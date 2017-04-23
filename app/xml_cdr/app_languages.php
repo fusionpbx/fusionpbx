@@ -896,7 +896,7 @@ $text['label-destination']['sv-se'] = "Destination";
 $text['label-destination']['uk'] = "Номер";
 $text['label-destination']['de-at'] = "Ziel";
 $text['label-destination']['he'] = "יעד";
-$text['label-destination']['ru-ru'] = "Место назначения";
+$text['label-destination']['ru-ru'] = "Назначение";
 
 $text['label-data']['en-us'] = "Data";
 $text['label-data']['es-cl'] = "Datos";
@@ -1238,7 +1238,7 @@ $text['description_search']['sv-se'] = "Notera : Källa, Destination och Nummerp
 $text['description_search']['uk'] = "";
 $text['description_search']['de-at'] = "Info: Quelle, Ziel und Anruferkennung (CID) Name Felder unterstützen die Verwendung von Stern ('*') als Wildcard Zeichen.";
 $text['description_search']['he'] = "";
-$text['description_search']['ru-ru'] = "<u>Заметка</u>: Источник, Поля Имя и Caller ID (CID) Имя поддерживают использование <i>asterisk</i> ('*') В качестве подстановочного знака.";
+$text['description_search']['ru-ru'] = "<u>Заметка</u>: Поля 'Источник', 'Назначение' и 'CID Имя' поддерживают использование <i>звездочки</i> ('*') в качестве подстановочного знака.";
 
 $text['description-7']['en-us'] = "Call variables, call flow, timing information, and other useful call details.";
 $text['description-7']['es-cl'] = "variables de llamada, flujo, información temporal y otros detalles útiles.";
@@ -1286,7 +1286,7 @@ $text['description-4']['sv-se'] = "Sedan visa samtalen i listan eller hämta dem
 $text['description-4']['uk'] = "";
 $text['description-4']['de-at'] = "Sehen Sie dann die Anrufe in der Liste oder laden Sie sie auf die Schaltfläche Export verwenden.";
 $text['description-4']['he'] = "";
-$text['description-4']['ru-ru'] = "Записи в списке вызовов могут быть сохранены локально с помощью кнопки« Экспорт";
+$text['description-4']['ru-ru'] = "Записи в списке вызовов могут быть сохранены локально с помощью кнопки 'Экспорт'";
 
 $text['description-3']['en-us'] = "Use the fields to filter the information for the specific call records that are desired.";
 $text['description-3']['es-cl'] = "Use los campos para filtrar la información. ";
