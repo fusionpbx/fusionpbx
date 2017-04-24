@@ -5,6 +5,7 @@ $apps[$x]['menu'][0]['title']['es-cl'] = "Notificaciones";
 $apps[$x]['menu'][0]['title']['fr-fr'] = "Notifications";
 $apps[$x]['menu'][0]['title']['fr-ca'] = "Notifications";
 $apps[$x]['menu'][0]['title']['pl'] = "Powiadomienia";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Уведомления";
 $apps[$x]['menu'][0]['title']['uk'] = "Сповіщення";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Meddelanden";
 $apps[$x]['menu'][0]['title']['de-at'] = "Benachrichtigungen";

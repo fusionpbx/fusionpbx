@@ -6,6 +6,7 @@ $apps[$x]['menu'][0]['title']['fr-fr'] = "Variables";
 $apps[$x]['menu'][0]['title']['pt-pt'] = "Variáveis";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Variáveis";
 $apps[$x]['menu'][0]['title']['pl'] = "Zmienne";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Параметры FreeSwitch";
 $apps[$x]['menu'][0]['title']['uk'] = "Змінні";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Variabler";
 $apps[$x]['menu'][0]['title']['de-at'] = "Variablen";

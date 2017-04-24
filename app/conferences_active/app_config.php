@@ -18,6 +18,7 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "A ferramenta AJAX permite visualizar e gerir todas as chamadas ativas numa sala de conferências.";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['ru-ru'] = "AJAX утилита для просмотра и управления всеми активными участниками в конференции.";
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = "conference_active_view";

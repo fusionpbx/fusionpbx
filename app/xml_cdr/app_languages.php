@@ -10,6 +10,7 @@ $text['title2']['sv-se'] = "Samtalsdetaljer";
 $text['title2']['uk'] = "Деталі дзвінка";
 $text['title2']['de-at'] = "Anruf Details";
 $text['title2']['he'] = "פרטי שיחה";
+$text['title2']['ru-ru'] = "Сведения о вызове";
 
 $text['title-extension_summary']['en-us'] = "Extension Summary";
 $text['title-extension_summary']['es-cl'] = "Resumen Extensión";
@@ -21,6 +22,7 @@ $text['title-extension_summary']['sv-se'] = "Anknytnings Summering";
 $text['title-extension_summary']['uk'] = "";
 $text['title-extension_summary']['de-at'] = "Nebenstellen Statistik";
 $text['title-extension_summary']['he'] = "סיכום שלוחות";
+$text['title-extension_summary']['ru-ru'] = "По всем номерам";
 
 $text['title']['en-us'] = "Call Detail Records";
 $text['title']['es-cl'] = "Registro de Detalle de Llamadas";
@@ -32,6 +34,7 @@ $text['title']['sv-se'] = "Detaljerad Samtalsinformation";
 $text['title']['uk'] = "Параметри облікового запису";
 $text['title']['de-at'] = "Meine Gespräche";
 $text['title']['he'] = "הגדרת חשבון";
+$text['title']['ru-ru'] = "Детализация Вызовов";
 
 $text['table-time']['en-us'] = "Time";
 $text['table-time']['es-cl'] = "Tiempo";
@@ -43,6 +46,7 @@ $text['table-time']['sv-se'] = "Tid";
 $text['table-time']['uk'] = "Час";
 $text['table-time']['de-at'] = "Zeit";
 $text['table-time']['he'] = "זמן";
+$text['table-time']['ru-ru'] = "Время";
 
 $text['table-name']['en-us'] = "Name";
 $text['table-name']['es-cl'] = "Nombre";
@@ -54,6 +58,7 @@ $text['table-name']['sv-se'] = "Namn";
 $text['table-name']['uk'] = "Назва";
 $text['table-name']['de-at'] = "Name";
 $text['table-name']['he'] = "שם";
+$text['table-name']['ru-ru'] = "Имя";
 
 $text['table-missed']['en-us'] = "Missed";
 $text['table-missed']['es-cl'] = "Perdidas";
@@ -65,6 +70,7 @@ $text['table-missed']['sv-se'] = "Missat";
 $text['table-missed']['uk'] = "";
 $text['table-missed']['de-at'] = "Verpasst";
 $text['table-missed']['he'] = "שיחות שלא נענו";
+$text['table-missed']['ru-ru'] = "Пропущщеные";
 
 $text['table-minutes']['en-us'] = "Minutes";
 $text['table-minutes']['es-cl'] = "Minutos";
@@ -76,6 +82,7 @@ $text['table-minutes']['sv-se'] = "Minuter";
 $text['table-minutes']['uk'] = "Хвилини";
 $text['table-minutes']['de-at'] = "Minuten";
 $text['table-minutes']['he'] = "דקות";
+$text['table-minutes']['ru-ru'] = "Минут";
 
 $text['table-hours']['en-us'] = "Hours";
 $text['table-hours']['es-cl'] = "Horas";
@@ -87,6 +94,7 @@ $text['table-hours']['sv-se'] = "Timmar";
 $text['table-hours']['uk'] = "Години";
 $text['table-hours']['de-at'] = "Stunden";
 $text['table-hours']['he'] = "שעות";
+$text['table-hours']['ru-ru'] = "Часов";
 
 $text['table-end']['en-us'] = "End";
 $text['table-end']['es-cl'] = "Fin";
@@ -98,6 +106,7 @@ $text['table-end']['sv-se'] = "Slut";
 $text['table-end']['uk'] = "Кінець";
 $text['table-end']['de-at'] = "Ende";
 $text['table-end']['he'] = "סיום";
+$text['table-end']['ru-ru'] = "Конец";
 
 $text['table-download']['en-us'] = "Number";
 $text['table-download']['es-cl'] = "Número";
@@ -109,6 +118,7 @@ $text['table-download']['sv-se'] = "Nummer";
 $text['table-download']['uk'] = "Скачати";
 $text['table-download']['de-at'] = "Nummer";
 $text['table-download']['he'] = "הורדה";
+$text['table-download']['ru-ru'] = "Номер";
 
 $text['table-direction']['en-us'] = "Direction";
 $text['table-direction']['es-cl'] = "Dirección";
@@ -120,6 +130,7 @@ $text['table-direction']['sv-se'] = "Riktning";
 $text['table-direction']['uk'] = "Напрям";
 $text['table-direction']['de-at'] = "Richtung";
 $text['table-direction']['he'] = "כיוון שיחה";
+$text['table-direction']['ru-ru'] = "Направление";
 
 $text['table-days']['en-us'] = "Days";
 $text['table-days']['es-cl'] = "Días";
@@ -131,6 +142,7 @@ $text['table-days']['sv-se'] = "Dagar";
 $text['table-days']['uk'] = "Дні";
 $text['table-days']['de-at'] = "Tage";
 $text['table-days']['he'] = "ימים";
+$text['table-days']['ru-ru'] = "Дни";
 
 $text['table-date']['en-us'] = "Date";
 $text['table-date']['es-cl'] = "Fecha";
@@ -142,6 +154,7 @@ $text['table-date']['sv-se'] = "Datum";
 $text['table-date']['uk'] = "Дата";
 $text['table-date']['de-at'] = "Datum";
 $text['table-date']['he'] = "תאריך";
+$text['table-date']['ru-ru'] = "Дата";
 
 $text['table-calls-per-minute']['en-us'] = "Calls Per Min";
 $text['table-calls-per-minute']['es-cl'] = "Llamadas por minutos";
@@ -153,6 +166,7 @@ $text['table-calls-per-minute']['sv-se'] = "Samtal Per Minut";
 $text['table-calls-per-minute']['uk'] = "";
 $text['table-calls-per-minute']['de-at'] = "Anrufe pro Min";
 $text['table-calls-per-minute']['he'] = "שיחות פר דקה";
+$text['table-calls-per-minute']['ru-ru'] = "Вызовов в минуту";
 
 $text['option-yesterday']['en-us'] = "Yesterday";
 $text['option-yesterday']['es-cl'] = "Ayer";
@@ -164,6 +178,7 @@ $text['option-yesterday']['sv-se'] = "Igår";
 $text['option-yesterday']['uk'] = "Вчора";
 $text['option-yesterday']['de-at'] = "Gestern";
 $text['option-yesterday']['he'] = "אתמול";
+$text['option-yesterday']['ru-ru'] = "Вчера";
 
 $text['option-today']['en-us'] = "Today";
 $text['option-today']['es-cl'] = "Hoy";
@@ -175,6 +190,7 @@ $text['option-today']['sv-se'] = "Idag";
 $text['option-today']['uk'] = "Сьогодні";
 $text['option-today']['de-at'] = "Heute";
 $text['option-today']['he'] = "היום";
+$text['option-today']['ru-ru'] = "Сегодня";
 
 $text['option-this_year']['en-us'] = "This Year";
 $text['option-this_year']['es-cl'] = "Este Año";
@@ -186,6 +202,7 @@ $text['option-this_year']['sv-se'] = "Detta Året";
 $text['option-this_year']['uk'] = "Цього року";
 $text['option-this_year']['de-at'] = "Dieses Jahr";
 $text['option-this_year']['he'] = "בשנה זו";
+$text['option-this_year']['ru-ru'] = "В этом году";
 
 $text['option-this_week']['en-us'] = "This Week";
 $text['option-this_week']['es-cl'] = "Esta Semana";
@@ -197,6 +214,7 @@ $text['option-this_week']['sv-se'] = "Denna Månaden";
 $text['option-this_week']['uk'] = "Цього тижня";
 $text['option-this_week']['de-at'] = "Diese Woche";
 $text['option-this_week']['he'] = "בשבוע זה";
+$text['option-this_week']['ru-ru'] = "На этой неделе";
 
 $text['option-this_month']['en-us'] = "This Month";
 $text['option-this_month']['es-cl'] = "Este Mes";
@@ -208,6 +226,7 @@ $text['option-this_month']['sv-se'] = "Denna Månaden";
 $text['option-this_month']['uk'] = "Цього місяця";
 $text['option-this_month']['de-at'] = "Diesen Monat";
 $text['option-this_month']['he'] = "בחודש זה";
+$text['option-this_month']['ru-ru'] = "В этом месяце";
 
 $text['option-last_seven_days']['en-us'] = "Last 7 Days";
 $text['option-last_seven_days']['es-cl'] = "Últimos 7 días";
@@ -219,6 +238,7 @@ $text['option-last_seven_days']['sv-se'] = "Senaste 7 Dagarna";
 $text['option-last_seven_days']['uk'] = "За останні 7 днів";
 $text['option-last_seven_days']['de-at'] = "Letzte 7 Tage";
 $text['option-last_seven_days']['he'] = "7 ימים אחרונים";
+$text['option-last_seven_days']['ru-ru'] = "За последние 7 дней";
 
 $text['option-last_hour']['en-us'] = "Last Hour";
 $text['option-last_hour']['es-cl'] = "Ultima Hora";
@@ -230,6 +250,7 @@ $text['option-last_hour']['sv-se'] = "Senaste Timman";
 $text['option-last_hour']['uk'] = "За останню годину";
 $text['option-last_hour']['de-at'] = "Letzte Stunde";
 $text['option-last_hour']['he'] = "בשעה אחרונה";
+$text['option-last_hour']['ru-ru'] = "За последний час";
 
 $text['option-default']['en-us'] = "Default";
 $text['option-default']['es-cl'] = "Predeterminado";
@@ -241,6 +262,7 @@ $text['option-default']['sv-se'] = "Standard";
 $text['option-default']['uk'] = "Типово";
 $text['option-default']['de-at'] = "Vorgabe";
 $text['option-default']['he'] = "";
+$text['option-default']['ru-ru'] = "По умолчанию";
 
 $text['message-preparing_download']['en-us'] = "Preparing file for download, please wait...";
 $text['message-preparing_download']['es-cl'] = "Archivo de Preparación para la descarga, por favor espere ...";
@@ -252,6 +274,7 @@ $text['message-preparing_download']['sv-se'] = "Förbereder fil för nedladdning
 $text['message-preparing_download']['uk'] = "Підготовка файлу для завантаження,  зачекайте, будь ласка...";
 $text['message-preparing_download']['de-at'] = "Bereite Datei für den Download vor, bitte warten...";
 $text['message-preparing_download']['he'] = "מכין קובץ להורדה, אנא המתן";
+$text['message-preparing_download']['ru-ru'] = "Подготовка файла для загрузки, пожалуйста, подождите...";
 
 $text['label-write_codec']['en-us'] = "Write Codec";
 $text['label-write_codec']['es-cl'] = "Escribe Códec";
@@ -263,6 +286,7 @@ $text['label-write_codec']['sv-se'] = "Write Codec";
 $text['label-write_codec']['uk'] = "Кодеки запису";
 $text['label-write_codec']['de-at'] = "Schreib Codec";
 $text['label-write_codec']['he'] = "";
+$text['label-write_codec']['ru-ru'] = "Кодек Записи";
 
 $text['label-voicemail']['en-us'] = "Voicemail";
 $text['label-voicemail']['es-cl'] = "Correo de Voz";
@@ -274,6 +298,7 @@ $text['label-voicemail']['sv-se'] = "Röstbrevlåda";
 $text['label-voicemail']['uk'] = "Голосова пошта";
 $text['label-voicemail']['de-at'] = "Mailbox";
 $text['label-voicemail']['he'] = "תא קולי";
+$text['label-voicemail']['ru-ru'] = "Голосовая почта";
 
 $text['label-variables']['en-us'] = "Variables";
 $text['label-variables']['pt-pt'] = "Variáveis";
@@ -284,6 +309,7 @@ $text['label-variables']['sv-se'] = "Variabler";
 $text['label-variables']['uk'] = "Змінні";
 $text['label-variables']['de-at'] = "Variablen";
 $text['label-variables']['he'] = "";
+$text['label-variables']['ru-ru'] = "Переменные";
 
 $text['label-uuid']['en-us'] = "UUID";
 $text['label-uuid']['es-cl'] = "UUID";
@@ -295,6 +321,7 @@ $text['label-uuid']['sv-se'] = "UUID";
 $text['label-uuid']['uk'] = "UUID ";
 $text['label-uuid']['de-at'] = "UUID";
 $text['label-uuid']['he'] = "";
+$text['label-uuid']['ru-ru'] = "UUID";
 
 $text['label-username']['en-us'] = "Username";
 $text['label-username']['es-cl'] = "Nombre de usuario";
@@ -306,6 +333,7 @@ $text['label-username']['sv-se'] = "Användarnamn";
 $text['label-username']['uk'] = "Ім’я користувача";
 $text['label-username']['de-at'] = "Benutzername";
 $text['label-username']['he'] = "שם משתמש";
+$text['label-username']['ru-ru'] = "Имя пользователя";
 
 $text['label-tta']['en-us'] = "TTA";
 $text['label-tta']['es-cl'] = "TTA";
@@ -317,6 +345,7 @@ $text['label-tta']['sv-se'] = "TTA";
 $text['label-tta']['uk'] = "TTA ";
 $text['label-tta']['de-at'] = "TTA";
 $text['label-tta']['he'] = "";
+$text['label-tta']['ru-ru'] = "TTA";
 
 $text['label-total']['en-us'] = "Total";
 $text['label-total']['es-cl'] = "Total";
@@ -328,6 +357,7 @@ $text['label-total']['sv-se'] = "Totalt";
 $text['label-total']['uk'] = "Всього";
 $text['label-total']['de-at'] = "Total";
 $text['label-total']['he'] = "סה״כ";
+$text['label-total']['ru-ru'] = "Всего";
 
 $text['label-tools']['en-us'] = "Tools";
 $text['label-tools']['es-cl'] = "Herramientas";
@@ -339,6 +369,7 @@ $text['label-tools']['sv-se'] = "Verktyg";
 $text['label-tools']['uk'] = "Параметри";
 $text['label-tools']['de-at'] = "Funktionen";
 $text['label-tools']['he'] = "כלים";
+$text['label-tools']['ru-ru'] = "Инструменты";
 
 $text['label-to']['en-us'] = "To";
 $text['label-to']['es-cl'] = "Final";
@@ -350,6 +381,7 @@ $text['label-to']['sv-se'] = "Till";
 $text['label-to']['uk'] = "До";
 $text['label-to']['de-at'] = "Bis";
 $text['label-to']['he'] = "ל";
+$text['label-to']['ru-ru'] = "До";
 
 $text['label-summary']['en-us'] = "Summary";
 $text['label-summary']['es-cl'] = "Sumario";
@@ -361,6 +393,7 @@ $text['label-summary']['sv-se'] = "Summa";
 $text['label-summary']['uk'] = "";
 $text['label-summary']['de-at'] = "Zusammenfassung";
 $text['label-summary']['he'] = "סיכום";
+$text['label-summary']['ru-ru'] = "Сводка";
 
 $text['label-status']['en-us'] = "Status";
 $text['label-status']['es-cl'] = "Estado";
@@ -372,6 +405,7 @@ $text['label-status']['sv-se'] = "Status";
 $text['label-status']['uk'] = "Статус";
 $text['label-status']['de-at'] = "Status";
 $text['label-status']['he'] = "סטטוס";
+$text['label-status']['ru-ru'] = "Статус";
 
 $text['label-start_range']['en-us'] = "Start Range";
 $text['label-start_range']['es-cl'] = "Comienzo Lapso";
@@ -383,6 +417,7 @@ $text['label-start_range']['sv-se'] = "Intervall start";
 $text['label-start_range']['uk'] = "";
 $text['label-start_range']['de-at'] = "Start Bereich";
 $text['label-start_range']['he'] = "החל מטווח";
+$text['label-start_range']['ru-ru'] = "Начало";
 
 $text['label-start_date_time']['en-us'] = "Start Date/Time";
 $text['label-start_date_time']['es-cl'] = "Fecha/Hora de Comienzo";
@@ -394,6 +429,7 @@ $text['label-start_date_time']['sv-se'] = "Start Datum/Tid";
 $text['label-start_date_time']['uk'] = "";
 $text['label-start_date_time']['de-at'] = "Start Datum/Zeit";
 $text['label-start_date_time']['he'] = "החל מתאריך/שעה";
+$text['label-start_date_time']['ru-ru'] = "Старт Дата/Время";
 
 $text['label-start']['en-us'] = "Start";
 $text['label-start']['es-cl'] = "Comienzo";
@@ -405,6 +441,7 @@ $text['label-start']['sv-se'] = "Starta";
 $text['label-start']['uk'] = "Запустити";
 $text['label-start']['de-at'] = "Start";
 $text['label-start']['he'] = "החל";
+$text['label-start']['ru-ru'] = "Старт";
 
 $text['label-source']['en-us'] = "Source";
 $text['label-source']['es-cl'] = "Origen";
@@ -416,6 +453,7 @@ $text['label-source']['sv-se'] = "Källa";
 $text['label-source']['uk'] = "Джерело";
 $text['label-source']['de-at'] = "Quelle";
 $text['label-source']['he'] = "מקור";
+$text['label-source']['ru-ru'] = "Источник";
 
 $text['label-result']['en-us'] = "Result";
 $text['label-result']['es-cl'] = "Resultado";
@@ -427,6 +465,7 @@ $text['label-result']['sv-se'] = "Resultat";
 $text['label-result']['uk'] = "Результат";
 $text['label-result']['de-at'] = "Ergebnis";
 $text['label-result']['he'] = "תוֹצָאָה";
+$text['label-result']['ru-ru'] = "Результат";
 
 $text['label-remote_media_ip']['en-us'] = "Remote Media IP";
 $text['label-remote_media_ip']['es-cl'] = "Remoto IP Media";
@@ -438,6 +477,7 @@ $text['label-remote_media_ip']['sv-se'] = "Remote Media IP";
 $text['label-remote_media_ip']['uk'] = "";
 $text['label-remote_media_ip']['de-at'] = "Remote Media IP";
 $text['label-remote_media_ip']['he'] = "";
+$text['label-remote_media_ip']['ru-ru'] = "Удаленный IP-адрес мультимедиа";
 
 $text['label-recording']['en-us'] = "Recording";
 $text['label-recording']['es-cl'] = "Grabación";
@@ -449,6 +489,7 @@ $text['label-recording']['sv-se'] = "Inspelning";
 $text['label-recording']['uk'] = "Запис";
 $text['label-recording']['de-at'] = "Aufnahme";
 $text['label-recording']['he'] = "הקלטה";
+$text['label-recording']['ru-ru'] = "Запись";
 
 $text['label-read_codec']['en-us'] = "Read Codec";
 $text['label-read_codec']['es-cl'] = "Leer Códec";
@@ -460,6 +501,7 @@ $text['label-read_codec']['sv-se'] = "Read Codec";
 $text['label-read_codec']['uk'] = "";
 $text['label-read_codec']['de-at'] = "Lese Codec";
 $text['label-read_codec']['he'] = "קודק קורא";
+$text['label-read_codec']['ru-ru'] = "Чтение кодека";
 
 $text['label-price']['en-us'] = "Price";
 $text['label-price']['es-cl'] = "Precio";
@@ -471,6 +513,7 @@ $text['label-price']['sv-se'] = "Pris";
 $text['label-price']['uk'] = "Ціна";
 $text['label-price']['de-at'] = "Preis";
 $text['label-price']['he'] = "מחיר";
+$text['label-price']['ru-ru'] = "Цена";
 
 $text['label-preset']['en-us'] = "Quick Select";
 $text['label-preset']['es-cl'] = "Selección rápida";
@@ -482,6 +525,7 @@ $text['label-preset']['sv-se'] = "Snabbval";
 $text['label-preset']['uk'] = "Швидкий вибір";
 $text['label-preset']['de-at'] = "Schnellauswahl";
 $text['label-preset']['he'] = "בחירה מהירה";
+$text['label-preset']['ru-ru'] = "Быстрый выбор";
 
 $text['label-play']['en-us'] = "Play";
 $text['label-play']['es-cl'] = "Reproducir";
@@ -493,6 +537,7 @@ $text['label-play']['sv-se'] = "Spela Upp";
 $text['label-play']['uk'] = "Відтворити";
 $text['label-play']['de-at'] = "Play";
 $text['label-play']['he'] = "נגן";
+$text['label-play']['ru-ru'] = "Воспроизведение";
 
 $text['label-phoneip']['en-us'] = "Phone IP";
 $text['label-phoneip']['es-cl'] = "Teléfono IP";
@@ -504,6 +549,7 @@ $text['label-phoneip']['sv-se'] = "Telefon IP";
 $text['label-phoneip']['uk'] = "";
 $text['label-phoneip']['de-at'] = "Geräte IP";
 $text['label-phoneip']['he'] = "";
+$text['label-phoneip']['ru-ru'] = "Телефон IP";
 
 $text['label-pause']['en-us'] = "Pause";
 $text['label-pause']['es-cl'] = "Pausa";
@@ -515,6 +561,7 @@ $text['label-pause']['sv-se'] = "Paus";
 $text['label-pause']['uk'] = "Призупинити";
 $text['label-pause']['de-at'] = "Pause";
 $text['label-pause']['he'] = "השהייה";
+$text['label-pause']['ru-ru'] = "Пауза";
 
 $text['label-outbound_duration']['en-us'] = "Outbound Duration";
 $text['label-outbound_duration']['es-cl'] = "Duración de Salida";
@@ -526,6 +573,7 @@ $text['label-outbound_duration']['sv-se'] = "Utgående Samtalstid";
 $text['label-outbound_duration']['uk'] = "";
 $text['label-outbound_duration']['de-at'] = "Ausgehend Dauer";
 $text['label-outbound_duration']['he'] = "";
+$text['label-outbound_duration']['ru-ru'] = "Продолжительность исходящих";
 
 $text['label-outbound_calls']['en-us'] = "Outbound Calls";
 $text['label-outbound_calls']['es-cl'] = "Llamadas Salientes";
@@ -537,6 +585,7 @@ $text['label-outbound_calls']['sv-se'] = "Utgående Samtal";
 $text['label-outbound_calls']['uk'] = "";
 $text['label-outbound_calls']['de-at'] = "Ausgehende Anrufe";
 $text['label-outbound_calls']['he'] = "";
+$text['label-outbound_calls']['ru-ru'] = "Исходящих вызовов";
 
 $text['label-outbound']['en-us'] = "Outbound";
 $text['label-outbound']['es-cl'] = "Salida";
@@ -548,6 +597,7 @@ $text['label-outbound']['sv-se'] = "Utgående";
 $text['label-outbound']['uk'] = "";
 $text['label-outbound']['de-at'] = "Ausgehend";
 $text['label-outbound']['he'] = "";
+$text['label-outbound']['ru-ru'] = "Исходящие";
 
 $text['label-number_alias']['en-us'] = "Number Alias";
 $text['label-number_alias']['es-cl'] = "Número Alias";
@@ -559,6 +609,7 @@ $text['label-number_alias']['sv-se'] = "Nummer Alias";
 $text['label-number_alias']['uk'] = "Псевдонім номера";
 $text['label-number_alias']['de-at'] = "Alternative Nummer";
 $text['label-number_alias']['he'] = "";
+$text['label-number_alias']['ru-ru'] = "Альтернативный номер";
 
 $text['label-number']['en-us'] = "Number";
 $text['label-number']['es-cl'] = "Número";
@@ -570,6 +621,7 @@ $text['label-number']['sv-se'] = "Nummer";
 $text['label-number']['uk'] = "Номер";
 $text['label-number']['de-at'] = "Nummer";
 $text['label-number']['he'] = "מספר";
+$text['label-number']['ru-ru'] = "Номер";
 
 $text['label-no_answer']['en-us'] = "No Answer";
 $text['label-no_answer']['es-cl'] = "Sin Respuesta";
@@ -581,6 +633,7 @@ $text['label-no_answer']['sv-se'] = "Inget Svar";
 $text['label-no_answer']['uk'] = "Без відповіді";
 $text['label-no_answer']['de-at'] = "Keine Antwort";
 $text['label-no_answer']['he'] = "אין מענה";
+$text['label-no_answer']['ru-ru'] = "Нет ответа";
 
 $text['label-network_addr']['en-us'] = "Network Address";
 $text['label-network_addr']['es-cl'] = "Dirección de red";
@@ -592,6 +645,7 @@ $text['label-network_addr']['sv-se'] = "Nätverks-adress";
 $text['label-network_addr']['uk'] = "";
 $text['label-network_addr']['de-at'] = "Netzwerk Adresse";
 $text['label-network_addr']['he'] = "כתובת רשת";
+$text['label-network_addr']['ru-ru'] = "Сетевой адрес";
 
 $text['label-mos_score']['en-us'] = "MOS Score";
 $text['label-mos_score']['es-cl'] = "";
@@ -603,6 +657,7 @@ $text['label-mos_score']['sv-se'] = "";
 $text['label-mos_score']['uk'] = "";
 $text['label-mos_score']['de-at'] = "";
 $text['label-mos_score']['he'] = "";
+$text['label-mos_score']['ru-ru'] = "MOS Score";
 
 $text['label-name']['en-us'] = "Name";
 $text['label-name']['es-cl'] = "Nombre";
@@ -614,6 +669,7 @@ $text['label-name']['sv-se'] = "Namn";
 $text['label-name']['uk'] = "Назва";
 $text['label-name']['de-at'] = "Name";
 $text['label-name']['he'] = "שם";
+$text['label-name']['ru-ru'] = "Имя";
 
 $text['label-missed']['en-us'] = "Missed";
 $text['label-missed']['es-cl'] = "Perdidas";
@@ -625,6 +681,7 @@ $text['label-missed']['sv-se'] = "Missade";
 $text['label-missed']['uk'] = "";
 $text['label-missed']['de-at'] = "Verpasst";
 $text['label-missed']['he'] = "שיחה שלא נענתה";
+$text['label-missed']['ru-ru'] = "Пропущено";
 
 $text['label-local']['en-us'] = "Local";
 $text['label-local']['es-cl'] = "Local";
@@ -636,6 +693,7 @@ $text['label-local']['sv-se'] = "Lokal";
 $text['label-local']['uk'] = "Локальний";
 $text['label-local']['de-at'] = "Lokal";
 $text['label-local']['he'] = "מקומי";
+$text['label-local']['ru-ru'] = "Локальный";
 
 $text['label-include_internal']['en-us'] = "Include Internal";
 $text['label-include_internal']['es-cl'] = "Incluya Interna";
@@ -647,6 +705,7 @@ $text['label-include_internal']['sv-se'] = "Inkludera Interna";
 $text['label-include_internal']['uk'] = "";
 $text['label-include_internal']['de-at'] = "Intern hinzufügen";
 $text['label-include_internal']['he'] = "כולל פנימי";
+$text['label-include_internal']['ru-ru'] = "Включить внутренний";
 
 $text['label-inbound_duration']['en-us'] = "Inbound Duration";
 $text['label-inbound_duration']['es-cl'] = "Duración Inbound";
@@ -658,6 +717,7 @@ $text['label-inbound_duration']['sv-se'] = "Inkommande Samtalstid";
 $text['label-inbound_duration']['uk'] = "";
 $text['label-inbound_duration']['de-at'] = "Eingehend Dauer";
 $text['label-inbound_duration']['he'] = "";
+$text['label-inbound_duration']['ru-ru'] = "Продолжительность входящих";
 
 $text['label-inbound_calls']['en-us'] = "Inbound Calls";
 $text['label-inbound_calls']['es-cl'] = "Las Llamadas Entrantes";
@@ -669,6 +729,7 @@ $text['label-inbound_calls']['sv-se'] = "Inkommande Samtal";
 $text['label-inbound_calls']['uk'] = "";
 $text['label-inbound_calls']['de-at'] = "Eingehende Anrufe";
 $text['label-inbound_calls']['he'] = "";
+$text['label-inbound_calls']['ru-ru'] = "Входящих вызовов";
 
 $text['label-inbound']['en-us'] = "Inbound";
 $text['label-inbound']['es-cl'] = "Entrada";
@@ -680,6 +741,7 @@ $text['label-inbound']['sv-se'] = "Inkommande";
 $text['label-inbound']['uk'] = "Вихідний";
 $text['label-inbound']['de-at'] = "Eingehend";
 $text['label-inbound']['he'] = "";
+$text['label-inbound']['ru-ru'] = "Входящие";
 
 $text['label-hangup_cause']['en-us'] = "Hangup Cause";
 $text['label-hangup_cause']['es-cl'] = "Causa Colgar";
@@ -691,6 +753,7 @@ $text['label-hangup_cause']['sv-se'] = "påläggnings Orsak";
 $text['label-hangup_cause']['uk'] = "Hangup Причина";
 $text['label-hangup_cause']['de-at'] = "Hangup Ursache";
 $text['label-hangup_cause']['he'] = "";
+$text['label-hangup_cause']['ru-ru'] = "Причина отбоя";
 
 $text['label-from']['en-us'] = "From";
 $text['label-from']['es-cl'] = "Comienzo";
@@ -702,6 +765,7 @@ $text['label-from']['sv-se'] = "Från";
 $text['label-from']['uk'] = "";
 $text['label-from']['de-at'] = "Von";
 $text['label-from']['he'] = "";
+$text['label-from']['ru-ru'] = "От";
 
 $text['label-failed']['en-us'] = "Failed";
 $text['label-failed']['es-cl'] = "Fracasado";
@@ -713,6 +777,7 @@ $text['label-failed']['sv-se'] = "Misslyckad";
 $text['label-failed']['uk'] = "";
 $text['label-failed']['de-at'] = "Fehlgeschlagen";
 $text['label-failed']['he'] = "נכשל";
+$text['label-failed']['ru-ru'] = "Ошибка";
 
 $text['label-extension']['en-us'] = "Extension";
 $text['label-extension']['es-cl'] = "Extensión";
@@ -724,6 +789,7 @@ $text['label-extension']['sv-se'] = "Anknytning";
 $text['label-extension']['uk'] = "Розширення (Extention)";
 $text['label-extension']['de-at'] = "Durchwahl";
 $text['label-extension']['he'] = "שלוחה";
+$text['label-extension']['ru-ru'] = "Внутренний номер";
 
 $text['label-end_stamp']['en-us'] = "End";
 $text['label-end_stamp']['es-cl'] = "Fin";
@@ -735,6 +801,7 @@ $text['label-end_stamp']['sv-se'] = "Slut";
 $text['label-end_stamp']['uk'] = "";
 $text['label-end_stamp']['de-at'] = "Ende";
 $text['label-end_stamp']['he'] = "סיום";
+$text['label-end_stamp']['ru-ru'] = "Конец";
 
 $text['label-end_range']['en-us'] = "End Range";
 $text['label-end_range']['es-cl'] = "Fin Lapso";
@@ -746,6 +813,7 @@ $text['label-end_range']['sv-se'] = "Intervall Slut";
 $text['label-end_range']['uk'] = "";
 $text['label-end_range']['de-at'] = "Ende Bereich";
 $text['label-end_range']['he'] = "עד טווח";
+$text['label-end_range']['ru-ru'] = "Окончание";
 
 $text['label-end_date_time']['en-us'] = "End Date/Time";
 $text['label-end_date_time']['es-cl'] = "Fecha/Hora";
@@ -757,6 +825,7 @@ $text['label-end_date_time']['sv-se'] = "Slut Datum/Tid";
 $text['label-end_date_time']['uk'] = "";
 $text['label-end_date_time']['de-at'] = "Ende Datum/Zeit";
 $text['label-end_date_time']['he'] = "עד תאריך/זמן";
+$text['label-end_date_time']['ru-ru'] = "Конечная дата/время";
 
 $text['label-duration']['en-us'] = "Duration";
 $text['label-duration']['es-cl'] = "Duración";
@@ -768,6 +837,7 @@ $text['label-duration']['sv-se'] = "Samtalstid";
 $text['label-duration']['uk'] = "Тривалість";
 $text['label-duration']['de-at'] = "Dauer";
 $text['label-duration']['he'] = "משך השיחה";
+$text['label-duration']['ru-ru'] = "Продолжительность";
 
 $text['label-download']['en-us'] = "Download";
 $text['label-download']['es-cl'] = "Descargar";
@@ -779,6 +849,7 @@ $text['label-download']['sv-se'] = "Ladda Ned";
 $text['label-download']['uk'] = "Завантажини";
 $text['label-download']['de-at'] = "Download";
 $text['label-download']['he'] = "הורדה";
+$text['label-download']['ru-ru'] = "Загрузить";
 
 $text['label-domain-name']['en-us'] = "Domain Name";
 $text['label-domain-name']['es-cl'] = "Nombre de Dominio";
@@ -790,6 +861,7 @@ $text['label-domain-name']['sv-se'] = "Domän Namn";
 $text['label-domain-name']['uk'] = "";
 $text['label-domain-name']['de-at'] = "Domain Name";
 $text['label-domain-name']['he'] = "שם דומיין";
+$text['label-domain-name']['ru-ru'] = "Имя домена";
 
 $text['label-domain']['en-us'] = "Domain";
 $text['label-domain']['es-cl'] = "Dominio";
@@ -800,6 +872,7 @@ $text['label-domain']['sv-se'] = "Domän";
 $text['label-domain']['uk'] = "Домен";
 $text['label-domain']['de-at'] = "Domain";
 $text['label-domain']['he'] = "תחום";
+$text['label-domain']['ru-ru'] = "Домен";
 
 $text['label-direction']['en-us'] = "Direction";
 $text['label-direction']['es-cl'] = "Dirección";
@@ -811,6 +884,7 @@ $text['label-direction']['sv-se'] = "Riktning";
 $text['label-direction']['uk'] = "";
 $text['label-direction']['de-at'] = "Richtung";
 $text['label-direction']['he'] = "כיוון";
+$text['label-direction']['ru-ru'] = "Направление";
 
 $text['label-destination']['en-us'] = "Destination";
 $text['label-destination']['es-cl'] = "Destino";
@@ -822,6 +896,7 @@ $text['label-destination']['sv-se'] = "Destination";
 $text['label-destination']['uk'] = "Номер";
 $text['label-destination']['de-at'] = "Ziel";
 $text['label-destination']['he'] = "יעד";
+$text['label-destination']['ru-ru'] = "Назначение";
 
 $text['label-data']['en-us'] = "Data";
 $text['label-data']['es-cl'] = "Datos";
@@ -833,6 +908,7 @@ $text['label-data']['sv-se'] = "Data";
 $text['label-data']['uk'] = "Дані";
 $text['label-data']['de-at'] = "Daten";
 $text['label-data']['he'] = "מידע";
+$text['label-data']['ru-ru'] = "Дата";
 
 $text['label-context']['en-us'] = "Context";
 $text['label-context']['es-cl'] = "Contexto";
@@ -844,6 +920,7 @@ $text['label-context']['sv-se'] = "Context";
 $text['label-context']['uk'] = "Контекст";
 $text['label-context']['de-at'] = "Kontext";
 $text['label-context']['he'] = "";
+$text['label-context']['ru-ru'] = "Контекст";
 
 $text['label-cid-number']['en-us'] = "CID Number";
 $text['label-cid-number']['es-cl'] = "Número CID";
@@ -855,6 +932,7 @@ $text['label-cid-number']['sv-se'] = "CID, nummerspresentation";
 $text['label-cid-number']['uk'] = "CID Номер";
 $text['label-cid-number']['de-at'] = "Anrufer Nummer";
 $text['label-cid-number']['he'] = "זהוי מספר";
+$text['label-cid-number']['ru-ru'] = "CID номера";
 
 $text['label-cid-name']['en-us'] = "CID Name";
 $text['label-cid-name']['es-cl'] = "Nombre CID";
@@ -866,6 +944,7 @@ $text['label-cid-name']['sv-se'] = "CID namnpresentation";
 $text['label-cid-name']['uk'] = "CID Ім’я";
 $text['label-cid-name']['de-at'] = "Anrufer Name";
 $text['label-cid-name']['he'] = "זהוי שם";
+$text['label-cid-name']['ru-ru'] = "CID Имя";
 
 $text['label-channel']['en-us'] = "Channel Data";
 $text['label-channel']['es-cl'] = "Datos del Canal";
@@ -877,6 +956,7 @@ $text['label-channel']['sv-se'] = "Channel Data";
 $text['label-channel']['uk'] = "";
 $text['label-channel']['de-at'] = "Kanal Daten";
 $text['label-channel']['he'] = "";
+$text['label-channel']['ru-ru'] = "Данные канала";
 
 $text['label-cancelled']['en-us'] = "Cancelled";
 $text['label-cancelled']['es-cl'] = "Cancelado";
@@ -891,6 +971,7 @@ $text['label-cancelled']['de-at'] = "Abgebrochen";
 $text['label-cancelled']['ro'] = "Anulat";
 $text['label-cancelled']['fa'] = "";
 $text['label-cancelled']['ar-eg'] = "ألغيت";
+$text['label-cancelled']['ru-ru'] = "Отменено";
 
 $text['label-caller_id_number']['en-us'] = "CID Number";
 $text['label-caller_id_number']['es-cl'] = "Número CID";
@@ -902,6 +983,7 @@ $text['label-caller_id_number']['sv-se'] = "CID Nummer";
 $text['label-caller_id_number']['uk'] = "Caller ID Номер";
 $text['label-caller_id_number']['de-at'] = "Anrufer Nummer";
 $text['label-caller_id_number']['he'] = "";
+$text['label-caller_id_number']['ru-ru'] = "CID Номер";
 
 $text['label-caller_id_name']['en-us'] = "CID Name";
 $text['label-caller_id_name']['es-cl'] = "Nombre CID";
@@ -913,6 +995,7 @@ $text['label-caller_id_name']['sv-se'] = "CID Namn";
 $text['label-caller_id_name']['uk'] = "Caller ID Ім’я";
 $text['label-caller_id_name']['de-at'] = "Anrufer Name";
 $text['label-caller_id_name']['he'] = "";
+$text['label-caller_id_name']['ru-ru'] = "CID Имя";
 
 $text['label-call-statistics-description']['en-us'] = "Call Detail Records Statics summarize the call information.";
 $text['label-call-statistics-description']['es-cl'] = "Estadísticas de los registros de llamadas.";
@@ -924,6 +1007,7 @@ $text['label-call-statistics-description']['sv-se'] = "Detaljerad Samtals-statis
 $text['label-call-statistics-description']['uk'] = "";
 $text['label-call-statistics-description']['de-at'] = "Anruf Statistiken fassen alle Anrufinformationen zusammen.";
 $text['label-call-statistics-description']['he'] = "";
+$text['label-call-statistics-description']['ru-ru'] = "Обобщенная информацию о вызовах.";
 
 $text['label-call-statistics']['en-us'] = "Call Detail Record Statistics";
 $text['label-call-statistics']['es-cl'] = "Estadísticas de ñps  detalles de grabación de llamadas";
@@ -935,6 +1019,7 @@ $text['label-call-statistics']['sv-se'] = "Detaljerad Samtals-statistik";
 $text['label-call-statistics']['uk'] = "";
 $text['label-call-statistics']['de-at'] = "Anruf Statistiken";
 $text['label-call-statistics']['he'] = "";
+$text['label-call-statistics']['ru-ru'] = "Статистика вызовов";
 
 $text['label-call-flow-5']['en-us'] = "Call Flow: Times";
 $text['label-call-flow-5']['es-cl'] = "Flujos de llamada: Tiempos";
@@ -946,6 +1031,7 @@ $text['label-call-flow-5']['sv-se'] = "Samtals Flöden: Tider";
 $text['label-call-flow-5']['uk'] = "";
 $text['label-call-flow-5']['de-at'] = "Anruf Steuerung: Zeiten";
 $text['label-call-flow-5']['he'] = "";
+$text['label-call-flow-5']['ru-ru'] = "Поток вызовов: время";
 
 $text['label-call-flow-4']['en-us'] = "Call Flow: Caller Profile";
 $text['label-call-flow-4']['es-cl'] = "Flujos de llamada: Perfil de quien llama";
@@ -957,6 +1043,7 @@ $text['label-call-flow-4']['sv-se'] = "Samtals Flöden: Samtals Profil";
 $text['label-call-flow-4']['uk'] = "";
 $text['label-call-flow-4']['de-at'] = "Anruf Steuerung: Anrufer Profil";
 $text['label-call-flow-4']['he'] = "";
+$text['label-call-flow-4']['ru-ru'] = "Поток вызовов: профиль вызывающего абонента";
 
 $text['label-call-flow-3']['en-us'] = "Call Flow: Extension: Application";
 $text['label-call-flow-3']['es-cl'] = "Flujos de llamada: Extensión: Aplicación";
@@ -968,6 +1055,7 @@ $text['label-call-flow-3']['sv-se'] = "Samtals Flöden: Anknytning: Applikation"
 $text['label-call-flow-3']['uk'] = "";
 $text['label-call-flow-3']['de-at'] = "Anruf Steuerung: Nebenstelle: Applikation";
 $text['label-call-flow-3']['he'] = "";
+$text['label-call-flow-3']['ru-ru'] = "Поток вызовов: расширение: приложение";
 
 $text['label-call-flow-2']['en-us'] = "Call Flow: Extension: Attributes";
 $text['label-call-flow-2']['es-cl'] = "Flujos de llamada: Extensión: Atributos";
@@ -979,6 +1067,7 @@ $text['label-call-flow-2']['sv-se'] = "Samtals Flöden: Anknytning: Attribut";
 $text['label-call-flow-2']['uk'] = "";
 $text['label-call-flow-2']['de-at'] = "Anruf Steuerung: Nebenstelle: Attribute";
 $text['label-call-flow-2']['he'] = "";
+$text['label-call-flow-2']['ru-ru'] = "Поток вызова: внутренние номера: атрибуты";
 
 $text['label-call-flow']['en-us'] = "Call Flow: Attributes";
 $text['label-call-flow']['es-cl'] = "Flujos de llamada: Atributos";
@@ -990,6 +1079,7 @@ $text['label-call-flow']['sv-se'] = "Samtals Flöden: Attribut";
 $text['label-call-flow']['uk'] = "";
 $text['label-call-flow']['de-at'] = "Anruf Steuerung: Attribute";
 $text['label-call-flow']['he'] = "";
+$text['label-call-flow']['ru-ru'] = "Поток вызова: атрибуты";
 
 $text['label-busy']['en-us'] = "Busy";
 $text['label-busy']['es-cl'] = "Ocupado";
@@ -1001,6 +1091,7 @@ $text['label-busy']['sv-se'] = "Upptagen";
 $text['label-busy']['uk'] = "Зайнято";
 $text['label-busy']['de-at'] = "Besetzt";
 $text['label-busy']['he'] = "תפוס";
+$text['label-busy']['ru-ru'] = "Занято";
 
 $text['label-bridge_uuid']['en-us'] = "Bridge UUID";
 $text['label-bridge_uuid']['es-cl'] = "UUID Puente";
@@ -1012,6 +1103,7 @@ $text['label-bridge_uuid']['sv-se'] = "Bridge UUID";
 $text['label-bridge_uuid']['uk'] = "";
 $text['label-bridge_uuid']['de-at'] = "Bridge UUID";
 $text['label-bridge_uuid']['he'] = "";
+$text['label-bridge_uuid']['ru-ru'] = "UUID Моста";
 
 $text['label-billsec']['en-us'] = "Bill Seconds";
 $text['label-billsec']['es-cl'] = "Segundos Bill";
@@ -1023,6 +1115,7 @@ $text['label-billsec']['sv-se'] = "Debitering Sekunder";
 $text['label-billsec']['uk'] = "";
 $text['label-billsec']['de-at'] = "Abrechnung Sekunden";
 $text['label-billsec']['he'] = "";
+$text['label-billsec']['ru-ru'] = "Биллинг секунд";
 
 $text['label-b-leg']['en-us'] = "B-leg";
 $text['label-b-leg']['es-cl'] = "B-leg";
@@ -1034,6 +1127,7 @@ $text['label-b-leg']['sv-se'] = "B-part";
 $text['label-b-leg']['uk'] = "";
 $text['label-b-leg']['de-at'] = "B-Ast";
 $text['label-b-leg']['he'] = "";
+$text['label-b-leg']['ru-ru'] = "B-часть";
 
 $text['label-average']['en-us'] = "Average";
 $text['label-average']['es-cl'] = "Promedio";
@@ -1045,6 +1139,7 @@ $text['label-average']['sv-se'] = "Medel";
 $text['label-average']['uk'] = "";
 $text['label-average']['de-at'] = "Durchschnitt";
 $text['label-average']['he'] = "ממוצע";
+$text['label-average']['ru-ru'] = "В среднем";
 
 $text['label-application-log']['en-us'] = "Application Log";
 $text['label-application-log']['es-cl'] = "Registro de Aplicación";
@@ -1056,6 +1151,7 @@ $text['label-application-log']['sv-se'] = "Apllikations Log";
 $text['label-application-log']['uk'] = "";
 $text['label-application-log']['de-at'] = "Applikations Log";
 $text['label-application-log']['he'] = "";
+$text['label-application-log']['ru-ru'] = "Лог Приложений";
 
 $text['label-answered']['en-us'] = "Answered";
 $text['label-answered']['es-cl'] = "Respondido";
@@ -1070,6 +1166,7 @@ $text['label-answered']['de-at'] = "Angenommen";
 $text['label-answered']['ro'] = "Răspuns";
 $text['label-answered']['fa'] = "";
 $text['label-answered']['ar-eg'] = "تم الرد";
+$text['label-answered']['ru-ru'] = "Отвечено";
 
 $text['label-answer_range']['en-us'] = "Answer Range";
 $text['label-answer_range']['es-cl'] = "Respuesta Lapso";
@@ -1081,6 +1178,7 @@ $text['label-answer_range']['sv-se'] = "Svarstid";
 $text['label-answer_range']['uk'] = "";
 $text['label-answer_range']['de-at'] = "Antwort Rate";
 $text['label-answer_range']['he'] = "";
+$text['label-answer_range']['ru-ru'] = "Отвечен";
 
 $text['label-answer']['en-us'] = "Answer";
 $text['label-answer']['es-cl'] = "Respuesta";
@@ -1092,6 +1190,7 @@ $text['label-answer']['sv-se'] = "Besvarat";
 $text['label-answer']['uk'] = "";
 $text['label-answer']['de-at'] = "Antwort";
 $text['label-answer']['he'] = "מענה";
+$text['label-answer']['ru-ru'] = "Ответ";
 
 $text['label-aloc']['en-us'] = "ALOC";
 $text['label-aloc']['es-cl'] = "ALOC";
@@ -1103,6 +1202,7 @@ $text['label-aloc']['sv-se'] = "ALOC";
 $text['label-aloc']['uk'] = "";
 $text['label-aloc']['de-at'] = "ALOC";
 $text['label-aloc']['he'] = "";
+$text['label-aloc']['ru-ru'] = "ALOC";
 
 $text['label-accountcode']['en-us'] = "Account Code";
 $text['label-accountcode']['es-cl'] = "Código de Cuenta";
@@ -1114,6 +1214,7 @@ $text['label-accountcode']['sv-se'] = "Account Code";
 $text['label-accountcode']['uk'] = "";
 $text['label-accountcode']['de-at'] = "Account Code";
 $text['label-accountcode']['he'] = "קוד חשבון";
+$text['label-accountcode']['ru-ru'] = "Учетный код";
 
 $text['label-a-leg']['en-us'] = "A-leg";
 $text['label-a-leg']['es-cl'] = "A-leg";
@@ -1125,6 +1226,7 @@ $text['label-a-leg']['sv-se'] = "A-part";
 $text['label-a-leg']['uk'] = "";
 $text['label-a-leg']['de-at'] = "A-Ast";
 $text['label-a-leg']['he'] = "";
+$text['label-a-leg']['ru-ru'] = "A-часть";
 
 $text['description_search']['en-us'] = "<u>Note</u>: Source, Destination and Caller ID (CID) Name fields support the use of an <i>asterisk</i> ('*') as a wildcard character.";
 $text['description_search']['es-cl'] = "<u>Atención</u>: Origen, Destino y el identificador de llamadas (CID) campos Nombre apoyan el uso de un <i>asterisco</i> ('*') como carácter comodín.";
@@ -1136,6 +1238,7 @@ $text['description_search']['sv-se'] = "Notera : Källa, Destination och Nummerp
 $text['description_search']['uk'] = "";
 $text['description_search']['de-at'] = "Info: Quelle, Ziel und Anruferkennung (CID) Name Felder unterstützen die Verwendung von Stern ('*') als Wildcard Zeichen.";
 $text['description_search']['he'] = "";
+$text['description_search']['ru-ru'] = "<u>Заметка</u>: Поля 'Источник', 'Назначение' и 'CID Имя' поддерживают использование <i>звездочки</i> ('*') в качестве подстановочного знака.";
 
 $text['description-7']['en-us'] = "Call variables, call flow, timing information, and other useful call details.";
 $text['description-7']['es-cl'] = "variables de llamada, flujo, información temporal y otros detalles útiles.";
@@ -1147,6 +1250,7 @@ $text['description-7']['sv-se'] = "Samtalsvariabler, samtalsflöden, tidsinforma
 $text['description-7']['uk'] = "";
 $text['description-7']['de-at'] = "Anruf Variablen, Ruf-Ablauf, Zeit Information und andere nützliche Anruf Details";
 $text['description-7']['he'] = "";
+$text['description-7']['ru-ru'] = "Переменные вызова, поток вызовов, информация о сроках и другие полезные детали вызова.";
 
 $text['description-6']['en-us'] = "The information contains caller id name and number, channel data, ";
 $text['description-6']['es-cl'] = "La información contiene el nombre y número del caller id, datos del canal, ";
@@ -1158,6 +1262,7 @@ $text['description-6']['sv-se'] = "Informationen innehåller presentation av nam
 $text['description-6']['uk'] = "";
 $text['description-6']['de-at'] = "Die Information beinhaltet Anruferkennung (Name, Nummer) und Kanal Daten.";
 $text['description-6']['he'] = "";
+$text['description-6']['ru-ru'] = "Информация содержит имя и номер идентификатора вызывающего абонента, данные канала, ";
 
 $text['description-5']['en-us'] = "A detailed view of the call and all information regarding it.";
 $text['description-5']['es-cl'] = "Una vista detallada de la información de la llamada.";
@@ -1169,6 +1274,7 @@ $text['description-5']['sv-se'] = "En detaljerad vy av samtalet och information 
 $text['description-5']['uk'] = "";
 $text['description-5']['de-at'] = "Eine detaillierte Ansicht des Anrufes mit allen zugehörigen Informationen.";
 $text['description-5']['he'] = "";
+$text['description-5']['ru-ru'] = "Подробный просмотр вызова и вся информация, относящаяся к нему.";
 
 $text['description-4']['en-us'] = "Records in the call list can be saved locally using the Export button.";
 $text['description-4']['es-cl'] = "A continuación, ver las llamadas de la lista o descargarlos usando el botón Exportar.";
@@ -1180,6 +1286,7 @@ $text['description-4']['sv-se'] = "Sedan visa samtalen i listan eller hämta dem
 $text['description-4']['uk'] = "";
 $text['description-4']['de-at'] = "Sehen Sie dann die Anrufe in der Liste oder laden Sie sie auf die Schaltfläche Export verwenden.";
 $text['description-4']['he'] = "";
+$text['description-4']['ru-ru'] = "Записи в списке вызовов могут быть сохранены локально с помощью кнопки 'Экспорт'";
 
 $text['description-3']['en-us'] = "Use the fields to filter the information for the specific call records that are desired.";
 $text['description-3']['es-cl'] = "Use los campos para filtrar la información. ";
@@ -1191,6 +1298,7 @@ $text['description-3']['sv-se'] = "Använd fälten för att filtrera fram det ö
 $text['description-3']['uk'] = "";
 $text['description-3']['de-at'] = "Benutzen Sie die Felder um Informationen betreffend spezifischer Anrufe zu filtern.";
 $text['description-3']['he'] = "";
+$text['description-3']['ru-ru'] = "Используйте поля для фильтрации информации для конкретных записей вызовов, которые вам нужны.";
 
 $text['description-2']['en-us'] = "The information contains source, destination, duration, and other useful call details.";
 $text['description-2']['es-cl'] = "La información contiene origen, destino, duración y otra información útil.";
@@ -1202,6 +1310,7 @@ $text['description-2']['sv-se'] = "Informationen innehåller källa, destination
 $text['description-2']['uk'] = "";
 $text['description-2']['de-at'] = "Die Information beinhaltet Quelle, Ziel, Dauer und andere nützliche Details.";
 $text['description-2']['he'] = "";
+$text['description-2']['ru-ru'] = "нформация содержит источник, адресат, продолжительность и другие полезные детали вызова.";
 
 $text['description']['en-us'] = "Call Detail Records (CDRs) are detailed information on the calls.";
 $text['description']['es-cl'] = "Los registros de detalle de llamadas (CDR) contienen información detallada de las llamadas.";
@@ -1213,6 +1322,7 @@ $text['description']['sv-se'] = "Detaljerad Samtalsinformation (CDR) är detalje
 $text['description']['uk'] = "Редагування інформації облікового запису";
 $text['description']['de-at'] = "Kontoinformationen bearbeiten";
 $text['description']['he'] = "ערוך את פרטי החשבון";
+$text['description']['ru-ru'] = "Подробные сведения о вызовах.";
 
 $text['button-update']['en-us'] = "Update";
 $text['button-update']['es-cl'] = "Actualización";
@@ -1224,6 +1334,7 @@ $text['button-update']['sv-se'] = "Uppdatera";
 $text['button-update']['uk'] = "Оновити";
 $text['button-update']['de-at'] = "Aktualisieren";
 $text['button-update']['he'] = "עדכון";
+$text['button-update']['ru-ru'] = "Обновить";
 
 $text['button-statistics']['en-us'] = "Statistics";
 $text['button-statistics']['es-cl'] = "Estadísticas";
@@ -1235,6 +1346,7 @@ $text['button-statistics']['sv-se'] = "Statistik";
 $text['button-statistics']['uk'] = "";
 $text['button-statistics']['de-at'] = "Statistik";
 $text['button-statistics']['he'] = "סטטיסטיקה";
+$text['button-statistics']['ru-ru'] = "Статистика";
 
 $text['button-missed']['en-us'] = "Missed Calls";
 $text['button-missed']['es-cl'] = "Llamadas Perdidas";
@@ -1246,6 +1358,7 @@ $text['button-missed']['sv-se'] = "Missade Samtal";
 $text['button-missed']['uk'] = "";
 $text['button-missed']['de-at'] = "Verpasste Anrufe";
 $text['button-missed']['he'] = "שיחות שלא נענו";
+$text['button-missed']['ru-ru'] = "Пропущенные вызова";
 
 $text['button-extension_summary']['en-us'] = "Extension Summary";
 $text['button-extension_summary']['es-cl'] = "Resumen Extensión";
@@ -1257,6 +1370,7 @@ $text['button-extension_summary']['sv-se'] = "Anknytning Summering";
 $text['button-extension_summary']['uk'] = "";
 $text['button-extension_summary']['de-at'] = "Nebenstellen Statistik";
 $text['button-extension_summary']['he'] = "";
+$text['button-extension_summary']['ru-ru'] = "Всего по внутренним номерам";
 
 $text['button-download_csv']['en-us'] = "Download CSV";
 $text['button-download_csv']['es-cl'] = "Descarga CSV";
@@ -1268,6 +1382,7 @@ $text['button-download_csv']['sv-se'] = "Ladda Ned CSV";
 $text['button-download_csv']['uk'] = "";
 $text['button-download_csv']['de-at'] = "CSV Herunterladen";
 $text['button-download_csv']['he'] = "";
+$text['button-download_csv']['ru-ru'] = "Загрузить в формате CSV";
 
 $text['button-advanced_search']['en-us'] = "Advanced Search";
 $text['button-advanced_search']['es-cl'] = "Búsqueda Avanzada";
@@ -1279,5 +1394,6 @@ $text['button-advanced_search']['sv-se'] = "Avancerad Sökning";
 $text['button-advanced_search']['uk'] = "";
 $text['button-advanced_search']['de-at'] = "Erweiterte Suche";
 $text['button-advanced_search']['he'] = "חיפוש מתקדם";
+$text['button-advanced_search']['ru-ru'] = "Расширенный поиск";
 
 ?>

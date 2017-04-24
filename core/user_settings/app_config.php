@@ -18,6 +18,7 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Configurações de conta de utilizador pode ser alterado pelo utilizador.";
 		$apps[$x]['description']['pt-br'] = "Configurações das contas podem ser alteradas pelo usuário.";
+		$apps[$x]['description']['ru-ru'] = "Настройки учетной записи могут быть изменены пользователем";
 
 	//permission details
 		$y=0;

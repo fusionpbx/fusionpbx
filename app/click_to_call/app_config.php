@@ -18,6 +18,7 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Originar chamadas com um URL.";
 		$apps[$x]['description']['pt-br'] = "Gera chamadas a partir de um URL";
+		$apps[$x]['description']['ru-ru'] = "Создание исходящих вызовов с помощью вызова URL";
 
 	//permission details
 		$y=0;

@@ -6,6 +6,7 @@ $apps[$x]['menu'][0]['title']['fr-fr'] = "Mise à jour";
 $apps[$x]['menu'][0]['title']['pt-pt'] = "Actualizar BD";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Atualizar banco de dados";
 $apps[$x]['menu'][0]['title']['pl'] = "Aktualizacja";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Обновление";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Uppgardera";
 $apps[$x]['menu'][0]['title']['uk'] = "Оновлення";
 $apps[$x]['menu'][0]['title']['de-at'] = "Aktualisierung";

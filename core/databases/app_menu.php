@@ -6,6 +6,7 @@ $apps[$x]['menu'][0]['title']['fr-fr'] = "BDD";
 $apps[$x]['menu'][0]['title']['pt-pt'] = "Base de Dados";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Base de dados";
 $apps[$x]['menu'][0]['title']['pl'] = "Bazy danych";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Базы данных";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Databaser";
 $apps[$x]['menu'][0]['title']['uk'] = "Бази даних";
 $apps[$x]['menu'][0]['title']['de-at'] = "Datenbanken";

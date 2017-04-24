@@ -8,6 +8,7 @@ $apps[$x]['menu'][0]['title']['fr-ca'] = "Command";
 $apps[$x]['menu'][0]['title']['pt-pt'] = "Comandos";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Comandos";
 $apps[$x]['menu'][0]['title']['pl'] = "Polecenie";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Выполнение команд";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Kommando";
 $apps[$x]['menu'][0]['title']['uk'] = "Команди";
 $apps[$x]['menu'][0]['title']['de-at'] = "Befehl";

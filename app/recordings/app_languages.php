@@ -10,6 +10,7 @@ $text['title-edit']['sv-se'] = "Inspelning";
 $text['title-edit']['uk'] = "Запис";
 $text['title-edit']['de-de'] = "Aufnahmen";
 $text['title-edit']['de-at'] = "Aufnahmen";
+$text['title-edit']['ru-ru'] = "Запись";
 
 $text['title-add']['en-us'] = "Add Recording";
 $text['title-add']['es-cl'] = "Agregar Grabación";
@@ -21,6 +22,7 @@ $text['title-add']['sv-se'] = "Lägg Till Inspelning";
 $text['title-add']['uk'] = "Додати запис";
 $text['title-add']['de-de'] = "Aufnahmen hinzufügen";
 $text['title-add']['de-at'] = "Aufnahmen hinzufügen";
+$text['title-add']['ru-ru'] = "Добавить запись";
 
 $text['title-recordings']['en-us'] = "Recordings";
 $text['title-recordings']['es-cl'] = "Grabaciones";
@@ -32,6 +34,7 @@ $text['title-recordings']['sv-se'] = "Inspelningar";
 $text['title-recordings']['uk'] = "Записи";
 $text['title-recordings']['de-de'] = "Aufnahmen";
 $text['title-recordings']['de-at'] = "Aufnahmen";
+$text['title-recordings']['ru-ru'] = "Записи";
 
 $text['message-uploaded']['en-us'] = "File Uploaded";
 $text['message-uploaded']['es-cl'] = "Subida de Archivos";
@@ -43,6 +46,7 @@ $text['message-uploaded']['sv-se'] = "File Uppladdade";
 $text['message-uploaded']['uk'] = "файл Завантажено";
 $text['message-uploaded']['de-de'] = "Datei hochgeladen";
 $text['message-uploaded']['de-at'] = "Datei hochgeladen";
+$text['message-uploaded']['ru-ru'] = "Файл загружен";
 
 $text['label-uploaded']['en-us'] = "Uploaded";
 $text['label-uploaded']['es-cl'] = "Subir";
@@ -55,6 +59,7 @@ $text['label-uploaded']['uk'] = "Завантажено";
 $text['label-uploaded']['de-de'] = "Hochgeladen";
 $text['label-uploaded']['de-at'] = "Hochgeladen";
 $text['label-uploaded']['he'] = "הוטען";
+$text['label-uploaded']['ru-ru'] = "Загружено";
 
 $text['label-upload']['en-us'] = "File Path";
 $text['label-upload']['es-cl'] = "Archivo a subir";
@@ -66,6 +71,7 @@ $text['label-upload']['sv-se'] = "Sökväg";
 $text['label-upload']['uk'] = "Шлях до файла";
 $text['label-upload']['de-de'] = "Dateipfad";
 $text['label-upload']['de-at'] = "Dateipfad";
+$text['label-upload']['ru-ru'] = "Путь к файлу";
 
 $text['label-tools']['en-us'] = "Tools";
 $text['label-tools']['es-cl'] = "Instrumentos";
@@ -77,6 +83,7 @@ $text['label-tools']['sv-se'] = "Verktyg";
 $text['label-tools']['uk'] = "Параметри";
 $text['label-tools']['de-de'] = "Funktionen";
 $text['label-tools']['de-at'] = "Funktionen";
+$text['label-tools']['ru-ru'] = "Инструменты";
 
 $text['label-recording_name']['en-us'] = "Recording Name";
 $text['label-recording_name']['es-cl'] = "Nombre de la grabación";
@@ -88,6 +95,7 @@ $text['label-recording_name']['sv-se'] = "Namn på inspelning";
 $text['label-recording_name']['uk'] = "Назва запису";
 $text['label-recording_name']['de-de'] = "Name der Aufnahme";
 $text['label-recording_name']['de-at'] = "Name der Aufnahme";
+$text['label-recording_name']['ru-ru'] = "Название записи";
 
 $text['label-play']['en-us'] = "Play";
 $text['label-play']['es-cl'] = "Reproducir";
@@ -97,6 +105,7 @@ $text['label-play']['pt-br'] = "Tocar";
 $text['label-play']['pl'] = "Odtwórz";
 $text['label-play']['sv-se'] = "Spela Upp";
 $text['label-play']['uk'] = "Відтворити";
+$text['label-play']['ru-ru'] = "Проиграть";
 $text['label-play']['de-de'] = "Abspielen";
 $text['label-play']['de-at'] = "Abspielen";
 
@@ -110,6 +119,7 @@ $text['label-pause']['sv-se'] = "Paus";
 $text['label-pause']['uk'] = "Призупинити";
 $text['label-pause']['de-de'] = "Pause";
 $text['label-pause']['de-at'] = "Pause";
+$text['label-pause']['ru-ru'] = "Пайза";
 
 $text['label-file_name']['en-us'] = "File Name";
 $text['label-file_name']['es-cl'] = "Nombre del Archivo";
@@ -121,6 +131,7 @@ $text['label-file_name']['sv-se'] = "Fil-namn";
 $text['label-file_name']['uk'] = "Назва файлу";
 $text['label-file_name']['de-de'] = "Dateiname";
 $text['label-file_name']['de-at'] = "Dateiname";
+$text['label-file_name']['ru-ru'] = "Имя файла";
 
 $text['label-file-size']['en-us'] = "File Size";
 $text['label-file-size']['es-cl'] = "Tamaño del archivo";
@@ -132,6 +143,7 @@ $text['label-file-size']['sv-se'] = "Filstorlek";
 $text['label-file-size']['uk'] = "Розмір файлу";
 $text['label-file-size']['de-de'] = "Dateigröße";
 $text['label-file-size']['de-at'] = "Dateigröße";
+$text['label-file-size']['ru-ru'] = "Размер файла";
 
 $text['label-file']['en-us'] = "Filename (Download)";
 $text['label-file']['es-cl'] = "Nombre de archivo (Descargar)";
@@ -143,6 +155,7 @@ $text['label-file']['sv-se'] = "Fil Ej Funnen";
 $text['label-file']['uk'] = "";
 $text['label-file']['de-de'] = "Dateiname (Download)";
 $text['label-file']['de-at'] = "Dateiname (Download)";
+$text['label-file']['ru-ru'] = "Имя файла (для загрузки)";
 
 $text['label-edit-recording']['en-us'] = "Please provide: Recording Name (play)";
 $text['label-edit-recording']['es-cl'] = "Por favor indique: Nombre de la grabación (reproducir)";
@@ -152,6 +165,7 @@ $text['label-edit-recording']['pt-br'] = "Por favor indique: Nome da gravação 
 $text['label-edit-recording']['pl'] = "Wprowadź: Nazwę nagrania (do odsłuchania)";
 $text['label-edit-recording']['sv-se'] = "Ange: Namn på inspelning (spela upp)";
 $text['label-edit-recording']['uk'] = "";
+$text['label-edit-recording']['ru-ru'] = "Укажите: название записи (для воспроизведения)";
 $text['label-edit-recording']['de-de'] = "Bitte geben Sie folgendes an: Name der Aufnahme (Abspielen)";
 $text['label-edit-recording']['de-at'] = "Bitte geben Sie folgendes an: Name der Aufnahme (Abspielen)";
 
@@ -163,6 +177,7 @@ $text['label-edit-file']['pt-br'] = "Por favor indique: Nome de ficheiro (downlo
 $text['label-edit-file']['pl'] = "Wprowadź: Nazwę pliku (do pobrania)";
 $text['label-edit-file']['sv-se'] = "Ange: Filnamn (ladda ned)";
 $text['label-edit-file']['uk'] = "";
+$text['label-edit-file']['ru-ru'] = "Укажите: имя файла (для загрузки)";
 $text['label-edit-file']['de-de'] = "Bitte geben Sie folgendes an: Dateiname (Herunterladen)";
 $text['label-edit-file']['de-at'] = "Bitte geben Sie folgendes an: Dateiname (Herunterladen)";
 
@@ -174,6 +189,7 @@ $text['label-download']['pt-br'] = "Download";
 $text['label-download']['pl'] = "Pobierz";
 $text['label-download']['sv-se'] = "Ladda Ned";
 $text['label-download']['uk'] = "Завантажини";
+$text['label-download']['ru-ru'] = "Загрузить";
 $text['label-download']['de-de'] = "Herunterladen";
 $text['label-download']['de-at'] = "Herunterladen";
 
@@ -187,6 +203,7 @@ $text['header']['sv-se'] = "Ladda Upp Inspelning";
 $text['header']['uk'] = "Вивантажити запис";
 $text['header']['de-de'] = "Aufnahme hochladen";
 $text['header']['de-at'] = "Aufnahme hochladen";
+$text['header']['ru-ru'] = "Загрузить запись";
 
 $text['description-recording']['en-us'] = "A name for the recording (not parsed).";
 $text['description-recording']['es-cl'] = "Nombre de la grabación.";
@@ -198,6 +215,7 @@ $text['description-recording']['sv-se'] = "Namn på Inspelning.";
 $text['description-recording']['uk'] = "Ім'я для запису (не розбирається).";
 $text['description-recording']['de-de'] = "Ein Name für die Aufnahme.";
 $text['description-recording']['de-at'] = "Ein Name für die Aufnahme.";
+$text['description-recording']['ru-ru'] = "Имя для записи (не анализируется).";
 
 $text['description-file']['en-us'] = "Name of the file. example.wav";
 $text['description-file']['es-cl'] = "Nombre del archivo. ejemplo.wav";
@@ -209,6 +227,7 @@ $text['description-file']['sv-se'] = "Namn på filen. exempel: inspelning.wav";
 $text['description-file']['uk'] = "";
 $text['description-file']['de-de'] = "Dateiname (z.B.: example.wav)";
 $text['description-file']['de-at'] = "Dateiname (z.B.: example.wav)";
+$text['description-file']['ru-ru'] = "Имя файла. example.wav";
 
 $text['description']['en-us'] = "Dial *732 to create a recording, or (for best results) upload a 16bit 8khz/16khz mono WAV file.";
 $text['description']['es-cl'] = "Para realizar una grabación marque *732 o puede crear un archivo en formato WAV a 16 bit 8khz/16khz Mono y luego copiarlo en el siguiente directorio y refrezcar la página para reproducirlo.";
@@ -220,5 +239,6 @@ $text['description']['sv-se'] = "För att göra en inspelning ring * 732 eller s
 $text['description']['uk'] = "Редагування інформації облікового запису";
 $text['description']['de-de'] = "Wählen Sie *732 um eine Aufnahme direkt vom Telefon zu starten oder laden Sie eine 16bit 8/16kHz mono WAV Datei hoch.";
 $text['description']['de-at'] = "Wählen Sie *732 um eine Aufnahme direkt vom Telefon zu starten oder laden Sie eine 16bit 8/16kHz mono WAV Datei hoch.";
+$text['description']['ru-ru'] = "Наберите *732 для создания записи, или (для получения наилучших результатов) загрузите 16bit 8khz/16khz mono WAV файл.";
 
 ?>

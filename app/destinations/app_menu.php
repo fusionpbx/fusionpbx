@@ -8,6 +8,7 @@ $apps[$x]['menu'][0]['title']['fr-ca'] = "Cibler";
 $apps[$x]['menu'][0]['title']['pt-pt'] = "Destinos";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Destinos";
 $apps[$x]['menu'][0]['title']['pl'] = "Destynacje";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Направления";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Destinationer";
 $apps[$x]['menu'][0]['title']['uk'] = "Номери";
 $apps[$x]['menu'][0]['title']['ro'] = "Destinații";

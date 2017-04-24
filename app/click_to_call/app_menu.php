@@ -10,6 +10,7 @@
 	$apps[$x]['menu'][0]['title']['fr-ch'] = "";
 	$apps[$x]['menu'][0]['title']['pt-pt'] = "Clicar para Chamadas";
 	$apps[$x]['menu'][0]['title']['pt-br'] = "";
+	$apps[$x]['menu'][0]['title']['ru-ru'] = "Вызов по клику";
 	$apps[$x]['menu'][0]['uuid'] = "f862556f-9ddd-2697-fdf4-bed08ec63aa5";
 	$apps[$x]['menu'][0]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
 	$apps[$x]['menu'][0]['category'] = "internal";
