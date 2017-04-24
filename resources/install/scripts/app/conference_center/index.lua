@@ -63,6 +63,12 @@
 --answer the call
 	session:answer();
 
+--get record_ext
+	record_ext = session:getVariable("record_ext");
+	if (not record_ext) then
+			record_ext = "wav";
+	end
+
 --define a function to send email
 	function send_email(email, attachment, default_language, default_dialect)
 
@@ -769,7 +775,7 @@
 					end
 				--record the conference
 					if (record == "true") then
-						cmd="sched_api (+5 none lua app/conference_center/resources/scripts/start_recording.lua "..meeting_uuid.." "..domain_name.." )";
+						cmd="sched_api (+5 none lua app/conference_center/resources/scripts/start_recording.lua "..meeting_uuid.." "..domain_name.." "..record_ext.." )";
 						api:executeString(cmd);
 					end
 				--send the call to the conference
