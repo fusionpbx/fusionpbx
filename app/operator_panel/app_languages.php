@@ -235,7 +235,7 @@ $text['label-call_group']['de-de'] = "Rufgruppe";
 $text['label-call_group']['de-at'] = "Rufgruppe";
 $text['label-call_group']['he'] = "קבוצת חיוג";
 $text['label-call_group']['it-it'] = "Chiamata di Gruppo";
-$text['label-call_group']['ru-ru'] = "Вызов Группы";
+$text['label-call_group']['ru-ru'] = "Группы вызова";
 
 $text['label-call_direction']['en-us'] = "Call Direction";
 $text['label-call_direction']['es-cl'] = "Dirección de la llamada";
