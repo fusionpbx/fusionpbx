@@ -17,6 +17,7 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "O menu pode ser personalizado utilizando esta ferramenta.";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['ru-ru'] = "Меню можно настроить с помощью этого инструмента";
 
 	//permission details
 		$y=0;

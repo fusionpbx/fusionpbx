@@ -19,6 +19,7 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Utiliza SVG para mostrar o tráfego de rede.";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['ru-ru'] = "Использование SVG для отображения сетевого трафика.";
 
 	//permission details
 		$y=0;

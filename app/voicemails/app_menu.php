@@ -4,6 +4,7 @@ $apps[$x]['menu'][0]['title']['en-us'] = "Voicemail";
 $apps[$x]['menu'][0]['title']['fr-fr'] = "Messagerie Vocale";
 $apps[$x]['menu'][0]['title']['pl'] = "Poczta głosowa";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Correio de voz";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Голосовая почта";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Röstbrevlåda";
 $apps[$x]['menu'][0]['title']['uk'] = "Голосова пошта";
 $apps[$x]['menu'][0]['title']['de-at'] = "Mailbox";

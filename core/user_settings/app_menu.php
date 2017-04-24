@@ -6,6 +6,7 @@ $apps[$x]['menu'][1]['title']['fr-fr'] = "Tableau de bord de l'utilisateur";
 $apps[$x]['menu'][1]['title']['pt-pt'] = "Painel de Controle do Usuário";
 $apps[$x]['menu'][1]['title']['pt-br'] = "Painel de controle do usuário (Dashboard)";
 $apps[$x]['menu'][1]['title']['pl'] = "Panel użytkowników";
+$apps[$x]['menu'][1]['title']['ru-ru'] = "Панель пользователя";
 $apps[$x]['menu'][1]['title']['he'] = "ממשק משתמש";
 $apps[$x]['menu'][1]['title']['uk'] = "Панель користувача";
 $apps[$x]['menu'][1]['title']['sv-se'] = "Användarpanel";

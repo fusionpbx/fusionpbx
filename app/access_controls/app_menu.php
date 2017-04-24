@@ -9,6 +9,7 @@ $apps[$x]['menu'][0]['title']['he'] = "בקרת גישה";
 $apps[$x]['menu'][0]['title']['de-at'] = " Zugriffskontrolle";
 $apps[$x]['menu'][0]['title']['pl'] = "Kontrola dostępu";
 $apps[$x]['menu'][0]['title']['ro'] = "Controale de acces";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Контроль доступа";
 $apps[$x]['menu'][0]['title']['uk'] = "контроль доступу";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Åtkomstkontroll";
 $apps[$x]['menu'][0]['title']['ar-eg'] = "عناصر التحكم في الوصول";

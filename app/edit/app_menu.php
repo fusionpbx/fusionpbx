@@ -12,6 +12,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-ch'] = "";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Editor de Scripts";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "";
+	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Редактор скриптов";
 	$apps[$x]['menu'][$y]['uuid'] = "f1905fec-0577-daef-6045-59d09b7d3f94";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";
 	$apps[$x]['menu'][$y]['category'] = "external";
@@ -30,6 +31,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-ch'] = "";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Editor XML";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "";
+	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Редактор XML";
 	$apps[$x]['menu'][$y]['uuid'] = "16013877-606a-2a05-7d6a-c1b215839131";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";
 	$apps[$x]['menu'][$y]['category'] = "external";
@@ -48,6 +50,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-ch'] = "";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Editor de Provisionamento";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "";
+	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Редактор шаблонов автоконфигурации";
 	$apps[$x]['menu'][$y]['uuid'] = "57773542-a565-1a29-605d-6535da1a0870";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";
 	$apps[$x]['menu'][$y]['category'] = "external";
@@ -66,6 +69,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-ch'] = "";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Editor de PHP";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "";
+	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Редактор PHP";
 	$apps[$x]['menu'][$y]['uuid'] = "eae1f2d6-789b-807c-cc26-44501e848693";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";
 	$apps[$x]['menu'][$y]['category'] = "external";
@@ -84,6 +88,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-ch'] = "";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Editor Gramático";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "";
+	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Редактор грамматики";
 	$apps[$x]['menu'][$y]['uuid'] = "c3db739e-89f9-0fa2-44ce-0f4c2ff43b1a";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";
 	$apps[$x]['menu'][$y]['category'] = "external";

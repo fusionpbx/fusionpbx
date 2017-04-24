@@ -6,6 +6,7 @@ $apps[$x]['menu'][0]['title']['fr-fr'] = "Confs par Défaut";
 $apps[$x]['menu'][0]['title']['pt-pt'] = "Predefinições";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Configurações";
 $apps[$x]['menu'][0]['title']['pl'] = "Ustawienia domyślne";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Настройки по умолчанию";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Standard Inställningar";
 $apps[$x]['menu'][0]['title']['uk'] = "Налаштування за замовчуванням";
 $apps[$x]['menu'][0]['title']['de-at'] = "Standardeinstellungen";

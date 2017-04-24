@@ -6,6 +6,7 @@ $apps[$x]['menu'][0]['title']['fr-fr'] = "Menu SVI";
 $apps[$x]['menu'][0]['title']['pt-pt'] = "Menu de IVR";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Menu de IVR";
 $apps[$x]['menu'][0]['title']['pl'] = "Zapowiedzi głosowe (IVR)";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Голосовые меню (IVR)";
 $apps[$x]['menu'][0]['title']['sv-se'] = "IVR Meny";
 $apps[$x]['menu'][0]['title']['de-at'] = "Automatische Vermittlung";
 $apps[$x]['menu'][0]['uuid'] = "72259497-a67b-e5aa-cac2-0f2dcef16308";

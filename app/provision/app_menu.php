@@ -2,6 +2,7 @@
 
 	//$apps[$x]['menu'][0]['title']['en-us'] = "Provision";
 	//$apps[$x]['menu'][0]['title']['fr-fr'] = "Provision";
+	//$apps[$x]['menu'][0]['title']['ru-ru'] = "Обеспечение";
 	//$apps[$x]['menu'][0]['uuid'] = "";
 	//$apps[$x]['menu'][0]['parent_uuid'] = "";
 	//$apps[$x]['menu'][0]['category'] = "internal";

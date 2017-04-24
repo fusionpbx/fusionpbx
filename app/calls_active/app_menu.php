@@ -6,6 +6,7 @@ $apps[$x]['menu'][0]['title']['fr-fr'] = "Appels en cours";
 $apps[$x]['menu'][0]['title']['pt-pt'] = "Chamadas Activas";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Chamadas ativas";
 $apps[$x]['menu'][0]['title']['pl'] = "Aktywne połączenia";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Активные вызовы";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Aktiva samtal";
 $apps[$x]['menu'][0]['title']['uk'] = "Активні дзвінки";
 $apps[$x]['menu'][0]['title']['de-at'] = "Aktive Gespräche";

@@ -18,5 +18,6 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['ru-ru'] = "Предоставляет платформу проверки подлинности с плагинами для проверки авторизации пользователя.";
 
 ?>

@@ -10,6 +10,7 @@ $text['title-voicemails']['sv-se'] = "Röstmeddelande";
 $text['title-voicemails']['uk'] = "Голосова пошта";
 $text['title-voicemails']['de-at'] = "Mailboxen";
 $text['title-voicemails']['he'] = "תאים קוליים";
+$text['title-voicemails']['ru-ru'] = "Голосовая почта";
 
 $text['title-voicemail_option']['en-us'] = "Voicemail Option";
 $text['title-voicemail_option']['es-cl'] = "Opción de correo de voz";
@@ -21,6 +22,7 @@ $text['title-voicemail_option']['sv-se'] = "Röstbrevlåda Inställning";
 $text['title-voicemail_option']['uk'] = "Параметри голосової пошти";
 $text['title-voicemail_option']['de-at'] = "Mailbox Option";
 $text['title-voicemail_option']['he'] = "";
+$text['title-voicemail_option']['ru-ru'] = "Опции Голосовой почты";
 
 $text['title-voicemail_messages']['en-us'] = "Voicemail Messages";
 $text['title-voicemail_messages']['es-cl'] = "Mensajes de correo de voz";
@@ -32,6 +34,7 @@ $text['title-voicemail_messages']['sv-se'] = "Röstbrevlåda Meddelanden";
 $text['title-voicemail_messages']['uk'] = "Повідомлення голосової пошти";
 $text['title-voicemail_messages']['de-at'] = "Mailbox Nachrichten";
 $text['title-voicemail_messages']['he'] = "הודעות תא קולי";
+$text['title-voicemail_messages']['ru-ru'] = "Сообщения голосовой почты";
 
 $text['title-voicemail_message']['en-us'] = "Voicemail Message";
 $text['title-voicemail_message']['es-cl'] = "Mensaje de correo de voz";
@@ -43,6 +46,7 @@ $text['title-voicemail_message']['sv-se'] = "Röstbrevlåda Meddelande";
 $text['title-voicemail_message']['uk'] = "Повідомлення голосової пошти";
 $text['title-voicemail_message']['de-at'] = "Mailbox Nachricht";
 $text['title-voicemail_message']['he'] = "הודעה תא קולי";
+$text['title-voicemail_message']['ru-ru'] = "Сообщение голосовой почты";
 
 $text['title-voicemail']['en-us'] = "Voicemail";
 $text['title-voicemail']['es-cl'] = "Correo de Voz";
@@ -54,6 +58,7 @@ $text['title-voicemail']['sv-se'] = "Röstbrevlåda";
 $text['title-voicemail']['uk'] = "Голосова пошта";
 $text['title-voicemail']['de-at'] = "Mailbox";
 $text['title-voicemail']['he'] = "תא קולי";
+$text['title-voicemail']['ru-ru'] = "Голосовая почта";
 
 $text['option-voicemail_file_listen']['en-us'] = "Listen Link (Login Required)";
 $text['option-voicemail_file_listen']['es-cl'] = "Escuchar Link (Se requiere entrar)";
@@ -65,6 +70,7 @@ $text['option-voicemail_file_listen']['sv-se'] = "Lyssna-länk (Måste Logga In)
 $text['option-voicemail_file_listen']['uk'] = "Посилання на прослуховування (Входити обов’язково)";
 $text['option-voicemail_file_listen']['de-at'] = "Link zur Nachricht (Login erforderlich)";
 $text['option-voicemail_file_listen']['he'] = "";
+$text['option-voicemail_file_listen']['ru-ru'] = "Ссылка для прослушивания (требуется вход в систему)";
 
 $text['option-voicemail_file_link']['en-us'] = "Download Link (No Login Required)";
 $text['option-voicemail_file_link']['es-cl'] = "Enlace de descarga (No se requiere conexión)";
@@ -76,6 +82,7 @@ $text['option-voicemail_file_link']['sv-se'] = "Nedladdnings-länk (Ingen Inlogg
 $text['option-voicemail_file_link']['uk'] = "Посилання на завантаження (Входити не обов’язково)";
 $text['option-voicemail_file_link']['de-at'] = "Link zur Nachricht (kein Login erforderlich)";
 $text['option-voicemail_file_link']['he'] = "";
+$text['option-voicemail_file_link']['ru-ru'] = "Ссылка для загрузки (не требуется вход в систему)";
 
 $text['option-voicemail_file_attach']['en-us'] = "Audio File Attachment";
 $text['option-voicemail_file_attach']['es-cl'] = "Archivo Adjunto Audio";
@@ -87,6 +94,7 @@ $text['option-voicemail_file_attach']['sv-se'] = "Ljudfil Bifogad";
 $text['option-voicemail_file_attach']['uk'] = "Приєднати аудіофайл";
 $text['option-voicemail_file_attach']['de-at'] = "Audiodatei als Anhang";
 $text['option-voicemail_file_attach']['he'] = "";
+$text['option-voicemail_file_attach']['ru-ru'] = "Прикрепление аудиофайлов";
 
 $text['message-toggled']['en-us'] = "Toggle Completed";
 $text['message-toggled']['es-cl'] = "Alternar Completado";
@@ -101,6 +109,7 @@ $text['message-toggled']['de-at'] = "Toggle Completed";
 $text['message-toggled']['ro'] = "Completat toggle";
 $text['message-toggled']['fa'] = "";
 $text['message-toggled']['ar-eg'] = "الانتهاء من تبديل";
+$text['message-toggled']['ru-ru'] = "Переключение выполнено";
 
 $text['message-messages_not_found']['en-us'] = "No messages found.";
 $text['message-messages_not_found']['es-cl'] = "No hay mensajes encontrados.";
@@ -112,6 +121,7 @@ $text['message-messages_not_found']['sv-se'] = "Inga meddelanden hittades.";
 $text['message-messages_not_found']['uk'] = "Не знайдено повідомлень";
 $text['message-messages_not_found']['de-at'] = "Nachricht nicht gefunden.";
 $text['message-messages_not_found']['he'] = "לא נמצאו הודעות";
+$text['message-messages_not_found']['ru-ru'] = "Сообщений не найдено.";
 
 $text['label-voicemail_uuid']['en-us'] = "Voicemail UUID";
 $text['label-voicemail_uuid']['es-cl'] = "UUID";
@@ -123,6 +133,7 @@ $text['label-voicemail_uuid']['sv-se'] = "Röstbrevlåda UUID";
 $text['label-voicemail_uuid']['uk'] = "UUID голосової пошти";
 $text['label-voicemail_uuid']['de-at'] = "Mailbox UUID";
 $text['label-voicemail_uuid']['he'] = "";
+$text['label-voicemail_uuid']['ru-ru'] = "UUID Голосовой почты";
 
 $text['label-voicemail_password']['en-us'] = "Password";
 $text['label-voicemail_password']['es-cl'] = "Contraseña";
@@ -134,6 +145,7 @@ $text['label-voicemail_password']['sv-se'] = "Lösenord";
 $text['label-voicemail_password']['uk'] = "Пароль";
 $text['label-voicemail_password']['de-at'] = "Mailbox Passwort";
 $text['label-voicemail_password']['he'] = "סיסמא לתא קולי";
+$text['label-voicemail_password']['ru-ru'] = "Пароль";
 
 $text['label-voicemail_alternate_greet_id']['en-us'] = "Alternate Greet ID";
 $text['label-voicemail_alternate_greet_id']['es-cl'] = "";
@@ -145,6 +157,7 @@ $text['label-voicemail_alternate_greet_id']['sv-se'] = "";
 $text['label-voicemail_alternate_greet_id']['uk'] = "";
 $text['label-voicemail_alternate_greet_id']['de-at'] = "";
 $text['label-voicemail_alternate_greet_id']['he'] = "";
+$text['label-voicemail_alternate_greet_id']['ru-ru'] = "Альтернативный приветственный ID";
 
 $text['label-voicemail_sms_to']['en-us'] = "SMS To";
 $text['label-voicemail_sms_to']['es-cl'] = "SMS a";
@@ -156,6 +169,7 @@ $text['label-voicemail_sms_to']['sv-se'] = "";
 $text['label-voicemail_sms_to']['uk'] = "SMS-повідомлення на";
 $text['label-voicemail_sms_to']['de-at'] = "SMS an";
 $text['label-voicemail_sms_to']['he'] = "";
+$text['label-voicemail_sms_to']['ru-ru'] = "SMS для";
 
 $text['label-voicemail_transcription_enabled']['en-us'] = "Transcription Enabled";
 $text['label-voicemail_transcription_enabled']['es-cl'] = "";
@@ -167,6 +181,7 @@ $text['label-voicemail_transcription_enabled']['sv-se'] = "";
 $text['label-voicemail_transcription_enabled']['uk'] = "";
 $text['label-voicemail_transcription_enabled']['de-at'] = "";
 $text['label-voicemail_transcription_enabled']['he'] = "";
+$text['label-voicemail_transcription_enabled']['ru-ru'] = "Транскрипция включена";
 
 $text['label-voicemail_mail_to']['en-us'] = "Mail To";
 $text['label-voicemail_mail_to']['es-cl'] = "Correo a";
@@ -178,6 +193,7 @@ $text['label-voicemail_mail_to']['sv-se'] = "E-post Till";
 $text['label-voicemail_mail_to']['uk'] = "Надсилати на";
 $text['label-voicemail_mail_to']['de-at'] = "Mailbox E-Mail";
 $text['label-voicemail_mail_to']['he'] = "תא קולי לאימייל";
+$text['label-voicemail_mail_to']['ru-ru'] = "Почта для";
 
 $text['label-voicemail_local_after_email']['en-us'] = "Keep Local";
 $text['label-voicemail_local_after_email']['es-cl'] = "Conservar después de enviar";
@@ -189,6 +205,7 @@ $text['label-voicemail_local_after_email']['sv-se'] = "Behåll Lokalt";
 $text['label-voicemail_local_after_email']['uk'] = "Залишати локально";
 $text['label-voicemail_local_after_email']['de-at'] = "Mailbox Nachricht am Server behalten";
 $text['label-voicemail_local_after_email']['he'] = "תא קולי השאר עותק";
+$text['label-voicemail_local_after_email']['ru-ru'] = "Оставлять локально";
 
 $text['label-voicemail_id']['en-us'] = "Voicemail ID";
 $text['label-voicemail_id']['es-cl'] = "ID de correo de voz";
@@ -200,6 +217,7 @@ $text['label-voicemail_id']['sv-se'] = "Röstbrevlåda ID";
 $text['label-voicemail_id']['uk'] = "ID голосової пошти";
 $text['label-voicemail_id']['de-at'] = "Mailbox ID";
 $text['label-voicemail_id']['he'] = "";
+$text['label-voicemail_id']['ru-ru'] = "ID голосовой почты";
 
 $text['label-voicemail_file_attached']['en-us'] = "Attached";
 $text['label-voicemail_file_attached']['es-cl'] = "Adjunto";
@@ -211,6 +229,7 @@ $text['label-voicemail_file_attached']['sv-se'] = "Bifogat";
 $text['label-voicemail_file_attached']['uk'] = "Прикріплено";
 $text['label-voicemail_file_attached']['de-at'] = "im Anhang";
 $text['label-voicemail_file_attached']['he'] = "מצורף";
+$text['label-voicemail_file_attached']['ru-ru'] = "Прикреплено";
 
 $text['label-voicemail_file']['en-us'] = "Voicemail File";
 $text['label-voicemail_file']['es-cl'] = "Correo de Voz Archivo";
@@ -222,6 +241,7 @@ $text['label-voicemail_file']['sv-se'] = "Röstbrevlåda Fil";
 $text['label-voicemail_file']['uk'] = "Файл повідомлення";
 $text['label-voicemail_file']['de-at'] = "Audio Datei";
 $text['label-voicemail_file']['he'] = "תא קולי קובץ";
+$text['label-voicemail_file']['ru-ru'] = "Файл Голосового сообщения";
 
 $text['label-voicemail_enabled']['en-us'] = "Enabled";
 $text['label-voicemail_enabled']['es-cl'] = "Activado";
@@ -233,6 +253,7 @@ $text['label-voicemail_enabled']['sv-se'] = "Aktiverad";
 $text['label-voicemail_enabled']['uk'] = "Включено";
 $text['label-voicemail_enabled']['de-at'] = "Mailbox eingeschaltet";
 $text['label-voicemail_enabled']['he'] = "";
+$text['label-voicemail_enabled']['ru-ru'] = "Включено";
 
 $text['label-voicemail_description']['en-us'] = "Description";
 $text['label-voicemail_description']['es-cl'] = "Descripción";
@@ -244,6 +265,7 @@ $text['label-voicemail_description']['sv-se'] = "Beskrivning";
 $text['label-voicemail_description']['uk'] = "Опис";
 $text['label-voicemail_description']['de-at'] = "Beschreibung";
 $text['label-voicemail_description']['he'] = "תאור";
+$text['label-voicemail_description']['ru-ru'] = "Описание";
 
 $text['label-voicemail_tutorial']['en-us'] = "Play Tutorial";
 $text['label-voicemail_tutorial']['es-cl'] = "";
@@ -255,6 +277,7 @@ $text['label-voicemail_tutorial']['sv-se'] = "";
 $text['label-voicemail_tutorial']['uk'] = "";
 $text['label-voicemail_tutorial']['de-at'] = "";
 $text['label-voicemail_tutorial']['he'] = "";
+$text['label-voicemail_tutorial']['ru-ru'] = "Воспроизвести учебник";
 
 $text['label-tools']['en-us'] = "Tools";
 $text['label-tools']['es-cl'] = "Herramientas";
@@ -266,6 +289,7 @@ $text['label-tools']['sv-se'] = "Verktyg";
 $text['label-tools']['uk'] = "Параметри";
 $text['label-tools']['de-at'] = "Werkzeug";
 $text['label-tools']['he'] = "כלים";
+$text['label-tools']['ru-ru'] = "Параметры";
 
 $text['label-read_epoch']['en-us'] = "Read";
 $text['label-read_epoch']['es-cl'] = "Leer";
@@ -277,6 +301,7 @@ $text['label-read_epoch']['sv-se'] = "Läs";
 $text['label-read_epoch']['uk'] = "Читати";
 $text['label-read_epoch']['de-at'] = "Lesen";
 $text['label-read_epoch']['he'] = "קריאה";
+$text['label-read_epoch']['ru-ru'] = "Читать";
 
 $text['label-play']['en-us'] = "Play";
 $text['label-play']['es-cl'] = "Reproducir";
@@ -288,6 +313,7 @@ $text['label-play']['sv-se'] = "Spela Upp";
 $text['label-play']['uk'] = "Відтворити";
 $text['label-play']['de-at'] = "Play";
 $text['label-play']['he'] = "נגן";
+$text['label-play']['ru-ru'] = "Играть";
 
 $text['label-pause']['en-us'] = "Pause";
 $text['label-pause']['es-cl'] = "Pausa";
@@ -299,6 +325,7 @@ $text['label-pause']['sv-se'] = "Paus";
 $text['label-pause']['uk'] = "Призупинити";
 $text['label-pause']['de-at'] = "Pause";
 $text['label-pause']['he'] = "השהייה";
+$text['label-pause']['ru-ru'] = "Пауза";
 
 $text['label-options']['en-us'] = "Options";
 $text['label-options']['es-cl'] = "Opciones";
@@ -310,6 +337,7 @@ $text['label-options']['sv-se'] = "Val";
 $text['label-options']['uk'] = "Параметри";
 $text['label-options']['de-at'] = "Optionen";
 $text['label-options']['he'] = "אופציות";
+$text['label-options']['ru-ru'] = "Опции";
 
 $text['label-option']['en-us'] = "Option";
 $text['label-option']['es-cl'] = "Opción";
@@ -321,6 +349,7 @@ $text['label-option']['sv-se'] = "Val";
 $text['label-option']['uk'] = "Параметр";
 $text['label-option']['de-at'] = "Option";
 $text['label-option']['he'] = "אופציה";
+$text['label-option']['ru-ru'] = "Опция";
 
 $text['label-messages']['en-us'] = "Messages";
 $text['label-messages']['es-cl'] = "Mensajes";
@@ -334,6 +363,7 @@ $text['label-messages']['ro'] = "mesaje";
 $text['label-messages']['de-at'] = "Nachrichten";
 $text['label-messages']['ar-eg'] = "رسائل";
 $text['label-messages']['he'] = "הודעות";
+$text['label-messages']['ru-ru'] = "Сообщения";
 
 $text['label-message_status']['en-us'] = "Status";
 $text['label-message_status']['es-cl'] = "Estado";
@@ -345,6 +375,7 @@ $text['label-message_status']['sv-se'] = "Status";
 $text['label-message_status']['uk'] = "Статус";
 $text['label-message_status']['de-at'] = "Status";
 $text['label-message_status']['he'] = "סטטוס";
+$text['label-message_status']['ru-ru'] = "Статус";
 
 $text['label-message_size']['en-us'] = "Size";
 $text['label-message_size']['es-cl'] = "Tamaño";
@@ -356,6 +387,7 @@ $text['label-message_size']['sv-se'] = "Storlek";
 $text['label-message_size']['uk'] = "Розмір";
 $text['label-message_size']['de-at'] = "Größe";
 $text['label-message_size']['he'] = "גודל";
+$text['label-message_size']['ru-ru'] = "Размер";
 
 $text['label-transcription']['en-us'] = "Transcription";
 $text['label-transcription']['es-cl'] = "";
@@ -367,6 +399,7 @@ $text['label-transcription']['sv-se'] = "";
 $text['label-transcription']['uk'] = "";
 $text['label-transcription']['de-at'] = "";
 $text['label-transcription']['he'] = "";
+$text['label-transcription']['ru-ru'] = "Транскрипция";
 
 $text['label-message_priority']['en-us'] = "Priority";
 $text['label-message_priority']['es-cl'] = "Prioridad";
@@ -378,6 +411,7 @@ $text['label-message_priority']['sv-se'] = "Prioritet";
 $text['label-message_priority']['uk'] = "Пріоритет";
 $text['label-message_priority']['de-at'] = "Priorität";
 $text['label-message_priority']['he'] = "תעדוף";
+$text['label-message_priority']['ru-ru'] = "Приоритет";
 
 $text['label-message_length']['en-us'] = "Length";
 $text['label-message_length']['es-cl'] = "Duración";
@@ -389,6 +423,7 @@ $text['label-message_length']['sv-se'] = "Längd";
 $text['label-message_length']['uk'] = "Довжина";
 $text['label-message_length']['de-at'] = "Länge";
 $text['label-message_length']['he'] = "אורך";
+$text['label-message_length']['ru-ru'] = "Длина";
 
 $text['label-mailbox']['en-us'] = "Mailbox";
 $text['label-mailbox']['es-cl'] = "Bandeja de entrada";
@@ -400,6 +435,7 @@ $text['label-mailbox']['sv-se'] = "Röstbrevlåda";
 $text['label-mailbox']['uk'] = "Поштова скринька";
 $text['label-mailbox']['de-at'] = "Mailbox";
 $text['label-mailbox']['he'] = "";
+$text['label-mailbox']['ru-ru'] = "Почтовый ящик";
 
 $text['label-greetings']['en-us'] = "Greetings";
 $text['label-greetings']['es-cl'] = "Bienvenida";
@@ -411,6 +447,7 @@ $text['label-greetings']['sv-se'] = "Hälsningar";
 $text['label-greetings']['uk'] = "Привітання";
 $text['label-greetings']['de-at'] = "Begrüßung";
 $text['label-greetings']['he'] = "";
+$text['label-greetings']['ru-ru'] = "Приветствия";
 
 $text['label-greeting']['en-us'] = "Greeting";
 $text['label-greeting']['es-cl'] = "ID de bienvenida";
@@ -422,6 +459,7 @@ $text['label-greeting']['sv-se'] = "Hälsning ID";
 $text['label-greeting']['uk'] = "ID привітання";
 $text['label-greeting']['de-at'] = "Begrüßung ID";
 $text['label-greeting']['he'] = "";
+$text['label-greeting']['ru-ru'] = "Приветствие";
 
 $text['label-forward_destinations']['en-us'] = "Forward Destinations";
 $text['label-forward_destinations']['es-cl'] = "Destinos Adelante";
@@ -433,6 +471,7 @@ $text['label-forward_destinations']['sv-se'] = "Vidarekopplingsdestinationer";
 $text['label-forward_destinations']['uk'] = "Цілі для перенаправлення";
 $text['label-forward_destinations']['de-at'] = "Weiterleitungs Destinationen";
 $text['label-forward_destinations']['he'] = "";
+$text['label-forward_destinations']['ru-ru'] = "Пересылка адресатам";
 
 $text['label-download']['en-us'] = "Download";
 $text['label-download']['es-cl'] = "Descargar";
@@ -444,6 +483,7 @@ $text['label-download']['sv-se'] = "Ladda Ned";
 $text['label-download']['uk'] = "Завантажини";
 $text['label-download']['de-at'] = "Download";
 $text['label-download']['he'] = "הורדה";
+$text['label-download']['ru-ru'] = "Загрузка";
 
 $text['label-destination']['en-us'] = "Destination";
 $text['label-destination']['es-cl'] = "Destino";
@@ -455,6 +495,7 @@ $text['label-destination']['sv-se'] = "Destination";
 $text['label-destination']['uk'] = "Номер";
 $text['label-destination']['de-at'] = "Ziel";
 $text['label-destination']['he'] = "יעד";
+$text['label-destination']['ru-ru'] = "Место назначения";
 
 $text['label-created_epoch']['en-us'] = "Created";
 $text['label-created_epoch']['es-cl'] = "Creación";
@@ -466,6 +507,7 @@ $text['label-created_epoch']['sv-se'] = "Skapad";
 $text['label-created_epoch']['uk'] = "Створено";
 $text['label-created_epoch']['de-at'] = "Erstellt";
 $text['label-created_epoch']['he'] = "נוצר";
+$text['label-created_epoch']['ru-ru'] = "Создано";
 
 $text['label-count']['en-us'] = "Count";
 $text['label-count']['es-cl'] = "Conteo";
@@ -477,6 +519,7 @@ $text['label-count']['sv-se'] = "Räkna";
 $text['label-count']['uk'] = "Кількість";
 $text['label-count']['de-at'] = "Zähler";
 $text['label-count']['he'] = "נספר";
+$text['label-count']['ru-ru'] = "Подсчет";
 
 $text['label-caller_id_number']['en-us'] = "Caller ID Number";
 $text['label-caller_id_number']['es-cl'] = "Número de Caller ID";
@@ -488,6 +531,7 @@ $text['label-caller_id_number']['sv-se'] = "Nummerpresentation";
 $text['label-caller_id_number']['uk'] = "Caller ID Номер";
 $text['label-caller_id_number']['de-at'] = "Anrufer Nummer";
 $text['label-caller_id_number']['he'] = "";
+$text['label-caller_id_number']['ru-ru'] = "Caller ID Номера";
 
 $text['label-caller_id_name']['en-us'] = "Caller ID Name";
 $text['label-caller_id_name']['es-cl'] = "Nombre de Caller ID";
@@ -499,6 +543,7 @@ $text['label-caller_id_name']['sv-se'] = "Namnpresentation";
 $text['label-caller_id_name']['uk'] = "Caller ID Ім’я";
 $text['label-caller_id_name']['de-at'] = "Anrufer Name";
 $text['label-caller_id_name']['he'] = "";
+$text['label-caller_id_name']['ru-ru'] = "Caller ID Имя";
 
 $text['header-voicemail_option']['en-us'] = "Voicemail Option";
 $text['header-voicemail_option']['es-cl'] = "Opción de correo de voz";
@@ -510,6 +555,7 @@ $text['header-voicemail_option']['sv-se'] = "Röstbrevlåda Inställning";
 $text['header-voicemail_option']['uk'] = "Параметри голосової пошти";
 $text['header-voicemail_option']['de-at'] = "Mailbox Option";
 $text['header-voicemail_option']['he'] = "";
+$text['header-voicemail_option']['ru-ru'] = "Параметры Голосовой Почты";
 
 $text['description-voicemail_uuid']['en-us'] = "Voicemail UUID";
 $text['description-voicemail_uuid']['es-cl'] = "UUID";
@@ -521,6 +567,7 @@ $text['description-voicemail_uuid']['sv-se'] = "Röstbrevlåda UUID";
 $text['description-voicemail_uuid']['uk'] = "UUID голосової пошти";
 $text['description-voicemail_uuid']['de-at'] = "Mailbox UUID";
 $text['description-voicemail_uuid']['he'] = "";
+$text['description-voicemail_uuid']['ru-ru'] = "UUID Голосовой почты";
 
 $text['description-voicemail_password']['en-us'] = "Enter the Password";
 $text['description-voicemail_password']['es-cl'] = "Ingrese la contraseña";
@@ -532,6 +579,7 @@ $text['description-voicemail_password']['sv-se'] = "Ange lösenordet.";
 $text['description-voicemail_password']['uk'] = "Введіть пароль";
 $text['description-voicemail_password']['de-at'] = "Geben Sie das numerische Mailbox Passwort an.";
 $text['description-voicemail_password']['he'] = "";
+$text['description-voicemail_password']['ru-ru'] = "Введите пароль";
 
 $text['description-voicemail_sms_to']['en-us'] = "Enter the SMS Number to send voicemail notification to. ";
 $text['description-voicemail_sms_to']['es-cl'] = "Introduzca el número de SMS para enviar notificación de correo de voz.";
@@ -543,6 +591,7 @@ $text['description-voicemail_sms_to']['sv-se'] = "Ange numret SMS för att skick
 $text['description-voicemail_sms_to']['uk'] = "Введіть номер SMS відправити повідомлення голосової пошти.";
 $text['description-voicemail_sms_to']['de-at'] = "Geben Sie die SMS-Nummer um Voicemail Benachrichtigung zu senden.";
 $text['description-voicemail_sms_to']['he'] = "הזן את מספר ה-SMS לשלוח הודעת תא קולי.";
+$text['description-voicemail_sms_to']['ru-ru'] = "Введите номер SMS, чтобы отправить уведомление о голосовой почте. ";
 
 $text['description-voicemail_transcription_enabled']['en-us'] = "Choose if voicemail transcription is enabled for this extension ";
 $text['description-voicemail_transcription_enabled']['es-cl'] = "";
@@ -554,6 +603,7 @@ $text['description-voicemail_transcription_enabled']['sv-se'] = "";
 $text['description-voicemail_transcription_enabled']['uk'] = "";
 $text['description-voicemail_transcription_enabled']['de-at'] = "";
 $text['description-voicemail_transcription_enabled']['he'] = "";
+$text['description-voicemail_transcription_enabled']['ru-ru'] = "Выберите, разрешена ли голосовая почта для этого расширения";
 
 $text['description-voicemail_message']['en-us'] = "A list of recorded voice messages which shows when the message was created, caller ID information, length, file size and download or delete the message.";
 $text['description-voicemail_message']['es-cl'] = "Un listado de grabaciones de mensajes de voz que muestran la fecha de creación, información del Caller ID, duración, tamaño del archivo y permite descargar o eliminar el archivo";
@@ -565,6 +615,7 @@ $text['description-voicemail_message']['sv-se'] = "En lista med inspelade röstm
 $text['description-voicemail_message']['uk'] = "Список записаних голосових повідомлень, який відображає, коли повідомлення було створено, інформація про абонента, довжина, розмір файлу і завантаження або видалення повідомлення.";
 $text['description-voicemail_message']['de-at'] = "Eine Liste der Aufgenommenen Mailbox Nachrichten. Die Liste zeigt, wann die Nachricht aufgenommen wurde, wer angerufen hat, wie lange gesprochen wurde und wie groß die Datei ist. Die Dateien können heruntergeladen und/oder gelöscht werden.";
 $text['description-voicemail_message']['he'] = "";
+$text['description-voicemail_message']['ru-ru'] = "Список записанных голосовых сообщений, которые показывают, когда было создано сообщение, информацию идентификатора вызывающего абонента, длину, размер файла и загрузку или удаление сообщения.";
 
 $text['description-voicemail_alternate_greet_id']['en-us'] = "An alternative greet id used in the default greeting.";
 $text['description-voicemail_alternate_greet_id']['es-cl'] = "";
@@ -576,6 +627,7 @@ $text['description-voicemail_alternate_greet_id']['sv-se'] = "";
 $text['description-voicemail_alternate_greet_id']['uk'] = "";
 $text['description-voicemail_alternate_greet_id']['de-at'] = "";
 $text['description-voicemail_alternate_greet_id']['he'] = "";
+$text['description-voicemail_alternate_greet_id']['ru-ru'] = "Альтернативный приветственный идентификатор, используемый в приветствии по умолчанию.";
 
 $text['description-voicemail_mail_to']['en-us'] = "Enter the email address to send voicemail to. ";
 $text['description-voicemail_mail_to']['es-cl'] = "Ingrese las direcciones de correo a quien desee enviar el correo de voz.";
@@ -587,6 +639,7 @@ $text['description-voicemail_mail_to']['sv-se'] = "Ange E-post adressen dit medd
 $text['description-voicemail_mail_to']['uk'] = "Введіть адресу E-Mail на яку надіслати голосове повідомлення";
 $text['description-voicemail_mail_to']['de-at'] = "Geben Sie die Email Adresse an, an die Ihre Mailbox Nachricht gesendet werden soll (optional).";
 $text['description-voicemail_mail_to']['he'] = "";
+$text['description-voicemail_mail_to']['ru-ru'] = "Введите адрес электронной почты для отправки голосовой почты.";
 
 $text['description-voicemail_local_after_email']['en-us'] = "Choose whether to keep the voicemail in the system after sending the email notification.";
 $text['description-voicemail_local_after_email']['es-cl'] = "Escoja si desea mantener el buzón de voz en el sistema después de enviar la notificación por correo electrónico.";
@@ -598,6 +651,7 @@ $text['description-voicemail_local_after_email']['sv-se'] = "Välj om du vill be
 $text['description-voicemail_local_after_email']['uk'] = "Виберіть, чи слід зберегти голосове повідомлення в системі після його відправлення на електронну пошту.";
 $text['description-voicemail_local_after_email']['de-at'] = "Wählen Sie ob die Mailbox Nachricht am Server gespeichert werden soll, nachdem die Nachricht per Mail versendet worden ist.";
 $text['description-voicemail_local_after_email']['he'] = "";
+$text['description-voicemail_local_after_email']['ru-ru'] = "Выберите, следует ли сохранять голосовую почту в системе после отправки уведомления по электронной почте.";
 
 $text['description-voicemail_id']['en-us'] = "Enter the Voicemail ID";
 $text['description-voicemail_id']['es-cl'] = "Ingrese el ID del correo de voz";
@@ -609,6 +663,7 @@ $text['description-voicemail_id']['sv-se'] = "Ange Röstbrevlåda ID";
 $text['description-voicemail_id']['uk'] = "Введіть ID голосової пошти";
 $text['description-voicemail_id']['de-at'] = "Geben Sie die Mailbox ID an";
 $text['description-voicemail_id']['he'] = "";
+$text['description-voicemail_id']['ru-ru'] = "Введите идентификатор голосовой почты";
 
 $text['description-voicemail_file']['en-us'] = "Select a listening option to include with the email notification.";
 $text['description-voicemail_file']['es-cl'] = "Seleccione qué opción de escucha para incluir en la notificación de correo electrónico.";
@@ -620,6 +675,7 @@ $text['description-voicemail_file']['sv-se'] = "Välj ett alternativ för avlyss
 $text['description-voicemail_file']['uk'] = "Виберіть опцію прослуховування включити з поштовим повідомленням.";
 $text['description-voicemail_file']['de-at'] = "Wählen Sie eine Option für die Mailbox Benachrichtigung.";
 $text['description-voicemail_file']['he'] = "";
+$text['description-voicemail_file']['ru-ru'] = "Выберите вариант прослушивания, который нужно включить с уведомлением по электронной почте.";
 
 $text['description-voicemail_enabled']['en-us'] = "Select to enable or disable this voicemail.";
 $text['description-voicemail_enabled']['es-cl'] = "Indique si desea activar este correo";
@@ -631,6 +687,7 @@ $text['description-voicemail_enabled']['sv-se'] = "Aktivera/Inaktivera röstbrev
 $text['description-voicemail_enabled']['uk'] = "Виберіть, щоб включити або відключити це голосове повідомлення.";
 $text['description-voicemail_enabled']['de-at'] = "Mailbox für diese Nebenstelle Ein- oder Ausschalten.";
 $text['description-voicemail_enabled']['he'] = "";
+$text['description-voicemail_enabled']['ru-ru'] = "Выберите, чтобы включить или отключить эту голосовую почту.";
 
 $text['description-voicemail_description']['en-us'] = "Enter the description.";
 $text['description-voicemail_description']['es-cl'] = "Ingrese una descripción.";
@@ -642,6 +699,7 @@ $text['description-voicemail_description']['sv-se'] = "Ange Beskrivning.";
 $text['description-voicemail_description']['uk'] = "Введіть опис";
 $text['description-voicemail_description']['de-at'] = "Geben Sie eine Beschreibung an.";
 $text['description-voicemail_description']['he'] = "";
+$text['description-voicemail_description']['ru-ru'] = "Введите описание.";
 
 $text['description-voicemail']['en-us'] = "Voicemail settings.";
 $text['description-voicemail']['es-cl'] = "Configuración de correo de voz";
@@ -653,6 +711,7 @@ $text['description-voicemail']['sv-se'] = "Röstbrevlåda Inställningar.";
 $text['description-voicemail']['uk'] = "Налаштування голосової пошти";
 $text['description-voicemail']['de-at'] = "Mailbox Einstellungen.";
 $text['description-voicemail']['he'] = "";
+$text['description-voicemail']['ru-ru'] = "Настройки голосовой почты.";
 
 $text['description-read_epoch']['en-us'] = "Read";
 $text['description-read_epoch']['es-cl'] = "Leer";
@@ -664,6 +723,7 @@ $text['description-read_epoch']['sv-se'] = "Läs";
 $text['description-read_epoch']['uk'] = "Читати";
 $text['description-read_epoch']['de-at'] = "Abgehört";
 $text['description-read_epoch']['he'] = "נקרא";
+$text['description-read_epoch']['ru-ru'] = "Читать";
 
 $text['description-options']['en-us'] = "Define caller options for the voicemail greeting.";
 $text['description-options']['es-cl'] = "Definir opciones del llamador para el saludo del correo de voz.";
@@ -675,6 +735,7 @@ $text['description-options']['sv-se'] = "Definiera val för inringande till rös
 $text['description-options']['uk'] = "Задайте параметри абонента для привітання голосової пошти";
 $text['description-options']['de-at'] = "Definieren Sie Optionen für die Mailbox Begrüßung.";
 $text['description-options']['he'] = "";
+$text['description-options']['ru-ru'] = "Определите параметры вызывающего абонента для приветствия голосовой почты.";
 
 $text['description-message_status']['en-us'] = "Status";
 $text['description-message_status']['es-cl'] = "Estado";
@@ -686,6 +747,7 @@ $text['description-message_status']['sv-se'] = "Status";
 $text['description-message_status']['uk'] = "Статус";
 $text['description-message_status']['de-at'] = "Status";
 $text['description-message_status']['he'] = "";
+$text['description-message_status']['ru-ru'] = "Статус";
 
 $text['description-message_priority']['en-us'] = "Priority";
 $text['description-message_priority']['es-cl'] = "Prioridad";
@@ -697,6 +759,7 @@ $text['description-message_priority']['sv-se'] = "Prioritet";
 $text['description-message_priority']['uk'] = "Пріоритет";
 $text['description-message_priority']['de-at'] = "Priorität";
 $text['description-message_priority']['he'] = "";
+$text['description-message_priority']['ru-ru'] = "Приоритет";
 
 $text['description-message_length']['en-us'] = "Length";
 $text['description-message_length']['es-cl'] = "Duración";
@@ -708,6 +771,7 @@ $text['description-message_length']['sv-se'] = "Längd";
 $text['description-message_length']['uk'] = "Довжина";
 $text['description-message_length']['de-at'] = "Länge";
 $text['description-message_length']['he'] = "";
+$text['description-message_length']['ru-ru'] = "Длинна";
 
 $text['description-greeting']['en-us'] = "Select the desired Greeting.";
 $text['description-greeting']['es-cl'] = "Ingrese el ID de bienvenida";
@@ -719,6 +783,7 @@ $text['description-greeting']['sv-se'] = "Ange Hälsningens ID";
 $text['description-greeting']['uk'] = "Введіть ID привітання";
 $text['description-greeting']['de-at'] = "Geben Sie die Begrüßungs ID an.";
 $text['description-greeting']['he'] = "";
+$text['description-greeting']['ru-ru'] = "Выберите желаемое приветствие.";
 
 $text['description-forward_destinations']['en-us'] = "Forward voicemail messages to additional destinations.";
 $text['description-forward_destinations']['es-cl'] = "Reenviar mensajes de voz a destinos adicionales.";
@@ -730,6 +795,7 @@ $text['description-forward_destinations']['sv-se'] = "Vidarekoppla röstmeddelan
 $text['description-forward_destinations']['uk'] = "Направити повідомлення голосової пошти на додаткові місця призначення.";
 $text['description-forward_destinations']['de-at'] = "Mailbox Nachrichten an zusätzliche Nebenstellen weiterleiten.";
 $text['description-forward_destinations']['he'] = "";
+$text['description-forward_destinations']['ru-ru'] = "Пересылать сообщения голосовой почты на дополнительные адресаты.";
 
 $text['description-created_epoch']['en-us'] = "Created";
 $text['description-created_epoch']['es-cl'] = "Creación";
@@ -741,6 +807,7 @@ $text['description-created_epoch']['sv-se'] = "SKapad";
 $text['description-created_epoch']['uk'] = "Створено";
 $text['description-created_epoch']['de-at'] = "Erstellt";
 $text['description-created_epoch']['he'] = "";
+$text['description-created_epoch']['ru-ru'] = "Создано";
 
 $text['description-caller_id_number']['en-us'] = "Caller ID Number";
 $text['description-caller_id_number']['es-cl'] = "Número de Caller ID";
@@ -752,6 +819,7 @@ $text['description-caller_id_number']['sv-se'] = "Nummerpresentation";
 $text['description-caller_id_number']['uk'] = "Caller ID Номер";
 $text['description-caller_id_number']['de-at'] = "Anruferkennung (Nummer)";
 $text['description-caller_id_number']['he'] = "";
+$text['description-caller_id_number']['ru-ru'] = "Caller ID Номера";
 
 $text['description-caller_id_name']['en-us'] = "Caller ID Name";
 $text['description-caller_id_name']['es-cl'] = "Nombre de Caller ID";
@@ -763,6 +831,7 @@ $text['description-caller_id_name']['sv-se'] = "Namnpresentation";
 $text['description-caller_id_name']['uk'] = "Caller ID Ім’я";
 $text['description-caller_id_name']['de-at'] = "Anruferkennung (Name)";
 $text['description-caller_id_name']['he'] = "";
+$text['description-caller_id_name']['ru-ru'] = "Caller ID Имя";
 
 $text['description-voicemail_tutorial']['en-us'] = "Play the voicemail tutorial after the next voicemail login.";
 $text['description-voicemail_tutorial']['es-cl'] = "";
@@ -774,6 +843,7 @@ $text['description-voicemail_tutorial']['sv-se'] = "";
 $text['description-voicemail_tutorial']['uk'] = "";
 $text['description-voicemail_tutorial']['de-at'] = "";
 $text['description-voicemail_tutorial']['he'] = "";
+$text['description-voicemail_tutorial']['ru-ru'] = "Воспроизведите голосовое сообщение после следующего входа в систему голосовой почты.";
 
 $text['button-toggle']['en-us'] = "Toggle";
 $text['button-toggle']['es-cl'] = "Palanca";
@@ -788,6 +858,7 @@ $text['button-toggle']['de-at'] = "Umschalten";
 $text['button-toggle']['ro'] = "Comutare";
 $text['button-toggle']['fa'] = "";
 $text['button-toggle']['ar-eg'] = "تبديل";
+$text['button-toggle']['ru-ru'] = "Переключить";
 
 $text['button-settings']['en-us'] = "Settings";
 $text['button-settings']['es-cl'] = "Configuraciones";
@@ -799,6 +870,7 @@ $text['button-settings']['sv-se'] = "Inställningar";
 $text['button-settings']['uk'] = "Налаштування";
 $text['button-settings']['de-at'] = "Einstellungen";
 $text['button-settings']['he'] = "הגדרות";
+$text['button-settings']['ru-ru'] = "Настройки";
 
 $text['button-greetings']['en-us'] = "Greetings";
 $text['button-greetings']['es-cl'] = "Bienvenida";
@@ -810,5 +882,6 @@ $text['button-greetings']['sv-se'] = "Hälsning";
 $text['button-greetings']['uk'] = "Привітання";
 $text['button-greetings']['de-at'] = "Begrüßungen";
 $text['button-greetings']['he'] = "";
+$text['button-greetings']['ru-ru'] = "Приветствия";
 
 ?>

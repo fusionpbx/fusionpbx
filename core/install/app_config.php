@@ -17,6 +17,7 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['ru-ru'] = "Установка системы fuisionPBX или добавление новых коммутаторов";
 
 	//permission details
 		//$y=0;

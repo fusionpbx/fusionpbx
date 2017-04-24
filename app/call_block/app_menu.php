@@ -6,6 +6,7 @@ $apps[$x]['menu'][0]['title']['fr-fr'] = "Liste Noire";
 $apps[$x]['menu'][0]['title']['pt-pt'] = "Bloqueio de Chamadas";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Bloqueio de chamadas";
 $apps[$x]['menu'][0]['title']['pl'] = "Blokowanie rozmów";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Черный список";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Blockera Samtal";
 $apps[$x]['menu'][0]['title']['uk'] = "Блокування дзвінків";
 $apps[$x]['menu'][0]['title']['ro'] = "Blocare apel";

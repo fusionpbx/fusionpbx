@@ -6,6 +6,7 @@ $apps[$x]['menu'][0]['title']['fr-fr'] = "Voir les Logs";
 $apps[$x]['menu'][0]['title']['pt-pt'] = "Visualizar Log";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Visualizar Log";
 $apps[$x]['menu'][0]['title']['pl'] = "Podgląd logów";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Просмотр логов";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Log Viewer ";
 $apps[$x]['menu'][0]['title']['uk'] = "Логи";
 $apps[$x]['menu'][0]['title']['de-at'] = "Log Datei";

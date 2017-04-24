@@ -8,6 +8,7 @@ $apps[$x]['menu'][0]['title']['fr-ca'] = "Queues actives";
 $apps[$x]['menu'][0]['title']['pt-pt'] = "Filas Activas";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Filas ativas";
 $apps[$x]['menu'][0]['title']['pl'] = "Aktywne kolejki";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Активные Очереди";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Aktiva Köer";
 $apps[$x]['menu'][0]['title']['uk'] = "Активні черги";
 $apps[$x]['menu'][0]['title']['de-at'] = "Aktive Warteschlangen";
