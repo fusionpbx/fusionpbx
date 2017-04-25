@@ -6,6 +6,7 @@ $apps[$x]['menu'][0]['title']['fr-fr'] = "Musique d'attente";
 $apps[$x]['menu'][0]['title']['pt-pt'] = "Musica em Espera";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Música de espera";
 $apps[$x]['menu'][0]['title']['pl'] = "Muzyka na czekanie";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Музыка на удержании";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Väntmusik";
 $apps[$x]['menu'][0]['title']['uk'] = "Музика на утриманні";
 $apps[$x]['menu'][0]['title']['de-at'] = "Haltemusik";

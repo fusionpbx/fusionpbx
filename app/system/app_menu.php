@@ -6,6 +6,7 @@ $apps[$x]['menu'][0]['title']['fr-fr'] = "Etat Système";
 $apps[$x]['menu'][0]['title']['pt-pt'] = "Estado do Sistema";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Estado do sistema";
 $apps[$x]['menu'][0]['title']['pl'] = "Stan systemu";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Состояние cистемы";
 $apps[$x]['menu'][0]['title']['sv-se'] = "System Status";
 $apps[$x]['menu'][0]['title']['uk'] = "Стан системи ";
 $apps[$x]['menu'][0]['title']['de-at'] = "System Status";

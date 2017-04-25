@@ -6,6 +6,7 @@ $apps[$x]['menu'][0]['title']['fr-fr'] = "Modules";
 $apps[$x]['menu'][0]['title']['pt-pt'] = "Modulos";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Módulos";
 $apps[$x]['menu'][0]['title']['pl'] = "Moduły";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Модули";
 $apps[$x]['menu'][0]['title']['uk'] = "Модулі";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Moduler";
 $apps[$x]['menu'][0]['title']['de-at'] = "Module";

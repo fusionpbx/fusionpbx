@@ -6,6 +6,7 @@ $apps[$x]['menu'][0]['title']['fr-fr'] = "Centre de Conférences";
 $apps[$x]['menu'][0]['title']['pt-pt'] = "Conferencias";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Centro de Conferência";
 $apps[$x]['menu'][0]['title']['pl'] = "Centrum Konferencyjne";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Конференц-центр";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Konferenscenter";
 $apps[$x]['menu'][0]['title']['uk'] = "Конференц-центр";
 $apps[$x]['menu'][0]['title']['de-at'] = "Konferenz Zentrale";

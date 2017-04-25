@@ -11,6 +11,7 @@ $text['label-syntax']['uk'] = "Підсвічування синтаксису";
 $text['label-syntax']['de-de'] = "Syntax Highlighted";
 $text['label-syntax']['de-at'] = "Syntax Highlighted";
 $text['label-syntax']['it-it'] = "Sintassi Evidenziata";
+$text['label-syntax']['ru-ru'] = "Выделение Синтаксиса";
 
 $text['label-sort']['en-us'] = "Sort Descending";
 $text['label-sort']['es-cl'] = "Mostrar en orden descendente";
@@ -23,6 +24,7 @@ $text['label-sort']['uk'] = "Сортувати за спаданням";
 $text['label-sort']['de-de'] = "Absteigend sortiert";
 $text['label-sort']['de-at'] = "Absteigend sortiert";
 $text['label-sort']['it-it'] = "Visualizza in ordine decrescente";
+$text['label-sort']['ru-ru'] = "Сортировка по убыванию";
 
 $text['label-open-file']['en-us'] = "opening entire file";
 $text['label-open-file']['es-cl'] = "Abrir el archivo completo";
@@ -35,6 +37,7 @@ $text['label-open-file']['uk'] = "відкрито весь файл";
 $text['label-open-file']['de-de'] = "gesamte Datei öffnen";
 $text['label-open-file']['de-at'] = "gesamte Datei öffnen";
 $text['label-open-file']['it-it'] = "apri l'intero file";
+$text['label-open-file']['ru-ru'] = "Открытие всего файла";
 
 $text['label-open-at']['en-us'] = "opening at";
 $text['label-open-at']['es-cl'] = "Abrir en";
@@ -47,6 +50,7 @@ $text['label-open-at']['uk'] = "відкрито о";
 $text['label-open-at']['de-de'] = "öffnen";
 $text['label-open-at']['de-at'] = "öffnen";
 $text['label-open-at']['it-it'] = "apri a";
+$text['label-open-at']['ru-ru'] = "Открытие на";
 
 $text['label-log-viewer']['en-us'] = "Log Viewer";
 $text['label-log-viewer']['es-cl'] = "Visor de Eventos";
@@ -59,6 +63,7 @@ $text['label-log-viewer']['uk'] = "Логи";
 $text['label-log-viewer']['de-de'] = "Log Datei";
 $text['label-log-viewer']['de-at'] = "Log Datei";
 $text['label-log-viewer']['it-it'] = "Visualizzatore Log";
+$text['label-log-viewer']['ru-ru'] = "Просмотр Логов";
 
 $text['label-line-num']['en-us'] = "Show Line Numbers";
 $text['label-line-num']['es-cl'] = "Mostrar números de línea";
@@ -71,6 +76,7 @@ $text['label-line-num']['uk'] = "Нумерація рядків";
 $text['label-line-num']['de-de'] = "Zeilennummern anzeigen";
 $text['label-line-num']['de-at'] = "Zeilennummern anzeigen";
 $text['label-line-num']['it-it'] = "Mostra il numero di linea";
+$text['label-line-num']['ru-ru'] = "Показывать номера строк";
 
 $text['label-kb']['en-us'] = "KB";
 $text['label-kb']['es-cl'] = "KB";
@@ -83,6 +89,7 @@ $text['label-kb']['uk'] = "КБ";
 $text['label-kb']['de-de'] = "KB";
 $text['label-kb']['de-at'] = "KB";
 $text['label-kb']['it-it'] = "KB";
+$text['label-kb']['ru-ru'] = "KB";
 
 $text['label-filter']['en-us'] = "Filter";
 $text['label-filter']['es-cl'] = "Filtrar";
@@ -95,6 +102,7 @@ $text['label-filter']['uk'] = "Фільтр";
 $text['label-filter']['de-de'] = "Filter";
 $text['label-filter']['de-at'] = "Filter";
 $text['label-filter']['it-it'] = "Filtro";
+$text['label-filter']['ru-ru'] = "Фильтр";
 
 $text['label-displaying']['en-us'] = "Displaying the last";
 $text['label-displaying']['es-cl'] = "Mostrando últimos eventos";
@@ -107,6 +115,7 @@ $text['label-displaying']['uk'] = "Показувати останні";
 $text['label-displaying']['de-de'] = "letztes anzeigen";
 $text['label-displaying']['de-at'] = "letztes anzeigen";
 $text['label-displaying']['it-it'] = "Visualizzando gli ultimi";
+$text['label-displaying']['ru-ru'] = "Отображение последнего";
 
 $text['label-bytes']['en-us'] = "bytes";
 $text['label-bytes']['es-cl'] = "bytes";
@@ -119,6 +128,7 @@ $text['label-bytes']['uk'] = "байти";
 $text['label-bytes']['de-de'] = "bytes";
 $text['label-bytes']['de-at'] = "bytes";
 $text['label-bytes']['it-it'] = "bytes";
+$text['label-bytes']['ru-ru'] = "байты";
 
 $text['error-open-file']['en-us'] = "Unable to open file!";
 $text['error-open-file']['es-cl'] = "¡Imposible abrir el archivo!";
@@ -131,6 +141,7 @@ $text['error-open-file']['uk'] = "Неможливо відкрити файл!"
 $text['error-open-file']['de-de'] = "Datei kann nicht geöffnet werden!";
 $text['error-open-file']['de-at'] = "Datei kann nicht geöffnet werden!";
 $text['error-open-file']['it-it'] = "Impossibile aprire il file!";
+$text['error-open-file']['ru-ru'] = "Невозможно открыть файл!";
 
 $text['description-filter']['en-us'] = "Filtering the log with the text:";
 $text['description-filter']['es-cl'] = "Filtrar el registro con el texto:";
@@ -143,5 +154,6 @@ $text['description-filter']['uk'] = "Фільтрування логів по т
 $text['description-filter']['de-de'] = "Log Datei nach Text filtern:";
 $text['description-filter']['de-at'] = "Log Datei nach Text filtern:";
 $text['description-filter']['it-it'] = "Filtrando il log con il testo:";
+$text['description-filter']['ru-ru'] = "Фильтрация журнала с текстом:";
 
 ?>

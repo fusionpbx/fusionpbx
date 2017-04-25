@@ -17,6 +17,7 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Atualizar o esquema da base de dados.";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['ru-ru'] = "Обновление или восстановление настроек системы";
 
 	//permission details
 		$y=0;

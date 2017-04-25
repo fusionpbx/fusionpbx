@@ -12,6 +12,7 @@
 --options all, last, non_moderator, member_id
 	meeting_uuid = argv[1];
 	domain_name = argv[2];
+	record_ext = argv[3];
 
 --prepare the api object
 	api = freeswitch.API();
@@ -43,8 +44,8 @@
 			recording = recordings_dir.."/"..conference_session_uuid;
 
 		--send a command to record the conference
-			if (not file_exists(recording..".wav")) then
-				cmd = "conference "..meeting_uuid.."@"..domain_name.." record "..recording..".wav";
+			if (not file_exists(recording.."."..record_ext)) then
+				cmd = "conference "..meeting_uuid.."@"..domain_name.." record "..recording.."."..record_ext;
 				freeswitch.consoleLog("notice", "[start-recording] cmd: " .. cmd .. "\n");
 				response = api:executeString(cmd);
 			end

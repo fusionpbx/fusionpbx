@@ -19,6 +19,7 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Definir variáveis que são utilizadas pelo softswitch, aprovisionamento, e outros.";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['ru-ru'] = "Определение переменной делает возможным управление FreeSwitch, его инициализации, и многое другое.";
 
 	//permission details
 		$y=0;
