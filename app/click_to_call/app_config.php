@@ -10,9 +10,9 @@
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Originate calls with a URL.";
 		$apps[$x]['description']['es-cl'] = "Genera llamadas con un URL.";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Anrufe über eine URL erzeugen.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Anrufe über eine URL erzeugen.";
 		$apps[$x]['description']['fr-fr'] = "Appeler à partir d'une URL";
 		$apps[$x]['description']['fr-ca'] = "Appeller avec d'URL";
 		$apps[$x]['description']['fr-ch'] = "";

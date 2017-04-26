@@ -11,9 +11,9 @@
 		$apps[$x]['description']['en-us'] = "Define variables that are used by the switch, provisioning, and more.";
 		$apps[$x]['description']['es-cl'] = "Define variables usadas por el switch, provisionamiento y más";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Definiere Variablen, die für den Switch, die Verwaltung und anderes verwendet werden können.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Definiere Variablen, die für den Switch, die Verwaltung und anderes verwendet werden können.";
 		$apps[$x]['description']['fr-fr'] = "Définr les variables utilisées par le switch, le provisioning et plus.";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";

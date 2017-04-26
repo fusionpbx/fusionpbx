@@ -9,6 +9,7 @@ $apps[$x]['menu'][0]['title']['pl'] = "Aktywne połączenia";
 $apps[$x]['menu'][0]['title']['ru-ru'] = "Активные вызовы";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Aktiva samtal";
 $apps[$x]['menu'][0]['title']['uk'] = "Активні дзвінки";
+$apps[$x]['menu'][0]['title']['de-de'] = "Aktive Gespräche";
 $apps[$x]['menu'][0]['title']['de-at'] = "Aktive Gespräche";
 $apps[$x]['menu'][0]['title']['he'] = "שיחות פעילות";
 $apps[$x]['menu'][0]['uuid'] = "eba3d07f-dd5c-6b7b-6880-493b44113ade";

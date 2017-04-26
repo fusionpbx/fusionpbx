@@ -9,6 +9,7 @@ $apps[$x]['menu'][0]['title']['pt-br'] = "Call Center ativos";
 $apps[$x]['menu'][0]['title']['pl'] = "Aktywność w Call Center ";
 $apps[$x]['menu'][0]['title']['ru-ru'] = "Активные Колл-центры";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Aktivt Call Center";
+$apps[$x]['menu'][0]['title']['de-de'] = "Aktive Callcenter";
 $apps[$x]['menu'][0]['title']['de-at'] = "Aktive Callcenter";
 $apps[$x]['menu'][0]['uuid'] = "7fb0dd87-e984-9980-c512-2c76b887aeb2";
 $apps[$x]['menu'][0]['parent_uuid'] = "0438b504-8613-7887-c420-c837ffb20cb1";

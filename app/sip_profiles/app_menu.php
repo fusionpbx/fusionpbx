@@ -9,6 +9,7 @@ $apps[$x]['menu'][0]['title']['pl'] = "Profile SIP";
 $apps[$x]['menu'][0]['title']['ru-ru'] = "Профили SIP";
 $apps[$x]['menu'][0]['title']['sv-se'] = "SIP Profiler";
 $apps[$x]['menu'][0]['title']['uk'] = "SIP профілі";
+$apps[$x]['menu'][0]['title']['de-de'] = "SIP Profile";
 $apps[$x]['menu'][0]['title']['de-at'] = "SIP Profile";
 $apps[$x]['menu'][0]['uuid'] = "47014b1d-13ad-921c-313d-ca42c0424b37";
 $apps[$x]['menu'][0]['parent_uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";

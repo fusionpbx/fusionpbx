@@ -9,6 +9,7 @@ $apps[$x]['menu'][0]['title']['pl'] = "Grupy odbiorców rozmów.";
 $apps[$x]['menu'][0]['title']['ru-ru'] = "Группы вызовов";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Ringgrupper";
 $apps[$x]['menu'][0]['title']['uk'] = "Групи";
+$apps[$x]['menu'][0]['title']['de-de'] = "Rufgruppen";
 $apps[$x]['menu'][0]['title']['de-at'] = "Rufgruppen";
 $apps[$x]['menu'][0]['title']['he'] = "קבוצות חיוג";
 $apps[$x]['menu'][0]['uuid'] = "b30f085f-3ec6-2819-7e62-53dfba5cb8d5";

@@ -9,6 +9,7 @@ $apps[$x]['menu'][0]['title']['pl'] = "Ustawienia domyślne";
 $apps[$x]['menu'][0]['title']['ru-ru'] = "Настройки по умолчанию";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Standard Inställningar";
 $apps[$x]['menu'][0]['title']['uk'] = "Налаштування за замовчуванням";
+$apps[$x]['menu'][0]['title']['de-de'] = "Standardeinstellungen";
 $apps[$x]['menu'][0]['title']['de-at'] = "Standardeinstellungen";
 $apps[$x]['menu'][0]['uuid'] = "834b2739-9e99-4345-9b0b-7ec3ca332b67";
 $apps[$x]['menu'][0]['parent_uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";

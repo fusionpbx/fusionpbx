@@ -2,9 +2,9 @@
 
 	$apps[$x]['menu'][0]['title']['en-us'] = "Click to Call";
 	$apps[$x]['menu'][0]['title']['es-cl'] = "Pulse para Llamar";
-	$apps[$x]['menu'][0]['title']['de-de'] = "";
+	$apps[$x]['menu'][0]['title']['de-de'] = "Click to Call";
 	$apps[$x]['menu'][0]['title']['de-ch'] = "";
-	$apps[$x]['menu'][0]['title']['de-at'] = "";
+	$apps[$x]['menu'][0]['title']['de-at'] = "Click to Call";
 	$apps[$x]['menu'][0]['title']['fr-fr'] = "Cliquez pour Appeller";
 	$apps[$x]['menu'][0]['title']['fr-ca'] = "";
 	$apps[$x]['menu'][0]['title']['fr-ch'] = "";

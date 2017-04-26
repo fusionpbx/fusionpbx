@@ -11,9 +11,9 @@
 		$apps[$x]['description']['en-us'] = "To receive a FAX setup a fax extension and then direct the incoming FAX with a dedicated number or you can detect the FAX tone by using on the Public tab.";
 		$apps[$x]['description']['es-cl'] = "Para recibir un FAX, configure una extensión y después asigne un número a esta o puede detectar el tono de FAX utilizando la pestaña Público.";
 		$apps[$x]['description']['es-mx'] = "Para recibir un FAX, configure una extensiÃ³n y despuÃ©s asigne un nÃºmero a esta.";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Um ein Fax zu empfangen, legen Sie eine Fax-Nebenstelle an und leiten das eingehende Fax über eine dedizierte Rufnummer oder die Faxerkennung in den Einstellungen an das Ziel.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "m ein Fax zu empfangen, legen Sie eine Fax-Nebenstelle an und leiten das eingehende Fax über eine dedizierte Rufnummer oder die Faxerkennung in den Einstellungen an das Ziel.";
 		$apps[$x]['description']['fr-fr'] = "Pour recevoir un fax, configurez une extension du FAX et après diriger un numéro vers lui.";
 		$apps[$x]['description']['fr-ca'] = "Pour recevoir un fax, configurez un Ã©xtension du FAX et aprÃ¨s dirigers un nombre vers lui.";
 		$apps[$x]['description']['fr-ch'] = "";

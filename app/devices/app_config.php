@@ -11,9 +11,9 @@
 		$apps[$x]['description']['en-us'] = "Devices for provisioning.";
 		$apps[$x]['description']['es-cl'] = "Provicionamiento de dispositivos.";
 		$apps[$x]['description']['es-mx'] = "Provicionamiento de dispositivos.";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Geräte die verwaltet werden sollen.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Geräte die verwaltet werden sollen.";
 		$apps[$x]['description']['fr-fr'] = "Equipements pour provisioning.";
 		$apps[$x]['description']['fr-ca'] = "Dispositifs pour provisionnement.";
 		$apps[$x]['description']['fr-ch'] = "";

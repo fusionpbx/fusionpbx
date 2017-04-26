@@ -7,11 +7,11 @@
 		$apps[$x]['subcategory'] = "";
 		$apps[$x]['version'] = "";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
-		$apps[$x]['description']['en-us'] = "Install the fuisionPBX system or add new switches";
+		$apps[$x]['description']['en-us'] = "Install the fusionPBX system or add new switches";
 		$apps[$x]['description']['es-cl'] = "";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Installiere das FusionPBX System oder füge neue Switches hinzu.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Installiere das FusionPBX System oder füge neue Switches hinzu.";
 		$apps[$x]['description']['fr-fr'] = "";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";

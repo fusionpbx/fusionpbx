@@ -2,9 +2,9 @@
 
 	$apps[$x]['menu'][0]['title']['en-us'] = "Adminer";
 	$apps[$x]['menu'][0]['title']['es-cl'] = "Administrador";
-	$apps[$x]['menu'][0]['title']['de-de'] = "";
+	$apps[$x]['menu'][0]['title']['de-de'] = "Adminer";
 	$apps[$x]['menu'][0]['title']['de-ch'] = "";
-	$apps[$x]['menu'][0]['title']['de-at'] = "";
+	$apps[$x]['menu'][0]['title']['de-at'] = "Adminer";
 	$apps[$x]['menu'][0]['title']['fr-fr'] = "Admin BDD";
 	$apps[$x]['menu'][0]['title']['fr-ca'] = "";
 	$apps[$x]['menu'][0]['title']['fr-ch'] = "";

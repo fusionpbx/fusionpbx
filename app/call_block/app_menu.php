@@ -10,6 +10,7 @@ $apps[$x]['menu'][0]['title']['ru-ru'] = "Черный список";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Blockera Samtal";
 $apps[$x]['menu'][0]['title']['uk'] = "Блокування дзвінків";
 $apps[$x]['menu'][0]['title']['ro'] = "Blocare apel";
+$apps[$x]['menu'][0]['title']['de-de'] = "Sperrlisten";
 $apps[$x]['menu'][0]['title']['de-at'] = "Sperrlisten";
 $apps[$x]['menu'][0]['title']['ar-eg'] = "حظر المكالمات";
 $apps[$x]['menu'][0]['title']['he'] = "חסימת מספר";

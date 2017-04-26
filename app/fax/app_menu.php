@@ -5,6 +5,7 @@ $apps[$x]['menu'][0]['title']['es-cl'] = "Servidor de Fax";
 $apps[$x]['menu'][0]['title']['es-mx'] = "Servidor de Fax";
 $apps[$x]['menu'][0]['title']['de-de'] = "Faxserver";
 $apps[$x]['menu'][0]['title']['de-ch'] = "Faxserver";
+$apps[$x]['menu'][0]['title']['de-de'] = "Fax Server";
 $apps[$x]['menu'][0]['title']['de-at'] = "Fax Server";
 $apps[$x]['menu'][0]['title']['fr-fr'] = "Serveur Fax";
 $apps[$x]['menu'][0]['title']['fr-ca'] = "Serveur du fax";

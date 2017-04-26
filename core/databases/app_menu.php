@@ -9,6 +9,7 @@ $apps[$x]['menu'][0]['title']['pl'] = "Bazy danych";
 $apps[$x]['menu'][0]['title']['ru-ru'] = "Базы данных";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Databaser";
 $apps[$x]['menu'][0]['title']['uk'] = "Бази даних";
+$apps[$x]['menu'][0]['title']['de-de'] = "Datenbanken";
 $apps[$x]['menu'][0]['title']['de-at'] = "Datenbanken";
 $apps[$x]['menu'][0]['title']['ar-eg'] = "قواعد البيانات";
 $apps[$x]['menu'][0]['uuid'] = "ebbd754d-ca74-d5b1-a77e-9206ba3ecc3f";
