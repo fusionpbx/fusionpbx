@@ -95,8 +95,8 @@ $text['label-timeout']['fr-fr'] = "Timeout";
 $text['label-timeout']['pt-br'] = "Tempo limite";
 $text['label-timeout']['pl'] = "Przekroczenie czasu oczekiwania (timeout)";
 $text['label-timeout']['sv-se'] = "Tidsgräns";
-$text['label-timeout']['de-de'] = "Abwurfzeit";
-$text['label-timeout']['de-at'] = "Abwurfzeit";
+$text['label-timeout']['de-de'] = "Zeitbeschränkung";
+$text['label-timeout']['de-at'] = "Zeitbeschränkung";
 $text['label-timeout']['ru-ru'] = "Тайм-аут";
 
 $text['label-ring_back']['en-us'] = "Ring Back";
@@ -139,8 +139,8 @@ $text['label-max_timeouts']['fr-fr'] = "Timeouts Max";
 $text['label-max_timeouts']['pt-br'] = "Nª máximo de tempo de saída";
 $text['label-max_timeouts']['pl'] = "Maksymalna wartość przekroczenia czasu oczekiwania";
 $text['label-max_timeouts']['sv-se'] = "Max Tidsgräns";
-$text['label-max_timeouts']['de-de'] = "Max Abwurfzeit";
-$text['label-max_timeouts']['de-at'] = "Max Abwurfzeit";
+$text['label-max_timeouts']['de-de'] = "Max Zeitbeschränkung";
+$text['label-max_timeouts']['de-at'] = "Max Zeitbeschränkung";
 $text['label-max_timeouts']['ru-ru'] = "Максимальное время ожидания";
 
 $text['label-max_failures']['en-us'] = "Max Failures";
@@ -216,8 +216,8 @@ $text['label-exit_sound']['fr-fr'] = "Audio de sortie";
 $text['label-exit_sound']['pt-br'] = "Áudio de saída";
 $text['label-exit_sound']['pl'] = "Dźwięk przy wyjściu";
 $text['label-exit_sound']['sv-se'] = "Avslutningsljud";
-$text['label-exit_sound']['de-at'] = "Ton beideerlassen";
-$text['label-exit_sound']['de-at'] = "Ton bei verlassen";
+$text['label-exit_sound']['de-de'] = "Ton bei Verlassen";
+$text['label-exit_sound']['de-at'] = "Ton bei Verlassen";
 $text['label-exit_sound']['ru-ru'] = "Выход звука";
 
 $text['label-exit_action']['en-us'] = "Exit Action";
@@ -227,8 +227,8 @@ $text['label-exit_action']['fr-fr'] = "Action de Sortie";
 $text['label-exit_action']['pt-br'] = "Ação de saída";
 $text['label-exit_action']['pl'] = "Porzuć operację";
 $text['label-exit_action']['sv-se'] = "Avslutningsaktion";
-$text['label-exit_action']['de-de'] = "Aktion bei verlassen";
-$text['label-exit_action']['de-at'] = "Aktion bei verlassen";
+$text['label-exit_action']['de-de'] = "Aktion bei Verlassen";
+$text['label-exit_action']['de-at'] = "Aktion bei Verlassen";
 $text['label-exit_action']['ru-ru'] = "Активизация Выхода";
 
 $text['label-direct_dial']['en-us'] = "Direct Dial";
@@ -590,8 +590,8 @@ $text['description-exit_action']['fr-fr'] = "Choisir l'action à executer en sor
 $text['description-exit_action']['pt-br'] = "Escolher a ação de saída a realizar se o IVR existir";
 $text['description-exit_action']['pl'] = "Wybierz następny krok po wyjściu z IVR.";
 $text['description-exit_action']['sv-se'] = "Välj en aktion som skall utföras när IVR Menyn är 'slut'";
-$text['description-exit_action']['de-de'] = "Wählen Sie eine Aktion bei verlassen der Automatischen Vermittlung.";
-$text['description-exit_action']['de-at'] = "Wählen Sie eine Aktion bei verlassen der Automatischen Vermittlung.";
+$text['description-exit_action']['de-de'] = "Wählen Sie eine Aktion bei Verlassen der Automatischen Vermittlung.";
+$text['description-exit_action']['de-at'] = "Wählen Sie eine Aktion bei Verlassen der Automatischen Vermittlung.";
 $text['description-exit_action']['ru-ru'] = "Выберите действие выхода, которое необходимо выполнить, если Голосовое Меню (IVR) завершает работу.";
 
 $text['description-enabled']['en-us'] = "Set the status of this IVR Menu.";

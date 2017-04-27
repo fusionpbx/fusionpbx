@@ -804,8 +804,8 @@ $text['label-enabled']['pl'] = "Włączony";
 $text['label-enabled']['ru-ru'] = "Включено";
 $text['label-enabled']['sv-se'] = "Aktiverad";
 $text['label-enabled']['uk'] = "Включено";
-$text['label-enabled']['de-de'] = "An";
-$text['label-enabled']['de-at'] = "An";
+$text['label-enabled']['de-de'] = "Aktiviert";
+$text['label-enabled']['de-at'] = "Aktiviert";
 $text['label-enabled']['it-it'] = "Attivato";
 
 $text['label-disable']['en-us'] = "Disable";
@@ -830,8 +830,8 @@ $text['label-disabled']['pl'] = "Wyłączony";
 $text['label-disabled']['ru-ru'] = "Выключено";
 $text['label-disabled']['sv-se'] = "Inaktiverad";
 $text['label-disabled']['uk'] = "Відключено";
-$text['label-disabled']['de-de'] = "Ausgeschaltet";
-$text['label-disabled']['de-at'] = "Ausgeschaltet";
+$text['label-disabled']['de-de'] = "Deaktiviert";
+$text['label-disabled']['de-at'] = "Deaktiviert";
 $text['label-disabled']['it-it'] = "Disattiva";
 
 $text['label-domain']['en-us'] = "Domain";
