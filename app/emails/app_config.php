@@ -11,9 +11,9 @@
 		$apps[$x]['description']['en-us'] = "Manage failed email messages.";
 		$apps[$x]['description']['es-cl'] = "Gestionar los mensajes fallidos.";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Fehlgeschlagene Email Benachrichtigungen verwalten.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Fehlgeschlagene Email Benachrichtigungen verwalten.";
 		$apps[$x]['description']['fr-fr'] = "GÈrer les messages Èlectroniques ÈchouÈ.";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";

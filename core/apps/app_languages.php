@@ -9,8 +9,8 @@ $text['title-apps']['pl'] = "Menedżer aplikacji";
 $text['title-apps']['ru-ru'] = "Управление приложениями";
 $text['title-apps']['sv-se'] = "App Inställningar";
 $text['title-apps']['uk'] = "Керування додатками";
-$text['title-apps']['de-de'] = "App Verwaltung";
-$text['title-apps']['de-at'] = "App Verwaltung";
+$text['title-apps']['de-de'] = "Applikation Verwaltung";
+$text['title-apps']['de-at'] = "Applikation Verwaltung";
 $text['title-apps']['it-it'] = "Gestore applicazioni";
 
 $text['title-app-edit']['en-us'] = "App Edit";
@@ -48,8 +48,8 @@ $text['header-apps']['pl'] = "Menedżer aplikacji";
 $text['header-apps']['ru-ru'] = "Управление приложениями";
 $text['header-apps']['sv-se'] = "App Inställningar";
 $text['header-apps']['uk'] = "Керування додатками";
-$text['header-apps']['de-de'] = "App Verwaltung";
-$text['header-apps']['de-at'] = "App Verwaltung";
+$text['header-apps']['de-de'] = "Applikation verwalten";
+$text['header-apps']['de-at'] = "Applikation verwalten";
 $text['header-apps']['it-it'] = "Gestore applicazioni";
 
 $text['header-app-edit']['en-us'] = "App Edit";

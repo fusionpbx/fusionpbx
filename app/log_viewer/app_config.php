@@ -11,9 +11,9 @@
 		$apps[$x]['description']['en-us'] = "Display the switch logs.";
 		$apps[$x]['description']['es-cl'] = "Muestra los registros del switch";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Zeigt die Switch-Logs an.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Zeigt die Switch-Logs an.";
 		$apps[$x]['description']['fr-fr'] = "Logs du switch.";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";

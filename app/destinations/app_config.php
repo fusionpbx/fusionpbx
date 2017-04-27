@@ -11,9 +11,9 @@
 		$apps[$x]['description']['en-us'] = "Used to define external destination numbers.";
 		$apps[$x]['description']['es-cl'] = "Utilizado para definir números de destino externos.";
 		$apps[$x]['description']['es-mx'] = "Utilizado para definir numeros destinos externos.";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Wird verwendet um externe Ziele zu definieren.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Wird verwendet um externe Ziele zu definieren.";
 		$apps[$x]['description']['fr-fr'] = "Défini les numéros externes.";
 		$apps[$x]['description']['fr-ca'] = "Usé pour définir cibler nombres externe.";
 		$apps[$x]['description']['fr-ch'] = "";

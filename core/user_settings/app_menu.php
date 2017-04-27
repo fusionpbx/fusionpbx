@@ -10,6 +10,7 @@ $apps[$x]['menu'][1]['title']['ru-ru'] = "Панель пользователя"
 $apps[$x]['menu'][1]['title']['he'] = "ממשק משתמש";
 $apps[$x]['menu'][1]['title']['uk'] = "Панель користувача";
 $apps[$x]['menu'][1]['title']['sv-se'] = "Användarpanel";
+$apps[$x]['menu'][1]['title']['de-de'] = "Benutzerübersicht";
 $apps[$x]['menu'][1]['title']['de-at'] = "Benutzerübersicht";
 $apps[$x]['menu'][1]['title']['ro'] = "Panou control utilizator";
 $apps[$x]['menu'][1]['title']['ar-eg'] = "الصفحه الرئيسيه للمستخدم";

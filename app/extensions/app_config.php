@@ -11,9 +11,9 @@
 		$apps[$x]['description']['en-us'] = "Used Configure SIP extensions.";
 		$apps[$x]['description']['es-cl'] = "Utilizado para configurar Extensiones SIP.";
 		$apps[$x]['description']['es-mx'] = "Utilizado para configurar Extensiones SIP.";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Wird verwendet um SIP Nebenstellen zu konfigurieren.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Wird verwendet um SIP Nebenstellen zu konfigurieren.";
 		$apps[$x]['description']['fr-fr'] = "Utilisé pour configurer des extentions SIP";
 		$apps[$x]['description']['fr-ca'] = "Utilisé pour configurer des éxtentions SIP";
 		$apps[$x]['description']['fr-ch'] = "";

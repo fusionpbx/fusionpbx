@@ -10,9 +10,9 @@
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Manage user groups and permissions.";
 		$apps[$x]['description']['es-cl'] = "Administrar grupos de usuarios y permisos.";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Verwalte Benutzergruppen und Berechtigungen.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Verwalte Benutzergruppen und Berechtigungen.";
 		$apps[$x]['description']['fr-fr'] = "Gérer les groupes d'utilisateurs et des autorisations.";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";

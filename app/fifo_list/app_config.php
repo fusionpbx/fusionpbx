@@ -11,9 +11,9 @@
 		$apps[$x]['description']['en-us'] = "List all the queues that are currently active with one or more callers.";
 		$apps[$x]['description']['es-cl'] = "Lista todas las colas que estan siendo actualmente usadas con una o más personas en espera.";
 		$apps[$x]['description']['es-mx'] = "Lista todas las colas que estan siendo actualmente usadas con una o más personas en espera.";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Führt alle Warteschlangen mit einem oder mehrere aktive Anrufer auf.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Führt alle Warteschlangen mit einem oder mehrere aktive Anrufer auf.";
 		$apps[$x]['description']['fr-fr'] = "Liste toutes les files d'attente actuellement utilisées avec une ou plus des personnes en attend.";
 		$apps[$x]['description']['fr-ca'] = "Il liste toutes les queues qui sont maintenant utilisés avec une ou plus des personnes en attend.";
 		$apps[$x]['description']['fr-ch'] = "";

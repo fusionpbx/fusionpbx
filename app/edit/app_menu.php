@@ -6,7 +6,8 @@
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "";
-	$apps[$x]['menu'][$y]['title']['de-at'] = "";
+	$apps[$x]['menu'][$y]['title']['de-de'] = "Skript Editor";
+	$apps[$x]['menu'][$y]['title']['de-at'] = "Skript Editor";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Editeur de script";
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
 	$apps[$x]['menu'][$y]['title']['fr-ch'] = "";
@@ -25,7 +26,8 @@
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "";
-	$apps[$x]['menu'][$y]['title']['de-at'] = "";
+	$apps[$x]['menu'][$y]['title']['de-de'] = "XML Editor";
+	$apps[$x]['menu'][$y]['title']['de-at'] = "XML Editor";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Editeur XML";
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
 	$apps[$x]['menu'][$y]['title']['fr-ch'] = "";
@@ -44,7 +46,8 @@
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "";
-	$apps[$x]['menu'][$y]['title']['de-at'] = "";
+	$apps[$x]['menu'][$y]['title']['de-de'] = "Bereitstellungs Editor";
+	$apps[$x]['menu'][$y]['title']['de-at'] = "Bereitstellungs Editor";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Editeur de Provisioning";
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
 	$apps[$x]['menu'][$y]['title']['fr-ch'] = "";
@@ -63,7 +66,8 @@
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "";
-	$apps[$x]['menu'][$y]['title']['de-at'] = "";
+	$apps[$x]['menu'][$y]['title']['de-de'] = "PHP Editor";
+	$apps[$x]['menu'][$y]['title']['de-at'] = "PHP Editor";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Editeur PHP";
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
 	$apps[$x]['menu'][$y]['title']['fr-ch'] = "";
@@ -82,7 +86,8 @@
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "Editor Gramático";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "";
-	$apps[$x]['menu'][$y]['title']['de-at'] = "";
+	$apps[$x]['menu'][$y]['title']['de-de'] = "Grammatik Editor";
+	$apps[$x]['menu'][$y]['title']['de-at'] = "Grammatik Editor";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Editeur de Grammaire";
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
 	$apps[$x]['menu'][$y]['title']['fr-ch'] = "";

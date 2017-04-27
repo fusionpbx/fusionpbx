@@ -10,9 +10,9 @@
 	$apps[$x]['url'] = "http://www.fusionpbx.com";
 	$apps[$x]['description']['en-us'] = "Call Forward, Follow Me and Do Not Disturb.";
 	$apps[$x]['description']['es-cl'] = "Reenvio de llamada, Sígueme y No Molestar.";
-	$apps[$x]['description']['de-de'] = "";
+	$apps[$x]['description']['de-de'] = "Anrufweiterleitung, Follow Me und Nicht-Stören.";
 	$apps[$x]['description']['de-ch'] = "";
-	$apps[$x]['description']['de-at'] = "";
+	$apps[$x]['description']['de-at'] = "Anrufweiterleitung, Follow Me und Nicht-Stören.";
 	$apps[$x]['description']['fr-fr'] = "Renvoi d'appel, Follow Me et ne pas deranger.";
 	$apps[$x]['description']['fr-ca'] = "";
 	$apps[$x]['description']['fr-ch'] = "";
