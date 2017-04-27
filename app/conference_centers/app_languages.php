@@ -292,7 +292,7 @@ $text['label-wait_for_moderator']['sv-se'] = "Vänta på Moderator";
 $text['label-wait_for_moderator']['uk'] = "Очікування на модератора";
 $text['label-wait_for_moderator']['de-de'] = "Warte auf Moderator";
 $text['label-wait_for_moderator']['de-at'] = "Warte auf Moderator";
-$text['label-wait_for_moderator']['ru-ru'] = "Ждите модератора";
+$text['label-wait_for_moderator']['ru-ru'] = "Ждать модератора";
 
 $text['label-view']['en-us'] = "View";
 $text['label-view']['es-cl'] = "Ver";
@@ -364,7 +364,7 @@ $text['label-to']['sv-se'] = "Till";
 $text['label-to']['uk'] = "До";
 $text['label-to']['de-de'] = "An";
 $text['label-to']['de-at'] = "An";
-$text['label-to']['ru-ru'] = "Кому";
+$text['label-to']['ru-ru'] = "До";
 
 $text['label-time']['en-us'] = "Time";
 $text['label-time']['es-cl'] = "Hora";
@@ -421,7 +421,7 @@ $text['label-schedule']['pl'] = "Harmonogram";
 $text['label-schedule']['sv-se'] = "Schema";
 $text['label-schedule']['uk'] = "Розклад";
 $text['label-schedule']['de-at'] = "Zeitplan";
-$text['label-schedule']['ru-ru'] = "Планироащик";
+$text['label-schedule']['ru-ru'] = "Планировщик";
 
 $text['label-room-name']['en-us'] = "Room Name";
 $text['label-room-name']['es-cl'] = "Nombre de la Sala";
@@ -685,7 +685,7 @@ $text['label-details']['sv-se'] = "Detaljer";
 $text['label-details']['uk'] = "Деталі";
 $text['label-details']['de-de'] = "Details";
 $text['label-details']['de-at'] = "Details";
-$text['label-details']['ru-ru'] = "Details";
+$text['label-details']['ru-ru'] = "Детали";
 
 $text['label-conference_name']['en-us'] = "Conference Name";
 $text['label-conference_name']['es-cl'] = "Nombre de la conferencia";
@@ -768,7 +768,7 @@ $text['description-schedule']['sv-se'] = "Sätt en start och stopp datum/tid fö
 $text['description-schedule']['uk'] = "Встановіть час початку/завершення для цієї кімнати.";
 $text['description-schedule']['de-de'] = "Setzen Sie die Start und Stopp Datum/Zeit für diesen Raum";
 $text['description-schedule']['de-at'] = "Setzen Sie die Start und Stopp Datum/Zeit für diesen Raum";
-$text['description-schedule']['ru-ru'] = "Установить Set a start and stop date/time for this room.";
+$text['description-schedule']['ru-ru'] = "Установить дату / время начала и окончания для этой комнаты.";
 
 $text['description-room-name']['en-us'] = "Enter a name for the conference room.";
 $text['description-room-name']['es-cl'] = "Introduzca un nombre para la sala de conferencias.";
