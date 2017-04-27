@@ -781,8 +781,8 @@ $text['label-continue']['pt-br'] = "Continuar";
 $text['label-continue']['pl'] = "Kontynuuj";
 $text['label-continue']['uk'] = "Продовжити";
 $text['label-continue']['sv-se'] = "Fortsätt";
-$text['label-continue']['de-de'] = "fortfahren";
-$text['label-continue']['de-at'] = "fortfahren";
+$text['label-continue']['de-de'] = "Fortfahren";
+$text['label-continue']['de-at'] = "Fortfahren";
 $text['label-continue']['he'] = "המשך";
 $text['label-continue']['ru-ru'] = "Продолжить";
 

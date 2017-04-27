@@ -9,8 +9,8 @@ $text['title']['pl'] = "Rozsyłanie rozmów";
 $text['title']['sv-se'] = "Samtalsdistributioner";
 $text['title']['ru-ru'] = "Массовые вызовы";
 $text['title']['uk'] = "Трансляція дзвінків";
-$text['title']['de-de'] = "Automatische Anrufe";
-$text['title']['de-at'] = "Automatische Anrufe";
+$text['title']['de-de'] = "Rundrufe";
+$text['title']['de-at'] = "Rundrufe";
 $text['title']['he'] = "הגדרת חשבון";
 
 $text['option-true']['en-us'] = "True";
@@ -100,8 +100,8 @@ $text['label-has-been']['pl'] = "rozpoczęto";
 $text['label-has-been']['sv-se'] = "har startat";
 $text['label-has-been']['ru-ru'] = "было запущено";
 $text['label-has-been']['uk'] = "було запущено";
-$text['label-has-been']['de-de'] = "bereits gestartet";
-$text['label-has-been']['de-at'] = "bereits gestartet";
+$text['label-has-been']['de-de'] = "wurde gestartet";
+$text['label-has-been']['de-at'] = "wurde gestartet";
 $text['label-has-been']['he'] = "";
 
 $text['label-destination']['en-us'] = "Destination Number";
@@ -165,8 +165,8 @@ $text['label-call-broadcasts']['pl'] = "Rozsyłanie rozmów";
 $text['label-call-broadcasts']['sv-se'] = "Samtalsdistributioner";
 $text['label-call-broadcasts']['ru-ru'] = "Массовые вызовы";
 $text['label-call-broadcasts']['uk'] = "Трансляція дзвінків";
-$text['label-call-broadcasts']['de-de'] = "Automatische Anrufe";
-$text['label-call-broadcasts']['de-at'] = "Automatische Anrufe";
+$text['label-call-broadcasts']['de-de'] = "Rundrufe";
+$text['label-call-broadcasts']['de-at'] = "Rundrufe";
 $text['label-call-broadcasts']['he'] = "";
 
 $text['label-call-broadcast']['en-us'] = "Call Broadcast";
@@ -178,8 +178,8 @@ $text['label-call-broadcast']['pl'] = "Rozsyłanie rozmów";
 $text['label-call-broadcast']['sv-se'] = "Samtalsdistribution";
 $text['label-call-broadcast']['ru-ru'] = "Массовый вызов";
 $text['label-call-broadcast']['uk'] = "Трансляція дзвінка";
-$text['label-call-broadcast']['de-de'] = "Automatische Anrufe";
-$text['label-call-broadcast']['de-at'] = "Automatische Anrufe";
+$text['label-call-broadcast']['de-de'] = "Rundrufe";
+$text['label-call-broadcast']['de-at'] = "Rundrufe";
 $text['label-call-broadcast']['he'] = "";
 
 $text['label-avmd']['en-us'] = "Voicemail Detection";
@@ -191,8 +191,8 @@ $text['label-avmd']['pl'] = "Wykrywanie poczty głosowej";
 $text['label-avmd']['sv-se'] = "Känn Av Röstbrevlåda";
 $text['label-avmd']['ru-ru'] = "Определение голосовой почты";
 $text['label-avmd']['uk'] = "Виявлення голосової пошти";
-$text['label-avmd']['de-de'] = "Mailboxerkennung";
-$text['label-avmd']['de-at'] = "Mailboxerkennung";
+$text['label-avmd']['de-de'] = "Erkennung von Sprachnachrichten";
+$text['label-avmd']['de-at'] = "Erkennung von Sprachnachrichten";
 $text['label-avmd']['he'] = "";
 
 $text['label-accountcode']['en-us'] = "Accountcode";
@@ -205,7 +205,7 @@ $text['label-accountcode']['sv-se'] = "Accountcode";
 $text['label-accountcode']['ru-ru'] = "Код Авторизации";
 $text['label-accountcode']['uk'] = "Код облікового запису";
 $text['label-accountcode']['de-de'] = "Kontoschlüssel";
-$text['label-accountcode']['de-at'] = "KOntoschlüssel";
+$text['label-accountcode']['de-at'] = "Kontoschlüssel";
 $text['label-accountcode']['he'] = "קוד חשבון";
 
 $text['description-timeout']['en-us'] = "";
@@ -269,8 +269,8 @@ $text['description-destination']['pl'] = "Wybierz numer docelowy.";
 $text['description-destination']['sv-se'] = "Skicka samtalet till en anknytning, IVR Meny, Konferens Rum eller något annat nummer.";
 $text['description-destination']['ru-ru'] = "Отправить вызов на внутренний номер, IVR, конференцию или любой другой номер.";
 $text['description-destination']['uk'] = "Відправити дзвінок на розширення, меню IVR, конференцію, або будь-який інший номер.";
-$text['description-destination']['de-de'] = "Der Anruf wird auf diese Nebenstelle, eine Automatische Vermittlung, ein Konferenzraum oder jede andere Nummer weitergeleitet.";
-$text['description-destination']['de-at'] = "Der Anruf wird auf diese Nebenstelle, eine Automatische Vermittlung, ein Konferenzraum oder jede andere Nummer weitergeleitet.";
+$text['description-destination']['de-de'] = "Der Anruf wird an eine Nebenstelle, eine Automatische Vermittlung, ein Konferenzraum oder jede andere Nummer weitergeleitet.";
+$text['description-destination']['de-at'] = "Der Anruf wird an eine Nebenstelle, eine Automatische Vermittlung, ein Konferenzraum oder jede andere Nummer weitergeleitet.";
 $text['description-destination']['he'] = "";
 
 $text['description-concurrent-limit']['en-us'] = "Limit the approximate number of concurrent calls. Leave this empty for no limit.";
@@ -282,8 +282,8 @@ $text['description-concurrent-limit']['pl'] = "Ogranicz liczbę równoczesnych  
 $text['description-concurrent-limit']['sv-se'] = "Begränsa ungefärliga antalet samtidiga samtal. Lämna det här tomt för ingen gräns.";
 $text['description-concurrent-limit']['ru-ru'] = "Ограничение примерного количества параллельных вызовов. Оставьте пустым для его отсутствия.";
 $text['description-concurrent-limit']['uk'] = "Обмеження приблизної кількості одночасних дзвінків. Якщо пусто - без обмежень";
-$text['description-concurrent-limit']['de-de'] = "Limitiert die Anzahl gleichzeitiger Anrufe. Kein Limit wenn leer gelassen.";
-$text['description-concurrent-limit']['de-at'] = "Limitiert die Anzahl gleichzeitiger Anrufe. Kein Limit wenn leer gelassen.";
+$text['description-concurrent-limit']['de-de'] = "Begrenzt die Anzahl gleichzeitiger Anrufe. Kein Limit wenn leer gelassen.";
+$text['description-concurrent-limit']['de-at'] = "Begrenzt die Anzahl gleichzeitiger Anrufe. Kein Limit wenn leer gelassen.";
 $text['description-concurrent-limit']['he'] = "";
 
 $text['description-caller-id-number']['en-us'] = "Applicable if the provider that allow the Caller ID number to be sent. default: 0000000000";
@@ -385,8 +385,8 @@ $text['button-stop']['pl'] = "Zatrzymaj rozsylanie rozmów";
 $text['button-stop']['sv-se'] = "Stoppa Samtalsdistribution";
 $text['button-stop']['ru-ru'] = "Остановить";
 $text['button-stop']['uk'] = "Зупинити трансляцію";
-$text['button-stop']['de-de'] = "Stopp";
-$text['button-stop']['de-at'] = "Stopp";
+$text['button-stop']['de-de'] = "Rundruf beenden";
+$text['button-stop']['de-at'] = "Rundruf beenden";
 $text['button-stop']['he'] = "";
 
 $text['button-send']['en-us'] = "Send Broadcast";
@@ -398,8 +398,8 @@ $text['button-send']['pl'] = "Wysłane";
 $text['button-send']['sv-se'] = "Skicka Samtalsdistribution";
 $text['button-send']['ru-ru'] = "Запустить";
 $text['button-send']['uk'] = "Транслювати";
-$text['button-send']['de-de'] = "Senden";
-$text['button-send']['de-at'] = "Senden";
+$text['button-send']['de-de'] = "Rundruf senden";
+$text['button-send']['de-at'] = "Rundruf senden";
 $text['button-send']['he'] = "נשלח";
 
 ?>

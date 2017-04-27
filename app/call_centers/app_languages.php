@@ -515,8 +515,8 @@ $text['label-timeout_action']['pl'] = "Następny krok po upływie limitu czasowe
 $text['label-timeout_action']['sv-se'] = "Timeout Åtgärd";
 $text['label-timeout_action']['ru-ru'] = "Действие по тайм-ауту";
 $text['label-timeout_action']['uk'] = "";
-$text['label-timeout_action']['de-de'] = "Aktion bei Abwurf";
-$text['label-timeout_action']['de-at'] = "Aktion bei Abwurf";
+$text['label-timeout_action']['de-de'] = "Aktion bei Zeitüberschreitung";
+$text['label-timeout_action']['de-at'] = "Aktion bei Zeitüberschreitung";
 
 $text['label-time_base_score']['en-us'] = "Time Base Score";
 $text['label-time_base_score']['es-cl'] = "Puntuación basada en tiempo";
@@ -575,8 +575,8 @@ $text['label-tier_rule_wait_multiply_level']['pl'] = "Poziomowa zasada przemnoż
 $text['label-tier_rule_wait_multiply_level']['sv-se'] = "Kunskap Regel Väntetid Multipla Värden";
 $text['label-tier_rule_wait_multiply_level']['ru-ru'] = "Правило компетенции: Множитель ожидания";
 $text['label-tier_rule_wait_multiply_level']['uk'] = "";
-$text['label-tier_rule_wait_multiply_level']['de-de'] = "EbenenRRegel Wartezeit Multiplikator Level";
-$text['label-tier_rule_wait_multiply_level']['de-at'] = "EbenenRRegel Wartezeit Multiplikator Level";
+$text['label-tier_rule_wait_multiply_level']['de-de'] = "Multiplikator für die Ebenen-Regel Wartezeit";
+$text['label-tier_rule_wait_multiply_level']['de-at'] = "Multiplikator für die Ebenen-Regel Wartezeit";
 
 $text['label-tier_rule_no_agent_no_wait']['en-us'] = "Tier Rule No Agent No Wait";
 $text['label-tier_rule_no_agent_no_wait']['es-cl'] = "Regla de nivel No espera Sin Agente";
@@ -647,8 +647,8 @@ $text['label-reject_delay_time']['pl'] = "Odrzuć opóznienie czasowe";
 $text['label-reject_delay_time']['sv-se'] = "Fördröjning vid Neka";
 $text['label-reject_delay_time']['ru-ru'] = "Время задержки по отказу";
 $text['label-reject_delay_time']['uk'] = "";
-$text['label-reject_delay_time']['de-de'] = "Zeitverzögerung für Abwurf";
-$text['label-reject_delay_time']['de-at'] = "Zeitverzögerung für Abwurf";
+$text['label-reject_delay_time']['de-de'] = "Zeitverzögerung für Zeitüberschreitung";
+$text['label-reject_delay_time']['de-at'] = "Zeitverzögerung für Zeitüberschreitung";
 
 $text['label-record_template']['en-us'] = "Record";
 $text['label-record_template']['es-cl'] = "Guardar";
@@ -779,8 +779,8 @@ $text['label-discard_abandoned_after']['pl'] = "Odrzuć opuszczoną rozmowę po"
 $text['label-discard_abandoned_after']['sv-se'] = "Uteslut Ej Besvarat Efter";
 $text['label-discard_abandoned_after']['ru-ru'] = "Сбросить вызов после покидания очереди";
 $text['label-discard_abandoned_after']['uk'] = "";
-$text['label-discard_abandoned_after']['de-de'] = "Zurückweisen nach Abwurf";
-$text['label-discard_abandoned_after']['de-at'] = "Zurückweisen nach Abwurf";
+$text['label-discard_abandoned_after']['de-de'] = "Zurückweisen nach Zeitüberschreitung";
+$text['label-discard_abandoned_after']['de-at'] = "Zurückweisen nach Zeitüberschreitung";
 
 $text['label-default_status']['en-us'] = "Default Status";
 $text['label-default_status']['es-cl'] = "Estado Predeterminado";
@@ -873,8 +873,8 @@ $text['label-call_timeout']['pl'] = "Limit czasu rozmowy";
 $text['label-call_timeout']['sv-se'] = "Ring Tidsgräns";
 $text['label-call_timeout']['ru-ru'] = "Тайм-аут вызова";
 $text['label-call_timeout']['uk'] = "Тайм-аут дзвінка";
-$text['label-call_timeout']['de-de'] = "Abwurfzeit";
-$text['label-call_timeout']['de-at'] = "Abwurfzeit";
+$text['label-call_timeout']['de-de'] = "Zeitüberschreitung";
+$text['label-call_timeout']['de-at'] = "Zeitüberschreitung";
 
 $text['label-busy_delay_time']['en-us'] = "Busy Delay Time";
 $text['label-busy_delay_time']['es-cl'] = "Tiempo de espera para ocupado";
@@ -1412,8 +1412,8 @@ $text['description-call_timeout']['pl'] = "Wpisz limit czasu rozmowy";
 $text['description-call_timeout']['sv-se'] = "Ange 'call timeout'";
 $text['description-call_timeout']['ru-ru'] = "Введите тайм-аут вызова";
 $text['description-call_timeout']['uk'] = "";
-$text['description-call_timeout']['de-de'] = "Geben Sie die Abwurfzeit an.";
-$text['description-call_timeout']['de-at'] = "Geben Sie die Abwurfzeit an.";
+$text['description-call_timeout']['de-de'] = "Geben Sie den Wert für die Zeitüberschreitung an.";
+$text['description-call_timeout']['de-at'] = "Geben Sie den Wert für die Zeitüberschreitung an.";
 
 $text['description-call_center_queues']['en-us'] = "List of queues for the call center.";
 $text['description-call_center_queues']['es-cl'] = "Lista de Colas de Centro de Llamados.";
