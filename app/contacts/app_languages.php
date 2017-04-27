@@ -2564,8 +2564,8 @@ $text['description-groups']['pt-br'] = "Selecione os grupos que podem ver este c
 $text['description-groups']['pl'] = "Kontaky przypisane do grupy, są widoczne tylko dla użytkowników w grupie. Kontakty nie przypisane do grupy będą widoczna dla wszystkich użytkowników w domenie.";
 $text['description-groups']['uk'] = "Опис";
 $text['description-groups']['sv-se'] = "Kontakter tilldelade till en grupp är endast synbara för användare i guppen. Kontakter som inte är tilldelade till någon grupp syns för alla användare i hela domänen.";
-$text['description-groups']['de-de'] = "Legen Sie die Gruppen fest, für die dieser Kontakt sichtbar ist. Kontakte ohne Gruppenzuordnung sind für alle Benutzer dieser Domain sichtbar.";
-$text['description-groups']['de-at'] = "Legen Sie die Gruppen fest, für die dieser Kontakt sichtbar ist. Kontakte ohne Gruppenzuordnung sind für alle Benutzer dieser Domain sichtbar.";
+$text['description-groups']['de-de'] = "Legen Sie die Gruppen fest, für die dieser Kontakt sichtbar ist.";
+$text['description-groups']['de-at'] = "Legen Sie die Gruppen fest, für die dieser Kontakt sichtbar ist.";
 $text['description-groups']['he'] = "";
 $text['description-groups']['ru-ru'] = "Выберите группы, которым разрешено просматривать этот контакт.";
 

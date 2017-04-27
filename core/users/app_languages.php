@@ -1104,6 +1104,7 @@ $text['description-contact']['ru-ru'] = "Назначить контакт дл�
 $text['description-contact']['uk'] = "Призначити контакт в цей обліковий запис користувача.";
 $text['description-contact']['sv-se'] = "Tilldela en kontakt till detta konto.";
 $text['description-contact']['ro'] = "";
+$text['description-contact']['de-de'] = "Weisen Sie diesem Benutzer einen Kontakt zu.";
 $text['description-contact']['de-at'] = "Weisen Sie diesem Benutzer einen Kontakt zu.";
 $text['description-contact']['he'] = "שייך איש קשר לחשבון";
 $text['description-contact']['it-it'] = "Assegna un contatto a questo account utente";

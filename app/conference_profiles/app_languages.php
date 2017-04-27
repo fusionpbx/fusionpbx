@@ -5,16 +5,16 @@
 		$text['title-conference_profiles']['es-cl'] = '';
 		$text['title-conference_profiles']['pt-pt'] = '';
 		$text['title-conference_profiles']['fr-fr'] = '';
-		$text['title-conference_profiles']['de-de'] = 'Konferenz Profile';
-		$text['title-conference_profiles']['de-at'] = 'Konferenz Profile';
+		$text['title-conference_profiles']['de-de'] = 'Konferenzprofile';
+		$text['title-conference_profiles']['de-at'] = 'Konferenzprofile';
 		$text['title-conference_profiles']['ru-ru'] = 'Профили Конференций';
 
 		$text['title-conference_profile']['en-us'] = 'Conference Profile';
 		$text['title-conference_profile']['es-cl'] = '';
 		$text['title-conference_profile']['pt-pt'] = '';
 		$text['title-conference_profile']['fr-fr'] = '';
-		$text['title-conference_profile']['de-de'] = 'Konferenz Profile';
-		$text['title-conference_profile']['de-at'] = 'Konferenz Profile';
+		$text['title-conference_profile']['de-de'] = 'Konferenzprofile';
+		$text['title-conference_profile']['de-at'] = 'Konferenzprofile';
 		$text['title-conference_profile']['ru-ru'] = 'Профиль Конференции';
 
 		$text['title_description-conference_profile']['en-us'] = 'A group of conference parameters saved together as a profile.';
