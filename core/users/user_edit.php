@@ -63,8 +63,7 @@
 		}
 		unset($prep_statement, $row);
 		if ($total_users >= $_SESSION['limit']['users']['numeric']) {
-			$_SESSION['message_mood'] = 'negative';
-			$_SESSION['message'] = $text['message-maximum_users'].' '.$_SESSION['limit']['users']['numeric'];
+			messages::add(text['message-maximum_users'].' '.$_SESSION['limit']['users']['numeric'], 'negative');
 			header('Location: users.php');
 			exit;
 		}
@@ -91,7 +90,7 @@
 			$sql .= "and user_uuid = '".$user_uuid."' ";
 			$db->exec(check_sql($sql));
 		//redirect the user
-			$_SESSION["message"] = $text['message-update'];
+			messages::add($text['message-update']);
 			header("Location: user_edit.php?id=".$user_uuid);
 			return;
 	}
@@ -147,8 +146,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 		}
 
 		if ($msg_error != '') {
-			$_SESSION["message"] = $msg_error;
-			$_SESSION["message_mood"] = 'negative';
+			messages::add($msg_error, 'negative');
 			if ($action == 'edit') {
 				header("Location: user_edit.php?id=".$user_uuid);
 			}
@@ -454,7 +452,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 		}
 
 	//redirect the browser
-		$_SESSION["message"] = $text['message-update'];
+		messages::add($text['message-update']);
 		if ($_REQUEST['action'] == $text['button-add'] || !permission_exists('user_edit')) {
 			header("Location: user_edit.php?id=".$user_uuid);
 		}
@@ -679,7 +677,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	echo "		<select id='user_time_zone' name='user_time_zone' class='formfld' style=''>\n";
 	echo "		<option value=''></option>\n";
 	//$list = DateTimeZone::listAbbreviations();
-    $time_zone_identifiers = DateTimeZone::listIdentifiers();
+	$time_zone_identifiers = DateTimeZone::listIdentifiers();
 	$previous_category = '';
 	$x = 0;
 	foreach ($time_zone_identifiers as $key => $row) {

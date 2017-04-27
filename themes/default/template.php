@@ -66,43 +66,27 @@
 
 	//display message bar via js
 		function display_message(msg, mood, delay) {
-			var mood = (typeof mood !== 'undefined') ? mood : 'default';
-			var delay = (typeof delay !== 'undefined') ? delay : <?php echo (1000 * (float) $_SESSION['theme']['message_delay']['text']); ?>;
-			if (msg != '') {
-				var inner_width = $(window).width();
-				// add class by mood
-				$("#message_container").addClass('message_container_mood_'+mood);
-				$("#message_text").addClass('message_text_mood_'+mood);
-				// output message
-				$("#message_text").html(msg);
-				$("#message_container").css({height: $("#message_text").css("height")});
-				$("#message_container").css({width: inner_width});
-				$("#message_text").show().animate({top: '+=80'}, 500).animate({opacity: 1}, 'fast').delay(delay).animate({top: '-=80'}, 1000).animate({opacity: 0});
-				$("#message_container").show().animate({top: '+=80'}, 500).animate({opacity: <?php echo $_SESSION['theme']['message_opacity']['text']; ?>}, "fast").delay(delay).animate({top: '-=80'}, 1000).animate({opacity: 0}, function() {
-					$("#message_container").removeClass('message_container_mood_'+mood);
-				});
+			mood = (typeof mood !== 'undefined') ? mood : 'default';
+			delay = (typeof delay !== 'undefined') ? delay : <?php echo (1000 * (float) $_SESSION['theme']['message_delay']['text']); ?>;
+			if (msg !== '') {
+				var message_text = $(document.createElement('div'));
+				message_text.addClass('message_text message_mood_'+mood);
+				message_text.html(msg);
+				message_text.click(function() {
+					var object = $(this);
+					object.clearQueue().finish();
+					object.css({height: '3em'});
+					object.animate({height: '0', 'font-size': '0', 'border-bottom-width': '0'}, 1000).animate({opacity: 0});
+				} );
+				$("#messages_container").append(message_text);
+				message_text.animate({height: '3em'}, 500).animate({opacity: 1}, 'fast').delay(delay).animate({height: '0', 'font-size': '0', 'border-bottom-width': '0'}, 1000).animate({opacity: 0});
 			}
 		}
 
 	$(document).ready(function() {
 
-		//set response message, if any
-			<?php
-			if (strlen($_SESSION['message']) > 0) {
-				$message_text = addslashes($_SESSION['message']);
-				$message_mood = $_SESSION['message_mood'];
-				$message_delay = $_SESSION['message_delay'];
-
-				echo "display_message('".$message_text."'";
-				echo ($message_mood != '') ? ", '".$message_mood."'" : ", 'default'";
-				if ($message_delay != '') {
-					echo ", '".$message_delay."'";
-				}
-				echo "); ";
-				unset($_SESSION['message'], $_SESSION['message_mood'], $_SESSION['message_delay']);
-			}
-			?>
-
+		//render the messages
+			<?php echo messages::html(); ?>
 
 		//hide message bar on hover
 			$("#message_text").mouseover(function() { $(this).hide(); $("#message_container").hide(); });
@@ -253,8 +237,8 @@
 				
 				$('audio').each(function(){
 					if ($(this).get(0) != recording_audio) {
-					    $(this).get(0).pause(); // Stop playing
-					    $(this).get(0).currentTime = 0; // Reset time
+						$(this).get(0).pause(); // Stop playing
+						$(this).get(0).currentTime = 0; // Reset time
 					}
 				});
 			}
@@ -301,15 +285,14 @@
 </head>
 
 <?php
-//add multi-lingual support
+//add multilingual support
 	$language = new text;
 	$text = $language->get(null,'themes/default');
 ?>
 
 <body onload="<?php echo $onload;?>">
 
-	<div id='message_container' class='message_container_mood_default'></div>
-	<div id='message_text' class='message_container_text_default'></div>
+	<div id='messages_container'></div>
 
 	<?php
 	//logged in show the domains block
