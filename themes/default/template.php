@@ -34,7 +34,7 @@
 <link rel="stylesheet" type="text/css" href="<!--{project_path}-->/themes/<?php echo $_SESSION['domain']['template']['name']; ?>/css.php<?php echo ($default_login) ? '?login=default' : null; ?>">
 <?php
 //load custom css
-	if ($_SESSION['theme']['custom_css']['text'] != '') {
+	if (isset($_SESSION['theme']['custom_css']['text']) && $_SESSION['theme']['custom_css']['text'] != '') {
 		echo "<link rel='stylesheet' type='text/css' href='".$_SESSION['theme']['custom_css']['text']."'>\n\n";
 	}
 

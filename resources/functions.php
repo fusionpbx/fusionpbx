@@ -52,6 +52,30 @@
 		}
 	}
 
+	if (!function_exists('post_str')) {
+		// Helper function returns a $_POST variable.  If unset, defaults to blank '' string
+		// allows for easy conversion to fix code (suppressed php warnings)
+		function post_str($field) {
+			return (isset($_POST[$field])) ? $_POST[$field] : '';
+		}
+	}
+
+	if (!function_exists('get_str')) {
+		// Helper function returns a $_GET variable.  If unset, defaults to blank '' string
+		// allows for easy conversion to fix code (suppressed php warnings)
+		function get_str($field) {
+			return (isset($_GET[$field])) ? $_GET[$field] : '';
+		}
+	}
+
+	
+	if (!function_exists('request_str')) {
+		// substitute for $_REQUEST but only uses get/post to avoid cookie xss issues
+		function request_str($field) {
+			return (isset($_POST[$field])) ? $_POST[$field] : (isset($_GET[$field])) ? $_GET[$field] : '';
+		}
+	}
+	
 	if (!function_exists('check_str')) {
 		function check_str($string, $trim = true) {
 			global $db_type, $db;

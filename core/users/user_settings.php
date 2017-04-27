@@ -62,8 +62,8 @@
 	require_once "resources/paging.php";
 
 //get the variables
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
+	$order_by = check_str(get_str("order_by"));
+	$order = check_str(get_str("order"));
 
 //show the content
 	echo "<form name='frm_settings' id='frm_settings' method='get' action='user_setting_delete.php'>";
@@ -86,9 +86,9 @@
 	}
 
 //prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 100;
+	$rows_per_page = (isset($_SESSION['domain']['paging']['numeric']) && $_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 100;
 	$param = "";
-	$page = $_GET['page'];
+	$page = get_str('page');
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
@@ -120,6 +120,7 @@
 //show the content
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
+	$subcat_ids = array();
 	if ($result_count > 0) {
 		$previous_category = '';
 		foreach($result as $row) {
