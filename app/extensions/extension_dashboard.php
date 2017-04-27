@@ -59,10 +59,14 @@
 
 						//build the array on what is allowed.
 							if ($found) {
-								if (is_numeric($row['outbound_caller_id_number'])) {
-									$array['extensions'][$x]['extension_uuid'] = $row['extension_uuid'];
-									$array['extensions'][$x]['outbound_caller_id_name'] = $row['outbound_caller_id_name'];
-									$array['extensions'][$x]['outbound_caller_id_number'] = $row['outbound_caller_id_number'];
+								$caller_id = explode('@', $row['outbound_caller_id']);
+								$outbound_caller_id_name = $caller_id[0];
+								$outbound_caller_id_number = $caller_id[1];
+
+								$array['extensions'][$x]['extension_uuid'] = $row['extension_uuid'];
+								$array['extensions'][$x]['outbound_caller_id_name'] = $caller_id[0];
+								if (is_numeric($outbound_caller_id_number)) {
+									$array['extensions'][$x]['outbound_caller_id_number'] = $outbound_caller_id_number;
 								}
 							}
 
@@ -164,8 +168,7 @@
 			if ($x === 0 && $previous_extension_uuid != $row['extension_uuid']) {
 				echo "			<tr>\n";
 				echo "				<th>".$text['label-extension']."</th>\n";
-				echo "				<th>".$text['label-outbound_caller_id_name']."</th>\n";
-				echo "				<th>".$text['label-outbound_caller_id_number']."</th>\n";
+				echo "				<th>".$text['label-caller_id']."</th>\n";
 				echo "			</tr>\n";
 			}
 
@@ -194,38 +197,15 @@
 			echo "				<td class='row_style".$c." row_style_slim'>\n";
 			if (permission_exists('outbound_caller_id_select')) {
 				if (count($destinations) > 0) {
-					echo "	<select name='extensions[".$x."][outbound_caller_id_name]' id='outbound_caller_id_name' class='formfld'>\n";
+					echo "	<select name='extensions[".$x."][outbound_caller_id]' id='outbound_caller_id_number' class='formfld'>\n";
 					echo "	<option value=''></option>\n";
 					foreach ($destinations as &$row) {
-						if(strlen($row['destination_caller_id_name']) > 0){
-							if ($outbound_caller_id_name == $row['destination_caller_id_name']) {
-								echo "		<option value='".$row['destination_caller_id_name']."' selected='selected'>".$row['destination_caller_id_name']."</option>\n";
-							}
-							else {
-								echo "		<option value='".$row['destination_caller_id_name']."'>".$row['destination_caller_id_name']."</option>\n";
-							}
-						}
-					}
-					echo "		</select>\n";
-				}
-			}
-			else {
-					echo "					<input class='formfld' style='min-width: 50px; max-width: 100px;' type='text' name='extensions[".$x."][outbound_caller_id_name]' maxlength='255' value=\"".$row['outbound_caller_id_name']."\">\n";
-			}
-			echo "				</td>\n";
-
-			echo "				<td class='row_style".$c." row_style_slim'>\n";
-			if (permission_exists('outbound_caller_id_select')) {
-				if (count($destinations) > 0) {
-					echo "	<select name='extensions[".$x."][outbound_caller_id_number]' id='outbound_caller_id_number' class='formfld'>\n";
-					echo "	<option value=''></option>\n";
-					foreach ($destinations as &$row) {
-						if(strlen($row['destination_caller_id_number']) > 0){
+						if(strlen($row['destination_caller_id_number']) > 0) {
 							if ($outbound_caller_id_number == $row['destination_caller_id_number']) {
-								echo "		<option value='".$row['destination_caller_id_number']."' selected='selected'>".$row['destination_caller_id_number']."</option>\n";
+								echo "		<option value='".$row['destination_caller_id_name']."@".$row['destination_caller_id_number']."' selected='selected'>".$row['destination_caller_id_name']." ".$row['destination_caller_id_number']."</option>\n";
 							}
 							else {
-								echo "		<option value='".$row['destination_caller_id_number']."'>".$row['destination_caller_id_number']."</option>\n";
+								echo "		<option value='".$row['destination_caller_id_name']."@".$row['destination_caller_id_number']."'>".$row['destination_caller_id_name']." ".$row['destination_caller_id_number']."</option>\n";
 							}
 						}
 					}
