@@ -6,6 +6,7 @@ $apps[$x]['menu'][0]['title']['pt-pt'] = "Controles de Acesso";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Controles de Acesso";
 $apps[$x]['menu'][0]['title']['es-cl'] = "Controles de acceso";
 $apps[$x]['menu'][0]['title']['he'] = "בקרת גישה";
+$apps[$x]['menu'][0]['title']['de-de'] = " Zugriffskontrolle";
 $apps[$x]['menu'][0]['title']['de-at'] = " Zugriffskontrolle";
 $apps[$x]['menu'][0]['title']['pl'] = "Kontrola dostępu";
 $apps[$x]['menu'][0]['title']['ro'] = "Controale de acces";

@@ -9,6 +9,7 @@ $apps[$x]['menu'][0]['title']['pl'] = "Stan systemu";
 $apps[$x]['menu'][0]['title']['ru-ru'] = "Состояние cистемы";
 $apps[$x]['menu'][0]['title']['sv-se'] = "System Status";
 $apps[$x]['menu'][0]['title']['uk'] = "Стан системи ";
+$apps[$x]['menu'][0]['title']['de-de'] = "System Status";
 $apps[$x]['menu'][0]['title']['de-at'] = "System Status";
 $apps[$x]['menu'][0]['uuid'] = "5243e0d2-0e8b-277a-912e-9d8b5fcdb41d";
 $apps[$x]['menu'][0]['parent_uuid'] = "0438b504-8613-7887-c420-c837ffb20cb1";

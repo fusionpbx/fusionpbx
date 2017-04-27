@@ -12,6 +12,7 @@ $apps[$x]['menu'][0]['title']['ru-ru'] = "Внутренние номера";
 $apps[$x]['menu'][0]['title']['uk'] = "Розширення";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Anknytningar";
 $apps[$x]['menu'][0]['title']['ro'] = "Extensii";
+$apps[$x]['menu'][0]['title']['de-de'] = "Nebenstellen";
 $apps[$x]['menu'][0]['title']['de-at'] = "Nebenstellen";
 $apps[$x]['menu'][0]['title']['ar-eg'] = "الأرقام الداخلية";
 $apps[$x]['menu'][0]['title']['he'] = "שלוחות";

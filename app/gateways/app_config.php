@@ -11,9 +11,9 @@
 		$apps[$x]['description']['en-us'] = "Gateways provide access into other voice networks. These can be voice providers or other systems that require SIP registration.";
 		$apps[$x]['description']['es-cl'] = "Las pasarelas proveen acceso a otras redes de voz. Pueden ser provedores u otro sistema que requiera registo SIP.";
 		$apps[$x]['description']['es-mx'] = "Las pasarelas proveen acceso a otras redes de voz.  Pueden ser provedores u otro sistema que requiera registo SIP.";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Gateways stellen Verbindungen zu andere Sprach-Netzwerke bereit. Diese können Voice-Provider oder andere Systeme sein, die eine SIP Registrierung benötigen.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Gateways stellen Verbindungen zu andere Sprach-Netzwerke bereit. Diese können Voice-Provider oder andere Systeme sein, die eine SIP Registrierung benötigen.";
 		$apps[$x]['description']['fr-fr'] = "Les passerelles donnent access autres réseaux vocaux. Ceux-ci peuvent être des opérateurs ou d'autres systèmes reqieérant un enregistrement SIP";
 		$apps[$x]['description']['fr-ca'] = "Les passerelles donnent access autres réseaux vocaux.  Elles pouvent être d'autre furnisseur ou autre système avec la régistration SIP.";
 		$apps[$x]['description']['fr-ch'] = "";

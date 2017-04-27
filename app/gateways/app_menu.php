@@ -10,6 +10,7 @@ $apps[$x]['menu'][0]['title']['pl'] = "Brama wyjściowa ";
 $apps[$x]['menu'][0]['title']['ru-ru'] = "Шлюзы";
 $apps[$x]['menu'][0]['title']['uk'] = "Шлюзи";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Gateways";
+$apps[$x]['menu'][0]['title']['de-de'] = "Gateways";
 $apps[$x]['menu'][0]['title']['de-at'] = "Gateways";
 $apps[$x]['menu'][0]['title']['ar-eg'] = "البوابات";
 $apps[$x]['menu'][0]['uuid'] = "237a512a-f8fe-1ce4-b5d7-e71c401d7159";

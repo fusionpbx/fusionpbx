@@ -10,9 +10,9 @@
 	$apps[$x]['url'] = "http://www.adminer.org/";
 	$apps[$x]['description']['en-us'] = "Adminer (formerly phpMinAdmin) is a full-featured database management tool written in PHP. Adminer is available for MySQL, PostgreSQL, SQLite, MS SQL and Oracle.";
 	$apps[$x]['description']['es-cl'] = "Adminer (anteriormente phpMinAdmin) es una herramienta completa para la gestión de bases de datos escrita en PHP. Adminer está disponible para MySQL, PostgreSQL, SQLite, MS SQL y Oracle)";
-	$apps[$x]['description']['de-de'] = "";
+	$apps[$x]['description']['de-de'] = "Adminer (ehemals phpMinAdmin) ist ein umfassendes Werkzeug für die Datenbankverwaltung welches in PHP geschrieben wurde. Es ist für MySQL, PostgreSQL, SQLite, MS SQL und Oracle verfügbar.";
 	$apps[$x]['description']['de-ch'] = "";
-	$apps[$x]['description']['de-at'] = "";
+	$apps[$x]['description']['de-at'] = "Adminer (ehemals phpMinAdmin) ist ein umfassendes Werkzeug für die Datenbankverwaltung welches in PHP geschrieben wurde. Es ist für MySQL, PostgreSQL, SQLite, MS SQL und Oracle verfügbar.";
 	$apps[$x]['description']['fr-fr'] = "Adminer (précédemment phpMinAdmin) est un outil gestion de base de données complet écrite en php. Adminer est disponible pour MySQL, PostgreSQL, SQLite, MS SQL et Oracle.";
 	$apps[$x]['description']['fr-ca'] = "";
 	$apps[$x]['description']['fr-ch'] = "";

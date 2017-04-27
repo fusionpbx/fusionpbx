@@ -11,9 +11,9 @@
 		$apps[$x]['description']['en-us'] = "Monitor System Services.";
 		$apps[$x]['description']['es-cl'] = "Monitor de Servicios de Sistema";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Systemdienste überwachen.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Systemdienste überwachen.";
 		$apps[$x]['description']['fr-fr'] = "Contrôler les services du système.";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";

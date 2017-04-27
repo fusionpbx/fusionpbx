@@ -10,9 +10,9 @@
 		$apps[$x]['contact_url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Provides a place to store contact information for individuals and organizations.";
 		$apps[$x]['description']['es-cl'] = "Provee un lugar para almacenar información de los contactos, para individuos u organizaciones";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Bietet einen Ort um Kontaktinformationen von Personen und Firmen zu speichern.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Bietet einen Ort um Kontaktinformationen von Personen und Firmen zu speichern.";
 		$apps[$x]['description']['fr-fr'] = "Place pour stocker les information des contacts, personnes ou organizations.";
 		$apps[$x]['description']['fr-ca'] = "C'est un endroit pour posser information des contacts, personnes ou organizations.";
 		$apps[$x]['description']['fr-ch'] = "";

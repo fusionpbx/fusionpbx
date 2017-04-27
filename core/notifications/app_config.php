@@ -9,9 +9,9 @@
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Configure notification preferences.";
 		$apps[$x]['description']['es-cl'] = "Configure las preferencias de notificaciones.";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Verwalte Benachrichtigunggseinstellungen.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Verwalte Benachrichtigunggseinstellungen.";
 		$apps[$x]['description']['fr-fr'] = "Configurez les notifications.";
 		$apps[$x]['description']['fr-ca'] = "Configurez les notifications.";
 		$apps[$x]['description']['fr-ch'] = "";

@@ -9,9 +9,9 @@
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Update or restore various system settings.";
 		$apps[$x]['description']['es-cl'] = "Actualiza el esquema de la base de datos";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Verschiedene Systemeinstellungen aktualisieren oder zurücksetzen.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Verschiedene Systemeinstellungen aktualisieren oder zurücksetzen.";
 		$apps[$x]['description']['fr-fr'] = "Mise %uFFFD jour du Sch%uFFFDma de la base de donn%uFFFDes";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";

@@ -11,9 +11,9 @@
 		$apps[$x]['description']['en-us'] = "Outbound dialplans have one or more conditions that are matched to attributes of a call. When a call matches the conditions the call is then routed to the gateway.";
 		$apps[$x]['description']['es-cl'] = "Los planes de marcado de salida tienen una o más condiciones que deben cumplirse.  Cuando las condiciones se cumplen, las llamada es dirigida con la pasarela seleccionada.";
 		$apps[$x]['description']['es-mx'] = "Los planes de marcado de salida tienen una o más condiciones que deben cumplirse.  Cuando las condiciones se cumplen, las llamada es dirigida con la pasarela seleccionada.";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Ausgehende Wählpläne haben eine oder mehrere Bedingungen welche mit den Atributen des Anrufes abgeglichen werden. Wenn die Bedingungen erfüllt sind, wird der Anruf über das Gateway geleitet.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Ausgehende Wählpläne haben eine oder mehrere Bedingungen welche mit den Atributen des Anrufes abgeglichen werden. Wenn die Bedingungen erfüllt sind, wird der Anruf über das Gateway geleitet.";
 		$apps[$x]['description']['fr-fr'] = "Les routes sortantes acheminent un appel en fonction d'une ou plusieurs conditions. Quand les conditions sont remplies, l'appel est dirigés vers la passerelle correspondante.";
 		$apps[$x]['description']['fr-ca'] = "Les routes sortantes ont une ou plus conditions qui devent répondre.  Quand les conditions son tout répondres, l'appel est dirigers vers la passarelle séléctioné.";
 		$apps[$x]['description']['fr-ch'] = "";

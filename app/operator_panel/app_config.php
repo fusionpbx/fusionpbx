@@ -10,9 +10,9 @@
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'Operator panel shows the status.';
 		$apps[$x]['description']['es-mx'] = '';
-		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-de'] = 'Das Bedienfeld zeigt den Status an.';
 		$apps[$x]['description']['de-ch'] = '';
-		$apps[$x]['description']['de-at'] = '';
+		$apps[$x]['description']['de-at'] = 'Das Bedienfeld zeigt den Status an.';
 		$apps[$x]['description']['fr'] = '';
 		$apps[$x]['description']['fr-ca'] = '';
 		$apps[$x]['description']['fr-ch'] = '';

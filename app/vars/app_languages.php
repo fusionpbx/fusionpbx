@@ -8,6 +8,7 @@ $text['title-variables_advanced']['pt-br'] = "Variáveis do Softswitch: Avançad
 $text['title-variables_advanced']['pl'] = "Zmienne PBXu (zaawansowane)";
 $text['title-variables_advanced']['uk'] = "Задання змінних: Додатково";
 $text['title-variables_advanced']['sv-se'] = "Switch Variabler: Avancerat";
+$text['title-variables_advanced']['de-de'] = "Switch Variablen: Erweitert";
 $text['title-variables_advanced']['de-at'] = "Switch Variablen: Erweitert";
 $text['title-variables_advanced']['ru-ru'] = "Параметры FreeSwitch: Расширенные";
 
@@ -19,6 +20,7 @@ $text['title-variables']['pt-br'] = "Variáveis do Softswitch ";
 $text['title-variables']['pl'] = "Zmienne PBXu";
 $text['title-variables']['uk'] = "Задання змінних ";
 $text['title-variables']['sv-se'] = "Switch Variabler";
+$text['title-variables']['de-de'] = "Switch Variablen";
 $text['title-variables']['de-at'] = "Switch Variablen";
 $text['title-variables']['ru-ru'] = "Параметры FreeSwitch";
 
@@ -30,6 +32,7 @@ $text['title-variable_edit']['pt-br'] = "Editar Variável ";
 $text['title-variable_edit']['pl'] = "Zmienna";
 $text['title-variable_edit']['uk'] = "Змінна";
 $text['title-variable_edit']['sv-se'] = "Variabel";
+$text['title-variable_edit']['de-de'] = "Variable";
 $text['title-variable_edit']['de-at'] = "Variable";
 $text['title-variable_edit']['ru-ru'] = "Переменная";
 
@@ -40,6 +43,7 @@ $text['title-variable_add']['pt-br'] = "Adicionar Variável ";
 $text['title-variable_add']['pl'] = "Zmienna";
 $text['title-variable_add']['uk'] = "Змінна";
 $text['title-variable_add']['sv-se'] = "Variabel";
+$text['title-variable_add']['de-de'] = "Variable";
 $text['title-variable_add']['de-at'] = "Variable";
 $text['title-variable_add']['ru-ru'] = "Переменная";
 
@@ -49,6 +53,7 @@ $text['label-hostname']['fr-fr'] = "Nom d'hôte";
 $text['label-hostname']['pl'] = "Nazwa hosta";
 $text['label-hostname']['uk'] = "Назва хоста";
 $text['label-hostname']['sv-se'] = "Hostname";
+$text['label-hostname']['de-de'] = "Hostname";
 $text['label-hostname']['de-at'] = "Hostname";
 $text['label-hostname']['ru-ru'] = "Имя хоста";
 
@@ -60,6 +65,7 @@ $text['label-codec_information']['pt-br'] = "Informações sobre o Codec";
 $text['label-codec_information']['pl'] = "Informacja o kodekach";
 $text['label-codec_information']['uk'] = "Інформація про кодек";
 $text['label-codec_information']['sv-se'] = "Codec Information";
+$text['label-codec_information']['de-de'] = "Codec Information";
 $text['label-codec_information']['de-at'] = "Codec Information";
 $text['label-codec_information']['ru-ru'] = "Информация о кодеке";
 
@@ -71,6 +77,7 @@ $text['header-variables_advanced']['pt-br'] = "Variáveis do Softswitch: Avança
 $text['header-variables_advanced']['pl'] = "Zamień zmienne (zaawansowane)";
 $text['header-variables_advanced']['uk'] = "Задання змінних: Додатково";
 $text['header-variables_advanced']['sv-se'] = "Switch Variabler: Avancerat";
+$text['header-variables_advanced']['de-de'] = "Switch Variablen: Erweitert";
 $text['header-variables_advanced']['de-at'] = "Switch Variablen: Erweitert";
 $text['header-variables_advanced']['ru-ru'] = "Параметры FreeSwitch: Расширенный";
 
@@ -82,6 +89,7 @@ $text['header-variables']['pt-br'] = "Variáveis do Softswitch ";
 $text['header-variables']['pl'] = "Zmienne PBXu";
 $text['header-variables']['uk'] = "Задання змінних";
 $text['header-variables']['sv-se'] = "Switch Variabler";
+$text['header-variables']['de-de'] = "Switch Variablen";
 $text['header-variables']['de-at'] = "Switch Variablen";
 $text['header-variables']['ru-ru'] = "Параметры FreeSwitch";
 
@@ -93,6 +101,7 @@ $text['header-variable_edit']['pt-br'] = "Editar variável";
 $text['header-variable_edit']['pl'] = "Zmienna";
 $text['header-variable_edit']['uk'] = "Змінна";
 $text['header-variable_edit']['sv-se'] = "Variabel";
+$text['header-variable_edit']['de-de'] = "Variable";
 $text['header-variable_edit']['de-at'] = "Variable";
 $text['header-variable_edit']['ru-ru'] = "Переменная";
 
@@ -102,6 +111,7 @@ $text['header-hostname']['fr-fr'] = "Nom d'hôte";
 $text['header-hostname']['pl'] = "Nazwa hosta";
 $text['header-hostname']['uk'] = "Назва хоста";
 $text['header-hostname']['sv-se'] = "Hostname";
+$text['header-hostname']['de-de'] = "Hostname";
 $text['header-hostname']['de-at'] = "Hostname";
 $text['header-hostname']['ru-ru'] = "Имя хоста";
 
@@ -113,6 +123,7 @@ $text['description-variables_advanced']['pt-br'] = "Defina as variáveis aqui. P
 $text['description-variables_advanced']['pl'] = "Tutaj zdefiniuj zmienne preprocesora. Mogą być dostępne w konfiguracji xml z $.";
 $text['description-variables_advanced']['uk'] = "Задайте змінні препроцесора тут. Вони будуть доступними в конфігурації XML з символом $.";
 $text['description-variables_advanced']['sv-se'] = "Definiera preprocessor variabler här. Kan nås i xml konfigurationen med $.";
+$text['description-variables_advanced']['de-de'] = "Definieren Sie Preprozessor Variablen. Auf diese kann in der XML Konfiguration mittels $ zugegriffen werden.";
 $text['description-variables_advanced']['de-at'] = "Definieren Sie Preprozessor Variablen. Auf diese kann in der XML Konfiguration mittels $ zugegriffen werden.";
 $text['description-variables_advanced']['ru-ru'] = "Определите здесь параметры FreeSwitch. Доступ к файлу xml можно получить с помощью $.";
 
@@ -124,6 +135,7 @@ $text['description-variables']['pt-br'] = "Defina as variáveis aqui:";
 $text['description-variables']['pl'] = "Tutaj zdefiniuj zmienne preprocesora";
 $text['description-variables']['uk'] = "Задайте змінні препроцесора тут.";
 $text['description-variables']['sv-se'] = "Definiera preprocessor variabler här.";
+$text['description-variables']['de-de'] = "Definieren Sie Preprozessor Variablen.";
 $text['description-variables']['de-at'] = "Definieren Sie Preprozessor Variablen.";
 $text['description-variables']['ru-ru'] = "Определите здесь параметры FreeSwitch.";
 
@@ -135,6 +147,7 @@ $text['description-name']['pt-br'] = "Insira o nome do menu";
 $text['description-name']['pl'] = "Wprowadź nazwę zmiennej";
 $text['description-name']['uk'] = "Введіть назву змінної";
 $text['description-name']['sv-se'] = "Skriv in namnet på menyn.";
+$text['description-name']['de-de'] = "Geben Sie den Namen der Variable an.";
 $text['description-name']['de-at'] = "Geben Sie den Namen der Variable an.";
 $text['description-name']['ru-ru'] = "Введите имя переменной.";
 
@@ -144,6 +157,7 @@ $text['description-hostname']['fr-fr'] = "Entrer le nom de l'hôte / du switch."
 $text['description-hostname']['pl'] = "Wprowadź nazwę hosta / PBXu";
 $text['description-hostname']['uk'] = "Введіть назву хоста / switchname.";
 $text['description-hostname']['sv-se'] = "Fyll i hostname / switchname.";
+$text['description-hostname']['de-de'] = "Geben Sie den Hostnamen / Switchnamen an.";
 $text['description-hostname']['de-at'] = "Geben Sie den Hostnamen / Switchnamen an.";
 $text['description-hostname']['ru-ru'] = "Введите имя хоста / имя_схемы.";
 

@@ -10,9 +10,9 @@
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Active channels on the system.";
 		$apps[$x]['description']['es-cl'] = "Canales activos en el sistema.";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Aktive Kanäle auf dem System.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Aktive Kanäle auf dem System.";
 		$apps[$x]['description']['fr-fr'] = "Channels actifs sur le système";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";

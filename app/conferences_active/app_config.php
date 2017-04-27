@@ -10,9 +10,9 @@
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "AJAX tool to view and manage all active callers in a conference room.";
 		$apps[$x]['description']['es-cl'] = "Herramienta AJAX para ver y administrar todas las llamadas activas en una sala de conferencia.";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "AJAX Wekzeug um alle aktive Anrufer in einem Konferenzraum anzuzeigen und zu verwalten.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "AJAX Wekzeug um alle aktive Anrufer in einem Konferenzraum anzuzeigen und zu verwalten.";
 		$apps[$x]['description']['fr-fr'] = "Outil en AJAX pour voir et gérer toutes les conférences actives.";
 		$apps[$x]['description']['fr-ca'] = "Outil en AJAX pour voir et gerer toutes les conferences actives aux chambres.";
 		$apps[$x]['description']['fr-ch'] = "";

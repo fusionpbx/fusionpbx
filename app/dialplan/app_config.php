@@ -11,9 +11,9 @@
 		$apps[$x]['description']['en-us'] = "The dialplan is used to setup call destinations based on conditions and context. You can use the dialplan to send calls to gateways, auto attendants, external numbers, to scripts, or any destination.";
 		$apps[$x]['description']['es-cl'] = "El plan de marcado es usado para configurar los destinos de llamadas basados en condiciones y contexto. Usted puede usar los planes de marcado para enviar hacia pasarelas, IVR, números externos, scripts o cualquier otro destino.";
 		$apps[$x]['description']['es-mx'] = "El plan de marcado es usado para configurar los destinos de llamadas basados en condiciones y contexto. Usted puede usar los planes de marcado para enviar hacia pasarelas, IVR, números externos, scripts o cualquier otro destino.";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Der Wählplan wird verwendet um Anruf-Ziele anhand von Bedingungen und Kontext fest zu legen. Sie können den Wählplan verwenden, um Anrufe an Gateways, Automatische Zentralen, externe Rufnummern, Skripte oder andere Ziele weiterzuleiten.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Der Wählplan wird verwendet um Anruf-Ziele anhand von Bedingungen und Kontext fest zu legen. Sie können den Wählplan verwenden, um Anrufe an Gateways, Automatische Zentralen, externe Rufnummern, Skripte oder andere Ziele weiterzuleiten.";
 		$apps[$x]['description']['fr-fr'] = "Les dialplans son utilisés pour configurer les destinations d'appels selon des conditions et contextes.  Vous pouvez en utiliser pour diriger les appels vers les passerelles, IVR, numéross exterieurs ou tout autre destination.";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";
