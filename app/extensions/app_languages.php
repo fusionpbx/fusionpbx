@@ -607,6 +607,21 @@ $text['label-password']['he'] = "סיסמא";
 $text['label-password']['it-it'] = "Password";
 $text['label-password']['ru-ru'] = "Пароль";
 
+$text['label-caller_id']['en-us'] = "Caller ID";
+$text['label-caller_id']['es-cl'] = "Caller ID";
+$text['label-caller_id']['pt-pt'] = "público";
+$text['label-caller_id']['fr-fr'] = "public";
+$text['label-caller_id']['pt-br'] = "público";
+$text['label-caller_id']['pl'] = "";
+$text['label-caller_id']['uk'] = "";
+$text['label-caller_id']['sv-se'] = "Utgående";
+$text['label-caller_id']['de-de'] = "Ausgehende Anruferkennung";
+$text['label-caller_id']['de-at'] = "Ausgehende Anruferkennung";
+$text['label-caller_id']['ro'] = "Caller ID";
+$text['label-caller_id']['ar-eg'] = "";
+$text['label-caller_id']['he'] = "";
+$text['label-caller_id']['it-it'] = "Caller ID";
+
 $text['label-caller_id_number']['en-us'] = "Caller ID";
 $text['label-caller_id_number']['es-cl'] = "Caller ID";
 $text['label-caller_id_number']['pt-pt'] = "público";
