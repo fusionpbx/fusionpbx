@@ -185,12 +185,13 @@
 					//get the user extension list
 						$_SESSION['user']['extension'] = null;
 						$sql = "select ";
+						$sql .= "	e.extension_uuid, ";
 						$sql .= "	e.extension, ";
 						$sql .= "	e.number_alias, ";
 						$sql .= "	e.user_context, ";
-						$sql .= "	e.extension_uuid, ";
 						$sql .= "	e.outbound_caller_id_name, ";
-						$sql .= "	e.outbound_caller_id_number ";
+						$sql .= "	e.outbound_caller_id_number, ";
+						$sql .= "	e.description ";
 						$sql .= "from ";
 						$sql .= "	v_extension_users as u, ";
 						$sql .= "	v_extensions as e ";
@@ -206,16 +207,23 @@
 							$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 							$x = 0;
 							foreach($result as $row) {
+								//set the destination
 								$destination = $row['extension'];
 								if (strlen($row['number_alias']) > 0) {
 									$destination = $row['number_alias'];
 								}
+								
+								//build the uers array
 								$_SESSION['user']['extension'][$x]['user'] = $row['extension'];
 								$_SESSION['user']['extension'][$x]['number_alias'] = $row['number_alias'];
 								$_SESSION['user']['extension'][$x]['destination'] = $destination;
 								$_SESSION['user']['extension'][$x]['extension_uuid'] = $row['extension_uuid'];
 								$_SESSION['user']['extension'][$x]['outbound_caller_id_name'] = $row['outbound_caller_id_name'];
 								$_SESSION['user']['extension'][$x]['outbound_caller_id_number'] = $row['outbound_caller_id_number'];
+								$_SESSION['user']['extension'][$x]['user_context'] = $row['user_context'];
+								$_SESSION['user']['extension'][$x]['description'] = $row['description'];
+								
+								//set the user context
 								$_SESSION['user_context'] = $row["user_context"];
 								$x++;
 							}
