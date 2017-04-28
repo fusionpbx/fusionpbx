@@ -1928,14 +1928,14 @@
 <Application_LED ua="na"></Application_LED>
 <Serv_Subscribe_Failed_LED ua="na"></Serv_Subscribe_Failed_LED>
 <Serv_Subscribing_LED ua="na"></Serv_Subscribing_LED>
-<SNRM_Day_Mode_LED ua="na"></SNRM_Day_Mode_LED>
-<SNRM_Night_Mode_LED ua="na"></SNRM_Night_Mode_LED>
-<Parking_Lot_Idle_LED ua="na"></Parking_Lot_Idle_LED>
-<Parking_Lot_Busy_LED ua="na"></Parking_Lot_Busy_LED>
+<SNRM_Day_Mode_LED ua="na">c=g,p=sb</SNRM_Day_Mode_LED>
+<SNRM_Night_Mode_LED ua="na">c=r,p=sb</SNRM_Night_Mode_LED>
+<Parking_Lot_Idle_LED ua="na">c=g,p=sb</Parking_Lot_Idle_LED>
+<Parking_Lot_Busy_LED ua="na">c=g,p=fb</Parking_Lot_Busy_LED>
 <BLF_Idle_LED ua="na"></BLF_Idle_LED>
 <BLF_Ringing_LED ua="na"></BLF_Ringing_LED>
-<BLF_Busy_LED ua="na"></BLF_Busy_LED>
-<BLF_Held_LED ua="na"></BLF_Held_LED>
+<BLF_Busy_LED ua="na">c=r,p=sb</BLF_Busy_LED>
+<BLF_Held_LED ua="na">c=r,p=fb</BLF_Held_LED>
 
 <!-- Attendant_Console/Unit_x -->
 {foreach $keys["expansion"] as $row}
