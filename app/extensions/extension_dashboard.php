@@ -59,12 +59,17 @@
 
 						//build the array on what is allowed.
 							if ($found) {
-								$caller_id = explode('@', $row['outbound_caller_id']);
-								$outbound_caller_id_name = $caller_id[0];
-								$outbound_caller_id_number = $caller_id[1];
-
+								if (permission_exists('outbound_caller_id_select')) {
+									$caller_id = explode('@', $row['outbound_caller_id']);
+									$outbound_caller_id_name = $caller_id[0];
+									$outbound_caller_id_number = $caller_id[1];
+								}
+								else {
+									$outbound_caller_id_name = $row['outbound_caller_id_name'];
+									$outbound_caller_id_number = $row['outbound_caller_id_number'];
+								}
 								$array['extensions'][$x]['extension_uuid'] = $row['extension_uuid'];
-								$array['extensions'][$x]['outbound_caller_id_name'] = $caller_id[0];
+								$array['extensions'][$x]['outbound_caller_id_name'] = $outbound_caller_id_name;
 								if (is_numeric($outbound_caller_id_number)) {
 									$array['extensions'][$x]['outbound_caller_id_number'] = $outbound_caller_id_number;
 								}
@@ -101,11 +106,10 @@
 					$p->delete("extension_edit", "temp");
 
 				//clear the cache
-					//$cache = new cache;
-					//$cache->delete("directory:".$extension."@".$user_context);
-					//if (permission_exists('number_alias') && strlen($number_alias) > 0) {
-					//	$cache->delete("directory:".$number_alias."@".$user_context);
-					//}
+					$cache = new cache;
+					foreach($_SESSION['user']['extension'] as $field) {
+						$cache->delete("directory:".$_SESSION['user']['destination']."@".$_SESSION['user']['user_context']);
+					}
 
 				//set the message
 					if (!isset($_SESSION['message'])) {
@@ -163,12 +167,14 @@
 			$destination = $row['destination'];
 			$outbound_caller_id_name = $row['outbound_caller_id_name'];
 			$outbound_caller_id_number = $row['outbound_caller_id_number'];
+			$description = $row['description'];
 
 		//set the column names
 			if ($x === 0 && $previous_extension_uuid != $row['extension_uuid']) {
 				echo "			<tr>\n";
 				echo "				<th>".$text['label-extension']."</th>\n";
 				echo "				<th>".$text['label-caller_id']."</th>\n";
+				echo "				<th>".$text['label-description']."</th>\n";
 				echo "			</tr>\n";
 			}
 
@@ -190,37 +196,51 @@
 				echo "				<input name='extensions[".$x."][extension_uuid]' type='hidden' value=\"".$row['extension_uuid']."\">\n";
 			}
 
+		//show the destination
 			echo "				<td class='row_style".$c." row_style_slim'>\n";
 			echo "					".$row['destination'];
 			echo "				</td>\n";
 
-			echo "				<td class='row_style".$c." row_style_slim'>\n";
+		//caller id form input
 			if (permission_exists('outbound_caller_id_select')) {
+				//caller id select
+				echo "				<td class='row_style".$c." row_style_slim'>\n";
 				if (count($destinations) > 0) {
 					echo "	<select name='extensions[".$x."][outbound_caller_id]' id='outbound_caller_id_number' class='formfld'>\n";
 					echo "	<option value=''></option>\n";
-					foreach ($destinations as &$row) {
-						if(strlen($row['destination_caller_id_number']) > 0) {
-							if ($outbound_caller_id_number == $row['destination_caller_id_number']) {
-								echo "		<option value='".$row['destination_caller_id_name']."@".$row['destination_caller_id_number']."' selected='selected'>".$row['destination_caller_id_name']." ".$row['destination_caller_id_number']."</option>\n";
+					foreach ($destinations as &$field) {
+						if(strlen($field['destination_caller_id_number']) > 0) {
+							if ($outbound_caller_id_number == $field['destination_caller_id_number']) {
+								echo "		<option value='".$field['destination_caller_id_name']."@".$field['destination_caller_id_number']."' selected='selected'>".$field['destination_caller_id_name']." ".$field['destination_caller_id_number']."</option>\n";
 							}
 							else {
-								echo "		<option value='".$row['destination_caller_id_name']."@".$row['destination_caller_id_number']."'>".$row['destination_caller_id_name']." ".$row['destination_caller_id_number']."</option>\n";
+								echo "		<option value='".$field['destination_caller_id_name']."@".$field['destination_caller_id_number']."'>".$field['destination_caller_id_name']." ".$field['destination_caller_id_number']."</option>\n";
 							}
 						}
 					}
 					echo "		</select>\n";
 				}
+				echo "				</td>\n";
 			}
 			else {
-					echo "					<input class='formfld' style='min-width: 50px; max-width: 100px;' type='text' name='extensions[".$x."][outbound_caller_id_number]' maxlength='255' value=\"".$row['outbound_caller_id_number']."\">\n";
+				//caller id name an number input text
+				echo "				<td class='row_style".$c." row_style_slim'>\n";
+				echo "					<input class='formfld' style='min-width: 50px; max-width: 100px;' type='text' name='extensions[".$x."][outbound_caller_id_name]' maxlength='255' value=\"".$row['outbound_caller_id_name']."\">\n";
+				echo "				</td>\n";
+				echo "				<td class='row_style".$c." row_style_slim'>\n";
+				echo "					<input class='formfld' style='min-width: 50px; max-width: 100px;' type='text' name='extensions[".$x."][outbound_caller_id_number]' maxlength='255' value=\"".$row['outbound_caller_id_number']."\">\n";
+				echo "				</td>\n";
 			}
+
+		//show the description
+			echo "				<td class='row_style".$c." row_style_slim'>\n";
+			echo "					".$row['description'];
 			echo "				</td>\n";
 
 		//end the row
 			echo "				</tr>\n";
 		//set the previous extension_uuid
-			$previous_extension_uuid = $row['extension_uuid'];
+			$previous_extension_uuid = $extension_uuid;
 		//increment the array key
 			$x++;
 		//alternate the value
