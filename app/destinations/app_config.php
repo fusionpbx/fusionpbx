@@ -62,6 +62,17 @@
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$y++;
 
+	//default settings
+		$y = 0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '70d8538a-89ab-4db6-87b1-f5e447680283';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'limit';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'destinations';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '3';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
+
 	//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_destinations";
