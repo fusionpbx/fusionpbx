@@ -119,6 +119,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'de655030-ae71-4b53-8068-5cf0b14cf635';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'limit';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'ring_groups';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '3';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
 
 	//schema details
 		$y=0;
