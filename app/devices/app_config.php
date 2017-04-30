@@ -255,6 +255,17 @@
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$y++;
 
+	//default settings
+		$y = 0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'e05a4745-ea59-47a7-8e7f-5db7d2a5c273';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'limit';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'devices';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '3';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
+
 	//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_devices";
