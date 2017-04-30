@@ -103,6 +103,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '26984efd-2445-4ac9-b459-bb7bda4217c6';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'limit';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'ivr_menus';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '3';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
 
 	//schema details
 		$y = 0; //table array index
