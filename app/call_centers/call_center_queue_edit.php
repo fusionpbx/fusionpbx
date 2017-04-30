@@ -381,7 +381,7 @@
 				$queue_cid_prefix = $row["queue_cid_prefix"];
 				$queue_announce_sound = $row["queue_announce_sound"];
 				$queue_announce_frequency = $row["queue_announce_frequency"];
-				$queue_cc_exit_keys = check_str($_POST["queue_cc_exit_keys"]);
+				$queue_cc_exit_keys = $row["queue_cc_exit_keys"];
 				$queue_description = $row["queue_description"];
 			}
 		}
