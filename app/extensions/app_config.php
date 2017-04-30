@@ -146,6 +146,15 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = '{sip_invite_domain=${domain_name},leg_timeout=${call_timeout},presence_id=${dialed_user}@${dialed_domain}}${sofia_contact(*/${dialed_user}@${dialed_domain})}';
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '3eeb3757-f7bb-437a-9021-8ccf3f27c98b';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'limit';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'extensions';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '3';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
 
 	//schema details
 		$y = 0; //table array index
