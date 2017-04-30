@@ -56,6 +56,17 @@
 		$apps[$x]['permissions'][$y]['name'] = "gateway_domain";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
+	//default settings
+		$y = 0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'df031ab4-087d-4e0e-92ac-e96f5d0aa55d';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'limit';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'gateways';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '3';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
+
 	//schema details
 		$y = 0; //table array index
 		$z = 0; //field array index
