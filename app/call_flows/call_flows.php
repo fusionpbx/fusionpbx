@@ -177,7 +177,6 @@
 			echo 		"&nbsp;\n";
 			echo "	</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_name']."&nbsp;</td>\n";
-			echo "  <td valign='top' class='".$row_style[$c]."'>".$row['call_flow_status']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_extension']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_feature_code']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_context']."&nbsp;</td>\n";
