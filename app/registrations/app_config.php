@@ -11,9 +11,9 @@
 		$apps[$x]['description']['en-us'] = "Displays registrations from endpoints.";
 		$apps[$x]['description']['es-cl'] = "Muestra los registros desde los extremos";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Zeigt registrierte Endgeräte an.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Zeigt registrierte Endgeräte an.";
 		$apps[$x]['description']['fr-fr'] = "Afficher les enregistrements des équipements.";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";

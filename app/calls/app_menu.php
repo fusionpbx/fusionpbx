@@ -10,6 +10,7 @@
 	$apps[$x]['menu'][0]['title']['fr-ch'] = "routage des appels";
 	$apps[$x]['menu'][0]['title']['pt-pt'] = "Roteamento de chamadas";
 	$apps[$x]['menu'][0]['title']['pt-br'] = "roteamento de chamadas";
+	$apps[$x]['menu'][0]['title']['ru-ru'] = "Маршрутизация вызовов";
 	$apps[$x]['menu'][0]['uuid'] = "4e4df00b-aafb-45a8-82c1-cdabc921889c";
 	$apps[$x]['menu'][0]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
 	$apps[$x]['menu'][0]['category'] = "internal";

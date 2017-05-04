@@ -11,14 +11,15 @@
 		$apps[$x]['description']['en-us'] = "Manager voicemail greetings for extensions.";
 		$apps[$x]['description']['es-cl'] = "Administrador de mensajes de bienvenida de correo de voz para extensiones.";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Verwalte Voicemail-Begrüßungen für Nebenstellen.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Verwalte Voicemail-Begrüßungen für Nebenstellen.";
 		$apps[$x]['description']['fr-fr'] = "Accueil messagerie Vocale.";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Gestor de saudações de correio de voz para extensões.";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['ru-ru'] = "Менеджер приветствий Голосовой почты для Внутренних Номеров.";
 
 	//permission details
 		$apps[$x]['permissions'][$y]['name'] = "voicemail_greeting_view";
@@ -115,6 +116,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "greeting_base64";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Voicemail greeting file encoded in base64.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['ru-ru'] = "К сообщению Голосовой Почты прикреплен файл в кодировке base64.";
 		$z++;
 
 ?>

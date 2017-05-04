@@ -10,6 +10,7 @@ $text['title-queue']['sv-se'] = "Kö";
 $text['title-queue']['uk'] = "Черга";
 $text['title-queue']['de-de'] = "Warteschlange";
 $text['title-queue']['de-at'] = "Warteschlange";
+$text['title-queue']['ru-ru'] = "Очередь";
 
 $text['title-active_queues']['en-us'] = "Active Queues";
 $text['title-active_queues']['es-cl'] = "Colas Activas";
@@ -21,6 +22,7 @@ $text['title-active_queues']['sv-se'] = "Aktiva Köer";
 $text['title-active_queues']['uk'] = "Активні черги";
 $text['title-active_queues']['de-de'] = "Aktive Warteschlangen";
 $text['title-active_queues']['de-at'] = "Aktive Warteschlangen";
+$text['title-active_queues']['ru-ru'] = "Активные Очереди";
 
 $text['label-waiting_count']['en-us'] = "Waiting Count";
 $text['label-waiting_count']['es-cl'] = "Conteo de Espera";
@@ -32,6 +34,7 @@ $text['label-waiting_count']['sv-se'] = "Antal Väntande";
 $text['label-waiting_count']['uk'] = "Кількість в очікуванні";
 $text['label-waiting_count']['de-de'] = "Anzahl Wartend";
 $text['label-waiting_count']['de-at'] = "Anzahl Wartend";
+$text['label-waiting_count']['ru-ru'] = "Счетчик ожиданий";
 
 $text['label-view']['en-us'] = "View";
 $text['label-view']['es-cl'] = "Ver";
@@ -43,6 +46,7 @@ $text['label-view']['sv-se'] = "Visa";
 $text['label-view']['uk'] = "Перегляд";
 $text['label-view']['de-de'] = "Ansicht";
 $text['label-view']['de-at'] = "Ansicht";
+$text['label-view']['ru-ru'] = "Просмотр";
 
 $text['label-username']['en-us'] = "Username";
 $text['label-username']['es-cl'] = "Nombre de Usuario";
@@ -54,6 +58,7 @@ $text['label-username']['sv-se'] = "Användarnamn";
 $text['label-username']['uk'] = "Ім’я користувача";
 $text['label-username']['de-de'] = "Benutzername";
 $text['label-username']['de-at'] = "Benutzername";
+$text['label-username']['ru-ru'] = "Имя Пользователя";
 
 $text['label-status']['en-us'] = "Status";
 $text['label-status']['es-cl'] = "Estado";
@@ -65,6 +70,7 @@ $text['label-status']['sv-se'] = "Status";
 $text['label-status']['uk'] = "Стан";
 $text['label-status']['de-de'] = "Status";
 $text['label-status']['de-at'] = "Status";
+$text['label-status']['ru-ru'] = "Статус";
 
 $text['label-priority']['en-us'] = "Priority";
 $text['label-priority']['es-cl'] = "Prioridad";
@@ -76,6 +82,7 @@ $text['label-priority']['sv-se'] = "Prioritet";
 $text['label-priority']['uk'] = "Пріоритет";
 $text['label-priority']['de-de'] = "Priorität";
 $text['label-priority']['de-at'] = "Priorität";
+$text['label-priority']['ru-ru'] = "Приоритет";
 
 $text['label-position']['en-us'] = "Position";
 $text['label-position']['es-cl'] = "Posición";
@@ -87,6 +94,7 @@ $text['label-position']['sv-se'] = "Position";
 $text['label-position']['uk'] = "Позиція";
 $text['label-position']['de-de'] = "Position";
 $text['label-position']['de-at'] = "Position";
+$text['label-position']['ru-ru'] = "Позиция";
 
 $text['label-name']['en-us'] = "Name";
 $text['label-name']['es-cl'] = "Nombre";
@@ -98,6 +106,7 @@ $text['label-name']['sv-se'] = "Namn";
 $text['label-name']['uk'] = "Назва";
 $text['label-name']['de-de'] = "Name";
 $text['label-name']['de-at'] = "Name";
+$text['label-name']['ru-ru'] = "Имя";
 
 $text['label-language']['en-us'] = "Language";
 $text['label-language']['es-cl'] = "Lenguaje";
@@ -109,6 +118,7 @@ $text['label-language']['sv-se'] = "Språk";
 $text['label-language']['uk'] = "Мова";
 $text['label-language']['de-de'] = "Sprache";
 $text['label-language']['de-at'] = "Sprache";
+$text['label-language']['ru-ru'] = "Язык";
 
 $text['label-importance']['en-us'] = "Importance";
 $text['label-importance']['es-cl'] = "Importancia";
@@ -120,6 +130,7 @@ $text['label-importance']['sv-se'] = "Betydelse";
 $text['label-importance']['uk'] = "Важливість";
 $text['label-importance']['de-de'] = "Wichtigkeit";
 $text['label-importance']['de-at'] = "Wichtigkeit";
+$text['label-importance']['ru-ru'] = "Важность";
 
 $text['label-duration']['en-us'] = "Duration";
 $text['label-duration']['es-cl'] = "Duración";
@@ -131,6 +142,7 @@ $text['label-duration']['sv-se'] = "Samtalstid";
 $text['label-duration']['uk'] = "Тривалість";
 $text['label-duration']['de-de'] = "Dauer";
 $text['label-duration']['de-at'] = "Dauer";
+$text['label-duration']['ru-ru'] = "Продолжительность";
 
 $text['label-destination_number']['en-us'] = "Destination Number";
 $text['label-destination_number']['es-cl'] = "Número de Destino";
@@ -142,6 +154,7 @@ $text['label-destination_number']['sv-se'] = "Destination Nummer";
 $text['label-destination_number']['uk'] = "Номер";
 $text['label-destination_number']['de-de'] = "Zielnummer";
 $text['label-destination_number']['de-at'] = "Zielnummer";
+$text['label-destination_number']['ru-ru'] = "Целевой номер";
 
 $text['label-consumer_count']['en-us'] = "Consumer Count";
 $text['label-consumer_count']['es-cl'] = "Conteo de Consumo";
@@ -153,6 +166,7 @@ $text['label-consumer_count']['sv-se'] = "Förbrukat Antal";
 $text['label-consumer_count']['uk'] = "Кількість споживачів";
 $text['label-consumer_count']['de-de'] = "Anzahl Verbraucher";
 $text['label-consumer_count']['de-at'] = "Anzahl Verbraucher";
+$text['label-consumer_count']['ru-ru'] = "Количество клиентов";
 
 $text['label-caller_id_number']['en-us'] = "Caller ID Number";
 $text['label-caller_id_number']['es-cl'] = "Número de Caller ID";
@@ -164,6 +178,7 @@ $text['label-caller_id_number']['sv-se'] = "Inringande ID Nummer";
 $text['label-caller_id_number']['uk'] = "Caller ID Номер";
 $text['label-caller_id_number']['de-de'] = "Anrufer Nummer";
 $text['label-caller_id_number']['de-at'] = "Anrufer Nummer";
+$text['label-caller_id_number']['ru-ru'] = "Caller ID Номера";
 
 $text['label-caller_id_name']['en-us'] = "Caller ID Name";
 $text['label-caller_id_name']['es-cl'] = "Nombre de Caller ID";
@@ -175,6 +190,7 @@ $text['label-caller_id_name']['sv-se'] = "Inringande ID Namn";
 $text['label-caller_id_name']['uk'] = "Caller ID Ім’я";
 $text['label-caller_id_name']['de-de'] = "Anrufer Name";
 $text['label-caller_id_name']['de-at'] = "Anrufer Name";
+$text['label-caller_id_name']['ru-ru'] = "Caller ID Имя";
 
 $text['label-caller_count']['en-us'] = "Caller Count";
 $text['label-caller_count']['es-cl'] = "Conteo de Llamadas";
@@ -186,6 +202,7 @@ $text['label-caller_count']['sv-se'] = "Antal samtal";
 $text['label-caller_count']['uk'] = "Кількість абонентів";
 $text['label-caller_count']['de-de'] = "Anzahl Anrufer";
 $text['label-caller_count']['de-at'] = "Anzahl Anrufer";
+$text['label-caller_count']['ru-ru'] = "Количество абонентов";
 
 $text['header-queue']['en-us'] = "Queue";
 $text['header-queue']['es-cl'] = "Cola";
@@ -197,6 +214,7 @@ $text['header-queue']['sv-se'] = "Kö";
 $text['header-queue']['uk'] = "Черга";
 $text['header-queue']['de-de'] = "Warteschlange";
 $text['header-queue']['de-at'] = "Warteschlange";
+$text['header-queue']['ru-ru'] = "Очередь";
 
 $text['header-active_queues']['en-us'] = "Active Queues";
 $text['header-active_queues']['es-cl'] = "Colas Activas";
@@ -208,6 +226,7 @@ $text['header-active_queues']['sv-se'] = "Aktiva Köer";
 $text['header-active_queues']['uk'] = "Активні черги";
 $text['header-active_queues']['de-de'] = "Aktive Warteschlangen";
 $text['header-active_queues']['de-at'] = "Aktive Warteschlangen";
+$text['header-active_queues']['ru-ru'] = "Активные Очереди";
 
 $text['description-queue']['en-us'] = "Use this page to monitor the queue activity.";
 $text['description-queue']['es-cl'] = "Utilice esta página para monitorear la actividad de la cola.";
@@ -219,6 +238,7 @@ $text['description-queue']['sv-se'] = "Använd denna sida för att monitorera k�
 $text['description-queue']['uk'] = "Використовуйте цю сторінку, щоб стежити за активністю черги.";
 $text['description-queue']['de-de'] = "Eine aktuelle Liste der Anrufer in der Warteschlange sehen sie unten.";
 $text['description-queue']['de-at'] = "Eine aktuelle Liste der Anrufer in der Warteschlange sehen sie unten.";
+$text['description-queue']['ru-ru'] = "Используйте эту страницу для мониторинга активности очереди.";
 
 $text['description-active_queues']['en-us'] = "List all the queues that are currently active with one or more callers.";
 $text['description-active_queues']['es-cl'] = "Lista todas las colas que estan siendo actualmente usadas con una o más personas en espera.";
@@ -230,5 +250,6 @@ $text['description-active_queues']['sv-se'] = "Lista alla köer med en eller fle
 $text['description-active_queues']['uk'] = "Перелік всіх черг, в яких в даний час є активні абоненти.";
 $text['description-active_queues']['de-de'] = "Auflistung aller derzeit aktiven Warteschlangen mit einem oder mehreren Anrufern.";
 $text['description-active_queues']['de-at'] = "Auflistung aller derzeit aktiven Warteschlangen mit einem oder mehreren Anrufern.";
+$text['description-active_queues']['ru-ru'] = "Список всех очередей, которые в данный момент активны, с одним или несколькими вызывающими абонентами.";
 
 ?>

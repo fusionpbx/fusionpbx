@@ -10,9 +10,9 @@
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Conferences Centers allows one or more audio and video conference rooms.";
 		$apps[$x]['description']['es-cl'] = "El Centro de Conferencia permite una o más salas de conferencia para audio y video.";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Konferenzzentralen stellen ein oder mehrere Audio- und Videokonferenzräume bereit.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Konferenzzentralen stellen ein oder mehrere Audio- und Videokonferenzräume bereit.";
 		$apps[$x]['description']['fr-fr'] = "Centre de Conférences permet une ou plus conferences audio ou vidéo.";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";

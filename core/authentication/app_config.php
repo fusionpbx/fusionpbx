@@ -12,11 +12,13 @@
 		$apps[$x]['description']['es-cl'] = "";
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Stellt ein Authentifizierungs-Framework mit Plugins bereit, um zu prüfen, obsich ein Benutzer anmelden darf.";
+		$apps[$x]['description']['de-at'] = "Stellt ein Authentifizierungs-Framework mit Plugins bereit, um zu prüfen, obsich ein Benutzer anmelden darf.";
 		$apps[$x]['description']['fr-fr'] = "";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['ru-ru'] = "Предоставляет платформу проверки подлинности с плагинами для проверки авторизации пользователя.";
 
 ?>

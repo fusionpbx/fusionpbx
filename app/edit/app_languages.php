@@ -33,6 +33,7 @@ $text['title-manage-files']['fr-fr'] = "Gérer les Fichiers";
 $text['title-manage-files']['it-it'] = "Gestione File";
 $text['title-manage-files']['de-de'] = "Dateien verwalten";
 $text['title-manage-files']['de-at'] = "Dateien verwalten";
+$text['title-manage-files']['ru-ru'] = "Управление файлами";
 
 $text['title-manage-clips']['en-us'] = "Manage Clips";
 $text['title-manage-clips']['es-cl'] = "Gestión de Clips";
@@ -41,6 +42,7 @@ $text['title-manage-clips']['fr-fr'] = "Gérer Clips";
 $text['title-manage-clips']['it-it'] = "Gestione Clip";
 $text['title-manage-clips']['de-de'] = "Clips verwalten";
 $text['title-manage-clips']['de-at'] = "Clips verwalten";
+$text['title-manage-clips']['ru-ru'] = "Управление клипами";
 
 $text['label-folder']['en-us'] = "Folder:";
 $text['label-folder']['es-cl'] = "Carpeta:";
@@ -49,6 +51,7 @@ $text['label-folder']['fr-fr'] = "Répertoire:";
 $text['label-folder']['it-it'] = "Cartella:";
 $text['label-folder']['de-de'] = "Ordner:";
 $text['label-folder']['de-at'] = "Ordner:";
+$text['label-folder']['ru-ru'] = "Папка:";
 
 $text['label-before-selection']['en-us'] = "Before Selection:";
 $text['label-before-selection']['es-cl'] = "Antes de seleccionar:";
@@ -57,6 +60,7 @@ $text['label-before-selection']['fr-fr'] = "Avant la Selection:";
 $text['label-before-selection']['it-it'] = "Prima della Selezione:";
 $text['label-before-selection']['de-de'] = "Vor der Auswahl:";
 $text['label-before-selection']['de-at'] = "Vor der Auswahl:";
+$text['label-before-selection']['ru-ru'] = "Перед выбором:";
 
 $text['label-after-selection']['en-us'] = "After Selection:";
 $text['label-after-selection']['es-cl'] = "Despues de seleccionar:";
@@ -65,6 +69,7 @@ $text['label-after-selection']['fr-fr'] = "Après la Selection:";
 $text['label-after-selection']['it-it'] = "Dopo la Selezione:";
 $text['label-after-selection']['de-de'] = "Nach der Auswahl:";
 $text['label-after-selection']['de-at'] = "Nach der Auswahl:";
+$text['label-after-selection']['ru-ru'] = "После выбора:";
 
 $text['label-notes']['en-us'] = "Notes:";
 $text['label-notes']['es-cl'] = "Notas:";
@@ -73,6 +78,7 @@ $text['label-notes']['fr-fr'] = "Notes:";
 $text['label-notes']['it-it'] = "Note:";
 $text['label-notes']['de-de'] = "Notiz:";
 $text['label-notes']['de-at'] = "Notiz:";
+$text['label-notes']['ru-ru'] = "Заметки:";
 
 $text['message-give-up']['en-us'] = "Giving up :( Cannot create an XMLHTTP instance";
 $text['message-give-up']['es-cl'] = "Cancelando, no se puede crear una instancia XMLHTTP";
@@ -81,6 +87,7 @@ $text['message-give-up']['fr-fr'] = "Abandon :( Ne peut pas créer un instance X
 $text['message-give-up']['it-it'] = "Annullamento :( Impossibile creare un istanza XMLHTTP";
 $text['message-give-up']['de-de'] = "Vorgang abgebrochen :( Konnte XMLHTTP Instanz nich erzeugen";
 $text['message-give-up']['de-at'] = "Vorgang abgebrochen :( Konnte XMLHTTP Instanz nich erzeugen";
+$text['message-give-up']['ru-ru'] = "Операция отменена :( Невозможно создать XMLHTTP экземпляр";
 
 $text['message-problem']['en-us'] = "There was a problem with the request.";
 $text['message-problem']['es-cl'] = "Hubo un problema con la petición.";
@@ -89,6 +96,7 @@ $text['message-problem']['fr-fr'] = "Il y a une un problème avec la requête.";
 $text['message-problem']['it-it'] = "Si è verificato un problema con la richiesta.";
 $text['message-problem']['de-de'] = "Es gab ein Problem mit der Anfrage.";
 $text['message-problem']['de-at'] = "Es gab ein Problem mit der Anfrage.";
+$text['message-problem']['ru-ru'] = "Возникла проблема с запросом.";
 
 $text['label-clip-library']['en-us'] = "Clip Library";
 $text['label-clip-library']['es-cl'] = "Librería de Clips";
@@ -97,6 +105,7 @@ $text['label-clip-library']['fr-fr'] = "Clip Libraries";
 $text['label-clip-library']['it-it'] = "Libreria Clip";
 $text['label-clip-library']['de-de'] = "Clip Bibliothek";
 $text['label-clip-library']['de-at'] = "Clip Bibliothek";
+$text['label-clip-library']['ru-ru'] = "Библиотека клипов";
 
 $text['label-selected-clip']['en-us'] = "Selected Clip";
 $text['label-selected-clip']['es-cl'] = "Clip Seleccionado";
@@ -105,6 +114,7 @@ $text['label-selected-clip']['fr-fr'] = "Clip Sélectionné";
 $text['label-selected-clip']['it-it'] =  "Clip Selezionati";
 $text['label-selected-clip']['de-de'] =  "Ausgewählter Clip";
 $text['label-selected-clip']['de-at'] =  "Ausgewählter Clip";
+$text['label-selected-clip']['ru-ru'] = "Выбранный клип";
 
 $text['button-edit-clip']['en-us'] = "Edit Clip";
 $text['button-edit-clip']['es-cl'] = "Editar Clip";
@@ -113,6 +123,7 @@ $text['button-edit-clip']['fr-fr'] = "Editer le Clip";
 $text['button-edit-clip']['it-it'] = "Modifica Clip";
 $text['button-edit-clip']['de-de'] = "Clip bearbeiten";
 $text['button-edit-clip']['de-at'] = "Clip bearbeiten";
+$text['button-edit-clip']['ru-ru'] = "Редактировать клип";
 
 $text['button-add-clip']['en-us'] = "Add Clip";
 $text['button-add-clip']['es-cl'] = "Agregar Clip";
@@ -121,6 +132,7 @@ $text['button-add-clip']['fr-fr'] = "Ajouter un Clip";
 $text['button-add-clip']['it-it'] = "Aggiungi Clip";
 $text['button-add-clip']['de-de'] = "Clip hinzufügen";
 $text['button-add-clip']['de-at'] = "Clip hinzufügen";
+$text['button-add-clip']['ru-ru'] = "Добавить клип";
 
 $text['message-delete-clip']['en-us'] = "Are you sure you want to delete the selected clip?";
 $text['message-delete-clip']['es-cl'] = "¿Realmente desea eliminar el clip seleccionado?";
@@ -129,6 +141,7 @@ $text['message-delete-clip']['fr-fr'] = "Etes-vous sûr de vouloir supprimer le 
 $text['message-delete-clip']['it-it'] = "Sei sicuro di voler cancellare la clip selezionata?";
 $text['message-delete-clip']['de-de'] = "Sind Sie sicher, dass Sie den ausgewählten Clip löschen möchten?";
 $text['message-delete-clip']['de-at'] = "Sind Sie sicher, dass Sie den ausgewählten Clip löschen möchten?";
+$text['message-delete-clip']['ru-ru'] = "Вы действительно хотите удалить выбранный клип?";
 
 $text['button-close']['en-us'] = "Close";
 $text['button-close']['es-cl'] = "Cerrar";
@@ -137,6 +150,7 @@ $text['button-close']['fr-fr'] = "Fermé";
 $text['button-close']['it-it'] = "Chiudi";
 $text['button-close']['de-de'] = "Schließen";
 $text['button-close']['de-at'] = "Schließen";
+$text['button-close']['ru-ru'] = "Закрыть";
 
 $text['label-path']['en-us'] = "Path:";
 $text['label-path']['es-cl'] = "Ruta:";
@@ -145,6 +159,7 @@ $text['label-path']['fr-fr'] = "Chemin:";
 $text['label-path']['it-it'] = "Percorso:";
 $text['label-path']['de-de'] = "Pfad:";
 $text['label-path']['de-at'] = "Pfad:";
+$text['label-path']['ru-ru'] = "Путь:";
 
 $text['label-file-name']['en-us'] = "File Name:";
 $text['label-file-name']['es-cl'] = "Nombre de Archivo:";
@@ -153,6 +168,7 @@ $text['label-file-name']['fr-fr'] = "Nom du Fichier:";
 $text['label-file-name']['it-it'] = "Nome File:";
 $text['label-file-name']['de-de'] = "Dateiname:";
 $text['label-file-name']['de-at'] = "Dateiname:";
+$text['label-file-name']['ru-ru'] = "Имя Файла:";
 
 $text['button-new-file']['en-us'] = "New File";
 $text['button-new-file']['es-cl'] = "Nuevo Archivo";
@@ -161,6 +177,7 @@ $text['button-new-file']['fr-fr'] = "Nouveau Fichier";
 $text['button-new-file']['it-it'] = "Nuovo File";
 $text['button-new-file']['de-de'] = "Neue Datei";
 $text['button-new-file']['de-at'] = "Neue Datei";
+$text['button-new-file']['ru-ru'] = "Новый Файл";
 
 $text['label-file-name-orig']['en-us'] = "Original File Name:";
 $text['label-file-name-orig']['es-cl'] = "Nombre de Archivo Original:";
@@ -169,6 +186,7 @@ $text['label-file-name-orig']['fr-fr'] = "Nom du Fichier Original:";
 $text['label-file-name-orig']['it-it'] = "Nome File originario:";
 $text['label-file-name-orig']['de-de'] = "Ursprünglicher Dateiname:";
 $text['label-file-name-orig']['de-at'] = "Ursprünglicher Dateiname:";
+$text['label-file-name-orig']['ru-ru'] = "Оригинальное Имя Файла:";
 
 $text['label-rename-file-to']['en-us'] = "Rename File To:";
 $text['label-rename-file-to']['es-cl'] = "Renombrar a:";
@@ -177,6 +195,7 @@ $text['label-rename-file-to']['fr-fr'] = "Renommer le Fichier en:";
 $text['label-rename-file-to']['it-it'] = "Rinomina il File in:";
 $text['label-rename-file-to']['de-de'] = "Datei umbenennen in:";
 $text['label-rename-file-to']['de-at'] = "Datei umbenennen in:";
+$text['label-rename-file-to']['ru-ru'] = "Переименовать Файл:";
 
 $text['label-files']['en-us'] = "Files";
 $text['label-files']['es-cl'] = "Archivos";
@@ -185,6 +204,7 @@ $text['label-files']['fr-fr'] = "Fichiers";
 $text['label-files']['it-it'] = "Files";
 $text['label-files']['de-de'] = "Dateien";
 $text['label-files']['de-at'] = "Dateien";
+$text['label-files']['ru-ru'] = "Файлы";
 
 $text['button-add-file']['en-us'] = "Add File";
 $text['button-add-file']['pt-pt'] = "Adicionar Ficheiro";
@@ -192,6 +212,7 @@ $text['button-add-file']['fr-fr'] = "Ajouter Fichier";
 $text['button-add-file']['it-it'] = "Aggiungi File";
 $text['button-add-file']['de-de'] = "Datei hinzufügen";
 $text['button-add-file']['de-at'] = "Datei hinzufügen";
+$text['button-add-file']['ru-ru'] = "Добавить Файл";
 
 $text['button-add-dir']['en-us'] = "Add Dir"; //add directory
 $text['button-add-dir']['es-cl'] = "Agregar Carpeta"; //add directory
@@ -200,6 +221,7 @@ $text['button-add-dir']['fr-fr'] = "Ajouter un Répertoire"; //add directory
 $text['button-add-dir']['it-it'] = "Aggiungi Cartella";
 $text['button-add-dir']['de-de'] = "Verzeichnis erstellen";
 $text['button-add-dir']['de-at'] = "Verzeichnis erstellen";
+$text['button-add-dir']['ru-ru'] = "Добавить Каталог"; //add directory
 
 $text['button-rename-file']['en-us'] = "Rename File";
 $text['button-rename-file']['es-cl'] = "Renombrar Archivo";
@@ -208,6 +230,7 @@ $text['button-rename-file']['fr-fr'] = "Renommer le Fichier";
 $text['button-rename-file']['it-it'] = "Rinomina File";
 $text['button-rename-file']['de-de'] = "Datei umbenennen";
 $text['button-rename-file']['de-at'] = "Datei umbenennen";
+$text['button-rename-file']['ru-ru'] = "Переименовать Файл";
 
 $text['message-delete-file']['en-us'] = "Are you sure you want to delete the selected file?";
 $text['message-delete-file']['es-cl'] = "¿Realmente desea eliminar el archivo seleccionado?";
@@ -216,6 +239,7 @@ $text['message-delete-file']['fr-fr'] = "Etes-vous sûr de vouloir supprimer le 
 $text['message-delete-file']['it-it'] = "Sei sicuro di voler cancellare il file selezionato?";
 $text['message-delete-file']['de-de'] = "Sind Sie sicher, dass Sie die markierte Datei löschen möchten?";
 $text['message-delete-file']['de-at'] = "Sind Sie sicher, dass Sie die markierte Datei löschen möchten?";
+$text['message-delete-file']['ru-ru'] = "Вы уверены, что хотите удалить выбранный файл?";
 
 $text['button-del-file']['en-us'] = "Delete File";
 $text['button-del-file']['es-cl'] = "Eliminar Archivo";
@@ -224,6 +248,7 @@ $text['button-del-file']['fr-fr'] = "Supprimer le Fichier";
 $text['button-del-file']['it-it'] = "Cancella File";
 $text['button-del-file']['de-de'] = "Datei löschen";
 $text['button-del-file']['de-at'] = "Datei löschen";
+$text['button-del-file']['ru-ru'] = "Удалить Файл";
 
 $text['message-delete-folder']['en-us'] = "Are you sure you want to delete the selected folder?";
 $text['message-delete-folder']['es-cl'] = "¿Realmente desea eliminar la carpeta seleccionada?";
@@ -232,6 +257,7 @@ $text['message-delete-folder']['fr-fr'] = "Etes-vous sûr de vouloir supprimer l
 $text['message-delete-folder']['it-it'] = "Sei sicuro di voler cancellare la cartella selezionata?";
 $text['message-delete-folder']['de-de'] = "SSind Sie sicher, dass Sie den markierten Ordner löschen möchten?";
 $text['message-delete-folder']['de-at'] = "SSind Sie sicher, dass Sie den markierten Ordner löschen möchten?";
+$text['message-delete-folder']['ru-ru'] = "Вы действительно хотите удалить выбранный Каталог?";
 
 $text['button-del-dir']['en-us'] = "Delete Dir"; //delete directory
 $text['button-del-dir']['es-cl'] = "Eliminar Carpeta"; //delete directory
@@ -240,6 +266,7 @@ $text['button-del-dir']['fr-fr'] = "Supprimer le Répertoire"; //delete director
 $text['button-del-dir']['it-it'] = "Cancella Cartella";
 $text['button-del-dir']['de-de'] = "Verzeichnis löschen";
 $text['button-del-dir']['de-at'] = "Verzeichnis löschen";
+$text['button-del-dir']['ru-ru'] = "Удалить Каталог"; //delete directory
 
 $text['message-error']['en-us'] = "Error!!";
 $text['message-error']['es-cl'] = "Error";
@@ -248,6 +275,7 @@ $text['message-error']['fr-fr'] = "Erreur!!";
 $text['message-error']['it-it'] = "Errore!!";
 $text['message-error']['de-de'] = "Fehler!!";
 $text['message-error']['de-at'] = "Fehler!!";
+$text['message-error']['ru-ru'] = "Ошибка!!";
 
 $text['label-folder-name']['en-us'] = "Folder Name:";
 $text['label-folder-name']['es-cl'] = "Nombre de Carpeta:";
@@ -256,6 +284,7 @@ $text['label-folder-name']['fr-fr'] = "Nom du Répertoire:";
 $text['label-folder-name']['it-it'] = "Nome Cartella:";
 $text['label-folder-name']['de-de'] = "Verzeichnis Name:";
 $text['label-folder-name']['de-at'] = "Verzeichnis Name:";
+$text['label-folder-name']['ru-ru'] = "Имя Каталога";
 
 $text['button-new-folder']['en-us'] = "New Folder";
 $text['button-new-folder']['es-cl'] = "Nueva Carpeta";
@@ -264,6 +293,7 @@ $text['button-new-folder']['fr-fr'] = "Nouveau Répertoire";
 $text['button-new-folder']['it-it'] = "Nuova Cartella";
 $text['button-new-folder']['de-de'] = "Neues Verzeichnis";
 $text['button-new-folder']['de-at'] = "Neues Verzeichnis";
+$text['button-new-folder']['ru-ru'] = "Новый Каталогr";
 
 $text['button-delete-this']['en-us'] = "Are you sure want to delete this?";
 $text['button-delete-this']['es-cl'] = "¿Realmente desea eliminar esto?";
@@ -272,6 +302,7 @@ $text['button-delete-this']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
 $text['button-delete-this']['it-it'] = "Sei sicuro di voler eliminare questo elemento?";
 $text['button-delete-this']['de-de'] = "Sind Sie sicher, dass Sie dieses löschen möchten?";
 $text['button-delete-this']['de-at'] = "Sind Sie sicher, dass Sie dieses löschen möchten?";
+$text['button-delete-this']['ru-ru'] = "Вы действительно хотите удалить это?";
 
 $text['label-file']['en-us'] = "File:";
 $text['label-file']['es-cl'] = "Archivo:";
@@ -280,5 +311,6 @@ $text['label-file']['fr-fr'] = "Fichier:";
 $text['label-file']['it-it'] = "File:";
 $text['label-file']['de-de'] = "Datei:";
 $text['label-file']['de-at'] = "Datei:";
+$text['label-file']['ru-ru'] = "Файл:";
 
 ?>

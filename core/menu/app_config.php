@@ -9,14 +9,15 @@
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "The menu can be customized using this tool.";
 		$apps[$x]['description']['es-cl'] = "El menú puede ser personalizado utilizando esta herramienta";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Das Menü kann mit diesem Werkzeug angepasst werden.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Das Menü kann mit diesem Werkzeug angepasst werden.";
 		$apps[$x]['description']['fr-fr'] = "Le menu peut être personnalisé ici";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "O menu pode ser personalizado utilizando esta ferramenta.";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['ru-ru'] = "Меню можно настроить с помощью этого инструмента";
 
 	//permission details
 		$y=0;

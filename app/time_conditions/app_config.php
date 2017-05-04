@@ -11,14 +11,15 @@
 		$apps[$x]['description']['en-us'] = "Direct calls based on the time of day.";
 		$apps[$x]['description']['es-cl'] = "Direcciona llamadas basada en hora del día";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Anrufe anhand der Tageszeit weiterleiten.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Anrufe anhand der Tageszeit weiterleiten.";
 		$apps[$x]['description']['fr-fr'] = "Redirige les appels en fonction de l'heure.";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Chamada directa com base na hora do dia.";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['ru-ru'] = "Прямые вызовы на основании времени суток.";
 
 	//destination details
 		$y=0;

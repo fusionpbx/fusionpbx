@@ -63,6 +63,12 @@
 --answer the call
 	session:answer();
 
+--get record_ext
+	record_ext = session:getVariable("record_ext");
+	if (not record_ext) then
+			record_ext = "wav";
+	end
+
 --define a function to send email
 	function send_email(email, attachment, default_language, default_dialect)
 
@@ -287,7 +293,7 @@
 
 		--if the conference is empty
 			if (conference_session_uuid) then
-				cmd = "conference "..meeting_uuid.."-"..domain_name.." xml_list";
+				cmd = "conference "..meeting_uuid.."@"..domain_name.." xml_list";
 				result = trim(api:executeString(cmd));
 				if (string.sub(result, -9) == "not found") then
 					--get the conference start_epoch
@@ -597,7 +603,7 @@
 		else
 			if (meeting_uuid) then
 				--check if the conference exists
-					cmd = "conference "..meeting_uuid.."-"..domain_name.." xml_list";
+					cmd = "conference "..meeting_uuid.."@"..domain_name.." xml_list";
 					result = trim(api:executeString(cmd));
 					if (string.sub(result, -9) == "not found") then
 						conference_exists = false;
@@ -618,7 +624,7 @@
 							--max members must be 2 or more
 							session:execute("set","conference_max_members="..max_members);
 							if (conference_exists) then
-								cmd = "conference "..meeting_uuid.."-"..domain_name.." get count";
+								cmd = "conference "..meeting_uuid.."@"..domain_name.." get count";
 								count = trim(api:executeString(cmd));
 								if (count ~= nil) then
 									if (tonumber(count) >= tonumber(max_members)) then
@@ -687,7 +693,7 @@
 					end
 
 				--get the conference xml_list
-					cmd = "conference "..meeting_uuid.."-"..domain_name.." xml_list";
+					cmd = "conference "..meeting_uuid.."@"..domain_name.." xml_list";
 					freeswitch.consoleLog("INFO","" .. cmd .. "\n");
 					result = trim(api:executeString(cmd));
 
@@ -723,7 +729,7 @@
 						--play a message that the conference is being a recorded
 							session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-recording_started.wav");
 						--play a message that the conference is being a recorded
-							--cmd = "conference "..meeting_uuid.."-"..domain_name.." play "..sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-recording_started.wav";
+							--cmd = "conference "..meeting_uuid.."@"..domain_name.." play "..sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-recording_started.wav";
 							--freeswitch.consoleLog("notice", "[conference center] ".. cmd .."\n");
 							--response = api:executeString(cmd);
 					end
@@ -731,24 +737,24 @@
 				--announce the caller
 					if (announce == "true") then
 						--announce the caller - play the recording
-							cmd = "conference "..meeting_uuid.."-"..domain_name.." play " .. temp_dir:gsub("\\", "/") .. "/conference-"..uuid..".wav";
+							cmd = "conference "..meeting_uuid.."@"..domain_name.." play " .. temp_dir:gsub("\\", "/") .. "/conference-"..uuid..".wav";
 							--freeswitch.consoleLog("notice", "[conference center] ".. cmd .."\n");
 							response = api:executeString(cmd);
 						--play has entered the conference
-							cmd = "conference "..meeting_uuid.."-"..domain_name.." play "..sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-has_joined.wav";
+							cmd = "conference "..meeting_uuid.."@"..domain_name.." play "..sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-has_joined.wav";
 							--freeswitch.consoleLog("notice", "[conference center] ".. cmd .."\n");
 							response = api:executeString(cmd);
 					else
 						if (not conference_locked) then
 							if (sounds == "true") then
-								cmd = "conference "..meeting_uuid.."-"..domain_name.." play "..enter_sound;
+								cmd = "conference "..meeting_uuid.."@"..domain_name.." play "..enter_sound;
 								response = api:executeString(cmd);
 							end
 						end
 					end
 
 				--get the conference member count
-					cmd = "conference "..meeting_uuid.."-"..domain_name.." list count";
+					cmd = "conference "..meeting_uuid.."@"..domain_name.." list count";
 					--freeswitch.consoleLog("notice", "[conference center] cmd: ".. cmd .."\n");
 					member_count = api:executeString(cmd);
 					if (string.sub(trim(member_count), -9) == "not found") then
@@ -769,11 +775,11 @@
 					end
 				--record the conference
 					if (record == "true") then
-						cmd="sched_api (+5 none lua app/conference_center/resources/scripts/start_recording.lua "..meeting_uuid.." "..domain_name.." )";
+						cmd="sched_api (+5 none lua app/conference_center/resources/scripts/start_recording.lua "..meeting_uuid.." "..domain_name.." "..record_ext.." )";
 						api:executeString(cmd);
 					end
 				--send the call to the conference
-					cmd = meeting_uuid.."-"..domain_name.."@"..profile.."+flags{".. flags .."}";
+					cmd = meeting_uuid.."@"..domain_name.."@"..profile.."+flags{".. flags .."}";
 					freeswitch.consoleLog("INFO","[conference center] conference " .. cmd .. "\n");
 					session:execute("conference", cmd);
 			end

@@ -11,14 +11,15 @@
 		$apps[$x]['description']['en-us'] = "Uses SVG to show the network traffic.";
 		$apps[$x]['description']['es-cl'] = "Utiliza SVG para mostrar el tráfico de red";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Verwendet SVG um die Netzwerkauslastung anzuzeigen.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Verwendet SVG um die Netzwerkauslastung anzuzeigen.";
 		$apps[$x]['description']['fr-fr'] = "Affiche le traffique Réseau via SVG.";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Utiliza SVG para mostrar o tráfego de rede.";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['ru-ru'] = "Использование SVG для отображения сетевого трафика.";
 
 	//permission details
 		$y=0;

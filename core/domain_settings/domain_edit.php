@@ -404,13 +404,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							unset($sql, $prep_statement, $result);
 						}
 
-					// update call flows data, anti-data and contexts
+					// update call flows data, alternate-data and contexts
 						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_flows/app_config.php")){
-							$sql = "select call_flow_uuid, call_flow_data, call_flow_anti_data, call_flow_context from v_call_flows ";
+							$sql = "select call_flow_uuid, call_flow_data, call_flow_alternate_data, call_flow_context from v_call_flows ";
 							$sql .= "where domain_uuid = '".$domain_uuid."' ";
 							$sql .= "and ( ";
 							$sql .= "call_flow_data like '%".$original_domain_name."%' or ";
-							$sql .= "call_flow_anti_data like '%".$original_domain_name."%' or ";
+							$sql .= "call_flow_alternate_data like '%".$original_domain_name."%' or ";
 							$sql .= "call_flow_context like '%".$original_domain_name."%' ";
 							$sql .= ") ";
 							$prep_statement = $db->prepare(check_sql($sql));
@@ -420,16 +420,16 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 								// get current values
 								$call_flow_uuid = $row["call_flow_uuid"];
 								$call_flow_data = $row["call_flow_data"];
-								$call_flow_anti_data = $row["call_flow_anti_data"];
+								$call_flow_alternate_data = $row["call_flow_alternate_data"];
 								$call_flow_context = $row["call_flow_context"];
 								// replace old domain name with new domain
 								$call_flow_data = str_replace($original_domain_name, $domain_name, $call_flow_data);
-								$call_flow_anti_data = str_replace($original_domain_name, $domain_name, $call_flow_anti_data);
+								$call_flow_alternate_data = str_replace($original_domain_name, $domain_name, $call_flow_alternate_data);
 								$call_flow_context = str_replace($original_domain_name, $domain_name, $call_flow_context);
 								// update db record
 								$sql = "update v_call_flows set ";
 								$sql .= "call_flow_data = '".$call_flow_data."', ";
-								$sql .= "call_flow_anti_data = '".$call_flow_anti_data."', ";
+								$sql .= "call_flow_alternate_data = '".$call_flow_alternate_data."', ";
 								$sql .= "call_flow_context = '".$call_flow_context."' ";
 								$sql .= "where call_flow_uuid = '".$call_flow_uuid."' ";
 								$sql .= "and domain_uuid = '".$domain_uuid."' ";
@@ -476,11 +476,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 					// update device lines server address, outbound proxy
 						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/devices/app_config.php")){
-							$sql = "select device_line_uuid, server_address, outbound_proxy from v_device_lines ";
+							$sql = "select device_line_uuid, server_address, outbound_proxy_primary, outbound_proxy_secondary from v_device_lines ";
 							$sql .= "where domain_uuid = '".$domain_uuid."' ";
 							$sql .= "and ( ";
 							$sql .= "server_address like '%".$original_domain_name."%' or ";
-							$sql .= "outbound_proxy like '%".$original_domain_name."%' ";
+							$sql .= "outbound_proxy_primary like '%".$original_domain_name."%' or ";
+							$sql .= "outbound_proxy_secondary like '%".$original_domain_name."%' ";
 							$sql .= ") ";
 							$prep_statement = $db->prepare(check_sql($sql));
 							$prep_statement->execute();
@@ -489,14 +490,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 								// get current values
 								$device_line_uuid = $row["device_line_uuid"];
 								$server_address = $row["server_address"];
-								$outbound_proxy = $row["outbound_proxy"];
+								$outbound_proxy_primary = $row["outbound_proxy_primary"];
+								$outbound_proxy_secondary = $row["outbound_proxy_secondary"];
 								// replace old domain name with new domain
 								$server_address = str_replace($original_domain_name, $domain_name, $server_address);
-								$outbound_proxy = str_replace($original_domain_name, $domain_name, $outbound_proxy);
+								$outbound_proxy_primary = str_replace($original_domain_name, $domain_name, $outbound_proxy_primary);
+								$outbound_proxy_secondary = str_replace($original_domain_name, $domain_name, $outbound_proxy_secondary);
 								// update db record
 								$sql = "update v_device_lines set ";
 								$sql .= "server_address = '".$server_address."', ";
-								$sql .= "outbound_proxy = '".$outbound_proxy."' ";
+								$sql .= "outbound_proxy_primary = '".$outbound_proxy_primary."' ";
+								$sql .= "outbound_proxy_secondary = '".$outbound_proxy_secondary."' ";
 								$sql .= "where device_line_uuid = '".$device_line_uuid."' ";
 								$sql .= "and domain_uuid = '".$domain_uuid."' ";
 								$db->exec(check_sql($sql));

@@ -10,14 +10,15 @@
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Add, edit, delete, and search for users.";
 		$apps[$x]['description']['es-cl'] = "Agregar, Editar, Eliminar y Buscar Usuarios.";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Benutzer hinzufügen, bearbeiten, löschen und suchen.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Benutzer hinzufügen, bearbeiten, löschen und suchen.";
 		$apps[$x]['description']['fr-fr'] = "Ajouter, Editer, Supprimer et Chercher des Usagers";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Adicionar, editar, apagar e pesquisa pelos utilizadores.";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['ru-ru'] = "Добавление, редактирование, удаление и поиск пользователей";
 
 	//permission details
 		$y=0;
@@ -72,6 +73,15 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'global';
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '727977e5-8b5f-4d80-af37-41fd3a4a1859';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'limit';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'users';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '3';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
 
 	//schema details
 		$y=0;

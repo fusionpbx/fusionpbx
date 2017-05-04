@@ -71,8 +71,8 @@
 			$voicemail_tutorial = check_str($_POST["voicemail_tutorial"]);
 		//remove the space
 			$voicemail_mail_to = str_replace(" ", "", $voicemail_mail_to);
-
-		echo "<pre>"; print_r($voicemail_options); echo "</pre>";
+		//debug info
+			//echo "<pre>"; print_r($voicemail_options); echo "</pre>";
 	}
 
 //unassign the voicemail id copy from the voicemail id
