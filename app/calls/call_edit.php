@@ -165,6 +165,14 @@
 
 		//call forward config
 			if (permission_exists('call_forward')) {
+
+				//sanitize the destinations
+				$forward_all_destination = str_replace('$', '', $forward_all_destination);
+				$forward_busy_destination = str_replace('$', '', $forward_busy_destination);
+				$forward_no_answer_destination = str_replace('$', '', $forward_no_answer_destination);
+				$forward_user_not_registered_destination = str_replace('$', '', $forward_user_not_registered_destination);
+
+				//build the array
 				$extensions['domain_uuid'] = $_SESSION['domain_uuid'];
 				$extensions['extension_uuid'] = $extension_uuid;
 				$extensions['forward_all_enabled'] = $forward_all_enabled;
@@ -206,6 +214,11 @@
 					$destination_found = false;
 					foreach ($destinations as $field) {
 						if ($field['destination'] != '') {
+
+							//sanitize the destination
+							$field['destination'] = str_replace('$', '', $field['destination']);
+
+							//build the array
 							$follow_me['follow_me_destinations'][$d]['domain_uuid'] = $_SESSION['domain_uuid'];
 							$follow_me['follow_me_destinations'][$d]['follow_me_uuid'] = $follow_me_uuid;
 							$follow_me['follow_me_destinations'][$d]['follow_me_destination_uuid'] = $field['uuid'];

@@ -89,31 +89,42 @@ $document['title'] = $text['title-sys-status'];
 		if(file_exists($git_path)){
 			$git_exe = 'git';
 			if (strtoupper(substr(PHP_OS, 0, 3)) === 'SUN') { $git_exe = shell_exec('which git'); }
-			shell_exec($git_exe.' --git-dir='.$git_path.' fetch');
-			$git_branch = shell_exec($git_exe.' --git-dir='.$git_path.' name-rev --name-only HEAD');
-			rtrim($git_branch);
-			$git_commit = shell_exec($git_exe.' --git-dir='.$git_path.' rev-parse HEAD');
-			rtrim($git_commit);
-			$git_origin = shell_exec($git_exe.' --git-dir='.$git_path.' config --get remote.origin.url');
-			rtrim($git_origin);
-			$git_origin = preg_replace('/\.git$/','',$git_origin);
-			$git_status = shell_exec($git_exe.' --git-dir='.$git_path.' status | grep "Your branch"');
-			rtrim($git_status);
-			$git_age = shell_exec($git_exe.' --git-dir='.$git_path.' log --pretty=format:%at HEAD^!');
-			rtrim($git_age);
-			$git_date = DateTime::createFromFormat('U', $git_age);
-			$git_age = $git_date->diff(new DateTime('now'));
-			echo "<tr>\n";
-			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-			echo "		".$text['label-git_info']."\n";
-			echo "	</td>\n";
-			echo "	<td class=\"row_style1\">\n";
-			echo "		".$text['label-git_branch'].": ".$git_branch."<br>\n";
-			echo "		".$text['label-git_commit'].": <a href='$git_origin/commit/$git_commit'>".$git_commit."</a><br>\n";
-			echo "		".$text['label-git_origin'].": ".$git_origin."<br>\n";
-			echo "		".$text['label-git_status'].": ".$git_status.$git_age->format(' %R%a days ago')."<br>\n";
-			echo "	</td>\n";
-			echo "</tr>\n";
+			exec($git_exe.' --git-dir='.$git_path.' fetch', $dummy, $returnCode);
+			if($returnCode){
+				echo "<tr>\n";
+				echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+				echo "		".$text['label-git_info']."\n";
+				echo "	</td>\n";
+				echo "	<td class=\"row_style1\">\n";
+				echo "		".$text['label-git_corrupted']."\n";
+				echo "	</td>\n";
+				echo "</tr>\n";
+			}else{
+				$git_branch = shell_exec($git_exe.' --git-dir='.$git_path.' name-rev --name-only HEAD');
+				rtrim($git_branch);
+				$git_commit = shell_exec($git_exe.' --git-dir='.$git_path.' rev-parse HEAD');
+				rtrim($git_commit);
+				$git_origin = shell_exec($git_exe.' --git-dir='.$git_path.' config --get remote.origin.url');
+				rtrim($git_origin);
+				$git_origin = preg_replace('/\.git$/','',$git_origin);
+				$git_status = shell_exec($git_exe.' --git-dir='.$git_path.' status | grep "Your branch"');
+				rtrim($git_status);
+				$git_age = shell_exec($git_exe.' --git-dir='.$git_path.' log --pretty=format:%at HEAD^!');
+				rtrim($git_age);
+				$git_date = DateTime::createFromFormat('U', $git_age);
+				$git_age = $git_date->diff(new DateTime('now'));
+				echo "<tr>\n";
+				echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+				echo "		".$text['label-git_info']."\n";
+				echo "	</td>\n";
+				echo "	<td class=\"row_style1\">\n";
+				echo "		".$text['label-git_branch'].": ".$git_branch."<br>\n";
+				echo "		".$text['label-git_commit'].": <a href='$git_origin/commit/$git_commit'>".$git_commit."</a><br>\n";
+				echo "		".$text['label-git_origin'].": ".$git_origin."<br>\n";
+				echo "		".$text['label-git_status'].": ".$git_status.$git_age->format(' %R%a days ago')."<br>\n";
+				echo "	</td>\n";
+				echo "</tr>\n";
+			}
 		}
 
 		echo "<tr>\n";

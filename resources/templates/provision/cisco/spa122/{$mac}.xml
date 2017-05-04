@@ -207,7 +207,7 @@
 <Auth_ID_1_></Auth_ID_1_>
 <Resident_Online_Number_1_></Resident_Online_Number_1_>
 <SIP_URI_1_></SIP_URI_1_>
-<Call_Waiting_Serv_1_>Yes</Call_Waiting_Serv_1_>
+<Call_Waiting_Serv_1_>{$spa_call_waiting}</Call_Waiting_Serv_1_>
 <Block_CID_Serv_1_>Yes</Block_CID_Serv_1_>
 <Block_ANC_Serv_1_>Yes</Block_ANC_Serv_1_>
 <Dist_Ring_Serv_1_>Yes</Dist_Ring_Serv_1_>

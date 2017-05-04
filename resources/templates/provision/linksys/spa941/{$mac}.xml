@@ -707,7 +707,7 @@
 <Speed_Dial_7 group="User/Speed_Dial"/>
 <Speed_Dial_8 group="User/Speed_Dial"/>
 <Speed_Dial_9 group="User/Speed_Dial"/>
-<CW_Setting group="User/Supplementary_Services">Yes</CW_Setting>
+<CW_Setting group="User/Supplementary_Services">{$spa_call_waiting}</CW_Setting>
 <Block_CID_Setting group="User/Supplementary_Services">No</Block_CID_Setting>
 <Block_ANC_Setting group="User/Supplementary_Services">No</Block_ANC_Setting>
 <DND_Setting group="User/Supplementary_Services">No</DND_Setting>

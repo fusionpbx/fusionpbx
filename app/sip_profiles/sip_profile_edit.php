@@ -202,6 +202,7 @@
 //get the child data
 	$sql = "select * from v_sip_profile_settings ";
 	$sql .= "where sip_profile_uuid = '".$sip_profile_uuid."' ";
+	$sql .= "order by sip_profile_setting_name ";
 	$prep_statement = $db->prepare($sql);
 	$prep_statement->execute();
 	$sip_profile_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -209,8 +210,7 @@
 //add an empty row
 	$x = count($sip_profile_settings);
 	$sip_profile_settings[$x]['sip_profile_setting_uuid'] = uuid();
-	$sip_profile_settings[$x]['sip_profile_setting_uuid'] = '';
-	$sip_profile_settings[$x]['sip_profile_uuid'] = '';
+	$sip_profile_settings[$x]['sip_profile_uuid'] = $sip_profile_uuid;
 	$sip_profile_settings[$x]['sip_profile_setting_name'] = '';
 	$sip_profile_settings[$x]['sip_profile_setting_value'] = '';
 	$sip_profile_settings[$x]['sip_profile_setting_enabled'] = '';
@@ -226,7 +226,7 @@
 //add an empty row
 	$x = count($sip_profile_domains);
 	$sip_profile_domains[$x]['sip_profile_domain_uuid'] = uuid();
-	$sip_profile_domains[$x]['sip_profile_uuid'] = '';
+	$sip_profile_domains[$x]['sip_profile_uuid'] = $sip_profile_uuid;
 	$sip_profile_domains[$x]['sip_profile_domain_name'] = '';
 	$sip_profile_domains[$x]['sip_profile_domain_alias'] = '';
 	$sip_profile_domains[$x]['sip_profile_domain_parse'] = '';
@@ -373,7 +373,7 @@
 		echo "					<input class='formfld' type='text' name='sip_profile_settings[$x][sip_profile_setting_description]' maxlength='255' value=\"".$row["sip_profile_setting_description"]."\">\n";
 		echo "				</td>\n";
 		echo "				<td class='list_control_icons' style='width: 25px;'>\n";
-		echo "					<a href=\"sip_profile_setting_delete.php?id=".$row["sip_profile_setting_uuid"]."&amp;sip_profile_setting_uuid=".$row["sip_profile_setting_uuid"]."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\"><button type='button' class='btn btn-default list_control_icon'><span class='glyphicon glyphicon-remove'></span></button></a>\n";
+		echo "					<a href=\"sip_profile_setting_delete.php?id=".$row["sip_profile_setting_uuid"]."&amp;sip_profile_uuid=".$sip_profile_uuid."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\"><button type='button' class='btn btn-default list_control_icon'><span class='glyphicon glyphicon-remove'></span></button></a>\n";
 		echo "				</td>\n";
 		echo "			</tr>\n";
 		$x++;

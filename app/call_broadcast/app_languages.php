@@ -188,8 +188,8 @@ $text['label-accountcode']['pt-br'] = "Código da conta";
 $text['label-accountcode']['pl'] = "Numer konta billingowego";
 $text['label-accountcode']['sv-se'] = "Accountcode";
 $text['label-accountcode']['uk'] = "Код облікового запису";
-$text['label-accountcode']['de-de'] = "Account Code";
-$text['label-accountcode']['de-at'] = "Account Code";
+$text['label-accountcode']['de-de'] = "Kontoschlüssel";
+$text['label-accountcode']['de-at'] = "KOntoschlüssel";
 $text['label-accountcode']['he'] = "קוד חשבון";
 
 $text['description-timeout']['en-us'] = "";
