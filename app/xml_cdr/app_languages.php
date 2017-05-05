@@ -968,8 +968,10 @@ $text['label-origin-destination']['pt-br'] = "Origem";
 $text['label-origin-destination']['pl'] = "Numer prezentowany";
 $text['label-origin-destination']['sv-se'] = "Källa";
 $text['label-origin-destination']['uk'] = "Джерело";
+$text['label-origin-destination']['de-de'] = "Quelle";
 $text['label-origin-destination']['de-at'] = "Quelle";
 $text['label-origin-destination']['he'] = "מקור";
+$text['label-origin-destination']['ru-ru'] = "Источник";
 
 $text['label-destination']['en-us'] = "Destination";
 $text['label-destination']['es-cl'] = "Destino";
