@@ -11,9 +11,9 @@
 		$apps[$x]['description']['en-us'] = "Script Editor can be used to edit lua, javascript or other scripts.";
 		$apps[$x]['description']['es-cl'] = "Editor de scripts. Puede ser utilizado para editar archivos lua, javascript, etc.";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Der Skript-Editor kann verwendet werden um Lua, Javaskripte oder andere Skripte zu bearbeiten.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Der Skript-Editor kann verwendet werden um Lua, Javaskripte oder andere Skripte zu bearbeiten.";
 		$apps[$x]['description']['fr-fr'] = "L'éditeur permet de modifier les scripts lua, javascript ou autres.";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";

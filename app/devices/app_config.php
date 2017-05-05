@@ -11,14 +11,15 @@
 		$apps[$x]['description']['en-us'] = "Devices for provisioning.";
 		$apps[$x]['description']['es-cl'] = "Provicionamiento de dispositivos.";
 		$apps[$x]['description']['es-mx'] = "Provicionamiento de dispositivos.";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Geräte die verwaltet werden sollen.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Geräte die verwaltet werden sollen.";
 		$apps[$x]['description']['fr-fr'] = "Equipements pour provisioning.";
 		$apps[$x]['description']['fr-ca'] = "Dispositifs pour provisionnement.";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Lista de provisionamento de Telefone.";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['ru-ru'] = "Устройства для автопровижинга";
 
 	//permission details
 		$y=0;
@@ -252,6 +253,17 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_vendor_function_group_delete';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+
+	//default settings
+		$y = 0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'e05a4745-ea59-47a7-8e7f-5db7d2a5c273';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'limit';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'devices';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '3';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
 		$y++;
 
 	//schema details

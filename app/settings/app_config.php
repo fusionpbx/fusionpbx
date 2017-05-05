@@ -11,9 +11,9 @@
 		$apps[$x]['description']['en-us'] = "PBX Settings.";
 		$apps[$x]['description']['es-cl'] = "Configuraciones del PBX";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "PBX Einstellungen.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "PBX Einstellungen.";
 		$apps[$x]['description']['fr-fr'] = "Confs PBX";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";

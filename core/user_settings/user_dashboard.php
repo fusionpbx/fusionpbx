@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -1198,6 +1198,18 @@
 //additional items for the dashbaord
 	if (!is_array($selected_blocks) || in_array('call_routing', $selected_blocks) || in_array('ring_groups', $selected_blocks)) {
 		echo "<div class='row' style='margin-top: 30px;'>\n";
+
+		if (!is_array($selected_blocks) || in_array('caller_id', $selected_blocks)) {
+			//caller id management
+				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/extensions/extension_dashboard.php")) {
+						if (permission_exists('extension_caller_id')) {
+							$is_included = true;
+							echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6' style='margin: 0 0 30px 0;'>\n";
+							require_once "app/extensions/extension_dashboard.php";
+							echo "</div>";
+						}
+				}
+		}
 
 		if (!is_array($selected_blocks) || in_array('call_routing', $selected_blocks)) {
 			//call routing

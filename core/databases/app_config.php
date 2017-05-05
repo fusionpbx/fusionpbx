@@ -10,14 +10,15 @@
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Stored database connection information.";
 		$apps[$x]['description']['es-cl'] = "Información de conexiones a bases de datos";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Gespeicherte Informationen zu Datenbank-Verbindungen.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Gespeicherte Informationen zu Datenbank-Verbindungen.";
 		$apps[$x]['description']['fr-fr'] = "Information de connexions au BDD";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Armazena informações de conexão com a base de dados.";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['ru-ru'] = "Информация о подключении к базам данных";
 
 	//permission details
 		$y=0;

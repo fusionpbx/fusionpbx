@@ -47,9 +47,6 @@ function vm_message_count(account, use_cache)
 	if use_cache and cache.support() then
 		local uuid = cache.get('voicemail_uuid:' .. account)
 		if not uuid then
-			local sql = string.format(vm_to_uuid_sql,
-				dbh:escape(id), dbh:escape(domain_name)
-			)
 			uuid = dbh:first_value(vm_to_uuid_sql, {
 				voicemail_id = id, domain_name = domain_name
 			})

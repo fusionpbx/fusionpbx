@@ -11,9 +11,9 @@
 		$apps[$x]['description']['en-us'] = "The IVR Menu plays a recording or a pre-defined phrase that presents the caller with options to choose from. Each option has a corresponding destination. The destinations can be extensions, voicemail, IVR menus, hunt groups, FAX extensions, and more.";
 		$apps[$x]['description']['es-cl'] = "El menú IVR reproduce una grabación o una frase predefinida que presenta opciones para elegir. Cada opción corresponde a un destino. Los destinos pueden ser extensiones, correo de voz, IVR, grupos, fax entre otros.";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Anrufzentralen spielen eine Aufnahme oder vordefinierte Phrasen ab und bieten denm Anrufer verschieden Optionen zur Auswahl. Jede Option hat ei dazugehöriges Ziel. Diese können Nebenstellen, Autromatische Zentralen, Hunt Groups, Fax Nebenstellen und anderes sein.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Anrufzentralen spielen eine Aufnahme oder vordefinierte Phrasen ab und bieten denm Anrufer verschieden Optionen zur Auswahl. Jede Option hat ei dazugehöriges Ziel. Diese können Nebenstellen, Autromatische Zentralen, Hunt Groups, Fax Nebenstellen und anderes sein.";
 		$apps[$x]['description']['fr-fr'] = "Le menu SVI joue un enregistrement ou une phrase prédéfinie permettant à l'appelant de faire un choix. Ce choix l'amenant sur une destination spécifique. Cette destination peut être une extension, une messagerie vocale, un IVR, un groupement, un FAX ...";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";
@@ -101,6 +101,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = '1';
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '26984efd-2445-4ac9-b459-bb7bda4217c6';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'limit';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'ivr_menus';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '3';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
 		$y++;
 

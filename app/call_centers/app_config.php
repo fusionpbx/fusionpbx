@@ -10,9 +10,9 @@
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Queues for managing inbound calls and routing those calls to available agents.";
 		$apps[$x]['description']['es-cl'] = "Colas pra administar las llamadas entrantes y enviarlas a los agentes disponibles";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Warteschlangen um eingehende Anrufe zu verwalten und diese an verfügbare Agenten weiterzuleiten.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Warteschlangen um eingehende Anrufe zu verwalten und diese an verfügbare Agenten weiterzuleiten.";
 		$apps[$x]['description']['fr-fr'] = "Files d'attente d'appels entrants distribu%uFFFDs aux agents disponibles.";
 		$apps[$x]['description']['fr-ca'] = "Queues pour envoyer les appels entrants vers les agents disponibles.";
 		$apps[$x]['description']['fr-ch'] = "";
@@ -106,6 +106,17 @@
 		$apps[$x]['permissions'][$y]['name'] = "call_center_log_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+
+	//default settings
+		$y = 0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '8ebeb864-f03e-406c-b82f-6eb47cb1bd39';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'limit';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'call_center_queues';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '3';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
 
 	//schema details
 		$y=0;
@@ -310,6 +321,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "queue_announce_frequency";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+               	$apps[$x]['db'][$y]['fields'][$z]['name'] = "queue_cc_exit_keys";
+               	$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+               	$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "queue_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";

@@ -56,7 +56,7 @@
 
 //set init settings
 	ini_set('max_execution_time',1800); //30 minutes
-	ini_set('memory_limit', '128M');
+	ini_set('memory_limit', '512M');
 
 //listen for standard input
 	if ($msg == '') {

@@ -11,9 +11,9 @@
 		$apps[$x]['description']['en-us'] = "Gateways provide access into other voice networks. These can be voice providers or other systems that require SIP registration.";
 		$apps[$x]['description']['es-cl'] = "Las pasarelas proveen acceso a otras redes de voz. Pueden ser provedores u otro sistema que requiera registo SIP.";
 		$apps[$x]['description']['es-mx'] = "Las pasarelas proveen acceso a otras redes de voz.  Pueden ser provedores u otro sistema que requiera registo SIP.";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Gateways stellen Verbindungen zu andere Sprach-Netzwerke bereit. Diese können Voice-Provider oder andere Systeme sein, die eine SIP Registrierung benötigen.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Gateways stellen Verbindungen zu andere Sprach-Netzwerke bereit. Diese können Voice-Provider oder andere Systeme sein, die eine SIP Registrierung benötigen.";
 		$apps[$x]['description']['fr-fr'] = "Les passerelles donnent access autres réseaux vocaux. Ceux-ci peuvent être des opérateurs ou d'autres systèmes reqieérant un enregistrement SIP";
 		$apps[$x]['description']['fr-ca'] = "Les passerelles donnent access autres réseaux vocaux.  Elles pouvent être d'autre furnisseur ou autre système avec la régistration SIP.";
 		$apps[$x]['description']['fr-ch'] = "";
@@ -55,6 +55,17 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "gateway_domain";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+
+	//default settings
+		$y = 0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'df031ab4-087d-4e0e-92ac-e96f5d0aa55d';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'limit';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'gateways';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '3';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
 
 	//schema details
 		$y=0;

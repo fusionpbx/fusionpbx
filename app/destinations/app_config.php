@@ -11,9 +11,9 @@
 		$apps[$x]['description']['en-us'] = "Used to define external destination numbers.";
 		$apps[$x]['description']['es-cl'] = "Utilizado para definir números de destino externos.";
 		$apps[$x]['description']['es-mx'] = "Utilizado para definir numeros destinos externos.";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Wird verwendet um externe Ziele zu definieren.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Wird verwendet um externe Ziele zu definieren.";
 		$apps[$x]['description']['fr-fr'] = "Défini les numéros externes.";
 		$apps[$x]['description']['fr-ca'] = "Usé pour définir cibler nombres externe.";
 		$apps[$x]['description']['fr-ch'] = "";
@@ -60,6 +60,17 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'destination_all';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+
+	//default settings
+		$y = 0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '70d8538a-89ab-4db6-87b1-f5e447680283';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'limit';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'destinations';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '3';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
 		$y++;
 
 	//schema details

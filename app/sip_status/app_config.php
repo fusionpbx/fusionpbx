@@ -11,14 +11,15 @@
 		$apps[$x]['description']['en-us'] = "Displays system information such as RAM, CPU and Hard Drive information.";
 		$apps[$x]['description']['es-cl'] = "Muestra información del sistema como RAM, CPU y Disco Duro";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Zeigt den SIP-Status an.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Zeigt den SIP-Status an.";
 		$apps[$x]['description']['fr-fr'] = "";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Exibe informações do sistema, como memória RAM, CPU e informações do disco rígido.";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['ru-ru'] = "Отображает системную информацию о состоянии Памяти, Процессора и Дисковых накопителей.";
 
 	//permission details
 		$y=0;
