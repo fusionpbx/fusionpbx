@@ -490,7 +490,8 @@ $text['label-source']['sv-se'] = "CID, nummerspresentation";
 $text['label-source']['uk'] = "CID Номер";
 $text['label-source']['de-de'] = "Anrufer Nummer";
 $text['label-source']['de-at'] = "Anrufer Nummer";
-$text['label-source']['he'] = "זהוי מספר";$text['label-source']['ru-ru'] = "CID номера";
+$text['label-source']['he'] = "זהוי מספר";
+$text['label-source']['ru-ru'] = "CID Hомер";
 
 $text['label-result']['en-us'] = "Result";
 $text['label-result']['es-cl'] = "Resultado";
@@ -1019,7 +1020,7 @@ $text['label-cid-number']['sv-se'] = "CID, nummerspresentation";
 $text['label-cid-number']['uk'] = "CID Номер";
 $text['label-cid-number']['de-at'] = "Anrufer Nummer";
 $text['label-cid-number']['he'] = "זהוי מספר";
-$text['label-cid-number']['ru-ru'] = "CID номера";
+$text['label-cid-number']['ru-ru'] = "CID Номер";
 
 $text['label-cid-name']['en-us'] = "CID Name";
 $text['label-cid-name']['es-cl'] = "Nombre CID";
