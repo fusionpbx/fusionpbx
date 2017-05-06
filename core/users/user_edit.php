@@ -63,7 +63,7 @@
 		}
 		unset($prep_statement, $row);
 		if ($total_users >= $_SESSION['limit']['users']['numeric']) {
-			messages::add(text['message-maximum_users'].' '.$_SESSION['limit']['users']['numeric'], 'negative');
+			messages::add($text['message-maximum_users'].' '.$_SESSION['limit']['users']['numeric'], 'negative');
 			header('Location: users.php');
 			exit;
 		}
