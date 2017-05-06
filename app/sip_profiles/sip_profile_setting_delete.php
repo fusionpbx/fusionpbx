@@ -38,15 +38,13 @@ else {
 	$language = new text;
 	$text = $language->get();
 
-if (count($_GET)>0) {
-	$id = check_str($_GET["id"]);
-	$sip_profile_uuid = check_str($_GET["sip_profile_uuid"]);
-}
+	$sip_profile_setting_uuid = @$_GET["id"];
+	$sip_profile_uuid = @$_GET["sip_profile_uuid"];
 
-if (strlen($id)>0) {
+if (is_uuid($sip_profile_setting_uuid) && is_uuid($sip_profile_uuid)) {
 	//delete the sip profile setting
 		$sql = "delete from v_sip_profile_settings ";
-		$sql .= "where sip_profile_setting_uuid = '$id' ";
+		$sql .= "where sip_profile_setting_uuid = '$sip_profile_setting_uuid' and sip_profile_uuid='$sip_profile_uuid'";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		unset($sql);
@@ -59,8 +57,10 @@ if (strlen($id)>0) {
 }
 
 //redirect the browser
-	$_SESSION["message"] = $text['message-delete'];
-	header("Location: sip_profile_edit.php?id=".$sip_profile_uuid);
+	if(is_uuid($sip_profile_uuid)){
+		$_SESSION["message"] = $text['message-delete'];
+		header("Location: sip_profile_edit.php?id=".$sip_profile_uuid);
+	}
 	return;
 
 ?>
