@@ -277,9 +277,9 @@
 	echo "		<td class='vtable' align='left'>\n";
 	echo "			<table>\n";
 	echo "				<tr>\n";
-	echo "					<td class='vtable' style='width:70px; text-align: left;'>".$text['label-sip_profile_domain_name']."</td>\n";
-	echo "					<td class='vtable' style='width:70px; text-align: left;'>".$text['label-sip_profile_domain_alias']."</td>\n";
-	echo "					<td class='vtable' style='width:70px; text-align: left;'>".$text['label-sip_profile_domain_parse']."</td>\n";
+	echo "					<th class='vtable' style='width:80px; text-align: left;'>".$text['label-sip_profile_domain_name']."</th>\n";
+	echo "					<th class='vtable' style='width:70px; text-align: left;'>".$text['label-sip_profile_domain_alias']."</th>\n";
+	echo "					<th class='vtable' style='width:70px; text-align: left;'>".$text['label-sip_profile_domain_parse']."</th>\n";
 	echo "				</tr>\n";
 	$x = 0;
 	foreach($sip_profile_domains as $row) {
@@ -344,16 +344,16 @@
 	echo "	</tr>\n";
 
 	echo "	<tr>\n";
-	echo "		<td class='vncell' align='left'>\n";
+	echo "		<td class='vncellreq' align='left'>\n";
 	echo "			".$text['label-sip_profile_settings']."\n";
 	echo "		</td>\n";
 	echo "		<td class='vtable' align='left'>\n";
 	echo "			<table>\n";
 	echo "				<tr>\n";
-	echo "					<td class='vtable'>".$text['label-sip_profile_setting_name']."</td>\n";
-	echo "					<td class='vtable'>".$text['label-sip_profile_setting_value']."</td>\n";
-	echo "					<td class='vtable' style='width:70px;'>".$text['label-sip_profile_setting_enabled']."</td>\n";
-	echo "					<td class='vtable'>".$text['label-sip_profile_setting_description']."</td>\n";
+	echo "					<th class='vtable' style='text-align: left;'>".$text['label-sip_profile_setting_name']."</th>\n";
+	echo "					<th class='vtable' style='text-align: left;'>".$text['label-sip_profile_setting_value']."</th>\n";
+	echo "					<th class='vtable' style='width:70px; text-align: left;'>".$text['label-sip_profile_setting_enabled']."</th>\n";
+	echo "					<th class='vtable' style='text-align: left;'>".$text['label-sip_profile_setting_description']."</th>\n";
 	echo "				</tr>\n";
 	$x = 0;
 	foreach($sip_profile_settings as $row) {
