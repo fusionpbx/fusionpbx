@@ -385,8 +385,7 @@
 											else
 												contact = trim(api:execute("sofia_contact", destination));
 												array = explode('/',contact);
-												sip_profile = array[2];
-												local profile, proxy = sip_profile, database_hostname;
+												local profile, proxy = array[2], database_hostname;
 												dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. presence_id .."}sofia/" .. profile .. "/" .. destination .. ";fs_path=sip:" .. proxy;
 												--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dial_string " .. dial_string .. "\n");
 											end
