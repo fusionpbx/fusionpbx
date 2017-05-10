@@ -659,7 +659,7 @@ include "root.php";
 				$this->write_progress("... superuser exists as '" . $this->admin_uuid . "', updating password");
 				$sql = "update v_users ";
 				$sql .= "set password = '".md5($salt.$this->admin_password)."' ";
-				$sql .= "set salt = '$salt' ";
+				$sql .= ",salt = '$salt' ";
 				$sql .= "where USER_uuid = '".$this->admin_uuid."' ";
 				$this->write_debug($sql);
 				$this->dbh->exec(check_sql($sql));
@@ -712,7 +712,7 @@ include "root.php";
 			$prep_statement = $this->dbh->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['count'] == 0) {
+			if ($row['count(*)'] == 0) {
 				$sql = "insert into v_contacts ";
 				$sql .= "(";
 				$sql .= "domain_uuid, ";
@@ -742,7 +742,7 @@ include "root.php";
 			$prep_statement = $this->dbh->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['count'] == 0) {
+			if ($row['count(*)'] == 0) {
 				//add the user to the superadmin group
 				$sql = "insert into v_group_users ";
 				$sql .= "(";
