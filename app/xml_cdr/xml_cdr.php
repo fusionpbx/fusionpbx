@@ -649,7 +649,11 @@
 				}
 			//mos (mean opinion score)
 				if (permission_exists("xml_cdr_mos")) {
-					echo "	<td valign='top' class='".$row_style[$c]."' ".((strlen($row['rtp_audio_in_mos']) > 0) ? "title='".($row['rtp_audio_in_mos'] / 5 * 100)."%'" : null)." style='text-align: center;'>".((strlen($row['rtp_audio_in_mos']) > 0) ? $row['rtp_audio_in_mos'] : "&nbsp;")."</td>\n";
+					if(strlen($row['rtp_audio_in_mos']) > 0){
+						$title = " title='".$text['label-mos_score-'.round($row['rtp_audio_in_mos'])]."'";
+						$value = $row['rtp_audio_in_mos'];
+					}
+					echo "	<td valign='top' class='".$row_style[$c]."'$title style='text-align: center;'>$value</td>\n";
 				}
 			//hangup cause/call result
 				if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
