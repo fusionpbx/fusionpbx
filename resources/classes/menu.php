@@ -69,6 +69,8 @@ if (!class_exists('menu')) {
 					$config_list = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_menu.php");
 					$x = 0;
 					foreach ($config_list as &$config_path) {
+						$app_path = dirname($config_path);
+						$app_path = preg_replace('/\A.*(\/.*\/.*)\z/', '$1', $app_path);
 						$y = 0;
 						try {
 							//echo "[".$x ."] ".$config_path."\n";
