@@ -703,7 +703,7 @@ include "root.php";
 					unset($sql);
 			}
 			$this->write_progress("\tChecking if superuser contact exists");
-			$sql = "select count(*) from v_contacts ";
+			$sql = "select count(*) as count from v_contacts ";
 			$sql .= "where domain_uuid = '".$this->global_settings->domain_uuid()."' ";
 			$sql .= "and contact_name_given = '".$this->admin_username."' ";
 			$sql .= "and contact_nickname = '".$this->admin_username."' ";
@@ -712,7 +712,7 @@ include "root.php";
 			$prep_statement = $this->dbh->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['count(*)'] == 0) {
+			if ($row['count'] == 0) {
 				$sql = "insert into v_contacts ";
 				$sql .= "(";
 				$sql .= "domain_uuid, ";
@@ -733,7 +733,7 @@ include "root.php";
 				unset($sql);
 			}
 			$this->write_progress("\tChecking if superuser is in the correct group");
-			$sql = "select count(*) from v_group_users ";
+			$sql = "select count(*) as count from v_group_users ";
 			$sql .= "where domain_uuid = '".$this->global_settings->domain_uuid()."' ";
 			$sql .= "and user_uuid = '".$this->admin_uuid."' ";
 			$sql .= "and group_name = 'superadmin' ";
@@ -742,7 +742,7 @@ include "root.php";
 			$prep_statement = $this->dbh->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['count(*)'] == 0) {
+			if ($row['count'] == 0) {
 				//add the user to the superadmin group
 				$sql = "insert into v_group_users ";
 				$sql .= "(";
