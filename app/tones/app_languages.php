@@ -1,5 +1,5 @@
 <?php
-#This file was last reorganized on 10th of May 2017 11:11:57 AM UTC
+#This file was last reorganized on 11th of May 2017 12:21:56 PM UTC
 
 $text['title-tones']['en-us'] = "Tones";
 $text['title-tones']['ar-eg'] = "";
@@ -7,6 +7,7 @@ $text['title-tones']['de-at'] = "Töne";
 $text['title-tones']['de-de'] = "Töne";
 $text['title-tones']['es-cl'] = "Tono";
 $text['title-tones']['fr-fr'] = "Ton";
+$text['title-tones']['he'   ] = "";
 $text['title-tones']['it-it'] = "Tono";
 $text['title-tones']['nl-nl'] = "Toon";
 $text['title-tones']['pl'   ] = "Ton";
@@ -22,6 +23,7 @@ $text['label-tone']['de-at'] = "Ton";
 $text['label-tone']['de-de'] = "Ton";
 $text['label-tone']['es-cl'] = "Tono";
 $text['label-tone']['fr-fr'] = "Ton";
+$text['label-tone']['he'   ] = "";
 $text['label-tone']['it-it'] = "Tono";
 $text['label-tone']['nl-nl'] = "Toon";
 $text['label-tone']['pl'   ] = "Ton";
@@ -37,6 +39,7 @@ $text['label-tones']['de-at'] = "Töne";
 $text['label-tones']['de-de'] = "Töne";
 $text['label-tones']['es-cl'] = "Tono";
 $text['label-tones']['fr-fr'] = "Ton";
+$text['label-tones']['he'   ] = "";
 $text['label-tones']['it-it'] = "Tono";
 $text['label-tones']['nl-nl'] = "Toon";
 $text['label-tones']['pl'   ] = "Ton";
