@@ -9,8 +9,24 @@ class text {
 	/**
 	 * Called when the object is created
 	 */
+	public $languages;
+	
 	public function __construct() {
-		//place holder
+		//define the text array
+			$text = array();
+
+		//get the global app_languages.php so we can get the list of languages
+			include $_SERVER["PROJECT_ROOT"]."/resources/app_languages.php";
+		
+		//get the list of languages, remove en-us, sort it then put en-us in front
+			unset($text['language-name']['en-us']);
+			$languages = array_keys($text['language-name']);
+			asort($languages);
+			array_unshift($languages, 'en-us');
+		
+		//support legacy variable
+			$_SESSION['app']['languages'] = $languages;
+			$this->languages = $languages;
 	}
 
 	/**
@@ -49,19 +65,6 @@ class text {
 				require $lang_path;
 			}
 
-		//get the available languages
-			if (is_array($text)) {
-				krsort($text);
-				foreach ($text as $lang_label => $lang_codes) {
-					if (is_array($lang_codes)) foreach ($lang_codes as $lang_code => $lang_text) {
-						if ($lang_text != '') {
-							$app_languages[] = $lang_code;
-						}
-					}
-				}
-			}
-			if (is_array($app_languages)) { $_SESSION['app']['languages'] = array_unique($app_languages); }
-
 		//check the session language
 			if (isset($_SESSION['domain']) and $language_code == null){
 				$language_code = $_SESSION['domain']['language']['code'];
@@ -92,9 +95,6 @@ class text {
 	 */
 	public function organize_language($app_path = null, $no_sort = false) {
 	
-		//fetch the languages
-			$languages = get_languages();
-			
 		//clear $text ready for the import
 			$text = array();
 
@@ -128,13 +128,13 @@ class text {
 						$spacer = "";
 						if(strlen($lang_label) == 11)
 							$spacer = "   ";
-						fwrite($lang_file, "\$text['$lang_label'$spacer]['en-us'] = \"".array_shift($text[$lang_label])."\";\n");
+						fwrite($lang_file, "\$text['$lang_label'$spacer]['en-us'] = \"".$this->escape_str(array_shift($text[$lang_label]))."\";\n");
 					}else{
 					
 						//put a line break in between the last tag if it has changed
 							if($last_lang_label != $lang_label)
 								fwrite($lang_file, "\n");
-							foreach ($languages as $lang_code) {
+							foreach ($this->languages as $lang_code) {
 								$value = "";
 								$append = "";
 								$spacer = "";
@@ -142,7 +142,7 @@ class text {
 									$spacer = "   ";
 								if(array_key_exists($lang_code, $text[$lang_label]))
 									$value = $text[$lang_label][$lang_code];
-								fwrite($lang_file, "\$text['$lang_label']['$lang_code'$spacer] = \"".$value."\";$append\n");
+								fwrite($lang_file, "\$text['$lang_label']['$lang_code'$spacer] = \"".$this->escape_str($value)."\";$append\n");
 							}
 					}
 					$last_lang_label = $lang_label;
@@ -152,26 +152,12 @@ class text {
 			fwrite($lang_file, "\n?>\n");
 			fclose($lang_file);
 	}
-	
-	/**
-	 * fetch the list of installed languages detected in resources
-	 */
-	public function get_languages() {
-		
-		//define the text array
-			$text = array();
-
-		//get the global app_languages.php so we can get the list of languages
-			include $_SERVER["PROJECT_ROOT"]."/resources/app_languages.php";
-		
-		//get the list of languages, remove en-us, sort it then put en-us in front
-			unset($text['language-name']['en-us']);
-			$languages = array_keys($text['language-name']);
-			asort($languages);
-			array_unshift($languages, 'en-us');
-			return $languages;
+	private function escape_str($string = '') {
+		//perform initial escape
+			$string = addslashes($string);
+		//swap \' back otherwise we end up with a double escape
+			return preg_replace("/\\\'/", "'", $string);
 	}
-
 }
 
 ?>
