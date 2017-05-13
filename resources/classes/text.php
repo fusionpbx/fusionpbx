@@ -10,6 +10,14 @@ class text {
 	 * Called when the object is created
 	 */
 	public $languages;
+	public $legacy_map = array (
+		'he' => 'he-il',
+		'pl' => 'pl-pl',
+		'uk' => 'uk-ua',
+		'he-il' => 'he',
+		'pl-pl' => 'pl',
+		'uk-ua' => 'uk',
+	);
 	
 	public function __construct() {
 		//define the text array
@@ -27,6 +35,7 @@ class text {
 		//support legacy variable
 			$_SESSION['app']['languages'] = $languages;
 			$this->languages = $languages;
+			
 	}
 
 	/**
@@ -61,15 +70,22 @@ class text {
 			else {
 				$lang_path = getcwd().'/app_languages.php';
 			}
-			if(file_exists($lang_path)){
+			if(file_exists($lang_path)) {
 				require $lang_path;
 			}
 
 		//check the session language
-			if (isset($_SESSION['domain']) and $language_code == null){
+			if (isset($_SESSION['domain']) and $language_code == null) {
 				$language_code = $_SESSION['domain']['language']['code'];
 			} elseif ($language_code == null){
 				$language_code = 'en-us';
+			}
+
+		//check the language code
+			if(strlen($language_code) == 2) {
+				if(array_key_exists($language_code, $this->legacy_map)) {
+					$language_code = $this->legacy_map[$language_code];
+				}
 			}
 
 		//reduce to specific language
@@ -122,13 +138,19 @@ class text {
 			foreach ($text as $lang_label => $lang_codes) {
 				
 				//behave differently if we are one of the special language-* tags
-					if(preg_match('/\Alanguage-\w{2}(?:-\w{2})?\z/',$lang_label)) {
+					if(preg_match('/\Alanguage-(\w{2}|\w{2}-\w{2})\z/', $lang_label, $lang_code)) {
 						if($lang_label == 'language-en-us')
 							fwrite($lang_file, "\n");
+						$target_lang = $lang_code[1];
+						if(strlen($target_lang) == 2) {
+							if(array_key_exists($target_lang, $this->legacy_map)) {
+								$target_lang = $this->legacy_map[$target_lang];
+							}
+						}
 						$spacer = "";
-						if(strlen($lang_label) == 11)
+						if(strlen($target_lang) == 11)
 							$spacer = "   ";
-						fwrite($lang_file, "\$text['$lang_label'$spacer]['en-us'] = \"".$this->escape_str(array_shift($text[$lang_label]))."\";\n");
+						fwrite($lang_file, "\$text['language-$target_lang'$spacer]['en-us'] = \"".$this->escape_str(array_shift($text[$lang_label]))."\";\n");
 					}else{
 					
 						//put a line break in between the last tag if it has changed
@@ -138,21 +160,33 @@ class text {
 								$value = "";
 								$append = "";
 								$spacer = "";
-								if(strlen($lang_code) == 2)
+								$target_lang = $lang_code;
+								if(strlen($lang_code) == 2) {
+									if(array_key_exists($lang_code, $this->legacy_map)) {
+										$target_lang = $this->legacy_map[$lang_code];
+									}
+								}
+								if(strlen($target_lang) == 2)
 									$spacer = "   ";
 								if(array_key_exists($lang_code, $text[$lang_label]))
 									$value = $text[$lang_label][$lang_code];
-								fwrite($lang_file, "\$text['$lang_label']['$lang_code'$spacer] = \"".$this->escape_str($value)."\";$append\n");
+								if(strlen($value) == 0 and array_key_exists($target_lang, $this->legacy_map)) {
+									$value = $text[$lang_label][$this->legacy_map[$target_lang]];
+								}
+								fwrite($lang_file, "\$text['$lang_label']['$target_lang'$spacer] = \"".$this->escape_str($value)."\";$append\n");
 							}
 					}
 					$last_lang_label = $lang_label;
 			}
-			
+
 		//close the language file
 			fwrite($lang_file, "\n?>\n");
 			fclose($lang_file);
 	}
+
 	private function escape_str($string = '') {
+		//remove \' otherwise we end up with a double escape
+			return preg_replace("/\\\'/", "'", $string);
 		//perform initial escape
 			$string = addslashes($string);
 		//swap \' back otherwise we end up with a double escape
