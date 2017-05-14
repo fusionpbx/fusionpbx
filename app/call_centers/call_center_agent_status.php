@@ -182,9 +182,9 @@ else {
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<th>".$text['label-agent']."</th>\n";
-	echo "<th>".$text['label-status']."</th>\n";
-	echo "<th>".$text['label-options']."</th>\n";
+	echo "	<th>".$text['label-agent']."</th>\n";
+	echo "	<th>".$text['label-status']."</th>\n";
+	echo "	<th>".$text['label-options']."</th>\n";
 	echo "</tr>\n";
 	$x = 0;
 	foreach($agents as $row) {
@@ -195,11 +195,11 @@ else {
 		$str .= "	<td valign='middle' class='".$row_style[$c]."'>";
 		$str .= "		<input type='hidden' name='agents[".$x."][agent_name]' id='agent_".$x."_name' value='".$row['agent_name']."'>\n";
 		$str .= "		<input type='hidden' name='agents[".$x."][id]' id='agent_".$x."_name' value='".$row['call_center_agent_uuid']."'>\n";
-		$str .= "		<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_no_change' value='' checked='checked'><label for='agent_".$x."_status_no_change'>".$text['option-no_change']."</label>\n";
-		$str .= "		<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_available' value='Available'><label for='agent_".$x."_status_available'>".$text['option-available']."</label>\n";
-		$str .= "		<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_logged_out' value='Logged Out'><label for='agent_".$x."_status_logged_out'>".$text['option-logged_out']."</label>\n";
-		$str .= "		<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_on_break' value='On Break'><label for='agent_".$x."_status_on_break'>".$text['option-on_break']."</label>\n";
-		//$str .= "		<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_dnd' value='Do Not Disturb'><label for='agent_".$x."_status_dnd'>".$text['option-do_not_disturb']."</label>\n";
+		$str .= "		<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_no_change' value='' checked='checked'>&nbsp;<label for='agent_".$x."_status_no_change'>".$text['option-no_change']."</label>&nbsp;\n";
+		$str .= "		<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_available' value='Available'>&nbsp;<label for='agent_".$x."_status_available'>".$text['option-available']."</label>&nbsp;\n";
+		$str .= "		<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_logged_out' value='Logged Out'>&nbsp;<label for='agent_".$x."_status_logged_out'>".$text['option-logged_out']."</label>&nbsp;\n";
+		$str .= "		<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_on_break' value='On Break'>&nbsp;<label for='agent_".$x."_status_on_break'>".$text['option-on_break']."</label>&nbsp;\n";
+		//$str .= "		<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_dnd' value='Do Not Disturb'><label for='agent_".$x."_status_dnd'>&nbsp;".$text['option-do_not_disturb']."</label>\n";
 		$str .= "	</td>\n";
 		$str .= "</tr>\n";
 		if (count($_SESSION['domains']) > 1) {
