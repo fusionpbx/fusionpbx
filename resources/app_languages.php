@@ -705,6 +705,22 @@ $text['button-start']['ru-ru'] = "Старт";
 $text['button-start']['sv-se'] = "Start";
 $text['button-start']['uk-ua'] = "Запустити";
 
+$text['label-username']['en-us'] = "Username";
+$text['label-username']['ar-eg'] = "";
+$text['label-username']['de-at'] = "Benutzername";
+$text['label-username']['de-de'] = "Benutzername";
+$text['label-username']['es-cl'] = "Nombre de usuario";
+$text['label-username']['fr-fr'] = "Nom d'utilisateur";
+$text['label-username']['he-il'] = "שם משתמש";
+$text['label-username']['it-it'] = "Nome Utente";
+$text['label-username']['nl-nl'] = "";
+$text['label-username']['pl-pl'] = "Użytkownik";
+$text['label-username']['pt-br'] = "";
+$text['label-username']['pt-pt'] = "Nome de Utilizador";
+$text['label-username']['ru-ru'] = "Имя пользователя";
+$text['label-username']['sv-se'] = "Användarnamn";
+$text['label-username']['uk-ua'] = "Ім’я користувача";
+
 $text['label-name']['en-us'] = "Name";
 $text['label-name']['ar-eg'] = "";
 $text['label-name']['de-at'] = "Name";
