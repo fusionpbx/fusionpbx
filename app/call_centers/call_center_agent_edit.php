@@ -114,7 +114,7 @@
 			if (strlen($agent_type) == 0) { $msg .= $text['message-required']." ".$text['label-agent_type']."<br>\n"; }
 			if (strlen($agent_call_timeout) == 0) { $msg .= $text['message-required']." ".$text['label-agent_call_timeout']."<br>\n"; }
 			//if (strlen($agent_id) == 0) { $msg .= $text['message-required']." ".$text['label-agent_id']."<br>\n"; }
-			if (strlen($agent_password) == 0) { $msg .= $text['message-required']." ".$text['label-agent_password']."<br>\n"; }
+			//if (strlen($agent_password) == 0) { $msg .= $text['message-required']." ".$text['label-agent_password']."<br>\n"; }
 			if (strlen($agent_status) == 0) { $msg .= $text['message-required']." ".$text['label-agent_status']."<br>\n"; }
 			if (strlen($agent_contact) == 0) { $msg .= $text['message-required']." ".$text['label-agent_contact']."<br>\n"; }
 			if (strlen($agent_no_answer_delay_time) == 0) { $msg .= $text['message-required']." ".$text['label-agent_no_answer_delay_time']."<br>\n"; }
@@ -224,9 +224,9 @@
 
 		//prepare the array
 			$array['call_center_agents'][] = $_POST;
-			$array['users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
-			$array['users'][0]['user_uuid'] = $user_uuid;
-			$array['users'][0]['user_status'] = $agent_status;
+			//$array['users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+			//$array['users'][0]['user_uuid'] = $user_uuid;
+			//$array['users'][0]['user_status'] = $agent_status;
 
 		//save to the data
 			$database = new database;
@@ -367,6 +367,8 @@
 	echo "	".$text['label-agent_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='agent_name' maxlength='255' value=\"$agent_name\" />\n";
+	/*
 	echo "<select id=\"agent_name\" name=\"agent_name\" class='formfld'>\n";
 	echo "<option value=\"\"></option>\n";
 	if (is_array($users)) {
@@ -380,6 +382,7 @@
 		}
 	}
 	echo "</select>";
+	*/
 	echo "<br />\n";
 	echo $text['description-agent_name']."\n";
 	echo "</td>\n";

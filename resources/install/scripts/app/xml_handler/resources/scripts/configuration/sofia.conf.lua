@@ -210,12 +210,14 @@
 								if (string.len(field.supress_cng) > 0) then
 									table.insert(xml, [[							<param name="supress-cng" value="]] .. field.supress_cng .. [["/>]]);
 								end
-								if (string.len(field.sip_cid_type) > 0) then
-									table.insert(xml, [[							<param name="sip_cid_type" value="]] .. field.sip_cid_type .. [["/>]]);
-								end
 								if (string.len(field.extension_in_contact) > 0) then
 									table.insert(xml, [[							<param name="extension-in-contact" value="]] .. field.extension_in_contact .. [["/>]]);
 								end
+								table.insert(xml, [[							<variables>]]);
+								if (string.len(field.sip_cid_type) > 0) then
+									table.insert(xml, [[								<variable name="sip_cid_type" value="]] .. field.sip_cid_type .. [["/>]]);
+								end
+								table.insert(xml, [[							</variables>]]);
 								table.insert(xml, [[						</gateway>]]);
 							end)
 

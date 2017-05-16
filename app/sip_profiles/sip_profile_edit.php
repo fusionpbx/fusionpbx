@@ -234,6 +234,18 @@
 //show the header
 	require_once "resources/header.php";
 
+	
+//label to form input
+	echo "<script language='javascript'>\n";
+	echo "	function label_to_form(label_id, form_id) {\n";
+	echo "		if (document.getElementById(label_id) != null) {\n";
+	echo "			label = document.getElementById(label_id);\n";
+	echo "			label.parentNode.removeChild(label);\n";
+	echo "		}\n";
+	echo "		document.getElementById(form_id).style.display='';\n";
+	echo "	}\n";
+	echo "</script>\n";
+	
 //show the content
 	echo "<form name='frm' id='frm' method='post' action=''>\n";
 	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
@@ -265,9 +277,9 @@
 	echo "		<td class='vtable' align='left'>\n";
 	echo "			<table>\n";
 	echo "				<tr>\n";
-	echo "					<td class='vtable'>".$text['label-sip_profile_domain_name']."</td>\n";
-	echo "					<td class='vtable'>".$text['label-sip_profile_domain_alias']."</td>\n";
-	echo "					<td class='vtable'>".$text['label-sip_profile_domain_parse']."</td>\n";
+	echo "					<th class='vtable' style='width:80px; text-align: left;'>&nbsp;".$text['label-sip_profile_domain_name']."</th>\n";
+	echo "					<th class='vtable' style='width:70px; text-align: left;'>".$text['label-sip_profile_domain_alias']."</th>\n";
+	echo "					<th class='vtable' style='width:70px; text-align: left;'>".$text['label-sip_profile_domain_parse']."</th>\n";
 	echo "				</tr>\n";
 	$x = 0;
 	foreach($sip_profile_domains as $row) {
@@ -280,11 +292,13 @@
 		}
 		echo "				<input type='hidden' name='sip_profile_domains[$x][sip_profile_domain_uuid]' value=\"".$sip_profile_domain_uuid."\">\n";
 		echo "				<input type='hidden' name='sip_profile_domains[$x][sip_profile_uuid]' maxlength='255' value=\"".$sip_profile_uuid."\">\n";
-		echo "				<td>\n";
-		echo "					<input class='formfld' type='text' name='sip_profile_domains[$x][sip_profile_domain_name]' maxlength='255' value=\"".$row["sip_profile_domain_name"]."\">\n";
+		echo "				<td class=\"vtablerow\" style=\"\" onclick=\"label_to_form('label_sip_profile_domain_name_$x','sip_profile_domain_name_$x');\" nowrap=\"nowrap\">\n";
+		echo "					&nbsp; <label id='label_sip_profile_domain_name_$x'>".$row["sip_profile_domain_name"]."</label>\n";
+		echo "					<input id='sip_profile_domain_name_$x' class='formfld' style='display: none;' type='text' name='sip_profile_domains[$x][sip_profile_domain_name]' maxlength='255' value=\"".$row["sip_profile_domain_name"]."\">\n";
 		echo "				</td>\n";
-		echo "				<td>\n";
-		echo "					<select class='formfld' name='sip_profile_domains[$x][sip_profile_domain_alias]'>\n";
+		echo "				<td class=\"vtablerow\" style=\"\" onclick=\"label_to_form('label_sip_profile_domain_alias_$x','sip_profile_domain_alias_$x');\" nowrap=\"nowrap\">\n";
+		echo "					<label id='label_sip_profile_domain_alias_$x'>".$row["sip_profile_domain_alias"]."</label>\n";
+		echo "					<select id='sip_profile_domain_alias_$x' class='formfld' style='display: none;' name='sip_profile_domains[$x][sip_profile_domain_alias]'>\n";
 		echo "						<option value=''></option>\n";
 		if ($row["sip_profile_domain_alias"] == "true") {
 			echo "						<option value='true' selected='selected'>".$text['label-true']."</option>\n";
@@ -301,8 +315,9 @@
 		echo "					</select>\n";
 
 		echo "				</td>\n";
-		echo "				<td>\n";
-		echo "					<select class='formfld' name='sip_profile_domains[$x][sip_profile_domain_parse]'>\n";
+		echo "				<td class=\"vtablerow\" style=\"\" onclick=\"label_to_form('label_sip_profile_domain_parse_$x','sip_profile_domain_parse_$x');\" nowrap=\"nowrap\">\n";
+		echo "					<label id='label_sip_profile_domain_parse_$x'>".$row["sip_profile_domain_parse"]."</label>\n";
+		echo "					<select id='sip_profile_domain_parse_$x' class='formfld' style='display: none;' name='sip_profile_domains[$x][sip_profile_domain_parse]'>\n";
 		echo "						<option value=''></option>\n";
 		if ($row["sip_profile_domain_parse"] == "true") {
 			echo "						<option value='true' selected='selected'>".$text['label-true']."</option>\n";
@@ -319,7 +334,9 @@
 		echo "					</select>\n";
 		echo "				</td>\n";
 		echo "				<td class='list_control_icons' style='width: 25px;'>\n";
-		echo "					<a href=\"sip_profile_domain_delete.php?id=".$row["sip_profile_domain_uuid"]."&amp;sip_profile_domain_uuid=".$row["sip_profile_domain_uuid"]."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\"><button type='button' class='btn btn-default list_control_icon'><span class='glyphicon glyphicon-remove'></span></button></a>\n";
+		if (strlen($row["sip_profile_domain_name"]) > 0) {
+			echo "				<a href=\"sip_profile_domain_delete.php?id=".$row["sip_profile_domain_uuid"]."&amp;sip_profile_domain_uuid=".$row["sip_profile_domain_uuid"]."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\"><button type='button' class='btn btn-default list_control_icon'><span class='glyphicon glyphicon-remove'></span></button></a>\n";
+		}
 		echo "				</td>\n";
 		echo "			</tr>\n";
 		$x++;
@@ -329,16 +346,16 @@
 	echo "	</tr>\n";
 
 	echo "	<tr>\n";
-	echo "		<td class='vncell' align='left'>\n";
+	echo "		<td class='vncellreq' align='left'>\n";
 	echo "			".$text['label-sip_profile_settings']."\n";
 	echo "		</td>\n";
 	echo "		<td class='vtable' align='left'>\n";
 	echo "			<table>\n";
 	echo "				<tr>\n";
-	echo "					<td class='vtable'>".$text['label-sip_profile_setting_name']."</td>\n";
-	echo "					<td class='vtable'>".$text['label-sip_profile_setting_value']."</td>\n";
-	echo "					<td class='vtable'>".$text['label-sip_profile_setting_enabled']."</td>\n";
-	echo "					<td class='vtable'>".$text['label-sip_profile_setting_description']."</td>\n";
+	echo "					<th class='vtable' style='text-align: left;'>&nbsp;".$text['label-sip_profile_setting_name']."</th>\n";
+	echo "					<th class='vtable' style='text-align: left;'>".$text['label-sip_profile_setting_value']."</th>\n";
+	echo "					<th class='vtable' style='width:70px; text-align: left;'>".$text['label-sip_profile_setting_enabled']."</th>\n";
+	echo "					<th class='vtable' style='text-align: left;'>".$text['label-sip_profile_setting_description']."</th>\n";
 	echo "				</tr>\n";
 	$x = 0;
 	foreach($sip_profile_settings as $row) {
@@ -346,14 +363,17 @@
 		echo "				<input type='hidden' name='sip_profile_settings[$x][sip_profile_setting_uuid]' value=\"".$row["sip_profile_setting_uuid"]."\">\n";
 		echo "				<input type='hidden' name='sip_profile_settings[$x][sip_profile_setting_uuid]' maxlength='255' value=\"".$row["sip_profile_setting_uuid"]."\">\n";
 		echo "				<input type='hidden' name='sip_profile_settings[$x][sip_profile_uuid]' maxlength='255' value=\"".$row["sip_profile_uuid"]."\">\n";
-		echo "				<td>\n";
-		echo "					<input class='formfld' type='text' name='sip_profile_settings[$x][sip_profile_setting_name]' maxlength='255' value=\"".$row["sip_profile_setting_name"]."\">\n";
+		echo "				<td class=\"vtablerow\" style=\"\" onclick=\"label_to_form('label_sip_profile_setting_name_$x','sip_profile_setting_name_$x');\" nowrap=\"nowrap\">\n";
+		echo "					&nbsp; <label id='label_sip_profile_setting_name_$x'>".$row["sip_profile_setting_name"]."</label>\n";
+		echo "					<input id='sip_profile_setting_name_$x' class='formfld' style='display: none;' type='text' name='sip_profile_settings[$x][sip_profile_setting_name]' maxlength='255' value=\"".$row["sip_profile_setting_name"]."\">\n";
 		echo "				</td>\n";
-		echo "				<td>\n";
-		echo "					<input class='formfld' type='text' name='sip_profile_settings[$x][sip_profile_setting_value]' maxlength='255' value=\"".$row["sip_profile_setting_value"]."\">\n";
+		echo "				<td class=\"vtablerow\" style=\"\" onclick=\"label_to_form('label_sip_profile_setting_value_$x','sip_profile_setting_value_$x');\" nowrap=\"nowrap\">\n";
+		echo "					<label id='label_sip_profile_setting_value_$x'>".substr($row["sip_profile_setting_value"],0,22)." &nbsp;</label>\n";
+		echo "					<input id='sip_profile_setting_value_$x' class='formfld' style='display: none;' type='text' name='sip_profile_settings[$x][sip_profile_setting_value]' maxlength='255' value=\"".$row["sip_profile_setting_value"]."\">\n";
 		echo "				</td>\n";
-		echo "				<td>\n";
-		echo "					<select class='formfld' name='sip_profile_settings[$x][sip_profile_setting_enabled].'>\n";
+		echo "				<td class=\"vtablerow\" style=\"\" onclick=\"label_to_form('label_sip_profile_setting_enabled_$x','sip_profile_setting_enabled_$x');\" nowrap=\"nowrap\">\n";
+		echo "					<label id='label_sip_profile_setting_enabled_$x'>".$row["sip_profile_setting_enabled"]."</label>\n";
+		echo "					<select id='sip_profile_setting_enabled_$x' class='formfld' style='display: none;' name='sip_profile_settings[$x][sip_profile_setting_enabled].'>\n";
 		echo "						<option value=''></option>\n";
 		if ($row['sip_profile_setting_enabled'] == "true") {
 			echo "						<option value='true' selected='selected'>".$text['label-true']."</option>\n";
@@ -367,13 +387,16 @@
 		else {
 			echo "						<option value='false'>".$text['label-false']."</option>\n";
 		}
-			echo "					</select>\n";
+		echo "					</select>\n";
 		echo "				</td>\n";
-		echo "				<td>\n";
-		echo "					<input class='formfld' type='text' name='sip_profile_settings[$x][sip_profile_setting_description]' maxlength='255' value=\"".$row["sip_profile_setting_description"]."\">\n";
+		echo "				<td class=\"vtablerow\" style=\"\" onclick=\"label_to_form('label_sip_profile_setting_description_$x','sip_profile_setting_description_$x');\" nowrap=\"nowrap\">\n";
+		echo "					<label id='label_sip_profile_setting_description_$x'>".$row["sip_profile_setting_description"]."&nbsp;</label>\n";
+		echo "					<input id='sip_profile_setting_description_$x' class='formfld' style='display: none;' type='text' name='sip_profile_settings[$x][sip_profile_setting_description]' maxlength='255' value=\"".$row["sip_profile_setting_description"]."\">\n";
 		echo "				</td>\n";
 		echo "				<td class='list_control_icons' style='width: 25px;'>\n";
-		echo "					<a href=\"sip_profile_setting_delete.php?id=".$row["sip_profile_setting_uuid"]."&amp;sip_profile_uuid=".$sip_profile_uuid."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\"><button type='button' class='btn btn-default list_control_icon'><span class='glyphicon glyphicon-remove'></span></button></a>\n";
+		if (strlen($row["sip_profile_setting_name"]) > 0) {
+			echo "					<a href=\"sip_profile_setting_delete.php?id=".$row["sip_profile_setting_uuid"]."&amp;sip_profile_uuid=".$sip_profile_uuid."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\"><button type='button' class='btn btn-default list_control_icon'><span class='glyphicon glyphicon-remove'></span></button></a>\n";
+		}
 		echo "				</td>\n";
 		echo "			</tr>\n";
 		$x++;

@@ -458,18 +458,18 @@
 			}
 		}
 		echo th_order_by('start_stamp', $text['label-start'], $order_by, $order, null, "style='text-align: center;'", $param);
-		echo th_order_by('tta', $text['label-tta'], $order_by, $order, null, "style='text-align: right;'", $param);
+		echo th_order_by('tta', $text['label-tta'], $order_by, $order, null, "style='text-align: right;'", $param, $text['description-tta']);
 		echo th_order_by('duration', $text['label-duration'], $order_by, $order, null, "style='text-align: center;'", $param);
 		if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
 			echo "<th>".$text['label-price']."</th>\n";
 			$col_count++;
 		}
 		if (permission_exists('xml_cdr_pdd')) {
-			echo th_order_by('pdd_ms', 'PDD', $order_by, $order, null, "style='text-align: right;'", $param);
+			echo th_order_by('pdd_ms', $text['label-pdd'], $order_by, $order, null, "style='text-align: right;'", $param, $text['description-pdd']);
 			$col_count++;
 		}
 		if (permission_exists('xml_cdr_mos')) {
-			echo th_order_by('rtp_audio_in_mos', 'MOS', $order_by, $order, null, "style='text-align: center;'", $param);
+			echo th_order_by('rtp_audio_in_mos', $text['label-mos'], $order_by, $order, null, "style='text-align: center;'", $param, $text['description-mos']);
 			$col_count++;
 		}
 		if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
@@ -737,7 +737,11 @@
 				}
 			//mos (mean opinion score)
 				if (permission_exists("xml_cdr_mos")) {
-					echo "	<td valign='top' class='".$row_style[$c]."' ".((strlen($row['rtp_audio_in_mos']) > 0) ? "title='".($row['rtp_audio_in_mos'] / 5 * 100)."%'" : null)." style='text-align: center;'>".((strlen($row['rtp_audio_in_mos']) > 0) ? $row['rtp_audio_in_mos'] : "&nbsp;")."</td>\n";
+					if(strlen($row['rtp_audio_in_mos']) > 0){
+						$title = " title='".$text['label-mos_score-'.round($row['rtp_audio_in_mos'])]."'";
+						$value = $row['rtp_audio_in_mos'];
+					}
+					echo "	<td valign='top' class='".$row_style[$c]."'$title style='text-align: center;'>$value</td>\n";
 				}
 			//hangup cause/call result
 				if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
