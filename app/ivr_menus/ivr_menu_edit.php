@@ -555,7 +555,7 @@
 			echo "<optgroup label='Recordings'>\n";
 			foreach ($recordings as &$row) {
 				$recording_name = $row["recording_name"];
-				$recording_filename = $row["recording_filename"];
+				$recording_filename = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$row["recording_filename"];
 				if ($ivr_menu_greet_long == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename && strlen($ivr_menu_greet_long) > 0) {
 					$tmp_selected = true;
 					echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename."' selected='selected'>".$recording_name."</option>\n";
@@ -697,7 +697,7 @@
 			echo "<optgroup label='Recordings'>\n";
 			foreach ($recordings as &$row) {
 				$recording_name = $row["recording_name"];
-				$recording_filename = $row["recording_filename"];
+				$recording_filename = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$row["recording_filename"];
 				if ($ivr_menu_greet_short == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename && strlen($ivr_menu_greet_short) > 0) {
 					$tmp_selected = true;
 					echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename."' selected='selected'>".$recording_name."</option>\n";
