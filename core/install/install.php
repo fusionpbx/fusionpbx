@@ -28,6 +28,7 @@
 	require_once "root.php";
 	require_once "resources/functions.php";
 	require_once "resources/classes/text.php";
+	require_once "core/install/resources/classes/detect_switch.php";
 
 //start a php session
 	if (!isset($_SESSION)) { session_start(); }
@@ -172,6 +173,18 @@
 			$messages[] = "<b>Windows requires a system DSN ODBC connection</b> this must be configured.";
 		}
 
+	//if Event Socket values are invalid go back to previous step
+	if ($install_step == 'config_detail') {
+		$detect_switch = new detect_switch($event_host, $event_port, $event_password);
+		try {
+			$detect_switch->detect();
+		} catch(Exception $e){
+			$install_step = 'detect_config';
+			$return_install_step = 'select_language';
+			$messages[] = "<b>Invalid Event Socket Configuration";
+		}
+	}
+
 	//action code
 	if($return_install_step == 'config_detail'){
 		//check for all required data
@@ -261,7 +274,6 @@
 		//$protocol = 'http';
 		//if($_SERVER['HTTPS']) { $protocol = 'https'; }
 		//echo "<iframe src='$protocol://$domain_name/core/install/install_first_time.php' style='border:solid 1px #000;width:100%;height:auto'></iframe>";
-		require_once "core/install/resources/classes/detect_switch.php";
 		$detect_switch = new detect_switch($event_host, $event_port, $event_password);
 		$detect_ok = true;
 		try {

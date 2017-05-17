@@ -122,7 +122,9 @@ require_once "resources/classes/event_socket.php";
 				throw new Exception('Failed to use event socket');
 			}
 			$FS_Version = $this->event_socket_request('api version');
-			preg_match("/FreeSWITCH Version (\d+)\.(\d+)\.(\d+(?:\.\d+)?).*\(.*?(\d+\w+)\s*\)/", $FS_Version, $matches);
+			if (preg_match("/FreeSWITCH Version (\d+)\.(\d+)\.(\d+(?:\.\d+)?).*\(.*?(\d+\w+)\s*\)/", $FS_Version, $matches) !== 1) {
+				throw new Exception('Failed to use event socket (wrong password?)');
+			}
 			$this->_major = $matches[1];
 			$this->_minor = $matches[2];
 			$this->_build = $matches[3];
