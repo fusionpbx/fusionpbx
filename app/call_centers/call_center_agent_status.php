@@ -23,16 +23,20 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('call_center_agent_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('call_center_agent_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -192,7 +196,7 @@ else {
 		$str .= "<tr>\n";
 		$str .= "	<td valign='middle' class='".$row_style[$c]."'>".$row['agent_name']."&nbsp;</td>\n";
 		$str .= "	<td valign='middle' class='".$row_style[$c]."'>".$row['agent_status']."&nbsp;</td>\n";
-		$str .= "	<td valign='middle' class='".$row_style[$c]."'>";
+		$str .= "	<td valign='middle' class='".$row_style[$c]."' nowrap='nowrap'>";
 		$str .= "		<input type='hidden' name='agents[".$x."][agent_name]' id='agent_".$x."_name' value='".$row['agent_name']."'>\n";
 		$str .= "		<input type='hidden' name='agents[".$x."][id]' id='agent_".$x."_name' value='".$row['call_center_agent_uuid']."'>\n";
 		$str .= "		<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_no_change' value='' checked='checked'>&nbsp;<label for='agent_".$x."_status_no_change'>".$text['option-no_change']."</label>&nbsp;\n";
