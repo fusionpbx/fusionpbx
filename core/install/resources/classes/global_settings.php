@@ -194,10 +194,6 @@ require_once "root.php";
 						$this->$o_key = $value;
 					}
 				}
-				if($this->_db_create== 1) {
-                                    if (strlen($this->_db_create_username)==0) $this->_db_create_username='root';
-                                    if (strlen($this->_db_create_password)==0) $this->_db_password;
-				}
 				if (strlen($this->_db_port) == 0) { $this->_db_port = "5432"; }
 
 				// domain info
