@@ -282,7 +282,7 @@
 			local params = {};
 			for key,extension in pairs(extensions) do
 				local param_name = "presence_id_" .. tostring(key);
-				sql = sql .. "OR presence_id = :" .. param_name;
+				sql = sql .. "OR presence_id = :" .. param_name .. " ";
 				params[param_name] = extension.."@"..domain_name;
 			end
 			sql = sql .. ") ";
