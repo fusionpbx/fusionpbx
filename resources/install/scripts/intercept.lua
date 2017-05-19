@@ -49,9 +49,9 @@
 
 --include json library
 	local json
---	if (debug["sql"]) then
+	if (debug["sql"]) then
 		json = require "resources.functions.lunajson"
---	end
+	end
 
 --get the hostname
 	local hostname = trim(api:execute("switchname", ""));
@@ -288,9 +288,9 @@
 			sql = sql .. ") ";
 			sql = sql .. "AND call_uuid IS NOT NULL ";
 			sql = sql .. "LIMIT 1 ";
-			--if (debug["sql"]) then
+			if (debug["sql"]) then
 				log.noticef("SQL: %s; params: %s", sql, json.encode(params));
-			--end
+			end
 			local is_child
 			dbh:query(sql, params, function(row)
 				--for key, val in pairs(row) do
