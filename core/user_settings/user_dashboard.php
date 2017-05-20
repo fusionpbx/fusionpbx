@@ -1235,6 +1235,18 @@
 				}
 		}
 
+		if (!is_array($selected_blocks) || in_array('call_center_agents', $selected_blocks)) {
+			//call center agent
+				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/call_centers/call_center_agent_dashboard.php")) {
+					if (permission_exists('call_center_agent_view')) {
+						$is_included = true;
+						echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6' style='margin: 0 0 30px 0;'>\n";
+						require_once "app/call_centers/call_center_agent_dashboard.php";
+						echo "</div>";
+					}
+				}
+		}
+
 		if (!is_array($selected_blocks) || in_array('device_keys', $selected_blocks)) {
 			//device key management
 				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/devices/device_dashboard.php")) {
