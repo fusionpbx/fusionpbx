@@ -446,6 +446,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Enable changing Caller ID name and number.';
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '98be8c07-eb3a-45c5-9565-341e60f0d82b';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'dashboard';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'agent';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'array';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'call_center_agents';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Enable Dashboard Call Center Agent Status block for users in the agent group.';
+		$y++;
 
 	//schema details
 		$y=0;
