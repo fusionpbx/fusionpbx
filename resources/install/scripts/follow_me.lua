@@ -82,7 +82,7 @@
 	local follow_me_uuid = row.follow_me_uuid;
 
 --determine whether to update the dial string
-	sql = "select follow_me_enabled, call_prompt, cid_name_prefix, cid_number_prefix, dial_string "
+	sql = "select follow_me_enabled, cid_name_prefix, cid_number_prefix, dial_string "
 	sql = sql .. "from v_follow_me ";
 	sql = sql .. "where domain_uuid = :domain_uuid ";
 	sql = sql .. "and follow_me_uuid = :follow_me_uuid ";
@@ -95,7 +95,6 @@
 	if not row then return end
 
 	local enabled = row.follow_me_enabled;
-	local call_prompt = row.call_prompt;
 	local cid_name_prefix = row.cid_name_prefix;
 	local cid_number_prefix = row.cid_number_prefix;
 	local dial_string = row.dial_string;
