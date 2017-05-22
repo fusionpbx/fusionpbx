@@ -867,7 +867,7 @@ $text['description-exit_action']['uk-ua'] = "";
 
 $text['description-enabled']['en-us'] = "Set the status of this IVR Menu.";
 $text['description-enabled']['ar-eg'] = "";
-$text['description-enabled']['de-at'] = "";
+$text['description-enabled']['de-at'] = "Setzen Sie den Status dieser Automatischen Vermittlung.";
 $text['description-enabled']['de-de'] = "Setzen Sie den Status dieser Automatischen Vermittlung.";
 $text['description-enabled']['es-cl'] = "Configurar el estado de este menú IVR.";
 $text['description-enabled']['fr-fr'] = "Choisir l'état de ce menu.";

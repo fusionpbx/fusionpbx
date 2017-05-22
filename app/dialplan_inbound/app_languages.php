@@ -83,7 +83,7 @@ $text['option-rdnis']['uk-ua'] = "RDNIS";
 
 $text['option-public']['en-us'] = "Public";
 $text['option-public']['ar-eg'] = "";
-$text['option-public']['de-at'] = "";
+$text['option-public']['de-at'] = "Öffentlich";
 $text['option-public']['de-de'] = "Öffentlich";
 $text['option-public']['es-cl'] = "Público";
 $text['option-public']['fr-fr'] = "";
@@ -323,7 +323,7 @@ $text['label-required-action_application_1']['uk-ua'] = "Будь ласка, н
 
 $text['label-caller-id-number-prefix']['en-us'] = "Caller ID Number Prefix";
 $text['label-caller-id-number-prefix']['ar-eg'] = "";
-$text['label-caller-id-number-prefix']['de-at'] = "";
+$text['label-caller-id-number-prefix']['de-at'] = "Präfix für Anruferkennung";
 $text['label-caller-id-number-prefix']['de-de'] = "Präfix für Anruferkennung";
 $text['label-caller-id-number-prefix']['es-cl'] = "Redial prefijo de salida";
 $text['label-caller-id-number-prefix']['fr-fr'] = "Bis préfixe pour sortant";
