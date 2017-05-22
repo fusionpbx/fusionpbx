@@ -595,8 +595,7 @@ include "root.php";
 										//determine if the parent_key_exists
 										$parent_key_exists = false;
 										if (isset($array[$parent_key_name])) {
-											$this->uuid = $array[$parent_key_name];
-											$parent_key_value = $this->uuid;
+											$parent_key_value = $array[$parent_key_name];
 											$parent_key_exists = true;
 										}
 										else {
@@ -622,7 +621,7 @@ include "root.php";
 									//get the data before the delete
 										if ($parent_key_exists) {
 											$sql = "SELECT * FROM ".$table_name." ";
-											$sql .= "WHERE ".$parent_key_name." = '".$this->uuid."' ";
+											$sql .= "WHERE ".$parent_key_name." = '".$parent_key_value."' ";
 											$prep_statement = $this->db->prepare($sql);
 											if ($prep_statement) {
 												//get the data
@@ -790,14 +789,14 @@ include "root.php";
 																	if (permission_exists($child_name.'_delete')) {
 																		$sql = "DELETE FROM ".$table_name." ";
 																		$sql .= "WHERE ".$child_key_name." = '".$child_key_value."' ";
-																		if (strlen($this->uuid) > 0) { $sql .= "AND ".$parent_key_name." = '".$this->uuid."' "; }
+																		if (strlen($parent_key_value) > 0) { $sql .= "AND ".$parent_key_name." = '".$parent_key_value."' "; }
 																		//$sql = "DELETE FROM :table_name ";
 																		//$sql .= "WHERE :child_key_name = ':child_key_value' ";
-																		//if (strlen($this->uuid) > 0) { $sql .= "AND :parent_key_name = ':parent_key_value' }";
+																		//if (strlen($parent_key_value) > 0) { $sql .= "AND :parent_key_name = ':parent_key_value' }";
 																		//$statement = $this->db->prepare($sql);
 																		//$statement->bindParam(':table_name', $table_name);
 																		//$statement->bindParam(':parent_key_name', $parent_key_name);
-																		//$statement->bindParam(':parent_key_value', $this->uuid);
+																		//$statement->bindParam(':parent_key_value', $parent_key_value);
 																		//$statement->bindParam(':child_key_name', $child_key_name);
 																		//$statement->bindParam(':child_key_value', $child_key_value);
 																		$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -1155,8 +1154,7 @@ include "root.php";
 								//determine if the parent_key_exists
 								$parent_key_exists = false;
 								if (isset($array[$parent_key_name])) {
-									$this->uuid = $array[$parent_key_name];
-									$parent_key_value = $this->uuid;
+									$parent_key_value = $array[$parent_key_name];
 									$parent_key_exists = true;
 								}
 								else {
@@ -1180,7 +1178,7 @@ include "root.php";
 							//determine action update or delete and get the original data
 								if ($parent_key_exists) {
 									$sql = "SELECT ".implode(", ", $parent_field_names)." FROM ".$table_name." ";
-									$sql .= "WHERE ".$parent_key_name." = '".$this->uuid."' ";
+									$sql .= "WHERE ".$parent_key_name." = '".$parent_key_value."' ";
 									$prep_statement = $this->db->prepare($sql);
 									if ($prep_statement) {
 										//get the data
@@ -1432,7 +1430,7 @@ include "root.php";
 																	}
 																}
 															}
-															$sql .= "WHERE ".$parent_key_name." = '".$this->uuid."' ";
+															$sql .= "WHERE ".$parent_key_name." = '".$parent_key_value."' ";
 															$sql .= "AND ".$child_key_name." = '".$child_key_value."' ";
 															$sql = str_replace(", WHERE", " WHERE", $sql);
 															$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
