@@ -185,12 +185,12 @@ class text {
 	}
 
 	private function escape_str($string = '') {
-		//remove \' otherwise we end up with a double escape
-			return preg_replace("/\\\'/", "'", $string);
 		//perform initial escape
-			$string = addslashes($string);
-		//swap \' back otherwise we end up with a double escape
+			$string = addslashes(stripslashes($string));
+		//swap \' as we don't need to escape those
 			return preg_replace("/\\\'/", "'", $string);
+		//escape " as we write our strings double quoted
+			return preg_replace("/\"/", '\"', $string);
 	}
 }
 
