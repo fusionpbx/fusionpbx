@@ -3139,7 +3139,7 @@ $text['description-import_duplicates']['uk-ua'] = "";
 
 $text['description-import_data']['en-us'] = "Copy and paste the comma delimitted data into the text area to begin the import.";
 $text['description-import_data']['ar-eg'] = "";
-$text['description-import_data']['de-at'] = "";
+$text['description-import_data']['de-at'] = "Kopieren Sie die komma-getrennten Daten in den Textbereich um den Import zu starten.";
 $text['description-import_data']['de-de'] = "Kopieren Sie die komma-getrennten Daten in den Textbereich um den Import zu starten.";
 $text['description-import_data']['es-cl'] = "Copie y pegue la información delimitada por comas en el cuadro de texto para comenzar su importación.";
 $text['description-import_data']['fr-fr'] = "Copier et coller les données séparées par une virgule ou un 'pipe' dans la zone de texte pour commencer l'import.";

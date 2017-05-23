@@ -467,8 +467,8 @@ $text['label-tta']['uk-ua'] = ""; //unsure of safe translation
 
 $text['label-pdd']['en-us'] = "PDD";
 $text['label-pdd']['ar-eg'] = ""; //unsure of safe translation
-$text['label-pdd']['de-at'] = ""; //unsure of safe translation
-$text['label-pdd']['de-de'] = ""; //unsure of safe translation
+$text['label-pdd']['de-at'] = "PDD"; //unsure of safe translation
+$text['label-pdd']['de-de'] = "PDD"; //unsure of safe translation
 $text['label-pdd']['es-cl'] = "RDMP"; //Google translate
 $text['label-pdd']['fr-fr'] = "TDLPDP"; //Google translate
 $text['label-pdd']['he-il'] = ""; //unsure of safe translation
