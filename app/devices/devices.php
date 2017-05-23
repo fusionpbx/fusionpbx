@@ -107,9 +107,9 @@
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	if ($_GET['showall'] && permission_exists('device_all')) {
-		$param = "&showall=true";
+		$param = "&search=".$search."&showall=true";
 	} else {
-		$param = "";
+		$param = "&search=".$search;
 	}
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
