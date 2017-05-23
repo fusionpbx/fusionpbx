@@ -65,6 +65,25 @@ $text['option-false']['ru-ru'] = "Нет";
 $text['option-false']['sv-se'] = "Falsk";
 $text['option-false']['uk-ua'] = "Ні";
 
+$text['message-upgrade_permissions']['en-us'] = "Permission Defaults Restored";
+$text['message-upgrade_permissions']['ar-eg'] = "";
+$text['message-upgrade_permissions']['de-at'] = "";
+$text['message-upgrade_permissions']['de-ch'] = "";
+$text['message-upgrade_permissions']['de-de'] = "";
+$text['message-upgrade_permissions']['es-cl'] = "";
+$text['message-upgrade_permissions']['es-mx'] = "";
+$text['message-upgrade_permissions']['fr-fr'] = "";
+$text['message-upgrade_permissions']['he-il'] = "";
+$text['message-upgrade_permissions']['it-it'] = "";
+$text['message-upgrade_permissions']['nl-nl'] = "";
+$text['message-upgrade_permissions']['pl-pl'] = "";
+$text['message-upgrade_permissions']['pt-br'] = "";
+$text['message-upgrade_permissions']['pt-pt'] = "";
+$text['message-upgrade_permissions']['ro-ro'] = "";
+$text['message-upgrade_permissions']['ru-ru'] = "";
+$text['message-upgrade_permissions']['sv-se'] = "";
+$text['message-upgrade_permissions']['uk-ua'] = "";
+
 $text['message-upgrade_source_scripts']['en-us'] = "Source Files and Scripts Updated";
 $text['message-upgrade_source_scripts']['ar-eg'] = "";
 $text['message-upgrade_source_scripts']['de-at'] = "Quellcode und Scripte aktualisieren";

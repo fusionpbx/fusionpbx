@@ -25,7 +25,7 @@
 */
 
 //set a timeout
-	set_time_limit(900); //15 minutes
+	set_time_limit(15*60); //15 minutes
 
 //includes
 	include "root.php";
@@ -48,6 +48,9 @@
 	$language = new text;
 	$text = $language->get();
 
+//set a default message_timeout
+	$message_timeout = 4*1000;
+
 //process the http post
 	if (sizeof($_POST) > 0) {
 
@@ -55,11 +58,12 @@
 
 		// run source update
 		if ($do["source"] && permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx")) {
+			$cwd = getcwd();
 			chdir($_SERVER["PROJECT_ROOT"]);
 			exec("git pull 2>&1", $response_source_update);
 			$update_failed = true;
 			if (sizeof($response_source_update) > 0) {
-				$_SESSION["response_source_update"] = $response_source_update;
+				$_SESSION["response"]["source"] = $response_source_update;
 				foreach ($response_source_update as $response_line) {
 					if (substr_count($response_line, "Updating ") > 0 || substr_count($response_line, "Already up-to-date.") > 0) {
 						$update_failed = false;
@@ -71,30 +75,28 @@
 					}
 				}
 			}
-			if ($update_failed) {
-				$_SESSION["message_delay"] = 3500;
-				$_SESSION["message_mood"] = 'negative';
-				$response_message = $text['message-upgrade_source_failed'];
-			}
+			chdir($cwd);
+			if ($update_failed)
+				messages::add($text['message-upgrade_source_failed'], 'negative', $message_timeout);
+			else
+				messages::add($text['message-upgrade_source'], null, $message_timeout);
 		}
 
 		// load an array of the database schema and compare it with the active database
 		if ($do["schema"] && permission_exists("upgrade_schema")) {
-			$response_message = $text['message-upgrade_schema'];
-
 			$upgrade_data_types = check_str($do["data_types"]);
 			require_once "resources/classes/schema.php";
 			$obj = new schema();
-			$_SESSION["schema"]["response"] = $obj->schema("html");
+			$_SESSION["response"]["schema"] = $obj->schema("html");
+			messages::add($text['message-upgrade_schema'], null, $message_timeout);
 		}
 
 		// process the apps defaults
 		if ($do["apps"] && permission_exists("upgrade_apps")) {
-			$response_message = $text['message-upgrade_apps'];
-
 			require_once "resources/classes/domains.php";
 			$domain = new domains;
 			$domain->upgrade();
+			messages::add($text['message-upgrade_apps'], null, $message_timeout);
 		}
 
 		// restore defaults of the selected menu
@@ -105,21 +107,16 @@
 			$included = true;
 			require_once("core/menu/menu_restore_default.php");
 			unset($sel_menu);
-			$response_message = $text['message-upgrade_menu'];
+			messages::add($text['message-upgrade_menu'], null, $message_timeout);
 		}
 
 		// restore default permissions
 		if ($do["permissions"] && permission_exists("group_edit")) {
 			$included = true;
 			require_once("core/groups/permissions_default.php");
-			$response_message = "Permission Defaults Restored";
+			messages::add($text['message-upgrade_permissions'], null, $message_timeout);
 		}
 
-		if (sizeof($_POST['do']) > 1) {
-			$response_message = $text['message-upgrade'];
-		}
-
-		$_SESSION["message"] = $response_message;
 		header("Location: ".PROJECT_PATH."/core/upgrade/index.php");
 		exit;
 
@@ -131,9 +128,9 @@
 
 //show the content
 	echo "<b>".$text['header-upgrade']."</b>";
-	echo "<br><br>";
+	echo "<br /><br />";
 	echo $text['description-upgrade'];
-	echo "<br><br>";
+	echo "<br /><br />";
 
 	echo "<form name='frm' method='post' action=''>\n";
 
@@ -242,32 +239,25 @@
 		echo "</table>\n";
 	}
 
-	echo "<br>";
+	echo "<br />";
 	echo "<div style='text-align: right;'><input type='submit' class='btn' value='".$text['button-upgrade_execute']."'></div>";
-	echo "<br><br>";
 	echo "</form>\n";
 
-	// output result of source update
-	if (sizeof($_SESSION["response_source_update"]) > 0) {
-		echo "<br />";
-		echo "<b>".$text['header-source_update_results']."</b>";
+	echo "<br /><br />";
+	foreach($_SESSION["response"] as $part => $response){
+		echo "<b>".$text["header-${part}_update_results"]."</b>";
 		echo "<br /><br />";
-		echo "<pre>";
-		echo implode("\n", $_SESSION["response_source_update"]);
-		echo "</pre>";
+		if(is_array($_SESSION["response"][$part])) {
+			echo "<pre>";
+			echo implode("\n", $_SESSION["response"][$part]);
+			echo "</pre>";
+		}else {
+			echo $_SESSION["response"][$part];
+		}
 		echo "<br /><br />";
-		unset($_SESSION["response_source_update"]);
 	}
+	unset($_SESSION["response"]);		
 
-	// output result of upgrade schema
-	if ($_SESSION["schema"]["response"] != '') {
-		echo "<br />";
-		echo "<b>".$text['header-upgrade_schema_results']."</b>";
-		echo "<br /><br />";
-		echo $_SESSION["schema"]["response"];
-		unset($_SESSION["schema"]["response"]);
-	}
-	echo "<br><br>";
 
 //include the footer
 	require_once "resources/footer.php";
