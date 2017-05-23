@@ -371,7 +371,7 @@ $text['label-pin']['uk-ua'] = "";
 
 $text['description-pin']['en-us'] = "Optional pin number to secure access to the conference.";
 $text['description-pin']['ar-eg'] = "";
-$text['description-pin']['de-at'] = "";
+$text['description-pin']['de-at'] = "Optionale PIN Nummer um den Zugriff auf die Konferenz ab zu sichern.)";
 $text['description-pin']['de-de'] = "Optionale PIN Nummer um den Zugriff auf die Konferenz ab zu sichern.)";
 $text['description-pin']['es-cl'] = "Número de pin opcional para garantizar el acceso a la conferencia.";
 $text['description-pin']['fr-fr'] = "Numéro d'identifiant pour sécuriser l'accès à la conf. (Optionnel)";
@@ -451,10 +451,10 @@ $text['description-order']['uk-ua'] = "";
 
 $text['description-user-add']['en-us'] = "Assign the users that are can manage this conference extension.";
 $text['description-user-add']['ar-eg'] = "";
-$text['description-user-add']['de-at'] = "";
-$text['description-user-add']['de-de'] = "";
+$text['description-user-add']['de-at'] = "Wählen Sie die Benutzer aus, welche die Konferenz administrieren können.";
+$text['description-user-add']['de-de'] = "Wählen Sie die Benutzer aus, welche die Konferenz administrieren können.";
 $text['description-user-add']['es-cl'] = "Asignar usuarios para que puedan administrar esta extensión de conferencia.";
-$text['description-user-add']['fr-fr'] = "Wählen Sie die Benutzer aus, welche die Konferenz administrieren können.";
+$text['description-user-add']['fr-fr'] = "Selectionner les usagers pouvant gérer cette conférence.";
 $text['description-user-add']['he-il'] = "";
 $text['description-user-add']['it-it'] = "";
 $text['description-user-add']['nl-nl'] = "";

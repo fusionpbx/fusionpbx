@@ -435,8 +435,8 @@ $text['description-call_flow_alternate_label']['uk-ua'] = "Введіть аль
 
 $text['description-call_flow_alternate_destination']['en-us'] = "Select the alternate destination.";
 $text['description-call_flow_alternate_destination']['ar-eg'] = "";
-$text['description-call_flow_alternate_destination']['de-at'] = "";
-$text['description-call_flow_alternate_destination']['de-de'] = "";
+$text['description-call_flow_alternate_destination']['de-at'] = "Wählen Sie ein alternatives Ziel.";
+$text['description-call_flow_alternate_destination']['de-de'] = "Wählen Sie ein alternatives Ziel.";
 $text['description-call_flow_alternate_destination']['es-cl'] = "";
 $text['description-call_flow_alternate_destination']['fr-fr'] = "";
 $text['description-call_flow_alternate_destination']['he-il'] = "";

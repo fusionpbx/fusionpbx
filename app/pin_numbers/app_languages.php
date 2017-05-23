@@ -339,7 +339,7 @@ $text['message-add']['uk-ua'] = "";
 
 $text['message-update']['en-us'] = "Update Completed";
 $text['message-update']['ar-eg'] = "";
-$text['message-update']['de-at'] = "";
+$text['message-update']['de-at'] = "Aktualisierung durchgeführt";
 $text['message-update']['de-de'] = "Aktualisierung durchgeführt";
 $text['message-update']['es-cl'] = "";
 $text['message-update']['fr-fr'] = "";

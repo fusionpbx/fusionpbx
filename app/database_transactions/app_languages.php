@@ -19,8 +19,8 @@ $text['title-database_transactions']['uk-ua'] = "";
 
 $text['title-database_transaction']['en-us'] = "Database Transaction";
 $text['title-database_transaction']['ar-eg'] = "";
-$text['title-database_transaction']['de-at'] = "";
-$text['title-database_transaction']['de-de'] = "";
+$text['title-database_transaction']['de-at'] = "Datenbank Transaktionen";
+$text['title-database_transaction']['de-de'] = "Datenbank Transaktionen";
 $text['title-database_transaction']['es-cl'] = "";
 $text['title-database_transaction']['fr-fr'] = "";
 $text['title-database_transaction']['he-il'] = "";
@@ -67,7 +67,7 @@ $text['label-user_uuid']['uk-ua'] = "";
 
 $text['description-user_uuid']['en-us'] = "User transaction.";
 $text['description-user_uuid']['ar-eg'] = "";
-$text['description-user_uuid']['de-at'] = "";
+$text['description-user_uuid']['de-at'] = "Benutzer Transaktion";
 $text['description-user_uuid']['de-de'] = "Benutzer Transaktion";
 $text['description-user_uuid']['es-cl'] = "";
 $text['description-user_uuid']['fr-fr'] = "";
@@ -387,8 +387,8 @@ $text['label-true']['uk-ua'] = "";
 
 $text['label-false']['en-us'] = "false";
 $text['label-false']['ar-eg'] = "";
-$text['label-false']['de-at'] = "";
-$text['label-false']['de-de'] = "";
+$text['label-false']['de-at'] = "aus";
+$text['label-false']['de-de'] = "aus";
 $text['label-false']['es-cl'] = "falso";
 $text['label-false']['fr-fr'] = "falso";
 $text['label-false']['he-il'] = "";
@@ -547,7 +547,7 @@ $text['message-update']['uk-ua'] = "";
 
 $text['message-delete']['en-us'] = "Delete Completed";
 $text['message-delete']['ar-eg'] = "";
-$text['message-delete']['de-at'] = "";
+$text['message-delete']['de-at'] = "Erfolgreich gelöscht";
 $text['message-delete']['de-de'] = "Erfolgreich gelöscht";
 $text['message-delete']['es-cl'] = "";
 $text['message-delete']['fr-fr'] = "";
