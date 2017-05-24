@@ -353,6 +353,20 @@ $text['label-hold']['ru-ru'] = "Удержание";
 $text['label-hold']['sv-se'] = "";
 $text['label-hold']['uk-ua'] = "";
 
+$text['label-fake']['en-us'] = "Fake";
+$text['label-fake']['es-cl'] = "Falso";
+$text['label-fake']['pt-pt'] = "Falso";
+$text['label-fake']['fr-fr'] = "Faux";
+$text['label-fake']['nl-nl'] = "";
+$text['label-fake']['pt-br'] = "Falso";
+$text['label-fake']['pl'] = "";
+$text['label-fake']['sv-se'] = "";
+$text['label-fake']['uk'] = "";
+$text['label-fake']['ro'] = "";
+$text['label-fake']['de-at'] = "";
+$text['label-fake']['ar-eg'] = "";
+$text['label-fake']['he'] = "";
+
 $text['label-voicemail']['en-us'] = "Voicemail";
 $text['label-voicemail']['ar-eg'] = "";
 $text['label-voicemail']['de-at'] = "Mailbox";
