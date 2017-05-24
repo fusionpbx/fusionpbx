@@ -23,7 +23,21 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-if ($domains_processed == 1) {
+if ($domains_processed > 0) {
+	        
+	//flush everything
+                $sql = "delete from v_device_vendors";
+                $db->exec(check_sql($sql));
+                unset($sql);
+
+                $sql = "delete from v_device_vendor_functions";
+                $db->exec(check_sql($sql));
+                unset($sql);
+
+                $sql = "delete from v_device_vendor_function_groups";
+                $db->exec(check_sql($sql));
+                unset($sql);
+
 
 	//set all lines to enabled (true) where null or empty string
 		$sql = "update v_device_lines set ";
