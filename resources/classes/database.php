@@ -703,7 +703,7 @@ include "root.php";
 											}
 											else {
 												$message["name"] = $this->name;
-												$message["message"] = "Forbidden";
+												$message["message"] = "Forbidden, does not have '".$this->singular($this->name)."_delete'";
 												$message["code"] = "403";
 												$message["line"] = __line__;
 												$this->message = $message;
@@ -831,7 +831,7 @@ include "root.php";
 																	}
 																	else {
 																		$message["name"] = $child_name;
-																		$message["message"] = "Forbidden";
+																		$message["message"] = "Forbidden, does not have '${child_name}_delete'";
 																		$message["code"] = "403";
 																		$message["line"] = __line__;
 																		$this->message = $message;
@@ -1278,7 +1278,7 @@ include "root.php";
 									}
 									else {
 										$message["name"] = $this->name;
-										$message["message"] = "Forbidden";
+										$message["message"] = "Forbidden, does not have '".$this->singular($this->name)."_add'";
 										$message["code"] = "403";
 										$message["line"] = __line__;
 										$this->message[] = $message;
@@ -1338,7 +1338,7 @@ include "root.php";
 									}
 									else {
 										$message["name"] = $this->name;
-										$message["message"] = "Forbidden";
+										$message["message"] = "Forbidden, does not have '".$this->singular($this->name)."_edit'";
 										$message["code"] = "403";
 										$message["line"] = __line__;
 										$this->message = $message;
@@ -1465,7 +1465,7 @@ include "root.php";
 														}
 														else {
 															$message["name"] = $child_name;
-															$message["message"] = "Forbidden";
+															$message["message"] = "Forbidden, does not have '${child_name}_edit'";
 															$message["code"] = "403";
 															$message["line"] = __line__;
 															$this->message = $message;
@@ -1563,7 +1563,7 @@ include "root.php";
 													}
 													else {
 														$message["name"] = $child_name;
-														$message["message"] = "Forbidden";
+														$message["message"] = "Forbidden, does not have '${child_name}_add'";
 														$message["code"] = "403";
 														$message["line"] = __line__;
 														$this->message = $message;
