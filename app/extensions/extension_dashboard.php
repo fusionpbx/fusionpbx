@@ -108,7 +108,7 @@
 				//clear the cache
 					$cache = new cache;
 					foreach($_SESSION['user']['extension'] as $field) {
-						$cache->delete("directory:".$_SESSION['user']['destination']."@".$_SESSION['user']['user_context']);
+						$cache->delete("directory:".$field['destination']."@".$field['user_context']);
 					}
 
 				//set the message
