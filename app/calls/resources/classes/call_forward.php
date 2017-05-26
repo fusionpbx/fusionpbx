@@ -90,10 +90,12 @@ include "root.php";
 							if (strlen($row_caller['destination_description']) > 0) {
 								$dial_string_caller_id_name = $row_caller['destination_description'];
 								$dial_string .= ",origination_caller_id_name=$dial_string_caller_id_name";
+								$dial_string .= ",effective_caller_id_name=$dial_string_caller_id_name";
 							}
 							if (strlen($row_caller['destination_number']) > 0) {
 								$dial_string_caller_id_number = $row_caller['destination_number'];
 								$dial_string .= ",origination_caller_id_number=$dial_string_caller_id_number";
+								$dial_string .= ",effective_caller_id_number=$dial_string_caller_id_number";
 								$dial_string .= ",outbound_caller_id_number=$dial_string_caller_id_number";
 							}
 						}
@@ -104,6 +106,8 @@ include "root.php";
 							$dial_string .= ",outbound_caller_id_number=".$this->outbound_caller_id_number;
 							$dial_string .= ",origination_caller_id_name=".$this->outbound_caller_id_name;
 							$dial_string .= ",origination_caller_id_number=".$this->outbound_caller_id_number;
+							$dial_string .= ",effective_caller_id_name=".$this->outbound_caller_id_name;
+							$dial_string .= ",effective_caller_id_number=".$this->outbound_caller_id_number;
 						}
 					}
 
