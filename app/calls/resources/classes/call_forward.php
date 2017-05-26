@@ -126,16 +126,25 @@ include "root.php";
 					else {
 						// setting here presence_id equal extension not dialed number allows work BLF and intercept.
 						$presence_id = extension_presence_id($this->extension, $this->number_alias);
+						
+						if (strlen($caller_id_number) > 0) {		
+ -							//set the caller id if it is set		
+ -							if (strlen($caller_id_name) > 0) { 
+	 							$dial_string .= ",origination_caller_id_name=".$caller_id_name; 
+	 							$dial_string .= ",effective_caller_id_name=".$caller_id_name; 
+ 							}		
+ -							$dial_string .= ",origination_caller_id_number=".$caller_id_number;		
+							$dial_string .= ",effective_caller_id_number=".$caller_id_number;
+ -						}		
+ -						else {		
+ -							//set the outbound caller id number if the caller id number is a user		
+	 					        $dial_string .='{origination_caller_id_number=${cond(${from_user_exists} == true ? ${outbound_caller_id_number} : ${origination_caller_id_number})}}';
+							$dial_string .='{effective_caller_id_number=${cond(${from_user_exists} == true ? ${outbound_caller_id_number} : ${effective_caller_id_number})}}';
+							$dial_string .='{origination_caller_id_name=${cond(${from_user_exists} == true ? ${outbound_caller_id_name} : ${origination_caller_id_name})}}';
+							$dial_string .='{effective_caller_id_name=${cond(${from_user_exists} == true ? ${outbound_caller_id_name} : ${effective_caller_id_name})}}';
 
-						if (strlen($caller_id_number) > 0) {
-							//set the caller id if it is set
-							if (strlen($caller_id_name) > 0) { $dial_string .= ",origination_caller_id_name=".$caller_id_name; }
-							$dial_string .= ",origination_caller_id_number=".$caller_id_number;
-						}
-						else {
-							//set the outbound caller id number if the caller id number is a user
-							$dial_string .= ",\${cond(\${user_exists id \${caller_id_number} \${domain_name}} == true ? origination_caller_id_name=\${outbound_caller_id_name},origination_caller_id_number=\${outbound_caller_id_number} : )}";
-						}
+ -						}
+
 						// $presence_id = $this->forward_all_destination;
 						$dial_string .= ",presence_id=".$presence_id."@".$_SESSION['domain_name'];
 						$dial_string .= "}";
