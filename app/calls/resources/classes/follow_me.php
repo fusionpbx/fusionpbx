@@ -372,6 +372,9 @@ include "root.php";
 								$dial_string .= ",outbound_caller_id_number=".$this->outbound_caller_id_number;
 								$dial_string .= ",origination_caller_id_name=".$this->outbound_caller_id_name;
 								$dial_string .= ",origination_caller_id_number=".$this->outbound_caller_id_number;
+								$dial_string .= ",effective_caller_id_name=".$this->outbound_caller_id_name;
+								$dial_string .= ",effective_caller_id_number=".$this->outbound_caller_id_number;
+
 							}
 							else{
 								$dial_string .='origination_caller_id_number=${cond(${from_user_exists} == true ? ${outbound_caller_id_number} : ${origination_caller_id_number})}';
