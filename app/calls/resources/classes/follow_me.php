@@ -384,16 +384,30 @@ include "root.php";
 						if ($_SESSION['cdr']['follow_me_fix']['boolean'] == "true") {
 							if (strlen($this->outbound_caller_id_name) > 0) {
 								$dial_string .= ",origination_caller_id_name=".$this->cid_name_prefix.$this->outbound_caller_id_name;
+								$dial_string .= ",effective_caller_id_name=".$this->cid_name_prefix.$this->outbound_caller_id_name;
 							}
 							if (strlen($this->outbound_caller_id_number) > 0) {
 								$dial_string .= ",origination_caller_id_number=".$this->cid_number_prefix.$this->outbound_caller_id_number;
+								$dial_string .= ",effective_caller_id_number=".$this->cid_number_prefix.$this->outbound_caller_id_number;
 							}
 						}
 						else {
+							if (strlen($caller_id_number) > 0) {
+								//set the caller id if it is set
+								if (strlen($caller_id_name) > 0) { 
+									$dial_string .= ",origination_caller_id_name=".$this->cid_name_prefix.$caller_id_name; 
+									$dial_string .= ",effective_caller_id_name=".$this->cid_name_prefix.$caller_id_name;
+								}
+								$dial_string .= ",origination_caller_id_number=".$this->cid_number_prefix.$caller_id_number;
+								$dial_string .= ",effective_caller_id_number=".$this->cid_number_prefix.$caller_id_number;
+							}
+							else {
+								//set the outbound caller id number if the caller id number is a user
 							        $dial_string .=',origination_caller_id_number=${cond(${from_user_exists} == true ? ${outbound_caller_id_number} : ${origination_caller_id_number})}';
 								$dial_string .=',effective_caller_id_number=${cond(${from_user_exists} == true ? ${outbound_caller_id_number} : ${effective_caller_id_number})}';
 								$dial_string .=',origination_caller_id_name=${cond(${from_user_exists} == true ? ${outbound_caller_id_name} : ${origination_caller_id_name})}';
 								$dial_string .=',effective_caller_id_name=${cond(${from_user_exists} == true ? ${outbound_caller_id_name} : ${effective_caller_id_name})}';
+							}
 						}
 
 						$dial_string .= ",presence_id=".$presence_id."@".$_SESSION['domain_name'];
