@@ -406,7 +406,7 @@ include "root.php";
 								$dial_string .=',origination_caller_id_number=${cond(${from_user_exists} == true ? ${outbound_caller_id_number} : ${origination_caller_id_number})}';
 								$dial_string .=',effective_caller_id_number=${cond(${from_user_exists} == true ? ${outbound_caller_id_number} : ${effective_caller_id_number})}';
 								$dial_string .=',origination_caller_id_name=${cond(${from_user_exists} == true ? ${outbound_caller_id_name} : ${origination_caller_id_name})}';
-								$dial_string .=',effective_caller_id_name=${cond(${from_user_exists} == true ? ${outbound_caller_id_name} : ${effective_caller_id_name})}';						}
+								$dial_string .=',effective_caller_id_name=${cond(${from_user_exists} == true ? ${outbound_caller_id_name} : ${effective_caller_id_name})}';
 							}
 						}
 						$dial_string .= ",presence_id=".$presence_id."@".$_SESSION['domain_name'];
