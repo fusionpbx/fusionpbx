@@ -483,25 +483,27 @@
 					$tmp_day = date("d", strtotime($row['start_stamp']));
 					$tmp_start_epoch = ($_SESSION['domain']['time_format']['text'] == '12h') ? date("n/j g:ia", $row['start_epoch']) : date("n/j H:i", $row['start_epoch']);
 					//set click-to-call variables
-						if (permission_exists('click_to_call_call')) {
-							$tr_link = "onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php".
-								"?src_cid_name=".urlencode($row['caller_id_name']).
-								"&src_cid_number=".urlencode($row['caller_id_number']).
-								"&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name']).
-								"&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number']).
-								"&src=".urlencode($_SESSION['user']['extension'][0]['user']).
-								"&dest=".urlencode($row['caller_id_number']).
-								"&rec=".(isset($_SESSION['click_to_call']['record']['boolean'])?$_SESSION['click_to_call']['record']['boolean']:"false").
-								"&ringback=".(isset($_SESSION['click_to_call']['ringback']['text'])?$_SESSION['click_to_call']['ringback']['text']:"us-ring").
-								"&auto_answer=".(isset($_SESSION['click_to_call']['auto_answer']['boolean'])?$_SESSION['click_to_call']['auto_answer']['boolean']:"true").
-								"');\" ".
-								"style='cursor: pointer;'";
-						}
+					if (permission_exists('click_to_call_call')) {
+						$tr_link = "onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php".
+							"?src_cid_name=".urlencode($row['caller_id_name']).
+							"&src_cid_number=".urlencode($row['caller_id_number']).
+							"&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name']).
+							"&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number']).
+							"&src=".urlencode($_SESSION['user']['extension'][0]['user']).
+							"&dest=".urlencode($row['caller_id_number']).
+							"&rec=".(isset($_SESSION['click_to_call']['record']['boolean'])?$_SESSION['click_to_call']['record']['boolean']:"false").
+							"&ringback=".(isset($_SESSION['click_to_call']['ringback']['text'])?$_SESSION['click_to_call']['ringback']['text']:"us-ring").
+							"&auto_answer=".(isset($_SESSION['click_to_call']['auto_answer']['boolean'])?$_SESSION['click_to_call']['auto_answer']['boolean']:"true").
+							"');\" ".
+							"style='cursor: pointer;'";
+					}
 					$hud[$n]['html'] .= "<tr ".$tr_link.">\n";
 					$hud[$n]['html'] .= "<td valign='middle' class='".$row_style[$c]."' style='cursor: help; padding: 0 0 0 6px;'>\n";
 					if ($theme_cdr_images_exist) {
 						$call_result = ($row['answer_stamp'] != '') ? 'voicemail' : 'cancelled';
-						$hud[$n]['html'] .= "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_".$row['direction']."_".$call_result.".png' width='16' style='border: none;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]."'>\n";
+						if (isset($row['direction'])) {
+							$hud[$n]['html'] .= "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_".$row['direction']."_".$call_result.".png' width='16' style='border: none;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]."'>\n";
+						}
 					}
 					$hud[$n]['html'] .= "</td>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'><a href='javascript:void(0);' ".(($row['caller_id_name'] != '') ? "title=\"".$row['caller_id_name']."\"" : null).">".((is_numeric($row['caller_id_number'])) ? format_phone($row['caller_id_number']) : $row['caller_id_number'])."</td>\n";
@@ -517,7 +519,6 @@
 			$hud[$n]['html'] .= "</div>";
 			$n++;
 		}
-
 
 	//recent calls
 		if (is_array($selected_blocks) && in_array('recent', $selected_blocks) && permission_exists('xml_cdr_view') && is_array($_SESSION['user']['extension']) && sizeof($_SESSION['user']['extension']) > 0) {
@@ -645,7 +646,9 @@
 								else if ($row['answer_stamp'] == '' && $row['bridge_uuid'] != '') { $call_result = 'cancelled'; }
 								else { $call_result = 'failed'; }
 							}
-							$hud[$n]['html'] .= "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_".$row['direction']."_".$call_result.".png' width='16' style='border: none;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]."'>\n";
+							if (isset($row['direction'])) {
+								$hud[$n]['html'] .= "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_".$row['direction']."_".$call_result.".png' width='16' style='border: none;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]."'>\n";
+							}
 						}
 						$hud[$n]['html'] .= "</td>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'><a href='javascript:void(0);' ".(($cdr_name != '') ? "title=\"".$cdr_name."\"" : null).">".$cdr_number."</a></td>\n";
