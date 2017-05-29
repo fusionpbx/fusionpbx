@@ -1,6 +1,10 @@
 require "resources.functions.split"
+local api = require "resources.functions.api"
+local log = require "resources.functions.log".presence
 
 local function turn_lamp(on, user, uuid)
+	log.debugf('turn_lamp: %s - %s(%s)', tostring(user), tostring(on), type(on))
+
 	local userid, domain, proto = split_first(user, "@", true)
 	proto, userid = split_first(userid, "+", true)
 	if userid then
@@ -9,6 +13,7 @@ local function turn_lamp(on, user, uuid)
 		proto = "sip"
 	end
 
+	uuid = uuid or api:execute('create_uuid')
 
 	local event = freeswitch.Event("PRESENCE_IN");
 	event:addHeader("proto", proto);
@@ -26,6 +31,9 @@ local function turn_lamp(on, user, uuid)
 	else
 		event:addHeader("answer-state", "terminated");
 	end
+
+	-- log.debug(event:serialize())
+
 	event:fire();
 end
 
