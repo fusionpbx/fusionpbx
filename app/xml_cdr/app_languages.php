@@ -1436,6 +1436,22 @@ $text['label-caller_id_name']['ru-ru'] = "CID Имя";
 $text['label-caller_id_name']['sv-se'] = "CID Namn";
 $text['label-caller_id_name']['uk-ua'] = "Caller ID Ім’я";
 
+$text['label-caller_destination']['en-us'] = "Caller Destination";
+$text['label-caller_destination']['ar-eg'] = "";
+$text['label-caller_destination']['de-at'] = "";
+$text['label-caller_destination']['de-de'] = "";
+$text['label-caller_destination']['es-cl'] = "";
+$text['label-caller_destination']['fr-fr'] = "";
+$text['label-caller_destination']['he-il'] = "";
+$text['label-caller_destination']['it-it'] = "";
+$text['label-caller_destination']['nl-nl'] = "";
+$text['label-caller_destination']['pl-pl'] = "";
+$text['label-caller_destination']['pt-br'] = "";
+$text['label-caller_destination']['pt-pt'] = "";
+$text['label-caller_destination']['ru-ru'] = "";
+$text['label-caller_destination']['sv-se'] = "";
+$text['label-caller_destination']['uk-ua'] = "";
+
 $text['label-call-statistics-description']['en-us'] = "Call Detail Records Statics summarize the call information.";
 $text['label-call-statistics-description']['ar-eg'] = "";
 $text['label-call-statistics-description']['de-at'] = "Anruf Statistiken fassen alle Anrufinformationen zusammen.";
