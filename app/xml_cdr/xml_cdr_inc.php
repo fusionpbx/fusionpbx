@@ -50,7 +50,7 @@
 		$direction = check_str($_REQUEST["direction"]);
 		$caller_id_name = check_str($_REQUEST["caller_id_name"]);
 		$caller_id_number = check_str($_REQUEST["caller_id_number"]);
-		$caller_destination_number = check_str($_REQUEST["caller_destination_number"]);
+		$caller_destination = check_str($_REQUEST["caller_destination"]);
 		$caller_extension_uuid = check_str($_REQUEST["caller_extension_uuid"]);
 		$destination_number = check_str($_REQUEST["destination_number"]);
 		$context = check_str($_REQUEST["context"]);
@@ -120,9 +120,9 @@
 		$mod_caller_id_number = str_replace("*", "%", $caller_id_number);
 		$sql_where_ands[] = "caller_id_number like '".$mod_caller_id_number."'";
 	}
-	if (strlen($caller_destination_number) > 0) {
-		$mod_caller_destination_number = str_replace("*", "%", $caller_destination_number);
-		$sql_where_ands[] = "caller_destination_number like '".$mod_caller_destination_number."'";
+	if (strlen($caller_destination) > 0) {
+		$mod_caller_destination = str_replace("*", "%", $caller_destination);
+		$sql_where_ands[] = "caller_destination like '".$mod_caller_destination."'";
 	}
 	if (strlen($destination_number) > 0) {
 		$mod_destination_number = str_replace("*", "%", $destination_number);
@@ -257,7 +257,7 @@
 	$param .= "&direction=".$direction;
 	$param .= "&caller_id_name=".$caller_id_name;
 	$param .= "&caller_id_number=".$caller_id_number;
-	$param .= "&caller_destination_number=".$caller_destination_number;
+	$param .= "&caller_destination=".$caller_destination;
 	$param .= "&caller_extension_uuid=".$caller_extension_uuid;
 	$param .= "&destination_number=".$destination_number;
 	$param .= "&context=".$context;
@@ -366,7 +366,7 @@
 	$sql .= "billsec, ";
 	$sql .= "caller_id_name, ";
 	$sql .= "caller_id_number, ";
-	$sql .= "caller_destination_number, ";
+	$sql .= "caller_destination, ";
 	$sql .= "source_number, ";
 	$sql .= "destination_number, ";
 	$sql .= "(xml IS NOT NULL OR json IS NOT NULL) AS raw_data_exists, ";
