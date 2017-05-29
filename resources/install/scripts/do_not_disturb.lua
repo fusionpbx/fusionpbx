@@ -43,6 +43,8 @@
 --include config.lua
 	require "resources.functions.config";
 
+	local presence_in   = require "resources.functions.presence_in"
+
 --check if the session is ready
 	if ( session:ready() ) then
 		--answer the call
@@ -57,6 +59,7 @@
 			extension_uuid = session:getVariable("extension_uuid");
 			context = session:getVariable("context");
 			if (not context ) then context = 'default'; end
+			toggle = (enabled == "toggle")
 
 		--set the sounds path for the language, dialect and voice
 			default_language = session:getVariable("default_language");
@@ -93,6 +96,9 @@
 				accountcode = row.accountcode;
 				follow_me_uuid = row.follow_me_uuid;
 				do_not_disturb = row.do_not_disturb;
+				if toggle then
+					enabled = (do_not_disturb == 'true') and 'false' or 'true'
+				end
 				--freeswitch.consoleLog("NOTICE", "[do_not_disturb] extension "..row.extension.."\n");
 				--freeswitch.consoleLog("NOTICE", "[do_not_disturb] accountcode "..row.accountcode.."\n");
 			end);
@@ -210,4 +216,14 @@
 		--end the call
 			session:hangup();
 
+		-- BLF for display DND status
+			local function dnd_blf(enabled, id, domain)
+				local user = string.format('dnd+%s@%s', id, domain)
+				presence_in.turn_lamp(enabled, user)
+			end
+
+			dnd_blf(enabled == "true", extension, domain_name)
+			if number_alias and #number_alias > 0 then
+				dnd_blf(enabled == "true", number_alias, domain_name)
+			end
 	end

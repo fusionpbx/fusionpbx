@@ -8,8 +8,12 @@
 			<action application="set" data="enabled=true"/>
 			<action application="lua" data="do_not_disturb.lua"/>
 		</condition>
-		<condition field="destination_number" expression="^\*79$">
+		<condition field="destination_number" expression="^\*79$" break="on-true">
 			<action application="set" data="enabled=false"/>
+			<action application="lua" data="do_not_disturb.lua"/>
+		</condition>
+		<condition field="destination_number" expression="^dnd\+${caller_id_number}$" break="on-true">
+			<action application="set" data="enabled=toggle"/>
 			<action application="lua" data="do_not_disturb.lua"/>
 		</condition>
 	</extension>
