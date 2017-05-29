@@ -101,6 +101,7 @@ if (!class_exists('xml_cdr')) {
 			$this->fields[] = "json";
 			$this->fields[] = "caller_id_name";
 			$this->fields[] = "caller_id_number";
+			$this->fields[] = "caller_destination";
 			$this->fields[] = "destination_number";
 			$this->fields[] = "source_number";
 			$this->fields[] = "start_epoch";
@@ -250,9 +251,10 @@ if (!class_exists('xml_cdr')) {
 					$destination_number = urldecode($xml->variables->last_sent_callee_id_number);
 				}
 
-			//get the caller id
+			//get the caller details
 				$caller_id_name = urldecode($xml->variables->effective_caller_id_name);
 				$caller_id_number = urldecode($xml->variables->effective_caller_id_number);
+				$caller_id_destination = urldecode($xml->variables->caller_destination);
 				if (strlen($caller_id_number) == 0) foreach ($xml->callflow as $row) {
 					$caller_id_name = urldecode($row->caller_profile->caller_id_name);
 					$caller_id_number = urldecode($row->caller_profile->caller_id_number);
