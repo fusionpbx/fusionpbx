@@ -106,7 +106,8 @@
 			require_once "resources/classes/database.php";
 			$database = new database;
 			$database->table = "v_xml_cdr";
-
+		//caller info
+			$database->fields['caller_destination'] = check_str(urldecode($xml->variables->caller_destination));
 		//misc
 			$uuid = check_str(urldecode($xml->variables->uuid));
 			$database->fields['uuid'] = $uuid;
@@ -169,7 +170,6 @@
 				}
 				$database->fields['caller_id_name'] = check_str(urldecode($row->caller_profile->caller_id_name));
 				$database->fields['caller_id_number'] = check_str(urldecode($row->caller_profile->caller_id_number));
-				$database->fields['caller_destination_number'] = check_str(urldecode($row->caller_profile->destination_number));
 				$x++;
 			}
 			unset($x);
