@@ -91,7 +91,7 @@
 	echo "	<input type='hidden' name='call_result' value='".$call_result."'>\n";
 	echo "	<input type='hidden' name='caller_extension_uuid' value='".$caller_extension_uuid."'>\n";
 	echo "	<input type='hidden' name='caller_id_number' value='".$caller_id_number."'>\n";
-	echo "	<input type='hidden' name='caller_destination_number' value='".$caller_destination_number."'>\n";
+	echo "	<input type='hidden' name='caller_destination' value='".$caller_destination."'>\n";
 	echo "	<input type='hidden' name='destination_number' value='".$destination_number."'>\n";
 	echo "	<input type='hidden' name='context' value='".$context."'>\n";
 	echo "	<input type='hidden' name='answer_stamp_begin' value='".$answer_stamp_begin."'>\n";
@@ -323,7 +323,7 @@
 					echo "			".$text['label-caller-destination']."\n";
 					echo "		</td>\n";
 					echo "		<td class='vtable' align='left'>\n";
-					echo "			<input type='text' class='formfld' name='caller_destination_number' value='$caller_destination_number'>\n";
+					echo "			<input type='text' class='formfld' name='caller_destination' value='$caller_destination'>\n";
 					echo "		</td>\n";
 					echo "	</tr>\n";
 					echo "</table>\n";
@@ -375,7 +375,7 @@
 		}
 		echo th_order_by('caller_id_name', $text['label-cid-name'], $order_by, $order, null, null, $param);
 		echo th_order_by('caller_id_number', $text['label-source'], $order_by, $order, null, null, $param);
-		echo th_order_by('caller_destination_number', $text['label-caller_destination'], $order_by, $order, null, null, $param);
+		echo th_order_by('caller_destination', "caller destination ".$text['label-caller_destination'], $order_by, $order, null, null, $param);
 		echo th_order_by('destination_number', $text['label-destination'], $order_by, $order, null, null, $param);
 		if (permission_exists('recording_play') || permission_exists('recording_download')) {
 			echo "<th>".$text['label-recording']."</th>\n";
@@ -550,12 +550,12 @@
 				echo "	</td>\n";
 			//caller destination
 				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>";
-				echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['caller_id_name'])."&src_cid_number=".urlencode($row['caller_id_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['caller_destination_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
-				if (is_numeric($row['caller_destination_number'])) {
-					echo "		".format_phone($row['caller_destination_number']).' ';
+				echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['caller_id_name'])."&src_cid_number=".urlencode($row['caller_id_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['caller_destination'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
+				if (is_numeric($row['caller_destination'])) {
+					echo "		".format_phone($row['caller_destination']).' ';
 				}
 				else {
-					echo "		".$row['caller_destination_number'].' ';
+					echo "		".$row['caller_destination'].' ';
 				}
 				echo "		</a>";
 				echo "	</td>\n";
