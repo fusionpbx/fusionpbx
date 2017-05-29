@@ -169,6 +169,7 @@
 				}
 				$database->fields['caller_id_name'] = check_str(urldecode($row->caller_profile->caller_id_name));
 				$database->fields['caller_id_number'] = check_str(urldecode($row->caller_profile->caller_id_number));
+				$database->fields['caller_destination_number'] = check_str(urldecode($row->caller_profile->destination_number));
 				$x++;
 			}
 			unset($x);
