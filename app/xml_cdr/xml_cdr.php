@@ -375,7 +375,7 @@
 		}
 		echo th_order_by('caller_id_name', $text['label-cid-name'], $order_by, $order, null, null, $param);
 		echo th_order_by('caller_id_number', $text['label-source'], $order_by, $order, null, null, $param);
-		echo th_order_by('caller_destination', "caller destination ".$text['label-caller_destination'], $order_by, $order, null, null, $param);
+		echo th_order_by('caller_destination', $text['label-caller_destination'], $order_by, $order, null, null, $param);
 		echo th_order_by('destination_number', $text['label-destination'], $order_by, $order, null, null, $param);
 		if (permission_exists('recording_play') || permission_exists('recording_download')) {
 			echo "<th>".$text['label-recording']."</th>\n";
