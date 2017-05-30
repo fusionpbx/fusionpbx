@@ -10,15 +10,19 @@ local find_call_flow do
 
 local find_call_flow_sql = [[select t1.call_flow_uuid, t1.call_flow_status
 from v_call_flows t1 inner join v_domains t2 on t1.domain_uuid = t2.domain_uuid
-where t2.domain_name = :domain_name and t1.call_flow_feature_code = :feature_code
+where t2.domain_name = :domain_name and (t1.call_flow_feature_code = :feature_code
+or t1.call_flow_feature_code = :short_feature_code)
 ]]
 
 function find_call_flow(user)
 	local ext, domain_name = split_first(user, '@', true)
+	local _, short = split_first(ext, '+', true)
 	if not domain_name then return end
 	local dbh = Database.new('system')
 	if not dbh then return end
-	local row = dbh:first_row(find_call_flow_sql, {domain_name = domain_name, feature_code = ext})
+	local row = dbh:first_row(find_call_flow_sql, {
+		domain_name = domain_name, feature_code = ext, short_feature_code = short
+	})
 	dbh:release()
 	if not row then return end
 	return row.call_flow_uuid, row.call_flow_status
@@ -27,6 +31,7 @@ end
 end
 
 local find_dnd do
+
 local find_dnd_sql = [[select t1.do_not_disturb
 from v_extensions t1 inner join v_domains t2 on t1.domain_uuid = t2.domain_uuid
 where t2.domain_name = :domain_name and (t1.extension = :extension or t1.number_alias=:extension)]]
