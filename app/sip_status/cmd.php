@@ -45,7 +45,7 @@ else {
 			if ($cmd == "api reloadxml") {
 				//reloadxml
 					if ($cmd == "api reloadxml") {
-						$response = event_socket_request($fp, $cmd);
+						messages::add(rtrim(event_socket_request($fp, $cmd)), 'alert');
 						unset($cmd);
 					}
 
@@ -54,7 +54,7 @@ else {
 
 				//rescan the external profile to look for new or stopped gateways
 					$tmp_cmd = 'api sofia profile external rescan';
-					$response = event_socket_request($fp, $tmp_cmd);
+					messages::add(rtrim(event_socket_request($fp, $tmp_cmd)), 'alert');
 					unset($tmp_cmd);
 			}
 
@@ -66,13 +66,13 @@ else {
 
 		//reloadacl
 			if ($cmd == "api reloadacl") {
-				$response = event_socket_request($fp, $cmd);
+				messages::add(rtrim(event_socket_request($fp, $cmd)), 'alert');
 				unset($cmd);
 			}
 
 		//sofia profile
 			if (substr($cmd, 0, 17) == "api sofia profile") {
-				$response = event_socket_request($fp, $cmd);
+				messages::add(rtrim(event_socket_request($fp, $cmd)), 'alert');
 			}
 
 		//close the connection
@@ -85,7 +85,6 @@ else {
 		echo $response;
 	}
 	else {
-		$_SESSION["message"] = $response;
 		header("Location: sip_status.php");
 	}
 
