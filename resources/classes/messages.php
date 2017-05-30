@@ -39,7 +39,7 @@ if (!class_exists('messages')) {
 				$message_mood = $_SESSION['message_mood'] ?: 'default';
 				$message_delay = $_SESSION['message_delay'];
 
-				$html .= "display_message('".$message_text."', '".$message_mood."'";
+				$html .= "display_message('".str_replace(array("\r\n", "\n", "\r"),'\\n', htmlspecialchars($message_text))."', '".$message_mood."'";
 				if ($message_delay != '') {
 					$html .= ", '".$message_delay."'";
 				}
@@ -51,7 +51,7 @@ if (!class_exists('messages')) {
 					$message_mood = $message['mood'] ?: 'default';
 					$message_delay = $message['delay'];
 
-					$html .= "display_message('".$message_text."', '".$message_mood."'";
+					$html .= "display_message('".str_replace(array("\r\n", "\n", "\r"),'\\n', htmlspecialchars($message_text))."', '".$message_mood."'";
 					if ($message_delay != '') {
 						$html .= ", '".$message_delay."'";
 					}
