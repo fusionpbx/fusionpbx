@@ -65,6 +65,22 @@ $text['title-sip-status']['ru-ru'] = "SIP Статус";
 $text['title-sip-status']['sv-se'] = "SIP Status";
 $text['title-sip-status']['uk-ua'] = "Стан SIP";
 
+$text['label-action']['en-us'] = "Action";
+$text['label-action']['ar-eg'] = "";
+$text['label-action']['de-at'] = "Aktion";
+$text['label-action']['de-de'] = "Aktion";
+$text['label-action']['es-cl'] = "Acción";
+$text['label-action']['fr-fr'] = "Action";
+$text['label-action']['he-il'] = "";
+$text['label-action']['it-it'] = "";
+$text['label-action']['nl-nl'] = "";
+$text['label-action']['pl-pl'] = "Operacja";
+$text['label-action']['pt-br'] = "Ação";
+$text['label-action']['pt-pt'] = "Acção";
+$text['label-action']['ru-ru'] = "Действие";
+$text['label-action']['sv-se'] = "Åtgärd";
+$text['label-action']['uk-ua'] = "Дія";
+
 $text['label-state']['en-us'] = "State";
 $text['label-state']['ar-eg'] = "";
 $text['label-state']['de-at'] = "Status";
