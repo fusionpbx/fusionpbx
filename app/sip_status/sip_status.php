@@ -128,6 +128,14 @@ if ($_GET['a'] == "download") {
 		catch(Exception $e) {
 			echo $e->getMessage();
 		}
+		$cmd = "api sofia xmlstatus gateway";
+		$xml_response = trim(event_socket_request($fp, $cmd));
+		try {
+			$xml_gateways = new SimpleXMLElement($xml_response);
+		}
+		catch(Exception $e) {
+			echo $e->getMessage();
+		}
 		echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 		echo "<tr>\n";
 		echo "<td width='50%'>\n";
@@ -156,6 +164,7 @@ if ($_GET['a'] == "download") {
 		echo "<th>".$text['label-type']."</th>\n";
 		echo "<th>".$text['label-data']."</th>\n";
 		echo "<th>".$text['label-state']."</th>\n";
+		echo "<th>".$text['label-action']."</th>\n";
 		echo "</tr>\n";
 		foreach ($xml->profile as $row) {
 			echo "<tr>\n";
@@ -163,10 +172,11 @@ if ($_GET['a'] == "download") {
 			echo "	<td class='".$row_style[$c]."'>".$row->type."</td>\n";
 			echo "	<td class='".$row_style[$c]."'>".$row->data."</td>\n";
 			echo "	<td class='".$row_style[$c]."'>".$row->state."</td>\n";
+			echo "	<td class='".$row_style[$c]."'>&nbsp;</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		}
-		foreach ($xml->gateway as $row) {
+		foreach ($xml_gateways->gateway as $row) {
 			$gateway_name = '';
 			$gateway_domain_name = '';
 			foreach($gateways as $field) {
@@ -182,14 +192,15 @@ if ($_GET['a'] == "download") {
 				echo "<a href='".PROJECT_PATH."/app/gateways/gateway_edit.php?id=".strtolower($row->name)."'>".$gateway_name."@".$gateway_domain_name."</a>";
 			}
 			elseif ($gateway_domain_name == '') {
-				echo $gateway_name;
+				echo $gateway_name ? $gateway_name : $row->name;
 			} else {
 				echo $gateway_name."@".$gateway_domain_name;
 			}
 			echo "	</td>\n";
-			echo "	<td class='".$row_style[$c]."'>".$row->type."</td>\n";
-			echo "	<td class='".$row_style[$c]."'>".$row->data."</td>\n";
+			echo "	<td class='".$row_style[$c]."'>Gateway</td>\n";
+			echo "	<td class='".$row_style[$c]."'>".$row->to."</td>\n";
 			echo "	<td class='".$row_style[$c]."'>".$row->state."</td>\n";
+			echo "	<td class='".$row_style[$c]."'><a onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".$row->profile."+killgw+".$row->name."';\" />".$text['button-stop']."</a></td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		}
@@ -200,6 +211,7 @@ if ($_GET['a'] == "download") {
 			echo "	<td class='".$row_style[$c]."'>".$row->type."</td>\n";
 			echo "	<td class='".$row_style[$c]."'>".$row->data."</td>\n";
 			echo "	<td class='".$row_style[$c]."'>".$row->state."</td>\n";
+			echo "	<td class='".$row_style[$c]."'>&nbsp;</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		}
