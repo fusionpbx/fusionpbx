@@ -319,7 +319,11 @@ include "root.php";
 					foreach ($_SESSION['domains'] as $domain) {
 						//get the domain_uuid
 						$this->domain_uuid = $domain['domain_uuid'];
-
+						//set the dialplan_context
+						$this->dialplan_context = $dialplan['@attributes']['name'];
+						if ($this->dialplan_context == "{v_context}") {
+							$this->dialplan_context = $domain['domain_name'];
+						}
 						//check if the dialplan exists
 						if (!$this->app_uuid_exists()) {
 							//start the transaction
@@ -328,12 +332,10 @@ include "root.php";
 								$this->dialplan_uuid = uuid();
 								$this->dialplan_name = $dialplan['extension']['@attributes']['name'];
 								$this->dialplan_number = $dialplan['extension']['@attributes']['number'];
-								$this->dialplan_context = $domain['domain_name'];
 								$this->dialplan_global = false;
 								if (strlen($dialplan['extension']['@attributes']['global']) > 0) {
 									if ($dialplan['extension']['@attributes']['global'] == "true") {
 										$this->dialplan_global = true;
-										$this->dialplan_context = '${domain_name}';
 									}
 								}
 								if ($this->display_type == "text") {
