@@ -1,4 +1,4 @@
-<context name="{v_context}">
+<context name="${domain_name}">
   <extension name="talking clock date" number="*9171" app_uuid="780e174b-a645-478e-b53c-0eb08b9a043c" global="true">
     <condition field="destination_number" expression="^\*9171$">
       <action application="answer"/>
