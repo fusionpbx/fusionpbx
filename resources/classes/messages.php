@@ -32,14 +32,15 @@ if (!class_exists('messages')) {
 			$_SESSION["messages"][] = array(message => $message, mood => $mood, delay => $delay);
 		}
 		
-		static function html($clear_messages = true) {
-			$html = "";
+		static function html($clear_messages = true, $spacer = "") {
+			$html = "${spacer}//render the messages\n";
+			$spacer .="\t";
 			if (strlen($_SESSION['message']) > 0) {
 				$message_text = addslashes($_SESSION['message']);
 				$message_mood = $_SESSION['message_mood'] ?: 'default';
 				$message_delay = $_SESSION['message_delay'];
 
-				$html .= "display_message('".str_replace(array("\r\n", "\n", "\r"),'\\n', htmlspecialchars($message_text))."', '".$message_mood."'";
+				$html .= "${spacer}display_message('".str_replace(array("\r\n", "\n", "\r"),'\\n', $message_text)."', '".$message_mood."'";
 				if ($message_delay != '') {
 					$html .= ", '".$message_delay."'";
 				}
@@ -51,7 +52,7 @@ if (!class_exists('messages')) {
 					$message_mood = $message['mood'] ?: 'default';
 					$message_delay = $message['delay'];
 
-					$html .= "display_message('".str_replace(array("\r\n", "\n", "\r"),'\\n', htmlspecialchars($message_text))."', '".$message_mood."'";
+					$html .= "${spacer}display_message('".str_replace(array("\r\n", "\n", "\r"),'\\n', $message_text)."', '".$message_mood."'";
 					if ($message_delay != '') {
 						$html .= ", '".$message_delay."'";
 					}
