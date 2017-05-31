@@ -353,6 +353,12 @@ if (!class_exists('extension')) {
 							if (strlen($row['emergency_caller_id_number']) > 0) {
 								$xml .= "      <variable name=\"emergency_caller_id_number\" value=\"" . $row['emergency_caller_id_number'] . "\"/>\n";
 							}
+							if (strlen($row['missed_call_app']) > 0) {
+                                                                $xml .= "      <variable name=\"missed_call_app\" value=\"" . $row['missed_call_app'] . "\"/>\n";
+                                                        }
+                                                        if (strlen($row['missed_call_app']) > 0 and strlen($row['missed_call_data']) > 0) {
+                                                                $xml .= "      <variable name=\"missed_call_data\" value=\"" . $row['missed_call_data'] . "\"/>\n";
+                                                        }
 							if (strlen($row['directory_full_name']) > 0) {
 								$xml .= "      <variable name=\"directory_full_name\" value=\"" . $row['directory_full_name'] . "\"/>\n";
 							}
