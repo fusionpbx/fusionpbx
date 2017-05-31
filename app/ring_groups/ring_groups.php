@@ -24,23 +24,27 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('ring_group_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('ring_group_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-require_once "resources/header.php";
-require_once "resources/paging.php";
+//additional includes
+	require_once "resources/header.php";
+	require_once "resources/paging.php";
 
 //get variables used to control the order
 	$order_by = $_GET["order_by"];
@@ -59,57 +63,59 @@ require_once "resources/paging.php";
 	echo "	</tr>\n";
 	echo "</table>\n";
 
-	//get total ring group count from the database
-		$sql = "select count(*) as num_rows from v_ring_groups where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			$total_ring_groups = $row['num_rows'];
-		}
-		unset($prep_statement, $row);
-
-	//prepare to page the results (reuse $sql from above)
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
+//get total ring group count from the database
+	$sql = "select count(*) as num_rows from v_ring_groups where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
 		$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if (strlen($row['num_rows']) > 0) {
-				$num_rows = $row['num_rows'];
-			}
-			else {
-				$num_rows = '0';
-			}
-		}
+		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+		$total_ring_groups = $row['num_rows'];
+	}
+	unset($prep_statement, $row);
 
-	//prepare to page the results
-		$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-		$param = "";
-		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
-		$offset = $rows_per_page * $page;
-
-	//get the  list
-		$sql = "select * from v_ring_groups ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		if (strlen($order_by) == 0) {
-			$sql .= "order by ring_group_name, ring_group_extension asc ";
+//prepare to page the results (reuse $sql from above)
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+	$prep_statement->execute();
+		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+		if (strlen($row['num_rows']) > 0) {
+			$num_rows = $row['num_rows'];
 		}
 		else {
-			$sql .= "order by $order_by $order ";
+			$num_rows = '0';
 		}
-		$sql .= " limit $rows_per_page offset $offset ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll();
-		$result_count = count($result);
-		unset ($prep_statement, $sql);
+	}
 
+//prepare to page the results
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$param = "";
+	$page = $_GET['page'];
+	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+	$offset = $rows_per_page * $page;
+
+//get the  list
+	$sql = "select * from v_ring_groups ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
+	if (strlen($order_by) == 0) {
+		$sql .= "order by ring_group_name, ring_group_extension asc ";
+	}
+	else {
+		$sql .= "order by $order_by $order ";
+	}
+	$sql .= " limit $rows_per_page offset $offset ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll();
+	$result_count = count($result);
+	unset ($prep_statement, $sql);
+
+//set the row styles
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
+//show the content
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('ring_group_name', $text['label-name'], $order_by, $order);
@@ -178,8 +184,8 @@ require_once "resources/paging.php";
 
 	echo "</table>";
 	echo "<br><br>";
-	echo "</div>";
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>
