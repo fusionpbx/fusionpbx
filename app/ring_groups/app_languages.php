@@ -78,7 +78,7 @@ $text['option-random']['pl-pl'] = "";
 $text['option-random']['pt-br'] = "";
 $text['option-random']['pt-pt'] = "";
 $text['option-random']['ru-ru'] = "Случайная";
-$text['option-random']['sv-se'] = "";
+$text['option-random']['sv-se'] = "Slumpmässig";
 $text['option-random']['uk-ua'] = "";
 
 $text['option-ptring']['en-us'] = "pt-ring";
@@ -574,7 +574,7 @@ $text['label-distinctive_ring']['pl-pl'] = "";
 $text['label-distinctive_ring']['pt-br'] = "";
 $text['label-distinctive_ring']['pt-pt'] = "";
 $text['label-distinctive_ring']['ru-ru'] = "Отличительный вызов";
-$text['label-distinctive_ring']['sv-se'] = "";
+$text['label-distinctive_ring']['sv-se'] = "Distinkt Ringning";
 $text['label-distinctive_ring']['uk-ua'] = "";
 
 $text['label-destinations']['en-us'] = "Destinations";
@@ -1022,7 +1022,7 @@ $text['description-distinctive_ring']['pl-pl'] = "";
 $text['description-distinctive_ring']['pt-br'] = "";
 $text['description-distinctive_ring']['pt-pt'] = "";
 $text['description-distinctive_ring']['ru-ru'] = "Выберите параметры звука для отличительного вызова";
-$text['description-distinctive_ring']['sv-se'] = "";
+$text['description-distinctive_ring']['sv-se'] = "Välj ett ljud för den distinkta ringningen.";
 $text['description-distinctive_ring']['uk-ua'] = "";
 
 $text['description-destinations']['en-us'] = "Add destinations and parameters to the ring group.";

@@ -14,7 +14,7 @@ $text['title-pin_numbers']['pl-pl'] = "";
 $text['title-pin_numbers']['pt-br'] = "";
 $text['title-pin_numbers']['pt-pt'] = "";
 $text['title-pin_numbers']['ru-ru'] = "PIN Номеров";
-$text['title-pin_numbers']['sv-se'] = "";
+$text['title-pin_numbers']['sv-se'] = "PIN Nummer";
 $text['title-pin_numbers']['uk-ua'] = "";
 
 $text['title-pin_number']['en-us'] = "PIN Number";
@@ -30,7 +30,7 @@ $text['title-pin_number']['pl-pl'] = "";
 $text['title-pin_number']['pt-br'] = "";
 $text['title-pin_number']['pt-pt'] = "";
 $text['title-pin_number']['ru-ru'] = "PIN Номер";
-$text['title-pin_number']['sv-se'] = "";
+$text['title-pin_number']['sv-se'] = "PIN Nummer";
 $text['title-pin_number']['uk-ua'] = "";
 
 $text['title_description-pin_number']['en-us'] = "List of PIN Numbers and account codes.";
@@ -46,7 +46,7 @@ $text['title_description-pin_number']['pl-pl'] = "";
 $text['title_description-pin_number']['pt-br'] = "";
 $text['title_description-pin_number']['pt-pt'] = "";
 $text['title_description-pin_number']['ru-ru'] = "Список PIN Номеров и Аккаунт кодов.";
-$text['title_description-pin_number']['sv-se'] = "";
+$text['title_description-pin_number']['sv-se'] = "Lista med PIN Nummer och account codes.";
 $text['title_description-pin_number']['uk-ua'] = "";
 
 $text['label-pin_number']['en-us'] = "PIN Number";
@@ -62,7 +62,7 @@ $text['label-pin_number']['pl-pl'] = "";
 $text['label-pin_number']['pt-br'] = "";
 $text['label-pin_number']['pt-pt'] = "";
 $text['label-pin_number']['ru-ru'] = "PIN Номер";
-$text['label-pin_number']['sv-se'] = "";
+$text['label-pin_number']['sv-se'] = "PIN Nummer";
 $text['label-pin_number']['uk-ua'] = "";
 
 $text['description-pin_number']['en-us'] = "Enter the PIN number.";
@@ -78,7 +78,7 @@ $text['description-pin_number']['pl-pl'] = "";
 $text['description-pin_number']['pt-br'] = "";
 $text['description-pin_number']['pt-pt'] = "";
 $text['description-pin_number']['ru-ru'] = "Введите PIN номер.";
-$text['description-pin_number']['sv-se'] = "";
+$text['description-pin_number']['sv-se'] = "Ange PIN NUmret.;
 $text['description-pin_number']['uk-ua'] = "";
 
 $text['label-accountcode']['en-us'] = "Accountcode";
@@ -94,7 +94,7 @@ $text['label-accountcode']['pl-pl'] = "";
 $text['label-accountcode']['pt-br'] = "";
 $text['label-accountcode']['pt-pt'] = "";
 $text['label-accountcode']['ru-ru'] = "Код Аккаунта";
-$text['label-accountcode']['sv-se'] = "";
+$text['label-accountcode']['sv-se'] = "Accountcode";
 $text['label-accountcode']['uk-ua'] = "";
 
 $text['description-accountcode']['en-us'] = "Enter the accountcode.";
@@ -110,7 +110,7 @@ $text['description-accountcode']['pl-pl'] = "";
 $text['description-accountcode']['pt-br'] = "";
 $text['description-accountcode']['pt-pt'] = "";
 $text['description-accountcode']['ru-ru'] = "Введите код Аккаунта.";
-$text['description-accountcode']['sv-se'] = "";
+$text['description-accountcode']['sv-se'] = "Ange Accountcode";
 $text['description-accountcode']['uk-ua'] = "";
 
 $text['label-enabled']['en-us'] = "Enabled";
@@ -126,7 +126,7 @@ $text['label-enabled']['pl-pl'] = "";
 $text['label-enabled']['pt-br'] = "";
 $text['label-enabled']['pt-pt'] = "";
 $text['label-enabled']['ru-ru'] = "Включено";
-$text['label-enabled']['sv-se'] = "";
+$text['label-enabled']['sv-se'] = "Aktiverad";
 $text['label-enabled']['uk-ua'] = "";
 
 $text['description-enabled']['en-us'] = "Enable or Disable the PIN Number.";
@@ -142,7 +142,7 @@ $text['description-enabled']['pl-pl'] = "";
 $text['description-enabled']['pt-br'] = "";
 $text['description-enabled']['pt-pt'] = "";
 $text['description-enabled']['ru-ru'] = "Включение и отключение PIN Номера.";
-$text['description-enabled']['sv-se'] = "";
+$text['description-enabled']['sv-se'] = "Aktivera eller inaktivera PIN Nummer.";
 $text['description-enabled']['uk-ua'] = "";
 
 $text['label-description']['en-us'] = "Description";
@@ -158,7 +158,7 @@ $text['label-description']['pl-pl'] = "";
 $text['label-description']['pt-br'] = "";
 $text['label-description']['pt-pt'] = "";
 $text['label-description']['ru-ru'] = "Описание";
-$text['label-description']['sv-se'] = "";
+$text['label-description']['sv-se'] = "Beskrivning";
 $text['label-description']['uk-ua'] = "";
 
 $text['description-description']['en-us'] = "Enter the description.";
@@ -174,7 +174,7 @@ $text['description-description']['pl-pl'] = "";
 $text['description-description']['pt-br'] = "";
 $text['description-description']['pt-pt'] = "";
 $text['description-description']['ru-ru'] = "Введите описание.";
-$text['description-description']['sv-se'] = "";
+$text['description-description']['sv-se'] = "Ange beskrivningen.";
 $text['description-description']['uk-ua'] = "";
 
 $text['label-true']['en-us'] = "true";
@@ -190,7 +190,7 @@ $text['label-true']['pl-pl'] = "";
 $text['label-true']['pt-br'] = "";
 $text['label-true']['pt-pt'] = "";
 $text['label-true']['ru-ru'] = "Да";
-$text['label-true']['sv-se'] = "";
+$text['label-true']['sv-se'] = "sann";
 $text['label-true']['uk-ua'] = "";
 
 $text['label-false']['en-us'] = "false";
@@ -206,7 +206,7 @@ $text['label-false']['pl-pl'] = "";
 $text['label-false']['pt-br'] = "";
 $text['label-false']['pt-pt'] = "falso";
 $text['label-false']['ru-ru'] = "";
-$text['label-false']['sv-se'] = "";
+$text['label-false']['sv-se'] = "falsk";
 $text['label-false']['uk-ua'] = "";
 
 $text['button-add']['en-us'] = "Add";
@@ -222,7 +222,7 @@ $text['button-add']['pl-pl'] = "";
 $text['button-add']['pt-br'] = "";
 $text['button-add']['pt-pt'] = "";
 $text['button-add']['ru-ru'] = "Добавить";
-$text['button-add']['sv-se'] = "";
+$text['button-add']['sv-se'] = "Lägg Till";
 $text['button-add']['uk-ua'] = "";
 
 $text['button-edit']['en-us'] = "Edit";
@@ -238,7 +238,7 @@ $text['button-edit']['pl-pl'] = "";
 $text['button-edit']['pt-br'] = "";
 $text['button-edit']['pt-pt'] = "";
 $text['button-edit']['ru-ru'] = "Редактировать";
-$text['button-edit']['sv-se'] = "";
+$text['button-edit']['sv-se'] = "Ändra";
 $text['button-edit']['uk-ua'] = "";
 
 $text['button-delete']['en-us'] = "Delete";
@@ -254,7 +254,7 @@ $text['button-delete']['pl-pl'] = "";
 $text['button-delete']['pt-br'] = "";
 $text['button-delete']['pt-pt'] = "";
 $text['button-delete']['ru-ru'] = "Удалить";
-$text['button-delete']['sv-se'] = "";
+$text['button-delete']['sv-se'] = "Ta Bort";
 $text['button-delete']['uk-ua'] = "";
 
 $text['button-save']['en-us'] = "Save";
@@ -270,7 +270,7 @@ $text['button-save']['pl-pl'] = "";
 $text['button-save']['pt-br'] = "";
 $text['button-save']['pt-pt'] = "Guardar";
 $text['button-save']['ru-ru'] = "Сохранить";
-$text['button-save']['sv-se'] = "";
+$text['button-save']['sv-se'] = "Spara";
 $text['button-save']['uk-ua'] = "";
 
 $text['button-view']['en-us'] = "View";
@@ -286,7 +286,7 @@ $text['button-view']['pl-pl'] = "";
 $text['button-view']['pt-br'] = "";
 $text['button-view']['pt-pt'] = "";
 $text['button-view']['ru-ru'] = "";
-$text['button-view']['sv-se'] = "";
+$text['button-view']['sv-se'] = "Visa";
 $text['button-view']['uk-ua'] = "";
 
 $text['button-back']['en-us'] = "Back";
@@ -302,7 +302,7 @@ $text['button-back']['pl-pl'] = "";
 $text['button-back']['pt-br'] = "";
 $text['button-back']['pt-pt'] = "Voltar";
 $text['button-back']['ru-ru'] = "Назад";
-$text['button-back']['sv-se'] = "";
+$text['button-back']['sv-se'] = "Tillbaka";
 $text['button-back']['uk-ua'] = "";
 
 $text['confirm-delete']['en-us'] = "Do you really want to delete this?";
@@ -318,7 +318,7 @@ $text['confirm-delete']['pl-pl'] = "";
 $text['confirm-delete']['pt-br'] = "";
 $text['confirm-delete']['pt-pt'] = "";
 $text['confirm-delete']['ru-ru'] = "Вы действительно хотите удалить это?";
-$text['confirm-delete']['sv-se'] = "";
+$text['confirm-delete']['sv-se'] = "Vill du verkligen ta bort detta?";
 $text['confirm-delete']['uk-ua'] = "";
 
 $text['message-add']['en-us'] = "Add Completed";
@@ -334,7 +334,7 @@ $text['message-add']['pl-pl'] = "";
 $text['message-add']['pt-br'] = "";
 $text['message-add']['pt-pt'] = "";
 $text['message-add']['ru-ru'] = "Добавление выполнено";
-$text['message-add']['sv-se'] = "";
+$text['message-add']['sv-se'] = "Tillagd";
 $text['message-add']['uk-ua'] = "";
 
 $text['message-update']['en-us'] = "Update Completed";
@@ -350,7 +350,7 @@ $text['message-update']['pl-pl'] = "";
 $text['message-update']['pt-br'] = "";
 $text['message-update']['pt-pt'] = "";
 $text['message-update']['ru-ru'] = "Обновление завершено";
-$text['message-update']['sv-se'] = "";
+$text['message-update']['sv-se'] = "Ändring Utförd";
 $text['message-update']['uk-ua'] = "";
 
 $text['message-delete']['en-us'] = "Delete Completed";
@@ -366,7 +366,7 @@ $text['message-delete']['pl-pl'] = "";
 $text['message-delete']['pt-br'] = "";
 $text['message-delete']['pt-pt'] = "";
 $text['message-delete']['ru-ru'] = "Удаление завершено";
-$text['message-delete']['sv-se'] = "";
+$text['message-delete']['sv-se'] = "Borttagen";
 $text['message-delete']['uk-ua'] = "";
 
 $text['message-required']['en-us'] = "Please provide: ";
@@ -382,7 +382,7 @@ $text['message-required']['pl-pl'] = "";
 $text['message-required']['pt-br'] = "";
 $text['message-required']['pt-pt'] = "";
 $text['message-required']['ru-ru'] = "Пожалуйста предоставьте: ";
-$text['message-required']['sv-se'] = "";
+$text['message-required']['sv-se'] = "Var god ange: ";
 $text['message-required']['uk-ua'] = "";
 
 ?>

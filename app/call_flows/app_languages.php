@@ -446,7 +446,7 @@ $text['description-call_flow_alternate_destination']['pl-pl'] = "";
 $text['description-call_flow_alternate_destination']['pt-br'] = "";
 $text['description-call_flow_alternate_destination']['pt-pt'] = "";
 $text['description-call_flow_alternate_destination']['ru-ru'] = "Выберите альтернативное направление.";
-$text['description-call_flow_alternate_destination']['sv-se'] = "";
+$text['description-call_flow_alternate_destination']['sv-se'] = "Välj den alternativa destinationen.";
 $text['description-call_flow_alternate_destination']['uk-ua'] = "";
 
 $text['description-alternate_destination']['en-us'] = "";

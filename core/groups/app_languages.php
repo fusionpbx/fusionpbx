@@ -14,7 +14,7 @@ $text['title-user_setting-edit']['pl-pl'] = "";
 $text['title-user_setting-edit']['pt-br'] = "";
 $text['title-user_setting-edit']['pt-pt'] = "Definição do Utilizador";
 $text['title-user_setting-edit']['ru-ru'] = "Настройки пользователя";
-$text['title-user_setting-edit']['sv-se'] = "";
+$text['title-user_setting-edit']['sv-se'] = "Användarinställningar";
 $text['title-user_setting-edit']['uk-ua'] = "";
 
 $text['title-user_setting-add']['en-us'] = "User Setting Add";
@@ -30,7 +30,7 @@ $text['title-user_setting-add']['pl-pl'] = "";
 $text['title-user_setting-add']['pt-br'] = "";
 $text['title-user_setting-add']['pt-pt'] = "Usuário setting Adicionar";
 $text['title-user_setting-add']['ru-ru'] = "Добавить настройки пользователя";
-$text['title-user_setting-add']['sv-se'] = "";
+$text['title-user_setting-add']['sv-se'] = "Lägg Till Användarinställningar";
 $text['title-user_setting-add']['uk-ua'] = "";
 
 $text['title-user_manager']['en-us'] = "User Manager";

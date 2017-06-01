@@ -254,7 +254,7 @@ $text['message-invalid-fax']['pl-pl'] = "Nieprawidłowy faks - Proszę wpisać w
 $text['message-invalid-fax']['pt-br'] = "Fax inválido - Por favor, digite uma mensagem ou selecionar um arquivo a ser enviado.";
 $text['message-invalid-fax']['pt-pt'] = "Fax inválida - Por favor, digite uma mensagem ou selecionar um arquivo a ser enviado.";
 $text['message-invalid-fax']['ru-ru'] = "Неверный FAX: введите сообщение или выберите файл для отправки.";
-$text['message-invalid-fax']['sv-se'] = "Invalid Fax - Fyll i ett meddelande eller välj en fil att skicka iväg.";
+$text['message-invalid-fax']['sv-se'] = "Ogiltigt Fax - Fyll i ett meddelande eller välj en fil att skicka iväg.";
 $text['message-invalid-fax']['uk-ua'] = "";
 
 $text['message-cannot_connect']['en-us'] = "Connection Failed";
@@ -398,7 +398,7 @@ $text['label-active']['pl-pl'] = "";
 $text['label-active']['pt-br'] = "";
 $text['label-active']['pt-pt'] = "";
 $text['label-active']['ru-ru'] = "Активные";
-$text['label-active']['sv-se'] = "";
+$text['label-active']['sv-se'] = "Aktiv";
 $text['label-active']['uk-ua'] = "";
 
 $text['label-location']['en-us'] = "Location";
@@ -1278,7 +1278,7 @@ $text['label-email_inouund_subject_tag']['pl-pl'] = "";
 $text['label-email_inouund_subject_tag']['pt-br'] = "";
 $text['label-email_inouund_subject_tag']['pt-pt'] = "";
 $text['label-email_inouund_subject_tag']['ru-ru'] = "Тема";
-$text['label-email_inouund_subject_tag']['sv-se'] = "";
+$text['label-email_inouund_subject_tag']['sv-se'] = "Tema";
 $text['label-email_inouund_subject_tag']['uk-ua'] = "";
 
 $text['label-email_email-to-fax']['en-us'] = "Email-to-Fax";
@@ -1550,7 +1550,7 @@ $text['label-fax_send_greeting']['pl-pl'] = "";
 $text['label-fax_send_greeting']['pt-br'] = "";
 $text['label-fax_send_greeting']['pt-pt'] = "";
 $text['label-fax_send_greeting']['ru-ru'] = "Приветствие";
-$text['label-fax_send_greeting']['sv-se'] = "";
+$text['label-fax_send_greeting']['sv-se'] = "Hälsning";
 $text['label-fax_send_greeting']['uk-ua'] = "";
 
 $text['label-fax_send_channels']['en-us'] = "Number of channels";
@@ -2798,7 +2798,7 @@ $text['fax-active_title']['pl-pl'] = "";
 $text['fax-active_title']['pt-br'] = "";
 $text['fax-active_title']['pt-pt'] = "";
 $text['fax-active_title']['ru-ru'] = "Fax очередь";
-$text['fax-active_title']['sv-se'] = "";
+$text['fax-active_title']['sv-se'] = "Fax kö";
 $text['fax-active_title']['uk-ua'] = "";
 
 $text['fax-active_description']['en-us'] = "Current status of fax queue";
@@ -2814,7 +2814,7 @@ $text['fax-active_description']['pl-pl'] = "";
 $text['fax-active_description']['pt-br'] = "";
 $text['fax-active_description']['pt-pt'] = "";
 $text['fax-active_description']['ru-ru'] = "Текущий статус fax очереди";
-$text['fax-active_description']['sv-se'] = "";
+$text['fax-active_description']['sv-se'] = "Nuvarande status för fax kö:n";
 $text['fax-active_description']['uk-ua'] = "";
 
 $text['fax-active_title_fax_server']['en-us'] = "Fax";
@@ -2830,7 +2830,7 @@ $text['fax-active_title_fax_server']['pl-pl'] = "";
 $text['fax-active_title_fax_server']['pt-br'] = "";
 $text['fax-active_title_fax_server']['pt-pt'] = "";
 $text['fax-active_title_fax_server']['ru-ru'] = "Fax";
-$text['fax-active_title_fax_server']['sv-se'] = "";
+$text['fax-active_title_fax_server']['sv-se'] = "Fax";
 $text['fax-active_title_fax_server']['uk-ua'] = "";
 
 $text['fax-active_title_enabled']['en-us'] = "Enabled";
@@ -2846,7 +2846,7 @@ $text['fax-active_title_enabled']['pl-pl'] = "";
 $text['fax-active_title_enabled']['pt-br'] = "";
 $text['fax-active_title_enabled']['pt-pt'] = "";
 $text['fax-active_title_enabled']['ru-ru'] = "Включено";
-$text['fax-active_title_enabled']['sv-se'] = "";
+$text['fax-active_title_enabled']['sv-se'] = "Aktiverad";
 $text['fax-active_title_enabled']['uk-ua'] = "";
 
 $text['fax-active_title_status']['en-us'] = "Status";
@@ -2878,7 +2878,7 @@ $text['fax-active_title_next_time']['pl-pl'] = "";
 $text['fax-active_title_next_time']['pt-br'] = "";
 $text['fax-active_title_next_time']['pt-pt'] = "";
 $text['fax-active_title_next_time']['ru-ru'] = "Следующее время";
-$text['fax-active_title_next_time']['sv-se'] = "";
+$text['fax-active_title_next_time']['sv-se'] = "Nästa gång";
 $text['fax-active_title_next_time']['uk-ua'] = "";
 
 $text['fax-active_title_files']['en-us'] = "Files";
@@ -2894,7 +2894,7 @@ $text['fax-active_title_files']['pl-pl'] = "";
 $text['fax-active_title_files']['pt-br'] = "";
 $text['fax-active_title_files']['pt-pt'] = "";
 $text['fax-active_title_files']['ru-ru'] = "Файлы";
-$text['fax-active_title_files']['sv-se'] = "";
+$text['fax-active_title_files']['sv-se'] = "Filer";
 $text['fax-active_title_files']['uk-ua'] = "";
 
 $text['fax-active_title_uri']['en-us'] = "URI";
@@ -2910,7 +2910,7 @@ $text['fax-active_title_uri']['pl-pl'] = "";
 $text['fax-active_title_uri']['pt-br'] = "";
 $text['fax-active_title_uri']['pt-pt'] = "";
 $text['fax-active_title_uri']['ru-ru'] = "URI";
-$text['fax-active_title_uri']['sv-se'] = "";
+$text['fax-active_title_uri']['sv-se'] = "URI";
 $text['fax-active_title_uri']['uk-ua'] = "";
 
 $text['fax-active_status_wait']['en-us'] = "Wait";
@@ -2926,7 +2926,7 @@ $text['fax-active_status_wait']['pl-pl'] = "";
 $text['fax-active_status_wait']['pt-br'] = "";
 $text['fax-active_status_wait']['pt-pt'] = "";
 $text['fax-active_status_wait']['ru-ru'] = "Ожидайте";
-$text['fax-active_status_wait']['sv-se'] = "";
+$text['fax-active_status_wait']['sv-se'] = "Vänta";
 $text['fax-active_status_wait']['uk-ua'] = "";
 
 $text['fax-active_status_execute']['en-us'] = "Execute";
@@ -2942,7 +2942,7 @@ $text['fax-active_status_execute']['pl-pl'] = "";
 $text['fax-active_status_execute']['pt-br'] = "";
 $text['fax-active_status_execute']['pt-pt'] = "";
 $text['fax-active_status_execute']['ru-ru'] = "Выполнить";
-$text['fax-active_status_execute']['sv-se'] = "";
+$text['fax-active_status_execute']['sv-se'] = "Utför";
 $text['fax-active_status_execute']['uk-ua'] = "";
 
 $text['fax-active_status_success']['en-us'] = "Success";
@@ -2958,7 +2958,7 @@ $text['fax-active_status_success']['pl-pl'] = "";
 $text['fax-active_status_success']['pt-br'] = "";
 $text['fax-active_status_success']['pt-pt'] = "";
 $text['fax-active_status_success']['ru-ru'] = "Успешно";
-$text['fax-active_status_success']['sv-se'] = "";
+$text['fax-active_status_success']['sv-se'] = "Lyckat";
 $text['fax-active_status_success']['uk-ua'] = "";
 
 $text['fax-active_status_fail']['en-us'] = "Fail";
@@ -2974,7 +2974,7 @@ $text['fax-active_status_fail']['pl-pl'] = "";
 $text['fax-active_status_fail']['pt-br'] = "";
 $text['fax-active_status_fail']['pt-pt'] = "";
 $text['fax-active_status_fail']['ru-ru'] = "Ошибка";
-$text['fax-active_status_fail']['sv-se'] = "";
+$text['fax-active_status_fail']['sv-se'] = "Misslyckad";
 $text['fax-active_status_fail']['uk-ua'] = "";
 
 ?>

@@ -270,7 +270,7 @@ $text['label-welcome']['pl-pl'] = "Witamy:";
 $text['label-welcome']['pt-br'] = "Bem-vindo:";
 $text['label-welcome']['pt-pt'] = "Witamy:";
 $text['label-welcome']['ru-ru'] = "Добро пожаловать:";
-$text['label-welcome']['sv-se'] = "Välkomna:";
+$text['label-welcome']['sv-se'] = "Välkommen:";
 $text['label-welcome']['uk-ua'] = "Ласкаво просимо:";
 
 $text['label-voicemail']['en-us'] = "Voicemail";
@@ -382,7 +382,7 @@ $text['label-used']['pl-pl'] = "Używany";
 $text['label-used']['pt-br'] = "Usava";
 $text['label-used']['pt-pt'] = "Usava";
 $text['label-used']['ru-ru'] = "Используются";
-$text['label-used']['sv-se'] = "Begagnade";
+$text['label-used']['sv-se'] = "Används";
 $text['label-used']['uk-ua'] = "використовується";
 
 $text['label-uppercase_letters']['en-us'] = "Uppercase Letters";
@@ -574,7 +574,7 @@ $text['label-special_characters']['pl-pl'] = "Znaki specjalne";
 $text['label-special_characters']['pt-br'] = "Caracteres especiais";
 $text['label-special_characters']['pt-pt'] = "Caracteres especiais";
 $text['label-special_characters']['ru-ru'] = "Специальные символы";
-$text['label-special_characters']['sv-se'] = "Speciella karaktärer";
+$text['label-special_characters']['sv-se'] = "Speciella Tecken";
 $text['label-special_characters']['uk-ua'] = "спеціальні символи";
 
 $text['label-ring_groups']['en-us'] = "Ring Groups";
@@ -670,7 +670,7 @@ $text['label-recent_calls']['pl-pl'] = "Ostatnie połączenia";
 $text['label-recent_calls']['pt-br'] = "Chamadas recentes";
 $text['label-recent_calls']['pt-pt'] = "chamadas recentes";
 $text['label-recent_calls']['ru-ru'] = "Последние вызовы";
-$text['label-recent_calls']['sv-se'] = "Samtals";
+$text['label-recent_calls']['sv-se'] = "Senaste Samtalen";
 $text['label-recent_calls']['uk-ua'] = "";
 
 $text['label-processor_usage']['en-us'] = "CPU Usage";
@@ -734,7 +734,7 @@ $text['label-numbers']['pl-pl'] = "Liczby";
 $text['label-numbers']['pt-br'] = "Números";
 $text['label-numbers']['pt-pt'] = "Números";
 $text['label-numbers']['ru-ru'] = "Номера";
-$text['label-numbers']['sv-se'] = "Tal";
+$text['label-numbers']['sv-se'] = "Nummer";
 $text['label-numbers']['uk-ua'] = "чисел";
 
 $text['label-no_voicemail_assigned']['en-us'] = "No Voicemail Assigned";
@@ -750,7 +750,7 @@ $text['label-no_voicemail_assigned']['pl-pl'] = "Nie głosowa Przypisany";
 $text['label-no_voicemail_assigned']['pt-br'] = "Sem correio de voz definido";
 $text['label-no_voicemail_assigned']['pt-pt'] = "Sem Voicemail Assigned";
 $text['label-no_voicemail_assigned']['ru-ru'] = "Голосовая почта не назначена";
-$text['label-no_voicemail_assigned']['sv-se'] = "Ingen röstmeddelande Delad";
+$text['label-no_voicemail_assigned']['sv-se'] = "Ingen Röstbrevlåda Tilldelad";
 $text['label-no_voicemail_assigned']['uk-ua'] = "Ні Voicemail Assigned";
 
 $text['label-new_password']['en-us'] = "New Password";
@@ -782,7 +782,7 @@ $text['label-new_messages']['pl-pl'] = "Nowe wiadomości";
 $text['label-new_messages']['pt-br'] = "Novas mensagens";
 $text['label-new_messages']['pt-pt'] = "Novas mensagens";
 $text['label-new_messages']['ru-ru'] = "Новые сообщения";
-$text['label-new_messages']['sv-se'] = "нові повідомлення";
+$text['label-new_messages']['sv-se'] = "Nya Meddelanden";
 $text['label-new_messages']['uk-ua'] = "нові повідомлення";
 
 $text['label-new']['en-us'] = "New";
@@ -814,7 +814,7 @@ $text['label-missed_calls']['pl-pl'] = "Nieodebrane połączenie";
 $text['label-missed_calls']['pt-br'] = "Chamadas perdidas";
 $text['label-missed_calls']['pt-pt'] = "Chamadas perdidas";
 $text['label-missed_calls']['ru-ru'] = "Пропущенные вызовы";
-$text['label-missed_calls']['sv-se'] = "Missade samtal";
+$text['label-missed_calls']['sv-se'] = "Missade Samtal";
 $text['label-missed_calls']['uk-ua'] = "";
 
 $text['label-missed']['en-us'] = "Missed";
@@ -846,7 +846,7 @@ $text['label-messages']['pl-pl'] = "Wiadomości";
 $text['label-messages']['pt-br'] = "Mensagens";
 $text['label-messages']['pt-pt'] = "mensagens";
 $text['label-messages']['ru-ru'] = "Сообщения";
-$text['label-messages']['sv-se'] = "meddelanden";
+$text['label-messages']['sv-se'] = "Meddelanden";
 $text['label-messages']['uk-ua'] = "повідомлення";
 
 $text['label-memory_usage']['en-us'] = "Memory Usage";
@@ -1006,7 +1006,7 @@ $text['label-feature']['pl-pl'] = "Cecha";
 $text['label-feature']['pt-br'] = "Característica";
 $text['label-feature']['pt-pt'] = "Característica";
 $text['label-feature']['ru-ru'] = "Функционал";
-$text['label-feature']['sv-se'] = "Särdrag";
+$text['label-feature']['sv-se'] = "Funktion";
 $text['label-feature']['uk-ua'] = "особливість";
 
 $text['label-failed']['en-us'] = "Failed";
@@ -1102,7 +1102,7 @@ $text['label-domain_limits']['pl-pl'] = "Granice domen";
 $text['label-domain_limits']['pt-br'] = "Limites de domínio";
 $text['label-domain_limits']['pt-pt'] = "Limites de domínio";
 $text['label-domain_limits']['ru-ru'] = "Ограничения домена";
-$text['label-domain_limits']['sv-se'] = "domän Gränser";
+$text['label-domain_limits']['sv-se'] = "Domän Begränsningar";
 $text['label-domain_limits']['uk-ua'] = "обмеження домену";
 
 $text['label-domain']['en-us'] = "Domain";
@@ -1150,7 +1150,7 @@ $text['label-disk_usage']['pl-pl'] = "Użycie dysku";
 $text['label-disk_usage']['pt-br'] = "Uso de disco";
 $text['label-disk_usage']['pt-pt'] = "Uso de disco";
 $text['label-disk_usage']['ru-ru'] = "Использование диска";
-$text['label-disk_usage']['sv-se'] = "Drive användning";
+$text['label-disk_usage']['sv-se'] = "Disk Användning";
 $text['label-disk_usage']['uk-ua'] = "Використання диска";
 
 $text['label-disabled']['en-us'] = "Disabled";
@@ -1214,7 +1214,7 @@ $text['label-date_time']['pl-pl'] = "Data Godzina";
 $text['label-date_time']['pt-br'] = "Data/hora";
 $text['label-date_time']['pt-pt'] = "Data hora";
 $text['label-date_time']['ru-ru'] = "Дата/Время";
-$text['label-date_time']['sv-se'] = "Datum Tid";
+$text['label-date_time']['sv-se'] = "Datum/Tid";
 $text['label-date_time']['uk-ua'] = "Дата, час";
 
 $text['label-database_connections']['en-us'] = "DB Connections";
@@ -1230,7 +1230,7 @@ $text['label-database_connections']['pl-pl'] = "Połączenia z bazami danych";
 $text['label-database_connections']['pt-br'] = "Conexões de banco de dados";
 $text['label-database_connections']['pt-pt'] = "Conexões de banco de dados";
 $text['label-database_connections']['ru-ru'] = "Соединения базы данных";
-$text['label-database_connections']['sv-se'] = "databasanslutningar ";
+$text['label-database_connections']['sv-se'] = "Databasanslutningar";
 $text['label-database_connections']['uk-ua'] = "з'єднання бази даних";
 
 $text['label-confirm-password']['en-us'] = "Confirm Password";
@@ -1294,7 +1294,7 @@ $text['label-characters']['pl-pl'] = "Postacie";
 $text['label-characters']['pt-br'] = "Personagens";
 $text['label-characters']['pt-pt'] = "Personagens";
 $text['label-characters']['ru-ru'] = "символов";
-$text['label-characters']['sv-se'] = "tecken";
+$text['label-characters']['sv-se'] = "Tecken";
 $text['label-characters']['uk-ua'] = "персонажі";
 
 $text['label-channels']['en-us'] = "Channels";
@@ -1326,7 +1326,7 @@ $text['label-cancelled']['pl-pl'] = "Odwołany";
 $text['label-cancelled']['pt-br'] = "Cancelado";
 $text['label-cancelled']['pt-pt'] = "Cancelado";
 $text['label-cancelled']['ru-ru'] = "Отменен";
-$text['label-cancelled']['sv-se'] = "Avbryts";
+$text['label-cancelled']['sv-se'] = "Avbryten";
 $text['label-cancelled']['uk-ua'] = "скасовано";
 
 $text['label-cancel']['en-us'] = "Cancel";
@@ -1342,7 +1342,7 @@ $text['label-cancel']['pl-pl'] = "Anuluj";
 $text['label-cancel']['pt-br'] = "Cancelar";
 $text['label-cancel']['pt-pt'] = "Cancelar";
 $text['label-cancel']['ru-ru'] = "Отменить";
-$text['label-cancel']['sv-se'] = "Avbryt";
+$text['label-cancel']['sv-se'] = "Ångra";
 $text['label-cancel']['uk-ua'] = "Відмінити";
 
 $text['label-callforward']['en-us'] = "Call Forward";
@@ -1406,7 +1406,7 @@ $text['label-active_users']['pl-pl'] = "Aktywni użytkownicy";
 $text['label-active_users']['pt-br'] = "Usuários ativos";
 $text['label-active_users']['pt-pt'] = "Usuários ativos";
 $text['label-active_users']['ru-ru'] = "Активные пользователи";
-$text['label-active_users']['sv-se'] = "aktiva användare";
+$text['label-active_users']['sv-se'] = "Aktiva Användare";
 $text['label-active_users']['uk-ua'] = "активні користувачі";
 
 $text['label-active_extensions']['en-us'] = "Active Extensions";
@@ -1422,7 +1422,7 @@ $text['label-active_extensions']['pl-pl'] = "Całość Rozszerzenia";
 $text['label-active_extensions']['pt-br'] = "Ramais ativos";
 $text['label-active_extensions']['pt-pt'] = "Extensões de ativos";
 $text['label-active_extensions']['ru-ru'] = "Активные внутренний номера";
-$text['label-active_extensions']['sv-se'] = "aktiva Extensions";
+$text['label-active_extensions']['sv-se'] = "Aktiva Anknytningar";
 $text['label-active_extensions']['uk-ua'] = "активні Розширення";
 
 $text['label-active_domains']['en-us'] = "Active Domains";
@@ -1438,7 +1438,7 @@ $text['label-active_domains']['pl-pl'] = "aktywne Domeny";
 $text['label-active_domains']['pt-br'] = "Domínios ativos";
 $text['label-active_domains']['pt-pt'] = "Domínios ativos";
 $text['label-active_domains']['ru-ru'] = "Активные домены";
-$text['label-active_domains']['sv-se'] = "aktiva domäner";
+$text['label-active_domains']['sv-se'] = "Aktiva Domäner";
 $text['label-active_domains']['uk-ua'] = "активні домени";
 
 $text['header-user_dashboard']['en-us'] = "Dashboard";
@@ -1454,7 +1454,7 @@ $text['header-user_dashboard']['pl-pl'] = "Panel użytkowników";
 $text['header-user_dashboard']['pt-br'] = "Painel de controle do usuário (Dashboard)";
 $text['header-user_dashboard']['pt-pt'] = "Painel de Controle do Usuário";
 $text['header-user_dashboard']['ru-ru'] = "Панель пользователя";
-$text['header-user_dashboard']['sv-se'] = "Användarpanel";
+$text['header-user_dashboard']['sv-se'] = "Dashboard";
 $text['header-user_dashboard']['uk-ua'] = "Панель користувача";
 
 $text['description-user_language']['en-us'] = "Select the language.";
@@ -1486,7 +1486,7 @@ $text['description-user_dashboard']['pl-pl'] = "Szybki dostęp do informacji i n
 $text['description-user_dashboard']['pt-br'] = "Acesse rapidamente informações e ferramentas relacionadas à sua conta.";
 $text['description-user_dashboard']['pt-pt'] = "Acessar rapidamente as informações e ferramentas relacionadas à sua conta.";
 $text['description-user_dashboard']['ru-ru'] = "Быстрый доступ к информации и инструментам, связанным с вашей учетной записью.";
-$text['description-user_dashboard']['sv-se'] = "Snabb tillgång till information och verktyg för ditt konto.";
+$text['description-user_dashboard']['sv-se'] = "Snabb tillgång till kontoinformation och funktioner.";
 $text['description-user_dashboard']['uk-ua'] = "Швидкий доступ до інформації та інструментів  вашого облікового запису.";
 
 $text['description-timezone']['en-us'] = "Select the default time zone.";
@@ -1502,7 +1502,7 @@ $text['description-timezone']['pl-pl'] = "Wybierz domyślną strefę czasową";
 $text['description-timezone']['pt-br'] = "Selecione o fuso horário padrão.";
 $text['description-timezone']['pt-pt'] = "Selecione o fuso horário por omissão.";
 $text['description-timezone']['ru-ru'] = "Выберите часовой пояс по умолчанию.";
-$text['description-timezone']['sv-se'] = "Välj standardtidszon";
+$text['description-timezone']['sv-se'] = "Välj standardtidszon.";
 $text['description-timezone']['uk-ua'] = "Виберіть часовий пояс за замовчуванням";
 
 $text['description-status']['en-us'] = "Select a user status.";
@@ -1566,7 +1566,7 @@ $text['confirm-password']['pl-pl'] = "Hasła nie sa takie same";
 $text['confirm-password']['pt-br'] = "As senhas não coincidem.";
 $text['confirm-password']['pt-pt'] = "As palavras-chave não coincidem.";
 $text['confirm-password']['ru-ru'] = "Пароли не совпадают.";
-$text['confirm-password']['sv-se'] = "Lösenorden matchar inte.";
+$text['confirm-password']['sv-se'] = "Lösenorden matchade inte.";
 $text['confirm-password']['uk-ua'] = "Паролі не співпадають";
 
 $text['check-onbreak-status']['en-us'] = "On Break";

@@ -30,7 +30,7 @@ $text['prompt-block_recent_name']['pl-pl'] = "Zablokuj ostatnią rozmowę. Edytu
 $text['prompt-block_recent_name']['pt-br'] = "Bloquear chamadas recentes, edite o nome se assim desejar...";
 $text['prompt-block_recent_name']['pt-pt'] = "Bloquear Chamadas Recentes - Edite o nome, se desejar...";
 $text['prompt-block_recent_name']['ru-ru'] = "Блокировать недавний вызов. Отредактируйте название, если необходимо...";
-$text['prompt-block_recent_name']['sv-se'] = "Blockera Senaste Samtal, meditera namnet om nödvändigt...";
+$text['prompt-block_recent_name']['sv-se'] = "Blockera Senaste Samtal, editera namnet om nödvändigt...";
 $text['prompt-block_recent_name']['uk-ua'] = "Блокувати недавній дзвінок. Відредагуйте назву за бажанням";
 
 $text['label-update-complete']['en-us'] = "Update Complete";
@@ -350,7 +350,7 @@ $text['label-hold']['pl-pl'] = "";
 $text['label-hold']['pt-br'] = "Espera";
 $text['label-hold']['pt-pt'] = "";
 $text['label-hold']['ru-ru'] = "Удержание";
-$text['label-hold']['sv-se'] = "";
+$text['label-hold']['sv-se'] = "Vänt";
 $text['label-hold']['uk-ua'] = "";
 
 $text['label-voicemail']['en-us'] = "Voicemail";

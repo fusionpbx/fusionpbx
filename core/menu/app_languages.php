@@ -110,7 +110,7 @@ $text['option-external']['pl-pl'] = "Zewnętrzny";
 $text['option-external']['pt-br'] = "Externo";
 $text['option-external']['pt-pt'] = "Externo";
 $text['option-external']['ru-ru'] = "Внешний";
-$text['option-external']['sv-se'] = "EXtern";
+$text['option-external']['sv-se'] = "Extern";
 $text['option-external']['uk-ua'] = "Зовнішній (External)";
 
 $text['option-email']['en-us'] = "E-mail";
@@ -334,7 +334,7 @@ $text['label-category']['pl-pl'] = "Kategoria";
 $text['label-category']['pt-br'] = "Destino";
 $text['label-category']['pt-pt'] = "Destino";
 $text['label-category']['ru-ru'] = "Цель";
-$text['label-category']['sv-se'] = "Kategori";
+$text['label-category']['sv-se'] = "KMäl";
 $text['label-category']['uk-ua'] = "Категорія";
 
 $text['header-menus']['en-us'] = "Menu Manager";

@@ -158,7 +158,7 @@ $text['label-tier_rules_apply']['pl-pl'] = "Zastosuj zasadę poziomów";
 $text['label-tier_rules_apply']['pt-br'] = "Aplicar regas de nível";
 $text['label-tier_rules_apply']['pt-pt'] = "Aplicar as Regras do Nível";
 $text['label-tier_rules_apply']['ru-ru'] = "Применять правила компетенции";
-$text['label-tier_rules_apply']['sv-se'] = "Kunskap Regler Gäller";
+$text['label-tier_rules_apply']['sv-se'] = "Kunskaps Regler Gäller";
 $text['label-tier_rules_apply']['uk-ua'] = "";
 
 $text['label-tier_rule_wait_second']['en-us'] = "Tier Rule Wait Second";
@@ -174,7 +174,7 @@ $text['label-tier_rule_wait_second']['pl-pl'] = "Poziomowa zasada czekania";
 $text['label-tier_rule_wait_second']['pt-br'] = "Regra de segundo nível de espera";
 $text['label-tier_rule_wait_second']['pt-pt'] = "Regra de nível segundo espera";
 $text['label-tier_rule_wait_second']['ru-ru'] = "Правило компетенции: Ждать секунд";
-$text['label-tier_rule_wait_second']['sv-se'] = "Kunskap Regel Väntetid i Sekunder";
+$text['label-tier_rule_wait_second']['sv-se'] = "Kunskaps Regel Väntetid i Sekunder";
 $text['label-tier_rule_wait_second']['uk-ua'] = "";
 
 $text['label-tier_rule_wait_multiply_level']['en-us'] = "Tier Rule Wait Multiply Level";
@@ -190,7 +190,7 @@ $text['label-tier_rule_wait_multiply_level']['pl-pl'] = "Poziomowa zasada przemn
 $text['label-tier_rule_wait_multiply_level']['pt-br'] = "Regra de espera multiplicado pelo nível";
 $text['label-tier_rule_wait_multiply_level']['pt-pt'] = "Regra de nível de espera multiplicado pelo nível";
 $text['label-tier_rule_wait_multiply_level']['ru-ru'] = "Правило компетенции: Множитель ожидания";
-$text['label-tier_rule_wait_multiply_level']['sv-se'] = "Kunskap Regel Väntetid Multipla Värden";
+$text['label-tier_rule_wait_multiply_level']['sv-se'] = "Kunskaps Regel Väntetid Multipla Värden";
 $text['label-tier_rule_wait_multiply_level']['uk-ua'] = "";
 
 $text['label-tier_rule_no_agent_no_wait']['en-us'] = "Tier Rule No Agent No Wait";
@@ -206,7 +206,7 @@ $text['label-tier_rule_no_agent_no_wait']['pl-pl'] = "Zasada poziomowa - nie ma 
 $text['label-tier_rule_no_agent_no_wait']['pt-br'] = "Regra de nível sem espera do agente";
 $text['label-tier_rule_no_agent_no_wait']['pt-pt'] = "Regra de Nível Sem Agente Sem Espera";
 $text['label-tier_rule_no_agent_no_wait']['ru-ru'] = "Правило компетенции: Нет оператора, нет ожидания";
-$text['label-tier_rule_no_agent_no_wait']['sv-se'] = "Kunskap Regel Ingen Agent Ingen Väntan";
+$text['label-tier_rule_no_agent_no_wait']['sv-se'] = "Kunskaps Regel Ingen Agent Ingen Väntan";
 $text['label-tier_rule_no_agent_no_wait']['uk-ua'] = "";
 
 $text['label-tier_position']['en-us'] = "Tier Position";
@@ -222,7 +222,7 @@ $text['label-tier_position']['pl-pl'] = "Pozycja poziomu";
 $text['label-tier_position']['pt-br'] = "Nivel da posição";
 $text['label-tier_position']['pt-pt'] = "Posição do Tier";
 $text['label-tier_position']['ru-ru'] = "Позиция компетенции";
-$text['label-tier_position']['sv-se'] = "Kunskap Position";
+$text['label-tier_position']['sv-se'] = "Kunskaps Position";
 $text['label-tier_position']['uk-ua'] = "";
 
 $text['label-tier_level']['en-us'] = "Tier Level";
@@ -238,7 +238,7 @@ $text['label-tier_level']['pl-pl'] = "Tier Level";
 $text['label-tier_level']['pt-br'] = "Nivel da camada";
 $text['label-tier_level']['pt-pt'] = "Nível do Tier";
 $text['label-tier_level']['ru-ru'] = "Уровень компетенции";
-$text['label-tier_level']['sv-se'] = "Kunskap Nivå";
+$text['label-tier_level']['sv-se'] = "Kunskaps Nivå";
 $text['label-tier_level']['uk-ua'] = "";
 
 $text['label-system']['en-us'] = "System";

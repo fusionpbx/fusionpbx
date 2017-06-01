@@ -734,7 +734,7 @@ $text['label-group']['pl-pl'] = "";
 $text['label-group']['pt-br'] = "";
 $text['label-group']['pt-pt'] = "";
 $text['label-group']['ru-ru'] = "Групповой";
-$text['label-group']['sv-se'] = "";
+$text['label-group']['sv-se'] = "Grupp";
 $text['label-group']['uk-ua'] = "";
 
 $text['header-time_conditions']['en-us'] = "Time Conditions";
