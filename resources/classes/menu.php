@@ -62,6 +62,7 @@ if (!class_exists('menu')) {
 
 		//restore the menu
 			public function restore() {
+				
 				//set the variables
 					$db = $this->db;
 
@@ -85,6 +86,9 @@ if (!class_exists('menu')) {
 					if ($db_type == "sqlite") {
 						$db->beginTransaction();
 					}
+
+				//get the list of languages
+					$language = new text;
 
 				//use the app array to restore the default menu
 					foreach ($apps as $row) {
@@ -155,7 +159,10 @@ if (!class_exists('menu')) {
 											unset($sql);
 
 										//set the menu languages
-											foreach ($menu["title"] as $menu_language => $menu_item_title) {
+											foreach ($language->languages as $menu_language) {
+												$menu_item_title = $menu["title"][$menu_language];
+												if(strlen($menu_item_title) == 0)
+													$menu_item_title = $menu["title"]['en-us'];
 												$menu_language_uuid = uuid();
 												$sql = "insert into v_menu_languages ";
 												$sql .= "(";
