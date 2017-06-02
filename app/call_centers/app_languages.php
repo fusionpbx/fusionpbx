@@ -46,7 +46,7 @@ $text['title-call_center_queues_edit']['pl-pl'] = "";
 $text['title-call_center_queues_edit']['pt-br'] = "Editar fila de Call Center";
 $text['title-call_center_queues_edit']['pt-pt'] = "Editar Fila de Call Center";
 $text['title-call_center_queues_edit']['ru-ru'] = "Редактировать очередь Колл-центра";
-$text['title-call_center_queues_edit']['sv-se'] = "";
+$text['title-call_center_queues_edit']['sv-se'] = "Ändra Call Center Kö";
 $text['title-call_center_queues_edit']['uk-ua'] = "";
 
 $text['title-call_center_queues_add']['en-us'] = "Add Call Center Queue";
@@ -62,7 +62,7 @@ $text['title-call_center_queues_add']['pl-pl'] = "";
 $text['title-call_center_queues_add']['pt-br'] = "Adicionar filas de Call Center";
 $text['title-call_center_queues_add']['pt-pt'] = "Adicionar Fila de Call Center";
 $text['title-call_center_queues_add']['ru-ru'] = "Добавить очередь Колл-центра";
-$text['title-call_center_queues_add']['sv-se'] = "";
+$text['title-call_center_queues_add']['sv-se'] = "Lägg till Call Center Kö";
 $text['title-call_center_queues_add']['uk-ua'] = "";
 
 $text['title-call_center_queues']['en-us'] = "Call Center Queues";
@@ -430,7 +430,7 @@ $text['option-no_change']['pl-pl'] = "Bez zmian";
 $text['option-no_change']['pt-br'] = "Não modificar";
 $text['option-no_change']['pt-pt'] = "No Change";
 $text['option-no_change']['ru-ru'] = "Без изменения";
-$text['option-no_change']['sv-se'] = "Ändra Ej";
+$text['option-no_change']['sv-se'] = "Ingen Förändring";
 $text['option-no_change']['uk-ua'] = "Без змін";
 
 $text['option-longest_idle_agent']['en-us'] = "Longest Idle Agent";
@@ -1134,7 +1134,7 @@ $text['label-exit_keys']['pl-pl'] = "";
 $text['label-exit_keys']['pt-br'] = "";
 $text['label-exit_keys']['pt-pt'] = "";
 $text['label-exit_keys']['ru-ru'] = "";
-$text['label-exit_keys']['sv-se'] = "";
+$text['label-exit_keys']['sv-se'] = "Knapp för att lämna";
 $text['label-exit_keys']['uk-ua'] = "";
 
 $text['description-exit_keys']['en-us'] = "Keys to quite the current queue waiting.";
@@ -1150,7 +1150,7 @@ $text['description-exit_keys']['pl-pl'] = "";
 $text['description-exit_keys']['pt-br'] = "";
 $text['description-exit_keys']['pt-pt'] = "";
 $text['description-exit_keys']['ru-ru'] = "";
-$text['description-exit_keys']['sv-se'] = "";
+$text['description-exit_keys']['sv-se'] = "Knapp för att lämna den nuvarande kö:n";
 $text['description-exit_keys']['uk-ua'] = "";
 
 $text['label-call_timeout']['en-us'] = "Call Timeout";
@@ -1198,7 +1198,7 @@ $text['label-agent_password']['pl-pl'] = "Środek Hasło";
 $text['label-agent_password']['pt-br'] = "Agente de Senha";
 $text['label-agent_password']['pt-pt'] = "Agente Senha";
 $text['label-agent_password']['ru-ru'] = "Пароль оператора";
-$text['label-agent_password']['sv-se'] = "Środek Hasło";
+$text['label-agent_password']['sv-se'] = "Agent Lösen";
 $text['label-agent_password']['uk-ua'] = "";
 
 $text['label-agent_name']['en-us'] = "Agent Name";
@@ -1454,7 +1454,7 @@ $text['description-timeout_action']['pl-pl'] = "Ustaw operację do wykonania po 
 $text['description-timeout_action']['pt-br'] = "Defina a ação para realizar quando o tempo máximo de espera for atingido.";
 $text['description-timeout_action']['pt-pt'] = "Defina a acção a realizar quando o tempo máximo de espera for atingido.";
 $text['description-timeout_action']['ru-ru'] = "Установите действие при достижении максимального времени ожидания";
-$text['description-timeout_action']['sv-se'] = "Ange aktion som skall utföras när max vänttid är nådd.";
+$text['description-timeout_action']['sv-se'] = "Ange vad som skall utföras när max vänttid är nådd.";
 $text['description-timeout_action']['uk-ua'] = "";
 
 $text['description-time_base_score']['en-us'] = "Select the time base score.";

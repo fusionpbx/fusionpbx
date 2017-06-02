@@ -446,7 +446,7 @@ $text['description-monthly_price_buy']['pl-pl'] = "Wpisz kwotę, która ty płac
 $text['description-monthly_price_buy']['pt-br'] = "Digite o preço mensal para este destino (Apenas quando for entrada)";
 $text['description-monthly_price_buy']['pt-pt'] = "Digite o preço mensal de paga para este destino (somente quando entrada)";
 $text['description-monthly_price_buy']['ru-ru'] = "Введите ежемесячную цену, которую вы платите за это направление (только за входящие)";
-$text['description-monthly_price_buy']['sv-se'] = "Ange pris per månad som du betslar för denna destination (endast vid inkommande)";
+$text['description-monthly_price_buy']['sv-se'] = "Ange pris per månad som du betalar för denna destination (endast vid inkommande)";
 $text['description-monthly_price_buy']['uk-ua'] = "Введіть щомісячний тариф, який оплачуєте за цей номер (тільки для вхідних)";
 
 $text['description-monthly_price']['en-us'] = "Enter monthly price to bill for this destination (only when inbound)";

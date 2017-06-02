@@ -46,7 +46,7 @@ $text['title-sip_profile_domains']['pl-pl'] = "";
 $text['title-sip_profile_domains']['pt-br'] = "";
 $text['title-sip_profile_domains']['pt-pt'] = "";
 $text['title-sip_profile_domains']['ru-ru'] = "Домены";
-$text['title-sip_profile_domains']['sv-se'] = "";
+$text['title-sip_profile_domains']['sv-se'] = "Domäner";
 $text['title-sip_profile_domains']['uk-ua'] = "";
 
 $text['title-sip_profile_domain']['en-us'] = "Domain";
@@ -62,7 +62,7 @@ $text['title-sip_profile_domain']['pl-pl'] = "";
 $text['title-sip_profile_domain']['pt-br'] = "";
 $text['title-sip_profile_domain']['pt-pt'] = "";
 $text['title-sip_profile_domain']['ru-ru'] = "Домен";
-$text['title-sip_profile_domain']['sv-se'] = "";
+$text['title-sip_profile_domain']['sv-se'] = "Domän";
 $text['title-sip_profile_domain']['uk-ua'] = "";
 
 $text['title-sip_profile_setting']['en-us'] = "Profile Setting";
@@ -174,7 +174,7 @@ $text['label-sip_profile_domain_alias']['pl-pl'] = "";
 $text['label-sip_profile_domain_alias']['pt-br'] = "";
 $text['label-sip_profile_domain_alias']['pt-pt'] = "";
 $text['label-sip_profile_domain_alias']['ru-ru'] = "Псевдоним";
-$text['label-sip_profile_domain_alias']['sv-se'] = "";
+$text['label-sip_profile_domain_alias']['sv-se'] = "Alias";
 $text['label-sip_profile_domain_alias']['uk-ua'] = "";
 
 $text['label-sip_profile_domain_parse']['en-us'] = "Parse";
@@ -190,7 +190,7 @@ $text['label-sip_profile_domain_parse']['pl-pl'] = "";
 $text['label-sip_profile_domain_parse']['pt-br'] = "";
 $text['label-sip_profile_domain_parse']['pt-pt'] = "";
 $text['label-sip_profile_domain_parse']['ru-ru'] = "Parse";
-$text['label-sip_profile_domain_parse']['sv-se'] = "";
+$text['label-sip_profile_domain_parse']['sv-se'] = "Parse";
 $text['label-sip_profile_domain_parse']['uk-ua'] = "";
 
 $text['label-sip_profile_setting_name']['en-us'] = "Name";
@@ -286,7 +286,7 @@ $text['label-sip_profile_settings']['pl-pl'] = "Ustawienia";
 $text['label-sip_profile_settings']['pt-br'] = "Configurações";
 $text['label-sip_profile_settings']['pt-pt'] = "Definições";
 $text['label-sip_profile_settings']['ru-ru'] = "Настройки";
-$text['label-sip_profile_settings']['sv-se'] = "";
+$text['label-sip_profile_settings']['sv-se'] = "Inställningar";
 $text['label-sip_profile_settings']['uk-ua'] = "Параметри";
 
 $text['header-sip_profiles']['en-us'] = "SIP Profiles";

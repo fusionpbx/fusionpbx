@@ -14,7 +14,7 @@ $text['title-user_setting-edit']['pl-pl'] = "";
 $text['title-user_setting-edit']['pt-br'] = "";
 $text['title-user_setting-edit']['pt-pt'] = "Definição do Utilizador";
 $text['title-user_setting-edit']['ru-ru'] = "Параметры пользователя";
-$text['title-user_setting-edit']['sv-se'] = "";
+$text['title-user_setting-edit']['sv-se'] = "Användarinställning";
 $text['title-user_setting-edit']['uk-ua'] = "";
 
 $text['title-user_setting-add']['en-us'] = "User Setting Add";
@@ -30,7 +30,7 @@ $text['title-user_setting-add']['pl-pl'] = "";
 $text['title-user_setting-add']['pt-br'] = "";
 $text['title-user_setting-add']['pt-pt'] = "Usuário setting Adicionar";
 $text['title-user_setting-add']['ru-ru'] = "Добавить параметры пользователя";
-$text['title-user_setting-add']['sv-se'] = "";
+$text['title-user_setting-add']['sv-se'] = "Lägg Till Användarinställning";
 $text['title-user_setting-add']['uk-ua'] = "";
 
 $text['title-user_manager']['en-us'] = "User Manager";
@@ -270,7 +270,7 @@ $text['message-password_requirements']['pl-pl'] = "Wymagania Hasło";
 $text['message-password_requirements']['pt-br'] = "";
 $text['message-password_requirements']['pt-pt'] = "Requisitos Senha";
 $text['message-password_requirements']['ru-ru'] = "Требования к паролю";
-$text['message-password_requirements']['sv-se'] = "lösenordskrav ";
+$text['message-password_requirements']['sv-se'] = "Lösenordskrav";
 $text['message-password_requirements']['uk-ua'] = "вимоги до паролю";
 
 $text['message-maximum_users']['en-us'] = "Maximum Users:";
@@ -318,7 +318,7 @@ $text['message-cannot_delete_own_account']['pl-pl'] = "Nie można usunąć włas
 $text['message-cannot_delete_own_account']['pt-br'] = "";
 $text['message-cannot_delete_own_account']['pt-pt'] = "Você não pode excluir a sua própria conta de usuário. Identifique-se como um usuário diferente, em seguida, tente novamente.";
 $text['message-cannot_delete_own_account']['ru-ru'] = "Вы не можете удалить свою учетную запись. Войдите как другой пользователь, а затем повторите попытку.";
-$text['message-cannot_delete_own_account']['sv-se'] = "Du kan inte ta bort ditt egna användarkonto. Logg ain som en annan användare och försök igen.";
+$text['message-cannot_delete_own_account']['sv-se'] = "Du kan inte ta bort ditt egna användarkonto. Logga in som en annan användare och försök igen.";
 $text['message-cannot_delete_own_account']['uk-ua'] = "Ви не можете видалити власний обліковий запис. Будь ласка, увійдіть під іншим користувачем, потім повторіть спробу.";
 
 $text['label-web_fonts']['en-us'] = "Web Fonts";
@@ -334,7 +334,7 @@ $text['label-web_fonts']['pl-pl'] = "Czcionki sieci";
 $text['label-web_fonts']['pt-br'] = "Polices Web";
 $text['label-web_fonts']['pt-pt'] = "Fontes da web";
 $text['label-web_fonts']['ru-ru'] = "Шрифты Web";
-$text['label-web_fonts']['sv-se'] = "web teckensnitt";
+$text['label-web_fonts']['sv-se'] = "web Teckensnitt";
 $text['label-web_fonts']['uk-ua'] = "веб-шрифти";
 
 $text['label-username']['en-us'] = "Username";
@@ -494,7 +494,7 @@ $text['label-special_characters']['pl-pl'] = "Znaki specjalne";
 $text['label-special_characters']['pt-br'] = "Caracteres especiais";
 $text['label-special_characters']['pt-pt'] = "Caracteres especiais";
 $text['label-special_characters']['ru-ru'] = "Специальные символы";
-$text['label-special_characters']['sv-se'] = "Speciella karaktärer";
+$text['label-special_characters']['sv-se'] = "Speciella Karaktärer";
 $text['label-special_characters']['uk-ua'] = "спеціальні символи";
 
 $text['label-right']['en-us'] = "Right";
@@ -606,7 +606,7 @@ $text['label-numbers']['pl-pl'] = "Liczby";
 $text['label-numbers']['pt-br'] = "Números";
 $text['label-numbers']['pt-pt'] = "Números";
 $text['label-numbers']['ru-ru'] = "Цифры";
-$text['label-numbers']['sv-se'] = "Tal";
+$text['label-numbers']['sv-se'] = "Nummer";
 $text['label-numbers']['uk-ua'] = "чисел";
 
 $text['label-none']['en-us'] = "None";
@@ -686,7 +686,7 @@ $text['label-inline']['pl-pl'] = "inline";
 $text['label-inline']['pt-br'] = "Na linha";
 $text['label-inline']['pt-pt'] = "Na linha";
 $text['label-inline']['ru-ru'] = "inline";
-$text['label-inline']['sv-se'] = "I kö";
+$text['label-inline']['sv-se'] = "Inline";
 $text['label-inline']['uk-ua'] = "В лінію";
 
 $text['label-image']['en-us'] = "Image";
@@ -878,7 +878,7 @@ $text['label-characters']['pl-pl'] = "Postacie";
 $text['label-characters']['pt-br'] = "Personagens";
 $text['label-characters']['pt-pt'] = "Personagens";
 $text['label-characters']['ru-ru'] = "символов";
-$text['label-characters']['sv-se'] = "tecken";
+$text['label-characters']['sv-se'] = "Tecken";
 $text['label-characters']['uk-ua'] = "персонажі";
 
 $text['label-center']['en-us'] = "Center";
@@ -958,7 +958,7 @@ $text['label-24-hour']['pl-pl'] = "24-godzinny";
 $text['label-24-hour']['pt-br'] = "24 horas";
 $text['label-24-hour']['pt-pt'] = "24 horas";
 $text['label-24-hour']['ru-ru'] = "24-часовой";
-$text['label-24-hour']['sv-se'] = "24-timmars";
+$text['label-24-hour']['sv-se'] = "24-Timmars";
 $text['label-24-hour']['uk-ua'] = "24-годинний";
 
 $text['label-12-hour']['en-us'] = "12-Hour";
@@ -974,7 +974,7 @@ $text['label-12-hour']['pl-pl'] = "12-godzinny";
 $text['label-12-hour']['pt-br'] = "12 horas";
 $text['label-12-hour']['pt-pt'] = "12 horas";
 $text['label-12-hour']['ru-ru'] = "12-часовой";
-$text['label-12-hour']['sv-se'] = "12-timmars";
+$text['label-12-hour']['sv-se'] = "12-Timmars";
 $text['label-12-hour']['uk-ua'] = "12-годинний";
 
 $text['header-user_setting-edit']['en-us'] = "User Setting";
@@ -990,7 +990,7 @@ $text['header-user_setting-edit']['pl-pl'] = "";
 $text['header-user_setting-edit']['pt-br'] = "";
 $text['header-user_setting-edit']['pt-pt'] = "Definição do Utilizador";
 $text['header-user_setting-edit']['ru-ru'] = "Параметры пользователя";
-$text['header-user_setting-edit']['sv-se'] = "";
+$text['header-user_setting-edit']['sv-se'] = "Användarinställning";
 $text['header-user_setting-edit']['uk-ua'] = "";
 
 $text['header-user_setting-add']['en-us'] = "User Setting Add";
@@ -1006,7 +1006,7 @@ $text['header-user_setting-add']['pl-pl'] = "";
 $text['header-user_setting-add']['pt-br'] = "";
 $text['header-user_setting-add']['pt-pt'] = "Usuário setting Adicionar";
 $text['header-user_setting-add']['ru-ru'] = "Добавить параметр пользователя";
-$text['header-user_setting-add']['sv-se'] = "";
+$text['header-user_setting-add']['sv-se'] = "Lägg Till Användarinställning";
 $text['header-user_setting-add']['uk-ua'] = "";
 
 $text['header-user_manager']['en-us'] = "Users";
@@ -1022,7 +1022,7 @@ $text['header-user_manager']['pl-pl'] = "Menadżer użytkowników";
 $text['header-user_manager']['pt-br'] = "";
 $text['header-user_manager']['pt-pt'] = "Gestão de Utilizadores";
 $text['header-user_manager']['ru-ru'] = "Пользователи";
-$text['header-user_manager']['sv-se'] = "Användar Inställningar";
+$text['header-user_manager']['sv-se'] = "Användare";
 $text['header-user_manager']['uk-ua'] = "Користувачі";
 
 $text['header-user_edit']['en-us'] = "User";
@@ -1070,7 +1070,7 @@ $text['description-user_setting-edit']['pl-pl'] = "";
 $text['description-user_setting-edit']['pt-br'] = "";
 $text['description-user_setting-edit']['pt-pt'] = "Editar uma configuração para este usuário.";
 $text['description-user_setting-edit']['ru-ru'] = "Изменить настройки этого пользователя.";
-$text['description-user_setting-edit']['sv-se'] = "";
+$text['description-user_setting-edit']['sv-se'] = "Ändra en inställning för denna användfare.";
 $text['description-user_setting-edit']['uk-ua'] = "";
 
 $text['description-user_setting-add']['en-us'] = "Add a setting for this user.";
@@ -1086,7 +1086,7 @@ $text['description-user_setting-add']['pl-pl'] = "";
 $text['description-user_setting-add']['pt-br'] = "";
 $text['description-user_setting-add']['pt-pt'] = "Adicionar uma definição para esse usuário.";
 $text['description-user_setting-add']['ru-ru'] = "Добавьте параметр для этого пользователя.";
-$text['description-user_setting-add']['sv-se'] = "";
+$text['description-user_setting-add']['sv-se'] = "Lägg till en inställning för denna användare.";
 $text['description-user_setting-add']['uk-ua'] = "";
 
 $text['description-user_manager']['en-us'] = "Add, edit, delete, and search users. ";
@@ -1134,7 +1134,7 @@ $text['description-user_edit']['pl-pl'] = "Edytuj informacje o użytkowniku i pr
 $text['description-user_edit']['pt-br'] = "";
 $text['description-user_edit']['pt-pt'] = "Editar a informação do utilizador e os membros do grupo. ";
 $text['description-user_edit']['ru-ru'] = "Изменение информации о пользователях и членстве в группах. ";
-$text['description-user_edit']['sv-se'] = "Meditera användarinformation och grupp medlemskap.";
+$text['description-user_edit']['sv-se'] = "Ändra användarinformation och grupp medlemskap.";
 $text['description-user_edit']['uk-ua'] = "Змініть інформацію користувача і членство в групі.";
 
 $text['description-user_add']['en-us'] = "To add a user, please fill out this form completely. All fields are required. ";
@@ -1182,7 +1182,7 @@ $text['description-status']['pl-pl'] = "Wybierz status użytkownika";
 $text['description-status']['pt-br'] = "";
 $text['description-status']['pt-pt'] = "Escolher o estado de presença do utilizador.";
 $text['description-status']['ru-ru'] = "Установить статус присутствия пользователя.";
-$text['description-status']['sv-se'] = "Välj en användarstatus.";
+$text['description-status']['sv-se'] = "Ange användarens status..";
 $text['description-status']['uk-ua'] = "Виберіть статус користувача";
 
 $text['description-enabled']['en-us'] = "Set the status of this account.";
@@ -1198,7 +1198,7 @@ $text['description-enabled']['pl-pl'] = "Ustaw status numeru wewnętrznego.";
 $text['description-enabled']['pt-br'] = "";
 $text['description-enabled']['pt-pt'] = "Escolha o estado desta conta.";
 $text['description-enabled']['ru-ru'] = "Установить статус учетной записи.";
-$text['description-enabled']['sv-se'] = "Välj status på denna standardinställning.";
+$text['description-enabled']['sv-se'] = "Ange statusen på detta konto..";
 $text['description-enabled']['uk-ua'] = "Вкажіть стан цього облікового запису.";
 
 $text['description-contact_view']['en-us'] = "View";
@@ -1214,7 +1214,7 @@ $text['description-contact_view']['pl-pl'] = "Widok";
 $text['description-contact_view']['pt-br'] = "";
 $text['description-contact_view']['pt-pt'] = "Ver";
 $text['description-contact_view']['ru-ru'] = "Посмотреть";
-$text['description-contact_view']['sv-se'] = "Granska";
+$text['description-contact_view']['sv-se'] = "Visa";
 $text['description-contact_view']['uk-ua'] = "Перегляд";
 
 $text['description-contact']['en-us'] = "Assign a contact to this user account.";

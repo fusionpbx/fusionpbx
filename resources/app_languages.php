@@ -238,7 +238,7 @@ $text['button-apply']['pl-pl'] = "";
 $text['button-apply']['pt-br'] = "";
 $text['button-apply']['pt-pt'] = "";
 $text['button-apply']['ru-ru'] = "Применить";
-$text['button-apply']['sv-se'] = "";
+$text['button-apply']['sv-se'] = "Tillämpa";
 $text['button-apply']['uk-ua'] = "";
 
 $text['button-applied']['en-us'] = "Applied";
@@ -254,7 +254,7 @@ $text['button-applied']['pl-pl'] = "";
 $text['button-applied']['pt-br'] = "";
 $text['button-applied']['pt-pt'] = "";
 $text['button-applied']['ru-ru'] = "Применяется";
-$text['button-applied']['sv-se'] = "";
+$text['button-applied']['sv-se'] = "Tillämpad";
 $text['button-applied']['uk-ua'] = "";
 
 $text['button-xml']['en-us'] = "XML";
@@ -270,7 +270,7 @@ $text['button-xml']['pl-pl'] = "";
 $text['button-xml']['pt-br'] = "";
 $text['button-xml']['pt-pt'] = "";
 $text['button-xml']['ru-ru'] = "XML";
-$text['button-xml']['sv-se'] = "";
+$text['button-xml']['sv-se'] = "XML";
 $text['button-xml']['uk-ua'] = "";
 
 $text['button-clear']['en-us'] = "Clear";
@@ -414,7 +414,7 @@ $text['button-next']['pl-pl'] = "";
 $text['button-next']['pt-br'] = "";
 $text['button-next']['pt-pt'] = "";
 $text['button-next']['ru-ru'] = "Далее";
-$text['button-next']['sv-se'] = "";
+$text['button-next']['sv-se'] = "Nästa";
 $text['button-next']['uk-ua'] = "";
 
 $text['button-back']['en-us'] = "Back";
@@ -1310,7 +1310,7 @@ $text['description-name']['pl-pl'] = "";
 $text['description-name']['pt-br'] = "";
 $text['description-name']['pt-pt'] = "";
 $text['description-name']['ru-ru'] = "Введите имя.";
-$text['description-name']['sv-se'] = "";
+$text['description-name']['sv-se'] = "Ange namnet.";
 $text['description-name']['uk-ua'] = "";
 
 $text['description-value']['en-us'] = "Enter the value.";
@@ -1390,7 +1390,7 @@ $text['description-description']['pl-pl'] = "Wpisz opis (opcjonalne).";
 $text['description-description']['pt-br'] = "Insira a descrição, caso desejar";
 $text['description-description']['pt-pt'] = "";
 $text['description-description']['ru-ru'] = "Введите описание.";
-$text['description-description']['sv-se'] = "Fyll i en beskrivning, om nödvändigt.";
+$text['description-description']['sv-se'] = "Fyll i en beskrivning.";
 $text['description-description']['uk-ua'] = "Введіть опис, якщо це необхідно.";
 
 $text['description-enabled']['en-us'] = "";

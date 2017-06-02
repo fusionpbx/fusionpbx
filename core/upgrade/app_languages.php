@@ -302,7 +302,7 @@ $text['label-upgrade_switch']['pl-pl'] = "";
 $text['label-upgrade_switch']['pt-br'] = "";
 $text['label-upgrade_switch']['pt-pt'] = "";
 $text['label-upgrade_switch']['ru-ru'] = "Обновление коммутатора";
-$text['label-upgrade_switch']['sv-se'] = "";
+$text['label-upgrade_switch']['sv-se'] = "Uppgradera Switch";
 $text['label-upgrade_switch']['uk-ua'] = "";
 
 $text['label-upgrade']['en-us'] = "Upgrade";
@@ -638,7 +638,7 @@ $text['description-upgrade_switch']['pl-pl'] = "";
 $text['description-upgrade_switch']['pt-br'] = "";
 $text['description-upgrade_switch']['pt-pt'] = "";
 $text['description-upgrade_switch']['ru-ru'] = "Выполняет процедуру обновления коммутатора.";
-$text['description-upgrade_switch']['sv-se'] = "";
+$text['description-upgrade_switch']['sv-se'] = "Kör rutinen för att uppgradera switchen";
 $text['description-upgrade_switch']['uk-ua'] = "";
 
 $text['description-upgrade']['en-us'] = "Select the actions below you wish to perform.";

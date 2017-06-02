@@ -446,7 +446,7 @@ $text['label-timer_name']['pl-pl'] = "";
 $text['label-timer_name']['pt-br'] = "";
 $text['label-timer_name']['pt-pt'] = "";
 $text['label-timer_name']['ru-ru'] = "Имя Таймера";
-$text['label-timer_name']['sv-se'] = "";
+$text['label-timer_name']['sv-se'] = "Timer Namn";
 $text['label-timer_name']['uk-ua'] = "";
 
 $text['label-global']['en-us'] = "Global";

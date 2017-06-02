@@ -14,7 +14,7 @@ $text['title-database_transactions']['pl-pl'] = "";
 $text['title-database_transactions']['pt-br'] = "";
 $text['title-database_transactions']['pt-pt'] = "";
 $text['title-database_transactions']['ru-ru'] = "Изменения в Базе данных";
-$text['title-database_transactions']['sv-se'] = "";
+$text['title-database_transactions']['sv-se'] = "Databas Transaktioner";
 $text['title-database_transactions']['uk-ua'] = "";
 
 $text['title-database_transaction']['en-us'] = "Database Transaction";
@@ -30,7 +30,7 @@ $text['title-database_transaction']['pl-pl'] = "";
 $text['title-database_transaction']['pt-br'] = "";
 $text['title-database_transaction']['pt-pt'] = "";
 $text['title-database_transaction']['ru-ru'] = "Изменение в Базе данных";
-$text['title-database_transaction']['sv-se'] = "";
+$text['title-database_transaction']['sv-se'] = "Transaktionsdatabas";
 $text['title-database_transaction']['uk-ua'] = "";
 
 $text['title_description-database_transaction']['en-us'] = "";
@@ -46,7 +46,7 @@ $text['title_description-database_transaction']['pl-pl'] = "";
 $text['title_description-database_transaction']['pt-br'] = "";
 $text['title_description-database_transaction']['pt-pt'] = "";
 $text['title_description-database_transaction']['ru-ru'] = "Транзакций Базы Данных";
-$text['title_description-database_transaction']['sv-se'] = "";
+$text['title_description-database_transaction']['sv-se'] = "Transaktionsdatabas";
 $text['title_description-database_transaction']['uk-ua'] = "";
 
 $text['label-user_uuid']['en-us'] = "User";
@@ -62,7 +62,7 @@ $text['label-user_uuid']['pl-pl'] = "";
 $text['label-user_uuid']['pt-br'] = "";
 $text['label-user_uuid']['pt-pt'] = "";
 $text['label-user_uuid']['ru-ru'] = "Пользователь";
-$text['label-user_uuid']['sv-se'] = "";
+$text['label-user_uuid']['sv-se'] = "Användare";
 $text['label-user_uuid']['uk-ua'] = "";
 
 $text['description-user_uuid']['en-us'] = "User transaction.";
@@ -78,7 +78,7 @@ $text['description-user_uuid']['pl-pl'] = "";
 $text['description-user_uuid']['pt-br'] = "";
 $text['description-user_uuid']['pt-pt'] = "";
 $text['description-user_uuid']['ru-ru'] = "Транзакции Пользователя.";
-$text['description-user_uuid']['sv-se'] = "";
+$text['description-user_uuid']['sv-se'] = "Användar transaktion";
 $text['description-user_uuid']['uk-ua'] = "";
 
 $text['label-app_name']['en-us'] = "Application";
@@ -94,7 +94,7 @@ $text['label-app_name']['pl-pl'] = "";
 $text['label-app_name']['pt-br'] = "";
 $text['label-app_name']['pt-pt'] = "";
 $text['label-app_name']['ru-ru'] = "Приложение";
-$text['label-app_name']['sv-se'] = "";
+$text['label-app_name']['sv-se'] = "Applikation";
 $text['label-app_name']['uk-ua'] = "";
 
 $text['description-app_name']['en-us'] = "Application name.";
@@ -110,7 +110,7 @@ $text['description-app_name']['pl-pl'] = "";
 $text['description-app_name']['pt-br'] = "";
 $text['description-app_name']['pt-pt'] = "";
 $text['description-app_name']['ru-ru'] = "Имя Приложения.";
-$text['description-app_name']['sv-se'] = "";
+$text['description-app_name']['sv-se'] = "Applikation namn";
 $text['description-app_name']['uk-ua'] = "";
 
 $text['label-app_uuid']['en-us'] = "Application Id";
@@ -126,7 +126,7 @@ $text['label-app_uuid']['pl-pl'] = "";
 $text['label-app_uuid']['pt-br'] = "";
 $text['label-app_uuid']['pt-pt'] = "";
 $text['label-app_uuid']['ru-ru'] = "Id Приложения";
-$text['label-app_uuid']['sv-se'] = "";
+$text['label-app_uuid']['sv-se'] = "Applikation Id.";
 $text['label-app_uuid']['uk-ua'] = "";
 
 $text['description-app_uuid']['en-us'] = "Application name.";
@@ -142,7 +142,7 @@ $text['description-app_uuid']['pl-pl'] = "";
 $text['description-app_uuid']['pt-br'] = "";
 $text['description-app_uuid']['pt-pt'] = "";
 $text['description-app_uuid']['ru-ru'] = "Имя приложения.";
-$text['description-app_uuid']['sv-se'] = "";
+$text['description-app_uuid']['sv-se'] = "Applikation namn.";
 $text['description-app_uuid']['uk-ua'] = "";
 
 $text['label-transaction_code']['en-us'] = "Code";
@@ -158,7 +158,7 @@ $text['label-transaction_code']['pl-pl'] = "";
 $text['label-transaction_code']['pt-br'] = "";
 $text['label-transaction_code']['pt-pt'] = "";
 $text['label-transaction_code']['ru-ru'] = "Код";
-$text['label-transaction_code']['sv-se'] = "";
+$text['label-transaction_code']['sv-se'] = "Kod";
 $text['label-transaction_code']['uk-ua'] = "";
 
 $text['description-transaction_code']['en-us'] = "Transaction code.";
@@ -174,7 +174,7 @@ $text['description-transaction_code']['pl-pl'] = "";
 $text['description-transaction_code']['pt-br'] = "";
 $text['description-transaction_code']['pt-pt'] = "";
 $text['description-transaction_code']['ru-ru'] = "Код Транзакции.";
-$text['description-transaction_code']['sv-se'] = "";
+$text['description-transaction_code']['sv-se'] = "Transaktion kod.";
 $text['description-transaction_code']['uk-ua'] = "";
 
 $text['label-transaction_address']['en-us'] = "IP Address";
@@ -190,7 +190,7 @@ $text['label-transaction_address']['pl-pl'] = "";
 $text['label-transaction_address']['pt-br'] = "";
 $text['label-transaction_address']['pt-pt'] = "";
 $text['label-transaction_address']['ru-ru'] = "IP Адреса";
-$text['label-transaction_address']['sv-se'] = "";
+$text['label-transaction_address']['sv-se'] = "IP Address";
 $text['label-transaction_address']['uk-ua'] = "";
 
 $text['description-transaction_address']['en-us'] = "IP address of the user.";
@@ -206,7 +206,7 @@ $text['description-transaction_address']['pl-pl'] = "";
 $text['description-transaction_address']['pt-br'] = "";
 $text['description-transaction_address']['pt-pt'] = "";
 $text['description-transaction_address']['ru-ru'] = "IP Адреса пользователя.";
-$text['description-transaction_address']['sv-se'] = "";
+$text['description-transaction_address']['sv-se'] = "Användarens IP Address";
 $text['description-transaction_address']['uk-ua'] = "";
 
 $text['label-transaction_type']['en-us'] = "Type";
@@ -222,7 +222,7 @@ $text['label-transaction_type']['pl-pl'] = "";
 $text['label-transaction_type']['pt-br'] = "";
 $text['label-transaction_type']['pt-pt'] = "";
 $text['label-transaction_type']['ru-ru'] = "Тип";
-$text['label-transaction_type']['sv-se'] = "";
+$text['label-transaction_type']['sv-se'] = "Typ";
 $text['label-transaction_type']['uk-ua'] = "";
 
 $text['description-transaction_type']['en-us'] = "Type: insert, update, delete, select";
@@ -238,7 +238,7 @@ $text['description-transaction_type']['pl-pl'] = "";
 $text['description-transaction_type']['pt-br'] = "";
 $text['description-transaction_type']['pt-pt'] = "";
 $text['description-transaction_type']['ru-ru'] = "Тип: вставка, обновление, удаление, выбор";
-$text['description-transaction_type']['sv-se'] = "";
+$text['description-transaction_type']['sv-se'] = "Typ: lägg till, ändra, ta bort, välj";
 $text['description-transaction_type']['uk-ua'] = "";
 
 $text['label-transaction_date']['en-us'] = "Date";
@@ -254,7 +254,7 @@ $text['label-transaction_date']['pl-pl'] = "";
 $text['label-transaction_date']['pt-br'] = "";
 $text['label-transaction_date']['pt-pt'] = "";
 $text['label-transaction_date']['ru-ru'] = "Дата";
-$text['label-transaction_date']['sv-se'] = "";
+$text['label-transaction_date']['sv-se'] = "Datum";
 $text['label-transaction_date']['uk-ua'] = "";
 
 $text['description-transaction_date']['en-us'] = "Transaction date.";
@@ -270,7 +270,7 @@ $text['description-transaction_date']['pl-pl'] = "";
 $text['description-transaction_date']['pt-br'] = "";
 $text['description-transaction_date']['pt-pt'] = "";
 $text['description-transaction_date']['ru-ru'] = "Дата Транзакции.";
-$text['description-transaction_date']['sv-se'] = "";
+$text['description-transaction_date']['sv-se'] = "Transaktions datum.";
 $text['description-transaction_date']['uk-ua'] = "";
 
 $text['label-transaction_old']['en-us'] = "Before";
@@ -286,7 +286,7 @@ $text['label-transaction_old']['pl-pl'] = "";
 $text['label-transaction_old']['pt-br'] = "";
 $text['label-transaction_old']['pt-pt'] = "";
 $text['label-transaction_old']['ru-ru'] = "До";
-$text['label-transaction_old']['sv-se'] = "";
+$text['label-transaction_old']['sv-se'] = "Före";
 $text['label-transaction_old']['uk-ua'] = "";
 
 $text['description-transaction_old']['en-us'] = "Array before the transaction.";
@@ -302,7 +302,7 @@ $text['description-transaction_old']['pl-pl'] = "";
 $text['description-transaction_old']['pt-br'] = "";
 $text['description-transaction_old']['pt-pt'] = "";
 $text['description-transaction_old']['ru-ru'] = "Массив перед транзакцией.";
-$text['description-transaction_old']['sv-se'] = "";
+$text['description-transaction_old']['sv-se'] = "Array före transaktionen.";
 $text['description-transaction_old']['uk-ua'] = "";
 
 $text['label-transaction_new']['en-us'] = "After";
@@ -318,7 +318,7 @@ $text['label-transaction_new']['pl-pl'] = "";
 $text['label-transaction_new']['pt-br'] = "";
 $text['label-transaction_new']['pt-pt'] = "";
 $text['label-transaction_new']['ru-ru'] = "После";
-$text['label-transaction_new']['sv-se'] = "";
+$text['label-transaction_new']['sv-se'] = "Efter";
 $text['label-transaction_new']['uk-ua'] = "";
 
 $text['description-transaction_new']['en-us'] = "Array after the transaction.";
@@ -334,7 +334,7 @@ $text['description-transaction_new']['pl-pl'] = "";
 $text['description-transaction_new']['pt-br'] = "";
 $text['description-transaction_new']['pt-pt'] = "";
 $text['description-transaction_new']['ru-ru'] = "Массив после транзакции.";
-$text['description-transaction_new']['sv-se'] = "";
+$text['description-transaction_new']['sv-se'] = "Array efter transaktionen.";
 $text['description-transaction_new']['uk-ua'] = "";
 
 $text['label-transaction_result']['en-us'] = "Result";
@@ -350,7 +350,7 @@ $text['label-transaction_result']['pl-pl'] = "";
 $text['label-transaction_result']['pt-br'] = "";
 $text['label-transaction_result']['pt-pt'] = "";
 $text['label-transaction_result']['ru-ru'] = "Результат.";
-$text['label-transaction_result']['sv-se'] = "";
+$text['label-transaction_result']['sv-se'] = "Resultat";
 $text['label-transaction_result']['uk-ua'] = "";
 
 $text['description-transaction_result']['en-us'] = "Result of the transaction.";
@@ -366,7 +366,7 @@ $text['description-transaction_result']['pl-pl'] = "";
 $text['description-transaction_result']['pt-br'] = "";
 $text['description-transaction_result']['pt-pt'] = "";
 $text['description-transaction_result']['ru-ru'] = "Результат транзакции.";
-$text['description-transaction_result']['sv-se'] = "";
+$text['description-transaction_result']['sv-se'] = "Resultat av transaktionen.";
 $text['description-transaction_result']['uk-ua'] = "";
 
 $text['label-true']['en-us'] = "true";
@@ -382,7 +382,7 @@ $text['label-true']['pl-pl'] = "";
 $text['label-true']['pt-br'] = "";
 $text['label-true']['pt-pt'] = "";
 $text['label-true']['ru-ru'] = "Да";
-$text['label-true']['sv-se'] = "";
+$text['label-true']['sv-se'] = "sann";
 $text['label-true']['uk-ua'] = "";
 
 $text['label-false']['en-us'] = "false";
@@ -398,7 +398,7 @@ $text['label-false']['pl-pl'] = "";
 $text['label-false']['pt-br'] = "";
 $text['label-false']['pt-pt'] = "falso";
 $text['label-false']['ru-ru'] = "Нет";
-$text['label-false']['sv-se'] = "";
+$text['label-false']['sv-se'] = "falsk";
 $text['label-false']['uk-ua'] = "";
 
 $text['button-add']['en-us'] = "Add";
@@ -414,7 +414,7 @@ $text['button-add']['pl-pl'] = "";
 $text['button-add']['pt-br'] = "";
 $text['button-add']['pt-pt'] = "";
 $text['button-add']['ru-ru'] = "Добавить";
-$text['button-add']['sv-se'] = "";
+$text['button-add']['sv-se'] = "Lägg Till";
 $text['button-add']['uk-ua'] = "";
 
 $text['button-edit']['en-us'] = "Edit";
@@ -430,7 +430,7 @@ $text['button-edit']['pl-pl'] = "";
 $text['button-edit']['pt-br'] = "";
 $text['button-edit']['pt-pt'] = "";
 $text['button-edit']['ru-ru'] = "Редактировать";
-$text['button-edit']['sv-se'] = "";
+$text['button-edit']['sv-se'] = "Ändra";
 $text['button-edit']['uk-ua'] = "";
 
 $text['button-delete']['en-us'] = "Delete";
@@ -446,7 +446,7 @@ $text['button-delete']['pl-pl'] = "";
 $text['button-delete']['pt-br'] = "";
 $text['button-delete']['pt-pt'] = "";
 $text['button-delete']['ru-ru'] = "Удалить";
-$text['button-delete']['sv-se'] = "";
+$text['button-delete']['sv-se'] = "Ta Bort";
 $text['button-delete']['uk-ua'] = "";
 
 $text['button-save']['en-us'] = "Save";
@@ -462,7 +462,7 @@ $text['button-save']['pl-pl'] = "";
 $text['button-save']['pt-br'] = "";
 $text['button-save']['pt-pt'] = "Guardar";
 $text['button-save']['ru-ru'] = "Сохранить";
-$text['button-save']['sv-se'] = "";
+$text['button-save']['sv-se'] = "Spara";
 $text['button-save']['uk-ua'] = "";
 
 $text['button-view']['en-us'] = "View";
@@ -478,7 +478,7 @@ $text['button-view']['pl-pl'] = "";
 $text['button-view']['pt-br'] = "";
 $text['button-view']['pt-pt'] = "";
 $text['button-view']['ru-ru'] = "Просмотрт";
-$text['button-view']['sv-se'] = "";
+$text['button-view']['sv-se'] = "Visa";
 $text['button-view']['uk-ua'] = "";
 
 $text['button-back']['en-us'] = "Back";
@@ -494,7 +494,7 @@ $text['button-back']['pl-pl'] = "";
 $text['button-back']['pt-br'] = "";
 $text['button-back']['pt-pt'] = "Voltar";
 $text['button-back']['ru-ru'] = "Назад";
-$text['button-back']['sv-se'] = "";
+$text['button-back']['sv-se'] = "Tillbaka";
 $text['button-back']['uk-ua'] = "";
 
 $text['confirm-delete']['en-us'] = "Do you really want to delete this?";
@@ -510,7 +510,7 @@ $text['confirm-delete']['pl-pl'] = "";
 $text['confirm-delete']['pt-br'] = "";
 $text['confirm-delete']['pt-pt'] = "";
 $text['confirm-delete']['ru-ru'] = "Вы действительно хотите удалить это?";
-$text['confirm-delete']['sv-se'] = "";
+$text['confirm-delete']['sv-se'] = "Vill du verkligen ta bort detta?";
 $text['confirm-delete']['uk-ua'] = "";
 
 $text['message-add']['en-us'] = "Add Completed";
@@ -526,7 +526,7 @@ $text['message-add']['pl-pl'] = "";
 $text['message-add']['pt-br'] = "";
 $text['message-add']['pt-pt'] = "";
 $text['message-add']['ru-ru'] = "Добавление Выполнено";
-$text['message-add']['sv-se'] = "";
+$text['message-add']['sv-se'] = "Tillagd";
 $text['message-add']['uk-ua'] = "";
 
 $text['message-update']['en-us'] = "Update Completed";
@@ -542,7 +542,7 @@ $text['message-update']['pl-pl'] = "";
 $text['message-update']['pt-br'] = "";
 $text['message-update']['pt-pt'] = "";
 $text['message-update']['ru-ru'] = "Обновление Выполнено";
-$text['message-update']['sv-se'] = "";
+$text['message-update']['sv-se'] = "Ändring utförd";
 $text['message-update']['uk-ua'] = "";
 
 $text['message-delete']['en-us'] = "Delete Completed";
@@ -558,7 +558,7 @@ $text['message-delete']['pl-pl'] = "";
 $text['message-delete']['pt-br'] = "";
 $text['message-delete']['pt-pt'] = "";
 $text['message-delete']['ru-ru'] = "Удаление Выполнено";
-$text['message-delete']['sv-se'] = "";
+$text['message-delete']['sv-se'] = "Borttagning utförd";
 $text['message-delete']['uk-ua'] = "";
 
 $text['message-required']['en-us'] = "Please provide: ";
@@ -574,7 +574,7 @@ $text['message-required']['pl-pl'] = "";
 $text['message-required']['pt-br'] = "";
 $text['message-required']['pt-pt'] = "";
 $text['message-required']['ru-ru'] = "Пожалуйста предоставьте:";
-$text['message-required']['sv-se'] = "";
+$text['message-required']['sv-se'] = "Var god ange: ";
 $text['message-required']['uk-ua'] = "";
 
 ?>

@@ -446,7 +446,7 @@ $text['label-speed_dial_prefix']['pl-pl'] = "";
 $text['label-speed_dial_prefix']['pt-br'] = "";
 $text['label-speed_dial_prefix']['pt-pt'] = "";
 $text['label-speed_dial_prefix']['ru-ru'] = "Префикс быстрого набора";
-$text['label-speed_dial_prefix']['sv-se'] = "";
+$text['label-speed_dial_prefix']['sv-se'] = "Speed Dial Prefix";
 $text['label-speed_dial_prefix']['uk-ua'] = "";
 
 $text['label-sms']['en-us'] = "SMS";
@@ -622,7 +622,7 @@ $text['label-pickup']['pl-pl'] = "";
 $text['label-pickup']['pt-br'] = "";
 $text['label-pickup']['pt-pt'] = "";
 $text['label-pickup']['ru-ru'] = "Перехват";
-$text['label-pickup']['sv-se'] = "";
+$text['label-pickup']['sv-se'] = "Plocka";
 $text['label-pickup']['uk-ua'] = "";
 
 $text['label-public_hold']['en-us'] = "Public Hold";
@@ -878,7 +878,7 @@ $text['label-primary']['pl-pl'] = "1";
 $text['label-primary']['pt-br'] = "1";
 $text['label-primary']['pt-pt'] = "1";
 $text['label-primary']['ru-ru'] = "Основной";
-$text['label-primary']['sv-se'] = "1";
+$text['label-primary']['sv-se'] = "Primär";
 $text['label-primary']['uk-ua'] = "1";
 
 $text['label-secondary']['en-us'] = "Secondary";
@@ -894,7 +894,7 @@ $text['label-secondary']['pl-pl'] = "2";
 $text['label-secondary']['pt-br'] = "2";
 $text['label-secondary']['pt-pt'] = "2";
 $text['label-secondary']['ru-ru'] = "Резервный";
-$text['label-secondary']['sv-se'] = "2";
+$text['label-secondary']['sv-se'] = "Sekundär";
 $text['label-secondary']['uk-ua'] = "2";
 
 $text['label-orbit']['en-us'] = "Park + Orbit";
@@ -1294,7 +1294,7 @@ $text['label-conf']['pl-pl'] = "";
 $text['label-conf']['pt-br'] = "";
 $text['label-conf']['pt-pt'] = "";
 $text['label-conf']['ru-ru'] = "Conf";
-$text['label-conf']['sv-se'] = "";
+$text['label-conf']['sv-se'] = "Konf";
 $text['label-conf']['uk-ua'] = "";
 
 $text['label-empty']['en-us'] = "Empty";
@@ -1310,7 +1310,7 @@ $text['label-empty']['pl-pl'] = "";
 $text['label-empty']['pt-br'] = "";
 $text['label-empty']['pt-pt'] = "";
 $text['label-empty']['ru-ru'] = "Empty";
-$text['label-empty']['sv-se'] = "";
+$text['label-empty']['sv-se'] = "Tom";
 $text['label-empty']['uk-ua'] = "";
 
 $text['label-filter']['en-us'] = "Filter";
@@ -1326,7 +1326,7 @@ $text['label-filter']['pl-pl'] = "";
 $text['label-filter']['pt-br'] = "";
 $text['label-filter']['pt-pt'] = "";
 $text['label-filter']['ru-ru'] = "Filter";
-$text['label-filter']['sv-se'] = "";
+$text['label-filter']['sv-se'] = "Filter";
 $text['label-filter']['uk-ua'] = "";
 
 $text['label-flash']['en-us'] = "Flash";
@@ -1342,7 +1342,7 @@ $text['label-flash']['pl-pl'] = "";
 $text['label-flash']['pt-br'] = "";
 $text['label-flash']['pt-pt'] = "";
 $text['label-flash']['ru-ru'] = "Flash";
-$text['label-flash']['sv-se'] = "";
+$text['label-flash']['sv-se'] = "Flash";
 $text['label-flash']['uk-ua'] = "";
 
 $text['label-icom']['en-us'] = "Icom";
@@ -1358,7 +1358,7 @@ $text['label-icom']['pl-pl'] = "";
 $text['label-icom']['pt-br'] = "";
 $text['label-icom']['pt-pt'] = "";
 $text['label-icom']['ru-ru'] = "Icom";
-$text['label-icom']['sv-se'] = "";
+$text['label-icom']['sv-se'] = "Icom";
 $text['label-icom']['uk-ua'] = "";
 
 $text['label-lcr']['en-us'] = "LCR";
@@ -1374,7 +1374,7 @@ $text['label-lcr']['pl-pl'] = "";
 $text['label-lcr']['pt-br'] = "";
 $text['label-lcr']['pt-pt'] = "";
 $text['label-lcr']['ru-ru'] = "LCR";
-$text['label-lcr']['sv-se'] = "";
+$text['label-lcr']['sv-se'] = "LCR";
 $text['label-lcr']['uk-ua'] = "";
 
 $text['label-page']['en-us'] = "Page";
@@ -1390,7 +1390,7 @@ $text['label-page']['pl-pl'] = "";
 $text['label-page']['pt-br'] = "";
 $text['label-page']['pt-pt'] = "";
 $text['label-page']['ru-ru'] = "Page";
-$text['label-page']['sv-se'] = "";
+$text['label-page']['sv-se'] = "Page";
 $text['label-page']['uk-ua'] = "";
 
 $text['label-park']['en-us'] = "Park";
@@ -1406,7 +1406,7 @@ $text['label-park']['pl-pl'] = "";
 $text['label-park']['pt-br'] = "";
 $text['label-park']['pt-pt'] = "";
 $text['label-park']['ru-ru'] = "Парковка";
-$text['label-park']['sv-se'] = "";
+$text['label-park']['sv-se'] = "Parkera";
 $text['label-park']['uk-ua'] = "";
 
 $text['label-phonelock']['en-us'] = "Phone Lock";
@@ -1422,7 +1422,7 @@ $text['label-phonelock']['pl-pl'] = "";
 $text['label-phonelock']['pt-br'] = "";
 $text['label-phonelock']['pt-pt'] = "";
 $text['label-phonelock']['ru-ru'] = "Блокировка телефона";
-$text['label-phonelock']['sv-se'] = "";
+$text['label-phonelock']['sv-se'] = "Telefonlås";
 $text['label-phonelock']['uk-ua'] = "";
 
 $text['label-speed_dial_conf']['en-us'] = "Speed Dial Conf";
@@ -1454,7 +1454,7 @@ $text['label-speed_dial_mwi']['pl-pl'] = "";
 $text['label-speed_dial_mwi']['pt-br'] = "";
 $text['label-speed_dial_mwi']['pt-pt'] = "";
 $text['label-speed_dial_mwi']['ru-ru'] = "Speed Dial MWI";
-$text['label-speed_dial_mwi']['sv-se'] = "";
+$text['label-speed_dial_mwi']['sv-se'] = "Speed Dial MWI";
 $text['label-speed_dial_mwi']['uk-ua'] = "";
 
 $text['label-speed_dial_xfer']['en-us'] = "Speed Dial Xfer";
@@ -1470,7 +1470,7 @@ $text['label-speed_dial_xfer']['pl-pl'] = "";
 $text['label-speed_dial_xfer']['pt-br'] = "";
 $text['label-speed_dial_xfer']['pt-pt'] = "";
 $text['label-speed_dial_xfer']['ru-ru'] = "Speed Dial Xfer";
-$text['label-speed_dial_xfer']['sv-se'] = "";
+$text['label-speed_dial_xfer']['sv-se'] = "Speed Dial Xfer";
 $text['label-speed_dial_xfer']['uk-ua'] = "";
 
 $text['label-sprecode']['en-us'] = "Sprecode";
@@ -1486,7 +1486,7 @@ $text['label-sprecode']['pl-pl'] = "";
 $text['label-sprecode']['pt-br'] = "";
 $text['label-sprecode']['pt-pt'] = "";
 $text['label-sprecode']['ru-ru'] = "Sprecode";
-$text['label-sprecode']['sv-se'] = "";
+$text['label-sprecode']['sv-se'] = "Sprecode";
 $text['label-sprecode']['uk-ua'] = "";
 
 $text['label-xml']['en-us'] = "XML";
@@ -1502,7 +1502,7 @@ $text['label-xml']['pl-pl'] = "";
 $text['label-xml']['pt-br'] = "";
 $text['label-xml']['pt-pt'] = "";
 $text['label-xml']['ru-ru'] = "XML";
-$text['label-xml']['sv-se'] = "";
+$text['label-xml']['sv-se'] = "XML";
 $text['label-xml']['uk-ua'] = "";
 
 $text['label-forward']['en-us'] = "Forward";
@@ -1886,7 +1886,7 @@ $text['label-download']['pl-pl'] = "";
 $text['label-download']['pt-br'] = "";
 $text['label-download']['pt-pt'] = "";
 $text['label-download']['ru-ru'] = "Скачать";
-$text['label-download']['sv-se'] = "";
+$text['label-download']['sv-se'] = "Ladda ned";
 $text['label-download']['uk-ua'] = "";
 
 $text['label-device_label']['en-us'] = "Label";
@@ -2270,7 +2270,7 @@ $text['label-callers']['pl-pl'] = "";
 $text['label-callers']['pt-br'] = "";
 $text['label-callers']['pt-pt'] = "";
 $text['label-callers']['ru-ru'] = "Звонящие";
-$text['label-callers']['sv-se'] = "";
+$text['label-callers']['sv-se'] = "Uppringare";
 $text['label-callers']['uk-ua'] = "";
 
 $text['label-xfer']['en-us'] = "Xfer";
@@ -2286,7 +2286,7 @@ $text['label-xfer']['pl-pl'] = "Xfer ";
 $text['label-xfer']['pt-br'] = "";
 $text['label-xfer']['pt-pt'] = "";
 $text['label-xfer']['ru-ru'] = "Xfer";
-$text['label-xfer']['sv-se'] = "";
+$text['label-xfer']['sv-se'] = "Xfer";
 $text['label-xfer']['uk-ua'] = "";
 
 $text['label-automata']['en-us'] = "Automata";
@@ -2318,7 +2318,7 @@ $text['label-messages']['pl-pl'] = "Wiadomości";
 $text['label-messages']['pt-br'] = "mensagens";
 $text['label-messages']['pt-pt'] = "mensagens";
 $text['label-messages']['ru-ru'] = "Сообщения";
-$text['label-messages']['sv-se'] = "meddelanden";
+$text['label-messages']['sv-se'] = "mMddelanden";
 $text['label-messages']['uk-ua'] = "повідомлення";
 
 $text['label-micmute']['en-us'] = "MicMute";
@@ -2462,7 +2462,7 @@ $text['label-not_programmed']['pl-pl'] = "";
 $text['label-not_programmed']['pt-br'] = "";
 $text['label-not_programmed']['pt-pt'] = "";
 $text['label-not_programmed']['ru-ru'] = "Не запрограммировано";
-$text['label-not_programmed']['sv-se'] = "";
+$text['label-not_programmed']['sv-se'] = "Ej Programmerad";
 $text['label-not_programmed']['uk-ua'] = "";
 
 $text['label-call_log']['en-us'] = "Call Log";
@@ -2478,7 +2478,7 @@ $text['label-call_log']['pl-pl'] = "";
 $text['label-call_log']['pt-br'] = "";
 $text['label-call_log']['pt-pt'] = "";
 $text['label-call_log']['ru-ru'] = "Журнал вызовов";
-$text['label-call_log']['sv-se'] = "";
+$text['label-call_log']['sv-se'] = "Samtals Log";
 $text['label-call_log']['uk-ua'] = "";
 
 $text['label-phone_book']['en-us'] = "Phone Book";
@@ -2494,7 +2494,7 @@ $text['label-phone_book']['pl-pl'] = "";
 $text['label-phone_book']['pt-br'] = "";
 $text['label-phone_book']['pt-pt'] = "";
 $text['label-phone_book']['ru-ru'] = "Телефонная книга";
-$text['label-phone_book']['sv-se'] = "";
+$text['label-phone_book']['sv-se'] = "Telefonbok";
 $text['label-phone_book']['uk-ua'] = "";
 
 $text['label-advisory_message']['en-us'] = "Advisory Message on/off";
@@ -2510,7 +2510,7 @@ $text['label-advisory_message']['pl-pl'] = "";
 $text['label-advisory_message']['pt-br'] = "";
 $text['label-advisory_message']['pt-pt'] = "";
 $text['label-advisory_message']['ru-ru'] = "Консультативное сообщение вкл./выкл.";
-$text['label-advisory_message']['sv-se'] = "";
+$text['label-advisory_message']['sv-se'] = "Rådgivande meddelande på/av";
 $text['label-advisory_message']['uk-ua'] = "";
 
 $text['label-pc_application']['en-us'] = "PC Application";
@@ -2526,7 +2526,7 @@ $text['label-pc_application']['pl-pl'] = "";
 $text['label-pc_application']['pt-br'] = "";
 $text['label-pc_application']['pt-pt'] = "";
 $text['label-pc_application']['ru-ru'] = "PC-приложение";
-$text['label-pc_application']['sv-se'] = "";
+$text['label-pc_application']['sv-se'] = "PC Applikation";
 $text['label-pc_application']['uk-ua'] = "";
 
 $text['label-headset_on_off']['en-us'] = "Headset on/off";
@@ -2542,7 +2542,7 @@ $text['label-headset_on_off']['pl-pl'] = "";
 $text['label-headset_on_off']['pt-br'] = "";
 $text['label-headset_on_off']['pt-pt'] = "";
 $text['label-headset_on_off']['ru-ru'] = "Гарнитура вкл./выкл.";
-$text['label-headset_on_off']['sv-se'] = "";
+$text['label-headset_on_off']['sv-se'] = "Headset  på/av";
 $text['label-headset_on_off']['uk-ua'] = "";
 
 $text['label-rss_feed']['en-us'] = "RSS Feed";
@@ -2558,7 +2558,7 @@ $text['label-rss_feed']['pl-pl'] = "";
 $text['label-rss_feed']['pt-br'] = "";
 $text['label-rss_feed']['pt-pt'] = "";
 $text['label-rss_feed']['ru-ru'] = "RSS-лента";
-$text['label-rss_feed']['sv-se'] = "";
+$text['label-rss_feed']['sv-se'] = "RSS Feed";
 $text['label-rss_feed']['uk-ua'] = "";
 
 $text['label-html_application']['en-us'] = "HTML Application";
@@ -2574,7 +2574,7 @@ $text['label-html_application']['pl-pl'] = "";
 $text['label-html_application']['pt-br'] = "";
 $text['label-html_application']['pt-pt'] = "";
 $text['label-html_application']['ru-ru'] = "HTML-приложение";
-$text['label-html_application']['sv-se'] = "";
+$text['label-html_application']['sv-se'] = "HTML Application";
 $text['label-html_application']['uk-ua'] = "";
 
 $text['label-speed_dial_blf']['en-us'] = "Speed Dial + BLF";
@@ -2590,7 +2590,7 @@ $text['label-speed_dial_blf']['pl-pl'] = "";
 $text['label-speed_dial_blf']['pt-br'] = "";
 $text['label-speed_dial_blf']['pt-pt'] = "";
 $text['label-speed_dial_blf']['ru-ru'] = "Быстрый набор + BLF";
-$text['label-speed_dial_blf']['sv-se'] = "";
+$text['label-speed_dial_blf']['sv-se'] = "Speed Dial + BLF";
 $text['label-speed_dial_blf']['uk-ua'] = "";
 
 $text['label-ent_phone_book']['en-us'] = "Enterprise Phonebook";
@@ -2606,7 +2606,7 @@ $text['label-ent_phone_book']['pl-pl'] = "";
 $text['label-ent_phone_book']['pt-br'] = "";
 $text['label-ent_phone_book']['pt-pt'] = "";
 $text['label-ent_phone_book']['ru-ru'] = "Корпоративная телефонная книга";
-$text['label-ent_phone_book']['sv-se'] = "";
+$text['label-ent_phone_book']['sv-se'] = "Enterprise Telefonbok";
 $text['label-ent_phone_book']['uk-ua'] = "";
 
 $text['label-missed_calls']['en-us'] = "Missed Calls";
@@ -2622,7 +2622,7 @@ $text['label-missed_calls']['pl-pl'] = "";
 $text['label-missed_calls']['pt-br'] = "";
 $text['label-missed_calls']['pt-pt'] = "";
 $text['label-missed_calls']['ru-ru'] = "Пропущеные вызовы";
-$text['label-missed_calls']['sv-se'] = "";
+$text['label-missed_calls']['sv-se'] = "Missade Samtal";
 $text['label-missed_calls']['uk-ua'] = "";
 
 $text['label-received_calls']['en-us'] = "Received Calls";
@@ -2638,7 +2638,7 @@ $text['label-received_calls']['pl-pl'] = "";
 $text['label-received_calls']['pt-br'] = "";
 $text['label-received_calls']['pt-pt'] = "";
 $text['label-received_calls']['ru-ru'] = "Принятые вызовы";
-$text['label-received_calls']['sv-se'] = "";
+$text['label-received_calls']['sv-se'] = "Mottagna Samtal";
 $text['label-received_calls']['uk-ua'] = "";
 
 $text['label-dialed_calls']['en-us'] = "Dialed Calls";
@@ -2654,7 +2654,7 @@ $text['label-dialed_calls']['pl-pl'] = "";
 $text['label-dialed_calls']['pt-br'] = "";
 $text['label-dialed_calls']['pt-pt'] = "";
 $text['label-dialed_calls']['ru-ru'] = "Исходящие вызовы";
-$text['label-dialed_calls']['sv-se'] = "";
+$text['label-dialed_calls']['sv-se'] = "Ringda Samtal";
 $text['label-dialed_calls']['uk-ua'] = "";
 
 $text['label-enable_account']['en-us'] = "Enable/Disable SIP Account";
@@ -2670,7 +2670,7 @@ $text['label-enable_account']['pl-pl'] = "";
 $text['label-enable_account']['pt-br'] = "";
 $text['label-enable_account']['pt-pt'] = "";
 $text['label-enable_account']['ru-ru'] = "Включение/отключение учетной записи SIP";
-$text['label-enable_account']['sv-se'] = "";
+$text['label-enable_account']['sv-se'] = "Aktivera/Avaktivera SIP Konto";
 $text['label-enable_account']['uk-ua'] = "";
 
 $text['label-provison_now']['en-us'] = "Auto Provison Now";
@@ -2686,7 +2686,7 @@ $text['label-provison_now']['pl-pl'] = "";
 $text['label-provison_now']['pt-br'] = "";
 $text['label-provison_now']['pt-pt'] = "";
 $text['label-provison_now']['ru-ru'] = "Автонастроить сейчас";
-$text['label-provison_now']['sv-se'] = "";
+$text['label-provison_now']['sv-se'] = "Auto Provisionera Nu";
 $text['label-provison_now']['uk-ua'] = "";
 
 $text['label-paging_list']['en-us'] = "Paging List";
@@ -2702,7 +2702,7 @@ $text['label-paging_list']['pl-pl'] = "";
 $text['label-paging_list']['pt-br'] = "";
 $text['label-paging_list']['pt-pt'] = "";
 $text['label-paging_list']['ru-ru'] = "Список для Пейджинга";
-$text['label-paging_list']['sv-se'] = "";
+$text['label-paging_list']['sv-se'] = "Paging List";
 $text['label-paging_list']['uk-ua'] = "";
 
 $text['header-profiles']['en-us'] = "Profiles";
@@ -3406,7 +3406,7 @@ $text['button-files']['pl-pl'] = "";
 $text['button-files']['pt-br'] = "Arquivos";
 $text['button-files']['pt-pt'] = "Arquivos";
 $text['button-files']['ru-ru'] = "Файлы";
-$text['button-files']['sv-se'] = "";
+$text['button-files']['sv-se'] = "Filer";
 $text['button-files']['uk-ua'] = "";
 
 $text['title-device_vendors']['en-us'] = "Vendors";
@@ -3454,7 +3454,7 @@ $text['title_description-device_vendor']['pl-pl'] = "";
 $text['title_description-device_vendor']['pt-br'] = "";
 $text['title_description-device_vendor']['pt-pt'] = "";
 $text['title_description-device_vendor']['ru-ru'] = "Определяет список поставщиков оборудования.";
-$text['title_description-device_vendor']['sv-se'] = "";
+$text['title_description-device_vendor']['sv-se'] = "Definierar listan över leverantörer som används med provisioning-enheter.";
 $text['title_description-device_vendor']['uk-ua'] = "";
 
 $text['button-vendors']['en-us'] = "Vendors";

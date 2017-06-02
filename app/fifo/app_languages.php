@@ -14,7 +14,7 @@ $text['title-queues']['pl-pl'] = "Kolejki";
 $text['title-queues']['pt-br'] = "";
 $text['title-queues']['pt-pt'] = "Filas";
 $text['title-queues']['ru-ru'] = "Очереди";
-$text['title-queues']['sv-se'] = "";
+$text['title-queues']['sv-se'] = "Kö:er";
 $text['title-queues']['uk-ua'] = "";
 
 $text['title-queue_edit']['en-us'] = "Queue Edit";
@@ -30,7 +30,7 @@ $text['title-queue_edit']['pl-pl'] = "Edytuj kolejkę";
 $text['title-queue_edit']['pt-br'] = "";
 $text['title-queue_edit']['pt-pt'] = "Editar Fila";
 $text['title-queue_edit']['ru-ru'] = "Редактирование очереди";
-$text['title-queue_edit']['sv-se'] = "";
+$text['title-queue_edit']['sv-se'] = "Editera Kö";
 $text['title-queue_edit']['uk-ua'] = "";
 
 $text['title-queue_detail_edit']['en-us'] = "Queue Detail Edit";
@@ -46,7 +46,7 @@ $text['title-queue_detail_edit']['pl-pl'] = "Edytuj szczegóły kolejki.";
 $text['title-queue_detail_edit']['pt-br'] = "";
 $text['title-queue_detail_edit']['pt-pt'] = "Editar Detalhes da Fila";
 $text['title-queue_detail_edit']['ru-ru'] = "Редактирование очереди";
-$text['title-queue_detail_edit']['sv-se'] = "";
+$text['title-queue_detail_edit']['sv-se'] = "Editera Kö Detaljer";
 $text['title-queue_detail_edit']['uk-ua'] = "";
 
 $text['title-queue_detail_add']['en-us'] = "Queue Detail Add";
@@ -62,7 +62,7 @@ $text['title-queue_detail_add']['pl-pl'] = "Dodaj szczegóły kolejki.";
 $text['title-queue_detail_add']['pt-br'] = "";
 $text['title-queue_detail_add']['pt-pt'] = "Adicionar Detalhes à Fila";
 $text['title-queue_detail_add']['ru-ru'] = "Добавление детали в очередь";
-$text['title-queue_detail_add']['sv-se'] = "";
+$text['title-queue_detail_add']['sv-se'] = "Lägg Till Kö Detaljer";
 $text['title-queue_detail_add']['uk-ua'] = "";
 
 $text['title-queue_add']['en-us'] = "Queue Add";
@@ -78,7 +78,7 @@ $text['title-queue_add']['pl-pl'] = "Dodaj kolejkę";
 $text['title-queue_add']['pt-br'] = "";
 $text['title-queue_add']['pt-pt'] = "Adicionar Fila";
 $text['title-queue_add']['ru-ru'] = "Добавить Очередь";
-$text['title-queue_add']['sv-se'] = "";
+$text['title-queue_add']['sv-se'] = "Lägg Till Kö";
 $text['title-queue_add']['uk-ua'] = "";
 
 $text['option-true']['en-us'] = "True";
@@ -94,7 +94,7 @@ $text['option-true']['pl-pl'] = "Tak";
 $text['option-true']['pt-br'] = "";
 $text['option-true']['pt-pt'] = "Sim";
 $text['option-true']['ru-ru'] = "Да";
-$text['option-true']['sv-se'] = "";
+$text['option-true']['sv-se'] = "Sann";
 $text['option-true']['uk-ua'] = "";
 
 $text['option-parameter']['en-us'] = "Parameter";
@@ -110,7 +110,7 @@ $text['option-parameter']['pl-pl'] = "Parametr";
 $text['option-parameter']['pt-br'] = "";
 $text['option-parameter']['pt-pt'] = "Parâmetro";
 $text['option-parameter']['ru-ru'] = "Параметр";
-$text['option-parameter']['sv-se'] = "";
+$text['option-parameter']['sv-se'] = "Parameter";
 $text['option-parameter']['uk-ua'] = "";
 
 $text['option-false']['en-us'] = "False";
@@ -126,7 +126,7 @@ $text['option-false']['pl-pl'] = "Nie";
 $text['option-false']['pt-br'] = "";
 $text['option-false']['pt-pt'] = "Não";
 $text['option-false']['ru-ru'] = "Нет";
-$text['option-false']['sv-se'] = "";
+$text['option-false']['sv-se'] = "Falsk";
 $text['option-false']['uk-ua'] = "";
 
 $text['option-condition']['en-us'] = "Condition";
@@ -142,7 +142,7 @@ $text['option-condition']['pl-pl'] = "Warunek";
 $text['option-condition']['pt-br'] = "";
 $text['option-condition']['pt-pt'] = "Condição";
 $text['option-condition']['ru-ru'] = "Состояние";
-$text['option-condition']['sv-se'] = "";
+$text['option-condition']['sv-se'] = "Skick";
 $text['option-condition']['uk-ua'] = "";
 
 $text['option-anti-action']['en-us'] = "Anti-Action";
@@ -158,7 +158,7 @@ $text['option-anti-action']['pl-pl'] = "Anty-Operacja";
 $text['option-anti-action']['pt-br'] = "";
 $text['option-anti-action']['pt-pt'] = "Anti-Acção";
 $text['option-anti-action']['ru-ru'] = "Anti-Action";
-$text['option-anti-action']['sv-se'] = "";
+$text['option-anti-action']['sv-se'] = "Anti-Action";
 $text['option-anti-action']['uk-ua'] = "";
 
 $text['option-action']['en-us'] = "Action";
@@ -174,7 +174,7 @@ $text['option-action']['pl-pl'] = "Operacja";
 $text['option-action']['pt-br'] = "";
 $text['option-action']['pt-pt'] = "Acção";
 $text['option-action']['ru-ru'] = "Действие";
-$text['option-action']['sv-se'] = "";
+$text['option-action']['sv-se'] = "Action";
 $text['option-action']['uk-ua'] = "";
 
 $text['label-tag']['en-us'] = "Tag";
@@ -190,7 +190,7 @@ $text['label-tag']['pl-pl'] = "Tag";
 $text['label-tag']['pt-br'] = "";
 $text['label-tag']['pt-pt'] = "Tag";
 $text['label-tag']['ru-ru'] = "Тег";
-$text['label-tag']['sv-se'] = "";
+$text['label-tag']['sv-se'] = "Tag";
 $text['label-tag']['uk-ua'] = "";
 
 $text['label-field']['en-us'] = "Field";
@@ -206,7 +206,7 @@ $text['label-field']['pl-pl'] = "Pole";
 $text['label-field']['pt-br'] = "";
 $text['label-field']['pt-pt'] = "Campo";
 $text['label-field']['ru-ru'] = "Поле";
-$text['label-field']['sv-se'] = "";
+$text['label-field']['sv-se'] = "Fält";
 $text['label-field']['uk-ua'] = "";
 
 $text['label-extension']['en-us'] = "Extension";
@@ -222,7 +222,7 @@ $text['label-extension']['pl-pl'] = "Numer wewnętrzny";
 $text['label-extension']['pt-br'] = "";
 $text['label-extension']['pt-pt'] = "Extensão";
 $text['label-extension']['ru-ru'] = "Внутренний Номер";
-$text['label-extension']['sv-se'] = "";
+$text['label-extension']['sv-se'] = "Anknytning";
 $text['label-extension']['uk-ua'] = "";
 
 $text['label-expression']['en-us'] = "Expression";
@@ -238,7 +238,7 @@ $text['label-expression']['pl-pl'] = "Wyrażenie";
 $text['label-expression']['pt-br'] = "";
 $text['label-expression']['pt-pt'] = "Expressão";
 $text['label-expression']['ru-ru'] = "Выражение";
-$text['label-expression']['sv-se'] = "";
+$text['label-expression']['sv-se'] = "Uttryck";
 $text['label-expression']['uk-ua'] = "";
 
 $text['label-data']['en-us'] = "Data";
@@ -254,7 +254,7 @@ $text['label-data']['pl-pl'] = "Dane";
 $text['label-data']['pt-br'] = "";
 $text['label-data']['pt-pt'] = "Data";
 $text['label-data']['ru-ru'] = "Дата";
-$text['label-data']['sv-se'] = "";
+$text['label-data']['sv-se'] = "Data";
 $text['label-data']['uk-ua'] = "";
 
 $text['label-continue']['en-us'] = "Continue";
@@ -270,7 +270,7 @@ $text['label-continue']['pl-pl'] = "Kontynuuj";
 $text['label-continue']['pt-br'] = "";
 $text['label-continue']['pt-pt'] = "Continuar";
 $text['label-continue']['ru-ru'] = "Продолжить";
-$text['label-continue']['sv-se'] = "";
+$text['label-continue']['sv-se'] = "Fortsätt";
 $text['label-continue']['uk-ua'] = "";
 
 $text['label-application']['en-us'] = "Application";
@@ -286,7 +286,7 @@ $text['label-application']['pl-pl'] = "Aplikacja";
 $text['label-application']['pt-br'] = "";
 $text['label-application']['pt-pt'] = "Aplicação";
 $text['label-application']['ru-ru'] = "Заявка";
-$text['label-application']['sv-se'] = "";
+$text['label-application']['sv-se'] = "Applikation";
 $text['label-application']['uk-ua'] = "";
 
 $text['label-agent_queue_extension']['en-us'] = "Queue Extension Number";
@@ -302,7 +302,7 @@ $text['label-agent_queue_extension']['pl-pl'] = "Numer wew kolejki.";
 $text['label-agent_queue_extension']['pt-br'] = "";
 $text['label-agent_queue_extension']['pt-pt'] = "Número da Extensão da Fila";
 $text['label-agent_queue_extension']['ru-ru'] = "Очередь Внутренних Номеров";
-$text['label-agent_queue_extension']['sv-se'] = "";
+$text['label-agent_queue_extension']['sv-se'] = "Kö Anknytningsnummer";
 $text['label-agent_queue_extension']['uk-ua'] = "";
 
 $text['label-agent_loginout_extension']['en-us'] = "Login/Logout Extension Number";
@@ -318,7 +318,7 @@ $text['label-agent_loginout_extension']['pl-pl'] = "Włączony/wyłączony numer
 $text['label-agent_loginout_extension']['pt-br'] = "";
 $text['label-agent_loginout_extension']['pt-pt'] = "Login/Logout Número de Extensão";
 $text['label-agent_loginout_extension']['ru-ru'] = "Внутренний номер вход / выход";
-$text['label-agent_loginout_extension']['sv-se'] = "";
+$text['label-agent_loginout_extension']['sv-se'] = "Logga In/Logga Ut Anknytningsnummer";
 $text['label-agent_loginout_extension']['uk-ua'] = "";
 
 $text['header-queues']['en-us'] = "Queues";
@@ -334,7 +334,7 @@ $text['header-queues']['pl-pl'] = "Kolejki";
 $text['header-queues']['pt-br'] = "";
 $text['header-queues']['pt-pt'] = "Filas";
 $text['header-queues']['ru-ru'] = "Очереди";
-$text['header-queues']['sv-se'] = "";
+$text['header-queues']['sv-se'] = "Kö:er";
 $text['header-queues']['uk-ua'] = "";
 
 $text['header-queue_edit']['en-us'] = "Queue Edit";
@@ -350,7 +350,7 @@ $text['header-queue_edit']['pl-pl'] = "Edytuj kolejkę";
 $text['header-queue_edit']['pt-br'] = "";
 $text['header-queue_edit']['pt-pt'] = "Editar Fila";
 $text['header-queue_edit']['ru-ru'] = "редиктирование Очереди";
-$text['header-queue_edit']['sv-se'] = "";
+$text['header-queue_edit']['sv-se'] = "Editera Kö";
 $text['header-queue_edit']['uk-ua'] = "";
 
 $text['header-queue_detail_edit']['en-us'] = "Queue Detail Edit";
@@ -366,7 +366,7 @@ $text['header-queue_detail_edit']['pl-pl'] = "Edytuj szczegóły kolejki";
 $text['header-queue_detail_edit']['pt-br'] = "";
 $text['header-queue_detail_edit']['pt-pt'] = "Editar Detalhes da Fila";
 $text['header-queue_detail_edit']['ru-ru'] = "Редактирование деталей Очереди";
-$text['header-queue_detail_edit']['sv-se'] = "";
+$text['header-queue_detail_edit']['sv-se'] = "Editera Kö Detaljer";
 $text['header-queue_detail_edit']['uk-ua'] = "";
 
 $text['header-queue_detail_add']['en-us'] = "Queue Detail Add";
@@ -382,7 +382,7 @@ $text['header-queue_detail_add']['pl-pl'] = "Dodaj szczegóły kolejki";
 $text['header-queue_detail_add']['pt-br'] = "";
 $text['header-queue_detail_add']['pt-pt'] = "Adicionado Detalhes da Fila";
 $text['header-queue_detail_add']['ru-ru'] = "Добавление деталей в Очередь";
-$text['header-queue_detail_add']['sv-se'] = "";
+$text['header-queue_detail_add']['sv-se'] = "Lägg Till Kö Detalj";
 $text['header-queue_detail_add']['uk-ua'] = "";
 
 $text['header-queue_add']['en-us'] = "Queue Add";
@@ -398,7 +398,7 @@ $text['header-queue_add']['pl-pl'] = "Dodaj kolejkę";
 $text['header-queue_add']['pt-br'] = "";
 $text['header-queue_add']['pt-pt'] = "Adicionar Fila";
 $text['header-queue_add']['ru-ru'] = "Добавить Очередь";
-$text['header-queue_add']['sv-se'] = "";
+$text['header-queue_add']['sv-se'] = "Lägg Till Kö";
 $text['header-queue_add']['uk-ua'] = "";
 
 $text['header-conditions_and_actions']['en-us'] = "Conditions and Actions";
@@ -414,7 +414,7 @@ $text['header-conditions_and_actions']['pl-pl'] = "Warunki i operacje";
 $text['header-conditions_and_actions']['pt-br'] = "";
 $text['header-conditions_and_actions']['pt-pt'] = "Condições e Acções";
 $text['header-conditions_and_actions']['ru-ru'] = "Условия и действия";
-$text['header-conditions_and_actions']['sv-se'] = "";
+$text['header-conditions_and_actions']['sv-se'] = "Tillstånd och Actions";
 $text['header-conditions_and_actions']['uk-ua'] = "";
 
 $text['header-agent_details']['en-us'] = "Agent Details";
@@ -430,7 +430,7 @@ $text['header-agent_details']['pl-pl'] = "Szczegóły agenta";
 $text['header-agent_details']['pt-br'] = "";
 $text['header-agent_details']['pt-pt'] = "Detalhes do Agente";
 $text['header-agent_details']['ru-ru'] = "Сведения об агенте";
-$text['header-agent_details']['sv-se'] = "";
+$text['header-agent_details']['sv-se'] = "Agent Detaljer";
 $text['header-agent_details']['uk-ua'] = "";
 
 $text['header-additional_information']['en-us'] = "Additional Information";
@@ -446,7 +446,7 @@ $text['header-additional_information']['pl-pl'] = "Informacje dodatkowe";
 $text['header-additional_information']['pt-br'] = "";
 $text['header-additional_information']['pt-pt'] = "Informação Adicional";
 $text['header-additional_information']['ru-ru'] = "Дополнительная информация";
-$text['header-additional_information']['sv-se'] = "";
+$text['header-additional_information']['sv-se'] = "Ytterligare Information";
 $text['header-additional_information']['uk-ua'] = "";
 
 $text['description-queues']['en-us'] = "Queues are used to setup waiting lines for callers. Also known as FIFO Queues.";
@@ -462,7 +462,7 @@ $text['description-queues']['pl-pl'] = "Kolejki są używane do konfiguracji lin
 $text['description-queues']['pt-br'] = "";
 $text['description-queues']['pt-pt'] = "As filas são utilizadas para configurar linhas de espera para os originadores das chamadas. Também são chamadas de filas FIFO.";
 $text['description-queues']['ru-ru'] = "Очереди используются для установки ожидающих линий для вызывающих абонентов. Также известны как очереди FIFO.";
-$text['description-queues']['sv-se'] = "";
+$text['description-queues']['sv-se'] = "Köer används för att konfigurera väntelinjer för uppringare. Även känd som FIFO Kö:er.";
 $text['description-queues']['uk-ua'] = "";
 
 $text['description-queue_edit']['en-us'] = "Queues are used to setup waiting lines for callers. Also known as FIFO Queues.";
@@ -478,7 +478,7 @@ $text['description-queue_edit']['pl-pl'] = "Kolejki są używane do konfiguracji
 $text['description-queue_edit']['pt-br'] = "";
 $text['description-queue_edit']['pt-pt'] = "As filas são utilizadas para configurar linhas de espera para os originadores de chamadas.";
 $text['description-queue_edit']['ru-ru'] = "Очереди используются для установки ожидающих линий для вызывающих абонентов. Также известны как очереди FIFO.";
-$text['description-queue_edit']['sv-se'] = "";
+$text['description-queue_edit']['sv-se'] = "Köer används för att konfigurera väntelinjer för uppringare. Även känd som FIFO Kö:er.";
 $text['description-queue_edit']['uk-ua'] = "";
 
 $text['description-queue_add']['en-us'] = "In simple terms queues are holding patterns for callers to wait until someone is available to take the call. Also known as FIFO Queues.";
@@ -494,7 +494,7 @@ $text['description-queue_add']['pl-pl'] = "Kolejki przetrzymują dzwoniących a�
 $text['description-queue_add']['pt-br'] = "";
 $text['description-queue_add']['pt-pt'] = "As filas implementam padrões que permitem aos originadores das chamadas esperar até que algum agente fique disponível para atender a chamada.";
 $text['description-queue_add']['ru-ru'] = "Говоря простыми словами, очереди удерживают звонящих на линии, пока кто-то не сможет принять вызов. Также известны как очереди FIFO.";
-$text['description-queue_add']['sv-se'] = "";
+$text['description-queue_add']['sv-se'] = "Enkelt förklarat så är kö:er en vänt plats för inkommande samtal fram tills någon kan ta samtalet. Även känt som FIFO Kö:er.";
 $text['description-queue_add']['uk-ua'] = "";
 
 $text['description-name']['en-us'] = "The name the queue will be assigned.";
@@ -510,7 +510,7 @@ $text['description-name']['pl-pl'] = " Nazwa kolejki.";
 $text['description-name']['pt-br'] = "";
 $text['description-name']['pt-pt'] = "O nome que será atribuído à fila.";
 $text['description-name']['ru-ru'] = "Имя очереди будет присвоено.";
-$text['description-name']['sv-se'] = "";
+$text['description-name']['sv-se'] = "Namnet som kommer att kopplas till kö:n.";
 $text['description-name']['uk-ua'] = "";
 
 $text['description-extension']['en-us'] = "The number that will be assigned to the queue.";
@@ -526,7 +526,7 @@ $text['description-extension']['pl-pl'] = "Numer wew kolejki.";
 $text['description-extension']['pt-br'] = "";
 $text['description-extension']['pt-pt'] = "O número que será atribuído à fila.";
 $text['description-extension']['ru-ru'] = "Номер, который будет назначен очереди.";
-$text['description-extension']['sv-se'] = "";
+$text['description-extension']['sv-se'] = "Numret som kommer att kopplas till kö:n.";
 $text['description-extension']['uk-ua'] = "";
 
 $text['description-continue']['en-us'] = "Continue in most cases should be set to false.";
@@ -542,7 +542,7 @@ $text['description-continue']['pl-pl'] = "Kontynuacja w większości przypadków
 $text['description-continue']['pt-br'] = "";
 $text['description-continue']['pt-pt'] = "A acção Continuar deverá ser, na maioria dos casos, definida a false.";
 $text['description-continue']['ru-ru'] = "Для продолжения в большинстве случаев должно быть установлено значение Нет.";
-$text['description-continue']['sv-se'] = "";
+$text['description-continue']['sv-se'] = "Fortsätt i de flesta fall bör detta vara inställd på falsk.";
 $text['description-continue']['uk-ua'] = "";
 
 $text['description-conditions_and_actions']['en-us'] = "The following conditions, actions and anti-actions are used in the dialplan to direct call flow. Each is processed in order until you reach the action dialplan_detail_tag which tells what action to perform. You are not limited to only one condition or action dialplan_detail_tag for a given extension.";
@@ -558,7 +558,7 @@ $text['description-conditions_and_actions']['pl-pl'] = "Następujące warunki, a
 $text['description-conditions_and_actions']['pt-br'] = "";
 $text['description-conditions_and_actions']['pt-pt'] = "As seguintes condições, acções e anti-acções são utilizadas no dialplan para encaminhar as chamadas. Cada condição, acção ou anti-acção é processada por ordem até ser atingida a acção a tomar. Podem ser tomadas mais do que uma condição ou acção para uma determinada extensão.";
 $text['description-conditions_and_actions']['ru-ru'] = "Следующие условия, действия и антидействия используются в диалплане для направления потока вызовов. Каждый обрабатывается по порядку, пока не будет достигнуто действие dialplan_detail_tag, которое сообщает, какое действие выполнить. Вы не ограничены только одним условием или действием dialplan_detail_tag для данного расширения.";
-$text['description-conditions_and_actions']['sv-se'] = "";
+$text['description-conditions_and_actions']['sv-se'] = "Följande villkor, åtgärder och anti-handlingar används i nummerplanen för att styra ett samtals flöde. Varje steg bearbetas i ordning tills du når steget dialplan_detail_tag som berättar vilken åtgärd som ska utföras. Du är inte begränsad till endast ett villkor eller åtgärd dialplan_detail_tag för en viss anknytning.";
 $text['description-conditions_and_actions']['uk-ua'] = "";
 
 $text['description-agent_queue_extension']['en-us'] = "The extension number for the Agent FIFO Queue. This is the holding pattern for agents waiting to service calls in the caller FIFO queue.";
@@ -574,7 +574,7 @@ $text['description-agent_queue_extension']['pl-pl'] = "Numer wew agenta w kolejc
 $text['description-agent_queue_extension']['pt-br'] = "";
 $text['description-agent_queue_extension']['pt-pt'] = "O número de extensão para o agente da fila. Este é o procedimento para que os agentes possam receber chamadas da fila.";
 $text['description-agent_queue_extension']['ru-ru'] = "Внутренний номер очереди агента FIFO. Это шаблон ожидания для операторов, ожидающих обслуживания вызовов в очереди FIFO вызывающего абонента.";
-$text['description-agent_queue_extension']['sv-se'] = "";
+$text['description-agent_queue_extension']['sv-se'] = "Anknytningsnumret för Agent FIFO Queue. Detta är väntplatsen för agenter som väntar på att betjäna samtal i den uppringande FIFO-köen.";
 $text['description-agent_queue_extension']['uk-ua'] = "";
 
 $text['description-agent_loginout_extension']['en-us'] = "Agents use this extension number to login or logout of the Queue. After logging into the agent will be ready to receive calls from the Queue.";
@@ -590,7 +590,8 @@ $text['description-agent_loginout_extension']['pl-pl'] = "Agenci używają numer
 $text['description-agent_loginout_extension']['pt-br'] = "";
 $text['description-agent_loginout_extension']['pt-pt'] = "Os agentes utilizam este número de extensão para entrarem ou sairem da fila. Depois desta configuração o agente receberá chamadas com destino a esta fila.";
 $text['description-agent_loginout_extension']['ru-ru'] = "Агенты используют этот внутренний номер для входа или выхода из очереди. После входа в агент будет готов принимать вызовы из очереди.";
-$text['description-agent_loginout_extension']['sv-se'] = "";
+$text['description-agent_loginout_extension']['sv-se'] = "
+Agenter använder det här anknytningsnumret för att logga in eller logga ut från köen. Efter att du loggat in i agenten kommer du att vara redo att ta emot samtal från köen.";
 $text['description-agent_loginout_extension']['uk-ua'] = "";
 
 ?>

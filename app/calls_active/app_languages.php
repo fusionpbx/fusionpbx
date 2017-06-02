@@ -126,7 +126,7 @@ $text['label-refresh_pause']['pl-pl'] = "Pauzuj odÅ›wieÅ¼anie";
 $text['label-refresh_pause']['pt-br'] = "Pausar atualizaÃ§Ã£o";
 $text['label-refresh_pause']['pt-pt'] = "Pausa Atualizar";
 $text['label-refresh_pause']['ru-ru'] = "Приостановить обновление";
-$text['label-refresh_pause']['sv-se'] = "";
+$text['label-refresh_pause']['sv-se'] = "Paus Uppdatera";
 $text['label-refresh_pause']['uk-ua'] = "пауза Оновити";
 
 $text['label-refresh_enable']['en-us'] = "Enable Refresh";
@@ -142,7 +142,7 @@ $text['label-refresh_enable']['pl-pl'] = "WÅ‚Ä…cz odÅ›wieÅ¼anie";
 $text['label-refresh_enable']['pt-br'] = "Habilitar atualizaÃ§Ã£o";
 $text['label-refresh_enable']['pt-pt'] = "Habilitar Atualização";
 $text['label-refresh_enable']['ru-ru'] = "Включить обновление";
-$text['label-refresh_enable']['sv-se'] = "";
+$text['label-refresh_enable']['sv-se'] = "Aktivera Uppdatering";
 $text['label-refresh_enable']['uk-ua'] = "включити Оновити";
 
 $text['label-profile']['en-us'] = "Profile";
@@ -190,7 +190,7 @@ $text['label-park']['pl-pl'] = "parkowanie";
 $text['label-park']['pt-br'] = "Estacionamento";
 $text['label-park']['pt-pt'] = "parquear";
 $text['label-park']['ru-ru'] = "парковка";
-$text['label-park']['sv-se'] = "Parkera";
+$text['label-park']['sv-se'] = "parkera";
 $text['label-park']['uk-ua'] = "паркувати";
 
 $text['label-opt']['en-us'] = "Options";
@@ -286,7 +286,7 @@ $text['label-domain']['pl-pl'] = "Domena";
 $text['label-domain']['pt-br'] = "Dominio";
 $text['label-domain']['pt-pt'] = "Domínio";
 $text['label-domain']['ru-ru'] = "Домен";
-$text['label-domain']['sv-se'] = "";
+$text['label-domain']['sv-se'] = "Domän";
 $text['label-domain']['uk-ua'] = "Домен";
 
 $text['label-destination']['en-us'] = "Dest";
@@ -526,7 +526,7 @@ $text['check-available-on-demand-status']['pl-pl'] = "Dostępny (na żądanie)";
 $text['check-available-on-demand-status']['pt-br'] = "Disponível (A pedido)";
 $text['check-available-on-demand-status']['pt-pt'] = "Disponível (A pedido)";
 $text['check-available-on-demand-status']['ru-ru'] = "Доступен (по требованию)";
-$text['check-available-on-demand-status']['sv-se'] = "Anträffbar (På Begäran) ";
+$text['check-available-on-demand-status']['sv-se'] = "Anträffbar (På Begäran)";
 $text['check-available-on-demand-status']['uk-ua'] = "Доступний (на вимогу)";
 
 $text['button-show_all']['en-us'] = "Show All";
@@ -542,7 +542,7 @@ $text['button-show_all']['pl-pl'] = "Pokaż Wszystkie";
 $text['button-show_all']['pt-br'] = "Mostrar Todos";
 $text['button-show_all']['pt-pt'] = "Mostrar Todos";
 $text['button-show_all']['ru-ru'] = "Показать все";
-$text['button-show_all']['sv-se'] = "";
+$text['button-show_all']['sv-se'] = "Visa Allt";
 $text['button-show_all']['uk-ua'] = "Показати всі";
 
 ?>

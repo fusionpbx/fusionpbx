@@ -494,7 +494,7 @@ $text['label-force_ping']['pl-pl'] = "";
 $text['label-force_ping']['pt-br'] = "";
 $text['label-force_ping']['pt-pt'] = "";
 $text['label-force_ping']['ru-ru'] = "Force ping";
-$text['label-force_ping']['sv-se'] = "";
+$text['label-force_ping']['sv-se'] = "Force ping";
 $text['label-force_ping']['uk-ua'] = "";
 
 $text['label-rewrite_tls_contact_port']['en-us'] = "Rewrite TLS Contact Port";
@@ -622,7 +622,7 @@ $text['label-caller_id']['pl-pl'] = "";
 $text['label-caller_id']['pt-br'] = "público";
 $text['label-caller_id']['pt-pt'] = "público";
 $text['label-caller_id']['ru-ru'] = "";
-$text['label-caller_id']['sv-se'] = "Utgående";
+$text['label-caller_id']['sv-se'] = "Nummerpresentation";
 $text['label-caller_id']['uk-ua'] = "";
 
 $text['label-caller_id_number']['en-us'] = "Caller ID";
@@ -638,7 +638,7 @@ $text['label-caller_id_number']['pl-pl'] = "";
 $text['label-caller_id_number']['pt-br'] = "público";
 $text['label-caller_id_number']['pt-pt'] = "público";
 $text['label-caller_id_number']['ru-ru'] = "";
-$text['label-caller_id_number']['sv-se'] = "Utgående";
+$text['label-caller_id_number']['sv-se'] = "Nummerpresentation";
 $text['label-caller_id_number']['uk-ua'] = "";
 
 $text['label-outbound_caller_id_number']['en-us'] = "Outbound Caller ID Number";
@@ -654,7 +654,7 @@ $text['label-outbound_caller_id_number']['pl-pl'] = "Numer prezentowany w rozmow
 $text['label-outbound_caller_id_number']['pt-br'] = "Número público";
 $text['label-outbound_caller_id_number']['pt-pt'] = "Número público";
 $text['label-outbound_caller_id_number']['ru-ru'] = "Идентификатор (Caller ID) номера вызывающего абонента";
-$text['label-outbound_caller_id_number']['sv-se'] = "Utgående Nummervisning";
+$text['label-outbound_caller_id_number']['sv-se'] = "Utgående Nummerpresentation";
 $text['label-outbound_caller_id_number']['uk-ua'] = "";
 
 $text['label-outbound_caller_id_name']['en-us'] = "Outbound Caller ID Name";
@@ -670,7 +670,7 @@ $text['label-outbound_caller_id_name']['pl-pl'] = "Nazwa prezentowana w rozmowac
 $text['label-outbound_caller_id_name']['pt-br'] = "Nome público";
 $text['label-outbound_caller_id_name']['pt-pt'] = "Nome público";
 $text['label-outbound_caller_id_name']['ru-ru'] = "Идентификатор (Caller ID) имени вызывающего абонента";
-$text['label-outbound_caller_id_name']['sv-se'] = "Utgående Namnvisning";
+$text['label-outbound_caller_id_name']['sv-se'] = "Utgående Namnpresentation";
 $text['label-outbound_caller_id_name']['uk-ua'] = "";
 
 $text['label-number_alias']['en-us'] = "Number Alias";
@@ -830,7 +830,7 @@ $text['label-emergency_caller_id_number']['pl-pl'] = "Prezentacja numeru dzwoni�
 $text['label-emergency_caller_id_number']['pt-br'] = "Número de emergência do discador";
 $text['label-emergency_caller_id_number']['pt-pt'] = "Número de Emergência do Chamador";
 $text['label-emergency_caller_id_number']['ru-ru'] = "Идентификатор (Caller ID) номера экстренного вызова";
-$text['label-emergency_caller_id_number']['sv-se'] = "Nöd Nummervisning";
+$text['label-emergency_caller_id_number']['sv-se'] = "Nöd Nummerpresentation";
 $text['label-emergency_caller_id_number']['uk-ua'] = "";
 
 $text['label-emergency_caller_id_name']['en-us'] = "Emergency Caller ID Name";
@@ -846,7 +846,7 @@ $text['label-emergency_caller_id_name']['pl-pl'] = "Prezentacja nazwy dzwoniące
 $text['label-emergency_caller_id_name']['pt-br'] = "Nome de emergência do discador";
 $text['label-emergency_caller_id_name']['pt-pt'] = "Nome de Emergência do Chamador";
 $text['label-emergency_caller_id_name']['ru-ru'] = "Идентификатор (Caller ID) имени экстренного вызова";
-$text['label-emergency_caller_id_name']['sv-se'] = "Nöd Namnvisning";
+$text['label-emergency_caller_id_name']['sv-se'] = "Nöd Namnpresentation";
 $text['label-emergency_caller_id_name']['uk-ua'] = "";
 
 $text['label-email']['en-us'] = "Email";
@@ -878,7 +878,7 @@ $text['label-effective_caller_id_number']['pl-pl'] = "Prezentacja numeru dzwoni�
 $text['label-effective_caller_id_number']['pt-br'] = "Número interno";
 $text['label-effective_caller_id_number']['pt-pt'] = "Número interno";
 $text['label-effective_caller_id_number']['ru-ru'] = "Эффективный идентификатор (Caller ID) номера вызывающего абонента";
-$text['label-effective_caller_id_number']['sv-se'] = "Effektiv Nummervisning";
+$text['label-effective_caller_id_number']['sv-se'] = "Effektiv Nummerpresentation";
 $text['label-effective_caller_id_number']['uk-ua'] = "";
 
 $text['label-effective_caller_id_name']['en-us'] = "Effective Caller ID Name";
@@ -894,7 +894,7 @@ $text['label-effective_caller_id_name']['pl-pl'] = "Prezentacja nazwy dzwoniące
 $text['label-effective_caller_id_name']['pt-br'] = "Nome interno";
 $text['label-effective_caller_id_name']['pt-pt'] = "Nome Interno";
 $text['label-effective_caller_id_name']['ru-ru'] = "Эффективный идентификатор (Caller ID) имени вызывающего абонента";
-$text['label-effective_caller_id_name']['sv-se'] = "Effektiv Namnvisning";
+$text['label-effective_caller_id_name']['sv-se'] = "Effektiv Namnpresentation";
 $text['label-effective_caller_id_name']['uk-ua'] = "";
 
 $text['label-domain']['en-us'] = "Domain";
@@ -958,7 +958,7 @@ $text['label-directory_exten_visible']['pl-pl'] = "Czy numer wew książki telef
 $text['label-directory_exten_visible']['pt-br'] = "Extensão do diretório visivel";
 $text['label-directory_exten_visible']['pt-pt'] = "Extensão do Directório Visível";
 $text['label-directory_exten_visible']['ru-ru'] = "Расширение видимого каталога";
-$text['label-directory_exten_visible']['sv-se'] = "Anknytning Synlig I Katalog";
+$text['label-directory_exten_visible']['sv-se'] = "Fullständigt Namn I Katalogen";
 $text['label-directory_exten_visible']['uk-ua'] = "";
 
 $text['label-dial_string']['en-us'] = "Dial String";
@@ -974,7 +974,7 @@ $text['label-dial_string']['pl-pl'] = "Opcje polecenia DIAL";
 $text['label-dial_string']['pt-br'] = "Dial String";
 $text['label-dial_string']['pt-pt'] = "Dial String";
 $text['label-dial_string']['ru-ru'] = "Строка набора";
-$text['label-dial_string']['sv-se'] = "Ringa Sträng";
+$text['label-dial_string']['sv-se'] = "Dial String";
 $text['label-dial_string']['uk-ua'] = "";
 
 $text['label-device_template']['en-us'] = "Template";
@@ -1054,7 +1054,7 @@ $text['label-call_timeout']['pl-pl'] = "Limit czasu rozmowy";
 $text['label-call_timeout']['pt-br'] = "Timeout da chamada";
 $text['label-call_timeout']['pt-pt'] = "Timeout da Chamada";
 $text['label-call_timeout']['ru-ru'] = "Тайм-аут вызова";
-$text['label-call_timeout']['sv-se'] = "Ring Tidsgräns";
+$text['label-call_timeout']['sv-se'] = "Call Timeout";
 $text['label-call_timeout']['uk-ua'] = "";
 
 $text['label-call_screen_enabled']['en-us'] = "Call Screen";
@@ -1070,7 +1070,7 @@ $text['label-call_screen_enabled']['pl-pl'] = "";
 $text['label-call_screen_enabled']['pt-br'] = "";
 $text['label-call_screen_enabled']['pt-pt'] = "";
 $text['label-call_screen_enabled']['ru-ru'] = "Экран вызова";
-$text['label-call_screen_enabled']['sv-se'] = "";
+$text['label-call_screen_enabled']['sv-se'] = "Call Screen";
 $text['label-call_screen_enabled']['uk-ua'] = "";
 
 $text['label-call_group']['en-us'] = "Call Group";
@@ -1182,7 +1182,7 @@ $text['label-is_registered']['pl-pl'] = "";
 $text['label-is_registered']['pt-br'] = "";
 $text['label-is_registered']['pt-pt'] = "";
 $text['label-is_registered']['ru-ru'] = "Зарегистрировано";
-$text['label-is_registered']['sv-se'] = "";
+$text['label-is_registered']['sv-se'] = "Registrerad";
 $text['label-is_registered']['uk-ua'] = "";
 
 $text['header-extensions']['en-us'] = "Extensions";
@@ -1598,7 +1598,7 @@ $text['description-absolute_codec_string']['pl-pl'] = "";
 $text['description-absolute_codec_string']['pt-br'] = "";
 $text['description-absolute_codec_string']['pt-pt'] = "";
 $text['description-absolute_codec_string']['ru-ru'] = "Последовательность выбора кодеков для Внутреннего Номера";
-$text['description-absolute_codec_string']['sv-se'] = "";
+$text['description-absolute_codec_string']['sv-se'] = "Absolut Codec String för anknytningen";
 $text['description-absolute_codec_string']['uk-ua'] = "";
 
 $text['description-force_ping']['en-us'] = "Use OPTIONS to detect if extension is reacheable";
@@ -1614,7 +1614,7 @@ $text['description-force_ping']['pl-pl'] = "";
 $text['description-force_ping']['pt-br'] = "";
 $text['description-force_ping']['pt-pt'] = "";
 $text['description-force_ping']['ru-ru'] = "Использовать OPTIONS, чтобы определить доступность Внутреннего Номера";
-$text['description-force_ping']['sv-se'] = "";
+$text['description-force_ping']['sv-se'] = "Använd OPTIONS för att avgöra om anknytningen är nåbar";
 $text['description-force_ping']['uk-ua'] = "";
 
 $text['description-missed_call']['en-us'] = "Select the notification type, and enter the appropriate destination.";
@@ -1822,7 +1822,7 @@ $text['description-directory_visible']['pl-pl'] = "Wybierz czy ukryć imię i na
 $text['description-directory_visible']['pt-br'] = "Escolha se deseja ou não ocultar o nome do diretório";
 $text['description-directory_visible']['pt-pt'] = "Escolha se deseja ou não ocultar o nome do directório.";
 $text['description-directory_visible']['ru-ru'] = "Выберите, следует ли скрыть имя каталога.";
-$text['description-directory_visible']['sv-se'] = "Välj om namn skall gömas i katalogen.";
+$text['description-directory_visible']['sv-se'] = "Välj om namnet inte skall visas i katalogen.";
 $text['description-directory_visible']['uk-ua'] = "";
 
 $text['description-directory_full_name']['en-us'] = "Enter the first name followed by the last name.";
@@ -1918,7 +1918,7 @@ $text['description-call_screen_enabled']['pl-pl'] = "";
 $text['description-call_screen_enabled']['pt-br'] = "";
 $text['description-call_screen_enabled']['pt-pt'] = "";
 $text['description-call_screen_enabled']['ru-ru'] = "Укажите, следует ли включать или отключать проверку вызовов.";
-$text['description-call_screen_enabled']['sv-se'] = "";
+$text['description-call_screen_enabled']['sv-se'] = "Välj om du vill aktivera eller inaktivera call screening.";
 $text['description-call_screen_enabled']['uk-ua'] = "";
 
 $text['description-call_group']['en-us'] = "Enter the user call group here. Groups available by default: sales, support, billing.";

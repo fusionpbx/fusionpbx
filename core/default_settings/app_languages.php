@@ -302,7 +302,7 @@ $text['label-normal']['pl-pl'] = "Normalny";
 $text['label-normal']['pt-br'] = "Normal";
 $text['label-normal']['pt-pt'] = "Normal";
 $text['label-normal']['ru-ru'] = "Нормальный";
-$text['label-normal']['sv-se'] = "normal";
+$text['label-normal']['sv-se'] = "Normal";
 $text['label-normal']['uk-ua'] = "звичайно";
 
 $text['label-none']['en-us'] = "None";
@@ -350,7 +350,7 @@ $text['label-inline']['pl-pl'] = "inline";
 $text['label-inline']['pt-br'] = "Na linha";
 $text['label-inline']['pt-pt'] = "Na linha";
 $text['label-inline']['ru-ru'] = "inline";
-$text['label-inline']['sv-se'] = "I kö";
+$text['label-inline']['sv-se'] = "Inline";
 $text['label-inline']['uk-ua'] = "В лінію";
 
 $text['label-image']['en-us'] = "Image";
