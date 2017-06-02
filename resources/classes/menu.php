@@ -404,7 +404,7 @@ if (!class_exists('menu')) {
 				//get the database connnection
 					$db = $this->db;
 
-				//database ojbect does not exist return immediately
+				//database object does not exist return immediately
 					if (!$db) { return Array(); }
 
 				//if there are no groups then set the public group
