@@ -83,15 +83,21 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Transaction date.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'transaction_old';
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'longtext';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Before the transaction.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'transaction_new';
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'longtext';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'After the transaction.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'transaction_result';
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'longtext';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Result of the transaction.';
 		$z++;
 
