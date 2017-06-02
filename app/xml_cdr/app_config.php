@@ -61,6 +61,10 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_all";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_b_leg";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//default settings
 		$y=0;

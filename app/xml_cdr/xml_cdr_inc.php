@@ -99,9 +99,12 @@
 		}
 		//$mos_comparison = check_str($_REQUEST["mos_comparison"]);
 		$mos_score = check_str($_REQUEST["mos_score"]);
+		$leg = check_str($_REQUEST["leg"]);
 	}
 
-
+	if(!permission_exists(xml_cdr_b_leg)){
+		$leg = 'a';
+	}
 
 //build the sql where string
 	if (strlen($start_epoch) > 0 && strlen($stop_epoch) > 0) {
@@ -205,6 +208,7 @@
 	if (strlen($remote_media_ip) > 0) { $sql_where_ands[] = "remote_media_ip like '%".$remote_media_ip."%'"; }
 	if (strlen($network_addr) > 0) { $sql_where_ands[] = "network_addr like '%".$network_addr."%'"; }
 	if (strlen($mos_comparison) > 0 && strlen($mos_score) > 0 ) { $sql_where_ands[] = "rtp_audio_in_mos " . $mos_comparison . " ".$mos_score.""; }
+	if (strlen($leg) > 0) { $sql_where_ands[] = "leg='$leg'"; }
 
 	//if not admin or superadmin, only show own calls
 	if (!permission_exists('xml_cdr_domain')) {
@@ -369,6 +373,7 @@
 	$sql .= "caller_destination, ";
 	$sql .= "source_number, ";
 	$sql .= "destination_number, ";
+	$sql .= "leg, ";
 	$sql .= "(xml IS NOT NULL OR json IS NOT NULL) AS raw_data_exists, ";
 	if (is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
@@ -396,6 +401,7 @@
 	} else {
 		$sql .= "where domain_uuid = '".$domain_uuid."' ";
 	}
+
 	$sql .= $sql_where;
 	if (strlen($order_by)> 0) { $sql .= " order by ".$order_by." ".$order." "; }
 	if ($_REQUEST['export_format'] != "csv" && $_REQUEST['export_format'] != "pdf") {
