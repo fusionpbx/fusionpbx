@@ -157,6 +157,13 @@
 						storage_path = storage_path:gsub("${voicemail_dir}", voicemail_dir);
 					end
 				end
+				if (settings['voicemail']['transcribe_enabled'] ~= nil) then
+					if (settings['voicemail']['transcribe_enabled']['boolean'] ~= nil) then
+						transcribe_enabled = settings['voicemail']['transcribe_enabled']['boolean'];
+					else
+						transcribe_enabled = "false";
+					end
+				end	
 			end
 
 			if settings['voicemail'] then
@@ -225,6 +232,9 @@
 								session:setVariable("playback_terminators", "#");
 								session:setInputCallback("on_dtmf", "");
 							end
+						
+						-- override message format if transcription is enabled
+							if (transcribe_enabled == "true") and (voicemail_transcription_enabled == "true") then vm_message_ext = 'wav'; end
 						end
 				end
 			end
