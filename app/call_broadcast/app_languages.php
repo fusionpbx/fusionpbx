@@ -270,7 +270,7 @@ $text['description-timeout']['pl-pl'] = "Ilość milisekund oczekiwania po odtwo
 $text['description-timeout']['pt-br'] = "";
 $text['description-timeout']['pt-pt'] = "Limite de tempo (em milissegundos) de espera após reproduzir gravações ou confirmar a macro.";
 $text['description-timeout']['ru-ru'] = "Время ожидания (в миллисекундах) после воспроизведения записи или подтверждения макроса.";
-$text['description-timeout']['sv-se'] = "";
+$text['description-timeout']['sv-se'] = "Specificera den absoluta timeout:en i sekunder.";
 $text['description-timeout']['uk-ua'] = "";
 
 $text['description-phone']['en-us'] = "Optional, set a list of phone numbers one per row in the following format: 123-123-1234|Last Name, First Name";

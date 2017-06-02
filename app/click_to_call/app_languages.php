@@ -14,7 +14,7 @@ $text['label-click2call']['pl-pl'] = "";
 $text['label-click2call']['pt-br'] = "Clique para chamar";
 $text['label-click2call']['pt-pt'] = "Clique para chamar";
 $text['label-click2call']['ru-ru'] = "Вызов по клику";
-$text['label-click2call']['sv-se'] = "";
+$text['label-click2call']['sv-se'] = "Klicka för att ringa";
 $text['label-click2call']['uk-ua'] = "";
 
 $text['desc-click2call']['en-us'] = "Provide the following information to make a call from the source number to the destination number.";
@@ -30,7 +30,7 @@ $text['desc-click2call']['pl-pl'] = "";
 $text['desc-click2call']['pt-br'] = "Forneça as seguintes informações para realizar uma chamada do telefone originário para o telefone de destino.";
 $text['desc-click2call']['pt-pt'] = "Forneça a informação seguinte para realizar uma chamada com uma determinada origem para um determinado destino.";
 $text['desc-click2call']['ru-ru'] = "Предоставьте следующую информацию, чтобы сделать вызов от исходного номера до номера адресата.";
-$text['desc-click2call']['sv-se'] = "";
+$text['desc-click2call']['sv-se'] = "Ange följande information för att ringa från källnumret till destinationsnumret.";
 $text['desc-click2call']['uk-ua'] = "";
 
 $text['label-src-caller-id-nam']['en-us'] = "Source Caller ID Name";
@@ -46,7 +46,7 @@ $text['label-src-caller-id-nam']['pl-pl'] = "";
 $text['label-src-caller-id-nam']['pt-br'] = "Nome de origem";
 $text['label-src-caller-id-nam']['pt-pt'] = "Nome do Chamador";
 $text['label-src-caller-id-nam']['ru-ru'] = "Исходящее Caller ID Имя";
-$text['label-src-caller-id-nam']['sv-se'] = "";
+$text['label-src-caller-id-nam']['sv-se'] = "Caller ID Namn på källa";
 $text['label-src-caller-id-nam']['uk-ua'] = "";
 
 $text['desc-src-caller-id-nam']['en-us'] = "Enter the Caller ID name to send to your phone.";
@@ -62,7 +62,7 @@ $text['desc-src-caller-id-nam']['pl-pl'] = "";
 $text['desc-src-caller-id-nam']['pt-br'] = "Entre com o ID do número de origem para ser enviado para seu telefone.";
 $text['desc-src-caller-id-nam']['pt-pt'] = "Introduza o nome do chamador para ser enviado para o seu telefone.";
 $text['desc-src-caller-id-nam']['ru-ru'] = "Введите имя вызывающего абонента для отправки на свой телефон.";
-$text['desc-src-caller-id-nam']['sv-se'] = "";
+$text['desc-src-caller-id-nam']['sv-se'] = "Ange Caller ID Namn som skall skickas till din telefon.";
 $text['desc-src-caller-id-nam']['uk-ua'] = "";
 
 $text['label-src-caller-id-num']['en-us'] = "Source Caller ID Number";
@@ -78,7 +78,7 @@ $text['label-src-caller-id-num']['pl-pl'] = "";
 $text['label-src-caller-id-num']['pt-br'] = "Número de origem";
 $text['label-src-caller-id-num']['pt-pt'] = "Número do Chamador";
 $text['label-src-caller-id-num']['ru-ru'] = "Исходящий Caller ID Номер";
-$text['label-src-caller-id-num']['sv-se'] = "";
+$text['label-src-caller-id-num']['sv-se'] = "Källa Caller ID Nummer";
 $text['label-src-caller-id-num']['uk-ua'] = "";
 
 $text['desc-src-caller-id-num']['en-us'] = "Enter the Caller ID number to send to your phone (you probably want this to be the same as the destination number).";
@@ -94,7 +94,7 @@ $text['desc-src-caller-id-num']['pl-pl'] = "";
 $text['desc-src-caller-id-num']['pt-br'] = "Entre com o ID do número de origem para ser enviado para seu telefone (Orientamos colocar este número sendo o mesmo número que 'número de destino'";
 $text['desc-src-caller-id-num']['pt-pt'] = "Introduza o identificador de chamada para enviar para o seu telefone (geralmente é o mesmo que o número de destino).";
 $text['desc-src-caller-id-num']['ru-ru'] = "Введите номер вызывающего абонента для отправки на свой телефон (возможно, вы хотите чтобы он был то же, что и номер назначения).";
-$text['desc-src-caller-id-num']['sv-se'] = "";
+$text['desc-src-caller-id-num']['sv-se'] = "Ange nummeret för nummerpresentation som ska skickas till din telefon (du vill noga att det här är detsamma som destinationsnumret).";
 $text['desc-src-caller-id-num']['uk-ua'] = "";
 
 $text['label-dest-caller-id-nam']['en-us'] = "Destination Caller ID Name";
@@ -110,7 +110,7 @@ $text['label-dest-caller-id-nam']['pl-pl'] = "";
 $text['label-dest-caller-id-nam']['pt-br'] = "Identificação do destino";
 $text['label-dest-caller-id-nam']['pt-pt'] = "Nome do Chamador";
 $text['label-dest-caller-id-nam']['ru-ru'] = "Удаленное Caller ID Имя";
-$text['label-dest-caller-id-nam']['sv-se'] = "";
+$text['label-dest-caller-id-nam']['sv-se'] = "Destination Caller ID Nummer";
 $text['label-dest-caller-id-nam']['uk-ua'] = "";
 
 $text['desc-dest-caller-id-nam']['en-us'] = "Enter the Caller ID name to send to the destination number.";
@@ -126,7 +126,7 @@ $text['desc-dest-caller-id-nam']['pl-pl'] = "";
 $text['desc-dest-caller-id-nam']['pt-br'] = "Entre com a identificação a ser enviada para o número de destino.";
 $text['desc-dest-caller-id-nam']['pt-pt'] = "Introduza o identificador do chamador a ser enviado para o destinatário.";
 $text['desc-dest-caller-id-nam']['ru-ru'] = "Введите имя вызывающего абонента для отправки на номер назначения.";
-$text['desc-dest-caller-id-nam']['sv-se'] = "";
+$text['desc-dest-caller-id-nam']['sv-se'] = "Ange Caller ID Namn som skall skickas till destinationen.";
 $text['desc-dest-caller-id-nam']['uk-ua'] = "";
 
 $text['label-dest-caller-id-num']['en-us'] = "Destination Caller ID Number";
@@ -142,7 +142,7 @@ $text['label-dest-caller-id-num']['pl-pl'] = "";
 $text['label-dest-caller-id-num']['pt-br'] = "Número de destino";
 $text['label-dest-caller-id-num']['pt-pt'] = "Número a apresentar no destino";
 $text['label-dest-caller-id-num']['ru-ru'] = "Удаленный Caller ID Номер";
-$text['label-dest-caller-id-num']['sv-se'] = "";
+$text['label-dest-caller-id-num']['sv-se'] = "Destination Caller ID Nummer";
 $text['label-dest-caller-id-num']['uk-ua'] = "";
 
 $text['desc-dest-caller-id-num']['en-us'] = "Enter the Caller ID number to send to the destination number (you probably want this to be your phone number).";
@@ -158,7 +158,7 @@ $text['desc-dest-caller-id-num']['pl-pl'] = "";
 $text['desc-dest-caller-id-num']['pt-br'] = "Entre com o número de identificação a ser mandado para o número de destino (geralmente é o mesmo que o número de telefone).";
 $text['desc-dest-caller-id-num']['pt-pt'] = "Introduza o número identificador de chamada a ser enviado ao telefone de destino (geralmente é o mesmo que o seu número de telefone).";
 $text['desc-dest-caller-id-num']['ru-ru'] = "Введите номер вызывающего абонента для отправки на номер адресата (возможно, вы хотите, чтобы это был ваш номер телефона).";
-$text['desc-dest-caller-id-num']['sv-se'] = "";
+$text['desc-dest-caller-id-num']['sv-se'] = "Ange Caller ID nummret för att skicka till destinationen (du vill säkert att detta ska vara ditt telefonnummer).";
 $text['desc-dest-caller-id-num']['uk-ua'] = "";
 
 $text['label-src-num']['en-us'] = "Source Number";
@@ -174,7 +174,7 @@ $text['label-src-num']['pl-pl'] = "";
 $text['label-src-num']['pt-br'] = "Número de origem";
 $text['label-src-num']['pt-pt'] = "Número de origem";
 $text['label-src-num']['ru-ru'] = "Исходящий номер";
-$text['label-src-num']['sv-se'] = "";
+$text['label-src-num']['sv-se'] = "Nummer på källa";
 $text['label-src-num']['uk-ua'] = "";
 
 $text['desc-src-num']['en-us'] = "Enter your phone number. This can be an extension on the system, or another number (eg: mobile phone).";
@@ -190,7 +190,7 @@ $text['desc-src-num']['pl-pl'] = "";
 $text['desc-src-num']['pt-br'] = "Entre com seu númerop de telefone. Pode ser um ramal ou outro número (ex: número de celular).";
 $text['desc-src-num']['pt-pt'] = "Introduza o seu número de telefone. Poderá ser uma extensão do sistema ou outro número (ex: número de telemóvel).";
 $text['desc-src-num']['ru-ru'] = "Введите свой номер телефона. Это может быть внутренний номер или другой номер (например, мобильный).";
-$text['desc-src-num']['sv-se'] = "";
+$text['desc-src-num']['sv-se'] = "Skriv in ditt telefonnummer. Detta kan vara en anknytning i systemet, eller ett annat nummer (t ex: mobiltelefon).";
 $text['desc-src-num']['uk-ua'] = "";
 
 $text['label-dest-num']['en-us'] = "Destination Number";
@@ -206,7 +206,7 @@ $text['label-dest-num']['pl-pl'] = "";
 $text['label-dest-num']['pt-br'] = "Número do Destino";
 $text['label-dest-num']['pt-pt'] = "Número do Destino";
 $text['label-dest-num']['ru-ru'] = "Номер назначения";
-$text['label-dest-num']['sv-se'] = "";
+$text['label-dest-num']['sv-se'] = "Destination Nummer";
 $text['label-dest-num']['uk-ua'] = "";
 
 $text['desc-dest-num']['en-us'] = "Enter the number to call. This can be an extension on the system, another number, or a sip uri.  Sip URI's are of the form 5551234567@voip.example.com:5080 (5080 for freeswitch, or 5060 for other systems).";
@@ -222,7 +222,7 @@ $text['desc-dest-num']['pl-pl'] = "";
 $text['desc-dest-num']['pt-br'] = "";
 $text['desc-dest-num']['pt-pt'] = "Entre com o número a ser ligado. Pode ser um ramal, outro número, ou SIP URI. Exemplo de SIP URI: 12345678@voip.example.com:5080, sendo 5080 para o freeswitch ou 5060 para outros sistemas.";
 $text['desc-dest-num']['ru-ru'] = "Введите номер для вызова. Это может быть внутренний номер, другой номер или sip uri. SIP URI имеют вид 5551234567@voip.example.com:5080 (5080 для freeswitch или 5060 для других систем).";
-$text['desc-dest-num']['sv-se'] = "";
+$text['desc-dest-num']['sv-se'] = "Ange numret som ska ringas. Detta kan vara en anknytning i systemet, ett annat nummer eller en sip uri. SIP URIs är av formatet 5551234567@voip.example.com: 5080 (5080 för freeswitch eller 5060 för andra system).";
 $text['desc-dest-num']['uk-ua'] = "";
 
 $text['label-auto-answer']['en-us'] = "Auto Answer";
@@ -238,7 +238,7 @@ $text['label-auto-answer']['pl-pl'] = "";
 $text['label-auto-answer']['pt-br'] = "Resposta Automática";
 $text['label-auto-answer']['pt-pt'] = "Resposta Automática";
 $text['label-auto-answer']['ru-ru'] = "Автоответ";
-$text['label-auto-answer']['sv-se'] = "";
+$text['label-auto-answer']['sv-se'] = "Auto Svar";
 $text['label-auto-answer']['uk-ua'] = "";
 
 $text['desc-auto-answer']['en-us'] = "Select whether to enable auto answer.";
@@ -254,7 +254,7 @@ $text['desc-auto-answer']['pl-pl'] = "";
 $text['desc-auto-answer']['pt-br'] = "Ativar ou desativar a resposta automática.";
 $text['desc-auto-answer']['pt-pt'] = "Activar ou Desactivar a resposta automática.";
 $text['desc-auto-answer']['ru-ru'] = "Выберите для включения автоответа.";
-$text['desc-auto-answer']['sv-se'] = "";
+$text['desc-auto-answer']['sv-se'] = "Välj för att aktivera auto svara.";
 $text['desc-auto-answer']['uk-ua'] = "";
 
 $text['label-record']['en-us'] = "Record";
@@ -270,7 +270,7 @@ $text['label-record']['pl-pl'] = "";
 $text['label-record']['pt-br'] = "Gravar";
 $text['label-record']['pt-pt'] = "Gravar";
 $text['label-record']['ru-ru'] = "Запись";
-$text['label-record']['sv-se'] = "";
+$text['label-record']['sv-se'] = "Spela In";
 $text['label-record']['uk-ua'] = "";
 
 $text['label-true']['en-us'] = "true";
@@ -286,7 +286,7 @@ $text['label-true']['pl-pl'] = "";
 $text['label-true']['pt-br'] = "sim";
 $text['label-true']['pt-pt'] = "sim";
 $text['label-true']['ru-ru'] = "да";
-$text['label-true']['sv-se'] = "";
+$text['label-true']['sv-se'] = "sann";
 $text['label-true']['uk-ua'] = "";
 
 $text['label-false']['en-us'] = "false";
@@ -302,7 +302,7 @@ $text['label-false']['pl-pl'] = "";
 $text['label-false']['pt-br'] = "";
 $text['label-false']['pt-pt'] = "não";
 $text['label-false']['ru-ru'] = "нет";
-$text['label-false']['sv-se'] = "";
+$text['label-false']['sv-se'] = "falsk";
 $text['label-false']['uk-ua'] = "";
 
 $text['desc-record']['en-us'] = "Select whether to record the call.";
@@ -318,7 +318,7 @@ $text['desc-record']['pl-pl'] = "";
 $text['desc-record']['pt-br'] = "Escolha se quer gravar chamada.";
 $text['desc-record']['pt-pt'] = "Escolha se quer gravar chamada.";
 $text['desc-record']['ru-ru'] = "Выберите для включения записи.";
-$text['desc-record']['sv-se'] = "";
+$text['desc-record']['sv-se'] = "Välj om samtalet skall spelas in.";
 $text['desc-record']['uk-ua'] = "";
 
 $text['label-ringback']['en-us'] = "Ring Back";
@@ -334,7 +334,7 @@ $text['label-ringback']['pl-pl'] = "";
 $text['label-ringback']['pt-br'] = "Tocar de volta (Ring Back)";
 $text['label-ringback']['pt-pt'] = "Ring Back";
 $text['label-ringback']['ru-ru'] = "Контроль посылки вызова (КПВ)";
-$text['label-ringback']['sv-se'] = "";
+$text['label-ringback']['sv-se'] = "Tillbakaringning";
 $text['label-ringback']['uk-ua'] = "";
 
 $text['desc-ringback']['en-us'] = "Defines what you will hear while destination is being called. The choices are music (music on hold) ring (ring tone).";
@@ -350,7 +350,7 @@ $text['desc-ringback']['pl-pl'] = "";
 $text['desc-ringback']['pt-br'] = "Definir o que deseja escutar enquanto o destino não atende. As escolhas são música (música em espera) ring (tom de chamada).";
 $text['desc-ringback']['pt-pt'] = "Definir o que deseja ouvir enquanto o destino não atende. As escolhas são música (música em espera) ring (tom de chamada).";
 $text['desc-ringback']['ru-ru'] = "Определяет что вы услышите во время вызова номера назначения. Вы можете выбрать music (музыка на удержании) или ring (звонок).";
-$text['desc-ringback']['sv-se'] = "";
+$text['desc-ringback']['sv-se'] = "Definierar vad du kommer att höra när destinationen rings upp. Valet är musik (musik i vänteläge) ring (ringsignal).";
 $text['desc-ringback']['uk-ua'] = "";
 
 $text['opt-usring']['en-us'] = "us-ring";
@@ -366,7 +366,7 @@ $text['opt-usring']['pl-pl'] = "";
 $text['opt-usring']['pt-br'] = "us-ring";
 $text['opt-usring']['pt-pt'] = "us-ring";
 $text['opt-usring']['ru-ru'] = "us-ring";
-$text['opt-usring']['sv-se'] = "";
+$text['opt-usring']['sv-se'] = "us-ring";
 $text['opt-usring']['uk-ua'] = "";
 
 $text['opt-frring']['en-us'] = "fr-ring";
@@ -382,7 +382,7 @@ $text['opt-frring']['pl-pl'] = "";
 $text['opt-frring']['pt-br'] = "fr-ring";
 $text['opt-frring']['pt-pt'] = "fr-ring";
 $text['opt-frring']['ru-ru'] = "fr-ring";
-$text['opt-frring']['sv-se'] = "";
+$text['opt-frring']['sv-se'] = "fr-ring";
 $text['opt-frring']['uk-ua'] = "";
 
 $text['opt-ptring']['en-us'] = "pt-ring";
@@ -398,7 +398,7 @@ $text['opt-ptring']['pl-pl'] = "";
 $text['opt-ptring']['pt-br'] = "pt-ring";
 $text['opt-ptring']['pt-pt'] = "pt-ring";
 $text['opt-ptring']['ru-ru'] = "pt-ring";
-$text['opt-ptring']['sv-se'] = "";
+$text['opt-ptring']['sv-se'] = "pt-ring";
 $text['opt-ptring']['uk-ua'] = "";
 
 $text['opt-ukring']['en-us'] = "uk-ring";
@@ -414,7 +414,7 @@ $text['opt-ukring']['pl-pl'] = "";
 $text['opt-ukring']['pt-br'] = "uk-ring";
 $text['opt-ukring']['pt-pt'] = "uk-ring";
 $text['opt-ukring']['ru-ru'] = "uk-ring";
-$text['opt-ukring']['sv-se'] = "";
+$text['opt-ukring']['sv-se'] = "uk-ring";
 $text['opt-ukring']['uk-ua'] = "";
 
 $text['opt-rsring']['en-us'] = "rs-ring";
@@ -430,7 +430,7 @@ $text['opt-rsring']['pl-pl'] = "";
 $text['opt-rsring']['pt-br'] = "rs-ring";
 $text['opt-rsring']['pt-pt'] = "rs-ring";
 $text['opt-rsring']['ru-ru'] = "rs-ring";
-$text['opt-rsring']['sv-se'] = "";
+$text['opt-rsring']['sv-se'] = "rs-ring";
 $text['opt-rsring']['uk-ua'] = "";
 
 $text['opt-ruring']['en-us'] = "ru-ring";
@@ -446,7 +446,7 @@ $text['opt-ruring']['pl-pl'] = "";
 $text['opt-ruring']['pt-br'] = "ru-ring";
 $text['opt-ruring']['pt-pt'] = "ru-ring";
 $text['opt-ruring']['ru-ru'] = "ru-ring";
-$text['opt-ruring']['sv-se'] = "";
+$text['opt-ruring']['sv-se'] = "ru-ring";
 $text['opt-ruring']['uk-ua'] = "";
 
 $text['opt-itring']['en-us'] = "it-ring";
@@ -462,7 +462,7 @@ $text['opt-itring']['pl-pl'] = "";
 $text['opt-itring']['pt-br'] = "it-ring";
 $text['opt-itring']['pt-pt'] = "it-ring";
 $text['opt-itring']['ru-ru'] = "it-ring";
-$text['opt-itring']['sv-se'] = "";
+$text['opt-itring']['sv-se'] = "it-ring";
 $text['opt-itring']['uk-ua'] = "";
 
 $text['opt-dering']['en-us'] = "de-ring";
@@ -478,7 +478,7 @@ $text['opt-dering']['pl-pl'] = "";
 $text['opt-dering']['pt-br'] = "de-ring";
 $text['opt-dering']['pt-pt'] = "de-ring";
 $text['opt-dering']['ru-ru'] = "de-ring";
-$text['opt-dering']['sv-se'] = "";
+$text['opt-dering']['sv-se'] = "de-ring";
 $text['opt-dering']['uk-ua'] = "";
 
 $text['opt-moh']['en-us'] = "music";
@@ -494,7 +494,7 @@ $text['opt-moh']['pl-pl'] = "";
 $text['opt-moh']['pt-br'] = "música";
 $text['opt-moh']['pt-pt'] = "música";
 $text['opt-moh']['ru-ru'] = "music";
-$text['opt-moh']['sv-se'] = "";
+$text['opt-moh']['sv-se'] = "musik";
 $text['opt-moh']['uk-ua'] = "";
 
 $text['button-call']['en-us'] = "Call";
@@ -510,7 +510,7 @@ $text['button-call']['pl-pl'] = "";
 $text['button-call']['pt-br'] = "Chamada";
 $text['button-call']['pt-pt'] = "Chamada";
 $text['button-call']['ru-ru'] = "Call";
-$text['button-call']['sv-se'] = "";
+$text['button-call']['sv-se'] = "Ring";
 $text['button-call']['uk-ua'] = "";
 
 ?>

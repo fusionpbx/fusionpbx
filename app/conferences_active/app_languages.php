@@ -478,7 +478,7 @@ $text['label-kick']['pl-pl'] = "Kick ";
 $text['label-kick']['pt-br'] = "Ejetar";
 $text['label-kick']['pt-pt'] = "Ejectar";
 $text['label-kick']['ru-ru'] = "Выкинуть";
-$text['label-kick']['sv-se'] = "Kick";
+$text['label-kick']['sv-se'] = "Sparka Ut";
 $text['label-kick']['uk-ua'] = "";
 
 $text['label-joined']['en-us'] = "Joined";
@@ -654,7 +654,7 @@ $text['label-cid-name']['pl-pl'] = "Prezentacja nazwy dzwoniącego";
 $text['label-cid-name']['pt-br'] = "Nome CID";
 $text['label-cid-name']['pt-pt'] = "Nome do Chamador";
 $text['label-cid-name']['ru-ru'] = "CID Имя";
-$text['label-cid-name']['sv-se'] = "CID, namnpresentation";
+$text['label-cid-name']['sv-se'] = "CID, Namnpresentation";
 $text['label-cid-name']['uk-ua'] = "CID Ім’я";
 
 $text['label-capabilities']['en-us'] = "Capabilities";

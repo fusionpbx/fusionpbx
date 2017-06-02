@@ -318,7 +318,7 @@ $text['description-access_control_description']['pl-pl'] = "Wprowadź opis";
 $text['description-access_control_description']['pt-br'] = "Digite a descrição.";
 $text['description-access_control_description']['pt-pt'] = "Digite a descrição";
 $text['description-access_control_description']['ru-ru'] = "Введите описание";
-$text['description-access_control_description']['sv-se'] = "Skriv en beskrivning";
+$text['description-access_control_description']['sv-se'] = "Ange en beskrivning";
 $text['description-access_control_description']['uk-ua'] = "Введіть опис";
 
 $text['description-access_control_default']['en-us'] = "Select the default type.";

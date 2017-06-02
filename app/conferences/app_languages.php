@@ -14,7 +14,7 @@ $text['title-conferences']['pl-pl'] = "";
 $text['title-conferences']['pt-br'] = "";
 $text['title-conferences']['pt-pt'] = "Conferências";
 $text['title-conferences']['ru-ru'] = "Конференции";
-$text['title-conferences']['sv-se'] = "";
+$text['title-conferences']['sv-se'] = "Konferenser";
 $text['title-conferences']['uk-ua'] = "";
 
 $text['description']['en-us'] = "Conferences is used to setup conference rooms with a name, description, and optional pin number.";
@@ -30,7 +30,7 @@ $text['description']['pl-pl'] = "";
 $text['description']['pt-br'] = "";
 $text['description']['pt-pt'] = "As conferências são utilizadas para configurar salas de conferência com um nome, descrição e número pin opcional.";
 $text['description']['ru-ru'] = "Конференции используются для настройки конференц-залов с именем, описанием и необязательным номером контакта.";
-$text['description']['sv-se'] = "";
+$text['description']['sv-se'] = "Konferenser används för att konfigurera konferensrum med namn, beskrivning och valfritt PIN-nummer.";
 $text['description']['uk-ua'] = "";
 
 $text['label-active_conferences']['en-us'] = "Active Conferences";
@@ -46,7 +46,7 @@ $text['label-active_conferences']['pl-pl'] = "";
 $text['label-active_conferences']['pt-br'] = "";
 $text['label-active_conferences']['pt-pt'] = "Conferências Activas";
 $text['label-active_conferences']['ru-ru'] = "Активные Конференции";
-$text['label-active_conferences']['sv-se'] = "";
+$text['label-active_conferences']['sv-se'] = "Aktiva Konferenser";
 $text['label-active_conferences']['uk-ua'] = "";
 
 $text['button-view_active']['en-us'] = "View Active";
@@ -62,7 +62,7 @@ $text['button-view_active']['pl-pl'] = "";
 $text['button-view_active']['pt-br'] = "";
 $text['button-view_active']['pt-pt'] = "Ver Ativo";
 $text['button-view_active']['ru-ru'] = "Просмотр Активных";
-$text['button-view_active']['sv-se'] = "";
+$text['button-view_active']['sv-se'] = "Visa Aktiva";
 $text['button-view_active']['uk-ua'] = "";
 
 $text['table-name']['en-us'] = "Name";
@@ -78,7 +78,7 @@ $text['table-name']['pl-pl'] = "";
 $text['table-name']['pt-br'] = "";
 $text['table-name']['pt-pt'] = "Nome";
 $text['table-name']['ru-ru'] = "Имя";
-$text['table-name']['sv-se'] = "";
+$text['table-name']['sv-se'] = "Namn";
 $text['table-name']['uk-ua'] = "";
 
 $text['table-extension']['en-us'] = "Extension";
@@ -94,7 +94,7 @@ $text['table-extension']['pl-pl'] = "";
 $text['table-extension']['pt-br'] = "";
 $text['table-extension']['pt-pt'] = "Extensão";
 $text['table-extension']['ru-ru'] = "Внутренний Номер";
-$text['table-extension']['sv-se'] = "";
+$text['table-extension']['sv-se'] = "Anknytning";
 $text['table-extension']['uk-ua'] = "";
 
 $text['table-profile']['en-us'] = "Profile";
@@ -110,7 +110,7 @@ $text['table-profile']['pl-pl'] = "";
 $text['table-profile']['pt-br'] = "";
 $text['table-profile']['pt-pt'] = "Perfil";
 $text['table-profile']['ru-ru'] = "Профиль";
-$text['table-profile']['sv-se'] = "";
+$text['table-profile']['sv-se'] = "Profil";
 $text['table-profile']['uk-ua'] = "";
 
 $text['table-order']['en-us'] = "Order";
@@ -126,7 +126,7 @@ $text['table-order']['pl-pl'] = "";
 $text['table-order']['pt-br'] = "";
 $text['table-order']['pt-pt'] = "Ordem";
 $text['table-order']['ru-ru'] = "Приоритет";
-$text['table-order']['sv-se'] = "";
+$text['table-order']['sv-se'] = "Ordning";
 $text['table-order']['uk-ua'] = "";
 
 $text['table-enabled']['en-us'] = "Enabled";
@@ -142,7 +142,7 @@ $text['table-enabled']['pl-pl'] = "";
 $text['table-enabled']['pt-br'] = "";
 $text['table-enabled']['pt-pt'] = "Activo";
 $text['table-enabled']['ru-ru'] = "Включено";
-$text['table-enabled']['sv-se'] = "";
+$text['table-enabled']['sv-se'] = "Aktiverad";
 $text['table-enabled']['uk-ua'] = "";
 
 $text['table-description']['en-us'] = "Description";
@@ -158,7 +158,7 @@ $text['table-description']['pl-pl'] = "";
 $text['table-description']['pt-br'] = "";
 $text['table-description']['pt-pt'] = "Descrição";
 $text['table-description']['ru-ru'] = "Описание";
-$text['table-description']['sv-se'] = "";
+$text['table-description']['sv-se'] = "Beskrivning";
 $text['table-description']['uk-ua'] = "";
 
 $text['confirm-add']['en-us'] = "Add Complete";
@@ -174,7 +174,7 @@ $text['confirm-add']['pl-pl'] = "";
 $text['confirm-add']['pt-br'] = "";
 $text['confirm-add']['pt-pt'] = "Adição Efectuada";
 $text['confirm-add']['ru-ru'] = "Добавление Выполнено";
-$text['confirm-add']['sv-se'] = "";
+$text['confirm-add']['sv-se'] = "Tillagd";
 $text['confirm-add']['uk-ua'] = "";
 
 $text['confirm-update']['en-us'] = "Update Complete";
@@ -190,7 +190,7 @@ $text['confirm-update']['pl-pl'] = "";
 $text['confirm-update']['pt-br'] = "";
 $text['confirm-update']['pt-pt'] = "Actualização Efectuada";
 $text['confirm-update']['ru-ru'] = "Обновление Выполнено";
-$text['confirm-update']['sv-se'] = "";
+$text['confirm-update']['sv-se'] = "Ändring Utförd";
 $text['confirm-update']['uk-ua'] = "";
 
 $text['confirm-name']['en-us'] = "Please provide: Name";
@@ -206,7 +206,7 @@ $text['confirm-name']['pl-pl'] = "";
 $text['confirm-name']['pt-br'] = "";
 $text['confirm-name']['pt-pt'] = "Por favor indique: Nome";
 $text['confirm-name']['ru-ru'] = "Просьба указать: ФИО";
-$text['confirm-name']['sv-se'] = "";
+$text['confirm-name']['sv-se'] = "Var god ange: Namn";
 $text['confirm-name']['uk-ua'] = "";
 
 $text['confirm-extension']['en-us'] = "Please provide: Extension";
@@ -222,7 +222,7 @@ $text['confirm-extension']['pl-pl'] = "";
 $text['confirm-extension']['pt-br'] = "";
 $text['confirm-extension']['pt-pt'] = "Por favor indique: Extensão";
 $text['confirm-extension']['ru-ru'] = "Просьба указать: Внутренний Номер";
-$text['confirm-extension']['sv-se'] = "";
+$text['confirm-extension']['sv-se'] = "Var god ange: Anknytning";
 $text['confirm-extension']['uk-ua'] = "";
 
 $text['confirm-profile']['en-us'] = "Please provide: Profile";
@@ -238,7 +238,7 @@ $text['confirm-profile']['pl-pl'] = "";
 $text['confirm-profile']['pt-br'] = "";
 $text['confirm-profile']['pt-pt'] = "Por favor indique: Perfil";
 $text['confirm-profile']['ru-ru'] = "Просьба указать: Профиль";
-$text['confirm-profile']['sv-se'] = "";
+$text['confirm-profile']['sv-se'] = "Var god ange: Profil";
 $text['confirm-profile']['uk-ua'] = "";
 
 $text['confirm-enabled']['en-us'] = "Please provide: Enabled";
@@ -254,7 +254,7 @@ $text['confirm-enabled']['pl-pl'] = "";
 $text['confirm-enabled']['pt-br'] = "";
 $text['confirm-enabled']['pt-pt'] = "Por favor indique: Ativado";
 $text['confirm-enabled']['ru-ru'] = "Просьба указать: Включено";
-$text['confirm-enabled']['sv-se'] = "";
+$text['confirm-enabled']['sv-se'] = "Var god ange: Aktiverad";
 $text['confirm-enabled']['uk-ua'] = "";
 
 $text['label-conference-add']['en-us'] = "Conferences Add";
@@ -270,7 +270,7 @@ $text['label-conference-add']['pl-pl'] = "";
 $text['label-conference-add']['pt-br'] = "";
 $text['label-conference-add']['pt-pt'] = "Adição de Conferências";
 $text['label-conference-add']['ru-ru'] = "Добавить Конференции";
-$text['label-conference-add']['sv-se'] = "";
+$text['label-conference-add']['sv-se'] = "Lägg Till Konferens";
 $text['label-conference-add']['uk-ua'] = "";
 
 $text['label-conference-edit']['en-us'] = "Conferences Edit";
@@ -286,7 +286,7 @@ $text['label-conference-edit']['pl-pl'] = "";
 $text['label-conference-edit']['pt-br'] = "";
 $text['label-conference-edit']['pt-pt'] = "Edição de Conferências";
 $text['label-conference-edit']['ru-ru'] = "Редактировать Конференции";
-$text['label-conference-edit']['sv-se'] = "";
+$text['label-conference-edit']['sv-se'] = "Ändra Konferens";
 $text['label-conference-edit']['uk-ua'] = "";
 
 $text['label-extension']['en-us'] = "Extension";
@@ -302,7 +302,7 @@ $text['label-extension']['pl-pl'] = "";
 $text['label-extension']['pt-br'] = "";
 $text['label-extension']['pt-pt'] = "Extensão";
 $text['label-extension']['ru-ru'] = "Внутренний Номер";
-$text['label-extension']['sv-se'] = "";
+$text['label-extension']['sv-se'] = "Anknytning";
 $text['label-extension']['uk-ua'] = "";
 
 $text['description-name']['en-us'] = "Enter the conference name.";
@@ -318,7 +318,7 @@ $text['description-name']['pl-pl'] = "";
 $text['description-name']['pt-br'] = "";
 $text['description-name']['pt-pt'] = "Insira o nome da conferência.";
 $text['description-name']['ru-ru'] = "Введите Имя Конференции.";
-$text['description-name']['sv-se'] = "";
+$text['description-name']['sv-se'] = "Ange konferensens namn.";
 $text['description-name']['uk-ua'] = "";
 
 $text['description-extension']['en-us'] = "Enter the conference extension number.";
@@ -334,7 +334,7 @@ $text['description-extension']['pl-pl'] = "";
 $text['description-extension']['pt-br'] = "";
 $text['description-extension']['pt-pt'] = "Insira a extensão da conferência";
 $text['description-extension']['ru-ru'] = "Введите добавочный номер конференции.";
-$text['description-extension']['sv-se'] = "";
+$text['description-extension']['sv-se'] = "Ange konferensens anknytnings nummer.";
 $text['description-extension']['uk-ua'] = "";
 
 $text['description-3']['en-us'] = "to monitor and interact with the conference room.";
@@ -350,7 +350,7 @@ $text['description-3']['pl-pl'] = "";
 $text['description-3']['pt-br'] = "";
 $text['description-3']['pt-pt'] = "para monitorizar e interagir com a sala de conferências.";
 $text['description-3']['ru-ru'] = "Контролировать и взаимодействовать с конференц-залом.";
-$text['description-3']['sv-se'] = "";
+$text['description-3']['sv-se'] = "för att interagera med konferens rum.";
 $text['description-3']['uk-ua'] = "";
 
 $text['label-pin']['en-us'] = "Pin Number";
@@ -366,7 +366,7 @@ $text['label-pin']['pl-pl'] = "";
 $text['label-pin']['pt-br'] = "";
 $text['label-pin']['pt-pt'] = "Código Pin";
 $text['label-pin']['ru-ru'] = "PIN Номер";
-$text['label-pin']['sv-se'] = "";
+$text['label-pin']['sv-se'] = "Pin Nummer";
 $text['label-pin']['uk-ua'] = "";
 
 $text['description-pin']['en-us'] = "Optional pin number to secure access to the conference.";
@@ -382,7 +382,7 @@ $text['description-pin']['pl-pl'] = "";
 $text['description-pin']['pt-br'] = "";
 $text['description-pin']['pt-pt'] = "Código pin opcional para garantir o acesso à conferência.";
 $text['description-pin']['ru-ru'] = "Дополнительный PIN номер контакта для обеспечения доступа к конференции.";
-$text['description-pin']['sv-se'] = "";
+$text['description-pin']['sv-se'] = "Frivilligt pin nummer för att säkra tillgången till konferensen.";
 $text['description-pin']['uk-ua'] = "";
 
 $text['confirm-delete-2']['en-us'] = "Do you really want to delete this?";
@@ -398,7 +398,7 @@ $text['confirm-delete-2']['pl-pl'] = "";
 $text['confirm-delete-2']['pt-br'] = "";
 $text['confirm-delete-2']['pt-pt'] = "Deseja realmente apagar isto?";
 $text['confirm-delete-2']['ru-ru'] = "Вы действительно хотите удалить это?";
-$text['confirm-delete-2']['sv-se'] = "";
+$text['confirm-delete-2']['sv-se'] = "Vill du verkligen ta bort detta?";
 $text['confirm-delete-2']['uk-ua'] = "";
 
 $text['description-info']['en-us'] = "Enter the description.";
@@ -414,7 +414,7 @@ $text['description-info']['pl-pl'] = "";
 $text['description-info']['pt-br'] = "";
 $text['description-info']['pt-pt'] = "Insira a descrição.";
 $text['description-info']['ru-ru'] = "Введите описание.";
-$text['description-info']['sv-se'] = "";
+$text['description-info']['sv-se'] = "Ange beskrivningen.";
 $text['description-info']['uk-ua'] = "";
 
 $text['description-conference-enable']['en-us'] = "Select whether to enable or disable the conference.";
@@ -430,7 +430,7 @@ $text['description-conference-enable']['pl-pl'] = "";
 $text['description-conference-enable']['pt-br'] = "";
 $text['description-conference-enable']['pt-pt'] = "Seleccione se deseja ativar ou desativar a conferência.";
 $text['description-conference-enable']['ru-ru'] = "Выберите, включить или отключить конференцию.";
-$text['description-conference-enable']['sv-se'] = "";
+$text['description-conference-enable']['sv-se'] = "Välj om konferensen skall vara aktiverad eller ej.";
 $text['description-conference-enable']['uk-ua'] = "";
 
 $text['description-order']['en-us'] = "Enter the order number.";
@@ -446,7 +446,7 @@ $text['description-order']['pl-pl'] = "";
 $text['description-order']['pt-br'] = "";
 $text['description-order']['pt-pt'] = "Digite o número do pedido.";
 $text['description-order']['ru-ru'] = "Введите номер заказа.";
-$text['description-order']['sv-se'] = "";
+$text['description-order']['sv-se'] = "Ange ordnings numret.";
 $text['description-order']['uk-ua'] = "";
 
 $text['description-user-add']['en-us'] = "Assign the users that are can manage this conference extension.";
@@ -462,7 +462,7 @@ $text['description-user-add']['pl-pl'] = "";
 $text['description-user-add']['pt-br'] = "";
 $text['description-user-add']['pt-pt'] = "Atribuir utilizadores que podem gerir esta extensão de conferência.";
 $text['description-user-add']['ru-ru'] = "Назначьте пользователей, которые могут управлять этим Внутренним Номером конференции.";
-$text['description-user-add']['sv-se'] = "";
+$text['description-user-add']['sv-se'] = "Lägg till användarna som kan managera denna konferens anknytning.";
 $text['description-user-add']['uk-ua'] = "";
 
 $text['description-profile']['en-us'] = "Conference Profile is a collection of settings for the conference.";
@@ -478,7 +478,7 @@ $text['description-profile']['pl-pl'] = "";
 $text['description-profile']['pt-br'] = "";
 $text['description-profile']['pt-pt'] = "Perfil de conferência é um conjunto de definições para a conferência.";
 $text['description-profile']['ru-ru'] = "Профиль конференции - это набор настроек для конференции.";
-$text['description-profile']['sv-se'] = "";
+$text['description-profile']['sv-se'] = "Konferensprofil är en samling inställningar för konferensen.";
 $text['description-profile']['uk-ua'] = "";
 
 $text['description-flags']['en-us'] = "Optional conference flags. examples: mute|deaf|waste|moderator";
@@ -494,7 +494,7 @@ $text['description-flags']['pl-pl'] = "";
 $text['description-flags']['pt-br'] = "";
 $text['description-flags']['pt-pt'] = "Flags opcionais de conferências. Exemplos: mute|deaf|waste|moderator";
 $text['description-flags']['ru-ru'] = "Дополнительные флаги конференции. Примеры: откл. Микрофон | откл. Динамик | Временное отсутствие | Модератор";
-$text['description-flags']['sv-se'] = "";
+$text['description-flags']['sv-se'] = "Valfria konferensflaggor. Exempel: mute|deaf|waste|moderator";
 $text['description-flags']['uk-ua'] = "";
 
 $text['label-user_list']['en-us'] = "User List";
@@ -510,7 +510,7 @@ $text['label-user_list']['pl-pl'] = "";
 $text['label-user_list']['pt-br'] = "";
 $text['label-user_list']['pt-pt'] = "Lista de usuários";
 $text['label-user_list']['ru-ru'] = "Список Пользователей";
-$text['label-user_list']['sv-se'] = "";
+$text['label-user_list']['sv-se'] = "Användarlista";
 $text['label-user_list']['uk-ua'] = "";
 
 $text['label-flags']['en-us'] = "Flags";
@@ -526,7 +526,7 @@ $text['label-flags']['pl-pl'] = "";
 $text['label-flags']['pt-br'] = "";
 $text['label-flags']['pt-pt'] = "Bandeiras";
 $text['label-flags']['ru-ru'] = "Флаги";
-$text['label-flags']['sv-se'] = "";
+$text['label-flags']['sv-se'] = "Flaggor";
 $text['label-flags']['uk-ua'] = "";
 
 ?>

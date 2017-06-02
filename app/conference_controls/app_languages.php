@@ -14,7 +14,7 @@ $text['title-conference_controls']['pl-pl'] = "";
 $text['title-conference_controls']['pt-br'] = "Controles de conferência";
 $text['title-conference_controls']['pt-pt'] = "";
 $text['title-conference_controls']['ru-ru'] = "";
-$text['title-conference_controls']['sv-se'] = "";
+$text['title-conference_controls']['sv-se'] = "Konferens Kontroller";
 $text['title-conference_controls']['uk-ua'] = "";
 
 $text['title-conference_control']['en-us'] = "Conference Control";
@@ -30,7 +30,7 @@ $text['title-conference_control']['pl-pl'] = "";
 $text['title-conference_control']['pt-br'] = "Controle de conferência";
 $text['title-conference_control']['pt-pt'] = "";
 $text['title-conference_control']['ru-ru'] = "";
-$text['title-conference_control']['sv-se'] = "";
+$text['title-conference_control']['sv-se'] = "Konferens Kontroll";
 $text['title-conference_control']['uk-ua'] = "";
 
 $text['title_description-conference_control']['en-us'] = "Call controls enable ability to assign digits to actions. They can be used to mute, unmute, or other actions during the conference call.";
@@ -46,7 +46,7 @@ $text['title_description-conference_control']['pl-pl'] = "";
 $text['title_description-conference_control']['pt-br'] = "Controle de chamadas habilita atribuir ações aos números. Podem ser usadas para silenciar, ou outras ações durante a conferência.";
 $text['title_description-conference_control']['pt-pt'] = "";
 $text['title_description-conference_control']['ru-ru'] = "";
-$text['title_description-conference_control']['sv-se'] = "";
+$text['title_description-conference_control']['sv-se'] = "Samtalskontroller möjliggör tilldelning av siffror till handlingar. De kan användas för att stänga av, avaktivera eller andra åtgärder under konferenssamtalet.";
 $text['title_description-conference_control']['uk-ua'] = "";
 
 $text['label-control_name']['en-us'] = "Name";
@@ -62,7 +62,7 @@ $text['label-control_name']['pl-pl'] = "";
 $text['label-control_name']['pt-br'] = "Nome";
 $text['label-control_name']['pt-pt'] = "";
 $text['label-control_name']['ru-ru'] = "";
-$text['label-control_name']['sv-se'] = "";
+$text['label-control_name']['sv-se'] = "Namn";
 $text['label-control_name']['uk-ua'] = "";
 
 $text['description-control_name']['en-us'] = "Enter the conference control name.";
@@ -78,7 +78,7 @@ $text['description-control_name']['pl-pl'] = "";
 $text['description-control_name']['pt-br'] = "Entre com o nome do controle de conferência.";
 $text['description-control_name']['pt-pt'] = "";
 $text['description-control_name']['ru-ru'] = "";
-$text['description-control_name']['sv-se'] = "";
+$text['description-control_name']['sv-se'] = "Ange konferens kontroll namnet.";
 $text['description-control_name']['uk-ua'] = "";
 
 $text['label-control_enabled']['en-us'] = "Enabled";
@@ -94,7 +94,7 @@ $text['label-control_enabled']['pl-pl'] = "";
 $text['label-control_enabled']['pt-br'] = "Habilitado";
 $text['label-control_enabled']['pt-pt'] = "";
 $text['label-control_enabled']['ru-ru'] = "";
-$text['label-control_enabled']['sv-se'] = "";
+$text['label-control_enabled']['sv-se'] = "Aktiverad";
 $text['label-control_enabled']['uk-ua'] = "";
 
 $text['description-control_enabled']['en-us'] = "Set the status of the control.";
@@ -110,7 +110,7 @@ $text['description-control_enabled']['pl-pl'] = "";
 $text['description-control_enabled']['pt-br'] = "Atribua o estado do controle.";
 $text['description-control_enabled']['pt-pt'] = "";
 $text['description-control_enabled']['ru-ru'] = "";
-$text['description-control_enabled']['sv-se'] = "";
+$text['description-control_enabled']['sv-se'] = "Ange statusen för kontrollen.";
 $text['description-control_enabled']['uk-ua'] = "";
 
 $text['label-control_description']['en-us'] = "Description";
@@ -126,7 +126,7 @@ $text['label-control_description']['pl-pl'] = "";
 $text['label-control_description']['pt-br'] = "Descrição";
 $text['label-control_description']['pt-pt'] = "";
 $text['label-control_description']['ru-ru'] = "";
-$text['label-control_description']['sv-se'] = "";
+$text['label-control_description']['sv-se'] = "Beskrivning";
 $text['label-control_description']['uk-ua'] = "";
 
 $text['description-control_description']['en-us'] = "Enter the description.";
@@ -142,7 +142,7 @@ $text['description-control_description']['pl-pl'] = "";
 $text['description-control_description']['pt-br'] = "Entre com a descrição.";
 $text['description-control_description']['pt-pt'] = "";
 $text['description-control_description']['ru-ru'] = "";
-$text['description-control_description']['sv-se'] = "";
+$text['description-control_description']['sv-se'] = "Ange beskrivningen.";
 $text['description-control_description']['uk-ua'] = "";
 
 $text['label-true']['en-us'] = "true";
@@ -158,7 +158,7 @@ $text['label-true']['pl-pl'] = "";
 $text['label-true']['pt-br'] = "Sim";
 $text['label-true']['pt-pt'] = "";
 $text['label-true']['ru-ru'] = "";
-$text['label-true']['sv-se'] = "";
+$text['label-true']['sv-se'] = "sann";
 $text['label-true']['uk-ua'] = "";
 
 $text['label-false']['en-us'] = "false";
@@ -174,7 +174,7 @@ $text['label-false']['pl-pl'] = "";
 $text['label-false']['pt-br'] = "Não";
 $text['label-false']['pt-pt'] = "falso";
 $text['label-false']['ru-ru'] = "";
-$text['label-false']['sv-se'] = "";
+$text['label-false']['sv-se'] = "falsk";
 $text['label-false']['uk-ua'] = "";
 
 $text['button-add']['en-us'] = "Add";
@@ -190,7 +190,7 @@ $text['button-add']['pl-pl'] = "";
 $text['button-add']['pt-br'] = "Adicionar";
 $text['button-add']['pt-pt'] = "";
 $text['button-add']['ru-ru'] = "";
-$text['button-add']['sv-se'] = "";
+$text['button-add']['sv-se'] = "Lägg Till";
 $text['button-add']['uk-ua'] = "";
 
 $text['button-edit']['en-us'] = "Edit";
@@ -206,7 +206,7 @@ $text['button-edit']['pl-pl'] = "";
 $text['button-edit']['pt-br'] = "Editar";
 $text['button-edit']['pt-pt'] = "";
 $text['button-edit']['ru-ru'] = "";
-$text['button-edit']['sv-se'] = "";
+$text['button-edit']['sv-se'] = "Ändra";
 $text['button-edit']['uk-ua'] = "";
 
 $text['button-delete']['en-us'] = "Delete";
@@ -222,7 +222,7 @@ $text['button-delete']['pl-pl'] = "";
 $text['button-delete']['pt-br'] = "Deletar";
 $text['button-delete']['pt-pt'] = "";
 $text['button-delete']['ru-ru'] = "";
-$text['button-delete']['sv-se'] = "";
+$text['button-delete']['sv-se'] = "Ta Bort";
 $text['button-delete']['uk-ua'] = "";
 
 $text['button-save']['en-us'] = "Save";
@@ -238,7 +238,7 @@ $text['button-save']['pl-pl'] = "";
 $text['button-save']['pt-br'] = "Salvar";
 $text['button-save']['pt-pt'] = "Guardar";
 $text['button-save']['ru-ru'] = "";
-$text['button-save']['sv-se'] = "";
+$text['button-save']['sv-se'] = "Spara";
 $text['button-save']['uk-ua'] = "";
 
 $text['button-view']['en-us'] = "View";
@@ -254,7 +254,7 @@ $text['button-view']['pl-pl'] = "";
 $text['button-view']['pt-br'] = "Visualizar";
 $text['button-view']['pt-pt'] = "";
 $text['button-view']['ru-ru'] = "";
-$text['button-view']['sv-se'] = "";
+$text['button-view']['sv-se'] = "Läs";
 $text['button-view']['uk-ua'] = "";
 
 $text['button-back']['en-us'] = "Back";
@@ -270,7 +270,7 @@ $text['button-back']['pl-pl'] = "";
 $text['button-back']['pt-br'] = "Voltar";
 $text['button-back']['pt-pt'] = "Voltar";
 $text['button-back']['ru-ru'] = "";
-$text['button-back']['sv-se'] = "";
+$text['button-back']['sv-se'] = "Tillbaka";
 $text['button-back']['uk-ua'] = "";
 
 $text['confirm-delete']['en-us'] = "Do you really want to delete this?";
@@ -286,7 +286,7 @@ $text['confirm-delete']['pl-pl'] = "";
 $text['confirm-delete']['pt-br'] = "Você realmente deseja excluir?";
 $text['confirm-delete']['pt-pt'] = "";
 $text['confirm-delete']['ru-ru'] = "";
-$text['confirm-delete']['sv-se'] = "";
+$text['confirm-delete']['sv-se'] = "Vill du verkligen t abort detta?";
 $text['confirm-delete']['uk-ua'] = "";
 
 $text['message-add']['en-us'] = "Add Completed";
@@ -302,7 +302,7 @@ $text['message-add']['pl-pl'] = "";
 $text['message-add']['pt-br'] = "Adicionar concluído";
 $text['message-add']['pt-pt'] = "";
 $text['message-add']['ru-ru'] = "";
-$text['message-add']['sv-se'] = "";
+$text['message-add']['sv-se'] = "Tillagd";
 $text['message-add']['uk-ua'] = "";
 
 $text['message-update']['en-us'] = "Update Completed";
@@ -318,7 +318,7 @@ $text['message-update']['pl-pl'] = "";
 $text['message-update']['pt-br'] = "Atualização concluída";
 $text['message-update']['pt-pt'] = "";
 $text['message-update']['ru-ru'] = "";
-$text['message-update']['sv-se'] = "";
+$text['message-update']['sv-se'] = "Ändring Utförd";
 $text['message-update']['uk-ua'] = "";
 
 $text['message-delete']['en-us'] = "Delete Completed";
@@ -334,7 +334,7 @@ $text['message-delete']['pl-pl'] = "";
 $text['message-delete']['pt-br'] = "Exclusão concluída";
 $text['message-delete']['pt-pt'] = "";
 $text['message-delete']['ru-ru'] = "";
-$text['message-delete']['sv-se'] = "";
+$text['message-delete']['sv-se'] = "Borttagen";
 $text['message-delete']['uk-ua'] = "";
 
 $text['message-required']['en-us'] = "Please provide: ";
@@ -350,7 +350,7 @@ $text['message-required']['pl-pl'] = "";
 $text['message-required']['pt-br'] = "Por favor, informe: ";
 $text['message-required']['pt-pt'] = "";
 $text['message-required']['ru-ru'] = "";
-$text['message-required']['sv-se'] = "";
+$text['message-required']['sv-se'] = "Var god ange: ";
 $text['message-required']['uk-ua'] = "";
 
 $text['title-conference_control_details']['en-us'] = "Controls";
@@ -366,7 +366,7 @@ $text['title-conference_control_details']['pl-pl'] = "";
 $text['title-conference_control_details']['pt-br'] = "Controles";
 $text['title-conference_control_details']['pt-pt'] = "";
 $text['title-conference_control_details']['ru-ru'] = "";
-$text['title-conference_control_details']['sv-se'] = "";
+$text['title-conference_control_details']['sv-se'] = "Kontroller";
 $text['title-conference_control_details']['uk-ua'] = "";
 
 $text['title-conference_control_detail']['en-us'] = "Control";
@@ -382,7 +382,7 @@ $text['title-conference_control_detail']['pl-pl'] = "";
 $text['title-conference_control_detail']['pt-br'] = "Controle";
 $text['title-conference_control_detail']['pt-pt'] = "";
 $text['title-conference_control_detail']['ru-ru'] = "";
-$text['title-conference_control_detail']['sv-se'] = "";
+$text['title-conference_control_detail']['sv-se'] = "Kontrol";
 $text['title-conference_control_detail']['uk-ua'] = "";
 
 $text['title_description-conference_control_detail']['en-us'] = "";
@@ -414,7 +414,7 @@ $text['label-control_digits']['pl-pl'] = "";
 $text['label-control_digits']['pt-br'] = "Digitos";
 $text['label-control_digits']['pt-pt'] = "";
 $text['label-control_digits']['ru-ru'] = "";
-$text['label-control_digits']['sv-se'] = "";
+$text['label-control_digits']['sv-se'] = "Siffror";
 $text['label-control_digits']['uk-ua'] = "";
 
 $text['description-control_digits']['en-us'] = "Enter the digits.";
@@ -430,7 +430,7 @@ $text['description-control_digits']['pl-pl'] = "";
 $text['description-control_digits']['pt-br'] = "Entre com os digitos";
 $text['description-control_digits']['pt-pt'] = "";
 $text['description-control_digits']['ru-ru'] = "";
-$text['description-control_digits']['sv-se'] = "";
+$text['description-control_digits']['sv-se'] = "Ange siffrorna.";
 $text['description-control_digits']['uk-ua'] = "";
 
 $text['label-control_action']['en-us'] = "Action";
@@ -446,7 +446,7 @@ $text['label-control_action']['pl-pl'] = "";
 $text['label-control_action']['pt-br'] = "Ação";
 $text['label-control_action']['pt-pt'] = "";
 $text['label-control_action']['ru-ru'] = "";
-$text['label-control_action']['sv-se'] = "";
+$text['label-control_action']['sv-se'] = "Handling";
 $text['label-control_action']['uk-ua'] = "";
 
 $text['description-control_action']['en-us'] = "Enter the action.";
@@ -462,7 +462,7 @@ $text['description-control_action']['pl-pl'] = "";
 $text['description-control_action']['pt-br'] = "Informe uma ação.";
 $text['description-control_action']['pt-pt'] = "";
 $text['description-control_action']['ru-ru'] = "";
-$text['description-control_action']['sv-se'] = "";
+$text['description-control_action']['sv-se'] = "Ange handlingen.";
 $text['description-control_action']['uk-ua'] = "";
 
 $text['label-control_data']['en-us'] = "Data";
@@ -478,7 +478,7 @@ $text['label-control_data']['pl-pl'] = "";
 $text['label-control_data']['pt-br'] = "Dados";
 $text['label-control_data']['pt-pt'] = "";
 $text['label-control_data']['ru-ru'] = "";
-$text['label-control_data']['sv-se'] = "";
+$text['label-control_data']['sv-se'] = "Data";
 $text['label-control_data']['uk-ua'] = "";
 
 $text['description-control_data']['en-us'] = "Enter the data.";
@@ -494,7 +494,7 @@ $text['description-control_data']['pl-pl'] = "";
 $text['description-control_data']['pt-br'] = "Informe os dados.";
 $text['description-control_data']['pt-pt'] = "";
 $text['description-control_data']['ru-ru'] = "";
-$text['description-control_data']['sv-se'] = "";
+$text['description-control_data']['sv-se'] = "Ange data.";
 $text['description-control_data']['uk-ua'] = "";
 
 ?>

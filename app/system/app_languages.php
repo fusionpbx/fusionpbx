@@ -174,7 +174,7 @@ $text['label-path']['pl-pl'] = "Ścieżka projektu";
 $text['label-path']['pt-br'] = "Caminho do projeto";
 $text['label-path']['pt-pt'] = "Caminho do projeto";
 $text['label-path']['ru-ru'] = "Путь к проекту";
-$text['label-path']['sv-se'] = "projekt Path";
+$text['label-path']['sv-se'] = "Projekt Path";
 $text['label-path']['uk-ua'] = "шлях проекту";
 
 $text['label-git_info']['en-us'] = "Git Information";
@@ -190,7 +190,7 @@ $text['label-git_info']['pl-pl'] = "git informacji";
 $text['label-git_info']['pt-br'] = "Informações git";
 $text['label-git_info']['pt-pt'] = "Informações git";
 $text['label-git_info']['ru-ru'] = "Информация о Git";
-$text['label-git_info']['sv-se'] = "git Information";
+$text['label-git_info']['sv-se'] = "Git Information";
 $text['label-git_info']['uk-ua'] = "Гіт інформація";
 
 $text['label-git_corrupted']['en-us'] = "Git data is corrupt";
@@ -206,7 +206,7 @@ $text['label-git_corrupted']['pl-pl'] = "Git danych jest uszkodzony";
 $text['label-git_corrupted']['pt-br'] = "Dados Git é corrupto";
 $text['label-git_corrupted']['pt-pt'] = "Dados Git é corrupto";
 $text['label-git_corrupted']['ru-ru'] = "Git Данные повреждены";
-$text['label-git_corrupted']['sv-se'] = "Git uppgifter är korrupt";
+$text['label-git_corrupted']['sv-se'] = "Git data är korrupt";
 $text['label-git_corrupted']['uk-ua'] = "Гіт дані пошкоджені";
 
 $text['label-switch']['en-us'] = "Switch";
@@ -222,7 +222,7 @@ $text['label-switch']['pl-pl'] = "Przełącznik";
 $text['label-switch']['pt-br'] = "Interruptor";
 $text['label-switch']['pt-pt'] = "Interruptor";
 $text['label-switch']['ru-ru'] = "FreeSwitch";
-$text['label-switch']['sv-se'] = "Växla";
+$text['label-switch']['sv-se'] = "Switch";
 $text['label-switch']['uk-ua'] = "перемикач";
 
 $text['label-git_branch']['en-us'] = "Branch";
@@ -238,7 +238,7 @@ $text['label-git_branch']['pl-pl'] = "Gałąź";
 $text['label-git_branch']['pt-br'] = "Ramo";
 $text['label-git_branch']['pt-pt'] = "Ramo";
 $text['label-git_branch']['ru-ru'] = "Ветка";
-$text['label-git_branch']['sv-se'] = "Gren";
+$text['label-git_branch']['sv-se'] = "Branch";
 $text['label-git_branch']['uk-ua'] = "філія";
 
 $text['label-git_commit']['en-us'] = "Commit";
@@ -254,7 +254,7 @@ $text['label-git_commit']['pl-pl'] = "Popełnić";
 $text['label-git_commit']['pt-br'] = "cometer";
 $text['label-git_commit']['pt-pt'] = "cometer";
 $text['label-git_commit']['ru-ru'] = "Фиксация";
-$text['label-git_commit']['sv-se'] = "Begå";
+$text['label-git_commit']['sv-se'] = "Commit";
 $text['label-git_commit']['uk-ua'] = "здійснити";
 
 $text['label-git_origin']['en-us'] = "Origin";
@@ -334,7 +334,7 @@ $text['label-drive-percent']['pl-pl'] = "Dostępne w %";
 $text['label-drive-percent']['pt-br'] = "Percentagem livre";
 $text['label-drive-percent']['pt-pt'] = "Percentagem Livre";
 $text['label-drive-percent']['ru-ru'] = "Процент свободных";
-$text['label-drive-percent']['sv-se'] = "Ledigt Procent";
+$text['label-drive-percent']['sv-se'] = "Procent Ledigt";
 $text['label-drive-percent']['uk-ua'] = "Відсоток вільного";
 
 $text['label-drive-free']['en-us'] = "Free Space";

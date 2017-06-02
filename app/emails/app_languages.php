@@ -126,7 +126,7 @@ $text['label-type_email2fax']['pl-pl'] = "";
 $text['label-type_email2fax']['pt-br'] = "";
 $text['label-type_email2fax']['pt-pt'] = "";
 $text['label-type_email2fax']['ru-ru'] = "Отчет Электронной Почты на факс";
-$text['label-type_email2fax']['sv-se'] = "";
+$text['label-type_email2fax']['sv-se'] = "E-post till fax rapport";
 $text['label-type_email2fax']['uk-ua'] = "";
 
 $text['label-type']['en-us'] = "Type";

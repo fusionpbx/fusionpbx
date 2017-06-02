@@ -94,7 +94,7 @@ $text['message-invalid_recipient']['pl-pl'] = "Nieprawid艂owy odbiorca powiadom
 $text['message-invalid_recipient']['pt-br'] = "Notifica莽茫o inv谩lida Destinat谩rio";
 $text['message-invalid_recipient']['pt-pt'] = "Inv醠ido Notifica玢o Destinat醨io";
 $text['message-invalid_recipient']['ru-ru'] = "Недопустимый получатель";
-$text['message-invalid_recipient']['sv-se'] = "Ogiltig Mottagare f枚r Meddelande";
+$text['message-invalid_recipient']['sv-se'] = "Ogiltig Mottagare för Meddelande";
 $text['message-invalid_recipient']['uk-ua'] = "袧械胁褨褉薪懈泄  芯褌褉懈屑褍胁邪褔 锌芯胁褨写芯屑谢械薪薪褟";
 
 $text['message-disclaimer']['en-us'] = "<u>Disclosure</u>: Enabling Project Notifications is consent to the collection of <i>anonymous</i> and <i>general</i> demographic information about your installation environment.  Information requested consists of the following: 1) FusionPBX version, 2) PHP version, 3) web server and version, 4) voice switch version, 5) database type and version, 6) operating system platform and version, and 7) public IP address. If you do not wish for this information to be submitted, simply leave Project Notifications disabled, and no information will be submitted about your system.";
@@ -110,7 +110,7 @@ $text['message-disclaimer']['pl-pl'] = "Uwaga: W艂膮czanie Powiadomie艅 wi膮
 $text['message-disclaimer']['pt-br'] = "Informa莽玫es sobre erros";
 $text['message-disclaimer']['pt-pt'] = "<u>Divulga玢o</u>: A habilita玢o do projeto Notifica珲es ?o consentimento para a coleta de <i>an鬾imo</i> e <i>geral</i> informa珲es demogr醘icas sobre o seu ambiente de instala玢o. As informa珲es solicitadas consiste no seguinte: 1) vers鉶 FusionPBX, 2) vers鉶 PHP, 3) servidor web e vers鉶, 4) vers鉶 interruptor de voz, 5) Tipo de banco de dados e vers鉶, 6) plataforma de sistema operacional e vers鉶, e 7) IP p鷅lico endere鏾. Se voc?n鉶 deseja que esta informa玢o ser submetida, basta deixar Projeto Notifica珲es desativada, e nenhuma informa玢o ser?apresentada sobre o sistema.";
 $text['message-disclaimer']['ru-ru'] = "<u>Соглашение</u>: Включение уведомлений о проекте - это согласие на сбор статистической информации <i>анонимной</i> и <i>общей</i> о вашей среде установки. Запрошенная информация состоит из следующих компонентов:<br> 1) версия FusionPBX;<br> 2) версия PHP;<br> 3) веб-сервер и версия;<br> 4) версия голосового коммутатора;<br> 5) тип и версия базы данных;<br> 6) платформа и версия операционной системы;<br> 7) публичный IP-адрес.<br>Если вы не хотите, чтобы эта информация была отправлена, просто отключите уведомление проекту, и информация о вашей системе не будет отправлена.";
-$text['message-disclaimer']['sv-se'] = "Information: Att aktivera Projekt Meddelande 盲r samtidigt ett samtycke till att    anonym och demografisk information kommer att samlas in fr氓n din installationsmilj枚. Information som beg盲rs best氓r av f枚ljande : 1 ) FusionPBX versionen , 2 ) PHP -version , 3 ) webbserver och version , 4 ) r枚st switch version , 5 ) databas typ och version , 6 ) operativsystem plattform och version , samt 7 ) publik IP adress. Om du inte vill att denna information l盲mnas, l盲mna d氓  Projekt Meddelande avaktiverat.";
+$text['message-disclaimer']['sv-se'] = "Information: Att aktivera Projekt Meddelande är samtidigt ett samtycke till att anonym och demografisk information kommer att samlas in från din installationsmiljö. Information som begärs består av följande : 1 ) FusionPBX versionen , 2 ) PHP -version , 3 ) webbserver och version , 4 ) röst switch version , 5 ) databas typ och version , 6 ) operativsystem plattform och version , samt 7 ) publik IP adress. Om du inte vill att denna information lämnas, lämna då  Projekt Meddelande avaktiverat.";
 $text['message-disclaimer']['uk-ua'] = "";
 
 $text['message-demographics_submitted']['en-us'] = "Demographics Submitted";
@@ -142,7 +142,7 @@ $text['message-demographics_click_here']['pl-pl'] = "kliknij tutaj";
 $text['message-demographics_click_here']['pt-br'] = "Clique Aqui";
 $text['message-demographics_click_here']['pt-pt'] = "clicar aqui";
 $text['message-demographics_click_here']['ru-ru'] = "нажмите сюда";
-$text['message-demographics_click_here']['sv-se'] = "klicka h盲r";
+$text['message-demographics_click_here']['sv-se'] = "klicka här";
 $text['message-demographics_click_here']['uk-ua'] = "泻谢褨泻薪褨褌褜 褌褍褌";
 
 $text['message-demographics']['en-us'] = "<u>Note</u>: To help the FusionPBX project by submitting the demographic information described above <i>without</i> subscribing to Project Notifications, simply ";
@@ -158,7 +158,7 @@ $text['message-demographics']['pl-pl'] = "Uwaga: Aby wspom贸c projekt FusionPBX
 $text['message-demographics']['pt-br'] = "Nota: Para ajudar o FusionPBX, nos ajude a solucionar o incidente";
 $text['message-demographics']['pt-pt'] = "<u>Nota</u>: Para ajudar o projeto FusionPBX, apresentando as informa珲es demogr醘icas descrito acima sem a assinatura do Projeto Notifica珲es, basta ";
 $text['message-demographics']['ru-ru'] = "<u>Примечание:</u> Чтобы помочь проекту FusionPBX, отправив статистической информацию, описанную выше, <i>без</i> подписывания на уведомления о проекте, просто";
-$text['message-demographics']['sv-se'] = "Obs! F枚r att hj盲lpa FusionPBX projektet genom att skicka in demografisk information som beskrivs ovan utan att prenumerera p氓 Project Meddelanden , helt enkelt";
+$text['message-demographics']['sv-se'] = "Obs! För att hjälpa FusionPBX projektet genom att skicka in demografisk information som beskrivs ovan utan att prenumerera på Project Meddelanden , helt enkelt";
 $text['message-demographics']['uk-ua'] = "";
 
 $text['label-project_security']['en-us'] = "Security";
@@ -174,7 +174,7 @@ $text['label-project_security']['pl-pl'] = "Zabezpieczenia";
 $text['label-project_security']['pt-br'] = "Seguran莽a";
 $text['label-project_security']['pt-pt'] = "Seguran鏰";
 $text['label-project_security']['ru-ru'] = "Безопасность";
-$text['label-project_security']['sv-se'] = "S盲kerhet";
+$text['label-project_security']['sv-se'] = "Säkerhet";
 $text['label-project_security']['uk-ua'] = "袘械蟹锌械泻邪";
 
 $text['label-project_releases']['en-us'] = "Releases";
@@ -190,7 +190,7 @@ $text['label-project_releases']['pl-pl'] = "Wydania";
 $text['label-project_releases']['pt-br'] = "Lan莽amentos";
 $text['label-project_releases']['pt-pt'] = "Lan鏰mentos";
 $text['label-project_releases']['ru-ru'] = "Релизы";
-$text['label-project_releases']['sv-se'] = "Utg氓va";
+$text['label-project_releases']['sv-se'] = "Utgåva";
 $text['label-project_releases']['uk-ua'] = "袪械谢褨蟹懈";
 
 $text['label-project_notifications']['en-us'] = "Project Notifications";
@@ -302,7 +302,7 @@ $text['description-project_security']['pl-pl'] = "Otrzymuj powiadomienia o aktua
 $text['description-project_security']['pt-br'] = "Receber notifica莽玫es de atualiza莽茫o de seguran莽a";
 $text['description-project_security']['pt-pt'] = "Receber notifica珲es de atualiza珲es de seguran鏰.";
 $text['description-project_security']['ru-ru'] = "Получать уведомления об обновлениях безопасности.";
-$text['description-project_security']['sv-se'] = "Ta emot meddelanden om s盲kerhets uppdateringar.";
+$text['description-project_security']['sv-se'] = "Ta emot meddelanden om säkerhets uppdateringar.";
 $text['description-project_security']['uk-ua'] = "";
 
 $text['description-project_releases']['en-us'] = "Receive notifications when new stable version of FusionPBX are released and available for download.";
@@ -318,7 +318,7 @@ $text['description-project_releases']['pl-pl'] = "Otrzymuj powiadomienia kiedy n
 $text['description-project_releases']['pt-br'] = "Receber notifica莽玫es sobre uma nova vers茫o disponivel para download";
 $text['description-project_releases']['pt-pt'] = "Receba notifica珲es quando nova vers鉶 est醰el do FusionPBX s鉶 liberados e dispon韛eis para download.";
 $text['description-project_releases']['ru-ru'] = "Получать уведомления, когда новая стабильная версия FusionPBX выпущена и доступна для загрузки.";
-$text['description-project_releases']['sv-se'] = "Ta emot meddelanden n盲r nya stabila versioner av FusionPBX sl盲pps och finns f枚r nedladdning. ";
+$text['description-project_releases']['sv-se'] = "Ta emot meddelanden när nya stabila versioner av FusionPBX släpps och finns för nedladdning. ";
 $text['description-project_releases']['uk-ua'] = "";
 
 $text['description-project_notifications']['en-us'] = "Enable FusionPBX project notifications.";
@@ -350,7 +350,7 @@ $text['description-project_notification_recipient']['pl-pl'] = "Wpisz  adres e-m
 $text['description-project_notification_recipient']['pt-br'] = "Digite o endere莽o de email desejado para o destinat谩rio";
 $text['description-project_notification_recipient']['pt-pt'] = "Digite o endere鏾 de email desejado para o destinat醨io.";
 $text['description-project_notification_recipient']['ru-ru'] = "Введите адрес электронной почты получателя.";
-$text['description-project_notification_recipient']['sv-se'] = "Ange 枚nskad e-postadress f枚r mottagaren.";
+$text['description-project_notification_recipient']['sv-se'] = "Ange önskad e-postadress för mottagaren.";
 $text['description-project_notification_recipient']['uk-ua'] = "";
 
 $text['description-project_notification_method']['en-us'] = "Select the desired method of communication.";
@@ -366,7 +366,7 @@ $text['description-project_notification_method']['pl-pl'] = "Wybierz  metod臋 k
 $text['description-project_notification_method']['pt-br'] = "Selecione o m茅todo desejado de comunica莽茫o";
 $text['description-project_notification_method']['pt-pt'] = "Seleccione o m閠odo desejado de comunica玢o.";
 $text['description-project_notification_method']['ru-ru'] = "Выберите желаемый способ связи.";
-$text['description-project_notification_method']['sv-se'] = "V盲lj 枚nskad metod f枚r kommunikation.";
+$text['description-project_notification_method']['sv-se'] = "Välj önskad metod för kommunikation.";
 $text['description-project_notification_method']['uk-ua'] = "";
 
 $text['description-project_news']['en-us'] = "Receive notifications of general FusionPBX related news and information.";
@@ -382,7 +382,7 @@ $text['description-project_news']['pl-pl'] = "Otrzymuj og贸lne powiadomienia za
 $text['description-project_news']['pt-br'] = "Receber notifica莽玫es, not铆cias e informa莽玫es gerais relacionadas ao sistema";
 $text['description-project_news']['pt-pt'] = "Receber notifica珲es de not韈ias e informa珲es gerais FusionPBX relacionados.";
 $text['description-project_news']['ru-ru'] = "Получать уведомления об общих новостях и информации FusionPBX.";
-$text['description-project_news']['sv-se'] = "Ta emot meddelanden om allm盲nna FusionPBX relaterade nyheter och information.";
+$text['description-project_news']['sv-se'] = "Ta emot meddelanden om allmänna FusionPBX relaterade nyheter och information.";
 $text['description-project_news']['uk-ua'] = "";
 
 $text['description-project_events']['en-us'] = "Receive notifications of upcoming FusionPBX training classes, convention booths, and other events related to the project.";
@@ -398,7 +398,7 @@ $text['description-project_events']['pl-pl'] = "Otrzymuj powiadomienia zawieraj�
 $text['description-project_events']['pt-br'] = "Receber notifica莽玫es futuros treinamentos sobre o sistema e outros eventos";
 $text['description-project_events']['pt-pt'] = "Receber notifica珲es de futuras aulas FusionPBX forma玢o, cabines de conven珲es e outros eventos relacionados ao projeto.";
 $text['description-project_events']['ru-ru'] = "Получать уведомления о предстоящих учебных классах FusionPBX, стендах для конференций и других событиях, связанных с проектом.";
-$text['description-project_events']['sv-se'] = "F氓 meddelanden om kommande FusionPBX utbildningar , utst盲llningar och andra h盲ndelser relaterade till projektet.";
+$text['description-project_events']['sv-se'] = "Få meddelanden om kommande FusionPBX utbildningar , utställningar och andra händelser relaterade till projektet.";
 $text['description-project_events']['uk-ua'] = "";
 
 $text['description-notifications']['en-us'] = "Set notification preferences for FusionPBX project-related communication and other local system alerts.";
@@ -414,7 +414,7 @@ $text['description-notifications']['pl-pl'] = "Ustawienia preferencji powiadomie
 $text['description-notifications']['pt-br'] = "Definir prefer锚ncias de notifica莽玫es para a comunica莽茫o relacionada ao sistema";
 $text['description-notifications']['pt-pt'] = "Definir prefer阯cias de notifica玢o para a comunica玢o relacionada com o projecto FusionPBX e outros alertas do sistema local.";
 $text['description-notifications']['ru-ru'] = "Устанавливать настройки уведомлений для FusionPBX связанных с проектом сообщений и других локальных системных предупреждений.";
-$text['description-notifications']['sv-se'] = "Inst盲llningar f枚r FusionPBX relaterade meddelanden och andra lokala system varningar.";
+$text['description-notifications']['sv-se'] = "Inställningar för FusionPBX relaterade meddelanden och andra lokala system varningar.";
 $text['description-notifications']['uk-ua'] = "";
 
 ?>

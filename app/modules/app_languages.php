@@ -78,7 +78,7 @@ $text['label-unknown']['pl-pl'] = "";
 $text['label-unknown']['pt-br'] = "";
 $text['label-unknown']['pt-pt'] = "";
 $text['label-unknown']['ru-ru'] = "Неизвестный";
-$text['label-unknown']['sv-se'] = "";
+$text['label-unknown']['sv-se'] = "Okänd";
 $text['label-unknown']['uk-ua'] = "";
 
 $text['label-none']['en-us'] = "None";
@@ -94,7 +94,7 @@ $text['label-none']['pl-pl'] = "";
 $text['label-none']['pt-br'] = "";
 $text['label-none']['pt-pt'] = "";
 $text['label-none']['ru-ru'] = "Никто";
-$text['label-none']['sv-se'] = "";
+$text['label-none']['sv-se'] = "Ingen";
 $text['label-none']['uk-ua'] = "";
 
 $text['label-stopped']['en-us'] = "Stopped";

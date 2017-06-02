@@ -30,7 +30,7 @@ $text['label-status_on_demand']['pl-pl'] = "Na Å¼Ä…danie ";
 $text['label-status_on_demand']['pt-br'] = "A pedido";
 $text['label-status_on_demand']['pt-pt'] = "A Pedido";
 $text['label-status_on_demand']['ru-ru'] = "По требованию";
-$text['label-status_on_demand']['sv-se'] = "PÃ¥ BegÃ¤ran";
+$text['label-status_on_demand']['sv-se'] = "På Begäran";
 $text['label-status_on_demand']['uk-ua'] = "ÐÐ° Ð²Ð¸Ð¼Ð¾Ð³Ñƒ";
 
 $text['label-status_on_break']['en-us'] = "On Break";
@@ -46,7 +46,7 @@ $text['label-status_on_break']['pl-pl'] = "Na przerwie";
 $text['label-status_on_break']['pt-br'] = "Em pausa";
 $text['label-status_on_break']['pt-pt'] = "Em Pausa";
 $text['label-status_on_break']['ru-ru'] = "Пауза";
-$text['label-status_on_break']['sv-se'] = "PÃ¥ Rast";
+$text['label-status_on_break']['sv-se'] = "På Rast";
 $text['label-status_on_break']['uk-ua'] = "ÐÐ° Ð¿ÐµÑ€ÐµÑ€Ð²Ñ–";
 
 $text['label-status_logged_out_or_unknown']['en-us'] = "Logged Out / Unknown";
@@ -62,7 +62,7 @@ $text['label-status_logged_out_or_unknown']['pl-pl'] = "Wylogowany/nieznany";
 $text['label-status_logged_out_or_unknown']['pt-br'] = "Desligar / Desconhecido";
 $text['label-status_logged_out_or_unknown']['pt-pt'] = "Desligado / Unknown";
 $text['label-status_logged_out_or_unknown']['ru-ru'] = "Вышел из системы / Неизвестен";
-$text['label-status_logged_out_or_unknown']['sv-se'] = "Utloggad / OkÃ¤nd";
+$text['label-status_logged_out_or_unknown']['sv-se'] = "Utloggad / Okänd";
 $text['label-status_logged_out_or_unknown']['uk-ua'] = "Ð’Ð¸Ð¹ÑˆÐ¾Ð²/Ð½ÐµÐ²Ñ–Ð´Ð¾Ð¼Ð¾";
 
 $text['label-status_logged_out']['en-us'] = "Logged Out";
@@ -94,7 +94,7 @@ $text['label-status_do_not_disturb']['pl-pl'] = "Nie przeszkadzaÄ‡ (DND)";
 $text['label-status_do_not_disturb']['pt-br'] = "NÃ£o perturbe";
 $text['label-status_do_not_disturb']['pt-pt'] = "Não perturbe (DND)";
 $text['label-status_do_not_disturb']['ru-ru'] = "Просьба не беспокоить";
-$text['label-status_do_not_disturb']['sv-se'] = "StÃ¶r Ej";
+$text['label-status_do_not_disturb']['sv-se'] = "Stör Ej";
 $text['label-status_do_not_disturb']['uk-ua'] = "ÐÐµ Ñ‚ÑƒÑ€Ð±ÑƒÐ²Ð°Ñ‚Ð¸";
 
 $text['label-status_available_on_demand']['en-us'] = "Available (On Demand)";
@@ -110,7 +110,7 @@ $text['label-status_available_on_demand']['pl-pl'] = "DostÄ™pny (na Å¼Ä…
 $text['label-status_available_on_demand']['pt-br'] = "Disponivel (A pedido)";
 $text['label-status_available_on_demand']['pt-pt'] = "Disponível (A Pedido)";
 $text['label-status_available_on_demand']['ru-ru'] = "Доступен (по требованию)";
-$text['label-status_available_on_demand']['sv-se'] = "TillgÃ¤nglig (PÃ¥ BegÃ¤ran)";
+$text['label-status_available_on_demand']['sv-se'] = "Tillgänglig (På Begäran)";
 $text['label-status_available_on_demand']['uk-ua'] = "Ð”Ð¾ÑÑ‚ÑƒÐ¿Ð½Ð¸Ð¹ (Ð½Ð° Ð²Ð¸Ð¼Ð¾Ð³Ñƒ)";
 
 $text['label-status_available']['en-us'] = "Available";
@@ -126,7 +126,7 @@ $text['label-status_available']['pl-pl'] = "DostÄ™pny";
 $text['label-status_available']['pt-br'] = "DisponÃ­vel";
 $text['label-status_available']['pt-pt'] = "Disponível";
 $text['label-status_available']['ru-ru'] = "Доступен";
-$text['label-status_available']['sv-se'] = "TillgÃ¤nglig";
+$text['label-status_available']['sv-se'] = "Tillgänglig";
 $text['label-status_available']['uk-ua'] = "Ð”Ð¾ÑÑ‚ÑƒÐ¿Ð½Ð¸Ð¹";
 
 $text['label-refresh_pause']['en-us'] = "Pause Refresh";
@@ -238,7 +238,7 @@ $text['label-kill']['pl-pl'] = "WyÅ‚Ä…cz";
 $text['label-kill']['pt-br'] = "Chamada final";
 $text['label-kill']['pt-pt'] = "Chamada Final";
 $text['label-kill']['ru-ru'] = "Убить";
-$text['label-kill']['sv-se'] = "LÃ¤gg PÃ¥";
+$text['label-kill']['sv-se'] = "Lägg På";
 $text['label-kill']['uk-ua'] = "вбити";
 
 $text['label-eavesdrop']['en-us'] = "Eavesdrop";
@@ -302,7 +302,7 @@ $text['description-eavesdrop_destination']['pl-pl'] = "Wybierz destynacjÄ™ po
 $text['description-eavesdrop_destination']['pt-br'] = "Selecione o eavesdrop de destino";
 $text['description-eavesdrop_destination']['pt-pt'] = "Selecione o Eavesdrop Destino";
 $text['description-eavesdrop_destination']['ru-ru'] = "Выберите подслушивание пункта назначения";
-$text['description-eavesdrop_destination']['sv-se'] = "VÃ¤lj Medlyssning Destination";
+$text['description-eavesdrop_destination']['sv-se'] = "Välj Medlyssning Destination";
 $text['description-eavesdrop_destination']['uk-ua'] = "Виберіть пункт призначення підслуховувати";
 
 $text['button-all']['en-us'] = "All";
