@@ -5,20 +5,28 @@
 		$apps[$x]['uuid'] = "742714e5-8cdf-32fd-462c-cbe7e3d655db";
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "";
+		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "The dialplan is used to setup call destinations based on conditions and context. You can use the dialplan to send calls to gateways, auto attendants, external numbers, to scripts, or any destination.";
+		$apps[$x]['description']['ar-eg'] = "";
+		$apps[$x]['description']['de-at'] = "Der Wählplan wird verwendet um Anruf-Ziele anhand von Bedingungen und Kontext fest zu legen. Sie können den Wählplan verwenden, um Anrufe an Gateways, Automatische Zentralen, externe Rufnummern, Skripte oder andere Ziele weiterzuleiten.";
+		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-de'] = "Der Wählplan wird verwendet um Anruf-Ziele anhand von Bedingungen und Kontext fest zu legen. Sie können den Wählplan verwenden, um Anrufe an Gateways, Automatische Zentralen, externe Rufnummern, Skripte oder andere Ziele weiterzuleiten.";
 		$apps[$x]['description']['es-cl'] = "El plan de marcado es usado para configurar los destinos de llamadas basados en condiciones y contexto. Usted puede usar los planes de marcado para enviar hacia pasarelas, IVR, números externos, scripts o cualquier otro destino.";
 		$apps[$x]['description']['es-mx'] = "El plan de marcado es usado para configurar los destinos de llamadas basados en condiciones y contexto. Usted puede usar los planes de marcado para enviar hacia pasarelas, IVR, números externos, scripts o cualquier otro destino.";
-		$apps[$x]['description']['de-de'] = "Der Wählplan wird verwendet um Anruf-Ziele anhand von Bedingungen und Kontext fest zu legen. Sie können den Wählplan verwenden, um Anrufe an Gateways, Automatische Zentralen, externe Rufnummern, Skripte oder andere Ziele weiterzuleiten.";
-		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "Der Wählplan wird verwendet um Anruf-Ziele anhand von Bedingungen und Kontext fest zu legen. Sie können den Wählplan verwenden, um Anrufe an Gateways, Automatische Zentralen, externe Rufnummern, Skripte oder andere Ziele weiterzuleiten.";
-		$apps[$x]['description']['fr-fr'] = "Les dialplans son utilisés pour configurer les destinations d'appels selon des conditions et contextes.  Vous pouvez en utiliser pour diriger les appels vers les passerelles, IVR, numéross exterieurs ou tout autre destination.";
 		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "O dialplan é usado para configurar destinos de chamada com base nas condições e contexto. Você pode usar o dialplan para enviar chamadas para gateways, atendedores automáticos, números externos, para scripts, ou qualquer destino.";
+		$apps[$x]['description']['fr-fr'] = "Les dialplans son utilisés pour configurer les destinations d'appels selon des conditions et contextes.  Vous pouvez en utiliser pour diriger les appels vers les passerelles, IVR, numéross exterieurs ou tout autre destination.";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-pt'] = "O dialplan é usado para configurar destinos de chamada com base nas condições e contexto. Você pode usar o dialplan para enviar chamadas para gateways, atendedores automáticos, números externos, para scripts, ou qualquer destino.";
+		$apps[$x]['description']['ro-ro'] = "";
+		$apps[$x]['description']['ru-ru'] = "";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
 
 	//permission details
 		$y=0;
@@ -55,9 +63,8 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'dialplan_domain';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "dialplan_domain";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//schema details
 		$y=0;

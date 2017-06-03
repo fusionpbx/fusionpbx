@@ -1,26 +1,34 @@
 <?php
 
-	//application details
+//application details
 		$apps[$x]['name'] = "Edit";
 		$apps[$x]['uuid'] = "17e628ee-ccfa-49c0-29ca-9894a0384b9b";
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "";
+		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Script Editor can be used to edit lua, javascript or other scripts.";
+		$apps[$x]['description']['ar-eg'] = "";
+		$apps[$x]['description']['de-at'] = "Der Skript-Editor kann verwendet werden um Lua, Javaskripte oder andere Skripte zu bearbeiten.";
+		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-de'] = "Der Skript-Editor kann verwendet werden um Lua, Javaskripte oder andere Skripte zu bearbeiten.";
 		$apps[$x]['description']['es-cl'] = "Editor de scripts. Puede ser utilizado para editar archivos lua, javascript, etc.";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['de-de'] = "Der Skript-Editor kann verwendet werden um Lua, Javaskripte oder andere Skripte zu bearbeiten.";
-		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "Der Skript-Editor kann verwendet werden um Lua, Javaskripte oder andere Skripte zu bearbeiten.";
-		$apps[$x]['description']['fr-fr'] = "L'éditeur permet de modifier les scripts lua, javascript ou autres.";
 		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "Editor de script pode ser usado para editar lua, javascript ou outros scripts.";
+		$apps[$x]['description']['fr-fr'] = "L'éditeur permet de modifier les scripts lua, javascript ou autres.";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-pt'] = "Editor de script pode ser usado para editar lua, javascript ou outros scripts.";
+		$apps[$x]['description']['ro-ro'] = "";
+		$apps[$x]['description']['ru-ru'] = "";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
 
-	//permission details
+//permission details
 		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "script_editor_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "f1905fec-0577-daef-6045-59d09b7d3f94";
@@ -71,58 +79,57 @@
 		$apps[$x]['permissions'][$y]['name'] = "clip_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
-	//default settings
+//default settings
 		$y=0;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '2e217303-53ff-4dda-b74e-7f07738d83c2';
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'editor';
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'font_size';
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = '14px';
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Set the default text size for Editor.';
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2e217303-53ff-4dda-b74e-7f07738d83c2";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "editor";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "font_size";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "14px";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the default text size for Editor.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '8701cdca-64a1-4ff4-85a1-a09b1389ce92';
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'editor';
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'indent_guides';
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'boolean';
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'false';
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Set the default visibility of indent guides for Editor.';
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8701cdca-64a1-4ff4-85a1-a09b1389ce92";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "editor";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "indent_guides";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the default visibility of indent guides for Editor.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '5669f8cf-f0a0-4d9c-ad75-caf239e9f5cd';
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'editor';
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'invisibles';
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'boolean';
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'false';
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Set the default state of invisible characters for Editor.';
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5669f8cf-f0a0-4d9c-ad75-caf239e9f5cd";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "editor";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "invisibles";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the default state of invisible characters for Editor.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '7122cb30-d557-4001-af94-d8d21f964a63';
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'editor';
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'line_numbers';
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'boolean';
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'false';
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Set the default visibility of line numbers for Editor.';
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7122cb30-d557-4001-af94-d8d21f964a63";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "editor";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "line_numbers";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the default visibility of line numbers for Editor.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '62cfc1ac-6566-45ba-8c7d-f4234ab1b31e';
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'editor';
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'live_previews';
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'boolean';
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'false';
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Enable or disable live previewing of syntax, text size and theme changes.';
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "62cfc1ac-6566-45ba-8c7d-f4234ab1b31e";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "editor";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "live_previews";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable or disable live previewing of syntax, text size and theme changes.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '7b403afd-e4d6-4e96-8c8f-2cf5d6187191';
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'editor';
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'theme';
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'Cobalt';
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Set the default theme.';
-		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7b403afd-e4d6-4e96-8c8f-2cf5d6187191";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "editor";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Cobalt";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the default theme.";
 
-	//schema details
+//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_clips";
 		$apps[$x]['db'][$y]['table']['parent'] = "";

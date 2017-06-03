@@ -5,19 +5,28 @@
 		$apps[$x]['uuid'] = "b81412e8-7253-91f4-e48e-42fc2c9a38d9";
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "";
+		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Conferences is used to setup conference rooms with a name, description, and optional pin number.";
-		$apps[$x]['description']['es-cl'] = "Las conferencias son usadas para configurar salas con un nombre, descripción y un número de acceso (opcional)";
-		$apps[$x]['description']['de-de'] = "Konferenzen wird verwendet, um Konferenzräume mit Namen, Beschreibung und optionaler PIN bereit zu stellen.";
-		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Konferenzen wird verwendet, um Konferenzräume mit Namen, Beschreibung und optionaler PIN bereit zu stellen.";
-		$apps[$x]['description']['fr-fr'] = "Les conferences servent à configurer des salles avec un nom, une description et un code pin facultatif";
+		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-de'] = "Konferenzen wird verwendet, um Konferenzräume mit Namen, Beschreibung und optionaler PIN bereit zu stellen.";
+		$apps[$x]['description']['es-cl'] = "Las conferencias son usadas para configurar salas con un nombre, descripción y un número de acceso (opcional)";
+		$apps[$x]['description']['es-mx'] = "";
 		$apps[$x]['description']['fr-ca'] = "Les conferences sont utilises pour la configuration de chambres avec un nom, descrption et nom d'access (facultatif)";
-		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "Conferências é usado para configurar salas de conferências com um nome, descrição e número de pin opcional.";
+		$apps[$x]['description']['fr-fr'] = "Les conferences servent à configurer des salles avec un nom, une description et un code pin facultatif";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-pt'] = "Conferências é usado para configurar salas de conferências com um nome, descrição e número de pin opcional.";
+		$apps[$x]['description']['ro-ro'] = "";
+		$apps[$x]['description']['ru-ru'] = "";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
 
 	//destination details
 		$y=0;
@@ -134,7 +143,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select whether to enable or disable the conference.";
 
-		$y=1;
+		$y++;
 		$apps[$x]['db'][$y]['table']['name'] = "v_conference_users";
 		$apps[$x]['db'][$y]['table']['parent'] = "v_conferences";
 		$z=0;

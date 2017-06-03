@@ -1,26 +1,34 @@
 <?php
 
-	//application details
+//application details
 		$apps[$x]['name'] = "Extensions";
 		$apps[$x]['uuid'] = "e68d9689-2769-e013-28fa-6214bf47fca3";
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "";
+		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Used Configure SIP extensions.";
+		$apps[$x]['description']['ar-eg'] = "";
+		$apps[$x]['description']['de-at'] = "Wird verwendet um SIP Nebenstellen zu konfigurieren.";
+		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-de'] = "Wird verwendet um SIP Nebenstellen zu konfigurieren.";
 		$apps[$x]['description']['es-cl'] = "Utilizado para configurar Extensiones SIP.";
 		$apps[$x]['description']['es-mx'] = "Utilizado para configurar Extensiones SIP.";
-		$apps[$x]['description']['de-de'] = "Wird verwendet um SIP Nebenstellen zu konfigurieren.";
-		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "Wird verwendet um SIP Nebenstellen zu konfigurieren.";
-		$apps[$x]['description']['fr-fr'] = "Utilisé pour configurer des extentions SIP";
 		$apps[$x]['description']['fr-ca'] = "Utilisé pour configurer des éxtentions SIP";
-		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "Utilizado para configurar extensões SIP.";
+		$apps[$x]['description']['fr-fr'] = "Utilisé pour configurer des extentions SIP";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-pt'] = "Utilizado para configurar extensões SIP.";
+		$apps[$x]['description']['ro-ro'] = "";
+		$apps[$x]['description']['ru-ru'] = "";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
 
-	//destination details
+//destination details
 		$y=0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "extensions";
@@ -52,7 +60,7 @@
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:bridge group/\${destination}@\${domain_name}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination}";
 
-	//permission details
+//permission details
 		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "extension_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "d3036a99-9a9f-2ad6-a82a-1fe7bebbe2d3";
@@ -140,28 +148,26 @@
 		$apps[$x]['permissions'][$y]['name'] = "extension_force_ping";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
-		$y++;
 
-	//default settings
+//default settings
 		$y=0;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'db3290e5-d3fb-4bcd-b2a8-a0061aa02532';
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'domain';
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'dial_string';
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = '{sip_invite_domain=${domain_name},leg_timeout=${call_timeout},presence_id=${dialed_user}@${dialed_domain}}${sofia_contact(*/${dialed_user}@${dialed_domain})}';
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "db3290e5-d3fb-4bcd-b2a8-a0061aa02532";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "domain";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dial_string";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "{sip_invite_domain=${domain_name},leg_timeout=${call_timeout},presence_id=${dialed_user}@${dialed_domain}}${sofia_contact(*/${dialed_user}@${dialed_domain})}";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '3eeb3757-f7bb-437a-9021-8ccf3f27c98b';
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'limit';
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'extensions';
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = '3';
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
-		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3eeb3757-f7bb-437a-9021-8ccf3f27c98b";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "limit";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "extensions";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 
-	//schema details
+//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_extensions";
 		$apps[$x]['db'][$y]['table']['parent'] = "";

@@ -1,17 +1,17 @@
 <?php
 
-	//application details
+		//application details
 		$apps[$x]['name'] = "Tones";
 		$apps[$x]['uuid'] = "38ab9f01-bcd2-4726-a9ff-9af8ed9e396a";
 		$apps[$x]['category'] = "Switch";;
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "";
+		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Manage Tones";
 		$apps[$x]['description']['ru-ru'] = "Менеджер Тонов";
 
-	//destination details
+		//destination details
 		$y=0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "tones";
