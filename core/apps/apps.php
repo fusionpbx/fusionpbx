@@ -92,8 +92,9 @@
 		if ($row['uuid'] != "d8704214-75a0-e52f-1336-f0780e29fef8") {
 
 			$description = $row['description'][$_SESSION['domain']['language']['code']];
-			if (strlen($description) == 0) { $row['$description'] = $row['description']['en-us']; }
-			if (strlen($description) == 0) { $row['$description'] = '&nbsp;'; }
+			if (strlen($description) == 0) { $description = $row['description']['en-us']; }
+			if (strlen($description) == 0) { $description = '&nbsp;'; }
+			$row['$description'] = $description;
 
 			/*
 			$tr_link = (permission_exists('app_edit')) ? "href='apps_edit.php?id=".$row['uuid']."'" : null;
