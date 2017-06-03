@@ -5,19 +5,28 @@
 		$apps[$x]['uuid'] = "8d083f5a-f726-42a8-9ffa-8d28f848f10e";
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "";
+		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Conferences Centers allows one or more audio and video conference rooms.";
-		$apps[$x]['description']['es-cl'] = "El Centro de Conferencia permite una o más salas de conferencia para audio y video.";
-		$apps[$x]['description']['de-de'] = "Konferenzzentralen stellen ein oder mehrere Audio- und Videokonferenzräume bereit.";
-		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Konferenzzentralen stellen ein oder mehrere Audio- und Videokonferenzräume bereit.";
-		$apps[$x]['description']['fr-fr'] = "Centre de Conférences permet une ou plus conferences audio ou vidéo.";
+		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-de'] = "Konferenzzentralen stellen ein oder mehrere Audio- und Videokonferenzräume bereit.";
+		$apps[$x]['description']['es-cl'] = "El Centro de Conferencia permite una o más salas de conferencia para audio y video.";
+		$apps[$x]['description']['es-mx'] = "";
 		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "O centro de conferências permite gerir uma ou mais salas de conferência, audio e vídeo.";
+		$apps[$x]['description']['fr-fr'] = "Centre de Conférences permet une ou plus conferences audio ou vidéo.";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "O centro de conferências permite gerir uma ou mais salas de conferência de audio e vídeo.";
+		$apps[$x]['description']['pt-pt'] = "O centro de conferências permite gerir uma ou mais salas de conferência, audio e vídeo.";
+		$apps[$x]['description']['ro-ro'] = "";
+		$apps[$x]['description']['ru-ru'] = "";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
 
 	//destination details
 		$y=0;
@@ -224,7 +233,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enable or disable the conference center.";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Habilite ou desabilite o centro de conferência.";
 
-		$y=1;
+		$y++;
 		$apps[$x]['db'][$y]['table']['name'] = "v_conference_rooms";
 		$apps[$x]['db'][$y]['table']['parent'] = "";
 		$z=0;
@@ -332,9 +341,8 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Description.for the conference session.";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Descrição para a sessão de conferência.";
-		$z++;
 
-		$y=2;
+		$y++;
 		$apps[$x]['db'][$y]['table']['name'] = "v_conference_sessions";
 		$apps[$x]['db'][$y]['table']['parent'] = "";
 		$z=0;
@@ -381,9 +389,8 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "end_epoch";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Fim do período.";
-		$z++;
 
-		$y=3;
+		$y++;
 		$apps[$x]['db'][$y]['table']['name'] = "v_conference_session_details";
 		$apps[$x]['db'][$y]['table']['parent'] = "v_conference_sessions";
 		$z=0;
@@ -460,6 +467,5 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "end_epoch";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Fim do período";
-		$z++;
 
 ?>

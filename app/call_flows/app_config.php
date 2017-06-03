@@ -5,19 +5,28 @@
 		$apps[$x]['uuid'] = "b1b70f85-6b42-429b-8c5a-60c8b02b7d14";
 		$apps[$x]['category'] = "";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "";
+		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
-		$apps[$x]['description']['en-us'] = "";
-		$apps[$x]['description']['es-cl'] = "";
-		$apps[$x]['description']['de-de'] = "";
-		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['en-us'] = "Direct calls between two destinations by calling a feature code.";
+		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "";
-		$apps[$x]['description']['fr-fr'] = "";
+		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['es-cl'] = "";
+		$apps[$x]['description']['es-mx'] = "";
 		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "";
+		$apps[$x]['description']['fr-fr'] = "";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-pt'] = "";
+		$apps[$x]['description']['ro-ro'] = "";
+		$apps[$x]['description']['ru-ru'] = "";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
 
 	//destination details
 		$y=0;
@@ -51,7 +60,6 @@
 		$apps[$x]['permissions'][$y]['name'] = "call_flow_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
-		$y++;
 
 	//schema details
 		$y=0;

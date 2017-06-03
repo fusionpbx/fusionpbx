@@ -5,20 +5,28 @@
 		$apps[$x]['uuid'] = "35ff1f56-513a-1f6c-a393-955838ff12ee";
 		$apps[$x]['category'] = "System";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "";
+		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Monitor System Services.";
+		$apps[$x]['description']['ar-eg'] = "";
+		$apps[$x]['description']['de-at'] = "Systemdienste überwachen.";
+		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-de'] = "Systemdienste überwachen.";
 		$apps[$x]['description']['es-cl'] = "Monitor de Servicios de Sistema";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['de-de'] = "Systemdienste überwachen.";
-		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "Systemdienste überwachen.";
-		$apps[$x]['description']['fr-fr'] = "Contrôler les services du système.";
 		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "Monitorizar Serviços do Sistema.";
+		$apps[$x]['description']['fr-fr'] = "Contrôler les services du système.";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-pt'] = "Monitorizar Serviços do Sistema.";
+		$apps[$x]['description']['ro-ro'] = "";
+		$apps[$x]['description']['ru-ru'] = "";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
 
 	//permission details
 		$y=0;

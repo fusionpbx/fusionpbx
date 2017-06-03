@@ -5,20 +5,28 @@
 		$apps[$x]['uuid'] = "ec8530a9-903a-469d-3717-281f798b9ef6";
 		$apps[$x]['category'] = "Switch";;
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "";
+		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Active channels on the system.";
-		$apps[$x]['description']['es-cl'] = "Canales activos en el sistema.";
-		$apps[$x]['description']['de-de'] = "Aktive Kanäle auf dem System.";
-		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Aktive Kanäle auf dem System.";
-		$apps[$x]['description']['fr-fr'] = "Channels actifs sur le système";
+		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-de'] = "Aktive Kanäle auf dem System.";
+		$apps[$x]['description']['es-cl'] = "Canales activos en el sistema.";
+		$apps[$x]['description']['es-mx'] = "";
 		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "Canais ativos no sistema.";
+		$apps[$x]['description']['fr-fr'] = "Channels actifs sur le système";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "Canais ativos no sistema.";
+		$apps[$x]['description']['pt-pt'] = "Canais ativos no sistema.";
+		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "Активные каналы в системе";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
 
 	//permission details
 		$y=0;
