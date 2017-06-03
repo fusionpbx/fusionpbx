@@ -5,19 +5,28 @@
 		$apps[$x]['uuid'] = "95788e50-9500-079e-2807-fd530b0ea370";
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "";
+		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Queues for managing inbound calls and routing those calls to available agents.";
-		$apps[$x]['description']['es-cl'] = "Colas pra administar las llamadas entrantes y enviarlas a los agentes disponibles";
-		$apps[$x]['description']['de-de'] = "Warteschlangen um eingehende Anrufe zu verwalten und diese an verfügbare Agenten weiterzuleiten.";
-		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Warteschlangen um eingehende Anrufe zu verwalten und diese an verfügbare Agenten weiterzuleiten.";
-		$apps[$x]['description']['fr-fr'] = "Files d'attente d'appels entrants distribu%uFFFDs aux agents disponibles.";
+		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-de'] = "Warteschlangen um eingehende Anrufe zu verwalten und diese an verfügbare Agenten weiterzuleiten.";
+		$apps[$x]['description']['es-cl'] = "Colas pra administar las llamadas entrantes y enviarlas a los agentes disponibles";
+		$apps[$x]['description']['es-mx'] = "";
 		$apps[$x]['description']['fr-ca'] = "Queues pour envoyer les appels entrants vers les agents disponibles.";
-		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "As filas servem para gerenciamento de chamadas de entrada e encaminhamento das mesmas para os agentes dispon%uFFFDveis.";
+		$apps[$x]['description']['fr-fr'] = "Files d'attente d'appels entrants distribu%uFFFDs aux agents disponibles.";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "As filas servem para gerenciar as chamadas que entram e encaminhar as mesmas para os agentes disponíveis.";
+		$apps[$x]['description']['pt-pt'] = "As filas servem para gerenciamento de chamadas de entrada e encaminhamento das mesmas para os agentes dispon%uFFFDveis.";
+		$apps[$x]['description']['ro-ro'] = "";
+		$apps[$x]['description']['ru-ru'] = "";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
 
 	//destination details
 		$y=0;
@@ -109,14 +118,13 @@
 
 	//default settings
 		$y = 0;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '8ebeb864-f03e-406c-b82f-6eb47cb1bd39';
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'limit';
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'call_center_queues';
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = '3';
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
-		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8ebeb864-f03e-406c-b82f-6eb47cb1bd39";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "limit";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "call_center_queues";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 
 	//schema details
 		$y=0;
@@ -331,9 +339,9 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
-               	$apps[$x]['db'][$y]['fields'][$z]['name'] = "queue_cc_exit_keys";
-               	$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-               	$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "queue_cc_exit_keys";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "queue_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";

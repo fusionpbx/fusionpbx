@@ -1,11 +1,11 @@
 <?php
 
-	//application details
+		//application details
 		$apps[$x]['name'] = "Variables";
 		$apps[$x]['uuid'] = "54e08402-c1b8-0a9d-a30a-f569fc174dd8";
 		$apps[$x]['category'] = "Switch";;
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "";
+		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Define variables that are used by the switch, provisioning, and more.";
@@ -21,7 +21,7 @@
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['ru-ru'] = "Определение переменной делает возможным управление FreeSwitch, его инициализации, и многое другое.";
 
-	//permission details
+		//permission details
 		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "var_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "7a4e9ec5-24b9-7200-89b8-d70bf8afdd8f";
@@ -36,7 +36,7 @@
 		$apps[$x]['permissions'][$y]['name'] = "var_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
-	//schema details
+		//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_vars";
 		$apps[$x]['db'][$y]['table']['parent'] = "";

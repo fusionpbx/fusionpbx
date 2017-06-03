@@ -1,25 +1,34 @@
 <?php
 
-	//application details
+//application details
 		$apps[$x]['name'] = "Follow Me";
 		$apps[$x]['uuid'] = "f5210fba-337d-4e05-86b6-7a2fd9dc7c42";
 		$apps[$x]['category'] = "";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "";
+		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
-		$apps[$x]['description']['en-us'] = "";
-		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['de-de'] = "Follow Me";
+		$apps[$x]['description']['en-us'] = "Define alternate inbound call handling for extensions.";
+		$apps[$x]['description']['ar-eg'] = "";
+		$apps[$x]['description']['de-at'] = "";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "Follow Me";
-		$apps[$x]['description']['fr-fr'] = "";
+		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['es-cl'] = "";
+		$apps[$x]['description']['es-mx'] = "";
 		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "";
+		$apps[$x]['description']['fr-fr'] = "";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-pt'] = "";
+		$apps[$x]['description']['ro-ro'] = "";
+		$apps[$x]['description']['ru-ru'] = "";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
 
-	//permission details
+//permission details
 		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "follow_me_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "a1144e12-873e-4722-9818-02da1adb6ba3";
@@ -81,9 +90,8 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "follow_me_cid_set";
-		$y++;
 
-	//schema details
+//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_follow_me";
 		$apps[$x]['db'][$y]['table']['parent'] = "";
@@ -135,9 +143,8 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "follow_me_ignore_busy";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "";
-		$z++;
 
-	//schema details
+//schema details
 		$y++;
 		$apps[$x]['db'][$y]['table']['name'] = "v_follow_me_destinations";
 		$apps[$x]['db'][$y]['table']['parent'] = "v_follow_me";
@@ -183,6 +190,5 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "follow_me_order";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "";
-		$z++;
 
 ?>

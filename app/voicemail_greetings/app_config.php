@@ -1,11 +1,11 @@
 <?php
 
-	//application details
+		//application details
 		$apps[$x]['name'] = "Voicemail Greetings";
 		$apps[$x]['uuid'] = "e4b4fbee-9e4d-8e46-3810-91ba663db0c2";
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "";
+		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Manager voicemail greetings for extensions.";
@@ -21,7 +21,7 @@
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['ru-ru'] = "Менеджер приветствий Голосовой почты для Внутренних Номеров.";
 
-	//permission details
+		//permission details
 		$apps[$x]['permissions'][$y]['name'] = "voicemail_greeting_view";
 		$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
@@ -57,7 +57,7 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
-	//schema details
+		//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_voicemail_greetings";
 		$apps[$x]['db'][$y]['table']['parent'] = "";

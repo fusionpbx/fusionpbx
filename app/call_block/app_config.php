@@ -5,19 +5,28 @@
 		$apps[$x]['uuid'] = "9ed63276-e085-4897-839c-4f2e36d92d6c";
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "";
+		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "A tool to block incoming numbers.";
-		$apps[$x]['description']['es-cl'] = "Una herramineta para bloquear números entrantes";
-		$apps[$x]['description']['de-de'] = "Ein Werkzeug um eingehende Rufnummern zu sperren.";
-		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Ein Werkzeug um eingehende Rufnummern zu sperren.";
-		$apps[$x]['description']['fr-fr'] = "Outil pour bloquer les numéro d'appelant";
+		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-de'] = "Ein Werkzeug um eingehende Rufnummern zu sperren.";
+		$apps[$x]['description']['es-cl'] = "Una herramineta para bloquear números entrantes";
+		$apps[$x]['description']['es-mx'] = "";
 		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "Uma ferramenta para bloquear números indesejados";
+		$apps[$x]['description']['fr-fr'] = "Outil pour bloquer les numéro d'appelant";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "Uma ferramenta para bloquear números que entram.";
+		$apps[$x]['description']['pt-pt'] = "Uma ferramenta para bloquear números indesejados";
+		$apps[$x]['description']['ro-ro'] = "";
+		$apps[$x]['description']['ru-ru'] = "";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
 
 	//permission details
 		$y=0;
@@ -37,7 +46,6 @@
 		$apps[$x]['permissions'][$y]['name'] = "call_block_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
-		$y++;
 
 	//schema details
 		$y=0;
@@ -94,6 +102,5 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enable/disable blocking the call.";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Habilitar/desabilitar bloqueamento da chamada.";
-		$z++;
 
 ?>
