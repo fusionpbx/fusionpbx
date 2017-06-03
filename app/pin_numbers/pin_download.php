@@ -118,7 +118,7 @@
         echo "</tr>";
         foreach ($columns as $value) {
                 echo "<tr>\n";
-                echo "  <td width = '20px' valign='top' class='".$row_style[$c]."'>\";
+                echo "  <td width = '20px' valign='top' class='".$row_style[$c]."'>\n";
 		echo "		<input class=\"checkbox1\" type=\"checkbox\" name=\"column_group[]\" value=\"$value\"/>\n";
                 echo "	</td>\n";
                 echo "  <td valign='top' class='".$row_style[$c]."'>\n";
