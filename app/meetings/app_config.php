@@ -83,11 +83,11 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "moderator_pin";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enter the moderator PIN number.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the moderator PIN number.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "participant_pin";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enter the participant PIN number.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the participant PIN number.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
@@ -123,6 +123,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "user_uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "user_uuid";
 
 ?>
