@@ -50,7 +50,11 @@ else {
 	echo "	<td width='70%' align='right' valign='top'>\n";
 	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='xml_cdr.php'\" value='".$text['button-back']."'>\n";
 	if (permission_exists('xml_cdr_search_advanced')) {
-		echo "			<input type='button' class='btn' value='".$text['button-advanced_search']."' onclick=\"window.location='xml_cdr_search.php?redirect=xml_cdr_statistics';\">\n";
+		$advenced_search_url = 'xml_cdr_search.php?redirect=xml_cdr_statistics';
+		if(permission_exists('xml_cdr_all') && (@$_GET['showall'] === 'true')){
+			$advenced_search_url .= '&showall=true';
+		}
+		echo "			<input type='button' class='btn' value='".$text['button-advanced_search']."' onclick=\"window.location='$advenced_search_url';\">\n";
 	}
 	if (permission_exists('xml_cdr_all')) {
 		if ($_GET['showall'] != 'true') {

@@ -61,9 +61,37 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_all";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_b_leg";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//default settings
 		$y=0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '0f208802-5f18-41f9-97a3-45e939e7a1b8';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'cdr';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'b_leg';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'array';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'outbound';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'd9d09758-6deb-47e5-b5bb-812da3a8d196';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'cdr';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'b_leg';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'array';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'inbound';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '74e33709-da7d-4d46-a31f-6580ab9a7714';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'cdr';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'b_leg';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'array';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'local';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'dbbadd02-f95d-480b-85d5-2a4113d4cccc';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'cdr';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'format';
