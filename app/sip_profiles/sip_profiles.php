@@ -113,7 +113,7 @@
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
-	echo "			".$text['title_description-sip_profiles']."<br /><br />\n";
+	echo "			".$text['description-sip_profiles']."<br /><br />\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
