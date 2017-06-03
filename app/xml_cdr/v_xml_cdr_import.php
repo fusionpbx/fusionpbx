@@ -74,6 +74,19 @@
 		require_once "app/billing/resources/functions/rating.php";
 	}
 
+	function accept_b_leg($xml){
+		// if no filter set allow all for backward compatibility
+			if(empty($_SESSION['cdr']['b_leg'])){
+				return true;
+			}
+		// filter out by call direction
+			if(in_array(@$xml->variables->call_direction, $_SESSION['cdr']['b_leg'])){
+				return true;
+			}
+		// Disable cdr write
+			return false;
+	}
+
 //define the process_xml_cdr function
 	function process_xml_cdr($db, $leg, $xml_string) {
 		//set global variable
@@ -100,6 +113,13 @@
 			catch(Exception $e) {
 				echo $e->getMessage();
 				xml_cdr_log("\nfail loadxml: " . $e->getMessage() . "\n");
+			}
+
+		//filter out b-legs
+			if($leg == 'b'){
+				if(!accept_b_leg($xml)){
+					return;
+				}
 			}
 
 		//prepare the database object
@@ -175,7 +195,7 @@
 			unset($x);
 
 		//if last_sent_callee_id_number is set use it for the destination_number
-			if (strlen($xml->variables->last_sent_callee_id_number) > 0) {
+			if (($leg == 'a') && (strlen($xml->variables->last_sent_callee_id_number) > 0)) {
 				$database->fields['destination_number'] = urldecode($xml->variables->last_sent_callee_id_number);
 			}
 
