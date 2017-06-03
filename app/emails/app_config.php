@@ -1,6 +1,6 @@
 <?php
 
-//application details
+	//application details
 		$apps[$x]['name'] = "Emails";
 		$apps[$x]['uuid'] = "bd64f590-9a24-468d-951f-6639ac728694";
 		$apps[$x]['category'] = "Switch";
@@ -28,7 +28,7 @@
 		$apps[$x]['description']['sv-se'] = "";
 		$apps[$x]['description']['uk-ua'] = "";
 
-//permission details
+	//permission details
 		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "email_view";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
@@ -49,7 +49,7 @@
 		$apps[$x]['permissions'][$y]['name'] = "emails_all";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
-//schema details
+	//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_emails";
 		$apps[$x]['db'][$y]['table']['parent'] = "";

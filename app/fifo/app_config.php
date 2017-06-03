@@ -1,6 +1,6 @@
 <?php
 
-//application details
+	//application details
 		$apps[$x]['name'] = "FIFO";
 		$apps[$x]['uuid'] = "16589224-c876-aeb3-f59f-523a1c0801f7";
 		$apps[$x]['category'] = "Switch";;
@@ -28,7 +28,7 @@
 		$apps[$x]['description']['sv-se'] = "";
 		$apps[$x]['description']['uk-ua'] = "";
 
-//permission details
+	//permission details
 		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "fifo_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "c535ac0b-1da1-0f9c-4653-7934c6f4732c";

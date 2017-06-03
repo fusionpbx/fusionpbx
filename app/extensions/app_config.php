@@ -1,6 +1,6 @@
 <?php
 
-//application details
+	//application details
 		$apps[$x]['name'] = "Extensions";
 		$apps[$x]['uuid'] = "e68d9689-2769-e013-28fa-6214bf47fca3";
 		$apps[$x]['category'] = "Switch";
@@ -28,7 +28,7 @@
 		$apps[$x]['description']['sv-se'] = "";
 		$apps[$x]['description']['uk-ua'] = "";
 
-//destination details
+	//destination details
 		$y=0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "extensions";
@@ -60,7 +60,7 @@
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:bridge group/\${destination}@\${domain_name}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination}";
 
-//permission details
+	//permission details
 		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "extension_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "d3036a99-9a9f-2ad6-a82a-1fe7bebbe2d3";
@@ -149,7 +149,7 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 
-//default settings
+	//default settings
 		$y=0;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "db3290e5-d3fb-4bcd-b2a8-a0061aa02532";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "domain";
@@ -167,7 +167,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 
-//schema details
+	//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_extensions";
 		$apps[$x]['db'][$y]['table']['parent'] = "";
