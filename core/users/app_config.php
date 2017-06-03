@@ -5,20 +5,28 @@
 		$apps[$x]['uuid'] = "112124b3-95c2-5352-7e9d-d14c0b88f207";
 		$apps[$x]['category'] = "Core";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "";
+		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Add, edit, delete, and search for users.";
-		$apps[$x]['description']['es-cl'] = "Agregar, Editar, Eliminar y Buscar Usuarios.";
-		$apps[$x]['description']['de-de'] = "Benutzer hinzufügen, bearbeiten, löschen und suchen.";
-		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Benutzer hinzufügen, bearbeiten, löschen und suchen.";
-		$apps[$x]['description']['fr-fr'] = "Ajouter, Editer, Supprimer et Chercher des Usagers";
+		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-de'] = "Benutzer hinzufügen, bearbeiten, löschen und suchen.";
+		$apps[$x]['description']['es-cl'] = "Agregar, Editar, Eliminar y Buscar Usuarios.";
+		$apps[$x]['description']['es-mx'] = "";
 		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "Adicionar, editar, apagar e pesquisa pelos utilizadores.";
+		$apps[$x]['description']['fr-fr'] = "Ajouter, Editer, Supprimer et Chercher des Usagers";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-pt'] = "Adicionar, editar, apagar e pesquisa pelos utilizadores.";
+		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "Добавление, редактирование, удаление и поиск пользователей";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
 
 	//permission details
 		$y=0;
@@ -39,11 +47,11 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'user_domain';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['name'] = "user_domain";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'user_all';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['name'] = "user_all";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "user_setting_view";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -66,22 +74,21 @@
 
 	//default settings
 		$y=0;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '38cf53d2-5fae-43ed-be93-33b0a5cc1c38';
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'user';
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'unique';
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'global';
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "38cf53d2-5fae-43ed-be93-33b0a5cc1c38";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "user";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "unique";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "global";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '727977e5-8b5f-4d80-af37-41fd3a4a1859';
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'limit';
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'users';
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = '3';
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
-		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "727977e5-8b5f-4d80-af37-41fd3a4a1859";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "limit";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "users";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 
 	//schema details
 		$y=0;
@@ -172,7 +179,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
-		$y=1;
+		$y++;
 		$apps[$x]['db'][$y]['table']['name'] = "v_user_settings";
 		$apps[$x]['db'][$y]['table']['parent'] = "";
 		$z=0;
