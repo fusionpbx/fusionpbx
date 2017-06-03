@@ -3,7 +3,7 @@
 	//application details
 		$apps[$x]['name'] = "Time Conditions";
 		$apps[$x]['uuid'] = "4b821450-926b-175a-af93-a03c441818b1";
-		$apps[$x]['category'] = "Switch";;
+		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
 		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
@@ -39,46 +39,47 @@
 
 	//permission details
 		$y=0;
-		$apps[$x]['permissions'][$y]['name'] = 'time_condition_view';
-		$apps[$x]['permissions'][$y]['menu']['uuid'] = '67aede56-8623-df2d-6338-ecfbde5825f7';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['name'] = "time_condition_view";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "67aede56-8623-df2d-6338-ecfbde5825f7";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'time_condition_add';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['name'] = "time_condition_add";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'time_condition_edit';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['name'] = "time_condition_edit";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'time_condition_delete';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['name'] = "time_condition_delete";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'time_condition_domain';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['name'] = "time_condition_domain";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//default settings
 		$y=0;
+
 	//define region presets
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'c8cbb0eb-850b-4afd-a918-cceaf8af3957';
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'time_conditions';
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'region';
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'usa';
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'What region to use by default when choosing Time Conditions';
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c8cbb0eb-850b-4afd-a918-cceaf8af3957";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "time_conditions";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "region";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "usa";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "What region to use by default when choosing Time Conditions";
 
 	//define English holiday presets
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '528ec73e-03bb-4ea1-9ce1-19b81fb3f584';
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'time_conditions';
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'preset_england';
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'array';
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "528ec73e-03bb-4ea1-9ce1-19b81fb3f584";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "time_conditions";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "preset_england";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = '{"new_years_day":{"mday":"1","mon":"1"}}';
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'England Holiday';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "England Holiday";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '420b7282-2e49-4d63-9eb3-48b3b96bc184';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'time_conditions';
