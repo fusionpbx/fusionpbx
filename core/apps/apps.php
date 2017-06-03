@@ -102,7 +102,12 @@ require_once "resources/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['category']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['subcategory']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['version']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg' width='35%'>".$row['description']['en-us']."&nbsp;</td>\n";
+			$description = $row['description'][$_SESSION['domain']['language']['code']];
+			if(strlen($description) == 0)
+				$description = $row['description']['en-us'];
+			if(strlen($description) == 0)
+				$description = '&nbsp;'
+			echo "	<td valign='top' class='row_stylebg' width='35%'>$description</td>\n";
 			/*  // temporarily disabled
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('app_edit')) {
