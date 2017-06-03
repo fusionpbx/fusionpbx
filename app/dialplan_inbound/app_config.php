@@ -1,6 +1,6 @@
 <?php
 
-//application details
+	//application details
 		$apps[$x]['name'] = "Inbound Routes";
 		$apps[$x]['uuid'] = "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4";
 		$apps[$x]['category'] = "Switch";
@@ -28,7 +28,7 @@
 		$apps[$x]['description']['sv-se'] = "";
 		$apps[$x]['description']['uk-ua'] = "";
 
-//permission details
+	//permission details
 		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "inbound_route_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "b64b2bbf-f99b-b568-13dc-32170515a687";

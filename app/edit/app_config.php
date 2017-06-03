@@ -1,6 +1,6 @@
 <?php
 
-//application details
+	//application details
 		$apps[$x]['name'] = "Edit";
 		$apps[$x]['uuid'] = "17e628ee-ccfa-49c0-29ca-9894a0384b9b";
 		$apps[$x]['category'] = "Switch";
@@ -28,7 +28,7 @@
 		$apps[$x]['description']['sv-se'] = "";
 		$apps[$x]['description']['uk-ua'] = "";
 
-//permission details
+	//permission details
 		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "script_editor_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "f1905fec-0577-daef-6045-59d09b7d3f94";
@@ -79,7 +79,7 @@
 		$apps[$x]['permissions'][$y]['name'] = "clip_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
-//default settings
+	//default settings
 		$y=0;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2e217303-53ff-4dda-b74e-7f07738d83c2";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "editor";
@@ -129,7 +129,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the default theme.";
 
-//schema details
+	//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_clips";
 		$apps[$x]['db'][$y]['table']['parent'] = "";

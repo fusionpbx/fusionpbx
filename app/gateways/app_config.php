@@ -1,6 +1,6 @@
 <?php
 
-//application details
+	//application details
 		$apps[$x]['name'] = "Gateways";
 		$apps[$x]['uuid'] = "297ab33e-2c2f-8196-552c-f3567d2caaf8";
 		$apps[$x]['category'] = "Switch";;
@@ -28,7 +28,7 @@
 		$apps[$x]['description']['sv-se'] = "";
 		$apps[$x]['description']['uk-ua'] = "";
 
-//destination details
+	//destination details
 		$y=0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "gateways";
@@ -46,7 +46,7 @@
 		//$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:bridge sofia/gateway/\${destination}/";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${name}@\${domain_name} \${description}";
 
-//permission details
+	//permission details
 		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "gateway_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "237a512a-f8fe-1ce4-b5d7-e71c401d7159";
