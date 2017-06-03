@@ -5,20 +5,28 @@
 		$apps[$x]['uuid'] = "8d229b6d-1383-fcec-74c6-4ce1682479e2";
 		$apps[$x]['category'] = "Core";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "";
+		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Stored database connection information.";
-		$apps[$x]['description']['es-cl'] = "Información de conexiones a bases de datos";
-		$apps[$x]['description']['de-de'] = "Gespeicherte Informationen zu Datenbank-Verbindungen.";
-		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Gespeicherte Informationen zu Datenbank-Verbindungen.";
-		$apps[$x]['description']['fr-fr'] = "Information de connexions au BDD";
+		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-de'] = "Gespeicherte Informationen zu Datenbank-Verbindungen.";
+		$apps[$x]['description']['es-cl'] = "Información de conexiones a bases de datos";
+		$apps[$x]['description']['es-mx'] = "";
 		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "Armazena informações de conexão com a base de dados.";
+		$apps[$x]['description']['fr-fr'] = "Information de connexions au BDD";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-pt'] = "Armazena informações de conexão com a base de dados.";
+		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "Информация о подключении к базам данных";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
 
 	//permission details
 		$y=0;
@@ -104,6 +112,5 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "db_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
-		$z++;
 
 ?>
