@@ -80,17 +80,14 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "control_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the conference control name.";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Entre com o nome para o controle de conferência.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "control_enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Set the stats of the control.";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Estabelece o estado do controle.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "control_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Entre com a descrição.";
 
 		$y++;
 		$apps[$x]['db'][$y]['table']['name'] = "v_conference_control_details";
@@ -113,21 +110,17 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "control_digits";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the digits.";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Entre com os digitos.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "control_action";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the action.";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Entre com a ação.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "control_data";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the data.";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Entre com os dados.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "control_enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Set the status of the control.";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Estababelece o estado do controle.";
 
 ?>
