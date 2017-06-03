@@ -126,7 +126,7 @@ if (sizeof($_REQUEST) > 1) {
 	$sql = "select * from v_domain_settings ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	if (strlen($order_by) == 0) {
-		$sql .= "order by domain_setting_category, domain_setting_subcategory, domain_setting_order asc ";
+		$sql .= "order by domain_setting_category, domain_setting_subcategory, domain_setting_order asc, domain_setting_name, domain_setting_value ";
 	}
 	else {
 		$sql .= "order by $order_by $order ";
