@@ -1,6 +1,6 @@
 <?php
 
-//application details
+	//application details
 		$apps[$x]['name'] = "Users";
 		$apps[$x]['uuid'] = "6788f73d-4dfa-4303-9ee1-3f090ae91769";
 		$apps[$x]['category'] = "";
@@ -28,7 +28,7 @@
 		$apps[$x]['description']['sv-se'] = "";
 		$apps[$x]['description']['uk-ua'] = "";
 
-//permission details
+	//permission details
 		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "meeting_view";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -62,7 +62,7 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 
-//schema details
+	//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_meetings";
 		$apps[$x]['db'][$y]['table']['parent'] = "";

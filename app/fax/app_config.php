@@ -1,6 +1,6 @@
 <?php
 
-//application details
+	//application details
 		$apps[$x]['name'] = "Fax";
 		$apps[$x]['uuid'] = "24108154-4ac3-1db6-1551-4731703a4440";
 		$apps[$x]['category'] = "Switch";
@@ -28,7 +28,7 @@
 		$apps[$x]['description']['sv-se'] = "";
 		$apps[$x]['description']['uk-ua'] = "";
 
-//destination details
+	//destination details
 		$y=0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "fax";
@@ -41,7 +41,7 @@
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name}";
 
-//permission details
+	//permission details
 		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "fax_extension_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "9c9642e4-2b9b-2785-18d0-6c0a4ede2b2f";
@@ -162,7 +162,7 @@
 		$apps[$x]['permissions'][$y]['name'] = "fax_active_all";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
-//default settings
+	//default settings
 		$y=0;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "6840bdb0-eb9d-45bd-a79a-ccb64d08fd97";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "fax";
@@ -332,7 +332,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Store FAX in base64.";
 
-//schema details
+	//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_fax";
 		$apps[$x]['db'][$y]['table']['parent'] = "";
@@ -471,11 +471,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
-	//$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "fax_keep_local";
-	//$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "fax_local";
-	//$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-	//$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-	//$z++;
+		//$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "fax_keep_local";
+		//$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "fax_local";
+		//$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		//$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		//$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "fax_description";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "faxdescription";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";

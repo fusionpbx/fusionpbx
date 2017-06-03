@@ -1,6 +1,6 @@
 <?php
 
-//application details
+	//application details
 		$apps[$x]['name'] = "Follow Me";
 		$apps[$x]['uuid'] = "f5210fba-337d-4e05-86b6-7a2fd9dc7c42";
 		$apps[$x]['category'] = "";
@@ -28,7 +28,7 @@
 		$apps[$x]['description']['sv-se'] = "";
 		$apps[$x]['description']['uk-ua'] = "";
 
-//permission details
+	//permission details
 		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "follow_me_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "a1144e12-873e-4722-9818-02da1adb6ba3";
@@ -91,7 +91,7 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "follow_me_cid_set";
 
-//schema details
+	//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_follow_me";
 		$apps[$x]['db'][$y]['table']['parent'] = "";
@@ -144,7 +144,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
-//schema details
+	//schema details
 		$y++;
 		$apps[$x]['db'][$y]['table']['name'] = "v_follow_me_destinations";
 		$apps[$x]['db'][$y]['table']['parent'] = "v_follow_me";

@@ -28,7 +28,6 @@
 		$apps[$x]['description']['sv-se'] = "";
 		$apps[$x]['description']['uk-ua'] = "";
 
-
 	//permission details
 		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "pin_number_view";
