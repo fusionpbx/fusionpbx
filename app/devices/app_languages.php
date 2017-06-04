@@ -3214,23 +3214,6 @@ $text['description-extension']['ru-ru'] = "Назначение внутренн
 $text['description-extension']['sv-se'] = "Tilldela anknytning och linje nummer till enheten.";
 $text['description-extension']['uk-ua'] = "";
 
-$text['description-domain']['en-us'] = "";
-$text['description-domain']['ar-eg'] = "";
-$text['description-domain']['de-at'] = "";
-$text['description-domain']['de-de'] = "";
-$text['description-domain']['es-cl'] = "";
-$text['description-domain']['fr-fr'] = "";
-$text['description-domain']['he-il'] = "";
-$text['description-domain']['it-it'] = "";
-$text['description-domain']['nl-nl'] = "";
-$text['description-domain']['pl-pl'] = "";
-$text['description-domain']['pt-br'] = "";
-$text['description-domain']['pt-pt'] = "";
-$text['description-domain']['ro-ro'] = "";
-$text['description-domain']['ru-ru'] = "";
-$text['description-domain']['sv-se'] = "";
-$text['description-domain']['uk-ua'] = "";
-
 $text['description-display_name']['en-us'] = "Enter the display name.";
 $text['description-display_name']['ar-eg'] = "";
 $text['description-display_name']['de-at'] = "Geben Sie den angezeigten Namen an.";

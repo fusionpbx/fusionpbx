@@ -1,5 +1,5 @@
 <?php
-#This file was last reorganized on 2nd of June 2017 04:38:28 PM UTC
+#This file was last reorganized on 4th of June 2017 08:29:50 AM UTC
 
 $text['title-database_transactions']['en-us'] = "Database Transactions";
 $text['title-database_transactions']['ar-eg'] = "";
@@ -40,26 +40,6 @@ $text['title-database_transaction']['ro-ro'] = "";
 $text['title-database_transaction']['ru-ru'] = "Изменение в Базе данных";
 $text['title-database_transaction']['sv-se'] = "Transaktionsdatabas";
 $text['title-database_transaction']['uk-ua'] = "";
-
-$text['title_description-database_transaction']['en-us'] = "";
-$text['title_description-database_transaction']['ar-eg'] = "";
-$text['title_description-database_transaction']['de-at'] = "Datenbank Transaktion";
-$text['title_description-database_transaction']['de-ch'] = "";
-$text['title_description-database_transaction']['de-de'] = "Datenbank Transaktion";
-$text['title_description-database_transaction']['es-cl'] = "";
-$text['title_description-database_transaction']['es-mx'] = "";
-$text['title_description-database_transaction']['fr-ca'] = "";
-$text['title_description-database_transaction']['fr-fr'] = "";
-$text['title_description-database_transaction']['he-il'] = "";
-$text['title_description-database_transaction']['it-it'] = "";
-$text['title_description-database_transaction']['nl-nl'] = "";
-$text['title_description-database_transaction']['pl-pl'] = "";
-$text['title_description-database_transaction']['pt-br'] = "";
-$text['title_description-database_transaction']['pt-pt'] = "";
-$text['title_description-database_transaction']['ro-ro'] = "";
-$text['title_description-database_transaction']['ru-ru'] = "Транзакций Базы Данных";
-$text['title_description-database_transaction']['sv-se'] = "Transaktionsdatabas";
-$text['title_description-database_transaction']['uk-ua'] = "";
 
 $text['label-user_uuid']['en-us'] = "User";
 $text['label-user_uuid']['ar-eg'] = "";
