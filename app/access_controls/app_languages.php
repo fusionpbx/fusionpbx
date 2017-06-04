@@ -341,26 +341,6 @@ $text['description-node_cidr']['ru-ru'] = "Введите диапазон IP CI
 $text['description-node_cidr']['sv-se'] = "Ange IP CIDR sortimentet.";
 $text['description-node_cidr']['uk-ua'] = "Введіть діапазон IP-CIDR.";
 
-$text['description-access_control_node']['en-us'] = "";
-$text['description-access_control_node']['ar-eg'] = "";
-$text['description-access_control_node']['de-at'] = "";
-$text['description-access_control_node']['de-ch'] = "";
-$text['description-access_control_node']['de-de'] = "";
-$text['description-access_control_node']['es-cl'] = "";
-$text['description-access_control_node']['es-mx'] = "";
-$text['description-access_control_node']['fr-ca'] = "";
-$text['description-access_control_node']['fr-fr'] = "";
-$text['description-access_control_node']['he-il'] = "";
-$text['description-access_control_node']['it-it'] = "";
-$text['description-access_control_node']['nl-nl'] = "";
-$text['description-access_control_node']['pl-pl'] = "";
-$text['description-access_control_node']['pt-br'] = "";
-$text['description-access_control_node']['pt-pt'] = "";
-$text['description-access_control_node']['ro-ro'] = "";
-$text['description-access_control_node']['ru-ru'] = "";
-$text['description-access_control_node']['sv-se'] = "";
-$text['description-access_control_node']['uk-ua'] = "";
-
 $text['description-access_control_name']['en-us'] = "Enter the name.";
 $text['description-access_control_name']['ar-eg'] = "أدخل اسم.";
 $text['description-access_control_name']['de-at'] = "Namen eingeben.";

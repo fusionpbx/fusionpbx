@@ -1340,26 +1340,9 @@ $text['label-email_inbound_subject_tag']['pl-pl'] = "Tag ł";
 $text['label-email_inbound_subject_tag']['pt-br'] = "Assunto Tag";
 $text['label-email_inbound_subject_tag']['pt-pt'] = "Assunto Tag";
 $text['label-email_inbound_subject_tag']['ro-ro'] = "";
-$text['label-email_inbound_subject_tag']['ru-ru'] = "";
+$text['label-email_inbound_subject_tag']['ru-ru'] = "Тема";
 $text['label-email_inbound_subject_tag']['sv-se'] = "Ämnes 'Tag'";
 $text['label-email_inbound_subject_tag']['uk-ua'] = "";
-
-$text['label-email_inouund_subject_tag']['en-us'] = "";
-$text['label-email_inouund_subject_tag']['ar-eg'] = "";
-$text['label-email_inouund_subject_tag']['de-at'] = "";
-$text['label-email_inouund_subject_tag']['de-de'] = "";
-$text['label-email_inouund_subject_tag']['es-cl'] = "";
-$text['label-email_inouund_subject_tag']['fr-fr'] = "";
-$text['label-email_inouund_subject_tag']['he-il'] = "";
-$text['label-email_inouund_subject_tag']['it-it'] = "";
-$text['label-email_inouund_subject_tag']['nl-nl'] = "";
-$text['label-email_inouund_subject_tag']['pl-pl'] = "";
-$text['label-email_inouund_subject_tag']['pt-br'] = "";
-$text['label-email_inouund_subject_tag']['pt-pt'] = "";
-$text['label-email_inouund_subject_tag']['ro-ro'] = "";
-$text['label-email_inouund_subject_tag']['ru-ru'] = "Тема";
-$text['label-email_inouund_subject_tag']['sv-se'] = "Tema";
-$text['label-email_inouund_subject_tag']['uk-ua'] = "";
 
 $text['label-email_email-to-fax']['en-us'] = "Email-to-Fax";
 $text['label-email_email-to-fax']['ar-eg'] = "";

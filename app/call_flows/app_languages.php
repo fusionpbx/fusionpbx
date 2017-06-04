@@ -1,5 +1,5 @@
 <?php
-#This file was last reorganized on 2nd of June 2017 04:38:28 PM UTC
+#This file was last reorganized on 4th of June 2017 08:29:50 AM UTC
 
 $text['title-call_flows']['en-us'] = "Call Flows";
 $text['title-call_flows']['ar-eg'] = "";
@@ -546,40 +546,20 @@ $text['description-call_flow_alternate_destination']['ar-eg'] = "";
 $text['description-call_flow_alternate_destination']['de-at'] = "Wählen Sie ein alternatives Ziel.";
 $text['description-call_flow_alternate_destination']['de-ch'] = "";
 $text['description-call_flow_alternate_destination']['de-de'] = "Wählen Sie ein alternatives Ziel.";
-$text['description-call_flow_alternate_destination']['es-cl'] = "";
+$text['description-call_flow_alternate_destination']['es-cl'] = "Seleccione el destino alternativo.";
 $text['description-call_flow_alternate_destination']['es-mx'] = "";
 $text['description-call_flow_alternate_destination']['fr-ca'] = "";
-$text['description-call_flow_alternate_destination']['fr-fr'] = "";
+$text['description-call_flow_alternate_destination']['fr-fr'] = "Choisir la destination alternative.";
 $text['description-call_flow_alternate_destination']['he-il'] = "";
 $text['description-call_flow_alternate_destination']['it-it'] = "";
 $text['description-call_flow_alternate_destination']['nl-nl'] = "";
-$text['description-call_flow_alternate_destination']['pl-pl'] = "";
-$text['description-call_flow_alternate_destination']['pt-br'] = "";
-$text['description-call_flow_alternate_destination']['pt-pt'] = "";
+$text['description-call_flow_alternate_destination']['pl-pl'] = "Wybierz alternatywną destynację";
+$text['description-call_flow_alternate_destination']['pt-br'] = "Selecione um destino alternativo.";
+$text['description-call_flow_alternate_destination']['pt-pt'] = "Seleccione um destino alternativo.";
 $text['description-call_flow_alternate_destination']['ro-ro'] = "";
 $text['description-call_flow_alternate_destination']['ru-ru'] = "Выберите альтернативное направление.";
 $text['description-call_flow_alternate_destination']['sv-se'] = "Välj den alternativa destinationen.";
-$text['description-call_flow_alternate_destination']['uk-ua'] = "";
-
-$text['description-alternate_destination']['en-us'] = "";
-$text['description-alternate_destination']['ar-eg'] = "";
-$text['description-alternate_destination']['de-at'] = "Wählen Sie ein alternatives Ziel.";
-$text['description-alternate_destination']['de-ch'] = "";
-$text['description-alternate_destination']['de-de'] = "Wählen Sie ein alternatives Ziel.";
-$text['description-alternate_destination']['es-cl'] = "Seleccione el destino alternativo.";
-$text['description-alternate_destination']['es-mx'] = "";
-$text['description-alternate_destination']['fr-ca'] = "";
-$text['description-alternate_destination']['fr-fr'] = "Choisir la destination alternative.";
-$text['description-alternate_destination']['he-il'] = "";
-$text['description-alternate_destination']['it-it'] = "";
-$text['description-alternate_destination']['nl-nl'] = "";
-$text['description-alternate_destination']['pl-pl'] = "Wybierz alternatywną destynację";
-$text['description-alternate_destination']['pt-br'] = "Selecione um destino alternativo.";
-$text['description-alternate_destination']['pt-pt'] = "Seleccione um destino alternativo.";
-$text['description-alternate_destination']['ro-ro'] = "";
-$text['description-alternate_destination']['ru-ru'] = "";
-$text['description-alternate_destination']['sv-se'] = "Välj den alternativa destinationen.";
-$text['description-alternate_destination']['uk-ua'] = "Виберіть інше розташування.";
+$text['description-call_flow_alternate_destination']['uk-ua'] = "Виберіть інше розташування.";
 
 $text['description-call_flow_sound']['en-us'] = "Select the sound to play when the status is set to the destinations.";
 $text['description-call_flow_sound']['ar-eg'] = "";

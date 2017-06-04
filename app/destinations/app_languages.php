@@ -1,5 +1,5 @@
 <?php
-#This file was last reorganized on 2nd of June 2017 04:38:28 PM UTC
+#This file was last reorganized on 4th of June 2017 08:29:50 AM UTC
 
 $text['title-destinations']['en-us'] = "Destinations";
 $text['title-destinations']['ar-eg'] = "جهات الأتصال";
@@ -600,26 +600,6 @@ $text['description-fax_uuid']['ro-ro'] = "";
 $text['description-fax_uuid']['ru-ru'] = "Выберите адресат факса, чтобы включить его обнаружение.";
 $text['description-fax_uuid']['sv-se'] = "Ange fax destination för att aktivera fax deteketering.";
 $text['description-fax_uuid']['uk-ua'] = "Виберіть  номер для факсу, щоб дозволити його виявлення";
-
-$text['description-domain']['en-us'] = "";
-$text['description-domain']['ar-eg'] = "";
-$text['description-domain']['de-at'] = "";
-$text['description-domain']['de-ch'] = "";
-$text['description-domain']['de-de'] = "";
-$text['description-domain']['es-cl'] = "";
-$text['description-domain']['es-mx'] = "";
-$text['description-domain']['fr-ca'] = "";
-$text['description-domain']['fr-fr'] = "";
-$text['description-domain']['he-il'] = "";
-$text['description-domain']['it-it'] = "";
-$text['description-domain']['nl-nl'] = "";
-$text['description-domain']['pl-pl'] = "";
-$text['description-domain']['pt-br'] = "";
-$text['description-domain']['pt-pt'] = "";
-$text['description-domain']['ro-ro'] = "";
-$text['description-domain']['ru-ru'] = "";
-$text['description-domain']['sv-se'] = "";
-$text['description-domain']['uk-ua'] = "";
 
 $text['description-destinations']['en-us'] = "Inbound destinations are the DID/DDI, DNIS or Alias for inbound calls.";
 $text['description-destinations']['ar-eg'] = "";
