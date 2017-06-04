@@ -481,7 +481,7 @@ $text['title-conference_control_detail']['ru-ru'] = "";
 $text['title-conference_control_detail']['sv-se'] = "Kontrol";
 $text['title-conference_control_detail']['uk-ua'] = "";
 
-$text['title_description-conference_control_detail']['en-us'] = "";
+$text['title_description-conference_control_detail']['en-us'] = "Call controls enable ability to assign digits to actions. They can be used to mute, unmute, or other actions during the conference call.";
 $text['title_description-conference_control_detail']['ar-eg'] = "";
 $text['title_description-conference_control_detail']['de-at'] = "";
 $text['title_description-conference_control_detail']['de-ch'] = "";

@@ -321,7 +321,7 @@ $text['label-accountcode']['ru-ru'] = "Код Авторизации";
 $text['label-accountcode']['sv-se'] = "Accountcode";
 $text['label-accountcode']['uk-ua'] = "Код облікового запису";
 
-$text['description-timeout']['en-us'] = "";
+$text['description-timeout']['en-us'] = "Specify the absolute timeout in seconds.";
 $text['description-timeout']['ar-eg'] = "";
 $text['description-timeout']['de-at'] = "Geben Sie die absolute Zeitüberschreitung in Sekunden an.";
 $text['description-timeout']['de-ch'] = "";
