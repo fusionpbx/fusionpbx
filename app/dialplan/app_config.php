@@ -57,11 +57,9 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "dialplan_detail_edit";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "dialplan_detail_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "dialplan_domain";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
