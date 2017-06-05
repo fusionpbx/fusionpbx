@@ -1093,7 +1093,7 @@
 				echo "<td valign='top' align='left' nowrap='nowrap'>\n";
 				echo "	<select class='formfld' name='device_keys[".$x."][device_key_line]'>\n";
 				echo "		<option value=''></option>\n";
-				for ($l = 0; $l <= 12; $l++) {
+				for ($l = 0; $l <= 255; $l++) {
 					echo "	<option value='".$l."' ".(($row['device_key_line'] == $l) ? "selected='selected'" : null).">".$l."</option>\n";
 				}
 				echo "	</select>\n";
