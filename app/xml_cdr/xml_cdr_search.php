@@ -107,8 +107,20 @@
 		echo "			<option value='local'>".$text['label-local']."</option>\n";
 	}
 	echo "			</select>\n";
+
+	if(permission_exists('xml_cdr_b_leg')){
+		echo "			<select name='leg' class='formfld'>\n";
+		echo "			<option value='' selected='selected'></option>\n";
+		echo "			<option value='a'>a-leg</option>\n";
+		echo "			<option value='b'>b-leg</option>\n";
+		echo "			</select>\n";
+	}
+
 	echo "		</td>\n";
 	echo "	</tr>\n";
+
+
+
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-caller_id_name']."</td>"; //source name
 	echo "		<td class='vtable'><input type='text' class='formfld' name='caller_id_name' value='$caller_id_name'></td>";
