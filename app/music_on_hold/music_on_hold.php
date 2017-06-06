@@ -158,7 +158,7 @@
 
 		//process, if possible
 			if (!$valid_file_type) {
-				$_SESSION['message'] = $text['message-unsupported_file_type'];
+				messages::add($text['message-unsupported_file_type']);
 			}
 			else {
 
@@ -257,7 +257,7 @@
 					}
 
 				//set message
-					$_SESSION['message'] = $text['message-upload_completed'];
+					messages::add($text['message-upload_completed']);
 			}
 
 		//require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
@@ -302,7 +302,7 @@
 						array_map('unlink', glob(path_join($stream_path, '*.ogg')));
 					}
 				//set message
-					$_SESSION['message'] = $text['message-delete'];
+					messages::add($text['message-delete']);
 			}
 
 		//require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
