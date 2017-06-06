@@ -5,21 +5,28 @@
 		$apps[$x]['uuid'] = "e4b4fbee-9e4d-8e46-3810-91ba663db0c2";
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "";
+		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Manager voicemail greetings for extensions.";
+		$apps[$x]['description']['ar-eg'] = "";
+		$apps[$x]['description']['de-at'] = "Verwalte Voicemail-Begrüßungen für Nebenstellen.";
+		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-de'] = "Verwalte Voicemail-Begrüßungen für Nebenstellen.";
 		$apps[$x]['description']['es-cl'] = "Administrador de mensajes de bienvenida de correo de voz para extensiones.";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['de-de'] = "Verwalte Voicemail-Begrüßungen für Nebenstellen.";
-		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "Verwalte Voicemail-Begrüßungen für Nebenstellen.";
-		$apps[$x]['description']['fr-fr'] = "Accueil messagerie Vocale.";
 		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "Gestor de saudações de correio de voz para extensões.";
+		$apps[$x]['description']['fr-fr'] = "Accueil messagerie Vocale.";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-pt'] = "Gestor de saudações de correio de voz para extensões.";
+		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "Менеджер приветствий Голосовой почты для Внутренних Номеров.";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
 
 	//permission details
 		$apps[$x]['permissions'][$y]['name'] = "voicemail_greeting_view";
@@ -116,7 +123,5 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "greeting_base64";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Voicemail greeting file encoded in base64.";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['ru-ru'] = "К сообщению Голосовой Почты прикреплен файл в кодировке base64.";
-		$z++;
 
 ?>

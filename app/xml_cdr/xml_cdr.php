@@ -110,6 +110,7 @@
 	echo "	<input type='hidden' name='remote_media_ip' value='".$remote_media_ip."'>\n";
 	echo "	<input type='hidden' name='network_addr' value='".$network_addr."'>\n";
 	echo "	<input type='hidden' name='bridge_uuid' value='".$bridge_uuid."'>\n";
+	echo "	<input type='hidden' name='leg' value='".$leg."'>\n";
 	if (is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
 			$array = explode(",", $field);
@@ -524,7 +525,12 @@
 						else { $call_result = 'failed'; }
 					}
 					if (strlen($row['direction']) > 0) {
-						echo "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_".$row['direction']."_".$call_result.".png' width='16' style='border: none; cursor: help;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]."'>\n";
+						$image_name = "icon_cdr_" . $row['direction'] . "_" . $call_result;
+						if($row['leg'] == 'b'){
+							$image_name .= '_b';
+						}
+						$image_name .= ".png";
+						echo "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/$image_name' width='16' style='border: none; cursor: help;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]. ($row['leg']=='b'?'(b)':'') . "'>\n";
 					}
 				}
 				else { echo "&nbsp;"; }

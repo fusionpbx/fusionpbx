@@ -78,7 +78,7 @@ $text['title-contact_time_add']['pl-pl'] = "Czas Dodawania";
 $text['title-contact_time_add']['pt-br'] = "Time Adicionar";
 $text['title-contact_time_add']['pt-pt'] = "Time Adicionar";
 $text['title-contact_time_add']['ru-ru'] = "Добавить Время";
-$text['title-contact_time_add']['sv-se'] = "Time Lägg";
+$text['title-contact_time_add']['sv-se'] = "Lägg Till Tid";
 $text['title-contact_time_add']['uk-ua'] = "час додавання";
 
 $text['title-contact_setting_edit']['en-us'] = "Contact Setting Edit";
@@ -1294,7 +1294,7 @@ $text['label-phone_speed_dial']['pl-pl'] = "";
 $text['label-phone_speed_dial']['pt-br'] = "";
 $text['label-phone_speed_dial']['pt-pt'] = "";
 $text['label-phone_speed_dial']['ru-ru'] = "Быстрый Набор";
-$text['label-phone_speed_dial']['sv-se'] = "";
+$text['label-phone_speed_dial']['sv-se'] = "Snabb Nummer";
 $text['label-phone_speed_dial']['uk-ua'] = "";
 
 $text['label-phone_numbers']['en-us'] = "Numbers";
@@ -1518,7 +1518,7 @@ $text['label-import_data']['pl-pl'] = "";
 $text['label-import_data']['pt-br'] = "";
 $text['label-import_data']['pt-pt'] = "Dados";
 $text['label-import_data']['ru-ru'] = "Данные";
-$text['label-import_data']['sv-se'] = "";
+$text['label-import_data']['sv-se'] = "Data";
 $text['label-import_data']['uk-ua'] = "";
 
 $text['label-import_delimiter']['en-us'] = "Delimiter";
@@ -3006,7 +3006,7 @@ $text['description-phone_speed_dial']['pl-pl'] = "";
 $text['description-phone_speed_dial']['pt-br'] = "";
 $text['description-phone_speed_dial']['pt-pt'] = "";
 $text['description-phone_speed_dial']['ru-ru'] = "Введите номер быстрого набора.";
-$text['description-phone_speed_dial']['sv-se'] = "";
+$text['description-phone_speed_dial']['sv-se'] = "Ange snabbknappens nummer.";
 $text['description-phone_speed_dial']['uk-ua'] = "";
 
 $text['description-phone_number']['en-us'] = "Enter the phone number.";
@@ -3150,7 +3150,7 @@ $text['description-import_data']['pl-pl'] = "";
 $text['description-import_data']['pt-br'] = "";
 $text['description-import_data']['pt-pt'] = "Copie e cole os dados separados por vírgula para iniciar a importação.";
 $text['description-import_data']['ru-ru'] = "Скопируйте и вставьте данные с разделителями-запятыми в текстовую область, чтобы начать импорт.";
-$text['description-import_data']['sv-se'] = "";
+$text['description-import_data']['sv-se'] = "Kopiera och klistra in din kommaseparerade data i textområdet för att börja importera.";
 $text['description-import_data']['uk-ua'] = "";
 
 $text['description-import_delimiter']['en-us'] = "Select the delimiter (comma or pipe).";

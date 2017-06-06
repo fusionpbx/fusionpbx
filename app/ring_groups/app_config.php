@@ -5,20 +5,28 @@
 		$apps[$x]['uuid'] = "1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2";
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "";
+		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "A tool to call multiple extensions.";
+		$apps[$x]['description']['ar-eg'] = "";
+		$apps[$x]['description']['de-at'] = "Ein Werkzeug um mehrere Nebenstellen anzurufen.";
+		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-de'] = "Ein Werkzeug um mehrere Nebenstellen anzurufen.";
 		$apps[$x]['description']['es-cl'] = "Una herramienta para llamar a múltiples extensiones";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['de-de'] = "Ein Werkzeug um mehrere Nebenstellen anzurufen.";
-		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "Ein Werkzeug um mehrere Nebenstellen anzurufen.";
-		$apps[$x]['description']['fr-fr'] = "Outil pour appeler plusieurs extensions.";
 		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "Uma ferramenta para chamar várias extensões.";
+		$apps[$x]['description']['fr-fr'] = "Outil pour appeler plusieurs extensions.";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-pt'] = "Uma ferramenta para chamar várias extensões.";
+		$apps[$x]['description']['ro-ro'] = "";
+		$apps[$x]['description']['ru-ru'] = "";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
 
 	//destination details
 		$y=0;
@@ -99,34 +107,33 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_forward_toll_allow";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$apps[$x]['permissions'][$y]['groups'][] = "admin";		
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 
 	//default settings
 		$y=0;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '745d8fdc-57bc-4f43-97d7-508fda8f70a8';
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'ring_group';
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'destination_add_rows';
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = '5';
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "745d8fdc-57bc-4f43-97d7-508fda8f70a8";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ring_group";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "destination_add_rows";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'ddf306c9-6f58-40f7-910e-2f27dc33fa57';
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'ring_group';
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'destination_edit_rows';
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = '1';
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ddf306c9-6f58-40f7-910e-2f27dc33fa57";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ring_group";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "destination_edit_rows";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'de655030-ae71-4b53-8068-5cf0b14cf635';
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'limit';
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'ring_groups';
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = '3';
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
-		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "de655030-ae71-4b53-8068-5cf0b14cf635";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "limit";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "ring_groups";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 
 	//schema details
 		$y=0;
@@ -223,7 +230,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_forward_toll_allow";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Toll Allow for Ring Group Forward.";
-		$z++;		
 
 		$y++;
 		$apps[$x]['db'][$y]['table']['name'] = "v_ring_group_destinations";
@@ -268,7 +274,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_prompt";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric"; //confirm,announce
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
 
 		$y++;
 		$apps[$x]['db'][$y]['table']['name'] = "v_ring_group_users";

@@ -378,7 +378,7 @@ include "root.php";
 					}
 					else {
 						$presence_id = extension_presence_id($this->extension, $this->number_alias);
-						$dial_string .= "[anyvar=";
+						$dial_string .= "[presence_id=".$presence_id."@".$_SESSION['domain_name'];
 
 						//set the caller id
 						if ($_SESSION['cdr']['follow_me_fix']['boolean'] == "true") {
@@ -410,7 +410,6 @@ include "root.php";
 							}
 						}
 
-						$dial_string .= ",presence_id=".$presence_id."@".$_SESSION['domain_name'];
 						if ($row["follow_me_prompt"] == "1") {
 							$dial_string .= ",group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true,";
 						}

@@ -4,20 +4,28 @@
 		$apps[$x]['uuid'] = "f4b3b3d2-6287-489c-2a00-64529e46f2d7";
 		$apps[$x]['category'] = "Core";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "";
+		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "The menu can be customized using this tool.";
-		$apps[$x]['description']['es-cl'] = "El menú puede ser personalizado utilizando esta herramienta";
-		$apps[$x]['description']['de-de'] = "Das Menü kann mit diesem Werkzeug angepasst werden.";
-		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Das Menü kann mit diesem Werkzeug angepasst werden.";
-		$apps[$x]['description']['fr-fr'] = "Le menu peut être personnalisé ici";
+		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-de'] = "Das Menü kann mit diesem Werkzeug angepasst werden.";
+		$apps[$x]['description']['es-cl'] = "El menú puede ser personalizado utilizando esta herramienta";
+		$apps[$x]['description']['es-mx'] = "";
 		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "O menu pode ser personalizado utilizando esta ferramenta.";
+		$apps[$x]['description']['fr-fr'] = "Le menu peut être personnalisé ici";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-pt'] = "O menu pode ser personalizado utilizando esta ferramenta.";
+		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "Меню можно настроить с помощью этого инструмента";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
 
 	//permission details
 		$y=0;
@@ -104,7 +112,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "menu_desc";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
-		$z++;
 
 		$y++;
 		$apps[$x]['db'][$y]['table']['name'] = "v_menu_items";

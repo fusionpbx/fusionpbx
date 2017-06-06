@@ -301,8 +301,8 @@
 	if (from_address == nil) then
 		from_address = email_address;
 	end
-	--needs to be fixed on operating systems that do not have sed or echo utilities.
-	number_dialed = api:execute("system", "/bin/echo -n "..fax_uri.." | sed -e s,.*/,,g");
+	uri_array = explode("/",fax_uri);
+	number_dialed = uri_array[4];
 	--do not use apostrophies in message, they are not escaped and the mail will fail.
 	email_message_fail = "We are sorry the fax failed to go through.  It has been attached. Please check the number "..number_dialed..", and if it was correct you might consider emailing it instead."
 	email_message_success = "We are happy to report the fax was sent successfully.  It has been attached for your records."
@@ -519,7 +519,7 @@
 				freeswitch.consoleLog("INFO","[FAX] RETRY FAILED: tried ["..fax_retry_attempts.."] of [4]: GIVING UP\n");
 				freeswitch.consoleLog("INFO", "[FAX] RETRY STATS FAILURE: GATEWAY[".. fax_uri .."], tried 5 combinations without success");
 
-				email_message_fail = email_message_fail.."  We tried sending 5 times ways.  You may also want to know that the call was busy "..fax_busy_attempts.." of those times."
+				email_message_fail = email_message_fail.."  We tried sending 5 times.  You may also want to know that the call was busy "..fax_busy_attempts.." of those times."
 				email_address = email_address:gsub("\\,", ",");
 
 				freeswitch.email(email_address,

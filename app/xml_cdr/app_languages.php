@@ -462,7 +462,7 @@ $text['label-tta']['pl-pl'] = "CNO"; //Google translate
 $text['label-tta']['pt-br'] = "HDR"; //Google translate
 $text['label-tta']['pt-pt'] = "HDR"; //Google translate
 $text['label-tta']['ru-ru'] = ""; //unsure of safe translation
-$text['label-tta']['sv-se'] = "DAS"; //Google translate
+$text['label-tta']['sv-se'] = "TTA";
 $text['label-tta']['uk-ua'] = ""; //unsure of safe translation
 
 $text['label-pdd']['en-us'] = "PDD";
@@ -478,7 +478,7 @@ $text['label-pdd']['pl-pl'] = "ONZ"; //Google translate
 $text['label-pdd']['pt-br'] = "ADDDP"; //Google translate
 $text['label-pdd']['pt-pt'] = "ADDDP"; //Google translate
 $text['label-pdd']['ru-ru'] = ""; //unsure of safe translation
-$text['label-pdd']['sv-se'] = "SF"; //Google translate
+$text['label-pdd']['sv-se'] = "PDD";
 $text['label-pdd']['uk-ua'] = ""; //unsure of safe translation
 
 $text['label-mos']['en-us'] = "MOS";
@@ -494,7 +494,7 @@ $text['label-mos']['pl-pl'] = "ŚOO"; //Google translate
 $text['label-mos']['pt-br'] = "PDOM"; //Google translate
 $text['label-mos']['pt-pt'] = "PDOM"; //Google translate
 $text['label-mos']['ru-ru'] = ""; //unsure of safe translation
-$text['label-mos']['sv-se'] = "GBP"; //Google translate
+$text['label-mos']['sv-se'] = "MOS";
 $text['label-mos']['uk-ua'] = ""; ///unsure of safe translation
 
 $text['label-total']['en-us'] = "Total";
@@ -910,7 +910,7 @@ $text['label-mos_score']['pl-pl'] = "";
 $text['label-mos_score']['pt-br'] = "";
 $text['label-mos_score']['pt-pt'] = "";
 $text['label-mos_score']['ru-ru'] = "MOS Score";
-$text['label-mos_score']['sv-se'] = "";
+$text['label-mos_score']['sv-se'] = "MOS Värde";
 $text['label-mos_score']['uk-ua'] = "";
 
 $text['label-mos_score-1']['en-us'] = "Bad";
@@ -925,7 +925,7 @@ $text['label-mos_score-1']['pl-pl'] = "Zły"; //Google translate
 $text['label-mos_score-1']['pt-br'] = "Mau"; //Google translate
 $text['label-mos_score-1']['pt-pt'] = "Mau"; //Google translate
 $text['label-mos_score-1']['ru-ru'] = "Плохо"; //Google translate
-$text['label-mos_score-1']['sv-se'] = "Dålig"; //Google translate
+$text['label-mos_score-1']['sv-se'] = " Jätte Dålig";
 $text['label-mos_score-1']['uk-ua'] = "поганий"; //Google translate
 
 $text['label-mos_score-2']['en-us'] = "Poor";
@@ -940,7 +940,7 @@ $text['label-mos_score-2']['pl-pl'] = "Ubogi"; //Google translate
 $text['label-mos_score-2']['pt-br'] = "Pobre"; //Google translate
 $text['label-mos_score-2']['pt-pt'] = "Pobre"; //Google translate
 $text['label-mos_score-2']['ru-ru'] = "Бедные"; //Google translate
-$text['label-mos_score-2']['sv-se'] = "Fattig"; //Google translate
+$text['label-mos_score-2']['sv-se'] = "Dålig";
 $text['label-mos_score-2']['uk-ua'] = "бідних"; //Google translate
 
 $text['label-mos_score-3']['en-us'] = "Fair";
@@ -955,7 +955,7 @@ $text['label-mos_score-3']['pl-pl'] = "Sprawiedliwy"; //Google translate
 $text['label-mos_score-3']['pt-br'] = "Justo"; //Google translate
 $text['label-mos_score-3']['pt-pt'] = "Justo"; //Google translate
 $text['label-mos_score-3']['ru-ru'] = "Справедливая"; //Google translate
-$text['label-mos_score-3']['sv-se'] = "Rättvis"; //Google translate
+$text['label-mos_score-3']['sv-se'] = "Ganska Bra";
 $text['label-mos_score-3']['uk-ua'] = "чесний"; //Google translate
 
 $text['label-mos_score-4']['en-us'] = "Good";
@@ -970,7 +970,7 @@ $text['label-mos_score-4']['pl-pl'] = "Dobry"; //Google translate
 $text['label-mos_score-4']['pt-br'] = "Boa"; //Google translate
 $text['label-mos_score-4']['pt-pt'] = "Boa"; //Google translate
 $text['label-mos_score-4']['ru-ru'] = "Хорошо"; //Google translate
-$text['label-mos_score-4']['sv-se'] = "Bra"; //Google translate
+$text['label-mos_score-4']['sv-se'] = "Bra";
 $text['label-mos_score-4']['uk-ua'] = "добре"; //Google translate
 
 $text['label-mos_score-5']['en-us'] = "Excellent";
@@ -1113,7 +1113,7 @@ $text['label-hangup_cause']['pl-pl'] = "hangup Przyczyna";
 $text['label-hangup_cause']['pt-br'] = "Causa Hangup";
 $text['label-hangup_cause']['pt-pt'] = "Causa Hangup";
 $text['label-hangup_cause']['ru-ru'] = "Причина отбоя";
-$text['label-hangup_cause']['sv-se'] = "påläggnings Orsak";
+$text['label-hangup_cause']['sv-se'] = "Hangup Orsak";
 $text['label-hangup_cause']['uk-ua'] = "Hangup Причина";
 
 $text['label-from']['en-us'] = "From";
@@ -1353,7 +1353,7 @@ $text['label-cid-number']['pl-pl'] = "Prezentacja numeru dzwoniącego";
 $text['label-cid-number']['pt-br'] = "Número CID";
 $text['label-cid-number']['pt-pt'] = "Número CID";
 $text['label-cid-number']['ru-ru'] = "CID номера";
-$text['label-cid-number']['sv-se'] = "CID, nummerspresentation";
+$text['label-cid-number']['sv-se'] = "CID, Nummer";
 $text['label-cid-number']['uk-ua'] = "CID Номер";
 
 $text['label-cid-name']['en-us'] = "CID Name";
@@ -1369,7 +1369,7 @@ $text['label-cid-name']['pl-pl'] = "Prezentacja nazwy dzwoniącego";
 $text['label-cid-name']['pt-br'] = "Nome CID";
 $text['label-cid-name']['pt-pt'] = "Nome CID";
 $text['label-cid-name']['ru-ru'] = "CID Имя";
-$text['label-cid-name']['sv-se'] = "CID namnpresentation";
+$text['label-cid-name']['sv-se'] = "CID Namn";
 $text['label-cid-name']['uk-ua'] = "CID Ім’я";
 
 $text['label-channel']['en-us'] = "Channel Data";
@@ -1401,7 +1401,7 @@ $text['label-cancelled']['pl-pl'] = "Odwołany";
 $text['label-cancelled']['pt-br'] = "Cancelado";
 $text['label-cancelled']['pt-pt'] = "Cancelado";
 $text['label-cancelled']['ru-ru'] = "Отменено";
-$text['label-cancelled']['sv-se'] = "Avbryts";
+$text['label-cancelled']['sv-se'] = "Avbröts";
 $text['label-cancelled']['uk-ua'] = "скасовано";
 
 $text['label-caller_id_number']['en-us'] = "CID Number";

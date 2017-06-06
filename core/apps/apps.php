@@ -23,29 +23,35 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (if_group("admin") || if_group("superadmin")) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (if_group("admin") || if_group("superadmin")) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-require_once "resources/header.php";
-$document['title'] = $text['title-apps'];
+//additional includes
+	require_once "resources/header.php";
+	require_once "resources/paging.php";
 
-require_once "resources/paging.php";
+//set the title
+	$document['title'] = $text['title-apps'];
 
 //get variables used to control the order
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = check_str($_GET["order_by"]);
+	$order = check_str($_GET["order"]);
 
 //get the list of installed apps from the core and mod directories
 	$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
@@ -55,15 +61,16 @@ require_once "resources/paging.php";
 		$x++;
 	}
 
+//set the row styles
+	$c = 0;
+	$row_style["0"] = "row_style0";
+	$row_style["1"] = "row_style1";
+
 //show the content
 	echo "<b>".$text['header-apps']."</b>\n";
 	echo "<br /><br />\n";
 	echo $text['description-apps'];
 	echo "<br /><br />\n";
-
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
@@ -83,6 +90,12 @@ require_once "resources/paging.php";
 
 	foreach($apps as $row) {
 		if ($row['uuid'] != "d8704214-75a0-e52f-1336-f0780e29fef8") {
+
+			$description = $row['description'][$_SESSION['domain']['language']['code']];
+			if (strlen($description) == 0) { $description = $row['description']['en-us']; }
+			if (strlen($description) == 0) { $description = '&nbsp;'; }
+			$row['$description'] = $description;
+
 			/*
 			$tr_link = (permission_exists('app_edit')) ? "href='apps_edit.php?id=".$row['uuid']."'" : null;
 			*/
@@ -102,7 +115,7 @@ require_once "resources/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['category']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['subcategory']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['version']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg' width='35%'>".$row['description']['en-us']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg' width='35%'>".$row['$description']."</td>\n";
 			/*  // temporarily disabled
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('app_edit')) {

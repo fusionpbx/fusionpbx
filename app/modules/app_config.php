@@ -5,20 +5,28 @@
 		$apps[$x]['uuid'] = "5eb9cba1-8cb6-5d21-e36a-775475f16b5e";
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "";
+		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Modules extend the features of the system. Use this page to enable or disable modules.";
+		$apps[$x]['description']['ar-eg'] = "";
+		$apps[$x]['description']['de-at'] = "Module erweitern die Funktionalität des Systems. Verwende diese Seite um Module zu aktivieren oder deaktivieren.";
+		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-de'] = "Module erweitern die Funktionalität des Systems. Verwende diese Seite um Module zu aktivieren oder deaktivieren.";
 		$apps[$x]['description']['es-cl'] = "Los módulos extienden las funcionalidades del sistema. Utilice esta página para activar o desactivar los diferentes módulos.";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['de-de'] = "Module erweitern die Funktionalität des Systems. Verwende diese Seite um Module zu aktivieren oder deaktivieren.";
-		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "Module erweitern die Funktionalität des Systems. Verwende diese Seite um Module zu aktivieren oder deaktivieren.";
-		$apps[$x]['description']['fr-fr'] = "Les Modules augmentent les fonctionnalitées du système. Ici il est possible de les activer et de les désactiver.";
 		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "Módulos estendem as funcionalidades do sistema. Utilize esta página para habilitar ou desabilitar módulos.";
+		$apps[$x]['description']['fr-fr'] = "Les Modules augmentent les fonctionnalitées du système. Ici il est possible de les activer et de les désactiver.";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-pt'] = "Módulos estendem as funcionalidades do sistema. Utilize esta página para habilitar ou desabilitar módulos.";
+		$apps[$x]['description']['ro-ro'] = "";
+		$apps[$x]['description']['ru-ru'] = "";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
 
 	//permission details
 		$y=0;

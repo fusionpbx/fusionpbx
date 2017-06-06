@@ -5,11 +5,28 @@
 		$apps[$x]['uuid'] = "6788f73d-4dfa-4303-9ee1-3f090ae91769";
 		$apps[$x]['category'] = "";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "";
+		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
-		$apps[$x]['description']['en-us'] = "";
+		$apps[$x]['description']['en-us'] = "Add, edit, delete, and search users. ";
+		$apps[$x]['description']['ar-eg'] = "";
+		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['es-cl'] = "";
+		$apps[$x]['description']['es-mx'] = "";
+		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-fr'] = "";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
+		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-pt'] = "";
+		$apps[$x]['description']['ro-ro'] = "";
+		$apps[$x]['description']['ru-ru'] = "";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
 
 	//permission details
 		$y=0;
@@ -55,8 +72,8 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
-		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = 'v_domains';
-		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = 'domain_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_domains";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "domain_uuid";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "meeting_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
@@ -66,11 +83,11 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "moderator_pin";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enter the moderator PIN number.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the moderator PIN number.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "participant_pin";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enter the participant PIN number.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the participant PIN number.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
@@ -79,7 +96,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Description.for the meeting description.";
-		$z++;
 
 		$y++;
 		$apps[$x]['db'][$y]['table']['name'] = "v_meeting_users";
@@ -107,7 +123,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "user_uuid";
-		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "user_uuid";
 
 ?>

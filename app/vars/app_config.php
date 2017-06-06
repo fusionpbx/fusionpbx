@@ -5,21 +5,28 @@
 		$apps[$x]['uuid'] = "54e08402-c1b8-0a9d-a30a-f569fc174dd8";
 		$apps[$x]['category'] = "Switch";;
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "";
+		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Define variables that are used by the switch, provisioning, and more.";
+		$apps[$x]['description']['ar-eg'] = "";
+		$apps[$x]['description']['de-at'] = "Definiere Variablen, die für den Switch, die Verwaltung und anderes verwendet werden können.";
+		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-de'] = "Definiere Variablen, die für den Switch, die Verwaltung und anderes verwendet werden können.";
 		$apps[$x]['description']['es-cl'] = "Define variables usadas por el switch, provisionamiento y más";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['de-de'] = "Definiere Variablen, die für den Switch, die Verwaltung und anderes verwendet werden können.";
-		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "Definiere Variablen, die für den Switch, die Verwaltung und anderes verwendet werden können.";
-		$apps[$x]['description']['fr-fr'] = "Définr les variables utilisées par le switch, le provisioning et plus.";
 		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "Definir variáveis que são utilizadas pelo softswitch, aprovisionamento, e outros.";
+		$apps[$x]['description']['fr-fr'] = "Définr les variables utilisées par le switch, le provisioning et plus.";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-pt'] = "Definir variáveis que são utilizadas pelo softswitch, aprovisionamento, e outros.";
+		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "Определение переменной делает возможным управление FreeSwitch, его инициализации, и многое другое.";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
 
 	//permission details
 		$y=0;
