@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2010
+	Portions created by the Initial Developer are Copyright (C) 2008-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,6 +30,15 @@
 			$sql = "update v_domains set domain_enabled = 'true' where domain_enabled = '' or domain_enabled is null";
 			$db->exec(check_sql($sql));
 			unset($sql);
+		//update any domains set to legacy languages
+			$language = new text;
+			foreach ($language->legacy_map as $language_code => $legacy_code) {
+				if(strlen($legacy_code) == 5)
+					continue;
+				$sql = "update v_domain_settings set domain_setting_value = '$language_code' where domain_setting_value = '$legacy_code' and deafult_setting_name = 'code' and domain_setting_dubcategory = 'language' and domain_setting_category = 'domain'";
+				$db->exec(check_sql($sql));
+				unset($sql);
+			}
 	}
 
 ?>

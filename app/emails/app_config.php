@@ -5,20 +5,28 @@
 		$apps[$x]['uuid'] = "bd64f590-9a24-468d-951f-6639ac728694";
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "";
+		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Manage failed email messages.";
+		$apps[$x]['description']['ar-eg'] = "";
+		$apps[$x]['description']['de-at'] = "Fehlgeschlagene Email Benachrichtigungen verwalten.";
+		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-de'] = "Fehlgeschlagene Email Benachrichtigungen verwalten.";
 		$apps[$x]['description']['es-cl'] = "Gestionar los mensajes fallidos.";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['de-de'] = "Fehlgeschlagene Email Benachrichtigungen verwalten.";
-		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "Fehlgeschlagene Email Benachrichtigungen verwalten.";
-		$apps[$x]['description']['fr-fr'] = "GÈrer les messages Èlectroniques ÈchouÈ.";
 		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "Gerenciar mensagens de e-mail falhou.";
+		$apps[$x]['description']['fr-fr'] = "GÈrer les messages Èlectroniques ÈchouÈ.";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-pt'] = "Gerenciar mensagens de e-mail falhou.";
+		$apps[$x]['description']['ro-ro'] = "";
+		$apps[$x]['description']['ru-ru'] = "";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
 
 	//permission details
 		$y=0;
@@ -40,7 +48,6 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "emails_all";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
 
 	//schema details
 		$y=0;

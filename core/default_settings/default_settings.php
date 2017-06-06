@@ -314,7 +314,7 @@ else {
 //get the list
 	$sql = "select * from v_default_settings ";
 	if (strlen($order_by) == 0) {
-		$sql .= "order by default_setting_category, default_setting_subcategory, default_setting_order asc ";
+		$sql .= "order by default_setting_category, default_setting_subcategory, default_setting_order asc, default_setting_name, default_setting_value ";
 	}
 	else {
 		$sql .= "order by $order_by $order ";

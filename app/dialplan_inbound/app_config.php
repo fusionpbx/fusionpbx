@@ -5,20 +5,28 @@
 		$apps[$x]['uuid'] = "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4";
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "";
+		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "The public dialplan is used to route incoming calls to destinations based on one or more conditions and context.";
+		$apps[$x]['description']['ar-eg'] = "";
+		$apps[$x]['description']['de-at'] = "Der öffentliche Wählplan wird verwendet um eingehende Anrufe anhand von einer oder mehreren Bedingungen und Kontext an die Ziele weiterzuleiten.";
+		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-de'] = "Der öffentliche Wählplan wird verwendet um eingehende Anrufe anhand von einer oder mehreren Bedingungen und Kontext an die Ziele weiterzuleiten.";
 		$apps[$x]['description']['es-cl'] = "El plan de marcado público es usado para dirigir llamadas entrantes a destinos basados en una o más condiciones y contexto.";
 		$apps[$x]['description']['es-mx'] = "El plan de marcado público es usado para dirigir llamadas entrantes a destinos basados en una o más condiciones y contexto.";
-		$apps[$x]['description']['de-de'] = "Der öffentliche Wählplan wird verwendet um eingehende Anrufe anhand von einer oder mehreren Bedingungen und Kontext an die Ziele weiterzuleiten.";
-		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "Der öffentliche Wählplan wird verwendet um eingehende Anrufe anhand von einer oder mehreren Bedingungen und Kontext an die Ziele weiterzuleiten.";
-		$apps[$x]['description']['fr-fr'] = "Les routes publiques sont utilisés pour diriger les appels entrants en fonction d'une ou plusieures conditions et contextes.";
 		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "O dialplan público é usado para encaminhar chamadas recebidas para destinos com base em uma ou mais condições e contexto.";
+		$apps[$x]['description']['fr-fr'] = "Les routes publiques sont utilisés pour diriger les appels entrants en fonction d'une ou plusieures conditions et contextes.";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-pt'] = "O dialplan público é usado para encaminhar chamadas recebidas para destinos com base em uma ou mais condições e contexto.";
+		$apps[$x]['description']['ro-ro'] = "";
+		$apps[$x]['description']['ru-ru'] = "";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
 
 	//permission details
 		$y=0;

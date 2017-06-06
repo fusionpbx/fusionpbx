@@ -5,20 +5,28 @@
 		$apps[$x]['uuid'] = "297ab33e-2c2f-8196-552c-f3567d2caaf8";
 		$apps[$x]['category'] = "Switch";;
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "";
+		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Gateways provide access into other voice networks. These can be voice providers or other systems that require SIP registration.";
+		$apps[$x]['description']['ar-eg'] = "";
+		$apps[$x]['description']['de-at'] = "Gateways stellen Verbindungen zu andere Sprach-Netzwerke bereit. Diese können Voice-Provider oder andere Systeme sein, die eine SIP Registrierung benötigen.";
+		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-de'] = "Gateways stellen Verbindungen zu andere Sprach-Netzwerke bereit. Diese können Voice-Provider oder andere Systeme sein, die eine SIP Registrierung benötigen.";
 		$apps[$x]['description']['es-cl'] = "Las pasarelas proveen acceso a otras redes de voz. Pueden ser provedores u otro sistema que requiera registo SIP.";
 		$apps[$x]['description']['es-mx'] = "Las pasarelas proveen acceso a otras redes de voz.  Pueden ser provedores u otro sistema que requiera registo SIP.";
-		$apps[$x]['description']['de-de'] = "Gateways stellen Verbindungen zu andere Sprach-Netzwerke bereit. Diese können Voice-Provider oder andere Systeme sein, die eine SIP Registrierung benötigen.";
-		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "Gateways stellen Verbindungen zu andere Sprach-Netzwerke bereit. Diese können Voice-Provider oder andere Systeme sein, die eine SIP Registrierung benötigen.";
-		$apps[$x]['description']['fr-fr'] = "Les passerelles donnent access autres réseaux vocaux. Ceux-ci peuvent être des opérateurs ou d'autres systèmes reqieérant un enregistrement SIP";
 		$apps[$x]['description']['fr-ca'] = "Les passerelles donnent access autres réseaux vocaux.  Elles pouvent être d'autre furnisseur ou autre système avec la régistration SIP.";
-		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "As Gateways garatem o acesso a redes de voz fornecidas por outros operdadores. Estes podem ser os operadores de voz ou outros sistemas que exigem registo SIP.";
+		$apps[$x]['description']['fr-fr'] = "Les passerelles donnent access autres réseaux vocaux. Ceux-ci peuvent être des opérateurs ou d'autres systèmes reqieérant un enregistrement SIP";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-pt'] = "As Gateways garatem o acesso a redes de voz fornecidas por outros operdadores. Estes podem ser os operadores de voz ou outros sistemas que exigem registo SIP.";
+		$apps[$x]['description']['ro-ro'] = "";
+		$apps[$x]['description']['ru-ru'] = "";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
 
 	//destination details
 		$y=0;
@@ -56,18 +64,17 @@
 		$apps[$x]['permissions'][$y]['name'] = "gateway_domain";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
-	//default settings
+//default settings
 		$y = 0;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'df031ab4-087d-4e0e-92ac-e96f5d0aa55d';
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'limit';
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'gateways';
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = '3';
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
-		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "df031ab4-087d-4e0e-92ac-e96f5d0aa55d";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "limit";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "gateways";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 
-	//schema details
+//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_gateways";
 		$apps[$x]['db'][$y]['table']['parent'] = "";
