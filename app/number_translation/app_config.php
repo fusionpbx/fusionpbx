@@ -10,9 +10,9 @@
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Manage mod_translation";
 		$apps[$x]['description']['ar-eg'] = "إدارة mod_translate";  //translation provided by Google Translate
-		$apps[$x]['description']['de-at'] = "Maniere mod_translate";  //translation provided by Google Translate
-		$apps[$x]['description']['de-ch'] = "Maniere mod_translate";  //translation provided by Google Translate
-		$apps[$x]['description']['de-de'] = "Maniere mod_translate";  //translation provided by Google Translate
+		$apps[$x]['description']['de-at'] = "Verwalte mod_translate";
+		$apps[$x]['description']['de-ch'] = "Verwalte mod_translate";
+		$apps[$x]['description']['de-de'] = "Verwalte mod_translate";
 		$apps[$x]['description']['es-cl'] = "Administrar mod_translate";  //translation provided by Google Translate
 		$apps[$x]['description']['es-mx'] = "Administrar mod_translate";  //translation provided by Google Translate
 		$apps[$x]['description']['fr-ca'] = "Gérer mod_translate";  //translation provided by Google Translate

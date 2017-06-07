@@ -3,9 +3,9 @@
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Number Translation";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "عدد الترجمة"; //Google translate
-	$apps[$x]['menu'][$y]['title']['de-at'] = "Nummer Übersetzung"; //Google translate
-	$apps[$x]['menu'][$y]['title']['de-ch'] = "Nummer Übersetzung"; //Google translate
-	$apps[$x]['menu'][$y]['title']['de-de'] = "Nummer Übersetzung"; //Google translate
+	$apps[$x]['menu'][$y]['title']['de-at'] = "Nummer Übersetzung";
+	$apps[$x]['menu'][$y]['title']['de-ch'] = "Nummer Übersetzung";
+	$apps[$x]['menu'][$y]['title']['de-de'] = "Nummer Übersetzung";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Traducción de números"; //Google translate
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "Traducción de números"; //Google translate
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Traduction de numéros"; //Google translate
