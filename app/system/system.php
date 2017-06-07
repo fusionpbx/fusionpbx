@@ -210,7 +210,7 @@ $document['title'] = $text['title-sys-status'];
 		//linux
 		if (stristr(PHP_OS, 'Linux')) {
 			echo "<!--\n";
-			$shellcmd='free';
+			$shellcmd = 'free -hw';
 			$shell_result = shell_exec($shellcmd);
 			echo "-->\n";
 			if (strlen($shell_result) > 0) {
@@ -237,7 +237,7 @@ $document['title'] = $text['title-sys-status'];
 		//freebsd
 		if (stristr(PHP_OS, 'FreeBSD')) {
 			echo "<!--\n";
-			$shellcmd='sysctl vm.vmtotal';
+			$shellcmd = 'sysctl vm.vmtotal';
 			$shell_result = shell_exec($shellcmd);
 			echo "-->\n";
 			if (strlen($shell_result) > 0) {
@@ -267,7 +267,7 @@ $document['title'] = $text['title-sys-status'];
 		//linux
 		if (stristr(PHP_OS, 'Linux')) {
 			echo "<!--\n";
-			$shellcmd="ps -e -o pcpu,cpu,nice,state,cputime,args --sort pcpu | sed '/^ 0.0 /d'";
+			$shellcmd = "ps -e -o pcpu,cpu,nice,state,cputime,args --sort pcpu | sed '/^ 0.0 /d'";
 			$shell_result = shell_exec($shellcmd);
 			echo "-->\n";
 			if (strlen($shell_result) > 0) {
@@ -302,7 +302,7 @@ $document['title'] = $text['title-sys-status'];
 		//freebsd
 		if (stristr(PHP_OS, 'FreeBSD')) {
 			echo "<!--\n";
-			$shellcmd='top';
+			$shellcmd = 'top';
 			$shell_result = shell_exec($shellcmd);
 			echo "-->\n";
 			if (strlen($shell_result) > 0) {
@@ -330,6 +330,10 @@ $document['title'] = $text['title-sys-status'];
 //drive space
 	if (permission_exists('system_view_hdd')) {
 		if (stristr(PHP_OS, 'Linux') || stristr(PHP_OS, 'FreeBSD')) {
+			echo "<!--\n";
+			$shellcmd = 'df -hP --total';
+			$shell_result = shell_exec($shellcmd);
+			echo "-->\n";
 			echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
 			echo "<tr>\n";
 			echo "	<th class='th' colspan='2' align='left'>".$text['title-drive']."</th>\n";
@@ -340,8 +344,6 @@ $document['title'] = $text['title-sys-status'];
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
 			echo "<pre>\n";
-			$shellcmd = 'df -h';
-			$shell_result = shell_exec($shellcmd);
 			echo "$shell_result<br>";
 			echo "</pre>\n";
 			echo "	</td>\n";
