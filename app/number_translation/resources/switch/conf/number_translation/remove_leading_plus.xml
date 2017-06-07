@@ -1,0 +1,3 @@
+<profile name="remove_leading_plus" description="Remove a leading +">
+  <rule regex="^\+(\d+)$" replace="$1"/>
+</profile>
