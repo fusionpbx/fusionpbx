@@ -68,25 +68,23 @@
 			//get the domain
 				if (substr_count($row['presence_id'], '@') > 0) {
 					$presence_id_array = explode('@', $row['presence_id']);
-					$domain_name = $presence_id_array[1];
+					$row['domain_name'] = $presence_id_array[1];
 				}
 				else if ($context != '') {
 					if (substr_count($context, '@') > 0) {
 						$context_array = explode('@', $context);
-						$domain_name = $context_array[1];
+						$row['domain_name'] = $context_array[1];
 					}
 					else {
-						$domain_name = $row['context'];
+						$row['domain_name'] = $row['context'];
 					}
 				}
-			//set the domain_name
-				$row['domain_name'] = $domain_name;
 			//add the row to the array
 				if (($show == 'all' && permission_exists('call_active_all'))) {
 					$rows[] = $row;
 				}
 				else {
-					if ($row['context'] == $_SESSION['domain_name']) {
+					if ($row['domain_name'] == $_SESSION['domain_name']) {
 						$rows[] = $row;
 					}
 				}
