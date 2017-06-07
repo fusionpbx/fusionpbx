@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
 //includes
@@ -96,6 +97,13 @@
 			$document_title = (($document["title"] != '') ? $document["title"]." " : null);
 		}
 	}
+	
+	if (isset($_SESSION["theme"]["title.domain"]["boolean"])) {
+		if ($_SESSION["theme"]["title.domain"]["boolean"] == 'true') {
+			$document_title .= (" " . $_SESSION["domain_name"]);
+		}
+	}
+	
 	$output = str_replace ("<!--{title}-->", $document_title, $template); //<!--{title}--> defined in each individual page
 	$output = str_replace ("<!--{head}-->", $custom_head, $output); //<!--{head}--> defined in each individual page
 	if (strlen($v_menu) > 0) {
