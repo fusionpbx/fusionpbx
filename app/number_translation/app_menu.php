@@ -17,7 +17,7 @@
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Tradução numérica"; //Google translate
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Tradução numérica"; //Google translate
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Traducerea numerelor"; //Google translate
-	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Перевод номера"; //Google translate
+	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Преобразование номера";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Antal översättning"; //Google translate
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "кількість перекладів"; //Google translate
 	$apps[$x]['menu'][$y]['uuid'] = "6ad5505c-4909-11e7-a919-92ebcb67fe33";

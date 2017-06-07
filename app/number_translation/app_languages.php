@@ -16,7 +16,7 @@ $text['button-reload']['pl-pl'] = "Przeładować"; //translation provided by Goo
 $text['button-reload']['pt-br'] = "Recarregar"; //translation provided by Google Translate
 $text['button-reload']['pt-pt'] = "Recarregar"; //translation provided by Google Translate
 $text['button-reload']['ro-ro'] = "Reîncarcă"; //translation provided by Google Translate
-$text['button-reload']['ru-ru'] = "перезагружать"; //translation provided by Google Translate
+$text['button-reload']['ru-ru'] = "Перезагрузить";
 $text['button-reload']['sv-se'] = "Ladda om"; //translation provided by Google Translate
 $text['button-reload']['uk-ua'] = "перезавантажувати"; //translation provided by Google Translate
 
@@ -36,7 +36,7 @@ $text['button-reload_xml']['pl-pl'] = "Przeładuj XML";
 $text['button-reload_xml']['pt-br'] = "Carregar novamente XML";
 $text['button-reload_xml']['pt-pt'] = "Recarregar XML";
 $text['button-reload_xml']['ro-ro'] = "Reîncărcați XML"; //translation provided by Google Translate
-$text['button-reload_xml']['ru-ru'] = "перезагрузить XML";
+$text['button-reload_xml']['ru-ru'] = "Перезагрузить XML";
 $text['button-reload_xml']['sv-se'] = "Ladda Om XML";
 $text['button-reload_xml']['uk-ua'] = "Перезагрузити XML";
 
@@ -56,7 +56,7 @@ $text['description-number_translation']['pl-pl'] = "Zarządzaj profilami mod_tra
 $text['description-number_translation']['pt-br'] = "Gerenciar perfis mod_translate"; //translation provided by Google Translate
 $text['description-number_translation']['pt-pt'] = "Gerenciar perfis mod_translate"; //translation provided by Google Translate
 $text['description-number_translation']['ro-ro'] = "Gestionați profilele mod_translate"; //translation provided by Google Translate
-$text['description-number_translation']['ru-ru'] = "Управление профилями mod_translate"; //translation provided by Google Translate
+$text['description-number_translation']['ru-ru'] = "Управление профилями mod_translate";
 $text['description-number_translation']['sv-se'] = "Hantera mod_translate profiler"; //translation provided by Google Translate
 $text['description-number_translation']['uk-ua'] = "Управління mod_translate профілів"; //translation provided by Google Translate
 
@@ -76,7 +76,7 @@ $text['header-number_translation']['pl-pl'] = "Profile"; //translation provided 
 $text['header-number_translation']['pt-br'] = "Perfis"; //translation provided by Google Translate
 $text['header-number_translation']['pt-pt'] = "Perfis"; //translation provided by Google Translate
 $text['header-number_translation']['ro-ro'] = "Profil"; //translation provided by Google Translate
-$text['header-number_translation']['ru-ru'] = "профили"; //translation provided by Google Translate
+$text['header-number_translation']['ru-ru'] = "Профили";
 $text['header-number_translation']['sv-se'] = "profiler"; //translation provided by Google Translate
 $text['header-number_translation']['uk-ua'] = "профілі"; //translation provided by Google Translate
 
@@ -116,7 +116,7 @@ $text['label-regex']['pl-pl'] = "Wyrażenie regularne";  //translation provided 
 $text['label-regex']['pt-br'] = "Expressão regular";  //translation provided by Google Translate
 $text['label-regex']['pt-pt'] = "Expressão regular";  //translation provided by Google Translate
 $text['label-regex']['ro-ro'] = "Expresie uzuala";  //translation provided by Google Translate
-$text['label-regex']['ru-ru'] = "Регулярное выражение";  //translation provided by Google Translate
+$text['label-regex']['ru-ru'] = "Регулярное выражение";
 $text['label-regex']['sv-se'] = "Vanligt uttryck";  //translation provided by Google Translate
 $text['label-regex']['uk-ua'] = "Регулярний вираз";  //translation provided by Google Translate
 
@@ -136,7 +136,7 @@ $text['label-replace']['pl-pl'] = "Zastąpić";  //translation provided by Googl
 $text['label-replace']['pt-br'] = "Substituir";  //translation provided by Google Translate
 $text['label-replace']['pt-pt'] = "Substituir";  //translation provided by Google Translate
 $text['label-replace']['ro-ro'] = "A inlocui";  //translation provided by Google Translate
-$text['label-replace']['ru-ru'] = "замещать";  //translation provided by Google Translate
+$text['label-replace']['ru-ru'] = "Замена";
 $text['label-replace']['sv-se'] = "Byta ut";  //translation provided by Google Translate
 $text['label-replace']['uk-ua'] = "заміщати";  //translation provided by Google Translate
 
@@ -156,7 +156,7 @@ $text['title-number_translation']['pl-pl'] = "Zarządzaj mod_translate";  //tran
 $text['title-number_translation']['pt-br'] = "Gerenciar mod_translate";  //translation provided by Google Translate
 $text['title-number_translation']['pt-pt'] = "Gerenciar mod_translate";  //translation provided by Google Translate
 $text['title-number_translation']['ro-ro'] = "Gestionați mod_translate";  //translation provided by Google Translate
-$text['title-number_translation']['ru-ru'] = "Управление mod_translate";  //translation provided by Google Translate
+$text['title-number_translation']['ru-ru'] = "Управление mod_translate";
 $text['title-number_translation']['sv-se'] = "Hantera mod_translate";  //translation provided by Google Translate
 $text['title-number_translation']['uk-ua'] = "управління mod_translate";  //translation provided by Google Translate
 
