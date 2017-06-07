@@ -22,6 +22,7 @@
 --      Contributor(s):
 --      Gerrit Visser <gerrit308@gmail.com>
 --      Mark J Crane <markjcrane@fusionpbx.com>
+--	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 --[[
 This module provides for Blacklisting of phone numbers. Essentially these are numbers that you do not want to hear from again!
 
@@ -37,6 +38,7 @@ This method causes the script to get its manadatory arguments directly from the 
 	12 Jun, 2013: update the database connection, change table name from v_callblock to v_call_block
 	14 Jun, 2013: Change Voicemail option to use Transfer, avoids mod_voicemail dependency
 	27 Sep, 2013: Changed the name of the fields to conform with the table name
+	24 May, 2017: New default settings
 ]]
 
 --set defaults
@@ -63,6 +65,9 @@ This method causes the script to get its manadatory arguments directly from the 
 
 --define the functions
 	require "resources.functions.trim";
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson";
+	end
 
 --define the logger function
 	local function logger(level, log, data)
@@ -82,6 +87,22 @@ This method causes the script to get its manadatory arguments directly from the 
 	logger("D", "NOTICE", "params are: " .. string.format("'%s', '%s', '%s', '%s'", params["cid_num"],
 			params["cid_name"], params["userid"], params["domain_name"]));
 
+--connect to the database
+	Database = require "resources.functions.database";
+	dbh = Database.new('system');
+
+--log if not connect
+	if dbh:connected() == false then
+		logger("W", "NOTICE", "db was not connected")
+	end
+
+	domain_uuid = session:getVariable("domain_uuid");
+	require "resources.functions.settings";
+	settings = settings(domain_uuid);
+	if (debug["sql"]) then
+		freeswitch.consoleLog("notice", "[call_block] "..json.encode(settings).."\n");
+	end
+
 --get the cache
 	if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
 		cache = trim(api:execute("memcache", "get app:call_block:" .. params["domain_name"] .. ":" .. params["cid_num"]));
@@ -92,14 +113,6 @@ This method causes the script to get its manadatory arguments directly from the 
 --check if number is in call_block list then increment the counter and block the call
 	--if not cached then get the information from the database
 	if (cache == "-ERR NOT FOUND") then
-		--connect to the database
-			Database = require "resources.functions.database";
-			dbh = Database.new('system');
-
-		--log if not connect
-			if dbh:connected() == false then
-				logger("W", "NOTICE", "db was not connected")
-			end
 
 		--check if the the call block is blocked
 			sql = "SELECT * FROM v_call_block as c "
@@ -189,6 +202,21 @@ This method causes the script to get its manadatory arguments directly from the 
 			elseif (found_action =="Hold") then
 				session:setAutoHangup(false)
 				session:execute("transfer", "*9664")
+			elseif (found_action == "Fake") then
+				domain_name = params["domain_name"];
+                        	domain_uuid = session:getVariable("domain_uuid");
+
+				fake_tone = '%(2000,4000,440,480)';
+				fake_tone_times = -1;
+				if (settings['call_block']['fake_tone']['text'] ~= nil) then
+					fake_tone = settings['call_block']['fake_tone']['text'];
+				end
+				if (settings['call_block']['fake_tone_times']['numeric'] ~= nil) then
+					fake_tone_times = settings['call_block']['fake_tone_times']['numeric'];
+				end
+				session:setAutoHangup(false);
+				session:execute("playback","{loops="..fake_tone_times.."}tone_stream://"..fake_tone);
+				session:hangup();
 			elseif (details[0] =="Voicemail") then
 				session:setAutoHangup(false)
 				session:execute("transfer", "*99" .. details[2] .. " XML  " .. details[1])
