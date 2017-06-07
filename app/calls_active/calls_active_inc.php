@@ -61,10 +61,6 @@
 		$results = json_decode($json, "true");
 	}
 
-//set the domain_name
-	$domain_name = $_SESSION['domain_name'];
-	$domain_name = 'demo@www.fusionpbx.com';
-
 //build a new array with domain_name
 	$rows = array();
 	if (isset($results["rows"])) {
