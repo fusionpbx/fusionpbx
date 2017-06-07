@@ -153,6 +153,9 @@ include "root.php";
 			case "escene":
 				$mac = strtolower($mac);
 				break;
+			case "grandstream":
+				$mac = strtolower($mac);
+				break;
 			default:
 				$mac = strtolower($mac);
 				$mac = substr($mac, 0,2).'-'.substr($mac, 2,2).'-'.substr($mac, 4,2).'-'.substr($mac, 6,2).'-'.substr($mac, 8,2).'-'.substr($mac, 10,2);
@@ -234,6 +237,185 @@ include "root.php";
 
 					$contact['phone_number_' . $phone_label] = $row['phone_number'];
 					unset($contact, $numbers, $uuid, $phone_label);
+				}
+			}
+		}
+
+		private function contact_grandstream(&$contacts, &$line, $domain_uuid, $device_user_uuid){
+			// Get username for this.
+			$sql = "SELECT username FROM v_users WHERE user_uuid = '${device_user_uuid}' AND domain_uuid = '${domain_uuid}' LIMIT 1";
+			$prep_statement = $this->db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$my_username = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			unset($prep_statement, $sql);
+			$my_username = $my_username[0]['username'];
+
+			// Global contact groups available to every phone if ['provision']['global_contact_groups']['text'] is set.
+			// Easier than assigning these common groups to every user.
+			// Check provision global_contact_groups and sanitize for sql.
+			$global_contact_groups['enabled']=false;
+			if ( preg_match('/[a-zA-Z0-9-_, ]/',$_SESSION['provision']['gs_global_contact_groups']['text'])){
+				$global_contact_groups['enabled']=true;
+				$gp=array();
+				$groups=explode(',',$_SESSION['provision']['gs_global_contact_groups']['text']);
+				foreach ($groups as $group){
+					$gp[] = trim($group);
+				}
+				$global_contact_groups['sql']="'".implode("','", $gp)."'";
+			}
+			// Get a list of groups the user has access to see.
+			$sql = "SELECT DISTINCT g.group_uuid, g.group_name, g.group_description ";
+			$sql .= "FROM v_groups g ";
+			$sql .= "	INNER JOIN v_group_users gu ";
+			$sql .= "	ON gu.group_uuid=g.group_uuid ";
+			$sql .= "	INNER JOIN v_contact_groups cg ";
+			$sql .= "	ON cg.group_uuid=g.group_uuid ";
+			$sql .= "WHERE gu.user_uuid = '$device_user_uuid' ";
+			if ( $global_contact_groups['enabled'] ){
+				$sql .= "UNION ";
+				$sql .= "SELECT g.group_uuid, g.group_name, g.group_description ";
+				$sql .= "FROM v_groups g ";
+				$sql .= "WHERE g.group_name IN( ".$global_contact_groups['sql'].") ";
+			}
+			$sql .= "ORDER BY group_description";
+			$prep_statement = $this->db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$user_groups = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			unset($prep_statement, $sql);
+			$key=0;
+			foreach ($user_groups as &$row) {
+				$contacts[] = array("contact_type"=>"group", "group_name"=>$row['group_name'], "group_description"=>$row['group_description'], "id"=>++$key);
+				$groups[$row['group_uuid']] = $key;
+				$my_groups[] = '@'.$row['group_name']; // Used to show/hide  
+			}
+			// Get a list of contacts that this user/phone has access based on assigned users and groups.
+			$sql  = "SELECT c.contact_uuid, c.contact_name_given, c.contact_name_family, c.contact_title, c.contact_category, c.contact_role, c.contact_organization, u.user_uuid ";
+			$sql .= "FROM v_contacts c ";
+			$sql .= "	LEFT JOIN v_users u ";
+			$sql .= "	ON c.contact_uuid = u.contact_uuid ";
+			$sql .= "WHERE c.contact_uuid IN (";	// assigned groups
+			$sql .= "	SELECT cg.contact_uuid";
+			$sql .= "	FROM v_contact_groups cg ";
+			$sql .= "	WHERE cg.group_uuid IN (";
+			$sql .= "		SELECT gu.group_uuid ";
+			$sql .= "		FROM v_group_users gu ";
+			$sql .= "		WHERE gu.user_uuid = '$device_user_uuid' ";
+			$sql .= "		AND gu.domain_uuid = '$domain_uuid' ";
+			if ( $global_contact_groups['enabled'] ){
+				$sql .= "	UNION ";
+				$sql .= "	SELECT g.group_uuid ";
+				$sql .= "	FROM v_groups g ";
+				$sql .= "	WHERE g.group_name IN( ".$global_contact_groups['sql'].") ";
+			}
+			$sql .= "	)";
+			$sql .= "	UNION ";		// assigned users
+			$sql .= "	SELECT cu.contact_uuid ";
+			$sql .= "	FROM v_contact_users cu ";
+			$sql .= "	WHERE cu.user_uuid = '$device_user_uuid' ";
+			$sql .= "	AND cu.domain_uuid = '$domain_uuid' ";
+			$sql .= ")";
+			$sql .= "ORDER BY contact_name_given, contact_name_family";
+			$prep_statement = $this->db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$user_contacts = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			unset($prep_statement, $sql);
+			$groupid=0;
+			foreach ($user_contacts as &$row) {
+				$last_extention = $row['extension'];
+				unset($contact);
+				// Grandsteam phonebook manager: First, Last, Department, Primary, (Work, Home, Mobile, Fax, Pager, Car... with number and account), email(s), Photo, Ringtone, Group(s) 
+				// GXP21xx serries has First, Last, Company, Department, Job, Job TItle, 1Work ,1Home, 1Mobile, Accounts, Groups(1-many)
+				$contact = array();
+				$contact['contact_type']	= "contact";
+				$contact['contact_uuid']	= $row['contact_uuid'];
+				$contact['user_uuid']		= $row['user_uuid'];
+				$contact['contact_name_given']	= $row['contact_name_given']; //FirstName
+				$contact['contact_name_family']	= $row['contact_name_family']; // LastName
+				$contact['contact_title']	= $row['contact_title']; 
+				$contact['contact_category']	= $row['contact_category']; // Department
+				$contact['contact_role']	= $row['contact_role']; // Job Title
+				$contact['contact_organization']= $row['contact_organization']; // Company
+				$contact['contact_work']	= $row['extension'];
+				//$contact['contact_account_index'] = $line['line_number'];  // This was empty so disabled it.
+				// Look up groups for this contact
+				$sql = "SELECT g.group_description, g.group_uuid ";
+				$sql .= "FROM v_groups g ";
+				$sql .= "	INNER JOIN v_contact_groups cg ";
+				$sql .= "	ON cg.group_uuid=g.group_uuid ";
+				$sql .= "WHERE cg.contact_uuid = '".$row['contact_uuid']."' ";
+				$sql .= "AND cg.domain_uuid = '$domain_uuid'";
+				$prep_statement = $this->db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$user_groups = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				foreach ($user_groups as $group ){
+					if ( ! empty($groups[$group['group_uuid']])){
+						$contact['groups'][] = $groups[$group['group_uuid']];
+					}
+				}
+				if ( empty($contact['groups']) && !empty($groups['Other'])){
+					$contact['groups'][] = $groups['Other'];
+				}
+				// Look up extention(s) for this contact.
+				if ( ! empty ($row['user_uuid']) ){
+					$sql = "SELECT e.extension, e.description ";
+					$sql .= "FROM v_extensions e ";
+					$sql .= "	INNER JOIN v_extension_users eu ";
+					$sql .= "	ON e.extension_uuid = eu.extension_uuid ";
+					$sql .= "WHERE eu.user_uuid = '".$row['user_uuid']."' ";
+					$sql .= "AND eu.domain_uuid = '$domain_uuid' ";
+					$sql .= "AND e.enabled = 'true' ";
+					$sql .= "AND e.directory_visible = 'true' ";		# TODO: not right field but it works for our district.
+					$sql .= "AND e.directory_exten_visible = 'true' ";	# TODO: not right field but it works for our district.
+					$prep_statement = $this->db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$user_extentions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					foreach ($user_extentions as $ext ){
+						if ( preg_match ('/ (Cell|Mobile)/i', $ext['description'])){
+							$contact['contact_cell'] = $ext['extension'];
+						} elseif ( preg_match ("/ Home/i", $ext['description'])){
+							$contact['contact_home'] = $ext['extension'];
+						} else {
+							$contact['contact_work'] = $ext['extension'];
+						}
+					}
+				}
+				// Additional phone numbers for this contact.
+				$sql = "select phone_number, phone_label, phone_description from v_contact_phones ";
+				$sql .= "where contact_uuid='".$row['contact_uuid']."' ";
+				$sql .= "and domain_uuid='".$domain_uuid."' ";
+				$sql .= "and phone_type_voice = '1' ";
+				$sql .= "and phone_label in ('Home', 'Mobile', 'Work') ";
+				$prep_statement = $this->db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$user_phones = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				unset($prep_statement, $sql);
+				foreach ($user_phones as $phone){
+					// Check permission in phone_description field for string :allow:username1:username2:@group1:@group2:
+					$show = true;
+					if ( preg_match ('/:allow:/i', $phone['phone_description'] )){
+						$show = false;
+						$allows = explode ( ':', $phone['phone_description'] );
+						foreach ( $allows as $allow ){
+							if ( in_array($allow, $my_groups) || preg_match('/^'.$my_username.'$/', $allow)){
+								$show = true;
+								break 1;
+							}
+						} 		
+					}
+					if ( $show && $phone['phone_label'] == "Home" ) {
+						$contact['contact_home'] = $phone['phone_number'];
+					} elseif ( $show && $phone['phone_label'] == "Mobile" ){
+						$contact['contact_cell'] = $phone['phone_number'];
+					} elseif ( $show && $phone['phone_label'] == "Work" ){
+						// Work phones are usually just extentions already assigned above.
+						if (empty($contact['contact_work'])){
+							$contact['contact_work'] = $phone['phone_number'];
+						}
+					}
+				}
+				// Only add to contact list if a phone number exists.
+				if(!empty($contact['contact_work']) || !empty($contact['contact_home']) || !empty($contact['contact_cell'])){
+					$contacts[] = &$contact;
 				}
 			}
 		}
@@ -387,10 +569,24 @@ include "root.php";
 								"yealink SIP-T22"=>"yealink/t22",
 								"yealink SIP-T26"=>"yealink/t26",
 								"Yealink SIP-T32"=>"yealink/t32",
+								"HW DP750"=>"grandstream/dp750",
 								"HW GXP1450"=>"grandstream/gxp1450",
+								"HW GXP1628"=>"grandstream/gxp16xx",
+								"HW GXP1610"=>"grandstream/gxp16xx",
+								"HW GXP1620"=>"grandstream/gxp16xx",
+								"HW GXP1625"=>"grandstream/gxp16xx",
+								"HW GXP1628"=>"grandstream/gxp16xx",
+								"HW GXP1630"=>"grandstream/gxp16xx",
 								"HW GXP2124"=>"grandstream/gxp2124",
+								"HW GXP2130"=>"grandstream/gxp2130",
+								"HW GXP2135"=>"grandstream/gxp2135",
+								"HW GXP2140"=>"grandstream/gxp2140",
+								"HW GXP2160"=>"grandstream/gxp2160",
+								"HW GXP2170"=>"grandstream/gxp2170",
 								"HW GXV3140"=>"grandstream/gxv3140",
+								"HW GXV3240"=>"grandstream/gxv3240",
 								"HW GXV3175"=>"grandstream/gxv3175",
+								"Vesa VCS754"=>"vtech/vcs754",
 								"Wget/1.11.3"=>"konftel/kt300ip"
 								);
 
@@ -623,6 +819,10 @@ include "root.php";
 						//get the contacts assigned to the user and add to the contacts array
 							if ($_SESSION['provision']['contact_users']['boolean'] == "true") {
 								$this->contact_append($contacts, $line, $domain_uuid, $device_user_uuid, false);
+							}
+						// Grandstream get the contacts assigned to the user and groups and add to the contacts array
+							if ($_SESSION['provision']['contact_grandstream']['text'] == "true") {
+								$this->contact_grandstream($contacts, $line, $domain_uuid, $device_user_uuid);
 							}
 					}
 
@@ -887,6 +1087,18 @@ include "root.php";
 					$view->assign("user_id",$user_id);
 					$view->assign("password",$password);
 					$view->assign("template",$device_template);
+
+				// personal ldap password
+					global $laddr_salt;
+					if (isset($device_user_uuid)){
+						$sql = "SELECT contact_uuid FROM v_users WHERE user_uuid='".$device_user_uuid."'";
+						$prep_statement = $this->db->prepare(check_sql($sql));
+						$prep_statement->execute();
+						$c_uuid = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+						$view->assign("ldap_username","uid=".$c_uuid[0]['contact_uuid'].",".$_SESSION['provision']['gs_ldap_user_base']['text']);
+						$view->assign("ldap_password",md5($laddr_salt.$device_user_uuid));
+					}
+
 
 				//get the time zone
 					$time_zone_name = $_SESSION['domain']['time_zone']['name'];

@@ -350,6 +350,7 @@
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
 			$device_mac_address = $row["device_mac_address"];
+			$device_provisioned_ip = $row["device_provisioned_ip"];
 			$domain_uuid = $row["domain_uuid"];
 			$device_label = $row["device_label"];
 			//$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
@@ -563,7 +564,7 @@
 			if ($_SERVER['HTTPS'] == 'on') { $_SERVER['HTTP_PROTOCOL'] = 'https'; }
 			if ($_SERVER['SERVER_PORT'] == '443') { $_SERVER['HTTP_PROTOCOL'] = 'https'; }
 		}
-		echo "		window.location = '".$_SERVER['HTTP_PROTOCOL']."://".$domain_name.PROJECT_PATH."/app/provision?mac=".$device_mac_address."&file=' + d + '&content_type=application/octet-stream';\n";
+		echo "		window.location = '".$_SERVER['HTTP_PROTOCOL']."://".$domain_name.PROJECT_PATH."/app/provision/index.php?mac=".$device_mac_address."&file=' + d + '&content_type=application/octet-stream';\n";
 		echo "	}\n";
 
 		echo "\n";
@@ -650,6 +651,7 @@
 		echo $device_mac_address;
 	}
 	echo "	<div style='display: none;' id='duplicate_mac_response'></div>\n";
+	echo "<a href='http://".$device_provisioned_ip."' target='_blank'>".$device_provisioned_ip."</a>";
 	echo "</td>\n";
 	echo "</tr>\n";
 
