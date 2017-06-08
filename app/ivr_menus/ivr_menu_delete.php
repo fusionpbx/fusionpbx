@@ -61,7 +61,7 @@ if (strlen($id) > 0) {
 }
 
 //redirect the user
-	$_SESSION['message'] = $text['message-delete'];
+	messages::add($text['message-delete']);
 	header("Location: ivr_menus.php");
 
 ?>

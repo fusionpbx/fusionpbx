@@ -67,7 +67,7 @@ else {
 			$response = event_socket_request($fp, "api log notice ".$command);
 
 		//show the response
-			$_SESSION['message'] = $text['label-event']." ".ucwords($cmd)."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$text['label-response'].$response;
+			messages::add($text['label-event']." ".ucwords($cmd)."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$text['label-response'].htmlentities($response));
 
 		//close the connection
 			fclose($fp);

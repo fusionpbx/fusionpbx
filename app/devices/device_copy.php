@@ -68,7 +68,7 @@
 			}
 			else {
 				$save = false;
-				$_SESSION['message'] =  $text['message-duplicate'];
+				messages::add($text['message-duplicate']);
 			}
 		}
 		unset($prep_statement);

@@ -64,8 +64,7 @@
 				}
 				unset($prep_statement, $row);
 				if ($total_destinations >= $_SESSION['limit']['destinations']['numeric']) {
-					$_SESSION['message_mood'] = 'negative';
-					$_SESSION['message'] = $text['message-maximum_destinations'].' '.$_SESSION['limit']['destinations']['numeric'];
+					messages::add($text['message-maximum_destinations'].' '.$_SESSION['limit']['destinations']['numeric'], 'negative');
 					header('Location: destinations.php');
 					return;
 				}
