@@ -122,14 +122,20 @@ else {
 					$mos_comparison = "<>";
 					break;
 			}
-         } else {
-             $mos_comparison = '';
-        }
+		} else {
+			$mos_comparison = '';
+		}
 		//$mos_comparison = check_str($_REQUEST["mos_comparison"]);
 		$mos_score = check_str($_REQUEST["mos_score"]);
+		if(permission_exists('xml_cdr_b_leg')){
+			$leg = check_str($_REQUEST["leg"]);
+		}
 	}
 
-
+//if we do not see b-leg then use only a-leg to generate statistics
+	if(!permission_exists('xml_cdr_b_leg')){
+		$leg = 'a';
+	}
 
 //build the sql where string
 	if ($missed == true) {
@@ -182,6 +188,7 @@ else {
 	if (strlen($remote_media_ip) > 0) { $sql_where_ands[] = "remote_media_ip like '%".$remote_media_ip."%'"; }
 	if (strlen($network_addr) > 0) { $sql_where_ands[] = "network_addr like '%".$network_addr."%'"; }
 	if (strlen($mos_comparison) > 0 && strlen($mos_score) > 0 ) { $sql_where_ands[] = "rtp_audio_in_mos " . $mos_comparison . " ".$mos_score.""; }
+	if (strlen($leg) > 0) { $sql_where_ands[] = "leg='$leg'"; }
 
 	//if not admin or superadmin, only show own calls
 	if (!permission_exists('xml_cdr_domain')) {
