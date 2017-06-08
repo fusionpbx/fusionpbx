@@ -172,20 +172,54 @@
 		echo "	<th class='th' colspan='2' align='left' style='padding-top:2em'>".$text['title-os-info']."</th>\n";
 		echo "</tr>\n";
 
-		echo "<!--\n";
-		$tmp_result = shell_exec('uname -a');
-		echo "-->\n";
-		if (strlen($tmp_result) > 0) {
+		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+			echo "<!--\n";
+			$data = explode("\n",shell_exec('systeminfo /FO CSV 2> nul'));
+			$data = array_combine(str_getcsv($data[0]), str_getcsv($data[1]));
+			$os_name = $data['OS Name'];
+			$os_version = $data['OS Version'];
+			unset($data);
+			echo "-->\n";
+		}
+		else {
+			echo "<!--\n";
+			$os_kernel = shell_exec('uname -a');
+			$os_name = shell_exec('lsb_release -is');
+			$os_version = shell_exec('lsb_release -rs');
+			echo "-->\n";
+		}
+		
+		if (strlen($os_name) > 0) {
 			echo "<tr>\n";
 			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 			echo "		".$text['label-os']." \n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
-			echo "		".$tmp_result." \n";
+			echo "		".$os_name." \n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 		}
-		unset($tmp_result);
+		if (strlen($os_version) > 0) {
+			echo "<tr>\n";
+			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+			echo "		".$text['label-version']." \n";
+			echo "	</td>\n";
+			echo "	<td class=\"row_style1\">\n";
+			echo "		".$os_version." \n";
+			echo "	</td>\n";
+			echo "</tr>\n";
+		}
+		if (strlen($os_kernel) > 0) {
+			echo "<tr>\n";
+			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+			echo "		".$text['label-kernel']." \n";
+			echo "	</td>\n";
+			echo "	<td class=\"row_style1\">\n";
+			echo "		".$os_kernel." \n";
+			echo "	</td>\n";
+			echo "</tr>\n";
+		}
+		unset($os_name, $os_version, $os_kernel);
 
 		echo "<!--\n";
 		$tmp_result = shell_exec('uptime');
