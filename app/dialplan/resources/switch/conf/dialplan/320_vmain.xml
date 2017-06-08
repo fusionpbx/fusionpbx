@@ -9,5 +9,13 @@
 			<action application="lua" data="app.lua voicemail"/>
 			<!--<action application="voicemail" data="check default ${domain_name}"/>-->
 		</condition>
+		<condition field="destination_number" expression="^(vmain$|^\*4000$|^\*98)(\d{2,7})$">
+			<action application="answer"/>
+			<action application="sleep" data="1000"/>
+			<action application="set" data="voicemail_action=check"/>
+			<action application="set" data="voicemail_id=$2"/>
+			<action application="set" data="voicemail_profile=default"/>
+			<action application="lua" data="app.lua voicemail"/>
+		</condition>		
 	</extension>
 </context>
