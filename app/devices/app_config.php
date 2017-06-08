@@ -1863,7 +1863,7 @@
 		$vendors[$y]['functions'][$z]['uuid'] = "bbb4c3f9-7a2f-4670-a194-e7ab92c5c3d1";
 		$vendors[$y]['functions'][$z]['label'] = "label-conference";
 		$vendors[$y]['functions'][$z]['name'] = "conference";
-		$vendors[$y]['functions'][$z]['value'] = "converence";
+		$vendors[$y]['functions'][$z]['value'] = "conference";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
