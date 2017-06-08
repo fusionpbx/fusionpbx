@@ -1,0 +1,6 @@
+<profile name="e164_to_GB_national" description="Convert from E.164 format to GB national dialling">
+  <rule regex="^44(\d{3,6})$" replace="$1"/>
+  <rule regex="^44(\d+)$" replace="0$1"/>
+  <rule regex="^(\d+)$" replace="00$1"/>
+  <rule regex="^\+(\d+)$" replace="00$1"/>
+</profile>
