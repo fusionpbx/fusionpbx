@@ -25,15 +25,17 @@
 --	POSSIBILITY OF SUCH DAMAGE.
 
 --get the cache
-	hostname = trim(api:execute("switchname", ""));
-	if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
-		XML_STRING = trim(api:execute("memcache", "get configuration:sofia.conf:" .. hostname));
-	else
-		XML_STRING = "-ERR NOT FOUND";
-	end
+	local cache = require "resources.functions.cache"
+	local hostname = trim(api:execute("switchname", ""))
+	local sofia_cache_key = "configuration:sofia.conf:" .. hostname
+	XML_STRING, err = cache.get(sofia_cache_key)
 
 --set the cache
-	if (XML_STRING == "-ERR NOT FOUND") or (XML_STRING == "-ERR CONNECTION FAILURE") then
+	if not XML_STRING then
+		--log cache error
+			if (debug["cache"]) then
+				freeswitch.consoleLog("warning", "[xml_handler] " .. sofia_cache_key .. " can not be get from memcache: " .. tostring(err) .. "\n");
+			end
 
 		--set a default value
 			if (expire["sofia"] == nil) then
@@ -296,7 +298,14 @@
 			dbh:release();
 
 		--set the cache
-			result = trim(api:execute("memcache", "set configuration:sofia.conf:" .. hostname .." '"..XML_STRING:gsub("'", "&#39;").."' "..expire["sofia"]));
+			local ok, err = cache.set(sofia_cache_key, XML_STRING, expire["sofia"])
+			if debug["cache"] then
+				if ok then
+					freeswitch.consoleLog("notice", "[xml_handler] " .. sofia_cache_key .. " stored in memcache\n");
+				else
+					freeswitch.consoleLog("warning", "[xml_handler] " .. sofia_cache_key .. " can not be stored in memcache: " .. tostring(err) .. "\n");
+				end
+			end
 
 		--send the xml to the console
 			if (debug["xml_string"]) then
@@ -307,14 +316,11 @@
 
 		--send to the console
 			if (debug["cache"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] configuration:sofia.conf:" .. hostname .." source: database\n");
+				freeswitch.consoleLog("notice", "[xml_handler] " .. sofia_cache_key .. " source: database\n");
 			end
 	else
-		--replace the &#39 back to a single quote
-			XML_STRING = XML_STRING:gsub("&#39;", "'");
-
 		--send to the console
 			if (debug["cache"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] configuration:sofia.conf source: memcache\n");
+				freeswitch.consoleLog("notice", "[xml_handler] " .. sofia_cache_key .. " source: memcache\n");
 			end
 	end --if XML_STRING
