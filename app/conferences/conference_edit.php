@@ -106,10 +106,10 @@
 			$sql_insert .= "'".$user_uuid."' ";
 			$sql_insert .= ")";
 			$db->exec($sql_insert);
-
-		$_SESSION["message"] = $text['confirm-add'];
-		header("Location: conference_edit.php?id=".$conference_uuid);
-		return;
+		//send a message
+			$_SESSION["message"] = $text['confirm-add'];
+			header("Location: conference_edit.php?id=".$conference_uuid);
+			return;
 	}
 
 //process http post variables
@@ -193,7 +193,7 @@
 						//<condition destination_number="500" />
 						$dialplan_detail_tag = 'condition'; //condition, action, antiaction
 						$dialplan_detail_type = 'destination_number';
-						$dialplan_detail_data = '^'.$conference_extension.'$';
+						$dialplan_detail_data = '^(conf\+)?'.$conference_extension.'$';
 						$dialplan_detail_order = '000';
 						$dialplan_detail_group = '2';
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
