@@ -63,8 +63,7 @@
 			}
 			unset($prep_statement, $row);
 			if ($total_extensions >= $_SESSION['limit']['extensions']['numeric']) {
-				$_SESSION['message_mood'] = 'negative';
-				$_SESSION['message'] = $text['message-maximum_extensions'].' '.$_SESSION['limit']['extensions']['numeric'];
+				messages::add($text['message-maximum_extensions'].' '.$_SESSION['limit']['extensions']['numeric'], 'negative');
 				header('Location: extensions.php');
 				return;
 			}

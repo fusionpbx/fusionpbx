@@ -56,7 +56,7 @@ else {
 	}
 
 //redirect the user
-	$_SESSION['message'] = $text['message-delete'];
+	messages::add($text['message-delete']);
 	header('Location: ivr_menu_edit.php?id='.$ivr_menu_uuid);
 
 ?>
