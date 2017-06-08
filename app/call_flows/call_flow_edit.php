@@ -163,6 +163,10 @@
 			$destination_extension = str_replace("+", "\+", $destination_extension);
 
 			$destination_feature = $call_flow_feature_code;
+			// Allows dial feature code as `flow+<feature_code>`
+			if (substr($destination_feature, 0, 5) != 'flow+') {
+				$destination_feature = '(?:flow+)?' . $destination_feature;
+			}
 			$destination_feature = str_replace("*", "\*", $destination_feature);
 			$destination_feature = str_replace("+", "\+", $destination_feature);
 
