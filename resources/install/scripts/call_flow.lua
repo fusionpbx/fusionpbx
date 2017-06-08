@@ -207,6 +207,12 @@ if (session:ready()) then
 				call_flow_feature_code.."@"..domain_name,
 				call_flow_uuid
 			);
+			if string.find(call_flow_feature_code, 'flow+', nil, true) ~= 1 then
+				presence_in.turn_lamp( toggle == "false",
+					'flow+'..call_flow_feature_code.."@"..domain_name,
+					call_flow_uuid
+				);
+			end
 
 		--active label
 			local active_flow_label = (toggle == "true") and call_flow_label or call_flow_alternate_label
