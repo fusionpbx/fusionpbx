@@ -651,7 +651,7 @@
 		echo $device_mac_address;
 	}
 	echo "	<div style='display: none;' id='duplicate_mac_response'></div>\n";
-	echo $device_provisioned_ip."(<a href='http://".$device_provisioned_ip."' target='_blank'>http</a>|<a href='https://".$device_provisioned_ip."' target='_blank'>https</a>)\n";
+	echo " ".$device_provisioned_ip."(<a href='http://".$device_provisioned_ip."' target='_blank'>http</a>|<a href='https://".$device_provisioned_ip."' target='_blank'>https</a>)\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
