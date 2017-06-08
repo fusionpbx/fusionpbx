@@ -140,7 +140,7 @@ $text['message-upgrade_source_failed']['ru-ru'] = "Обновление исхо
 $text['message-upgrade_source_failed']['sv-se'] = "Källfiler Uppdatering misslyckades";
 $text['message-upgrade_source_failed']['uk-ua'] = "Помилка оновлення вихідних файлів";
 
-$text['message-upgrade_source']['en-us'] = "Files Sorgenti Caricati";
+$text['message-upgrade_source']['en-us'] = "Source Files Updated";
 $text['message-upgrade_source']['ar-eg'] = "";
 $text['message-upgrade_source']['de-at'] = "Quellcode aktualisiert";
 $text['message-upgrade_source']['de-ch'] = "";
@@ -150,7 +150,7 @@ $text['message-upgrade_source']['es-mx'] = "";
 $text['message-upgrade_source']['fr-ca'] = "";
 $text['message-upgrade_source']['fr-fr'] = "Code source mis à jour";
 $text['message-upgrade_source']['he-il'] = "";
-$text['message-upgrade_source']['it-it'] = "";
+$text['message-upgrade_source']['it-it'] = "Files Sorgenti Caricati";
 $text['message-upgrade_source']['nl-nl'] = "";
 $text['message-upgrade_source']['pl-pl'] = "Aktualizacja plików źródłowych powiodła się";
 $text['message-upgrade_source']['pt-br'] = "Fonte de arquivos atualizados";
