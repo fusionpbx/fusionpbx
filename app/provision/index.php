@@ -62,7 +62,7 @@
 		$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 		$domain_name = $domain_array[0];
 		$device = device_by_ext($db, $ext, $domain_name);
-		if(($device !== false)&&($device['device_vendor']=='escene')){
+		if(($device !== false)&&(($device['device_vendor']=='escene')||($device['device_vendor']=='grandstream'))){
 			$mac = $device['device_mac_address'];
 		}
 	}
@@ -81,7 +81,7 @@
 				$mac = substr($_SERVER['HTTP_USER_AGENT'],-14);
 				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
 			}
-                //Grandstream: $_SERVER['HTTP_USER_AGENT'] = "Grandstream Model HW GXP2135 SW 1.0.7.97 DevId 000b828aa872"
+		//Grandstream: $_SERVER['HTTP_USER_AGENT'] = "Grandstream Model HW GXP2135 SW 1.0.7.97 DevId 000b828aa872"
 			if (substr($_SERVER['HTTP_USER_AGENT'],0,11) == "Grandstream") {
 				$mac = substr($_SERVER['HTTP_USER_AGENT'],-12);
 				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
