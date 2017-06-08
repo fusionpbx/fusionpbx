@@ -240,6 +240,8 @@ if (!class_exists('domains')) {
 				$db = $this->db;
 				$x=0;
 				foreach ($config_list as &$config_path) {
+					$app_path = dirname($config_path);
+					$app_path = preg_replace('/\A.*(\/.*\/.*)\z/', '$1', $app_path);
 					include($config_path);
 					$x++;
 				}
