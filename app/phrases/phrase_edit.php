@@ -170,7 +170,7 @@
 						}
 
 					//send a redirect
-						$_SESSION["message"] = $text['message-add'];
+						messages::add($text['message-add']);
 						header("Location: phrase_edit.php?id=".$phrase_uuid);
 						return;
 				} //if ($action == "add")
@@ -239,7 +239,7 @@
 						}
 
 					//send a redirect
-						$_SESSION["message"] = $text['message-update'];
+						messages::add($text['message-update']);
 						header("Location: phrase_edit.php?id=".$phrase_uuid);
 						return;
 

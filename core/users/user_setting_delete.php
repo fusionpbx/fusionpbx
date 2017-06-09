@@ -60,8 +60,7 @@
 	}
 	else {
 		// set message
-		$_SESSION["message"] = $text['message-delete_failed'];
-		$_SESSION["message_mood"] = "negative";
+		messages::add($text['message-delete_failed'], 'negative');
 	}
 
 	header("Location: user_edit.php?id=".check_str($_REQUEST["user_uuid"]));

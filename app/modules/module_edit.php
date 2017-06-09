@@ -117,7 +117,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$module = new modules;;
 				$module->xml();
 
-				$_SESSION["message"] = $text['message-add'];
+				messages::add($text['message-add']);
 				header("Location: modules.php");
 				return;
 			} //if ($action == "add")
@@ -138,7 +138,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$module = new modules;;
 				$module->xml();
 
-				$_SESSION["message"] = $text['message-update'];
+				messages::add($text['message-update']);
 				header("Location: modules.php");
 				return;
 			} //if ($action == "update")

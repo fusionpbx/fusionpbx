@@ -39,7 +39,7 @@
 			$sql .= "where device_vendor_function_group_uuid = '".$device_vendor_function_group_uuid."' ";
 			$db->exec(check_sql($sql));
 		//redirect the browser
-			$_SESSION["message"] = $text['message-delete'];
+			messages::add($text['message-delete']);
 			header("Location: device_vendor_function_edit.php?id=".$device_vendor_function_uuid ."&device_vendor_uuid=".$device_vendor_uuid);
 			return;
 	}

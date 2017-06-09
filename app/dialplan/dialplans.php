@@ -51,7 +51,7 @@
 		$sql .= "where dialplan_uuid = '".$dialplan_uuid."'";
 		$db->exec(check_sql($sql));
 		unset($sql);
-		$_SESSION["message"] = $text['message-update'];
+		messages::add($text['message-update']);
 	}
 
 //delete the dialplan context from memcache

@@ -164,7 +164,7 @@
 	}
 
 //redirect the browser
-	$_SESSION["message"] = $text['message-delete'];
+	messages::add($text['message-delete']);
 	header("Location: extensions.php");
 	return;
 

@@ -112,7 +112,7 @@
 	$cache->delete("dialplan:".$destination_context);
 
 //redirect the user
-	$_SESSION["message"] = $text['message-delete'];
+	messages::add($text['message-delete']);
 	header("Location: destinations.php");
 	return;
 

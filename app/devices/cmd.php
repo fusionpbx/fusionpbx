@@ -80,9 +80,7 @@ else {
 	}
 	else {
 		//send the message
-			$_SESSION["message_delay"] = 3500;
-			$_SESSION["message_mood"] = 'positive';
-			$_SESSION["message"] = $text['button-applied'];
+			messages::add($text['button-applied'], 'positive', 3500);
 
 		//send the redirect
 			if (isset($_SERVER['HTTP_REFERER'])) {

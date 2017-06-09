@@ -161,7 +161,7 @@
 			$cache->delete("configuration:sofia.conf:".$sip_profile_hostname);
 
 		//redirect the browser
-			$_SESSION["message"] = $text['message-update'];
+			messages::add($text['message-update']);
 			header("Location: sip_profiles.php");
 
 			//save the sip profile xml
@@ -172,10 +172,10 @@
 		//redirect the user
 			if (isset($action)) {
 				if ($action == "add") {
-					$_SESSION["message"] = $text['message-add'];
+					messages::add($text['message-add']);
 				}
 				if ($action == "update") {
-					$_SESSION["message"] = $text['message-update'];
+					messages::add($text['message-update']);
 				}
 				header('Location: sip_profile_edit.php?id='.$sip_profile_uuid);
 				return;

@@ -656,8 +656,7 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 		else {
 			if (!$included) {
 				//nothing to send, redirect the browser
-				$_SESSION['message_mood'] = 'negative';
-				$_SESSION["message"] = $text['message-invalid-fax'];
+				messages::add($text['message-invalid-fax'], 'negative');
 				header("Location: fax_send.php?id=".$fax_uuid);
 				exit;
 			}
@@ -806,7 +805,7 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 
 		if (!$included) {
 			//redirect the browser
-			$_SESSION["message"] = $response;
+			messages::add($response, 'default');
 			if (permission_exists('fax_active_view')) {
 				header("Location: fax_active.php?id=".$fax_uuid);
 			}
