@@ -1,5 +1,5 @@
 <?php
-#This file was last reorganized on 2nd of June 2017 04:38:28 PM UTC
+#This file was last reorganized on 9th of June 2017 07:00:00 AM UTC
 
 $text['language-name']['en-us'] = "English - United States";
 $text['language-name']['ar-eg'] = "العربية - مصر";
@@ -180,6 +180,26 @@ $text['message-copy']['ro-ro'] = "";
 $text['message-copy']['ru-ru'] = "Копирование выполнено";
 $text['message-copy']['sv-se'] = "Kopiering Slutförd";
 $text['message-copy']['uk-ua'] = "Скопійовано";
+
+$text['message-invalid_credentials']['en-us'] = "Invalid Username and/or Password";
+$text['message-invalid_credentials']['ar-eg'] = "";
+$text['message-invalid_credentials']['de-at'] = "";
+$text['message-invalid_credentials']['de-ch'] = "";
+$text['message-invalid_credentials']['de-de'] = "";
+$text['message-invalid_credentials']['es-cl'] = "";
+$text['message-invalid_credentials']['es-mx'] = "";
+$text['message-invalid_credentials']['fr-ca'] = "";
+$text['message-invalid_credentials']['fr-fr'] = "";
+$text['message-invalid_credentials']['he-il'] = "";
+$text['message-invalid_credentials']['it-it'] = "";
+$text['message-invalid_credentials']['nl-nl'] = "";
+$text['message-invalid_credentials']['pl-pl'] = "";
+$text['message-invalid_credentials']['pt-br'] = "";
+$text['message-invalid_credentials']['pt-pt'] = "";
+$text['message-invalid_credentials']['ro-ro'] = "";
+$text['message-invalid_credentials']['ru-ru'] = "";
+$text['message-invalid_credentials']['sv-se'] = "";
+$text['message-invalid_credentials']['uk-ua'] = "";
 
 $text['message-message']['en-us'] = "Message";
 $text['message-message']['ar-eg'] = "";
