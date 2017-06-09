@@ -48,6 +48,31 @@ end
 
 end
 
+local find_call_forward do
+
+local find_call_forward_sql = [[select t1.forward_all_destination, t1.forward_all_enabled
+from v_extensions t1 inner join v_domains t2 on t1.domain_uuid = t2.domain_uuid
+where t2.domain_name = :domain_name and (t1.extension = :extension or t1.number_alias=:extension)]]
+
+find_call_forward = function(user)
+	local ext, domain_name, number = split_first(user, '@', true)
+	if not domain_name then return end
+	ext, number = split_first(ext, '/', true)
+	local dbh = Database.new('system')
+	if not dbh then return end
+	local row = dbh:first_row(find_call_forward_sql, {domain_name = domain_name, extension = ext})
+	dbh:release()
+	if not (row and row.forward_all_enabled) then return end
+	if row.forward_all_enabled ~= 'true' then return 'false' end
+	if number then
+		return number == row.forward_all_destination and 'true' or 'false',
+			row.forward_all_destination
+	end
+	return 'true', row.forward_all_destination
+end
+
+end
+
 local service_name = "call_flow"
 local pid_file = scripts_dir .. "/run/" .. service_name .. ".tmp"
 
@@ -102,6 +127,28 @@ protocols.dnd = function(event)
 			presence_in.turn_lamp(dnd_status == "true", to)
 		else
 			log.warningf("Can not find DND: %s", to)
+		end
+	else
+		log.noticef("%s UNSUBSCRIBE from %s", from, to)
+	end
+end
+
+protocols.forward = function(event)
+	local from, to = event:getHeader('from'), event:getHeader('to')
+	local expires = tonumber(event:getHeader('expires'))
+	if expires and expires > 0 then
+		local proto, user = split_first(to, '+', true)
+		user = user or proto
+		local status, number = find_call_forward(user)
+		if status then
+			if status == 'true' then
+				log.noticef("CF: %s to number %s", to, tostring(number))
+			else
+				log.noticef("CF: %s disabled", to)
+			end
+			presence_in.turn_lamp(status == "true", to)
+		else
+			log.warningf("Can not find CF: %s", to)
 		end
 	else
 		log.noticef("%s UNSUBSCRIBE from %s", from, to)
