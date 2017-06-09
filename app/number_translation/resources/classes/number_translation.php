@@ -106,6 +106,7 @@ include "root.php";
 							}
 							$database = new database;
 							$database->app_name = 'number_translations';
+							$database->app_uuid = '6ad54de6-4909-11e7-a919-92ebcb67fe33';
 							$database->save($array);
 							if ($this->display_type == "text") {
 								if ($database->message['code'] != '200') { 
