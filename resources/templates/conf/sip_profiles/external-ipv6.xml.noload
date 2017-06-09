@@ -10,7 +10,7 @@
 	</aliases>
 
 	<domains>
-		<domain name="all" alias="false" parse="true"/>
+		<domain name="all" alias="false" parse="false"/>
 	</domains>
 
 	<settings>
