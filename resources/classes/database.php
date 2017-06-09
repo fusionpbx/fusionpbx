@@ -48,6 +48,8 @@ include "root.php";
 			public $count;
 			public $sql;
 			public $result;
+			public $app_name;
+			public $app_uuid;
 
 			public function connect() {
 
@@ -881,7 +883,7 @@ include "root.php";
 						$sql .= "database_transaction_uuid, ";
 						$sql .= "domain_uuid, ";
 						$sql .= "user_uuid, ";
-						if (isset($this->app_uuid)) {
+						if (strlen($this->app_uuid) > 0) {
 							$sql .= "app_uuid, ";
 						}
 						$sql .= "app_name, ";
@@ -898,7 +900,7 @@ include "root.php";
 						$sql .= "'".uuid()."', ";
 						$sql .= "'".$domain_uuid."', ";
 						$sql .= "'".$_SESSION['user_uuid']."', ";
-						if (isset($this->app_uuid)) {
+						if (strlen($this->app_uuid) > 0) {
 							$sql .= "'".$this->app_uuid."', ";
 						}
 						$sql .= "'".$this->app_name."', ";
@@ -1608,7 +1610,7 @@ include "root.php";
 						$sql .= "database_transaction_uuid, ";
 						$sql .= "domain_uuid, ";
 						$sql .= "user_uuid, ";
-						if (isset($this->app_uuid)) {
+						if (strlen($this->app_uuid) > 0) {
 							$sql .= "app_uuid, ";
 						}
 						$sql .= "app_name, ";
@@ -1625,7 +1627,7 @@ include "root.php";
 						$sql .= "'".uuid()."', ";
 						$sql .= "'".$domain_uuid."', ";
 						$sql .= "'".$_SESSION['user_uuid']."', ";
-						if (isset($this->app_uuid)) {
+						if (strlen($this->app_uuid) > 0) {
 							$sql .= "'".$this->app_uuid."', ";
 						}
 						$sql .= "'".$this->app_name."', ";
