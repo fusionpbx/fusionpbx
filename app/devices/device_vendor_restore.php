@@ -159,7 +159,7 @@
                 } //if num_rows
         } // if prep_statement
 
-        $_SESSION['message'] = $text['message-restore'];
+        messages::add($text['message-restore']);
         header('Location: device_vendors.php');
 
 ?>

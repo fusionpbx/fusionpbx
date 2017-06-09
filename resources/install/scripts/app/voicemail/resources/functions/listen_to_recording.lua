@@ -64,10 +64,14 @@
 		--say the message date
 			if (session:ready()) then
 				if (string.len(dtmf_digits) == 0) then
-					if (current_time_zone ~= nil) then
-						session:execute("set", "timezone="..current_time_zone.."");
+					if (vm_say_date_time ~= nil) then
+						if (vm_say_date_time == "true") then
+							if (current_time_zone ~= nil) then
+								session:execute("set", "timezone="..current_time_zone.."");
+							end
+							session:say(created_epoch, default_language, "current_date_time", "pronounced");
+						end
 					end
-					session:say(created_epoch, default_language, "current_date_time", "pronounced");
 				end
 			end
 		--get the recordings from the database

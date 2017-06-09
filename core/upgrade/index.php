@@ -63,7 +63,7 @@
 			exec("git pull 2>&1", $response_source_update);
 			$update_failed = true;
 			if (sizeof($response_source_update) > 0) {
-				$_SESSION["response"]["source"] = $response_source_update;
+				$_SESSION["response"]["upgrade_source"] = $response_source_update;
 				foreach ($response_source_update as $response_line) {
 					if (substr_count($response_line, "Updating ") > 0 || substr_count($response_line, "Already up-to-date.") > 0) {
 						$update_failed = false;
@@ -76,10 +76,12 @@
 				}
 			}
 			chdir($cwd);
-			if ($update_failed)
+			if ($update_failed) {
 				messages::add($text['message-upgrade_source_failed'], 'negative', $message_timeout);
-			else
+			}
+			else {
 				messages::add($text['message-upgrade_source'], null, $message_timeout);
+			}
 		}
 
 		// load an array of the database schema and compare it with the active database
@@ -95,7 +97,14 @@
 		if ($do["apps"] && permission_exists("upgrade_apps")) {
 			require_once "resources/classes/domains.php";
 			$domain = new domains;
+			ob_start();
+			$domain->display_type = 'text';
 			$domain->upgrade();
+			$_SESSION["response"]["upgrade_apps"] = ob_get_flush();
+			if (strlen($_SESSION["response"]["upgrade_apps"]) == 0) {
+				$_SESSION["response"]["upgrade_apps"] = "No items updated or added";
+			}
+			$_SESSION["response"]["upgrade_apps"] = explode("\n", $_SESSION["response"]["upgrade_apps"]);
 			messages::add($text['message-upgrade_apps'], null, $message_timeout);
 		}
 
@@ -245,14 +254,15 @@
 
 	echo "<br /><br />";
 	foreach($_SESSION["response"] as $part => $response){
-		echo "<b>".$text["header-${part}_update_results"]."</b>";
+		echo "<b>". $text["label-results"]." - ".$text["label-${part}"]."</b>";
 		echo "<br /><br />";
-		if(is_array($_SESSION["response"][$part])) {
+		if (is_array($response)) {
 			echo "<pre>";
-			echo implode("\n", $_SESSION["response"][$part]);
+			echo implode("\n", $response);
 			echo "</pre>";
-		}else {
-			echo $_SESSION["response"][$part];
+		}
+		else {
+			echo $response;
 		}
 		echo "<br /><br />";
 	}

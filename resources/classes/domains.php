@@ -30,6 +30,7 @@ if (!class_exists('domains')) {
 
 		//define variables
 		public $db;
+		public $display_type;
 
 		//class constructor
 		public function __construct() {
@@ -239,6 +240,8 @@ if (!class_exists('domains')) {
 				$db = $this->db;
 				$x=0;
 				foreach ($config_list as &$config_path) {
+					$app_path = dirname($config_path);
+					$app_path = preg_replace('/\A.*(\/.*\/.*)\z/', '$1', $app_path);
 					include($config_path);
 					$x++;
 				}
@@ -344,6 +347,7 @@ if (!class_exists('domains')) {
 
 					//get the list of installed apps from the core and mod directories and execute the php code in app_defaults.php
 						$default_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_defaults.php");
+						$display_type = $this->display_type;
 						foreach ($default_list as &$default_path) {
 							include($default_path);
 						}

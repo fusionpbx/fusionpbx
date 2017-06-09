@@ -81,7 +81,7 @@
 	}
 
 //save the message to a session variable
-	$_SESSION['message'] = $text['message-delete'];
+	messages::add($text['message-delete']);
 
 //redirect the browser
 	header("Location: dialplan_edit.php?id=".$dialplan_uuid.(($app_uuid != '') ? "&app_uuid=".$app_uuid : null));

@@ -52,6 +52,9 @@
 		json = require "resources.functions.lunajson"
 	end
 
+--include cache library
+	local cache = require "resources.functions.cache"
+
 -- event source
 	local event_calling_function = params:getHeader("Event-Calling-Function")
 	local event_calling_file = params:getHeader("Event-Calling-File")
@@ -147,33 +150,19 @@
 		-- get the cache. We can use cache only if we do not use `fs_path`
 		-- or we do not need dial-string. In other way we have to use database.
 			if (continue) and (not USE_FS_PATH) then
-				if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
-					if (domain_name) then
-						local key = "directory:" .. (from_user or user) .. "@" .. domain_name
-						XML_STRING = trim(api:execute("memcache", "get " .. key));
+				if cache.support() and domain_name then
+					local key, err = "directory:" .. (from_user or user) .. "@" .. domain_name
+					XML_STRING, err = cache.get(key);
 
-						if debug['cache'] then
-							if XML_STRING:sub(1, 4) == '-ERR' then
-								freeswitch.consoleLog("notice", "[xml_handler-directory][memcache] get key: " .. key .. " fail: " .. XML_STRING .. "\n")
-							else
-								freeswitch.consoleLog("notice", "[xml_handler-directory][memcache] get key: " .. key .. " pass!" .. "\n")
-							end
+					if debug['cache'] then
+						if not XML_STRING then
+							freeswitch.consoleLog("notice", "[xml_handler-directory][memcache] get key: " .. key .. " fail: " .. tostring(err) .. "\n")
+						else
+							freeswitch.consoleLog("notice", "[xml_handler-directory][memcache] get key: " .. key .. " pass!" .. "\n")
 						end
-					else
-						XML_STRING = "-ERR NOT FOUND"
 					end
-					if (XML_STRING == "-ERR NOT FOUND") or (XML_STRING == "-ERR CONNECTION FAILURE") then
-						source = "database";
-						continue = true;
-					else
-						source = "cache";
-						continue = true;
-					end
-				else
-					XML_STRING = "";
-					source = "database";
-					continue = true;
 				end
+				source = XML_STRING and "cache" or "database";
 			end
 
 		--show the params in the console
@@ -261,7 +250,7 @@
 									params.now = os.time();
 									sql = sql .. "AND expires > :now ";
 								else
-									sql = sql .. "AND to_timestamp(expires) > NOW() ";
+									sql = sql .. "AND to_timestamp(expires) > NOW()";
 								end
 								if (debug["sql"]) then
 									freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
@@ -626,18 +615,26 @@
 							dbh:release();
 
 						--set the cache
-							local key = "directory:" .. sip_from_number .. "@" .. domain_name
-							if debug['cache'] then
-								freeswitch.consoleLog("notice", "[xml_handler-directory][memcache] set key: " .. key .. "\n")
-							end
-							result = trim(api:execute("memcache", "set " .. key .. " '"..XML_STRING:gsub("'", "&#39;").."' "..expire["directory"]));
-
-							if sip_from_number ~= sip_from_user then
-								key = "directory:" .. sip_from_user .. "@" .. domain_name
+							if cache.support() then
+								local key = "directory:" .. sip_from_number .. "@" .. domain_name
 								if debug['cache'] then
 									freeswitch.consoleLog("notice", "[xml_handler-directory][memcache] set key: " .. key .. "\n")
 								end
-								result = trim(api:execute("memcache", "set " .. key .. " '"..XML_STRING:gsub("'", "&#39;").."' "..expire["directory"]));
+								local ok, err = cache.set(key, XML_STRING, expire["directory"])
+								if debug["cache"] and not ok then
+									freeswitch.consoleLog("warning", "[xml_handler-directory][memcache] set key: " .. key .. " fail: " .. tostring(err) .. "\n");
+								end
+
+								if sip_from_number ~= sip_from_user then
+									key = "directory:" .. sip_from_user .. "@" .. domain_name
+									if debug['cache'] then
+										freeswitch.consoleLog("notice", "[xml_handler-directory][memcache] set key: " .. key .. "\n")
+									end
+									ok, err = cache.set(key, XML_STRING, expire["directory"])
+									if debug["cache"] and not ok then
+										freeswitch.consoleLog("warning", "[xml_handler-directory][memcache] set key: " .. key .. " fail: " .. tostring(err) .. "\n");
+									end
+								end
 							end
 
 						--send the xml to the console
@@ -675,11 +672,6 @@
 
 		--get the XML string from the cache
 			if (source == "cache") then
-				--replace the &#39 back to a single quote
-					if (XML_STRING) then
-						XML_STRING = XML_STRING:gsub("&#39;", "'");
-					end
-
 				--send to the console
 					if (debug["cache"]) then
 						if (XML_STRING) then
@@ -690,7 +682,7 @@
 	end --if action
 
 --if the extension does not exist send "not found"
-	if (trim(XML_STRING) == "-ERR NOT FOUND" or XML_STRING == nil) then
+	if not XML_STRING then
 		--send not found but do not cache it
 			XML_STRING = [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 			<document type="freeswitch/xml">
@@ -703,4 +695,4 @@
 --send the xml to the console
 	if (debug["xml_string"]) then
 		freeswitch.consoleLog("notice", "[xml_handler] XML_STRING: \n" .. XML_STRING .. "\n");
-end
+	end

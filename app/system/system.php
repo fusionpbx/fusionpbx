@@ -17,55 +17,63 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('system_view_info')
-	|| permission_exists('system_view_cpu')
-	|| permission_exists('system_view_hdd')
-	|| permission_exists('system_view_ram')
-	|| permission_exists('system_view_backup')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('system_view_info')
+		|| permission_exists('system_view_cpu')
+		|| permission_exists('system_view_hdd')
+		|| permission_exists('system_view_ram')
+		|| permission_exists('system_view_backup')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-require_once "resources/header.php";
-$document['title'] = $text['title-sys-status'];
+//additional includes
+	require_once "resources/header.php";
+
+//set the page title
+	$document['title'] = $text['title-sys-status'];
 
 // OS Support
-//
-// For each section below wrap in an OS detection statement like:
-//	if (stristr(PHP_OS, 'Linux')) {}
-//
-// Some possibilites for PHP_OS...
-//
-//	CYGWIN_NT-5.1
-//	Darwin
-//	FreeBSD
-//	HP-UX
-//	IRIX64
-//	Linux
-//	NetBSD
-//	OpenBSD
-//	SunOS
-//	Unix
-//	WIN32
-//	WINNT
-//	Windows
-//
+	//
+	// For each section below wrap in an OS detection statement like:
+	//	if (stristr(PHP_OS, 'Linux')) {}
+	//
+	// Some possibilites for PHP_OS...
+	//
+	//	CYGWIN_NT-5.1
+	//	Darwin
+	//	FreeBSD
+	//	HP-UX
+	//	IRIX64
+	//	Linux
+	//	NetBSD
+	//	OpenBSD
+	//	SunOS
+	//	Unix
+	//	WIN32
+	//	WINNT
+	//	Windows
+	//
 
 //system information
 	echo "<b>".$text['header-sys-status']."</b>";
@@ -164,20 +172,54 @@ $document['title'] = $text['title-sys-status'];
 		echo "	<th class='th' colspan='2' align='left' style='padding-top:2em'>".$text['title-os-info']."</th>\n";
 		echo "</tr>\n";
 
-		echo "<!--\n";
-		$tmp_result = shell_exec('uname -a');
-		echo "-->\n";
-		if (strlen($tmp_result) > 0) {
+		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+			echo "<!--\n";
+			$data = explode("\n",shell_exec('systeminfo /FO CSV 2> nul'));
+			$data = array_combine(str_getcsv($data[0]), str_getcsv($data[1]));
+			$os_name = $data['OS Name'];
+			$os_version = $data['OS Version'];
+			unset($data);
+			echo "-->\n";
+		}
+		else {
+			echo "<!--\n";
+			$os_kernel = shell_exec('uname -a');
+			$os_name = shell_exec('lsb_release -is');
+			$os_version = shell_exec('lsb_release -rs');
+			echo "-->\n";
+		}
+		
+		if (strlen($os_name) > 0) {
 			echo "<tr>\n";
 			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 			echo "		".$text['label-os']." \n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
-			echo "		".$tmp_result." \n";
+			echo "		".$os_name." \n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 		}
-		unset($tmp_result);
+		if (strlen($os_version) > 0) {
+			echo "<tr>\n";
+			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+			echo "		".$text['label-version']." \n";
+			echo "	</td>\n";
+			echo "	<td class=\"row_style1\">\n";
+			echo "		".$os_version." \n";
+			echo "	</td>\n";
+			echo "</tr>\n";
+		}
+		if (strlen($os_kernel) > 0) {
+			echo "<tr>\n";
+			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+			echo "		".$text['label-kernel']." \n";
+			echo "	</td>\n";
+			echo "	<td class=\"row_style1\">\n";
+			echo "		".$os_kernel." \n";
+			echo "	</td>\n";
+			echo "</tr>\n";
+		}
+		unset($os_name, $os_version, $os_kernel);
 
 		echo "<!--\n";
 		$tmp_result = shell_exec('uptime');
@@ -210,8 +252,8 @@ $document['title'] = $text['title-sys-status'];
 		//linux
 		if (stristr(PHP_OS, 'Linux')) {
 			echo "<!--\n";
-			$shellcmd='free';
-			$shell_result = shell_exec($shellcmd);
+			$shell_cmd = 'free -hw';
+			$shell_result = shell_exec($shell_cmd);
 			echo "-->\n";
 			if (strlen($shell_result) > 0) {
 				echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
@@ -237,8 +279,8 @@ $document['title'] = $text['title-sys-status'];
 		//freebsd
 		if (stristr(PHP_OS, 'FreeBSD')) {
 			echo "<!--\n";
-			$shellcmd='sysctl vm.vmtotal';
-			$shell_result = shell_exec($shellcmd);
+			$shell_cmd = 'sysctl vm.vmtotal';
+			$shell_result = shell_exec($shell_cmd);
 			echo "-->\n";
 			if (strlen($shell_result) > 0) {
 				echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
@@ -267,8 +309,8 @@ $document['title'] = $text['title-sys-status'];
 		//linux
 		if (stristr(PHP_OS, 'Linux')) {
 			echo "<!--\n";
-			$shellcmd="ps -e -o pcpu,cpu,nice,state,cputime,args --sort pcpu | sed '/^ 0.0 /d'";
-			$shell_result = shell_exec($shellcmd);
+			$shell_cmd = "ps -e -o pcpu,cpu,nice,state,cputime,args --sort pcpu | sed '/^ 0.0 /d'";
+			$shell_result = shell_exec($shell_cmd);
 			echo "-->\n";
 			if (strlen($shell_result) > 0) {
 				echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
@@ -282,7 +324,7 @@ $document['title'] = $text['title-sys-status'];
 				echo "	<td class=\"row_style1\">\n";
 				echo "	<pre>\n";
 
-				//$last_line = shell_exec($shellcmd, $shell_result);
+				//$last_line = shell_exec($shell_cmd, $shell_result);
 				//foreach ($shell_result as $value) {
 				//	echo substr($value, 0, 100);
 				//	echo "<br />";
@@ -302,8 +344,8 @@ $document['title'] = $text['title-sys-status'];
 		//freebsd
 		if (stristr(PHP_OS, 'FreeBSD')) {
 			echo "<!--\n";
-			$shellcmd='top';
-			$shell_result = shell_exec($shellcmd);
+			$shell_cmd = 'top';
+			$shell_result = shell_exec($shell_cmd);
 			echo "-->\n";
 			if (strlen($shell_result) > 0) {
 				echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
@@ -330,6 +372,10 @@ $document['title'] = $text['title-sys-status'];
 //drive space
 	if (permission_exists('system_view_hdd')) {
 		if (stristr(PHP_OS, 'Linux') || stristr(PHP_OS, 'FreeBSD')) {
+			echo "<!--\n";
+			$shell_cmd = 'df -hP --total';
+			$shell_result = shell_exec($shell_cmd);
+			echo "-->\n";
 			echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
 			echo "<tr>\n";
 			echo "	<th class='th' colspan='2' align='left'>".$text['title-drive']."</th>\n";
@@ -340,8 +386,6 @@ $document['title'] = $text['title-sys-status'];
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
 			echo "<pre>\n";
-			$shellcmd = 'df -h';
-			$shell_result = shell_exec($shellcmd);
 			echo "$shell_result<br>";
 			echo "</pre>\n";
 			echo "	</td>\n";
@@ -351,10 +395,10 @@ $document['title'] = $text['title-sys-status'];
 			//disk_free_space returns the number of bytes available on the drive;
 			//1 kilobyte = 1024 byte
 			//1 megabyte = 1024 kilobyte
-			$driveletter = substr($_SERVER["DOCUMENT_ROOT"], 0, 2);
-			$disksize = round(disk_total_space($driveletter)/1024/1024, 2);
-			$disksizefree = round(disk_free_space($driveletter)/1024/1024, 2);
-			$diskpercentavailable = round(($disksizefree/$disksize) * 100, 2);
+			$drive_letter = substr($_SERVER["DOCUMENT_ROOT"], 0, 2);
+			$disk_size = round(disk_total_space($drive_letter)/1024/1024, 2);
+			$disk_size_free = round(disk_free_space($drive_letter)/1024/1024, 2);
+			$disk_percent_available = round(($disk_size_free/$disk_size) * 100, 2);
 
 			echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
 			echo "<tr>\n";
@@ -365,7 +409,7 @@ $document['title'] = $text['title-sys-status'];
 			echo "		".$text['label-drive-capacity']." \n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
-			echo "		$disksize mb\n";
+			echo "		$disk_size mb\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 
@@ -374,7 +418,7 @@ $document['title'] = $text['title-sys-status'];
 			echo "		".$text['label-drive-free']." \n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
-			echo "		$disksizefree mb\n";
+			echo "		$disk_size_free mb\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 
@@ -383,7 +427,7 @@ $document['title'] = $text['title-sys-status'];
 			echo "		".$text['label-drive-percent']." \n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
-			echo "		$diskpercentavailable% \n";
+			echo "		$disk_percent_available% \n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 			echo "</table>\n";
@@ -439,11 +483,7 @@ $document['title'] = $text['title-sys-status'];
 		echo "<br /><br />\n";
 	}
 
-//backup
-	if (permission_exists('zzz') && $db_type == 'sqlite') {
-		require_once "core/backup/backupandrestore.php";
-	}
-
 //include the footer
 	require_once "resources/footer.php";
+
 ?>
