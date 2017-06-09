@@ -197,7 +197,7 @@ $text['message-invalid_credentials']['pl-pl'] = "";
 $text['message-invalid_credentials']['pt-br'] = "";
 $text['message-invalid_credentials']['pt-pt'] = "";
 $text['message-invalid_credentials']['ro-ro'] = "";
-$text['message-invalid_credentials']['ru-ru'] = "";
+$text['message-invalid_credentials']['ru-ru'] = "Неверное имя пользователя или пароль";
 $text['message-invalid_credentials']['sv-se'] = "";
 $text['message-invalid_credentials']['uk-ua'] = "";
 
