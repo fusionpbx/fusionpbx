@@ -28,7 +28,7 @@
 
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get('resources');
+	$text = $language->get(null, 'resources');
 
 //for compatibility require this library if less than version 5.5
 	if (version_compare(phpversion(), '5.5', '<')) {
