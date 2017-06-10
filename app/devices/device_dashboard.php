@@ -279,20 +279,11 @@
 					}
 
 				//set the message
-					if (!isset($_SESSION['message'])) {
-						//set the message
-							if ($action == "add") {
-								//save the message to a session variable
-									$_SESSION['message'] = $text['message-add'];
-							}
-							if ($action == "update") {
-								//save the message to a session variable
-									$_SESSION['message'] = $text['message-update'];
-							}
-						//redirect the browser
-							header("Location: /core/user_settings/user_dashboard.php");
-							exit;
-					}
+					messages::add($text["message-$action"]);
+
+				//redirect the browser
+					header("Location: /core/user_settings/user_dashboard.php");
+					exit;
 
 			} //if ($_POST["persistformvar"] != "true")
 	} //(count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0)

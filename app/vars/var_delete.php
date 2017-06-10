@@ -55,7 +55,7 @@ else {
 	}
 
 
-$_SESSION["message"] = $text['message-delete'];
+messages::add($text['message-delete']);
 header("Location: vars.php");
 return;
 

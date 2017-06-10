@@ -142,10 +142,10 @@
 
 		//set the message
 			if ($action == "add") {
-				$_SESSION['message'] = $text['message-add'];
+				messages::add($text['message-add']);
 			}
 			else if ($action == "update") {
-				$_SESSION['message'] = $text['message-update'];
+				messages::add($text['message-update']);
 			}
 			header("Location: ?id=$number_translation_uuid");
 			exit;

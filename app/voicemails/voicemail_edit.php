@@ -88,7 +88,7 @@
 					d.voicemail_uuid = '".$voicemail_uuid."'";
 			$db->exec(check_sql($sqld));
 		//redirect the browser
-			$_SESSION["message"] = $text['message-delete'];
+			messages::add($text['message-delete']);
 			header("Location: voicemail_edit.php?id=".$voicemail_uuid);
 			return;
 	}
@@ -116,7 +116,7 @@
 				)";
 			$db->exec(check_sql($sqli));
 		//redirect the browser
-			$_SESSION["message"] = $text['message-add'];
+			messages::add($text['message-add']);
 	}
 
 if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -180,7 +180,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-				$_SESSION["message"] = $text['message-add'];
+				messages::add($text['message-add']);
 			} //if ($action == "add")
 
 			if ($action == "update" && permission_exists('voicemail_edit')) {
@@ -202,7 +202,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-				$_SESSION["message"] = $text['message-update'];
+				messages::add($text['message-update']);
 			} //if ($action == "update")
 
 

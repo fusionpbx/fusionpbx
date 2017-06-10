@@ -62,7 +62,7 @@
 	}
 
 //redirect the user
-	$_SESSION["message"] = $text['message-delete'];
+	messages::add($text['message-delete']);
 	header("Location: voicemails.php");
 	return;
 

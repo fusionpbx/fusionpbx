@@ -106,7 +106,7 @@ else {
 	}
 
 //redirect the user
-	$_SESSION["message"] = $text['message-delete'];
+	messages::add($text['message-delete']);
 	header("Location: ring_groups.php");
 	return;
 

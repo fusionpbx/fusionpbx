@@ -91,7 +91,7 @@
 	}
 
 //redirect the user
-	$_SESSION["message"] = $text['message-delete'];
+	messages::add($text['message-delete']);
 	header("Location: conference_rooms.php");
 	return;
 

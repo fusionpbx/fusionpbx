@@ -188,12 +188,11 @@
 						}
 				}
 
-				$_SESSION["message"] = $text['message-update'];
+				messages::add($text['message-update']);
 				header("Location: groups.php");
 			}
 			else {
-				$_SESSION['message_mood'] = 'negative';
-				$_SESSION["message"] = $text['message-group_exists'];
+				messages::add($text['message-group_exists'], 'negative');
 				header("Location: groupedit.php?id=".$group_uuid);
 			}
 

@@ -247,10 +247,10 @@
 		//redirect the user
 			if (isset($action)) {
 				if ($action == "add") {
-					$_SESSION["message"] = $text['message-add'];
+					messages::add($text['message-add']);
 				}
 				if ($action == "update") {
-					$_SESSION["message"] = $text['message-update'];
+					messages::add($text['message-update']);
 				}
 				header("Location: call_center_agents.php");
 				return;

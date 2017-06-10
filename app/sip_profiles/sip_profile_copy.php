@@ -161,7 +161,7 @@
 	$_SESSION["reload_xml"] = true;
 
 //redirect the user
-	$_SESSION["message"] = $text['message-copy'];
+	messages::add($text['message-copy']);
 	header("Location: ".PROJECT_PATH."/app/sip_profiles/sip_profiles.php");
 	return;
 

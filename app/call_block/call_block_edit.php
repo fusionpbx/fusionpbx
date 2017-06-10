@@ -151,7 +151,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-				$_SESSION["message"] = $text['label-add-complete'];
+				messages::add($text['label-add-complete']);
 				header("Location: call_block.php");
 				return;
 			} //if ($action == "add")
@@ -186,7 +186,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-				$_SESSION["message"] = $text['label-update-complete'];
+				messages::add($text['label-update-complete']);
 				header("Location: call_block.php");
 				return;
 			} //if ($action == "update")

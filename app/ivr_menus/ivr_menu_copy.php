@@ -169,7 +169,7 @@
 	}
 
 //redirect the user
-	$_SESSION["message"] = $text['message-copy'];
+	messages::add($text['message-copy']);
 	header("Location: ivr_menus.php");
 	return;
 

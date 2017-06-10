@@ -313,10 +313,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 			//redirect the browser
 				if ($action == "update") {
-					$_SESSION["message"] = $text['message-update'];
+					messages::add($text['message-update']);
 				}
 				if ($action == "add") {
-					$_SESSION["message"] = $text['message-add'];
+					messages::add($text['message-add']);
 				}
 				header("Location: domain_edit.php?id=".$domain_uuid);
 				return;

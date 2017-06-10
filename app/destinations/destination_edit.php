@@ -412,10 +412,10 @@
 
 		//redirect the user
 			if ($action == "add") {
-				$_SESSION["message"] = $text['message-add'];
+				messages::add($text['message-add']);
 			}
 			if ($action == "update") {
-				$_SESSION["message"] = $text['message-update'];
+				messages::add($text['message-update']);
 			}
 			header("Location: destination_edit.php?id=".$destination_uuid);
 			return;

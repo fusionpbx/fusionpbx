@@ -95,12 +95,11 @@
 					// $info[2] is the driver specific error string
 				}
 
-				$_SESSION["message"] = $text['message-add'];
+				messages::add($text['message-add']);
 				header("Location: groups.php");
 			}
 			else {
-				$_SESSION['message_mood'] = 'negative';
-				$_SESSION["message"] = $text['message-group_exists'];
+				messages::add($text['message-group_exists'], 'negative');
 				header("Location: groupadd.php");
 			}
 
