@@ -73,12 +73,12 @@ class text {
 			}
 			if (file_exists("${lang_path}/app_languages.php")) {
 				if ($lang_path != 'resources' or $exclude_global) {
-					require "${lang_path}/app_languages.php";
+					include "${lang_path}/app_languages.php";
 				}
 			}
-			else {
-				throw new Exception("could not find app_languages for '$app_path'");
-			}
+			//else {
+			//	throw new Exception("could not find app_languages for '$app_path'");
+			//}
 
 		//check the session language
 			if (isset($_SESSION['domain']) and $language_code == null) {
