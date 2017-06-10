@@ -30,14 +30,6 @@
 	ini_set("session.cookie_httponly", True);
 	if (!isset($_SESSION)) { session_start(); }
 
-//retain messages
-	$messagse = new messages;
-	$messages->stash();
-
-//destroy session
-	session_unset();
-	session_destroy();
-
 //if config.php file does not exist then redirect to the install page
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/resources/config.php")) {
 		//original directory
@@ -56,12 +48,6 @@
 		header("Location: ".PROJECT_PATH."/core/install/install.php");
 		exit;
 	}
-
-//adds multiple includes
-	require_once "resources/require.php";
-
-//restore message
-	$messages->pop();
 
 //use custom login, if present, otherwise use default login
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/login.php")){
