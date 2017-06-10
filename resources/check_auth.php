@@ -26,7 +26,11 @@
 //includes
 	require_once "resources/require.php";
 
-//for compatability require this library if less than version 5.5
+//add multi-lingual support
+	$language = new text;
+	$text = $language->get('resources');
+
+//for compatibility require this library if less than version 5.5
 	if (version_compare(phpversion(), '5.5', '<')) {
 		require_once "resources/functions/password.php";
 	}
@@ -55,8 +59,7 @@
 		//if the username is not provided then send to login.php
 			if (strlen($_REQUEST["username"]) == 0 && strlen($_REQUEST["key"]) == 0) {
 				$target_path = ($_REQUEST["path"] != '') ? $_REQUEST["path"] : $_SERVER["REQUEST_URI"];
-				$_SESSION["message_mood"] = "negative";
-				$_SESSION["message"] = "Invalid Username and/or Password";
+				messages::add($text['message-invalid_credentials'], 'negative');
 				header("Location: ".PROJECT_PATH."/login.php?path=".urlencode($target_path));
 				exit;
 			}
@@ -97,8 +100,7 @@
 					closelog();
 				//redirect the user to the login page
 					$target_path = ($_REQUEST["path"] != '') ? $_REQUEST["path"] : $_SERVER["PHP_SELF"];
-					$_SESSION["message_mood"] = "negative";
-					$_SESSION["message"] = "Invalid Username and/or Password";
+					messages::add($text['message-invalid_credentials'], 'negative');
 					header("Location: ".PROJECT_PATH."/login.php?path=".urlencode($target_path));
 					exit;
 			}
