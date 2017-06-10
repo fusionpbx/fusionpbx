@@ -30,17 +30,9 @@
 	ini_set("session.cookie_httponly", True);
 	if (!isset($_SESSION)) { session_start(); }
 
-//retain message
-	if (isset($_SESSION["message"])) {
-		$message_mood = $_SESSION["message_mood"];
-		$message = $_SESSION["message"];
-	}
-	else {
-		$message_mood = null;
-		$message = null;
-		$_SESSION["message"] = null;
-		$_SESSION["message_mood"] = null;
-	}
+//retain messages
+	$messagse = new messages;
+	$messages->stash();
 
 //destroy session
 	session_unset();
@@ -69,10 +61,7 @@
 	require_once "resources/require.php";
 
 //restore message
-	if ($message != '') {
-		$_SESSION["message_mood"] = $message_mood;
-		$_SESSION["message"] = $message;
-	}
+	$messages->pop();
 
 //use custom login, if present, otherwise use default login
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/login.php")){
