@@ -23,8 +23,9 @@
 	Contributor(s):
 	Mark J. Crane <markjcrane@fusionpbx.com>
 */
-//include root.php
+//includes
 	include "root.php";
+	require_once "resources/require.php";
 
 //start session
 	ini_set("session.cookie_httponly", True);
