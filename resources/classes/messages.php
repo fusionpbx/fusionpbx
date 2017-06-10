@@ -28,8 +28,6 @@
 if (!class_exists('messages')) {
 	class messages {
 		
-		private $messages;
-
 		static function add($message, $mood = NULL, $delay = NULL) {
 			$_SESSION["messages"][] = array(message => $message, mood => $mood, delay => $delay);
 		}
@@ -59,34 +57,6 @@ if (!class_exists('messages')) {
 				unset($_SESSION['messages']);
 			}
 			return $html;
-		}
-		
-		public function stash() {
-			if (strlen($_SESSION['message']) > 0) {
-				add($_SESSION['message'], $_SESSION['message_mood'], $_SESSION['message_delay']);
-				unset($_SESSION['message'], $_SESSION['message_mood'], $_SESSION['message_delay']);
-			}			
-			if (is_array($this->messages)) {
-				if (is_array($_SESSION["messages"])) {
-					$this->messages = array_merge($this->messages, $_SESSION["messages"]);
-				}
-			}
-			else {
-				$this->messages = $_SESSION["messages"];
-			}
-			unset($_SESSION['messages']);
-		}
-
-		public function pop() {
-			if (is_array($_SESSION["messages"])) {
-				if (is_array($this->messages)) {
-					$_SESSION["messages"] = array_merge($_SESSION["messages"], $this->messages);
-				}
-			}
-			else {
-				$_SESSION["messages"] = $this->messages;
-			}
-			unset($this->messages);
 		}
 
 	}
