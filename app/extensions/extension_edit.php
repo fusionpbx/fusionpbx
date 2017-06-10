@@ -546,6 +546,7 @@
 
 				//show the action and redirect the user
 					if ($action == "add") {
+							messages::add($text['message-add']);
 						//prepare for alternating the row style
 							$c = 0;
 							$row_style["0"] = "row_style0";
@@ -554,7 +555,6 @@
 						//show the action and redirect the user
 							if (count($generated_users) == 0) {
 								//action add
-									$_SESSION["message"] = $text['message-add'];
 									header("Location: extension_edit.php?id=".$extension_uuid);
 							}
 							else {
@@ -584,12 +584,7 @@
 							return;
 					}
 					if ($action == "update") {
-						if ($action == "update") {
-							$_SESSION["message"] = $text['message-update'];
-						}
-						else {
-							$_SESSION["message"] = $text['message-add'];
-						}
+						messages::add($text['message-update']);
 						header("Location: extension_edit.php?id=".$extension_uuid);
 						return;
 					}

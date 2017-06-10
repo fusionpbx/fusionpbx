@@ -116,7 +116,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$_SESSION["reload_xml"] = true;
 
 				//redirect the browser
-					$_SESSION["message"] = $text['message-add'];
+					messages::add($text['message-add']);
 					header("Location: sip_profile_edit.php?id=".$sip_profile_uuid);
 					return;
 			} //if ($action == "add")
@@ -140,7 +140,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$_SESSION["reload_xml"] = true;
 
 				//redirect the browser
-					$_SESSION["message"] = $text['message-update'];
+					messages::add($text['message-update']);
 					header("Location: sip_profile_edit.php?id=".$sip_profile_uuid);
 					return;
 			} //if ($action == "update")

@@ -342,7 +342,7 @@
 			}
 
 		//redirect the user
-			$_SESSION["message"] = $text['confirm-update'];
+			messages::add($text['confirm-update']);
 			header("Location: ".$_REQUEST['return_url']);
 			return;
 

@@ -55,8 +55,7 @@
 // skip the copy if the domain extension already exists
 	$extension = new extension;
 	if ($extension->exists($_SESSION['domain_uuid'], $extension_new)) {
-		$_SESSION['message_mood'] = 'negative';
-		$_SESSION["message"] = $text['message-duplicate'];
+		messages::add($text['message-duplicate'], 'negative');
 		header("Location: extensions.php");
 		return;
 	}
@@ -237,7 +236,7 @@
 	}
 
 //redirect the user
-	$_SESSION["message"] = $text['message-copy'];
+	messages::add($text['message-copy']);
 	header("Location: extensions.php");
 	return;
 

@@ -115,7 +115,7 @@
 			unset ($prep_statement);
 
 		//redirect the user
-			$_SESSION["message"] = $text['message-copy'];
+			messages::add($text['message-copy']);
 	}
 
 //redirect

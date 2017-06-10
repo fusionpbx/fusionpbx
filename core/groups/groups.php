@@ -62,7 +62,7 @@
 		$db->exec(check_sql($sql));
 		unset($sql);
 
-		$_SESSION["message"] = $text['message-update'];
+		messages::add($text['message-update']);
 	}
 
 //get the groups

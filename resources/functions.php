@@ -1021,9 +1021,7 @@ function format_string ($format, $data) {
 				$msg_errors[] = '1+ '.$text['label-special_characters'];
 			}
 			if (is_array($msg_errors) && sizeof($msg_errors) > 0) {
-				$_SESSION["message"] = $text['message-password_requirements'].': '.implode(', ', $msg_errors);
-				$_SESSION['message_mood'] = 'negative';
-				$_SESSION['message_delay'] = '6000';
+				messages::add($_SESSION["message"] = $text['message-password_requirements'].': '.implode(', ', $msg_errors), 'negative', 6000);
 				return false;
 			}
 			else {

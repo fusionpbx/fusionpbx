@@ -82,7 +82,7 @@
 	}
 
 //set the message and redirect the user
-	$_SESSION["message"] = $text['message-delete'];
+	messages::add($text['message-delete']);
 	header("Location: devices.php");
 	return;
 

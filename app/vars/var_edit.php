@@ -128,7 +128,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				//synchronize the configuration
 					save_var_xml();
 
-				$_SESSION["message"] = $text['message-add'];
+				messages::add($text['message-add']);
 				header("Location: vars.php");
 				return;
 			} //if ($action == "add")
@@ -158,7 +158,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				//synchronize the configuration
 					save_var_xml();
 
-				$_SESSION["message"] = $text['message-update'];
+				messages::add($text['message-update']);
 				header("Location: vars.php");
 				return;
 			} //if ($action == "update")

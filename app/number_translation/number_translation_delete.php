@@ -93,7 +93,7 @@ if (!permission_exists('number_translation_delete')) {
 	}
 
 //redirect the browser
-	$_SESSION["message"] = $text['message-delete'].(($number_translations_deleted > 1) ? ": ".$number_translations_deleted : null);
+	messages::add($text['message-delete'].(($number_translations_deleted > 1) ? ": ".$number_translations_deleted : null));
 	header("Location: ".PROJECT_PATH."/app/number_translation/number_translations.php".(($app_uuid != '') ? "?app_uuid=".$app_uuid : null));
 
 ?>

@@ -169,7 +169,7 @@ require_once "resources/check_auth.php";
 							$prep_statement->execute();
 							unset($prep_statement);
 
-						$_SESSION["message"] = $text['message-uploaded'].": ".$_FILES['file']['name'];
+						messages::add($text['message-uploaded'].": ".$_FILES['file']['name']);
 						break;
 					}
 					else {
@@ -208,7 +208,7 @@ require_once "resources/check_auth.php";
 			$prep_statement->execute();
 			unset($prep_statement);
 
-		$_SESSION["message"] = $text['message-greeting_selected'];
+		messages::add($text['message-greeting_selected']);
 		header("Location: voicemail_greetings.php?id=".$voicemail_id."&order_by=".$order_by."&order=".$order);
 		exit;
 	}

@@ -69,7 +69,7 @@
 				unset($sql);
 			}
 			//redirect the user
-				$_SESSION["message"] = $text['message-update'];
+				messages::add($text['message-update']);
 				header("Location: ".$_REQUEST['return_url']);
 				exit;
 		}

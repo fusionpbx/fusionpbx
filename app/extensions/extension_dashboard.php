@@ -112,14 +112,11 @@
 					}
 
 				//set the message
-					if (!isset($_SESSION['message'])) {
-						//save the message to a session variable
-							$_SESSION['message'] = $text['message-update'];
+					messages::add($text['message-update']);
 
-						//redirect the browser
-							header("Location: /core/user_settings/user_dashboard.php");
-							exit;
-					}
+				//redirect the browser
+					header("Location: /core/user_settings/user_dashboard.php");
+					exit;
 
 			} //if ($_POST["persistformvar"] != "true")
 	} //(count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0)

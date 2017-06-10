@@ -52,11 +52,7 @@ else {
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		unset($sql, $prep_statement);
-
-	//set message
-		if ($_SESSION["message"] == '') {
-			$_SESSION["message"] = $text['message-delete'];
-		}
+		messages::add($text['message-delete']);
 	}
 
 //redirect user

@@ -109,7 +109,7 @@
 	}
 
 //redirect the browser
-	$_SESSION["message"] = $text['message-delete'];
+	messages::add($text['message-delete']);
 	header("Location: sip_profiles.php");
 	return;
 

@@ -53,7 +53,7 @@ else {
 			$db->exec(check_sql($sql));
 			unset($sql);
 
-			$_SESSION["message"] = $text['message-update'];
+			messages::add($text['message-update']);
 			header("Location: default_settings.php".(($search != '') ? "?search=".$search : null)."#".$category);
 			exit;
 		}
@@ -162,7 +162,7 @@ else {
 			}
 			else {
 				// set message
-				$_SESSION["message"] = $text['message-copy_failed'];
+				messages::add($text['message-copy_failed']);
 			}
 
 			header("Location: default_settings.php".(($search != '') ? "?search=".$search : null));
@@ -185,8 +185,7 @@ else {
 			}
 			else {
 				// set message
-				$_SESSION["message"] = $text['message-delete_failed'];
-				$_SESSION["message_mood"] = "negative";
+				messages::add($text['message-delete_failed'], 'negative');
 			}
 
 			header("Location: default_settings.php".(($search != '') ? "?search=".$search : null));

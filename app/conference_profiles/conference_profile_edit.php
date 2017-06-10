@@ -81,7 +81,7 @@
 					$db->exec(check_sql($sql));
 					unset($sql);
 	
-					$_SESSION["message"] = $text['message-add'];
+					messages::add($text['message-add']);
 					header("Location: conference_profiles.php");
 					return;
 	
@@ -97,7 +97,7 @@
 					$db->exec(check_sql($sql));
 					unset($sql);
 	
-					$_SESSION["message"] = $text['message-update'];
+					messages::add($text['message-update']);
 					header("Location: conference_profiles.php");
 					return;
 	
