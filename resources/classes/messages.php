@@ -36,7 +36,7 @@ if (!class_exists('messages')) {
 			$html = "${spacer}//render the messages\n";
 			$spacer .="\t";
 			if (strlen($_SESSION['message']) > 0) {
-				add($_SESSION['message'], $_SESSION['message_mood'], $_SESSION['message_delay']);
+				self::add($_SESSION['message'], $_SESSION['message_mood'], $_SESSION['message_delay']);
 				unset($_SESSION['message'], $_SESSION['message_mood'], $_SESSION['message_delay']);
 			}
 			if(count($_SESSION['messages']) > 0 ){
