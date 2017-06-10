@@ -71,20 +71,26 @@ class text {
 			else {
 				$lang_path = getcwd();
 			}
-			if(file_exists($lang_path)) {
-				require $lang_path."/app_languages.php";
+			if (file_exists("${lang_path}/app_languages.php")) {
+				if ($lang_path != 'resources' or $exclude_global) {
+					require "${lang_path}/app_languages.php";
+				}
+			}
+			else {
+				throw new Exception("could not find app_languages for '$app_path'");
 			}
 
 		//check the session language
 			if (isset($_SESSION['domain']) and $language_code == null) {
 				$language_code = $_SESSION['domain']['language']['code'];
-			} elseif ($language_code == null){
+			}
+			elseif ($language_code == null) {
 				$language_code = 'en-us';
 			}
 
 		//check the language code
-			if(strlen($language_code) == 2) {
-				if(array_key_exists($language_code, $this->legacy_map)) {
+			if (strlen($language_code) == 2) {
+				if (array_key_exists($language_code, $this->legacy_map)) {
 					$language_code = $this->legacy_map[$language_code];
 				}
 			}
@@ -94,7 +100,8 @@ class text {
 				if (is_array($text)) foreach ($text as $key => $value) {
 					if (strlen($value[$language_code]) > 0) {
 						$text[$key] = $value[$language_code];
-					} else {
+					}
+					else {
 						//fallback to en-us
 						$text[$key] = $value['en-us'];
 					}
