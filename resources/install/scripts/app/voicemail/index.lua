@@ -141,20 +141,35 @@
 		--settings
 			require "resources.functions.settings";
 			settings = settings(domain_uuid);
-			storage_type = "";
-			storage_path = "";
 			if (settings['voicemail'] ~= nil) then
+				storage_type = '';
 				if (settings['voicemail']['storage_type'] ~= nil) then
 					if (settings['voicemail']['storage_type']['text'] ~= nil) then
 						storage_type = settings['voicemail']['storage_type']['text'];
 					end
 				end
+
+				storage_path = '';
 				if (settings['voicemail']['storage_path'] ~= nil) then
 					if (settings['voicemail']['storage_path']['text'] ~= nil) then
 						storage_path = settings['voicemail']['storage_path']['text'];
 						storage_path = storage_path:gsub("${domain_name}", domain_name);
 						storage_path = storage_path:gsub("${voicemail_id}", voicemail_id);
 						storage_path = storage_path:gsub("${voicemail_dir}", voicemail_dir);
+					end
+				end
+
+				message_order = '';
+				if (settings['voicemail']['message_order'] ~= nil) then
+					if (settings['voicemail']['message_order']['text'] ~= nil) then
+						message_order = settings['voicemail']['message_order']['text'];
+					end
+				end
+
+				remote_access = '';
+				if (settings['voicemail']['remote_access'] ~= nil) then
+					if (settings['voicemail']['remote_access']['boolean'] ~= nil) then
+						remote_access = settings['voicemail']['remote_access']['boolean'];
 					end
 				end
 			end
