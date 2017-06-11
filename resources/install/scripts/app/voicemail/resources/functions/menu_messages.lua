@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2017 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -50,8 +50,8 @@
 					elseif (message_status == "saved") then
 						sql = sql .. [[AND message_status = 'saved' ]];
 					end
-					sql = sql .. [[ORDER BY created_epoch desc;]];
-					local params = {domain_uuid = domain_uuid, voicemail_uuid = voicemail_uuid};
+					sql = sql .. [[ORDER BY created_epoch :message_order;]];
+					local params = {domain_uuid = domain_uuid, voicemail_uuid = voicemail_uuid, message_order = message_order};
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 					end
