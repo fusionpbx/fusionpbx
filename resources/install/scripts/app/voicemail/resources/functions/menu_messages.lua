@@ -50,8 +50,8 @@
 					elseif (message_status == "saved") then
 						sql = sql .. [[AND message_status = 'saved' ]];
 					end
-					sql = sql .. [[ORDER BY created_epoch :message_order;]];
-					local params = {domain_uuid = domain_uuid, voicemail_uuid = voicemail_uuid, message_order = message_order};
+					sql = sql .. [[ORDER BY created_epoch ]]..message_order;
+					local params = {domain_uuid = domain_uuid, voicemail_uuid = voicemail_uuid};
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 					end
