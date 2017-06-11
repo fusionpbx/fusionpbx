@@ -1,0 +1,19 @@
+<YealinkIPPhoneMenu>
+	<Title>FusionPBX Addressbook</Title>
+{foreach $contacts as $contact}
+{if $contact.contact_type == "group"}
+	<MenuItem>
+		<Name>{$contact.group_description}</Name>
+		<URL>http://{$domain_name}/app/provision/index.php?mac={$mac}&amp;file=Department.xml&amp;group={$contact.group_description}&amp;id={$contact.id}</URL>
+	</MenuItem>
+{/if}
+{/foreach}
+	<MenuItem>
+		<Name>General</Name>
+		<URL>http://{$domain_name}/app/provision/index.php?mac={$mac}&amp;file=Department.xml&amp;group=General&amp;id=-1</URL>
+	</MenuItem>
+	<MenuItem>
+		<Name>All</Name>
+		<URL>http://{$domain_name}/app/provision/index.php?mac={$mac}&amp;file=Department.xml&amp;group=All&amp;id=-2</URL>
+	</MenuItem>
+</YealinkIPPhoneMenu>

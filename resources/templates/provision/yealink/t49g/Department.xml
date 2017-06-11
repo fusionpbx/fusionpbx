@@ -1,0 +1,44 @@
+<YealinkIPPhoneDirectory>
+{foreach $contacts as $contact}
+{$in_group = 0}
+{foreach $contact.groups as $group}
+{if $smarty.get.id == $group && $contact.contact_name_given != "" && $contact.contact_type == "contact" }
+{$in_group = 1}
+	<DirectoryEntry>
+		<Name>{$contact.contact_name_given} {$contact.contact_name_family}</Name>
+		<Telephone>{$contact.contact_work}</Telephone>
+{if $contact.contact_home != "" }
+		<Telephone>{$contact.contact_home}</Telephone>
+{/if}
+{if $contact.contact_cell != "" }
+		<Telephone>{$contact.contact_cell}</Telephone>
+{/if}
+	</DirectoryEntry>
+{/if}
+{/foreach}
+{if !$contact.groups|is_array &&  $smarty.get.id == "-1" && $contact.contact_name_given != "" && $contact.contact_type == "contact" }
+	<DirectoryEntry>
+		<Name>{$contact.contact_name_given} {$contact.contact_name_family}</Name>
+		<Telephone>{$contact.contact_work}</Telephone>
+{if $contact.contact_home != "" }
+		<Telephone>{$contact.contact_home}</Telephone>
+{/if}
+{if $contact.contact_cell != "" }
+		<Telephone>{$contact.contact_cell}</Telephone>
+{/if}
+	</DirectoryEntry>
+{/if}
+{if $smarty.get.id == "-2" && $contact.contact_name_given != "" && $contact.contact_type == "contact" }
+	<DirectoryEntry>
+		<Name>{$contact.contact_name_given} {$contact.contact_name_family}</Name>
+		<Telephone>{$contact.contact_work}</Telephone>
+{if $contact.contact_home != "" }
+		<Telephone>{$contact.contact_home}</Telephone>
+{/if}
+{if $contact.contact_cell != "" }
+		<Telephone>{$contact.contact_cell}</Telephone>
+{/if}
+	</DirectoryEntry>
+{/if}
+{/foreach}
+</YealinkIPPhoneDirectory>

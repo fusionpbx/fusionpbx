@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root_group>
+{foreach $contacts as $contact}
+{if $contact.contact_type == "group"}
+{append var='arr_groups' value=$contact.group_description index=$contact.id }
+<group display_name="{$contact.group_description}" ring="" />
+{/if}
+{/foreach}
+</root_group>
+<root_contact>
+{foreach $contacts as $contact}
+{if $contact.contact_name_given != "" && $contact.contact_type == "contact"}
+{$group_id_name = ""}
+{foreach $contact.groups as $group}
+{$group_id_name = $arr_groups[$group]}
+{/foreach}
+<contact display_name="{$contact.contact_name_given} {$contact.contact_name_family}" office_number="{$contact.contact_work}" mobile_number="{$contact.contact_cell}" other_number="{$contact.contact_home}" line="0" ring="Auto" group_id_name="{$group_id_name}" />
+{/if}
+{/foreach}
+</root_contact>
