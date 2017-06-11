@@ -37,8 +37,8 @@
 	direct_dial["max_digits"] = 4;
 
 --debug
-	debug["info"] = true;
-	debug["sql"] = true;
+	--debug["info"] = true;
+	--debug["sql"] = true;
 
 --get the argv values
 	script_name = argv[1];
