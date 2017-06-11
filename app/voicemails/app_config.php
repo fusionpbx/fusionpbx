@@ -165,6 +165,22 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable display of @domain_name after voicemail_id when rendering emails.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '370714b1-4d6d-4bb1-bb77-eae1fd668be3';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'voicemail';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'remote_access';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'boolean';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Allow access to the voicemail menu with the correct voiemail password.';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'd09e808d-bd28-400a-81db-8d41b6394527';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'voicemail';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'message_order';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'asc';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Set the message order to asc or desc.';
 
 	//schema details
 		$y=0;
