@@ -873,7 +873,8 @@ include "root.php";
 				//commit the atomic transaction
 					//$this->db->commit();
 
-				//get the domain uuid
+				//get the UUIDs
+					$user_uuid = $_SESSION['user_uuid'];
 					$domain_uuid = $_SESSION['domain_uuid'];
 
 				//log the transaction results
@@ -882,7 +883,9 @@ include "root.php";
 						$sql .= "(";
 						$sql .= "database_transaction_uuid, ";
 						$sql .= "domain_uuid, ";
-						$sql .= "user_uuid, ";
+						if (strlen($user_uuid) > 0) {
+							$sql .= "user_uuid, ";
+						}
 						if (strlen($this->app_uuid) > 0) {
 							$sql .= "app_uuid, ";
 						}
@@ -899,7 +902,9 @@ include "root.php";
 						$sql .= "(";
 						$sql .= "'".uuid()."', ";
 						$sql .= "'".$domain_uuid."', ";
-						$sql .= "'".$_SESSION['user_uuid']."', ";
+						if (strlen($user_uuid) > 0) {
+							$sql .= "'".$user_uuid."', ";
+						}
 						if (strlen($this->app_uuid) > 0) {
 							$sql .= "'".$this->app_uuid."', ";
 						}
@@ -1600,7 +1605,8 @@ include "root.php";
 				//commit the atomic transaction
 					$this->db->commit();
 
-				//get the domain uuid
+				//get the UUIDs
+					$user_uuid = $_SESSION['user_uuid'];
 					$domain_uuid = $_SESSION['domain_uuid'];
 
 				//log the transaction results
@@ -1609,7 +1615,9 @@ include "root.php";
 						$sql .= "(";
 						$sql .= "database_transaction_uuid, ";
 						$sql .= "domain_uuid, ";
-						$sql .= "user_uuid, ";
+						if (strlen($user_uuid) > 0) {
+							$sql .= "user_uuid, ";
+						}
 						if (strlen($this->app_uuid) > 0) {
 							$sql .= "app_uuid, ";
 						}
@@ -1626,7 +1634,9 @@ include "root.php";
 						$sql .= "(";
 						$sql .= "'".uuid()."', ";
 						$sql .= "'".$domain_uuid."', ";
-						$sql .= "'".$_SESSION['user_uuid']."', ";
+						if (strlen($user_uuid) > 0) {
+							$sql .= "'".$user_uuid."', ";
+						}
 						if (strlen($this->app_uuid) > 0) {
 							$sql .= "'".$this->app_uuid."', ";
 						}
@@ -1792,4 +1802,5 @@ include "root.php";
 		$database->add();
 		print_r($database->result);
 */
+
 ?>
