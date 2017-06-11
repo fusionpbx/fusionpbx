@@ -45,7 +45,7 @@
 			echo "access denied";
 			exit;
 		}
-		$display_type = 'html';
+		$display_type = 'html'; //html, text
 	}
 
 //add multi-lingual support
