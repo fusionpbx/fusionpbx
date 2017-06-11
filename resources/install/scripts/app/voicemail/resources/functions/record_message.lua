@@ -131,11 +131,17 @@
 					if (session:ready()) then
 						freeswitch.consoleLog("notice", "[voicemail] dtmf_digits: " .. string.sub(dtmf_digits, 0, 1) .. "\n");
 						if (dtmf_digits == "*") then
-							--check the voicemail password
-								check_password(voicemail_id, password_tries);
-							--send to the main menu
-								timeouts = 0;
-								main_menu();
+							if (remote_access == "true") then
+								--check the voicemail password
+									check_password(voicemail_id, password_tries);
+								--send to the main menu
+									timeouts = 0;
+									main_menu();
+							else
+								--remote access is false
+								freeswitch.consoleLog("notice", "[voicemail] remote access is disabled.\n");
+								session:hangup();
+							end
 						elseif (string.sub(dtmf_digits, 0, 1) == "*") then
 							--do not allow dialing numbers prefixed with *
 							session:hangup();
