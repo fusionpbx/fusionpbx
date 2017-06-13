@@ -44,7 +44,7 @@
 	local Database = require "resources.functions.database"
 	local Settings = require "resources.functions.lazy_settings"
 	local route_to_bridge = require "resources.functions.route_to_bridge"
-	local presence_in   = require "resources.functions.presence_in"
+	local blf = require "resources.functions.blf"
 
 --include json library
 	local json
@@ -386,35 +386,11 @@
 			session:hangup();
 	end
 
--- BLF for display DND status
-	local function cf_blf(enabled, id, domain)
-		local user = string.format('forward+%s@%s', id, domain)
-		presence_in.turn_lamp(enabled, user)
-	end
+-- BLF for display CF status
+	blf.forward(enabled == 'true', extension, number_alias, 
+		last_forward_all_destination, forward_all_destination, domain_name)
 
---wait some time before send blf
-	session:sleep(100);
-
--- turn off previews BLF number
-	if not empty(last_forward_all_destination) then
-		if last_forward_all_destination ~= forward_all_destination then
-			cf_blf(false, extension .. '/' .. last_forward_all_destination, domain_name)
-			if #number_alias > 0 then
-				cf_blf(false, number_alias .. '/' .. last_forward_all_destination, domain_name)
-			end
-		end
-	end
-
--- set common BLF status
-	cf_blf(enabled == 'true', extension, domain_name)
-	if #number_alias > 0 then
-		cf_blf(enabled == 'true', number_alias, domain_name)
-	end
-
--- set destination specifc status
-	if not empty(forward_all_destination) then
-		cf_blf(enabled == 'true', extension .. '/' .. forward_all_destination, domain_name)
-		if #number_alias > 0 then
-			cf_blf(enabled == 'true', number_alias .. '/' .. forward_all_destination, domain_name)
-		end
+-- turn off DND BLF
+	if enabled == 'true' then
+		blf.dnd(false, extension, number_alias, domain_name)
 	end
