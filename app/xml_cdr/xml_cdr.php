@@ -321,7 +321,7 @@
 					echo "	</tr>\n";
 					echo "	<tr>\n";
 					echo "		<td class='vncell' valign='top' nowrap='nowrap'>\n";
-					echo "			".$text['label-caller-destination']."\n";
+					echo "			".$text['label-caller_destination']."\n";
 					echo "		</td>\n";
 					echo "		<td class='vtable' align='left'>\n";
 					echo "			<input type='text' class='formfld' name='caller_destination' value='$caller_destination'>\n";
