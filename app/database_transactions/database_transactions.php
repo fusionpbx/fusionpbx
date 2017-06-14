@@ -90,10 +90,10 @@
 	$sql = "select ";
 	$sql .= "t.database_transaction_uuid, d.domain_name, u.username, t.user_uuid, t.app_name, t.app_uuid, ";
 	$sql .= "t.transaction_code, t.transaction_address, t.transaction_type, t.transaction_date ";
-	$sql .= "from v_database_transactions as t, v_domains as d, v_users as u ";
+	$sql .= "from v_database_transactions as t ";
+	$sql .= "LEFT OUTER JOIN v_domains as d USING (domain_uuid) ";
+	$sql .= "LEFT OUTER JOIN v_users as u USING (user_uuid) ";
 	$sql .= "where t.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "and t.user_uuid = u.user_uuid ";
-	$sql .= "and t.domain_uuid = d.domain_uuid ";
 	$sql .= $sql_search;
 	if (strlen($order_by) == 0) {
 		$sql .= "order by transaction_date desc ";
