@@ -6,6 +6,7 @@
 		$apps[$x]['category'] = "Switch";;
 		$apps[$x]['subcategory'] = "";
 		$apps[$x]['version'] = "1.0";
+		$apps[$x]['minimum_version'] = 'current';
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Active channels on the system.";

@@ -6,6 +6,7 @@
 		$apps[$x]['category'] = "System";
 		$apps[$x]['subcategory'] = "";
 		$apps[$x]['version'] = "3.2.2";
+		$apps[$x]['minimum_version'] = 'current';
 		$apps[$x]['license'] = "http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0";
 		$apps[$x]['url'] = "http://www.adminer.org/";
 		$apps[$x]['description']['en-us'] = "Adminer (formerly phpMinAdmin) is a full-featured database management tool written in PHP. Adminer is available for MySQL, PostgreSQL, SQLite, MS SQL and Oracle.";

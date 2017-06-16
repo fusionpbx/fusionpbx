@@ -6,6 +6,7 @@
 		$apps[$x]['category'] = "CRM";
 		$apps[$x]['subcategory'] = "";
 		$apps[$x]['version'] = "1.0";
+		$apps[$x]['minimum_version'] = 'current';
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['contact_url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Provides a place to store contact information for individuals and organizations.";
