@@ -14,9 +14,9 @@
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-de'] = "Benutzer hinzufügen, bearbeiten, löschen und suchen.";
 		$apps[$x]['description']['es-cl'] = "Agregar, Editar, Eliminar y Buscar Usuarios.";
-		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-fr'] = "Ajouter, Editer, Supprimer et Chercher des Usagers";
+		$apps[$x]['description']['es-mx'] = "Agregar, Editar, Eliminar y Buscar Usuarios.";
+		$apps[$x]['description']['fr-ca'] = "Ajouter, Editer, Supprimer et Chercher des Utilisateurs";
+		$apps[$x]['description']['fr-fr'] = "Ajouter, Editer, Supprimer et Chercher des Utilisateurs";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "";
