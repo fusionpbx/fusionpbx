@@ -461,7 +461,7 @@
 		if (strlen($dialplan_anti_action_app) > 0) {
 
 			//increment group number, reset order number
-			$dialplan_detail_group = 999;
+			$dialplan_detail_group = 9999;
 			$dialplan_detail_order = 0;
 
 			//add destination number condition
@@ -596,7 +596,7 @@
 			if (is_array($result)) {
 				foreach ($result as $row) {
 					if ($row['dialplan_detail_tag'] == 'action') {
-						if ($row['dialplan_detail_group'] == '999') {
+						if ($row['dialplan_detail_group'] == '9999') {
 							$dialplan_anti_action = $row['dialplan_detail_type'].(($row['dialplan_detail_data'] != '') ? ':'.$row['dialplan_detail_data'] : null);
 						}
 						else {
