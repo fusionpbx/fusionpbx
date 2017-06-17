@@ -1,6 +1,6 @@
 --	directory.lua
 --	Part of FusionPBX
---	Copyright (C) 2012-2016 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2012-2017 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -359,34 +359,34 @@
 			--directory[x] = row;
 		--variables
 			effective_caller_id_name = row.effective_caller_id_name;
-			if (row.directory_full_name) then
-				name = row.directory_full_name;
+			if (row.directory_first_name) then
+				first_name = row.directory_first_name;
+				last_name = row.directory_last_name;
 			else
 				if (string.len(effective_caller_id_name) > 0) then
 					name = effective_caller_id_name;
+					name_table = explode(" ",name);
+					first_name = name_table[1];
+					last_name = name_table[2];
 				end
 			end
-			if (name) then
-				name_table = explode(" ",name);
-				first_name = name_table[1];
-				last_name = name_table[2];
-				if (first_name) then
-					if (string.len(first_name) > 0) then
-						--freeswitch.consoleLog("notice", "[directory] first_name: --" .. first_name .. "--\n");
-						first_name_digits = dialpad_to_digit(string.sub(first_name, 1, 1))..dialpad_to_digit(string.sub(first_name, 2, 2))..dialpad_to_digit(string.sub(first_name, 3, 3));
-					end
+		--get the digits
+			if (first_name) then
+				if (string.len(first_name) > 0) then
+					--freeswitch.consoleLog("notice", "[directory] first_name: --" .. first_name .. "--\n");
+					first_name_digits = dialpad_to_digit(string.sub(first_name, 1, 1))..dialpad_to_digit(string.sub(first_name, 2, 2))..dialpad_to_digit(string.sub(first_name, 3, 3));
 				end
-				if (last_name) then
-					if (string.len(last_name) > 0) then
-						--freeswitch.consoleLog("notice", "[directory] last_name: --" .. last_name .. "--\n");
-						last_name_digits = dialpad_to_digit(string.sub(last_name, 1, 1))..dialpad_to_digit(string.sub(last_name, 2, 2))..dialpad_to_digit(string.sub(last_name, 3, 3));
-					end
+			end
+			if (last_name) then
+				if (string.len(last_name) > 0) then
+					--freeswitch.consoleLog("notice", "[directory] last_name: --" .. last_name .. "--\n");
+					last_name_digits = dialpad_to_digit(string.sub(last_name, 1, 1))..dialpad_to_digit(string.sub(last_name, 2, 2))..dialpad_to_digit(string.sub(last_name, 3, 3));
 				end
+			end
 
-			end
 		--add the row to the array
 			--freeswitch.consoleLog("notice", "[directory] extension="..row.extension..",context="..row.user_context..",first_name="..name_table[1]..",last_name="..name_table[2]..",first_name_digits="..first_name_digits..",last_name_digits="..last_name_digits..",directory_exten_visible="..row.directory_exten_visible.."\n");
-			table.insert(directory, {extension=row.extension,context=row.user_context,first_name=name_table[1],last_name=name_table[2],first_name_digits=first_name_digits,last_name_digits=last_name_digits,directory_exten_visible=row.directory_exten_visible});
+			table.insert(directory, {extension=row.extension,context=row.user_context,first_name=first_name,last_name=last_name,first_name_digits=first_name_digits,last_name_digits=last_name_digits,directory_exten_visible=row.directory_exten_visible});
 
 		--increment x
 			x = x + 1;
