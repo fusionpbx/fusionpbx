@@ -786,5 +786,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The type of SIP header(s) to carry the caller ID; 0-FROM (default), 1-PAI 2-PAI-FROM, 3-PRID-PAI-FROM, 4-PAI-RPID-FROM, 5-RPID-FROM";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "6fd955ef-2f65-41f0-84cf-5b3ad917cc20";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_dtmf_hide";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "enabled";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = " 0-Disabled 1-Enabled";
 
 ?>
