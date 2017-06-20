@@ -44,6 +44,7 @@
 	local Database = require "resources.functions.database"
 	local Settings = require "resources.functions.lazy_settings"
 	local route_to_bridge = require "resources.functions.route_to_bridge"
+	local blf = require "resources.functions.blf"
 
 --include json library
 	local json
@@ -69,6 +70,7 @@
 	local domain_name = session:getVariable("domain_name");
 	local extension_uuid = session:getVariable("extension_uuid");
 	local request_id = session:getVariable("request_id");
+	local forward_all_destination = session:getVariable("forward_all_destination") or '';
 	local extension, dial_string
 
 --set the sounds path for the language, dialect and voice
@@ -144,14 +146,24 @@
 	local number_alias = row.number_alias or '';
 	local accountcode = row.accountcode;
 	local forward_all_enabled = row.forward_all_enabled;
-	local forward_all_destination = row.forward_all_destination;
+	local last_forward_all_destination = row.forward_all_destination;
 	local follow_me_uuid = row.follow_me_uuid;
 	local toll_allow = row.toll_allow or '';
 	local forward_caller_id_uuid = row.forward_caller_id_uuid;
 
 --toggle enabled
 	if enabled == "toggle" then
-		enabled = (forward_all_enabled == "true") and "false" or "true";
+		-- if we toggle CF and specify new destination number then just enable it
+		if (#forward_all_destination == 0) or (forward_all_destination == row.forward_all_destination) then
+			enabled = (forward_all_enabled == "true") and "false" or "true";
+		else
+			enabled = 'true'
+		end
+	end
+
+-- get destination number form database if it not provided
+	if enabled == 'true' and #forward_all_enabled == 0 then
+		forward_all_destination = row.forward_all_destination
 	end
 
 	if not session:ready() then return end
@@ -372,4 +384,13 @@
 			session:sleep(100);
 		--end the call
 			session:hangup();
+	end
+
+-- BLF for display CF status
+	blf.forward(enabled == 'true', extension, number_alias, 
+		last_forward_all_destination, forward_all_destination, domain_name)
+
+-- turn off DND BLF
+	if enabled == 'true' then
+		blf.dnd(false, extension, number_alias, domain_name)
 	end
