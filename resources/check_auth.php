@@ -46,7 +46,7 @@
 	if (!isset($_SESSION['template_content'])) { $_SESSION["template_content"] = null; }
 
 //if the username session is not set the check username and password
-	 if (strlen($_SESSION['username']) == 0) {
+	if (strlen($_SESSION['username']) == 0 && isset($_REQUEST["username"]) && isset($_REQUEST["password"])) {
 
 		//clear the menu
 			$_SESSION["menu"] = "";
