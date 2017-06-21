@@ -829,7 +829,7 @@ include "root.php";
 				//get the extensions and add them to the contacts array
 					if (strlen($device_uuid) > 0 and strlen($domain_uuid) > 0 and $_SESSION['provision']['contact_extensions']['boolean'] == "true") {
 						//get contacts from the database
-							$sql = "select extension_uuid as contact_uuid, directory_full_name, ";
+							$sql = "select extension_uuid as contact_uuid, directory_first_name, directory_last_name, ";
 							$sql .= "effective_caller_id_name, effective_caller_id_number, ";
 							$sql .= "number_alias, extension ";
 							$sql .= "from v_extensions ";
