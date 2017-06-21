@@ -309,7 +309,7 @@ else {
 		$end_date = new DateTime(check_str($_GET['start_stamp_end']));
 		$time = $end_date->getTimestamp();
 		$time = $time - $time % 3600;
-		$hours = ($end_date->getTimestamp() - $start_date->getTimestamp()) / 3600;
+		$hours = floor(($end_date->getTimestamp() - $start_date->getTimestamp()) / 3600);
 	} else {
 		//round down to the nearest hour
 		$time = time() - time() % 3600;
