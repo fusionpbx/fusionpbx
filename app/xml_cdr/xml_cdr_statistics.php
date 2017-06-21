@@ -215,14 +215,9 @@ else {
 			echo "	<th>ALOC</th>\n";
 			echo "</tr>\n";
 			echo "<tr>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>1</td>\n";
 		}
-		elseif ($i == $hours+2) {
-			echo "<tr>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>7</td>\n";
-		}
-		elseif ($i == $hours+3) {
-			echo "	<td valign='top' class='".$row_style[$c]."'>30</td>\n";
+		if ($i > $hours) {
+			echo "	<td valign='top' class='".$row_style[$c]."'>" . floor($row['hours']/24) . "</td>\n";
 		}
 		if ($i <= $hours) {
 			echo "	<td valign='top' class='".$row_style[$c]."'>".date('j M', $row['start_epoch'])."</td>\n";
@@ -235,7 +230,7 @@ else {
 		echo "	<td valign='top' class='".$row_style[$c]."'>".$row['volume']."&nbsp;</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".(round($row['minutes'],2))."&nbsp;</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".(round($row['avg_min'],2))."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"xml_cdr.php?missed=true&direction=inbound&start_epoch=".$row['start_epoch']."&stop_epoch=".$row['stop_epoch']."\">".$row['missed']."</a>&nbsp;</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"xml_cdr.php?missed=true&direction=$direction&start_epoch=".$row['start_epoch']."&stop_epoch=".$row['stop_epoch']."\">".$row['missed']."</a>&nbsp;</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".(round($row['asr'],2))."&nbsp;</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".(round($row['aloc'],2))."&nbsp;</td>\n";
 		echo "</tr >\n";
