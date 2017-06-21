@@ -280,7 +280,6 @@ else {
 		$stats[$i]['seconds'] = $stat_range ? $stat_range['seconds'] : 0;
 		$stats[$i]['minutes'] = $stats[$i]['seconds'] / 60;
 		$stats[$i]['avg_sec'] = ($stats[$i]['volume']==0) ? 0 : $stats[$i]['seconds'] / $stats[$i]['volume'];
-		$stats[$i]['avg_min'] = (($stats[$i]['volume']==0) ? 0 : $stats[$i]['volume'] - $stats[$i]['missed']) / 60;
 
 		if($missed) {
 			// we select only missed calls at first plase. so there no reasons to select it again.
@@ -292,11 +291,17 @@ else {
 			$stats[$i]['missed'] = $stat_range ? $stat_range['volume'] : 0;
 		}
 
+		$delta_min = ($stop_epoch - $start_epoch) / 60;
+		$success_volume = ($stats[$i]['volume']==0) ? 0 : ($stats[$i]['volume'] - $stats[$i]['missed']);
+
+		// Calls per minute
+		$stats[$i]['avg_min'] = $success_volume / $delta_min;
+
 		//answer / seizure ratio
-		$stats[$i]['asr'] = ($stats[$i]['volume']==0) ? 0 : (($stats[$i]['volume'] - $stats[$i]['missed']) / ($stats[$i]['volume']) * 100);
+		$stats[$i]['asr'] = ($stats[$i]['volume']==0) ? 0 : ($success_volume / $stats[$i]['volume'] * 100);
 
 		//average length of call
-		$stats[$i]['aloc'] = ($stats[$i]['volume']==0) ? 0 : $stats[$i]['minutes'] / ($stats[$i]['volume'] - $stats[$i]['missed']);
+		$stats[$i]['aloc'] = ($success_volume==0) ? 0 : $stats[$i]['minutes'] / $success_volume;
 	}
 
 	if (strlen(check_str($_GET['start_stamp_begin'])) > 0 && strlen(check_str($_GET['start_stamp_end'])) > 0 ) {
