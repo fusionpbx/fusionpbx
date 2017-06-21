@@ -1412,12 +1412,15 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		font-size: 10pt;
 		display: block;
 		border-bottom: solid 1px;
-		}
-
-	.message_mood_default {
 		color: <?php echo $_SESSION['theme']['message_default_color']['text']; ?>;
 		background: <?php echo $_SESSION['theme']['message_default_background_color']['text']; ?>;
 		border-bottom-color: <?php echo $_SESSION['theme']['message_default_color']['text']; ?>;
+		}
+
+	.message_mood_positive {
+		color: <?php echo $_SESSION['theme']['message_positive_color']['text']; ?>;
+		background: <?php echo $_SESSION['theme']['message_positive_background_color']['text']; ?>;
+		border-bottom-color: <?php echo $_SESSION['theme']['message_positive_color']['text']; ?>;
 		}
 
 	.message_mood_negative {
