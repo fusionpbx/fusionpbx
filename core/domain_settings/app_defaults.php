@@ -24,7 +24,7 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//proccess this only one time
+//process this only one time
 	if ($domains_processed == 1) {
 		//set domains with enabled status of empty or null to true
 			$sql = "update v_domains set domain_enabled = 'true' where domain_enabled = '' or domain_enabled is null";
@@ -39,6 +39,23 @@
 				$db->exec(check_sql($sql));
 				unset($sql);
 			}
+		//migrate old domain_settings
+			$sql = "update v_domain_settings ";
+			$sql .= "set domain_setting_value = '#fafafa' ";
+			$sql .= "where domain_setting_subcategory = 'message_default_color' ";
+			$sql .= "and domain_setting_value = '#ccffcc' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			if ($prep_statement) {
+				$prep_statement->execute();
+			}
+			$sql = "update v_domain_settings ";
+			$sql .= "set domain_setting_value = '#666' ";
+			$sql .= "where domain_setting_subcategory = 'message_default_background_color' ";
+			$sql .= "and domain_setting_value = '#004200' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			if ($prep_statement) {
+				$prep_statement->execute();
+			}
+			unset($prep_statement, $sql);
 	}
-
 ?>
