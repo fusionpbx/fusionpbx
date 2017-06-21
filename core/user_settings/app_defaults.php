@@ -24,7 +24,7 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//proccess this only one time
+//process this only one time
 	if ($domains_processed == 1) {
 		//update any users set to legacy languages
 			$language = new text;
@@ -35,6 +35,23 @@
 				$db->exec(check_sql($sql));
 				unset($sql);
 			}
+		//migrate old user_settings
+			$sql = "update v_user_settings ";
+			$sql .= "set user_setting_value = '#fafafa' ";
+			$sql .= "where user_setting_subcategory = 'message_default_color' ";
+			$sql .= "and user_setting_value = '#ccffcc' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			if ($prep_statement) {
+				$prep_statement->execute();
+			}
+			$sql = "update v_user_settings ";
+			$sql .= "set user_setting_value = '#666' ";
+			$sql .= "where user_setting_subcategory = 'message_default_background_color' ";
+			$sql .= "and user_setting_value = '#004200' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			if ($prep_statement) {
+				$prep_statement->execute();
+			}
+			unset($prep_statement, $sql);
 	}
-
 ?>
