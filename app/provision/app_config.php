@@ -497,5 +497,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "enabled";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = " 0-Disabled 1-Enabled";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "68c9f53-305c-4fbd-a7dd-4dd6099e829e";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_sip_listen_port";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5060";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "disabled";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = " 5060 default";
 
 ?>
