@@ -44,7 +44,7 @@
 <Random_REG_CID_On_Reboot group="SIP/SIP_Parameters">No</Random_REG_CID_On_Reboot>
 <Mark_All_AVT_Packets group="SIP/SIP_Parameters">Yes</Mark_All_AVT_Packets>
 <SIP_TCP_Port_Min group="SIP/SIP_Parameters">5060</SIP_TCP_Port_Min>
-<SIP_TCP_Port_Max group="SIP/SIP_Parameters">5080</SIP_TCP_Port_Max>
+<SIP_TCP_Port_Max group="SIP/SIP_Parameters">15080</SIP_TCP_Port_Max>
 <CTI_Enable group="SIP/SIP_Parameters">No</CTI_Enable>
 <Caller_ID_Header group="SIP/SIP_Parameters">PAID-RPID-FROM</Caller_ID_Header>
 <SRTP_Method group="SIP/SIP_Parameters">x-sipura</SRTP_Method>
