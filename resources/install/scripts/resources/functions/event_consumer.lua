@@ -433,7 +433,7 @@ local default_timeout       = 60000
 local default_poll_interval = 60000 * 30
 
 function EventConsumer:__init(pid_file, timeout)
-	self.__base.__init(self)
+	self = EventConsumer.__base.__init(self)
 
 	if pid_file then
 		assert(type(pid_file) == 'string')
