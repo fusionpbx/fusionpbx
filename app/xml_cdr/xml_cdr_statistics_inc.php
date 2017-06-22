@@ -294,8 +294,11 @@ else {
 		$delta_min = ($stop_epoch - $start_epoch) / 60;
 		$success_volume = ($stats[$i]['volume']==0) ? 0 : ($stats[$i]['volume'] - $stats[$i]['missed']);
 
+		// Calls per minute (answered)
+		$stats[$i]['cpm_ans'] = $success_volume / $delta_min;
+
 		// Calls per minute
-		$stats[$i]['avg_min'] = $success_volume / $delta_min;
+		$stats[$i]['avg_min'] = $stats[$i]['volume'] / $delta_min;
 
 		//answer / seizure ratio
 		$stats[$i]['asr'] = ($stats[$i]['volume']==0) ? 0 : ($success_volume / $stats[$i]['volume'] * 100);
