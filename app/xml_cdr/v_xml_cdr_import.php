@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -258,6 +258,14 @@
 			}
 			if(isset($recording_file) && !empty($recording_file)) {
 				$database->fields['recording_file'] = $recording_file;
+			}
+			if(isset($recording_file) && !empty($recording_file)) {
+				$database->fields['recording_name'] = $recording_file;
+			}
+
+		//get the recording name
+			if (strlen($xml->variables->recording_name) > 0) {
+				$database->fields['recording_name'] = urldecode($xml->variables->recording_name);
 			}
 
 		//dynamic cdr fields
