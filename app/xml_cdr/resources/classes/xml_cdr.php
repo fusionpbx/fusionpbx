@@ -33,13 +33,17 @@
 if (!class_exists('xml_cdr')) {
 	class xml_cdr {
 
-		//define variables
+		/**
+		 * define variables
+		 */
 		public $db;
 		public $array;
 		public $debug;
 		public $fields;
 
-		//user summary
+		/**
+		 * user summary
+		 */
 		public $domain_uuid;
 		public $quick_select;
 		public $start_stamp_begin;
