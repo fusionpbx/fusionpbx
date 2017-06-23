@@ -47,6 +47,7 @@
 //get post or get variables from http
 	if (count($_REQUEST) > 0) {
 		$cdr_id = check_str($_REQUEST["cdr_id"]);
+		$missed = check_str($_REQUEST["missed"]);
 		$direction = check_str($_REQUEST["direction"]);
 		$caller_id_name = check_str($_REQUEST["caller_id_name"]);
 		$caller_id_number = check_str($_REQUEST["caller_id_number"]);
@@ -107,6 +108,9 @@
 	}
 
 //build the sql where string
+	if ($missed == true) {
+		$sql_where_ands[] = "billsec = '0'";
+	}
 	if (strlen($start_epoch) > 0 && strlen($stop_epoch) > 0) {
 		$sql_where_ands[] = "start_epoch BETWEEN ".$start_epoch." AND ".$stop_epoch." ";
 	}
@@ -258,6 +262,7 @@
 
 //set the param variable which is used with paging
 	$param = "&cdr_id=".$cdr_id;
+	$param .= "&missed=".$missed;
 	$param .= "&direction=".$direction;
 	$param .= "&caller_id_name=".$caller_id_name;
 	$param .= "&caller_id_number=".$caller_id_number;
