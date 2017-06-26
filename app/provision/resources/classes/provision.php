@@ -829,7 +829,7 @@ include "root.php";
 				//get the extensions and add them to the contacts array
 					if (strlen($device_uuid) > 0 and strlen($domain_uuid) > 0 and $_SESSION['provision']['contact_extensions']['boolean'] == "true") {
 						//get contacts from the database
-							$sql = "select extension_uuid as contact_uuid, directory_full_name, ";
+							$sql = "select extension_uuid as contact_uuid, directory_first_name, directory_last_name, ";
 							$sql .= "effective_caller_id_name, effective_caller_id_number, ";
 							$sql .= "number_alias, extension ";
 							$sql .= "from v_extensions ";
@@ -845,13 +845,15 @@ include "root.php";
 										//get the contact_uuid
 											$uuid = $row['contact_uuid'];
 										//get the names
-											if (strlen($row['directory_full_name']) > 0) {
-												$name_array = explode(" ", $row['directory_full_name']);
+											if (strlen($row['directory_first_name']) > 0) {
+												$contact_name_given = $row['directory_first_name'];
+												$contact_name_family = $row['directory_last_name'];
 											} else {
 												$name_array = explode(" ", $row['effective_caller_id_name']);
+												$contact_name_given = array_shift($name_array);
+												$contact_name_family = trim(implode(' ', $name_array));
 											}
-											$contact_name_given = array_shift($name_array);
-											$contact_name_family = trim(implode(' ', $name_array));
+
 										//get the phone_extension
 											if (is_numeric($row['extension'])) {
 												$phone_extension = $row['extension'];

@@ -229,7 +229,7 @@
 					}
 
 				//build the xml dialplan
-					$dialplan_xml = "<extension name=\"".$ivr_menu_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
+					$dialplan_xml = "<extension name=\"".$ivr_menu_name."\" continue=\"false\" uuid=\"".$dialplan_uuid."\">\n";
 					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$ivr_menu_extension."\$\">\n";
 					$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
 					$dialplan_xml .= "		<action application=\"sleep\" data=\"1000\"/>\n";

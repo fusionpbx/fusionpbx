@@ -210,6 +210,16 @@ class text {
 									if(strlen($value) == 0 and array_key_exists($target_lang, $this->legacy_map)) {
 										$value = $text[$lang_label][$this->legacy_map[$target_lang]];
 									}
+									if(strlen($value) == 0){
+										$base_code = substr($target_lang, 0, 2);
+										foreach($this->languages as $lang_code){
+											if(substr($lang_code, 0, 2) == $base_code and strlen($text[$lang_label][$lang_code]) > 0){
+												$value = $text[$lang_label][$lang_code];
+												$append = " //copied from $lang_code";
+												continue;
+											}
+										}
+									}
 									fwrite($lang_file, "\$text['$lang_label']['$target_lang'$spacer] = \"".$this->escape_str($value)."\";$append\n");
 								}
 					}
@@ -217,7 +227,7 @@ class text {
 			}
 
 		//close the language file
-			fwrite($lang_file, "\n?>");
+			fwrite($lang_file, "\n?>\n");
 			fclose($lang_file);
 	}
 

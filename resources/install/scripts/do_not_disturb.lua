@@ -43,7 +43,7 @@
 --include config.lua
 	require "resources.functions.config";
 
-	local presence_in   = require "resources.functions.presence_in"
+	local blf = require "resources.functions.blf"
 
 --check if the session is ready
 	if ( session:ready() ) then
@@ -96,6 +96,8 @@
 				accountcode = row.accountcode;
 				follow_me_uuid = row.follow_me_uuid;
 				do_not_disturb = row.do_not_disturb;
+				forward_all_destination = row.forward_all_destination
+				forward_all_enabled = row.forward_all_enabled
 				if toggle then
 					enabled = (do_not_disturb == 'true') and 'false' or 'true'
 				end
@@ -154,11 +156,11 @@
 			if (enabled == "true") then
 				sql = sql .. "dial_string = :dial_string, ";
 				sql = sql .. "do_not_disturb = 'true', ";
+				sql = sql .. "forward_all_enabled = 'false' ";
 			else
 				sql = sql .. "dial_string = null, ";
-				sql = sql .. "do_not_disturb = 'false', ";
+				sql = sql .. "do_not_disturb = 'false' ";
 			end
-			sql = sql .. "forward_all_enabled = 'false' ";
 			sql = sql .. "where domain_uuid = :domain_uuid ";
 			sql = sql .. "and extension_uuid = :extension_uuid ";
 			local params = {dial_string = dial_string, domain_uuid = domain_uuid, extension_uuid = extension_uuid};
@@ -217,13 +219,12 @@
 			session:hangup();
 
 		-- BLF for display DND status
-			local function dnd_blf(enabled, id, domain)
-				local user = string.format('dnd+%s@%s', id, domain)
-				presence_in.turn_lamp(enabled, user)
-			end
+			blf.dnd(enabled == "true", extension, number_alias, domain_name)
 
-			dnd_blf(enabled == "true", extension, domain_name)
-			if number_alias and #number_alias > 0 then
-				dnd_blf(enabled == "true", number_alias, domain_name)
+		-- Turn off BLF for call forward
+			if forward_all_enabled == 'true' and enabled == 'true' then
+				blf.forward(false, extension, number_alias,
+					forward_all_destination, nil, domain_name
+				)
 			end
 	end
