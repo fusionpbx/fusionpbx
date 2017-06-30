@@ -783,9 +783,9 @@ $text['label-static']['uk-ua'] = "статичний";
 
 $text['label-special_characters']['en-us'] = "Special Characters";
 $text['label-special_characters']['ar-eg'] = "أحرف خاصة";
-$text['label-special_characters']['de-at'] = "";
+$text['label-special_characters']['de-at'] = "Sonderzeichen";
+$text['label-special_characters']['de-de'] = "Sonderzeichen";
 $text['label-special_characters']['de-ch'] = "";
-$text['label-special_characters']['de-de'] = "";
 $text['label-special_characters']['es-cl'] = "Caracteres especiales";
 $text['label-special_characters']['es-mx'] = "Caracteres especiales"; //copied from es-cl
 $text['label-special_characters']['fr-ca'] = "Caractères spéciaux"; //copied from fr-fr

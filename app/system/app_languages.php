@@ -183,9 +183,9 @@ $text['label-os']['uk-ua'] = "Операційна система";
 
 $text['label-kernel']['en-us'] = "Kernel";
 $text['label-kernel']['ar-eg'] = "";
-$text['label-kernel']['de-at'] = "";
+$text['label-kernel']['de-at'] = "Kernel";
 $text['label-kernel']['de-ch'] = "";
-$text['label-kernel']['de-de'] = "";
+$text['label-kernel']['de-de'] = "Kernel";
 $text['label-kernel']['es-cl'] = "";
 $text['label-kernel']['es-mx'] = "";
 $text['label-kernel']['fr-ca'] = "";

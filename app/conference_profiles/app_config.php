@@ -10,9 +10,9 @@
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "A group of conference parameters saved together as a profile.";
 		$apps[$x]['description']['ar-eg'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Eine Gruppe von Konferenz-Parametern zu einem Profil zusammengefasst.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Eine Gruppe von Konferenz-Parametern zu einem Profil zusammengefasst.";
 		$apps[$x]['description']['es-cl'] = "";
 		$apps[$x]['description']['es-mx'] = "";
 		$apps[$x]['description']['fr-ca'] = "";

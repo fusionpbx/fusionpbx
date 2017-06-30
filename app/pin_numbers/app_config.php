@@ -10,9 +10,9 @@
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Manage PIN Numbers and account codes.";
 		$apps[$x]['description']['ar-eg'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "PIN Nummern und Kontoschlüssel verwalten.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "PIN Nummern und Kontoschlüssel verwalten.";
 		$apps[$x]['description']['es-cl'] = "";
 		$apps[$x]['description']['es-mx'] = "";
 		$apps[$x]['description']['fr-ca'] = "";

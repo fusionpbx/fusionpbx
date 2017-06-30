@@ -10,9 +10,9 @@
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Direct calls between two destinations by calling a feature code.";
 		$apps[$x]['description']['ar-eg'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Anrufe zwischen zwei Ziele anhand eines Funktions-Codes steuern.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Anrufe zwischen zwei Ziele anhand eines Funktions-Codes steuern.";
 		$apps[$x]['description']['es-cl'] = "";
 		$apps[$x]['description']['es-mx'] = "";
 		$apps[$x]['description']['fr-ca'] = "";

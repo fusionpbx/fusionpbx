@@ -3,7 +3,7 @@
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Fax Server";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
-	$apps[$x]['menu'][$y]['title']['de-at'] = "";
+	$apps[$x]['menu'][$y]['title']['de-at'] = "Faxserver";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "Faxserver";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Faxserver";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Servidor de Fax";
