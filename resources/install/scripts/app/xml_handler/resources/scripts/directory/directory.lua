@@ -317,7 +317,8 @@
 								emergency_caller_id_number = row.emergency_caller_id_number;
 								missed_call_app = row.missed_call_app;
 								missed_call_data = row.missed_call_data;
-								directory_full_name = row.directory_full_name;
+								directory_first_name = row.directory_first_name;
+								directory_last_name = row.directory_last_name;
 								directory_visible = row.directory_visible;
 								directory_exten_visible = row.directory_exten_visible;
 								limit_max = row.limit_max;
@@ -431,6 +432,16 @@
 
 				--set the xml array and then concatenate the array to a string
 					if (continue and password) then
+
+						--set the directory full name
+							directory_full_name = '';
+							if (string.len(directory_first_name) > 0) then
+								directory_full_name = directory_first_name;
+								if (string.len(directory_last_name) > 0) then
+									directory_full_name = directory_first_name.. [[ ]] .. directory_last_name;
+								end
+							end
+
 						--build the xml
 							local xml = {}
 							table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);

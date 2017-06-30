@@ -75,11 +75,10 @@
 				message_text.click(function() {
 					var object = $(this);
 					object.clearQueue().finish();
-					object.css({height: '3em'});
 					object.animate({height: '0', 'font-size': '0', 'border-bottom-width': '0'}, 1000).animate({opacity: 0});
 				} );
 				$("#messages_container").append(message_text);
-				message_text.animate({height: '3em'}, 500).animate({opacity: 1}, 'fast').delay(delay).animate({height: '0', 'font-size': '0', 'border-bottom-width': '0'}, 1000).animate({opacity: 0});
+				message_text.animate({opacity: 1}, 'fast').delay(delay).animate({height: '0', 'font-size': '0', 'border-bottom-width': '0'}, 1000).animate({opacity: 0});
 			}
 		}
 

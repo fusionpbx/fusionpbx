@@ -86,7 +86,8 @@
 			$outbound_caller_id_number = $_POST["outbound_caller_id_number"];
 			$emergency_caller_id_name = $_POST["emergency_caller_id_name"];
 			$emergency_caller_id_number = $_POST["emergency_caller_id_number"];
-			$directory_full_name = $_POST["directory_full_name"];
+			$directory_first_name = $_POST["directory_first_name"];
+			$directory_last_name = $_POST["directory_last_name"];
 			$directory_visible = $_POST["directory_visible"];
 			$directory_exten_visible = $_POST["directory_exten_visible"];
 			$limit_max = $_POST["limit_max"];
@@ -320,7 +321,8 @@
 									$array["extensions"][$i]["outbound_caller_id_number"] = $outbound_caller_id_number;
 									$array["extensions"][$i]["emergency_caller_id_name"] = $emergency_caller_id_name;
 									$array["extensions"][$i]["emergency_caller_id_number"] = $emergency_caller_id_number;
-									$array["extensions"][$i]["directory_full_name"] = $directory_full_name;
+									$array["extensions"][$i]["directory_first_name"] = $directory_first_name;
+									$array["extensions"][$i]["directory_last_name"] = $directory_last_name;
 									$array["extensions"][$i]["directory_visible"] = $directory_visible;
 									$array["extensions"][$i]["directory_exten_visible"] = $directory_exten_visible;
 									$array["extensions"][$i]["limit_max"] = $limit_max;
@@ -611,7 +613,8 @@
 			$outbound_caller_id_number = $row["outbound_caller_id_number"];
 			$emergency_caller_id_name = $row["emergency_caller_id_name"];
 			$emergency_caller_id_number = $row["emergency_caller_id_number"];
-			$directory_full_name = $row["directory_full_name"];
+			$directory_first_name = $row["directory_first_name"];
+			$directory_last_name = $row["directory_last_name"];
 			$directory_visible = $row["directory_visible"];
 			$directory_exten_visible = $row["directory_exten_visible"];
 			$limit_max = $row["limit_max"];
@@ -1229,7 +1232,8 @@
 	echo "    ".$text['label-directory_full_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='directory_full_name' maxlength='255' value=\"$directory_full_name\">\n";
+	echo "    <input class='formfld' type='text' name='directory_first_name' maxlength='255' value=\"$directory_first_name\">\n";
+	echo "    <input class='formfld' type='text' name='directory_last_name' maxlength='255' value=\"$directory_last_name\">\n";
 	echo "<br />\n";
 	echo $text['description-directory_full_name']."\n";
 	echo "</td>\n";

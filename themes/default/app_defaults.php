@@ -24,36 +24,54 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-if ($domains_processed == 1) {
-
-	//get the background images
-		$relative_path = PROJECT_PATH.'/themes/default/images/backgrounds';
-		$backgrounds = opendir($_SERVER["DOCUMENT_ROOT"].'/'.$relative_path);
-		unset($array);
-		$x = 0;
-		while (false !== ($file = readdir($backgrounds))) {
-			if ($file != "." AND $file != "..") {
-				$ext = pathinfo($file, PATHINFO_EXTENSION);
-				if ($ext == "png" || $ext == "jpg" || $ext == "jpeg" || $ext == "gif") {
-					$array[$x]['default_setting_category'] = 'theme';
-					$array[$x]['default_setting_subcategory'] = 'background_image';
-					$array[$x]['default_setting_name'] = 'array';
-					$array[$x]['default_setting_value'] = $relative_path.'/'.$file;
-					$array[$x]['default_setting_enabled'] = 'false';
-					$array[$x]['default_setting_description'] = 'Set a relative path or URL within a selected compatible template.';
-					$x++;
-					$array[$x]['default_setting_category'] = 'theme';
-					$array[$x]['default_setting_subcategory'] = 'login_background_image';
-					$array[$x]['default_setting_name'] = 'array';
-					$array[$x]['default_setting_value'] = $relative_path.'/'.$file;
-					$array[$x]['default_setting_enabled'] = 'false';
-					$array[$x]['default_setting_description'] = 'Set a relative path or URL within a selected compatible template.';
-					$x++;
+//process this only one time
+	if ($domains_processed == 1) {
+	
+		//get the background images
+			$relative_path = PROJECT_PATH.'/themes/default/images/backgrounds';
+			$backgrounds = opendir($_SERVER["DOCUMENT_ROOT"].'/'.$relative_path);
+			unset($array);
+			$x = 0;
+			while (false !== ($file = readdir($backgrounds))) {
+				if ($file != "." AND $file != "..") {
+					$ext = pathinfo($file, PATHINFO_EXTENSION);
+					if ($ext == "png" || $ext == "jpg" || $ext == "jpeg" || $ext == "gif") {
+						$array[$x]['default_setting_category'] = 'theme';
+						$array[$x]['default_setting_subcategory'] = 'background_image';
+						$array[$x]['default_setting_name'] = 'array';
+						$array[$x]['default_setting_value'] = $relative_path.'/'.$file;
+						$array[$x]['default_setting_enabled'] = 'false';
+						$array[$x]['default_setting_description'] = 'Set a relative path or URL within a selected compatible template.';
+						$x++;
+						$array[$x]['default_setting_category'] = 'theme';
+						$array[$x]['default_setting_subcategory'] = 'login_background_image';
+						$array[$x]['default_setting_name'] = 'array';
+						$array[$x]['default_setting_value'] = $relative_path.'/'.$file;
+						$array[$x]['default_setting_enabled'] = 'false';
+						$array[$x]['default_setting_description'] = 'Set a relative path or URL within a selected compatible template.';
+						$x++;
+					}
+					if ($x > 300) { break; };
 				}
-				if ($x > 300) { break; };
 			}
-		}
-
-}
+		//migrate old default_settings
+			$sql = "update v_default_settings ";
+			$sql .= "set default_setting_value = '#fafafa' ";
+			$sql .= "where default_setting_subcategory = 'message_default_color' ";
+			$sql .= "and default_setting_value = '#ccffcc' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			if ($prep_statement) {
+				$prep_statement->execute();
+			}
+			$sql = "update v_default_settings ";
+			$sql .= "set default_setting_value = '#666' ";
+			$sql .= "where default_setting_subcategory = 'message_default_background_color' ";
+			$sql .= "and default_setting_value = '#004200' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			if ($prep_statement) {
+				$prep_statement->execute();
+			}
+			unset($prep_statement, $sql);
+	}
 
 ?>

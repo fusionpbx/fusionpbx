@@ -33,13 +33,17 @@
 if (!class_exists('xml_cdr')) {
 	class xml_cdr {
 
-		//define variables
+		/**
+		 * define variables
+		 */
 		public $db;
 		public $array;
 		public $debug;
 		public $fields;
 
-		//user summary
+		/**
+		 * user summary
+		 */
 		public $domain_uuid;
 		public $quick_select;
 		public $start_stamp_begin;
@@ -122,6 +126,7 @@ if (!class_exists('xml_cdr')) {
 			$this->fields[] = "remote_media_ip";
 			$this->fields[] = "network_addr";
 			$this->fields[] = "recording_file";
+			$this->fields[] = "recording_name";
 			$this->fields[] = "leg";
 			$this->fields[] = "pdd_ms";
 			$this->fields[] = "rtp_audio_in_mos";
@@ -401,6 +406,11 @@ if (!class_exists('xml_cdr')) {
 				}
 				if(isset($recording_file) && !empty($recording_file)) {
 					$this->array[$key]['recording_file'] = $recording_file;
+				}
+
+			//get the recording name
+				if (strlen($xml->variables->recording_name) > 0) {
+					$this->array[$key]['recording_name'] = urldecode($xml->variables->recording_name);
 				}
 
 			//save to the database in xml format

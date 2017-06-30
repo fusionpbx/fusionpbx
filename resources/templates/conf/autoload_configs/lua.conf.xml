@@ -39,8 +39,14 @@
       1 - Monitor - ignore SUBSCRIBE and just send NOTIFY each X seconds
       2 - Event handler - handle each SUBSCRIBE request
     -->
-    <!--<param name="startup-script" value="call_flow_subscribe.lua"/>-->
     <!--<param name="startup-script" value="call_flow_monitor.lua"/>-->
+    <!--<param name="startup-script" value="blf_subscribe.lua flow"/>-->
+
+    <!-- FusionPBX: Support BLF for DND -->
+    <!--<param name="startup-script" value="blf_subscribe.lua dnd"/>-->
+
+    <!-- FusionPBX: Support BLF for Call Forward -->
+    <!--<param name="startup-script" value="blf_subscribe.lua forward"/>-->
 
     <!-- FusionPBX: Support MWI indicator-->
     <!-- There 2 way to handle this
