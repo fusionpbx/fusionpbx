@@ -43,9 +43,9 @@ $text['title-conference_profile']['uk-ua'] = "";
 
 $text['title_description-conference_profile']['en-us'] = "A group of conference parameters saved together as a profile.";
 $text['title_description-conference_profile']['ar-eg'] = "";
-$text['title_description-conference_profile']['de-at'] = "Eine Gruppe von Konferenz-Parametern zu einem Profil zusammengefasst";
+$text['title_description-conference_profile']['de-at'] = "Eine Gruppe von Konferenz-Parametern zu einem Profil zusammengefasst.";
 $text['title_description-conference_profile']['de-ch'] = "";
-$text['title_description-conference_profile']['de-de'] = "Eine Gruppe von Konferenz-Parametern zu einem Profil zusammengefasst";
+$text['title_description-conference_profile']['de-de'] = "Eine Gruppe von Konferenz-Parametern zu einem Profil zusammengefasst.";
 $text['title_description-conference_profile']['es-cl'] = "";
 $text['title_description-conference_profile']['es-mx'] = "";
 $text['title_description-conference_profile']['fr-ca'] = "";

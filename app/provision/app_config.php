@@ -10,9 +10,9 @@
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Writes the provisioning files from templates.";
 		$apps[$x]['description']['ar-eg'] = "";
-		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-at'] = "Schreibt die Dateien für die Bereitstellung aus den Vorlagen.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-de'] = "Schreibt die Dateien für die Bereitstellung aus den Vorlagen.";
 		$apps[$x]['description']['es-cl'] = "";
 		$apps[$x]['description']['es-mx'] = "";
 		$apps[$x]['description']['fr-ca'] = "";

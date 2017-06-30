@@ -705,8 +705,8 @@ $text['label-static']['uk-ua'] = "статичний";
 
 $text['label-special_characters']['en-us'] = "Special Characters";
 $text['label-special_characters']['ar-eg'] = "أحرف خاصة";
-$text['label-special_characters']['de-at'] = "";
-$text['label-special_characters']['de-de'] = "";
+$text['label-special_characters']['de-at'] = "Sonderzeichen";
+$text['label-special_characters']['de-de'] = "Sonderzeichen";
 $text['label-special_characters']['es-cl'] = "Caracteres especiales";
 $text['label-special_characters']['fr-ca'] = "";
 $text['label-special_characters']['fr-fr'] = "Caractères spéciaux";
