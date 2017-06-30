@@ -83,9 +83,9 @@ $text['option-false']['uk-ua'] = "Ні";
 
 $text['message-upgrade_permissions']['en-us'] = "Permission Defaults Restored";
 $text['message-upgrade_permissions']['ar-eg'] = "";
-$text['message-upgrade_permissions']['de-at'] = "";
+$text['message-upgrade_permissions']['de-at'] = "Standard Berechtigungen wiederhergestellt.";
 $text['message-upgrade_permissions']['de-ch'] = "";
-$text['message-upgrade_permissions']['de-de'] = "";
+$text['message-upgrade_permissions']['de-de'] = "Standard Berechtigungen wiederhergestellt.";
 $text['message-upgrade_permissions']['es-cl'] = "";
 $text['message-upgrade_permissions']['es-mx'] = "";
 $text['message-upgrade_permissions']['fr-ca'] = "";
@@ -223,9 +223,9 @@ $text['message-upgrade_apps']['uk-ua'] = "Встановлено типові н
 
 $text['message-upgrade']['en-us'] = "Upgrade Completed";
 $text['message-upgrade']['ar-eg'] = "";
-$text['message-upgrade']['de-at'] = "";
+$text['message-upgrade']['de-at'] = "Aktualisierung durchgeführt.";
 $text['message-upgrade']['de-ch'] = "";
-$text['message-upgrade']['de-de'] = "";
+$text['message-upgrade']['de-de'] = "Aktualisierung durchgeführt.";
 $text['message-upgrade']['es-cl'] = "Actualización Completa";
 $text['message-upgrade']['es-mx'] = "Actualización Completa"; //copied from es-cl
 $text['message-upgrade']['fr-ca'] = "Mis à jour"; //copied from fr-fr

@@ -183,9 +183,9 @@ $text['message-copy']['uk-ua'] = "Скопійовано";
 
 $text['message-invalid_credentials']['en-us'] = "Invalid Username and/or Password";
 $text['message-invalid_credentials']['ar-eg'] = "";
-$text['message-invalid_credentials']['de-at'] = "";
+$text['message-invalid_credentials']['de-at'] = "Ungültiger Benutzername und/oder Passwort";
 $text['message-invalid_credentials']['de-ch'] = "";
-$text['message-invalid_credentials']['de-de'] = "";
+$text['message-invalid_credentials']['de-de'] = "Ungültiger Benutzername und/oder Passwort";
 $text['message-invalid_credentials']['es-cl'] = "";
 $text['message-invalid_credentials']['es-mx'] = "";
 $text['message-invalid_credentials']['fr-ca'] = "";

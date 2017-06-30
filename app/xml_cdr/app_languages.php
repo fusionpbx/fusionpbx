@@ -1803,9 +1803,9 @@ $text['label-caller_id_name']['uk-ua'] = "Caller ID Ім’я";
 
 $text['label-caller_destination']['en-us'] = "Caller Destination";
 $text['label-caller_destination']['ar-eg'] = "";
-$text['label-caller_destination']['de-at'] = "";
+$text['label-caller_destination']['de-at'] = "Rufziel";
+$text['label-caller_destination']['de-de'] = "Rufziel";
 $text['label-caller_destination']['de-ch'] = "";
-$text['label-caller_destination']['de-de'] = "";
 $text['label-caller_destination']['es-cl'] = "";
 $text['label-caller_destination']['es-mx'] = "";
 $text['label-caller_destination']['fr-ca'] = "";

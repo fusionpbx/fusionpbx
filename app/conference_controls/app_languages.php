@@ -483,9 +483,9 @@ $text['title-conference_control_detail']['uk-ua'] = "";
 
 $text['title_description-conference_control_detail']['en-us'] = "Call controls enable ability to assign digits to actions. They can be used to mute, unmute, or other actions during the conference call.";
 $text['title_description-conference_control_detail']['ar-eg'] = "";
-$text['title_description-conference_control_detail']['de-at'] = "";
+$text['title_description-conference_control_detail']['de-at'] = "Anrufsteuerung anhand von zugeordneten Ziffern. Diese können verschiedene Aktionen wie Stummschaltung, usw. während einer Konferenz auslösen.";
 $text['title_description-conference_control_detail']['de-ch'] = "";
-$text['title_description-conference_control_detail']['de-de'] = "";
+$text['title_description-conference_control_detail']['de-de'] = "Anrufsteuerung anhand von zugeordneten Ziffern. Diese können verschiedene Aktionen wie Stummschaltung, usw. während einer Konferenz auslösen.";
 $text['title_description-conference_control_detail']['es-cl'] = "";
 $text['title_description-conference_control_detail']['es-mx'] = "";
 $text['title_description-conference_control_detail']['fr-ca'] = "";
