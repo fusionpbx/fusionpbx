@@ -46,7 +46,7 @@
 	if (!isset($_SESSION['template_content'])) { $_SESSION["template_content"] = null; }
 
 //if the username is not provided then send to login.php
-	if (strlen($_REQUEST["username"]) == 0 && strlen($_REQUEST["key"]) == 0) {
+	if (strlen($_SESSION['username']) == 0 && strlen($_REQUEST["username"]) == 0 && strlen($_REQUEST["key"]) == 0) {
 		$target_path = ($_REQUEST["path"] != '') ? $_REQUEST["path"] : $_SERVER["REQUEST_URI"];
 		header("Location: ".PROJECT_PATH."/login.php?path=".urlencode($target_path));
 		exit;
