@@ -1,21 +1,23 @@
 What is [FusionPBX](http://fusionpbx.com/)?
 --------------------------------------
-[FusionPBX](http://fusionpbx.com/) is a flexible, customizable administration web GUI that takes [FreeSwitch](http://freeswitch.org) and converts it into a single- or multi-tenant gateway or PBX system out of the box.
-It will run on any operating system and x86-based hardware of your choice.
-It provides the functionality your business needs and brings corporate-level phone system features to small, medium, and large businesses. Read more at [FusionPBX](http://fusionpbx.com/). [Please visit our youtube channel](https://www.youtube.com/FusionPBX)
+[FusionPBX](http://fusionpbx.com/) is a flexible, customizable administration web GUI that uses [FreeSWITCH](http://freeswitch.org) as a single or multi-tenant PBX system or a flexible communication platform.
+It will run on multiple operating systems and 32 and 64 bit hardward.
+It provides the functionality your business needs and brings carrier grade switching, and corporate-level phone system features to small, medium, and large businesses. Read more at [FusionPBX](http://fusionpbx.com/). [Please visit our youtube channel](https://www.youtube.com/FusionPBX)
 
 In addition to providing all of the usual PBX functionality, FusionPBX allows you to configure:
 
 - Multi-Tenant
 - Unlimited Extensions
 - Voicemail-to-Email
+- Device Provisioning
 - Music on Hold
 - Call Parking
 - Automatic Call Distribution
 - Interactive Voice Response
 - Ring Groups
 - Find Me / Follow Me
-- Dialplan Features that can be endlessly combined for your preferences
+- Hot desking
+- Dialplan Programming that allow nearly endless positiblities
 - [Many other Features](http://docs.fusionpbx.com/en/latest/features/features.html)
 
 Free Support
@@ -40,9 +42,8 @@ Software Requirements
 --------------------------------------
 - [Debian Jessie](http://cdimage.debian.org/debian-cd/8.7.1/) - Recommended
 This is the distribution recommended by the FreeSwitch team
-- Fusion will also install on Debian Wheezy, Ubuntu 10.10 LTS and is known to work on FreeBSD
+- Fusion will also install on Latest Debian, FreeBSD, CentOS, and more.
 - [FusionPBX Installer](http://fusionpbx.com/download.php)
-
 
 Community
 --------------------------------------
