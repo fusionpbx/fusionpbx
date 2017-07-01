@@ -42,7 +42,7 @@ Software Requirements
 --------------------------------------
 - [Debian Jessie](http://cdimage.debian.org/debian-cd/8.7.1/) - Recommended
 This is the distribution recommended by the FreeSwitch team
-- Fusion will also install on Latest Debian, FreeBSD, CentOS, and more.
+- FusionPBX will run on Debian 8, FreeBSD 10 & 11, CentOS, and more.
 - [FusionPBX Installer](http://fusionpbx.com/download.php)
 
 Community
