@@ -87,7 +87,6 @@ $apps[$x]['menu'][4]['icon'] = "glyphicon-cog";
 $apps[$x]['menu'][4]['path'] = "";
 $apps[$x]['menu'][4]['order'] = "30";
 $apps[$x]['menu'][4]['groups'][] = "superadmin";
-$apps[$x]['menu'][4]['groups'][] = "admin";
 
 $apps[$x]['menu'][5]['title']['en-us'] = "Login";
 $apps[$x]['menu'][5]['title']['es-cl'] = "Ingresar";
