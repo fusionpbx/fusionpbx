@@ -37,7 +37,7 @@ if (!class_exists('menu')) {
 					$db = $this->db;
 				//remove existing menu languages
 					$sql  = "delete from v_menu_languages ";
-					$sql .= "where menu_uuid = '".$this->menu_uuid."' ";
+					$sql .= "where menu_uuid = '".$this->menu_uuid."';";
 					$db->exec(check_sql($sql));
 				//remove existing unprotected menu item groups
 					$sql = "delete from v_menu_item_groups ";
@@ -50,19 +50,19 @@ if (!class_exists('menu')) {
 					$sql .= " 		menu_item_protected <> 'true' ";
 					$sql .= "		or menu_item_protected is null ";
 					$sql .= "	) ";
-					$sql .= ") ";
+					$sql .= ");";
 					$db->exec(check_sql($sql));
 				//remove existing unprotected menu items
 					$sql  = "delete from v_menu_items ";
 					$sql .= "where menu_uuid = '".$this->menu_uuid."' ";
 					$sql .= "and (menu_item_protected <> 'true' ";
-					$sql .= "or menu_item_protected is null); ";
+					$sql .= "or menu_item_protected is null);";
 					$db->exec(check_sql($sql));
 			}
 
 		//restore the menu
 			public function restore() {
-				
+
 				//set the variables
 					$db = $this->db;
 
@@ -110,6 +110,9 @@ if (!class_exists('menu')) {
 								$menu_item_order = $menu['order'];
 								$menu_item_description = $menu['desc'];
 
+							//menu found set the default
+								$menu_item_found = false;
+
 							//if the item uuid is not currently in the db then add it
 								$sql = "select * from v_menu_items ";
 								$sql .= "where menu_uuid = '".$this->menu_uuid."' ";
@@ -119,6 +122,10 @@ if (!class_exists('menu')) {
 									$prep_statement->execute();
 									$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 									if (count($result) == 0) {
+
+										//menu found the menu
+											$menu_item_found = true;
+
 										//insert the default menu into the database
 											$sql = "insert into v_menu_items ";
 											$sql .= "(";
@@ -159,34 +166,36 @@ if (!class_exists('menu')) {
 												$db->exec(check_sql($sql));
 											}
 											unset($sql);
-
-										//set the menu languages
-											foreach ($language->languages as $menu_language) {
-												$menu_item_title = $menu["title"][$menu_language];
-												if(strlen($menu_item_title) == 0)
-													$menu_item_title = $menu["title"]['en-us'];
-												$menu_language_uuid = uuid();
-												$sql = "insert into v_menu_languages ";
-												$sql .= "(";
-												$sql .= "menu_language_uuid, ";
-												$sql .= "menu_item_uuid, ";
-												$sql .= "menu_uuid, ";
-												$sql .= "menu_language, ";
-												$sql .= "menu_item_title ";
-												$sql .= ") ";
-												$sql .= "values ";
-												$sql .= "(";
-												$sql .= "'".$menu_language_uuid."', ";
-												$sql .= "'".$menu_item_uuid."', ";
-												$sql .= "'".$this->menu_uuid."', ";
-												$sql .= "'".$menu_language."', ";
-												$sql .= "'".check_str($menu_item_title)."' ";
-												$sql .= ")";
-												$db->exec(check_sql($sql));
-												unset($sql);
-											}
 									}
 								}
+
+							//set the menu languages
+								foreach ($language->languages as $menu_language) {
+									$menu_item_title = $menu["title"][$menu_language];
+									if(strlen($menu_item_title) == 0) {
+										$menu_item_title = $menu["title"]['en-us'];
+									}
+									$menu_language_uuid = uuid();
+									$sql = "insert into v_menu_languages ";
+									$sql .= "(";
+									$sql .= "menu_language_uuid, ";
+									$sql .= "menu_item_uuid, ";
+									$sql .= "menu_uuid, ";
+									$sql .= "menu_language, ";
+									$sql .= "menu_item_title ";
+									$sql .= ") ";
+									$sql .= "values ";
+									$sql .= "(";
+									$sql .= "'".$menu_language_uuid."', ";
+									$sql .= "'".$menu_item_uuid."', ";
+									$sql .= "'".$this->menu_uuid."', ";
+									$sql .= "'".$menu_language."', ";
+									$sql .= "'".check_str($menu_item_title)."' ";
+									$sql .= ")";
+									$db->exec(check_sql($sql));
+									unset($sql);
+								}
+
 						}
 					}
 
@@ -415,8 +424,10 @@ if (!class_exists('menu')) {
 					}
 
 				//get the menu from the database
-					if (strlen($sql) == 0) { //default sql for base of the menu
-						$sql = "select i.menu_item_link, l.menu_item_title as menu_language_title, i.menu_item_title, i.menu_item_protected, i.menu_item_category, i.menu_item_icon, i.menu_item_uuid, i.menu_item_parent_uuid ";
+					if (strlen($sql) == 0) {
+						$sql = "select i.menu_item_link, l.menu_item_title as menu_language_title, ".
+						$sql .= "i.menu_item_title, i.menu_item_protected, i.menu_item_category, ";
+						$sql .= "i.menu_item_icon, i.menu_item_uuid, i.menu_item_parent_uuid ";
 						$sql .= "from v_menu_items as i, v_menu_languages as l ";
 						$sql .= "where i.menu_item_uuid = l.menu_item_uuid ";
 						$sql .= "and l.menu_language = '".$_SESSION['domain']['language']['code']."' ";
