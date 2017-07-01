@@ -18,6 +18,7 @@ In addition to providing all of the usual PBX functionality, FusionPBX allows yo
 - Ring Groups
 - Find Me / Follow Me
 - Hot desking
+- High Availability and Redundancy
 - Dialplan Programming that allow nearly endless positiblities
 - [Many other Features](http://docs.fusionpbx.com/en/latest/features/features.html)
 
