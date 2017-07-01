@@ -132,7 +132,6 @@
 	$apps[$x]['menu'][$y]['path'] = "";
 	$apps[$x]['menu'][$y]['order'] = "30";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
-	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$y++;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Login";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
