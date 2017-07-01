@@ -1,7 +1,7 @@
 What is [FusionPBX](http://fusionpbx.com/)?
 --------------------------------------
 [FusionPBX](http://fusionpbx.com/) is a flexible, customizable administration web GUI that uses [FreeSWITCH](http://freeswitch.org) as a single or multi-tenant PBX system or a flexible communication platform.
-It will run on multiple operating systems and 32 and 64 bit hardward.
+
 It provides the functionality your business needs and brings carrier grade switching, and corporate-level phone system features to small, medium, and large businesses. Read more at [FusionPBX](http://fusionpbx.com/). [Please visit our youtube channel](https://www.youtube.com/FusionPBX)
 
 In addition to providing all of the usual PBX functionality, FusionPBX allows you to configure:
@@ -40,8 +40,7 @@ These options support the project and cover any kind of help you might need from
 
 Software Requirements
 --------------------------------------
-- [Debian Jessie](http://cdimage.debian.org/debian-cd/8.7.1/) - Recommended
-This is the distribution recommended by the FreeSwitch team
+
 - FusionPBX will run on Debian 8, FreeBSD 10 & 11, CentOS, and more.
 - [FusionPBX Installer](http://fusionpbx.com/download.php)
 
