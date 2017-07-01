@@ -28,6 +28,6 @@ $apps[$x]['menu'][1]['uuid'] = "0869ac79-4af3-498f-af65-69662280d74e";
 $apps[$x]['menu'][1]['parent_uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";
 $apps[$x]['menu'][1]['category'] = "internal";
 $apps[$x]['menu'][1]['path'] = "/core/domain_settings/domain_edit.php";
-$apps[$x]['menu'][1]['groups'][] = "admin";
+//$apps[$x]['menu'][1]['groups'][] = "superadmin";
 
 ?>
