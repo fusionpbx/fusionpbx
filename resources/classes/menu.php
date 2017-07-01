@@ -37,7 +37,16 @@ if (!class_exists('menu')) {
 					$db = $this->db;
 				//remove existing menu languages
 					$sql  = "delete from v_menu_languages ";
-					$sql .= "where menu_uuid = '".$this->menu_uuid."';";
+					$sql .= "where menu_uuid = '".$this->menu_uuid."' ";
+					$sql .= "and menu_item_uuid in ( ";
+					$sql .= "	select menu_item_uuid ";
+					$sql .= "	from v_menu_items ";
+					$sql .= "	where menu_uuid = '".$this->menu_uuid."' ";
+					$sql .= "	and ( ";
+					$sql .= " 		menu_item_protected <> 'true' ";
+					$sql .= "		or menu_item_protected is null ";
+					$sql .= "	) ";
+					$sql .= ");";
 					$db->exec(check_sql($sql));
 				//remove existing unprotected menu item groups
 					$sql = "delete from v_menu_item_groups ";
@@ -111,7 +120,7 @@ if (!class_exists('menu')) {
 								$menu_item_description = $menu['desc'];
 
 							//menu found set the default
-								$menu_item_found = false;
+								$menu_item_exists = true;
 
 							//if the item uuid is not currently in the db then add it
 								$sql = "select * from v_menu_items ";
@@ -124,7 +133,7 @@ if (!class_exists('menu')) {
 									if (count($result) == 0) {
 
 										//menu found the menu
-											$menu_item_found = true;
+											$menu_item_exists = false;
 
 										//insert the default menu into the database
 											$sql = "insert into v_menu_items ";
@@ -170,30 +179,32 @@ if (!class_exists('menu')) {
 								}
 
 							//set the menu languages
-								foreach ($language->languages as $menu_language) {
-									$menu_item_title = $menu["title"][$menu_language];
-									if(strlen($menu_item_title) == 0) {
-										$menu_item_title = $menu["title"]['en-us'];
+								if (!$menu_item_exists) {
+									foreach ($language->languages as $menu_language) {
+										$menu_item_title = $menu["title"][$menu_language];
+										if(strlen($menu_item_title) == 0) {
+											$menu_item_title = $menu["title"]['en-us'];
+										}
+										$menu_language_uuid = uuid();
+										$sql = "insert into v_menu_languages ";
+										$sql .= "(";
+										$sql .= "menu_language_uuid, ";
+										$sql .= "menu_item_uuid, ";
+										$sql .= "menu_uuid, ";
+										$sql .= "menu_language, ";
+										$sql .= "menu_item_title ";
+										$sql .= ") ";
+										$sql .= "values ";
+										$sql .= "(";
+										$sql .= "'".$menu_language_uuid."', ";
+										$sql .= "'".$menu_item_uuid."', ";
+										$sql .= "'".$this->menu_uuid."', ";
+										$sql .= "'".$menu_language."', ";
+										$sql .= "'".check_str($menu_item_title)."' ";
+										$sql .= ")";
+										$db->exec(check_sql($sql));
+										unset($sql);
 									}
-									$menu_language_uuid = uuid();
-									$sql = "insert into v_menu_languages ";
-									$sql .= "(";
-									$sql .= "menu_language_uuid, ";
-									$sql .= "menu_item_uuid, ";
-									$sql .= "menu_uuid, ";
-									$sql .= "menu_language, ";
-									$sql .= "menu_item_title ";
-									$sql .= ") ";
-									$sql .= "values ";
-									$sql .= "(";
-									$sql .= "'".$menu_language_uuid."', ";
-									$sql .= "'".$menu_item_uuid."', ";
-									$sql .= "'".$this->menu_uuid."', ";
-									$sql .= "'".$menu_language."', ";
-									$sql .= "'".check_str($menu_item_title)."' ";
-									$sql .= ")";
-									$db->exec(check_sql($sql));
-									unset($sql);
 								}
 
 						}
