@@ -1,7 +1,7 @@
 What is [FusionPBX](http://fusionpbx.com/)?
 --------------------------------------
 
-[FusionPBX](http://fusionpbx.com/) can be used as a highly available single or domain based multi-tenant PBX, carrier grade switch, call center server, fax server, VoIP server, voicemail server, conference server, voice application server, multi-tenant appliance framework and more. [FreeSWITCH™](http://freeswitch.org) is a highly scalable, multi-threaded, multi-platform communication platform. 
+[FusionPBX](http://fusionpbx.com/) can be used as a single or domain based multi-tenant PBX, carrier grade switch, call center server, fax server, VoIP server, voicemail server, conference server, voice application server, multi-tenant appliance framework and more. [FreeSWITCH™](http://freeswitch.org) is a highly scalable, multi-threaded, multi-platform communication platform. 
 
 It provides the functionality your business needs and brings carrier grade switching, and corporate-level phone system features to small, medium, and large businesses. Read more at [FusionPBX](http://fusionpbx.com/). [Please visit our youtube channel](https://www.youtube.com/FusionPBX)
 
