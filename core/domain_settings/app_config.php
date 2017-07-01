@@ -30,7 +30,6 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "domain_edit";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "domain_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -40,19 +39,15 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "domain_setting_view";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "domain_setting_add";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "domain_setting_edit";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "domain_setting_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "domain_setting_category_edit";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
