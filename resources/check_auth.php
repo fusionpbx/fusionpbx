@@ -45,6 +45,13 @@
 	if (!isset($_SESSION['login']['destination']['url'])) { $_SESSION['login']['destination']['url'] = null; }
 	if (!isset($_SESSION['template_content'])) { $_SESSION["template_content"] = null; }
 
+//if the username is not provided then send to login.php
+	if (strlen($_REQUEST["username"]) == 0 && strlen($_REQUEST["key"]) == 0) {
+		$target_path = ($_REQUEST["path"] != '') ? $_REQUEST["path"] : $_SERVER["REQUEST_URI"];
+		header("Location: ".PROJECT_PATH."/login.php?path=".urlencode($target_path));
+		exit;
+	}
+
 //if the username session is not set the check username and password
 	if (strlen($_SESSION['username']) == 0 && isset($_REQUEST["username"]) && isset($_REQUEST["password"])) {
 
@@ -54,14 +61,6 @@
 		//clear the template only if the template has not been assigned by the superadmin
 			if (strlen($_SESSION['domain']['template']['name']) == 0) {
 				$_SESSION["template_content"] = '';
-			}
-
-		//if the username is not provided then send to login.php
-			if (strlen($_REQUEST["username"]) == 0 && strlen($_REQUEST["key"]) == 0) {
-				$target_path = ($_REQUEST["path"] != '') ? $_REQUEST["path"] : $_SERVER["REQUEST_URI"];
-				messages::add($text['message-invalid_credentials'], 'negative');
-				header("Location: ".PROJECT_PATH."/login.php?path=".urlencode($target_path));
-				exit;
 			}
 
 		//validate the username and password
