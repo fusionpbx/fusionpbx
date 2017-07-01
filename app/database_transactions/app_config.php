@@ -241,5 +241,3 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Result of the transaction.";
 
 ?>
-
-<?php
