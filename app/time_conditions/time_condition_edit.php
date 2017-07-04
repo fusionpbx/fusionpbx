@@ -140,7 +140,7 @@
 					$sql .= "'".$dialplan_name."', ";
 					$sql .= "'".$dialplan_number."', ";
 					$sql .= "'".$dialplan_order."', ";
-					$sql .= "'true', ";
+					$sql .= "'false', ";
 					if (strlen($domain_uuid) == 0) {
 						$sql .= "'\${domain_name}', ";
 					}
