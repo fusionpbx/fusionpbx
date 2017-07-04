@@ -1,14 +1,18 @@
 <?php
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('access_control_node_delete')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('access_control_node_delete')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -22,12 +26,16 @@ else {
 
 //delete access_control_node
 	if (strlen($id)>0) {
+		//update the database
 		$sql = "delete from v_access_control_nodes ";
 		$sql .= "where access_control_node_uuid = '$id' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		unset($sql);
-		remove_config_from_cache('configuration:acl.conf');
+
+		//clear the cache
+		$cache = new cache;
+		$cache->delete("configuration:acl.conf");
 	}
 
 //redirect the user
