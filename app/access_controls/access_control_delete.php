@@ -42,6 +42,10 @@
 		//clear the cache
 			$cache = new cache;
 			$cache->delete("configuration:acl.conf");
+		
+		//create the event socket connection
+			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			if ($fp) { event_socket_request($fp, "api reloadacl"); }
 	}
 
 //redirect the user
