@@ -61,6 +61,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
 			if ($action == "add" && permission_exists('access_control_add')) {
+				//update the database
 				$sql = "insert into v_access_controls ";
 				$sql .= "(";
 				$sql .= "access_control_uuid, ";
@@ -78,14 +79,21 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-				remove_config_from_cache('configuration:acl.conf');
+				//clear the cache
+				$cache = new cache;
+				$cache->delete("configuration:acl.conf");
+
+				//add the message
 				messages::add($text['message-add']);
+				
+				//redirect the user
 				header("Location: access_controls.php");
 				return;
 
 			} //if ($action == "add")
 
 			if ($action == "update" && permission_exists('access_control_edit')) {
+				//update the database
 				$sql = "update v_access_controls set ";
 				$sql .= "access_control_name = '$access_control_name', ";
 				$sql .= "access_control_default = '$access_control_default', ";
@@ -94,8 +102,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-				remove_config_from_cache('configuration:acl.conf');
+				//clear the cache
+				$cache = new cache;
+				$cache->delete("configuration:acl.conf");
+
+				//add the message
 				messages::add($text['message-update']);
+
+				//redirect the user
 				header("Location: access_controls.php");
 				return;
 
