@@ -86,7 +86,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 				//create the event socket connection
 				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-				if ($fp) { event_socket_request($fp, "api reloadacl")); }
+				if ($fp) { event_socket_request($fp, "api reloadacl"); }
 
 				//add the message
 				messages::add($text['message-add']);
@@ -113,7 +113,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 				//create the event socket connection
 				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-				if ($fp) { event_socket_request($fp, "api reloadacl")); }
+				if ($fp) { event_socket_request($fp, "api reloadacl"); }
 
 				//add the message
 				messages::add($text['message-update']);
