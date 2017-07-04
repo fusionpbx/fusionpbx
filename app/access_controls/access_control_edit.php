@@ -36,12 +36,13 @@
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
-	$msg = '';
-	if ($action == "update") {
-		$access_control_uuid = check_str($_POST["access_control_uuid"]);
-	}
+	//get the primary key
+		if ($action == "update") {
+			$access_control_uuid = check_str($_POST["access_control_uuid"]);
+		}
 
 	//check for all required data
+		$msg = '';
 		if (strlen($access_control_name) == 0) { $msg .= $text['message-required']." ".$text['label-access_control_name']."<br>\n"; }
 		if (strlen($access_control_default) == 0) { $msg .= $text['message-required']." ".$text['label-access_control_default']."<br>\n"; }
 		//if (strlen($access_control_description) == 0) { $msg .= $text['message-required']." ".$text['label-access_control_description']."<br>\n"; }
@@ -83,6 +84,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$cache = new cache;
 				$cache->delete("configuration:acl.conf");
 
+				//create the event socket connection
+				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				if ($fp) { event_socket_request($fp, "api reloadacl")); }
+
 				//add the message
 				messages::add($text['message-add']);
 				
@@ -105,6 +110,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				//clear the cache
 				$cache = new cache;
 				$cache->delete("configuration:acl.conf");
+
+				//create the event socket connection
+				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				if ($fp) { event_socket_request($fp, "api reloadacl")); }
 
 				//add the message
 				messages::add($text['message-update']);
