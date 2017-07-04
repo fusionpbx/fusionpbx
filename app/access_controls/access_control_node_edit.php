@@ -1,14 +1,18 @@
 <?php
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('access_control_node_add') || permission_exists('access_control_node_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('access_control_node_add') || permission_exists('access_control_node_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -38,12 +42,13 @@ else {
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
-	$msg = '';
-	if ($action == "update") {
-		$access_control_node_uuid = check_str($_POST["access_control_node_uuid"]);
-	}
+	//get the uuid
+		if ($action == "update") {
+			$access_control_node_uuid = check_str($_POST["access_control_node_uuid"]);
+		}
 
 	//check for all required data
+		$msg = '';
 		if (strlen($node_type) == 0) { $msg .= $text['message-required']." ".$text['label-node_type']."<br>\n"; }
 		//if (strlen($node_cidr) == 0) { $msg .= $text['message-required']." ".$text['label-node_cidr']."<br>\n"; }
 		//if (strlen($node_domain) == 0) { $msg .= $text['message-required']." ".$text['label-node_domain']."<br>\n"; }
@@ -64,6 +69,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
 			if ($action == "add" && permission_exists('access_control_node_add')) {
+				//update the database
 				$sql = "insert into v_access_control_nodes ";
 				$sql .= "(";
 				$sql .= "access_control_node_uuid, ";
@@ -85,14 +91,22 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-				remove_config_from_cache('configuration:acl.conf');
+				//clear the cache
+				$cache = new cache;
+				$cache->delete("configuration:acl.conf");
+
+				//add the message
 				messages::add($text['message-add']);
+
+				//redirect the browser
 				header('Location: access_control_edit.php?id='.$access_control_uuid);
 				return;
 
 			} //if ($action == "add")
 
 			if ($action == "update" && permission_exists('access_control_node_edit')) {
+
+				//update the database
 				$sql = "update v_access_control_nodes set ";
 				$sql .= "access_control_uuid = '$access_control_uuid', ";
 				$sql .= "node_type = '$node_type', ";
@@ -103,8 +117,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-				remove_config_from_cache('configuration:acl.conf');
+				//clear the cache
+				$cache = new cache;
+				$cache->delete("configuration:acl.conf");
+
+				//add the message
 				messages::add($text['message-update']);
+
+				//redirect the browser
 				header('Location: access_control_edit.php?id='.$access_control_uuid);
 				return;
 
@@ -134,7 +154,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	require_once "resources/header.php";
 
 //show the content
-
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
