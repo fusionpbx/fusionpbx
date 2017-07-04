@@ -39,8 +39,9 @@
 			$prep_statement->execute();
 			unset($sql);
 
-		// clear cache
-			remove_config_from_cache('configuration:acl.conf');
+		//clear the cache
+			$cache = new cache;
+			$cache->delete("configuration:acl.conf");
 	}
 
 //redirect the user
