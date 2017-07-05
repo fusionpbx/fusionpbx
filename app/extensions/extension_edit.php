@@ -408,7 +408,9 @@
 											$array["voicemails"][$i]["voicemail_mail_to"] = $voicemail_mail_to;
 											//$array["voicemails"][$i]["voicemail_attach_file"] = $voicemail_attach_file;
 											$array["voicemails"][$i]["voicemail_file"] = $voicemail_file;
-											$array["voicemails"][$i]["voicemail_local_after_email"] = $voicemail_local_after_email;
+											if (permission_exists('voicemail_local_after_email')) {
+												$array["voicemails"][$i]["voicemail_local_after_email"] = $voicemail_local_after_email;
+											}
 											$array["voicemails"][$i]["voicemail_enabled"] = $voicemail_enabled;
 											if ( empty($voicemail_description)){
 												$voicemail_description = $description;
@@ -1363,19 +1365,21 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "    ".$text['label-voicemail_local_after_email']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='voicemail_local_after_email' id='voicemail_local_after_email' onchange=\"if (this.selectedIndex == 1) { document.getElementById('voicemail_file').selectedIndex = 2; }\">\n";
-		echo "    	<option value='true' ".(($voicemail_local_after_email == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-		echo "    	<option value='false' ".(($voicemail_local_after_email == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-		echo "    </select>\n";
-		echo "<br />\n";
-		echo $text['description-voicemail_local_after_email']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
+		if (permission_exists('voicemail_local_after_email')) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "    ".$text['label-voicemail_local_after_email']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "    <select class='formfld' name='voicemail_local_after_email' id='voicemail_local_after_email' onchange=\"if (this.selectedIndex == 1) { document.getElementById('voicemail_file').selectedIndex = 2; }\">\n";
+			echo "    	<option value='true' ".(($voicemail_local_after_email == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+			echo "    	<option value='false' ".(($voicemail_local_after_email == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+			echo "    </select>\n";
+			echo "<br />\n";
+			echo $text['description-voicemail_local_after_email']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
 	}
 
 	if (permission_exists('extension_missed_call')) {
