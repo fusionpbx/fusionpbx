@@ -156,7 +156,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "voicemail_transcription_enabled, ";
 				$sql .= "voicemail_tutorial, ";
 				$sql .= "voicemail_file, ";
-				$sql .= "voicemail_local_after_email, ";
+				if (permission_exists('voicemail_local_after_email')) {
+					$sql .= "voicemail_local_after_email, ";
+				}
 				$sql .= "voicemail_enabled, ";
 				$sql .= "voicemail_description ";
 				$sql .= ")";
@@ -173,7 +175,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'".$voicemail_transcription_enabled."', ";
 				$sql .= "'".$voicemail_tutorial."', ";
 				$sql .= "'".$voicemail_file."', ";
-				$sql .= "'".$voicemail_local_after_email."', ";
+				if (permission_exists('voicemail_local_after_email')) {
+					$sql .= "'".$voicemail_local_after_email."', ";
+				}
 				$sql .= "'".$voicemail_enabled."', ";
 				$sql .= "'".$voicemail_description."' ";
 				$sql .= ")";
@@ -194,7 +198,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "voicemail_transcription_enabled = '".$voicemail_transcription_enabled."', ";
 				$sql .= "voicemail_tutorial = '".$voicemail_tutorial."', ";
 				$sql .= "voicemail_file = '".$voicemail_file."', ";
-				$sql .= "voicemail_local_after_email = '".$voicemail_local_after_email."', ";
+				if (permission_exists('voicemail_local_after_email')) {
+					$sql .= "voicemail_local_after_email = '".$voicemail_local_after_email."', ";
+				}
 				$sql .= "voicemail_enabled = '".$voicemail_enabled."', ";
 				$sql .= "voicemail_description = '".$voicemail_description."' ";
 				$sql .= "where domain_uuid = '".$domain_uuid."' ";
@@ -562,19 +568,21 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-voicemail_local_after_email']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='voicemail_local_after_email' id='voicemail_local_after_email' onchange=\"if (this.selectedIndex == 1) { document.getElementById('voicemail_file').selectedIndex = 2; }\">\n";
-	echo "    	<option value='true' ".(($voicemail_local_after_email == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-	echo "    	<option value='false' ".(($voicemail_local_after_email == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-	echo "	</select>\n";
-	echo "<br />\n";
-	echo $text['description-voicemail_local_after_email']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists('voicemail_local_after_email')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-voicemail_local_after_email']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='voicemail_local_after_email' id='voicemail_local_after_email' onchange=\"if (this.selectedIndex == 1) { document.getElementById('voicemail_file').selectedIndex = 2; }\">\n";
+		echo "    	<option value='true' ".(($voicemail_local_after_email == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+		echo "    	<option value='false' ".(($voicemail_local_after_email == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo $text['description-voicemail_local_after_email']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	if ($action == "update") {
 		echo "	<tr>";
