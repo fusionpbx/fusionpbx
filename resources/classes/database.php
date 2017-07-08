@@ -1244,7 +1244,7 @@ include "root.php";
 													if (strlen($array_value) == 0) {
 														$sql .= "null, ";
 													}
-													elseif ($array_value == "now()") {
+													elseif ($array_value === "now()") {
 														$sql .= "now(), ";
 													}
 													else {
@@ -1306,7 +1306,7 @@ include "root.php";
 														if (strlen($array_value) == 0) {
 															$sql .= check_str($array_key)." = null, ";
 														}
-														elseif ($array_value == "now()") {
+														elseif ($array_value === "now()") {
 															$sql .= check_str($array_key)." = now(), ";
 														}
 														else {
@@ -1437,7 +1437,7 @@ include "root.php";
 																		if (strlen($v) == 0) {
 																			$sql .= check_str($k)." = null, ";
 																		}
-																		elseif ($v == "now()") {
+																		elseif ($v === "now()") {
 																			$sql .= check_str($k)." = now(), ";
 																		}
 																		else {
@@ -1539,7 +1539,7 @@ include "root.php";
 																	if (strlen($v) == 0) {
 																		$sql .= "null, ";
 																	}
-																	elseif ($v == "now()") {
+																	elseif ($v === "now()") {
 																		$sql .= "now(), ";
 																	}
 																	else {
