@@ -48,23 +48,22 @@
    <X-PRE-PROCESS cmd="set" data="default_areacode=208" category="default" enabled="true" uuid="f84232a6-5107-43f0-90fd-870e54785f41"/>
    <X-PRE-PROCESS cmd="set" data="sit=%(274,0,913.8);%(274,0,1370.6);%(380,0,1776.7)" category="default" enabled="true" uuid="93508409-4679-4132-890b-8a6f39cea271"/>
    <X-PRE-PROCESS cmd="set" data="use_profile=internal" category="default" enabled="true" uuid="861372f4-9150-4815-a120-7808b4fb4897"/>
-   <X-PRE-PROCESS cmd="set" data="default_language=en" category="default" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="default_dialect=us" category="default" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="default_voice=callie" category="default" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="ajax_refresh_rate=3000" category="default" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="xml_cdr_archive=dir" category="default" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="ringback=$${us-ring}" category="default" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="transfer_ringback=$${us-ring}" category="default" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="record_ext=wav" category="default" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="default_country=US" category="default" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="default_countrycode=1" category="default" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="default_exitcode=011" category="default" enabled="true" uuid="zzz"/>
+   <X-PRE-PROCESS cmd="set" data="default_language=en" category="default" enabled="true" uuid="1b6312a0-10f4-4a35-9592-8f7f90b666f0"/>
+   <X-PRE-PROCESS cmd="set" data="default_dialect=us" category="default" enabled="true" uuid="3d5e6bd6-a862-4862-91d1-6fa363345cad"/>
+   <X-PRE-PROCESS cmd="set" data="default_voice=callie" category="default" enabled="true" uuid="5fa8a217-697c-4525-99f3-1349e1e4e437"/>
+   <X-PRE-PROCESS cmd="set" data="ajax_refresh_rate=3000" category="default" enabled="true" uuid="8cc61a79-8bf2-406f-ac96-7c5fcc28108d"/>
+   <X-PRE-PROCESS cmd="set" data="ringback=$${us-ring}" category="default" enabled="true" uuid="10aa29df-0f39-41a5-bbc9-57be50a0f64e"/>
+   <X-PRE-PROCESS cmd="set" data="transfer_ringback=$${us-ring}" category="default" enabled="true" uuid="82c2e923-3038-4da8-b721-85919792e50e"/>
+   <X-PRE-PROCESS cmd="set" data="record_ext=wav" category="default" enabled="true" uuid="439e60dd-9385-43db-9b65-85fcc5db369a"/>
+   <X-PRE-PROCESS cmd="set" data="default_country=US" category="default" enabled="true" uuid="db10bba0-b637-434f-8065-40f34ae16a94"/>
+   <X-PRE-PROCESS cmd="set" data="default_countrycode=1" category="default" enabled="true" uuid="2b0e7950-171b-4710-a69b-29941151bb11"/>
+   <X-PRE-PROCESS cmd="set" data="default_exitcode=011" category="default" enabled="true" uuid="6732040e-827b-48d4-a246-f74e1d3d383d"/>
 
    <!-- Dingaling -->
    <!-- xmpp_client_profile and xmpp_server_profile xmpp_client_profile can be any string. xmpp_server_profile is appended to "dingaling_" to form the database name containing the "subscriptions" table. used by: dingaling.conf.xml enum.conf.xml -->
-   <X-PRE-PROCESS cmd="set" data="xmpp_client_profile=xmppc" category="XMPP" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="xmpp_server_profile=xmpps" category="XMPP" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="bind_server_ip=auto" category="XMPP" enabled="true" uuid="zzz"/>
+   <X-PRE-PROCESS cmd="set" data="xmpp_client_profile=xmppc" category="XMPP" enabled="true" uuid="33a1076e-0d0e-47ba-ab5c-30bbbc7e3507"/>
+   <X-PRE-PROCESS cmd="set" data="xmpp_server_profile=xmpps" category="XMPP" enabled="true" uuid="5e0053dd-422e-4dc7-9e68-7682e76f7f49"/>
+   <X-PRE-PROCESS cmd="set" data="bind_server_ip=auto" category="XMPP" enabled="true" uuid="0e02b564-22b6-41b7-8744-04f4b2b53aca"/>
 
    <!-- IP Address -->
    <!-- (If you''re going to load test then please input real IP addresses for external_rtp_ip and external_sip_ip)
@@ -75,11 +74,11 @@
       a DNS name: "host:host.server.com"
 
    where fs.mydomain.com is a DNS A record-useful when fs is on a dynamic IP address, and uses a dynamic DNS updater. If unspecified, the bind_server_ip value is used. Used by: sofia.conf.xml dingaling.conf.xml -->
-   <X-PRE-PROCESS cmd="set" data="external_rtp_ip=$${local_ip_v4}" category="IP Address" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="external_sip_ip=$${local_ip_v4}" category="IP Address" enabled="true" uuid="zzz"/>
+   <X-PRE-PROCESS cmd="set" data="external_rtp_ip=$${local_ip_v4}" category="IP Address" enabled="true" uuid="3d98734c-fa27-46c7-af21-29b3688005c2"/>
+   <X-PRE-PROCESS cmd="set" data="external_sip_ip=$${local_ip_v4}" category="IP Address" enabled="true" uuid="21754b8f-c7cd-44da-ae44-6b890af8f23c"/>
 
    <!-- Music on Hold -->
-   <X-PRE-PROCESS cmd="set" data="hold_music=local_stream://default" category="Music on Hold" enabled="true" uuid="zzz"/>
+   <X-PRE-PROCESS cmd="set" data="hold_music=local_stream://default" category="Music on Hold" enabled="true" uuid="f3912a2-c3ea-4e6e-8f74-bce2838a20d8"/>
 
    <!-- Ringtones -->
    <X-PRE-PROCESS cmd="set" data="au-ring=%(400,200,383,417);%(400,2000,383,417)" category="Ringtones" enabled="true" uuid="zzz"/>
