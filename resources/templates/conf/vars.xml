@@ -7,6 +7,7 @@
       are available to the config as $${variable}.  You can see their calculated value via fs_cli
       by entering eval $${variable}
 
+      switchname
       hostname
       local_ip_v4 
       local_mask_v4
