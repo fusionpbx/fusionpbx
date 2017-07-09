@@ -3,8 +3,8 @@
       These are introduced when configuration strings must be consistent across modules. 
       NOTICE: YOU CAN NOT COMMENT OUT AN X-PRE-PROCESS line, Remove the line instead.
 
-      The following variables are set dynamically - calculated if possible by freeswitch - and 
-      are available to the config as $${variable}.  You can see their calculated value via fs_cli
+      The following variables are set dynamically by freeswitch and are available to
+      the config as $${variable}.  You can see their calculated value via fs_cli
       by entering eval $${variable}
 
       switchname
@@ -39,15 +39,15 @@
    <!-- Codecs -->
    <!-- G7221@32000h,G7221@16000h,G722,PCMU,PCMA,iLBC,GSM,H263,H264 -->
    <X-PRE-PROCESS cmd="set" data="global_codec_prefs=G7221@32000h,G7221@16000h,G722,PCMU,PCMA" category="Codecs" enabled="true" uuid="38271682-cf61-40d3-a769-63617d933902"/>
-   <X-PRE-PROCESS cmd="set" data="outbound_codec_prefs=PCMU,PCMA" category="Codecs" enabled="true"  uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="media_mix_inbound_outbound_codecs=true" category="Codecs" enabled="true" uuid="zzz"/>
+   <X-PRE-PROCESS cmd="set" data="outbound_codec_prefs=PCMU,PCMA" category="Codecs" enabled="true"  uuid="522f710e-66ff-4e4d-8164-0ee1ef31c600"/>
+   <X-PRE-PROCESS cmd="set" data="media_mix_inbound_outbound_codecs=true" category="Codecs" enabled="true" uuid="76646fce-3ff0-4582-a377-0986ed330782"/>
 
    <!-- Defaults -->
-   <X-PRE-PROCESS cmd="set" data="call_debug=false" category="default" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="console_loglevel=info" category="default" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="default_areacode=208" category="default" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="sit=%(274,0,913.8);%(274,0,1370.6);%(380,0,1776.7)" category="default" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="use_profile=internal" category="default" enabled="true" uuid="zzz"/>
+   <X-PRE-PROCESS cmd="set" data="call_debug=false" category="default" enabled="true" uuid="ace95a89-5b8e-481b-8d3a-5fe0a0e4925a"/>
+   <X-PRE-PROCESS cmd="set" data="console_loglevel=info" category="default" enabled="true" uuid="a0dd1b20-436d-4bc5-b112-0311132f9f97"/>
+   <X-PRE-PROCESS cmd="set" data="default_areacode=208" category="default" enabled="true" uuid="f84232a6-5107-43f0-90fd-870e54785f41"/>
+   <X-PRE-PROCESS cmd="set" data="sit=%(274,0,913.8);%(274,0,1370.6);%(380,0,1776.7)" category="default" enabled="true" uuid="93508409-4679-4132-890b-8a6f39cea271"/>
+   <X-PRE-PROCESS cmd="set" data="use_profile=internal" category="default" enabled="true" uuid="861372f4-9150-4815-a120-7808b4fb4897"/>
    <X-PRE-PROCESS cmd="set" data="default_language=en" category="default" enabled="true" uuid="zzz"/>
    <X-PRE-PROCESS cmd="set" data="default_dialect=us" category="default" enabled="true" uuid="zzz"/>
    <X-PRE-PROCESS cmd="set" data="default_voice=callie" category="default" enabled="true" uuid="zzz"/>
