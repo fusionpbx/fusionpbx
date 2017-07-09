@@ -114,34 +114,34 @@
 
    <!-- Tones -->
    <X-PRE-PROCESS cmd="set" data="vacant-us-tone=%(274,0,913.8);%(274,0,1370.6);%(380,0,1776.7)" category="Tones" enabled="true" uuid="81e63d9e-d2d5-4691-a0f4-74dffb3b25dc"/>
-   <X-PRE-PROCESS cmd="set" data="vacant-uk-tone=%(330,15,950);%(330,15,1400);%(330,1000,1800)" category="Tones" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="busy-us-tone=%(500,500,480,620)" category="Tones" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="busy-au-tone=v=-13;%(375,375,420);v=-23;%(375,375,420)" category="Tones" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="bong-us-tone=v=-7;%(100,0,941.0,1477.0);v=-7;>=2;+=.1;%(1400,0,350,440)" category="Tones" enabled="true" uuid="zzz"/>
+   <X-PRE-PROCESS cmd="set" data="vacant-uk-tone=%(330,15,950);%(330,15,1400);%(330,1000,1800)" category="Tones" enabled="true" uuid="a59be835-1c69-4af0-974d-0995c1fb7ae3"/>
+   <X-PRE-PROCESS cmd="set" data="busy-us-tone=%(500,500,480,620)" category="Tones" enabled="true" uuid="29b0bf45-a633-4b48-a2dc-4a6e78f73a13"/>
+   <X-PRE-PROCESS cmd="set" data="busy-au-tone=v=-13;%(375,375,420);v=-23;%(375,375,420)" category="Tones" enabled="true" uuid="333c5a08-2389-4fb1-a398-a5a98e4f447a"/>
+   <X-PRE-PROCESS cmd="set" data="bong-us-tone=v=-7;%(100,0,941.0,1477.0);v=-7;>=2;+=.1;%(1400,0,350,440)" category="Tones" enabled="true" uuid="4be3153c-5e8d-4b2e-82f0-c89ce7006a0d"/>
 
    <!-- SIP -->
    <!-- Used to turn on sip loopback unrolling. -->
-   <X-PRE-PROCESS cmd="set" data="hangup_on_subscriber_absent=true" category="SIP" enabled="false" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="hangup_on_call_reject=true" category="SIP" enabled="false" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="unroll_loops=true" category="SIP" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="sip_tls_version=tlsv1" category="SIP" enabled="true" uuid="zzz"/>
+   <X-PRE-PROCESS cmd="set" data="hangup_on_subscriber_absent=true" category="SIP" enabled="false" uuid="c1292ccc-ad04-490d-9a30-c79e7747fb86"/>
+   <X-PRE-PROCESS cmd="set" data="hangup_on_call_reject=true" category="SIP" enabled="false" uuid="62644977-03b8-41c1-9827-ccedbc743d75"/>
+   <X-PRE-PROCESS cmd="set" data="unroll_loops=true" category="SIP" enabled="true" uuid="314fbf59-201b-4b3a-9e3a-34b19099ac6d"/>
+   <X-PRE-PROCESS cmd="set" data="sip_tls_version=tlsv1" category="SIP" enabled="true" uuid="3fff6ed5-fde0-49ca-abe6-7db15f7f54d4"/>
 
    <!-- SIP Profile: External -->
-   <X-PRE-PROCESS cmd="set" data="external_auth_calls=false" category="SIP Profile: External" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="external_sip_port=5080" category="SIP Profile: External" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="external_tls_port=5081" category="SIP Profile: External" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="external_ssl_enable=false" category="SIP Profile: External" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="external_ssl_dir=$${conf_dir}/tls" category="SIP Profile: External" enabled="true" uuid="zzz"/>
+   <X-PRE-PROCESS cmd="set" data="external_auth_calls=false" category="SIP Profile: External" enabled="true" uuid="e296bea7-2153-4405-b87b-954531979ea8"/>
+   <X-PRE-PROCESS cmd="set" data="external_sip_port=5080" category="SIP Profile: External" enabled="true" uuid="9594ab5c-884a-4d16-87ec-1a9f5b9c3247"/>
+   <X-PRE-PROCESS cmd="set" data="external_tls_port=5081" category="SIP Profile: External" enabled="true" uuid="ea87e722-8b8f-4c11-b4cd-16eabd99450b"/>
+   <X-PRE-PROCESS cmd="set" data="external_ssl_enable=false" category="SIP Profile: External" enabled="true" uuid="428d5aad-3116-4cfb-bbfa-d4c424707efb"/>
+   <X-PRE-PROCESS cmd="set" data="external_ssl_dir=$${conf_dir}/tls" category="SIP Profile: External" enabled="true" uuid="ad813484-bd8a-4fe9-9342-82ef8834da96"/>
 
    <!-- SIP Profile: Internal -->
-   <X-PRE-PROCESS cmd="set" data="internal_auth_calls=true" category="SIP Profile: Internal" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="internal_sip_port=5060" category="SIP Profile: Internal" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="internal_tls_port=5061" category="SIP Profile: Internal" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="internal_ssl_enable=false" category="SIP Profile: Internal" enabled="true" uuid="zzz"/>
-   <X-PRE-PROCESS cmd="set" data="internal_ssl_dir=$${conf_dir}/tls" category="SIP Profile: Internal" enabled="true" uuid="zzz"/>
+   <X-PRE-PROCESS cmd="set" data="internal_auth_calls=true" category="SIP Profile: Internal" enabled="true" uuid="23fc152f-22f1-4edf-8b34-4066c3c1febf"/>
+   <X-PRE-PROCESS cmd="set" data="internal_sip_port=5060" category="SIP Profile: Internal" enabled="true" uuid="562e0395-4059-4421-b648-2ed991edb0fb"/>
+   <X-PRE-PROCESS cmd="set" data="internal_tls_port=5061" category="SIP Profile: Internal" enabled="true" uuid="82e185df-2835-419b-b79c-f5f3cf373c08"/>
+   <X-PRE-PROCESS cmd="set" data="internal_ssl_enable=false" category="SIP Profile: Internal" enabled="true" uuid="ee58ced9-75b2-49ae-9595-ea95a3781d85"/>
+   <X-PRE-PROCESS cmd="set" data="internal_ssl_dir=$${conf_dir}/tls" category="SIP Profile: Internal" enabled="true" uuid="c7daefd5-ac6d-4fed-b85a-40d7e8ad8c53"/>
 
    <!-- Sound -->
    <!-- Sets the sound directory. -->
-   <X-PRE-PROCESS cmd="set" data="sound_prefix=$${sounds_dir}/en/us/callie" category="Sound" enabled="true" uuid="zzz"/>
+   <X-PRE-PROCESS cmd="set" data="sound_prefix=$${sounds_dir}/en/us/callie" category="Sound" enabled="true" uuid="693e0d9a-dde0-4d63-80e2-5255c2dc726e"/>
 
 </include>
