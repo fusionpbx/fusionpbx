@@ -9,7 +9,7 @@
 
       switchname
       hostname
-      local_ip_v4 
+      local_ip_v4
       local_mask_v4
       local_ip_v6
       switch_serial
@@ -33,7 +33,7 @@
       zrtp_enabled
       nat_public_addr
       nat_private_addr
-      nat_type 
+      nat_type
    -->
 
    <!-- Codecs -->
@@ -43,21 +43,21 @@
    <X-PRE-PROCESS cmd="set" data="media_mix_inbound_outbound_codecs=true" category="Codecs" enabled="true" uuid="76646fce-3ff0-4582-a377-0986ed330782"/>
 
    <!-- Defaults -->
-   <X-PRE-PROCESS cmd="set" data="call_debug=false" category="default" enabled="true" uuid="ace95a89-5b8e-481b-8d3a-5fe0a0e4925a"/>
-   <X-PRE-PROCESS cmd="set" data="console_loglevel=info" category="default" enabled="true" uuid="a0dd1b20-436d-4bc5-b112-0311132f9f97"/>
-   <X-PRE-PROCESS cmd="set" data="default_areacode=208" category="default" enabled="true" uuid="f84232a6-5107-43f0-90fd-870e54785f41"/>
-   <X-PRE-PROCESS cmd="set" data="sit=%(274,0,913.8);%(274,0,1370.6);%(380,0,1776.7)" category="default" enabled="true" uuid="93508409-4679-4132-890b-8a6f39cea271"/>
-   <X-PRE-PROCESS cmd="set" data="use_profile=internal" category="default" enabled="true" uuid="861372f4-9150-4815-a120-7808b4fb4897"/>
-   <X-PRE-PROCESS cmd="set" data="default_language=en" category="default" enabled="true" uuid="1b6312a0-10f4-4a35-9592-8f7f90b666f0"/>
-   <X-PRE-PROCESS cmd="set" data="default_dialect=us" category="default" enabled="true" uuid="3d5e6bd6-a862-4862-91d1-6fa363345cad"/>
-   <X-PRE-PROCESS cmd="set" data="default_voice=callie" category="default" enabled="true" uuid="5fa8a217-697c-4525-99f3-1349e1e4e437"/>
-   <X-PRE-PROCESS cmd="set" data="ajax_refresh_rate=3000" category="default" enabled="true" uuid="8cc61a79-8bf2-406f-ac96-7c5fcc28108d"/>
-   <X-PRE-PROCESS cmd="set" data="ringback=$${us-ring}" category="default" enabled="true" uuid="10aa29df-0f39-41a5-bbc9-57be50a0f64e"/>
-   <X-PRE-PROCESS cmd="set" data="transfer_ringback=$${us-ring}" category="default" enabled="true" uuid="82c2e923-3038-4da8-b721-85919792e50e"/>
-   <X-PRE-PROCESS cmd="set" data="record_ext=wav" category="default" enabled="true" uuid="439e60dd-9385-43db-9b65-85fcc5db369a"/>
-   <X-PRE-PROCESS cmd="set" data="default_country=US" category="default" enabled="true" uuid="db10bba0-b637-434f-8065-40f34ae16a94"/>
-   <X-PRE-PROCESS cmd="set" data="default_countrycode=1" category="default" enabled="true" uuid="2b0e7950-171b-4710-a69b-29941151bb11"/>
-   <X-PRE-PROCESS cmd="set" data="default_exitcode=011" category="default" enabled="true" uuid="6732040e-827b-48d4-a246-f74e1d3d383d"/>
+   <X-PRE-PROCESS cmd="set" data="call_debug=false" category="Defaults" enabled="true" uuid="ace95a89-5b8e-481b-8d3a-5fe0a0e4925a"/>
+   <X-PRE-PROCESS cmd="set" data="console_loglevel=info" category="Defaults" enabled="true" uuid="a0dd1b20-436d-4bc5-b112-0311132f9f97"/>
+   <X-PRE-PROCESS cmd="set" data="default_areacode=208" category="Defaults" enabled="true" uuid="f84232a6-5107-43f0-90fd-870e54785f41"/>
+   <X-PRE-PROCESS cmd="set" data="sit=%(274,0,913.8);%(274,0,1370.6);%(380,0,1776.7)" category="Defaults" enabled="true" uuid="93508409-4679-4132-890b-8a6f39cea271"/>
+   <X-PRE-PROCESS cmd="set" data="use_profile=internal" category="Defaults" enabled="true" uuid="861372f4-9150-4815-a120-7808b4fb4897"/>
+   <X-PRE-PROCESS cmd="set" data="default_language=en" category="Defaults" enabled="true" uuid="1b6312a0-10f4-4a35-9592-8f7f90b666f0"/>
+   <X-PRE-PROCESS cmd="set" data="default_dialect=us" category="Defaults" enabled="true" uuid="3d5e6bd6-a862-4862-91d1-6fa363345cad"/>
+   <X-PRE-PROCESS cmd="set" data="default_voice=callie" category="Defaults" enabled="true" uuid="5fa8a217-697c-4525-99f3-1349e1e4e437"/>
+   <X-PRE-PROCESS cmd="set" data="ajax_refresh_rate=3000" category="Defaults" enabled="true" uuid="8cc61a79-8bf2-406f-ac96-7c5fcc28108d"/>
+   <X-PRE-PROCESS cmd="set" data="ringback=$${us-ring}" category="Defaults" enabled="true" uuid="10aa29df-0f39-41a5-bbc9-57be50a0f64e"/>
+   <X-PRE-PROCESS cmd="set" data="transfer_ringback=$${us-ring}" category="Defaults" enabled="true" uuid="82c2e923-3038-4da8-b721-85919792e50e"/>
+   <X-PRE-PROCESS cmd="set" data="record_ext=wav" category="Defaults" enabled="true" uuid="439e60dd-9385-43db-9b65-85fcc5db369a"/>
+   <X-PRE-PROCESS cmd="set" data="default_country=US" category="Defaults" enabled="true" uuid="db10bba0-b637-434f-8065-40f34ae16a94"/>
+   <X-PRE-PROCESS cmd="set" data="default_countrycode=1" category="Defaults" enabled="true" uuid="2b0e7950-171b-4710-a69b-29941151bb11"/>
+   <X-PRE-PROCESS cmd="set" data="default_exitcode=011" category="Defaults" enabled="true" uuid="6732040e-827b-48d4-a246-f74e1d3d383d"/>
 
    <!-- Dingaling -->
    <!-- xmpp_client_profile and xmpp_server_profile xmpp_client_profile can be any string. xmpp_server_profile is appended to "dingaling_" to form the database name containing the "subscriptions" table. used by: dingaling.conf.xml enum.conf.xml -->
