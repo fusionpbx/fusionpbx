@@ -1156,6 +1156,7 @@ include "root.php";
 							//set the variables
 								$table_name = "v_".$this->name;
 								$parent_key_name = $this->singular($this->name)."_uuid";
+								$parent_key_name = preg_replace('#[^a-zA-Z0-9_/]#', '', $parent_key_name);
 
 							//if the uuid is set then set parent key exists and value 
 								//determine if the parent_key_exists
@@ -1174,11 +1175,14 @@ include "root.php";
 									}
 								}
 
+							//allow characters found in the uuid only.
+								$parent_key_value = preg_replace('#[^a-zA-Z0-9_/]#', '', $parent_key_value);
+
 							//get the parent field names
 								$parent_field_names = array();
 								if (is_array($array)) foreach ($array as $key => $value) {
 									if (!is_array($value)) {
-										$parent_field_names[] = $key;
+										$parent_field_names[] = preg_replace('#[^a-zA-Z0-9_/]#', '', $key);
 									}
 								}
 
@@ -1365,9 +1369,11 @@ include "root.php";
 
 									if (is_array($value)) {
 											$table_name = "v_".$key;
+											$table_name = preg_replace('#[^a-zA-Z0-9_/]#', '', $table_name);
 											foreach ($value as $id => $row) {
 												//prepare the variables
 													$child_name = $this->singular($key);
+													$child_name = preg_replace('#[^a-zA-Z0-9_/]#', '', $child_name);
 													$child_key_name = $child_name."_uuid";
 
 												//determine if the parent key exists in the child array
@@ -1391,11 +1397,14 @@ include "root.php";
 														}
 													}
 
+												//allow characters found in the uuid only.
+													$child_key_value = preg_replace('#[^a-zA-Z0-9_/]#', '', $child_key_value);
+
 												//get the child field names
 													$child_field_names = array();
 													if (is_array($row)) foreach ($row as $k => $v) {
 														if (!is_array($v)) {
-															$child_field_names[] = $k;
+															$child_field_names[] = preg_replace('#[^a-zA-Z0-9_/]#', '', $k);
 														}
 													}
 
