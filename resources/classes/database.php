@@ -585,7 +585,7 @@ include "root.php";
 					if (is_array($new_array)) {
 						foreach ($new_array as $schema_name => $schema_array) {
 
-							$this->name = $schema_name;
+							$this->name = preg_replace('#[^a-zA-Z0-9_/]#', '', $schema_name);
 							if (is_array($schema_array)) {
 								foreach ($schema_array as $schema_id => $array) {
 
@@ -1005,7 +1005,7 @@ include "root.php";
 					}
 				//set the name
 					if (isset($array['name'])) {
-						$this->name = $array['name'];
+						$this->name = preg_replace('#[^a-zA-Z0-9_/]#', '', $array['name']);
 					}
 				//set the uuid
 					if (isset($array['uuid'])) {
@@ -1150,7 +1150,7 @@ include "root.php";
 				//loop through the array
 					if (is_array($new_array)) foreach ($new_array as $schema_name => $schema_array) {
 
-						$this->name = $schema_name;
+						$this->name = preg_replace('#[^a-zA-Z0-9_/]#', '', $schema_name);
 						if (is_array($schema_array)) foreach ($schema_array as $schema_id => $array) {
 
 							//set the variables
