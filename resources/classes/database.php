@@ -1234,7 +1234,8 @@ include "root.php";
 											//}
 											if (is_array($array)) foreach ($array as $array_key => $array_value) {
 												if (!is_array($array_value)) {
-													$sql .= check_str($array_key).", ";
+													$array_key = preg_replace('#[^a-zA-Z0-9_/]#', '', $array_key);
+													$sql .= $array_key.", ";
 												}
 											}
 											$sql .= ") ";
@@ -1307,14 +1308,15 @@ include "root.php";
 											if (is_array($array)) {
 												foreach ($array as $array_key => $array_value) {
 													if (!is_array($array_value) && $array_key != $parent_key_name) {
+														$array_key = preg_replace('#[^a-zA-Z0-9_/]#', '', $array_key);
 														if (strlen($array_value) == 0) {
-															$sql .= check_str($array_key)." = null, ";
+															$sql .= $array_key." = null, ";
 														}
 														elseif ($array_value === "now()") {
-															$sql .= check_str($array_key)." = now(), ";
+															$sql .= $array_key." = now(), ";
 														}
 														else {
-															$sql .= check_str($array_key)." = '".check_str($array_value)."', ";
+															$sql .= $array_key." = '".check_str($array_value)."', ";
 														}
 													}
 												}
@@ -1441,16 +1443,16 @@ include "root.php";
 															$sql = "UPDATE ".$table_name." SET ";
 															if (is_array($row)) {
 																foreach ($row as $k => $v) {
-																	//if (!is_array($v) && $k != $child_key_name) { //original
 																	if (!is_array($v) && ($k != $parent_key_name || $k != $child_key_name)) {
+																		$k = preg_replace('#[^a-zA-Z0-9_/]#', '', $k);
 																		if (strlen($v) == 0) {
-																			$sql .= check_str($k)." = null, ";
+																			$sql .= $k." = null, ";
 																		}
 																		elseif ($v === "now()") {
-																			$sql .= check_str($k)." = now(), ";
+																			$sql .= $k." = now(), ";
 																		}
 																		else {
-																			$sql .= check_str($k)." = '".check_str($v)."', ";
+																			$sql .= "$k = '".check_str($v)."', ";
 																		}
 																	}
 																}
@@ -1459,6 +1461,9 @@ include "root.php";
 															$sql .= "AND ".$child_key_name." = '".$child_key_value."' ";
 															$sql = str_replace(", WHERE", " WHERE", $sql);
 															$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+															//$prep_statement->bindParam(':domain_uuid', $_SESSION["domain_uuid"] );
+
 															try {
 																$this->db->query(check_sql($sql));
 																$message["details"][$m]["name"] = $key;
@@ -1529,7 +1534,8 @@ include "root.php";
 														if (is_array($row)) {
 															foreach ($row as $k => $v) {
 																if (!is_array($v)) {
-																	$sql .= check_str($k).", ";
+																	$k = preg_replace('#[^a-zA-Z0-9_/]#', '', $k);
+																	$sql .= $k.", ";
 																}
 															}
 														}
