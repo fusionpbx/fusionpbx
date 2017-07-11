@@ -1254,14 +1254,32 @@ include "root.php";
 													}
 													else {
 														$sql .= "'".check_str($array_value)."', ";
+														//$sql .= ":".$array_key.", ";
 													}
 												}
 											}
 											$sql .= ");";
 											$sql = str_replace(", )", ")", $sql);
+
 											$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+											//$prep_statement = $this->db->prepare($sql);
+
 											try {
+												//bind the parameters key and values
+												//if (is_array($array)) foreach ($array as $array_key => $array_value) {
+												//	if (!is_array($array_value)) {
+												//		if (strlen($array_value) == 0) {}
+												//		elseif ($array_value === "now()") {}
+												//		else {
+												//			$prep_statement->bindParam(':'.$array_key, $array_value);
+												//			$params[$array_key] = $array_value;
+												//		}
+												//	}
+												//}
+
 												$this->db->query(check_sql($sql));
+												//$prep_statement->execute();
+												//unset($prep_statement);
 												$message["message"] = "OK";
 												$message["code"] = "200";
 												$message["uuid"] = $parent_key_value;
@@ -1271,6 +1289,9 @@ include "root.php";
 												$message["details"][$m]["uuid"] = $parent_key_value;
 												if ($this->debug["sql"]) {
 													$message["details"][$m]["sql"] = $sql;
+													//if (is_array($params)) {
+													//	$message["details"][$m]["params"] = $params;
+													//}
 												}
 												$this->message = $message;
 												$m++;
@@ -1283,7 +1304,11 @@ include "root.php";
 												$message["details"][$m]["code"] = "400";
 												if ($this->debug["sql"]) {
 													$message["details"][$m]["sql"] = $sql;
+													//if (is_array($params)) {
+													//	$message["details"][$m]["params"] = $params;
+													//}
 												}
+												//print_r($message);
 												$this->message = $message;
 												$m++;
 											}
