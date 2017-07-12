@@ -89,12 +89,26 @@
 					timer_name = row.music_on_hold_timer_name;
 				end
 
+				--set the default channels to 1
+					if (row.music_on_hold_channels == nil or row.music_on_hold_channels == '') then
+						hold_channels = "1";
+					else
+						hold_channels = row.music_on_hold_channels;
+					end
+		
+				--set the default interval to 20
+					if (row.music_on_hold_interval == nil or row.music_on_hold_interval == '') then
+						hold_interval = "20";
+					else
+						hold_interval = row.music_on_hold_interval;
+					end
+		
 				--build the xml ]]..row.music_on_hold_name..[["
 				table.insert(xml, [[	<directory name="]]..name..[[" uuid="]]..row.music_on_hold_uuid..[[" path="]]..music_on_hold_path..[[">]]);
 				table.insert(xml, [[			<param name="rate" value="]]..rate..[["/>]]);
 				table.insert(xml, [[			<param name="shuffle" value="]]..row.music_on_hold_shuffle..[["/>]]);
-				table.insert(xml, [[			<param name="channels" value="1"/>]]);
-				table.insert(xml, [[			<param name="interval" value="20"/>]]);
+				table.insert(xml, [[			<param name="channels" value="]]..hold_channels..[["/>]]);
+				table.insert(xml, [[			<param name="interval" value="]]..hold_interval..[["/>]]);
 				table.insert(xml, [[			<param name="timer-name" value="]]..timer_name..[["/>]]);
 				if (chime_list ~= nil) then
 					table.insert(xml, [[			<param name="chime-list" value="]]..chime_list..[["/>]]);
