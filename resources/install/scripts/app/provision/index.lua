@@ -182,7 +182,7 @@
 					event:addHeader('host', row.server_address);
 					event:addHeader('content-type', 'application/simple-message-summary');
 				--check sync
-					event:addHeader('event-string', 'check-sync;reboot=false');
+					event:addHeader('event-string', 'check-sync;reboot=true');
 				--send the event
 					event:fire();
 		end);
@@ -232,7 +232,7 @@
 			event:addHeader('host', domain);
 			event:addHeader('content-type', 'application/simple-message-summary');
 		--check sync
-			event:addHeader('event-string', 'check-sync;reboot=false');
+			event:addHeader('event-string', 'check-sync;reboot=true');
 		--send the event
 			event:fire();
 	end
