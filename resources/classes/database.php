@@ -1139,7 +1139,7 @@ include "root.php";
 					$this->debug["sql"] = true;
 
 				//start the atomic transaction
-//					$this->db->beginTransaction();
+					//$this->db->beginTransaction();
 
 				//debug info
 					//echo "<pre>\n";
@@ -1224,6 +1224,7 @@ include "root.php";
 
 									if (permission_exists($this->singular($this->name).'_add')) {
 
+											$params = array();
 											$sql = "INSERT INTO v_".$this->name." ";
 											$sql .= "(";
 											if (!$parent_key_exists) {
@@ -1280,9 +1281,9 @@ include "root.php";
 													$message["details"][$m]["sql"] = $sql;
 													if (is_array($params)) {
 														$message["details"][$m]["params"] = $params;
-														unset($params);
 													}
 												}
+												unset($params);
 												$this->message = $message;
 												$m++;
 											}
@@ -1297,10 +1298,9 @@ include "root.php";
 													$message["details"][$m]["sql"] = $sql;
 													if (is_array($params)) {
 														$message["details"][$m]["params"] = $params;
-														unset($params);
 													}
 												}
-												//print_r($message);
+												unset($params);
 												$this->message = $message;
 												$m++;
 											}
@@ -1321,6 +1321,7 @@ include "root.php";
 									if (permission_exists($this->singular($this->name).'_edit')) {
 
 										//parent data
+											$params = array();
 											$sql = "UPDATE v_".$this->name." SET ";
 											if (is_array($array)) {
 												foreach ($array as $array_key => $array_value) {
@@ -1358,9 +1359,9 @@ include "root.php";
 													$message["details"][$m]["sql"] = $sql;
 													if (is_array($params)) {
 														$message["details"][$m]["params"] = $params;
-														unset($params);
 													}
 												}
+												unset($params);
 												$this->message = $message;
 												$m++;
 												unset($sql);
@@ -1375,9 +1376,9 @@ include "root.php";
 													$message["details"][$m]["sql"] = $sql;
 													if (is_array($params)) {
 														$message["details"][$m]["params"] = $params;
-														unset($params);
 													}
 												}
+												unset($params);
 												$this->message = $message;
 												$m++;
 											}
@@ -1482,8 +1483,8 @@ include "root.php";
 																		}
 																		else {
 																			//$sql .= "$k = '".check_str($v)."', ";
-																			$sql .= $array_key." = :".$array_key.", ";
-																			$params[$array_key] = $array_value;
+																			$sql .= $k." = :".$k.", ";
+																			$params[$k] = $v;
 																		}
 																	}
 																}
@@ -1492,6 +1493,7 @@ include "root.php";
 															$sql .= "AND ".$child_key_name." = '".$child_key_value."' ";
 															$sql = str_replace(", WHERE", " WHERE", $sql);
 															$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+										//					unset($row);
 
 															//$prep_statement->bindParam(':domain_uuid', $_SESSION["domain_uuid"] );
 
@@ -1499,6 +1501,7 @@ include "root.php";
 																//$this->db->query(check_sql($sql));
 																$prep_statement = $this->db->prepare($sql);
 																$prep_statement->execute($params);
+																unset($prep_statement);
 																$message["details"][$m]["name"] = $key;
 																$message["details"][$m]["message"] = "OK";
 																$message["details"][$m]["code"] = "200";
@@ -1685,7 +1688,7 @@ include "root.php";
 					$this->message = $message;
 
 				//commit the atomic transaction
-//					$this->db->commit();
+					//$this->db->commit();
 
 				//get the UUIDs
 					$user_uuid = $_SESSION['user_uuid'];
