@@ -53,6 +53,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($node_cidr) == 0) { $msg .= $text['message-required']." ".$text['label-node_cidr']."<br>\n"; }
 		//if (strlen($node_domain) == 0) { $msg .= $text['message-required']." ".$text['label-node_domain']."<br>\n"; }
 		//if (strlen($node_description) == 0) { $msg .= $text['message-required']." ".$text['label-node_description']."<br>\n"; }
+
+	// check for CIDR notation
+	   $pattern = '/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$/';
+
+	   if (preg_match($pattern, $node_cidr) == 0 && $node_cidr != '') { $msg .= $text['message-required']." ".$text['label-node_cidr']."<br>\n"; }
+	   
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
