@@ -1914,5 +1914,5 @@ include "root.php";
 		$fields[0]['name'] = 'domain_uuid';
 		$fields[0]['value'] = $_SESSION["domain_uuid"];
 		echo $database->count();
-
+*/
 ?>
