@@ -1139,7 +1139,7 @@ include "root.php";
 					$this->debug["sql"] = true;
 
 				//start the atomic transaction
-					//$this->db->beginTransaction();
+					$this->db->beginTransaction();
 
 				//debug info
 					//echo "<pre>\n";
@@ -1493,7 +1493,6 @@ include "root.php";
 															$sql .= "AND ".$child_key_name." = '".$child_key_value."' ";
 															$sql = str_replace(", WHERE", " WHERE", $sql);
 															$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-										//					unset($row);
 
 															//$prep_statement->bindParam(':domain_uuid', $_SESSION["domain_uuid"] );
 
@@ -1688,7 +1687,7 @@ include "root.php";
 					$this->message = $message;
 
 				//commit the atomic transaction
-					//$this->db->commit();
+					$this->db->commit();
 
 				//get the UUIDs
 					$user_uuid = $_SESSION['user_uuid'];
