@@ -449,6 +449,8 @@ include "root.php";
 					if (!$this->db) {
 						$this->connect();
 					}
+				//sanitize the table name
+					$this->table = preg_replace('#[^a-zA-Z0-9_\-]#', '', $this->table);
 				//count the fields
 					$field_count = count($this->fields);
 				//add data to the database
@@ -457,6 +459,7 @@ include "root.php";
 					$i = 1;
 					if (is_array($this->fields)) {
 						foreach($this->fields as $name => $value) {
+							$name = preg_replace('#[^a-zA-Z0-9_\-]#', '', $name);
 							if (count($this->fields) == $i) {
 								$sql .= $name." \n";
 							}
@@ -472,6 +475,7 @@ include "root.php";
 					$i = 1;
 					if (is_array($this->fields)) {
 						foreach($this->fields as $name => $value) {
+							$name = preg_replace('#[^a-zA-Z0-9_\-]#', '', $name);
 							if ($field_count == $i) {
 								if (strlen($value) > 0) {
 									//$sql .= "'".$value."' ";
@@ -523,17 +527,22 @@ include "root.php";
 					if (!$this->db) {
 						$this->connect();
 					}
+				//sanitize the table name
+					$this->table = preg_replace('#[^a-zA-Z0-9_\-]#', '', $this->table);
 				//udate the database
 					$sql = "update ".$this->table." set ";
 					$i = 1;
 					if (is_array($this->fields)) {
 						foreach($this->fields as $name => $value) {
+							$name = preg_replace('#[^a-zA-Z0-9_\-]#', '', $name);
 							if (count($this->fields) == $i) {
 								if (strlen($name) > 0 && $value == null) {
 									$sql .= $name." = null ";
 								}
 								else {
-									$sql .= $name." = '".$value."' ";
+									//$sql .= $name." = '".$value."' ";
+									$sql .= $name." = :".$name." ";
+									$params[$name] = $value;
 								}
 							}
 							else {
@@ -541,7 +550,9 @@ include "root.php";
 									$sql .= $name." = null, ";
 								}
 								else {
-									$sql .= $name." = '".$value."', ";
+									//$sql .= $name." = '".$value."', ";
+									$sql .= $name." = :".$name.", ";
+									$params[$name] = $value;
 								}
 							}
 							$i++;
@@ -550,16 +561,46 @@ include "root.php";
 					$i = 0;
 					if (is_array($this->where)) {
 						foreach($this->where as $row) {
+
+							//sanitize the name
+							$row['name'] = preg_replace('#[^a-zA-Z0-9_\-]#', '', $row['name']);
+
+							//validate the operator
+							switch ($row['operator']) {
+								case "<": break;
+								case ">": break;
+								case "<=": break;
+								case ">=": break;
+								case "=": break;
+								case ">=": break;
+								case "<>": break;
+								case "!=": break;
+								default:
+									//invalid operator
+									return false;
+							}
+
+							//build the sql
 							if ($i == 0) {
-								$sql .= 'where '.$row['name']." ".$row['operator']." '".$row['value']."' ";
+								//$sql .= $row['name']." ".$row['operator']." '".$row['value']."' ";
+								$sql .= "where ".$row['name']." ".$row['operator']." :".$row['name']." ";
 							}
 							else {
-								$sql .= "and ".$row['name']." ".$row['operator']." '".$row['value']."' ";
+								//$sql .= $row['name']." ".$row['operator']." '".$row['value']."' ";
+								$sql .= "and ".$row['name']." ".$row['operator']." :".$row['name']." ";
 							}
+
+							//add the name and value to the params array
+							$params[$row['name']] = $row['value'];
+
+							//increment $i
 							$i++;
 						}
 					}
-					$this->db->exec(check_sql($sql));
+					//$this->db->exec(check_sql($sql));
+					$prep_statement = $this->db->prepare($sql);
+					$prep_statement->execute($params);
+					unset($prep_statement);
 					unset($this->fields);
 					unset($this->where);
 					unset($sql);
