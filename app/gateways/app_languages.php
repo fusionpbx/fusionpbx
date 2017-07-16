@@ -861,7 +861,7 @@ $text['description-register_transport']['ru-ru'] = "Выберите предп�
 $text['description-register_transport']['sv-se'] = "Välj om registrera transport eller ej.";
 $text['description-register_transport']['uk-ua'] = "Choose whether to register-transport.";
 
-$text['description-register_proxy']['en-us'] = "Enter the hostname or IP address of the register proxy. (this can take the format of host:port)";
+$text['description-register_proxy']['en-us'] = "Enter the hostname or IP address of the register proxy. host[:port]";
 $text['description-register_proxy']['ar-eg'] = "أدخل اسم المضيف أو عنوان إب الخاص بروكسي السجل. (وهذا يمكن أن تتخذ شكل المضيف: ميناء)"; //translation provided by google translate
 $text['description-register_proxy']['de-at'] = "Geben Sie den Hostnamen oder IP-Adresse des Register-Proxy ein. (Der Zielport kann mittels Hostname:port oder IP-Adresse:port spezifiziert werden)";
 $text['description-register_proxy']['de-ch'] = "Geben Sie den Hostnamen oder IP-Adresse des Register-Proxy ein. (Der Zielport kann mittels Hostname:port oder IP-Adresse:port spezifiziert werden)";
@@ -921,7 +921,7 @@ $text['description-realm']['ru-ru'] = "Вставьте поле, использ
 $text['description-realm']['sv-se'] = "Ange 'realm' här.";
 $text['description-realm']['uk-ua'] = "Enter the realm here.";
 
-$text['description-proxy']['en-us'] = "Enter the hostname or IP address of the proxy. (this can take the format of host:port)";
+$text['description-proxy']['en-us'] = "Enter the hostname or IP address of the proxy. host[:port]";
 $text['description-proxy']['ar-eg'] = "أدخل اسم المضيف أو عنوان إب الخاص بالوكيل. (وهذا يمكن أن تتخذ شكل المضيف: ميناء)"; //translation provided by google translate
 $text['description-proxy']['de-at'] = "Geben Sie des Hostnamen oder IP-Adresse des Proxy ein. (Der Zielport kann mittels Hostname:port oder IP-Adresse:port spezifiziert werden)";
 $text['description-proxy']['de-ch'] = "Geben Sie des Hostnamen oder IP-Adresse des Proxy ein. (Der Zielport kann mittels Hostname:port oder IP-Adresse:port spezifiziert werden)";
@@ -1001,7 +1001,7 @@ $text['description-password']['ru-ru'] = "Введите здесь пароль
 $text['description-password']['sv-se'] = "Fyll i lösenord.";
 $text['description-password']['uk-ua'] = "Введіть пароль";
 
-$text['description-outbound_proxy']['en-us'] = "Enter the hostname or IP address of the outbound proxy. (this can take the format of host:port)";
+$text['description-outbound_proxy']['en-us'] = "Enter the hostname or IP address of the outbound proxy. host[:port]";
 $text['description-outbound_proxy']['ar-eg'] = "أدخل اسم المضيف أو عنوان إب الخاص بالوكيل الصادر. (وهذا يمكن أن تتخذ شكل المضيف: ميناء)"; //translation provided by google translate
 $text['description-outbound_proxy']['de-at'] = "Geben Sie des Hostnamen oder IP-Adresse des Outbound-Proxy ein. (Der Zielport kann mittels Hostname:port oder IP-Adresse:port spezifiziert werden)";
 $text['description-outbound_proxy']['de-ch'] = "Geben Sie des Hostnamen oder IP-Adresse des Outbound-Proxy ein. (Der Zielport kann mittels Hostname:port oder IP-Adresse:port spezifiziert werden)";
