@@ -444,12 +444,13 @@ include "root.php";
 					}
 			}
 
-
 			public function add() {
 				//connect to the database if needed
 					if (!$this->db) {
 						$this->connect();
 					}
+				//count the fields
+					$field_count = count($this->fields);
 				//add data to the database
 					$sql = "insert into ".$this->table;
 					$sql .= " (";
@@ -457,44 +458,44 @@ include "root.php";
 					if (is_array($this->fields)) {
 						foreach($this->fields as $name => $value) {
 							if (count($this->fields) == $i) {
-								$sql .= $name." ";
+								$sql .= $name." \n";
 							}
 							else {
-								$sql .= $name.", ";
+								$sql .= $name.", \n";
 							}
 							$i++;
 						}
 					}
-					$sql .= ") ";
-					$sql .= "values ";
-					$sql .= "(";
+					$sql .= ") \n";
+					$sql .= "values \n";
+					$sql .= "(\n";
 					$i = 1;
 					if (is_array($this->fields)) {
 						foreach($this->fields as $name => $value) {
-							if (count($this->fields) == $i) {
+							if ($field_count == $i) {
 								if (strlen($value) > 0) {
 									//$sql .= "'".$value."' ";
-									$sql .= ":".$value." ";
+									$sql .= ":".$name." \n";
 									$params[$name] = $value;
 								}
 								else {
-									$sql .= "null ";
+									$sql .= "null \n";
 								}
 							}
 							else {
 								if (strlen($value) > 0) {
 									//$sql .= "'".$value."', ";
-									$sql .= ":".$value.", ";
+									$sql .= ":".$name.", \n";
 									$params[$name] = $value;
 								}
 								else {
-									$sql .= "null, ";
+									$sql .= "null, \n";
 								}
 							}
 							$i++;
 						}
 					}
-					$sql .= ")";
+					$sql .= ")\n";
 
 				//execute the query, show exceptions
 					$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
