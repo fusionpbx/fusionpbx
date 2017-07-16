@@ -518,6 +518,53 @@ include "root.php";
 					unset($sql, $prep_statement, $this->fields);
 			}
 
+			public function update() {
+				//connect to the database if needed
+					if (!$this->db) {
+						$this->connect();
+					}
+				//udate the database
+					$sql = "update ".$this->table." set ";
+					$i = 1;
+					if (is_array($this->fields)) {
+						foreach($this->fields as $name => $value) {
+							if (count($this->fields) == $i) {
+								if (strlen($name) > 0 && $value == null) {
+									$sql .= $name." = null ";
+								}
+								else {
+									$sql .= $name." = '".$value."' ";
+								}
+							}
+							else {
+								if (strlen($name) > 0 && $value == null) {
+									$sql .= $name." = null, ";
+								}
+								else {
+									$sql .= $name." = '".$value."', ";
+								}
+							}
+							$i++;
+						}
+					}
+					$i = 0;
+					if (is_array($this->where)) {
+						foreach($this->where as $row) {
+							if ($i == 0) {
+								$sql .= 'where '.$row['name']." ".$row['operator']." '".$row['value']."' ";
+							}
+							else {
+								$sql .= "and ".$row['name']." ".$row['operator']." '".$row['value']."' ";
+							}
+							$i++;
+						}
+					}
+					$this->db->exec(check_sql($sql));
+					unset($this->fields);
+					unset($this->where);
+					unset($sql);
+			}
+
 			public function delete($array) {
 				//connect to the database if needed
 					if (!$this->db) {
