@@ -444,6 +444,79 @@ include "root.php";
 					}
 			}
 
+
+			public function add() {
+				//connect to the database if needed
+					if (!$this->db) {
+						$this->connect();
+					}
+				//add data to the database
+					$sql = "insert into ".$this->table;
+					$sql .= " (";
+					$i = 1;
+					if (is_array($this->fields)) {
+						foreach($this->fields as $name => $value) {
+							if (count($this->fields) == $i) {
+								$sql .= $name." ";
+							}
+							else {
+								$sql .= $name.", ";
+							}
+							$i++;
+						}
+					}
+					$sql .= ") ";
+					$sql .= "values ";
+					$sql .= "(";
+					$i = 1;
+					if (is_array($this->fields)) {
+						foreach($this->fields as $name => $value) {
+							if (count($this->fields) == $i) {
+								if (strlen($value) > 0) {
+									//$sql .= "'".$value."' ";
+									$sql .= ":".$value." ";
+									$params[$name] = $value;
+								}
+								else {
+									$sql .= "null ";
+								}
+							}
+							else {
+								if (strlen($value) > 0) {
+									//$sql .= "'".$value."', ";
+									$sql .= ":".$value.", ";
+									$params[$name] = $value;
+								}
+								else {
+									$sql .= "null, ";
+								}
+							}
+							$i++;
+						}
+					}
+					$sql .= ")";
+
+				//execute the query, show exceptions
+					$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+					try {
+						//$this->sql = $sql;
+						//$this->db->exec($sql);
+						$prep_statement = $this->db->prepare($sql);
+						$prep_statement->execute($params);
+					}
+					catch(PDOException $e) {
+						echo "<b>Error:</b><br />\n";
+						echo "<table>\n";
+						echo "<tr>\n";
+						echo "<td>\n";
+						echo $e->getMessage();
+						echo "</td>\n";
+						echo "</tr>\n";
+						echo "</table>\n";
+					}
+					unset($sql, $prep_statement, $this->fields);
+			}
+
 			public function delete($array) {
 				//connect to the database if needed
 					if (!$this->db) {
