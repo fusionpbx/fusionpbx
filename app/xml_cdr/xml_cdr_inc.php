@@ -47,9 +47,11 @@
 //get post or get variables from http
 	if (count($_REQUEST) > 0) {
 		$cdr_id = check_str($_REQUEST["cdr_id"]);
+		$missed = check_str($_REQUEST["missed"]);
 		$direction = check_str($_REQUEST["direction"]);
 		$caller_id_name = check_str($_REQUEST["caller_id_name"]);
 		$caller_id_number = check_str($_REQUEST["caller_id_number"]);
+		$caller_destination = check_str($_REQUEST["caller_destination"]);
 		$caller_extension_uuid = check_str($_REQUEST["caller_extension_uuid"]);
 		$destination_number = check_str($_REQUEST["destination_number"]);
 		$context = check_str($_REQUEST["context"]);
@@ -98,11 +100,17 @@
 		}
 		//$mos_comparison = check_str($_REQUEST["mos_comparison"]);
 		$mos_score = check_str($_REQUEST["mos_score"]);
+		$leg = check_str($_REQUEST["leg"]);
 	}
 
-
+	if(!permission_exists(xml_cdr_b_leg)){
+		$leg = 'a';
+	}
 
 //build the sql where string
+	if ($missed == true) {
+		$sql_where_ands[] = "billsec = '0'";
+	}
 	if (strlen($start_epoch) > 0 && strlen($stop_epoch) > 0) {
 		$sql_where_ands[] = "start_epoch BETWEEN ".$start_epoch." AND ".$stop_epoch." ";
 	}
@@ -118,6 +126,10 @@
 	if (strlen($caller_id_number) > 0) {
 		$mod_caller_id_number = str_replace("*", "%", $caller_id_number);
 		$sql_where_ands[] = "caller_id_number like '".$mod_caller_id_number."'";
+	}
+	if (strlen($caller_destination) > 0) {
+		$mod_caller_destination = str_replace("*", "%", $caller_destination);
+		$sql_where_ands[] = "caller_destination like '".$mod_caller_destination."'";
 	}
 	if (strlen($destination_number) > 0) {
 		$mod_destination_number = str_replace("*", "%", $destination_number);
@@ -200,6 +212,7 @@
 	if (strlen($remote_media_ip) > 0) { $sql_where_ands[] = "remote_media_ip like '%".$remote_media_ip."%'"; }
 	if (strlen($network_addr) > 0) { $sql_where_ands[] = "network_addr like '%".$network_addr."%'"; }
 	if (strlen($mos_comparison) > 0 && strlen($mos_score) > 0 ) { $sql_where_ands[] = "rtp_audio_in_mos " . $mos_comparison . " ".$mos_score.""; }
+	if (strlen($leg) > 0) { $sql_where_ands[] = "leg='$leg'"; }
 
 	//if not admin or superadmin, only show own calls
 	if (!permission_exists('xml_cdr_domain')) {
@@ -249,9 +262,11 @@
 
 //set the param variable which is used with paging
 	$param = "&cdr_id=".$cdr_id;
+	$param .= "&missed=".$missed;
 	$param .= "&direction=".$direction;
 	$param .= "&caller_id_name=".$caller_id_name;
 	$param .= "&caller_id_number=".$caller_id_number;
+	$param .= "&caller_destination=".$caller_destination;
 	$param .= "&caller_extension_uuid=".$caller_extension_uuid;
 	$param .= "&destination_number=".$destination_number;
 	$param .= "&context=".$context;
@@ -300,43 +315,35 @@
 //set a default number of rows to show
 	$num_rows = '0';
 
-//set a default CDR limit
-	if (!isset($_SESSION['cdr']['limit']['numeric'])) {
-		$_SESSION['cdr']['limit']['numeric'] = 1000;
-	}
-
 //disable the paging
 	if ($_REQUEST['export_format'] == "csv") { $rows_per_page = 0; }
 	if ($_REQUEST['export_format'] == "pdf") { $rows_per_page = 0; }
 
 //page results if rows_per_page is greater than zero
 	if ($rows_per_page > 0) {
-			if ($_SESSION['cdr']['count']['boolean'] == "true") {
-				//get the number of rows in the v_xml_cdr
-					$sql = "select count(uuid) as num_rows from v_xml_cdr ";
-					$sql .= "where domain_uuid = '".$domain_uuid."' ".$sql_where;
-					$prep_statement = $db->prepare(check_sql($sql));
-					if ($prep_statement) {
-						$prep_statement->execute();
-						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-						if ($row['num_rows'] > 0) {
-							$num_rows = $row['num_rows'];
-						}
-						else {
-							$num_rows = '0';
-						}
-					}
-					unset($prep_statement, $result);
+
+		//get the number of rows in the v_xml_cdr
+			$sql = "select count(uuid) as num_rows from v_xml_cdr ";
+			$sql .= "where domain_uuid = '".$domain_uuid."' ".$sql_where;
+			$prep_statement = $db->prepare(check_sql($sql));
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				if ($row['num_rows'] > 0) {
+					$num_rows = $row['num_rows'];
+				}
+				else {
+					$num_rows = '0';
+				}
 			}
-			else {
-				//limit the number of results
-					if ($num_rows > $_SESSION['cdr']['limit']['numeric']) {
-						$num_rows = $_SESSION['cdr']['limit']['numeric'];
-					}
-					else {
-						$num_rows = '1000';
-					}
+			unset($prep_statement, $result);
+
+		//limit the number of results
+			if ($_SESSION['cdr']['limit']['numeric'] > 0) {
+				$num_rows = $_SESSION['cdr']['limit']['numeric'];
 			}
+
+		//set the default paging
 			if ($_SESSION['domain']['paging']['numeric'] != '' && $rows_per_page > $_SESSION['domain']['paging']['numeric']) {
 				$rows_per_page = $_SESSION['domain']['paging']['numeric'];
 			}
@@ -368,8 +375,10 @@
 	$sql .= "billsec, ";
 	$sql .= "caller_id_name, ";
 	$sql .= "caller_id_number, ";
+	$sql .= "caller_destination, ";
 	$sql .= "source_number, ";
 	$sql .= "destination_number, ";
+	$sql .= "leg, ";
 	$sql .= "(xml IS NOT NULL OR json IS NOT NULL) AS raw_data_exists, ";
 	if (is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
@@ -397,6 +406,7 @@
 	} else {
 		$sql .= "where domain_uuid = '".$domain_uuid."' ";
 	}
+
 	$sql .= $sql_where;
 	if (strlen($order_by)> 0) { $sql .= " order by ".$order_by." ".$order." "; }
 	if ($_REQUEST['export_format'] != "csv" && $_REQUEST['export_format'] != "pdf") {

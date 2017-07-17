@@ -102,6 +102,7 @@
 	$row_style["1"] = "row_style1";
 
 //show the content
+        echo "<input type='button' class='btn' style='margin-right: 15px;' value='".$text['button-export']."' onclick=\"window.location.href='pin_download.php'\">\n";
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-pin_numbers']."</b></td>\n";
@@ -182,5 +183,4 @@
 
 //include the footer
 	require_once "resources/footer.php";
-
 ?>

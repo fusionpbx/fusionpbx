@@ -165,10 +165,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 
 			if ($action == "add") {
-				$_SESSION["message"] = $text['message-add'];
+				messages::add($text['message-add']);
 			}
 			if ($action == "update") {
-				$_SESSION["message"] = $text['message-update'];
+				messages::add($text['message-update']);
 			}
 			header("Location: device_edit.php?id=".$device_uuid);
 			return;

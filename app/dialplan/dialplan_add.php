@@ -259,7 +259,7 @@
 				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 			}
 	
-		$_SESSION["message"] = $text['message-update'];
+		messages::add($text['message-update']);
 		header("Location: ".PROJECT_PATH."/app/dialplan/dialplans.php");
 		return;
 	} //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
@@ -306,6 +306,7 @@
 	echo "			<span class=\"title\">".$text['header-dialplan-add']."</span>\n";
 	echo "		</td>\n";
 	echo "		<td align='right'>\n";
+	echo "			<input type='button' class='btn' name='' alt='".$text['button-advanced']."' onclick=\"window.location='dialplan_edit.php'\" value='".$text['button-advanced']."'>\n";
 	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplans.php'\" value='".$text['button-back']."'>\n";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";

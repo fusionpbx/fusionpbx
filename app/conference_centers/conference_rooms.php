@@ -75,7 +75,7 @@ else {
 					$default_language = 'en';
 					$default_dialect = 'us';
 					$default_voice = 'callie';
-					$switch_cmd = "conference ".$meeting_uuid."-".$_SESSION['domain_name']." play ".$_SESSION['switch']['sounds']['dir']."/".$default_language."/".$default_dialect."/".$default_voice."/ivr/ivr-recording_started.wav";
+					$switch_cmd = "conference ".$meeting_uuid."@".$_SESSION['domain_name']." play ".$_SESSION['switch']['sounds']['dir']."/".$default_language."/".$default_dialect."/".$default_voice."/ivr/ivr-recording_started.wav";
 				//connect to event socket
 					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 					if ($fp) {
@@ -135,7 +135,7 @@ else {
 			//show the conferences that have a matching domain
 				$tmp_domain = substr($conference_name, -strlen($_SESSION['domain_name']));
 				if ($tmp_domain == $_SESSION['domain_name']) {
-					$meeting_uuid = substr($conference_name, 0, strlen($conference_name) - strlen('-'.$_SESSION['domain_name']));
+					$meeting_uuid = substr($conference_name, 0, strlen($conference_name) - strlen('@'.$_SESSION['domain_name']));
 					$conference[$meeting_uuid]["conference_name"] = $conference_name;
 					$conference[$meeting_uuid]["session_uuid"] = $session_uuid;
 					$conference[$meeting_uuid]["member_count"] = $member_count;

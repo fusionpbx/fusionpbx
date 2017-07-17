@@ -72,8 +72,7 @@
 			}
 			unset($prep_statement, $row);
 			if ($total_ivr_menus >= $_SESSION['limit']['ivr_menus']['numeric']) {
-				$_SESSION['message_mood'] = 'negative';
-				$_SESSION['message'] = $text['message-maximum_ivr_menus'].' '.$_SESSION['limit']['ivr_menus']['numeric'];
+				messages::add($text['message-maximum_ivr_menus'].' '.$_SESSION['limit']['ivr_menus']['numeric'], 'negative');
 				header('Location: ivr_menus.php');
 				return;
 			}
@@ -230,8 +229,8 @@
 					}
 
 				//build the xml dialplan
-					$dialplan_xml = "<extension name=\"".$ivr_menu_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
-					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$ivr_menu_extension."\">\n";
+					$dialplan_xml = "<extension name=\"".$ivr_menu_name."\" continue=\"false\" uuid=\"".$dialplan_uuid."\">\n";
+					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$ivr_menu_extension."\$\">\n";
 					$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
 					$dialplan_xml .= "		<action application=\"sleep\" data=\"1000\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
@@ -304,12 +303,12 @@
 
 				//set the add message
 					if ($action == "add" && permission_exists('ivr_menu_add')) {
-						$_SESSION['message'] = $text['message-add'];
+						messages::add($text['message-add']);
 					}
 
 				//set the update message
 					if ($action == "update" && permission_exists('ivr_menu_edit')) {
-						$_SESSION['message'] = $text['message-update'];
+						messages::add($text['message-update']);
 					}
 
 				//redirect the user

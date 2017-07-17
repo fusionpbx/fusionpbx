@@ -103,7 +103,7 @@
 	}
 
 //redirect the browser
-	$_SESSION["message"] = $text['message-delete'];
+	messages::add($text['message-delete']);
 	header("Location: call_center_queues.php");
 	return;
 

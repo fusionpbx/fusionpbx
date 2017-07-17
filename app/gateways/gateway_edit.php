@@ -74,8 +74,7 @@
 			}
 			unset($prep_statement, $row);
 			if ($total_gateways >= $_SESSION['limit']['gateways']['numeric']) {
-				$_SESSION['message_mood'] = 'negative';
-				$_SESSION['message'] = $text['message-maximum_gateways'].' '.$_SESSION['limit']['gateways']['numeric'];
+				messages::add($text['message-maximum_gateways'].' '.$_SESSION['limit']['gateways']['numeric'], 'negative');
 				header('Location: gateways.php');
 				return;
 			}
@@ -275,10 +274,10 @@
 		//redirect the user
 			if (isset($action)) {
 				if ($action == "add") {
-					$_SESSION["message"] = $text['message-add'];
+					messages::add($text['message-add']);
 				}
 				if ($action == "update") {
-					$_SESSION["message"] = $text['message-update'];
+					messages::add($text['message-update']);
 				}
 				header("Location: gateways.php");
 				return;

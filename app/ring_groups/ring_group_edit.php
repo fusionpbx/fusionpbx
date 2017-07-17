@@ -57,7 +57,7 @@
 			$sql .= "and user_uuid = '".$user_uuid."' ";
 			$db->exec(check_sql($sql));
 		//save the message to a session variable
-			$_SESSION['message'] = $text['message-delete'];
+			messages::add($text['message-delete']);
 		//redirect the browser
 			header("Location: ring_group_edit.php?id=$ring_group_uuid");
 			exit;
@@ -84,8 +84,7 @@
 			}
 			unset($prep_statement, $row);
 			if ($total_ring_groups >= $_SESSION['limit']['ring_groups']['numeric']) {
-				$_SESSION['message_mood'] = 'negative';
-				$_SESSION['message'] = $text['message-maximum_ring_groups'].' '.$_SESSION['limit']['ring_groups']['numeric'];
+				messages::add($text['message-maximum_ring_groups'].' '.$_SESSION['limit']['ring_groups']['numeric'], 'negative');
 				header('Location: ring_groups.php');
 				return;
 			}
@@ -108,6 +107,7 @@
 			$ring_group_missed_call_data = check_str($_POST["ring_group_missed_call_data"]);
 			$ring_group_forward_enabled = check_str($_POST["ring_group_forward_enabled"]);
 			$ring_group_forward_destination = check_str($_POST["ring_group_forward_destination"]);
+			$ring_group_forward_toll_allow = check_str($_POST["ring_group_forward_toll_allow"]);
 			$ring_group_enabled = check_str($_POST["ring_group_enabled"]);
 			$ring_group_description = check_str($_POST["ring_group_description"]);
 			$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
@@ -148,7 +148,7 @@
 			$sql_insert .= ")";
 			$db->exec($sql_insert);
 		//save the message to a session variable
-			$_SESSION['message'] = $text['message-add'];
+			messages::add($text['message-add']);
 		//redirect the browser
 			header("Location: ring_group_edit.php?id=$ring_group_uuid");
 			exit;
@@ -257,6 +257,10 @@
 				//update the ring group destinations array
 					$x = 0;
 					foreach ($_POST["ring_group_destinations"] as $row) {
+
+						//sanitize the destination_number
+							$_POST["ring_group_destinations"][$x]["destination_number"] = str_replace('$', '', $_POST["ring_group_destinations"][$x]["destination_number"]);
+
 						//add the domain_uuid
 							if (strlen($_POST["ring_group_destinations"][$x]["domain_uuid"]) == 0) {
 								$_POST["ring_group_destinations"][$x]["domain_uuid"] = $_SESSION['domain_uuid'];
@@ -332,14 +336,14 @@
 		//set the message
 			if ($action == "add") {
 				//save the message to a session variable
-					$_SESSION['message'] = $text['message-add'];
+					messages::add($text['message-add']);
 				//redirect the browser
 					header("Location: ring_group_edit.php?id=$ring_group_uuid");
 					exit;
 			}
 			if ($action == "update") {
 				//save the message to a session variable
-					$_SESSION['message'] = $text['message-update'];
+					messages::add($text['message-update']);
 			}
 
 	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
@@ -371,6 +375,7 @@
 			$ring_group_missed_call_data = $row["ring_group_missed_call_data"];
 			$ring_group_forward_enabled = $row["ring_group_forward_enabled"];
 			$ring_group_forward_destination = $row["ring_group_forward_destination"];
+			$ring_group_forward_toll_allow = $row["ring_group_forward_toll_allow"];
 			$ring_group_enabled = $row["ring_group_enabled"];
 			$ring_group_description = $row["ring_group_description"];
 			$dialplan_uuid = $row["dialplan_uuid"];
@@ -708,6 +713,19 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	if (permission_exists('ring_group_forward_toll_allow')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-ring_group_forward_toll_allow']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='ring_group_forward_toll_allow' maxlength='255' value=".$ring_group_forward_toll_allow.">\n";
+		echo "<br />\n";
+		echo $text['description-ring_group_forward_toll_allow']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+	
 	if (if_group("superadmin")) {
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";

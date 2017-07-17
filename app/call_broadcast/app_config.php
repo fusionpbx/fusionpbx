@@ -5,46 +5,57 @@
 		$apps[$x]['uuid'] = "efc11f6b-ed73-9955-4d4d-3a1bed75a056";
 		$apps[$x]['category'] = "Switch";;
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "";
+		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Schedule to immediately make multiple calls to the extension, an IVR Menu, Conference Room, or any other number.";
-		$apps[$x]['description']['es-cl'] = "Realiza llamadas inmediatamente a extensiones, IVR, conferencias o cualquier otro número";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['ar-eg'] = "";
+		$apps[$x]['description']['de-at'] = "Methode um sofort mehrere parallele Anrufe an Nebenstellen, Automatische Zentralen, Conferenzräume oder andere Rufnummern zu leiten.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
-		$apps[$x]['description']['fr-fr'] = "Programmation de campagnes d'appels vers des extensions, IVR, salles de conferences ou tout autre numéro.";
+		$apps[$x]['description']['de-de'] = "Methode um sofort mehrere parallele Anrufe an Nebenstellen, Automatische Zentralen, Conferenzräume oder andere Rufnummern zu leiten.";
+		$apps[$x]['description']['es-cl'] = "Realiza llamadas inmediatamente a extensiones, IVR, conferencias o cualquier otro número";
+		$apps[$x]['description']['es-mx'] = "";
 		$apps[$x]['description']['fr-ca'] = "Il fait d' massive appels vers des extensions, IVR, salles de conferences ou quelqu'autre nom.";
-		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "Programação para imediatamente fazer várias chamadas para uma extensão, um IVR, Sala de Conferência, ou qualquer outro número.";
+		$apps[$x]['description']['fr-fr'] = "Programmation de campagnes d'appels vers des extensions, IVR, salles de conferences ou tout autre numéro.";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "Programação para imediatamente realizar várias chamadas para uma extensão, um menu IVR, Sala de Conferência ou qualquer outro número.";
+		$apps[$x]['description']['pt-pt'] = "Programação para imediatamente fazer várias chamadas para uma extensão, um IVR, Sala de Conferência, ou qualquer outro número.";
+		$apps[$x]['description']['ro-ro'] = "";
+		$apps[$x]['description']['ru-ru'] = "";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = "call_broadcast_view";
-		$apps[$x]['permissions'][0]['menu']['uuid'] = "50153bbf-78c5-b49e-7bd9-4b3e4b1134e6";
-		$apps[$x]['permissions'][0]['groups'][] = "admin";
-		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][1]['name'] = "call_broadcast_add";
-		$apps[$x]['permissions'][1]['groups'][] = "admin";
-		$apps[$x]['permissions'][1]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][2]['name'] = "call_broadcast_edit";
-		$apps[$x]['permissions'][2]['groups'][] = "admin";
-		$apps[$x]['permissions'][2]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][3]['name'] = "call_broadcast_delete";
-		$apps[$x]['permissions'][3]['groups'][] = "admin";
-		$apps[$x]['permissions'][3]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][4]['name'] = "call_broadcast_send";
-		$apps[$x]['permissions'][4]['groups'][] = "admin";
-		$apps[$x]['permissions'][4]['groups'][] = "superadmin";
+		$y=0;
+		$apps[$x]['permissions'][$y]['name'] = "call_broadcast_view";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "50153bbf-78c5-b49e-7bd9-4b3e4b1134e6";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "call_broadcast_add";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "call_broadcast_edit";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "call_broadcast_delete";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "call_broadcast_send";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_call_broadcasts";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_call_broadcasts";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "call_broadcast_id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";

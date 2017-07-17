@@ -21,7 +21,7 @@
 	}
 
 //get the failed emails
-	$sql = "select email_uuid, email from v_emails";
+	$sql = "select email_uuid, email from v_emails limit 100";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$emails = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -35,7 +35,7 @@
 			require_once "secure/v_mailto.php";
 			if ($mailer_error == '') {
 				//get the message
-				$_SESSION["message"] = $text['message-message_resent'];
+				messages::add($text['message-message_resent']);
 
 				//delete the email
 				$sql = "delete from v_emails ";
@@ -45,7 +45,6 @@
 				unset($sql, $prep_statement);
 			}
 			unset($mailer_error);
-			break;
 		}
 	}
 	unset ($prep_statement, $sql, $emails);

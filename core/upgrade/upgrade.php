@@ -32,7 +32,7 @@
 		set_include_path($document_root);
 		require_once "resources/require.php";
 		$_SERVER["DOCUMENT_ROOT"] = $document_root;
-		$format = 'text'; //html, text
+		$display_type = 'text'; //html, text
 	}
 	else {
 		include "root.php";
@@ -45,7 +45,7 @@
 			echo "access denied";
 			exit;
 		}
-		$format = 'html';
+		$display_type = 'html'; //html, text
 	}
 
 //add multi-lingual support
@@ -54,7 +54,7 @@
 	$text = $language->get();
 
 //show the title
-	if ($format == 'text') {
+	if ($display_type == 'text') {
 		echo "\n";
 		echo $text['label-upgrade']."\n";
 		echo "-----------------------------------------\n";
@@ -70,10 +70,11 @@
 //run all app_defaults.php files
 	require_once "resources/classes/domains.php";
 	$domain = new domains;
+	$domain->display_type = $display_type;
 	$domain->upgrade();
 
 //show the content
-	if ($format == 'html') {
+	if ($display_type == 'html') {
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
 		echo "<tr>\n";
@@ -93,12 +94,12 @@
 		echo "<br />\n";
 		echo "<br />\n";
 	}
-	elseif ($format == 'text') {
+	elseif ($display_type == 'text') {
 		echo "\n";
 	}
 
 //include the footer
-	if ($format == "html") {
+	if ($display_type == "html") {
 		require_once "resources/footer.php";
 	}
 

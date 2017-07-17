@@ -156,7 +156,7 @@ else {
 	save_gateway_xml();
 
 //redirect the user
-	$_SESSION["message"] = $text['message-copy'];
+	messages::add($text['message-copy']);
 	header("Location: gateways.php");
 	return;
 

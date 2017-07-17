@@ -106,41 +106,44 @@ class authentication {
 	 */
 	function get_domain() {
 
-		//get the domain name
-			if (!($this->domain_name)) {
-				//get the domain from the url
-					$this->domain_name = $_SERVER["HTTP_HOST"];
-				//get the domain name from the username
-					if ($_SESSION["user"]["unique"]["text"] != "global") {
-						$username_array = explode("@", check_str($_REQUEST["username"]));
-						if (count($username_array) > 1) {
-							//get the domain name
-								$domain_name =  $username_array[count($username_array) -1];
-							//check if the domain from the username exists then set the domain_uuid
-								$domain_exists = false;
-								foreach ($_SESSION['domains'] as $row) {
-									if (lower_case($row['domain_name']) == lower_case($domain_name)) {
-										$this->domain_uuid = $row['domain_uuid'];
-										$domain_exists = true;
-										break;
-									}
-								}
-							//if the domain exists then set domain_name and update the username
-								if ($domain_exists) {
-									$this->domain_name = $domain_name;
-									$this->username = substr(check_str($_REQUEST["username"]), 0, -(strlen($domain_name)+1));
-									$_SESSION['domain_uuid'] = $this->domain_uuid;
-								}
-							//unset the domain name variable
-								unset($domain_name);
+		//get the domain from the url
+			$this->domain_name = $_SERVER["HTTP_HOST"];
+
+		//get the domain name from the username
+			if ($_SESSION["user"]["unique"]["text"] != "global") {
+				$username_array = explode("@", check_str($_REQUEST["username"]));
+				if (count($username_array) > 1) {
+					//get the domain name
+						$domain_name =  $username_array[count($username_array) -1];
+					//check if the domain from the username exists then set the domain_uuid
+						$domain_exists = false;
+						foreach ($_SESSION['domains'] as $row) {
+							if (lower_case($row['domain_name']) == lower_case($domain_name)) {
+								$this->domain_uuid = $row['domain_uuid'];
+								$domain_exists = true;
+								break;
+							}
 						}
-					}
-				//get the domain name from the http value
-					if (strlen(check_str($_REQUEST["domain_name"])) > 0) {
-						$this->domain_name = check_str($_REQUEST["domain_name"]);
-					}
-				//set the domain name
-					$_SESSION['domain_name'] = $this->domain_name;
+					//if the domain exists then set domain_name and update the username
+						if ($domain_exists) {
+							$this->domain_name = $domain_name;
+							$this->username = substr(check_str($_REQUEST["username"]), 0, -(strlen($domain_name)+1));
+							$_SESSION['domain_uuid'] = $this->domain_uuid;
+						}
+					//unset the domain name variable
+						unset($domain_name);
+				}
+			}
+
+		//get the domain name from the http value
+			if (strlen(check_str($_REQUEST["domain_name"])) > 0) {
+				$this->domain_name = check_str($_REQUEST["domain_name"]);
+			}
+
+		//remote port number from the domain name
+			$domain_array = explode(":", $this->domain_name);
+			if (count($domain_array) > 1) {
+				$this->domain_name = $domain_array[0];
 			}
 
 		//get the domain uuid and domain settings
@@ -159,8 +162,12 @@ class authentication {
 			$obj->db = $db;
 			$obj->set();
 
-		//set the domain parent uuid
+		//set the domain settings
+			$_SESSION['domain_name'] = $this->domain_name;
 			$_SESSION['domain_parent_uuid'] = $_SESSION["domain_uuid"];
+
+		//set the domain name
+			return $this->domain_name;
 	}
 }
 

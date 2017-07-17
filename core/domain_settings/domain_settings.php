@@ -52,7 +52,7 @@ if (sizeof($_REQUEST) > 1) {
 			$db->exec(check_sql($sql));
 			unset($sql);
 
-			$_SESSION["message"] = $text['message-update'];
+			messages::add($text['message-update']);
 			header("Location: domain_edit.php?id=".$domain_uuid);
 			exit;
 		}
@@ -76,8 +76,7 @@ if (sizeof($_REQUEST) > 1) {
 			}
 			else {
 				// set message
-				$_SESSION["message"] = $text['message-delete_failed'];
-				$_SESSION["message_mood"] = "negative";
+				messages::add($text['message-delete_failed'], 'negative');
 			}
 
 			header("Location: domain_edit.php?id=".check_str($_REQUEST["domain_uuid"]));
@@ -126,7 +125,7 @@ if (sizeof($_REQUEST) > 1) {
 	$sql = "select * from v_domain_settings ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	if (strlen($order_by) == 0) {
-		$sql .= "order by domain_setting_category, domain_setting_subcategory, domain_setting_order asc ";
+		$sql .= "order by domain_setting_category, domain_setting_subcategory, domain_setting_order asc, domain_setting_name, domain_setting_value ";
 	}
 	else {
 		$sql .= "order by $order_by $order ";

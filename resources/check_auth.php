@@ -26,7 +26,11 @@
 //includes
 	require_once "resources/require.php";
 
-//for compatability require this library if less than version 5.5
+//add multi-lingual support
+	$language = new text;
+	$text = $language->get(null, 'resources');
+
+//for compatibility require this library if less than version 5.5
 	if (version_compare(phpversion(), '5.5', '<')) {
 		require_once "resources/functions/password.php";
 	}
@@ -41,8 +45,15 @@
 	if (!isset($_SESSION['login']['destination']['url'])) { $_SESSION['login']['destination']['url'] = null; }
 	if (!isset($_SESSION['template_content'])) { $_SESSION["template_content"] = null; }
 
+//if the username is not provided then send to login.php
+	if (strlen($_SESSION['username']) == 0 && strlen($_REQUEST["username"]) == 0 && strlen($_REQUEST["key"]) == 0) {
+		$target_path = ($_REQUEST["path"] != '') ? $_REQUEST["path"] : $_SERVER["REQUEST_URI"];
+		header("Location: ".PROJECT_PATH."/login.php?path=".urlencode($target_path));
+		exit;
+	}
+
 //if the username session is not set the check username and password
-	 if (strlen($_SESSION['username']) == 0) {
+	if (strlen($_SESSION['username']) == 0 && isset($_REQUEST["username"]) && isset($_REQUEST["password"])) {
 
 		//clear the menu
 			$_SESSION["menu"] = "";
@@ -50,15 +61,6 @@
 		//clear the template only if the template has not been assigned by the superadmin
 			if (strlen($_SESSION['domain']['template']['name']) == 0) {
 				$_SESSION["template_content"] = '';
-			}
-
-		//if the username is not provided then send to login.php
-			if (strlen($_REQUEST["username"]) == 0 && strlen($_REQUEST["key"]) == 0) {
-				$target_path = ($_REQUEST["path"] != '') ? $_REQUEST["path"] : $_SERVER["REQUEST_URI"];
-				$_SESSION["message_mood"] = "negative";
-				$_SESSION["message"] = "Invalid Username and/or Password";
-				header("Location: ".PROJECT_PATH."/login.php?path=".urlencode($target_path));
-				exit;
 			}
 
 		//validate the username and password
@@ -97,8 +99,7 @@
 					closelog();
 				//redirect the user to the login page
 					$target_path = ($_REQUEST["path"] != '') ? $_REQUEST["path"] : $_SERVER["PHP_SELF"];
-					$_SESSION["message_mood"] = "negative";
-					$_SESSION["message"] = "Invalid Username and/or Password";
+					messages::add($text['message-invalid_credentials'], 'negative');
 					header("Location: ".PROJECT_PATH."/login.php?path=".urlencode($target_path));
 					exit;
 			}
@@ -185,12 +186,13 @@
 					//get the user extension list
 						$_SESSION['user']['extension'] = null;
 						$sql = "select ";
+						$sql .= "	e.extension_uuid, ";
 						$sql .= "	e.extension, ";
 						$sql .= "	e.number_alias, ";
 						$sql .= "	e.user_context, ";
-						$sql .= "	e.extension_uuid, ";
 						$sql .= "	e.outbound_caller_id_name, ";
-						$sql .= "	e.outbound_caller_id_number ";
+						$sql .= "	e.outbound_caller_id_number, ";
+						$sql .= "	e.description ";
 						$sql .= "from ";
 						$sql .= "	v_extension_users as u, ";
 						$sql .= "	v_extensions as e ";
@@ -206,16 +208,23 @@
 							$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 							$x = 0;
 							foreach($result as $row) {
+								//set the destination
 								$destination = $row['extension'];
 								if (strlen($row['number_alias']) > 0) {
 									$destination = $row['number_alias'];
 								}
+								
+								//build the uers array
 								$_SESSION['user']['extension'][$x]['user'] = $row['extension'];
 								$_SESSION['user']['extension'][$x]['number_alias'] = $row['number_alias'];
 								$_SESSION['user']['extension'][$x]['destination'] = $destination;
 								$_SESSION['user']['extension'][$x]['extension_uuid'] = $row['extension_uuid'];
 								$_SESSION['user']['extension'][$x]['outbound_caller_id_name'] = $row['outbound_caller_id_name'];
 								$_SESSION['user']['extension'][$x]['outbound_caller_id_number'] = $row['outbound_caller_id_number'];
+								$_SESSION['user']['extension'][$x]['user_context'] = $row['user_context'];
+								$_SESSION['user']['extension'][$x]['description'] = $row['description'];
+								
+								//set the user context
 								$_SESSION['user_context'] = $row["user_context"];
 								$x++;
 							}

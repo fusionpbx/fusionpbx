@@ -37,11 +37,15 @@
 				if (stream_seek == true) then
 					if (dtmf_digits == "4") then
 						dtmf_digits = "";
-						return("seek:-12000");
+						return("seek:-5000");
+					end
+					if (dtmf_digits == "5") then
+						dtmf_digits = "";
+						return("pause");
 					end
 					if (dtmf_digits == "6") then
 						dtmf_digits = "";
-						return("seek:12000");
+						return("seek:+5000");
 					end
 				end
 				if (string.len(dtmf_digits) >= max_digits) then

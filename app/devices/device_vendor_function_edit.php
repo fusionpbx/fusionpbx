@@ -39,7 +39,7 @@
 			$sql .= "where device_vendor_function_group_uuid = '".$device_vendor_function_group_uuid."' ";
 			$db->exec(check_sql($sql));
 		//redirect the browser
-			$_SESSION["message"] = $text['message-delete'];
+			messages::add($text['message-delete']);
 			header("Location: device_vendor_function_edit.php?id=".$device_vendor_function_uuid ."&device_vendor_uuid=".$device_vendor_uuid);
 			return;
 	}
@@ -198,8 +198,8 @@
 		$sql .= "where device_vendor_function_uuid = '$device_vendor_function_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$device_vendor_functions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($device_vendor_functions as &$row) {
 			//$label = $row["label"];
 			$name = $row["name"];
 			$value = $row["value"];
@@ -232,9 +232,11 @@
 	unset($sql, $prep_statement);
 
 //set the assigned_groups array
-	foreach($menu_item_groups as $field) {
-		if (strlen($field['group_name']) > 0) {
-			$assigned_groups[] = $field['group_uuid'];
+	if (is_array($menu_item_groups)) {
+		foreach($menu_item_groups as $field) {
+			if (strlen($field['group_name']) > 0) {
+				$assigned_groups[] = $field['group_uuid'];
+			}
 		}
 	}
 

@@ -52,7 +52,7 @@ else {
 		//synchronize the configuration
 		save_var_xml();
 
-		$_SESSION["message"] = $text['message-update'];
+		messages::add($text['message-update']);
 		header("Location: vars.php?id=".$_REQUEST['id']);
 		exit;
 	}

@@ -260,7 +260,7 @@
 		--check the database to get the uuid of a ringing call
 			call_hostname = "";
 			sql = "SELECT uuid, call_uuid, hostname FROM channels ";
-			sql = sql .. "WHERE callstate in ('RINGING', 'EARLY') ";
+			sql = sql .. "WHERE callstate IN ('RINGING', 'EARLY') ";
 			-- next check should prevent pickup call from extension
 			-- e.g. if extension 100 dial some cell phone and some one else dial *8
 			-- he can pickup this call.
@@ -275,33 +275,34 @@
 					if direction:find('outbound') then
 						sql = sql .. "OR direction = 'inbound' ";
 					end
-				sql = sql .. ")"
+				sql = sql .. ") "
 			end
 
-			sql = sql .. "AND (1<>1";
+			sql = sql .. "AND (1<>1 ";
 			local params = {};
 			for key,extension in pairs(extensions) do
 				local param_name = "presence_id_" .. tostring(key);
-				sql = sql .. " OR presence_id = :" .. param_name;
+				sql = sql .. "OR presence_id = :" .. param_name .. " ";
 				params[param_name] = extension.."@"..domain_name;
 			end
 			sql = sql .. ") ";
-			sql = sql .. "and call_uuid is not null ";
-			sql = sql .. "limit 1 ";
+			sql = sql .. "AND call_uuid IS NOT NULL ";
+			sql = sql .. "LIMIT 1 ";
 			if (debug["sql"]) then
 				log.noticef("SQL: %s; params: %s", sql, json.encode(params));
 			end
 			local is_child
 			dbh:query(sql, params, function(row)
-				-- for key, val in pairs(row) do
-				-- 	log.notice("row "..key.." "..val);
-				-- end
-				-- log.notice("-----------------------");
+				--for key, val in pairs(row) do
+			 	--	log.notice("row "..key.." "..val);
+				--end
+				--log.notice("-----------------------");
 				is_child = (row.uuid == row.call_uuid)
 				uuid = row.call_uuid;
 				call_hostname = row.hostname;
 			end);
-
+			--log.notice("uuid: "..uuid);
+			--log.notice("call_hostname: "..call_hostname);
 			if is_child then
 				-- we need intercept `parent` call e.g. call in FIFO/CallCenter Queue
 				if (call_hostname == hostname) then

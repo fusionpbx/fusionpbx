@@ -95,13 +95,10 @@ if (!class_exists('scripts')) {
 		public function copy_files() {
 			if (is_array($_SESSION['switch']['scripts'])) {
 				$dst_dir = $_SESSION['switch']['scripts']['dir'];
-				if(strlen($dst_dir) == 0) {
-					throw new Exception("Cannot copy scripts the 'script_dir' is empty");
-				}
 				if (file_exists($dst_dir)) {
 					//get the source directory
-					if (file_exists('/usr/share/examples/fusionpbx/resources/install/scripts')){
-						$src_dir = '/usr/share/examples/fusionpbx/resources/install/scripts';
+					if (file_exists('/usr/share/examples/fusionpbx/scripts')){
+						$src_dir = '/usr/share/examples/fusionpbx/scripts';
 					}
 					else {
 						$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/scripts';
@@ -109,6 +106,13 @@ if (!class_exists('scripts')) {
 					if (is_readable($dst_dir)) {
 						recursive_copy($src_dir,$dst_dir);
 						unset($src_dir);
+						
+						// Copy the app/*/resource/install/scripts
+						$app_scripts = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'app/*/resource/install/scripts');
+						foreach ($app_scripts as $app_script){
+							recursive_copy($app_script, $dst_dir);
+						}
+						unset($app_scripts);
 					}else{
 						throw new Exception("Cannot read from '$src_dir' to get the scripts");
 					}
@@ -213,8 +217,11 @@ if (!class_exists('scripts')) {
 					if (substr(strtoupper(PHP_OS), 0, 3) == "WIN") {
 						$tmp .= "	php_bin = \"php.exe\";\n";
 					}
+					elseif (file_exists(PHP_BINDIR."/php5")) { 
+	 					$tmp .= "	php_bin = \"php5\";\n";
+ 					}
 					else {
-						$tmp .= "	php_bin = \"php5\";\n";
+						$tmp .= "	php_bin = \"php\";\n";
 					}
 					$tmp .= $this->correct_path("	document_root = [[".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."]];\n");
 					$tmp .= $this->correct_path("	project_path = [[".PROJECT_PATH."]];\n");

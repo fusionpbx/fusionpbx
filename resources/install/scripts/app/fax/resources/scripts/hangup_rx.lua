@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2015
+--	Copyright (C) 2015-2016
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -173,6 +173,7 @@
 		fax_accountcode = row["accountcode"];
 		fax_destination_number = row["fax_destination_number"];
 		fax_name = row["fax_name"];
+		fax_prefix = row["fax_prefix"];
 		fax_email = row["fax_email"];
 		fax_email_connection_type = row["fax_email_connection_type"];
 		fax_email_connection_host = row["fax_email_connection_host"];
@@ -210,6 +211,13 @@
 	cmd = cmd .. "caller_id_number=" .. quote(caller_id_number or '') .. " ";
 	if #fax_forward_number > 0 then
 		cmd = cmd .. "fax_relay=true ";
+	else
+		cmd = cmd .. "fax_relay=false ";
+	end
+	if #fax_prefix > 0 then
+		cmd = cmd .. "fax_prefix=true ";
+	else
+		cmd = cmd .. "fax_prefix=false ";
 	end
 	freeswitch.consoleLog("notice", "[fax] command: " .. cmd .. "\n");
 	result = api:execute("system", cmd);

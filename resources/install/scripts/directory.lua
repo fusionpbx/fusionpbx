@@ -1,6 +1,6 @@
 --	directory.lua
 --	Part of FusionPBX
---	Copyright (C) 2012 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2012-2017 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -13,7 +13,7 @@
 --	notice, this list of conditions and the following disclaimer in the
 --	documentation and/or other materials provided with the distribution.
 --
---	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--	THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 --	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
 --	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
@@ -78,10 +78,6 @@
 			end
 		end
 	end
-
---debug
-	debug["info"] = false;
-	debug["sql"] = false;
 
 --prepare the api object
 	api = freeswitch.API();
@@ -195,8 +191,17 @@
 			dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/voicemail/vm-press.wav", "", "\\d+");
 		end
 		if (string.len(dtmf_digits) == 0) then
-			digit_timeout = "3000";
 			dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/digits/1.wav", "", "\\d+");
+		end
+		if (string.len(dtmf_digits) == 0) then
+			dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/directory/dir-for_next.wav", "", "\\d+");
+		end
+		if (string.len(dtmf_digits) == 0) then
+			dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/voicemail/vm-press.wav", "", "\\d+");
+		end
+		if (string.len(dtmf_digits) == 0) then
+			digit_timeout = "5000";
+			dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/digits/6.wav", "", "\\d+");
 		end
 		return dtmf_digits;
 	end
@@ -260,17 +265,19 @@
 											session:streamFile(file_location);
 										else
 											--announce the first and last names
-											if (speak_mod ~= nil and speak_voice ~= nil) then
-												session:execute("speak",speak_mod.."|"..speak_voice.."|"..row.first_name);
-											else
-												session:execute("say", "en name_spelled iterated "..row.first_name);
+											if (row.first_name ~= nil and row.first_name ~= '') then
+												if (speak_mod ~= nil and speak_voice ~= nil) then
+													session:execute("speak", speak_mod.."|"..speak_voice.."|"..row.first_name);
+												else
+													session:execute("say", default_language.." name_spelled iterated "..row.first_name);
+												end
 											end
 											--session:execute("sleep", "500");
-											if (row.last_name ~= nil) then
+											if (row.last_name ~= nil and row.last_name ~= '') then
 												if (speak_mod ~= nil and speak_voice ~= nil) then
-													session:execute("speak",speak_mod.."|"..speak_voice.."|"..row.last_name);
+													session:execute("speak", speak_mod.."|"..speak_voice.."|"..row.last_name);
 												else
-													session:execute("say", "en name_spelled iterated "..row.last_name);
+													session:execute("say", default_language.." name_spelled iterated "..row.last_name);
 												end
 											end
 										end
@@ -289,28 +296,30 @@
 									session:streamFile(voicemail_dir.."/"..row.extension.."/recorded_name.wav");
 								else
 									--announce the first and last names
-										if (speak_mod ~= nil and speak_voice ~= nil) then
-											session:execute("speak",speak_mod.."|"..speak_voice.."|"..row.first_name);
-										else
-											session:execute("say", "en name_spelled iterated "..row.first_name);
+										if (row.first_name ~= nil and row.first_name ~= '') then
+											if (speak_mod ~= nil and speak_voice ~= nil) then
+												session:execute("speak",speak_mod.."|"..speak_voice.."|"..row.first_name);
+											else
+												session:execute("say", default_language.." name_spelled iterated "..row.first_name);
+											end
 										end
-										if (row.last_name ~= nil) then
+										if (row.last_name ~= nil and row.last_name ~= '') then
 											--session:execute("sleep", "500");
 											if (speak_mod ~= nil and speak_voice ~= nil) then
 												session:execute("speak",speak_mod.."|"..speak_voice.."|"..row.last_name);
 											else
-												session:execute("say", "en name_spelled iterated "..row.last_name);
+												session:execute("say", default_language.." name_spelled iterated "..row.last_name);
 											end
 										end
 								end
 							end
 
 						--announce the extension number
-							if (row.directory_exten_visible == "false") then
+							--if (row.directory_exten_visible == "false") then
 								--invisible extension number
-							else
+							if (row.extension ~= nil and row.extension ~= '' and row.directory_exten_visible == "true") then
 								session:streamFile(sounds_dir.."/directory/dir-at_extension.wav");
-								session:execute("say", "en number iterated "..row.extension);
+								session:execute("say", default_language.." NAME_SPELLED iterated "..row.extension);
 							end
 
 						--select this entry press 1
@@ -350,34 +359,34 @@
 			--directory[x] = row;
 		--variables
 			effective_caller_id_name = row.effective_caller_id_name;
-			if (row.directory_full_name) then
-				name = row.directory_full_name;
+			if (row.directory_first_name) then
+				first_name = row.directory_first_name;
+				last_name = row.directory_last_name;
 			else
 				if (string.len(effective_caller_id_name) > 0) then
 					name = effective_caller_id_name;
+					name_table = explode(" ",name);
+					first_name = name_table[1];
+					last_name = name_table[2];
 				end
 			end
-			if (name) then
-				name_table = explode(" ",name);
-				first_name = name_table[1];
-				last_name = name_table[2];
-				if (first_name) then
-					if (string.len(first_name) > 0) then
-						--freeswitch.consoleLog("notice", "[directory] first_name: --" .. first_name .. "--\n");
-						first_name_digits = dialpad_to_digit(string.sub(first_name, 1, 1))..dialpad_to_digit(string.sub(first_name, 2, 2))..dialpad_to_digit(string.sub(first_name, 3, 3));
-					end
+		--get the digits
+			if (first_name) then
+				if (string.len(first_name) > 0) then
+					--freeswitch.consoleLog("notice", "[directory] first_name: --" .. first_name .. "--\n");
+					first_name_digits = dialpad_to_digit(string.sub(first_name, 1, 1))..dialpad_to_digit(string.sub(first_name, 2, 2))..dialpad_to_digit(string.sub(first_name, 3, 3));
 				end
-				if (last_name) then
-					if (string.len(last_name) > 0) then
-						--freeswitch.consoleLog("notice", "[directory] last_name: --" .. last_name .. "--\n");
-						last_name_digits = dialpad_to_digit(string.sub(last_name, 1, 1))..dialpad_to_digit(string.sub(last_name, 2, 2))..dialpad_to_digit(string.sub(last_name, 3, 3));
-					end
+			end
+			if (last_name) then
+				if (string.len(last_name) > 0) then
+					--freeswitch.consoleLog("notice", "[directory] last_name: --" .. last_name .. "--\n");
+					last_name_digits = dialpad_to_digit(string.sub(last_name, 1, 1))..dialpad_to_digit(string.sub(last_name, 2, 2))..dialpad_to_digit(string.sub(last_name, 3, 3));
 				end
+			end
 
-			end
 		--add the row to the array
 			--freeswitch.consoleLog("notice", "[directory] extension="..row.extension..",context="..row.user_context..",first_name="..name_table[1]..",last_name="..name_table[2]..",first_name_digits="..first_name_digits..",last_name_digits="..last_name_digits..",directory_exten_visible="..row.directory_exten_visible.."\n");
-			table.insert(directory, {extension=row.extension,context=row.user_context,first_name=name_table[1],last_name=name_table[2],first_name_digits=first_name_digits,last_name_digits=last_name_digits,directory_exten_visible=row.directory_exten_visible});
+			table.insert(directory, {extension=row.extension,context=row.user_context,first_name=first_name,last_name=last_name,first_name_digits=first_name_digits,last_name_digits=last_name_digits,directory_exten_visible=row.directory_exten_visible});
 
 		--increment x
 			x = x + 1;

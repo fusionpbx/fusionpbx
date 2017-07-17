@@ -54,7 +54,7 @@ else {
 	}
 
 
-$_SESSION["message"] = $text['confirm-delete'];
+messages::add($text['confirm-delete']);
 header("Location: call_broadcast.php");
 return;
 

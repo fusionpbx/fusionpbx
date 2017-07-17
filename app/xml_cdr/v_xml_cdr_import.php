@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -74,6 +74,19 @@
 		require_once "app/billing/resources/functions/rating.php";
 	}
 
+	function accept_b_leg($xml){
+		// if no filter set allow all for backward compatibility
+			if(empty($_SESSION['cdr']['b_leg'])){
+				return true;
+			}
+		// filter out by call direction
+			if(in_array(@$xml->variables->call_direction, $_SESSION['cdr']['b_leg'])){
+				return true;
+			}
+		// Disable cdr write
+			return false;
+	}
+
 //define the process_xml_cdr function
 	function process_xml_cdr($db, $leg, $xml_string) {
 		//set global variable
@@ -102,11 +115,19 @@
 				xml_cdr_log("\nfail loadxml: " . $e->getMessage() . "\n");
 			}
 
+		//filter out b-legs
+			if($leg == 'b'){
+				if(!accept_b_leg($xml)){
+					return;
+				}
+			}
+
 		//prepare the database object
 			require_once "resources/classes/database.php";
 			$database = new database;
 			$database->table = "v_xml_cdr";
-
+		//caller info
+			$database->fields['caller_destination'] = check_str(urldecode($xml->variables->caller_destination));
 		//misc
 			$uuid = check_str(urldecode($xml->variables->uuid));
 			$database->fields['uuid'] = $uuid;
@@ -174,7 +195,7 @@
 			unset($x);
 
 		//if last_sent_callee_id_number is set use it for the destination_number
-			if (strlen($xml->variables->last_sent_callee_id_number) > 0) {
+			if (($leg == 'a') && (strlen($xml->variables->last_sent_callee_id_number) > 0)) {
 				$database->fields['destination_number'] = urldecode($xml->variables->last_sent_callee_id_number);
 			}
 
@@ -237,6 +258,14 @@
 			}
 			if(isset($recording_file) && !empty($recording_file)) {
 				$database->fields['recording_file'] = $recording_file;
+			}
+			if(isset($recording_file) && !empty($recording_file)) {
+				$database->fields['recording_name'] = $recording_file;
+			}
+
+		//get the recording name
+			if (strlen($xml->variables->recording_name) > 0) {
+				$database->fields['recording_name'] = urldecode($xml->variables->recording_name);
 			}
 
 		//dynamic cdr fields

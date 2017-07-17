@@ -68,7 +68,7 @@ CREATE TABLE channels (
     ip_addr character varying(256),
     dest character varying(1024),
     application character varying(128),
-    application_data character varying(4096),
+    application_data text,
     dialplan character varying(128),
     context character varying(128),
     read_codec character varying(128),

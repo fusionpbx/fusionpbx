@@ -9,20 +9,28 @@
 		$apps[$x]['version'] = "0.1";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
-		$apps[$x]['description']['en-us'] = "Manager phrases primarily used with an IVR.";
+		$apps[$x]['description']['en-us'] = "Manage phrases primarily used with an IVR.";
+		$apps[$x]['description']['ar-eg'] = "";
+		$apps[$x]['description']['de-at'] = "Phrasen verwalten. Diese werden hauptsächlich für Anrufzentralen (IVR) verwendet.";
+		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-de'] = "Phrasen verwalten. Diese werden hauptsächlich für Anrufzentralen (IVR) verwendet.";
 		$apps[$x]['description']['es-cl'] = "Administrador de grabaciones, utilizadas primordialmente con un IVR";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['de-de'] = "";
-		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
-		$apps[$x]['description']['fr-fr'] = "Gestion des enregistrements principalement utilisés dans les IVR";
 		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "Gestor de gravações utilizadas principalmente com um IVR.";
+		$apps[$x]['description']['fr-fr'] = "Gestion des enregistrements principalement utilisés dans les IVR";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-pt'] = "Gestor de gravações utilizadas principalmente com um IVR.";
+		$apps[$x]['description']['ro-ro'] = "";
+		$apps[$x]['description']['ru-ru'] = "";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
 
 	//destination details
-		$y = 0;
+		$y=0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "phrases";
 		$apps[$x]['destinations'][$y]['name'] = "phrases";
@@ -36,7 +44,7 @@
 		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "phrase_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "a5caa6dc-a6d7-41c3-a484-e556ffd0d2ff";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
@@ -63,9 +71,10 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_phrases";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_phrases";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "phrase_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -97,12 +106,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "phrase_enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
 
-		//schema details
-		$y = 1; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_phrase_details";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_phrase_details";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_phrases";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "phrase_detail_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -159,7 +167,5 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "phrase_detail_order";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
-
 
 ?>

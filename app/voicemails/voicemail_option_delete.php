@@ -54,7 +54,7 @@ else {
 	}
 
 //redirect the user
-	$_SESSION['message'] = $text['message-delete'];
+	messages::add($text['message-delete']);
 	header('Location: voicemail_edit.php?id='.$voicemail_uuid);
 
 ?>

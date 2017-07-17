@@ -53,7 +53,7 @@ else {
 			$db->exec(check_sql($sql));
 			unset($sql);
 
-			$_SESSION["message"] = $text['message-update'];
+			messages::add($text['message-update']);
 			header("Location: default_settings.php".(($search != '') ? "?search=".$search : null)."#".$category);
 			exit;
 		}
@@ -162,7 +162,7 @@ else {
 			}
 			else {
 				// set message
-				$_SESSION["message"] = $text['message-copy_failed'];
+				messages::add($text['message-copy_failed']);
 			}
 
 			header("Location: default_settings.php".(($search != '') ? "?search=".$search : null));
@@ -185,8 +185,7 @@ else {
 			}
 			else {
 				// set message
-				$_SESSION["message"] = $text['message-delete_failed'];
-				$_SESSION["message_mood"] = "negative";
+				messages::add($text['message-delete_failed'], 'negative');
 			}
 
 			header("Location: default_settings.php".(($search != '') ? "?search=".$search : null));
@@ -314,7 +313,7 @@ else {
 //get the list
 	$sql = "select * from v_default_settings ";
 	if (strlen($order_by) == 0) {
-		$sql .= "order by default_setting_category, default_setting_subcategory, default_setting_order asc ";
+		$sql .= "order by default_setting_category, default_setting_subcategory, default_setting_order asc, default_setting_name, default_setting_value ";
 	}
 	else {
 		$sql .= "order by $order_by $order ";

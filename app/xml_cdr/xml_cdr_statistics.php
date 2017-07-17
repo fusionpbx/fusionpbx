@@ -50,7 +50,11 @@ else {
 	echo "	<td width='70%' align='right' valign='top'>\n";
 	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='xml_cdr.php'\" value='".$text['button-back']."'>\n";
 	if (permission_exists('xml_cdr_search_advanced')) {
-		echo "			<input type='button' class='btn' value='".$text['button-advanced_search']."' onclick=\"window.location='xml_cdr_search.php?redirect=xml_cdr_statistics';\">\n";
+		$advenced_search_url = 'xml_cdr_search.php?redirect=xml_cdr_statistics';
+		if(permission_exists('xml_cdr_all') && (@$_GET['showall'] === 'true')){
+			$advenced_search_url .= '&showall=true';
+		}
+		echo "			<input type='button' class='btn' value='".$text['button-advanced_search']."' onclick=\"window.location='$advenced_search_url';\">\n";
 	}
 	if (permission_exists('xml_cdr_all')) {
 		if ($_GET['showall'] != 'true') {
@@ -211,14 +215,9 @@ else {
 			echo "	<th>ALOC</th>\n";
 			echo "</tr>\n";
 			echo "<tr>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>1</td>\n";
 		}
-		elseif ($i == $hours+2) {
-			echo "<tr>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>7</td>\n";
-		}
-		elseif ($i == $hours+3) {
-			echo "	<td valign='top' class='".$row_style[$c]."'>30</td>\n";
+		if ($i > $hours) {
+			echo "	<td valign='top' class='".$row_style[$c]."'>" . floor($row['hours']/24) . "</td>\n";
 		}
 		if ($i <= $hours) {
 			echo "	<td valign='top' class='".$row_style[$c]."'>".date('j M', $row['start_epoch'])."</td>\n";
@@ -230,8 +229,8 @@ else {
 		}
 		echo "	<td valign='top' class='".$row_style[$c]."'>".$row['volume']."&nbsp;</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".(round($row['minutes'],2))."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".(round($row['avg_min'],2))."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"xml_cdr.php?missed=true&direction=inbound&start_epoch=".$row['start_epoch']."&stop_epoch=".$row['stop_epoch']."\">".$row['missed']."</a>&nbsp;</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".(round($row['avg_min'],2))."&nbsp;/&nbsp;".(round($row['cpm_ans'],2))."&nbsp;</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"xml_cdr.php?missed=true&direction=$direction&start_epoch=".$row['start_epoch']."&stop_epoch=".$row['stop_epoch']."\">".$row['missed']."</a>&nbsp;</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".(round($row['asr'],2))."&nbsp;</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".(round($row['aloc'],2))."&nbsp;</td>\n";
 		echo "</tr >\n";

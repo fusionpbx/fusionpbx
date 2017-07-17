@@ -30,14 +30,17 @@
 	local log = require "resources.functions.log".ivr_menu
 
 --get the cache
-	if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
-		XML_STRING = trim(api:execute("memcache", "get configuration:ivr.conf:" .. ivr_menu_uuid));
-	else
-		XML_STRING = "-ERR NOT FOUND";
-	end
+	local cache = require "resources.functions.cache"
+	local ivr_menu_cache_key = "configuration:ivr.conf:" .. ivr_menu_uuid
+	XML_STRING, err = cache.get(ivr_menu_cache_key)
 
 --set the cache
-	if (XML_STRING == "-ERR NOT FOUND" or XML_STRING == "-ERR CONNECTION FAILURE") then
+	if not XML_STRING  then
+		--log cache error
+			if (debug["cache"]) then
+				freeswitch.consoleLog("warning", "[xml_handler] " .. ivr_menu_cache_key .. " can not be get from memcache: " .. tostring(err) .. "\n");
+			end
+
 		--required includes
 			local Database = require "resources.functions.database"
 			local Settings = require "resources.functions.lazy_settings"
@@ -268,7 +271,14 @@
 			--freeswitch.consoleLog("notice", "[xml_handler]"..api:execute("eval ${dsn}"));
 
 		--set the cache
-			result = trim(api:execute("memcache", "set configuration:ivr.conf:".. ivr_menu_uuid .." '"..XML_STRING:gsub("'", "&#39;").."' "..expire['ivr']));
+			local ok, err = cache.set(ivr_menu_uuid, XML_STRING, expire["ivr"]);
+			if debug["cache"] then
+				if ok then
+					freeswitch.consoleLog("notice", "[xml_handler] " .. ivr_menu_uuid .. " stored in memcache\n");
+				else
+					freeswitch.consoleLog("warning", "[xml_handler] " .. ivr_menu_uuid .. " can not be stored in memcache: " .. tostring(err) .. "\n");
+				end
+			end
 
 		--send the xml to the console
 			if (debug["xml_string"]) then
@@ -279,14 +289,12 @@
 
 		--send to the console
 			if (debug["cache"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] configuration:ivr.conf:" .. ivr_menu_uuid .." source: database\n");
+				freeswitch.consoleLog("notice", "[xml_handler] " .. ivr_menu_cache_key .. " source: database\n");
 			end
 
 	else
-		--replace the &#39 back to a single quote
-			XML_STRING = XML_STRING:gsub("&#39;", "'");
 		--send to the console
 			if (debug["cache"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] configuration:ivr.conf" .. ivr_menu_uuid .." source: memcache\n");
+				freeswitch.consoleLog("notice", "[xml_handler] " .. ivr_menu_cache_key .. " source: memcache\n");
 			end
 	end --if XML_STRING

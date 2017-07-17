@@ -64,7 +64,7 @@
 	}
 
 //redirect the user
-	$_SESSION["message"] = $text['message-delete'];
+	messages::add($text['message-delete']);
 	header("Location: groupmembers.php?group_uuid=".$group_uuid."&group_name=".$group_name);
 
 ?>

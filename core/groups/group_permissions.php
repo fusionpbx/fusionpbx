@@ -314,7 +314,7 @@
 				}
 			}
 
-		$_SESSION["message"] = $text['message-update'];
+		messages::add($text['message-update']);
 		header("Location: groups.php");
 		return;
 	}

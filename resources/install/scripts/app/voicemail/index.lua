@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013-2016 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2017 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -12,7 +12,7 @@
 --	  notice, this list of conditions and the following disclaimer in the
 --	  documentation and/or other materials provided with the distribution.
 --
---	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--	THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 --	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
 --	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
@@ -37,8 +37,8 @@
 	direct_dial["max_digits"] = 4;
 
 --debug
-	debug["info"] = false;
-	debug["sql"] = false;
+	--debug["info"] = true;
+	--debug["sql"] = true;
 
 --get the argv values
 	script_name = argv[1];
@@ -74,26 +74,37 @@
 			destination_number = session:getVariable("destination_number");
 			caller_id_name = session:getVariable("caller_id_name");
 			caller_id_number = session:getVariable("caller_id_number");
-			if (string.sub(caller_id_number, 1, 1) == "/") then
-				caller_id_number = string.sub(caller_id_number, 2, -1);
-			end
 			voicemail_greeting_number = session:getVariable("voicemail_greeting_number");
 			skip_instructions = session:getVariable("skip_instructions");
 			skip_greeting = session:getVariable("skip_greeting");
 			vm_message_ext = session:getVariable("vm_message_ext");
 			vm_say_caller_id_number = session:getVariable("vm_say_caller_id_number");
+			vm_say_date_time = session:getVariable("vm_say_date_time");
 			vm_disk_quota = session:getVariable("vm-disk-quota");
-			if (not vm_disk_quota) then
-				vm_disk_quota = session:getVariable("vm_disk_quota");
-			end
 			record_silence_threshold = session:getVariable("record-silence-threshold");
-			if (not record_silence_threshold) then
-				record_silence_threshold = 300;
-			end
 			voicemail_authorized = session:getVariable("voicemail_authorized");
 			sip_from_user = session:getVariable("sip_from_user");
 			sip_number_alias = session:getVariable("sip_number_alias");
-			if (not vm_message_ext) then vm_message_ext = 'wav'; end
+
+		--set default values
+			if (string.sub(caller_id_number, 1, 1) == "/") then
+				caller_id_number = string.sub(caller_id_number, 2, -1);
+			end
+			if (not record_silence_threshold) then
+				record_silence_threshold = 300;
+			end
+			if (not vm_disk_quota) then
+				vm_disk_quota = session:getVariable("vm_disk_quota");
+			end
+			if (not vm_message_ext) then
+				vm_message_ext = 'wav';
+			end
+			if (not vm_say_caller_id_number) then
+				vm_say_caller_id_number = "true";
+			end
+			if (not vm_say_date_time) then
+				vm_say_date_time = "true";
+			end
 
 		--set the sounds path for the language, dialect and voice
 			default_language = session:getVariable("default_language");
@@ -141,20 +152,35 @@
 		--settings
 			require "resources.functions.settings";
 			settings = settings(domain_uuid);
-			storage_type = "";
-			storage_path = "";
 			if (settings['voicemail'] ~= nil) then
+				storage_type = '';
 				if (settings['voicemail']['storage_type'] ~= nil) then
 					if (settings['voicemail']['storage_type']['text'] ~= nil) then
 						storage_type = settings['voicemail']['storage_type']['text'];
 					end
 				end
+
+				storage_path = '';
 				if (settings['voicemail']['storage_path'] ~= nil) then
 					if (settings['voicemail']['storage_path']['text'] ~= nil) then
 						storage_path = settings['voicemail']['storage_path']['text'];
 						storage_path = storage_path:gsub("${domain_name}", domain_name);
 						storage_path = storage_path:gsub("${voicemail_id}", voicemail_id);
 						storage_path = storage_path:gsub("${voicemail_dir}", voicemail_dir);
+					end
+				end
+
+				message_order = '';
+				if (settings['voicemail']['message_order'] ~= nil) then
+					if (settings['voicemail']['message_order']['text'] ~= nil) then
+						message_order = settings['voicemail']['message_order']['text'];
+					end
+				end
+
+				remote_access = '';
+				if (settings['voicemail']['remote_access'] ~= nil) then
+					if (settings['voicemail']['remote_access']['boolean'] ~= nil) then
+						remote_access = settings['voicemail']['remote_access']['boolean'];
 					end
 				end
 			end
@@ -199,6 +225,8 @@
 							voicemail_mail_to = row["voicemail_mail_to"];
 							voicemail_attach_file = row["voicemail_attach_file"];
 							voicemail_local_after_email = row["voicemail_local_after_email"];
+							voicemail_transcription_enabled = row["voicemail_transcription_enabled"];
+							voicemail_tutorial = row["voicemail_tutorial"];
 						end);
 					--set default values
 						if (voicemail_local_after_email == nil) then
@@ -263,6 +291,7 @@
 	require "app.voicemail.resources.functions.record_name";
 	require "app.voicemail.resources.functions.message_count"
 	require "app.voicemail.resources.functions.mwi_notify";
+	require "app.voicemail.resources.functions.tutorial";	
 
 --send a message waiting event
 	if (voicemail_action == "mwi") then
@@ -313,36 +342,42 @@
 
 			--send to the main menu
 				timeouts = 0;
-				main_menu();
+				if (voicemail_tutorial == "true") then 
+					tutorial("intro");
+				else
+					main_menu();
+				end
 		end
 	end
 
 --leave a message
 	if (voicemail_action == "save") then
 
+		--check the voicemail quota
+			if (voicemail_uuid ~= nil and vm_disk_quota ~= nil) then
+				--get voicemail message seconds
+					local sql = [[SELECT coalesce(sum(message_length), 0) as message_sum FROM v_voicemail_messages
+						WHERE domain_uuid = :domain_uuid
+						AND voicemail_uuid = :voicemail_uuid]]
+					local params = {domain_uuid = domain_uuid, voicemail_uuid = voicemail_uuid};
+					if (debug["sql"]) then
+						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+					end
+					dbh:query(sql, params, function(row)
+						message_sum = row["message_sum"];
+					end);
+					if (tonumber(vm_disk_quota) <= tonumber(message_sum)) then
+						--play message mailbox full
+							session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-mailbox_full.wav")
+						--hangup
+							session:hangup("NORMAL_CLEARING");
+						--set the voicemail_uuid to nil to prevent saving the voicemail
+							voicemail_uuid = nil;
+					end
+			end
+
 		--valid voicemail
 			if (voicemail_uuid ~= nil) then
-
-				--check the voicemail quota
-					if (vm_disk_quota) then
-						--get voicemail message seconds
-							local sql = [[SELECT coalesce(sum(message_length), 0) as message_sum FROM v_voicemail_messages
-								WHERE domain_uuid = :domain_uuid
-								AND voicemail_uuid = :voicemail_uuid]]
-							local params = {domain_uuid = domain_uuid, voicemail_uuid = voicemail_uuid};
-							if (debug["sql"]) then
-								freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
-							end
-							dbh:query(sql, params, function(row)
-								message_sum = row["message_sum"];
-							end);
-							if (tonumber(vm_disk_quota) <= tonumber(message_sum)) then
-								--play message mailbox full
-									session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-mailbox_full.wav")
-								--set the voicemail_uuid to nil to prevent saving the voicemail
-									voicemail_uuid = nil;
-							end
-					end
 
 				--play the greeting
 					timeouts = 0;
@@ -414,7 +449,7 @@
 								if (storage_type == "base64") then
 									table.insert(sql, "message_base64, ");
 								end
-								if (transcribe_enabled == "true") then
+								if (transcribe_enabled == "true") and (voicemail_transcription_enabled == "true") then
 									table.insert(sql, "message_transcription, ");
 								end
 								table.insert(sql, "message_length ");
@@ -432,7 +467,7 @@
 								if (storage_type == "base64") then
 									table.insert(sql, ":message_base64, ");
 								end
-								if (transcribe_enabled == "true") then
+								if (transcribe_enabled == "true") and (voicemail_transcription_enabled == "true") then
 									table.insert(sql,  ":transcription, ");
 								end
 								table.insert(sql, ":message_length ");
@@ -529,13 +564,15 @@
 
 			else
 				--voicemail not enabled or does not exist
-					referred_by = session:getVariable("sip_h_Referred-By");
-					if (referred_by) then
-						referred_by = referred_by:match('[%d]+');
-						session:transfer(referred_by, "XML", context);
-					else
-						session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-no_answer_no_vm.wav");
-						session:hangup("NO_ANSWER");
+					if (session:ready()) then
+						referred_by = session:getVariable("sip_h_Referred-By");
+						if (referred_by) then
+							referred_by = referred_by:match('[%d]+');
+							session:transfer(referred_by, "XML", context);
+						else
+							session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-no_answer_no_vm.wav");
+							session:hangup("NO_ANSWER");
+						end
 					end
 			end
 	end

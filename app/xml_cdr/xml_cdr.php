@@ -91,6 +91,7 @@
 	echo "	<input type='hidden' name='call_result' value='".$call_result."'>\n";
 	echo "	<input type='hidden' name='caller_extension_uuid' value='".$caller_extension_uuid."'>\n";
 	echo "	<input type='hidden' name='caller_id_number' value='".$caller_id_number."'>\n";
+	echo "	<input type='hidden' name='caller_destination' value='".$caller_destination."'>\n";
 	echo "	<input type='hidden' name='destination_number' value='".$destination_number."'>\n";
 	echo "	<input type='hidden' name='context' value='".$context."'>\n";
 	echo "	<input type='hidden' name='answer_stamp_begin' value='".$answer_stamp_begin."'>\n";
@@ -109,6 +110,7 @@
 	echo "	<input type='hidden' name='remote_media_ip' value='".$remote_media_ip."'>\n";
 	echo "	<input type='hidden' name='network_addr' value='".$network_addr."'>\n";
 	echo "	<input type='hidden' name='bridge_uuid' value='".$bridge_uuid."'>\n";
+	echo "	<input type='hidden' name='leg' value='".$leg."'>\n";
 	if (is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
 			$array = explode(",", $field);
@@ -144,6 +146,7 @@
 	}
 	echo "				<input type='button' class='btn' value='".$text['button-statistics']."' onclick=\"document.location.href='xml_cdr_statistics.php';\">\n";
 	echo "				<input type='button' class='btn' value='".$text['button-export']."' onclick=\"toggle_select('export_format');\">\n";
+	echo "				<input type='button' class='btn' value='".$text['button-refresh']."' onclick=\"document.location.href='xml_cdr.php';\" />\n";
 	echo "			</td>";
 	echo "			<td style='vertical-align: top;'>";
 	echo "				<select class='formfld' style='display: none; width: auto; margin-left: 3px;' name='export_format' id='export_format' onchange=\"display_message('".$text['message-preparing_download']."'); toggle_select('export_format'); document.getElementById('frm_export').submit();\">\n";
@@ -316,6 +319,14 @@
 					echo "			</select>\n";
 					echo "		</td>\n";
 					echo "	</tr>\n";
+					echo "	<tr>\n";
+					echo "		<td class='vncell' valign='top' nowrap='nowrap'>\n";
+					echo "			".$text['label-caller_destination']."\n";
+					echo "		</td>\n";
+					echo "		<td class='vtable' align='left'>\n";
+					echo "			<input type='text' class='formfld' name='caller_destination' value='$caller_destination'>\n";
+					echo "		</td>\n";
+					echo "	</tr>\n";
 					echo "</table>\n";
 
 				echo "</td>";
@@ -365,6 +376,7 @@
 		}
 		echo th_order_by('caller_id_name', $text['label-cid-name'], $order_by, $order, null, null, $param);
 		echo th_order_by('caller_id_number', $text['label-source'], $order_by, $order, null, null, $param);
+		echo th_order_by('caller_destination', $text['label-caller_destination'], $order_by, $order, null, null, $param);
 		echo th_order_by('destination_number', $text['label-destination'], $order_by, $order, null, null, $param);
 		if (permission_exists('recording_play') || permission_exists('recording_download')) {
 			echo "<th>".$text['label-recording']."</th>\n";
@@ -382,18 +394,18 @@
 			}
 		}
 		echo th_order_by('start_stamp', $text['label-start'], $order_by, $order, null, "style='text-align: center;'", $param);
-		echo th_order_by('tta', $text['label-tta'], $order_by, $order, null, "style='text-align: right;'", $param);
+		echo th_order_by('tta', $text['label-tta'], $order_by, $order, null, "style='text-align: right;'", $param, $text['description-tta']);
 		echo th_order_by('duration', $text['label-duration'], $order_by, $order, null, "style='text-align: center;'", $param);
 		if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
 			echo "<th>".$text['label-price']."</th>\n";
 			$col_count++;
 		}
 		if (permission_exists('xml_cdr_pdd')) {
-			echo th_order_by('pdd_ms', 'PDD', $order_by, $order, null, "style='text-align: right;'", $param);
+			echo th_order_by('pdd_ms', $text['label-pdd'], $order_by, $order, null, "style='text-align: right;'", $param, $text['description-pdd']);
 			$col_count++;
 		}
 		if (permission_exists('xml_cdr_mos')) {
-			echo th_order_by('rtp_audio_in_mos', 'MOS', $order_by, $order, null, "style='text-align: center;'", $param);
+			echo th_order_by('rtp_audio_in_mos', $text['label-mos'], $order_by, $order, null, "style='text-align: center;'", $param, $text['description-mos']);
 			$col_count++;
 		}
 		if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
@@ -513,7 +525,12 @@
 						else { $call_result = 'failed'; }
 					}
 					if (strlen($row['direction']) > 0) {
-						echo "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_".$row['direction']."_".$call_result.".png' width='16' style='border: none; cursor: help;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]."'>\n";
+						$image_name = "icon_cdr_" . $row['direction'] . "_" . $call_result;
+						if($row['leg'] == 'b'){
+							$image_name .= '_b';
+						}
+						$image_name .= ".png";
+						echo "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/$image_name' width='16' style='border: none; cursor: help;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]. ($row['leg']=='b'?'(b)':'') . "'>\n";
 					}
 				}
 				else { echo "&nbsp;"; }
@@ -534,6 +551,17 @@
 				}
 				else {
 					echo "		".$row['caller_id_number'].' ';
+				}
+				echo "		</a>";
+				echo "	</td>\n";
+			//caller destination
+				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>";
+				echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['caller_id_name'])."&src_cid_number=".urlencode($row['caller_id_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['caller_destination'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
+				if (is_numeric($row['caller_destination'])) {
+					echo "		".format_phone($row['caller_destination']).' ';
+				}
+				else {
+					echo "		".$row['caller_destination'].' ';
 				}
 				echo "		</a>";
 				echo "	</td>\n";
@@ -648,7 +676,11 @@
 				}
 			//mos (mean opinion score)
 				if (permission_exists("xml_cdr_mos")) {
-					echo "	<td valign='top' class='".$row_style[$c]."' ".((strlen($row['rtp_audio_in_mos']) > 0) ? "title='".($row['rtp_audio_in_mos'] / 5 * 100)."%'" : null)." style='text-align: center;'>".((strlen($row['rtp_audio_in_mos']) > 0) ? $row['rtp_audio_in_mos'] : "&nbsp;")."</td>\n";
+					if(strlen($row['rtp_audio_in_mos']) > 0){
+						$title = " title='".$text['label-mos_score-'.round($row['rtp_audio_in_mos'])]."'";
+						$value = $row['rtp_audio_in_mos'];
+					}
+					echo "	<td valign='top' class='".$row_style[$c]."'$title style='text-align: center;'>$value</td>\n";
 				}
 			//hangup cause/call result
 				if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {

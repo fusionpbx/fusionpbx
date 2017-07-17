@@ -28,6 +28,7 @@
 	require_once "root.php";
 	require_once "resources/functions.php";
 	require_once "resources/classes/text.php";
+	require_once "resources/classes/messages.php";
 
 //start a php session
 	if (!isset($_SESSION)) { session_start(); }
@@ -257,7 +258,7 @@
 		include "resources/page_parts/install_config_database.php";
 	}
 	elseif($install_step == 'execute'){
-		echo "<p><b>".$text['header-installing'][$install_language]."</b></p>\n";
+		echo "<p><b>".$text['header-installing']."</b></p>\n";
 		//$protocol = 'http';
 		//if($_SERVER['HTTPS']) { $protocol = 'https'; }
 		//echo "<iframe src='$protocol://$domain_name/core/install/install_first_time.php' style='border:solid 1px #000;width:100%;height:auto'></iframe>";

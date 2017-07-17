@@ -1,14 +1,18 @@
 <?php
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('access_control_node_add') || permission_exists('access_control_node_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('access_control_node_add') || permission_exists('access_control_node_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -38,16 +42,24 @@ else {
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
-	$msg = '';
-	if ($action == "update") {
-		$access_control_node_uuid = check_str($_POST["access_control_node_uuid"]);
-	}
+	//get the uuid
+		if ($action == "update") {
+			$access_control_node_uuid = check_str($_POST["access_control_node_uuid"]);
+		}
 
 	//check for all required data
+		$msg = '';
 		if (strlen($node_type) == 0) { $msg .= $text['message-required']." ".$text['label-node_type']."<br>\n"; }
 		//if (strlen($node_cidr) == 0) { $msg .= $text['message-required']." ".$text['label-node_cidr']."<br>\n"; }
 		//if (strlen($node_domain) == 0) { $msg .= $text['message-required']." ".$text['label-node_domain']."<br>\n"; }
 		//if (strlen($node_description) == 0) { $msg .= $text['message-required']." ".$text['label-node_description']."<br>\n"; }
+
+	// check IPv4 and IPv6 CIDR notation
+	  	$pattern4 = '/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$/';
+		$pattern6 = '/^s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3}))|:)))(%.+)?s*(\/([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8]))$/';
+
+		if ($node_cidr != '' && (preg_match($pattern4, $node_cidr) == 0) && (preg_match($pattern6, $node_cidr) == 0)) { $msg .= $text['message-required']." ".$text['label-node_cidr']."<br>\n"; }
+	   
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
@@ -64,6 +76,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
 			if ($action == "add" && permission_exists('access_control_node_add')) {
+				//update the database
 				$sql = "insert into v_access_control_nodes ";
 				$sql .= "(";
 				$sql .= "access_control_node_uuid, ";
@@ -85,14 +98,26 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-				remove_config_from_cache('configuration:acl.conf');
-				$_SESSION['message'] = $text['message-add'];
+				//clear the cache
+				$cache = new cache;
+				$cache->delete("configuration:acl.conf");
+
+				//create the event socket connection
+				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				if ($fp) { event_socket_request($fp, "api reloadacl"); }
+
+				//add the message
+				messages::add($text['message-add']);
+
+				//redirect the browser
 				header('Location: access_control_edit.php?id='.$access_control_uuid);
 				return;
 
 			} //if ($action == "add")
 
 			if ($action == "update" && permission_exists('access_control_node_edit')) {
+
+				//update the database
 				$sql = "update v_access_control_nodes set ";
 				$sql .= "access_control_uuid = '$access_control_uuid', ";
 				$sql .= "node_type = '$node_type', ";
@@ -103,8 +128,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-				remove_config_from_cache('configuration:acl.conf');
-				$_SESSION['message'] = $text['message-update'];
+				//clear the cache
+				$cache = new cache;
+				$cache->delete("configuration:acl.conf");
+
+				//create the event socket connection
+				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				if ($fp) { event_socket_request($fp, "api reloadacl"); }
+
+				//add the message
+				messages::add($text['message-update']);
+
+				//redirect the browser
 				header('Location: access_control_edit.php?id='.$access_control_uuid);
 				return;
 
@@ -134,7 +169,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	require_once "resources/header.php";
 
 //show the content
-
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";

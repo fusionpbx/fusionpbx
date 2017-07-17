@@ -83,6 +83,7 @@
 //get http post variables and set them to php variables
 	if (is_array($_POST)) {
 		$call_center_agent_uuid = check_str($_POST["call_center_agent_uuid"]);
+		$user_uuid = check_str($_POST["user_uuid"]);
 		$agent_name = check_str($_POST["agent_name"]);
 		$agent_type = check_str($_POST["agent_type"]);
 		$agent_call_timeout = check_str($_POST["agent_call_timeout"]);
@@ -110,11 +111,12 @@
 			$msg = '';
 			//if (strlen($call_center_agent_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-call_center_agent_uuid']."<br>\n"; }
 			//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
+			if (strlen($user_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-user_uuid']."<br>\n"; }
 			if (strlen($agent_name) == 0) { $msg .= $text['message-required']." ".$text['label-agent_name']."<br>\n"; }
 			if (strlen($agent_type) == 0) { $msg .= $text['message-required']." ".$text['label-agent_type']."<br>\n"; }
 			if (strlen($agent_call_timeout) == 0) { $msg .= $text['message-required']." ".$text['label-agent_call_timeout']."<br>\n"; }
 			//if (strlen($agent_id) == 0) { $msg .= $text['message-required']." ".$text['label-agent_id']."<br>\n"; }
-			if (strlen($agent_password) == 0) { $msg .= $text['message-required']." ".$text['label-agent_password']."<br>\n"; }
+			//if (strlen($agent_password) == 0) { $msg .= $text['message-required']." ".$text['label-agent_password']."<br>\n"; }
 			if (strlen($agent_status) == 0) { $msg .= $text['message-required']." ".$text['label-agent_status']."<br>\n"; }
 			if (strlen($agent_contact) == 0) { $msg .= $text['message-required']." ".$text['label-agent_contact']."<br>\n"; }
 			if (strlen($agent_no_answer_delay_time) == 0) { $msg .= $text['message-required']." ".$text['label-agent_no_answer_delay_time']."<br>\n"; }
@@ -211,16 +213,14 @@
 				$_POST["call_center_agent_uuid"] = $call_center_agent_uuid;
 			}
 
-		//get the user_uuid
-			$sql = "select user_uuid from v_users ";
+		//get the users array
+			$sql = "SELECT * FROM v_users ";
 			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and username = '".$agent_name."' ";
+			$sql .= "order by username asc ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			foreach ($result as &$row) {
-				$user_uuid = $row["user_uuid"];
-			}
+			$users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			unset($prep_statement, $sql);
 
 		//prepare the array
 			$array['call_center_agents'][] = $_POST;
@@ -247,10 +247,10 @@
 		//redirect the user
 			if (isset($action)) {
 				if ($action == "add") {
-					$_SESSION["message"] = $text['message-add'];
+					messages::add($text['message-add']);
 				}
 				if ($action == "update") {
-					$_SESSION["message"] = $text['message-update'];
+					messages::add($text['message-update']);
 				}
 				header("Location: call_center_agents.php");
 				return;
@@ -271,6 +271,7 @@
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
 			$call_center_agent_uuid = $row["call_center_agent_uuid"];
+			$user_uuid = $row["user_uuid"];
 			$agent_name = $row["agent_name"];
 			$agent_type = $row["agent_type"];
 			$agent_call_timeout = $row["agent_call_timeout"];
@@ -367,6 +368,8 @@
 	echo "	".$text['label-agent_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='agent_name' maxlength='255' value=\"$agent_name\" />\n";
+	/*
 	echo "<select id=\"agent_name\" name=\"agent_name\" class='formfld'>\n";
 	echo "<option value=\"\"></option>\n";
 	if (is_array($users)) {
@@ -380,6 +383,7 @@
 		}
 	}
 	echo "</select>";
+	*/
 	echo "<br />\n";
 	echo $text['description-agent_name']."\n";
 	echo "</td>\n";
@@ -406,6 +410,26 @@
 	echo $text['description-call_timeout']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+	echo "	<tr>";
+	echo "		<td class='vncell' valign='top'>".$text['label-username']."</td>";
+	echo "		<td class='vtable' align='left'>";
+	echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
+	echo "			<option value=\"\"></option>\n";
+	foreach($users as $field) {
+		if ($user_uuid == $field['user_uuid']) {
+			echo "			<option value='".$field['user_uuid']."' selected='selected'>".$field['username']."</option>\n";
+		}
+		else {
+			echo "			<option value='".$field['user_uuid']."' $selected>".$field['username']."</option>\n";
+		}
+	}
+	echo "			</select>";
+	unset($users);
+	echo "			<br>\n";
+	echo "			".$text['description-users']."\n";
+	echo "		</td>";
+	echo "	</tr>";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";

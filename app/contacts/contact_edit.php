@@ -150,7 +150,7 @@ else {
 						$db->exec(check_sql($sql));
 						unset($sql);
 
-						$_SESSION["message"] = $text['message-add'];
+						messages::add($text['message-add']);
 						$location = "contact_edit.php?id=".$contact_uuid;
 					} //if ($action == "add")
 
@@ -177,7 +177,7 @@ else {
 						$db->exec(check_sql($sql));
 						unset($sql);
 
-						$_SESSION["message"] = $text['message-update'];
+						messages::add($text['message-update']);
 						$location = "contact_edit.php?id=".$contact_uuid;
 					} //if ($action == "update")
 

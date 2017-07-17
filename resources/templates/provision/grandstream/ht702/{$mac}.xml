@@ -3,7 +3,10 @@
 <config version="1">
 
 <!--  Configuration template for HT701 and HT702 firmware version 1.0.5.2 -->
-
+<!-- VARIABLES for FusionPBX:
+     grandstream_disable_call_waiting: set to 1 disables call waiting (used for PBX/FAX interconnects)
+     grandstream_disable_fax_t38: set to 1 sets pass-through fax mode
+ -->
 <!-- Advanced Settings. -->
 
 
@@ -69,7 +72,7 @@
 
 <!-- Firmware Server Path -->
 <!-- Server address -->
-<P192>fm.grandstream.com/gs</P192>
+<P192>{$domain_name}{$project_path}/app/provision</P192>
 
 <!-- Config Server Path -->
 <!-- Server address;  -->
@@ -478,7 +481,7 @@
 <!-- Enable Call Features. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P191>1</P191>
+<P191>0</P191>
 
 <!-- Offhook Auto-Dial (User ID/extension to dial automatically when offhook) -->
 <!-- String: 0-9, #, * -->
@@ -533,7 +536,9 @@
 <!-- Disable Call-Waiting. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P91>0</P91>
+{if $grandstream_disable_call_waiting == '1'}<P91>1</P91>
+    {else}<P91>0</P91>
+    {/if}
 
 <!-- Disable Call-Waiting Caller ID. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
@@ -742,7 +747,10 @@
 <!-- FAX Mode. 0 - T.38 (Auto Detect), 1 - Pass Through -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P228>0</P228>
+{if $grandstream_disable_fax_t38 == '1'}<P228>1</P228>
+    {else}<P228>0</P228>
+    {/if}
+
 
 <!-- Re-INVITE After Fax Tone Detected. 0 - Disabled, 1 - Enabled. -->
 <!-- Number: 0, 1 -->
@@ -1192,7 +1200,9 @@
 <!-- Disable Call-Waiting. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P791>0</P791>
+{if $grandstream_disable_call_waiting == '1'}<P791>1</P791>
+    {else}<P791>0</P791>
+    {/if}
 
 <!-- Disable Call-Waiting Caller ID. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
@@ -1399,7 +1409,9 @@
 <!-- FAX Mode. 0 - T.38 (Auto Detect), 1 - Pass Through -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P710>0</P710>
+{if $grandstream_disable_fax_t38 == '1'}<P710>1</P710>
+    {else}<P710>0</P710>
+    {/if}
 
 <!-- Re-INVITE After Fax Tone Detected. 0 - Disabled, 1 - Enabled. -->
 <!-- Number: 0, 1 -->

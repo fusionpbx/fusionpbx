@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016
+	Portions created by the Initial Developer are Copyright (C) 2016 - 2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -135,7 +135,7 @@
 					$db->exec(check_sql($sql));
 					unset($sql);
 	
-					$_SESSION["message"] = $text['message-add'];
+					messages::add($text['message-add']);
 					header("Location: database_transactions.php");
 					return;
 	
@@ -158,7 +158,7 @@
 					$db->exec(check_sql($sql));
 					unset($sql);
 	
-					$_SESSION["message"] = $text['message-update'];
+					messages::add($text['message-update']);
 					header("Location: database_transactions.php");
 					return;
 	
@@ -211,83 +211,82 @@
 //show the content
 	//echo "<form name='frm' id='frm' method='post' action=''>\n";
 	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td align='left' width='20%' nowrap='nowrap' valign='top'><b>".$text['title-database_transaction']."</b><br><br></td>\n";
-	echo "<td width='80%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='database_transactions.php'\" value='".$text['button-back']."'>";
-	//echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
-	echo "</td>\n";
-	echo "</tr>\n";
+	echo "	<tr>\n";
+	echo "		<td align='left' width='20%' nowrap='nowrap' valign='top'><b>".$text['title-database_transaction']."</b><br><br></td>\n";
+	echo "		<td width='80%' align='right' valign='top'>\n";
+	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='database_transactions.php'\" value='".$text['button-back']."'>";
+	//echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
+	echo "		</td>\n";
+	echo "	</tr>\n";
 	echo "</table>\n";
 
 	echo "<table width='350px'  border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<td valign='top'>\n";
-		echo "<table>\n";
-		echo "<tr>\n";
-		echo "<th valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-app_name']."\n";
-		echo "</th>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "	".$app_name."\n";
-		//echo "  <input class='formfld' type='text' name='app_name' maxlength='255' value='$app_name'>\n";
-		//echo "<br />\n";
-		//echo $text['description-app_uuid']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
+	echo "	<table>\n";
+	echo "		<tr>\n";
+	echo "			<th valign='top' align='left' nowrap='nowrap'>\n";
+	echo "				".$text['label-app_name']."\n";
+	echo "			</th>\n";
+	echo "			<td class='vtable' align='left'>\n";
+	echo "				".$app_name."\n";
+	//echo "			<input class='formfld' type='text' name='app_name' maxlength='255' value='$app_name'>\n";
+	//echo "			<br />\n";
+	//echo "			".$text['description-app_uuid']."\n";
+	echo "			</td>\n";
+	echo "		</tr>\n";
 
-		/*echo "<tr>\n";
-		echo "<th width='10%' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-domain']."\n";
-		echo "</th>\n";
-		echo "<td width='90%' aclass='vtable' align='left'>\n";
-		echo "	".$domain_name;
-		//echo "  <input class='formfld' type='text' name='domain_name' maxlength='255' value='$domain_name'>\n";
-		//echo "	<br />\n";
-		//echo "	".$text['description-domain']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-		*/
-	
-		echo "<tr>\n";
-		echo "<th valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-user_uuid']."\n";
-		echo "</th>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "  ".$username."\n";
-		//echo "  <input class='formfld' type='text' name='username' maxlength='255' value='$username'>\n";
-		//echo "<br />\n";
-		//echo $text['description-user_uuid']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-		echo "</table>\n";
+	/*echo "	<tr>\n";
+	echo "			<th width='10%' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "				".$text['label-domain']."\n";
+	echo "			</th>\n";
+	echo "			<td width='90%' aclass='vtable' align='left'>\n";
+	echo "				".$domain_name;
+	//echo "	 		<input class='formfld' type='text' name='domain_name' maxlength='255' value='$domain_name'>\n";
+	//echo "			<br />\n";
+	//echo "			".$text['description-domain']."\n";
+	echo "			</td>\n";
+	echo "		</tr>\n";
+	*/
+
+	echo "		<tr>\n";
+	echo "			<th valign='top' align='left' nowrap='nowrap'>\n";
+	echo "				".$text['label-user_uuid']."\n";
+	echo "			</th>\n";
+	echo "			<td class='vtable' align='left'>\n";
+	echo "  			".$username."\n";
+	//echo "  			<input class='formfld' type='text' name='username' maxlength='255' value='$username'>\n";
+	//echo "			<br />\n";
+	//echo "			".$text['description-user_uuid']."\n";
+	echo "			</td>\n";
+	echo "		</tr>\n";
+	echo "	</table>\n";
 	echo "</td>\n";
 
 	echo "<td valign='top'>\n";
-		echo "<table>\n";
-		echo "<tr>\n";
-		echo "<th valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-transaction_code']."\n";
-		echo "</th>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "	$transaction_code\n";
-		//echo "  <input class='formfld' type='text' name='transaction_code' maxlength='255' value='$transaction_code'>\n";
-		//echo "<br />\n";
-		//echo $text['description-transaction_code']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-	
-		echo "<tr>\n";
-		echo "<th valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-transaction_address']."\n";
-		echo "</th>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "	$transaction_address\n";
-		//echo "	<input class='formfld' type='text' name='transaction_address' maxlength='255' value=\"$transaction_address\">\n";
-		//echo "<br />\n";
-		//echo $text['description-transaction_address']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-		echo "</table>\n";
+	echo "	<table>\n";
+	echo "		<tr>\n";
+	echo "			<th valign='top' align='left' nowrap='nowrap'>\n";
+	echo "				".$text['label-transaction_code']."\n";
+	echo "			</th>\n";
+	echo "			<td class='vtable' align='left'>\n";
+	echo "				$transaction_code\n";
+	//echo "  			<input class='formfld' type='text' name='transaction_code' maxlength='255' value='$transaction_code'>\n";
+	//echo "			<br />\n";
+	//echo "			".$text['description-transaction_code']."\n";
+	echo "			</td>\n";
+	echo "		</tr>\n";
+	echo "		<tr>\n";
+	echo "			<th valign='top' align='left' nowrap='nowrap'>\n";
+	echo "				".$text['label-transaction_address']."\n";
+	echo "			</th>\n";
+	echo "			<td class='vtable' align='left'>\n";
+	echo "				$transaction_address\n";
+	//echo "			<input class='formfld' type='text' name='transaction_address' maxlength='255' value=\"$transaction_address\">\n";
+	//echo "			<br />\n";
+	//echo "			".$text['description-transaction_address']."\n";
+	echo "			</td>\n";
+	echo "		</tr>\n";
+	echo "	</table>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
@@ -398,8 +397,13 @@
 					$array = show_difference($value);
 				}
 				else {
+					//set the variables
+						$old = $value['old'];
+						$new = $value['new'];
+						if (is_null($old)) { $old = ''; }
+						if (is_null($new)) { $new = ''; }
 					//determine if the value has changed
-						if (strval($value['old']) == strval($value['new']) && isset($value['old'])) {
+						if (strval($old) == strval($new) && isset($old)) {
 							$color = "#000000";
 						}
 						else {
@@ -412,11 +416,6 @@
 						}
 						$_SESSION['previous_name'] = $_SESSION['name'];
 						$_SESSION['previous_row'] = $_SESSION['row'];
-					//set the variables
-						$old = $value['old'];
-						$new = $value['new'];
-						if (is_null($old)) { $old = "null"; }
-						if (is_null($new)) { $new = "null"; }
 					//show the results
 						echo "<tr style='color: $color;'>\n";
 						//echo "	<td class=\"vtable\" style='color: $color;'>".$_SESSION['name']."</td>\n";
@@ -457,7 +456,7 @@
 			show_difference($array);
 			echo "</table>\n";
 	}
-	
+
 //show the delete
 	if (count($before) > 0 && count($after) == 0) {
 		echo "<h3>Record Deleted</h3><br />\n";
@@ -465,7 +464,7 @@
 		print_r($before);
 		echo "		</pre>\n";
 	}
-	
+
 //add a few lines at the end
 	echo "<br />\n";
 	echo "<br />\n";

@@ -102,7 +102,7 @@ else {
 		$db->exec(check_sql($sql));
 		unset($sql);
 
-		$_SESSION["message"] = $text['label-add-complete'];
+		messages::add($text['label-add-complete']);
 
 	}
 

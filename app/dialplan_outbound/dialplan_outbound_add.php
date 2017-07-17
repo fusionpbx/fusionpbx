@@ -426,35 +426,8 @@
 						$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'bind_digit_action';
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'local,*1,exec:execute_extension,dx XML ${context},both';
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
-						$y++;
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
-						$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'bind_digit_action';
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'local,*2,exec:record_session,$${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}/${uuid}.${record_ext},both';
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
-						$y++;
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
-						$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'bind_digit_action';
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'local,*3,exec:execute_extension,cf XML ${context},both';
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
-						$y++;
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
-						$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'bind_digit_action';
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'local,*4,exec:execute_extension,att_xfer XML ${context},both';
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'unset';
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'call_timeout';
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 
@@ -655,7 +628,7 @@
 			save_dialplan_xml();
 
 		//redirect the browser
-			$_SESSION["message"] = $text['message-update'];
+			messages::add($text['message-update']);
 			header("Location: ".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3");
 			return;
 	} //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)

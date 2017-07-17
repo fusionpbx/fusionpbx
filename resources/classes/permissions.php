@@ -50,13 +50,11 @@ if (!class_exists('permissions')) {
 			if ($this->exists($permission)) {
 				if ($type === "temp") {
 					if ($_SESSION["permissions"][$permission] === "temp") {
-						echo "delete ".__line__." $type\n";
 						unset($_SESSION["permissions"][$permission]);
 					}
 				}
 				else {
 					if ($_SESSION["permissions"][$permission] !== "temp") {
-						echo "delete ".__line__." $type\n";
 						unset($_SESSION["permissions"][$permission]);
 					}
 				}

@@ -292,8 +292,8 @@ include "root.php";
 				$schema->exec();
 
 			//get the contents of the sql file
-				if (file_exists('/usr/share/examples/fusionpbx/resources/install/sql/sqlite.sql')){
-					$filename = "/usr/share/examples/fusionpbx/resources/install/sql/sqlite.sql";
+				if (file_exists('/usr/share/examples/fusionpbx/sql/sqlite.sql')){
+					$filename = "/usr/share/examples/fusionpbx/sql/sqlite.sql";
 				}
 				else {
 					$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/sqlite.sql';
@@ -387,8 +387,8 @@ include "root.php";
 				$schema->exec();
 
 			//get the contents of the sql file
-				if (file_exists('/usr/share/examples/fusionpbx/resources/install/sql/pgsql.sql')){
-					$filename = "/usr/share/examples/fusionpbx/resources/install/sql/pgsql.sql";
+				if (file_exists('/usr/share/examples/fusionpbx/sql/pgsql.sql')){
+					$filename = "/usr/share/examples/fusionpbx/sql/pgsql.sql";
 				}
 				else {
 				$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/pgsql.sql';
@@ -558,8 +558,8 @@ include "root.php";
 
 			//add the defaults data into the database
 				//get the contents of the sql file
-					if (file_exists('/usr/share/examples/fusionpbx/resources/install/sql/mysql.sql')){
-						$filename = "/usr/share/examples/fusionpbx/resources/install/sql/mysql.sql";
+					if (file_exists('/usr/share/examples/fusionpbx/sql/mysql.sql')){
+						$filename = "/usr/share/examples/fusionpbx/sql/mysql.sql";
 					}
 					else {
 						$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/mysql.sql';
@@ -659,7 +659,7 @@ include "root.php";
 				$this->write_progress("... superuser exists as '" . $this->admin_uuid . "', updating password");
 				$sql = "update v_users ";
 				$sql .= "set password = '".md5($salt.$this->admin_password)."' ";
-				$sql .= "set salt = '$salt' ";
+				$sql .= ",salt = '$salt' ";
 				$sql .= "where USER_uuid = '".$this->admin_uuid."' ";
 				$this->write_debug($sql);
 				$this->dbh->exec(check_sql($sql));
@@ -703,7 +703,7 @@ include "root.php";
 					unset($sql);
 			}
 			$this->write_progress("\tChecking if superuser contact exists");
-			$sql = "select count(*) from v_contacts ";
+			$sql = "select count(*) as count from v_contacts ";
 			$sql .= "where domain_uuid = '".$this->global_settings->domain_uuid()."' ";
 			$sql .= "and contact_name_given = '".$this->admin_username."' ";
 			$sql .= "and contact_nickname = '".$this->admin_username."' ";
@@ -733,7 +733,7 @@ include "root.php";
 				unset($sql);
 			}
 			$this->write_progress("\tChecking if superuser is in the correct group");
-			$sql = "select count(*) from v_group_users ";
+			$sql = "select count(*) as count from v_group_users ";
 			$sql .= "where domain_uuid = '".$this->global_settings->domain_uuid()."' ";
 			$sql .= "and user_uuid = '".$this->admin_uuid."' ";
 			$sql .= "and group_name = 'superadmin' ";

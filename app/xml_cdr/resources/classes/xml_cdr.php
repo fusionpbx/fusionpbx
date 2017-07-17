@@ -33,13 +33,17 @@
 if (!class_exists('xml_cdr')) {
 	class xml_cdr {
 
-		//define variables
+		/**
+		 * define variables
+		 */
 		public $db;
 		public $array;
 		public $debug;
 		public $fields;
 
-		//user summary
+		/**
+		 * user summary
+		 */
 		public $domain_uuid;
 		public $quick_select;
 		public $start_stamp_begin;
@@ -101,6 +105,7 @@ if (!class_exists('xml_cdr')) {
 			$this->fields[] = "json";
 			$this->fields[] = "caller_id_name";
 			$this->fields[] = "caller_id_number";
+			$this->fields[] = "caller_destination";
 			$this->fields[] = "destination_number";
 			$this->fields[] = "source_number";
 			$this->fields[] = "start_epoch";
@@ -121,6 +126,7 @@ if (!class_exists('xml_cdr')) {
 			$this->fields[] = "remote_media_ip";
 			$this->fields[] = "network_addr";
 			$this->fields[] = "recording_file";
+			$this->fields[] = "recording_name";
 			$this->fields[] = "leg";
 			$this->fields[] = "pdd_ms";
 			$this->fields[] = "rtp_audio_in_mos";
@@ -250,9 +256,10 @@ if (!class_exists('xml_cdr')) {
 					$destination_number = urldecode($xml->variables->last_sent_callee_id_number);
 				}
 
-			//get the caller id
+			//get the caller details
 				$caller_id_name = urldecode($xml->variables->effective_caller_id_name);
 				$caller_id_number = urldecode($xml->variables->effective_caller_id_number);
+				$caller_id_destination = urldecode($xml->variables->caller_destination);
 				if (strlen($caller_id_number) == 0) foreach ($xml->callflow as $row) {
 					$caller_id_name = urldecode($row->caller_profile->caller_id_name);
 					$caller_id_number = urldecode($row->caller_profile->caller_id_number);
@@ -399,6 +406,11 @@ if (!class_exists('xml_cdr')) {
 				}
 				if(isset($recording_file) && !empty($recording_file)) {
 					$this->array[$key]['recording_file'] = $recording_file;
+				}
+
+			//get the recording name
+				if (strlen($xml->variables->recording_name) > 0) {
+					$this->array[$key]['recording_name'] = urldecode($xml->variables->recording_name);
 				}
 
 			//save to the database in xml format

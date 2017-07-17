@@ -17,22 +17,26 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('destination_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('destination_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -55,7 +59,7 @@ else {
 			$sql .= "where ";
 		}
 	} else {
-		$sql .= "where domain_uuid = '".$domain_uuid."' ";
+		$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
 		if (strlen($search) > 0) {
 			$sql .= "and ";
 		}
@@ -64,9 +68,9 @@ else {
 		$sql .= "(";
 		$sql .= "	destination_type like '%".$search."%' ";
 		$sql .= " 	or destination_number like '%".$search."%' ";
-		$sql .= " 	or destination_context like '%".$search."%' ";
+		$sql .= " 	or lower(destination_context) like '%".strtolower($search)."%' ";
 		$sql .= " 	or destination_enabled like '%".$search."%' ";
-		$sql .= " 	or destination_description like '%".$search."%' ";
+		$sql .= " 	or lower(destination_description) like '%".strtolower($search)."%' ";
 		$sql .= ") ";
 	}
 	$prep_statement = $db->prepare($sql);
@@ -97,7 +101,7 @@ else {
 			$sql .= " where ";
 		}
 	} else {
-		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
 		if (strlen($search) > 0) {
 			$sql .= " and ";
 		}
@@ -106,9 +110,9 @@ else {
 		$sql .= " (";
 		$sql .= "	destination_type like '%".$search."%' ";
 		$sql .= " 	or destination_number like '%".$search."%' ";
-		$sql .= " 	or destination_context like '%".$search."%' ";
+		$sql .= " 	or lower(destination_context) like '%".strtolower($search)."%' ";
 		$sql .= " 	or destination_enabled like '%".$search."%' ";
-		$sql .= " 	or destination_description like '%".$search."%' ";
+		$sql .= " 	or lower(destination_description) like '%".strtolower($search)."%' ";
 		$sql .= ") ";
 	}
 	if (strlen($order_by) > 0) {
@@ -225,4 +229,5 @@ else {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

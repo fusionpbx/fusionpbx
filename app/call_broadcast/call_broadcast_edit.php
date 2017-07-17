@@ -166,7 +166,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$db->exec(check_sql($sql));
 			unset($sql);
 
-			$_SESSION["message"] = $text['confirm-add'];
+			messages::add($text['confirm-add']);
 			header("Location: call_broadcast.php");
 			return;
 		} //if ($action == "add")
@@ -201,7 +201,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$db->exec(check_sql($sql));
 			unset($sql);
 
-			$_SESSION["message"] = $text['confirm-update'];
+			messages::add($text['confirm-update']);
 			header("Location: call_broadcast.php");
 			return;
 		} //if ($action == "update")

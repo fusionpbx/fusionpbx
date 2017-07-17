@@ -73,6 +73,11 @@ local log = require "resources.functions.log".ring_group
 		call_direction = "local";
 	end
 
+--set ring ready
+	if (session:ready()) then
+		session:execute("ring_ready", "");
+	end
+
 --define additional variables
 	uuids = "";
 	external = "false";
@@ -118,6 +123,7 @@ local log = require "resources.functions.log".ring_group
 		ring_group_extension = row["ring_group_extension"];
 		ring_group_forward_enabled = row["ring_group_forward_enabled"];
 		ring_group_forward_destination = row["ring_group_forward_destination"];
+		ring_group_forward_toll_allow = row["ring_group_forward_toll_allow"];
 		ring_group_cid_name_prefix = row["ring_group_cid_name_prefix"];
 		ring_group_cid_number_prefix = row["ring_group_cid_number_prefix"];
 		missed_call_app = row["ring_group_missed_call_app"];
@@ -127,10 +133,10 @@ local log = require "resources.functions.log".ring_group
 --set the caller id
 	if (session:ready()) then
 		if (string.len(ring_group_cid_name_prefix) > 0) then
-			session:execute("set", "effective_caller_id_name="..ring_group_cid_name_prefix.."#"..caller_id_name);
+			session:execute("export", "effective_caller_id_name="..ring_group_cid_name_prefix.."#"..caller_id_name);
 		end
 		if (string.len(ring_group_cid_number_prefix) > 0) then
-			session:execute("set", "effective_caller_id_number="..ring_group_cid_number_prefix..caller_id_number);
+			session:execute("export", "effective_caller_id_number="..ring_group_cid_number_prefix..caller_id_number);
 		end
 	end
 
@@ -206,6 +212,7 @@ local log = require "resources.functions.log".ring_group
 --process the ring group
 	if (ring_group_forward_enabled == "true" and string.len(ring_group_forward_destination) > 0) then
 		--forward the ring group
+			session:setVariable("toll_allow",ring_group_forward_toll_allow);	
 			session:execute("transfer", ring_group_forward_destination.." XML "..context);
 	else
 		--get the strategy of the ring group, if random, we use random() to order the destinations
@@ -628,6 +635,7 @@ local log = require "resources.functions.log".ring_group
 								or session:getVariable("originate_disposition") == "NORMAL_TEMPORARY_FAILURE"
 								or session:getVariable("originate_disposition") == "NO_ROUTE_DESTINATION"
 								or session:getVariable("originate_disposition") == "USER_BUSY"
+								or session:getVariable("originate_disposition") == "RECOVERY_ON_TIMER_EXPIRE"
 								or session:getVariable("originate_disposition") == "failure"
 							) then
 								--send missed call notification

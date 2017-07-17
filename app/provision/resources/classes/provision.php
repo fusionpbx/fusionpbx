@@ -129,6 +129,9 @@ include "root.php";
 		//set the mac address in the correct format for the specific vendor
 		public function format_mac($mac, $vendor) {
 			switch (strtolower($vendor)) {
+			case "algo":
+				$mac = strtoupper($mac);
+				break;
 			case "aastra":
 				$mac = strtoupper($mac);
 				break;
@@ -148,6 +151,9 @@ include "root.php";
 				$mac = strtolower($mac);
 				break;
 			case "escene":
+				$mac = strtolower($mac);
+				break;
+			case "grandstream":
 				$mac = strtolower($mac);
 				break;
 			default:
@@ -196,40 +202,221 @@ include "root.php";
 			$user_contacts = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			unset($prep_statement, $sql);
 
-			foreach ($user_contacts as &$row) {
-				$uuid = $row['contact_uuid'];
-				$phone_label = strtolower($row['phone_label']);
-				$contact_category = strtolower($row['contact_category']);
+			if (is_array($user_contacts)) {
+				foreach ($user_contacts as &$row) {
+					$uuid = $row['contact_uuid'];
+					$phone_label = strtolower($row['phone_label']);
+					$contact_category = strtolower($row['contact_category']);
 
-				$contact = array();
-				$contacts[] = &$contact;
-				$contact['category']             = $is_group ? 'groups' : 'users';
-				$contact['contact_uuid']         = $row['contact_uuid'];
-				$contact['contact_type']         = $row['contact_type'];
-				$contact['contact_category']     = $row['contact_category'];
-				$contact['contact_organization'] = $row['contact_organization'];
-				$contact['contact_name_given']   = $row['contact_name_given'];
-				$contact['contact_name_family']  = $row['contact_name_family'];
-				$contact['numbers']              = array();
+					$contact = array();
+					$contacts[] = &$contact;
+					$contact['category']             = $is_group ? 'groups' : 'users';
+					$contact['contact_uuid']         = $row['contact_uuid'];
+					$contact['contact_type']         = $row['contact_type'];
+					$contact['contact_category']     = $row['contact_category'];
+					$contact['contact_organization'] = $row['contact_organization'];
+					$contact['contact_name_given']   = $row['contact_name_given'];
+					$contact['contact_name_family']  = $row['contact_name_family'];
+					$contact['numbers']              = array();
 
-				$numbers = &$contact['numbers'];
+					$numbers = &$contact['numbers'];
 
-				if (($row['phone_primary'] == '1') || (!isset($contact['phone_number']))) {
-					$contact['phone_label']		= $phone_label;
-					$contact['phone_number']	= $row['phone_number'];
-					$contact['phone_extension']	= $row['phone_extension'];
+					if (($row['phone_primary'] == '1') || (!isset($contact['phone_number']))) {
+						$contact['phone_label']		= $phone_label;
+						$contact['phone_number']	= $row['phone_number'];
+						$contact['phone_extension']	= $row['phone_extension'];
+					}
+
+					$numbers[] = array(
+						line_number			=> $line['line_number'],
+						phone_label			=> $phone_label,
+						phone_number		=> $row['phone_number'],
+						phone_extension		=> $row['phone_extension'],
+						phone_primary		=> $row['phone_primary'],
+					);
+
+					$contact['phone_number_' . $phone_label] = $row['phone_number'];
+					unset($contact, $numbers, $uuid, $phone_label);
 				}
+			}
+		}
 
-				$numbers[] = array(
-					line_number			=> $line['line_number'],
-					phone_label			=> $phone_label,
-					phone_number		=> $row['phone_number'],
-					phone_extension		=> $row['phone_extension'],
-					phone_primary		=> $row['phone_primary'],
-				);
+		private function contact_grandstream(&$contacts, &$line, $domain_uuid, $device_user_uuid){
+			// Get username for this.
+			$sql = "SELECT username FROM v_users WHERE user_uuid = '${device_user_uuid}' AND domain_uuid = '${domain_uuid}' LIMIT 1";
+			$prep_statement = $this->db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$my_username = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			unset($prep_statement, $sql);
+			$my_username = $my_username[0]['username'];
 
-				$contact['phone_number_' . $phone_label] = $row['phone_number'];
-				unset($contact, $numbers, $uuid, $phone_label);
+			// Global contact groups available to every phone if ['provision']['global_contact_groups']['text'] is set.
+			// Easier than assigning these common groups to every user.
+			// Check provision global_contact_groups and sanitize for sql.
+			$global_contact_groups['enabled']=false;
+			if ( preg_match('/[a-zA-Z0-9-_, ]/',$_SESSION['provision']['gs_global_contact_groups']['text'])){
+				$global_contact_groups['enabled']=true;
+				$gp=array();
+				$groups=explode(',',$_SESSION['provision']['gs_global_contact_groups']['text']);
+				foreach ($groups as $group){
+					$gp[] = trim($group);
+				}
+				$global_contact_groups['sql']="'".implode("','", $gp)."'";
+			}
+			// Get a list of groups the user has access to see.
+			$sql = "SELECT DISTINCT g.group_uuid, g.group_name, g.group_description ";
+			$sql .= "FROM v_groups g ";
+			$sql .= "	INNER JOIN v_group_users gu ";
+			$sql .= "	ON gu.group_uuid=g.group_uuid ";
+			$sql .= "	INNER JOIN v_contact_groups cg ";
+			$sql .= "	ON cg.group_uuid=g.group_uuid ";
+			$sql .= "WHERE gu.user_uuid = '$device_user_uuid' ";
+			if ( $global_contact_groups['enabled'] ){
+				$sql .= "UNION ";
+				$sql .= "SELECT g.group_uuid, g.group_name, g.group_description ";
+				$sql .= "FROM v_groups g ";
+				$sql .= "WHERE g.group_name IN( ".$global_contact_groups['sql'].") ";
+			}
+			$sql .= "ORDER BY group_description";
+			$prep_statement = $this->db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$user_groups = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			unset($prep_statement, $sql);
+			$key=0;
+			foreach ($user_groups as &$row) {
+				$contacts[] = array("contact_type"=>"group", "group_name"=>$row['group_name'], "group_description"=>$row['group_description'], "id"=>++$key);
+				$groups[$row['group_uuid']] = $key;
+				$my_groups[] = '@'.$row['group_name']; // Used to show/hide  
+			}
+			// Get a list of contacts that this user/phone has access based on assigned users and groups.
+			$sql  = "SELECT c.contact_uuid, c.contact_name_given, c.contact_name_family, c.contact_title, c.contact_category, c.contact_role, c.contact_organization, u.user_uuid ";
+			$sql .= "FROM v_contacts c ";
+			$sql .= "	LEFT JOIN v_users u ";
+			$sql .= "	ON c.contact_uuid = u.contact_uuid ";
+			$sql .= "WHERE c.contact_uuid IN (";	// assigned groups
+			$sql .= "	SELECT cg.contact_uuid";
+			$sql .= "	FROM v_contact_groups cg ";
+			$sql .= "	WHERE cg.group_uuid IN (";
+			$sql .= "		SELECT gu.group_uuid ";
+			$sql .= "		FROM v_group_users gu ";
+			$sql .= "		WHERE gu.user_uuid = '$device_user_uuid' ";
+			$sql .= "		AND gu.domain_uuid = '$domain_uuid' ";
+			if ( $global_contact_groups['enabled'] ){
+				$sql .= "	UNION ";
+				$sql .= "	SELECT g.group_uuid ";
+				$sql .= "	FROM v_groups g ";
+				$sql .= "	WHERE g.group_name IN( ".$global_contact_groups['sql'].") ";
+			}
+			$sql .= "	)";
+			$sql .= "	UNION ";		// assigned users
+			$sql .= "	SELECT cu.contact_uuid ";
+			$sql .= "	FROM v_contact_users cu ";
+			$sql .= "	WHERE cu.user_uuid = '$device_user_uuid' ";
+			$sql .= "	AND cu.domain_uuid = '$domain_uuid' ";
+			$sql .= ")";
+			$sql .= "ORDER BY contact_name_given, contact_name_family";
+			$prep_statement = $this->db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$user_contacts = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			unset($prep_statement, $sql);
+			$groupid=0;
+			foreach ($user_contacts as &$row) {
+				$last_extention = $row['extension'];
+				unset($contact);
+				// Grandsteam phonebook manager: First, Last, Department, Primary, (Work, Home, Mobile, Fax, Pager, Car... with number and account), email(s), Photo, Ringtone, Group(s) 
+				// GXP21xx serries has First, Last, Company, Department, Job, Job TItle, 1Work ,1Home, 1Mobile, Accounts, Groups(1-many)
+				$contact = array();
+				$contact['contact_type']	= "contact";
+				$contact['contact_uuid']	= $row['contact_uuid'];
+				$contact['user_uuid']		= $row['user_uuid'];
+				$contact['contact_name_given']	= $row['contact_name_given']; //FirstName
+				$contact['contact_name_family']	= $row['contact_name_family']; // LastName
+				$contact['contact_title']	= $row['contact_title']; 
+				$contact['contact_category']	= $row['contact_category']; // Department
+				$contact['contact_role']	= $row['contact_role']; // Job Title
+				$contact['contact_organization']= $row['contact_organization']; // Company
+				$contact['contact_work']	= $row['extension'];
+				//$contact['contact_account_index'] = $line['line_number'];  // This was empty so disabled it.
+				// Look up groups for this contact
+				$sql = "SELECT g.group_description, g.group_uuid ";
+				$sql .= "FROM v_groups g ";
+				$sql .= "	INNER JOIN v_contact_groups cg ";
+				$sql .= "	ON cg.group_uuid=g.group_uuid ";
+				$sql .= "WHERE cg.contact_uuid = '".$row['contact_uuid']."' ";
+				$sql .= "AND cg.domain_uuid = '$domain_uuid'";
+				$prep_statement = $this->db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$user_groups = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				foreach ($user_groups as $group ){
+					if ( ! empty($groups[$group['group_uuid']])){
+						$contact['groups'][] = $groups[$group['group_uuid']];
+					}
+				}
+				if ( empty($contact['groups']) && !empty($groups['Other'])){
+					$contact['groups'][] = $groups['Other'];
+				}
+				// Look up extention(s) for this contact.
+				if ( ! empty ($row['user_uuid']) ){
+					$sql = "SELECT e.extension, e.description ";
+					$sql .= "FROM v_extensions e ";
+					$sql .= "	INNER JOIN v_extension_users eu ";
+					$sql .= "	ON e.extension_uuid = eu.extension_uuid ";
+					$sql .= "WHERE eu.user_uuid = '".$row['user_uuid']."' ";
+					$sql .= "AND eu.domain_uuid = '$domain_uuid' ";
+					$sql .= "AND e.enabled = 'true' ";
+					$sql .= "AND e.directory_visible = 'true' ";		# TODO: not right field but it works for our district.
+					$sql .= "AND e.directory_exten_visible = 'true' ";	# TODO: not right field but it works for our district.
+					$prep_statement = $this->db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$user_extentions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					foreach ($user_extentions as $ext ){
+						if ( preg_match ('/ (Cell|Mobile)/i', $ext['description'])){
+							$contact['contact_cell'] = $ext['extension'];
+						} elseif ( preg_match ("/ Home/i", $ext['description'])){
+							$contact['contact_home'] = $ext['extension'];
+						} else {
+							$contact['contact_work'] = $ext['extension'];
+						}
+					}
+				}
+				// Additional phone numbers for this contact.
+				$sql = "select phone_number, phone_label, phone_description from v_contact_phones ";
+				$sql .= "where contact_uuid='".$row['contact_uuid']."' ";
+				$sql .= "and domain_uuid='".$domain_uuid."' ";
+				$sql .= "and phone_type_voice = '1' ";
+				$sql .= "and phone_label in ('Home', 'Mobile', 'Work') ";
+				$prep_statement = $this->db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$user_phones = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				unset($prep_statement, $sql);
+				foreach ($user_phones as $phone){
+					// Check permission in phone_description field for string :allow:username1:username2:@group1:@group2:
+					$show = true;
+					if ( preg_match ('/:allow:/i', $phone['phone_description'] )){
+						$show = false;
+						$allows = explode ( ':', $phone['phone_description'] );
+						foreach ( $allows as $allow ){
+							if ( in_array($allow, $my_groups) || preg_match('/^'.$my_username.'$/', $allow)){
+								$show = true;
+								break 1;
+							}
+						} 		
+					}
+					if ( $show && $phone['phone_label'] == "Home" ) {
+						$contact['contact_home'] = $phone['phone_number'];
+					} elseif ( $show && $phone['phone_label'] == "Mobile" ){
+						$contact['contact_cell'] = $phone['phone_number'];
+					} elseif ( $show && $phone['phone_label'] == "Work" ){
+						// Work phones are usually just extentions already assigned above.
+						if (empty($contact['contact_work'])){
+							$contact['contact_work'] = $phone['phone_number'];
+						}
+					}
+				}
+				// Only add to contact list if a phone number exists.
+				if(!empty($contact['contact_work']) || !empty($contact['contact_home']) || !empty($contact['contact_cell'])){
+					$contacts[] = &$contact;
+				}
 			}
 		}
 
@@ -278,13 +465,15 @@ include "root.php";
 
 			//build the provision array
 				$provision = Array();
-				foreach($_SESSION['provision'] as $key=>$val) {
-					if (strlen($val['var']) > 0) { $value = $val['var']; }
-					if (strlen($val['text']) > 0) { $value = $val['text']; }
-					if (strlen($val['boolean']) > 0) { $value = $val['boolean']; }
-					if (strlen($val['numeric']) > 0) { $value = $val['numeric']; }
-					if (strlen($value) > 0) { $provision[$key] = $value; }
-					unset($value);
+				if (is_array($_SESSION['provision'])) {
+					foreach($_SESSION['provision'] as $key=>$val) {
+						if (strlen($val['var']) > 0) { $value = $val['var']; }
+						if (strlen($val['text']) > 0) { $value = $val['text']; }
+						if (strlen($val['boolean']) > 0) { $value = $val['boolean']; }
+						if (strlen($val['numeric']) > 0) { $value = $val['numeric']; }
+						if (strlen($value) > 0) { $provision[$key] = $value; }
+						unset($value);
+					}
 				}
 
 			//check to see if the mac_address exists in devices
@@ -380,10 +569,24 @@ include "root.php";
 								"yealink SIP-T22"=>"yealink/t22",
 								"yealink SIP-T26"=>"yealink/t26",
 								"Yealink SIP-T32"=>"yealink/t32",
+								"HW DP750"=>"grandstream/dp750",
 								"HW GXP1450"=>"grandstream/gxp1450",
+								"HW GXP1628"=>"grandstream/gxp16xx",
+								"HW GXP1610"=>"grandstream/gxp16xx",
+								"HW GXP1620"=>"grandstream/gxp16xx",
+								"HW GXP1625"=>"grandstream/gxp16xx",
+								"HW GXP1628"=>"grandstream/gxp16xx",
+								"HW GXP1630"=>"grandstream/gxp16xx",
 								"HW GXP2124"=>"grandstream/gxp2124",
+								"HW GXP2130"=>"grandstream/gxp2130",
+								"HW GXP2135"=>"grandstream/gxp2135",
+								"HW GXP2140"=>"grandstream/gxp2140",
+								"HW GXP2160"=>"grandstream/gxp2160",
+								"HW GXP2170"=>"grandstream/gxp2170",
 								"HW GXV3140"=>"grandstream/gxv3140",
+								"HW GXV3240"=>"grandstream/gxv3240",
 								"HW GXV3175"=>"grandstream/gxv3175",
+								"Vesa VCS754"=>"vtech/vcs754",
 								"Wget/1.11.3"=>"konftel/kt300ip"
 								);
 
@@ -483,10 +686,12 @@ include "root.php";
 					$prep_statement->execute();
 					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 					$result_count = count($result);
-					foreach($result as $row) {
-						$key = $row['device_setting_subcategory'];
-						$value = $row['device_setting_value'];
-						$provision[$key] = $value;
+					if (is_array($result)) {
+						foreach($result as $row) {
+							$key = $row['device_setting_subcategory'];
+							$value = $row['device_setting_value'];
+							$provision[$key] = $value;
+						}
 					}
 					unset ($prep_statement);
 				}
@@ -500,10 +705,12 @@ include "root.php";
 					$prep_statement->execute();
 					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 					$result_count = count($result);
-					foreach($result as $row) {
-						$key = $row['device_setting_subcategory'];
-						$value = $row['device_setting_value'];
-						$provision[$key] = $value;
+					if (is_array($result)) {
+						foreach($result as $row) {
+							$key = $row['device_setting_subcategory'];
+							$value = $row['device_setting_value'];
+							$provision[$key] = $value;
+						}
 					}
 					unset ($prep_statement);
 				}
@@ -537,65 +744,67 @@ include "root.php";
 						//assign the keys array
 							$view->assign("lines", $device_lines);
 						//set the variables
-							foreach($device_lines as $row) {
-								//set the variables
-									$line_number = $row['line_number'];
-									$register_expires = $row['register_expires'];
-									$sip_transport = strtolower($row['sip_transport']);
-									$sip_port = $row['sip_port'];
+							if (is_array($device_lines)) {
+								foreach($device_lines as $row) {
+									//set the variables
+										$line_number = $row['line_number'];
+										$register_expires = $row['register_expires'];
+										$sip_transport = strtolower($row['sip_transport']);
+										$sip_port = $row['sip_port'];
 
-								//set defaults
-									if (strlen($register_expires) == 0) { $register_expires = "120"; }
-									if (strlen($sip_transport) == 0) { $sip_transport = "tcp"; }
-									if (strlen($sip_port) == 0) {
-										if ($line_number == "" || $line_number == "1") {
-											$sip_port = "5060";
+									//set defaults
+										if (strlen($register_expires) == 0) { $register_expires = "120"; }
+										if (strlen($sip_transport) == 0) { $sip_transport = "tcp"; }
+										if (strlen($sip_port) == 0) {
+											if ($line_number == "" || $line_number == "1") {
+												$sip_port = "5060";
+											}
+											else {
+												$sip_port = "506".($line_number + 1);
+											}
 										}
-										else {
-											$sip_port = "506".($line_number + 1);
+
+									//set a lines array index is the line number
+										$lines[$line_number]['register_expires'] = $register_expires;
+										$lines[$line_number]['sip_transport'] = strtolower($sip_transport);
+										$lines[$line_number]['sip_port'] = $sip_port;
+										$lines[$line_number]['server_address'] = $row["server_address"];
+										$lines[$line_number]['outbound_proxy'] = $row["outbound_proxy_primary"];
+										$lines[$line_number]['outbound_proxy_primary'] = $row["outbound_proxy_primary"];
+										$lines[$line_number]['outbound_proxy_secondary'] = $row["outbound_proxy_secondary"];
+										$lines[$line_number]['display_name'] = $row["display_name"];
+										$lines[$line_number]['auth_id'] = $row["auth_id"];
+										$lines[$line_number]['user_id'] = $row["user_id"];
+										$lines[$line_number]['password'] = $row["password"];
+
+									//assign the variables for line one - short name
+										if ($line_number == "1") {
+											$view->assign("server_address", $row["server_address"]);
+											$view->assign("outbound_proxy", $row["outbound_proxy_primary"]);
+											$view->assign("outbound_proxy_primary", $row["outbound_proxy_primary"]);
+											$view->assign("outbound_proxy_secondary", $row["outbound_proxy_secondary"]);
+											$view->assign("display_name", $row["display_name"]);
+											$view->assign("auth_id", $row["auth_id"]);
+											$view->assign("user_id", $row["user_id"]);
+											$view->assign("user_password", $row["password"]);
+											$view->assign("sip_transport", $sip_transport);
+											$view->assign("sip_port", $sip_port);
+											$view->assign("register_expires", $register_expires);
 										}
-									}
 
-								//set a lines array index is the line number
-									$lines[$line_number]['register_expires'] = $register_expires;
-									$lines[$line_number]['sip_transport'] = strtolower($sip_transport);
-									$lines[$line_number]['sip_port'] = $sip_port;
-									$lines[$line_number]['server_address'] = $row["server_address"];
-									$lines[$line_number]['outbound_proxy'] = $row["outbound_proxy_primary"];
-									$lines[$line_number]['outbound_proxy_primary'] = $row["outbound_proxy_primary"];
-									$lines[$line_number]['outbound_proxy_secondary'] = $row["outbound_proxy_secondary"];
-									$lines[$line_number]['display_name'] = $row["display_name"];
-									$lines[$line_number]['auth_id'] = $row["auth_id"];
-									$lines[$line_number]['user_id'] = $row["user_id"];
-									$lines[$line_number]['password'] = $row["password"];
-
-								//assign the variables for line one - short name
-									if ($line_number == "1") {
-										$view->assign("server_address", $row["server_address"]);
-										$view->assign("outbound_proxy", $row["outbound_proxy_primary"]);
-										$view->assign("outbound_proxy_primary", $row["outbound_proxy_primary"]);
-										$view->assign("outbound_proxy_secondary", $row["outbound_proxy_secondary"]);
-										$view->assign("display_name", $row["display_name"]);
-										$view->assign("auth_id", $row["auth_id"]);
-										$view->assign("user_id", $row["user_id"]);
-										$view->assign("user_password", $row["password"]);
-										$view->assign("sip_transport", $sip_transport);
-										$view->assign("sip_port", $sip_port);
-										$view->assign("register_expires", $register_expires);
-									}
-
-								//assign the variables with the line number as part of the name
-									$view->assign("server_address_".$line_number, $row["server_address"]);
-									$view->assign("outbound_proxy_".$line_number, $row["outbound_proxy_primary"]);
-									$view->assign("outbound_proxy_primary_".$line_number, $row["outbound_proxy_primary"]);
-									$view->assign("outbound_proxy_secondary_".$line_number, $row["outbound_proxy_secondary"]);
-									$view->assign("display_name_".$line_number, $row["display_name"]);
-									$view->assign("auth_id_".$line_number, $row["auth_id"]);
-									$view->assign("user_id_".$line_number, $row["user_id"]);
-									$view->assign("user_password_".$line_number, $row["password"]);
-									$view->assign("sip_transport_".$line_number, $sip_transport);
-									$view->assign("sip_port_".$line_number, $sip_port);
-									$view->assign("register_expires_".$line_number, $register_expires);
+									//assign the variables with the line number as part of the name
+										$view->assign("server_address_".$line_number, $row["server_address"]);
+										$view->assign("outbound_proxy_".$line_number, $row["outbound_proxy_primary"]);
+										$view->assign("outbound_proxy_primary_".$line_number, $row["outbound_proxy_primary"]);
+										$view->assign("outbound_proxy_secondary_".$line_number, $row["outbound_proxy_secondary"]);
+										$view->assign("display_name_".$line_number, $row["display_name"]);
+										$view->assign("auth_id_".$line_number, $row["auth_id"]);
+										$view->assign("user_id_".$line_number, $row["user_id"]);
+										$view->assign("user_password_".$line_number, $row["password"]);
+										$view->assign("sip_transport_".$line_number, $sip_transport);
+										$view->assign("sip_port_".$line_number, $sip_port);
+										$view->assign("register_expires_".$line_number, $register_expires);
+								}
 							}
 							unset ($prep_statement);
 					}
@@ -611,12 +820,16 @@ include "root.php";
 							if ($_SESSION['provision']['contact_users']['boolean'] == "true") {
 								$this->contact_append($contacts, $line, $domain_uuid, $device_user_uuid, false);
 							}
+						// Grandstream get the contacts assigned to the user and groups and add to the contacts array
+							if ($_SESSION['provision']['contact_grandstream']['text'] == "true") {
+								$this->contact_grandstream($contacts, $line, $domain_uuid, $device_user_uuid);
+							}
 					}
 
 				//get the extensions and add them to the contacts array
 					if (strlen($device_uuid) > 0 and strlen($domain_uuid) > 0 and $_SESSION['provision']['contact_extensions']['boolean'] == "true") {
 						//get contacts from the database
-							$sql = "select extension_uuid as contact_uuid, directory_full_name, ";
+							$sql = "select extension_uuid as contact_uuid, directory_first_name, directory_last_name, ";
 							$sql .= "effective_caller_id_name, effective_caller_id_number, ";
 							$sql .= "number_alias, extension ";
 							$sql .= "from v_extensions ";
@@ -627,33 +840,37 @@ include "root.php";
 							if ($prep_statement) {
 								$prep_statement->execute();
 								$extensions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-								foreach ($extensions as $row) {
-									//get the contact_uuid
-										$uuid = $row['contact_uuid'];
-									//get the names
-										if (strlen($row['directory_full_name']) > 0) {
-											$name_array = explode(" ", $row['directory_full_name']);
-										} else {
-											$name_array = explode(" ", $row['effective_caller_id_name']);
-										}
-										$contact_name_given = array_shift($name_array);
-										$contact_name_family = trim(implode(' ', $name_array));
-									//get the phone_extension
-										if (is_numeric($row['extension'])) {
-											$phone_extension = $row['extension'];
-										}
-										else {
-											$phone_extension = $row['number_alias'];
-										}
-									//save the contact array values
-										$contacts[$uuid]['category'] = 'extensions';
-										$contacts[$uuid]['contact_uuid'] = $row['contact_uuid'];
-										$contacts[$uuid]['contact_category'] = 'extensions';
-										$contacts[$uuid]['contact_name_given'] = $contact_name_given;
-										$contacts[$uuid]['contact_name_family'] = $contact_name_family;
-										$contacts[$uuid]['phone_extension'] = $phone_extension;
-									//unset the variables
-										unset($name_array, $contact_name_given, $contact_name_family, $phone_extension);
+								if (is_array($extensions)) {
+									foreach ($extensions as $row) {
+										//get the contact_uuid
+											$uuid = $row['contact_uuid'];
+										//get the names
+											if (strlen($row['directory_first_name']) > 0) {
+												$contact_name_given = $row['directory_first_name'];
+												$contact_name_family = $row['directory_last_name'];
+											} else {
+												$name_array = explode(" ", $row['effective_caller_id_name']);
+												$contact_name_given = array_shift($name_array);
+												$contact_name_family = trim(implode(' ', $name_array));
+											}
+
+										//get the phone_extension
+											if (is_numeric($row['extension'])) {
+												$phone_extension = $row['extension'];
+											}
+											else {
+												$phone_extension = $row['number_alias'];
+											}
+										//save the contact array values
+											$contacts[$uuid]['category'] = 'extensions';
+											$contacts[$uuid]['contact_uuid'] = $row['contact_uuid'];
+											$contacts[$uuid]['contact_category'] = 'extensions';
+											$contacts[$uuid]['contact_name_given'] = $contact_name_given;
+											$contacts[$uuid]['contact_name_family'] = $contact_name_family;
+											$contacts[$uuid]['phone_extension'] = $phone_extension;
+										//unset the variables
+											unset($name_array, $contact_name_given, $contact_name_family, $phone_extension);
+									}
 								}
 							}
 					}
@@ -701,27 +918,29 @@ include "root.php";
 							$keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
 						//override profile keys with device keys
-							foreach($keys as $row) {
-								//set the variables
-								$id = $row['device_key_id'];
-								$category = $row['device_key_category'];
-								
-								//build the device keys array
-								$device_keys[$category][$id] = $row;
-								if (is_uuid($row['device_profile_uuid'])) {
-									$device_keys[$category][$id]['device_key_owner'] = "profile";
-								}
-								else {
-									$device_keys[$category][$id]['device_key_owner'] = "device";
-								}
-								
-								//kept temporarily for backwards comptability to allow custom templates to be updated
-								$device_keys[$id] = $row;
-								if (is_uuid($row['device_profile_uuid'])) {
-									$device_keys[$id]['device_key_owner'] = "profile";
-								}
-								else {
-									$device_keys[$id]['device_key_owner'] = "device";
+							if (is_array($keys)) {
+								foreach($keys as $row) {
+									//set the variables
+									$id = $row['device_key_id'];
+									$category = $row['device_key_category'];
+
+									//build the device keys array
+									$device_keys[$category][$id] = $row;
+									if (is_uuid($row['device_profile_uuid'])) {
+										$device_keys[$category][$id]['device_key_owner'] = "profile";
+									}
+									else {
+										$device_keys[$category][$id]['device_key_owner'] = "device";
+									}
+
+									//kept temporarily for backwards comptability to allow custom templates to be updated
+									$device_keys[$id] = $row;
+									if (is_uuid($row['device_profile_uuid'])) {
+										$device_keys[$id]['device_key_owner'] = "profile";
+									}
+									else {
+										$device_keys[$id]['device_key_owner'] = "device";
+									}
 								}
 							}
 							unset($keys);
@@ -861,6 +1080,7 @@ include "root.php";
 				//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
 					$view->assign("mac" , $mac);
 					$view->assign("label", $device_label);
+					$view->assign("device_label", $device_label);
 					$view->assign("firmware_version", $device_firmware_version);
 					$view->assign("domain_name", $domain_name);
 					$view->assign("project_path", PROJECT_PATH);
@@ -869,6 +1089,18 @@ include "root.php";
 					$view->assign("user_id",$user_id);
 					$view->assign("password",$password);
 					$view->assign("template",$device_template);
+
+				// personal ldap password
+					global $laddr_salt;
+					if (isset($device_user_uuid)){
+						$sql = "SELECT contact_uuid FROM v_users WHERE user_uuid='".$device_user_uuid."'";
+						$prep_statement = $this->db->prepare(check_sql($sql));
+						$prep_statement->execute();
+						$c_uuid = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+						$view->assign("ldap_username","uid=".$c_uuid[0]['contact_uuid'].",".$_SESSION['provision']['gs_ldap_user_base']['text']);
+						$view->assign("ldap_password",md5($laddr_salt.$device_user_uuid));
+					}
+
 
 				//get the time zone
 					$time_zone_name = $_SESSION['domain']['time_zone']['name'];
@@ -900,8 +1132,10 @@ include "root.php";
 					}
 
 				//replace the dynamic provision variables that are defined in default, domain, and device settings
-					foreach($provision as $key=>$val) {
-						$view->assign($key, $val);
+					if (is_array($provision)) {
+						foreach($provision as $key=>$val) {
+							$view->assign($key, $val);
+						}
 					}
 
 				//set the template directory
@@ -965,13 +1199,15 @@ include "root.php";
 		function write() {
 			//build the provision array
 				$provision = Array();
-				foreach($_SESSION['provision'] as $key=>$val) {
-					if (strlen($val['var']) > 0) { $value = $val['var']; }
-					if (strlen($val['text']) > 0) { $value = $val['text']; }
-					if (strlen($val['boolean']) > 0) { $value = $val['boolean']; }
-					if (strlen($val['numeric']) > 0) { $value = $val['numeric']; }
-					if (strlen($value) > 0) { $provision[$key] = $value; }
-					unset($value);
+				if (is_array($_SESSION['provision'])) {
+					foreach($_SESSION['provision'] as $key=>$val) {
+						if (strlen($val['var']) > 0) { $value = $val['var']; }
+						if (strlen($val['text']) > 0) { $value = $val['text']; }
+						if (strlen($val['boolean']) > 0) { $value = $val['boolean']; }
+						if (strlen($val['numeric']) > 0) { $value = $val['numeric']; }
+						if (strlen($value) > 0) { $provision[$key] = $value; }
+						unset($value);
+					}
 				}
 
 			//check either we have destination path to write files
@@ -988,7 +1224,7 @@ include "root.php";
 				unset ($prep_statement);
 
 			//process each device
-				foreach ($result as &$row) {
+				if (is_array($result)) foreach ($result as &$row) {
 					//get the values from the database and set as variables
 						$domain_uuid = $row["domain_uuid"];
 						$device_uuid = $row["device_uuid"];
@@ -1028,7 +1264,7 @@ include "root.php";
 						}
 
 					//loop through the provision templates
-						foreach ($dir_array as &$template_path) {
+						if (is_array($dir_array)) foreach ($dir_array as &$template_path) {
 							if (is_dir($template_path)) continue;
 							if (!file_exists($template_path)) continue;
 
@@ -1048,7 +1284,7 @@ include "root.php";
 
 							//render and write configuration to file
 								$provision_dir_array = explode(";", $provision["path"]);
-								foreach($provision_dir_array as $directory) {
+								if (is_array($provision_dir_array)) foreach($provision_dir_array as $directory) {
 									//destinatino file path
 										$dest_path = path_join($directory, $file_name);
 
@@ -1057,6 +1293,7 @@ include "root.php";
 												$file_contents = $this->render();
 
 											//write the file
+												mkdir($directory,0777,true);
 												$fh = fopen($dest_path,"w") or die("Unable to write to $directory for provisioning. Make sure the path exists and permissons are set correctly.");
 												fwrite($fh, $file_contents);
 												fclose($fh);
