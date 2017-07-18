@@ -82,6 +82,7 @@
 		//get ivr menu
 			$ivr_menu_name = check_str($_POST["ivr_menu_name"]);
 			$ivr_menu_extension = check_str($_POST["ivr_menu_extension"]);
+			$ivr_menu_language = check_str($_POST["ivr_menu_language"]);
 			$ivr_menu_greet_long = check_str($_POST["ivr_menu_greet_long"]);
 			$ivr_menu_greet_short = check_str($_POST["ivr_menu_greet_short"]);
 			$ivr_menu_options = $_POST["ivr_menu_options"];
@@ -128,6 +129,7 @@
 			$msg = '';
 			if (strlen($ivr_menu_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
 			if (strlen($ivr_menu_extension) == 0) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
+			if (strlen($ivr_menu_language) == 0) { $msg .= $text['message-required'].$text['label-language']."<br>\n"; }
 			if (strlen($ivr_menu_greet_long) == 0) { $msg .= $text['message-required'].$text['label-greet_long']."<br>\n"; }
 			//if (strlen($ivr_menu_greet_short) == 0) { $msg .= $text['message-required'].$text['label-greet_short']."<br>\n"; }
 			//if (strlen($ivr_menu_invalid_sound) == 0) { $msg .= $text['message-required'].$text['label-invalid_sound']."<br>\n"; }
@@ -254,6 +256,7 @@
 			$dialplan_uuid = $row["dialplan_uuid"];
 			$ivr_menu_name = $row["ivr_menu_name"];
 			$ivr_menu_extension = $row["ivr_menu_extension"];
+			$ivr_menu_language = $row["ivr_menu_language"];
 			$ivr_menu_greet_long = $row["ivr_menu_greet_long"];
 			$ivr_menu_greet_short = $row["ivr_menu_greet_short"];
 			$ivr_menu_invalid_sound = $row["ivr_menu_invalid_sound"];
@@ -318,6 +321,7 @@
 	if (strlen($ivr_menu_ringback) == 0) { $ivr_menu_ringback = 'local_stream://default'; }
 	if (strlen($ivr_menu_invalid_sound) == 0) { $ivr_menu_invalid_sound = 'ivr/ivr-that_was_an_invalid_entry.wav'; }
 	//if (strlen($ivr_menu_confirm_key) == 0) { $ivr_menu_confirm_key = '#'; }
+	if (strlen($ivr_menu_language) == 0) { $ivr_menu_language = 'en'; }
 	if (strlen($ivr_menu_tts_engine) == 0) { $ivr_menu_tts_engine = 'flite'; }
 	if (strlen($ivr_menu_tts_voice) == 0) { $ivr_menu_tts_voice = 'rms'; }
 	if (strlen($ivr_menu_confirm_attempts) == 0) { $ivr_menu_confirm_attempts = '1'; }
@@ -409,6 +413,17 @@
 	echo "  <input class='formfld' type='text' name='ivr_menu_extension' maxlength='255' value='$ivr_menu_extension' required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-extension']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "	".$text['label-language']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "  <input class='formfld' type='text' name='ivr_menu_language' maxlength='255' value='$ivr_menu_language' required='required'>\n";
+	echo "<br />\n";
+	echo $text['description-language']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

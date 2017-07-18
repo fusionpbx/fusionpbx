@@ -54,6 +54,15 @@ $text['message-maximum_ivr_menus']['pl'] = "Maksymalna ilość zapowiedzi głoso
 $text['message-maximum_ivr_menus']['sv-se'] = "Max Antal IVR Menyer: ";
 $text['message-maximum_ivr_menus']['de-at'] = "Maximale Anzahl an Automatischen Vermittlungen:";
 
+$text['label-language']['en-us'] = "Language";
+$text['label-language']['es-cl'] = "Idioma";
+$text['label-language']['pt-pt'] = "Língua";
+$text['label-language']['fr-fr'] = "Langue";
+$text['label-language']['pt-br'] = "Língua";
+$text['label-language']['pl'] = "Język";
+$text['label-language']['sv-se'] = "Språk";
+$text['label-language']['de-at'] = "Sprache";
+
 $text['label-tts_voice']['en-us'] = "TTS Voice";
 $text['label-tts_voice']['es-cl'] = "Voz TTS";
 $text['label-tts_voice']['pt-pt'] = "Voz TTS";
@@ -296,6 +305,15 @@ $text['header-ivr_menu']['pt-br'] = "Menu IVR";
 $text['header-ivr_menu']['pl'] = "Menu zapowiedzi głosowej (IVR)";
 $text['header-ivr_menu']['sv-se'] = "IVR Meny";
 $text['header-ivr_menu']['de-at'] = "Automatische Vermittlung";
+
+$text['description-language']['en-us'] = "IVR greeting language. (ex. en, fr, es)";
+$text['description-language']['es-cl'] = "Menú idioma de grabación. (ex. en, fr, es)";
+$text['description-language']['pt-pt'] = "Idioma de gravação do menu. (ex. en, fr, pt)";
+$text['description-language']['fr-fr'] = "Langue des enregistrements pour le menu. (ex. en, fr, es)";
+$text['description-language']['pt-br'] = "Idioma de gravação do menu. (ex. en, fr, pt)";
+$text['description-language']['pl'] = "Język zapisu menu. (ex. en, fr, pl)";
+$text['description-language']['sv-se'] = "Menyinspelningsspråk. (ex. en, fr, sv)";
+$text['description-language']['de-at'] = "'Menüaufzeichnungssprache. (ex. en, fr, de)";
 
 $text['description-tts_voice']['en-us'] = "Text to speech voice.";
 $text['description-tts_voice']['es-cl'] = "Voz de texto a voz";

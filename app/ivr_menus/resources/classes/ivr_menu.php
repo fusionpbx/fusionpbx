@@ -34,6 +34,7 @@ include "root.php";
 		public $ivr_menu_uuid;
 		public $ivr_menu_name;
 		public $ivr_menu_extension;
+		public $ivr_menu_language;
 		public $ivr_menu_greet_long;
 		public $ivr_menu_greet_short;
 		public $ivr_menu_invalid_sound;
@@ -360,6 +361,12 @@ include "root.php";
 				$details[$x]['dialplan_detail_data'] = 'hangup_after_bridge=true';
 				$details[$x]['dialplan_detail_order'] = '020';
 
+				
+				
+				
+				
+				
+				
 				$x++;
 				$details[$x]['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
 				$details[$x]['dialplan_detail_type'] = 'set';
@@ -369,8 +376,8 @@ include "root.php";
 				else {
 					$details[$x]['dialplan_detail_data'] = 'ringback='.$field['ivr_menu_ringback'];
 				}
-				$details[$x]['dialplan_detail_order'] = '025';
-
+				$details[$x]['dialplan_detail_order'] = '025';				
+				
 				$x++;
 				$details[$x]['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
 				$details[$x]['dialplan_detail_type'] = 'set';
@@ -381,12 +388,23 @@ include "root.php";
 					$details[$x]['dialplan_detail_data'] = 'transfer_ringback='.$field['ivr_menu_ringback'];
 				}
 				$details[$x]['dialplan_detail_order'] = '030';
-
+				
+				$x++;
+				$details[$x]['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
+				$details[$x]['dialplan_detail_type'] = 'set';
+				if ($field['ivr_menu_language'] == "") {
+					$details[$x]['dialplan_detail_data'] = 'default_language=en';
+				}
+				else {
+					$details[$x]['dialplan_detail_data'] = 'default_language='.$field['ivr_menu_language'];
+				}
+				$details[$x]['dialplan_detail_order'] = '035';
+				
 				$x++;
 				$details[$x]['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
 				$details[$x]['dialplan_detail_type'] = 'set';
 				$details[$x]['dialplan_detail_data'] = 'ivr_menu_uuid='.$this->ivr_menu_uuid;
-				$details[$x]['dialplan_detail_order'] = '035';
+				$details[$x]['dialplan_detail_order'] = '040';
 
 				$x++;
 				$details[$x]['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
@@ -398,14 +416,14 @@ include "root.php";
 					$details[$x]['dialplan_detail_type'] = 'ivr';
 					$details[$x]['dialplan_detail_data'] = $this->ivr_menu_uuid;
 				}
-				$details[$x]['dialplan_detail_order'] = '040';
+				$details[$x]['dialplan_detail_order'] = '045';
 
 				if (strlen($field['ivr_menu_exit_app']) > 0) {
 					$x++;
 					$details[$x]['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
 					$details[$x]['dialplan_detail_type'] = $field['ivr_menu_exit_app'];
 					$details[$x]['dialplan_detail_data'] = $field['ivr_menu_exit_data'];
-					$details[$x]['dialplan_detail_order'] = '045';
+					$details[$x]['dialplan_detail_order'] = '050';
 					$x++;
 				}
 
