@@ -121,6 +121,27 @@ $text['message-maximum_ivr_menus']['ru-ru'] = "Максимальное Голо
 $text['message-maximum_ivr_menus']['sv-se'] = "Max Antal IVR Menyer: ";
 $text['message-maximum_ivr_menus']['uk-ua'] = "";
 
+$text['label-language']['en-us'] = "Language";
+$text['label-language']['ar-eg'] = "";
+$text['label-language']['de-at'] = "Sprache";
+$text['label-language']['de-ch'] = "Sprache"; //copied from de-de
+$text['label-language']['de-de'] = "Sprache";
+$text['label-language']['es-cl'] = "Idioma";
+$text['label-language']['es-mx'] = "Idioma";
+$text['label-language']['fr-ca'] = "Langue";
+$text['label-language']['fr-fr'] = "Langue";
+$text['label-language']['he-il'] = "";
+$text['label-language']['it-it'] = "";
+$text['label-language']['nl-nl'] = "";
+$text['label-language']['pl-pl'] = "Język";
+$text['label-language']['pt-br'] = "Língua";
+$text['label-language']['pt-pt'] = "Língua";
+$text['label-language']['ro-ro'] = "";
+$text['label-language']['ru-ru'] = "";
+$text['label-language']['sv-se'] = "Språk";
+$text['label-language']['uk-ua'] = "";
+
+
 $text['label-tts_voice']['en-us'] = "TTS Voice";
 $text['label-tts_voice']['ar-eg'] = "";
 $text['label-tts_voice']['de-at'] = "TTS Sprache";
