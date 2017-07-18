@@ -237,7 +237,9 @@
 					$dialplan_xml .= "		<action application=\"sleep\" data=\"1000\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"ringback=".$ivr_menu_ringback."\"/>\n";
-					$dialplan_xml .= "		<action application=\"set\" data=\"default_language=".$ivr_menu_language."\"/>\n";
+					if  (strlen($ivr_menu_language) > 0) {
+						$dialplan_xml .= "		<action application=\"set\" data=\"default_language=".$ivr_menu_language."\"/>\n";
+					}
 					$dialplan_xml .= "		<action application=\"set\" data=\"transfer_ringback=".$ivr_menu_ringback."\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"ivr_menu_uuid=".$ivr_menu_uuid."\"/>\n";
 
