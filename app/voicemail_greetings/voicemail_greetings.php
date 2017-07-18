@@ -17,15 +17,25 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//deny access if the user extension is not assigned
+	if (!permission_exists('voicemail_greeting_view')) {
+		if (!is_extension_assigned($voicemail_id)) {
+			echo "access denied";
+			return;
+		}
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -46,14 +56,6 @@ require_once "resources/check_auth.php";
 	if ($order_by == '') {
 		$order_by = "greeting_name";
 		$order = "asc";
-	}
-
-//deny access if the user extension is not assigned
-	if (!permission_exists('voicemail_greeting_view')) {
-		if (!is_extension_assigned($voicemail_id)) {
-			echo "access denied";
-			return;
-		}
 	}
 
 //used (above) to search the array to determine if an extension is assigned to the user
@@ -145,37 +147,53 @@ require_once "resources/check_auth.php";
 //upload the greeting
 	if (permission_exists('voicemail_greeting_upload')) {
 		if ($_POST['submit'] == $text['button-upload'] && $_POST['type'] == 'rec' && is_uploaded_file($_FILES['file']['tmp_name'])) {
+
+			//get the file extension
+				$file_ext = substr($_FILES['file']['name'], -4);
+
 			//find the next available
 				for ($i = 1; $i < 10; $i++) {
-					$file_name = 'greeting_'.$i.'.wav';
-					//check the database
-					$sql = "select voicemail_greeting_uuid from v_voicemail_greetings ";
-					$sql .= "where domain_uuid = '".$domain_uuid."' ";
-					$sql .= "and voicemail_id = '".$voicemail_id."' ";
-					$sql .= "and greeting_filename = '".$file_name."' ";
-					$prep_statement = $db->prepare(check_sql($sql));
-					$prep_statement->execute();
-					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-					if (count($result) == 0 && !file_exists($v_greeting_dir.'/'.$file_name)) {
-						//move the uploaded greeting
-							event_socket_mkdir($v_greeting_dir);
-							move_uploaded_file($_FILES['file']['tmp_name'], $v_greeting_dir.'/'.$file_name);
-						//set newly uploaded greeting as active greeting for voicemail box
-							$sql = "update v_voicemails ";
-							$sql .= "set greeting_id = '".$i."' ";
-							$sql .= "where domain_uuid = '".$domain_uuid."' ";
-							$sql .= "and voicemail_id = '".$voicemail_id."' ";
-							$prep_statement = $db->prepare(check_sql($sql));
-							$prep_statement->execute();
-							unset($prep_statement);
-
-						$_SESSION["message"] = $text['message-uploaded'].": ".$_FILES['file']['name'];
+					
+					//exit the loop if the file extension is invalid
+					if ($file_ext != '.wav' && $file_ext != '.mp3') {
 						break;
 					}
-					else {
-						continue;
+
+					//set the file name
+					$file_name = 'greeting_'.$i.$file_ext;
+
+					//check the database
+					if (is_uuid($domain_uuid) && is_numeric($voicemail_id) ) {
+						$sql = "select voicemail_greeting_uuid from v_voicemail_greetings ";
+						$sql .= "where domain_uuid = '".check_str($domain_uuid)."' ";
+						$sql .= "and voicemail_id = '".($voicemail_id)."' ";
+						$sql .= "and greeting_filename = '".check_str($file_name)."' ";
+						$prep_statement = $db->prepare(check_sql($sql));
+						$prep_statement->execute();
+						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+						if (count($result) == 0 && !file_exists($v_greeting_dir.'/'.$file_name)) {
+							//move the uploaded greeting
+								event_socket_mkdir($v_greeting_dir);
+								if ($file_ext == '.wav' || $file_ext == '.mp3') {
+									move_uploaded_file($_FILES['file']['tmp_name'], $v_greeting_dir.'/'.$file_name);
+								}
+							//set newly uploaded greeting as active greeting for voicemail box
+								$sql = "update v_voicemails ";
+								$sql .= "set greeting_id = '".$i."' ";
+								$sql .= "where domain_uuid = '".$domain_uuid."' ";
+								$sql .= "and voicemail_id = '".$voicemail_id."' ";
+								$prep_statement = $db->prepare(check_sql($sql));
+								$prep_statement->execute();
+								unset($prep_statement);
+
+							messages::add($text['message-uploaded'].": ".$_FILES['file']['name']);
+							break;
+						}
+						else {
+							continue;
+						}
+						unset ($prep_statement);
 					}
-					unset ($prep_statement);
 				}
 
 			//set the file name to be inserted as the greeting description
@@ -308,6 +326,21 @@ require_once "resources/check_auth.php";
 		} //if
 	} //if
 
+//get the greetings list
+	$sql = "select * from v_voicemail_greetings ";
+	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "and voicemail_id = '".$voicemail_id."' ";
+	$sql .= "order by ".$order_by." ".$order." ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$greetings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$greeting_count = count($result);
+	unset ($prep_statement, $sql);
+
+//set the row styles
+	$c = 0;
+	$row_style["0"] = "row_style0";
+	$row_style["1"] = "row_style1";
 
 //include the header
 	$document['title'] = $text['title'];
@@ -350,21 +383,6 @@ require_once "resources/check_auth.php";
 	echo $text['description']." <strong>".$voicemail_id."</strong>\n";
 	echo "<br /><br />\n";
 
-	//get the greetings list
-		$sql = "select * from v_voicemail_greetings ";
-		$sql .= "where domain_uuid = '".$domain_uuid."' ";
-		$sql .= "and voicemail_id = '".$voicemail_id."' ";
-		$sql .= "order by ".$order_by." ".$order." ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
-		unset ($prep_statement, $sql);
-
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
-
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<th width='2'>&nbsp;</th>\n";
@@ -387,8 +405,8 @@ require_once "resources/check_auth.php";
 	if ($_SESSION['voicemail']['storage_type']['text'] == 'base64') { $colspan = $colspan - 2; }
 	if (!(permission_exists('voicemail_greeting_edit') || permission_exists('voicemail_greeting_delete'))) { $colspan = $colspan - 1; }
 
-	if ($result_count > 0) {
-		foreach($result as $row) {
+	if ($greeting_count > 0) {
+		foreach($greetings as $row) {
 			//playback progress bar
 			if (permission_exists('voicemail_greeting_play')) {
 				echo "<tr id='recording_progress_bar_".$row['voicemail_greeting_uuid']."' style='display: none;'><td colspan='".$colspan."' class='".$row_style[$c]." playback_progress_bar_background'><span class='playback_progress_bar' id='recording_progress_".$row['voicemail_greeting_uuid']."'></span></td></tr>\n";
