@@ -114,11 +114,13 @@ local log = require "resources.functions.log".ring_group
 --get the ring group
 	ring_group_forward_enabled = "";
 	ring_group_forward_destination = "";
-	sql = "SELECT * FROM v_ring_groups ";
-	sql = sql .. "where ring_group_uuid = :ring_group_uuid ";
+	sql = "SELECT r.*, u.user_uuid FROM v_ring_groups as r, v_ring_group_users as u ";
+	sql = sql .. "where r.ring_group_uuid = :ring_group_uuid ";
+	sql = sql .. "and r.ring_group_uuid = u.ring_group_uuid ";
 	local params = {ring_group_uuid = ring_group_uuid};
 	status = dbh:query(sql, params, function(row)
 		domain_uuid = row["domain_uuid"];
+		user_uuid = row["user_uuid"];
 		ring_group_name = row["ring_group_name"];
 		ring_group_extension = row["ring_group_extension"];
 		ring_group_forward_enabled = row["ring_group_forward_enabled"];
@@ -159,6 +161,20 @@ local log = require "resources.functions.log".ring_group
 						file_subject = scripts_dir.."/app/missed_calls/resources/templates/en/us/email_subject.tpl";
 						file_body = scripts_dir.."/app/missed_calls/resources/templates/en/us/email_body.tpl";
 					end
+
+				--send event
+					local event = freeswitch.Event("ring_groups");
+					event:addHeader("type", "missed");
+					event:addHeader("domain_uuid", domain_uuid);
+					event:addHeader("domain_name", domain_name);
+					event:addHeader("ring_group_uuid", ring_group_uuid);
+					event:addHeader("user_uuid", user_uuid);
+					event:addHeader("ring_group_name", ring_group_name);
+					event:addHeader("ring_group_extension", ring_group_extension);
+					event:addHeader("call_uuid", uuid);
+					event:addHeader("caller_id_name", caller_id_name);
+					event:addHeader("caller_id_number", caller_id_number);
+					event:fire();
 
 				--prepare the headers
 					headers = '{"X-FusionPBX-Domain-UUID":"'..domain_uuid..'",';
