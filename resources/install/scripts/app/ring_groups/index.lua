@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2010-2017 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2010-2016 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -144,6 +144,21 @@ local log = require "resources.functions.log".ring_group
 
 --check the missed calls
 	function missed()
+
+		--send a missec call event
+			local event = freeswitch.Event("CUSTOM", "MISSED_CALLS");
+			event:addHeader("domain_uuid", domain_uuid);
+			event:addHeader("domain_name", domain_name);
+			event:addHeader("ring_group_uuid", ring_group_uuid);
+			event:addHeader("user_uuid", user_uuid);
+			event:addHeader("ring_group_name", ring_group_name);
+			event:addHeader("ring_group_extension", ring_group_extension);
+			event:addHeader("call_uuid", uuid);
+			event:addHeader("caller_id_name", caller_id_name);
+			event:addHeader("caller_id_number", caller_id_number);
+			event:fire();
+
+		--send missed call email
 		if (missed_call_app ~= nil and missed_call_data ~= nil) then
 			if (missed_call_app == "email") then
 				--set the sounds path for the language, dialect and voice
@@ -161,20 +176,6 @@ local log = require "resources.functions.log".ring_group
 						file_subject = scripts_dir.."/app/missed_calls/resources/templates/en/us/email_subject.tpl";
 						file_body = scripts_dir.."/app/missed_calls/resources/templates/en/us/email_body.tpl";
 					end
-
-				--send event
-					local event = freeswitch.Event("ring_groups");
-					event:addHeader("type", "missed");
-					event:addHeader("domain_uuid", domain_uuid);
-					event:addHeader("domain_name", domain_name);
-					event:addHeader("ring_group_uuid", ring_group_uuid);
-					event:addHeader("user_uuid", user_uuid);
-					event:addHeader("ring_group_name", ring_group_name);
-					event:addHeader("ring_group_extension", ring_group_extension);
-					event:addHeader("call_uuid", uuid);
-					event:addHeader("caller_id_name", caller_id_name);
-					event:addHeader("caller_id_number", caller_id_number);
-					event:fire();
 
 				--prepare the headers
 					headers = '{"X-FusionPBX-Domain-UUID":"'..domain_uuid..'",';
