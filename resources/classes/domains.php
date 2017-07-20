@@ -239,12 +239,43 @@ if (!class_exists('domains')) {
 				unset($config_list_1,$config_list_2);
 				$db = $this->db;
 				$x=0;
+				$version_messages = array();
 				foreach ($config_list as &$config_path) {
 					$app_path = dirname($config_path);
 					$app_path = preg_replace('/\A.*(\/.*\/.*)\z/', '$1', $app_path);
 					include($config_path);
+					//check if it needs a minimum version
+						if (strlen($apps[$x]['minimum_version']) > 0 and ($apps[$x]['minimum_version'] != 'current' or version_compare(software_version(), $apps[$x]['minimum_version'], '<'))) {
+							//get a display name for the application
+								$app_display = $app_path;
+								if (strlen( $apps[$x]['name']) > 0) {
+									$app_display .= " (" .  $apps[$x]['name'] . ")";
+								}
+							//store the message
+								$version_messages[] = "$app_display requires at least $apps[$x]['minimum_version']";
+						}
 					$x++;
 				}
+				if (count($version_messages) > 0) {
+					if ($this->display_type == "text") {
+						echo "Version problems were detected, system version is " . software_version() ."\n";
+					}
+					elseif ($this->display_type == "html") {
+						echo "<h3>Version problems were detected, system version is " . software_version() ."</h3>\n";
+					}
+					foreach($version_messages as $message) {
+						if ($this->display_type == "text") {
+							echo "\t$message\n";
+						}
+						elseif ($this->display_type == "html") {
+							echo "<p>$message</p>\n";
+						}
+						else {
+							trigger_error("$message, but the system version is " . software_version(), E_USER_WARNING);
+						}
+					}
+				}
+				unset($version_messages, $config_list, $app_path, $app_display);
 
 			//get the domains
 				$sql = "select * from v_domains ";
@@ -298,7 +329,7 @@ if (!class_exists('domains')) {
 						$context = $domain_name;
 
 					//show the domain when display_type is set to text
-						if ($display_type == "text") {
+						if ($this->display_type == "text") {
 							echo "\n";
 							echo $domain_name;
 							echo "\n";
