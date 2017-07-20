@@ -498,7 +498,12 @@
 							$array["devices"][0]["device_lines"][0]["device_line_uuid"] = $device_line_uuid;
 							$array["devices"][0]["device_lines"][0]["domain_uuid"] = $_SESSION['domain_uuid'];
 							$array["devices"][0]["device_lines"][0]["server_address"] = $_SESSION['domain_name'];
-							$array["devices"][0]["device_lines"][0]["display_name"] = $extension;
+							if (strlen($effective_caller_id_name) > 0) {
+								$array["devices"][0]["device_lines"][0]["display_name"] = $effective_caller_id_name;
+							}
+							else {
+								$array["devices"][0]["device_lines"][0]["display_name"] = $extension;
+							}
 							$array["devices"][0]["device_lines"][0]["user_id"] = $extension;
 							$array["devices"][0]["device_lines"][0]["auth_id"] = $extension;
 							$array["devices"][0]["device_lines"][0]["password"] = $password;
