@@ -145,7 +145,7 @@ local log = require "resources.functions.log".ring_group
 --check the missed calls
 	function missed()
 
-		--send a missec call event
+		--send a missed call event
 			local event = freeswitch.Event("CUSTOM", "MISSED_CALLS");
 			event:addHeader("domain_uuid", domain_uuid);
 			event:addHeader("domain_name", domain_name);
