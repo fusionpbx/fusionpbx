@@ -366,6 +366,7 @@ include "root.php";
 					$sql .= "AND e.enabled = 'true' ";
 					$sql .= "AND e.directory_visible = 'true' ";		# TODO: not right field but it works for our district.
 					$sql .= "AND e.directory_exten_visible = 'true' ";	# TODO: not right field but it works for our district.
+					$sql .= "ORDER BY CASE WHEN directory_full_name LIKE '%".$contact['contact_name_given']."%' THEN 1 ELSE 2 END DESC ";
 					$prep_statement = $this->db->prepare(check_sql($sql));
 					$prep_statement->execute();
 					$user_extentions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
