@@ -106,14 +106,14 @@ class cache {
 					fclose($fp);
 			}
 
-		//cache method file 
-			if (strlen($_SESSION['cache']['method']['text']) == "file") {
+		//cache method file
+			if ($_SESSION['cache']['method']['text'] == "file") {
 				$key = str_replace(":", ".", $key);
 				if (file_exists($_SESSION['cache']['location']['text'] . "/" . $key)) {
 					unlink($_SESSION['cache']['location']['text'] . "/" . $key);
-					if (file_exists($_SESSION['cache']['location']['text'] . "/" . $key . ".tmp")) {
-						unlink($_SESSION['cache']['location']['text'] . "/" . $key . ".tmp");
-					}
+				}
+				if (file_exists($_SESSION['cache']['location']['text'] . "/" . $key . ".tmp")) {
+					unlink($_SESSION['cache']['location']['text'] . "/" . $key . ".tmp");
 				}
 			}
 
@@ -126,7 +126,7 @@ class cache {
 	 */
 	public function flush() {
 		//cache method memcache 
-			if (strlen($_SESSION['cache']['method']['text']) == "memcache") {
+			if ($_SESSION['cache']['method']['text'] == "memcache") {
 				// connect to event socket
 					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 					if ($fp === false) {
@@ -150,7 +150,7 @@ class cache {
 			}
 
 		//cache method file 
-			if (strlen($_SESSION['cache']['method']['text']) == "file") {
+			if ($_SESSION['cache']['method']['text'] == "file") {
 
 				//send a custom event
 					$event = "sendevent CUSTOM\n";
