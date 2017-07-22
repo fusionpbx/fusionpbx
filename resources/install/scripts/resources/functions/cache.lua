@@ -6,7 +6,12 @@
 -- end
 --
 
+--include config.lua
+require "resources.functions.config";
+
+-- include functions
 require "resources.functions.trim";
+require "resources.functions.file_exists";
 
 local api = api
 if not api then
@@ -21,10 +26,16 @@ if not api then
 end
 
 local function send_event(action, key)
-  local event = freeswitch.Event("CUSTOM", "fusion::memcache");
-  event:addHeader("API-Command", "memcache");
-  event:addHeader("API-Command-Argument", action .. " " .. key);
-  event:fire()
+    if (cache.method == "memcache") then
+      local event = freeswitch.Event("CUSTOM", "fusion::memcache");
+      event:addHeader("API-Command", "memcache");
+    end
+    if (cache.method == "file") then
+      local event = freeswitch.Event("CUSTOM", "fusion::file");
+      event:addHeader("API-Command", "file");
+    end
+    event:addHeader("API-Command-Argument", action .. " " .. key);
+    event:fire()
 end
 
 local Cache = {}
@@ -37,7 +48,7 @@ local function check_error(result)
   end
 
   if result == 'INVALID COMMAND!' and not Cache.support() then
-      return nil, 'INVALID COMMAND'
+    return nil, 'INVALID COMMAND'
   end
 
   return result
@@ -48,7 +59,11 @@ function Cache.support()
   if Cache._support then
     return true
   end
-  Cache._support = (trim(api:execute('module_exists', 'mod_memcache')) == 'true')
+  if (cache.method == "memcache") then
+    Cache._support = (trim(api:execute('module_exists', 'mod_memcache')) == 'true')
+  else
+  	Cache._support = true;
+  end
   return Cache._support
 end
 
@@ -60,22 +75,61 @@ end
 -- @return[2] error string `e.g. 'NOT FOUND'
 -- @note error string does not contain `-ERR` prefix
 function Cache.get(key)
-  local result, err = check_error(api:execute('memcache', 'get ' .. key))
+  local key = key:gsub(":", ".")
+  if (cache.method == "memcache") then
+    local result, err = check_error(api:execute('memcache', 'get ' .. key))
+  end
+  if (cache.method == "file") then
+    if (file_exists("/tmp/" .. key)) then
+      local result, err = io.open(cache.location .. "/" .. key,  "rb")
+    end
+  end
   if not result then return nil, err end
   return (result:gsub("&#39;", "'"))
 end
 
 function Cache.set(key, value, expire)
+  key = key:gsub(":", ".")
   value = value:gsub("'", "&#39;"):gsub("\\", "\\\\")
-  expire = expire and tostring(expire) or ""
-  local ok, err = check_error(api:execute("memcache", "set " .. key .. " '" .. value .. "' " .. expire))
-  if not ok then return nil, err end
-  return ok == '+OK'
+  --local ok, err = check_error(write_file("/tmp/" .. key, value))
+  if (cache.method == "file") then
+    if (not file_exists("/tmp/" .. key .. ".tmp")) then
+      --write the temp file
+      local file, err = io.open("/tmp/" .. key .. ".tmp", "wb")
+      if not file then
+        log.err("Can not open file to write:" .. tostring(err))
+        return nil, err
+      end
+      file:write(value)
+      file:close()
+      --move the temp file
+      os.rename("/tmp/" .. key .. ".tmp", "/tmp/" .. key)
+    end
+  end
+  if (cache.method == "memcache") then
+    expire = expire and tostring(expire) or ""
+    local ok, err = check_error(api:execute("memcache", "set " .. key .. " '" .. value .. "' " .. expire))
+    if not ok then return nil, err end
+    return ok == '+OK'
+  end
 end
 
 function Cache.del(key)
+  key = key:gsub(":", ".")
   send_event('delete', key)
-  local result, err = check_error(api:execute("memcache", "delete " .. key))
+  if (cache.method == "memcache") then
+    local result, err = check_error(api:execute("memcache", "delete " .. key))
+  end
+  if (cache.method == "file") then
+    if (file_exists("/tmp/" .. key)) then
+      os.remove("/tmp/" .. key)
+      if (file_exists("/tmp/" .. key .. ".tmp")) then
+        os.remove("/tmp/" .. key .. ".tmp")
+      end
+    else
+      err = 'NOT FOUND'
+    end
+  end
   if not result then
     if err == 'NOT FOUND' then
       return true
