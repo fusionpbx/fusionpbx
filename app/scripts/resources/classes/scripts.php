@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -97,7 +97,7 @@ if (!class_exists('scripts')) {
 				$dst_dir = $_SESSION['switch']['scripts']['dir'];
 				if (file_exists($dst_dir)) {
 					//get the source directory
-					if (file_exists('/usr/share/examples/fusionpbx/scripts')){
+					if (file_exists('/usr/share/examples/fusionpbx/scripts')) {
 						$src_dir = '/usr/share/examples/fusionpbx/scripts';
 					}
 					else {
@@ -113,7 +113,8 @@ if (!class_exists('scripts')) {
 							recursive_copy($app_script, $dst_dir);
 						}
 						unset($app_scripts);
-					}else{
+					}
+					else {
 						throw new Exception("Cannot read from '$src_dir' to get the scripts");
 					}
 					chmod($dst_dir, 0775);
@@ -228,8 +229,15 @@ if (!class_exists('scripts')) {
 					$tmp .= $this->correct_path("	http_protocol = [[".$_SERVER['HTTP_PROTOCOL']."]];\n");
 					$tmp .= "\n";
 
-					$tmp .= "--store settings in memcache\n";
-					$tmp .= "	settings_in_cache = false;\n";
+					$tmp .= "--cache settings\n";
+					$tmp .= "	cache = {}\n";
+					if (strlen($_SESSION['cache']['method']['text']) > 0) {
+						$tmp .= "	cache.method = [[".$_SESSION['cache']['method']['text']."]];\n";  //file, memcache
+					}
+					if (strlen($_SESSION['cache']['location']['text']) > 0) {
+						$tmp .= "	cache.location = [[".$_SESSION['cache']['location']['text']."]];\n";
+					}
+					$tmp .= "	cache.settings = false;\n";
 					$tmp .= "\n";
 
 					if ((strlen($this->db_type) > 0) || (strlen($this->dsn_name) > 0)) {
