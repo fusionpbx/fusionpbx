@@ -148,12 +148,10 @@
 			//exit;
 
 		//get the hostname
-			if ($sip_profile_name == nul) {
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-				if ($fp) {
-					$switch_cmd = "hostname";
-					$sip_profile_hostname = event_socket_request($fp, 'api '.$switch_cmd);
-				}
+			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			if ($fp) {
+				$switch_cmd = "switchname";
+				$sip_profile_hostname = event_socket_request($fp, 'api '.$switch_cmd);
 			}
 
 		//clear the cache
