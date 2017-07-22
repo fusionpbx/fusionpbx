@@ -84,7 +84,6 @@ function Cache.get(key)
       --freeswitch.consoleLog("notice", "[cache] location: " .. cache.location .. "/" .. key .."\n");
       local file, err = io.open(cache.location .. "/" .. key,  "rb")
       result = file:read("*all")
-      err = '';
     else
       err = 'NOT FOUND';
     end
