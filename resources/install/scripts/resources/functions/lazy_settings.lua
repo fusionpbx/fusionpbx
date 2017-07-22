@@ -55,7 +55,7 @@ function Settings.new(db, domain_name, domain_uuid)
   self._db          = db
   self._domain_name = domain_name
   self._domain_uuid = domain_uuid
-  self._use_cache   = not not settings_in_cache
+  self._use_cache   = not not cache.settings
 
   return self
 end
