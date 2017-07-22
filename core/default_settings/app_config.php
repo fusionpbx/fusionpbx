@@ -460,6 +460,22 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "call_center_agents";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable Dashboard Call Center Agent Status block for users in the agent group.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "85d79c4e-4689-4d8e-b87d-5edd5b1574b1";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cache";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "method";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "memcache";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Cache methods file and memcache.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7b644bfb-124f-4212-9541-1ca564be9d79";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cache";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "location";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/tmp";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Location for the file cache.";
 
 	//schema details
 		$y=0;
