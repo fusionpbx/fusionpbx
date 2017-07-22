@@ -81,9 +81,16 @@ function Cache.get(key)
   end
   if (cache.method == "file") then
     if (file_exists(cache.location .. "/" .. key)) then
-      local result, err = io.open(cache.location .. "/" .. key,  "rb")
+      --freeswitch.consoleLog("notice", "[cache] location: " .. cache.location .. "/" .. key .."\n");
+      local file, err = io.open(cache.location .. "/" .. key,  "rb")
+      result = file:read("*all")
+      err = '';
+    else
+      err = 'NOT FOUND';
     end
   end
+  --freeswitch.consoleLog("notice", "[cache] result: " .. result .. "\n");
+  --file:close()
   if not result then return nil, err end
   return (result:gsub("&#39;", "'"))
 end
