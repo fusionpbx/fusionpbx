@@ -80,7 +80,7 @@ function Cache.get(key)
     local result, err = check_error(api:execute('memcache', 'get ' .. key))
   end
   if (cache.method == "file") then
-    if (file_exists("/tmp/" .. key)) then
+    if (file_exists(cache.location .. "/" .. key)) then
       local result, err = io.open(cache.location .. "/" .. key,  "rb")
     end
   end
@@ -91,11 +91,11 @@ end
 function Cache.set(key, value, expire)
   key = key:gsub(":", ".")
   value = value:gsub("'", "&#39;"):gsub("\\", "\\\\")
-  --local ok, err = check_error(write_file("/tmp/" .. key, value))
+  --local ok, err = check_error(write_file(cache.location .. "/" .. key, value))
   if (cache.method == "file") then
-    if (not file_exists("/tmp/" .. key .. ".tmp")) then
+    if (not file_exists(cache.location .. "/" .. key .. ".tmp")) then
       --write the temp file
-      local file, err = io.open("/tmp/" .. key .. ".tmp", "wb")
+      local file, err = io.open(cache.location .. "/" .. key .. ".tmp", "wb")
       if not file then
         log.err("Can not open file to write:" .. tostring(err))
         return nil, err
@@ -103,7 +103,7 @@ function Cache.set(key, value, expire)
       file:write(value)
       file:close()
       --move the temp file
-      os.rename("/tmp/" .. key .. ".tmp", "/tmp/" .. key)
+      os.rename(cache.location .. "/" .. key .. ".tmp", cache.location .. "/" .. key)
     end
   end
   if (cache.method == "memcache") then
@@ -121,10 +121,10 @@ function Cache.del(key)
     local result, err = check_error(api:execute("memcache", "delete " .. key))
   end
   if (cache.method == "file") then
-    if (file_exists("/tmp/" .. key)) then
-      os.remove("/tmp/" .. key)
-      if (file_exists("/tmp/" .. key .. ".tmp")) then
-        os.remove("/tmp/" .. key .. ".tmp")
+    if (file_exists(cache.location .. "/" .. key)) then
+      os.remove(cache.location .. "/" .. key)
+      if (file_exists(cache.location .. "/" .. key .. ".tmp")) then
+        os.remove(cache.location .. "/" .. key .. ".tmp")
       end
     else
       err = 'NOT FOUND'
