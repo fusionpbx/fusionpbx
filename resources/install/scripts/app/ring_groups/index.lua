@@ -82,6 +82,7 @@
 	if (session:ready()) then
 		session:setAutoHangup(false);
 		domain_name = session:getVariable("domain_name");
+		domain_uuid = session:getVariable("domain_uuid");
 		ring_group_uuid = session:getVariable("ring_group_uuid");
 		recordings_dir = session:getVariable("recordings_dir");
 		sounds_dir = session:getVariable("sounds_dir");
@@ -153,7 +154,7 @@
 	sql = sql .. "and r.ring_group_uuid = u.ring_group_uuid ";
 	local params = {ring_group_uuid = ring_group_uuid};
 	status = dbh:query(sql, params, function(row)
-		domain_uuid = row["domain_uuid"];
+		--domain_uuid = row["domain_uuid"];
 		user_uuid = row["user_uuid"];
 		ring_group_name = row["ring_group_name"];
 		ring_group_extension = row["ring_group_extension"];
