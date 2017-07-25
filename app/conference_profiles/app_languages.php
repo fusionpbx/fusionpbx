@@ -301,7 +301,7 @@ $text['label-profile_param_value']['ru-ru'] = "Значение";
 $text['label-profile_param_value']['sv-se'] = "Värde";
 $text['label-profile_param_value']['uk-ua'] = "";
 
-$text['description-profile_param_value']['en-us'] = "Введите Значение.";
+$text['description-profile_param_value']['en-us'] = "Enter the value.";
 $text['description-profile_param_value']['ar-eg'] = "";
 $text['description-profile_param_value']['de-at'] = "Geben Sie den Wert ein.";
 $text['description-profile_param_value']['de-ch'] = "Geben Sie den Wert ein."; //copied from de-de
@@ -317,7 +317,7 @@ $text['description-profile_param_value']['pl-pl'] = "";
 $text['description-profile_param_value']['pt-br'] = "";
 $text['description-profile_param_value']['pt-pt'] = "";
 $text['description-profile_param_value']['ro-ro'] = "";
-$text['description-profile_param_value']['ru-ru'] = "";
+$text['description-profile_param_value']['ru-ru'] = "Введите Значение.";
 $text['description-profile_param_value']['sv-se'] = "Ange värdet.";
 $text['description-profile_param_value']['uk-ua'] = "";
 
