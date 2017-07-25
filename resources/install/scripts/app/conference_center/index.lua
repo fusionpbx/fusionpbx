@@ -373,7 +373,9 @@
 
 --make sure the session is ready
 	if (session:ready()) then
-
+		-- start expecting dtmf
+			session:execute("start_dtmf","")
+	
 		--answer the call
 			session:preAnswer();
 
