@@ -88,6 +88,11 @@ else {
 	<table>
 		<tr>
 			<td align='left'>
+				<div id="placeholder-legend" style="padding:2px;margin-bottom: 8px;border-radius: 3px 3px 3px 3px;border: 1px solid #E6E6E6;display: inline-block;margin: 0 auto;"></div>
+			</td>
+		</tr>
+		<tr>
+			<td align='left'>
 				<div id="placeholder" style="width:700px;height:180px;"></div>
 			</td>
 			<td align='left' valign='top'>
@@ -155,6 +160,12 @@ else {
 
 			if (data.length > 0)
 				$.plot($("#placeholder"), data, {
+					legend:{
+						show: true,
+						noColumns: 10,
+						container: $("#placeholder-legend"),
+						placement: 'outsideGrid',
+					},
 					yaxis: { min: 0 },
 					<?php
 						if ($hours <= 48) {
