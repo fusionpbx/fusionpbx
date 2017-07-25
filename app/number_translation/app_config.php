@@ -6,6 +6,7 @@
 		$apps[$x]['category'] = "System";
 		$apps[$x]['subcategory'] = "";
 		$apps[$x]['version'] = "0.1";
+		$apps[$x]['minimum_version'] = 'current';
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Manage mod_translation";
@@ -27,7 +28,6 @@
 		$apps[$x]['description']['ru-ru'] = "Управление mod_translate";
 		$apps[$x]['description']['sv-se'] = "Hantera mod_translate";  //translation provided by Google Translate
 		$apps[$x]['description']['uk-ua'] = "управління mod_translate";  //translation provided by Google Translate
-		$apps[$x]['minimum_version'] = "4.3.2";
 
 	//permission details
 		$y = 0;

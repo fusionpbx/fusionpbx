@@ -76,8 +76,8 @@
 	echo "<tr>\n";
 	echo "	<th>".$text['label-name']."</th>\n";
 	echo "	<th>".$text['label-category']."</th>\n";
-	echo "	<th>".$text['label-subcategory']."</th>\n";
 	echo "	<th>".$text['label-version']."</th>\n";
+	echo "	<th title='".$text['description-required_version']."'>".$text['label-required_version']."</th>\n";
 	echo "	<th>".$text['label-description']."</th>\n";
 	/*
 	echo "<td class='list_control_icons'>\n";
@@ -112,9 +112,16 @@
 			}
 			*/
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['category']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['subcategory']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".(strlen($row['category'])>0 ? $row['category'] : 'None').(strlen($row['subcategory'])>0 ? "/".$row['subcategory'] : '')."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['version']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'";
+			if (strlen($row['minimum_version']) > 0) {
+				echo "style='color:".($row['minimum_version'] != 'current' or version_compare(software_version(), $row['minimum_version'], '<') ? '#D00' : '#0D0').";'>".$row['minimum_version'];
+			}
+			else {
+				echo ">&nbsp;";
+			}
+			echo "</td>\n";
 			echo "	<td valign='top' class='row_stylebg' width='35%'>".$row['$description']."</td>\n";
 			/*  // temporarily disabled
 			echo "	<td class='list_control_icons'>";

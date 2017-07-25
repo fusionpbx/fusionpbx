@@ -6,6 +6,7 @@
 		$apps[$x]['category'] = "";
 		$apps[$x]['subcategory'] = "";
 		$apps[$x]['version'] = "1.0";
+		$apps[$x]['minimum_version'] = 'current';
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Call controls enable ability to assign digits to actions. They can be used to mute, unmute, or other actions during the conference call.";

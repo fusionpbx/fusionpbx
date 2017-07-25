@@ -6,6 +6,7 @@
 		$apps[$x]['category'] = "Core";
 		$apps[$x]['subcategory'] = "";
 		$apps[$x]['version'] = "1.0";
+		$apps[$x]['minimum_version'] = 'current';
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Update or restore various system settings.";
 		$apps[$x]['description']['ar-eg'] = "";
