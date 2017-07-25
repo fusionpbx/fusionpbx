@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -129,7 +129,7 @@
 			$msg = '';
 			if (strlen($ivr_menu_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
 			if (strlen($ivr_menu_extension) == 0) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
-			if (strlen($ivr_menu_language) == 0) { $msg .= $text['message-required'].$text['label-language']."<br>\n"; }
+			//if (strlen($ivr_menu_language) == 0) { $msg .= $text['message-required'].$text['label-language']."<br>\n"; }
 			if (strlen($ivr_menu_greet_long) == 0) { $msg .= $text['message-required'].$text['label-greet_long']."<br>\n"; }
 			//if (strlen($ivr_menu_greet_short) == 0) { $msg .= $text['message-required'].$text['label-greet_short']."<br>\n"; }
 			//if (strlen($ivr_menu_invalid_sound) == 0) { $msg .= $text['message-required'].$text['label-invalid_sound']."<br>\n"; }
@@ -498,7 +498,7 @@
 	echo "</tr>\n";
 	
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-language']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
