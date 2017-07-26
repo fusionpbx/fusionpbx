@@ -353,7 +353,7 @@
 				$sql = "delete from v_dialplan_details ";
 				$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
 				if (!permission_exists('destination_domain')) {
-					$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
+					$sql .= "and (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
 				}
 				//echo $sql."<br><br>";
 				$db->exec(check_sql($sql));
