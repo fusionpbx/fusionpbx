@@ -33,11 +33,16 @@ if not api then
   end
 end
 
-local function send_event(action, key)
-  local event = freeswitch.Event("CUSTOM", "fusion::" .. cache_method)
-  event:addHeader("API-Command", cache_method)
-  event:addHeader("API-Command-Argument", action .. " " .. key)
-  event:fire()
+local send_event
+if freeswitch then
+  send_event = function (action, key)
+    local event = freeswitch.Event("CUSTOM", "fusion::" .. cache_method)
+    event:addHeader("API-Command", cache_method)
+    event:addHeader("API-Command-Argument", action .. " " .. key)
+    event:fire()
+  end
+else
+  send_event = function() end
 end
 
 local Cache = {}
@@ -63,6 +68,14 @@ local function key2file(key)
     ['\\'] = '_',
     ['/']  = '_',
   })
+end
+
+-- generate random file name
+local function tmp_file(key)
+  -- @todo may be it worth fallback to `os.tmpname`
+  local uuid = check_error(api:execute("create_uuid", ""))
+  if uuid then key = key .. '.' .. uuid end
+  return key .. '.tmp'
 end
 
 -- convert cache key to memcache key
@@ -125,9 +138,18 @@ end
 
 function Cache.set(key, value, expire)
   if (cache_method == "file") then
+    -- To make write to cache atomic we first write to some
+    -- temp file with uniq random name. So if there more than
+    -- one writers all of then write to its own temp file.
+    -- After it done we do rename and this operation will
+    -- leave only one file. If rename fail we assume that
+    -- some one else write this cache item so we just remove our
+    -- temp file. This should works because all writers should
+    -- write same values and it does not metter which one do this first.
     key = key2file(key)
     if (not File.exists(key)) then
-      local key_tmp = key .. ".tmp"
+      -- get random name for the temp file
+      local key_tmp = tmp_file(key)
       --write the temp file
       local ok, err = File.write(key_tmp, value)
       if not ok then
@@ -136,6 +158,8 @@ function Cache.set(key, value, expire)
       end
       --move the temp file
       ok, err = File.rename(key_tmp, key)
+      -- if we can not rename file then assume that key already exists,
+      -- so we have to remove our temp file.
       if not ok then File.remove(key_tmp) end
       return ok, err
     end
@@ -214,8 +238,8 @@ function Cache._self_test()
   print('done')
 end
 
--- if debug.self_test then
---   Cache._self_test()
--- end
+if debug.self_test then
+  Cache._self_test()
+end
 
 return Cache
