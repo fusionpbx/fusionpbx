@@ -192,6 +192,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Enforce voicemail password complexity.';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '95f9d770-0fb0-4e2c-93b1-d2a140568058';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'voicemail';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'password_min_length';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '4';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Minimum voicemail password length.';
 
 	//schema details
 		$y=0;
