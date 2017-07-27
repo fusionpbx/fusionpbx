@@ -155,7 +155,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "domain";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dial_string";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "{sip_invite_domain=\${domain_name},leg_timeout=\${call_timeout},presence_id=\${dialed_user}@\${dialed_domain}}\${sofia_contact(\*/\${dialed_user}@\${dialed_domain})}";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "{sip_invite_domain=\${domain_name},leg_timeout=\${call_timeout},presence_id=\${dialed_user}@\${dialed_domain}}\${sofia_contact(*/\${dialed_user}@\${dialed_domain})}";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
