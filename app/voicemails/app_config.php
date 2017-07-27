@@ -184,6 +184,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'asc';
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Set the message order to asc or desc.';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'b31bcf2d-cb43-41c3-8fb3-36ef74d079b0';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'voicemail';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'password_complexity';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'boolean';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Enforce voicemail password complexity.';
 
 	//schema details
 		$y=0;
