@@ -214,9 +214,9 @@
 <!-- For example: directory.grandstream.com/engineering -->
 <!-- String -->
 {if isset($contact_grandstream)}
-<P331>{$gs_phonebook_xml_server_path}{$user_id_1}/</P331>
-{elseif isset($gs_phonebook_xml_server_path)}
-<P331>{$gs_phonebook_xml_server_path}</P331>
+<P331>{$grandstream_phonebook_xml_server_path}{$user_id_1}/</P331>
+{elseif isset($grandstream_phonebook_xml_server_path)}
+<P331>{$grandstream_phonebook_xml_server_path}</P331>
 {else}
 <P331></P331>
 {/if}
@@ -243,7 +243,7 @@
 
 <!-- Server Address, up to 256 characters can be used. It can be IP address or Domain name -->
 <!-- String -->
-<P8020>{$gs_ldap_server}</P8020>
+<P8020>{$grandstream_ldap_server}</P8020>
 
 <!-- Port. Default value is 389 -->
 <!-- Number: 1 - 65535 -->
@@ -253,7 +253,7 @@
 <!-- Example 1: dc=grandstream,dc=com -->
 <!-- Example 2: ou=Boston, dc=grandstream,dc=com -->
 <!-- String -->
-<P8022>{$gs_ldap_base_dn}</P8022>
+<P8022>{$grandstream_ldap_base_dn}</P8022>
 
 <!-- User Name. The bind "Username" for querying LDAP servers. Some LDAP servers allow anonymous binds in which case the setting can be left blank -->
 <!-- String -->
@@ -266,34 +266,34 @@
 <!-- LDAP Name Attributes. This setting specifies the "name" attributes of each record which are returned in the LDAP search result -->
 <!-- The setting allows the users to configure multiple space separated name attributes -->
 <!-- String -->
-<P8028>{$gs_ldap_name_attr}</P8028>
+<P8028>{$grandstream_ldap_name_attr}</P8028>
 
 <!-- LDAP Number Attributes. This setting specifies the "number" attributes of each record which are returned in the LDAP search result -->
 <!-- The setting allows the users to configure multiple space separated number attributes -->
 <!-- String -->
-<P8029>{$gs_ldap_number_attr}</P8029>
+<P8029>{$grandstream_ldap_number_attr}</P8029>
 
 <!-- LDAP Mail Attributes. This setting specifies the "mail" attributes of each record which are returned in the LDAP search result -->
 <!-- The setting allows the users to configure multiple space separated mail attributes -->
 <!-- String -->
-<P8038>{$gs_ldap_mail_attr}</P8038>
+<P8038>{$grandstream_ldap_mail_attr}</P8038>
 
 <!-- LDAP Name Filter -->
 <!-- LDAP name filter is the filter used for name look ups. Please refer to usermanual for examples -->
 <!-- P8025 and P8026 are reversed on gswave -->
 <!-- String -->
-<P8025>{$gs_ldap_name_filter}</P8025>
+<P8025>{$grandstream_ldap_name_filter}</P8025>
 
 <!-- LDAP Number Filter -->
 <!-- LDAP name filter is the filter used for number look ups. Please refer to usermanual for examples -->
 <!-- P8025 and P8026 are reversed on gswave -->
 <!-- String -->
-<P8026>{$gs_ldap_number_filter}</P8026>
+<P8026>{$grandstream_ldap_number_filter}</P8026>
 
 <!-- LDAP Mail Filter -->
 <!-- LDAP mail filter is the filter used for mail look ups. Please refer to usermanual for examples -->
 <!-- String -->
-<P8039>{$gs_ldap_mail_filter}</P8039>
+<P8039>{$grandstream_ldap_mail_filter}</P8039>
 
 <!-- LDAP Displaying Name Attributes. The entry information to be shown on phone LCD. Grandstream phones will display up to 3 fields -->
 <!-- String -->
