@@ -61,7 +61,12 @@
 
 <!-- Firmware Server Path -->
 <!-- Server address -->
-<P192>fm.grandstream.com/gs</P192>
+
+{if isset($grandstream_firmware_path)}
+<P192>{$grandstream_firmware_path}</P192>
+{else}
+<P192>{$domain_name}{$project_path}/app/provision</P192>
+{/if}
 
 <!-- Config Server Path -->
 <!-- Server address;  -->
@@ -105,7 +110,11 @@
 <!-- Automatic Upgrade. 0 - No, 1 - Check daily, 2 - Check weekly, 3 - Check every () minutes. Default is No. -->
 <!-- Number: 0, 1, 2, 3 -->
 <!-- Mandatory -->
+{if isset($grandstream_auto_upgrade)}
+<P194>{$grandstream_auto_upgrade}</P194>
+{else}
 <P194>0</P194>
+{/if}
 
 <!-- Check for new firmware/config file every () minutes, unit is in minute, minimum 60 minutes, default is 7 days. -->
 <!-- Number: 60 to 5256000 -->
@@ -236,18 +245,26 @@
 
 <!-- Syslog Server (name of the server, max length is 64 characters) -->
 <!-- Server address -->
-<P207></P207>
+<P207>{$grandstream_syslog_server}</P207>
 
 <!-- Syslog Level (Default setting is NONE) -->
 <!-- 0 - NONE, 1 - DEBUG, 2 - INFO, 3 - WARNING, 4 - ERROR, 5 - EXTRA DEBUG -->
 <!-- Number: 0, 1, 2, 3, 4, 5 -->
 <!-- Mandatory -->
+{if isset($grandstream_syslog_level)}
+<P208>{$grandstream_syslog_level}</P208>
+{else}
 <P208>0</P208>
+{/if}
 
 <!-- Send SIP Log. 0 - No, 1 - Yes. (If set to yes, The unit will replicate the received and send SIP packets on the syslog) -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
+{if isset($grandstream_send_sip_log)}
+<P1387>{$grandstream_send_sip_log}</P1387>
+{else}
 <P1387>0</P1387>
+{/if}
 
 <!-- FXS PORT 1 Settings -->
 
@@ -286,7 +303,11 @@
 <!-- NAT Traversal (STUN) 0 - No, 2 - No but send keep-alive, 1 - Yes, 3 - UPnP -->
 <!-- Number: 0, 1, 2, 3 -->
 <!-- Mandatory -->
+{if isset($grandstream_nat_traversal_1)}
+<P52>{$grandstream_nat_traversal_1}</P52>
+{else}
 <P52>0</P52>
+{/if}
 
 <!-- SIP User ID -->
 <!-- String -->
@@ -402,7 +423,12 @@
 <!-- Check SIP UserID for incoming INVITE. 0 - No, 1 - Yes (no direct IP calling if Yes) -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
+
+{if isset($grandstream_check_sip_user_id)}
+<P258>1</P258>
+{else}
 <P258>0</P258>
+{/if}
 
 <!-- Authenticate incoming INVITE -->
 <!-- Number: 0, 1 -->
@@ -1747,7 +1773,7 @@
 <!-- <value=TZe-13> GMT+13:00 (Nuku'alofa) -->
 <!-- <value=customize> Using self-defined Time Zone -->
 <!-- Mandatory -->
-<P64>customize</P64>
+<P64>{$grandstream_gxp_time_zone}</P64>
 
 <!-- Self-Defined Time Zone -->
 <!-- String -->
