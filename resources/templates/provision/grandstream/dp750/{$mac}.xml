@@ -63,8 +63,8 @@
 <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP . -->
 <!-- Number: 0,1,2,3 -->
 <!-- Mandatory  -->
-{if isset($gs_dns_mode_1) }
-<P103>{$gs_dns_mode_1}</P103>
+{if isset($grandstream_dns_mode_1) }
+<P103>{$grandstream_dns_mode_1}</P103>
 {else}
 <P103>0</P103>
 {/if}
@@ -84,8 +84,8 @@
 <!-- NAT Traversal (STUN). 0 - No, 2 - No but send keep-alive, 1 - Yes -->
 <!-- Number: 0,1,2 -->
 <!-- Mandatory -->
-{if isset($gs_nat_traversal_1) }
-<P52>{$gs_nat_traversal_1}</P52>
+{if isset($grandstream_nat_traversal_1) }
+<P52>{$grandstream_nat_traversal_1}</P52>
 {else}
 <P52>0</P52>
 {/if}
@@ -617,8 +617,8 @@
 <!-- NAT Traversal (STUN). 0 - No, 2 - No but send keep-alive, 1 - Yes -->
 <!-- Number: 0,1,2 -->
 <!-- Mandatory -->
-{if isset($gs_nat_traversal_2) }
-<P730>{$gs_nat_traversal_2}</P730>
+{if isset($grandstream_nat_traversal_2) }
+<P730>{$grandstream_nat_traversal_2}</P730>
 {else}
 <P730>0</P730>
 {/if}
@@ -1141,8 +1141,8 @@
 <!-- NAT Traversal (STUN). 0 - No, 2 - No but send keep-alive, 1 - Yes -->
 <!-- Number: 0,1,2 -->
 <!-- Mandatory -->
-{if isset($gs_nat_traversal_3)}
-<P630>{$gs_nat_traversal_3}</P630>
+{if isset($grandstream_nat_traversal_3)}
+<P630>{$grandstream_nat_traversal_3}</P630>
 {else}
 <P630>0</P630>
 {/if}
@@ -1666,8 +1666,8 @@
 <!-- NAT Traversal (STUN). 0 - No, 2 - No but send keep-alive, 1 - Yes -->
 <!-- Number: 0,1,2 -->
 <!-- Mandatory -->
-{if isset($gs_nat_traversal_4)}
-<P614>{$gs_nat_traversal_4}</P614>
+{if isset($grandstream_nat_traversal_4)}
+<P614>{$grandstream_nat_traversal_4}</P614>
 {else}
 <P614>0</P614>
 {/if}
@@ -2431,7 +2431,7 @@
 <!-- Enable VLAN。 Config to enable or disable virtual LAN. 0 - Disabled, 1 - Enabled. Default is 0 - disabled. -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-{if isset($gs_lan_port_vlan) }
+{if isset($grandstream_lan_port_vlan) }
 <P27004>1</P27004>
 {else}
 <P27004>0</P27004>
@@ -2440,8 +2440,8 @@
 <!-- Layer 2 QoS 802.1Q/VLAN Tag -->
 <!-- Number -->
 <!-- Mandatory -->
-{if isset($gs_lan_port_vlan) }
-<P51>{$gs_lan_port_vlan}</P51>
+{if isset($grandstream_lan_port_vlan) }
+<P51>{$grandstream_lan_port_vlan}</P51>
 {else}
 <P51>0</P51>
 {/if}
@@ -2449,8 +2449,8 @@
 <!-- Layer 2 QoS 802.1p Priority Value for SIP signaling -->
 <!-- Number: 0 to 7 -->
 <!-- Mandatory -->
-{if isset($gs_qos_sip)}
-<P5038>{$gs_qos_sip}</P5038>
+{if isset($grandstream_qos_sip)}
+<P5038>{$grandstream_qos_sip}</P5038>
 {else}
 <P5038>0</P5038>
 {/if}
@@ -2458,8 +2458,8 @@
 <!-- Layer 2 QoS 802.1p Priority Value for RTP media -->
 <!-- Number: 0 to 7 -->
 <!-- Mandatory -->
-{if isset($gs_qos_rtp)}
-<P5042>{$gs_qos_rtp}</P5042>
+{if isset($grandstream_qos_rtp)}
+<P5042>{$grandstream_qos_rtp}</P5042>
 {else}
 <P5042>0</P5042>
 {/if}
@@ -2571,8 +2571,8 @@
 
 <!-- Firmware Server Path -->
 <!-- String: serveraddress  -->
-{if isset($gs_firmware_path)}
-<P192>{$gs_firmware_path}</P192>
+{if isset($grandstream_firmware_path)}
+<P192>{$grandstream_firmware_path}</P192>
 {else}
 <P192>{$domain_name}{$project_path}/app/provision</P192>
 {/if}
@@ -2660,10 +2660,10 @@
 
 <!-- Config Server Path -->
 <!-- String: serveraddress  -->
-{if $gs_config_server_path=="none"}
+{if $grandstream_config_server_path=="none"}
 <P237></P237>
-{elseif isset($gs_config_server_path)}
-<P237>{$gs_config_server_path}</P237>
+{elseif isset($grandstream_config_server_path)}
+<P237>{$grandstream_config_server_path}</P237>
 {else}
 <P237>{$domain_name}{$project_path}/app/provision</P237>
 {/if}
@@ -2937,8 +2937,8 @@
 <!-- <value="TZe-13"> GMT+13:00 </option> -->
 <!-- <value="customize"> Self-Defined Time Zone </option> -->
 <!-- Mandatory Category: string Max Length: 9 Range0: Min=a Max=z Range1: Min=A Max=Z Range2: Min=+ Max=: -->
-{if isset($gs_gxp_time_zone)}
-<P64>{$gs_gxp_time_zone}</P64>
+{if isset($grandstream_gxp_time_zone)}
+<P64>{$grandstream_gxp_time_zone}</P64>
 {/if}
 
 <!-- Self-Defined Time Zone -->
@@ -2956,22 +2956,22 @@
 
 <!-- Syslog Server (name of the server, max length is 64 charactors) -->
 <!-- String: serveraddress  -->
-<P207>{$gs_syslog_server}</P207>
+<P207>{$grandstream_syslog_server}</P207>
 
 <!-- Syslog Level (Default setting is NONE) -->
 <!-- 0 - NONE, 1 - DEBUG, 2 - INFO, 3 - WARNING, 4 - ERROR -->
 <!-- Number: 0,1,2,3,4 -->
 <!-- Mandatory -->
-{if isset($gs_syslog_level)}
-<P208>{$gs_syslog_level}</P208>
+{if isset($grandstream_syslog_level)}
+<P208>{$grandstream_syslog_level}</P208>
 {else}
 <P208>0</P208>
 {/if}
 
 <!-- Send SIP Log (0 - No, 1 - Yes, Default set to No) -->
 <!-- Number: 0,1  -->
-{if isset($gs_send_sip_log)}
-<P1387>{$gs_send_sip_log}</P1387>
+{if isset($grandstream_send_sip_log)}
+<P1387>{$grandstream_send_sip_log}</P1387>
 {else}
 <P1387>0</P1387>
 {/if}
@@ -3026,9 +3026,9 @@
 <!-- For example: directory.grandstream.com/engineering -->
 <!-- String -->
 {if isset($contact_grandstream)}
-<P331>{$gs_phonebook_xml_server_path}{$mac}/</P331>
-{elseif isset($gs_phonebook_xml_server_path)}
-<P331>{$gs_phonebook_xml_server_path}</P331>
+<P331>{$grandstream_phonebook_xml_server_path}{$mac}/</P331>
+{elseif isset($grandstream_phonebook_xml_server_path)}
+<P331>{$grandstream_phonebook_xml_server_path}</P331>
 {else}
 <P331></P331>
 {/if}
@@ -3054,7 +3054,7 @@
 
 <!-- LDAP Server Address, up to 256 characters can be used. It can be IP address or Domain name -->
 <!-- String -->
-<P8020>{$gs_ldap_server}</P8020>
+<P8020>{$grandstream_ldap_server}</P8020>
 
 <!-- LDAP Server Port. Default is 389. -->
 <!-- Number: 1 - 65535 -->
@@ -3064,7 +3064,7 @@
 <!-- Example 1: dc=grandstream,dc=com -->
 <!-- Example 2: ou=Boston, dc=grandstream,dc=com -->
 <!-- String -->
-<P8022>{$gs_ldap_base_dn}</P8022>
+<P8022>{$grandstream_ldap_base_dn}</P8022>
 
 <!-- User name. The bind "Username" for querying LDAP servers. Some LDAP servers allow anonymous binds in which case the setting can be left blank -->
 <!-- String -->
@@ -3077,12 +3077,12 @@
 <!-- LDAP Number Filter -->
 <!-- LDAP name filter is the filter used for name look ups. Please refer to user manual for examples -->
 <!-- String -->
-<P8025>{$gs_ldap_number_filter}</P8025>
+<P8025>{$grandstream_ldap_number_filter}</P8025>
 
 <!-- LDAP Name Filter -->
 <!-- LDAP name filter is the filter used for name look ups. Please refer to user manual for examples -->
 <!-- String -->
-<P8026>{$gs_ldap_name_filter}</P8026>
+<P8026>{$grandstream_ldap_name_filter}</P8026>
 
 <!-- LDAP Version. Protocol version for the phone when send the bind requests -->
 <!-- 2 - version 2, 3 - version 3. Default is 3 -->
@@ -3092,12 +3092,12 @@
 <!-- LDAP Name Attributes. This setting specifies the "name" attributes of each record which are returned in the LDAP search result -->
 <!-- The setting allows the users to configure multiple space separated name attributes -->
 <!-- String -->
-<P8028>{$gs_ldap_name_attr}</P8028>
+<P8028>{$grandstream_ldap_name_attr}</P8028>
 
 <!-- LDAP Number Attributes. This setting specifies the “number” attributes of each record which are returned in the LDAP search result -->
 <!-- The setting allows the users to configure multiple space separated number attributes -->
 <!-- String -->
-<P8029>{$gs_ldap_number_attr}</P8029>
+<P8029>{$grandstream_ldap_number_attr}</P8029>
 
 <!-- LDAP Display Name. The entry information to be shown on phone LCD. Grandstream phones will display up to 3 fields -->
 <!-- String -->
