@@ -114,12 +114,19 @@
 <!--  0 = No -->
 <!--  1 = YES, HTTP -->
 <!--  2 = YES, TFTP -->
-<P330>0</P330>
+<P330>2</P330>
 
 <!--  Phonebook XML Server Path -->
 <!--  This is a string of up to 128 characters that should contain a path to the XML file. -->
 <!--  It MUST be in the host/path format. For example: "directory.grandstream.com/engineering" -->
+
+{if isset($contact_grandstream)}
+<P331>{$grandstream_phonebook_xml_server_path}{$mac}/</P331>
+{elseif isset($grandstream_phonebook_xml_server_path)}
+<P331>{$grandstream_phonebook_xml_server_path}</P331>
+{else}
 <P331></P331>
+{/if}
 
 <!--  Phonebook Download Interval -->
 <!--  This is an integer variable in hours.  -->
