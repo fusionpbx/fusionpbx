@@ -68,8 +68,8 @@
 
 <!-- NAT Traversal. 0 - NAT No, 1 - STUN, 2 - Keep-alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default value is 2 -->
 <!-- Number: 0, 1, 2, 3, 4, 5 -->
-{if isset($gs_nat_traversal_1)}
-<P52>{$gs_nat_traversal_1}</P52>
+{if isset($grandstream_nat_traversal_1)}
+<P52>{$grandstream_nat_traversal_1}</P52>
 {else}
 <P52>0</P52>
 {/if}
@@ -217,7 +217,7 @@
 <!-- 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
 
-{if isset($gs_validate_incoming_sip)}
+{if isset($grandstream_validate_incoming_sip)}
 <P2306>1</P2306>
 {else}
 <P2306>0</P2306>
@@ -227,7 +227,7 @@
 <!-- 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
 
-{if isset($gs_check_sip_user_id)}
+{if isset($grandstream_check_sip_user_id)}
 <P258>1</P258>
 {else}
 <P258>0</P258>
@@ -245,7 +245,7 @@
 <!-- Only Accept SIP Requests from Known Servers -->
 <!-- 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
-{if isset($gs_sip_only_known_servers)}
+{if isset($grandstream_sip_only_known_servers)}
 <P2347>1</P2347>
 {else}
 <P2347>0</P2347>
@@ -583,8 +583,8 @@
 <P2343>0</P2343>
 
 <!-- Account Ring Tone. See ring tone options and value in the Ring Tone Value Table below -->
-{if isset($gs_account_ring_tone_1)||$gs_account_ring_tone_1==0}
-<P104>{$gs_account_ring_tone_1}</P104>
+{if isset($grandstream_account_ring_tone_1)||$grandstream_account_ring_tone_1==0}
+<P104>{$grandstream_account_ring_tone_1}</P104>
 {else}
 <P104>content://settings/system/ringtone</P104>
 {/if}
@@ -603,38 +603,38 @@
 
 <!-- Matching Incoming Caller ID. Matching Rule 1 -->
 <!-- String -->
-{if isset($gs_ring_tone_caller_id_1_1)}
-<P1488>{$gs_ring_tone_caller_id_1_1}</P1488>
+{if isset($grandstream_ring_tone_caller_id_1_1)}
+<P1488>{$grandstream_ring_tone_caller_id_1_1}</P1488>
 {/if}
 
 <!-- Matching Rule 1 Distinctive Ringtone. See ring tone options and value in the Ring Tone Value Table below -->
 <!-- String -->
-{if isset($gs_ring_tone_1_1)||$gs_ring_tone_1_1==0}
-<P1489>{$gs_ring_tone_1_1}</P1489>
+{if isset($grandstream_ring_tone_1_1)||$grandstream_ring_tone_1_1==0}
+<P1489>{$grandstream_ring_tone_1_1}</P1489>
 {/if}
 
 <!-- Matching Incoming Caller ID. Matching Rule 2 -->
 <!-- String -->
-{if isset($gs_ring_tone_caller_id_2_1)}
-<P1490>{$gs_ring_tone_caller_id_2_1}</P1490>
+{if isset($grandstream_ring_tone_caller_id_2_1)}
+<P1490>{$grandstream_ring_tone_caller_id_2_1}</P1490>
 {/if}
 
 <!-- Matching Rule 2 Distinctive Ringtone. See ring tone options and value in the Ring Tone Value Table below -->
 <!-- String -->
-{if isset($gs_ring_tone_2_1)||$gs_ring_tone_2_1==0}
-<P1491>{$gs_ring_tone_2_1}</P1491>
+{if isset($grandstream_ring_tone_2_1)||$grandstream_ring_tone_2_1==0}
+<P1491>{$grandstream_ring_tone_2_1}</P1491>
 {/if}
 
 <!-- Matching Incoming Caller ID. Matching Rule 3 -->
 <!-- String -->
-{if isset($gs_ring_tone_caller_id_3_1)}
-<P1492>{$gs_ring_tone_caller_id_3_1}</P1492>
+{if isset($grandstream_ring_tone_caller_id_3_1)}
+<P1492>{$grandstream_ring_tone_caller_id_3_1}</P1492>
 {/if}
 
 <!-- Matching Rule 3 Distinctive Ringtone. See ring tone options and value in the Ring Tone Value Table below -->
 <!-- String -->
-{if isset($gs_ring_tone_3_1)||$gs_ring_tone_2_1==0}
-<P1493>{$gs_ring_tone_3_1}</P1493>
+{if isset($grandstream_ring_tone_3_1)||$grandstream_ring_tone_2_1==0}
+<P1493>{$grandstream_ring_tone_3_1}</P1493>
 {/if}
 
 <!-- Enable Local MOH. 0 - No, 1 - Yes. Default value is 0 -->
@@ -3931,8 +3931,8 @@
 
 <!-- STUN Server -->
 <!-- <P76>stun.ipvideotalk.com</P76> -->
-{if isset($gs_stun_server) }
-<P76>{$gs_stun_server}</P76>
+{if isset($grandstream_stun_server) }
+<P76>{$grandstream_stun_server}</P76>
 {else}
 <P76></P76>
 {/if}
@@ -4474,9 +4474,9 @@
 
 <!-- Layer 2 QoS. 802.1Q/VLAN Tag(Ethernet) for Data. Default value is 0 -->
 <!-- Number: 0 - 4095 -->
-{if isset($gs_lan_port_vlan) }
-<P51>{$gs_lan_port_vlan}</P51>
-<P22111>{$gs_lan_port_vlan}</P22111>
+{if isset($grandstream_lan_port_vlan) }
+<P51>{$grandstream_lan_port_vlan}</P51>
+<P22111>{$grandstream_lan_port_vlan}</P22111>
 {else}
 <P51>0</P51>
 <P22111>0</P22111>
@@ -4503,8 +4503,8 @@
 <P22048>0</P22048>
 
 <!-- PC Port VLAN Tag. -->
-{if isset($gs_pc_port_vlan) }
-<P229>{$gs_pc_port_vlan}</P229>
+{if isset($grandstream_pc_port_vlan) }
+<P229>{$grandstream_pc_port_vlan}</P229>
 {else}
 <P229>1</P229>
 {/if}
@@ -4709,7 +4709,7 @@
 
 <!-- Time Zone -->
 <!-- P64=PST8PDT -->
-<P64>{$gs_gxp_time_zone}</P64>
+<P64>{$grandstream_gxp_time_zone}</P64>
 
 <!-- Time Display Format. 0 - 12 Hour, 1 - 24 Hour. Default value is 1 -->
 <!-- Number: 0, 1 -->
@@ -4758,8 +4758,8 @@
 <P6767>1</P6767>
 
 <!-- Firmware Server Path -->
-{if isset($gs_firmware_path)}
-<P192>{$gs_firmware_path}</P192>
+{if isset($grandstream_firmware_path)}
+<P192>{$grandstream_firmware_path}</P192>
 {else}
 <P192>{$domain_name}{$project_path}/app/provision</P192>
 {/if}
@@ -4782,10 +4782,10 @@
 <P212>1</P212>
 
 <!-- Config Server Path -->
-{if $gs_config_server_path=="none"}
+{if $grandstream_config_server_path=="none"}
 <P237></P237>
-{elseif isset($gs_config_server_path)}
-<P237>{$gs_config_server_path}</P237>
+{elseif isset($grandstream_config_server_path)}
+<P237>{$grandstream_config_server_path}</P237>
 {else}
 <P237>{$domain_name}{$project_path}/app/provision</P237>
 {/if}
@@ -4869,8 +4869,8 @@
 
 <!-- Automatic Upgrade. 0 - No, 1 - Check Every Day, 2 - Check Every Week, 3 - Check at a Period Time. Default value is 0 -->
 <!-- Number: 0, 1, 2, 3 -->
-{if isset($gs_auto_upgrade)}
-<P194>{$gs_auto_upgrade}</P194>
+{if isset($grandstream_auto_upgrade)}
+<P194>{$grandstream_auto_upgrade}</P194>
 {else}
 <P194>0</P194>
 {/if}
@@ -4907,13 +4907,13 @@
 <!-- ###################################################################### -->
 
 <!-- Syslog Server. Name of the server -->
-<P207>{$gs_syslog_server}</P207>
+<P207>{$grandstream_syslog_server}</P207>
 
 <!-- Syslog Level -->
 <!-- 0 - NONE, 1 - DEBUG, 2 - INFO, 3 - WARNING, 4 - ERROR. Default value is 0 -->
 <!-- Number: 0, 1, 2, 3, 4 -->
-{if isset($gs_syslog_level)}
-<P208>{$gs_syslog_level}</P208>
+{if isset($grandstream_syslog_level)}
+<P208>{$grandstream_syslog_level}</P208>
 {else}
 <P208>0</P208>
 {/if}
@@ -4925,8 +4925,8 @@
 
 <!-- Send SIP Log. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number : 0, 1 -->
-{if isset($gs_send_sip_log)}
-<P1387>{$gs_send_sip_log}</P1387>
+{if isset($grandstream_send_sip_log)}
+<P1387>{$grandstream_send_sip_log}</P1387>
 {else}
 <P1387>0</P1387>
 {/if}
@@ -5081,9 +5081,9 @@
 <!-- For example: directory.grandstream.com/engineering -->
 <!-- String -->
 {if isset($contact_grandstream)}
-<P331>{$gs_phonebook_xml_server_path}{$mac}/</P331>
-{elseif isset($gs_phonebook_xml_server_path)}
-<P331>{$gs_phonebook_xml_server_path}</P331>
+<P331>{$grandstream_phonebook_xml_server_path}{$mac}/</P331>
+{elseif isset($grandstream_phonebook_xml_server_path)}
+<P331>{$grandstream_phonebook_xml_server_path}</P331>
 {else}
 <P331></P331>
 {/if}
@@ -5110,7 +5110,7 @@
 
 <!-- Server Address, up to 256 characters can be used. It can be IP address or Domain name -->
 <!-- String -->
-<P8020>{$gs_ldap_server}</P8020>
+<P8020>{$grandstream_ldap_server}</P8020>
 
 <!-- Port. Default value is 389 -->
 <!-- Number: 1 - 65535 -->
@@ -5120,7 +5120,7 @@
 <!-- Example 1: dc=grandstream,dc=com -->
 <!-- Example 2: ou=Boston, dc=grandstream,dc=com -->
 <!-- String -->
-<P8022>{$gs_ldap_base_dn}</P8022>
+<P8022>{$grandstream_ldap_base_dn}</P8022>
 
 <!-- User Name. The bind "Username" for querying LDAP servers. Some LDAP servers allow anonymous binds in which case the setting can be left blank -->
 <!-- String -->
@@ -5133,32 +5133,32 @@
 <!-- LDAP Name Attributes. This setting specifies the "name" attributes of each record which are returned in the LDAP search result -->
 <!-- The setting allows the users to configure multiple space separated name attributes -->
 <!-- String -->
-<P8028>{$gs_ldap_name_attr}</P8028>
+<P8028>{$grandstream_ldap_name_attr}</P8028>
 
 <!-- LDAP Number Attributes. This setting specifies the "number" attributes of each record which are returned in the LDAP search result -->
 <!-- The setting allows the users to configure multiple space separated number attributes -->
 <!-- String -->
-<P8029>{$gs_ldap_number_attr}</P8029>
+<P8029>{$grandstream_ldap_number_attr}</P8029>
 
 <!-- LDAP Mail Attributes. This setting specifies the "mail" attributes of each record which are returned in the LDAP search result -->
 <!-- The setting allows the users to configure multiple space separated mail attributes -->
 <!-- String -->
-<P8038>{$gs_ldap_mail_attr}</P8038>
+<P8038>{$grandstream_ldap_mail_attr}</P8038>
 
 <!-- LDAP Name Filter -->
 <!-- LDAP name filter is the filter used for name look ups. Please refer to usermanual for examples -->
 <!-- String -->
-<P8026>{$gs_ldap_name_filter}</P8026>
+<P8026>{$grandstream_ldap_name_filter}</P8026>
 
 <!-- LDAP Number Filter -->
 <!-- LDAP name filter is the filter used for number look ups. Please refer to usermanual for examples -->
 <!-- String -->
-<P8025>{$gs_ldap_number_filter}</P8025>
+<P8025>{$grandstream_ldap_number_filter}</P8025>
 
 <!-- LDAP Mail Filter -->
 <!-- LDAP mail filter is the filter used for mail look ups. Please refer to usermanual for examples -->
 <!-- String -->
-<P8039>{$gs_ldap_mail_filter}</P8039>
+<P8039>{$grandstream_ldap_mail_filter}</P8039>
 
 <!-- LDAP Displaying Name Attributes. The entry information to be shown on phone LCD. Grandstream phones will display up to 3 fields -->
 <!-- String -->
@@ -5362,8 +5362,8 @@
 
 <!-- Headset Type. 0 - Normal Headset, 1 - Plantronics EHS, 2 - Jabra EHS. Default value is 0 -->
 <!-- Number: 0, 1 -->
-{if isset($gs_headset_type)}
-<P1487>{$gs_headset_type}</P1487>
+{if isset($grandstream_headset_type)}
+<P1487>{$grandstream_headset_type}</P1487>
 {else}
 <P1487>0</P1487>
 {/if}
