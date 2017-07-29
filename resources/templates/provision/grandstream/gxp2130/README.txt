@@ -7,7 +7,7 @@ I've added symlinks so you can download both files for upload to the phone if au
  - auto provision requires
 	nginx rewrite rules
 	provision enabled text true
-	provision gs_config_server_path text mydomain.com/provision
+	provision granstream_config_server_path text mydomain.com/provision
 	# to enable phonebook contacts see below...
 
 ======================
@@ -28,11 +28,11 @@ This provisions the phonebook button and the phone's display for incoming/outgoi
 	provision enabled text true
 	provision contact_extensions boolean false
 	provision contact_grandstream text true
-	provision gs_phonebook_xml_server_path text mydomain.com/provision/pb  # note provision template adds {$mac} on the end
+	provision granstream_phonebook_xml_server_path text mydomain.com/provision/pb  # note provision template adds {$mac} on the end
 		 handled by nginx (above).
-	provision gs_config_server_path text mydomain.com/provision
-	provision gs_phonebook_download_interval text 720
-	provision gs_global_contact_groups text contacts_it,contacts_finance  # these are setup in Group Manager (see below).
+	provision granstream_config_server_path text mydomain.com/provision
+	provision granstream_phonebook_download_interval text 720
+	provision granstream_global_contact_groups text contacts_it,contacts_finance  # these are setup in Group Manager (see below).
 		 Comma seperated groups listed here will be on all phones, saving the need to add these groups to every user. 
 
 
