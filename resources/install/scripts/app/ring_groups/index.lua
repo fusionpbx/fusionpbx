@@ -54,6 +54,9 @@
 		--send info to the log
 			--freeswitch.consoleLog("notice","[ring_groups] originate_disposition: " .. session:getVariable("originate_disposition") .. "\n");
 
+		--status
+			status = 'answered'
+
 		--run the missed called function
 			if (
 				session:getVariable("originate_disposition")  == "ALLOTTED_TIMEOUT"
@@ -67,9 +70,25 @@
 				or session:getVariable("originate_disposition") == "failure"
 				or session:getVariable("originate_disposition") == "ORIGINATOR_CANCEL"
 			) then
+				--set the status
+					status = 'missed'
 				--send missed call notification
 					missed();
 			end
+
+		--send the ring group event
+		    event = freeswitch.Event("CUSTOM", "RING_GROUPS");
+			event:addHeader("domain_uuid", domain_uuid);
+			event:addHeader("domain_name", domain_name);
+			event:addHeader("ring_group_uuid", ring_group_uuid);
+			event:addHeader("user_uuid", user_uuid);
+			event:addHeader("ring_group_name", ring_group_name);
+			event:addHeader("ring_group_extension", ring_group_extension);
+			event:addHeader("status", status);
+			event:addHeader("call_uuid", uuid);
+			event:addHeader("caller_id_name", caller_id_name);
+			event:addHeader("caller_id_number", caller_id_number);
+			event:fire();
 
 	end
 
@@ -179,19 +198,6 @@
 
 --check the missed calls
 	function missed()
-
-		--send a missed call event
-			local event = freeswitch.Event("CUSTOM", "MISSED_CALLS");
-			event:addHeader("domain_uuid", domain_uuid);
-			event:addHeader("domain_name", domain_name);
-			event:addHeader("ring_group_uuid", ring_group_uuid);
-			event:addHeader("user_uuid", user_uuid);
-			event:addHeader("ring_group_name", ring_group_name);
-			event:addHeader("ring_group_extension", ring_group_extension);
-			event:addHeader("call_uuid", uuid);
-			event:addHeader("caller_id_name", caller_id_name);
-			event:addHeader("caller_id_number", caller_id_number);
-			event:fire();
 
 		--send missed call email
 		if (missed_call_app ~= nil and missed_call_data ~= nil) then
