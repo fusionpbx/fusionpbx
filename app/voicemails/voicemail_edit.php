@@ -335,6 +335,39 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	require_once "resources/header.php";
 	$document['title'] = $text['title-voicemail'];
 
+//password complexity
+	$password_complexity = $_SESSION['voicemail']['password_complexity']['boolean'];
+	if ($password_complexity == "true") {
+		echo "<script>\n";	
+		$req['length'] = $_SESSION['voicemail']['password_min_length']['numeric'];
+		echo "	function check_password_strength(pwd) {\n";
+		echo "		var msg_errors = [];\n";
+		//length
+		if (is_numeric($req['length']) && $req['length'] != 0) {
+			echo "	var re = /.{".$req['length'].",}/;\n"; 
+			echo "	if (!re.test(pwd)) { msg_errors.push('".$req['length']."+ ".$text['label-digits']."'); }\n";
+		}
+		//numberic only
+		echo "		var re = /(?=.*[a-zA-Z\W])/;\n";
+		echo "		if (re.test(pwd)) { msg_errors.push('".$text['label-numberic_only']."'); }\n";
+		//repeating digits
+		echo "		var re = /(\d)\\1{2}/;\n";
+		echo "		if (re.test(pwd)) { msg_errors.push('".$text['label-password_repeating']."'); }\n";
+		//sequential digits
+		echo "		var re = /(012|123|345|456|567|678|789|987|876|765|654|543|432|321|210)/;\n";
+		echo "		if (re.test(pwd)) { msg_errors.push('".$text['label-password_sequential']."'); }\n";
+	
+		echo "		if (msg_errors.length > 0) {\n";
+		echo "			var msg = '".$text['message-password_requirements'].": ' + msg_errors.join(', ');\n";
+		echo "			display_message(msg, 'negative', '6000');\n";
+		echo "			return false;\n";
+		echo "		}\n";
+		echo "		else {\n";
+		echo "			return true;\n";
+		echo "		}\n";
+		echo "	}\n";
+		echo "</script>\n";
+	}
 //show the content
 	echo "<form method='post' name='frm' id='frm' action=''>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
@@ -345,7 +378,11 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"javascript:history.back();\" value='".$text['button-back']."'>\n";
-	echo "	<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
+	if ($password_complexity == "true") {
+		echo "		<input type='button' class='btn' value='".$text['button-save']."' onclick=\"if (check_password_strength(document.getElementById('password').value)) { submit_form(); }\">";
+	} else {
+		echo "	<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
+	}
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -702,7 +739,11 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "				<input type='hidden' name='referer_path' value='".$http_referer['path']."'>\n";
 	echo "				<input type='hidden' name='referer_query' value='".$http_referer['query']."'>\n";
 	echo "				<br>";
-	echo "				<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
+	if ($password_complexity == "true") {
+		echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick=\"if (check_password_strength(document.getElementById('password').value)) { submit_form(); }\">";
+	} else {
+		echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
+	}
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
