@@ -273,7 +273,7 @@ $text['label-password_repeating']['ru-ru'] = "";
 $text['label-password_repeating']['sv-se'] = "";
 $text['label-password_repeating']['uk-ua'] = "";
 
-$text['label-password_sequential']['en-us'] = "Tpo Many Sequential Digits";
+$text['label-password_sequential']['en-us'] = "Too Many Sequential Digits";
 $text['label-password_sequential']['ar-eg'] = "";
 $text['label-password_sequential']['de-at'] = "";
 $text['label-password_sequential']['de-ch'] = "";
