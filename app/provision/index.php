@@ -91,6 +91,12 @@
 				$mac = substr($_SERVER['HTTP_USER_AGENT'],-13);
 				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
 			}
+		//Aastra: $_SERVER['HTTP_USER_AGENT'] = "Aastra6731i MAC:00-08-5D-29-4C-6B V:3.3.1.4365-SIP"
+			if (substr($_SERVER['HTTP_USER_AGENT'],0,6) == "Aastra") {
+				preg_match("/MAC:([A-F0-9-]{17})/", $_SERVER['HTTP_USER_AGENT'], $matches);
+				$mac = $matches[1];
+				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+			}
 	}
 
 //prepare the mac address
