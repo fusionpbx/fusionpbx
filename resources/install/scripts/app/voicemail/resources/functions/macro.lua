@@ -264,6 +264,16 @@
 					if (name == "goodbye") then
 						table.insert(actions, {app="streamFile",data="voicemail/vm-goodbye.wav"});
 					end
+				--Password is not secure
+					if (name == "password_not_secure") then
+						table.insert(actions, {app="streamFile",data="voicemail/vm-password_is_not_secure.wav"});
+					end
+				--Password is below minimum length
+					if (name == "password_below_minimum") then
+						table.insert(actions, {app="streamFile",data="voicemail/vm-pin_below_minimum_length.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-minimum_pin_length_is.wav"});
+						table.insert(actions, {app="streamFile",data="digits/"..param..".wav"});
+					end
 			--Tutorial
 				--Tutorial intro
 					if (name == "tutorial_intro") then

@@ -183,6 +183,20 @@
 						remote_access = settings['voicemail']['remote_access']['boolean'];
 					end
 				end
+
+				password_complexity = '';
+				if (settings['voicemail']['password_complexity'] ~= nil) then
+					if (settings['voicemail']['password_complexity']['boolean'] ~= nil) then
+						password_complexity = settings['voicemail']['password_complexity']['boolean'];
+					end
+				end
+
+				password_min_length = '';
+				if (settings['voicemail']['password_min_length'] ~= nil) then
+					if (settings['voicemail']['password_min_length']['numeric'] ~= nil) then
+						password_min_length = settings['voicemail']['password_min_length']['numeric'];
+					end
+				end
 			end
 
 			if settings['voicemail'] then
