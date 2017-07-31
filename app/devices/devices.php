@@ -82,14 +82,14 @@
 	}
 	if (strlen($search) > 0) {
 		$sql .= "(";
-		$sql .= "	d.device_mac_address like '%".$search."%' ";
-		$sql .= "	or d.device_label like '%".$search."%' ";
-		$sql .= "	or d.device_vendor like '%".$search."%' ";
-		$sql .= "	or d.device_enabled like '%".$search."%' ";
-		$sql .= "	or d.device_template like '%".$search."%' ";
-		$sql .= "	or d.device_description like '%".$search."%' ";
-		$sql .= "	or d.device_provisioned_method like '%".$search."%' ";
-		$sql .= "	or d.device_provisioned_ip like '%".$search."%' ";
+		$sql .= "	d.device_mac_address ILIKE '%".$search."%' ";
+		$sql .= "	OR d.device_label ILIKE '%".$search."%' ";
+		$sql .= "	OR d.device_vendor ILIKE '%".$search."%' ";
+		$sql .= "	OR d.device_enabled ILIKE '%".$search."%' ";
+		$sql .= "	OR d.device_template ILIKE '%".$search."%' ";
+		$sql .= "	OR d.device_description ILIKE '%".$search."%' ";
+		$sql .= "	OR d.device_provisioned_method ILIKE '%".$search."%' ";
+		$sql .= "	OR d.device_provisioned_ip ILIKE '%".$search."%' ";
 		$sql .= ") ";
 	}
 	$prep_statement = $db->prepare($sql);
@@ -135,14 +135,14 @@
 	}
 	if (strlen($search) > 0) {
 		$sql .= "and (";
-		$sql .= "	d.device_mac_address like '%".$search."%' ";
-		$sql .= "	or d.device_label like '%".$search."%' ";
-		$sql .= "	or d.device_vendor like '%".$search."%' ";
-		$sql .= "	or d.device_enabled like '%".$search."%' ";
-		$sql .= "	or d.device_template like '%".$search."%' ";
-		$sql .= "	or d.device_description like '%".$search."%' ";
-		$sql .= "	or d.device_provisioned_method like '%".$search."%' ";
-		$sql .= "	or d.device_provisioned_ip like '%".$search."%' ";
+		$sql .= "	d.device_mac_address ILIKE '%".$search."%' ";
+		$sql .= "	OR d.device_label ILIKE '%".$search."%' ";
+		$sql .= "	OR d.device_vendor ILIKE '%".$search."%' ";
+		$sql .= "	OR d.device_enabled ILIKE '%".$search."%' ";
+		$sql .= "	OR d.device_template ILIKE '%".$search."%' ";
+		$sql .= "	OR d.device_description ILIKE '%".$search."%' ";
+		$sql .= "	OR d.device_provisioned_method ILIKE '%".$search."%' ";
+		$sql .= "	OR d.device_provisioned_ip ILIKE '%".$search."%' ";
 		$sql .= ") ";
 	}
 	if (strlen($order_by) == 0) {
