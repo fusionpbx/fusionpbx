@@ -345,6 +345,9 @@
 		}
 
 		public function message_waiting() {
+			//get the voicemail id
+				$this->get_voicemail_id();
+
 			//send the message waiting status
 				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 				if ($fp) {
@@ -354,7 +357,7 @@
 		}
 
 		public function message_delete() {
-			
+
 			//get the voicemail id
 				$this->get_voicemail_id();
 
@@ -436,7 +439,6 @@
 			//check the message waiting status
 				$this->message_waiting();
 		}
-
 
 		public function message_saved() {
 
