@@ -28,6 +28,7 @@
 	include "root.php";
 
 //find and include the config.php file
+    $config_exists = false;
 	if (file_exists("/etc/fusionpbx/config.php")) {
 		$config_exists = true;
 		include "/etc/fusionpbx/config.php";
