@@ -877,6 +877,7 @@ include "root.php";
 							$sql .= "from v_extensions ";
 							$sql .= "where domain_uuid = '".$domain_uuid."' ";
 							$sql .= "and enabled = 'true' ";
+							$sql .= "and directory_visible = 'true' ";
 							$sql .= "order by number_alias, extension asc ";
 							$prep_statement = $this->db->prepare($sql);
 							if ($prep_statement) {
