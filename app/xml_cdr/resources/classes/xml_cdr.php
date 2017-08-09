@@ -673,9 +673,15 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "e.extension, \n";
 				$sql .= "e.number_alias, \n";
 
-				$sql .= "COUNT(*) \n";
-				$sql .= "FILTER( \n";
-				$sql .= " WHERE c.domain_uuid = e.domain_uuid \n";
+				if ($db_type == 'pgsql'){
+					$sql .= "COUNT(*) \n";
+					$sql .= "FILTER( \n";
+					$sql .= " WHERE ";
+				}
+				else {
+					$sql .= "SUM(CASE WHEN ";
+				}
+				$sql .= "c.domain_uuid = e.domain_uuid \n";
 				$sql .= " AND ((\n";
 				$sql .= "   c.caller_id_number = e.extension \n";
 				$sql .= "   OR \n";
@@ -691,17 +697,29 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "  c.bridge_uuid IS NOT NULL) \n";
 
 				if ($this->include_internal) {
-					$sql .= " AND (direction = 'inbound' OR direction = 'local')) \n";
+					$sql .= " AND (direction = 'inbound' OR direction = 'local') \n";
 				}
 				else {
-					$sql .= "AND direction = 'inbound') \n";
+					$sql .= "AND direction = 'inbound' \n";
 				}
-				$sql .= "AS answered, \n";
 
-				$sql .= "COUNT(*) \n";
-				$sql .= "FILTER( \n";
-				$sql .= " WHERE (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
+				if ($db_type == 'pgsql'){
+					// Do not add nothing extra
+				}
+				else{
+					$sql .= "THEN 1 ELSE 0 END ";
+				}
+				$sql .= ") AS answered, \n";
+
+				if ($db_type == 'pgsql'){
+					$sql .= "COUNT(*) \n";
+					$sql .= "FILTER( \n";
+					$sql .= " WHERE  \n";
+				}
+				else {
+					$sql .= "SUM(CASE WHEN ";
+				}
+				$sql .= "((   c.caller_id_number = e.extension \n";
 				$sql .= "   OR \n";
 				$sql .= "   c.destination_number = e.extension) \n";
 				$sql .= "  OR (\n";
@@ -715,16 +733,27 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "  AND \n";
 				$sql .= "  c.bridge_uuid IS NULL) \n";
 				if ($this->include_internal) {
-							$sql .= " AND (direction = 'inbound' OR direction = 'outbound'))";
+							$sql .= " AND (direction = 'inbound' OR direction = 'outbound') ";
 				} else {
-							$sql .= " AND direction = 'inbound')";
+							$sql .= " AND direction = 'inbound' ";
 				}
-				$sql .= "AS missed, \n";
+				if ($db_type == 'pgsql'){
+					// Do not add nothing extra
+				}
+				else{
+					$sql .= "THEN 1 ELSE 0 END ";
+				}
+				$sql .= ") AS missed, \n";
 
-				$sql .= "COUNT(*) \n";
-				$sql .= "FILTER( \n";
-				$sql .= " WHERE (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
+				if ($db_type == 'pgsql'){
+					$sql .= "COUNT(*) \n";
+					$sql .= "FILTER( \n";
+					$sql .= " WHERE  \n";
+				}
+				else {
+					$sql .= "SUM(CASE WHEN ";
+				}
+				$sql .= "((   c.caller_id_number = e.extension \n";
 				$sql .= "   OR \n";
 				$sql .= "   c.destination_number = e.extension) \n";
 				$sql .= "  OR ( \n";
@@ -740,12 +769,23 @@ if (!class_exists('xml_cdr')) {
 				else { 
 					$sql .= "AND direction = 'inbound' \n";
 				}
+				if ($db_type == 'pgsql'){
+					// Do not add nothing extra
+				}
+				else{
+					$sql .= "THEN 1 ELSE 0 END ";
+				}
 				$sql .= ") AS no_answer, \n";
 
-				$sql .= "COUNT(*) \n";
-				$sql .= "FILTER( \n";
-				$sql .= " WHERE (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
+				if ($db_type == 'pgsql'){
+					$sql .= "COUNT(*) \n";
+					$sql .= "FILTER( \n";
+					$sql .= " WHERE  \n";
+				}
+				else {
+					$sql .= "SUM(CASE WHEN ";
+				}
+				$sql .= "((   c.caller_id_number = e.extension \n";
 				$sql .= "   OR \n";
 				$sql .= "   c.destination_number = e.extension) \n";
 				$sql .= "  OR ( \n";
@@ -757,17 +797,28 @@ if (!class_exists('xml_cdr')) {
 				$sql .= " AND \n";
 				$sql .= " c.hangup_cause = 'USER_BUSY' \n";
 				if ($this->include_internal) {
-						$sql .= " AND (direction = 'inbound' OR direction = 'local')) \n";
+						$sql .= " AND (direction = 'inbound' OR direction = 'local')  \n";
 				}
 				else {
-						$sql .= " AND direction = 'inbound') \n";
+						$sql .= " AND direction = 'inbound'  \n";
 				}
-				$sql .= "AS busy, \n";
+				if ($db_type == 'pgsql'){
+					// Do not add nothing extra
+				}
+				else{
+					$sql .= "THEN 1 ELSE 0 END ";
+				}
+				$sql .= ") AS busy, \n";
 
-				$sql .= "SUM(c.billsec) \n";
-				$sql .= "FILTER ( \n";
-				$sql .= " WHERE (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
+				if ($db_type == 'pgsql'){
+					$sql .= "SUM(c.billsec) \n";
+					$sql .= "FILTER ( \n";
+					$sql .= " WHERE  \n";
+				}
+				else {
+					$sql .= "SUM(CASE WHEN ";
+				}
+				$sql .= "((   c.caller_id_number = e.extension \n";
 				$sql .= "   OR \n";
 				$sql .= "   c.destination_number = e.extension) \n";
 				$sql .= "  OR ( \n";
@@ -778,12 +829,23 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "    c.destination_number = e.number_alias))) \n";
 				if ($this->include_internal) {
 						$sql .= " AND (direction = 'inbound' OR 'direction = 'outbound') \n";
+				}
+				if ($db_type == 'pgsql'){
+					// Do not add nothing extra
+				}
+				else{
+					$sql .= "THEN c.billsec ELSE 0 END ";
 				}
 				$sql .= " ) / \n";
-				$sql .= "COUNT(*) \n";
-				$sql .= "FILTER ( \n";
-				$sql .= " WHERE (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
+				if ($db_type == 'pgsql'){
+					$sql .= "COUNT(*) \n";
+					$sql .= "FILTER ( \n";
+					$sql .= " WHERE  \n";
+				}
+				else {
+					$sql .= "SUM(CASE WHEN ";
+				}
+				$sql .= "((   c.caller_id_number = e.extension \n";
 				$sql .= "   OR \n";
 				$sql .= "   c.destination_number = e.extension) \n";
 				$sql .= "  OR ( \n";
@@ -794,13 +856,24 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "    c.destination_number = e.number_alias))) \n";
 				if ($this->include_internal) {
 						$sql .= " AND (direction = 'inbound' OR 'direction = 'outbound') \n";
+				}
+				if ($db_type == 'pgsql'){
+					// Do not add nothing extra
+				}
+				else{
+					$sql .= "THEN 1 ELSE 0 END ";
 				}
 				$sql .= " ) AS aloc, \n";
 
-				$sql .= "COUNT(*) \n";
-				$sql .= "FILTER ( \n";
-				$sql .= " WHERE (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
+				if ($db_type == 'pgsql'){
+					$sql .= "COUNT(*) \n";
+					$sql .= "FILTER ( \n";
+					$sql .= " WHERE  \n";
+				}
+				else {
+					$sql .= "SUM(CASE WHEN ";
+				}
+				$sql .= "((   c.caller_id_number = e.extension \n";
 				$sql .= "   OR \n";
 				$sql .= "   c.destination_number = e.extension) \n";
 				$sql .= "  OR ( \n";
@@ -810,17 +883,28 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "    OR \n";
 				$sql .= "    c.destination_number = e.number_alias))) \n";
 				if ($this->include_internal) {
-						$sql .= " AND (direction = 'inbound' OR direction = 'local')) \n";
+						$sql .= " AND (direction = 'inbound' OR direction = 'local') \n";
 				}
 				else {
-						$sql .= " AND direction = 'inbound') \n";
+						$sql .= " AND direction = 'inbound' \n";
 				}
-				$sql .= "AS inbound_calls, \n";
+				if ($db_type == 'pgsql'){
+					// Do not add nothing extra
+				}
+				else{
+					$sql .= "THEN 1 ELSE 0 END ";
+				}
+				$sql .= ") AS inbound_calls, \n";
 
-				$sql .= "SUM(c.billsec) \n";
-				$sql .= "FILTER ( \n";
-				$sql .= " WHERE (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
+				if ($db_type == 'pgsql'){
+					$sql .= "SUM(c.billsec) \n";
+					$sql .= "FILTER ( \n";
+					$sql .= " WHERE  \n";
+				}
+				else {
+					$sql .= "SUM(CASE WHEN ";
+				}
+				$sql .= "((   c.caller_id_number = e.extension \n";
 				$sql .= "   OR \n";
 				$sql .= "   c.destination_number = e.extension) \n";
 				$sql .= "  OR ( \n";
@@ -830,17 +914,28 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "    OR \n";
 				$sql .= "    c.destination_number = e.number_alias))) \n";
 				if ($this->include_internal) {
-						$sql .= " AND (direction = 'inbound' OR direction = 'local')) \n";
+						$sql .= " AND (direction = 'inbound' OR direction = 'local') \n";
 				}
 				else {
-						$sql .= " AND direction = 'inbound') \n";
+						$sql .= " AND direction = 'inbound' \n";
 				}
-				$sql .= "AS inbound_duration, \n";
+				if ($db_type == 'pgsql'){
+					// Do not add nothing extra
+				}
+				else{
+					$sql .= "THEN c.billsec ELSE 0 END ";
+				}
+				$sql .= ") AS inbound_duration, \n";
 
-				$sql .= "COUNT(*) \n";
-				$sql .= "FILTER ( \n";
-				$sql .= " WHERE (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
+				if ($db_type == 'pgsql'){
+					$sql .= "COUNT(*) \n";
+					$sql .= "FILTER ( \n";
+					$sql .= " WHERE  \n";
+				}
+				else {
+					$sql .= "SUM(CASE WHEN ";
+				}
+				$sql .= "((   c.caller_id_number = e.extension \n";
 				$sql .= "   OR \n";
 				$sql .= "   c.destination_number = e.extension) \n";
 				$sql .= "  OR ( \n";
@@ -850,13 +945,24 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "    OR \n";
 				$sql .= "    c.destination_number = e.number_alias))) \n";
 				$sql .= " AND \n";
-				$sql .= " c.direction = 'outbound') \n";
-				$sql .= "AS outbound_calls, \n";
+				$sql .= " c.direction = 'outbound' \n";
+				if ($db_type == 'pgsql'){
+					// Do not add nothing extra
+				}
+				else{
+					$sql .= "THEN 1 ELSE 0 END ";
+				}
+				$sql .= ") AS outbound_calls, \n";
 
-				$sql .= "SUM(c.billsec) \n";
-				$sql .= "FILTER ( \n";
-				$sql .= " WHERE (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
+				if ($db_type == 'pgsql'){
+					$sql .= "SUM(c.billsec) \n";
+					$sql .= "FILTER ( \n";
+					$sql .= " WHERE  \n";
+				}
+				else {
+					$sql .= "SUM(CASE WHEN ";
+				}
+				$sql .= "((   c.caller_id_number = e.extension \n";
 				$sql .= "   OR \n";
 				$sql .= "   c.destination_number = e.extension) \n";
 				$sql .= "  OR ( \n";
@@ -866,8 +972,14 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "    OR \n";
 				$sql .= "    c.destination_number = e.number_alias))) \n";
 				$sql .= " AND ( \n";
-				$sql .= " c.direction = 'outbound')) \n";
-				$sql .= "AS outbound_duration, \n";
+				$sql .= " c.direction = 'outbound') \n";
+				if ($db_type == 'pgsql'){
+					// Do not add nothing extra
+				}
+				else{
+					$sql .= "THEN c.billsec ELSE 0 END ";
+				}
+				$sql .= ") AS outbound_duration, \n";
 
 				$sql .= "e.description \n";
 
