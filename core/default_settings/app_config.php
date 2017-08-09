@@ -77,6 +77,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "cee8b1af-8b02-47e4-aa8e-267b18b69b67";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "domain";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "cidr";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'cb55e6ac-9bb0-4714-b68f-82b39a3b9ec2';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'domain';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'country';
