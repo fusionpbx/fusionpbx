@@ -587,7 +587,7 @@ include "root.php";
 							$templates['Yealink SIP-T48G'] = 'yealink/t48g';
 							$templates['Yealink SIP-T48S'] = 'yealink/t48s';
 							$templates['Yealink SIP-T49G'] = 'yealink/t49g';
-							$templates['Yealink SIP-VP530'] = 'yealink/vp530';
+							$templates['VP530P'] = 'yealink/vp530';
 							$templates['Yealink SIP-W52P'] = 'yealink/w52p';
 							$templates['Yealink SIP-W56P'] = 'yealink/w56p';
 							$templates['HW DP750'] = 'grandstream/dp750';
