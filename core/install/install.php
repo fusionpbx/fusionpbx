@@ -157,7 +157,7 @@
 	$msg = '';
 	//make sure the includes directory is writable so the config.php file can be written.
 		if (!is_writable($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/pdo.php")) {
-			$messages[] = "<b>Write access to ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."</b> and its sub-directories are required during the install.";
+			$messages[] = "<b>Write access to ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."</b> and its sub-directories is required during the install.";
 		}
 	//test for selinux
 		if (file_exists('/usr/sbin/getenforce')) {
@@ -168,10 +168,10 @@
 				"<sm>You can use the following to find what ports are allowed<pre>semanage port -l | grep '^http_port_t'</pre></sm>";
 			}
 		}
-	//test for windows and non sqlite
-		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' and strlen($db_type) > 0 and $db_type !='sqlite') {
-			$messages[] = "<b>Windows requires a system DSN ODBC connection</b> this must be configured.";
-		}
+	//test for windows and non sqlite is not required since we are using PDO extension
+	//	if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' and strlen($db_type) > 0 and $db_type !='sqlite') {
+	//		$messages[] = "<b>Windows requires a system DSN ODBC connection</b> this must be configured.";
+	//	}
 
 	//action code
 	if($return_install_step == 'config_detail'){
