@@ -47,15 +47,32 @@
     </ParameterValueStruct>
     <ParameterValueStruct>
       <Name>ProxyServerTransport</Name>
-   		{if $row.sip_transport == ''}<Value>TCP</Value>{/if}
-	  	{if $row.sip_transport == 'tcp'}<Value>TCP</Value>{/if}
-		  {if $row.sip_transport == 'udp'}<Value>UDP</Value>{/if}
-	   	{if $row.sip_transport == 'tls'}<Value>TLS</Value>{/if}
+      {if $row.sip_transport == ''}<Value>TCP</Value>{/if}
+      {if $row.sip_transport == 'tcp'}<Value>TCP</Value>{/if}
+      {if $row.sip_transport == 'udp'}<Value>UDP</Value>{/if}
+      {if $row.sip_transport == 'tls'}<Value>TLS</Value>{/if}
       {if $row.sip_transport == 'dns srv'}<Value>SRV</Value>{/if}
     </ParameterValueStruct>
     <ParameterValueStruct>
       <Name>RegisterExpires</Name>
       <Value>{$row.register_expires}</Value>
+    </ParameterValueStruct>
+  </Object>
+  {/foreach}
+  {foreach $keys["line"] as $row}
+    <Object>
+    <Name>VoiceService.1.Phone.LineKey.{$row.device_key_id}.</Name>
+    <ParameterValueStruct>
+      <Name>Function</Name>
+      <Value>{$row.device_key_type}</Value>
+    </ParameterValueStruct>
+    <ParameterValueStruct>
+      <Name>Number</Name>
+      <Value>{$row.device_key_value}</Value>
+    </ParameterValueStruct>
+    <ParameterValueStruct>
+      <Name>Name</Name>
+      <Value>{$row.device_key_label}</Value>
     </ParameterValueStruct>
   </Object>
   {/foreach}
