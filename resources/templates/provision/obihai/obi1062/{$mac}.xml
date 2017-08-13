@@ -67,6 +67,10 @@
       <Value>{$row.device_key_type}</Value>
     </ParameterValueStruct>
     <ParameterValueStruct>
+      <Name>Service</Name>
+      <Value>SP{$row.device_key_line}</Value>
+    </ParameterValueStruct>
+    <ParameterValueStruct>
       <Name>Number</Name>
       <Value>{$row.device_key_value}</Value>
     </ParameterValueStruct>
