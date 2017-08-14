@@ -145,8 +145,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 				}
 				else { //not sip-uri
 					$bridge_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $dest);
-					//$switch_cmd = $destination_common."}".$bridge_array[0].")";  // wouldn't set cdr destination correctly, so below used instead
-					$switch_cmd = " &transfer('".$dest." XML ".$context."')";
+					$switch_cmd = " &bridge({origination_caller_id_name='$dest_cid_name',origination_caller_id_number=$dest_cid_number,call_direction=outbound}".$bridge_array[0];
 				}
 			}
 		}
