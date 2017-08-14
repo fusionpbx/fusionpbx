@@ -170,7 +170,12 @@
 		}
 	//test for windows and non sqlite
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' and strlen($db_type) > 0 and $db_type !='sqlite') {
-			$messages[] = "<b>Windows requires a system DSN ODBC connection</b> this must be configured.";
+			//Test for ODBC DSN in ODBC.INI. It should have section:
+			//[fusionpbx]
+			//Driver32=C:\Program Files\psqlODBC\0906\bin\psqlodbc35w.dll
+			if ( preg_match('/\[fusionpbx\]/mi', file_get_contents('c:/Windows/ODBC.INI')) == 0 ) {
+				$messages[] = "<b>Windows requires a system DSN ODBC connection with name 'fusionpbx'.</b>";
+			}
 		}
 
 	//action code
