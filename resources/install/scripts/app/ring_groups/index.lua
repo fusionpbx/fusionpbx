@@ -615,10 +615,7 @@
 						bind_target = 'both';
 					end
 					local bindings = {
-						"local,*1,exec:execute_extension,dx XML " .. context,
 						"local,*2,exec:record_session," .. record_file,
-						"local,*3,exec:execute_extension,cf XML " .. context,
-						"local,*4,exec:execute_extension,att_xfer XML " .. context,
 						-- "local,*0,exec:execute_extension,conf_xfer_from_dialplan XML conf-xfer@" .. context
 					}
 					for _, str in ipairs(bindings) do
