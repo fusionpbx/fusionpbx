@@ -379,6 +379,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "counts";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable Dashboard Domain Counts block for users in the superadmin group.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8db77a43-11a0-446d-a8c0-f90609be1165";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "superadmin";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "system_counts";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable Dashboard System Counts block for users in the superadmin group.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "13387e37-bf0a-43ca-a24f-94339bd61208";
