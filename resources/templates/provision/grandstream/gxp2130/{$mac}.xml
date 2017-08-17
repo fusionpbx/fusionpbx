@@ -811,7 +811,7 @@
 
 <!--  Backup Outbound Proxy -->
 <!--  String -->
-<P2433></P2433>
+<P2433>{$outbound_proxy_secondary_2}</P2433>
 
 <!--  BLF Server -->
 <!--  String -->
@@ -1565,7 +1565,7 @@
 
 <!--  Backup Outbound Proxy -->
 <!--  String -->
-<P2533></P2533>
+<P2533>{$outbound_proxy_secondary_3}</P2533>
 
 <!--  BLF Server -->
 <!--  String -->
@@ -2318,7 +2318,7 @@
 
 <!--  Backup Outbound Proxy -->
 <!--  String -->
-<P2633></P2633>
+<P2633>{$outbound_proxy_secondary_4}</P2633>
 
 <!--  BLF Server -->
 <!--  String -->
@@ -3073,7 +3073,7 @@
 
 <!--  Backup Outbound Proxy -->
 <!--  String -->
-<P2733></P2733>
+<P2733>{$outbound_proxy_secondary_5}</P2733>
 
 <!--  BLF Server -->
 <!--  String -->
@@ -3826,7 +3826,7 @@
 
 <!--  Backup Outbound Proxy -->
 <!--  String -->
-<P2833></P2833>
+<P2833>{$outbound_proxy_secondary_6}</P2833>
 
 <!--  BLF Server -->
 <!--  String -->
