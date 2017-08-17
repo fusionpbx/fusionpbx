@@ -42,7 +42,7 @@
 
 <!--  Backup Outbound Proxy -->
 <!--  String -->
-<P2333></P2333>
+<P2333>{$outbound_proxy_secondary_1}</P2333>
 
 <!--  BLF Server -->
 <!--  String -->
