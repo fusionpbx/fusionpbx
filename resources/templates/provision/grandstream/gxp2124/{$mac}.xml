@@ -453,7 +453,7 @@
     <P2412></P2412>
     <!-- Outbound Proxy -->
     <!-- String -->
-    <P403></P403>
+    <P403>{$outbound_proxy_2}</P403>
     <!-- SIP User ID -->
     <!-- String -->
     <P404>{$user_id_2}</P404>
@@ -881,7 +881,7 @@
     <P2512></P2512>
     <!-- Outbound Proxy -->
     <!-- String -->
-    <P503></P503>
+    <P503>{$outbound_proxy_3}</P503>
     <!-- SIP User ID -->
     <!-- String -->
     <P504>{$user_id_3}</P504>
@@ -1308,7 +1308,7 @@
     <P2612></P2612>
     <!-- Outbound Proxy -->
     <!-- String -->
-    <P603></P603>
+    <P603>{$outbound_proxy_4}</P603>
     <!-- SIP User ID -->
     <!-- String -->
     <P604>{$user_id_4}</P604>
