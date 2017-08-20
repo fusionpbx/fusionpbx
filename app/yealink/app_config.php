@@ -3,7 +3,7 @@
 	//application details
 		$apps[$x]['name'] = "Yealink";
 		$apps[$x]['uuid'] = "82626eb7-f2dd-4c25-bd0f-06235222ce76";
-		$apps[$x]['category'] = "Vendors";
+		$apps[$x]['category'] = "Vendor";
 		$apps[$x]['subcategory'] = "";
 		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
