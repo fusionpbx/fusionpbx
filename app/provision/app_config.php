@@ -899,6 +899,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the T46G firmware ROM";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4e2b8fcb-7d06-4553-becf-9904e1331c4c";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t46s";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t46s-66.81.0.110.rom";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the T46S firmware ROM";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0276b965-0ef6-493a-bdd0-b9786bf8aad7";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t48g";
