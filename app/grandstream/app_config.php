@@ -1,6 +1,5 @@
 <?php
 
-
 	//application details
 		$apps[$x]['name'] = "Grandstream";
 		$apps[$x]['uuid'] = "24ab69bf-c78b-4ab3-9911-cf30247e3e46";
