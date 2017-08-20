@@ -943,7 +943,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t54s";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t54s-70.81.0.10.rom.rom";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t54s-70.81.0.10.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the T54S firmware ROM";
 		$y++;
@@ -969,7 +969,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t58v-58.80.0.25.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the firmware ROM";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the T58V firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a39fc1af-9c30-46c7-a564-212e4af0331f";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -977,5 +977,5 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "vp530-23.70.0.40.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the firmware ROM";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the VP530 firmware ROM";
 ?>
