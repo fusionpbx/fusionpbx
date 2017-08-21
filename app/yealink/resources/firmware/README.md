@@ -1,4 +1,4 @@
-Recommended Firmware and Naming Convention for Yealink Phones
+#Recommended Firmware and Naming Convention for Yealink Phones
 
 **CP860**  
 [CP860 Product Page](http://yealink.com/product_info.aspx?ProductsCateID=1271&parentcateid=1297&cateid=1271&BaseInfoCateId=1271&Cate_Id=1271&index=2)  
