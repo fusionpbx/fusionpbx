@@ -44,6 +44,7 @@
 	require "resources.functions.config";
 
 	local blf = require "resources.functions.blf"
+	local cache = require "resources.functions.cache"
 
 --check if the session is ready
 	if ( session:ready() ) then
@@ -203,12 +204,10 @@
 			end);
 
 		--clear the cache
-			if (extension ~= nil) then
-				freeswitch.consoleLog("notice", "[do_not_disturb] memcache delete directory:"..extension.."@"..domain_name);
-				api:execute("memcache", "delete directory:"..extension.."@"..domain_name);
+			if extension and #extension > 0 and cache.support() then
+				cache.del("directory:"..extension.."@"..domain_name);
 				if #number_alias > 0 then
-					freeswitch.consoleLog("notice", "[do_not_disturb] memcache delete directory:"..number_alias.."@"..domain_name);
-					api:execute("memcache", "delete directory:"..number_alias.."@"..domain_name);
+					cache.del("directory:"..number_alias.."@"..domain_name);
 				end
 			end
 
