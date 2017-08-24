@@ -158,13 +158,10 @@
 			$cache = new cache;
 			$cache->delete("configuration:sofia.conf:".$sip_profile_hostname);
 
-		//redirect the browser
-			messages::add($text['message-update']);
-			header("Location: sip_profiles.php");
-
-			//save the sip profile xml
+		//save the sip profile xml
 			save_sip_profile_xml();
-			//apply settings reminder
+
+		//apply settings reminder
 			$_SESSION["reload_xml"] = true;
 
 		//redirect the user
