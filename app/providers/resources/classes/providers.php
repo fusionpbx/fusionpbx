@@ -95,27 +95,35 @@ if (!class_exists('providers')) {
 				if ($provider == 'voicetel') {
 					$x = 0;
 					$nodes[$x]['uuid'] = 'dae9ab41-73c1-4792-bfdb-eccbedeebac9';
-					$nodes[$x]['cidr'] = '199.101.184.146/32';
+					$nodes[$x]['cidr'] = '104.225.6.160/29';
 					$nodes[$x]['description'] = 'VoiceTel';
 					$x++;
 					$nodes[$x]['uuid'] = '3167d47d-0679-4336-b4c4-be68cdc28e5b';
-					$nodes[$x]['cidr'] = '162.243.249.135/32';
+					$nodes[$x]['cidr'] = '104.225.13.72/29';
 					$nodes[$x]['description'] = 'VoiceTel';
 					$x++;
 					$nodes[$x]['uuid'] = 'e3d2e9b8-5807-4175-9ffc-57480ac94f83';
-					$nodes[$x]['cidr'] = '192.254.76.222/32';
+					$nodes[$x]['cidr'] = '148.59.176.0/23';
 					$nodes[$x]['description'] = 'VoiceTel';
 					$x++;
 					$nodes[$x]['uuid'] = 'a1d70666-ab25-425a-9884-60530f4dd8b7';
-					$nodes[$x]['cidr'] = '162.243.156.185/32';
+					$nodes[$x]['cidr'] = '192.73.246.104/29';
 					$nodes[$x]['description'] = 'VoiceTel';
 					$x++;
 					$nodes[$x]['uuid'] = '0bf5450f-c23b-4139-9e89-884bd0972912';
-					$nodes[$x]['cidr'] = '94.75.246.200/32';
+					$nodes[$x]['cidr'] = '192.73.250.96/29';
 					$nodes[$x]['description'] = 'VoiceTel';
 					$x++;
 					$nodes[$x]['uuid'] = '181dcaf8-f990-4869-90e3-97de7d2daa5a';
-					$nodes[$x]['cidr'] = '204.77.3.60/32';
+					$nodes[$x]['cidr'] = '192.73.251.104/29';
+					$nodes[$x]['description'] = 'VoiceTel';
+					$x++;
+					$nodes[$x]['uuid'] = 'b32db3ae-4ce8-4793-ad30-fbb6478b9249';
+					$nodes[$x]['cidr'] = '192.254.70.144/29';
+					$nodes[$x]['description'] = 'VoiceTel';
+					$x++;
+					$nodes[$x]['uuid'] = '5782acb1-845c-4d33-8241-569f83854283';
+					$nodes[$x]['cidr'] = '192.254.76.220/30';
 					$nodes[$x]['description'] = 'VoiceTel';
 				}
 
