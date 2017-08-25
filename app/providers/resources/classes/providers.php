@@ -1,4 +1,4 @@
-2<?php
+<?php
 /*
 	FusionPBX
 	Version: MPL 1.1
@@ -448,16 +448,16 @@ if (!class_exists('providers')) {
 				$dialplans->uuid = $dialplan_uuid;
 				$dialplans->xml();
 
-			//clear the cache
-				$cache = new cache;
-				$cache->delete("configuration:acl.conf");
-				$cache->delete("configuration:sofia.conf:".$sip_profile_hostname);
-
 			//create the event socket connection
 				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 
 			//get the hostname
 				if ($fp) {  $sip_profile_hostname = event_socket_request($fp, 'api switchname'); }
+
+			//clear the cache
+				$cache = new cache;
+				$cache->delete("configuration:acl.conf");
+				$cache->delete("configuration:sofia.conf:".$sip_profile_hostname);
 
 			//reload acl and rescan the sip profile
 				if ($fp) { event_socket_request($fp, "api reloadacl"); }
@@ -527,11 +527,15 @@ if (!class_exists('providers')) {
 			//create the event socket connection
 				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 
+			//get the hostname
+				if ($fp) {  $sip_profile_hostname = event_socket_request($fp, 'api switchname'); }
+
 			//delete each gateway
 				foreach ($gateways as $row) {
 					//stop the gateway
-					if ($fp) { event_socket_request($fp, "api sofia profile ".$sip_profile_name." killgw ".$row['uuid']); }
-					
+					$cmd = "sofia profile ".$sip_profile_name." killgw ".$row['uuid'];
+					if ($fp) { event_socket_request($fp, "api ".$cmd); }
+
 					//delete the gateway
 					$sql = "delete from v_gateways ";
 					$sql .= "where gateway_uuid = '".$row['uuid']."'; ";
@@ -543,9 +547,6 @@ if (!class_exists('providers')) {
 				$cache = new cache;
 				$cache->delete("configuration:acl.conf");
 				$cache->delete("configuration:sofia.conf:".$sip_profile_hostname);
-
-			//get the hostname
-				if ($fp) {  $sip_profile_hostname = event_socket_request($fp, 'api switchname'); }
 
 			//reload acl and rescan the sip profile
 				if ($fp) { event_socket_request($fp, "api reloadacl"); }
