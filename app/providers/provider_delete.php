@@ -57,7 +57,7 @@
 	messages::add($text['message-delete']);
 
 //redirect the user
-	header("Location: index.php");
+	header("Location: providers.php");
 	return;
 
 ?>
