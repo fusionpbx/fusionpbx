@@ -113,7 +113,7 @@
 			echo "<button type=\"button\" onclick=\"window.location='provider_setup.php?provider=voicetel'\" class=\"btn btn-primary\">".$text['button-setup']."</button>\n";
 		}
 		else { 
-			echo "<button type=\"button\" onclick=\"window.location='provider_delete.php?provider=voicetel'\" class=\"btn btn-danger\">".$text['button-delete']."</button>\n";
+			echo "<button type=\"button\" onclick=\"window.location='provider_delete.php?provider=voicetel'\" class=\"btn btn-danger\">".$text['button-remove']."</button>\n";
 		}
 		?>
 	</div>
@@ -149,7 +149,7 @@
 			echo "<button type=\"button\" onclick=\"window.location='provider_setup.php?provider=skyetel'\" class=\"btn btn-primary\">".$text['button-setup']."</button>\n";
 		}
 		else {
-			echo "<button type=\"button\" onclick=\"window.location='provider_delete.php?provider=skyetel'\" class=\"btn btn-danger\">".$text['button-delete']."</button>\n";
+			echo "<button type=\"button\" onclick=\"window.location='provider_delete.php?provider=skyetel'\" class=\"btn btn-danger\">".$text['button-remove']."</button>\n";
 		}
 		?>
 	</div>
