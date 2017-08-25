@@ -57,7 +57,7 @@
 	messages::add($text['message-add']);
 
 //redirect the user
-	header("Location: index.php");
+	header("Location: providers.php");
 	return;
 
 ?>
