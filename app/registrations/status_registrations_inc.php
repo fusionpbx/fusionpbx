@@ -122,6 +122,7 @@ require_once "resources/classes/status_registrations.php";
 				else {
 					echo "	<input type='button' class='btn' name='' alt='".$text['button-show_all']."' onclick=\"window.location='status_registrations.php?show_reg=1&profile=$sip_profile_name&show=all'\" value='".$text['button-show_all']."' ".$onhover_pause_refresh.">\n";
 				}
+				echo "	<input type='button' class='btn' name='' alt='".$text['button-reboot_all']."' onclick=\"window.location='cmd.php?cmd=reboot&profile=".$sip_profile_name."&show=".$show."'\" value='".$text['button-reboot_all']."' ".$onhover_pause_refresh.">\n";
 			}
 			echo "</td>\n";
 			echo "</tr>\n";
