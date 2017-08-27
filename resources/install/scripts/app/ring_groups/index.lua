@@ -283,6 +283,28 @@ local log = require "resources.functions.log".ring_group
 							--add the row to the destinations array
 							destinations[x] = row;
 						end
+					--determine if the user is registered if not registered then lookup 
+						cmd = "sofia_contact ".. row.destination_number .."@" ..leg_domain_name;
+						if (api:executeString(cmd) == "error/user_not_registered") then
+							cmd = "user_data ".. row.destination_number .."@" ..leg_domain_name.." var forward_user_not_registered_enabled";
+							if (api:executeString(cmd) == "true") then
+								--get the new destination number
+								cmd = "user_data ".. row.destination_number .."@" ..leg_domain_name.." var forward_user_not_registered_destination";
+								destination_number = api:executeString(cmd);
+								if (row.destination_number ~= nil) then
+									row.destination_number = destination_number;	
+								end
+
+								--check the new destination number for user_exists
+								cmd = "user_exists id ".. row.destination_number .." "..leg_domain_name;
+								user_exists = api:executeString(cmd);
+								if (user_exists == "true") then
+									row['user_exists'] = "true";
+								else
+									row['user_exists'] = "false";
+								end
+							end
+						end
 				else
 					--set the values
 						external = "true";
