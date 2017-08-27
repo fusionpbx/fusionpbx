@@ -359,9 +359,9 @@
 								cmd = "user_exists id ".. row.destination_number .." "..leg_domain_name;
 								user_exists = api:executeString(cmd);
 								if (user_exists == "true") then
-										row['user_exists'] = "true";
+									row['user_exists'] = "true";
 								else
-										row['user_exists'] = "false";
+									row['user_exists'] = "false";
 								end
 							end
 						end
