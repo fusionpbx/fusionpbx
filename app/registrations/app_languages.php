@@ -381,6 +381,26 @@ $text['button-unregister']['ru-ru'] = "Отменить регистрацию";
 $text['button-unregister']['sv-se'] = "Avregistrera";
 $text['button-unregister']['uk-ua'] = "Розреєструвати";
 
+$text['button-reboot_all']['en-us'] = "Reboot all";
+$text['button-reboot_all']['ar-eg'] = "";
+$text['button-reboot_all']['de-at'] = "Neu starten";
+$text['button-reboot_all']['de-ch'] = "Neu starten"; //copied from de-de
+$text['button-reboot_all']['de-de'] = "Neu starten";
+$text['button-reboot_all']['es-cl'] = "Reiniciar todo";
+$text['button-reboot_all']['es-mx'] = "Reiniciar todo"; //copied from es-cl
+$text['button-reboot_all']['fr-ca'] = "Redémarrer tout"; //copied from fr-fr
+$text['button-reboot_all']['fr-fr'] = "Redémarrer tout";
+$text['button-reboot_all']['he-il'] = "";
+$text['button-reboot_all']['it-it'] = "";
+$text['button-reboot_all']['nl-nl'] = "";
+$text['button-reboot_all']['pl-pl'] = "Zrestartuj";
+$text['button-reboot_all']['pt-br'] = "Reiniciando";
+$text['button-reboot_all']['pt-pt'] = "Reinicialização";
+$text['button-reboot_all']['ro-ro'] = "";
+$text['button-reboot_all']['ru-ru'] = "Перезагрузить";
+$text['button-reboot_all']['sv-se'] = "Starta Om";
+$text['button-reboot_all']['uk-ua'] = "Перезавантажити";
+
 $text['button-reboot']['en-us'] = "Reboot";
 $text['button-reboot']['ar-eg'] = "";
 $text['button-reboot']['de-at'] = "Neu starten";
