@@ -140,6 +140,7 @@ if (!class_exists('registrations')) {
 								//increment the array id
 									$id++;
 							}
+							unset($array);
 						}
 				}
 
