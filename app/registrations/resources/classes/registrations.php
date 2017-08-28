@@ -36,7 +36,7 @@ if (!class_exists('registrations')) {
 		/**
 		 * get the registrations
 		 */
-		public function get($show) {
+		public function get($profile) {
 
 			//initialize the id used in the registrations array
 				$id = 0;
@@ -45,8 +45,16 @@ if (!class_exists('registrations')) {
 				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 
 			//get the default settings
-				$sql = "select sip_profile_name from v_sip_profiles where sip_profile_enabled = 'true' ";
-				$prep_statement = $this->db->prepare($sql);
+				$sql = "select sip_profile_name from v_sip_profiles ";
+				$sql .= "where sip_profile_enabled = 'true' ";
+				if ($profile == 'all' || $profile == '') {
+					$prep_statement = $this->db->prepare($sql);
+				}
+				else {
+					$sql .= "and sip_profile_name=:sip_profile_name ";
+					$prep_statement = $this->db->prepare($sql);
+					$prep_statement->bindParam(':sip_profile_name', $profile);
+				}
 				$prep_statement->execute();
 				$sip_profiles = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				foreach ($sip_profiles as $row) {
@@ -120,7 +128,7 @@ if (!class_exists('registrations')) {
 
 								//remove unrelated domains
 									if (count($_SESSION["domains"]) > 1) {
-										if (!(permission_exists('registration_all') && $show == "all")) {
+										if (!(permission_exists('registration_all') && $profile == "all")) {
 											if ($registrations[$id]['sip-auth-realm'] == $_SESSION['domain_name']) {}
 											elseif ($user_array[1] == $_SESSION['domain_name']){}
 											else {
@@ -142,7 +150,7 @@ if (!class_exists('registrations')) {
 }
 /*
 $obj = new registrations;
-$registrations = $obj->get();
+$registrations = $obj->get('all');
 print($registrations);
 */
 
