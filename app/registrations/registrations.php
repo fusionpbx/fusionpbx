@@ -50,10 +50,6 @@
 	require_once "resources/header.php";
 	$document['title'] = $text['header-registrations'];
 
-//set the variables
-	$profile = (isset($_REQUEST['profile']) && $_REQUEST['profile'] != '') ? $_REQUEST['profile'] : "internal";
-	$show = trim($_REQUEST["show"]);
-
 //check permissions
 	if (permission_exists("registration_domain") || permission_exists("registration_all") || if_group("superadmin")) {
 		//access granted
@@ -68,9 +64,10 @@
 	$text = $language->get();
 
 //get the HTTP values and set as variables
+	$profile = trim($_REQUEST["profile"]);
 	$search = trim($_REQUEST["search"]);
 	$show = trim($_REQUEST["show"]);
-	if ($show != "all") { $show = ''; }
+	if ($show == "all") { $profile = 'all'; }
 
 //define variables
 	$c = 0;
@@ -94,7 +91,7 @@
 
 		//get the registrations
 			$obj = new registrations;
-			$registrations = $obj->get($show);
+			$registrations = $obj->get($profile);
 
 		//count the registrations
 			$registration_count = 0;
@@ -107,7 +104,6 @@
 					}
 				}
 			}
-
 		//show the registrations
 			echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
 			echo "<tr>\n";
