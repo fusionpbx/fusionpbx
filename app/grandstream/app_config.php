@@ -41,9 +41,9 @@
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5f97afa2-b8ae-45fc-a47c-4131b6b4e1fd";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "contact_grandstream";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable Address Book for Grandstream based on users and groups assigned to contact.";
 		$y++;
 
