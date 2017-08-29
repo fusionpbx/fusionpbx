@@ -66,6 +66,13 @@
 				{"landline",      "8[3-68]%d%d%d%d%d%d%d%d%d"                     };
 				{"unknown",       ""                                              };
 			};
+			ZA = {
+                                {"international", "00%d+"         };
+                                {"mobile",        "0[6-8]%d%d%d%d%d%d%d%d"                      };
+                                {"landline",      "0[1-5]%d%d%d%d%d%d%d%d"                      };
+                                {"unknown",       ""                                            };
+                        };
+
 		}
 
 	--Set to true to allow all calls for extensions without toll_allow
