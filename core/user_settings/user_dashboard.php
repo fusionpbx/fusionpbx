@@ -1128,7 +1128,7 @@
 					$tmp = event_socket_request($fp, 'api sofia xmlstatus profile internal reg');
 					$registrations = substr_count($tmp, '<registration>');
 					$registrations = (is_numeric($registrations)) ? $registrations : 0;
-					$tr_link = "href='".PROJECT_PATH."/app/registrations/status_registrations.php'";
+					$tr_link = "href='".PROJECT_PATH."/app/registrations/registrations.php'";
 					$hud[$n]['html'] .= "<tr ".$tr_link.">\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-registrations']."</a></td>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$registrations."</td>\n";
