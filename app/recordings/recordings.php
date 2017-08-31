@@ -250,7 +250,7 @@
 	require_once "resources/paging.php";
 
 //get total recordings from the database
-	$sql = "select count(recording_uuid) as num_rows from v_recordings from v_recordings \n";
+	$sql = "select count(recording_uuid) as num_rows from v_recordings \n";
 	$sql = "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	$prep_statement = $db->prepare($sql);
 	if ($prep_statement) {
