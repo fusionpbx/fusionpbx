@@ -74,6 +74,7 @@
 			destination_number = session:getVariable("destination_number");
 			caller_id_name = session:getVariable("caller_id_name");
 			caller_id_number = session:getVariable("caller_id_number");
+			effective_caller_id_number = session:getVariable("effective_caller_id_number");
 			voicemail_greeting_number = session:getVariable("voicemail_greeting_number");
 			skip_instructions = session:getVariable("skip_instructions");
 			skip_greeting = session:getVariable("skip_greeting");
@@ -85,6 +86,11 @@
 			voicemail_authorized = session:getVariable("voicemail_authorized");
 			sip_from_user = session:getVariable("sip_from_user");
 			sip_number_alias = session:getVariable("sip_number_alias");
+
+		--modify caller_id_number if effective_caller_id_number is set
+			if (effective_caller_id_number ~= nil) then
+				caller_id_number = effective_caller_id_number;
+			end
 
 		--set default values
 			if (string.sub(caller_id_number, 1, 1) == "/") then
