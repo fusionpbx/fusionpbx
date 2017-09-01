@@ -102,6 +102,7 @@ if (!class_exists('registrations')) {
 									$registrations[$id]['mwi-account'] = $row['mwi-account'] ?: "&nbsp;";
 									$registrations[$id]['status'] = $row['status'] ?: "&nbsp;";
 									$registrations[$id]['ping-time'] = $row['ping-time'] ?: "&nbsp;";
+									$registrations[$id]['sip_profile_name'] = $row['sip_profile_name'];
 
 								//get network-ip to url or blank
 									if(isset($row['network-ip'])) {
