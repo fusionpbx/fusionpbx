@@ -35,6 +35,9 @@ RewriteRule     ^provision/([A-Fa-f0-9]{12})-directory.xml$                     
 RewriteRule     ^.*/([0-9]{1,11})_Extern.xml$                                   app/provision/?ext=$1&file={$mac}_extern.xml [QSA]
 RewriteRule     ^.*/([0-9]{1,11})_Phonebook.xml$                                app/provision/?ext=$1&file={$mac}_phonebook.xml [QSA]
 
+#Aastra
+RewriteRule     ^provision/aastra.cfg$                                          app/provision/index.php?file=aastra.cfg [QSA]
+
 Options -Indexes
 
 #PHP settings
