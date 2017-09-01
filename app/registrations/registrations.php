@@ -173,9 +173,9 @@
 								echo "	<td class='".$row_style[$c]."'>".$row['status']."</td>\n";
 								echo "	<td class='".$row_style[$c]."'>".$row['ping-time']."</td>\n";
 								echo "	<td class='".$row_style[$c]."' style='text-align: right;' nowrap='nowrap'>\n";
-								echo "		<input type='button' class='btn' value='".$text['button-unregister']."' onclick=\"document.location.href='cmd.php?cmd=unregister&profile=".$sip_profile_name."&show=".$show."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\">\n";
-								echo "		<input type='button' class='btn' value='".$text['button-provision']."' onclick=\"document.location.href='cmd.php?cmd=check_sync&profile=".$sip_profile_name."&show=".$show."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\">\n";
-								echo "		<input type='button' class='btn' value='".$text['button-reboot']."' onclick=\"document.location.href='cmd.php?cmd=reboot&profile=".$sip_profile_name."&show=".$show."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\">\n";
+								echo "		<input type='button' class='btn' value='".$text['button-unregister']."' onclick=\"document.location.href='cmd.php?cmd=unregister&profile=".$row['sip_profile_name']."&show=".$show."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\">\n";
+								echo "		<input type='button' class='btn' value='".$text['button-provision']."' onclick=\"document.location.href='cmd.php?cmd=check_sync&profile=".$row['sip_profile_name']."&show=".$show."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\">\n";
+								echo "		<input type='button' class='btn' value='".$text['button-reboot']."' onclick=\"document.location.href='cmd.php?cmd=reboot&profile=".$row['sip_profile_name']."&show=".$show."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\">\n";
 								echo "	</td>\n";
 								echo "</tr>\n";
 								if ($c==0) { $c=1; } else { $c=0; }
@@ -191,4 +191,5 @@
 
 //get the footer
 	require_once "resources/footer.php";
+
 ?>
