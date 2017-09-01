@@ -682,8 +682,7 @@
 		$template_dir = $device->get_template_dir();
 
 		echo "<select id='device_template' name='device_template' class='formfld'>\n";
-		echo "<option value=''>".$text['label-disable']."</option>\n";
-		echo "<option value='' disabled='disabled'>====</option>\n";
+		echo "<option value=''></option>\n";
 
 		if (is_dir($template_dir)) {
 				$templates = scandir($template_dir);
@@ -697,14 +696,11 @@
 								foreach($templates_sub as $dir_sub) {
 									if($file_sub != '.' && $dir_sub != '..' && $dir_sub[0] != '.') {
 										if(is_dir($template_dir . '/' . $dir .'/'. $dir_sub)) {
-                                            if($dir_sub == 'include') {
-                                                continue;
-                                            }
 											if ($device_template == $dir."/".$dir_sub) {
-												echo "<option value='".$dir."/".$dir_sub."' selected='selected'>".$dir_sub."</option>\n";
+												echo "<option value='".$dir."/".$dir_sub."' selected='selected'>".$dir."/".$dir_sub."</option>\n";
 											}
 											else {
-												echo "<option value='".$dir."/".$dir_sub."'>".$dir_sub."</option>\n";
+												echo "<option value='".$dir."/".$dir_sub."'>".$dir."/".$dir_sub."</option>\n";
 											}
 										}
 									}
