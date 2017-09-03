@@ -321,6 +321,26 @@ $text['label-contact']['ru-ru'] = "Контакт";
 $text['label-contact']['sv-se'] = "Kontakta";
 $text['label-contact']['uk-ua'] = "Контакт";
 
+$text['label-sip_profile_name']['en-us'] = "Profile";
+$text['label-sip_profile_name']['ar-eg'] = "";
+$text['label-sip_profile_name']['de-at'] = "Profile";
+$text['label-sip_profile_name']['de-ch'] = "Profile";
+$text['label-sip_profile_name']['de-de'] = "Profile";
+$text['label-sip_profile_name']['es-cl'] = "Perfile";
+$text['label-sip_profile_name']['es-mx'] = "Perfile";
+$text['label-sip_profile_name']['fr-ca'] = "Profile";
+$text['label-sip_profile_name']['fr-fr'] = "Profile";
+$text['label-sip_profile_name']['he-il'] = "";
+$text['label-sip_profile_name']['it-it'] = "";
+$text['label-sip_profile_name']['nl-nl'] = "";
+$text['label-sip_profile_name']['pl-pl'] = "Profile";
+$text['label-sip_profile_name']['pt-br'] = "Perfis";
+$text['label-sip_profile_name']['pt-pt'] = "Perfis";
+$text['label-sip_profile_name']['ro-ro'] = "";
+$text['label-sip_profile_name']['ru-ru'] = "Профили";
+$text['label-sip_profile_name']['sv-se'] = "Profiler";
+$text['label-sip_profile_name']['uk-ua'] = "профілі";
+
 $text['header-registrations']['en-us'] = "Registrations";
 $text['header-registrations']['ar-eg'] = "";
 $text['header-registrations']['de-at'] = "Registrierungen";
