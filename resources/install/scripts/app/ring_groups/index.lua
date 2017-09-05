@@ -168,13 +168,10 @@
 --get the ring group
 	ring_group_forward_enabled = "";
 	ring_group_forward_destination = "";
-	sql = "SELECT r.*, u.user_uuid FROM v_ring_groups as r, v_ring_group_users as u ";
+	sql = "SELECT r.* FROM v_ring_groups as r ";
 	sql = sql .. "where r.ring_group_uuid = :ring_group_uuid ";
-	sql = sql .. "and r.ring_group_uuid = u.ring_group_uuid ";
 	local params = {ring_group_uuid = ring_group_uuid};
 	status = dbh:query(sql, params, function(row)
-		--domain_uuid = row["domain_uuid"];
-		user_uuid = row["user_uuid"];
 		ring_group_name = row["ring_group_name"];
 		ring_group_extension = row["ring_group_extension"];
 		ring_group_forward_enabled = row["ring_group_forward_enabled"];
@@ -184,6 +181,15 @@
 		ring_group_cid_number_prefix = row["ring_group_cid_number_prefix"];
 		missed_call_app = row["ring_group_missed_call_app"];
 		missed_call_data = row["ring_group_missed_call_data"];
+	end);
+	
+--get the ring group user
+	sql = "SELECT r.*, u.user_uuid FROM v_ring_groups as r, v_ring_group_users as u ";
+	sql = sql .. "where r.ring_group_uuid = :ring_group_uuid ";
+	sql = sql .. "and r.ring_group_uuid = u.ring_group_uuid ";
+	local params = {ring_group_uuid = ring_group_uuid};
+	status = dbh:query(sql, params, function(row)
+		user_uuid = row["user_uuid"];
 	end);
 
 --set the caller id
