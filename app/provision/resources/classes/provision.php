@@ -607,7 +607,7 @@ include "root.php";
 				//get the extensions and add them to the contacts array
 					if (strlen($device_uuid) > 0 and strlen($domain_uuid) > 0 and $_SESSION['provision']['contact_extensions']['boolean'] == "true") {
 						//get contacts from the database
-							$sql = "select extension_uuid as contact_uuid, directory_first_name, directory_last_name";
+							$sql = "select extension_uuid as contact_uuid, directory_full_name, ";
 							$sql .= "effective_caller_id_name, effective_caller_id_number, ";
 							$sql .= "number_alias, extension ";
 							$sql .= "from v_extensions ";
@@ -622,6 +622,14 @@ include "root.php";
 									foreach ($extensions as $row) {
 										//get the contact_uuid
 											$uuid = $row['contact_uuid'];
+										//get the names
+											if (strlen($row['directory_full_name']) > 0) {
+												$name_array = explode(" ", $row['directory_full_name']);
+											} else {
+												$name_array = explode(" ", $row['effective_caller_id_name']);
+											}
+											$contact_name_given = array_shift($name_array);
+											$contact_name_family = trim(implode(' ', $name_array));
 										//get the phone_extension
 											if (is_numeric($row['extension'])) {
 												$phone_extension = $row['extension'];
@@ -633,11 +641,11 @@ include "root.php";
 											$contacts[$uuid]['category'] = 'extensions';
 											$contacts[$uuid]['contact_uuid'] = $row['contact_uuid'];
 											$contacts[$uuid]['contact_category'] = 'extensions';
-											$contacts[$uuid]['contact_name_given'] = $row['directory_first_name'];
-											$contacts[$uuid]['contact_name_family'] = $row['directory_last_name'];
+											$contacts[$uuid]['contact_name_given'] = $contact_name_given;
+											$contacts[$uuid]['contact_name_family'] = $contact_name_family;
 											$contacts[$uuid]['phone_extension'] = $phone_extension;
 										//unset the variables
-											unset($name_array, $phone_extension);
+											unset($name_array, $contact_name_given, $contact_name_family, $phone_extension);
 									}
 								}
 							}
