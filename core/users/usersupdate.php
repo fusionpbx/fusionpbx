@@ -112,7 +112,10 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 
 	//check required values
 		if ($username != $username_old) {
-			$sql = "select count(*) as num_rows from v_users where domain_uuid = '".$domain_uuid."' and username = '".$username."'";
+			$sql = "select count(*) as num_rows from v_users where username = '".$username."'";
+			if ($_SESSION["user"]["unique"]["text"] != "global"){
+                                $sql .= " and domain_uuid = '".$domain_uuid."'";
+                        }
 			$prep_statement = $db->prepare(check_sql($sql));
 			if ($prep_statement) {
 				$prep_statement->execute();
