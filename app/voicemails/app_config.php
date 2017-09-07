@@ -40,7 +40,7 @@
 		$apps[$x]['destinations'][$y]['field']['description'] = "voicemail_description";
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:*99\${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer *99\${destination} XML \${context}";
-		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${description}";
+		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${description} &#9993";
 
 	//permission details
 		$y=0;
