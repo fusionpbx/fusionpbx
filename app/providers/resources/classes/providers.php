@@ -145,6 +145,9 @@ if (!class_exists('providers')) {
 						$gateways[$x]['username'] = 'username';
 						$gateways[$x]['password'] = 'password';
 						$gateways[$x]['register'] = 'false';
+						$gateways[$x]['caller_id_in_from'] = 'true';
+						$gateways[$x]['supress_cng'] = 'true';
+						$gateways[$x]['sip_cid_type'] = 'pid';
 						$x++;
 						$gateways[$x]['uuid'] = 'b171ba70-06a5-4560-82be-596ed9d00041';
 						$gateways[$x]['name'] = 'skyetel.34';
@@ -152,6 +155,9 @@ if (!class_exists('providers')) {
 						$gateways[$x]['username'] = 'username';
 						$gateways[$x]['password'] = 'password';
 						$gateways[$x]['register'] = 'false';
+						$gateways[$x]['caller_id_in_from'] = 'true';
+						$gateways[$x]['supress_cng'] = 'true';
+						$gateways[$x]['sip_cid_type'] = 'pid';
 						$x++;
 						$gateways[$x]['uuid'] = '4864ac6e-9e50-4fff-8381-2c508f8912b5';
 						$gateways[$x]['name'] = 'skyetel.128';
@@ -159,6 +165,9 @@ if (!class_exists('providers')) {
 						$gateways[$x]['username'] = 'username';
 						$gateways[$x]['password'] = 'password';
 						$gateways[$x]['register'] = 'false';
+						$gateways[$x]['caller_id_in_from'] = 'true';
+						$gateways[$x]['supress_cng'] = 'true';
+						$gateways[$x]['sip_cid_type'] = 'pid';
 						$x++;
 						$gateways[$x]['uuid'] = '5553606b-e543-4427-bb63-ebed16001937';
 						$gateways[$x]['name'] = 'skyetel.216';
@@ -166,17 +175,19 @@ if (!class_exists('providers')) {
 						$gateways[$x]['username'] = 'username';
 						$gateways[$x]['password'] = 'password';
 						$gateways[$x]['register'] = 'false';
+						$gateways[$x]['caller_id_in_from'] = 'true';
+						$gateways[$x]['supress_cng'] = 'true';
+						$gateways[$x]['sip_cid_type'] = 'pid';
 						$x++;
 				}
 				if ($provider == 'voicetel') {
-					//build the array
 					$x=0;
 					$gateways[$x]['uuid'] = 'd61be0f0-3a4c-434a-b9f6-4fef15e1a634';
 					$gateways[$x]['name'] = 'voicetel';
 					$gateways[$x]['proxy'] = 'sbc.voicetel.com';
 					$gateways[$x]['username'] = 'username';
 					$gateways[$x]['password'] = 'password';
-					$gateways[$x]['register'] = 'true';
+					$gateways[$x]['register'] = 'false';
 					$x++;
 				}
 
@@ -285,6 +296,15 @@ if (!class_exists('providers')) {
 					$array['gateways'][$x]['retry_seconds'] = '30';
 					$array['gateways'][$x]['ping'] = '90';
 					$array['gateways'][$x]['expire_seconds'] = '800';
+					if (isset($row['supress_cng'])) {
+						$array['gateways'][$x]['caller_id_in_from'] = $row['caller_id_in_from'];
+					}
+					if (isset($row['supress_cng'])) {
+						$array['gateways'][$x]['supress_cng'] = $row['supress_cng'];
+					}
+					if (isset($row['sip_cid_type'])) {
+						$array['gateways'][$x]['sip_cid_type'] = $row['sip_cid_type'];
+					}
 					$array['gateways'][$x]['context'] = 'public';
 					$array['gateways'][$x]['profile'] = $sip_profile_name;
 					$array['gateways'][$x]['enabled'] = 'true';
