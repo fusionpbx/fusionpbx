@@ -208,7 +208,7 @@
 <Handle_VIA_received ua="na">No</Handle_VIA_received>
 <Handle_VIA_rport ua="na">{$spa_handle_via_rport}</Handle_VIA_rport>
 <Insert_VIA_received ua="na">No</Insert_VIA_received>
-<Insert_VIA_rport ua="na">{$spa_handle_via_rport}</Insert_VIA_rport>
+<Insert_VIA_rport ua="na">{$spa_insert_via_rport}</Insert_VIA_rport>
 <Substitute_VIA_Addr ua="na">No</Substitute_VIA_Addr>
 <Send_Resp_To_Src_Port ua="na">No</Send_Resp_To_Src_Port>
 <STUN_Enable ua="na">No</STUN_Enable>
