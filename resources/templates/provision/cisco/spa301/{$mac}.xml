@@ -143,9 +143,9 @@
 
 <!-- SIP/NAT_Support_Parameters -->
 <Handle_VIA_received group="SIP/NAT_Support_Parameters">No</Handle_VIA_received>
-<Handle_VIA_rport group="SIP/NAT_Support_Parameters">No</Handle_VIA_rport>
+<Handle_VIA_rport group="SIP/NAT_Support_Parameters">{$spa_handle_via_rport}</Handle_VIA_rport>
 <Insert_VIA_received group="SIP/NAT_Support_Parameters">No</Insert_VIA_received>
-<Insert_VIA_rport group="SIP/NAT_Support_Parameters">No</Insert_VIA_rport>
+<Insert_VIA_rport group="SIP/NAT_Support_Parameters">{$spa_insert_via_rport}</Insert_VIA_rport>
 <Substitute_VIA_Addr group="SIP/NAT_Support_Parameters">No</Substitute_VIA_Addr>
 <Send_Resp_To_Src_Port group="SIP/NAT_Support_Parameters">No</Send_Resp_To_Src_Port>
 <STUN_Enable group="SIP/NAT_Support_Parameters">No</STUN_Enable>
