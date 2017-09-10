@@ -430,7 +430,7 @@ if (!class_exists('xml_cdr')) {
 						$database->app_uuid = '56165644-598d-4ed8-be01-d960bcb8ffed';
 						$database->save($array);
 						$message = $database->message;
-						unset($array)
+						unset($array);
 				}
 
 			//save to the database in xml format
