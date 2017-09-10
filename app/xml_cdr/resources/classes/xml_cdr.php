@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016
+	Portions created by the Initial Developer are Copyright (C) 2016-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -411,6 +411,26 @@ if (!class_exists('xml_cdr')) {
 			//get the recording name
 				if (strlen($xml->variables->recording_name) > 0) {
 					$this->array[$key]['recording_name'] = urldecode($xml->variables->recording_name);
+				}
+
+			//add the call recording
+				if (urldecode($xml->variables->record_name) > 0 && file_exists($_SERVER["PROJECT_ROOT"]."/app/call_recordings/app_config.php")) {
+						$x = 0;
+						$array['call_recordings'][$x]['call_recording_uuid'] = $uuid;
+						$array['call_recordings'][$x]['domain_uuid'] = $domain_uuid;
+						$array['call_recordings'][$x]['call_recording_name'] = check_str(urldecode($xml->variables->record_name));
+						$array['call_recordings'][$x]['call_recording_path'] = check_str(urldecode($xml->variables->record_path));
+						$array['call_recordings'][$x]['call_recording_length']= check_str(urldecode($xml->variables->bill_sec));
+						$array['call_recordings'][$x]['call_recording_date']= check_str(urldecode($xml->variables->answer_stamp));
+						$array['call_recordings'][$x]['call_direction']= check_str(urldecode($xml->variables->call_direction));
+						//$array['call_recordings'][$x]['call_recording_description']= $row['zzz'];
+						//$array['call_recordings'][$x]['call_recording_base64']= $row['zzz'];
+						$database = new database;
+						$database->app_name = 'call_recordings';
+						$database->app_uuid = '56165644-598d-4ed8-be01-d960bcb8ffed';
+						$database->save($array);
+						$message = $database->message;
+						unset($array)
 				}
 
 			//save to the database in xml format
