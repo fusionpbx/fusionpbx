@@ -46,7 +46,14 @@
 			<action application="set" data="record_session=true" inline="true"/>
 		</condition>
 		<condition field="${record_session}" expression="^true$">
-			<action application="export" data="nolocal:api_on_answer=uuid_record ${uuid} start ${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}/${uuid}.${record_ext}"/>
+			<action application="set" data="record_path=${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}" inline="true"/>
+			<action application="set" data="record_name=${uuid}.${record_ext}" inline="true"/>
+			<action application="set" data="RECORD_TITLE=Recording ${destination_number} ${caller_id_number} ${strftime(%Y-%m-%d %H:%M)}"/>
+			<action application="set" data="RECORD_DATE=${strftime(%Y-%m-%d %H:%M)}"/>
+			<action application="export" data="api_on_answer=record_session ${recordings_path}/${record_name}"/>
+			<!--<action application="export" data="nolocal:api_on_answer=uuid_record ${uuid} start ${recordings_path}/${record_name}"/>-->
+			<action application="set" data="record_append=true" inline="true"/>
+			<action application="set" data="record_in_progress=true" inline="true"/>
 		</condition>
 	</extension>
 </context>
