@@ -289,6 +289,7 @@
 					$database = new database;
 					$database->app_name = 'call_recordings';
 					$database->app_uuid = '56165644-598d-4ed8-be01-d960bcb8ffed';
+					$database->domain_uuid = $domain_uuid;
 					$database->save($array);
 					$message = $database->message;
 					unset($array);
