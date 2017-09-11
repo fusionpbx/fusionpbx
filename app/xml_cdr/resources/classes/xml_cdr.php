@@ -575,7 +575,7 @@ if (!class_exists('xml_cdr')) {
 									$this->xml_array($x, $leg, $xml_string);
 
 								//delete the file after it has been imported
-//									unlink($xml_cdr_dir.'/'.$file);
+									unlink($xml_cdr_dir.'/'.$file);
 							}
 
 						//increment the value
