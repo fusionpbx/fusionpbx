@@ -275,17 +275,27 @@
 					$array['call_recordings'][$x]['domain_uuid'] = $domain_uuid;
 					$array['call_recordings'][$x]['call_recording_name'] = check_str(urldecode($xml->variables->record_name));
 					$array['call_recordings'][$x]['call_recording_path'] = check_str(urldecode($xml->variables->record_path));
-					$array['call_recordings'][$x]['call_recording_length']= check_str(urldecode($xml->variables->bill_sec));
+					$array['call_recordings'][$x]['call_recording_length']= check_str(urldecode($xml->variables->billsec));
 					$array['call_recordings'][$x]['call_recording_date']= check_str(urldecode($xml->variables->answer_stamp));
 					$array['call_recordings'][$x]['call_direction']= check_str(urldecode($xml->variables->call_direction));
 					//$array['call_recordings'][$x]['call_recording_description']= $row['zzz'];
 					//$array['call_recordings'][$x]['call_recording_base64']= $row['zzz'];
+
+					//add the temporary permission
+					$p = new permissions;
+					$p->add("call_recording_add", "temp");
+					$p->add("call_recording_edit", "temp");
+
 					$database = new database;
 					$database->app_name = 'call_recordings';
 					$database->app_uuid = '56165644-598d-4ed8-be01-d960bcb8ffed';
 					$database->save($array);
 					$message = $database->message;
 					unset($array);
+				
+					//remove the temporary permission
+					$p->delete("call_recording_add", "temp");
+					$p->delete("call_recording_edit", "temp");
 			}
 
 		//dynamic cdr fields
