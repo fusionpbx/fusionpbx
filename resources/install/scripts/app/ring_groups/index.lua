@@ -284,7 +284,7 @@ local log = require "resources.functions.log".ring_group
 							destinations[x] = row;
 						end
 					--determine if the user is registered if not registered then lookup 
-						cmd = "sofia_contact ".. row.destination_number .."@" ..leg_domain_name;
+						cmd = "sofia_contact */".. row.destination_number .."@" ..leg_domain_name;
 						if (api:executeString(cmd) == "error/user_not_registered") then
 							cmd = "user_data ".. row.destination_number .."@" ..leg_domain_name.." var forward_user_not_registered_enabled";
 							if (api:executeString(cmd) == "true") then
