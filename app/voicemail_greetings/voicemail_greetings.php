@@ -186,8 +186,9 @@
 								$prep_statement->execute();
 								unset($prep_statement);
 
-							messages::add($text['message-uploaded'].": ".$_FILES['file']['name']);
-							break;
+							//set the message
+								$_SESSION["message"] = $text['message-uploaded'].": ".$_FILES['file']['name'];
+								break;
 						}
 						else {
 							continue;
