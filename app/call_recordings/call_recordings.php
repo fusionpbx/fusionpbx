@@ -62,29 +62,9 @@
 		if (is_array($_POST["call_recordings"])) {
 			//set the array
 				$call_recordings = $_POST["call_recordings"];
-			//debug info
-				//echo "<pre>\n";
-				//print_r($call_recordings);
-				//echo "</pre>\n";
-			//get the action
-				foreach($call_recordings as $row) {
-					if ($row['action'] == 'delete') {
-						$action = 'delete';
-						break;
-					}
-				}
-			//delete the checked rows
-				if ($action == 'delete') {
-					foreach($call_recordings as $row) {
-						if ($row['checked'] == 'true') {
-							$sql = "delete from v_call_recordings ";
-							$sql .= "where call_recording_uuid = '".$row['call_recording_uuid']."'; ";
-							//echo $sql."\n";
-							$db->query($sql);
-							unset($sql);
-						}
-					}
-				}
+			//download
+				$obj = new call_recordings;
+				$obj->delete($call_recordings);
 			//delete message
 				messages::add($text['message-delete']);
 		}
