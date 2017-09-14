@@ -48,7 +48,7 @@ if (!class_exists('call_recordings')) {
 						$sql = "select call_recording_name, call_recording_path, call_recording_base64 from v_call_recordings ";
 						$sql .= "where call_recording_uuid = '".$call_recording_uuid."' ";
 						//$sql .= "and domain_uuid = '".$domain_uuid."' \n";
-						$prep_statement = $this->db->prepare(check_sql($sql));
+						$prep_statement = $this->db->prepare($sql);
 						$prep_statement->execute();
 						$call_recordings = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 						if (is_array($call_recordings)) {
@@ -93,10 +93,6 @@ if (!class_exists('call_recordings')) {
 								header("Content-Type: audio/mpeg");
 							}
 						}
-						//exit;
-						//echo "file_ext: ".$file_ext."<br />\n";
-						//echo "type: ".$_GET['t']."<br />\n";
-						//exit;
 						header('Content-Disposition: attachment; filename="'.$call_recording_name.'"');
 						header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 						header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
@@ -125,7 +121,7 @@ if (!class_exists('call_recordings')) {
 					if (isset($id) && is_uuid($id)) {
 						$sql = "delete from v_call_recordings ";
 						$sql .= "where call_recording_uuid = '".$id."'; ";
-						$db->query($sql);
+						$this->db->query($sql);
 						unset($sql);
 					}
 
@@ -148,31 +144,31 @@ if (!class_exists('call_recordings')) {
 							if ($action == 'delete') {
 								foreach($call_recordings as $row) {
 									if ($row['checked'] == 'true') {
-										//delete call recordings
-											$sql = "delete from v_call_recordings ";
-											$sql .= "where call_recording_uuid = '".$row['call_recording_uuid']."'; ";
-											$db->query($sql);
-											unset($sql);
-
 										//get the information to delete
 											$sql = "select call_recording_name, call_recording_path from v_call_recordings ";
 											$sql .= "where call_recording_uuid = '".$row['call_recording_uuid']."' ";
 											//$sql .= "and domain_uuid = '".$domain_uuid."' \n";
 											$prep_statement = $this->db->prepare(check_sql($sql));
 											$prep_statement->execute();
-											$call_recordings = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-											if (is_array($call_recordings)) {
-												foreach($call_recordings as &$row) {
-													if (file_exists($row['call_recording_path'].'/'.$row['call_recording_name'])) {
-														unlink($row['call_recording_path'].'/'.$row['call_recording_name']);
-													}
-													exit;
+											$array = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+											if (is_array($array)) {
+												foreach($array as &$field) {
+													//delete the file on the file system
+														if (file_exists($field['call_recording_path'].'/'.$field['call_recording_name'])) {
+															unlink($field['call_recording_path'].'/'.$field['call_recording_name']);
+														}
+													//delete call recordings in the database
+														$sql = "delete from v_call_recordings ";
+														$sql .= "where call_recording_uuid = '".$row['call_recording_uuid']."'; ";
+														//echo $sql."\n";
+														$this->db->query($sql);
+														unset($sql);
 												}
 											}
-											unset ($sql, $prep_statement, $id, $call_recordings);
-
+											unset ($sql, $prep_statement, $id, $array);
 									}
 								}
+								unset($call_recordings);
 							}
 					}
 			}
