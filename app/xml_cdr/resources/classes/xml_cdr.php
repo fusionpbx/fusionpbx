@@ -415,6 +415,7 @@ if (!class_exists('xml_cdr')) {
 
 			//add the call recording
 				if (urldecode($xml->variables->record_name) > 0 && file_exists($_SERVER["PROJECT_ROOT"]."/app/call_recordings/app_config.php")) {
+					if (urldecode($xml->variables->billsec) > 0) {
 						$x = 0;
 						$array['call_recordings'][$x]['call_recording_uuid'] = $uuid;
 						$array['call_recordings'][$x]['domain_uuid'] = $domain_uuid;
@@ -442,6 +443,7 @@ if (!class_exists('xml_cdr')) {
 						$p->delete("call_recording_add", "temp");
 						$p->delete("call_recording_edit", "temp");
 						unset($array);
+					}
 				}
 
 			//save to the database in xml format
