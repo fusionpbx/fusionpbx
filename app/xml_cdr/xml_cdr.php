@@ -496,7 +496,7 @@
 					echo "<tr id='recording_progress_bar_".$row['uuid']."' style='display: none;'><td class='".$row_style[$c]." playback_progress_bar_background' style='padding: 0; border: none;' colspan='".((if_group("admin") || if_group("superadmin") || if_group("cdr")) ? ($col_count - 1) : $col_count)."'><span class='playback_progress_bar' id='recording_progress_".$row['uuid']."'></span></td></tr>\n";
 				}
 
-				if ($row['raw_data_exists'] && (if_group("admin") || if_group("superadmin") || if_group("cdr"))) {
+				if ($row['raw_data_exists'] && permission_exists('xml_cdr_details')) {
 					$tr_link = "href='xml_cdr_details.php?uuid=".$row['uuid'].(($_REQUEST['showall']) ? "&showall=true" : null)."'";
 				}
 				else {
@@ -690,7 +690,7 @@
 					echo "	<td valign='top' class='".$row_style[$c]."' nowrap='nowrap'>".ucwords($call_result)."</td>\n";
 				}
 			//control icons
-				if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
+				if (permission_exists('xml_cdr_details')) {
 					echo "	<td class='list_control_icons tr_link_void' nowrap='nowrap'>";
 					if ($tr_link!=null) {
 						echo "		<a $tr_link title='".$text['button-view']."'>$v_link_label_view</a>"; //CJB
