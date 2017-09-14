@@ -42,20 +42,9 @@
 	$language = new text;
 	$text = $language->get();
 
-//get the id
-	if (count($_GET)>0) {
-		$id = check_str($_GET["id"]);
-	}
-
-//delete the data
-	if (strlen($id)>0) {
-		$sql = "delete from v_call_recordings ";
-		$sql .= "where call_recording_uuid = '$id' ";
-		$sql .= "and domain_uuid = '$domain_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($sql);
-	}
+//delete the recording
+	$obj = new call_recordings;
+	$obj->delete($_GET["id"]);
 
 //delete message
 	messages::add($text['message-delete']);
