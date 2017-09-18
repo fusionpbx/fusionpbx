@@ -5,31 +5,23 @@
 		$apps[$x]['uuid'] = "b81412e8-7253-91f4-e48e-42fc2c9a38d9";
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "1.0";
+		$apps[$x]['version'] = "";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Conferences is used to setup conference rooms with a name, description, and optional pin number.";
-		$apps[$x]['description']['ar-eg'] = "";
-		$apps[$x]['description']['de-at'] = "Konferenzen wird verwendet, um Konferenzräume mit Namen, Beschreibung und optionaler PIN bereit zu stellen.";
-		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-de'] = "Konferenzen wird verwendet, um Konferenzräume mit Namen, Beschreibung und optionaler PIN bereit zu stellen.";
 		$apps[$x]['description']['es-cl'] = "Las conferencias son usadas para configurar salas con un nombre, descripción y un número de acceso (opcional)";
-		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['fr-ca'] = "Les conferences sont utilises pour la configuration de chambres avec un nom, descrption et nom d'access (facultatif)";
+		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-at'] = "";
 		$apps[$x]['description']['fr-fr'] = "Les conferences servent à configurer des salles avec un nom, une description et un code pin facultatif";
-		$apps[$x]['description']['he-il'] = "";
-		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
-		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['fr-ca'] = "Les conferences sont utilises pour la configuration de chambres avec un nom, descrption et nom d'access (facultatif)";
+		$apps[$x]['description']['fr-ch'] = "";
+                $apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['pt-pt'] = "Conferências é usado para configurar salas de conferências com um nome, descrição e número de pin opcional.";
-		$apps[$x]['description']['ro-ro'] = "";
-		$apps[$x]['description']['ru-ru'] = "";
-		$apps[$x]['description']['sv-se'] = "";
-		$apps[$x]['description']['uk-ua'] = "";
+		$apps[$x]['description']['pt-br'] = "";
 
 	//destination details
-		$y=0;
+		$y = 0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "conferences";
 		$apps[$x]['destinations'][$y]['name'] = "conferences";
@@ -43,7 +35,7 @@
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name} \${description}";
 
 	//permission details
-		$y=0;
+		$y = 0;
 		$apps[$x]['permissions'][$y]['name'] = "conference_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "9f2a8c08-3e65-c41c-a716-3b53d42bc4d4";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -84,10 +76,9 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 
 	//schema details
-		$y=0;
-		$apps[$x]['db'][$y]['table']['name'] = "v_conferences";
-		$apps[$x]['db'][$y]['table']['parent'] = "";
-		$z=0;
+		$y = 0; //table array index
+		$z = 0; //field array index
+		$apps[$x]['db'][$y]['table'] = "v_conferences";
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -143,10 +134,9 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select whether to enable or disable the conference.";
 
-		$y++;
-		$apps[$x]['db'][$y]['table']['name'] = "v_conference_users";
-		$apps[$x]['db'][$y]['table']['parent'] = "v_conferences";
-		$z=0;
+		$y = 1; //table array index
+		$z = 0; //field array index
+		$apps[$x]['db'][$y]['table'] = "v_conference_users";
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_user_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
