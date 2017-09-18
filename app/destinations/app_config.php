@@ -5,31 +5,24 @@
 		$apps[$x]['uuid'] = "5ec89622-b19c-3559-64f0-afde802ab139";
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "1.0";
+		$apps[$x]['version'] = "";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Used to define external destination numbers.";
-		$apps[$x]['description']['ar-eg'] = "";
-		$apps[$x]['description']['de-at'] = "Wird verwendet um externe Ziele zu definieren.";
-		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-de'] = "Wird verwendet um externe Ziele zu definieren.";
 		$apps[$x]['description']['es-cl'] = "Utilizado para definir números de destino externos.";
 		$apps[$x]['description']['es-mx'] = "Utilizado para definir numeros destinos externos.";
-		$apps[$x]['description']['fr-ca'] = "Usé pour définir cibler nombres externe.";
+		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-at'] = "";
 		$apps[$x]['description']['fr-fr'] = "Défini les numéros externes.";
-		$apps[$x]['description']['he-il'] = "";
-		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
-		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['fr-ca'] = "Usé pour définir cibler nombres externe.";
+		$apps[$x]['description']['fr-ch'] = "";
+                $apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['pt-pt'] = "Utilizado para definir os números de destino externos.";
-		$apps[$x]['description']['ro-ro'] = "";
-		$apps[$x]['description']['ru-ru'] = "";
-		$apps[$x]['description']['sv-se'] = "";
-		$apps[$x]['description']['uk-ua'] = "";
+		$apps[$x]['description']['pt-br'] = "";
 
 	//destination details
-		$y=0;
+		$y = 0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "destinations";
 		$apps[$x]['destinations'][$y]['name'] = "destinations";
@@ -45,7 +38,7 @@
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${description}";
 
 	//permission details
-		$y=0;
+		$y = 0;
 		$apps[$x]['permissions'][$y]['name'] = "destination_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "fd2a708a-ff03-c707-c19d-5a4194375eba";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -63,27 +56,28 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "destination_domain";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['name'] = 'destination_domain';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "destination_all";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['name'] = 'destination_all';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
 
 	//default settings
 		$y = 0;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "70d8538a-89ab-4db6-87b1-f5e447680283";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "limit";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "destinations";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '70d8538a-89ab-4db6-87b1-f5e447680283';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'limit';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'destinations';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '3';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
 
 	//schema details
-		$y=0;
-		$apps[$x]['db'][$y]['table']['name'] = "v_destinations";
-		$apps[$x]['db'][$y]['table']['parent'] = "";
-		$z=0;
+		$y = 0; //table array index
+		$z = 0; //field array index
+		$apps[$x]['db'][$y]['table'] = "v_destinations";
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -165,5 +159,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_accountcode";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the accountcode.";
+		$z++;
 
 ?>

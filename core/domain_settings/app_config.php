@@ -1,35 +1,27 @@
 <?php
-	
+
 	//application details
 		$apps[$x]['name'] = "Domains";
 		$apps[$x]['guid'] = "b31e723a-bf70-670c-a49b-470d2a232f71";
 		$apps[$x]['category'] = "Core";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "1.0";
+		$apps[$x]['version'] = "";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Manage a single domain or multiple domains for multi-tenant.";
-		$apps[$x]['description']['ar-eg'] = "";
-		$apps[$x]['description']['de-at'] = "Verwalte eine einzelne Domäne oder mehrere Domänen für Multi-Mandanten.";
-		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-de'] = "Verwalte eine einzelne Domäne oder mehrere Domänen für Multi-Mandanten.";
 		$apps[$x]['description']['es-cl'] = "Administre un único dominio o múltiples dominios";
-		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['fr-ca'] = "";
+		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-at'] = "";
 		$apps[$x]['description']['fr-fr'] = "Gestion d'un domaine ou plusieurs dans le cas d'un système multi-parties.";
-		$apps[$x]['description']['he-il'] = "";
-		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
-		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['fr-ca'] = "";
+		$apps[$x]['description']['fr-ch'] = "";
+                $apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['pt-pt'] = "Gerir um único domínio ou vários domínios para multi-tenant.";
-		$apps[$x]['description']['ro-ro'] = "";
-		$apps[$x]['description']['ru-ru'] = "Управление одним доменом или несколькими доменами для нескольких пользователей";
-		$apps[$x]['description']['sv-se'] = "";
-		$apps[$x]['description']['uk-ua'] = "";
+		$apps[$x]['description']['pt-br'] = "";
 
 	//permission details
-		$y=0;
+		$y = 0;
 		$apps[$x]['permissions'][$y]['name'] = "domain_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "4fa7e90b-6d6c-12d4-712f-62857402b801";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -62,10 +54,9 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//schema details
-		$y=0;
-		$apps[$x]['db'][$y]['table']['name'] = "v_domains";
-		$apps[$x]['db'][$y]['table']['parent'] = "";
-		$z=0;	
+		$y = 0; //table array index
+		$z = 0; //field array index
+		$apps[$x]['db'][$y]['table'] = "v_domains";
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "integer";
@@ -98,10 +89,9 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
 
-		$y++;
-		$apps[$x]['db'][$y]['table']['name'] = "v_domain_settings";
-		$apps[$x]['db'][$y]['table']['parent'] = "v_domains";
-		$z=0;
+		$y = 1; //table array index
+		$z = 0; //field array index
+		$apps[$x]['db'][$y]['table'] = "v_domain_settings";
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "integer";
