@@ -194,7 +194,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_url";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server.yourdomain.com/app/yealink/firmware";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server.yourdomain.com/app/yealink/resources/firmware";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Base URL for Yealink Firmware";
 		$y++;
