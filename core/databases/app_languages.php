@@ -1,9 +1,9 @@
 <?php
-#This file was last reorganized on 12th of June 2017 10:57:41 AM UTC
+#This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['title-databases']['en-us'] = "Databases";
 $text['title-databases']['ar-eg'] = "قواعد البيانات";
-$text['title-databases']['de-at'] = "Datenbanken";
+$text['title-databases']['de-at'] = "Datenbanken"; //copied from de-de
 $text['title-databases']['de-ch'] = "Datenbanken"; //copied from de-de
 $text['title-databases']['de-de'] = "Datenbanken";
 $text['title-databases']['es-cl'] = "Bases de datos";
@@ -23,7 +23,7 @@ $text['title-databases']['uk-ua'] = "Бази даних";
 
 $text['title-database-edit']['en-us'] = "Database Edit";
 $text['title-database-edit']['ar-eg'] = "تعديل قاعدة البيانات";
-$text['title-database-edit']['de-at'] = "Datenbank editieren";
+$text['title-database-edit']['de-at'] = "Datenbank editieren"; //copied from de-de
 $text['title-database-edit']['de-ch'] = "Datenbank editieren"; //copied from de-de
 $text['title-database-edit']['de-de'] = "Datenbank editieren";
 $text['title-database-edit']['es-cl'] = "Editar base de datos";
@@ -43,7 +43,7 @@ $text['title-database-edit']['uk-ua'] = "Редагування бази дан�
 
 $text['title-database-add']['en-us'] = "Database Add";
 $text['title-database-add']['ar-eg'] = "إضافة قاعدة بيانات";
-$text['title-database-add']['de-at'] = "Datenbank hinzufügen";
+$text['title-database-add']['de-at'] = "Datenbank hinzufügen"; //copied from de-de
 $text['title-database-add']['de-ch'] = "Datenbank hinzufügen"; //copied from de-de
 $text['title-database-add']['de-de'] = "Datenbank hinzufügen";
 $text['title-database-add']['es-cl'] = "Agregar Base de Datos";
@@ -63,7 +63,7 @@ $text['title-database-add']['uk-ua'] = "Додавання бази даних";
 
 $text['label-username']['en-us'] = "Username";
 $text['label-username']['ar-eg'] = "اسم المستخدم";
-$text['label-username']['de-at'] = "Benutzername";
+$text['label-username']['de-at'] = "Benutzername"; //copied from de-de
 $text['label-username']['de-ch'] = "Benutzername"; //copied from de-de
 $text['label-username']['de-de'] = "Benutzername";
 $text['label-username']['es-cl'] = "Nombre de usuario";
@@ -83,7 +83,7 @@ $text['label-username']['uk-ua'] = "Ім’я користувача";
 
 $text['label-port']['en-us'] = "Port";
 $text['label-port']['ar-eg'] = "منفذ";
-$text['label-port']['de-at'] = "Port";
+$text['label-port']['de-at'] = "Port"; //copied from de-de
 $text['label-port']['de-ch'] = "Port"; //copied from de-de
 $text['label-port']['de-de'] = "Port";
 $text['label-port']['es-cl'] = "Puerto";
@@ -103,7 +103,7 @@ $text['label-port']['uk-ua'] = "Порт";
 
 $text['label-path']['en-us'] = "Path";
 $text['label-path']['ar-eg'] = "";
-$text['label-path']['de-at'] = "Pfad";
+$text['label-path']['de-at'] = "Pfad"; //copied from de-de
 $text['label-path']['de-ch'] = "Pfad"; //copied from de-de
 $text['label-path']['de-de'] = "Pfad";
 $text['label-path']['es-cl'] = "Ruta";
@@ -114,7 +114,7 @@ $text['label-path']['he-il'] = "";
 $text['label-path']['it-it'] = "Percorso";
 $text['label-path']['nl-nl'] = "";
 $text['label-path']['pl-pl'] = "Ścieżka";
-$text['label-path']['pt-br'] = "Caminho";
+$text['label-path']['pt-br'] = "Caminho"; //copied from pt-pt
 $text['label-path']['pt-pt'] = "Caminho";
 $text['label-path']['ro-ro'] = "";
 $text['label-path']['ru-ru'] = "Путь";
@@ -123,7 +123,7 @@ $text['label-path']['uk-ua'] = "Шлях";
 
 $text['label-host']['en-us'] = "Host";
 $text['label-host']['ar-eg'] = "مضيف";
-$text['label-host']['de-at'] = "Host";
+$text['label-host']['de-at'] = "Host"; //copied from de-de
 $text['label-host']['de-ch'] = "Host"; //copied from de-de
 $text['label-host']['de-de'] = "Host";
 $text['label-host']['es-cl'] = "Host";
@@ -134,7 +134,7 @@ $text['label-host']['he-il'] = "";
 $text['label-host']['it-it'] = "Host";
 $text['label-host']['nl-nl'] = "";
 $text['label-host']['pl-pl'] = "Host";
-$text['label-host']['pt-br'] = "Máquina";
+$text['label-host']['pt-br'] = "Máquina"; //copied from pt-pt
 $text['label-host']['pt-pt'] = "Máquina";
 $text['label-host']['ro-ro'] = "";
 $text['label-host']['ru-ru'] = "Хост";
@@ -143,7 +143,7 @@ $text['label-host']['uk-ua'] = "Хост";
 
 $text['label-driver']['en-us'] = "Driver";
 $text['label-driver']['ar-eg'] = "";
-$text['label-driver']['de-at'] = "Treiber";
+$text['label-driver']['de-at'] = "Treiber"; //copied from de-de
 $text['label-driver']['de-ch'] = "Treiber"; //copied from de-de
 $text['label-driver']['de-de'] = "Treiber";
 $text['label-driver']['es-cl'] = "Controlador";
@@ -154,7 +154,7 @@ $text['label-driver']['he-il'] = "";
 $text['label-driver']['it-it'] = "Driver";
 $text['label-driver']['nl-nl'] = "";
 $text['label-driver']['pl-pl'] = "Sterownik";
-$text['label-driver']['pt-br'] = "Driver";
+$text['label-driver']['pt-br'] = "Driver"; //copied from pt-pt
 $text['label-driver']['pt-pt'] = "Driver";
 $text['label-driver']['ro-ro'] = "";
 $text['label-driver']['ru-ru'] = "Драйвер";
@@ -163,7 +163,7 @@ $text['label-driver']['uk-ua'] = "Драйвер";
 
 $text['header-databases']['en-us'] = "Databases";
 $text['header-databases']['ar-eg'] = "قواعد البيانات";
-$text['header-databases']['de-at'] = "Datenbanken";
+$text['header-databases']['de-at'] = "Datenbanken"; //copied from de-de
 $text['header-databases']['de-ch'] = "Datenbanken"; //copied from de-de
 $text['header-databases']['de-de'] = "Datenbanken";
 $text['header-databases']['es-cl'] = "Bases de datos";
@@ -183,7 +183,7 @@ $text['header-databases']['uk-ua'] = "Бази даних";
 
 $text['header-database-edit']['en-us'] = "Database Edit";
 $text['header-database-edit']['ar-eg'] = "تعديل قاعدة البيانات";
-$text['header-database-edit']['de-at'] = "Datenbanken bearbeiten";
+$text['header-database-edit']['de-at'] = "Datenbanken bearbeiten"; //copied from de-de
 $text['header-database-edit']['de-ch'] = "Datenbanken bearbeiten"; //copied from de-de
 $text['header-database-edit']['de-de'] = "Datenbanken bearbeiten";
 $text['header-database-edit']['es-cl'] = "Editar base de datos";
@@ -203,7 +203,7 @@ $text['header-database-edit']['uk-ua'] = "Редагування бази дан
 
 $text['header-database-add']['en-us'] = "Database Add";
 $text['header-database-add']['ar-eg'] = "إضافة قاعدة بيانات";
-$text['header-database-add']['de-at'] = "Datenbanken hinzufügen";
+$text['header-database-add']['de-at'] = "Datenbanken hinzufügen"; //copied from de-de
 $text['header-database-add']['de-ch'] = "Datenbanken hinzufügen"; //copied from de-de
 $text['header-database-add']['de-de'] = "Datenbanken hinzufügen";
 $text['header-database-add']['es-cl'] = "Agregar Base de Datos";
@@ -223,7 +223,7 @@ $text['header-database-add']['uk-ua'] = "Додавання бази даних"
 
 $text['description-username']['en-us'] = "Enter the database username.";
 $text['description-username']['ar-eg'] = "أدخل اسم المستخدم هنا";
-$text['description-username']['de-at'] = "Geben Sie den Datenbank Benutzernamen an.";
+$text['description-username']['de-at'] = "Geben Sie den Datenbank Benutzernamen an."; //copied from de-de
 $text['description-username']['de-ch'] = "Geben Sie den Datenbank Benutzernamen an."; //copied from de-de
 $text['description-username']['de-de'] = "Geben Sie den Datenbank Benutzernamen an.";
 $text['description-username']['es-cl'] = "Ingrese el nombre de usuario de la base de datos.";
@@ -243,9 +243,9 @@ $text['description-username']['uk-ua'] = "Введіть ім’я корист�
 
 $text['description-type']['en-us'] = "Select the database type.";
 $text['description-type']['ar-eg'] = "إختر نوع قاعدة البيانات";
-$text['description-type']['de-at'] = "Wählen Sie den Datenbank Typ.";
-$text['description-type']['de-ch'] = "Wählen Sie den Datenbank Typ."; //copied from de-at
-$text['description-type']['de-de'] = "Wählen Sie den Datenbank Typ."; //copied from de-at
+$text['description-type']['de-at'] = "Wählen Sie den Datenbank Typ."; //copied from de-de
+$text['description-type']['de-ch'] = "Wählen Sie den Datenbank Typ."; //copied from de-de
+$text['description-type']['de-de'] = "Wählen Sie den Datenbank Typ.";
 $text['description-type']['es-cl'] = "Seleccione el tipo de base de datos";
 $text['description-type']['es-mx'] = "Seleccione el tipo de base de datos"; //copied from es-cl
 $text['description-type']['fr-ca'] = "Choisir le type de Base de données."; //copied from fr-fr
@@ -263,7 +263,7 @@ $text['description-type']['uk-ua'] = "Виберіть тип бази дани�
 
 $text['description-port']['en-us'] = "Enter the port number.";
 $text['description-port']['ar-eg'] = "أدخل رقم المنفذ";
-$text['description-port']['de-at'] = "Geben Sie die Port Nummer an.";
+$text['description-port']['de-at'] = "Geben Sie die Port Nummer an."; //copied from de-de
 $text['description-port']['de-ch'] = "Geben Sie die Port Nummer an."; //copied from de-de
 $text['description-port']['de-de'] = "Geben Sie die Port Nummer an.";
 $text['description-port']['es-cl'] = "Ingrese el número del puerto.";
@@ -283,7 +283,7 @@ $text['description-port']['uk-ua'] = "Введіть номер порта";
 
 $text['description-path']['en-us'] = "Enter the database file path (SQLite only).";
 $text['description-path']['ar-eg'] = "";
-$text['description-path']['de-at'] = "Geben Sie den Datenbank Pfad an (nur für SQLite).";
+$text['description-path']['de-at'] = "Geben Sie den Datenbank Pfad an (nur für SQLite)."; //copied from de-de
 $text['description-path']['de-ch'] = "Geben Sie den Datenbank Pfad an (nur für SQLite)."; //copied from de-de
 $text['description-path']['de-de'] = "Geben Sie den Datenbank Pfad an (nur für SQLite).";
 $text['description-path']['es-cl'] = "Ingrese la ruta al archivo de datos (solo SQLite).";
@@ -303,7 +303,7 @@ $text['description-path']['uk-ua'] = "Вкажіть шлях до файлу б
 
 $text['description-password']['en-us'] = "Enter the database password.";
 $text['description-password']['ar-eg'] = "أدخل الرقم السري الخاص بقاعدة البيانات";
-$text['description-password']['de-at'] = "Geben Sie das Datenbank Passwort ein.";
+$text['description-password']['de-at'] = "Geben Sie das Datenbank Passwort ein."; //copied from de-de
 $text['description-password']['de-ch'] = "Geben Sie das Datenbank Passwort ein."; //copied from de-de
 $text['description-password']['de-de'] = "Geben Sie das Datenbank Passwort ein.";
 $text['description-password']['es-cl'] = "Ingrese la contraseña de la base de datos.";
@@ -323,7 +323,7 @@ $text['description-password']['uk-ua'] = "Введіть пароль бази �
 
 $text['description-name']['en-us'] = "Enter the database name.";
 $text['description-name']['ar-eg'] = "أدخل إسم قاعدة البيانات";
-$text['description-name']['de-at'] = "Geben Sie den Namen der Datenbank an";
+$text['description-name']['de-at'] = "Geben Sie den Namen der Datenbank an"; //copied from de-de
 $text['description-name']['de-ch'] = "Geben Sie den Namen der Datenbank an"; //copied from de-de
 $text['description-name']['de-de'] = "Geben Sie den Namen der Datenbank an";
 $text['description-name']['es-cl'] = "Ingrese el nombre de la base de datos.";
@@ -343,7 +343,7 @@ $text['description-name']['uk-ua'] = "Введіть ім'я бази даних
 
 $text['description-host']['en-us'] = "Enter the host name.";
 $text['description-host']['ar-eg'] = "أدخل إسم المضيف";
-$text['description-host']['de-at'] = "Geben Sie den Host Namen ein.";
+$text['description-host']['de-at'] = "Geben Sie den Host Namen ein."; //copied from de-de
 $text['description-host']['de-ch'] = "Geben Sie den Host Namen ein."; //copied from de-de
 $text['description-host']['de-de'] = "Geben Sie den Host Namen ein.";
 $text['description-host']['es-cl'] = "Ingrese el nombre de host";
@@ -363,9 +363,9 @@ $text['description-host']['uk-ua'] = "Введіть ім'я хоста.";
 
 $text['description-driver']['en-us'] = "Select the database driver.";
 $text['description-driver']['ar-eg'] = "";
-$text['description-driver']['de-at'] = "Wählen Sie den Datenbank Treiber.";
-$text['description-driver']['de-ch'] = "Wählen Sie den Datenbank Treiber."; //copied from de-at
-$text['description-driver']['de-de'] = "Wählen Sie den Datenbank Treiber."; //copied from de-at
+$text['description-driver']['de-at'] = "Wählen Sie den Datenbank Treiber."; //copied from de-de
+$text['description-driver']['de-ch'] = "Wählen Sie den Datenbank Treiber."; //copied from de-de
+$text['description-driver']['de-de'] = "Wählen Sie den Datenbank Treiber.";
 $text['description-driver']['es-cl'] = "Seleccione un controlador de base de datos.";
 $text['description-driver']['es-mx'] = "Seleccione un controlador de base de datos."; //copied from es-cl
 $text['description-driver']['fr-ca'] = "Choisir le driver de la Base de données."; //copied from fr-fr
@@ -374,7 +374,7 @@ $text['description-driver']['he-il'] = "";
 $text['description-driver']['it-it'] = "Seleziona il driver del database.";
 $text['description-driver']['nl-nl'] = "";
 $text['description-driver']['pl-pl'] = "Wybierz sterownik bazy danych.";
-$text['description-driver']['pt-br'] = "Escolha o driver da base de dados";
+$text['description-driver']['pt-br'] = "Escolha o driver da base de dados"; //copied from pt-pt
 $text['description-driver']['pt-pt'] = "Escolha o driver da base de dados";
 $text['description-driver']['ro-ro'] = "";
 $text['description-driver']['ru-ru'] = "Выберите драйвер базы данных.";
@@ -383,7 +383,7 @@ $text['description-driver']['uk-ua'] = "Виберіть драйвер бази
 
 $text['description-databases']['en-us'] = "Database information.";
 $text['description-databases']['ar-eg'] = "بيانات قاعدة البيانات";
-$text['description-databases']['de-at'] = "Datenbank Information.";
+$text['description-databases']['de-at'] = "Datenbank Information."; //copied from de-de
 $text['description-databases']['de-ch'] = "Datenbank Information."; //copied from de-de
 $text['description-databases']['de-de'] = "Datenbank Information.";
 $text['description-databases']['es-cl'] = "Información de bases de datos.";
@@ -403,7 +403,7 @@ $text['description-databases']['uk-ua'] = "Інформація про базу 
 
 $text['description-database-edit']['en-us'] = "Database connection information.";
 $text['description-database-edit']['ar-eg'] = "بيانات الإتصال الخاص بقاعدة البيانات";
-$text['description-database-edit']['de-at'] = "Datenbank Verbindungs Information.";
+$text['description-database-edit']['de-at'] = "Datenbank Verbindungs Information."; //copied from de-de
 $text['description-database-edit']['de-ch'] = "Datenbank Verbindungs Information."; //copied from de-de
 $text['description-database-edit']['de-de'] = "Datenbank Verbindungs Information.";
 $text['description-database-edit']['es-cl'] = "Información de conexión a base de datos.";
@@ -423,7 +423,7 @@ $text['description-database-edit']['uk-ua'] = "інформація про пі�
 
 $text['description-database-add']['en-us'] = "Database connection information.";
 $text['description-database-add']['ar-eg'] = "بيانات الإتصال الخاص بقاعدة البيانات";
-$text['description-database-add']['de-at'] = "Datenbank Verbindungs Information.";
+$text['description-database-add']['de-at'] = "Datenbank Verbindungs Information."; //copied from de-de
 $text['description-database-add']['de-ch'] = "Datenbank Verbindungs Information."; //copied from de-de
 $text['description-database-add']['de-de'] = "Datenbank Verbindungs Information.";
 $text['description-database-add']['es-cl'] = "Información de conexión a base de datos.";
