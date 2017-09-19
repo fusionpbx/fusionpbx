@@ -1,9 +1,9 @@
 <?php
-#This file was last reorganized on 12th of June 2017 10:57:40 AM UTC
+#This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['title-conferences']['en-us'] = "Conferences";
 $text['title-conferences']['ar-eg'] = "";
-$text['title-conferences']['de-at'] = "Konferenzen";
+$text['title-conferences']['de-at'] = "Konferenzen"; //copied from de-de
 $text['title-conferences']['de-ch'] = "Konferenzen"; //copied from de-de
 $text['title-conferences']['de-de'] = "Konferenzen";
 $text['title-conferences']['es-cl'] = "Conferencias";
@@ -23,7 +23,7 @@ $text['title-conferences']['uk-ua'] = "";
 
 $text['description']['en-us'] = "Conferences is used to setup conference rooms with a name, description, and optional pin number.";
 $text['description']['ar-eg'] = "";
-$text['description']['de-at'] = "Konferenzen wird verwendet, um KOnferenzräume mit einem Namen, Beschreibung und optionaler PIN zu erstellen.";
+$text['description']['de-at'] = "Konferenzen wird verwendet, um KOnferenzräume mit einem Namen, Beschreibung und optionaler PIN zu erstellen."; //copied from de-de
 $text['description']['de-ch'] = "Konferenzen wird verwendet, um KOnferenzräume mit einem Namen, Beschreibung und optionaler PIN zu erstellen."; //copied from de-de
 $text['description']['de-de'] = "Konferenzen wird verwendet, um KOnferenzräume mit einem Namen, Beschreibung und optionaler PIN zu erstellen.";
 $text['description']['es-cl'] = "Las conferencias son usadas para configurar salas con un nombre, descripción y un número de acceso pin (opcional).";
@@ -43,7 +43,7 @@ $text['description']['uk-ua'] = "";
 
 $text['label-active_conferences']['en-us'] = "Active Conferences";
 $text['label-active_conferences']['ar-eg'] = "";
-$text['label-active_conferences']['de-at'] = "Aktive Konferenzen";
+$text['label-active_conferences']['de-at'] = "Aktive Konferenzen"; //copied from de-de
 $text['label-active_conferences']['de-ch'] = "Aktive Konferenzen"; //copied from de-de
 $text['label-active_conferences']['de-de'] = "Aktive Konferenzen";
 $text['label-active_conferences']['es-cl'] = "Conferencias Activas";
@@ -63,7 +63,7 @@ $text['label-active_conferences']['uk-ua'] = "";
 
 $text['button-view_active']['en-us'] = "View Active";
 $text['button-view_active']['ar-eg'] = "";
-$text['button-view_active']['de-at'] = "Aktive anzeigen";
+$text['button-view_active']['de-at'] = "Aktive anzeigen"; //copied from de-de
 $text['button-view_active']['de-ch'] = "Aktive anzeigen"; //copied from de-de
 $text['button-view_active']['de-de'] = "Aktive anzeigen";
 $text['button-view_active']['es-cl'] = "Ver Activo";
@@ -83,7 +83,7 @@ $text['button-view_active']['uk-ua'] = "";
 
 $text['table-name']['en-us'] = "Name";
 $text['table-name']['ar-eg'] = "";
-$text['table-name']['de-at'] = "Name";
+$text['table-name']['de-at'] = "Name"; //copied from de-de
 $text['table-name']['de-ch'] = "Name"; //copied from de-de
 $text['table-name']['de-de'] = "Name";
 $text['table-name']['es-cl'] = "Nombre";
@@ -103,7 +103,7 @@ $text['table-name']['uk-ua'] = "";
 
 $text['table-extension']['en-us'] = "Extension";
 $text['table-extension']['ar-eg'] = "";
-$text['table-extension']['de-at'] = "Nebenstelle";
+$text['table-extension']['de-at'] = "Nebenstelle"; //copied from de-de
 $text['table-extension']['de-ch'] = "Nebenstelle"; //copied from de-de
 $text['table-extension']['de-de'] = "Nebenstelle";
 $text['table-extension']['es-cl'] = "Extensión";
@@ -123,7 +123,7 @@ $text['table-extension']['uk-ua'] = "";
 
 $text['table-profile']['en-us'] = "Profile";
 $text['table-profile']['ar-eg'] = "";
-$text['table-profile']['de-at'] = "Profile";
+$text['table-profile']['de-at'] = "Profile"; //copied from de-de
 $text['table-profile']['de-ch'] = "Profile"; //copied from de-de
 $text['table-profile']['de-de'] = "Profile";
 $text['table-profile']['es-cl'] = "Perfil";
@@ -143,7 +143,7 @@ $text['table-profile']['uk-ua'] = "";
 
 $text['table-order']['en-us'] = "Order";
 $text['table-order']['ar-eg'] = "";
-$text['table-order']['de-at'] = "Reihenfolge";
+$text['table-order']['de-at'] = "Reihenfolge"; //copied from de-de
 $text['table-order']['de-ch'] = "Reihenfolge"; //copied from de-de
 $text['table-order']['de-de'] = "Reihenfolge";
 $text['table-order']['es-cl'] = "Orden";
@@ -163,7 +163,7 @@ $text['table-order']['uk-ua'] = "";
 
 $text['table-enabled']['en-us'] = "Enabled";
 $text['table-enabled']['ar-eg'] = "";
-$text['table-enabled']['de-at'] = "Aktiviert";
+$text['table-enabled']['de-at'] = "Aktiviert"; //copied from de-de
 $text['table-enabled']['de-ch'] = "Aktiviert"; //copied from de-de
 $text['table-enabled']['de-de'] = "Aktiviert";
 $text['table-enabled']['es-cl'] = "Activo";
@@ -183,7 +183,7 @@ $text['table-enabled']['uk-ua'] = "";
 
 $text['table-description']['en-us'] = "Description";
 $text['table-description']['ar-eg'] = "";
-$text['table-description']['de-at'] = "Beschreibung";
+$text['table-description']['de-at'] = "Beschreibung"; //copied from de-de
 $text['table-description']['de-ch'] = "Beschreibung"; //copied from de-de
 $text['table-description']['de-de'] = "Beschreibung";
 $text['table-description']['es-cl'] = "Descripción";
@@ -203,7 +203,7 @@ $text['table-description']['uk-ua'] = "";
 
 $text['confirm-add']['en-us'] = "Add Complete";
 $text['confirm-add']['ar-eg'] = "";
-$text['confirm-add']['de-at'] = "Erfolgreich hinzugefügt";
+$text['confirm-add']['de-at'] = "Erfolgreich hinzugefügt"; //copied from de-de
 $text['confirm-add']['de-ch'] = "Erfolgreich hinzugefügt"; //copied from de-de
 $text['confirm-add']['de-de'] = "Erfolgreich hinzugefügt";
 $text['confirm-add']['es-cl'] = "Agregado Completo";
@@ -223,7 +223,7 @@ $text['confirm-add']['uk-ua'] = "";
 
 $text['confirm-update']['en-us'] = "Update Complete";
 $text['confirm-update']['ar-eg'] = "";
-$text['confirm-update']['de-at'] = "Aktualisierung durchgeführt";
+$text['confirm-update']['de-at'] = "Aktualisierung durchgeführt"; //copied from de-de
 $text['confirm-update']['de-ch'] = "Aktualisierung durchgeführt"; //copied from de-de
 $text['confirm-update']['de-de'] = "Aktualisierung durchgeführt";
 $text['confirm-update']['es-cl'] = "Actualización Completa";
@@ -243,7 +243,7 @@ $text['confirm-update']['uk-ua'] = "";
 
 $text['confirm-name']['en-us'] = "Please provide: Name";
 $text['confirm-name']['ar-eg'] = "";
-$text['confirm-name']['de-at'] = "Bitte angeben: Name";
+$text['confirm-name']['de-at'] = "Bitte angeben: Name"; //copied from de-de
 $text['confirm-name']['de-ch'] = "Bitte angeben: Name"; //copied from de-de
 $text['confirm-name']['de-de'] = "Bitte angeben: Name";
 $text['confirm-name']['es-cl'] = "Por favor, indique: Nombre";
@@ -263,7 +263,7 @@ $text['confirm-name']['uk-ua'] = "";
 
 $text['confirm-extension']['en-us'] = "Please provide: Extension";
 $text['confirm-extension']['ar-eg'] = "";
-$text['confirm-extension']['de-at'] = "Bitte angeben: Nebenstelle";
+$text['confirm-extension']['de-at'] = "Bitte angeben: Nebenstelle"; //copied from de-de
 $text['confirm-extension']['de-ch'] = "Bitte angeben: Nebenstelle"; //copied from de-de
 $text['confirm-extension']['de-de'] = "Bitte angeben: Nebenstelle";
 $text['confirm-extension']['es-cl'] = "Por favor, indique: Extensión";
@@ -283,7 +283,7 @@ $text['confirm-extension']['uk-ua'] = "";
 
 $text['confirm-profile']['en-us'] = "Please provide: Profile";
 $text['confirm-profile']['ar-eg'] = "";
-$text['confirm-profile']['de-at'] = "Bitte angeben: Profil";
+$text['confirm-profile']['de-at'] = "Bitte angeben: Profil"; //copied from de-de
 $text['confirm-profile']['de-ch'] = "Bitte angeben: Profil"; //copied from de-de
 $text['confirm-profile']['de-de'] = "Bitte angeben: Profil";
 $text['confirm-profile']['es-cl'] = "Por favor, indique: Perfil";
@@ -303,7 +303,7 @@ $text['confirm-profile']['uk-ua'] = "";
 
 $text['confirm-enabled']['en-us'] = "Please provide: Enabled";
 $text['confirm-enabled']['ar-eg'] = "";
-$text['confirm-enabled']['de-at'] = "Bitte angeben: Aktiviert";
+$text['confirm-enabled']['de-at'] = "Bitte angeben: Aktiviert"; //copied from de-de
 $text['confirm-enabled']['de-ch'] = "Bitte angeben: Aktiviert"; //copied from de-de
 $text['confirm-enabled']['de-de'] = "Bitte angeben: Aktiviert";
 $text['confirm-enabled']['es-cl'] = "Por favor, indique: Activado";
@@ -323,7 +323,7 @@ $text['confirm-enabled']['uk-ua'] = "";
 
 $text['label-conference-add']['en-us'] = "Conferences Add";
 $text['label-conference-add']['ar-eg'] = "";
-$text['label-conference-add']['de-at'] = "Konferenz hinzufügen";
+$text['label-conference-add']['de-at'] = "Konferenz hinzufügen"; //copied from de-de
 $text['label-conference-add']['de-ch'] = "Konferenz hinzufügen"; //copied from de-de
 $text['label-conference-add']['de-de'] = "Konferenz hinzufügen";
 $text['label-conference-add']['es-cl'] = "Agregar Conferencias";
@@ -343,7 +343,7 @@ $text['label-conference-add']['uk-ua'] = "";
 
 $text['label-conference-edit']['en-us'] = "Conferences Edit";
 $text['label-conference-edit']['ar-eg'] = "";
-$text['label-conference-edit']['de-at'] = "Konferenz bearbeiten";
+$text['label-conference-edit']['de-at'] = "Konferenz bearbeiten"; //copied from de-de
 $text['label-conference-edit']['de-ch'] = "Konferenz bearbeiten"; //copied from de-de
 $text['label-conference-edit']['de-de'] = "Konferenz bearbeiten";
 $text['label-conference-edit']['es-cl'] = "Edición de Conferencias";
@@ -363,7 +363,7 @@ $text['label-conference-edit']['uk-ua'] = "";
 
 $text['label-extension']['en-us'] = "Extension";
 $text['label-extension']['ar-eg'] = "";
-$text['label-extension']['de-at'] = "Nebenstelle";
+$text['label-extension']['de-at'] = "Nebenstelle"; //copied from de-de
 $text['label-extension']['de-ch'] = "Nebenstelle"; //copied from de-de
 $text['label-extension']['de-de'] = "Nebenstelle";
 $text['label-extension']['es-cl'] = "Extensión";
@@ -383,7 +383,7 @@ $text['label-extension']['uk-ua'] = "";
 
 $text['description-name']['en-us'] = "Enter the conference name.";
 $text['description-name']['ar-eg'] = "";
-$text['description-name']['de-at'] = "Geben Sie einen Namen für die Konferenz ein.";
+$text['description-name']['de-at'] = "Geben Sie einen Namen für die Konferenz ein."; //copied from de-de
 $text['description-name']['de-ch'] = "Geben Sie einen Namen für die Konferenz ein."; //copied from de-de
 $text['description-name']['de-de'] = "Geben Sie einen Namen für die Konferenz ein.";
 $text['description-name']['es-cl'] = "Ingrese el nombre de la conferencia.";
@@ -403,7 +403,7 @@ $text['description-name']['uk-ua'] = "";
 
 $text['description-extension']['en-us'] = "Enter the conference extension number.";
 $text['description-extension']['ar-eg'] = "";
-$text['description-extension']['de-at'] = "Geben Sie die Nebenstelle der Konferenz an.";
+$text['description-extension']['de-at'] = "Geben Sie die Nebenstelle der Konferenz an."; //copied from de-de
 $text['description-extension']['de-ch'] = "Geben Sie die Nebenstelle der Konferenz an."; //copied from de-de
 $text['description-extension']['de-de'] = "Geben Sie die Nebenstelle der Konferenz an.";
 $text['description-extension']['es-cl'] = "Ingrese el número de extensión de la conferencia";
@@ -423,7 +423,7 @@ $text['description-extension']['uk-ua'] = "";
 
 $text['description-3']['en-us'] = "to monitor and interact with the conference room.";
 $text['description-3']['ar-eg'] = "";
-$text['description-3']['de-at'] = "um eine Konferenz zu überwachen und zu steuern.";
+$text['description-3']['de-at'] = "um eine Konferenz zu überwachen und zu steuern."; //copied from de-de
 $text['description-3']['de-ch'] = "um eine Konferenz zu überwachen und zu steuern."; //copied from de-de
 $text['description-3']['de-de'] = "um eine Konferenz zu überwachen und zu steuern.";
 $text['description-3']['es-cl'] = "para monitorear e interactuar con la sala de conferencia.";
@@ -443,7 +443,7 @@ $text['description-3']['uk-ua'] = "";
 
 $text['label-pin']['en-us'] = "Pin Number";
 $text['label-pin']['ar-eg'] = "";
-$text['label-pin']['de-at'] = "PIN Nummer";
+$text['label-pin']['de-at'] = "PIN Nummer"; //copied from de-de
 $text['label-pin']['de-ch'] = "PIN Nummer"; //copied from de-de
 $text['label-pin']['de-de'] = "PIN Nummer";
 $text['label-pin']['es-cl'] = "Número Pin";
@@ -463,7 +463,7 @@ $text['label-pin']['uk-ua'] = "";
 
 $text['description-pin']['en-us'] = "Optional pin number to secure access to the conference.";
 $text['description-pin']['ar-eg'] = "";
-$text['description-pin']['de-at'] = "Optionale PIN Nummer um den Zugriff auf die Konferenz ab zu sichern.)";
+$text['description-pin']['de-at'] = "Optionale PIN Nummer um den Zugriff auf die Konferenz ab zu sichern.)"; //copied from de-de
 $text['description-pin']['de-ch'] = "Optionale PIN Nummer um den Zugriff auf die Konferenz ab zu sichern.)"; //copied from de-de
 $text['description-pin']['de-de'] = "Optionale PIN Nummer um den Zugriff auf die Konferenz ab zu sichern.)";
 $text['description-pin']['es-cl'] = "Número de pin opcional para garantizar el acceso a la conferencia.";
@@ -483,7 +483,7 @@ $text['description-pin']['uk-ua'] = "";
 
 $text['confirm-delete-2']['en-us'] = "Do you really want to delete this?";
 $text['confirm-delete-2']['ar-eg'] = "";
-$text['confirm-delete-2']['de-at'] = "Wollen Sie das wirklich löschen?";
+$text['confirm-delete-2']['de-at'] = "Wollen Sie das wirklich löschen?"; //copied from de-de
 $text['confirm-delete-2']['de-ch'] = "Wollen Sie das wirklich löschen?"; //copied from de-de
 $text['confirm-delete-2']['de-de'] = "Wollen Sie das wirklich löschen?";
 $text['confirm-delete-2']['es-cl'] = "¿Realmente desea eliminar esto?";
@@ -503,7 +503,7 @@ $text['confirm-delete-2']['uk-ua'] = "";
 
 $text['description-info']['en-us'] = "Enter the description.";
 $text['description-info']['ar-eg'] = "";
-$text['description-info']['de-at'] = "Geben Sie die Beschreibung ein.";
+$text['description-info']['de-at'] = "Geben Sie die Beschreibung ein."; //copied from de-de
 $text['description-info']['de-ch'] = "Geben Sie die Beschreibung ein."; //copied from de-de
 $text['description-info']['de-de'] = "Geben Sie die Beschreibung ein.";
 $text['description-info']['es-cl'] = "Ingrese una descripción.";
@@ -523,7 +523,7 @@ $text['description-info']['uk-ua'] = "";
 
 $text['description-conference-enable']['en-us'] = "Select whether to enable or disable the conference.";
 $text['description-conference-enable']['ar-eg'] = "";
-$text['description-conference-enable']['de-at'] = "Wählen Sie, ob die Konferenz ein- oder ausgeschaltet werden soll.";
+$text['description-conference-enable']['de-at'] = "Wählen Sie, ob die Konferenz ein- oder ausgeschaltet werden soll."; //copied from de-de
 $text['description-conference-enable']['de-ch'] = "Wählen Sie, ob die Konferenz ein- oder ausgeschaltet werden soll."; //copied from de-de
 $text['description-conference-enable']['de-de'] = "Wählen Sie, ob die Konferenz ein- oder ausgeschaltet werden soll.";
 $text['description-conference-enable']['es-cl'] = "Indique si desea activar o desactivar la conferencia.";
@@ -543,7 +543,7 @@ $text['description-conference-enable']['uk-ua'] = "";
 
 $text['description-order']['en-us'] = "Enter the order number.";
 $text['description-order']['ar-eg'] = "";
-$text['description-order']['de-at'] = "Geben Sie die Nummer für die Reihenfolge an.";
+$text['description-order']['de-at'] = "Geben Sie die Nummer für die Reihenfolge an."; //copied from de-de
 $text['description-order']['de-ch'] = "Geben Sie die Nummer für die Reihenfolge an."; //copied from de-de
 $text['description-order']['de-de'] = "Geben Sie die Nummer für die Reihenfolge an.";
 $text['description-order']['es-cl'] = "Ingrese el número de orden.";
@@ -563,7 +563,7 @@ $text['description-order']['uk-ua'] = "";
 
 $text['description-user-add']['en-us'] = "Assign the users that are can manage this conference extension.";
 $text['description-user-add']['ar-eg'] = "";
-$text['description-user-add']['de-at'] = "Wählen Sie die Benutzer aus, welche die Konferenz administrieren können.";
+$text['description-user-add']['de-at'] = "Wählen Sie die Benutzer aus, welche die Konferenz administrieren können."; //copied from de-de
 $text['description-user-add']['de-ch'] = "Wählen Sie die Benutzer aus, welche die Konferenz administrieren können."; //copied from de-de
 $text['description-user-add']['de-de'] = "Wählen Sie die Benutzer aus, welche die Konferenz administrieren können.";
 $text['description-user-add']['es-cl'] = "Asignar usuarios para que puedan administrar esta extensión de conferencia.";
@@ -583,7 +583,7 @@ $text['description-user-add']['uk-ua'] = "";
 
 $text['description-profile']['en-us'] = "Conference Profile is a collection of settings for the conference.";
 $text['description-profile']['ar-eg'] = "";
-$text['description-profile']['de-at'] = "Ein Profil ist eine Zusammenfassung von Parametern für die Konferenz.";
+$text['description-profile']['de-at'] = "Ein Profil ist eine Zusammenfassung von Parametern für die Konferenz."; //copied from de-de
 $text['description-profile']['de-ch'] = "Ein Profil ist eine Zusammenfassung von Parametern für die Konferenz."; //copied from de-de
 $text['description-profile']['de-de'] = "Ein Profil ist eine Zusammenfassung von Parametern für die Konferenz.";
 $text['description-profile']['es-cl'] = "El perfil de conferencia es una colección de ajustes para la conferencia.";
@@ -603,7 +603,7 @@ $text['description-profile']['uk-ua'] = "";
 
 $text['description-flags']['en-us'] = "Optional conference flags. examples: mute|deaf|waste|moderator";
 $text['description-flags']['ar-eg'] = "";
-$text['description-flags']['de-at'] = "Optionale Attribute für die Konferenz. Beispiele: mute|deaf|waste|moderator";
+$text['description-flags']['de-at'] = "Optionale Attribute für die Konferenz. Beispiele: mute|deaf|waste|moderator"; //copied from de-de
 $text['description-flags']['de-ch'] = "Optionale Attribute für die Konferenz. Beispiele: mute|deaf|waste|moderator"; //copied from de-de
 $text['description-flags']['de-de'] = "Optionale Attribute für die Konferenz. Beispiele: mute|deaf|waste|moderator";
 $text['description-flags']['es-cl'] = "Flags opcionales de conferencia. Ejemplo: mute|deaf|waste|moderator";
@@ -623,7 +623,7 @@ $text['description-flags']['uk-ua'] = "";
 
 $text['label-user_list']['en-us'] = "User List";
 $text['label-user_list']['ar-eg'] = "";
-$text['label-user_list']['de-at'] = "Benutzerliste";
+$text['label-user_list']['de-at'] = "Benutzerliste"; //copied from de-de
 $text['label-user_list']['de-ch'] = "Benutzerliste"; //copied from de-de
 $text['label-user_list']['de-de'] = "Benutzerliste";
 $text['label-user_list']['es-cl'] = "Lista de usuarios";
@@ -643,7 +643,7 @@ $text['label-user_list']['uk-ua'] = "";
 
 $text['label-flags']['en-us'] = "Flags";
 $text['label-flags']['ar-eg'] = "";
-$text['label-flags']['de-at'] = "Attribute";
+$text['label-flags']['de-at'] = "Attribute"; //copied from de-de
 $text['label-flags']['de-ch'] = "Attribute"; //copied from de-de
 $text['label-flags']['de-de'] = "Attribute";
 $text['label-flags']['es-cl'] = "Banderas";

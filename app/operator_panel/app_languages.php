@@ -1,9 +1,9 @@
 <?php
-#This file was last reorganized on 12th of June 2017 10:57:40 AM UTC
+#This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['title-operator_panel']['en-us'] = "Operator Panel";
 $text['title-operator_panel']['ar-eg'] = "";
-$text['title-operator_panel']['de-at'] = "Bedienfeld";
+$text['title-operator_panel']['de-at'] = "Bedienfeld"; //copied from de-de
 $text['title-operator_panel']['de-ch'] = "Bedienfeld"; //copied from de-de
 $text['title-operator_panel']['de-de'] = "Bedienfeld";
 $text['title-operator_panel']['es-cl'] = "Panel de Operador";
@@ -23,7 +23,7 @@ $text['title-operator_panel']['uk-ua'] = "ÐŸÐ°Ð½ÐµÐ»ÑŒ Ð¾Ð¿Ðµ�
 
 $text['label-status_on_demand']['en-us'] = "On Demand";
 $text['label-status_on_demand']['ar-eg'] = "";
-$text['label-status_on_demand']['de-at'] = "Bei Bedarf";
+$text['label-status_on_demand']['de-at'] = "Bei Bedarf"; //copied from de-de
 $text['label-status_on_demand']['de-ch'] = "Bei Bedarf"; //copied from de-de
 $text['label-status_on_demand']['de-de'] = "Bei Bedarf";
 $text['label-status_on_demand']['es-cl'] = "A Pedido";
@@ -43,7 +43,7 @@ $text['label-status_on_demand']['uk-ua'] = "ÐÐ° Ð²Ð¸Ð¼Ð¾Ð³Ñƒ";
 
 $text['label-status_on_break']['en-us'] = "On Break";
 $text['label-status_on_break']['ar-eg'] = "";
-$text['label-status_on_break']['de-at'] = "In Pause";
+$text['label-status_on_break']['de-at'] = "In Pause"; //copied from de-de
 $text['label-status_on_break']['de-ch'] = "In Pause"; //copied from de-de
 $text['label-status_on_break']['de-de'] = "In Pause";
 $text['label-status_on_break']['es-cl'] = "En Pausa";
@@ -63,7 +63,7 @@ $text['label-status_on_break']['uk-ua'] = "ÐÐ° Ð¿ÐµÑ€ÐµÑ€Ð²Ñ
 
 $text['label-status_logged_out_or_unknown']['en-us'] = "Logged Out / Unknown";
 $text['label-status_logged_out_or_unknown']['ar-eg'] = "";
-$text['label-status_logged_out_or_unknown']['de-at'] = "Abgemeldet / Unbekannt";
+$text['label-status_logged_out_or_unknown']['de-at'] = "Abgemeldet / Unbekannt"; //copied from de-de
 $text['label-status_logged_out_or_unknown']['de-ch'] = "Abgemeldet / Unbekannt"; //copied from de-de
 $text['label-status_logged_out_or_unknown']['de-de'] = "Abgemeldet / Unbekannt";
 $text['label-status_logged_out_or_unknown']['es-cl'] = "Desconectado / Desconocido";
@@ -83,7 +83,7 @@ $text['label-status_logged_out_or_unknown']['uk-ua'] = "Ð’Ð¸Ð¹ÑˆÐ¾Ð�
 
 $text['label-status_logged_out']['en-us'] = "Logged Out";
 $text['label-status_logged_out']['ar-eg'] = "";
-$text['label-status_logged_out']['de-at'] = "Abgemeldet";
+$text['label-status_logged_out']['de-at'] = "Abgemeldet"; //copied from de-de
 $text['label-status_logged_out']['de-ch'] = "Abgemeldet"; //copied from de-de
 $text['label-status_logged_out']['de-de'] = "Abgemeldet";
 $text['label-status_logged_out']['es-cl'] = "Desconectado";
@@ -94,7 +94,7 @@ $text['label-status_logged_out']['he-il'] = "";
 $text['label-status_logged_out']['it-it'] = "Scollegato";
 $text['label-status_logged_out']['nl-nl'] = "";
 $text['label-status_logged_out']['pl-pl'] = "Wylogowany";
-$text['label-status_logged_out']['pt-br'] = "Desligado";
+$text['label-status_logged_out']['pt-br'] = "Desligado"; //copied from pt-pt
 $text['label-status_logged_out']['pt-pt'] = "Desligado";
 $text['label-status_logged_out']['ro-ro'] = "";
 $text['label-status_logged_out']['ru-ru'] = "Вышел из системы";
@@ -103,7 +103,7 @@ $text['label-status_logged_out']['uk-ua'] = "Ð’Ð¸Ð¹ÑˆÐ¾Ð²";
 
 $text['label-status_do_not_disturb']['en-us'] = "Do Not Disturb";
 $text['label-status_do_not_disturb']['ar-eg'] = "";
-$text['label-status_do_not_disturb']['de-at'] = "Bitte nicht Stören";
+$text['label-status_do_not_disturb']['de-at'] = "Bitte nicht Stören"; //copied from de-de
 $text['label-status_do_not_disturb']['de-ch'] = "Bitte nicht Stören"; //copied from de-de
 $text['label-status_do_not_disturb']['de-de'] = "Bitte nicht Stören";
 $text['label-status_do_not_disturb']['es-cl'] = "No Molestar";
@@ -123,7 +123,7 @@ $text['label-status_do_not_disturb']['uk-ua'] = "ÐÐµ Ñ‚ÑƒÑ€Ð±Ñƒ
 
 $text['label-status_available_on_demand']['en-us'] = "Available (On Demand)";
 $text['label-status_available_on_demand']['ar-eg'] = "";
-$text['label-status_available_on_demand']['de-at'] = "Verfügbar (Bei Bedarf)";
+$text['label-status_available_on_demand']['de-at'] = "Verfügbar (Bei Bedarf)"; //copied from de-de
 $text['label-status_available_on_demand']['de-ch'] = "Verfügbar (Bei Bedarf)"; //copied from de-de
 $text['label-status_available_on_demand']['de-de'] = "Verfügbar (Bei Bedarf)";
 $text['label-status_available_on_demand']['es-cl'] = "Disponible (A Pedido)";
@@ -143,7 +143,7 @@ $text['label-status_available_on_demand']['uk-ua'] = "Ð”Ð¾ÑÑ‚ÑƒÐ¿
 
 $text['label-status_available']['en-us'] = "Available";
 $text['label-status_available']['ar-eg'] = "";
-$text['label-status_available']['de-at'] = "Verfügbar";
+$text['label-status_available']['de-at'] = "Verfügbar"; //copied from de-de
 $text['label-status_available']['de-ch'] = "Verfügbar"; //copied from de-de
 $text['label-status_available']['de-de'] = "Verfügbar";
 $text['label-status_available']['es-cl'] = "Disponible";
@@ -163,7 +163,7 @@ $text['label-status_available']['uk-ua'] = "Ð”Ð¾ÑÑ‚ÑƒÐ¿Ð½Ð¸Ð
 
 $text['label-refresh_pause']['en-us'] = "Pause Refresh";
 $text['label-refresh_pause']['ar-eg'] = "";
-$text['label-refresh_pause']['de-at'] = "Seite neu laden deaktivieren";
+$text['label-refresh_pause']['de-at'] = "Seite neu laden deaktivieren"; //copied from de-de
 $text['label-refresh_pause']['de-ch'] = "Seite neu laden deaktivieren"; //copied from de-de
 $text['label-refresh_pause']['de-de'] = "Seite neu laden deaktivieren";
 $text['label-refresh_pause']['es-cl'] = "Actualizar Pausa";
@@ -183,7 +183,7 @@ $text['label-refresh_pause']['uk-ua'] = "ÐŸÑ€Ð¸Ð¿Ð¸Ð½Ð¸Ñ‚Ð¸ 
 
 $text['label-refresh_enable']['en-us'] = "Enable Refresh";
 $text['label-refresh_enable']['ar-eg'] = "";
-$text['label-refresh_enable']['de-at'] = "Seite neu laden aktivieren";
+$text['label-refresh_enable']['de-at'] = "Seite neu laden aktivieren"; //copied from de-de
 $text['label-refresh_enable']['de-ch'] = "Seite neu laden aktivieren"; //copied from de-de
 $text['label-refresh_enable']['de-de'] = "Seite neu laden aktivieren";
 $text['label-refresh_enable']['es-cl'] = "Activar Actualizar";
@@ -203,7 +203,7 @@ $text['label-refresh_enable']['uk-ua'] = "Ð’ÐºÐ»ÑŽÑ‡Ð¸Ñ‚Ð¸ Ð
 
 $text['label-recording']['en-us'] = "Recording";
 $text['label-recording']['ar-eg'] = "";
-$text['label-recording']['de-at'] = "Aufnahme";
+$text['label-recording']['de-at'] = "Aufnahme"; //copied from de-de
 $text['label-recording']['de-ch'] = "Aufnahme"; //copied from de-de
 $text['label-recording']['de-de'] = "Aufnahme";
 $text['label-recording']['es-cl'] = "Grabación de Llamadas";
@@ -223,7 +223,7 @@ $text['label-recording']['uk-ua'] = "Ð—Ð°Ð¿Ð¸Ñ";
 
 $text['label-record']['en-us'] = "Record";
 $text['label-record']['ar-eg'] = "";
-$text['label-record']['de-at'] = "Aufnehmen";
+$text['label-record']['de-at'] = "Aufnehmen"; //copied from de-de
 $text['label-record']['de-ch'] = "Aufnehmen"; //copied from de-de
 $text['label-record']['de-de'] = "Aufnehmen";
 $text['label-record']['es-cl'] = "Registro";
@@ -234,7 +234,7 @@ $text['label-record']['he-il'] = "הקלטה";
 $text['label-record']['it-it'] = "Registra";
 $text['label-record']['nl-nl'] = "";
 $text['label-record']['pl-pl'] = "Nagrywanie";
-$text['label-record']['pt-br'] = "Registro";
+$text['label-record']['pt-br'] = "Registro"; //copied from pt-pt
 $text['label-record']['pt-pt'] = "Registro";
 $text['label-record']['ro-ro'] = "";
 $text['label-record']['ru-ru'] = "Воспроизведение";
@@ -243,7 +243,7 @@ $text['label-record']['uk-ua'] = "Ð—Ð°Ð¿Ð¸Ñ";
 
 $text['label-other_extensions']['en-us'] = "Other Extensions";
 $text['label-other_extensions']['ar-eg'] = "";
-$text['label-other_extensions']['de-at'] = "Andere Nebenstellen";
+$text['label-other_extensions']['de-at'] = "Andere Nebenstellen"; //copied from de-de
 $text['label-other_extensions']['de-ch'] = "Andere Nebenstellen"; //copied from de-de
 $text['label-other_extensions']['de-de'] = "Andere Nebenstellen";
 $text['label-other_extensions']['es-cl'] = "Otras Extensiones";
@@ -263,9 +263,9 @@ $text['label-other_extensions']['uk-ua'] = "Ð†Ð½ÑˆÑ– Ñ€Ð¾Ð·Ñˆ
 
 $text['label-no_extensions_found']['en-us'] = "No extensions found.";
 $text['label-no_extensions_found']['ar-eg'] = "";
-$text['label-no_extensions_found']['de-at'] = "Keine Nebenstellen gefunden.";
-$text['label-no_extensions_found']['de-ch'] = "Keine Nebenstellen gefunden."; //copied from de-at
-$text['label-no_extensions_found']['de-de'] = "Keine Nebenstellen gefunden."; //copied from de-at
+$text['label-no_extensions_found']['de-at'] = "Keine Nebenstellen gefunden."; //copied from de-de
+$text['label-no_extensions_found']['de-ch'] = "Keine Nebenstellen gefunden."; //copied from de-de
+$text['label-no_extensions_found']['de-de'] = "Keine Nebenstellen gefunden.";
 $text['label-no_extensions_found']['es-cl'] = "No hay extensiones encontrados.";
 $text['label-no_extensions_found']['es-mx'] = "No hay extensiones encontrados."; //copied from es-cl
 $text['label-no_extensions_found']['fr-ca'] = "Aucun extensions trouvés."; //copied from fr-fr
@@ -283,7 +283,7 @@ $text['label-no_extensions_found']['uk-ua'] = "ÐÐµ Ð·Ð½Ð°Ð¹Ð´Ðµ
 
 $text['label-kill']['en-us'] = "Kill";
 $text['label-kill']['ar-eg'] = "";
-$text['label-kill']['de-at'] = "Abwürgen";
+$text['label-kill']['de-at'] = "Abwürgen"; //copied from de-de
 $text['label-kill']['de-ch'] = "Abwürgen"; //copied from de-de
 $text['label-kill']['de-de'] = "Abwürgen";
 $text['label-kill']['es-cl'] = "Finalizar Llamada";
@@ -303,7 +303,7 @@ $text['label-kill']['uk-ua'] = "вбити";
 
 $text['label-eavesdrop']['en-us'] = "Eavesdrop";
 $text['label-eavesdrop']['ar-eg'] = "";
-$text['label-eavesdrop']['de-at'] = "Mithören";
+$text['label-eavesdrop']['de-at'] = "Mithören"; //copied from de-de
 $text['label-eavesdrop']['de-ch'] = "Mithören"; //copied from de-de
 $text['label-eavesdrop']['de-de'] = "Mithören";
 $text['label-eavesdrop']['es-cl'] = "Escuchar";
@@ -323,7 +323,7 @@ $text['label-eavesdrop']['uk-ua'] = "підслуховувати";
 
 $text['label-call_group']['en-us'] = "Call Group";
 $text['label-call_group']['ar-eg'] = "";
-$text['label-call_group']['de-at'] = "Rufgruppe";
+$text['label-call_group']['de-at'] = "Rufgruppe"; //copied from de-de
 $text['label-call_group']['de-ch'] = "Rufgruppe"; //copied from de-de
 $text['label-call_group']['de-de'] = "Rufgruppe";
 $text['label-call_group']['es-cl'] = "Llamar a Grupo";
@@ -334,7 +334,7 @@ $text['label-call_group']['he-il'] = "קבוצת חיוג";
 $text['label-call_group']['it-it'] = "Chiamata di Gruppo";
 $text['label-call_group']['nl-nl'] = "";
 $text['label-call_group']['pl-pl'] = "Grupa odbiorcÃ³w rozmowy";
-$text['label-call_group']['pt-br'] = "Grupo";
+$text['label-call_group']['pt-br'] = "Grupo"; //copied from pt-pt
 $text['label-call_group']['pt-pt'] = "Grupo";
 $text['label-call_group']['ro-ro'] = "";
 $text['label-call_group']['ru-ru'] = "Группы вызова";
@@ -343,7 +343,7 @@ $text['label-call_group']['uk-ua'] = "груповий виклик";
 
 $text['label-call_direction']['en-us'] = "Call Direction";
 $text['label-call_direction']['ar-eg'] = "";
-$text['label-call_direction']['de-at'] = "Anruf Richtung";
+$text['label-call_direction']['de-at'] = "Anruf Richtung"; //copied from de-de
 $text['label-call_direction']['de-ch'] = "Anruf Richtung"; //copied from de-de
 $text['label-call_direction']['de-de'] = "Anruf Richtung";
 $text['label-call_direction']['es-cl'] = "Dirección de la llamada";
@@ -363,7 +363,7 @@ $text['label-call_direction']['uk-ua'] = "напрямок виклику";
 
 $text['description-eavesdrop_destination']['en-us'] = "Select the Eavesdrop Destination";
 $text['description-eavesdrop_destination']['ar-eg'] = "";
-$text['description-eavesdrop_destination']['de-at'] = "Wählen Sie ein Ziel zum Mithören";
+$text['description-eavesdrop_destination']['de-at'] = "Wählen Sie ein Ziel zum Mithören"; //copied from de-de
 $text['description-eavesdrop_destination']['de-ch'] = "Wählen Sie ein Ziel zum Mithören"; //copied from de-de
 $text['description-eavesdrop_destination']['de-de'] = "Wählen Sie ein Ziel zum Mithören";
 $text['description-eavesdrop_destination']['es-cl'] = "Seleccione el Eavesdrop Destino";
@@ -383,7 +383,7 @@ $text['description-eavesdrop_destination']['uk-ua'] = "Виберіть пунк
 
 $text['button-all']['en-us'] = "All";
 $text['button-all']['ar-eg'] = "";
-$text['button-all']['de-at'] = "Alle";
+$text['button-all']['de-at'] = "Alle"; //copied from de-de
 $text['button-all']['de-ch'] = "Alle"; //copied from de-de
 $text['button-all']['de-de'] = "Alle";
 $text['button-all']['es-cl'] = "Todos";
@@ -394,7 +394,7 @@ $text['button-all']['he-il'] = "הכל";
 $text['button-all']['it-it'] = "Tutti";
 $text['button-all']['nl-nl'] = "";
 $text['button-all']['pl-pl'] = "Wszyscy";
-$text['button-all']['pt-br'] = "Tudo";
+$text['button-all']['pt-br'] = "Tudo"; //copied from pt-pt
 $text['button-all']['pt-pt'] = "Tudo";
 $text['button-all']['ro-ro'] = "";
 $text['button-all']['ru-ru'] = "Все";

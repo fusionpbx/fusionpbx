@@ -1,9 +1,9 @@
 <?php
-#This file was last reorganized on 12th of June 2017 10:57:40 AM UTC
+#This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['title-queues']['en-us'] = "Queues";
 $text['title-queues']['ar-eg'] = "";
-$text['title-queues']['de-at'] = "Warteschlangen";
+$text['title-queues']['de-at'] = "Warteschlangen"; //copied from de-de
 $text['title-queues']['de-ch'] = "Warteschlangen"; //copied from de-de
 $text['title-queues']['de-de'] = "Warteschlangen";
 $text['title-queues']['es-cl'] = "Colas";
@@ -23,7 +23,7 @@ $text['title-queues']['uk-ua'] = "";
 
 $text['title-queue_edit']['en-us'] = "Queue Edit";
 $text['title-queue_edit']['ar-eg'] = "";
-$text['title-queue_edit']['de-at'] = "Warteschlangen bearbeiten";
+$text['title-queue_edit']['de-at'] = "Warteschlangen bearbeiten"; //copied from de-de
 $text['title-queue_edit']['de-ch'] = "Warteschlangen bearbeiten"; //copied from de-de
 $text['title-queue_edit']['de-de'] = "Warteschlangen bearbeiten";
 $text['title-queue_edit']['es-cl'] = "Editar Cola";
@@ -43,7 +43,7 @@ $text['title-queue_edit']['uk-ua'] = "";
 
 $text['title-queue_detail_edit']['en-us'] = "Queue Detail Edit";
 $text['title-queue_detail_edit']['ar-eg'] = "";
-$text['title-queue_detail_edit']['de-at'] = "Warteschlangen Details bearbeiten";
+$text['title-queue_detail_edit']['de-at'] = "Warteschlangen Details bearbeiten"; //copied from de-de
 $text['title-queue_detail_edit']['de-ch'] = "Warteschlangen Details bearbeiten"; //copied from de-de
 $text['title-queue_detail_edit']['de-de'] = "Warteschlangen Details bearbeiten";
 $text['title-queue_detail_edit']['es-cl'] = "Editar Detalle de Cola";
@@ -63,7 +63,7 @@ $text['title-queue_detail_edit']['uk-ua'] = "";
 
 $text['title-queue_detail_add']['en-us'] = "Queue Detail Add";
 $text['title-queue_detail_add']['ar-eg'] = "";
-$text['title-queue_detail_add']['de-at'] = "Warteschlangen Details hinzufügen.";
+$text['title-queue_detail_add']['de-at'] = "Warteschlangen Details hinzufügen."; //copied from de-de
 $text['title-queue_detail_add']['de-ch'] = "Warteschlangen Details hinzufügen."; //copied from de-de
 $text['title-queue_detail_add']['de-de'] = "Warteschlangen Details hinzufügen.";
 $text['title-queue_detail_add']['es-cl'] = "Agregar Detalle de Cola";
@@ -83,7 +83,7 @@ $text['title-queue_detail_add']['uk-ua'] = "";
 
 $text['title-queue_add']['en-us'] = "Queue Add";
 $text['title-queue_add']['ar-eg'] = "";
-$text['title-queue_add']['de-at'] = "Warteschlange hinzufügen";
+$text['title-queue_add']['de-at'] = "Warteschlange hinzufügen"; //copied from de-de
 $text['title-queue_add']['de-ch'] = "Warteschlange hinzufügen"; //copied from de-de
 $text['title-queue_add']['de-de'] = "Warteschlange hinzufügen";
 $text['title-queue_add']['es-cl'] = "Cola Agregar";
@@ -103,7 +103,7 @@ $text['title-queue_add']['uk-ua'] = "";
 
 $text['option-true']['en-us'] = "True";
 $text['option-true']['ar-eg'] = "";
-$text['option-true']['de-at'] = "Ein";
+$text['option-true']['de-at'] = "Ein"; //copied from de-de
 $text['option-true']['de-ch'] = "Ein"; //copied from de-de
 $text['option-true']['de-de'] = "Ein";
 $text['option-true']['es-cl'] = "verdadero";
@@ -123,7 +123,7 @@ $text['option-true']['uk-ua'] = "";
 
 $text['option-parameter']['en-us'] = "Parameter";
 $text['option-parameter']['ar-eg'] = "";
-$text['option-parameter']['de-at'] = "Parameter";
+$text['option-parameter']['de-at'] = "Parameter"; //copied from de-de
 $text['option-parameter']['de-ch'] = "Parameter"; //copied from de-de
 $text['option-parameter']['de-de'] = "Parameter";
 $text['option-parameter']['es-cl'] = "Parámetro";
@@ -143,7 +143,7 @@ $text['option-parameter']['uk-ua'] = "";
 
 $text['option-false']['en-us'] = "False";
 $text['option-false']['ar-eg'] = "";
-$text['option-false']['de-at'] = "Aus";
+$text['option-false']['de-at'] = "Aus"; //copied from de-de
 $text['option-false']['de-ch'] = "Aus"; //copied from de-de
 $text['option-false']['de-de'] = "Aus";
 $text['option-false']['es-cl'] = "falso";
@@ -163,7 +163,7 @@ $text['option-false']['uk-ua'] = "";
 
 $text['option-condition']['en-us'] = "Condition";
 $text['option-condition']['ar-eg'] = "";
-$text['option-condition']['de-at'] = "Bedingung";
+$text['option-condition']['de-at'] = "Bedingung"; //copied from de-de
 $text['option-condition']['de-ch'] = "Bedingung"; //copied from de-de
 $text['option-condition']['de-de'] = "Bedingung";
 $text['option-condition']['es-cl'] = "Condición";
@@ -183,7 +183,7 @@ $text['option-condition']['uk-ua'] = "";
 
 $text['option-anti-action']['en-us'] = "Anti-Action";
 $text['option-anti-action']['ar-eg'] = "";
-$text['option-anti-action']['de-at'] = "Anti-Aktion";
+$text['option-anti-action']['de-at'] = "Anti-Aktion"; //copied from de-de
 $text['option-anti-action']['de-ch'] = "Anti-Aktion"; //copied from de-de
 $text['option-anti-action']['de-de'] = "Anti-Aktion";
 $text['option-anti-action']['es-cl'] = "Anti-Acción";
@@ -203,7 +203,7 @@ $text['option-anti-action']['uk-ua'] = "";
 
 $text['option-action']['en-us'] = "Action";
 $text['option-action']['ar-eg'] = "";
-$text['option-action']['de-at'] = "Aktion";
+$text['option-action']['de-at'] = "Aktion"; //copied from de-de
 $text['option-action']['de-ch'] = "Aktion"; //copied from de-de
 $text['option-action']['de-de'] = "Aktion";
 $text['option-action']['es-cl'] = "Acción";
@@ -223,7 +223,7 @@ $text['option-action']['uk-ua'] = "";
 
 $text['label-tag']['en-us'] = "Tag";
 $text['label-tag']['ar-eg'] = "";
-$text['label-tag']['de-at'] = "Kennzeichnen";
+$text['label-tag']['de-at'] = "Kennzeichnen"; //copied from de-de
 $text['label-tag']['de-ch'] = "Kennzeichnen"; //copied from de-de
 $text['label-tag']['de-de'] = "Kennzeichnen";
 $text['label-tag']['es-cl'] = "Etiqueta";
@@ -243,7 +243,7 @@ $text['label-tag']['uk-ua'] = "";
 
 $text['label-field']['en-us'] = "Field";
 $text['label-field']['ar-eg'] = "";
-$text['label-field']['de-at'] = "Feld";
+$text['label-field']['de-at'] = "Feld"; //copied from de-de
 $text['label-field']['de-ch'] = "Feld"; //copied from de-de
 $text['label-field']['de-de'] = "Feld";
 $text['label-field']['es-cl'] = "Campo";
@@ -263,7 +263,7 @@ $text['label-field']['uk-ua'] = "";
 
 $text['label-extension']['en-us'] = "Extension";
 $text['label-extension']['ar-eg'] = "";
-$text['label-extension']['de-at'] = "Nebenstelle";
+$text['label-extension']['de-at'] = "Nebenstelle"; //copied from de-de
 $text['label-extension']['de-ch'] = "Nebenstelle"; //copied from de-de
 $text['label-extension']['de-de'] = "Nebenstelle";
 $text['label-extension']['es-cl'] = "Extensión";
@@ -283,7 +283,7 @@ $text['label-extension']['uk-ua'] = "";
 
 $text['label-expression']['en-us'] = "Expression";
 $text['label-expression']['ar-eg'] = "";
-$text['label-expression']['de-at'] = "Ausdruck";
+$text['label-expression']['de-at'] = "Ausdruck"; //copied from de-de
 $text['label-expression']['de-ch'] = "Ausdruck"; //copied from de-de
 $text['label-expression']['de-de'] = "Ausdruck";
 $text['label-expression']['es-cl'] = "Expresión";
@@ -303,7 +303,7 @@ $text['label-expression']['uk-ua'] = "";
 
 $text['label-data']['en-us'] = "Data";
 $text['label-data']['ar-eg'] = "";
-$text['label-data']['de-at'] = "Daten";
+$text['label-data']['de-at'] = "Daten"; //copied from de-de
 $text['label-data']['de-ch'] = "Daten"; //copied from de-de
 $text['label-data']['de-de'] = "Daten";
 $text['label-data']['es-cl'] = "Datos";
@@ -323,7 +323,7 @@ $text['label-data']['uk-ua'] = "";
 
 $text['label-continue']['en-us'] = "Continue";
 $text['label-continue']['ar-eg'] = "";
-$text['label-continue']['de-at'] = "Fortsetzen";
+$text['label-continue']['de-at'] = "Fortsetzen"; //copied from de-de
 $text['label-continue']['de-ch'] = "Fortsetzen"; //copied from de-de
 $text['label-continue']['de-de'] = "Fortsetzen";
 $text['label-continue']['es-cl'] = "Continuar";
@@ -343,7 +343,7 @@ $text['label-continue']['uk-ua'] = "";
 
 $text['label-application']['en-us'] = "Application";
 $text['label-application']['ar-eg'] = "";
-$text['label-application']['de-at'] = "Anwendung";
+$text['label-application']['de-at'] = "Anwendung"; //copied from de-de
 $text['label-application']['de-ch'] = "Anwendung"; //copied from de-de
 $text['label-application']['de-de'] = "Anwendung";
 $text['label-application']['es-cl'] = "Aplicación";
@@ -363,7 +363,7 @@ $text['label-application']['uk-ua'] = "";
 
 $text['label-agent_queue_extension']['en-us'] = "Queue Extension Number";
 $text['label-agent_queue_extension']['ar-eg'] = "";
-$text['label-agent_queue_extension']['de-at'] = "Nebenstelle der Warteschlange";
+$text['label-agent_queue_extension']['de-at'] = "Nebenstelle der Warteschlange"; //copied from de-de
 $text['label-agent_queue_extension']['de-ch'] = "Nebenstelle der Warteschlange"; //copied from de-de
 $text['label-agent_queue_extension']['de-de'] = "Nebenstelle der Warteschlange";
 $text['label-agent_queue_extension']['es-cl'] = "Número de Extensión de Cola";
@@ -383,7 +383,7 @@ $text['label-agent_queue_extension']['uk-ua'] = "";
 
 $text['label-agent_loginout_extension']['en-us'] = "Login/Logout Extension Number";
 $text['label-agent_loginout_extension']['ar-eg'] = "";
-$text['label-agent_loginout_extension']['de-at'] = "Nebenstelle für Anmeldung/Abmeldung";
+$text['label-agent_loginout_extension']['de-at'] = "Nebenstelle für Anmeldung/Abmeldung"; //copied from de-de
 $text['label-agent_loginout_extension']['de-ch'] = "Nebenstelle für Anmeldung/Abmeldung"; //copied from de-de
 $text['label-agent_loginout_extension']['de-de'] = "Nebenstelle für Anmeldung/Abmeldung";
 $text['label-agent_loginout_extension']['es-cl'] = "Número de Extensión de Conexión/Desconexión";
@@ -403,7 +403,7 @@ $text['label-agent_loginout_extension']['uk-ua'] = "";
 
 $text['header-queues']['en-us'] = "Queues";
 $text['header-queues']['ar-eg'] = "";
-$text['header-queues']['de-at'] = "Warteschlangen";
+$text['header-queues']['de-at'] = "Warteschlangen"; //copied from de-de
 $text['header-queues']['de-ch'] = "Warteschlangen"; //copied from de-de
 $text['header-queues']['de-de'] = "Warteschlangen";
 $text['header-queues']['es-cl'] = "Colas";
@@ -423,7 +423,7 @@ $text['header-queues']['uk-ua'] = "";
 
 $text['header-queue_edit']['en-us'] = "Queue Edit";
 $text['header-queue_edit']['ar-eg'] = "";
-$text['header-queue_edit']['de-at'] = "Warteschlange bearbeiten";
+$text['header-queue_edit']['de-at'] = "Warteschlange bearbeiten"; //copied from de-de
 $text['header-queue_edit']['de-ch'] = "Warteschlange bearbeiten"; //copied from de-de
 $text['header-queue_edit']['de-de'] = "Warteschlange bearbeiten";
 $text['header-queue_edit']['es-cl'] = "Editar Cola";
@@ -443,7 +443,7 @@ $text['header-queue_edit']['uk-ua'] = "";
 
 $text['header-queue_detail_edit']['en-us'] = "Queue Detail Edit";
 $text['header-queue_detail_edit']['ar-eg'] = "";
-$text['header-queue_detail_edit']['de-at'] = "Warteschlange Details bearbeiten";
+$text['header-queue_detail_edit']['de-at'] = "Warteschlange Details bearbeiten"; //copied from de-de
 $text['header-queue_detail_edit']['de-ch'] = "Warteschlange Details bearbeiten"; //copied from de-de
 $text['header-queue_detail_edit']['de-de'] = "Warteschlange Details bearbeiten";
 $text['header-queue_detail_edit']['es-cl'] = "Editar Detalle de Cola";
@@ -463,7 +463,7 @@ $text['header-queue_detail_edit']['uk-ua'] = "";
 
 $text['header-queue_detail_add']['en-us'] = "Queue Detail Add";
 $text['header-queue_detail_add']['ar-eg'] = "";
-$text['header-queue_detail_add']['de-at'] = "Warteschlange Details hinzufügen";
+$text['header-queue_detail_add']['de-at'] = "Warteschlange Details hinzufügen"; //copied from de-de
 $text['header-queue_detail_add']['de-ch'] = "Warteschlange Details hinzufügen"; //copied from de-de
 $text['header-queue_detail_add']['de-de'] = "Warteschlange Details hinzufügen";
 $text['header-queue_detail_add']['es-cl'] = "Agregar Detalle de Cola";
@@ -483,7 +483,7 @@ $text['header-queue_detail_add']['uk-ua'] = "";
 
 $text['header-queue_add']['en-us'] = "Queue Add";
 $text['header-queue_add']['ar-eg'] = "";
-$text['header-queue_add']['de-at'] = "Warteschlange hinzufügen";
+$text['header-queue_add']['de-at'] = "Warteschlange hinzufügen"; //copied from de-de
 $text['header-queue_add']['de-ch'] = "Warteschlange hinzufügen"; //copied from de-de
 $text['header-queue_add']['de-de'] = "Warteschlange hinzufügen";
 $text['header-queue_add']['es-cl'] = "Agregar Cola";
@@ -503,7 +503,7 @@ $text['header-queue_add']['uk-ua'] = "";
 
 $text['header-conditions_and_actions']['en-us'] = "Conditions and Actions";
 $text['header-conditions_and_actions']['ar-eg'] = "";
-$text['header-conditions_and_actions']['de-at'] = "Bedingungen und Aktionen";
+$text['header-conditions_and_actions']['de-at'] = "Bedingungen und Aktionen"; //copied from de-de
 $text['header-conditions_and_actions']['de-ch'] = "Bedingungen und Aktionen"; //copied from de-de
 $text['header-conditions_and_actions']['de-de'] = "Bedingungen und Aktionen";
 $text['header-conditions_and_actions']['es-cl'] = "Condiciones y Acciones";
@@ -523,7 +523,7 @@ $text['header-conditions_and_actions']['uk-ua'] = "";
 
 $text['header-agent_details']['en-us'] = "Agent Details";
 $text['header-agent_details']['ar-eg'] = "";
-$text['header-agent_details']['de-at'] = "Agenten Details";
+$text['header-agent_details']['de-at'] = "Agenten Details"; //copied from de-de
 $text['header-agent_details']['de-ch'] = "Agenten Details"; //copied from de-de
 $text['header-agent_details']['de-de'] = "Agenten Details";
 $text['header-agent_details']['es-cl'] = "Detalles de Agente";
@@ -543,7 +543,7 @@ $text['header-agent_details']['uk-ua'] = "";
 
 $text['header-additional_information']['en-us'] = "Additional Information";
 $text['header-additional_information']['ar-eg'] = "";
-$text['header-additional_information']['de-at'] = "Weiterführende Informationen";
+$text['header-additional_information']['de-at'] = "Weiterführende Informationen"; //copied from de-de
 $text['header-additional_information']['de-ch'] = "Weiterführende Informationen"; //copied from de-de
 $text['header-additional_information']['de-de'] = "Weiterführende Informationen";
 $text['header-additional_information']['es-cl'] = "Información Adicional";
@@ -563,7 +563,7 @@ $text['header-additional_information']['uk-ua'] = "";
 
 $text['description-queues']['en-us'] = "Queues are used to setup waiting lines for callers. Also known as FIFO Queues.";
 $text['description-queues']['ar-eg'] = "";
-$text['description-queues']['de-at'] = "Warteschlangen werden verwendt um Warteschleifen für Anrufer zu erstellen. Diese sind auch als FIFO-Warteschlangen bekannt.";
+$text['description-queues']['de-at'] = "Warteschlangen werden verwendt um Warteschleifen für Anrufer zu erstellen. Diese sind auch als FIFO-Warteschlangen bekannt."; //copied from de-de
 $text['description-queues']['de-ch'] = "Warteschlangen werden verwendt um Warteschleifen für Anrufer zu erstellen. Diese sind auch als FIFO-Warteschlangen bekannt."; //copied from de-de
 $text['description-queues']['de-de'] = "Warteschlangen werden verwendt um Warteschleifen für Anrufer zu erstellen. Diese sind auch als FIFO-Warteschlangen bekannt.";
 $text['description-queues']['es-cl'] = "Las colas son usadas para configurar líneas de espera. Son conocidas como colas FIFO.";
@@ -583,7 +583,7 @@ $text['description-queues']['uk-ua'] = "";
 
 $text['description-queue_edit']['en-us'] = "Queues are used to setup waiting lines for callers. Also known as FIFO Queues.";
 $text['description-queue_edit']['ar-eg'] = "";
-$text['description-queue_edit']['de-at'] = "Warteschlangen werden verwendt um Warteschleifen für Anrufer zu erstellen. Diese sind auch als FIFO-Warteschlangen bekannt.";
+$text['description-queue_edit']['de-at'] = "Warteschlangen werden verwendt um Warteschleifen für Anrufer zu erstellen. Diese sind auch als FIFO-Warteschlangen bekannt."; //copied from de-de
 $text['description-queue_edit']['de-ch'] = "Warteschlangen werden verwendt um Warteschleifen für Anrufer zu erstellen. Diese sind auch als FIFO-Warteschlangen bekannt."; //copied from de-de
 $text['description-queue_edit']['de-de'] = "Warteschlangen werden verwendt um Warteschleifen für Anrufer zu erstellen. Diese sind auch als FIFO-Warteschlangen bekannt.";
 $text['description-queue_edit']['es-cl'] = "Las colas son usadas para configurar líneas de espera. Son conocidas como colas FIFO.";
@@ -603,7 +603,7 @@ $text['description-queue_edit']['uk-ua'] = "";
 
 $text['description-queue_add']['en-us'] = "In simple terms queues are holding patterns for callers to wait until someone is available to take the call. Also known as FIFO Queues.";
 $text['description-queue_add']['ar-eg'] = "";
-$text['description-queue_add']['de-at'] = "Einfach ausgedrückt sind WarteschlangenWarteschlangen in denen die Anruf gehalten werden, bit jemand verfügbar ist, der den Anruf annehmen kann. Diese sind als FIFO-Warteschlangen bekannt.";
+$text['description-queue_add']['de-at'] = "Einfach ausgedrückt sind WarteschlangenWarteschlangen in denen die Anruf gehalten werden, bit jemand verfügbar ist, der den Anruf annehmen kann. Diese sind als FIFO-Warteschlangen bekannt."; //copied from de-de
 $text['description-queue_add']['de-ch'] = "Einfach ausgedrückt sind WarteschlangenWarteschlangen in denen die Anruf gehalten werden, bit jemand verfügbar ist, der den Anruf annehmen kann. Diese sind als FIFO-Warteschlangen bekannt."; //copied from de-de
 $text['description-queue_add']['de-de'] = "Einfach ausgedrückt sind WarteschlangenWarteschlangen in denen die Anruf gehalten werden, bit jemand verfügbar ist, der den Anruf annehmen kann. Diese sind als FIFO-Warteschlangen bekannt.";
 $text['description-queue_add']['es-cl'] = "En términos simples, las colas son patrones para mantener en espera hasta que alguien está disponible para tomar la llamada. Son conocidas como colas FIFO.";
@@ -623,7 +623,7 @@ $text['description-queue_add']['uk-ua'] = "";
 
 $text['description-name']['en-us'] = "The name the queue will be assigned.";
 $text['description-name']['ar-eg'] = "";
-$text['description-name']['de-at'] = "Der Name, welcher der Warteschlange zugeordnet werden soll.";
+$text['description-name']['de-at'] = "Der Name, welcher der Warteschlange zugeordnet werden soll."; //copied from de-de
 $text['description-name']['de-ch'] = "Der Name, welcher der Warteschlange zugeordnet werden soll."; //copied from de-de
 $text['description-name']['de-de'] = "Der Name, welcher der Warteschlange zugeordnet werden soll.";
 $text['description-name']['es-cl'] = "El nombre al que la cola que va a ser asignada.";
@@ -643,7 +643,7 @@ $text['description-name']['uk-ua'] = "";
 
 $text['description-extension']['en-us'] = "The number that will be assigned to the queue.";
 $text['description-extension']['ar-eg'] = "";
-$text['description-extension']['de-at'] = "Die Rufnummer, die der Warteschlange zugeordnet werden soll.";
+$text['description-extension']['de-at'] = "Die Rufnummer, die der Warteschlange zugeordnet werden soll."; //copied from de-de
 $text['description-extension']['de-ch'] = "Die Rufnummer, die der Warteschlange zugeordnet werden soll."; //copied from de-de
 $text['description-extension']['de-de'] = "Die Rufnummer, die der Warteschlange zugeordnet werden soll.";
 $text['description-extension']['es-cl'] = "El número al que será asignada la cola.";
@@ -663,7 +663,7 @@ $text['description-extension']['uk-ua'] = "";
 
 $text['description-continue']['en-us'] = "Continue in most cases should be set to false.";
 $text['description-continue']['ar-eg'] = "";
-$text['description-continue']['de-at'] = "Die Option Weiterführen sollte in der Regel auf Aus stehen.";
+$text['description-continue']['de-at'] = "Die Option Weiterführen sollte in der Regel auf Aus stehen."; //copied from de-de
 $text['description-continue']['de-ch'] = "Die Option Weiterführen sollte in der Regel auf Aus stehen."; //copied from de-de
 $text['description-continue']['de-de'] = "Die Option Weiterführen sollte in der Regel auf Aus stehen.";
 $text['description-continue']['es-cl'] = "Continuar en la mayoría de los casos debería configurarse como falso.";
@@ -683,7 +683,7 @@ $text['description-continue']['uk-ua'] = "";
 
 $text['description-conditions_and_actions']['en-us'] = "The following conditions, actions and anti-actions are used in the dialplan to direct call flow. Each is processed in order until you reach the action dialplan_detail_tag which tells what action to perform. You are not limited to only one condition or action dialplan_detail_tag for a given extension.";
 $text['description-conditions_and_actions']['ar-eg'] = "";
-$text['description-conditions_and_actions']['de-at'] = "Die nachfolgenden Bedingungen, Aktionen und Anti-Aktionen werden im Wählplan verwendet, um den Anruf-Fluss zu steuern. Jeder Anruf wird sequentiell abgearbeitet, bis die Aktion dialplan_detail_tag erreicht wird, welche die auszuführende Aktion bestimmt. Es können mehrere Bedingungen und Aktionen vom Typ dialplan_detail_tag pro Nebenstelle angegeben werden.";
+$text['description-conditions_and_actions']['de-at'] = "Die nachfolgenden Bedingungen, Aktionen und Anti-Aktionen werden im Wählplan verwendet, um den Anruf-Fluss zu steuern. Jeder Anruf wird sequentiell abgearbeitet, bis die Aktion dialplan_detail_tag erreicht wird, welche die auszuführende Aktion bestimmt. Es können mehrere Bedingungen und Aktionen vom Typ dialplan_detail_tag pro Nebenstelle angegeben werden."; //copied from de-de
 $text['description-conditions_and_actions']['de-ch'] = "Die nachfolgenden Bedingungen, Aktionen und Anti-Aktionen werden im Wählplan verwendet, um den Anruf-Fluss zu steuern. Jeder Anruf wird sequentiell abgearbeitet, bis die Aktion dialplan_detail_tag erreicht wird, welche die auszuführende Aktion bestimmt. Es können mehrere Bedingungen und Aktionen vom Typ dialplan_detail_tag pro Nebenstelle angegeben werden."; //copied from de-de
 $text['description-conditions_and_actions']['de-de'] = "Die nachfolgenden Bedingungen, Aktionen und Anti-Aktionen werden im Wählplan verwendet, um den Anruf-Fluss zu steuern. Jeder Anruf wird sequentiell abgearbeitet, bis die Aktion dialplan_detail_tag erreicht wird, welche die auszuführende Aktion bestimmt. Es können mehrere Bedingungen und Aktionen vom Typ dialplan_detail_tag pro Nebenstelle angegeben werden.";
 $text['description-conditions_and_actions']['es-cl'] = "Las siguientes condiciones, acciones y anti-acciones son usada en el plan de marcado para dirigir el flujo de llamado. Cada uno es procesado en orden hasta que se alcanza la accion dialplan_detail_tag, el cual indica la acción a ejecutar. No está limitado a solo una condición o acción dialplan_detail_tag para una extensión dada.";
@@ -703,7 +703,7 @@ $text['description-conditions_and_actions']['uk-ua'] = "";
 
 $text['description-agent_queue_extension']['en-us'] = "The extension number for the Agent FIFO Queue. This is the holding pattern for agents waiting to service calls in the caller FIFO queue.";
 $text['description-agent_queue_extension']['ar-eg'] = "";
-$text['description-agent_queue_extension']['de-at'] = "Die Nebenstelle für die Agent FIFO Warteschlange.";
+$text['description-agent_queue_extension']['de-at'] = "Die Nebenstelle für die Agent FIFO Warteschlange."; //copied from de-de
 $text['description-agent_queue_extension']['de-ch'] = "Die Nebenstelle für die Agent FIFO Warteschlange."; //copied from de-de
 $text['description-agent_queue_extension']['de-de'] = "Die Nebenstelle für die Agent FIFO Warteschlange.";
 $text['description-agent_queue_extension']['es-cl'] = "El número de extensión para la cola del Agente FIFO. Este es el patrón de espera para agentes esperando servir llamadas en la cola.";
@@ -723,7 +723,7 @@ $text['description-agent_queue_extension']['uk-ua'] = "";
 
 $text['description-agent_loginout_extension']['en-us'] = "Agents use this extension number to login or logout of the Queue. After logging into the agent will be ready to receive calls from the Queue.";
 $text['description-agent_loginout_extension']['ar-eg'] = "";
-$text['description-agent_loginout_extension']['de-at'] = "Der Agent verwendet diese Nebenstelle um sich bei der Warteschlange an oder ab zu melden. Nach der Anmeldung kann der Agent Anrufe aus der Warteschlange entgegennehmen.";
+$text['description-agent_loginout_extension']['de-at'] = "Der Agent verwendet diese Nebenstelle um sich bei der Warteschlange an oder ab zu melden. Nach der Anmeldung kann der Agent Anrufe aus der Warteschlange entgegennehmen."; //copied from de-de
 $text['description-agent_loginout_extension']['de-ch'] = "Der Agent verwendet diese Nebenstelle um sich bei der Warteschlange an oder ab zu melden. Nach der Anmeldung kann der Agent Anrufe aus der Warteschlange entgegennehmen."; //copied from de-de
 $text['description-agent_loginout_extension']['de-de'] = "Der Agent verwendet diese Nebenstelle um sich bei der Warteschlange an oder ab zu melden. Nach der Anmeldung kann der Agent Anrufe aus der Warteschlange entgegennehmen.";
 $text['description-agent_loginout_extension']['es-cl'] = "Los agentes usan este número de extensión para conectarse o desconectarse en la cola. Despues de conectarse, el agente estará listo para recibir llamadas desde la cola.";
