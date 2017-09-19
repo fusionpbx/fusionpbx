@@ -200,23 +200,53 @@ echo "<div style='text-align: left; margin-left: -16px;'>\n";
 
 ini_set("session.cookie_httponly", True);
 if (!isset($_SESSION)) { session_start(); }
-switch ($_SESSION["app"]["edit"]["dir"]) {
-	case 'scripts':
-		echo recur_dir($_SESSION['switch']['scripts']['dir']);
-		break;
-	case 'php':
-		echo recur_dir($_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH);
-		break;
-	case 'grammer':
-		echo recur_dir($_SESSION['switch']['grammar']['dir']);
-		break;
-	case 'provision':
-		echo recur_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/");
-		break;
-	case 'xml':
-		echo recur_dir($_SESSION['switch']['conf']['dir']);
-		break;
-}
+//get the directory
+	if (!isset($_SESSION)) { session_start(); }
+	switch ($_SESSION["app"]["edit"]["dir"]) {
+		case 'scripts':
+			$edit_directory = $_SESSION['switch']['scripts']['dir'];
+			break;
+		case 'php':
+			$edit_directory = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH;
+			break;
+		case 'grammer':
+			$edit_directory = $_SESSION['switch']['grammar']['dir'];
+			break;
+		case 'provision':
+			switch (PHP_OS) {
+				case "Linux":
+					if (file_exists('/etc/fusionpbx/resources/templates/provision')) {
+						$edit_directory = '/etc/fusionpbx/resources/templates/provision';
+					}
+					else {
+						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					}
+					break;
+				case "FreeBSD":
+					if (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
+						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					}
+					else {
+						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					}
+					break;
+				case "NetBSD":
+					$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					break;
+				case "OpenBSD":
+					$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					break;
+				default:
+					$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+			}
+			break;
+		case 'xml':
+			$edit_directory = $_SESSION['switch']['conf']['dir'];
+			break;
+	}
+	if (file_exists($edit_directory)) {
+		echo recur_dir($edit_directory);
+	}
 
 echo "</div>\n";
 
