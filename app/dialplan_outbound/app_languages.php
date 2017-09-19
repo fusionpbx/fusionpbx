@@ -1,9 +1,9 @@
 <?php
-#This file was last reorganized on 12th of June 2017 10:57:40 AM UTC
+#This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['title-dialplan-outbound-add']['en-us'] = "Outbound Call Routing";
 $text['title-dialplan-outbound-add']['ar-eg'] = "";
-$text['title-dialplan-outbound-add']['de-at'] = "Routing ausgehender Anrufe";
+$text['title-dialplan-outbound-add']['de-at'] = "Routing ausgehender Anrufe"; //copied from de-de
 $text['title-dialplan-outbound-add']['de-ch'] = "Routing ausgehender Anrufe"; //copied from de-de
 $text['title-dialplan-outbound-add']['de-de'] = "Routing ausgehender Anrufe";
 $text['title-dialplan-outbound-add']['es-cl'] = "Direccionamiento de llamadas de salida";
@@ -23,7 +23,7 @@ $text['title-dialplan-outbound-add']['uk-ua'] = "Маршрутизація ви
 
 $text['message-provide']['en-us'] = "Please Provide";
 $text['message-provide']['ar-eg'] = "";
-$text['message-provide']['de-at'] = "Bitte angeben";
+$text['message-provide']['de-at'] = "Bitte angeben"; //copied from de-de
 $text['message-provide']['de-ch'] = "Bitte angeben"; //copied from de-de
 $text['message-provide']['de-de'] = "Bitte angeben";
 $text['message-provide']['es-cl'] = "Por favor indique";
@@ -43,7 +43,7 @@ $text['message-provide']['uk-ua'] = "Будь ласка, надайте";
 
 $text['message-add-options2']['en-us'] = "Select another gateway as an alternative to use if the second one fails.";
 $text['message-add-options2']['ar-eg'] = "";
-$text['message-add-options2']['de-at'] = "Wählen Sie ein alternatives Gateway aus, falls das zweite Gateway fehlschlägt.";
+$text['message-add-options2']['de-at'] = "Wählen Sie ein alternatives Gateway aus, falls das zweite Gateway fehlschlägt."; //copied from de-de
 $text['message-add-options2']['de-ch'] = "Wählen Sie ein alternatives Gateway aus, falls das zweite Gateway fehlschlägt."; //copied from de-de
 $text['message-add-options2']['de-de'] = "Wählen Sie ein alternatives Gateway aus, falls das zweite Gateway fehlschlägt.";
 $text['message-add-options2']['es-cl'] = "Seleccione otra pasarela para utilizar de forma alternativa, en caso de que las demas fallen.";
@@ -63,7 +63,7 @@ $text['message-add-options2']['uk-ua'] = "Виберіть  інший шлюз 
 
 $text['message-add-options1']['en-us'] = "Select another gateway as an alternative to use if the first one fails.";
 $text['message-add-options1']['ar-eg'] = "";
-$text['message-add-options1']['de-at'] = "Wählen Sie ein alternatives Gateway aus, falls das erste Gateway fehlschlägt.";
+$text['message-add-options1']['de-at'] = "Wählen Sie ein alternatives Gateway aus, falls das erste Gateway fehlschlägt."; //copied from de-de
 $text['message-add-options1']['de-ch'] = "Wählen Sie ein alternatives Gateway aus, falls das erste Gateway fehlschlägt."; //copied from de-de
 $text['message-add-options1']['de-de'] = "Wählen Sie ein alternatives Gateway aus, falls das erste Gateway fehlschlägt.";
 $text['message-add-options1']['es-cl'] = "Seleccione otra pasarela para utilizar de forma alternativa, en caso de que la primera falle.";
@@ -83,7 +83,7 @@ $text['message-add-options1']['uk-ua'] = "Виберіть  інший шлюз 
 
 $text['message-add-options']['en-us'] = "Select the gateway to use with this outbound route.";
 $text['message-add-options']['ar-eg'] = "";
-$text['message-add-options']['de-at'] = "Wählen Sie ein Gateway für die ausgehenden Anrufe aus";
+$text['message-add-options']['de-at'] = "Wählen Sie ein Gateway für die ausgehenden Anrufe aus"; //copied from de-de
 $text['message-add-options']['de-ch'] = "Wählen Sie ein Gateway für die ausgehenden Anrufe aus"; //copied from de-de
 $text['message-add-options']['de-de'] = "Wählen Sie ein Gateway für die ausgehenden Anrufe aus";
 $text['message-add-options']['es-cl'] = "Seleccione una pasarela para utilizar con esta regla de salida.";
@@ -103,7 +103,7 @@ $text['message-add-options']['uk-ua'] = "Виберіть шлюз для цьо
 
 $text['label-toll_allow']['en-us'] = "Toll allow";
 $text['label-toll_allow']['ar-eg'] = "";
-$text['label-toll_allow']['de-at'] = "Gebührenpflichtige Anrufe erlauben";
+$text['label-toll_allow']['de-at'] = "Gebührenpflichtige Anrufe erlauben"; //copied from de-de
 $text['label-toll_allow']['de-ch'] = "Gebührenpflichtige Anrufe erlauben"; //copied from de-de
 $text['label-toll_allow']['de-de'] = "Gebührenpflichtige Anrufe erlauben";
 $text['label-toll_allow']['es-cl'] = "Permitir Tarifas Especiales";
@@ -123,7 +123,7 @@ $text['label-toll_allow']['uk-ua'] = "TOLL дозволено";
 
 $text['label-sip-gateway']['en-us'] = "SIP Gateways";
 $text['label-sip-gateway']['ar-eg'] = "";
-$text['label-sip-gateway']['de-at'] = "SIP Gateways";
+$text['label-sip-gateway']['de-at'] = "SIP Gateways"; //copied from de-de
 $text['label-sip-gateway']['de-ch'] = "SIP Gateways"; //copied from de-de
 $text['label-sip-gateway']['de-de'] = "SIP Gateways";
 $text['label-sip-gateway']['es-cl'] = "Pasarela SIP";
@@ -143,7 +143,7 @@ $text['label-sip-gateway']['uk-ua'] = "SIP Шлюз";
 
 $text['label-prefix']['en-us'] = "Prefix";
 $text['label-prefix']['ar-eg'] = "";
-$text['label-prefix']['de-at'] = "Präfix";
+$text['label-prefix']['de-at'] = "Präfix"; //copied from de-de
 $text['label-prefix']['de-ch'] = "Präfix"; //copied from de-de
 $text['label-prefix']['de-de'] = "Präfix";
 $text['label-prefix']['es-cl'] = "Prefijo";
@@ -163,7 +163,7 @@ $text['label-prefix']['uk-ua'] = "Префікс";
 
 $text['label-outbound-routes']['en-us'] = "Outbound Routes";
 $text['label-outbound-routes']['ar-eg'] = "";
-$text['label-outbound-routes']['de-at'] = "Ausgehende Routen";
+$text['label-outbound-routes']['de-at'] = "Ausgehende Routen"; //copied from de-de
 $text['label-outbound-routes']['de-ch'] = "Ausgehende Routen"; //copied from de-de
 $text['label-outbound-routes']['de-de'] = "Ausgehende Routen";
 $text['label-outbound-routes']['es-cl'] = "Rutas de Salida";
@@ -183,7 +183,7 @@ $text['label-outbound-routes']['uk-ua'] = "Вихідні маршрути";
 
 $text['label-north-america-intl']['en-us'] = "North America International";
 $text['label-north-america-intl']['ar-eg'] = "";
-$text['label-north-america-intl']['de-at'] = "Nordamerika International";
+$text['label-north-america-intl']['de-at'] = "Nordamerika International"; //copied from de-de
 $text['label-north-america-intl']['de-ch'] = "Nordamerika International"; //copied from de-de
 $text['label-north-america-intl']['de-de'] = "Nordamerika International";
 $text['label-north-america-intl']['es-cl'] = "America del Norte Internacional";
@@ -203,7 +203,7 @@ $text['label-north-america-intl']['uk-ua'] = "Північна Америка (�
 
 $text['label-north-america']['en-us'] = "North America";
 $text['label-north-america']['ar-eg'] = "";
-$text['label-north-america']['de-at'] = "Nordamerika";
+$text['label-north-america']['de-at'] = "Nordamerika"; //copied from de-de
 $text['label-north-america']['de-ch'] = "Nordamerika"; //copied from de-de
 $text['label-north-america']['de-de'] = "Nordamerika";
 $text['label-north-america']['es-cl'] = "América del Norte";
@@ -223,7 +223,7 @@ $text['label-north-america']['uk-ua'] = "Північна Америка";
 
 $text['label-limit']['en-us'] = "Limit";
 $text['label-limit']['ar-eg'] = "";
-$text['label-limit']['de-at'] = "Obergrenze";
+$text['label-limit']['de-at'] = "Obergrenze"; //copied from de-de
 $text['label-limit']['de-ch'] = "Obergrenze"; //copied from de-de
 $text['label-limit']['de-de'] = "Obergrenze";
 $text['label-limit']['es-cl'] = "Límite";
@@ -243,7 +243,7 @@ $text['label-limit']['uk-ua'] = "Обмеження";
 
 $text['label-intl']['en-us'] = "International";
 $text['label-intl']['ar-eg'] = "";
-$text['label-intl']['de-at'] = "International";
+$text['label-intl']['de-at'] = "International"; //copied from de-de
 $text['label-intl']['de-ch'] = "International"; //copied from de-de
 $text['label-intl']['de-de'] = "International";
 $text['label-intl']['es-cl'] = "Internacional";
@@ -263,7 +263,7 @@ $text['label-intl']['uk-ua'] = "Міжнародний";
 
 $text['label-gateway-name']['en-us'] = "Gateway Name";
 $text['label-gateway-name']['ar-eg'] = "";
-$text['label-gateway-name']['de-at'] = "Gateway Namen";
+$text['label-gateway-name']['de-at'] = "Gateway Namen"; //copied from de-de
 $text['label-gateway-name']['de-ch'] = "Gateway Namen"; //copied from de-de
 $text['label-gateway-name']['de-de'] = "Gateway Namen";
 $text['label-gateway-name']['es-cl'] = "Nombre de Pasarela";
@@ -283,7 +283,7 @@ $text['label-gateway-name']['uk-ua'] = "Назва шлюза";
 
 $text['label-gateway']['en-us'] = "Gateway";
 $text['label-gateway']['ar-eg'] = "";
-$text['label-gateway']['de-at'] = "Gateway";
+$text['label-gateway']['de-at'] = "Gateway"; //copied from de-de
 $text['label-gateway']['de-ch'] = "Gateway"; //copied from de-de
 $text['label-gateway']['de-de'] = "Gateway";
 $text['label-gateway']['es-cl'] = "Pasarela";
@@ -303,7 +303,7 @@ $text['label-gateway']['uk-ua'] = "Шлюз";
 
 $text['label-europe-intl']['en-us'] = "Europe International";
 $text['label-europe-intl']['ar-eg'] = "";
-$text['label-europe-intl']['de-at'] = "Europa international";
+$text['label-europe-intl']['de-at'] = "Europa international"; //copied from de-de
 $text['label-europe-intl']['de-ch'] = "Europa international"; //copied from de-de
 $text['label-europe-intl']['de-de'] = "Europa international";
 $text['label-europe-intl']['es-cl'] = "Europa Internacional";
@@ -323,7 +323,7 @@ $text['label-europe-intl']['uk-ua'] = "Європа (міжнародний)";
 
 $text['label-dialplan-expression']['en-us'] = "Dialplan Expression";
 $text['label-dialplan-expression']['ar-eg'] = "";
-$text['label-dialplan-expression']['de-at'] = "Wählplan Ausdruck";
+$text['label-dialplan-expression']['de-at'] = "Wählplan Ausdruck"; //copied from de-de
 $text['label-dialplan-expression']['de-ch'] = "Wählplan Ausdruck"; //copied from de-de
 $text['label-dialplan-expression']['de-de'] = "Wählplan Ausdruck";
 $text['label-dialplan-expression']['es-cl'] = "Expresión de plan de marcado";
@@ -343,7 +343,7 @@ $text['label-dialplan-expression']['uk-ua'] = "Вираз маршрутизац
 
 $text['label-custom-outbound-prefix']['en-us'] = "Dial custom prefix, then Digits";
 $text['label-custom-outbound-prefix']['ar-eg'] = "";
-$text['label-custom-outbound-prefix']['de-at'] = "Wähle benutzerdefinierten Präfix, dann Ziffern";
+$text['label-custom-outbound-prefix']['de-at'] = "Wähle benutzerdefinierten Präfix, dann Ziffern"; //copied from de-de
 $text['label-custom-outbound-prefix']['de-ch'] = "Wähle benutzerdefinierten Präfix, dann Ziffern"; //copied from de-de
 $text['label-custom-outbound-prefix']['de-de'] = "Wähle benutzerdefinierten Präfix, dann Ziffern";
 $text['label-custom-outbound-prefix']['es-cl'] = "Marcar prefijo personalizados, luego Dígitos";
@@ -363,7 +363,7 @@ $text['label-custom-outbound-prefix']['uk-ua'] = "Наберіть префік�
 
 $text['label-alt2']['en-us'] = "Alternate 2";
 $text['label-alt2']['ar-eg'] = "";
-$text['label-alt2']['de-at'] = "Alternative 2";
+$text['label-alt2']['de-at'] = "Alternative 2"; //copied from de-de
 $text['label-alt2']['de-ch'] = "Alternative 2"; //copied from de-de
 $text['label-alt2']['de-de'] = "Alternative 2";
 $text['label-alt2']['es-cl'] = "Alternativa 2";
@@ -383,7 +383,7 @@ $text['label-alt2']['uk-ua'] = "Інший 2";
 
 $text['label-alt1']['en-us'] = "Alternate 1";
 $text['label-alt1']['ar-eg'] = "";
-$text['label-alt1']['de-at'] = "Alternative 1";
+$text['label-alt1']['de-at'] = "Alternative 1"; //copied from de-de
 $text['label-alt1']['de-ch'] = "Alternative 1"; //copied from de-de
 $text['label-alt1']['de-de'] = "Alternative 1";
 $text['label-alt1']['es-cl'] = "Alternativa 1";
@@ -403,7 +403,7 @@ $text['label-alt1']['uk-ua'] = "Інший 1";
 
 $text['label-add-options']['en-us'] = "Additional Options";
 $text['label-add-options']['ar-eg'] = "";
-$text['label-add-options']['de-at'] = "Weitere Optionen";
+$text['label-add-options']['de-at'] = "Weitere Optionen"; //copied from de-de
 $text['label-add-options']['de-ch'] = "Weitere Optionen"; //copied from de-de
 $text['label-add-options']['de-de'] = "Weitere Optionen";
 $text['label-add-options']['es-cl'] = "Opciones Adicionales";
@@ -423,7 +423,7 @@ $text['label-add-options']['uk-ua'] = "Додаткові параметри";
 
 $text['label-accountcode']['en-us'] = "Account Code";
 $text['label-accountcode']['ar-eg'] = "";
-$text['label-accountcode']['de-at'] = "Kontoschlüssel";
+$text['label-accountcode']['de-at'] = "Kontoschlüssel"; //copied from de-de
 $text['label-accountcode']['de-ch'] = "Kontoschlüssel"; //copied from de-de
 $text['label-accountcode']['de-de'] = "Kontoschlüssel";
 $text['label-accountcode']['es-cl'] = "Código de Cuenta";
@@ -443,7 +443,7 @@ $text['label-accountcode']['uk-ua'] = "Код облікового запису"
 
 $text['label-9d9']['en-us'] = "Dial 9, then 9 Digits";
 $text['label-9d9']['ar-eg'] = "";
-$text['label-9d9']['de-at'] = "Wähle 9, dann 9 Ziffern";
+$text['label-9d9']['de-at'] = "Wähle 9, dann 9 Ziffern"; //copied from de-de
 $text['label-9d9']['de-ch'] = "Wähle 9, dann 9 Ziffern"; //copied from de-de
 $text['label-9d9']['de-de'] = "Wähle 9, dann 9 Ziffern";
 $text['label-9d9']['es-cl'] = "Marcar 9, luego 9 dígitos";
@@ -463,7 +463,7 @@ $text['label-9d9']['uk-ua'] = "Наберіть 9, а потім 9 цифр";
 
 $text['label-9d8']['en-us'] = "Dial 9, then 8 Digits";
 $text['label-9d8']['ar-eg'] = "";
-$text['label-9d8']['de-at'] = "Wähle 9, dann 8 Ziffern";
+$text['label-9d8']['de-at'] = "Wähle 9, dann 8 Ziffern"; //copied from de-de
 $text['label-9d8']['de-ch'] = "Wähle 9, dann 8 Ziffern"; //copied from de-de
 $text['label-9d8']['de-de'] = "Wähle 9, dann 8 Ziffern";
 $text['label-9d8']['es-cl'] = "Marcar 9, luego 8 dígitos";
@@ -483,7 +483,7 @@ $text['label-9d8']['uk-ua'] = "Наберіть 9, а потім 8 цифр";
 
 $text['label-9d7']['en-us'] = "Dial 9, then 7 Digits";
 $text['label-9d7']['ar-eg'] = "";
-$text['label-9d7']['de-at'] = "Wähle 9, dann 7 Ziffern";
+$text['label-9d7']['de-at'] = "Wähle 9, dann 7 Ziffern"; //copied from de-de
 $text['label-9d7']['de-ch'] = "Wähle 9, dann 7 Ziffern"; //copied from de-de
 $text['label-9d7']['de-de'] = "Wähle 9, dann 7 Ziffern";
 $text['label-9d7']['es-cl'] = "Marcar 9, luego 7 dígitos";
@@ -503,7 +503,7 @@ $text['label-9d7']['uk-ua'] = "Наберіть 9, а потім 7 цифр";
 
 $text['label-9d6']['en-us'] = "Dial 9, then 6 Digits";
 $text['label-9d6']['ar-eg'] = "";
-$text['label-9d6']['de-at'] = "Wähle 9, dann 6 Ziffern";
+$text['label-9d6']['de-at'] = "Wähle 9, dann 6 Ziffern"; //copied from de-de
 $text['label-9d6']['de-ch'] = "Wähle 9, dann 6 Ziffern"; //copied from de-de
 $text['label-9d6']['de-de'] = "Wähle 9, dann 6 Ziffern";
 $text['label-9d6']['es-cl'] = "";
@@ -523,7 +523,7 @@ $text['label-9d6']['uk-ua'] = "Наберіть 9, а потім 6 цифр";
 
 $text['label-9d5']['en-us'] = "Dial 9, then 5 Digits";
 $text['label-9d5']['ar-eg'] = "";
-$text['label-9d5']['de-at'] = "Wähle 9, dann 5 Ziffern";
+$text['label-9d5']['de-at'] = "Wähle 9, dann 5 Ziffern"; //copied from de-de
 $text['label-9d5']['de-ch'] = "Wähle 9, dann 5 Ziffern"; //copied from de-de
 $text['label-9d5']['de-de'] = "Wähle 9, dann 5 Ziffern";
 $text['label-9d5']['es-cl'] = "Marcar 9, luego 5 dígitos";
@@ -543,7 +543,7 @@ $text['label-9d5']['uk-ua'] = "Наберіть 9, а потім 5 цифр";
 
 $text['label-9d4']['en-us'] = "Dial 9, then 4 Digits";
 $text['label-9d4']['ar-eg'] = "";
-$text['label-9d4']['de-at'] = "Wähle 9, dann 4 Ziffern";
+$text['label-9d4']['de-at'] = "Wähle 9, dann 4 Ziffern"; //copied from de-de
 $text['label-9d4']['de-ch'] = "Wähle 9, dann 4 Ziffern"; //copied from de-de
 $text['label-9d4']['de-de'] = "Wähle 9, dann 4 Ziffern";
 $text['label-9d4']['es-cl'] = "Marcar 9, luego 4 dígitos";
@@ -563,7 +563,7 @@ $text['label-9d4']['uk-ua'] = "Наберіть 9, а потім 4 цифр";
 
 $text['label-9d3']['en-us'] = "Dial 9, then 3 Digits";
 $text['label-9d3']['ar-eg'] = "";
-$text['label-9d3']['de-at'] = "Wähle 9, dann 3 Ziffern";
+$text['label-9d3']['de-at'] = "Wähle 9, dann 3 Ziffern"; //copied from de-de
 $text['label-9d3']['de-ch'] = "Wähle 9, dann 3 Ziffern"; //copied from de-de
 $text['label-9d3']['de-de'] = "Wähle 9, dann 3 Ziffern";
 $text['label-9d3']['es-cl'] = "Marcar 9, luego 3 dígitos";
@@ -583,7 +583,7 @@ $text['label-9d3']['uk-ua'] = "Наберіть 9, а потім 3 цифр";
 
 $text['label-9d2']['en-us'] = "Dial 9, then 2 Digits";
 $text['label-9d2']['ar-eg'] = "";
-$text['label-9d2']['de-at'] = "Wähle 9, dann 2 Ziffern";
+$text['label-9d2']['de-at'] = "Wähle 9, dann 2 Ziffern"; //copied from de-de
 $text['label-9d2']['de-ch'] = "Wähle 9, dann 2 Ziffern"; //copied from de-de
 $text['label-9d2']['de-de'] = "Wähle 9, dann 2 Ziffern";
 $text['label-9d2']['es-cl'] = "Marcar 9, luego 2 dígitos";
@@ -603,7 +603,7 @@ $text['label-9d2']['uk-ua'] = "Наберіть 9, а потім 2 цифр";
 
 $text['label-9d11']['en-us'] = "Dial 9, then 11 Digits";
 $text['label-9d11']['ar-eg'] = "";
-$text['label-9d11']['de-at'] = "Wähle 9, dann 11 Ziffern";
+$text['label-9d11']['de-at'] = "Wähle 9, dann 11 Ziffern"; //copied from de-de
 $text['label-9d11']['de-ch'] = "Wähle 9, dann 11 Ziffern"; //copied from de-de
 $text['label-9d11']['de-de'] = "Wähle 9, dann 11 Ziffern";
 $text['label-9d11']['es-cl'] = "Marcar 9, luego 11 dígitos";
@@ -623,7 +623,7 @@ $text['label-9d11']['uk-ua'] = "Наберіть 9, а потім 11 цифр";
 
 $text['label-9d10']['en-us'] = "Dial 9, then 10 Digits";
 $text['label-9d10']['ar-eg'] = "";
-$text['label-9d10']['de-at'] = "Wähle 9, dann 10 Ziffern";
+$text['label-9d10']['de-at'] = "Wähle 9, dann 10 Ziffern"; //copied from de-de
 $text['label-9d10']['de-ch'] = "Wähle 9, dann 10 Ziffern"; //copied from de-de
 $text['label-9d10']['de-de'] = "Wähle 9, dann 10 Ziffern";
 $text['label-9d10']['es-cl'] = "Marcar 9, luego 10 dígitos";
@@ -643,7 +643,7 @@ $text['label-9d10']['uk-ua'] = "Наберіть 9, а потім 10 цифр";
 
 $text['label-9d.12-20']['en-us'] = "Dial 9, then International";
 $text['label-9d.12-20']['ar-eg'] = "";
-$text['label-9d.12-20']['de-at'] = "Wähle 9, dann international";
+$text['label-9d.12-20']['de-at'] = "Wähle 9, dann international"; //copied from de-de
 $text['label-9d.12-20']['de-ch'] = "Wähle 9, dann international"; //copied from de-de
 $text['label-9d.12-20']['de-de'] = "Wähle 9, dann international";
 $text['label-9d.12-20']['es-cl'] = "Marcar 9, luego Internacional";
@@ -663,7 +663,7 @@ $text['label-9d.12-20']['uk-ua'] = "Наберіть 9, а потім міжна
 
 $text['label-9d']['en-us'] = "9 Digits";
 $text['label-9d']['ar-eg'] = "";
-$text['label-9d']['de-at'] = "9 Ziffern";
+$text['label-9d']['de-at'] = "9 Ziffern"; //copied from de-de
 $text['label-9d']['de-ch'] = "9 Ziffern"; //copied from de-de
 $text['label-9d']['de-de'] = "9 Ziffern";
 $text['label-9d']['es-cl'] = "9 Dígitos";
@@ -683,7 +683,7 @@ $text['label-9d']['uk-ua'] = "9 цифр";
 
 $text['label-911']['en-us'] = "911 Emergency";
 $text['label-911']['ar-eg'] = "";
-$text['label-911']['de-at'] = "911 Notruf (USA)";
+$text['label-911']['de-at'] = "911 Notruf (USA)"; //copied from de-de
 $text['label-911']['de-ch'] = "911 Notruf (USA)"; //copied from de-de
 $text['label-911']['de-de'] = "911 Notruf (USA)";
 $text['label-911']['es-cl'] = "911 Emergencias";
@@ -703,7 +703,7 @@ $text['label-911']['uk-ua'] = "911";
 
 $text['label-8d']['en-us'] = "8 Digits";
 $text['label-8d']['ar-eg'] = "";
-$text['label-8d']['de-at'] = "8 Ziffern";
+$text['label-8d']['de-at'] = "8 Ziffern"; //copied from de-de
 $text['label-8d']['de-ch'] = "8 Ziffern"; //copied from de-de
 $text['label-8d']['de-de'] = "8 Ziffern";
 $text['label-8d']['es-cl'] = "8 Dígitos";
@@ -723,7 +723,7 @@ $text['label-8d']['uk-ua'] = "8 цифр";
 
 $text['label-800']['en-us'] = "Toll-Free";
 $text['label-800']['ar-eg'] = "";
-$text['label-800']['de-at'] = "Gebührenfrei";
+$text['label-800']['de-at'] = "Gebührenfrei"; //copied from de-de
 $text['label-800']['de-ch'] = "Gebührenfrei"; //copied from de-de
 $text['label-800']['de-de'] = "Gebührenfrei";
 $text['label-800']['es-cl'] = "Línea gratuita";
@@ -743,7 +743,7 @@ $text['label-800']['uk-ua'] = "Безкоштовний";
 
 $text['label-inum']['en-us'] = "iNum 0118335100xxxxxxxx";
 $text['label-inum']['ar-eg'] = "";
-$text['label-inum']['de-at'] = "iNum 0118335100xxxxxxxx";
+$text['label-inum']['de-at'] = "iNum 0118335100xxxxxxxx"; //copied from de-de
 $text['label-inum']['de-ch'] = "iNum 0118335100xxxxxxxx"; //copied from de-de
 $text['label-inum']['de-de'] = "iNum 0118335100xxxxxxxx";
 $text['label-inum']['es-cl'] = "iNum 0118335100xxxxxxxx";
@@ -763,7 +763,7 @@ $text['label-inum']['uk-ua'] = "iNum 0118335100xxxxxxxx";
 
 $text['label-711']['en-us'] = "711 TTY";
 $text['label-711']['ar-eg'] = "";
-$text['label-711']['de-at'] = "711";
+$text['label-711']['de-at'] = "711"; //copied from de-de
 $text['label-711']['de-ch'] = "711"; //copied from de-de
 $text['label-711']['de-de'] = "711";
 $text['label-711']['es-cl'] = "711";
@@ -783,7 +783,7 @@ $text['label-711']['uk-ua'] = "711";
 
 $text['label-7d']['en-us'] = "7 Digits Local";
 $text['label-7d']['ar-eg'] = "";
-$text['label-7d']['de-at'] = "7 Ziffern (Ortsrufnummern)";
+$text['label-7d']['de-at'] = "7 Ziffern (Ortsrufnummern)"; //copied from de-de
 $text['label-7d']['de-ch'] = "7 Ziffern (Ortsrufnummern)"; //copied from de-de
 $text['label-7d']['de-de'] = "7 Ziffern (Ortsrufnummern)";
 $text['label-7d']['es-cl'] = "7 Dígitos Local";
@@ -803,7 +803,7 @@ $text['label-7d']['uk-ua'] = "7 цифр";
 
 $text['label-6d']['en-us'] = "6 Digits";
 $text['label-6d']['ar-eg'] = "";
-$text['label-6d']['de-at'] = "6 Ziffern";
+$text['label-6d']['de-at'] = "6 Ziffern"; //copied from de-de
 $text['label-6d']['de-ch'] = "6 Ziffern"; //copied from de-de
 $text['label-6d']['de-de'] = "6 Ziffern";
 $text['label-6d']['es-cl'] = "6 Dígitos";
@@ -823,7 +823,7 @@ $text['label-6d']['uk-ua'] = "6 цифр";
 
 $text['label-5d']['en-us'] = "5 Digits";
 $text['label-5d']['ar-eg'] = "";
-$text['label-5d']['de-at'] = "5 Ziffern";
+$text['label-5d']['de-at'] = "5 Ziffern"; //copied from de-de
 $text['label-5d']['de-ch'] = "5 Ziffern"; //copied from de-de
 $text['label-5d']['de-de'] = "5 Ziffern";
 $text['label-5d']['es-cl'] = "5 Dígitos";
@@ -843,7 +843,7 @@ $text['label-5d']['uk-ua'] = "5 цифр";
 
 $text['label-4d']['en-us'] = "4 Digits";
 $text['label-4d']['ar-eg'] = "";
-$text['label-4d']['de-at'] = "4 Ziffern";
+$text['label-4d']['de-at'] = "4 Ziffern"; //copied from de-de
 $text['label-4d']['de-ch'] = "4 Ziffern"; //copied from de-de
 $text['label-4d']['de-de'] = "4 Ziffern";
 $text['label-4d']['es-cl'] = "4 Dígitos";
@@ -863,7 +863,7 @@ $text['label-4d']['uk-ua'] = "4 цифри";
 
 $text['label-411']['en-us'] = "411 Information";
 $text['label-411']['ar-eg'] = "";
-$text['label-411']['de-at'] = "411 Auskunft";
+$text['label-411']['de-at'] = "411 Auskunft"; //copied from de-de
 $text['label-411']['de-ch'] = "411 Auskunft"; //copied from de-de
 $text['label-411']['de-de'] = "411 Auskunft";
 $text['label-411']['es-cl'] = "411 Información";
@@ -883,7 +883,7 @@ $text['label-411']['uk-ua'] = "411 Довідка";
 
 $text['label-3d']['en-us'] = "3 Digits";
 $text['label-3d']['ar-eg'] = "";
-$text['label-3d']['de-at'] = "3 Ziffern";
+$text['label-3d']['de-at'] = "3 Ziffern"; //copied from de-de
 $text['label-3d']['de-ch'] = "3 Ziffern"; //copied from de-de
 $text['label-3d']['de-de'] = "3 Ziffern";
 $text['label-3d']['es-cl'] = "3 Dígitos";
@@ -903,7 +903,7 @@ $text['label-3d']['uk-ua'] = "3 цифри";
 
 $text['label-311']['en-us'] = "311 Information";
 $text['label-311']['ar-eg'] = "";
-$text['label-311']['de-at'] = "311 Auskunft";
+$text['label-311']['de-at'] = "311 Auskunft"; //copied from de-de
 $text['label-311']['de-ch'] = "311 Auskunft"; //copied from de-de
 $text['label-311']['de-de'] = "311 Auskunft";
 $text['label-311']['es-cl'] = "311 Información";
@@ -923,7 +923,7 @@ $text['label-311']['uk-ua'] = "311 Довідка";
 
 $text['label-2d']['en-us'] = "2 Digits";
 $text['label-2d']['ar-eg'] = "";
-$text['label-2d']['de-at'] = "2 Ziffern";
+$text['label-2d']['de-at'] = "2 Ziffern"; //copied from de-de
 $text['label-2d']['de-ch'] = "2 Ziffern"; //copied from de-de
 $text['label-2d']['de-de'] = "2 Ziffern";
 $text['label-2d']['es-cl'] = "2 Dígitos";
@@ -943,7 +943,7 @@ $text['label-2d']['uk-ua'] = "2 цифри";
 
 $text['label-11d']['en-us'] = "11 Digits Long Distance";
 $text['label-11d']['ar-eg'] = "";
-$text['label-11d']['de-at'] = "11 Ziffern Ferngespräch";
+$text['label-11d']['de-at'] = "11 Ziffern Ferngespräch"; //copied from de-de
 $text['label-11d']['de-ch'] = "11 Ziffern Ferngespräch"; //copied from de-de
 $text['label-11d']['de-de'] = "11 Ziffern Ferngespräch";
 $text['label-11d']['es-cl'] = "11 Dígitos Larga Distancia";
@@ -963,7 +963,7 @@ $text['label-11d']['uk-ua'] = "11 цифр міжміського номера";
 
 $text['label-10d']['en-us'] = "10 Digits Long Distance";
 $text['label-10d']['ar-eg'] = "";
-$text['label-10d']['de-at'] = "10 Ziffern Ferngespräch";
+$text['label-10d']['de-at'] = "10 Ziffern Ferngespräch"; //copied from de-de
 $text['label-10d']['de-ch'] = "10 Ziffern Ferngespräch"; //copied from de-de
 $text['label-10d']['de-de'] = "10 Ziffern Ferngespräch";
 $text['label-10d']['es-cl'] = "10 Dígitos Larga Distancia";
@@ -983,7 +983,7 @@ $text['label-10d']['uk-ua'] = "10 цифр міжміського номера";
 
 $text['description-shortcut']['en-us'] = "Shortcut to create the outbound dialplan entries for this Gateway.";
 $text['description-shortcut']['ar-eg'] = "";
-$text['description-shortcut']['de-at'] = "Abkkürzung um ausgehende Wählpläne für dieses Gateway zu erstellen.";
+$text['description-shortcut']['de-at'] = "Abkkürzung um ausgehende Wählpläne für dieses Gateway zu erstellen."; //copied from de-de
 $text['description-shortcut']['de-ch'] = "Abkkürzung um ausgehende Wählpläne für dieses Gateway zu erstellen."; //copied from de-de
 $text['description-shortcut']['de-de'] = "Abkkürzung um ausgehende Wählpläne für dieses Gateway zu erstellen.";
 $text['description-shortcut']['es-cl'] = "Acceso directo para crear las entradas del plan de marcado saliente para esta pasarela.";
@@ -1003,7 +1003,7 @@ $text['description-shortcut']['uk-ua'] = "Ярлик для створення �
 
 $text['description-outbound-routes']['en-us'] = "Outbound dialplans have one or more conditions that are matched to attributes of a call.  When a call matches the conditions the call is then routed to the gateway.";
 $text['description-outbound-routes']['ar-eg'] = "";
-$text['description-outbound-routes']['de-at'] = "Ausgehende Wählpläne haben eine oder mehrere Bedingungen, die gegen den Eigenschaften des Anrufes geprüft werden. Sofern der Anruf die Bedingungen erfüllt, wir er über dieses Gateway geroutet.";
+$text['description-outbound-routes']['de-at'] = "Ausgehende Wählpläne haben eine oder mehrere Bedingungen, die gegen den Eigenschaften des Anrufes geprüft werden. Sofern der Anruf die Bedingungen erfüllt, wir er über dieses Gateway geroutet."; //copied from de-de
 $text['description-outbound-routes']['de-ch'] = "Ausgehende Wählpläne haben eine oder mehrere Bedingungen, die gegen den Eigenschaften des Anrufes geprüft werden. Sofern der Anruf die Bedingungen erfüllt, wir er über dieses Gateway geroutet."; //copied from de-de
 $text['description-outbound-routes']['de-de'] = "Ausgehende Wählpläne haben eine oder mehrere Bedingungen, die gegen den Eigenschaften des Anrufes geprüft werden. Sofern der Anruf die Bedingungen erfüllt, wir er über dieses Gateway geroutet.";
 $text['description-outbound-routes']['es-cl'] = "Los planes de marcado de salida tienen una o más condiciones que deben cumplirse.  Cuando las condiciones se cumplen, las llamada es dirigida con la pasarela seleccionada.";
@@ -1023,7 +1023,7 @@ $text['description-outbound-routes']['uk-ua'] = "Плани набору вих�
 
 $text['description-order']['en-us'] = "Select the order number. The order number determines the order of the outbound routes when there is more than one.";
 $text['description-order']['ar-eg'] = "";
-$text['description-order']['de-at'] = "Wahlen Sie die Nummer für die Reihenfolge. Hierdurch wird die Reihenfolge bei mehreren ausgehenden Routen festgelegt.";
+$text['description-order']['de-at'] = "Wahlen Sie die Nummer für die Reihenfolge. Hierdurch wird die Reihenfolge bei mehreren ausgehenden Routen festgelegt."; //copied from de-de
 $text['description-order']['de-ch'] = "Wahlen Sie die Nummer für die Reihenfolge. Hierdurch wird die Reihenfolge bei mehreren ausgehenden Routen festgelegt."; //copied from de-de
 $text['description-order']['de-de'] = "Wahlen Sie die Nummer für die Reihenfolge. Hierdurch wird die Reihenfolge bei mehreren ausgehenden Routen festgelegt.";
 $text['description-order']['es-cl'] = "Ingrese el número de orden. El número de orden determina el orden de las rutas de salida cuando existe más de una.";
@@ -1043,7 +1043,7 @@ $text['description-order']['uk-ua'] = "Виберіть порядковий н�
 
 $text['description-limit']['en-us'] = "Enter limit to restrict the number of outbound calls.";
 $text['description-limit']['ar-eg'] = "";
-$text['description-limit']['de-at'] = "Geben Sie eine Obergrenze ein, um die Anzahl ausgehender Anrufe zu begrenzen.";
+$text['description-limit']['de-at'] = "Geben Sie eine Obergrenze ein, um die Anzahl ausgehender Anrufe zu begrenzen."; //copied from de-de
 $text['description-limit']['de-ch'] = "Geben Sie eine Obergrenze ein, um die Anzahl ausgehender Anrufe zu begrenzen."; //copied from de-de
 $text['description-limit']['de-de'] = "Geben Sie eine Obergrenze ein, um die Anzahl ausgehender Anrufe zu begrenzen.";
 $text['description-limit']['es-cl'] = "Ingrese un límite para restringir el número de llamadas salientes.";
@@ -1063,7 +1063,7 @@ $text['description-limit']['uk-ua'] = "Введіть обмеження кіл�
 
 $text['description-enter-prefix']['en-us'] = "Enter a prefix number to add to the beginning of the destination number.";
 $text['description-enter-prefix']['ar-eg'] = "";
-$text['description-enter-prefix']['de-at'] = "Geben Sie eine präfix Nummer an, die am Anfang der Zielrufnummer hinzugefügt wird.";
+$text['description-enter-prefix']['de-at'] = "Geben Sie eine präfix Nummer an, die am Anfang der Zielrufnummer hinzugefügt wird."; //copied from de-de
 $text['description-enter-prefix']['de-ch'] = "Geben Sie eine präfix Nummer an, die am Anfang der Zielrufnummer hinzugefügt wird."; //copied from de-de
 $text['description-enter-prefix']['de-de'] = "Geben Sie eine präfix Nummer an, die am Anfang der Zielrufnummer hinzugefügt wird.";
 $text['description-enter-prefix']['es-cl'] = "Ingrese un número de prefijo para agregar al inicio del número de destino.";
@@ -1083,7 +1083,7 @@ $text['description-enter-prefix']['uk-ua'] = "Введіть префікс, щ�
 
 $text['description-enter-custom-outbound-prefix']['en-us'] = "Enter custom outbound prefix";
 $text['description-enter-custom-outbound-prefix']['ar-eg'] = "";
-$text['description-enter-custom-outbound-prefix']['de-at'] = "Geben Sie eine benutzerdefinierten ausgehenden Präfix an";
+$text['description-enter-custom-outbound-prefix']['de-at'] = "Geben Sie eine benutzerdefinierten ausgehenden Präfix an"; //copied from de-de
 $text['description-enter-custom-outbound-prefix']['de-ch'] = "Geben Sie eine benutzerdefinierten ausgehenden Präfix an"; //copied from de-de
 $text['description-enter-custom-outbound-prefix']['de-de'] = "Geben Sie eine benutzerdefinierten ausgehenden Präfix an";
 $text['description-enter-custom-outbound-prefix']['es-cl'] = "Ingrese un prefijo de salida personalizados";
@@ -1103,7 +1103,7 @@ $text['description-enter-custom-outbound-prefix']['uk-ua'] = "Введіть п�
 
 $text['description-enabled']['en-us'] = "Choose to enable or disable the outbound route.";
 $text['description-enabled']['ar-eg'] = "";
-$text['description-enabled']['de-at'] = "Wählen Sie, ob die ausgehende Route aktiviert oder deaktiviert werden soll.";
+$text['description-enabled']['de-at'] = "Wählen Sie, ob die ausgehende Route aktiviert oder deaktiviert werden soll."; //copied from de-de
 $text['description-enabled']['de-ch'] = "Wählen Sie, ob die ausgehende Route aktiviert oder deaktiviert werden soll."; //copied from de-de
 $text['description-enabled']['de-de'] = "Wählen Sie, ob die ausgehende Route aktiviert oder deaktiviert werden soll.";
 $text['description-enabled']['es-cl'] = "Seleccione si desea activar o desactivar la ruta de salida.";
@@ -1123,7 +1123,7 @@ $text['description-enabled']['uk-ua'] = "Виберіть щоб включит�
 
 $text['description-enable-toll_allow']['en-us'] = "Set to true to enable toll allow";
 $text['description-enable-toll_allow']['ar-eg'] = "";
-$text['description-enable-toll_allow']['de-at'] = "Setzen Sie den Wert auf Ein, um kostenpflichtige Anrufe zu erlauben.";
+$text['description-enable-toll_allow']['de-at'] = "Setzen Sie den Wert auf Ein, um kostenpflichtige Anrufe zu erlauben."; //copied from de-de
 $text['description-enable-toll_allow']['de-ch'] = "Setzen Sie den Wert auf Ein, um kostenpflichtige Anrufe zu erlauben."; //copied from de-de
 $text['description-enable-toll_allow']['de-de'] = "Setzen Sie den Wert auf Ein, um kostenpflichtige Anrufe zu erlauben.";
 $text['description-enable-toll_allow']['es-cl'] = "Seleccione verdadero para activar permitir Tarifas Especiales";
@@ -1143,7 +1143,7 @@ $text['description-enable-toll_allow']['uk-ua'] = "Встановіть 'Так'
 
 $text['description-accountcode']['en-us'] = "Enter the accountcode.";
 $text['description-accountcode']['ar-eg'] = "";
-$text['description-accountcode']['de-at'] = "Geben Sie den Kontoschlüssel an.";
+$text['description-accountcode']['de-at'] = "Geben Sie den Kontoschlüssel an."; //copied from de-de
 $text['description-accountcode']['de-ch'] = "Geben Sie den Kontoschlüssel an."; //copied from de-de
 $text['description-accountcode']['de-de'] = "Geben Sie den Kontoschlüssel an.";
 $text['description-accountcode']['es-cl'] = "Ingrese el código de cuenta.";

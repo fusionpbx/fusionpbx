@@ -1,9 +1,9 @@
 <?php
-#This file was last reorganized on 12th of June 2017 10:57:40 AM UTC
+#This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['title-manage-files']['en-us'] = "Manage Files";
 $text['title-manage-files']['ar-eg'] = "";
-$text['title-manage-files']['de-at'] = "Dateien verwalten";
+$text['title-manage-files']['de-at'] = "Dateien verwalten"; //copied from de-de
 $text['title-manage-files']['de-ch'] = "Dateien verwalten"; //copied from de-de
 $text['title-manage-files']['de-de'] = "Dateien verwalten";
 $text['title-manage-files']['es-cl'] = "Gestión de Archivos";
@@ -23,7 +23,7 @@ $text['title-manage-files']['uk-ua'] = "";
 
 $text['title-manage-clips']['en-us'] = "Manage Clips";
 $text['title-manage-clips']['ar-eg'] = "";
-$text['title-manage-clips']['de-at'] = "Clips verwalten";
+$text['title-manage-clips']['de-at'] = "Clips verwalten"; //copied from de-de
 $text['title-manage-clips']['de-ch'] = "Clips verwalten"; //copied from de-de
 $text['title-manage-clips']['de-de'] = "Clips verwalten";
 $text['title-manage-clips']['es-cl'] = "Gestión de Clips";
@@ -43,7 +43,7 @@ $text['title-manage-clips']['uk-ua'] = "";
 
 $text['label-folder']['en-us'] = "Folder:";
 $text['label-folder']['ar-eg'] = "";
-$text['label-folder']['de-at'] = "Ordner:";
+$text['label-folder']['de-at'] = "Ordner:"; //copied from de-de
 $text['label-folder']['de-ch'] = "Ordner:"; //copied from de-de
 $text['label-folder']['de-de'] = "Ordner:";
 $text['label-folder']['es-cl'] = "Carpeta:";
@@ -63,7 +63,7 @@ $text['label-folder']['uk-ua'] = "";
 
 $text['label-before-selection']['en-us'] = "Before Selection:";
 $text['label-before-selection']['ar-eg'] = "";
-$text['label-before-selection']['de-at'] = "Vor der Auswahl:";
+$text['label-before-selection']['de-at'] = "Vor der Auswahl:"; //copied from de-de
 $text['label-before-selection']['de-ch'] = "Vor der Auswahl:"; //copied from de-de
 $text['label-before-selection']['de-de'] = "Vor der Auswahl:";
 $text['label-before-selection']['es-cl'] = "Antes de seleccionar:";
@@ -83,7 +83,7 @@ $text['label-before-selection']['uk-ua'] = "";
 
 $text['label-after-selection']['en-us'] = "After Selection:";
 $text['label-after-selection']['ar-eg'] = "";
-$text['label-after-selection']['de-at'] = "Nach der Auswahl:";
+$text['label-after-selection']['de-at'] = "Nach der Auswahl:"; //copied from de-de
 $text['label-after-selection']['de-ch'] = "Nach der Auswahl:"; //copied from de-de
 $text['label-after-selection']['de-de'] = "Nach der Auswahl:";
 $text['label-after-selection']['es-cl'] = "Despues de seleccionar:";
@@ -103,7 +103,7 @@ $text['label-after-selection']['uk-ua'] = "";
 
 $text['label-notes']['en-us'] = "Notes:";
 $text['label-notes']['ar-eg'] = "";
-$text['label-notes']['de-at'] = "Notiz:";
+$text['label-notes']['de-at'] = "Notiz:"; //copied from de-de
 $text['label-notes']['de-ch'] = "Notiz:"; //copied from de-de
 $text['label-notes']['de-de'] = "Notiz:";
 $text['label-notes']['es-cl'] = "Notas:";
@@ -123,7 +123,7 @@ $text['label-notes']['uk-ua'] = "";
 
 $text['message-give-up']['en-us'] = "Giving up :( Cannot create an XMLHTTP instance";
 $text['message-give-up']['ar-eg'] = "";
-$text['message-give-up']['de-at'] = "Vorgang abgebrochen :( Konnte XMLHTTP Instanz nich erzeugen";
+$text['message-give-up']['de-at'] = "Vorgang abgebrochen :( Konnte XMLHTTP Instanz nich erzeugen"; //copied from de-de
 $text['message-give-up']['de-ch'] = "Vorgang abgebrochen :( Konnte XMLHTTP Instanz nich erzeugen"; //copied from de-de
 $text['message-give-up']['de-de'] = "Vorgang abgebrochen :( Konnte XMLHTTP Instanz nich erzeugen";
 $text['message-give-up']['es-cl'] = "Cancelando, no se puede crear una instancia XMLHTTP";
@@ -143,7 +143,7 @@ $text['message-give-up']['uk-ua'] = "";
 
 $text['message-problem']['en-us'] = "There was a problem with the request.";
 $text['message-problem']['ar-eg'] = "";
-$text['message-problem']['de-at'] = "Es gab ein Problem mit der Anfrage.";
+$text['message-problem']['de-at'] = "Es gab ein Problem mit der Anfrage."; //copied from de-de
 $text['message-problem']['de-ch'] = "Es gab ein Problem mit der Anfrage."; //copied from de-de
 $text['message-problem']['de-de'] = "Es gab ein Problem mit der Anfrage.";
 $text['message-problem']['es-cl'] = "Hubo un problema con la petición.";
@@ -163,7 +163,7 @@ $text['message-problem']['uk-ua'] = "";
 
 $text['label-clip-library']['en-us'] = "Clip Library";
 $text['label-clip-library']['ar-eg'] = "";
-$text['label-clip-library']['de-at'] = "Clip Bibliothek";
+$text['label-clip-library']['de-at'] = "Clip Bibliothek"; //copied from de-de
 $text['label-clip-library']['de-ch'] = "Clip Bibliothek"; //copied from de-de
 $text['label-clip-library']['de-de'] = "Clip Bibliothek";
 $text['label-clip-library']['es-cl'] = "Librería de Clips";
@@ -183,7 +183,7 @@ $text['label-clip-library']['uk-ua'] = "";
 
 $text['label-selected-clip']['en-us'] = "Selected Clip";
 $text['label-selected-clip']['ar-eg'] = "";
-$text['label-selected-clip']['de-at'] = "Ausgewählter Clip";
+$text['label-selected-clip']['de-at'] = "Ausgewählter Clip"; //copied from de-de
 $text['label-selected-clip']['de-ch'] = "Ausgewählter Clip"; //copied from de-de
 $text['label-selected-clip']['de-de'] = "Ausgewählter Clip";
 $text['label-selected-clip']['es-cl'] = "Clip Seleccionado";
@@ -203,7 +203,7 @@ $text['label-selected-clip']['uk-ua'] = "";
 
 $text['button-edit-clip']['en-us'] = "Edit Clip";
 $text['button-edit-clip']['ar-eg'] = "";
-$text['button-edit-clip']['de-at'] = "Clip bearbeiten";
+$text['button-edit-clip']['de-at'] = "Clip bearbeiten"; //copied from de-de
 $text['button-edit-clip']['de-ch'] = "Clip bearbeiten"; //copied from de-de
 $text['button-edit-clip']['de-de'] = "Clip bearbeiten";
 $text['button-edit-clip']['es-cl'] = "Editar Clip";
@@ -223,7 +223,7 @@ $text['button-edit-clip']['uk-ua'] = "";
 
 $text['button-add-clip']['en-us'] = "Add Clip";
 $text['button-add-clip']['ar-eg'] = "";
-$text['button-add-clip']['de-at'] = "Clip hinzufügen";
+$text['button-add-clip']['de-at'] = "Clip hinzufügen"; //copied from de-de
 $text['button-add-clip']['de-ch'] = "Clip hinzufügen"; //copied from de-de
 $text['button-add-clip']['de-de'] = "Clip hinzufügen";
 $text['button-add-clip']['es-cl'] = "Agregar Clip";
@@ -243,7 +243,7 @@ $text['button-add-clip']['uk-ua'] = "";
 
 $text['message-delete-clip']['en-us'] = "Are you sure you want to delete the selected clip?";
 $text['message-delete-clip']['ar-eg'] = "";
-$text['message-delete-clip']['de-at'] = "Sind Sie sicher, dass Sie den ausgewählten Clip löschen möchten?";
+$text['message-delete-clip']['de-at'] = "Sind Sie sicher, dass Sie den ausgewählten Clip löschen möchten?"; //copied from de-de
 $text['message-delete-clip']['de-ch'] = "Sind Sie sicher, dass Sie den ausgewählten Clip löschen möchten?"; //copied from de-de
 $text['message-delete-clip']['de-de'] = "Sind Sie sicher, dass Sie den ausgewählten Clip löschen möchten?";
 $text['message-delete-clip']['es-cl'] = "¿Realmente desea eliminar el clip seleccionado?";
@@ -263,7 +263,7 @@ $text['message-delete-clip']['uk-ua'] = "";
 
 $text['button-close']['en-us'] = "Close";
 $text['button-close']['ar-eg'] = "";
-$text['button-close']['de-at'] = "Schließen";
+$text['button-close']['de-at'] = "Schließen"; //copied from de-de
 $text['button-close']['de-ch'] = "Schließen"; //copied from de-de
 $text['button-close']['de-de'] = "Schließen";
 $text['button-close']['es-cl'] = "Cerrar";
@@ -283,7 +283,7 @@ $text['button-close']['uk-ua'] = "";
 
 $text['label-path']['en-us'] = "Path:";
 $text['label-path']['ar-eg'] = "";
-$text['label-path']['de-at'] = "Pfad:";
+$text['label-path']['de-at'] = "Pfad:"; //copied from de-de
 $text['label-path']['de-ch'] = "Pfad:"; //copied from de-de
 $text['label-path']['de-de'] = "Pfad:";
 $text['label-path']['es-cl'] = "Ruta:";
@@ -303,7 +303,7 @@ $text['label-path']['uk-ua'] = "";
 
 $text['label-file-name']['en-us'] = "File Name:";
 $text['label-file-name']['ar-eg'] = "";
-$text['label-file-name']['de-at'] = "Dateiname:";
+$text['label-file-name']['de-at'] = "Dateiname:"; //copied from de-de
 $text['label-file-name']['de-ch'] = "Dateiname:"; //copied from de-de
 $text['label-file-name']['de-de'] = "Dateiname:";
 $text['label-file-name']['es-cl'] = "Nombre de Archivo:";
@@ -323,7 +323,7 @@ $text['label-file-name']['uk-ua'] = "";
 
 $text['button-new-file']['en-us'] = "New File";
 $text['button-new-file']['ar-eg'] = "";
-$text['button-new-file']['de-at'] = "Neue Datei";
+$text['button-new-file']['de-at'] = "Neue Datei"; //copied from de-de
 $text['button-new-file']['de-ch'] = "Neue Datei"; //copied from de-de
 $text['button-new-file']['de-de'] = "Neue Datei";
 $text['button-new-file']['es-cl'] = "Nuevo Archivo";
@@ -343,7 +343,7 @@ $text['button-new-file']['uk-ua'] = "";
 
 $text['label-file-name-orig']['en-us'] = "Original File Name:";
 $text['label-file-name-orig']['ar-eg'] = "";
-$text['label-file-name-orig']['de-at'] = "Ursprünglicher Dateiname:";
+$text['label-file-name-orig']['de-at'] = "Ursprünglicher Dateiname:"; //copied from de-de
 $text['label-file-name-orig']['de-ch'] = "Ursprünglicher Dateiname:"; //copied from de-de
 $text['label-file-name-orig']['de-de'] = "Ursprünglicher Dateiname:";
 $text['label-file-name-orig']['es-cl'] = "Nombre de Archivo Original:";
@@ -363,7 +363,7 @@ $text['label-file-name-orig']['uk-ua'] = "";
 
 $text['label-rename-file-to']['en-us'] = "Rename File To:";
 $text['label-rename-file-to']['ar-eg'] = "";
-$text['label-rename-file-to']['de-at'] = "Datei umbenennen in:";
+$text['label-rename-file-to']['de-at'] = "Datei umbenennen in:"; //copied from de-de
 $text['label-rename-file-to']['de-ch'] = "Datei umbenennen in:"; //copied from de-de
 $text['label-rename-file-to']['de-de'] = "Datei umbenennen in:";
 $text['label-rename-file-to']['es-cl'] = "Renombrar a:";
@@ -383,7 +383,7 @@ $text['label-rename-file-to']['uk-ua'] = "";
 
 $text['label-files']['en-us'] = "Files";
 $text['label-files']['ar-eg'] = "";
-$text['label-files']['de-at'] = "Dateien";
+$text['label-files']['de-at'] = "Dateien"; //copied from de-de
 $text['label-files']['de-ch'] = "Dateien"; //copied from de-de
 $text['label-files']['de-de'] = "Dateien";
 $text['label-files']['es-cl'] = "Archivos";
@@ -403,7 +403,7 @@ $text['label-files']['uk-ua'] = "";
 
 $text['button-add-file']['en-us'] = "Add File";
 $text['button-add-file']['ar-eg'] = "";
-$text['button-add-file']['de-at'] = "Datei hinzufügen";
+$text['button-add-file']['de-at'] = "Datei hinzufügen"; //copied from de-de
 $text['button-add-file']['de-ch'] = "Datei hinzufügen"; //copied from de-de
 $text['button-add-file']['de-de'] = "Datei hinzufügen";
 $text['button-add-file']['es-cl'] = "";
@@ -423,7 +423,7 @@ $text['button-add-file']['uk-ua'] = "";
 
 $text['button-add-dir']['en-us'] = "Add Dir";
 $text['button-add-dir']['ar-eg'] = "";
-$text['button-add-dir']['de-at'] = "Verzeichnis erstellen";
+$text['button-add-dir']['de-at'] = "Verzeichnis erstellen"; //copied from de-de
 $text['button-add-dir']['de-ch'] = "Verzeichnis erstellen"; //copied from de-de
 $text['button-add-dir']['de-de'] = "Verzeichnis erstellen";
 $text['button-add-dir']['es-cl'] = "Agregar Carpeta";
@@ -443,7 +443,7 @@ $text['button-add-dir']['uk-ua'] = "";
 
 $text['button-rename-file']['en-us'] = "Rename File";
 $text['button-rename-file']['ar-eg'] = "";
-$text['button-rename-file']['de-at'] = "Datei umbenennen";
+$text['button-rename-file']['de-at'] = "Datei umbenennen"; //copied from de-de
 $text['button-rename-file']['de-ch'] = "Datei umbenennen"; //copied from de-de
 $text['button-rename-file']['de-de'] = "Datei umbenennen";
 $text['button-rename-file']['es-cl'] = "Renombrar Archivo";
@@ -463,7 +463,7 @@ $text['button-rename-file']['uk-ua'] = "";
 
 $text['message-delete-file']['en-us'] = "Are you sure you want to delete the selected file?";
 $text['message-delete-file']['ar-eg'] = "";
-$text['message-delete-file']['de-at'] = "Sind Sie sicher, dass Sie die markierte Datei löschen möchten?";
+$text['message-delete-file']['de-at'] = "Sind Sie sicher, dass Sie die markierte Datei löschen möchten?"; //copied from de-de
 $text['message-delete-file']['de-ch'] = "Sind Sie sicher, dass Sie die markierte Datei löschen möchten?"; //copied from de-de
 $text['message-delete-file']['de-de'] = "Sind Sie sicher, dass Sie die markierte Datei löschen möchten?";
 $text['message-delete-file']['es-cl'] = "¿Realmente desea eliminar el archivo seleccionado?";
@@ -483,7 +483,7 @@ $text['message-delete-file']['uk-ua'] = "";
 
 $text['button-del-file']['en-us'] = "Delete File";
 $text['button-del-file']['ar-eg'] = "";
-$text['button-del-file']['de-at'] = "Datei löschen";
+$text['button-del-file']['de-at'] = "Datei löschen"; //copied from de-de
 $text['button-del-file']['de-ch'] = "Datei löschen"; //copied from de-de
 $text['button-del-file']['de-de'] = "Datei löschen";
 $text['button-del-file']['es-cl'] = "Eliminar Archivo";
@@ -503,7 +503,7 @@ $text['button-del-file']['uk-ua'] = "";
 
 $text['message-delete-folder']['en-us'] = "Are you sure you want to delete the selected folder?";
 $text['message-delete-folder']['ar-eg'] = "";
-$text['message-delete-folder']['de-at'] = "SSind Sie sicher, dass Sie den markierten Ordner löschen möchten?";
+$text['message-delete-folder']['de-at'] = "SSind Sie sicher, dass Sie den markierten Ordner löschen möchten?"; //copied from de-de
 $text['message-delete-folder']['de-ch'] = "SSind Sie sicher, dass Sie den markierten Ordner löschen möchten?"; //copied from de-de
 $text['message-delete-folder']['de-de'] = "SSind Sie sicher, dass Sie den markierten Ordner löschen möchten?";
 $text['message-delete-folder']['es-cl'] = "¿Realmente desea eliminar la carpeta seleccionada?";
@@ -523,7 +523,7 @@ $text['message-delete-folder']['uk-ua'] = "";
 
 $text['button-del-dir']['en-us'] = "Delete Dir";
 $text['button-del-dir']['ar-eg'] = "";
-$text['button-del-dir']['de-at'] = "Verzeichnis löschen";
+$text['button-del-dir']['de-at'] = "Verzeichnis löschen"; //copied from de-de
 $text['button-del-dir']['de-ch'] = "Verzeichnis löschen"; //copied from de-de
 $text['button-del-dir']['de-de'] = "Verzeichnis löschen";
 $text['button-del-dir']['es-cl'] = "Eliminar Carpeta";
@@ -543,7 +543,7 @@ $text['button-del-dir']['uk-ua'] = "";
 
 $text['message-error']['en-us'] = "Error!!";
 $text['message-error']['ar-eg'] = "";
-$text['message-error']['de-at'] = "Fehler!!";
+$text['message-error']['de-at'] = "Fehler!!"; //copied from de-de
 $text['message-error']['de-ch'] = "Fehler!!"; //copied from de-de
 $text['message-error']['de-de'] = "Fehler!!";
 $text['message-error']['es-cl'] = "Error";
@@ -563,7 +563,7 @@ $text['message-error']['uk-ua'] = "";
 
 $text['label-folder-name']['en-us'] = "Folder Name:";
 $text['label-folder-name']['ar-eg'] = "";
-$text['label-folder-name']['de-at'] = "Verzeichnis Name:";
+$text['label-folder-name']['de-at'] = "Verzeichnis Name:"; //copied from de-de
 $text['label-folder-name']['de-ch'] = "Verzeichnis Name:"; //copied from de-de
 $text['label-folder-name']['de-de'] = "Verzeichnis Name:";
 $text['label-folder-name']['es-cl'] = "Nombre de Carpeta:";
@@ -583,7 +583,7 @@ $text['label-folder-name']['uk-ua'] = "";
 
 $text['button-new-folder']['en-us'] = "New Folder";
 $text['button-new-folder']['ar-eg'] = "";
-$text['button-new-folder']['de-at'] = "Neues Verzeichnis";
+$text['button-new-folder']['de-at'] = "Neues Verzeichnis"; //copied from de-de
 $text['button-new-folder']['de-ch'] = "Neues Verzeichnis"; //copied from de-de
 $text['button-new-folder']['de-de'] = "Neues Verzeichnis";
 $text['button-new-folder']['es-cl'] = "Nueva Carpeta";
@@ -603,7 +603,7 @@ $text['button-new-folder']['uk-ua'] = "";
 
 $text['button-delete-this']['en-us'] = "Are you sure want to delete this?";
 $text['button-delete-this']['ar-eg'] = "";
-$text['button-delete-this']['de-at'] = "Sind Sie sicher, dass Sie dieses löschen möchten?";
+$text['button-delete-this']['de-at'] = "Sind Sie sicher, dass Sie dieses löschen möchten?"; //copied from de-de
 $text['button-delete-this']['de-ch'] = "Sind Sie sicher, dass Sie dieses löschen möchten?"; //copied from de-de
 $text['button-delete-this']['de-de'] = "Sind Sie sicher, dass Sie dieses löschen möchten?";
 $text['button-delete-this']['es-cl'] = "¿Realmente desea eliminar esto?";
@@ -623,7 +623,7 @@ $text['button-delete-this']['uk-ua'] = "";
 
 $text['label-file']['en-us'] = "File:";
 $text['label-file']['ar-eg'] = "";
-$text['label-file']['de-at'] = "Datei:";
+$text['label-file']['de-at'] = "Datei:"; //copied from de-de
 $text['label-file']['de-ch'] = "Datei:"; //copied from de-de
 $text['label-file']['de-de'] = "Datei:";
 $text['label-file']['es-cl'] = "Archivo:";

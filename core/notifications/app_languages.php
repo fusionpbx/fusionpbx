@@ -1,9 +1,9 @@
 <?php
-#This file was last reorganized on 12th of June 2017 10:57:41 AM UTC
+#This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['title-notifications']['en-us'] = "Notifications";
 $text['title-notifications']['ar-eg'] = "";
-$text['title-notifications']['de-at'] = "Benachrichtigungen";
+$text['title-notifications']['de-at'] = "Benachrichtigungen"; //copied from de-de
 $text['title-notifications']['de-ch'] = "Benachrichtigungen"; //copied from de-de
 $text['title-notifications']['de-de'] = "Benachrichtigungen";
 $text['title-notifications']['es-cl'] = "Notificaciones";
@@ -23,7 +23,7 @@ $text['title-notifications']['uk-ua'] = "小锌芯胁褨褖械薪薪褟";
 
 $text['option-enabled']['en-us'] = "Enabled";
 $text['option-enabled']['ar-eg'] = "";
-$text['option-enabled']['de-at'] = "Aktiviert";
+$text['option-enabled']['de-at'] = "Aktiviert"; //copied from de-de
 $text['option-enabled']['de-ch'] = "Aktiviert"; //copied from de-de
 $text['option-enabled']['de-de'] = "Aktiviert";
 $text['option-enabled']['es-cl'] = "Activado";
@@ -34,7 +34,7 @@ $text['option-enabled']['he-il'] = "";
 $text['option-enabled']['it-it'] = "Attivo";
 $text['option-enabled']['nl-nl'] = "";
 $text['option-enabled']['pl-pl'] = "W艂膮czony";
-$text['option-enabled']['pt-br'] = "Ativado";
+$text['option-enabled']['pt-br'] = "Ativado"; //copied from pt-pt
 $text['option-enabled']['pt-pt'] = "Ativado";
 $text['option-enabled']['ro-ro'] = "";
 $text['option-enabled']['ru-ru'] = "Включено";
@@ -43,7 +43,7 @@ $text['option-enabled']['uk-ua'] = "袙泻谢褞褔械薪芯";
 
 $text['option-email']['en-us'] = "Email";
 $text['option-email']['ar-eg'] = "";
-$text['option-email']['de-at'] = "E-mail";
+$text['option-email']['de-at'] = "E-mail"; //copied from de-de
 $text['option-email']['de-ch'] = "E-mail"; //copied from de-de
 $text['option-email']['de-de'] = "E-mail";
 $text['option-email']['es-cl'] = "Email";
@@ -63,7 +63,7 @@ $text['option-email']['uk-ua'] = "袝谢械泻褌褉芯薪薪邪 锌芯褕褌邪
 
 $text['option-disabled']['en-us'] = "Disabled";
 $text['option-disabled']['ar-eg'] = "";
-$text['option-disabled']['de-at'] = "Deaktiviert";
+$text['option-disabled']['de-at'] = "Deaktiviert"; //copied from de-de
 $text['option-disabled']['de-ch'] = "Deaktiviert"; //copied from de-de
 $text['option-disabled']['de-de'] = "Deaktiviert";
 $text['option-disabled']['es-cl'] = "Discapacitado";
@@ -83,7 +83,7 @@ $text['option-disabled']['uk-ua'] = "袙懈泻谢褞褔械薪芯";
 
 $text['message-no_channels']['en-us'] = "No Channels Enabled";
 $text['message-no_channels']['ar-eg'] = "";
-$text['message-no_channels']['de-at'] = "Keine Kanäle aktiviert";
+$text['message-no_channels']['de-at'] = "Keine Kanäle aktiviert"; //copied from de-de
 $text['message-no_channels']['de-ch'] = "Keine Kanäle aktiviert"; //copied from de-de
 $text['message-no_channels']['de-de'] = "Keine Kanäle aktiviert";
 $text['message-no_channels']['es-cl'] = "No hay canales habilitados";
@@ -103,7 +103,7 @@ $text['message-no_channels']['uk-ua'] = "袞芯写械薪 泻邪薪邪谢 薪械 
 
 $text['message-invalid_recipient']['en-us'] = "Invalid Notification Recipient";
 $text['message-invalid_recipient']['ar-eg'] = "";
-$text['message-invalid_recipient']['de-at'] = "Ungültiger Empfänger";
+$text['message-invalid_recipient']['de-at'] = "Ungültiger Empfänger"; //copied from de-de
 $text['message-invalid_recipient']['de-ch'] = "Ungültiger Empfänger"; //copied from de-de
 $text['message-invalid_recipient']['de-de'] = "Ungültiger Empfänger";
 $text['message-invalid_recipient']['es-cl'] = "Inv醠ido destinatario de la notificaci髇";
@@ -123,7 +123,7 @@ $text['message-invalid_recipient']['uk-ua'] = "袧械胁褨褉薪懈泄  芯褌�
 
 $text['message-disclaimer']['en-us'] = "<u>Disclosure</u>: Enabling Project Notifications is consent to the collection of <i>anonymous</i> and <i>general</i> demographic information about your installation environment.  Information requested consists of the following: 1) FusionPBX version, 2) PHP version, 3) web server and version, 4) voice switch version, 5) database type and version, 6) operating system platform and version, and 7) public IP address. If you do not wish for this information to be submitted, simply leave Project Notifications disabled, and no information will be submitted about your system.";
 $text['message-disclaimer']['ar-eg'] = "";
-$text['message-disclaimer']['de-at'] = "Bemerkung: Durch das Aktivieren der Projekt-Benachrichtigung werden anonyme Daten und allgemeine statistische Informationen über Ihre Installation gesammelt. Diese Informationen beinhalten folgendes: 1) FusionPBX Version, 2) PHP Version, 3) Web Server und Version, 4) Voice Switch Version, 5) Datenbank Typ und Version, 7) öffentliche IP Addresse. Wenn Sie diese Informationen nicht weitergeben möchten, lassen Sie Projekt-Benachrichtigungen einfach deaktiviert und es werden keine Informationen weitergegeben.";
+$text['message-disclaimer']['de-at'] = "Bemerkung: Durch das Aktivieren der Projekt-Benachrichtigung werden anonyme Daten und allgemeine statistische Informationen über Ihre Installation gesammelt. Diese Informationen beinhalten folgendes: 1) FusionPBX Version, 2) PHP Version, 3) Web Server und Version, 4) Voice Switch Version, 5) Datenbank Typ und Version, 7) öffentliche IP Addresse. Wenn Sie diese Informationen nicht weitergeben möchten, lassen Sie Projekt-Benachrichtigungen einfach deaktiviert und es werden keine Informationen weitergegeben."; //copied from de-de
 $text['message-disclaimer']['de-ch'] = "Bemerkung: Durch das Aktivieren der Projekt-Benachrichtigung werden anonyme Daten und allgemeine statistische Informationen über Ihre Installation gesammelt. Diese Informationen beinhalten folgendes: 1) FusionPBX Version, 2) PHP Version, 3) Web Server und Version, 4) Voice Switch Version, 5) Datenbank Typ und Version, 7) öffentliche IP Addresse. Wenn Sie diese Informationen nicht weitergeben möchten, lassen Sie Projekt-Benachrichtigungen einfach deaktiviert und es werden keine Informationen weitergegeben."; //copied from de-de
 $text['message-disclaimer']['de-de'] = "Bemerkung: Durch das Aktivieren der Projekt-Benachrichtigung werden anonyme Daten und allgemeine statistische Informationen über Ihre Installation gesammelt. Diese Informationen beinhalten folgendes: 1) FusionPBX Version, 2) PHP Version, 3) Web Server und Version, 4) Voice Switch Version, 5) Datenbank Typ und Version, 7) öffentliche IP Addresse. Wenn Sie diese Informationen nicht weitergeben möchten, lassen Sie Projekt-Benachrichtigungen einfach deaktiviert und es werden keine Informationen weitergegeben.";
 $text['message-disclaimer']['es-cl'] = "<u>Divulgaci髇</u>: Habilitaci髇 del proyecto Notificaciones es el consentimiento a la recopilaci髇 de <i>an髇imo</i> y <i>generales</i> la informaci髇 demogr醘ica sobre su entorno de instalaci髇. La informaci髇 solicitada se compone de los siguientes: 1) FusionPBX versi髇, 2) la versi髇 de PHP, 3) del servidor web y la versi髇 4) Versi髇 conmutador de voz, 5) el tipo de base de datos y la versi髇 6) plataforma de sistema operativo y versi髇, y 7) IP p鷅lica direcci髇. Si usted no desea que esta informaci髇 sea presentada, simplemente deje de Proyecto Notificaciones deshabilitado, y ninguna informaci髇 se presentar?sobre su sistema.";
@@ -143,7 +143,7 @@ $text['message-disclaimer']['uk-ua'] = "";
 
 $text['message-demographics_submitted']['en-us'] = "Demographics Submitted";
 $text['message-demographics_submitted']['ar-eg'] = "";
-$text['message-demographics_submitted']['de-at'] = "Statistik weitergegeben";
+$text['message-demographics_submitted']['de-at'] = "Statistik weitergegeben"; //copied from de-de
 $text['message-demographics_submitted']['de-ch'] = "Statistik weitergegeben"; //copied from de-de
 $text['message-demographics_submitted']['de-de'] = "Statistik weitergegeben";
 $text['message-demographics_submitted']['es-cl'] = "Demograf韆 Enviado";
@@ -163,7 +163,7 @@ $text['message-demographics_submitted']['uk-ua'] = "袛械屑芯谐褉邪褎褨�
 
 $text['message-demographics_click_here']['en-us'] = "click here";
 $text['message-demographics_click_here']['ar-eg'] = "";
-$text['message-demographics_click_here']['de-at'] = "Hier Klicken";
+$text['message-demographics_click_here']['de-at'] = "Hier Klicken"; //copied from de-de
 $text['message-demographics_click_here']['de-ch'] = "Hier Klicken"; //copied from de-de
 $text['message-demographics_click_here']['de-de'] = "Hier Klicken";
 $text['message-demographics_click_here']['es-cl'] = "clic aqu?";
@@ -183,7 +183,7 @@ $text['message-demographics_click_here']['uk-ua'] = "泻谢褨泻薪褨褌褜 �
 
 $text['message-demographics']['en-us'] = "<u>Note</u>: To help the FusionPBX project by submitting the demographic information described above <i>without</i> subscribing to Project Notifications, simply ";
 $text['message-demographics']['ar-eg'] = "";
-$text['message-demographics']['de-at'] = "<u>Anmerkung</u>: Um das FusionPBX Projekt zu unterstützen ohne statistische Informationen über Ihre Installation preiszugeben, ";
+$text['message-demographics']['de-at'] = "<u>Anmerkung</u>: Um das FusionPBX Projekt zu unterstützen ohne statistische Informationen über Ihre Installation preiszugeben, "; //copied from de-de
 $text['message-demographics']['de-ch'] = "<u>Anmerkung</u>: Um das FusionPBX Projekt zu unterstützen ohne statistische Informationen über Ihre Installation preiszugeben, "; //copied from de-de
 $text['message-demographics']['de-de'] = "<u>Anmerkung</u>: Um das FusionPBX Projekt zu unterstützen ohne statistische Informationen über Ihre Installation preiszugeben, ";
 $text['message-demographics']['es-cl'] = "<u>Nota</u>: Para ayudar al proyecto FusionPBX presentando la informaci髇 demogr醘ica descrita anteriormente sin necesidad de suscribirse a Project Notificaciones, haga ";
@@ -203,7 +203,7 @@ $text['message-demographics']['uk-ua'] = "";
 
 $text['label-project_security']['en-us'] = "Security";
 $text['label-project_security']['ar-eg'] = "";
-$text['label-project_security']['de-at'] = "Sicherheit";
+$text['label-project_security']['de-at'] = "Sicherheit"; //copied from de-de
 $text['label-project_security']['de-ch'] = "Sicherheit"; //copied from de-de
 $text['label-project_security']['de-de'] = "Sicherheit";
 $text['label-project_security']['es-cl'] = "Seguran鏰";
@@ -223,7 +223,7 @@ $text['label-project_security']['uk-ua'] = "袘械蟹锌械泻邪";
 
 $text['label-project_releases']['en-us'] = "Releases";
 $text['label-project_releases']['ar-eg'] = "";
-$text['label-project_releases']['de-at'] = "Versionen";
+$text['label-project_releases']['de-at'] = "Versionen"; //copied from de-de
 $text['label-project_releases']['de-ch'] = "Versionen"; //copied from de-de
 $text['label-project_releases']['de-de'] = "Versionen";
 $text['label-project_releases']['es-cl'] = "Estrenos";
@@ -243,7 +243,7 @@ $text['label-project_releases']['uk-ua'] = "袪械谢褨蟹懈";
 
 $text['label-project_notifications']['en-us'] = "Project Notifications";
 $text['label-project_notifications']['ar-eg'] = "";
-$text['label-project_notifications']['de-at'] = "Projekt Benachrichtigungen";
+$text['label-project_notifications']['de-at'] = "Projekt Benachrichtigungen"; //copied from de-de
 $text['label-project_notifications']['de-ch'] = "Projekt Benachrichtigungen"; //copied from de-de
 $text['label-project_notifications']['de-de'] = "Projekt Benachrichtigungen";
 $text['label-project_notifications']['es-cl'] = "Proyecto Notificaciones";
@@ -263,7 +263,7 @@ $text['label-project_notifications']['uk-ua'] = "小锌芯胁褨褖械薪薪褟 
 
 $text['label-project_notification_recipient']['en-us'] = "Recipient";
 $text['label-project_notification_recipient']['ar-eg'] = "";
-$text['label-project_notification_recipient']['de-at'] = "Empfänger";
+$text['label-project_notification_recipient']['de-at'] = "Empfänger"; //copied from de-de
 $text['label-project_notification_recipient']['de-ch'] = "Empfänger"; //copied from de-de
 $text['label-project_notification_recipient']['de-de'] = "Empfänger";
 $text['label-project_notification_recipient']['es-cl'] = "Beneficiario";
@@ -283,7 +283,7 @@ $text['label-project_notification_recipient']['uk-ua'] = "袨褌褉懈屑褍胁�
 
 $text['label-project_notification_method']['en-us'] = "Method";
 $text['label-project_notification_method']['ar-eg'] = "";
-$text['label-project_notification_method']['de-at'] = "Methode";
+$text['label-project_notification_method']['de-at'] = "Methode"; //copied from de-de
 $text['label-project_notification_method']['de-ch'] = "Methode"; //copied from de-de
 $text['label-project_notification_method']['de-de'] = "Methode";
 $text['label-project_notification_method']['es-cl'] = "M閠odo";
@@ -303,7 +303,7 @@ $text['label-project_notification_method']['uk-ua'] = "袦械褌芯写";
 
 $text['label-project_news']['en-us'] = "News";
 $text['label-project_news']['ar-eg'] = "";
-$text['label-project_news']['de-at'] = "Nachrichten";
+$text['label-project_news']['de-at'] = "Nachrichten"; //copied from de-de
 $text['label-project_news']['de-ch'] = "Nachrichten"; //copied from de-de
 $text['label-project_news']['de-de'] = "Nachrichten";
 $text['label-project_news']['es-cl'] = "Noticias";
@@ -323,7 +323,7 @@ $text['label-project_news']['uk-ua'] = "袧芯胁懈薪懈";
 
 $text['label-project_events']['en-us'] = "Events";
 $text['label-project_events']['ar-eg'] = "";
-$text['label-project_events']['de-at'] = "Veranstaltungen";
+$text['label-project_events']['de-at'] = "Veranstaltungen"; //copied from de-de
 $text['label-project_events']['de-ch'] = "Veranstaltungen"; //copied from de-de
 $text['label-project_events']['de-de'] = "Veranstaltungen";
 $text['label-project_events']['es-cl'] = "Eventos";
@@ -334,7 +334,7 @@ $text['label-project_events']['he-il'] = "";
 $text['label-project_events']['it-it'] = "Eventi";
 $text['label-project_events']['nl-nl'] = "";
 $text['label-project_events']['pl-pl'] = "Wydarzenia";
-$text['label-project_events']['pt-br'] = "Eventos";
+$text['label-project_events']['pt-br'] = "Eventos"; //copied from pt-pt
 $text['label-project_events']['pt-pt'] = "Eventos";
 $text['label-project_events']['ro-ro'] = "";
 $text['label-project_events']['ru-ru'] = "События";
@@ -343,7 +343,7 @@ $text['label-project_events']['uk-ua'] = "袩芯写褨褩";
 
 $text['header-notifications']['en-us'] = "Notifications";
 $text['header-notifications']['ar-eg'] = "";
-$text['header-notifications']['de-at'] = "Benachrichtigungen";
+$text['header-notifications']['de-at'] = "Benachrichtigungen"; //copied from de-de
 $text['header-notifications']['de-ch'] = "Benachrichtigungen"; //copied from de-de
 $text['header-notifications']['de-de'] = "Benachrichtigungen";
 $text['header-notifications']['es-cl'] = "Notificaciones";
@@ -363,7 +363,7 @@ $text['header-notifications']['uk-ua'] = "小锌芯胁褨褖械薪薪褟";
 
 $text['description-project_security']['en-us'] = "Receive notifications of security updates.";
 $text['description-project_security']['ar-eg'] = "";
-$text['description-project_security']['de-at'] = "Benachrichtigungen über Sicherheitskritische Updates erhalten.";
+$text['description-project_security']['de-at'] = "Benachrichtigungen über Sicherheitskritische Updates erhalten."; //copied from de-de
 $text['description-project_security']['de-ch'] = "Benachrichtigungen über Sicherheitskritische Updates erhalten."; //copied from de-de
 $text['description-project_security']['de-de'] = "Benachrichtigungen über Sicherheitskritische Updates erhalten.";
 $text['description-project_security']['es-cl'] = "Recibir notificaciones de actualizaciones de seguridad.";
@@ -383,7 +383,7 @@ $text['description-project_security']['uk-ua'] = "";
 
 $text['description-project_releases']['en-us'] = "Receive notifications when new stable version of FusionPBX are released and available for download.";
 $text['description-project_releases']['ar-eg'] = "";
-$text['description-project_releases']['de-at'] = "Benachrichtigungen über neue stabile Versionen von FusionPBX erhalten.";
+$text['description-project_releases']['de-at'] = "Benachrichtigungen über neue stabile Versionen von FusionPBX erhalten."; //copied from de-de
 $text['description-project_releases']['de-ch'] = "Benachrichtigungen über neue stabile Versionen von FusionPBX erhalten."; //copied from de-de
 $text['description-project_releases']['de-de'] = "Benachrichtigungen über neue stabile Versionen von FusionPBX erhalten.";
 $text['description-project_releases']['es-cl'] = "Reciba notificaciones cuando una nueva versi髇 estable de FusionPBX se liberan y disponible para su descarga.";
@@ -403,7 +403,7 @@ $text['description-project_releases']['uk-ua'] = "";
 
 $text['description-project_notifications']['en-us'] = "Enable FusionPBX project notifications.";
 $text['description-project_notifications']['ar-eg'] = "";
-$text['description-project_notifications']['de-at'] = "FusionPBX Projekt-Benachrichtigung aktivieren.";
+$text['description-project_notifications']['de-at'] = "FusionPBX Projekt-Benachrichtigung aktivieren."; //copied from de-de
 $text['description-project_notifications']['de-ch'] = "FusionPBX Projekt-Benachrichtigung aktivieren."; //copied from de-de
 $text['description-project_notifications']['de-de'] = "FusionPBX Projekt-Benachrichtigung aktivieren.";
 $text['description-project_notifications']['es-cl'] = "Habilitar las notificaciones de proyectos FusionPBX.";
@@ -423,7 +423,7 @@ $text['description-project_notifications']['uk-ua'] = "";
 
 $text['description-project_notification_recipient']['en-us'] = "Enter the desired Email Address for the recipient.";
 $text['description-project_notification_recipient']['ar-eg'] = "";
-$text['description-project_notification_recipient']['de-at'] = "Geben Sie die gewünschte E-Mail Addresse ein.";
+$text['description-project_notification_recipient']['de-at'] = "Geben Sie die gewünschte E-Mail Addresse ein."; //copied from de-de
 $text['description-project_notification_recipient']['de-ch'] = "Geben Sie die gewünschte E-Mail Addresse ein."; //copied from de-de
 $text['description-project_notification_recipient']['de-de'] = "Geben Sie die gewünschte E-Mail Addresse ein.";
 $text['description-project_notification_recipient']['es-cl'] = "Introduzca la deseada direcci髇 de correo electr髇ico del destinatario.";
@@ -443,7 +443,7 @@ $text['description-project_notification_recipient']['uk-ua'] = "";
 
 $text['description-project_notification_method']['en-us'] = "Select the desired method of communication.";
 $text['description-project_notification_method']['ar-eg'] = "";
-$text['description-project_notification_method']['de-at'] = "Wählen Sie den gewünschten Kommunikationsweg.";
+$text['description-project_notification_method']['de-at'] = "Wählen Sie den gewünschten Kommunikationsweg."; //copied from de-de
 $text['description-project_notification_method']['de-ch'] = "Wählen Sie den gewünschten Kommunikationsweg."; //copied from de-de
 $text['description-project_notification_method']['de-de'] = "Wählen Sie den gewünschten Kommunikationsweg.";
 $text['description-project_notification_method']['es-cl'] = "Seleccione el m閠odo deseado de la comunicaci髇.";
@@ -463,7 +463,7 @@ $text['description-project_notification_method']['uk-ua'] = "";
 
 $text['description-project_news']['en-us'] = "Receive notifications of general FusionPBX related news and information.";
 $text['description-project_news']['ar-eg'] = "";
-$text['description-project_news']['de-at'] = "Allgemeine Informationen über FusionPBX.";
+$text['description-project_news']['de-at'] = "Allgemeine Informationen über FusionPBX."; //copied from de-de
 $text['description-project_news']['de-ch'] = "Allgemeine Informationen über FusionPBX."; //copied from de-de
 $text['description-project_news']['de-de'] = "Allgemeine Informationen über FusionPBX.";
 $text['description-project_news']['es-cl'] = "Recibir notificaciones de noticias FusionPBX relacionadas e informaci髇 general.";
@@ -483,7 +483,7 @@ $text['description-project_news']['uk-ua'] = "";
 
 $text['description-project_events']['en-us'] = "Receive notifications of upcoming FusionPBX training classes, convention booths, and other events related to the project.";
 $text['description-project_events']['ar-eg'] = "";
-$text['description-project_events']['de-at'] = "Benachrichtigungen über kommende FusionPBX Schulungen und andere Projektbezogene Veranstaltungen.";
+$text['description-project_events']['de-at'] = "Benachrichtigungen über kommende FusionPBX Schulungen und andere Projektbezogene Veranstaltungen."; //copied from de-de
 $text['description-project_events']['de-ch'] = "Benachrichtigungen über kommende FusionPBX Schulungen und andere Projektbezogene Veranstaltungen."; //copied from de-de
 $text['description-project_events']['de-de'] = "Benachrichtigungen über kommende FusionPBX Schulungen und andere Projektbezogene Veranstaltungen.";
 $text['description-project_events']['es-cl'] = "Recibir notificaciones de pr髕imas clases FusionPBX formaci髇, cabinas de convenciones y otros eventos relacionados con el proyecto.";
@@ -503,7 +503,7 @@ $text['description-project_events']['uk-ua'] = "";
 
 $text['description-notifications']['en-us'] = "Set notification preferences for FusionPBX project-related communication and other local system alerts.";
 $text['description-notifications']['ar-eg'] = "";
-$text['description-notifications']['de-at'] = "Benachrichtigungseinstellungen für FusionPBX Projektbezogene Informationen.";
+$text['description-notifications']['de-at'] = "Benachrichtigungseinstellungen für FusionPBX Projektbezogene Informationen."; //copied from de-de
 $text['description-notifications']['de-ch'] = "Benachrichtigungseinstellungen für FusionPBX Projektbezogene Informationen."; //copied from de-de
 $text['description-notifications']['de-de'] = "Benachrichtigungseinstellungen für FusionPBX Projektbezogene Informationen.";
 $text['description-notifications']['es-cl'] = "Definici髇 de las preferencias de notificaci髇 de la comunicaci髇 relacionada con el proyecto FusionPBX y otras alertas del sistema local.";
