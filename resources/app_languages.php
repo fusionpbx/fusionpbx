@@ -973,6 +973,26 @@ $text['button-download_csv']['ru-ru'] = "Загрузить в формате CS
 $text['button-download_csv']['sv-se'] = "Ladda Ned CSV";
 $text['button-download_csv']['uk-ua'] = "";
 
+$text['button-import']['en-us'] = "Import";
+$text['button-import']['ar-eg'] = "";
+$text['button-import']['de-at'] = "Importieren";
+$text['button-import']['de-ch'] = "Importieren"; //copied from de-de
+$text['button-import']['de-de'] = "Importieren";
+$text['button-import']['es-cl'] = "Importar";
+$text['button-import']['es-mx'] = "Importar"; //copied from es-cl
+$text['button-import']['fr-ca'] = "Importer"; //copied from fr-fr
+$text['button-import']['fr-fr'] = "Importer";
+$text['button-import']['he-il'] = "";
+$text['button-import']['it-it'] = "";
+$text['button-import']['nl-nl'] = "";
+$text['button-import']['pl-pl'] = "Importuj";
+$text['button-import']['pt-br'] = "Importar";
+$text['button-import']['pt-pt'] = "Importat";
+$text['button-import']['ro-ro'] = "";
+$text['button-import']['ru-ru'] = "Импорт";
+$text['button-import']['sv-se'] = "Importera";
+$text['button-import']['uk-ua'] = "";
+
 $text['label-total']['en-us'] = "Total";
 $text['label-total']['ar-eg'] = "";
 $text['label-total']['de-at'] = "Summe";
