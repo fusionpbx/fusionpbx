@@ -24,16 +24,20 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('script_editor_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('script_editor_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -195,24 +199,53 @@ echo "<body style='margin: 0; padding: 5px;' onfocus='blur();'>\n";
 echo "<div style='text-align: left; margin-left: -16px;'>\n";
 
 ini_set("session.cookie_httponly", True);
-session_start();
-switch ($_SESSION["app"]["edit"]["dir"]) {
-	case 'scripts':
-		echo recur_dir($_SESSION['switch']['scripts']['dir']);
-		break;
-	case 'php':
-		echo recur_dir($_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH);
-		break;
-	case 'grammer':
-		echo recur_dir($_SESSION['switch']['grammar']['dir']);
-		break;
-	case 'provision':
-		echo recur_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/");
-		break;
-	case 'xml':
-		echo recur_dir($_SESSION['switch']['conf']['dir']);
-		break;
-}
+if (!isset($_SESSION)) { session_start(); }
+	if (!isset($_SESSION)) { session_start(); }
+	switch ($_SESSION["app"]["edit"]["dir"]) {
+		case 'scripts':
+			$edit_directory = $_SESSION['switch']['scripts']['dir'];
+			break;
+		case 'php':
+			$edit_directory = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH;
+			break;
+		case 'grammer':
+			$edit_directory = $_SESSION['switch']['grammar']['dir'];
+			break;
+		case 'provision':
+			switch (PHP_OS) {
+				case "Linux":
+					if (file_exists('/etc/fusionpbx/resources/templates/provision')) {
+						$edit_directory = '/etc/fusionpbx/resources/templates/provision';
+					}
+					else {
+						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					}
+					break;
+				case "FreeBSD":
+					if (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
+						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					}
+					else {
+						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					}
+					break;
+				case "NetBSD":
+					$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					break;
+				case "OpenBSD":
+					$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					break;
+				default:
+					$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+			}
+			break;
+		case 'xml':
+			$edit_directory = $_SESSION['switch']['conf']['dir'];
+			break;
+	}
+	if (file_exists($edit_directory)) {
+		echo recur_dir($edit_directory);
+	}
 
 echo "</div>\n";
 
