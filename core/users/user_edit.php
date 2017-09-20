@@ -126,7 +126,10 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 		if ($username == '') { $msg_error = $text['message-required'].$text['label-username']; }
 		if (permission_exists('user_edit') && $action == 'edit') {
 			if ($username != $username_old && $username != '') {
-				$sql = "select count(user_uuid) as num_rows from v_users where domain_uuid = '".$domain_uuid."' and username = '".$username."'";
+				$sql = "select count(*) as num_rows from v_users where username = '".$username."'";
+				if ($_SESSION["user"]["unique"]["text"] != "global"){
+					$sql .= " and domain_uuid = '".$domain_uuid."'";
+				}
 				$prep_statement = $db->prepare(check_sql($sql));
 				if ($prep_statement) {
 					$prep_statement->execute();
@@ -586,7 +589,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	echo "		}\n";
 	echo "	}\n";
 
-	echo "	function show_strenth_meter() {\n";
+	echo "	function show_strength_meter() {\n";
 	echo "		$('#pwstrength_progress').slideDown();\n";
 	echo "	}\n";
 	echo "</script>\n";
@@ -632,7 +635,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	echo "		<td class='vncell".(($action == 'add') ? 'req' : null)."' valign='top'>".$text['label-password']."</td>";
 	echo "		<td class='vtable'>";
 	echo "			<input style='display: none;' type='password'>";
-	echo "			<input type='password' autocomplete='off' class='formfld' name='password' id='password' value='' onkeypress='show_strenth_meter();' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'>";
+	echo "			<input type='password' autocomplete='off' class='formfld' name='password' id='password' value='' onkeypress='show_strength_meter();' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'>";
 	echo "			<div id='pwstrength_progress' class='pwstrength_progress'></div>";
 	echo "		</td>";
 	echo "	</tr>";

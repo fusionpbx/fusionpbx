@@ -28,7 +28,6 @@
 	include "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
-	require_once $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/registrations/resources/classes/status_registrations.php";
 
 //check permissions
 	if (permission_exists('extension_view')) {
@@ -41,16 +40,8 @@
 
 //get the registrations
 	if (permission_exists('extension_registered')) {
-		//create the event socket connection
-		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-		if (!$fp) {
-			$msg = "<div align='center'>".$text['error-event-socket']."<br /></div>";
-		}
-		$registrations = get_registrations('internal');
-		//order the array
-		require_once "resources/classes/array_order.php";
-		$order = new array_order();
-		$registrations = $order->sort($registrations, 'sip-auth-realm', 'user');
+		$obj = new registrations;
+		$registrations = $obj->get('all');
 	}
 
 //add multi-lingual support

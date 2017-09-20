@@ -83,7 +83,7 @@ class cache {
 	public function delete($key) {
 
 		//cache method memcache 
-			if (strlen($_SESSION['cache']['method']['text']) == "memcache") {
+			if ($_SESSION['cache']['method']['text'] == "memcache") {
 				// connect to event socket
 					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 					if ($fp === false) {

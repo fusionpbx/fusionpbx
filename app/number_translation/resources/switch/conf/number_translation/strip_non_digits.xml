@@ -1,0 +1,4 @@
+<profile name="strip_non_digits" description="Remove anything that is not [0-9a-fA-F#*]">
+  <rule regex="^[^0-9a-fA-F#*]*([0-9a-fA-F#*]+)[^0-9a-fA-F#*]*([0-9a-fA-F#*]*)[^0-9a-fA-F#*]*([0-9a-fA-F#*]*)[^0-9a-fA-F#*]*([0-9a-fA-F#*]*)[^0-9a-fA-F#*]*([0-9a-fA-F#*]*)[^0-9a-fA-F#*]*([0-9a-fA-F#*]*)[^0-9a-fA-F#*]*([0-9a-fA-F#*]*)[^0-9a-fA-F#*]*([0-9a-fA-F#*]*)[^0-9a-fA-F#*]*([0-9a-fA-F#*]*)[^0-9a-fA-F#*]*$" replace="$1$2$3$4$5$6$7$8$9"/>
+  <rule regex="^(.*)$" replace="$1"/>
+</profile>

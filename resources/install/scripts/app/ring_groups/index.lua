@@ -168,13 +168,10 @@
 --get the ring group
 	ring_group_forward_enabled = "";
 	ring_group_forward_destination = "";
-	sql = "SELECT r.*, u.user_uuid FROM v_ring_groups as r, v_ring_group_users as u ";
+	sql = "SELECT r.* FROM v_ring_groups as r ";
 	sql = sql .. "where r.ring_group_uuid = :ring_group_uuid ";
-	sql = sql .. "and r.ring_group_uuid = u.ring_group_uuid ";
 	local params = {ring_group_uuid = ring_group_uuid};
 	status = dbh:query(sql, params, function(row)
-		--domain_uuid = row["domain_uuid"];
-		user_uuid = row["user_uuid"];
 		ring_group_name = row["ring_group_name"];
 		ring_group_extension = row["ring_group_extension"];
 		ring_group_forward_enabled = row["ring_group_forward_enabled"];
@@ -184,6 +181,15 @@
 		ring_group_cid_number_prefix = row["ring_group_cid_number_prefix"];
 		missed_call_app = row["ring_group_missed_call_app"];
 		missed_call_data = row["ring_group_missed_call_data"];
+	end);
+	
+--get the ring group user
+	sql = "SELECT r.*, u.user_uuid FROM v_ring_groups as r, v_ring_group_users as u ";
+	sql = sql .. "where r.ring_group_uuid = :ring_group_uuid ";
+	sql = sql .. "and r.ring_group_uuid = u.ring_group_uuid ";
+	local params = {ring_group_uuid = ring_group_uuid};
+	status = dbh:query(sql, params, function(row)
+		user_uuid = row["user_uuid"];
 	end);
 
 --set the caller id
@@ -342,6 +348,28 @@
 						if (api:executeString(cmd) ~= "true") then
 							--add the row to the destinations array
 							destinations[x] = row;
+						end
+					--determine if the user is registered if not registered then lookup 
+						cmd = "sofia_contact */".. row.destination_number .."@" ..leg_domain_name;
+						if (api:executeString(cmd) == "error/user_not_registered") then
+							cmd = "user_data ".. row.destination_number .."@" ..leg_domain_name.." var forward_user_not_registered_enabled";
+							if (api:executeString(cmd) == "true") then
+								--get the new destination number
+								cmd = "user_data ".. row.destination_number .."@" ..leg_domain_name.." var forward_user_not_registered_destination";
+								destination_number = api:executeString(cmd);
+								if (row.destination_number ~= nil) then
+									row.destination_number = destination_number;	
+								end
+
+								--check the new destination number for user_exists
+								cmd = "user_exists id ".. row.destination_number .." "..leg_domain_name;
+								user_exists = api:executeString(cmd);
+								if (user_exists == "true") then
+									row['user_exists'] = "true";
+								else
+									row['user_exists'] = "false";
+								end
+							end
 						end
 				else
 					--set the values
@@ -615,10 +643,7 @@
 						bind_target = 'both';
 					end
 					local bindings = {
-						"local,*1,exec:execute_extension,dx XML " .. context,
 						"local,*2,exec:record_session," .. record_file,
-						"local,*3,exec:execute_extension,cf XML " .. context,
-						"local,*4,exec:execute_extension,att_xfer XML " .. context,
 						-- "local,*0,exec:execute_extension,conf_xfer_from_dialplan XML conf-xfer@" .. context
 					}
 					for _, str in ipairs(bindings) do

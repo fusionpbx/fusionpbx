@@ -1,9 +1,9 @@
 <?php
-#This file was last reorganized on 12th of June 2017 10:57:41 AM UTC
+#This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['title-variables_advanced']['en-us'] = "Switch Variables: Advanced";
 $text['title-variables_advanced']['ar-eg'] = "";
-$text['title-variables_advanced']['de-at'] = "Switch Variablen: Erweitert";
+$text['title-variables_advanced']['de-at'] = "Switch Variablen: Erweitert"; //copied from de-de
 $text['title-variables_advanced']['de-ch'] = "Switch Variablen: Erweitert"; //copied from de-de
 $text['title-variables_advanced']['de-de'] = "Switch Variablen: Erweitert";
 $text['title-variables_advanced']['es-cl'] = "Variables de Switch: Avanzadas";
@@ -23,7 +23,7 @@ $text['title-variables_advanced']['uk-ua'] = "Задання змінних: Д�
 
 $text['title-variables']['en-us'] = "Switch Variables";
 $text['title-variables']['ar-eg'] = "";
-$text['title-variables']['de-at'] = "Switch Variablen";
+$text['title-variables']['de-at'] = "Switch Variablen"; //copied from de-de
 $text['title-variables']['de-ch'] = "Switch Variablen"; //copied from de-de
 $text['title-variables']['de-de'] = "Switch Variablen";
 $text['title-variables']['es-cl'] = "Variables de Switch";
@@ -43,7 +43,7 @@ $text['title-variables']['uk-ua'] = "Задання змінних ";
 
 $text['title-variable_edit']['en-us'] = "Variable";
 $text['title-variable_edit']['ar-eg'] = "";
-$text['title-variable_edit']['de-at'] = "Variable";
+$text['title-variable_edit']['de-at'] = "Variable"; //copied from de-de
 $text['title-variable_edit']['de-ch'] = "Variable"; //copied from de-de
 $text['title-variable_edit']['de-de'] = "Variable";
 $text['title-variable_edit']['es-cl'] = "Editar Variable";
@@ -63,7 +63,7 @@ $text['title-variable_edit']['uk-ua'] = "Змінна";
 
 $text['title-variable_add']['en-us'] = "Variable";
 $text['title-variable_add']['ar-eg'] = "";
-$text['title-variable_add']['de-at'] = "Variable";
+$text['title-variable_add']['de-at'] = "Variable"; //copied from de-de
 $text['title-variable_add']['de-ch'] = "Variable"; //copied from de-de
 $text['title-variable_add']['de-de'] = "Variable";
 $text['title-variable_add']['es-cl'] = "";
@@ -83,7 +83,7 @@ $text['title-variable_add']['uk-ua'] = "Змінна";
 
 $text['label-hostname']['en-us'] = "Hostname";
 $text['label-hostname']['ar-eg'] = "";
-$text['label-hostname']['de-at'] = "Hostname";
+$text['label-hostname']['de-at'] = "Hostname"; //copied from de-de
 $text['label-hostname']['de-ch'] = "Hostname"; //copied from de-de
 $text['label-hostname']['de-de'] = "Hostname";
 $text['label-hostname']['es-cl'] = "";
@@ -103,7 +103,7 @@ $text['label-hostname']['uk-ua'] = "Назва хоста";
 
 $text['label-codec_information']['en-us'] = "Codec Information";
 $text['label-codec_information']['ar-eg'] = "";
-$text['label-codec_information']['de-at'] = "Codec Information";
+$text['label-codec_information']['de-at'] = "Codec Information"; //copied from de-de
 $text['label-codec_information']['de-ch'] = "Codec Information"; //copied from de-de
 $text['label-codec_information']['de-de'] = "Codec Information";
 $text['label-codec_information']['es-cl'] = "Informatión de Codec";
@@ -123,7 +123,7 @@ $text['label-codec_information']['uk-ua'] = "Інформація про код�
 
 $text['header-variables_advanced']['en-us'] = "Switch Variables: Advanced";
 $text['header-variables_advanced']['ar-eg'] = "";
-$text['header-variables_advanced']['de-at'] = "Switch Variablen: Erweitert";
+$text['header-variables_advanced']['de-at'] = "Switch Variablen: Erweitert"; //copied from de-de
 $text['header-variables_advanced']['de-ch'] = "Switch Variablen: Erweitert"; //copied from de-de
 $text['header-variables_advanced']['de-de'] = "Switch Variablen: Erweitert";
 $text['header-variables_advanced']['es-cl'] = "Variables de Switch: Avanzadas";
@@ -143,7 +143,7 @@ $text['header-variables_advanced']['uk-ua'] = "Задання змінних: Д
 
 $text['header-variables']['en-us'] = "Switch Variables";
 $text['header-variables']['ar-eg'] = "";
-$text['header-variables']['de-at'] = "Switch Variablen";
+$text['header-variables']['de-at'] = "Switch Variablen"; //copied from de-de
 $text['header-variables']['de-ch'] = "Switch Variablen"; //copied from de-de
 $text['header-variables']['de-de'] = "Switch Variablen";
 $text['header-variables']['es-cl'] = "Variables de Switch";
@@ -163,7 +163,7 @@ $text['header-variables']['uk-ua'] = "Задання змінних";
 
 $text['header-variable_edit']['en-us'] = "Variable";
 $text['header-variable_edit']['ar-eg'] = "";
-$text['header-variable_edit']['de-at'] = "Variable";
+$text['header-variable_edit']['de-at'] = "Variable"; //copied from de-de
 $text['header-variable_edit']['de-ch'] = "Variable"; //copied from de-de
 $text['header-variable_edit']['de-de'] = "Variable";
 $text['header-variable_edit']['es-cl'] = "Editar Variable";
@@ -174,7 +174,7 @@ $text['header-variable_edit']['he-il'] = "";
 $text['header-variable_edit']['it-it'] = "";
 $text['header-variable_edit']['nl-nl'] = "";
 $text['header-variable_edit']['pl-pl'] = "Zmienna";
-$text['header-variable_edit']['pt-br'] = "Editar variável";
+$text['header-variable_edit']['pt-br'] = "Editar variável"; //copied from pt-pt
 $text['header-variable_edit']['pt-pt'] = "Editar variável";
 $text['header-variable_edit']['ro-ro'] = "";
 $text['header-variable_edit']['ru-ru'] = "Переменная";
@@ -183,7 +183,7 @@ $text['header-variable_edit']['uk-ua'] = "Змінна";
 
 $text['header-hostname']['en-us'] = "Hostname";
 $text['header-hostname']['ar-eg'] = "";
-$text['header-hostname']['de-at'] = "Hostname";
+$text['header-hostname']['de-at'] = "Hostname"; //copied from de-de
 $text['header-hostname']['de-ch'] = "Hostname"; //copied from de-de
 $text['header-hostname']['de-de'] = "Hostname";
 $text['header-hostname']['es-cl'] = "";
@@ -203,7 +203,7 @@ $text['header-hostname']['uk-ua'] = "Назва хоста";
 
 $text['description-variables_advanced']['en-us'] = "Define preprocessor variables here. Can be accessed in the xml configuration with $.";
 $text['description-variables_advanced']['ar-eg'] = "";
-$text['description-variables_advanced']['de-at'] = "Definieren Sie Preprozessor Variablen. Auf diese kann in der XML Konfiguration mittels $ zugegriffen werden.";
+$text['description-variables_advanced']['de-at'] = "Definieren Sie Preprozessor Variablen. Auf diese kann in der XML Konfiguration mittels $ zugegriffen werden."; //copied from de-de
 $text['description-variables_advanced']['de-ch'] = "Definieren Sie Preprozessor Variablen. Auf diese kann in der XML Konfiguration mittels $ zugegriffen werden."; //copied from de-de
 $text['description-variables_advanced']['de-de'] = "Definieren Sie Preprozessor Variablen. Auf diese kann in der XML Konfiguration mittels $ zugegriffen werden.";
 $text['description-variables_advanced']['es-cl'] = "Defina variables de preprocesador aquí. Pueden ser accesadas en la configuración XML con $.";
@@ -223,7 +223,7 @@ $text['description-variables_advanced']['uk-ua'] = "Задайте змінні 
 
 $text['description-variables']['en-us'] = "Define preprocessor variables here.";
 $text['description-variables']['ar-eg'] = "";
-$text['description-variables']['de-at'] = "Definieren Sie Preprozessor Variablen.";
+$text['description-variables']['de-at'] = "Definieren Sie Preprozessor Variablen."; //copied from de-de
 $text['description-variables']['de-ch'] = "Definieren Sie Preprozessor Variablen."; //copied from de-de
 $text['description-variables']['de-de'] = "Definieren Sie Preprozessor Variablen.";
 $text['description-variables']['es-cl'] = "Defina variables de procesador aquí.";
@@ -243,7 +243,7 @@ $text['description-variables']['uk-ua'] = "Задайте змінні преп�
 
 $text['description-name']['en-us'] = "Enter the variable name.";
 $text['description-name']['ar-eg'] = "";
-$text['description-name']['de-at'] = "Geben Sie den Namen der Variable an.";
+$text['description-name']['de-at'] = "Geben Sie den Namen der Variable an."; //copied from de-de
 $text['description-name']['de-ch'] = "Geben Sie den Namen der Variable an."; //copied from de-de
 $text['description-name']['de-de'] = "Geben Sie den Namen der Variable an.";
 $text['description-name']['es-cl'] = "Ingrese el nombre de la variable.";
@@ -263,7 +263,7 @@ $text['description-name']['uk-ua'] = "Введіть назву змінної";
 
 $text['description-hostname']['en-us'] = "Enter the hostname / switchname.";
 $text['description-hostname']['ar-eg'] = "";
-$text['description-hostname']['de-at'] = "Geben Sie den Hostnamen / Switchnamen an.";
+$text['description-hostname']['de-at'] = "Geben Sie den Hostnamen / Switchnamen an."; //copied from de-de
 $text['description-hostname']['de-ch'] = "Geben Sie den Hostnamen / Switchnamen an."; //copied from de-de
 $text['description-hostname']['de-de'] = "Geben Sie den Hostnamen / Switchnamen an.";
 $text['description-hostname']['es-cl'] = "";

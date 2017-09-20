@@ -1,9 +1,9 @@
 <?php
-#This file was last reorganized on 12th of June 2017 10:57:40 AM UTC
+#This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['title-database_transactions']['en-us'] = "Database Transactions";
 $text['title-database_transactions']['ar-eg'] = "";
-$text['title-database_transactions']['de-at'] = "Datenbank Transaktionen";
+$text['title-database_transactions']['de-at'] = "Datenbank Transaktionen"; //copied from de-de
 $text['title-database_transactions']['de-ch'] = "Datenbank Transaktionen"; //copied from de-de
 $text['title-database_transactions']['de-de'] = "Datenbank Transaktionen";
 $text['title-database_transactions']['es-cl'] = "";
@@ -23,7 +23,7 @@ $text['title-database_transactions']['uk-ua'] = "";
 
 $text['title-database_transaction']['en-us'] = "Database Transaction";
 $text['title-database_transaction']['ar-eg'] = "";
-$text['title-database_transaction']['de-at'] = "Datenbank Transaktionen";
+$text['title-database_transaction']['de-at'] = "Datenbank Transaktionen"; //copied from de-de
 $text['title-database_transaction']['de-ch'] = "Datenbank Transaktionen"; //copied from de-de
 $text['title-database_transaction']['de-de'] = "Datenbank Transaktionen";
 $text['title-database_transaction']['es-cl'] = "";
@@ -43,7 +43,7 @@ $text['title-database_transaction']['uk-ua'] = "";
 
 $text['label-user_uuid']['en-us'] = "User";
 $text['label-user_uuid']['ar-eg'] = "";
-$text['label-user_uuid']['de-at'] = "Benutzer";
+$text['label-user_uuid']['de-at'] = "Benutzer"; //copied from de-de
 $text['label-user_uuid']['de-ch'] = "Benutzer"; //copied from de-de
 $text['label-user_uuid']['de-de'] = "Benutzer";
 $text['label-user_uuid']['es-cl'] = "";
@@ -63,7 +63,7 @@ $text['label-user_uuid']['uk-ua'] = "";
 
 $text['description-user_uuid']['en-us'] = "User transaction.";
 $text['description-user_uuid']['ar-eg'] = "";
-$text['description-user_uuid']['de-at'] = "Benutzer Transaktion";
+$text['description-user_uuid']['de-at'] = "Benutzer Transaktion"; //copied from de-de
 $text['description-user_uuid']['de-ch'] = "Benutzer Transaktion"; //copied from de-de
 $text['description-user_uuid']['de-de'] = "Benutzer Transaktion";
 $text['description-user_uuid']['es-cl'] = "";
@@ -83,7 +83,7 @@ $text['description-user_uuid']['uk-ua'] = "";
 
 $text['label-app_name']['en-us'] = "Application";
 $text['label-app_name']['ar-eg'] = "";
-$text['label-app_name']['de-at'] = "Anwendung";
+$text['label-app_name']['de-at'] = "Anwendung"; //copied from de-de
 $text['label-app_name']['de-ch'] = "Anwendung"; //copied from de-de
 $text['label-app_name']['de-de'] = "Anwendung";
 $text['label-app_name']['es-cl'] = "";
@@ -103,7 +103,7 @@ $text['label-app_name']['uk-ua'] = "";
 
 $text['description-app_name']['en-us'] = "Application name.";
 $text['description-app_name']['ar-eg'] = "";
-$text['description-app_name']['de-at'] = "Anwendungs-Name.";
+$text['description-app_name']['de-at'] = "Anwendungs-Name."; //copied from de-de
 $text['description-app_name']['de-ch'] = "Anwendungs-Name."; //copied from de-de
 $text['description-app_name']['de-de'] = "Anwendungs-Name.";
 $text['description-app_name']['es-cl'] = "";
@@ -123,7 +123,7 @@ $text['description-app_name']['uk-ua'] = "";
 
 $text['label-app_uuid']['en-us'] = "Application Id";
 $text['label-app_uuid']['ar-eg'] = "";
-$text['label-app_uuid']['de-at'] = "Anwendungs-ID";
+$text['label-app_uuid']['de-at'] = "Anwendungs-ID"; //copied from de-de
 $text['label-app_uuid']['de-ch'] = "Anwendungs-ID"; //copied from de-de
 $text['label-app_uuid']['de-de'] = "Anwendungs-ID";
 $text['label-app_uuid']['es-cl'] = "";
@@ -143,7 +143,7 @@ $text['label-app_uuid']['uk-ua'] = "";
 
 $text['description-app_uuid']['en-us'] = "Application name.";
 $text['description-app_uuid']['ar-eg'] = "";
-$text['description-app_uuid']['de-at'] = "Anwendungs-Name.";
+$text['description-app_uuid']['de-at'] = "Anwendungs-Name."; //copied from de-de
 $text['description-app_uuid']['de-ch'] = "Anwendungs-Name."; //copied from de-de
 $text['description-app_uuid']['de-de'] = "Anwendungs-Name.";
 $text['description-app_uuid']['es-cl'] = "";
@@ -163,7 +163,7 @@ $text['description-app_uuid']['uk-ua'] = "";
 
 $text['label-transaction_code']['en-us'] = "Code";
 $text['label-transaction_code']['ar-eg'] = "";
-$text['label-transaction_code']['de-at'] = "Code";
+$text['label-transaction_code']['de-at'] = "Code"; //copied from de-de
 $text['label-transaction_code']['de-ch'] = "Code"; //copied from de-de
 $text['label-transaction_code']['de-de'] = "Code";
 $text['label-transaction_code']['es-cl'] = "";
@@ -183,7 +183,7 @@ $text['label-transaction_code']['uk-ua'] = "";
 
 $text['description-transaction_code']['en-us'] = "Transaction code.";
 $text['description-transaction_code']['ar-eg'] = "";
-$text['description-transaction_code']['de-at'] = "Transaktions-Code";
+$text['description-transaction_code']['de-at'] = "Transaktions-Code"; //copied from de-de
 $text['description-transaction_code']['de-ch'] = "Transaktions-Code"; //copied from de-de
 $text['description-transaction_code']['de-de'] = "Transaktions-Code";
 $text['description-transaction_code']['es-cl'] = "";
@@ -203,7 +203,7 @@ $text['description-transaction_code']['uk-ua'] = "";
 
 $text['label-transaction_address']['en-us'] = "IP Address";
 $text['label-transaction_address']['ar-eg'] = "";
-$text['label-transaction_address']['de-at'] = "IP Adresse";
+$text['label-transaction_address']['de-at'] = "IP Adresse"; //copied from de-de
 $text['label-transaction_address']['de-ch'] = "IP Adresse"; //copied from de-de
 $text['label-transaction_address']['de-de'] = "IP Adresse";
 $text['label-transaction_address']['es-cl'] = "";
@@ -223,7 +223,7 @@ $text['label-transaction_address']['uk-ua'] = "";
 
 $text['description-transaction_address']['en-us'] = "IP address of the user.";
 $text['description-transaction_address']['ar-eg'] = "";
-$text['description-transaction_address']['de-at'] = "IP Adresse des Anwenders";
+$text['description-transaction_address']['de-at'] = "IP Adresse des Anwenders"; //copied from de-de
 $text['description-transaction_address']['de-ch'] = "IP Adresse des Anwenders"; //copied from de-de
 $text['description-transaction_address']['de-de'] = "IP Adresse des Anwenders";
 $text['description-transaction_address']['es-cl'] = "";
@@ -243,7 +243,7 @@ $text['description-transaction_address']['uk-ua'] = "";
 
 $text['label-transaction_type']['en-us'] = "Type";
 $text['label-transaction_type']['ar-eg'] = "";
-$text['label-transaction_type']['de-at'] = "Typ";
+$text['label-transaction_type']['de-at'] = "Typ"; //copied from de-de
 $text['label-transaction_type']['de-ch'] = "Typ"; //copied from de-de
 $text['label-transaction_type']['de-de'] = "Typ";
 $text['label-transaction_type']['es-cl'] = "";
@@ -263,7 +263,7 @@ $text['label-transaction_type']['uk-ua'] = "";
 
 $text['description-transaction_type']['en-us'] = "Type: insert, update, delete, select";
 $text['description-transaction_type']['ar-eg'] = "";
-$text['description-transaction_type']['de-at'] = "Typ: insert, update, delete, select";
+$text['description-transaction_type']['de-at'] = "Typ: insert, update, delete, select"; //copied from de-de
 $text['description-transaction_type']['de-ch'] = "Typ: insert, update, delete, select"; //copied from de-de
 $text['description-transaction_type']['de-de'] = "Typ: insert, update, delete, select";
 $text['description-transaction_type']['es-cl'] = "";
@@ -283,7 +283,7 @@ $text['description-transaction_type']['uk-ua'] = "";
 
 $text['label-transaction_date']['en-us'] = "Date";
 $text['label-transaction_date']['ar-eg'] = "";
-$text['label-transaction_date']['de-at'] = "Datum";
+$text['label-transaction_date']['de-at'] = "Datum"; //copied from de-de
 $text['label-transaction_date']['de-ch'] = "Datum"; //copied from de-de
 $text['label-transaction_date']['de-de'] = "Datum";
 $text['label-transaction_date']['es-cl'] = "";
@@ -303,7 +303,7 @@ $text['label-transaction_date']['uk-ua'] = "";
 
 $text['description-transaction_date']['en-us'] = "Transaction date.";
 $text['description-transaction_date']['ar-eg'] = "";
-$text['description-transaction_date']['de-at'] = "Transaktions-Datum";
+$text['description-transaction_date']['de-at'] = "Transaktions-Datum"; //copied from de-de
 $text['description-transaction_date']['de-ch'] = "Transaktions-Datum"; //copied from de-de
 $text['description-transaction_date']['de-de'] = "Transaktions-Datum";
 $text['description-transaction_date']['es-cl'] = "";
@@ -323,7 +323,7 @@ $text['description-transaction_date']['uk-ua'] = "";
 
 $text['label-transaction_old']['en-us'] = "Before";
 $text['label-transaction_old']['ar-eg'] = "";
-$text['label-transaction_old']['de-at'] = "Vor";
+$text['label-transaction_old']['de-at'] = "Vor"; //copied from de-de
 $text['label-transaction_old']['de-ch'] = "Vor"; //copied from de-de
 $text['label-transaction_old']['de-de'] = "Vor";
 $text['label-transaction_old']['es-cl'] = "";
@@ -343,7 +343,7 @@ $text['label-transaction_old']['uk-ua'] = "";
 
 $text['description-transaction_old']['en-us'] = "Array before the transaction.";
 $text['description-transaction_old']['ar-eg'] = "";
-$text['description-transaction_old']['de-at'] = "Array vor der Transaktion.";
+$text['description-transaction_old']['de-at'] = "Array vor der Transaktion."; //copied from de-de
 $text['description-transaction_old']['de-ch'] = "Array vor der Transaktion."; //copied from de-de
 $text['description-transaction_old']['de-de'] = "Array vor der Transaktion.";
 $text['description-transaction_old']['es-cl'] = "";
@@ -363,7 +363,7 @@ $text['description-transaction_old']['uk-ua'] = "";
 
 $text['label-transaction_new']['en-us'] = "After";
 $text['label-transaction_new']['ar-eg'] = "";
-$text['label-transaction_new']['de-at'] = "Nach";
+$text['label-transaction_new']['de-at'] = "Nach"; //copied from de-de
 $text['label-transaction_new']['de-ch'] = "Nach"; //copied from de-de
 $text['label-transaction_new']['de-de'] = "Nach";
 $text['label-transaction_new']['es-cl'] = "";
@@ -383,7 +383,7 @@ $text['label-transaction_new']['uk-ua'] = "";
 
 $text['description-transaction_new']['en-us'] = "Array after the transaction.";
 $text['description-transaction_new']['ar-eg'] = "";
-$text['description-transaction_new']['de-at'] = "Array nach der Transaktion.";
+$text['description-transaction_new']['de-at'] = "Array nach der Transaktion."; //copied from de-de
 $text['description-transaction_new']['de-ch'] = "Array nach der Transaktion."; //copied from de-de
 $text['description-transaction_new']['de-de'] = "Array nach der Transaktion.";
 $text['description-transaction_new']['es-cl'] = "";
@@ -403,7 +403,7 @@ $text['description-transaction_new']['uk-ua'] = "";
 
 $text['label-transaction_result']['en-us'] = "Result";
 $text['label-transaction_result']['ar-eg'] = "";
-$text['label-transaction_result']['de-at'] = "Ergebnis";
+$text['label-transaction_result']['de-at'] = "Ergebnis"; //copied from de-de
 $text['label-transaction_result']['de-ch'] = "Ergebnis"; //copied from de-de
 $text['label-transaction_result']['de-de'] = "Ergebnis";
 $text['label-transaction_result']['es-cl'] = "";
@@ -423,7 +423,7 @@ $text['label-transaction_result']['uk-ua'] = "";
 
 $text['description-transaction_result']['en-us'] = "Result of the transaction.";
 $text['description-transaction_result']['ar-eg'] = "";
-$text['description-transaction_result']['de-at'] = "Ergebnis der Transaktion.";
+$text['description-transaction_result']['de-at'] = "Ergebnis der Transaktion."; //copied from de-de
 $text['description-transaction_result']['de-ch'] = "Ergebnis der Transaktion."; //copied from de-de
 $text['description-transaction_result']['de-de'] = "Ergebnis der Transaktion.";
 $text['description-transaction_result']['es-cl'] = "";
@@ -443,7 +443,7 @@ $text['description-transaction_result']['uk-ua'] = "";
 
 $text['label-true']['en-us'] = "true";
 $text['label-true']['ar-eg'] = "";
-$text['label-true']['de-at'] = "wahr";
+$text['label-true']['de-at'] = "wahr"; //copied from de-de
 $text['label-true']['de-ch'] = "wahr"; //copied from de-de
 $text['label-true']['de-de'] = "wahr";
 $text['label-true']['es-cl'] = "";
@@ -463,7 +463,7 @@ $text['label-true']['uk-ua'] = "";
 
 $text['label-false']['en-us'] = "false";
 $text['label-false']['ar-eg'] = "";
-$text['label-false']['de-at'] = "aus";
+$text['label-false']['de-at'] = "aus"; //copied from de-de
 $text['label-false']['de-ch'] = "aus"; //copied from de-de
 $text['label-false']['de-de'] = "aus";
 $text['label-false']['es-cl'] = "falso";
@@ -483,7 +483,7 @@ $text['label-false']['uk-ua'] = "";
 
 $text['button-add']['en-us'] = "Add";
 $text['button-add']['ar-eg'] = "";
-$text['button-add']['de-at'] = "Hinzufügen";
+$text['button-add']['de-at'] = "Hinzufügen"; //copied from de-de
 $text['button-add']['de-ch'] = "Hinzufügen"; //copied from de-de
 $text['button-add']['de-de'] = "Hinzufügen";
 $text['button-add']['es-cl'] = "";
@@ -503,7 +503,7 @@ $text['button-add']['uk-ua'] = "";
 
 $text['button-edit']['en-us'] = "Edit";
 $text['button-edit']['ar-eg'] = "";
-$text['button-edit']['de-at'] = "Bearbeiten";
+$text['button-edit']['de-at'] = "Bearbeiten"; //copied from de-de
 $text['button-edit']['de-ch'] = "Bearbeiten"; //copied from de-de
 $text['button-edit']['de-de'] = "Bearbeiten";
 $text['button-edit']['es-cl'] = "";
@@ -523,7 +523,7 @@ $text['button-edit']['uk-ua'] = "";
 
 $text['button-delete']['en-us'] = "Delete";
 $text['button-delete']['ar-eg'] = "";
-$text['button-delete']['de-at'] = "Löschen";
+$text['button-delete']['de-at'] = "Löschen"; //copied from de-de
 $text['button-delete']['de-ch'] = "Löschen"; //copied from de-de
 $text['button-delete']['de-de'] = "Löschen";
 $text['button-delete']['es-cl'] = "";
@@ -543,7 +543,7 @@ $text['button-delete']['uk-ua'] = "";
 
 $text['button-save']['en-us'] = "Save";
 $text['button-save']['ar-eg'] = "";
-$text['button-save']['de-at'] = "Speichern";
+$text['button-save']['de-at'] = "Speichern"; //copied from de-de
 $text['button-save']['de-ch'] = "Speichern"; //copied from de-de
 $text['button-save']['de-de'] = "Speichern";
 $text['button-save']['es-cl'] = "";
@@ -563,7 +563,7 @@ $text['button-save']['uk-ua'] = "";
 
 $text['button-view']['en-us'] = "View";
 $text['button-view']['ar-eg'] = "";
-$text['button-view']['de-at'] = "Anzeigen";
+$text['button-view']['de-at'] = "Anzeigen"; //copied from de-de
 $text['button-view']['de-ch'] = "Anzeigen"; //copied from de-de
 $text['button-view']['de-de'] = "Anzeigen";
 $text['button-view']['es-cl'] = "";
@@ -583,7 +583,7 @@ $text['button-view']['uk-ua'] = "";
 
 $text['button-back']['en-us'] = "Back";
 $text['button-back']['ar-eg'] = "";
-$text['button-back']['de-at'] = "Zurück";
+$text['button-back']['de-at'] = "Zurück"; //copied from de-de
 $text['button-back']['de-ch'] = "Zurück"; //copied from de-de
 $text['button-back']['de-de'] = "Zurück";
 $text['button-back']['es-cl'] = "";
@@ -603,7 +603,7 @@ $text['button-back']['uk-ua'] = "";
 
 $text['confirm-delete']['en-us'] = "Do you really want to delete this?";
 $text['confirm-delete']['ar-eg'] = "";
-$text['confirm-delete']['de-at'] = "Wollen Sie das wirklich löschen?";
+$text['confirm-delete']['de-at'] = "Wollen Sie das wirklich löschen?"; //copied from de-de
 $text['confirm-delete']['de-ch'] = "Wollen Sie das wirklich löschen?"; //copied from de-de
 $text['confirm-delete']['de-de'] = "Wollen Sie das wirklich löschen?";
 $text['confirm-delete']['es-cl'] = "";
@@ -623,7 +623,7 @@ $text['confirm-delete']['uk-ua'] = "";
 
 $text['message-add']['en-us'] = "Add Completed";
 $text['message-add']['ar-eg'] = "";
-$text['message-add']['de-at'] = "Erfolgreich hinzugefügt";
+$text['message-add']['de-at'] = "Erfolgreich hinzugefügt"; //copied from de-de
 $text['message-add']['de-ch'] = "Erfolgreich hinzugefügt"; //copied from de-de
 $text['message-add']['de-de'] = "Erfolgreich hinzugefügt";
 $text['message-add']['es-cl'] = "";
@@ -643,7 +643,7 @@ $text['message-add']['uk-ua'] = "";
 
 $text['message-update']['en-us'] = "Update Completed";
 $text['message-update']['ar-eg'] = "";
-$text['message-update']['de-at'] = "Aktualisierung durchgeführt";
+$text['message-update']['de-at'] = "Aktualisierung durchgeführt"; //copied from de-de
 $text['message-update']['de-ch'] = "Aktualisierung durchgeführt"; //copied from de-de
 $text['message-update']['de-de'] = "Aktualisierung durchgeführt";
 $text['message-update']['es-cl'] = "";
@@ -663,7 +663,7 @@ $text['message-update']['uk-ua'] = "";
 
 $text['message-delete']['en-us'] = "Delete Completed";
 $text['message-delete']['ar-eg'] = "";
-$text['message-delete']['de-at'] = "Erfolgreich gelöscht";
+$text['message-delete']['de-at'] = "Erfolgreich gelöscht"; //copied from de-de
 $text['message-delete']['de-ch'] = "Erfolgreich gelöscht"; //copied from de-de
 $text['message-delete']['de-de'] = "Erfolgreich gelöscht";
 $text['message-delete']['es-cl'] = "";
@@ -683,7 +683,7 @@ $text['message-delete']['uk-ua'] = "";
 
 $text['message-required']['en-us'] = "Please provide: ";
 $text['message-required']['ar-eg'] = "";
-$text['message-required']['de-at'] = "Bitte geben Sie folgendes an:";
+$text['message-required']['de-at'] = "Bitte geben Sie folgendes an:"; //copied from de-de
 $text['message-required']['de-ch'] = "Bitte geben Sie folgendes an:"; //copied from de-de
 $text['message-required']['de-de'] = "Bitte geben Sie folgendes an:";
 $text['message-required']['es-cl'] = "";

@@ -1,9 +1,9 @@
 <?php
-#This file was last reorganized on 12th of June 2017 10:57:41 AM UTC
+#This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['title-status']['en-us'] = "Status";
 $text['title-status']['ar-eg'] = "";
-$text['title-status']['de-at'] = "Status";
+$text['title-status']['de-at'] = "Status"; //copied from de-de
 $text['title-status']['de-ch'] = "Status"; //copied from de-de
 $text['title-status']['de-de'] = "Status";
 $text['title-status']['es-cl'] = "Estado";
@@ -14,7 +14,7 @@ $text['title-status']['he-il'] = "";
 $text['title-status']['it-it'] = "Stato";
 $text['title-status']['nl-nl'] = "";
 $text['title-status']['pl-pl'] = "Status ";
-$text['title-status']['pt-br'] = "Estado";
+$text['title-status']['pt-br'] = "Estado"; //copied from pt-pt
 $text['title-status']['pt-pt'] = "Estado";
 $text['title-status']['ro-ro'] = "";
 $text['title-status']['ru-ru'] = "Статус";
@@ -23,7 +23,7 @@ $text['title-status']['uk-ua'] = "Стан";
 
 $text['title-sofia-status-profile']['en-us'] = "sofia status profile";
 $text['title-sofia-status-profile']['ar-eg'] = "";
-$text['title-sofia-status-profile']['de-at'] = "sofia status profile";
+$text['title-sofia-status-profile']['de-at'] = "sofia status profile"; //copied from de-de
 $text['title-sofia-status-profile']['de-ch'] = "sofia status profile"; //copied from de-de
 $text['title-sofia-status-profile']['de-de'] = "sofia status profile";
 $text['title-sofia-status-profile']['es-cl'] = "perfil de estado sofia";
@@ -43,7 +43,7 @@ $text['title-sofia-status-profile']['uk-ua'] = "sofia status profile ";
 
 $text['title-sofia-status']['en-us'] = "sofia status";
 $text['title-sofia-status']['ar-eg'] = "";
-$text['title-sofia-status']['de-at'] = "sofia status";
+$text['title-sofia-status']['de-at'] = "sofia status"; //copied from de-de
 $text['title-sofia-status']['de-ch'] = "sofia status"; //copied from de-de
 $text['title-sofia-status']['de-de'] = "sofia status";
 $text['title-sofia-status']['es-cl'] = "estado sofia";
@@ -63,7 +63,7 @@ $text['title-sofia-status']['uk-ua'] = "sofia status ";
 
 $text['title-sip-status']['en-us'] = "SIP Status";
 $text['title-sip-status']['ar-eg'] = "";
-$text['title-sip-status']['de-at'] = "SIP Status";
+$text['title-sip-status']['de-at'] = "SIP Status"; //copied from de-de
 $text['title-sip-status']['de-ch'] = "SIP Status"; //copied from de-de
 $text['title-sip-status']['de-de'] = "SIP Status";
 $text['title-sip-status']['es-cl'] = "SIP Estado";
@@ -83,7 +83,7 @@ $text['title-sip-status']['uk-ua'] = "Стан SIP";
 
 $text['label-action']['en-us'] = "Action";
 $text['label-action']['ar-eg'] = "";
-$text['label-action']['de-at'] = "Aktion";
+$text['label-action']['de-at'] = "Aktion"; //copied from de-de
 $text['label-action']['de-ch'] = "Aktion"; //copied from de-de
 $text['label-action']['de-de'] = "Aktion";
 $text['label-action']['es-cl'] = "Acción";
@@ -103,7 +103,7 @@ $text['label-action']['uk-ua'] = "Дія";
 
 $text['label-state']['en-us'] = "State";
 $text['label-state']['ar-eg'] = "";
-$text['label-state']['de-at'] = "Status";
+$text['label-state']['de-at'] = "Status"; //copied from de-de
 $text['label-state']['de-ch'] = "Status"; //copied from de-de
 $text['label-state']['de-de'] = "Status";
 $text['label-state']['es-cl'] = "Estado";
@@ -114,7 +114,7 @@ $text['label-state']['he-il'] = "";
 $text['label-state']['it-it'] = "Stato";
 $text['label-state']['nl-nl'] = "";
 $text['label-state']['pl-pl'] = "Status";
-$text['label-state']['pt-br'] = "Estado";
+$text['label-state']['pt-br'] = "Estado"; //copied from pt-pt
 $text['label-state']['pt-pt'] = "Estado";
 $text['label-state']['ro-ro'] = "";
 $text['label-state']['ru-ru'] = "Состояние";
@@ -123,7 +123,7 @@ $text['label-state']['uk-ua'] = "Стан";
 
 $text['label-message']['en-us'] = "Message";
 $text['label-message']['ar-eg'] = "";
-$text['label-message']['de-at'] = "Nachricht";
+$text['label-message']['de-at'] = "Nachricht"; //copied from de-de
 $text['label-message']['de-ch'] = "Nachricht"; //copied from de-de
 $text['label-message']['de-de'] = "Nachricht";
 $text['label-message']['es-cl'] = "Mensaje";
@@ -134,7 +134,7 @@ $text['label-message']['he-il'] = "";
 $text['label-message']['it-it'] = "Messaggio";
 $text['label-message']['nl-nl'] = "";
 $text['label-message']['pl-pl'] = "Wiadomość";
-$text['label-message']['pt-br'] = "Mensagem";
+$text['label-message']['pt-br'] = "Mensagem"; //copied from pt-pt
 $text['label-message']['pt-pt'] = "Mensagem";
 $text['label-message']['ro-ro'] = "";
 $text['label-message']['ru-ru'] = "Сообщение";
@@ -143,7 +143,7 @@ $text['label-message']['uk-ua'] = "Повідомлення";
 
 $text['label-data']['en-us'] = "Data";
 $text['label-data']['ar-eg'] = "";
-$text['label-data']['de-at'] = "Daten";
+$text['label-data']['de-at'] = "Daten"; //copied from de-de
 $text['label-data']['de-ch'] = "Daten"; //copied from de-de
 $text['label-data']['de-de'] = "Daten";
 $text['label-data']['es-cl'] = "Datos";
@@ -163,7 +163,7 @@ $text['label-data']['uk-ua'] = "Дані";
 
 $text['header-sip-status']['en-us'] = "SIP Status";
 $text['header-sip-status']['ar-eg'] = "";
-$text['header-sip-status']['de-at'] = "SIP Status";
+$text['header-sip-status']['de-at'] = "SIP Status"; //copied from de-de
 $text['header-sip-status']['de-ch'] = "SIP Status"; //copied from de-de
 $text['header-sip-status']['de-de'] = "SIP Status";
 $text['header-sip-status']['es-cl'] = "SIP Estado";
@@ -174,7 +174,7 @@ $text['header-sip-status']['he-il'] = "";
 $text['header-sip-status']['it-it'] = "Stato SIP";
 $text['header-sip-status']['nl-nl'] = "";
 $text['header-sip-status']['pl-pl'] = "Status SIP";
-$text['header-sip-status']['pt-br'] = "SIP Estado";
+$text['header-sip-status']['pt-br'] = "SIP Estado"; //copied from pt-pt
 $text['header-sip-status']['pt-pt'] = "SIP Estado";
 $text['header-sip-status']['ro-ro'] = "";
 $text['header-sip-status']['ru-ru'] = "Статус SIP";
@@ -183,7 +183,7 @@ $text['header-sip-status']['uk-ua'] = "Стан SIP";
 
 $text['error-event-socket']['en-us'] = "Connection to Event Socket failed.";
 $text['error-event-socket']['ar-eg'] = "";
-$text['error-event-socket']['de-at'] = "Verbindung zum Event Socket fehlgeschlagen.";
+$text['error-event-socket']['de-at'] = "Verbindung zum Event Socket fehlgeschlagen."; //copied from de-de
 $text['error-event-socket']['de-ch'] = "Verbindung zum Event Socket fehlgeschlagen."; //copied from de-de
 $text['error-event-socket']['de-de'] = "Verbindung zum Event Socket fehlgeschlagen.";
 $text['error-event-socket']['es-cl'] = "Conexión a Socket de Eventos fallida.";
@@ -203,7 +203,7 @@ $text['error-event-socket']['uk-ua'] = "Помилка підключення д
 
 $text['button-rescan']['en-us'] = "Rescan";
 $text['button-rescan']['ar-eg'] = "";
-$text['button-rescan']['de-at'] = "Neu scannen";
+$text['button-rescan']['de-at'] = "Neu scannen"; //copied from de-de
 $text['button-rescan']['de-ch'] = "Neu scannen"; //copied from de-de
 $text['button-rescan']['de-de'] = "Neu scannen";
 $text['button-rescan']['es-cl'] = "Vuelva a Explorar";
@@ -223,7 +223,7 @@ $text['button-rescan']['uk-ua'] = "Пересканувати";
 
 $text['button-reload_xml']['en-us'] = "Reload XML";
 $text['button-reload_xml']['ar-eg'] = "";
-$text['button-reload_xml']['de-at'] = "XML neu laden";
+$text['button-reload_xml']['de-at'] = "XML neu laden"; //copied from de-de
 $text['button-reload_xml']['de-ch'] = "XML neu laden"; //copied from de-de
 $text['button-reload_xml']['de-de'] = "XML neu laden";
 $text['button-reload_xml']['es-cl'] = "Actualizar XML";
@@ -243,7 +243,7 @@ $text['button-reload_xml']['uk-ua'] = "Перезагрузити XML";
 
 $text['button-reload_acl']['en-us'] = "Reload ACL";
 $text['button-reload_acl']['ar-eg'] = "";
-$text['button-reload_acl']['de-at'] = "ACL neu laden";
+$text['button-reload_acl']['de-at'] = "ACL neu laden"; //copied from de-de
 $text['button-reload_acl']['de-ch'] = "ACL neu laden"; //copied from de-de
 $text['button-reload_acl']['de-de'] = "ACL neu laden";
 $text['button-reload_acl']['es-cl'] = "Actualizar ACL";
@@ -263,7 +263,7 @@ $text['button-reload_acl']['uk-ua'] = "Перезагрузити ACL ";
 
 $text['button-registrations']['en-us'] = "Registrations";
 $text['button-registrations']['ar-eg'] = "";
-$text['button-registrations']['de-at'] = "Registrierungen";
+$text['button-registrations']['de-at'] = "Registrierungen"; //copied from de-de
 $text['button-registrations']['de-ch'] = "Registrierungen"; //copied from de-de
 $text['button-registrations']['de-de'] = "Registrierungen";
 $text['button-registrations']['es-cl'] = "Inscripciones";
@@ -274,7 +274,7 @@ $text['button-registrations']['he-il'] = "";
 $text['button-registrations']['it-it'] = "Registrazioni SIP";
 $text['button-registrations']['nl-nl'] = "";
 $text['button-registrations']['pl-pl'] = "Rejestracje";
-$text['button-registrations']['pt-br'] = "Inscrições";
+$text['button-registrations']['pt-br'] = "Inscrições"; //copied from pt-pt
 $text['button-registrations']['pt-pt'] = "Inscrições";
 $text['button-registrations']['ro-ro'] = "";
 $text['button-registrations']['ru-ru'] = "Регистрация";
@@ -283,7 +283,7 @@ $text['button-registrations']['uk-ua'] = "Реєстрації";
 
 $text['button-flush_registrations']['en-us'] = "Flush Registrations";
 $text['button-flush_registrations']['ar-eg'] = "";
-$text['button-flush_registrations']['de-at'] = "Registrierungen verwerfen";
+$text['button-flush_registrations']['de-at'] = "Registrierungen verwerfen"; //copied from de-de
 $text['button-flush_registrations']['de-ch'] = "Registrierungen verwerfen"; //copied from de-de
 $text['button-flush_registrations']['de-de'] = "Registrierungen verwerfen";
 $text['button-flush_registrations']['es-cl'] = "Inscripciones Flush";
@@ -303,7 +303,7 @@ $text['button-flush_registrations']['uk-ua'] = "Скинути реєстрац�
 
 $text['button-flush_memcache']['en-us'] = "Flush Memcache";
 $text['button-flush_memcache']['ar-eg'] = "";
-$text['button-flush_memcache']['de-at'] = "Memcache leeren";
+$text['button-flush_memcache']['de-at'] = "Memcache leeren"; //copied from de-de
 $text['button-flush_memcache']['de-ch'] = "Memcache leeren"; //copied from de-de
 $text['button-flush_memcache']['de-de'] = "Memcache leeren";
 $text['button-flush_memcache']['es-cl'] = "Memcache Flush";

@@ -1,9 +1,9 @@
 <?php
-#This file was last reorganized on 12th of June 2017 10:57:41 AM UTC
+#This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['title-traffic_graph']['en-us'] = "Traffic Graph";
 $text['title-traffic_graph']['ar-eg'] = "";
-$text['title-traffic_graph']['de-at'] = "Netzauslastung";
+$text['title-traffic_graph']['de-at'] = "Netzauslastung"; //copied from de-de
 $text['title-traffic_graph']['de-ch'] = "Netzauslastung"; //copied from de-de
 $text['title-traffic_graph']['de-de'] = "Netzauslastung";
 $text['title-traffic_graph']['es-cl'] = "Gráfico de Tráfico";
@@ -23,7 +23,7 @@ $text['title-traffic_graph']['uk-ua'] = "Графік трафіку";
 
 $text['message-no_interfaces_found']['en-us'] = "No interfaces found.";
 $text['message-no_interfaces_found']['ar-eg'] = "";
-$text['message-no_interfaces_found']['de-at'] = "Keine Netzwerkkarte gefunden.";
+$text['message-no_interfaces_found']['de-at'] = "Keine Netzwerkkarte gefunden."; //copied from de-de
 $text['message-no_interfaces_found']['de-ch'] = "Keine Netzwerkkarte gefunden."; //copied from de-de
 $text['message-no_interfaces_found']['de-de'] = "Keine Netzwerkkarte gefunden.";
 $text['message-no_interfaces_found']['es-cl'] = "Sin interfaces encontrados.";
@@ -34,7 +34,7 @@ $text['message-no_interfaces_found']['he-il'] = "";
 $text['message-no_interfaces_found']['it-it'] = "Non è stata trovata nessuna interfaccia.";
 $text['message-no_interfaces_found']['nl-nl'] = "";
 $text['message-no_interfaces_found']['pl-pl'] = "Nie znaleziono interfejsy.";
-$text['message-no_interfaces_found']['pt-br'] = "Sem interfaces encontrados.";
+$text['message-no_interfaces_found']['pt-br'] = "Sem interfaces encontrados."; //copied from pt-pt
 $text['message-no_interfaces_found']['pt-pt'] = "Sem interfaces encontrados.";
 $text['message-no_interfaces_found']['ro-ro'] = "";
 $text['message-no_interfaces_found']['ru-ru'] = "Интерфейсы не найдены.";
@@ -43,7 +43,7 @@ $text['message-no_interfaces_found']['uk-ua'] = "Не знайдено жодн�
 
 $text['label-interface']['en-us'] = "Interface";
 $text['label-interface']['ar-eg'] = "";
-$text['label-interface']['de-at'] = "Netzwerkkarte";
+$text['label-interface']['de-at'] = "Netzwerkkarte"; //copied from de-de
 $text['label-interface']['de-ch'] = "Netzwerkkarte"; //copied from de-de
 $text['label-interface']['de-de'] = "Netzwerkkarte";
 $text['label-interface']['es-cl'] = "Interfaz";
@@ -54,7 +54,7 @@ $text['label-interface']['he-il'] = "";
 $text['label-interface']['it-it'] = "Interfaccia";
 $text['label-interface']['nl-nl'] = "";
 $text['label-interface']['pl-pl'] = "Wybierz interfejs";
-$text['label-interface']['pt-br'] = "Interface";
+$text['label-interface']['pt-br'] = "Interface"; //copied from pt-pt
 $text['label-interface']['pt-pt'] = "Interface";
 $text['label-interface']['ro-ro'] = "";
 $text['label-interface']['ru-ru'] = "Интерфейсы";
@@ -63,7 +63,7 @@ $text['label-interface']['uk-ua'] = "Інтерфейс";
 
 $text['header-traffic_graph']['en-us'] = "Traffic Graph";
 $text['header-traffic_graph']['ar-eg'] = "";
-$text['header-traffic_graph']['de-at'] = "Netzauslastung";
+$text['header-traffic_graph']['de-at'] = "Netzauslastung"; //copied from de-de
 $text['header-traffic_graph']['de-ch'] = "Netzauslastung"; //copied from de-de
 $text['header-traffic_graph']['de-de'] = "Netzauslastung";
 $text['header-traffic_graph']['es-cl'] = "Gráfico de Tráfico";
@@ -83,7 +83,7 @@ $text['header-traffic_graph']['uk-ua'] = "Графік трафіку";
 
 $text['description-traffic_graph']['en-us'] = "A browser (or plugin) that supports Scalable Vector Graphics (SVG) is required to view the traffic graph below.";
 $text['description-traffic_graph']['ar-eg'] = "";
-$text['description-traffic_graph']['de-at'] = "Um die Netzauslastung anzuzeigen ist ein Browser (oder Plugin) erforderlich, das SVG Dateien (Scalable Vector Graphics) unterstützt.";
+$text['description-traffic_graph']['de-at'] = "Um die Netzauslastung anzuzeigen ist ein Browser (oder Plugin) erforderlich, das SVG Dateien (Scalable Vector Graphics) unterstützt."; //copied from de-de
 $text['description-traffic_graph']['de-ch'] = "Um die Netzauslastung anzuzeigen ist ein Browser (oder Plugin) erforderlich, das SVG Dateien (Scalable Vector Graphics) unterstützt."; //copied from de-de
 $text['description-traffic_graph']['de-de'] = "Um die Netzauslastung anzuzeigen ist ein Browser (oder Plugin) erforderlich, das SVG Dateien (Scalable Vector Graphics) unterstützt.";
 $text['description-traffic_graph']['es-cl'] = "Un navegador (o plugin) que soporte SVG (Scalable Vector Graphics) es necesario para ver el gráfico siguiente.";
@@ -103,7 +103,7 @@ $text['description-traffic_graph']['uk-ua'] = "Браузер (або плагі
 
 $text['description-no_svg']['en-us'] = "Unfortunately your browser does not currently support Scalable Vector Graphics (SVG).  To view the traffic graph, please use a browser (or plugin) that supports Scalable Vector Graphics (SVG).";
 $text['description-no_svg']['ar-eg'] = "";
-$text['description-no_svg']['de-at'] = "Offensichtlich unterstützt Ihr Browser keine SVG Dateien (Scalable Vector Graphics). Um die Netzauslastung anzuzeigen benutzen Sie bitte einen Browser (oder Plugin) welcher SVG Dateien unterstützt.";
+$text['description-no_svg']['de-at'] = "Offensichtlich unterstützt Ihr Browser keine SVG Dateien (Scalable Vector Graphics). Um die Netzauslastung anzuzeigen benutzen Sie bitte einen Browser (oder Plugin) welcher SVG Dateien unterstützt."; //copied from de-de
 $text['description-no_svg']['de-ch'] = "Offensichtlich unterstützt Ihr Browser keine SVG Dateien (Scalable Vector Graphics). Um die Netzauslastung anzuzeigen benutzen Sie bitte einen Browser (oder Plugin) welcher SVG Dateien unterstützt."; //copied from de-de
 $text['description-no_svg']['de-de'] = "Offensichtlich unterstützt Ihr Browser keine SVG Dateien (Scalable Vector Graphics). Um die Netzauslastung anzuzeigen benutzen Sie bitte einen Browser (oder Plugin) welcher SVG Dateien unterstützt.";
 $text['description-no_svg']['es-cl'] = "Su navegador no soporta SVG (Scalable Vector Graphics). Para ver el gráfico debe utilizar un navegador (o plugin) que soporte SVG.";
@@ -114,7 +114,7 @@ $text['description-no_svg']['he-il'] = "";
 $text['description-no_svg']['it-it'] = "Sfortunatamente il tuo browser attualmente non supporta SVG (Scalable Vector Graphics).  Per visualizzare il grafico del traffico usa un browser (o un plugin) che supportino SVG (Scalable Vector Graphics).";
 $text['description-no_svg']['nl-nl'] = "";
 $text['description-no_svg']['pl-pl'] = "Niestety twoja przeglądarka nie obsługuje obecnie Scalable Vector Graphics (SVG). Aby wyświetlić wykres przesyłu danych, należy użyć przeglądarki (lub wtyczki), który obsługuje Scalable Vector Graphics (SVG).";
-$text['description-no_svg']['pt-br'] = "Infelizmente o seu browser não suporta SVG (Scalable Vector Graphics). Para ver o gráfico do tráfego por favor utilize um browser (ou plugin) que suporte SVG.";
+$text['description-no_svg']['pt-br'] = "Infelizmente o seu browser não suporta SVG (Scalable Vector Graphics). Para ver o gráfico do tráfego por favor utilize um browser (ou plugin) que suporte SVG."; //copied from pt-pt
 $text['description-no_svg']['pt-pt'] = "Infelizmente o seu browser não suporta SVG (Scalable Vector Graphics). Para ver o gráfico do tráfego por favor utilize um browser (ou plugin) que suporte SVG.";
 $text['description-no_svg']['ro-ro'] = "";
 $text['description-no_svg']['ru-ru'] = "К сожалению, ваш браузер в настоящее время не поддерживает масштабируемую векторную графику (SVG). Чтобы просмотреть график трафика, используйте браузер (или плагин), который поддерживает масштабируемую векторную графику (SVG).";

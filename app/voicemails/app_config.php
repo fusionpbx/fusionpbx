@@ -40,7 +40,7 @@
 		$apps[$x]['destinations'][$y]['field']['description'] = "voicemail_description";
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:*99\${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer *99\${destination} XML \${context}";
-		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${description}";
+		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${description} &#9993";
 
 	//permission details
 		$y=0;
@@ -90,6 +90,7 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "voicemail_local_after_email";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "voicemail_option_add";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
