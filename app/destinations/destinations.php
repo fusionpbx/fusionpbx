@@ -151,6 +151,10 @@
 			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='destinations.php?showall=true';\">\n";
 		}
 	}
+
+	if (permission_exists('destination_import') && file_exists($_SERVER["PROJECT_ROOT"]."/destinations/destination_import.php")) {
+		echo 				"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='destination_import.php'\" value='".$text['button-import']."'>\n";
+	}
 	echo "				<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	echo "			</td>\n";
