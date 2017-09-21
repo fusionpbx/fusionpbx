@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2016 All Rights Reserved.
+	Copyright (C) 2008-2017 All Rights Reserved.
 
 */
 
@@ -473,7 +473,6 @@
 		$device_vendor = device::get_vendor($device_mac_address);
 	}
 
-
 //get the device line info for provision button
 	foreach($device_lines as $row) {
 		if (strlen($row['user_id']) > 0) {
@@ -483,7 +482,20 @@
 			$server_address = $row['server_address'];
 		}
 	}
-	$sip_profile_name = 'internal';
+
+//get the sip profile name
+	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	if ($fp) {
+		$command = "sofia_contact ".$user_id."@".$server_address;
+		$contact_string = event_socket_request($fp, "api ".$command);
+		if (substr($contact_string, 0, 5) == "sofia") {
+			$contact_array = explode("/", $contact_string);
+			$sip_profile_name = $contact_array[1];
+		}
+		else {
+			$sip_profile_name = 'internal';
+		}
+	}
 
 //show the header
 	require_once "resources/header.php";
@@ -654,7 +666,6 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-device_label']."\n";
@@ -668,7 +679,6 @@
 	else {
 		echo $device_label;
 	}
-
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -1351,7 +1361,8 @@
 		echo $text['description-domain_name']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
-	} else {
+	}
+	else {
 		echo "	<input type='hidden' name='domain_uuid' id='domain_uuid' value=\"".$_SESSION['domain_uuid']."\"/>\n";
 	}
 
