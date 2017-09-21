@@ -18,7 +18,7 @@
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-fr'] = "";
 		$apps[$x]['description']['he-il'] = "";
-		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['it-it'] = "Gestione Toni";
 		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";

@@ -10,7 +10,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Notifications";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Notifications";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
-	$apps[$x]['menu'][$y]['title']['it-it'] = "";
+	$apps[$x]['menu'][$y]['title']['it-it'] = "Notifiche";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Powiadomienia";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "";
