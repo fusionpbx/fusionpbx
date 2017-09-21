@@ -9,17 +9,24 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Direct calls based on the time of day.";
-		$apps[$x]['description']['es-cl'] = "Direcciona llamadas basada en hora del día";
-		$apps[$x]['description']['es-mx'] = "";
+		$apps[$x]['description']['ar-eg'] = "";
+		$apps[$x]['description']['de-at'] = "Anrufe anhand der Tageszeit weiterleiten.";
 		$apps[$x]['description']['de-de'] = "Anrufe anhand der Tageszeit weiterleiten.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "Anrufe anhand der Tageszeit weiterleiten.";
+		$apps[$x]['description']['es-cl'] = "Direcciona llamadas basada en hora del día";
+		$apps[$x]['description']['es-mx'] = "";
 		$apps[$x]['description']['fr-fr'] = "Redirige les appels en fonction de l'heure.";
 		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "Chamada directa com base na hora do dia.";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "Instrada le chiamate basandosi su giorno e ora.";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
+        $apps[$x]['description']['pt-pt'] = "Chamada directa com base na hora do dia.";
+		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "Прямые вызовы на основании времени суток.";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
 
 	//destination details
 		$y=0;

@@ -11,7 +11,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Routes Sortantes";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
-	$apps[$x]['menu'][$y]['title']['it-it'] = "";
+	$apps[$x]['menu'][$y]['title']['it-it'] = "Rotte di Uscita";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Trasy wyjściowe";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "";

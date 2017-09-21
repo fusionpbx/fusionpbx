@@ -10,7 +10,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Configuration";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
-	$apps[$x]['menu'][$y]['title']['it-it'] = "";
+	$apps[$x]['menu'][$y]['title']['it-it'] = "Parametri";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Ustawienia";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Definições";

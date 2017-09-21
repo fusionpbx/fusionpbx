@@ -11,7 +11,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Post téléphonique";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Extensions";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "שלוחות";
-	$apps[$x]['menu'][$y]['title']['it-it'] = "";
+	$apps[$x]['menu'][$y]['title']['it-it'] = "Interni";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Numery wewnętrzne";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Extensões";
