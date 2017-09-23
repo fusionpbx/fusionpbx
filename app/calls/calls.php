@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -38,9 +38,8 @@
 		exit;
 	}
 
-//get the https values and set as variables
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
+//get the domain_uuid from the session
+	$domain_uuid = $_SESSION['domain_uuid'];
 
 //handle search term
 	$search = check_str($_GET["search"]);
@@ -163,9 +162,9 @@
 			$tr_url = PROJECT_PATH."/app/calls/call_edit.php?id=".$row['extension_uuid']."&return_url=".urlencode($_SERVER['REQUEST_URI']);
 			$tr_link = (permission_exists('call_forward') || permission_exists('follow_me') || permission_exists('do_not_disturb')) ? "href='".$tr_url."'" : null;
 			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'><a ".$tr_link.">".$row['extension']."</a></td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'><a ".$tr_link.">".escape($row['extension'])."</a></td>\n";
 			if (permission_exists('call_forward')) {
-				echo "<td valign='top' class='".$row_style[$c]."'>".(($row['forward_all_enabled'] == 'true') ? format_phone($row['forward_all_destination']) : '&nbsp;')."</td>";
+				echo "<td valign='top' class='".$row_style[$c]."'>".(($row['forward_all_enabled'] == 'true') ? escape(format_phone($row['forward_all_destination'])) : '&nbsp;')."</td>";
 			}
 			if (permission_exists('follow_me')) {
 				if ($row['follow_me_uuid'] != '') {
@@ -195,7 +194,7 @@
 				echo "<td valign='top' class='".$row_style[$c]."'>".(($row['do_not_disturb'] == 'true') ? $text['label-enabled'] : '&nbsp;')."</td>";
 			}
 			if (!$is_included) {
-				echo "<td valign='top' class='row_stylebg hidden-xs'>".$row['description']."&nbsp;</td>\n";
+				echo "<td valign='top' class='row_stylebg hidden-xs'>".escape($row['description'])."&nbsp;</td>\n";
 			}
 			echo "	<td class='list_control_icon'><a href='".$tr_url."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a></td>\n";
 			echo "</tr>\n";
