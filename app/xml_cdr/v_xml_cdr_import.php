@@ -543,17 +543,29 @@
 			}
 			unset($sql);
 
+		//get the recording details
+			if (strlen($xml->variables->record_name) > 0) {
+				$record_path = urldecode($xml->variables->record_path);
+				$record_name = urldecode($xml->variables->record_name);
+				$record_length = urldecode($xml->variables->billsec);
+			}
+			if (strlen($xml->variables->sofia_record_file) > 0) {
+				$record_path = dirname(urldecode($xml->variables->sofia_record_file));
+				$record_name = basename(urldecode($xml->variables->sofia_record_file));
+				$record_length = urldecode($xml->variables->record_seconds);
+			}
+
 		//add the call recording
-			if (strlen($xml->variables->record_name) > 0 && file_exists($_SERVER["PROJECT_ROOT"]."/app/call_recordings/app_config.php")) {
-					if (urldecode($xml->variables->billsec) > 0) {
+			if (strlen($record_name) > 0 && file_exists($_SERVER["PROJECT_ROOT"]."/app/call_recordings/app_config.php")) {
+					if ($record_length > 0) {
 						$x = 0;
 						$array['call_recordings'][$x]['call_recording_uuid'] = $uuid;
 						$array['call_recordings'][$x]['domain_uuid'] = $domain_uuid;
-						$array['call_recordings'][$x]['call_recording_name'] = check_str(urldecode($xml->variables->record_name));
-						$array['call_recordings'][$x]['call_recording_path'] = check_str(urldecode($xml->variables->record_path));
-						$array['call_recordings'][$x]['call_recording_length']= check_str(urldecode($xml->variables->billsec));
-						$array['call_recordings'][$x]['call_recording_date']= check_str(urldecode($xml->variables->answer_stamp));
-						$array['call_recordings'][$x]['call_direction']= check_str(urldecode($xml->variables->call_direction));
+						$array['call_recordings'][$x]['call_recording_name'] = $record_name;
+						$array['call_recordings'][$x]['call_recording_path'] = $record_path;
+						$array['call_recordings'][$x]['call_recording_length'] = $record_length;
+						$array['call_recordings'][$x]['call_recording_date'] = urldecode($xml->variables->answer_stamp);
+						$array['call_recordings'][$x]['call_direction'] = urldecode($xml->variables->call_direction);
 						//$array['call_recordings'][$x]['call_recording_description']= $row['zzz'];
 						//$array['call_recordings'][$x]['call_recording_base64']= $row['zzz'];
 
