@@ -486,7 +486,7 @@
 //get the sip profile name
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 	if ($fp) {
-		$command = "sofia_contact ".$user_id."@".$server_address;
+		$command = "sofia_contact */".$user_id."@".$server_address;
 		$contact_string = event_socket_request($fp, "api ".$command);
 		if (substr($contact_string, 0, 5) == "sofia") {
 			$contact_array = explode("/", $contact_string);
