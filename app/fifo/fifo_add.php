@@ -277,7 +277,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//redirect the user
 		messages::add($text['message-add']);
-		header("Location: ".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=16589224-c876-aeb3-f59f-523a1c0801f7");
+		header("Location: ".PROJECT_PATH."/app/dialplans/dialplans.php?app_uuid=16589224-c876-aeb3-f59f-523a1c0801f7");
 		return;
 
 } //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
@@ -428,7 +428,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<br><br>";
 	echo "</form>";
 
-
 //show the footer
 	require_once "resources/footer.php";
+
 ?>
