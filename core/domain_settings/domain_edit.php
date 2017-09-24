@@ -17,23 +17,27 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2015
+ Portions created by the Initial Developer are Copyright (C) 2008-2017
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
  Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('domain_add') || permission_exists('domain_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('domain_add') || permission_exists('domain_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -140,7 +144,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				if ($original_domain_name != $domain_name) {
 
 					// update dialplans
-						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/dialplan/app_config.php")){
+						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/dialplans/app_config.php")){
 							$sql = "update v_dialplans set ";
 							$sql .= "dialplan_context = '".$domain_name."' ";
 							$sql .= "where dialplan_context = '".$original_domain_name."' ";
@@ -521,7 +525,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						unset($dialplan_public_xml);
 
 					// update dialplan details
-						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/dialplan/app_config.php")){
+						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/dialplans/app_config.php")){
 							$sql = "select dialplan_detail_uuid, dialplan_detail_data from v_dialplan_details ";
 							$sql .= "where domain_uuid = '".$domain_uuid."' ";
 							$sql .= "and dialplan_detail_data like '%".$original_domain_name."%' ";
