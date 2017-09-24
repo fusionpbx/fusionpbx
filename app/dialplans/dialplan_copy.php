@@ -155,10 +155,10 @@
 		case "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4": //inbound routes
 		case "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3": //outbound routes
 		case "4b821450-926b-175a-af93-a03c441818b1": //time conditions
-			$redirect_url = PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=".$app_uuid;
+			$redirect_url = PROJECT_PATH."/app/dialplans/dialplans.php?app_uuid=".$app_uuid;
 			break;
 		default:
-			$redirect_url = PROJECT_PATH."/app/dialplan/dialplans.php";
+			$redirect_url = PROJECT_PATH."/app/dialplans/dialplans.php";
 	}
 	header("Location: ".$redirect_url);
 	return;
