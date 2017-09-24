@@ -629,7 +629,7 @@
 
 		//redirect the browser
 			messages::add($text['message-update']);
-			header("Location: ".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3");
+			header("Location: ".PROJECT_PATH."/app/dialplans/dialplans.php?app_uuid=8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3");
 			return;
 	} //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 ?>
@@ -914,7 +914,6 @@ function type_onchange(dialplan_detail_type) {
 	echo $text['message-add-options2']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-
 
 	echo "<tr>\n";
 	echo "  <td valign=\"top\" class=\"vncellreq\">".$text['label-dialplan-expression']."</td>\n";
