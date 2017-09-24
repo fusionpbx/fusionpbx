@@ -109,6 +109,6 @@ else {
 
 //redirect the browser
 	$_SESSION["message"] = $text['message-delete'].(($dialplans_deleted > 1) ? ": ".$dialplans_deleted : null);
-	header("Location: ".PROJECT_PATH."/app/dialplan/dialplans.php".(($app_uuid != '') ? "?app_uuid=".$app_uuid : null));
+	header("Location: ".PROJECT_PATH."/app/dialplans/dialplans.php".(($app_uuid != '') ? "?app_uuid=".$app_uuid : null));
 
 ?>
