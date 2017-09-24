@@ -23,7 +23,7 @@
 	$apps[$x]['menu'][$y]['uuid'] = "b64b2bbf-f99b-b568-13dc-32170515a687";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "b94e8bd9-9eb5-e427-9c26-ff7a6c21552a";
 	$apps[$x]['menu'][$y]['category'] = "internal";
-	$apps[$x]['menu'][$y]['path'] = "/app/dialplan/dialplans.php?app_uuid=c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4";
+	$apps[$x]['menu'][$y]['path'] = "/app/dialplans/dialplans.php?app_uuid=c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 
 ?>
