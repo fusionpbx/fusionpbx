@@ -76,11 +76,11 @@
 					end
 					if (cache_updated) then
 						for key,row in pairs(servers) do
-							if (row.method == "ssh") then
-								api_command_argument = api_command_argument:gsub("%%20", " ");
-								cmd = [[ ssh ]]..row.username..[[@]]..row.hostname..[[ " ]]..api_command_argument..[["]];
-								freeswitch.consoleLog("INFO", "[notice] command: ".. cmd .. "\n");
-								os.execute(cmd);
+							if (row.method == "curl") then
+								api_command_argument = api_command_argument:gsub(" ", "%%20");
+								url = [[http://]]..row.username..[[:]]..row.password..[[@]]..row.hostname..[[:]]..row.port..[[/webapi/luarun?app/servers/resources/clear_cache.lua%20]]..api_command_argument;
+								os.execute("curl "..url);
+								freeswitch.consoleLog("INFO", "[notice] curl ".. url .. " \n");
 							end
 						end
 					end
