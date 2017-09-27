@@ -1,6 +1,6 @@
 --      xml_handler.lua
 --      Part of FusionPBX
---      Copyright (C) 2016 Mark J Crane <markjcrane@fusionpbx.com>
+--      Copyright (C) 2016-2017 Mark J Crane <markjcrane@fusionpbx.com>
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -113,7 +113,8 @@
 
 				--function to get recording to local fs
 					local function load_record(name)
-						local path, is_base64 = base_path .. "/" .. name
+						local path = base_path .. "/" .. name;
+						local is_base64 = false;
 
 						if not file_exists(path) then
 							local sql = "SELECT recording_base64 FROM v_recordings " .. 
@@ -125,18 +126,14 @@
 							end
 
 							dbh:query(sql, params, function(row)
-							--get full path to recording
-								is_base64, name = true, path
-
-							--save the recording to the file system
+								--save the recording to the file system
 								if #row.recording_base64 > 32 then
+									is_base64 = true;
 									file.write_base64(path, row.recording_base64);
 								end
 							end);
-						else
-							name = path
 						end
-						return name, is_base64
+						return path, is_base64
 					end
 
 				--greet long
