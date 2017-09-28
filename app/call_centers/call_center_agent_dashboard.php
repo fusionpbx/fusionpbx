@@ -225,7 +225,4 @@
 	echo "<br><br>";
 	echo "</form>\n";
 
-//show the footer
-	require_once "resources/footer.php";
-
 ?>
