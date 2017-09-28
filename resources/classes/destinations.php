@@ -82,7 +82,7 @@ class destinations {
 			}
 			$this->destinations[$x]['type'] = 'array';
 			$this->destinations[$x]['label'] = 'other';
-			$this->destinations[$x]['name'] = 'dialplan';
+			$this->destinations[$x]['name'] = 'dialplans';
 			$this->destinations[$x]['field']['name'] = "name";
 			$this->destinations[$x]['field']['destination'] = "destination";
 			$this->destinations[$x]['select_value']['dialplan'] = "transfer:\${destination}";
