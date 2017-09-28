@@ -341,6 +341,40 @@
 				cmd = "user_exists id ".. row.destination_number .." "..leg_domain_name;
 				user_exists = api:executeString(cmd);
 				if (user_exists == "true") then
+					--check to see if the destination is forwarded - first forward
+						cmd = "user_data ".. row.destination_number .."@" ..leg_domain_name.." var forward_all_enabled";
+						if (api:executeString(cmd) == "true") then
+							--get the new destination
+								cmd = "user_data ".. row.destination_number .."@" ..leg_domain_name.." var forward_all_destination";
+								row.destination_number = api:executeString(cmd);
+								cmd = "user_exists id ".. row.destination_number .." "..leg_domain_name;
+								user_exists = api:executeString(cmd);
+								if (user_exists == "true") then
+									--check to see if the new destination is forwarded - second forward
+										cmd = "user_data ".. row.destination_number .."@" ..leg_domain_name.." var forward_all_enabled";
+										if (api:executeString(cmd) == "true") then
+											--get the new destination - second forward
+												cmd = "user_data ".. row.destination_number .."@" ..leg_domain_name.." var forward_all_destination";
+												row.destination_number = api:executeString(cmd);
+												cmd = "user_exists id ".. row.destination_number .." "..leg_domain_name;
+												user_exists = api:executeString(cmd);
+												if (user_exists == "true") then
+													---check to see if the new destination is forwarded - third forward
+														cmd = "user_data ".. row.destination_number .."@" ..leg_domain_name.." var forward_all_enabled";
+														if (api:executeString(cmd) == "true") then
+															--get the new destination - third foward
+																cmd = "user_data ".. row.destination_number .."@" ..leg_domain_name.." var forward_all_destination";
+																row.destination_number = api:executeString(cmd);
+																cmd = "user_exists id ".. row.destination_number .." "..leg_domain_name;
+																user_exists = api:executeString(cmd);
+														end
+												end
+										end
+								end
+						end
+				end
+				cmd = "user_exists id ".. row.destination_number .." "..leg_domain_name;
+				if (user_exists == "true") then
 					--add user_exists true or false to the row array
 						row['user_exists'] = "true";
 					--handle do_not_disturb
