@@ -215,7 +215,7 @@
 
 			echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
 			echo "<tr>\n";
-			echo "	<th>\n";
+			echo "	<th style='width:30px;'>\n";
 			echo "		<input type='checkbox' name='checkbox_all' id='checkbox_all' value='' onclick=\"checkbox_toggle();\">\n";
 			echo "	</th>\n";
 			echo "	<th>".$text['label-user']."</th>\n";
@@ -251,7 +251,7 @@
 
 							//show the registrations
 								echo "<tr>\n";
-								echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; padding: 3px 3px 0px 8px;'>\n";
+								echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='align: center; padding: 3px 3px 0px 8px;'>\n";
 								echo "		<input type='checkbox' name=\"registrations[$x][checked]\" id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$row['user']."').checked = false; }\">\n";
 								echo "		<input type='hidden' name=\"registrations[$x][user]\" value='".$row['user']."' />\n";
 								echo "		<input type='hidden' name=\"registrations[$x][profile]\" value='".$row['sip_profile_name']."' />\n";
