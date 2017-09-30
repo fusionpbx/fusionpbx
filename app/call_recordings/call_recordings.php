@@ -42,6 +42,49 @@
 	$language = new text;
 	$text = $language->get();
 
+//get the action
+	if (is_array($_POST["call_recordings"])) {
+		$call_recordings = $_POST["call_recordings"];
+		foreach($call_recordings as $row) {
+			if ($row['action'] == 'download') {
+				$action = 'download';
+				break;
+			}
+			if ($row['action'] == 'delete') {
+				$action = 'delete';
+				break;
+			}
+		}
+	}
+
+//download recordings
+	if (permission_exists('call_recording_download')) {
+		if ($action == "download") {
+			//download
+				$obj = new call_recordings;
+				$obj->download($call_recordings);
+			//delete message
+				messages::add($text['message-add']);
+		}
+	}
+
+//delete the recordings
+	if (permission_exists('call_recording_delete')) {
+		if ($action == "delete") {
+			//set the array
+				$call_recordings = $_POST["call_recordings"];
+			//download
+				$obj = new call_recordings;
+				$obj->delete($call_recordings);
+			//delete message
+				messages::add($text['message-delete']);
+		}
+	}
+
+//additional includes
+	require_once "resources/header.php";
+	require_once "resources/paging.php";
+
 //get variables used to control the order
 	$order_by = check_str($_GET["order_by"]);
 	$order = check_str($_GET["order"]);
@@ -56,23 +99,6 @@
 		$sql_search .= "or lower(call_recording_description) like '%".$search."%' ";
 		$sql_search .= ") ";
 	}
-
-//delete the recordings
-	if (permission_exists('call_recording_delete')) {
-		if (is_array($_POST["call_recordings"])) {
-			//set the array
-				$call_recordings = $_POST["call_recordings"];
-			//download
-				$obj = new call_recordings;
-				$obj->delete($call_recordings);
-			//delete message
-				messages::add($text['message-delete']);
-		}
-	}
-
-//additional includes
-	require_once "resources/header.php";
-	require_once "resources/paging.php";
 
 //prepare to page the results
 	$sql = "select count(call_recording_uuid) as num_rows from v_call_recordings ";
@@ -133,15 +159,18 @@
 	echo "</script>\n";
 
 //show the content
+	echo "<form method='post' action=''>\n";
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-call_recordings']."</b></td>\n";
-	echo "		<form method='get' action=''>\n";
 	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
+	//if (permission_exists('call_recording_delete')) {
+	echo "				<button type='submit' class='btn btn-default' name=\"call_recordings[$x][action]\" alt='".$text['button-download']."' value='download'>".$text['button-download']."</span></button>\n";
+	echo "				&nbsp; &nbsp; &nbsp; ";
+	//}
 	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>\n";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
 	echo "			</td>\n";
-	echo "		</form>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
@@ -160,10 +189,9 @@
 	//echo "</style>\n";
 	echo "\n";
 
-	echo "<form method='post' action=''>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "	<th style='width:4px;'>\n";
+	echo "	<th style='width:30px;'>\n";
 	echo "		<input type='checkbox' name='checkbox_all' id='checkbox_all' value='' onclick=\"checkbox_toggle();\">\n";
 	echo "	</th>\n";
 	echo th_order_by('call_recording_name', $text['label-call_recording_name'], $order_by, $order);
@@ -183,7 +211,7 @@
 	}
 	echo "	</td>\n";
 	echo "<tr>\n";
-	
+
 	if (is_array($result)) {
 		$x = 0;
 		foreach($result as $row) {
@@ -194,7 +222,7 @@
 				$tr_link = "href='call_recording_edit.php?id=".$row['call_recording_uuid']."'";
 			}
 			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; padding: 3px 3px 0px 8px;'>\n";
+			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='align: center; padding: 3px 3px 0px 8px;'>\n";
 			echo "		<input type='checkbox' name=\"call_recordings[$x][checked]\" id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$x."').checked = false; }\">\n";
 			echo "		<input type='hidden' name=\"call_recordings[$x][call_recording_uuid]\" value='".$row['call_recording_uuid']."' />\n";
 			echo "	</td>\n";
