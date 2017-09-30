@@ -761,6 +761,26 @@ $text['button-download']['ru-ru'] = "Скачать";
 $text['button-download']['sv-se'] = "Ladda Ned";
 $text['button-download']['uk-ua'] = "Скачати";
 
+$text['button-downloads']['en-us'] = "Downloads";
+$text['button-downloads']['ar-eg'] = "";
+$text['button-downloads']['de-at'] = "Herunterladen";
+$text['button-downloads']['de-ch'] = "Herunterladen"; //copied from de-de
+$text['button-downloads']['de-de'] = "Herunterladen";
+$text['button-downloads']['es-cl'] = "Descargar";
+$text['button-downloads']['es-mx'] = "Descargar"; //copied from es-cl
+$text['button-downloads']['fr-ca'] = "Télécharger"; //copied from fr-fr
+$text['button-downloads']['fr-fr'] = "Télécharger";
+$text['button-downloads']['he-il'] = "";
+$text['button-downloads']['it-it'] = "Scarica";
+$text['button-downloads']['nl-nl'] = "";
+$text['button-downloads']['pl-pl'] = "Pobierz";
+$text['button-downloads']['pt-br'] = "Download";
+$text['button-downloads']['pt-pt'] = "Baixar";
+$text['button-downloads']['ro-ro'] = "";
+$text['button-downloads']['ru-ru'] = "Скачать";
+$text['button-downloads']['sv-se'] = "Ladda Ned";
+$text['button-downloads']['uk-ua'] = "Скачати";
+
 $text['button-restart']['en-us'] = "Restart";
 $text['button-restart']['ar-eg'] = "";
 $text['button-restart']['de-at'] = "Neu starten";
