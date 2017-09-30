@@ -62,7 +62,7 @@
 				if (dtmf_digits == "1") then
 					--To record a greeting press 1
 					timeouts = 0;
-					record_greeting('',"advanced");
+					record_greeting(nil,"advanced");
 				elseif (dtmf_digits == "2") then
 					--To choose greeting press 2
 					timeouts = 0;
