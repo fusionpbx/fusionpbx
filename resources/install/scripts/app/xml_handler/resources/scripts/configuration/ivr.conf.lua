@@ -133,7 +133,7 @@
 								end
 							end);
 						end
-						return path, is_base64
+						return name, is_base64
 					end
 
 				--greet long
