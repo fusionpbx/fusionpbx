@@ -130,6 +130,8 @@
 								if #row.recording_base64 > 32 then
 									is_base64 = true;
 									file.write_base64(path, row.recording_base64);
+									--add the full path and file name
+									name = path;
 								end
 							end);
 						end
