@@ -549,12 +549,12 @@
 				$record_name = urldecode($xml->variables->record_name);
 				$record_length = urldecode($xml->variables->billsec);
 			}
-			if (strlen($xml->variables->record_session) > 0) {
+			elseif (strlen($xml->variables->record_session) > 0) {
 				$record_path = dirname(urldecode($xml->variables->record_session));
 				$record_name = basename(urldecode($xml->variables->record_session));
 				$record_length = urldecode($xml->variables->record_seconds);
 			}
-			if (strlen($xml->variables->sofia_record_file) > 0) {
+			elseif (strlen($xml->variables->sofia_record_file) > 0) {
 				$record_path = dirname(urldecode($xml->variables->sofia_record_file));
 				$record_name = basename(urldecode($xml->variables->sofia_record_file));
 				$record_length = urldecode($xml->variables->record_seconds);
