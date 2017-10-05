@@ -48,25 +48,34 @@ local log = require "resources.functions.log".ring_group
 	require "resources.functions.format_ringback"
 
 --get the variables
-	domain_name = session:getVariable("domain_name");
-	ring_group_uuid = session:getVariable("ring_group_uuid");
-	recordings_dir = session:getVariable("recordings_dir");
-	sounds_dir = session:getVariable("sounds_dir");
+	if (session:ready()) then
+		domain_name = session:getVariable("domain_name");
+		ring_group_uuid = session:getVariable("ring_group_uuid");
+		recordings_dir = session:getVariable("recordings_dir");
+		sounds_dir = session:getVariable("sounds_dir");
+	end
 
 --variables that don't require ${} when used in the dialplan conditions
-	username = session:getVariable("username");
-	dialplan = session:getVariable("dialplan");
-	caller_id_name = session:getVariable("caller_id_name");
-	caller_id_number = session:getVariable("caller_id_number");
-	network_addr = session:getVariable("network_addr");
-	ani = session:getVariable("ani");
-	aniii = session:getVariable("aniii");
-	rdnis = session:getVariable("rdnis");
-	destination_number = session:getVariable("destination_number");
-	source = session:getVariable("source");
-	uuid = session:getVariable("uuid");
-	context = session:getVariable("context");
-	call_direction = session:getVariable("call_direction");
+	if (session:ready()) then
+		username = session:getVariable("username");
+		dialplan = session:getVariable("dialplan");
+		caller_id_name = session:getVariable("caller_id_name");
+		caller_id_number = session:getVariable("caller_id_number");
+		network_addr = session:getVariable("network_addr");
+		ani = session:getVariable("ani");
+		aniii = session:getVariable("aniii");
+		rdnis = session:getVariable("rdnis");
+		destination_number = session:getVariable("destination_number");
+		source = session:getVariable("source");
+		uuid = session:getVariable("uuid");
+		context = session:getVariable("context");
+		call_direction = session:getVariable("call_direction");
+	end
+
+--set the call_timeout to a higher value to prevent the early timeout of the ring group
+	if (session:ready()) then
+		session:setVariable("call_timeout","300");
+	end
 
 --default to local if nil
 	if (call_direction == nil) then
