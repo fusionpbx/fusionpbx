@@ -120,6 +120,11 @@
 		call_direction = session:getVariable("call_direction");
 	end
 
+--set the call_timeout to a higher value to prevent the early timeout of the ring group
+	if (session:ready()) then
+		session:setVariable("call_timeout","300");
+	end
+
 --default to local if nil
 	if (call_direction == nil) then
 		call_direction = "local";
