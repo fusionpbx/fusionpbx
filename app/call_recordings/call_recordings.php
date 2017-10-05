@@ -58,13 +58,13 @@
 	}
 
 //download recordings
-	if (permission_exists('call_recording_download')) {
+	if (permission_exists('call_recording_download_add')) {
 		if ($action == "download") {
 			//download
-				$obj = new call_recordings;
-				$obj->download($call_recordings);
-			//delete message
-				messages::add($text['message-add']);
+				$obj = new call_recording_downloads;
+				$obj->save($call_recordings);
+			//direct the user to the downloads
+				header("Location: ".PROJECT_PATH."/app/call_recording_downloads/call_recording_downloads.php");
 		}
 	}
 
@@ -164,10 +164,10 @@
 	echo "	<tr>\n";
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-call_recordings']."</b></td>\n";
 	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
-	//if (permission_exists('call_recording_delete')) {
-	echo "				<button type='submit' class='btn btn-default' name=\"call_recordings[$x][action]\" alt='".$text['button-download']."' value='download'>".$text['button-download']."</span></button>\n";
-	echo "				&nbsp; &nbsp; &nbsp; ";
-	//}
+	if (permission_exists('call_recording_download_add')) {
+		echo "				<button type='submit' class='btn btn-default' name=\"call_recordings[$x][action]\" alt='".$text['button-download']."' value='download'>".$text['button-downloads']."</span></button>\n";
+		echo "				&nbsp; &nbsp; &nbsp; ";
+	}
 	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>\n";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
 	echo "			</td>\n";
