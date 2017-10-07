@@ -43,14 +43,14 @@
 	$text = $language->get();
 
 //get the action
-	if (is_array($_POST["call_recordings"])) {
+	if (strlen($_REQUEST["search"]) == 0 && is_array($_POST["call_recordings"])) {
 		$call_recordings = $_POST["call_recordings"];
 		foreach($call_recordings as $row) {
-			if ($row['action'] == 'download') {
+			if ($row['action'] === 'download') {
 				$action = 'download';
 				break;
 			}
-			if ($row['action'] == 'delete') {
+			if ($row['action'] === 'delete') {
 				$action = 'delete';
 				break;
 			}
@@ -70,7 +70,7 @@
 
 //delete the recordings
 	if (permission_exists('call_recording_delete')) {
-		if ($action == "delete") {
+		if ($action === "delete") {
 			//set the array
 				$call_recordings = $_POST["call_recordings"];
 			//download
@@ -86,11 +86,11 @@
 	require_once "resources/paging.php";
 
 //get variables used to control the order
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
+	$order_by = check_str($_REQUEST["order_by"]);
+	$order = check_str($_REQUEST["order"]);
 
 //add the search term
-	$search = strtolower(check_str($_GET["search"]));
+	$search = strtolower(check_str($_REQUEST["search"]));
 	if (strlen($search) > 0) {
 		$sql_search = "and (";
 		$sql_search .= "lower(call_recording_name) like '%".$search."%' ";
@@ -120,8 +120,8 @@
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "";
-	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	$page = $_REQUEST['page'];
+	if (strlen($page) == 0) { $page = 0; $_REQUEST['page'] = 0; }
 	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
@@ -146,8 +146,8 @@
 	echo "	function checkbox_toggle(item) {\n";
 	echo "		var inputs = document.getElementsByTagName(\"input\");\n";
 	echo "		for (var i = 0, max = inputs.length; i < max; i++) {\n";
-	echo "		    if (inputs[i].type === 'checkbox') {\n";
-	echo "		       	if (document.getElementById('checkbox_all').checked == true) {\n";
+	echo "			if (inputs[i].type === 'checkbox') {\n";
+	echo "				if (document.getElementById('checkbox_all').checked == true) {\n";
 	echo "				inputs[i].checked = true;\n";
 	echo "			}\n";
 	echo "				else {\n";
@@ -165,7 +165,7 @@
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-call_recordings']."</b></td>\n";
 	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
 	if (permission_exists('call_recording_download_add')) {
-		echo "				<button type='submit' class='btn btn-default' name=\"call_recordings[$x][action]\" alt='".$text['button-download']."' value='download'>".$text['button-downloads']."</span></button>\n";
+		echo "				<button type='submit' class='btn btn-default' id='downloads' name=\"call_recordings[$x][action]\" alt='".$text['button-download']."' onclick=\"document.getElementById('downloads').value='download'\" value=''>".$text['button-downloads']."</span></button>\n";
 		echo "				&nbsp; &nbsp; &nbsp; ";
 	}
 	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>\n";
