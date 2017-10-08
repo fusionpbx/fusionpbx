@@ -217,6 +217,32 @@ local log = require "resources.functions.log".ring_group
 		end
 	end
 
+--get the destination and follow the forward
+	function get_forward_all(count, destination_number, domain_name)
+		cmd = "user_exists id ".. destination_number .." "..domain_name;
+		freeswitch.consoleLog("notice", "[ring groups][call forward all] " .. cmd .. "\n");
+		user_exists = api:executeString(cmd);
+		if (user_exists == "true") then
+			---check to see if the new destination is forwarded - third forward
+				cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_all_enabled";
+				if (api:executeString(cmd) == "true") then
+					--get the new destination - third foward
+						cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_all_destination";
+						destination_number = api:executeString(cmd);
+						freeswitch.consoleLog("notice", "[ring groups][call forward all] " .. count .. " " .. cmd .. " ".. destination_number .."\n");
+
+						cmd = "user_exists id ".. destination_number .." "..domain_name;
+						user_exists = api:executeString(cmd);
+
+						count = count + 1;
+						if (count < 5) then
+							count, destination_number = get_forward_all(count, destination_number, domain_name);
+						end
+				end
+		end
+		return count, destination_number;
+	end
+
 --process the ring group
 	if (ring_group_forward_enabled == "true" and string.len(ring_group_forward_destination) > 0) then
 		--forward the ring group
@@ -281,6 +307,10 @@ local log = require "resources.functions.log".ring_group
 				else
 					leg_domain_name = array[2];
 				end
+
+				--follow the forwards
+				count, destination_number = get_forward_all(0, row.destination_number, leg_domain_name);
+
 				cmd = "user_exists id ".. row.destination_number .." "..leg_domain_name;
 				user_exists = api:executeString(cmd);
 				if (user_exists == "true") then
