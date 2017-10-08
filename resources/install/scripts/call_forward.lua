@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010-2014
+--	Copyright (C) 2010-2017
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -234,80 +234,6 @@
 				forward_caller_id = forward_caller_id ..
 					 ",outbound_caller_id_name=" .. row.outbound_caller_id_name ..
 					 ",origination_caller_id_name=" .. row.outbound_caller_id_name
-			end
-		end
-	end
-
---set the dial string
-	if enabled == "true" then
-		local destination_extension, destination_number_alias
-
-		--used for number_alias to get the correct user
-		local sql = "select extension, number_alias from v_extensions ";
-		sql = sql .. "where domain_uuid = :domain_uuid ";
-		sql = sql .. "and number_alias = :number_alias ";
-		local params = {domain_uuid = domain_uuid; number_alias = forward_all_destination}
-		if (debug["sql"]) then
-			log.noticef("SQL: %s; params: %s", sql, json.encode(params));
-		end
-		dbh:query(sql, params, function(row)
-			destination_user = row.extension;
-			destination_extension = row.extension;
-			destination_number_alias = row.number_alias or '';
-		end);
-
-		if (destination_user ~= nil) then
-			cmd = "user_exists id ".. destination_user .." "..domain_name;
-		else
-			cmd = "user_exists id ".. forward_all_destination .." "..domain_name;
-		end
-		local user_exists = trim(api:executeString(cmd));
-
-		--set the dial_string
-		dial_string = "{instant_ringback=true";
-		dial_string = dial_string .. ",domain_uuid="..domain_uuid;
-		dial_string = dial_string .. ",sip_invite_domain="..domain_name;
-		dial_string = dial_string .. ",domain_name="..domain_name;
-		dial_string = dial_string .. ",domain="..domain_name;
-		dial_string = dial_string .. ",extension_uuid="..extension_uuid;
-		dial_string = dial_string .. ",toll_allow='"..toll_allow.."'";
-		dial_string = dial_string .. ",sip_h_Diversion=<sip:"..extension.."@"..domain_name..">;reason=unconditional";
-		if (not accountcode) or (#accountcode == 0) then
-			dial_string = dial_string .. ",sip_h_X-accountcode=${accountcode}";
-		else
-			dial_string = dial_string .. ",sip_h_X-accountcode="..accountcode;
-			dial_string = dial_string .. ",accountcode="..accountcode;
-		end
-		dial_string = dial_string .. forward_caller_id
-
-		if (user_exists == "true") then
-			-- we do not need here presence_id because user dial-string already has one
-			dial_string = dial_string .. ",dialed_extension=" .. forward_all_destination
-			dial_string = dial_string .. "}"
-			dial_string = dial_string .. "user/"..forward_all_destination.."@"..domain_name;
-		else
-			-- setting here presence_id equal extension not dialed number allows work BLF and intercept.
-			local presence_id = extension
-			if (#number_alias > 0) and (settings:get('provision', 'number_as_presence_id', 'text') == 'true') then
-				presence_id = number_alias
-			end
-
-			dial_string = dial_string .. ",presence_id="..presence_id.."@"..domain_name;
-			dial_string = dial_string .. "}";
-			local mode = settings:get('domain', 'bridge', 'text')
-			if mode == "outbound" or mode == "bridge" then
-				local bridge = route_to_bridge(dbh, domain_uuid, {
-					destination_number = forward_all_destination;
-					['${toll_allow}'] = toll_allow;
-					['${user_exists}'] = 'false';
-				})
-				if bridge and bridge.bridge then
-					dial_string = dial_string .. bridge.bridge
-				else
-					log.warning('Can not build dialstring for call forward number.')
-				end
-			else
-				dial_string = dial_string .. "loopback/"..forward_all_destination;
 			end
 		end
 	end
