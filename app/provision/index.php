@@ -30,7 +30,7 @@
 	require_once "resources/functions/device_by.php";
 
 //logging
-	openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+	openlog("FusionPBX", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 
 //set default variables
 	$dir_count = 0;
