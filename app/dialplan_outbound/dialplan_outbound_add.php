@@ -187,6 +187,7 @@
 			if (strlen(trim($_POST['dialplan_expression'])) > 0) {
 
 				$tmp_array = explode("\n", $_POST['dialplan_expression']);
+				$x = 0;
 				foreach($tmp_array as $dialplan_expression) {
 					$dialplan_expression = trim($dialplan_expression);
 					if (strlen($dialplan_expression) > 0) {
@@ -357,7 +358,6 @@
 						$dialplan_uuid = uuid();
 
 					//build the array
-						$x = 0;
 						$array['dialplans'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 						$array['dialplans'][$x]['dialplan_uuid'] = $dialplan_uuid;
 						$array['dialplans'][$x]['app_uuid'] = $app_uuid;
@@ -603,7 +603,8 @@
 						unset($dialplan_expression);
 						unset($action_data);
 					} //if strlen
-				} //end for each
+					$x++;
+				} //end foreach
 			}
 
 		//save to the data
