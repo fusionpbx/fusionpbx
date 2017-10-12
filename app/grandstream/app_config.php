@@ -68,7 +68,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_config_server_path";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "none";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "mydomain.com/provision to Fusionpbx provisioning. Phones will use firmware url if this is set to: none";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "eb4ad508-aab8-478c-a42c-71f02f5e9f3e";
