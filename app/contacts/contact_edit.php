@@ -302,6 +302,19 @@ else {
 		$document['title'] = $text['title-contact-add'];
 	}
 
+//set the mode
+	if (isset($_SESSION['theme']['qr_image'])) {
+		if (strlen($_SESSION['theme']['qr_image']) > 0) {
+			$mode = '4';
+		}
+		else {
+			$mode = '0';
+		}
+	}
+	else {
+		$mode = '4';
+	}
+
 //qr code generation
 	$_GET['type'] = "text";
 	$qr_vcard = true;
@@ -340,7 +353,7 @@ else {
 	echo "				radius: 0.2, ";
 	echo "				quiet: 6, ";
 	echo "				background: '#fff', ";
-	echo "				mode: 4, ";
+	echo "				mode: ".$mode.", ";
 	echo "				mSize: 0.2, ";
 	echo "				mPosX: 0.5, ";
 	echo "				mPosY: 0.5, ";
