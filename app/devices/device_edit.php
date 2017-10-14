@@ -419,6 +419,8 @@
 	$sql .= "WHEN 'memory' THEN 2 ";
 	$sql .= "WHEN 'programmable' THEN 3 ";
 	$sql .= "WHEN 'expansion' THEN 4 ";
+	$sql .= "WHEN 'expansion-1' THEN 5 ";
+	$sql .= "WHEN 'expansion-2' THEN 6 ";
 	$sql .= "ELSE 100 END, ";
 	if ($db_type == "mysql") {
 		$sql .= "device_key_id asc ";
@@ -1005,11 +1007,13 @@
 				else {
 					echo "	<option value='line'>".$text['label-line']."</option>\n";
 				}
-				if ($row['device_key_category'] == "memory") {
-					echo "	<option value='memory' selected='selected'>".$text['label-memory']."</option>\n";
-				}
-				else {
-					echo "	<option value='memory'>".$text['label-memory']."</option>\n";
+				if ($row['device_key_vendor'] !== "polycom") {
+					if ($row['device_key_category'] == "memory") {
+						echo "	<option value='memory' selected='selected'>".$text['label-memory']."</option>\n";
+					}
+					else {
+						echo "	<option value='memory'>".$text['label-memory']."</option>\n";
+					}
 				}
 				if ($row['device_key_category'] == "programmable") {
 					echo "	<option value='programmable' selected='selected'>".$text['label-programmable']."</option>\n";
@@ -1017,21 +1021,13 @@
 				else {
 					echo "	<option value='programmable'>".$text['label-programmable']."</option>\n";
 				}
-				if (strlen($device_vendor) == 0) {
-					if ($row['device_key_category'] == "expansion") {
-						echo "	<option value='expansion' selected='selected'>".$text['label-expansion']."</option>\n";
-					}
-					else {
-						echo "	<option value='expansion'>".$text['label-expansion']."</option>\n";
-					}
-				}
-				else {
-					if (strtolower($device_vendor) == "cisco") {
-						if ($row['device_key_category'] == "expansion-1" || $row['device_key_category'] == "expansion") {
-							echo "	<option value='expansion-1' selected='selected'>".$text['label-expansion']." 1</option>\n";
+				if ($row['device_key_vendor'] !== "polycom") {
+					if (strlen($device_vendor) == 0) {
+						if ($row['device_key_category'] == "expansion") {
+							echo "	<option value='expansion' selected='selected'>".$text['label-expansion']."</option>\n";
 						}
 						else {
-							echo "	<option value='expansion-1'>".$text['label-expansion']." 1</option>\n";
+							echo "	<option value='expansion'>".$text['label-expansion']."</option>\n";
 						}
 						if ($row['device_key_category'] == "expansion-2") {
 							echo "	<option value='expansion-2' selected='selected'>".$text['label-expansion']." 2</option>\n";
@@ -1041,14 +1037,29 @@
 						}
 					}
 					else {
-						if ($row['device_key_category'] == "expansion") {
-							echo "	<option value='expansion' selected='selected'>".$text['label-expansion']."</option>\n";
+						if (strtolower($device_vendor) == "cisco" or strtolower($row['device_key_vendor']) == "yealink") {
+							if ($row['device_key_category'] == "expansion-1" || $row['device_key_category'] == "expansion") {
+								echo "	<option value='expansion-1' selected='selected'>".$text['label-expansion']." 1</option>\n";
+							}
+							else {
+								echo "	<option value='expansion-1'>".$text['label-expansion']." 1</option>\n";
+							}
+							if ($row['device_key_category'] == "expansion-2") {
+								echo "	<option value='expansion-2' selected='selected'>".$text['label-expansion']." 2</option>\n";
+							}
+							else {
+								echo "	<option value='expansion-2'>".$text['label-expansion']." 2</option>\n";
+							}
 						}
 						else {
-							echo "	<option value='expansion'>".$text['label-expansion']."</option>\n";
+							if ($row['device_key_category'] == "expansion") {
+								echo "	<option value='expansion' selected='selected'>".$text['label-expansion']."</option>\n";
+							}
+							else {
+								echo "	<option value='expansion'>".$text['label-expansion']."</option>\n";
+							}
 						}
 					}
-
 				}
 				echo "	</select>\n";
 				echo "</td>\n";
