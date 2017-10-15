@@ -413,9 +413,9 @@ if (!class_exists('xml_cdr')) {
 				}
 
 			//add the call recording
-				if (isset($record_path) && isset($record_name) && file_exists($record_path.'/'.$record_name && $record_length > 0)) {
+				if (isset($record_path) && isset($record_name) && file_exists($record_path.'/'.$record_name) && $record_length > 0) {
 					//add to the xml cdr table
-						$this->array[$key]['record_path'] = $record_path.'/'.$record_name;
+						$this->array[$key]['record_path'] = $record_path;
 						$this->array[$key]['record_name'] = $record_name;
 					//add to the call recordings table
 						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_recordings/app_config.php")) {
