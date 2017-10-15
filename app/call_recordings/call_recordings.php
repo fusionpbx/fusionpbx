@@ -237,14 +237,15 @@
 			//echo "			<source src=\"download.php?id=".$row['call_recording_uuid']."\" type=\"audio/wav\">\n";
 			//echo "		</audio>\n";
 			//echo "		<a href=\"download.php?id=".$row['call_recording_uuid']."&t=bin\">".$text['label-download']." ".$v_link_label_download."</a>\n";
-				
-			//if (permission_exists('recording_play')) {
-				echo 	"<audio id='recording_audio_".$row['call_recording_uuid']."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row['call_recording_uuid']."')\" onended=\"recording_reset('".$row['call_recording_uuid']."');\" src=\"download.php?id=".$row['call_recording_uuid']."\" type='".$recording_type."'></audio>";
-				echo 	"<span id='recording_button_".$row['call_recording_uuid']."' onclick=\"recording_play('".$row['call_recording_uuid']."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
-			//}
-			//if (permission_exists('recording_download')) {
-				echo 	"<a href=\"download.php?id=".$row['call_recording_uuid']."&t=bin\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
-			//}
+			if (file_exists($row['call_recording_path'].'/'.$row['call_recording_name'])) {	
+				//if (permission_exists('recording_play')) {
+					echo 	"<audio id='recording_audio_".$row['call_recording_uuid']."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row['call_recording_uuid']."')\" onended=\"recording_reset('".$row['call_recording_uuid']."');\" src=\"download.php?id=".$row['call_recording_uuid']."\" type='".$recording_type."'></audio>";
+					echo 	"<span id='recording_button_".$row['call_recording_uuid']."' onclick=\"recording_play('".$row['call_recording_uuid']."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
+				//}
+				//if (permission_exists('recording_download')) {
+					echo 	"<a href=\"download.php?id=".$row['call_recording_uuid']."&t=bin\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
+				//}
+			}
 			echo "	</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."' style=\"\">\n";
 			//echo "		<a href=\"download.php?id=".$row['call_recording_uuid']."&t=bin\">".$text['label-download']." ".$v_link_label_download."</a>\n";
