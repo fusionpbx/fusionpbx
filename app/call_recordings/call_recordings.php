@@ -220,7 +220,7 @@
 	if (is_array($result)) {
 		$x = 0;
 		foreach($result as $row) {
-			//if (permission_exists('recording_play') && $recording_file_path != '') {
+			//if (permission_exists('call_recording_play') && $recording_file_path != '') {
 			//	echo "<tr id='recording_progress_bar_".$row['call_recording_uuid']."' style='display: none3;'><td class='".$row_style[$c]." playback_progress_bar_background' style='padding: 0; border: none;' colspan='".((if_group("admin") || if_group("superadmin") || if_group("cdr")) ? ($col_count - 1) : $col_count)."'><span class='playback_progress_bar' id='recording_progress_".$row['call_recording_uuid']."'></span></td></tr>\n";
 			//}
 			if (permission_exists('call_recording_edit')) {
@@ -238,13 +238,13 @@
 			//echo "		</audio>\n";
 			//echo "		<a href=\"download.php?id=".$row['call_recording_uuid']."&t=bin\">".$text['label-download']." ".$v_link_label_download."</a>\n";
 			if (file_exists($row['call_recording_path'].'/'.$row['call_recording_name'])) {	
-				//if (permission_exists('recording_play')) {
+				if (permission_exists('call_recording_play')) {
 					echo 	"<audio id='recording_audio_".$row['call_recording_uuid']."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row['call_recording_uuid']."')\" onended=\"recording_reset('".$row['call_recording_uuid']."');\" src=\"download.php?id=".$row['call_recording_uuid']."\" type='".$recording_type."'></audio>";
 					echo 	"<span id='recording_button_".$row['call_recording_uuid']."' onclick=\"recording_play('".$row['call_recording_uuid']."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
-				//}
-				//if (permission_exists('recording_download')) {
+				}
+				if (permission_exists('call_recording_download')) {
 					echo 	"<a href=\"download.php?id=".$row['call_recording_uuid']."&t=bin\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
-				//}
+				}
 			}
 			echo "	</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."' style=\"\">\n";
