@@ -423,8 +423,8 @@ if (!class_exists('xml_cdr')) {
 							$x = 0;
 							$array['call_recordings'][$x]['call_recording_uuid'] = $uuid;
 							$array['call_recordings'][$x]['domain_uuid'] = $domain_uuid;
-							$array['call_recordings'][$x]['call_recording_name'] = $record_name;
-							$array['call_recordings'][$x]['call_recording_path'] = $record_path;
+							$array['call_recordings'][$x]['record_name'] = $record_name;
+							$array['call_recordings'][$x]['record_path'] = $record_path;
 							$array['call_recordings'][$x]['call_recording_length'] = $record_length;
 							$array['call_recordings'][$x]['call_recording_date'] =  urldecode($xml->variables->answer_stamp);
 							$array['call_recordings'][$x]['call_direction'] = urldecode($xml->variables->call_direction);
@@ -952,7 +952,71 @@ if (!class_exists('xml_cdr')) {
 				return $summary;
 		}
 
-	} //end scripts class
+		/**
+		 * download the recordings
+		 */
+		public function download() {
+			if (permission_exists('xml_cdr_view')) {
+
+				//cache limiter
+					session_cache_limiter('public');
+
+				//get call recording from database
+					$uuid = check_str($_GET['id']);
+					if ($uuid != '') {
+						$sql = "select record_name, record_path from v_xml_cdr ";
+						$sql .= "where uuid = '".$uuid."' ";
+						//$sql .= "and domain_uuid = '".$domain_uuid."' \n";
+						$prep_statement = $this->db->prepare($sql);
+						$prep_statement->execute();
+						$xml_cdr = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+						if (is_array($xml_cdr)) {
+							foreach($xml_cdr as &$row) {
+								$record_name = $row['record_name'];
+								$record_path = $row['record_path'];
+								break;
+							}
+						}
+						unset ($sql, $prep_statement, $xml_cdr);
+					}
+
+				//build full path
+					$record_file = $record_path . '/' . $record_name;
+
+				//download the file
+					if (file_exists($record_file)) {
+						//content-range
+						//if (isset($_SERVER['HTTP_RANGE']))  {
+						//	range_download($record_file);
+						//}
+						ob_clean();
+						$fd = fopen($record_file, "rb");
+						if ($_GET['t'] == "bin") {
+							header("Content-Type: application/force-download");
+							header("Content-Type: application/octet-stream");
+							header("Content-Type: application/download");
+							header("Content-Description: File Transfer");
+						}
+						else {
+							$file_ext = substr($record_name, -3);
+							if ($file_ext == "wav") {
+								header("Content-Type: audio/x-wav");
+							}
+							if ($file_ext == "mp3") {
+								header("Content-Type: audio/mpeg");
+							}
+						}
+						header('Content-Disposition: attachment; filename="'.$record_name.'"');
+						header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+						header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+						// header("Content-Length: " . filesize($record_file));
+						ob_clean();
+						fpassthru($fd);
+					}
+			}
+		} //end download method
+
+	} //end the class
 }
 /*
 //example use
