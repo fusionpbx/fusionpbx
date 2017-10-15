@@ -563,7 +563,7 @@
 				echo "	</td>\n";
 			//recording
 				if (permission_exists('recording_play') || permission_exists('recording_download')) {
-					if ($record_path != '') {
+					if ($record_path != '' && file_exists($record_path.'/'.$record_name)) {
 						echo "	<td valign='top' align='center' class='".$row_style[$c]." row_style_slim tr_link_void' nowrap='nowrap'>";
 						if (permission_exists('recording_play')) {
 							echo 	"<audio id='recording_audio_".$row['uuid']."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row['uuid']."')\" onended=\"recording_reset('".$row['uuid']."');\" src=\"download.php?id=".$row['uuid']."&t=record\" type='".$record_type."'></audio>";
