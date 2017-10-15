@@ -75,10 +75,6 @@
 					}
 					unset ($sql, $prep_statement, $result, $recording_decoded);
 				}
-			//if from xml_cdr, use file system
-				else {
-					$recording_filename = base64_decode($_GET['filename']); //xml_cdr
-				}
 
 			// build full path
 				if(substr($recording_filename,0,1) == '/'){
@@ -87,40 +83,41 @@
 					$full_recording_path = $path . '/' . $recording_filename;
 				}
 
-			if (file_exists($full_recording_path)) {
-				//content-range
-				if (isset($_SERVER['HTTP_RANGE']))  {
-					range_download($full_recording_path);
-				}
-				
-				$fd = fopen($full_recording_path, "rb");
-				if ($_GET['t'] == "bin") {
-					header("Content-Type: application/force-download");
-					header("Content-Type: application/octet-stream");
-					header("Content-Type: application/download");
-					header("Content-Description: File Transfer");
-				}
-				else {
-					$file_ext = substr($recording_filename, -3);
-					if ($file_ext == "wav") {
-						header("Content-Type: audio/x-wav");
+			//send the headers and then the data stream
+				if (file_exists($full_recording_path)) {
+					//content-range
+					if (isset($_SERVER['HTTP_RANGE']))  {
+						range_download($full_recording_path);
 					}
-					if ($file_ext == "mp3") {
-						header("Content-Type: audio/mpeg");
+					
+					$fd = fopen($full_recording_path, "rb");
+					if ($_GET['t'] == "bin") {
+						header("Content-Type: application/force-download");
+						header("Content-Type: application/octet-stream");
+						header("Content-Type: application/download");
+						header("Content-Description: File Transfer");
 					}
+					else {
+						$file_ext = substr($recording_filename, -3);
+						if ($file_ext == "wav") {
+							header("Content-Type: audio/x-wav");
+						}
+						if ($file_ext == "mp3") {
+							header("Content-Type: audio/mpeg");
+						}
+					}
+					header('Content-Disposition: attachment; filename="'.$recording_filename.'"');
+					header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+					header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+					// header("Content-Length: " . filesize($full_recording_path));
+					ob_clean();
+					fpassthru($fd);
 				}
-				header('Content-Disposition: attachment; filename="'.$recording_filename.'"');
-				header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
-				header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-				// header("Content-Length: " . filesize($full_recording_path));
-				ob_clean();
-				fpassthru($fd);
-			}
 
 			//if base64, remove temp recording file
-			if ($_SESSION['recordings']['storage_type']['text'] == 'base64' && $row['recording_base64'] != '') {
-				@unlink($full_recording_path);
-			}
+				if ($_SESSION['recordings']['storage_type']['text'] == 'base64' && $row['recording_base64'] != '') {
+					@unlink($full_recording_path);
+				}
 		}
 		exit;
 	}
