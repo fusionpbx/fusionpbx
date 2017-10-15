@@ -89,6 +89,12 @@
 	$order_by = check_str($_REQUEST["order_by"]);
 	$order = check_str($_REQUEST["order"]);
 
+//set the defaults
+	if (strlen($order_by) == 0) { 
+		$order_by = 'call_recording_date';
+		$order = 'desc';
+	}
+
 //add the search term
 	$search = strtolower(check_str($_REQUEST["search"]));
 	if (strlen($search) > 0) {
@@ -104,7 +110,6 @@
 	$sql = "select count(call_recording_uuid) as num_rows from v_call_recordings ";
 	$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
 	$sql .= $sql_search;
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 	$prep_statement = $db->prepare($sql);
 	if ($prep_statement) {
 		$prep_statement->execute();
@@ -129,7 +134,7 @@
 	$sql = "select * from v_call_recordings ";
 	$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
 	$sql .= $sql_search;
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+	$sql .= "order by $order_by $order ";
 	$sql .= "limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
