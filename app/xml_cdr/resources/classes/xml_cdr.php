@@ -74,7 +74,6 @@ if (!class_exists('xml_cdr')) {
 			}
 		}
 
-
 		/**
 		 * cdr process logging
 		 */
@@ -125,8 +124,8 @@ if (!class_exists('xml_cdr')) {
 			$this->fields[] = "write_rate";
 			$this->fields[] = "remote_media_ip";
 			$this->fields[] = "network_addr";
-			$this->fields[] = "recording_file";
-			$this->fields[] = "recording_name";
+			$this->fields[] = "record_path";
+			$this->fields[] = "record_name";
 			$this->fields[] = "leg";
 			$this->fields[] = "pdd_ms";
 			$this->fields[] = "rtp_audio_in_mos";
@@ -396,23 +395,6 @@ if (!class_exists('xml_cdr')) {
 					$this->array[$key]['domain_name'] = $domain_name;
 				}
 
-			//check whether a recording exists
-				$recording_relative_path = '/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
-				if (file_exists($_SESSION['switch']['recordings']['dir'].$recording_relative_path.'/'.$uuid.'.wav')) {
-					$recording_file = $recording_relative_path.'/'.$uuid.'.wav';
-				}
-				elseif (file_exists($_SESSION['switch']['recordings']['dir'].$recording_relative_path.'/'.$uuid.'.mp3')) {
-					$recording_file = $recording_relative_path.'/'.$uuid.'.mp3';
-				}
-				if(isset($recording_file) && !empty($recording_file)) {
-					$this->array[$key]['recording_file'] = $recording_file;
-				}
-
-			//get the recording details
-				if (strlen($xml->variables->recording_name) > 0) {
-					$this->array[$key]['recording_name'] = urldecode($xml->variables->recording_name);
-				}
-				
 			//get the recording details
 				if (strlen($xml->variables->record_name) > 0) {
 					$record_path = urldecode($xml->variables->record_path);
@@ -431,36 +413,41 @@ if (!class_exists('xml_cdr')) {
 				}
 
 			//add the call recording
-				if (urldecode($record_name) > 0 && file_exists($_SERVER["PROJECT_ROOT"]."/app/call_recordings/app_config.php")) {
-					if ($record_length > 0) {
-						$x = 0;
-						$array['call_recordings'][$x]['call_recording_uuid'] = $uuid;
-						$array['call_recordings'][$x]['domain_uuid'] = $domain_uuid;
-						$array['call_recordings'][$x]['call_recording_name'] = $record_name;
-						$array['call_recordings'][$x]['call_recording_path'] = $record_path;
-						$array['call_recordings'][$x]['call_recording_length'] = $record_length;
-						$array['call_recordings'][$x]['call_recording_date'] =  urldecode($xml->variables->answer_stamp);
-						$array['call_recordings'][$x]['call_direction'] = urldecode($xml->variables->call_direction);
-						//$array['call_recordings'][$x]['call_recording_description']= $row['zzz'];
-						//$array['call_recordings'][$x]['call_recording_base64']= $row['zzz'];
+				if (isset($record_path) && isset($record_name) && file_exists($record_path.'/'.$record_name && $record_length > 0)) {
+					//add to the xml cdr table
+						$this->array[$key]['record_path'] = $record_path.'/'.$record_name;
+						$this->array[$key]['record_name'] = $record_name;
+					//add to the call recordings table
+						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_recordings/app_config.php")) {
+							//build the array
+							$x = 0;
+							$array['call_recordings'][$x]['call_recording_uuid'] = $uuid;
+							$array['call_recordings'][$x]['domain_uuid'] = $domain_uuid;
+							$array['call_recordings'][$x]['call_recording_name'] = $record_name;
+							$array['call_recordings'][$x]['call_recording_path'] = $record_path;
+							$array['call_recordings'][$x]['call_recording_length'] = $record_length;
+							$array['call_recordings'][$x]['call_recording_date'] =  urldecode($xml->variables->answer_stamp);
+							$array['call_recordings'][$x]['call_direction'] = urldecode($xml->variables->call_direction);
+							//$array['call_recordings'][$x]['call_recording_description']= $row['zzz'];
+							//$array['call_recordings'][$x]['call_recording_base64']= $row['zzz'];
 
-						//add the temporary permission
-						$p = new permissions;
-						$p->add("call_recording_add", "temp");
-						$p->add("call_recording_edit", "temp");
+							//add the temporary permission
+							$p = new permissions;
+							$p->add("call_recording_add", "temp");
+							$p->add("call_recording_edit", "temp");
 
-						$database = new database;
-						$database->app_name = 'call_recordings';
-						$database->app_uuid = '56165644-598d-4ed8-be01-d960bcb8ffed';
-						$database->domain_uuid = $domain_uuid;
-						$database->save($array);
-						$message = $database->message;
+							$database = new database;
+							$database->app_name = 'call_recordings';
+							$database->app_uuid = '56165644-598d-4ed8-be01-d960bcb8ffed';
+							$database->domain_uuid = $domain_uuid;
+							$database->save($array);
+							$message = $database->message;
 
-						//remove the temporary permission
-						$p->delete("call_recording_add", "temp");
-						$p->delete("call_recording_edit", "temp");
-						unset($array);
-					}
+							//remove the temporary permission
+							$p->delete("call_recording_add", "temp");
+							$p->delete("call_recording_edit", "temp");
+							unset($array);
+						}
 				}
 
 			//save to the database in xml format
