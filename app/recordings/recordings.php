@@ -41,7 +41,7 @@
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
-//define order by default
+//set the default order
 	if ($order_by == '') {
 		$order_by = "recording_name";
 		$order = "asc";
