@@ -57,10 +57,10 @@ if (!class_exists('registrations')) {
 				}
 				$prep_statement->execute();
 				$sip_profiles = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				foreach ($sip_profiles as $row) {
+				foreach ($sip_profiles as $field) {
 
 					//get sofia status profile information including registrations
-						$cmd = "api sofia xmlstatus profile ".$row['sip_profile_name']." reg";
+						$cmd = "api sofia xmlstatus profile ".$field['sip_profile_name']." reg";
 						$xml_response = trim(event_socket_request($fp, $cmd));
 
 						if ($xml_response == "Invalid Profile!") { $xml_response = "<error_msg>".$text['label-message']."</error_msg>"; }
@@ -102,6 +102,7 @@ if (!class_exists('registrations')) {
 									$registrations[$id]['mwi-account'] = $row['mwi-account'] ?: "&nbsp;";
 									$registrations[$id]['status'] = $row['status'] ?: "&nbsp;";
 									$registrations[$id]['ping-time'] = $row['ping-time'] ?: "&nbsp;";
+									$registrations[$id]['sip_profile_name'] = $field['sip_profile_name'];
 
 								//get network-ip to url or blank
 									if(isset($row['network-ip'])) {

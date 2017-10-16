@@ -83,7 +83,7 @@ class cache {
 	public function delete($key) {
 
 		//cache method memcache 
-			if (strlen($_SESSION['cache']['method']['text']) == "memcache") {
+			if ($_SESSION['cache']['method']['text'] == "memcache") {
 				// connect to event socket
 					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 					if ($fp === false) {
@@ -104,17 +104,34 @@ class cache {
 
 				//close event socket
 					fclose($fp);
+
 			}
 
 		//cache method file
 			if ($_SESSION['cache']['method']['text'] == "file") {
 				$key = str_replace(":", ".", $key);
-				if (file_exists($_SESSION['cache']['location']['text'] . "/" . $key)) {
-					unlink($_SESSION['cache']['location']['text'] . "/" . $key);
-				}
-				if (file_exists($_SESSION['cache']['location']['text'] . "/" . $key . ".tmp")) {
-					unlink($_SESSION['cache']['location']['text'] . "/" . $key . ".tmp");
-				}
+
+				// connect to event socket
+					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					if ($fp === false) {
+						return false;
+					}
+					
+				//send a custom event
+					$event = "sendevent CUSTOM\n";
+					$event .= "Event-Name: CUSTOM\n";
+					$event .= "Event-Subclass: fusion::file\n";
+					$event .= "API-Command: cache\n";
+					$event .= "API-Command-Argument: delete ".$key."\n";
+					event_socket_request($fp, $event);
+				
+				//remove the local files
+					if (file_exists($_SESSION['cache']['location']['text'] . "/" . $key)) {
+						unlink($_SESSION['cache']['location']['text'] . "/" . $key);
+					}
+					if (file_exists($_SESSION['cache']['location']['text'] . "/" . $key . ".tmp")) {
+						unlink($_SESSION['cache']['location']['text'] . "/" . $key . ".tmp");
+					}
 			}
 
 		// return result
@@ -147,16 +164,22 @@ class cache {
 		
 				//close event socket
 					fclose($fp);
+
 			}
 
 		//cache method file 
 			if ($_SESSION['cache']['method']['text'] == "file") {
+				// connect to event socket
+					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					if ($fp === false) {
+						return false;
+					}
 
 				//send a custom event
 					$event = "sendevent CUSTOM\n";
 					$event .= "Event-Name: CUSTOM\n";
 					$event .= "Event-Subclass: fusion::file\n";
-					$event .= "API-Command: file\n";
+					$event .= "API-Command: cache\n";
 					$event .= "API-Command-Argument: flush\n";
 					event_socket_request($fp, $event);
 

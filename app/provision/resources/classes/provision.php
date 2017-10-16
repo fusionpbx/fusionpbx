@@ -115,14 +115,25 @@ include "root.php";
 					$row = $prep_statement->fetch();
 					$count = $row['count'];
 					if ($row['count'] > 0) {
-						return true;
+						$mac_exists = true;
 					}
 					else {
-						return false;
+						$mac_exists = false;
 					}
 				}
 				else {
-					return false;
+					$mac_exists = false;
+				}
+				if ($mac_exists) {
+					return true;
+				}
+				else {
+					//log the invalid mac address attempt to the syslog server
+						openlog("FusionPBX", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+						syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] invalid mac address ".$mac);
+						closelog();
+					//invalid mac address return false
+						return false;
 				}
 		}
 
@@ -366,6 +377,7 @@ include "root.php";
 					$sql .= "AND e.enabled = 'true' ";
 					$sql .= "AND e.directory_visible = 'true' ";		# TODO: not right field but it works for our district.
 					$sql .= "AND e.directory_exten_visible = 'true' ";	# TODO: not right field but it works for our district.
+					$sql .= "ORDER BY CASE WHEN directory_first_name LIKE '%".$contact['contact_name_given']."%' THEN 1 ELSE 2 END DESC ";
 					$prep_statement = $this->db->prepare(check_sql($sql));
 					$prep_statement->execute();
 					$user_extentions = $prep_statement->fetchAll(PDO::FETCH_NAMED);

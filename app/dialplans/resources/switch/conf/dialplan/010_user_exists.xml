@@ -1,0 +1,25 @@
+<context name="{v_context}">
+	<extension name="user_exists" number="" continue="true" app_uuid="897845b0-1f13-444c-84fe-432fd47338ca">
+		<condition field="" expression="" break="">
+			<action application="set" data="user_exists=${user_exists id ${destination_number} ${domain_name}}" inline="true"/>
+		</condition>
+		<condition field="${user_exists}" expression="^true$" break="">
+			<action application="set" data="extension_uuid=${user_data ${destination_number}@${domain_name} var extension_uuid}" inline="true"/>
+			<action application="set" data="hold_music=${user_data ${destination_number}@${domain_name} var hold_music}" inline="true"/>
+			<action application="set" data="forward_all_enabled=${user_data ${destination_number}@${domain_name} var forward_all_enabled}" inline="true"/>
+			<action application="set" data="forward_all_destination=${user_data ${destination_number}@${domain_name} var forward_all_destination}" inline="true"/>
+			<action application="set" data="forward_busy_enabled=${user_data ${destination_number}@${domain_name} var forward_busy_enabled}" inline="true"/>
+			<action application="set" data="forward_busy_destination=${user_data ${destination_number}@${domain_name} var forward_busy_destination}" inline="true"/>
+			<action application="set" data="forward_no_answer_enabled=${user_data ${destination_number}@${domain_name} var forward_no_answer_enabled}" inline="true"/>
+			<action application="set" data="forward_no_answer_destination=${user_data ${destination_number}@${domain_name} var forward_no_answer_destination}" inline="true"/>
+			<action application="set" data="forward_user_not_registered_enabled=${user_data ${destination_number}@${domain_name} var forward_user_not_registered_enabled}" inline="true"/>
+			<action application="set" data="forward_user_not_registered_destination=${user_data ${destination_number}@${domain_name} var forward_user_not_registered_destination}" inline="true"/>
+			<action application="set" data="do_not_disturb=${user_data ${destination_number}@${domain_name} var do_not_disturb}" inline="true"/>
+			<action application="set" data="call_timeout=${user_data ${destination_number}@${domain_name} var call_timeout}" inline="true"/>
+			<action application="set" data="missed_call_app=${user_data ${destination_number}@${domain_name} var missed_call_app}" inline="true"/>
+			<action application="set" data="missed_call_data=${user_data ${destination_number}@${domain_name} var missed_call_data}" inline="true"/>
+			<action application="set" data="toll_allow=${user_data ${destination_number}@${domain_name} var toll_allow}" inline="true"/>
+			<action application="set" data="call_screen_enabled=${user_data ${destination_number}@${domain_name} var call_screen_enabled}" inline="true"/>
+		</condition>
+	</extension>
+</context>

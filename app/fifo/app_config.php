@@ -18,7 +18,7 @@
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-fr'] = "Les queues sont utilisés pour configurer les salles d'attente (FIFO).";
 		$apps[$x]['description']['he-il'] = "";
-		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['it-it'] = "Le code sono usate per creare linee di attesa per i chiamanti. Anche dette Code FIFO.";
 		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";

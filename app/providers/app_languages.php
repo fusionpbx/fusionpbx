@@ -1,4 +1,5 @@
 <?php
+#This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['title-providers']['en-us'] = "Providers";
 $text['title-providers']['ar-eg'] = "";
@@ -99,26 +100,6 @@ $text['button-signup']['ro-ro'] = "";
 $text['button-signup']['ru-ru'] = "";
 $text['button-signup']['sv-se'] = "";
 $text['button-signup']['uk-ua'] = "";
-
-$text['button-setup']['en-us'] = "Setup";
-$text['button-setup']['ar-eg'] = "";
-$text['button-setup']['de-at'] = "";
-$text['button-setup']['de-ch'] = "";
-$text['button-setup']['de-de'] = "";
-$text['button-setup']['es-cl'] = "";
-$text['button-setup']['es-mx'] = "";
-$text['button-setup']['fr-ca'] = "";
-$text['button-setup']['fr-fr'] = "";
-$text['button-setup']['he-il'] = "";
-$text['button-setup']['it-it'] = "";
-$text['button-setup']['nl-nl'] = "";
-$text['button-setup']['pl-pl'] = "";
-$text['button-setup']['pt-br'] = "";
-$text['button-setup']['pt-pt'] = "";
-$text['button-setup']['ro-ro'] = "";
-$text['button-setup']['ru-ru'] = "";
-$text['button-setup']['sv-se'] = "";
-$text['button-setup']['uk-ua'] = "";
 
 $text['button-setup']['en-us'] = "Setup";
 $text['button-setup']['ar-eg'] = "";

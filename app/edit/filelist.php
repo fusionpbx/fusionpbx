@@ -17,23 +17,27 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('script_editor_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('script_editor_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add css and javascript
 	require_once "header.php";
@@ -94,6 +98,51 @@ else {
 
 		closedir($dirlist);
 		return $htmldirlist ."\n". $htmlfilelist;
+	}
+
+//get the directory
+	if (!isset($_SESSION)) { session_start(); }
+	switch ($_SESSION["app"]["edit"]["dir"]) {
+		case 'scripts':
+			$edit_directory = $_SESSION['switch']['scripts']['dir'];
+			break;
+		case 'php':
+			$edit_directory = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH;
+			break;
+		case 'grammer':
+			$edit_directory = $_SESSION['switch']['grammar']['dir'];
+			break;
+		case 'provision':
+			switch (PHP_OS) {
+				case "Linux":
+					if (file_exists('/etc/fusionpbx/resources/templates/provision')) {
+						$edit_directory = '/etc/fusionpbx/resources/templates/provision';
+					}
+					else {
+						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					}
+					break;
+				case "FreeBSD":
+					if (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
+						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					}
+					else {
+						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					}
+					break;
+				case "NetBSD":
+					$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					break;
+				case "OpenBSD":
+					$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					break;
+				default:
+					$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+			}
+			break;
+		case 'xml':
+			$edit_directory = $_SESSION['switch']['conf']['dir'];
+			break;
 	}
 
 echo "<script type=\"text/javascript\" language=\"javascript\">\n";
@@ -193,47 +242,12 @@ key_press('backspace', 'down', 'window', null, null, 'return false;', true);
 echo "</head>\n";
 echo "<body style='margin: 0px; padding: 5px;'>\n";
 
-echo "<div style='text-align: left; padding-top: 3px; padding-bottom: 3px;'><a href='javascript:void(0);' onclick=\"window.open('fileoptions.php?folder=".urlencode($_SERVER["DOCUMENT_ROOT"])."','filewin','left=20,top=20,width=310,height=350,toolbar=0,resizable=0');\" style='text-decoration:none;' title='".$text['label-files']."'><img src='resources/images/icon_gear.png' border='0' align='absmiddle' style='margin: 0px 2px 4px -1px;'>".$text['label-files']."</a></div>\n";
+echo "<div style='text-align: left; padding-top: 3px; padding-bottom: 3px;'><a href='javascript:void(0);' onclick=\"window.open('fileoptions.php','filewin','left=20,top=20,width=310,height=350,toolbar=0,resizable=0');\" style='text-decoration:none;' title='".$text['label-files']."'><img src='resources/images/icon_gear.png' border='0' align='absmiddle' style='margin: 0px 2px 4px -1px;'>".$text['label-files']."</a></div>\n";
 echo "<div style='text-align: left; margin-left: -16px;'>\n";
-
-//start the session
-ini_set("session.cookie_httponly", True);
-if (!isset($_SESSION)) { session_start(); }
-switch ($_SESSION["app"]["edit"]["dir"]) {
-	case 'scripts':
-		echo recur_dir($_SESSION['switch']['scripts']['dir']);
-		break;
-	case 'php':
-		echo recur_dir($_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH);
-		break;
-	case 'grammer':
-		echo recur_dir($_SESSION['switch']['grammar']['dir']);
-		break;
-	case 'provision':
-		switch (PHP_OS) {
-			case "Linux":
-				echo (file_exists('/etc/fusionpbx/resources/templates/provision')) ? recur_dir('/etc/fusionpbx/resources/templates/provision') : recur_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/");
-				break;
-			case "FreeBSD":
-				echo (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) ? recur_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/") : recur_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/");
-				break;
-			case "NetBSD":
-				echo recur_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/");
-				break;
-			case "OpenBSD":
-				echo recur_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/");
-				break;
-			default:
-				echo recur_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/");
-		}
-		break;
-	case 'xml':
-		echo recur_dir($_SESSION['switch']['conf']['dir']);
-		break;
+if (file_exists($edit_directory)) {
+	echo recur_dir($edit_directory);
 }
-
 echo "</div>\n";
-
 
 require_once "footer.php";
 
@@ -242,4 +256,5 @@ unset ($result);
 unset ($key);
 unset ($val);
 unset ($c);
+
 ?>

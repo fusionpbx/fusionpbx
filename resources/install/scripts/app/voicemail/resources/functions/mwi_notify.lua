@@ -8,7 +8,7 @@
 
 		--create the api object
 		api = freeswitch.API();
-		local sofia_contact = trim(api:executeString("sofia_contact "..account));
+		local sofia_contact = trim(api:executeString("sofia_contact */"..account));
 		array = explode("/", sofia_contact);
 		sip_profile = array[2];
 

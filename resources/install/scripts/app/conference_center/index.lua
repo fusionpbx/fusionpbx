@@ -775,7 +775,7 @@
 					end
 				--record the conference
 					if (record == "true") then
-						cmd="sched_api (+5 none lua app/conference_center/resources/scripts/start_recording.lua "..meeting_uuid.." "..domain_name.." "..record_ext.." )";
+						cmd="sched_api +5 none lua "..scripts_dir.."/app/conference_center/resources/scripts/start_recording.lua "..meeting_uuid.." "..domain_name.." "..record_ext;
 						api:executeString(cmd);
 					end
 				--send the call to the conference
