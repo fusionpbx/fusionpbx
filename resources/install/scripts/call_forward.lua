@@ -71,7 +71,7 @@
 	local extension_uuid = session:getVariable("extension_uuid");
 	local request_id = session:getVariable("request_id");
 	local forward_all_destination = session:getVariable("forward_all_destination") or '';
-	local extension, dial_string
+	local extension;
 
 --set the sounds path for the language, dialect and voice
 	local default_language = session:getVariable("default_language") or 'en';
@@ -271,18 +271,15 @@
 		local sql = "update v_extensions set ";
 		if (enabled == "true") then
 			sql = sql .. "forward_all_destination = :forward_all_destination, ";
-			sql = sql .. "dial_string = :dial_string, ";
 			sql = sql .. "do_not_disturb = 'false', ";
 		else
 			sql = sql .. "forward_all_destination = null, ";
-			sql = sql .. "dial_string = null, ";
 		end
 		sql = sql .. "forward_all_enabled = :forward_all_enabled ";
 		sql = sql .. "where domain_uuid = :domain_uuid ";
 		sql = sql .. "and extension_uuid = :extension_uuid ";
 		local params = {
 			forward_all_destination = forward_all_destination;
-			dial_string = dial_string;
 			forward_all_enabled = forward_all_enabled;
 			domain_uuid = domain_uuid;
 			extension_uuid = extension_uuid;
