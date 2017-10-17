@@ -44,10 +44,10 @@
 					--get the voicemail_id
 					--fix for extensions that start with 0 (Ex: 0712)
 							sql = [[SELECT voicemail_id FROM v_voicemails WHERE voicemail_uuid = :voicemail_uuid]];
+							local params = {voicemail_uuid = voicemail_uuid};
 							if (debug["sql"]) then
 								freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 							end
-							local params = {voicemail_uuid = voicemail_uuid};
 							dbh:query(sql, params, function(result)
 								voicemail_id_copy = result["voicemail_id"];
 							end);
