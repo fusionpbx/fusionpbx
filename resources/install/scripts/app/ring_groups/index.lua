@@ -292,9 +292,6 @@
 						destination_number = api:executeString(cmd);
 						freeswitch.consoleLog("notice", "[ring groups][call forward all] " .. count .. " " .. cmd .. " ".. destination_number .."\n");
 
-						cmd = "user_exists id ".. destination_number .." "..domain_name;
-						user_exists = api:executeString(cmd);
-
 						count = count + 1;
 						if (count < 5) then
 							count, destination_number = get_forward_all(count, destination_number, domain_name);
@@ -373,30 +370,34 @@
 				--follow the forwards
 				count, destination_number = get_forward_all(0, row.destination_number, leg_domain_name);
 
-				cmd = "user_exists id ".. row.destination_number .." "..leg_domain_name;
+				--check if the user exists
+				cmd = "user_exists id ".. destination_number .." "..domain_name;
+				user_exists = api:executeString(cmd);
+
+				--cmd = "user_exists id ".. destination_number .." "..leg_domain_name;
 				if (user_exists == "true") then
 					--add user_exists true or false to the row array
 						row['user_exists'] = "true";
 					--handle do_not_disturb
-						cmd = "user_data ".. row.destination_number .."@" ..leg_domain_name.." var do_not_disturb";
+						cmd = "user_data ".. destination_number .."@" ..leg_domain_name.." var do_not_disturb";
 						if (api:executeString(cmd) ~= "true") then
 							--add the row to the destinations array
 							destinations[x] = row;
 						end
 					--determine if the user is registered if not registered then lookup 
-						cmd = "sofia_contact */".. row.destination_number .."@" ..leg_domain_name;
+						cmd = "sofia_contact */".. destination_number .."@" ..leg_domain_name;
 						if (api:executeString(cmd) == "error/user_not_registered") then
-							cmd = "user_data ".. row.destination_number .."@" ..leg_domain_name.." var forward_user_not_registered_enabled";
+							cmd = "user_data ".. destination_number .."@" ..leg_domain_name.." var forward_user_not_registered_enabled";
 							if (api:executeString(cmd) == "true") then
 								--get the new destination number
-								cmd = "user_data ".. row.destination_number .."@" ..leg_domain_name.." var forward_user_not_registered_destination";
-								destination_number = api:executeString(cmd);
-								if (row.destination_number ~= nil) then
-									row.destination_number = destination_number;	
+								cmd = "user_data ".. destination_number .."@" ..leg_domain_name.." var forward_user_not_registered_destination";
+								not_registered_destination_number = api:executeString(cmd);
+								if (not_registered_destination_number ~= nil) then
+--									destination_number = not_registered_destination_number;	
 								end
 
 								--check the new destination number for user_exists
-								cmd = "user_exists id ".. row.destination_number .." "..leg_domain_name;
+								cmd = "user_exists id ".. destination_number .." "..leg_domain_name;
 								user_exists = api:executeString(cmd);
 								if (user_exists == "true") then
 									row['user_exists'] = "true";
@@ -465,6 +466,13 @@
 					destination_timeout = row.destination_timeout;
 					destination_prompt = row.destination_prompt;
 					domain_name = row.domain_name;
+
+				--follow the forwards
+					count, destination_number = get_forward_all(0, destination_number, leg_domain_name);
+
+				--check if the user exists
+					cmd = "user_exists id ".. destination_number .." "..domain_name;
+					user_exists = api:executeString(cmd);
 
 				--set ringback
 					ring_group_ringback = format_ringback(ring_group_ringback);
@@ -584,18 +592,23 @@
 									y = 0;
 								end
 							end
+			
 							if (r.dialplan_detail_tag == "condition") then
 								if (r.dialplan_detail_type == "destination_number") then
+			dial_string = "regex m:~"..destination_number.."~"..r.dialplan_detail_data
 									if (api:execute("regex", "m:~"..destination_number.."~"..r.dialplan_detail_data) == "true") then
 										--get the regex result
 											destination_result = trim(api:execute("regex", "m:~"..destination_number.."~"..r.dialplan_detail_data.."~$1"));
 										--set match equal to true
-											regex_match = true
+											regex_match = true;
 									end
 								end
-							end
+						end
+--regex_match = true;
+--dial_string = r.dialplan_detail_data;
 							if (r.dialplan_detail_tag == "action") then
 								if (regex_match) then
+--dial_string = 'match';
 									--replace $1
 										dialplan_detail_data = r.dialplan_detail_data:gsub("$1", destination_result);
 									--if the session is set then process the actions
