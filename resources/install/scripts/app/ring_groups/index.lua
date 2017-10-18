@@ -231,9 +231,6 @@ local log = require "resources.functions.log".ring_group
 						destination_number = api:executeString(cmd);
 						freeswitch.consoleLog("notice", "[ring groups][call forward all] " .. count .. " " .. cmd .. " ".. destination_number .."\n");
 
-						cmd = "user_exists id ".. destination_number .." "..domain_name;
-						user_exists = api:executeString(cmd);
-
 						count = count + 1;
 						if (count < 5) then
 							count, destination_number = get_forward_all(count, destination_number, domain_name);
@@ -311,31 +308,32 @@ local log = require "resources.functions.log".ring_group
 				--follow the forwards
 				count, destination_number = get_forward_all(0, row.destination_number, leg_domain_name);
 
-				cmd = "user_exists id ".. row.destination_number .." "..leg_domain_name;
+				--check if the user exists
+				cmd = "user_exists id ".. destination_number .." "..domain_name;
 				user_exists = api:executeString(cmd);
 				if (user_exists == "true") then
 					--add user_exists true or false to the row array
 						row['user_exists'] = "true";
 					--handle do_not_disturb
-						cmd = "user_data ".. row.destination_number .."@" ..leg_domain_name.." var do_not_disturb";
+						cmd = "user_data ".. destination_number .."@" ..leg_domain_name.." var do_not_disturb";
 						if (api:executeString(cmd) ~= "true") then
 							--add the row to the destinations array
 							destinations[x] = row;
 						end
 					--determine if the user is registered if not registered then lookup 
-						cmd = "sofia_contact */".. row.destination_number .."@" ..leg_domain_name;
+						cmd = "sofia_contact */".. destination_number .."@" ..leg_domain_name;
 						if (api:executeString(cmd) == "error/user_not_registered") then
-							cmd = "user_data ".. row.destination_number .."@" ..leg_domain_name.." var forward_user_not_registered_enabled";
+							cmd = "user_data ".. destination_number .."@" ..leg_domain_name.." var forward_user_not_registered_enabled";
 							if (api:executeString(cmd) == "true") then
 								--get the new destination number
-								cmd = "user_data ".. row.destination_number .."@" ..leg_domain_name.." var forward_user_not_registered_destination";
-								destination_number = api:executeString(cmd);
-								if (row.destination_number ~= nil) then
-									row.destination_number = destination_number;	
+								cmd = "user_data ".. destination_number .."@" ..leg_domain_name.." var forward_user_not_registered_destination";
+								not_registered_destination_number = api:executeString(cmd);
+								if (not_registered_destination_number ~= nil) then
+									destination_number = not_registered_destination_number;	
 								end
 
 								--check the new destination number for user_exists
-								cmd = "user_exists id ".. row.destination_number .." "..leg_domain_name;
+								cmd = "user_exists id ".. destination_number .." "..leg_domain_name;
 								user_exists = api:executeString(cmd);
 								if (user_exists == "true") then
 									row['user_exists'] = "true";
@@ -404,6 +402,13 @@ local log = require "resources.functions.log".ring_group
 					destination_timeout = row.destination_timeout;
 					destination_prompt = row.destination_prompt;
 					domain_name = row.domain_name;
+
+				--follow the forwards
+					count, destination_number = get_forward_all(0, destination_number, leg_domain_name);
+
+				--check if the user exists
+					cmd = "user_exists id ".. destination_number .." "..domain_name;
+					user_exists = api:executeString(cmd);
 
 				--set ringback
 					ring_group_ringback = format_ringback(ring_group_ringback);
