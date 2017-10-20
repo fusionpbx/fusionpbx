@@ -303,8 +303,25 @@
 					$recording = $parts[3];
 					$record_path = dirname($recording);
 					$record_name = basename($recording);
+					$record_length = urldecode($xml->variables->duration);
 				}
-				$record_length = urldecode($xml->variables->duration);
+			}
+			elseif (strlen($xml->variables->bridge) > 0) {
+				$commands = explode(",", urldecode($xml->variables->bridge));
+				foreach ($commands as $command) {
+					$cmd = explode("=", $command);
+					if ($cmd[0] == "api_on_answer") {
+						$a = explode("]", $cmd[1]);
+						$command = str_replace("'", "", $a[0]);
+						$parts = explode(" ", $command);
+						if ($parts[0] == "uuid_record") {
+							$recording = $parts[3];
+							$record_path = dirname($recording);
+							$record_name = basename($recording);
+							$record_length = urldecode($xml->variables->duration);
+						}
+					}
+				}
 			}
 
 		//add the call recording
