@@ -361,7 +361,7 @@
 
 	fwrite($fp, $content);
 	fclose($fp);
-
+	rename(sys_get_temp_dir()."/mailer-app.log", sys_get_temp_dir()."/mailer-app-$call_uuid.log");
 
 /********************************************************************************************
 
@@ -391,6 +391,7 @@ ob_end_clean(); //clean the buffer
 
 fwrite($fp, $content);
 fclose($fp);
+rename(sys_get_temp_dir()."/email.eml", sys_get_temp_dir()."/email-$call_uuid.eml");
 
 */
 ?>
