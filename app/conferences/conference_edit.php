@@ -328,7 +328,7 @@
 	$sql = "select * ";
 	$sql .= "from v_conference_profiles ";
 	$sql .= "where profile_enabled = 'true' ";
-	$sql .= "and (profile_name <> 'page' and profile_name <> 'sla') ";
+	$sql .= "and profile_name <> 'sla' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$conference_profiles = $prep_statement->fetchAll(PDO::FETCH_NAMED);
