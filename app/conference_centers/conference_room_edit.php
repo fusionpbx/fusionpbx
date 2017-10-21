@@ -24,16 +24,20 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('conference_room_add') || permission_exists('conference_room_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('conference_room_add') || permission_exists('conference_room_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -85,6 +89,19 @@ else {
 	if (strlen($conference_center_uuid) == 0) {
 		$conference_center_uuid = $conference_centers[0]["conference_center_uuid"];
 	}
+
+//get the conference profiles
+	$sql = "select * ";
+	$sql .= "from v_conference_profiles ";
+	$sql .= "where profile_enabled = 'true' ";
+	$sql .= "and (profile_name <> 'page' and profile_name <> 'sla') ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$conference_profiles = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset ($prep_statement, $sql);
+
+//set the default
+	if ($profile === "") { $profile = "default"; }
 
 //define fucntion get_meeting_pin - used to find a unique pin number
 	function get_meeting_pin($length, $meeting_uuid) {
@@ -632,7 +649,16 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>".$text['label-profile']."</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='profile' maxlength='255' value='$profile'>\n";
+		echo "	<select class='formfld' name='profile'>\n";
+		foreach ($conference_profiles as $row) {
+			if ($profile === $row['profile_name']) {
+					echo "	<option value='". $row['profile_name'] ."' selected='selected'>". $row['profile_name'] ."</option>\n";
+			}
+			else {
+					echo "	<option value='". $row['profile_name'] ."'>". $row['profile_name'] ."</option>\n";
+			}
+		}
+		echo "	</select>\n";
 		echo "	<br />\n";
 		echo "	".$text['description-profile']."\n";
 		echo "</td>\n";
