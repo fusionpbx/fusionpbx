@@ -306,8 +306,8 @@
 					$record_length = urldecode($xml->variables->duration);
 				}
 			}
-			elseif (strlen($xml->variables->bridge) > 0) {
-				$commands = explode(",", urldecode($xml->variables->bridge));
+			elseif (strlen($xml->variables->current_application_data) > 0) {
+				$commands = explode(",", urldecode($xml->variables->current_application_data));
 				foreach ($commands as $command) {
 					$cmd = explode("=", $command);
 					if ($cmd[0] == "api_on_answer") {
