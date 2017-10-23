@@ -1414,10 +1414,10 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		if (is_array($_SESSION['toll allow']['name'])) {
-			echo "	<select class='formfld' name='toll_allow'>\n";
+			echo "	<select class='formfld' name='toll_allow' id='toll_allow'>\n";
 			echo "		<option value=''></option>\n";
 			foreach ($_SESSION['toll allow']['name'] as $name) {
-				if ($_SESSION['call group']['name'] == $call_group) {
+				if ($name == $toll_allow) {
 					echo "		<option value='$name' selected='selected'>$name</option>\n";
 				}
 				else {
