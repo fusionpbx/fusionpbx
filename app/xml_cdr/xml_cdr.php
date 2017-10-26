@@ -449,9 +449,6 @@
 
 		foreach($result as $index => $row) {
 			//get the date and time
-				$tmp_year = date("Y", strtotime($row['start_stamp']));
-				$tmp_month = date("M", strtotime($row['start_stamp']));
-				$tmp_day = date("d", strtotime($row['start_stamp']));
 				$tmp_start_epoch = ($_SESSION['domain']['time_format']['text'] == '12h') ? date("j M Y g:i:sa", $row['start_epoch']) : date("j M Y H:i:s", $row['start_epoch']);
 
 			//get the hangup cause
@@ -465,14 +462,25 @@
 
 			//determine recording properties
 				if (permission_exists('recording_play') || permission_exists('recording_download')) {
-					$record_path = $row['record_path'];
-					$record_name = $row['record_name'];
-					//$record_name = strtolower(pathinfo($tmp_name, PATHINFO_BASENAME));
-					$record_extension = pathinfo($record_name, PATHINFO_EXTENSION);
-					switch ($record_extension) {
-						case "wav" : $record_type = "audio/wav"; break;
-						case "mp3" : $record_type = "audio/mpeg"; break;
-						case "ogg" : $record_type = "audio/ogg"; break;
+					$record_file = xml_cdr::recording_file($row);
+
+					if(!empty($record_file)){
+						$record_path = pathinfo($record_file, PATHINFO_DIRNAME);
+						$record_name = pathinfo($record_file, PATHINFO_BASENAME);
+						$record_extension = pathinfo($recording_file_name, PATHINFO_EXTENSION);
+						//$record_name = strtolower(pathinfo($tmp_name, PATHINFO_BASENAME));
+						$record_extension = pathinfo($record_name, PATHINFO_EXTENSION);
+						switch ($record_extension) {
+							case "wav" : $record_type = "audio/wav"; break;
+							case "mp3" : $record_type = "audio/mpeg"; break;
+							case "ogg" : $record_type = "audio/ogg"; break;
+						}
+					}
+					else{
+						$record_path = '';
+						$record_name = '';
+						$record_extension = '';
+						$record_type = '';
 					}
 				}
 
@@ -601,7 +609,7 @@
 				if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
 
 					$database->table = "v_xml_cdr";
-					$accountcode = (strlen($row["accountcode"])?$row["accountcode"]:$_SESSION[domain_name]);
+					$accountcode = (strlen($row["accountcode"])?$row["accountcode"]:$_SESSION['domain_name']);
 					$database->sql = "SELECT currency FROM v_billings WHERE type_value='$accountcode'";
 					$database->result = $database->execute();
 					$billing_currency = (strlen($database->result[0]['currency'])?$database->result[0]['currency']:'USD');
