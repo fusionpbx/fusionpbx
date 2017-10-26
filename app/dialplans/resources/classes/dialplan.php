@@ -835,7 +835,7 @@ include "root.php";
 														}
 													}
 												//add the call direction and domain name and uuid
-													$xml .= "		<action application=\"set\" data=\"call_direction=inbound\" inline=\"true\"/>\n";
+													$xml .= "		<action application=\"export\" data=\"call_direction=inbound\" inline=\"true\"/>\n";
 													if ($domain_uuid != null and $domain_uuid != '') {
 														$domain_name = $domains[$domain_uuid];
 														$xml .= "		<action application=\"set\" data=\"domain_uuid=" . $domain_uuid . "\" inline=\"true\"/>\n";
