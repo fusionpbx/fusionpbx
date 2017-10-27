@@ -243,9 +243,9 @@ class destinations {
 						}
 
 						$select_value = str_replace("\${domain_name}", $_SESSION['domain_name'], $select_value);
-						$select_value = str_replace("\${context}", $_SESSION['context'], $select_value); //to do: context can come from the array
+						$select_value = str_replace("\${context}", $_SESSION['domain_name'], $select_value); //to do: context can come from the array
 						$select_label = str_replace("\${domain_name}", $_SESSION['domain_name'], $select_label);
-						$select_label = str_replace("\${context}", $_SESSION['context'], $select_label);
+						$select_label = str_replace("\${context}", $_SESSION['domain_name'], $select_label);
 						$select_label = trim($select_label);
 						if ($select_value == $destination_value) { $selected = "selected='selected' "; $select_found = true; } else { $selected = ''; }
 						if ($label2 == 'destinations') { $select_label = format_phone($select_label); }
