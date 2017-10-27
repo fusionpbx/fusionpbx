@@ -59,7 +59,12 @@ if (!class_exists('xml_cdr')) {
 			if( !(empty($row['record_path']) || empty($row['record_name'])) ){
 				$record_path = $row['record_path'];
 				$record_name = $row['record_name'];
-				return path_join($record_path, $record_name);
+				$record_file = path_join($record_path, $record_name);
+
+				// test either file exists
+				if(!file_exists($record_file)) return false;
+
+				return $record_file;
 			}
 
 			// 4.2 variant just test either file exists on disk
