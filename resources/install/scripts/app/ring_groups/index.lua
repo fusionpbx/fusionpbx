@@ -354,6 +354,7 @@
 			end
 			destinations = {};
 			x = 1;
+			destination_count = 0;
 			assert(dbh:query(sql, params, function(row)
 				if (row.destination_prompt == "1" or row.destination_prompt == "2") then
 					prompt = "true";
@@ -414,6 +415,7 @@
 						destinations[x] = row;
 				end
 				row['domain_name'] = leg_domain_name;
+				destination_count = destination_count + 1;
 				x = x + 1;
 			end));
 			--freeswitch.consoleLog("NOTICE", "[ring_group] external "..external.."\n");
@@ -478,6 +480,11 @@
 					ring_group_ringback = format_ringback(ring_group_ringback);
 					session:setVariable("ringback", ring_group_ringback);
 					session:setVariable("transfer_ringback", ring_group_ringback);
+
+				--set the timeout if there is only one destination
+					if (destination_count == 1) then
+						session:execute("set", "call_timeout="..row.destination_timeout);
+					end
 
 				--setup the delimiter
 					delimiter = ",";
