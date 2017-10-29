@@ -148,6 +148,58 @@ if (!class_exists('registrations')) {
 			//return the registrations array
 				return $registrations;
 		}
+
+		/**
+		 * get the registration count
+		 */
+		public function count($profile) {
+
+			//set the initial count value to 0
+				$count = 0;
+
+			//create the event socket connection
+				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+
+			//get the default settings
+				$sql = "select sip_profile_name from v_sip_profiles ";
+				$sql .= "where sip_profile_enabled = 'true' ";
+				if ($profile == 'all' || $profile == '') {
+					$prep_statement = $this->db->prepare($sql);
+				}
+				else {
+					$sql .= "and sip_profile_name=:sip_profile_name ";
+					$prep_statement = $this->db->prepare($sql);
+					$prep_statement->bindParam(':sip_profile_name', $profile);
+				}
+				$prep_statement->execute();
+				$sip_profiles = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				foreach ($sip_profiles as $field) {
+
+					//get sofia status profile information including registrations
+						$cmd = "api sofia xmlstatus profile ".$field['sip_profile_name']." reg";
+						$xml_response = trim(event_socket_request($fp, $cmd));
+
+						if ($xml_response == "Invalid Profile!") { $xml_response = "<error_msg>".$text['label-message']."</error_msg>"; }
+						$xml_response = str_replace("<profile-info>", "<profile_info>", $xml_response);
+						$xml_response = str_replace("</profile-info>", "</profile_info>", $xml_response);
+						if (strlen($xml_response) > 101) {
+							try {
+								$xml = new SimpleXMLElement($xml_response);
+							}
+							catch(Exception $e) {
+								echo $e->getMessage();
+								exit;
+							}
+							$array = json_decode(json_encode($xml) , true);
+							$count = $count + count($array['registrations']['registration']);
+						}
+
+				}
+
+			//return the registrations count
+				return $count;
+		}
+
 	}
 }
 /*
