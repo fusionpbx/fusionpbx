@@ -69,15 +69,27 @@
 				if (debug["info"]) then
 					freeswitch.consoleLog("notice", "[voicemail] CMD: " .. transcribe_cmd .. "\n");
 					freeswitch.consoleLog("notice", "[voicemail] RESULT: " .. transcribe_result .. "\n");
-					freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: " .. transcribe_json["results"][1]["name"] .. "\n");
-					freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: " .. transcribe_json["results"][1]["confidence"] .. "\n");
+					 if (transcribe_json["results"][1]["name"] == nil) then
+						freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: (null) \n");
+					else
+						freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: " .. transcribe_json["results"][1]["name"] .. "\n");
+					end
+					if (transcribe_json["results"][1]["confidence"] == nil) then
+						freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: (null) \n");
+					else
+						freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: " .. transcribe_json["results"][1]["confidence"] .. "\n");
+					end
 				end
-							
-				transcription = transcribe_json["results"][1]["name"];
-				transcription = transcription:gsub("<profanity>.*<%/profanity>","...");
-				confidence = transcribe_json["results"][1]["confidence"];
+				
+				if (transcribe_json["results"][1]["name"] == nil) then
+                                        return '';
+                                else
+					transcription = transcribe_json["results"][1]["name"];
+					transcription = transcription:gsub("<profanity>.*<%/profanity>","...");
+					confidence = transcribe_json["results"][1]["confidence"];
+					return transcription;
+				end
 			end
-			return transcription;
 		end
 		
 		return '';
