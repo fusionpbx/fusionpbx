@@ -68,6 +68,7 @@ if (!class_exists('registrations')) {
 						$xml_response = str_replace("</profile-info>", "</profile_info>", $xml_response);
 						if (strlen($xml_response) > 101) {
 							try {
+								$xml_response = str_ireplace("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>", "<?xml version=\"1.0\" encoding=\"UTF-8\"?>", $xml_response);
 								$xml = new SimpleXMLElement($xml_response);
 							}
 							catch(Exception $e) {
