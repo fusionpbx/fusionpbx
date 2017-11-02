@@ -344,12 +344,7 @@
 			}
 
 		//set the default paging
-			if ($_SESSION['domain']['paging']['numeric'] != '' && $rows_per_page > $_SESSION['domain']['paging']['numeric']) {
-				$rows_per_page = $_SESSION['domain']['paging']['numeric'];
-			}
-			else {
-				$rows_per_page = 50;
-			}
+			$rows_per_page = $_SESSION['domain']['paging']['numeric'];
 
 		//prepare to page the results
 			//$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50; //set on the page that includes this page
