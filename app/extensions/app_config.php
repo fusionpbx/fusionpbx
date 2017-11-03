@@ -137,6 +137,12 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "extension_accountcode";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "extension_nibble_account";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "extension_user_context";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
