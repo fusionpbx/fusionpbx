@@ -143,7 +143,9 @@
 			$field_name = end($array);
 			if (isset($$field_name)) {
 				$$field_name = check_str($_REQUEST[$field_name]);
-				$sql_where_ands[] = "$field_name like '%".$$field_name."%'";
+				if (strlen($$field_name) > 0) {
+					$sql_where_ands[] = "$field_name like '%".$$field_name."%'";
+				}
 			}
 		}
 	}
