@@ -1552,10 +1552,7 @@
 		echo "</tr>\n";
 	}
 
-	if (if_group("superadmin")) {
-		if (strlen($user_context) == 0) {
-			$user_context = $_SESSION['domain_name'];
-		}
+	if (permission_exists("extension_user_context")) {
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "    ".$text['label-user_context']."\n";
