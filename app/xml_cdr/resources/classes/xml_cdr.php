@@ -260,8 +260,10 @@ if (!class_exists('xml_cdr')) {
 				$caller_id_number = urldecode($xml->variables->effective_caller_id_number);
 				$caller_id_destination = urldecode($xml->variables->caller_destination);
 				if (strlen($caller_id_number) == 0) foreach ($xml->callflow as $row) {
-					$caller_id_name = urldecode($row->caller_profile->caller_id_name);
 					$caller_id_number = urldecode($row->caller_profile->caller_id_number);
+				}
+				if (strlen($caller_id_name) == 0) foreach ($xml->callflow as $row) {
+					$caller_id_name = urldecode($row->caller_profile->caller_id_name);
 				}
 
 			//misc
@@ -273,7 +275,7 @@ if (!class_exists('xml_cdr')) {
 				$this->array[$key]['network_addr'] = check_str(urldecode($xml->variables->sip_network_ip));
 				$this->array[$key]['caller_id_name'] = check_str($caller_id_name);
 				$this->array[$key]['caller_id_number'] = check_str($caller_id_number);
-
+				$this->array[$key]['caller_destination'] = check_str(urldecode($xml->variables->caller_destination));
 				$this->array[$key]['accountcode'] = check_str(urldecode($xml->variables->accountcode));
 				$this->array[$key]['default_language'] = check_str(urldecode($xml->variables->default_language));
 				$this->array[$key]['bridge_uuid'] = check_str(urldecode($xml->variables->bridge_uuid));
