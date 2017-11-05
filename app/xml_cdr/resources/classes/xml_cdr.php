@@ -1034,6 +1034,9 @@ if (!class_exists('xml_cdr')) {
 							if ($file_ext == "mp3") {
 								header("Content-Type: audio/mpeg");
 							}
+							if ($file_ext == "ogg") {
+								header("Content-Type: audio/ogg");
+							}
 						}
 						header('Content-Disposition: attachment; filename="'.$record_name.'"');
 						header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
