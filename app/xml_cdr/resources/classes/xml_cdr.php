@@ -51,6 +51,46 @@ if (!class_exists('xml_cdr')) {
 		public $include_internal;
 		public $extensions;
 
+		/** Return full path to record file or false.
+		 * This function does not guarantee that file actually exists.
+		 */
+		static public function recording_file($row) {
+			// new in 4.3 save file metadata in database
+			if( !(empty($row['record_path']) || empty($row['record_name'])) ){
+				$record_path = $row['record_path'];
+				$record_name = $row['record_name'];
+				$record_file = path_join($record_path, $record_name);
+
+				// test either file exists
+				if(!file_exists($record_file)) return false;
+
+				return $record_file;
+			}
+
+			// 4.2 variant just test either file exists on disk
+			$recdir = $_SESSION['switch']['recordings']['dir'];
+			$domain_name = $row['domain_name'];
+			if(empty($domain_name)){
+				$domain_name = $_SESSION['domain_name'];
+			}
+			$subdir = date('Y/M/d', strtotime($row['start_stamp']));
+
+			$recdir = path_join($recdir, $domain_name, 'archive', $subdir);
+			if(!is_dir($recdir)) return false;
+
+			foreach(['uuid', 'bridge_uuid'] as $uuid_name){
+				$uuid = $row[$uuid_name];
+				if(!empty($uuid)){
+					$record = path_join($recdir, "${uuid}.wav"   ); if(file_exists($record)) return $record;
+					$record = path_join($recdir, "${uuid}_1.wav" ); if(file_exists($record)) return $record;
+					$record = path_join($recdir, "${uuid}.mp3"   ); if(file_exists($record)) return $record;
+					$record = path_join($recdir, "${uuid}_1.mp3" ); if(file_exists($record)) return $record;
+				}
+			}
+
+			return false;
+		}
+
 		/**
 		 * Called when the object is created
 		 */
@@ -993,7 +1033,7 @@ if (!class_exists('xml_cdr')) {
 				//get call recording from database
 					$uuid = check_str($_GET['id']);
 					if ($uuid != '') {
-						$sql = "select record_name, record_path from v_xml_cdr ";
+						$sql = "select start_stamp, uuid, bridge_uuid, domain_name, record_name, record_path from v_xml_cdr ";
 						$sql .= "where uuid = '".$uuid."' ";
 						//$sql .= "and domain_uuid = '".$domain_uuid."' \n";
 						$prep_statement = $this->db->prepare($sql);
@@ -1001,16 +1041,16 @@ if (!class_exists('xml_cdr')) {
 						$xml_cdr = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 						if (is_array($xml_cdr)) {
 							foreach($xml_cdr as &$row) {
-								$record_name = $row['record_name'];
-								$record_path = $row['record_path'];
-								break;
+								$record_file = static::recording_file($row);
+								if(!empty($record_file)){
+									$record_name = pathinfo($record_file, PATHINFO_BASENAME);
+									$record_path = pathinfo($record_file, PATHINFO_DIRNAME);
+									break;
+								}
 							}
 						}
 						unset ($sql, $prep_statement, $xml_cdr);
 					}
-
-				//build full path
-					$record_file = $record_path . '/' . $record_name;
 
 				//download the file
 					if (file_exists($record_file)) {
@@ -1033,6 +1073,9 @@ if (!class_exists('xml_cdr')) {
 							}
 							if ($file_ext == "mp3") {
 								header("Content-Type: audio/mpeg");
+							}
+							if ($file_ext == "ogg") {
+								header("Content-Type: audio/ogg");
 							}
 						}
 						header('Content-Disposition: attachment; filename="'.$record_name.'"');
