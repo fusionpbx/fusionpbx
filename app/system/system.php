@@ -97,7 +97,7 @@
 		if(file_exists($git_path)){
 			$git_exe = 'git';
 			if (strtoupper(substr(PHP_OS, 0, 3)) === 'SUN') { $git_exe = shell_exec('which git'); }
-			exec($git_exe.' --git-dir='.$git_path.' fetch', $dummy, $returnCode);
+			exec($git_exe.' --git-dir='.$git_path.' status', $dummy, $returnCode);
 			if($returnCode){
 				echo "<tr>\n";
 				echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
@@ -117,7 +117,7 @@
 				$git_origin = preg_replace('/\.git$/','',$git_origin);
 				$git_status = shell_exec($git_exe.' --git-dir='.$git_path.' status | grep "Your branch"');
 				rtrim($git_status);
-				$git_age = shell_exec($git_exe.' --git-dir='.$git_path.' log --pretty=format:%at HEAD^!');
+				$git_age = shell_exec($git_exe.' --git-dir='.$git_path.' log --pretty=format:%at "HEAD^!"');
 				rtrim($git_age);
 				$git_date = DateTime::createFromFormat('U', $git_age);
 				$git_age = $git_date->diff(new DateTime('now'));
