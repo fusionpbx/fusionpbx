@@ -744,6 +744,7 @@
 	unset ($sql, $prep_statement);
 
 //set the defaults
+	if (strlen($user_context) == 0) { $user_context = $_SESSION['domain_name']; }
 	if (strlen($limit_max) == 0) { $limit_max = '5'; }
 	if (strlen($limit_destination) == 0) { $limit_destination = 'error/user_busy'; }
 	if (strlen($call_timeout) == 0) { $call_timeout = '30'; }
