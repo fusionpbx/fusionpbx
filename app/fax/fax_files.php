@@ -217,10 +217,10 @@ else {
 	echo "	<tr>\n";
 	echo "		<td align='left' valign='top'>\n";
 	if ($_REQUEST['box'] == 'inbox' && permission_exists('fax_inbox_view')) {
-		echo "			<b>".$text['header-inbox'].": <span style='color: #000;'>".$fax_name." (".$fax_extension.")</span></b>\n";
+		echo "			<b>".$text['header-inbox'].": ".$fax_name." (".$fax_extension.")</b>\n";
 	}
 	if ($_REQUEST['box'] == 'sent' && permission_exists('fax_sent_view')) {
-		echo "			<b>".$text['header-sent'].": <span style='color: #000;'>".$fax_name." (".$fax_extension.")</span></b>\n";
+		echo "			<b>".$text['header-sent'].": ".$fax_name." (".$fax_extension.")</b>\n";
 	}
 	echo "		</td>\n";
 	echo "		<td width='70%' align='right' valign='top'>\n";

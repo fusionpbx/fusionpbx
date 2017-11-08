@@ -27,7 +27,7 @@
 
 	if (!function_exists('software_version')) {
 		function software_version() {
-			return '4.3.3';
+			return '4.3.4';
 		}
 	}
 
@@ -1894,6 +1894,7 @@ function number_pad($number,$n) {
 		}
 	}
 
+//make directory with event socket
 	function event_socket_mkdir($dir) {
 		//connect to fs
 			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
@@ -1913,6 +1914,12 @@ function number_pad($number,$n) {
 			}
 		//can not create directory
 			return false;
+	}
+
+//escape user data
+	function escape($string) {
+		return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+		//return htmlentities($string, ENT_QUOTES, 'UTF-8');
 	}
 
 ?>

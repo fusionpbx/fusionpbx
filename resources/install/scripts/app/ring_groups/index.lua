@@ -125,6 +125,11 @@
 		call_direction = "local";
 	end
 
+---set the call_timeout to a higher value to prevent the early timeout of the ring group
+	if (session:ready()) then
+		session:setVariable("call_timeout","300");
+	end
+
 --set ring ready
 	if (session:ready()) then
 		session:execute("ring_ready", "");
@@ -194,10 +199,10 @@
 
 --set the caller id
 	if (session:ready()) then
-		if (ring_group_cid_name_prefix ~= nil) then
+		if (ring_group_cid_name_prefix ~= nil and string.len(ring_group_cid_name_prefix) > 0) then
 			session:execute("export", "effective_caller_id_name="..ring_group_cid_name_prefix.."#"..caller_id_name);
 		end
-		if (ring_group_cid_number_prefix ~= nil) then
+		if (ring_group_cid_number_prefix ~= nil and string.len(ring_group_cid_number_prefix) > 0) then
 			session:execute("export", "effective_caller_id_number="..ring_group_cid_number_prefix..caller_id_number);
 		end
 	end
@@ -273,6 +278,29 @@
 		end
 	end
 
+--get the destination and follow the forward
+	function get_forward_all(count, destination_number, domain_name)
+		cmd = "user_exists id ".. destination_number .." "..domain_name;
+		freeswitch.consoleLog("notice", "[ring groups][call forward all] " .. cmd .. "\n");
+		user_exists = api:executeString(cmd);
+		if (user_exists == "true") then
+			---check to see if the new destination is forwarded - third forward
+				cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_all_enabled";
+				if (api:executeString(cmd) == "true") then
+					--get the new destination - third foward
+						cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_all_destination";
+						destination_number = api:executeString(cmd);
+						freeswitch.consoleLog("notice", "[ring groups][call forward all] " .. count .. " " .. cmd .. " ".. destination_number .."\n");
+
+						count = count + 1;
+						if (count < 5) then
+							count, destination_number = get_forward_all(count, destination_number, domain_name);
+						end
+				end
+		end
+		return count, destination_number;
+	end
+
 --process the ring group
 	if (ring_group_forward_enabled == "true" and string.len(ring_group_forward_destination) > 0) then
 		--forward the ring group
@@ -326,6 +354,7 @@
 			end
 			destinations = {};
 			x = 1;
+			destination_count = 0;
 			assert(dbh:query(sql, params, function(row)
 				if (row.destination_prompt == "1" or row.destination_prompt == "2") then
 					prompt = "true";
@@ -338,31 +367,38 @@
 				else
 					leg_domain_name = array[2];
 				end
-				cmd = "user_exists id ".. row.destination_number .." "..leg_domain_name;
+
+				--follow the forwards
+				count, destination_number = get_forward_all(0, row.destination_number, leg_domain_name);
+
+				--check if the user exists
+				cmd = "user_exists id ".. destination_number .." "..domain_name;
 				user_exists = api:executeString(cmd);
+
+				--cmd = "user_exists id ".. destination_number .." "..leg_domain_name;
 				if (user_exists == "true") then
 					--add user_exists true or false to the row array
 						row['user_exists'] = "true";
 					--handle do_not_disturb
-						cmd = "user_data ".. row.destination_number .."@" ..leg_domain_name.." var do_not_disturb";
+						cmd = "user_data ".. destination_number .."@" ..leg_domain_name.." var do_not_disturb";
 						if (api:executeString(cmd) ~= "true") then
 							--add the row to the destinations array
 							destinations[x] = row;
 						end
 					--determine if the user is registered if not registered then lookup 
-						cmd = "sofia_contact */".. row.destination_number .."@" ..leg_domain_name;
+						cmd = "sofia_contact */".. destination_number .."@" ..leg_domain_name;
 						if (api:executeString(cmd) == "error/user_not_registered") then
-							cmd = "user_data ".. row.destination_number .."@" ..leg_domain_name.." var forward_user_not_registered_enabled";
+							cmd = "user_data ".. destination_number .."@" ..leg_domain_name.." var forward_user_not_registered_enabled";
 							if (api:executeString(cmd) == "true") then
 								--get the new destination number
-								cmd = "user_data ".. row.destination_number .."@" ..leg_domain_name.." var forward_user_not_registered_destination";
-								destination_number = api:executeString(cmd);
-								if (row.destination_number ~= nil) then
-									row.destination_number = destination_number;	
+								cmd = "user_data ".. destination_number .."@" ..leg_domain_name.." var forward_user_not_registered_destination";
+								not_registered_destination_number = api:executeString(cmd);
+								if (not_registered_destination_number ~= nil) then
+--									destination_number = not_registered_destination_number;	
 								end
 
 								--check the new destination number for user_exists
-								cmd = "user_exists id ".. row.destination_number .." "..leg_domain_name;
+								cmd = "user_exists id ".. destination_number .." "..leg_domain_name;
 								user_exists = api:executeString(cmd);
 								if (user_exists == "true") then
 									row['user_exists'] = "true";
@@ -379,6 +415,7 @@
 						destinations[x] = row;
 				end
 				row['domain_name'] = leg_domain_name;
+				destination_count = destination_count + 1;
 				x = x + 1;
 			end));
 			--freeswitch.consoleLog("NOTICE", "[ring_group] external "..external.."\n");
@@ -432,10 +469,22 @@
 					destination_prompt = row.destination_prompt;
 					domain_name = row.domain_name;
 
+				--follow the forwards
+					count, destination_number = get_forward_all(0, destination_number, leg_domain_name);
+
+				--check if the user exists
+					cmd = "user_exists id ".. destination_number .." "..domain_name;
+					user_exists = api:executeString(cmd);
+
 				--set ringback
 					ring_group_ringback = format_ringback(ring_group_ringback);
 					session:setVariable("ringback", ring_group_ringback);
 					session:setVariable("transfer_ringback", ring_group_ringback);
+
+				--set the timeout if there is only one destination
+					if (destination_count == 1) then
+						session:execute("set", "call_timeout="..row.destination_timeout);
+					end
 
 				--setup the delimiter
 					delimiter = ",";
@@ -550,18 +599,23 @@
 									y = 0;
 								end
 							end
+			
 							if (r.dialplan_detail_tag == "condition") then
 								if (r.dialplan_detail_type == "destination_number") then
+			dial_string = "regex m:~"..destination_number.."~"..r.dialplan_detail_data
 									if (api:execute("regex", "m:~"..destination_number.."~"..r.dialplan_detail_data) == "true") then
 										--get the regex result
 											destination_result = trim(api:execute("regex", "m:~"..destination_number.."~"..r.dialplan_detail_data.."~$1"));
 										--set match equal to true
-											regex_match = true
+											regex_match = true;
 									end
 								end
-							end
+						end
+--regex_match = true;
+--dial_string = r.dialplan_detail_data;
 							if (r.dialplan_detail_tag == "action") then
 								if (regex_match) then
+--dial_string = 'match';
 									--replace $1
 										dialplan_detail_data = r.dialplan_detail_data:gsub("$1", destination_result);
 									--if the session is set then process the actions

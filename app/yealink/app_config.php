@@ -34,9 +34,17 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_time_zone";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "-6";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "-5";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Time zone ranges from -11 to +12";
+		$y=0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9009cb3d-5eb8-41fa-bcbb-ee6b63cdccfa";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_time_zone_name";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "United States-Eastern Time";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Time zone name example United States-Mountain Time";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7f4a1607-4cbe-49f5-8cd2-6d599b89bd9b";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";

@@ -41,6 +41,17 @@
 		--message_status new,saved
 			if (session:ready()) then
 				if (voicemail_id ~= nil) then
+					--get the voicemail_id
+					--fix for extensions that start with 0 (Ex: 0712)
+							sql = [[SELECT voicemail_id FROM v_voicemails WHERE voicemail_uuid = :voicemail_uuid]];
+							local params = {voicemail_uuid = voicemail_uuid};
+							if (debug["sql"]) then
+								freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+							end
+							dbh:query(sql, params, function(result)
+								voicemail_id_copy = result["voicemail_id"];
+							end);
+
 					local sql = [[SELECT voicemail_message_uuid, created_epoch, caller_id_name, caller_id_number 
 						FROM v_voicemail_messages
 						WHERE domain_uuid = :domain_uuid
@@ -85,6 +96,10 @@
 					)
 				--send the message waiting event
 					mwi_notify(voicemail_id.."@"..domain_name, new_messages, saved_messages)
+					--fix for extensions that start with 0 (Ex: 0712)
+						if (voicemail_id_copy ~= voicemail_id  and voicemail_id_copy ~= nil) then
+							message_waiting(voicemail_id_copy, domain_uuid);
+						end
 			end
 
 		--set the display

@@ -260,7 +260,7 @@
 			}
 	
 		messages::add($text['message-update']);
-		header("Location: ".PROJECT_PATH."/app/dialplan/dialplans.php");
+		header("Location: ".PROJECT_PATH."/app/dialplans/dialplans.php");
 		return;
 	} //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
