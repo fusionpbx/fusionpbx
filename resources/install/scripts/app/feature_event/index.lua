@@ -74,7 +74,7 @@
 --get the events
 	--if (user == nil) then 		
 		--serialize the data for the console
-			freeswitch.consoleLog("notice","[events] " .. event:serialize("xml") .. "\n");
+			--freeswitch.consoleLog("notice","[events] " .. event:serialize("xml") .. "\n");
 			--freeswitch.consoleLog("notice","[evnts] " .. event:serialize("json") .. "\n");
 	
 		--get the event variables
