@@ -373,5 +373,21 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "vp530-23.70.0.40.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the VP530 firmware ROM";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "68eba481-aeb1-4c7e-a4e4-630946abc0e7";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_network_vpn_enable";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = " (0-Disabled;1-Enabled)";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "85675560-82cf-48a5-8056-227c01a44f37";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_openvpn_url";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "hxxps://replace-this.url/openvpn.tar";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = " (URL within 511 characters)";
 
 ?>
