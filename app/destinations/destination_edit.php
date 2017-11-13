@@ -417,6 +417,7 @@
 		//clear the cache
 			$cache = new cache;
 			$cache->delete("dialplan:".$destination_context);
+			$cache->delete("dialplan:".$destination_context.":".$destination_number);
 
 		//redirect the user
 			if ($action == "add") {
