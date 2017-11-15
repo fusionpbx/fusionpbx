@@ -467,8 +467,8 @@ if (!class_exists('xml_cdr')) {
 							$x = 0;
 							$array['call_recordings'][$x]['call_recording_uuid'] = $uuid;
 							$array['call_recordings'][$x]['domain_uuid'] = $domain_uuid;
-							$array['call_recordings'][$x]['record_name'] = $record_name;
-							$array['call_recordings'][$x]['record_path'] = $record_path;
+							$array['call_recordings'][$x]['call_recording_name'] = $record_name;
+							$array['call_recordings'][$x]['call_recording_path'] = $record_path;
 							$array['call_recordings'][$x]['call_recording_length'] = $record_length;
 							$array['call_recordings'][$x]['call_recording_date'] =  urldecode($xml->variables->answer_stamp);
 							$array['call_recordings'][$x]['call_direction'] = urldecode($xml->variables->call_direction);
