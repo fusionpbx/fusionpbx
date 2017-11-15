@@ -1,4 +1,9 @@
 local log  = require "resources.functions.log".route_to_bridge
+require "resources.functions.split"
+
+local allows_functions = {
+	['user_data'] = true,
+}
 
 local pcre_match
 
@@ -48,34 +53,35 @@ local function pcre_self_test()
 	io.write(' - ok\n')
 end
 
-local select_outbound_dialplan_sql = [[SELECT
-		d.dialplan_uuid,
-		d.dialplan_context,
-		d.dialplan_continue,
-		s.dialplan_detail_group,
-		s.dialplan_detail_break,
-		s.dialplan_detail_data,
-		s.dialplan_detail_inline,
-		s.dialplan_detail_tag,
-		s.dialplan_detail_type
-	FROM v_dialplans as d, v_dialplan_details as s
-	WHERE  (d.domain_uuid = :domain_uuid OR d.domain_uuid IS NULL)
+local select_outbound_dialplan_sql = [[
+SELECT
+	d.dialplan_uuid,
+	d.dialplan_context,
+	d.dialplan_continue,
+	s.dialplan_detail_group,
+	s.dialplan_detail_break,
+	s.dialplan_detail_data,
+	s.dialplan_detail_inline,
+	s.dialplan_detail_tag,
+	s.dialplan_detail_type
+FROM v_dialplans as d, v_dialplan_details as s
+WHERE  (d.domain_uuid = :domain_uuid OR d.domain_uuid IS NULL)
 	AND (d.hostname = :hostname OR d.hostname IS NULL)
 	AND d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3'
 	AND d.dialplan_enabled = 'true'
 	AND d.dialplan_uuid = s.dialplan_uuid
-	ORDER BY
-		d.dialplan_order ASC,
-		d.dialplan_name ASC,
-		d.dialplan_uuid ASC,
-		s.dialplan_detail_group ASC,
-		CASE s.dialplan_detail_tag
-			WHEN 'condition' THEN 1
-			WHEN 'action' THEN 2
-			WHEN 'anti-action' THEN 3
-			ELSE 100
-		END,
-		s.dialplan_detail_order ASC
+ORDER BY
+	d.dialplan_order ASC,
+	d.dialplan_name ASC,
+	d.dialplan_uuid ASC,
+	s.dialplan_detail_group ASC,
+	CASE s.dialplan_detail_tag
+		WHEN 'condition' THEN 1
+		WHEN 'action' THEN 2
+		WHEN 'anti-action' THEN 3
+		ELSE 100
+	END,
+	s.dialplan_detail_order ASC
 ]]
 
 local function append(t, v)
@@ -120,20 +126,20 @@ local function check_conditions(group, fields)
 		end
 
 		break_on = condition.break_on
-		if break_on == 'always'  then break end
-		if break_on ~= 'never' then
-			if pass and break_on == 'on-true' then break end
-			if not pass and (break_on == 'on-false' or break_on == '') then break end
+		if break_on == 'always'  then break
+		elseif break_on ~= 'never' then
+			if pass then if break_on == 'on-true' then break end
+			elseif break_on == 'on-false' or break_on == '' then break end
 		end
 
 		break_on = nil
 	end
 
-	-- we shuld execute action/anti-action only if we check ALL conditions
+	-- we should execute action/anti-action only if we check ALL conditions
 	local act
 	if last then act = pass and 'action' or 'anti-action' end
 
-	-- we shuld break
+	-- we should break
 	return act, not not break_on, matches
 end
 
@@ -143,23 +149,67 @@ local function apply_match(s, match)
 	end)
 end
 
+local function apply_var(s, fields)
+	local str = string.gsub(s, "%$?%${([^$%(%){}= ]-)}", function(var)
+		return fields[var]
+	end)
+
+	if fields.__api__ then
+		local api = fields.__api__
+		-- try call functions like ('set result=${user_data(args)}')
+		str = string.gsub(str, "%${([^$%(%){}= ]+)%s*%((.-)%)%s*}", function(fn, par)
+			if allows_functions[fn] then
+				return api:execute(fn, par) or ''
+			end
+			log.warningf('try call not allowed function %s', tostring(fn))
+		end)
+
+		-- try call functions like 'set result=${user_data args}'
+		str = string.gsub(str, "%${([^$%(%){}= ]+)%s+(%S.-)%s*}", function(fn, par)
+			if allows_functions[fn] then
+				return api:execute(fn, par) or ''
+			end
+			log.warningf('try call not allowed function %s', tostring(fn))
+		end)
+	end
+
+	if string.find(str, '%${.+}') then
+		log.warningf('can not resolve vars inside `%s`', tostring(str))
+	end
+	return str
+end
+
 local function group_to_bridge(actions, group, fields)
-	local action, do_break, matches = check_conditions(group, fields)
-	if action then
-		local t = (action == 'action') and group.actions or group.anti_actions
-		for _, element in ipairs(t) do
-			local value = element.data
-			if element.type == 'export' and string.sub(value, 1, 8) == 'nolocal:' then
-				value = string.sub(value, 9)
+	local action_type, do_break, matches = check_conditions(group, fields)
+	if action_type then
+		local t = (action_type == 'action') and group.actions or group.anti_actions
+		for _, action in ipairs(t) do
+			local value = action.data
+
+			-- we only support set/export actions
+			if action.type == 'export' or action.type == 'set' then
+				local key
+
+				key, value = split_first(value, '=', true)
+				if key then
+					local bleg_only = (action.type == 'export') and (string.sub(value, 1, 8) == 'nolocal:')
+					if bleg_only then value = string.sub(value, 9) end
+
+					value = apply_match(value, matches)
+					value = apply_var(value, fields)
+
+					if action.inline and not bleg_only then
+						fields[key] = value
+					end
+
+					--! @todo do value escape?
+					append(actions, key .. '=' .. value)
+				end
 			end
 
-			-- we only support action/export
-			if element.type == 'export' or element.type == 'set' then
+			if action.type == 'bridge' then
 				value = apply_match(value, matches)
-				append(actions, value)
-			end
-
-			if element.type == 'bridge' then
+				value = apply_var(value, fields)
 				actions.bridge = apply_match(value, matches)
 				break
 			end
@@ -177,6 +227,69 @@ local function extension_to_bridge(extension, actions, fields)
 end
 
 local function self_test()
+	local unpack = unpack or table.unpack
+
+	local function assert_equal(expected, actions)
+		for i = 1, math.max(#expected, #actions) do
+			local e, v, msg = expected[i], actions[i]
+			if not e then
+				msg = string.format("unexpected value #%d - `%s`", i, v)
+			elseif not v then
+				msg = string.format("expected value `%s` at position #%d, but got no value", e, i)
+			elseif e ~= v then
+				msg = string.format("expected value `%s` at position #%d but got: `%s`", e, i, v)
+			end
+			assert(not msg, msg)
+		end
+
+		for name, e in pairs(expected) do
+			local v, msg = actions[name]
+			if not v then
+				msg = string.format("%s expected as `%s`, but got no value", name, e)
+			elseif e ~= v then
+				msg = string.format("expected value for %s is `%s`, but got: `%s`", name, e, v)
+			end
+			assert(not msg, msg)
+		end
+
+		for name, v in pairs(actions) do
+			local e, msg = expected[name]
+			if not e then
+				msg = string.format("expected value %s = `%s`", name, v)
+			end
+			assert(not msg, msg)
+		end
+
+	end
+
+	local function test_grout_to_bridge(group, params, ret, expected)
+		local actions = {}
+		local result = group_to_bridge(actions, group, params)
+		if result ~= ret then
+			local msg = string.format('expected `%s` but got `%s`', tostring(ret), tostring(result))
+			assert(false, msg)
+		end
+		assert_equal(expected, actions)
+	end
+
+	-- mock for API
+	local function API(t)
+		local api = {
+			execute = function(self, cmd, args)
+				cmd = assert(t[cmd])
+				return cmd[args]
+			end;
+		}
+		return api
+	end
+
+	local old_log = log
+	log = {
+		errf     = function() end;
+		warningf = function() end;
+		debugf   = function() end;
+	}
+
 	pcre_self_test()
 
 	local test_conditions = {
@@ -270,6 +383,168 @@ local function self_test()
 		assert(do_break == result[2])
 		io.write(' - ok\n')
 	end
+
+	local test_actions = {
+		{ -- should not touch unknown vars
+			{actions={
+					{type='set', data='a=${b}'}
+				};
+				conditions={{type='', data='', break_on='on-true'}};
+			},
+			{ -- parameters
+			},
+			{ -- result
+				'a=${b}'
+			}
+		},
+		{ -- should call execute command with braces
+			{actions={
+					{type='set', data='a=${user_data(a b c)}'}
+				};
+				conditions={{type='', data='', break_on='on-true'}};
+			},
+			{ -- parameters
+				__api__ = API{user_data={['a b c'] = 'value'}}
+			},
+			{ -- result
+				'a=value'
+			}
+		},
+		{ -- should call execute command with spaces
+			{actions={
+					{type='set', data='a=${user_data a b c }'}
+				};
+				conditions={{type='', data='', break_on='on-true'}};
+			},
+			{ -- parameters
+				__api__ = API{user_data={['a b c'] = 'value'}}
+			},
+			{ -- result
+				'a=value'
+			}
+		},
+		{ -- should not call not allowed function
+			{actions={
+					{type='set', data='a=${user_exists( a b c )}'}
+				};
+				conditions={{type='', data='', break_on='on-true'}};
+			},
+			{ -- parameters
+				__api__ = API{user_data={['a b c'] = 'value'}}
+			},
+			{ -- result
+				'a=${user_exists( a b c )}'
+			}
+		},
+		{ -- should set inline vars
+			{actions={
+					{type='set', data='a=hello', inline=true},
+					{type='set', data='b=${a}'},
+				};
+				conditions={{type='', data='', break_on='on-true'}};
+			},
+			{ -- parameters
+				__api__ = API{user_data={['a b c'] = 'value'}}
+			},
+			{ -- result
+				'a=hello',
+				'b=hello',
+			}
+		},
+		{ -- should not set not inline vars
+			{actions={
+					{type='set', data='a=hello'},
+					{type='set', data='b=${a}'},
+				};
+				conditions={{type='', data='', break_on='on-true'}};
+			},
+			{ -- parameters
+				__api__ = API{user_data={['a b c'] = 'value'}}
+			},
+			{ -- result
+				'a=hello',
+				'b=${a}',
+			}
+		},
+		{ -- should expand vars inside call
+			{actions={
+					{type='set', data='a=${user_data(${a}${b})}'},
+				};
+				conditions={{type='', data='', break_on='on-true'}};
+			},
+			{ -- parameters
+				__api__ = API{user_data={['helloworld'] = 'value'}},
+				a = 'hello',
+				b = 'world',
+			},
+			{ -- result
+				'a=value',
+				}
+		},
+		{ -- should export nolocal
+			{actions={
+					{type='export', data='a=nolocal:value', inline=true},
+					{type='export', data='b=${a}'},
+				};
+				conditions={{type='', data='', break_on='on-true'}};
+			},
+			{ -- parameters
+			},
+			{ -- result
+				'a=value',
+				'b=${a}',
+			}
+		},
+		{ -- should handle bridge as last action
+			{actions={
+					{type='bridge', data='sofia/gateway/${a}'},
+					{type='set', data='a=123', inline=true},
+				};
+				conditions={{type='', data='', break_on='on-true'}};
+			},
+			{ -- parameters
+				a='gw'
+			},
+			{ -- result
+				bridge = 'sofia/gateway/gw'
+			}
+		},
+		{ -- should ingnore `nolocal` for set
+			{actions={
+					{type='set', data='a=nolocal:123', inline=true},
+					{type='export', data='b=${a}'},
+				};
+				conditions={{type='', data='', break_on='on-true'}};
+			},
+			{ -- parameters
+			},
+			{ -- result
+				'a=nolocal:123';
+				'b=nolocal:123';
+			}
+		},
+		{ -- should ingnore unsupportded actions
+			{actions={
+					{type='ring_ready', data=''},
+					{type='answer', data=''},
+				};
+				conditions={{type='', data='', break_on='on-true'}};
+			},
+			{ -- parameters
+			},
+			{ -- result
+			}
+		},
+	}
+
+	for i, test_case in ipairs(test_actions) do
+		local group, params, expected = unpack(test_case)
+		io.write('Test execute #' .. i)
+		test_grout_to_bridge(group, params, true, expected)
+		io.write(' - ok\n')
+	end
+
+	log = old_log
 end
 
 local function outbound_route_to_bridge(dbh, domain_uuid, fields, actions)
@@ -336,12 +611,7 @@ end
 
 local function apply_vars(actions, fields)
 	for i, action in ipairs(actions) do
-		actions[i] = string.gsub(action, '%${(.-)}', function(var)
-			local value = fields[var] or ''
-			if value == '' then return "''" end
-			if not string.find(value, "[',]") then return value end
-			return "'" .. string.gsub(value, "'", "\\'") .. "'"
-		end)
+		actions[i] = apply_var(action, fields)
 	end
 	return actions
 end

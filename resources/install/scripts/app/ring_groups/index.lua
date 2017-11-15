@@ -573,6 +573,7 @@
 
 						local session_mt = {__index = function(_, k) return session:getVariable(k) end}
 						local params = setmetatable({
+							__api__             = api,
 							destination_number  = destination_number,
 							user_exists         = 'false',
 							call_direction      = 'outbound',
@@ -583,7 +584,7 @@
 						}, session_mt)
 
 						local confirm = string.gsub(group_confirm, ',$', '') -- remove `,` from end of string
-						local route = { -- predefined actions
+						local route = route_to_bridge.apply_vars({ -- predefined actions
 							"domain_name=${domain_name}",
 							"domain_uuid=${domain_uuid}",
 							"sip_invite_domain=${domain_name}",
@@ -591,27 +592,34 @@
 							delay_name .. "=${destination_delay}",
 							"ignore_early_media=true",
 							confirm,
-						}
+						}, params)
 
 						route = route_to_bridge(dialplans, domain_uuid, params, route)
 
 						if route and route.bridge then
 							local remove_actions = {
-								["effective_caller_id_name=${outbound_caller_id_name}"] = true;
-								["effective_caller_id_number=${outbound_caller_id_number}"] = true;
+								["effective_caller_id_name="]   = true;
+								["effective_caller_id_number="] = true;
+								['sip_h_X-accountcode=']        = true;
 							}
-							if (not accountcode) or (#accountcode == 0) then
-								remove_actions['sip_h_X-accountcode=${accountcode}'] = true;
-							end
+
+							-- cleanup variables
 							local i = 1 while i < #route do
+								-- remove vars from prev variant
 								if remove_actions[ route[i] ] then
+									table.remove(route, i)
+									i = i - 1
+								-- remove vars with unresolved vars
+								elseif string.find(route[i], '%${.+}') then
+									table.remove(route, i)
+									i = i - 1
+								-- remove vars with empty values
+								elseif string.find(route[i], '=$') then
 									table.remove(route, i)
 									i = i - 1
 								end
 								i = i + 1
 							end
-
-							route_to_bridge.apply_vars(route, params)
 
 							dial_string = '[' .. table.concat(route, ',') .. ']' .. route.bridge
 						end
