@@ -618,14 +618,14 @@ end
 
 local function wrap_dbh(t)
 	local i = 0
-	return {query = function(self, s, p, f)
+	return {query = function(self, sql, params, callback)
 		while true do
 			i = i + 1
 			local row = t[i]
 			if not row then break end
 
-			local r = f(row)
-			if r == 1 then break end
+			local result = callback(row)
+			if result == 1 then break end
 		end
 	end}
 end
