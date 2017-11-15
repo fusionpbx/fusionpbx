@@ -547,6 +547,19 @@ local function self_test()
 	log = old_log
 end
 
+-- Returns array of set/export actions and bridge command.
+--
+-- This function does not set any var to session.
+--
+-- @param dbh database connection
+-- @param domain_uuid
+-- @param fields list of avaliable channel variables.
+--   if `context` provided then dialplan will be filtered by this var
+--   `__api__`  key can be used to pass freeswitch.API object for execute
+--   some functions in actions (e.g. `s=${user_data ...}`)
+-- @param actions optional list of predefined actions
+-- @return array part of table will contain list of actions.
+--     `bridge` key will contain bridge statement
 local function outbound_route_to_bridge(dbh, domain_uuid, fields, actions)
 	actions = actions or {}
 
@@ -630,6 +643,9 @@ local function wrap_dbh(t)
 	end}
 end
 
+-- Load all extension for outbound routes and
+-- returns object which can be used instead real DBH object to build
+-- dialplan for specific destination_number
 local function preload_dialplan(dbh, domain_uuid, fields)
 	local hostname = fields and fields.hostname
 	if not hostname  then
