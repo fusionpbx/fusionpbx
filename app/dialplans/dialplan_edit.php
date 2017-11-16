@@ -54,15 +54,17 @@
 	$text = $language->get();
 
 //set the action as an add or an update
-	if (is_uuid($_REQUEST["id"])) {
+	if (is_uuid($_GET["id"])) {
 		$action = "update";
-		$dialplan_uuid = $_REQUEST["id"];
+		$dialplan_uuid = $_GET["id"];
 	}
 	else {
 		$action = "add";
 	}
-	if (strlen($_REQUEST["app_uuid"]) > 0) {
-		$app_uuid = $_REQUEST["app_uuid"];
+
+//set the app_uuid
+	if (strlen($_GET["app_uuid"]) > 0) {
+		$app_uuid = $_GET["app_uuid"];
 	}
 
 //get the http post values and set them as php variables
@@ -127,11 +129,6 @@
 			$dialplan_name = str_replace(" ", "_", $dialplan_name);
 			$dialplan_name = str_replace("/", "", $dialplan_name);
 
-		//default app_uuid
-			if (strlen($app_uuid) == 0) {
-				$app_uuid = uuid();
-			}
-
 		//build the array
 			$x = 0;
 			if (isset($_POST["dialplan_uuid"])) {
@@ -147,7 +144,9 @@
 			else {
 				$array['dialplans'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 			}
-			$array['dialplans'][$x]['app_uuid'] = $app_uuid;
+			if ($action == 'add') {
+				$array['dialplans'][$x]['app_uuid'] = uuid();
+			}
 			$array['dialplans'][$x]['hostname'] = $hostname;
 			$array['dialplans'][$x]['dialplan_name'] = $dialplan_name;
 			$array['dialplans'][$x]['dialplan_number'] = $_POST["dialplan_number"];
@@ -221,7 +220,6 @@
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		if (is_array($result)) foreach ($result as &$row) {
 			$domain_uuid = $row["domain_uuid"];
-			//$app_uuid = $row["app_uuid"];
 			$hostname = $row["hostname"];
 			$dialplan_name = $row["dialplan_name"];
 			$dialplan_number = $row["dialplan_number"];
@@ -818,10 +816,6 @@
 	echo "</div>\n";
 	echo "<br><br>\n";
 	echo "</form>";
-
-	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
-		echo "<p>".$text['billing-warning']."</p>";
-	}
 
 //show the footer
 	require_once "resources/footer.php";
