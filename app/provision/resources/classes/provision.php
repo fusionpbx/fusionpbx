@@ -937,7 +937,7 @@ include "root.php";
 					}
 
 				//get the provisioning information from device keys
-					if (strlen($device_uuid) > 0) {
+					if (isset($device_uuid)) {
 
 						//get the device keys array
 							$sql = "SELECT * FROM v_device_keys ";
