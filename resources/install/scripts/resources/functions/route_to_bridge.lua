@@ -192,8 +192,8 @@ local function group_to_bridge(actions, group, fields)
 
 				key, value = split_first(value, '=', true)
 				if key then
-					local bleg_only = (action.type == 'export') and (string.sub(value, 1, 8) == 'nolocal:')
-					if bleg_only then value = string.sub(value, 9) end
+					local bleg_only = (action.type == 'export') and (string.sub(key, 1, 8) == 'nolocal:')
+					if bleg_only then key = string.sub(key, 9) end
 
 					value = apply_match(value, matches)
 					value = apply_var(value, fields)
