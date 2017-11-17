@@ -31,7 +31,7 @@
 			foreach ($language->legacy_map as $language_code => $legacy_code) {
 				if(strlen($legacy_code) == 5)
 					continue;
-				$sql = "update v_user_settings set user_setting_value = '$language_code' where user_setting_value = '$legacy_code' and deafult_setting_name = 'code' and user_setting_dubcategory = 'language' and user_setting_category = 'domain'";
+				$sql = "update v_user_settings set user_setting_value = '$language_code' where user_setting_value = '$legacy_code' and default_setting_name = 'code' and user_setting_dubcategory = 'language' and user_setting_category = 'domain'";
 				$db->exec(check_sql($sql));
 				unset($sql);
 			}
