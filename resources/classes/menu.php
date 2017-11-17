@@ -430,7 +430,7 @@ if (!class_exists('menu')) {
 					if (!$db) { return Array(); }
 
 				//if there are no groups then set the public group
-					if (!isset($_SESSION['groups'])) {
+					if (!isset($_SESSION['groups'][0]['group_name'])) {
 						$_SESSION['groups'][0]['group_name'] = 'public';
 					}
 
