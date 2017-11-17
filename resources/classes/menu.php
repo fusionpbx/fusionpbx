@@ -448,20 +448,15 @@ if (!class_exists('menu')) {
 						$sql .= "and i.menu_item_uuid in ";
 						$sql .= "(select menu_item_uuid from v_menu_item_groups where menu_uuid = '".$this->menu_uuid."' ";
 						$sql .= "and ( ";
-						if (!isset($_SESSION['groups'])) {
-							$sql .= "group_name = 'public' ";
-						}
-						else {
-							$x = 0;
-							foreach($_SESSION['groups'] as $row) {
-								if ($x == 0) {
-									$sql .= "group_name = '".$row['group_name']."' ";
-								}
-								else {
-									$sql .= "or group_name = '".$row['group_name']."' ";
-								}
-								$x++;
+						$x = 0;
+						foreach($_SESSION['groups'] as $row) {
+							if ($x == 0) {
+								$sql .= "group_name = '".$row['group_name']."' ";
 							}
+							else {
+								$sql .= "or group_name = '".$row['group_name']."' ";
+							}
+							$x++;
 						}
 						$sql .= ") ";
 						$sql .= "and menu_item_uuid is not null ";
