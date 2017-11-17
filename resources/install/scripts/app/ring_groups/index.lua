@@ -569,7 +569,7 @@
 						dial_string = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
 					else
 						--external number
-						dial_string = ''
+						dial_string = nil
 
 						local session_mt = {__index = function(_, k) return session:getVariable(k) end}
 						local params = setmetatable({
@@ -747,12 +747,16 @@
 								or session:getVariable("originate_disposition") == "failure"
 							) then
 								--execute the time out action
-									session:execute(ring_group_timeout_app, ring_group_timeout_data);
+									if ring_group_timeout_app and #ring_group_timeout_app > 0 then
+										session:execute(ring_group_timeout_app, ring_group_timeout_data);
+									end
 							end
 						else
 							if (ring_group_timeout_app ~= nil) then
 								--execute the time out action
-									session:execute(ring_group_timeout_app, ring_group_timeout_data);
+									if ring_group_timeout_app and #ring_group_timeout_app > 0 then
+										session:execute(ring_group_timeout_app, ring_group_timeout_data);
+									end
 							else
 								local sql = "SELECT ring_group_timeout_app, ring_group_timeout_data FROM v_ring_groups ";
 								sql = sql .. "where ring_group_uuid = :ring_group_uuid";
@@ -762,7 +766,9 @@
 								end
 								dbh:query(sql, params, function(row)
 									--execute the time out action
-										session:execute(row.ring_group_timeout_app, row.ring_group_timeout_data);
+										if row.ring_group_timeout_app and #row.ring_group_timeout_app > 0 then
+											session:execute(row.ring_group_timeout_app, row.ring_group_timeout_data);
+										end
 								end);
 							end
 						end
