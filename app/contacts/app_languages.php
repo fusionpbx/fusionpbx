@@ -1057,7 +1057,7 @@ $text['message-update']['pl-pl'] = "Zaktualizowano poprawnie";
 $text['message-update']['pt-br'] = "Atualização Efetuada";
 $text['message-update']['pt-pt'] = "Actualização Efectuada";
 $text['message-update']['ro-ro'] = "";
-$text['message-update']['ru-ru'] = "Оновленнея завершено";
+$text['message-update']['ru-ru'] = "Обновление завершено";
 $text['message-update']['sv-se'] = "Uppdatering Klar";
 $text['message-update']['uk-ua'] = "Оновлення завершено";
 
