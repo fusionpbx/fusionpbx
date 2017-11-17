@@ -210,7 +210,7 @@
  				$found = false;
  				$found_count = 0;
  				foreach ($registrations as $arr) {
- 					if (in_array($row['extension'],$arr)) {
+ 					if (in_array($row['extension'].'@'.$_SESSION['domain_name'],$arr)) {
  						$found = true;
  						$found_count++;
  					}
