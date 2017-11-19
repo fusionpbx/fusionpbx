@@ -1387,6 +1387,23 @@
 
 		$y++; //vendors array index
 		$z=0; //functions array index
+		$vendors[$y]['name'] = "linksys";
+		$vendors[$y]['functions'][$z]['uuid'] = "d0a48ae2-0b8a-4f0c-9006-e062e2e3a39c";
+		$vendors[$y]['functions'][$z]['label'] = "label-line";
+		$vendors[$y]['functions'][$z]['name'] = "line";
+		$vendors[$y]['functions'][$z]['value'] = "line";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "a971c5ab-e473-417a-b2f4-8a0473159722";
+		$vendors[$y]['functions'][$z]['label'] = "label-disabled";
+		$vendors[$y]['functions'][$z]['name'] = "disabled";
+		$vendors[$y]['functions'][$z]['value'] = "disabled";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+
+		$y++; //vendors array index
+		$z=0; //functions array index
 		$vendors[$y]['name'] = "escene";
 		$vendors[$y]['functions'][$z]['label'] = "label-blf";
 		$vendors[$y]['functions'][$z]['name'] = "blf";
