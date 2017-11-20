@@ -390,4 +390,30 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = " (URL within 511 characters)";
 
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b75ef82b-a225-43a5-a208-78d545cca8aa";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ip_address_mode";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "integer";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "IP Address mode 0-ipv4, 1-ipv6, 2-ipv4&ipv6";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e731d65f-132b-49a1-9f20-39ecd1e70b54";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_lldp_enable";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = " LLDP 0-Disabled, 1-Enabled";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2d380c07-aba5-46a9-8ef5-7e6b713868fd";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_cdp_enable";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = " CDP 0-Disabled, 1-Enabled";
+		
+		
 ?>
