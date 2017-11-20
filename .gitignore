@@ -8,3 +8,5 @@ secure/*.sqlite
 .DS_Store
 
 *.php~
+
+app/yealink/resources/firmware/*
