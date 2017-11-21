@@ -870,7 +870,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "    OR \n";
 				$sql .= "    c.destination_number = e.number_alias))) \n";
 				if ($this->include_internal) {
-						$sql .= " AND (direction = 'inbound' OR 'direction = 'outbound') \n";
+						$sql .= " AND (direction = 'inbound' OR direction = 'outbound') \n";
 				}
 				$sql .= " ) / \n";
 				$sql .= "COUNT(*) \n";
@@ -886,7 +886,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "    OR \n";
 				$sql .= "    c.destination_number = e.number_alias))) \n";
 				if ($this->include_internal) {
-						$sql .= " AND (direction = 'inbound' OR 'direction = 'outbound') \n";
+						$sql .= " AND (direction = 'inbound' OR direction = 'outbound') \n";
 				}
 				$sql .= " ) AS aloc, \n";
 
