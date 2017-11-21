@@ -394,7 +394,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b75ef82b-a225-43a5-a208-78d545cca8aa";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ip_address_mode";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "integer";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "IP Address mode 0-ipv4, 1-ipv6, 2-ipv4&ipv6";
