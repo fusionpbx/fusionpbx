@@ -70,7 +70,7 @@
 					$presence_id_array = explode('@', $row['presence_id']);
 					$row['domain_name'] = $presence_id_array[1];
 				}
-				else if ($context != '') {
+				else if (strlen($context) == 0) {
 					if (substr_count($context, '@') > 0) {
 						$context_array = explode('@', $context);
 						$row['domain_name'] = $context_array[1];
