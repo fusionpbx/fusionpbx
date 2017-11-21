@@ -5,9 +5,8 @@
  * @method array get
  */
 class text {
-
 	public $languages;
-	public $legacy_map = array (
+	public $legacy_map = array(
 		'he' => 'he-il',
 		'pl' => 'pl-pl',
 		'uk' => 'uk-ua',
@@ -16,6 +15,11 @@ class text {
 		'pl-pl' => 'pl',
 		'uk-ua' => 'uk',
 		'ro-ro' => 'ro',
+		//we use the following to indicate which is the preferred
+		'de' => 'de-de',
+		'es' => 'es-cl',
+		'fr' => 'fr-fr',
+		'pt' => 'pt-pt',
 	);
 
 	/**
@@ -126,8 +130,8 @@ class text {
 			if ($app_path == null) {
 				throw new Exception("\$app_path must be specified");
 			}
-			$lang_path = $_SERVER["PROJECT_ROOT"]."/".$app_path."/app_languages.php";
-			if(!file_exists($lang_path)){
+			$lang_path = $_SERVER["PROJECT_ROOT"]."/$app_path/app_languages.php";
+			if (!file_exists($lang_path)) {
 				throw new Exception("could not find app_languages for '$app_path'");
 			}
 			require $lang_path;
@@ -140,11 +144,11 @@ class text {
 			$lang_file = fopen($lang_path, 'w');
 			date_default_timezone_set('UTC');
 			fwrite($lang_file, "<?php\n#This file was last reorganized on " . date("jS \of F Y h:i:s A e") . "\n");
-			if(!$no_sort){
-				if($app_path == 'resources') {
+			if (!$no_sort) {
+				if ($app_path == 'resources') {
 					$temp_A['language-name'] = $text['language-name'];
 					unset($text['language-name']);
-					foreach($this->languages as $language){
+					foreach($this->languages as $language) {
 						$temp_B["language-$language"] = $text["language-$language"];
 						unset($text["language-$language"]);
 					}
@@ -155,14 +159,16 @@ class text {
 					ksort($text);
 					$text = array_merge($temp_A, $temp_B, $text);
 					unset($temp_A, $temp_B, $temp_C);
-				}else {
+				}
+                else {
 					ksort($text);
 				}
-			}else{
-				if($app_path == 'resources') {
-					foreach($this->languages as $language){
+			}
+            else {
+				if ($app_path == 'resources') {
+					foreach($this->languages as $language) {
 						$label = array_shift($text["language-$language"]);
-						if(strlen($label) == 0)
+						if (strlen($label) == 0)
 							$label = $language;
 						$text["language-$language"]['en-us'] = $label;
 					}
@@ -172,48 +178,56 @@ class text {
 			foreach ($text as $lang_label => $lang_codes) {
 
 				//behave differently if we are one of the special language-* tags
-					if(preg_match('/\Alanguage-(\w{2}|\w{2}-\w{2})\z/', $lang_label, $lang_code)) {
-						if($lang_label == 'language-en-us')
+					if (preg_match('/\Alanguage-(\w{2}|\w{2}-\w{2})\z/', $lang_label, $lang_code)) {
+						if ($lang_label == 'language-en-us')
 							fwrite($lang_file, "\n");
 						$target_lang = $lang_code[1];
-						if(strlen($target_lang) == 2) {
-							if(array_key_exists($target_lang, $this->legacy_map)) {
+						if (strlen($target_lang) == 2) {
+							if (array_key_exists($target_lang, $this->legacy_map)) {
 								$target_lang = $this->legacy_map[$target_lang];
 							}
 						}
 						$spacer = "";
-						if(strlen($target_lang) == 11)
+						if (strlen($target_lang) == 11)
 							$spacer = "   ";
 						$language_name = $this->escape_str(array_shift($text[$lang_label]));
-						if(strlen($language_name) == 0)
+						if (strlen($language_name) == 0)
 							$language_name = $this->escape_str($target_lang);
 						fwrite($lang_file, "\$text['language-$target_lang'$spacer]['en-us'] = \"$language_name\";\n");
-					}else{
+					}
+                    else {
 
 						//put a line break in between the last tag if it has changed
-							if($last_lang_label != $lang_label)
+							if ($last_lang_label != $lang_label)
 								fwrite($lang_file, "\n");
 								foreach ($this->languages as $lang_code) {
 									$value = "";
 									$append = "";
 									$spacer = "";
 									$target_lang = $lang_code;
-									if(strlen($lang_code) == 2) {
-										if(array_key_exists($lang_code, $this->legacy_map)) {
+									if (strlen($lang_code) == 2) {
+										if (array_key_exists($lang_code, $this->legacy_map)) {
 											$target_lang = $this->legacy_map[$lang_code];
 										}
 									}
-									if(strlen($target_lang) == 2)
+									if (strlen($target_lang) == 2)
 										$spacer = "   ";
-									if(array_key_exists($lang_code, $text[$lang_label]))
+									if (array_key_exists($lang_code, $text[$lang_label]))
 										$value = $text[$lang_label][$lang_code];
-									if(strlen($value) == 0 and array_key_exists($target_lang, $this->legacy_map)) {
+									if (strlen($value) == 0 and array_key_exists($target_lang, $this->legacy_map)) {
 										$value = $text[$lang_label][$this->legacy_map[$target_lang]];
 									}
-									if(strlen($value) == 0){
-										$base_code = substr($target_lang, 0, 2);
-										foreach($this->languages as $lang_code){
-											if(substr($lang_code, 0, 2) == $base_code and strlen($text[$lang_label][$lang_code]) > 0){
+									$base_code = substr($target_lang, 0, 2);
+									if (strlen($value) > 0
+										and array_key_exists($base_code, $this->legacy_map )
+										and $this->legacy_map[$base_code] != $target_lang
+										and $value == $text[$lang_label][$this->legacy_map[$base_code]]
+									) {
+										$append = " //copied from ".$this->legacy_map[$base_code];
+									}
+									if (strlen($value) == 0) {
+										foreach($this->languages as $lang_code) {
+											if (substr($lang_code, 0, 2) == $base_code and strlen($text[$lang_label][$lang_code]) > 0) {
 												$value = $text[$lang_label][$lang_code];
 												$append = " //copied from $lang_code";
 												continue;
@@ -245,10 +259,10 @@ class text {
 			include $_SERVER["PROJECT_ROOT"] . "/resources/app_languages.php";
 	
 		//check every tag
-			foreach($text as $lang_codes){
+			foreach($text as $lang_codes) {
 				foreach($lang_codes as $language_code => $value) {
-					if(strlen($language_code) == 2) {
-						if(array_key_exists($language_code, $this->legacy_map)) {
+					if (strlen($language_code) == 2) {
+						if (array_key_exists($language_code, $this->legacy_map)) {
 							$language_code = $this->legacy_map[$language_code];
 						}
 					}
@@ -293,7 +307,7 @@ class text {
 			foreach($text as $label_name => $values) {
 				$language_totals['languages']['total']++;
 				foreach ($this->languages as $language_code) {
-					if(strlen($values[$language_code]) > 0)
+					if (strlen($values[$language_code]) > 0)
 						$language_totals['languages'][$language_code]++;
 				}
 			}
@@ -303,9 +317,9 @@ class text {
 			$x = 0;
 			$files = glob($_SERVER["PROJECT_ROOT"] . "/*/*");
 			foreach($files as $file) {
-				if(file_exists($file . "/app_menu.php"))
+				if (file_exists($file . "/app_menu.php"))
 					include $file . "/app_menu.php";
-				if(file_exists($file . "/app_config.php"))
+				if (file_exists($file . "/app_config.php"))
 					include $file . "/app_config.php";
 				$x++;
 			}
@@ -316,13 +330,13 @@ class text {
 				foreach($app['menu'] as $menu_item) {
 					$language_totals['menu_items']['total']++;
 					foreach ($this->languages as $language_code) {
-						if(strlen($menu_item['title'][$language_code]) > 0)
+						if (strlen($menu_item['title'][$language_code]) > 0)
 							$language_totals['menu_items'][$language_code]++;
 					}
 				}
 				foreach ($this->languages as $language_code) {
-						if(strlen($app['description'][$language_code]) > 0)
-							$language_totals['app_descriptions'][$language_code]++;
+                    if (strlen($app['description'][$language_code]) > 0)
+                        $language_totals['app_descriptions'][$language_code]++;
 				}
 			}
 			

@@ -62,17 +62,17 @@
 				if (dtmf_digits == "1") then
 					--To record a greeting press 1
 					timeouts = 0;
-					record_greeting();
+					record_greeting(nil,"advanced");
 				elseif (dtmf_digits == "2") then
 					--To choose greeting press 2
 					timeouts = 0;
 					choose_greeting();
 				elseif (dtmf_digits == "3") then
 					--To record your name 3
-					record_name();
+					record_name("advanced");
 				elseif (dtmf_digits == "6") then
 					--To change your password press 6
-					change_password(voicemail_id);
+					change_password(voicemail_id, "advanced");
 				elseif (dtmf_digits == "0") then
 					--For the main menu press 0
 					timeouts = 0;

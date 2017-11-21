@@ -11,7 +11,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Command";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Commande";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
-	$apps[$x]['menu'][$y]['title']['it-it'] = "";
+	$apps[$x]['menu'][$y]['title']['it-it'] = "Comando";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Polecenie";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Comandos";

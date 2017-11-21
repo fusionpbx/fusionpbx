@@ -709,7 +709,7 @@
 				switch ($category) {
 					case 'users':
 						if (!permission_exists('user_view')) { continue 2; }
-						$url = '/core/users/index.php';
+						$url = '/core/users/users.php';
 						break;
 					case 'call_center_queues':
 						if (!permission_exists('call_center_active_view')) { continue 2; }
@@ -775,7 +775,7 @@
 				$hud_stat_title = $text['label-active_extensions'];
 			}
 			else if ((permission_exists('user_view') || if_group("superadmin")) && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/core/users/")) {
-				$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/core/users/index.php'\"";
+				$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/core/users/users.php'\"";
 				$hud_stat = $stats[$scope]['users']['total'] - $stats[$scope]['users']['disabled'];
 				$hud_stat_title = $text['label-active_users'];
 			}
@@ -844,7 +844,7 @@
 
 			//users
 				if ((permission_exists('user_view') || if_group("superadmin")) && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/core/users/")) {
-					$tr_link = "href='".PROJECT_PATH."/core/users/index.php'";
+					$tr_link = "href='".PROJECT_PATH."/core/users/users.php'";
 					$hud[$n]['html'] .= "<tr ".$tr_link.">\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-users']."</a></td>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['users']['disabled']."</td>\n";
@@ -1125,10 +1125,9 @@
 
 			//registration count
 				if ($fp && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/registrations/")) {
-					$tmp = event_socket_request($fp, 'api sofia xmlstatus profile internal reg');
-					$registrations = substr_count($tmp, '<registration>');
-					$registrations = (is_numeric($registrations)) ? $registrations : 0;
-					$tr_link = "href='".PROJECT_PATH."/app/registrations/status_registrations.php'";
+					$registration = new registrations;
+					$registrations = $registration->count();
+					$tr_link = "href='".PROJECT_PATH."/app/registrations/registrations.php'";
 					$hud[$n]['html'] .= "<tr ".$tr_link.">\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-registrations']."</a></td>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$registrations."</td>\n";

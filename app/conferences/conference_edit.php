@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -324,6 +324,19 @@
 		unset ($prep_statement);
 	}
 
+//get the conference profiles
+	$sql = "select * ";
+	$sql .= "from v_conference_profiles ";
+	$sql .= "where profile_enabled = 'true' ";
+	$sql .= "and profile_name <> 'sla' ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$conference_profiles = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset ($prep_statement, $sql);
+
+//set the default
+	if ($conference_profile == "") { $conference_profile = "default"; }
+
 //set defaults
 	if (strlen($conference_enabled) == 0) { $conference_enabled = "true"; }
 
@@ -445,12 +458,14 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='conference_profile'>\n";
-	//if the profile has no value set it to default
-	if ($conference_profile == "") { $conference_profile = "default"; }
-	if ($conference_profile == "default") { echo "<option value='default' selected='selected'>default</option>\n"; } else {	echo "<option value='default'>default</option>\n"; }
-	if ($conference_profile == "wideband") { echo "<option value='wideband' selected='selected'>wideband</option>\n"; } else {	echo "<option value='wideband'>wideband</option>\n"; }
-	if ($conference_profile == "ultrawideband") { echo "<option value='ultrawideband' selected='selected'>ultrawideband</option>\n"; } else {	echo "<option value='ultrawideband'>ultrawideband</option>\n"; }
-	if ($conference_profile == "cdquality") { echo "<option value='cdquality' selected='selected'>cdquality</option>\n"; } else {	echo "<option value='cdquality'>cdquality</option>\n"; }
+	foreach ($conference_profiles as $row) {
+		if ($conference_profile === $row['profile_name']) {
+				echo "<option value='". $row['profile_name'] ."' selected='selected'>". $row['profile_name'] ."</option>\n";
+		}
+		else {
+				echo "<option value='". $row['profile_name'] ."'>". $row['profile_name'] ."</option>\n";
+		}
+	}
 	echo "    </select>\n";
 	echo "<br />\n";
 	echo "".$text['description-profile']."\n";

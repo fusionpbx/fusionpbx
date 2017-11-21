@@ -217,7 +217,7 @@ $text['label-voicemail_password']['pl-pl'] = "Hasło poczty głosowej";
 $text['label-voicemail_password']['pt-br'] = "Senha do correio de voz";
 $text['label-voicemail_password']['pt-pt'] = "Password do Correio de Voz";
 $text['label-voicemail_password']['ro-ro'] = "";
-$text['label-voicemail_password']['ru-ru'] = "Пароль Голосовй Почты";
+$text['label-voicemail_password']['ru-ru'] = "Пароль Голосовой Почты";
 $text['label-voicemail_password']['sv-se'] = "Röstbrevlåda Lösenord";
 $text['label-voicemail_password']['uk-ua'] = "Пароль на голосову пошту";
 

@@ -115,14 +115,25 @@ include "root.php";
 					$row = $prep_statement->fetch();
 					$count = $row['count'];
 					if ($row['count'] > 0) {
-						return true;
+						$mac_exists = true;
 					}
 					else {
-						return false;
+						$mac_exists = false;
 					}
 				}
 				else {
-					return false;
+					$mac_exists = false;
+				}
+				if ($mac_exists) {
+					return true;
+				}
+				else {
+					//log the invalid mac address attempt to the syslog server
+						openlog("FusionPBX", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+						syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] invalid mac address ".$mac);
+						closelog();
+					//invalid mac address return false
+						return false;
 				}
 		}
 
@@ -366,6 +377,7 @@ include "root.php";
 					$sql .= "AND e.enabled = 'true' ";
 					$sql .= "AND e.directory_visible = 'true' ";		# TODO: not right field but it works for our district.
 					$sql .= "AND e.directory_exten_visible = 'true' ";	# TODO: not right field but it works for our district.
+					$sql .= "ORDER BY CASE WHEN directory_first_name LIKE '%".$contact['contact_name_given']."%' THEN 1 ELSE 2 END DESC ";
 					$prep_statement = $this->db->prepare(check_sql($sql));
 					$prep_statement->execute();
 					$user_extentions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -544,59 +556,101 @@ include "root.php";
 					}
 					else {
 						//use the user_agent to pre-assign a template for 1-hit provisioning. Enter the a unique string to match in the user agent, and the template it should match.
-							$template_list=array(
-								"Linksys/SPA-2102"=>"linksys/spa2102",
-								"Linksys/SPA-3102"=>"linksys/spa3102",
-								"Linksys/SPA-9212"=>"linksys/spa921",
-								"Cisco/SPA301"=>"cisco/spa301",
-								"Cisco/SPA301D"=>"cisco/spa302d",
-								"Cisco/SPA303"=>"cisco/spa303",
-								"Cisco/SPA501G"=>"cisco/spa501g",
-								"Cisco/SPA502G"=>"cisco/spa502g",
-								"Cisco/SPA504G"=>"cisco/spa504g",
-								"Cisco/SPA508G"=>"cisco/spa508g",
-								"Cisco/SPA509G"=>"cisco/spa509g",
-								"Cisco/SPA512G"=>"cisco/spa512g",
-								"Cisco/SPA514G"=>"cisco/spa514g",
-								"Cisco/SPA525G2"=>"cisco/spa525g2",
-								"snom300-SIP"=>"snom/300",
-								"snom320-SIP"=>"snom/320",
-								"snom360-SIP"=>"snom/360",
-								"snom370-SIP"=>"snom/370",
-								"snom820-SIP"=>"snom/820",
-								"snom-m3-SIP"=>"snom/m3",
-								"yealink SIP-T20"=>"yealink/t20",
-								"yealink SIP-T22"=>"yealink/t22",
-								"yealink SIP-T26"=>"yealink/t26",
-								"Yealink SIP-T32"=>"yealink/t32",
-								"HW DP750"=>"grandstream/dp750",
-								"HW GXP1450"=>"grandstream/gxp1450",
-								"HW GXP1628"=>"grandstream/gxp16xx",
-								"HW GXP1610"=>"grandstream/gxp16xx",
-								"HW GXP1620"=>"grandstream/gxp16xx",
-								"HW GXP1625"=>"grandstream/gxp16xx",
-								"HW GXP1628"=>"grandstream/gxp16xx",
-								"HW GXP1630"=>"grandstream/gxp16xx",
-								"HW GXP2124"=>"grandstream/gxp2124",
-								"HW GXP2130"=>"grandstream/gxp2130",
-								"HW GXP2135"=>"grandstream/gxp2135",
-								"HW GXP2140"=>"grandstream/gxp2140",
-								"HW GXP2160"=>"grandstream/gxp2160",
-								"HW GXP2170"=>"grandstream/gxp2170",
-								"HW GXV3140"=>"grandstream/gxv3140",
-								"HW GXV3240"=>"grandstream/gxv3240",
-								"HW GXV3175"=>"grandstream/gxv3175",
-								"Vesa VCS754"=>"vtech/vcs754",
-								"Wget/1.11.3"=>"konftel/kt300ip"
-								);
-
-							foreach ($template_list as $key=>$val){
+							$templates['Linksys/SPA-2102'] = 'linksys/spa2102';
+							$templates['Linksys/SPA-3102'] = 'linksys/spa3102';
+							$templates['Linksys/SPA-9212'] = 'linksys/spa921';
+							$templates['Cisco/SPA301'] = 'cisco/spa301';
+							$templates['Cisco/SPA301D'] = 'cisco/spa302d';
+							$templates['Cisco/SPA303'] = 'cisco/spa303';
+							$templates['Cisco/SPA501G'] = 'cisco/spa501g';
+							$templates['Cisco/SPA502G'] = 'cisco/spa502g';
+							$templates['Cisco/SPA504G'] = 'cisco/spa504g';
+							$templates['Cisco/SPA508G'] = 'cisco/spa508g';
+							$templates['Cisco/SPA509G'] = 'cisco/spa509g';
+							$templates['Cisco/SPA512G'] = 'cisco/spa512g';
+							$templates['Cisco/SPA514G'] = 'cisco/spa514g';
+							$templates['Cisco/SPA525G2'] = 'cisco/spa525g2';
+							$templates['snom300-SIP'] = 'snom/300';
+							$templates['snom320-SIP'] = 'snom/320';
+							$templates['snom360-SIP'] = 'snom/360';
+							$templates['snom370-SIP'] = 'snom/370';
+							$templates['snom820-SIP'] = 'snom/820';
+							$templates['snom-m3-SIP'] = 'snom/m3';
+							$templates['yealink SIP-CP860'] = 'yealink/cp860';
+							$templates['yealink SIP-T19P'] = 'yealink/t19p';
+							$templates['yealink SIP-T20P'] = 'yealink/t20p';
+							$templates['yealink SIP-T21P'] = 'yealink/t21p';
+							$templates['yealink SIP-T22P'] = 'yealink/t22p';
+							$templates['yealink SIP-T23P'] = 'yealink/t23p';
+							$templates['yealink SIP-T23G'] = 'yealink/t23g';
+							$templates['yealink SIP-T27G'] = 'yealink/t27g';
+							$templates['yealink SIP-T26P'] = 'yealink/t26p';
+							$templates['yealink SIP-T28P'] = 'yealink/t28p';
+							$templates['yealink SIP-T29P'] = 'yealink/t29p';
+							$templates['Yealink SIP-T32G'] = 'yealink/t32g';
+							$templates['Yealink SIP-T38G'] = 'yealink/t38g';
+							$templates['Yealink SIP-T40P'] = 'yealink/t40p';
+							$templates['Yealink SIP-T41P'] = 'yealink/t41p';
+							$templates['Yealink SIP-T41G'] = 'yealink/t41g';
+							$templates['Yealink SIP-T41S'] = 'yealink/t41s';
+							$templates['Yealink SIP-T42G'] = 'yealink/t42g';
+							$templates['Yealink SIP-T46G'] = 'yealink/t46g';
+							$templates['Yealink SIP-T46S'] = 'yealink/t46s';
+							$templates['Yealink SIP-T48G'] = 'yealink/t48g';
+							$templates['Yealink SIP-T48S'] = 'yealink/t48s';
+							$templates['Yealink SIP-T49G'] = 'yealink/t49g';
+							$templates['VP530P'] = 'yealink/vp530';
+							$templates['Yealink SIP-W52P'] = 'yealink/w52p';
+							$templates['Yealink SIP-W56P'] = 'yealink/w56p';
+							$templates['HW DP750'] = 'grandstream/dp750';
+							$templates['HW GXP1450'] = 'grandstream/gxp1450';
+							$templates['HW GXP1628'] = 'grandstream/gxp16xx';
+							$templates['HW GXP1610'] = 'grandstream/gxp16xx';
+							$templates['HW GXP1620'] = 'grandstream/gxp16xx';
+							$templates['HW GXP1625'] = 'grandstream/gxp16xx';
+							$templates['HW GXP1630'] = 'grandstream/gxp16xx';
+							$templates['HW GXP2124'] = 'grandstream/gxp2124';
+							$templates['HW GXP2130'] = 'grandstream/gxp2130';
+							$templates['HW GXP2135'] = 'grandstream/gxp2135';
+							$templates['HW GXP2140'] = 'grandstream/gxp2140';
+							$templates['HW GXP2160'] = 'grandstream/gxp2160';
+							$templates['HW GXP2170'] = 'grandstream/gxp2170';
+							$templates['HW GXV3140'] = 'grandstream/gxv3140';
+							$templates['HW GXV3240'] = 'grandstream/gxv3240';
+							$templates['HW GXV3175'] = 'grandstream/gxv3175';
+							$templates['PolycomVVX-VVX_101-UA/4'] = 'polycom/4.x';
+							$templates['PolycomVVX-VVX_201-UA/4'] = 'polycom/4.x';
+							$templates['PolycomVVX-VVX_300-UA/4'] = 'polycom/4.x';
+							$templates['PolycomVVX-VVX_301-UA/4'] = 'polycom/4.x';
+							$templates['PolycomVVX-VVX_310-UA/4'] = 'polycom/4.x';
+							$templates['PolycomVVX-VVX_311-UA/4'] = 'polycom/4.x';
+							$templates['PolycomVVX-VVX_400-UA/4'] = 'polycom/4.x';
+							$templates['PolycomVVX-VVX_410-UA/4'] = 'polycom/4.x';
+							$templates['PolycomVVX-VVX_500-UA/4'] = 'polycom/4.x';
+							$templates['PolycomVVX-VVX_501-UA/4'] = 'polycom/4.x';
+							$templates['PolycomVVX-VVX_600-UA/4'] = 'polycom/4.x';
+							$templates['PolycomVVX-VVX_601-UA/4'] = 'polycom/4.x';
+							$templates['PolycomVVX-VVX_101-UA/5'] = 'polycom/5.x';
+							$templates['PolycomVVX-VVX_201-UA/5'] = 'polycom/5.x';
+							$templates['PolycomVVX-VVX_300-UA/5'] = 'polycom/5.x';
+							$templates['PolycomVVX-VVX_301-UA/5'] = 'polycom/5.x';
+							$templates['PolycomVVX-VVX_310-UA/5'] = 'polycom/5.x';
+							$templates['PolycomVVX-VVX_311-UA/5'] = 'polycom/5.x';
+							$templates['PolycomVVX-VVX_400-UA/5'] = 'polycom/5.x';
+							$templates['PolycomVVX-VVX_410-UA/5'] = 'polycom/5.x';
+							$templates['PolycomVVX-VVX_500-UA/5'] = 'polycom/5.x';
+							$templates['PolycomVVX-VVX_501-UA/5'] = 'polycom/5.x';
+							$templates['PolycomVVX-VVX_600-UA/5'] = 'polycom/5.x';
+							$templates['PolycomVVX-VVX_601-UA/5'] = 'polycom/5.x';					
+							$templates['Vesa VCS754'] = 'vtech/vcs754';
+							$templates['Wget/1.11.3'] = 'konftel/kt300ip';
+							foreach ($templates as $key=>$value){
 								if(stripos($_SERVER['HTTP_USER_AGENT'],$key)!== false) {
-									$device_template = $val;
+									$device_template = $value;
 									break;
 								}
 							}
-							unset($template_list);
+							unset($templates);
 
 						//mac address does not exist in the table so add it
 							if ($_SESSION['provision']['auto_insert_enabled']['boolean'] == "true" and strlen($domain_uuid) > 0) {
@@ -835,6 +889,7 @@ include "root.php";
 							$sql .= "from v_extensions ";
 							$sql .= "where domain_uuid = '".$domain_uuid."' ";
 							$sql .= "and enabled = 'true' ";
+							$sql .= "and directory_visible = 'true' ";
 							$sql .= "order by number_alias, extension asc ";
 							$prep_statement = $this->db->prepare($sql);
 							if ($prep_statement) {
@@ -882,7 +937,7 @@ include "root.php";
 					}
 
 				//get the provisioning information from device keys
-					if (strlen($device_uuid) > 0) {
+					if (isset($device_uuid)) {
 
 						//get the device keys array
 							$sql = "SELECT * FROM v_device_keys ";

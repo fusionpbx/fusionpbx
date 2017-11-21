@@ -51,6 +51,14 @@
 		$action = "add";
 	}
 
+//set the type
+	if ($_GET['type'] == 'outbound') {
+		$destination_type = 'outbound';
+	}
+	else {
+		$destination_type = 'inbound';
+	}
+
 //get total destination count from the database, check limit, if defined
 	if (!permission_exists('destination_domain')) {
 		if ($action == 'add') {
@@ -353,7 +361,7 @@
 				$sql = "delete from v_dialplan_details ";
 				$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
 				if (!permission_exists('destination_domain')) {
-					$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
+					$sql .= "and (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
 				}
 				//echo $sql."<br><br>";
 				$db->exec(check_sql($sql));
@@ -409,6 +417,7 @@
 		//clear the cache
 			$cache = new cache;
 			$cache->delete("dialplan:".$destination_context);
+			$cache->delete("dialplan:".$destination_context.":".$destination_number);
 
 		//redirect the user
 			if ($action == "add") {
@@ -417,7 +426,7 @@
 			if ($action == "update") {
 				messages::add($text['message-update']);
 			}
-			header("Location: destination_edit.php?id=".$destination_uuid);
+			header("Location: destination_edit.php?id=".$destination_uuid."&type=".$destination_type);
 			return;
 
 	} //(count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0)
@@ -570,7 +579,7 @@
 		echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['header-destination-edit']."</b></td>\n";
 	}
 	echo "<td width='70%' align='right' valign='top'>";
-	echo "	<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"window.location='destinations.php'\" value='".$text['button-back']."'>";
+	echo "	<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"window.location='destinations.php?type=".$destination_type."'\" value='".$text['button-back']."'>";
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";

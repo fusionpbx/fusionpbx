@@ -99,7 +99,7 @@
 				if ($dir_name != "." && $dir_name != ".." && $dir_name != ".svn" && $dir_name != ".git" && $dir_name != "flags" && is_readable($theme_dir.'/'.$dir_name)) {
 					$dir_label = str_replace('_', ' ', $dir_name);
 					$dir_label = str_replace('-', ' ', $dir_label);
-					if ($dir_name == 'enhanced') {
+					if ($dir_name == 'default') {
 						echo "		<option value='$dir_name' selected='selected'>$dir_label</option>\n";
 					}
 					else {

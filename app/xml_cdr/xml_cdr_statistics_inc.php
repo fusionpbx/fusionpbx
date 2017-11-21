@@ -233,9 +233,10 @@ else {
 		}
 	}
 
+	$sql_where = ' where ';
 	// concatenate the 'ands's array, add to where clause
 	if (sizeof($sql_where_ands) > 0) {
-		$sql_where = " where ".implode(" and ", $sql_where_ands)." and ";
+		$sql_where .= implode(" and ", $sql_where_ands)." and ";
 	}
 
 //calculate the seconds in different time frames

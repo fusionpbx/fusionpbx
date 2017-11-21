@@ -262,6 +262,11 @@
 		<param name="vad" value="out" enabled="false"/>
 		<!-- <param name="vad" value="both" enabled="false"/> -->
 		<param name="alias" value="sip:10.0.1.251:5555" enabled="false"/>
+
+		<!-- sip expire settings -->
+		<param name="sip-expires-max-deviation" value="600" enabled="false"/>
+		<param name="sip-force-expires" value="1800" enabled="false"/>
+
 		<!--
 		These are enabled to make the default config work better out of the box.
 		If you need more than ONE domain you'll need to not use these options.
@@ -371,5 +376,6 @@
 		<!-- Periodically send an packet to all registered endpoints that are behind NAT -->
 		<param name="registration-thread-frequency" value="30"  enabled="false"/>
 		<param name="nat-options-ping" value="true" enabled="false"/>
+
 	</settings>
 </profile>

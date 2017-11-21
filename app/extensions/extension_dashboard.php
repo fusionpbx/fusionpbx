@@ -134,7 +134,7 @@
 	$sql = "select destination_caller_id_name, destination_caller_id_number from v_destinations ";
 	$sql .= "where domain_uuid = '".check_str($_SESSION['domain_uuid'])."' ";
 	$sql .= "and destination_type = 'inbound' ";
-	$sql .= "order by destination_number asc ";
+	$sql .= "order by destination_caller_id_name asc, destination_caller_id_number asc";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$destinations = $prep_statement->fetchAll(PDO::FETCH_ASSOC);

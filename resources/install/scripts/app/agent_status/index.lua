@@ -88,6 +88,7 @@
 		--set the variables
 			agent_name = row.agent_name;
 			agent_id = row.agent_id;
+			user_uuid = row.user_uuid;
 		--authorize the user
 			agent_authorized = 'true';
 	end);
@@ -102,16 +103,15 @@
 
 --get the user_uuid
 	if (agent_authorized == 'true') then
-		local sql = "SELECT user_uuid, user_status FROM v_users ";
-		sql = sql .. "WHERE username = :agent_name ";
+		local sql = "SELECT user_status FROM v_users ";
+		sql = sql .. "WHERE user_uuid = :user_uuid ";
 		sql = sql .. "AND domain_uuid = :domain_uuid ";
-		local params = {agent_name = agent_name, domain_uuid = domain_uuid};
+		local params = {user_uuid = user_uuid, domain_uuid = domain_uuid};
 		if (debug["sql"]) then
 			freeswitch.consoleLog("notice", "[call_center] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 		end
 		dbh:query(sql, params, function(row)
 			--get the user info
-				user_uuid = row.user_uuid;
 				user_status = row.user_status;
 				if (user_status == "Available") then
 					action = "logout";

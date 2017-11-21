@@ -1,0 +1,25 @@
+# #################
+# Provisioning Settings
+# #################
+# phone looks for configuration files in aastra.cfg followed by <MAC>.cfg, e.g. "00085D1610DE.cfg"
+# HTTPS, TFTP and FTP also supported
+download protocol: HTTP
+
+# === HTTP Provisioning Settings ===
+http server: {$domain_name}
+#http port: 80
+http path: /provision
+
+# === FTP Provisioning Settings ===
+#ftp server: {$domain_name}
+#ftp username: {$ftp_auth_username}
+#ftp password: {$ftp_auth_password}
+
+# === TFTP Provisioning Settings ===
+#tftp server: {$domain_name}
+#tftp path: /provision/{$domain_name}
+
+# === Provisioning Sync Settings ===
+# Example below is for resyncing config (but not firmware) nightly at 2am
+auto resync mode: 1
+auto resync time: 02:00

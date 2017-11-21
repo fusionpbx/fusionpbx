@@ -187,6 +187,7 @@
 			if (strlen(trim($_POST['dialplan_expression'])) > 0) {
 
 				$tmp_array = explode("\n", $_POST['dialplan_expression']);
+				$x = 0;
 				foreach($tmp_array as $dialplan_expression) {
 					$dialplan_expression = trim($dialplan_expression);
 					if (strlen($dialplan_expression) > 0) {
@@ -357,7 +358,6 @@
 						$dialplan_uuid = uuid();
 
 					//build the array
-						$x = 0;
 						$array['dialplans'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 						$array['dialplans'][$x]['dialplan_uuid'] = $dialplan_uuid;
 						$array['dialplans'][$x]['app_uuid'] = $app_uuid;
@@ -416,7 +416,7 @@
 						$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'export';
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'call_direction=outbound';
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
@@ -603,7 +603,8 @@
 						unset($dialplan_expression);
 						unset($action_data);
 					} //if strlen
-				} //end for each
+					$x++;
+				} //end foreach
 			}
 
 		//save to the data
@@ -629,7 +630,7 @@
 
 		//redirect the browser
 			messages::add($text['message-update']);
-			header("Location: ".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3");
+			header("Location: ".PROJECT_PATH."/app/dialplans/dialplans.php?app_uuid=8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3");
 			return;
 	} //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 ?>
@@ -674,7 +675,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "			<span class=\"title\">".$text['label-outbound-routes']."</span>\n";
 	echo "		</td>\n";
 	echo "		<td align='right'>\n";
-	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3'\" value='".$text['button-back']."'>\n";
+	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='".PROJECT_PATH."/app/dialplans/dialplans.php?app_uuid=8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3'\" value='".$text['button-back']."'>\n";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
@@ -914,7 +915,6 @@ function type_onchange(dialplan_detail_type) {
 	echo $text['message-add-options2']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-
 
 	echo "<tr>\n";
 	echo "  <td valign=\"top\" class=\"vncellreq\">".$text['label-dialplan-expression']."</td>\n";

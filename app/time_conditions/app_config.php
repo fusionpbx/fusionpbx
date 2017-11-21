@@ -9,17 +9,24 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Direct calls based on the time of day.";
-		$apps[$x]['description']['es-cl'] = "Direcciona llamadas basada en hora del día";
-		$apps[$x]['description']['es-mx'] = "";
+		$apps[$x]['description']['ar-eg'] = "";
+		$apps[$x]['description']['de-at'] = "Anrufe anhand der Tageszeit weiterleiten.";
 		$apps[$x]['description']['de-de'] = "Anrufe anhand der Tageszeit weiterleiten.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "Anrufe anhand der Tageszeit weiterleiten.";
+		$apps[$x]['description']['es-cl'] = "Direcciona llamadas basada en hora del día";
+		$apps[$x]['description']['es-mx'] = "";
 		$apps[$x]['description']['fr-fr'] = "Redirige les appels en fonction de l'heure.";
 		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "Chamada directa com base na hora do dia.";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "Instrada le chiamate basandosi su giorno e ora.";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
+        $apps[$x]['description']['pt-pt'] = "Chamada directa com base na hora do dia.";
+		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "Прямые вызовы на основании времени суток.";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
 
 	//destination details
 		$y=0;
@@ -203,7 +210,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "USA Holiday";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '';
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '340856f4-ed1d-42ec-b13b-7f37630d019a';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'time_conditions';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'preset_canada';
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'array';
@@ -211,7 +218,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Canada Holiday';
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '';
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '74199644-5156-4e46-9069-a56413750e01';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'time_conditions';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'preset_canada';
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'array';
@@ -219,7 +226,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Canada Holiday';
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '';
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '6e848fde-8543-4410-b6f5-c387dc45fc49';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'time_conditions';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'preset_canada';
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'array';
@@ -227,7 +234,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Canada Holiday';
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '';
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '49bbadb3-568d-42d8-b6b4-edc9560a054d';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'time_conditions';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'preset_canada';
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'array';
@@ -235,7 +242,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Canada Holiday';
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '';
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '39c69aa6-124c-405e-a437-b49e379a7079';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'time_conditions';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'preset_canada';
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'array';
@@ -243,7 +250,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Canada Holiday';
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '';
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '2eed38e8-11c3-4477-9185-103c36ccf26d';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'time_conditions';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'preset_canada';
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'array';
@@ -251,7 +258,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Canada Holiday';
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '';
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'c3244258-55fe-4d20-a23d-ac9e108bf38e';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'time_conditions';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'preset_canada';
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'array';
@@ -259,7 +266,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Canada Holiday';
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '';
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '51717873-86d2-43a2-8748-ff191b4915e7';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'time_conditions';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'preset_canada';
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'array';
@@ -267,7 +274,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Canada Holiday';
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '';
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'a96c087a-503c-4b7c-87af-dff24d5d39c1';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'time_conditions';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'preset_canada';
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'array';
@@ -275,7 +282,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Canada Holiday';
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '';
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '43ef3137-084a-40ea-94ed-42b68979c551';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'time_conditions';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'preset_canada';
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'array';

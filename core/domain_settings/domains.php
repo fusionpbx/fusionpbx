@@ -221,7 +221,7 @@ require_once "resources/check_auth.php";
 				echo "<a href='domain_edit.php?id=".$domain_uuid."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
 			}
 			if (permission_exists('domain_delete')) {
-				if ($_SESSION["groups"][0]["domain_uuid"] != $domain_uuid && count($domains) > 1) {
+				if ($_SESSION["groups"][0]["domain_uuid"] != $domain_uuid && count($_SESSION['domains']) > 1) {
 					echo "<a href='domain_delete.php?id=".$domain_uuid."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 				}
 				else {

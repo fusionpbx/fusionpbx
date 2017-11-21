@@ -30,7 +30,7 @@
 	require_once "resources/functions/device_by.php";
 
 //logging
-	openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+	openlog("FusionPBX", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 
 //set default variables
 	$dir_count = 0;
@@ -71,10 +71,15 @@
 	if (empty($mac)){
 		//set the http user agent
 			//$_SERVER['HTTP_USER_AGENT'] = "Yealink SIP-T38G  38.70.0.125 00:15:65:00:00:00";
+			//$_SERVER['HTTP_USER_AGENT'] = "Yealink SIP-T56A  58.80.0.25 001565f429a4"; 
 		//Yealink: 17 digit mac appended to the user agent, so check for a space exactly 17 digits before the end.
 			if (strtolower(substr($_SERVER['HTTP_USER_AGENT'],0,7)) == "yealink" || strtolower(substr($_SERVER['HTTP_USER_AGENT'],0,5)) == "vp530") {
-				$mac = substr($_SERVER['HTTP_USER_AGENT'],-17);
-				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+				if (strstr(substr($_SERVER['HTTP_USER_AGENT'],-4), ':')) { //remove colons if they exist
+					$mac = substr($_SERVER['HTTP_USER_AGENT'],-17);
+					$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+				} else { //take mac as is - fixes T5X series
+					$mac = substr($_SERVER['HTTP_USER_AGENT'],-12);
+				}
 			}
 		//Panasonic: $_SERVER['HTTP_USER_AGENT'] = "Panasonic_KX-UT670/01.022 (0080f000000)"
 			if (substr($_SERVER['HTTP_USER_AGENT'],0,9) == "Panasonic") {
@@ -89,6 +94,12 @@
 		//Audiocodes: $_SERVER['HTTP_USER_AGENT'] = "AUDC-IPPhone/2.2.8.61 (440HDG-Rev0; 00908F602AAC)"
 			if (substr($_SERVER['HTTP_USER_AGENT'],0,12) == "AUDC-IPPhone") {
 				$mac = substr($_SERVER['HTTP_USER_AGENT'],-13);
+				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+			}
+		//Aastra: $_SERVER['HTTP_USER_AGENT'] = "Aastra6731i MAC:00-08-5D-29-4C-6B V:3.3.1.4365-SIP"
+			if (substr($_SERVER['HTTP_USER_AGENT'],0,6) == "Aastra") {
+				preg_match("/MAC:([A-F0-9-]{17})/", $_SERVER['HTTP_USER_AGENT'], $matches);
+				$mac = $matches[1];
 				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
 			}
 	}

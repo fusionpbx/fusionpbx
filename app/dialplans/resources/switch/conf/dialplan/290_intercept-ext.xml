@@ -1,0 +1,12 @@
+<context name="{v_context}">
+	<extension name="intercept-ext" number="**[ext]" continue="false" app_uuid="2b7b2f82-edfe-4339-8cc5-7d0cf36e1e68">
+		<condition field="destination_number" expression="^\*\*(\d+)$" break="on-true">
+			<action application="answer"/>
+			<action application="lua" data="intercept.lua $1"/>
+		</condition>
+		<condition field="destination_number" expression="^\*\*$"/>
+		<condition field="${sip_h_X-intercept_uuid}" expression="^(.+)$" break="on-true">
+			<action application="intercept" data="$1"/>
+		</condition>
+	</extension>
+</context>

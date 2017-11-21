@@ -448,7 +448,7 @@ CREATE TABLE sip_subscriptions (
     network_ip character varying(255),
     version integer DEFAULT 0 NOT NULL,
     orig_proto character varying(255),
-    full_to character varying(255),
+    full_to character varying(1024),
 sip_subscription_uuid uuid PRIMARY KEY default gen_random_uuid()
 );
 ALTER TABLE sip_subscriptions OWNER TO fusionpbx;

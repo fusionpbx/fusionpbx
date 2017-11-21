@@ -11,7 +11,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Cibler";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Destinations";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "יעד";
-	$apps[$x]['menu'][$y]['title']['it-it'] = "";
+	$apps[$x]['menu'][$y]['title']['it-it'] = "Destinazioni";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Destynacje";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Destinos";

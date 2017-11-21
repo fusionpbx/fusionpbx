@@ -1,9 +1,9 @@
 <?php
-#This file was last reorganized on 12th of June 2017 10:57:40 AM UTC
+#This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['title-conference_profiles']['en-us'] = "Conference Profiles";
 $text['title-conference_profiles']['ar-eg'] = "";
-$text['title-conference_profiles']['de-at'] = "Konferenzprofile";
+$text['title-conference_profiles']['de-at'] = "Konferenzprofile"; //copied from de-de
 $text['title-conference_profiles']['de-ch'] = "Konferenzprofile"; //copied from de-de
 $text['title-conference_profiles']['de-de'] = "Konferenzprofile";
 $text['title-conference_profiles']['es-cl'] = "";
@@ -23,7 +23,7 @@ $text['title-conference_profiles']['uk-ua'] = "";
 
 $text['title-conference_profile']['en-us'] = "Conference Profile";
 $text['title-conference_profile']['ar-eg'] = "";
-$text['title-conference_profile']['de-at'] = "Konferenzprofile";
+$text['title-conference_profile']['de-at'] = "Konferenzprofile"; //copied from de-de
 $text['title-conference_profile']['de-ch'] = "Konferenzprofile"; //copied from de-de
 $text['title-conference_profile']['de-de'] = "Konferenzprofile";
 $text['title-conference_profile']['es-cl'] = "";
@@ -43,7 +43,7 @@ $text['title-conference_profile']['uk-ua'] = "";
 
 $text['title_description-conference_profile']['en-us'] = "A group of conference parameters saved together as a profile.";
 $text['title_description-conference_profile']['ar-eg'] = "";
-$text['title_description-conference_profile']['de-at'] = "Eine Gruppe von Konferenz-Parametern zu einem Profil zusammengefasst";
+$text['title_description-conference_profile']['de-at'] = "Eine Gruppe von Konferenz-Parametern zu einem Profil zusammengefasst"; //copied from de-de
 $text['title_description-conference_profile']['de-ch'] = "Eine Gruppe von Konferenz-Parametern zu einem Profil zusammengefasst"; //copied from de-de
 $text['title_description-conference_profile']['de-de'] = "Eine Gruppe von Konferenz-Parametern zu einem Profil zusammengefasst";
 $text['title_description-conference_profile']['es-cl'] = "";
@@ -63,7 +63,7 @@ $text['title_description-conference_profile']['uk-ua'] = "";
 
 $text['label-profile_name']['en-us'] = "Name";
 $text['label-profile_name']['ar-eg'] = "";
-$text['label-profile_name']['de-at'] = "Name";
+$text['label-profile_name']['de-at'] = "Name"; //copied from de-de
 $text['label-profile_name']['de-ch'] = "Name"; //copied from de-de
 $text['label-profile_name']['de-de'] = "Name";
 $text['label-profile_name']['es-cl'] = "";
@@ -83,7 +83,7 @@ $text['label-profile_name']['uk-ua'] = "";
 
 $text['description-profile_name']['en-us'] = "Enter the profile name.";
 $text['description-profile_name']['ar-eg'] = "";
-$text['description-profile_name']['de-at'] = "Geben Sie den Profil Namen ein.";
+$text['description-profile_name']['de-at'] = "Geben Sie den Profil Namen ein."; //copied from de-de
 $text['description-profile_name']['de-ch'] = "Geben Sie den Profil Namen ein."; //copied from de-de
 $text['description-profile_name']['de-de'] = "Geben Sie den Profil Namen ein.";
 $text['description-profile_name']['es-cl'] = "";
@@ -103,7 +103,7 @@ $text['description-profile_name']['uk-ua'] = "";
 
 $text['label-profile_enabled']['en-us'] = "Enabled";
 $text['label-profile_enabled']['ar-eg'] = "";
-$text['label-profile_enabled']['de-at'] = "Aktiviert";
+$text['label-profile_enabled']['de-at'] = "Aktiviert"; //copied from de-de
 $text['label-profile_enabled']['de-ch'] = "Aktiviert"; //copied from de-de
 $text['label-profile_enabled']['de-de'] = "Aktiviert";
 $text['label-profile_enabled']['es-cl'] = "";
@@ -123,7 +123,7 @@ $text['label-profile_enabled']['uk-ua'] = "";
 
 $text['description-profile_enabled']['en-us'] = "Set the status of the profile.";
 $text['description-profile_enabled']['ar-eg'] = "";
-$text['description-profile_enabled']['de-at'] = "Setzen Sie den Status des Profils";
+$text['description-profile_enabled']['de-at'] = "Setzen Sie den Status des Profils"; //copied from de-de
 $text['description-profile_enabled']['de-ch'] = "Setzen Sie den Status des Profils"; //copied from de-de
 $text['description-profile_enabled']['de-de'] = "Setzen Sie den Status des Profils";
 $text['description-profile_enabled']['es-cl'] = "";
@@ -143,7 +143,7 @@ $text['description-profile_enabled']['uk-ua'] = "";
 
 $text['label-profile_description']['en-us'] = "Description";
 $text['label-profile_description']['ar-eg'] = "";
-$text['label-profile_description']['de-at'] = "Beschreibung";
+$text['label-profile_description']['de-at'] = "Beschreibung"; //copied from de-de
 $text['label-profile_description']['de-ch'] = "Beschreibung"; //copied from de-de
 $text['label-profile_description']['de-de'] = "Beschreibung";
 $text['label-profile_description']['es-cl'] = "";
@@ -163,7 +163,7 @@ $text['label-profile_description']['uk-ua'] = "";
 
 $text['description-profile_description']['en-us'] = "Enter the description.";
 $text['description-profile_description']['ar-eg'] = "";
-$text['description-profile_description']['de-at'] = "Geben Sie die Beschreibung ein.";
+$text['description-profile_description']['de-at'] = "Geben Sie die Beschreibung ein."; //copied from de-de
 $text['description-profile_description']['de-ch'] = "Geben Sie die Beschreibung ein."; //copied from de-de
 $text['description-profile_description']['de-de'] = "Geben Sie die Beschreibung ein.";
 $text['description-profile_description']['es-cl'] = "";
@@ -183,7 +183,7 @@ $text['description-profile_description']['uk-ua'] = "";
 
 $text['title-conference_profile_params']['en-us'] = "Profile Parameters";
 $text['title-conference_profile_params']['ar-eg'] = "";
-$text['title-conference_profile_params']['de-at'] = "Profil Parameter";
+$text['title-conference_profile_params']['de-at'] = "Profil Parameter"; //copied from de-de
 $text['title-conference_profile_params']['de-ch'] = "Profil Parameter"; //copied from de-de
 $text['title-conference_profile_params']['de-de'] = "Profil Parameter";
 $text['title-conference_profile_params']['es-cl'] = "";
@@ -203,7 +203,7 @@ $text['title-conference_profile_params']['uk-ua'] = "";
 
 $text['title-conference_profile_param']['en-us'] = "Profile Parameter";
 $text['title-conference_profile_param']['ar-eg'] = "";
-$text['title-conference_profile_param']['de-at'] = "Profil Parameter";
+$text['title-conference_profile_param']['de-at'] = "Profil Parameter"; //copied from de-de
 $text['title-conference_profile_param']['de-ch'] = "Profil Parameter"; //copied from de-de
 $text['title-conference_profile_param']['de-de'] = "Profil Parameter";
 $text['title-conference_profile_param']['es-cl'] = "";
@@ -223,7 +223,7 @@ $text['title-conference_profile_param']['uk-ua'] = "";
 
 $text['title_description-conference_profile_param']['en-us'] = "Settings assigned to the conference profiles.";
 $text['title_description-conference_profile_param']['ar-eg'] = "";
-$text['title_description-conference_profile_param']['de-at'] = "Zugewiesene Einstellungen des Konferenz Profils";
+$text['title_description-conference_profile_param']['de-at'] = "Zugewiesene Einstellungen des Konferenz Profils"; //copied from de-de
 $text['title_description-conference_profile_param']['de-ch'] = "Zugewiesene Einstellungen des Konferenz Profils"; //copied from de-de
 $text['title_description-conference_profile_param']['de-de'] = "Zugewiesene Einstellungen des Konferenz Profils";
 $text['title_description-conference_profile_param']['es-cl'] = "";
@@ -243,7 +243,7 @@ $text['title_description-conference_profile_param']['uk-ua'] = "";
 
 $text['label-profile_param_name']['en-us'] = "Name";
 $text['label-profile_param_name']['ar-eg'] = "";
-$text['label-profile_param_name']['de-at'] = "Name";
+$text['label-profile_param_name']['de-at'] = "Name"; //copied from de-de
 $text['label-profile_param_name']['de-ch'] = "Name"; //copied from de-de
 $text['label-profile_param_name']['de-de'] = "Name";
 $text['label-profile_param_name']['es-cl'] = "";
@@ -263,7 +263,7 @@ $text['label-profile_param_name']['uk-ua'] = "";
 
 $text['description-profile_param_name']['en-us'] = "Enter the parameter name.";
 $text['description-profile_param_name']['ar-eg'] = "";
-$text['description-profile_param_name']['de-at'] = "Geben Sie den Namen für den Parameter ein.";
+$text['description-profile_param_name']['de-at'] = "Geben Sie den Namen für den Parameter ein."; //copied from de-de
 $text['description-profile_param_name']['de-ch'] = "Geben Sie den Namen für den Parameter ein."; //copied from de-de
 $text['description-profile_param_name']['de-de'] = "Geben Sie den Namen für den Parameter ein.";
 $text['description-profile_param_name']['es-cl'] = "";
@@ -283,7 +283,7 @@ $text['description-profile_param_name']['uk-ua'] = "";
 
 $text['label-profile_param_value']['en-us'] = "Value";
 $text['label-profile_param_value']['ar-eg'] = "";
-$text['label-profile_param_value']['de-at'] = "Wert";
+$text['label-profile_param_value']['de-at'] = "Wert"; //copied from de-de
 $text['label-profile_param_value']['de-ch'] = "Wert"; //copied from de-de
 $text['label-profile_param_value']['de-de'] = "Wert";
 $text['label-profile_param_value']['es-cl'] = "";
@@ -301,9 +301,9 @@ $text['label-profile_param_value']['ru-ru'] = "Значение";
 $text['label-profile_param_value']['sv-se'] = "Värde";
 $text['label-profile_param_value']['uk-ua'] = "";
 
-$text['description-profile_param_value']['en-us'] = "Введите Значение.";
+$text['description-profile_param_value']['en-us'] = "Enter the value.";
 $text['description-profile_param_value']['ar-eg'] = "";
-$text['description-profile_param_value']['de-at'] = "Geben Sie den Wert ein.";
+$text['description-profile_param_value']['de-at'] = "Geben Sie den Wert ein."; //copied from de-de
 $text['description-profile_param_value']['de-ch'] = "Geben Sie den Wert ein."; //copied from de-de
 $text['description-profile_param_value']['de-de'] = "Geben Sie den Wert ein.";
 $text['description-profile_param_value']['es-cl'] = "";
@@ -317,13 +317,13 @@ $text['description-profile_param_value']['pl-pl'] = "";
 $text['description-profile_param_value']['pt-br'] = "";
 $text['description-profile_param_value']['pt-pt'] = "";
 $text['description-profile_param_value']['ro-ro'] = "";
-$text['description-profile_param_value']['ru-ru'] = "";
+$text['description-profile_param_value']['ru-ru'] = "Введите Значение.";
 $text['description-profile_param_value']['sv-se'] = "Ange värdet.";
 $text['description-profile_param_value']['uk-ua'] = "";
 
 $text['label-profile_param_enabled']['en-us'] = "Enabled";
 $text['label-profile_param_enabled']['ar-eg'] = "";
-$text['label-profile_param_enabled']['de-at'] = "Aktiviert";
+$text['label-profile_param_enabled']['de-at'] = "Aktiviert"; //copied from de-de
 $text['label-profile_param_enabled']['de-ch'] = "Aktiviert"; //copied from de-de
 $text['label-profile_param_enabled']['de-de'] = "Aktiviert";
 $text['label-profile_param_enabled']['es-cl'] = "";
@@ -343,7 +343,7 @@ $text['label-profile_param_enabled']['uk-ua'] = "";
 
 $text['description-profile_param_enabled']['en-us'] = "Set the status of the parameter.";
 $text['description-profile_param_enabled']['ar-eg'] = "";
-$text['description-profile_param_enabled']['de-at'] = "Setzen Sie den Status des Parameters";
+$text['description-profile_param_enabled']['de-at'] = "Setzen Sie den Status des Parameters"; //copied from de-de
 $text['description-profile_param_enabled']['de-ch'] = "Setzen Sie den Status des Parameters"; //copied from de-de
 $text['description-profile_param_enabled']['de-de'] = "Setzen Sie den Status des Parameters";
 $text['description-profile_param_enabled']['es-cl'] = "";
@@ -363,7 +363,7 @@ $text['description-profile_param_enabled']['uk-ua'] = "";
 
 $text['label-profile_param_description']['en-us'] = "Description";
 $text['label-profile_param_description']['ar-eg'] = "";
-$text['label-profile_param_description']['de-at'] = "Beschreibung";
+$text['label-profile_param_description']['de-at'] = "Beschreibung"; //copied from de-de
 $text['label-profile_param_description']['de-ch'] = "Beschreibung"; //copied from de-de
 $text['label-profile_param_description']['de-de'] = "Beschreibung";
 $text['label-profile_param_description']['es-cl'] = "";
@@ -383,7 +383,7 @@ $text['label-profile_param_description']['uk-ua'] = "";
 
 $text['description-profile_param_description']['en-us'] = "Enter the description.";
 $text['description-profile_param_description']['ar-eg'] = "";
-$text['description-profile_param_description']['de-at'] = "Geben Sie die Beschreibung ein.";
+$text['description-profile_param_description']['de-at'] = "Geben Sie die Beschreibung ein."; //copied from de-de
 $text['description-profile_param_description']['de-ch'] = "Geben Sie die Beschreibung ein."; //copied from de-de
 $text['description-profile_param_description']['de-de'] = "Geben Sie die Beschreibung ein.";
 $text['description-profile_param_description']['es-cl'] = "";

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -143,7 +143,9 @@
 			$field_name = end($array);
 			if (isset($$field_name)) {
 				$$field_name = check_str($_REQUEST[$field_name]);
-				$sql_where_ands[] = "$field_name like '%".$$field_name."%'";
+				if (strlen($$field_name) > 0) {
+					$sql_where_ands[] = "$field_name like '%".$$field_name."%'";
+				}
 			}
 		}
 	}
@@ -344,12 +346,7 @@
 			}
 
 		//set the default paging
-			if ($_SESSION['domain']['paging']['numeric'] != '' && $rows_per_page > $_SESSION['domain']['paging']['numeric']) {
-				$rows_per_page = $_SESSION['domain']['paging']['numeric'];
-			}
-			else {
-				$rows_per_page = 50;
-			}
+			$rows_per_page = $_SESSION['domain']['paging']['numeric'];
 
 		//prepare to page the results
 			//$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50; //set on the page that includes this page
@@ -368,7 +365,8 @@
 	$sql .= "hangup_cause, ";
 	$sql .= "duration, ";
 	$sql .= "billmsec, ";
-	$sql .= "recording_file, ";
+	$sql .= "record_path, ";
+	$sql .= "record_name, ";
 	$sql .= "uuid, ";
 	$sql .= "bridge_uuid, ";
 	$sql .= "direction, ";

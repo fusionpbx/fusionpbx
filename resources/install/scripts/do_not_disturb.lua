@@ -44,6 +44,9 @@
 	require "resources.functions.config";
 
 	local blf = require "resources.functions.blf"
+	local cache = require "resources.functions.cache"
+	local Settings = require "resources.functions.lazy_settings"	
+	local notify = require "app.feature_event.resources.functions.feature_event_notify"		
 
 --check if the session is ready
 	if ( session:ready() ) then
@@ -75,6 +78,8 @@
 		--connect to the database
 			local Database = require "resources.functions.database";
 			dbh = Database.new('system');
+
+			local settings = Settings.new(dbh, domain_name, domain_uuid);
 
 		--include json library
 			local json
@@ -202,13 +207,57 @@
 					dbh:query(sql, params);
 			end);
 
+--send notify to phone if feature sync is enabled
+	if settings:get('device', 'feature_sync', 'boolean') == 'true' then
+		-- Get values from the database
+			do_not_disturb, forward_all_enabled, forward_all_destination, forward_busy_enabled, forward_busy_destination, forward_no_answer_enabled, forward_no_answer_destination, call_timeout = notify.get_db_values(extension, domain_name)
+		
+		-- Get the sip_profile
+			if (extension ~= nil and domain_name ~= nil) then
+				sip_profile = notify.get_profile(extension, domain_name);
+			end
+
+		if (sip_profile ~= nil) then 
+				freeswitch.consoleLog("NOTICE", "[feature_event] SIP NOTIFY: CFWD set to "..forward_all_enabled.."\n");
+			
+			--Do Not Disturb
+				notify.dnd(extension, domain_name, sip_profile, do_not_disturb);
+
+			--Forward all
+				forward_immediate_enabled = forward_all_enabled;
+				forward_immediate_destination = forward_all_destination;
+				
+				--workaround for freeswitch not sending NOTIFY when destination values are nil. Send 0.
+					if (string.len(forward_immediate_destination) < 1) then 
+						forward_immediate_destination = '0';
+					end
+				
+				notify.forward_immediate(extension, domain_name, sip_profile, forward_immediate_enabled, forward_immediate_destination);
+				
+			--Forward busy
+				--workaround for freeswitch not sending NOTIFY when destination values are nil. Send 0.
+					if (string.len(forward_busy_destination) < 1) then 
+						forward_busy_destination = '0';
+					end
+				
+				notify.forward_busy(extension, domain_name, sip_profile, forward_busy_enabled, forward_busy_destination);
+
+			--Forward No Answer
+				ring_count = math.ceil (call_timeout / 6);
+				--workaround for freeswitch not sending NOTIFY when destination values are nil. Send 0.
+					if (string.len(forward_no_answer_destination) < 1) then 
+						forward_no_answer_destination = '0';
+					end
+					
+				notify.forward_no_answer(extension, domain_name, sip_profile, forward_no_answer_enabled, forward_no_answer_destination, ring_count);
+		end
+	end
+
 		--clear the cache
-			if (extension ~= nil) then
-				freeswitch.consoleLog("notice", "[do_not_disturb] memcache delete directory:"..extension.."@"..domain_name);
-				api:execute("memcache", "delete directory:"..extension.."@"..domain_name);
+			if extension and #extension > 0 and cache.support() then
+				cache.del("directory:"..extension.."@"..domain_name);
 				if #number_alias > 0 then
-					freeswitch.consoleLog("notice", "[do_not_disturb] memcache delete directory:"..number_alias.."@"..domain_name);
-					api:execute("memcache", "delete directory:"..number_alias.."@"..domain_name);
+					cache.del("directory:"..number_alias.."@"..domain_name);
 				end
 			end
 
@@ -227,4 +276,8 @@
 					forward_all_destination, nil, domain_name
 				)
 			end
+		
+		--disconnect from database
+			dbh:release()
+			
 	end
