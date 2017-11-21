@@ -86,7 +86,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Retransmission";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "bf122bc9-c9bf-497c-9dda-95d125293eaf";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1374da96-dc40-4f12-8269-0b94278b7c55";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_srtp_encryption";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
