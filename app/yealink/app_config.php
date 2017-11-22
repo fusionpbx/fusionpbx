@@ -86,7 +86,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Retransmission";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "bf122bc9-c9bf-497c-9dda-95d125293eaf";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1374da96-dc40-4f12-8269-0b94278b7c55";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_srtp_encryption";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -394,7 +394,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b75ef82b-a225-43a5-a208-78d545cca8aa";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ip_address_mode";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "integer";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "IP Address mode 0-ipv4, 1-ipv6, 2-ipv4&ipv6";
