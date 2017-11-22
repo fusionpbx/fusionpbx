@@ -61,7 +61,7 @@ include "root.php";
 			//music on hold
 				$music_list = $this->get();
 				if (count($music_list) > 0) {
-					$select .= "	<optgroup value=''>\n";
+					$select .= "	<option value=''>\n";
 					$select .= "	<optgroup label='".$text['label-music_on_hold']."'>\n";
 					$previous_name = '';
 					foreach($music_list as $row) {
