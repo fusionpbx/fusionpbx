@@ -167,9 +167,11 @@ include "root.php";
 			case "grandstream":
 				$mac = strtolower($mac);
 				break;
+			case "yealink":
+				$mac = strtolower($mac);
+				break;
 			default:
 				$mac = strtolower($mac);
-				$mac = substr($mac, 0,2).'-'.substr($mac, 2,2).'-'.substr($mac, 4,2).'-'.substr($mac, 6,2).'-'.substr($mac, 8,2).'-'.substr($mac, 10,2);
 			}
 			return $mac;
 		}
