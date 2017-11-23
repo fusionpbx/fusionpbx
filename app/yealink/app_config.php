@@ -414,6 +414,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = " CDP 0-Disabled, 1-Enabled";
-		
-		
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f54bd090-723c-47c8-a9cd-c1e875134501";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_overwrite_mode";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Overwrite Mode 0-Disabled, 1-Enabled";
+
 ?>
