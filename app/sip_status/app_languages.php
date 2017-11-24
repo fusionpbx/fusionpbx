@@ -321,24 +321,4 @@ $text['button-flush_cache']['ru-ru'] = "Сбросить кеш память";
 $text['button-flush_cache']['sv-se'] = "Flush Cache ";
 $text['button-flush_cache']['uk-ua'] = "Скинути кеш";
 
-$text['button-flush_memcache']['en-us'] = "Flush Memcache";
-$text['button-flush_memcache']['ar-eg'] = "";
-$text['button-flush_memcache']['de-at'] = "Memcache leeren"; //copied from de-de
-$text['button-flush_memcache']['de-ch'] = "Memcache leeren"; //copied from de-de
-$text['button-flush_memcache']['de-de'] = "Memcache leeren";
-$text['button-flush_memcache']['es-cl'] = "Memcache Flush";
-$text['button-flush_memcache']['es-mx'] = "Memcache Flush"; //copied from es-cl
-$text['button-flush_memcache']['fr-ca'] = "Vider Memcache"; //copied from fr-fr
-$text['button-flush_memcache']['fr-fr'] = "Vider Memcache";
-$text['button-flush_memcache']['he-il'] = "";
-$text['button-flush_memcache']['it-it'] = "Pulisci Memcache";
-$text['button-flush_memcache']['nl-nl'] = "";
-$text['button-flush_memcache']['pl-pl'] = "Opróżnij pamięć podręczną (memcache)";
-$text['button-flush_memcache']['pt-br'] = "Nivelar memória cache";
-$text['button-flush_memcache']['pt-pt'] = "Memcache Lavar";
-$text['button-flush_memcache']['ro-ro'] = "";
-$text['button-flush_memcache']['ru-ru'] = "Сбросить кеш память";
-$text['button-flush_memcache']['sv-se'] = "Flush Memcache ";
-$text['button-flush_memcache']['uk-ua'] = "Скинути кеш";
-
 ?>
