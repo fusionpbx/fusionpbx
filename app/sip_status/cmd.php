@@ -62,8 +62,8 @@
 					unset($tmp_cmd);
 			}
 
-		//memcache flush
-			if ($cmd == "api memcache flush") {
+		//cache flush
+			if ($cmd == "api cache flush") {
 				$cache = new cache;
 				$cache->flush();
 			}
