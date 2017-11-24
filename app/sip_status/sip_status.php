@@ -143,7 +143,12 @@ if ($_GET['a'] == "download") {
 		echo "	<br><br>";
 		echo "</td>\n";
 		echo "<td width='50%' align='right'>\n";
-		echo "  <input type='button' class='btn' value='".$text['button-flush_memcache']."' onclick=\"document.location.href='cmd.php?cmd=api+memcache+flush';\" />\n";
+		if ($_SESSION['cache']['method']['text'] == 'memcache') {
+			echo "  <input type='button' class='btn' value='".$text['button-flush_memcache']."' onclick=\"document.location.href='cmd.php?cmd=api+memcache+flush';\" />\n";
+		}
+		else {
+			echo "  <input type='button' class='btn' value='".$text['button-flush_cache']."' onclick=\"document.location.href='cmd.php?cmd=api+cache+flush';\" />\n";
+		}
 		echo "  <input type='button' class='btn' value='".$text['button-reload_acl']."' onclick=\"document.location.href='cmd.php?cmd=api+reloadacl';\" />\n";
 		echo "  <input type='button' class='btn' value='".$text['button-reload_xml']."' onclick=\"document.location.href='cmd.php?cmd=api+reloadxml';\" />\n";
 		echo "  <input type='button' class='btn' value='".$text['button-refresh']."' onclick=\"document.location.href='sip_status.php';\" />\n";
