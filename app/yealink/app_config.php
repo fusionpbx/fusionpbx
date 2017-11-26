@@ -429,5 +429,5 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Default-0 Extended-1 Mid Range-2";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = " DSS Key Label Length Default-0 Extended-1 Mid Range-2";
 ?>
