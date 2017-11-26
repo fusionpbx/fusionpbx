@@ -610,7 +610,7 @@ include "root.php";
 							$templates['Yealink SIP-T52S'] = 'yealink/t52s';
 							$templates['Yealink SIP-T54S'] = 'yealink/t54s';
 							$templates['Yealink SIP-T56A'] = 'yealink/t56a';
-							$templates['Yealink SIP-T58V'] = 'yealink/t58v';
+							$templates['Yealink SIP-T58'] = 'yealink/t58v';
 							$templates['VP530P'] = 'yealink/vp530';
 							$templates['Yealink SIP-W52P'] = 'yealink/w52p';
 							$templates['Yealink SIP-W56P'] = 'yealink/w56p';
