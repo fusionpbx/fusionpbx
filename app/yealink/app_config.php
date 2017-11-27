@@ -338,7 +338,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t54s";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "T4S(T52S)-70.82.0.20.rom";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "T54S(T52S)-70.82.0.20.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Firmware tested 2017-11-26";
 		$y++;
