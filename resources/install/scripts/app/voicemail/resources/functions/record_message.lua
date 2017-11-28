@@ -65,30 +65,41 @@
 				local handle = io.popen(transcribe_cmd);
 				local transcribe_result = handle:read("*a");
 				handle:close();
-				local transcribe_json = JSON.decode(transcribe_result);
 				if (debug["info"]) then
-					freeswitch.consoleLog("notice", "[voicemail] CMD: " .. transcribe_cmd .. "\n");
-					freeswitch.consoleLog("notice", "[voicemail] RESULT: " .. transcribe_result .. "\n");
-					 if (transcribe_json["results"][1]["name"] == nil) then
-						freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: (null) \n");
-					else
-						freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: " .. transcribe_json["results"][1]["name"] .. "\n");
-					end
-					if (transcribe_json["results"][1]["confidence"] == nil) then
-						freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: (null) \n");
-					else
-						freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: " .. transcribe_json["results"][1]["confidence"] .. "\n");
-					end
-				end
-				
-				if (transcribe_json["results"][1]["name"] == nil) then
+                                	freeswitch.consoleLog("notice", "[voicemail] CMD: " .. transcribe_cmd .. "\n");
+                                        freeswitch.consoleLog("notice", "[voicemail] RESULT: " .. transcribe_result .. "\n");
+                                end
+				local status, transcribe_json = pcall(JSON.decode, transcribe_result);
+				if not status then
+                                        if (debug["info"]) then
+                                                freeswitch.consoleLog("notice", "[voicemail] error decoding bing json\n");
+                                        end
                                         return '';
-                                else
-					transcription = transcribe_json["results"][1]["name"];
-					transcription = transcription:gsub("<profanity>.*<%/profanity>","...");
-					confidence = transcribe_json["results"][1]["confidence"];
-					return transcription;
-				end
+                                end
+				if (debug["info"]) then
+ 					if (transcribe_json["header"]["status"] == "success") then   
+                                                if (transcribe_json["results"][1]["name"] == nil) then
+                                                        freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: (null) \n");
+                                                else
+                                                        freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: " .. transcribe_json["results"][1]["name"] .. "\n");
+                                                end
+                                                if (transcribe_json["results"][1]["confidence"] == nil) then
+                                                        freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: (null) \n");
+                                                else
+                                                        freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: " .. transcribe_json["results"][1]["confidence"] .. "\n");
+                                                end
+                                        end				end
+				
+				if (transcribe_json["header"]["status"] == "success") then
+                                        if (transcribe_json["results"][1]["name"] == nil) then
+                                                return '';
+                                        else
+                                                transcription = transcribe_json["results"][1]["name"];
+                                                transcription = transcription:gsub("<profanity>.*<%/profanity>","...");
+                                                confidence = transcribe_json["results"][1]["confidence"];
+                                                return transcription;
+                                        end
+                                end
 			end
 		end
 		
