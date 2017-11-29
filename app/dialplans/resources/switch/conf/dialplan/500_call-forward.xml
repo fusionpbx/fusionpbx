@@ -2,15 +2,18 @@
 	<extension name="call-forward" number="*72,*73,*74" continue="false" app_uuid="b4b32fb4-0181-4876-9bec-b9dff1299d60" enabled="true">
 		<condition field="destination_number" expression="^\*72$" break="on-true">
 			<action application="set" data="enabled=true"/>
+			<action application="unset" data="forward_all_destination"/>
 			<action application="lua" data="call_forward.lua"/>
 		</condition>
 		<condition field="destination_number" expression="^\*73$" break="on-true">
 			<action application="set" data="enabled=false"/>
+			<action application="unset" data="forward_all_destination"/>
 			<action application="lua" data="call_forward.lua"/>
 		</condition>
 		<condition field="destination_number" expression="^\*74$" break="on-true">
 			<action application="set" data="request_id=true"/>
 			<action application="set" data="enabled=toggle"/>
+			<action application="unset" data="forward_all_destination"/>
 			<action application="lua" data="call_forward.lua"/>
 		</condition>
 		<condition field="destination_number" expression="^forward\+(\Q${caller_id_number}\E)(?:\/(\d+))?$" break="on-true">
