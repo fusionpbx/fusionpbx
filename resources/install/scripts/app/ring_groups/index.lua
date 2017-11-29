@@ -95,6 +95,39 @@
 
 	end
 
+--define iterator function to iterate over key/value pairs in string
+	local function split_vars_pairs(str)
+		local last_pos = 1
+		return function()
+			-- end of string
+			if not str then return end
+
+			-- handle case when there exists comma after kv pair
+			local action, next_pos = string.match(str, "([^=]+=%b''),()", last_pos)
+			if not action then
+				action, next_pos = string.match(str, "([^=]+=[^'][^,]-),()", last_pos)
+				if not action then
+					action, next_pos = string.match(str, "([^=]+=),()", last_pos)
+				end
+			end
+			if action then
+				last_pos = next_pos
+				return action
+			end
+
+			-- last kv pair may not have comma after it
+			if last_pos < #str then
+				action = string.match(str, "([^=]+=%b'')$", last_pos)
+				if not action then
+					action = string.match(str, "([^=]+=[^,]-)$", last_pos)
+				end
+				str = nil -- end of iteration
+			end
+
+			return action
+		end
+	end
+
 --set the hangup hook function
 	if (session:ready()) then
 		session:setHangupHook("session_hangup_hook");
@@ -564,65 +597,83 @@
 						--send to user
 						local dial_string_to_user = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid .. row.record_session .. "]user/" .. row.destination_number .. "@" .. domain_name;
 						dial_string = dial_string_to_user;
-					elseif (tonumber(destination_number) == nil) then
-						--sip uri
-						dial_string = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
 					else
-						--external number
-						dial_string = nil
+						--external number or direct dial
+							dial_string = nil
 
-						local session_mt = {__index = function(_, k) return session:getVariable(k) end}
-						local params = setmetatable({
-							__api__             = api,
-							destination_number  = destination_number,
-							user_exists         = 'false',
-							call_direction      = 'outbound',
-							domain_name         = domain_name,
-							domain_uuid         = domain_uuid,
-							destination_timeout = destination_timeout,
-							destination_delay   = destination_delay,
-						}, session_mt)
-
-						local confirm = string.gsub(group_confirm, ',$', '') -- remove `,` from end of string
-						local route = route_to_bridge.apply_vars({ -- predefined actions
-							"domain_name=${domain_name}",
-							"domain_uuid=${domain_uuid}",
-							"sip_invite_domain=${domain_name}",
-							"leg_timeout=${destination_timeout}",
-							delay_name .. "=${destination_delay}",
-							"ignore_early_media=true",
-							confirm,
-						}, params)
-
-						route = route_to_bridge(dialplans, domain_uuid, params, route)
-
-						if route and route.bridge then
-							local remove_actions = {
-								["effective_caller_id_name="]   = true;
-								["effective_caller_id_number="] = true;
-								['sip_h_X-accountcode=']        = true;
+						--prepare default actions
+							local confirm = string.gsub(group_confirm, ',$', '') -- remove `,` from end of string
+							local route = { -- predefined actions
+								"domain_name=${domain_name}",
+								"domain_uuid=${domain_uuid}",
+								"sip_invite_domain=${domain_name}",
+								"call_direction=${call_direction}",
+								"leg_timeout=${destination_timeout}",
+								delay_name .. "=${destination_delay}",
+								"ignore_early_media=true",
+								confirm,
 							}
 
-							-- cleanup variables
-							local i = 1 while i < #route do
-								-- remove vars from prev variant
-								if remove_actions[ route[i] ] then
-									table.remove(route, i)
-									i = i - 1
-								-- remove vars with unresolved vars
-								elseif string.find(route[i], '%${.+}') then
-									table.remove(route, i)
-									i = i - 1
-								-- remove vars with empty values
-								elseif string.find(route[i], '=$') then
-									table.remove(route, i)
-									i = i - 1
-								end
-								i = i + 1
+						--prepare default variables
+							local session_mt = {__index = function(_, k) return session:getVariable(k) end}
+							local params = setmetatable({
+								__api__             = api,
+								destination_number  = destination_number,
+								user_exists         = 'false',
+								call_direction      = 'outbound',
+								domain_name         = domain_name,
+								domain_uuid         = domain_uuid,
+								destination_timeout = destination_timeout,
+								destination_delay   = destination_delay,
+							}, session_mt)
+
+						--find destination route
+							if (tonumber(destination_number) == nil) then
+								--user define direct destination like `[key=value]sofia/gateway/carrier/123456`
+									local variables, destination = string.match(destination_number, "^%[(.-)%](.+)$")
+									if not variables then
+										destination = destination_number
+									else
+										for action in split_vars_pairs(variables) do
+											route[#route + 1] = action
+										end
+									end
+									route = route_to_bridge.apply_vars(route, params)
+									route.bridge = destination
+							else
+								--user define external number as destination
+									route = route_to_bridge.apply_vars(route, params)
+									route = route_to_bridge(dialplans, domain_uuid, params, route)
 							end
 
-							dial_string = '[' .. table.concat(route, ',') .. ']' .. route.bridge
-						end
+						--build dialstring
+							if route and route.bridge then
+								local remove_actions = {
+									["effective_caller_id_name="]   = true;
+									["effective_caller_id_number="] = true;
+									['sip_h_X-accountcode=']        = true;
+								}
+
+								-- cleanup variables
+								local i = 1 while i < #route do
+									-- remove vars from prev variant
+									if remove_actions[ route[i] ] then
+										table.remove(route, i)
+										i = i - 1
+									-- remove vars with unresolved vars
+									elseif string.find(route[i], '%${.+}') then
+										table.remove(route, i)
+										i = i - 1
+									-- remove vars with empty values
+									elseif string.find(route[i], '=$') then
+										table.remove(route, i)
+										i = i - 1
+									end
+									i = i + 1
+								end
+
+								dial_string = '[' .. table.concat(route, ',') .. ']' .. route.bridge
+							end
 					end
 
 				--add a delimiter between destinations
