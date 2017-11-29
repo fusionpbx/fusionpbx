@@ -575,7 +575,7 @@ local function outbound_route_to_bridge(dbh, domain_uuid, fields, actions)
 
 	local current_dialplan_uuid, extension
 	dbh:query(select_outbound_dialplan_sql, {domain_uuid=domain_uuid, hostname=hostname}, function(route)
-		if context and context ~= route.dialplan_context then
+		if (route.dialplan_context ~= '${domain_name}') and (context and context ~= route.dialplan_context) then
 			-- skip dialplan for wrong contexts
 			return
 		end
@@ -659,7 +659,7 @@ local function preload_dialplan(dbh, domain_uuid, fields)
 
 	local dialplan = {}
 	dbh:query(select_outbound_dialplan_sql, {domain_uuid=domain_uuid, hostname=hostname}, function(route)
-		if context and context ~= route.dialplan_context then
+		if (route.dialplan_context ~= '${domain_name}') and (context and context ~= route.dialplan_context) then
 			-- skip dialplan for wrong contexts
 			return
 		end
