@@ -501,6 +501,26 @@ $text['label-carrier']['ru-ru'] = "Название оператора";
 $text['label-carrier']['sv-se'] = "Operatör";
 $text['label-carrier']['uk-ua'] = "Назва оператора";
 
+$text['label-destination_record']['en-us'] = "Record";
+$text['label-destination_record']['ar-eg'] = "";
+$text['label-destination_record']['de-at'] = "Aufnehmen"; //copied from de-de
+$text['label-destination_record']['de-ch'] = "Aufnehmen"; //copied from de-de
+$text['label-destination_record']['de-de'] = "Aufnehmen";
+$text['label-destination_record']['es-cl'] = "Grabar";
+$text['label-destination_record']['es-mx'] = "Grabar"; //copied from es-cl
+$text['label-destination_record']['fr-ca'] = "Enregistrer"; //copied from fr-fr
+$text['label-destination_record']['fr-fr'] = "Enregistrer";
+$text['label-destination_record']['he-il'] = "";
+$text['label-destination_record']['it-it'] = "";
+$text['label-destination_record']['nl-nl'] = "";
+$text['label-destination_record']['pl-pl'] = "Nagraj";
+$text['label-destination_record']['pt-br'] = "Gravar"; //copied from pt-pt
+$text['label-destination_record']['pt-pt'] = "Gravar";
+$text['label-destination_record']['ro-ro'] = "";
+$text['label-destination_record']['ru-ru'] = "Запись";
+$text['label-destination_record']['sv-se'] = "Spela In";
+$text['label-destination_record']['uk-ua'] = "Запис";
+
 $text['label-account_code']['en-us'] = "Account Code";
 $text['label-account_code']['ar-eg'] = "";
 $text['label-account_code']['de-at'] = "Kontoschlüssel"; //copied from de-de
