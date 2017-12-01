@@ -76,6 +76,9 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_all";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "destination_record";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//default settings
 		$y = 0;
@@ -162,6 +165,14 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the context.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_record";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select whether to record the call.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_accountcode";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the accountcode.";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_app";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the application.";
@@ -177,9 +188,5 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_accountcode";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the accountcode.";
 
 ?>
