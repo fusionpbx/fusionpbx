@@ -76,6 +76,9 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_all";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "destination_record";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//default settings
 		$y = 0;
@@ -85,6 +88,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "911412de-e0a6-49db-a3c8-65f05c9d847f";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "destinations";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dialplan_details";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 
 	//schema details
@@ -154,6 +165,14 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the context.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_record";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select whether to record the call.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_accountcode";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the accountcode.";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_app";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the application.";
@@ -169,9 +188,5 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_accountcode";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the accountcode.";
 
 ?>

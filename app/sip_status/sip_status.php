@@ -24,19 +24,22 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
-if (permission_exists('system_status_sofia_status')
-	|| permission_exists('system_status_sofia_status_profile')
-	|| if_group("superadmin")) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//check permissions
+	if (permission_exists('system_status_sofia_status')
+		|| permission_exists('system_status_sofia_status_profile')
+		|| if_group("superadmin")) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -143,7 +146,7 @@ if ($_GET['a'] == "download") {
 		echo "	<br><br>";
 		echo "</td>\n";
 		echo "<td width='50%' align='right'>\n";
-		echo "  <input type='button' class='btn' value='".$text['button-flush_memcache']."' onclick=\"document.location.href='cmd.php?cmd=api+memcache+flush';\" />\n";
+		echo "  <input type='button' class='btn' value='".$text['button-flush_cache']."' onclick=\"document.location.href='cmd.php?cmd=api+cache+flush';\" />\n";
 		echo "  <input type='button' class='btn' value='".$text['button-reload_acl']."' onclick=\"document.location.href='cmd.php?cmd=api+reloadacl';\" />\n";
 		echo "  <input type='button' class='btn' value='".$text['button-reload_xml']."' onclick=\"document.location.href='cmd.php?cmd=api+reloadxml';\" />\n";
 		echo "  <input type='button' class='btn' value='".$text['button-refresh']."' onclick=\"document.location.href='sip_status.php';\" />\n";

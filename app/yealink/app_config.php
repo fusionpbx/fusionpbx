@@ -37,7 +37,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "-5";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Time zone ranges from -11 to +12";
-		$y=0;
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9009cb3d-5eb8-41fa-bcbb-ee6b63cdccfa";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_time_zone_name";
@@ -204,7 +204,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server.yourdomain.com/app/yealink/resources/firmware";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Base URL for Yealink Firmware";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Base URL for Yealink Firmware.  Download from http://support.yealink.com";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e8f3e617-a6b3-4859-af59-04e2349f3d49";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -338,9 +338,9 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t54s";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t54s-70.81.0.10.rom";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "T54S(T52S)-70.82.0.20.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the T54S firmware ROM";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Firmware tested 2017-11-26";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4ffd1ad7-1b00-41f7-8e9319412127245a";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -422,5 +422,12 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Overwrite Mode 0-Disabled, 1-Enabled";
-
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "709945c3-7fc4-4903-b6b2-7c0d695fea43";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_dsskey_length";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = " DSS Key Label Length Default-0 Extended-1 Mid Range-2";
 ?>
