@@ -168,6 +168,21 @@ include "root.php";
 			return $mac;
 		}
 
+		//send http error
+		private function http_error($error) {
+			if ($error === "404") {
+				header("HTTP/1.0 404 Not Found");
+				echo "<html>\n";
+				echo "<head><title>404 Not Found</title></head>\n";
+				echo "<body bgcolor=\"white\">\n";
+				echo "<center><h1>404 Not Found</h1></center>\n";
+				echo "<hr><center>nginx/1.12.1</center>\n";
+				echo "</body>\n";
+				echo "</html>\n";
+			}
+			exit();
+		}
+
 		//define a function to check if a contact exists in the contacts array
 		private function contact_exists($contacts, $uuid) {
 			if (is_array($contacts[$uuid])) {
@@ -326,7 +341,9 @@ include "root.php";
 											if ($_SESSION['provision']['debug']['boolean'] == 'true'){
 												echo "<br/>device disabled<br/>";
 											}
-											echo "file not found";
+											else {
+												$this->http_error('404');
+											}
 											exit;
 										}
 
@@ -935,7 +952,7 @@ include "root.php";
 							$file = "{\$mac}.cfg";
 						}
 						else {
-							echo "file not found";
+							$this->http_error('404');
 							exit;
 						}
 					}
