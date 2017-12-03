@@ -67,6 +67,21 @@
 		}
 	}
 
+//send http error
+	function http_error($error) {
+		if ($error === "404") {
+			header("HTTP/1.0 404 Not Found");
+			echo "<html>\n";
+			echo "<head><title>404 Not Found</title></head>\n";
+			echo "<body bgcolor=\"white\">\n";
+			echo "<center><h1>404 Not Found</h1></center>\n";
+			echo "<hr><center>nginx/1.12.1</center>\n";
+			echo "</body>\n";
+			echo "</html>\n";
+		}
+		exit();
+	}
+
 //check alternate MAC source
 	if (empty($mac)){
 		//set the http user agent
@@ -253,8 +268,7 @@
 //check if provisioning has been enabled
 	if ($provision["enabled"] != "true") {
 		syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but provisioning is not enabled for ".check_str($_REQUEST['mac']));
-		echo "access denied";
-		exit;
+		http_error('404');
 	}
 
 //send a request to a remote server to validate the MAC address and secret
@@ -262,8 +276,7 @@
 		$result = send_http_request($_SERVER['auth_server'], 'mac='.check_str($_REQUEST['mac']).'&secret='.check_str($_REQUEST['secret']));
 		if ($result == "false") {
 			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but the remote auth server said no for ".check_str($_REQUEST['mac']));
-			echo "access denied";
-			exit;
+			http_error('404');
 		}
 	}
 
@@ -286,8 +299,7 @@
 		}
 		if (!$found) {
 			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but failed CIDR check for ".check_str($_REQUEST['mac']));
-			echo "access denied";
-			exit;
+			http_error('404');
 		}
 	}
 
