@@ -186,6 +186,21 @@ include "root.php";
 			}
 		}
 
+		//send http error
+		private function http_error($error) {
+			if ($error === "404") {
+				header("HTTP/1.0 404 Not Found");
+				echo "<html>\n";
+				echo "<head><title>404 Not Found</title></head>\n";
+				echo "<body bgcolor=\"white\">\n";
+				echo "<center><h1>404 Not Found</h1></center>\n";
+				echo "<hr><center>nginx/1.12.1</center>\n";
+				echo "</body>\n";
+				echo "</html>\n";
+			}
+			exit();
+		}
+
 		private function contact_append(&$contacts, &$line, $domain_uuid, $device_user_uuid, $is_group){
 			$sql = "select c.contact_uuid, c.contact_organization, c.contact_name_given, c.contact_name_family, ";
 			$sql .= "c.contact_type, c.contact_category, p.phone_label,";
@@ -514,7 +529,7 @@ include "root.php";
 											if ($_SESSION['provision']['debug']['boolean'] == 'true'){
 												echo "<br/>device disabled<br/>";
 											}
-											echo "file not found";
+											$this->http_error('404');
 											exit;
 										}
 
@@ -1228,7 +1243,7 @@ include "root.php";
 							$file = "{\$mac}.cfg";
 						}
 						else {
-							echo "file not found";
+							$this->http_error('404');
 							exit;
 						}
 					}
