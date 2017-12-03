@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2015 All Rights Reserved.
+	Copyright (C) 2008-2017 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -62,6 +62,21 @@
 		if(($device !== false)&&($device['device_vendor']=='escene')){
 			$mac = $device['device_mac_address'];
 		}
+	}
+
+//send http error
+	function http_error($error) {
+		if ($error === "404") {
+			header("HTTP/1.0 404 Not Found");
+			echo "<html>\n";
+			echo "<head><title>404 Not Found</title></head>\n";
+			echo "<body bgcolor=\"white\">\n";
+			echo "<center><h1>404 Not Found</h1></center>\n";
+			echo "<hr><center>nginx/1.12.1</center>\n";
+			echo "</body>\n";
+			echo "</html>\n";
+		}
+		exit();
 	}
 
 //check alternate MAC source
@@ -239,7 +254,7 @@
 //check if provisioning has been enabled
 	if ($provision["enabled"] != "true") {
 		syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but provisioning is not enabled for ".check_str($_REQUEST['mac']));
-		echo "access denied";
+		http_error('404');
 		exit;
 	}
 
@@ -248,7 +263,7 @@
 		$result = send_http_request($_SERVER['auth_server'], 'mac='.check_str($_REQUEST['mac']).'&secret='.check_str($_REQUEST['secret']));
 		if ($result == "false") {
 			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but the remote auth server said no for ".check_str($_REQUEST['mac']));
-			echo "access denied";
+			http_error('404');
 			exit;
 		}
 	}
@@ -272,7 +287,7 @@
 		}
 		if (!$found) {
 			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but failed CIDR check for ".check_str($_REQUEST['mac']));
-			echo "access denied";
+			http_error('404');
 			exit;
 		}
 	}
@@ -374,7 +389,7 @@
 			openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
 			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt bad password for ".check_str($_REQUEST['mac']));
 			closelog();
-			echo "access denied";
+			http_error('404');
 			return;
 		}
 	}
