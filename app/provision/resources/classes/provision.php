@@ -176,16 +176,6 @@ include "root.php";
 			return $mac;
 		}
 
-		//define a function to check if a contact exists in the contacts array
-		private function contact_exists($contacts, $uuid) {
-			if (is_array($contacts[$uuid])) {
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
-
 		//send http error
 		private function http_error($error) {
 			if ($error === "404") {
@@ -199,6 +189,16 @@ include "root.php";
 				echo "</html>\n";
 			}
 			exit();
+		}
+
+		//define a function to check if a contact exists in the contacts array
+		private function contact_exists($contacts, $uuid) {
+			if (is_array($contacts[$uuid])) {
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
 
 		private function contact_append(&$contacts, &$line, $domain_uuid, $device_user_uuid, $is_group){
@@ -529,7 +529,9 @@ include "root.php";
 											if ($_SESSION['provision']['debug']['boolean'] == 'true'){
 												echo "<br/>device disabled<br/>";
 											}
-											$this->http_error('404');
+											else {
+												$this->http_error('404');
+											}
 											exit;
 										}
 
