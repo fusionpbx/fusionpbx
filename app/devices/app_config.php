@@ -344,6 +344,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "device_enabled_date";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "timestamp";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "device_template";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "phone_template";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
