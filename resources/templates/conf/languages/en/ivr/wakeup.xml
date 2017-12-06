@@ -14,7 +14,7 @@
 				<action function="play-file" data="digits/0.wav"/>
 
 				<action function="execute" data="sleep(750)"/>
-				<action function="play-file" data="ivr-for.wav"/>
+				<action function="play-file" data="ivr/ivr-for.wav"/>
 				<action function="play-file" data="digits/6.wav"/>
 				<action function="play-file" data="digits/30.wav"/>
 				<action function="play-file" data="time/a-m.wav"/>
@@ -136,7 +136,7 @@
 				<action function="play-file" data="voicemail/vm-to_exit.wav"/>
 				<action function="play-file" data="voicemail/vm-press.wav"/>
 				<action function="play-file" data="digits/1.wav"/>
-				<action function="play-file" data="ivr-for.wav"/>
+				<action function="play-file" data="ivr/ivr-for.wav"/>
 				<action function="play-file" data="digits/10.wav"/>
 				<action function="play-file" data="time/minutes.wav"/>
 				<action function="play-file" data="voicemail/vm-press.wav"/>
