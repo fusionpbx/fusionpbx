@@ -1,24 +1,25 @@
 <include>
-	<macro name="wakeup-greeting">
+	<macro name="wakeup-get-time">
 		<input pattern="(.*)">
 			<match>
 				<!-- To schedule a wakeup call enter a 4 digit number  -->
 				<!-- For 6:30 am press 0630. Enter the digits now. -->
 				<action function="execute" data="sleep(750)"/>
 				<action function="play-file" data="ivr/ivr-request_wakeup_call.wav"/>
+
+				<action function="execute" data="sleep(100)"/>
+				<action function="play-file" data="ivr/ivr-for.wav"/>
+				<action function="play-file" data="digits/6.wav"/>
+				<action function="play-file" data="digits/30.wav"/>
+				<action function="play-file" data="time/a-m.wav"/>
+
 				<action function="play-file" data="voicemail/vm-press.wav"/>
 				<action function="play-file" data="digits/0.wav"/>
 				<action function="play-file" data="digits/6.wav"/>
 				<action function="play-file" data="digits/3.wav"/>
 				<action function="play-file" data="digits/0.wav"/>
 
-				<action function="execute" data="sleep(750)"/>
-				<action function="play-file" data="ivr-for.wav"/>
-				<action function="play-file" data="digits/6.wav"/>
-				<action function="play-file" data="digits/30.wav"/>
-				<action function="play-file" data="time/a-m.wav"/>
-
-				<action function="execute" data="sleep(750)"/>
+				<action function="execute" data="sleep(100)"/>
 				<action function="play-file" data="ivr/ivr-please_enter_the.wav"/>
 				<action function="play-file" data="ivr/ivr-number.wav"/>
 				<action function="play-file" data="misc/followed.wav"/>
@@ -108,7 +109,7 @@
 				<action function="play-file" data="voicemail/vm-to_exit.wav"/>
 				<action function="play-file" data="voicemail/vm-press.wav"/>
 				<action function="play-file" data="digits/1.wav"/>
-				<action function="play-file" data="ivr-for.wav"/>
+				<action function="play-file" data="ivr/ivr-for.wav"/>
 				<action function="play-file" data="digits/10.wav"/>
 				<action function="play-file" data="time/minutes.wav"/>
 				<action function="play-file" data="voicemail/vm-press.wav"/>
