@@ -337,6 +337,26 @@ $text['button-apply']['sv-se'] = "Tillämpa";
 $text['button-apply']['uk-ua'] = "";
 $text['button-apply']['tr-tr'] = "Uygula";
 
+$text['button-provision']['en-us'] = "Provision";
+$text['button-provision']['ar-eg'] = "";
+$text['button-provision']['de-at'] = "Bereitstellen"; //copied from de-de
+$text['button-provision']['de-ch'] = "Bereitstellen"; //copied from de-de
+$text['button-provision']['de-de'] = "Bereitstellen";
+$text['button-provision']['es-cl'] = "";
+$text['button-provision']['es-mx'] = "";
+$text['button-provision']['fr-ca'] = "Provisionner"; //copied from fr-fr
+$text['button-provision']['fr-fr'] = "Provisionner";
+$text['button-provision']['he-il'] = "";
+$text['button-provision']['it-it'] = "";
+$text['button-provision']['nl-nl'] = "";
+$text['button-provision']['pl-pl'] = "Konfigutuj";
+$text['button-provision']['pt-br'] = "";
+$text['button-provision']['pt-pt'] = "";
+$text['button-provision']['ro-ro'] = "";
+$text['button-provision']['ru-ru'] = "Обеспечение";
+$text['button-provision']['sv-se'] = "Provisionera";
+$text['button-provision']['uk-ua'] = "Provision ";
+
 $text['button-applied']['en-us'] = "Applied";
 $text['button-applied']['ar-eg'] = "";
 $text['button-applied']['de-at'] = "Angewandt";
