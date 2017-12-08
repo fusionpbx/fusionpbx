@@ -610,7 +610,7 @@
 	echo "</td>\n";
 	echo "<td align='right' valign='top'>\n";
 	echo "	<input type='button' class='btn' id='button_back_location' name='' alt='".$text['button-back']."' onclick=\"window.location='devices.php'\" value='".$text['button-back']."'/>\n";
-	echo "	<input type='button' class='btn' value='".$text['button-apply']."' onclick=\"document.location.href='".PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&profile=".$sip_profile_name."&user=".$user_id."@".$server_address."&domain=".$server_address."&agent=".$device_vendor."';\">&nbsp;\n";
+	echo "	<input type='button' class='btn' value='".$text['button-provision']."' onclick=\"document.location.href='".PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&profile=".$sip_profile_name."&user=".$user_id."@".$server_address."&domain=".$server_address."&agent=".$device_vendor."';\">&nbsp;\n";
 	if (permission_exists("device_files")) {
 		//get the template directory
 			$prov = new provision;
