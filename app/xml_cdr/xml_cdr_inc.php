@@ -303,8 +303,8 @@
 			}
 		}
 	}
-	if ($_GET['showall'] == 'true' && permission_exists('xml_cdr_all')) {
-		$param .= "&showall=true";
+	if ($_GET['show'] == 'all' && permission_exists('xml_cdr_all')) {
+		$param .= "&show=all";
 	}
 	if (isset($order_by)) {
 		$param .= "&order_by=".$order_by."&order=".$order;
@@ -395,11 +395,11 @@
 		$sql .= "rtp_audio_in_mos, ";
 	}
 	$sql .= "(answer_epoch - start_epoch) as tta ";
-	if ($_REQUEST['showall'] == "true" && permission_exists('xml_cdr_all')) {
+	if ($_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
 		$sql .= ", domain_name ";
 	}
 	$sql .= "from v_xml_cdr ";
-	if ($_REQUEST['showall'] == "true" && permission_exists('xml_cdr_all')) {
+	if ($_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
 		if ($sql_where) { $sql .= "where "; }
 	} else {
 		$sql .= "where domain_uuid = '".$domain_uuid."' ";
