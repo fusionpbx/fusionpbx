@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -56,13 +56,13 @@
 //handle search term
 	$search = check_str($_GET["search"]);
 	if (strlen($search) > 0) {
-		$sql_mod = "and ( ";
-		$sql_mod .= "extension like '%".$search."%' ";
-		$sql_mod .= "or call_group like '%".$search."%' ";
-		$sql_mod .= "or user_context like '%".$search."%' ";
-		$sql_mod .= "or enabled like '%".$search."%' ";
-		$sql_mod .= "or description like '%".$search."%' ";
-		$sql_mod .= ") ";
+		$sql_search = "and ( ";
+		$sql_search .= "extension like '%".$search."%' ";
+		$sql_search .= "or call_group like '%".$search."%' ";
+		$sql_search .= "or user_context like '%".$search."%' ";
+		$sql_search .= "or enabled like '%".$search."%' ";
+		$sql_search .= "or description like '%".$search."%' ";
+		$sql_search .= ") ";
 	}
 
 //additional includes
@@ -72,10 +72,22 @@
 
 //get total extension count from the database
 	$sql = "select ";
-	$sql .= "(select count(*) from v_extensions where domain_uuid = '".$_SESSION['domain_uuid']."' ".$sql_mod.") as num_rows ";
+	$sql .= "(select count(*) from v_extensions ";
+	$sql .= "where 1 = 1 ";
+	if ($_GET['show'] == "all" && permission_exists('extension_all')) {
+		//show all extensions
+	} else {
+		$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	}
+	$sql .= " ".$sql_search.") as num_rows ";
 	if ($db_type == "pgsql") {
-		$sql .= ",(select count(*) as count from v_extensions ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= ", (select count(*) as count from v_extensions ";
+		$sql .= "where 1 = 1 ";
+		if ($_GET['show'] == "all" && permission_exists('extension_all')) {
+			//show all extensions
+		} else {
+			$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		}
 		$sql .= "and extension ~ '^[0-9]+$') as numeric_extensions ";
 	}
 	$prep_statement = $db->prepare($sql);
@@ -108,8 +120,13 @@
 
 //get the extensions
 	$sql = "select * from v_extensions ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= $sql_mod; //add search mod from above
+	$sql .= "where 1 = 1 ";
+	if ($_GET['show'] == "all" && permission_exists('extension_all')) {
+		//show all gateways
+	} else {
+		$sql .= "and domain_uuid = '$domain_uuid' ";
+	}
+	$sql .= $sql_search; //add search mod from above
 	if (strlen($order_by) > 0) {
 		$sql .= ($order_by == 'extension') ? "order by $order_text ".$order." " : "order by ".$order_by." ".$order." ";
 	}
@@ -135,6 +152,14 @@
 	echo "	</td>\n";
 	echo "		<form method='get' action=''>\n";
 	echo "			<td style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
+	if (permission_exists('extension_all')) {
+		if ($_GET['show'] == 'all') {
+			echo "	<input type='hidden' name='show' value='all'>";
+		}
+		else {
+			echo "	<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='extensions.php?show=all';\">\n";
+		}
+	}
 	if (if_group("superadmin")) {
 		echo "				<input type='button' class='btn' style='margin-right: 15px;' value='".$text['button-export']."' onclick=\"window.location.href='extension_download.php'\">\n";
 	}
@@ -159,6 +184,9 @@
 	echo "<tr>\n";
 	if (permission_exists('extension_delete') && is_array($extensions)) {
 		echo "<th style='width: 30px; text-align: center; padding: 0px;'><input type='checkbox' id='chk_all' onchange=\"(this.checked) ? check('all') : check('none');\"></th>";
+	}
+	if ($_GET['show'] == "all" && permission_exists('extension_all')) {
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param);
 	}
 	echo th_order_by('extension', $text['label-extension'], $order_by, $order);
 	echo th_order_by('call_group', $text['label-call_group'], $order_by, $order);
@@ -192,6 +220,9 @@
 				echo "		<input type='checkbox' name='id[]' id='checkbox_".$row['extension_uuid']."' value='".$row['extension_uuid']."' onclick=\"if (!this.checked) { document.getElementById('chk_all').checked = false; }\">";
 				echo "	</td>";
 				$ext_ids[] = 'checkbox_'.$row['extension_uuid'];
+			}
+			if ($_GET['show'] == "all" && permission_exists('extension_all')) {
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."</td>\n";
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('extension_edit')) {
@@ -296,4 +327,5 @@
 
 //show the footer
 	require_once "resources/footer.php";
+
 ?>
