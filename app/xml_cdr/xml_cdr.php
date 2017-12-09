@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -124,20 +124,20 @@
 		echo "	<input type='hidden' name='order_by' value='".$order_by."'>\n";
 		echo "	<input type='hidden' name='order' value='".$order."'>\n";
 	}
-	if (permission_exists('xml_cdr_all') && $_REQUEST['showall'] == 'true') {
-		echo "	<input type='hidden' name='showall' value='true'>\n";
+	if (permission_exists('xml_cdr_all') && $_REQUEST['show'] == 'all') {
+		echo "	<input type='hidden' name='show' value='all'>\n";
 	}
 	echo "	<table cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "		<tr>\n";
 	echo "			<td style='vertical-align: top;'>\n";
 	if (permission_exists('xml_cdr_all')) {
-		if ($_REQUEST['showall'] != 'true') {
-			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='xml_cdr.php?showall=true';\">\n";
+		if ($_REQUEST['show'] != 'alll') {
+			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='xml_cdr.php?show=all';\">\n";
 		}
 	}
 	if (permission_exists('xml_cdr_search_advanced')) {
-		if ($_REQUEST['showall'] == 'true') {
-			$query_string = "showall=true";
+		if ($_REQUEST['show'] == 'all') {
+			$query_string = "show=all";
 		}
 		echo "			<input type='button' class='btn' value='".$text['button-advanced_search']."' onclick=\"window.location='xml_cdr_search.php?$query_string';\">\n";
 	}
@@ -341,8 +341,8 @@
 			echo 	$text['description_search'];
 			echo "</td>";
 			echo "<td style='padding-top: 8px;' align='right' nowrap>";
-			if (permission_exists('xml_cdr_all') && $_REQUEST['showall'] == 'true') {
-				echo "<input type='hidden' name='showall' value='true'>\n";
+			if (permission_exists('xml_cdr_all') && $_REQUEST['show'] == 'all') {
+				echo "<input type='hidden' name='show' value='all'>\n";
 			}
 			echo "<input type='button' class='btn' value='".$text['button-reset']."' onclick=\"document.location.href='xml_cdr.php';\">\n";
 			echo "<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
@@ -370,7 +370,7 @@
 	}
 	//column headings
 		echo "<th>&nbsp;</th>\n";
-		if ($_REQUEST['showall'] && permission_exists('xml_cdr_all')) {
+		if ($_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
 			echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
 			$col_count++;
 		}
@@ -482,7 +482,7 @@
 				}
 
 				if ($row['raw_data_exists'] && permission_exists('xml_cdr_details')) {
-					$tr_link = "href='xml_cdr_details.php?uuid=".$row['uuid'].(($_REQUEST['showall']) ? "&showall=true" : null)."'";
+					$tr_link = "href='xml_cdr_details.php?uuid=".$row['uuid'].(($_REQUEST['show']) ? "&show=all" : null)."'";
 				}
 				else {
 					$tr_link = null;
@@ -521,7 +521,7 @@
 				else { echo "&nbsp;"; }
 				echo "</td>\n";
 			//domain name
-				if ($_REQUEST['showall'] && permission_exists('xml_cdr_all')) {
+				if ($_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
 					echo "	<td valign='top' class='".$row_style[$c]."'>";
 					echo 	$row['domain_name'].'&nbsp;';
 					echo "	</td>\n";
