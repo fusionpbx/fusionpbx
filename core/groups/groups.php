@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -67,7 +67,7 @@
 
 //get the groups
 	$sql = "select * from v_groups ";
-	if (!(permission_exists('group_all') && $_GET['showall'] == 'true')) {
+	if (!(permission_exists('group_all') && $_GET['show'] == 'all')) {
 		$sql .= "where domain_uuid = '".$domain_uuid."' ";
 		$sql .= "or domain_uuid is null ";
 	}
@@ -103,8 +103,8 @@
 	echo "</td>";
 	echo "<td width='50%' align='right' valign='top'>";
 	if (permission_exists('group_all')) {
-		if ($_GET['showall'] != 'true') {
-			echo "<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='groups.php?showall=true';\">\n";
+		if ($_GET['show'] != 'all') {
+			echo "<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='groups.php?show=all';\">\n";
 		}
 	}
 	if (permission_exists('user_view')) {
@@ -124,7 +124,7 @@
 
 	$echo = "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	$echo .= "<tr>\n";
-	if (permission_exists('group_all') && $_GET['showall'] == 'true') {
+	if (permission_exists('group_all') && $_GET['show'] == 'all') {
 		$echo .= "	<th nowrap>".$text['label-domain']."</th>\n";
 	}
 	$echo .= "	<th nowrap>".$text['label-group_name']."</th>\n";
@@ -160,17 +160,17 @@
 				unset($tr_link);
 			}
 			$echo .= "<tr ".$tr_link.">\n";
-			if (permission_exists('group_all') && $_GET['showall'] == 'true') {
+			if (permission_exists('group_all') && $_GET['show'] == 'all') {
 				$echo .= "<td class='".$row_style[$c]."' nowrap>";
 				$echo .= 	($domain_uuid != '') ? $_SESSION['domains'][$domain_uuid]['domain_name'] : "<i>".$text['label-global']."</i>";
 				$echo .= "</td>\n";
 			}
 			$echo .= "<td class='".$row_style[$c]."' nowrap>";
 			if (permission_exists('group_edit') && !($domain_uuid == '' && in_array($group_name, $system_groups))) {
-				$echo .= "<a href='groupedit.php?id=".$group_uuid."'>".(($domain_uuid == '' && $_GET['showall'] != 'true') ? "<i>".$group_name."</i>" : $group_name)."</a>";
+				$echo .= "<a href='groupedit.php?id=".$group_uuid."'>".(($domain_uuid == '' && $_GET['show'] != 'all') ? "<i>".$group_name."</i>" : $group_name)."</a>";
 			}
 			else {
-				$echo .= ($domain_uuid == '' && $_GET['showall'] != 'true') ? "<i>".$group_name."</i>" : $group_name;
+				$echo .= ($domain_uuid == '' && $_GET['show'] != 'all') ? "<i>".$group_name."</i>" : $group_name;
 			}
 			$echo .= "</td>\n";
 			$echo .= "<td class='".$row_style[$c]." tr_link_void' nowrap>\n";
@@ -185,7 +185,7 @@
 			}
 			$echo .= "</td>\n";
 			$echo .= "<td class='".$row_style[$c]." tr_link_void' style='padding: 0px; text-align: center;' align='center' nowrap>\n";
-			$echo .= "	<input type='checkbox' name='group_protected' ".(($group_protected == "true") ? "checked='checked'" : null)." value='".(($group_protected == "true") ? 'false' : 'true')."' onchange=\"window.location='".PROJECT_PATH."/core/groups/groups.php?change=".(($group_protected == "true") ? 'false' : 'true')."&group_uuid=".$group_uuid."&group_name=".$group_name.(($_GET['showall'] == 'true') ? "&showall=true" : null)."';\">\n";
+			$echo .= "	<input type='checkbox' name='group_protected' ".(($group_protected == "true") ? "checked='checked'" : null)." value='".(($group_protected == "true") ? 'false' : 'true')."' onchange=\"window.location='".PROJECT_PATH."/core/groups/groups.php?change=".(($group_protected == "true") ? 'false' : 'true')."&group_uuid=".$group_uuid."&group_name=".$group_name.(($_GET['show'] == 'all') ? "&show=all" : null)."';\">\n";
 			$echo .= "</td>\n";
 			$echo .= "<td class='row_stylebg' nowrap>".$group_description."</td>\n";
 			$echo .= "<td class='list_control_icons' style='width: 25px;'>";
@@ -213,7 +213,7 @@
 	}
 
 	$echo .= "<tr>\n";
-	$echo .= "<td colspan='".((permission_exists('group_all') && $_GET['showall'] == 'true') ? 5 : 4)."'>&nbsp;</td>";
+	$echo .= "<td colspan='".((permission_exists('group_all') && $_GET['show'] == 'all') ? 5 : 4)."'>&nbsp;</td>";
 	$echo .= "<td class='list_control_icons' style='width: 25px;'>";
 	if (permission_exists('group_add')) {
 		$echo .= "<a href='groupadd.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
