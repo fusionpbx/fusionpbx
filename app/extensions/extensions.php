@@ -160,7 +160,7 @@
 			echo "	<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='extensions.php?show=all';\">\n";
 		}
 	}
-	if (if_group("superadmin")) {
+	if (permission_exists('extension_export')) {
 		echo "				<input type='button' class='btn' style='margin-right: 15px;' value='".$text['button-export']."' onclick=\"window.location.href='extension_download.php'\">\n";
 	}
 	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>";
