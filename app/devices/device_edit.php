@@ -807,6 +807,26 @@
 				echo "				<option value='10' ".($row['line_number'] == "10" ? $selected:"").">10</option>\n";
 				echo "				<option value='11' ".($row['line_number'] == "11" ? $selected:"").">11</option>\n";
 				echo "				<option value='12' ".($row['line_number'] == "12" ? $selected:"").">12</option>\n";
+				echo "				<option value='13' ".($row['line_number'] == "13" ? $selected:"").">13</option>\n";
+				echo "				<option value='14' ".($row['line_number'] == "14" ? $selected:"").">14</option>\n";
+				echo "				<option value='15' ".($row['line_number'] == "15" ? $selected:"").">15</option>\n";
+				echo "				<option value='16' ".($row['line_number'] == "16" ? $selected:"").">16</option>\n";
+				echo "				<option value='17' ".($row['line_number'] == "17" ? $selected:"").">17</option>\n";
+				echo "				<option value='18' ".($row['line_number'] == "18" ? $selected:"").">18</option>\n";
+				echo "				<option value='19' ".($row['line_number'] == "19" ? $selected:"").">19</option>\n";
+				echo "				<option value='20' ".($row['line_number'] == "20" ? $selected:"").">20</option>\n";
+				echo "				<option value='21' ".($row['line_number'] == "21" ? $selected:"").">21</option>\n";
+				echo "				<option value='22' ".($row['line_number'] == "22" ? $selected:"").">22</option>\n";
+				echo "				<option value='23' ".($row['line_number'] == "23" ? $selected:"").">23</option>\n";
+				echo "				<option value='24' ".($row['line_number'] == "24" ? $selected:"").">24</option>\n";
+				echo "				<option value='25' ".($row['line_number'] == "25" ? $selected:"").">25</option>\n";
+				echo "				<option value='26' ".($row['line_number'] == "26" ? $selected:"").">26</option>\n";
+				echo "				<option value='27' ".($row['line_number'] == "27" ? $selected:"").">27</option>\n";
+				echo "				<option value='28' ".($row['line_number'] == "28" ? $selected:"").">28</option>\n";
+				echo "				<option value='29' ".($row['line_number'] == "29" ? $selected:"").">29</option>\n";
+				echo "				<option value='30' ".($row['line_number'] == "30" ? $selected:"").">30</option>\n";
+				echo "				<option value='31' ".($row['line_number'] == "31" ? $selected:"").">31</option>\n";
+				echo "				<option value='32' ".($row['line_number'] == "32" ? $selected:"").">32</option>\n";
 				echo "				</select>\n";
 				echo "			</td>\n";
 				if (permission_exists('device_line_server_address')) {
