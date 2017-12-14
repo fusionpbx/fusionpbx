@@ -534,7 +534,21 @@ include "root.php";
 											}
 											exit;
 										}
-
+									//register that we have seen the device
+										$sql = "UPDATE v_devices "; 
+										$sql .= "SET device_provisioned_date=:date, device_provisioned_method=:method, device_provisioned_ip=:ip ";
+										$sql .= "WHERE domain_uuid=:domain_uuid AND device_mac_address=:mac ";
+										$prep_statement = $db->prepare(check_sql($sql));
+										if ($prep_statement) {
+											//use the prepared statement
+												$prep_statement->bindValue(':domain_uuid', $domain_uuid);
+												$prep_statement->bindValue(':mac', strtolower($mac));
+												$prep_statement->bindValue(':date', date("Y-m-d H:i:s"));
+												$prep_statement->bindValue(':method', (isset($_SERVER["HTTPS"]) ? 'https' : 'http'));
+												$prep_statement->bindValue(':ip', $_SERVER['REMOTE_ADDR']);
+												$prep_statement->execute();
+												unset($prep_statement);
+										}
 									//set the variables from values in the database
 										$device_uuid = $row["device_uuid"];
 										$device_label = $row["device_label"];
