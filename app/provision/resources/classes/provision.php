@@ -535,10 +535,10 @@ include "root.php";
 											exit;
 										}
 									//register that we have seen the device
-										$sql = "UPDATE v_devices "; 
+										$sql = "UPDATE v_devices ";
 										$sql .= "SET device_provisioned_date=:date, device_provisioned_method=:method, device_provisioned_ip=:ip ";
 										$sql .= "WHERE domain_uuid=:domain_uuid AND device_mac_address=:mac ";
-										$prep_statement = $db->prepare(check_sql($sql));
+										$prep_statement = $this->db->prepare(check_sql($sql));
 										if ($prep_statement) {
 											//use the prepared statement
 												$prep_statement->bindValue(':domain_uuid', $domain_uuid);
