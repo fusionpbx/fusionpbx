@@ -1,4 +1,7 @@
 #!version:1.0.0.1
 ## The header above must appear as-is in the first line
 
-#overwrite_mode = 1
+include:config "y000000000036.cfg"
+include:config "{$mac}.cfg"
+
+overwrite_mode = {$yealink_overwrite_mode}
