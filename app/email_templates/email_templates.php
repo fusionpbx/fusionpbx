@@ -219,7 +219,13 @@
 			echo "		<input type='hidden' name=\"email_templates[$x][email_template_uuid]\" value='".$row['email_template_uuid']."' />\n";
 			echo "	</td>\n";
 			if ($_GET['show'] == "all" && permission_exists('email_template_all')) {
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."</td>\n";
+				if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
+					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
+				}
+				else {
+					$domain = $text['label-global'];
+				}
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$domain."</td>\n";
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['template_language']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['template_category']."&nbsp;</td>\n";
