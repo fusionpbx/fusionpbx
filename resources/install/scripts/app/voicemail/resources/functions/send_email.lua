@@ -163,9 +163,6 @@
 					end
 
 				--prepare the subject
-					--local f = io.open(file_subject, "r");
-					--local subject = f:read("*all");
-					--f:close();
 					subject = subject:gsub("${caller_id_name}", caller_id_name);
 					subject = subject:gsub("${caller_id_number}", caller_id_number);
 					subject = subject:gsub("${message_date}", message_date);
@@ -179,9 +176,6 @@
 					subject = '=?utf-8?B?'..base64.encode(subject)..'?=';
 
 				--prepare the body
-					--local f = io.open(file_body, "r");
-					--body = f:read("*all");
-					--f:close();
 					body = body:gsub("${caller_id_name}", caller_id_name);
 					body = body:gsub("${caller_id_number}", caller_id_number);
 					body = body:gsub("${message_date}", message_date);
@@ -203,13 +197,9 @@
 					else
 						body = body:gsub("${message}", "<a href='"..link_address.."/app/voicemails/voicemail_messages.php?action=autoplay&id="..db_voicemail_uuid.."&uuid="..uuid.."'>"..text['label-listen'].."</a>");
 					end
-					--body = body:gsub("<", "");
-					--body = body:gsub(">", "");
 					--body = body:gsub(" ", "&nbsp;");
 					--body = body:gsub("%s+", "");
 					--body = body:gsub("&nbsp;", " ");
-					--body = body:gsub("\n", "");
-					--body = body:gsub("\n", "");
 					body = trim(body);
 
 				--prepare file
