@@ -548,11 +548,11 @@
 			$p->add("dialplan_detail_edit", 'temp');
 
 		//get main dialplan entry
-			$orm = new orm;
-			$orm->name('dialplans');
-			$orm->uuid($dialplan_uuid);
-			$result = $orm->find()->get();
-			//$message = $orm->message;
+			$sql = "select * from v_dialplans ";
+			$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			if (is_array($result)) {
 				foreach ($result as &$row) {
 					$domain_uuid = $row["domain_uuid"];
