@@ -89,7 +89,7 @@
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&search=".$search;
-	if ($_GET['showl'] == "all" && permission_exists('destination_all')) {
+	if ($_GET['show'] == "all" && permission_exists('destination_all')) {
 		$param .= "&show=all";
 	}
 	$page = $_GET['page'];
