@@ -192,7 +192,13 @@
 			$tr_link = (permission_exists('gateway_edit')) ? "href='gateway_edit.php?id=".$row['gateway_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			if ($_GET['show'] == "all" && permission_exists('gateway_all')) {
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."</td>\n";
+				if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
+					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
+				}
+				else {
+					$domain = $text['label-global'];
+				}
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$domain."</td>\n";
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('gateway_edit')) {
