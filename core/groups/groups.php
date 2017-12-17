@@ -125,12 +125,12 @@
 	$echo = "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	$echo .= "<tr>\n";
 	if (permission_exists('group_all') && $_GET['show'] == 'all') {
-		$echo .= "	<th nowrap>".$text['label-domain']."</th>\n";
+		$echo .= "	<th nowrap='nowrap'>".$text['label-domain']."</th>\n";
 	}
-	$echo .= "	<th nowrap>".$text['label-group_name']."</th>\n";
-	$echo .= "	<th nowrap>".$text['label-group_tools']."</th>\n";
-	$echo .= "	<th style='text-align: center;' nowrap>".$text['label-group_protected']."</th>\n";
-	$echo .= "	<th nowrap>".$text['label-group_description']."</th>\n";
+	$echo .= "	<th nowrap='nowrap'>".$text['label-group_name']."</th>\n";
+	$echo .= "	<th nowrap='nowrap'>".$text['label-group_tools']."</th>\n";
+	$echo .= "	<th style='text-align: center;' nowrap='nowrap'>".$text['label-group_protected']."</th>\n";
+	$echo .= "	<th nowrap='nowrap'>".$text['label-group_description']."</th>\n";
 	$echo .= "	<td class='list_control_icons' style='width: 25px;'>";
 	if (permission_exists('group_add')) {
 		$echo .= "<a href='groupadd.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
@@ -161,11 +161,16 @@
 			}
 			$echo .= "<tr ".$tr_link.">\n";
 			if (permission_exists('group_all') && $_GET['show'] == 'all') {
-				$echo .= "<td class='".$row_style[$c]."' nowrap>";
-				$echo .= 	($domain_uuid != '') ? $_SESSION['domains'][$domain_uuid]['domain_name'] : "<i>".$text['label-global']."</i>";
-				$echo .= "</td>\n";
+				$echo .= "";
+				if (strlen($_SESSION['domains'][$domain_uuid]['domain_name']) > 0) {
+					$domain = $_SESSION['domains'][$domain_uuid]['domain_name'];
+				}
+				else {
+					$domain = $text['label-global'];
+				}
+				$echo .= "<td class='".$row_style[$c]."' nowrap='nowrap'>$domain</td>\n";
 			}
-			$echo .= "<td class='".$row_style[$c]."' nowrap>";
+			$echo .= "<td class='".$row_style[$c]."' nowrap='nowrap'>";
 			if (permission_exists('group_edit') && !($domain_uuid == '' && in_array($group_name, $system_groups))) {
 				$echo .= "<a href='groupedit.php?id=".$group_uuid."'>".(($domain_uuid == '' && $_GET['show'] != 'all') ? "<i>".$group_name."</i>" : $group_name)."</a>";
 			}
@@ -173,7 +178,7 @@
 				$echo .= ($domain_uuid == '' && $_GET['show'] != 'all') ? "<i>".$group_name."</i>" : $group_name;
 			}
 			$echo .= "</td>\n";
-			$echo .= "<td class='".$row_style[$c]." tr_link_void' nowrap>\n";
+			$echo .= "<td class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>\n";
 			if (permission_exists('group_add') || if_group("superadmin")) {
 				$echo .= "<a class='' href='group_permissions.php?group_uuid=".$group_uuid."' title='".$text['label-group_permissions']."'>".$text['label-group_permissions']."</a>&nbsp;&nbsp;&nbsp;";
 			}
@@ -184,10 +189,10 @@
 				}
 			}
 			$echo .= "</td>\n";
-			$echo .= "<td class='".$row_style[$c]." tr_link_void' style='padding: 0px; text-align: center;' align='center' nowrap>\n";
+			$echo .= "<td class='".$row_style[$c]." tr_link_void' style='padding: 0px; text-align: center;' align='center' nowrap='nowrap'>\n";
 			$echo .= "	<input type='checkbox' name='group_protected' ".(($group_protected == "true") ? "checked='checked'" : null)." value='".(($group_protected == "true") ? 'false' : 'true')."' onchange=\"window.location='".PROJECT_PATH."/core/groups/groups.php?change=".(($group_protected == "true") ? 'false' : 'true')."&group_uuid=".$group_uuid."&group_name=".$group_name.(($_GET['show'] == 'all') ? "&show=all" : null)."';\">\n";
 			$echo .= "</td>\n";
-			$echo .= "<td class='row_stylebg' nowrap>".$group_description."</td>\n";
+			$echo .= "<td class='row_stylebg' nowrap='nowrap'>".$group_description."</td>\n";
 			$echo .= "<td class='list_control_icons' style='width: 25px;'>";
 			if (permission_exists('group_edit')) {
 				if (!($domain_uuid == '' && in_array($group_name, $system_groups))) {
