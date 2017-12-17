@@ -38,7 +38,7 @@
 
 					//build the array
 					$x = 0;
-					$array['email_templates'][$x]['email_template_uuid'] = $uuid;
+					$array['email_templates'][$x]['email_template_uuid'] = '861e6e04-92fe-4bfb-a983-f29b3a5c07cf';
 					$array['email_templates'][$x]['template_language'] = 'de-at';
 					$array['email_templates'][$x]['template_category'] = 'email';
 					$array['email_templates'][$x]['template_subcategory'] = 'default';
@@ -52,7 +52,7 @@
 					$array['email_templates'][$x]['template_enabled'] = 'true';
 					$array['email_templates'][$x]['template_description'] = '';
 					$x++;
-					$array['email_templates'][$x]['email_template_uuid'] = $uuid;
+					$array['email_templates'][$x]['email_template_uuid'] = 'f45935f0-7dc1-4b92-9bd7-7b35121a3ca7';
 					$array['email_templates'][$x]['template_language'] = 'de-de';
 					$array['email_templates'][$x]['template_category'] = 'email';
 					$array['email_templates'][$x]['template_subcategory'] = 'default';
@@ -66,7 +66,7 @@
 					$array['email_templates'][$x]['template_enabled'] = 'true';
 					$array['email_templates'][$x]['template_description'] = '';
 					$x++;
-					$array['email_templates'][$x]['email_template_uuid'] = $uuid;
+					$array['email_templates'][$x]['email_template_uuid'] = 'defb880a-e368-4862-b946-a5244871af55';
 					$array['email_templates'][$x]['template_language'] = 'en-gb';
 					$array['email_templates'][$x]['template_category'] = 'email';
 					$array['email_templates'][$x]['template_subcategory'] = 'default';
@@ -80,7 +80,7 @@
 					$array['email_templates'][$x]['template_enabled'] = 'true';
 					$array['email_templates'][$x]['template_description'] = '';
 					$x++;
-					$array['email_templates'][$x]['email_template_uuid'] = $uuid;
+					$array['email_templates'][$x]['email_template_uuid'] = 'c5f3ae42-a5af-4bb7-80a3-480cfe90fb49';
 					$array['email_templates'][$x]['template_language'] = 'en-gb';
 					$array['email_templates'][$x]['template_category'] = 'email';
 					$array['email_templates'][$x]['template_subcategory'] = 'transcription';
@@ -94,7 +94,7 @@
 					$array['email_templates'][$x]['template_enabled'] = 'true';
 					$array['email_templates'][$x]['template_description'] = '';
 					$x++;
-					$array['email_templates'][$x]['email_template_uuid'] = $uuid;
+					$array['email_templates'][$x]['email_template_uuid'] = '56bb3416-53fc-4a3d-936d-9e3ba869081d';
 					$array['email_templates'][$x]['template_language'] = 'en-us';
 					$array['email_templates'][$x]['template_category'] = 'email';
 					$array['email_templates'][$x]['template_subcategory'] = 'default';
@@ -108,7 +108,7 @@
 					$array['email_templates'][$x]['template_enabled'] = 'true';
 					$array['email_templates'][$x]['template_description'] = '';
 					$x++;
-					$array['email_templates'][$x]['email_template_uuid'] = $uuid;
+					$array['email_templates'][$x]['email_template_uuid'] = 'c8f14f37-4998-41a2-9c7b-7e810c77c570';
 					$array['email_templates'][$x]['template_language'] = 'en-us';
 					$array['email_templates'][$x]['template_category'] = 'email';
 					$array['email_templates'][$x]['template_subcategory'] = 'transcription';
