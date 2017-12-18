@@ -176,7 +176,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'boolean';
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'false';
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Allow access to the voicemail menu with the correct voiemail password.';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Allow access to the voicemail menu with the correct voicemail password.';
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'd09e808d-bd28-400a-81db-8d41b6394527';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'voicemail';
