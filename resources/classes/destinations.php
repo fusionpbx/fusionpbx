@@ -12,13 +12,41 @@ class destinations {
 	 * destinations array
 	 */
 	public $destinations;
+	public $db;
 
 	/**
 	 * Called when the object is created
 	 */
 	public function __construct() {
+			//connect to the database if not connected
+			if (!$this->db) {
+				require_once "resources/classes/database.php";
+				$database = new database;
+				$database->connect();
+				$this->db = $database->db;
+			}
+	}
+
+	/**
+	 * Called when there are no references to a particular object
+	 * unset the variables used in the class
+	 */
+	public function __destruct() {
+		foreach ($this as $key => $value) {
+			unset($this->$key);
+		}
+	}
+
+	/**
+	 * Get the destination menu
+	 * @var string $destination_type can be ivr, dialplan, call_center_contact or bridge
+	 * @var string $destination_name - current name
+	 * @var string $destination_value - current value
+	 */
+	public function select($destination_type, $destination_name, $destination_value) {
+
 		//set the global variables
-			global $db, $db_type;
+			global $db_type;
 
 		//get the array from the app_config.php files
 			$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
@@ -70,7 +98,7 @@ class destinations {
 					$sql .= "order by ".trim($row['order_by']);
 					$sql = str_replace("\${domain_uuid}", $_SESSION['domain_uuid'], $sql);
 					$sql = trim($sql);
-					$statement = $db->prepare($sql);
+					$statement = $this->db->prepare($sql);
 					$statement->execute();
 					$result = $statement->fetchAll(PDO::FETCH_NAMED);
 					unset($statement);
@@ -106,25 +134,6 @@ class destinations {
 			$this->destinations[$x]['result']['data'][$y]['name'] = '*732';
 			$this->destinations[$x]['result']['data'][$y]['destination'] = '*732 XML ${context}';
 			$y++;
-	}
-
-	/**
-	 * Called when there are no references to a particular object
-	 * unset the variables used in the class
-	 */
-	public function __destruct() {
-		foreach ($this as $key => $value) {
-			unset($this->$key);
-		}
-	}
-
-	/**
-	 * Get the destination menu
-	 * @var string $destination_type can be ivr, dialplan, call_center_contact or bridge
-	 * @var string $destination_name - current name
-	 * @var string $destination_value - current value
-	 */
-	public function select($destination_type, $destination_name, $destination_value) {
 
 		//remove special characters from the name
 			$destination_id = str_replace("]", "", $destination_name);
@@ -270,6 +279,37 @@ class destinations {
 		//return the formatted destinations
 			return $response;
 	}
+
+	/**
+	 * delete destinations
+	 */
+	public function delete($destinations) {
+		if (permission_exists('destination_delete')) {
+
+			//delete multiple destinations
+				if (is_array($destinations)) {
+					//get the action
+						foreach($destinations as $row) {
+							if ($row['action'] == 'delete') {
+								$action = 'delete';
+								break;
+							}
+						}
+					//delete the checked rows
+						if ($action == 'delete') {
+							foreach($destinations as $row) {
+								if ($row['checked'] == 'true') {
+									$sql = "delete from v_destinations ";
+									$sql .= "where destination_uuid = '".$row['destination_uuid']."'; ";
+									$this->db->query($sql);
+									unset($sql);
+								}
+							}
+							unset($destinations);
+						}
+				}
+		}
+	} //end the delete function
 }
 /*
 $obj = new destinations;
