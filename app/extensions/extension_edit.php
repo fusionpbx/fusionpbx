@@ -278,6 +278,7 @@
 								//extension does not exist add it
 									if ($action == "add" || $range > 1) {
 										$extension_uuid = uuid();
+										$voicemail_uuid = uuid();
 										$password = generate_password();
 									}
 
@@ -423,6 +424,7 @@
 						//increment the extension number
 							if ($action != "update") {
 								$extension++;
+								$voicemail_id = $extension;
 
 								if (strlen($number_alias) > 0) {
 									$number_alias++;
