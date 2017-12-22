@@ -1913,6 +1913,27 @@ $text['label-domain']['sv-se'] = "Domän";
 $text['label-domain']['uk-ua'] = "Домен";
 $text['label-domain']['tr-tr'] = "Alan Adı";
 
+$text['label-domain_uuid']['en-us'] = "Domain";
+$text['label-domain_uuid']['ar-eg'] = "النطاق";
+$text['label-domain_uuid']['de-at'] = "Domäne";
+$text['label-domain_uuid']['de-ch'] = "Domäne"; //copied from de-de
+$text['label-domain_uuid']['de-de'] = "Domäne";
+$text['label-domain_uuid']['es-cl'] = "Dominio";
+$text['label-domain_uuid']['es-mx'] = "Dominio"; //copied from es-cl
+$text['label-domain_uuid']['fr-ca'] = "Domaine"; //copied from fr-fr
+$text['label-domain_uuid']['fr-fr'] = "Domaine";
+$text['label-domain_uuid']['he-il'] = "דומיין";
+$text['label-domain_uuid']['it-it'] = "Dominio";
+$text['label-domain_uuid']['nl-nl'] = "";
+$text['label-domain_uuid']['pl-pl'] = "Domena";
+$text['label-domain_uuid']['pt-br'] = "Dominio";
+$text['label-domain_uuid']['pt-pt'] = "Domínio";
+$text['label-domain_uuid']['ro-ro'] = "Domeniu";
+$text['label-domain_uuid']['ru-ru'] = "Домен";
+$text['label-domain_uuid']['sv-se'] = "Domän";
+$text['label-domain_uuid']['uk-ua'] = "Домен";
+$text['label-domain_uuid']['tr-tr'] = "Alan Adı";
+
 $text['label-global']['en-us'] = "Global";
 $text['label-global']['ar-eg'] = "";
 $text['label-global']['de-at'] = "Global";
