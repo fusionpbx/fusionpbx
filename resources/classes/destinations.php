@@ -298,7 +298,7 @@ class destinations {
 					//delete the checked rows
 						if ($action == 'delete') {
 							foreach($destinations as $row) {
-								if ($row['checked'] == 'true') {
+								if ($row['action'] == 'delete' or $row['checked'] == 'true') {
 									$sql = "delete from v_destinations ";
 									$sql .= "where destination_uuid = '".$row['destination_uuid']."'; ";
 									$this->db->query($sql);
