@@ -84,16 +84,9 @@
 				return;
 			}
 
-		//set the domain_uuid
-				$_POST["domain_uuid"] = $_SESSION["domain_uuid"];
-
 		//cleanup the array
 			$x = 0;
 			foreach ($_POST["number_translation_details"] as $row) {
-				//add the domain_uuid
-					if (strlen($_POST["number_translation_details"][$x]["domain_uuid"]) == 0) {
-						$_POST["number_translation_details"][$x]["domain_uuid"] = $_SESSION['domain_uuid'];
-					}
 				//unset the empty row
 					if (strlen($_POST["number_translation_details"][$x]["number_translation_detail_regex"]) == 0) {
 						unset($_POST["number_translation_details"][$x]);
@@ -151,7 +144,6 @@
 		$number_translation_uuid = check_str($_GET["id"]);
 		$sql = "select * from v_number_translations ";
 		$sql .= "where number_translation_uuid = '$number_translation_uuid' ";
-		//$sql .= "and domain_uuid = '$domain_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -168,7 +160,6 @@
 	if (strlen($number_translation_uuid) > 0) {
 		$sql = "select * from v_number_translation_details ";
 		$sql .= "where number_translation_uuid = '".$number_translation_uuid."' ";
-		//$sql .= "and domain_uuid = '".$domain_uuid."' ";
 		$prep_statement = $db->prepare($sql);
 		$prep_statement->execute();
 		$number_translation_details = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -181,7 +172,6 @@
 
 //add an empty row
 	$x = count($number_translation_details);
-	$number_translation_details[$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 	$number_translation_details[$x]['number_translation_uuid'] = $number_translation_uuid;
 	$number_translation_details[$x]['number_translation_detail_uuid'] = uuid();
 	$number_translation_details[$x]['number_translation_detail_regex'] = '';
@@ -229,7 +219,6 @@
 	$x = 0;
 	foreach($number_translation_details as $row) {
 		echo "			<tr>\n";
-		echo "				<input type='hidden' name='number_translation_details[$x][domain_uuid]' value=\"".$row["domain_uuid"]."\">\n";
 		echo "				<input type='hidden' name='number_translation_details[$x][number_translation_uuid]' value=\"".$row["number_translation_uuid"]."\">\n";
 		echo "				<input type='hidden' name='number_translation_details[$x][number_translation_detail_uuid]' value=\"".$row["number_translation_detail_uuid"]."\">\n";
 		echo "				<td>\n";
@@ -291,8 +280,8 @@
 
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
-	echo "				<input type='hidden' name='number_translation_uuid' value='$number_translation_uuid'>\n";
-	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<input type='hidden' name='number_translation_uuid' value='$number_translation_uuid'>\n";
+	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
