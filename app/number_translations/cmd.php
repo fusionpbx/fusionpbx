@@ -24,13 +24,19 @@
 	Matthew Vale <github@mafoo.org>
 */
 
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (!if_group("superadmin")) {
-	echo "access denied";
-	exit;
-}
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('number_translation_add') || permission_exists('number_translation_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //set the variables
 	$cmd = check_str($_GET['cmd']);
@@ -39,7 +45,6 @@ if (!if_group("superadmin")) {
 //create the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 	if ($fp) {
-
 		//reloadxml
 			if ($cmd == "api reloadxml") {
 				messages::add(rtrim(event_socket_request($fp, $cmd)), 'alert');
