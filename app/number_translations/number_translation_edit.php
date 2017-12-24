@@ -19,7 +19,6 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Portions created by the Initial Developer are Copyright (C) 2017
 	the Initial Developer. All Rights Reserved.
-
 */
 
 //includes
