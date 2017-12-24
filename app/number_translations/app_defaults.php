@@ -29,7 +29,7 @@
 			$xml_list = glob($_SERVER["PROJECT_ROOT"] . "/*/*/resources/switch/conf/number_translation/*.xml");
 
 		//number_translation class
-			$number_translation = new number_translation;
+			$number_translation = new number_translations;
 
 		//process the xml files
 			foreach ($xml_list as &$xml_file) {
