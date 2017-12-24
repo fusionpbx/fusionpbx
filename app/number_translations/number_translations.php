@@ -65,7 +65,10 @@
 	$search = strtolower(check_str($_GET["search"]));
 	if (strlen($search) > 0) {
 		$sql_search = " (";
-		$sql_search .= ") ";
+		$sql_search .= "   number_translation_name like '%".$search."%' ";
+		$sql_search .= "   or number_translation_enabled like '%".$search."%' ";
+		$sql_search .= "   or number_translation_description like '%".$search."%' ";
+		$sql_search .= " ) ";
 	}
 
 //additional includes
