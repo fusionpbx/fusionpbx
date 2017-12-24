@@ -181,12 +181,11 @@
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='align: center; padding: 3px 3px 0px 8px;'>\n";
 			echo "		<input type='checkbox' name=\"number_translations[$x][checked]\" id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$x."').checked = false; }\">\n";
-			echo "		<input type='hidden' name=\"number_translations[$x][number_translation_uuid]\" value='".$row['number_translation_uuid']."' />\n";
+			echo "		<input type='hidden' name=\"number_translations[$x][number_translation_uuid]\" value='".escape($row['number_translation_uuid'])."' />\n";
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['number_translation_name']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['number_translation_details']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['number_translation_enabled']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".$row['number_translation_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['number_translation_name'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['number_translation_enabled'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($row['number_translation_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('number_translation_edit')) {
 				echo "<a href='number_translation_edit.php?id=".$row['number_translation_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
