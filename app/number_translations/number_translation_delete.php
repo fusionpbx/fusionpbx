@@ -42,14 +42,12 @@
 		//delete the child data
 			$sql = "delete from v_number_translation_details ";
 			$sql .= "where number_translation_uuid = '".$id."' ";
-			//$sql .= "and domain_uuid = '".$domain_uuid."' ";
 			$prep_statement = $db->prepare($sql);
 			$prep_statement->execute();
 
 		//delete number_translation
 			$sql = "delete from v_number_translations ";
 			$sql .= "where number_translation_uuid = '$id' ";
-			$sql .= "and domain_uuid = '$domain_uuid' ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			unset($sql);
@@ -63,7 +61,6 @@
 		//select from v_number_translation_details
 			$sql = "select * from v_number_translation_details ";
 			$sql .= "where number_translation_detail_uuid = '".$_REQUEST["number_translation_detail_uuid"]."' ";
-			//$sql .= "and domain_uuid = '".$domain_uuid."' ";
 			$prep_statement = $db->prepare($sql);
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -75,13 +72,11 @@
 		//delete the row
 			$sql = "delete from v_number_translation_details ";
 			$sql .= "where number_translation_detail_uuid = '".$_REQUEST["number_translation_detail_uuid"]."' ";
-			//$sql .= "and domain_uuid = '".$domain_uuid."' ";
 			$prep_statement = $db->prepare($sql);
 			$prep_statement->execute();
 
 		//redirect the user
 			header('Location: number_translation_edit.php?id='.$number_translation_uuid);
 	}
-
 
 ?>
