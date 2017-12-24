@@ -74,15 +74,8 @@
 
 //prepare to page the results
 	$sql = "select count(number_translation_uuid) as num_rows from v_number_translations ";
-	if ($_GET['show'] == "all" && permission_exists('number_translation_all')) {
-		if (isset($sql_search)) {
-			$sql .= "where ".$sql_search;
-		}
-	} else {
-		$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
-		if (isset($sql_search)) {
-			$sql .= "and ".$sql_search;
-		}
+	if (isset($sql_search)) {
+		$sql .= "where ".$sql_search;
 	}
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 	$prep_statement = $db->prepare($sql);
@@ -110,15 +103,8 @@
 
 //get the list
 	$sql = "select * from v_number_translations ";
-	if ($_GET['show'] == "all" && permission_exists('number_translation_all')) {
-		if (isset($sql_search)) {
-			$sql .= "where ".$sql_search;
-		}
-	} else {
-		$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
-		if (isset($sql_search)) {
-			$sql .= "and ".$sql_search;
-		}
+	if (isset($sql_search)) {
+		$sql .= "where ".$sql_search;
 	}
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 	$sql .= "limit $rows_per_page offset $offset ";
