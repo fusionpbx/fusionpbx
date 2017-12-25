@@ -177,7 +177,7 @@ $text['description-number_translation_detail_order']['pl-pl'] = '';
 $text['description-number_translation_detail_order']['pt-br'] = '';
 $text['description-number_translation_detail_order']['pt-pt'] = '';
 $text['description-number_translation_detail_order']['ro-ro'] = '';
-$text['description-number_translation_detail_order']['ru-ru'] = 'Задайте приоритет обработки регулярных выражений';
+$text['description-number_translation_detail_order']['ru-ru'] = 'Задайте порядок обработки регулярных выражений в поле приоритета';
 $text['description-number_translation_detail_order']['sv-se'] = '';
 $text['description-number_translation_detail_order']['uk-ua'] = '';
 
