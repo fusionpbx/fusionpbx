@@ -17,7 +17,7 @@ $text['title-number_translations']['pl-pl'] = '';
 $text['title-number_translations']['pt-br'] = '';
 $text['title-number_translations']['pt-pt'] = '';
 $text['title-number_translations']['ro-ro'] = '';
-$text['title-number_translations']['ru-ru'] = '';
+$text['title-number_translations']['ru-ru'] = 'Преобразование номеров';
 $text['title-number_translations']['sv-se'] = '';
 $text['title-number_translations']['uk-ua'] = '';
 
@@ -37,7 +37,7 @@ $text['title-number_translation']['pl-pl'] = '';
 $text['title-number_translation']['pt-br'] = '';
 $text['title-number_translation']['pt-pt'] = '';
 $text['title-number_translation']['ro-ro'] = '';
-$text['title-number_translation']['ru-ru'] = '';
+$text['title-number_translation']['ru-ru'] = 'Преобразование номера';
 $text['title-number_translation']['sv-se'] = '';
 $text['title-number_translation']['uk-ua'] = '';
 
@@ -57,7 +57,7 @@ $text['title_description-number_translation']['pl-pl'] = '';
 $text['title_description-number_translation']['pt-br'] = '';
 $text['title_description-number_translation']['pt-pt'] = '';
 $text['title_description-number_translation']['ro-ro'] = '';
-$text['title_description-number_translation']['ru-ru'] = '';
+$text['title_description-number_translation']['ru-ru'] = 'Используйте для преобразования номера из одного вида в другой используя регулярные выражения';
 $text['title_description-number_translation']['sv-se'] = '';
 $text['title_description-number_translation']['uk-ua'] = '';
 
@@ -97,7 +97,7 @@ $text['description-number_translation_detail_regex']['pl-pl'] = '';
 $text['description-number_translation_detail_regex']['pt-br'] = '';
 $text['description-number_translation_detail_regex']['pt-pt'] = '';
 $text['description-number_translation_detail_regex']['ro-ro'] = '';
-$text['description-number_translation_detail_regex']['ru-ru'] = '';
+$text['description-number_translation_detail_regex']['ru-ru'] = 'Задайте регулярное выражение для преобразования номера';
 $text['description-number_translation_detail_regex']['sv-se'] = '';
 $text['description-number_translation_detail_regex']['uk-ua'] = '';
 
@@ -197,7 +197,7 @@ $text['label-number_translation_name']['pl-pl'] = '';
 $text['label-number_translation_name']['pt-br'] = '';
 $text['label-number_translation_name']['pt-pt'] = '';
 $text['label-number_translation_name']['ro-ro'] = '';
-$text['label-number_translation_name']['ru-ru'] = '';
+$text['label-number_translation_name']['ru-ru'] = 'Имя';
 $text['label-number_translation_name']['sv-se'] = '';
 $text['label-number_translation_name']['uk-ua'] = '';
 
@@ -217,7 +217,7 @@ $text['description-number_translation_name']['pl-pl'] = '';
 $text['description-number_translation_name']['pt-br'] = '';
 $text['description-number_translation_name']['pt-pt'] = '';
 $text['description-number_translation_name']['ro-ro'] = '';
-$text['description-number_translation_name']['ru-ru'] = '';
+$text['description-number_translation_name']['ru-ru'] = 'Задайте имя для правила преобразования номера';
 $text['description-number_translation_name']['sv-se'] = '';
 $text['description-number_translation_name']['uk-ua'] = '';
 
@@ -277,7 +277,7 @@ $text['label-number_translation_enabled']['pl-pl'] = '';
 $text['label-number_translation_enabled']['pt-br'] = '';
 $text['label-number_translation_enabled']['pt-pt'] = '';
 $text['label-number_translation_enabled']['ro-ro'] = '';
-$text['label-number_translation_enabled']['ru-ru'] = '';
+$text['label-number_translation_enabled']['ru-ru'] = 'Включено';
 $text['label-number_translation_enabled']['sv-se'] = '';
 $text['label-number_translation_enabled']['uk-ua'] = '';
 
@@ -317,7 +317,7 @@ $text['label-number_translation_description']['pl-pl'] = '';
 $text['label-number_translation_description']['pt-br'] = '';
 $text['label-number_translation_description']['pt-pt'] = '';
 $text['label-number_translation_description']['ro-ro'] = '';
-$text['label-number_translation_description']['ru-ru'] = '';
+$text['label-number_translation_description']['ru-ru'] = 'Описание';
 $text['label-number_translation_description']['sv-se'] = '';
 $text['label-number_translation_description']['uk-ua'] = '';
 
