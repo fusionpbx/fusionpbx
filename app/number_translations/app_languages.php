@@ -157,7 +157,7 @@ $text['label-number_translation_detail_order']['pl-pl'] = '';
 $text['label-number_translation_detail_order']['pt-br'] = '';
 $text['label-number_translation_detail_order']['pt-pt'] = '';
 $text['label-number_translation_detail_order']['ro-ro'] = '';
-$text['label-number_translation_detail_order']['ru-ru'] = '';
+$text['label-number_translation_detail_order']['ru-ru'] = 'Приоритет';
 $text['label-number_translation_detail_order']['sv-se'] = '';
 $text['label-number_translation_detail_order']['uk-ua'] = '';
 
@@ -177,7 +177,7 @@ $text['description-number_translation_detail_order']['pl-pl'] = '';
 $text['description-number_translation_detail_order']['pt-br'] = '';
 $text['description-number_translation_detail_order']['pt-pt'] = '';
 $text['description-number_translation_detail_order']['ro-ro'] = '';
-$text['description-number_translation_detail_order']['ru-ru'] = '';
+$text['description-number_translation_detail_order']['ru-ru'] = 'Задайте приоритет обработки регулярных выражений';
 $text['description-number_translation_detail_order']['sv-se'] = '';
 $text['description-number_translation_detail_order']['uk-ua'] = '';
 
@@ -237,7 +237,7 @@ $text['label-number_translation_details']['pl-pl'] = '';
 $text['label-number_translation_details']['pt-br'] = '';
 $text['label-number_translation_details']['pt-pt'] = '';
 $text['label-number_translation_details']['ro-ro'] = '';
-$text['label-number_translation_details']['ru-ru'] = '';
+$text['label-number_translation_details']['ru-ru'] = 'Действия по преобразованию номера';
 $text['label-number_translation_details']['sv-se'] = '';
 $text['label-number_translation_details']['uk-ua'] = '';
 
@@ -297,7 +297,7 @@ $text['description-number_translation_enabled']['pl-pl'] = '';
 $text['description-number_translation_enabled']['pt-br'] = '';
 $text['description-number_translation_enabled']['pt-pt'] = '';
 $text['description-number_translation_enabled']['ro-ro'] = '';
-$text['description-number_translation_enabled']['ru-ru'] = '';
+$text['description-number_translation_enabled']['ru-ru'] = 'Включить/выключить обработку';
 $text['description-number_translation_enabled']['sv-se'] = '';
 $text['description-number_translation_enabled']['uk-ua'] = '';
 
@@ -337,7 +337,7 @@ $text['description-number_translation_description']['pl-pl'] = '';
 $text['description-number_translation_description']['pt-br'] = '';
 $text['description-number_translation_description']['pt-pt'] = '';
 $text['description-number_translation_description']['ro-ro'] = '';
-$text['description-number_translation_description']['ru-ru'] = '';
+$text['description-number_translation_description']['ru-ru'] = 'Введите описание для создаваемого правила';
 $text['description-number_translation_description']['sv-se'] = '';
 $text['description-number_translation_description']['uk-ua'] = '';
 
