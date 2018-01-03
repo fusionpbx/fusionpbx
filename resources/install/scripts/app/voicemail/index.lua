@@ -77,6 +77,7 @@
 			if (string.sub(caller_id_number, 1, 1) == "/") then
 				caller_id_number = string.sub(caller_id_number, 2, -1);
 			end
+			current_time_zone = session:getVariable("timezone");
 			voicemail_greeting_number = session:getVariable("voicemail_greeting_number");
 			skip_instructions = session:getVariable("skip_instructions");
 			skip_greeting = session:getVariable("skip_greeting");
