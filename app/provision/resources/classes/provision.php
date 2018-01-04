@@ -1188,6 +1188,7 @@ include "root.php";
 					$view->assign("user_id",$user_id);
 					$view->assign("password",$password);
 					$view->assign("template",$device_template);
+					$view->assign("microtime",microtime(true));		
 
 				// personal ldap password
 					global $laddr_salt;
