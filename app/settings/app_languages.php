@@ -321,7 +321,7 @@ $text['description-shout-volume']['ru-ru'] = "Введите Mod Shout Volume.";
 $text['description-shout-volume']['sv-se'] = "Fyll i Mod Shout Volume.";
 $text['description-shout-volume']['uk-ua'] = "Enter Mod Shout Volume. ";
 
-$text['description-shout-decoder']['en-us'] = "Ender the Decoder. default: i386";
+$text['description-shout-decoder']['en-us'] = "Enter the Decoder. default: i386";
 $text['description-shout-decoder']['ar-eg'] = "";
 $text['description-shout-decoder']['de-at'] = "Wählen Sie den Decoder. Standard: i386"; //copied from de-de
 $text['description-shout-decoder']['de-ch'] = "Wählen Sie den Decoder. Standard: i386"; //copied from de-de
@@ -339,7 +339,7 @@ $text['description-shout-decoder']['pt-pt'] = "Tipo de descodificador. omissão:
 $text['description-shout-decoder']['ro-ro'] = "";
 $text['description-shout-decoder']['ru-ru'] = "Введите Decoder. По умолчанию: i386";
 $text['description-shout-decoder']['sv-se'] = "Fyll i Decoder. default: i386";
-$text['description-shout-decoder']['uk-ua'] = "Ender the Decoder. default: i386 ";
+$text['description-shout-decoder']['uk-ua'] = "Enter the Decoder. default: i386 ";
 
 $text['description-event-socket-pw']['en-us'] = "Enter the event socket password.";
 $text['description-event-socket-pw']['ar-eg'] = "";
