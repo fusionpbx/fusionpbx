@@ -50,7 +50,30 @@ include "root.php";
 			public $result;
 			public $app_name;
 			public $app_uuid;
+			public $domain_uuid;
 
+			/**
+			 * Called when the object is created
+			 */
+			public function __construct() {
+				if (!isset($this->domain_uuid)) {
+					$this->domain_uuid = $_SESSION['domain_uuid'];
+				}
+			}
+		
+			/**
+			 * Called when there are no references to a particular object
+			 * unset the variables used in the class
+			 */
+			public function __destruct() {
+				foreach ($this as $key => $value) {
+					unset($this->$key);
+				}
+			}
+		
+			/**
+			 * Connect to the database
+			 */
 			public function connect() {
 
 				if (strlen($this->db_name) == 0) {
@@ -1010,7 +1033,6 @@ include "root.php";
 
 				//get the UUIDs
 					$user_uuid = $_SESSION['user_uuid'];
-					$domain_uuid = $_SESSION['domain_uuid'];
 
 				//log the transaction results
 					if (file_exists($_SERVER["PROJECT_ROOT"]."/app/database_transactions/app_config.php")) {
@@ -1036,7 +1058,7 @@ include "root.php";
 						$sql .= "values ";
 						$sql .= "(";
 						$sql .= "'".uuid()."', ";
-						$sql .= "'".$domain_uuid."', ";
+						$sql .= "'".$this->domain_uuid."', ";
 						if (strlen($user_uuid) > 0) {
 							$sql .= "'".$user_uuid."', ";
 						}
@@ -1687,7 +1709,7 @@ include "root.php";
 															$sql = str_replace(", WHERE", " WHERE", $sql);
 															$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-															//$prep_statement->bindParam(':domain_uuid', $_SESSION["domain_uuid"] );
+															//$prep_statement->bindParam(':domain_uuid', $this->domain_uuid );
 
 															try {
 																//$this->db->query(check_sql($sql));
@@ -1884,7 +1906,6 @@ include "root.php";
 
 				//get the UUIDs
 					$user_uuid = $_SESSION['user_uuid'];
-					$domain_uuid = $_SESSION['domain_uuid'];
 
 				//log the transaction results
 					if (file_exists($_SERVER["PROJECT_ROOT"]."/app/database_transactions/app_config.php")) {
@@ -1910,7 +1931,7 @@ include "root.php";
 						$sql .= "values ";
 						$sql .= "(";
 						$sql .= "'".uuid()."', ";
-						$sql .= "'".$domain_uuid."', ";
+						$sql .= "'".$this->domain_uuid."', ";
 						if (strlen($user_uuid) > 0) {
 							$sql .= "'".$user_uuid."', ";
 						}

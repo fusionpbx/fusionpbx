@@ -1,0 +1,20 @@
+# #################
+# Network Settings
+# #################
+
+# === IP network settings ===
+# dhcp: 1
+# ip: 192.168.1.100
+# subnet mask: 255.255.255.0
+# default gateway: 192.168.1.1
+{if isset($dns_server_primary)}dns1: {$dns_server_primary}{"\n"}{/if}
+{if isset($dns_server_secondary)}dns2: {$dns_server_secondary}{"\n"}{/if}
+
+# === NTP time server settings ===
+time server disabled: 0                      # 0 == enable time server    1 = disable time server
+time server1: {$ntp_server_primary}
+time server2: {$ntp_server_secondary}
+
+# === Advanced Network Settings ===
+upnp manager: 0                               # Enable/Disable Universal Plug and Play
+lldp: 0                                       # Enable/Disable Link-Layer Discovery Protocol

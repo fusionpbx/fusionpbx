@@ -30,7 +30,7 @@
 	require_once "resources/functions/device_by.php";
 
 //logging
-	openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+	openlog("FusionPBX", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 
 //set default variables
 	$dir_count = 0;
@@ -67,14 +67,34 @@
 		}
 	}
 
+//send http error
+	function http_error($error) {
+		if ($error === "404") {
+			header("HTTP/1.0 404 Not Found");
+			echo "<html>\n";
+			echo "<head><title>404 Not Found</title></head>\n";
+			echo "<body bgcolor=\"white\">\n";
+			echo "<center><h1>404 Not Found</h1></center>\n";
+			echo "<hr><center>nginx/1.12.1</center>\n";
+			echo "</body>\n";
+			echo "</html>\n";
+		}
+		exit();
+	}
+
 //check alternate MAC source
 	if (empty($mac)){
 		//set the http user agent
 			//$_SERVER['HTTP_USER_AGENT'] = "Yealink SIP-T38G  38.70.0.125 00:15:65:00:00:00";
+			//$_SERVER['HTTP_USER_AGENT'] = "Yealink SIP-T56A  58.80.0.25 001565f429a4"; 
 		//Yealink: 17 digit mac appended to the user agent, so check for a space exactly 17 digits before the end.
 			if (strtolower(substr($_SERVER['HTTP_USER_AGENT'],0,7)) == "yealink" || strtolower(substr($_SERVER['HTTP_USER_AGENT'],0,5)) == "vp530") {
-				$mac = substr($_SERVER['HTTP_USER_AGENT'],-17);
-				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+				if (strstr(substr($_SERVER['HTTP_USER_AGENT'],-4), ':')) { //remove colons if they exist
+					$mac = substr($_SERVER['HTTP_USER_AGENT'],-17);
+					$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+				} else { //take mac as is - fixes T5X series
+					$mac = substr($_SERVER['HTTP_USER_AGENT'],-12);
+				}
 			}
 		//Panasonic: $_SERVER['HTTP_USER_AGENT'] = "Panasonic_KX-UT670/01.022 (0080f000000)"
 			if (substr($_SERVER['HTTP_USER_AGENT'],0,9) == "Panasonic") {
@@ -248,8 +268,7 @@
 //check if provisioning has been enabled
 	if ($provision["enabled"] != "true") {
 		syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but provisioning is not enabled for ".check_str($_REQUEST['mac']));
-		echo "access denied";
-		exit;
+		http_error('404');
 	}
 
 //send a request to a remote server to validate the MAC address and secret
@@ -257,8 +276,7 @@
 		$result = send_http_request($_SERVER['auth_server'], 'mac='.check_str($_REQUEST['mac']).'&secret='.check_str($_REQUEST['secret']));
 		if ($result == "false") {
 			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but the remote auth server said no for ".check_str($_REQUEST['mac']));
-			echo "access denied";
-			exit;
+			http_error('404');
 		}
 	}
 
@@ -281,8 +299,7 @@
 		}
 		if (!$found) {
 			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but failed CIDR check for ".check_str($_REQUEST['mac']));
-			echo "access denied";
-			exit;
+			http_error('404');
 		}
 	}
 
@@ -387,22 +404,6 @@
 			return;
 		}
 	}
-
-//register that we have seen the device
-	$sql = "UPDATE v_devices "; 
-	$sql .= "SET device_provisioned_date=:date, device_provisioned_method=:method, device_provisioned_ip=:ip ";
-	$sql .= "WHERE domain_uuid=:domain_uuid AND device_mac_address=:mac ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	if ($prep_statement) {
-		//use the prepared statement
-			$prep_statement->bindValue(':domain_uuid', $domain_uuid);
-			$prep_statement->bindValue(':mac', strtolower($mac));
-			$prep_statement->bindValue(':date', date("Y-m-d H:i:s"));
-			$prep_statement->bindValue(':method', (isset($_SERVER["HTTPS"]) ? 'https' : 'http'));
-			$prep_statement->bindValue(':ip', $_SERVER['REMOTE_ADDR']);
-			$prep_statement->execute();
-			unset($prep_statement);
-	}
 	
 //output template to string for header processing
 	$prov = new provision;
@@ -443,8 +444,14 @@
 			header("Content-Type: text/plain; charset=iso-8859-1");
 			header("Content-Length: ".strlen($file_contents));
 		} else {
-			header("Content-Type: text/xml; charset=utf-8");
-			header("Content-Length: ".strlen($file_contents));
+                        $result = simplexml_load_string ($file_contents, 'SimpleXmlElement', LIBXML_NOERROR+LIBXML_ERR_FATAL+LIBXML_ERR_NONE);
+                        if (false == $result){
+                            header("Content-Type: text/plain");
+                            header("Content-Length: ".strval(strlen($file_contents)));
+                        } else {
+                            header("Content-Type: text/xml; charset=utf-8");
+                            header("Content-Length: ".strlen($file_contents));
+                        }
 		}
 	}
 	echo $file_contents;

@@ -286,10 +286,7 @@ include "root.php";
 			//add the database structure
 				require_once "resources/classes/schema.php";
 				$schema = new schema;
-				$schema->db = $this->dbh;
-				$schema->db_type = $this->global_settings->db_type();
-				$schema->sql();
-				$schema->exec();
+				echo $schema->schema();
 
 			//get the contents of the sql file
 				if (file_exists('/usr/share/examples/fusionpbx/sql/sqlite.sql')){
@@ -381,17 +378,14 @@ include "root.php";
 			//add the database structure
 				require_once "resources/classes/schema.php";
 				$schema = new schema;
-				$schema->db = $this->dbh;
-				$schema->db_type = $this->global_settings->db_type();
-				$schema->sql();
-				$schema->exec();
+				//echo $schema->schema();
 
 			//get the contents of the sql file
 				if (file_exists('/usr/share/examples/fusionpbx/sql/pgsql.sql')){
 					$filename = "/usr/share/examples/fusionpbx/sql/pgsql.sql";
 				}
 				else {
-				$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/pgsql.sql';
+					$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/pgsql.sql';
 				}
 				$file_contents = file_get_contents($filename);
 
@@ -551,10 +545,7 @@ include "root.php";
 			//add the database structure
 				require_once "resources/classes/schema.php";
 				$schema = new schema;
-				$schema->db = $this->dbh;
-				$schema->db_type = $this->global_settings->db_type();
-				$schema->sql();
-				$schema->exec();
+				//echo $schema->schema();
 
 			//add the defaults data into the database
 				//get the contents of the sql file
@@ -821,7 +812,7 @@ include "root.php";
 			//add the database structure
 				require_once "resources/classes/schema.php";
 				$schema = new schema;
-				echo $schema->schema();
+				//echo $schema->schema();
 
 			//run all app_defaults.php files
 				$default_language = $this->install_language;

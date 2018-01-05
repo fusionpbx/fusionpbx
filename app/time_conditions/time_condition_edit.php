@@ -548,11 +548,11 @@
 			$p->add("dialplan_detail_edit", 'temp');
 
 		//get main dialplan entry
-			$orm = new orm;
-			$orm->name('dialplans');
-			$orm->uuid($dialplan_uuid);
-			$result = $orm->find()->get();
-			//$message = $orm->message;
+			$sql = "select * from v_dialplans ";
+			$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			if (is_array($result)) {
 				foreach ($result as &$row) {
 					$domain_uuid = $row["domain_uuid"];
@@ -900,7 +900,7 @@ echo "		</td>\n";
 echo "		<td align='right' valign='top'>\n";
 echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='".PROJECT_PATH."/app/time_conditions/time_conditions.php?app_uuid=4b821450-926b-175a-af93-a03c441818b1'\" value='".$text['button-back']."'>\n";
 if (if_group("superadmin") && $action == 'update') {
-	echo "		<input type='button' class='btn' name='' alt='".$text['button-dialplan']."' onclick=\"document.location.href='".PROJECT_PATH."/app/dialplan/dialplan_edit.php?id=".$dialplan_uuid."&app_uuid=4b821450-926b-175a-af93-a03c441818b1'\" value='".$text['button-dialplan']."'>\n";
+	echo "		<input type='button' class='btn' name='' alt='".$text['button-dialplan']."' onclick=\"document.location.href='".PROJECT_PATH."/app/dialplans/dialplan_edit.php?id=".$dialplan_uuid."&app_uuid=4b821450-926b-175a-af93-a03c441818b1'\" value='".$text['button-dialplan']."'>\n";
 }
 echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 echo "		</td>\n";

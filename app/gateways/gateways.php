@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -91,6 +91,14 @@
 	echo "	<tr>\n";
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-gateways']."</b></td>\n";
 	echo "		<td align='right'>";
+	if (permission_exists('gateway_all')) {
+		if ($_GET['show'] == 'all') {
+			echo "	<input type='hidden' name='show' value='all'>";
+		}
+		else {
+			echo "	<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='gateways.php?show=all';\">\n";
+		}
+	}
 	echo "			<input type='button' class='btn' name='refresh' alt='".$text['button-refresh']."' onclick=\"window.location='gateways.php'\" value='".$text['button-refresh']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
@@ -129,18 +137,23 @@
 
 //get the list
 	$sql = "select * from v_gateways ";
-	$sql .= "where ( domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	if (permission_exists('gateway_domain')) {
-		$sql .= "or domain_uuid is null ";
+	if ($_GET['show'] == "all" && permission_exists('gateway_all')) {
+		//show all gateways
+	} else {
+		$sql .= "where (\n";
+		$sql .= " domain_uuid = '".$_SESSION['domain_uuid']."'\n";
+		if (permission_exists('gateway_domain')) {
+			$sql .= " or domain_uuid is null\n";
+		}
+		$sql .= ") ";
 	}
-	$sql .= ") ";
 	if (strlen($order_by) == 0) {
-		$sql .= "order by gateway asc ";
+		$sql .= "order by gateway asc\n";
 	}
 	else {
-		$sql .= "order by $order_by $order ";
+		$sql .= "order by $order_by $order\n";
 	}
-	$sql .= "limit $rows_per_page offset $offset ";
+	$sql .= "limit $rows_per_page offset $offset\n";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$gateways = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -152,6 +165,9 @@
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
+	if ($_GET['show'] == "all" && permission_exists('gateway_all')) {
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param);
+	}
 	echo th_order_by('gateway', $text['label-gateway'], $order_by, $order);
 	echo th_order_by('context', $text['label-context'], $order_by, $order);
 	if ($fp) {
@@ -175,6 +191,15 @@
 		foreach($gateways as $row) {
 			$tr_link = (permission_exists('gateway_edit')) ? "href='gateway_edit.php?id=".$row['gateway_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
+			if ($_GET['show'] == "all" && permission_exists('gateway_all')) {
+				if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
+					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
+				}
+				else {
+					$domain = $text['label-global'];
+				}
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$domain."</td>\n";
+			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('gateway_edit')) {
 				echo "<a href='gateway_edit.php?id=".$row['gateway_uuid']."'>".$row["gateway"]."</a>";

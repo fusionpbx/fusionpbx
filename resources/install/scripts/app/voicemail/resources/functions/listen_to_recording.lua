@@ -217,6 +217,10 @@
 				elseif (dtmf_digits == "7") then
 					delete_recording(voicemail_id, uuid);
 					message_waiting(voicemail_id, domain_uuid);
+					--fix for extensions that start with 0 (Ex: 0712)
+						if (voicemail_id_copy ~= voicemail_id  and voicemail_id_copy ~= nil) then
+							message_waiting(voicemail_id_copy, domain_uuid);
+						end
 				elseif (dtmf_digits == "8") then
 					forward_to_extension(voicemail_id, uuid);
 					dtmf_digits = '';

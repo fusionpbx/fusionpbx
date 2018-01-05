@@ -30,6 +30,9 @@
 --include the log
 	local log = require "resources.functions.log".ring_group
 
+-- include libs
+	local route_to_bridge = require "resources.functions.route_to_bridge"
+
 --connect to the database
 	local Database = require "resources.functions.database";
 	dbh = Database.new('system');
@@ -92,6 +95,39 @@
 
 	end
 
+--define iterator function to iterate over key/value pairs in string
+	local function split_vars_pairs(str)
+		local last_pos = 1
+		return function()
+			-- end of string
+			if not str then return end
+
+			-- handle case when there exists comma after kv pair
+			local action, next_pos = string.match(str, "([^=]+=%b''),()", last_pos)
+			if not action then
+				action, next_pos = string.match(str, "([^=]+=[^'][^,]-),()", last_pos)
+				if not action then
+					action, next_pos = string.match(str, "([^=]+=),()", last_pos)
+				end
+			end
+			if action then
+				last_pos = next_pos
+				return action
+			end
+
+			-- last kv pair may not have comma after it
+			if last_pos < #str then
+				action = string.match(str, "([^=]+=%b'')$", last_pos)
+				if not action then
+					action = string.match(str, "([^=]+=[^,]-)$", last_pos)
+				end
+				str = nil -- end of iteration
+			end
+
+			return action
+		end
+	end
+
 --set the hangup hook function
 	if (session:ready()) then
 		session:setHangupHook("session_hangup_hook");
@@ -118,11 +154,17 @@
 		uuid = session:getVariable("uuid");
 		context = session:getVariable("context");
 		call_direction = session:getVariable("call_direction");
+		accountcode = session:getVariable("accountcode");
 	end
 
 --default to local if nil
 	if (call_direction == nil) then
 		call_direction = "local";
+	end
+
+---set the call_timeout to a higher value to prevent the early timeout of the ring group
+	if (session:ready()) then
+		session:setVariable("call_timeout","300");
 	end
 
 --set ring ready
@@ -165,16 +207,16 @@
 	--	error();
 	--end
 
+--get current switchname
+	hostname = trim(api:execute("switchname", ""))
+
 --get the ring group
 	ring_group_forward_enabled = "";
 	ring_group_forward_destination = "";
-	sql = "SELECT r.*, u.user_uuid FROM v_ring_groups as r, v_ring_group_users as u ";
+	sql = "SELECT r.* FROM v_ring_groups as r ";
 	sql = sql .. "where r.ring_group_uuid = :ring_group_uuid ";
-	sql = sql .. "and r.ring_group_uuid = u.ring_group_uuid ";
 	local params = {ring_group_uuid = ring_group_uuid};
 	status = dbh:query(sql, params, function(row)
-		--domain_uuid = row["domain_uuid"];
-		user_uuid = row["user_uuid"];
 		ring_group_name = row["ring_group_name"];
 		ring_group_extension = row["ring_group_extension"];
 		ring_group_forward_enabled = row["ring_group_forward_enabled"];
@@ -186,12 +228,21 @@
 		missed_call_data = row["ring_group_missed_call_data"];
 	end);
 
+--get the ring group user
+	sql = "SELECT r.*, u.user_uuid FROM v_ring_groups as r, v_ring_group_users as u ";
+	sql = sql .. "where r.ring_group_uuid = :ring_group_uuid ";
+	sql = sql .. "and r.ring_group_uuid = u.ring_group_uuid ";
+	local params = {ring_group_uuid = ring_group_uuid};
+	status = dbh:query(sql, params, function(row)
+		user_uuid = row["user_uuid"];
+	end);
+
 --set the caller id
 	if (session:ready()) then
-		if (ring_group_cid_name_prefix ~= nil) then
+		if (ring_group_cid_name_prefix ~= nil and string.len(ring_group_cid_name_prefix) > 0) then
 			session:execute("export", "effective_caller_id_name="..ring_group_cid_name_prefix.."#"..caller_id_name);
 		end
-		if (ring_group_cid_number_prefix ~= nil) then
+		if (ring_group_cid_number_prefix ~= nil and string.len(ring_group_cid_number_prefix) > 0) then
 			session:execute("export", "effective_caller_id_number="..ring_group_cid_number_prefix..caller_id_number);
 		end
 	end
@@ -267,10 +318,33 @@
 		end
 	end
 
+--get the destination and follow the forward
+	function get_forward_all(count, destination_number, domain_name)
+		cmd = "user_exists id ".. destination_number .." "..domain_name;
+		freeswitch.consoleLog("notice", "[ring groups][call forward all] " .. cmd .. "\n");
+		user_exists = api:executeString(cmd);
+		if (user_exists == "true") then
+			---check to see if the new destination is forwarded - third forward
+				cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_all_enabled";
+				if (api:executeString(cmd) == "true") then
+					--get the new destination - third foward
+						cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_all_destination";
+						destination_number = api:executeString(cmd);
+						freeswitch.consoleLog("notice", "[ring groups][call forward all] " .. count .. " " .. cmd .. " ".. destination_number .."\n");
+
+						count = count + 1;
+						if (count < 5) then
+							count, destination_number = get_forward_all(count, destination_number, domain_name);
+						end
+				end
+		end
+		return count, destination_number;
+	end
+
 --process the ring group
 	if (ring_group_forward_enabled == "true" and string.len(ring_group_forward_destination) > 0) then
 		--forward the ring group
-			session:setVariable("toll_allow",ring_group_forward_toll_allow);	
+			session:setVariable("toll_allow",ring_group_forward_toll_allow);
 			session:execute("transfer", ring_group_forward_destination.." XML "..context);
 	else
 		--get the strategy of the ring group, if random, we use random() to order the destinations
@@ -320,6 +394,7 @@
 			end
 			destinations = {};
 			x = 1;
+			destination_count = 0;
 			assert(dbh:query(sql, params, function(row)
 				if (row.destination_prompt == "1" or row.destination_prompt == "2") then
 					prompt = "true";
@@ -332,16 +407,45 @@
 				else
 					leg_domain_name = array[2];
 				end
-				cmd = "user_exists id ".. row.destination_number .." "..leg_domain_name;
+
+				--follow the forwards
+				count, destination_number = get_forward_all(0, row.destination_number, leg_domain_name);
+
+				--check if the user exists
+				cmd = "user_exists id ".. destination_number .." "..domain_name;
 				user_exists = api:executeString(cmd);
+
+				--cmd = "user_exists id ".. destination_number .." "..leg_domain_name;
 				if (user_exists == "true") then
 					--add user_exists true or false to the row array
 						row['user_exists'] = "true";
 					--handle do_not_disturb
-						cmd = "user_data ".. row.destination_number .."@" ..leg_domain_name.." var do_not_disturb";
+						cmd = "user_data ".. destination_number .."@" ..leg_domain_name.." var do_not_disturb";
 						if (api:executeString(cmd) ~= "true") then
 							--add the row to the destinations array
 							destinations[x] = row;
+						end
+					--determine if the user is registered if not registered then lookup 
+						cmd = "sofia_contact */".. destination_number .."@" ..leg_domain_name;
+						if (api:executeString(cmd) == "error/user_not_registered") then
+							cmd = "user_data ".. destination_number .."@" ..leg_domain_name.." var forward_user_not_registered_enabled";
+							if (api:executeString(cmd) == "true") then
+								--get the new destination number
+								cmd = "user_data ".. destination_number .."@" ..leg_domain_name.." var forward_user_not_registered_destination";
+								not_registered_destination_number = api:executeString(cmd);
+								if (not_registered_destination_number ~= nil) then
+--									destination_number = not_registered_destination_number;	
+								end
+
+								--check the new destination number for user_exists
+								cmd = "user_exists id ".. destination_number .." "..leg_domain_name;
+								user_exists = api:executeString(cmd);
+								if (user_exists == "true") then
+									row['user_exists'] = "true";
+								else
+									row['user_exists'] = "false";
+								end
+							end
 						end
 				else
 					--set the values
@@ -351,39 +455,16 @@
 						destinations[x] = row;
 				end
 				row['domain_name'] = leg_domain_name;
+				destination_count = destination_count + 1;
 				x = x + 1;
 			end));
 			--freeswitch.consoleLog("NOTICE", "[ring_group] external "..external.."\n");
 
 		--get the dialplan data and save it to a table
 			if (external) then
-				sql = [[select * from v_dialplans as d, v_dialplan_details as s
-					where (d.domain_uuid = :domain_uuid or d.domain_uuid is null)
-					and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3'
-					and d.dialplan_enabled = 'true'
-					and d.dialplan_uuid = s.dialplan_uuid
-					order by
-					d.dialplan_order asc,
-					d.dialplan_name asc,
-					d.dialplan_uuid asc,
-					s.dialplan_detail_group asc,
-					CASE s.dialplan_detail_tag
-					WHEN 'condition' THEN 1
-					WHEN 'action' THEN 2
-					WHEN 'anti-action' THEN 3
-					ELSE 100 END,
-					s.dialplan_detail_order asc
-				]];
-				params = {domain_uuid = domain_uuid};
-				if debug["sql"] then
-					freeswitch.consoleLog("notice", "[ring group] SQL:" .. sql .. "; params:" .. json.encode(params) .. "\n");
-				end
-				dialplans = {};
-				x = 1;
-				assert(dbh:query(sql, params, function(row)
-					dialplans[x] = row;
-					x = x + 1;
-				end));
+				dialplans = route_to_bridge.preload_dialplan(
+					dbh, domain_uuid, {hostname = hostname, context = context}
+				)
 			end
 
 		--process the destinations
@@ -404,10 +485,22 @@
 					destination_prompt = row.destination_prompt;
 					domain_name = row.domain_name;
 
+				--follow the forwards
+					count, destination_number = get_forward_all(0, destination_number, leg_domain_name);
+
+				--check if the user exists
+					cmd = "user_exists id ".. destination_number .." "..domain_name;
+					user_exists = api:executeString(cmd);
+
 				--set ringback
 					ring_group_ringback = format_ringback(ring_group_ringback);
 					session:setVariable("ringback", ring_group_ringback);
 					session:setVariable("transfer_ringback", ring_group_ringback);
+
+				--set the timeout if there is only one destination
+					if (destination_count == 1) then
+						session:execute("set", "call_timeout="..row.destination_timeout);
+					end
 
 				--setup the delimiter
 					delimiter = ",";
@@ -503,73 +596,84 @@
 						extension_uuid = trim(api:executeString(cmd));
 						--send to user
 						local dial_string_to_user = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid .. row.record_session .. "]user/" .. row.destination_number .. "@" .. domain_name;
-							dial_string = dial_string_to_user;
-					elseif (tonumber(destination_number) == nil) then
-						--sip uri
-						dial_string = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
+						dial_string = dial_string_to_user;
 					else
-						--external number
-						y = 0;
-						dial_string = '';
-						previous_dialplan_uuid = '';
-						regex_match = false;
-						for k, r in pairs(dialplans) do
-							if (y > 0) then
-								if (previous_dialplan_uuid ~= r.dialplan_uuid) then
-									regex_match = false;
-									bridge_match = false;
-									square = square .. "]";
-									y = 0;
-								end
-							end
-							if (r.dialplan_detail_tag == "condition") then
-								if (r.dialplan_detail_type == "destination_number") then
-									if (api:execute("regex", "m:~"..destination_number.."~"..r.dialplan_detail_data) == "true") then
-										--get the regex result
-											destination_result = trim(api:execute("regex", "m:~"..destination_number.."~"..r.dialplan_detail_data.."~$1"));
-										--set match equal to true
-											regex_match = true
+						--external number or direct dial
+							dial_string = nil
+
+						--prepare default actions
+							local confirm = string.gsub(group_confirm, ',$', '') -- remove `,` from end of string
+							local route = { -- predefined actions
+								"domain_name=${domain_name}",
+								"domain_uuid=${domain_uuid}",
+								"sip_invite_domain=${domain_name}",
+								"call_direction=${call_direction}",
+								"leg_timeout=${destination_timeout}",
+								delay_name .. "=${destination_delay}",
+								"ignore_early_media=true",
+								confirm,
+							}
+
+						--prepare default variables
+							local session_mt = {__index = function(_, k) return session:getVariable(k) end}
+							local params = setmetatable({
+								__api__             = api,
+								destination_number  = destination_number,
+								user_exists         = 'false',
+								call_direction      = 'outbound',
+								domain_name         = domain_name,
+								domain_uuid         = domain_uuid,
+								destination_timeout = destination_timeout,
+								destination_delay   = destination_delay,
+							}, session_mt)
+
+						--find destination route
+							if (tonumber(destination_number) == nil) then
+								--user define direct destination like `[key=value]sofia/gateway/carrier/123456`
+									local variables, destination = string.match(destination_number, "^%[(.-)%](.+)$")
+									if not variables then
+										destination = destination_number
+									else
+										for action in split_vars_pairs(variables) do
+											route[#route + 1] = action
+										end
 									end
-								end
+									route = route_to_bridge.apply_vars(route, params)
+									route.bridge = destination
+							else
+								--user define external number as destination
+									route = route_to_bridge.apply_vars(route, params)
+									route = route_to_bridge(dialplans, domain_uuid, params, route)
 							end
-							if (r.dialplan_detail_tag == "action") then
-								if (regex_match) then
-									--replace $1
-										dialplan_detail_data = r.dialplan_detail_data:gsub("$1", destination_result);
-									--if the session is set then process the actions
-										if (y == 0) then
-											square = "[domain_name="..domain_name..",domain_uuid="..domain_uuid..",sip_invite_domain="..domain_name..",call_direction=outbound,"..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay..",ignore_early_media=true,";
-										end
-										if (r.dialplan_detail_type == "set") then
-											--session:execute("eval", dialplan_detail_data);
-											if (dialplan_detail_data == "sip_h_X-accountcode=${accountcode}") then
-												if (session) then
-													accountcode = session:getVariable("accountcode");
-													if (accountcode) then
-														square = square .. "sip_h_X-accountcode="..accountcode..",";
-													end
-												end
-											elseif (dialplan_detail_data == "effective_caller_id_name=${outbound_caller_id_name}") then
-											elseif (dialplan_detail_data == "effective_caller_id_number=${outbound_caller_id_number}") then
-											else
-												square = square .. dialplan_detail_data..",";
-											end
-										elseif (r.dialplan_detail_type == "bridge") then
-											if (bridge_match) then
-												dial_string = dial_string .. delimiter .. square .."]"..dialplan_detail_data;
-												square = "[";
-											else
-												dial_string = square .."]"..dialplan_detail_data;
-											end
-											bridge_match = true;
-											break;
-										end
-									--increment the value
-										y = y + 1;
+
+						--build dialstring
+							if route and route.bridge then
+								local remove_actions = {
+									["effective_caller_id_name="]   = true;
+									["effective_caller_id_number="] = true;
+									['sip_h_X-accountcode=']        = true;
+								}
+
+								-- cleanup variables
+								local i = 1 while i < #route do
+									-- remove vars from prev variant
+									if remove_actions[ route[i] ] then
+										table.remove(route, i)
+										i = i - 1
+									-- remove vars with unresolved vars
+									elseif string.find(route[i], '%${.+}') then
+										table.remove(route, i)
+										i = i - 1
+									-- remove vars with empty values
+									elseif string.find(route[i], '=$') then
+										table.remove(route, i)
+										i = i - 1
+									end
+									i = i + 1
 								end
+
+								dial_string = '[' .. table.concat(route, ',') .. ']' .. route.bridge
 							end
-							previous_dialplan_uuid = r.dialplan_uuid;
-						end
 					end
 
 				--add a delimiter between destinations
@@ -694,12 +798,16 @@
 								or session:getVariable("originate_disposition") == "failure"
 							) then
 								--execute the time out action
-									session:execute(ring_group_timeout_app, ring_group_timeout_data);
+									if ring_group_timeout_app and #ring_group_timeout_app > 0 then
+										session:execute(ring_group_timeout_app, ring_group_timeout_data);
+									end
 							end
 						else
 							if (ring_group_timeout_app ~= nil) then
 								--execute the time out action
-									session:execute(ring_group_timeout_app, ring_group_timeout_data);
+									if ring_group_timeout_app and #ring_group_timeout_app > 0 then
+										session:execute(ring_group_timeout_app, ring_group_timeout_data);
+									end
 							else
 								local sql = "SELECT ring_group_timeout_app, ring_group_timeout_data FROM v_ring_groups ";
 								sql = sql .. "where ring_group_uuid = :ring_group_uuid";
@@ -709,7 +817,9 @@
 								end
 								dbh:query(sql, params, function(row)
 									--execute the time out action
-										session:execute(row.ring_group_timeout_app, row.ring_group_timeout_data);
+										if row.ring_group_timeout_app and #row.ring_group_timeout_app > 0 then
+											session:execute(row.ring_group_timeout_app, row.ring_group_timeout_data);
+										end
 								end);
 							end
 						end

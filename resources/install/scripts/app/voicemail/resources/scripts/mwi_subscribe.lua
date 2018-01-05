@@ -1,14 +1,13 @@
 require "resources.functions.config"
 require "resources.functions.split"
 
-local log           = require "resources.functions.log".mwi_subscribe
-local EventConsumer = require "resources.functions.event_consumer"
-local Database      = require "resources.functions.database"
-local cache         = require "resources.functions.cache"
-local mwi_notify    = require "app.voicemail.resources.functions.mwi_notify"
-
 local service_name = "mwi"
-local pid_file = scripts_dir .. "/run/" .. service_name .. ".tmp"
+
+local log               = require "resources.functions.log"[service_name]
+local BasicEventService = require "resources.functions.basic_event_service"
+local Database          = require "resources.functions.database"
+local cache             = require "resources.functions.cache"
+local mwi_notify        = require "app.voicemail.resources.functions.mwi_notify"
 
 local vm_message_count do
 
@@ -82,29 +81,10 @@ end
 
 end
 
-local events = EventConsumer.new(pid_file)
-
--- FS shutdown
-events:bind("SHUTDOWN", function(self, name, event)
-	log.notice("shutdown")
-	return self:stop()
-end)
-
--- Control commands from FusionPBX
-events:bind("CUSTOM::fusion::service::control", function(self, name, event)
-	if service_name ~= event:getHeader('service-name') then return end
-
-	local command = event:getHeader('service-command')
-	if command == "stop" then
-		log.notice("get stop command")
-		return self:stop()
-	end
-
-	log.warningf('Unknown service command: %s', command or '<NONE>')
-end)
+local service = BasicEventService.new(log, service_name)
 
 -- MWI SUBSCRIBE
-events:bind("MESSAGE_QUERY", function(self, name, event)
+service:bind("MESSAGE_QUERY", function(self, name, event)
 	local account_header = event:getHeader('Message-Account')
 	if not account_header then
 		return log.warningf("MWI message without `Message-Account` header")
@@ -127,6 +107,6 @@ end)
 
 log.notice("start")
 
-events:run()
+service:run()
 
 log.notice("stop")

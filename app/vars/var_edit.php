@@ -23,16 +23,20 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('var_add') || permission_exists('var_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('var_add') || permission_exists('var_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -62,108 +66,113 @@ else {
 		$var_description = str_replace("''", "'", $var_description);
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+//process the post
+	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
-	$msg = '';
-	if ($action == "update") {
-		$var_uuid = check_str($_POST["var_uuid"]);
-	}
+		//get the uuid
+			if ($action == "update") {
+				$var_uuid = check_str($_POST["var_uuid"]);
+			}
 
-	//check for all required data
-		if (strlen($var_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
-		//if (strlen($var_value) == 0) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
-		//if (strlen($var_cat) == 0) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
-		if (strlen($var_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
-		if (strlen($var_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-			require_once "resources/header.php";
-			require_once "resources/persist_form_var.php";
-			echo "<div align='center'>\n";
-			echo "<table><tr><td>\n";
-			echo $msg."<br />";
-			echo "</td></tr></table>\n";
-			persistformvar($_POST);
-			echo "</div>\n";
-			require_once "resources/footer.php";
-			return;
-		}
-
-	//add or update the database
-		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add" && permission_exists('var_add')) {
-				$var_uuid = uuid();
-				$sql = "insert into v_vars ";
-				$sql .= "(";
-				$sql .= "var_uuid, ";
-				$sql .= "var_name, ";
-				$sql .= "var_hostname, ";
-				$sql .= "var_value, ";
-				$sql .= "var_cat, ";
-				$sql .= "var_enabled, ";
-				$sql .= "var_order, ";
-				$sql .= "var_description ";
-				$sql .= ")";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'$var_uuid', ";
-				$sql .= "'$var_name', ";
-				if (strlen($var_hostname) > 0) {
-					$sql .= "'$var_hostname', ";
-				}
-				else {
-					$sql .= "null, ";
-				}
-				$sql .= "'$var_value', ";
-				$sql .= "'$var_cat', ";
-				$sql .= "'$var_enabled', ";
-				$sql .= "'$var_order', ";
-				$sql .= "'".base64_encode($var_description)."' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
-
-				//unset the user defined variables
-					$_SESSION["user_defined_variables"] = "";
-
-				//synchronize the configuration
-					save_var_xml();
-
-				messages::add($text['message-add']);
-				header("Location: vars.php");
+		//check for all required data
+			$msg = '';
+			if (strlen($var_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
+			//if (strlen($var_value) == 0) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
+			//if (strlen($var_cat) == 0) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
+			if (strlen($var_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+			if (strlen($var_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
+			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+				require_once "resources/header.php";
+				require_once "resources/persist_form_var.php";
+				echo "<div align='center'>\n";
+				echo "<table><tr><td>\n";
+				echo $msg."<br />";
+				echo "</td></tr></table>\n";
+				persistformvar($_POST);
+				echo "</div>\n";
+				require_once "resources/footer.php";
 				return;
-			} //if ($action == "add")
+			}
 
-			if ($action == "update" && permission_exists('var_edit')) {
-				//update the variables
-					$sql = "update v_vars set ";
-					$sql .= "var_name = '$var_name', ";
-					if (strlen($var_hostname) > 0) {
-						$sql .= "var_hostname = '$var_hostname', ";
-					}
-					else {
-						$sql .= "var_hostname = null, ";
-					}
-					$sql .= "var_value = '$var_value', ";
-					$sql .= "var_cat = '$var_cat', ";
-					$sql .= "var_enabled = '$var_enabled', ";
-					$sql .= "var_order = '$var_order', ";
-					$sql .= "var_description = '".base64_encode($var_description)."' ";
-					$sql .= "where var_uuid = '$var_uuid' ";
-					$db->exec(check_sql($sql));
-					unset($sql);
+		//add or update the database
+			if ($_POST["persistformvar"] != "true") {
+				if ($action == "add" && permission_exists('var_add')) {
+					//insert the variable
+						$var_uuid = uuid();
+						$sql = "insert into v_vars ";
+						$sql .= "(";
+						$sql .= "var_uuid, ";
+						$sql .= "var_name, ";
+						$sql .= "var_hostname, ";
+						$sql .= "var_value, ";
+						$sql .= "var_cat, ";
+						$sql .= "var_enabled, ";
+						$sql .= "var_order, ";
+						$sql .= "var_description ";
+						$sql .= ")";
+						$sql .= "values ";
+						$sql .= "(";
+						$sql .= "'$var_uuid', ";
+						$sql .= "'$var_name', ";
+						if (strlen($var_hostname) > 0) {
+							$sql .= "'$var_hostname', ";
+						}
+						else {
+							$sql .= "null, ";
+						}
+						$sql .= "'$var_value', ";
+						$sql .= "'$var_cat', ";
+						$sql .= "'$var_enabled', ";
+						$sql .= "'$var_order', ";
+						$sql .= "'".base64_encode($var_description)."' ";
+						$sql .= ")";
+						$db->exec(check_sql($sql));
+						unset($sql);
 
-				//unset the user defined variables
-					$_SESSION["user_defined_variables"] = "";
+					//unset the user defined variables
+						$_SESSION["user_defined_variables"] = "";
 
-				//synchronize the configuration
-					save_var_xml();
+					//synchronize the configuration
+						save_var_xml();
 
-				messages::add($text['message-update']);
-				header("Location: vars.php");
-				return;
-			} //if ($action == "update")
-	} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+					//set the message and redirect the user
+						messages::add($text['message-add']);
+						header("Location: vars.php");
+						return;
+				} //if ($action == "add")
+
+				if ($action == "update" && permission_exists('var_edit')) {
+					//update the variables
+						$sql = "update v_vars set ";
+						$sql .= "var_name = '$var_name', ";
+						if (strlen($var_hostname) > 0) {
+							$sql .= "var_hostname = '$var_hostname', ";
+						}
+						else {
+							$sql .= "var_hostname = null, ";
+						}
+						$sql .= "var_value = '$var_value', ";
+						$sql .= "var_cat = '$var_cat', ";
+						$sql .= "var_enabled = '$var_enabled', ";
+						$sql .= "var_order = '$var_order', ";
+						$sql .= "var_description = '".base64_encode($var_description)."' ";
+						$sql .= "where var_uuid = '$var_uuid' ";
+						$db->exec(check_sql($sql));
+						unset($sql);
+
+					//unset the user defined variables
+						$_SESSION["user_defined_variables"] = "";
+
+					//synchronize the configuration
+						save_var_xml();
+
+					//set the message and redirect the user
+						messages::add($text['message-update']);
+						header("Location: vars.php");
+						return;
+				} //if ($action == "update")
+		} //if ($_POST["persistformvar"] != "true")
+	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
@@ -340,7 +349,20 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		echo "	<table>\n";
 		echo "	<tr>\n";
-		echo "	<tr><td width='200'>iLBC@30i</td><td>iLBC using mode=30 which will win in all cases.</td></tr>\n";
+		echo "	<tr><td width='200'>opus@48000h@10i</td><td>Opus 48khz using 10 ms ptime (mono and stereo)</td></tr>\n";
+		echo "	<tr><td>opus@48000h@20i</td><td>Opus 48khz using 20 ms ptime (mono and stereo)</td></tr>\n";
+		echo "	<tr><td>opus@48000h@40i</td><td>Opus 48khz using 40 ms ptime</td></tr>\n";
+		echo "	<tr><td>opus@16000h@10i</td><td>Opus 16khz using 10 ms ptime (mono and stereo)</td></tr>\n";
+		echo "	<tr><td>opus@16000h@20i</td><td>Opus 16khz using 20 ms ptime (mono and stereo)</td></tr>\n";
+		echo "	<tr><td>opus@16000h@40i</td><td>Opus 16khz using 40 ms ptime</td></tr>\n";
+		echo "	<tr><td>opus@8000h@10i</td><td>Opus 8khz using 10 ms ptime (mono and stereo)</td></tr>\n";
+		echo "	<tr><td>opus@8000h@20i</td><td>Opus 8khz using 20 ms ptime (mono and stereo)</td></tr>\n";
+		echo "	<tr><td>opus@8000h@40i</td><td>Opus 8khz using 40 ms ptime</td></tr>\n";
+		echo "	<tr><td>opus@8000h@60i</td><td>Opus 8khz using 60 ms ptime</td></tr>\n";
+		echo "	<tr><td>opus@8000h@80i</td><td>Opus 8khz using 80 ms ptime</td></tr>\n";
+		echo "	<tr><td>opus@8000h@100i</td><td>Opus 8khz using 100 ms ptime</td></tr>\n";
+		echo "	<tr><td>opus@8000h@120i</td><td>Opus 8khz using 120 ms ptime</td></tr>\n";
+		echo "	<tr><td>iLBC@30i</td><td>iLBC using mode=30 which will win in all cases.</td></tr>\n";
 		echo "	<tr><td>DVI4@8000h@20i</td><td>IMA ADPCM 8kHz using 20ms ptime. (multiples of 10)</td></tr>\n";
 		echo "	<tr><td>DVI4@16000h@40i</td><td>IMA ADPCM 16kHz using 40ms ptime. (multiples of 10)</td></tr>\n";
 		echo "	<tr><td>speex@8000h@20i</td><td>Speex 8kHz using 20ms ptime.</td></tr>\n";
@@ -391,4 +413,5 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //include header
 	require_once "resources/footer.php";
+
 ?>

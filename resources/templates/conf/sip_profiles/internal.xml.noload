@@ -75,6 +75,7 @@
 		<param name="log-auth-failures" value="true"/>
 		<param name="forward-unsolicited-mwi-notify" value="false"/>
 
+		<param name="track-calls" value="false"/>
 		<param name="context" value="public"/>
 		<param name="rfc2833-pt" value="101"/>
 		<!-- port to bind to for sip traffic -->

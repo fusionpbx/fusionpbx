@@ -344,6 +344,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "device_enabled_date";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "timestamp";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "device_template";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "phone_template";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
@@ -1517,6 +1521,24 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
 		$vendors[$y]['functions'][$z]['uuid'] = "73805147-a9e5-4e26-9573-cdbeadf1703f";
+		$vendors[$y]['functions'][$z]['label'] = "label-disabled";
+		$vendors[$y]['functions'][$z]['name'] = "disabled";
+		$vendors[$y]['functions'][$z]['value'] = "disabled";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+
+		$y++;
+		$vendors[$y]['uuid'] = "8116f44f-ccd6-46d5-8e65-46cc2c8cca32";
+		$vendors[$y]['name'] = "linksys";
+		$z=0;
+		$vendors[$y]['functions'][$z]['uuid'] = "d0a48ae2-0b8a-4f0c-9006-e062e2e3a39c";
+		$vendors[$y]['functions'][$z]['label'] = "label-line";
+		$vendors[$y]['functions'][$z]['name'] = "line";
+		$vendors[$y]['functions'][$z]['value'] = "line";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "a971c5ab-e473-417a-b2f4-8a0473159722";
 		$vendors[$y]['functions'][$z]['label'] = "label-disabled";
 		$vendors[$y]['functions'][$z]['name'] = "disabled";
 		$vendors[$y]['functions'][$z]['value'] = "disabled";

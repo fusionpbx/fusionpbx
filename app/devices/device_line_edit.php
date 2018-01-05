@@ -230,6 +230,26 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "				<option value='10'>10</option>\n";
 	echo "				<option value='11'>11</option>\n";
 	echo "				<option value='12'>12</option>\n";
+	echo "				<option value='13'>13</option>\n";
+	echo "				<option value='14'>14</option>\n";
+	echo "				<option value='15'>15</option>\n";
+	echo "				<option value='16'>16</option>\n";
+	echo "				<option value='17'>17</option>\n";
+	echo "				<option value='18'>18</option>\n";
+	echo "				<option value='19'>19</option>\n";
+	echo "				<option value='20'>20</option>\n";
+	echo "				<option value='21'>21</option>\n";
+	echo "				<option value='22'>22</option>\n";
+	echo "				<option value='23'>23</option>\n";
+	echo "				<option value='24'>24</option>\n";
+	echo "				<option value='25'>25</option>\n";
+	echo "				<option value='26'>26</option>\n";
+	echo "				<option value='27'>27</option>\n";
+	echo "				<option value='28'>28</option>\n";
+	echo "				<option value='29'>29</option>\n";
+	echo "				<option value='30'>30</option>\n";
+	echo "				<option value='31'>31</option>\n";
+	echo "				<option value='32'>32</option>\n";
 	echo "				</select>\n";
 	echo "<br />\n";
 	echo $text['description-line_number']."\n";
@@ -351,4 +371,5 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

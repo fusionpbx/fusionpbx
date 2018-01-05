@@ -10,7 +10,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Profiles SIP";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
-	$apps[$x]['menu'][$y]['title']['it-it'] = "";
+	$apps[$x]['menu'][$y]['title']['it-it'] = "Profili SIP";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Profile SIP";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Perfis SIP";

@@ -10,7 +10,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Mise à jour";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
-	$apps[$x]['menu'][$y]['title']['it-it'] = "";
+	$apps[$x]['menu'][$y]['title']['it-it'] = "Aggiorna";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Aktualizacja";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Atualizar banco de dados";
