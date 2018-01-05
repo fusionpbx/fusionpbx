@@ -438,4 +438,12 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = " DSS Key Label Length Default-0 Extended-1 Mid Range-2";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3dee932a-6987-4693-b289-825d192e8f85";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_feature_key_sync";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Enable or disable the feature key synchronization; 0-Disabled (default) 1-Enabled";
 ?>
