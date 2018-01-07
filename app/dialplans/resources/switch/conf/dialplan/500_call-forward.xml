@@ -9,7 +9,6 @@
 			<action application="lua" data="call_forward.lua"/>
 		</condition>
 		<condition field="destination_number" expression="^\*74$" break="on-true">
-			<action application="set" data="request_id=true"/>
 			<action application="set" data="enabled=toggle"/>
 			<action application="lua" data="call_forward.lua"/>
 		</condition>
