@@ -410,7 +410,8 @@
 
 				--follow the forwards
 				count, destination_number = get_forward_all(0, row.destination_number, leg_domain_name);
-
+				row['destination_number'] = destination_number
+				
 				--check if the user exists
 				cmd = "user_exists id ".. destination_number .." "..domain_name;
 				user_exists = api:executeString(cmd);
