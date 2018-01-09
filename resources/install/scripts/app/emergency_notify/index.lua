@@ -22,7 +22,7 @@
 --	Contributor(s):
 --	KonradSC <konrd@yahoo.com>
 --
---	Intructions:
+--	Instructions:
 --	Simply add an action to your emergency outbound route. Make sure
 --	the order is higher than your bridge statement
 --
