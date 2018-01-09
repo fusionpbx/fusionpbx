@@ -24,7 +24,7 @@
 --
 --	Instructions:
 --	Simply add an action to your emergency outbound route. Make sure
---	the order is higher than your bridge statement
+--	the order is a lower number than your bridge statement.
 --
 --	Tag: action
 --	Type: lua
