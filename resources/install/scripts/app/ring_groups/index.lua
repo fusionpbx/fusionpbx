@@ -327,18 +327,22 @@
 			---check to see if the new destination is forwarded - third forward
 				cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_all_enabled";
 				if (api:executeString(cmd) == "true") then
+					--get the toll_allow var	
+						cmd = "user_data ".. destination_number .."@" ..leg_domain_name.." var toll_allow";
+						toll_allow = api:executeString(cmd);
+						freeswitch.consoleLog("notice", "[ring groups][call forward all] " .. destination_number .. " toll_allow is ".. toll_allow .."\n");
+						
 					--get the new destination - third foward
 						cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_all_destination";
 						destination_number = api:executeString(cmd);
 						freeswitch.consoleLog("notice", "[ring groups][call forward all] " .. count .. " " .. cmd .. " ".. destination_number .."\n");
-
 						count = count + 1;
 						if (count < 5) then
 							count, destination_number = get_forward_all(count, destination_number, domain_name);
 						end
 				end
 		end
-		return count, destination_number;
+		return count, destination_number, toll_allow;
 	end
 
 --process the ring group
@@ -409,8 +413,11 @@
 				end
 
 				--follow the forwards
-				count, destination_number = get_forward_all(0, row.destination_number, leg_domain_name);
+				count, destination_number, toll_allow = get_forward_all(0, row.destination_number, leg_domain_name);
+
+				--update values
 				row['destination_number'] = destination_number
+				row['toll_allow'] = toll_allow;
 				
 				--check if the user exists
 				cmd = "user_exists id ".. destination_number .." "..domain_name;
@@ -485,6 +492,7 @@
 					destination_timeout = row.destination_timeout;
 					destination_prompt = row.destination_prompt;
 					domain_name = row.domain_name;
+					toll_allow = row.toll_allow;
 
 				--follow the forwards
 					count, destination_number = get_forward_all(0, destination_number, leg_domain_name);
@@ -626,6 +634,7 @@
 								domain_uuid         = domain_uuid,
 								destination_timeout = destination_timeout,
 								destination_delay   = destination_delay,
+								toll_allow			= toll_allow,
 							}, session_mt)
 
 						--find destination route
