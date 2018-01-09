@@ -291,45 +291,49 @@ class destinations {
 		if (permission_exists('destination_delete')) {
 
 			//delete multiple destinations
-				if (is_array($destinations)) {
-					//get the action
-						foreach($destinations as $row) {
-							if ($row['action'] == 'delete') {
-								$action = 'delete';
-								break;
-							}
-						}
-					//delete the checked rows
-						if ($action == 'delete') {
-							foreach($destinations as $row) {
-								if ($row['action'] == 'delete' or $row['checked'] == 'true') {
-									//get the list of dialplan uuid
-										$sql = "select * from v_destinations ";
-										$sql .= "where destination_uuid = '".$row['destination_uuid']."';";
-										$prep_statement = $this->db->prepare($sql);
-										$prep_statement->execute();
-										$destinations = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-										$row = $destinations[0];
-									//delete th dialplan
-										$sql = "delete from v_dialplan_details ";
-										$sql .= "where dialplan_uuid = '".$row['dialplan_uuid']."';";
-										$this->db->query($sql);
-										unset($sql);
-									//delete th dialplan
-										$sql = "delete from v_dialplans ";
-										$sql .= "where dialplan_uuid = '".$row['dialplan_uuid']."';";
-										$this->db->query($sql);
-										unset($sql);
-									//delete the destinations
-										$sql = "delete from v_destinations ";
-										$sql .= "where destination_uuid = '".$row['destination_uuid']."';";
-										$this->db->query($sql);
-										unset($sql);
-								}
-							}
-							unset($destinations);
-						}
+			if (is_array($destinations)) {
+				//get the action
+				foreach($destinations as $row) {
+					if ($row['action'] == 'delete') {
+						$action = 'delete';
+						break;
+					}
 				}
+
+				//delete the checked rows
+				if ($action == 'delete') {
+					foreach($destinations as $row) {
+						if ($row['action'] == 'delete' or $row['checked'] == 'true') {
+							//get the list of dialplan uuid
+							$sql = "select * from v_destinations ";
+							$sql .= "where destination_uuid = '".$row['destination_uuid']."';";
+							$prep_statement = $this->db->prepare($sql);
+							$prep_statement->execute();
+							$destinations = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+							$row = $destinations[0];
+
+							//delete th dialplan
+							$sql = "delete from v_dialplan_details ";
+							$sql .= "where dialplan_uuid = '".$row['dialplan_uuid']."';";
+							$this->db->query($sql);
+							unset($sql);
+
+							//delete th dialplan
+							$sql = "delete from v_dialplans ";
+							$sql .= "where dialplan_uuid = '".$row['dialplan_uuid']."';";
+							$this->db->query($sql);
+							unset($sql);
+
+							//delete the destinations
+							$sql = "delete from v_destinations ";
+							$sql .= "where destination_uuid = '".$row['destination_uuid']."';";
+							$this->db->query($sql);
+							unset($sql);
+						}
+					}
+					unset($destinations);
+				}
+			}
 		}
 	} //end the delete function
 }
