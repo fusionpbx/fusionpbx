@@ -350,6 +350,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call Waiting Yes=enabled No=disable";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "05176dde-763e-4983-b8d2-93f6bf984805";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_feature_key_sync";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "No";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Feature Key Sync Yes=enabled No=disable";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8fc369c3-bd6e-4fbb-957c-681de8a325fc";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_call_waiting";
