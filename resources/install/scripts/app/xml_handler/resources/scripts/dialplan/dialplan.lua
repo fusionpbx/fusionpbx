@@ -1,6 +1,6 @@
 --	xml_handler.lua
 --	Part of FusionPBX
---	Copyright (C) 2013-2017 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2018 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -44,19 +44,19 @@
 	if (call_context == "public" or string.sub(call_context, 0, 7) == "public@" or string.sub(call_context, -7) == ".public") then
 		context_name = 'public';
 	end
-	--freeswitch.consoleLog("notice", "[xml_handler] ".. context_type .. " key:" .. key .. "\n");
+	--freeswitch.consoleLog("notice", "[xml_handler] ".. context_type .. " key:" .. dialplan_cache_key .. "\n");
 
---set the key
-	local key = "dialplan:" .. call_context;
+--set the dialplan cache key
+	local dialplan_cache_key = "dialplan:" .. call_context;
 	if (context_name == 'public' and context_type == "single") then
 		key = "dialplan:" .. call_context .. ":" .. destination_number;
 	end
 
 --get the cache
-	XML_STRING, err = cache.get(key);
+	XML_STRING, err = cache.get(dialplan_cache_key);
 	if (debug['cache']) then
 		if XML_STRING then
-			log.notice(key.." source: cache");
+			log.notice(dialplan_cache_key.." source: cache");
 		elseif err ~= 'NOT FOUND' then
 			log.notice("error get element from cache: " .. err);
 		end
@@ -144,23 +144,33 @@
 			table.insert(xml, [[</document>]]);
 			XML_STRING = table.concat(xml, "\n");
 
-		--set the cache
-			if cache.support() then
-				cache.set(key, XML_STRING, expire["dialplan"])
-			end
+		--close the database connection
+			dbh:release();
 
-		--send the xml to the console
-			if (debug["xml_string"]) then
-				local file = assert(io.open(temp_dir .. "/" .. key .. ".xml", "w"));
-				file:write(XML_STRING);
-				file:close();
+		--set the cache
+			local ok, err = cache.set(dialplan_cache_key, XML_STRING, expire["dialplan"]);
+			if debug["cache"] then
+				if ok then
+					freeswitch.consoleLog("notice", "[xml_handler] " .. dialplan_cache_key .. " stored in the cache\n");
+				else
+					freeswitch.consoleLog("warning", "[xml_handler] " .. dialplan_cache_key .. " can not be stored in the cache: " .. tostring(err) .. "\n");
+				end
 			end
 
 		--send to the console
 			if (debug["cache"]) then
-				log.notice(key .. " source: database");
+				freeswitch.consoleLog("notice", "[xml_handler] " .. dialplan_cache_key .. " source: database\n");
 			end
+	else
+		--send to the console
+			if (debug["cache"]) then
+				freeswitch.consoleLog("notice", "[xml_handler] " .. dialplan_cache_key .. " source: cache\n");
+			end
+	end --if XML_STRING
 
-		--close the database connection
-			dbh:release();
+--send the xml to the console
+	if (debug["xml_string"]) then
+		local file = assert(io.open(temp_dir .. "/" .. key .. ".xml", "w"));
+		file:write(XML_STRING);
+		file:close();
 	end
