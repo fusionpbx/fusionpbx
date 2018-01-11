@@ -209,7 +209,7 @@
 	if (permission_exists('contact_add')) {
 		echo 				"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='contact_import.php'\" value='".$text['button-import']."'>\n";
 	}
-	 if (if_group("superadmin")) {
+	if (if_group("superadmin")) {
                 echo "                          <input type='button' class='btn' style='margin-right: 15px;' value='".$text['button-export']."' onclick=\"window.location.href='contact_download.php'\">\n";
         }
 	echo "			</form>\n";
