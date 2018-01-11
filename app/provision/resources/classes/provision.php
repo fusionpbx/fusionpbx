@@ -167,11 +167,28 @@ include "root.php";
 			case "grandstream":
 				$mac = strtolower($mac);
 				break;
+			case "yealink":
+				$mac = strtolower($mac);
+				break;
 			default:
 				$mac = strtolower($mac);
-				$mac = substr($mac, 0,2).'-'.substr($mac, 2,2).'-'.substr($mac, 4,2).'-'.substr($mac, 6,2).'-'.substr($mac, 8,2).'-'.substr($mac, 10,2);
 			}
 			return $mac;
+		}
+
+		//send http error
+		private function http_error($error) {
+			if ($error === "404") {
+				header("HTTP/1.0 404 Not Found");
+				echo "<html>\n";
+				echo "<head><title>404 Not Found</title></head>\n";
+				echo "<body bgcolor=\"white\">\n";
+				echo "<center><h1>404 Not Found</h1></center>\n";
+				echo "<hr><center>nginx/1.12.1</center>\n";
+				echo "</body>\n";
+				echo "</html>\n";
+			}
+			exit();
 		}
 
 		//define a function to check if a contact exists in the contacts array
@@ -512,10 +529,26 @@ include "root.php";
 											if ($_SESSION['provision']['debug']['boolean'] == 'true'){
 												echo "<br/>device disabled<br/>";
 											}
-											echo "file not found";
+											else {
+												$this->http_error('404');
+											}
 											exit;
 										}
-
+									//register that we have seen the device
+										$sql = "UPDATE v_devices ";
+										$sql .= "SET device_provisioned_date=:date, device_provisioned_method=:method, device_provisioned_ip=:ip ";
+										$sql .= "WHERE domain_uuid=:domain_uuid AND device_mac_address=:mac ";
+										$prep_statement = $this->db->prepare(check_sql($sql));
+										if ($prep_statement) {
+											//use the prepared statement
+												$prep_statement->bindValue(':domain_uuid', $domain_uuid);
+												$prep_statement->bindValue(':mac', strtolower($mac));
+												$prep_statement->bindValue(':date', date("Y-m-d H:i:s"));
+												$prep_statement->bindValue(':method', (isset($_SERVER["HTTPS"]) ? 'https' : 'http'));
+												$prep_statement->bindValue(':ip', $_SERVER['REMOTE_ADDR']);
+												$prep_statement->execute();
+												unset($prep_statement);
+										}
 									//set the variables from values in the database
 										$device_uuid = $row["device_uuid"];
 										$device_label = $row["device_label"];
@@ -576,32 +609,43 @@ include "root.php";
 							$templates['snom370-SIP'] = 'snom/370';
 							$templates['snom820-SIP'] = 'snom/820';
 							$templates['snom-m3-SIP'] = 'snom/m3';
+
 							$templates['yealink SIP-CP860'] = 'yealink/cp860';
+#							$templates['yealink SIP-CP860'] = 'yealink/cp920';							
+#							$templates['yealink SIP-CP860'] = 'yealink/cp960';
 							$templates['yealink SIP-T19P'] = 'yealink/t19p';
 							$templates['yealink SIP-T20P'] = 'yealink/t20p';
 							$templates['yealink SIP-T21P'] = 'yealink/t21p';
 							$templates['yealink SIP-T22P'] = 'yealink/t22p';
-							$templates['yealink SIP-T23P'] = 'yealink/t23p';
 							$templates['yealink SIP-T23G'] = 'yealink/t23g';
-							$templates['yealink SIP-T27G'] = 'yealink/t27g';
+							$templates['yealink SIP-T23P'] = 'yealink/t23p';
 							$templates['yealink SIP-T26P'] = 'yealink/t26p';
+							$templates['yealink SIP-T27G'] = 'yealink/t27g';
+							$templates['Yealink SIP-T29G'] = 'yealink/t27p';
 							$templates['yealink SIP-T28P'] = 'yealink/t28p';
+							$templates['Yealink SIP-T29G'] = 'yealink/t29g';
 							$templates['yealink SIP-T29P'] = 'yealink/t29p';
 							$templates['Yealink SIP-T32G'] = 'yealink/t32g';
 							$templates['Yealink SIP-T38G'] = 'yealink/t38g';
 							$templates['Yealink SIP-T40P'] = 'yealink/t40p';
-							$templates['Yealink SIP-T41P'] = 'yealink/t41p';
 							$templates['Yealink SIP-T41G'] = 'yealink/t41g';
+							$templates['Yealink SIP-T41P'] = 'yealink/t41p';
 							$templates['Yealink SIP-T41S'] = 'yealink/t41s';
 							$templates['Yealink SIP-T42G'] = 'yealink/t42g';
+							$templates['Yealink SIP-T42S'] = 'yealink/t42s';
 							$templates['Yealink SIP-T46G'] = 'yealink/t46g';
 							$templates['Yealink SIP-T46S'] = 'yealink/t46s';
 							$templates['Yealink SIP-T48G'] = 'yealink/t48g';
 							$templates['Yealink SIP-T48S'] = 'yealink/t48s';
 							$templates['Yealink SIP-T49G'] = 'yealink/t49g';
+							$templates['Yealink SIP-T52S'] = 'yealink/t52s';
+							$templates['Yealink SIP-T54S'] = 'yealink/t54s';
+							$templates['Yealink SIP-T56A'] = 'yealink/t56a';
+							$templates['Yealink SIP-T58'] = 'yealink/t58v';
 							$templates['VP530P'] = 'yealink/vp530';
 							$templates['Yealink SIP-W52P'] = 'yealink/w52p';
 							$templates['Yealink SIP-W56P'] = 'yealink/w56p';
+
 							$templates['HW DP750'] = 'grandstream/dp750';
 							$templates['HW GXP1450'] = 'grandstream/gxp1450';
 							$templates['HW GXP1628'] = 'grandstream/gxp16xx';
@@ -937,7 +981,7 @@ include "root.php";
 					}
 
 				//get the provisioning information from device keys
-					if (strlen($device_uuid) > 0) {
+					if (isset($device_uuid)) {
 
 						//get the device keys array
 							$sql = "SELECT * FROM v_device_keys ";
@@ -1144,6 +1188,7 @@ include "root.php";
 					$view->assign("user_id",$user_id);
 					$view->assign("password",$password);
 					$view->assign("template",$device_template);
+					$view->assign("microtime",microtime(true));		
 
 				// personal ldap password
 					global $laddr_salt;
@@ -1215,7 +1260,7 @@ include "root.php";
 							$file = "{\$mac}.cfg";
 						}
 						else {
-							echo "file not found";
+							$this->http_error('404');
 							exit;
 						}
 					}

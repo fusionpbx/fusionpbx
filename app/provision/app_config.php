@@ -233,9 +233,9 @@
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "931d6cc7-ca82-4813-ae92-7015e0c2ea1b";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "http_domain_filter";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "6c4430f6-3713-4c8b-9da3-eaf1705d7dc3";
@@ -349,6 +349,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Yes";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call Waiting Yes=enabled No=disable";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "05176dde-763e-4983-b8d2-93f6bf984805";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_feature_key_sync";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "No";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Feature Key Sync Yes=enabled No=disable";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8fc369c3-bd6e-4fbb-957c-681de8a325fc";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";

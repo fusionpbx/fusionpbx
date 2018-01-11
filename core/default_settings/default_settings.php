@@ -82,6 +82,11 @@ else {
 					}
 					unset ($prep_statement);
 
+					//set a random password for http_auth_password
+					if ($default_setting_subcategory == "http_auth_password") {
+						$default_setting_value = generate_password();
+					}
+
 					// check if exists
 					$sql = "select domain_setting_uuid from v_domain_settings ";
 					$sql .= "where domain_uuid = '".$target_domain_uuid."' ";
@@ -537,6 +542,7 @@ else {
 		echo "		}\n";
 		echo "	}\n";
 		echo "\n";
+
 	//auto run, if search term passed back
 		if ($search != '') {
 			echo "	setting_search();";
@@ -546,4 +552,5 @@ else {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

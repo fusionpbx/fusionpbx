@@ -635,7 +635,7 @@
       <ProvisionEnable PROVISION_ENABLE="Y"/>
       <Option66Enable OPTION66_ENABLE="Y"/>
       <Option66Reboot OPTION66_REBOOT="Y"/>
-      <StandardFileURL CFG_STANDARD_FILE_PATH="http://{$server_address_1}{literal}{mac}{/literal}"/>
+      <StandardFileURL CFG_STANDARD_FILE_PATH="https://{$server_address_1}{$project_path}/app/provision"/>
       <ProductFileURL CFG_PRODUCT_FILE_PATH=""/>
       <MasterFileURL CFG_MASTER_FILE_PATH=""/>
       <CyclicEnable CFG_CYCLIC="Y"/>

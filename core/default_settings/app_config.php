@@ -338,7 +338,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "admin";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "caller_id";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable changing Caller ID name and number.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "610cfc85-7a17-4c96-a7c7-a83054710bc1";
@@ -402,7 +402,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "superadmin";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "caller_id";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable changing Caller ID name and number.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "78bb45d5-8108-4bed-aced-d764575531dc";
@@ -458,7 +458,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "user";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "caller_id";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable changing Caller ID name and number.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "98be8c07-eb3a-45c5-9565-341e60f0d82b";

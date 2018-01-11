@@ -45,6 +45,7 @@
 	local Settings = require "resources.functions.lazy_settings"
 	local route_to_bridge = require "resources.functions.route_to_bridge"
 	local blf = require "resources.functions.blf"
+	local notify = require "app.feature_event.resources.functions.feature_event_notify"	
 
 --include json library
 	local json
@@ -71,7 +72,7 @@
 	local extension_uuid = session:getVariable("extension_uuid");
 	local request_id = session:getVariable("request_id");
 	local forward_all_destination = session:getVariable("forward_all_destination") or '';
-	local extension, dial_string
+	local extension;
 
 --set the sounds path for the language, dialect and voice
 	local default_language = session:getVariable("default_language") or 'en';
@@ -271,18 +272,15 @@
 		local sql = "update v_extensions set ";
 		if (enabled == "true") then
 			sql = sql .. "forward_all_destination = :forward_all_destination, ";
-			sql = sql .. "dial_string = :dial_string, ";
 			sql = sql .. "do_not_disturb = 'false', ";
 		else
 			sql = sql .. "forward_all_destination = null, ";
-			sql = sql .. "dial_string = null, ";
 		end
 		sql = sql .. "forward_all_enabled = :forward_all_enabled ";
 		sql = sql .. "where domain_uuid = :domain_uuid ";
 		sql = sql .. "and extension_uuid = :extension_uuid ";
 		local params = {
 			forward_all_destination = forward_all_destination;
-			dial_string = dial_string;
 			forward_all_enabled = forward_all_enabled;
 			domain_uuid = domain_uuid;
 			extension_uuid = extension_uuid;
@@ -293,6 +291,55 @@
 		dbh:query(sql, params);
 	end
 
+--send notify to phone if feature sync is enabled
+	if settings:get('device', 'feature_sync', 'boolean') == 'true' then
+		-- Get values from the database
+			do_not_disturb, forward_all_enabled, forward_all_destination, forward_busy_enabled, forward_busy_destination, forward_no_answer_enabled, forward_no_answer_destination, call_timeout = notify.get_db_values(extension, domain_name)
+		
+		-- Get the sip_profile
+			if (extension ~= nil and domain_name ~= nil) then
+				sip_profile = notify.get_profile(extension, domain_name);
+			end
+
+		if (sip_profile ~= nil) then 
+				freeswitch.consoleLog("NOTICE", "[feature_event] SIP NOTIFY: CFWD set to "..forward_all_enabled.."\n");
+			
+			--Do Not Disturb
+				notify.dnd(extension, domain_name, sip_profile, do_not_disturb);
+
+			--Forward all
+				forward_immediate_enabled = forward_all_enabled;
+				forward_immediate_destination = forward_all_destination;
+				
+				--workaround for freeswitch not sending NOTIFY when destination values are nil. Send 0.
+					if (string.len(forward_immediate_destination) < 1) then 
+						forward_immediate_destination = '0';
+					end
+				
+				freeswitch.consoleLog("NOTICE", "[feature_event] forward_immediate_destination "..forward_immediate_destination.."\n");
+				notify.forward_immediate(extension, domain_name, sip_profile, forward_immediate_enabled, forward_immediate_destination);
+				
+			--Forward busy
+				--workaround for freeswitch not sending NOTIFY when destination values are nil. Send 0.
+					if (string.len(forward_busy_destination) < 1) then 
+						forward_busy_destination = '0';
+					end
+				
+				freeswitch.consoleLog("NOTICE", "[feature_event] forward_busy_destination "..forward_busy_destination.."\n");
+				notify.forward_busy(extension, domain_name, sip_profile, forward_busy_enabled, forward_busy_destination);
+
+			--Forward No Answer
+				ring_count = math.ceil (call_timeout / 6);
+				--workaround for freeswitch not sending NOTIFY when destination values are nil. Send 0.
+					if (string.len(forward_no_answer_destination) < 1) then 
+						forward_no_answer_destination = '0';
+					end
+					
+				freeswitch.consoleLog("NOTICE", "[feature_event] forward_no_answer_destination "..forward_no_answer_destination.."\n");
+				notify.forward_no_answer(extension, domain_name, sip_profile, forward_no_answer_enabled, forward_no_answer_destination, ring_count);
+		end
+	end
+	
 --disconnect from database
 	dbh:release()
 

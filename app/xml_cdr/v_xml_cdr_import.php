@@ -296,6 +296,33 @@
 				$record_name = basename(urldecode($xml->variables->sofia_record_file));
 				$record_length = urldecode($xml->variables->record_seconds);
 			}
+			elseif (strlen($xml->variables->api_on_answer) > 0) {
+				$command = str_replace("\n", " ", urldecode($xml->variables->api_on_answer));
+				$parts = explode(" ", $command);
+				if ($parts[0] == "uuid_record") {
+					$recording = $parts[3];
+					$record_path = dirname($recording);
+					$record_name = basename($recording);
+					$record_length = urldecode($xml->variables->duration);
+				}
+			}
+			elseif (strlen($xml->variables->current_application_data) > 0) {
+				$commands = explode(",", urldecode($xml->variables->current_application_data));
+				foreach ($commands as $command) {
+					$cmd = explode("=", $command);
+					if ($cmd[0] == "api_on_answer") {
+						$a = explode("]", $cmd[1]);
+						$command = str_replace("'", "", $a[0]);
+						$parts = explode(" ", $command);
+						if ($parts[0] == "uuid_record") {
+							$recording = $parts[3];
+							$record_path = dirname($recording);
+							$record_name = basename($recording);
+							$record_length = urldecode($xml->variables->duration);
+						}
+					}
+				}
+			}
 
 		//add the call recording
 			if (isset($record_path) && isset($record_name) && file_exists($record_path.'/'.$record_name) && $record_length > 0) {

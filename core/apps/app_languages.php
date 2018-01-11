@@ -20,6 +20,8 @@ $text['title-apps']['ro-ro'] = "";
 $text['title-apps']['ru-ru'] = "Управление приложениями";
 $text['title-apps']['sv-se'] = "App Inställningar";
 $text['title-apps']['uk-ua'] = "Керування додатками";
+$text['title-apps']['tr-tr'] = "Uygulama Yöneticisi";
+
 
 $text['title-app-edit']['en-us'] = "App Edit";
 $text['title-app-edit']['ar-eg'] = "";
@@ -40,6 +42,7 @@ $text['title-app-edit']['ro-ro'] = "";
 $text['title-app-edit']['ru-ru'] = "Изменеие приложения";
 $text['title-app-edit']['sv-se'] = "Ändra App";
 $text['title-app-edit']['uk-ua'] = "Редагувати додаток";
+$text['title-app-edit']['tr-tr'] = "Uygulama Düzenle";
 
 $text['label-version']['en-us'] = "Version";
 $text['label-version']['ar-eg'] = "";
@@ -60,6 +63,7 @@ $text['label-version']['ro-ro'] = "";
 $text['label-version']['ru-ru'] = "Версия";
 $text['label-version']['sv-se'] = "Version";
 $text['label-version']['uk-ua'] = "Версія";
+$text['label-version']['tr-tr'] = "Sürüm";
 
 $text['header-apps']['en-us'] = "App Manager";
 $text['header-apps']['ar-eg'] = "";
@@ -80,6 +84,7 @@ $text['header-apps']['ro-ro'] = "";
 $text['header-apps']['ru-ru'] = "Управление приложениями";
 $text['header-apps']['sv-se'] = "App Inställningar";
 $text['header-apps']['uk-ua'] = "Керування додатками";
+$text['header-apps']['tr-tr'] = "Uygulama Yöneticisi";
 
 $text['header-app-edit']['en-us'] = "App Edit";
 $text['header-app-edit']['ar-eg'] = "";
@@ -100,6 +105,7 @@ $text['header-app-edit']['ro-ro'] = "";
 $text['header-app-edit']['ru-ru'] = "Изменеие приложения";
 $text['header-app-edit']['sv-se'] = "Ändra App";
 $text['header-app-edit']['uk-ua'] = "Редагувати додаток";
+$text['header-app-edit']['tr-tr'] = "Uygulama Düzenle";
 
 $text['description-apps']['en-us'] = "Manage the applications that are installed.";
 $text['description-apps']['ar-eg'] = "";
@@ -120,6 +126,7 @@ $text['description-apps']['ro-ro'] = "";
 $text['description-apps']['ru-ru'] = "Управление установленными приложениями.";
 $text['description-apps']['sv-se'] = "Hantera de applikationer som är installerade.";
 $text['description-apps']['uk-ua'] = "Керування встановленими додатками";
+$text['description-apps']['tr-tr'] = "Yüklü bulunan uygulamaları düzenleyin.";
 
 $text['description-app-edit']['en-us'] = "Manage the applications that are installed.";
 $text['description-app-edit']['ar-eg'] = "";
@@ -140,5 +147,7 @@ $text['description-app-edit']['ro-ro'] = "";
 $text['description-app-edit']['ru-ru'] = "Управление установленными приложениями.";
 $text['description-app-edit']['sv-se'] = "Hantera de applikationer som är installerade.";
 $text['description-app-edit']['uk-ua'] = "Керування встановленими додатками";
+$text['description-app-edit']['tr-tr'] = "Yüklü bulunan uygulamaları düzenleyin.";
+
 
 ?>

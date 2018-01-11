@@ -63,6 +63,9 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "gateway_domain";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "gateway_all";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 //default settings
 		$y = 0;

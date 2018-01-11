@@ -326,6 +326,40 @@
 				}
 			}
 
+		//send feature event notify to the phone
+			if ($_SESSION['device']['feature_sync']['boolean'] == "true") {
+				$ring_count = ceil($call_timeout / 6);
+				$feature_event_notify = new feature_event_notify;
+				$feature_event_notify->domain_name = $_SESSION['domain_name'];
+				$feature_event_notify->extension = $extension;
+				$feature_event_notify->do_not_disturb = $dnd_enabled;
+				$feature_event_notify->ring_count = $ring_count;
+				$feature_event_notify->forward_all_enabled = $forward_all_enabled;
+				$feature_event_notify->forward_busy_enabled = $forward_busy_enabled;
+				$feature_event_notify->forward_no_answer_enabled = $forward_no_answer_enabled;				
+				//workaround for freeswitch not sending NOTIFY when destination values are nil. Send 0.
+				if ($forward_all_destination == "") {
+					$feature_event_notify->forward_all_destination = "0";
+				} else {
+					$feature_event_notify->forward_all_destination = $forward_all_destination;
+				}
+				
+				if ($forward_busy_destination == "") {
+					$feature_event_notify->forward_busy_destination = "0";
+				} else {
+					$feature_event_notify->forward_busy_destination = $forward_busy_destination;
+				}				
+
+				if ($forward_no_answer_destination == "") {
+					$feature_event_notify->forward_no_answer_destination = "0";
+				} else {
+					$feature_event_notify->forward_no_answer_destination = $forward_no_answer_destination;
+				}					
+				
+				$feature_event_notify->send_notify();
+				unset($feature_event_notify);
+			}
+
 		//synchronize configuration
 			if (is_readable($_SESSION['switch']['extensions']['dir'])) {
 				require_once "app/extensions/resources/classes/extension.php";

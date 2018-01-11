@@ -65,18 +65,19 @@
 	$rows = array();
 	if (isset($results["rows"])) {
 		foreach ($results["rows"] as &$row) {
+				$context = $row['context'];
 			//get the domain
 				if (substr_count($row['presence_id'], '@') > 0) {
 					$presence_id_array = explode('@', $row['presence_id']);
 					$row['domain_name'] = $presence_id_array[1];
 				}
-				else if ($context != '') {
+				else if (strlen($context) > 0) {
 					if (substr_count($context, '@') > 0) {
 						$context_array = explode('@', $context);
 						$row['domain_name'] = $context_array[1];
 					}
 					else {
-						$row['domain_name'] = $row['context'];
+						$row['domain_name'] = $context;
 					}
 				}
 			//add the row to the array
@@ -89,7 +90,7 @@
 					}
 				}
 		}
-		unset($results);
+		unset($results, $context);
 	}
 
 //set the alternating color for each row
