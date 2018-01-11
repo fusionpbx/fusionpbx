@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -59,6 +59,7 @@
 					if (is_array($extensions)) { 
 						foreach ($extensions as &$row) {
 							$extension = $row["extension"];
+							$number_alias = $row["number_alias"];
 							$user_context = $row["user_context"];
 							$follow_me_uuid = $row["follow_me_uuid"];
 						}
@@ -142,13 +143,23 @@
 					$prep_statement = $db->prepare(check_sql($sql));
 					$prep_statement->execute();
 					unset($prep_statement, $sql);
-					
+
 					$sql = "delete from v_follow_me ";
 					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 					$sql .= "and follow_me_uuid = '".$follow_me_uuid."' ";
 					$prep_statement = $db->prepare(check_sql($sql));
 					$prep_statement->execute();
 					unset($prep_statement, $sql);
+
+				//delete the ring group destinations
+					if (file_exists($_SERVER["PROJECT_ROOT"]."/app/ring_groups/app_config.php")) {
+						$sql = "delete from v_ring_group_destinations ";
+						$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+						$sql .= "and (destination_number = '".$extension."' or destination_number = '".$number_alias."') ";
+						$db->exec(check_sql($sql));
+						unset($sql);
+					}
+
 			}
 		}
 

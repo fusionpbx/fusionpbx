@@ -63,7 +63,7 @@
 //add user's uuid to group uuid list to include private (non-shared) contacts
 	$user_group_uuids[] = $_SESSION["user_uuid"];
 
-//get contact sync sources
+//get contact settings - sync sources
 	$sql = "select ";
 	$sql .= "contact_uuid, ";
 	$sql .= "contact_setting_value ";
@@ -212,7 +212,7 @@
 	echo "			</form>\n";
 	echo "		</td>\n";
 	if ($paging_controls_mini != '') {
-		echo "		<td valign='middle' nowrap style='padding-left: 15px;'>".$paging_controls_mini."</td>\n";
+		echo "		<td valign='top' nowrap='nowrap' style='padding-left: 15px;'>".$paging_controls_mini."</td>\n";
 	}
 	echo "	</tr>\n";
 	echo "	<tr>\n";
@@ -288,4 +288,5 @@
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

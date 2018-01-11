@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -84,6 +84,12 @@
 		$sql_search .= "or lower(destination_number) like '%".$search."%' ";
 		$sql_search .= "or lower(destination_context) like '%".$search."%' ";
 		$sql_search .= "or lower(destination_accountcode) like '%".$search."%' ";
+		if (permission_exists('outbound_caller_id_select')) {
+			$sql_search .= "or lower(destination_caller_id_name) like '%".$search."%' ";
+			$sql_search .= "or destination_caller_id_number like '%".$search."%' ";
+		}
+		$sql_search .= "or lower(destination_enabled) like '%".$search."%' ";
+		$sql_search .= "or lower(destination_description) like '%".$search."%' ";
 		$sql_search .= ") ";
 	}
 
@@ -214,8 +220,10 @@
 	echo th_order_by('destination_type', $text['label-destination_type'], $order_by, $order);
 	echo th_order_by('destination_number', $text['label-destination_number'], $order_by, $order);
 	echo th_order_by('destination_context', $text['label-destination_context'], $order_by, $order);
-	echo th_order_by('destination_caller_id_name', $text['label-destination_caller_id_name'], $order_by, $order);
-	echo th_order_by('destination_caller_id_number', $text['label-destination_caller_id_number'], $order_by, $order);
+	if (permission_exists('outbound_caller_id_select')) {
+		echo th_order_by('destination_caller_id_name', $text['label-destination_caller_id_name'], $order_by, $order);
+		echo th_order_by('destination_caller_id_number', $text['label-destination_caller_id_number'], $order_by, $order);
+	}
 	echo th_order_by('destination_enabled', $text['label-destination_enabled'], $order_by, $order);
 	echo th_order_by('destination_description', $text['label-destination_description'], $order_by, $order);
 	echo "	<td class='list_control_icons'>";
@@ -247,8 +255,10 @@
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_number_regex']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_context']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_uuid']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_caller_id_name']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_caller_id_number']."&nbsp;</td>\n";
+			if (permission_exists('outbound_caller_id_select')) {
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_caller_id_name']."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_caller_id_number']."&nbsp;</td>\n";
+			}
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_cid_name_prefix']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_app']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_data']."&nbsp;</td>\n";
