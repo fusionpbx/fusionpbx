@@ -41,7 +41,7 @@
 //get the registrations
 	if (permission_exists('extension_registered')) {
 		$obj = new registrations;
-		$registrations = $obj->get('internal');
+		$registrations = $obj->get('all');
 	}
 
 //add multi-lingual support
