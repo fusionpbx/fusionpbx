@@ -1,6 +1,6 @@
 --	xml_handler.lua
 --	Part of FusionPBX
---	Copyright (C) 2013 - 2017 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013 - 2018 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -34,7 +34,7 @@
 	if not XML_STRING then
 		--log cache error
 			if (debug["cache"]) then
-				freeswitch.consoleLog("warning", "[xml_handler] " .. sofia_cache_key .. " can not be get from memcache: " .. tostring(err) .. "\n");
+				freeswitch.consoleLog("warning", "[xml_handler] " .. sofia_cache_key .. " can not be get from the cache: " .. tostring(err) .. "\n");
 			end
 
 		--set a default value
@@ -301,17 +301,10 @@
 			local ok, err = cache.set(sofia_cache_key, XML_STRING, expire["sofia"])
 			if debug["cache"] then
 				if ok then
-					freeswitch.consoleLog("notice", "[xml_handler] " .. sofia_cache_key .. " stored in memcache\n");
+					freeswitch.consoleLog("notice", "[xml_handler] " .. sofia_cache_key .. " stored in the cache\n");
 				else
-					freeswitch.consoleLog("warning", "[xml_handler] " .. sofia_cache_key .. " can not be stored in memcache: " .. tostring(err) .. "\n");
+					freeswitch.consoleLog("warning", "[xml_handler] " .. sofia_cache_key .. " can not be stored in the cache: " .. tostring(err) .. "\n");
 				end
-			end
-
-		--send the xml to the console
-			if (debug["xml_string"]) then
-				local file = assert(io.open(temp_dir .. "/sofia.conf.xml", "w"));
-				file:write(XML_STRING);
-				file:close();
 			end
 
 		--send to the console
@@ -321,6 +314,13 @@
 	else
 		--send to the console
 			if (debug["cache"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] " .. sofia_cache_key .. " source: memcache\n");
+				freeswitch.consoleLog("notice", "[xml_handler] " .. sofia_cache_key .. " source: cache\n");
 			end
 	end --if XML_STRING
+
+--send the xml to the console
+	if (debug["xml_string"]) then
+		local file = assert(io.open(temp_dir .. "/sofia.conf.xml", "w"));
+		file:write(XML_STRING);
+		file:close();
+	end
