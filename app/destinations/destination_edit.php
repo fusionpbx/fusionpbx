@@ -126,7 +126,6 @@
 			}
 			else {
 				$destination_uuid = uuid();
-				$_POST["destination_uuid"] = $destination_uuid;
 			}
 
 		//set the default context
@@ -218,6 +217,11 @@
 			if (strlen($dialplan_uuid) == 0) {
 				$dialplan_uuid = uuid();
 			}
+
+		//build the destination array
+			$destination = $_POST;
+			$destination["destination_uuid"] = $destination_uuid;
+			$destination["dialplan_uuid"] = $dialplan_uuid;
 
 		//build the dialplan array
 			$dialplan["app_uuid"] = "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4";
@@ -525,7 +529,7 @@
 			}
 
 		//prepare the array
-			$array['destinations'][] = $_POST;
+			$array['destinations'][] = $destination;
 			$array['dialplans'][] = $dialplan;
 			unset($dialplan);
 
