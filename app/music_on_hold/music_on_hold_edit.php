@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016
+	Portions created by the Initial Developer are Copyright (C) 2016-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -148,6 +148,10 @@
 						$db->exec(check_sql($sql));
 						unset($sql);
 
+					//clear the cache
+						$cache = new cache;
+						$cache->delete("configuration:local_stream.conf");
+
 					//reload mod local stream
 						$music = new switch_music_on_hold;
 						$music->reload();
@@ -185,6 +189,10 @@
 						$sql .= "where music_on_hold_uuid = '$music_on_hold_uuid' ";
 						$db->exec(check_sql($sql));
 						unset($sql);
+
+					//clear the cache
+						$cache = new cache;
+						$cache->delete("configuration:local_stream.conf");
 
 					//reload mod local stream
 						$music = new switch_music_on_hold;
