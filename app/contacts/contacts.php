@@ -63,7 +63,7 @@
 //add user's uuid to group uuid list to include private (non-shared) contacts
 	$user_group_uuids[] = $_SESSION["user_uuid"];
 
-//get contact settings - sync sources
+//get contact sync sources
 	$sql = "select ";
 	$sql .= "contact_uuid, ";
 	$sql .= "contact_setting_value ";
@@ -209,10 +209,13 @@
 	if (permission_exists('contact_add')) {
 		echo 				"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='contact_import.php'\" value='".$text['button-import']."'>\n";
 	}
+	 if (if_group("superadmin")) {
+                echo "                          <input type='button' class='btn' style='margin-right: 15px;' value='".$text['button-export']."' onclick=\"window.location.href='contact_download.php'\">\n";
+        }
 	echo "			</form>\n";
 	echo "		</td>\n";
 	if ($paging_controls_mini != '') {
-		echo "		<td valign='top' nowrap='nowrap' style='padding-left: 15px;'>".$paging_controls_mini."</td>\n";
+		echo "		<td valign='middle' nowrap style='padding-left: 15px;'>".$paging_controls_mini."</td>\n";
 	}
 	echo "	</tr>\n";
 	echo "	<tr>\n";
@@ -288,5 +291,4 @@
 
 //include the footer
 	require_once "resources/footer.php";
-
 ?>
