@@ -317,7 +317,7 @@
 <CFWD_Notify_Serv_1_ group="Ext_1/Call_Feature_Settings">No</CFWD_Notify_Serv_1_>
 <CFWD_Notifier_1_ group="Ext_1/Call_Feature_Settings" />
 <Proxy_1_ group="Ext_1/Proxy_and_Registration">{$server_address_1}</Proxy_1_>
-<Use_Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">{if isset($outbound_proxy_secondary_1)}Yes{else}No{/if}</Use_Outbound_Proxy_1_>
+<Use_Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">{if isset($outbound_proxy_primary_1)}Yes{else}No{/if}</Use_Outbound_Proxy_1_>
 <Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">{$outbound_proxy_primary_1}</Outbound_Proxy_1_>
 <Alternate_Proxy_1_ group="Ext_1/Proxy_and_Registration">{$server_address_1}</Alternate_Proxy_1_>
 <Alternate_Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">{$outbound_proxy_secondary_1}</Alternate_Outbound_Proxy_1_>
