@@ -307,6 +307,7 @@
 <MOH_Server_1_ group="Ext_1/Call_Feature_Settings" />
 <Auth_Page_1_ group="Ext_1/Call_Feature_Settings">No</Auth_Page_1_>
 <Default_Ring__1__ group="Ext_1/Call_Feature_Settings">1</Default_Ring__1__>
+<Feature_Key_Sync_1_ group="Ext_1/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_1_> 
 <Auth_Page_Realm_1_ group="Ext_1/Call_Feature_Settings" />
 <Conference_Bridge_URL_1_ group="Ext_1/Call_Feature_Settings" />
 <Auth_Page_Password_1_ group="Ext_1/Call_Feature_Settings" />
