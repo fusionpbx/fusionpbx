@@ -270,6 +270,7 @@
 <Voice_Quality_Report_Address_1_ ua="na"></Voice_Quality_Report_Address_1_>
 
 <!-- Call Feature Settings -->
+<Device_Feature_Sync_1_ ua="na">{$spa_feature_key_sync}</Device_Feature_Sync_1_>  
 <Blind_Attn-Xfer_Enable_1_ ua="na">No</Blind_Attn-Xfer_Enable_1_>
 <MOH_Server_1_ ua="na"></MOH_Server_1_>
 <Message_Waiting_1_ ua="na">No</Message_Waiting_1_>
