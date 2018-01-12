@@ -17,7 +17,7 @@
 		$text['title-email_templates']['pt-br'] = '';
 		$text['title-email_templates']['pt-pt'] = '';
 		$text['title-email_templates']['ro-ro'] = '';
-		$text['title-email_templates']['ru-ru'] = '';
+		$text['title-email_templates']['ru-ru'] = 'Email шаблоны';
 		$text['title-email_templates']['sv-se'] = '';
 		$text['title-email_templates']['uk-ua'] = '';
 
@@ -37,7 +37,7 @@
 		$text['title-email_template']['pt-br'] = '';
 		$text['title-email_template']['pt-pt'] = '';
 		$text['title-email_template']['ro-ro'] = '';
-		$text['title-email_template']['ru-ru'] = '';
+		$text['title-email_template']['ru-ru'] = 'Email шаблон';
 		$text['title-email_template']['sv-se'] = '';
 		$text['title-email_template']['uk-ua'] = '';
 
@@ -77,7 +77,7 @@
 		$text['label-template_language']['pt-br'] = '';
 		$text['label-template_language']['pt-pt'] = '';
 		$text['label-template_language']['ro-ro'] = '';
-		$text['label-template_language']['ru-ru'] = '';
+		$text['label-template_language']['ru-ru'] = 'Язык';
 		$text['label-template_language']['sv-se'] = '';
 		$text['label-template_language']['uk-ua'] = '';
 
@@ -117,7 +117,7 @@
 		$text['label-template_category']['pt-br'] = '';
 		$text['label-template_category']['pt-pt'] = '';
 		$text['label-template_category']['ro-ro'] = '';
-		$text['label-template_category']['ru-ru'] = '';
+		$text['label-template_category']['ru-ru'] = 'Категория';
 		$text['label-template_category']['sv-se'] = '';
 		$text['label-template_category']['uk-ua'] = '';
 
@@ -157,7 +157,7 @@
 		$text['label-template_subcategory']['pt-br'] = '';
 		$text['label-template_subcategory']['pt-pt'] = '';
 		$text['label-template_subcategory']['ro-ro'] = '';
-		$text['label-template_subcategory']['ru-ru'] = '';
+		$text['label-template_subcategory']['ru-ru'] = 'Подкатегория';
 		$text['label-template_subcategory']['sv-se'] = '';
 		$text['label-template_subcategory']['uk-ua'] = '';
 
@@ -197,7 +197,7 @@
 		$text['label-template_subject']['pt-br'] = '';
 		$text['label-template_subject']['pt-pt'] = '';
 		$text['label-template_subject']['ro-ro'] = '';
-		$text['label-template_subject']['ru-ru'] = '';
+		$text['label-template_subject']['ru-ru'] = 'Тема';
 		$text['label-template_subject']['sv-se'] = '';
 		$text['label-template_subject']['uk-ua'] = '';
 
@@ -237,7 +237,7 @@
 		$text['label-template_body']['pt-br'] = '';
 		$text['label-template_body']['pt-pt'] = '';
 		$text['label-template_body']['ro-ro'] = '';
-		$text['label-template_body']['ru-ru'] = '';
+		$text['label-template_body']['ru-ru'] = 'Cообщение';
 		$text['label-template_body']['sv-se'] = '';
 		$text['label-template_body']['uk-ua'] = '';
 
@@ -277,7 +277,7 @@
 		$text['label-template_enabled']['pt-br'] = '';
 		$text['label-template_enabled']['pt-pt'] = '';
 		$text['label-template_enabled']['ro-ro'] = '';
-		$text['label-template_enabled']['ru-ru'] = '';
+		$text['label-template_enabled']['ru-ru'] = 'Включено';
 		$text['label-template_enabled']['sv-se'] = '';
 		$text['label-template_enabled']['uk-ua'] = '';
 
@@ -317,7 +317,7 @@
 		$text['label-template_description']['pt-br'] = '';
 		$text['label-template_description']['pt-pt'] = '';
 		$text['label-template_description']['ro-ro'] = '';
-		$text['label-template_description']['ru-ru'] = '';
+		$text['label-template_description']['ru-ru'] = 'Описание';
 		$text['label-template_description']['sv-se'] = '';
 		$text['label-template_description']['uk-ua'] = '';
 
