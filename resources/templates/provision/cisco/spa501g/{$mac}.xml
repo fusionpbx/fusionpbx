@@ -517,8 +517,8 @@
 <DNS_SRV_Auto_Prefix_1_ group="Ext_1/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_1_>
 <Proxy_Fallback_Intvl_1_ group="Ext_1/Proxy_and_Registration">600</Proxy_Fallback_Intvl_1_>
 <Proxy_Redundancy_Method_1_ group="Ext_1/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_1_>
-<Dual_Registration_1_ group="Ext_1/Proxy_and_Registration">if isset($spa_dual_registration)}Yes{else}No{/if}</Dual_Registration_1_>
-<Auto_Register_When_Failover_1_ group="Ext_1/Proxy_and_Registration">if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_1_>
+<Dual_Registration_1_ group="Ext_1/Proxy_and_Registration">{if isset($spa_dual_registration)}Yes{else}No{/if}</Dual_Registration_1_>
+<Auto_Register_When_Failover_1_ group="Ext_1/Proxy_and_Registration">{if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_1_>
 
 <!-- Ext_1/Subscriber_Information -->
 <Display_Name_1_ group="Ext_1/Subscriber_Information">{$display_name_1}</Display_Name_1_>
@@ -640,8 +640,8 @@
 <DNS_SRV_Auto_Prefix_2_ group="Ext_2/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_2_>
 <Proxy_Fallback_Intvl_2_ group="Ext_2/Proxy_and_Registration">600</Proxy_Fallback_Intvl_2_>
 <Proxy_Redundancy_Method_2_ group="Ext_2/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_2_>
-<Dual_Registration_2_ group="Ext_2/Proxy_and_Registration">if isset($spa_dual_registration)}Yes{else}No{/if}</Dual_Registration_2_>
-<Auto_Register_When_Failover_2_ group="Ext_2/Proxy_and_Registration">if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_2_>
+<Dual_Registration_2_ group="Ext_2/Proxy_and_Registration">{if isset($spa_dual_registration)}Yes{else}No{/if}</Dual_Registration_2_>
+<Auto_Register_When_Failover_2_ group="Ext_2/Proxy_and_Registration">{if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_2_>
 
 <!-- Ext_2/Subscriber_Information -->
 <Display_Name_2_ group="Ext_2/Subscriber_Information">{$display_name_2}</Display_Name_2_>
