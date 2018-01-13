@@ -402,7 +402,7 @@
 <CFWD_Notify_Serv_2_ group="Ext_2/Call_Feature_Settings">No</CFWD_Notify_Serv_2_>
 <CFWD_Notifier_2_ group="Ext_2/Call_Feature_Settings" />
 <Proxy_2_ group="Ext_2/Proxy_and_Registration">{$server_address_2}</Proxy_2_>
-<Use_Outbound_Proxy_2_ group="Ext_2/Proxy_and_Registration">{if isset($outbound_proxy_secondary_2)}Yes{else}No{/if}</Use_Outbound_Proxy_2_>
+<Use_Outbound_Proxy_2_ group="Ext_2/Proxy_and_Registration">{if isset($outbound_proxy_primary_2)}Yes{else}No{/if}</Use_Outbound_Proxy_2_>
 <Outbound_Proxy_2_ group="Ext_2/Proxy_and_Registration">{$outbound_proxy_primary_2}</Outbound_Proxy_2_>
 <Alternate_Proxy_2_ group="Ext_2/Proxy_and_Registration">{$server_address_2}</Alternate_Proxy_2_>
 <Alternate_Outbound_Proxy_2_ group="Ext_2/Proxy_and_Registration">{$outbound_proxy_secondary_2}</Alternate_Outbound_Proxy_2_>
@@ -487,7 +487,7 @@
 <CFWD_Notify_Serv_3_ group="Ext_3/Call_Feature_Settings">No</CFWD_Notify_Serv_3_>
 <CFWD_Notifier_3_ group="Ext_3/Call_Feature_Settings" />
 <Proxy_3_ group="Ext_3/Proxy_and_Registration">{$server_address_3}</Proxy_3_>
-<Use_Outbound_Proxy_3_ group="Ext_3/Proxy_and_Registration">{if isset($outbound_proxy_secondary_3)}Yes{else}No{/if}</Use_Outbound_Proxy_3_>
+<Use_Outbound_Proxy_3_ group="Ext_3/Proxy_and_Registration">{if isset($outbound_proxy_primary_3)}Yes{else}No{/if}</Use_Outbound_Proxy_3_>
 <Outbound_Proxy_3_ group="Ext_3/Proxy_and_Registration">{$outbound_proxy_primary_3}</Outbound_Proxy_3_>
 <Alternate_Proxy_3_ group="Ext_3/Proxy_and_Registration">{$server_address_3}</Alternate_Proxy_3_>
 <Alternate_Outbound_Proxy_3_ group="Ext_2/Proxy_and_Registration">{$outbound_proxy_secondary_3}</Alternate_Outbound_Proxy_3_>
@@ -572,7 +572,7 @@
 <CFWD_Notify_Serv_4_ group="Ext_4/Call_Feature_Settings">No</CFWD_Notify_Serv_4_>
 <CFWD_Notifier_4_ group="Ext_4/Call_Feature_Settings" />
 <Proxy_4_ group="Ext_4/Proxy_and_Registration">{$server_address_4}</Proxy_4_>
-<Use_Outbound_Proxy_4_ group="Ext_4/Proxy_and_Registration">No</Use_Outbound_Proxy_4_>
+<Use_Outbound_Proxy_4_ group="Ext_4/Proxy_and_Registration">{if isset($outbound_proxy_primary_4)}Yes{else}No{/if}</Use_Outbound_Proxy_4_>
 <Outbound_Proxy_4_ group="Ext_4/Proxy_and_Registration" />
 <Use_OB_Proxy_In_Dialog_4_ group="Ext_4/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_4_>
 <Register_4_ group="Ext_4/Proxy_and_Registration">Yes</Register_4_>
