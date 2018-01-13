@@ -331,8 +331,8 @@
 <DNS_SRV_Auto_Prefix_1_ group="Ext_1/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_1_>
 <Proxy_Fallback_Intvl_1_ group="Ext_1/Proxy_and_Registration">600</Proxy_Fallback_Intvl_1_>
 <Proxy_Redundancy_Method_1_ group="Ext_1/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_1_>
-<Dual_Registration_1_ group="Ext_1/Proxy_and_Registration">No</Dual_Registration_1_>
-<Auto_Register_When_Failover_1_ group="Ext_1/Proxy_and_Registration">No</Auto_Register_When_Failover_1_>
+<Dual_Registration_1_ group="Ext_1/Proxy_and_Registration">if isset($spa_dual_registration)}Yes{else}No{/if}</Dual_Registration_1_>
+<Auto_Register_When_Failover_1_ group="Ext_1/Proxy_and_Registration">if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_1_>
 <Display_Name_1_ group="Ext_1/Subscriber_Information">{$display_name_1}</Display_Name_1_>
 <User_ID_1_ group="Ext_1/Subscriber_Information">{$user_id_1}</User_ID_1_>
 <Password_1_ group="Ext_1/Subscriber_Information">{$user_password_1}</Password_1_>
@@ -416,8 +416,8 @@
 <DNS_SRV_Auto_Prefix_2_ group="Ext_2/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_2_>
 <Proxy_Fallback_Intvl_2_ group="Ext_2/Proxy_and_Registration">600</Proxy_Fallback_Intvl_2_>
 <Proxy_Redundancy_Method_2_ group="Ext_2/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_2_>
-<Dual_Registration_2_ group="Ext_2/Proxy_and_Registration">No</Dual_Registration_2_>
-<Auto_Register_When_Failover_2_ group="Ext_2/Proxy_and_Registration">No</Auto_Register_When_Failover_2_>
+<Dual_Registration_2_ group="Ext_2/Proxy_and_Registration">if isset($spa_dual_registration)}Yes{else}No{/if}</Dual_Registration_2_>
+<Auto_Register_When_Failover_2_ group="Ext_2/Proxy_and_Registration">if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_2_>
 <Display_Name_2_ group="Ext_2/Subscriber_Information">{$display_name_2}</Display_Name_2_>
 <User_ID_2_ group="Ext_2/Subscriber_Information">{$user_id_2}</User_ID_2_>
 <Password_2_ group="Ext_2/Subscriber_Information">{$user_password_2}</Password_2_>
@@ -501,8 +501,8 @@
 <DNS_SRV_Auto_Prefix_3_ group="Ext_3/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_3_>
 <Proxy_Fallback_Intvl_3_ group="Ext_3/Proxy_and_Registration">600</Proxy_Fallback_Intvl_3_>
 <Proxy_Redundancy_Method_3_ group="Ext_3/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_3_>
-<Dual_Registration_3_ group="Ext_3/Proxy_and_Registration">No</Dual_Registration_3_>
-<Auto_Register_When_Failover_3_ group="Ext_3/Proxy_and_Registration">No</Auto_Register_When_Failover_3_>
+<Dual_Registration_3_ group="Ext_3/Proxy_and_Registration">if isset($spa_dual_registration)}Yes{else}No{/if}</Dual_Registration_3_>
+<Auto_Register_When_Failover_3_ group="Ext_3/Proxy_and_Registration">if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_3_>
 <Display_Name_3_ group="Ext_3/Subscriber_Information">{$display_name_3}</Display_Name_3_>
 <User_ID_3_ group="Ext_3/Subscriber_Information">{$user_id_3}</User_ID_3_>
 <Password_3_ group="Ext_3/Subscriber_Information">{$user_password_3}</Password_3_>
@@ -583,8 +583,8 @@
 <DNS_SRV_Auto_Prefix_4_ group="Ext_4/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_4_>
 <Proxy_Fallback_Intvl_4_ group="Ext_4/Proxy_and_Registration">600</Proxy_Fallback_Intvl_4_>
 <Proxy_Redundancy_Method_4_ group="Ext_4/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_4_>
-<Dual_Registration_4_ group="Ext_4/Proxy_and_Registration">No</Dual_Registration_4_>
-<Auto_Register_When_Failover_4_ group="Ext_4/Proxy_and_Registration">No</Auto_Register_When_Failover_4_>
+<Dual_Registration_4_ group="Ext_4/Proxy_and_Registration">if isset($spa_dual_registration)}Yes{else}No{/if}</Dual_Registration_4_>
+<Auto_Register_When_Failover_4_ group="Ext_4/Proxy_and_Registration">if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_4_>
 <Display_Name_4_ group="Ext_4/Subscriber_Information">{$display_name_4}</Display_Name_4_>
 <User_ID_4_ group="Ext_4/Subscriber_Information">{$user_id_4}</User_ID_4_>
 <Password_4_ group="Ext_4/Subscriber_Information">{$user_password_4}</Password_4_>
