@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010
+--	Copyright (C) 2010-2018
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -33,6 +33,9 @@
 --define the explode function
 	require "resources.functions.explode";
 
+--prepare the api object
+	api = freeswitch.API();
+
 --answer the call
 	if (session:ready()) then
 		session:answer();
@@ -47,7 +50,6 @@
 		predefined_destination = session:getVariable("predefined_destination");
 		digit_min_length = session:getVariable("digit_min_length");
 		digit_max_length = session:getVariable("digit_max_length");
-		gateway = session:getVariable("gateway");
 		context = session:getVariable("context");
 		privacy = session:getVariable("privacy");
 	end
@@ -63,15 +65,11 @@
 	end
 
 --set defaults
-	if (digit_min_length) then
-		--do nothing
-	else
+	if (not digit_min_length) then
 		digit_min_length = "2";
 	end
 
-	if (digit_max_length) then
-		--do nothing
-	else
+	if (not digit_max_length) then
 		digit_max_length = "11";
 	end
 
@@ -102,9 +100,20 @@
 		end
 	end
 
+--set privacy
+	if (session:ready()) then
+		if (privacy == "true") then
+			session:execute("privacy", "full");
+			session:execute("set", "sip_h_Privacy=id");
+			session:execute("set", "privacy=yes");
+		end
+	end
+
 --set the caller id name and number
 	if (session:ready()) then
-		if (string.len(destination_number) < 7) then
+		cmd = "user_exists id ".. destination_number .." "..context;
+		user_exists = trim(api:executeString(cmd));
+		if (user_exists == "true") then
 			if (caller_id_name) then
 				--caller id name provided do nothing
 			else
@@ -129,28 +138,15 @@
 		end
 	end
 
---transfer or bridge the call
+--send the destination
 	if (session:ready()) then
-		if (string.len(destination_number) < 7) then
+		if (user_exists == true) then
 			--local call
 			session:execute("transfer", destination_number .. " XML " .. context);
 		else
-			--remote call
-			if (gateway) then
-				gateway_table = explode(",",gateway);
-				for index,value in pairs(gateway_table) do
-					session:execute("bridge", "{continue_on_fail=true,hangup_after_bridge=true,origination_caller_id_name="..caller_id_name..",origination_caller_id_number="..caller_id_number.."}sofia/gateway/"..value.."/"..destination_number);
-				end
-		else
-				session:execute("set", "effective_caller_id_name="..caller_id_name);
-				session:execute("set", "effective_caller_id_number="..caller_id_number);
-				session:execute("transfer", destination_number .. " XML " .. context);
-			end
+			--exteernal call
+			session:execute("set", "effective_caller_id_name="..caller_id_name);
+			session:execute("set", "effective_caller_id_number="..caller_id_number);
+			session:execute("transfer", destination_number .. " XML " .. context);
 		end
 	end
-
---alternate method
-	--local session2 = freeswitch.Session("{ignore_early_media=true}sofia/gateway/flowroute.com/"..destination_number);
-	--t1 = os.date('*t');
-	--call_start_time = os.time(t1);
-	--freeswitch.bridge(session, session2);
