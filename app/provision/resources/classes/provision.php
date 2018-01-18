@@ -314,7 +314,7 @@ include "root.php";
 			foreach ($user_groups as &$row) {
 				$contacts[] = array("contact_type"=>"group", "group_name"=>$row['group_name'], "group_description"=>$row['group_description'], "id"=>++$key);
 				$groups[$row['group_uuid']] = $key;
-				$my_groups[] = '@'.$row['group_name']; // Used to show/hide
+				$my_groups[] = '@'.$row['group_name']; // Used to show/hide  
 			}
 			// Get a list of contacts that this user/phone has access based on assigned users and groups.
 			$sql  = "SELECT c.contact_uuid, c.contact_name_given, c.contact_name_family, c.contact_title, c.contact_category, c.contact_role, c.contact_organization, u.user_uuid ";
@@ -351,7 +351,7 @@ include "root.php";
 			foreach ($user_contacts as &$row) {
 				$last_extention = $row['extension'];
 				unset($contact);
-				// Grandsteam phonebook manager: First, Last, Department, Primary, (Work, Home, Mobile, Fax, Pager, Car... with number and account), email(s), Photo, Ringtone, Group(s)
+				// Grandsteam phonebook manager: First, Last, Department, Primary, (Work, Home, Mobile, Fax, Pager, Car... with number and account), email(s), Photo, Ringtone, Group(s) 
 				// GXP21xx serries has First, Last, Company, Department, Job, Job TItle, 1Work ,1Home, 1Mobile, Accounts, Groups(1-many)
 				$contact = array();
 				$contact['contact_type']	= "contact";
@@ -359,7 +359,7 @@ include "root.php";
 				$contact['user_uuid']		= $row['user_uuid'];
 				$contact['contact_name_given']	= $row['contact_name_given']; //FirstName
 				$contact['contact_name_family']	= $row['contact_name_family']; // LastName
-				$contact['contact_title']	= $row['contact_title'];
+				$contact['contact_title']	= $row['contact_title']; 
 				$contact['contact_category']	= $row['contact_category']; // Department
 				$contact['contact_role']	= $row['contact_role']; // Job Title
 				$contact['contact_organization']= $row['contact_organization']; // Company
@@ -429,7 +429,7 @@ include "root.php";
 								$show = true;
 								break 1;
 							}
-						}
+						} 		
 					}
 					if ( $show && $phone['phone_label'] == "Home" ) {
 						$contact['contact_home'] = $phone['phone_number'];
@@ -611,7 +611,7 @@ include "root.php";
 							$templates['snom-m3-SIP'] = 'snom/m3';
 
 							$templates['yealink SIP-CP860'] = 'yealink/cp860';
-#							$templates['yealink SIP-CP860'] = 'yealink/cp920';
+#							$templates['yealink SIP-CP860'] = 'yealink/cp920';							
 #							$templates['yealink SIP-CP860'] = 'yealink/cp960';
 							$templates['yealink SIP-T19P'] = 'yealink/t19p';
 							$templates['yealink SIP-T20P'] = 'yealink/t20p';
@@ -685,7 +685,7 @@ include "root.php";
 							$templates['PolycomVVX-VVX_500-UA/5'] = 'polycom/5.x';
 							$templates['PolycomVVX-VVX_501-UA/5'] = 'polycom/5.x';
 							$templates['PolycomVVX-VVX_600-UA/5'] = 'polycom/5.x';
-							$templates['PolycomVVX-VVX_601-UA/5'] = 'polycom/5.x';
+							$templates['PolycomVVX-VVX_601-UA/5'] = 'polycom/5.x';					
 							$templates['Vesa VCS754'] = 'vtech/vcs754';
 							$templates['Wget/1.11.3'] = 'konftel/kt300ip';
 							foreach ($templates as $key=>$value){
@@ -811,16 +811,6 @@ include "root.php";
 						}
 					}
 					unset ($prep_statement);
-				}
-
-				//set the template directory
-				if (strlen($provision["template_dir"]) > 0) {
-					$template_dir = $provision["template_dir"];
-				}
-
-                                //if the domain name directory exists then only use templates from it
-				if (is_dir($template_dir.'/'.$domain_name)) {
-					$device_template = $domain_name.'/'.$device_template;
 				}
 
 			//initialize a template object
@@ -1198,7 +1188,7 @@ include "root.php";
 					$view->assign("user_id",$user_id);
 					$view->assign("password",$password);
 					$view->assign("template",$device_template);
-					$view->assign("microtime",microtime(true));
+					$view->assign("microtime",microtime(true));		
 
 				// personal ldap password
 					global $laddr_salt;
@@ -1246,6 +1236,16 @@ include "root.php";
 						foreach($provision as $key=>$val) {
 							$view->assign($key, $val);
 						}
+					}
+
+				//set the template directory
+					if (strlen($provision["template_dir"]) > 0) {
+						$template_dir = $provision["template_dir"];
+					}
+
+				//if the domain name directory exists then only use templates from it
+					if (is_dir($template_dir.'/'.$domain_name)) {
+						$device_template = $domain_name.'/'.$device_template;
 					}
 
 				//if $file is not provided then look for a default file that exists
