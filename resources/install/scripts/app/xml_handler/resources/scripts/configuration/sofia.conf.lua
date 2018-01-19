@@ -242,7 +242,7 @@
 							if (name == nil or name == '') then name = 'false'; end
 							if (alias == nil or alias == '') then alias = 'false'; end
 							if (parse == nil or parse == '') then parse = 'false'; end
-							table.insert(xml, [[						<domain name="]] .. name .. [[" alias="]] .. alias .. [[" parse="]] .. parse .. [[""/>]]);
+							table.insert(xml, [[						<domain name="]] .. name .. [[" alias="]] .. alias .. [[" parse="]] .. parse .. [["/>]]);
 						end);
 						
 						table.insert(xml, [[					</domains>]]);
