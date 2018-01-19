@@ -13,7 +13,7 @@
 --	   notice, this list of conditions and the following disclaimer in the
 --	   documentation and/or other materials provided with the distribution.
 --
---	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--	THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 --	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
 --	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
@@ -244,7 +244,7 @@
 							if (name == nil or name == '') then name = 'false'; end
 							if (alias == nil or alias == '') then alias = 'false'; end
 							if (parse == nil or parse == '') then parse = 'false'; end
-							table.insert(xml, [[						<domain name="]] .. name .. [[" alias="]] .. alias .. [[" parse="]] .. parse .. [[""/>]]);
+							table.insert(xml, [[						<domain name="]] .. name .. [[" alias="]] .. alias .. [[" parse="]] .. parse .. [["/>]]);
 						end);
 						
 						table.insert(xml, [[					</domains>]]);
