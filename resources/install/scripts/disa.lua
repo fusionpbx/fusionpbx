@@ -43,6 +43,7 @@
 
 --get and save the variables
 	if (session:ready()) then
+		sound_greeting = session:getVariable("sound_greeting");
 		pin_number = session:getVariable("pin_number");
 		sounds_dir = session:getVariable("sounds_dir");
 		caller_id_name = session:getVariable("caller_id_name");
@@ -71,6 +72,12 @@
 
 	if (not digit_max_length) then
 		digit_max_length = "11";
+	end
+
+--if the sound_greeting is provided then play it
+	if (session:ready() and sound_greeting) then
+		session:streamFile(sound_greeting);
+		session:sleep(200);
 	end
 
 --if the pin number is provided then require it
