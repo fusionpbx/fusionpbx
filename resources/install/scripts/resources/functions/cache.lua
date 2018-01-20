@@ -80,17 +80,32 @@ end
 
 -- convert cache key to memcache key
 local function key2key(key)
-  return (string.gsub(key, "\\", "\\\\"))
+  if (key) then
+    key = string.gsub(key, "\\", "\\\\");
+  else
+    key = '';
+  end
+  return key;
 end
 
 -- encode value to be able store it in memcache
 local function memcache_encode(value)
-  return (string.gsub(value, "'", "&#39;"):gsub("\\", "\\\\"))
+  if (value) then
+    value = string.gsub(value, "'", "&#39;"):gsub("\\", "\\\\");
+  else
+    value = '';
+  end
+  return value;
 end
 
 -- decode value retrived from memcache
 local function memcache_decode(value)
-  return (string.gsub(value, "&#39;", "'"))
+  if (value) then
+    value = string.gsub(value, "&#39;", "'");
+  else
+    value = '';
+  end
+  return value;
 end
 
 function Cache.support()
