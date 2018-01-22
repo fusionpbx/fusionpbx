@@ -211,7 +211,7 @@
 	hostname = trim(api:execute("switchname", ""))
 
 --get the domain_uuid if it not already set
-	if(domain_uuid == nil or domain_uuid == '' and domain_name) then
+	if (domain_uuid == nil or domain_uuid == '' and domain_name) then
 		sql = "SELECT domain_uuid FROM v_domains as d ";
 		sql = sql .. "where d.domain_name = :domain_name ";
 		local params = {domain_name = domain_name};
