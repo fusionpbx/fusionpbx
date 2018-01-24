@@ -195,7 +195,7 @@
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
-			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='destinations.php?show=all';\">\n";
+			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='destinations.php?show=all&type=$destination_type';\">\n";
 		}
 	}
 
@@ -228,7 +228,7 @@
 	echo th_order_by('destination_description', $text['label-destination_description'], $order_by, $order);
 	echo "	<td class='list_control_icons'>";
 	if (permission_exists('destination_add')) {
-		echo "		<a href='destination_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo "		<a href='destination_edit.php?type=$destination_type' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	else {
 		echo "&nbsp;\n";
@@ -289,7 +289,7 @@
 	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
 	echo "		<td class='list_control_icons'>";
 	if (permission_exists('destination_add')) {
-		echo 		"<a href='destination_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo 		"<a href='destination_edit.php?type=$destination_type' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	else {
 		echo 		"&nbsp;";
