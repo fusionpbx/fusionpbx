@@ -358,6 +358,22 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Feature Key Sync Yes=enabled No=disable";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2ce5d7a2-2a72-423f-adb4-777b1f0f8586";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_dual_registration";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "No";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Dual Registration Yes=enabled No=disable";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "6f815035-9b80-4007-8cc6-ac151727e5fb";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_register_when_failover";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "No";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Auto register when failover Yes=enabled No=disable";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8fc369c3-bd6e-4fbb-957c-681de8a325fc";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_call_waiting";
@@ -397,6 +413,22 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "VLAN Priority";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ce5bf781-bb48-480a-b144-4fa466842fa1";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "stun_server";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "STUN server address";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d39b97ea-fc69-4a42-af30-628cf6139e0b";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "stun_port";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3478";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "STUN server port";
 		$y++;
 
 ?>

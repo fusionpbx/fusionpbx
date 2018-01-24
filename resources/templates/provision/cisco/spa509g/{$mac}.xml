@@ -587,25 +587,27 @@
 <User_ID_with_Domain_1_ group="Ext_1/Call_Feature_Settings">No</User_ID_with_Domain_1_>
 <Broadsoft_ACD_1_ group="Ext_1/Call_Feature_Settings">No</Broadsoft_ACD_1_>
 <Auto_Ans_Page_On_Active_Call_1_ group="Ext_1/Call_Feature_Settings">Yes</Auto_Ans_Page_On_Active_Call_1_>
-<Feature_Key_Sync_1_ group="Ext_1/Call_Feature_Settings">No</Feature_Key_Sync_1_>
+<Feature_Key_Sync_1_ group="Ext_1/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_1_>
 <Call_Park_Monitor_Enable_1_ group="Ext_1/Call_Feature_Settings">No</Call_Park_Monitor_Enable_1_>
 
 <!-- Ext_1/Proxy_and_Registration -->
 <Proxy_1_ group="Ext_1/Proxy_and_Registration">{$server_address_1}</Proxy_1_>
-<Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration" />
-<Alternate_Proxy_1_ group="Ext_1/Proxy_and_Registration" />
-<Alternate_Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration" />
-<Use_Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">No</Use_Outbound_Proxy_1_>
+<Use_Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">{if isset($outbound_proxy_primary_1)}Yes{else}No{/if}</Use_Outbound_Proxy_1_>
+<Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">{$outbound_proxy_primary_1}</Outbound_Proxy_1_>
+<Alternate_Proxy_1_ group="Ext_1/Proxy_and_Registration">{$server_address_1}</Alternate_Proxy_1_>
+<Alternate_Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">{$outbound_proxy_secondary_1}</Alternate_Outbound_Proxy_1_>
 <Use_OB_Proxy_In_Dialog_1_ group="Ext_1/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_1_>
 <Register_1_ group="Ext_1/Proxy_and_Registration">Yes</Register_1_>
 <Make_Call_Without_Reg_1_ group="Ext_1/Proxy_and_Registration">No</Make_Call_Without_Reg_1_>
 <Register_Expires_1_ group="Ext_1/Proxy_and_Registration">{$register_expires_1}</Register_Expires_1_>
 <Ans_Call_Without_Reg_1_ group="Ext_1/Proxy_and_Registration">No</Ans_Call_Without_Reg_1_>
-<Use_DNS_SRV_1_ group="Ext_1/Proxy_and_Registration">No</Use_DNS_SRV_1_>
+{if $sip_transport_1 == 'dns srv'}<Use_DNS_SRV_1_ group="Ext_1/Proxy_and_Registration">Yes</Use_DNS_SRV_1_>{/if}
+{if $sip_transport_1 != 'dns srv'}<Use_DNS_SRV_1_ group="Ext_1/Proxy_and_Registration">No</Use_DNS_SRV_1_>{/if}
 <DNS_SRV_Auto_Prefix_1_ group="Ext_1/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_1_>
-<Proxy_Fallback_Intvl_1_ group="Ext_1/Proxy_and_Registration">3600</Proxy_Fallback_Intvl_1_>
+<Proxy_Fallback_Intvl_1_ group="Ext_1/Proxy_and_Registration">600</Proxy_Fallback_Intvl_1_>
 <Proxy_Redundancy_Method_1_ group="Ext_1/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_1_>
-<Dual_Registration_1_ group="Ext_1/Proxy_and_Registration">No</Dual_Registration_1_>
+<Dual_Registration_1_ group="Ext_1/Proxy_and_Registration">{if isset($spa_dual_registration)}Yes{else}No{/if}</Dual_Registration_1_>
+<Auto_Register_When_Failover_1_ group="Ext_1/Proxy_and_Registration">{if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_1_>
 
 <!-- Ext_1/Subscriber_Information -->
 <Display_Name_1_ group="Ext_1/Subscriber_Information">{$display_name_1}</Display_Name_1_>
@@ -708,7 +710,7 @@
 <User_ID_with_Domain_2_ group="Ext_2/Call_Feature_Settings">No</User_ID_with_Domain_2_>
 <Broadsoft_ACD_2_ group="Ext_2/Call_Feature_Settings">No</Broadsoft_ACD_2_>
 <Auto_Ans_Page_On_Active_Call_2_ group="Ext_2/Call_Feature_Settings">Yes</Auto_Ans_Page_On_Active_Call_2_>
-<Feature_Key_Sync_2_ group="Ext_2/Call_Feature_Settings">No</Feature_Key_Sync_2_>
+<Feature_Key_Sync_2_ group="Ext_2/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_2_>
 <Call_Park_Monitor_Enable_2_ group="Ext_2/Call_Feature_Settings">No</Call_Park_Monitor_Enable_2_>
 
 <!-- Ext_2/Proxy_and_Registration -->
@@ -829,7 +831,7 @@
 <User_ID_with_Domain_3_ group="Ext_3/Call_Feature_Settings">No</User_ID_with_Domain_3_>
 <Broadsoft_ACD_3_ group="Ext_3/Call_Feature_Settings">No</Broadsoft_ACD_3_>
 <Auto_Ans_Page_On_Active_Call_3_ group="Ext_3/Call_Feature_Settings">Yes</Auto_Ans_Page_On_Active_Call_3_>
-<Feature_Key_Sync_3_ group="Ext_3/Call_Feature_Settings">No</Feature_Key_Sync_3_>
+<Feature_Key_Sync_3_ group="Ext_3/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_3_>
 <Call_Park_Monitor_Enable_3_ group="Ext_3/Call_Feature_Settings">No</Call_Park_Monitor_Enable_3_>
 
 <!-- Ext_3/Proxy_and_Registration -->
@@ -950,7 +952,7 @@
 <User_ID_with_Domain_4_ group="Ext_4/Call_Feature_Settings">No</User_ID_with_Domain_4_>
 <Broadsoft_ACD_4_ group="Ext_4/Call_Feature_Settings">No</Broadsoft_ACD_4_>
 <Auto_Ans_Page_On_Active_Call_4_ group="Ext_4/Call_Feature_Settings">Yes</Auto_Ans_Page_On_Active_Call_4_>
-<Feature_Key_Sync_4_ group="Ext_4/Call_Feature_Settings">No</Feature_Key_Sync_4_>
+<Feature_Key_Sync_4_ group="Ext_4/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_4_>
 <Call_Park_Monitor_Enable_4_ group="Ext_4/Call_Feature_Settings">No</Call_Park_Monitor_Enable_4_>
 
 <!-- Ext_4/Proxy_and_Registration -->
@@ -1071,7 +1073,7 @@
 <User_ID_with_Domain_5_ group="Ext_5/Call_Feature_Settings">No</User_ID_with_Domain_5_>
 <Broadsoft_ACD_5_ group="Ext_5/Call_Feature_Settings">No</Broadsoft_ACD_5_>
 <Auto_Ans_Page_On_Active_Call_5_ group="Ext_5/Call_Feature_Settings">Yes</Auto_Ans_Page_On_Active_Call_5_>
-<Feature_Key_Sync_5_ group="Ext_5/Call_Feature_Settings">No</Feature_Key_Sync_5_>
+<Feature_Key_Sync_5_ group="Ext_5/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_5_>
 <Call_Park_Monitor_Enable_5_ group="Ext_5/Call_Feature_Settings">No</Call_Park_Monitor_Enable_5_>
 
 <!-- Ext_5/Proxy_and_Registration -->
@@ -1192,7 +1194,7 @@
 <User_ID_with_Domain_6_ group="Ext_6/Call_Feature_Settings">No</User_ID_with_Domain_6_>
 <Broadsoft_ACD_6_ group="Ext_6/Call_Feature_Settings">No</Broadsoft_ACD_6_>
 <Auto_Ans_Page_On_Active_Call_6_ group="Ext_6/Call_Feature_Settings">Yes</Auto_Ans_Page_On_Active_Call_6_>
-<Feature_Key_Sync_6_ group="Ext_6/Call_Feature_Settings">No</Feature_Key_Sync_6_>
+<Feature_Key_Sync_6_ group="Ext_6/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_6_>
 <Call_Park_Monitor_Enable_6_ group="Ext_6/Call_Feature_Settings">No</Call_Park_Monitor_Enable_6_>
 
 <!-- Ext_6/Proxy_and_Registration -->
@@ -1313,7 +1315,7 @@
 <User_ID_with_Domain_7_ group="Ext_7/Call_Feature_Settings">No</User_ID_with_Domain_7_>
 <Broadsoft_ACD_7_ group="Ext_7/Call_Feature_Settings">No</Broadsoft_ACD_7_>
 <Auto_Ans_Page_On_Active_Call_7_ group="Ext_7/Call_Feature_Settings">Yes</Auto_Ans_Page_On_Active_Call_7_>
-<Feature_Key_Sync_7_ group="Ext_7/Call_Feature_Settings">No</Feature_Key_Sync_7_>
+<Feature_Key_Sync_7_ group="Ext_7/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_7_>
 <Call_Park_Monitor_Enable_7_ group="Ext_7/Call_Feature_Settings">No</Call_Park_Monitor_Enable_7_>
 
 <!-- Ext_7/Proxy_and_Registration -->
@@ -1434,7 +1436,7 @@
 <User_ID_with_Domain_8_ group="Ext_8/Call_Feature_Settings">No</User_ID_with_Domain_8_>
 <Broadsoft_ACD_8_ group="Ext_8/Call_Feature_Settings">No</Broadsoft_ACD_8_>
 <Auto_Ans_Page_On_Active_Call_8_ group="Ext_8/Call_Feature_Settings">Yes</Auto_Ans_Page_On_Active_Call_8_>
-<Feature_Key_Sync_8_ group="Ext_8/Call_Feature_Settings">No</Feature_Key_Sync_8_>
+<Feature_Key_Sync_8_ group="Ext_8/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_8_>
 <Call_Park_Monitor_Enable_8_ group="Ext_8/Call_Feature_Settings">No</Call_Park_Monitor_Enable_8_>
 
 <!-- Ext_8/Proxy_and_Registration -->
@@ -1555,7 +1557,7 @@
 <User_ID_with_Domain_9_ group="Ext_9/Call_Feature_Settings">No</User_ID_with_Domain_9_>
 <Broadsoft_ACD_9_ group="Ext_9/Call_Feature_Settings">No</Broadsoft_ACD_9_>
 <Auto_Ans_Page_On_Active_Call_9_ group="Ext_9/Call_Feature_Settings">Yes</Auto_Ans_Page_On_Active_Call_9_>
-<Feature_Key_Sync_9_ group="Ext_9/Call_Feature_Settings">No</Feature_Key_Sync_9_>
+<Feature_Key_Sync_9_ group="Ext_9/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_9_>
 <Call_Park_Monitor_Enable_9_ group="Ext_9/Call_Feature_Settings">No</Call_Park_Monitor_Enable_9_>
 
 <!-- Ext_9/Proxy_and_Registration -->
@@ -1676,7 +1678,7 @@
 <User_ID_with_Domain_10_ group="Ext_10/Call_Feature_Settings">No</User_ID_with_Domain_10_>
 <Broadsoft_ACD_10_ group="Ext_10/Call_Feature_Settings">No</Broadsoft_ACD_10_>
 <Auto_Ans_Page_On_Active_Call_10_ group="Ext_10/Call_Feature_Settings">Yes</Auto_Ans_Page_On_Active_Call_10_>
-<Feature_Key_Sync_10_ group="Ext_10/Call_Feature_Settings">No</Feature_Key_Sync_10_>
+<Feature_Key_Sync_10_ group="Ext_10/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_10_>
 <Call_Park_Monitor_Enable_10_ group="Ext_10/Call_Feature_Settings">No</Call_Park_Monitor_Enable_10_>
 
 <!-- Ext_10/Proxy_and_Registration -->
@@ -1797,7 +1799,7 @@
 <User_ID_with_Domain_11_ group="Ext_11/Call_Feature_Settings">No</User_ID_with_Domain_11_>
 <Broadsoft_ACD_11_ group="Ext_11/Call_Feature_Settings">No</Broadsoft_ACD_11_>
 <Auto_Ans_Page_On_Active_Call_11_ group="Ext_11/Call_Feature_Settings">Yes</Auto_Ans_Page_On_Active_Call_11_>
-<Feature_Key_Sync_11_ group="Ext_11/Call_Feature_Settings">No</Feature_Key_Sync_11_>
+<Feature_Key_Sync_11_ group="Ext_11/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_11_>
 <Call_Park_Monitor_Enable_11_ group="Ext_11/Call_Feature_Settings">No</Call_Park_Monitor_Enable_11_>
 
 <!-- Ext_11/Proxy_and_Registration -->
@@ -1918,7 +1920,7 @@
 <User_ID_with_Domain_12_ group="Ext_12/Call_Feature_Settings">No</User_ID_with_Domain_12_>
 <Broadsoft_ACD_12_ group="Ext_12/Call_Feature_Settings">No</Broadsoft_ACD_12_>
 <Auto_Ans_Page_On_Active_Call_12_ group="Ext_12/Call_Feature_Settings">Yes</Auto_Ans_Page_On_Active_Call_12_>
-<Feature_Key_Sync_12_ group="Ext_12/Call_Feature_Settings">No</Feature_Key_Sync_12_>
+<Feature_Key_Sync_12_ group="Ext_12/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_12_>
 <Call_Park_Monitor_Enable_12_ group="Ext_12/Call_Feature_Settings">No</Call_Park_Monitor_Enable_12_>
 
 <!-- Ext_12/Proxy_and_Registration -->

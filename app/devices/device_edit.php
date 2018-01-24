@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2017 All Rights Reserved.
+	Copyright (C) 2008-2018 All Rights Reserved.
 
 */
 
@@ -404,6 +404,7 @@
 	$device_lines[$x]['user_id'] = '';
 	$device_lines[$x]['auth_id'] = '';
 	$device_lines[$x]['password'] = '';
+	$device_lines[$x]['shared_line'] = '';
 	$device_lines[$x]['enabled'] = '';
 	$device_lines[$x]['sip_port'] = $_SESSION['provision']['line_sip_port']['numeric'];
 	$device_lines[$x]['sip_transport'] = $_SESSION['provision']['line_sip_transport']['text'];
@@ -761,6 +762,9 @@
 		if (permission_exists('device_line_register_expires')) {
 			echo "				<td class='vtable'>".$text['label-register_expires']."</td>\n";
 		}
+		if (permission_exists('device_shared_line')) {
+			echo "				<td class='vtable'>".$text['label-shared_line']."</td>\n";
+		}
 		echo "				<td class='vtable'>".$text['label-enabled']."</td>\n";
 		echo "				<td>&nbsp;</td>\n";
 		echo "			</tr>\n";
@@ -899,6 +903,15 @@
 				}
 				else {
 					echo "				<input type='hidden' name='device_lines[".$x."][register_expires]' value=\"".$row['register_expires']."\"/>\n";
+				}
+
+				if (permission_exists('device_shared_line')) {
+					echo "			<td align='left'>\n";
+					echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][shared_line]' maxlength='255' value=\"".$row['shared_line']."\"/>\n";
+					echo "			</td>\n";
+				}
+				else {
+					echo "				<input type='hidden' name='device_lines[".$x."][shared_line]' value=\"".$row['shared_line']."\"/>\n";
 				}
 
 				echo "			<td align='left'>\n";

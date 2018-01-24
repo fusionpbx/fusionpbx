@@ -752,7 +752,7 @@
 	echo "	".$text['label-destination_type']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='destination_type' id='destination_type' onchange='type_control(this.options[this.selectedIndex].value);'>\n";
+	echo "	<select class='formfld' name='destination_type' id='destination_type' onchange='type_control(this.options[this.selectedIndex].value);context_control();'>\n";
 	switch ($destination_type) {
 		case "inbound" : 	$selected[1] = "selected='selected'";	break;
 		case "outbound" : 	$selected[2] = "selected='selected'";	break;

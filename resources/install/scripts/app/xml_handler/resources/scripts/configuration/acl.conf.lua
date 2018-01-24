@@ -1,6 +1,6 @@
 --	xml_handler.lua
 --	Part of FusionPBX
---	Copyright (C) 2015 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2015-2018 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -13,7 +13,7 @@
 --	   notice, this list of conditions and the following disclaimer in the
 --	   documentation and/or other materials provided with the distribution.
 --
---	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--	THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 --	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
 --	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
@@ -39,14 +39,10 @@
 
 --set the cache
 	if not XML_STRING then
-		--log cache error
-			if (debug["cache"]) then
-				freeswitch.consoleLog("warning", "[xml_handler] " .. acl_cache_key .. " can not be get from memcache: " .. tostring(err) .. "\n");
-			end
 
 		--log cache error
 			if (debug["cache"]) then
-				freeswitch.consoleLog("warning", "[xml_handler] configuration:acl.conf can not be get from memcache: " .. tostring(err) .. "\n");
+				freeswitch.consoleLog("warning", "[xml_handler] configuration:acl.conf can not be get from the cache: " .. tostring(err) .. "\n");
 			end
 
 		--set a default value
@@ -125,17 +121,10 @@
 			local ok, err = cache.set(acl_cache_key, XML_STRING, expire["acl"]);
 			if debug["cache"] then
 				if ok then
-					freeswitch.consoleLog("notice", "[xml_handler] " .. acl_cache_key .. " stored in memcache\n");
+					freeswitch.consoleLog("notice", "[xml_handler] " .. acl_cache_key .. " stored in the cache\n");
 				else
-					freeswitch.consoleLog("warning", "[xml_handler] " .. acl_cache_key .. " can not be stored in memcache: " .. tostring(err) .. "\n");
+					freeswitch.consoleLog("warning", "[xml_handler] " .. acl_cache_key .. " can not be stored in the cache: " .. tostring(err) .. "\n");
 				end
-			end
-
-		--send the xml to the console
-			if (debug["xml_string"]) then
-				local file = assert(io.open(temp_dir .. "/acl.conf.xml", "w"));
-				file:write(XML_STRING);
-				file:close();
 			end
 
 		--send to the console
@@ -145,6 +134,13 @@
 	else
 		--send to the console
 			if (debug["cache"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] " .. acl_cache_key .. " source: memcache\n");
+				freeswitch.consoleLog("notice", "[xml_handler] " .. acl_cache_key .. " source: cache\n");
 			end
 	end --if XML_STRING
+
+--send the xml to the console
+	if (debug["xml_string"]) then
+		local file = assert(io.open(temp_dir .. "/acl.conf.xml", "w"));
+		file:write(XML_STRING);
+		file:close();
+	end

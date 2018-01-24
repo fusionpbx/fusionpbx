@@ -812,6 +812,15 @@ include "root.php";
 					}
 					unset ($prep_statement);
 				}
+			//set the template directory
+				if (strlen($provision["template_dir"]) > 0) {
+					$template_dir = $provision["template_dir"];
+				}
+
+			//if the domain name directory exists then only use templates from it
+				if (is_dir($template_dir.'/'.$domain_name)) {
+					$device_template = $domain_name.'/'.$device_template;
+				}
 
 			//initialize a template object
 				$view = new template();
@@ -1236,16 +1245,6 @@ include "root.php";
 						foreach($provision as $key=>$val) {
 							$view->assign($key, $val);
 						}
-					}
-
-				//set the template directory
-					if (strlen($provision["template_dir"]) > 0) {
-						$template_dir = $provision["template_dir"];
-					}
-
-				//if the domain name directory exists then only use templates from it
-					if (is_dir($template_dir.'/'.$domain_name)) {
-						$device_template = $domain_name.'/'.$device_template;
 					}
 
 				//if $file is not provided then look for a default file that exists
