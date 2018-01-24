@@ -422,7 +422,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "STUN server address";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ce5bf781-bb48-480a-b144-4fa466842fa1";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d39b97ea-fc69-4a42-af30-628cf6139e0b";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "stun_port";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
