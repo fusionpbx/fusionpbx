@@ -251,7 +251,7 @@
 			echo "		<input type='hidden' name=\"destinations[$x][destination_uuid]\" value='".$row['destination_uuid']."' />\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_type']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_number']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".format_phone($row['destination_number'])."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_number_regex']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_context']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_uuid']."&nbsp;</td>\n";
