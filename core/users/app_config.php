@@ -82,6 +82,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e3f5f4cd-0f17-428a-b788-2f2db91b6dc7";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "user";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "password_length";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The default length of characters in a user password.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "727977e5-8b5f-4d80-af37-41fd3a4a1859";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "limit";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "users";
