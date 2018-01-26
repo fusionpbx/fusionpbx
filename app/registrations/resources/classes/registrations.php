@@ -153,7 +153,7 @@ if (!class_exists('registrations')) {
 		/**
 		 * get the registration count
 		 */
-		public function count($profile) {
+		public function count($profile = 'all') {
 
 			//set the initial count value to 0
 				$count = 0;
