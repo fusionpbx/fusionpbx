@@ -2641,4 +2641,24 @@ $text['button-agents']['ru-ru'] = "Операторы";
 $text['button-agents']['sv-se'] = "Agenter";
 $text['button-agents']['uk-ua'] = "Оператори";
 
+$text['button-wallbaord']['en-us'] = "Wallboard";
+$text['button-wallbaord']['ar-eg'] = "";
+$text['button-wallbaord']['de-at'] = "";
+$text['button-wallbaord']['de-ch'] = "";
+$text['button-wallbaord']['de-de'] = "";
+$text['button-wallbaord']['es-cl'] = "";
+$text['button-wallbaord']['es-mx'] = "";
+$text['button-wallbaord']['fr-ca'] = "";
+$text['button-wallbaord']['fr-fr'] = "";
+$text['button-wallbaord']['he-il'] = "";
+$text['button-wallbaord']['it-it'] = "";
+$text['button-wallbaord']['nl-nl'] = "";
+$text['button-wallbaord']['pl-pl'] = "";
+$text['button-wallbaord']['pt-br'] = "";
+$text['button-wallbaord']['pt-pt'] = "";
+$text['button-wallbaord']['ro-ro'] = "";
+$text['button-wallbaord']['ru-ru'] = "";
+$text['button-wallbaord']['sv-se'] = "";
+$text['button-wallbaord']['uk-ua'] = "";
+
 ?>
