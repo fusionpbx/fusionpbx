@@ -797,7 +797,7 @@ $text['message-duplicate_agent_id']['pl-pl'] = "Duplikat Wykryto Agenta ID";
 $text['message-duplicate_agent_id']['pt-br'] = "Duplicar ID do agente detectado";
 $text['message-duplicate_agent_id']['pt-pt'] = "Duplicar Agent ID Detectado";
 $text['message-duplicate_agent_id']['ro-ro'] = "";
-$text['message-duplicate_agent_id']['ru-ru'] = "Выявлен дубликат шдентификатора оператора";
+$text['message-duplicate_agent_id']['ru-ru'] = "Выявлен дубликат идентификатора оператора";
 $text['message-duplicate_agent_id']['sv-se'] = "Duplicate Agent-ID Funnet";
 $text['message-duplicate_agent_id']['uk-ua'] = "Повторювані Ідентифікатор агента Виявлено";
 
