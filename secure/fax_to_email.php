@@ -375,15 +375,15 @@ if(!function_exists('fax_split_dtmf')) {
 	$smtp['auth'] 		= $_SESSION['email']['smtp_auth']['var'];
 	$smtp['username'] 	= $_SESSION['email']['smtp_username']['var'];
 	$smtp['password'] 	= $_SESSION['email']['smtp_password']['var'];
-	$smtp['from'] 		= (strlen($_SESSION['email']['smtp_from']['var'])?$_SESSION['email']['smtp_from']['var']:'fusionpbx@example.com');
-	$smtp['from_name'] 	= (strlen($_SESSION['email']['smtp_from_name']['var'])?$_SESSION['email']['smtp_from_name']['var']:'FusionPBX FAX');
+	$smtp['from'] 		= (strlen($_SESSION['fax']['smtp_from']['var'])?$_SESSION['fax']['smtp_from']['var']:'fusionpbx@example.com');
+	$smtp['from_name'] 	= (strlen($_SESSION['fax']['smtp_from_name']['var'])?$_SESSION['fax']['smtp_from_name']['var']:'FusionPBX FAX');
 
 	// overwrite with domain-specific smtp server settings, if any
 	if ($domain_uuid != '') {
 		$sql = "select domain_setting_subcategory, domain_setting_value ";
 		$sql .= "from v_domain_settings ";
 		$sql .= "where domain_uuid = '".$domain_uuid."' ";
-		$sql .= "and domain_setting_category = 'email' ";
+		$sql .= "and domain_setting_category = 'fax' ";
 		$sql .= "and domain_setting_name = 'var' ";
 		$sql .= "and domain_setting_enabled = 'true' ";
 		$prep_statement = $db->prepare($sql);
