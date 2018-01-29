@@ -146,15 +146,15 @@
 	$smtp['auth'] 		= $_SESSION['email']['smtp_auth']['var'];
 	$smtp['username'] 	= $_SESSION['email']['smtp_username']['var'];
 	$smtp['password'] 	= $_SESSION['email']['smtp_password']['var'];
-	$smtp['from'] 		= (strlen($_SESSION['email']['smtp_from']['var'])?$_SESSION['email']['smtp_from']['var']:'fusionpbx@example.com');
-	$smtp['from_name'] 	= (strlen($_SESSION['email']['smtp_from_name']['var'])?$_SESSION['email']['smtp_from_name']['var']:'FusionPBX Voicemail');
+	$smtp['from'] 		= (strlen($_SESSION['voicemail']['smtp_from']['var'])?$_SESSION['voicemail']['smtp_from']['var']:'fusionpbx@example.com');
+	$smtp['from_name'] 	= (strlen($_SESSION['voicemail']['smtp_from_name']['var'])?$_SESSION['voicemail']['smtp_from_name']['var']:'FusionPBX Voicemail');
 
 	// overwrite with domain-specific smtp server settings, if any
 	if ($headers["X-FusionPBX-Domain-UUID"] != '') {
 		$sql = "select domain_setting_subcategory, domain_setting_value ";
 		$sql .= "from v_domain_settings ";
 		$sql .= "where domain_uuid = '".$headers["X-FusionPBX-Domain-UUID"]."' ";
-		$sql .= "and domain_setting_category = 'email' ";
+		$sql .= "and domain_setting_category = 'voicemail' ";
 		$sql .= "and domain_setting_name = 'var' ";
 		$sql .= "and domain_setting_enabled = 'true' ";
 		$prep_statement = $db->prepare($sql);
