@@ -377,13 +377,13 @@ if(!function_exists('fax_split_dtmf')) {
 	$smtp['password'] 	= $_SESSION['email']['smtp_password']['var'];
 	
 	if (isset($_SESSION['voicemail']['smtp_from'])) {
-	$smtp['from'] 		= (strlen($_SESSION['voicemail']['smtp_from']['var'])?$_SESSION['voicemail']['smtp_from']['var']:'fusionpbx@example.com');
+	$smtp['from'] 		= (strlen($_SESSION['fax']['smtp_from']['var'])?$_SESSION['fax']['smtp_from']['var']:'fusionpbx@example.com');
 	} else {
 		$smtp['from'] 		= (strlen($_SESSION['email']['smtp_from']['var'])?$_SESSION['email']['smtp_from']['var']:'fusionpbx@example.com');
 	}
 	
 	if (isset($_SESSION['voicemail']['smtp_from_name'])) {
-	$smtp['from_name'] 	= (strlen($_SESSION['voicemail']['smtp_from_name']['var'])?$_SESSION['voicemail']['smtp_from_name']['var']:'FusionPBX Voicemail');	
+	$smtp['from_name'] 	= (strlen($_SESSION['fax']['smtp_from_name']['var'])?$_SESSION['fax']['smtp_from_name']['var']:'FusionPBX Voicemail');	
 	} else {
 		$smtp['from_name'] 	= (strlen($_SESSION['email']['smtp_from_name']['var'])?$_SESSION['email']['smtp_from_name']['var']:'FusionPBX Voicemail');
 	}
