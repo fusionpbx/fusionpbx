@@ -123,6 +123,10 @@ if (!class_exists('registrations')) {
 												array('0','1','2','3','4','5','6','7','8','9'),
 												$lan_ip);
 										}
+                                        					elseif(1 === preg_match('/\ACL750A/', $agent)) {
+											//required for GIGASET Sculpture CL750A puts _ in it's lan ip account
+											$lan_ip = preg_replace('/_/', '.', $lan_ip);
+                                        					}
 										$registrations[$id]['lan-ip'] = "<a href='http://".$lan_ip."' target='_blank'>".$lan_ip."</a>";
 									} else {
 										$registrations[$id]['lan-ip'] = "&nbsp;";
@@ -153,7 +157,7 @@ if (!class_exists('registrations')) {
 		/**
 		 * get the registration count
 		 */
-		public function count($profile) {
+		public function count($profile = 'all') {
 
 			//set the initial count value to 0
 				$count = 0;

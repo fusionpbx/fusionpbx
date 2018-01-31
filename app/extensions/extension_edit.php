@@ -428,6 +428,7 @@
 
 								if (strlen($number_alias) > 0) {
 									$number_alias++;
+									$voicemail_id = $number_alias;
 								}
 
 								if (strlen($mwi_account) > 0) {

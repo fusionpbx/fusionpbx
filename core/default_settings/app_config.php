@@ -123,7 +123,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the required/default length for user/system generated passwords.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the required length for the generated passwords.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0fa21a56-7515-4c65-b5f8-270cc24ea375";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "security";
@@ -131,7 +131,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set whether to require at least one number in user passwords.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set whether to require at least one number in passwords.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d5f9acbd-857c-42eb-9e9a-92a850fcb734";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "security";
@@ -139,7 +139,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set whether to require at least one lowecase letter in user passwords.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set whether to require at least one lowecase letter in passwords.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "256b0d87-a43e-4618-b96b-541e191879c7";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "security";
@@ -147,7 +147,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set whether to require at least one uppercase letter in user passwords.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set whether to require at least one uppercase letter in passwords.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4209ff1f-6ea8-4b77-81be-bd75e8670785";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "security";
@@ -155,7 +155,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set whether to require at least one special character in user passwords.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set whether to require at least one special character in passwords.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "718b1641-fa3c-4861-b1f3-40635c951888";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "security";
@@ -163,7 +163,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "4";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the default strength for system generated passwords.  Valid Options: 1 - Numeric Only, 2 - Include Lower Apha, 3 - Include Upper Alpha, 4 - Include Special Characters.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the default strength for generated passwords. Valid Options: 1 - Numeric Only, 2 - Include Lower Apha, 3 - Include Upper Alpha, 4 - Include Special Characters.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "33914c55-9081-4b95-b62e-f1a500088d78";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "security";

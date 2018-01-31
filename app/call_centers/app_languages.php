@@ -797,7 +797,7 @@ $text['message-duplicate_agent_id']['pl-pl'] = "Duplikat Wykryto Agenta ID";
 $text['message-duplicate_agent_id']['pt-br'] = "Duplicar ID do agente detectado";
 $text['message-duplicate_agent_id']['pt-pt'] = "Duplicar Agent ID Detectado";
 $text['message-duplicate_agent_id']['ro-ro'] = "";
-$text['message-duplicate_agent_id']['ru-ru'] = "Выявлен дубликат шдентификатора оператора";
+$text['message-duplicate_agent_id']['ru-ru'] = "Выявлен дубликат идентификатора оператора";
 $text['message-duplicate_agent_id']['sv-se'] = "Duplicate Agent-ID Funnet";
 $text['message-duplicate_agent_id']['uk-ua'] = "Повторювані Ідентифікатор агента Виявлено";
 
@@ -2640,5 +2640,25 @@ $text['button-agents']['ro-ro'] = "";
 $text['button-agents']['ru-ru'] = "Операторы";
 $text['button-agents']['sv-se'] = "Agenter";
 $text['button-agents']['uk-ua'] = "Оператори";
+
+$text['button-wallboard']['en-us'] = "Wallboard";
+$text['button-wallboard']['ar-eg'] = "";
+$text['button-wallboard']['de-at'] = "";
+$text['button-wallboard']['de-ch'] = "";
+$text['button-wallboard']['de-de'] = "";
+$text['button-wallboard']['es-cl'] = "";
+$text['button-wallboard']['es-mx'] = "";
+$text['button-wallboard']['fr-ca'] = "";
+$text['button-wallboard']['fr-fr'] = "";
+$text['button-wallboard']['he-il'] = "";
+$text['button-wallboard']['it-it'] = "";
+$text['button-wallboard']['nl-nl'] = "";
+$text['button-wallboard']['pl-pl'] = "";
+$text['button-wallboard']['pt-br'] = "";
+$text['button-wallboard']['pt-pt'] = "";
+$text['button-wallboard']['ro-ro'] = "";
+$text['button-wallboard']['ru-ru'] = "";
+$text['button-wallboard']['sv-se'] = "";
+$text['button-wallboard']['uk-ua'] = "";
 
 ?>

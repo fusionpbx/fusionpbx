@@ -136,8 +136,13 @@ if (!class_exists('xml_cdr')) {
 			$this->fields[] = "cc_queue_joined_epoch";
 			$this->fields[] = "cc_queue";
 			$this->fields[] = "cc_member_session_uuid";
+			$this->fields[] = "cc_agent_uuid";
 			$this->fields[] = "cc_agent";
 			$this->fields[] = "cc_agent_type";
+			$this->fields[] = "cc_agent_bridged";
+			$this->fields[] = "cc_queue_answered_epoch";
+			$this->fields[] = "cc_queue_terminated_epoch";
+			$this->fields[] = "cc_cause";
 			$this->fields[] = "waitsec";
 			$this->fields[] = "conference_name";
 			$this->fields[] = "conference_uuid";
