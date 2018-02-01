@@ -868,9 +868,9 @@
 <Proxy_Redundancy_Method_6_ ua="na">Normal</Proxy_Redundancy_Method_6_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
-<Display_Name_6_ ua="na"></Display_Name_6_>
-<User_ID_6_ ua="na"></User_ID_6_>
-<Password_6_ ua="na"></Password_6_>
+<Display_Name_6_ ua="na">{$display_name_6}</Display_Name_6_>
+<User_ID_6_ ua="na">{$user_id_6}</User_ID_6_>
+<Password_6_ ua="na">{$user_password_6}</Password_6_>
 <Use_Auth_ID_6_ ua="na">No</Use_Auth_ID_6_>
 <Auth_ID_6_ ua="na"></Auth_ID_6_>
 <Mini_Certificate_6_ ua="na"></Mini_Certificate_6_>
@@ -980,9 +980,9 @@
 <Proxy_Redundancy_Method_7_ ua="na">Normal</Proxy_Redundancy_Method_7_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
-<Display_Name_7_ ua="na"></Display_Name_7_>
-<User_ID_7_ ua="na"></User_ID_7_>
-<Password_7_ ua="na"></Password_7_>
+<Display_Name_7_ ua="na">{$display_name_7}</Display_Name_7_>
+<User_ID_7_ ua="na">{$user_id_7}</User_ID_7_>
+<Password_7_ ua="na">{$user_password_7}</Password_7_>
 <Use_Auth_ID_7_ ua="na">No</Use_Auth_ID_7_>
 <Auth_ID_7_ ua="na"></Auth_ID_7_>
 <Mini_Certificate_7_ ua="na"></Mini_Certificate_7_>
@@ -1092,9 +1092,9 @@
 <Proxy_Redundancy_Method_8_ ua="na">Normal</Proxy_Redundancy_Method_8_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
-<Display_Name_8_ ua="na"></Display_Name_8_>
-<User_ID_8_ ua="na"></User_ID_8_>
-<Password_8_ ua="na"></Password_8_>
+<Display_Name_8_ ua="na">{$display_name_8}</Display_Name_8_>
+<User_ID_8_ ua="na">{$user_id_8}</User_ID_8_>
+<Password_8_ ua="na">{$user_password_8}</Password_8_>
 <Use_Auth_ID_8_ ua="na">No</Use_Auth_ID_8_>
 <Auth_ID_8_ ua="na"></Auth_ID_8_>
 <Mini_Certificate_8_ ua="na"></Mini_Certificate_8_>
@@ -1204,9 +1204,9 @@
 <Proxy_Redundancy_Method_9_ ua="na">Normal</Proxy_Redundancy_Method_9_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
-<Display_Name_9_ ua="na"></Display_Name_9_>
-<User_ID_9_ ua="na"></User_ID_9_>
-<Password_9_ ua="na"></Password_9_>
+<Display_Name_9_ ua="na">{$display_name_9}</Display_Name_9_>
+<User_ID_9_ ua="na">{$user_id_9}</User_ID_9_>
+<Password_9_ ua="na">{$user_password_9}</Password_9_>
 <Use_Auth_ID_9_ ua="na">No</Use_Auth_ID_9_>
 <Auth_ID_9_ ua="na"></Auth_ID_9_>
 <Mini_Certificate_9_ ua="na"></Mini_Certificate_9_>
@@ -1316,9 +1316,9 @@
 <Proxy_Redundancy_Method_10_ ua="na">Normal</Proxy_Redundancy_Method_10_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
-<Display_Name_10_ ua="na"></Display_Name_10_>
-<User_ID_10_ ua="na"></User_ID_10_>
-<Password_10_ ua="na"></Password_10_>
+<Display_Name_10_ ua="na">{$display_name_10}</Display_Name_10_>
+<User_ID_10_ ua="na">{$user_id_10}</User_ID_10_>
+<Password_10_ ua="na">{$user_password_10}</Password_10_>
 <Use_Auth_ID_10_ ua="na">No</Use_Auth_ID_10_>
 <Auth_ID_10_ ua="na"></Auth_ID_10_>
 <Mini_Certificate_10_ ua="na"></Mini_Certificate_10_>
@@ -1428,9 +1428,9 @@
 <Proxy_Redundancy_Method_11_ ua="na">Normal</Proxy_Redundancy_Method_11_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
-<Display_Name_11_ ua="na"></Display_Name_11_>
-<User_ID_11_ ua="na"></User_ID_11_>
-<Password_11_ ua="na"></Password_11_>
+<Display_Name_11_ ua="na">{$display_name_11}</Display_Name_11_>
+<User_ID_11_ ua="na">{$user_id_11}</User_ID_11_>
+<Password_11_ ua="na">{$user_password_11}</Password_11_>
 <Use_Auth_ID_11_ ua="na">No</Use_Auth_ID_11_>
 <Auth_ID_11_ ua="na"></Auth_ID_11_>
 <Mini_Certificate_11_ ua="na"></Mini_Certificate_11_>
@@ -1540,9 +1540,9 @@
 <Proxy_Redundancy_Method_12_ ua="na">Normal</Proxy_Redundancy_Method_12_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
-<Display_Name_12_ ua="na"></Display_Name_12_>
-<User_ID_12_ ua="na"></User_ID_12_>
-<Password_12_ ua="na"></Password_12_>
+<Display_Name_12_ ua="na">{$display_name_12}</Display_Name_12_>
+<User_ID_12_ ua="na">{$user_id_12}</User_ID_12_>
+<Password_12_ ua="na">{$user_password_12}</Password_12_>
 <Use_Auth_ID_12_ ua="na">No</Use_Auth_ID_12_>
 <Auth_ID_12_ ua="na"></Auth_ID_12_>
 <Mini_Certificate_12_ ua="na"></Mini_Certificate_12_>
