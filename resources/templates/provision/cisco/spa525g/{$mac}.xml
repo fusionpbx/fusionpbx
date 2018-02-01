@@ -384,6 +384,7 @@
 <Voice_Quality_Report_Address_2_ ua="na"></Voice_Quality_Report_Address_2_>
 
 <!-- Call Feature Settings -->
+<Device_Feature_Sync_2_ ua="na">{$spa_feature_key_sync}</Device_Feature_Sync_2_>
 <Blind_Attn-Xfer_Enable_2_ ua="na">No</Blind_Attn-Xfer_Enable_2_>
 <MOH_Server_2_ ua="na"></MOH_Server_2_>
 <Message_Waiting_2_ ua="na">No</Message_Waiting_2_>
@@ -497,6 +498,7 @@
 <Voice_Quality_Report_Address_3_ ua="na"></Voice_Quality_Report_Address_3_>
 
 <!-- Call Feature Settings -->
+<Device_Feature_Sync_3_ ua="na">{$spa_feature_key_sync}</Device_Feature_Sync_3_>
 <Blind_Attn-Xfer_Enable_3_ ua="na">No</Blind_Attn-Xfer_Enable_3_>
 <MOH_Server_3_ ua="na"></MOH_Server_3_>
 <Message_Waiting_3_ ua="na">No</Message_Waiting_3_>
@@ -610,6 +612,7 @@
 <Voice_Quality_Report_Address_4_ ua="na"></Voice_Quality_Report_Address_4_>
 
 <!-- Call Feature Settings -->
+<Device_Feature_Sync_4_ ua="na">{$spa_feature_key_sync}</Device_Feature_Sync_4_>
 <Blind_Attn-Xfer_Enable_4_ ua="na">No</Blind_Attn-Xfer_Enable_4_>
 <MOH_Server_4_ ua="na"></MOH_Server_4_>
 <Message_Waiting_4_ ua="na">No</Message_Waiting_4_>
@@ -723,6 +726,7 @@
 <Voice_Quality_Report_Address_5_ ua="na"></Voice_Quality_Report_Address_5_>
 
 <!-- Call Feature Settings -->
+<Device_Feature_Sync_5_ ua="na">{$spa_feature_key_sync}</Device_Feature_Sync_5_>
 <Blind_Attn-Xfer_Enable_5_ ua="na">No</Blind_Attn-Xfer_Enable_5_>
 <MOH_Server_5_ ua="na"></MOH_Server_5_>
 <Message_Waiting_5_ ua="na">No</Message_Waiting_5_>
@@ -835,6 +839,7 @@
 <Voice_Quality_Report_Address_6_ ua="na"></Voice_Quality_Report_Address_6_>
 
 <!-- Call Feature Settings -->
+<Device_Feature_Sync_6_ ua="na">{$spa_feature_key_sync}</Device_Feature_Sync_6_>
 <Blind_Attn-Xfer_Enable_6_ ua="na">No</Blind_Attn-Xfer_Enable_6_>
 <MOH_Server_6_ ua="na"></MOH_Server_6_>
 <Message_Waiting_6_ ua="na">No</Message_Waiting_6_>
@@ -948,6 +953,7 @@
 <Voice_Quality_Report_Address_7_ ua="na"></Voice_Quality_Report_Address_7_>
 
 <!-- Call Feature Settings -->
+<Device_Feature_Sync_7_ ua="na">{$spa_feature_key_sync}</Device_Feature_Sync_7_>
 <Blind_Attn-Xfer_Enable_7_ ua="na">No</Blind_Attn-Xfer_Enable_7_>
 <MOH_Server_7_ ua="na"></MOH_Server_7_>
 <Message_Waiting_7_ ua="na">No</Message_Waiting_7_>
@@ -1060,6 +1066,7 @@
 <Voice_Quality_Report_Address_8_ ua="na"></Voice_Quality_Report_Address_8_>
 
 <!-- Call Feature Settings -->
+<Device_Feature_Sync_8_ ua="na">{$spa_feature_key_sync}</Device_Feature_Sync_8_>
 <Blind_Attn-Xfer_Enable_8_ ua="na">No</Blind_Attn-Xfer_Enable_8_>
 <MOH_Server_8_ ua="na"></MOH_Server_8_>
 <Message_Waiting_8_ ua="na">No</Message_Waiting_8_>
@@ -1172,6 +1179,7 @@
 <Voice_Quality_Report_Address_9_ ua="na"></Voice_Quality_Report_Address_9_>
 
 <!-- Call Feature Settings -->
+<Device_Feature_Sync_9_ ua="na">{$spa_feature_key_sync}</Device_Feature_Sync_9_>
 <Blind_Attn-Xfer_Enable_9_ ua="na">No</Blind_Attn-Xfer_Enable_9_>
 <MOH_Server_9_ ua="na"></MOH_Server_9_>
 <Message_Waiting_9_ ua="na">No</Message_Waiting_9_>
@@ -1284,6 +1292,7 @@
 <Voice_Quality_Report_Address_10_ ua="na"></Voice_Quality_Report_Address_10_>
 
 <!-- Call Feature Settings -->
+  <Device_Feature_Sync_10_ ua="na">{$spa_feature_key_sync}</Device_Feature_Sync_10_>
 <Blind_Attn-Xfer_Enable_10_ ua="na">No</Blind_Attn-Xfer_Enable_10_>
 <MOH_Server_10_ ua="na"></MOH_Server_10_>
 <Message_Waiting_10_ ua="na">No</Message_Waiting_10_>
@@ -1396,6 +1405,7 @@
 <Voice_Quality_Report_Address_11_ ua="na"></Voice_Quality_Report_Address_11_>
 
 <!-- Call Feature Settings -->
+<Device_Feature_Sync_11_ ua="na">{$spa_feature_key_sync}</Device_Feature_Sync_11_>
 <Blind_Attn-Xfer_Enable_11_ ua="na">No</Blind_Attn-Xfer_Enable_11_>
 <MOH_Server_11_ ua="na"></MOH_Server_11_>
 <Message_Waiting_11_ ua="na">No</Message_Waiting_11_>
@@ -1508,6 +1518,7 @@
 <Voice_Quality_Report_Address_12_ ua="na"></Voice_Quality_Report_Address_12_>
 
 <!-- Call Feature Settings -->
+<Device_Feature_Sync_12_ ua="na">{$spa_feature_key_sync}</Device_Feature_Sync_12_>
 <Blind_Attn-Xfer_Enable_12_ ua="na">No</Blind_Attn-Xfer_Enable_12_>
 <MOH_Server_12_ ua="na"></MOH_Server_12_>
 <Message_Waiting_12_ ua="na">No</Message_Waiting_12_>
