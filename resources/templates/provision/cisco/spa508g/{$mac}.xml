@@ -1327,20 +1327,22 @@
 
 <!-- Ext_7/Proxy_and_Registration -->
 <Proxy_7_ group="Ext_7/Proxy_and_Registration">{$server_address_7}</Proxy_7_>
-<Outbound_Proxy_7_ group="Ext_7/Proxy_and_Registration" />
-<Alternate_Proxy_7_ group="Ext_7/Proxy_and_Registration" />
-<Alternate_Outbound_Proxy_7_ group="Ext_7/Proxy_and_Registration" />
-<Use_Outbound_Proxy_7_ group="Ext_7/Proxy_and_Registration">No</Use_Outbound_Proxy_7_>
+<Use_Outbound_Proxy_7_ group="Ext_7/Proxy_and_Registration">{if isset($outbound_proxy_primary_7)}Yes{else}No{/if}</Use_Outbound_Proxy_7_>
+<Outbound_Proxy_7_ group="Ext_7/Proxy_and_Registration">{$outbound_proxy_primary_7}</Outbound_Proxy_7_>
+<Alternate_Proxy_7_ group="Ext_7/Proxy_and_Registration">{$server_address_7}</Alternate_Proxy_7_>
+<Alternate_Outbound_Proxy_7_ group="Ext_7/Proxy_and_Registration">{$outbound_proxy_secondary_7}</Alternate_Outbound_Proxy_7_>
 <Use_OB_Proxy_In_Dialog_7_ group="Ext_7/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_7_>
 <Register_7_ group="Ext_7/Proxy_and_Registration">Yes</Register_7_>
 <Make_Call_Without_Reg_7_ group="Ext_7/Proxy_and_Registration">No</Make_Call_Without_Reg_7_>
 <Register_Expires_7_ group="Ext_7/Proxy_and_Registration">{$register_expires_7}</Register_Expires_7_>
 <Ans_Call_Without_Reg_7_ group="Ext_7/Proxy_and_Registration">No</Ans_Call_Without_Reg_7_>
-<Use_DNS_SRV_7_ group="Ext_7/Proxy_and_Registration">No</Use_DNS_SRV_7_>
+{if $sip_transport_7 == 'dns srv'}<Use_DNS_SRV_7_ group="Ext_7/Proxy_and_Registration">Yes</Use_DNS_SRV_7_>{/if}
+{if $sip_transport_7 != 'dns srv'}<Use_DNS_SRV_7_ group="Ext_7/Proxy_and_Registration">No</Use_DNS_SRV_7_>{/if}
 <DNS_SRV_Auto_Prefix_7_ group="Ext_7/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_7_>
-<Proxy_Fallback_Intvl_7_ group="Ext_7/Proxy_and_Registration">3600</Proxy_Fallback_Intvl_7_>
+<Proxy_Fallback_Intvl_7_ group="Ext_7/Proxy_and_Registration">600</Proxy_Fallback_Intvl_7_>
 <Proxy_Redundancy_Method_7_ group="Ext_7/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_7_>
-<Dual_Registration_7_ group="Ext_7/Proxy_and_Registration">No</Dual_Registration_7_>
+<Dual_Registration_7_ group="Ext_7/Proxy_and_Registration">{if isset($spa_dual_registration)}Yes{else}No{/if}</Dual_Registration_7_>
+<Auto_Register_When_Failover_7_ group="Ext_7/Proxy_and_Registration">{if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_7_>
 
 <!-- Ext_7/Subscriber_Information -->
 <Display_Name_7_ group="Ext_7/Subscriber_Information">{$display_name_7}</Display_Name_7_>
@@ -1448,20 +1450,22 @@
 
 <!-- Ext_8/Proxy_and_Registration -->
 <Proxy_8_ group="Ext_8/Proxy_and_Registration">{$server_address_8}</Proxy_8_>
-<Outbound_Proxy_8_ group="Ext_8/Proxy_and_Registration" />
-<Alternate_Proxy_8_ group="Ext_8/Proxy_and_Registration" />
-<Alternate_Outbound_Proxy_8_ group="Ext_8/Proxy_and_Registration" />
-<Use_Outbound_Proxy_8_ group="Ext_8/Proxy_and_Registration">No</Use_Outbound_Proxy_8_>
+<Use_Outbound_Proxy_8_ group="Ext_8/Proxy_and_Registration">{if isset($outbound_proxy_primary_8)}Yes{else}No{/if}</Use_Outbound_Proxy_8_>
+<Outbound_Proxy_8_ group="Ext_8/Proxy_and_Registration">{$outbound_proxy_primary_8}</Outbound_Proxy_8_>
+<Alternate_Proxy_8_ group="Ext_8/Proxy_and_Registration">{$server_address_8}</Alternate_Proxy_8_>
+<Alternate_Outbound_Proxy_8_ group="Ext_8/Proxy_and_Registration">{$outbound_proxy_secondary_8}</Alternate_Outbound_Proxy_8_>
 <Use_OB_Proxy_In_Dialog_8_ group="Ext_8/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_8_>
 <Register_8_ group="Ext_8/Proxy_and_Registration">Yes</Register_8_>
 <Make_Call_Without_Reg_8_ group="Ext_8/Proxy_and_Registration">No</Make_Call_Without_Reg_8_>
 <Register_Expires_8_ group="Ext_8/Proxy_and_Registration">{$register_expires_8}</Register_Expires_8_>
 <Ans_Call_Without_Reg_8_ group="Ext_8/Proxy_and_Registration">No</Ans_Call_Without_Reg_8_>
-<Use_DNS_SRV_8_ group="Ext_8/Proxy_and_Registration">No</Use_DNS_SRV_8_>
+{if $sip_transport_8 == 'dns srv'}<Use_DNS_SRV_8_ group="Ext_8/Proxy_and_Registration">Yes</Use_DNS_SRV_8_>{/if}
+{if $sip_transport_8 != 'dns srv'}<Use_DNS_SRV_8_ group="Ext_8/Proxy_and_Registration">No</Use_DNS_SRV_8_>{/if}
 <DNS_SRV_Auto_Prefix_8_ group="Ext_8/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_8_>
-<Proxy_Fallback_Intvl_8_ group="Ext_8/Proxy_and_Registration">3600</Proxy_Fallback_Intvl_8_>
+<Proxy_Fallback_Intvl_8_ group="Ext_8/Proxy_and_Registration">600</Proxy_Fallback_Intvl_8_>
 <Proxy_Redundancy_Method_8_ group="Ext_8/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_8_>
-<Dual_Registration_8_ group="Ext_8/Proxy_and_Registration">No</Dual_Registration_8_>
+<Dual_Registration_8_ group="Ext_8/Proxy_and_Registration">{if isset($spa_dual_registration)}Yes{else}No{/if}</Dual_Registration_8_>
+<Auto_Register_When_Failover_8_ group="Ext_8/Proxy_and_Registration">{if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_8_>
 
 <!-- Ext_8/Subscriber_Information -->
 <Display_Name_8_ group="Ext_8/Subscriber_Information">{$display_name_8}</Display_Name_8_>
