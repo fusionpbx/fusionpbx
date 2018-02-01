@@ -290,16 +290,17 @@
 
 <!-- Proxy and Registration -->
 <Proxy_1_ ua="na">{$domain_name}</Proxy_1_>
-<Outbound_Proxy_1_ ua="na"></Outbound_Proxy_1_>
-<Use_Outbound_Proxy_1_ ua="na">No</Use_Outbound_Proxy_1_>
+<Outbound_Proxy_1_ ua="na">{$outbound_proxy_primary_1}</Outbound_Proxy_1_>
+<Use_Outbound_Proxy_1_ ua="na">{if isset($outbound_proxy_primary_1)}Yes{else}No{/if}</Use_Outbound_Proxy_1_>
 <Use_OB_Proxy_In_Dialog_1_ ua="na">Yes</Use_OB_Proxy_In_Dialog_1_>
 <Register_1_ ua="na">Yes</Register_1_>
 <Make_Call_Without_Reg_1_ ua="na">No</Make_Call_Without_Reg_1_>
 <Register_Expires_1_ ua="na">{$register_expires_1}</Register_Expires_1_>
 <Ans_Call_Without_Reg_1_ ua="na">No</Ans_Call_Without_Reg_1_>
-<Use_DNS_SRV_1_ ua="na">No</Use_DNS_SRV_1_>
+{if $sip_transport_1 == 'dns srv'}<Use_DNS_SRV_1_ ua="na">Yes</Use_DNS_SRV_1_>{/if}
+{if $sip_transport_1 != 'dns srv'}<Use_DNS_SRV_1_ ua="na">No</Use_DNS_SRV_1_>{/if}
 <DNS_SRV_Auto_Prefix_1_ ua="na">No</DNS_SRV_Auto_Prefix_1_>
-<Proxy_Fallback_Intvl_1_ ua="na">3600</Proxy_Fallback_Intvl_1_>
+<Proxy_Fallback_Intvl_1_ ua="na">600</Proxy_Fallback_Intvl_1_>
 <Proxy_Redundancy_Method_1_ ua="na">Normal</Proxy_Redundancy_Method_1_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
@@ -402,16 +403,17 @@
 
 <!-- Proxy and Registration -->
 <Proxy_2_ ua="na">{$domain_name}</Proxy_2_>
-<Outbound_Proxy_2_ ua="na"></Outbound_Proxy_2_>
-<Use_Outbound_Proxy_2_ ua="na">No</Use_Outbound_Proxy_2_>
+<Outbound_Proxy_2_ ua="na">{$outbound_proxy_primary_2}</Outbound_Proxy_2_>
+<Use_Outbound_Proxy_2_ ua="na">{if isset($outbound_proxy_primary_2)}Yes{else}No{/if}</Use_Outbound_Proxy_2_>
 <Use_OB_Proxy_In_Dialog_2_ ua="na">Yes</Use_OB_Proxy_In_Dialog_2_>
 <Register_2_ ua="na">Yes</Register_2_>
 <Make_Call_Without_Reg_2_ ua="na">No</Make_Call_Without_Reg_2_>
 <Register_Expires_2_ ua="na">{$register_expires_2}</Register_Expires_2_>
 <Ans_Call_Without_Reg_2_ ua="na">No</Ans_Call_Without_Reg_2_>
-<Use_DNS_SRV_2_ ua="na">No</Use_DNS_SRV_2_>
+{if $sip_transport_2 == 'dns srv'}<Use_DNS_SRV_2_ ua="na">Yes</Use_DNS_SRV_2_>{/if}
+{if $sip_transport_2 != 'dns srv'}<Use_DNS_SRV_2_ ua="na">No</Use_DNS_SRV_2_>{/if}
 <DNS_SRV_Auto_Prefix_2_ ua="na">No</DNS_SRV_Auto_Prefix_2_>
-<Proxy_Fallback_Intvl_2_ ua="na">3600</Proxy_Fallback_Intvl_2_>
+<Proxy_Fallback_Intvl_2_ ua="na">600</Proxy_Fallback_Intvl_2_>
 <Proxy_Redundancy_Method_2_ ua="na">Normal</Proxy_Redundancy_Method_2_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
@@ -514,16 +516,17 @@
 
 <!-- Proxy and Registration -->
 <Proxy_3_ ua="na">{$domain_name}</Proxy_3_>
-<Outbound_Proxy_3_ ua="na"></Outbound_Proxy_3_>
-<Use_Outbound_Proxy_3_ ua="na">No</Use_Outbound_Proxy_3_>
+<Outbound_Proxy_3_ ua="na">{$outbound_proxy_primary_3}</Outbound_Proxy_3_>
+<Use_Outbound_Proxy_3_ ua="na">{if isset($outbound_proxy_primary_3)}Yes{else}No{/if}</Use_Outbound_Proxy_3_>
 <Use_OB_Proxy_In_Dialog_3_ ua="na">Yes</Use_OB_Proxy_In_Dialog_3_>
 <Register_3_ ua="na">Yes</Register_3_>
 <Make_Call_Without_Reg_3_ ua="na">No</Make_Call_Without_Reg_3_>
 <Register_Expires_3_ ua="na">{$register_expires_3}</Register_Expires_3_>
 <Ans_Call_Without_Reg_3_ ua="na">No</Ans_Call_Without_Reg_3_>
-<Use_DNS_SRV_3_ ua="na">No</Use_DNS_SRV_3_>
+{if $sip_transport_3 == 'dns srv'}<Use_DNS_SRV_3_ ua="na">Yes</Use_DNS_SRV_3_>{/if}
+{if $sip_transport_3 != 'dns srv'}<Use_DNS_SRV_3_ ua="na">No</Use_DNS_SRV_3_>{/if}
 <DNS_SRV_Auto_Prefix_3_ ua="na">No</DNS_SRV_Auto_Prefix_3_>
-<Proxy_Fallback_Intvl_3_ ua="na">3600</Proxy_Fallback_Intvl_3_>
+<Proxy_Fallback_Intvl_3_ ua="na">600</Proxy_Fallback_Intvl_3_>
 <Proxy_Redundancy_Method_3_ ua="na">Normal</Proxy_Redundancy_Method_3_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
@@ -626,16 +629,17 @@
 
 <!-- Proxy and Registration -->
 <Proxy_4_ ua="na">{$domain_name}</Proxy_4_>
-<Outbound_Proxy_4_ ua="na"></Outbound_Proxy_4_>
-<Use_Outbound_Proxy_4_ ua="na">No</Use_Outbound_Proxy_4_>
+<Outbound_Proxy_4_ ua="na">{$outbound_proxy_primary_4}</Outbound_Proxy_4_>
+<Use_Outbound_Proxy_4_ ua="na">{if isset($outbound_proxy_primary_4)}Yes{else}No{/if}</Use_Outbound_Proxy_4_>
 <Use_OB_Proxy_In_Dialog_4_ ua="na">Yes</Use_OB_Proxy_In_Dialog_4_>
 <Register_4_ ua="na">Yes</Register_4_>
 <Make_Call_Without_Reg_4_ ua="na">No</Make_Call_Without_Reg_4_>
 <Register_Expires_4_ ua="na">{$register_expires_4}</Register_Expires_4_>
 <Ans_Call_Without_Reg_4_ ua="na">No</Ans_Call_Without_Reg_4_>
-<Use_DNS_SRV_4_ ua="na">No</Use_DNS_SRV_4_>
+{if $sip_transport_4 == 'dns srv'}<Use_DNS_SRV_4_ ua="na">Yes</Use_DNS_SRV_4_>{/if}
+{if $sip_transport_4 != 'dns srv'}<Use_DNS_SRV_4_ ua="na">No</Use_DNS_SRV_4_>{/if}
 <DNS_SRV_Auto_Prefix_4_ ua="na">No</DNS_SRV_Auto_Prefix_4_>
-<Proxy_Fallback_Intvl_4_ ua="na">3600</Proxy_Fallback_Intvl_4_>
+<Proxy_Fallback_Intvl_4_ ua="na">600</Proxy_Fallback_Intvl_4_>
 <Proxy_Redundancy_Method_4_ ua="na">Normal</Proxy_Redundancy_Method_4_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
@@ -737,17 +741,17 @@
 <Auto_Ans_Page_On_Active_Call_5_ ua="na">Yes</Auto_Ans_Page_On_Active_Call_5_>
 
 <!-- Proxy and Registration -->
-<Proxy_5_ ua="na"></Proxy_5_>
-<Outbound_Proxy_5_ ua="na">{$domain_name}</Outbound_Proxy_5_>
-<Use_Outbound_Proxy_5_ ua="na">No</Use_Outbound_Proxy_5_>
+<Proxy_5_ ua="na">{$domain_name}</Proxy_5_>
+<Outbound_Proxy_5_ ua="na">{$outbound_proxy_primary_5}</Outbound_Proxy_5_>
+<Use_Outbound_Proxy_5_ ua="na">{if isset($outbound_proxy_primary_5)}Yes{else}No{/if}</Use_Outbound_Proxy_5_>
 <Use_OB_Proxy_In_Dialog_5_ ua="na">Yes</Use_OB_Proxy_In_Dialog_5_>
 <Register_5_ ua="na">Yes</Register_5_>
 <Make_Call_Without_Reg_5_ ua="na">No</Make_Call_Without_Reg_5_>
 <Register_Expires_5_ ua="na">{$register_expires_5}</Register_Expires_5_>
 <Ans_Call_Without_Reg_5_ ua="na">No</Ans_Call_Without_Reg_5_>
-<Use_DNS_SRV_5_ ua="na">No</Use_DNS_SRV_5_>
-<DNS_SRV_Auto_Prefix_5_ ua="na">No</DNS_SRV_Auto_Prefix_5_>
-<Proxy_Fallback_Intvl_5_ ua="na">3600</Proxy_Fallback_Intvl_5_>
+{if $sip_transport_5 == 'dns srv'}<Use_DNS_SRV_5_ ua="na">Yes</Use_DNS_SRV_5_>{/if}
+{if $sip_transport_5 != 'dns srv'}<Use_DNS_SRV_5_ ua="na">No</Use_DNS_SRV_5_>{/if}
+<Proxy_Fallback_Intvl_5_ ua="na">600</Proxy_Fallback_Intvl_5_>
 <Proxy_Redundancy_Method_5_ ua="na">Normal</Proxy_Redundancy_Method_5_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
@@ -849,17 +853,18 @@
 <Auto_Ans_Page_On_Active_Call_6_ ua="na">Yes</Auto_Ans_Page_On_Active_Call_6_>
 
 <!-- Proxy and Registration -->
-<Proxy_6_ ua="na"></Proxy_6_>
-<Outbound_Proxy_6_ ua="na"></Outbound_Proxy_6_>
-<Use_Outbound_Proxy_6_ ua="na">No</Use_Outbound_Proxy_6_>
+<Proxy_6_ ua="na">{$domain_name}</Proxy_6_>
+<Outbound_Proxy_6_ ua="na">{$outbound_proxy_primary_6}</Outbound_Proxy_6_>
+<Use_Outbound_Proxy_6_ ua="na">{if isset($outbound_proxy_primary_6)}Yes{else}No{/if}</Use_Outbound_Proxy_6_>
 <Use_OB_Proxy_In_Dialog_6_ ua="na">Yes</Use_OB_Proxy_In_Dialog_6_>
 <Register_6_ ua="na">Yes</Register_6_>
 <Make_Call_Without_Reg_6_ ua="na">No</Make_Call_Without_Reg_6_>
 <Register_Expires_6_ ua="na">{$register_expires_6}</Register_Expires_6_>
 <Ans_Call_Without_Reg_6_ ua="na">No</Ans_Call_Without_Reg_6_>
-<Use_DNS_SRV_6_ ua="na">No</Use_DNS_SRV_6_>
+{if $sip_transport_6 == 'dns srv'}<Use_DNS_SRV_6_ ua="na">Yes</Use_DNS_SRV_6_>{/if}
+{if $sip_transport_6 != 'dns srv'}<Use_DNS_SRV_6_ ua="na">No</Use_DNS_SRV_6_>{/if}
 <DNS_SRV_Auto_Prefix_6_ ua="na">No</DNS_SRV_Auto_Prefix_6_>
-<Proxy_Fallback_Intvl_6_ ua="na">3600</Proxy_Fallback_Intvl_6_>
+<Proxy_Fallback_Intvl_6_ ua="na">600</Proxy_Fallback_Intvl_6_>
 <Proxy_Redundancy_Method_6_ ua="na">Normal</Proxy_Redundancy_Method_6_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
@@ -961,17 +966,17 @@
 <Auto_Ans_Page_On_Active_Call_7_ ua="na">Yes</Auto_Ans_Page_On_Active_Call_7_>
 
 <!-- Proxy and Registration -->
-<Proxy_7_ ua="na"></Proxy_7_>
-<Outbound_Proxy_7_ ua="na"></Outbound_Proxy_7_>
-<Use_Outbound_Proxy_7_ ua="na">No</Use_Outbound_Proxy_7_>
+<Proxy_7_ ua="na">{$domain_name}</Proxy_7_>
+<Outbound_Proxy_7_ ua="na">{$outbound_proxy_primary_7}</Outbound_Proxy_7_>
+<Use_Outbound_Proxy_7_ ua="na">{if isset($outbound_proxy_primary_7)}Yes{else}No{/if}</Use_Outbound_Proxy_7_>
 <Use_OB_Proxy_In_Dialog_7_ ua="na">Yes</Use_OB_Proxy_In_Dialog_7_>
 <Register_7_ ua="na">Yes</Register_7_>
 <Make_Call_Without_Reg_7_ ua="na">No</Make_Call_Without_Reg_7_>
 <Register_Expires_7_ ua="na">{$register_expires_7}</Register_Expires_7_>
 <Ans_Call_Without_Reg_7_ ua="na">No</Ans_Call_Without_Reg_7_>
-<Use_DNS_SRV_7_ ua="na">No</Use_DNS_SRV_7_>
-<DNS_SRV_Auto_Prefix_7_ ua="na">No</DNS_SRV_Auto_Prefix_7_>
-<Proxy_Fallback_Intvl_7_ ua="na">3600</Proxy_Fallback_Intvl_7_>
+{if $sip_transport_7 == 'dns srv'}<Use_DNS_SRV_7_ ua="na">Yes</Use_DNS_SRV_7_>{/if}
+{if $sip_transport_7 != 'dns srv'}<Use_DNS_SRV_7_ ua="na">No</Use_DNS_SRV_7_>{/if}
+<Proxy_Fallback_Intvl_7_ ua="na">600</Proxy_Fallback_Intvl_7_>
 <Proxy_Redundancy_Method_7_ ua="na">Normal</Proxy_Redundancy_Method_7_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
@@ -1073,17 +1078,17 @@
 <Auto_Ans_Page_On_Active_Call_8_ ua="na">Yes</Auto_Ans_Page_On_Active_Call_8_>
 
 <!-- Proxy and Registration -->
-<Proxy_8_ ua="na"></Proxy_8_>
-<Outbound_Proxy_8_ ua="na"></Outbound_Proxy_8_>
-<Use_Outbound_Proxy_8_ ua="na">No</Use_Outbound_Proxy_8_>
+<Proxy_8_ ua="na">{$domain_name}</Proxy_8_>
+<Outbound_Proxy_8_ ua="na">{$outbound_proxy_primary_8}</Outbound_Proxy_8_>
+<Use_Outbound_Proxy_8_ ua="na">{if isset($outbound_proxy_primary_8)}Yes{else}No{/if}</Use_Outbound_Proxy_8_>
 <Use_OB_Proxy_In_Dialog_8_ ua="na">Yes</Use_OB_Proxy_In_Dialog_8_>
 <Register_8_ ua="na">Yes</Register_8_>
 <Make_Call_Without_Reg_8_ ua="na">No</Make_Call_Without_Reg_8_>
 <Register_Expires_8_ ua="na">{$register_expires_8}</Register_Expires_8_>
 <Ans_Call_Without_Reg_8_ ua="na">No</Ans_Call_Without_Reg_8_>
-<Use_DNS_SRV_8_ ua="na">No</Use_DNS_SRV_8_>
-<DNS_SRV_Auto_Prefix_8_ ua="na">No</DNS_SRV_Auto_Prefix_8_>
-<Proxy_Fallback_Intvl_8_ ua="na">3600</Proxy_Fallback_Intvl_8_>
+{if $sip_transport_8 == 'dns srv'}<Use_DNS_SRV_8_ ua="na">Yes</Use_DNS_SRV_8_>{/if}
+{if $sip_transport_8 != 'dns srv'}<Use_DNS_SRV_8_ ua="na">No</Use_DNS_SRV_8_>{/if}
+<Proxy_Fallback_Intvl_8_ ua="na">600</Proxy_Fallback_Intvl_8_>
 <Proxy_Redundancy_Method_8_ ua="na">Normal</Proxy_Redundancy_Method_8_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
@@ -1185,17 +1190,17 @@
 <Auto_Ans_Page_On_Active_Call_9_ ua="na">Yes</Auto_Ans_Page_On_Active_Call_9_>
 
 <!-- Proxy and Registration -->
-<Proxy_9_ ua="na"></Proxy_9_>
-<Outbound_Proxy_9_ ua="na"></Outbound_Proxy_9_>
-<Use_Outbound_Proxy_9_ ua="na">No</Use_Outbound_Proxy_9_>
+<Proxy_9_ ua="na">{$domain_name}</Proxy_9_>
+<Outbound_Proxy_9_ ua="na">{$outbound_proxy_primary_9}</Outbound_Proxy_9_>
+<Use_Outbound_Proxy_9_ ua="na">{if isset($outbound_proxy_primary_9)}Yes{else}No{/if}</Use_Outbound_Proxy_9_>
 <Use_OB_Proxy_In_Dialog_9_ ua="na">Yes</Use_OB_Proxy_In_Dialog_9_>
 <Register_9_ ua="na">Yes</Register_9_>
 <Make_Call_Without_Reg_9_ ua="na">No</Make_Call_Without_Reg_9_>
 <Register_Expires_9_ ua="na">{$register_expires_9}</Register_Expires_9_>
 <Ans_Call_Without_Reg_9_ ua="na">No</Ans_Call_Without_Reg_9_>
-<Use_DNS_SRV_9_ ua="na">No</Use_DNS_SRV_9_>
-<DNS_SRV_Auto_Prefix_9_ ua="na">No</DNS_SRV_Auto_Prefix_9_>
-<Proxy_Fallback_Intvl_9_ ua="na">3600</Proxy_Fallback_Intvl_9_>
+{if $sip_transport_9 == 'dns srv'}<Use_DNS_SRV_9_ ua="na">Yes</Use_DNS_SRV_9_>{/if}
+{if $sip_transport_9 != 'dns srv'}<Use_DNS_SRV_9_ ua="na">No</Use_DNS_SRV_9_>{/if}
+<Proxy_Fallback_Intvl_9_ ua="na">600</Proxy_Fallback_Intvl_9_>
 <Proxy_Redundancy_Method_9_ ua="na">Normal</Proxy_Redundancy_Method_9_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
@@ -1297,17 +1302,17 @@
 <Auto_Ans_Page_On_Active_Call_10_ ua="na">Yes</Auto_Ans_Page_On_Active_Call_10_>
 
 <!-- Proxy and Registration -->
-<Proxy_10_ ua="na"></Proxy_10_>
-<Outbound_Proxy_10_ ua="na"></Outbound_Proxy_10_>
-<Use_Outbound_Proxy_10_ ua="na">No</Use_Outbound_Proxy_10_>
+<Proxy_10_ ua="na">{$domain_name}</Proxy_10_>
+<Outbound_Proxy_10_ ua="na">{$outbound_proxy_primary_10}</Outbound_Proxy_10_>
+<Use_Outbound_Proxy_10_ ua="na">{if isset($outbound_proxy_primary_10)}Yes{else}No{/if}</Use_Outbound_Proxy_10_>
 <Use_OB_Proxy_In_Dialog_10_ ua="na">Yes</Use_OB_Proxy_In_Dialog_10_>
 <Register_10_ ua="na">Yes</Register_10_>
 <Make_Call_Without_Reg_10_ ua="na">No</Make_Call_Without_Reg_10_>
 <Register_Expires_10_ ua="na">{$register_expires_10}</Register_Expires_10_>
 <Ans_Call_Without_Reg_10_ ua="na">No</Ans_Call_Without_Reg_10_>
-<Use_DNS_SRV_10_ ua="na">No</Use_DNS_SRV_10_>
-<DNS_SRV_Auto_Prefix_10_ ua="na">No</DNS_SRV_Auto_Prefix_10_>
-<Proxy_Fallback_Intvl_10_ ua="na">3600</Proxy_Fallback_Intvl_10_>
+{if $sip_transport_10 == 'dns srv'}<Use_DNS_SRV_10_ ua="na">Yes</Use_DNS_SRV_10_>{/if}
+{if $sip_transport_10 != 'dns srv'}<Use_DNS_SRV_10_ ua="na">No</Use_DNS_SRV_10_>{/if}
+<Proxy_Fallback_Intvl_10_ ua="na">600</Proxy_Fallback_Intvl_10_>
 <Proxy_Redundancy_Method_10_ ua="na">Normal</Proxy_Redundancy_Method_10_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
@@ -1409,17 +1414,17 @@
 <Auto_Ans_Page_On_Active_Call_11_ ua="na">Yes</Auto_Ans_Page_On_Active_Call_11_>
 
 <!-- Proxy and Registration -->
-<Proxy_11_ ua="na"></Proxy_11_>
-<Outbound_Proxy_11_ ua="na"></Outbound_Proxy_11_>
-<Use_Outbound_Proxy_11_ ua="na">No</Use_Outbound_Proxy_11_>
+<Proxy_11_ ua="na">{$domain_name}</Proxy_11_>
+<Outbound_Proxy_11_ ua="na">{$outbound_proxy_primary_11}</Outbound_Proxy_11_>
+<Use_Outbound_Proxy_11_ ua="na">{if isset($outbound_proxy_primary_11)}Yes{else}No{/if}</Use_Outbound_Proxy_11_>
 <Use_OB_Proxy_In_Dialog_11_ ua="na">Yes</Use_OB_Proxy_In_Dialog_11_>
 <Register_11_ ua="na">Yes</Register_11_>
 <Make_Call_Without_Reg_11_ ua="na">No</Make_Call_Without_Reg_11_>
 <Register_Expires_11_ ua="na">{$register_expires_11}</Register_Expires_11_>
 <Ans_Call_Without_Reg_11_ ua="na">No</Ans_Call_Without_Reg_11_>
-<Use_DNS_SRV_11_ ua="na">No</Use_DNS_SRV_11_>
-<DNS_SRV_Auto_Prefix_11_ ua="na">No</DNS_SRV_Auto_Prefix_11_>
-<Proxy_Fallback_Intvl_11_ ua="na">3600</Proxy_Fallback_Intvl_11_>
+{if $sip_transport_11 == 'dns srv'}<Use_DNS_SRV_11_ ua="na">Yes</Use_DNS_SRV_11_>{/if}
+{if $sip_transport_11 != 'dns srv'}<Use_DNS_SRV_11_ ua="na">No</Use_DNS_SRV_11_>{/if}
+<Proxy_Fallback_Intvl_11_ ua="na">600</Proxy_Fallback_Intvl_11_>
 <Proxy_Redundancy_Method_11_ ua="na">Normal</Proxy_Redundancy_Method_11_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
@@ -1521,17 +1526,17 @@
 <Auto_Ans_Page_On_Active_Call_12_ ua="na">Yes</Auto_Ans_Page_On_Active_Call_12_>
 
 <!-- Proxy and Registration -->
-<Proxy_12_ ua="na"></Proxy_12_>
-<Outbound_Proxy_12_ ua="na"></Outbound_Proxy_12_>
-<Use_Outbound_Proxy_12_ ua="na">No</Use_Outbound_Proxy_12_>
+<Proxy_12_ ua="na">{$domain_name}</Proxy_12_>
+<Outbound_Proxy_12_ ua="na">{$outbound_proxy_primary_12}</Outbound_Proxy_12_>
+<Use_Outbound_Proxy_12_ ua="na">{if isset($outbound_proxy_primary_12)}Yes{else}No{/if}</Use_Outbound_Proxy_12_>
 <Use_OB_Proxy_In_Dialog_12_ ua="na">Yes</Use_OB_Proxy_In_Dialog_12_>
 <Register_12_ ua="na">Yes</Register_12_>
 <Make_Call_Without_Reg_12_ ua="na">No</Make_Call_Without_Reg_12_>
 <Register_Expires_12_ ua="na">{$register_expires_12}</Register_Expires_12_>
 <Ans_Call_Without_Reg_12_ ua="na">No</Ans_Call_Without_Reg_12_>
-<Use_DNS_SRV_12_ ua="na">No</Use_DNS_SRV_12_>
-<DNS_SRV_Auto_Prefix_12_ ua="na">No</DNS_SRV_Auto_Prefix_12_>
-<Proxy_Fallback_Intvl_12_ ua="na">3600</Proxy_Fallback_Intvl_12_>
+{if $sip_transport_12 == 'dns srv'}<Use_DNS_SRV_12_ ua="na">Yes</Use_DNS_SRV_12_>{/if}
+{if $sip_transport_12 != 'dns srv'}<Use_DNS_SRV_12_ ua="na">No</Use_DNS_SRV_12_>{/if}
+<Proxy_Fallback_Intvl_12_ ua="na">600</Proxy_Fallback_Intvl_12_>
 <Proxy_Redundancy_Method_12_ ua="na">Normal</Proxy_Redundancy_Method_12_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
