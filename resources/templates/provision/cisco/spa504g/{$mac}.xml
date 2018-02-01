@@ -490,7 +490,7 @@
 <Use_Outbound_Proxy_3_ group="Ext_3/Proxy_and_Registration">{if isset($outbound_proxy_primary_3)}Yes{else}No{/if}</Use_Outbound_Proxy_3_>
 <Outbound_Proxy_3_ group="Ext_3/Proxy_and_Registration">{$outbound_proxy_primary_3}</Outbound_Proxy_3_>
 <Alternate_Proxy_3_ group="Ext_3/Proxy_and_Registration">{$server_address_3}</Alternate_Proxy_3_>
-<Alternate_Outbound_Proxy_3_ group="Ext_2/Proxy_and_Registration">{$outbound_proxy_secondary_3}</Alternate_Outbound_Proxy_3_>
+<Alternate_Outbound_Proxy_3_ group="Ext_3/Proxy_and_Registration">{$outbound_proxy_secondary_3}</Alternate_Outbound_Proxy_3_>
 <Use_OB_Proxy_In_Dialog_3_ group="Ext_3/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_3_>
 <Register_3_ group="Ext_3/Proxy_and_Registration">Yes</Register_3_>
 <Make_Call_Without_Reg_3_ group="Ext_3/Proxy_and_Registration">No</Make_Call_Without_Reg_3_>
@@ -571,15 +571,18 @@
 <State_Agent_4_ group="Ext_4/Call_Feature_Settings" />
 <CFWD_Notify_Serv_4_ group="Ext_4/Call_Feature_Settings">No</CFWD_Notify_Serv_4_>
 <CFWD_Notifier_4_ group="Ext_4/Call_Feature_Settings" />
-<Proxy_4_ group="Ext_4/Proxy_and_Registration">{$server_address_4}</Proxy_4_>
+<Proxy_4_ group="Ext_4/Proxy_and_Registration">{$server_address_1}</Proxy_4_>
 <Use_Outbound_Proxy_4_ group="Ext_4/Proxy_and_Registration">{if isset($outbound_proxy_primary_4)}Yes{else}No{/if}</Use_Outbound_Proxy_4_>
-<Outbound_Proxy_4_ group="Ext_4/Proxy_and_Registration" />
+<Outbound_Proxy_4_ group="Ext_4/Proxy_and_Registration">{$outbound_proxy_primary_4}</Outbound_Proxy_4_>
+<Alternate_Proxy_4_ group="Ext_4/Proxy_and_Registration">{$server_address_4}</Alternate_Proxy_4_>
+<Alternate_Outbound_Proxy_4_ group="Ext_4/Proxy_and_Registration">{$outbound_proxy_secondary_4}</Alternate_Outbound_Proxy_4_>
 <Use_OB_Proxy_In_Dialog_4_ group="Ext_4/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_4_>
 <Register_4_ group="Ext_4/Proxy_and_Registration">Yes</Register_4_>
 <Make_Call_Without_Reg_4_ group="Ext_4/Proxy_and_Registration">No</Make_Call_Without_Reg_4_>
 <Register_Expires_4_ group="Ext_4/Proxy_and_Registration">{$register_expires_4}</Register_Expires_4_>
 <Ans_Call_Without_Reg_4_ group="Ext_4/Proxy_and_Registration">No</Ans_Call_Without_Reg_4_>
-<Use_DNS_SRV_4_ group="Ext_4/Proxy_and_Registration">No</Use_DNS_SRV_4_>
+{if $sip_transport_4 == 'dns srv'}<Use_DNS_SRV_4_ group="Ext_4/Proxy_and_Registration">Yes</Use_DNS_SRV_4_>{/if}
+{if $sip_transport_4 != 'dns srv'}<Use_DNS_SRV_4_ group="Ext_4/Proxy_and_Registration">No</Use_DNS_SRV_4_>{/if}
 <DNS_SRV_Auto_Prefix_4_ group="Ext_4/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_4_>
 <Proxy_Fallback_Intvl_4_ group="Ext_4/Proxy_and_Registration">600</Proxy_Fallback_Intvl_4_>
 <Proxy_Redundancy_Method_4_ group="Ext_4/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_4_>
