@@ -18,7 +18,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -148,15 +148,15 @@
 	$smtp['password'] 	= $_SESSION['email']['smtp_password']['var'];
 	
 	if (isset($_SESSION['voicemail']['smtp_from'])) {
-	$smtp['from'] 		= (strlen($_SESSION['voicemail']['smtp_from']['var'])?$_SESSION['voicemail']['smtp_from']['var']:'fusionpbx@example.com');
+		$smtp['from'] = $_SESSION['voicemail']['smtp_from']['var'];
 	} else {
-		$smtp['from'] 		= (strlen($_SESSION['email']['smtp_from']['var'])?$_SESSION['email']['smtp_from']['var']:'fusionpbx@example.com');
+		$smtp['from'] = $_SESSION['email']['smtp_from']['var'];
 	}
 	
 	if (isset($_SESSION['voicemail']['smtp_from_name'])) {
-	$smtp['from_name'] 	= (strlen($_SESSION['voicemail']['smtp_from_name']['var'])?$_SESSION['voicemail']['smtp_from_name']['var']:'FusionPBX Voicemail');	
+		$smtp['from_name'] = $_SESSION['voicemail']['smtp_from_name']['var'];	
 	} else {
-		$smtp['from_name'] 	= (strlen($_SESSION['email']['smtp_from_name']['var'])?$_SESSION['email']['smtp_from_name']['var']:'FusionPBX Voicemail');
+		$smtp['from_name'] = $_SESSION['email']['smtp_from_name']['var'];
 	}
 
 	// overwrite with domain-specific smtp server settings, if any
@@ -164,8 +164,7 @@
 		$sql = "select domain_setting_subcategory, domain_setting_value ";
 		$sql .= "from v_domain_settings ";
 		$sql .= "where domain_uuid = '".$headers["X-FusionPBX-Domain-UUID"]."' ";
-		$sql .= "and domain_setting_category = 'email' ";
-		$sql .= "or domain_setting_category = 'voicemail' ";
+		$sql .= "and (domain_setting_category = 'email' or domain_setting_category = 'voicemail') ";
 		$sql .= "and domain_setting_name = 'var' ";
 		$sql .= "and domain_setting_enabled = 'true' ";
 		$prep_statement = $db->prepare($sql);
@@ -200,19 +199,19 @@
 	} else $mail->IsSMTP();
 
 // optional bypass TLS certificate check e.g. for self-signed certificates
-    if (isset($_SESSION['email']['smtp_validate_certificate'])) {
-            if ($_SESSION['email']['smtp_validate_certificate']['boolean'] == "false") {
+	if (isset($_SESSION['email']['smtp_validate_certificate'])) {
+	    if ($_SESSION['email']['smtp_validate_certificate']['boolean'] == "false") {
 
-                    // this is needed to work around TLS certificate problems
-                    $mail->SMTPOptions = array(
-                            'ssl' => array(
-                            'verify_peer' => false,
-                            'verify_peer_name' => false,
-                            'allow_self_signed' => true
-                            )
-                    );
-            }
-    }
+		    // this is needed to work around TLS certificate problems
+		    $mail->SMTPOptions = array(
+			    'ssl' => array(
+			    'verify_peer' => false,
+			    'verify_peer_name' => false,
+			    'allow_self_signed' => true
+			    )
+		    );
+	    }
+	}
 
 	$mail->SMTPAuth = $smtp['auth'];
 	$mail->Host = $smtp['host'];
@@ -389,13 +388,10 @@
 	fwrite($fp, $content);
 	fclose($fp);
 
-
-/********************************************************************************************
-
+/*
 // save in /tmp as eml file
 
 $fp = fopen(sys_get_temp_dir()."/email.eml", "w");
-
 ob_end_clean();
 ob_start();
 
