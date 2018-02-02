@@ -371,12 +371,22 @@ if(!function_exists('fax_split_dtmf')) {
 		$smtp['port'] = 0;
 	}
 	
-	$smtp['secure'] 	= $_SESSION['email']['smtp_secure']['var'];
+		$smtp['secure'] 	= $_SESSION['email']['smtp_secure']['var'];
 	$smtp['auth'] 		= $_SESSION['email']['smtp_auth']['var'];
 	$smtp['username'] 	= $_SESSION['email']['smtp_username']['var'];
 	$smtp['password'] 	= $_SESSION['email']['smtp_password']['var'];
-	$smtp['from'] 		= (strlen($_SESSION['email']['smtp_from']['var'])?$_SESSION['email']['smtp_from']['var']:'fusionpbx@example.com');
-	$smtp['from_name'] 	= (strlen($_SESSION['email']['smtp_from_name']['var'])?$_SESSION['email']['smtp_from_name']['var']:'FusionPBX FAX');
+	
+	if (isset($_SESSION['voicemail']['smtp_from'])) {
+	$smtp['from'] 		= (strlen($_SESSION['fax']['smtp_from']['var'])?$_SESSION['fax']['smtp_from']['var']:'fusionpbx@example.com');
+	} else {
+		$smtp['from'] 		= (strlen($_SESSION['email']['smtp_from']['var'])?$_SESSION['email']['smtp_from']['var']:'fusionpbx@example.com');
+	}
+	
+	if (isset($_SESSION['voicemail']['smtp_from_name'])) {
+	$smtp['from_name'] 	= (strlen($_SESSION['fax']['smtp_from_name']['var'])?$_SESSION['fax']['smtp_from_name']['var']:'FusionPBX Voicemail');	
+	} else {
+		$smtp['from_name'] 	= (strlen($_SESSION['email']['smtp_from_name']['var'])?$_SESSION['email']['smtp_from_name']['var']:'FusionPBX Voicemail');
+	}
 
 	// overwrite with domain-specific smtp server settings, if any
 	if ($domain_uuid != '') {
@@ -384,6 +394,7 @@ if(!function_exists('fax_split_dtmf')) {
 		$sql .= "from v_domain_settings ";
 		$sql .= "where domain_uuid = '".$domain_uuid."' ";
 		$sql .= "and domain_setting_category = 'email' ";
+		$sql .= "or domain_setting_category = 'fax' ";
 		$sql .= "and domain_setting_name = 'var' ";
 		$sql .= "and domain_setting_enabled = 'true' ";
 		$prep_statement = $db->prepare($sql);
