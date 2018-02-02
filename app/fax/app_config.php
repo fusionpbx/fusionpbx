@@ -331,6 +331,22 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "base64";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Store FAX in base64.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "762717f6-743d-428f-b345-33b9d84ff099";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "fax";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "smtp_from";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "var";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "03c6ea15-a0b8-4164-9026-47595981477b";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "fax";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "smtp_from_name";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "var";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 
 	//schema details
 		$y=0;
