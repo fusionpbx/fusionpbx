@@ -571,7 +571,7 @@
 <State_Agent_4_ group="Ext_4/Call_Feature_Settings" />
 <CFWD_Notify_Serv_4_ group="Ext_4/Call_Feature_Settings">No</CFWD_Notify_Serv_4_>
 <CFWD_Notifier_4_ group="Ext_4/Call_Feature_Settings" />
-<Proxy_4_ group="Ext_4/Proxy_and_Registration">{$server_address_1}</Proxy_4_>
+<Proxy_4_ group="Ext_4/Proxy_and_Registration">{$server_address_4}</Proxy_4_>
 <Use_Outbound_Proxy_4_ group="Ext_4/Proxy_and_Registration">{if isset($outbound_proxy_primary_4)}Yes{else}No{/if}</Use_Outbound_Proxy_4_>
 <Outbound_Proxy_4_ group="Ext_4/Proxy_and_Registration">{$outbound_proxy_primary_4}</Outbound_Proxy_4_>
 <Alternate_Proxy_4_ group="Ext_4/Proxy_and_Registration">{$server_address_4}</Alternate_Proxy_4_>
