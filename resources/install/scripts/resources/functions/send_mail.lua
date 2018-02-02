@@ -79,26 +79,26 @@ end
 
 if freeswitch then
 	function send_mail(headers, address, message, file)
-	local xheaders = "{"
-	for k,v in pairs(headers) do
-		xheaders = xheaders .. ('"%s":"%s",'):format(k, v)
-	end
-	xheaders = xheaders:sub(1,-2) .. '}'
+		local xheaders = "{"
+		for k,v in pairs(headers) do
+			xheaders = xheaders .. ('"%s":"%s",'):format(k, v)
+		end
+		xheaders = xheaders:sub(1,-2) .. '}'
 
-	local subject = message[1]
-	local body = message[2] or ''
+		local subject = message[1]
+		local body = message[2] or ''
 
-	local mail_headers =
-		"To: ".. address .. "\n" ..
-		"From: " .. address .. "\n" ..
-		"Subject: " .. subject .. "\n" ..
-		"X-Headers: " .. xheaders
+		local mail_headers =
+			"To: ".. address .. "\n" ..
+			"From: " .. address .. "\n" ..
+			"Subject: " .. subject .. "\n" ..
+			"X-Headers: " .. xheaders
 
-	if file then
-		freeswitch.email(address, address, mail_headers, body, file)
-	else
-		freeswitch.email(address, address, mail_headers, body)
-	end
+		if file then
+			freeswitch.email(address, address, mail_headers, body, file)
+		else
+			freeswitch.email(address, address, mail_headers, body)
+		end
 	end
 end
 
