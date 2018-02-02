@@ -376,13 +376,15 @@ if (!function_exists('fax_split_dtmf')) {
 
 	if (strlen($_SESSION['fax']['smtp_from']) > 0) {
 		$smtp['from'] = $_SESSION['fax']['smtp_from']['var'];
-	} else {
+	}
+	else {
 		$smtp['from'] = $_SESSION['email']['smtp_from']['var'];
 	}
 
 	if (strlen($_SESSION['fax']['smtp_from_name']) > 0) {
 		$smtp['from_name'] = $_SESSION['fax']['smtp_from_name']['var'];
-	} else {
+	}
+	else {
 		$smtp['from_name'] = $_SESSION['email']['smtp_from_name']['var'];
 	}
 
