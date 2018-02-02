@@ -12,7 +12,7 @@ if not freeswitch then
 		local domain_uuid = headers["X-FusionPBX-Domain-UUID"]
 		local domain_name = headers["X-FusionPBX-Domain-Name"]
 		local email_type = headers["X-FusionPBX-Email-Type"] or 'info'
-		local call_uuid = headers["X-FusionPBX-Email-Type"]
+		local call_uuid = headers["X-FusionPBX-Call-UUID"]
 		local db = dbh or Database.new('system')
 		local settings = Settings.new(db, domain_name, domain_uuid)
 
@@ -78,27 +78,46 @@ if not freeswitch then
 end
 
 if freeswitch then
+	local Settings = require "resources.functions.lazy_settings"
+	local Database = require "resources.functions.database"
+
 	function send_mail(headers, address, message, file)
-	local xheaders = "{"
-	for k,v in pairs(headers) do
-		xheaders = xheaders .. ('"%s":"%s",'):format(k, v)
-	end
-	xheaders = xheaders:sub(1,-2) .. '}'
-
-	local subject = message[1]
-	local body = message[2] or ''
-
-	local mail_headers =
-		"To: ".. address .. "\n" ..
-		"From: " .. address .. "\n" ..
-		"Subject: " .. subject .. "\n" ..
-		"X-Headers: " .. xheaders
-
-	if file then
-		freeswitch.email(address, address, mail_headers, body, file)
-	else
-		freeswitch.email(address, address, mail_headers, body)
-	end
+        local domain_uuid = headers["X-FusionPBX-Domain-UUID"]
+        local domain_name = headers["X-FusionPBX-Domain-Name"]
+        local email_type = headers["X-FusionPBX-Email-Type"] or 'info'
+        local call_uuid = headers["X-FusionPBX-Call-UUID"]
+        local db = dbh or Database.new('system')
+        local settings = Settings.new(db, domain_name, domain_uuid)
+        local xheaders = "{"
+        for k,v in pairs(headers) do
+            xheaders = xheaders .. ('"%s":"%s",'):format(k, v)
+        end
+        xheaders = xheaders:sub(1,-2) .. '}'
+    
+        local subject = message[1]
+        local body = message[2] or ''
+        local from_address = address
+    
+        local from = {
+                    title = settings:get('email', 'freeswitch_from_name', 'var');
+                    address = settings:get('email', 'freeswitch_from', 'var');
+        };
+        
+        if from.address then
+            from_address = from.title .. "<" .. from.address .. ">"
+        end
+    
+        local mail_headers =
+            "To: ".. address .. "\n" ..
+            "From: " .. from_address .. "\n" ..
+            "Subject: " .. subject .. "\n" ..
+            "X-Headers: " .. xheaders
+    
+        if file then
+            freeswitch.email(address, from_address, mail_headers, body, file)
+        else
+            freeswitch.email(address, from_address, mail_headers, body)
+        end
 	end
 end
 
