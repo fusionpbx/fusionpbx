@@ -146,13 +146,13 @@
 	$smtp['auth'] 		= $_SESSION['email']['smtp_auth']['var'];
 	$smtp['username'] 	= $_SESSION['email']['smtp_username']['var'];
 	$smtp['password'] 	= $_SESSION['email']['smtp_password']['var'];
-	
+
 	if (isset($_SESSION['voicemail']['smtp_from'])) {
 		$smtp['from'] = $_SESSION['voicemail']['smtp_from']['var'];
 	} else {
 		$smtp['from'] = $_SESSION['email']['smtp_from']['var'];
 	}
-	
+
 	if (isset($_SESSION['voicemail']['smtp_from_name'])) {
 		$smtp['from_name'] = $_SESSION['voicemail']['smtp_from_name']['var'];	
 	} else {
