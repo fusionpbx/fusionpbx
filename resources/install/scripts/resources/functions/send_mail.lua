@@ -91,8 +91,8 @@ if freeswitch then
 		end
 		xheaders = xheaders:sub(1,-2) .. '}'
 
-		local from = settins:get('email', 'smtp_from', 'var')
-		local from_name = settins:get('email', 'smtp_from_name', 'var')
+		local from = settings:get('email', 'smtp_from', 'var')
+		local from_name = settings:get('email', 'smtp_from_name', 'var')
 		local from_address = from_name .. "<" .. from .. ">"
 		local subject = message[1]
 		local body = message[2] or ''
