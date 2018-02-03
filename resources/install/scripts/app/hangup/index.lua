@@ -31,6 +31,9 @@
 	require "resources.functions.base64";
 	require "resources.functions.file_exists";
 
+--load libraries
+	require 'resources.functions.send_mail'
+
 --create the api object
 	api = freeswitch.API();
 
@@ -55,10 +58,12 @@
 					end
 
 				--prepare the headers
-					headers = '{"X-FusionPBX-Domain-UUID":"'..domain_uuid..'",';
-					headers = headers..'"X-FusionPBX-Domain-Name":"'..domain_name..'",';
-					headers = headers..'"X-FusionPBX-Call-UUID":"'..uuid..'",';
-					headers = headers..'"X-FusionPBX-Email-Type":"missed"}';
+					local headers = {
+						["X-FusionPBX-Domain-UUID"] = domain_uuid;
+						["X-FusionPBX-Domain-Name"] = domain_name;
+						["X-FusionPBX-Call-UUID"]   = uuid;
+						["X-FusionPBX-Email-Type"]  = 'missed';
+					}
 
 				--prepare the subject
 					local f = io.open(file_subject, "r");
@@ -89,11 +94,14 @@
 					body = trim(body);
 
 				--send the emails
-					cmd = "luarun email.lua "..missed_call_data.." "..missed_call_data.." "..headers.." '"..subject.."' '"..body.."'";
+					send_mail(headers,
+						missed_call_data,
+						{subject, body}
+					);
+
 					if (debug["info"]) then
-						freeswitch.consoleLog("notice", "[missed call] cmd: " .. cmd .. "\n");
+						freeswitch.consoleLog("notice", "[missed call] " .. caller_id_number .. "->" .. sip_to_user .. "emailed to " .. missed_call_data .. "\n");
 					end
-					result = api:executeString(cmd);
 			end
 		end
 	end
