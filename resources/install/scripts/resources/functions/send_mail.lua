@@ -82,7 +82,7 @@ if freeswitch then
 		local domain_uuid = headers["X-FusionPBX-Domain-UUID"]
 		local domain_name = headers["X-FusionPBX-Domain-Name"]
 		local email_type = headers["X-FusionPBX-Email-Type"] or 'info'
-		local call_uuid = headers["X-FusionPBX-Email-Type"]
+		local call_uuid = headers["X-FusionPBX-Email-Call-UUID"]
 		local db = dbh or Database.new('system')
 		local settings = Settings.new(db, domain_name, domain_uuid)
 		local xheaders = "{"
@@ -92,19 +92,21 @@ if freeswitch then
 		xheaders = xheaders:sub(1,-2) .. '}'
 
 		local from = settins:get('email', 'smtp_from', 'var')
+		local from_name = settins:get('email', 'smtp_from_name', 'var')
+		local from_address = from_name .. "<" .. from .. ">"
 		local subject = message[1]
 		local body = message[2] or ''
 
 		local mail_headers =
 			"To: ".. address .. "\n" ..
-			"From: " .. from .. "\n" ..
+			"From: " .. from_address "\n" ..
 			"Subject: " .. subject .. "\n" ..
 			"X-Headers: " .. xheaders
 
 		if file then
-			freeswitch.email(address, from, mail_headers, body, file)
+			freeswitch.email(address, from_address, mail_headers, body, file)
 		else
-			freeswitch.email(address, from, mail_headers, body)
+			freeswitch.email(address, from_address, mail_headers, body)
 		end
 	end
 end
