@@ -762,7 +762,7 @@
 		if (permission_exists('device_line_register_expires')) {
 			echo "				<td class='vtable'>".$text['label-register_expires']."</td>\n";
 		}
-		if (permission_exists('device_shared_line')) {
+		if (permission_exists('device_line_shared')) {
 			echo "				<td class='vtable'>".$text['label-shared_line']."</td>\n";
 		}
 		echo "				<td class='vtable'>".$text['label-enabled']."</td>\n";
@@ -905,7 +905,7 @@
 					echo "				<input type='hidden' name='device_lines[".$x."][register_expires]' value=\"".$row['register_expires']."\"/>\n";
 				}
 
-				if (permission_exists('device_shared_line')) {
+				if (permission_exists('device_line_shared')) {
 					echo "			<td align='left'>\n";
 					echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][shared_line]' maxlength='255' value=\"".$row['shared_line']."\"/>\n";
 					echo "			</td>\n";
