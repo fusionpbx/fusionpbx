@@ -1533,6 +1533,13 @@
 		$vendors[$y]['functions'][$z]['value'] = "disabled";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "72f610e3-2803-404a-96d8-74bfcc6adabe";
+		$vendors[$y]['functions'][$z]['label'] = "label-shared_line";
+		$vendors[$y]['functions'][$z]['name'] = "shared_line";
+		$vendors[$y]['functions'][$z]['value'] = "shared";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 
 		$y++;
 		$vendors[$y]['uuid'] = "8116f44f-ccd6-46d5-8e65-46cc2c8cca32";
@@ -1549,6 +1556,13 @@
 		$vendors[$y]['functions'][$z]['label'] = "label-disabled";
 		$vendors[$y]['functions'][$z]['name'] = "disabled";
 		$vendors[$y]['functions'][$z]['value'] = "disabled";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "9a23351d-2578-438f-8a94-7b1190f69c28";
+		$vendors[$y]['functions'][$z]['label'] = "label-shared_line";
+		$vendors[$y]['functions'][$z]['name'] = "shared_line";
+		$vendors[$y]['functions'][$z]['value'] = "shared";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 
