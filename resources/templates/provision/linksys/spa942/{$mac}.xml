@@ -372,7 +372,7 @@
 <EM_Enable group="Phone/Extension_Mobility">No</EM_Enable>
 <EM_User_Domain group="Phone/Extension_Mobility"/>
 <Line_Enable_1_ group="Ext_1/General">Yes</Line_Enable_1_>
-<Share_Ext_1_ group="Ext_1/Share_Line_Appearance">{$shared_line_1}</Share_Ext_1_>
+<Share_Ext_1_ group="Ext_1/Share_Line_Appearance">{if $shared_line_1 == "shared"}shared{else}private{/if}</Share_Ext_1_>
 <Shared_User_ID_1_ group="Ext_1/Share_Line_Appearance"/>
 <Subscription_Expires_1_ group="Ext_1/Share_Line_Appearance">3600</Subscription_Expires_1_>
 <NAT_Mapping_Enable_1_ group="Ext_1/NAT_Settings">Yes</NAT_Mapping_Enable_1_>
@@ -453,7 +453,7 @@
 <Enable_IP_Dialing_1_ group="Ext_1/Dial_Plan">Yes</Enable_IP_Dialing_1_>
 <Emergency_Number_1_ group="Ext_1/Dial_Plan"/>
 <Line_Enable_2_ group="Ext_2/General">Yes</Line_Enable_2_>
-<Share_Ext_2_ group="Ext_2/Share_Line_Appearance">{$shared_line_2}</Share_Ext_2_>
+<Share_Ext_2_ group="Ext_2/Share_Line_Appearance">{if $shared_line_2 == "shared"}shared{else}private{/if}</Share_Ext_2_>
 <Shared_User_ID_2_ group="Ext_2/Share_Line_Appearance"/>
 <Subscription_Expires_2_ group="Ext_2/Share_Line_Appearance">3600</Subscription_Expires_2_>
 <NAT_Mapping_Enable_2_ group="Ext_2/NAT_Settings">Yes</NAT_Mapping_Enable_2_>
@@ -534,7 +534,7 @@
 <Enable_IP_Dialing_2_ group="Ext_2/Dial_Plan">Yes</Enable_IP_Dialing_2_>
 <Emergency_Number_2_ group="Ext_2/Dial_Plan"/>
 <Line_Enable_3_ group="Ext_3/General">Yes</Line_Enable_3_>
-<Share_Ext_3_ group="Ext_3/Share_Line_Appearance">{$shared_line_3}</Share_Ext_3_>
+<Share_Ext_3_ group="Ext_3/Share_Line_Appearance">{if $shared_line_3 == "shared"}shared{else}private{/if}</Share_Ext_3_>
 <Shared_User_ID_3_ group="Ext_3/Share_Line_Appearance"/>
 <Subscription_Expires_3_ group="Ext_3/Share_Line_Appearance">3600</Subscription_Expires_3_>
 <NAT_Mapping_Enable_3_ group="Ext_3/NAT_Settings">Yes</NAT_Mapping_Enable_3_>
@@ -615,7 +615,7 @@
 <Enable_IP_Dialing_3_ group="Ext_3/Dial_Plan">Yes</Enable_IP_Dialing_3_>
 <Emergency_Number_3_ group="Ext_3/Dial_Plan"/>
 <Line_Enable_4_ group="Ext_4/General">Yes</Line_Enable_4_>
-<Share_Ext_4_ group="Ext_4/Share_Line_Appearance">{$shared_line_4}</Share_Ext_4_>
+<Share_Ext_4_ group="Ext_4/Share_Line_Appearance">{if $shared_line_4 == "shared"}shared{else}private{/if}</Share_Ext_4_>
 <Shared_User_ID_4_ group="Ext_4/Share_Line_Appearance"/>
 <Subscription_Expires_4_ group="Ext_4/Share_Line_Appearance">3600</Subscription_Expires_4_>
 <NAT_Mapping_Enable_4_ group="Ext_4/NAT_Settings">Yes</NAT_Mapping_Enable_4_>
