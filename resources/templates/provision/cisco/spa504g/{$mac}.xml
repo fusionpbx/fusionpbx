@@ -393,6 +393,7 @@
 <MOH_Server_2_ group="Ext_2/Call_Feature_Settings" />
 <Auth_Page_2_ group="Ext_2/Call_Feature_Settings">No</Auth_Page_2_>
 <Default_Ring__2__ group="Ext_2/Call_Feature_Settings">1</Default_Ring__2__>
+<Feature_Key_Sync_2_ group="Ext_1/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_2_>
 <Auth_Page_Realm_2_ group="Ext_2/Call_Feature_Settings" />
 <Conference_Bridge_URL_2_ group="Ext_2/Call_Feature_Settings" />
 <Auth_Page_Password_2_ group="Ext_2/Call_Feature_Settings" />
@@ -478,6 +479,7 @@
 <MOH_Server_3_ group="Ext_3/Call_Feature_Settings" />
 <Auth_Page_3_ group="Ext_3/Call_Feature_Settings">No</Auth_Page_3_>
 <Default_Ring__3__ group="Ext_3/Call_Feature_Settings">1</Default_Ring__3__>
+<Feature_Key_Sync_3_ group="Ext_1/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_3_>
 <Auth_Page_Realm_3_ group="Ext_3/Call_Feature_Settings" />
 <Conference_Bridge_URL_3_ group="Ext_3/Call_Feature_Settings" />
 <Auth_Page_Password_3_ group="Ext_3/Call_Feature_Settings" />
@@ -563,6 +565,7 @@
 <MOH_Server_4_ group="Ext_4/Call_Feature_Settings" />
 <Auth_Page_4_ group="Ext_4/Call_Feature_Settings">No</Auth_Page_4_>
 <Default_Ring__4__ group="Ext_4/Call_Feature_Settings">1</Default_Ring__4__>
+<Feature_Key_Sync_4_ group="Ext_1/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_4_>
 <Auth_Page_Realm_4_ group="Ext_4/Call_Feature_Settings" />
 <Conference_Bridge_URL_4_ group="Ext_4/Call_Feature_Settings" />
 <Auth_Page_Password_4_ group="Ext_4/Call_Feature_Settings" />
