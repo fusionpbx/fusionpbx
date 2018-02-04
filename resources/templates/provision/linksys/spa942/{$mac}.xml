@@ -285,6 +285,7 @@
 <Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}"/>
 <Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extended_Function_{$row.device_key_id}_>
 
+{/if}
 {/foreach}
 
 <Extension_2_ group="Phone/Line_Key_2">{$ExtLineStatus_2}</Extension_2_>
