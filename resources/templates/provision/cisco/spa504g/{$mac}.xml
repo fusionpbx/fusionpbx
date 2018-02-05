@@ -621,7 +621,7 @@
 <Block_CID_Setting group="User/Supplementary_Services">No</Block_CID_Setting>
 <Block_ANC_Setting group="User/Supplementary_Services">No</Block_ANC_Setting>
 <DND_Setting group="User/Supplementary_Services">No</DND_Setting>
-<Secure_Call_Setting group="User/Supplementary_Services">No</Secure_Call_Setting>
+<Secure_Call_Setting group="User/Supplementary_Services">{if isset($spa_secure_call_setting)}Yes{else}No{/if}</Secure_Call_Setting>
 <Dial_Assistance group="User/Supplementary_Services">No</Dial_Assistance>
 <Auto_Answer_Page group="User/Supplementary_Services">Yes</Auto_Answer_Page>
 <Preferred_Audio_Device group="User/Supplementary_Services">Speaker</Preferred_Audio_Device>
