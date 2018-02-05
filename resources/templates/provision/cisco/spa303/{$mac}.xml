@@ -1635,7 +1635,7 @@
 <Voice_Mail_Number ua="na">*97</Voice_Mail_Number>
 <Text_Logo ua="na"></Text_Logo>
 <BMP_Picture_Download_URL ua="na"></BMP_Picture_Download_URL>
-<Select_Logo ua="na"></Select_Logo> <!-- options: Default/BMP Picture/Text Logo/None -->
+<Select_Logo ua="na">Default</Select_Logo> <!-- options: Default/BMP Picture/Text Logo/None -->
 <Select_Background_Picture ua="na">None</Select_Background_Picture> <!-- options: None/BMP Picture/Text Logo -->
 <Softkey_Labels_Font ua="na">Auto</Softkey_Labels_Font> <!-- options: Normal/Narrow/Auto -->
 <Screen_Saver_Enable ua="rw">No</Screen_Saver_Enable>
@@ -1643,24 +1643,19 @@
 <Screen_Saver_Icon ua="rw">Background Picture</Screen_Saver_Icon> <!-- options: StationTime/Lock/Phone/DateTime/Background Picture -->
 
 {foreach $keys["line"] as $row}
-{if $row.device_key_type == "line"}
+{if $row.device_key_category == "line"}
 <!-- Phone/Line_Key_{$row.device_key_id} -->
 <Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_line}</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
 <Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
-<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">private</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
-<Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}"/>
-{else}
-<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">Disabled</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
-<Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
-<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">private</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
+<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{if $row.device_key_type == "shared"}shared{else}private{/if}</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
 <Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extended_Function_{$row.device_key_id}_>
-{/if}
 
+{/if}
 {/foreach}
 
 <!-- Miscellaneous Line Key Settings -->
 <Line_ID_Mapping ua="na">Vertical First</Line_ID_Mapping> <!-- options: Horizontal First/Vertical First -->
-<SCA_Barge-In_Enable ua="na">No</SCA_Barge-In_Enable>
+<SCA_Barge-In_Enable ua="na">Yes</SCA_Barge-In_Enable>
 <SCA_Sticky_Auto_Line_Seize ua="na">No</SCA_Sticky_Auto_Line_Seize>
 <Line_Navigation ua="na">Per Line</Line_Navigation> <!-- options: Per Call/Per Line -->
 <Call_Appearance_Per_Line ua="na">2</Call_Appearance_Per_Line> <!-- options: 2/3/4/5/6/7/8/9/10 -->
@@ -1738,7 +1733,7 @@
 <Directory_Type ua="na">Enterprise</Directory_Type> <!-- options: Enterprise/Group/Personal -->
 <Directory_UserID ua="na"></Directory_UserID>
 <Directory_Password ua="na"></Directory_Password>
-<Call_Feature_Sync_Ext ua="na">Disabled</Call_Feature_Sync_Ext> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
+<Call_Feature_Sync_Ext ua="na">{$spa_feature_key_sync}</Call_Feature_Sync_Ext> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
 
 <!-- LDAP Corporate Directory Search -->
 <LDAP_Dir_Enable ua="na">No</LDAP_Dir_Enable>
