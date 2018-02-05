@@ -74,7 +74,7 @@
 <Random_REG_CID_On_Reboot group="SIP/SIP_Parameters">No</Random_REG_CID_On_Reboot>
 <Mark_All_AVT_Packets group="SIP/SIP_Parameters">Yes</Mark_All_AVT_Packets>
 <SIP_TCP_Port_Min group="SIP/SIP_Parameters">5060</SIP_TCP_Port_Min>
-<SIP_TCP_Port_Max group="SIP/SIP_Parameters">5080</SIP_TCP_Port_Max>
+<SIP_TCP_Port_Max group="SIP/SIP_Parameters">15080</SIP_TCP_Port_Max>
 <CTI_Enable group="SIP/SIP_Parameters">No</CTI_Enable>
 <Caller_ID_Header group="SIP/SIP_Parameters">PAID-RPID-FROM</Caller_ID_Header>
 <SRTP_Method group="SIP/SIP_Parameters">x-sipura</SRTP_Method>
@@ -115,7 +115,7 @@
 
 <!-- SIP/RTP_Parameters -->
 <RTP_Port_Min group="SIP/RTP_Parameters">16384</RTP_Port_Min>
-<RTP_Port_Max group="SIP/RTP_Parameters">16538</RTP_Port_Max>
+<RTP_Port_Max group="SIP/RTP_Parameters">32768</RTP_Port_Max>
 <RTP_Packet_Size group="SIP/RTP_Parameters">0.020</RTP_Packet_Size>
 <Max_RTP_ICMP_Err group="SIP/RTP_Parameters">0</Max_RTP_ICMP_Err>
 <RTCP_Tx_Interval group="SIP/RTP_Parameters">0</RTCP_Tx_Interval>
@@ -152,7 +152,7 @@
 <Insert_VIA_received group="SIP/NAT_Support_Parameters">No</Insert_VIA_received>
 <Insert_VIA_rport group="SIP/NAT_Support_Parameters">{$spa_insert_via_rport}</Insert_VIA_rport>
 <Substitute_VIA_Addr group="SIP/NAT_Support_Parameters">No</Substitute_VIA_Addr>
-<Send_Resp_To_Src_Port group="SIP/NAT_Support_Parameters">No}</Send_Resp_To_Src_Port>
+<Send_Resp_To_Src_Port group="SIP/NAT_Support_Parameters">No</Send_Resp_To_Src_Port>
 <STUN_Enable group="SIP/NAT_Support_Parameters">No</STUN_Enable>
 <STUN_Test_Enable group="SIP/NAT_Support_Parameters">No</STUN_Test_Enable>
 <STUN_Server group="SIP/NAT_Support_Parameters" />
@@ -352,7 +352,7 @@
 <Voice_Mail_Number group="Phone/General">{$voicemail_number}</Voice_Mail_Number>
 <Text_Logo group="Phone/General" />
 <BMP_Picture_Download_URL group="Phone/General" />
-<Select_Logo group="Phone/General" />
+<Select_Logo group="Phone/General">Default</Select_Logo>
 <Select_Background_Picture group="Phone/General">None</Select_Background_Picture>
 <Softkey_Labels_Font group="Phone/General">Auto</Softkey_Labels_Font>
 <Screen_Saver_Enable group="Phone/General">No</Screen_Saver_Enable>
@@ -360,19 +360,14 @@
 <Screen_Saver_Icon group="Phone/General">Background Picture</Screen_Saver_Icon>
 
 {foreach $keys["line"] as $row}
-{if $row.device_key_type == "line"}
+{if $row.device_key_category == "line"}
 <!-- Phone/Line_Key_{$row.device_key_id} -->
 <Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_line}</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
 <Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
-<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">private</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
-<Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}"/>
-{else}
-<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">Disabled</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
-<Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
-<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">private</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
+<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{if $row.device_key_type == "shared"}shared{else}private{/if}</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
 <Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extended_Function_{$row.device_key_id}_>
-{/if}
 
+{/if}
 {/foreach}
 
 <!-- Phone/Miscellaneous_Line_Key_Settings -->
@@ -501,7 +496,7 @@
 <Line_Enable_1_ group="Ext_1/General">Yes</Line_Enable_1_>
 
 <!-- Ext_1/Share_Line_Appearance -->
-<Share_Ext_1_ group="Ext_1/Share_Line_Appearance">private</Share_Ext_1_>
+<Share_Ext_1_ group="Ext_1/Share_Line_Appearance">{if $shared_line_1 == "shared"}shared{else}private{/if}</Share_Ext_1_>
 <Shared_User_ID_1_ group="Ext_1/Share_Line_Appearance" />
 <Subscription_Expires_1_ group="Ext_1/Share_Line_Appearance">3600</Subscription_Expires_1_>
 <Restrict_MWI_1_ group="Ext_1/Share_Line_Appearance">No</Restrict_MWI_1_>
@@ -548,6 +543,7 @@
 <Message_Waiting_1_ group="Ext_1/Call_Feature_Settings">No</Message_Waiting_1_>
 <Auth_Page_1_ group="Ext_1/Call_Feature_Settings">No</Auth_Page_1_>
 <Default_Ring__1__ group="Ext_1/Call_Feature_Settings">1</Default_Ring__1__>
+<Feature_Key_Sync_1_ group="Ext_1/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_1_>
 <Auth_Page_Realm_1_ group="Ext_1/Call_Feature_Settings" />
 <Conference_Bridge_URL_1_ group="Ext_1/Call_Feature_Settings" />
 <Auth_Page_Password_1_ group="Ext_1/Call_Feature_Settings" />
@@ -583,6 +579,8 @@
 <Auto_Register_When_Failover_1_ group="Ext_1/Proxy_and_Registration">No</Auto_Register_When_Failover_1_>
 
 <!-- Ext_1/Subscriber_Information -->
+<Dual_Registration_1_ group="Ext_1/Proxy_and_Registration">{if isset($spa_dual_registration)}Yes{else}No{/if}</Dual_Registration_1_>
+<Auto_Register_When_Failover_1_ group="Ext_1/Proxy_and_Registration">{if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_1_>
 <Display_Name_1_ group="Ext_1/Subscriber_Information">{$display_name_1}</Display_Name_1_>
 <User_ID_1_ group="Ext_1/Subscriber_Information">{$user_id_1}</User_ID_1_>
 <Password_1_ group="Ext_1/Subscriber_Information">{$user_password_1}</Password_1_>
