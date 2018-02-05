@@ -229,7 +229,7 @@
 <Line_Enable_1_ ua="na">Yes</Line_Enable_1_>
 
 <!-- Share Line Appearance -->
-<Share_Ext_1_ ua="na">private</Share_Ext_1_> <!-- options: private/shared -->
+<Share_Ext_1_ ua="na">{if $shared_line_1 == "shared"}shared{else}private{/if}</Share_Ext_1_> <!-- options: private/shared -->
 <Shared_User_ID_1_ ua="na"></Shared_User_ID_1_>
 <Subscription_Expires_1_ ua="na">3600</Subscription_Expires_1_>
 <Restrict_MWI_1_ ua="na">No</Restrict_MWI_1_>
@@ -343,7 +343,7 @@
 <Line_Enable_2_ ua="na">Yes</Line_Enable_2_>
 
 <!-- Share Line Appearance -->
-<Share_Ext_2_ ua="na">private</Share_Ext_2_> <!-- options: private/shared -->
+<Share_Ext_2_ ua="na">{if $shared_line_2 == "shared"}shared{else}private{/if}</Share_Ext_2_> <!-- options: private/shared -->
 <Shared_User_ID_2_ ua="na"></Shared_User_ID_2_>
 <Subscription_Expires_2_ ua="na">3600</Subscription_Expires_2_>
 <Restrict_MWI_2_ ua="na">No</Restrict_MWI_2_>
@@ -457,7 +457,7 @@
 <Line_Enable_3_ ua="na">Yes</Line_Enable_3_>
 
 <!-- Share Line Appearance -->
-<Share_Ext_3_ ua="na">private</Share_Ext_3_> <!-- options: private/shared -->
+<Share_Ext_3_ ua="na">{if $shared_line_3 == "shared"}shared{else}private{/if}</Share_Ext_3_> <!-- options: private/shared -->
 <Shared_User_ID_3_ ua="na"></Shared_User_ID_3_>
 <Subscription_Expires_3_ ua="na">3600</Subscription_Expires_3_>
 <Restrict_MWI_3_ ua="na">No</Restrict_MWI_3_>
@@ -571,7 +571,7 @@
 <Line_Enable_4_ ua="na">Yes</Line_Enable_4_>
 
 <!-- Share Line Appearance -->
-<Share_Ext_4_ ua="na">private</Share_Ext_4_> <!-- options: private/shared -->
+<Share_Ext_4_ ua="na">{if $shared_line_4 == "shared"}shared{else}private{/if}</Share_Ext_4_> <!-- options: private/shared -->
 <Shared_User_ID_4_ ua="na"></Shared_User_ID_4_>
 <Subscription_Expires_4_ ua="na">3600</Subscription_Expires_4_>
 <Restrict_MWI_4_ ua="na">No</Restrict_MWI_4_>
@@ -685,7 +685,7 @@
 <Line_Enable_5_ ua="na">Yes</Line_Enable_5_>
 
 <!-- Share Line Appearance -->
-<Share_Ext_5_ ua="na">private</Share_Ext_5_> <!-- options: private/shared -->
+<Share_Ext_5_ ua="na">{if $shared_line_5 == "shared"}shared{else}private{/if}</Share_Ext_5_> <!-- options: private/shared -->
 <Shared_User_ID_5_ ua="na"></Shared_User_ID_5_>
 <Subscription_Expires_5_ ua="na">3600</Subscription_Expires_5_>
 <Restrict_MWI_5_ ua="na">No</Restrict_MWI_5_>
@@ -798,7 +798,7 @@
 <Line_Enable_6_ ua="na">Yes</Line_Enable_6_>
 
 <!-- Share Line Appearance -->
-<Share_Ext_6_ ua="na">private</Share_Ext_6_> <!-- options: private/shared -->
+<Share_Ext_6_ ua="na">{if $shared_line_6 == "shared"}shared{else}private{/if}</Share_Ext_6_> <!-- options: private/shared -->
 <Shared_User_ID_6_ ua="na"></Shared_User_ID_6_>
 <Subscription_Expires_6_ ua="na">3600</Subscription_Expires_6_>
 <Restrict_MWI_6_ ua="na">No</Restrict_MWI_6_>
@@ -912,7 +912,7 @@
 <Line_Enable_7_ ua="na">Yes</Line_Enable_7_>
 
 <!-- Share Line Appearance -->
-<Share_Ext_7_ ua="na">private</Share_Ext_7_> <!-- options: private/shared -->
+<Share_Ext_7_ ua="na">{if $shared_line_7 == "shared"}shared{else}private{/if}</Share_Ext_7_> <!-- options: private/shared -->
 <Shared_User_ID_7_ ua="na"></Shared_User_ID_7_>
 <Subscription_Expires_7_ ua="na">3600</Subscription_Expires_7_>
 <Restrict_MWI_7_ ua="na">No</Restrict_MWI_7_>
@@ -1025,7 +1025,7 @@
 <Line_Enable_8_ ua="na">Yes</Line_Enable_8_>
 
 <!-- Share Line Appearance -->
-<Share_Ext_8_ ua="na">private</Share_Ext_8_> <!-- options: private/shared -->
+<Share_Ext_8_ ua="na">{if $shared_line_8 == "shared"}shared{else}private{/if}</Share_Ext_8_> <!-- options: private/shared -->
 <Shared_User_ID_8_ ua="na"></Shared_User_ID_8_>
 <Subscription_Expires_8_ ua="na">3600</Subscription_Expires_8_>
 <Restrict_MWI_8_ ua="na">No</Restrict_MWI_8_>
@@ -1138,7 +1138,7 @@
 <Line_Enable_9_ ua="na">Yes</Line_Enable_9_>
 
 <!-- Share Line Appearance -->
-<Share_Ext_9_ ua="na">private</Share_Ext_9_> <!-- options: private/shared -->
+<Share_Ext_9_ ua="na">{if $shared_line_9 == "shared"}shared{else}private{/if}</Share_Ext_9_> <!-- options: private/shared -->
 <Shared_User_ID_9_ ua="na"></Shared_User_ID_9_>
 <Subscription_Expires_9_ ua="na">3600</Subscription_Expires_9_>
 <Restrict_MWI_9_ ua="na">No</Restrict_MWI_9_>
@@ -1251,7 +1251,7 @@
 <Line_Enable_10_ ua="na">Yes</Line_Enable_10_>
 
 <!-- Share Line Appearance -->
-<Share_Ext_10_ ua="na">private</Share_Ext_10_> <!-- options: private/shared -->
+<Share_Ext_10_ ua="na">{if $shared_line_10 == "shared"}shared{else}private{/if}</Share_Ext_10_> <!-- options: private/shared -->
 <Shared_User_ID_10_ ua="na"></Shared_User_ID_10_>
 <Subscription_Expires_10_ ua="na">3600</Subscription_Expires_10_>
 <Restrict_MWI_10_ ua="na">No</Restrict_MWI_10_>
@@ -1364,7 +1364,7 @@
 <Line_Enable_11_ ua="na">Yes</Line_Enable_11_>
 
 <!-- Share Line Appearance -->
-<Share_Ext_11_ ua="na">private</Share_Ext_11_> <!-- options: private/shared -->
+<Share_Ext_11_ ua="na">{if $shared_line_11 == "shared"}shared{else}private{/if}</Share_Ext_11_> <!-- options: private/shared -->
 <Shared_User_ID_11_ ua="na"></Shared_User_ID_11_>
 <Subscription_Expires_11_ ua="na">3600</Subscription_Expires_11_>
 <Restrict_MWI_11_ ua="na">No</Restrict_MWI_11_>
@@ -1477,7 +1477,7 @@
 <Line_Enable_12_ ua="na">Yes</Line_Enable_12_>
 
 <!-- Share Line Appearance -->
-<Share_Ext_12_ ua="na">private</Share_Ext_12_> <!-- options: private/shared -->
+<Share_Ext_12_ ua="na">{if $shared_line_12 == "shared"}shared{else}private{/if}</Share_Ext_12_> <!-- options: private/shared -->
 <Shared_User_ID_12_ ua="na"></Shared_User_ID_12_>
 <Subscription_Expires_12_ ua="na">3600</Subscription_Expires_12_>
 <Restrict_MWI_12_ ua="na">No</Restrict_MWI_12_>
@@ -1660,24 +1660,19 @@
 <Screen_Saver_Icon ua="rw">Background Picture</Screen_Saver_Icon> <!-- options: StationTime/Lock/Phone/DateTime/Background Picture -->
 
 {foreach $keys["line"] as $row}
-{if $row.device_key_type == "line"}
+{if $row.device_key_category == "line"}
 <!-- Phone/Line_Key_{$row.device_key_id} -->
 <Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_line}</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
 <Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
-<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">private</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
-<Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}"/>
-{else}
-<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">Disabled</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
-<Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
-<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">private</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
+<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{if $row.device_key_type == "shared"}shared{else}private{/if}</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
 <Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extended_Function_{$row.device_key_id}_>
-{/if}
 
+{/if}
 {/foreach}
 
 <!-- Miscellaneous Line Key Settings -->
 <Line_ID_Mapping ua="na">Vertical First</Line_ID_Mapping> <!-- options: Horizontal First/Vertical First -->
-<SCA_Barge-In_Enable ua="na">No</SCA_Barge-In_Enable>
+<SCA_Barge-In_Enable ua="na">Yes</SCA_Barge-In_Enable>
 <SCA_Sticky_Auto_Line_Seize ua="na">No</SCA_Sticky_Auto_Line_Seize>
 <Line_Navigation ua="na">Per Line</Line_Navigation> <!-- options: Per Call/Per Line -->
 <Call_Appearance_Per_Line ua="na">2</Call_Appearance_Per_Line> <!-- options: 2/3/4/5/6/7/8/9/10 -->
