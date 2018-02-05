@@ -301,6 +301,11 @@
 				$record_name = basename(urldecode($xml->variables->sofia_record_file));
 				$record_length = urldecode($xml->variables->record_seconds);
 			}
+			elseif (strlen($xml->variables->cc_record_filename) > 0) {
+				$record_path = dirname(urldecode($xml->variables->cc_record_filename));
+				$record_name = basename(urldecode($xml->variables->cc_record_filename));
+				$record_length = urldecode($xml->variables->record_seconds);
+			}
 			elseif (strlen($xml->variables->api_on_answer) > 0) {
 				$command = str_replace("\n", " ", urldecode($xml->variables->api_on_answer));
 				$parts = explode(" ", $command);
