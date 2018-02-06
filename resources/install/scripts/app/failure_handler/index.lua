@@ -58,12 +58,11 @@
 					end
 
 				--prepare the headers
-					local headers = {
-						["X-FusionPBX-Domain-UUID"] = domain_uuid;
-						["X-FusionPBX-Domain-Name"] = domain_name;
-						["X-FusionPBX-Call-UUID"]   = uuid;
-						["X-FusionPBX-Email-Type"]  = 'missed';
-					}
+					local headers = {}
+					headers["X-FusionPBX-Domain-UUID"] = domain_uuid;
+					headers["X-FusionPBX-Domain-Name"] = domain_name;
+					headers["X-FusionPBX-Call-UUID"]   = uuid;
+					headers["X-FusionPBX-Email-Type"]  = 'missed';
 
 				--prepare the subject
 					local f = io.open(file_subject, "r");
