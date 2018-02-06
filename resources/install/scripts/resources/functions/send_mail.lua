@@ -1,5 +1,4 @@
 
-local send_mail
 local Settings = require "resources.functions.lazy_settings"
 local Database = require "resources.functions.database"
 
