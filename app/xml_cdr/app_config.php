@@ -368,7 +368,9 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Unique member identifier";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "cc_queue_joined_epoch";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "bigint";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Epoch when caller joined the queue";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "cc_queue";
@@ -400,11 +402,15 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "bridged true or false";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "cc_queue_answered_epoch";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "bigint";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "queue answered epoch";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "cc_queue_terminated_epoch";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "bigint";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "queue terminated epoch";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "cc_cause";
