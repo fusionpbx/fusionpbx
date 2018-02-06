@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2015
+--	Copyright (C) 2015 - 2018
 --	the Initial Developer. All Rights Reserved.
 
 --set the debug options
@@ -58,12 +58,11 @@
 					end
 
 				--prepare the headers
-					local headers = {
-						["X-FusionPBX-Domain-UUID"] = domain_uuid;
-						["X-FusionPBX-Domain-Name"] = domain_name;
-						["X-FusionPBX-Call-UUID"]   = uuid;
-						["X-FusionPBX-Email-Type"]  = 'missed';
-					}
+					local headers = {}
+					headers["X-FusionPBX-Domain-UUID"] = domain_uuid;
+					headers["X-FusionPBX-Domain-Name"] = domain_name;
+					headers["X-FusionPBX-Call-UUID"]   = uuid;
+					headers["X-FusionPBX-Email-Type"]  = 'missed';
 
 				--prepare the subject
 					local f = io.open(file_subject, "r");
