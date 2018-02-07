@@ -1,5 +1,4 @@
 <?php
-
 /*
 	FusionPBX
 	Version: MPL 1.1
@@ -136,27 +135,27 @@
 
 //prepare smtp server settings
 	// load default smtp settings
-	$smtp['host'] 		= (strlen($_SESSION['email']['smtp_host']['var'])?$_SESSION['email']['smtp_host']['var']:'127.0.0.1');
+	$smtp['host'] 		= (strlen($_SESSION['email']['smtp_host']['text'])?$_SESSION['email']['smtp_host']['text']:'127.0.0.1');
 	if (isset($_SESSION['email']['smtp_port'])) {
 		$smtp['port'] = (int)$_SESSION['email']['smtp_port']['numeric'];
 	} else {
 		$smtp['port'] = 0;
 	}
-	$smtp['secure'] 	= $_SESSION['email']['smtp_secure']['var'];
-	$smtp['auth'] 		= $_SESSION['email']['smtp_auth']['var'];
-	$smtp['username'] 	= $_SESSION['email']['smtp_username']['var'];
-	$smtp['password'] 	= $_SESSION['email']['smtp_password']['var'];
+	$smtp['secure'] 	= $_SESSION['email']['smtp_secure']['text'];
+	$smtp['auth'] 		= $_SESSION['email']['smtp_auth']['text'];
+	$smtp['username'] 	= $_SESSION['email']['smtp_username']['text'];
+	$smtp['password'] 	= $_SESSION['email']['smtp_password']['text'];
 
 	if (isset($_SESSION['voicemail']['smtp_from'])) {
-		$smtp['from'] = $_SESSION['voicemail']['smtp_from']['var'];
+		$smtp['from'] = $_SESSION['voicemail']['smtp_from']['text'];
 	} else {
-		$smtp['from'] = $_SESSION['email']['smtp_from']['var'];
+		$smtp['from'] = $_SESSION['email']['smtp_from']['text'];
 	}
 
 	if (isset($_SESSION['voicemail']['smtp_from_name'])) {
-		$smtp['from_name'] = $_SESSION['voicemail']['smtp_from_name']['var'];	
+		$smtp['from_name'] = $_SESSION['voicemail']['smtp_from_name']['text'];	
 	} else {
-		$smtp['from_name'] = $_SESSION['email']['smtp_from_name']['var'];
+		$smtp['from_name'] = $_SESSION['email']['smtp_from_name']['text'];
 	}
 
 	// overwrite with domain-specific smtp server settings, if any
@@ -165,7 +164,7 @@
 		$sql .= "from v_domain_settings ";
 		$sql .= "where domain_uuid = '".$headers["X-FusionPBX-Domain-UUID"]."' ";
 		$sql .= "and (domain_setting_category = 'email' or domain_setting_category = 'voicemail') ";
-		$sql .= "and domain_setting_name = 'var' ";
+		$sql .= "and domain_setting_name = 'text' ";
 		$sql .= "and domain_setting_enabled = 'true' ";
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
