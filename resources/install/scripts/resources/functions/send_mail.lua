@@ -11,7 +11,7 @@ if not freeswitch then
 		local domain_uuid = headers["X-FusionPBX-Domain-UUID"]
 		local domain_name = headers["X-FusionPBX-Domain-Name"]
 		local email_type = headers["X-FusionPBX-Email-Type"] or 'info'
-		local call_uuid = headers["X-FusionPBX-Email-Type"]
+		local call_uuid = headers["X-FusionPBX-Email-Call-UUID"]
 		local db = dbh or Database.new('system')
 		local settings = Settings.new(db, domain_name, domain_uuid)
 
@@ -81,7 +81,7 @@ if freeswitch then
 		local domain_uuid = headers["X-FusionPBX-Domain-UUID"]
 		local domain_name = headers["X-FusionPBX-Domain-Name"]
 		local email_type = headers["X-FusionPBX-Email-Type"] or 'info'
-		local call_uuid = headers["X-FusionPBX-Email-Type"]
+		local call_uuid = headers["X-FusionPBX-Email-Call-UUID"]
 		local db = dbh or Database.new('system')
 		local settings = Settings.new(db, domain_name, domain_uuid)
 		local xheaders = "{"
