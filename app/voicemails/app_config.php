@@ -205,7 +205,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "22cf494d-d605-42bd-a667-cbe5b4121973";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "voicemail";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "smtp_from";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "var";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
@@ -213,7 +213,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b753197c-cb07-44d3-9074-8bf5bca391b8";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "voicemail";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "smtp_from_name";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "var";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
