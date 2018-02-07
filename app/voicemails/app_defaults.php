@@ -27,6 +27,20 @@
 //if the number of rows is 0 then read the sip profile xml into the database
 	if ($domains_processed == 1) {
 
+		//default settings - change the type from var to text
+			$sql = "update v_default_settings ";
+			$sql .= "set default_setting_name = 'text' ";
+			$sql .= "where default_setting_name = 'var' ";
+			$db->exec(check_sql($sql));
+			unset($sql);
+
+		//domain settings - change the type from var to text
+			$sql = "update v_domain_settings ";
+			$sql .= "set domain_setting_name = 'text' ";
+			$sql .= "where domain_setting_name = 'var' ";
+			$db->exec(check_sql($sql));
+			unset($sql);
+
 		//add the sip profiles to the database
 			$sql = "select count(*) as num_rows from v_email_templates ";
 			$sql .= "where template_category = 'email' ";
