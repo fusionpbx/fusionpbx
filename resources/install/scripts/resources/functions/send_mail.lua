@@ -1,4 +1,3 @@
-
 local Settings = require "resources.functions.lazy_settings"
 local Database = require "resources.functions.database"
 
@@ -91,6 +90,12 @@ if freeswitch then
 		xheaders = xheaders:sub(1,-2) .. '}'
 
 		local from = settings:get('email', 'smtp_from', 'var')
+		local from_name = settings:get('email', 'smtp_from_name', 'var')
+		if from == nil or from == "" then
+			from = address
+		elseif from_name ~= nil and from_name ~= "" then
+			from = from_name .. "<" .. from .. ">"
+		end
 		local subject = message[1]
 		local body = message[2] or ''
 
