@@ -176,7 +176,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "97a2410b-cfc8-4194-9172-dd5b0acfa9f3";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "email";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "smtp_auth";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "var";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
@@ -200,7 +200,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "16f40b7b-293d-4308-81f4-772e0ea4c536";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "email";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "smtp_from";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "var";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
@@ -208,7 +208,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2976da3a-d8e5-4e25-9f16-463dfa256f4d";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "email";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "smtp_from_name";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "var";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
@@ -216,7 +216,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0bd788c1-3262-4336-92f4-ef7869062380";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "email";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "smtp_host";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "var";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
@@ -224,7 +224,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "49e778a6-22a7-418f-84b9-bfa27e38f2e5";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "email";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "smtp_username";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "var";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
@@ -232,7 +232,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8a5ae059-9bf3-4d6d-ae92-b6cb39766d0a";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "email";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "smtp_password";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "var";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
@@ -240,7 +240,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "fd7441d5-d348-4660-8c0b-6413220c680d";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "email";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "smtp_secure";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "var";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "tls";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
