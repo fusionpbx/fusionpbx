@@ -14,19 +14,19 @@ if not freeswitch then
 		local db = dbh or Database.new('system')
 		local settings = Settings.new(db, domain_name, domain_uuid)
 
-		local ssl = settings:get('email', 'smtp_secure', 'var');
+		local ssl = settings:get('email', 'smtp_secure', 'text');
 
 		local ok, err = sendmail{
 			server = {
-				address = settings:get('email','smtp_host','var');
-				user = settings:get('email','smtp_username','var');
-				password = settings:get('email','smtp_password','var');
+				address = settings:get('email','smtp_host','text');
+				user = settings:get('email','smtp_username','text');
+				password = settings:get('email','smtp_password','text');
 				ssl = (ssl == 'true') and { verify = {"none"} };
 			},
 
 			from = {
-				title = settings:get('email', 'smtp_from_name', 'var');
-				address = settings:get('email', 'smtp_from', 'var');
+				title = settings:get('email', 'smtp_from_name', 'text');
+				address = settings:get('email', 'smtp_from', 'text');
 			},
 
 			to = {
@@ -89,8 +89,8 @@ if freeswitch then
 		end
 		xheaders = xheaders:sub(1,-2) .. '}'
 
-		local from = settings:get('email', 'smtp_from', 'var')
-		local from_name = settings:get('email', 'smtp_from_name', 'var')
+		local from = settings:get('email', 'smtp_from', 'text')
+		local from_name = settings:get('email', 'smtp_from_name', 'text')
 		if from == nil or from == "" then
 			from = address
 		elseif from_name ~= nil and from_name ~= "" then
