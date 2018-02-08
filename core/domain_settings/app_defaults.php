@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -26,10 +26,19 @@
 
 //process this only one time
 	if ($domains_processed == 1) {
+
+		//domain settings - change the type from var to text
+			$sql = "update v_domain_settings ";
+			$sql .= "set domain_setting_name = 'text' ";
+			$sql .= "where domain_setting_name = 'var' ";
+			$db->exec(check_sql($sql));
+			unset($sql);
+
 		//set domains with enabled status of empty or null to true
 			$sql = "update v_domains set domain_enabled = 'true' where domain_enabled = '' or domain_enabled is null";
 			$db->exec(check_sql($sql));
 			unset($sql);
+
 		//update any domains set to legacy languages
 			$language = new text;
 			foreach ($language->legacy_map as $language_code => $legacy_code) {
@@ -39,6 +48,7 @@
 				$db->exec(check_sql($sql));
 				unset($sql);
 			}
+
 		//migrate old domain_settings
 			$sql = "update v_domain_settings ";
 			$sql .= "set domain_setting_value = '#fafafa' ";
