@@ -1,6 +1,26 @@
 local Settings = require "resources.functions.lazy_settings"
 local Database = require "resources.functions.database"
 
+function get_from_address(email_type, default_from, settings)
+	-- Credit MaFooUK modified by ConnorStrandt
+    local address = settings:get('email','smtp_from','text') or default_from
+    local title = settings:get('email','smtp_from_name','text') or default_from
+    local type_map = {
+        ["missed"]      = "email",
+        ["voicemail"]   = "voicemail",
+        ["fax"]         = "fax",
+    }
+    local mapped_type = type_map[email_type];
+    if( mapped_type ~= nil and mapped_type ~= "" ) then
+        address = settings:get(mapped_type, 'smtp_from', 'text') or address;
+        title = settings:get(mapped_type, 'smtp_from_name', 'text') or title;
+    end
+    return {
+    	['title'] = title,
+        ['address'] = address
+    };
+end
+
 if not freeswitch then
 	local log = require "resources.functions.log".sendmail
 	local sendmail = require "sendmail"
@@ -24,10 +44,7 @@ if not freeswitch then
 				ssl = (ssl == 'true') and { verify = {"none"} };
 			},
 
-			from = {
-				title = settings:get('email', 'smtp_from_name', 'text');
-				address = settings:get('email', 'smtp_from', 'text');
-			},
+			from = get_from_address(email_type, address, settings);
 
 			to = {
 				address = address;
@@ -89,26 +106,20 @@ if freeswitch then
 		end
 		xheaders = xheaders:sub(1,-2) .. '}'
 
-		local from = settings:get('email', 'smtp_from', 'text')
-		local from_name = settings:get('email', 'smtp_from_name', 'text')
-		if from == nil or from == "" then
-			from = address
-		elseif from_name ~= nil and from_name ~= "" then
-			from = from_name .. "<" .. from .. ">"
-		end
+		local from = get_from_address(email_type, address, settings)
 		local subject = message[1]
 		local body = message[2] or ''
 
 		local mail_headers =
 			"To: ".. address .. "\n" ..
-			"From: " .. from .. "\n" ..
+			"From: " .. from["title"] .. " <" .. from["address"] .. ">\n" ..
 			"Subject: " .. subject .. "\n" ..
 			"X-Headers: " .. xheaders
 
 		if file then
-			freeswitch.email(address, from, mail_headers, body, file)
+			freeswitch.email(address, from["address"], mail_headers, body, file)
 		else
-			freeswitch.email(address, from, mail_headers, body)
+			freeswitch.email(address, from["address"], mail_headers, body)
 		end
 	end
 end
