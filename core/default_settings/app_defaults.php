@@ -26,7 +26,14 @@
 
 //process this only one time
 	if ($domains_processed == 1) {
-	
+
+		//default settings - change the type from var to text
+			$sql = "update v_default_settings ";
+			$sql .= "set default_setting_name = 'text' ";
+			$sql .= "where default_setting_name = 'var' ";
+			$db->exec(check_sql($sql));
+			unset($sql);
+
 		//set domains with enabled status of empty or null to true
 			$sql = "delete from v_default_settings ";
 			$sql .= "where (default_setting_category is null and default_setting_subcategory is null) ";
