@@ -28,7 +28,8 @@ require_once "resources/require.php";
 
 //check permissions
 	require_once "resources/check_auth.php";
-	if (if_group("admin") || if_group("superadmin")) {
+	//if (if_group("admin") || if_group("superadmin")) {
+	if (permission_exists('user_add')) {
 		//access allowed
 	}
 	else {
