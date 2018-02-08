@@ -67,5 +67,47 @@
 				$prep_statement->execute();
 			}
 			unset($prep_statement, $sql);
+			
+		//domain settings - change the type from var to text
+			$sql = "select * from v_domain_settings ";
+			$sql .= "where domain_setting_name = 'var' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			foreach ($result as &$row) {
+				$sql = "select * from v_domain_settings ";
+				$sql .= "where domain_setting_name = 'text' ";
+				$sql .= "and domain_setting_category = '".check_str($row['domain_setting_category'])."' ";
+				$sql .= "and domain_setting_subcategory = '".check_str($row['domain_setting_subcategory'])."' ";
+				$sql .= "and domain_uuid = '".check_str($row['domain_uuid'])."' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$e_row = $prep_statement->fetch(PDO::FETCH_NAMED);
+				$sql = "update v_domain_settings ";
+				$sql .= "set domain_setting_name = 'text' ";
+				if($e_row) {
+					//copy the description from the probbably newer field
+						$sql .= ", domain_setting_description = '".check_str($e_row['domain_setting_description'])."' ";
+					//delete the probbably newer field if it is empty
+						if($e_row['domain_setting_value'] == ""){
+							$d_sql = "delete from v_domain_settings ";
+							$d_sql .= "where domain_setting_name = 'text' ";
+							$d_sql .= "and domain_setting_category = '".check_str($row['domain_setting_category'])."' ";
+							$d_sql .= "and domain_setting_subcategory = '".check_str($row['domain_setting_subcategory'])."' ";
+							$d_sql .= "and domain_uuid = '".check_str($row['domain_uuid'])."' ";
+							$d_sql .= "and domain_setting_value = '' ";
+							$db->exec(check_sql($d_sql));
+							unset($d_sql);
+						}
+				}
+				$sql .= "where domain_setting_name = 'var' ";
+				$sql .= "and domain_setting_category = '".check_str($row['domain_setting_category'])."' ";
+				$sql .= "and domain_setting_subcategory = '".check_str($row['domain_setting_subcategory'])."' ";
+				$sql .= "and domain_uuid = '".check_str($row['domain_uuid'])."' ";
+				$db->exec(check_sql($sql));
+				unset($e_row);
+			}
+			unset($sql, $prep_statement, $result);
+  
 	}
 ?>
