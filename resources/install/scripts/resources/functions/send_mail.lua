@@ -3,9 +3,8 @@ local Database = require "resources.functions.database"
 
 function get_from_address(email_type, default_from, settings)
 	-- Credit MaFooUK modified by ConnorStrandt
-    local address = settings:get('email','smtp_from','text') or default_from
-    local title = settings:get('email','smtp_from_name','text') or default_from
     local type_map = {
+    	["info"]		= "email",
         ["missed"]      = "email",
         ["voicemail"]   = "voicemail",
         ["fax"]         = "fax",
