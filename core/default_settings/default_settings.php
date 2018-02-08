@@ -54,7 +54,7 @@ else {
 			unset($sql);
 
 			messages::add($text['message-update']);
-			header("Location: default_settings.php".(($search != '') ? "?search=".$search : null)."#".$category);
+			header("Location: default_settings.php".(($search != '') ? "?search=".$search : null)."#anchor_".$category);
 			exit;
 		}
 
