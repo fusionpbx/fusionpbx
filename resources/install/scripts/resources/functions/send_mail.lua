@@ -20,10 +20,44 @@
 --  
 --  Contributor(s):
 --  Mark J Crane <markjcrane@fusionpbx.com>
+--  Matthew Vale <github@mafoo.org>
 
 --load libraries
 	local Settings = require "resources.functions.lazy_settings"
 	local Database = require "resources.functions.database"
+
+--define a function to calculate the from address consistently
+	local function get_from_address(email_type, default_from)
+		local db = dbh or Database.new('system')
+		local settings = Settings.new(db, domain_name, domain_uuid)
+		local address = settings:get('email', 'smtp_from', 'text');
+		local title = settings:get('email', 'smtp_from_name', 'text');
+		local type_map = {
+			email2fax = "fax"
+		};
+		local mapped_type = type_map[email_type];
+		if( mapped_type == nil or mapped_type == "") then
+			mapped_type = email_type;
+		end
+		if(mapped_type ~= nil and mapped_type ~= "") then
+			local s_address = settings:get(mapped_type, 'smtp_from', 'text');
+			local s_title = settings:get(mapped_type, 'smtp_from_name', 'text');
+			if(s_address ~= nil and s_address ~= "") then
+				address = s_address;
+				title = s_title;
+			elseif(s_title ~= nil and s_title ~= "") then
+				title = s_title;
+			end;
+		end
+		if(address == nil or address == "") then
+			address = default_from
+			title = nil
+		end
+		return {
+			address = address,
+			title = title
+		};
+	end
 
 --use sendmail if we don't have freeswitch API availible
 	if not freeswitch then
@@ -50,10 +84,7 @@
 					ssl = (ssl == 'true') and { verify = {"none"} };
 				},
 
-				from = {
-					title = settings:get('email', 'smtp_from_name', 'text');
-					address = settings:get('email', 'smtp_from', 'text');
-				},
+				from = get_from_address(email_type, address),
 
 				to = {
 					address = address;
@@ -118,12 +149,10 @@
 			end
 			xheaders = xheaders:sub(1,-2) .. '}'
 
-			local from = settings:get('email', 'smtp_from', 'text')
-			local from_name = settings:get('email', 'smtp_from_name', 'text')
-			if from == nil or from == "" then
-				from = address
-			elseif from_name ~= nil and from_name ~= "" then
-				from = from_name .. "<" .. from .. ">"
+			local from_data = get_from_address(email_type, address);
+			local from = from_data["address"];
+			if(from_data["title"] ~= nill and from_data["title"] ~= "") then
+				from = from_data["title"] .. "<" .. from .. ">"
 			end
 			local subject = message[1]
 			local body = message[2] or ''
