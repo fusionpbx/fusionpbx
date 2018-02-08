@@ -34,6 +34,52 @@
 			$db->exec(check_sql($sql));
 			unset($sql);
 
+		//default settings - change the type from var to text
+			$sql = "select * from v_default_settings ";
+			$sql .= "where default_setting_name = 'var' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			
+			foreach ($result as &$row) {
+				$sql = "select * from v_default_settings ";
+				$sql .= "where default_setting_name = 'text' ";
+				$sql .= "and default_setting_category = '".check_str($row['default_setting_category'])."' ";
+				$sql .= "and default_setting_subcategory = '".check_str($row['default_setting_subcategory'])."' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$e_row = $prep_statement->fetch(PDO::FETCH_NAMED);
+				$sql = "update v_default_settings ";
+				$sql .= "set default_setting_name = 'text' ";
+				if($e_row) {
+					//copy the description from the probbably newer field
+						$sql .= ", default_setting_description = '".check_str($e_row['default_setting_description'])."' ";
+					//delete the probbably newer field if it is empty
+						if($e_row['default_setting_value'] == ""){
+							$d_sql = "delete from v_default_settings ";
+							$d_sql .= "where default_setting_name = 'text' ";
+							$d_sql .= "and default_setting_category = '".check_str($row['default_setting_category'])."' ";
+							$d_sql .= "and default_setting_subcategory = '".check_str($row['default_setting_subcategory'])."' ";
+							$d_sql .= "and default_setting_value = '' ";
+							$db->exec(check_sql($d_sql));
+							unset($d_sql);
+						}
+				}
+				$sql .= "where default_setting_name = 'var' ";
+				$sql .= "and default_setting_category = '".check_str($row['default_setting_category'])."' ";
+				$sql .= "and default_setting_subcategory = '".check_str($row['default_setting_subcategory'])."' ";
+				$db->exec(check_sql($sql));
+				unset($e_row);
+			}
+			unset($sql, $prep_statement, $result);
+	  
+			$sql = "update v_domain_settings ";
+			$sql .= "set domain_setting_name = 'text' ";
+			$sql .= "where domain_setting_name = 'var' ";
+			$db->exec(check_sql($sql));
+			unset($sql);
+
+
 		//move the dynamic provision variables that from v_vars table to v_default_settings
 			/* if (count($_SESSION['provision']) == 0) {
 				$sql = "select * from v_vars ";
