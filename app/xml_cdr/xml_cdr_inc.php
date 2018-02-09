@@ -370,6 +370,11 @@
 			$sql .= $field_name.", ";
 		}
 	}
+	if (is_array($_SESSION['cdr']['export'])) {
+		foreach ($_SESSION['cdr']['export'] as $field) {
+			$sql .= $field.", ";
+		}
+	}
 	$sql .= "accountcode, ";
 	$sql .= "answer_stamp, ";
 	$sql .= "sip_hangup_disposition, ";
