@@ -150,7 +150,6 @@
 			$database->fields['cc_queue_terminated_epoch'] = check_str(urldecode($xml->variables->cc_queue_terminated_epoch));
 			$database->fields['cc_cause'] = check_str(urldecode($xml->variables->cc_cause));
 			$database->fields['waitsec'] = check_str(urldecode($xml->variables->waitsec));
-
 		//app info
 			$database->fields['last_app'] = check_str(urldecode($xml->variables->last_app));
 			$database->fields['last_arg'] = check_str(urldecode($xml->variables->last_arg));
