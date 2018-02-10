@@ -1,6 +1,6 @@
 --	call_flow.lua
 --	Part of FusionPBX
---	Copyright (C) 2010 - 2018 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2010 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -31,15 +31,16 @@
 --include config.lua
 	require "resources.functions.config";
 
+--additional includes
 	local presence_in = require "resources.functions.presence_in"
 	local Database    = require "resources.functions.database"
 	local Settings    = require "resources.functions.lazy_settings"
-	local file        = require "resources.functions.file"
-	local log         = require "resources.functions.log".call_flow
-	local basename    = require "resources.functions.basename"
-	local is_absolute_path    = require "resources.functions.is_absolute_path"
-	local find_file    = require "resources.functions.find_file"
-	local play_file    = require "resources.functions.play_file"
+	file        = require "resources.functions.file"
+	log         = require "resources.functions.log".call_flow
+	require "resources.functions.basename"
+	require "resources.functions.is_absolute_path"
+	require "resources.functions.find_file"
+	require "resources.functions.play_file"
 
 --include json library
 	local json
@@ -52,11 +53,11 @@
 
 --get the variables
 	if (session:ready()) then
-		local domain_name = session:getVariable("domain_name");
-		local domain_uuid = session:getVariable("domain_uuid");
-		local call_flow_uuid = session:getVariable("call_flow_uuid");
-		local sounds_dir = session:getVariable("sounds_dir");
-		local feature_code = session:getVariable("feature_code");
+		domain_name = session:getVariable("domain_name");
+		domain_uuid = session:getVariable("domain_uuid");
+		call_flow_uuid = session:getVariable("call_flow_uuid");
+		sounds_dir = session:getVariable("sounds_dir");
+		feature_code = session:getVariable("feature_code");
 	end
 
 --set the sounds path for the language, dialect and voice
