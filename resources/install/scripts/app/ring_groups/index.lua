@@ -28,7 +28,7 @@
 --	Luis Daniel Lucio Qurioz <dlucio@okay.com.mx>
 
 --include the log
-	local log = require "resources.functions.log".ring_group
+	log = require "resources.functions.log".ring_group
 
 --connect to the database
 	local Database = require "resources.functions.database";
@@ -47,6 +47,13 @@
 	require "resources.functions.file_exists";
 	require "resources.functions.channel_utils"
 	require "resources.functions.format_ringback"
+
+--additional includes
+	file = require "resources.functions.file"
+	require "resources.functions.basename"
+	require "resources.functions.is_absolute_path"
+	require "resources.functions.find_file"
+	require "resources.functions.play_file"
 
 --define the session hangup
 	function session_hangup_hook()
@@ -227,6 +234,7 @@
 	status = dbh:query(sql, params, function(row)
 		ring_group_name = row["ring_group_name"];
 		ring_group_extension = row["ring_group_extension"];
+		ring_group_greeting = row["ring_group_greeting"];
 		ring_group_forward_enabled = row["ring_group_forward_enabled"];
 		ring_group_forward_destination = row["ring_group_forward_destination"];
 		ring_group_forward_toll_allow = row["ring_group_forward_toll_allow"];
@@ -235,6 +243,15 @@
 		missed_call_app = row["ring_group_missed_call_app"];
 		missed_call_data = row["ring_group_missed_call_data"];
 	end);
+
+--play the greeting
+	if (session:ready()) then
+		if (ring_group_greeting and #ring_group_greeting > 0) then
+			session:sleep(1000);
+			play_file(dbh, domain_name, domain_uuid, ring_group_greeting)
+			session:sleep(1000);
+		end
+	end
 
 --get the ring group user
 	sql = "SELECT r.*, u.user_uuid FROM v_ring_groups as r, v_ring_group_users as u ";
