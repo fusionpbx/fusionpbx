@@ -846,7 +846,7 @@
 		echo "    ".$text['label-password']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='password' name='password' id='password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='50' value=\"$password\">\n";
+		echo "    <input class='formfld' type='password' name='password' id='password' autocomplete='off' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='50' value=\"$password\">\n";
 		echo "    <br />\n";
 		echo "    ".$text['description-password']."\n";
 		echo "</td>\n";
