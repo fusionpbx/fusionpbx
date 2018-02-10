@@ -630,8 +630,8 @@ local function apply_vars(actions, fields)
 end
 
 local function wrap_dbh(t)
-	local i = 0
 	return {query = function(self, sql, params, callback)
+		local i = 0
 		while true do
 			i = i + 1
 			local row = t[i]
