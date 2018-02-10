@@ -1,4 +1,6 @@
+
 function find_file(dbh, domain_name, domain_uuid, file_name)
+
 	-- if we specify e.g. full path
 	if (is_absolute_path(file_name) and file.exists(file_name)) then
 		log.debugf('found file `%s` in file system', file_name)
@@ -6,7 +8,6 @@ function find_file(dbh, domain_name, domain_uuid, file_name)
 	end
 
 	local file_name_only = basename(file_name)
-
 	local is_base64, found
 
 	if file_name_only == file_name then -- this can be recordings
