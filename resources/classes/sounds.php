@@ -11,6 +11,7 @@ class sounds {
 	* Called when the object is created
 	*/
 	public $db;
+	public $domain_uuid;
 
 	/**
 	* Class constructor
@@ -44,11 +45,13 @@ class sounds {
 
 		//miscellaneous
 			$x=0;
-			$array['miscellaneous'][$x]['name'] = "say";
-			$array['miscellaneous'][$x]['value'] = "say:";
-			$x++;
-			$array['miscellaneous'][$x]['name'] = "tone_stream";
-			$array['miscellaneous'][$x]['value'] = "tone_stream:";
+			if (if_group("superadmin")) {
+				$array['miscellaneous'][$x]['name'] = "say";
+				$array['miscellaneous'][$x]['value'] = "say:";
+				$x++;
+				$array['miscellaneous'][$x]['name'] = "tone_stream";
+				$array['miscellaneous'][$x]['value'] = "tone_stream:";
+			}
 		//recordings
 			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/phrases/app_config.php")) {
 				$sql = "select recording_name, recording_filename from v_recordings ";
@@ -75,7 +78,7 @@ class sounds {
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				if (count($result) > 0) {
 					foreach ($result as &$row) {
-						$array['phrases'][$x]['name'] = "phrase:".$row["phrase_uuid"];
+						$array['phrases'][$x]['name'] = "phrase:".$row["phrase_name"];
 						$array['phrases'][$x]['value'] = "phrase:".$row["phrase_uuid"];
 						$x++;
 					}
