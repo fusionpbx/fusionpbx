@@ -1,3 +1,6 @@
+local log = log or require "resources.functions.log"[app_name or 'play_file']
+local find_file = require "resources.functions.find_file"
+
 function play_file(dbh, domain_name, domain_uuid, file_name)
 	local full_path, is_base64 = find_file(dbh, domain_name, domain_uuid, file_name)
 	if not full_path then
@@ -8,3 +11,5 @@ function play_file(dbh, domain_name, domain_uuid, file_name)
 	end
 	session:execute("playback", full_path);
 end
+
+return play_file
