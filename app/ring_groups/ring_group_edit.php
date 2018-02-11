@@ -541,7 +541,7 @@
 	echo "	".$text['label-greeting']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "<select name='ring_group_greeting' class='formfld' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
+	echo "<select name='ring_group_greeting' class='formfld' style='width: 200px;' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
 	echo "	<option value=''></option>\n";
 	foreach($sounds as $key => $value) {
 		echo "<optgroup label=".$text['label-'.$key].">\n";
@@ -726,7 +726,7 @@
 	echo "	<tr>";
 	echo "		<td class='vncell' valign='top'>".$text['label-user_list']."</td>";
 	echo "		<td class='vtable'>";
-	echo "			<table width='52%'>\n";
+	echo "			<table width='300px'>\n";
 	if (isset($ring_group_users)) foreach($ring_group_users as $field) {
 		echo "			<tr>\n";
 		echo "				<td class='vtable'>".$field['username']."</td>\n";
