@@ -37,11 +37,12 @@ This method causes the script to get its manadatory arguments directly from the 
 	12 Jun, 2013: update the database connection, change table name from v_callblock to v_call_block
 	14 Jun, 2013: Change Voicemail option to use Transfer, avoids mod_voicemail dependency
 	27 Sep, 2013: Changed the name of the fields to conform with the table name
+	12 Feb, 2018: Added support for regular expressions in the phone numbers
 ]]
 
 --set defaults
 	expire = {}
-	expire["call_block"] = "3600";
+	expire["call_block"] = "60";
 	source = "";
 
 -- Command line parameters
@@ -104,7 +105,7 @@ This method causes the script to get its manadatory arguments directly from the 
 		--check if the the call block is blocked
 			sql = "SELECT * FROM v_call_block as c "
 			sql = sql .. "JOIN v_domains as d ON c.domain_uuid=d.domain_uuid "
-			sql = sql .. "WHERE c.call_block_number = :cid_num AND d.domain_name = :domain_name "
+			sql = sql .. "WHERE :cid_num ~ c.call_block_number AND d.domain_name = :domain_name "
 			dbh:query(sql, params, function(rows)
 				found_cid_num = rows["call_block_number"];
 				found_uuid = rows["call_block_uuid"];
