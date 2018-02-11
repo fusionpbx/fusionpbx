@@ -48,12 +48,9 @@
 	require "resources.functions.channel_utils"
 	require "resources.functions.format_ringback"
 
---additional includes
-	file = require "resources.functions.file"
-	require "resources.functions.basename"
-	require "resources.functions.is_absolute_path"
-	require "resources.functions.find_file"
-	require "resources.functions.play_file"
+--- include libs
+	local route_to_bridge = require "resources.functions.route_to_bridge"
+	local play_file   = require "resources.functions.play_file"
 
 --define the session hangup
 	function session_hangup_hook()
@@ -496,33 +493,9 @@
 
 		--get the dialplan data and save it to a table
 			if (external) then
-				sql = [[select * from v_dialplans as d, v_dialplan_details as s
-					where (d.domain_uuid = :domain_uuid or d.domain_uuid is null)
-					and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3'
-					and d.dialplan_enabled = 'true'
-					and d.dialplan_uuid = s.dialplan_uuid
-					order by
-					d.dialplan_order asc,
-					d.dialplan_name asc,
-					d.dialplan_uuid asc,
-					s.dialplan_detail_group asc,
-					CASE s.dialplan_detail_tag
-					WHEN 'condition' THEN 1
-					WHEN 'action' THEN 2
-					WHEN 'anti-action' THEN 3
-					ELSE 100 END,
-					s.dialplan_detail_order asc
-				]];
-				params = {domain_uuid = domain_uuid};
-				if debug["sql"] then
-					freeswitch.consoleLog("notice", "[ring group] SQL:" .. sql .. "; params:" .. json.encode(params) .. "\n");
-				end
-				dialplans = {};
-				x = 1;
-				assert(dbh:query(sql, params, function(row)
-					dialplans[x] = row;
-					x = x + 1;
-				end));
+				dialplans = route_to_bridge.preload_dialplan(
+					dbh, domain_uuid, {hostname = hostname, context = context}
+				)
 			end
 
 		--process the destinations
@@ -660,68 +633,83 @@
 						--sip uri
 						dial_string = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
 					else
-						--external number
-						y = 0;
-						dial_string = '';
-						previous_dialplan_uuid = '';
-						regex_match = false;
-						for k, r in pairs(dialplans) do
-							if (y > 0) then
-								if (previous_dialplan_uuid ~= r.dialplan_uuid) then
-									regex_match = false;
-									bridge_match = false;
-									square = square .. "]";
-									y = 0;
-								end
-							end
-							if (r.dialplan_detail_tag == "condition") then
-								if (r.dialplan_detail_type == "destination_number") then
-									if (api:execute("regex", "m:~"..destination_number.."~"..r.dialplan_detail_data) == "true") then
-										--get the regex result
-											destination_result = trim(api:execute("regex", "m:~"..destination_number.."~"..r.dialplan_detail_data.."~$1"));
-										--set match equal to true
-											regex_match = true
+					--external number or direct dial
+							dial_string = nil
+
+						--prepare default actions
+							local confirm = string.gsub(group_confirm, ',$', '') -- remove `,` from end of string
+							local route = { -- predefined actions
+								"domain_name=${domain_name}",
+								"domain_uuid=${domain_uuid}",
+								"sip_invite_domain=${domain_name}",
+								"call_direction=${call_direction}",
+								"leg_timeout=${destination_timeout}",
+								delay_name .. "=${destination_delay}",
+								"ignore_early_media=true",
+								confirm,
+							}
+
+						--prepare default variables
+							local session_mt = {__index = function(_, k) return session:getVariable(k) end}
+							local params = setmetatable({
+								__api__             = api,
+								destination_number  = destination_number,
+								user_exists         = 'false',
+								call_direction      = 'outbound',
+								domain_name         = domain_name,
+								domain_uuid         = domain_uuid,
+								destination_timeout = destination_timeout,
+								destination_delay   = destination_delay,
+								toll_allow			= toll_allow,
+							}, session_mt)
+
+						--find destination route
+							if (tonumber(destination_number) == nil) then
+								--user define direct destination like `[key=value]sofia/gateway/carrier/123456`
+									local variables, destination = string.match(destination_number, "^%[(.-)%](.+)$")
+									if not variables then
+										destination = destination_number
+									else
+										for action in split_vars_pairs(variables) do
+											route[#route + 1] = action
+										end
 									end
-								end
+									route = route_to_bridge.apply_vars(route, params)
+									route.bridge = destination
+							else
+								--user define external number as destination
+									route = route_to_bridge.apply_vars(route, params)
+									route = route_to_bridge(dialplans, domain_uuid, params, route)
 							end
-							if (r.dialplan_detail_tag == "action") then
-								if (regex_match) then
-									--replace $1
-										dialplan_detail_data = r.dialplan_detail_data:gsub("$1", destination_result);
-									--if the session is set then process the actions
-										if (y == 0) then
-											square = "[domain_name="..domain_name..",domain_uuid="..domain_uuid..",sip_invite_domain="..domain_name..",call_direction=outbound,"..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay..",ignore_early_media=true,";
-										end
-										if (r.dialplan_detail_type == "set") then
-											--session:execute("eval", dialplan_detail_data);
-											if (dialplan_detail_data == "sip_h_X-accountcode=${accountcode}") then
-												if (session) then
-													accountcode = session:getVariable("accountcode");
-													if (accountcode) then
-														square = square .. "sip_h_X-accountcode="..accountcode..",";
-													end
-												end
-											elseif (dialplan_detail_data == "effective_caller_id_name=${outbound_caller_id_name}") then
-											elseif (dialplan_detail_data == "effective_caller_id_number=${outbound_caller_id_number}") then
-											else
-												square = square .. dialplan_detail_data..",";
-											end
-										elseif (r.dialplan_detail_type == "bridge") then
-											if (bridge_match) then
-												dial_string = dial_string .. delimiter .. square .."]"..dialplan_detail_data;
-												square = "[";
-											else
-												dial_string = square .."]"..dialplan_detail_data;
-											end
-											bridge_match = true;
-											break;
-										end
-									--increment the value
-										y = y + 1;
+
+						--build dialstring
+							if route and route.bridge then
+								local remove_actions = {
+									["effective_caller_id_name="]   = true;
+									["effective_caller_id_number="] = true;
+									['sip_h_X-accountcode=']        = true;
+								}
+
+								-- cleanup variables
+								local i = 1 while i < #route do
+									-- remove vars from prev variant
+									if remove_actions[ route[i] ] then
+										table.remove(route, i)
+										i = i - 1
+									-- remove vars with unresolved vars
+									elseif string.find(route[i], '%${.+}') then
+										table.remove(route, i)
+										i = i - 1
+									-- remove vars with empty values
+									elseif string.find(route[i], '=$') then
+										table.remove(route, i)
+										i = i - 1
+									end
+									i = i + 1
 								end
+
+								dial_string = '[' .. table.concat(route, ',') .. ']' .. route.bridge
 							end
-							previous_dialplan_uuid = r.dialplan_uuid;
-						end
 					end
 
 				--add a delimiter between destinations
