@@ -31,16 +31,13 @@
 --include config.lua
 	require "resources.functions.config";
 
+--create logger object
+	log = require "resources.functions.log".call_flow
+
 --additional includes
 	local presence_in = require "resources.functions.presence_in"
 	local Database    = require "resources.functions.database"
-	local Settings    = require "resources.functions.lazy_settings"
-	file        = require "resources.functions.file"
-	log         = require "resources.functions.log".call_flow
-	require "resources.functions.basename"
-	require "resources.functions.is_absolute_path"
-	require "resources.functions.find_file"
-	require "resources.functions.play_file"
+	local play_file   = require "resources.functions.play_file"
 
 --include json library
 	local json
@@ -52,19 +49,16 @@
 	local dbh = Database.new('system');
 
 --get the variables
-	if (session:ready()) then
-		domain_name = session:getVariable("domain_name");
-		domain_uuid = session:getVariable("domain_uuid");
-		call_flow_uuid = session:getVariable("call_flow_uuid");
-		sounds_dir = session:getVariable("sounds_dir");
-		feature_code = session:getVariable("feature_code");
-	end
+	if not session:ready() then return end
 
---set the sounds path for the language, dialect and voice
-	if (session:ready()) then
-		local default_language = session:getVariable("default_language") or 'en';
-		local default_dialect = session:getVariable("default_dialect") or 'us';
-		local default_voice = session:getVariable("default_voice") or 'callie';
+	local domain_name = session:getVariable("domain_name");
+	local domain_uuid = session:getVariable("domain_uuid");
+	local call_flow_uuid = session:getVariable("call_flow_uuid");
+	local feature_code = session:getVariable("feature_code");
+
+	if not call_flow_uuid then
+		log.warning('Can not get call flow uuid')
+		return
 	end
 
 --get the call flow details
@@ -179,6 +173,7 @@
 			if (session:ready()) then
 				session:execute(app, data);
 			end
+
 		--timeout application
 			--if (not session:answered()) then
 			--	session:execute(ring_group_timeout_app, ring_group_timeout_data);
