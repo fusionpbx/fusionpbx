@@ -1,6 +1,11 @@
+local log = log or require "resources.functions.log"[app_name or 'find_file']
+
+local file             = require "resources.functions.file"
+local Settings         = require "resources.functions.lazy_settings"
+local basename         = require "resources.functions.basename"
+local is_absolute_path = require "resources.functions.is_absolute_path"
 
 function find_file(dbh, domain_name, domain_uuid, file_name)
-
 	-- if we specify e.g. full path
 	if (is_absolute_path(file_name) and file.exists(file_name)) then
 		log.debugf('found file `%s` in file system', file_name)
@@ -43,14 +48,16 @@ function find_file(dbh, domain_name, domain_uuid, file_name)
 	if not found then
 		local sounds_dir
 		if session then
-			-- Implemented based on stream.lua. But seems it never works.
-			-- because if we have file like `digits/1.wav` but full_path is `sounds_dir/digits/XXXX/1.wav`
-			sounds_dir = session:getVariable("sounds_dir")
-			local default_language = session:getVariable("default_language") or 'en'
-			local default_dialect = session:getVariable("default_dialect") or 'us'
-			local default_voice = session:getVariable("default_voice") or 'callie'
+			if session:ready() then
+				-- Implemented based on stream.lua. But seems it never works.
+				-- because if we have file like `digits/1.wav` but full_path is `sounds_dir/digits/XXXX/1.wav`
+				sounds_dir = session:getVariable("sounds_dir")
+				local default_language = session:getVariable("default_language") or 'en'
+				local default_dialect = session:getVariable("default_dialect") or 'us'
+				local default_voice = session:getVariable("default_voice") or 'callie'
 
-			sounds_dir = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice
+				sounds_dir = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice
+			end
 		else
 			--! @todo implement for not session call.
 		end
@@ -70,3 +77,5 @@ function find_file(dbh, domain_name, domain_uuid, file_name)
 
 	return file_name, is_base64
 end
+
+return find_file
