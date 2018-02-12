@@ -63,6 +63,8 @@ This method causes the script to get its manadatory arguments directly from the 
 	local sql = nil
 
 --define the functions
+	local Settings = require "resources.functions.lazy_settings"
+	local Database = require "resources.functions.database"
 	require "resources.functions.trim";
 
 --define the logger function
@@ -79,8 +81,11 @@ This method causes the script to get its manadatory arguments directly from the 
 -- ensure that we have a fresh status on exit
 	session:setVariable("call_block", "")
 
--- get session variables
-	local call_block_use_regex = session:getVariable("call_block_use_regex");
+-- get the configuration variables from the DB
+	local db = dbh or Database.new('system')
+	local settings = Settings.new(db, domain_name, domain_uuid)
+	local call_block_matching = settings:get('call block', 'call_block_matching', 'text');
+
 
 --send to the log
 	logger("D", "NOTICE", "params are: " .. string.format("'%s', '%s', '%s', '%s'", params["cid_num"],
@@ -108,15 +113,18 @@ This method causes the script to get its manadatory arguments directly from the 
 		--check if the the call block is blocked
 			sql = "SELECT * FROM v_call_block as c "
 			sql = sql .. "JOIN v_domains as d ON c.domain_uuid=d.domain_uuid "
-			if ((database["type"] == "pgsql") and (call_block_use_regex == "true")) then
+			if ((database["type"] == "pgsql") and (call_block_matching == "regex")) then
 				logger("W", "NOTICE", "call_block using regex match on cid_num")
 				sql = sql .. "WHERE :cid_num ~ c.call_block_number AND d.domain_name = :domain_name "
-			elseif (((database["type"] == "mysql") or (database["type"] == "sqlite")) and (call_block_use_regex == "true")) then
+			elseif (((database["type"] == "mysql") or (database["type"] == "sqlite")) and (call_block_matching == "regex")) then
 				logger("W", "NOTICE", "call_block using regex match on cid_num")
 				sql = sql .. "WHERE :cid_num REGEXP c.call_block_number AND d.domain_name = :domain_name "
-			else
+			elseif call_block_matching == "like" then
 				logger("W", "NOTICE", "call_block using like match on cid_num")
 				sql = sql .. "WHERE :cid_num LIKE c.call_block_number AND d.domain_name = :domain_name "
+			else
+				logger("W", "NOTICE", "call_block using exact match on cid_num")
+				sql = sql .. "WHERE :cid_num = c.call_block_number AND d.domain_name = :domain_name "
 			end
 			dbh:query(sql, params, function(rows)
 				found_cid_num = rows["call_block_number"];

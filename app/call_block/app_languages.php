@@ -521,11 +521,11 @@ $text['label-action']['ru-ru'] = "Действие";
 $text['label-action']['sv-se'] = "Åtgärd";
 $text['label-action']['uk-ua'] = "Дія";
 
-$text['description-number']['en-us'] = "Enter the exact number.";
+$text['description-number']['en-us'] = "Enter the number. This may be a regex expression or SQL match depending on the setting of the call_block_matching setting.";
 $text['description-number']['ar-eg'] = "";
-$text['description-number']['de-at'] = "Geben Sie die genaue Nummer an."; //copied from de-de
-$text['description-number']['de-ch'] = "Geben Sie die genaue Nummer an."; //copied from de-de
-$text['description-number']['de-de'] = "Geben Sie die genaue Nummer an.";
+$text['description-number']['de-at'] = "Geben Sie die Nummer an. Es kann sich hierbei um eine regulären Ausdruck oder einen SQL Vergleich handeln, je nach Wert der call_block_matching Einstellung."; //copied from de-de
+$text['description-number']['de-ch'] = "Geben Sie die Nummer an. Es kann sich hierbei um eine regulären Ausdruck oder einen SQL Vergleich handeln, je nach Wert der call_block_matching Einstellung."; //copied from de-de
+$text['description-number']['de-de'] = "Geben Sie die Nummer an. Es kann sich hierbei um eine regulären Ausdruck oder einen SQL Vergleich handeln, je nach Wert der call_block_matching Einstellung.";
 $text['description-number']['es-cl'] = "Ingrese el nú exacto.";
 $text['description-number']['es-mx'] = "Ingrese el nú exacto."; //copied from es-cl
 $text['description-number']['fr-ca'] = "Entrer le numéro exact."; //copied from fr-fr
