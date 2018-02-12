@@ -261,11 +261,11 @@ $text['label-transaction_type']['ru-ru'] = "Тип";
 $text['label-transaction_type']['sv-se'] = "Typ";
 $text['label-transaction_type']['uk-ua'] = "";
 
-$text['description-transaction_type']['en-us'] = "Type: insert, update, delete, select";
+$text['description-transaction_type']['en-us'] = "Type: add, update, delete";
 $text['description-transaction_type']['ar-eg'] = "";
-$text['description-transaction_type']['de-at'] = "Typ: insert, update, delete, select"; //copied from de-de
-$text['description-transaction_type']['de-ch'] = "Typ: insert, update, delete, select"; //copied from de-de
-$text['description-transaction_type']['de-de'] = "Typ: insert, update, delete, select";
+$text['description-transaction_type']['de-at'] = "Typ: add, update, delete"; //copied from de-de
+$text['description-transaction_type']['de-ch'] = "Typ: add, update, delete"; //copied from de-de
+$text['description-transaction_type']['de-de'] = "Typ: add, update, delete";
 $text['description-transaction_type']['es-cl'] = "";
 $text['description-transaction_type']['es-mx'] = "";
 $text['description-transaction_type']['fr-ca'] = "";
