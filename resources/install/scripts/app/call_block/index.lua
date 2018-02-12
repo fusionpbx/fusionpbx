@@ -79,6 +79,9 @@ This method causes the script to get its manadatory arguments directly from the 
 -- ensure that we have a fresh status on exit
 	session:setVariable("call_block", "")
 
+-- get session variables
+	local call_block_use_regex = session:getVariable("call_block_use_regex");
+
 --send to the log
 	logger("D", "NOTICE", "params are: " .. string.format("'%s', '%s', '%s', '%s'", params["cid_num"],
 			params["cid_name"], params["userid"], params["domain_name"]));
@@ -105,7 +108,17 @@ This method causes the script to get its manadatory arguments directly from the 
 		--check if the the call block is blocked
 			sql = "SELECT * FROM v_call_block as c "
 			sql = sql .. "JOIN v_domains as d ON c.domain_uuid=d.domain_uuid "
-			sql = sql .. "WHERE :cid_num ~ c.call_block_number AND d.domain_name = :domain_name "
+			if ((database["type"] == "pgsql") and (call_block_use_regex == "true")) then
+			--if (database["type"] == "pgsql") then
+				logger("W", "NOTICE", "call_block using regex match on cid_num")
+				sql = sql .. "WHERE :cid_num ~ c.call_block_number AND d.domain_name = :domain_name "
+			elseif (database["type"] == "mysql") then
+				logger("W", "NOTICE", "call_block using regex match on cid_num")
+				sql = sql .. "WHERE :cid_num REGEX c.call_block_number AND d.domain_name = :domain_name "
+			else
+				logger("W", "NOTICE", "call_block using exact match on cid_num")
+				sql = sql .. "WHERE c.call_block_number = :cid_num AND d.domain_name = :domain_name "
+			end
 			dbh:query(sql, params, function(rows)
 				found_cid_num = rows["call_block_number"];
 				found_uuid = rows["call_block_uuid"];
