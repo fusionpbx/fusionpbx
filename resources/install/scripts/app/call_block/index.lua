@@ -37,7 +37,7 @@ This method causes the script to get its manadatory arguments directly from the 
 	12 Jun, 2013: update the database connection, change table name from v_callblock to v_call_block
 	14 Jun, 2013: Change Voicemail option to use Transfer, avoids mod_voicemail dependency
 	27 Sep, 2013: Changed the name of the fields to conform with the table name
-	12 Feb, 2018: Added support for regular expressions in the phone numbers and changed default match to "LIKE"
+	12 Feb, 2018: Added support for regular expressions and SQL "like" matching  on the phone number
 ]]
 
 --set defaults
