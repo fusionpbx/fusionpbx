@@ -28,7 +28,6 @@
 		$apps[$x]['description']['sv-se'] = "";
 		$apps[$x]['description']['uk-ua'] = "";
 
-
 	//permission details
 		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "database_transaction_view";
@@ -95,7 +94,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "transaction_type";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Type: insert, update, delete, select";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Type: add, update, delete, select";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "transaction_date";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "timestamp";
