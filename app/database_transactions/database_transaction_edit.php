@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016 - 2017
+	Portions created by the Initial Developer are Copyright (C) 2016 - 2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -44,128 +44,8 @@
 
 //action add or update
 	if (isset($_REQUEST["id"])) {
-		//$action = "update";
 		$database_transaction_uuid = check_str($_REQUEST["id"]);
 	}
-	//else {
-	//	$action = "add";
-	//}
-
-//get http post variables and set them to php variables
-	/*
-	if (count($_POST) > 0) {
-		$user_uuid = check_str($_POST["user_uuid"]);
-		$app_uuid = check_str($_POST["app_uuid"]);
-		$transaction_code = check_str($_POST["transaction_code"]);
-		$transaction_address = check_str($_POST["transaction_address"]);
-		$transaction_type = check_str($_POST["transaction_type"]);
-		$transaction_date = check_str($_POST["transaction_date"]);
-		$transaction_old = check_str($_POST["transaction_old"]);
-		$transaction_new = check_str($_POST["transaction_new"]);
-		$transaction_result = check_str($_POST["transaction_result"]);
-	}
-	*/
-
-//process the data
-	/*
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
-	
-		$msg = '';
-		if ($action == "update") {
-			$database_transaction_uuid = check_str($_POST["database_transaction_uuid"]);
-		}
-	
-		//check for all required data
-			if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
-			if (strlen($user_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-user_uuid']."<br>\n"; }
-			if (strlen($app_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-app_uuid']."<br>\n"; }
-			if (strlen($transaction_code) == 0) { $msg .= $text['message-required']." ".$text['label-transaction_code']."<br>\n"; }
-			if (strlen($transaction_address) == 0) { $msg .= $text['message-required']." ".$text['label-transaction_address']."<br>\n"; }
-			if (strlen($transaction_type) == 0) { $msg .= $text['message-required']." ".$text['label-transaction_type']."<br>\n"; }
-			if (strlen($transaction_date) == 0) { $msg .= $text['message-required']." ".$text['label-transaction_date']."<br>\n"; }
-			if (strlen($transaction_old) == 0) { $msg .= $text['message-required']." ".$text['label-transaction_old']."<br>\n"; }
-			if (strlen($transaction_new) == 0) { $msg .= $text['message-required']." ".$text['label-transaction_new']."<br>\n"; }
-			if (strlen($transaction_result) == 0) { $msg .= $text['message-required']." ".$text['label-transaction_result']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-				require_once "resources/header.php";
-				require_once "resources/persist_form_var.php";
-				echo "<div align='center'>\n";
-				echo "<table><tr><td>\n";
-				echo $msg."<br />";
-				echo "</td></tr></table>\n";
-				persistformvar($_POST);
-				echo "</div>\n";
-				require_once "resources/footer.php";
-				return;
-			}
-	
-		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
-				if ($action == "add" && permission_exists('database_transaction_add')) {
-					$sql = "insert into v_database_transactions ";
-					$sql .= "(";
-					$sql .= "domain_uuid, ";
-					$sql .= "database_transaction_uuid, ";
-					$sql .= "domain_uuid, ";
-					$sql .= "user_uuid, ";
-					$sql .= "app_uuid, ";
-					$sql .= "transaction_code, ";
-					$sql .= "transaction_address, ";
-					$sql .= "transaction_type, ";
-					$sql .= "transaction_date, ";
-					$sql .= "transaction_old, ";
-					$sql .= "transaction_new, ";
-					$sql .= "transaction_result ";
-					$sql .= ")";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'$domain_uuid', ";
-					$sql .= "'".uuid()."', ";
-					$sql .= "'$domain_uuid', ";
-					$sql .= "'$user_uuid', ";
-					$sql .= "'$app_uuid', ";
-					$sql .= "'$transaction_code', ";
-					$sql .= "'$transaction_address', ";
-					$sql .= "'$transaction_type', ";
-					$sql .= "now(), ";
-					$sql .= "'$transaction_old', ";
-					$sql .= "'$transaction_new', ";
-					$sql .= "'$transaction_result' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
-	
-					messages::add($text['message-add']);
-					header("Location: database_transactions.php");
-					return;
-	
-				} //if ($action == "add")
-	
-				if ($action == "update" && permission_exists('database_transaction_edit')) {
-					$sql = "update v_database_transactions set ";
-					$sql .= "domain_uuid = '$domain_uuid', ";
-					$sql .= "user_uuid = '$user_uuid', ";
-					$sql .= "app_uuid = '$app_uuid', ";
-					$sql .= "transaction_code = '$transaction_code', ";
-					$sql .= "transaction_address = '$transaction_address', ";
-					$sql .= "transaction_type = '$transaction_type', ";
-					$sql .= "transaction_date = now(), ";
-					$sql .= "transaction_old = '$transaction_old', ";
-					$sql .= "transaction_new = '$transaction_new', ";
-					$sql .= "transaction_result = '$transaction_result' ";
-					$sql .= "where database_transaction_uuid = '$database_transaction_uuid'";
-					$sql .= "and domain_uuid = '$domain_uuid' ";
-					$db->exec(check_sql($sql));
-					unset($sql);
-	
-					messages::add($text['message-update']);
-					header("Location: database_transactions.php");
-					return;
-	
-				} //if ($action == "update")
-			} //if ($_POST["persistformvar"] != "true")
-	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
-	*/
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
@@ -196,7 +76,7 @@
 			$username = $row["username"];
 			$transaction_code = $row["transaction_code"];
 			$transaction_address = $row["transaction_address"];
-			//$transaction_type = $row["transaction_type"];
+			$transaction_type = $row["transaction_type"];
 			$transaction_date = $row["transaction_date"];
 			$transaction_old = $row["transaction_old"];
 			$transaction_new = $row["transaction_new"];
@@ -205,22 +85,28 @@
 		unset ($prep_statement);
 	}
 
+//get the type if not provided
+	//if (strlen($transaction_old) > 4) {
+	//	$transaction_type = 'add';
+	//}
+	//else {
+	//	$transaction_type = 'update';
+	//}
+
 //show the header
 	require_once "resources/header.php";
 
 //show the content
-	//echo "<form name='frm' id='frm' method='post' action=''>\n";
 	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' width='20%' nowrap='nowrap' valign='top'><b>".$text['title-database_transaction']."</b><br><br></td>\n";
 	echo "		<td width='80%' align='right' valign='top'>\n";
 	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='database_transactions.php'\" value='".$text['button-back']."'>";
-	//echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
 
-	echo "<table width='350px'  border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table width='400'  border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<td valign='top'>\n";
 	echo "	<table>\n";
 	echo "		<tr>\n";
@@ -229,50 +115,27 @@
 	echo "			</th>\n";
 	echo "			<td class='vtable' align='left'>\n";
 	echo "				".$app_name."\n";
-	//echo "			<input class='formfld' type='text' name='app_name' maxlength='255' value='$app_name'>\n";
-	//echo "			<br />\n";
-	//echo "			".$text['description-app_uuid']."\n";
 	echo "			</td>\n";
 	echo "		</tr>\n";
-
-	/*echo "	<tr>\n";
-	echo "			<th width='10%' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "				".$text['label-domain']."\n";
-	echo "			</th>\n";
-	echo "			<td width='90%' aclass='vtable' align='left'>\n";
-	echo "				".$domain_name;
-	//echo "	 		<input class='formfld' type='text' name='domain_name' maxlength='255' value='$domain_name'>\n";
-	//echo "			<br />\n";
-	//echo "			".$text['description-domain']."\n";
-	echo "			</td>\n";
-	echo "		</tr>\n";
-	*/
-
 	echo "		<tr>\n";
 	echo "			<th valign='top' align='left' nowrap='nowrap'>\n";
 	echo "				".$text['label-user_uuid']."\n";
 	echo "			</th>\n";
 	echo "			<td class='vtable' align='left'>\n";
 	echo "  			".$username."\n";
-	//echo "  			<input class='formfld' type='text' name='username' maxlength='255' value='$username'>\n";
-	//echo "			<br />\n";
-	//echo "			".$text['description-user_uuid']."\n";
 	echo "			</td>\n";
 	echo "		</tr>\n";
 	echo "	</table>\n";
 	echo "</td>\n";
 
 	echo "<td valign='top'>\n";
-	echo "	<table>\n";
+	echo "	<table border='0'>\n";
 	echo "		<tr>\n";
 	echo "			<th valign='top' align='left' nowrap='nowrap'>\n";
 	echo "				".$text['label-transaction_code']."\n";
 	echo "			</th>\n";
 	echo "			<td class='vtable' align='left'>\n";
 	echo "				$transaction_code\n";
-	//echo "  			<input class='formfld' type='text' name='transaction_code' maxlength='255' value='$transaction_code'>\n";
-	//echo "			<br />\n";
-	//echo "			".$text['description-transaction_code']."\n";
 	echo "			</td>\n";
 	echo "		</tr>\n";
 	echo "		<tr>\n";
@@ -281,26 +144,34 @@
 	echo "			</th>\n";
 	echo "			<td class='vtable' align='left'>\n";
 	echo "				$transaction_address\n";
-	//echo "			<input class='formfld' type='text' name='transaction_address' maxlength='255' value=\"$transaction_address\">\n";
-	//echo "			<br />\n";
-	//echo "			".$text['description-transaction_address']."\n";
 	echo "			</td>\n";
 	echo "		</tr>\n";
 	echo "	</table>\n";
 	echo "</td>\n";
+
+	echo "<td valign='top'>\n";
+	echo "	<table border='0'>\n";
+	echo "		<tr>\n";
+	echo "			<th valign='top' align='left' nowrap='nowrap'>\n";
+	echo "				".$text['label-transaction_type']."\n";
+	echo "			</th>\n";
+	echo "			<td class='vtable' align='left'>\n";
+	echo "				$transaction_type\n";
+	echo "			</td>\n";
+	echo "		</tr>\n";
+	echo "		<tr>\n";
+	echo "			<th width='10%' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "				".$text['label-domain']."\n";
+	echo "			</th>\n";
+	echo "			<td width='90%' aclass='vtable' align='left'>\n";
+	echo "				".$domain_name;
+	echo "			</td>\n";
+	echo "		</tr>\n";
+	echo "	</table>\n";
+	echo "</td>\n";
+
 	echo "</tr>\n";
 	echo "</table>\n";
-
-	//echo "<tr>\n";
-	//echo "<th valign='top' align='left' nowrap='nowrap'>\n";
-	//echo "	".$text['label-transaction_type']."\n";
-	//echo "</th>\n";
-	//echo "<td class='vtable' align='left'>\n";
-	//echo "	<input class='formfld' type='text' name='transaction_type' maxlength='255' value=\"$transaction_type\">\n";
-	//echo "<br />\n";
-	//echo $text['description-transaction_type']."\n";
-	//echo "</td>\n";
-	//echo "</tr>\n";
 
 	if ($_REQUEST["debug"] == "true") {
 		echo "<table width='350px'  border='0' cellpadding='0' cellspacing='0'>\n";
@@ -341,18 +212,6 @@
 		echo "</tr>\n";
 		echo "</table>";
 	}
-
-	//echo "	<tr>\n";
-	//echo "		<td colspan='2' align='right'>\n";
-	//if ($action == "update") {
-	//	echo "				<input type='hidden' name='database_transaction_uuid' value='$database_transaction_uuid'>\n";
-	//}
-	//echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	//echo "		</td>\n";
-	//echo "	</tr>";
-	//echo "</table>";
-	//echo "</form>";
-	//echo "<br /><br />";
 
 //define the array _difference function
 	//this adds old and new values to the array
@@ -438,28 +297,39 @@
 	unset($_SESSION['previous_row']);
 
 //show the add or update
-	if (count($before) > 0 && count($after) > 0) {
-		//create the table header
-			$array = array_difference($before, $after, 1);
-			$table_header = "<tr><td colspan='5'>&nbsp;</td></tr>\n";
-			$table_header .= "<tr>\n";
-			//$table_header .= "	<th>Table</th>\n";
-			//$table_header .= "	<th>Row</th>\n";
-			$table_header .= "	<th>name</th>\n";
-			$table_header .= "	<th>old</th>\n";
-			$table_header .= "	<th>new</th>\n";
-			$table_header .= "</tr>\n";
-			$_SESSION['table_header'] = $table_header;
-		
-		//show the difference
-			echo "<table border='0' cellpadding='3'>\n";
-			show_difference($array);
-			echo "</table>\n";
+	if ($transaction_type == "add") {
+		echo "<br />\n";
+		echo "		<pre>\n";
+		print_r($after);
+		echo "		</pre>\n";
+	}
+
+//show the add or update
+	if ($transaction_type == "update") {
+		if (count($before) > 0 && count($after) > 0) {
+			//create the table header
+				$array = array_difference($before, $after, 1);
+				$table_header = "<tr><td colspan='5'>&nbsp;</td></tr>\n";
+				$table_header .= "<tr>\n";
+				//$table_header .= "	<th>Table</th>\n";
+				//$table_header .= "	<th>Row</th>\n";
+				$table_header .= "	<th>name</th>\n";
+				$table_header .= "	<th>old</th>\n";
+				$table_header .= "	<th>new</th>\n";
+				$table_header .= "</tr>\n";
+				$_SESSION['table_header'] = $table_header;
+			
+			//show the difference
+				echo "<table border='0' cellpadding='3'>\n";
+				show_difference($array);
+				echo "</table>\n";
+		}
 	}
 
 //show the delete
-	if (count($before) > 0 && count($after) == 0) {
-		echo "<h3>Record Deleted</h3><br />\n";
+	if ($transaction_type == "delete") {
+		//echo "<h3>Record Deleted</h3><br />\n";
+		echo "<br />\n";
 		echo "		<pre>\n";
 		print_r($before);
 		echo "		</pre>\n";
