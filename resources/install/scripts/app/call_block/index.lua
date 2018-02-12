@@ -37,7 +37,7 @@ This method causes the script to get its manadatory arguments directly from the 
 	12 Jun, 2013: update the database connection, change table name from v_callblock to v_call_block
 	14 Jun, 2013: Change Voicemail option to use Transfer, avoids mod_voicemail dependency
 	27 Sep, 2013: Changed the name of the fields to conform with the table name
-	12 Feb, 2018: Added support for regular expressions in the phone numbers
+	12 Feb, 2018: Added support for regular expressions in the phone numbers and changed default match to "LIKE"
 ]]
 
 --set defaults
@@ -109,15 +109,14 @@ This method causes the script to get its manadatory arguments directly from the 
 			sql = "SELECT * FROM v_call_block as c "
 			sql = sql .. "JOIN v_domains as d ON c.domain_uuid=d.domain_uuid "
 			if ((database["type"] == "pgsql") and (call_block_use_regex == "true")) then
-			--if (database["type"] == "pgsql") then
 				logger("W", "NOTICE", "call_block using regex match on cid_num")
 				sql = sql .. "WHERE :cid_num ~ c.call_block_number AND d.domain_name = :domain_name "
-			elseif (database["type"] == "mysql") then
+			elseif (((database["type"] == "mysql") or (database["type"] == "sqlite")) and (call_block_use_regex == "true")) then
 				logger("W", "NOTICE", "call_block using regex match on cid_num")
-				sql = sql .. "WHERE :cid_num REGEX c.call_block_number AND d.domain_name = :domain_name "
+				sql = sql .. "WHERE :cid_num REGEXP c.call_block_number AND d.domain_name = :domain_name "
 			else
-				logger("W", "NOTICE", "call_block using exact match on cid_num")
-				sql = sql .. "WHERE c.call_block_number = :cid_num AND d.domain_name = :domain_name "
+				logger("W", "NOTICE", "call_block using like match on cid_num")
+				sql = sql .. "WHERE :cid_num LIKE c.call_block_number AND d.domain_name = :domain_name "
 			end
 			dbh:query(sql, params, function(rows)
 				found_cid_num = rows["call_block_number"];
