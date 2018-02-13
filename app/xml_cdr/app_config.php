@@ -346,6 +346,16 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "bigint";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "queue terminated epoch";
 		$z++;
+ 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "cc_queue_canceled_epoch";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "bigint";
+ 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "cause";
+ 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "cc_cancel_reason";
+ 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+ 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "cause";
+ 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "cc_cause";
  		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
  		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "cause";
