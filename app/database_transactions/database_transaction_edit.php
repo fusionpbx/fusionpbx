@@ -180,10 +180,7 @@
 		echo "	".$text['label-transaction_old']."\n";
 		echo "</th>\n";
 		echo "<td class='vtable' align='left'>\n";
-		//echo "	<input class='formfld' type='text' name='transaction_old' maxlength='255' value=\"$transaction_old\">\n";
 		echo "	<textarea name='transaction_old' style='width: 265px; height: 80px;'>$transaction_old</textarea>\n";
-		//echo "<br />\n";
-		//echo $text['description-transaction_old']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	
@@ -192,10 +189,7 @@
 		echo "	".$text['label-transaction_new']."\n";
 		echo "</th>\n";
 		echo "<td class='vtable' align='left'>\n";
-		//echo "	<input class='formfld' type='text' name='transaction_new' maxlength='255' value=\"$transaction_new\">\n";
 		echo "	<textarea name='transaction_new' style='width: 265px; height: 80px;'>$transaction_new</textarea>\n";
-		//echo "<br />\n";
-		//echo $text['description-transaction_new']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	
@@ -204,10 +198,7 @@
 		echo "	".$text['label-transaction_result']."\n";
 		echo "</th>\n";
 		echo "<td class='vtable' align='left'>\n";
-		//echo "	<input class='formfld' type='text' name='transaction_result' maxlength='255' value=\"$transaction_result\">\n";
 		echo "	<textarea name='transaction_result' style='width: 265px; height: 80px;'>$transaction_result</textarea>\n";
-		//echo "<br />\n";
-		//echo $text['description-transaction_result']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 		echo "</table>";
@@ -216,35 +207,36 @@
 //define the array _difference function
 	//this adds old and new values to the array
 	function array_difference($array1, $array2) {
-		$difference = array();
+		$array = array();
 		if (is_array($array1)) {
 			foreach($array1 as $key => $value) {
-				if(is_array($array2[$key])) {
-					$difference[$key] = array_difference($array1[$key], $array2[$key]);
+				if (is_array($array2[$key])) {
+					$array[$key] = array_difference($array1[$key], $array2[$key]);
 				}
 				else {
-				  	$difference[$key]['old'] = $value;
+				  	$array[$key]['old'] = $value;
 				}
 			}
 		}
 		if (is_array($array2)) {
 			foreach($array2 as $key => $value) {
-				if(is_array($value)) {
-					$difference[$key] = array_difference($array1[$key], $array2[$key]);
+				if (is_array($value)) {
+					$array[$key] = array_difference($array1[$key], $array2[$key]);
 				}
 				else {
-					$difference[$key]['new'] = $value;
+					$array[$key]['new'] = $value;
 				}
 			}
 		}
-		return $difference;
+		return $array;
 	}
 
 //show the content from the difference array as a list
 	function show_difference($array) {
+
 		//loop through the array
-			foreach($array as $key => $value) {
-				if(is_array($value) && !isset($value['old']) && !isset($value['new'])) {
+			foreach ($array as $key => $value) {
+				if (is_array($value) && !isset($value['old']) && !isset($value['new'])) {
 					if (!is_numeric($key)) {
 						//get the table name
 							$_SESSION['name'] = $key;
@@ -269,7 +261,7 @@
 							$color = "#ff0000";
 						}
 					//set the table header
-						if ($_SESSION['previous_name'] != $_SESSION['name'] || $_SESSION['previous_row'] != $_SESSION['row']) {
+						if ($_SESSION['previous_name'] !== $_SESSION['name'] || $_SESSION['previous_row'] !== $_SESSION['row']) {
 							echo str_replace("<th>name</th>","<th>".$_SESSION['name']."</th>",$_SESSION['table_header']);
 							//echo $_SESSION['table_header'];
 						}
@@ -277,14 +269,13 @@
 						$_SESSION['previous_row'] = $_SESSION['row'];
 					//show the results
 						echo "<tr style='color: $color;'>\n";
-						//echo "	<td class=\"vtable\" style='color: $color;'>".$_SESSION['name']."</td>\n";
-						//echo "	<td class=\"vtable\" style='color: $color; text-align: center;'>".$_SESSION['row']."</td>\n";
-						echo "	<td class=\"vtable\" style='color: $color;'>$key</td>\n";
+						echo "	<td class=\"vtable\" style='color: $color;'>".$key."</td>\n";
 						echo "	<td class=\"vtable\" style='color: $color;'>".$old."</td>\n";
 						echo "	<td class=\"vtable\" style='color: $color;'>".$new."</td>";
 						echo "</tr>\n";
 					//echo "</table>\n";
 				}
+				unset($key,$old,$new,$value);
 			}
 	}
 
@@ -296,23 +287,91 @@
 	unset($_SESSION['previous_name']);
 	unset($_SESSION['previous_row']);
 
-//show the add or update
+//show the add
 	if ($transaction_type == "add") {
-		echo "<br />\n";
-		echo "		<pre>\n";
-		print_r($after);
-		echo "		</pre>\n";
+
+		//multiple dimensional array into a 2 dimensional array
+		if (is_array($after)) {
+			$x = 0;
+			foreach($after as $key => $value) {
+				$id = 0;
+				foreach($value as $row) {
+					$sub_id = 0;
+					foreach($row as $sub_key => $val) {
+						if (is_array($val)) {
+							foreach($val as $sub_row) {
+								foreach($sub_row as $k => $v) {
+									$array[$x]['schema'] = $sub_key;
+									$array[$x]['row'] = $sub_id;
+									$array[$x]['name'] = $k;
+									$array[$x]['value'] = htmlentities($v);
+									$x++;
+								}
+								$sub_id++;
+							}
+						}
+						else {
+							$array[$x]['schema'] = $key;
+							$array[$x]['row'] = $id;
+							$array[$x]['name'] = $sub_key;
+							$array[$x]['value'] = htmlentities($val);
+							$x++;
+						}
+					}
+					$id++;
+				}
+			}
+		}
+
+		echo "<table border='0'>\n";
+		foreach($array as $row) {
+			if ($row['schema'] !== $previous_schema || $row['row'] !== $previous_row) {
+				echo "<tr><td colspan='4'>&nbsp;</td></tr>\n";
+				echo "<tr>\n";
+				echo "	<th>".$row['schema']."</th>\n";
+				echo "	<th>value</th>\n";
+				echo "</tr>\n";
+			}
+			echo "<tr>\n";
+			//echo "	<td>".$row['schema']."</td>\n";
+			//echo "	<td>".$row['row']."</td>\n";
+			echo "	<td class=\"vtable\" style='color: #000000;'>".$row['name']."</td>\n";
+			echo "	<td class=\"vtable\" style='color: #ff0000;'>".$row['value']."</td>\n";
+			echo "</tr>\n";
+
+			$previous_schema = $row['schema'];
+			$previous_row = $row['row'];
+		}
+		echo "</table>\n";
+
+		/*
+		if (is_array($after)) {
+			//create the table header
+				$array = array_difference(null, $after, 1);
+				$table_header = "<tr><td colspan='5'>&nbsp;</td></tr>\n";
+				$table_header .= "<tr>\n";
+				$table_header .= "	<th>name</th>\n";
+				$table_header .= "	<th>&nbsp;</th>\n";
+				$table_header .= "	<th>new</th>\n";
+				$table_header .= "</tr>\n";
+				$_SESSION['table_header'] = $table_header;
+
+			//show the difference
+				echo "<table border='0' cellpadding='3'>\n";
+				show_difference($array);
+				echo "</table>\n";
+		}
+		*/
 	}
 
-//show the add or update
+//show the update
 	if ($transaction_type == "update") {
 		if (count($before) > 0 && count($after) > 0) {
+
 			//create the table header
 				$array = array_difference($before, $after, 1);
 				$table_header = "<tr><td colspan='5'>&nbsp;</td></tr>\n";
 				$table_header .= "<tr>\n";
-				//$table_header .= "	<th>Table</th>\n";
-				//$table_header .= "	<th>Row</th>\n";
 				$table_header .= "	<th>name</th>\n";
 				$table_header .= "	<th>old</th>\n";
 				$table_header .= "	<th>new</th>\n";
@@ -320,7 +379,7 @@
 				$_SESSION['table_header'] = $table_header;
 			
 			//show the difference
-				echo "<table border='0' cellpadding='3'>\n";
+				echo "<table border='0'>\n";
 				show_difference($array);
 				echo "</table>\n";
 		}
@@ -330,9 +389,9 @@
 	if ($transaction_type == "delete") {
 		//echo "<h3>Record Deleted</h3><br />\n";
 		echo "<br />\n";
-		echo "		<pre>\n";
+		echo "<pre>\n";
 		print_r($before);
-		echo "		</pre>\n";
+		echo "</pre>\n";
 	}
 
 //add a few lines at the end
