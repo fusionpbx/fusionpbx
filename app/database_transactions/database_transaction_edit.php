@@ -86,12 +86,12 @@
 	}
 
 //get the type if not provided
-	//if (strlen($transaction_old) > 4) {
-	//	$transaction_type = 'add';
-	//}
-	//else {
-	//	$transaction_type = 'update';
-	//}
+	if (strlen($transaction_old) > 4) {
+		$transaction_type = 'add';
+	}
+	else {
+		$transaction_type = 'update';
+	}
 
 //show the header
 	require_once "resources/header.php";
