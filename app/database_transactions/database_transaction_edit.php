@@ -86,11 +86,13 @@
 	}
 
 //get the type if not provided
-	if (strlen($transaction_old) > 4) {
-		$transaction_type = 'add';
-	}
-	else {
-		$transaction_type = 'update';
+	if (strlen($transaction_type) == 0) {
+		if ($transaction_old == null || $transaction_old == "null") {
+			$transaction_type = 'add';
+		}
+		else {
+			$transaction_type = 'update';
+		}
 	}
 
 //show the header
