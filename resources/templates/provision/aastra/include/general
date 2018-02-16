@@ -3,13 +3,14 @@
 # #################
 
 # === passwords and access control ===
-{if isset($admin_password)}admin password: {$admin_password}{"\n"}{/if}   # 22222 is the default
+{if isset($admin_password)}admin password: {$admin_password}{"\n"}{/if}
 #user password: 123                 # default is blank
 #web interface enabled: 1           # Enable/Disable Web UI
 #options password enabled: 1        # default is 0 == not protected
 #options simple menu: 1             # default is 0 == full options menu
 
-tone set: UK                        # Australia, Europe (generic tones), France, Germany, Italy, UK, US (also used in Canada)
+#tone set: UK                        # Australia, Europe (generic tones), France, Germany, Italy, UK, US (also used in Canada)
+{if isset($progress_tones_region)}tone set: {$progress_tones_region}{"\n"}{/if}
 
 # === display date and time ===
 #time format: 0                  # 1 for 24 hr format

@@ -479,6 +479,17 @@
 		echo "		<option value='superfine' ".(($default_setting_value == 'superfine') ? 'selected' : null).">".$text['label-superfine']."</option>";
 		echo "	</select>";
 	}
+	elseif ($category == "provision" && $subcategory == "progress_tones_region" && $name == "text" ) {
+		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "		<option value='Australia' ".(($default_setting_value == 'Australia') ? 'selected' : null).">Australia</option>";
+		echo "		<option value='Europe' ".(($default_setting_value == 'Europe') ? 'selected' : null).">Europe</option>";
+		echo "		<option value='France' ".(($default_setting_value == 'France') ? 'selected' : null).">France</option>";
+		echo "		<option value='Germany' ".(($default_setting_value == 'Germany') ? 'selected' : null).">Germany</option>";
+		echo "		<option value='Italy' ".(($default_setting_value == 'Italy') ? 'selected' : null).">Italy</option>";
+		echo "		<option value='UK' ".(($default_setting_value == 'UK') ? 'selected' : null).">UK</option>";
+		echo "		<option value='US' ".(($default_setting_value == 'US') ? 'selected' : null).">US</option>";
+		echo "	</select>\n";
+	}
 	elseif ($category == "provision" && $subcategory == "aastra_time_format" && $name == "text" ) {
 		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
 		echo "		<option value='1' ".(($default_setting_value == "1") ? "selected='selected'" : null).">".$text['label-24-hour']."</option>\n";

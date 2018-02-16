@@ -1,0 +1,132 @@
+{if $progress_tones_region == 'Australia'}
+<tone>
+    <tone.chord>
+        <tone.chord.callProg>
+            <tone.chord.callProg.busyTone tone.chord.callProg.busyTone.offDur="375" tone.chord.callProg.busyTone.onDur="375" tone.chord.callProg.busyTone.repeat="0">
+                <tone.chord.callProg.busyTone.freq tone.chord.callProg.busyTone.freq.1="425" tone.chord.callProg.busyTone.freq.2="0"></tone.chord.callProg.busyTone.freq>
+                <tone.chord.callProg.busyTone.level tone.chord.callProg.busyTone.level.1="-20" tone.chord.callProg.busyTone.level.2="-30"></tone.chord.callProg.busyTone.level>
+            </tone.chord.callProg.busyTone>
+            <tone.chord.callProg.reorder tone.chord.callProg.reorder.offDur="500" tone.chord.callProg.reorder.onDur="2500" tone.chord.callProg.reorder.repeat="0">
+                <tone.chord.callProg.reorder.freq tone.chord.callProg.reorder.freq.1="425" tone.chord.callProg.reorder.freq.2="0"></tone.chord.callProg.reorder.freq>
+                <tone.chord.callProg.reorder.level tone.chord.callProg.reorder.level.1="-20" tone.chord.callProg.reorder.level.2="-30"></tone.chord.callProg.reorder.level>
+            </tone.chord.callProg.reorder>
+            <tone.chord.callProg.dialTone tone.chord.callProg.dialTone.offDur="0" tone.chord.callProg.dialTone.onDur="0" tone.chord.callProg.dialTone.repeat="0">
+                <tone.chord.callProg.dialTone.freq tone.chord.callProg.dialTone.freq.1="425" tone.chord.callProg.dialTone.freq.2="450"></tone.chord.callProg.dialTone.freq>
+                <tone.chord.callProg.dialTone.level tone.chord.callProg.dialTone.level.1="-19" tone.chord.callProg.dialTone.level.2="-22"></tone.chord.callProg.dialTone.level>
+            </tone.chord.callProg.dialTone>
+            <tone.chord.callProg.ringback tone.chord.callProg.ringback.offDur="200" tone.chord.callProg.ringback.onDur="400" tone.chord.callProg.ringback.repeat="2">
+                <tone.chord.callProg.ringback.freq tone.chord.callProg.ringback.freq.1="400" tone.chord.callProg.ringback.freq.2="450"></tone.chord.callProg.ringback.freq>
+                <tone.chord.callProg.ringback.level tone.chord.callProg.ringback.level.1="-20" tone.chord.callProg.ringback.level.2="-20"></tone.chord.callProg.ringback.level>
+            </tone.chord.callProg.ringback>
+            <tone.chord.callProg.stutterLong tone.chord.callProg.stutterLong.offDur="150" tone.chord.callProg.stutterLong.onDur="150" tone.chord.callProg.stutterLong.repeat="10">
+                <tone.chord.callProg.stutterLong.freq tone.chord.callProg.stutterLong.freq.1="350" tone.chord.callProg.stutterLong.freq.2="450"></tone.chord.callProg.stutterLong.freq>
+                <tone.chord.callProg.stutterLong.level tone.chord.callProg.stutterLong.level.1="-19" tone.chord.callProg.stutterLong.level.2="-22"></tone.chord.callProg.stutterLong.level>
+            </tone.chord.callProg.stutterLong>
+        </tone.chord.callProg>
+    </tone.chord>
+</tone>
+{elseif $progress_tones_region == 'Europe'}
+<tone>
+    <tone.chord>
+        <tone.chord.callProg>
+            <tone.chord.callProg.busyTone tone.chord.callProg.busyTone.offDur="500" tone.chord.callProg.busyTone.onDur="500" tone.chord.callProg.busyTone.repeat="0">
+                <tone.chord.callProg.busyTone.freq tone.chord.callProg.busyTone.freq.1="440" tone.chord.callProg.busyTone.freq.2="0"></tone.chord.callProg.busyTone.freq>
+                <tone.chord.callProg.busyTone.level tone.chord.callProg.busyTone.level.1="-20" tone.chord.callProg.busyTone.level.2="-30"></tone.chord.callProg.busyTone.level>
+            </tone.chord.callProg.busyTone>
+            <tone.chord.callProg.dialTone tone.chord.callProg.dialTone.offDur="0" tone.chord.callProg.dialTone.onDur="0" tone.chord.callProg.dialTone.repeat="0">
+                <tone.chord.callProg.dialTone.freq tone.chord.callProg.dialTone.freq.1="440" tone.chord.callProg.dialTone.freq.2="0"></tone.chord.callProg.dialTone.freq>
+                <tone.chord.callProg.dialTone.level tone.chord.callProg.dialTone.level.1="-19" tone.chord.callProg.dialTone.level.2="-22"></tone.chord.callProg.dialTone.level>
+            </tone.chord.callProg.dialTone>
+            <tone.chord.callProg.ringback tone.chord.callProg.ringback.offDur="3500" tone.chord.callProg.ringback.onDur="1500" tone.chord.callProg.ringback.repeat="2">
+                <tone.chord.callProg.ringback.freq tone.chord.callProg.ringback.freq.1="440" tone.chord.callProg.ringback.freq.2="0"></tone.chord.callProg.ringback.freq>
+                <tone.chord.callProg.ringback.level tone.chord.callProg.ringback.level.1="-20" tone.chord.callProg.ringback.level.2="-20"></tone.chord.callProg.ringback.level>
+            </tone.chord.callProg.ringback>
+        </tone.chord.callProg>
+    </tone.chord>
+</tone>
+{elseif $progress_tones_region == 'France'}
+<tone>
+    <tone.chord>
+        <tone.chord.callProg>
+            <tone.chord.callProg.busyTone tone.chord.callProg.busyTone.offDur="500" tone.chord.callProg.busyTone.onDur="500" tone.chord.callProg.busyTone.repeat="0">
+                <tone.chord.callProg.busyTone.freq tone.chord.callProg.busyTone.freq.1="440" tone.chord.callProg.busyTone.freq.2="0"></tone.chord.callProg.busyTone.freq>
+                <tone.chord.callProg.busyTone.level tone.chord.callProg.busyTone.level.1="-20" tone.chord.callProg.busyTone.level.2="-30"></tone.chord.callProg.busyTone.level>
+            </tone.chord.callProg.busyTone>
+            <tone.chord.callProg.dialTone tone.chord.callProg.dialTone.offDur="0" tone.chord.callProg.dialTone.onDur="0" tone.chord.callProg.dialTone.repeat="0">
+                <tone.chord.callProg.dialTone.freq tone.chord.callProg.dialTone.freq.1="440" tone.chord.callProg.dialTone.freq.2="0"></tone.chord.callProg.dialTone.freq>
+                <tone.chord.callProg.dialTone.level tone.chord.callProg.dialTone.level.1="-19" tone.chord.callProg.dialTone.level.2="-22"></tone.chord.callProg.dialTone.level>
+            </tone.chord.callProg.dialTone>
+            <tone.chord.callProg.ringback tone.chord.callProg.ringback.offDur="3500" tone.chord.callProg.ringback.onDur="1500" tone.chord.callProg.ringback.repeat="2">
+                <tone.chord.callProg.ringback.freq tone.chord.callProg.ringback.freq.1="440" tone.chord.callProg.ringback.freq.2="0"></tone.chord.callProg.ringback.freq>
+                <tone.chord.callProg.ringback.level tone.chord.callProg.ringback.level.1="-20" tone.chord.callProg.ringback.level.2="-20"></tone.chord.callProg.ringback.level>
+            </tone.chord.callProg.ringback>
+        </tone.chord.callProg>
+    </tone.chord>
+</tone>
+{elseif $progress_tones_region == 'Germany'}
+<tone>
+    <tone.chord>
+        <tone.chord.callProg>
+            <tone.chord.callProg.busyTone tone.chord.callProg.busyTone.offDur="480" tone.chord.callProg.busyTone.onDur="480" tone.chord.callProg.busyTone.repeat="0">
+                <tone.chord.callProg.busyTone.freq tone.chord.callProg.busyTone.freq.1="425" tone.chord.callProg.busyTone.freq.2="0"></tone.chord.callProg.busyTone.freq>
+                <tone.chord.callProg.busyTone.level tone.chord.callProg.busyTone.level.1="-20" tone.chord.callProg.busyTone.level.2="-30"></tone.chord.callProg.busyTone.level>
+            </tone.chord.callProg.busyTone>
+            <tone.chord.callProg.dialTone tone.chord.callProg.dialTone.offDur="0" tone.chord.callProg.dialTone.onDur="0" tone.chord.callProg.dialTone.repeat="0">
+                <tone.chord.callProg.dialTone.freq tone.chord.callProg.dialTone.freq.1="425" tone.chord.callProg.dialTone.freq.2="0"></tone.chord.callProg.dialTone.freq>
+                <tone.chord.callProg.dialTone.level tone.chord.callProg.dialTone.level.1="-19" tone.chord.callProg.dialTone.level.2="-22"></tone.chord.callProg.dialTone.level>
+            </tone.chord.callProg.dialTone>
+            <tone.chord.callProg.ringback tone.chord.callProg.ringback.offDur="4000" tone.chord.callProg.ringback.onDur="1000" tone.chord.callProg.ringback.repeat="2">
+                <tone.chord.callProg.ringback.freq tone.chord.callProg.ringback.freq.1="425" tone.chord.callProg.ringback.freq.2="0"></tone.chord.callProg.ringback.freq>
+                <tone.chord.callProg.ringback.level tone.chord.callProg.ringback.level.1="-20" tone.chord.callProg.ringback.level.2="-20"></tone.chord.callProg.ringback.level>
+            </tone.chord.callProg.ringback>
+        </tone.chord.callProg>
+    </tone.chord>
+</tone>
+{elseif $progress_tones_region == 'Italy'}
+<tone>
+    <tone.chord>
+        <tone.chord.callProg>
+            <tone.chord.callProg.busyTone tone.chord.callProg.busyTone.offDur="500" tone.chord.callProg.busyTone.onDur="500" tone.chord.callProg.busyTone.repeat="0">
+                <tone.chord.callProg.busyTone.freq tone.chord.callProg.busyTone.freq.1="425" tone.chord.callProg.busyTone.freq.2="0"></tone.chord.callProg.busyTone.freq>
+                <tone.chord.callProg.busyTone.level tone.chord.callProg.busyTone.level.1="-20" tone.chord.callProg.busyTone.level.2="-30"></tone.chord.callProg.busyTone.level>
+            </tone.chord.callProg.busyTone>
+            <tone.chord.callProg.dialTone tone.chord.callProg.dialTone.offDur="200" tone.chord.callProg.dialTone.onDur="200" tone.chord.callProg.dialTone.repeat="0">
+                <tone.chord.callProg.dialTone.freq tone.chord.callProg.dialTone.freq.1="425" tone.chord.callProg.dialTone.freq.2="0"></tone.chord.callProg.dialTone.freq>
+                <tone.chord.callProg.dialTone.level tone.chord.callProg.dialTone.level.1="-19" tone.chord.callProg.dialTone.level.2="-22"></tone.chord.callProg.dialTone.level>
+            </tone.chord.callProg.dialTone>
+            <tone.chord.callProg.ringback tone.chord.callProg.ringback.offDur="4000" tone.chord.callProg.ringback.onDur="1000" tone.chord.callProg.ringback.repeat="2">
+                <tone.chord.callProg.ringback.freq tone.chord.callProg.ringback.freq.1="425" tone.chord.callProg.ringback.freq.2="0"></tone.chord.callProg.ringback.freq>
+                <tone.chord.callProg.ringback.level tone.chord.callProg.ringback.level.1="-20" tone.chord.callProg.ringback.level.2="-20"></tone.chord.callProg.ringback.level>
+            </tone.chord.callProg.ringback>
+        </tone.chord.callProg>
+    </tone.chord>
+</tone>
+{elseif $progress_tones_region == 'UK'}
+<tone>
+    <tone.chord>
+        <tone.chord.callProg>
+            <tone.chord.callProg.busyTone tone.chord.callProg.busyTone.offDur="375" tone.chord.callProg.busyTone.onDur="375" tone.chord.callProg.busyTone.repeat="0">
+                <tone.chord.callProg.busyTone.freq tone.chord.callProg.busyTone.freq.1="400" tone.chord.callProg.busyTone.freq.2="0"></tone.chord.callProg.busyTone.freq>
+                <tone.chord.callProg.busyTone.level tone.chord.callProg.busyTone.level.1="-20" tone.chord.callProg.busyTone.level.2="-30"></tone.chord.callProg.busyTone.level>
+            </tone.chord.callProg.busyTone>
+            <tone.chord.callProg.reorder tone.chord.callProg.reorder.offDur="150" tone.chord.callProg.reorder.onDur="150" tone.chord.callProg.reorder.repeat="0">
+                <tone.chord.callProg.reorder.freq tone.chord.callProg.reorder.freq.1="400" tone.chord.callProg.reorder.freq.2="0"></tone.chord.callProg.reorder.freq>
+                <tone.chord.callProg.reorder.level tone.chord.callProg.reorder.level.1="-20" tone.chord.callProg.reorder.level.2="-30"></tone.chord.callProg.reorder.level>
+            </tone.chord.callProg.reorder>
+            <tone.chord.callProg.dialTone tone.chord.callProg.dialTone.offDur="0" tone.chord.callProg.dialTone.onDur="0" tone.chord.callProg.dialTone.repeat="0">
+                <tone.chord.callProg.dialTone.freq tone.chord.callProg.dialTone.freq.1="350" tone.chord.callProg.dialTone.freq.2="450"></tone.chord.callProg.dialTone.freq>
+                <tone.chord.callProg.dialTone.level tone.chord.callProg.dialTone.level.1="-19" tone.chord.callProg.dialTone.level.2="-22"></tone.chord.callProg.dialTone.level>
+            </tone.chord.callProg.dialTone>
+            <tone.chord.callProg.ringback tone.chord.callProg.ringback.offDur="200" tone.chord.callProg.ringback.onDur="400" tone.chord.callProg.ringback.repeat="2">
+                <tone.chord.callProg.ringback.freq tone.chord.callProg.ringback.freq.1="400" tone.chord.callProg.ringback.freq.2="450"></tone.chord.callProg.ringback.freq>
+                <tone.chord.callProg.ringback.level tone.chord.callProg.ringback.level.1="-20" tone.chord.callProg.ringback.level.2="-20"></tone.chord.callProg.ringback.level>
+            </tone.chord.callProg.ringback>
+            <tone.chord.callProg.stutterLong tone.chord.callProg.stutterLong.offDur="150" tone.chord.callProg.stutterLong.onDur="150" tone.chord.callProg.stutterLong.repeat="10">
+                <tone.chord.callProg.stutterLong.freq tone.chord.callProg.stutterLong.freq.1="350" tone.chord.callProg.stutterLong.freq.2="450"></tone.chord.callProg.stutterLong.freq>
+                <tone.chord.callProg.stutterLong.level tone.chord.callProg.stutterLong.level.1="-19" tone.chord.callProg.stutterLong.level.2="-22"></tone.chord.callProg.stutterLong.level>
+            </tone.chord.callProg.stutterLong>
+        </tone.chord.callProg>
+    </tone.chord>
+</tone>
+{elseif $progress_tones_region == 'US'}
+{/if}
