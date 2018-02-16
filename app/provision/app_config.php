@@ -438,5 +438,29 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "spa secure call No or Yes";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c471163a-12fa-11e8-b642-0ed5f89f718b";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "aastra_gmt_offset";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Aastra timezone offset in minutes (e.g. 300 = GMT-5 = Eastern Standard Time)";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c47117a2-12fa-11e8-b642-0ed5f89f718b";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "aastra_time_format";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Aastra clock format";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c47119aa-12fa-11e8-b642-0ed5f89f718b";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "aastra_date_format";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Aastra date format";
+		$y++;
 
 ?>
