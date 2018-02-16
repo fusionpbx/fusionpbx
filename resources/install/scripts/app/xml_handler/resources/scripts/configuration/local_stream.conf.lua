@@ -49,63 +49,77 @@
 			dbh:query(sql, function(row)
 
 				--combine the name, domain_name and the rate 
-				name = '';
-				if (row.domain_uuid ~= nil and string.len(row.domain_uuid) > 0) then
-					name = row.domain_name..'/';
-				end
-				name = name .. row.music_on_hold_name;
-				if (row.music_on_hold_rate ~= nil and #row.music_on_hold_rate > 0) then
-					name = name .. '/' .. row.music_on_hold_rate;
-				end
+					name = '';
+					if (row.domain_uuid ~= nil and string.len(row.domain_uuid) > 0) then
+						name = row.domain_name..'/';
+					end
+					name = name .. row.music_on_hold_name;
+					if (row.music_on_hold_rate ~= nil and #row.music_on_hold_rate > 0) then
+						name = name .. '/' .. row.music_on_hold_rate;
+					end
 
 				--replace the variable with the path to the sounds directory
-				music_on_hold_path = row.music_on_hold_path:gsub("$${sounds_dir}", sounds_dir);
+					music_on_hold_path = row.music_on_hold_path:gsub("$${sounds_dir}", sounds_dir);
 
 				--set the rate
-				rate = row.music_on_hold_rate;
-				if rate == '' then
-					rate = '48000';
-				end
+					rate = row.music_on_hold_rate;
+					if rate == '' then
+						rate = '48000';
+					end
 
 				--add the full path to the chime list
-				chime_list = row.music_on_hold_chime_list;
-				if (chime_list ~= nil) then
-					chime_array = explode(",", chime_list);
-					chime_list = "";
-					for k,v in pairs(chime_array) do
-						f = explode("/", v);
-						if (f[1] ~= nil and f[2] ~= nil and file_exists(sounds_dir.."/en/us/callie/"..f[1].."/"..rate.."/"..f[2])) then
-							chime_list = chime_list .. sounds_dir.."/en/us/callie/"..v;
-						else
-							chime_list = chime_list .. v;
+					chime_list = row.music_on_hold_chime_list;
+					if (chime_list ~= nil) then
+						chime_array = explode(",", chime_list);
+						chime_list = "";
+						for k,v in pairs(chime_array) do
+							f = explode("/", v);
+							if (f[1] ~= nil and f[2] ~= nil and file_exists(sounds_dir.."/en/us/callie/"..f[1].."/"..rate.."/"..f[2])) then
+								chime_list = chime_list .. sounds_dir.."/en/us/callie/"..v;
+							else
+								chime_list = chime_list .. v;
+							end
 						end
 					end
-				end
 
 				--set the default timer name to soft
-				if (row.music_on_hold_timer_name == nil or row.music_on_hold_timer_name == '') then
-					timer_name = "soft";
-				else
-					timer_name = row.music_on_hold_timer_name;
-				end
+					if (row.music_on_hold_timer_name == nil or row.music_on_hold_timer_name == '') then
+						timer_name = "soft";
+					else
+						timer_name = row.music_on_hold_timer_name;
+					end
 
+				--set the default channels to 1
+					if (row.music_on_hold_channels == nil or row.music_on_hold_channels == '') then
+						hold_channels = "1";
+					else
+						hold_channels = row.music_on_hold_channels;
+					end
+		
+				--set the default interval to 20
+					if (row.music_on_hold_interval == nil or row.music_on_hold_interval == '') then
+						hold_interval = "20";
+					else
+						hold_interval = row.music_on_hold_interval;
+					end
+		
 				--build the xml ]]..row.music_on_hold_name..[["
-				table.insert(xml, [[	<directory name="]]..name..[[" uuid="]]..row.music_on_hold_uuid..[[" path="]]..music_on_hold_path..[[">]]);
-				table.insert(xml, [[			<param name="rate" value="]]..rate..[["/>]]);
-				table.insert(xml, [[			<param name="shuffle" value="]]..row.music_on_hold_shuffle..[["/>]]);
-				table.insert(xml, [[			<param name="channels" value="1"/>]]);
-				table.insert(xml, [[			<param name="interval" value="20"/>]]);
-				table.insert(xml, [[			<param name="timer-name" value="]]..timer_name..[["/>]]);
-				if (chime_list ~= nil) then
-					table.insert(xml, [[			<param name="chime-list" value="]]..chime_list..[["/>]]);
-				end
-				if (row.music_on_hold_chime_freq ~= nil) then
-					table.insert(xml, [[			<param name="chime-freq" value="]]..row.music_on_hold_chime_freq..[["/>]]);
-				end
-				if (row.music_on_hold_chime_max ~= nil) then
-					table.insert(xml, [[			<param name="chime-max" value="]]..row.music_on_hold_chime_max..[["/>]]);
-				end
-				table.insert(xml, [[		</directory>]]);
+					table.insert(xml, [[	<directory name="]]..name..[[" uuid="]]..row.music_on_hold_uuid..[[" path="]]..music_on_hold_path..[[">]]);
+					table.insert(xml, [[			<param name="rate" value="]]..rate..[["/>]]);
+					table.insert(xml, [[			<param name="shuffle" value="]]..row.music_on_hold_shuffle..[["/>]]);
+					table.insert(xml, [[			<param name="channels" value="]]..hold_channels..[["/>]]);
+					table.insert(xml, [[			<param name="interval" value="]]..hold_interval..[["/>]]);
+					table.insert(xml, [[			<param name="timer-name" value="]]..timer_name..[["/>]]);
+					if (chime_list ~= nil) then
+						table.insert(xml, [[			<param name="chime-list" value="]]..chime_list..[["/>]]);
+					end
+					if (row.music_on_hold_chime_freq ~= nil) then
+						table.insert(xml, [[			<param name="chime-freq" value="]]..row.music_on_hold_chime_freq..[["/>]]);
+					end
+					if (row.music_on_hold_chime_max ~= nil) then
+						table.insert(xml, [[			<param name="chime-max" value="]]..row.music_on_hold_chime_max..[["/>]]);
+					end
+					table.insert(xml, [[		</directory>]]);
 
 			end)
 

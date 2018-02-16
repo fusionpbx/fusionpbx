@@ -30,24 +30,58 @@ include "root.php";
 //define the switch_music_on_hold class
 	class switch_music_on_hold {
 
-		public $domain_uuid;
+		private $music_list;
+		private $domain_uuid;
 		private $xml;
 		private $db;
 
-		public function __construct() {
+		public function __construct($domain_uuid) {
 			if (!$this->db) {
 				require_once "resources/classes/database.php";
 				$database = new database;
 				$database->connect();
 				$this->db = $database->db;
 			}
-			$this->domain_uuid = $_SESSION['domain_uuid'];
+			$this->domain_uuid = ( strlen($domain_uuid) > 0 ? $domain_uuid : $_SESSION['domain_uuid'] );
+			$this->music_list = $this->list_music();
 		}
 
 		public function __destruct() {
 			foreach ($this as $key => $value) {
 				unset($this->$key);
 			}
+		}
+
+		public function select_options($selected) {
+			//add multi-lingual support
+				$language = new text;
+				$text = $language->get();
+
+			//music on hold
+				if (count($this->music_list) > 0) {
+					$select .= "	<option value=''>\n";					
+					$options .= "	<optgroup label='".$text['label-music_on_hold']." - Global'>\n";
+					$previous_name = '';
+					foreach($this->music_list as $row) {
+						if ($previous_domain != $row['domain_name']) {
+							$options .= "	</optgroup>\n";
+							$options .= "	<optgroup label='".$text['label-music_on_hold']." - ".$row['domain_name']."'>\n";
+						}
+						if ($previous_name != $row['music_on_hold_name']) {
+							$name = $row['music_on_hold_name'];	
+							if (strlen($row['domain_uuid']) > 0) {
+								$name = $row['domain_name'].'/'.$name;
+							}
+							$options .= "		<option value='local_stream://".$name."' ".(($optionsed == "local_stream://".$name) ? 'selected="selected"' : null).">".$row['music_on_hold_name']."</option>\n";
+						}
+						$previous_name = $row['music_on_hold_name'];
+						$previous_domain = $row['domain_name'];
+					}
+					$options .= "	</optgroup>\n";
+				}
+
+			//return the options
+				return $options;
 		}
 
 		public function select($name, $selected, $options) {
@@ -59,37 +93,15 @@ include "root.php";
 				$select = "<select class='formfld' name='".$name."' id='".$name."' style='width: auto;'>\n";
 
 			//music on hold
-				$music_list = $this->get();
-				if (count($music_list) > 0) {
-					$select .= "	<option value=''>\n";
-					$select .= "	<optgroup label='".$text['label-music_on_hold']."'>\n";
-					$previous_name = '';
-					foreach($music_list as $row) {
-						if ($previous_name != $row['music_on_hold_name']) {
-							$name = '';
-							if (strlen($row['domain_uuid']) > 0) {
-								$name = $row['domain_name'].'/';	
-							}
-							$name .= $row['music_on_hold_name'];
-							$select .= "		<option value='local_stream://".$name."' ".(($selected == "local_stream://".$name) ? 'selected="selected"' : null).">".$row['music_on_hold_name']."</option>\n";
-						}
-						$previous_name = $row['music_on_hold_name'];
-					}
-					$select .= "	</optgroup>\n";
-				}
+				$select .= $this->select_options($selected);
+
 			//recordings
 				if (is_dir($_SERVER["PROJECT_ROOT"].'/app/recordings')) {
 					require_once "app/recordings/resources/classes/switch_recordings.php";
-					$recordings_c = new switch_recordings;
-					$recordings = $recordings_c->list_recordings();
-					if (sizeof($recordings) > 0) {
-						$select .= "	<optgroup label='".$text['label-recordings']."'>";
-						foreach($recordings as $recording_value => $recording_name){
-							$select .= "		<option value='".$recording_value."' ".(($selected == $recording_value) ? 'selected="selected"' : null).">".$recording_name."</option>\n";
-						}
-						$select .= "	</optgroup>\n";
-					}
+					$recordings = new switch_recordings;
+					$select .= $recordings->select_options($selected);
 				}
+
 			//add additional options
 				if (sizeof($options) > 0) {
 					$select .= "	<optgroup label='".$text['label-others']."'>";
@@ -102,20 +114,19 @@ include "root.php";
 		}
 
 		public function get() {
-			//add multi-lingual support
-				$language = new text;
-				$text = $language->get(null, 'app/music_on_hold');
+			return $this->list_music;
+		}
 
-			//get moh records, build array
-				$sql = "select ";
-				$sql .= "d.domain_name, m.* ";
-				$sql .= "from v_music_on_hold as m ";
-				$sql .= "left join v_domains as d ON d.domain_uuid = m.domain_uuid ";
-				$sql .= "where (m.domain_uuid = '".$this->domain_uuid."' or m.domain_uuid is null) ";
-				$sql .= "order by m.domain_uuid desc, music_on_hold_rate asc, music_on_hold_name asc";
-				$prep_statement = $this->db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				return $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		public function list_music() {
+			$sql = "select ";
+			$sql .= "d.domain_name, m.* ";
+			$sql .= "from v_music_on_hold as m ";
+			$sql .= "left join v_domains as d ON d.domain_uuid = m.domain_uuid ";
+			$sql .= "where (m.domain_uuid = '".$this->domain_uuid."' or m.domain_uuid is null) ";
+			$sql .= "order by m.domain_uuid desc, music_on_hold_rate asc, music_on_hold_name asc";
+			$prep_statement = $this->db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			return $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		}
 
 		public function reload() {
@@ -134,45 +145,28 @@ include "root.php";
 		}
 
 		public function xml() {
-			//build the list of categories
-				$music_on_hold_dir = $_SESSION['switch']['sounds']['dir'].'/music';
-			//default category (note: GLOB_BRACE doesn't work on some systems)
-				$array_1 = glob($music_on_hold_dir."/8000".$class_name.".php", GLOB_ONLYDIR);
-				$array_2 = glob($music_on_hold_dir."/16000".$class_name.".php", GLOB_ONLYDIR);
-				$array_3 = glob($music_on_hold_dir."/32000".$class_name.".php", GLOB_ONLYDIR);
-				$array_4 = glob($music_on_hold_dir."/48000".$class_name.".php", GLOB_ONLYDIR);
-				$array = array_merge((array)$array_1,(array)$array_2,(array)$array_3,(array)$array_4);
-				unset($array_1,$array_2,$array_3,$array_4);
-			//other categories
-				if (count($_SESSION['domains']) > 1) {
-					$array = array_merge($array, glob($music_on_hold_dir."/*/*/*", GLOB_ONLYDIR));
-				}
-				else {
-					$array = array_merge($array, glob($music_on_hold_dir."/*/*", GLOB_ONLYDIR));
-				}
-			//list the categories
+			//get the list of moh
 				$xml = "";
-				foreach($array as $moh_dir) {
-					//set the directory
-						$moh_dir = substr($moh_dir, strlen($music_on_hold_dir."/"));
-					//get and set the rate
-						$sub_array = explode("/", $moh_dir);
-						$moh_rate = end($sub_array);
-					//set the name
-						$moh_name = $moh_dir;
-						if ($moh_dir == $moh_rate) {
-							$moh_name = "default/$moh_rate";
+				if (count($this->music_list) > 0) {
+					foreach($this->music_list as $row) {
+						$name = $row['music_on_hold_name'];
+						if (strlen($row['domain_uuid']) > 0) {
+							$name = $row['domain_name'].'/'.$name;	
 						}
-					//build the xml
-						$xml .= "	<directory name=\"$moh_name\" path=\"\$\${sounds_dir}/music/$moh_dir\">\n";
-						$xml .= "		<param name=\"rate\" value=\"".$moh_rate."\"/>\n";
-						$xml .= "		<param name=\"shuffle\" value=\"true\"/>\n";
-						$xml .= "		<param name=\"channels\" value=\"1\"/>\n";
-						$xml .= "		<param name=\"interval\" value=\"20\"/>\n";
-						$xml .= "		<param name=\"timer-name\" value=\"soft\"/>\n";
+						$xml .= "	<directory name=\"$name/".$row['music_on_hold_rate']."\" path=\"\$\${sounds_dir}/music/$name/".$row['music_on_hold_rate']."\">\n";
+						$xml .= "		<param name=\"rate\" value=\"".$row['music_on_hold_rate']."\"/>\n";
+						$xml .= "		<param name=\"shuffle\" value=\"".$row['music_on_hold_shuffle']."\"/>\n";
+						$xml .= "		<param name=\"channels\" value=\"".( strlen($row['music_on_hold_channels']) > 0 ? $row['music_on_hold_channels'] : 1 )."\"/>\n";
+						$xml .= "		<param name=\"interval\" value=\"".( strlen($row['music_on_hold_interval']) > 0 ? $row['music_on_hold_interval'] : 20 )."\"/>\n";
+						$xml .= "		<param name=\"timer-name\" value=\"".( strlen($row['music_on_hold_timer_name']) > 0 ? $row['music_on_hold_timer_name'] : 'soft' )."\"/>\n";
+						( strlen($row['music_on_hold_chime_list']) > 0 ? $xml .= "		<param name=\"chime-list\" value=\"".$row['music_on_hold_chime_list']."\"/>\n" : null);
+						( strlen($row['music_on_hold_chime_freq']) > 0 ? $xml .= "		<param name=\"chime-freq\" value=\"".$row['music_on_hold_chime_freq']."\"/>\n" : null);
+						( strlen($row['music_on_hold_chime_max']) > 0 ? $xml .= "		<param name=\"chime-max\" value=\"".$row['music_on_hold_chime_max']."\"/>\n" : null);
 						$xml .= "	</directory>\n";
-						$this->xml = $xml;
+					}
 				}
+			// store the xml
+				$this->xml = $xml;
 		}
 
 		public function save() {

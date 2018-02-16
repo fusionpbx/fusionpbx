@@ -29,17 +29,19 @@ include "root.php";
 //define the switch_recordings class
 	class switch_recordings {
 
-		public $domain_uuid;
+		private $recordings_list;
+		private $domain_uuid;
 		private $db;
 
-		public function __construct() {
+		public function __construct($domain_uuid) {
 			if (!$this->db) {
 				require_once "resources/classes/database.php";
 				$database = new database;
 				$database->connect();
 				$this->db = $database->db;
 			}
-			$this->domain_uuid = $_SESSION['domain_uuid'];
+			$this->domain_uuid = ( strlen($domain_uuid) > 0 ? $domain_uuid : $_SESSION['domain_uuid'] );
+			$this->recordings_list = $this->list_recordings();
 		}
 
 		public function __destruct() {
@@ -59,6 +61,23 @@ include "root.php";
 			}
 			unset ($prep_statement);
 			return $recordings;
+		}
+
+		public function select_options($selected) {
+			//add multi-lingual support
+				$language = new text;
+				$text = $language->get();
+				
+			//get the recordings
+				if (sizeof($this->recordings_list) > 0) {
+					$options .= "	<optgroup label='".$text['label-recordings']."'>";
+					foreach($this->recordings_list as $recording_value => $recording_name){
+						$options .= "		<option value='".$recording_value."' ".(($optionsed == $recording_value) ? 'selected="selected"' : null).">".$recording_name."</option>\n";
+					}
+					$options .= "	</optgroup>\n";
+				}
+			//return the options
+				return $options;
 		}
 	
 	}
