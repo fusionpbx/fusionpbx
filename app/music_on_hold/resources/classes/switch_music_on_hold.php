@@ -57,6 +57,7 @@ include "root.php";
 
 			//start the select
 				$select = "<select class='formfld' name='".$name."' id='".$name."' style='width: auto;'>\n";
+				$select .= "	<option value=''>\n";
 
 			//music on hold
 				$music_list = $this->get();
