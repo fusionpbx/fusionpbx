@@ -2535,4 +2535,43 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
 
+		$y++;
+		$vendors[$y]['uuid'] = "d0449b9e-4f03-4931-a808-30ece1dffcc3";
+		$vendors[$y]['name'] = "htek";
+		$z=0;
+		$vendors[$y]['functions'][$z]['uuid'] = "6aa17aa6-2f8f-4a86-8ae4-78a621501b38";
+		$vendors[$y]['functions'][$z]['label'] = "label-line";
+		$vendors[$y]['functions'][$z]['name'] = "line";
+		$vendors[$y]['functions'][$z]['value'] = "1";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "608da213-f74a-4c75-bb25-3b7359e5c6b7";
+		$vendors[$y]['functions'][$z]['label'] = "label-speed_dial";
+		$vendors[$y]['functions'][$z]['name'] = "speed_dial";
+		$vendors[$y]['functions'][$z]['value'] = "2";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "ffba5c6b-b179-461f-baf0-9beb8260e9ad";
+		$vendors[$y]['functions'][$z]['label'] = "label-blf";
+		$vendors[$y]['functions'][$z]['name'] = "blf";
+		$vendors[$y]['functions'][$z]['value'] = "3";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "717d72e4-f619-41ec-a063-60b09dcd2326";
+		$vendors[$y]['functions'][$z]['label'] = "label-blf_list";
+		$vendors[$y]['functions'][$z]['name'] = "blf_list";
+		$vendors[$y]['functions'][$z]['value'] = "4";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "6e4e4337-c1b2-499a-846a-eebfcc2f1689";
+		$vendors[$y]['functions'][$z]['label'] = "label-voicemail";
+		$vendors[$y]['functions'][$z]['name'] = "voicemail";
+		$vendors[$y]['functions'][$z]['value'] = "5";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+
 ?>
