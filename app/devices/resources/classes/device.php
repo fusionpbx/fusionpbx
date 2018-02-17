@@ -113,6 +113,12 @@ include "root.php";
 				case "00268B":
 					$device_vendor = "escene";
 					break;
+				case "001fc1":
+					$device_vendor = "htek";
+					break;
+				case "0C383E":
+					$device_vendor = "fanvil";
+					break;
 				default:
 					$device_vendor = "";
 				}
@@ -159,6 +165,12 @@ include "root.php";
 					}
 					if (preg_match('/^.*?panasonic.*$/i', $agent)) {
 						return "panasonic";
+					}
+					if (preg_match('/^.*?htek.*$/i', $agent)) {
+						return "htek";
+					}
+					if (preg_replace('/^.*?(fanvil).*$/i', '$1', $agent) == "fanvil") {
+						return "fanvil";
 					}
 					// unknown vendor
 					return "";
