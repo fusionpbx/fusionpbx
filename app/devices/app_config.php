@@ -2795,18 +2795,19 @@
 		$vendors[$y]['uuid'] = "cb966a64-34b8-4825-b05a-f243adc0014f";
 		$vendors[$y]['name'] = "fanvil";
 		$z=0;
-		//$vendors[$y]['functions'][$z]['uuid'] = "3e6def66-5f55-4180-aec5-9d631ee9750e";
-		//$vendors[$y]['functions'][$z]['label'] = "label-zzz";
-		//$vendors[$y]['functions'][$z]['name'] = "zzz";
-		//$vendors[$y]['functions'][$z]['value'] = "zzz";
-		//$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
-		//$vendors[$y]['functions'][$z]['groups'][] = "admin";
-		//$z++;
-		//$vendors[$y]['functions'][$z]['uuid'] = "c445dae8-e483-400c-ace5-d2b70cdc3eb4";
-		//$vendors[$y]['functions'][$z]['label'] = "label-zzz";
-		//$vendors[$y]['functions'][$z]['name'] = "zzz";
-		//$vendors[$y]['functions'][$z]['value'] = "zzz";
-		//$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
-		//$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$vendors[$y]['functions'][$z]['uuid'] = "1050ef7d-219f-4a7d-9944-2b3e7a949c43";
+		$vendors[$y]['functions'][$z]['label'] = "label-line";
+		$vendors[$y]['functions'][$z]['name'] = "line";
+		$vendors[$y]['functions'][$z]['value'] = "1";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "9f67c457-f04d-45a5-bf4c-cbf11fbc4340";
+		$vendors[$y]['functions'][$z]['label'] = "label-voicemail";
+		$vendors[$y]['functions'][$z]['name'] = "voicemail";
+		$vendors[$y]['functions'][$z]['value'] = "2";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
 
 ?>
