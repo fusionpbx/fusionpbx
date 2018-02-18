@@ -35,6 +35,30 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "-20";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Time zone ranges ";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0747ed84-82f2-491d-98db-0812dd8df469";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_time_zone_name";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "UTC-5";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Time zone name example United States-Eastern Time";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0747ed84-82f2-491d-98db-0812dd8df469";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_location";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "4";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Used with time zone and time zone name";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "322690ee-43a1-4aa0-92f8-c9b1f2f73d60";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_enable_dst";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "1=enable 0=disable";
 
 
 ?>
