@@ -2808,6 +2808,6 @@
 		$vendors[$y]['functions'][$z]['value'] = "2";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
-		$z++;
+		
 
 ?>
