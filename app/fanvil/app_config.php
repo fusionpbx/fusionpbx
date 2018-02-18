@@ -63,10 +63,10 @@
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9d7a9b40-a01c-4687-aa25-74d92350628a";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_greeting";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "Text";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "FusionPBX";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Name at top left of screen";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Name at top left of screen 0~12 characters";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1c160cbf-6e6c-496f-8b3f-b066decc3b1e";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
