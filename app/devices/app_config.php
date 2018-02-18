@@ -2808,6 +2808,47 @@
 		$vendors[$y]['functions'][$z]['value'] = "2";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
-		
+		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "392bfdeb-cae1-4829-a704-d75bcd3fb2ab";
+		$vendors[$y]['functions'][$z]['label'] = "label-none";
+		$vendors[$y]['functions'][$z]['name'] = "none";
+		$vendors[$y]['functions'][$z]['value'] = "3";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "dcb10855-c3cf-4dd6-8ef6-8acc5f22df60";
+		$vendors[$y]['functions'][$z]['label'] = "label-dtmf";
+		$vendors[$y]['functions'][$z]['name'] = "dtmf";
+		$vendors[$y]['functions'][$z]['value'] = "4";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "000882b9-3c02-4e63-b235-13e0745bd230";
+		$vendors[$y]['functions'][$z]['label'] = "label-blf_list";
+		$vendors[$y]['functions'][$z]['name'] = "blf list";
+		$vendors[$y]['functions'][$z]['value'] = "5";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "8b42f992-33b8-4320-9b0f-9d904acfa088";
+		$vendors[$y]['functions'][$z]['label'] = "label-url";
+		$vendors[$y]['functions'][$z]['name'] = "url";
+		$vendors[$y]['functions'][$z]['value'] = "6";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "335176a5-f06e-4ccf-827e-1f65e839b6f3";
+		$vendors[$y]['functions'][$z]['label'] = "label-multicast";
+		$vendors[$y]['functions'][$z]['name'] = "multicast";
+		$vendors[$y]['functions'][$z]['value'] = "7";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "5fc20c48-e619-4671-86d1-3fa88a83d88c";
+		$vendors[$y]['functions'][$z]['label'] = "label-intercom";
+		$vendors[$y]['functions'][$z]['name'] = "intercom";
+		$vendors[$y]['functions'][$z]['value'] = "8";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 
 ?>
