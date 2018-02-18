@@ -608,11 +608,11 @@
 		$extension_uuid = $_GET["id"];
 		$sql = "select * from v_extensions ";
 		$sql .= "where extension_uuid = '".check_str($extension_uuid)."' ";
-		$sql .= "and domain_uuid = '".check_str($domain_uuid)."' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
+			$domain_uuid = $row["domain_uuid"];
 			$extension = $row["extension"];
 			$number_alias = $row["number_alias"];
 			$password = $row["password"];
