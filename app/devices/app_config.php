@@ -2825,7 +2825,7 @@
 		$z++;
 		$vendors[$y]['functions'][$z]['uuid'] = "000882b9-3c02-4e63-b235-13e0745bd230";
 		$vendors[$y]['functions'][$z]['label'] = "label-blf_list";
-		$vendors[$y]['functions'][$z]['name'] = "BLF List";
+		$vendors[$y]['functions'][$z]['name'] = "BLF_List";
 		$vendors[$y]['functions'][$z]['value'] = "5";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
