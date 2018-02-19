@@ -140,8 +140,7 @@
 			$user_uuid = $_REQUEST["delete_uuid"];
 		//delete the group from the users
 			$sql = "delete from v_extension_users ";
-			$sql .= "where domain_uuid = '".check_str($_SESSION['domain_uuid'])."' ";
-			$sql .= "and extension_uuid = '".check_str($extension_uuid)."' ";
+			$sql .= "where extension_uuid = '".check_str($extension_uuid)."' ";
 			$sql .= "and user_uuid = '".check_str($user_uuid)."' ";
 			$db->exec(check_sql($sql));
 	}
@@ -150,12 +149,10 @@
 	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/devices')) {
 		if ($_REQUEST["delete_type"] == "device_line" && strlen($_REQUEST["delete_uuid"]) > 0 && permission_exists("extension_delete")) {
 			//set the variables
-				$extension_uuid = $_REQUEST["id"];
 				$device_line_uuid = $_REQUEST["delete_uuid"];
 			//delete device_line
 				$sql = "delete from v_device_lines ";
-				$sql .= "where domain_uuid = '".check_str($_SESSION['domain_uuid'])."' ";
-				$sql .= "and device_line_uuid = '".check_str($device_line_uuid)."' ";
+				$sql .= "where device_line_uuid = '".check_str($device_line_uuid)."' ";
 				$db->exec(check_sql($sql));
 				unset($sql);
 		}
@@ -384,7 +381,7 @@
 										//get the voicemail_uuid
 											$sql = "select voicemail_uuid from v_voicemails ";
 											$sql .= "where voicemail_id = '".check_str($voicemail_id)."' ";
-											$sql .= "and domain_uuid = '".check_str($_SESSION["domain_uuid"])."' ";
+											$sql .= "and domain_uuid = '".check_str($domain_uuid)."' ";
 											$prep_statement = $db->prepare(check_sql($sql));
 											$prep_statement->execute();
 											$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
