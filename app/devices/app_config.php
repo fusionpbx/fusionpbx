@@ -771,7 +771,7 @@
 		$z++;
 		$vendors[$y]['functions'][$z]['uuid'] = "7384b1f7-46d1-4b36-a8c5-3f50c845b62c";
 		$vendors[$y]['functions'][$z]['label'] = "label-conference";
-		$vendors[$y]['functions'][$z]['name'] = "Conference";
+		$vendors[$y]['functions'][$z]['name'] = "conference";
 		$vendors[$y]['functions'][$z]['value'] = "1";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
@@ -2164,7 +2164,7 @@
 		$z++;
 		$vendors[$y]['functions'][$z]['uuid'] = "668da944-3e66-4010-818a-74f88c476778";
 		$vendors[$y]['functions'][$z]['label'] = "label-conference";
-		$vendors[$y]['functions'][$z]['name'] = "Conference";
+		$vendors[$y]['functions'][$z]['name'] = "conference";
 		$vendors[$y]['functions'][$z]['value'] = "17";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
@@ -2404,7 +2404,7 @@
 		$vendors[$y]['functions'][$z]['uuid'] = "b1135d34-cc02-4097-a0c4-67dfa4821935";
 		$vendors[$y]['functions'][$z]['label'] = "label-conference";
 		$vendors[$y]['functions'][$z]['name'] = "conference";
-		$vendors[$y]['functions'][$z]['value'] = "Conference";
+		$vendors[$y]['functions'][$z]['value'] = "conference";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
@@ -2653,7 +2653,7 @@
 		$z++;
 		$vendors[$y]['functions'][$z]['uuid'] = "bc92fa00-bf86-4d92-9cea-498e5d732929";
 		$vendors[$y]['functions'][$z]['label'] = "label-conference";
-		$vendors[$y]['functions'][$z]['name'] = "Conference";
+		$vendors[$y]['functions'][$z]['name'] = "conference";
 		$vendors[$y]['functions'][$z]['value'] = "17";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
