@@ -771,7 +771,7 @@
 		$z++;
 		$vendors[$y]['functions'][$z]['uuid'] = "7384b1f7-46d1-4b36-a8c5-3f50c845b62c";
 		$vendors[$y]['functions'][$z]['label'] = "label-conference";
-		$vendors[$y]['functions'][$z]['name'] = "conference";
+		$vendors[$y]['functions'][$z]['name'] = "Conference";
 		$vendors[$y]['functions'][$z]['value'] = "1";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
@@ -2825,7 +2825,7 @@
 		$z++;
 		$vendors[$y]['functions'][$z]['uuid'] = "000882b9-3c02-4e63-b235-13e0745bd230";
 		$vendors[$y]['functions'][$z]['label'] = "label-blf_list";
-		$vendors[$y]['functions'][$z]['name'] = "blf list";
+		$vendors[$y]['functions'][$z]['name'] = "BLF List";
 		$vendors[$y]['functions'][$z]['value'] = "5";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
