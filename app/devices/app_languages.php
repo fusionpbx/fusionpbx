@@ -1261,6 +1261,26 @@ $text['label-multicast_page']['ru-ru'] = "Широковещательное о�
 $text['label-multicast_page']['sv-se'] = "Muticast Sida";
 $text['label-multicast_page']['uk-ua'] = "";
 
+$text['label-multicast']['en-us'] = "Multicast";
+$text['label-multicast']['ar-eg'] = "";
+$text['label-multicast']['de-at'] = "Multicast"; //copied from de-de
+$text['label-multicast']['de-ch'] = "Multicast"; //copied from de-de
+$text['label-multicast']['de-de'] = "Multicast";
+$text['label-multicast']['es-cl'] = "Multicast";
+$text['label-multicast']['es-mx'] = "Multicast"; //copied from es-cl
+$text['label-multicast']['fr-ca'] = "multicast"; //copied from fr-fr
+$text['label-multicast']['fr-fr'] = "multicast";
+$text['label-multicast']['he-il'] = "";
+$text['label-multicast']['it-it'] = "Multicast";
+$text['label-multicast']['nl-nl'] = "";
+$text['label-multicast']['pl-pl'] = "Multicast Page ";
+$text['label-multicast']['pt-br'] = "multi-cast";
+$text['label-multicast']['pt-pt'] = "multicast";
+$text['label-multicast']['ro-ro'] = "";
+$text['label-multicast']['ru-ru'] = "Широковещательное";
+$text['label-multicast']['sv-se'] = "Muticast";
+$text['label-multicast']['uk-ua'] = "";
+
 $text['label-menu']['en-us'] = "Menu";
 $text['label-menu']['ar-eg'] = "القائمة";
 $text['label-menu']['de-at'] = "Menü"; //copied from de-de
