@@ -557,7 +557,7 @@ $text['label-speed_dial']['pl-pl'] = "";
 $text['label-speed_dial']['pt-br'] = "";
 $text['label-speed_dial']['pt-pt'] = "";
 $text['label-speed_dial']['ro-ro'] = "";
-$text['label-speed_dial']['ru-ru'] = "";
+$text['label-speed_dial']['ru-ru'] = "Быстрый набор";
 $text['label-speed_dial']['sv-se'] = "";
 $text['label-speed_dial']['uk-ua'] = "";
 
@@ -1557,7 +1557,7 @@ $text['label-hot_desking']['pl-pl'] = "Hot Desking ";
 $text['label-hot_desking']['pt-br'] = "Hot Desking"; //copied from pt-pt
 $text['label-hot_desking']['pt-pt'] = "Hot Desking";
 $text['label-hot_desking']['ro-ro'] = "";
-$text['label-hot_desking']['ru-ru'] = "Горячие столы";
+$text['label-hot_desking']['ru-ru'] = "Hot Desking";
 $text['label-hot_desking']['sv-se'] = "Hot Desking";
 $text['label-hot_desking']['uk-ua'] = "";
 
@@ -1577,7 +1577,7 @@ $text['label-hold']['pl-pl'] = "";
 $text['label-hold']['pt-br'] = "";
 $text['label-hold']['pt-pt'] = "";
 $text['label-hold']['ro-ro'] = "";
-$text['label-hold']['ru-ru'] = "";
+$text['label-hold']['ru-ru'] = "Удержание";
 $text['label-hold']['sv-se'] = "";
 $text['label-hold']['uk-ua'] = "";
 
@@ -1617,7 +1617,7 @@ $text['label-group_pickup']['pl-pl'] = "Przejmowanie połączeń (Group Pickup)"
 $text['label-group_pickup']['pt-br'] = "Grupo de captura"; //copied from pt-pt
 $text['label-group_pickup']['pt-pt'] = "Grupo de captura";
 $text['label-group_pickup']['ro-ro'] = "";
-$text['label-group_pickup']['ru-ru'] = "Группа перехвата";
+$text['label-group_pickup']['ru-ru'] = "Group Pickup";
 $text['label-group_pickup']['sv-se'] = "Plocka Grupp";
 $text['label-group_pickup']['uk-ua'] = "";
 
@@ -1637,7 +1637,7 @@ $text['label-group_listening']['pl-pl'] = "Przejmowanie połączeń (Group liste
 $text['label-group_listening']['pt-br'] = "Grupo de captura"; //copied from pt-pt
 $text['label-group_listening']['pt-pt'] = "Grupo de captura";
 $text['label-group_listening']['ro-ro'] = "";
-$text['label-group_listening']['ru-ru'] = "Группа перехвата";
+$text['label-group_listening']['ru-ru'] = "Group Listening";
 $text['label-group_listening']['sv-se'] = "Plocka Grupp";
 $text['label-group_listening']['uk-ua'] = "";
 
@@ -1657,7 +1657,7 @@ $text['label-call_forward']['pl-pl'] = "";
 $text['label-call_forward']['pt-br'] = "";
 $text['label-call_forward']['pt-pt'] = "";
 $text['label-call_forward']['ro-ro'] = "";
-$text['label-call_forward']['ru-ru'] = "";
+$text['label-call_forward']['ru-ru'] = "Call Forward";
 $text['label-call_forward']['sv-se'] = "";
 $text['label-call_forward']['uk-ua'] = "";
 
@@ -1697,7 +1697,7 @@ $text['label-empty']['pl-pl'] = "";
 $text['label-empty']['pt-br'] = "";
 $text['label-empty']['pt-pt'] = "";
 $text['label-empty']['ro-ro'] = "";
-$text['label-empty']['ru-ru'] = "Empty";
+$text['label-empty']['ru-ru'] = "Пусто";
 $text['label-empty']['sv-se'] = "Tom";
 $text['label-empty']['uk-ua'] = "";
 
@@ -1717,7 +1717,7 @@ $text['label-filter']['pl-pl'] = "";
 $text['label-filter']['pt-br'] = "";
 $text['label-filter']['pt-pt'] = "";
 $text['label-filter']['ro-ro'] = "";
-$text['label-filter']['ru-ru'] = "Filter";
+$text['label-filter']['ru-ru'] = "Фильтр";
 $text['label-filter']['sv-se'] = "Filter";
 $text['label-filter']['uk-ua'] = "";
 
@@ -2037,7 +2037,7 @@ $text['label-extension']['pl-pl'] = "Numer wewnętrzny";
 $text['label-extension']['pt-br'] = "Ramal";
 $text['label-extension']['pt-pt'] = "Extensõe";
 $text['label-extension']['ro-ro'] = "";
-$text['label-extension']['ru-ru'] = "Внутренний номер";
+$text['label-extension']['ru-ru'] = "Extension";
 $text['label-extension']['sv-se'] = "Anknytning";
 $text['label-extension']['uk-ua'] = "Розширення (Extention)";
 
@@ -2617,7 +2617,7 @@ $text['label-device_key_extension']['pl-pl'] = "Numer wewnętrzny";
 $text['label-device_key_extension']['pt-br'] = "Extensão"; //copied from pt-pt
 $text['label-device_key_extension']['pt-pt'] = "Extensão";
 $text['label-device_key_extension']['ro-ro'] = "";
-$text['label-device_key_extension']['ru-ru'] = "Внутренний номер";
+$text['label-device_key_extension']['ru-ru'] = "Extension";
 $text['label-device_key_extension']['sv-se'] = "Anknytning";
 $text['label-device_key_extension']['uk-ua'] = "Розширення";
 
@@ -2737,7 +2737,7 @@ $text['label-conference']['pl-pl'] = "";
 $text['label-conference']['pt-br'] = "";
 $text['label-conference']['pt-pt'] = "";
 $text['label-conference']['ro-ro'] = "";
-$text['label-conference']['ru-ru'] = "";
+$text['label-conference']['ru-ru'] = "Конференция";
 $text['label-conference']['sv-se'] = "";
 $text['label-conference']['uk-ua'] = "";
 
@@ -3097,7 +3097,7 @@ $text['label-direct_pickup']['pl-pl'] = "";
 $text['label-direct_pickup']['pt-br'] = ""; 
 $text['label-direct_pickup']['pt-pt'] = "";
 $text['label-direct_pickup']['ro-ro'] = "";
-$text['label-direct_pickup']['ru-ru'] = "";
+$text['label-direct_pickup']['ru-ru'] = "Direct Pickup";
 $text['label-direct_pickup']['sv-se'] = "";
 $text['label-direct_pickup']['uk-ua'] = "";
 
@@ -3597,7 +3597,7 @@ $text['label-block_anonymous_call']['pl-pl'] = "";
 $text['label-block_anonymous_call']['pt-br'] = "";
 $text['label-block_anonymous_call']['pt-pt'] = "";
 $text['label-block_anonymous_call']['ro-ro'] = "";
-$text['label-block_anonymous_call']['ru-ru'] = "";
+$text['label-block_anonymous_call']['ru-ru'] = "Блокировать неизвестные вызовы";
 $text['label-block_anonymous_call']['sv-se'] = "";
 $text['label-block_anonymous_call']['uk-ua'] = "";
 
@@ -3617,7 +3617,7 @@ $text['label-block_caller_id']['pl-pl'] = "";
 $text['label-block_caller_id']['pt-br'] = "";
 $text['label-block_caller_id']['pt-pt'] = "";
 $text['label-block_caller_id']['ro-ro'] = "";
-$text['label-block_caller_id']['ru-ru'] = "";
+$text['label-block_caller_id']['ru-ru'] = "Блокировать по Caller ID";
 $text['label-block_caller_id']['sv-se'] = "";
 $text['label-block_caller_id']['uk-ua'] = "";
 
@@ -3737,7 +3737,7 @@ $text['label-do_not_disturb']['pl-pl'] = "";
 $text['label-do_not_disturb']['pt-br'] = "";
 $text['label-do_not_disturb']['pt-pt'] = "";
 $text['label-do_not_disturb']['ro-ro'] = "";
-$text['label-do_not_disturb']['ru-ru'] = "";
+$text['label-do_not_disturb']['ru-ru'] = "Не беспокоить";
 $text['label-do_not_disturb']['sv-se'] = "";
 $text['label-do_not_disturb']['uk-ua'] = "";
 
@@ -3757,7 +3757,7 @@ $text['label-do_not_ring']['pl-pl'] = "";
 $text['label-do_not_ring']['pt-br'] = "";
 $text['label-do_not_ring']['pt-pt'] = "";
 $text['label-do_not_ring']['ro-ro'] = "";
-$text['label-do_not_ring']['ru-ru'] = "";
+$text['label-do_not_ring']['ru-ru'] = "Не вызывать";
 $text['label-do_not_ring']['sv-se'] = "";
 $text['label-do_not_ring']['uk-ua'] = "";
 
@@ -3837,7 +3837,7 @@ $text['label-line_monitor']['pl-pl'] = "";
 $text['label-line_monitor']['pt-br'] = "";
 $text['label-line_monitor']['pt-pt'] = "";
 $text['label-line_monitor']['ro-ro'] = "";
-$text['label-line_monitor']['ru-ru'] = "";
+$text['label-line_monitor']['ru-ru'] = "Монитор линии";
 $text['label-line_monitor']['sv-se'] = "";
 $text['label-line_monitor']['uk-ua'] = "";
 
@@ -3857,7 +3857,7 @@ $text['label-next_tab']['pl-pl'] = "";
 $text['label-next_tab']['pt-br'] = "";
 $text['label-next_tab']['pt-pt'] = "";
 $text['label-next_tab']['ro-ro'] = "";
-$text['label-next_tab']['ru-ru'] = "";
+$text['label-next_tab']['ru-ru'] = "След.Вкладка";
 $text['label-next_tab']['sv-se'] = "";
 $text['label-next_tab']['uk-ua'] = "";
 
@@ -3877,7 +3877,7 @@ $text['label-message_status']['pl-pl'] = "";
 $text['label-message_status']['pt-br'] = "";
 $text['label-message_status']['pt-pt'] = "";
 $text['label-message_status']['ro-ro'] = "";
-$text['label-message_status']['ru-ru'] = "";
+$text['label-message_status']['ru-ru'] = "Статус сообщения";
 $text['label-message_status']['sv-se'] = "";
 $text['label-message_status']['uk-ua'] = "";
 
@@ -3897,7 +3897,7 @@ $text['label-page_group_1']['pl-pl'] = "";
 $text['label-page_group_1']['pt-br'] = "";
 $text['label-page_group_1']['pt-pt'] = "";
 $text['label-page_group_1']['ro-ro'] = "";
-$text['label-page_group_1']['ru-ru'] = "";
+$text['label-page_group_1']['ru-ru'] = "Страница группы 1";
 $text['label-page_group_1']['sv-se'] = "";
 $text['label-page_group_1']['uk-ua'] = "";
 
@@ -3917,7 +3917,7 @@ $text['label-page_group_2']['pl-pl'] = "";
 $text['label-page_group_2']['pt-br'] = "";
 $text['label-page_group_2']['pt-pt'] = "";
 $text['label-page_group_2']['ro-ro'] = "";
-$text['label-page_group_2']['ru-ru'] = "";
+$text['label-page_group_2']['ru-ru'] = "Страница группы 2";
 $text['label-page_group_2']['sv-se'] = "";
 $text['label-page_group_2']['uk-ua'] = "";
 
@@ -3957,7 +3957,7 @@ $text['label-security_class']['pl-pl'] = "";
 $text['label-security_class']['pt-br'] = "";
 $text['label-security_class']['pt-pt'] = "";
 $text['label-security_class']['ro-ro'] = "";
-$text['label-security_class']['ru-ru'] = "";
+$text['label-security_class']['ru-ru'] = "Класс безопасности";
 $text['label-security_class']['sv-se'] = "";
 $text['label-security_class']['uk-ua'] = "";
 
@@ -3977,7 +3977,7 @@ $text['label-add_to_conference']['pl-pl'] = "";
 $text['label-add_to_conference']['pt-br'] = "";
 $text['label-add_to_conference']['pt-pt'] = "";
 $text['label-add_to_conference']['ro-ro'] = "";
-$text['label-add_to_conference']['ru-ru'] = "";
+$text['label-add_to_conference']['ru-ru'] = "Добавить в концеренцию";
 $text['label-add_to_conference']['sv-se'] = "";
 $text['label-add_to_conference']['uk-ua'] = "";
 
