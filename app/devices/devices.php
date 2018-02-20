@@ -174,9 +174,6 @@
 	echo "		</td>\n";
 	echo "		<td align='right' nowrap='nowrap' valign='top'>\n";
 	echo "			<form method='get' action=''>\n";
-	if (if_group("superadmin")) {
-		echo "				<input type='button' class='btn' style='margin-right: 15px;' value='".$text['button-export']."' onclick=\"window.location.href='device_download.php'\">\n";
-	}
 	if (permission_exists('device_all')) {
 		if ($_GET['show'] == 'all') {
 			echo "	<input type='hidden' name='show' value='all'>";
@@ -193,6 +190,9 @@
 	}
 	if (permission_exists('device_imports')) {
 		echo 				"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='/app/device_imports/device_imports.php'\" value='".$text['button-import']."'>\n";
+	}
+	if (if_group("superadmin")) {
+		echo "				<input type='button' class='btn' style='margin-right: 15px;' value='".$text['button-export']."' onclick=\"window.location.href='device_download.php'\">\n";
 	}
 	echo "			<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
 	echo "			<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
