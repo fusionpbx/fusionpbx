@@ -2164,6 +2164,26 @@ $text['label-recordings']['sv-se'] = "Inspelningar";
 $text['label-recordings']['uk-ua'] = "записи";
 $text['label-recordings']['tr-tr'] = "Kayıtlar";
 
+$text['label-streams']['en-us'] = 'Streams';
+$text['label-streams']['ar-eg'] = '';
+$text['label-streams']['de-at'] = '';
+$text['label-streams']['de-ch'] = '';
+$text['label-streams']['de-de'] = '';
+$text['label-streams']['es-cl'] = '';
+$text['label-streams']['es-mx'] = '';
+$text['label-streams']['fr-ca'] = '';
+$text['label-streams']['fr-fr'] = '';
+$text['label-streams']['he-il'] = '';
+$text['label-streams']['it-it'] = '';
+$text['label-streams']['nl-nl'] = '';
+$text['label-streams']['pl-pl'] = '';
+$text['label-streams']['pt-br'] = '';
+$text['label-streams']['pt-pt'] = '';
+$text['label-streams']['ro-ro'] = '';
+$text['label-streams']['ru-ru'] = '';
+$text['label-streams']['sv-se'] = '';
+$text['label-streams']['uk-ua'] = '';
+
 $text['label-default']['en-us'] = "Default";
 $text['label-default']['ar-eg'] = "בְּרִירַת מֶחדָל";
 $text['label-default']['de-at'] = "Standard"; //copied from de-de
