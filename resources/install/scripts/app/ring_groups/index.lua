@@ -418,7 +418,7 @@ local log = require "resources.functions.log".ring_group
 				--setup the delimiter
 					delimiter = ",";
 					if (ring_group_strategy == "rollover") then
-						delimiter = "|";
+						delimiter = ",";
 					end
 					if (ring_group_strategy == "sequence") then
 						delimiter = "|";
