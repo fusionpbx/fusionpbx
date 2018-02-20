@@ -2037,7 +2037,7 @@ $text['label-extension']['pl-pl'] = "Numer wewnętrzny";
 $text['label-extension']['pt-br'] = "Ramal";
 $text['label-extension']['pt-pt'] = "Extensõe";
 $text['label-extension']['ro-ro'] = "";
-$text['label-extension']['ru-ru'] = "Extension";
+$text['label-extension']['ru-ru'] = "Внутренний номер";
 $text['label-extension']['sv-se'] = "Anknytning";
 $text['label-extension']['uk-ua'] = "Розширення (Extention)";
 
@@ -2617,7 +2617,7 @@ $text['label-device_key_extension']['pl-pl'] = "Numer wewnętrzny";
 $text['label-device_key_extension']['pt-br'] = "Extensão"; //copied from pt-pt
 $text['label-device_key_extension']['pt-pt'] = "Extensão";
 $text['label-device_key_extension']['ro-ro'] = "";
-$text['label-device_key_extension']['ru-ru'] = "Extension";
+$text['label-device_key_extension']['ru-ru'] = "Внутренний номер";
 $text['label-device_key_extension']['sv-se'] = "Anknytning";
 $text['label-device_key_extension']['uk-ua'] = "Розширення";
 
