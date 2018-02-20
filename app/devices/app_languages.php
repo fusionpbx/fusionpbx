@@ -1657,7 +1657,7 @@ $text['label-call_forward']['pl-pl'] = "";
 $text['label-call_forward']['pt-br'] = "";
 $text['label-call_forward']['pt-pt'] = "";
 $text['label-call_forward']['ro-ro'] = "";
-$text['label-call_forward']['ru-ru'] = "Call Forward";
+$text['label-call_forward']['ru-ru'] = "Переадресация вызова";
 $text['label-call_forward']['sv-se'] = "";
 $text['label-call_forward']['uk-ua'] = "";
 
@@ -3037,7 +3037,7 @@ $text['label-micmute']['pl-pl'] = "MicMute";
 $text['label-micmute']['pt-br'] = "MicMute"; //copied from pt-pt
 $text['label-micmute']['pt-pt'] = "MicMute";
 $text['label-micmute']['ro-ro'] = "";
-$text['label-micmute']['ru-ru'] = "MicMute";
+$text['label-micmute']['ru-ru'] = "Микр.выкл";
 $text['label-micmute']['sv-se'] = "MicMute";
 $text['label-micmute']['uk-ua'] = "MicMute";
 
@@ -3537,7 +3537,7 @@ $text['label-auto_answer_intercom']['pl-pl'] = "";
 $text['label-auto_answer_intercom']['pt-br'] = "";
 $text['label-auto_answer_intercom']['pt-pt'] = "";
 $text['label-auto_answer_intercom']['ro-ro'] = "";
-$text['label-auto_answer_intercom']['ru-ru'] = "";
+$text['label-auto_answer_intercom']['ru-ru'] = "Автоответ для внутренней связи";
 $text['label-auto_answer_intercom']['sv-se'] = "";
 $text['label-auto_answer_intercom']['uk-ua'] = "";
 
@@ -3697,7 +3697,7 @@ $text['label-call_waiting']['pl-pl'] = "";
 $text['label-call_waiting']['pt-br'] = "";
 $text['label-call_waiting']['pt-pt'] = "";
 $text['label-call_waiting']['ro-ro'] = "";
-$text['label-call_waiting']['ru-ru'] = "";
+$text['label-call_waiting']['ru-ru'] = "Ожидание вызова";
 $text['label-call_waiting']['sv-se'] = "";
 $text['label-call_waiting']['uk-ua'] = "";
 
@@ -3977,7 +3977,7 @@ $text['label-add_to_conference']['pl-pl'] = "";
 $text['label-add_to_conference']['pt-br'] = "";
 $text['label-add_to_conference']['pt-pt'] = "";
 $text['label-add_to_conference']['ro-ro'] = "";
-$text['label-add_to_conference']['ru-ru'] = "Добавить в концеренцию";
+$text['label-add_to_conference']['ru-ru'] = "Добавить в конференцию";
 $text['label-add_to_conference']['sv-se'] = "";
 $text['label-add_to_conference']['uk-ua'] = "";
 
