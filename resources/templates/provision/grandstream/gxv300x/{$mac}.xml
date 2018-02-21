@@ -237,7 +237,7 @@
     <!-- Dial Plan Prefix (dial plan prefix string) -->
     <P66></P66>
     <!-- Dial Plan. Maxlength = 128 character. Defalut is allow all {x+|*x+} -->
-    <P290>{x+|*x+}</P290>
+    <P290>{$grandstream_dial_plan}</P290>
     <!-- Delayed Call Forward Wait Time. Default is 20 seconds, maxlength = 5  -->
     <P139>20</P139>
     <!-- Enable Call Features.  0 - no, 1 - yes -->
