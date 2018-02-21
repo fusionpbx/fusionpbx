@@ -111,7 +111,7 @@
 			$msg = '';
 			//if (strlen($call_center_agent_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-call_center_agent_uuid']."<br>\n"; }
 			//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
-			if (strlen($user_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-user_uuid']."<br>\n"; }
+			//if (strlen($user_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-user_uuid']."<br>\n"; }
 			if (strlen($agent_name) == 0) { $msg .= $text['message-required']." ".$text['label-agent_name']."<br>\n"; }
 			if (strlen($agent_type) == 0) { $msg .= $text['message-required']." ".$text['label-agent_type']."<br>\n"; }
 			if (strlen($agent_call_timeout) == 0) { $msg .= $text['message-required']." ".$text['label-agent_call_timeout']."<br>\n"; }
@@ -225,7 +225,9 @@
 		//prepare the array
 			$array['call_center_agents'][] = $_POST;
 			$array['users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
-			$array['users'][0]['user_uuid'] = $user_uuid;
+			if (is_uuid($user_uuid)) {
+				$array['users'][0]['user_uuid'] = $user_uuid;
+			}
 			$array['users'][0]['user_status'] = $agent_status;
 
 		//save to the data
@@ -411,25 +413,27 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	<tr>";
-	echo "		<td class='vncell' valign='top'>".$text['label-username']."</td>";
-	echo "		<td class='vtable' align='left'>";
-	echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
-	echo "			<option value=\"\"></option>\n";
-	foreach($users as $field) {
-		if ($user_uuid == $field['user_uuid']) {
-			echo "			<option value='".$field['user_uuid']."' selected='selected'>".$field['username']."</option>\n";
+	if (is_array($users)) {
+		echo "	<tr>";
+		echo "		<td class='vncell' valign='top'>".$text['label-username']."</td>";
+		echo "		<td class='vtable' align='left'>";
+		echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
+		echo "			<option value=\"\"></option>\n";
+		foreach($users as $field) {
+			if ($user_uuid == $field['user_uuid']) {
+				echo "			<option value='".$field['user_uuid']."' selected='selected'>".$field['username']."</option>\n";
+			}
+			else {
+				echo "			<option value='".$field['user_uuid']."' $selected>".$field['username']."</option>\n";
+			}
 		}
-		else {
-			echo "			<option value='".$field['user_uuid']."' $selected>".$field['username']."</option>\n";
-		}
+		echo "			</select>";
+		unset($users);
+		echo "			<br>\n";
+		echo "			".$text['description-users']."\n";
+		echo "		</td>";
+		echo "	</tr>";
 	}
-	echo "			</select>";
-	unset($users);
-	echo "			<br>\n";
-	echo "			".$text['description-users']."\n";
-	echo "		</td>";
-	echo "	</tr>";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
