@@ -361,7 +361,7 @@
 <P72>1</P72>
 
 <!-- Dial Plan -->
-<P4200>{ x+ | *x+ | *xx*x+ }</P4200>
+<P4200>{$grandstream_dial_plan}</P4200>
 
 <!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes -->
 <P99>1</P99>
