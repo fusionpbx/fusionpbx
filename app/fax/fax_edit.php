@@ -609,7 +609,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	".$text['label-caller-id-number']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='number' name='fax_caller_id_number' maxlength='255' min='0' step='1' value=\"$fax_caller_id_number\">\n";
+		echo "	<input class='formfld' type='text' name='fax_caller_id_number' maxlength='255' min='0' step='1' value=\"$fax_caller_id_number\">\n";
 		echo "<br />\n";
 		echo "".$text['description-caller-id-number']."\n";
 		echo "</td>\n";
