@@ -495,7 +495,7 @@
 <P2382>0</P2382>
 
 <!-- Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
-<P290>{ x+ | *x+ | *xx | *xxx | *xxxx | *xxxxx | *xxxxxx | **xx | **xxx | **xxxx | **xxxxx | **xxxxxx | **xxxxxxx | **xxxxxxxx | *xx*x+ | \+x+ | \p\a\r\k\+*x+ }</P290>
+<P290>{$grandstream_dial_plan}</P290>
 
 <!-- Refer-To Use Target Contact. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
