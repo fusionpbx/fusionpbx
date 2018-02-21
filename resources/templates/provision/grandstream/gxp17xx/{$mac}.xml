@@ -1310,7 +1310,7 @@
 <!-- # Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
 <!-- # String -->
 <!-- # Mandatory -->
-<P290>{ x+ | &apos;+x+ | *x+ | *xx*x+ }</P290>
+<P290>{$grandstream_dial_plan}</P290>
 
 <!-- # Call Log. 0 - Log All Calls, 1 - Log Incoming/Outgoing only (missed calls NOT recorded), 2 - Disable Call Log. Default is 0 -->
 <!-- # Number: 0, 1, 2 -->
