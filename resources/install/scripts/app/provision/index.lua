@@ -55,8 +55,12 @@
 --get the domain_uuid
 	domain_uuid = session:getVariable("domain_uuid");
 
---get the action
+--get the variables
 	action = session:getVariable("action");
+	reboot = session:getVariable("reboot");
+
+--set defaults
+	if (not reboot) then reboot = 'true'; end
 
 --set the sounds path for the language, dialect and voice
 	default_language = session:getVariable("default_language");
@@ -232,7 +236,7 @@
 			event:addHeader('host', domain);
 			event:addHeader('content-type', 'application/simple-message-summary');
 		--check sync
-			event:addHeader('event-string', 'check-sync;reboot=true');
+			event:addHeader('event-string', 'check-sync;reboot='..reboot);
 		--send the event
 			event:fire();
 	end
