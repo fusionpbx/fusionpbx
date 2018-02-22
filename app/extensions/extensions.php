@@ -160,10 +160,13 @@
 			echo "	<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='extensions.php?show=all';\">\n";
 		}
 	}
-	if (permission_exists('extension_export')) {
-		echo "				<input type='button' class='btn' style='margin-right: 15px;' value='".$text['button-export']."' onclick=\"window.location.href='extension_download.php'\">\n";
+	if (permission_exists('extension_import')) {
+		echo 				"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='/app/extension_imports/extension_imports.php'\" value='".$text['button-import']."'>\n";
 	}
-	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>";
+	if (permission_exists('extension_export')) {
+		echo "				<input type='button' class='btn' value='".$text['button-export']."' onclick=\"window.location.href='extension_download.php'\">\n";
+	}
+	echo "				<input type='text' class='txt' style='width: 150px; margin-left: 15px;' name='search' id='search' value='".$search."'>";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	if ($paging_controls_mini != '') {
 		echo 			"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
