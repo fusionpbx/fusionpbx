@@ -158,7 +158,10 @@
 			echo "<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='users.php?show=all';\">\n";
 		}
 	}
-	echo 	"<input type='text' class='txt' style='width: 150px; margin-right: 3px;' name='search_value' value=\"".$search_value."\">";
+	if (permission_exists('user_import')) {
+		echo 				"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='/app/user_imports/user_imports.php'\" value='".$text['button-import']."'>\n";
+	}
+	echo 	"<input type='text' class='txt' style='width: 150px; margin-left: 15px; margin-right: 3px;' name='search_value' value=\"".$search_value."\">";
 	echo 	"<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	echo "</td>";
 	echo "</tr>\n";
@@ -256,6 +259,5 @@
 
 //include the footer
 	include "resources/footer.php";
-
 
 ?>
