@@ -155,9 +155,6 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "extension_import";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "extension_export";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
