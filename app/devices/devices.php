@@ -188,10 +188,10 @@
 	if (permission_exists('device_profile_view')) {
 		echo "			<input type='button' class='btn' value='".$text['button-profiles']."' onclick=\"document.location.href='device_profiles.php';\">\n";
 	}
-	if (permission_exists('device_imports')) {
+	if (permission_exists('device_import')) {
 		echo "			<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='/app/device_imports/device_imports.php'\" value='".$text['button-import']."'>\n";
 	}
-	if (if_group("superadmin")) {
+	if (permission_exists('device_export')) {
 		echo "			<input type='button' class='btn' value='".$text['button-export']."' onclick=\"window.location.href='device_download.php'\">\n";
 	}
 	echo "			<input type='text' class='txt' style='width: 150px; margin-left: 15px;' name='search' value='".$search."'>\n";
