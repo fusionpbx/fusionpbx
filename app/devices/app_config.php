@@ -2850,5 +2850,19 @@
 		$vendors[$y]['functions'][$z]['value'] = "8";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "1cc1b4ff-52cd-4ea7-ab15-5930fc530fec";
+		$vendors[$y]['functions'][$z]['label'] = "label-call_park";
+		$vendors[$y]['functions'][$z]['name'] = "call_park";
+		$vendors[$y]['functions'][$z]['value'] = "9";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "330ac56c-c87e-4a65-a0bd-5f8332faeeab";
+		$vendors[$y]['functions'][$z]['label'] = "label-call_forward";
+		$vendors[$y]['functions'][$z]['name'] = "call_forward";
+		$vendors[$y]['functions'][$z]['value'] = "10";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 
 ?>
