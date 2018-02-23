@@ -140,8 +140,7 @@
 				//update the database
 					//if ($num_rows == "0" && strlen($waitsec) > 0) {
 					if (strlen($waitsec) > 0) {
-						$sql = "";
-						$sql .= "update v_xml_cdr ";
+						$sql = "update v_xml_cdr ";
 						$sql .= "set waitsec = '$waitsec' ";
 						$sql .= "where uuid = '$uuid' ";
 						echo $sql."\n";
