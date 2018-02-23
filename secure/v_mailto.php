@@ -145,17 +145,14 @@
 	$smtp['auth'] 		= $_SESSION['email']['smtp_auth']['text'];
 	$smtp['username'] 	= $_SESSION['email']['smtp_username']['text'];
 	$smtp['password'] 	= $_SESSION['email']['smtp_password']['text'];
+	$smtp['from'] 		= $_SESSION['email']['smtp_from']['text'];
+	$smtp['from_name'] 	= $_SESSION['email']['smtp_from_name']['text'];
 
-	if (isset($_SESSION['voicemail']['smtp_from'])) {
+	if (isset($_SESSION['voicemail']['smtp_from']) && strlen($_SESSION['voicemail']['smtp_from']['text']) > 0) {
 		$smtp['from'] = $_SESSION['voicemail']['smtp_from']['text'];
-	} else {
-		$smtp['from'] = $_SESSION['email']['smtp_from']['text'];
 	}
-
-	if (isset($_SESSION['voicemail']['smtp_from_name'])) {
-		$smtp['from_name'] = $_SESSION['voicemail']['smtp_from_name']['text'];	
-	} else {
-		$smtp['from_name'] = $_SESSION['email']['smtp_from_name']['text'];
+	if (isset($_SESSION['voicemail']['smtp_from_name']) && strlen($_SESSION['voicemail']['smtp_from_name']['text']) > 0) {
+		$smtp['from_name'] = $_SESSION['voicemail']['smtp_from_name']['text'];
 	}
 
 	// overwrite with domain-specific smtp server settings, if any
