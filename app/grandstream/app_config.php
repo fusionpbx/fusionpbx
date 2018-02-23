@@ -50,7 +50,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_gxp_time_zone";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "PST8PDT";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "auto";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "See provision profile for codes.";
 		$y++;
@@ -68,7 +68,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "none";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "mydomain.com/provision to Fusionpbx provisioning. Phones will use firmware url if this is set to: none";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "mydomain.com/app/provision to Fusionpbx provisioning. Phones will use firmware url if this is set to: none";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "eb4ad508-aab8-478c-a42c-71f02f5e9f3e";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -226,7 +226,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_phonebook_xml_server_path";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "mydomain.com/provision/pb";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "mydomain.com/app/provision/pb/";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Grandstream Phonebook Server Path - NOTE template adds MAC on the end of this if contact_grandstream is enabled.  This also requires nginx rewrite rules for phonebook.xml";
 		$y++;
