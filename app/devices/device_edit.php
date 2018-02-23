@@ -300,16 +300,40 @@
 
 				//save the device
 					if ($save) {
-						$database = new database;
-						$database->app_name = 'devices';
-						$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
-						if (strlen($device_uuid) > 0) {
-							$database->uuid($device_uuid);
+						$sql = "select ";
+						$sql .= "dom.domain_name ";
+						$sql .= "from ";
+						$sql .= "v_domains as dom, ";
+						$sql .= "v_devices as dev ";
+						$sql .= "where ";
+						$sql .= "dev.device_mac_address = '".check_str($_POST["device_mac_address"])."' ";
+						$sql .= "and dom.domain_uuid = dev.domain_uuid ";
+						if ($action == "update") {
+							$sql .= "and dev.device_uuid != '" . $device_uuid . "'";
 						}
-						$database->save($array);
-						$response = $database->message;
-						if (strlen($response['uuid']) > 0) {
-							$device_uuid = $response['uuid'];
+						$prep_statement = $db->prepare($sql);
+						if ($prep_statement) {
+							$prep_statement->execute();
+							$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+							if ($row['domain_name'] != '') {
+								messages::add($text['message-duplicate'].' in  '.$row["domain_name"], 'negative');
+								$save = false;
+							}
+						}
+						unset($prep_statement);
+
+						if ($save) {
+							$database = new database;
+							$database->app_name = 'devices';
+							$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+							if (strlen($device_uuid) > 0) {
+								$database->uuid($device_uuid);
+							}
+							$database->save($array);
+							$response = $database->message;
+							if (strlen($response['uuid']) > 0) {
+								$device_uuid = $response['uuid'];
+							}
 						}
 					}
 
