@@ -298,15 +298,40 @@
 
 				//save the device
 					if ($save) {
-						$orm = new orm;
-						$orm->name('devices');
-						if (strlen($device_uuid) > 0) {
-							$orm->uuid($device_uuid);
+						$sql = "select ";
+						$sql .= "dom.domain_name ";
+						$sql .= "from ";
+						$sql .= "v_domains as dom, ";
+						$sql .= "v_devices as dev ";
+						$sql .= "where ";
+						$sql .= "dev.device_mac_address = '".check_str($_POST["device_mac_address"])."' ";
+						$sql .= "and dom.domain_uuid = dev.domain_uuid ";
+						if ($action == "update") {
+							$sql .= "and dev.device_uuid != '" . $device_uuid . "'";
 						}
-						$orm->save($_POST);
-						$response = $orm->message;
-						if (strlen($response['uuid']) > 0) {
-							$device_uuid = $response['uuid'];
+						$prep_statement = $db->prepare($sql);
+						if ($prep_statement) {
+							$prep_statement->execute();
+							$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+							if ($row['domain_name'] != '') {
+								$_SESSION['message_mood'] = 'negative';
+								$_SESSION['message'] = $text['message-duplicate']. " in " . $row["domain_name"];
+								$save = false;
+							}
+						}
+						unset($prep_statement);
+
+						if ($save) {
+							$orm = new orm;
+							$orm->name('devices');
+							if (strlen($device_uuid) > 0) {
+								$orm->uuid($device_uuid);
+							}
+							$orm->save($_POST);
+							$response = $orm->message;
+							if (strlen($response['uuid']) > 0) {
+								$device_uuid = $response['uuid'];
+							}
 						}
 					}
 
