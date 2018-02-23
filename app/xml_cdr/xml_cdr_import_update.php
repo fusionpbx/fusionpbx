@@ -32,7 +32,6 @@
 		set_include_path($document_root);
 		require_once "resources/require.php";
 		$_SERVER["DOCUMENT_ROOT"] = $document_root;
-		$display_type = 'text'; //html, text
 	}
 	else {
 		echo "access denied";
@@ -155,4 +154,5 @@
 		//echo finished
 			echo "completed\n";
 	}
+
 ?>
