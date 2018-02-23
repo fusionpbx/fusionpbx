@@ -47,17 +47,17 @@
 	$var_value = trim($row["var_value"]);
 	switch ($var_value) {
 	case "dir":
-			$xml_cdr_archive = 'dir';
-			break;
+		$xml_cdr_archive = 'dir';
+		break;
 	case "db":
-			$xml_cdr_archive = 'db';
-			break;
+		$xml_cdr_archive = 'db';
+		break;
 	case "none":
-			$xml_cdr_archive = 'none';
-			break;
+		$xml_cdr_archive = 'none';
+		break;
 	default:
-			$xml_cdr_archive = 'dir';
-			break;
+		$xml_cdr_archive = 'dir';
+		break;
 	}
 
 //get the list of installed apps from the core and mod directories
