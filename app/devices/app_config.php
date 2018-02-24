@@ -2592,8 +2592,8 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
 		$vendors[$y]['functions'][$z]['uuid'] = "6463cac0-5fa3-433e-8bd5-7a0eb81e104e";
-		$vendors[$y]['functions'][$z]['label'] = "label-park";
-		$vendors[$y]['functions'][$z]['name'] = "park";
+		$vendors[$y]['functions'][$z]['label'] = "label-call_park";
+		$vendors[$y]['functions'][$z]['name'] = "call_park";
 		$vendors[$y]['functions'][$z]['value'] = "8";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
