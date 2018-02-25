@@ -12,6 +12,11 @@
 tone set: UK                        # Australia, Europe (generic tones), France, Germany, Italy, UK, US (also used in Canada)
 
 # === display date and time ===
+#time format: 0                  # 1 for 24 hr format
+#date format: 3                  # 0 == WWW MMM DD, 1 == DD-MMM-YY, 2 == YYYY-MM-DD, see reference for others
+#time zone name: GB-London       # Check reference for list of named time zones on page A-27, or set offset below 
+#time zone code: GMT             # Check reference for list of named time zones on page A-27, or set offset below 
+#time zone minutes: 300         # Offset in minutes from GMT, 300 = GMT-5 = Eastern Standard Time, -120 = GMT+2 = Eastern European Time
 {if isset($aastra_time_format)}time format: ${aastra_time_format}{"\n"}{/if}
 {if isset($aastra_date_format)}date format: ${aastra_date_format}{"\n"}{/if}
 {if isset($aastra_gmt_offset)}time zone minutes: ${aastra_gmt_offset}{"\n"}{/if}
