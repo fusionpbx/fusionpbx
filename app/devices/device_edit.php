@@ -707,7 +707,7 @@
 							if(is_dir($dh_sub)) {
 								$templates_sub = scandir($dh_sub);
 								foreach($templates_sub as $dir_sub) {
-									if($file_sub != '.' && $dir_sub != '..' && $dir_sub[0] != '.') {
+									if($file_sub != '.' && $dir_sub != '..' && $dir_sub[0] != '.' && $dir_sub[0] != 'include') {
 										if(is_dir($template_dir . '/' . $dir .'/'. $dir_sub)) {
 											if ($device_template == $dir."/".$dir_sub) {
 												echo "<option value='".$dir."/".$dir_sub."' selected='selected'>".$dir."/".$dir_sub."</option>\n";
