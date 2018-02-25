@@ -186,7 +186,7 @@
 		echo "		<input type='button' class='btn' value='".$text['button-outbound']."' onclick=\"window.location='destinations.php?type=outbound';\">\n";
 	}
 
-	if (permission_exists('destination_imports')) {
+	if (permission_exists('destination_import')) {
 		echo 				"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='/app/destination_imports/destination_imports.php'\" value='".$text['button-import']."'>\n";
 	}
 
