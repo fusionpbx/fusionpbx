@@ -338,9 +338,6 @@ include "root.php";
 										$this->dialplan_global = true;
 									}
 								}
-								if ($this->display_type == "text") {
-									echo "	".$this->dialplan_name.":		added\n";
-								}
 								if (strlen($dialplan['extension']['@attributes']['continue']) > 0) {
 									$this->dialplan_continue = $dialplan['extension']['@attributes']['continue'];
 								}
@@ -428,6 +425,8 @@ include "root.php";
 								}
 							//end the transaction
 								$this->db->commit();
+							//update the session array
+								$_SESSION['upgrade']['app_defaults']['dialplans'][$domain['domain_name']][]['dialplan_name'] = $this->dialplan_name;
 						}
 					}
 			}
