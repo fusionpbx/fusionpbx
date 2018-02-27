@@ -993,7 +993,7 @@
 
 <!-- Dial Plan -->
 <!-- String Max Length: 1024 -->
-<P4200>{ x+ | *x+ }</P4200>
+<P4200>{$grandstream_dial_plan}</P4200>
 
 <!-- Use # as Dial Key (if set to Yes, "#" will function as the "(Re-)Dial" key). 0 - no, 1 - yes -->
 <!-- Number: 0,1 -->

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2016 All Rights Reserved.
+	Copyright (C) 2008-2018 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -353,7 +353,19 @@
 			$A1 = md5($provision["http_auth_username"] . ':' . $realm . ':' . $provision["http_auth_password"]);
 			$A2 = md5($_SERVER['REQUEST_METHOD'].':'.$data['uri']);
 			$valid_response = md5($A1.':'.$data['nonce'].':'.$data['nc'].':'.$data['cnonce'].':'.$data['qop'].':'.$A2);
-			if ($data['response'] != $valid_response) {
+			$authorized = false;
+			if ($data['response'] == $valid_response) {
+				$authorized = true;
+			}
+			if (!$authorized && strlen($provision["http_auth_password_alternate"]) > 0) {
+				$A1 = md5($provision["http_auth_username"] . ':' . $realm . ':' . $provision["http_auth_password_alternate"]);
+				$A2 = md5($_SERVER['REQUEST_METHOD'].':'.$data['uri']);
+				$valid_response = md5($A1.':'.$data['nonce'].':'.$data['nc'].':'.$data['cnonce'].':'.$data['qop'].':'.$A2);
+				if ($data['response'] == $valid_response) {
+					$authorized = true;
+				}
+			}
+			if (!$authorized) {
 				header('HTTP/1.0 401 Unauthorized');
 				header("Content-Type: text/html");
 				$content = 'Unauthorized '.$__line__;
@@ -374,10 +386,16 @@
 			echo $content;
 			exit;
 		} else {
+			$authorized = false;
 			if ($_SERVER['PHP_AUTH_USER'] == $provision["http_auth_username"] && $_SERVER['PHP_AUTH_PW'] == $provision["http_auth_password"]) {
-				//authorized
+				$authorized = true;
 			}
-			else {
+			if (!$authorized && strlen($provision["http_auth_password_alternate"]) > 0) {
+				if ($_SERVER['PHP_AUTH_USER'] == $provision["http_auth_username"] && $_SERVER['PHP_AUTH_PW'] == $provision["http_auth_password_alternate"]) {
+					$authorized = true;
+				}
+			}
+			if (!$authorized) {
 				//access denied
 				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but failed http basic authentication for ".check_str($_REQUEST['mac']));
 				header('HTTP/1.0 401 Unauthorized');

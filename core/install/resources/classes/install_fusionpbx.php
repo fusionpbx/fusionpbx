@@ -378,7 +378,7 @@ include "root.php";
 			//add the database structure
 				require_once "resources/classes/schema.php";
 				$schema = new schema;
-				//echo $schema->schema();
+				echo $schema->schema();
 
 			//get the contents of the sql file
 				if (file_exists('/usr/share/examples/fusionpbx/sql/pgsql.sql')){

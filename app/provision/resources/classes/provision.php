@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2014-2016
+	Copyright (C) 2014-2018
 	All Rights Reserved.
 
 	Contributor(s):
@@ -812,6 +812,15 @@ include "root.php";
 					}
 					unset ($prep_statement);
 				}
+			//set the template directory
+				if (strlen($provision["template_dir"]) > 0) {
+					$template_dir = $provision["template_dir"];
+				}
+
+			//if the domain name directory exists then only use templates from it
+				if (is_dir($template_dir.'/'.$domain_name)) {
+					$device_template = $domain_name.'/'.$device_template;
+				}
 
 			//initialize a template object
 				$view = new template();
@@ -874,6 +883,7 @@ include "root.php";
 										$lines[$line_number]['auth_id'] = $row["auth_id"];
 										$lines[$line_number]['user_id'] = $row["user_id"];
 										$lines[$line_number]['password'] = $row["password"];
+										$lines[$line_number]['shared_line'] = $row["shared_line"];
 
 									//assign the variables for line one - short name
 										if ($line_number == "1") {
@@ -888,6 +898,7 @@ include "root.php";
 											$view->assign("sip_transport", $sip_transport);
 											$view->assign("sip_port", $sip_port);
 											$view->assign("register_expires", $register_expires);
+											$view->assign("shared_line", $row["shared_line"]);
 										}
 
 									//assign the variables with the line number as part of the name
@@ -902,6 +913,7 @@ include "root.php";
 										$view->assign("sip_transport_".$line_number, $sip_transport);
 										$view->assign("sip_port_".$line_number, $sip_port);
 										$view->assign("register_expires_".$line_number, $register_expires);
+										$view->assign("shared_line_".$line_number, $row["shared_line"]);
 								}
 							}
 							unset ($prep_statement);
@@ -1236,16 +1248,6 @@ include "root.php";
 						foreach($provision as $key=>$val) {
 							$view->assign($key, $val);
 						}
-					}
-
-				//set the template directory
-					if (strlen($provision["template_dir"]) > 0) {
-						$template_dir = $provision["template_dir"];
-					}
-
-				//if the domain name directory exists then only use templates from it
-					if (is_dir($template_dir.'/'.$domain_name)) {
-						$device_template = $domain_name.'/'.$device_template;
 					}
 
 				//if $file is not provided then look for a default file that exists

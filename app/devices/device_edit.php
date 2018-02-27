@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2017 All Rights Reserved.
+	Copyright (C) 2008-2018 All Rights Reserved.
 
 */
 
@@ -404,6 +404,7 @@
 	$device_lines[$x]['user_id'] = '';
 	$device_lines[$x]['auth_id'] = '';
 	$device_lines[$x]['password'] = '';
+	$device_lines[$x]['shared_line'] = '';
 	$device_lines[$x]['enabled'] = '';
 	$device_lines[$x]['sip_port'] = $_SESSION['provision']['line_sip_port']['numeric'];
 	$device_lines[$x]['sip_transport'] = $_SESSION['provision']['line_sip_transport']['text'];
@@ -706,7 +707,7 @@
 							if(is_dir($dh_sub)) {
 								$templates_sub = scandir($dh_sub);
 								foreach($templates_sub as $dir_sub) {
-									if($file_sub != '.' && $dir_sub != '..' && $dir_sub[0] != '.') {
+									if($file_sub != '.' && $dir_sub != '..' && $dir_sub[0] != '.' && $dir_sub[0] != 'include') {
 										if(is_dir($template_dir . '/' . $dir .'/'. $dir_sub)) {
 											if ($device_template == $dir."/".$dir_sub) {
 												echo "<option value='".$dir."/".$dir_sub."' selected='selected'>".$dir."/".$dir_sub."</option>\n";
@@ -760,6 +761,9 @@
 		}
 		if (permission_exists('device_line_register_expires')) {
 			echo "				<td class='vtable'>".$text['label-register_expires']."</td>\n";
+		}
+		if (permission_exists('device_line_shared')) {
+			echo "				<td class='vtable'>".$text['label-shared_line']."</td>\n";
 		}
 		echo "				<td class='vtable'>".$text['label-enabled']."</td>\n";
 		echo "				<td>&nbsp;</td>\n";
@@ -859,12 +863,12 @@
 				echo "			</td>\n";
 
 				echo "			<td align='left'>\n";
-				echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][user_id]' maxlength='255' value=\"".$row['user_id']."\"/>\n";
+				echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][user_id]' maxlength='255' autocomplete=\"off\" value=\"".$row['user_id']."\"/>\n";
 				echo "			</td>\n";
 
 				if (permission_exists('device_line_auth_id')) {
 					echo "			<td align='left'>\n";
-					echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][auth_id]' maxlength='255' value=\"".$row['auth_id']."\"/>\n";
+					echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][auth_id]' maxlength='255' autocomplete=\"off\" value=\"".$row['auth_id']."\"/>\n";
 					echo "			</td>\n";
 				}
 
@@ -899,6 +903,15 @@
 				}
 				else {
 					echo "				<input type='hidden' name='device_lines[".$x."][register_expires]' value=\"".$row['register_expires']."\"/>\n";
+				}
+
+				if (permission_exists('device_line_shared')) {
+					echo "			<td align='left'>\n";
+					echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][shared_line]' maxlength='255' value=\"".$row['shared_line']."\"/>\n";
+					echo "			</td>\n";
+				}
+				else {
+					echo "				<input type='hidden' name='device_lines[".$x."][shared_line]' value=\"".$row['shared_line']."\"/>\n";
 				}
 
 				echo "			<td align='left'>\n";

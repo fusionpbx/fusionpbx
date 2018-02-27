@@ -112,7 +112,7 @@
 			//if (strlen($call_flow_name) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_name']."<br>\n"; }
 			if (strlen($call_flow_extension) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_extension']."<br>\n"; }
 			if (strlen($call_flow_feature_code) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_feature_code']."<br>\n"; }
-			if (strlen($call_flow_context) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_context']."<br>\n"; }
+			//if (strlen($call_flow_context) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_context']."<br>\n"; }
 			//if (strlen($call_flow_status) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_status']."<br>\n"; }
 			//if (strlen($call_flow_pin_number) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_pin_number']."<br>\n"; }
 			//if (strlen($call_flow_label) == 0) { $msg .= $text['message-required']." ".$text['label-call_flow_label']."<br>\n"; }
@@ -153,7 +153,7 @@
 			}
 
 		//set the context for users that are not in the superadmin group
-			if (!if_group("superadmin")) {
+			if (!permission_exists('call_flow_context')) {
 				$call_flow_context = $_SESSION['domain_name'];
 			}
 
@@ -498,17 +498,6 @@
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-call_flow_context']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_context' maxlength='255' value=\"$call_flow_context\">\n";
-	echo "<br />\n";
-	echo $text['description-call_flow_context']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-call_flow_status']."\n";
 	echo "</td>\n";
@@ -649,6 +638,19 @@
 	echo $text['description-call_flow_alternate_destination']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+	if (permission_exists('call_flow_context')) {
+		echo "<tr>\n";
+		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-call_flow_context']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='call_flow_context' maxlength='255' value=\"$call_flow_context\">\n";
+		echo "<br />\n";
+		echo $text['description-call_flow_context']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";

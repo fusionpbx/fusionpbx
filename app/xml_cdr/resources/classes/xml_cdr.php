@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2017
+	Portions created by the Initial Developer are Copyright (C) 2016-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -136,8 +136,13 @@ if (!class_exists('xml_cdr')) {
 			$this->fields[] = "cc_queue_joined_epoch";
 			$this->fields[] = "cc_queue";
 			$this->fields[] = "cc_member_session_uuid";
+			$this->fields[] = "cc_agent_uuid";
 			$this->fields[] = "cc_agent";
 			$this->fields[] = "cc_agent_type";
+			$this->fields[] = "cc_agent_bridged";
+			$this->fields[] = "cc_queue_answered_epoch";
+			$this->fields[] = "cc_queue_terminated_epoch";
+			$this->fields[] = "cc_cause";
 			$this->fields[] = "waitsec";
 			$this->fields[] = "conference_name";
 			$this->fields[] = "conference_uuid";
@@ -441,6 +446,11 @@ if (!class_exists('xml_cdr')) {
 						elseif (strlen($xml->variables->sofia_record_file) > 0) {
 							$record_path = dirname(urldecode($xml->variables->sofia_record_file));
 							$record_name = basename(urldecode($xml->variables->sofia_record_file));
+							$record_length = urldecode($xml->variables->record_seconds);
+						}
+						elseif (strlen($xml->variables->cc_record_filename) > 0) {
+							$record_path = dirname(urldecode($xml->variables->cc_record_filename));
+							$record_name = basename(urldecode($xml->variables->cc_record_filename));
 							$record_length = urldecode($xml->variables->record_seconds);
 						}
 						elseif (strlen($xml->variables->api_on_answer) > 0) {

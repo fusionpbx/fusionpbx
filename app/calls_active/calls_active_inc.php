@@ -65,20 +65,19 @@
 	$rows = array();
 	if (isset($results["rows"])) {
 		foreach ($results["rows"] as &$row) {
-				$context = $row['context'];
 			//get the domain
-				if (substr_count($row['presence_id'], '@') > 0) {
-					$presence_id_array = explode('@', $row['presence_id']);
-					$row['domain_name'] = $presence_id_array[1];
-				}
-				else if (strlen($context) > 0) {
-					if (substr_count($context, '@') > 0) {
-						$context_array = explode('@', $context);
+				if (strlen($row['context']) > 0 and $row['context'] != "public") {
+					if (substr_count($row['context'], '@') > 0) {
+						$context_array = explode('@', $row['context']);
 						$row['domain_name'] = $context_array[1];
 					}
 					else {
-						$row['domain_name'] = $context;
+						$row['domain_name'] = $row['context'];
 					}
+				}
+				else if (substr_count($row['presence_id'], '@') > 0) {
+					$presence_id_array = explode('@', $row['presence_id']);
+					$row['domain_name'] = $presence_id_array[1].' '.__line__.' '.$row['presence_id'];
 				}
 			//add the row to the array
 				if (($show == 'all' && permission_exists('call_active_all'))) {
@@ -90,8 +89,9 @@
 					}
 				}
 		}
-		unset($results, $context);
+		unset($results);
 	}
+
 
 //set the alternating color for each row
 	$c = 0;

@@ -341,19 +341,14 @@
 <Voice_Mail_Number group="Phone/General">*97</Voice_Mail_Number>
 
 {foreach $keys["line"] as $row}
-{if $row.device_key_type == "line"}
+{if $row.device_key_category == "line"}
 <!-- Phone/Line_Key_{$row.device_key_id} -->
 <Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_line}</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
 <Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
-<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">private</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
-<Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}"/>
-{else}
-<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">Disabled</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
-<Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
-<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">private</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
+<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{if $row.device_key_type == "shared"}shared{else}private{/if}</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
 <Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extended_Function_{$row.device_key_id}_>
-{/if}
 
+{/if}
 {/foreach}
 
 <!-- Phone/Supplementary_Services -->
@@ -403,7 +398,7 @@
 <Line_Enable_1_ group="Ext_1/General">Yes</Line_Enable_1_>
 
 <!-- Ext_1/Share_Line_Appearance -->
-<Share_Ext_1_ group="Ext_1/Share_Line_Appearance">private</Share_Ext_1_>
+<Share_Ext_1_ group="Ext_1/Share_Line_Appearance">{if $shared_line_1 == "shared"}shared{else}private{/if}</Share_Ext_1_>
 <Shared_User_ID_1_ group="Ext_1/Share_Line_Appearance" />
 <Subscription_Expires_1_ group="Ext_1/Share_Line_Appearance">3600</Subscription_Expires_1_>
 <Restrict_MWI_1_ group="Ext_1/Share_Line_Appearance">No</Restrict_MWI_1_>
@@ -462,7 +457,7 @@
 <User_ID_with_Domain_1_ group="Ext_1/Call_Feature_Settings">No</User_ID_with_Domain_1_>
 <Broadsoft_ACD_1_ group="Ext_1/Call_Feature_Settings">No</Broadsoft_ACD_1_>
 <Auto_Ans_Page_On_Active_Call_1_ group="Ext_1/Call_Feature_Settings">Yes</Auto_Ans_Page_On_Active_Call_1_>
-<Feature_Key_Sync_1_ group="Ext_1/Call_Feature_Settings">No</Feature_Key_Sync_1_>
+<Feature_Key_Sync_1_ group="Ext_1/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_1_>
 <Call_Park_Monitor_Enable_1_ group="Ext_1/Call_Feature_Settings">No</Call_Park_Monitor_Enable_1_>
 
 <!-- Ext_1/Proxy_and_Registration -->

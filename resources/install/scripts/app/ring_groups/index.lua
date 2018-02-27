@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2010-2017 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2010-2018 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -8,7 +8,7 @@
 --	1. Redistributions of source code must retain the above copyright notice,
 --	   this list of conditions and the following disclaimer.
 --
---	2. Redistributions in binary form must repoduce the above copyright
+--	2. Redistributions in binary form must reproduce the above copyright
 --	   notice, this list of conditions and the following disclaimer in the
 --	   documentation and/or other materials provided with the distribution.
 --
@@ -28,10 +28,7 @@
 --	Luis Daniel Lucio Qurioz <dlucio@okay.com.mx>
 
 --include the log
-	local log = require "resources.functions.log".ring_group
-
--- include libs
-	local route_to_bridge = require "resources.functions.route_to_bridge"
+	log = require "resources.functions.log".ring_group
 
 --connect to the database
 	local Database = require "resources.functions.database";
@@ -50,6 +47,10 @@
 	require "resources.functions.file_exists";
 	require "resources.functions.channel_utils"
 	require "resources.functions.format_ringback"
+
+--- include libs
+	local route_to_bridge = require "resources.functions.route_to_bridge"
+	local play_file   = require "resources.functions.play_file"
 
 --define the session hangup
 	function session_hangup_hook()
@@ -210,15 +211,27 @@
 --get current switchname
 	hostname = trim(api:execute("switchname", ""))
 
+--get the domain_uuid if it not already set
+	if (domain_uuid == nil or domain_uuid == '' and domain_name) then
+		sql = "SELECT domain_uuid FROM v_domains as d ";
+		sql = sql .. "where d.domain_name = :domain_name ";
+		local params = {domain_name = domain_name};
+		status = dbh:query(sql, params, function(row)
+			domain_uuid = row["domain_uuid"];
+		end);
+	end
+
 --get the ring group
 	ring_group_forward_enabled = "";
 	ring_group_forward_destination = "";
 	sql = "SELECT r.* FROM v_ring_groups as r ";
 	sql = sql .. "where r.ring_group_uuid = :ring_group_uuid ";
-	local params = {ring_group_uuid = ring_group_uuid};
+	sql = sql .. "and r.domain_uuid = :domain_uuid ";
+	local params = {ring_group_uuid = ring_group_uuid, domain_uuid = domain_uuid};
 	status = dbh:query(sql, params, function(row)
 		ring_group_name = row["ring_group_name"];
 		ring_group_extension = row["ring_group_extension"];
+		ring_group_greeting = row["ring_group_greeting"];
 		ring_group_forward_enabled = row["ring_group_forward_enabled"];
 		ring_group_forward_destination = row["ring_group_forward_destination"];
 		ring_group_forward_toll_allow = row["ring_group_forward_toll_allow"];
@@ -228,11 +241,21 @@
 		missed_call_data = row["ring_group_missed_call_data"];
 	end);
 
+--play the greeting
+	if (session:ready()) then
+		if (ring_group_greeting and #ring_group_greeting > 0) then
+			session:sleep(1000);
+			play_file(dbh, domain_name, domain_uuid, ring_group_greeting)
+			session:sleep(1000);
+		end
+	end
+
 --get the ring group user
 	sql = "SELECT r.*, u.user_uuid FROM v_ring_groups as r, v_ring_group_users as u ";
 	sql = sql .. "where r.ring_group_uuid = :ring_group_uuid ";
 	sql = sql .. "and r.ring_group_uuid = u.ring_group_uuid ";
-	local params = {ring_group_uuid = ring_group_uuid};
+	sql = sql .. "and r.domain_uuid = :domain_uuid ";
+	local params = {ring_group_uuid = ring_group_uuid, domain_uuid = domain_uuid};
 	status = dbh:query(sql, params, function(row)
 		user_uuid = row["user_uuid"];
 	end);
@@ -418,7 +441,7 @@
 				--update values
 				row['destination_number'] = destination_number
 				row['toll_allow'] = toll_allow;
-				
+
 				--check if the user exists
 				cmd = "user_exists id ".. destination_number .." "..domain_name;
 				user_exists = api:executeString(cmd);
@@ -606,8 +629,11 @@
 						--send to user
 						local dial_string_to_user = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid .. row.record_session .. "]user/" .. row.destination_number .. "@" .. domain_name;
 						dial_string = dial_string_to_user;
+					elseif (tonumber(destination_number) == nil) then
+						--sip uri
+						dial_string = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
 					else
-						--external number or direct dial
+					--external number or direct dial
 							dial_string = nil
 
 						--prepare default actions

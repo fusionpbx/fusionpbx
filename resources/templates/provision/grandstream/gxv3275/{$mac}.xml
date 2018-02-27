@@ -500,7 +500,7 @@
 <P66></P66>
 
 <!-- Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
-<P290>{ x+ | \+x+ | *x+ | *xx*x+ }</P290>
+<P290>{$grandstream_dial_plan}</P290>
 
 <!-- Refer-To Use Target Contact. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -2202,7 +2202,7 @@ Account 5 Codec Settings
 <P1719></P1719>
 
 <!-- Dial Plan Maxlength: unlimited, default is allow all { x+ | *x+ | *xx*x+ } -->
-<P1759>{ x+ | \+x+ | *x+ | *xx*x+ }</P1759>
+<P1759>{$grandstream_dial_plan}</P1759>
 
 <!-- Refer-To Use Target Contact. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->

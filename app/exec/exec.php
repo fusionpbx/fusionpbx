@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -461,7 +461,10 @@
 				case 'switch':
 					if (permission_exists('exec_switch')) {
 						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-						if ($fp) { $result = htmlentities(event_socket_request($fp, 'api '.$cmd)); }
+						if ($fp) { 
+							$result = event_socket_request($fp, 'api '.$cmd);
+							$result = htmlspecialchars(utf8_encode($result), ENT_QUOTES);
+						}
 					}
 					break;
 			}

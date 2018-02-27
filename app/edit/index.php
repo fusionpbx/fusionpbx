@@ -65,7 +65,7 @@ else {
 		$favicon = $_SESSION['theme']['favicon']['text'];
 	}
 	else {
-		$favicon = '<!--{project_path}-->/themes/enhanced/favicon.ico';
+		$favicon = '<!--{project_path}-->/themes/default/favicon.ico';
 	}
 
 ?>

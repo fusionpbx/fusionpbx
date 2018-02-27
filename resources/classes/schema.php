@@ -143,7 +143,6 @@ if (!class_exists('schema')) {
 
 		//check if a column exists
 			public function column_exists ($db_name, $table_name, $column_name) {
-				global $display_type;
 
 				if ($this->db_type == "sqlite") {
 					$table_info = $this->table_info($db_name, $table_name);
@@ -305,7 +304,6 @@ if (!class_exists('schema')) {
 
 		//database column exists
 			private function db_column_exists ($db_type, $db_name, $table_name, $column_name) {
-				global $display_type;
 
 				if ($db_type == "sqlite") {
 					$table_info = $this->db_table_info($db_name, $db_type, $table_name);

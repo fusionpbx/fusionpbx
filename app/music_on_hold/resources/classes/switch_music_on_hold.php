@@ -90,6 +90,23 @@ include "root.php";
 						$select .= "	</optgroup>\n";
 					}
 				}
+			//streams
+				if (is_dir($_SERVER["PROJECT_ROOT"].'/app/streams')) {
+					$sql = "select * from v_streams ";
+					$sql .= "where (domain_uuid = '".$this->domain_uuid."' or domain_uuid is null) ";
+					$sql .= "and stream_enabled = 'true' ";
+					$sql .= "order by stream_name asc ";
+					$prep_statement = $this->db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$streams = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					if (sizeof($streams) > 0) {
+						$select .= "	<optgroup label='".$text['label-streams']."'>";
+						foreach($streams as $row){
+							$select .= "		<option value='".$row['stream_location']."' ".(($selected == $row['stream_location']) ? 'selected="selected"' : null).">".$row['stream_name']."</option>\n";
+						}
+						$select .= "	</optgroup>\n";
+					}
+				}
 			//add additional options
 				if (sizeof($options) > 0) {
 					$select .= "	<optgroup label='".$text['label-others']."'>";

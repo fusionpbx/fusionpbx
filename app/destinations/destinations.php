@@ -186,7 +186,7 @@
 		echo "		<input type='button' class='btn' value='".$text['button-outbound']."' onclick=\"window.location='destinations.php?type=outbound';\">\n";
 	}
 
-	if (permission_exists('destination_imports') && file_exists($_SERVER["PROJECT_ROOT"]."/app/destination_imports/destination_imports.php")) {
+	if (permission_exists('destination_import')) {
 		echo 				"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='/app/destination_imports/destination_imports.php'\" value='".$text['button-import']."'>\n";
 	}
 
@@ -195,11 +195,11 @@
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
-			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='destinations.php?show=all';\">\n";
+			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='destinations.php?show=all&type=$destination_type';\">\n";
 		}
 	}
 
-	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>\n";
+	echo "				<input type='text' class='txt' style='width: 150px; margin-left: 15px;' name='search' id='search' value='".$search."'>\n";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
 	echo "			</td>\n";
 	echo "		</form>\n";
@@ -228,7 +228,7 @@
 	echo th_order_by('destination_description', $text['label-destination_description'], $order_by, $order);
 	echo "	<td class='list_control_icons'>";
 	if (permission_exists('destination_add')) {
-		echo "		<a href='destination_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo "		<a href='destination_edit.php?type=$destination_type' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	else {
 		echo "&nbsp;\n";
@@ -251,7 +251,7 @@
 			echo "		<input type='hidden' name=\"destinations[$x][destination_uuid]\" value='".$row['destination_uuid']."' />\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_type']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_number']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".format_phone($row['destination_number'])."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_number_regex']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_context']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_uuid']."&nbsp;</td>\n";
@@ -289,7 +289,7 @@
 	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
 	echo "		<td class='list_control_icons'>";
 	if (permission_exists('destination_add')) {
-		echo 		"<a href='destination_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo 		"<a href='destination_edit.php?type=$destination_type' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	else {
 		echo 		"&nbsp;";

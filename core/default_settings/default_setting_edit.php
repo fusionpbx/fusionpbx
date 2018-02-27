@@ -154,12 +154,12 @@
 				//set the message and redirect the user
 				if ($action == "add" && permission_exists('default_setting_add')) {
 					messages::add($text['message-add']);
-					header("Location: default_settings.php".(($search != '') ? "?search=".$search : null)."#".$default_setting_category);
+					header("Location: default_settings.php".(($search != '') ? "?search=".$search : null)."#anchor_".$default_setting_category);
 					return;
 				}
 				if ($action == "update" && permission_exists('default_setting_edit')) {
 					messages::add($text['message-update']);
-					header("Location: default_settings.php".(($search != '') ? "?search=".$search : null)."#".$default_setting_category);
+					header("Location: default_settings.php".(($search != '') ? "?search=".$search : null)."#anchor_".$default_setting_category);
 					return;
 				}
 			} //if ($_POST["persistformvar"] != "true")
@@ -478,6 +478,24 @@
 		echo "		<option value='fine' ".(($default_setting_value == 'fine') ? 'selected' : null).">".$text['label-fine']."</option>";
 		echo "		<option value='superfine' ".(($default_setting_value == 'superfine') ? 'selected' : null).">".$text['label-superfine']."</option>";
 		echo "	</select>";
+	}
+	elseif ($category == "provision" && $subcategory == "aastra_time_format" && $name == "text" ) {
+		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "		<option value='1' ".(($default_setting_value == "1") ? "selected='selected'" : null).">".$text['label-24-hour']."</option>\n";
+		echo "		<option value='0' ".(($default_setting_value == "0") ? "selected='selected'" : null).">".$text['label-12-hour']."</option>\n";
+		echo "	</select>\n";
+	}
+	elseif ($category == "provision" && $subcategory == "aastra_date_format" && $name == "text" ) {
+		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "		<option value='0' ".(($default_setting_value == "0") ? "selected='selected'" : null).">WWW MMM DD</option>\n";
+		echo "		<option value='1' ".(($default_setting_value == "1") ? "selected='selected'" : null).">DD-MMM-YY</option>\n";
+		echo "		<option value='2' ".(($default_setting_value == "2") ? "selected='selected'" : null).">YYYY-MM-DD</option>\n";
+		echo "		<option value='3' ".(($default_setting_value == "3") ? "selected='selected'" : null).">DD/MM/YYYY</option>\n";
+		echo "		<option value='4' ".(($default_setting_value == "4") ? "selected='selected'" : null).">DD/MM/YY</option>\n";
+		echo "		<option value='5' ".(($default_setting_value == "5") ? "selected='selected'" : null).">DD-MM-YY</option>\n";
+		echo "		<option value='6' ".(($default_setting_value == "6") ? "selected='selected'" : null).">MM/DD/YY</option>\n";
+		echo "		<option value='7' ".(($default_setting_value == "7") ? "selected='selected'" : null).">MMM DD</option>\n";
+		echo "	</select>\n";
 	}
 	elseif ($category == "theme" && $subcategory == "domain_visible" && $name == "text" ) {
 		echo "    <select class='formfld' id='default_setting_value' name='default_setting_value'>\n";

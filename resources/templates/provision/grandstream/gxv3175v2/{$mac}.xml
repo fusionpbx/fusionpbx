@@ -208,7 +208,7 @@
     <!-- Dial Plan Prefix, MaxLength 32 -->
     <P66></P66>
     <!-- Dial Plan Maxlength = unlimited, default is allow all {x+|*x+} -->
-    <P290>{ x+ | *x+ | *xx*x+ }</P290>
+    <P290>{$grandstream_dial_plan}</P290>
     <!-- Early Dial. 0 - No, 1 - Yes -->
     <P29>0</P29>
     <!-- Refer-To Use Target Contact. 0 - No, 1 - Yes -->

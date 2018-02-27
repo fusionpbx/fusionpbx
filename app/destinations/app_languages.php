@@ -1,5 +1,5 @@
 <?php
-#This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
+#This file was last reorganized on 27th of September 2017 01:41:51 PM UTC
 
 $text['title-destinations']['en-us'] = "Destinations";
 $text['title-destinations']['ar-eg'] = "جهات الأتصال";
@@ -603,7 +603,7 @@ $text['header-destination-add']['uk-ua'] = "Номер";
 
 $text['header-destination_import']['en-us'] = "Import Destinations";
 $text['header-destination_import']['ar-eg'] = "";
-$text['header-destination_import']['de-at'] = "Importieren";
+$text['header-destination_import']['de-at'] = "Importieren"; //copied from de-de
 $text['header-destination_import']['de-ch'] = "Importieren"; //copied from de-de
 $text['header-destination_import']['de-de'] = "Importieren";
 $text['header-destination_import']['es-cl'] = "Importar";
@@ -614,7 +614,7 @@ $text['header-destination_import']['he-il'] = "";
 $text['header-destination_import']['it-it'] = "";
 $text['header-destination_import']['nl-nl'] = "";
 $text['header-destination_import']['pl-pl'] = "Importuj";
-$text['header-destination_import']['pt-br'] = "Importar";
+$text['header-destination_import']['pt-br'] = "Importar"; //copied from pt-pt
 $text['header-destination_import']['pt-pt'] = "Importar";
 $text['header-destination_import']['ro-ro'] = "";
 $text['header-destination_import']['ru-ru'] = "Импорт";

@@ -480,7 +480,7 @@
 <!-- Dial Plan. Default value is { x+ | *x+ | *xx*x+ } -->
 <!-- String -->
 <!-- Mandatory -->
-<P290>{ x+ | *x+ | *xx*x+ }</P290>
+<P290>{$grandstream_dial_plan}</P290>
 
 
 <!-- Delayed Call Forward Wait Time (in seconds). Default is 20 -->
