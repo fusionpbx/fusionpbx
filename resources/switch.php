@@ -1279,7 +1279,7 @@ if (!function_exists('switch_conf_xml')) {
 			$file_contents = file_get_contents($path."/autoload_configs/switch.conf.xml");
 
 		//prepare the php variables
-			if (stristr(PHP_OS, 'WIN')) {
+			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 				$php_bin = win_find_php('php.exe');
 				if(!$php_bin){ // relay on system path
 					$php_bin = 'php.exe';
