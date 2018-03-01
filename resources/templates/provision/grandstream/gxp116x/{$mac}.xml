@@ -795,7 +795,11 @@
 
 <!--  Firmware Server Path -->
 <!--  String -->
-<P192>fm.grandstream.com/gs</P192>
+{if isset($grandstream_firmware_path)}
+<P192>{$grandstream_firmware_path}</P192>
+{else}
+<P192>{$domain_name}{$project_path}/app/provision</P192>
+{/if}
 
 <!--  Config Server Path -->
 <!--  String -->
