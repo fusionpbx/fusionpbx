@@ -567,14 +567,33 @@
 <P212>2</P212>
 
 <!-- Firmware Server Path -->
-<P192>fm.grandstream.com/gs</P192>
+<P192>{domain_name}/firmware/gs</P192>
+
+<!-- Config Server Path -->
+<P237>{$domain_name}{$project_path}/app/provision</P237>
+
+{if isset($grandstream_firmware_path)}
+<P192>{$grandstream_firmware_path}</P192>
+{else}
+<P192>{$domain_name}{$project_path}/app/provision</P192>
+{/if}
 
 <!-- Config Server Path  -->
 
 <P237>{$domain_name}{$project_path}/app/provision</P237>
 
-<!-- XML Config File Password  -->
-<P1359></P1359>
+<!-- XML Config File Password -->
+<!-- String; between ascii values 33 and 126 -->
+<!-- Mandatory -->
+<P1359>{$http_auth_password}</P1359>
+
+<!--  HTTP/HTTPS User Name -->
+<!--  String; between ascii values 33 and 126 -->
+<P1360>{$http_auth_username}</P1360>
+
+<!--  HTTP/HTTPS Password -->
+<!--  String; between ascii values 33 and 126 -->
+<P1361>{$http_auth_password}</P1361>
 
 <!-- Automatic Upgrade Interval(Minutes):60-525600  -->
 <P193>1080</P193>
