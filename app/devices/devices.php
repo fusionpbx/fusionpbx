@@ -82,7 +82,7 @@
 	}
 	if (strlen($search) > 0) {
 		$sql .= "(";
-		$sql .= "	d.device_mac_address like '%".$search."%' ";
+		$sql .= "	lower(d.device_mac_address) like '%".strtolower($search)."%' ";
 		$sql .= "	or d.device_label like '%".$search."%' ";
 		$sql .= "	or d.device_vendor like '%".$search."%' ";
 		$sql .= "	or d.device_enabled like '%".$search."%' ";
@@ -94,7 +94,7 @@
 	}
 	$prep_statement = $db->prepare($sql);
 	if ($prep_statement) {
-	$prep_statement->execute();
+		$prep_statement->execute();
 		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 		if ($row['num_rows'] > 0) {
 			$num_rows = $row['num_rows'];
@@ -135,7 +135,7 @@
 	}
 	if (strlen($search) > 0) {
 		$sql .= "and (";
-		$sql .= "	d.device_mac_address like '%".$search."%' ";
+		$sql .= "	lower(d.device_mac_address) like '%".strtolower($search)."%' ";
 		$sql .= "	or d.device_label like '%".$search."%' ";
 		$sql .= "	or d.device_vendor like '%".$search."%' ";
 		$sql .= "	or d.device_enabled like '%".$search."%' ";
