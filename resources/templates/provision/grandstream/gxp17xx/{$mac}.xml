@@ -6026,11 +6026,11 @@
 
 <!-- # Config HTTP/HTTPS User Name -->
 <!-- # String -->
-<P1360></P1360>
+<P1360>{$http_auth_username}</P1360>
 
 <!-- # Config HTTP/HTTPS Password -->
 <!-- # String -->
-<P1361></P1361>
+<P1361>{$http_auth_password}</P1361>
 
 <!-- # Config File Prefix -->
 <!-- # String -->
@@ -6042,7 +6042,7 @@
 
 <!-- # XML Config File Password -->
 <!-- # String -->
-<P1359></P1359>
+<P1359>{$http_auth_password}</P1359>
 
 <!-- # Authenticate Conf File. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
@@ -6057,7 +6057,12 @@
 
 <!-- # Firmware Server Path -->
 <!-- # String -->
-<P192>fm.grandstream.com/gs</P192>
+    
+{if isset($grandstream_firmware_path)}
+<P192>{$grandstream_firmware_path}</P192>
+{else}
+<P192>{$domain_name}{$project_path}/app/provision</P192>
+{/if}
 
 <!-- # Firmware HTTP/HTTPS User Name. -->
 <!-- # String -->

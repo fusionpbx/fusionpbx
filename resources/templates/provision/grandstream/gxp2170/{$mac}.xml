@@ -20,7 +20,6 @@
 <!-- # Account Active. 0 - No, 1 - Yes. Default is 1 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-{if isset($user_password_1)}
 <P271>1</P271>
 {else}
 <P271>0</P271>
@@ -5477,7 +5476,7 @@
 
 <!-- # XML Config File Password -->
 <!-- # String -->
-<P1359></P1359>
+<P1359>{$http_auth_password}</P1359>
 
 <!-- # Authenticate Conf File. 0 - No, 1 - Yes. Default is No -->
 <!-- # Number: 0, 1 -->

@@ -133,7 +133,7 @@
 	$sql .= "limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$streams = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
 
 //alternate the row style
@@ -192,8 +192,12 @@
 	echo "	<th style='width:30px;'>\n";
 	echo "		<input type='checkbox' name='checkbox_all' id='checkbox_all' value='' onclick=\"checkbox_toggle();\">\n";
 	echo "	</th>\n";
+	if ($_GET['show'] == "all" && permission_exists('stream_all')) {
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param);
+	}
 	echo th_order_by('stream_name', $text['label-stream_name'], $order_by, $order);
-	echo th_order_by('stream_location', $text['label-stream_location'], $order_by, $order);
+	echo "	<th>".$text['label-play']."</th>\n";
+	//echo th_order_by('stream_location', $text['label-stream_location'], $order_by, $order);
 	echo th_order_by('stream_enabled', $text['label-stream_enabled'], $order_by, $order);
 	echo th_order_by('stream_description', $text['label-stream_description'], $order_by, $order);
 	echo "	<td class='list_control_icons'>";
@@ -206,9 +210,9 @@
 	echo "	</td>\n";
 	echo "<tr>\n";
 
-	if (is_array($result)) {
+	if (is_array($streams)) {
 		$x = 0;
-		foreach($result as $row) {
+		foreach($streams as $row) {
 			if (permission_exists('stream_edit')) {
 				$tr_link = "href='stream_edit.php?id=".$row['stream_uuid']."'";
 			}
@@ -217,8 +221,27 @@
 			echo "		<input type='checkbox' name=\"streams[$x][checked]\" id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$x."').checked = false; }\">\n";
 			echo "		<input type='hidden' name=\"streams[$x][stream_uuid]\" value='".$row['stream_uuid']."' />\n";
 			echo "	</td>\n";
+			if ($_GET['show'] == "all" && permission_exists('stream_all')) {
+				if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
+					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
+				}
+				else {
+					$domain = $text['label-global'];
+				}
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$domain."</td>\n";
+			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['stream_name'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['stream_location'])."&nbsp;</td>\n";
+
+			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
+			if (strlen($row['stream_location']) > 0) {
+				$location_parts = explode('://',$row['stream_location']);
+				if ($location_parts[0] == "shout") {
+					echo "<audio src=\"http://".$location_parts[1]."\" controls=\"controls\"/>\n";
+				}
+			}
+			echo "	</td>\n";
+
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['stream_location'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['stream_enabled'])."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['domain_uuid'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".escape($row['stream_description'])."&nbsp;</td>\n";
@@ -234,11 +257,11 @@
 			$x++;
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($sql, $streams, $row_count);
 	} //end if results
 
 	echo "<tr>\n";
-	echo "<td colspan='6' align='left'>\n";
+	echo "<td colspan='7' align='left'>\n";
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";

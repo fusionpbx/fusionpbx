@@ -228,6 +228,15 @@
 	$prep_statement->execute();
 	$phrases = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
+//get the streams
+	$sql = "select * from v_streams ";
+	$sql .= "where (domain_uuid = '".$_SESSION["domain_uuid"]."' or domain_uuid is null) ";
+	$sql .= "and stream_enabled = 'true' ";
+	$sql .= "order by stream_name asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$streams = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+
 //show the header
 	require_once "resources/header.php";
 
@@ -306,7 +315,7 @@
 	//recordings
 		$tmp_selected = false;
 		if (is_array($recordings)) {
-			echo "<optgroup label='Recordings'>\n";
+			echo "<optgroup label='".$text['label-recordings']."'>\n";
 			foreach ($recordings as &$row) {
 				$recording_name = $row["recording_name"];
 				$recording_filename = $row["recording_filename"];
@@ -322,7 +331,7 @@
 		}
 	//phrases
 		if (count($phrases) > 0) {
-			echo "<optgroup label='Phrases'>\n";
+			echo "<optgroup label='".$text['label-phrases']."'>\n";
 			foreach ($phrases as &$row) {
 				$selected = ($conference_center_greeting == "phrase:".$row["phrase_uuid"]) ? true : false;
 				echo "	<option value='phrase:".$row["phrase_uuid"]."' ".(($selected) ? "selected='selected'" : null).">".$row["phrase_name"]."</option>\n";
@@ -335,7 +344,7 @@
 		$file = new file;
 		$sound_files = $file->sounds();
 		if (is_array($sound_files)) {
-			echo "<optgroup label='Sounds'>\n";
+			echo "<optgroup label='".$text['label-sounds']."'>\n";
 			foreach ($sound_files as $key => $value) {
 				if (strlen($value) > 0) {
 					if (substr($conference_center_greeting, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
