@@ -196,6 +196,7 @@
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param);
 	}
 	echo th_order_by('stream_name', $text['label-stream_name'], $order_by, $order);
+	echo "	<th>".$text['label-play']."</th>\n";
 	echo th_order_by('stream_location', $text['label-stream_location'], $order_by, $order);
 	echo th_order_by('stream_enabled', $text['label-stream_enabled'], $order_by, $order);
 	echo th_order_by('stream_description', $text['label-stream_description'], $order_by, $order);
@@ -230,6 +231,16 @@
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$domain."</td>\n";
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['stream_name'])."&nbsp;</td>\n";
+
+			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
+			if (strlen($row['stream_location']) > 0) {
+				$location_parts = explode('://',$row['stream_location']);
+				if ($location_parts[0] == "shout") {
+					echo "<audio src=\"http://".$location_parts[1]."\" controls=\"controls\"/>\n";
+				}
+			}
+			echo "	</td>\n";
+
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['stream_location'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['stream_enabled'])."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['domain_uuid'])."&nbsp;</td>\n";
