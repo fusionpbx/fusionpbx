@@ -1330,7 +1330,8 @@ if (!function_exists('xml_cdr_conf_xml')) {
 
 		//get the global variables
 			global $domain_uuid;
-
+			global $domain_name;
+		
 		//get the database connection
 			require_once "resources/classes/database.php";
 			$database = new database;
@@ -1348,7 +1349,7 @@ if (!function_exists('xml_cdr_conf_xml')) {
 
 		//replace the values in the template
 			$file_contents = str_replace("{v_http_protocol}", "http", $file_contents);
-			$file_contents = str_replace("{domain_name}", "127.0.0.1", $file_contents);
+			$file_contents = str_replace("{domain_name}", $domain_name, $file_contents);
 			$file_contents = str_replace("{v_project_path}", PROJECT_PATH, $file_contents);
 
 			$v_user = generate_password();
