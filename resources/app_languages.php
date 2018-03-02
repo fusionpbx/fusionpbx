@@ -504,7 +504,6 @@ $text['button-restore']['sv-se'] = "Aktivera Standard Inställningar";
 $text['button-restore']['uk-ua'] = "Відновити типові значення";
 $text['button-restore']['tr-tr'] = "Varsayılana Geri Yükle";
 
-
 $text['button-reset']['en-us'] = "Reset";
 $text['button-reset']['ar-eg'] = "إعادة تعيين";
 $text['button-reset']['de-at'] = "Zurücksetzen"; //copied from de-de
@@ -1092,6 +1091,26 @@ $text['button-import']['ru-ru'] = "Импорт";
 $text['button-import']['sv-se'] = "Importera";
 $text['button-import']['uk-ua'] = "";
 $text['button-import']['tr-tr'] = "İçe Aktar";
+
+$text['button-qr_code']['en-us'] = "QR Code";
+$text['button-qr_code']['ar-eg'] = "";
+$text['button-qr_code']['de-at'] = "QR Code"; //copied from de-de
+$text['button-qr_code']['de-ch'] = "QR Code"; //copied from de-de
+$text['button-qr_code']['de-de'] = "QR Code";
+$text['button-qr_code']['es-cl'] = "Código QR";
+$text['button-qr_code']['es-mx'] = "Código QR"; //copied from es-cl
+$text['button-qr_code']['fr-ca'] = "Code QR"; //copied from fr-fr
+$text['button-qr_code']['fr-fr'] = "Code QR";
+$text['button-qr_code']['he-il'] = "";
+$text['button-qr_code']['it-it'] = "QR Code";
+$text['button-qr_code']['nl-nl'] = "";
+$text['button-qr_code']['pl-pl'] = "Kod QR";
+$text['button-qr_code']['pt-br'] = "QR Code";
+$text['button-qr_code']['pt-pt'] = "Código QR.";
+$text['button-qr_code']['ro-ro'] = "";
+$text['button-qr_code']['ru-ru'] = "QR Код";
+$text['button-qr_code']['sv-se'] = "QR Kod";
+$text['button-qr_code']['uk-ua'] = "";
 
 $text['label-total']['en-us'] = "Total";
 $text['label-total']['ar-eg'] = "";
@@ -2185,7 +2204,7 @@ $text['label-streams']['sv-se'] = '';
 $text['label-streams']['uk-ua'] = '';
 
 $text['label-default']['en-us'] = "Default";
-$text['label-default']['ar-eg'] = "בְּרִירַת מֶחדָל";
+$text['label-default']['ar-eg'] = "בְּרִירַת מֶחדָל";
 $text['label-default']['de-at'] = "Standard"; //copied from de-de
 $text['label-default']['de-ch'] = "Standard"; //copied from de-de
 $text['label-default']['de-de'] = "Standard";
