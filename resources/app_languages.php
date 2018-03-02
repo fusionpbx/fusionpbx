@@ -2601,6 +2601,26 @@ $text['label-greeting']['ru-ru'] = "Приветствие";
 $text['label-greeting']['sv-se'] = "Hälsning";
 $text['label-greeting']['uk-ua'] = "ID привітання";
 
+$text['label-play']['en-us'] = 'Play';
+$text['label-play']['ar-eg'] = '';
+$text['label-play']['de-at'] = '';
+$text['label-play']['de-ch'] = '';
+$text['label-play']['de-de'] = '';
+$text['label-play']['es-cl'] = '';
+$text['label-play']['es-mx'] = '';
+$text['label-play']['fr-ca'] = '';
+$text['label-play']['fr-fr'] = '';
+$text['label-play']['he-il'] = '';
+$text['label-play']['it-it'] = '';
+$text['label-play']['nl-nl'] = '';
+$text['label-play']['pl-pl'] = '';
+$text['label-play']['pt-br'] = '';
+$text['label-play']['pt-pt'] = '';
+$text['label-play']['ro-ro'] = '';
+$text['label-play']['ru-ru'] = '';
+$text['label-play']['sv-se'] = '';
+$text['label-play']['uk-ua'] = '';
+
 $text['description-greeting']['en-us'] = "Select the desired Greeting.";
 $text['description-greeting']['ar-eg'] = "";
 $text['description-greeting']['de-at'] = "Geben Sie die Begrüßungs-ID an."; //copied from de-de
