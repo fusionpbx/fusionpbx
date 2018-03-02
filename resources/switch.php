@@ -1348,7 +1348,7 @@ if (!function_exists('xml_cdr_conf_xml')) {
 
 		//replace the values in the template
 			$file_contents = str_replace("{v_http_protocol}", "http", $file_contents);
-			$file_contents = str_replace("{domain_name}", "127.0.0.1", $file_contents);
+			$file_contents = str_replace("{domain_name}", $_SERVER['SERVER_NAME'], $file_contents);
 			$file_contents = str_replace("{v_project_path}", PROJECT_PATH, $file_contents);
 
 			$v_user = generate_password();
