@@ -329,16 +329,6 @@
 			}
 			echo "</optgroup>\n";
 		}
-	//streams
-		if (is_dir($_SERVER["PROJECT_ROOT"].'/app/streams')) {
-			if (sizeof($streams) > 0) {
-				echo "	<optgroup label='".$text['label-streams']."'>";
-				foreach($streams as $row){
-					echo "		<option value='".$row['stream_location']."' ".(($selected == $row['stream_location']) ? 'selected="selected"' : null).">".$row['stream_name']."</option>\n";
-				}
-				echo "	</optgroup>\n";
-			}
-		}
 	//phrases
 		if (count($phrases) > 0) {
 			echo "<optgroup label='".$text['label-phrases']."'>\n";
