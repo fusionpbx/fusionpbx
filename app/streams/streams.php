@@ -197,7 +197,7 @@
 	}
 	echo th_order_by('stream_name', $text['label-stream_name'], $order_by, $order);
 	echo "	<th>".$text['label-play']."</th>\n";
-	echo th_order_by('stream_location', $text['label-stream_location'], $order_by, $order);
+	//echo th_order_by('stream_location', $text['label-stream_location'], $order_by, $order);
 	echo th_order_by('stream_enabled', $text['label-stream_enabled'], $order_by, $order);
 	echo th_order_by('stream_description', $text['label-stream_description'], $order_by, $order);
 	echo "	<td class='list_control_icons'>";
@@ -241,7 +241,7 @@
 			}
 			echo "	</td>\n";
 
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['stream_location'])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['stream_location'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['stream_enabled'])."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['domain_uuid'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".escape($row['stream_description'])."&nbsp;</td>\n";
