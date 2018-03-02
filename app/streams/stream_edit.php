@@ -87,7 +87,9 @@
 			}
 
 		//set the domain_uuid
+			if (!permission_exists('stream_all')) {
 				$_POST["domain_uuid"] = $_SESSION["domain_uuid"];
+			}
 
 		//add the stream_uuid
 			if (strlen($_POST["stream_uuid"]) == 0) {
@@ -131,12 +133,12 @@
 	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
 		$stream_uuid = check_str($_GET["id"]);
 		$sql = "select * from v_streams ";
-		$sql .= "where stream_uuid = '$stream_uuid' ";
-		//$sql .= "and domain_uuid = '$domain_uuid' ";
+		$sql .= "where stream_uuid = '".$stream_uuid."' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
+			$domain_uuid = $row["domain_uuid"];
 			$stream_name = $row["stream_name"];
 			$stream_location = $row["stream_location"];
 			$stream_enabled = $row["stream_enabled"];
@@ -214,7 +216,7 @@
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select class='formfld' name='domain_uuid'>\n";
 	if (strlen($domain_uuid) == 0) {
-		echo "		<option value='' selected='selected'>".$text['select-global']."</option>\n";
+		echo "		<option value='' selected='selected'>".$text['label-global']."</option>\n";
 	}
 	else {
 		echo "		<option value=''>".$text['label-global']."</option>\n";
