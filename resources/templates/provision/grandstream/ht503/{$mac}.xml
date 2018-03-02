@@ -136,15 +136,18 @@
 <!--  Mandatory -->
 <P212>2</P212>
 
-<!--  Firmware Server Path -->
-<P192>fm.grandstream.com/gs</P192>
+{if isset($grandstream_firmware_path)}
+<P192>{$grandstream_firmware_path}</P192>
+{else}
+<P192>{$domain_name}{$project_path}/app/provision</P192>
+{/if}
 
 <!--  Config Server Path -->
 <P237>{$domain_name}{$project_path}/app/provision</P237>
 
 <!--  XML Config File Password -->
 <!--  String; between ascii values 33 and 126 -->
-<P1359></P1359>
+<P1359>{$http_auth_password}</P1359>
 
 <!--  HTTP/HTTPS User Name -->
 <!--  String; between ascii values 33 and 126 -->
