@@ -140,6 +140,16 @@ class text {
 				throw new Exception("failed to import text data from '$app_path'");
 			}
 
+        //collect existing comments
+            $comment = array();
+            $file_handle = fopen($lang_path, "r");
+            while (!feof($file_handle)) {
+                if(preg_match('/\$text\[[\'"](.+)[\'"]\]\[[\'"](.+)[\'"]]\s+=\s+[\'"].*[\'"];\s+\/\/(.+)/', fgets($file_handle), $matches)){
+                    $comment[$matches[0]][$matches[1]] = $matches[2];
+                }
+            }
+            fclose($file_handle);
+
 		//open the language file for writing
 			$lang_file = fopen($lang_path, 'w');
 			date_default_timezone_set('UTC');
@@ -234,6 +244,9 @@ class text {
 											}
 										}
 									}
+                                    if(strlen($append) == 0 and array_key_exists($comment, $lang_label) and array_key_exists($comment[$lang_label], $lang_code)) {
+                                        $append = " //$comment[$lang_label][$lang_code]";
+                                    }
 									fwrite($lang_file, "\$text['$lang_label']['$target_lang'$spacer] = \"".$this->escape_str($value)."\";$append\n");
 								}
 					}
