@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016
+	Portions created by the Initial Developer are Copyright (C) 2016-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,6 +30,7 @@ if (!class_exists('ringbacks')) {
 
 		//define variables
 		public $db;
+		public $domain_uuid;
 		private $ringbacks;
 		private $tones_list;
 		private $music_list;
@@ -45,6 +46,9 @@ if (!class_exists('ringbacks')) {
 					$database->connect();
 					$this->db = $database->db;
 				}
+
+			//set the domain_uuid
+				$this->domain_uuid = $_SESSION['domain_uuid'];
 
 			//add multi-lingual support
 				$language = new text;
@@ -68,7 +72,7 @@ if (!class_exists('ringbacks')) {
 				}
 				$this->ringbacks = $ringback_list;
 				unset($ringback_list);
-			
+
 			//get the default_ringback label
 				/*
 				$sql = "select * from v_vars where var_name = 'ringback' ";
@@ -91,7 +95,7 @@ if (!class_exists('ringbacks')) {
 					require_once "resources/classes/tones.php";
 					$tones = new tones;
 					$this->tones_list = $tones->tones_list();
-				
+
 			//get music on hold	and recordings
 				if (is_dir($_SERVER["PROJECT_ROOT"].'/app/music_on_hold')) {
 					require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
@@ -138,6 +142,24 @@ if (!class_exists('ringbacks')) {
 						$select .= "		<option value='".$recording_value."' ".(($selected == $recording_value) ? 'selected="selected"' : '').">".$recording_name."</option>\n";
 					}
 					$select .= "	</optgroup>\n";
+				}
+
+			//streams
+				if (is_dir($_SERVER["PROJECT_ROOT"].'/app/streams')) {
+					$sql = "select * from v_streams ";
+					$sql .= "where (domain_uuid = '".$this->domain_uuid."' or domain_uuid is null) ";
+					$sql .= "and stream_enabled = 'true' ";
+					$sql .= "order by stream_name asc ";
+					$prep_statement = $this->db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$streams = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					if (sizeof($streams) > 0) {
+						$select .= "	<optgroup label='".$text['label-streams']."'>";
+						foreach($streams as $row){
+							$select .= "		<option value='".$row['stream_location']."' ".(($selected == $row['stream_location']) ? 'selected="selected"' : null).">".$row['stream_name']."</option>\n";
+						}
+						$select .= "	</optgroup>\n";
+					}
 				}
 
 			//ringbacks

@@ -223,10 +223,10 @@
 
 
 <!-- HTTP/HTTPS User Name -->
-<P6713></P6713>
+<P6713>{$http_auth_username}</P6713>
 
 <!-- HTTP/HTTPS Password -->
-<P6714></P6714>
+<P6714>{$http_auth_password}</P6714>
 
 
 <!-- Download Interval. Default is 0 for disabled -->
