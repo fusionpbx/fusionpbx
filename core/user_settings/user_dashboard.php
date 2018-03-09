@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -940,7 +940,7 @@
 			$hud[$n]['html'] .= "<span class='hud_title' style='cursor: default;'>".$text['label-system_status']."</span>";
 
 			//disk usage
-			if (stristr(PHP_OS, 'Linux')) {
+			if (PHP_OS == 'FreeBSD' || PHP_OS == 'Linux') {
 				$df = shell_exec("/usr/bin/which df");
 				if($df){
 					$tmp = shell_exec($df." /home 2>&1");
