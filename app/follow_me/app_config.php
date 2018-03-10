@@ -89,7 +89,7 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "follow_me_cid_set";
+		$apps[$x]['permissions'][$y]['name'] = "follow_me_caller_id";
 
 	//schema details
 		$y=0;
