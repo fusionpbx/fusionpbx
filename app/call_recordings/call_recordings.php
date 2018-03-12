@@ -167,7 +167,7 @@
 	echo "<form method='post' action=''>\n";
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-call_recordings']."</b></td>\n";
+	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-call_recordings']." (".$num_rows.")</b></td>\n";
 	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
 	if (permission_exists('call_recording_download_add')) {
 		echo "				<button type='submit' class='btn btn-default' id='downloads' name=\"call_recordings[$x][action]\" alt='".$text['button-download']."' onclick=\"document.getElementById('downloads').value='download'\" value=''>".$text['button-downloads']."</span></button>\n";
