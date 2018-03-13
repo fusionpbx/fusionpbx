@@ -378,7 +378,9 @@
 		}
 		echo th_order_by('caller_id_name', $text['label-cid-name'], $order_by, $order, null, null, $param);
 		echo th_order_by('caller_id_number', $text['label-source'], $order_by, $order, null, null, $param);
-		echo th_order_by('caller_destination', $text['label-caller_destination'], $order_by, $order, null, null, $param);
+		if (permission_exists('caller_destination')) {
+			echo th_order_by('caller_destination', $text['label-caller_destination'], $order_by, $order, null, null, $param);
+		}
 		echo th_order_by('destination_number', $text['label-destination'], $order_by, $order, null, null, $param);
 		if (permission_exists('recording_play') || permission_exists('recording_download')) {
 			echo "<th>".$text['label-recording']."</th>\n";
@@ -410,7 +412,7 @@
 			echo th_order_by('rtp_audio_in_mos', $text['label-mos'], $order_by, $order, null, "style='text-align: center;'", $param, $text['description-mos']);
 			$col_count++;
 		}
-		if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
+		if (permission_exists('hangup_cause')) {
 			echo th_order_by('hangup_cause', $text['label-hangup_cause'], $order_by, $order, null, null, $param);
 		}
 		else {
@@ -542,16 +544,18 @@
 				echo "		</a>";
 				echo "	</td>\n";
 			//caller destination
-				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>";
-				echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['caller_id_name'])."&src_cid_number=".urlencode($row['caller_id_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['caller_destination'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
-				if (is_numeric($row['caller_destination'])) {
-					echo "		".format_phone($row['caller_destination']).' ';
+				if (permission_exists('caller_destination')) {
+					echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>";
+					echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['caller_id_name'])."&src_cid_number=".urlencode($row['caller_id_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['caller_destination'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
+					if (is_numeric($row['caller_destination'])) {
+						echo "		".format_phone($row['caller_destination']).' ';
+					}
+					else {
+						echo "		".$row['caller_destination'].' ';
+					}
+					echo "		</a>";
+					echo "	</td>\n";
 				}
-				else {
-					echo "		".$row['caller_destination'].' ';
-				}
-				echo "		</a>";
-				echo "	</td>\n";
 			//destination
 				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>";
 				echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['destination_number'])."&src_cid_number=".urlencode($row['destination_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['destination_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
@@ -673,7 +677,7 @@
 					echo "	<td valign='top' class='".$row_style[$c]."'$title style='text-align: center;'>$value</td>\n";
 				}
 			//hangup cause/call result
-				if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
+				if (permission_exists('hangup_cause')) {
 					echo "	<td valign='top' class='".$row_style[$c]."' nowrap='nowrap'><a ".$tr_link.">".$hangup_cause."</a></td>\n";
 				}
 				else {
