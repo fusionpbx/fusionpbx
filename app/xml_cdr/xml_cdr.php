@@ -267,11 +267,11 @@
 			echo "</td>";
 
 			// show hangup clause filter to super/admin
-			if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
-				echo "<td width='27%' style='vertical-align: top;'>\n";
+			echo "<td width='27%' style='vertical-align: top;'>\n";
 
-					echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-					echo "	<tr>\n";
+				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+				echo "	<tr>\n";
+				if (permission_exists('hangup_cause')) {
 					echo "		<td class='vncell' valign='top' nowrap='nowrap'>\n";
 					echo "			".$text['label-hangup_cause']."\n";
 					echo "		</td>\n";
@@ -319,6 +319,8 @@
 					echo "			</select>\n";
 					echo "		</td>\n";
 					echo "	</tr>\n";
+				}
+				if (permission_exists('caller_destination')) {
 					echo "	<tr>\n";
 					echo "		<td class='vncell' valign='top' nowrap='nowrap'>\n";
 					echo "			".$text['label-caller_destination']."\n";
@@ -327,10 +329,10 @@
 					echo "			<input type='text' class='formfld' name='caller_destination' value='$caller_destination'>\n";
 					echo "		</td>\n";
 					echo "	</tr>\n";
-					echo "</table>\n";
+				}
+				echo "</table>\n";
 
-				echo "</td>";
-			}
+			echo "</td>";
 
 			echo "</tr>";
 			echo "</table>";
