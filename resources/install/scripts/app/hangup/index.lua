@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2015
+--	Copyright (C) 2015 - 2018
 --	the Initial Developer. All Rights Reserved.
 
 --set the debug options
@@ -30,6 +30,9 @@
 	require "resources.functions.trim";
 	require "resources.functions.base64";
 	require "resources.functions.file_exists";
+
+--load libraries
+	require 'resources.functions.send_mail'
 
 --create the api object
 	api = freeswitch.API();
@@ -55,10 +58,11 @@
 					end
 
 				--prepare the headers
-					headers = '{"X-FusionPBX-Domain-UUID":"'..domain_uuid..'",';
-					headers = headers..'"X-FusionPBX-Domain-Name":"'..domain_name..'",';
-					headers = headers..'"X-FusionPBX-Call-UUID":"'..uuid..'",';
-					headers = headers..'"X-FusionPBX-Email-Type":"missed"}';
+					local headers = {}
+					headers["X-FusionPBX-Domain-UUID"] = domain_uuid;
+					headers["X-FusionPBX-Domain-Name"] = domain_name;
+					headers["X-FusionPBX-Call-UUID"]   = uuid;
+					headers["X-FusionPBX-Email-Type"]  = 'missed';
 
 				--prepare the subject
 					local f = io.open(file_subject, "r");
@@ -89,11 +93,14 @@
 					body = trim(body);
 
 				--send the emails
-					cmd = "luarun email.lua "..missed_call_data.." "..missed_call_data.." "..headers.." '"..subject.."' '"..body.."'";
+					send_mail(headers,
+						missed_call_data,
+						{subject, body}
+					);
+
 					if (debug["info"]) then
-						freeswitch.consoleLog("notice", "[missed call] cmd: " .. cmd .. "\n");
+						freeswitch.consoleLog("notice", "[missed call] " .. caller_id_number .. "->" .. sip_to_user .. "emailed to " .. missed_call_data .. "\n");
 					end
-					result = api:executeString(cmd);
 			end
 		end
 	end

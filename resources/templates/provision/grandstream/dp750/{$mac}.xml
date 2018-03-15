@@ -475,7 +475,7 @@
 
 <!-- Dial Plan  -->
 <!-- String Max Length: 1024 -->
-<P4200>{ x+ | *x+ | *xx | *xxx | *xxxx | *xxxxx | *xxxxxx | **xx | **xxx | **xxxx | **xxxxx | **xxxxxx | **xxxxxxx | **xxxxxxxx | *xx*x+ }</P4200>
+<P4200>{$grandstream_dial_plan}</P4200>
 <!-- <P4200>{ x+ | *x+ | *xx | *xxx | *xxxx | *xxxxx | *xxxxxx | **xx | **xxx | **xxxx | **xxxxx | **xxxxxx | **xxxxxxx | **xxxxxxxx | *xx*x+ | \+x+ | \p\a\r\k\+*x+ }</P4200> -->
 
 <!-- Use #as Dial Key (if set to Yes, "#" will function as the "(Re-)Dial" key). 0 - no, 1 - yes -->
@@ -2632,7 +2632,7 @@
 <!-- XML Config File Password -->
 <!-- String Max Length: 40 -->
 <!-- Mandatory; between ascii values 33 and 126 -->
-<P1359></P1359>
+<P1359>{$http_auth_password}</P1359>
 
 <!-- HTTP/HTTPS User Name for config server -->
 <!-- String Max Length: 40; between ascii values 33 and 126 -->

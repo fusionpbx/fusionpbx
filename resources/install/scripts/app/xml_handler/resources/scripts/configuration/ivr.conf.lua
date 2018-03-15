@@ -1,6 +1,6 @@
 --      xml_handler.lua
 --      Part of FusionPBX
---      Copyright (C) 2016-2017 Mark J Crane <markjcrane@fusionpbx.com>
+--      Copyright (C) 2016-2018 Mark J Crane <markjcrane@fusionpbx.com>
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -38,7 +38,7 @@
 	if not XML_STRING  then
 		--log cache error
 			if (debug["cache"]) then
-				freeswitch.consoleLog("warning", "[xml_handler] " .. ivr_menu_cache_key .. " can not be get from memcache: " .. tostring(err) .. "\n");
+				freeswitch.consoleLog("warning", "[xml_handler] " .. ivr_menu_cache_key .. " can not be get from the cache: " .. tostring(err) .. "\n");
 			end
 
 		--required includes
@@ -273,9 +273,9 @@
 			local ok, err = cache.set(ivr_menu_uuid, XML_STRING, expire["ivr"]);
 			if debug["cache"] then
 				if ok then
-					freeswitch.consoleLog("notice", "[xml_handler] " .. ivr_menu_uuid .. " stored in memcache\n");
+					freeswitch.consoleLog("notice", "[xml_handler] " .. ivr_menu_uuid .. " stored in the cache\n");
 				else
-					freeswitch.consoleLog("warning", "[xml_handler] " .. ivr_menu_uuid .. " can not be stored in memcache: " .. tostring(err) .. "\n");
+					freeswitch.consoleLog("warning", "[xml_handler] " .. ivr_menu_uuid .. " can not be stored in the cache: " .. tostring(err) .. "\n");
 				end
 			end
 
@@ -294,6 +294,6 @@
 	else
 		--send to the console
 			if (debug["cache"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] " .. ivr_menu_cache_key .. " source: memcache\n");
+				freeswitch.consoleLog("notice", "[xml_handler] " .. ivr_menu_cache_key .. " source: cache\n");
 			end
 	end --if XML_STRING

@@ -114,20 +114,31 @@
 					if (debug["info"]) then
 						freeswitch.consoleLog("notice", "[voicemail] message length: " .. message_length .. "\n");
 					end
-					local message_date = os.date("%A, %d %b %Y %I:%M %p", created_epoch)
+					local message_date = os.date("%A, %d %b %Y %I:%M %p", created_epoch);
 
-				--prepare the files
-					if (transcription ~= nil) then
-						file_subject = scripts_dir.."/app/voicemail/resources/templates/"..default_language.."/"..default_dialect.."/email_subject.tpl";
-						file_body = scripts_dir.."/app/voicemail/resources/templates/"..default_language.."/"..default_dialect.."/email_body_transcription.tpl";					
+				--connect to the database
+					local dbh = Database.new('system');
+
+				--get the templates
+					local sql = "SELECT * FROM v_email_templates ";
+					sql = sql .. "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					sql = sql .. "AND template_language = :template_language ";
+					sql = sql .. "AND template_category = 'email' "
+					if (transcription == nil) then
+						sql = sql .. "AND template_subcategory = 'default' "
 					else
-						file_subject = scripts_dir.."/app/voicemail/resources/templates/"..default_language.."/"..default_dialect.."/email_subject.tpl";
-						file_body = scripts_dir.."/app/voicemail/resources/templates/"..default_language.."/"..default_dialect.."/email_body.tpl";
+						sql = sql .. "AND template_subcategory = 'transcription' "
 					end
-					if (not file_exists(file_subject)) then
-						file_subject = scripts_dir.."/app/voicemail/resources/templates/en/us/email_subject.tpl";
-						file_body = scripts_dir.."/app/voicemail/resources/templates/en/us/email_body.tpl";
+					sql = sql .. "AND template_enabled = 'true' "
+					sql = sql .. "ORDER BY domain_uuid DESC "
+					local params = {domain_uuid = domain_uuid, template_language = default_language.."-"..default_dialect};
+					if (debug["sql"]) then
+						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 					end
+					dbh:query(sql, params, function(row)
+						subject = row["template_subject"];
+						body = row["template_body"];
+					end);
 
 				--get the link_address
 					link_address = http_protocol.."://"..domain_name..project_path;
@@ -150,10 +161,8 @@
 					if (voicemail_description ~= nil and voicemail_description ~= "" and voicemail_description ~= id) then
 						voicemail_name_formatted = voicemail_name_formatted.." ("..voicemail_description..")";
 					end
+
 				--prepare the subject
-					local f = io.open(file_subject, "r");
-					local subject = f:read("*all");
-					f:close();
 					subject = subject:gsub("${caller_id_name}", caller_id_name);
 					subject = subject:gsub("${caller_id_number}", caller_id_number);
 					subject = subject:gsub("${message_date}", message_date);
@@ -167,9 +176,6 @@
 					subject = '=?utf-8?B?'..base64.encode(subject)..'?=';
 
 				--prepare the body
-					local f = io.open(file_body, "r");
-					body = f:read("*all");
-					f:close();
 					body = body:gsub("${caller_id_name}", caller_id_name);
 					body = body:gsub("${caller_id_number}", caller_id_number);
 					body = body:gsub("${message_date}", message_date);
@@ -191,11 +197,9 @@
 					else
 						body = body:gsub("${message}", "<a href='"..link_address.."/app/voicemails/voicemail_messages.php?action=autoplay&id="..db_voicemail_uuid.."&uuid="..uuid.."'>"..text['label-listen'].."</a>");
 					end
-					body = body:gsub(" ", "&nbsp;");
-					body = body:gsub("%s+", "");
-					body = body:gsub("&nbsp;", " ");
-					body = body:gsub("\n", "");
-					body = body:gsub("\n", "");
+					--body = body:gsub(" ", "&nbsp;");
+					--body = body:gsub("%s+", "");
+					--body = body:gsub("&nbsp;", " ");
 					body = trim(body);
 
 				--prepare file

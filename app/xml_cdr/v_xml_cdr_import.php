@@ -33,7 +33,6 @@
 		set_include_path($document_root);
 		$_SERVER["DOCUMENT_ROOT"] = $document_root;
 		require_once "resources/require.php";
-		$display_type = 'text'; //html, text
 	}
 	else {
 		include "root.php";
@@ -163,8 +162,15 @@
 			$database->fields['cc_queue_joined_epoch'] = check_str(urldecode($xml->variables->cc_queue_joined_epoch));
 			$database->fields['cc_queue'] = check_str(urldecode($xml->variables->cc_queue));
 			$database->fields['cc_member_session_uuid'] = check_str(urldecode($xml->variables->cc_member_session_uuid));
+			$database->fields['cc_agent_uuid'] = check_str(urldecode($xml->variables->cc_agent_uuid));
 			$database->fields['cc_agent'] = check_str(urldecode($xml->variables->cc_agent));
 			$database->fields['cc_agent_type'] = check_str(urldecode($xml->variables->cc_agent_type));
+			$database->fields['cc_agent_bridged'] = check_str(urldecode($xml->variables->cc_agent_bridged));
+			$database->fields['cc_queue_answered_epoch'] = check_str(urldecode($xml->variables->cc_queue_answered_epoch));
+			$database->fields['cc_queue_terminated_epoch'] = check_str(urldecode($xml->variables->cc_queue_terminated_epoch));
+			$database->fields['cc_queue_canceled_epoch'] = check_str(urldecode($xml->variables->cc_queue_canceled_epoch));
+			$database->fields['cc_cancel_reason'] = check_str(urldecode($xml->variables->cc_cancel_reason));
+			$database->fields['cc_cause'] = check_str(urldecode($xml->variables->cc_cause));
 			$database->fields['waitsec'] = check_str(urldecode($xml->variables->waitsec));
 		//app info
 			$database->fields['last_app'] = check_str(urldecode($xml->variables->last_app));
@@ -294,6 +300,11 @@
 			elseif (strlen($xml->variables->sofia_record_file) > 0) {
 				$record_path = dirname(urldecode($xml->variables->sofia_record_file));
 				$record_name = basename(urldecode($xml->variables->sofia_record_file));
+				$record_length = urldecode($xml->variables->record_seconds);
+			}
+			elseif (strlen($xml->variables->cc_record_filename) > 0) {
+				$record_path = dirname(urldecode($xml->variables->cc_record_filename));
+				$record_name = basename(urldecode($xml->variables->cc_record_filename));
 				$record_length = urldecode($xml->variables->record_seconds);
 			}
 			elseif (strlen($xml->variables->api_on_answer) > 0) {

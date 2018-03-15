@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -124,20 +124,20 @@
 		echo "	<input type='hidden' name='order_by' value='".$order_by."'>\n";
 		echo "	<input type='hidden' name='order' value='".$order."'>\n";
 	}
-	if (permission_exists('xml_cdr_all') && $_REQUEST['showall'] == 'true') {
-		echo "	<input type='hidden' name='showall' value='true'>\n";
+	if (permission_exists('xml_cdr_all') && $_REQUEST['show'] == 'all') {
+		echo "	<input type='hidden' name='show' value='all'>\n";
 	}
 	echo "	<table cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "		<tr>\n";
 	echo "			<td style='vertical-align: top;'>\n";
 	if (permission_exists('xml_cdr_all')) {
-		if ($_REQUEST['showall'] != 'true') {
-			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='xml_cdr.php?showall=true';\">\n";
+		if ($_REQUEST['show'] != 'alll') {
+			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='xml_cdr.php?show=all';\">\n";
 		}
 	}
 	if (permission_exists('xml_cdr_search_advanced')) {
-		if ($_REQUEST['showall'] == 'true') {
-			$query_string = "showall=true";
+		if ($_REQUEST['show'] == 'all') {
+			$query_string = "show=all";
 		}
 		echo "			<input type='button' class='btn' value='".$text['button-advanced_search']."' onclick=\"window.location='xml_cdr_search.php?$query_string';\">\n";
 	}
@@ -267,11 +267,11 @@
 			echo "</td>";
 
 			// show hangup clause filter to super/admin
-			if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
-				echo "<td width='27%' style='vertical-align: top;'>\n";
+			echo "<td width='27%' style='vertical-align: top;'>\n";
 
-					echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-					echo "	<tr>\n";
+				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+				echo "	<tr>\n";
+				if (permission_exists('hangup_cause')) {
 					echo "		<td class='vncell' valign='top' nowrap='nowrap'>\n";
 					echo "			".$text['label-hangup_cause']."\n";
 					echo "		</td>\n";
@@ -319,6 +319,8 @@
 					echo "			</select>\n";
 					echo "		</td>\n";
 					echo "	</tr>\n";
+				}
+				if (permission_exists('caller_destination')) {
 					echo "	<tr>\n";
 					echo "		<td class='vncell' valign='top' nowrap='nowrap'>\n";
 					echo "			".$text['label-caller_destination']."\n";
@@ -327,10 +329,10 @@
 					echo "			<input type='text' class='formfld' name='caller_destination' value='$caller_destination'>\n";
 					echo "		</td>\n";
 					echo "	</tr>\n";
-					echo "</table>\n";
+				}
+				echo "</table>\n";
 
-				echo "</td>";
-			}
+			echo "</td>";
 
 			echo "</tr>";
 			echo "</table>";
@@ -341,8 +343,8 @@
 			echo 	$text['description_search'];
 			echo "</td>";
 			echo "<td style='padding-top: 8px;' align='right' nowrap>";
-			if (permission_exists('xml_cdr_all') && $_REQUEST['showall'] == 'true') {
-				echo "<input type='hidden' name='showall' value='true'>\n";
+			if (permission_exists('xml_cdr_all') && $_REQUEST['show'] == 'all') {
+				echo "<input type='hidden' name='show' value='all'>\n";
 			}
 			echo "<input type='button' class='btn' value='".$text['button-reset']."' onclick=\"document.location.href='xml_cdr.php';\">\n";
 			echo "<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
@@ -370,13 +372,15 @@
 	}
 	//column headings
 		echo "<th>&nbsp;</th>\n";
-		if ($_REQUEST['showall'] && permission_exists('xml_cdr_all')) {
+		if ($_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
 			echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
 			$col_count++;
 		}
 		echo th_order_by('caller_id_name', $text['label-cid-name'], $order_by, $order, null, null, $param);
 		echo th_order_by('caller_id_number', $text['label-source'], $order_by, $order, null, null, $param);
-		echo th_order_by('caller_destination', $text['label-caller_destination'], $order_by, $order, null, null, $param);
+		if (permission_exists('caller_destination')) {
+			echo th_order_by('caller_destination', $text['label-caller_destination'], $order_by, $order, null, null, $param);
+		}
 		echo th_order_by('destination_number', $text['label-destination'], $order_by, $order, null, null, $param);
 		if (permission_exists('recording_play') || permission_exists('recording_download')) {
 			echo "<th>".$text['label-recording']."</th>\n";
@@ -408,7 +412,7 @@
 			echo th_order_by('rtp_audio_in_mos', $text['label-mos'], $order_by, $order, null, "style='text-align: center;'", $param, $text['description-mos']);
 			$col_count++;
 		}
-		if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
+		if (permission_exists('hangup_cause')) {
 			echo th_order_by('hangup_cause', $text['label-hangup_cause'], $order_by, $order, null, null, $param);
 		}
 		else {
@@ -482,7 +486,7 @@
 				}
 
 				if ($row['raw_data_exists'] && permission_exists('xml_cdr_details')) {
-					$tr_link = "href='xml_cdr_details.php?uuid=".$row['uuid'].(($_REQUEST['showall']) ? "&showall=true" : null)."'";
+					$tr_link = "href='xml_cdr_details.php?uuid=".$row['uuid'].(($_REQUEST['show']) ? "&show=all" : null)."'";
 				}
 				else {
 					$tr_link = null;
@@ -521,7 +525,7 @@
 				else { echo "&nbsp;"; }
 				echo "</td>\n";
 			//domain name
-				if ($_REQUEST['showall'] && permission_exists('xml_cdr_all')) {
+				if ($_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
 					echo "	<td valign='top' class='".$row_style[$c]."'>";
 					echo 	$row['domain_name'].'&nbsp;';
 					echo "	</td>\n";
@@ -540,16 +544,18 @@
 				echo "		</a>";
 				echo "	</td>\n";
 			//caller destination
-				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>";
-				echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['caller_id_name'])."&src_cid_number=".urlencode($row['caller_id_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['caller_destination'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
-				if (is_numeric($row['caller_destination'])) {
-					echo "		".format_phone($row['caller_destination']).' ';
+				if (permission_exists('caller_destination')) {
+					echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>";
+					echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['caller_id_name'])."&src_cid_number=".urlencode($row['caller_id_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['caller_destination'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
+					if (is_numeric($row['caller_destination'])) {
+						echo "		".format_phone($row['caller_destination']).' ';
+					}
+					else {
+						echo "		".$row['caller_destination'].' ';
+					}
+					echo "		</a>";
+					echo "	</td>\n";
 				}
-				else {
-					echo "		".$row['caller_destination'].' ';
-				}
-				echo "		</a>";
-				echo "	</td>\n";
 			//destination
 				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>";
 				echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['destination_number'])."&src_cid_number=".urlencode($row['destination_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['destination_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
@@ -671,7 +677,7 @@
 					echo "	<td valign='top' class='".$row_style[$c]."'$title style='text-align: center;'>$value</td>\n";
 				}
 			//hangup cause/call result
-				if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
+				if (permission_exists('hangup_cause')) {
 					echo "	<td valign='top' class='".$row_style[$c]."' nowrap='nowrap'><a ".$tr_link.">".$hangup_cause."</a></td>\n";
 				}
 				else {

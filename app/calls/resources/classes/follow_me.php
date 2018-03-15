@@ -440,7 +440,7 @@ include "root.php";
 				$this->dial_string = $dial_string;
 
 				$sql  = "update v_follow_me set ";
-				$sql .= "dial_string = '".$this->dial_string."' ";
+				$sql .= "dial_string = '".check_str($this->dial_string)."' ";
 				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
 				$sql .= "and follow_me_uuid = '".$this->follow_me_uuid."' ";
 				if ($this->debug) {

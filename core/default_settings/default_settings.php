@@ -54,7 +54,7 @@ else {
 			unset($sql);
 
 			messages::add($text['message-update']);
-			header("Location: default_settings.php".(($search != '') ? "?search=".$search : null)."#".$category);
+			header("Location: default_settings.php".(($search != '') ? "?search=".$search : null)."#anchor_".$category);
 			exit;
 		}
 
@@ -81,6 +81,11 @@ else {
 						$default_setting_description = $row["default_setting_description"];
 					}
 					unset ($prep_statement);
+
+					//set a random password for http_auth_password
+					if ($default_setting_subcategory == "http_auth_password") {
+						$default_setting_value = generate_password();
+					}
 
 					// check if exists
 					$sql = "select domain_setting_uuid from v_domain_settings ";
@@ -537,6 +542,7 @@ else {
 		echo "		}\n";
 		echo "	}\n";
 		echo "\n";
+
 	//auto run, if search term passed back
 		if ($search != '') {
 			echo "	setting_search();";
@@ -546,4 +552,5 @@ else {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

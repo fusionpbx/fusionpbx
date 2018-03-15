@@ -412,7 +412,7 @@
 	echo "</tr>\n";
 
 	echo "	<tr>";
-	echo "		<td class='vncell' valign='top'>".$text['label-username']."</td>";
+	echo "		<td class='vncellreq' valign='top'>".$text['label-username']."</td>";
 	echo "		<td class='vtable' align='left'>";
 	echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
 	echo "			<option value=\"\"></option>\n";

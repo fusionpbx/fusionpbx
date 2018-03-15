@@ -74,6 +74,7 @@
 			destination_number = session:getVariable("destination_number");
 			caller_id_name = session:getVariable("caller_id_name");
 			caller_id_number = session:getVariable("caller_id_number");
+			current_time_zone = session:getVariable("timezone");
 			effective_caller_id_number = session:getVariable("effective_caller_id_number");
 			voicemail_greeting_number = session:getVariable("voicemail_greeting_number");
 			skip_instructions = session:getVariable("skip_instructions");

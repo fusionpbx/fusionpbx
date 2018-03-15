@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2014-2016
+	Copyright (C) 2014-2018
 	All Rights Reserved.
 
 	Contributor(s):
@@ -174,6 +174,21 @@ include "root.php";
 				$mac = strtolower($mac);
 			}
 			return $mac;
+		}
+
+		//send http error
+		private function http_error($error) {
+			if ($error === "404") {
+				header("HTTP/1.0 404 Not Found");
+				echo "<html>\n";
+				echo "<head><title>404 Not Found</title></head>\n";
+				echo "<body bgcolor=\"white\">\n";
+				echo "<center><h1>404 Not Found</h1></center>\n";
+				echo "<hr><center>nginx/1.12.1</center>\n";
+				echo "</body>\n";
+				echo "</html>\n";
+			}
+			exit();
 		}
 
 		//define a function to check if a contact exists in the contacts array
@@ -514,10 +529,26 @@ include "root.php";
 											if ($_SESSION['provision']['debug']['boolean'] == 'true'){
 												echo "<br/>device disabled<br/>";
 											}
-											echo "file not found";
+											else {
+												$this->http_error('404');
+											}
 											exit;
 										}
-
+									//register that we have seen the device
+										$sql = "UPDATE v_devices ";
+										$sql .= "SET device_provisioned_date=:date, device_provisioned_method=:method, device_provisioned_ip=:ip ";
+										$sql .= "WHERE domain_uuid=:domain_uuid AND device_mac_address=:mac ";
+										$prep_statement = $this->db->prepare(check_sql($sql));
+										if ($prep_statement) {
+											//use the prepared statement
+												$prep_statement->bindValue(':domain_uuid', $domain_uuid);
+												$prep_statement->bindValue(':mac', strtolower($mac));
+												$prep_statement->bindValue(':date', date("Y-m-d H:i:s"));
+												$prep_statement->bindValue(':method', (isset($_SERVER["HTTPS"]) ? 'https' : 'http'));
+												$prep_statement->bindValue(':ip', $_SERVER['REMOTE_ADDR']);
+												$prep_statement->execute();
+												unset($prep_statement);
+										}
 									//set the variables from values in the database
 										$device_uuid = $row["device_uuid"];
 										$device_label = $row["device_label"];
@@ -781,6 +812,15 @@ include "root.php";
 					}
 					unset ($prep_statement);
 				}
+			//set the template directory
+				if (strlen($provision["template_dir"]) > 0) {
+					$template_dir = $provision["template_dir"];
+				}
+
+			//if the domain name directory exists then only use templates from it
+				if (is_dir($template_dir.'/'.$domain_name)) {
+					$device_template = $domain_name.'/'.$device_template;
+				}
 
 			//initialize a template object
 				$view = new template();
@@ -843,6 +883,7 @@ include "root.php";
 										$lines[$line_number]['auth_id'] = $row["auth_id"];
 										$lines[$line_number]['user_id'] = $row["user_id"];
 										$lines[$line_number]['password'] = $row["password"];
+										$lines[$line_number]['shared_line'] = $row["shared_line"];
 
 									//assign the variables for line one - short name
 										if ($line_number == "1") {
@@ -857,6 +898,7 @@ include "root.php";
 											$view->assign("sip_transport", $sip_transport);
 											$view->assign("sip_port", $sip_port);
 											$view->assign("register_expires", $register_expires);
+											$view->assign("shared_line", $row["shared_line"]);
 										}
 
 									//assign the variables with the line number as part of the name
@@ -871,6 +913,7 @@ include "root.php";
 										$view->assign("sip_transport_".$line_number, $sip_transport);
 										$view->assign("sip_port_".$line_number, $sip_port);
 										$view->assign("register_expires_".$line_number, $register_expires);
+										$view->assign("shared_line_".$line_number, $row["shared_line"]);
 								}
 							}
 							unset ($prep_statement);
@@ -1157,6 +1200,7 @@ include "root.php";
 					$view->assign("user_id",$user_id);
 					$view->assign("password",$password);
 					$view->assign("template",$device_template);
+					$view->assign("microtime",microtime(true));		
 
 				// personal ldap password
 					global $laddr_salt;
@@ -1206,16 +1250,6 @@ include "root.php";
 						}
 					}
 
-				//set the template directory
-					if (strlen($provision["template_dir"]) > 0) {
-						$template_dir = $provision["template_dir"];
-					}
-
-				//if the domain name directory exists then only use templates from it
-					if (is_dir($template_dir.'/'.$domain_name)) {
-						$device_template = $domain_name.'/'.$device_template;
-					}
-
 				//if $file is not provided then look for a default file that exists
 					if (strlen($file) == 0) {
 						if (file_exists($template_dir."/".$device_template ."/{\$mac}")) {
@@ -1228,7 +1262,7 @@ include "root.php";
 							$file = "{\$mac}.cfg";
 						}
 						else {
-							echo "file not found";
+							$this->http_error('404');
 							exit;
 						}
 					}

@@ -75,19 +75,21 @@
 //get the action and remove items from the array that are not checked
 	if (is_array($registrations)) {
 		$x = 0;
-		foreach ($registrations as $row) {
+		foreach ($registrations as &$row) {
 			//get the action
 				switch ($row['action']) {
-				    case "unregister":
-				        $action = 'unregister';
-				        break;
-				    case "provision":
-				        $action = 'provision';
-				        break;
-				        break;
-				    case "reboot":
-				        $action = 'reboot';
-				        break;
+					case "unregister":
+						$row['checked'] = 'true';
+						$action = 'unregister';
+						break;
+					case "provision":
+						$row['checked'] = 'true';
+						$action = 'provision';
+						break;
+					case "reboot":
+						$row['checked'] = 'true';
+						$action = 'reboot';
+						break;
 				}
 			//unset rows that were not selected
 				if (!isset($row['checked'])) {

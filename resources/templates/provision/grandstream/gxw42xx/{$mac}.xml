@@ -151,27 +151,28 @@
 <P238>0</P238>
 
 <!-- XML Config File Password -->
-<!-- String Max Length: 40 -->
-<!-- Mandatory; between ascii values 33 and 126 -->
-<P1359></P1359>
-
-<!-- HTTP/HTTPS User Name -->
-<!-- String Max Length: 40; between ascii values 33 and 126 -->
-<P1360></P1360>
-
-<!-- HTTP/HTTPS Password -->
-<!-- String Max Length: 40; between ascii values 33 and 126 -->
+<!-- String; between ascii values 33 and 126 -->
 <!-- Mandatory -->
-<P1361></P1361>
+<P1359>{$http_auth_password}</P1359>
+
+<!--  HTTP/HTTPS User Name -->
+<!--  String; between ascii values 33 and 126 -->
+<P1360>{$http_auth_username}</P1360>
+
+<!--  HTTP/HTTPS Password -->
+<!--  String; between ascii values 33 and 126 -->
+<P1361>{$http_auth_password}</P1361>
 
 <!-- Firmware Upgrade and Privisioning. 0 - TFTP Upgrade, 1 - HTTP Upgrade, 2 - HTTPS Upgrade. -->
 <!-- Number: 0 to 2 -->
 <!-- Mandatory -->
 <P212>2</P212>
 
-<!-- Firmware Server Path -->
-<!-- String: serveraddress -->
-<P192>fm.grandstream.com/gs</P192>
+{if isset($grandstream_firmware_path)}
+<P192>{$grandstream_firmware_path}</P192>
+{else}
+<P192>{$domain_name}{$project_path}/app/provision</P192>
+{/if}
 
 <!-- Config Server Path -->
 <!-- String: serveraddress -->
@@ -993,7 +994,7 @@
 
 <!-- Dial Plan -->
 <!-- String Max Length: 1024 -->
-<P4200>{ x+ | *x+ }</P4200>
+<P4200>{$grandstream_dial_plan}</P4200>
 
 <!-- Use # as Dial Key (if set to Yes, "#" will function as the "(Re-)Dial" key). 0 - no, 1 - yes -->
 <!-- Number: 0,1 -->

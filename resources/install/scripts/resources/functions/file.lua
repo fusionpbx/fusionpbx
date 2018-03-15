@@ -2,7 +2,7 @@
 	pcall(require, "resources.functions.base64")
 
 -- load logger for file library
-	local log = require "resources.functions.log".file
+	local log = log or require "resources.functions.log"[app_name or 'file']
 
 local base64 = base64
 

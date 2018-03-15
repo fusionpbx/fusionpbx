@@ -62,21 +62,6 @@
 						dtmf_digits = macro(session, "saved_messages", 1, 100, saved_messages);
 					end
 				end
-			--get domain timezone
-				if (session:ready()) then
-					if (string.len(dtmf_digits) == 0) then
-						local sql = [[SELECT domain_setting_value as current_time_zone FROM v_domain_settings
-							WHERE domain_uuid = :domain_uuid
-							AND domain_setting_subcategory='time_zone' ]];
-						local params = {domain_uuid = domain_uuid};
-						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
-						end
-						dbh:query(sql, params, function(row)
-							current_time_zone = row["current_time_zone"];
-						end);
-					end
-				end
 			--to listen to new message
 				if (session:ready() and new_messages ~= '0') then
 					if (string.len(dtmf_digits) == 0) then

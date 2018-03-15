@@ -338,9 +338,6 @@ include "root.php";
 										$this->dialplan_global = true;
 									}
 								}
-								if ($this->display_type == "text") {
-									echo "	".$this->dialplan_name.":		added\n";
-								}
 								if (strlen($dialplan['extension']['@attributes']['continue']) > 0) {
 									$this->dialplan_continue = $dialplan['extension']['@attributes']['continue'];
 								}
@@ -428,6 +425,8 @@ include "root.php";
 								}
 							//end the transaction
 								$this->db->commit();
+							//update the session array
+								$_SESSION['upgrade']['app_defaults']['dialplans'][$domain['domain_name']][]['dialplan_name'] = $this->dialplan_name;
 						}
 					}
 			}
@@ -925,7 +924,47 @@ include "root.php";
 						//return true;
 					}
 
-			}
+			} //end method
+
+			public function defaults () {
+
+				//get the array of xml files and then process thm
+					$xml_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/resources/switch/conf/dialplan/*.xml");
+					foreach ($xml_list as &$xml_file) {
+						//get and parse the xml
+							$xml_string = file_get_contents($xml_file);
+						//get the order number prefix from the file name
+							$name_array = explode('_', basename($xml_file));
+							if (is_numeric($name_array[0])) {
+								$dialplan_order = $name_array[0];
+							}
+							else {
+								$dialplan_order = 0;
+							}
+							$dialplan->dialplan_order = $dialplan_order;
+
+							$this->xml = $xml_string;
+							$this->import();
+					}
+
+				//update the dialplan order
+					$sql = "update v_dialplans set dialplan_order = '870' where dialplan_order = '980' and dialplan_name = 'cidlookup';\n";
+					$this->db->query($sql);
+					$sql = "update v_dialplans set dialplan_order = '880' where dialplan_order = '990' and dialplan_name = 'call_screen';\n";
+					$this->db->query($sql);
+					$sql = "update v_dialplans set dialplan_order = '890' where dialplan_order = '999' and dialplan_name = 'local_extension';\n";
+					$this->db->query($sql);
+					unset($sql);
+
+				//add xml for each dialplan where the dialplan xml is empty
+					$this->source = "details";
+					$this->destination = "database";
+					$this->is_empty = "dialplan_xml";
+					$array = $this->xml();
+					//print_r($array);
+					unset($this->source,$this->destination,$this->is_empty,$array);
+
+			} // end method
 		} // end class
 	} // class_exists
 

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2016 All Rights Reserved.
+	Copyright (C) 2008-2018 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -65,6 +65,21 @@
 		if(($device !== false)&&(($device['device_vendor']=='escene')||($device['device_vendor']=='grandstream'))){
 			$mac = $device['device_mac_address'];
 		}
+	}
+
+//send http error
+	function http_error($error) {
+		if ($error === "404") {
+			header("HTTP/1.0 404 Not Found");
+			echo "<html>\n";
+			echo "<head><title>404 Not Found</title></head>\n";
+			echo "<body bgcolor=\"white\">\n";
+			echo "<center><h1>404 Not Found</h1></center>\n";
+			echo "<hr><center>nginx/1.12.1</center>\n";
+			echo "</body>\n";
+			echo "</html>\n";
+		}
+		exit();
 	}
 
 //check alternate MAC source
@@ -253,8 +268,7 @@
 //check if provisioning has been enabled
 	if ($provision["enabled"] != "true") {
 		syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but provisioning is not enabled for ".check_str($_REQUEST['mac']));
-		echo "access denied";
-		exit;
+		http_error('404');
 	}
 
 //send a request to a remote server to validate the MAC address and secret
@@ -262,8 +276,7 @@
 		$result = send_http_request($_SERVER['auth_server'], 'mac='.check_str($_REQUEST['mac']).'&secret='.check_str($_REQUEST['secret']));
 		if ($result == "false") {
 			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but the remote auth server said no for ".check_str($_REQUEST['mac']));
-			echo "access denied";
-			exit;
+			http_error('404');
 		}
 	}
 
@@ -286,8 +299,7 @@
 		}
 		if (!$found) {
 			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but failed CIDR check for ".check_str($_REQUEST['mac']));
-			echo "access denied";
-			exit;
+			http_error('404');
 		}
 	}
 
@@ -341,7 +353,19 @@
 			$A1 = md5($provision["http_auth_username"] . ':' . $realm . ':' . $provision["http_auth_password"]);
 			$A2 = md5($_SERVER['REQUEST_METHOD'].':'.$data['uri']);
 			$valid_response = md5($A1.':'.$data['nonce'].':'.$data['nc'].':'.$data['cnonce'].':'.$data['qop'].':'.$A2);
-			if ($data['response'] != $valid_response) {
+			$authorized = false;
+			if ($data['response'] == $valid_response) {
+				$authorized = true;
+			}
+			if (!$authorized && strlen($provision["http_auth_password_alternate"]) > 0) {
+				$A1 = md5($provision["http_auth_username"] . ':' . $realm . ':' . $provision["http_auth_password_alternate"]);
+				$A2 = md5($_SERVER['REQUEST_METHOD'].':'.$data['uri']);
+				$valid_response = md5($A1.':'.$data['nonce'].':'.$data['nc'].':'.$data['cnonce'].':'.$data['qop'].':'.$A2);
+				if ($data['response'] == $valid_response) {
+					$authorized = true;
+				}
+			}
+			if (!$authorized) {
 				header('HTTP/1.0 401 Unauthorized');
 				header("Content-Type: text/html");
 				$content = 'Unauthorized '.$__line__;
@@ -362,10 +386,16 @@
 			echo $content;
 			exit;
 		} else {
+			$authorized = false;
 			if ($_SERVER['PHP_AUTH_USER'] == $provision["http_auth_username"] && $_SERVER['PHP_AUTH_PW'] == $provision["http_auth_password"]) {
-				//authorized
+				$authorized = true;
 			}
-			else {
+			if (!$authorized && strlen($provision["http_auth_password_alternate"]) > 0) {
+				if ($_SERVER['PHP_AUTH_USER'] == $provision["http_auth_username"] && $_SERVER['PHP_AUTH_PW'] == $provision["http_auth_password_alternate"]) {
+					$authorized = true;
+				}
+			}
+			if (!$authorized) {
 				//access denied
 				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but failed http basic authentication for ".check_str($_REQUEST['mac']));
 				header('HTTP/1.0 401 Unauthorized');
@@ -391,22 +421,6 @@
 			echo "access denied";
 			return;
 		}
-	}
-
-//register that we have seen the device
-	$sql = "UPDATE v_devices "; 
-	$sql .= "SET device_provisioned_date=:date, device_provisioned_method=:method, device_provisioned_ip=:ip ";
-	$sql .= "WHERE domain_uuid=:domain_uuid AND device_mac_address=:mac ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	if ($prep_statement) {
-		//use the prepared statement
-			$prep_statement->bindValue(':domain_uuid', $domain_uuid);
-			$prep_statement->bindValue(':mac', strtolower($mac));
-			$prep_statement->bindValue(':date', date("Y-m-d H:i:s"));
-			$prep_statement->bindValue(':method', (isset($_SERVER["HTTPS"]) ? 'https' : 'http'));
-			$prep_statement->bindValue(':ip', $_SERVER['REMOTE_ADDR']);
-			$prep_statement->execute();
-			unset($prep_statement);
 	}
 	
 //output template to string for header processing
@@ -448,8 +462,14 @@
 			header("Content-Type: text/plain; charset=iso-8859-1");
 			header("Content-Length: ".strlen($file_contents));
 		} else {
-			header("Content-Type: text/xml; charset=utf-8");
-			header("Content-Length: ".strlen($file_contents));
+                        $result = simplexml_load_string ($file_contents, 'SimpleXmlElement', LIBXML_NOERROR+LIBXML_ERR_FATAL+LIBXML_ERR_NONE);
+                        if (false == $result){
+                            header("Content-Type: text/plain");
+                            header("Content-Length: ".strval(strlen($file_contents)));
+                        } else {
+                            header("Content-Type: text/xml; charset=utf-8");
+                            header("Content-Length: ".strlen($file_contents));
+                        }
 		}
 	}
 	echo $file_contents;

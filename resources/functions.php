@@ -27,7 +27,7 @@
 
 	if (!function_exists('software_version')) {
 		function software_version() {
-			return '4.3.4';
+			return '4.3.5';
 		}
 	}
 
@@ -1416,25 +1416,25 @@ function number_pad($number,$n) {
 
 			$mail = new PHPMailer();
 			$mail -> IsSMTP();
-			$mail -> Host = $_SESSION['email']['smtp_host']['var'];
-			if ($_SESSION['email']['smtp_port']['var'] != '') {
-				$mail -> Port = $_SESSION['email']['smtp_port']['var'];
+			$mail -> Host = $_SESSION['email']['smtp_host']['text'];
+			if ($_SESSION['email']['smtp_port']['text'] != '') {
+				$mail -> Port = $_SESSION['email']['smtp_port']['text'];
 			}
-			if ($_SESSION['email']['smtp_auth']['var'] == "true") {
-				$mail -> SMTPAuth = $_SESSION['email']['smtp_auth']['var'];
+			if ($_SESSION['email']['smtp_auth']['text'] == "true") {
+				$mail -> SMTPAuth = $_SESSION['email']['smtp_auth']['text'];
 			}
-			if ($_SESSION['email']['smtp_username']['var']) {
-				$mail -> Username = $_SESSION['email']['smtp_username']['var'];
-				$mail -> Password = $_SESSION['email']['smtp_password']['var'];
+			if ($_SESSION['email']['smtp_username']['text']) {
+				$mail -> Username = $_SESSION['email']['smtp_username']['text'];
+				$mail -> Password = $_SESSION['email']['smtp_password']['text'];
 			}
-			if ($_SESSION['email']['smtp_secure']['var'] == "none") {
-				$_SESSION['email']['smtp_secure']['var'] = '';
+			if ($_SESSION['email']['smtp_secure']['text'] == "none") {
+				$_SESSION['email']['smtp_secure']['text'] = '';
 			}
-			if ($_SESSION['email']['smtp_secure']['var'] != '') {
-				$mail -> SMTPSecure = $_SESSION['email']['smtp_secure']['var'];
+			if ($_SESSION['email']['smtp_secure']['text'] != '') {
+				$mail -> SMTPSecure = $_SESSION['email']['smtp_secure']['text'];
 			}
-			$eml_from_address = ($eml_from_address != '') ? $eml_from_address : $_SESSION['email']['smtp_from']['var'];
-			$eml_from_name = ($eml_from_name != '') ? $eml_from_name : $_SESSION['email']['smtp_from_name']['var'];
+			$eml_from_address = ($eml_from_address != '') ? $eml_from_address : $_SESSION['email']['smtp_from']['text'];
+			$eml_from_name = ($eml_from_name != '') ? $eml_from_name : $_SESSION['email']['smtp_from_name']['text'];
 			$mail -> SetFrom($eml_from_address, $eml_from_name);
 			$mail -> AddReplyTo($eml_from_address, $eml_from_name);
 			$mail -> Subject = $eml_subject;

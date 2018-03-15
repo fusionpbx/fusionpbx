@@ -546,11 +546,11 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	echo "		}\n";
 	echo "	}\n";
 
-	$req['length'] = $_SESSION['security']['password_length']['numeric'];
-	$req['number'] = ($_SESSION['security']['password_number']['boolean'] == 'true') ? true : false;
-	$req['lowercase'] = ($_SESSION['security']['password_lowercase']['boolean'] == 'true') ? true : false;
-	$req['uppercase'] = ($_SESSION['security']['password_uppercase']['boolean'] == 'true') ? true : false;
-	$req['special'] = ($_SESSION['security']['password_special']['boolean'] == 'true') ? true : false;
+	$req['length'] = $_SESSION['user']['password_length']['numeric'];
+	$req['number'] = ($_SESSION['user']['password_number']['boolean'] == 'true') ? true : false;
+	$req['lowercase'] = ($_SESSION['user']['password_lowercase']['boolean'] == 'true') ? true : false;
+	$req['uppercase'] = ($_SESSION['user']['password_uppercase']['boolean'] == 'true') ? true : false;
+	$req['special'] = ($_SESSION['user']['password_special']['boolean'] == 'true') ? true : false;
 
 	echo "	function check_password_strength(pwd) {\n";
 	echo "		if ($('#password').val() != '' || $('#password_confirm').val() != '') {\n";

@@ -63,7 +63,7 @@
 	$sql .= "	v_groups as g ";
 	$sql .= "where ";
 	$sql .= "	gu.group_uuid = g.group_uuid ";
-	if (!(permission_exists('user_all') && $_GET['showall'] == 'true')) {
+	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
 		$sql .= "	and (";
 		$sql .= "		g.domain_uuid = '".$domain_uuid."' ";
 		$sql .= "		or g.domain_uuid is null ";
@@ -85,7 +85,7 @@
 
 //get total user count from the database
 	$sql = "select count(*) as num_rows from v_users where 1 = 1 ";
-	if (!(permission_exists('user_all') && $_GET['showall'] == 'true')) {
+	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
 		$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	}
 	$prep_statement = $db->prepare($sql);
@@ -115,8 +115,8 @@
 	unset ($prep_statement, $result, $sql);
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "search=".$search_value;
-	if (permission_exists('user_all') && $_GET['showall'] == 'true') {
-		$param .= "&showall=true";
+	if (permission_exists('user_all') && $_GET['show'] == 'all') {
+		$param .= "&show=all";
 	}
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
@@ -124,7 +124,7 @@
 	$offset = $rows_per_page * $page;
 
 	$sql = "select * from v_users where 1 = 1 ";
-	if (!(permission_exists('user_all') && $_GET['showall'] == 'true')) {
+	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
 		$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	}
 	if (strlen($search_value) > 0) {
@@ -150,15 +150,18 @@
 	echo "<td align='left' width='90%' nowrap='nowrap' valign='top'><b>".$text['header-user_manager']." (".$num_rows.")</b></td>\n";
 	echo "<td align='right' nowrap='nowrap'>";
 	if (permission_exists('user_all')) {
-		if ($_GET['showall'] == 'true') {
+		if ($_GET['show'] == 'all') {
 			echo "<input type='button' class='btn' value='".$text['button-back']."' onclick=\"window.location='users.php';\">\n";
-			echo "<input type='hidden' name='showall' value='true'>";
+			echo "<input type='hidden' name='show' value='all'>";
 		}
 		else {
-			echo "<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='users.php?showall=true';\">\n";
+			echo "<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='users.php?show=all';\">\n";
 		}
 	}
-	echo 	"<input type='text' class='txt' style='width: 150px; margin-right: 3px;' name='search_value' value=\"".$search_value."\">";
+	if (permission_exists('user_import')) {
+		echo 				"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='/app/user_imports/user_imports.php'\" value='".$text['button-import']."'>\n";
+	}
+	echo 	"<input type='text' class='txt' style='width: 150px; margin-left: 15px; margin-right: 3px;' name='search_value' value=\"".$search_value."\">";
 	echo 	"<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	echo "</td>";
 	echo "</tr>\n";
@@ -181,7 +184,7 @@
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	if (permission_exists('user_all') && $_GET['showall'] == 'true') {
+	if (permission_exists('user_all') && $_GET['show'] == 'all') {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, '', '', $param);
 	}
 	echo th_order_by('username', $text['label-username'], $order_by, $order);
@@ -203,7 +206,7 @@
 			} else {
 				$tr_link = (permission_exists('user_edit')) ? "href='user_edit.php?id=".$row['user_uuid']."'" : null;
 				echo "<tr ".$tr_link.">\n";
-				if (permission_exists('user_all') && $_GET['showall'] == 'true') {
+				if (permission_exists('user_all') && $_GET['show'] == 'all') {
 					echo "	<td valign='top' class='".$row_style[$c]."'>".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."</td>\n";
 				}
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
@@ -256,6 +259,5 @@
 
 //include the footer
 	include "resources/footer.php";
-
 
 ?>

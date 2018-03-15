@@ -112,8 +112,8 @@ local function check_conditions(group, fields)
 			if condition_type then value = fields[condition_type] end
 		end
 
-		if (not value) and (condition.type ~= '') then -- skip unkonw fields
-			log.errf('Unsupportded condition: %s', condition.type)
+		if (not value) and (condition.type ~= '') then -- skip unknown fields
+			log.errf('Unsupported condition: %s', condition.type)
 			matches, pass = {}, false
 		else
 			if condition.type == '' then
@@ -630,8 +630,8 @@ local function apply_vars(actions, fields)
 end
 
 local function wrap_dbh(t)
-	local i = 0
 	return {query = function(self, sql, params, callback)
+		local i = 0
 		while true do
 			i = i + 1
 			local row = t[i]

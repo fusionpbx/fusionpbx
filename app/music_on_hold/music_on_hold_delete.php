@@ -56,6 +56,14 @@
 		unset($sql);
 	}
 
+//clear the cache
+	$cache = new cache;
+	$cache->delete("configuration:local_stream.conf");
+
+//reload mod local stream
+	$music = new switch_music_on_hold;
+	$music->reload();
+
 //redirect the user
 	messages::add($text['message-delete']);
 	header('Location: music_on_hold.php');

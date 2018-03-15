@@ -96,6 +96,7 @@
 		//set variables from http values
 			$ring_group_name = check_str($_POST["ring_group_name"]);
 			$ring_group_extension = check_str($_POST["ring_group_extension"]);
+			$ring_group_greeting = check_str($_POST["ring_group_greeting"]);
 			$ring_group_context = check_str($_POST["ring_group_context"]);
 			$ring_group_strategy = check_str($_POST["ring_group_strategy"]);
 			$ring_group_timeout_action = check_str($_POST["ring_group_timeout_action"]);
@@ -167,6 +168,7 @@
 			$msg = '';
 			if (strlen($ring_group_name) == 0) { $msg .= $text['message-name']."<br>\n"; }
 			if (strlen($ring_group_extension) == 0) { $msg .= $text['message-extension']."<br>\n"; }
+			//if (strlen($ring_group_greeting) == 0) { $msg .= $text['message-greeting']."<br>\n"; }
 			if (strlen($ring_group_strategy) == 0) { $msg .= $text['message-strategy']."<br>\n"; }
 			//if (strlen($ring_group_timeout_app) == 0) { $msg .= $text['message-timeout-action']."<br>\n"; }
 			//if (strlen($ring_group_cid_name_prefix) == 0) { $msg .= "Please provide: Caller ID Name Prefix<br>\n"; }
@@ -363,6 +365,7 @@
 		foreach ($result as &$row) {
 			$ring_group_name = $row["ring_group_name"];
 			$ring_group_extension = $row["ring_group_extension"];
+			$ring_group_greeting = $row["ring_group_greeting"];
 			$ring_group_context = $row["ring_group_context"];
 			$ring_group_strategy = $row["ring_group_strategy"];
 			$ring_group_timeout_app = $row["ring_group_timeout_app"];
@@ -455,8 +458,45 @@
 	$ringbacks = new ringbacks;
 	$ringbacks = $ringbacks->select('ring_group_ringback', $ring_group_ringback);
 
+//get the sounds
+	$sounds = new sounds;
+	$sounds = $sounds->get();
+
 //show the header
 	require_once "resources/header.php";
+
+//option to change select to text
+	if (if_group("superadmin")) {
+		echo "<script>\n";
+		echo "var Objs;\n";
+		echo "\n";
+		echo "function changeToInput(obj){\n";
+		echo "	tb=document.createElement('INPUT');\n";
+		echo "	tb.type='text';\n";
+		echo "	tb.name=obj.name;\n";
+		echo "	tb.setAttribute('class', 'formfld');\n";
+		//echo "	tb.setAttribute('style', 'width: 380px;');\n";
+		echo "	tb.value=obj.options[obj.selectedIndex].value;\n";
+		echo "	tbb=document.createElement('INPUT');\n";
+		echo "	tbb.setAttribute('class', 'btn');\n";
+		echo "	tbb.setAttribute('style', 'margin-left: 4px;');\n";
+		echo "	tbb.type='button';\n";
+		echo "	tbb.value=$('<div />').html('&#9665;').text();\n";
+		echo "	tbb.objs=[obj,tb,tbb];\n";
+		echo "	tbb.onclick=function(){ Replace(this.objs); }\n";
+		echo "	obj.parentNode.insertBefore(tb,obj);\n";
+		echo "	obj.parentNode.insertBefore(tbb,obj);\n";
+		echo "	obj.parentNode.removeChild(obj);\n";
+		echo "}\n";
+		echo "\n";
+		echo "function Replace(obj){\n";
+		echo "	obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
+		echo "	obj[0].parentNode.removeChild(obj[1]);\n";
+		echo "	obj[0].parentNode.removeChild(obj[2]);\n";
+		echo "}\n";
+		echo "</script>\n";
+		echo "\n";
+	}
 
 //show the content
 	echo "<form method='post' name='frm' action=''>\n";
@@ -493,6 +533,39 @@
 	echo "	<input class='formfld' type='text' name='ring_group_extension' maxlength='255' value=\"$ring_group_extension\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-extension']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-greeting']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "<select name='ring_group_greeting' class='formfld' style='width: 200px;' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
+	echo "	<option value=''></option>\n";
+	foreach($sounds as $key => $value) {
+		echo "<optgroup label=".$text['label-'.$key].">\n";
+		$selected = false;
+		foreach($value as $row) {
+			if ($ring_group_greeting == $row["value"]) { 
+				$selected = true;
+				echo "	<option value='".$row["value"]."' selected='selected'>".$row["name"]."</option>\n";
+			}
+			else {
+				echo "	<option value='".$row["value"]."'>".$row["name"]."</option>\n";
+			}
+		}
+		echo "</optgroup>\n";
+	}
+	if (if_group("superadmin")) {
+		if (!$selected && strlen($ring_group_greeting) > 0) {
+			echo "	<option value='".$ring_group_greeting."' selected='selected'>".$ring_group_greeting."</option>\n";
+		}
+		unset($selected);
+	}
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo $text['description-greeting']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -653,7 +726,7 @@
 	echo "	<tr>";
 	echo "		<td class='vncell' valign='top'>".$text['label-user_list']."</td>";
 	echo "		<td class='vtable'>";
-	echo "			<table width='52%'>\n";
+	echo "			<table width='300px'>\n";
 	if (isset($ring_group_users)) foreach($ring_group_users as $field) {
 		echo "			<tr>\n";
 		echo "				<td class='vtable'>".$field['username']."</td>\n";
