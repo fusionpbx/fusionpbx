@@ -194,10 +194,11 @@
 	end
 
 --set the recording path
-	recording_archive = recordings_dir .. "/" .. domain_name .. "/archive/" .. os.date("%Y/%b/%d");
+	record_path = recordings_dir .. "/" .. domain_name .. "/archive/" .. os.date("%Y/%b/%d");
+	record_path = record_path:gsub("\\", "/");
 
 --set the recording file
-	record_file = recording_archive:gsub("\\", "/") .. "/" .. uuid .. "." .. record_ext
+	record_name = uuid .. "." .. record_ext;
 
 --prepare the api object
 	api = freeswitch.API();
@@ -615,7 +616,7 @@
 
 				--record the session
 					if (record_session) then
-						record_session = ",api_on_answer='uuid_record "..uuid.." start ".. record_file .. "'";
+						record_session = ",api_on_answer='uuid_record "..uuid.." start ".. record_path .. "/" .. record_name .. "',record_path='".. record_path .."',record_name="..record_name;
 					else
 						record_session = ""
 					end
@@ -755,7 +756,7 @@
 						bind_target = 'both';
 					end
 					local bindings = {
-						"local,*2,exec:record_session," .. record_file,
+						"local,*2,exec:record_session," .. record_path .. "/" .. record_name,
 						-- "local,*0,exec:execute_extension,conf_xfer_from_dialplan XML conf-xfer@" .. context
 					}
 					for _, str in ipairs(bindings) do
