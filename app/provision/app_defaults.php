@@ -52,7 +52,7 @@ if ($domains_processed == 1) {
 		unset($prep_statement, $result);
 	}
 
-	//update the default settings
+	//update default settings
 	$sql = "update v_default_settings set ";
 	$sql .= "default_setting_value = 'true', ";
 	$sql .= "default_setting_name = 'boolean', ";
@@ -61,6 +61,22 @@ if ($domains_processed == 1) {
 	$sql .= "and default_setting_name = 'text' ";
 	$sql .= "and default_setting_value = 'false' ";
 	$sql .= "and default_setting_enabled = 'false' ";
+	$db->exec($sql);
+	unset($sql);
+
+	//update default settings
+	$sql = "update v_default_settings set ";
+	$sql .= "default_setting_name = 'array' ";
+	$sql .= "where default_setting_subcategory = 'http_auth_password' ";
+	$sql .= "and default_setting_name = 'text' ";
+	$db->exec($sql);
+	unset($sql);
+
+	//update domain settings
+	$sql = "update v_domain_settings set ";
+	$sql .= "domain_setting_name = 'array' ";
+	$sql .= "where domain_setting_subcategory = 'http_auth_password' ";
+	$sql .= "and domain_setting_name = 'text' ";
 	$db->exec($sql);
 	unset($sql);
 
