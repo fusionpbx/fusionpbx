@@ -305,7 +305,7 @@
 
 //http authentication - digest
 	if (strlen($provision["http_auth_username"]) > 0 && strlen($provision["http_auth_type"]) == 0) { $provision["http_auth_type"] = "digest"; }
-	if (strlen($provision["http_auth_username"]) > 0 && strlen($provision["http_auth_password"]) > 0 && $provision["http_auth_type"] === "digest" && $provision["http_auth_disable"] !== "true") {
+	if (strlen($provision["http_auth_username"]) > 0 && $provision["http_auth_type"] === "digest" && $provision["http_auth_disable"] !== "true") {
 		//function to parse the http auth header
 			function http_digest_parse($txt) {
 				//protect against missing data
@@ -340,30 +340,31 @@
 			}
 
 		//check for valid digest authentication details
-			if (!($data = http_digest_parse($_SERVER['PHP_AUTH_DIGEST'])) || ($data['username'] != $provision["http_auth_username"])) {
-				header('HTTP/1.1 401 Unauthorized');
-				header("Content-Type: text/html");
-				$content = 'Unauthorized '.$__line__;
-				header("Content-Length: ".strval(strlen($content)));
-				echo $content;
-				exit;
+			if (isset($provision["http_auth_username"]) > 0 && strlen($provision["http_auth_username"])) {
+				if (!($data = http_digest_parse($_SERVER['PHP_AUTH_DIGEST'])) || ($data['username'] != $provision["http_auth_username"])) {
+					header('HTTP/1.1 401 Unauthorized');
+					header("Content-Type: text/html");
+					$content = 'Unauthorized '.$__line__;
+					header("Content-Length: ".strval(strlen($content)));
+					echo $content;
+					exit;
+				}
 			}
 
 		//generate the valid response
-			$A1 = md5($provision["http_auth_username"] . ':' . $realm . ':' . $provision["http_auth_password"]);
-			$A2 = md5($_SERVER['REQUEST_METHOD'].':'.$data['uri']);
-			$valid_response = md5($A1.':'.$data['nonce'].':'.$data['nc'].':'.$data['cnonce'].':'.$data['qop'].':'.$A2);
 			$authorized = false;
-			if ($data['response'] == $valid_response) {
-				$authorized = true;
-			}
-			if (!$authorized && strlen($provision["http_auth_password_alternate"]) > 0) {
-				$A1 = md5($provision["http_auth_username"] . ':' . $realm . ':' . $provision["http_auth_password_alternate"]);
-				$A2 = md5($_SERVER['REQUEST_METHOD'].':'.$data['uri']);
-				$valid_response = md5($A1.':'.$data['nonce'].':'.$data['nc'].':'.$data['cnonce'].':'.$data['qop'].':'.$A2);
-				if ($data['response'] == $valid_response) {
-					$authorized = true;
+			if (!$authorized && is_array($_SESSION['provision']["http_auth_password"])) {
+				foreach ($_SESSION['provision']["http_auth_password"] as $password) {
+					$A1 = md5($provision["http_auth_username"] . ':' . $realm . ':' . $password);
+					$A2 = md5($_SERVER['REQUEST_METHOD'].':'.$data['uri']);
+					$valid_response = md5($A1.':'.$data['nonce'].':'.$data['nc'].':'.$data['cnonce'].':'.$data['qop'].':'.$A2);
+					if ($data['response'] == $valid_response) {
+						$authorized = true;
+						break;
+					}
 				}
+				unset($password);
+				$provision["http_auth_password"] = $_SESSION['provision']["http_auth_password"][0];
 			}
 			if (!$authorized) {
 				header('HTTP/1.0 401 Unauthorized');
@@ -376,7 +377,7 @@
 	}
 
 //http authentication - basic
-	if (strlen($provision["http_auth_username"]) > 0 && strlen($provision["http_auth_password"]) > 0 && $provision["http_auth_type"] === "basic" && $provision["http_auth_disable"] !== "true") {
+	if (strlen($provision["http_auth_username"]) > 0 && $provision["http_auth_type"] === "basic" && $provision["http_auth_disable"] !== "true") {
 		if (!isset($_SERVER['PHP_AUTH_USER'])) {
 			header('WWW-Authenticate: Basic realm="'.$_SESSION['domain_name'].'"');
 			header('HTTP/1.0 401 Authorization Required');
@@ -387,13 +388,15 @@
 			exit;
 		} else {
 			$authorized = false;
-			if ($_SERVER['PHP_AUTH_USER'] == $provision["http_auth_username"] && $_SERVER['PHP_AUTH_PW'] == $provision["http_auth_password"]) {
-				$authorized = true;
-			}
-			if (!$authorized && strlen($provision["http_auth_password_alternate"]) > 0) {
-				if ($_SERVER['PHP_AUTH_USER'] == $provision["http_auth_username"] && $_SERVER['PHP_AUTH_PW'] == $provision["http_auth_password_alternate"]) {
-					$authorized = true;
+			if (is_array($_SESSION['provision']["http_auth_password"])) {
+				foreach ($_SESSION['provision']["http_auth_password"] as $password) {
+					if ($_SERVER['PHP_AUTH_PW'] == $password) {
+						$authorized = true;
+						break;
+					}
 				}
+				unset($password);
+				$provision["http_auth_password"] = $_SESSION['provision']["http_auth_password"][0];
 			}
 			if (!$authorized) {
 				//access denied
