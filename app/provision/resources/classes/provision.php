@@ -505,6 +505,11 @@ include "root.php";
 					}
 				}
 
+			//add the http auth password to the array
+				if (is_array($_SESSION['provision']["http_auth_password"])) {
+					$provision["http_auth_password"] = $_SESSION['provision']["http_auth_password"][0];
+				}
+
 			//check to see if the mac_address exists in devices
 				if (strlen($_REQUEST['user_id']) == 0 || strlen($_REQUEST['userid']) == 0) {
 					if ($this->mac_exists($mac)) {
