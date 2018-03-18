@@ -364,7 +364,6 @@
 					}
 				}
 				unset($password);
-				$provision["http_auth_password"] = $_SESSION['provision']["http_auth_password"][0];
 			}
 			if (!$authorized) {
 				header('HTTP/1.0 401 Unauthorized');
@@ -396,7 +395,6 @@
 					}
 				}
 				unset($password);
-				$provision["http_auth_password"] = $_SESSION['provision']["http_auth_password"][0];
 			}
 			if (!$authorized) {
 				//access denied
@@ -465,14 +463,14 @@
 			header("Content-Type: text/plain; charset=iso-8859-1");
 			header("Content-Length: ".strlen($file_contents));
 		} else {
-                        $result = simplexml_load_string ($file_contents, 'SimpleXmlElement', LIBXML_NOERROR+LIBXML_ERR_FATAL+LIBXML_ERR_NONE);
-                        if (false == $result){
-                            header("Content-Type: text/plain");
-                            header("Content-Length: ".strval(strlen($file_contents)));
-                        } else {
-                            header("Content-Type: text/xml; charset=utf-8");
-                            header("Content-Length: ".strlen($file_contents));
-                        }
+			$result = simplexml_load_string ($file_contents, 'SimpleXmlElement', LIBXML_NOERROR+LIBXML_ERR_FATAL+LIBXML_ERR_NONE);
+			if (false == $result){
+				header("Content-Type: text/plain");
+				header("Content-Length: ".strval(strlen($file_contents)));
+			} else {
+				header("Content-Type: text/xml; charset=utf-8");
+				header("Content-Length: ".strlen($file_contents));
+			}
 		}
 	}
 	echo $file_contents;
