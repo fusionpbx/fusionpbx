@@ -158,7 +158,7 @@
 			}
 			else {
 				//if the user_context was not set then set the default value
-				$user_context = $_SESSION['domain_name'];
+				$call_flow_context = $_SESSION['domain_name'];
 			}
 
 		//escape special characters
