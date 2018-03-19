@@ -19,9 +19,6 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Portions created by the Initial Developer are Copyright (C) 2018
 	the Initial Developer. All Rights Reserved.
-
-	Contributor(s):
-	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
 //includes
@@ -56,7 +53,7 @@
 	if (is_array($_POST)) {
 		$bridge_uuid = check_str($_POST["bridge_uuid"]);
 		$bridge_name = check_str($_POST["bridge_name"]);
-		$bridge_data = check_str($_POST["bridge_data"]);
+		$bridge_destination = check_str($_POST["bridge_destination"]);
 		$bridge_enabled = check_str($_POST["bridge_enabled"]);
 	}
 
@@ -71,7 +68,7 @@
 		//check for all required data
 			$msg = '';
 			if (strlen($bridge_name) == 0) { $msg .= $text['message-required']." ".$text['label-bridge_name']."<br>\n"; }
-			if (strlen($bridge_data) == 0) { $msg .= $text['message-required']." ".$text['label-bridge_data']."<br>\n"; }
+			if (strlen($bridge_destination) == 0) { $msg .= $text['message-required']." ".$text['label-bridge_destination']."<br>\n"; }
 			if (strlen($bridge_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-bridge_enabled']."<br>\n"; }
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "resources/header.php";
@@ -138,7 +135,7 @@
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
 			$bridge_name = $row["bridge_name"];
-			$bridge_data = $row["bridge_data"];
+			$bridge_destination = $row["bridge_destination"];
 			$bridge_enabled = $row["bridge_enabled"];
 		}
 		unset ($prep_statement);
@@ -172,12 +169,12 @@
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-bridge_data']."\n";
+	echo "	".$text['label-bridge_destination']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='bridge_data' maxlength='255' value=\"$bridge_data\">\n";
+	echo "	<input class='formfld' type='text' name='bridge_destination' maxlength='255' value=\"$bridge_destination\">\n";
 	echo "<br />\n";
-	echo $text['description-bridge_data']."\n";
+	echo $text['description-bridge_destination']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
