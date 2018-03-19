@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -152,9 +152,13 @@
 				$_POST["dialplan_uuid"] = $dialplan_uuid;
 			}
 
-		//set the context for users that are not in the superadmin group
-			if (!permission_exists('call_flow_context')) {
-				$call_flow_context = $_SESSION['domain_name'];
+		//set the default user context
+			if (permission_exists("call_flow_context")) {
+				//allow a user assigned to super admin to change the user_context
+			}
+			else {
+				//if the user_context was not set then set the default value
+				$user_context = $_SESSION['domain_name'];
 			}
 
 		//escape special characters
