@@ -73,7 +73,7 @@
 	if (strlen($search) > 0) {
 		$sql_search = " (";
 		$sql_search .= "lower(bridge_name) like '%".$search."%' ";
-		$sql_search .= "or lower(bridge_data) like '%".$search."%' ";
+		$sql_search .= "or lower(bridge_destination) like '%".$search."%' ";
 		$sql_search .= "or lower(bridge_enabled) like '%".$search."%' ";
 		$sql_search .= ") ";
 	}
@@ -194,7 +194,7 @@
 	echo "		<input type='checkbox' name='checkbox_all' id='checkbox_all' value='' onclick=\"checkbox_toggle();\">\n";
 	echo "	</th>\n";
 	echo th_order_by('bridge_name', $text['label-bridge_name'], $order_by, $order);
-	echo th_order_by('bridge_data', $text['label-bridge_data'], $order_by, $order);
+	echo th_order_by('bridge_destination', $text['label-bridge_destination'], $order_by, $order);
 	echo th_order_by('bridge_enabled', $text['label-bridge_enabled'], $order_by, $order);
 	echo "	<td class='list_control_icons'>";
 	if (permission_exists('bridge_add')) {
@@ -218,7 +218,7 @@
 			echo "		<input type='hidden' name=\"bridges[$x][bridge_uuid]\" value='".$row['bridge_uuid']."' />\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['bridge_name'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['bridge_data'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['bridge_destination'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['bridge_enabled'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('bridge_edit')) {
