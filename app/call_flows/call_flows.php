@@ -108,7 +108,7 @@
 	$sql .= "limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$call_flows = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
 
 //alternate the row style
@@ -150,6 +150,9 @@
 	//echo th_order_by('call_flow_alternate_sound', $text['label-call_flow_alternate_sound'], $order_by, $order);
 	//echo th_order_by('call_flow_alternate_app', $text['label-call_flow_alternate_app'], $order_by, $order);
 	//echo th_order_by('call_flow_alternate_data', $text['label-call_flow_alternate_data'], $order_by, $order);
+	if (permission_exists('call_flow_context')) {
+		echo th_order_by('call_flow_context', $text['label-call_flow_context'], $order_by, $order);
+	}
 	echo th_order_by('call_flow_description', $text['label-call_flow_description'], $order_by, $order);
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('call_flow_add')) {
@@ -161,8 +164,8 @@
 	echo "</td>\n";
 	echo "<tr>\n";
 
-	if (is_array($result)) {
-		foreach($result as $row) {
+	if (is_array($call_flows)) {
+		foreach($call_flows as $row) {
 			if (permission_exists('call_flow_edit')) {
 				$tr_link = "href='call_flow_edit.php?id=".$row['call_flow_uuid']."'";
 			}
@@ -179,7 +182,9 @@
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_name']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_extension']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_feature_code']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_context']."&nbsp;</td>\n";
+			if (permission_exists('call_flow_context')) {
+				echo "	<td valign='top' class='row_stylebg'>".$row['call_flow_context']."&nbsp;</td>\n";
+			}
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_pin_number']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_label']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_sound']."&nbsp;</td>\n";
@@ -201,7 +206,7 @@
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($sql, $call_flows, $row_count);
 	} //end if results
 
 	echo "<tr>\n";
