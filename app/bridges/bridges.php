@@ -72,6 +72,9 @@
 	$search = strtolower(check_str($_GET["search"]));
 	if (strlen($search) > 0) {
 		$sql_search = " (";
+		$sql_search .= "lower(bridge_name) like '%".$search."%' ";
+		$sql_search .= "or lower(bridge_data) like '%".$search."%' ";
+		$sql_search .= "or lower(bridge_enabled) like '%".$search."%' ";
 		$sql_search .= ") ";
 	}
 
@@ -187,6 +190,12 @@
 	echo "<form method='post' action=''>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
+	echo "	<th style='width:30px;'>\n";
+	echo "		<input type='checkbox' name='checkbox_all' id='checkbox_all' value='' onclick=\"checkbox_toggle();\">\n";
+	echo "	</th>\n";
+	echo th_order_by('bridge_name', $text['label-bridge_name'], $order_by, $order);
+	echo th_order_by('bridge_data', $text['label-bridge_data'], $order_by, $order);
+	echo th_order_by('bridge_enabled', $text['label-bridge_enabled'], $order_by, $order);
 	echo "	<td class='list_control_icons'>";
 	if (permission_exists('bridge_add')) {
 		echo "		<a href='bridge_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
@@ -204,9 +213,13 @@
 				$tr_link = "href='bridge_edit.php?id=".$row['bridge_uuid']."'";
 			}
 			echo "<tr ".$tr_link.">\n";
-			//echo "	<td valign='top' class=''>".escape($row['bridge_name'])."&nbsp;</td>\n";
-			//echo "	<td valign='top' class=''>".escape($row['bridge_data'])."&nbsp;</td>\n";
-			//echo "	<td valign='top' class=''>".escape($row['bridge_enabled'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='align: center; padding: 3px 3px 0px 8px;'>\n";
+			echo "		<input type='checkbox' name=\"bridges[$x][checked]\" id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$x."').checked = false; }\">\n";
+			echo "		<input type='hidden' name=\"bridges[$x][bridge_uuid]\" value='".$row['bridge_uuid']."' />\n";
+			echo "	</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['bridge_name'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['bridge_data'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['bridge_enabled'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('bridge_edit')) {
 				echo "<a href='bridge_edit.php?id=".$row['bridge_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
@@ -223,7 +236,7 @@
 	} //end if results
 
 	echo "<tr>\n";
-	echo "<td colspan='2' align='left'>\n";
+	echo "<td colspan='5' align='left'>\n";
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
