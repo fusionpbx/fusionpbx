@@ -32,6 +32,22 @@
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$y++;
 
+	//destination details
+		$y = 0;
+		$apps[$x]['destinations'][$y]['type'] = "sql";
+		$apps[$x]['destinations'][$y]['label'] = "bridges";
+		$apps[$x]['destinations'][$y]['name'] = "bridges";
+		//$apps[$x]['destinations'][$y]['sql'] = "select bridge_name, bridge_destination, bridge_description from v_bridges ";
+		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and bridge_enabled = 'true'";
+		$apps[$x]['destinations'][$y]['order_by'] = "bridge_name asc";
+		$apps[$x]['destinations'][$y]['field']['name'] = "bridge_name";
+		$apps[$x]['destinations'][$y]['field']['destination'] = "bridge_destination";
+		$apps[$x]['destinations'][$y]['field']['description'] = "bridge_description";
+		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "bridge:\${destination}";
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:bridge \${destination}";
+		$apps[$x]['destinations'][$y]['select_label'] = "\${name} \${description} ";
+		$y++;
+
 	//Bridges
 		$y = 0;
 		$apps[$x]['db'][$y]['table']['name'] = 'v_bridges';
@@ -55,9 +71,9 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the name.';
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'bridge_data';
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'bridge_destination';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the data.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the destination.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'bridge_enabled';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
