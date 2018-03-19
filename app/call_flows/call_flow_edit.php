@@ -152,12 +152,12 @@
 				$_POST["dialplan_uuid"] = $dialplan_uuid;
 			}
 
-		//set the default user context
+		//set the default context
 			if (permission_exists("call_flow_context")) {
-				//allow a user assigned to super admin to change the user_context
+				//allow a user assigned to super admin to change the call_flow_context
 			}
 			else {
-				//if the user_context was not set then set the default value
+				//if the call_flow_context was not set then set the default value
 				$call_flow_context = $_SESSION['domain_name'];
 			}
 
@@ -175,7 +175,7 @@
 			$destination_feature = str_replace("+", "\+", $destination_feature);
 
 		//build the xml dialplan
-			$dialplan_xml = "<extension name=\"".$conference_center_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
+			$dialplan_xml = "<extension name=\"".$call_flow_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
 			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$destination_feature."$\" break=\"on-true\">\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"feature_code=true\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"call_flow_uuid=".$call_flow_uuid."\"/>\n";
