@@ -49,7 +49,7 @@
 //convert the string to a named array
 	function str_to_named_array($tmp_str, $tmp_delimiter) {
 		$tmp_array = explode ("\n", $tmp_str);
-		$result = '';
+		$result = array();
 		if (trim(strtoupper($tmp_array[0])) != "+OK") {
 			$tmp_field_name_array = explode ($tmp_delimiter, $tmp_array[0]);
 			$x = 0;
