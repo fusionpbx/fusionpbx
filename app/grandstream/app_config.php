@@ -380,14 +380,6 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Screensaver XML Download Interval Number: 5 - 720. Default is 0 (disable auto downloading)";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "aa62d310-501d-4514-80b7-e7811f9f06c9";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_sip_transport";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS/TCP. Default is 0";
-		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "af73fb5c-8ded-4ee0-bd11-97f14f06f3c3";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_srtp";
