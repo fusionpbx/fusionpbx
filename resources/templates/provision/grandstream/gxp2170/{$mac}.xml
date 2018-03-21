@@ -3,7 +3,7 @@
 <gs_provision version="1">
 <mac>{$mac|replace:'-':''}</mac>
 <config version="1">
-<!-- ########################################################################################## -->
+<!-- ﻿########################################################################################## -->
 <!-- ## Configuration Template For GXP2130/2140/2160/2170/2135 Firmware Version 1.0.9.26     ## -->
 <!-- ########################################################################################## -->
 
@@ -181,11 +181,12 @@
 <!-- # SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS/TCP. Default is 0 -->
 <!-- # Number: 0, 1, 2 -->
 <!-- # Mandatory -->
-{if isset($grandstream_sip_transport)}
-<P130>{grandstream_sip_transport)}</P130>
-{else}
-<P130>0</P130>
-{/if}
+{$tp=0}
+{if $sip_transport_1 == 'udp'}{$tp=0}{/if}
+{if $sip_transport_1 == 'tcp'}{$tp=1}{/if}
+{if $sip_transport_1 == 'tls'}{$tp=2}{/if}
+{if $sip_transport_1 == 'dns srv'}{$tp=1}{/if}
+<P130>{$tp}</P130>
 
 <!-- # SIP Listening Mode.  -->
 <!-- # 0 - Transport Only, 1 - Dual, 2 - Dual (BLF Enforced), 3 - Dual (Secured). Default is 0 -->
@@ -1017,11 +1018,12 @@
 <!-- # SIP Transport. 0 - UDP, 1 - TCP, 2 - TCP/TLS. Default is 0 -->
 <!-- # Number: 0, 1, 2 -->
 <!-- # Mandatory -->
-{if isset($grandstream_sip_transport)}
-<P448>{grandstream_sip_transport)}</P448>
-{else}
-<P448>0</P448>
-{/if}
+{$tp=0}
+{if $sip_transport_2 == 'udp'}{$tp=0}{/if}
+{if $sip_transport_2 == 'tcp'}{$tp=1}{/if}
+{if $sip_transport_2 == 'tls'}{$tp=2}{/if}
+{if $sip_transport_2 == 'dns srv'}{$tp=1}{/if}
+<P448>{$tp}</P448>
 
 <!-- # SIP Listening Mode.  -->
 <!-- # 0 - Transport Only, 1 - Dual, 2 - Dual (BLF Enforced), 3 - Dual (Secured). Default is 0 -->
@@ -1853,11 +1855,12 @@
 <!-- # SIP Transport. 0 - UDP, 1 - TCP. 2- TCP/TLS. Default is 0 -->
 <!-- # Number: 0, 1, 2 -->
 <!-- # Mandatory -->
-{if isset($grandstream_sip_transport)}
-<P548>{grandstream_sip_transport)}</P548>
-{else}
-<P548>0</P548>
-{/if}
+{$tp=0}
+{if $sip_transport_3 == 'udp'}{$tp=0}{/if}
+{if $sip_transport_3 == 'tcp'}{$tp=1}{/if}
+{if $sip_transport_3 == 'tls'}{$tp=2}{/if}
+{if $sip_transport_3 == 'dns srv'}{$tp=1}{/if}
+<P548>{$tp}</P548>
 
 <!-- # SIP Listening Mode.  -->
 <!-- # 0 - Transport Only, 1 - Dual, 2 - Dual (BLF Enforced), 3 - Dual (Secured). Default is 0 -->
@@ -2688,11 +2691,12 @@
 <!-- # SIP Transport. 0 - UDP, 1 - TCP. 2 - TCP/TLS. Default is 0 -->
 <!-- # Number: 0, 1, 2 -->
 <!-- # Mandatory -->
-{if isset($grandstream_sip_transport)}
-<P648>{grandstream_sip_transport)}</P648>
-{else}
-<P648>0</P648>
-{/if}
+{$tp=0}
+{if $sip_transport_4 == 'udp'}{$tp=0}{/if}
+{if $sip_transport_4 == 'tcp'}{$tp=1}{/if}
+{if $sip_transport_4 == 'tls'}{$tp=2}{/if}
+{if $sip_transport_4 == 'dns srv'}{$tp=1}{/if}
+<P648>{$tp}</P648>
 
 <!-- # SIP Listening Mode.  -->
 <!-- # 0 - Transport Only, 1 - Dual, 2 - Dual (BLF Enforced), 3 - Dual (Secured). Default is 0 -->
@@ -3525,11 +3529,12 @@
 <!-- # SIP Transport. 0 - UDP, 1 - TCP. 2 - TCP/TLS. Default is 0 -->
 <!-- # Number: 0, 1, 2 -->
 <!-- # Mandatory -->
-{if isset($grandstream_sip_transport)}
-<P1748>{grandstream_sip_transport)}</P1748>
-{else}
-<P1748>0</P1748>
-{/if}
+{$tp=0}
+{if $sip_transport_5 == 'udp'}{$tp=0}{/if}
+{if $sip_transport_5 == 'tcp'}{$tp=1}{/if}
+{if $sip_transport_5 == 'tls'}{$tp=2}{/if}
+{if $sip_transport_5 == 'dns srv'}{$tp=1}{/if}
+<P1748>{$tp}</P1748>
 
 <!-- # SIP Listening Mode.  -->
 <!-- # 0 - Transport Only, 1 - Dual, 2 - Dual (BLF Enforced), 3 - Dual (Secured). Default is 0 -->
@@ -4362,11 +4367,12 @@
 <!-- # SIP Transport. 0 - UDP, 1 - TCP, 2 - TCP/TLS. Default is 2 -->
 <!-- # Number: 0, 1, 2 -->
 <!-- # Mandatory -->
-{if isset($grandstream_sip_transport)}
-<P1848>{grandstream_sip_transport)}</P1848>
-{else}
-<P1848>0</P1848>
-{/if}
+{$tp=0}
+{if $sip_transport_6 == 'udp'}{$tp=0}{/if}
+{if $sip_transport_6 == 'tcp'}{$tp=1}{/if}
+{if $sip_transport_6 == 'tls'}{$tp=2}{/if}
+{if $sip_transport_6 == 'dns srv'}{$tp=1}{/if}
+<P1848>{$tp}</P1848>
 
 <!-- # SIP Listening Mode.  -->
 <!-- # 0 - Transport Only, 1 - Dual, 2 - Dual (BLF Enforced), 3 - Dual (Secured). Default is 0 -->
