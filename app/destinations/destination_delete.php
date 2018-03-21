@@ -97,7 +97,7 @@
 //delete the destination
 	$sql = "delete from v_destinations ";
 	$sql .= "where destination_uuid = '".$id."' ";
-	echo $sql."<br />\n";
+	//echo $sql."<br />\n";
 	$db->exec(check_sql($sql));
 	unset($sql);
 
