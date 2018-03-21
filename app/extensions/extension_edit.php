@@ -72,6 +72,7 @@
 
 //get the http values and set them as php variables
 	if (count($_POST) > 0) {
+
 		//get the values from the HTTP POST and save them as PHP variables
 			$extension = str_replace(' ','-',$_POST["extension"]);
 			$number_alias = $_POST["number_alias"];
@@ -343,9 +344,7 @@
 									$array["extensions"][$i]["auth_acl"] = $auth_acl;
 									$array["extensions"][$i]["cidr"] = $cidr;
 									$array["extensions"][$i]["sip_force_contact"] = $sip_force_contact;
-									if (strlen($sip_force_expires) > 0) {
-										$array["extensions"][$i]["sip_force_expires"] = $sip_force_expires;
-									}
+									$array["extensions"][$i]["sip_force_expires"] = $sip_force_expires;
 									if (permission_exists('extension_nibble_account')) {
 										if (strlen($nibble_account) > 0) {
 											$array["extensions"][$i]["nibble_account"] = $nibble_account;
