@@ -56,7 +56,7 @@
 					local sql = "SELECT * FROM v_email_templates ";
 					sql = sql .. "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
 					sql = sql .. "AND template_language = :template_language ";
-					sql = sql .. "AND template_category = 'voicemail' "
+					sql = sql .. "AND template_category = 'missed' "
 					if (transcription == nil) then
 						sql = sql .. "AND template_subcategory = 'default' "
 					end
