@@ -119,8 +119,8 @@
 					$array['email_templates'][$x]['template_body'] .= "Received \${message_date}\n";
 					$array['email_templates'][$x]['template_body'] .= "Length \${message_duration}\n";
 					$array['email_templates'][$x]['template_body'] .= "Message \${message}\n";
--					$array['email_templates'][$x]['template_body'] .= "\n";
--					$array['email_templates'][$x]['template_body'] .= "\${message_text}\n";
+					$array['email_templates'][$x]['template_body'] .= "\n";
+					$array['email_templates'][$x]['template_body'] .= "\${message_text}\n";
 					$array['email_templates'][$x]['template_enabled'] = 'true';
 					$array['email_templates'][$x]['template_description'] = '';
 					$x++;
