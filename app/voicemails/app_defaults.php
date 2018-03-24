@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016
+	Portions created by the Initial Developer are Copyright (C) 2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -119,6 +119,8 @@
 					$array['email_templates'][$x]['template_body'] .= "Received \${message_date}\n";
 					$array['email_templates'][$x]['template_body'] .= "Length \${message_duration}\n";
 					$array['email_templates'][$x]['template_body'] .= "Message \${message}\n";
+					$array['email_templates'][$x]['template_body'] .= "\n";
+					$array['email_templates'][$x]['template_body'] .= "\${message_text}\n";
 					$array['email_templates'][$x]['template_enabled'] = 'true';
 					$array['email_templates'][$x]['template_description'] = '';
 					$x++;
