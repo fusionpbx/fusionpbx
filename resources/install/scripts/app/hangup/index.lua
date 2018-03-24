@@ -49,6 +49,10 @@
 					if (not default_dialect) then default_dialect = 'us'; end
 					if (not default_voice) then default_voice = 'callie'; end
 
+				--connect to the database
+					local Database = require "resources.functions.database";
+					local dbh = Database.new('system');
+
 				--get the templates
 					local sql = "SELECT * FROM v_email_templates ";
 					sql = sql .. "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
