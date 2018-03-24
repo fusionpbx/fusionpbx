@@ -50,6 +50,7 @@
 					if (not default_voice) then default_voice = 'callie'; end
 
 				--connect to the database
+					local Database = require "resources.functions.database";
 					local dbh = Database.new('system');
 
 				--get the templates
