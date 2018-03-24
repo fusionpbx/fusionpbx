@@ -466,6 +466,7 @@
 //get the users
 	$sql = "SELECT * FROM v_users ";
 	$sql .= "WHERE domain_uuid = '".$domain_uuid."' ";
+	$sql .= "AND user_enabled = 'true' ";
 	$sql .= "ORDER by username asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
