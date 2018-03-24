@@ -57,9 +57,6 @@
 					sql = sql .. "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
 					sql = sql .. "AND template_language = :template_language ";
 					sql = sql .. "AND template_category = 'missed' "
-					if (transcription == nil) then
-						sql = sql .. "AND template_subcategory = 'default' "
-					end
 					sql = sql .. "AND template_enabled = 'true' "
 					sql = sql .. "ORDER BY domain_uuid DESC "
 					local params = {domain_uuid = domain_uuid, template_language = default_language.."-"..default_dialect};
