@@ -81,7 +81,8 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(255)";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "var_cat";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "var_category";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "var_cat";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
