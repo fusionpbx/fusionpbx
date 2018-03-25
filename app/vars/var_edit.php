@@ -52,23 +52,24 @@
 	}
 
 //set http values as php variables
-	if (is_array($_POST)) {
-		$var_command = check_str($_POST["var_command"]);
+	if (count($_POST) > 0) {
+		$var_category = check_str($_POST["var_category"]);
 		$var_name = check_str($_POST["var_name"]);
 		$var_value = check_str($_POST["var_value"]);
+		$var_command = check_str($_POST["var_command"]);
 		$var_hostname = check_str($_POST["var_hostname"]);
-		$var_category = check_str($_POST["var_category"]);
-		if (strlen($_POST["var_cat_other"]) > 0) {
-			$var_cat = check_str($_POST["var_cat_other"]);
-		}
 		$var_enabled = check_str($_POST["var_enabled"]);
 		$var_order = check_str($_POST["var_order"]);
 		$var_description = $_POST["var_description"];
 		$var_description = str_replace("''", "'", $var_description);
+
+		if (strlen($_POST["var_category_other"]) > 0) {
+			$var_category = check_str($_POST["var_category_other"]);
+		}
 	}
 
 //process the post
-	if (is_array($_POST) && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		//get the uuid
 			if ($action == "update") {
@@ -77,10 +78,10 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($var_command) == 0) { $msg .= $text['message-required'].$text['label-command']."<br>\n"; }
+			//if (strlen($var_category) == 0) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
 			if (strlen($var_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
 			//if (strlen($var_value) == 0) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
-			//if (strlen($var_category) == 0) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
+			//if (strlen($var_command) == 0) { $msg .= $text['message-required'].$text['label-command']."<br>\n"; }
 			if (strlen($var_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
 			if (strlen($var_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -104,9 +105,9 @@
 						$sql = "insert into v_vars ";
 						$sql .= "(";
 						$sql .= "var_uuid, ";
-						$sql .= "var_command, ";
 						$sql .= "var_name, ";
 						$sql .= "var_value, ";
+						$sql .= "var_command, ";
 						$sql .= "var_hostname, ";
 						$sql .= "var_category, ";
 						$sql .= "var_enabled, ";
@@ -116,17 +117,16 @@
 						$sql .= "values ";
 						$sql .= "(";
 						$sql .= "'$var_uuid', ";
-						$sql .= "'$var_command', ";
+						$sql .= "'$var_category', ";
 						$sql .= "'$var_name', ";
 						$sql .= "'$var_value', ";
+						$sql .= "'$var_command', ";
 						if (strlen($var_hostname) > 0) {
 							$sql .= "'$var_hostname', ";
 						}
 						else {
 							$sql .= "null, ";
 						}
-
-						$sql .= "'$var_category', ";
 						$sql .= "'$var_enabled', ";
 						$sql .= "'$var_order', ";
 						$sql .= "'".base64_encode($var_description)."' ";
@@ -149,16 +149,16 @@
 				if ($action == "update" && permission_exists('var_edit')) {
 					//update the variables
 						$sql = "update v_vars set ";
-						$sql .= "var_command = '$var_command', ";
+						$sql .= "var_category = '$var_category', ";
 						$sql .= "var_name = '$var_name', ";
 						$sql .= "var_value = '$var_value', ";
+						$sql .= "var_command = '$var_command', ";
 						if (strlen($var_hostname) > 0) {
 							$sql .= "var_hostname = '$var_hostname', ";
 						}
 						else {
 							$sql .= "var_hostname = null, ";
 						}
-						$sql .= "var_category = '$var_category', ";
 						$sql .= "var_enabled = '$var_enabled', ";
 						$sql .= "var_order = '$var_order', ";
 						$sql .= "var_description = '".base64_encode($var_description)."' ";
@@ -189,11 +189,11 @@
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
-			$var_command = $row["var_command"];
+			$var_category = $row["var_category"];
 			$var_name = $row["var_name"];
 			$var_value = $row["var_value"];
+			$var_command = $row["var_command"];
 			$var_hostname = $row["var_hostname"];
-			$var_category = $row["var_category"];
 			$var_enabled = $row["var_enabled"];
 			$var_order = $row["var_order"];
 			$var_description = base64_decode($row["var_description"]);
@@ -229,25 +229,13 @@
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-command']."\n";
+	echo "	".$text['label-category']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='var_command'>\n";
-	if ($var_enabled == "set") {
-		echo "    <option value='set' selected='selected'>".$text['option-set']."</option>\n";
-	}
-	else {
-		echo "    <option value='set'>".$text['option-set']."</option>\n";
-	}
-	if ($var_enabled == "exec-set") {
-		echo "    <option value='exec-set' selected='selected'>".$text['option-exec-set']."</option>\n";
-	}
-	else {
-		echo "    <option value='exec-set'>".$text['option-exec-set']."</option>\n";
-	}
-	echo "    </select>\n";
-	echo "<br />\n";
-	echo $text['description-command']."\n";
+	$table_name = 'v_vars';$field_name = 'var_category';$sql_where_optional = "";$field_current_value = $var_category;
+	echo html_select_other($db, $table_name, $field_name, $sql_where_optional, $field_current_value);
+	//echo "<br />\n";
+	echo $text['description-category']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -274,6 +262,30 @@
 	echo "</tr>\n";
 
 	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "    ".$text['label-command']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <select class='formfld' name='var_command'>\n";
+	if ($var_command == "set") {
+		echo "    <option value='set' selected='selected'>".$text['option-set']."</option>\n";
+	}
+	else {
+		echo "    <option value='set'>".$text['option-set']."</option>\n";
+	}
+	if ($var_command == "exec-set") {
+		echo "    <option value='exec-set' selected='selected'>".$text['option-exec-set']."</option>\n";
+	}
+	else {
+		echo "    <option value='exec-set'>".$text['option-exec-set']."</option>\n";
+	}
+	echo "    </select>\n";
+	echo "<br />\n";
+	echo $text['description-command']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-hostname']."\n";
 	echo "</td>\n";
@@ -281,18 +293,6 @@
 	echo "	<input class='formfld' type='text' name='var_hostname' maxlength='255' value=\"$var_hostname\">\n";
 	echo "<br />\n";
 	echo $text['description-hostname']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-category']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	$table_name = 'v_vars';$field_name = 'var_category';$sql_where_optional = "";$field_current_value = $var_category;
-	echo html_select_other($db, $table_name, $field_name, $sql_where_optional, $field_current_value);
-	echo "<br />\n";
-	echo $text['description-category']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
