@@ -56,7 +56,7 @@
 		$var_name = check_str($_POST["var_name"]);
 		$var_hostname = check_str($_POST["var_hostname"]);
 		$var_value = check_str($_POST["var_value"]);
-		$var_cat = check_str($_POST["var_cat"]);
+		$var_category = check_str($_POST["var_category"]);
 		if (strlen($_POST["var_cat_other"]) > 0) {
 			$var_cat = check_str($_POST["var_cat_other"]);
 		}
@@ -78,7 +78,7 @@
 			$msg = '';
 			if (strlen($var_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
 			//if (strlen($var_value) == 0) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
-			//if (strlen($var_cat) == 0) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
+			//if (strlen($var_category) == 0) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
 			if (strlen($var_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
 			if (strlen($var_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -105,7 +105,7 @@
 						$sql .= "var_name, ";
 						$sql .= "var_hostname, ";
 						$sql .= "var_value, ";
-						$sql .= "var_cat, ";
+						$sql .= "var_category, ";
 						$sql .= "var_enabled, ";
 						$sql .= "var_order, ";
 						$sql .= "var_description ";
@@ -121,7 +121,7 @@
 							$sql .= "null, ";
 						}
 						$sql .= "'$var_value', ";
-						$sql .= "'$var_cat', ";
+						$sql .= "'$var_category', ";
 						$sql .= "'$var_enabled', ";
 						$sql .= "'$var_order', ";
 						$sql .= "'".base64_encode($var_description)."' ";
@@ -152,7 +152,7 @@
 							$sql .= "var_hostname = null, ";
 						}
 						$sql .= "var_value = '$var_value', ";
-						$sql .= "var_cat = '$var_cat', ";
+						$sql .= "var_category = '$var_category', ";
 						$sql .= "var_enabled = '$var_enabled', ";
 						$sql .= "var_order = '$var_order', ";
 						$sql .= "var_description = '".base64_encode($var_description)."' ";
@@ -186,7 +186,7 @@
 			$var_name = $row["var_name"];
 			$var_hostname = $row["var_hostname"];
 			$var_value = $row["var_value"];
-			$var_cat = $row["var_cat"];
+			$var_category = $row["var_category"];
 			$var_enabled = $row["var_enabled"];
 			$var_order = $row["var_order"];
 			$var_description = base64_decode($row["var_description"]);
@@ -258,7 +258,7 @@
 	echo "	".$text['label-category']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	$table_name = 'v_vars';$field_name = 'var_cat';$sql_where_optional = "";$field_current_value = $var_cat;
+	$table_name = 'v_vars';$field_name = 'var_category';$sql_where_optional = "";$field_current_value = $var_category;
 	echo html_select_other($db, $table_name, $field_name, $sql_where_optional, $field_current_value);
 	echo "<br />\n";
 	echo $text['description-category']."\n";
