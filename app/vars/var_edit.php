@@ -105,11 +105,11 @@
 						$sql = "insert into v_vars ";
 						$sql .= "(";
 						$sql .= "var_uuid, ";
+						$sql .= "var_category, ";
 						$sql .= "var_name, ";
 						$sql .= "var_value, ";
 						$sql .= "var_command, ";
 						$sql .= "var_hostname, ";
-						$sql .= "var_category, ";
 						$sql .= "var_enabled, ";
 						$sql .= "var_order, ";
 						$sql .= "var_description ";
