@@ -52,13 +52,11 @@ if ($domains_processed == 1) {
 					//<X-PRE-PROCESS cmd="set" data="global_codec_prefs=G7221@32000h,G7221@16000h,G722,PCMU,PCMA" category="Codecs" enabled="true"/>
 					$x = 0;
 					foreach ($variables['X-PRE-PROCESS'] as $variable) {
-						$command = $variable['@attributes']['cmd'];
-
+						$var_category = $variable['@attributes']['category'];
 						$data = explode('=', $variable['@attributes']['data']);
 						$var_name = $data[0];
 						$var_value = $data[1];
-
-						$var_category = $variable['@attributes']['category'];
+						$var_command = $variable['@attributes']['cmd'];
 						$var_enabled = $variable['@attributes']['enabled'];
 						$var_order = '';
 						$var_description = '';
@@ -67,7 +65,7 @@ if ($domains_processed == 1) {
 						$array['vars'][$x]['var_uuid'] = uuid();
 						$array['vars'][$x]['var_name'] = $var_name;
 						$array['vars'][$x]['var_value'] = $var_value;
-						$array['vars'][$x]['var_command'] = $command;
+						$array['vars'][$x]['var_command'] = $var_command;
 						$array['vars'][$x]['var_enabled'] = $var_enabled;
 						$array['vars'][$x]['var_order'] = $var_order;
 						$array['vars'][$x]['var_description'] = $var_description;
