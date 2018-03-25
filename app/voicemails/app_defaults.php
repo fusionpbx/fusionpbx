@@ -133,7 +133,7 @@
 					$array['email_templates'][$x]['template_category'] = 'missed';
 					$array['email_templates'][$x]['template_subcategory'] = 'default';
 					$array['email_templates'][$x]['template_subject'] = 'Missed Call from ${caller_id_name} <${caller_id_number}>';
-					$array['email_templates'][$x]['template_body'] = "Missed Call from ${caller_id_name} &lt;${caller_id_number}&gt; to ${sip_to_user} ext ${dialed_user}\n";
+					$array['email_templates'][$x]['template_body'] = "Missed Call from \${caller_id_name} &lt;\${caller_id_number}&gt; to \${sip_to_user} ext \${dialed_user}\n";
 					$array['email_templates'][$x]['template_enabled'] = 'true';
 					$array['email_templates'][$x]['template_description'] = '';
 					$x++;
@@ -142,7 +142,7 @@
 					$array['email_templates'][$x]['template_category'] = 'missed';
 					$array['email_templates'][$x]['template_subcategory'] = 'default';
 					$array['email_templates'][$x]['template_subject'] = 'Missed Call from ${caller_id_name} <${caller_id_number}>';
-					$array['email_templates'][$x]['template_body'] = "Missed Call from ${caller_id_name} &lt;${caller_id_number}&gt; to ${sip_to_user} ext ${dialed_user}\n";
+					$array['email_templates'][$x]['template_body'] = "Missed Call from \${caller_id_name} &lt;\${caller_id_number}&gt; to \${sip_to_user} ext \${dialed_user}\n";
 					$array['email_templates'][$x]['template_enabled'] = 'true';
 					$array['email_templates'][$x]['template_description'] = '';
 
