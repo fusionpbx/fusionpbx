@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2013
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -47,13 +47,15 @@
 	}
 
 //delete the data
-	if (strlen($id) > 0) {
+	if (strlen($id) > 0 && is_uuid($id)) {
+		//delete the variable
 		$sql = "delete from v_vars ";
 		$sql .= "where var_uuid = '$id' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		unset($sql);
 
+		//rewrite the xml
 		save_var_xml();
 	}
 
