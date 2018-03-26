@@ -23,67 +23,69 @@
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('domain_setting_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
+//check prmissions
+	if (permission_exists('domain_setting_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
-if (sizeof($_REQUEST) > 1) {
+//toggle enabled
+	if (sizeof($_REQUEST) > 1) {
 
-	$action = check_str($_REQUEST["action"]);
-	$domain_uuid = check_str($_REQUEST["domain_id"]);
-	$domain_setting_uuids = $_REQUEST["id"];
-	$enabled = check_str($_REQUEST['enabled']);
+		$action = check_str($_REQUEST["action"]);
+		$domain_uuid = check_str($_REQUEST["domain_id"]);
+		$domain_setting_uuids = $_REQUEST["id"];
+		$enabled = check_str($_REQUEST['enabled']);
 
-	//change enabled value
-		if ($domain_uuid != '' && sizeof($domain_setting_uuids) == 1 && $enabled != '') {
-			$sql = "update v_domain_settings set ";
-			$sql .= "domain_setting_enabled = '".$enabled."' ";
-			$sql .= "where domain_uuid = '".$domain_uuid."' ";
-			$sql .= "and domain_setting_uuid = '".$domain_setting_uuids[0]."' ";
-			//echo $sql."<br><br>";
-			$db->exec(check_sql($sql));
-			unset($sql);
+		//change enabled value
+			if ($domain_uuid != '' && sizeof($domain_setting_uuids) == 1 && $enabled != '') {
+				$sql = "update v_domain_settings set ";
+				$sql .= "domain_setting_enabled = '".$enabled."' ";
+				$sql .= "where domain_uuid = '".$domain_uuid."' ";
+				$sql .= "and domain_setting_uuid = '".$domain_setting_uuids[0]."' ";
+				//echo $sql."<br><br>";
+				$db->exec(check_sql($sql));
+				unset($sql);
 
-			messages::add($text['message-update']);
-			header("Location: domain_edit.php?id=".$domain_uuid);
-			exit;
-		}
+				messages::add($text['message-update']);
+				header("Location: domain_edit.php?id=".$domain_uuid);
+				exit;
+			}
 
-	//delete domain settings
-		if ($action == 'delete' && permission_exists('domain_setting_delete')) {
-			//add multi-lingual support
-				$language = new text;
-				$text = $language->get();
+		//delete domain settings
+			if ($action == 'delete' && permission_exists('domain_setting_delete')) {
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
 
-			if (sizeof($domain_setting_uuids) > 0) {
-				foreach ($domain_setting_uuids as $domain_setting_uuid) {
-					$sql = "delete from v_domain_settings ";
-					$sql .= "where domain_setting_uuid = '".$domain_setting_uuid."' ";
-					$prep_statement = $db->prepare(check_sql($sql));
-					$prep_statement->execute();
-					unset ($prep_statement, $sql);
+				if (sizeof($domain_setting_uuids) > 0) {
+					foreach ($domain_setting_uuids as $domain_setting_uuid) {
+						$sql = "delete from v_domain_settings ";
+						$sql .= "where domain_setting_uuid = '".$domain_setting_uuid."' ";
+						$prep_statement = $db->prepare(check_sql($sql));
+						$prep_statement->execute();
+						unset ($prep_statement, $sql);
+					}
+					// set message
+					$_SESSION["message"] = $text['message-delete'].": ".sizeof($domain_setting_uuids);
 				}
-				// set message
-				$_SESSION["message"] = $text['message-delete'].": ".sizeof($domain_setting_uuids);
-			}
-			else {
-				// set message
-				messages::add($text['message-delete_failed'], 'negative');
-			}
+				else {
+					// set message
+					messages::add($text['message-delete_failed'], 'negative');
+				}
 
-			header("Location: domain_edit.php?id=".check_str($_REQUEST["domain_uuid"]));
-			exit;
-		}
-
-} //REQUEST
+				header("Location: domain_edit.php?id=".check_str($_REQUEST["domain_uuid"]));
+				exit;
+			}
+	}
 
 //include the paging
 	require_once "resources/paging.php";
@@ -315,4 +317,5 @@ if (sizeof($_REQUEST) > 1) {
 
 //include the footer
 	//require_once "resources/footer.php";
+
 ?>
