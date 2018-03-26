@@ -940,7 +940,7 @@
 			$hud[$n]['html'] .= "<span class='hud_title' style='cursor: default;'>".$text['label-system_status']."</span>";
 
 			//disk usage
-			if (PHP_OS == 'FreeBSD' || PHP_OS == 'Linux') {
+			if ( (PHP_OS == 'FreeBSD' || PHP_OS == 'Linux') && file_exists('/home') ) {
 				$fractional_disk_usage = 1 - disk_free_space('/home') / disk_total_space('/home');
 				$percent_disk_usage = number_format(100*$fractional_disk_usage,0);
 
