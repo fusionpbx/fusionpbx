@@ -941,18 +941,8 @@
 
 			//disk usage
 			if (PHP_OS == 'FreeBSD' || PHP_OS == 'Linux') {
-				$df = shell_exec("/usr/bin/which df");
-				if($df){
-					$tmp = shell_exec($df." /home 2>&1");
-				} else {
-					$tmp = shell_exec("df /home 2>&1");
-				}
-				$tmp = explode("\n", $tmp);
-				$tmp = preg_replace('!\s+!', ' ', $tmp[1]); // multiple > single space
-				$tmp = explode(' ', $tmp);
-				foreach ($tmp as $stat) {
-					if (substr_count($stat, '%') > 0) { $percent_disk_usage = rtrim($stat,'%'); break; }
-				}
+				$fractional_disk_usage = 1 - disk_free_space('/home') / disk_total_space('/home');
+				$percent_disk_usage = number_format(100*$fractional_disk_usage,0);
 
 				if ($percent_disk_usage != '') {
 					$hud[$n]['html'] .= "<span class='hud_stat' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$percent_disk_usage."</span>";
