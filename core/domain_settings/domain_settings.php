@@ -39,11 +39,11 @@
 
 //toggle enabled
 	if (sizeof($_REQUEST) > 1) {
-
-		$action = check_str($_REQUEST["action"]);
-		$domain_uuid = check_str($_REQUEST["domain_id"]);
-		$domain_setting_uuids = $_REQUEST["id"];
-		$enabled = check_str($_REQUEST['enabled']);
+		//get the variables
+			$action = check_str($_REQUEST["action"]);
+			$domain_uuid = check_str($_REQUEST["domain_id"]);
+			$domain_setting_uuids = $_REQUEST["id"];
+			$enabled = check_str($_REQUEST['enabled']);
 
 		//change enabled value
 			if ($domain_uuid != '' && sizeof($domain_setting_uuids) == 1 && $enabled != '') {
