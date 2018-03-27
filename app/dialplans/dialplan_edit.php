@@ -641,7 +641,7 @@
 							echo "	<select id='dialplan_detail_type_".$x."' name='dialplan_details[".$x."][dialplan_detail_type]' class='formfld' style='width: auto; ".$element['visibility']."' onchange='change_to_input(this);'>\n";
 							if (strlen($dialplan_detail_type) > 0) {
 								echo "	<optgroup label='selected'>\n";
-								echo "		<option value='".htmlspecialchars($dialplan_detail_type)."'>".htmlspecialchars($dialplan_detail_type)."</option>\n";
+								echo "		<option value=\"".htmlspecialchars($dialplan_detail_type)."\">".htmlspecialchars($dialplan_detail_type)."</option>\n";
 								echo "	</optgroup>\n";
 							}
 							else {
