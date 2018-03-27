@@ -123,8 +123,8 @@
 						}
 						else {
 							$sql = "insert into v_vars ";
-							$sql .= "(var_uuid, var_name, var_value, var_cat, var_enabled) ";
-							$sql .= "values ('".uuid()."', 'timezone', '$default_setting_value', 'Defaults', 'true'); ";
+							$sql .= "(var_uuid, var_name, var_value, var_category, var_command, var_enabled) ";
+							$sql .= "values ('".uuid()."', 'timezone', '$default_setting_value', 'Defaults', 'set', 'true'); ";
 						}
 						$db->query($sql);
 						unset($sql);
