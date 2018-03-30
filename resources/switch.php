@@ -406,7 +406,7 @@ function save_var_xml() {
 		$prev_var_category = '';
 		$xml = '';
 		foreach ($variables as &$row) {
-			if ($row['var_cat'] != 'Provision') {
+			if ($row['var_category'] != 'Provision') {
 				if ($prev_var_category != $row['var_category']) {
 					$xml .= "\n<!-- ".$row['var_category']." -->\n";
 					if (strlen($row["var_description"]) > 0) {
