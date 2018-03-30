@@ -56,7 +56,7 @@ if (!class_exists('ringbacks')) {
 
 			//get the ringback types
 				$sql = "select * from v_vars ";
-				$sql .= "where var_cat = 'Ringtones' ";
+				$sql .= "where var_category = 'Ringtones' ";
 				$sql .= "order by var_name asc ";
 				$prep_statement = $this->db->prepare(check_sql($sql));
 				$prep_statement->execute();
@@ -92,9 +92,9 @@ if (!class_exists('ringbacks')) {
 				*/
 
 			//get the tones
-					require_once "resources/classes/tones.php";
-					$tones = new tones;
-					$this->tones_list = $tones->tones_list();
+				require_once "resources/classes/tones.php";
+				$tones = new tones;
+				$this->tones_list = $tones->tones_list();
 
 			//get music on hold	and recordings
 				if (is_dir($_SERVER["PROJECT_ROOT"].'/app/music_on_hold')) {
