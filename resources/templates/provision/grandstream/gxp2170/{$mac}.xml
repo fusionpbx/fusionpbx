@@ -21,9 +21,6 @@
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
 <P271>1</P271>
-{else}
-<P271>0</P271>
-{/if}
 
 <!--  Account Name -->
 <!--  String -->
@@ -75,8 +72,8 @@
 <!-- # DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
-{if isset($grandstream_dns_mode_1) }
-<P103>{$grandstream_dns_mode_1}</P103>
+{if isset($grandstream_dns_mode)}
+<P103>{$grandstream_dns_mode}</P103>
 {else}
 <P103>0</P103>
 {/if}
@@ -101,8 +98,8 @@
 <!-- # NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0. -->
 <!-- # Number: 0, 1, 2, 3, 4, 5 -->
 <!-- # Mandatory -->
-{if isset($grandstream_nat_traversal_1) }
-<P52>{$grandstream_nat_traversal_1}</P52>
+{if isset($grandstream_nat_traversal)}
+<P52>{$grandstream_nat_traversal}</P52>
 {else}
 <P52>0</P52>
 {/if}
@@ -550,7 +547,11 @@
 <!-- # SRTP Mode. 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced, 3 - Optional. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
+{if isset($grandstream_srtp)}
+<P183>{grandstream_srtp)}</P183>
+{else}
 <P183>0</P183>
+{/if}
 
 <!-- # SRTP Key Length. 0 - AES 128&256 bit, 1 - AES 128 bit, 2 - AES 256 bit. Default is 0 -->
 <!-- # Default is 0 -->
@@ -909,8 +910,8 @@
 <!-- # DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
-{if isset($grandstream_dns_mode_2) }
-<P408>{$grandstream_dns_mode_2}</P408>
+{if isset($grandstream_dns_mode)}
+<P408>{$grandstream_dns_mode}</P408>
 {else}
 <P408>0</P408>
 {/if}
@@ -934,8 +935,8 @@
 <!-- # NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3, 4, 5 -->
 <!-- # Mandatory -->
-{if isset($grandstream_nat_traversal_2) }
-<P414>{$grandstream_nat_traversal_2}</P414>
+{if isset($grandstream_nat_traversal)}
+<P414>{$grandstream_nat_traversal}</P414>
 {else}
 <P414>0</P414>
 {/if}
@@ -1023,6 +1024,7 @@
 {if $sip_transport_2 == 'tls'}{$tp=2}{/if}
 {if $sip_transport_2 == 'dns srv'}{$tp=1}{/if}
 <P448>{$tp}</P448>
+
 <!-- # SIP Listening Mode.  -->
 <!-- # 0 - Transport Only, 1 - Dual, 2 - Dual (BLF Enforced), 3 - Dual (Secured). Default is 0 -->
 <!-- # Number: 0,1,2,3 -->
@@ -1380,7 +1382,11 @@
 <!-- # 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced, 3 - Optional. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
+{if isset($grandstream_srtp)}
+<P443>{grandstream_srtp)}</P443>
+{else}
 <P443>0</P443>
+{/if}
 
 <!-- # SRTP Key Length. 0 - AES 128&256 bit, 1 - AES 128 bit, 2 - AES 256 bit. Default is 0 -->
 <!-- # Default is 0 -->
@@ -1740,8 +1746,8 @@
 <!-- # DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0  -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
-{if isset($grandstream_dns_mode_3) }
-<P508>{$grandstream_dns_mode_3}</P508>
+{if isset($grandstream_dns_mode)}
+<P508>{$grandstream_dns_mode}</P508>
 {else}
 <P508>0</P508>
 {/if}
@@ -1766,8 +1772,8 @@
 <!-- # NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3, 4, 5 -->
 <!-- # Mandatory -->
-{if isset($grandstream_nat_traversal_3) }
-<P514>{$grandstream_nat_traversal_3}</P514>
+{if isset($grandstream_nat_traversal)}
+<P514>{$grandstream_nat_traversal}</P514>
 {else}
 <P514>0</P514>
 {/if}
@@ -2232,7 +2238,11 @@
 <!-- # 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced, 3 - Optional. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
+{if isset($grandstream_srtp)}
+<P543>{grandstream_srtp)}</P543>
+{else}
 <P543>0</P543>
+{/if}
 
 <!-- # SRTP Key Length. 0 - AES 128&256 bit, 1 - AES 128 bit, 2 - AES 256 bit. Default is 0 -->
 <!-- # Default is 0 -->
@@ -2572,8 +2582,8 @@
 <!-- # DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
-{if isset($grandstream_dns_mode_4) }
-<P608>{$grandstream_dns_mode_4}</P608>
+{if isset($grandstream_dns_mode)}
+<P608>{$grandstream_dns_mode}</P608>
 {else}
 <P608>0</P608>
 {/if}
@@ -2598,8 +2608,8 @@
 <!-- # NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3, 4, 5 -->
 <!-- # Mandatory -->
-{if isset($grandstream_nat_traversal_4) }
-<P614>{$grandstream_nat_traversal_4}</P614>
+{if isset($grandstream_nat_traversal)}
+<P614>{$grandstream_nat_traversal}</P614>
 {else}
 <P614>0</P614>
 {/if}
@@ -3065,7 +3075,11 @@
 <!-- # 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced, 3 - Optional. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
+{if isset($grandstream_srtp)}
+<P643>{grandstream_srtp)}</P643>
+{else}
 <P643>0</P643>
+{/if}
 
 <!-- # SRTP Key Length. 0 - AES 128&256 bit, 1 - AES 128 bit, 2 - AES 256 bit. Default is 0 -->
 <!-- # Default is 0 -->
@@ -3406,8 +3420,8 @@
 <!-- # DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
-{if isset($grandstream_dns_mode_5) }
-<P1708>{$grandstream_dns_mode_5}</P1708>
+{if isset($grandstream_dns_mode)}
+<P1708>{$grandstream_dns_mode}</P1708>
 {else}
 <P1708>0</P1708>
 {/if}
@@ -3432,8 +3446,8 @@
 <!-- # NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3, 4, 5 -->
 <!-- # Mandatory -->
-{if isset($grandstream_nat_traversal_5) }
-<P1714>{$grandstream_nat_traversal_5}</P1714>
+{if isset($grandstream_nat_traversal)}
+<P1714>{$grandstream_nat_traversal}</P1714>
 {else}
 <P1714>0</P1714>
 {/if}
@@ -3898,7 +3912,11 @@
 <!-- # 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced, 3 - Optional. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
+{if isset($grandstream_srtp)}
+<P1743>{grandstream_srtp)}</P1743>
+{else}
 <P1743>0</P1743>
+{/if}
 
 <!-- # SRTP Key Length. 0 - AES 128&256 bit, 1 - AES 128 bit, 2 - AES 256 bit. Default is 0 -->
 <!-- # Default is 0 -->
@@ -4239,8 +4257,8 @@
 <!-- # DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
-{if isset($grandstream_dns_mode_6) }
-<P1808>{$grandstream_dns_mode_6}</P1808>
+{if isset($grandstream_dns_mode)}
+<P1808>{$grandstream_dns_mode}</P1808>
 {else}
 <P1808>0</P1808>
 {/if}
@@ -4265,8 +4283,8 @@
 <!-- # NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3, 4, 5 -->
 <!-- # Mandatory -->
-{if isset($grandstream_nat_traversal_6) }
-<P1814>{$grandstream_nat_traversal_6}</P1814>
+{if isset($grandstream_nat_traversal)}
+<P1814>{$grandstream_nat_traversal}</P1814>
 {else}
 <P1814>0</P1814>
 {/if}
@@ -4734,7 +4752,11 @@
 <!-- # 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced, 3 - Optional. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
+{if isset($grandstream_srtp)}
+<P1843>{grandstream_srtp)}</P1843>
+{else}
 <P1843>0</P1843>
+{/if}
 
 <!-- # SRTP Key Length. 0 - AES 128&256 bit, 1 - AES 128 bit, 2 - AES 256 bit. Default is 0 -->
 <!-- # Default is 0 -->
@@ -6896,7 +6918,11 @@
 
 <!-- # Secondary NTP Server -->
 <!-- # String -->
+{if isset($ntp_server_secondary)}
+<P8333>{$ntp_server_secondary}</P8333>
+{else}
 <P8333></P8333>
+{/if}
 
 <!-- # NTP Update Interval -->
 <!-- # String -->
@@ -7060,31 +7086,55 @@
 <!-- # Screensaver Settings -->
 <!-- # Screensaver. 0 - No, 1 - Yes, 2 - On if no VPK is active. Default is 1 -->
 <!-- # Mandatory -->
+{if isset($grandstream_screensaver)}
+<P2918>{$grandstream_screensaver}</P2918>
+{else}
 <P2918>1</P2918>
+{/if}
 
 <!-- # Screensaver Source.  0 - Default, 1 - USB, 2 - Download. Default is 0. --for GXP2140/2160/2170 only -->
 <!-- # Number: 0, 1, 2 -->
 <!-- # Mandatory -->
+{if isset($grandstream_screensaver_source)}
+<P6759>{$grandstream_screensaver_source}</P6759>
+{else}
 <P6759>0</P6759>
+{/if}
 
 <!-- # Show Date and Time. 0 - No, 1 - Yes. Default is 1 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
+{if isset($grandstream_screensaver_show_date_time)}
+<P8441>{$grandstream_screensaver_show_date_time}</P8441>
+{else}
 <P8441>1</P8441>
+{/if}
 
 <!-- # Screensaver Timeout. Minutes. -->
 <!-- # Number: 3 - 60 -->
 <!-- # Mandatory -->
+{if isset($grandstream_screensaver_timeout)}
+<P2919>{$grandstream_screensaver_timeout}</P2919>
+{else}
 <P2919>5</P2919>
+{/if}
 
 <!-- # Screensaver Server Path. -->
 <!-- # String -->
+{if isset($grandstream_screensaver_server_path)}
+<P934>{$grandstream_screensaver_server_path}</P934>
+{else}
 <P934></P934>
+{/if}
 
 <!-- Screensaver XML Download Interval -->
 <!-- # Number: 5 - 720. Default is 0 (disable auto downloading) -->
 <!-- # Mandatory -->
+{if isset($grandstream_screensaver_xml_download_interval)}
+<P935>{$grandstream_screensaver_xml_download_interval}</P935>
+{else}
 <P935>0</P935>
+{/if}
 
 <!-- ############################################################################## -->
 <!-- ##  Settings/Preferences / LED Control -->
