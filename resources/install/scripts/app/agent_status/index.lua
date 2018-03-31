@@ -86,6 +86,7 @@
 
 	dbh:query(sql, params, function(row)
 		--set the variables
+			agent_uuid = row.call_center_agent_uuid;
 			agent_name = row.agent_name;
 			agent_id = row.agent_id;
 			user_uuid = row.user_uuid;
@@ -135,7 +136,7 @@
 				dbh:query(sql, params);
 
 			--send a login or logout to mod_callcenter
-				cmd = "callcenter_config agent set status "..agent_name.."@"..domain_name.." '"..status.."'";
+				cmd = "callcenter_config agent set status "..agent_uuid.." '"..status.."'";
 				freeswitch.consoleLog("notice", "[user status][login] "..cmd.."\n");
 				result = api:executeString(cmd);
 
