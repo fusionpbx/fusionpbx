@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -59,6 +59,7 @@
 	else {
 		$per_queue_login = false;
 	}
+	unset($prep_statement, $sql);
 
 //setup the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
@@ -164,10 +165,12 @@
 			foreach ($call_center_queues as $queue) {
 				$agents[$x]['queues'][$i]['agent_name'] = $row['agent_name'];
 				$agents[$x]['queues'][$i]['queue_name'] = $queue['queue_name'];
+				$agents[$x]['queues'][$i]['call_center_agent_uuid'] = $row['call_center_agent_uuid'];
+				$agents[$x]['queues'][$i]['call_center_queue_uuid'] = $queue['call_center_queue_uuid'];
 				$agents[$x]['queues'][$i]['queue_status'] = 'Logged Out';
 				foreach ($call_center_tiers as $tier) {
-					if ($queue['queue_name'] .'@'. $_SESSION['domain_name'] == $tier['queue'] 
-						&& $row['agent_name'] .'@'. $_SESSION['domain_name'] == $tier['agent']) {
+					if ($queue['call_center_queue_uuid'] == $tier['call_center_queue_uuid'] 
+						&& $row['call_center_agent_uuid'] == $tier['call_center_agent_uuid']) {
 						$agents[$x]['queues'][$i]['queue_status'] = 'Available';
 					}
 				}
@@ -176,7 +179,7 @@
 
 		//update the agent status
 			foreach ($agent_list as $r) {
-				if ($r['name'] == $row['agent_name'].'@'.$domain_name) {
+				if ($r['name'] == $row['call_center_agent_uuid']) {
 					$agents[$x]['agent_status'] = $r['status'];
 				}
 			}
@@ -184,6 +187,8 @@
 			$x++;
 
 	}
+
+//debug info
 	//echo "<pre>\n";
 	//print_r($agents);
 	//echo "</pre>\n";
@@ -262,7 +267,8 @@
 				$str .= "		<td valign='middle' class='".$row_style[$c]."' nowrap='nowrap'>";
 				$str .= "			<input type='hidden' name='agents[".$x."][queue_name]' id='agent_".$x."_name' value='".$queue['queue_name']."'>\n";
 				$str .= "			<input type='hidden' name='agents[".$x."][agent_name]' id='agent_".$x."_name' value='".$row['agent_name']."'>\n";
-				$str .= "			<input type='hidden' name='agents[".$x."][id]' id='agent_".$x."_name' value='".$agent['call_center_agent_uuid']."'>\n";
+				$str .= "			<input type='hidden' name='agents[".$x."][id]' id='agent_".$x."_queue_uuid' value='".$agent['call_center_queue_uuid']."'>\n";
+				$str .= "			<input type='hidden' name='agents[".$x."][id]' id='agent_".$x."_agent_uuid' value='".$agent['call_center_agent_uuid']."'>\n";
 				//$str .= "			<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_no_change' value='' checked='checked'>&nbsp;<label for='agent_".$x."_status_no_change'>".$text['option-no_change']."</label>&nbsp;\n";
 				$str .= "			<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_available' value='Available'>&nbsp;<label for='agent_".$x."_status_available'>".$text['option-available']."</label>&nbsp;\n";
 				$str .= "			<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_logged_out' value='Logged Out'>&nbsp;<label for='agent_".$x."_status_logged_out'>".$text['option-logged_out']."</label>&nbsp;\n";
