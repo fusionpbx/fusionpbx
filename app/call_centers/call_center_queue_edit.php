@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -116,7 +116,7 @@
 			$call_center_queue_uuid = check_str($_REQUEST["id"]);
 			$call_center_tier_uuid = check_str($_REQUEST["call_center_tier_uuid"]);
 		//get the agent details
-			$sql = "select agent_name, queue_name ";
+			$sql = "select agent_name, queue_name, call_center_agent_uuid, call_center_queue_uuid ";
 			$sql .= "from v_call_center_tiers ";
 			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 			$sql .= "and call_center_tier_uuid = '".$call_center_tier_uuid."' ";
@@ -125,8 +125,8 @@
 			$tiers = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			if (is_array($tiers)) {
 				foreach ($tiers as &$row) {
-					$agent_name = $row["agent_name"];
-					$queue_name = $row["queue_name"];
+					$call_center_agent_uuid = $row["call_center_agent_uuid"];
+					$call_center_queue_uuid = $row["call_center_queue_uuid"];
 				}
 			}
 			unset ($prep_statement);
@@ -138,7 +138,7 @@
 			//delete the agent over event socket
 			if ($fp) {
 				//callcenter_config tier del [queue_name] [agent_name]
-				$cmd = "api callcenter_config tier del ".$queue_name."@".$tmp_domain." ".$agent_name."@".$_SESSION['domains'][$_SESSION['domain_uuid']]['domain_name'];
+				$cmd = "api callcenter_config tier del ".$call_center_queue_uuid." ".$call_center_agent_uuid;
 				$response = event_socket_request($fp, $cmd);
 			}
 		//delete the tier from the database
@@ -226,7 +226,7 @@
 			if (strlen($queue_cc_exit_keys) > 0) {
 				$dialplan_xml .= "		<action application=\"set\" data=\"cc_exit_keys=".$queue_cc_exit_keys."\"/>\n";
 			}
-			$dialplan_xml .= "		<action application=\"callcenter\" data=\"".$queue_name.'@'.$_SESSION['domain_name']."\"/>\n";
+			$dialplan_xml .= "		<action application=\"callcenter\" data=\"".$call_center_queue_uuid."\"/>\n";
 			$dialplan_xml .= "		<action application=\"".$queue_timeout_application."\" data=\"".$queue_timeout_data."\"/>\n";
 			$dialplan_xml .= "	</condition>\n";
 			$dialplan_xml .= "</extension>\n";
@@ -319,15 +319,15 @@
 							callcenter_config tier set position [queue_name] [agent_name] [position]
 						*/
 						//add the agent
-						$cmd = "api callcenter_config tier add ".$queue_name."@".$tmp_domain." ".$agent_name."@".$tmp_domain." ".$tier_level." ".$tier_position;
+						$cmd = "api callcenter_config tier add ".$call_center_queue_uuid." ".$call_center_agent_uuid." ".$tier_level." ".$tier_position;
 						$response = event_socket_request($fp, $cmd);
 						usleep(200);
 						//agent set level
-						$cmd = "api callcenter_config tier set level ".$queue_name."@".$tmp_domain." ".$agent_name."@".$tmp_domain." ".$tier_level;
+						$cmd = "api callcenter_config tier set level ".$call_center_queue_uuid." ".$call_center_agent_uuid." ".$tier_level;
 						$response = event_socket_request($fp, $cmd);
 						usleep(200);
 						//agent set position
-						$cmd = "api callcenter_config tier set position ".$queue_name."@".$tmp_domain." ".$agent_name."@".$tmp_domain." ".$tier_position;
+						$cmd = "api callcenter_config tier set position ".$call_center_queue_uuid." ".$call_center_agent_uuid." ".$tier_position;
 						$response = event_socket_request($fp, $cmd);
 						usleep(200);
 					}
@@ -387,8 +387,16 @@
 		unset ($prep_statement);
 	}
 
-//replace the dash in the queue name with a space
-	$queue_name = str_replace("-", " ", $queue_name);
+//get the tiers
+	$sql = "select t.call_center_tier_uuid, t.tier_level, t.tier_position, a.agent_name ";
+	$sql .= "from v_call_center_tiers as t, v_call_center_agents as a ";
+	$sql .= "where t.call_center_queue_uuid = '".$call_center_queue_uuid."' ";
+	$sql .= "and t.call_center_agent_uuid = a.call_center_agent_uuid ";
+	$sql .= "and t.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "order by tier_level asc, tier_position asc, agent_name asc";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$tiers = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
 //set default values
 	if (strlen($queue_strategy) == 0) { $queue_strategy = "longest-idle-agent"; }
@@ -433,7 +441,7 @@
 		echo "  <input type='button' class='btn' value='".$text['button-stop']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+unload+".$database_queue_name."@".$_SESSION['domain_name']."';\" />\n";
 		echo "  <input type='button' class='btn' value='".$text['button-start']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+load+".$database_queue_name."@".$_SESSION['domain_name']."';\" />\n";
 		echo "  <input type='button' class='btn' value='".$text['button-restart']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+reload+".$database_queue_name."@".$_SESSION['domain_name']."';\" />\n";
-		echo "  <input type='button' class='btn' value='".$text['button-view']."' onclick=\"document.location.href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".$database_queue_name."';\" />\n";
+		echo "  <input type='button' class='btn' value='".$text['button-view']."' onclick=\"document.location.href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".$call_center_queue_uuid."';\" />\n";
 		echo "	&nbsp;&nbsp;&nbsp;";
 	}
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>\n";
@@ -543,19 +551,7 @@
 		echo "				<td class='vtable' style='text-align: center;'>".$text['label-tier_position']."</td>\n";
 		echo "				<td></td>\n";
 		echo "			</tr>\n";
-
-		if ($call_center_queue_uuid != '') {
-			//replace the space in the queue name with a dash
-			$db_queue_name = str_replace(" ", "-", $queue_name);
-			$db_queue_name = $db_queue_name .'@'.$_SESSION['domain_name'];
-
-			$sql = "select * from v_call_center_tiers ";
-			$sql .= "where (call_center_queue_uuid = '".$call_center_queue_uuid."' or queue_name = '".$db_queue_name."') ";
-			$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "order by tier_level asc, tier_position asc, agent_name asc";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$tiers = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		if ($call_center_queue_uuid != null) {
 			if (is_array($tiers)) {
 				foreach($tiers as $field) {
 					echo "	<tr>\n";
@@ -581,7 +577,7 @@
 			//get agents
 			$sql = "select agent_name from v_call_center_agents ";
 			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			if ($assigned_agents){
+			if ($assigned_agents) {
 				foreach($assigned_agents as $assigned_agent) {
 					$sql .= "and agent_name <> '".$assigned_agent."' ";
 				}
@@ -589,14 +585,14 @@
 			$sql .= "order by agent_name asc";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			if (sizeof($result) > 0) {
+			$agents = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			if (is_array($agents) > 0) {
 				echo "		<tr>\n";
 				echo "			<td class='vtable'>\n";
 				echo "				<input type=\"hidden\" name='call_center_tiers[0][call_center_tier_uuid]' value='".uuid()."'>\n";
 				echo "				<select id='agent_name' name='call_center_tiers[0][agent_name]' class='formfld'>\n";
 				echo "					<option value=''></option>\n";
-				foreach($result as $field) {
+				foreach($agents as $field) {
 					echo "				<option value='".$field['agent_name']."'>".$field['agent_name']."</option>\n";
 				}
 				unset($sql,$prep_statement);
