@@ -44,7 +44,7 @@
 	$text = $language->get();
 
 //get the queue_name and set it as a variable
-	$queue_name = $_GET[queue_name];
+	$queue_name = $_GET['queue_name'];
 
 //convert the string to a named array
 	function str_to_named_array($tmp_str, $tmp_delimiter) {
@@ -159,14 +159,13 @@
 					if (isset($agent_result)) foreach ($agent_result as $agent_row) {
 						if ($tier_row['agent'] == $agent_row['name']) {
 							$name = $agent_row['name'];
-							$name = str_replace('@'.$_SESSION['domain_name'], '', $name);
 							//$system = $agent_row['system'];
-							$a_uuid = $agent_row['uuid'];
+							$agent_uuid = $agent_row['uuid'];
 							//$type = $agent_row['type'];
 							$contact = $agent_row['contact'];
-							$a_exten = preg_replace("/user\//", "", $contact);
-							$a_exten = preg_replace("/@.*/", "", $a_exten);
-							$a_exten = preg_replace("/{.*}/", "", $a_exten);
+							$agent_extension = preg_replace("/user\//", "", $contact);
+							$agent_extension = preg_replace("/@.*/", "", $agent_extension);
+							$agent_extension = preg_replace("/{.*}/", "", $agent_extension);
 							$status = $agent_row['status'];
 							$state = $agent_row['state'];
 							$max_no_answer = $agent_row['max_no_answer'];
@@ -199,8 +198,8 @@
 							$last_status_change_length = $last_status_change_length_hour.':'.$last_status_change_length_min.':'.$last_status_change_length_sec;
 
 							echo "<tr>\n";
-							echo "<td valign='top' class='".$row_style[$c]."'>".$name."</td>\n";
-							echo "<td valign='top' class='".$row_style[$c]."'>".$a_exten."</td>\n";
+							echo "<td valign='top' class='".$row_style[$c]."'>".$agent_row['name']."</td>\n";
+							echo "<td valign='top' class='".$row_style[$c]."'>".$agent_extension."</td>\n";
 							echo "<td valign='top' class='".$row_style[$c]."'>".$status."</td>\n";
 							echo "<td valign='top' class='".$row_style[$c]."'>".$state."</td>\n";
 							echo "<td valign='top' class='".$row_style[$c]."'>".$last_status_change_length."</td>\n";
@@ -216,20 +215,20 @@
 
 								//need to check state to so only waiting gets call, and trying/answer gets eavesdrop
 								if ($tier_state == "Offering" || $tier_state == "Active Inbound") {
-									$orig_command="{origination_caller_id_name=eavesdrop,origination_caller_id_number=".$a_exten."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26eavesdrop(".$a_uuid.")";
+									$orig_command="{origination_caller_id_name=eavesdrop,origination_caller_id_number=".$agent_extension."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26eavesdrop(".$agent_uuid.")";
 
 									//debug
 									//echo $orig_command;
 									//echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=log+".$orig_command.")');}\">log_cmd</a>&nbsp;\n";
 									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=originate+".$orig_command.")');}\">".$text['label-eavesdrop']."</a>&nbsp;\n";
 
-									$xfer_command = $a_uuid." -bleg ".$_SESSION['user']['extension'][0]['user']." XML ".$_SESSION['domain_name'];
-									//$xfer_command = $a_uuid." ".$_SESSION['user']['extension'][0]['user']." XML default";
+									$xfer_command = $agent_uuid." -bleg ".$_SESSION['user']['extension'][0]['user']." XML ".$_SESSION['domain_name'];
+									//$xfer_command = $agent_uuid." ".$_SESSION['user']['extension'][0]['user']." XML default";
 									$xfer_command = urlencode($xfer_command);
 									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=uuid_transfer+".$xfer_command."');}\">".$text['label-transfer']."</a>&nbsp;\n";
 								}
 								else {
-									$orig_call="{origination_caller_id_name=c2c-".urlencode($name).",origination_caller_id_number=".$a_exten."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26bridge(user/".$a_exten."@".$_SESSION['domain_name'].")";
+									$orig_call="{origination_caller_id_name=c2c-".urlencode($name).",origination_caller_id_number=".$agent_extension."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26bridge(user/".$agent_extension."@".$_SESSION['domain_name'].")";
 									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=originate+".$orig_call.")');}\">".$text['label-call']."</a>&nbsp;\n";
 								}
 								echo "</td>";
@@ -263,7 +262,7 @@
 
 				echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 				echo "  <tr>\n";
-				echo "	<td align='left'><b>".$text['label-queue'].": ".ucfirst($_GET[queue_name])."</b><br />\n";
+				echo "	<td align='left'><b>".$text['label-queue'].": ".ucfirst($_GET['name'])."</b><br />\n";
 				echo "		".$text['description-queue']."<br />\n";
 				echo "	</td>\n";
 				echo "	<td align='right' valign='top'>";
