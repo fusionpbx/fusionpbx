@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -44,7 +44,7 @@
 	$text = $language->get();
 
 //get the queue_name and set it as a variable
-	$queue_name = $_GET[queue_name].'@'. $_SESSION['domains'][$domain_uuid]['domain_name'];
+	$queue_name = $_GET[queue_name];
 
 //convert the string to a named array
 	function str_to_named_array($tmp_str, $tmp_delimiter) {
