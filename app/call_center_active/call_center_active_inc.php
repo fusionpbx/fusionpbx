@@ -133,7 +133,7 @@
 			//list the agents
 				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 				echo "<tr>\n";
-				echo "<th>".$text['label-name']."</th>\n";
+				//echo "<th>".$text['label-name']."</th>\n";
 				echo "<th>".$text['label-extension']."</th>\n";
 				echo "<th>".$text['label-status']."</th>\n";
 				echo "<th>".$text['label-state']."</th>\n";
@@ -198,7 +198,7 @@
 							$last_status_change_length = $last_status_change_length_hour.':'.$last_status_change_length_min.':'.$last_status_change_length_sec;
 
 							echo "<tr>\n";
-							echo "<td valign='top' class='".$row_style[$c]."'>".$agent_row['name']."</td>\n";
+							//echo "<td valign='top' class='".$row_style[$c]."'>".$agent_row['name']."</td>\n";
 							echo "<td valign='top' class='".$row_style[$c]."'>".$agent_extension."</td>\n";
 							echo "<td valign='top' class='".$row_style[$c]."'>".$status."</td>\n";
 							echo "<td valign='top' class='".$row_style[$c]."'>".$state."</td>\n";
