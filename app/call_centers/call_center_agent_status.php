@@ -67,6 +67,11 @@
 //get the http post values and set them as php variables
 	if (count($_POST) > 0) {
 
+		//debug info
+		//echo "<pre>\n";
+		//print_r($_POST);
+		//echo "</pre>\n";
+
 		foreach($_POST['agents'] as $row) {
 			if (strlen($row['agent_status']) > 0) {
 				//agent set status
@@ -76,7 +81,7 @@
 								$sql  = "update v_users set ";
 								$sql .= "user_status = '".$row['agent_status']."' ";
 								$sql .= "where domain_uuid = '".$domain_uuid."' ";
-								$sql .= "and username = '".$row['agent_name']."' ";
+								$sql .= "and user_uuid = '".$row['user_uuid']."' ";
 								$prep_statement = $db->prepare(check_sql($sql));
 								$prep_statement->execute();
 							}
@@ -97,20 +102,20 @@
 							//echo $cmd."\n";
 
 						//set the agent status to available and assign the agent to the queue with the tier
-							if (isset($row['queue_name']) && $row['agent_status'] == 'Available') {
+							if (isset($row['queue_uuid']) && $row['agent_status'] == 'Available') {
 								//set the call center status
 								//$cmd = "api callcenter_config agent set status ".$row['agent_name']."@".$_SESSION['domain_name']." '".$row['agent_status']."'";
 								//$response = event_socket_request($fp, $cmd);
 
 								//assign the agent to the queue
-								$cmd = "api callcenter_config tier add ".$row['queue_name']." ".$row['agent_uuid']." 1 1";
+								$cmd = "api callcenter_config tier add ".$row['queue_uuid']." ".$row['agent_uuid']." 1 1";
 								//echo $cmd."<br />\n";
 								$response = event_socket_request($fp, $cmd);
 							}
 
 						//un-assign the agent from the queue
-							if (isset($row['queue_name']) && $row['agent_status'] == 'Logged Out') {
-								$cmd = "api callcenter_config tier del ".$row['queue_name']." ".$row['agent_uuid'];
+							if (isset($row['queue_uuid']) && $row['agent_status'] == 'Logged Out') {
+								$cmd = "api callcenter_config tier del ".$row['queue_uuid']." ".$row['agent_uuid'];
 								//echo $cmd."<br />\n";
 								$response = event_socket_request($fp, $cmd);
 							}
@@ -186,13 +191,12 @@
 			}
 		//increment x
 			$x++;
-
 	}
 
 //debug info
-	//echo "<pre>\n";
-	//print_r($agents);
-	//echo "</pre>\n";
+	echo "<pre>\n";
+	print_r($agents);
+	echo "</pre>\n";
 
 //set the row style
 	$c = 0;
@@ -268,6 +272,7 @@
 				$html .= "		<td valign='middle' class='".$row_style[$c]."' nowrap='nowrap'>";
 				$html .= "			<input type='hidden' name='agents[".$x."][queue_name]' id='queue_".$x."_name' value='".$queue['queue_name']."'>\n";
 				$html .= "			<input type='hidden' name='agents[".$x."][agent_name]' id='agent_".$x."_name' value='".$row['agent_name']."'>\n";
+				$html .= "			<input type='hidden' name='agents[".$x."][user_uuid]' id='agent_".$x."_name' value='".$row['user_uuid']."'>\n";
 				$html .= "			<input type='hidden' name='agents[".$x."][queue_uuid]' id='queue_".$x."_uuid' value='".$queue['call_center_queue_uuid']."'>\n";
 				$html .= "			<input type='hidden' name='agents[".$x."][agent_uuid]' id='agent_".$x."_uuid' value='".$row['call_center_agent_uuid']."'>\n";
 				//$html .= "			<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_no_change' value='' checked='checked'>&nbsp;<label for='agent_".$x."_status_no_change'>".$text['option-no_change']."</label>&nbsp;\n";
