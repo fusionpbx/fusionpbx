@@ -138,17 +138,11 @@
 	$switch_cmd = 'callcenter_config agent list';
 	$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
 	$agent_list = csv_to_named_array($event_socket_str, '|');
-	//echo "<pre>\n";
-	//print_r($call_center_agents);
-	//echo "</pre>\n";
 
 //get the agent list from event socket
 	$switch_cmd = 'callcenter_config tier list';
 	$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
 	$call_center_tiers = csv_to_named_array($event_socket_str, '|');
-	//echo "<pre>\n";
-	//print_r($call_center_tiers);
-	//echo "</pre>\n";
 
 //get the call center queues from the database
 	$sql = "select * from v_call_center_queues ";
@@ -158,6 +152,17 @@
 	$prep_statement->execute();
 	$call_center_queues = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
+
+//add the status to the call_center_queues array
+	$x = 0;
+	foreach ($call_center_queues as $queue) {
+		//get the queue list from event socket
+		$switch_cmd = "callcenter_config queue list agents ".$queue['call_center_queue_uuid'];
+		$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+		$queue_list = csv_to_named_array($event_socket_str, '|');
+		$call_center_queues[$x]['queue_list'] = $queue_list;
+		$x++;
+	}
 
 //get the agent status from mod_callcenter and update the agent status in the agents array
 	$x = 0;
@@ -174,9 +179,8 @@
 				$agents[$x]['queues'][$i]['call_center_agent_uuid'] = $row['call_center_agent_uuid'];
 				$agents[$x]['queues'][$i]['call_center_queue_uuid'] = $queue['call_center_queue_uuid'];
 				$agents[$x]['queues'][$i]['queue_status'] = 'Logged Out';
-				foreach ($call_center_tiers as $tier) {
-					if ($queue['call_center_queue_uuid'] == $tier['call_center_queue_uuid'] 
-						&& $row['call_center_agent_uuid'] == $tier['call_center_agent_uuid']) {
+				foreach ($queue['queue_list'] as $queue_list) {
+					if ($row['call_center_agent_uuid'] == $queue_list['name']) {
 						$agents[$x]['queues'][$i]['queue_status'] = 'Available';
 					}
 				}
@@ -194,9 +198,9 @@
 	}
 
 //debug info
-	echo "<pre>\n";
-	print_r($agents);
-	echo "</pre>\n";
+	//echo "<pre>\n";
+	//print_r($agents);
+	//echo "</pre>\n";
 
 //set the row style
 	$c = 0;
@@ -270,14 +274,14 @@
 				$html .= "		</td>\n";
 
 				$html .= "		<td valign='middle' class='".$row_style[$c]."' nowrap='nowrap'>";
+				//$html .= "			<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_no_change' value='' checked='checked'>&nbsp;<label for='agent_".$x."_status_no_change'>".$text['option-no_change']."</label>&nbsp;\n";
+				$html .= "			<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_available' value='Available'>&nbsp;<label for='agent_".$x."_status_available'>".$text['option-available']."</label>&nbsp;\n";
+				$html .= "			<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_logged_out' value='Logged Out'>&nbsp;<label for='agent_".$x."_status_logged_out'>".$text['option-logged_out']."</label>&nbsp;\n";
 				$html .= "			<input type='hidden' name='agents[".$x."][queue_name]' id='queue_".$x."_name' value='".$queue['queue_name']."'>\n";
 				$html .= "			<input type='hidden' name='agents[".$x."][agent_name]' id='agent_".$x."_name' value='".$row['agent_name']."'>\n";
 				$html .= "			<input type='hidden' name='agents[".$x."][user_uuid]' id='agent_".$x."_name' value='".$row['user_uuid']."'>\n";
 				$html .= "			<input type='hidden' name='agents[".$x."][queue_uuid]' id='queue_".$x."_uuid' value='".$queue['call_center_queue_uuid']."'>\n";
 				$html .= "			<input type='hidden' name='agents[".$x."][agent_uuid]' id='agent_".$x."_uuid' value='".$row['call_center_agent_uuid']."'>\n";
-				//$html .= "			<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_no_change' value='' checked='checked'>&nbsp;<label for='agent_".$x."_status_no_change'>".$text['option-no_change']."</label>&nbsp;\n";
-				$html .= "			<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_available' value='Available'>&nbsp;<label for='agent_".$x."_status_available'>".$text['option-available']."</label>&nbsp;\n";
-				$html .= "			<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_logged_out' value='Logged Out'>&nbsp;<label for='agent_".$x."_status_logged_out'>".$text['option-logged_out']."</label>&nbsp;\n";
 				$html .= "		</td>\n";
 				$html .= "	</tr>\n";
 			}
