@@ -130,10 +130,20 @@
 				$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
 				$agent_result = str_to_named_array($event_socket_str, '|');
 
+			//get the agents from the database
+				if (!is_array($_SESSION['agents'])) {
+					$sql = "select * from v_call_center_agents ";
+					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+					$sql .= "order by agent_name ASC ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$_SESSION['agents'] = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				}
+
 			//list the agents
 				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 				echo "<tr>\n";
-				//echo "<th>".$text['label-name']."</th>\n";
+				echo "<th>".$text['label-name']."</th>\n";
 				echo "<th>".$text['label-extension']."</th>\n";
 				echo "<th>".$text['label-status']."</th>\n";
 				echo "<th>".$text['label-state']."</th>\n";
@@ -158,7 +168,16 @@
 
 					if (isset($agent_result)) foreach ($agent_result as $agent_row) {
 						if ($tier_row['agent'] == $agent_row['name']) {
-							$name = $agent_row['name'];
+							$agent_uuid = $agent_row['name'];
+
+							//get the agent name
+							$agent_name = '';
+							if (is_array($_SESSION['agents'])) foreach ($_SESSION['agents'] as $agent) {
+								if ($agent['call_center_agent_uuid'] = $agent_uuid) {
+									$agent_name = $agent['agent_name'];
+								}
+							}
+
 							//$system = $agent_row['system'];
 							$agent_uuid = $agent_row['uuid'];
 							//$type = $agent_row['type'];
@@ -198,7 +217,7 @@
 							$last_status_change_length = $last_status_change_length_hour.':'.$last_status_change_length_min.':'.$last_status_change_length_sec;
 
 							echo "<tr>\n";
-							//echo "<td valign='top' class='".$row_style[$c]."'>".$agent_row['name']."</td>\n";
+							echo "<td valign='top' class='".$row_style[$c]."'>".$agent_name."</td>\n";
 							echo "<td valign='top' class='".$row_style[$c]."'>".$agent_extension."</td>\n";
 							echo "<td valign='top' class='".$row_style[$c]."'>".$status."</td>\n";
 							echo "<td valign='top' class='".$row_style[$c]."'>".$state."</td>\n";
@@ -318,13 +337,13 @@
 				$joined_length_sec = sprintf("%02d", $joined_length_sec);
 				$joined_length = $joined_length_hour.':'.$joined_length_min.':'.$joined_length_sec;
 
-				//$system_seconds = time() - $system_epoch;
-				//$system_length_hour = floor($system_seconds/3600);
-				//$system_length_min = floor($system_seconds/60 - ($system_length_hour * 60));
-				//$system_length_sec = $system_seconds - (($system_length_hour * 3600) + ($system_length_min * 60));
-				//$system_length_min = sprintf("%02d", $system_length_min);
-				//$system_length_sec = sprintf("%02d", $system_length_sec);
-				//$system_length = $system_length_hour.':'.$system_length_min.':'.$system_length_sec;
+				//get the serving agent name
+				$serving_agent_name = '';
+				if (is_array($_SESSION['agents'])) foreach ($_SESSION['agents'] as $agent) {
+					if ($agent['call_center_agent_uuid'] = $serving_agent) {
+						$serving_agent_name = $agent['agent_name'];
+					}
+				}
 
 				echo "<tr>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>".$joined_length."</td>\n";
@@ -349,7 +368,7 @@
 					}
 					echo "</td>";
 				}
-				echo "<td valign='top' class='".$row_style[$c]."'>".$serving_agent."&nbsp;</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".$serving_agent_name."&nbsp;</td>\n";
 				echo "</tr>\n";
 				if ($c==0) { $c=1; } else { $c=0; }
 			}
