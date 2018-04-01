@@ -66,6 +66,7 @@
 
 //get the http post values and set them as php variables
 	if (count($_POST) > 0) {
+
 		foreach($_POST['agents'] as $row) {
 			if (strlen($row['agent_status']) > 0) {
 				//agent set status
@@ -265,10 +266,10 @@
 				$html .= "		</td>\n";
 
 				$html .= "		<td valign='middle' class='".$row_style[$c]."' nowrap='nowrap'>";
-				$html .= "			<input type='hidden' name='agents[".$x."][queue_name]' id='agent_".$x."_name' value='".$queue['queue_name']."'>\n";
+				$html .= "			<input type='hidden' name='agents[".$x."][queue_name]' id='queue_".$x."_name' value='".$queue['queue_name']."'>\n";
 				$html .= "			<input type='hidden' name='agents[".$x."][agent_name]' id='agent_".$x."_name' value='".$row['agent_name']."'>\n";
-				$html .= "			<input type='hidden' name='agents[".$x."][queue_uuid]' id='agent_".$x."_queue_uuid' value='".$agent['call_center_queue_uuid']."'>\n";
-				$html .= "			<input type='hidden' name='agents[".$x."][agent_uuid]' id='agent_".$x."_agent_uuid' value='".$agent['call_center_agent_uuid']."'>\n";
+				$html .= "			<input type='hidden' name='agents[".$x."][queue_uuid]' id='queue_".$x."_uuid' value='".$queue['call_center_queue_uuid']."'>\n";
+				$html .= "			<input type='hidden' name='agents[".$x."][agent_uuid]' id='agent_".$x."_uuid' value='".$row['call_center_agent_uuid']."'>\n";
 				//$html .= "			<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_no_change' value='' checked='checked'>&nbsp;<label for='agent_".$x."_status_no_change'>".$text['option-no_change']."</label>&nbsp;\n";
 				$html .= "			<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_available' value='Available'>&nbsp;<label for='agent_".$x."_status_available'>".$text['option-available']."</label>&nbsp;\n";
 				$html .= "			<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_logged_out' value='Logged Out'>&nbsp;<label for='agent_".$x."_status_logged_out'>".$text['option-logged_out']."</label>&nbsp;\n";
@@ -291,7 +292,7 @@
 		}
 		$x++;
 	} //end foreach
-	unset($sql, $result, $row_count);
+	unset($sql, $agents);
 
 	echo "<tr>\n";
 	echo "<td colspan='11' align='left'>\n";
