@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2016
+ Portions created by the Initial Developer are Copyright (C) 2018
  the Initial Developer. All Rights Reserved.
 */
 
@@ -56,6 +56,7 @@
 		$template_subcategory = check_str($_POST["template_subcategory"]);
 		$template_subject = check_str($_POST["template_subject"]);
 		$template_body = check_str($_POST["template_body"]);
+		$template_type = check_str($_POST["template_type"]);
 		$template_enabled = check_str($_POST["template_enabled"]);
 		$template_description = check_str($_POST["template_description"]);
 	}
@@ -76,6 +77,7 @@
 			if (strlen($template_subject) == 0) { $msg .= $text['message-required']." ".$text['label-template_subject']."<br>\n"; }
 			if (strlen($template_body) == 0) { $msg .= $text['message-required']." ".$text['label-template_body']."<br>\n"; }
 			//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
+			//if (strlen($template_type) == 0) { $msg .= $text['message-required']." ".$text['label-template_type']."<br>\n"; }
 			if (strlen($template_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-template_enabled']."<br>\n"; }
 			//if (strlen($template_description) == 0) { $msg .= $text['message-required']." ".$text['label-template_description']."<br>\n"; }
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -145,6 +147,7 @@
 			$template_subcategory = $row["template_subcategory"];
 			$template_subject = $row["template_subject"];
 			$template_body = $row["template_body"];
+			$template_type = $row["template_type"];
 			$template_enabled = $row["template_enabled"];
 			$template_description = $row["template_description"];
 		}
@@ -244,6 +247,17 @@
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-domain_uuid']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-template_type']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='template_type' maxlength='255' value=\"$template_type\">\n";
+	echo "<br />\n";
+	echo $text['description-template_type']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
