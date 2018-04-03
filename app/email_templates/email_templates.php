@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2016
+ Portions created by the Initial Developer are Copyright (C) 2016-2018
  the Initial Developer. All Rights Reserved.
 */
 
@@ -74,6 +74,7 @@
 		$sql_search .= " or template_subcategory like '%".$search."%' ";
 		//$sql_search .= " or template_subject like '%".$search."%' ";
 		//$sql_search .= " or template_body like '%".$search."%' ";
+		$sql_search .= " or template_type like '%".$search."%' ";
 		$sql_search .= " or template_enabled like '%".$search."%' ";
 		$sql_search .= " or lower(template_description) like '%".$search."%' ";
 		$sql_search .= ") ";
@@ -195,6 +196,7 @@
 	echo th_order_by('template_category', $text['label-template_category'], $order_by, $order);
 	echo th_order_by('template_subcategory', $text['label-template_subcategory'], $order_by, $order);
 	//echo th_order_by('domain_uuid', $text['label-domain_uuid'], $order_by, $order);
+	echo th_order_by('template_type', $text['label-template_type'], $order_by, $order);
 	echo th_order_by('template_enabled', $text['label-template_enabled'], $order_by, $order);
 	echo th_order_by('template_description', $text['label-template_description'], $order_by, $order);
 	echo "	<td class='list_control_icons'>";
@@ -233,6 +235,7 @@
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['template_subject']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['template_body']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_uuid']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['template_type']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['template_enabled']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['template_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
