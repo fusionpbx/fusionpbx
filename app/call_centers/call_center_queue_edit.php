@@ -99,9 +99,6 @@
 			$queue_cc_exit_keys = check_str($_POST["queue_cc_exit_keys"]);
 			$queue_description = check_str($_POST["queue_description"]);
 
-		//replace the space in the queue name with a dash
-			$queue_name = str_replace(" ", "-", $queue_name);
-
 		//remove invalid characters
 			$queue_cid_prefix = str_replace(":", "-", $queue_cid_prefix);
 			$queue_cid_prefix = str_replace("\"", "", $queue_cid_prefix);
@@ -349,7 +346,8 @@
 	$destination = new destinations;
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (is_array($_GET) && is_uuid($_GET["id"]) && $_POST["persistformvar"] != "true") {
+		
 		$call_center_queue_uuid = $_GET["id"];
 		$sql = "select * from v_call_center_queues ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -438,9 +436,9 @@
 		if (permission_exists('call_center_wallboard')) {
 			echo "  <input type='button' class='btn' value='".$text['button-wallboard']."' onclick=\"document.location.href='call_center_wallboard.php?queue_name=".$database_queue_name."';\" />\n";
 		}
-		echo "  <input type='button' class='btn' value='".$text['button-stop']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+unload+".$database_queue_name."@".$_SESSION['domain_name']."';\" />\n";
-		echo "  <input type='button' class='btn' value='".$text['button-start']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+load+".$database_queue_name."@".$_SESSION['domain_name']."';\" />\n";
-		echo "  <input type='button' class='btn' value='".$text['button-restart']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+reload+".$database_queue_name."@".$_SESSION['domain_name']."';\" />\n";
+		echo "  <input type='button' class='btn' value='".$text['button-stop']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+unload+".$call_center_queue_uuid."';\" />\n";
+		echo "  <input type='button' class='btn' value='".$text['button-start']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+load+".$call_center_queue_uuid."';\" />\n";
+		echo "  <input type='button' class='btn' value='".$text['button-restart']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+reload+".$call_center_queue_uuid."';\" />\n";
 		echo "  <input type='button' class='btn' value='".$text['button-view']."' onclick=\"document.location.href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".$call_center_queue_uuid."';\" />\n";
 		echo "	&nbsp;&nbsp;&nbsp;";
 	}
@@ -614,7 +612,7 @@
 				echo "			</td>\n";
 				echo "			<td>";
 				echo "				<input type=\"hidden\" name='call_center_tiers[0][domain_uuid]' value='".$_SESSION['domain_uuid']."'>\n";
-				//echo "				<input type=\"hidden\" name='call_center_tiers[0][queue_name]' value='".$queue_name."@".$_SESSION['domain_name']."'>\n";
+				//echo "				<input type=\"hidden\" name='call_center_tiers[0][queue_name]' value='".$call_center_queue_uuid."'>\n";
 				echo "				<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
 				echo "			</td>\n";
 				echo "		</tr>\n";
