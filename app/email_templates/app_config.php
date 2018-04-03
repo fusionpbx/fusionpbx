@@ -72,6 +72,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the template body.';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'template_type';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Set the type as html or text.';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'template_enabled';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Set the status of the template.';
