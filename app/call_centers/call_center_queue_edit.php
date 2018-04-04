@@ -398,7 +398,6 @@
 	$tiers = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
 //add an empty row to the tiers array
-
 	if (count($tiers) == 0) {
 		$rows = $_SESSION['call_center']['agent_add_rows']['numeric'];
 		$id = 0;
@@ -407,8 +406,6 @@
 		$rows = $_SESSION['call_center']['agent_edit_rows']['numeric'];
 		$id = count($tiers)+1;
 	}
-	$rows = 1;
-	$id = count($tiers) + 1;
 	for ($x = 0; $x < $rows; $x++) {
 		$tiers[$id]['call_center_tier_uuid'] = uuid();
 		$tiers[$id]['call_center_agent_uuid'] = '';
@@ -899,8 +896,8 @@
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-    echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-   	echo "  ".$text['label-exit_keys']."\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "  ".$text['label-exit_keys']."\n";
    	echo "</td>\n";
    	echo "<td class='vtable' align='left'>\n";
    	echo "  <input class='formfld' type='text' name='queue_cc_exit_keys' value='$queue_cc_exit_keys'>\n";
