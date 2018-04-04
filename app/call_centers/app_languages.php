@@ -1581,6 +1581,26 @@ $text['label-agent']['ru-ru'] = "Оператор";
 $text['label-agent']['sv-se'] = "Agent";
 $text['label-agent']['uk-ua'] = "Оператор";
 
+$text['label-agents']['en-us'] = "Agents";
+$text['label-agents']['ar-eg'] = "";
+$text['label-agents']['de-at'] = "Agenten"; //copied from de-de
+$text['label-agents']['de-ch'] = "Agenten"; //copied from de-de
+$text['label-agents']['de-de'] = "Agenten";
+$text['label-agents']['es-cl'] = "Agentes";
+$text['label-agents']['es-mx'] = "Agentes"; //copied from es-cl
+$text['label-agents']['fr-ca'] = "Agents"; //copied from fr-fr
+$text['label-agents']['fr-fr'] = "Agents";
+$text['label-agents']['he-il'] = "";
+$text['label-agents']['it-it'] = "Agenti";
+$text['label-agents']['nl-nl'] = "";
+$text['label-agents']['pl-pl'] = "Agenci";
+$text['label-agents']['pt-br'] = "Agentes"; //copied from pt-pt
+$text['label-agents']['pt-pt'] = "Agentes";
+$text['label-agents']['ro-ro'] = "";
+$text['label-agents']['ru-ru'] = "Операторы";
+$text['label-agents']['sv-se'] = "Agenter";
+$text['label-agents']['uk-ua'] = "Оператори";
+
 $text['label-abandoned_resume_allowed']['en-us'] = "Abandoned Resume Allowed";
 $text['label-abandoned_resume_allowed']['ar-eg'] = "";
 $text['label-abandoned_resume_allowed']['de-at'] = "Wiederaufnahme nach Zurückweisung erlaubt"; //copied from de-de
