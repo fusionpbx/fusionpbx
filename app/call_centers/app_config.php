@@ -128,6 +128,22 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b32179ad-96a4-4d83-8677-1fd8fc5ef6df";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_center";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "agent_add_rows";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "533eac69-887f-47aa-bf27-0751797555f5";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_center";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "agent_edit_rows";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 
 	//schema details
 		$y=0;
