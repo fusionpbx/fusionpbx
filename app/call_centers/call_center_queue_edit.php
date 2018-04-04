@@ -571,7 +571,7 @@
 
 	if (permission_exists('call_center_tier_view')) {
 		echo "<tr>";
-		echo "	<td class='vncell' valign='top'>".$text['label-tiers']."</td>";
+		echo "	<td class='vncell' valign='top'>".$text['label-agents']."</td>";
 		echo "	<td class='vtable' align='left'>";
 		echo "			<table border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "			<tr>\n";
