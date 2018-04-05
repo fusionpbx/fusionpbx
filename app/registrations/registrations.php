@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -46,9 +46,17 @@
 //get the http values and set them as variables
 	$search = check_str($_GET["search"]);
 
+//set the format
+	$template = true;
+	if ($_GET["template"] == "false" && permission_exists('registration_reload')) {
+		$template = false;
+	}
+
 //show the header
-	require_once "resources/header.php";
-	$document['title'] = $text['header-registrations'];
+	if ($template) {
+		require_once "resources/header.php";
+		$document['title'] = $text['header-registrations'];
+	}
 
 //check permissions
 	if (permission_exists("registration_domain") || permission_exists("registration_all") || if_group("superadmin")) {
@@ -193,23 +201,31 @@
 			echo "	<b>".$text['header-registrations']." (".$registration_count.")</b>\n";
 			echo "</td>\n";
 			echo "<td nowrap='nowrap' style='padding-right: 15px;'>";
-			//echo "		<form method='get' action=''>\n";
-			echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>";
-			echo "				<input type='hidden' name='show' value='".$show."'>";
-			echo "				<input type='hidden' name='profile' value='".$sip_profile_name."'>";
-			echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
-			//echo "		</form>\n";
+			if ($template) {
+				echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>";
+				echo "				<input type='hidden' name='show' value='".$show."'>";
+				echo "				<input type='hidden' name='profile' value='".$sip_profile_name."'>";
+				echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
+			}
 			echo "</td>";
 			echo "<td valign='top' nowrap='nowrap'>";
 			if (permission_exists('registration_all')) {
-				if ($show == "all") {
-					echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='registrations.php?profile=$sip_profile_name'\" value='".$text['button-back']."'>\n";
+				if ($template) {
+					$location = 'registrations.php';
 				}
 				else {
-					echo "	<input type='button' class='btn' name='' alt='".$text['button-show_all']."' onclick=\"window.location='registrations.php?profile=$sip_profile_name&show=all'\" value='".$text['button-show_all']."'>\n";
+					$location = 'registration_reload.php';
+				}
+				if ($show == "all") {
+					echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='$location?profile=$sip_profile_name'\" value='".$text['button-back']."'>\n";
+				}
+				else {
+					echo "	<input type='button' class='btn' name='' alt='".$text['button-show_all']."' onclick=\"window.location='$location?profile=$sip_profile_name&show=all'\" value='".$text['button-show_all']."'>\n";
 				}
 			}
-			echo "	<input type='button' class='btn' name='' alt='".$text['button-refresh']."' onclick=\"window.location='registrations.php?search=$search&show=$show'\" value='".$text['button-refresh']."'>\n";
+			if ($template) {
+				echo "	<input type='button' class='btn' name='' alt='".$text['button-refresh']."' onclick=\"window.location='$location?search=$search&show=$show'\" value='".$text['button-refresh']."'>\n";
+			}
 			echo "</td>\n";
 			echo "</tr>\n";
 			echo "</table>\n";
@@ -291,6 +307,8 @@
 	}
 
 //get the footer
-	require_once "resources/footer.php";
+	if ($template) {
+		require_once "resources/footer.php";
+	}
 
 ?>
