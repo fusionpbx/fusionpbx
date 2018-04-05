@@ -113,10 +113,10 @@
 	unset ($prep_statement);
 
 //process post vars
-	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		//get http post variables and set them to php variables
-			if (count($_POST)>0) {
+			if (count($_POST) > 0) {
 				$forward_all_enabled = check_str($_POST["forward_all_enabled"]);
 				$forward_all_destination = check_str($_POST["forward_all_destination"]);
 				$forward_busy_enabled = check_str($_POST["forward_busy_enabled"]);
@@ -246,12 +246,19 @@
 				$array['follow_me'][] = $follow_me;
 			}
 
+		//add the dialplan permission
+			$p = new permissions;
+			$p->add("extension_edit", "temp");
+
 		//save the data
 			$database = new database;
 			$database->app_name = 'call_routing';
 			$database->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
 			$database->save($array);
 			//$message = $database->message;
+
+		//remove the temporary permission
+			$p->delete("extension_edit", "temp");
 
 		//delete empty destination records
 			if (is_array($follow_me_delete_uuids) && sizeof($follow_me_delete_uuids) > 0) {
