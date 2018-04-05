@@ -100,6 +100,8 @@
 			$ring_group_context = check_str($_POST["ring_group_context"]);
 			$ring_group_strategy = check_str($_POST["ring_group_strategy"]);
 			$ring_group_timeout_action = check_str($_POST["ring_group_timeout_action"]);
+			$ring_group_caller_id_name = check_str($_POST["ring_group_caller_id_name"]);
+			$ring_group_caller_id_number = check_str($_POST["ring_group_caller_id_number"]);
 			$ring_group_cid_name_prefix = check_str($_POST["ring_group_cid_name_prefix"]);
 			$ring_group_cid_number_prefix = check_str($_POST["ring_group_cid_number_prefix"]);
 			$ring_group_distinctive_ring = check_str($_POST["ring_group_distinctive_ring"]);
@@ -370,6 +372,8 @@
 			$ring_group_strategy = $row["ring_group_strategy"];
 			$ring_group_timeout_app = $row["ring_group_timeout_app"];
 			$ring_group_timeout_data = $row["ring_group_timeout_data"];
+			$ring_group_caller_id_name = $row["ring_group_caller_id_name"];
+			$ring_group_caller_id_number = $row["ring_group_caller_id_number"];
 			$ring_group_cid_name_prefix = $row["ring_group_cid_name_prefix"];
 			$ring_group_cid_number_prefix = $row["ring_group_cid_number_prefix"];
 			$ring_group_distinctive_ring = $row["ring_group_distinctive_ring"];
@@ -676,6 +680,28 @@
 	echo $destination->select('dialplan', 'ring_group_timeout_action', $ring_group_timeout_action);
 	echo "	<br />\n";
 	echo "	".$text['description-timeout_destination']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-caller_id_name']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "  <input class='formfld' type='text' name='ring_group_caller_id_name' maxlength='255' value='$ring_group_caller_id_name'>\n";
+	echo "<br />\n";
+	echo $text['description-caller_id_name']." \n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-caller_id_number']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "  <input class='formfld' type='number' name='ring_group_caller_number' maxlength='255' min='0' step='1' value='$ring_group_caller_number'>\n";
+	echo "<br />\n";
+	echo $text['description-caller_id_number']." \n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
