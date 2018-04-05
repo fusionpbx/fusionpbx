@@ -180,6 +180,14 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select enable or disable the ring group call forward.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_caller_id_name";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the caller ID name.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_caller_id_number";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the caller ID number.";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_cid_name_prefix";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the caller ID name prefix.";
