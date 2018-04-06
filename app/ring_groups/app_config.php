@@ -108,6 +108,16 @@
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_forward_toll_allow";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "ring_group_caller_id_name";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "ring_group_caller_id_number";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "ring_group_cid_name_prefix";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "ring_group_cid_number_prefix";
 
 	//default settings
 		$y=0;
