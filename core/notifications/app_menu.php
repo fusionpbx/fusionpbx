@@ -23,6 +23,6 @@
 	$apps[$x]['menu'][$y]['parent_uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";
 	$apps[$x]['menu'][$y]['category'] = "internal";
 	$apps[$x]['menu'][$y]['path'] = "/core/notifications/notification_edit.php";
-	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
+	//$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 
 ?>
