@@ -86,6 +86,40 @@
 </div>
 <div style='clear: both;'><hr /></div>
 
+<div class="row">
+	<div class="col-sm-4" style='padding-top: 0px;'>
+		<br /><br />
+		<a href='http://skye.tel/fusion-contact' target='_blank'>
+			<img src="/app/providers/resources/images/skyetel-logo.png" style="max-width: 159px;" class="center-block img-responsive"><br>
+		</a>
+	</div>
+	<div class="col-sm-8" style='padding-top: 0px;'>
+		<?php
+		echo "<h2>Skyetel</h2>\n";
+		echo "<br />\n";
+		echo "<strong>".$text['label-region']."</strong><br />\n";
+		echo $text['label-region_skyetel']."\n";
+		echo "<br /><br />\n";
+		echo "<strong>".$text['label-about']."</strong><br />\n";
+		echo $text['label-about_skyetel']."\n";
+		echo "<br /><br />\n";
+		echo "<strong>".$text['label-features']."</strong><br />\n";
+		echo $text['label-features_skyetel']."\n";
+		echo "<br /><br />\n";
+		echo "<a href='http://skye.tel/fusionpbx-about' target='_blank'><button type=\"button\" class=\"btn btn-success\">".$text['button-website']."</button></a>\n";
+		echo "<a href='http://skye.tel/fusion-pricing' target='_blank'><button type=\"button\" class=\"btn btn-success\">".$text['button-pricing']."</button></a>\n";
+		echo "<a href='http://skye.tel/fusion-contact' target='_blank'><button type=\"button\" class=\"btn btn-success\">".$text['button-signup']."</button></a>\n";
+		if (!$skyetel_installed) {
+			echo "<button type=\"button\" onclick=\"window.location='provider_setup.php?provider=skyetel'\" class=\"btn btn-primary\">".$text['button-setup']."</button>\n";
+		}
+		else {
+			echo "<button type=\"button\" onclick=\"window.location='provider_delete.php?provider=skyetel'\" class=\"btn btn-danger\">".$text['button-remove']."</button>\n";
+		}
+		?>
+	</div>
+</div>
+
+<div style='clear: both;'><br/><br/><hr /><br/></div>
 
 <div class="row">
 	<div class="col-sm-4" style='padding-top: 0px;'>
@@ -118,41 +152,6 @@
 		?>
 	</div>
 
-</div>
-<div style='clear: both;'><br/><br/><hr /><br/></div>
-
-
-<div class="row">
-	<div class="col-sm-4" style='padding-top: 0px;'>
-		<br /><br />
-		<a href='http://skye.tel/fusion-contact' target='_blank'>
-			<img src="/app/providers/resources/images/skyetel-logo.png" style="max-width: 159px;" class="center-block img-responsive"><br>
-		</a>
-	</div>
-	<div class="col-sm-8" style='padding-top: 0px;'>
-		<?php
-		echo "<h2>Skyetel</h2>\n";
-		echo "<br />\n";
-		echo "<strong>".$text['label-region']."</strong><br />\n";
-		echo $text['label-region_skyetel']."\n";
-		echo "<br /><br />\n";
-		echo "<strong>".$text['label-about']."</strong><br />\n";
-		echo $text['label-about_skyetel']."\n";
-		echo "<br /><br />\n";
-		echo "<strong>".$text['label-features']."</strong><br />\n";
-		echo $text['label-features_skyetel']."\n";
-		echo "<br /><br />\n";
-		echo "<a href='http://skye.tel/fusionpbx-about' target='_blank'><button type=\"button\" class=\"btn btn-success\">".$text['button-website']."</button></a>\n";
-		echo "<a href='http://skye.tel/fusion-pricing' target='_blank'><button type=\"button\" class=\"btn btn-success\">".$text['button-pricing']."</button></a>\n";
-		echo "<a href='http://skye.tel/fusion-contact' target='_blank'><button type=\"button\" class=\"btn btn-success\">".$text['button-signup']."</button></a>\n";
-		if (!$skyetel_installed) {
-			echo "<button type=\"button\" onclick=\"window.location='provider_setup.php?provider=skyetel'\" class=\"btn btn-primary\">".$text['button-setup']."</button>\n";
-		}
-		else {
-			echo "<button type=\"button\" onclick=\"window.location='provider_delete.php?provider=skyetel'\" class=\"btn btn-danger\">".$text['button-remove']."</button>\n";
-		}
-		?>
-	</div>
 </div>
 
 <div style='clear: both;'><br><br></div>
