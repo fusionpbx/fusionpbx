@@ -548,7 +548,7 @@
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
 {if isset($grandstream_srtp)}
-<P183>{$grandstream_srtp)}</P183>
+<P183>{$grandstream_srtp}</P183>
 {else}
 <P183>0</P183>
 {/if}
@@ -1383,7 +1383,7 @@
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
 {if isset($grandstream_srtp)}
-<P443>{$grandstream_srtp)}</P443>
+<P443>{$grandstream_srtp}</P443>
 {else}
 <P443>0</P443>
 {/if}
@@ -2239,7 +2239,7 @@
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
 {if isset($grandstream_srtp)}
-<P543>{$grandstream_srtp)}</P543>
+<P543>{$grandstream_srtp}</P543>
 {else}
 <P543>0</P543>
 {/if}
@@ -3076,7 +3076,7 @@
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
 {if isset($grandstream_srtp)}
-<P643>{$grandstream_srtp)}</P643>
+<P643>{$grandstream_srtp}</P643>
 {else}
 <P643>0</P643>
 {/if}
@@ -3913,7 +3913,7 @@
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
 {if isset($grandstream_srtp)}
-<P1743>{$grandstream_srtp)}</P1743>
+<P1743>{$grandstream_srtp}</P1743>
 {else}
 <P1743>0</P1743>
 {/if}
@@ -4753,7 +4753,7 @@
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
 {if isset($grandstream_srtp)}
-<P1843>{$grandstream_srtp)}</P1843>
+<P1843>{$grandstream_srtp}</P1843>
 {else}
 <P1843>0</P1843>
 {/if}
