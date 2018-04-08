@@ -111,7 +111,7 @@
 			$msg = '';
 			//if (strlen($call_center_agent_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-call_center_agent_uuid']."<br>\n"; }
 			//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
-			if (strlen($user_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-user_uuid']."<br>\n"; }
+			//if (strlen($user_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-user_uuid']."<br>\n"; }
 			if (strlen($agent_name) == 0) { $msg .= $text['message-required']." ".$text['label-agent_name']."<br>\n"; }
 			if (strlen($agent_type) == 0) { $msg .= $text['message-required']." ".$text['label-agent_type']."<br>\n"; }
 			if (strlen($agent_call_timeout) == 0) { $msg .= $text['message-required']." ".$text['label-agent_call_timeout']."<br>\n"; }
@@ -175,32 +175,32 @@
 		//add the agent using event socket
 			if ($fp) {
 				//add the agent
-					$cmd = "api callcenter_config agent add ".$agent_name."@".$_SESSION['domains'][$domain_uuid]['domain_name']." ".$agent_type;
+					$cmd = "api callcenter_config agent add ".$call_center_agent_uuid." ".$agent_type;
 					$response = event_socket_request($fp, $cmd);
 					usleep(200);
 				//agent set contact
-					$cmd = "api callcenter_config agent set contact ".$agent_name."@".$_SESSION['domains'][$domain_uuid]['domain_name']." ".$agent_contact;
+					$cmd = "api callcenter_config agent set contact ".$call_center_agent_uuid." ".$agent_contact;
 					$response = event_socket_request($fp, $cmd);
 					usleep(200);
 				//agent set status
-					$cmd = "api callcenter_config agent set status ".$agent_name."@".$_SESSION['domains'][$domain_uuid]['domain_name']." '".$agent_status."'";
+					$cmd = "api callcenter_config agent set status ".$call_center_agent_uuid." '".$agent_status."'";
 					$response = event_socket_request($fp, $cmd);
 					usleep(200);
 				//agent set reject_delay_time
-					$cmd = "api callcenter_config agent set reject_delay_time ".$agent_name."@".$_SESSION['domains'][$domain_uuid]['domain_name']." ".$agent_reject_delay_time;
+					$cmd = "api callcenter_config agent set reject_delay_time ".$call_center_agent_uuid." ".$agent_reject_delay_time;
 					$response = event_socket_request($fp, $cmd);
 					usleep(200);
 				//agent set busy_delay_time
-					$cmd = "api callcenter_config agent set busy_delay_time ".$agent_name."@".$_SESSION['domains'][$domain_uuid]['domain_name']." ".$agent_busy_delay_time;
+					$cmd = "api callcenter_config agent set busy_delay_time ".$call_center_agent_uuid." ".$agent_busy_delay_time;
 					$response = event_socket_request($fp, $cmd);
 				//agent set no_answer_delay_time
-					$cmd = "api callcenter_config agent set no_answer_delay_time ".$agent_name."@".$_SESSION['domains'][$domain_uuid]['domain_name']." ".$agent_no_answer_delay_time;
+					$cmd = "api callcenter_config agent set no_answer_delay_time ".$call_center_agent_uuid." ".$agent_no_answer_delay_time;
 					$response = event_socket_request($fp, $cmd);
 				//agent set max_no_answer
-					$cmd = "api callcenter_config agent set max_no_answer ".$agent_name."@".$_SESSION['domains'][$domain_uuid]['domain_name']." ".$agent_max_no_answer;
+					$cmd = "api callcenter_config agent set max_no_answer ".$call_center_agent_uuid." ".$agent_max_no_answer;
 					$response = event_socket_request($fp, $cmd);
 				//agent set wrap_up_time
-					$cmd = "api callcenter_config agent set wrap_up_time ".$agent_name."@".$_SESSION['domains'][$domain_uuid]['domain_name']." ".$agent_wrap_up_time;
+					$cmd = "api callcenter_config agent set wrap_up_time ".$call_center_agent_uuid." ".$agent_wrap_up_time;
 					$response = event_socket_request($fp, $cmd);
 			}
 
@@ -224,9 +224,11 @@
 
 		//prepare the array
 			$array['call_center_agents'][] = $_POST;
-			$array['users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
-			$array['users'][0]['user_uuid'] = $user_uuid;
-			$array['users'][0]['user_status'] = $agent_status;
+			if (isset($user_uuid) && strlen($user_uuid) > 0) {
+				$array['users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+				$array['users'][0]['user_uuid'] = $user_uuid;
+				$array['users'][0]['user_status'] = $agent_status;
+			}
 
 		//save to the data
 			$database = new database;
@@ -412,7 +414,7 @@
 	echo "</tr>\n";
 
 	echo "	<tr>";
-	echo "		<td class='vncellreq' valign='top'>".$text['label-username']."</td>";
+	echo "		<td class='vncell' valign='top'>".$text['label-username']."</td>";
 	echo "		<td class='vtable' align='left'>";
 	echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
 	echo "			<option value=\"\"></option>\n";
