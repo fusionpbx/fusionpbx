@@ -85,6 +85,16 @@
 		end
 	end
 
+--fanvil
+	if (vendor == "fanvil") then
+		if (command == "reboot") then
+			event:addHeader('event-string', 'check-sync;reboot=true');
+		end
+		if (command == "check_sync") then
+			event:addHeader('event-string', 'resync');
+		end
+	end
+
 --grandstream
 	if (vendor == "grandstream") then
 		if (command == "reboot") then
