@@ -85,6 +85,16 @@
 		end
 	end
 
+--htek
+	if (vendor == "htek") then
+		if (command == "reboot") then
+			event:addHeader('event-string', 'check-sync;reboot=true');
+		end
+		if (command == "check_sync") then
+			event:addHeader('event-string', 'resync');
+		end
+	end
+
 --grandstream
 	if (vendor == "grandstream") then
 		if (command == "reboot") then
@@ -105,6 +115,16 @@
 		end
 	end
 
+--panasonic
+	if (vendor == "panasonic") then
+		if (command == "reboot") then
+			event:addHeader('event-string', 'check-sync;reboot=true');
+		end
+		if (command == "check_sync") then
+			event:addHeader('event-string', 'check-sync;reboot=true');
+		end
+	end
+
 --polycom
 	if (vendor == "polycom") then
 		if (command == "reboot") then
@@ -112,16 +132,6 @@
 		end
 		if (command == "check_sync") then
 			event:addHeader('event-string', 'check-sync');
-		end
-	end
-
---yealink
-	if (vendor == "yealink") then
-		if (command == "reboot") then
-			event:addHeader('event-string', 'check-sync;reboot=true');
-		end
-		if (command == "check_sync") then
-			event:addHeader('event-string', 'check-sync;reboot=false');
 		end
 	end
 
@@ -135,13 +145,13 @@
 		end
 	end
 
---panasonic
-	if (vendor == "panasonic") then
+--yealink
+	if (vendor == "yealink") then
 		if (command == "reboot") then
 			event:addHeader('event-string', 'check-sync;reboot=true');
 		end
 		if (command == "check_sync") then
-			event:addHeader('event-string', 'check-sync;reboot=true');
+			event:addHeader('event-string', 'check-sync;reboot=false');
 		end
 	end
 
