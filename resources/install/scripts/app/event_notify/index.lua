@@ -85,8 +85,8 @@
 		end
 	end
 
---htek
-	if (vendor == "htek") then
+--grandstream
+	if (vendor == "grandstream") then
 		if (command == "reboot") then
 			event:addHeader('event-string', 'check-sync;reboot=true');
 		end
@@ -95,8 +95,8 @@
 		end
 	end
 
---grandstream
-	if (vendor == "grandstream") then
+--htek
+	if (vendor == "htek") then
 		if (command == "reboot") then
 			event:addHeader('event-string', 'check-sync;reboot=true');
 		end
