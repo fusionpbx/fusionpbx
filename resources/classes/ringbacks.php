@@ -31,7 +31,7 @@ if (!class_exists('ringbacks')) {
 		//define variables
 		public $db;
 		public $domain_uuid;
-		private $ringbacks;
+		private $ringtones_list;
 		private $tones_list;
 		private $music_list;
 		private $recordings_list;
@@ -54,24 +54,23 @@ if (!class_exists('ringbacks')) {
 				$language = new text;
 				$text = $language->get();
 
-			//get the ringback types
+			//get the ringtones
 				$sql = "select * from v_vars ";
 				$sql .= "where var_category = 'Ringtones' ";
 				$sql .= "order by var_name asc ";
 				$prep_statement = $this->db->prepare(check_sql($sql));
 				$prep_statement->execute();
-				$ringbacks = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				$ringtones = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				unset ($prep_statement, $sql);
-				foreach($ringbacks as $ringback) {
-					$ringback = $ringback['var_name'];
-					$label = $text['label-'.$ringback];
+				foreach($ringtones as $ringtone) {
+					$ringtone = $ringtone['var_name'];
+					$label = $text['label-'.$ringtone];
 					if ($label == "") {
-						$label = $ringback;
+						$label = $ringtone;
 					}
-					$ringback_list[$ringback] = $label;
+					$ringtones_list[$ringtone] = $label;
 				}
-				$this->ringbacks = $ringback_list;
-				unset($ringback_list);
+				$this->ringtones_list = $ringtones_list;
 
 			//get the default_ringback label
 				/*
@@ -162,18 +161,18 @@ if (!class_exists('ringbacks')) {
 					}
 				}
 
-			//ringbacks
-				if (sizeof($this->ringbacks) > 0) {
-					$selected_ringback = $selected;
-					$selected_ringback = preg_replace('/\A\${/',"",$selected_ringback);
-					$selected_ringback = preg_replace('/}\z/',"",$selected_ringback);
-					$select .= "	<optgroup label='".$text['label-ringback']."'>";
-					//$select .= "		<option value='default_ringback'".(($selected == "default_ringback") ? ' selected="selected"' : '').">".$text['label-default']." (".$this->default_ringback_label.")</option>\n";
-					foreach($this->ringbacks as $ringback_value => $ringback_name) {
-						$select .= "		<option value='\${".$ringback_value."}'".(($selected_ringback == $ringback_value) ? ' selected="selected"' : '').">".$ringback_name."</option>\n";
+			//ringtones
+				if (sizeof($this->ringtones_list) > 0) {
+					$selected_ringtone = $selected;
+					$selected_ringtone = preg_replace('/\A\${/',"",$selected_ringtone);
+					$selected_ringtone = preg_replace('/}\z/',"",$selected_ringtone);
+					$select .= "	<optgroup label='".$text['label-ringtones']."'>";
+					//$select .= "		<option value='default_ringtones'".(($selected == "default_ringback") ? ' selected="selected"' : '').">".$text['label-default']." (".$this->default_ringtone_label.")</option>\n";
+					foreach($this->ringtones_list as $ringtone_value => $ringtone_name) {
+						$select .= "		<option value='\${".$ringtone_value."}'".(($selected_ringtone == $ringtone_value) ? ' selected="selected"' : '').">".$ringtone_name."</option>\n";
 					}
 					$select .= "	</optgroup>\n";
-					unset($selected_ringback);
+					unset($selected_ringtone);
 				}
 
 			//tones
@@ -181,7 +180,7 @@ if (!class_exists('ringbacks')) {
 					$selected_tone = $selected;
 					$selected_tone = preg_replace('/\A\${/',"",$selected_tone);
 					$selected_tone = preg_replace('/}\z/',"",$selected_tone);
-					$select .= "	<optgroup label='".$text['label-tone']."'>";
+					$select .= "	<optgroup label='".$text['label-tones']."'>";
 					foreach($this->tones_list as $tone_value => $tone_name) {
 						$select .= "		<option value='\${".$tone_value."}'".(($selected_tone == $tone_value) ? ' selected="selected"' : '').">".$tone_name."</option>\n";
 					}
