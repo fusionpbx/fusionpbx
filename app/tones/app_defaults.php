@@ -27,18 +27,19 @@
 if ($domains_processed == 1) {
 
 	//Change ringtones to tones
-		$sql = "select * from v_vars";
-		$sql .= "where var_category = 'Ringtones'; ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$tones = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-    if (is_array($tones)) {
+	$sql = "select * from v_vars";
+	$sql .= "where var_category = 'Ringtones'; ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$tones = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	if (is_array($tones)) {
 		foreach ($tones as &$row) {
-				$sql = "update v_vars set var_category = 'Tones' ";
-				$sql .= "where var_category = 'Ringtones'; ";
-				$db->exec(check_sql($sql));
-				unset($sql);
+			$sql = "update v_vars set var_category = 'Tones' ";
+			$sql .= "where var_category = 'Ringtones'; ";
+			$db->exec(check_sql($sql));
+			unset($sql);
 		}
+	}
 
 }
 
