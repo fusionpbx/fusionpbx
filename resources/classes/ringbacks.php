@@ -55,6 +55,7 @@ if (!class_exists('ringbacks')) {
 				$text = $language->get();
 
 			//get the ringback types
+				/*
 				$sql = "select * from v_vars ";
 				$sql .= "where var_category = 'Ringtones' ";
 				$sql .= "order by var_name asc ";
@@ -72,6 +73,7 @@ if (!class_exists('ringbacks')) {
 				}
 				$this->ringbacks = $ringback_list;
 				unset($ringback_list);
+				*/
 
 			//get the default_ringback label
 				/*
