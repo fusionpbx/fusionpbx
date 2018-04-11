@@ -55,7 +55,6 @@ if (!class_exists('ringbacks')) {
 				$text = $language->get();
 
 			//get the ringback types
-				/*
 				$sql = "select * from v_vars ";
 				$sql .= "where var_category = 'Ringtones' ";
 				$sql .= "order by var_name asc ";
@@ -73,7 +72,6 @@ if (!class_exists('ringbacks')) {
 				}
 				$this->ringbacks = $ringback_list;
 				unset($ringback_list);
-				*/
 
 			//get the default_ringback label
 				/*
@@ -183,7 +181,7 @@ if (!class_exists('ringbacks')) {
 					$selected_tone = $selected;
 					$selected_tone = preg_replace('/\A\${/',"",$selected_tone);
 					$selected_tone = preg_replace('/}\z/',"",$selected_tone);
-					$select .= "	<optgroup label='".$text['label-tone']."'>";
+					$select .= "	<optgroup label='".$text['label-tones']."'>";
 					foreach($this->tones_list as $tone_value => $tone_name) {
 						$select .= "		<option value='\${".$tone_value."}'".(($selected_tone == $tone_value) ? ' selected="selected"' : '').">".$tone_name."</option>\n";
 					}
