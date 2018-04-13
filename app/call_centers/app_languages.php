@@ -1421,7 +1421,7 @@ $text['label-exit_keys']['ru-ru'] = "";
 $text['label-exit_keys']['sv-se'] = "Knapp för att lämna";
 $text['label-exit_keys']['uk-ua'] = "";
 
-$text['description-exit_keys']['en-us'] = "Keys to quite the current queue waiting.";
+$text['description-exit_keys']['en-us'] = "Keys to quit the current queue waiting.";
 $text['description-exit_keys']['ar-eg'] = "";
 $text['description-exit_keys']['de-at'] = "Tasten um die aktuelle Warteschlange zu verlassen."; //copied from de-de
 $text['description-exit_keys']['de-ch'] = "Tasten um die aktuelle Warteschlange zu verlassen."; //copied from de-de
