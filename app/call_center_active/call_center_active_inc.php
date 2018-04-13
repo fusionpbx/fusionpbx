@@ -190,7 +190,7 @@
 							//get the agent name
 							$agent_name = '';
 							if (is_array($_SESSION['agents'])) foreach ($_SESSION['agents'] as $agent) {
-								if ($agent['call_center_agent_uuid'] = $agent_uuid) {
+								if ($agent['call_center_agent_uuid'] == $agent_uuid) {
 									$agent_name = $agent['agent_name'];
 								}
 							}
