@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
 	FusionPBX
 	Version: MPL 1.1
@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -45,6 +45,10 @@
 //get the queue_name and set it as a variable
 	$queue_name = $_GET['queue_name'];
 	$name = $_GET['name'];
+
+//get a new session array
+	unset($_SESSION['queues']);
+	unset($_SESSION['agents']);
 
 //get the header
 	require_once "resources/header.php";
