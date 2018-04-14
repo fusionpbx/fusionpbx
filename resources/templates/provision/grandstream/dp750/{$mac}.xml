@@ -2632,7 +2632,7 @@
 <!-- XML Config File Password -->
 <!-- String Max Length: 40 -->
 <!-- Mandatory; between ascii values 33 and 126 -->
-<P1359>{$http_auth_password}</P1359>
+<P1359></P1359>
 
 <!-- HTTP/HTTPS User Name for config server -->
 <!-- String Max Length: 40; between ascii values 33 and 126 -->

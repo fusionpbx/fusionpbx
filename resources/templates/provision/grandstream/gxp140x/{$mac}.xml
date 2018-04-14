@@ -1152,7 +1152,7 @@
     <P238>0</P238>
     <!--  XML Config File Password -->
     <!--  String -->
-    <P1359>{$http_auth_password}</P1359>
+    <P1359></P1359>
     <!--  HTTP/HTTPS User Name -->
     <!--  String -->
     <P1360>{$http_auth_username}</P1360>
