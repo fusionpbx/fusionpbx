@@ -246,21 +246,22 @@
 	echo "</form>\n";
 
 	echo "<br /><br />";
-	foreach($_SESSION["response"] as $part => $response){
-		echo "<b>". $text["label-results"]." - ".$text["label-${part}"]."</b>";
-		echo "<br /><br />";
-		if (is_array($response)) {
-			echo "<pre>";
-			echo implode("\n", $response);
-			echo "</pre>";
+	if (is_array($_SESSION["response"])) {
+		foreach($_SESSION["response"] as $part => $response){
+			echo "<b>". $text["label-results"]." - ".$text["label-${part}"]."</b>";
+			echo "<br /><br />";
+			if (is_array($response)) {
+				echo "<pre>";
+				echo implode("\n", $response);
+				echo "</pre>";
+			}
+			else {
+				echo $response;
+			}
+			echo "<br /><br />";
 		}
-		else {
-			echo $response;
-		}
-		echo "<br /><br />";
+		unset($_SESSION["response"]);
 	}
-	unset($_SESSION["response"]);		
-
 
 //include the footer
 	require_once "resources/footer.php";
