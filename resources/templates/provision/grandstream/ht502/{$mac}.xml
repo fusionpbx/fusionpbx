@@ -47,7 +47,7 @@
 		<!-- Config Server Path. Server address -->
 		<P237>{$domain_name}{$project_path}/app/provision</P237>
 		<!-- XML Config File Password. Max Length: 40 characters; between ascii values 33 and 126 -->
-		<P1359>{$http_auth_password}</P1359>
+		<P1359></P1359>
 		<!-- HTTP/HTTPS User Name. Max Length: 40 characters; between ascii values 33 and 126 -->
 		<P1360>{$http_auth_username}</P1360>
 		<!-- HTTP/HTTPS Password. Max Length: 40 characters; between ascii values 33 and 126 -->
