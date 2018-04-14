@@ -6042,7 +6042,7 @@
 
 <!-- # XML Config File Password -->
 <!-- # String -->
-<P1359>{$http_auth_password}</P1359>
+<P1359></P1359>
 
 <!-- # Authenticate Conf File. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->

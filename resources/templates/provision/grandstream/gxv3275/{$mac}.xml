@@ -3198,7 +3198,7 @@ Account 5 Codec Settings
 <!-- XML Config File Password -->
 <!-- String; between ascii values 33 and 126 -->
 <!-- Mandatory -->
-<P1359>{$http_auth_password}</P1359>
+<P1359></P1359>
 
 <!--  HTTP/HTTPS User Name -->
 <!--  String; between ascii values 33 and 126 -->
