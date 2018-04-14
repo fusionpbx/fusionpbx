@@ -38,7 +38,7 @@
 		<!-- Config Server Path -->
 		<P237>{$domain_name}{$project_path}/app/provision</P237>
 		<!-- XML Config File Password -->
-		<P1359>{$http_auth_password}</P1359>
+		<P1359></P1359>
 		<!-- HTTP/HTTPS User Name -->
 		<P1360>{$http_auth_username}</P1360>
 		<!-- HTTP/HTTPS Password -->
