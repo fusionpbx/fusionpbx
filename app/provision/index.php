@@ -96,6 +96,11 @@
 					$mac = substr($_SERVER['HTTP_USER_AGENT'],-12);
 				}
 			}
+		//HTek: $_SERVER['HTTP_USER_AGENT'] = "Htek UC926 2.0.4.2 00:1f:c1:00:00:00"
+			if (substr($_SERVER['HTTP_USER_AGENT'],0,4) == "Htek") {
+				$mac = substr($_SERVER['HTTP_USER_AGENT'],-17);
+				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+			}
 		//Panasonic: $_SERVER['HTTP_USER_AGENT'] = "Panasonic_KX-UT670/01.022 (0080f000000)"
 			if (substr($_SERVER['HTTP_USER_AGENT'],0,9) == "Panasonic") {
 				$mac = substr($_SERVER['HTTP_USER_AGENT'],-14);
