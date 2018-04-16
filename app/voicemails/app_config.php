@@ -28,7 +28,6 @@
 		$apps[$x]['description']['sv-se'] = "";
 		$apps[$x]['description']['uk-ua'] = "";
 
-
 	//destination details
 		$y=0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
