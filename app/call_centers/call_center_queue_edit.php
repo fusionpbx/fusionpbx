@@ -567,7 +567,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (permission_exists('call_center_tier_view')) {
+	if (permission_exists('call_center_tier_view') && is_array($agents) && count($agents) > 0) {
 		echo "<tr>";
 		echo "	<td class='vncell' valign='top'>".$text['label-agents']."</td>";
 		echo "	<td class='vtable' align='left'>";
@@ -578,58 +578,55 @@
 		echo "				<td class='vtable' style='text-align: center;'>".$text['label-tier_position']."</td>\n";
 		echo "				<td></td>\n";
 		echo "			</tr>\n";
-		if ($call_center_queue_uuid != null) {
-			if (is_array($tiers)) {
-				$x = 0;
-				foreach($tiers as $field) {
-					echo "	<tr>\n";
-					echo "		<td class=''>";
-					echo "				<input type=\"hidden\" name=\"call_center_tiers[$x][call_center_queue_uuid]\" value=\"".$field['call_center_queue_uuid']."\">\n";
-					echo "				<input type=\"hidden\" name=\"call_center_tiers[$x][call_center_tier_uuid]\" value=\"".$field['call_center_tier_uuid']."\">\n";
-					echo "				<select name=\"call_center_tiers[$x][call_center_agent_uuid]\" class=\"formfld\">\n";
-					echo "					<option value=\"\"></option>\n";
-					foreach($agents as $row) {
-						$selected = '';
-						if ($row['call_center_agent_uuid'] == $field['call_center_agent_uuid']) {
-							$selected = "selected=\"selected\"";
-						}
-						echo "				<option value=\"".$row['call_center_agent_uuid']."\" $selected>".$row['agent_name']."</option>\n";
-					}
-					echo "				</select>";
-					echo "		</td>\n";
-					echo "		<td class='' style='text-align: center;'>";
-					echo "				 <select name=\"call_center_tiers[$x][tier_level]\" class=\"formfld\">\n";
-					$i=0;
-					while($i<=9) {
-						$selected = ($i == $field['tier_level']) ? "selected" : null;
-						echo "				<option value=\"$i\" ".$selected.">$i</option>\n";
-						$i++;
-					}
-					echo "				</select>\n";
-					echo "		</td>\n";
-
-					echo "		<td class='' style='text-align: center;'>\n";
-					echo "				<select name=\"call_center_tiers[$x][tier_position]\" class=\"formfld\">\n";
-					$i=0;
-					while($i<=9) {
-						$selected = ($i == $field['tier_position']) ? "selected" : null;
-						echo "				<option value=\"$i\" ".$selected.">$i</option>\n";
-						$i++;
-					}
-					echo "				</select>\n";
-					echo "		</td>\n";
-					echo "		<td class=''>";
-					if (permission_exists('call_center_tier_delete')) {
-						echo "			<a href=\"call_center_queue_edit.php?id=".$call_center_queue_uuid."&call_center_tier_uuid=".$field['call_center_tier_uuid']."&a=delete\" alt=\"".$text['button-delete']."\" onclick=\"return confirm('".$text['confirm-delete']."');\">$v_link_label_delete</a>";
-					}
-					echo "		</td>\n";
-					echo "	</tr>\n";
-					$assigned_agents[] = $field['agent_name'];
-					$x++;
-				}
-				unset ($prep_statement, $sql, $tiers);
+		$x = 0;
+		foreach($tiers as $field) {
+			echo "	<tr>\n";
+			echo "		<td class=''>";
+			if (strlen($field['call_center_tier_uuid']) > 0) {
+				echo "		<input name='call_center_tiers[".$x."][call_center_tier_uuid]' type='hidden' value=\"".$field['call_center_tier_uuid']."\">\n";
 			}
+			echo "				<select name=\"call_center_tiers[$x][call_center_agent_uuid]\" class=\"formfld\">\n";
+			echo "					<option value=\"\"></option>\n";
+			foreach($agents as $row) {
+				$selected = '';
+				if ($row['call_center_agent_uuid'] == $field['call_center_agent_uuid']) {
+					$selected = "selected=\"selected\"";
+				}
+				echo "				<option value=\"".$row['call_center_agent_uuid']."\" $selected>".$row['agent_name']."</option>\n";
+			}
+			echo "				</select>";
+			echo "		</td>\n";
+			echo "		<td class='' style='text-align: center;'>";
+			echo "				 <select name=\"call_center_tiers[$x][tier_level]\" class=\"formfld\">\n";
+			$i=0;
+			while($i<=9) {
+				$selected = ($i == $field['tier_level']) ? "selected" : null;
+				echo "				<option value=\"$i\" ".$selected.">$i</option>\n";
+				$i++;
+			}
+			echo "				</select>\n";
+			echo "		</td>\n";
+
+			echo "		<td class='' style='text-align: center;'>\n";
+			echo "				<select name=\"call_center_tiers[$x][tier_position]\" class=\"formfld\">\n";
+			$i=0;
+			while($i<=9) {
+				$selected = ($i == $field['tier_position']) ? "selected" : null;
+				echo "				<option value=\"$i\" ".$selected.">$i</option>\n";
+				$i++;
+			}
+			echo "				</select>\n";
+			echo "		</td>\n";
+			echo "		<td class=''>";
+			if (permission_exists('call_center_tier_delete')) {
+				echo "			<a href=\"call_center_queue_edit.php?id=".$call_center_queue_uuid."&call_center_tier_uuid=".$field['call_center_tier_uuid']."&a=delete\" alt=\"".$text['button-delete']."\" onclick=\"return confirm('".$text['confirm-delete']."');\">$v_link_label_delete</a>";
+			}
+			echo "		</td>\n";
+			echo "	</tr>\n";
+			$assigned_agents[] = $field['agent_name'];
+			$x++;
 		}
+		unset ($prep_statement, $sql, $tiers);
 		echo "		</table>\n";
 		echo "		<br>\n";
 		echo "		".$text['description-tiers']."\n";
