@@ -114,6 +114,12 @@
 				xml_cdr_log("\nfail loadxml: " . $e->getMessage() . "\n");
 			}
 
+		//convert the xml object to json
+			$json = check_str(json_encode($xml));
+			
+		//convert json to an array
+			$array = json_decode($json, true);
+
 		//filter out b-legs
 			if($leg == 'b'){
 				if(!accept_b_leg($xml)){
@@ -254,19 +260,24 @@
 				$database->fields['domain_name'] = $domain_name;
 			}
 
+		//save to the database in json format
+			if ($_SESSION['cdr']['format']['text'] == "json" && $_SESSION['cdr']['storage']['text'] == "db") {
+				$database->fields['json'] = $json;
+			}
+
 		//dynamic cdr fields
 			if (is_array($_SESSION['cdr']['field'])) {
 				foreach ($_SESSION['cdr']['field'] as $field) {
 					$fields = explode(",", $field);
 					$field_name = end($fields);
 					if (count($fields) == 1) {
-						$database->fields[$field_name] = urldecode($xml->variables->$fields[0]);
+						$database->fields[$field_name] = urldecode($array['variables'][$fields[0]]);
 					}
 					if (count($fields) == 2) {
-						$database->fields[$field_name] = urldecode($xml->$fields[0]->$fields[1]);
+						$database->fields[$field_name] = urldecode($array[$fields[0]][$fields[1]]);
 					}
 					if (count($fields) == 3) {
-						$database->fields[$field_name] = urldecode($xml->$fields[0]->$fields[1]->$fields[2]);
+						$database->fields[$field_name] = urldecode($array[$fields[0]][$fields[1]][$fields[2]]);
 					}
 				}
 			}
@@ -274,11 +285,6 @@
 		//save to the database in xml format
 			if ($_SESSION['cdr']['format']['text'] == "xml" && $_SESSION['cdr']['storage']['text'] == "db") {
 				$database->fields['xml'] = check_str($xml_string);
-			}
-
-		//save to the database in json format
-			if ($_SESSION['cdr']['format']['text'] == "json" && $_SESSION['cdr']['storage']['text'] == "db") {
-				$database->fields['json'] = check_str(json_encode($xml));
 			}
 
 		//insert the check_str($extension_uuid)
@@ -361,8 +367,8 @@
 						$recordings['call_recordings'][$x]['call_recording_length'] = $record_length;
 						$recordings['call_recordings'][$x]['call_recording_date'] = urldecode($xml->variables->answer_stamp);
 						$recordings['call_recordings'][$x]['call_direction'] = urldecode($xml->variables->call_direction);
-						//$array['call_recordings'][$x]['call_recording_description']= $row['zzz'];
-						//$array['call_recordings'][$x]['call_recording_base64']= $row['zzz'];
+						//$recordings['call_recordings'][$x]['call_recording_description']= $row['zzz'];
+						//$recordings['call_recordings'][$x]['call_recording_base64']= $row['zzz'];
 
 						//add the temporary permission
 						$p = new permissions;
@@ -715,7 +721,7 @@
 					process_xml_cdr($db, $leg, $xml_string);
 
 				//delete the file after it has been imported
-					unlink($xml_cdr_dir.'/'.$file);
+//					unlink($xml_cdr_dir.'/'.$file);
 
 				//increment the variable
 					$x++;
