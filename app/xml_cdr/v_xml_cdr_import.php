@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -215,10 +215,10 @@
 			$database->fields['pdd_ms'] = check_str(urldecode($xml->variables->progress_mediamsec) + urldecode($xml->variables->progressmsec));
 
 		//get break down the date to year, month and day
-			$tmp_time = strtotime($start_stamp);
-			$tmp_year = date("Y", $tmp_time);
-			$tmp_month = date("M", $tmp_time);
-			$tmp_day = date("d", $tmp_time);
+			$start_time = strtotime($start_stamp);
+			$start_year = date("Y", $start_time);
+			$start_month = date("M", $start_time);
+			$start_day = date("d", $start_time);
 
 		//get the domain values from the xml
 			$domain_name = check_str(urldecode($xml->variables->domain_name));
@@ -333,6 +333,16 @@
 						}
 					}
 				}
+			}
+			if (!isset($record_name)) {
+				$bridge_uuid = urldecode($xml->variables->bridge_uuid);
+				$record_path = $_SESSION['switch']['recordings']['dir'].'/'.$domain_name.'/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
+				if (file_exists($record_path.'/'.$bridge_uuid.'.wav')) {
+					$record_name = $bridge_uuid.'.wav';
+				} elseif (file_exists($record_path.'/'.$bridge_uuid.'.mp3')) {
+					$record_name = $bridge_uuid.'.mp3';
+				}
+				$record_length = urldecode($xml->variables->duration);
 			}
 
 		//add the call recording
@@ -585,11 +595,7 @@
 
 				if ($_SESSION['cdr']['storage']['text'] == "dir" && $error != "true") {
 					if (strlen($uuid) > 0) {
-						$tmp_time = strtotime($start_stamp);
-						$tmp_year = date("Y", $tmp_time);
-						$tmp_month = date("M", $tmp_time);
-						$tmp_day = date("d", $tmp_time);
-						$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
+						$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
 						if(!file_exists($tmp_dir)) {
 							event_socket_mkdir($tmp_dir);
 						}
