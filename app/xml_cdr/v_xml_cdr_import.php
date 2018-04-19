@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -721,7 +721,7 @@
 					process_xml_cdr($db, $leg, $xml_string);
 
 				//delete the file after it has been imported
-//					unlink($xml_cdr_dir.'/'.$file);
+					unlink($xml_cdr_dir.'/'.$file);
 
 				//increment the variable
 					$x++;
