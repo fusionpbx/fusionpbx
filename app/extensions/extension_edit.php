@@ -434,7 +434,7 @@
 									unset($mwi_account_array);
 								}
 							}
-				}
+					}
 
 				//update devices having extension assigned to line(s) with new password
 					if ($action == "update" && $range == 1 && permission_exists('extension_password')) {
@@ -443,7 +443,6 @@
 						$sql .= "where domain_uuid = '".check_str($_SESSION['domain_uuid'])."' ";
 						$sql .= "and server_address = '".check_str($_SESSION['domain_name'])."' ";
 						$sql .= "and user_id = '".check_str($extension)."' ";
-						$sql .= "and password = '".check_str($extension)."' ";
 						$db->exec(check_sql($sql));
 						unset($sql);
 					}
