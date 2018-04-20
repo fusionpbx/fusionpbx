@@ -5,6 +5,9 @@
 	digit_timeout = 5000;
 	debug["sql"] = true;
 
+--general functions
+	require "resources.functions.trim";
+
 --connect to the database
 	local Database = require "resources.functions.database";
 	dbh = Database.new('system');
@@ -104,74 +107,80 @@
 
 --get the user_uuid
 	if (agent_authorized == 'true') then
-		local sql = "SELECT user_status FROM v_users ";
-		sql = sql .. "WHERE user_uuid = :user_uuid ";
-		sql = sql .. "AND domain_uuid = :domain_uuid ";
-		local params = {user_uuid = user_uuid, domain_uuid = domain_uuid};
-		if (debug["sql"]) then
-			freeswitch.consoleLog("notice", "[call_center] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
-		end
-		dbh:query(sql, params, function(row)
-			--get the user info
-				user_status = row.user_status;
-				if (user_status == "Available") then
-					action = "logout";
-					status = 'Logged Out';
-				else
-					action = "login";
-					status = 'Available';
-				end
 
-			--show the status in the log
-				freeswitch.consoleLog("NOTICE", "[call_center] user_status: ".. status .. "\n");
+		--get the agent status from mod_callcenter
+			cmd = "callcenter_config agent get status "..agent_uuid.."";
+			freeswitch.consoleLog("notice", "[user status][login] "..cmd.."\n");
+			user_status = trim(api:executeString(cmd));
 
-			--set the user_status in the users table
-				local sql = "UPDATE v_users SET ";
-				sql = sql .. "user_status = :status ";
+		--get the user info
+			if (user_status == "Available") then
+				action = "logout";
+				status = 'Logged Out';
+			else
+				action = "login";
+				status = 'Available';
+			end
+
+		--send a login or logout to mod_callcenter
+			cmd = "callcenter_config agent set status "..agent_uuid.." '"..status.."'";
+			freeswitch.consoleLog("notice", "[user status][login] "..cmd.."\n");
+			result = api:executeString(cmd);
+
+		--update the user status
+			if (user_uuid ~= nil and user_uuid ~= '') then
+				local sql = "SELECT user_status FROM v_users ";
 				sql = sql .. "WHERE user_uuid = :user_uuid ";
-				local params = {status = status, user_uuid = user_uuid};
+				sql = sql .. "AND domain_uuid = :domain_uuid ";
+				local params = {user_uuid = user_uuid, domain_uuid = domain_uuid};
 				if (debug["sql"]) then
 					freeswitch.consoleLog("notice", "[call_center] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 				end
-				dbh:query(sql, params);
+				dbh:query(sql, params, function(row)
 
-			--send a login or logout to mod_callcenter
-				cmd = "callcenter_config agent set status "..agent_uuid.." '"..status.."'";
-				freeswitch.consoleLog("notice", "[user status][login] "..cmd.."\n");
-				result = api:executeString(cmd);
+					--set the user_status in the users table
+						local sql = "UPDATE v_users SET ";
+						sql = sql .. "user_status = :status ";
+						sql = sql .. "WHERE user_uuid = :user_uuid ";
+						local params = {status = status, user_uuid = user_uuid};
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "[call_center] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+						end
+						dbh:query(sql, params);
+				end);
+			end
 
-			--set the presence to terminated - turn the lamp off:
-				if (action == "logout") then
-					event = freeswitch.Event("PRESENCE_IN");
-					event:addHeader("proto", "sip");
-					event:addHeader("event_type", "presence");
-					event:addHeader("alt_event_type", "dialog");
-					event:addHeader("Presence-Call-Direction", "outbound");
-					event:addHeader("state", "Active (1 waiting)");
-					event:addHeader("from", agent_name.."@"..domain_name);
-					event:addHeader("login", agent_name.."@"..domain_name);
-					event:addHeader("unique-id", user_uuid);
-					event:addHeader("answer-state", "terminated");
-					event:fire();
-				end
+		--set the presence to terminated - turn the lamp off:
+			if (action == "logout") then
+				event = freeswitch.Event("PRESENCE_IN");
+				event:addHeader("proto", "sip");
+				event:addHeader("event_type", "presence");
+				event:addHeader("alt_event_type", "dialog");
+				event:addHeader("Presence-Call-Direction", "outbound");
+				event:addHeader("state", "Active (1 waiting)");
+				event:addHeader("from", agent_name.."@"..domain_name);
+				event:addHeader("login", agent_name.."@"..domain_name);
+				event:addHeader("unique-id", agent_uuid);
+				event:addHeader("answer-state", "terminated");
+				event:fire();
+			end
 
-			--set presence in - turn lamp on
-				if (action == "login") then
-					event = freeswitch.Event("PRESENCE_IN");
-					event:addHeader("proto", "sip");
-					event:addHeader("login", agent_name.."@"..domain_name);
-					event:addHeader("from", agent_name.."@"..domain_name);
-					event:addHeader("status", "Active (1 waiting)");
-					event:addHeader("rpid", "unknown");
-					event:addHeader("event_type", "presence");
-					event:addHeader("alt_event_type", "dialog");
-					event:addHeader("event_count", "1");
-					event:addHeader("unique-id", user_uuid);
-					event:addHeader("Presence-Call-Direction", "outbound");
-					event:addHeader("answer-state", "confirmed");
-					event:fire();
-				end
-		end);
+		--set presence in - turn lamp on
+			if (action == "login") then
+				event = freeswitch.Event("PRESENCE_IN");
+				event:addHeader("proto", "sip");
+				event:addHeader("login", agent_name.."@"..domain_name);
+				event:addHeader("from", agent_name.."@"..domain_name);
+				event:addHeader("status", "Active (1 waiting)");
+				event:addHeader("rpid", "unknown");
+				event:addHeader("event_type", "presence");
+				event:addHeader("alt_event_type", "dialog");
+				event:addHeader("event_count", "1");
+				event:addHeader("unique-id", agent_uuid);
+				event:addHeader("Presence-Call-Direction", "outbound");
+				event:addHeader("answer-state", "confirmed");
+				event:fire();
+			end
 	end
 
 --unauthorized
