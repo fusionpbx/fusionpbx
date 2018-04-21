@@ -254,10 +254,12 @@ if ($db_type == "pgsql") {
 	}
 } //end if db_type pgsql
 
-//domain list
-	if ( ( !isset($_SESSION["domain_uuid"])) or (strlen($_SESSION["domain_uuid"]) == 0)) {
+//get the domain list
+	if (!is_array($_SESSION['domains']) or (!isset($_SESSION["domain_uuid"])) or (strlen($_SESSION["domain_uuid"]) == 0)) {
+
 		//get the domain
 			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
+
 		//get the domains from the database
 			$sql = "select * from v_domains";
 			$prep_statement = $db->prepare($sql);
