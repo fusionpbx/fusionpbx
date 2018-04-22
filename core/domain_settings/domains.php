@@ -112,6 +112,21 @@
 		$order = check_str($_GET["order"]);
 	}
 
+//rebuild the domains session array
+	unset($_SESSION["domains"]);
+	$sql = "select * from v_domains ";
+	$sql .= "order by v_domains asc; ";
+	$prep_statement = $db->prepare($sql);
+	$prep_statement->execute();
+	$domains = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset($prep_statement);
+	if (is_array($domains)) { 
+		foreach($domains as $row) {
+			$_SESSION['domains'][$row['domain_uuid']] = $row;
+		}
+		unset($domains);
+	}
+
 //prepare to page the results
 	$sql = "select count(*) as num_rows from v_domains ";
 	if (strlen($search) > 0) {
