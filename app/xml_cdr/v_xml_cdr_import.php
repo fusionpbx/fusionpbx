@@ -298,6 +298,11 @@
 				$record_name = urldecode($xml->variables->record_name);
 				$record_length = urldecode($xml->variables->record_seconds);
 			}
+			elseif (strlen($record_path) == 0 and urldecode($xml->variables->last_app) == "record_session") {
+				$record_path = dirname(urldecode($xml->variables->last_arg));
+				$record_name = basename(urldecode($xml->variables->last_arg));
+				$record_length = urldecode($xml->variables->record_seconds);
+			}
 			elseif (strlen($xml->variables->record_name) > 0) {
 				$record_path = urldecode($xml->variables->record_path);
 				$record_name = urldecode($xml->variables->record_name);
