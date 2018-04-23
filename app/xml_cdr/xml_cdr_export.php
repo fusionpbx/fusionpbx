@@ -40,6 +40,9 @@ else {
 
 //additional includes
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	if ($_REQUEST['archive_request'] == 'true') {
+		$archive_request = 'true';
+	}	
 	require_once "xml_cdr_inc.php";
 
 //get the format
