@@ -169,11 +169,7 @@
 				require_once "resources/footer.php";
 				return;
 			}
-	
-		//remove the invalid characters from the gateway name
-			$gateway = str_replace(" ", "_", $gateway);
-			$gateway = str_replace("/", "", $gateway);
-	
+
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
 
