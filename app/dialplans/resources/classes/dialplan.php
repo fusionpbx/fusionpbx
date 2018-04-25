@@ -751,7 +751,7 @@ include "root.php";
 											elseif ($dialplan_detail_type == "week") {
 												$condition_type = 'time';
 											}
-											elseif ($ialplan_detail_type == "date-time") {
+											elseif ($dialplan_detail_type == "date-time") {
 												$condition_type = 'time';
 											}
 											else {
