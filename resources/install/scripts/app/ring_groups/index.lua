@@ -463,28 +463,7 @@
 							--add the row to the destinations array
 							destinations[x] = row;
 						end
-					--determine if the user is registered if not registered then lookup 
-						cmd = "sofia_contact */".. destination_number .."@" ..leg_domain_name;
-						if (api:executeString(cmd) == "error/user_not_registered") then
-							cmd = "user_data ".. destination_number .."@" ..leg_domain_name.." var forward_user_not_registered_enabled";
-							if (api:executeString(cmd) == "true") then
-								--get the new destination number
-								cmd = "user_data ".. destination_number .."@" ..leg_domain_name.." var forward_user_not_registered_destination";
-								not_registered_destination_number = api:executeString(cmd);
-								--if (not_registered_destination_number ~= nil) then
-								--	destination_number = not_registered_destination_number;	
-								--end
-
-								--check the new destination number for user_exists
-								cmd = "user_exists id ".. destination_number .." "..leg_domain_name;
-								user_exists = api:executeString(cmd);
-								if (user_exists == "true") then
-									row['user_exists'] = "true";
-								else
-									row['user_exists'] = "false";
-								end
-							end
-						end
+--session:hangup();
 				else
 					--set the values
 						external = "true";
@@ -525,6 +504,33 @@
 					destination_prompt = row.destination_prompt;
 					domain_name = row.domain_name;
 					toll_allow = row.toll_allow;
+
+				--determine if the user is registered if not registered then lookup 
+					cmd = "sofia_contact */".. destination_number .."@" ..domain_name;
+					if (api:executeString(cmd) == "error/user_not_registered") then
+freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
+						cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_user_not_registered_enabled";
+freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
+						if (api:executeString(cmd) == "true") then
+							--get the new destination number
+							cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_user_not_registered_destination";
+freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
+							not_registered_destination_number = api:executeString(cmd);
+freeswitch.consoleLog("NOTICE", "[ring_group] "..not_registered_destination_number.."\n");
+							if (not_registered_destination_number ~= nil) then
+								destination_number = not_registered_destination_number;	
+							end
+
+							--check the new destination number for user_exists
+							cmd = "user_exists id ".. destination_number .." "..domain_name;
+							user_exists = api:executeString(cmd);
+							if (user_exists == "true") then
+								row['user_exists'] = "true";
+							else
+								row['user_exists'] = "false";
+							end
+						end
+					end
 
 				--follow the forwards
 					count, destination_number = get_forward_all(0, destination_number, leg_domain_name);
