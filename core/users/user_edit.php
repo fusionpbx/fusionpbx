@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -370,50 +370,6 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 		}
 		$x++;
 
-	//if call center installed
-		if (
-			$action == 'edit' &&
-			permission_exists('user_edit') &&
-			$username != $username_old &&
-			file_exists($_SERVER["PROJECT_ROOT"]."/app/call_center/app_config.php")
-			) {
-
-			//update call center agent table
-				$sql = "select call_center_agent_uuid from v_call_center_agents ";
-				$sql .= "where domain_uuid = '".$domain_uuid."' ";
-				$sql .= "and agent_name = '".$username_old."' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				if ($prep_statement) {
-					$prep_statement->execute();
-					$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-					$a = 0;
-					foreach ($result as $row) {
-						$array['call_center_agents'][$a]['call_center_agent_uuid'] = $row['call_center_agent_uuid'];
-						$array['call_center_agents'][$a]['agent_name'] = $username;
-						$a++;
-					}
-				}
-				unset($sql, $prep_statement, $result);
-
-			//update call center tiers table
-				$sql = "select call_center_tier_uuid from v_call_center_tiers ";
-				$sql .= "where domain_uuid = '".$domain_uuid."' ";
-				$sql .= "and agent_name = '".$username_old."' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				if ($prep_statement) {
-					$prep_statement->execute();
-					$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-					$t = 0;
-					foreach ($result as $row) {
-						$array['call_center_tiers'][$t]['call_center_tier_uuid'] = $row['call_center_tier_uuid'];
-						$array['call_center_tiers'][$t]['agent_name'] = $username;
-						$t++;
-					}
-				}
-				unset($sql, $prep_statement, $result);
-
-		}
-
 	//add the user_edit permission
 		$p = new permissions;
 		$p->add("user_setting_add", "temp");
@@ -433,25 +389,31 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 		$p->delete("user_edit", "temp");
 
 	//if call center installed
-		if (
-			$action == 'edit' &&
-			permission_exists('user_edit') &&
-			$username != $username_old &&
-			file_exists($_SERVER["PROJECT_ROOT"]."/app/call_center/app_config.php")
-			) {
-
-			//syncrhonize the configuration
-				save_call_center_xml();
+		if ($action == 'edit' && permission_exists('user_edit') && file_exists($_SERVER["PROJECT_ROOT"]."/app/call_centers/app_config.php")) {
+			//get the call center agent uuid
+				$sql = "select call_center_agent_uuid from v_call_center_agents ";
+				$sql .= "where domain_uuid = '".$domain_uuid."' ";
+				$sql .= "and user_uuid = '".$user_uuid."' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				if ($prep_statement) {
+					$prep_statement->execute();
+					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+					$call_center_agent_uuid = $row['call_center_agent_uuid'];
+				}
+				unset($sql, $prep_statement, $result);
 
 			//update the user_status
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-				$switch_cmd .= "callcenter_config agent set status ".$username."@".$_SESSION['domains'][$domain_uuid]['domain_name']." '".$user_status."'";
-				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+				if (isset($call_center_agent_uuid)) {
+					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					$switch_cmd .= "callcenter_config agent set status ".$call_center_agent_uuid." '".$user_status."'";
+					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+				}
 
 			//update the user state
-				$cmd = "api callcenter_config agent set state ".$username."@".$_SESSION['domains'][$domain_uuid]['domain_name']." Waiting";
-				$response = event_socket_request($fp, $cmd);
-
+				if (isset($call_center_agent_uuid)) {
+					$cmd = "api callcenter_config agent set state ".$call_center_agent_uuid." Waiting";
+					$response = event_socket_request($fp, $cmd);
+				}
 		}
 
 	//redirect the browser
