@@ -5970,11 +5970,11 @@
 <!--  0 - Self-Defined City Code, 1 - Automatic. Default is 1 -->
 <!--  Number: 0, 1 -->
 <!--  Mandatory -->
-<P1405>1</P1405>
+<P1405>{$grandstream_city_code_auto}</P1405>
 
 <!--  Self-Defined City Code -->
 <!--  String -->
-<P1377></P1377>
+<P1377>{$grandstream_city_code}</P1377>
 
 <!--  Update Interval (in minutes). Default is 15 -->
 <!--  Number: 5 - 360 -->
