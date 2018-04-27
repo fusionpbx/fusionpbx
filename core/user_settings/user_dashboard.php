@@ -929,7 +929,6 @@
 			$n++;
 		}
 
-
 	//system status
 		if (is_array($selected_blocks) && in_array('system', $selected_blocks)) {
 			$c = 0;
@@ -940,12 +939,7 @@
 
 			//disk usage
 			if (PHP_OS == 'FreeBSD' || PHP_OS == 'Linux') {
-				$df = shell_exec("/usr/bin/which df");
-				if($df){
-					$tmp = shell_exec($df." /home 2>&1");
-				} else {
-					$tmp = shell_exec("df /home 2>&1");
-				}
+				$tmp = shell_exec("df /home 2>&1");
 				$tmp = explode("\n", $tmp);
 				$tmp = preg_replace('!\s+!', ' ', $tmp[1]); // multiple > single space
 				$tmp = explode(' ', $tmp);
