@@ -169,8 +169,15 @@
 
 	if not session:ready() then return end
 
---get the forward destination
-	if enabled == "true" and empty(forward_all_destination) then
+--get the destination by argument and set the forwarding destination 
+	destination_by_arg = argv[1];
+	
+	if enabled == "true" and destination_by_arg then
+		forward_all_destination = destination_by_arg;
+	end
+	
+--get the forward destination by IVR if destination has not been passed by argument
+	if enabled == "true" and empty(forward_all_destination) and not destination_by_arg then
 		forward_all_destination = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-enter_destination_telephone_number.wav", "", "\\d+");
 		if empty(forward_all_destination) then return end
 	end
