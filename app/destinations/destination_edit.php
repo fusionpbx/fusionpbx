@@ -108,7 +108,7 @@
 			$destination_number_regex = string_to_regex($destination_number);
 			$_POST["destination_number_regex"] = $destination_number_regex;
 		//get the destination app and data
-			$destination_array = explode(":", $_POST["destination_action"]);
+			$destination_array = explode(":", $_POST["destination_action"], 2);
 			$destination_app = $destination_array[0];
 			$destination_data = $destination_array[1];
 			unset($_POST["destination_action"]);
