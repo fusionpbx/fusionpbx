@@ -29,13 +29,21 @@
 
 --define a function to record the greeting
 	function record_greeting(greeting_id, menu)
-		local db = dbh or Database.new('system')
-		local settings = Settings.new(db, domain_name, domain_uuid)
 
-		local max_len_seconds = settings:get('voicemail', 'greeting_max_length', 'numeric') or 90;
+		--setup the database connection
+			local db = dbh or Database.new('system')
+		
+		--get the voicemail settings
+			local settings = Settings.new(db, domain_name, domain_uuid)
+
+		--set the maximum greeeting length
+			local max_len_seconds = settings:get('voicemail', 'greeting_max_length', 'numeric') or 90;
 
 		--flush dtmf digits from the input buffer
 			session:flushDigits();
+
+		--disable appending to the recording
+			session:setVariable("record_append", "false");
 
 		--choose a greeting between 1 and 9
 			if (greeting_id == nil) then
