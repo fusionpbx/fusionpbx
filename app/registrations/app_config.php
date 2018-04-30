@@ -38,5 +38,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "registration_all";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "17dbfd56-291d-8c1c-bc43-713283a9dd5a";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "registration_reload";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "e3bd174e-ef22-46e0-b65f-3598531d29b6";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 ?>

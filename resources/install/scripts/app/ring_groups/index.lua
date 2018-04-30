@@ -236,6 +236,8 @@
 		ring_group_forward_enabled = row["ring_group_forward_enabled"];
 		ring_group_forward_destination = row["ring_group_forward_destination"];
 		ring_group_forward_toll_allow = row["ring_group_forward_toll_allow"];
+		ring_group_caller_id_name = row["ring_group_caller_id_name"];
+		ring_group_caller_id_number = row["ring_group_caller_id_number"];
 		ring_group_cid_name_prefix = row["ring_group_cid_name_prefix"];
 		ring_group_cid_number_prefix = row["ring_group_cid_number_prefix"];
 		missed_call_app = row["ring_group_missed_call_app"];
@@ -408,7 +410,9 @@
 				SELECT
 					r.ring_group_strategy, r.ring_group_timeout_app, r.ring_group_distinctive_ring,
 					d.destination_number, d.destination_delay, d.destination_timeout, d.destination_prompt,
-					r.ring_group_timeout_data, r.ring_group_cid_name_prefix, r.ring_group_cid_number_prefix, r.ring_group_ringback
+					r.ring_group_caller_id_name, r.ring_group_caller_id_number, 
+					r.ring_group_cid_name_prefix, r.ring_group_cid_number_prefix, 
+					r.ring_group_timeout_data, r.ring_group_ringback
 				FROM
 					v_ring_groups as r, v_ring_group_destinations as d
 				WHERE
@@ -459,28 +463,7 @@
 							--add the row to the destinations array
 							destinations[x] = row;
 						end
-					--determine if the user is registered if not registered then lookup 
-						cmd = "sofia_contact */".. destination_number .."@" ..leg_domain_name;
-						if (api:executeString(cmd) == "error/user_not_registered") then
-							cmd = "user_data ".. destination_number .."@" ..leg_domain_name.." var forward_user_not_registered_enabled";
-							if (api:executeString(cmd) == "true") then
-								--get the new destination number
-								cmd = "user_data ".. destination_number .."@" ..leg_domain_name.." var forward_user_not_registered_destination";
-								not_registered_destination_number = api:executeString(cmd);
-								if (not_registered_destination_number ~= nil) then
---									destination_number = not_registered_destination_number;	
-								end
-
-								--check the new destination number for user_exists
-								cmd = "user_exists id ".. destination_number .." "..leg_domain_name;
-								user_exists = api:executeString(cmd);
-								if (user_exists == "true") then
-									row['user_exists'] = "true";
-								else
-									row['user_exists'] = "false";
-								end
-							end
-						end
+--session:hangup();
 				else
 					--set the values
 						external = "true";
@@ -509,6 +492,8 @@
 					ring_group_strategy = row.ring_group_strategy;
 					ring_group_timeout_app = row.ring_group_timeout_app;
 					ring_group_timeout_data = row.ring_group_timeout_data;
+					ring_group_caller_id_name = row.ring_group_caller_id_name;
+					ring_group_caller_id_number = row.ring_group_caller_id_number;
 					ring_group_cid_name_prefix = row.ring_group_cid_name_prefix;
 					ring_group_cid_number_prefix = row.ring_group_cid_number_prefix;
 					ring_group_distinctive_ring = row.ring_group_distinctive_ring;
@@ -519,6 +504,33 @@
 					destination_prompt = row.destination_prompt;
 					domain_name = row.domain_name;
 					toll_allow = row.toll_allow;
+
+				--determine if the user is registered if not registered then lookup 
+					cmd = "sofia_contact */".. destination_number .."@" ..domain_name;
+					if (api:executeString(cmd) == "error/user_not_registered") then
+freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
+						cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_user_not_registered_enabled";
+freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
+						if (api:executeString(cmd) == "true") then
+							--get the new destination number
+							cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_user_not_registered_destination";
+freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
+							not_registered_destination_number = api:executeString(cmd);
+freeswitch.consoleLog("NOTICE", "[ring_group] "..not_registered_destination_number.."\n");
+							if (not_registered_destination_number ~= nil) then
+								destination_number = not_registered_destination_number;	
+							end
+
+							--check the new destination number for user_exists
+							cmd = "user_exists id ".. destination_number .." "..domain_name;
+							user_exists = api:executeString(cmd);
+							if (user_exists == "true") then
+								row['user_exists'] = "true";
+							else
+								row['user_exists'] = "false";
+							end
+						end
+					end
 
 				--follow the forwards
 					count, destination_number = get_forward_all(0, destination_number, leg_domain_name);
@@ -636,7 +648,7 @@
 						--sip uri
 						dial_string = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
 					else
-					--external number or direct dial
+						--external number or direct dial
 							dial_string = nil
 
 						--prepare default actions
@@ -685,7 +697,7 @@
 									route = route_to_bridge(dialplans, domain_uuid, params, route)
 							end
 
-						--build dialstring
+						--build the dial string
 							if route and route.bridge then
 								local remove_actions = {
 									["effective_caller_id_name="]   = true;
@@ -711,7 +723,17 @@
 									i = i + 1
 								end
 
-								dial_string = '[' .. table.concat(route, ',') .. ']' .. route.bridge
+								--set the caller id
+								caller_id = '';
+								if (ring_group_caller_id_name ~= nil) then
+									caller_id = "origination_caller_id_name='"..ring_group_caller_id_name.."'"
+								end
+								if (ring_group_caller_id_number ~= nil) then
+									caller_id = caller_id .. ",origination_caller_id_number="..ring_group_caller_id_number..",";
+								end
+
+								--set the destination dial string
+								dial_string = '['.. caller_id .. table.concat(route, ',') .. ']' .. route.bridge
 							end
 					end
 

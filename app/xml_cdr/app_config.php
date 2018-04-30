@@ -84,6 +84,10 @@
 		$apps[$x]['permissions'][$y]['name'] = "caller_destination";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_archive";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";		
 
 	//default settings
 		$y=0;
@@ -150,7 +154,63 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
-
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f39db4b4-86bc-4d5d-9580-0f17c7934fe8";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cdr";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "archive_database";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable Dedicated CDR Database Access";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c655308c-476c-4f60-ac12-6aaf2b79c344";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cdr";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "archive_database_driver";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "pgsql";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Archive Database Driver";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "eec7b6d7-6955-4ae2-8c6c-b853b3016200";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cdr";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "archive_database_host";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "IP/Hostname of Archive Database";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "73a1ad24-82d0-492a-86bb-36376a87348e";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cdr";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "archive_database_password";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Archive Database Password";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a05be23e-b1cf-4c0b-9ded-e6f06a7a7946";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cdr";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "archive_database_port";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5432";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Archive Database Port";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e92612b1-ed97-40a7-a641-78c8a79ff774";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cdr";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "archive_database_username";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Archive Database Username";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "38c507f5-fce2-40de-99d5-5aa4e8d718de";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cdr";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "archive_database_name";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fusionpbx";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Archive Database Name";
+		
 	//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_xml_cdr";

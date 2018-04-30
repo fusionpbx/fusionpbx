@@ -641,7 +641,7 @@
 							echo "	<select id='dialplan_detail_type_".$x."' name='dialplan_details[".$x."][dialplan_detail_type]' class='formfld' style='width: auto; ".$element['visibility']."' onchange='change_to_input(this);'>\n";
 							if (strlen($dialplan_detail_type) > 0) {
 								echo "	<optgroup label='selected'>\n";
-								echo "		<option value='".htmlspecialchars($dialplan_detail_type)."'>".htmlspecialchars($dialplan_detail_type)."</option>\n";
+								echo "		<option value=\"".htmlspecialchars($dialplan_detail_type)."\">".htmlspecialchars($dialplan_detail_type)."</option>\n";
 								echo "	</optgroup>\n";
 							}
 							else {
@@ -673,6 +673,7 @@
 								echo "		<option value='\${sip_to_user}'>\${sip_to_user}</option>\n";
 								echo "		<option value='\${sip_to_host}'>\${sip_to_host}</option>\n";
 								echo "		<option value='\${toll_allow}'>\${toll_allow}</option>\n";
+								echo "		<option value='\${sip_h_Diversion}'>\$sip_h_Diversion}</option>\n";
 								echo "	</optgroup>\n";
 							//}
 							//if (strlen($dialplan_detail_tag) == 0 || $dialplan_detail_tag == "action" || $dialplan_detail_tag == "anti-action") {

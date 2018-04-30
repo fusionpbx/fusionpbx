@@ -422,9 +422,25 @@
 	}
 	$sql= str_replace("  ", " ", $sql);
 	$sql= str_replace("where and", "where", $sql);
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+	//$prep_statement = $db->prepare(check_sql($sql));
+	//$prep_statement->execute();
+	//$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+	$database = new database;
+	if ($archive_request == 'true') {
+		if ($_SESSION['cdr']['archive_database']['boolean'] == 'true') {
+			$database->driver = $_SESSION['cdr']['archive_database_driver']['text'];
+			$database->host = $_SESSION['cdr']['archive_database_host']['text'];
+			$database->type = $_SESSION['cdr']['archive_database_type']['text'];
+			$database->port = $_SESSION['cdr']['archive_database_port']['text'];
+			$database->db_name = $_SESSION['cdr']['archive_database_name']['text'];
+			$database->username = $_SESSION['cdr']['archive_database_username']['text'];
+			$database->password = $_SESSION['cdr']['archive_database_password']['text'];
+		}
+	}
+	$database->select($sql);
+	$result = $database->result;
+	$result_count = count($result);
+	unset($database);	
 	$result_count = count($result);
 	unset ($prep_statement, $sql);
 

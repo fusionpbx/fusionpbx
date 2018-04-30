@@ -406,8 +406,8 @@ function save_var_xml() {
 		$prev_var_category = '';
 		$xml = '';
 		foreach ($variables as &$row) {
-			if ($row['var_cat'] != 'Provision') {
-				if ($prev_var_cat != $row['var_cat']) {
+			if ($row['var_category'] != 'Provision') {
+				if ($prev_var_category != $row['var_category']) {
 					$xml .= "\n<!-- ".$row['var_category']." -->\n";
 					if (strlen($row["var_description"]) > 0) {
 						$xml .= "<!-- ".base64_decode($row['var_description'])." -->\n";

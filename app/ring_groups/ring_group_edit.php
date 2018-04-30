@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2010-2016
+	Portions created by the Initial Developer are Copyright (C) 2010-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -100,6 +100,8 @@
 			$ring_group_context = check_str($_POST["ring_group_context"]);
 			$ring_group_strategy = check_str($_POST["ring_group_strategy"]);
 			$ring_group_timeout_action = check_str($_POST["ring_group_timeout_action"]);
+			$ring_group_caller_id_name = check_str($_POST["ring_group_caller_id_name"]);
+			$ring_group_caller_id_number = check_str($_POST["ring_group_caller_id_number"]);
 			$ring_group_cid_name_prefix = check_str($_POST["ring_group_cid_name_prefix"]);
 			$ring_group_cid_number_prefix = check_str($_POST["ring_group_cid_number_prefix"]);
 			$ring_group_distinctive_ring = check_str($_POST["ring_group_distinctive_ring"]);
@@ -370,6 +372,8 @@
 			$ring_group_strategy = $row["ring_group_strategy"];
 			$ring_group_timeout_app = $row["ring_group_timeout_app"];
 			$ring_group_timeout_data = $row["ring_group_timeout_data"];
+			$ring_group_caller_id_name = $row["ring_group_caller_id_name"];
+			$ring_group_caller_id_number = $row["ring_group_caller_id_number"];
 			$ring_group_cid_name_prefix = $row["ring_group_cid_name_prefix"];
 			$ring_group_cid_number_prefix = $row["ring_group_cid_number_prefix"];
 			$ring_group_distinctive_ring = $row["ring_group_distinctive_ring"];
@@ -679,27 +683,57 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-cid-name-prefix']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='ring_group_cid_name_prefix' maxlength='255' value='$ring_group_cid_name_prefix'>\n";
-	echo "<br />\n";
-	echo $text['description-cid-name-prefix']." \n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists('ring_group_caller_id_name')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-caller_id_name']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "  <input class='formfld' type='text' name='ring_group_caller_id_name' maxlength='255' value='$ring_group_caller_id_name'>\n";
+		echo "<br />\n";
+		echo $text['description-caller_id_name']." \n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-cid-number-prefix']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='number' name='ring_group_cid_number_prefix' maxlength='255' min='0' step='1' value='$ring_group_cid_number_prefix'>\n";
-	echo "<br />\n";
-	echo $text['description-cid-number-prefix']." \n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists('ring_group_caller_id_number')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-caller_id_number']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "  <input class='formfld' type='number' name='ring_group_caller_id_number' maxlength='255' min='0' step='1' value='$ring_group_caller_id_number'>\n";
+		echo "<br />\n";
+		echo $text['description-caller_id_number']." \n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('ring_group_cid_name_prefix')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-cid-name-prefix']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "  <input class='formfld' type='text' name='ring_group_cid_name_prefix' maxlength='255' value='$ring_group_cid_name_prefix'>\n";
+		echo "<br />\n";
+		echo $text['description-cid-name-prefix']." \n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('ring_group_cid_number_prefix')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-cid-number-prefix']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "  <input class='formfld' type='number' name='ring_group_cid_number_prefix' maxlength='255' min='0' step='1' value='$ring_group_cid_number_prefix'>\n";
+		echo "<br />\n";
+		echo $text['description-cid-number-prefix']." \n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";

@@ -201,7 +201,7 @@ $text['label-features']['ru-ru'] = "";
 $text['label-features']['sv-se'] = "";
 $text['label-features']['uk-ua'] = "";
 
-$text['label-region_skyetel']['en-us'] = "Providing service to the United States.";
+$text['label-region_skyetel']['en-us'] = "Providing service to the United States and Canada.";
 $text['label-region_skyetel']['ar-eg'] = "";
 $text['label-region_skyetel']['de-at'] = "";
 $text['label-region_skyetel']['de-ch'] = "";
