@@ -17,14 +17,14 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-function paging($num_rows, $param, $rows_per_page, $mini = false) {
+function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count = 0) {
 
 
 	//add multi-lingual support
@@ -32,7 +32,7 @@ function paging($num_rows, $param, $rows_per_page, $mini = false) {
 	$text = $language->get();
 
 	 //default number of rows per page
-	if (strlen($rows_per_page)==0) {
+	if (strlen($rows_per_page) == 0) {
 		$rows_per_page = 50;
 	}
 
@@ -47,8 +47,10 @@ function paging($num_rows, $param, $rows_per_page, $mini = false) {
 	// counting the offset
 	$offset = ($page_number - 1) * $rows_per_page;
 
-	// how many pages we have when using paging?
-	$max_page = ceil($num_rows/$rows_per_page);
+	// how many pages we have when using paging
+	if ($num_rows > 0) {
+		$max_page = ceil($num_rows/$rows_per_page);
+	}
 
 	// print the link to access each page
 	$self = $_SERVER['PHP_SELF'];
@@ -61,6 +63,7 @@ function paging($num_rows, $param, $rows_per_page, $mini = false) {
 			$nav .= " <a href=\"$self?page=$page\">$page</a> \n";
 		}
 	}
+
 	if ($page_number > 0) {
         $page = $page_number - 1;
 		$prev = "<input class='btn' type='button' value='".$text['button-back']."' alt='".($page+1)."' title='".($page+1)."' onClick=\"window.location = '".$self."?page=$page".$param."';\">\n"; //&#9664;
@@ -74,12 +77,15 @@ function paging($num_rows, $param, $rows_per_page, $mini = false) {
         $page = $page_number + 1;
 		$next = "<input class='btn' type='button' value='".$text['button-next']."' alt='".($page+1)."' title='".($page+1)."' onClick=\"window.location = '".$self."?page=$page".$param."';\">\n"; //&#9654;
 		$last = "<input class='btn' type='button' value='".$text['button-back']."' onClick=\"window.location = '".$self."?page=$max_page".$param."';\">\n"; //&#9660;
-
 	}
 	else {
 		$last = "<input class='btn' type='button' value='".$text['button-next']."' onClick=\"window.location = '".$self."?page=$max_page".$param."';\">\n"; //&#9660;
-		$next = "<input class='btn' type='button' disabled value='".$text['button-back']."' style='opacity: 0.4; -moz-opacity: 0.4; cursor: default;'>\n"; //&#9654;
+		$next = "<input class='btn' type='button' disabled value='".$text['button-next']."' style='opacity: 0.4; -moz-opacity: 0.4; cursor: default;'>\n"; //&#9654;
+	}
 
+	//if the result count is less than the rows per page then this is the last page of results
+	if ($result_count > 0 and $result_count < $rows_per_page) {
+			$next = "<input class='btn' type='button' disabled value='".$text['button-next']."' style='opacity: 0.4; -moz-opacity: 0.4; cursor: default;'>\n"; //&#9654;
 	}
 
 	$array = array();
@@ -123,7 +129,22 @@ function paging($num_rows, $param, $rows_per_page, $mini = false) {
 					"}\n".
 				"</script>\n";
 		//determine size
-			$code = ($mini) ? $prev.$next."\n".$script : "<center nowrap>".$prev."&nbsp;&nbsp;&nbsp;<input id='paging_page_num' class='formfld' style='max-width: 50px; min-width: 50px; text-align: center;' type='text' value='".($page_number+1)."' onfocus='this.select();' onkeypress='return go(event);'>&nbsp;&nbsp;<strong>".$max_page."</strong>&nbsp;&nbsp;&nbsp;&nbsp;".$next."</center>\n".$script;
+			if ($mini) {
+				$code = $prev.$next."\n".$script;
+			}
+			else {
+				$code .= "<center nowrap=\"nowrap\">";
+				$code .= "	".$prev;
+				$code .= "	&nbsp;&nbsp;&nbsp;";
+				$code .= "	<input id='paging_page_num' class='formfld' style='max-width: 50px; min-width: 50px; text-align: center;' type='text' value='".($page_number+1)."' onfocus='this.select();' onkeypress='return go(event);'>";
+				if ($result_count == 0) {
+					$code .= "	&nbsp;&nbsp;<strong>".$max_page."</strong>";
+				}
+				$code .= "	&nbsp;&nbsp;&nbsp;";
+				$code .= "	".$next;
+				$code .= "</center>\n".$script;
+			}
+
 		//add to array
 			$array[] = $code;
 	}
