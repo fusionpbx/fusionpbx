@@ -161,9 +161,7 @@
 	echo "					<option value='pdf'>PDF</option>\n";
 	echo "				</select>\n";
 	echo "			</td>\n";
-	if ($result_count == $rows_per_page && $paging_controls_mini != '') {
-		echo "		<td style='vertical-align: top; padding-left: 15px;'>".$paging_controls_mini."</td>\n";
-	}
+	echo "			<td style='vertical-align: top; padding-left: 15px;'>".$paging_controls_mini."</td>\n";
 	echo "		</tr>\n";
 	echo "	</table>\n";
 	echo "	</form>\n";
@@ -710,9 +708,7 @@
 	echo "</table>";
 	echo "</form>";
 	echo "<br><br>";
-	if ($result_count == $rows_per_page) {
-		echo $paging_controls;
-	}
+	echo $paging_controls;
 	echo "<br><br>";
 
 	// check or uncheck all checkboxes
