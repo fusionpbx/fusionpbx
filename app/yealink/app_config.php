@@ -454,5 +454,29 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Auto dial after digit timeout 0-Disabled (default), 1-Enabled;";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "627ef79d-1a49-4bae-b215-56182e308351";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ring_type";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "custom.wav";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "custom ring tone (Busy.wav);";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7af991ec-ddb9-4942-a05d-d1acc529fef5";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ringtone_url";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "custom.wav";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Before using this parameter, you should store the desired ring tone (custom.wav) to the provisioning server";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "368d8f25-9faf-417b-a1ac-942ecf8b9793";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ringtone_delete";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "http://localhost/all,delete";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "http://localhost/all,delete all the customized ring tones";
 
 ?>
