@@ -352,7 +352,7 @@
 //prepare to page the results
 	//$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50; //set on the page that includes this page
 	if (is_numeric($_GET['page'])) { $page = $_GET['page']; }
-	if (!isset($page)) { $page = 0; $_GET['page'] = 0; }
+	if (!isset($_GET['page'])) { $page = 0; $_GET['page'] = 0; }
 	$offset = $rows_per_page * $page;
 
 //get the results from the db
