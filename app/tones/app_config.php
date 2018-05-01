@@ -40,8 +40,8 @@
 		$apps[$x]['destinations'][$y]['field']['name'] = "var_name";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "var_filename";
 		$apps[$x]['destinations'][$y]['field']['description'] = "var_description";
-		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "play tone_stream://\${destination}";
-		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "play tone_stream://\${destination}";
+		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "playback:tone_stream://\${destination}";
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "playback:tone_stream://\${destination}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
 
 ?>
