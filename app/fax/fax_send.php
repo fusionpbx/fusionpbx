@@ -742,6 +742,7 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 
 		foreach ($fax_numbers as $fax_number) {
 
+			$fax_number = trim($fax_number);
 			fax_split_dtmf($fax_number, $fax_dtmf);
 
 			//prepare the fax command
