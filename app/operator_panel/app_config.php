@@ -50,6 +50,8 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "operator_panel_call_details";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "operator_panel_on_demand";
 
 ?>
