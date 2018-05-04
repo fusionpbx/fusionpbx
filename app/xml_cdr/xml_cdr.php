@@ -260,7 +260,7 @@
 				echo "	</tr>\n";
 				echo "	<tr>\n";
 				echo "		<td class='vncell' valign='top' nowrap='nowrap'>\n";
-				echo "			".$text['label-cid-name']."\n";
+				echo "			".$text['label-caller_id_name']."\n";
 				echo "		</td>\n";
 				echo "		<td class='vtable' align='left'>\n";
 				echo "			<input type='text' class='formfld' name='caller_id_name' value='$caller_id_name'>\n";
