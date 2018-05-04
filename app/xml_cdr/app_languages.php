@@ -1701,7 +1701,7 @@ $text['label-context']['ru-ru'] = "Контекст";
 $text['label-context']['sv-se'] = "Context";
 $text['label-context']['uk-ua'] = "Контекст";
 
-$text['label-cid-number']['en-us'] = "CID Number";
+$text['label-cid-number']['en-us'] = "Caller ID Number";
 $text['label-cid-number']['ar-eg'] = "";
 $text['label-cid-number']['de-at'] = "Anrufer Nummer"; //copied from de-de
 $text['label-cid-number']['de-ch'] = "Anrufer Nummer"; //copied from de-de
@@ -1721,7 +1721,7 @@ $text['label-cid-number']['ru-ru'] = "CID номера";
 $text['label-cid-number']['sv-se'] = "CID, Nummer";
 $text['label-cid-number']['uk-ua'] = "CID Номер";
 
-$text['label-cid-name']['en-us'] = "CID Name";
+$text['label-cid-name']['en-us'] = "Caller ID Name";
 $text['label-cid-name']['ar-eg'] = "";
 $text['label-cid-name']['de-at'] = "Anrufer Name"; //copied from de-de
 $text['label-cid-name']['de-ch'] = "Anrufer Name"; //copied from de-de
