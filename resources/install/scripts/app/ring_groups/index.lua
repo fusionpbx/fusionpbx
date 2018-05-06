@@ -791,6 +791,7 @@ freeswitch.consoleLog("NOTICE", "[ring_group] "..not_registered_destination_numb
 					--if the user is busy rollover to the next destination
 						if (ring_group_strategy == "rollover") then
 							x = 0;
+							app_data = '{ignore_early_media=true}';
 							for key, row in pairs(destinations) do
 								--set the values from the database as variables
 									user_exists = row.user_exists;
@@ -803,9 +804,6 @@ freeswitch.consoleLog("NOTICE", "[ring_group] "..not_registered_destination_numb
 										extension_uuid = trim(api:executeString(cmd));
 									end
 
-								--set the timeout
-									session:execute("set", "call_timeout="..row.destination_timeout);
-
 								--if the timeout was reached go to the timeout action
 									if (x > 0) then
 										if (session:getVariable("originate_disposition") == "ALLOTTED_TIMEOUT"
@@ -817,15 +815,18 @@ freeswitch.consoleLog("NOTICE", "[ring_group] "..not_registered_destination_numb
 
 								--send the call to the destination
 									if (user_exists == "true") then
-										dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",call_direction="..call_direction..",dialed_extension=" .. destination_number .. ",extension_uuid="..extension_uuid..",domain_name="..domain_name..",domain_uuid="..domain_uuid..row.record_session.."]user/" .. destination_number .. "@" .. domain_name;
-										session:execute("bridge", dial_string);
+										dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",leg_timeout="..destination_timeout..",call_direction="..call_direction..",dialed_extension=" .. destination_number .. ",extension_uuid="..extension_uuid..",domain_name="..domain_name..",domain_uuid="..domain_uuid..row.record_session.."]user/" .. destination_number .. "@" .. domain_name;
 									elseif (tonumber(destination_number) == nil) then
-										--sip uri
-										dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",call_direction=outbound,domain_name="..domain_name..",domain_uuid="..domain_uuid.."]" .. destination_number;
-										session:execute("bridge", dial_string);
+										dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",call_timeout="..destination_timeout..",call_direction=outbound,domain_name="..domain_name..",domain_uuid="..domain_uuid.."]" .. destination_number;
 									else
-										dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",call_direction=outbound]loopback/" .. destination_number;
-										session:execute("bridge", dial_string);
+										dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",call_timeout="..destination_timeout..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",call_direction=outbound]loopback/" .. destination_number;
+									end
+
+								--add the delimiter
+									if (x == 0) then
+										app_data = app_data .. dial_string;
+									else
+										app_data = app_data .. delimiter .. dial_string;
 									end
 
 								--increment the value of x
