@@ -441,6 +441,26 @@ $text['label-timeout_destination']['ru-ru'] = "Переадресация по �
 $text['label-timeout_destination']['sv-se'] = "Timeout Destination";
 $text['label-timeout_destination']['uk-ua'] = "";
 
+$text['label-call_timeout']['en-us'] = "Call Timeout";
+$text['label-call_timeout']['ar-eg'] = "";
+$text['label-call_timeout']['de-at'] = "Zeitüberschreitung des Anrufs"; //copied from de-de
+$text['label-call_timeout']['de-ch'] = "Zeitüberschreitung des Anrufs"; //copied from de-de
+$text['label-call_timeout']['de-de'] = "Zeitüberschreitung des Anrufs";
+$text['label-call_timeout']['es-cl'] = "Tiempo de Espera de Llamada";
+$text['label-call_timeout']['es-mx'] = "Tiempo de Espera de Llamada"; //copied from es-cl
+$text['label-call_timeout']['fr-ca'] = "Durée max d'appel"; //copied from fr-fr
+$text['label-call_timeout']['fr-fr'] = "Durée max d'appel";
+$text['label-call_timeout']['he-il'] = "";
+$text['label-call_timeout']['it-it'] = "Timeout Chiamata";
+$text['label-call_timeout']['nl-nl'] = "";
+$text['label-call_timeout']['pl-pl'] = "Limit czasu rozmowy";
+$text['label-call_timeout']['pt-br'] = "Timeout da chamada";
+$text['label-call_timeout']['pt-pt'] = "Timeout da Chamada";
+$text['label-call_timeout']['ro-ro'] = "";
+$text['label-call_timeout']['ru-ru'] = "Тайм-аут вызова";
+$text['label-call_timeout']['sv-se'] = "Call Timeout";
+$text['label-call_timeout']['uk-ua'] = "";
+
 $text['label-timeout']['en-us'] = "Timeout";
 $text['label-timeout']['ar-eg'] = "";
 $text['label-timeout']['de-at'] = "Time-Out"; //copied from de-de
