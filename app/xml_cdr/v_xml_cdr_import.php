@@ -277,7 +277,13 @@
 						$database->fields[$field_name] = urldecode($array[$fields[0]][$fields[1]]);
 					}
 					if (count($fields) == 3) {
-						$database->fields[$field_name] = urldecode($array[$fields[0]][$fields[1]][$fields[2]]);
+						$database->fields[$field_name] = urldecode($array[$fields[0]][0][$fields[1]][$fields[2]]);
+					}
+					if (count($fields) == 4) {
+						$database->fields[$field_name] = urldecode($array[$fields[0]][$fields[1]][$fields[2]][$fields[3]]);
+					}
+					if (count($fields) == 5) {
+						$database->fields[$field_name] = urldecode($array[$fields[0]][$fields[1]][$fields[2]][$fields[3]][$fields[4]]);
 					}
 				}
 			}
