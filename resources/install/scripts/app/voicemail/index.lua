@@ -207,8 +207,8 @@
 
 				not_found_message = 'false';
 				if (settings['voicemail']['not_found_message'] ~= nil) then
-					if (settings['voicemail']['not_found_message']['text'] ~= nil) then
-						not_found_message = settings['voicemail']['not_found_message']['text'];
+					if (settings['voicemail']['not_found_message']['boolean'] ~= nil) then
+						not_found_message = settings['voicemail']['not_found_message']['boolean'];
 					end
 				end
 
