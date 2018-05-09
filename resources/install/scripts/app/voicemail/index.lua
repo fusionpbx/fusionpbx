@@ -270,6 +270,7 @@
 						--answer the session
 							if (session:ready()) then
 								session:answer();
+								session:execute("sleep", "1000");
 							end
 
 						--unset bind meta app
@@ -600,9 +601,11 @@
 							session:transfer(referred_by, "XML", context);
 						else
 							if (not_found_message == "true") then
+								session:answer();
+								session:execute("sleep", "1000");
 								session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-no_answer_no_vm.wav");
+								session:hangup();
 							end
-							session:hangup("NO_ANSWER");
 						end
 					end
 			end
