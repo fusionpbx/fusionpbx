@@ -204,9 +204,17 @@
 						password_min_length = settings['voicemail']['password_min_length']['numeric'];
 					end
 				end
+
+				not_found_message = 'false';
+				if (settings['voicemail']['not_found_message'] ~= nil) then
+					if (settings['voicemail']['not_found_message']['text'] ~= nil) then
+						not_found_message = settings['voicemail']['not_found_message']['text'];
+					end
+				end
+
 			end
 
-			if settings['voicemail'] then
+			if (settings['voicemail']) then
 				if settings['voicemail']['voicemail_to_sms'] then
 					voicemail_to_sms = (settings['voicemail']['voicemail_to_sms']['boolean'] == 'true');
 				end
@@ -258,7 +266,7 @@
 						end
 
 					--valid voicemail
-						if (voicemail_uuid ~= nil) then
+						if (voicemail_uuid ~= nil and string.len(voicemail_uuid) > 0) then
 						--answer the session
 							if (session:ready()) then
 								session:answer();
@@ -591,7 +599,9 @@
 							referred_by = referred_by:match('[%d]+');
 							session:transfer(referred_by, "XML", context);
 						else
-							session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-no_answer_no_vm.wav");
+							if (not_found_message == "true") then
+								session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-no_answer_no_vm.wav");
+							end
 							session:hangup("NO_ANSWER");
 						end
 					end
