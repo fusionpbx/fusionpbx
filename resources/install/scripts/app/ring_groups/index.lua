@@ -482,7 +482,7 @@
 			--freeswitch.consoleLog("NOTICE", "[ring_group] external "..external.."\n");
 
 		--get the dialplan data and save it to a table
-			if (external) then
+			if (external == "true") then
 				dialplans = route_to_bridge.preload_dialplan(
 					dbh, domain_uuid, {hostname = hostname, context = context}
 				)
