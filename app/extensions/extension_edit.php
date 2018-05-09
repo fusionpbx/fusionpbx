@@ -100,7 +100,6 @@
 			$voicemail_mail_to = $_POST["voicemail_mail_to"];
 			$voicemail_file = $_POST["voicemail_file"];
 			$voicemail_local_after_email = $_POST["voicemail_local_after_email"];
-			$voicemail_description = $_POST["voicemail_description"];
 			$user_context = $_POST["user_context"];
 			$range = $_POST["range"];
 			$autogen_users = $_POST["autogen_users"];
@@ -409,10 +408,7 @@
 												$array["voicemails"][$i]["voicemail_local_after_email"] = $voicemail_local_after_email;
 											}
 											$array["voicemails"][$i]["voicemail_enabled"] = $voicemail_enabled;
-											if ( empty($voicemail_description)){
-												$voicemail_description = $description;
-											}
-											$array["voicemails"][$i]["voicemail_description"] = $voicemail_description;
+											$array["voicemails"][$i]["voicemail_description"] = $description;
 											$array["voicemails"][$i]["voicemail_tutorial"] = $voicemail_tutorial;
 									}
 							}
@@ -664,7 +660,6 @@
 					$voicemail_file = $row["voicemail_file"];
 					$voicemail_local_after_email = $row["voicemail_local_after_email"];
 					$voicemail_enabled = $row["voicemail_enabled"];
-					$voicemail_description = $row["voicemail_description"];
 					$voicemail_tutorial = $row["voicemail_tutorial"];
 				}
 				unset ($prep_statement);
@@ -1320,7 +1315,6 @@
 	if (permission_exists('voicemail_edit') && is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/voicemails')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "<input type='hidden' name='voicemail_description' value='".$voicemail_description."'>\n";
 		echo "    ".$text['label-voicemail_enabled']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
