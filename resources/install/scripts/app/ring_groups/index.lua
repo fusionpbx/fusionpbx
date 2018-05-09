@@ -467,7 +467,6 @@
 							--add the row to the destinations array
 							destinations[x] = row;
 						end
---session:hangup();
 				else
 					--set the values
 						external = "true";
