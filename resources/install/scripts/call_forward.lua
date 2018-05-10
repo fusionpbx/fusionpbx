@@ -34,7 +34,7 @@
 --create the api object
 	api = freeswitch.API();
 
---include config.lua
+--includes
 	require "resources.functions.config";
 	require "resources.functions.channel_utils";
 	local log = require "resources.functions.log".call_forward
