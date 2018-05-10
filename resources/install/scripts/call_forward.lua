@@ -34,16 +34,13 @@
 --create the api object
 	api = freeswitch.API();
 
---include config.lua
+--includes
 	require "resources.functions.config";
-
 	require "resources.functions.channel_utils";
-
 	local log = require "resources.functions.log".call_forward
 	local cache = require "resources.functions.cache"
 	local Database = require "resources.functions.database"
 	local Settings = require "resources.functions.lazy_settings"
-	local route_to_bridge = require "resources.functions.route_to_bridge"
 	local blf = require "resources.functions.blf"
 	local notify = require "app.feature_event.resources.functions.feature_event_notify"	
 
