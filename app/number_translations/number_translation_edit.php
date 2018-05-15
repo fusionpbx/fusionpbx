@@ -171,7 +171,12 @@
 	}
 
 //add an empty row
-	$x = count($number_translation_details);
+	if (is_array($number_translation_details)) {
+		$x = count($number_translation_details);
+	} else {
+		$number_translation_details = [];
+		$x = 0;
+	}
 	$number_translation_details[$x]['number_translation_uuid'] = $number_translation_uuid;
 	$number_translation_details[$x]['number_translation_detail_uuid'] = uuid();
 	$number_translation_details[$x]['number_translation_detail_regex'] = '';
