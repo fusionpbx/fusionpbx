@@ -170,6 +170,9 @@ include "root.php";
 			case "yealink":
 				$mac = strtolower($mac);
 				break;
+			case "gigaset":
+				$mac = strtoupper($mac);
+				break;
 			default:
 				$mac = strtolower($mac);
 			}
@@ -1192,9 +1195,17 @@ include "root.php";
 
 				//set the mac address in the correct format
 					$mac = $this->format_mac($mac, $device_vendor);
+				
+				// set date/time for versioning provisioning templates
+					if (strlen($_SESSION['provision']['version_format']['text']) > 0) {
+						$time = date($_SESSION['provision']['version_format']['text']);
+					} else {
+						$time = date("dmyHi");
+					}
 
 				//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
 					$view->assign("mac" , $mac);
+					$view->assign("time" , $time);
 					$view->assign("label", $device_label);
 					$view->assign("device_label", $device_label);
 					$view->assign("firmware_version", $device_firmware_version);
