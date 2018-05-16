@@ -119,6 +119,24 @@ include "root.php";
 				case "0C383E":
 					$device_vendor = "fanvil";
 					break;
+				case "7c2f80":
+					$device_vendor = "gigaset";
+					break;
+				case "14b370":
+					$device_vendor = "gigaset";
+					break;
+				case "002104":
+					$device_vendor = "gigaset";
+					break;
+				case "bcc342":
+					$device_vendor = "panasonic";
+					break;
+				case "080023":
+					$device_vendor = "panasonic";
+					break;
+				case "0080f0":
+					$device_vendor = "panasonic";
+					break;
 				default:
 					$device_vendor = "";
 				}
@@ -165,6 +183,9 @@ include "root.php";
 					}
 					if (preg_match('/^.*?panasonic.*$/i', $agent)) {
 						return "panasonic";
+					}
+					if (preg_replace('/^.*?(N510).*$/i', '$1', $agent) == "n510") {
+						return "gigaset";
 					}
 					if (preg_match('/^.*?htek.*$/i', $agent)) {
 						return "htek";
