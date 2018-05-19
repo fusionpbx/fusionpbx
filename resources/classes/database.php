@@ -132,8 +132,9 @@ include "root.php";
 					if (file_exists($this->path.'/'.$this->db_name)) {
 						//connect to the database
 							$this->db = new PDO('sqlite:'.$this->path.'/'.$this->db_name); //sqlite 3
-						//enable foreign key constraints
+						//PRAGMA commands
 							$this->db->query('PRAGMA foreign_keys = ON;');
+							$this->db->query('PRAGMA journal_mode = wal;');
 						//add additional functions to SQLite so that they are accessible inside SQL
 							//bool PDO::sqliteCreateFunction ( string function_name, callback callback [, int num_args] )
 							$this->db->sqliteCreateFunction('md5', 'php_md5', 1);
