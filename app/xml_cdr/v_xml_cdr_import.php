@@ -353,13 +353,28 @@
 			}
 			if (!isset($record_name)) {
 				$bridge_uuid = urldecode($xml->variables->bridge_uuid);
-				$record_path = $_SESSION['switch']['recordings']['dir'].'/'.$domain_name.'/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
-				if (file_exists($record_path.'/'.$bridge_uuid.'.wav')) {
+				$path = $_SESSION['switch']['recordings']['dir'].'/'.$domain_name.'/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
+				if (file_exists($path.'/'.$bridge_uuid.'.wav')) {
+					$record_path = $path;
 					$record_name = $bridge_uuid.'.wav';
+					$record_length = urldecode($xml->variables->duration);
 				} elseif (file_exists($record_path.'/'.$bridge_uuid.'.mp3')) {
+					$record_path = $path;
 					$record_name = $bridge_uuid.'.mp3';
+					$record_length = urldecode($xml->variables->duration);
 				}
-				$record_length = urldecode($xml->variables->duration);
+			}
+			if (!isset($record_name)) {
+				$path = $_SESSION['switch']['recordings']['dir'].'/'.$domain_name.'/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
+				if (file_exists($path.'/'.$uuid.'.wav')) {
+					$record_path = $path;
+					$record_name = $uuid.'.wav';
+					$record_length = urldecode($xml->variables->duration);
+				} elseif (file_exists($record_path.'/'.$uuid.'.mp3')) {
+					$record_path = $path;
+					$record_name = $uuid.'.mp3';
+					$record_length = urldecode($xml->variables->duration);
+				}
 			}
 
 		//add the call recording
