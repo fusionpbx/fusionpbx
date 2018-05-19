@@ -49,7 +49,7 @@
 
 //get the cdr string from the database
 	$sql = "select * from v_xml_cdr ";
-	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
+	if (permission_exists('xml_cdr_all')) {
 		$sql .= "where uuid  = '$uuid' ";
 	} else {
 		$sql .= "where uuid  = '$uuid' and domain_uuid  = '$domain_uuid' ";
