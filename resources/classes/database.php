@@ -116,7 +116,7 @@ include "root.php";
 				}
 
 				//sanitize the database name
-				$this->db_name = preg_replace('#[^a-zA-Z0-9_\-]#', '', $this->db_name);
+				$this->db_name = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $this->db_name);
 
 				if ($this->driver == "sqlite") {
 					if (strlen($this->db_name) == 0) {
