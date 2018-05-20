@@ -159,7 +159,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 			exit;
 		}
 
-		if (!check_password_strength($password, $text)) {
+		if (!check_password_strength($password, $text, 'user')) {
 			if ($action == 'edit') {
 				header("Location: user_edit.php?id=".$user_uuid);
 			}
