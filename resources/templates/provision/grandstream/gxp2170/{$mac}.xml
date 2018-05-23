@@ -731,7 +731,7 @@
 <!-- # Disable Recovery on Blind Transfer. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P2384>0</P2384>
+<P2384>1</P2384>
 
 <!-- # Blind Transfer Wait Timeout. Default is 30 -->
 <!-- # Number: 30 - 300 -->
@@ -7243,11 +7243,16 @@
 <!-- # 0 - Self-Defined City Code, 1 - Automatic. Default is 1 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
+{if isset($grandstream_city_code)}
+<P1405>0</P1405>
+{else}
 <P1405>1</P1405>
+{/if}
+
 
 <!-- # Self-Defined City Code -->
 <!-- # String -->
-<P1377></P1377>
+<P1377>{$grandstream_city_code}</P1377>
 
 <!-- # Update Interval (in minutes). Default is 15 -->
 <!-- # Number: 5 - 360 -->
