@@ -716,7 +716,7 @@
 <!--  Disable Recovery on Blind Transfer. 0 - No, 1 - Yes. Default is 0 -->
 <!--  Number: 0, 1 -->
 <!--  Mandatory -->
-<P2384>0</P2384>
+<P2384>1</P2384>
 
 <!--  No Key Entry Timeout (in seconds). Default is 4 -->
 <!--  Number: 1 - 15 -->
@@ -1586,7 +1586,7 @@
 <!--  Name -->
 <!--  String -->
 <P507>{$display_name_3}</P507>
-	
+
 <!--  Voice Mail UserID -->
 <!--  String -->
 <P526>*97</P526>
@@ -4573,7 +4573,7 @@
 <!--  String -->
 <!--  For GXP2130, Default value is Grandstream GXP2130. -->
 <!-- P148>Grandstream GXP2130</P148> -->
- 
+
 <!--  For GXP2140, Default value is Grandstream GXP2140. -->
 <!-- P148>Grandstream GXP2140</P148> -->
 
@@ -5493,7 +5493,7 @@
 <!--  User-Agent Prefix -->
 <!--  String -->
 <P8358></P8358>
- 
+
 <!--  Auto Provision List Starting Point. 0 - Extension Boards, 1 - VPKs, 2 - MPK . Default is 0.  - VPK/MPK is for GXP2130 only. Extension Boards/VPK is for GXP2140/2160/2170. -->
 <!--  Number: 0, 1, 2  -->
 <!--  Mandatory -->
@@ -5503,12 +5503,12 @@
 <!--  Number: 10 - 900 -->
 <!--  Mandatory -->
 <P26055>10</P26055>
- 
+
 <!--  Play Tone On Receiving IM. 0 - Disable, 1 - Enable. Default is 0 -->
 <!--  Number: 0, 1 -->
 <!--  Mandatory -->
 <P26056>0</P26056>
- 
+
 <!--  Allow Incoming Call Before Ringing. 0 - No, 1 - Yes. Default is 0 -->
 <!--  Number: 0, 1 -->
 <!--  Mandatory -->
@@ -5970,11 +5970,16 @@
 <!--  0 - Self-Defined City Code, 1 - Automatic. Default is 1 -->
 <!--  Number: 0, 1 -->
 <!--  Mandatory -->
+{if isset($grandstream_city_code)}
+<P1405>0</P1405>
+{else}
 <P1405>1</P1405>
+{/if}
 
-<!--  Self-Defined City Code -->
-<!--  String -->
-<P1377></P1377>
+
+<!-- # Self-Defined City Code -->
+<!-- # String -->
+<P1377>{$grandstream_city_code}</P1377>
 
 <!--  Update Interval (in minutes). Default is 15 -->
 <!--  Number: 5 - 360 -->
@@ -5984,7 +5989,11 @@
 <!--  Degree Unit. auto - Automatic, f - Fahrenheit, c - Celsius. Default is auto -->
 <!--  String: auto, f, c -->
 <!--  Mandatory -->
-<P1379>c</P1379>
+{if isset($grandstream_temp_unit)}
+<P1379>{$grandstream_temp_unit}</P1379>
+{else}
+<P1379>auto</P1379>
+{/if}
 
 <!--  Currency Update -->
 <!--  Enable Currency update. 0 - No, 1 - Yes. Default is 1 -->
