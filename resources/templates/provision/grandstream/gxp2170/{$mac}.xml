@@ -731,7 +731,7 @@
 <!-- # Disable Recovery on Blind Transfer. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P2384>0</P2384>
+<P2384>1</P2384>
 
 <!-- # Blind Transfer Wait Timeout. Default is 30 -->
 <!-- # Number: 30 - 300 -->
