@@ -396,12 +396,4 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enter City to configure City for the Weather app on the Phone";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "52b6e1e2-5ed5-11e8-9c2d-fa7ae01bbebc";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_temp_unit";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "f";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "c - Celsius f - Farenheit / If disabled will be set to auto";
-		$y++;
 ?>
