@@ -695,7 +695,7 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 		}
 
 		//get some more info to send the fax
-		$mailfrom_address = (isset($_SESSION['fax']['smtp_from']['var'])) ? $_SESSION['fax']['smtp_from']['var'] : $_SESSION['email']['smtp_from']['var'];
+		$mailfrom_address = (isset($_SESSION['fax']['smtp_from']['text'])) ? $_SESSION['fax']['smtp_from']['text'] : $_SESSION['email']['smtp_from']['text'];
 
 		$sql = "select * from v_fax where fax_uuid = '".$fax_uuid."'; ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -742,6 +742,7 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 
 		foreach ($fax_numbers as $fax_number) {
 
+			$fax_number = trim($fax_number);
 			fax_split_dtmf($fax_number, $fax_dtmf);
 
 			//prepare the fax command

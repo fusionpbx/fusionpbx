@@ -164,12 +164,14 @@
 			end
 
 		--set the cache
-			local ok, err = cache.set(language_cache_key, XML_STRING, expire["acl"]);
-			if debug["cache"] then
-				if ok then
-					freeswitch.consoleLog("notice", "[xml_handler] " .. language_cache_key .. " stored in the cache\n");
-				else
-					freeswitch.consoleLog("warning", "[xml_handler] " .. language_cache_key .. " can not be stored in the cache: " .. tostring(err) .. "\n");
+			if (XML_STRING) then
+				local ok, err = cache.set(language_cache_key, XML_STRING, expire["acl"]);
+				if debug["cache"] then
+					if ok then
+						freeswitch.consoleLog("notice", "[xml_handler] " .. language_cache_key .. " stored in the cache\n");
+					else
+						freeswitch.consoleLog("warning", "[xml_handler] " .. language_cache_key .. " can not be stored in the cache: " .. tostring(err) .. "\n");
+					end
 				end
 			end
 

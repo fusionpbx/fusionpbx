@@ -148,7 +148,7 @@
 	$sql .= "limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$destinations = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
 
 //alternate the row style
@@ -186,7 +186,7 @@
 		echo "		<input type='button' class='btn' value='".$text['button-outbound']."' onclick=\"window.location='destinations.php?type=outbound';\">\n";
 	}
 
-	if (permission_exists('destination_imports') && file_exists($_SERVER["PROJECT_ROOT"]."/app/destination_imports/destination_imports.php")) {
+	if (permission_exists('destination_import')) {
 		echo 				"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='/app/destination_imports/destination_imports.php'\" value='".$text['button-import']."'>\n";
 	}
 
@@ -199,7 +199,7 @@
 		}
 	}
 
-	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>\n";
+	echo "				<input type='text' class='txt' style='width: 150px; margin-left: 15px;' name='search' id='search' value='".$search."'>\n";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
 	echo "			</td>\n";
 	echo "		</form>\n";
@@ -217,6 +217,9 @@
 	echo "	<th style='width:30px;'>\n";
 	echo "		<input type='checkbox' name='checkbox_all' id='checkbox_all' value='' onclick=\"checkbox_toggle();\">\n";
 	echo "	</th>\n";
+	if ($_GET['show'] == "all" && permission_exists('destination_all')) {
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param);
+	}
 	echo th_order_by('destination_type', $text['label-destination_type'], $order_by, $order);
 	echo th_order_by('destination_number', $text['label-destination_number'], $order_by, $order);
 	echo th_order_by('destination_context', $text['label-destination_context'], $order_by, $order);
@@ -236,20 +239,28 @@
 	echo "	</td>\n";
 	echo "<tr>\n";
 
-	if (is_array($result)) {
+	if (is_array($destinations)) {
 		$x = 0;
-		foreach($result as $row) {
+		foreach($destinations as $row) {
 			if (permission_exists('destination_edit')) {
 				$tr_link = "href='destination_edit.php?id=".$row['destination_uuid']."'";
 			}
 			echo "<tr ".$tr_link.">\n";
-			//echo "	<td valign='top' class=''>".$row['domain_uuid']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class=''>".$row['destination_uuid']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class=''>".$row['dialplan_uuid']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='align: center; padding: 3px 3px 0px 8px;'>\n";
 			echo "		<input type='checkbox' name=\"destinations[$x][checked]\" id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$x."').checked = false; }\">\n";
 			echo "		<input type='hidden' name=\"destinations[$x][destination_uuid]\" value='".$row['destination_uuid']."' />\n";
 			echo "	</td>\n";
+			if ($_GET['show'] == "all" && permission_exists('destination_all')) {
+				if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
+					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
+				}
+				else {
+					$domain = $text['label-global'];
+				}
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$domain."</td>\n";
+			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_type']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".format_phone($row['destination_number'])."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_number_regex']."&nbsp;</td>\n";
@@ -278,11 +289,11 @@
 			$x++;
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($sql, $destinations, $row_count);
 	} //end if results
 
 	echo "<tr>\n";
-	echo "<td colspan='9' align='left'>\n";
+	echo "<td colspan='10' align='left'>\n";
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";

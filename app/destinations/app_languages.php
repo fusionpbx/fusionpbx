@@ -1,5 +1,5 @@
 <?php
-#This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
+#This file was last reorganized on 27th of September 2017 01:41:51 PM UTC
 
 $text['title-destinations']['en-us'] = "Destinations";
 $text['title-destinations']['ar-eg'] = "جهات الأتصال";
@@ -260,6 +260,46 @@ $text['label-fax_uuid']['ro-ro'] = "";
 $text['label-fax_uuid']['ru-ru'] = "Обнаружение факсов";
 $text['label-fax_uuid']['sv-se'] = "Fax Detektering";
 $text['label-fax_uuid']['uk-ua'] = "Виявлення факсу";
+
+$text['label-destinations']['en-us'] = "Destinations";
+$text['label-destinations']['ar-eg'] = "جهات الأتصال";
+$text['label-destinations']['de-at'] = "Ziele"; //copied from de-de
+$text['label-destinations']['de-ch'] = "Ziele"; //copied from de-de
+$text['label-destinations']['de-de'] = "Ziele";
+$text['label-destinations']['es-cl'] = "Destinos";
+$text['label-destinations']['es-mx'] = "Destinos"; //copied from es-cl
+$text['label-destinations']['fr-ca'] = "Destinations"; //copied from fr-fr
+$text['label-destinations']['fr-fr'] = "Destinations";
+$text['label-destinations']['he-il'] = "יעדים";
+$text['label-destinations']['it-it'] = "Destinazioni";
+$text['label-destinations']['nl-nl'] = "";
+$text['label-destinations']['pl-pl'] = "Destynacje";
+$text['label-destinations']['pt-br'] = "Destinos"; //copied from pt-pt
+$text['label-destinations']['pt-pt'] = "Destinos";
+$text['label-destinations']['ro-ro'] = "Destinații";
+$text['label-destinations']['ru-ru'] = "Направления";
+$text['label-destinations']['sv-se'] = "Destinationer";
+$text['label-destinations']['uk-ua'] = "Номери";
+
+$text['label-alternate_destination']['en-us'] = "Alternate Destination";
+$text['label-alternate_destination']['ar-eg'] = "";
+$text['label-alternate_destination']['de-at'] = "Alternatives Ziel"; //copied from de-de
+$text['label-alternate_destination']['de-ch'] = "Alternatives Ziel"; //copied from de-de
+$text['label-alternate_destination']['de-de'] = "Alternatives Ziel";
+$text['label-alternate_destination']['es-cl'] = "Destino Alternativo";
+$text['label-alternate_destination']['es-mx'] = "Destino Alternativo"; //copied from es-cl
+$text['label-alternate_destination']['fr-ca'] = "Destination alternative"; //copied from fr-fr
+$text['label-alternate_destination']['fr-fr'] = "Destination alternative";
+$text['label-alternate_destination']['he-il'] = "";
+$text['label-alternate_destination']['it-it'] = "";
+$text['label-alternate_destination']['nl-nl'] = "";
+$text['label-alternate_destination']['pl-pl'] = "Alternatywna destynacja";
+$text['label-alternate_destination']['pt-br'] = "Destino alternativo";
+$text['label-alternate_destination']['pt-pt'] = "Destino Alternativo";
+$text['label-alternate_destination']['ro-ro'] = "";
+$text['label-alternate_destination']['ru-ru'] = "Альтернативное направление";
+$text['label-alternate_destination']['sv-se'] = "Alternativ Destination";
+$text['label-alternate_destination']['uk-ua'] = "альтернативні варіанти призначення";
 
 $text['label-domain-name']['en-us'] = "Domain Name";
 $text['label-domain-name']['ar-eg'] = "اسم النطاق";
@@ -603,7 +643,7 @@ $text['header-destination-add']['uk-ua'] = "Номер";
 
 $text['header-destination_import']['en-us'] = "Import Destinations";
 $text['header-destination_import']['ar-eg'] = "";
-$text['header-destination_import']['de-at'] = "Importieren";
+$text['header-destination_import']['de-at'] = "Importieren"; //copied from de-de
 $text['header-destination_import']['de-ch'] = "Importieren"; //copied from de-de
 $text['header-destination_import']['de-de'] = "Importieren";
 $text['header-destination_import']['es-cl'] = "Importar";
@@ -614,7 +654,7 @@ $text['header-destination_import']['he-il'] = "";
 $text['header-destination_import']['it-it'] = "";
 $text['header-destination_import']['nl-nl'] = "";
 $text['header-destination_import']['pl-pl'] = "Importuj";
-$text['header-destination_import']['pt-br'] = "Importar";
+$text['header-destination_import']['pt-br'] = "Importar"; //copied from pt-pt
 $text['header-destination_import']['pt-pt'] = "Importar";
 $text['header-destination_import']['ro-ro'] = "";
 $text['header-destination_import']['ru-ru'] = "Импорт";

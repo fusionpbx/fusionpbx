@@ -586,6 +586,24 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "		<option value='superfine' ".(($row['domain_setting_value'] == 'superfine') ? 'selected' : null).">".$text['label-superfine']."</option>";
 		echo "	</select>";
 	}
+	elseif ($category == "provision" && $subcategory == "aastra_time_format" && $name == "text" ) {
+		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "		<option value='1' ".(($domain_setting_value == "1") ? "selected='selected'" : null).">".$text['label-24-hour']."</option>\n";
+		echo "		<option value='0' ".(($domain_setting_value == "0") ? "selected='selected'" : null).">".$text['label-12-hour']."</option>\n";
+		echo "	</select>\n";
+	}
+	elseif ($category == "provision" && $subcategory == "aastra_date_format" && $name == "text" ) {
+		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "		<option value='0' ".(($domain_setting_value == "0") ? "selected='selected'" : null).">WWW MMM DD</option>\n";
+		echo "		<option value='1' ".(($domain_setting_value == "1") ? "selected='selected'" : null).">DD-MMM-YY</option>\n";
+		echo "		<option value='2' ".(($domain_setting_value == "2") ? "selected='selected'" : null).">YYYY-MM-DD</option>\n";
+		echo "		<option value='3' ".(($domain_setting_value == "3") ? "selected='selected'" : null).">DD/MM/YYYY</option>\n";
+		echo "		<option value='4' ".(($domain_setting_value == "4") ? "selected='selected'" : null).">DD/MM/YY</option>\n";
+		echo "		<option value='5' ".(($domain_setting_value == "5") ? "selected='selected'" : null).">DD-MM-YY</option>\n";
+		echo "		<option value='6' ".(($domain_setting_value == "6") ? "selected='selected'" : null).">MM/DD/YY</option>\n";
+		echo "		<option value='7' ".(($domain_setting_value == "7") ? "selected='selected'" : null).">MMM DD</option>\n";
+		echo "	</select>\n";
+	}
 	elseif ($category == "theme" && $subcategory == "domain_visible" && $name == "text" ) {
 		echo "    <select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
 		echo "    	<option value='false' ".(($row['domain_setting_value'] == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";

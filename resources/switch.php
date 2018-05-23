@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -399,33 +399,33 @@ function save_var_xml() {
 		//build the xml
 		$sql = "select * from v_vars ";
 		$sql .= "where var_enabled = 'true' ";
-		$sql .= "order by var_cat, var_order asc ";
+		$sql .= "order by var_category, var_order asc ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
-		$prev_var_cat = '';
-		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+		$variables = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+		$prev_var_category = '';
 		$xml = '';
-		foreach ($result as &$row) {
-			if ($row['var_cat'] != 'Provision') {
-				if ($prev_var_cat != $row['var_cat']) {
-					$xml .= "\n<!-- ".$row['var_cat']." -->\n";
+		foreach ($variables as &$row) {
+			if ($row['var_category'] != 'Provision') {
+				if ($prev_var_category != $row['var_category']) {
+					$xml .= "\n<!-- ".$row['var_category']." -->\n";
 					if (strlen($row["var_description"]) > 0) {
 						$xml .= "<!-- ".base64_decode($row['var_description'])." -->\n";
 					}
 				}
-
-				if ($row['var_cat'] == 'Exec-Set') { $var_cmd = 'exec-set'; } else { $var_cmd = 'set'; }
+				if (strlen($row['var_command']) == 0) { $row['var_command'] = 'set'; }
+				if ($row['var_category'] == 'Exec-Set') { $row['var_command'] = 'exec-set'; }
 				if (strlen($row['var_hostname']) == 0) {
-					$xml .= "<X-PRE-PROCESS cmd=\"".$var_cmd."\" data=\"".$row['var_name']."=".$row['var_value']."\" />\n";
+					$xml .= "<X-PRE-PROCESS cmd=\"".$row['var_command']."\" data=\"".$row['var_name']."=".$row['var_value']."\" />\n";
 				} elseif ($row['var_hostname'] == $hostname) {
-					$xml .= "<X-PRE-PROCESS cmd=\"".$var_cmd."\" data=\"".$row['var_name']."=".$row['var_value']."\" />\n";
+					$xml .= "<X-PRE-PROCESS cmd=\"".$row['var_command']."\" data=\"".$row['var_name']."=".$row['var_value']."\" />\n";
 				}
 			}
-			$prev_var_cat = $row['var_cat'];
+			$prev_var_category = $row['var_category'];
 		}
 		$xml .= "\n";
 		fwrite($fout, $xml);
-		unset($xml);
+		unset($prep_statement, $variables, $xml);
 		fclose($fout);
 
 		//apply settings
@@ -1279,7 +1279,7 @@ if (!function_exists('switch_conf_xml')) {
 			$file_contents = file_get_contents($path."/autoload_configs/switch.conf.xml");
 
 		//prepare the php variables
-			if (stristr(PHP_OS, 'WIN')) {
+			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 				$php_bin = win_find_php('php.exe');
 				if(!$php_bin){ // relay on system path
 					$php_bin = 'php.exe';

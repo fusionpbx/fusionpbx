@@ -51,7 +51,7 @@ if (!class_exists('tones')) {
 
 			//get the tones
 				$sql = "select * from v_vars ";
-				$sql .= "where var_cat = 'Tones' ";
+				$sql .= "where var_category = 'Tones' ";
 				$sql .= "order by var_name asc ";
 				$prep_statement = $this->db->prepare(check_sql($sql));
 				$prep_statement->execute();

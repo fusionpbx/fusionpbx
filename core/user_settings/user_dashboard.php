@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -62,9 +62,8 @@
 	$language = new text;
 	$text = $language->get();
 
-//load header and set the title
+//load the header
 	require_once "resources/header.php";
-	$document['title'] = $text['title-user_dashboard'];
 
 //start the content
 	echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
@@ -930,7 +929,6 @@
 			$n++;
 		}
 
-
 	//system status
 		if (is_array($selected_blocks) && in_array('system', $selected_blocks)) {
 			$c = 0;
@@ -940,13 +938,8 @@
 			$hud[$n]['html'] .= "<span class='hud_title' style='cursor: default;'>".$text['label-system_status']."</span>";
 
 			//disk usage
-			if (stristr(PHP_OS, 'Linux')) {
-				$df = shell_exec("/usr/bin/which df");
-				if($df){
-					$tmp = shell_exec($df." /home 2>&1");
-				} else {
-					$tmp = shell_exec("df /home 2>&1");
-				}
+			if (PHP_OS == 'FreeBSD' || PHP_OS == 'Linux') {
+				$tmp = shell_exec("df /home 2>&1");
 				$tmp = explode("\n", $tmp);
 				$tmp = preg_replace('!\s+!', ' ', $tmp[1]); // multiple > single space
 				$tmp = explode(' ', $tmp);
@@ -1262,6 +1255,13 @@
 		}
 		echo "</div>\n";
 	}
+
+//add multi-lingual support
+	$language = new text;
+	$text = $language->get();
+
+//set the title
+	$document['title'] = $text['title-user_dashboard'];
 
 //show the footer
 	require_once "resources/footer.php";

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2016 All Rights Reserved.
+	Copyright (C) 2008-2018 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -72,6 +72,7 @@
 
 //get the http values and set them as php variables
 	if (count($_POST) > 0) {
+
 		//get the values from the HTTP POST and save them as PHP variables
 			$extension = str_replace(' ','-',$_POST["extension"]);
 			$number_alias = $_POST["number_alias"];
@@ -99,7 +100,6 @@
 			$voicemail_mail_to = $_POST["voicemail_mail_to"];
 			$voicemail_file = $_POST["voicemail_file"];
 			$voicemail_local_after_email = $_POST["voicemail_local_after_email"];
-			$voicemail_description = $_POST["voicemail_description"];
 			$user_context = $_POST["user_context"];
 			$range = $_POST["range"];
 			$autogen_users = $_POST["autogen_users"];
@@ -140,8 +140,7 @@
 			$user_uuid = $_REQUEST["delete_uuid"];
 		//delete the group from the users
 			$sql = "delete from v_extension_users ";
-			$sql .= "where domain_uuid = '".check_str($_SESSION['domain_uuid'])."' ";
-			$sql .= "and extension_uuid = '".check_str($extension_uuid)."' ";
+			$sql .= "where extension_uuid = '".check_str($extension_uuid)."' ";
 			$sql .= "and user_uuid = '".check_str($user_uuid)."' ";
 			$db->exec(check_sql($sql));
 	}
@@ -150,12 +149,10 @@
 	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/devices')) {
 		if ($_REQUEST["delete_type"] == "device_line" && strlen($_REQUEST["delete_uuid"]) > 0 && permission_exists("extension_delete")) {
 			//set the variables
-				$extension_uuid = $_REQUEST["id"];
 				$device_line_uuid = $_REQUEST["delete_uuid"];
 			//delete device_line
 				$sql = "delete from v_device_lines ";
-				$sql .= "where domain_uuid = '".check_str($_SESSION['domain_uuid'])."' ";
-				$sql .= "and device_line_uuid = '".check_str($device_line_uuid)."' ";
+				$sql .= "where device_line_uuid = '".check_str($device_line_uuid)."' ";
 				$db->exec(check_sql($sql));
 				unset($sql);
 		}
@@ -346,9 +343,7 @@
 									$array["extensions"][$i]["auth_acl"] = $auth_acl;
 									$array["extensions"][$i]["cidr"] = $cidr;
 									$array["extensions"][$i]["sip_force_contact"] = $sip_force_contact;
-									if (strlen($sip_force_expires) > 0) {
-										$array["extensions"][$i]["sip_force_expires"] = $sip_force_expires;
-									}
+									$array["extensions"][$i]["sip_force_expires"] = $sip_force_expires;
 									if (permission_exists('extension_nibble_account')) {
 										if (strlen($nibble_account) > 0) {
 											$array["extensions"][$i]["nibble_account"] = $nibble_account;
@@ -384,7 +379,7 @@
 										//get the voicemail_uuid
 											$sql = "select voicemail_uuid from v_voicemails ";
 											$sql .= "where voicemail_id = '".check_str($voicemail_id)."' ";
-											$sql .= "and domain_uuid = '".check_str($_SESSION["domain_uuid"])."' ";
+											$sql .= "and domain_uuid = '".check_str($domain_uuid)."' ";
 											$prep_statement = $db->prepare(check_sql($sql));
 											$prep_statement->execute();
 											$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -413,10 +408,7 @@
 												$array["voicemails"][$i]["voicemail_local_after_email"] = $voicemail_local_after_email;
 											}
 											$array["voicemails"][$i]["voicemail_enabled"] = $voicemail_enabled;
-											if ( empty($voicemail_description)){
-												$voicemail_description = $description;
-											}
-											$array["voicemails"][$i]["voicemail_description"] = $voicemail_description;
+											$array["voicemails"][$i]["voicemail_description"] = $description;
 											$array["voicemails"][$i]["voicemail_tutorial"] = $voicemail_tutorial;
 									}
 							}
@@ -438,7 +430,7 @@
 									unset($mwi_account_array);
 								}
 							}
-				}
+					}
 
 				//update devices having extension assigned to line(s) with new password
 					if ($action == "update" && $range == 1 && permission_exists('extension_password')) {
@@ -447,7 +439,6 @@
 						$sql .= "where domain_uuid = '".check_str($_SESSION['domain_uuid'])."' ";
 						$sql .= "and server_address = '".check_str($_SESSION['domain_name'])."' ";
 						$sql .= "and user_id = '".check_str($extension)."' ";
-						$sql .= "and password = '".check_str($extension)."' ";
 						$db->exec(check_sql($sql));
 						unset($sql);
 					}
@@ -608,11 +599,11 @@
 		$extension_uuid = $_GET["id"];
 		$sql = "select * from v_extensions ";
 		$sql .= "where extension_uuid = '".check_str($extension_uuid)."' ";
-		$sql .= "and domain_uuid = '".check_str($domain_uuid)."' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
+			$domain_uuid = $row["domain_uuid"];
 			$extension = $row["extension"];
 			$number_alias = $row["number_alias"];
 			$password = $row["password"];
@@ -669,7 +660,6 @@
 					$voicemail_file = $row["voicemail_file"];
 					$voicemail_local_after_email = $row["voicemail_local_after_email"];
 					$voicemail_enabled = $row["voicemail_enabled"];
-					$voicemail_description = $row["voicemail_description"];
 					$voicemail_tutorial = $row["voicemail_tutorial"];
 				}
 				unset ($prep_statement);
@@ -846,7 +836,7 @@
 		echo "    ".$text['label-password']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='password' name='password' id='password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='50' value=\"$password\">\n";
+		echo "    <input class='formfld' type='password' name='password' id='password' autocomplete='off' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='50' value=\"$password\">\n";
 		echo "    <br />\n";
 		echo "    ".$text['description-password']."\n";
 		echo "</td>\n";
@@ -1325,7 +1315,6 @@
 	if (permission_exists('voicemail_edit') && is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/voicemails')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "<input type='hidden' name='voicemail_description' value='".$voicemail_description."'>\n";
 		echo "    ".$text['label-voicemail_enabled']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
@@ -1459,7 +1448,7 @@
 		echo "	<select class='formfld' name='call_group'>\n";
 		echo "		<option value=''></option>\n";
 		foreach ($_SESSION['call group']['name'] as $name) {
-			if ($_SESSION['call group']['name'] == $call_group) {
+			if ($name == $call_group) {
 				echo "		<option value='$name' selected='selected'>$name</option>\n";
 			}
 			else {

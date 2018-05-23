@@ -145,6 +145,12 @@
 		echo "			<input type='button' class='btn' value='".$text['button-missed']."' onclick=\"document.location.href='xml_cdr.php?call_result=missed';\">\n";
 	}
 	echo "				<input type='button' class='btn' value='".$text['button-statistics']."' onclick=\"document.location.href='xml_cdr_statistics.php';\">\n";
+	if (permission_exists('xml_cdr_archive')) {
+		if ($_REQUEST['show'] == 'all') {
+			$query_string = "show=all";
+		}
+		echo "			<input type='button' class='btn' value='".$text['button-archive']."' onclick=\"window.location='xml_cdr_archive.php?$query_string';\">\n";
+	}
 	echo "				<input type='button' class='btn' value='".$text['button-export']."' onclick=\"toggle_select('export_format');\">\n";
 	echo "				<input type='button' class='btn' value='".$text['button-refresh']."' onclick=\"document.location.href='xml_cdr.php';\" />\n";
 	echo "			</td>";
@@ -155,9 +161,7 @@
 	echo "					<option value='pdf'>PDF</option>\n";
 	echo "				</select>\n";
 	echo "			</td>\n";
-	if ($result_count == $rows_per_page && $paging_controls_mini != '') {
-		echo "		<td style='vertical-align: top; padding-left: 15px;'>".$paging_controls_mini."</td>\n";
-	}
+	echo "			<td style='vertical-align: top; padding-left: 15px;'>".$paging_controls_mini."</td>\n";
 	echo "		</tr>\n";
 	echo "	</table>\n";
 	echo "	</form>\n";
@@ -225,7 +229,7 @@
 				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 				echo "	<tr>\n";
 				echo "		<td class='vncell' valign='top' nowrap='nowrap'>\n";
-				echo "			".$text['label-source']."\n";
+				echo "			".$text['label-caller_id_number']."\n";
 				echo "		</td>\n";
 				echo "		<td class='vtable' align='left' style='white-space: nowrap;'>\n";
 				echo "			<input type='text' class='formfld' style='".$style['caller_id_number']."' name='caller_id_number' id='caller_id_number' value='".$caller_id_number."'>\n";
@@ -256,7 +260,7 @@
 				echo "	</tr>\n";
 				echo "	<tr>\n";
 				echo "		<td class='vncell' valign='top' nowrap='nowrap'>\n";
-				echo "			".$text['label-cid-name']."\n";
+				echo "			".$text['label-caller_id_name']."\n";
 				echo "		</td>\n";
 				echo "		<td class='vtable' align='left'>\n";
 				echo "			<input type='text' class='formfld' name='caller_id_name' value='$caller_id_name'>\n";
@@ -267,11 +271,11 @@
 			echo "</td>";
 
 			// show hangup clause filter to super/admin
-			if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
-				echo "<td width='27%' style='vertical-align: top;'>\n";
+			echo "<td width='27%' style='vertical-align: top;'>\n";
 
-					echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-					echo "	<tr>\n";
+				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+				echo "	<tr>\n";
+				if (permission_exists('hangup_cause')) {
 					echo "		<td class='vncell' valign='top' nowrap='nowrap'>\n";
 					echo "			".$text['label-hangup_cause']."\n";
 					echo "		</td>\n";
@@ -319,6 +323,8 @@
 					echo "			</select>\n";
 					echo "		</td>\n";
 					echo "	</tr>\n";
+				}
+				if (permission_exists('caller_destination')) {
 					echo "	<tr>\n";
 					echo "		<td class='vncell' valign='top' nowrap='nowrap'>\n";
 					echo "			".$text['label-caller_destination']."\n";
@@ -327,10 +333,10 @@
 					echo "			<input type='text' class='formfld' name='caller_destination' value='$caller_destination'>\n";
 					echo "		</td>\n";
 					echo "	</tr>\n";
-					echo "</table>\n";
+				}
+				echo "</table>\n";
 
-				echo "</td>";
-			}
+			echo "</td>";
 
 			echo "</tr>";
 			echo "</table>";
@@ -374,9 +380,11 @@
 			echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
 			$col_count++;
 		}
-		echo th_order_by('caller_id_name', $text['label-cid-name'], $order_by, $order, null, null, $param);
-		echo th_order_by('caller_id_number', $text['label-source'], $order_by, $order, null, null, $param);
-		echo th_order_by('caller_destination', $text['label-caller_destination'], $order_by, $order, null, null, $param);
+		echo th_order_by('caller_id_name', $text['label-caller_id_name'], $order_by, $order, null, null, $param);
+		echo th_order_by('caller_id_number', $text['label-caller_id_number'], $order_by, $order, null, null, $param);
+		if (permission_exists('caller_destination')) {
+			echo th_order_by('caller_destination', $text['label-caller_destination'], $order_by, $order, null, null, $param);
+		}
 		echo th_order_by('destination_number', $text['label-destination'], $order_by, $order, null, null, $param);
 		if (permission_exists('recording_play') || permission_exists('recording_download')) {
 			echo "<th>".$text['label-recording']."</th>\n";
@@ -408,7 +416,7 @@
 			echo th_order_by('rtp_audio_in_mos', $text['label-mos'], $order_by, $order, null, "style='text-align: center;'", $param, $text['description-mos']);
 			$col_count++;
 		}
-		if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
+		if (permission_exists('hangup_cause')) {
 			echo th_order_by('hangup_cause', $text['label-hangup_cause'], $order_by, $order, null, null, $param);
 		}
 		else {
@@ -540,16 +548,18 @@
 				echo "		</a>";
 				echo "	</td>\n";
 			//caller destination
-				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>";
-				echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['caller_id_name'])."&src_cid_number=".urlencode($row['caller_id_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['caller_destination'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
-				if (is_numeric($row['caller_destination'])) {
-					echo "		".format_phone($row['caller_destination']).' ';
+				if (permission_exists('caller_destination')) {
+					echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>";
+					echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['caller_id_name'])."&src_cid_number=".urlencode($row['caller_id_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['caller_destination'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
+					if (is_numeric($row['caller_destination'])) {
+						echo "		".format_phone($row['caller_destination']).' ';
+					}
+					else {
+						echo "		".$row['caller_destination'].' ';
+					}
+					echo "		</a>";
+					echo "	</td>\n";
 				}
-				else {
-					echo "		".$row['caller_destination'].' ';
-				}
-				echo "		</a>";
-				echo "	</td>\n";
 			//destination
 				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>";
 				echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['destination_number'])."&src_cid_number=".urlencode($row['destination_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['destination_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
@@ -671,7 +681,7 @@
 					echo "	<td valign='top' class='".$row_style[$c]."'$title style='text-align: center;'>$value</td>\n";
 				}
 			//hangup cause/call result
-				if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
+				if (permission_exists('hangup_cause')) {
 					echo "	<td valign='top' class='".$row_style[$c]."' nowrap='nowrap'><a ".$tr_link.">".$hangup_cause."</a></td>\n";
 				}
 				else {
@@ -698,9 +708,7 @@
 	echo "</table>";
 	echo "</form>";
 	echo "<br><br>";
-	if ($result_count == $rows_per_page) {
-		echo $paging_controls;
-	}
+	echo $paging_controls;
 	echo "<br><br>";
 
 	// check or uncheck all checkboxes

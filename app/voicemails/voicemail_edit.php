@@ -82,10 +82,10 @@
 		//delete the voicemail from the destionations
 			$sqld = "
 				delete from
-					v_voicemail_destinations as d
+					v_voicemail_destination
 				where
-					d.voicemail_destination_uuid = '".$voicemail_destination_uuid."' and
-					d.voicemail_uuid = '".$voicemail_uuid."'";
+					voicemail_destination_uuid = '".$voicemail_destination_uuid."' and
+					voicemail_uuid = '".$voicemail_uuid."'";
 			$db->exec(check_sql($sqld));
 		//redirect the browser
 			messages::add($text['message-delete']);

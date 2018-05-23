@@ -90,7 +90,11 @@ require_once "resources/require.php";
 //get the  list
 	$sql = "select * from v_call_block ";
 	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+	if (strlen($order_by)> 0) { 
+		$sql .= "order by $order_by $order ";
+	} else {
+		$sql .= "order by call_block_number asc "; 
+	}
 	$sql .= " limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();

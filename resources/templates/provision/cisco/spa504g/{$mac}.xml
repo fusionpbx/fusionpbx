@@ -76,7 +76,7 @@
 <Try_Backup_RSC group="SIP/Response_Status_Code_Handling" />
 <Retry_Reg_RSC group="SIP/Response_Status_Code_Handling" />
 <RTP_Port_Min group="SIP/RTP_Parameters">16384</RTP_Port_Min>
-<RTP_Port_Max group="SIP/RTP_Parameters">16538</RTP_Port_Max>
+<RTP_Port_Max group="SIP/RTP_Parameters">32768</RTP_Port_Max>
 <RTP_Packet_Size group="SIP/RTP_Parameters">0.020</RTP_Packet_Size>
 <Max_RTP_ICMP_Err group="SIP/RTP_Parameters">0</Max_RTP_ICMP_Err>
 <RTCP_Tx_Interval group="SIP/RTP_Parameters">0</RTCP_Tx_Interval>
@@ -186,20 +186,19 @@
 <!-- Phone/Line_Key_{$row.device_key_id} -->
 <Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_line}</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
 <Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
-<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{if $row.device_key_extension == "shared"}shared{else}private{/if}</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
+<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{if $row.device_key_type == "shared"}shared{else}private{/if}</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
 <Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}"/>
 {else}
 <Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">Disabled</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
 <Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
-<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">private</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
 <Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extended_Function_{$row.device_key_id}_>
-{/if}
-{/if}
 
+{/if}
+{/if}
 {/foreach}
 
 <SCA_Line_ID_Mapping group="Phone/Miscellaneous_Line_Key_Settings">Vertical First</SCA_Line_ID_Mapping>
-<SCA_Barge-In_Enable group="Phone/Miscellaneous_Line_Key_Settings">No</SCA_Barge-In_Enable>
+<SCA_Barge-In_Enable group="Phone/Miscellaneous_Line_Key_Settings">Yes</SCA_Barge-In_Enable>
 <Idle_LED group="Phone/Line_Key_LED_Pattern" />
 <Remote_Undefined_LED group="Phone/Line_Key_LED_Pattern" />
 <Local_Seized_LED group="Phone/Line_Key_LED_Pattern" />
@@ -269,11 +268,7 @@
 <EM_Enable group="Phone/Extension_Mobility">No</EM_Enable>
 <EM_User_Domain group="Phone/Extension_Mobility" />
 <Line_Enable_1_ group="Ext_1/General">Yes</Line_Enable_1_>
-{foreach $keys["line"] as $row}
-{if $row.device_key_type == "line"}
-<Share_Ext_1_ group="Ext_1/Share_Line_Appearance">{if $row.device_key_extension == "shared"}shared{else}private{/if}</Share_Ext_1_>
-{/if}
-{/foreach}
+<Share_Ext_1_ group="Ext_1/Share_Line_Appearance">{if $shared_line_1 == "shared"}shared{else}private{/if}</Share_Ext_1_>
 <Shared_User_ID_1_ group="Ext_1/Share_Line_Appearance" />
 <Subscription_Expires_1_ group="Ext_1/Share_Line_Appearance">3600</Subscription_Expires_1_>
 <NAT_Mapping_Enable_1_ group="Ext_1/NAT_Settings">No</NAT_Mapping_Enable_1_>
@@ -359,7 +354,7 @@
 <Enable_IP_Dialing_1_ group="Ext_1/Dial_Plan">Yes</Enable_IP_Dialing_1_>
 <Emergency_Number_1_ group="Ext_1/Dial_Plan" />
 <Line_Enable_2_ group="Ext_2/General">Yes</Line_Enable_2_>
-<Share_Ext_2_ group="Ext_2/Share_Line_Appearance">private</Share_Ext_2_>
+<Share_Ext_2_ group="Ext_2/Share_Line_Appearance">{if $shared_line_2 == "shared"}shared{else}private{/if}</Share_Ext_2_>
 <Shared_User_ID_2_ group="Ext_2/Share_Line_Appearance" />
 <Subscription_Expires_2_ group="Ext_2/Share_Line_Appearance">3600</Subscription_Expires_2_>
 <NAT_Mapping_Enable_2_ group="Ext_2/NAT_Settings">No</NAT_Mapping_Enable_2_>
@@ -393,6 +388,7 @@
 <MOH_Server_2_ group="Ext_2/Call_Feature_Settings" />
 <Auth_Page_2_ group="Ext_2/Call_Feature_Settings">No</Auth_Page_2_>
 <Default_Ring__2__ group="Ext_2/Call_Feature_Settings">1</Default_Ring__2__>
+<Feature_Key_Sync_2_ group="Ext_2/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_2_>
 <Auth_Page_Realm_2_ group="Ext_2/Call_Feature_Settings" />
 <Conference_Bridge_URL_2_ group="Ext_2/Call_Feature_Settings" />
 <Auth_Page_Password_2_ group="Ext_2/Call_Feature_Settings" />
@@ -444,7 +440,7 @@
 <Enable_IP_Dialing_2_ group="Ext_2/Dial_Plan">Yes</Enable_IP_Dialing_2_>
 <Emergency_Number_2_ group="Ext_2/Dial_Plan" />
 <Line_Enable_3_ group="Ext_3/General">Yes</Line_Enable_3_>
-<Share_Ext_3_ group="Ext_3/Share_Line_Appearance">private</Share_Ext_3_>
+<Share_Ext_3_ group="Ext_3/Share_Line_Appearance">{if $shared_line_3 == "shared"}shared{else}private{/if}</Share_Ext_3_>
 <Shared_User_ID_3_ group="Ext_3/Share_Line_Appearance" />
 <Subscription_Expires_3_ group="Ext_3/Share_Line_Appearance">3600</Subscription_Expires_3_>
 <NAT_Mapping_Enable_3_ group="Ext_3/NAT_Settings">No</NAT_Mapping_Enable_3_>
@@ -478,6 +474,7 @@
 <MOH_Server_3_ group="Ext_3/Call_Feature_Settings" />
 <Auth_Page_3_ group="Ext_3/Call_Feature_Settings">No</Auth_Page_3_>
 <Default_Ring__3__ group="Ext_3/Call_Feature_Settings">1</Default_Ring__3__>
+<Feature_Key_Sync_3_ group="Ext_3/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_3_>
 <Auth_Page_Realm_3_ group="Ext_3/Call_Feature_Settings" />
 <Conference_Bridge_URL_3_ group="Ext_3/Call_Feature_Settings" />
 <Auth_Page_Password_3_ group="Ext_3/Call_Feature_Settings" />
@@ -490,7 +487,7 @@
 <Use_Outbound_Proxy_3_ group="Ext_3/Proxy_and_Registration">{if isset($outbound_proxy_primary_3)}Yes{else}No{/if}</Use_Outbound_Proxy_3_>
 <Outbound_Proxy_3_ group="Ext_3/Proxy_and_Registration">{$outbound_proxy_primary_3}</Outbound_Proxy_3_>
 <Alternate_Proxy_3_ group="Ext_3/Proxy_and_Registration">{$server_address_3}</Alternate_Proxy_3_>
-<Alternate_Outbound_Proxy_3_ group="Ext_2/Proxy_and_Registration">{$outbound_proxy_secondary_3}</Alternate_Outbound_Proxy_3_>
+<Alternate_Outbound_Proxy_3_ group="Ext_3/Proxy_and_Registration">{$outbound_proxy_secondary_3}</Alternate_Outbound_Proxy_3_>
 <Use_OB_Proxy_In_Dialog_3_ group="Ext_3/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_3_>
 <Register_3_ group="Ext_3/Proxy_and_Registration">Yes</Register_3_>
 <Make_Call_Without_Reg_3_ group="Ext_3/Proxy_and_Registration">No</Make_Call_Without_Reg_3_>
@@ -529,7 +526,7 @@
 <Enable_IP_Dialing_3_ group="Ext_3/Dial_Plan">Yes</Enable_IP_Dialing_3_>
 <Emergency_Number_3_ group="Ext_3/Dial_Plan" />
 <Line_Enable_4_ group="Ext_4/General">Yes</Line_Enable_4_>
-<Share_Ext_4_ group="Ext_4/Share_Line_Appearance">private</Share_Ext_4_>
+<Share_Ext_4_ group="Ext_4/Share_Line_Appearance">{if $shared_line_4 == "shared"}shared{else}private{/if}</Share_Ext_4_>
 <Shared_User_ID_4_ group="Ext_4/Share_Line_Appearance" />
 <Subscription_Expires_4_ group="Ext_4/Share_Line_Appearance">3600</Subscription_Expires_4_>
 <NAT_Mapping_Enable_4_ group="Ext_4/NAT_Settings">No</NAT_Mapping_Enable_4_>
@@ -563,6 +560,7 @@
 <MOH_Server_4_ group="Ext_4/Call_Feature_Settings" />
 <Auth_Page_4_ group="Ext_4/Call_Feature_Settings">No</Auth_Page_4_>
 <Default_Ring__4__ group="Ext_4/Call_Feature_Settings">1</Default_Ring__4__>
+<Feature_Key_Sync_4_ group="Ext_4/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_4_>
 <Auth_Page_Realm_4_ group="Ext_4/Call_Feature_Settings" />
 <Conference_Bridge_URL_4_ group="Ext_4/Call_Feature_Settings" />
 <Auth_Page_Password_4_ group="Ext_4/Call_Feature_Settings" />
@@ -573,13 +571,16 @@
 <CFWD_Notifier_4_ group="Ext_4/Call_Feature_Settings" />
 <Proxy_4_ group="Ext_4/Proxy_and_Registration">{$server_address_4}</Proxy_4_>
 <Use_Outbound_Proxy_4_ group="Ext_4/Proxy_and_Registration">{if isset($outbound_proxy_primary_4)}Yes{else}No{/if}</Use_Outbound_Proxy_4_>
-<Outbound_Proxy_4_ group="Ext_4/Proxy_and_Registration" />
+<Outbound_Proxy_4_ group="Ext_4/Proxy_and_Registration">{$outbound_proxy_primary_4}</Outbound_Proxy_4_>
+<Alternate_Proxy_4_ group="Ext_4/Proxy_and_Registration">{$server_address_4}</Alternate_Proxy_4_>
+<Alternate_Outbound_Proxy_4_ group="Ext_4/Proxy_and_Registration">{$outbound_proxy_secondary_4}</Alternate_Outbound_Proxy_4_>
 <Use_OB_Proxy_In_Dialog_4_ group="Ext_4/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_4_>
 <Register_4_ group="Ext_4/Proxy_and_Registration">Yes</Register_4_>
 <Make_Call_Without_Reg_4_ group="Ext_4/Proxy_and_Registration">No</Make_Call_Without_Reg_4_>
 <Register_Expires_4_ group="Ext_4/Proxy_and_Registration">{$register_expires_4}</Register_Expires_4_>
 <Ans_Call_Without_Reg_4_ group="Ext_4/Proxy_and_Registration">No</Ans_Call_Without_Reg_4_>
-<Use_DNS_SRV_4_ group="Ext_4/Proxy_and_Registration">No</Use_DNS_SRV_4_>
+{if $sip_transport_4 == 'dns srv'}<Use_DNS_SRV_4_ group="Ext_4/Proxy_and_Registration">Yes</Use_DNS_SRV_4_>{/if}
+{if $sip_transport_4 != 'dns srv'}<Use_DNS_SRV_4_ group="Ext_4/Proxy_and_Registration">No</Use_DNS_SRV_4_>{/if}
 <DNS_SRV_Auto_Prefix_4_ group="Ext_4/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_4_>
 <Proxy_Fallback_Intvl_4_ group="Ext_4/Proxy_and_Registration">600</Proxy_Fallback_Intvl_4_>
 <Proxy_Redundancy_Method_4_ group="Ext_4/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_4_>
@@ -626,7 +627,7 @@
 <Block_CID_Setting group="User/Supplementary_Services">No</Block_CID_Setting>
 <Block_ANC_Setting group="User/Supplementary_Services">No</Block_ANC_Setting>
 <DND_Setting group="User/Supplementary_Services">No</DND_Setting>
-<Secure_Call_Setting group="User/Supplementary_Services">No</Secure_Call_Setting>
+<Secure_Call_Setting group="User/Supplementary_Services">{if isset($spa_secure_call_setting)}Yes{else}No{/if}</Secure_Call_Setting>
 <Dial_Assistance group="User/Supplementary_Services">No</Dial_Assistance>
 <Auto_Answer_Page group="User/Supplementary_Services">Yes</Auto_Answer_Page>
 <Preferred_Audio_Device group="User/Supplementary_Services">Speaker</Preferred_Audio_Device>

@@ -113,10 +113,10 @@
 	unset ($prep_statement);
 
 //process post vars
-	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		//get http post variables and set them to php variables
-			if (count($_POST)>0) {
+			if (count($_POST) > 0) {
 				$forward_all_enabled = check_str($_POST["forward_all_enabled"]);
 				$forward_all_destination = check_str($_POST["forward_all_destination"]);
 				$forward_busy_enabled = check_str($_POST["forward_busy_enabled"]);
@@ -246,12 +246,19 @@
 				$array['follow_me'][] = $follow_me;
 			}
 
+		//add the dialplan permission
+			$p = new permissions;
+			$p->add("extension_edit", "temp");
+
 		//save the data
 			$database = new database;
 			$database->app_name = 'call_routing';
 			$database->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
 			$database->save($array);
 			//$message = $database->message;
+
+		//remove the temporary permission
+			$p->delete("extension_edit", "temp");
 
 		//delete empty destination records
 			if (is_array($follow_me_delete_uuids) && sizeof($follow_me_delete_uuids) > 0) {
@@ -539,7 +546,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (permission_exists('follow_me_cid_set')) {
+	if (permission_exists('call_forward_caller_id')) {
 		$sql_forward = "select destination_uuid, destination_number, destination_description, destination_caller_id_number, destination_caller_id_name from v_destinations where domain_uuid = '$domain_uuid' and destination_type = 'inbound' order by destination_number asc ";
 		$prep_statement_forward = $db->prepare(check_sql($sql_forward));
 		$prep_statement_forward->execute();
@@ -581,7 +588,7 @@
 	echo "<td class='vtable' align='left'>\n";
 	$on_click = "document.getElementById('forward_all_disabled').checked=true; ";
 	$on_click .= "document.getElementById('dnd_disabled').checked=true; ";
-	if (permission_exists('follow_me_cid_set')) {
+	if (permission_exists('follow_me_caller_id')) {
 		$on_click .= "document.getElementById('follow_me_caller_id_uuid').focus(); ";
 	}
 	echo "	<label for='follow_me_disabled'><input type='radio' name='follow_me_enabled' id='follow_me_disabled' onclick=\"$('#tr_follow_me_settings').slideUp('fast');\" value='false' ".(($follow_me_enabled == "false" || $follow_me_enabled == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
@@ -652,7 +659,7 @@
 		echo "		</tr>\n";
 	}
 
-	if (permission_exists('follow_me_cid_set')) {
+	if (permission_exists('follow_me_caller_id')) {
 		$sql_follow_me = "select destination_uuid, destination_number, destination_description, destination_caller_id_number, destination_caller_id_name from v_destinations where domain_uuid = '$domain_uuid' and destination_type = 'inbound' order by destination_number asc ";
 		$prep_statement_follow_me = $db->prepare(check_sql($sql_follow_me));
 		$prep_statement_follow_me->execute();

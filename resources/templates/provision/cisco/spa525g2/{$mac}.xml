@@ -552,7 +552,11 @@
 <Resync_Trigger_1 group="Provisioning/Configuration_Profile"/>
 <Resync_Trigger_2 group="Provisioning/Configuration_Profile"/>
 <Resync_Fails_On_FNF group="Provisioning/Configuration_Profile">Yes</Resync_Fails_On_FNF>
-<Profile_Rule group="Provisioning/Configuration_Profile"></Profile_Rule>
+{if isset ($http_auth_username)}
+<Profile_Rule group="Provisioning/Configuration_Profile">[--uid {$http_auth_username} --pwd {$http_auth_password}]http://{$domain_name}{$project_path}/app/provision/?mac=$MA</Profile_Rule>
+{else}
+<Profile_Rule group="Provisioning/Configuration_Profile">http://{$domain_name}{$project_path}/app/provision/?mac=$MA</Profile_Rule>
+{/if}
 <Profile_Rule_B group="Provisioning/Configuration_Profile"/>
 <Profile_Rule_C group="Provisioning/Configuration_Profile"/>
 <Profile_Rule_D group="Provisioning/Configuration_Profile"/>
@@ -694,29 +698,21 @@
 <Short_Name group="Phone/BluePhone"/>
 <User_Friendly_ID group="Phone/BluePhone"/>
 <PIN_Code group="Phone/BluePhone">*************</PIN_Code>
-<Extension_1_ group="Phone/Line_Key_1">1</Extension_1_>
-<Short_Name_1_ group="Phone/Line_Key_1">$USER </Short_Name_1_>
-<Share_Call_Appearance_1_ group="Phone/Line_Key_1">private</Share_Call_Appearance_1_>
-<Extended_Function_1_ group="Phone/Line_Key_1"/>
-<Extension_2_ group="Phone/Line_Key_2">Disabled</Extension_2_>
-<Short_Name_2_ group="Phone/Line_Key_2"/>
-<Share_Call_Appearance_2_ group="Phone/Line_Key_2">private</Share_Call_Appearance_2_>
-<Extended_Function_2_ group="Phone/Line_Key_2"/>
-<Extension_3_ group="Phone/Line_Key_3">Disabled</Extension_3_>
-<Short_Name_3_ group="Phone/Line_Key_3"/>
-<Share_Call_Appearance_3_ group="Phone/Line_Key_3">private</Share_Call_Appearance_3_>
-<Extended_Function_3_ group="Phone/Line_Key_3"/>
-<Extension_4_ group="Phone/Line_Key_4">Disabled</Extension_4_>
-<Short_Name_4_ group="Phone/Line_Key_4"/>
-<Share_Call_Appearance_4_ group="Phone/Line_Key_4">private</Share_Call_Appearance_4_>
-<Extended_Function_4_ group="Phone/Line_Key_4"/>
-<Extension_5_ group="Phone/Line_Key_5">Disabled</Extension_5_>
-<Short_Name_5_ group="Phone/Line_Key_5"/>
-<Share_Call_Appearance_5_ group="Phone/Line_Key_5">private</Share_Call_Appearance_5_>
-<Extended_Function_5_ group="Phone/Line_Key_5"/>
+
+{foreach $keys["line"] as $row}
+{if $row.device_key_category == "line"}
+
+<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_line}</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
+<Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
+<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{if $row.device_key_type == "shared"}shared{else}private{/if}</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
+<Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extended_Function_{$row.device_key_id}_>
+
+{/if}
+{/foreach}
+
 <Line_ID_Mapping group="Phone/Miscellaneous_Line_Key_Settings">Horizontal First</Line_ID_Mapping>
-<SCA_Barge-In_Enable group="Phone/Miscellaneous_Line_Key_Settings">No</SCA_Barge-In_Enable>
-<SCA_Sticky_Auto_Line_Seize group="Phone/Miscellaneous_Line_Key_Settings">No</SCA_Sticky_Auto_Line_Seize>
+<SCA_Line_ID_Mapping group="Phone/Miscellaneous_Line_Key_Settings">Vertical First</SCA_Line_ID_Mapping>
+<SCA_Barge-In_Enable group="Phone/Miscellaneous_Line_Key_Settings">Yes</SCA_Barge-In_Enable>
 <Call_Appearance_Per_Line group="Phone/Miscellaneous_Line_Key_Settings">2</Call_Appearance_Per_Line>
 <Softkey_Navigation_Style group="Phone/Miscellaneous_Line_Key_Settings">Scrollable</Softkey_Navigation_Style>
 <Idle_LED group="Phone/Line_Key_LED_Pattern"/>
@@ -846,7 +842,7 @@
 <Record_Enable group="Phone/Call_Audio_Recording">No</Record_Enable>
 <Record_Beep_Reminder group="Phone/Call_Audio_Recording">Yes</Record_Beep_Reminder>
 <Line_Enable_1_ group="Ext_1/General">Yes</Line_Enable_1_>
-<Share_Ext_1_ group="Ext_1/Share_Line_Appearance">private</Share_Ext_1_>
+<Share_Ext_1_ group="Ext_1/Share_Line_Appearance">{if $shared_line_1 == "shared"}shared{else}private{/if}</Share_Ext_1_>
 <Shared_User_ID_1_ group="Ext_1/Share_Line_Appearance"/>
 <Subscription_Expires_1_ group="Ext_1/Share_Line_Appearance">3600</Subscription_Expires_1_>
 <Restrict_MWI_1_ group="Ext_1/Share_Line_Appearance">No</Restrict_MWI_1_>
@@ -947,7 +943,7 @@
 <Enable_IP_Dialing_1_ group="Ext_1/Dial_Plan">No</Enable_IP_Dialing_1_>
 <Emergency_Number_1_ group="Ext_1/Dial_Plan"/>
 <Line_Enable_2_ group="Ext_2/General">No</Line_Enable_2_>
-<Share_Ext_2_ group="Ext_2/Share_Line_Appearance">private</Share_Ext_2_>
+<Share_Ext_2_ group="Ext_2/Share_Line_Appearance">{if $shared_line_2 == "shared"}shared{else}private{/if}</Share_Ext_2_>
 <Shared_User_ID_2_ group="Ext_2/Share_Line_Appearance"/>
 <Subscription_Expires_2_ group="Ext_2/Share_Line_Appearance">3600</Subscription_Expires_2_>
 <Restrict_MWI_2_ group="Ext_2/Share_Line_Appearance">No</Restrict_MWI_2_>
@@ -1048,7 +1044,7 @@
 <Enable_IP_Dialing_2_ group="Ext_2/Dial_Plan">Yes</Enable_IP_Dialing_2_>
 <Emergency_Number_2_ group="Ext_2/Dial_Plan"/>
 <Line_Enable_3_ group="Ext_3/General">No</Line_Enable_3_>
-<Share_Ext_3_ group="Ext_3/Share_Line_Appearance">private</Share_Ext_3_>
+<Share_Ext_3_ group="Ext_3/Share_Line_Appearance">{if $shared_line_3 == "shared"}shared{else}private{/if}</Share_Ext_3_>
 <Shared_User_ID_3_ group="Ext_3/Share_Line_Appearance"/>
 <Subscription_Expires_3_ group="Ext_3/Share_Line_Appearance">3600</Subscription_Expires_3_>
 <Restrict_MWI_3_ group="Ext_3/Share_Line_Appearance">No</Restrict_MWI_3_>
@@ -1149,7 +1145,7 @@
 <Enable_IP_Dialing_3_ group="Ext_3/Dial_Plan">Yes</Enable_IP_Dialing_3_>
 <Emergency_Number_3_ group="Ext_3/Dial_Plan"/>
 <Line_Enable_4_ group="Ext_4/General">No</Line_Enable_4_>
-<Share_Ext_4_ group="Ext_4/Share_Line_Appearance">private</Share_Ext_4_>
+<Share_Ext_4_ group="Ext_4/Share_Line_Appearance">{if $shared_line_4 == "shared"}shared{else}private{/if}</Share_Ext_4_>
 <Shared_User_ID_4_ group="Ext_4/Share_Line_Appearance"/>
 <Subscription_Expires_4_ group="Ext_4/Share_Line_Appearance">3600</Subscription_Expires_4_>
 <Restrict_MWI_4_ group="Ext_4/Share_Line_Appearance">No</Restrict_MWI_4_>
@@ -1250,7 +1246,7 @@
 <Enable_IP_Dialing_4_ group="Ext_4/Dial_Plan">Yes</Enable_IP_Dialing_4_>
 <Emergency_Number_4_ group="Ext_4/Dial_Plan"/>
 <Line_Enable_5_ group="Ext_5/General">No</Line_Enable_5_>
-<Share_Ext_5_ group="Ext_5/Share_Line_Appearance">private</Share_Ext_5_>
+<Share_Ext_5_ group="Ext_5/Share_Line_Appearance">{if $shared_line_5 == "shared"}shared{else}private{/if}</Share_Ext_5_>
 <Shared_User_ID_5_ group="Ext_5/Share_Line_Appearance"/>
 <Subscription_Expires_5_ group="Ext_5/Share_Line_Appearance">3600</Subscription_Expires_5_>
 <Restrict_MWI_5_ group="Ext_5/Share_Line_Appearance">No</Restrict_MWI_5_>

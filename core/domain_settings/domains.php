@@ -23,9 +23,10 @@
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
 //redirect admin to app instead
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/domains/") && !permission_exists('domain_parent') && permission_exists('domain_descendants')) {
@@ -173,7 +174,7 @@ require_once "resources/check_auth.php";
 //show the header and the search
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' valign='top' nowrap='nowrap'><b>".$text['header-domains']."</b></td>\n";
+	echo "		<td width='50%' align='left' valign='top' nowrap='nowrap'><b>".$text['header-domains']." (".$num_rows.")</b></td>\n";
 	echo "		<td width='50%' align='right' valign='top'>\n";
 	echo "			<form method='get' action=''>\n";
 	echo "			<input type='text' class='txt' style='width: 150px' name='search' value='$search'>";

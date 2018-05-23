@@ -116,8 +116,6 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "call_center_wallboard";
-		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//default settings
 		$y = 0;
@@ -127,6 +125,22 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b32179ad-96a4-4d83-8677-1fd8fc5ef6df";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_center";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "agent_add_rows";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "533eac69-887f-47aa-bf27-0751797555f5";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_center";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "agent_edit_rows";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 
 	//schema details
@@ -369,6 +383,15 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "primary";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_domains";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "domain_uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_center_queue_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -378,13 +401,14 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "call_center_queue_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_center_agent_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "primary";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
-		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_domains";
-		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "domain_uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_call_center_agents";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "call_center_agent_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "v_id";

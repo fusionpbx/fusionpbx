@@ -116,7 +116,7 @@ include "root.php";
 				}
 
 				//sanitize the database name
-				$this->db_name = preg_replace('#[^a-zA-Z0-9_\-]#', '', $this->db_name);
+				$this->db_name = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $this->db_name);
 
 				if ($this->driver == "sqlite") {
 					if (strlen($this->db_name) == 0) {
@@ -132,8 +132,9 @@ include "root.php";
 					if (file_exists($this->path.'/'.$this->db_name)) {
 						//connect to the database
 							$this->db = new PDO('sqlite:'.$this->path.'/'.$this->db_name); //sqlite 3
-						//enable foreign key constraints
+						//PRAGMA commands
 							$this->db->query('PRAGMA foreign_keys = ON;');
+							$this->db->query('PRAGMA journal_mode = wal;');
 						//add additional functions to SQLite so that they are accessible inside SQL
 							//bool PDO::sqliteCreateFunction ( string function_name, callback callback [, int num_args] )
 							$this->db->sqliteCreateFunction('md5', 'php_md5', 1);
@@ -1031,6 +1032,19 @@ include "root.php";
 				//commit the atomic transaction
 					//$this->db->commit();
 
+				//set the action if not set
+					if (strlen($action) == 0) {
+						if (is_array($old_array)) {
+							$transaction_type = 'update';
+						}
+						else {
+							$transaction_type = 'add';
+						}
+					}
+					else {
+						$transaction_type = $action;
+					}
+
 				//get the UUIDs
 					$user_uuid = $_SESSION['user_uuid'];
 
@@ -1049,7 +1063,7 @@ include "root.php";
 						$sql .= "app_name, ";
 						$sql .= "transaction_code, ";
 						$sql .= "transaction_address, ";
-						//$sql .= "transaction_type, ";
+						$sql .= "transaction_type, ";
 						$sql .= "transaction_date, ";
 						$sql .= "transaction_old, ";
 						$sql .= "transaction_new, ";
@@ -1068,10 +1082,20 @@ include "root.php";
 						$sql .= "'".$this->app_name."', ";
 						$sql .= "'".$message["code"]."', ";
 						$sql .= "'".$_SERVER['REMOTE_ADDR']."', ";
-						//$sql .= "'$transaction_type', ";
+						$sql .= "'".$transaction_type."', ";
 						$sql .= "now(), ";
-						$sql .= "'".check_str(json_encode($old_array, JSON_PRETTY_PRINT))."', ";
-						$sql .= "'".check_str(json_encode($new_array, JSON_PRETTY_PRINT))."', ";
+						if (is_array($old_array)) {
+							$sql .= "'".check_str(json_encode($old_array, JSON_PRETTY_PRINT))."', ";
+						}
+						else {
+							$sql .= "null, ";
+						}
+						if (is_array($new_array)) {
+							$sql .= "'".check_str(json_encode($new_array, JSON_PRETTY_PRINT))."', ";
+						}
+						else {
+							$sql .= "null, ";
+						}
 						$sql .= "'".check_str(json_encode($this->message, JSON_PRETTY_PRINT))."' ";
 						$sql .= ")";
 						$this->db->exec(check_sql($sql));
@@ -1904,6 +1928,19 @@ include "root.php";
 				//commit the atomic transaction
 					$this->db->commit();
 
+				//set the action if not set
+					if (strlen($action) == 0) {
+						if (is_array($old_array)) {
+							$transaction_type = 'update';
+						}
+						else {
+							$transaction_type = 'add';
+						}
+					}
+					else {
+						$transaction_type = $action;
+					}
+
 				//get the UUIDs
 					$user_uuid = $_SESSION['user_uuid'];
 
@@ -1922,7 +1959,7 @@ include "root.php";
 						$sql .= "app_name, ";
 						$sql .= "transaction_code, ";
 						$sql .= "transaction_address, ";
-						//$sql .= "transaction_type, ";
+						$sql .= "transaction_type, ";
 						$sql .= "transaction_date, ";
 						$sql .= "transaction_old, ";
 						$sql .= "transaction_new, ";
@@ -1941,10 +1978,20 @@ include "root.php";
 						$sql .= "'".$this->app_name."', ";
 						$sql .= "'".$message["code"]."', ";
 						$sql .= "'".$_SERVER['REMOTE_ADDR']."', ";
-						//$sql .= "'$transaction_type', ";
+						$sql .= "'".$transaction_type."', ";
 						$sql .= "now(), ";
-						$sql .= "'".check_str(json_encode($old_array, JSON_PRETTY_PRINT))."', ";
-						$sql .= "'".check_str(json_encode($new_array, JSON_PRETTY_PRINT))."', ";
+						if (is_array($old_array)) {
+							$sql .= "'".check_str(json_encode($old_array, JSON_PRETTY_PRINT))."', ";
+						}
+						else {
+							$sql .= "null, ";
+						}
+						if (is_array($new_array)) {
+							$sql .= "'".check_str(json_encode($new_array, JSON_PRETTY_PRINT))."', ";
+						}
+						else {
+							$sql .= "null, ";
+						}
 						$sql .= "'".check_str(json_encode($this->message, JSON_PRETTY_PRINT))."' ";
 						$sql .= ")";
 						$this->db->exec(check_sql($sql));
@@ -2098,4 +2145,5 @@ include "root.php";
 		$fields[0]['value'] = $_SESSION["domain_uuid"];
 		echo $database->count();
 */
+
 ?>

@@ -108,6 +108,16 @@
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_forward_toll_allow";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "ring_group_caller_id_name";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "ring_group_caller_id_number";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "ring_group_cid_name_prefix";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "ring_group_cid_number_prefix";
 
 	//default settings
 		$y=0;
@@ -162,9 +172,17 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the extension.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_greeting";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select the greeting.";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_context";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the context.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_call_timeout";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the call timeout.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_forward_destination";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "text";
@@ -175,6 +193,14 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_forward_enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select enable or disable the ring group call forward.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_caller_id_name";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the caller ID name.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_caller_id_number";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the caller ID number.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_cid_name_prefix";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";

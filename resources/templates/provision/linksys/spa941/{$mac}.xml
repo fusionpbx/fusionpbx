@@ -13,15 +13,15 @@
 <PPPoE_Service_Name group="System/_PPPoE_Settings"/>
 <HostName group="System/Optional_Network_Configuration"/>
 <Domain group="System/Optional_Network_Configuration"/>
-<Primary_DNS group="System/Optional_Network_Configuration"/>
-<Secondary_DNS group="System/Optional_Network_Configuration"/>
-<DNS_Server_Order group="System/Optional_Network_Configuration">Manual</DNS_Server_Order>
+<Primary_DNS group="System/Optional_Network_Configuration">{$dns_server_primary}</Primary_DNS>
+<Secondary_DNS group="System/Optional_Network_Configuration">{$dns_server_secondary}</Secondary_DNS>
+<DNS_Server_Order group="System/Optional_Network_Configuration">DHCP,Manual</DNS_Server_Order>
 <DNS_Query_Mode group="System/Optional_Network_Configuration">Parallel</DNS_Query_Mode>
 <Syslog_Server group="System/Optional_Network_Configuration"/>
 <Debug_Server group="System/Optional_Network_Configuration"/>
 <Debug_Level group="System/Optional_Network_Configuration">0</Debug_Level>
 <Primary_NTP_Server>{$ntp_server_primary}</Primary_NTP_Server>
-<Secondary_NTP_Server>{$ntp_server_secondary}</Secondary_NTP_Server>  
+<Secondary_NTP_Server>{$ntp_server_secondary}</Secondary_NTP_Server>
 <Enable_VLAN group="System/VLAN_Settings">No</Enable_VLAN>
 <Enable_CDP group="System/VLAN_Settings">Yes</Enable_CDP>
 <VLAN_ID group="System/VLAN_Settings">1</VLAN_ID>
@@ -126,7 +126,7 @@
 <Provision_Enable group="Provisioning/Configuration_Profile">Yes</Provision_Enable>
 <Resync_On_Reset group="Provisioning/Configuration_Profile">Yes</Resync_On_Reset>
 <Resync_Random_Delay group="Provisioning/Configuration_Profile">2</Resync_Random_Delay>
-<Resync_Periodic group="Provisioning/Configuration_Profile">3600</Resync_Periodic>
+<Resync_Periodic group="Provisioning/Configuration_Profile">0</Resync_Periodic>
 <Resync_Error_Retry_Delay group="Provisioning/Configuration_Profile">300</Resync_Error_Retry_Delay>
 <Forced_Resync_Delay group="Provisioning/Configuration_Profile">30</Forced_Resync_Delay>
 <Resync_From_SIP group="Provisioning/Configuration_Profile">Yes</Resync_From_SIP>
@@ -258,7 +258,7 @@
 <Set_Local_Time__HH_mm_ group="Regional/Miscellaneous"/>
 <Time_Zone group="Regional/Miscellaneous">{$spa_time_zone}</Time_Zone>
 <Time_Offset__HH_mm_ group="Regional/Miscellaneous"/>
-<Daylight_Saving_Time_Rule group="Regional/Miscellaneous">start=3/8/7/02:0:0;end=11/1/7/02:0:0;save=1</Daylight_Saving_Time_Rule>
+<Daylight_Saving_Time_Rule group="Regional/Miscellaneous">start={$daylight_savings_start_month}/{$daylight_savings_start_day}/{$daylight_savings_start_weekday}/{$daylight_savings_start_time}:0:0;end={$daylight_savings_stop_month}/{$daylight_savings_stop_day}/{$daylight_savings_stop_weekday}/{$daylight_savings_stop_time}:0:0;save=1</Daylight_Saving_Time_Rule>
 <Daylight_Saving_Time_Enable group="Regional/Miscellaneous">Yes</Daylight_Saving_Time_Enable>
 <DTMF_Playback_Level group="Regional/Miscellaneous">-16</DTMF_Playback_Level>
 <DTMF_Playback_Length group="Regional/Miscellaneous">.1</DTMF_Playback_Length>
@@ -277,19 +277,15 @@
 <Screen_Saver_Icon group="Phone/General">Background Picture</Screen_Saver_Icon>
 
 {foreach $keys["line"] as $row}
-{if $row.device_key_type == "line"}
+{if $row.device_key_category == "line"}
 <!-- Phone/Line_Key_{$row.device_key_id} -->
 <Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_line}</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
 <Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
-<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{if $row.device_key_extension == "shared"}shared{else}private{/if}</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
+<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{if $row.device_key_type == "shared"}shared{else}private{/if}</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
 <Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}"/>
-{else}
-<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">Enabled</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
-<Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
-<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">private</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
 <Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extended_Function_{$row.device_key_id}_>
-{/if}
 
+{/if}
 {/foreach}
 
 <Extension_2_ group="Phone/Line_Key_2">{$ExtLineStatus_2}</Extension_2_>
@@ -302,7 +298,7 @@
 <Server_Type group="Phone/Line_Key_Extended_Function">Asterisk</Server_Type>
 <SPA932_Call_Pickup_Code group="Phone/Line_Key_Extended_Function">*98</SPA932_Call_Pickup_Code>
 <SCA_Line_ID_Mapping group="Phone/Miscellaneous_Line_Key_Settings">Vertical First</SCA_Line_ID_Mapping>
-<SCA_Barge-In_Enable group="Phone/Miscellaneous_Line_Key_Settings">No</SCA_Barge-In_Enable>
+<SCA_Barge-In_Enable group="Phone/Miscellaneous_Line_Key_Settings">Yes</SCA_Barge-In_Enable>
 <Idle_LED group="Phone/Line_Key_LED_Pattern"/>
 <Remote_Undefined_LED group="Phone/Line_Key_LED_Pattern"/>
 <Local_Seized_LED group="Phone/Line_Key_LED_Pattern"/>
@@ -372,7 +368,7 @@
 <EM_Enable group="Phone/Extension_Mobility">No</EM_Enable>
 <EM_User_Domain group="Phone/Extension_Mobility"/>
 <Line_Enable_1_ group="Ext_1/General">Yes</Line_Enable_1_>
-<Share_Ext_1_ group="Ext_1/Share_Line_Appearance">private</Share_Ext_1_>
+<Share_Ext_1_ group="Ext_1/Share_Line_Appearance">{if $shared_line_1 == "shared"}shared{else}private{/if}</Share_Ext_1_>
 <Shared_User_ID_1_ group="Ext_1/Share_Line_Appearance"/>
 <Subscription_Expires_1_ group="Ext_1/Share_Line_Appearance">3600</Subscription_Expires_1_>
 <NAT_Mapping_Enable_1_ group="Ext_1/NAT_Settings">Yes</NAT_Mapping_Enable_1_>
@@ -453,7 +449,7 @@
 <Enable_IP_Dialing_1_ group="Ext_1/Dial_Plan">Yes</Enable_IP_Dialing_1_>
 <Emergency_Number_1_ group="Ext_1/Dial_Plan"/>
 <Line_Enable_2_ group="Ext_2/General">Yes</Line_Enable_2_>
-<Share_Ext_2_ group="Ext_2/Share_Line_Appearance">private</Share_Ext_2_>
+<Share_Ext_2_ group="Ext_2/Share_Line_Appearance">{if $shared_line_2 == "shared"}shared{else}private{/if}</Share_Ext_2_>
 <Shared_User_ID_2_ group="Ext_2/Share_Line_Appearance"/>
 <Subscription_Expires_2_ group="Ext_2/Share_Line_Appearance">3600</Subscription_Expires_2_>
 <NAT_Mapping_Enable_2_ group="Ext_2/NAT_Settings">Yes</NAT_Mapping_Enable_2_>
@@ -534,7 +530,7 @@
 <Enable_IP_Dialing_2_ group="Ext_2/Dial_Plan">Yes</Enable_IP_Dialing_2_>
 <Emergency_Number_2_ group="Ext_2/Dial_Plan"/>
 <Line_Enable_3_ group="Ext_3/General">Yes</Line_Enable_3_>
-<Share_Ext_3_ group="Ext_3/Share_Line_Appearance">private</Share_Ext_3_>
+<Share_Ext_3_ group="Ext_3/Share_Line_Appearance">{if $shared_line_3 == "shared"}shared{else}private{/if}</Share_Ext_3_>
 <Shared_User_ID_3_ group="Ext_3/Share_Line_Appearance"/>
 <Subscription_Expires_3_ group="Ext_3/Share_Line_Appearance">3600</Subscription_Expires_3_>
 <NAT_Mapping_Enable_3_ group="Ext_3/NAT_Settings">Yes</NAT_Mapping_Enable_3_>
@@ -615,7 +611,7 @@
 <Enable_IP_Dialing_3_ group="Ext_3/Dial_Plan">Yes</Enable_IP_Dialing_3_>
 <Emergency_Number_3_ group="Ext_3/Dial_Plan"/>
 <Line_Enable_4_ group="Ext_4/General">Yes</Line_Enable_4_>
-<Share_Ext_4_ group="Ext_4/Share_Line_Appearance">private</Share_Ext_4_>
+<Share_Ext_4_ group="Ext_4/Share_Line_Appearance">{if $shared_line_4 == "shared"}shared{else}private{/if}</Share_Ext_4_>
 <Shared_User_ID_4_ group="Ext_4/Share_Line_Appearance"/>
 <Subscription_Expires_4_ group="Ext_4/Share_Line_Appearance">3600</Subscription_Expires_4_>
 <NAT_Mapping_Enable_4_ group="Ext_4/NAT_Settings">Yes</NAT_Mapping_Enable_4_>

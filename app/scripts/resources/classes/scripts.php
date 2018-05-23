@@ -253,8 +253,8 @@ if (!class_exists('scripts')) {
 						}
 						elseif ($this->db_type == "pgsql") {
 							if ($this->db_host == "localhost") { $this->db_host = "127.0.0.1"; }
-							$tmp .= "	database.system = \"pgsql://hostaddr=".$this->db_host." port=".$this->db_port." dbname=".$this->db_name." user=".$this->db_username." password=".$this->db_password." options='' application_name='".$this->db_name."'\";\n";
-							$tmp .= "	database.switch = \"pgsql://hostaddr=".$this->db_host." port=".$this->db_port." dbname=freeswitch user=".$this->db_username." password=".$this->db_password." options='' application_name='freeswitch'\";\n";
+							$tmp .= "	database.system = \"pgsql://hostaddr=".$this->db_host." port=".$this->db_port." dbname=".$this->db_name." user=".$this->db_username." password=".$this->db_password." options=''\";\n";
+							$tmp .= "	database.switch = \"pgsql://hostaddr=".$this->db_host." port=".$this->db_port." dbname=freeswitch user=".$this->db_username." password=".$this->db_password." options=''\";\n";
 						}
 						elseif ($this->db_type == "sqlite") {
 							$tmp .= "	database.system = \"sqlite://".$this->db_path."/".$this->db_name."\";\n";

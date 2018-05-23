@@ -132,18 +132,13 @@
 	echo th_order_by('app_name', $text['label-app_name'], $order_by, $order);
 	echo th_order_by('transaction_code', $text['label-transaction_code'], $order_by, $order);
 	echo th_order_by('transaction_address', $text['label-transaction_address'], $order_by, $order);
-	//echo th_order_by('transaction_type', $text['label-transaction_type'], $order_by, $order);
+	echo th_order_by('transaction_type', $text['label-transaction_type'], $order_by, $order);
 	echo th_order_by('transaction_date', $text['label-transaction_date'], $order_by, $order);
 	//echo th_order_by('transaction_old', $text['label-transaction_old'], $order_by, $order);
 	//echo th_order_by('transaction_new', $text['label-transaction_new'], $order_by, $order);
 	//echo th_order_by('transaction_result', $text['label-transaction_result'], $order_by, $order);
 	echo "<td class='list_control_icons'>";
-	if (permission_exists('database_transaction_add')) {
-		echo "<a href='database_transaction_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
-	}
-	else {
-		echo "&nbsp;\n";
-	}
+	echo "	&nbsp;\n";
 	echo "</td>\n";
 	echo "<tr>\n";
 
@@ -158,7 +153,7 @@
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['app_name']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['transaction_code']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['transaction_address']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['transaction_type']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['transaction_type']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['transaction_date']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['transaction_old']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['transaction_new']."&nbsp;</td>\n";
@@ -167,9 +162,9 @@
 			if (permission_exists('database_transaction_edit')) {
 				echo "<a href='database_transaction_edit.php?id=".$row['database_transaction_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
-			if (permission_exists('database_transaction_delete')) {
-				echo "<a href='database_transaction_delete.php?id=".$row['database_transaction_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
-			}
+			//if (permission_exists('database_transaction_delete')) {
+			//	echo "<a href='database_transaction_delete.php?id=".$row['database_transaction_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+			//}
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
@@ -184,12 +179,7 @@
 	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
 	echo "		<td class='list_control_icons'>";
-	if (permission_exists('database_transaction_add')) {
-		echo 		"<a href='database_transaction_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
-	}
-	else {
-		echo 		"&nbsp;";
-	}
+	echo 			"&nbsp;";
 	echo "		</td>\n";
 	echo "	</tr>\n";
  	echo "	</table>\n";

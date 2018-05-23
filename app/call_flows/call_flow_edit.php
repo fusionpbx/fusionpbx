@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -54,30 +54,23 @@
 
 //get http post variables and set them to php variables
 	if (is_array($_POST)) {
+
 		//set the variables from the http values
 			$call_flow_uuid = check_str($_POST["call_flow_uuid"]);
 			$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
 			$call_flow_name = check_str($_POST["call_flow_name"]);
 			$call_flow_extension = check_str($_POST["call_flow_extension"]);
 			$call_flow_feature_code = check_str($_POST["call_flow_feature_code"]);
-			$call_flow_context = check_str($_POST["call_flow_context"]);
 			$call_flow_status = check_str($_POST["call_flow_status"]);
 			$call_flow_pin_number = check_str($_POST["call_flow_pin_number"]);
 			$call_flow_label = check_str($_POST["call_flow_label"]);
 			$call_flow_sound = check_str($_POST["call_flow_sound"]);
 			$call_flow_destination = check_str($_POST["call_flow_destination"]);
-			//$call_flow_app = check_str($_POST["call_flow_app"]);
-			//$call_flow_data = check_str($_POST["call_flow_data"]);
 			$call_flow_alternate_label = check_str($_POST["call_flow_alternate_label"]);
 			$call_flow_alternate_sound = check_str($_POST["call_flow_alternate_sound"]);
 			$call_flow_alternate_destination = check_str($_POST["call_flow_alternate_destination"]);
-			//$call_flow_alternate_app = check_str($_POST["call_flow_alternate_app"]);
-			//$call_flow_alternate_data = check_str($_POST["call_flow_alternate_data"]);
+			$call_flow_context = check_str($_POST["call_flow_context"]);
 			$call_flow_description = check_str($_POST["call_flow_description"]);
-
-		//unset the values
-			unset($_POST["call_flow_destination"]);
-			unset($_POST["call_flow_alternate_destination"]);
 
 		//seperate the action and the param
 			$destination_array = explode(":", $call_flow_destination);
@@ -97,12 +90,6 @@
 			if ($action == "update") {
 				$call_flow_uuid = check_str($_POST["call_flow_uuid"]);
 			}
-
-		//set the call flow application and data
-			$_POST["call_flow_app"] = $call_flow_app;
-			$_POST["call_flow_data"] = $call_flow_data;
-			$_POST["call_flow_alternate_app"] = $call_flow_alternate_app;
-			$_POST["call_flow_alternate_data"] = $call_flow_alternate_data;
 
 		//check for all required data
 			$msg = '';
@@ -137,23 +124,22 @@
 				return;
 			}
 
-		//set the domain_uuid
-			$_POST["domain_uuid"] = $_SESSION["domain_uuid"];
-
 		//add the call_flow_uuid
-			if (strlen($_POST["call_flow_uuid"]) == 0) {
+			if (strlen($call_flow_uuid) == 0) {
 				$call_flow_uuid = uuid();
-				$_POST["call_flow_uuid"] = $call_flow_uuid;
 			}
 
 		//add the dialplan_uuid
-			if (!isset($_POST["dialplan_uuid"])) {
+			if (strlen($dialplan_uuid) == 0) {
 				$dialplan_uuid = uuid();
-				$_POST["dialplan_uuid"] = $dialplan_uuid;
 			}
 
-		//set the context for users that are not in the superadmin group
-			if (!permission_exists('call_flow_context')) {
+		//set the default context
+			if (permission_exists("call_flow_context")) {
+				//allow a user assigned to super admin to change the call_flow_context
+			}
+			else {
+				//if the call_flow_context was not set then set the default value
 				$call_flow_context = $_SESSION['domain_name'];
 			}
 
@@ -171,7 +157,7 @@
 			$destination_feature = str_replace("+", "\+", $destination_feature);
 
 		//build the xml dialplan
-			$dialplan_xml = "<extension name=\"".$conference_center_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
+			$dialplan_xml = "<extension name=\"".$call_flow_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
 			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$destination_feature."$\" break=\"on-true\">\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"feature_code=true\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"call_flow_uuid=".$call_flow_uuid."\"/>\n";
@@ -183,22 +169,40 @@
 			$dialplan_xml .= "	</condition>\n";
 			$dialplan_xml .= "</extension>\n";
 
-		//build the dialplan array
-			$dialplan["domain_uuid"] = $_SESSION['domain_uuid'];
-			$dialplan["dialplan_uuid"] = $dialplan_uuid;
-			$dialplan["dialplan_name"] = $call_flow_name;
-			$dialplan["dialplan_number"] = $call_flow_extension;
-			$dialplan["dialplan_context"] = $call_flow_context;
-			$dialplan["dialplan_continue"] = "false";
-			$dialplan["dialplan_xml"] = $dialplan_xml;
-			$dialplan["dialplan_order"] = "333";
-			$dialplan["dialplan_enabled"] = "true";
-			$dialplan["dialplan_description"] = $call_flow_description;
-			$dialplan["app_uuid"] = "b1b70f85-6b42-429b-8c5a-60c8b02b7d14";
+		//set the row id
+			$i = 0;
 
-		//prepare the array
-			$array['call_flows'][] = $_POST;
-			$array['dialplans'][] = $dialplan;
+		//build the dialplan array
+			$array["dialplans"][$i]["domain_uuid"] = $_SESSION['domain_uuid'];
+			$array["dialplans"][$i]["dialplan_uuid"] = $dialplan_uuid;
+			$array["dialplans"][$i]["dialplan_name"] = $call_flow_name;
+			$array["dialplans"][$i]["dialplan_number"] = $call_flow_extension;
+			$array["dialplans"][$i]["dialplan_context"] = $call_flow_context;
+			$array["dialplans"][$i]["dialplan_continue"] = "false";
+			$array["dialplans"][$i]["dialplan_xml"] = $dialplan_xml;
+			$array["dialplans"][$i]["dialplan_order"] = "333";
+			$array["dialplans"][$i]["dialplan_enabled"] = "true";
+			$array["dialplans"][$i]["dialplan_description"] = $call_flow_description;
+			$array["dialplans"][$i]["app_uuid"] = "b1b70f85-6b42-429b-8c5a-60c8b02b7d14";
+
+			$array["call_flows"][$i]["call_flow_uuid"] =  $call_flow_uuid;
+			$array["call_flows"][$i]["domain_uuid"] = $_SESSION['domain_uuid'];
+			$array["call_flows"][$i]["dialplan_uuid"] = $dialplan_uuid;
+			$array["call_flows"][$i]["call_flow_name"] = $call_flow_name;
+			$array["call_flows"][$i]["call_flow_extension"] = $call_flow_extension;
+			$array["call_flows"][$i]["call_flow_feature_code"] = $call_flow_feature_code;
+			$array["call_flows"][$i]["call_flow_status"] = $call_flow_status;
+			$array["call_flows"][$i]["call_flow_pin_number"] = $call_flow_pin_number;
+			$array["call_flows"][$i]["call_flow_label"] = $call_flow_label;
+			$array["call_flows"][$i]["call_flow_sound"] = $call_flow_sound;
+			$array["call_flows"][$i]["call_flow_alternate_label"] = $call_flow_alternate_label;
+			$array["call_flows"][$i]["call_flow_alternate_sound"] = $call_flow_alternate_sound;
+			$array["call_flows"][$i]["call_flow_app"] = $call_flow_app;
+			$array["call_flows"][$i]["call_flow_data"] = $call_flow_data;
+			$array["call_flows"][$i]["call_flow_alternate_app"] = $call_flow_alternate_app;
+			$array["call_flows"][$i]["call_flow_alternate_data"] = $call_flow_alternate_data;
+			$array["call_flows"][$i]["call_flow_context"] = $call_flow_context;
+			$array["call_flows"][$i]["call_flow_description"] = $call_flow_description;
 
 		//add the dialplan permission
 			$p = new permissions;
