@@ -63,6 +63,16 @@
 	}
 	unset($sql, $prep_statement, $row);
 
+//get the devices profiles
+	$sql = "select * from v_device_profiles ";
+	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+		$prep_statement->execute();
+		$device_profiles = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+	}
+	unset($sql, $prep_statement, $row);
+
 //prepare to page the results
 	$sql = "select count(*) as num_rows from v_devices as d ";
 	if ($_GET['show'] == "all" && permission_exists('device_all')) {
@@ -223,6 +233,7 @@
 	}
 	echo th_order_by('device_vendor', $text['label-device_vendor'], $order_by, $order);
 	echo th_order_by('device_template', $text['label-device_template'], $order_by, $order);
+	echo "<th>". $text['label-device_profiles']."</th>\n";
 	echo th_order_by('device_enabled', $text['label-device_enabled'], $order_by, $order);
 	echo th_order_by('device_status', $text['label-device_status'], $order_by, $order);
 	echo th_order_by('device_description', $text['label-device_description'], $order_by, $order);
@@ -240,6 +251,14 @@
 
 	if (count($devices) > 0) {
 		foreach($devices as $row) {
+
+			$device_profile_name = '';
+			foreach($device_profiles as $profile) {
+				if ($profile['device_profile_uuid'] == $row['device_profile_uuid']) {
+					$device_profile_name = $profile['device_profile_name'];
+				}
+			}
+
 			$tr_link = (permission_exists('device_edit')) ? "href='device_edit.php?id=".$row['device_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			if ($_GET['show'] == "all" && permission_exists('device_all')) {
@@ -258,6 +277,7 @@
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_vendor']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_template']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$device_profile_name."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['device_enabled']]."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_provisioned_date']." - ".$row['device_provisioned_method']." - <a href='http://".$row['device_provisioned_ip']."' target='_blank'>".$row['device_provisioned_ip']."</a>&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['device_description']."&nbsp;</td>\n";
