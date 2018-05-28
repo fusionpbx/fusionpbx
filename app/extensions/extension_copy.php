@@ -31,7 +31,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('extension_add')) {
+	if (permission_exists('extension_copy')) {
 		//access granted
 	}
 	else {
