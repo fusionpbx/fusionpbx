@@ -2401,6 +2401,26 @@ $text['label-device_setting_description']['ru-ru'] = "Описание";
 $text['label-device_setting_description']['sv-se'] = "Beskrivning";
 $text['label-device_setting_description']['uk-ua'] = "";
 
+$text['label-profiles']['en-us'] = "Profiles";
+$text['label-profiles']['ar-eg'] = "";
+$text['label-profiles']['de-at'] = "Profile"; //copied from de-de
+$text['label-profiles']['de-ch'] = "Profile"; //copied from de-de
+$text['label-profiles']['de-de'] = "Profile";
+$text['label-profiles']['es-cl'] = "Perfiles";
+$text['label-profiles']['es-mx'] = "Perfiles"; //copied from es-cl
+$text['label-profiles']['fr-ca'] = "Profils"; //copied from fr-fr
+$text['label-profiles']['fr-fr'] = "Profils";
+$text['label-profiles']['he-il'] = "פרופילים";
+$text['label-profiles']['it-it'] = "Profili";
+$text['label-profiles']['nl-nl'] = "";
+$text['label-profiles']['pl-pl'] = "Profile";
+$text['label-profiles']['pt-br'] = "Perfis"; //copied from pt-pt
+$text['label-profiles']['pt-pt'] = "Perfis";
+$text['label-profiles']['ro-ro'] = "";
+$text['label-profiles']['ru-ru'] = "Профили";
+$text['label-profiles']['sv-se'] = "Profiler";
+$text['label-profiles']['uk-ua'] = "";
+
 $text['label-device_enabled']['en-us'] = "Enabled";
 $text['label-device_enabled']['ar-eg'] = "";
 $text['label-device_enabled']['de-at'] = "Ein"; //copied from de-de
