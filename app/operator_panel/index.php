@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -98,6 +98,7 @@
 <input type='hidden' class='formfld' id='vd_call_id' value=''>
 <input type='hidden' class='formfld' id='vd_ext_from' value=''>
 <input type='hidden' class='formfld' id='vd_ext_to' value=''>
+<input type='hidden' class='formfld' id='sort1' value=''>
 
 <!-- autocomplete for contact lookup -->
 <link rel="stylesheet" type="text/css" href="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-ui.css">
@@ -141,6 +142,10 @@
 	if (this.xmlHttp.readyState == 4 && (this.xmlHttp.status == 200 || !/^http/.test(window.location.href)))
 		//this.el.innerHTML = this.xmlHttp.responseText;
 		document.getElementById('ajax_reponse').innerHTML = this.xmlHttp.responseText;
+		if(document.getElementById('sort')){
+			 if(document.getElementById('sort').value != "") 
+				document.getElementById('sort1').value=document.getElementById('sort').value;
+		}
 	}
 
 	var requestTime = function() {
@@ -149,6 +154,8 @@
 		url += '&vd_ext_to=' + document.getElementById('vd_ext_to').value;
 		url += '&group=' + ((document.getElementById('group')) ? document.getElementById('group').value : '');
 		url += '&eavesdrop_dest=' + ((document.getElementById('eavesdrop_dest')) ? document.getElementById('eavesdrop_dest').value : '');
+		if (document.getElementById('sort1'))
+			if (document.getElementById('sort1').value == '1') url += '&sort';
 		<?php
 		if (isset($_GET['debug'])) {
 			echo "url += '&debug';";
@@ -234,6 +241,8 @@
 			url += '&vd_ext_to=' + document.getElementById('vd_ext_to').value;
 			url += '&group=' + ((document.getElementById('group')) ? document.getElementById('group').value : '');
 			url += '&eavesdrop_dest=' + ((document.getElementById('eavesdrop_dest')) ? document.getElementById('eavesdrop_dest').value : '');
+			if (document.getElementById('sort1'))
+				if (document.getElementById('sort1').value == '1') url += '&sort';
 			<?php
 			if (isset($_GET['debug'])) {
 				echo "url += '&debug';";
