@@ -121,6 +121,10 @@ $text['label-toll_allow']['ru-ru'] = "Разрешить ВСЕ";
 $text['label-toll_allow']['sv-se'] = "Tillåta fjärrsamtal";
 $text['label-toll_allow']['uk-ua'] = "TOLL дозволено";
 
+
+$text['label-pin_codes']['en-us'] = "Pin Codes";
+
+
 $text['label-sip-gateway']['en-us'] = "SIP Gateways";
 $text['label-sip-gateway']['ar-eg'] = "";
 $text['label-sip-gateway']['de-at'] = "SIP Gateways"; //copied from de-de
@@ -1140,6 +1144,11 @@ $text['description-enable-toll_allow']['ro-ro'] = "";
 $text['description-enable-toll_allow']['ru-ru'] = "Установите значение Да, чтобы разрешить ВСЕ";
 $text['description-enable-toll_allow']['sv-se'] = "Ändra till sann för att tillåta betalsamtal.";
 $text['description-enable-toll_allow']['uk-ua'] = "Встановіть 'Так' щоб дозволити номери TOLL";
+
+
+$text['description-enable-pin_codes']['en-us'] = "Set to true to enable pin codes";
+
+
 
 $text['description-accountcode']['en-us'] = "Enter the accountcode.";
 $text['description-accountcode']['ar-eg'] = "";
