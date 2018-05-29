@@ -85,6 +85,7 @@
 		//get ivr menu
 			$ivr_menu_name = check_str($_POST["ivr_menu_name"]);
 			$ivr_menu_extension = check_str($_POST["ivr_menu_extension"]);
+			$ivr_menu_language = check_str($_POST["ivr_menu_language"]);
 			$ivr_menu_greet_long = check_str($_POST["ivr_menu_greet_long"]);
 			$ivr_menu_greet_short = check_str($_POST["ivr_menu_greet_short"]);
 			$ivr_menu_options = $_POST["ivr_menu_options"];
@@ -128,6 +129,7 @@
 			$msg = '';
 			if (strlen($ivr_menu_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
 			if (strlen($ivr_menu_extension) == 0) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
+			//if (strlen($ivr_menu_language) == 0) { $msg .= $text['message-required'].$text['label-language']."<br>\n"; }
 			if (strlen($ivr_menu_greet_long) == 0) { $msg .= $text['message-required'].$text['label-greet_long']."<br>\n"; }
 			//if (strlen($ivr_menu_greet_short) == 0) { $msg .= $text['message-required'].$text['label-greet_short']."<br>\n"; }
 			//if (strlen($ivr_menu_invalid_sound) == 0) { $msg .= $text['message-required'].$text['label-invalid_sound']."<br>\n"; }
@@ -229,8 +231,6 @@
 					}
 
 				//build the xml dialplan
-					$ivr_menu_language = explode ("/",check_str($_POST["ivr_menu_language"]));
-					
 					$dialplan_xml = "<extension name=\"".$ivr_menu_name."\" continue=\"false\" uuid=\"".$dialplan_uuid."\">\n";
 					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$ivr_menu_extension."\$\">\n";
 					$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
@@ -238,9 +238,9 @@
 					$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"ringback=".$ivr_menu_ringback."\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"presence_id=".$ivr_menu_extension."@".$_SESSION['domain_name']."\"/>\n";
-					$dialplan_xml .= "		<action application=\"set\" data=\"default_language=".$ivr_menu_language[0]."\"/>\n";
-					$dialplan_xml .= "		<action application=\"set\" data=\"default_dialect=".$ivr_menu_language[1]."\"/>\n";
-					$dialplan_xml .= "		<action application=\"set\" data=\"default_voice=".$ivr_menu_language[2]."\"/>\n";
+					if  (strlen($ivr_menu_language) > 0) {
+						$dialplan_xml .= "		<action application=\"set\" data=\"default_language=".$ivr_menu_language."\"/>\n";
+					}
 					$dialplan_xml .= "		<action application=\"set\" data=\"transfer_ringback=".$ivr_menu_ringback."\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"ivr_menu_uuid=".$ivr_menu_uuid."\"/>\n";
 
@@ -339,8 +339,6 @@
 			$ivr_menu_name = $row["ivr_menu_name"];
 			$ivr_menu_extension = $row["ivr_menu_extension"];
 			$ivr_menu_language = $row["ivr_menu_language"];
-			$ivr_menu_dialect = $row["ivr_menu_dialect"];
-			$ivr_menu_voice = $row["ivr_menu_voice"];
 			$ivr_menu_greet_long = $row["ivr_menu_greet_long"];
 			$ivr_menu_greet_short = $row["ivr_menu_greet_short"];
 			$ivr_menu_invalid_sound = $row["ivr_menu_invalid_sound"];
@@ -405,9 +403,7 @@
 	if (strlen($ivr_menu_ringback) == 0) { $ivr_menu_ringback = 'local_stream://default'; }
 	if (strlen($ivr_menu_invalid_sound) == 0) { $ivr_menu_invalid_sound = 'ivr/ivr-that_was_an_invalid_entry.wav'; }
 	//if (strlen($ivr_menu_confirm_key) == 0) { $ivr_menu_confirm_key = '#'; }
-	if (strlen($ivr_menu_language_code) == 0) { $ivr_menu_language_code = 'en'; }
-	if (strlen($ivr_menu_dialect) == 0) { $ivr_menu_dialect = 'us'; }
-	if (strlen($ivr_menu_voice) == 0) { $ivr_menu_voice = 'callie'; }
+	if (strlen($ivr_menu_language) == 0) { $ivr_menu_language = 'en'; }
 	if (strlen($ivr_menu_tts_engine) == 0) { $ivr_menu_tts_engine = 'flite'; }
 	if (strlen($ivr_menu_tts_voice) == 0) { $ivr_menu_tts_voice = 'rms'; }
 	if (strlen($ivr_menu_confirm_attempts) == 0) { $ivr_menu_confirm_attempts = '1'; }
@@ -418,33 +414,6 @@
 	if (strlen($ivr_menu_direct_dial) == 0) { $ivr_menu_direct_dial = 'false'; }
 	if (strlen($ivr_menu_enabled) == 0) { $ivr_menu_enabled = 'true'; }
 	if (!isset($ivr_menu_exit_action)) { $ivr_menu_exit_action = ''; }
-
-//get installed languages
-$root = '/usr/share/freeswitch/sounds/';
-
-$maxDepth = 2;
-$minDepth = 2;
-
-$iter = new RecursiveIteratorIterator(
-	new RecursiveDirectoryIterator($root, RecursiveDirectoryIterator::SKIP_DOTS),
-	RecursiveIteratorIterator::SELF_FIRST,
-	RecursiveIteratorIterator::CATCH_GET_CHILD// Ignore "Permission denied"
-);
-
-$iter->setMaxDepth($maxDepth);
-
-$paths = array($root);
-foreach ($iter as $path => $dir) {
-	if ($iter->getDepth() >= $minDepth) {
-    	if ($dir->isDir()) {
-    		$cleanPath = str_replace($root,"",$path);
-    		if (preg_match("/^\w\w\/\w\w\/[a-z]*$/", $cleanPath)) {
-    			$paths[] = str_replace($root,"", $cleanPath);
-    		}
-    	}
-    }
-}
-array_shift($paths);
 
 //get the recordings
 	$sql = "select recording_name, recording_filename from v_recordings ";
@@ -534,28 +503,7 @@ array_shift($paths);
 	echo "	".$text['label-language']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <select class='formfld' type='text' name='ivr_menu_language' required='required'>\n";
-
-	if (empty($ivr_menu_language)) {
-		$defaultLang = "$ivr_menu_language_code-$ivr_menu_dialect $ivr_menu_voice";
-		$ivr_menu_language = "$ivr_menu_language_code/$ivr_menu_dialect/$ivr_menu_voice";
-		echo "		<option value='$ivr_menu_language'>$defaultLang</option>\n";
-	}
-	else {
-	$curLangA = explode ('/', $ivr_menu_language);
-	$curLang = $curLangA[0]."-".$curLangA[1]." ".$curLangA[2];
-	echo "		<option value='$ivr_menu_language'>$curLang</option>\n";
-	}
-	
-	foreach ($paths as $key=>$langParams) {
-		$langParam = explode ('/',$paths[$key]);
-		$language = $langParam[0];
-		$dialect = $langParam[1];
-		$voice = $langParam[2];
-		if ($curLang <> "$language-$dialect $voice" && $defaultLang <> "$language-$dialect $voice") {
-			echo "		<option value='$language/$dialect/$voice'>$language-$dialect $voice</option>\n";
-		}
-	}
+	echo "  <input class='formfld' type='text' name='ivr_menu_language' maxlength='255' value='$ivr_menu_language' required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-language']."\n";
 	echo "</td>\n";
