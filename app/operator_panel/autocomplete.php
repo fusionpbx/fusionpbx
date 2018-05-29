@@ -62,7 +62,7 @@ else {
 	$sql = "select ";
 	$sql .= "e.extension, ";
 	$sql .= "e.effective_caller_id_name, ";
-	$sql .= "e.directory_full_name ";
+	$sql .= "concat(e.directory_first_name, ' ', e.directory_last_name) as directory_full_name ";
 	$sql .= "from ";
 	$sql .= "v_extensions e ";
 	$sql .= "where ";
