@@ -470,7 +470,7 @@
 <!-- # Accept Incoming SIP from Proxy Only. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P2347>0</P2347>
+<P2347>1</P2347>
 
 <!-- # Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
@@ -670,33 +670,33 @@
 
 <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
 <!-- # String -->
-<P1488>ring1</P1488>
+<P1488></P1488>
 
 <!-- # Matching Rule 1 Distinctive Ringtone -->
 <!-- # 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent. Default is 0. -->
 <!-- # Number: 0, 1, 2, 3, 4 -->
 <!-- # Mandatory -->
-<P1489>1</P1489>
+<P1489>0</P1489>
 
 <!-- # Matching Incoming Caller ID. Matching Rule 2 -->
 <!-- # String -->
-<P1490>ring2</P1490>
+<P1490></P1490>
 
 <!-- # Matching Rule 2 Distinctive Ringtone -->
 <!-- # 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent. Default is 0. -->
 <!-- # Number: 0, 1, 2, 3, 4 -->
 <!-- # Mandatory -->
-<P1491>2</P1491>
+<P1491>0</P1491>
 
 <!-- # Matching Incoming Caller ID. Matching Rule 3 -->
 <!-- # String -->
-<P1492>ring</P1492>
+<P1492></P1492>
 
 <!-- # Matching Rule 3 Distinctive Ringtone -->
 <!-- # 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent. Default is 0. -->
 <!-- # Number: 0, 1, 2, 3, 4 -->
 <!-- # Mandatory -->
-<P1493>3</P1493>
+<P1493>0</P1493>
 
 <!-- # Ring Timeout (in seconds). Default is 60 -->
 <!-- # Number: 30 - 3600 -->
@@ -731,7 +731,7 @@
 <!-- # Disable Recovery on Blind Transfer. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P2384>0</P2384>
+<P2384>1</P2384>
 
 <!-- # Blind Transfer Wait Timeout. Default is 30 -->
 <!-- # Number: 30 - 300 -->
@@ -1304,7 +1304,7 @@
 <!-- # Accept Incoming SIP from Proxy Only. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P2447>0</P2447>
+<P2447>1</P2447>
 
 <!-- # Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
@@ -2141,7 +2141,7 @@
 <!-- # Accept Incoming SIP from Proxy Only. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P2547>0</P2547>
+<P2547>1</P2547>
 
 <!-- # Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
@@ -2978,7 +2978,7 @@
 <!-- # Accept Incoming SIP from Proxy Only. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P2647>0</P2647>
+<P2647>1</P2647>
 
 <!-- # Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
@@ -3815,7 +3815,7 @@
 <!-- # Accept Incoming SIP from Proxy Only. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P2747>0</P2747>
+<P2747>1</P2747>
 
 <!-- # Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
@@ -4655,7 +4655,7 @@
 <!-- # Accept Incoming SIP from Proxy Only. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P2847>0</P2847>
+<P2847>1</P2847>
 
 <!-- # Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
@@ -7243,11 +7243,16 @@
 <!-- # 0 - Self-Defined City Code, 1 - Automatic. Default is 1 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
+{if isset($grandstream_city_code)}
+<P1405>0</P1405>
+{else}
 <P1405>1</P1405>
+{/if}
+
 
 <!-- # Self-Defined City Code -->
 <!-- # String -->
-<P1377></P1377>
+<P1377>{$grandstream_city_code}</P1377>
 
 <!-- # Update Interval (in minutes). Default is 15 -->
 <!-- # Number: 5 - 360 -->
@@ -7257,7 +7262,11 @@
 <!-- # Degree Unit. auto - Automatic, f - Fahrenheit, c - Celsius. Default is auto -->
 <!-- # String: auto, f, c -->
 <!-- # Mandatory -->
+<P1379>{if isset ($grandstream_temp_unit)}
+<P1379>{}$grandstream_temp_unit}</P1379>
+{else}
 <P1379>auto</P1379>
+{/if}
 
 <!-- # Currency Update -->
 <!-- # Enable Currency update. 0 - No, 1 - Yes. Default is 1 -->

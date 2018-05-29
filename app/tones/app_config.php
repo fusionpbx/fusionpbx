@@ -3,7 +3,7 @@
 	//application details
 		$apps[$x]['name'] = "Tones";
 		$apps[$x]['uuid'] = "38ab9f01-bcd2-4726-a9ff-9af8ed9e396a";
-		$apps[$x]['category'] = "Switch";;
+		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
 		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
@@ -41,7 +41,7 @@
 		$apps[$x]['destinations'][$y]['field']['destination'] = "var_filename";
 		$apps[$x]['destinations'][$y]['field']['description'] = "var_description";
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "playback:tone_stream://\${destination}";
-		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "playback:tone_stream://\${destination}";
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:playback tone_stream://\${destination}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
 
 ?>
