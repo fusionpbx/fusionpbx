@@ -129,7 +129,7 @@
 <!-- # Register Expiration (in minutes). Default is 60. Max about 45 days -->
 <!-- # Number: 1 - 64800 -->
 <!-- # Mandatory -->
-<P32>60</P32>
+<P32>{$register_expires_1}</P32>
 
 <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
 <!-- # Number: 1 - 64800 -->
@@ -966,7 +966,7 @@
 <!-- # Register Expiration (in minutes). Default is 60. Max is 45 days -->
 <!-- # Number: 1 - 64800 -->
 <!-- # Mandatory -->
-<P412>60</P412>
+<P412>{$register_expires_2}</P412>
 
 <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
 <!-- # Number: 1 - 64800 -->
@@ -1803,7 +1803,7 @@
 <!-- # Register Expiration (in minutes). Default is 60. Max is 45 days -->
 <!-- # Number: 1 - 64800 -->
 <!-- # Mandatory -->
-<P512>60</P512>
+<P512>{$register_expires_3}</P512>
 
 <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
 <!-- # Number: 1 - 64800 -->
@@ -2639,7 +2639,7 @@
 <!-- # Register Expiration (in minutes). Default is 60. Max is 45 days -->
 <!-- # Number: 1 - 64800 -->
 <!-- # Mandatory -->
-<P612>60</P612>
+<P612>{$register_expires_4}</P612>
 
 <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
 <!-- # Number: 1 - 64800 -->
@@ -3477,7 +3477,7 @@
 <!-- # Register Expiration (in minutes. default 1 hour, max 45 days) -->
 <!-- # Number: 1-64800 -->
 <!-- # Mandatory -->
-<P1712>60</P1712>
+<P1712>{$register_expires_5}</P1712>
 
 <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
 <!-- # Number: 1 - 64800 -->
@@ -4315,7 +4315,7 @@
 <!-- # Register Expiration (in minutes). Default is 60. Max is 45 days -->
 <!-- # Number: 1 - 64800 -->
 <!-- # Mandatory -->
-<P1812>60</P1812>
+<P1812>{$register_expires_6}</P1812>
 
 <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
 <!-- # Number: 1 - 64800 -->
