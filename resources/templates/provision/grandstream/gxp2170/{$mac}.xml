@@ -5270,7 +5270,7 @@
 {if isset($grandstream_pc_port_vlan) }
 <P229>{$grandstream_pc_port_vlan}</P229>
 {else}
-<P229>1</P229>
+<P229>0</P229>
 {/if}
 
 <!-- # PC Port Priority Value. Default is 0  -->
