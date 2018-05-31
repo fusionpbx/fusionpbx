@@ -233,7 +233,8 @@
 	}
 	echo th_order_by('device_vendor', $text['label-device_vendor'], $order_by, $order);
 	echo th_order_by('device_template', $text['label-device_template'], $order_by, $order);
-	echo th_order_by('device_template', $text['label-device_profiles'], $order_by, $order);
+	echo "<th>". $text['label-device_profiles']."</th>\n";
+	#echo th_order_by('device_template', $text['label-device_profiles'], $order_by, $order);
 	echo th_order_by('device_enabled', $text['label-device_enabled'], $order_by, $order);
 	echo th_order_by('device_status', $text['label-device_status'], $order_by, $order);
 	echo th_order_by('device_description', $text['label-device_description'], $order_by, $order);
