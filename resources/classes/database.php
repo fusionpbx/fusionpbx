@@ -1968,7 +1968,12 @@ include "root.php";
 						$sql .= "values ";
 						$sql .= "(";
 						$sql .= "'".uuid()."', ";
-						$sql .= "'".$this->domain_uuid."', ";
+						if (is_null($this->domain_uuid)) {
+							$sql .= "null, ";
+						}
+						else {
+							$sql .= "'".$this->domain_uuid."', ";
+						}
 						if (strlen($user_uuid) > 0) {
 							$sql .= "'".$user_uuid."', ";
 						}
