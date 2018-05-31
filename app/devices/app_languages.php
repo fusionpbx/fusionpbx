@@ -2461,6 +2461,26 @@ $text['label-device_password']['ru-ru'] = "Пароль";
 $text['label-device_password']['sv-se'] = "Lösenord";
 $text['label-device_password']['uk-ua'] = "Пароль";
 
+$text['label-device_profiles']['en-us'] = "Profile";
+$text['label-device_profiles']['ar-eg'] = "Profile";
+$text['label-device_profiles']['de-at'] = "Profile"; //copied from de-de
+$text['label-device_profiles']['de-ch'] = "Profile"; //copied from de-de
+$text['label-device_profiles']['de-de'] = "Profile";
+$text['label-device_profiles']['es-cl'] = "Profile";
+$text['label-device_profiles']['es-mx'] = "Profile"; //copied from es-cl
+$text['label-device_profiles']['fr-ca'] = "Profile"; //copied from fr-fr
+$text['label-device_profiles']['fr-fr'] = "Profile";
+$text['label-device_profiles']['he-il'] = "פרופילים";
+$text['label-device_profilesl']['it-it'] = "Profile";
+$text['label-device_profiles']['nl-nl'] = "";
+$text['label-device_profiles']['pl-pl'] = "Profile";
+$text['label-device_profiles']['pt-br'] = "Profile"; //copied from pt-pt
+$text['label-device_profiles']['pt-pt'] = "Profile";
+$text['label-device_profiles']['ro-ro'] = "";
+$text['label-device_profiles']['ru-ru'] = "Профили";
+$text['label-device_profiles']['sv-se'] = "Profiler";
+$text['label-device_profiles']['uk-ua'] = "Профіль";
+
 $text['label-device_model']['en-us'] = "Model";
 $text['label-device_model']['ar-eg'] = "";
 $text['label-device_model']['de-at'] = "Modell"; //copied from de-de
