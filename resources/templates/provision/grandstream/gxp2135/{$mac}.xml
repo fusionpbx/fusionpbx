@@ -100,8 +100,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0. -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($nat_traversal_1) }
-<P52>{$nat_traversal_1}</P52>
+{if isset($grandstream_nat_traversal_1) }
+<P52>{$grandstream_nat_traversal_1}</P52>
 {else}
 <P52>0</P52>
 {/if}
@@ -869,8 +869,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($$grandstream_nat_traversal_2) }
-<P414>{$$grandstream_nat_traversal_2}</P414>
+{if isset($grandstream_nat_traversal_2) }
+<P414>{$grandstream_nat_traversal_2}</P414>
 {else}
 <P414>0</P414>
 {/if}
@@ -1623,8 +1623,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($nat_traversal_3) }
-<P514>{$nat_traversal_3}</P514>
+{if isset($grandstream_nat_traversal_3) }
+<P514>{$grandstream_nat_traversal_3}</P514>
 {else}
 <P514>0</P514>
 {/if}
@@ -2376,8 +2376,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($nat_traversal_4) }
-<P614>{$nat_traversal_4}</P614>
+{if isset($grandstream_nat_traversal_4) }
+<P614>{$grandstream_nat_traversal_4}</P614>
 {else}
 <P614>0</P614>
 {/if}
@@ -3131,8 +3131,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($nat_traversal_5) }
-<P1714>{$nat_traversal_5}</P1714>
+{if isset($grandstream_nat_traversal_5) }
+<P1714>{$grandstream_nat_traversal_5}</P1714>
 {else}
 <P1714>0</P1714>
 {/if}
@@ -3885,8 +3885,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($nat_traversal_6) }
-<P1814>{$nat_traversal_6}</P1814>
+{if isset($grandstream_nat_traversal_6) }
+<P1814>{$grandstream_nat_traversal_6}</P1814>
 {else}
 <P1814>0</P1814>
 {/if}
