@@ -91,6 +91,12 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 				$ringback_value = "\'%(2000,4000,440.0,480.0)\'";
 		}
 
+	//create the even socket connection and send the event socket command
+		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+		if (!$fp) {
+			//error message
+			echo "<div align='center'><strong>Connection to Event Socket failed.</strong></div>";
+		}
 
 	//set call uuid
 		$origination_uuid = trim(event_socket_request($fp, "api create_uuid"));
@@ -189,7 +195,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 					//use the server's time zone to ensure it matches the time zone used by freeswitch
 						date_default_timezone_set($_SESSION['time_zone']['system']);
 					//create the api record command and send it over event socket
-						$switch_cmd = "api uuid_record ".$uuid." start ".$record_path."/".$record_name;
+						$switch_cmd = "api uuid_record ".$origination_uuid." start ".$record_path."/".$record_name;
 						$result2 = trim(event_socket_request($fp, $switch_cmd));
 				}
 			}
