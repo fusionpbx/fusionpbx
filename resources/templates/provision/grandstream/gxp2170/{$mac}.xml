@@ -806,7 +806,8 @@
 <!-- #Enable Call Features.  0 - No, 1 - Yes. Default is 1 -->
 <!-- #Number: 0, 1  -->
 <!-- #Mandatory -->
-<P191>1</P191>
+<!-- # This must be 0 for FusionPBX features to work!!! -->
+<P191>0</P191>
 
 <!-- #Do Not Disturb (DND) - On -->
 <!-- # String -->
