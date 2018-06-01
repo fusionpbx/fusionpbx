@@ -2,7 +2,7 @@
 /* $Id$ */
 /*
 	call.php
-	Copyright (C) 2008, 2009 Mark J Crane
+	Copyright (C) 2008, 2018 Mark J Crane
 	All rights reserved.
 
 	Redistribution and use in source and binary forms, with or without
@@ -30,16 +30,19 @@
 	James Rose <james.o.rose@gmail.com>
 
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('click_to_call_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('click_to_call_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -88,18 +91,34 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 				$ringback_value = "\'%(2000,4000,440.0,480.0)\'";
 		}
 
+
+	//set call uuid
+		$origination_uuid = trim(event_socket_request($fp, "api create_uuid"));
+
+	//add record path and name
+		if ($rec == "true") {
+			$record_path = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d");
+			$record_name = $origination_uuid.".wav";
+		}
+
 	//determine call direction
 		$dir = (strlen($dest) < 7) ? 'local' : 'outbound';
 
 	//define a leg - set source to display the defined caller id name and number
 		$source_common = "{".
-			"click_to_call=true".
-			",origination_caller_id_name='".$src_cid_name."'".
-			",origination_caller_id_number=".$src_cid_number.
-			",instant_ringback=true".
-			",ringback=".$ringback_value.
-			",presence_id=".$src."@".$_SESSION['domains'][$domain_uuid]['domain_name'].
-			",call_direction=".$dir;
+		$source_common .= "origination_uuid=".$origination_uuid.
+		$source_common .= ",click_to_call=true".
+		$source_common .= ",origination_caller_id_name='".$src_cid_name."'".
+		$source_common .= ",origination_caller_id_number=".$src_cid_number.
+		$source_common .= ",instant_ringback=true".
+		$source_common .= ",ringback=".$ringback_value.
+		$source_common .= ",presence_id=".$src."@".$_SESSION['domains'][$domain_uuid]['domain_name'].
+		$source_common .= ",call_direction=".$dir;
+		if ($rec == "true") {
+			$source_common .= ",record_path='".$record_path."'";
+			$source_common .= ",record_name='".$record_name."';
+		}
+
 		if (strlen($src) < 7) {
 			//source is a local extension
 			$source = $source_common.$sip_auto_answer.
@@ -165,12 +184,12 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 			//show the command result
 			$result = trim(event_socket_request($fp, $switch_cmd));
 			if (substr($result, 0,3) == "+OK") {
-				$uuid = substr($result, 4);
+				//$uuid = substr($result, 4);
 				if ($rec == "true") {
 					//use the server's time zone to ensure it matches the time zone used by freeswitch
 						date_default_timezone_set($_SESSION['time_zone']['system']);
 					//create the api record command and send it over event socket
-						$switch_cmd = "api uuid_record ".$uuid." start ".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d")."/".$uuid.".wav";
+						$switch_cmd = "api uuid_record ".$uuid." start ".$record_path."/".$record_name;
 						$result2 = trim(event_socket_request($fp, $switch_cmd));
 				}
 			}
@@ -381,4 +400,5 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 
 //show the footer
 	require_once "resources/footer.php";
+
 ?>
