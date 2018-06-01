@@ -116,7 +116,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 		$source_common .= ",call_direction=".$dir;
 		if ($rec == "true") {
 			$source_common .= ",record_path='".$record_path."'";
-			$source_common .= ",record_name='".$record_name."';
+			$source_common .= ",record_name='".$record_name."'";
 		}
 
 		if (strlen($src) < 7) {
