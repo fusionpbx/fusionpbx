@@ -105,14 +105,14 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 		$dir = (strlen($dest) < 7) ? 'local' : 'outbound';
 
 	//define a leg - set source to display the defined caller id name and number
-		$source_common = "{".
-		$source_common .= "origination_uuid=".$origination_uuid.
-		$source_common .= ",click_to_call=true".
-		$source_common .= ",origination_caller_id_name='".$src_cid_name."'".
-		$source_common .= ",origination_caller_id_number=".$src_cid_number.
-		$source_common .= ",instant_ringback=true".
-		$source_common .= ",ringback=".$ringback_value.
-		$source_common .= ",presence_id=".$src."@".$_SESSION['domains'][$domain_uuid]['domain_name'].
+		$source_common = "{";
+		$source_common .= "origination_uuid=".$origination_uuid;
+		$source_common .= ",click_to_call=true";
+		$source_common .= ",origination_caller_id_name='".$src_cid_name."'";
+		$source_common .= ",origination_caller_id_number=".$src_cid_number;
+		$source_common .= ",instant_ringback=true";
+		$source_common .= ",ringback=".$ringback_value;
+		$source_common .= ",presence_id=".$src."@".$_SESSION['domains'][$domain_uuid]['domain_name'];
 		$source_common .= ",call_direction=".$dir;
 		if ($rec == "true") {
 			$source_common .= ",record_path='".$record_path."'";
