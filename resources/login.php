@@ -29,7 +29,6 @@
 	$text = $language->get(null,'core/user_settings');
 
 //get the http values and set as variables
-	if (isset($_GET["path"])) { $path = check_str($_GET["path"]); } else { $path = null; }
 	if (isset($_GET["msg"])) { $msg = check_str($_GET["msg"]); } else { $msg = null; }
 
 //set variable if not set
