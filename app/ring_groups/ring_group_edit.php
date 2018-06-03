@@ -100,6 +100,7 @@
 			$ring_group_context = check_str($_POST["ring_group_context"]);
 			$ring_group_strategy = check_str($_POST["ring_group_strategy"]);
 			$ring_group_timeout_action = check_str($_POST["ring_group_timeout_action"]);
+			$ring_group_call_timeout = check_str($_POST["ring_group_call_timeout"]);
 			$ring_group_caller_id_name = check_str($_POST["ring_group_caller_id_name"]);
 			$ring_group_caller_id_number = check_str($_POST["ring_group_caller_id_number"]);
 			$ring_group_cid_name_prefix = check_str($_POST["ring_group_cid_name_prefix"]);
@@ -372,6 +373,7 @@
 			$ring_group_strategy = $row["ring_group_strategy"];
 			$ring_group_timeout_app = $row["ring_group_timeout_app"];
 			$ring_group_timeout_data = $row["ring_group_timeout_data"];
+			$ring_group_call_timeout = $row["ring_group_call_timeout"];
 			$ring_group_caller_id_name = $row["ring_group_caller_id_name"];
 			$ring_group_caller_id_number = $row["ring_group_caller_id_number"];
 			$ring_group_cid_name_prefix = $row["ring_group_cid_name_prefix"];
@@ -680,6 +682,17 @@
 	echo $destination->select('dialplan', 'ring_group_timeout_action', $ring_group_timeout_action);
 	echo "	<br />\n";
 	echo "	".$text['description-timeout_destination']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-call_timeout']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "  <input class='formfld' type='text' name='ring_group_call_timeout' maxlength='255' value='$ring_group_call_timeout'>\n";
+	echo "<br />\n";
+	echo $text['description-ring_group_call_timeout']." \n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
