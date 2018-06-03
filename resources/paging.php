@@ -26,31 +26,30 @@
 
 function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count = 0) {
 
-
-	//add multi-lingual support
-	$language = new text;
-	$text = $language->get();
-
-	 //default number of rows per page
-	if (strlen($rows_per_page) == 0) {
-		$rows_per_page = 50;
-	}
-
-	// show the first page by default
-	$page_number = 0;
+	//validate the data
+	if (!is_numeric($num_rows)) { $num_rows = 0; }
+	if (!is_numeric($rows_per_page)) { $rows_per_page = 100; }
+	if (!is_numeric($result_count)) { $result_count = 0; }
 
 	// if $_get['page'] defined, use it as page number
 	if(isset($_GET['page']) && is_numeric($_GET['page'])) {
 		$page_number = $_GET['page'];
 	}
+	else {
+		$page_number = 0;
+	}
 
-	// counting the offset
+	//get the offset
 	$offset = ($page_number - 1) * $rows_per_page;
 
-	// how many pages we have when using paging
+	//how many pages we have when using paging
 	if ($num_rows > 0) {
 		$max_page = ceil($num_rows/$rows_per_page);
 	}
+
+	//add multi-lingual support
+	$language = new text;
+	$text = $language->get();
 
 	// print the link to access each page
 	$self = $_SERVER['PHP_SELF'];
