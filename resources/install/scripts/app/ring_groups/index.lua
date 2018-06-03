@@ -163,11 +163,6 @@
 		call_direction = "local";
 	end
 
----set the call_timeout to a higher value to prevent the early timeout of the ring group
-	if (session:ready()) then
-		session:setVariable("call_timeout","300");
-	end
-
 --set ring ready
 	if (session:ready()) then
 		session:execute("ring_ready", "");
@@ -236,6 +231,7 @@
 		ring_group_forward_enabled = row["ring_group_forward_enabled"];
 		ring_group_forward_destination = row["ring_group_forward_destination"];
 		ring_group_forward_toll_allow = row["ring_group_forward_toll_allow"];
+		ring_group_call_timeout = row["ring_group_call_timeout"];
 		ring_group_caller_id_name = row["ring_group_caller_id_name"];
 		ring_group_caller_id_number = row["ring_group_caller_id_number"];
 		ring_group_cid_name_prefix = row["ring_group_cid_name_prefix"];
@@ -243,6 +239,14 @@
 		missed_call_app = row["ring_group_missed_call_app"];
 		missed_call_data = row["ring_group_missed_call_data"];
 	end);
+
+---set the call_timeout to a higher value to prevent the early timeout of the ring group
+	if (session:ready()) then
+		if (ring_group_call_timeout and #ring_group_call_timeout == 0) then
+			ring_group_call_timeout = '300';
+		end
+		session:setVariable("call_timeout",ring_group_call_timeout);
+	end
 
 --play the greeting
 	if (session:ready()) then
