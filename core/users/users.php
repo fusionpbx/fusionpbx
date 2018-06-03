@@ -114,7 +114,7 @@
 	}
 	unset ($prep_statement, $result, $sql);
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "search=".$search_value;
+	$param = "search=".escape($search_value);
 	if (permission_exists('user_all') && $_GET['show'] == 'all') {
 		$param .= "&show=all";
 	}
@@ -161,7 +161,7 @@
 	if (permission_exists('user_import')) {
 		echo 				"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='/app/user_imports/user_imports.php'\" value='".$text['button-import']."'>\n";
 	}
-	echo 	"<input type='text' class='txt' style='width: 150px; margin-left: 15px; margin-right: 3px;' name='search_value' value=\"".$search_value."\">";
+	echo 	"<input type='text' class='txt' style='width: 150px; margin-left: 15px; margin-right: 3px;' name='search_value' value=\"".escape($search_value)."\">";
 	echo 	"<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	echo "</td>";
 	echo "</tr>\n";
@@ -199,27 +199,27 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($user_count > 0) {
+	if (is_array($users)) {
 		foreach($users as $row) {
 			if (if_superadmin($superadmins, $row['user_uuid']) && !if_group("superadmin")) {
 				//hide
 			} else {
-				$tr_link = (permission_exists('user_edit')) ? "href='user_edit.php?id=".$row['user_uuid']."'" : null;
+				$tr_link = (permission_exists('user_edit')) ? "href='user_edit.php?id=".escape($row['user_uuid'])."'" : null;
 				echo "<tr ".$tr_link.">\n";
 				if (permission_exists('user_all') && $_GET['show'] == 'all') {
-					echo "	<td valign='top' class='".$row_style[$c]."'>".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."</td>\n";
+					echo "	<td valign='top' class='".$row_style[$c]."'>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
 				}
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
 				if (permission_exists('user_edit')) {
-					echo "<a href='user_edit.php?id=".$row['user_uuid']."'>".$row['username']."</a>";
+					echo "<a href='user_edit.php?id=".escape($row['user_uuid'])."'>".escape($row['username'])."</a>";
 				}
 				else {
-					echo $row['username'];
+					echo escape($row['username']);
 				}
 				echo "	</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
 				if (sizeof($user_groups[$row['user_uuid']]) > 0) {
-					echo implode(', ', $user_groups[$row['user_uuid']]);
+					echo escape(implode(', ', $user_groups[$row['user_uuid']]));
 				}
 				echo "&nbsp;</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
