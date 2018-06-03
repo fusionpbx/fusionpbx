@@ -146,46 +146,46 @@
 				echo "<tr ".$tr_link.">\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
 				if (permission_exists('fax_extension_edit')) {
-					echo "<a href='fax_edit.php?id=".$row['fax_uuid']."'>".$row['fax_name']."</a>";
+					echo "<a href='fax_edit.php?id=".escape($row['fax_uuid'])."'>".escape($row['fax_name'])."</a>";
 				}
 				else {
-					echo $row['fax_name'];
+					echo escape($row['fax_name']);
 				}
 				echo "	</td>\n";
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_extension']."</td>\n";
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$fax_email."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['fax_extension'])."</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($fax_email)."&nbsp;</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void'>";
 				if (permission_exists('fax_send')) {
-					echo "		<a href='fax_send.php?id=".$row['fax_uuid']."'>".$text['label-new']."</a>&nbsp;&nbsp;";
+					echo "		<a href='fax_send.php?id=".escape($row['fax_uuid'])."'>".escape($text['label-new'])."</a>&nbsp;&nbsp;";
 				}
 				if (permission_exists('fax_inbox_view')) {
 					if ($row['fax_email_inbound_subject_tag'] != '') {
 						$file = "fax_files_remote.php";
-						$box = $row['fax_email_connection_mailbox'];
+						$box = escape($row['fax_email_connection_mailbox']);
 					}
 					else {
 						$file = "fax_files.php";
 						$box = 'inbox';
 					}
-					echo "		<a href='".$file."?id=".$row['fax_uuid']."&box=".$box."'>".$text['label-inbox']."</a>&nbsp;&nbsp;";
+					echo "		<a href='".$file."?id=".escape($row['fax_uuid'])."&box=".$box."'>".$text['label-inbox']."</a>&nbsp;&nbsp;";
 				}
 				if (permission_exists('fax_sent_view')) {
-					echo "		<a href='fax_files.php?id=".$row['fax_uuid']."&box=sent'>".$text['label-sent']."</a>&nbsp;&nbsp;";
+					echo "		<a href='fax_files.php?id=".escape($row['fax_uuid'])."&box=sent'>".$text['label-sent']."</a>&nbsp;&nbsp;";
 				}
 				if (permission_exists('fax_log_view')) {
-					echo "		<a href='fax_logs.php?id=".$row['fax_uuid']."'>".$text['label-log']."</a>";
+					echo "		<a href='fax_logs.php?id=".escape($row['fax_uuid'])."'>".$text['label-log']."</a>";
 				}
 				if (permission_exists('fax_active_view')) {
-					echo "		<a href='fax_active.php?id=".$row['fax_uuid']."'>".$text['label-active']."</a>";
+					echo "		<a href='fax_active.php?id=".escape($row['fax_uuid'])."'>".$text['label-active']."</a>";
 				}
 				echo "	</td>\n";
-				echo "	<td valign='top' class='row_stylebg' width='35%'>".$row['fax_description']."&nbsp;</td>\n";
+				echo "	<td valign='top' class='row_stylebg' width='35%'>".escape($row['fax_description'])."&nbsp;</td>\n";
 				echo "	<td class='list_control_icons'>";
 				if (permission_exists('fax_extension_edit')) {
-					echo "<a href='fax_edit.php?id=".$row['fax_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+					echo "<a href='fax_edit.php?id=".escape($row['fax_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 				}
 				if (permission_exists('fax_extension_delete')) {
-					echo "<a href='fax_delete.php?id=".$row['fax_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+					echo "<a href='fax_delete.php?id=".escape($row['fax_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 				}
 				echo "	</td>\n";
 				echo "</tr>\n";
@@ -200,7 +200,7 @@
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
+	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
 	echo "		<td class='list_control_icons'>";
 	if (permission_exists('fax_extension_add')) {
 		echo 		"<a href='fax_edit.php' alt='add'>$v_link_label_add</a>";
@@ -215,4 +215,5 @@
 
 //show the footer
 	require_once "resources/footer.php";
+
 ?>
