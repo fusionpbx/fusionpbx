@@ -76,7 +76,7 @@ else {
 	echo "<table class='tr_hover' style='width: 100%; direction: ltr; padding-left: 1px' border='0' cellpadding='0' cellspacing='0'>\n";
 	if ($result_count != 0) {
 		foreach($result as $row) {
-			$contact_note = $row['contact_note'];
+			$contact_note = escape($row['contact_note']);
 			$contact_note = str_replace("\n","<br />",$contact_note);
 			if (permission_exists('contact_note_add')) {
 				$tr_link = "href='contact_note_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_note_uuid']."'";
