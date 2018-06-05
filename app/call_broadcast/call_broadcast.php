@@ -38,6 +38,40 @@ else {
 	$language = new text;
 	$text = $language->get();
 
+//get the count
+	$sql = "select * from v_call_broadcasts ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
+	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$num_rows = count($result);
+	unset ($prep_statement, $result, $sql);
+
+//prepare the paging
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$param = "";
+	$page = $_GET['page'];
+	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
+	$offset = $rows_per_page * $page;
+
+//get the call call broadcasts
+	$sql = "select * from v_call_broadcasts ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
+	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+	$sql .= " limit $rows_per_page offset $offset ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$result_count = count($result);
+	unset ($prep_statement, $sql);
+
+//set the row style
+	$c = 0;
+	$row_style["0"] = "row_style0";
+	$row_style["1"] = "row_style1";
+
 //add the includes
 	require_once "resources/header.php";
 	require_once "resources/paging.php";
@@ -52,36 +86,6 @@ else {
 	echo "<td width='50%' align='right'>&nbsp;</td>\n";
 	echo "</tr></table>\n";
 	echo "<br>";
-
-	$sql = "select * from v_call_broadcasts ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$num_rows = count($result);
-	unset ($prep_statement, $result, $sql);
-
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "";
-	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
-	$offset = $rows_per_page * $page;
-
-	$sql = "select * from v_call_broadcasts ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$sql .= " limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
-	unset ($prep_statement, $sql);
-
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
@@ -102,21 +106,21 @@ else {
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('call_broadcast_edit')) {
-				echo "<a href='call_broadcast_edit.php?id=".$row['call_broadcast_uuid']."'>".$row['broadcast_name']."</a>";
+				echo "<a href='call_broadcast_edit.php?id=".escape($row['call_broadcast_uuid'])."'>".escape($row['broadcast_name'])."</a>";
 			}
 			else {
-				echo $row['broadcast_name'];
+				echo escape($row['broadcast_name']);
 			}
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['broadcast_concurrent_limit']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['broadcast_concurrent_limit'])."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['recordingid']."</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".$row['broadcast_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($row['broadcast_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('call_broadcast_edit')) {
-				echo "<a href='call_broadcast_edit.php?id=".$row['call_broadcast_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='call_broadcast_edit.php?id=".escape($row['call_broadcast_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('call_broadcast_delete')) {
-				echo "<a href='call_broadcast_delete.php?id=".$row['call_broadcast_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete-info']."')\">$v_link_label_delete</a>";
+				echo "<a href='call_broadcast_delete.php?id=".escape($row['call_broadcast_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete-info']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -145,5 +149,7 @@ else {
 	echo "</table>";
 	echo "<br><br>";
 
-require_once "resources/footer.php";
+//afooter
+	require_once "resources/footer.php";
+
 ?>
