@@ -17,22 +17,26 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('call_center_queue_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permisission
+	if (permission_exists('call_center_queue_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -145,32 +149,32 @@ else {
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('call_center_queue_edit')) {
-				echo "<a href='call_center_queue_edit.php?id=".$row[call_center_queue_uuid]."'>".$row[queue_name]."</a>";
+				echo "<a href='call_center_queue_edit.php?id=".escape($row[call_center_queue_uuid])."'>".escape($row[queue_name])."</a>";
 			}
 			else {
-				echo $row[queue_name];
+				echo escape($row[queue_name]);
 			}
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_extension]."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_strategy]."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_moh_sound]."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_record_template]."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_time_base_score]."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_max_wait_time]."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_max_wait_time_with_no_agent]."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row[queue_tier_rules_apply])."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_tier_rule_wait_second]."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_tier_rule_no_agent_no_wait]."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_discard_abandoned_after]."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_abandoned_resume_allowed]."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_tier_rule_wait_multiply_level]."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".$row[queue_description]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_extension])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_strategy])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_moh_sound])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_record_template])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_time_base_score])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_max_wait_time])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_max_wait_time_with_no_agent])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords(escape($row[queue_tier_rules_apply]))."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_tier_rule_wait_second])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_tier_rule_no_agent_no_wait])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_discard_abandoned_after])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_abandoned_resume_allowed])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_tier_rule_wait_multiply_level])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($row[queue_description])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('call_center_queue_edit')) {
-				echo "<a href='call_center_queue_edit.php?id=".$row[call_center_queue_uuid]."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='call_center_queue_edit.php?id=".escape($row[call_center_queue_uuid])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('call_center_queue_delete')) {
-				echo "<a href='call_center_queue_delete.php?id=".$row[call_center_queue_uuid]."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='call_center_queue_delete.php?id=".escape($row[call_center_queue_uuid])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -200,7 +204,7 @@ else {
 	echo "</table>";
 	echo "<br><br>";
 
-
 //show the footer
 	require_once "resources/footer.php";
+
 ?>
