@@ -17,22 +17,26 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('call_broadcast_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('call_broadcast_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -129,13 +133,12 @@ else {
 		unset($sql, $result, $row_count);
 	} //end if results
 
-
 	echo "<tr>\n";
 	echo "<td colspan='5' align='left'>\n";
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr class='tr_link_void'>\n";
-	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
+	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
+	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
 	echo "		<td class='list_control_icons'>";
 	if (permission_exists('call_broadcast_add')) {
 		echo 		"<a href='call_broadcast_edit.php' alt='add'>$v_link_label_add</a>";
@@ -149,7 +152,7 @@ else {
 	echo "</table>";
 	echo "<br><br>";
 
-//afooter
+//include the footer
 	require_once "resources/footer.php";
 
 ?>
