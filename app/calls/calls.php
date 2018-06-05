@@ -127,7 +127,7 @@
 	}
 	if (!$is_included) {
 		echo "				<form method='get' action='' style='display: inline-block;'>\n";
-		echo "				<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
+		echo "				<input type='text' class='txt' style='width: 150px' name='search' value='".escape($search)."'>";
 		echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 		echo "				</form>\n";
 		if ($paging_controls_mini != '') {
