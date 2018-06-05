@@ -128,28 +128,28 @@ require_once "resources/require.php";
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('call_block_edit')) {
-				echo "<a href='call_block_edit.php?id=".$row['call_block_uuid']."'>".$row['call_block_number']."</a>";
+				echo "<a href='call_block_edit.php?id=".escape($row['call_block_uuid'])."'>".escape($row['call_block_number'])."</a>";
 			}
 			else {
-				echo $row['call_block_number'];
+				echo escape($row['call_block_number']);
 			}
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_block_name']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>".$row['call_block_count']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_block_name'])."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>".escape($row['call_block_count'])."</td>\n";
 			if (defined('TIME_24HR') && TIME_24HR == 1) {
 				$tmp_date_added = date("j M Y H:i:s", $row['date_added']);
 			} else {
 				$tmp_date_added = date("j M Y h:i:sa", $row['date_added']);
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$tmp_date_added."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_block_action']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['call_block_enabled']]."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_block_action'])."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.escape($row['call_block_enabled'])]."</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('call_block_edit')) {
-				echo "<a href='call_block_edit.php?id=".$row['call_block_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='call_block_edit.php?id=".escape($row['call_block_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('call_block_delete')) {
-				echo "<a href='call_block_delete.php?id=".$row['call_block_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='call_block_delete.php?id=".escape($row['call_block_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			};
 			echo "  </td>";
 			echo "</tr>\n";
