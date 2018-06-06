@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2017
+	Portions created by the Initial Developer are Copyright (C) 2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -173,7 +173,7 @@
 		echo "				<button type='submit' class='btn btn-default' id='downloads' name=\"call_recordings[$x][action]\" alt='".$text['button-download']."' onclick=\"document.getElementById('downloads').value='download'\" value=''>".$text['button-downloads']."</span></button>\n";
 		echo "				&nbsp; &nbsp; &nbsp; ";
 	}
-	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>\n";
+	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".escape($search)."'>\n";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
 	echo "			</td>\n";
 	echo "	</tr>\n";
@@ -221,7 +221,7 @@
 		$x = 0;
 		foreach($result as $row) {
 			//if (permission_exists('call_recording_play') && $recording_file_path != '') {
-			//	echo "<tr id='recording_progress_bar_".$row['call_recording_uuid']."' style='display: none3;'><td class='".$row_style[$c]." playback_progress_bar_background' style='padding: 0; border: none;' colspan='".((if_group("admin") || if_group("superadmin") || if_group("cdr")) ? ($col_count - 1) : $col_count)."'><span class='playback_progress_bar' id='recording_progress_".$row['call_recording_uuid']."'></span></td></tr>\n";
+			//	echo "<tr id='recording_progress_bar_".escape($row['call_recording_uuid'])."' style='display: none3;'><td class='".$row_style[$c]." playback_progress_bar_background' style='padding: 0; border: none;' colspan='".((if_group("admin") || if_group("superadmin") || if_group("cdr")) ? ($col_count - 1) : $col_count)."'><span class='playback_progress_bar' id='recording_progress_".escape($row['call_recording_uuid'])."'></span></td></tr>\n";
 			//}
 			if (permission_exists('call_recording_edit')) {
 				$tr_link = "href='call_recording_edit.php?id=".$row['call_recording_uuid']."'";
@@ -229,38 +229,38 @@
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='align: center; padding: 3px 3px 0px 8px;'>\n";
 			echo "		<input type='checkbox' name=\"call_recordings[$x][checked]\" id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$x."').checked = false; }\">\n";
-			echo "		<input type='hidden' name=\"call_recordings[$x][call_recording_uuid]\" value='".$row['call_recording_uuid']."' />\n";
+			echo "		<input type='hidden' name=\"call_recordings[$x][call_recording_uuid]\" value='".escape($row['call_recording_uuid'])."' />\n";
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_recording_name']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_recording_name'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]." row_style_slim tr_link_void' valign='top' align='center' nowrap='nowrap'>\n";
 			//echo "		<audio controls=\"download\" preload=\"metadata\" style=\"width:200px;\">\n";
-			//echo "			<source src=\"download.php?id=".$row['call_recording_uuid']."\" type=\"audio/wav\">\n";
+			//echo "			<source src=\"download.php?id=".escape($row['call_recording_uuid'])."\" type=\"audio/wav\">\n";
 			//echo "		</audio>\n";
-			//echo "		<a href=\"download.php?id=".$row['call_recording_uuid']."&t=bin\">".$text['label-download']." ".$v_link_label_download."</a>\n";
+			//echo "		<a href=\"download.php?id=".escape($row['call_recording_uuid'])."&t=bin\">".$text['label-download']." ".$v_link_label_download."</a>\n";
 			if (file_exists($row['call_recording_path'].'/'.$row['call_recording_name'])) {	
 				if (permission_exists('call_recording_play')) {
-					echo 	"<audio id='recording_audio_".$row['call_recording_uuid']."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row['call_recording_uuid']."')\" onended=\"recording_reset('".$row['call_recording_uuid']."');\" src=\"download.php?id=".$row['call_recording_uuid']."\" type='".$recording_type."'></audio>";
-					echo 	"<span id='recording_button_".$row['call_recording_uuid']."' onclick=\"recording_play('".$row['call_recording_uuid']."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
+					echo 	"<audio id='recording_audio_".escape($row['call_recording_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['call_recording_uuid'])."')\" onended=\"recording_reset('".escape($row['call_recording_uuid'])."');\" src=\"download.php?id=".escape($row['call_recording_uuid'])."\" type='".$recording_type."'></audio>";
+					echo 	"<span id='recording_button_".escape($row['call_recording_uuid'])."' onclick=\"recording_play('".escape($row['call_recording_uuid'])."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
 				}
 				if (permission_exists('call_recording_download')) {
-					echo 	"<a href=\"download.php?id=".$row['call_recording_uuid']."&t=bin\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
+					echo 	"<a href=\"download.php?id=".escape($row['call_recording_uuid'])."&t=bin\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
 				}
 			}
 			echo "	</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."' style=\"\">\n";
-			//echo "		<a href=\"download.php?id=".$row['call_recording_uuid']."&t=bin\">".$text['label-download']." ".$v_link_label_download."</a>\n";
+			//echo "		<a href=\"download.php?id=".escape($row['call_recording_uuid'])."&t=bin\">".$text['label-download']." ".$v_link_label_download."</a>\n";
 			//echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_recording_length']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_recording_date']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_direction']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".$row['call_recording_description']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_recording_base64']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_recording_length'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_recording_date'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_direction'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($row['call_recording_description'])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_recording_base64'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('xml_cdr_details')) {
-				echo "		<a href='/app/xml_cdr/xml_cdr_details.php?uuid=".$row['call_recording_uuid']."' title='".$text['button-view']."'>$v_link_label_view</a>";
+				echo "		<a href='/app/xml_cdr/xml_cdr_details.php?uuid=".escape($row['call_recording_uuid'])."' title='".$text['button-view']."'>$v_link_label_view</a>";
 			}
 			if (permission_exists('call_recording_edit')) {
-				echo "<button type='button' class='btn btn-default list_control_icon' name='' alt='".$text['button-edit']."' onclick=\"window.location='call_recording_edit.php?id=".$row['call_recording_uuid']."'\" value='edit'><span class='glyphicon glyphicon-pencil'></span></input>\n";
+				echo "<button type='button' class='btn btn-default list_control_icon' name='' alt='".$text['button-edit']."' onclick=\"window.location='call_recording_edit.php?id=".escape($row['call_recording_uuid'])."'\" value='edit'><span class='glyphicon glyphicon-pencil'></span></input>\n";
 			}
 			if (permission_exists('call_recording_delete')) {
 				echo "<button type='submit' class='btn btn-default list_control_icon' name=\"call_recordings[$x][action]\" alt='".$text['button-delete']."' value='delete'><span class='glyphicon glyphicon-remove'></span></button>\n";
