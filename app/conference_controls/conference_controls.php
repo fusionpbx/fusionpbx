@@ -82,7 +82,7 @@
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-conference_controls']."</b></td>\n";
 	echo "		<form method='get' action=''>\n";
 	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
-	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>\n";
+	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".escape($search)."'>\n";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
 	echo "			</td>\n";
 	echo "		</form>\n";
@@ -115,15 +115,15 @@
 				$tr_link = "href='conference_control_edit.php?id=".$row['conference_control_uuid']."'";
 			}
 			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['control_name']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['control_enabled']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".$row['control_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['control_name'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['control_enabled'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($row['control_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('conference_control_edit')) {
-				echo "<a href='conference_control_edit.php?id=".$row['conference_control_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='conference_control_edit.php?id=".escape($row['conference_control_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('conference_control_delete')) {
-				echo "<a href='conference_control_delete.php?id=".$row['conference_control_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='conference_control_delete.php?id=".escape($row['conference_control_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
