@@ -53,6 +53,7 @@
 	unset ($prep_statement, $result, $sql);
 
 //prepare the paging
+	require_once "resources/paging.php";
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "";
 	$page = $_GET['page'];
@@ -76,9 +77,8 @@
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-//add the includes
+//add the header
 	require_once "resources/header.php";
-	require_once "resources/paging.php";
 
 //get the http get variables and set them to php variables
 	$order_by = $_GET["order_by"];
