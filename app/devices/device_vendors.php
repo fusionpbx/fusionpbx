@@ -108,7 +108,7 @@
 		echo "                          <input type='button' class='btn' alt='".$text['button-restore']."' onclick=\"document.location='device_vendor_restore.php'\" value='".$text['button-restore']."'>";
 	}
 	echo "				<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"document.location='devices.php'\" value='".$text['button-back']."'>";
-	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>\n";
+	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".escape($search)."'>\n";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
 	echo "			</td>\n";
 	echo "		</form>\n";
@@ -138,18 +138,18 @@
 	if (is_array($result)) {
 		foreach($result as $row) {
 			if (permission_exists('device_vendor_edit')) {
-				$tr_link = "href='device_vendor_edit.php?id=".$row['device_vendor_uuid']."'";
+				$tr_link = "href='device_vendor_edit.php?id=".escape($row['device_vendor_uuid'])."'";
 			}
 			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['name']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['enabled']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['name'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['enabled'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('device_vendor_edit')) {
-				echo "<a href='device_vendor_edit.php?id=".$row['device_vendor_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='device_vendor_edit.php?id=".escape($row['device_vendor_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('device_vendor_delete')) {
-				echo "<a href='device_vendor_delete.php?id=".$row['device_vendor_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='device_vendor_delete.php?id=".escape($row['device_vendor_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
