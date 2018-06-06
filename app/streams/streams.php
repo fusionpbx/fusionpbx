@@ -174,7 +174,7 @@
 		}
 	}
 
-	echo "				<input type='text' class='txt' style='width: 150px; margin-left: 15px;' name='search' id='search' value='".$search."'>\n";
+	echo "				<input type='text' class='txt' style='width: 150px; margin-left: 15px;' name='search' id='search' value='".escape($search)."'>\n";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
 	echo "			</td>\n";
 	echo "		</form>\n";
@@ -214,12 +214,12 @@
 		$x = 0;
 		foreach($streams as $row) {
 			if (permission_exists('stream_edit')) {
-				$tr_link = "href='stream_edit.php?id=".$row['stream_uuid']."'";
+				$tr_link = "href='stream_edit.php?id=".escape($row['stream_uuid'])."'";
 			}
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='align: center; padding: 3px 3px 0px 8px;'>\n";
 			echo "		<input type='checkbox' name=\"streams[$x][checked]\" id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$x."').checked = false; }\">\n";
-			echo "		<input type='hidden' name=\"streams[$x][stream_uuid]\" value='".$row['stream_uuid']."' />\n";
+			echo "		<input type='hidden' name=\"streams[$x][stream_uuid]\" value='".escape($row['stream_uuid'])."' />\n";
 			echo "	</td>\n";
 			if ($_GET['show'] == "all" && permission_exists('stream_all')) {
 				if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
