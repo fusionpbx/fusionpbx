@@ -383,7 +383,7 @@
 				if (strlen($row['domain_uuid']) == 0) {
 					if (strlen($row['music_on_hold_rate']) == 0) { $option_name = $row['music_on_hold_name']; }
 					if (strlen($row['music_on_hold_rate']) > 0) { $option_name = $row['music_on_hold_name'] .'/'.$row['music_on_hold_rate']; }
-					echo "						<option value='".$row['music_on_hold_uuid']."'>".$option_name."</option>\n";
+					echo "						<option value='".escape($row['music_on_hold_uuid'])."'>".$option_name."</option>\n";
 				}
 			}
 			echo "					</optgroup>\n";
@@ -395,7 +395,7 @@
 			if (strlen($row['domain_uuid']) > 0) {
 			if (strlen($row['music_on_hold_rate']) == 0) { $option_name = $row['music_on_hold_name']; }
 			if (strlen($row['music_on_hold_rate']) > 0) { $option_name = $row['music_on_hold_name'] .'/'.$row['music_on_hold_rate']; }
-				echo "						<option value='".$row['music_on_hold_uuid']."'>".$option_name."</option>\n";
+				echo "						<option value='".escape($row['music_on_hold_uuid'])."'>".$option_name."</option>\n";
 			}
 		}
 		if (permission_exists('music_on_hold_domain')) {
@@ -546,10 +546,10 @@
 					echo "		<th class='listhdr' style='width: 150px; text-align: right;'>".$text['label-uploaded']."</th>\n";
 					echo "		<td class='".((!permission_exists('music_on_hold_domain')) ? 'list_control_icon' : 'list_control_icons')." tr_link_void'>";
 					if (permission_exists('music_on_hold_edit')) {
-						echo "<a href='music_on_hold_edit.php?id=".$row['music_on_hold_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+						echo "<a href='music_on_hold_edit.php?id=".escape($row['music_on_hold_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 					}
 					if (permission_exists('music_on_hold_delete')) {
-						echo "<a href='music_on_hold_delete.php?id=".$row['music_on_hold_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+						echo "<a href='music_on_hold_delete.php?id=".escape($row['music_on_hold_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 					}
 					echo 		"</td>\n";
 					echo "	</tr>";
@@ -590,9 +590,9 @@
 							echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right; white-space: nowrap;'>".$stream_file_size."</td>\n";
 							echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".$stream_file_date."</td>\n";
 							echo "	<td valign='top' class='".((!permission_exists('music_on_hold_domain')) ? 'list_control_icon' : 'list_control_icons')."'>\n";
-							echo 		"<a href='?action=download&id=".$row['music_on_hold_uuid']."&file=".base64_encode($stream_file)."' title='".$text['label-download']."'>".$v_link_label_download."</a>";
+							echo 		"<a href='?action=download&id=".escape($row['music_on_hold_uuid'])."&file=".base64_encode($stream_file)."' title='".$text['label-download']."'>".$v_link_label_download."</a>";
 							if ( ($domain_uuid == '' && permission_exists('music_on_hold_domain')) || ($domain_uuid != '' && permission_exists('music_on_hold_delete')) ) {
-								echo 	"<a href='?action=delete&id=".$row['music_on_hold_uuid']."&file=".base64_encode($stream_file)."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+								echo 	"<a href='?action=delete&id=".escape($row['music_on_hold_uuid'])."&file=".base64_encode($stream_file)."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 							}
 							echo "	</td>\n";
 							echo "</tr>\n";
