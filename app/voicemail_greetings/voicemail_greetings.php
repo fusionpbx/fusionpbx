@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,7 +29,7 @@
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
-//deny access if the user extension is not assigned
+//check permissions
 	if (!permission_exists('voicemail_greeting_view')) {
 		if (!is_extension_assigned($voicemail_id)) {
 			echo "access denied";
@@ -366,7 +366,7 @@
 	echo "<div style='float: right; white-space: nowrap;'>\n";
 	if (permission_exists('voicemail_greeting_upload')) {
 		echo "		<form name='frm' method='POST' enctype='multipart/form-data' action=''>\n";
-		echo "		<input type='hidden' name='id' value='".$voicemail_id."'>\n";
+		echo "		<input type='hidden' name='id' value='".escape($voicemail_id)."'>\n";
 		echo "		<input type='hidden' name='type' value='rec'>\n";
 	}
 	echo "			<input type='button' class='btn' alt='back' onclick=\"window.location='".$_SESSION['back'][$_SERVER['PHP_SELF']]."';\" value='".$text['button-back']."'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n";
@@ -380,22 +380,22 @@
 	echo "</div>";
 	echo "<span class='title'>".$text['title']."</span>\n";
 	echo "<br><br>\n";
-	echo $text['description']." <strong>".$voicemail_id."</strong>\n";
+	echo $text['description']." <strong>".escape($voicemail_id)."</strong>\n";
 	echo "<br /><br />\n";
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<th width='2'>&nbsp;</th>\n";
-	echo th_order_by('greeting_id', $text['table-number'], $order_by, $order, '', "width='20'", "id=".$voicemail_id);
-	echo th_order_by('greeting_name', $text['table-name'], $order_by, $order, '', '', "id=".$voicemail_id);
+	echo th_order_by('greeting_id', $text['table-number'], $order_by, $order, '', "width='20'", "id=".escape($voicemail_id));
+	echo th_order_by('greeting_name', $text['table-name'], $order_by, $order, '', '', "id=".escape($voicemail_id));
 	if ($_SESSION['voicemail']['storage_type']['text'] != 'base64') {
-		echo th_order_by('greeting_filename', $text['table-filename'], $order_by, $order, '', '', "id=".$voicemail_id);
+		echo th_order_by('greeting_filename', $text['table-filename'], $order_by, $order, '', '', "id=".escape($voicemail_id));
 		echo "<th class='listhdr' style='text-align: right;' nowrap='nowrap'>".$text['table-size']."</th>\n";
 	}
 	if (permission_exists('voicemail_greeting_play') || permission_exists('voicemail_greeting_download')) {
 		echo "<th>".$text['label-tools']."</th>\n";
 	}
-	echo th_order_by('greeting_description', $text['table-description'], $order_by, $order, '', '', "id=".$voicemail_id);
+	echo th_order_by('greeting_description', $text['table-description'], $order_by, $order, '', '', "id=".escape($voicemail_id));
 	echo "<td align='right' width='21'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -405,22 +405,22 @@
 	if ($_SESSION['voicemail']['storage_type']['text'] == 'base64') { $colspan = $colspan - 2; }
 	if (!(permission_exists('voicemail_greeting_edit') || permission_exists('voicemail_greeting_delete'))) { $colspan = $colspan - 1; }
 
-	if ($greeting_count > 0) {
+	if (is_array($greetings) {
 		foreach($greetings as $row) {
 			//playback progress bar
 			if (permission_exists('voicemail_greeting_play')) {
-				echo "<tr id='recording_progress_bar_".$row['voicemail_greeting_uuid']."' style='display: none;'><td colspan='".$colspan."' class='".$row_style[$c]." playback_progress_bar_background'><span class='playback_progress_bar' id='recording_progress_".$row['voicemail_greeting_uuid']."'></span></td></tr>\n";
+				echo "<tr id='recording_progress_bar_".escape($row['voicemail_greeting_uuid'])."' style='display: none;'><td colspan='".$colspan."' class='".$row_style[$c]." playback_progress_bar_background'><span class='playback_progress_bar' id='recording_progress_".escape($row['voicemail_greeting_uuid'])."'></span></td></tr>\n";
 			}
-			$tr_link = (permission_exists('voicemail_greeting_edit')) ? "href='voicemail_greeting_edit.php?id=".$row['voicemail_greeting_uuid']."&voicemail_id=".$voicemail_id."'" : null;
+			$tr_link = (permission_exists('voicemail_greeting_edit')) ? "href='voicemail_greeting_edit.php?id=".escape($row['voicemail_greeting_uuid'])."&voicemail_id=".escape($voicemail_id)."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td class='".$row_style[$c]." row_style_slim tr_link_void' width='30px;' valign='top'>";
 			$selected = ($row['greeting_id'] == $selected_greeting_id) ? true : false;
-			echo 		"<input type='radio' onclick=\"window.location='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$voicemail_id."&greeting_id=".$row['greeting_id']."&action=set&order_by=".$order_by."&order=".$order."';\" name='greeting_id' value='".$row['greeting_id']."' ".(($selected) ? "checked='checked'" : null)." style='margin-top: 7px;'>\n";
+			echo 		"<input type='radio' onclick=\"window.location='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".escape($voicemail_id)."&greeting_id=".escape($row['greeting_id'])."&action=set&order_by=".$order_by."&order=".$order."';\" name='greeting_id' value='".escape($row['greeting_id'])."' ".(($selected) ? "checked='checked'" : null)." style='margin-top: 7px;'>\n";
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['greeting_id']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['greeting_name']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['greeting_id'])."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['greeting_name'])."</td>\n";
 			if ($_SESSION['voicemail']['storage_type']['text'] != 'base64') {
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['greeting_filename']."</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['greeting_filename'])."</td>\n";
 				$tmp_filesize = filesize($v_greeting_dir.'/'.$row['greeting_filename']);
 				$tmp_filesize = byte_convert($tmp_filesize);
 				echo "	<td class='".$row_style[$c]."' style='text-align: right;' nowrap>".$tmp_filesize."</td>\n";
@@ -436,21 +436,21 @@
 						case "mp3" : $greeting_type = "audio/mpeg"; break;
 						case "ogg" : $greeting_type = "audio/ogg"; break;
 					}
-					echo "<audio id='recording_audio_".$row['voicemail_greeting_uuid']."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row['voicemail_greeting_uuid']."')\" onended=\"recording_reset('".$row['voicemail_greeting_uuid']."');\" src=\"voicemail_greetings.php?id=".$voicemail_id."&a=download&type=rec&uuid=".$row['voicemail_greeting_uuid']."\" type='".$greeting_type."'></audio>";
-					echo "<span id='recording_button_".$row['voicemail_greeting_uuid']."' onclick=\"recording_play('".$row['voicemail_greeting_uuid']."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
+					echo "<audio id='recording_audio_".escape($row['voicemail_greeting_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['voicemail_greeting_uuid'])."')\" onended=\"recording_reset('".escape($row['voicemail_greeting_uuid'])."');\" src=\"voicemail_greetings.php?id=".escape($voicemail_id)."&a=download&type=rec&uuid=".escape($row['voicemail_greeting_uuid'])."\" type='".$greeting_type."'></audio>";
+					echo "<span id='recording_button_".escape($row['voicemail_greeting_uuid'])."' onclick=\"recording_play('".escape($row['voicemail_greeting_uuid'])."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
 				}
 				if (permission_exists('voicemail_greeting_download')) {
-					echo "<a href=\"voicemail_greetings.php?a=download&type=rec&t=bin&id=".$voicemail_id."&uuid=".$row['voicemail_greeting_uuid']."\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
+					echo "<a href=\"voicemail_greetings.php?a=download&type=rec&t=bin&id=".escape($voicemail_id)."&uuid=".escape($row['voicemail_greeting_uuid'])."\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
 				}
 				echo "	</td>\n";
 			}
-			echo "	<td width='30%' valign='top' class='row_stylebg'>".$row['greeting_description']."&nbsp;</td>\n";
+			echo "	<td width='30%' valign='top' class='row_stylebg'>".escape($row['greeting_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>\n";
 			if (permission_exists('voicemail_greeting_edit')) {
-				echo "<a href='voicemail_greeting_edit.php?id=".$row['voicemail_greeting_uuid']."&voicemail_id=".$voicemail_id."' alt='edit'>$v_link_label_edit</a>";
+				echo "<a href='voicemail_greeting_edit.php?id=".escape($row['voicemail_greeting_uuid'])."&voicemail_id=".escape($voicemail_id)."' alt='edit'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('voicemail_greeting_delete')) {
-				echo "<a href='voicemail_greeting_delete.php?id=".$row['voicemail_greeting_uuid']."&voicemail_id=".$voicemail_id."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>";
+				echo "<a href='voicemail_greeting_delete.php?id=".escape($row['voicemail_greeting_uuid'])."&voicemail_id=".escape($voicemail_id)."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -464,4 +464,5 @@
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>
