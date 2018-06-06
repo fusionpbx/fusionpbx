@@ -7207,12 +7207,14 @@
 <!-- # Speaker Ring Volume -->
 <!-- # Number: 0-7. Default is 5. -->
 <!-- # Mandatory -->
-<P8352>5</P8352>
+<!-- ##### We should NOT force the user's volume!!! ### -->
+<!-- <P8352>5</P8352> -->
 
 <!-- # Notification Tone Volume -->
 <!-- # Number: 0-7. Default is 5. -->
 <!-- # Mandatory -->
-<P8399>5</P8399>
+<!-- ##### We should NOT force the user's volume!!! ### -->
+<!-- <P8399>5</P8399> -->
 
 <!-- # Lock Volumne. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
