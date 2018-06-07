@@ -263,7 +263,7 @@
 						if ($matches != FALSE) {
 							//set the user agent
 								$agent = $row['agent'];
-	
+
 							//set the user id
 								$user_id = str_replace('@', '_', $row['user']);
 
@@ -277,10 +277,10 @@
 								echo "		<input type='hidden' name=\"registrations[$x][domain]\" value='".escape($row['sip-auth-realm'])."' />\n";
 								echo "	</td>\n";
 								echo "	<td class='".$row_style[$c]."'>".escape($row['user'])."&nbsp;</td>\n";
-								echo "	<td class='".$row_style[$c]."'>".htmlentities($row['agent'])."&nbsp;</td>\n";
-								echo "	<td class='".$row_style[$c]."'>".explode('"',$row['contact'])[1]."</td>\n";
-								echo "	<td class='".$row_style[$c]."'>".escape($row['lan-ip'])."</td>\n";
-								echo "	<td class='".$row_style[$c]."'>".escape($row['network-ip'])."</td>\n";
+								echo "	<td class='".$row_style[$c]."'>".escape($row['agent'])."&nbsp;</td>\n";
+								echo "	<td class='".$row_style[$c]."'>".escape(explode('"',$row['contact'])[1])."</td>\n";
+								echo "	<td class='".$row_style[$c]."'><a href='http://".escape($row['lan-ip'])."' target='_blank'>".escape($row['lan-ip'])."</a></td>\n";
+								echo "	<td class='".$row_style[$c]."'><a href='http://".escape($row['network-ip'])."' target='_blank'>".escape($row['network-ip'])."</a></td>\n";
 								echo "	<td class='".$row_style[$c]."'>".escape($row['network-port'])."</td>\n";
 								echo "	<td class='".$row_style[$c]."'>".escape($row['host'])."</td>\n";
 								echo "	<td class='".$row_style[$c]."'>".escape($row['status'])."</td>\n";
