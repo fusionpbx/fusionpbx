@@ -105,9 +105,9 @@ if (!class_exists('registrations')) {
 
 								//get network-ip to url or blank
 									if(isset($row['network-ip'])) {
-										$registrations[$id]['network-ip'] = "<a href='http://".$row['network-ip']."' target='_blank'>".$row['network-ip']."</a>";
+										$registrations[$id]['network-ip'] = $row['network-ip'];
 									} else {
-										$registrations[$id]['network-ip'] = "&nbsp;";
+										$registrations[$id]['network-ip'] = '';
 									}
 
 								//get the LAN IP address if it exists replace the external ip
@@ -125,9 +125,9 @@ if (!class_exists('registrations')) {
 											//required for GIGASET Sculpture CL750A puts _ in it's lan ip account
 											$lan_ip = preg_replace('/_/', '.', $lan_ip);
                                         					}
-										$registrations[$id]['lan-ip'] = "<a href='http://".$lan_ip."' target='_blank'>".$lan_ip."</a>";
+										$registrations[$id]['lan-ip'] = $lan_ip;
 									} else {
-										$registrations[$id]['lan-ip'] = "&nbsp;";
+										$registrations[$id]['lan-ip'] = '';
 									}
 
 								//remove unrelated domains
