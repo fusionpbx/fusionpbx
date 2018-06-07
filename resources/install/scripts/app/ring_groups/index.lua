@@ -511,15 +511,15 @@
 				--determine if the user is registered if not registered then lookup 
 					cmd = "sofia_contact */".. destination_number .."@" ..domain_name;
 					if (api:executeString(cmd) == "error/user_not_registered") then
-freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
+						freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
 						cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_user_not_registered_enabled";
-freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
+						freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
 						if (api:executeString(cmd) == "true") then
 							--get the new destination number
 							cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_user_not_registered_destination";
-freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
+							freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
 							not_registered_destination_number = api:executeString(cmd);
-freeswitch.consoleLog("NOTICE", "[ring_group] "..not_registered_destination_number.."\n");
+							freeswitch.consoleLog("NOTICE", "[ring_group] "..not_registered_destination_number.."\n");
 							if (not_registered_destination_number ~= nil) then
 								destination_number = not_registered_destination_number;	
 							end
@@ -773,10 +773,11 @@ freeswitch.consoleLog("NOTICE", "[ring_group] "..not_registered_destination_numb
 					session:execute("set", "continue_on_fail=true");
 
 				-- support conf-xfer feature
-				-- do
-				-- 	local uuid = api:executeString("create_uuid")
-				-- 	session:execute("export", "conf_xfer_number=xfer-" .. uuid .. "-" .. domain_name)
-				-- end
+					-- do
+					-- 	local uuid = api:executeString("create_uuid")
+					-- 	session:execute("export", "conf_xfer_number=xfer-" .. uuid .. "-" .. domain_name)
+					-- end
+
 				--set bind digit action
 					local bind_target = 'peer'
 					if session:getVariable("sip_authorized") == "true" then
@@ -791,106 +792,107 @@ freeswitch.consoleLog("NOTICE", "[ring_group] "..not_registered_destination_numb
 					end
 					session:execute("digit_action_set_realm", "local");
 
-					--if the user is busy rollover to the next destination
-						if (ring_group_strategy == "rollover") then
-							x = 0;
-							app_data = '{ignore_early_media=true}';
-							for key, row in pairs(destinations) do
-								--set the values from the database as variables
-									user_exists = row.user_exists;
-									destination_number = row.destination_number;
-									domain_name = row.domain_name;
+				--if the user is busy rollover to the next destination
+					if (ring_group_strategy == "rollover") then
+						timeout = 0;
+						x = 0;
+						for key, row in pairs(destinations) do
 
-								--get the extension_uuid
-									if (user_exists == "true") then
-										cmd = "user_data ".. destination_number .."@"..domain_name.." var extension_uuid";
-										extension_uuid = trim(api:executeString(cmd));
-									end
+							--set the app data
+								app_data = '{ignore_early_media=true}';
 
-								--if the timeout was reached go to the timeout action
-									if (x > 0) then
-										if (session:getVariable("originate_disposition") == "ALLOTTED_TIMEOUT"
-											or session:getVariable("originate_disposition") == "NO_ANSWER"
-											or session:getVariable("originate_disposition") == "NO_USER_RESPONSE") then
-												break;
-										end
-									end
+							--set the values from the database as variables
+								user_exists = row.user_exists;
+								destination_number = row.destination_number;
+								domain_name = row.domain_name;
 
-								--send the call to the destination
-									if (user_exists == "true") then
-										dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",leg_timeout="..destination_timeout..",call_direction="..call_direction..",dialed_extension=" .. destination_number .. ",extension_uuid="..extension_uuid..",domain_name="..domain_name..",domain_uuid="..domain_uuid..row.record_session.."]user/" .. destination_number .. "@" .. domain_name;
-									elseif (tonumber(destination_number) == nil) then
-										dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",call_timeout="..destination_timeout..",call_direction=outbound,domain_name="..domain_name..",domain_uuid="..domain_uuid.."]" .. destination_number;
-									else
-										dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",call_timeout="..destination_timeout..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",call_direction=outbound]loopback/" .. destination_number;
-									end
-
-								--add the delimiter
-									if (x == 0) then
-										app_data = app_data .. dial_string;
-									else
-										app_data = app_data .. delimiter .. dial_string;
-									end
-
-								--increment the value of x
-									x = x + 1;
-							end
-						end
-
-					--execute the bridge
-						if (app_data ~= nil) then
-							if (ring_group_strategy == "enterprise") then
-								app_data = app_data:gsub("%[", "{");
-								app_data = app_data:gsub("%]", "}");
-							end
-							freeswitch.consoleLog("NOTICE", "[ring group] app_data: "..app_data.."\n");
-							-- log.noticef("bridge begin: originate_disposition:%s answered:%s ready:%s bridged:%s", session:getVariable("originate_disposition"), session:answered() and "true" or "false", session:ready() and "true" or "false", session:bridged() and "true" or "false")
-							session:execute("bridge", app_data);
-							-- log.noticef("bridge done: originate_disposition:%s answered:%s ready:%s bridged:%s", session:getVariable("originate_disposition"), session:answered() and "true" or "false", session:ready() and "true" or "false", session:bridged() and "true" or "false")
-						end
-
-					--timeout destination
-						if (app_data ~= nil) then
-							if session:ready() and (
-								session:getVariable("originate_disposition")  == "ALLOTTED_TIMEOUT"
-								or session:getVariable("originate_disposition") == "NO_ANSWER"
-								or session:getVariable("originate_disposition") == "NO_USER_RESPONSE"
-								or session:getVariable("originate_disposition") == "USER_NOT_REGISTERED"
-								or session:getVariable("originate_disposition") == "NORMAL_TEMPORARY_FAILURE"
-								or session:getVariable("originate_disposition") == "NO_ROUTE_DESTINATION"
-								or session:getVariable("originate_disposition") == "USER_BUSY"
-								or session:getVariable("originate_disposition") == "RECOVERY_ON_TIMER_EXPIRE"
-								or session:getVariable("originate_disposition") == "failure"
-							) then
-								--execute the time out action
-									if ring_group_timeout_app and #ring_group_timeout_app > 0 then
-										session:execute(ring_group_timeout_app, ring_group_timeout_data);
-									end
-							end
-						else
-							if (ring_group_timeout_app ~= nil) then
-								--execute the time out action
-									if ring_group_timeout_app and #ring_group_timeout_app > 0 then
-										session:execute(ring_group_timeout_app, ring_group_timeout_data);
-									end
-							else
-								local sql = "SELECT ring_group_timeout_app, ring_group_timeout_data FROM v_ring_groups ";
-								sql = sql .. "where ring_group_uuid = :ring_group_uuid";
-								local params = {ring_group_uuid = ring_group_uuid};
-								if debug["sql"] then
-									freeswitch.consoleLog("notice", "[ring group] SQL:" .. sql .. "; params:" .. json.encode(params) .. "\n");
+							--get the extension_uuid
+								if (user_exists == "true") then
+									cmd = "user_data ".. destination_number .."@"..domain_name.." var extension_uuid";
+									extension_uuid = trim(api:executeString(cmd));
 								end
-								dbh:query(sql, params, function(row)
-									--execute the time out action
-										if row.ring_group_timeout_app and #row.ring_group_timeout_app > 0 then
-											session:execute(row.ring_group_timeout_app, row.ring_group_timeout_data);
-										end
-								end);
-							end
+
+							--if the timeout was reached exit the loop and go to the timeout action
+								if (tonumber(ring_group_call_timeout) == timeout) then
+									break;	
+								end
+								timeout = timeout + destination_timeout;
+
+							--send the call to the destination
+								if (user_exists == "true") then
+									dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",originate_timeout="..destination_timeout..",call_direction="..call_direction..",dialed_extension=" .. destination_number .. ",extension_uuid="..extension_uuid..",domain_name="..domain_name..",domain_uuid="..domain_uuid..row.record_session.."]user/" .. destination_number .. "@" .. domain_name;
+								elseif (tonumber(destination_number) == nil) then
+									dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",originate_timeout="..destination_timeout..",call_direction=outbound,domain_name="..domain_name..",domain_uuid="..domain_uuid.."]" .. destination_number;
+								else
+									dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",originate_timeout="..destination_timeout..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",call_direction=outbound]loopback/" .. destination_number;
+								end
+
+							--add the delimiter
+								app_data = app_data .. dial_string;
+								freeswitch.consoleLog("NOTICE", "[ring group] app_data: "..app_data.."\n");
+								session:execute("bridge", app_data);
+
+							--increment the value of x
+								x = x + 1;
 						end
-				end
-		
-		end
+					end
+
+				--execute the bridge
+					if (app_data ~= nil) then
+						if (ring_group_strategy == "enterprise") then
+							app_data = app_data:gsub("%[", "{");
+							app_data = app_data:gsub("%]", "}");
+						end
+						freeswitch.consoleLog("NOTICE", "[ring group] app_data: "..app_data.."\n");
+						-- log.noticef("bridge begin: originate_disposition:%s answered:%s ready:%s bridged:%s", session:getVariable("originate_disposition"), session:answered() and "true" or "false", session:ready() and "true" or "false", session:bridged() and "true" or "false")
+						if (ring_group_strategy ~= "rollover") then
+							session:execute("bridge", app_data);
+						end
+						-- log.noticef("bridge done: originate_disposition:%s answered:%s ready:%s bridged:%s", session:getVariable("originate_disposition"), session:answered() and "true" or "false", session:ready() and "true" or "false", session:bridged() and "true" or "false")
+					end
+
+				--timeout destination
+					if (app_data ~= nil) then
+						if session:ready() and (
+							session:getVariable("originate_disposition")  == "ALLOTTED_TIMEOUT"
+							or session:getVariable("originate_disposition") == "NO_ANSWER"
+							or session:getVariable("originate_disposition") == "NO_USER_RESPONSE"
+							or session:getVariable("originate_disposition") == "USER_NOT_REGISTERED"
+							or session:getVariable("originate_disposition") == "NORMAL_TEMPORARY_FAILURE"
+							or session:getVariable("originate_disposition") == "NO_ROUTE_DESTINATION"
+							or session:getVariable("originate_disposition") == "USER_BUSY"
+							or session:getVariable("originate_disposition") == "RECOVERY_ON_TIMER_EXPIRE"
+							or session:getVariable("originate_disposition") == "failure"
+						) then
+							--execute the time out action
+								if ring_group_timeout_app and #ring_group_timeout_app > 0 then
+									session:execute(ring_group_timeout_app, ring_group_timeout_data);
+								end
+						end
+					else
+						if (ring_group_timeout_app ~= nil) then
+							--execute the time out action
+								if ring_group_timeout_app and #ring_group_timeout_app > 0 then
+									session:execute(ring_group_timeout_app, ring_group_timeout_data);
+								end
+						else
+							local sql = "SELECT ring_group_timeout_app, ring_group_timeout_data FROM v_ring_groups ";
+							sql = sql .. "where ring_group_uuid = :ring_group_uuid";
+							local params = {ring_group_uuid = ring_group_uuid};
+							if debug["sql"] then
+								freeswitch.consoleLog("notice", "[ring group] SQL:" .. sql .. "; params:" .. json.encode(params) .. "\n");
+							end
+							dbh:query(sql, params, function(row)
+								--execute the time out action
+									if row.ring_group_timeout_app and #row.ring_group_timeout_app > 0 then
+										session:execute(row.ring_group_timeout_app, row.ring_group_timeout_data);
+									end
+							end);
+						end
+					end
+			end
+
+	end
 
 --actions
 	--ACTIONS = {}
