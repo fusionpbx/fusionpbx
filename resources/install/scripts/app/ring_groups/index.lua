@@ -794,8 +794,8 @@
 
 				--if the user is busy rollover to the next destination
 					if (ring_group_strategy == "rollover") then
+						timeout = 0;
 						x = 0;
-						
 						for key, row in pairs(destinations) do
 
 							--set the app data
@@ -812,14 +812,11 @@
 									extension_uuid = trim(api:executeString(cmd));
 								end
 
-							--if the timeout was reached go to the timeout action
-								--if (x > 0) then
-								--	if (session:getVariable("originate_disposition") == "ALLOTTED_TIMEOUT"
-								--		or session:getVariable("originate_disposition") == "NO_ANSWER"
-								--		or session:getVariable("originate_disposition") == "NO_USER_RESPONSE") then
-								--			break;
-								--	end
-								--end
+							--if the timeout was reached exit the loop and go to the timeout action
+								if (tonumber(ring_group_call_timeout) == timeout) then
+									break;	
+								end
+								timeout = timeout + destination_timeout;
 
 							--send the call to the destination
 								if (user_exists == "true") then
