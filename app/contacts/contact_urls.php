@@ -17,22 +17,26 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('contact_url_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('contact_url_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //show the content
 	echo "<table width='100%' border='0'>\n";
@@ -73,18 +77,18 @@ else {
 	if ($result_count > 0) {
 		foreach($result as $row) {
 			if (permission_exists('contact_url_edit')) {
-				$tr_link = "href='contact_url_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_url_uuid']."'";
+				$tr_link = "href='contact_url_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_url_uuid'])."'";
 			}
-			echo "<tr ".$tr_link." ".(($row['url_primary']) ? "style='font-weight: bold;'" : null).">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['url_label']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='width: 40%; max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><a href='".$row['url_address']."' target='_blank'>".str_replace("http://", "", str_replace("https://", "", $row['url_address']))."</a>&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".$row['url_description']."&nbsp;</td>\n";
+			echo "<tr ".$tr_link." ".((escape($row['url_primary'])) ? "style='font-weight: bold;'" : null).">\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['url_label'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='width: 40%; max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><a href='".escape($row['url_address'])."' target='_blank'>".str_replace("http://", "", str_replace("https://", "", escape($row['url_address'])))."</a>&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($row['url_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('contact_url_edit')) {
-				echo "<a href='contact_url_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_url_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='contact_url_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".$row['contact_url_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('contact_url_delete')) {
-				echo "<a href='contact_url_delete.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_url_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='contact_url_delete.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_url_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
