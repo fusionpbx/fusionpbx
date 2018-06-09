@@ -253,7 +253,7 @@
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='music_on_hold_name' maxlength='255' value=\"$music_on_hold_name\">\n";
+	echo "	<input class='formfld' type='text' name='music_on_hold_name' maxlength='255' value=\"".escape($music_on_hold_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-music_on_hold_name']."\n";
 	echo "</td>\n";
@@ -264,7 +264,7 @@
 	echo "	".$text['label-path']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='music_on_hold_path' maxlength='255' value=\"$music_on_hold_path\">\n";
+	echo "	<input class='formfld' type='text' name='music_on_hold_path' maxlength='255' value=\"".escape($music_on_hold_path)."\">\n";
 	echo "<br />\n";
 	echo $text['description-music_on_hold_path']."\n";
 	echo "</td>\n";
@@ -356,7 +356,7 @@
 	echo "	".$text['label-interval']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='music_on_hold_interval' maxlength='255' value='$music_on_hold_interval'>\n";
+	echo "  <input class='formfld' type='text' name='music_on_hold_interval' maxlength='255' value='".escape($music_on_hold_interval)."'>\n";
 	echo "<br />\n";
 	echo $text['description-music_on_hold_interval']."\n";
 	echo "</td>\n";
@@ -367,7 +367,7 @@
 	echo "	".$text['label-timer_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='music_on_hold_timer_name' maxlength='255' value=\"$music_on_hold_timer_name\">\n";
+	echo "	<input class='formfld' type='text' name='music_on_hold_timer_name' maxlength='255' value=\"".escape($music_on_hold_timer_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-music_on_hold_timer_name']."\n";
 	echo "</td>\n";
@@ -478,7 +478,7 @@
 	echo "	".$text['label-chime_frequency']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='music_on_hold_chime_freq' maxlength='255' value=\"$music_on_hold_chime_freq\">\n";
+	echo "	<input class='formfld' type='text' name='music_on_hold_chime_freq' maxlength='255' value=\"".escape($music_on_hold_chime_freq)."\">\n";
 	echo "<br />\n";
 	echo $text['description-music_on_hold_chime_freq']."\n";
 	echo "</td>\n";
@@ -489,7 +489,7 @@
 	echo "	".$text['label-chime_maximum']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='music_on_hold_chime_max' maxlength='255' value=\"$music_on_hold_chime_max\">\n";
+	echo "	<input class='formfld' type='text' name='music_on_hold_chime_max' maxlength='255' value=\"".escape($music_on_hold_chime_max)."\">\n";
 	echo "<br />\n";
 	echo $text['description-music_on_hold_chime_max']."\n";
 	echo "</td>\n";
