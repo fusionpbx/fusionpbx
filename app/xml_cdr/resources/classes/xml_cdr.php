@@ -289,7 +289,7 @@ if (!class_exists('xml_cdr')) {
 						$caller_id_name = urldecode($xml->variables->effective_caller_id_name);
 						$caller_id_number = urldecode($xml->variables->effective_caller_id_number);
 						$caller_id_destination = urldecode($xml->variables->caller_destination);
-						if (strlen($caller_id_number) == 0) foreach ($xml->callflow as $row) {
+						foreach ($xml->callflow as $row) {
 							$caller_id_number = urldecode($row->caller_profile->caller_id_number);
 						}
 						if (strlen($caller_id_name) == 0) foreach ($xml->callflow as $row) {
