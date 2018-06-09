@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2017
+	Portions created by the Initial Developer are Copyright (C) 2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -185,7 +185,7 @@
 	echo "	".$text['label-call_recording_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_recording_name' maxlength='255' value=\"$call_recording_name\">\n";
+	echo "	<input class='formfld' type='text' name='call_recording_name' maxlength='255' value=\"".escape($call_recording_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_recording_name']."\n";
 	echo "</td>\n";
@@ -196,7 +196,7 @@
 	echo "	".$text['label-call_recording_path']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_recording_path' maxlength='255' value=\"$call_recording_path\">\n";
+	echo "	<input class='formfld' type='text' name='call_recording_path' maxlength='255' value=\"".escape($call_recording_path)."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_recording_path']."\n";
 	echo "</td>\n";
@@ -207,7 +207,7 @@
 	echo "	".$text['label-call_recording_length']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='call_recording_length' maxlength='255' value='$call_recording_length'>\n";
+	echo "  <input class='formfld' type='text' name='call_recording_length' maxlength='255' value='".escape($call_recording_length)."'>\n";
 	echo "<br />\n";
 	echo $text['description-call_recording_length']."\n";
 	echo "</td>\n";
@@ -218,7 +218,7 @@
 	echo "	".$text['label-call_recording_date']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "			<input class='formfld datetimepicker' type='text' name='call_recording_date' maxlength='16' value=\"$call_recording_date\">\n";
+	echo "			<input class='formfld datetimepicker' type='text' name='call_recording_date' maxlength='16' value=\"".escape($call_recording_date)."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_recording_date']."\n";
 	echo "</td>\n";
@@ -229,7 +229,7 @@
 	echo "	".$text['label-call_direction']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_direction' maxlength='255' value=\"$call_direction\">\n";
+	echo "	<input class='formfld' type='text' name='call_direction' maxlength='255' value=\"".escape($call_direction)."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_direction']."\n";
 	echo "</td>\n";
@@ -240,7 +240,7 @@
 	echo "	".$text['label-call_recording_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_recording_description' maxlength='255' value=\"$call_recording_description\">\n";
+	echo "	<input class='formfld' type='text' name='call_recording_description' maxlength='255' value=\"".escape($call_recording_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_recording_description']."\n";
 	echo "</td>\n";
