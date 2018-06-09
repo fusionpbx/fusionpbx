@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2016
+ Portions created by the Initial Developer are Copyright (C) 2008-2018
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -391,7 +391,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-voicemail_id']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='voicemail_id' maxlength='255' value='$voicemail_id'>\n";
+	echo "	<input class='formfld' type='text' name='voicemail_id' maxlength='255' value='".escape($voicemail_id)."'>\n";
 	echo "<br />\n";
 	echo $text['description-voicemail_id']."\n";
 	echo "</td>\n";
@@ -402,7 +402,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-voicemail_password']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='voicemail_password' id='password' autocomplete='off' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" autocomplete='off' maxlength='50' value=\"$voicemail_password\">\n";
+	echo "	<input class='formfld' type='text' name='voicemail_password' id='password' autocomplete='off' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" autocomplete='off' maxlength='50' value=\"".escape($voicemail_password)."\">\n";
 	echo "<br />\n";
 	echo $text['description-voicemail_password']."\n";
 	echo "</td>\n";
@@ -446,7 +446,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-voicemail_alternate_greet_id']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='voicemail_alternate_greet_id' maxlength='255' value='$voicemail_alternate_greet_id'>\n";
+	echo "	<input class='formfld' type='text' name='voicemail_alternate_greet_id' maxlength='255' value='".escape($voicemail_alternate_greet_id)."'>\n";
 	echo "	<br />\n";
 	echo "	".$text['description-voicemail_alternate_greet_id']."\n";
 	echo "</td>\n";
@@ -557,7 +557,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-voicemail_mail_to']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='voicemail_mail_to' maxlength='255' value=\"$voicemail_mail_to\">\n";
+	echo "	<input class='formfld' type='text' name='voicemail_mail_to' maxlength='255' value=\"".escape($voicemail_mail_to)."\">\n";
 	echo "<br />\n";
 	echo $text['description-voicemail_mail_to']."\n";
 	echo "</td>\n";
@@ -568,7 +568,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	".$text['label-voicemail_sms_to']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='voicemail_sms_to' maxlength='255' value=\"$voicemail_sms_to\">\n";
+		echo "	<input class='formfld' type='text' name='voicemail_sms_to' maxlength='255' value=\"".escape($voicemail_sms_to)."\">\n";
 		echo "<br />\n";
 		echo $text['description-voicemail_sms_to']."\n";
 		echo "</td>\n";
@@ -651,7 +651,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "		<tr>\n";
 				echo "			<td class='vtable'>".$field['voicemail_id']."</td>\n";
 				echo "			<td>\n";
-				echo "				<a href='voicemail_edit.php?id=".$voicemail_uuid."&voicemail_destination_uuid=".$field['voicemail_destination_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+				echo "				<a href='voicemail_edit.php?id=".escape($voicemail_uuid)."&voicemail_destination_uuid=".$field['voicemail_destination_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".escape($v_link_label_delete)."</a>\n";
 				echo "			</td>\n";
 				echo "		</tr>\n";
 				$voicemail_uuid_copied[] = $field['voicemail_uuid_copy'];
@@ -725,7 +725,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-voicemail_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='voicemail_description' maxlength='255' value=\"$voicemail_description\">\n";
+	echo "	<input class='formfld' type='text' name='voicemail_description' maxlength='255' value=\"".escape($voicemail_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-voicemail_description']."\n";
 	echo "</td>\n";
@@ -733,7 +733,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='voicemail_uuid' value='$voicemail_uuid'>\n";
+		echo "				<input type='hidden' name='voicemail_uuid' value='".escape($voicemail_uuid)."'>\n";
 	}
 	$http_referer = parse_url($_SERVER["HTTP_REFERER"]);
 	echo "				<input type='hidden' name='referer_path' value='".$http_referer['path']."'>\n";
