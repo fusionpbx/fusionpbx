@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -437,7 +437,7 @@
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='phrase_name' maxlength='255' value=\"$phrase_name\">\n";
+	echo "	<input class='formfld' type='text' name='phrase_name' maxlength='255' value=\"".escape($phrase_name)."\">\n";
 	echo "	<br />\n";
 	echo "	".$text['description-name']."\n";
 	echo "</td>\n";
@@ -448,7 +448,7 @@
 	echo "	".$text['label-language']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='phrase_language' maxlength='255' value=\"$phrase_language\">\n";
+	echo "	<input class='formfld' type='text' name='phrase_language' maxlength='255' value=\"".escape($phrase_language)."\">\n";
 	echo "	<br />\n";
 	echo "	".$text['description-language']."\n";
 	echo "</td>\n";
@@ -491,7 +491,7 @@
 			echo "	<td class='vtable'>".$phrase_detail_data."&nbsp;</td>\n";
 			echo "	<td class='vtable' style='text-align: center;'>".$field['phrase_detail_order']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons' style='text-align: left;'>";
-			echo 		"<a href='phrase_detail_delete.php?pdid=".$field['phrase_detail_uuid']."&pid=".$phrase_uuid."&a=delete&lang=".$phrase_language."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+			echo 		"<a href='phrase_detail_delete.php?pdid=".$field['phrase_detail_uuid']."&pid=".escape($phrase_uuid)."&a=delete&lang=".escape($phrase_language)."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 			echo "	</td>\n";
 			echo "</tr>\n";
 		}
@@ -578,7 +578,7 @@
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='phrase_description' maxlength='255' value=\"".$phrase_description."\">\n";
+	echo "	<input class='formfld' type='text' name='phrase_description' maxlength='255' value=\"".escape($phrase_description)."\">\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
