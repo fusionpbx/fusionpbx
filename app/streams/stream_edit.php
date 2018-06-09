@@ -167,7 +167,7 @@
 	echo "	".$text['label-stream_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='stream_name' maxlength='255' value=\"$stream_name\">\n";
+	echo "	<input class='formfld' type='text' name='stream_name' maxlength='255' value=\"".escape($stream_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-stream_name']."\n";
 	echo "</td>\n";
@@ -178,7 +178,7 @@
 	echo "	".$text['label-stream_location']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='stream_location' maxlength='255' value=\"$stream_location\">\n";
+	echo "	<input class='formfld' type='text' name='stream_location' maxlength='255' value=\"".escape($stream_location)."\">\n";
 	echo "<br />\n";
 	echo $text['description-stream_location']."\n";
 	echo "</td>\n";
@@ -223,10 +223,10 @@
 	}
 	foreach ($_SESSION['domains'] as $row) {
 		if ($row['domain_uuid'] == $domain_uuid) {
-			echo "		<option value='".$row['domain_uuid']."' selected='selected'>".$row['domain_name']."</option>\n";
+			echo "		<option value='".escape($row['domain_uuid'])."' selected='selected'>".escape($row['domain_name'])."</option>\n";
 		}
 		else {
-			echo "		<option value='".$row['domain_uuid']."'>".$row['domain_name']."</option>\n";
+			echo "		<option value='".escape($row['domain_uuid'])."'>".escape($row['domain_name'])."</option>\n";
 		}
 	}
 	echo "	</select>\n";
@@ -240,7 +240,7 @@
 	echo "	".$text['label-stream_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='stream_description' maxlength='255' value=\"$stream_description\">\n";
+	echo "	<input class='formfld' type='text' name='stream_description' maxlength='255' value=\"".escape($stream_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-stream_description']."\n";
 	echo "</td>\n";
@@ -248,7 +248,7 @@
 
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
-	echo "				<input type='hidden' name='stream_uuid' value='$stream_uuid'>\n";
+	echo "				<input type='hidden' name='stream_uuid' value='".escape($stream_uuid)."'>\n";
 	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
