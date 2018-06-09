@@ -142,7 +142,7 @@
 	echo "	".$text['label-profile_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='profile_name' maxlength='255' value=\"$profile_name\">\n";
+	echo "	<input class='formfld' type='text' name='profile_name' maxlength='255' value=\"".escape($profile_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-profile_name']."\n";
 	echo "</td>\n";
@@ -178,7 +178,7 @@
 	echo "	".$text['label-profile_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='profile_description' maxlength='255' value=\"$profile_description\">\n";
+	echo "	<input class='formfld' type='text' name='profile_description' maxlength='255' value=\"".escape($profile_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-profile_description']."\n";
 	echo "</td>\n";
@@ -186,7 +186,7 @@
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='conference_profile_uuid' value='$conference_profile_uuid'>\n";
+		echo "				<input type='hidden' name='conference_profile_uuid' value='".escape($conference_profile_uuid)."'>\n";
 	}
 	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
