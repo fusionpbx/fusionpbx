@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -501,7 +501,7 @@
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='ivr_menu_name' maxlength='255' value=\"$ivr_menu_name\" required='required'>\n";
+	echo "	<input class='formfld' type='text' name='ivr_menu_name' maxlength='255' value=\"".escape($ivr_menu_name)."\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-name']."\n";
 	echo "</td>\n";
@@ -512,7 +512,7 @@
 	echo "	".$text['label-extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='ivr_menu_extension' maxlength='255' value='$ivr_menu_extension' required='required'>\n";
+	echo "  <input class='formfld' type='text' name='ivr_menu_extension' maxlength='255' value='".escape($ivr_menu_extension)."' required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-extension']."\n";
 	echo "</td>\n";
@@ -957,7 +957,7 @@
 	echo "	".$text['label-timeout']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='number' name='ivr_menu_timeout' maxlength='255' min='1' step='1' value='$ivr_menu_timeout' required='required'>\n";
+	echo "  <input class='formfld' type='number' name='ivr_menu_timeout' maxlength='255' min='1' step='1' value='".escape($ivr_menu_timeout)."' required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-timeout']."\n";
 	echo "</td>\n";
@@ -1017,7 +1017,7 @@
 	echo "	".$text['label-caller_id_name_prefix']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='ivr_menu_cid_prefix' maxlength='255' value=\"$ivr_menu_cid_prefix\">\n";
+	echo "	<input class='formfld' type='text' name='ivr_menu_cid_prefix' maxlength='255' value=\"".escape($ivr_menu_cid_prefix)."\">\n";
 	echo "<br />\n";
 	echo $text['description-caller_id_name_prefix']."\n";
 	echo "</td>\n";
@@ -1223,7 +1223,7 @@
 		echo "	".$text['label-comfirm_macro']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='ivr_menu_confirm_macro' maxlength='255' value=\"$ivr_menu_confirm_macro\">\n";
+		echo "	<input class='formfld' type='text' name='ivr_menu_confirm_macro' maxlength='255' value=\"".escape($ivr_menu_confirm_macro)."\">\n";
 		echo "<br />\n";
 		echo $text['description-comfirm_macro']."\n";
 		echo "</td>\n";
@@ -1234,7 +1234,7 @@
 		echo "	".$text['label-comfirm_key']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='ivr_menu_confirm_key' maxlength='255' value=\"$ivr_menu_confirm_key\">\n";
+		echo "	<input class='formfld' type='text' name='ivr_menu_confirm_key' maxlength='255' value=\"".escape($ivr_menu_confirm_key)."\">\n";
 		echo "<br />\n";
 		echo $text['description-comfirm_key']."\n";
 		echo "</td>\n";
@@ -1245,7 +1245,7 @@
 		echo "	".$text['label-tts_engine']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='ivr_menu_tts_engine' maxlength='255' value=\"$ivr_menu_tts_engine\">\n";
+		echo "	<input class='formfld' type='text' name='ivr_menu_tts_engine' maxlength='255' value=\"".escape($ivr_menu_tts_engine)."\">\n";
 		echo "<br />\n";
 		echo $text['description-tts_engine']."\n";
 		echo "</td>\n";
@@ -1256,7 +1256,7 @@
 		echo "	".$text['label-tts_voice']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='ivr_menu_tts_voice' maxlength='255' value=\"$ivr_menu_tts_voice\">\n";
+		echo "	<input class='formfld' type='text' name='ivr_menu_tts_voice' maxlength='255' value=\"".escape($ivr_menu_tts_voice)."\">\n";
 		echo "<br />\n";
 		echo $text['description-tts_voice']."\n";
 		echo "</td>\n";
@@ -1267,7 +1267,7 @@
 		echo "	".$text['label-comfirm_attempts']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "  <input class='formfld' type='number' name='ivr_menu_confirm_attempts' maxlength='255' min='1' step='1' value='$ivr_menu_confirm_attempts' required='required'>\n";
+		echo "  <input class='formfld' type='number' name='ivr_menu_confirm_attempts' maxlength='255' min='1' step='1' value='".escape($ivr_menu_confirm_attempts)."' required='required'>\n";
 		echo "<br />\n";
 		echo $text['description-comfirm_attempts']."\n";
 		echo "</td>\n";
@@ -1278,7 +1278,7 @@
 		echo "	".$text['label-inter-digit_timeout']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "  <input class='formfld' type='number' name='ivr_menu_inter_digit_timeout' maxlength='255' min='1' step='1' value='$ivr_menu_inter_digit_timeout' required='required'>\n";
+		echo "  <input class='formfld' type='number' name='ivr_menu_inter_digit_timeout' maxlength='255' min='1' step='1' value='".escape($ivr_menu_inter_digit_timeout)."' required='required'>\n";
 		echo "<br />\n";
 		echo $text['description-inter-digit_timeout']."\n";
 		echo "</td>\n";
@@ -1289,7 +1289,7 @@
 		echo "	".$text['label-max_failures']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "  <input class='formfld' type='number' name='ivr_menu_max_failures' maxlength='255' min='0' step='1' value='$ivr_menu_max_failures' required='required'>\n";
+		echo "  <input class='formfld' type='number' name='ivr_menu_max_failures' maxlength='255' min='0' step='1' value='".escape($ivr_menu_max_failures)."' required='required'>\n";
 		echo "<br />\n";
 		echo $text['description-max_failures']."\n";
 		echo "</td>\n";
@@ -1300,7 +1300,7 @@
 		echo "	".$text['label-max_timeouts']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "  <input class='formfld' type='number' name='ivr_menu_max_timeouts' maxlength='255' min='0' step='1' value='$ivr_menu_max_timeouts' required='required'>\n";
+		echo "  <input class='formfld' type='number' name='ivr_menu_max_timeouts' maxlength='255' min='0' step='1' value='".escape($ivr_menu_max_timeouts)."' required='required'>\n";
 		echo "<br />\n";
 		echo $text['description-max_timeouts']."\n";
 		echo "</td>\n";
@@ -1311,7 +1311,7 @@
 		echo "	".$text['label-digit_length']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "  <input class='formfld' type='number' name='ivr_menu_digit_len' maxlength='255' min='1' step='1' value='$ivr_menu_digit_len' required='required'>\n";
+		echo "  <input class='formfld' type='number' name='ivr_menu_digit_len' maxlength='255' min='1' step='1' value='".escape($ivr_menu_digit_len)."' required='required'>\n";
 		echo "<br />\n";
 		echo $text['description-digit_length']."\n";
 		echo "</td>\n";
@@ -1352,7 +1352,7 @@
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<textarea class='formfld' style='width: 450px; height: 100px;' name='ivr_menu_description'>".$ivr_menu_description."</textarea>\n";
+	echo "	<textarea class='formfld' style='width: 450px; height: 100px;' name='ivr_menu_description'>".escape($ivr_menu_description)."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
@@ -1361,7 +1361,7 @@
 	echo "		<td colspan='2' align='right'>\n";
 	if (strlen($ivr_menu_uuid) > 0) {
 		echo "		<input type='hidden' name='ivr_menu_uuid' value='$ivr_menu_uuid'>\n";
-		echo "		<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
+		echo "		<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	}
 	echo "			<br>";
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
