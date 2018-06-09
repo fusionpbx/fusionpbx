@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -361,7 +361,7 @@
 	echo "	<td align='right' valign='top'>";
 	echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='conferences.php'\" value='".$text['button-back']."'>";
 	if (permission_exists('conference_active_view')) {
-		echo "	<input type='button' class='btn' alt='".$text['button-view']."' onclick=\"window.location='".PROJECT_PATH."/app/conferences_active/conferences_active.php?c=".str_replace(" ", "-", $conference_name)."';\" value='".$text['button-view']."'>\n";
+		echo "	<input type='button' class='btn' alt='".$text['button-view']."' onclick=\"window.location='".PROJECT_PATH."/app/conferences_active/conferences_active.php?c=".escape(str_replace(" ", "-", $conference_name))."';\" value='".$text['button-view']."'>\n";
 	}
 	echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "	</td>\n";
@@ -375,7 +375,7 @@
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='conference_name' maxlength='255' value=\"$conference_name\">\n";
+	echo "	<input class='formfld' type='text' name='conference_name' maxlength='255' value=\"".escape($conference_name)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-name']."\n";
 	echo "</td>\n";
@@ -386,7 +386,7 @@
 	echo "	".$text['label-extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='conference_extension' maxlength='255' value=\"$conference_extension\">\n";
+	echo "	<input class='formfld' type='text' name='conference_extension' maxlength='255' value=\"".escape($conference_extension)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-extension']."\n";
 	echo "</td>\n";
@@ -397,7 +397,7 @@
 	echo "	".$text['label-pin']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='conference_pin_number' maxlength='255' value=\"$conference_pin_number\">\n";
+	echo "	<input class='formfld' type='text' name='conference_pin_number' maxlength='255' value=\"".escape($conference_pin_number)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-pin']."\n";
 	echo "</td>\n";
@@ -477,7 +477,7 @@
 	echo "	".$text['label-flags']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='conference_flags' maxlength='255' value=\"$conference_flags\">\n";
+	echo "	<input class='formfld' type='text' name='conference_flags' maxlength='255' value=\"".escape($conference_flags)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-flags']."\n";
 	echo "</td>\n";
@@ -535,7 +535,7 @@
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='conference_description' maxlength='255' value=\"$conference_description\">\n";
+	echo "	<input class='formfld' type='text' name='conference_description' maxlength='255' value=\"".escape($conference_description)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-info']."\n";
 	echo "</td>\n";
@@ -544,8 +544,8 @@
 	echo "<tr>\n";
 	echo "	<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "	<input type='hidden' name='dialplan_uuid' value=\"$dialplan_uuid\">\n";
-		echo "	<input type='hidden' name='conference_uuid' value='$conference_uuid'>\n";
+		echo "	<input type='hidden' name='dialplan_uuid' value=\"".escape($dialplan_uuid)."\">\n";
+		echo "	<input type='hidden' name='conference_uuid' value='".escape($conference_uuid)."'>\n";
 	}
 	echo "		<br>";
 	echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
