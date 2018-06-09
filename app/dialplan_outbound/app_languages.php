@@ -121,6 +121,27 @@ $text['label-toll_allow']['ru-ru'] = "Разрешить ВСЕ";
 $text['label-toll_allow']['sv-se'] = "Tillåta fjärrsamtal";
 $text['label-toll_allow']['uk-ua'] = "TOLL дозволено";
 
+$text['label-pin_codes']['en-us'] = "Pin Codes";
+$text['label-pin_codes']['ar-eg'] = "";
+$text['label-pin_codes']['de-at'] = "PIN-Codes"; //copied from de-de
+$text['label-pin_codes']['de-ch'] = "PIN-Codes"; //copied from de-de
+$text['label-pin_codes']['de-de'] = "PIN-Codes";
+$text['label-pin_codes']['es-cl'] = "Códigos PIN";
+$text['label-pin_codes']['es-mx'] = "Códigos PIN"; //copied from es-cl
+$text['label-pin_codes']['fr-ca'] = "Codes Pin"; //copied from fr-fr
+$text['label-pin_codes']['fr-fr'] = "Codes Pin";
+$text['label-pin_codes']['he-il'] = "";
+$text['label-pin_codes']['it-it'] = "Codici pin";
+$text['label-pin_codes']['nl-nl'] = "";
+$text['label-pin_codes']['pl-pl'] = "Kody pinów";
+$text['label-pin_codes']['pt-br'] = ""; //copied from pt-pt
+$text['label-pin_codes']['pt-pt'] = "";
+$text['label-pin_codes']['ro-ro'] = "";
+$text['label-pin_codes']['ru-ru'] = "Штриховые коды";
+$text['label-pin_codes']['sv-se'] = "Пин кодови";
+$text['label-pin_codes']['uk-ua'] = "Кодів PIN-коду";
+
+
 $text['label-sip-gateway']['en-us'] = "SIP Gateways";
 $text['label-sip-gateway']['ar-eg'] = "";
 $text['label-sip-gateway']['de-at'] = "SIP Gateways"; //copied from de-de
