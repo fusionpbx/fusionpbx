@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2016
+	Copyright (C) 2008-2018
 	All Rights Reserved.
 
 	Contributor(s):
@@ -123,7 +123,7 @@
 
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-caller_id_name']."</td>"; //source name
-	echo "		<td class='vtable'><input type='text' class='formfld' name='caller_id_name' value='$caller_id_name'></td>";
+	echo "		<td class='vtable'><input type='text' class='formfld' name='caller_id_name' value='".escape($caller_id_name)."'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-caller_id_number']."</td>"; //source number
@@ -140,29 +140,29 @@
 	$result_e = $prep_statement -> fetchAll(PDO::FETCH_NAMED);
 	foreach ($result_e as &$row) {
 		$selected = ($row['extension_uuid'] == $caller_extension_uuid) ? "selected" : null;
-		echo "			<option value='".$row['extension_uuid']."' ".$selected.">".((is_numeric($row['extension'])) ? $row['extension'] : $row['number_alias']." (".$row['extension'].")")."</option>";
+		echo "			<option value='".escape($row['extension_uuid'])."' ".escape($selected).">".((is_numeric($row['extension'])) ? $row['extension'] : $row['number_alias']." (".escape($row['extension']).")")."</option>";
 	}
 	unset ($prep_statement);
 	echo "			</select>\n";
-	echo "			<input type='text' class='formfld' style='display: none;'  name='caller_id_number' id='caller_id_number' value='".$caller_id_number."'>\n";
+	echo "			<input type='text' class='formfld' style='display: none;'  name='caller_id_number' id='caller_id_number' value='".escape($caller_id_number)."'>\n";
 	echo "			<input type='button' id='btn_toggle_source' class='btn' name='' alt='".$text['button-back']."' value='&#9665;' onclick=\"toggle('source');\">\n";
 	echo "		</td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-destination']."</td>";
-	echo "		<td class='vtable'><input type='text' class='formfld' name='destination_number' value='$destination_number'></td>";
+	echo "		<td class='vtable'><input type='text' class='formfld' name='destination_number' value='".escape($destination_number)."'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-context']."</td>";
-	echo "		<td class='vtable'><input type='text' class='formfld' name='context' value='$context'></td>";
+	echo "		<td class='vtable'><input type='text' class='formfld' name='context' value='".escape($context)."'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-start_range']."</td>";
 	echo "		<td class='vtable'>";
 	echo "			<div class='row'>\n";
 	echo "				<div class='col-sm-12'>";
-	echo "					<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px;' name='start_stamp_begin' placeholder='".$text['label-from']."' value='$start_stamp_begin'>";
-	echo "					<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px;' name='start_stamp_end' placeholder='".$text['label-to']."' value='$start_stamp_end'>";
+	echo "					<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px;' name='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin)."'>";
+	echo "					<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px;' name='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end)."'>";
 	echo "				</div>\n";
 	echo "			</div>\n";
 	echo "		</td>";
@@ -172,8 +172,8 @@
 	echo "		<td class='vtable'>";
 	echo "			<div class='row'>\n";
 	echo "				<div class='col-sm-12'>";
-	echo "					<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px;' name='answer_stamp_begin' placeholder='".$text['label-from']."' value='$answer_stamp_begin'>";
-	echo "					<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px;' name='answer_stamp_end' placeholder='".$text['label-to']."' value='$answer_stamp_end'>";
+	echo "					<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px;' name='answer_stamp_begin' placeholder='".$text['label-from']."' value='".escape($answer_stamp_begin)."'>";
+	echo "					<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px;' name='answer_stamp_end' placeholder='".$text['label-to']."' value='".escape($answer_stamp_end)."'>";
 	echo "				</div>\n";
 	echo "			</div>\n";
 	echo "		</td>";
@@ -183,15 +183,15 @@
 	echo "		<td class='vtable'>";
 	echo "			<div class='row'>\n";
 	echo "				<div class='col-sm-12'>";
-	echo "					<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px;' name='end_stamp_begin' placeholder='".$text['label-from']."' value='$end_stamp_begin'>";
-	echo "					<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px;' name='end_stamp_end' placeholder='".$text['label-to']."' value='$end_stamp_end'>";
+	echo "					<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px;' name='end_stamp_begin' placeholder='".$text['label-from']."' value='".escape($end_stamp_begin)."'>";
+	echo "					<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px;' name='end_stamp_end' placeholder='".$text['label-to']."' value='".escape($end_stamp_end)."'>";
 	echo "				</div>\n";
 	echo "			</div>\n";
 	echo "		</td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-duration']."</td>";
-	echo "		<td class='vtable'><input type='text' class='formfld' name='duration' value='$duration'></td>";
+	echo "		<td class='vtable'><input type='text' class='formfld' name='duration' value='".escape($duration)."'></td>";
 	echo "	</tr>";
 	if (permission_exists('xml_cdr_all')) {
 		echo "	<tr>";
@@ -214,39 +214,39 @@
 	echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>";
 	echo "		<td width='30%' class='vncell'>".$text['label-billsec']."</td>";
-	echo "		<td width='70%' class='vtable'><input type='text' class='formfld' name='billsec' value='$billsec'></td>";
+	echo "		<td width='70%' class='vtable'><input type='text' class='formfld' name='billsec' value='".escape($billsec)."'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-hangup_cause']."</td>";
-	echo "		<td class='vtable'><input type='text' class='formfld' name='hangup_cause' value='$hangup_cause'></td>";
+	echo "		<td class='vtable'><input type='text' class='formfld' name='hangup_cause' value='".escape($hangup_cause)."'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-uuid']."</td>";
-	echo "		<td class='vtable'><input type='text' class='formfld' name='uuid' value='$uuid'></td>";
+	echo "		<td class='vtable'><input type='text' class='formfld' name='uuid' value='".escape($uuid)."'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-bridge_uuid']."</td>";
-	echo "		<td class='vtable'><input type='text' class='formfld' name='bleg_uuid' value='$bridge_uuid'></td>";
+	echo "		<td class='vtable'><input type='text' class='formfld' name='bleg_uuid' value='".escape($bridge_uuid)."'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-accountcode']."</td>";
-	echo "		<td class='vtable'><input type='text' class='formfld' name='accountcode' value='$accountcode'></td>";
+	echo "		<td class='vtable'><input type='text' class='formfld' name='accountcode' value='".escape($accountcode)."'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-read_codec']."</td>";
-	echo "		<td class='vtable'><input type='text' class='formfld' name='read_codec' value='$read_codec'></td>";
+	echo "		<td class='vtable'><input type='text' class='formfld' name='read_codec' value='".escape($read_codec)."'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-write_codec']."</td>";
-	echo "		<td class='vtable'><input type='text' class='formfld' name='write_codec' value='$write_codec'></td>";
+	echo "		<td class='vtable'><input type='text' class='formfld' name='write_codec' value='".escape($write_codec)."'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-remote_media_ip']."</td>";
-	echo "		<td class='vtable'><input type='text' class='formfld' name='remote_media_ip' value='$remote_media_ip'></td>";
+	echo "		<td class='vtable'><input type='text' class='formfld' name='remote_media_ip' value='".escape($remote_media_ip)."'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-network_addr']."</td>";
-	echo "		<td class='vtable'><input type='text' class='formfld' name='network_addr' value='$network_addr'></td>";
+	echo "		<td class='vtable'><input type='text' class='formfld' name='network_addr' value='".escape($network_addr)."'></td>";
 	echo "	</tr>";
 	if (is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
@@ -256,8 +256,8 @@
 			$field_label = str_replace("Sip", "SIP", $field_label);
 			if ($field_name != "destination_number") {
 				echo "	<tr>";
-				echo "		<td class='vncell'>".$field_label."</td>";
-				echo "		<td class='vtable'><input type='text' class='formfld' name='".$field_name."' value='".$$field_name."'></td>";
+				echo "		<td class='vncell'>".escape($field_label)."</td>";
+				echo "		<td class='vtable'><input type='text' class='formfld' name='".escape($field_name)."' value='".escape($$field_name)."'></td>";
 				echo "	</tr>";
 			}
 		}
@@ -274,7 +274,7 @@
 	echo "			<option value='equal'>&#61;</option>\n";
 	echo "			<option value='notequal'>&lt;&gt;</option>\n";
 	echo "			</select>\n";
-	echo "			<input type='text' class='formfld' name='mos_score' value='$mos_score'>\n";
+	echo "			<input type='text' class='formfld' name='mos_score' value='".escape($mos_score)."'>\n";
 	echo "		</td>";
 	echo "	</tr>\n";
 	
