@@ -224,11 +224,11 @@
 			$queue_timeout_data = implode($action_array);
 
 		//build the xml dialplan
-			$dialplan_xml = "<extension name=\"".$queue_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
+			$dialplan_xml = "<extension name=\"".$queue_name."\" continue=\"\" uuid=\"".escape($dialplan_uuid)."\">\n";
 			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^([^#]+#)(.*)\$\" break=\"never\">\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"caller_id_name=\$2\"/>\n";
 			$dialplan_xml .= "	</condition>\n";
-			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$queue_extension."$\">\n";
+			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".escape($queue_extension)."$\">\n";
 			$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
 			if (strlen($queue_cid_prefix) > 0) {
@@ -463,12 +463,12 @@
 	if ($action == "update") {
 		echo "	&nbsp;&nbsp;&nbsp;";
 		if (permission_exists('call_center_wallboard')) {
-			echo "  <input type='button' class='btn' value='".$text['button-wallboard']."' onclick=\"document.location.href='".PROJECT_PATH."/app/call_center_wallboard/call_center_wallboard.php?queue_name=".$call_center_queue_uuid."';\" />\n";
+			echo "  <input type='button' class='btn' value='".$text['button-wallboard']."' onclick=\"document.location.href='".PROJECT_PATH."/app/call_center_wallboard/call_center_wallboard.php?queue_name=".escape($call_center_queue_uuid)."';\" />\n";
 		}
-		echo "  <input type='button' class='btn' value='".$text['button-stop']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+unload+".$call_center_queue_uuid."';\" />\n";
-		echo "  <input type='button' class='btn' value='".$text['button-start']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+load+".$call_center_queue_uuid."';\" />\n";
-		echo "  <input type='button' class='btn' value='".$text['button-restart']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+reload+".$call_center_queue_uuid."';\" />\n";
-		echo "  <input type='button' class='btn' value='".$text['button-view']."' onclick=\"document.location.href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".$call_center_queue_uuid."';\" />\n";
+		echo "  <input type='button' class='btn' value='".$text['button-stop']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+unload+".escape($call_center_queue_uuid)."';\" />\n";
+		echo "  <input type='button' class='btn' value='".$text['button-start']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+load+".escape($call_center_queue_uuid)."';\" />\n";
+		echo "  <input type='button' class='btn' value='".$text['button-restart']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+reload+".escape($call_center_queue_uuid)."';\" />\n";
+		echo "  <input type='button' class='btn' value='".$text['button-view']."' onclick=\"document.location.href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".escape($call_center_queue_uuid)."';\" />\n";
 		echo "	&nbsp;&nbsp;&nbsp;";
 	}
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>\n";
@@ -483,7 +483,7 @@
 	echo "	".$text['label-queue_name']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='queue_name' maxlength='255' value=\"$queue_name\" required='required'>\n";
+	echo "	<input class='formfld' type='text' name='queue_name' maxlength='255' value=\"".escape($queue_name)."\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-queue_name']."\n";
 	echo "</td>\n";
@@ -494,7 +494,7 @@
 	echo "	".$text['label-extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='number' name='queue_extension' maxlength='255' min='0' step='1' value=\"$queue_extension\" required='required'>\n";
+	echo "	<input class='formfld' type='number' name='queue_extension' maxlength='255' min='0' step='1' value=\"".escape($queue_extension)."\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-extension']."\n";
 	echo "</td>\n";
@@ -619,7 +619,7 @@
 			echo "		</td>\n";
 			echo "		<td class=''>";
 			if (permission_exists('call_center_tier_delete')) {
-				echo "			<a href=\"call_center_queue_edit.php?id=".$call_center_queue_uuid."&call_center_tier_uuid=".$field['call_center_tier_uuid']."&a=delete\" alt=\"".$text['button-delete']."\" onclick=\"return confirm('".$text['confirm-delete']."');\">$v_link_label_delete</a>";
+				echo "			<a href=\"call_center_queue_edit.php?id=".escape($call_center_queue_uuid)."&call_center_tier_uuid=".$field['call_center_tier_uuid']."&a=delete\" alt=\"".$text['button-delete']."\" onclick=\"return confirm('".$text['confirm-delete']."');\">$v_link_label_delete</a>";
 			}
 			echo "		</td>\n";
 			echo "	</tr>\n";
@@ -703,7 +703,7 @@
 	echo "	".$text['label-max_wait_time']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='number' name='queue_max_wait_time' maxlength='255' min='0' step='1' value='$queue_max_wait_time'>\n";
+	echo "  <input class='formfld' type='number' name='queue_max_wait_time' maxlength='255' min='0' step='1' value='".escape($queue_max_wait_time)."'>\n";
 	echo "<br />\n";
 	echo $text['description-max_wait_time']."\n";
 	echo "</td>\n";
@@ -714,7 +714,7 @@
 	echo "	".$text['label-max_wait_time_with_no_agent']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='number' name='queue_max_wait_time_with_no_agent' maxlength='255' min='0' step='1' value='$queue_max_wait_time_with_no_agent'>\n";
+	echo "  <input class='formfld' type='number' name='queue_max_wait_time_with_no_agent' maxlength='255' min='0' step='1' value='".escape($queue_max_wait_time_with_no_agent)."'>\n";
 	echo "<br />\n";
 	echo $text['description-max_wait_time_with_no_agent']."\n";
 	echo "</td>\n";
@@ -725,7 +725,7 @@
 	echo "	".$text['label-max_wait_time_with_no_agent_time_reached']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='number' name='queue_max_wait_time_with_no_agent_time_reached' maxlength='255' min='0' step='1' value='$queue_max_wait_time_with_no_agent_time_reached'>\n";
+	echo "  <input class='formfld' type='number' name='queue_max_wait_time_with_no_agent_time_reached' maxlength='255' min='0' step='1' value='".escape($queue_max_wait_time_with_no_agent_time_reached)."'>\n";
 	echo "<br />\n";
 	echo $text['description-max_wait_time_with_no_agent_time_reached']."\n";
 	echo "</td>\n";
@@ -736,7 +736,7 @@
 	echo "    ".$text['label-timeout_action']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo $destination->select('dialplan', 'queue_timeout_action', $queue_timeout_action);
+	echo $destination->select('dialplan', 'queue_timeout_action', escape($queue_timeout_action));
 	echo "<br />\n";
 	echo $text['description-timeout_action']."\n";
 	echo "</td>\n";
@@ -771,7 +771,7 @@
 	echo "	".$text['label-tier_rule_wait_second']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='number' name='queue_tier_rule_wait_second' maxlength='255' min='0' step='1' value='$queue_tier_rule_wait_second'>\n";
+	echo "  <input class='formfld' type='number' name='queue_tier_rule_wait_second' maxlength='255' min='0' step='1' value='".escape($queue_tier_rule_wait_second)."'>\n";
 	echo "<br />\n";
 	echo $text['description-tier_rule_wait_second']."\n";
 	echo "</td>\n";
@@ -830,7 +830,7 @@
 	echo "	".$text['label-discard_abandoned_after']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='number' name='queue_discard_abandoned_after' maxlength='255' min='0' step='1' value='$queue_discard_abandoned_after'>\n";
+	echo "  <input class='formfld' type='number' name='queue_discard_abandoned_after' maxlength='255' min='0' step='1' value='".escape($queue_discard_abandoned_after)."'>\n";
 	echo "<br />\n";
 	echo $text['description-discard_abandoned_after']."\n";
 	echo "</td>\n";
@@ -865,7 +865,7 @@
 	echo "	".$text['label-caller_id_name_prefix']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='queue_cid_prefix' maxlength='255' value='$queue_cid_prefix'>\n";
+	echo "  <input class='formfld' type='text' name='queue_cid_prefix' maxlength='255' value='".escape($queue_cid_prefix)."'>\n";
 	echo "<br />\n";
 	echo $text['description-caller_id_name_prefix']."\n";
 	echo "</td>\n";
@@ -876,7 +876,7 @@
 	echo "  ".$text['label-caller_announce_sound']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='queue_announce_sound' maxlength='255' value='$queue_announce_sound'>\n";
+	echo "  <input class='formfld' type='text' name='queue_announce_sound' maxlength='255' value='".escape($queue_announce_sound)."'>\n";
 	echo "<br />\n";
 	echo $text['description-caller_announce_sound']."\n";
 	echo "</td>\n";
@@ -887,7 +887,7 @@
 	echo "  ".$text['label-caller_announce_frequency']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='number' name='queue_announce_frequency' maxlength='255' min='0' step='1' value='$queue_announce_frequency'>\n";
+	echo "  <input class='formfld' type='number' name='queue_announce_frequency' maxlength='255' min='0' step='1' value='".escape($queue_announce_frequency)."'>\n";
 	echo "<br />\n";
 	echo $text['description-caller_announce_frequency']."\n";
 	echo "</td>\n";
@@ -898,7 +898,7 @@
 	echo "  ".$text['label-exit_keys']."\n";
    	echo "</td>\n";
    	echo "<td class='vtable' align='left'>\n";
-   	echo "  <input class='formfld' type='text' name='queue_cc_exit_keys' value='$queue_cc_exit_keys'>\n";
+   	echo "  <input class='formfld' type='text' name='queue_cc_exit_keys' value='".escape($queue_cc_exit_keys)."'>\n";
    	echo "<br />\n";
    	echo $text['description-exit_keys']."\n";
    	echo "</td>\n";
@@ -909,7 +909,7 @@
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='queue_description' maxlength='255' value=\"$queue_description\">\n";
+	echo "	<input class='formfld' type='text' name='queue_description' maxlength='255' value=\"".escape($queue_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
@@ -918,8 +918,8 @@
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='call_center_queue_uuid' value='".$call_center_queue_uuid."'>\n";
-		echo "		<input type='hidden' name='dialplan_uuid' value='".$dialplan_uuid."'>\n";
+		echo "		<input type='hidden' name='call_center_queue_uuid' value='".escape($call_center_queue_uuid)."'>\n";
+		echo "		<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	}
 	echo "			<br />";
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
