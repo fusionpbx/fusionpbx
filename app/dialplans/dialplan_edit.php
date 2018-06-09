@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -399,7 +399,7 @@
 	echo "		".$text['label-name']."\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' width='70%' align='left'>\n";
-	echo "		<input class='formfld' type='text' name='dialplan_name' maxlength='255' placeholder='' value=\"".htmlspecialchars($dialplan_name)."\" required='required'>\n";
+	echo "		<input class='formfld' type='text' name='dialplan_name' maxlength='255' placeholder='' value=\"".escape(htmlspecialchars($dialplan_name))."\" required='required'>\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 
@@ -408,7 +408,7 @@
 	echo "		".$text['label-number']."\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
-	echo "		<input class='formfld' type='text' name='dialplan_number' maxlength='255' placeholder='' value=\"".htmlspecialchars($dialplan_number)."\">\n";
+	echo "		<input class='formfld' type='text' name='dialplan_number' maxlength='255' placeholder='' value=\"".escape(htmlspecialchars($dialplan_number))."\">\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 
@@ -417,7 +417,7 @@
 	echo "		".$text['label-hostname']."\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
-	echo "		<input class='formfld' type='text' name='hostname' maxlength='255' value=\"$hostname\">\n";
+	echo "		<input class='formfld' type='text' name='hostname' maxlength='255' value=\"".escape($hostname)."\">\n";
 	echo "		<br />\n";
 	echo "		".$text['description-hostname']."\n";
 	echo "	</td>\n";
@@ -428,7 +428,7 @@
 	echo "		".$text['label-context']."\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' align='left' width='70%'>\n";
-	echo "		<input class='formfld' type='text' name='dialplan_context' maxlength='255' placeholder='' value=\"$dialplan_context\">\n";
+	echo "		<input class='formfld' type='text' name='dialplan_context' maxlength='255' placeholder='' value=\"".escape($dialplan_context)."\">\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 
@@ -539,7 +539,7 @@
 	echo "		".$text['label-description']."\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' align='left' width='70%'>\n";
-	echo "		<textarea class='formfld' style='width: 250px; height: 68px;' name='dialplan_description'>".htmlspecialchars($dialplan_description)."</textarea>\n";
+	echo "		<textarea class='formfld' style='width: 250px; height: 68px;' name='dialplan_description'>".escape(htmlspecialchars($dialplan_description))."</textarea>\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";
