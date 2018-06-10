@@ -405,7 +405,7 @@
 	if ($_SESSION['voicemail']['storage_type']['text'] == 'base64') { $colspan = $colspan - 2; }
 	if (!(permission_exists('voicemail_greeting_edit') || permission_exists('voicemail_greeting_delete'))) { $colspan = $colspan - 1; }
 
-	if (is_array($greetings) {
+	if (is_array($greetings)) {
 		foreach($greetings as $row) {
 			//playback progress bar
 			if (permission_exists('voicemail_greeting_play')) {
