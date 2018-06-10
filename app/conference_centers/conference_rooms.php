@@ -324,7 +324,7 @@
 						echo "		<a href=\"?conference_room_uuid=".escape($row['conference_room_uuid'])."&enabled=false\">".$text['label-true']."</a>";
 					}
 					else {
-						echo "		<a href=\"?conference_room_uuid="escape(.$row['conference_room_uuid'])."&enabled=true\">".$text['label-false']."</a>";
+						echo "		<a href=\"?conference_room_uuid=".escape($row['conference_room_uuid'])."&enabled=true\">".$text['label-false']."</a>";
 					}
 					echo "		&nbsp;\n";
 					echo "	</td>\n";
