@@ -651,7 +651,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "		<tr>\n";
 				echo "			<td class='vtable'>".escape($field['voicemail_id'])."</td>\n";
 				echo "			<td>\n";
-				echo "				<a href='voicemail_edit.php?id=".escape($voicemail_uuid)."&voicemail_destination_uuid=".escape($field['voicemail_destination_uuid'])."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".escape($v_link_label_delete)."</a>\n";
+				echo "				<a href='voicemail_edit.php?id=".escape($voicemail_uuid)."&voicemail_destination_uuid=".escape($field['voicemail_destination_uuid'])."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>\n";
 				echo "			</td>\n";
 				echo "		</tr>\n";
 				$voicemail_uuid_copied[] = $field['voicemail_uuid_copy'];
