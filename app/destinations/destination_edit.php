@@ -919,14 +919,14 @@
 			echo "	".$text['label-fax_uuid']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			echo "	<select name='fax_uuid' id='fax_uuid' class='formfld' style='".$select_style."'>\n";
+			echo "	<select name='fax_uuid' id='fax_uuid' class='formfld' style='".escape($select_style)."'>\n";
 			echo "	<option value=''></option>\n";
 			foreach ($result as &$row) {
 				if ($row["fax_uuid"] == $fax_uuid) {
 					echo "		<option value='".escape($row["fax_uuid"])."' selected='selected'>".escape($row["fax_extension"])." ".escape($row["fax_name"])."</option>\n";
 				}
 				else {
-					echo "		<option value='".escape($row["fax_uuid"])."'>".escape($row["fax_extension")]." ".escape($row["fax_name"])."</option>\n";
+					echo "		<option value='".escape($row["fax_uuid"])."'>".escape($row["fax_extension"])." ".escape($row["fax_name"])."</option>\n";
 				}
 			}
 			echo "	</select>\n";
