@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -860,7 +860,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	".$text['label-email_connection_server']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' style='white-space: nowrap;' align='left'>\n";
-			echo "	<input class='formfld' type='text' name='fax_email_connection_host' maxlength='255' value=\"$fax_email_connection_host\">&nbsp;:&nbsp;";
+			echo "	<input class='formfld' type='text' name='fax_email_connection_host' maxlength='255' value=\"".escape($fax_email_connection_host)."\">&nbsp;:&nbsp;";
 			echo 	"<input class='formfld' style='width: 50px; min-width: 50px; max-width: 50px;' type='text' name='fax_email_connection_port' maxlength='5' value=\"$fax_email_connection_port\">\n";
 			echo "<br />\n";
 			echo "	".$text['description-email_connection_server']."\n";
@@ -901,7 +901,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	".$text['label-email_connection_username']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			echo "	<input class='formfld' type='text' name='fax_email_connection_username' maxlength='255' value=\"$fax_email_connection_username\">\n";
+			echo "	<input class='formfld' type='text' name='fax_email_connection_username' maxlength='255' value=\"".escape($fax_email_connection_username)."\">\n";
 			echo "<br />\n";
 			echo "	".$text['description-email_connection_username']."\n";
 			echo "</td>\n";
@@ -912,7 +912,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	".$text['label-email_connection_password']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			echo "	<input class='formfld' type='password' name='fax_email_connection_password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" autocomplete='off' maxlength='50' value=\"$fax_email_connection_password\">\n";
+			echo "	<input class='formfld' type='password' name='fax_email_connection_password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" autocomplete='off' maxlength='50' value=\"".escape($fax_email_connection_password)."\">\n";
 			echo "<br />\n";
 			echo "	".$text['description-email_connection_password']."\n";
 			echo "</td>\n";
@@ -923,7 +923,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	".$text['label-email_connection_mailbox']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			echo "	<input class='formfld' type='text' name='fax_email_connection_mailbox' maxlength='255' value=\"$fax_email_connection_mailbox\">\n";
+			echo "	<input class='formfld' type='text' name='fax_email_connection_mailbox' maxlength='255' value=\"".escape($fax_email_connection_mailbox)."\">\n";
 			echo "<br />\n";
 			echo "	".$text['description-email_connection_mailbox']."\n";
 			echo "</td>\n";
@@ -948,7 +948,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	".$text['label-email_inbound_subject_tag']."\n";
 			echo "</td>\n";
 			echo "<td width='70%' class='vtable' align='left'>\n";
-			echo "	<span style='font-size: 18px;'>[ <input class='formfld' type='text' name='fax_email_inbound_subject_tag' maxlength='255' value=\"$fax_email_inbound_subject_tag\"> ]</span>\n";
+			echo "	<span style='font-size: 18px;'>[ <input class='formfld' type='text' name='fax_email_inbound_subject_tag' maxlength='255' value=\"".escape($fax_email_inbound_subject_tag)."\"> ]</span>\n";
 			echo "<br />\n";
 			echo "	".$text['description-email_inbound_subject_tag']."\n";
 			echo "</td>\n";
