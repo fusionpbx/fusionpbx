@@ -93,7 +93,6 @@
 			$destination_caller_id_number = check_str($_POST["destination_caller_id_number"]);
 			$destination_cid_name_prefix = check_str($_POST["destination_cid_name_prefix"]);
 			$destination_context = check_str($_POST["destination_context"]);
-			$destination_action = check_str($_POST["destination_action"]);
 			$fax_uuid = check_str($_POST["fax_uuid"]);
 			$destination_enabled = check_str($_POST["destination_enabled"]);
 			$destination_description = check_str($_POST["destination_description"]);
@@ -112,8 +111,16 @@
 			$destination_app = $destination_array[0];
 			$destination_data = $destination_array[1];
 			unset($_POST["destination_action"]);
+		//get the alternate destination app and data
+			$destination_alternate_array = explode(":", $_POST["destination_alternate_action"], 2);
+			$destination_alternate_app = $destination_alternate_array[0];
+			$destination_alternate_data = $destination_alternate_array[1];
+			unset($_POST["destination_alternate_action"]);
+		//set the application and data
 			$_POST["destination_app"] = $destination_app;
 			$_POST["destination_data"] = $destination_data;
+			$_POST["destination_alternate_app"] = $destination_alternate_app;
+			$_POST["destination_alternate_data"] = $destination_alternate_data;
 		//unset the db_destination_number
 			unset($_POST["db_destination_number"]);
 	}
@@ -270,6 +277,9 @@
 							$dialplan["dialplan_xml"] .= "		<action application=\"sleep\" data=\"3000\"/>\n";
 						}
 						$dialplan["dialplan_xml"] .= "		<action application=\"".$destination_app."\" data=\"".$destination_data."\"/>\n";
+						if (strlen($destination_alternate_app) > 0) {
+							$dialplan["dialplan_xml"] .= "		<action application=\"".$destination_alternate_app."\" data=\"".$destination_alternate_data."\"/>\n";
+						}
 						$dialplan["dialplan_xml"] .= "	</condition>\n";
 						$dialplan["dialplan_xml"] .= "</extension>\n";
 					}
@@ -306,6 +316,9 @@
 							$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 							$y++;
 
+						//increment the dialplan detail order
+							$dialplan_detail_order = $dialplan_detail_order + 10;
+
 						//add hangup_after_bridge
 							$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 							$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
@@ -325,9 +338,6 @@
 							$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 							$y++;
 
-						//increment the dialplan detail order
-							$dialplan_detail_order = $dialplan_detail_order + 10;
-							
 						//increment the dialplan detail order
 							$dialplan_detail_order = $dialplan_detail_order + 10;
 
@@ -620,7 +630,7 @@
 			if ($action == "update") {
 				messages::add($text['message-update']);
 			}
-			header("Location: destination_edit.php?id=".$destination_uuid."&type=".escape($destination_type));
+			header("Location: destination_edit.php?id=".escape($destination_uuid)."&type=".$destination_type);
 			return;
 
 	} //(count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0)
@@ -653,6 +663,8 @@
 				$destination_context = $row["destination_context"];
 				$destination_app = $row["destination_app"];
 				$destination_data = $row["destination_data"];
+				$destination_alternate_app = $row["destination_alternate_app"];
+				$destination_alternate_data = $row["destination_alternate_data"];
 				$fax_uuid = $row["fax_uuid"];
 				$destination_enabled = $row["destination_enabled"];
 				$destination_description = $row["destination_description"];
@@ -751,6 +763,7 @@
 	echo "			document.getElementById('tr_account_code').style.display = '';\n";
 	echo "			document.getElementById('destination_context').value = 'public'";
 	echo "		}\n";
+	echo "		";
 	echo "	}\n";
 	echo "	\n";
 	echo "	function context_control() {\n";
@@ -861,6 +874,9 @@
 		echo "<td class='vtable' align='left'>\n";
 		$destination_action = $destination_app.":".$destination_data;
 		echo $destination->select('dialplan', 'destination_action', $destination_action);
+		echo "<br />\n";
+		$destination_alternate_action = $destination_alternate_app.":".$destination_alternate_data;
+		echo $destination->select('dialplan', 'destination_alternate_action', $destination_alternate_action);
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
@@ -926,7 +942,7 @@
 					echo "		<option value='".escape($row["fax_uuid"])."' selected='selected'>".escape($row["fax_extension"])." ".escape($row["fax_name"])."</option>\n";
 				}
 				else {
-					echo "		<option value='".escape($row["fax_uuid"])."'>".escape($row["fax_extension")]." ".escape($row["fax_name"])."</option>\n";
+					echo "		<option value='".escape($row["fax_uuid"])."'>".escape($row["fax_extension"])." ".escape($row["fax_name"])."</option>\n";
 				}
 			}
 			echo "	</select>\n";
