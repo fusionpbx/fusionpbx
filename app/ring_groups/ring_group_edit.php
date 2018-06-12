@@ -778,7 +778,7 @@
 		echo "			<tr>\n";
 		echo "				<td class='vtable'>".escape($field['username'])."</td>\n";
 		echo "				<td>\n";
-		echo "					<a href='ring_group_edit.php?id=".escape($ring_group_uuid)."&user_uuid=".escape($field['user_uuid'])."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".escape($v_link_label_delete)."</a>\n";
+		echo "					<a href='ring_group_edit.php?id=".escape($ring_group_uuid)."&user_uuid=".escape($field['user_uuid'])."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>\n";
 		echo "				</td>\n";
 		echo "			</tr>\n";
 	}
