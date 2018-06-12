@@ -716,7 +716,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 		echo "<br />\n";
 		echo $text['description-contact']."\n";
 		if (strlen($contact_uuid) > 0) {
-			echo "			<a href=\"".PROJECT_PATH."/app/contacts/contact_edit.php?id=$contact_uuid\">".$text['description-contact_view']."</a>\n";
+			echo "			<a href=\"".PROJECT_PATH."/app/contacts/contact_edit.php?id=".escape($contact_uuid)."\">".$text['description-contact_view']."</a>\n";
 		}
 		echo "		</td>";
 		echo "	</tr>";
