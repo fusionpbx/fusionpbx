@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -136,15 +136,15 @@
 	echo "	<td width='70%' align='right' valign='top'>\n";
 	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='xml_cdr.php'\" value='".$text['button-back']."'>\n";
 	if (permission_exists('xml_cdr_search_advanced')) {
-		echo "			<input type='button' class='btn' value='".$text['button-advanced_search']."' onclick=\"window.location='xml_cdr_search.php?type=advanced".$search_url."';\">\n";
+		echo "			<input type='button' class='btn' value='".$text['button-advanced_search']."' onclick=\"window.location='xml_cdr_search.php?type=advanced".escape($search_url)."';\">\n";
 	}
 	if (permission_exists('xml_cdr_all')) {
 		if ($_GET['showall'] != 'true') {
-			echo "<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='xml_cdr_statistics.php?showall=true".$search_url."';\">\n";
+			echo "<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='xml_cdr_statistics.php?showall=true".escape($search_url)."';\">\n";
 		}
 	}
 	echo "		<input type='button' class='btn' value='".$text['button-extension_summary']."' onclick=\"document.location.href='xml_cdr_extension_summary.php';\">\n";
-	echo "		<input type='button' class='btn' value='".$text['button-download_csv']."' onclick=\"document.location.href='xml_cdr_statistics_csv.php?type=csv".$search_url."';\">\n";
+	echo "		<input type='button' class='btn' value='".$text['button-download_csv']."' onclick=\"document.location.href='xml_cdr_statistics_csv.php?type=csv".escape($search_url)."';\">\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
@@ -310,7 +310,7 @@
 			echo "<tr>\n";
 		}
 		if ($i > $hours) {
-			echo "	<td valign='top' class='".$row_style[$c]."'>" . floor($row['hours']/24) . "</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>" . floor(escape($row['hours'])/24) . "</td>\n";
 		}
 		if ($i <= $hours) {
 			echo "	<td valign='top' class='".$row_style[$c]."'>".date('j M', $row['start_epoch'])."</td>\n";
@@ -320,12 +320,12 @@
 			echo "	<td valign='top' class='".$row_style[$c]."'>".date('j M', $row['start_epoch'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".date('H:i', $row['start_epoch'])." - ".date('j M H:i', $row['stop_epoch'])."&nbsp;</td>\n";
 		}
-		echo "	<td valign='top' class='".$row_style[$c]."'>".$row['volume']."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".(round($row['minutes'],2))."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".(round($row['avg_min'],2))."&nbsp;/&nbsp;".(round($row['cpm_ans'],2))."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"xml_cdr.php?missed=true&direction=$direction&start_epoch=".$row['start_epoch']."&stop_epoch=".$row['stop_epoch']."\">".$row['missed']."</a>&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".(round($row['asr'],2))."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".(round($row['aloc'],2))."&nbsp;</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['volume'])."&nbsp;</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".(round(escape($row['minutes']),2))."&nbsp;</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".(round(escape($row['avg_min']),2))."&nbsp;/&nbsp;".(round(escape($row['cpm_ans']),2))."&nbsp;</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"xml_cdr.php?missed=true&direction=$direction&start_epoch=".escape($row['start_epoch'])."&stop_epoch=".escape($row['stop_epoch'])."\">".escape($row['missed'])."</a>&nbsp;</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".(round(escape($row['asr']),2))."&nbsp;</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".(round(escape($row['aloc']),2))."&nbsp;</td>\n";
 		echo "</tr >\n";
 		if ($c==0) { $c=1; } else { $c=0; }
 		$i++;
