@@ -640,7 +640,7 @@
 		$_GET['type'] = "text";
 		$qr_vcard = true;
 		include "contacts_vcard.php";
-		echo "<input type='hidden' id='qr_vcard' value=\"".$xml."\">";
+		echo "<input type='hidden' id='qr_vcard' value=\"".escape($xml)."\">";
 		echo "<style>";
 		echo "	#qr_code_container {";
 		echo "		z-index: 999999; ";
@@ -705,7 +705,7 @@
 	if (permission_exists("device_line_password") && $device_template == "grandstream/wave") {
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-qr_code']."' onclick=\"$('#qr_code_container').fadeIn(400);\" value='".$text['button-qr_code']."'>\n";
 	}
-	echo "	<input type='button' class='btn' value='".$text['button-provision']."' onclick=\"document.location.href='".PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&profile=".$sip_profile_name."&user=".$user_id."@".$server_address."&domain=".$server_address."&agent=".escape($device_vendor)."';\">&nbsp;\n";
+	echo "	<input type='button' class='btn' value='".$text['button-provision']."' onclick=\"document.location.href='".PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&profile=".escape($sip_profile_name)."&user=".escape($user_id)."@".escape($server_address)."&domain=".$server_address."&agent=".escape($device_vendor)."';\">&nbsp;\n";
 	if (permission_exists("device_files")) {
 		//get the template directory
 			$prov = new provision;
@@ -804,10 +804,10 @@
 									if($file_sub != '.' && $dir_sub != '..' && $dir_sub[0] != '.' && $dir_sub[0] != 'include') {
 										if(is_dir($template_dir . '/' . $dir .'/'. $dir_sub)) {
 											if ($device_template == $dir."/".$dir_sub) {
-												echo "<option value='".$dir."/".$dir_sub."' selected='selected'>".$dir."/".$dir_sub."</option>\n";
+												echo "<option value='".escape($dir)."/".escape($dir_sub)."' selected='selected'>".escape($dir)."/".escape($dir_sub)."</option>\n";
 											}
 											else {
-												echo "<option value='".$dir."/".$dir_sub."'>".$dir."/".$dir_sub."</option>\n";
+												echo "<option value='".escape($dir)."/".escape($dir_sub)."'>".$dir."/".escape($dir_sub)."</option>\n";
 											}
 										}
 									}
@@ -941,7 +941,7 @@
 						$placeholder_label = $text['label-primary'];
 					}
 					echo "			<td align='left'>\n";
-					echo "				<input class='formfld' style='width: 65px;' type='text' name='device_lines[".$x."][outbound_proxy_primary]' placeholder=\"".$placeholder_label."\" maxlength='255' value=\"".escape($row['outbound_proxy_primary'])."\"/>\n";
+					echo "				<input class='formfld' style='width: 65px;' type='text' name='device_lines[".$x."][outbound_proxy_primary]' placeholder=\"".escape($placeholder_label)."\" maxlength='255' value=\"".escape($row['outbound_proxy_primary'])."\"/>\n";
 					echo "			</td>\n";
 					unset($placeholder_label);
 				}
@@ -1050,7 +1050,7 @@
 			echo "			<select class='formfld' id='device_profile_uuid' name='device_profile_uuid'>\n";
 			echo "				<option value=''></option>\n";
 			foreach($result as $row) {
-				echo "			<option value='".$row['device_profile_uuid']."' ".(($row['device_profile_uuid'] == $device_profile_uuid) ? "selected='selected'" : null).">".$row['device_profile_name']." ".(($row['domain_uuid'] == '') ? "&nbsp;&nbsp;(".$text['select-global'].")" : null)."</option>\n";
+				echo "			<option value='".escape($row['device_profile_uuid'])."' ".(($row['device_profile_uuid'] == $device_profile_uuid) ? "selected='selected'" : null).">".escape($row['device_profile_name'])." ".(($row['domain_uuid'] == '') ? "&nbsp;&nbsp;(".$text['select-global'].")" : null)."</option>\n";
 			}
 			echo "			</select>\n";
 			echo "			<button type='button' class='btn btn-default list_control_icon' id='device_profile_edit' onclick=\"if($('#device_profile_uuid').val() != '') window.location='device_profile_edit.php?id='+$('#device_profile_uuid').val();\"><span class='glyphicon glyphicon-pencil'></span></button>";
@@ -1385,7 +1385,7 @@
 		echo "			<option value=\"\"></option>\n";
 		foreach($users as $field) {
 			if ($field['user_uuid'] == $device_user_uuid) { $selected = "selected='selected'"; } else { $selected = ''; }
-			echo "			<option value='".$field['user_uuid']."' $selected>".$field['username']."</option>\n";
+			echo "			<option value='".escape($field['user_uuid'])."' $selected>".escape($field['username'])."</option>\n";
 		}
 		echo "			</select>";
 		unset($users);
@@ -1423,7 +1423,7 @@
 			if (strlen($label) == 0) { $label = $device_alternate[0]['device_mac_address']; }
 			echo "	<table>\n";
 			echo "	<tr>\n";
-			echo "		<td><a href='?id=".escape($device_uuid_alternate)."' id='device_uuid_alternate_link'>$label</a><input class='formfld' type='hidden' name='device_uuid_alternate' id='device_uuid_alternate' maxlength='255' value=\"".escape($device_uuid_alternate)."\" />&nbsp;</td>";
+			echo "		<td><a href='?id=".escape($device_uuid_alternate)."' id='device_uuid_alternate_link'>".escape($label)."</a><input class='formfld' type='hidden' name='device_uuid_alternate' id='device_uuid_alternate' maxlength='255' value=\"".escape($device_uuid_alternate)."\" />&nbsp;</td>";
 			echo "		<td><a href='#' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('device_uuid_alternate').value = '';  document.getElementById('device_uuid_alternate_link').hidden = 'true'; submit_form(); }\" alt='".$text['button-delete']."'>$v_link_label_delete</a></td>\n";
 			echo "	</tr>\n";
 			echo "	</table>\n";
