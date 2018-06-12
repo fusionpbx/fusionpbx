@@ -206,7 +206,7 @@
 			else if ($action == "update") {
 				messages::add($text['message-update']);
 			}
-			header("Location: ?id=".escape($dialplan_uuid).(($app_uuid != '') ? "&app_uuid=".escape($app_uuid) : null));
+			header("Location: ?id=".$dialplan_uuid.(($app_uuid != '') ? "&app_uuid=".$app_uuid : null));
 			exit;
 
 	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
@@ -373,9 +373,9 @@
 	echo "		</td>\n";
 	echo "		<td width='70%' align='right'>\n";
 	if (permission_exists('dialplan_xml')) {
-		echo "			<input type='button' class='btn' name='' alt='".$text['button-xml']."' onclick=\"window.location='dialplan_xml.php?id=".escape($dialplan_uuid)."&".((strlen($app_uuid) > 0) ? "app_uuid=".escape($app_uuid) : null)."';\" value='".$text['button-xml']."'>\n";
+		echo "			<input type='button' class='btn' name='' alt='".$text['button-xml']."' onclick=\"window.location='dialplan_xml.php?id=".escape($dialplan_uuid)."&".((strlen($app_uuid) > 0) ? "app_uuid=".$app_uuid : null)."';\" value='".$text['button-xml']."'>\n";
 	}
-	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplans.php".((strlen($app_uuid) > 0) ? "?app_uuid=".escape($app_uuid) : null)."';\" value='".$text['button-back']."'>\n";
+	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplans.php".((strlen($app_uuid) > 0) ? "?app_uuid=".$app_uuid : null)."';\" value='".$text['button-back']."'>\n";
 	echo "			<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"if (confirm('".$text['confirm-copy']."')){window.location='dialplan_copy.php?id=".escape($dialplan_uuid)."';}\" value='".$text['button-copy']."'>\n";
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
@@ -399,7 +399,7 @@
 	echo "		".$text['label-name']."\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' width='70%' align='left'>\n";
-	echo "		<input class='formfld' type='text' name='dialplan_name' maxlength='255' placeholder='' value=\"".escape($dialplan_name)."\" required='required'>\n";
+	echo "		<input class='formfld' type='text' name='dialplan_name' maxlength='255' placeholder='' value=\"".htmlspecialchars($dialplan_name)."\" required='required'>\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 
@@ -408,7 +408,7 @@
 	echo "		".$text['label-number']."\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
-	echo "		<input class='formfld' type='text' name='dialplan_number' maxlength='255' placeholder='' value=\"".escape($dialplan_number)."\">\n";
+	echo "		<input class='formfld' type='text' name='dialplan_number' maxlength='255' placeholder='' value=\"".htmlspecialchars($dialplan_number)."\">\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 
@@ -469,13 +469,13 @@
 	while($i<=999) {
 		$selected = ($i == $dialplan_order) ? "selected" : null;
 		if (strlen($i) == 1) {
-			echo "			<option value='00$i' ".$selected.">00$i</option>\n";
+			echo "			<option value='00$i' ".escape($selected).">00$i</option>\n";
 		}
 		if (strlen($i) == 2) {
-			echo "			<option value='0$i' ".$selected.">0$i</option>\n";
+			echo "			<option value='0$i' ".escape($selected).">0$i</option>\n";
 		}
 		if (strlen($i) == 3) {
-			echo "			<option value='$i' ".$selected.">$i</option>\n";
+			echo "			<option value='$i' ".escape($selected).">$i</option>\n";
 		}
 		$i++;
 	}
@@ -499,10 +499,10 @@
 		}
 		if (is_array($_SESSION['domains'])) foreach ($_SESSION['domains'] as $row) {
 			if ($row['domain_uuid'] == $domain_uuid) {
-				echo "		<option value='".$row['domain_uuid']."' selected='selected'>".escape($row['domain_name'])."</option>\n";
+				echo "		<option value='".escape($row['domain_uuid'])."' selected='selected'>".escape($row['domain_name'])."</option>\n";
 			}
 			else {
-				echo "		<option value='".$row['domain_uuid']."'>".escape($row['domain_name'])."</option>\n";
+				echo "		<option value='".escape($row['domain_uuid'])."'>".escape($row['domain_name'])."</option>\n";
 			}
 		}
 		echo "		</select>\n";
@@ -539,7 +539,7 @@
 	echo "		".$text['label-description']."\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' align='left' width='70%'>\n";
-	echo "		<textarea class='formfld' style='width: 250px; height: 68px;' name='dialplan_description'>".escape($dialplan_description)."</textarea>\n";
+	echo "		<textarea class='formfld' style='width: 250px; height: 68px;' name='dialplan_description'>".htmlspecialchars($dialplan_description)."</textarea>\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";
@@ -621,7 +621,7 @@
 							}
 						//tag
 							$selected = "selected=\"selected\" ";
-							echo "<td class='vtablerow' style='".$no_border."' onclick=\"label_to_form('label_dialplan_detail_tag_".$x."','dialplan_detail_tag_".$x."');\" nowrap='nowrap'>\n";
+							echo "<td class='vtablerow' style='".escape($no_border)."' onclick=\"label_to_form('label_dialplan_detail_tag_".$x."','dialplan_detail_tag_".$x."');\" nowrap='nowrap'>\n";
 							if ($element['hidden']) {
 								echo "	<label id=\"label_dialplan_detail_tag_".$x."\">".escape($dialplan_detail_tag)."</label>\n";
 							}
@@ -634,14 +634,14 @@
 							echo "	</select>\n";
 							echo "</td>\n";
 						//type
-							echo "<td class='vtablerow' style='".$no_border."' onclick=\"label_to_form('label_dialplan_detail_type_".$x."','dialplan_detail_type_".$x."');\" nowrap='nowrap'>\n";
+							echo "<td class='vtablerow' style='".escape($no_border)."' onclick=\"label_to_form('label_dialplan_detail_type_".$x."','dialplan_detail_type_".$x."');\" nowrap='nowrap'>\n";
 							if ($element['hidden']) {
 								echo "	<label id=\"label_dialplan_detail_type_".$x."\">".escape($dialplan_detail_type)."</label>\n";
 							}
 							echo "	<select id='dialplan_detail_type_".$x."' name='dialplan_details[".$x."][dialplan_detail_type]' class='formfld' style='width: auto; ".$element['visibility']."' onchange='change_to_input(this);'>\n";
 							if (strlen($dialplan_detail_type) > 0) {
 								echo "	<optgroup label='selected'>\n";
-								echo "		<option value=\"".escape($dialplan_detail_type)."\">".escape($dialplan_detail_type)."</option>\n";
+								echo "		<option value=\"".htmlspecialchars($dialplan_detail_type)."\">".htmlspecialchars($dialplan_detail_type)."</option>\n";
 								echo "	</optgroup>\n";
 							}
 							else {
@@ -688,13 +688,14 @@
 										}
 									}
 								}
+								
 								echo "	</optgroup>\n";
 							//}
 							echo "	</select>\n";
 							//echo "	<input type='button' id='btn_select_to_input_dialplan_detail_type' class='btn' style='visibility:hidden;' name='' alt='".$text['button-back']."' onclick='change_to_input(document.getElementById(\"dialplan_detail_type\"));this.style.visibility = \"hidden\";' value='&#9665;'>\n";
 							echo "</td>\n";
 						//data
-							echo "<td class='vtablerow' onclick=\"label_to_form('label_dialplan_detail_data_".$x."','dialplan_detail_data_".$x."');\" style='".$no_border." width: 100%; max-width: 150px; overflow: hidden; _text-overflow: ellipsis; white-space: nowrap;' nowrap='nowrap'>\n";
+							echo "<td class='vtablerow' onclick=\"label_to_form('label_dialplan_detail_data_".$x."','dialplan_detail_data_".$x."');\" style='".escape($no_border)." width: 100%; max-width: 150px; overflow: hidden; _text-overflow: ellipsis; white-space: nowrap;' nowrap='nowrap'>\n";
 							if ($element['hidden']) {
 								$dialplan_detail_data_mod = $dialplan_detail_data;
 								if ($dialplan_detail_type == 'bridge') {
@@ -713,12 +714,12 @@
 										unset ($prep_statement, $sql, $bridge_statement);
 									}
 								}
-								echo "	<label id=\"label_dialplan_detail_data_".$x."\">".escape($dialplan_detail_data_mod)."</label>\n";
+								echo "	<label id=\"label_dialplan_detail_data_".$x."\">".htmlspecialchars($dialplan_detail_data_mod)."</label>\n";
 							}
-							echo "	<input id='dialplan_detail_data_".$x."' name='dialplan_details[".$x."][dialplan_detail_data]' class='formfld' type='text' style='width: calc(100% - 2px); min-width: calc(100% - 2px); max-width: calc(100% - 2px); ".$element['visibility']."' placeholder='' value=\"".escape($dialplan_detail_data)."\">\n";
+							echo "	<input id='dialplan_detail_data_".$x."' name='dialplan_details[".$x."][dialplan_detail_data]' class='formfld' type='text' style='width: calc(100% - 2px); min-width: calc(100% - 2px); max-width: calc(100% - 2px); ".$element['visibility']."' placeholder='' value=\"".htmlspecialchars($dialplan_detail_data)."\">\n";
 							echo "</td>\n";
 						//break
-							echo "<td class='vtablerow' style='".$no_border."' onclick=\"label_to_form('label_dialplan_detail_break_".$x."','dialplan_detail_break_".$x."');\" nowrap='nowrap'>\n";
+							echo "<td class='vtablerow' style='".escape($no_border)."' onclick=\"label_to_form('label_dialplan_detail_break_".$x."','dialplan_detail_break_".$x."');\" nowrap='nowrap'>\n";
 							if ($element['hidden']) {
 								echo "	<label id=\"label_dialplan_detail_break_".$x."\">".escape($dialplan_detail_break)."</label>\n";
 							}
@@ -731,7 +732,7 @@
 							echo "	</select>\n";
 							echo "</td>\n";
 						//inline
-							echo "<td class='vtablerow' style='".$no_border." text-align: center;' onclick=\"label_to_form('label_dialplan_detail_inline_".$x."','dialplan_detail_inline_".$x."');\" nowrap='nowrap'>\n";
+							echo "<td class='vtablerow' style='".escape($no_border)." text-align: center;' onclick=\"label_to_form('label_dialplan_detail_inline_".$x."','dialplan_detail_inline_".$x."');\" nowrap='nowrap'>\n";
 							if ($element['hidden']) {
 								echo "	<label id=\"label_dialplan_detail_inline_".$x."\">".escape($dialplan_detail_inline)."</label>\n";
 							}
@@ -742,16 +743,16 @@
 							echo "	</select>\n";
 							echo "</td>\n";
 						//group
-							echo "<td class='vtablerow' style='".$no_border." text-align: center;' onclick=\"label_to_form('label_dialplan_detail_group_".$x."','dialplan_detail_group_".$x."');\" nowrap='nowrap'>\n";
+							echo "<td class='vtablerow' style='".escape($no_border)." text-align: center;' onclick=\"label_to_form('label_dialplan_detail_group_".$x."','dialplan_detail_group_".$x."');\" nowrap='nowrap'>\n";
 							if ($element['hidden']) {
-								echo "	<label id=\"label_dialplan_detail_group_".$x."\">".$dialplan_detail_group."</label>\n";
+								echo "	<label id=\"label_dialplan_detail_group_".$x."\">".escape($dialplan_detail_group)."</label>\n";
 							}
-							echo "	<input id='dialplan_detail_group_".$x."' name='dialplan_details[".$x."][dialplan_detail_group]' class='formfld' type='number' min='0' step='1' style='width: 30px; text-align: center; ".$element['visibility']."' placeholder='' value=\"".escape($dialplan_detail_group)."\" onclick='this.select();'>\n";
+							echo "	<input id='dialplan_detail_group_".$x."' name='dialplan_details[".$x."][dialplan_detail_group]' class='formfld' type='number' min='0' step='1' style='width: 30px; text-align: center; ".$element['visibility']."' placeholder='' value=\"".htmlspecialchars($dialplan_detail_group)."\" onclick='this.select();'>\n";
 							/*
 							echo "	<select id='dialplan_detail_group_".$x."' name='dialplan_details[".$x."][dialplan_detail_group]' class='formfld' style='".$element['width']." ".$element['visibility']."'>\n";
 							echo "	<option value=''></option>\n";
 							if (strlen($dialplan_detail_group)> 0) {
-								echo "	<option $selected value='".escape($dialplan_detail_group)."'>".escape($dialplan_detail_group)."</option>\n";
+								echo "	<option $selected value='".htmlspecialchars($dialplan_detail_group)."'>".htmlspecialchars($dialplan_detail_group)."</option>\n";
 							}
 							$i=0;
 							while($i<=999) {
@@ -762,15 +763,15 @@
 							*/
 							echo "</td>\n";
 						//order
-							echo "<td class='vtablerow' style='".$no_border." text-align: center;' onclick=\"label_to_form('label_dialplan_detail_order_".$x."','dialplan_detail_order_".$x."');\" nowrap='nowrap'>\n";
+							echo "<td class='vtablerow' style='".escape($no_border)." text-align: center;' onclick=\"label_to_form('label_dialplan_detail_order_".$x."','dialplan_detail_order_".$x."');\" nowrap='nowrap'>\n";
 							if ($element['hidden']) {
 								echo "	<label id=\"label_dialplan_detail_order_".$x."\">".escape($dialplan_detail_order)."</label>\n";
 							}
-							echo "	<input id='dialplan_detail_order_".$x."' name='dialplan_details[".$x."][dialplan_detail_order]' class='formfld' type='number' min='0' step='1' style='width: 32px; text-align: center; ".$element['visibility']."' placeholder='' value=\"".escape($dialplan_detail_order)."\" onclick='this.select();'>\n";
+							echo "	<input id='dialplan_detail_order_".$x."' name='dialplan_details[".$x."][dialplan_detail_order]' class='formfld' type='number' min='0' step='1' style='width: 32px; text-align: center; ".$element['visibility']."' placeholder='' value=\"".htmlspecialchars($dialplan_detail_order)."\" onclick='this.select();'>\n";
 							/*
 							echo "	<select id='dialplan_detail_order_".$x."' name='dialplan_details[".$x."][dialplan_detail_order]' class='formfld' style='".$element['width']." ".$element['visibility']."'>\n";
 							if (strlen($dialplan_detail_order)> 0) {
-								echo "	<option $selected value='".escape($dialplan_detail_order)."'>".escape($dialplan_detail_order)."</option>\n";
+								echo "	<option $selected value='".htmlspecialchars($dialplan_detail_order)."'>".htmlspecialchars($dialplan_detail_order)."</option>\n";
 							}
 							$i=0;
 							while($i<=999) {
@@ -792,7 +793,7 @@
 							echo "	<td class='list_control_icon'>\n";
 							if ($element['hidden']) {
 								//echo "		<a href='dialplan_detail_edit.php?id=".$dialplan_detail_uuid."&dialplan_uuid=".$dialplan_uuid."&app_uuid=".$app_uuid."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
-								echo "		<a href='dialplan_detail_delete.php?id=".$dialplan_detail_uuid."&dialplan_uuid=".$dialplan_uuid.(($app_uuid != '') ? "&app_uuid=".$app_uuid : null)."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+								echo "		<a href='dialplan_detail_delete.php?id=".escape($dialplan_detail_uuid)."&dialplan_uuid=".escape($dialplan_uuid).(($app_uuid != '') ? "&app_uuid=".$app_uuid : null)."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 							}
 							echo "	</td>\n";
 						//end the row
@@ -813,7 +814,7 @@
 	echo "<br>\n";
 	echo "<div align='right'>\n";
 	if ($action == "update") {
-		echo "	<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
+		echo "	<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	}
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</div>\n";
