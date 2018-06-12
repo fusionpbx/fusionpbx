@@ -796,7 +796,7 @@
 	echo "<td width='70%' align='right' valign='top'>\n";
 	echo "	<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"window.location='extensions.php'\" value='".$text['button-back']."'>\n";
 	if ($action == 'update' && (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb'))) {
-		echo "	<input type='button' class='btn' alt='".$text['button-call_routing']."' onclick=\"window.location='../calls/call_edit.php?id=".$extension_uuid."';\" value='".$text['button-call_routing']."'>\n";
+		echo "	<input type='button' class='btn' alt='".$text['button-call_routing']."' onclick=\"window.location='../calls/call_edit.php?id=".escape($extension_uuid)."';\" value='".$text['button-call_routing']."'>\n";
 	}
 	if ($action == "update" && permission_exists('extension_copy')) {
 		echo "	<input type='button' class='btn' alt='".$text['button-copy']."' onclick=\"copy_extension();\" value='".$text['button-copy']."'>\n";
@@ -895,10 +895,10 @@
 			echo "		<table width='30%'>\n";
 			foreach($assigned_users as $field) {
 				echo "		<tr>\n";
-				echo "			<td class='vtable'><a href='/core/users/user_edit.php?id=".$field['user_uuid']."'>".$field['username']."</a></td>\n";
+				echo "			<td class='vtable'><a href='/core/users/user_edit.php?id=".escape($field['user_uuid'])."'>".escape($field['username'])."</a></td>\n";
 				echo "			<td>\n";
 				echo "				<a href='#' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('delete_type').value = 'user'; document.getElementById('delete_uuid').value = '".$field['user_uuid']."'; submit_form(); }\" alt='".$text['button-delete']."'>$v_link_label_delete</a>\n";
-				//echo "				<a href='extension_edit.php?id=".$extension_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+				//echo "				<a href='extension_edit.php?id=".escape($extension_uuid)."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".escape($field['user_uuid'])."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 				echo "			</td>\n";
 				echo "		</tr>\n";
 			}
@@ -909,7 +909,7 @@
 		echo "			<select name='extension_users[0][user_uuid]' id='user_uuid' class='formfld' style='width: auto;'>\n";
 		echo "			<option value=''></option>\n";
 		foreach($users as $field) {
-			echo "			<option value='".$field['user_uuid']."'>".$field['username']."</option>\n";
+			echo "			<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
 		}
 		echo "			</select>";
 		echo "			<input type='button' class='btn' value=\"".$text['button-add']."\" onclick='submit_form();'>\n";
@@ -969,10 +969,10 @@
 
 			echo "				<td>\n";
 			//if (permission_exists('device_edit')) {
-			//	echo "					<a href='device_line_edit.php?device_uuid=".$row['device_uuid']."&id=".$row['device_line_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+			//	echo "					<a href='device_line_edit.php?device_uuid=".escape($row['device_uuid'])."&id=".escape($row['device_line_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
 			//}
 			//if (permission_exists('device_delete')) {
-			//	echo "					<a href='device_line_delete.php?device_uuid=".$row['device_uuid']."&id=".$row['device_line_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+			//	echo "					<a href='device_line_delete.php?device_uuid=".escape($row['device_uuid'])."&id=".escape($row['device_line_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			//}
 			echo "				</td>\n";
 			echo "			</tr>\n";
@@ -980,9 +980,9 @@
 				$device_mac_address = $row['device_mac_address'];
 				$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
 				echo "		<tr>\n";
-				echo "			<td class='vtable'>".$row['line_number']."</td>\n";
-				echo "			<td class='vtable'><a href='".PROJECT_PATH."/app/devices/device_edit.php?id=".escape($row['device_uuid'])."'>".$device_mac_address."</a></td>\n";
-				echo "			<td class='vtable'>".$row['device_template']."&nbsp;</td>\n";
+				echo "			<td class='vtable'>".escape($row['line_number'])."</td>\n";
+				echo "			<td class='vtable'><a href='".PROJECT_PATH."/app/devices/device_edit.php?id=".escape($row['device_uuid'])."'>".escape($device_mac_address)."</a></td>\n";
+				echo "			<td class='vtable'>".escape($row['device_template'])."&nbsp;</td>\n";
 				//echo "			<td class='vtable'>".$row['device_description']."&nbsp;</td>\n";
 				echo "			<td>\n";
 				echo "				<a href='#' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('delete_type').value = 'device_line'; document.getElementById('delete_uuid').value = '".escape($row['device_line_uuid'])."'; submit_form(); }\" alt='".$text['button-delete']."'>$v_link_label_delete</a>\n";
@@ -995,7 +995,7 @@
 			echo "			<select id='line_number' name='devices[0][line_number]' class='formfld' style='width: auto;' onchange=\"".escape($onchange)."\">\n";
 			echo "			<option value=''></option>\n";
 			for ($n = 1; $n <=30; $n++) {
-				echo "		<option value='".$n."'>".$n."</option>\n";
+				echo "		<option value='".escape($n)."'>".escape($n)."</option>\n";
 			}
 			echo "			</select>\n";
 			echo "		</td>\n";
@@ -1044,10 +1044,10 @@
 				foreach($devices as $field) {
 					if (strlen($field["device_mac_address"]) > 0) {
 						if ($field_current_value == $field["device_mac_address"]) {
-							echo "					<option value=\"".$field["device_mac_address"]."\" selected=\"selected\">".$field["device_mac_address"]."</option>\n";
+							echo "					<option value=\"".escape($field["device_mac_address"])."\" selected=\"selected\">".escape($field["device_mac_address"])."</option>\n";
 						}
 						else {
-							echo "					<option value=\"".$field["device_mac_address"]."\">".$field["device_mac_address"]."  ".$field['device_model']." ".$field['device_description']."</option>\n";
+							echo "					<option value=\"".escape($field["device_mac_address"])."\">".escape($field["device_mac_address"])."  ".escape($field['device_model'])." ".escape($field['device_description'])."</option>\n";
 						}
 					}
 				}
@@ -1077,10 +1077,10 @@
 									if($file_sub != '.' && $dir_sub != '..' && $dir_sub[0] != '.') {
 										if(is_dir($template_dir . '/' . $dir .'/'. $dir_sub)) {
 											if ($device_template == $dir."/".$dir_sub) {
-												echo "<option value='".$dir."/".$dir_sub."' selected='selected'>".$dir."/".$dir_sub."</option>\n";
+												echo "<option value='".escape($dir)."/".escape($dir_sub)."' selected='selected'>".escape($dir)."/".escape($dir_sub)."</option>\n";
 											}
 											else {
-												echo "<option value='".$dir."/".$dir_sub."'>".$dir."/".$dir_sub."</option>\n";
+												echo "<option value='".escape($dir)."/".escape($dir_sub)."'>".escape($dir)."/".escape($dir_sub)."</option>\n";
 											}
 										}
 									}
@@ -1143,10 +1143,10 @@
 				}
 				if(strlen($tmp) > 0){
 					if ($outbound_caller_id_name == $tmp) {
-						echo "		<option value='".$tmp."' selected='selected'>".$tmp."</option>\n";
+						echo "		<option value='".escape($tmp)."' selected='selected'>".escape($tmp)."</option>\n";
 					}
 					else {
-						echo "		<option value='".$tmp."'>".$tmp."</option>\n";
+						echo "		<option value='".escape($tmp)."'>".escape($tmp)."</option>\n";
 					}
 				}
 			}
@@ -1182,10 +1182,10 @@
 				}
 				if(strlen($tmp) > 0){
 					if ($outbound_caller_id_number == $tmp) {
-						echo "		<option value='".$tmp."' selected='selected'>".$tmp."</option>\n";
+						echo "		<option value='".escape($tmp)."' selected='selected'>".escape($tmp)."</option>\n";
 					}
 					else {
-						echo "		<option value='".$tmp."'>".$tmp."</option>\n";
+						echo "		<option value='".escape($tmp)."'>".escape($tmp)."</option>\n";
 					}
 				}
 			}
@@ -1411,10 +1411,10 @@
 			echo "		<option value=''></option>\n";
 			foreach ($_SESSION['toll allow']['name'] as $name) {
 				if ($name == $toll_allow) {
-					echo "		<option value='$name' selected='selected'>$name</option>\n";
+					echo "		<option value='".escape($name)."' selected='selected'>".escape($name)."</option>\n";
 				}
 				else {
-					echo "		<option value='$name'>$name</option>\n";
+					echo "		<option value='".escape($name)."'>".escape($name)."</option>\n";
 				}
 			}
 			echo "	</select>\n";
@@ -1449,10 +1449,10 @@
 		echo "		<option value=''></option>\n";
 		foreach ($_SESSION['call group']['name'] as $name) {
 			if ($name == $call_group) {
-				echo "		<option value='$name' selected='selected'>$name</option>\n";
+				echo "		<option value='".escape($name)."' selected='selected'>".escape($name)."</option>\n";
 			}
 			else {
-				echo "		<option value='$name'>$name</option>\n";
+				echo "		<option value='".escape($name)."'>".escape($name)."</option>\n";
 			}
 		}
 		echo "	</select>\n";
