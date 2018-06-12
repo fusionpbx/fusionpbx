@@ -82,7 +82,7 @@
 		//delete the voicemail from the destionations
 			$sqld = "
 				delete from
-					v_voicemail_destination
+					v_voicemail_destinations
 				where
 					voicemail_destination_uuid = '".$voicemail_destination_uuid."' and
 					voicemail_uuid = '".$voicemail_uuid."'";
