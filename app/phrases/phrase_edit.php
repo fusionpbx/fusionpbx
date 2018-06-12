@@ -327,10 +327,10 @@
 			echo "opt_group.label = \"".$text['label-recordings']."\";\n";
 			foreach ($recordings as &$row) {
 				if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
-					echo "opt_group.appendChild(new Option(\"".$row["recording_name"]."\", \"lua(streamfile.lua ".$row["recording_filename"].")\"));\n";
+					echo "opt_group.appendChild(new Option(\"".escape($row["recording_name"])."\", \"lua(streamfile.lua ".escape($row["recording_filename"]).")\"));\n";
 				}
 				else {
-					echo "opt_group.appendChild(new Option(\"".$row["recording_name"]."\", \"".$_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$row["recording_filename"]."\"));\n";
+					echo "opt_group.appendChild(new Option(\"".escape($row["recording_name"])."\", \"".$_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.escape($row["recording_filename"])."\"));\n";
 				}
 			}
 			echo "obj_action.appendChild(opt_group);\n";
@@ -344,7 +344,7 @@
 			echo "opt_group.label = \"".$text['label-sounds']."\";\n";
 			foreach ($sound_files as $value) {
 				if (strlen($value) > 0) {
-					echo "opt_group.appendChild(new Option(\"".$value."\", \"".$value."\"));\n";
+					echo "opt_group.appendChild(new Option(\"".escape($value)."\", \"".escape($value)."\"));\n";
 				}
 			}
 			echo "obj_action.appendChild(opt_group);\n";
@@ -487,11 +487,11 @@
 				$phrase_detail_data = $field['phrase_detail_data'];
 			}
 			echo "<tr>\n";
-			echo "	<td class='vtable'>".$phrase_detail_function."&nbsp;</td>\n";
-			echo "	<td class='vtable'>".$phrase_detail_data."&nbsp;</td>\n";
+			echo "	<td class='vtable'>".escape($phrase_detail_function)."&nbsp;</td>\n";
+			echo "	<td class='vtable'>".escape($phrase_detail_data)."&nbsp;</td>\n";
 			echo "	<td class='vtable' style='text-align: center;'>".$field['phrase_detail_order']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons' style='text-align: left;'>";
-			echo 		"<a href='phrase_detail_delete.php?pdid=".$field['phrase_detail_uuid']."&pid=".escape($phrase_uuid)."&a=delete&lang=".escape($phrase_language)."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+			echo 		"<a href='phrase_detail_delete.php?pdid=".escape($field['phrase_detail_uuid'])."&pid=".escape($phrase_uuid)."&a=delete&lang=".escape($phrase_language)."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 			echo "	</td>\n";
 			echo "</tr>\n";
 		}
@@ -517,7 +517,7 @@
 	echo "		<select name='phrase_detail_order' class='formfld'>\n";
 	for ($i = 0; $i <= 999; $i++) {
 		$i_padded = str_pad($i, 3, '0', STR_PAD_LEFT);
-		echo "		<option value='".$i_padded."'>".$i_padded."</option>\n";
+		echo "		<option value='".escape($i_padded)."'>".escape($i_padded)."</option>\n";
 	}
 	echo "		</select>\n";
 	echo "	</td>\n";
@@ -548,10 +548,10 @@
 		}
 		foreach ($_SESSION['domains'] as $row) {
 			if ($row['domain_uuid'] == $domain_uuid) {
-				echo "		<option value='".$row['domain_uuid']."' selected='selected'>".$row['domain_name']."</option>\n";
+				echo "		<option value='".escape($row['domain_uuid'])."' selected='selected'>".escape($row['domain_name'])."</option>\n";
 			}
 			else {
-				echo "		<option value='".$row['domain_uuid']."'>".$row['domain_name']."</option>\n";
+				echo "		<option value='".escape($row['domain_uuid'])."'>".escape($row['domain_name'])."</option>\n";
 			}
 		}
 		echo "	</select>\n";
@@ -585,7 +585,7 @@
 	echo "<tr>\n";
 	echo "<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "	<input type='hidden' name='phrase_uuid' value='".$phrase_uuid."'>\n";
+		echo "	<input type='hidden' name='phrase_uuid' value='".escape($phrase_uuid)."'>\n";
 	}
 	echo "		<br />";
 	echo "		<input type='submit' name='submit' class='btn' alt=\"".$text['button-save']."\" value='".$text['button-save']."'>\n";
