@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -246,9 +246,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td width='70%' align='right'>\n";
 	echo "	<input type='button' class='btn' name='back' alt='".$text['button-back']."' onclick=\"window.location='call_broadcast.php'\" value='".$text['button-back']."'>\n";
 	if ($action == "update") {
-		echo "<input type='hidden' name='call_broadcast_uuid' value='$call_broadcast_uuid'>\n";
-		echo "<input type='button' class='btn' name='' alt='".$text['button-send']."' onclick=\"window.location='call_broadcast_send.php?id=$call_broadcast_uuid'\" value='".$text['button-send']."'>\n";
-		echo "<input type='button' class='btn' name='' alt='".$text['button-stop']."' onclick=\"window.location='call_broadcast_stop.php?id=".$call_broadcast_uuid."'\" value='".$text['button-stop']."'>\n";
+		echo "<input type='hidden' name='call_broadcast_uuid' value='".escape($call_broadcast_uuid)."'>\n";
+		echo "<input type='button' class='btn' name='' alt='".$text['button-send']."' onclick=\"window.location='call_broadcast_send.php?id=".escape($call_broadcast_uuid)."'\" value='".$text['button-send']."'>\n";
+		echo "<input type='button' class='btn' name='' alt='".$text['button-stop']."' onclick=\"window.location='call_broadcast_stop.php?id=".escape($call_broadcast_uuid)."'\" value='".$text['button-stop']."'>\n";
 	}
 	echo "	<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
@@ -259,7 +259,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='broadcast_name' maxlength='255' value=\"$broadcast_name\" required='required'>\n";
+	echo "	<input class='formfld' type='text' name='broadcast_name' maxlength='255' value=\"".escape($broadcast_name)."\" required='required'>\n";
 	echo "<br />\n";
 	echo "".$text['description-name']."\n";
 	echo "</td>\n";
@@ -272,7 +272,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		if ($action == "add"){ $accountcode=$_SESSION['domain_name']; }
-		echo "    <input class='formfld' type='text' name='broadcast_accountcode' maxlength='255' value=\"$broadcast_accountcode\">\n";
+		echo "    <input class='formfld' type='text' name='broadcast_accountcode' maxlength='255' value=\"".escape($broadcast_accountcode)."\">\n";
 		echo "<br />\n";
 		echo $text['description-accountcode']."\n";
 		echo "</td>\n";
@@ -313,7 +313,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-timeout']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='number' name='broadcast_timeout' maxlength='255' min='1' step='1' value=\"$broadcast_timeout\">\n";
+	echo "	<input class='formfld' type='number' name='broadcast_timeout' maxlength='255' min='1' step='1' value=\"".escape($broadcast_timeout)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-timeout']."\n";
 	echo "</td>\n";
@@ -324,7 +324,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-concurrent-limit']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='number' name='broadcast_concurrent_limit' maxlength='255' min='1' step='1' value=\"$broadcast_concurrent_limit\">\n";
+	echo "	<input class='formfld' type='number' name='broadcast_concurrent_limit' maxlength='255' min='1' step='1' value=\"".escape($broadcast_concurrent_limit)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-concurrent-limit']."\n";
 	echo "</td>\n";
@@ -345,10 +345,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//$prep_statement->execute();
 	//while($row = $prep_statement->fetch()) {
 	//	if ($recording_uuid == $row['recording_uuid']) {
-	//		echo "		<option value='".$row['recording_uuid']."' selected='yes'>".$row['recordingname']."</option>\n";
+	//		echo "		<option value='".$row['recording_uuid']."' selected='yes'>".escape($row['recordingname'])."</option>\n";
 	//	}
 	//	else {
-	//		echo "		<option value='".$row['recording_uuid']."'>".$row['recordingname']."</option>\n";
+	//		echo "		<option value='".$row['recording_uuid']."'>".escape($row['recordingname'])."</option>\n";
 	//	}
 	//}
 	//unset ($prep_statement);
@@ -365,7 +365,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-caller-id-name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='broadcast_caller_id_name' maxlength='255' value=\"$broadcast_caller_id_name\">\n";
+	echo "	<input class='formfld' type='text' name='broadcast_caller_id_name' maxlength='255' value=\"".escape($broadcast_caller_id_name)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-caller-id-name']."\n";
 	echo "</td>\n";
@@ -376,7 +376,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-callerid-number']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='number' name='broadcast_caller_id_number' maxlength='255' min='0' step='1' value=\"$broadcast_caller_id_number\">\n";
+	echo "	<input class='formfld' type='number' name='broadcast_caller_id_number' maxlength='255' min='0' step='1' value=\"".escape($broadcast_caller_id_number)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-caller-id-number']."\n";
 	echo "</td>\n";
@@ -387,7 +387,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	Type\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='broadcast_destination_type' maxlength='255' value=\"$broadcast_destination_type\">\n";
+	echo "	<input class='formfld' type='text' name='broadcast_destination_type' maxlength='255' value=\"".escape($broadcast_destination_type)."\">\n";
 	echo "<br />\n";
 	echo "Optional, Destination Type: bridge, transfer, voicemail, conference, fifo, etc.\n";
 	echo "</td>\n";
@@ -398,7 +398,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	Destination\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='broadcast_destination_data' maxlength='255' value=\"$broadcast_destination_data\">\n";
+	echo "	<input class='formfld' type='text' name='broadcast_destination_data' maxlength='255' value=\"".escape($broadcast_destination_data)."\">\n";
 	echo "<br />\n";
 	echo "Optional, send the call to an auto attendant, conference room, or any other destination. <br /><br />\n";
 	echo "conference (8khz): 01-\${domain}@default <br />\n";
@@ -414,7 +414,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-destination']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='broadcast_destination_data' maxlength='255' value=\"$broadcast_destination_data\">\n";
+	echo "	<input class='formfld' type='text' name='broadcast_destination_data' maxlength='255' value=\"".escape($broadcast_destination_data)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-destination']." <br /><br />\n";
 	echo "</td>\n";
@@ -425,7 +425,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-phone']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<textarea class='formfld' type='text' name='broadcast_phone_numbers' rows='10'>$broadcast_phone_numbers</textarea>\n";
+	echo "	<textarea class='formfld' type='text' name='broadcast_phone_numbers' rows='10'>".escape($broadcast_phone_numbers)."</textarea>\n";
 	echo "<br />\n";
 	echo "".$text['description-phone']." <br /><br />\n";
 	echo "</td>\n";
@@ -451,7 +451,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='broadcast_description' maxlength='255' value=\"$broadcast_description\">\n";
+	echo "	<input class='formfld' type='text' name='broadcast_description' maxlength='255' value=\"".escape($broadcast_description)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-info']."\n";
 	echo "</td>\n";
@@ -496,10 +496,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$prep_statement->execute();
 		while($row = $prep_statement->fetch()) {
 			if ($user_category   == $row['user_category']) {
-				echo "		<option value='".$row['user_category']."' selected='yes'>".$row['user_category']."</option>\n";
+				echo "		<option value='".escape($row['user_category'])."' selected='yes'>".escape($row['user_category'])."</option>\n";
 			}
 			else {
-				echo "		<option value='".$row['user_category']."'>".$row['user_category']."</option>\n";
+				echo "		<option value='".escape($row['user_category'])."'>".escape($row['user_category'])."</option>\n";
 			}
 		}
 		unset ($prep_statement);
@@ -524,10 +524,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$prep_statement->execute();
 		while($row = $prep_statement->fetch()) {
 			if ($recording_uuid == $row['group_name']) {
-				echo "		<option value='".$row['group_name']."' selected='yes'>".$row['group_name']."</option>\n";
+				echo "		<option value='".escape($row['group_name'])."' selected='yes'>".escape($row['group_name'])."</option>\n";
 			}
 			else {
-				echo "		<option value='".$row['group_name']."'>".$row['group_name']."</option>\n";
+				echo "		<option value='".escape($row['group_name'])."'>".escape($row['group_name'])."</option>\n";
 			}
 		}
 		unset ($prep_statement);
@@ -553,10 +553,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$prep_statement->execute();
 		while($row = $prep_statement->fetch()) {
 			if ($gateway == $row['gateway']) {
-				echo "		<option value='".$row['gateway']."' selected='yes'>".$row['gateway']."</option>\n";
+				echo "		<option value='".escape($row['gateway'])."' selected='yes'>".escape($row['gateway'])."</option>\n";
 			}
 			else {
-				echo "		<option value='".$row['gateway']."'>".$row['gateway']."</option>\n";
+				echo "		<option value='".escape($row['gateway'])."'>".escape($row['gateway'])."</option>\n";
 			}
 		}
 		unset ($prep_statement);
@@ -609,7 +609,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		echo "	<tr>\n";
 		echo "		<td colspan='2' align='right'>\n";
-		echo "				<input type='hidden' name='call_broadcast_uuid' value='$call_broadcast_uuid'>\n";
+		echo "				<input type='hidden' name='call_broadcast_uuid' value='".escape($call_broadcast_uuid)."'>\n";
 		echo "				<input type='submit' name='submit' class='btn' value='Send Broadcast'>\n";
 		echo "		</td>\n";
 		echo "	</tr>";
