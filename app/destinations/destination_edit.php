@@ -942,7 +942,7 @@
 					echo "		<option value='".escape($row["fax_uuid"])."' selected='selected'>".escape($row["fax_extension"])." ".escape($row["fax_name"])."</option>\n";
 				}
 				else {
-					echo "		<option value='".escape($row["fax_uuid"])."'>".escape($row["fax_extension")]." ".escape($row["fax_name"])."</option>\n";
+					echo "		<option value='".escape($row["fax_uuid"])."'>".escape($row["fax_extension"])." ".escape($row["fax_name"])."</option>\n";
 				}
 			}
 			echo "	</select>\n";
