@@ -358,7 +358,7 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 
-		echo "<select name='$name' class='formfld' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
+		echo "<select name='".escape($name)."' class='formfld' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
 		echo "	<option value=''></option>\n";
 		//misc optgroup
 			if (if_group("superadmin")) {
@@ -380,10 +380,10 @@
 					}
 					else if ($var == $recording_filename && strlen($var) > 0) {
 						$tmp_selected = true;
-						echo "	<option value='".$recording_filename."' selected='selected'>".$recording_name."</option>\n";
+						echo "	<option value='".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
 					}
 					else {
-						echo "	<option value='".$recording_filename."'>".$recording_name."</option>\n";
+						echo "	<option value='".escape($recording_filename)."'>".escape($recording_name)."</option>\n";
 					}
 				}
 				echo "</optgroup>\n";
@@ -398,10 +398,10 @@
 				foreach ($result as &$row) {
 					if ($var == "phrase:".$row["phrase_uuid"]) {
 						$tmp_selected = true;
-						echo "	<option value='phrase:".$row["phrase_uuid"]."' selected='selected'>".$row["phrase_name"]."</option>\n";
+						echo "	<option value='phrase:".escape($row["phrase_uuid"])."' selected='selected'>".escape($row["phrase_name"])."</option>\n";
 					}
 					else {
-						echo "	<option value='phrase:".$row["phrase_uuid"]."'>".$row["phrase_name"]."</option>\n";
+						echo "	<option value='phrase:".escape($row["phrase_uuid"])."'>".escape($row["phrase_name"])."</option>\n";
 					}
 				}
 				unset ($prep_statement);
@@ -420,10 +420,10 @@
 							}
 							if ($var == $value) {
 								$tmp_selected = true;
-								echo "	<option value='$value' selected='selected'>$value</option>\n";
+								echo "	<option value='".escape($value)."' selected='selected'>".escape($value)."</option>\n";
 							}
 							else {
-								echo "	<option value='$value'>$value</option>\n";
+								echo "	<option value='".escape($value)."'>".escape($value)."</option>\n";
 							}
 						}
 					}
@@ -435,13 +435,13 @@
 				if (!$tmp_selected && strlen($var) > 0) {
 					echo "<optgroup label='Selected'>\n";
 					if (file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$var)) {
-						echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$var."' selected='selected'>".$var."</option>\n";
+						echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".escape($var)."' selected='selected'>".escape($var)."</option>\n";
 					}
 					else if (substr($var, -3) == "wav" || substr($var, -3) == "mp3") {
-						echo "	<option value='".$var."' selected='selected'>".$var."</option>\n";
+						echo "	<option value='".escape($var)."' selected='selected'>".escape($var)."</option>\n";
 					}
 					else {
-						echo "	<option value='".$var."' selected='selected'>".$var."</option>\n";
+						echo "	<option value='".escape($var)."' selected='selected'>".escape($var)."</option>\n";
 					}
 					echo "</optgroup>\n";
 				}
