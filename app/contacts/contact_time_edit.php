@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -186,7 +186,7 @@ else {
 	}
 	echo "</b></td>\n";
 	echo "<td align='right' valign='top'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contact_edit.php?id=$contact_uuid'\" value='".$text['button-back']."'>";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contact_edit.php?id=".escape($contact_uuid)."'\" value='".$text['button-back']."'>";
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -200,7 +200,7 @@ else {
 	echo "	".$text['label-time_start']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld datetimepicker' type='text' name='time_start' id='time_start' style='min-width: 135px; width: 135px;' value='".$time_start."'>\n";
+	echo "	<input class='formfld datetimepicker' type='text' name='time_start' id='time_start' style='min-width: 135px; width: 135px;' value='".escape($time_start)."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -209,7 +209,7 @@ else {
 	echo "	".$text['label-time_stop']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld datetimepicker' type='text' name='time_stop' id='time_stop' style='min-width: 135px; width: 135px;' value='".$time_stop."'>\n";
+	echo "	<input class='formfld datetimepicker' type='text' name='time_stop' id='time_stop' style='min-width: 135px; width: 135px;' value='".escape($time_stop)."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -218,16 +218,16 @@ else {
 	echo "	".$text['label-time_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <textarea class='formfld' type='text' name='time_description' id='time_description' style='width: 400px; height: 100px;'>".$time_description."</textarea>\n";
+	echo "  <textarea class='formfld' type='text' name='time_description' id='time_description' style='width: 400px; height: 100px;'>".escape($time_description)."</textarea>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	echo "			<br>\n";
-	echo "			<input type='hidden' name='contact_uuid' value='".$contact_uuid."'>\n";
+	echo "			<input type='hidden' name='contact_uuid' value='".escape($contact_uuid)."'>\n";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='contact_time_uuid' value='".$contact_time_uuid."'>\n";
+		echo "		<input type='hidden' name='contact_time_uuid' value='".escape($contact_time_uuid)."'>\n";
 	}
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
