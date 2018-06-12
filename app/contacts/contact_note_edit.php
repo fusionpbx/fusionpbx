@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -182,7 +182,7 @@ else {
 	}
 	echo "</td>\n";
 	echo "<td width='70%' align='right'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contact_edit.php?id=$contact_uuid'\" value='".$text['button-back']."'>";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contact_edit.php?id=".escape($contact_uuid)."'\" value='".$text['button-back']."'>";
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -192,7 +192,7 @@ else {
 	echo "	".$text['label-contact_note']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <textarea class='formfld' type='text' rows=\"20\" style='width: 100%' name='contact_note'>".$contact_note."</textarea>\n";
+	echo "  <textarea class='formfld' type='text' rows=\"20\" style='width: 100%' name='contact_note'>".escape($contact_note)."</textarea>\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
@@ -200,9 +200,9 @@ else {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	echo "			<br>";
-	echo "			<input type='hidden' name='contact_uuid' value='$contact_uuid'>\n";
+	echo "			<input type='hidden' name='contact_uuid' value='".escape($contact_uuid)."'>\n";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='contact_note_uuid' value='$contact_note_uuid'>\n";
+		echo "		<input type='hidden' name='contact_note_uuid' value='".escape($contact_note_uuid)."'>\n";
 	}
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
