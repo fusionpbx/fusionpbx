@@ -630,7 +630,7 @@
 			if ($action == "update") {
 				messages::add($text['message-update']);
 			}
-			header("Location: destination_edit.php?id=".$destination_uuid."&type=".$destination_type);
+			header("Location: destination_edit.php?id=".escape($destination_uuid)."&type=".$destination_type);
 			return;
 
 	} //(count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0)
