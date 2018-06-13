@@ -778,7 +778,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 					if ($result_count > 1) {
 						if (permission_exists('group_member_delete') || if_group("superadmin")) {
 							echo "	<td class='list_control_icons' style='width: 25px;'>\n";
-							echo "		<a href='user_edit.php?id=".escape($user_uuid)."&domain_uuid=".escape($domain_uuid)."&group_uuid=".escape($field['group_uuid'])."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".escape($v_link_label_delete)."</a>\n";
+							echo "		<a href='user_edit.php?id=".escape($user_uuid)."&domain_uuid=".escape($domain_uuid)."&group_uuid=".escape($field['group_uuid'])."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>\n";
 							echo "	</td>\n";
 						}
 					}
