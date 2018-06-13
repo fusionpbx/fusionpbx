@@ -407,10 +407,10 @@
 				}
 				else if ($music_on_hold_chime_list == $recording_filename && strlen($music_on_hold_chime_list) > 0) {
 					$tmp_selected = true;
-					echo "	<option value='".$recording_filename."' selected='selected'>".$recording_name."</option>\n";
+					echo "	<option value='".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
 				}
 				else {
-					echo "	<option value='".$recording_filename."'>".$recording_name."</option>\n";
+					echo "	<option value='".escape($recording_filename)."'>".escape($recording_name)."</option>\n";
 				}
 			}
 			echo "</optgroup>\n";
@@ -425,10 +425,10 @@
 			foreach ($result as &$row) {
 				if ($music_on_hold_chime_list == "phrase:".$row["phrase_uuid"]) {
 					$tmp_selected = true;
-					echo "	<option value='phrase:".$row["phrase_uuid"]."' selected='selected'>".$row["phrase_name"]."</option>\n";
+					echo "	<option value='phrase:".escape($row["phrase_uuid"])."' selected='selected'>".escape($row["phrase_name"])."</option>\n";
 				}
 				else {
-					echo "	<option value='phrase:".$row["phrase_uuid"]."'>".$row["phrase_name"]."</option>\n";
+					echo "	<option value='phrase:".escape($row["phrase_uuid"])."'>".escape($row["phrase_name"])."</option>\n";
 				}
 			}
 			unset ($prep_statement);
@@ -446,10 +446,10 @@
 					}
 					if ($music_on_hold_chime_list == $value) {
 						$tmp_selected = true;
-						echo "	<option value='$value' selected='selected'>$value</option>\n";
+						echo "	<option value='".escape($value)."' selected='selected'>".escape($value)."</option>\n";
 					}
 					else {
-						echo "	<option value='$value'>$value</option>\n";
+						echo "	<option value='".escape($value)."'>".escape($value)."</option>\n";
 					}
 				}
 			}
@@ -510,10 +510,10 @@
 		}
 		foreach ($_SESSION['domains'] as $row) {
 			if ($row['domain_uuid'] == $domain_uuid) {
-				echo "		<option value='".$row['domain_uuid']."' selected='selected'>".$row['domain_name']."</option>\n";
+				echo "		<option value='".escape($row['domain_uuid'])."' selected='selected'>".escape($row['domain_name'])."</option>\n";
 			}
 			else {
-				echo "		<option value='".$row['domain_uuid']."'>".$row['domain_name']."</option>\n";
+				echo "		<option value='".escape($row['domain_uuid'])."'>".escape($row['domain_name'])."</option>\n";
 			}
 		}
 		echo "	</select>\n";
@@ -524,7 +524,7 @@
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='music_on_hold_uuid' value='$music_on_hold_uuid'>\n";
+		echo "				<input type='hidden' name='music_on_hold_uuid' value='".escape($music_on_hold_uuid)."'>\n";
 	}
 	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
