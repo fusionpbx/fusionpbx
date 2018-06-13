@@ -119,8 +119,6 @@
 	echo "		</td>\n";
 	echo "	</tr>\n";
 
-
-
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-caller_id_name']."</td>"; //source name
 	echo "		<td class='vtable'><input type='text' class='formfld' name='caller_id_name' value='".escape($caller_id_name)."'></td>";
@@ -140,11 +138,11 @@
 	$result_e = $prep_statement -> fetchAll(PDO::FETCH_NAMED);
 	foreach ($result_e as &$row) {
 		$selected = ($row['extension_uuid'] == $caller_extension_uuid) ? "selected" : null;
-		echo "			<option value='".escape($row['extension_uuid'])."' ".escape($selected).">".((is_numeric($row['extension'])) ? $row['extension'] : $row['number_alias']." (".escape($row['extension']).")")."</option>";
+		echo "			<option value='".escape($row['extension_uuid'])."' ".escape($selected).">".((is_numeric($row['extension'])) ? escape($row['extension']) : escape($row['number_alias'])." (".escape($row['extension']).")")."</option>";
 	}
 	unset ($prep_statement);
 	echo "			</select>\n";
-	echo "			<input type='text' class='formfld' style='display: none;'  name='caller_id_number' id='caller_id_number' value='".escape($caller_id_number)."'>\n";
+	echo "			<input type='text' class='formfld' style='display: none;' name='caller_id_number' id='caller_id_number' value='".escape($caller_id_number)."'>\n";
 	echo "			<input type='button' id='btn_toggle_source' class='btn' name='' alt='".$text['button-back']."' value='&#9665;' onclick=\"toggle('source');\">\n";
 	echo "		</td>";
 	echo "	</tr>";
