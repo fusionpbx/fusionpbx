@@ -54,79 +54,79 @@
 		$search_url .= '&showall=true';
 	}
 	if (strlen($_GET['direction']) > 0) {
-		$search_url .= '&direction='.$_GET['direction'];
+		$search_url .= '&direction='.escape($_GET['direction']);
 	}
 	if (strlen($_GET['leg']) > 0) {
-		$search_url .= '&leg='.$_GET['leg'];
+		$search_url .= '&leg='.escape($_GET['leg']);
 	}
 	if (strlen($_GET['caller_id_name']) > 0) {
-		$search_url .= '&caller_id_name='.$_GET['caller_id_name'];
+		$search_url .= '&caller_id_name='.escape($_GET['caller_id_name']);
 	}
 	if (strlen($_GET['caller_extension_uuid']) > 0) {
-		$search_url .= '&caller_extension_uuid='.$_GET['caller_extension_uuid'];
+		$search_url .= '&caller_extension_uuid='.escape($_GET['caller_extension_uuid']);
 	}
 	if (strlen($_GET['caller_id_number']) > 0) {
-		$search_url .= '&caller_id_number='.$_GET['caller_id_number'];
+		$search_url .= '&caller_id_number='.escape($_GET['caller_id_number']);
 	}
 	if (strlen($_GET['destination_number']) > 0) {
-		$search_url .= '&destination_number='.$_GET['destination_number'];
+		$search_url .= '&destination_number='.escape($_GET['destination_number']);
 	}
 	if (strlen($_GET['context']) > 0) {
-		$search_url .= '&context='.$_GET['context'];
+		$search_url .= '&context='.escape($_GET['context']);
 	}
 	if (strlen($_GET['start_stamp_begin']) > 0) {
-		$search_url .= '&start_stamp_begin='.$_GET['start_stamp_begin'];
+		$search_url .= '&start_stamp_begin='.escape($_GET['start_stamp_begin']);
 	}
 	if (strlen($_GET['start_stamp_end']) > 0) {
-		$search_url .= '&start_stamp_end='.$_GET['start_stamp_end'];
+		$search_url .= '&start_stamp_end='.escape($_GET['start_stamp_end']);
 	}
 	if (strlen($_GET['answer_stamp_begin']) > 0) {
-		$search_url .= '&answer_stamp_begin='.$_GET['answer_stamp_begin'];
+		$search_url .= '&answer_stamp_begin='.escape($_GET['answer_stamp_begin']);
 	}
 	if (strlen($_GET['answer_stamp_end']) > 0) {
-		$search_url .= '&answer_stamp_end='.$_GET['answer_stamp_end'];
+		$search_url .= '&answer_stamp_end='.escape($_GET['answer_stamp_end']);
 	}
 	if (strlen($_GET['end_stamp_begin']) > 0) {
-		$search_url .= '&end_stamp_begin='.$_GET['end_stamp_begin'];
+		$search_url .= '&end_stamp_begin='.escape($_GET['end_stamp_begin']);
 	}
 	if (strlen($_GET['end_stamp_end']) > 0) {
-		$search_url .= '&end_stamp_end='.$_GET['end_stamp_end'];
+		$search_url .= '&end_stamp_end='.escape($_GET['end_stamp_end']);
 	}
 	if (strlen($_GET['duration']) > 0) {
-		$search_url .= '&duration='.$_GET['duration'];
+		$search_url .= '&duration='.escape($_GET['duration']);
 	}
 	if (strlen($_GET['billsec']) > 0) {
-		$search_url .= '&billsec='.$_GET['billsec'];
+		$search_url .= '&billsec='.escape($_GET['billsec']);
 	}
 	if (strlen($_GET['hangup_cause']) > 0) {
-		$search_url .= '&hangup_cause='.$_GET['hangup_cause'];
+		$search_url .= '&hangup_cause='.escape$_GET['hangup_cause']);
 	}
 	if (strlen($_GET['uuid']) > 0) {
-		$search_url .= '&uuid='.$_GET['uuid'];
+		$search_url .= '&uuid='.escape($_GET['uuid']);
 	}
 	if (strlen($_GET['bleg_uuid']) > 0) {
-		$search_url .= '&bleg_uuid='.$_GET['bleg_uuid'];
+		$search_url .= '&bleg_uuid='.escape($_GET['bleg_uuid']);
 	}
 	if (strlen($_GET['accountcode']) > 0) {
-		$search_url .= '&accountcode='.$_GET['accountcode'];
+		$search_url .= '&accountcode='.escape($_GET['accountcode']);
 	}
 	if (strlen($_GET['read_codec']) > 0) {
-		$search_url .= '&read_codec='.$_GET['read_codec'];
+		$search_url .= '&read_codec='.escape($_GET['read_codec']);
 	}
 	if (strlen($_GET['write_codec']) > 0) {
-		$search_url .= '&write_codec='.$_GET['write_codec'];
+		$search_url .= '&write_codec='.escape($_GET['write_codec']);
 	}
 	if (strlen($_GET['remote_media_ip']) > 0) {
-		$search_url .= '&remote_media_ip='.$_GET['remote_media_ip'];
+		$search_url .= '&remote_media_ip='.escape($_GET['remote_media_ip']);
 	}
 	if (strlen($_GET['network_addr']) > 0) {
-		$search_url .= '&network_addr='.$_GET['network_addr'];
+		$search_url .= '&network_addr='.escape($_GET['network_addr']);
 	}
 	if (strlen($_GET['mos_comparison']) > 0) {
-		$search_url .= '&mos_comparison='.$_GET['mos_comparison'];
+		$search_url .= '&mos_comparison='.escape($_GET['mos_comparison']);
 	}
 	if (strlen($_GET['mos_score']) > 0) {
-		$search_url .= '&mos_score='.$_GET['mos_score'];
+		$search_url .= '&mos_score='.escape($_GET['mos_score']);
 	}
 
 //page title and description
@@ -136,15 +136,15 @@
 	echo "	<td width='70%' align='right' valign='top'>\n";
 	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='xml_cdr.php'\" value='".$text['button-back']."'>\n";
 	if (permission_exists('xml_cdr_search_advanced')) {
-		echo "			<input type='button' class='btn' value='".$text['button-advanced_search']."' onclick=\"window.location='xml_cdr_search.php?type=advanced".escape($search_url)."';\">\n";
+		echo "			<input type='button' class='btn' value='".$text['button-advanced_search']."' onclick=\"window.location='xml_cdr_search.php?type=advanced".$search_url."';\">\n";
 	}
 	if (permission_exists('xml_cdr_all')) {
 		if ($_GET['showall'] != 'true') {
-			echo "<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='xml_cdr_statistics.php?showall=true".escape($search_url)."';\">\n";
+			echo "<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='xml_cdr_statistics.php?showall=true".$search_url."';\">\n";
 		}
 	}
 	echo "		<input type='button' class='btn' value='".$text['button-extension_summary']."' onclick=\"document.location.href='xml_cdr_extension_summary.php';\">\n";
-	echo "		<input type='button' class='btn' value='".$text['button-download_csv']."' onclick=\"document.location.href='xml_cdr_statistics_csv.php?type=csv".escape($search_url)."';\">\n";
+	echo "		<input type='button' class='btn' value='".$text['button-download_csv']."' onclick=\"document.location.href='xml_cdr_statistics_csv.php?type=csv".$search_url."';\">\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
@@ -230,10 +230,8 @@
 		});
 		choiceContainer.find("input").click(plotAccordingToChoices);
 
-
 		function plotAccordingToChoices() {
 			var data = [];
-
 			choiceContainer.find("input:checked").each(function () {
 				var key = $(this).attr("name");
 				if (key && datasets[key])
@@ -257,9 +255,7 @@
 						} else {
 							echo "xaxis: {mode: \"time\",timeformat: \"%m:%d\",minTickSize: [1, \"month\"]}";
 						}
-
 					?>
-
 				});
 		}
 
@@ -335,4 +331,5 @@
 
 //show the footer
 	require_once "resources/footer.php";
+
 ?>
