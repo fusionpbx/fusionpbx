@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -312,7 +312,7 @@
 	echo "	".$text['label-phone_speed_dial']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='phone_speed_dial' maxlength='255' min='0' step='1' value=\"$phone_speed_dial\">\n";
+	echo "	<input class='formfld' type='text' name='phone_speed_dial' maxlength='255' min='0' step='1' value=\"".escape($phone_speed_dial)."\">\n";
 	echo "<br />\n";
 	echo $text['description-phone_speed_dial']."\n";
 	echo "</td>\n";
@@ -323,7 +323,7 @@
 	echo "	".$text['label-phone_number']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='phone_number' maxlength='255' min='0' step='1' value=\"$phone_number\">\n";
+	echo "	<input class='formfld' type='text' name='phone_number' maxlength='255' min='0' step='1' value=\"".escape($phone_number)."\">\n";
 	echo "<br />\n";
 	echo $text['description-phone_number']."\n";
 	echo "</td>\n";
@@ -334,7 +334,7 @@
 	echo "	".$text['label-phone_extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='number' name='phone_extension' min='0' step='1' maxlength='255' value=\"$phone_extension\">\n";
+	echo "	<input class='formfld' type='number' name='phone_extension' min='0' step='1' maxlength='255' value=\"".escape($phone_extension)."\">\n";
 	echo "<br />\n";
 	echo $text['description-phone_extension']."\n";
 	echo "</td>\n";
@@ -359,7 +359,7 @@
 	echo "	".$text['label-phone_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='phone_description' maxlength='255' value=\"$phone_description\">\n";
+	echo "	<input class='formfld' type='text' name='phone_description' maxlength='255' value=\"".escape($phone_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-phone_description']."\n";
 	echo "</td>\n";
@@ -368,9 +368,9 @@
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	echo "			<br>\n";
-	echo "			<input type='hidden' name='contact_uuid' value='$contact_uuid'>\n";
+	echo "			<input type='hidden' name='contact_uuid' value='".escape($contact_uuid)."'>\n";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='contact_phone_uuid' value='$contact_phone_uuid'>\n";
+		echo "		<input type='hidden' name='contact_phone_uuid' value='".escape($contact_phone_uuid)."'>\n";
 	}
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
