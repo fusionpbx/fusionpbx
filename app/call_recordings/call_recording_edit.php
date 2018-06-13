@@ -249,7 +249,7 @@
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='call_recording_uuid' value='$call_recording_uuid'>\n";
+		echo "				<input type='hidden' name='call_recording_uuid' value='".escape($call_recording_uuid)."'>\n";
 	}
 	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
