@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -210,7 +210,7 @@ else {
 	}
 	echo "</b></td>\n";
 	echo "<td align='right' valign='top'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contact_edit.php?id=".$contact_uuid."'\" value='".$text['button-back']."'>";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contact_edit.php?id=".escape($contact_uuid)."'\" value='".$text['button-back']."'>";
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -263,7 +263,7 @@ else {
 	echo "	".$text['label-url_address']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='url' name='url_address' maxlength='255' value=\"".$url_address."\" placeholder='http://...'>\n";
+	echo "	<input class='formfld' type='url' name='url_address' maxlength='255' value=\"".escape($url_address)."\" placeholder='http://...'>\n";
 	echo "<br />\n";
 	echo $text['description-url_address']."\n";
 	echo "</td>\n";
@@ -288,7 +288,7 @@ else {
 	echo "	".$text['label-url_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='url_description' maxlength='255' value=\"".$url_description."\">\n";
+	echo "	<input class='formfld' type='text' name='url_description' maxlength='255' value=\"".escape($url_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-url_description']."\n";
 	echo "</td>\n";
@@ -297,9 +297,9 @@ else {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	echo "			<br>\n";
-	echo "			<input type='hidden' name='contact_uuid' value='$contact_uuid'>\n";
+	echo "			<input type='hidden' name='contact_uuid' value='".escape($contact_uuid)."'>\n";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='contact_url_uuid' value='".$contact_url_uuid."'>\n";
+		echo "		<input type='hidden' name='contact_url_uuid' value='".escape($contact_url_uuid)."'>\n";
 	}
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
