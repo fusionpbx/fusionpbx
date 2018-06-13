@@ -675,7 +675,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 		echo "		".$text['label-status']."\n";
 		echo "	</td>\n";
 		echo "	<td class=\"vtable\">\n";
-		$cmd = "'".PROJECT_PATH."/app/calls_active/v_calls_exec.php?cmd=callcenter_config+agent+set+status+".$username."@".$_SESSION['domains'][$domain_uuid]['domain_name']."+'+this.value";
+		$cmd = "'".PROJECT_PATH."/app/calls_active/v_calls_exec.php?cmd=callcenter_config+agent+set+status+".escape($username)."@".$_SESSION['domains'][$domain_uuid]['domain_name']."+'+this.value";
 		echo "		<select id='user_status' name='user_status' class='formfld' style='' onchange=\"send_cmd($cmd);\">\n";
 		echo "			<option value=''></option>\n";
 		echo "			<option value='Available' ".(($user_status == "Available") ? "selected='selected'" : null).">".$text['option-available']."</option>\n";
@@ -695,7 +695,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 		echo "		<td class='vncell' valign='top'>".$text['label-contact']."</td>";
 		echo "		<td class='vtable'>\n";
 		$sql = " select contact_uuid, contact_organization, contact_name_given, contact_name_family, contact_nickname from v_contacts ";
-		$sql .= " where domain_uuid = '".$domain_uuid."' ";
+		$sql .= " where domain_uuid = '".escape($domain_uuid)."' ";
 		$sql .= " order by contact_organization desc, contact_name_family asc, contact_name_given asc, contact_nickname asc ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
@@ -773,12 +773,12 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 				if (strlen($field['group_name']) > 0) {
 					echo "<tr>\n";
 					echo "	<td class='vtable' style='white-space: nowrap; padding-right: 30px;' nowrap='nowrap'>";
-					echo $field['group_name'].(($field['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['group_domain_uuid']]['domain_name'] : null);
+					echo escape($field['group_name']).(($field['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['group_domain_uuid']]['domain_name'] : null);
 					echo "	</td>\n";
 					if ($result_count > 1) {
 						if (permission_exists('group_member_delete') || if_group("superadmin")) {
 							echo "	<td class='list_control_icons' style='width: 25px;'>\n";
-							echo "		<a href='user_edit.php?id=".escape($user_uuid)."&domain_uuid=".escape($domain_uuid)."&group_uuid=".$field['group_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".escape($v_link_label_delete)."</a>\n";
+							echo "		<a href='user_edit.php?id=".escape($user_uuid)."&domain_uuid=".escape($domain_uuid)."&group_uuid=".escape($field['group_uuid'])."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".escape($v_link_label_delete)."</a>\n";
 							echo "	</td>\n";
 						}
 					}
@@ -846,7 +846,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 			echo "		<td class='vncell' valign='top'>".$text['label-api_key']."</td>";
 			echo "		<td class='vtable'>\n";
 			echo "			<input type=\"text\" class='formfld' name=\"api_key\" id='api_key' value=\"".escape($api_key)."\" >";
-			echo "			<input type='button' class='btn' value='".$text['button-generate']."' onclick=\"getElementById('api_key').value='".uuid()."';\">";
+			echo "			<input type='button' class='btn' value='".$text['button-generate']."' onclick=\"getElementById('api_key').value='".escape(uuid())."';\">";
 			if (strlen($text['description-api_key']) > 0) {
 				echo "			<br />".$text['description-api_key']."<br />\n";
 			}
