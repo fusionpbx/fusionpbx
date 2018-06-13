@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -507,7 +507,7 @@
 	$on_click = "document.getElementById('dnd_disabled').checked=true;";
 	$on_click .= "document.getElementById('forward_busy_destination').focus();";
 	echo "	<label for='forward_busy_disabled'><input type='radio' name='forward_busy_enabled' id='forward_busy_disabled' onclick=\"\" value='false' ".(($forward_busy_enabled == "false" || $forward_busy_enabled == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
-	echo "	<label for='forward_busy_enabled'><input type='radio' name='forward_busy_enabled' id='forward_busy_enabled' onclick=\"$on_click\" value='true' ".(($forward_busy_enabled == "true") ? "checked='checked'" : null)."/> ".$text['label-enabled']."</label> \n";
+	echo "	<label for='forward_busy_enabled'><input type='radio' name='forward_busy_enabled' id='forward_busy_enabled' onclick=\"".escape($on_click)."\" value='true' ".(($forward_busy_enabled == "true") ? "checked='checked'" : null)."/> ".$text['label-enabled']."</label> \n";
 	unset($on_click);
 	echo "&nbsp;&nbsp;&nbsp;";
 	echo "	<input class='formfld' type='text' name='forward_busy_destination' id='forward_busy_destination' maxlength='255' placeholder=\"".$text['label-destination']."\" value=\"".escape($forward_busy_destination)."\">\n";
@@ -569,7 +569,7 @@
 				if(strlen($caller_id_name) == 0){
 					$caller_id_name = $row_forward['destination_description'];
 				}
-				echo "		<option value='".$row_forward["destination_uuid"]."' ".$selected.">".format_phone($caller_id_number)." : ".$caller_id_name."</option>\n";
+				echo "		<option value='".escape($row_forward["destination_uuid"])."' ".escape($selected).">".escape(format_phone($caller_id_number))." : ".$caller_id_name."</option>\n";
 			}
 			echo "	</select><br />\n";
 			echo $text['description-cid-number']."\n";
@@ -592,7 +592,7 @@
 		$on_click .= "document.getElementById('follow_me_caller_id_uuid').focus(); ";
 	}
 	echo "	<label for='follow_me_disabled'><input type='radio' name='follow_me_enabled' id='follow_me_disabled' onclick=\"$('#tr_follow_me_settings').slideUp('fast');\" value='false' ".(($follow_me_enabled == "false" || $follow_me_enabled == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
-	echo "	<label for='follow_me_enabled'><input type='radio' name='follow_me_enabled' id='follow_me_enabled' onclick=\"$('#tr_follow_me_settings').slideDown('fast'); ".$on_click."\" value='true' ".(($follow_me_enabled == "true") ? "checked='checked'" : null)."/> ".$text['label-enabled']."</label> \n";
+	echo "	<label for='follow_me_enabled'><input type='radio' name='follow_me_enabled' id='follow_me_enabled' onclick=\"$('#tr_follow_me_settings').slideDown('fast'); ".escape($on_click)."\" value='true' ".(($follow_me_enabled == "true") ? "checked='checked'" : null)."/> ".$text['label-enabled']."</label> \n";
 	unset($on_click);
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -652,7 +652,7 @@
 		echo "			</td>\n";
 		echo "			<td class='vtable' align='left'>\n";
 		echo "				<label for='follow_me_ignore_busy_false'><input type='radio' name='follow_me_ignore_busy' id='follow_me_ignore_busy_false' value='false' onclick=\"\" ".(($follow_me_ignore_busy == "false" || $follow_me_ignore_busy == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
-		echo "				<label for='follow_me_ignore_busy_true'><input type='radio' name='follow_me_ignore_busy' id='follow_me_ignore_busy_true' value='true' onclick=\"$on_click\" ".(($follow_me_ignore_busy == "true") ? "checked='checked'" : null)." /> ".$text['label-enabled']."</label> \n";
+		echo "				<label for='follow_me_ignore_busy_true'><input type='radio' name='follow_me_ignore_busy' id='follow_me_ignore_busy_true' value='true' onclick=\"".escape($on_click)."\" ".(($follow_me_ignore_busy == "true") ? "checked='checked'" : null)." /> ".$text['label-enabled']."</label> \n";
 		echo "				<br />\n";
 		echo 				$text['description-ignore_busy']."\n";
 		echo "			</td>\n";
@@ -684,7 +684,7 @@
 					$caller_id_name = $row_follow_me['destination_description'];
 				}
 
-				echo "		<option value='".$row_follow_me["destination_uuid"]."' ".$selected.">".format_phone($caller_id_number)." : ".$caller_id_name."</option>\n";
+				echo "		<option value='".escape($row_follow_me["destination_uuid"])."' ".escape($selected).">".format_phone(escape($caller_id_number))." : ".escape($caller_id_name)."</option>\n";
 			}
 			echo "	</select><br />\n";
 			echo $text['description-cid-number']."\n";
@@ -700,7 +700,7 @@
 		echo "	".$text['label-cid-name-prefix']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "  <input class='formfld' type='text' name='cid_name_prefix' maxlength='255' value='$cid_name_prefix'>\n";
+		echo "  <input class='formfld' type='text' name='cid_name_prefix' maxlength='255' value='".escape($cid_name_prefix)."'>\n";
 		echo "<br />\n";
 		echo $text['description-cid-name-prefix']."\n";
 		echo "</td>\n";
@@ -713,7 +713,7 @@
 		echo "	".$text['label-cid-number-prefix']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "  <input class='formfld' type='text' name='cid_number_prefix' maxlength='255' value='$cid_number_prefix'>\n";
+		echo "  <input class='formfld' type='text' name='cid_number_prefix' maxlength='255' value='".escape($cid_number_prefix)."'>\n";
 		echo "<br />\n";
 		echo $text['description-cid-number-prefix']."\n";
 		echo "</td>\n";
@@ -742,7 +742,7 @@
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='id' value='".$extension_uuid."'>\n";
+		echo "		<input type='hidden' name='id' value='".escape($extension_uuid)."'>\n";
 	}
 	echo "			<br />";
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
