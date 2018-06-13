@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -148,7 +148,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-recording_name']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='recording_name' maxlength='255' value=\"$recording_name\">\n";
+	echo "    <input class='formfld' type='text' name='recording_name' maxlength='255' value=\"".escape($recording_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-recording']."\n";
 	echo "</td>\n";
@@ -159,8 +159,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-file_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='recording_filename' maxlength='255' value=\"$recording_filename\">\n";
-	echo "    <input type='hidden' name='recording_filename_original' value=\"$recording_filename\">\n";
+	echo "    <input class='formfld' type='text' name='recording_filename' maxlength='255' value=\"".escape($recording_filename)."\">\n";
+	echo "    <input type='hidden' name='recording_filename_original' value=\"".escape($recording_filename)."\">\n";
 	echo "<br />\n";
 	echo $text['message-file']."\n";
 	echo "</td>\n";
@@ -171,14 +171,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    Description\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='recording_description' maxlength='255' value=\"$recording_description\">\n";
+	echo "    <input class='formfld' type='text' name='recording_description' maxlength='255' value=\"".escape($recording_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
-	echo "			<input type='hidden' name='recording_uuid' value='".$recording_uuid."'>\n";
+	echo "			<input type='hidden' name='recording_uuid' value='".escape($recording_uuid)."'>\n";
 	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
