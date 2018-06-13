@@ -813,7 +813,7 @@
 	echo "<br>\n";
 	echo "<div align='right'>\n";
 	if ($action == "update") {
-		echo "	<input type='hidden' name='dialplan_uuid' value='escape($dialplan_uuid)'>\n";
+		echo "	<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	}
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</div>\n";
