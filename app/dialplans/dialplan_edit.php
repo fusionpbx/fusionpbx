@@ -567,12 +567,12 @@
 		<?php
 
 		//display the results
-			if ($result_count > 0) {
+			if (is_array($details)) {
 
 				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0' style='margin: -2px; border-spacing: 2px;'>\n";
 
 				$x = 0;
-				if (is_array($details)) foreach($details as $group) {
+				foreach($details as $group) {
 
 					if ($x != 0) {
 						echo "<tr><td colspan='7'><br><br></td></tr>";
@@ -683,7 +683,7 @@
 										if (strlen($row) > 0) {
 											$application = explode(",", $row);
 											if ($application[0] != "name" && stristr($application[0], "[") != true) {
-												echo "	<option value='".$application[0]."'>".$application[0]."</option>\n";
+												echo "	<option value='".escape($application[0])."'>".escape($application[0])."</option>\n";
 											}
 										}
 									}
@@ -705,12 +705,12 @@
 										$sql = "select gateway from v_gateways where gateway_uuid = '".$bridge_statement[2]."' ";
 										$prep_statement = $db->prepare(check_sql($sql));
 										$prep_statement->execute();
-										$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-										if (count($result) > 0) {
+										$gateways = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+										if (is_array($gateways)) {
 											$gateway_name = $result[0]['gateway'];
 											$dialplan_detail_data_mod = str_replace($bridge_statement[2], $gateway_name, $dialplan_detail_data);
 										}
-										unset ($prep_statement, $sql, $bridge_statement);
+										unset ($prep_statement, $sql, $bridge_statement, $gateways);
 									}
 								}
 								echo "	<label id=\"label_dialplan_detail_data_".$x."\">".escape($dialplan_detail_data_mod)."</label>\n";
@@ -744,7 +744,7 @@
 						//group
 							echo "<td class='vtablerow' style='".$no_border." text-align: center;' onclick=\"label_to_form('label_dialplan_detail_group_".$x."','dialplan_detail_group_".$x."');\" nowrap='nowrap'>\n";
 							if ($element['hidden']) {
-								echo "	<label id=\"label_dialplan_detail_group_".$x."\">".$dialplan_detail_group."</label>\n";
+								echo "	<label id=\"label_dialplan_detail_group_".$x."\">".escape($dialplan_detail_group)."</label>\n";
 							}
 							echo "	<input id='dialplan_detail_group_".$x."' name='dialplan_details[".$x."][dialplan_detail_group]' class='formfld' type='number' min='0' step='1' style='width: 30px; text-align: center; ".$element['visibility']."' placeholder='' value=\"".escape($dialplan_detail_group)."\" onclick='this.select();'>\n";
 							/*
@@ -792,7 +792,7 @@
 							echo "	<td class='list_control_icon'>\n";
 							if ($element['hidden']) {
 								//echo "		<a href='dialplan_detail_edit.php?id=".$dialplan_detail_uuid."&dialplan_uuid=".$dialplan_uuid."&app_uuid=".$app_uuid."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
-								echo "		<a href='dialplan_detail_delete.php?id=".$dialplan_detail_uuid."&dialplan_uuid=".$dialplan_uuid.(($app_uuid != '') ? "&app_uuid=".$app_uuid : null)."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+								echo "		<a href='dialplan_detail_delete.php?id=".escape($dialplan_detail_uuid)."&dialplan_uuid=".escape($dialplan_uuid).(($app_uuid != '') ? "&app_uuid=".escape($app_uuid) : null)."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 							}
 							echo "	</td>\n";
 						//end the row
@@ -802,7 +802,7 @@
 					}
 					$x++;
 				} //end foreach
-				unset($sql, $result, $row_count);
+				unset($sql, $details);
 
 				echo "</table>";
 
@@ -813,7 +813,7 @@
 	echo "<br>\n";
 	echo "<div align='right'>\n";
 	if ($action == "update") {
-		echo "	<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
+		echo "	<input type='hidden' name='dialplan_uuid' value='escape($dialplan_uuid)'>\n";
 	}
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</div>\n";
