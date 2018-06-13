@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2014
+ Portions created by the Initial Developer are Copyright (C) 2008-2018
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -216,7 +216,7 @@ else {
 	}
 	echo "</b></td>\n";
 	echo "<td valign='top' width='70%' align='right'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contact_edit.php?id=$contact_uuid'\" value='".$text['button-back']."'>";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contact_edit.php?id=".escape($contact_uuid)."'\" value='".$text['button-back']."'>";
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -237,7 +237,7 @@ else {
 	echo "	".$text['label-contact_setting_category']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='contact_setting_category' maxlength='255' value=\"".$contact_setting_category."\" required='required'>\n";
+	echo "	<input class='formfld' type='text' name='contact_setting_category' maxlength='255' value=\"".escape($contact_setting_category)."\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-contact_setting_category']."\n";
 	echo "</td>\n";
@@ -248,7 +248,7 @@ else {
 	echo "	".$text['label-contact_setting_subcategory']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='contact_setting_subcategory' maxlength='255' value=\"".$contact_setting_subcategory."\">\n";
+	echo "	<input class='formfld' type='text' name='contact_setting_subcategory' maxlength='255' value=\"".escape($contact_setting_subcategory)."\">\n";
 	echo "<br />\n";
 	echo $text['description-contact_setting_subcategory']."\n";
 	echo "</td>\n";
@@ -259,7 +259,7 @@ else {
 	echo "	".$text['label-contact_setting_type']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='contact_setting_name' maxlength='255' value=\"".$contact_setting_name."\">\n";
+	echo "	<input class='formfld' type='text' name='contact_setting_name' maxlength='255' value=\"".escape($contact_setting_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-contact_setting_type']."\n";
 	echo "</td>\n";
@@ -273,7 +273,7 @@ else {
 	$category = $row['contact_setting_category'];
 	$subcategory = $row['contact_setting_subcategory'];
 	$name = $row['contact_setting_name'];
-	echo "	<input class='formfld' type='text' name='contact_setting_value' maxlength='255' value=\"".$row['contact_setting_value']."\">\n";
+	echo "	<input class='formfld' type='text' name='contact_setting_value' maxlength='255' value=\"".escape($row['contact_setting_value'])."\">\n";
 	echo "<br />\n";
 	echo $text['description-contact_setting_value']."\n";
 	echo "</td>\n";
@@ -290,13 +290,13 @@ else {
 		while($i<=999) {
 			$selected = ($i == $contact_setting_order) ? "selected" : null;
 			if (strlen($i) == 1) {
-				echo "		<option value='00$i' ".$selected.">00$i</option>\n";
+				echo "		<option value='00$i' ".escape($selected).">00$i</option>\n";
 			}
 			if (strlen($i) == 2) {
-				echo "		<option value='0$i' ".$selected.">0$i</option>\n";
+				echo "		<option value='0$i' ".escape($selected).">0$i</option>\n";
 			}
 			if (strlen($i) == 3) {
-				echo "		<option value='$i' ".$selected.">$i</option>\n";
+				echo "		<option value='$i' ".escape($selected).">$i</option>\n";
 			}
 			$i++;
 		}
@@ -336,7 +336,7 @@ else {
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='contact_setting_description' maxlength='255' value=\"$contact_setting_description\">\n";
+	echo "	<input class='formfld' type='text' name='contact_setting_description' maxlength='255' value=\"".escape($contact_setting_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
@@ -345,9 +345,9 @@ else {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	echo "			<br>";
-	echo "			<input type='hidden' name='contact_uuid' value='$contact_uuid'>\n";
+	echo "			<input type='hidden' name='contact_uuid' value='".escape($contact_uuid)."'>\n";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='contact_setting_uuid' value='$contact_setting_uuid'>\n";
+		echo "		<input type='hidden' name='contact_setting_uuid' value='".escape($contact_setting_uuid)."'>\n";
 	}
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
