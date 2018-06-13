@@ -99,7 +99,7 @@
 		$search_url .= '&billsec='.escape($_GET['billsec']);
 	}
 	if (strlen($_GET['hangup_cause']) > 0) {
-		$search_url .= '&hangup_cause='.escape$_GET['hangup_cause']);
+		$search_url .= '&hangup_cause='.escape($_GET['hangup_cause']);
 	}
 	if (strlen($_GET['uuid']) > 0) {
 		$search_url .= '&uuid='.escape($_GET['uuid']);
