@@ -246,9 +246,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td width='70%' align='right'>\n";
 	echo "	<input type='button' class='btn' name='back' alt='".$text['button-back']."' onclick=\"window.location='call_broadcast.php'\" value='".$text['button-back']."'>\n";
 	if ($action == "update") {
-		echo "<input type='hidden' name='call_broadcast_uuid' value='$call_broadcast_uuid'>\n";
-		echo "<input type='button' class='btn' name='' alt='".$text['button-send']."' onclick=\"window.location='call_broadcast_send.php?id=$call_broadcast_uuid'\" value='".$text['button-send']."'>\n";
-		echo "<input type='button' class='btn' name='' alt='".$text['button-stop']."' onclick=\"window.location='call_broadcast_stop.php?id=".$call_broadcast_uuid."'\" value='".$text['button-stop']."'>\n";
+		echo "<input type='hidden' name='call_broadcast_uuid' value='".escape($call_broadcast_uuid)."'>\n";
+		echo "<input type='button' class='btn' name='' alt='".$text['button-send']."' onclick=\"window.location='call_broadcast_send.php?id=".escape($call_broadcast_uuid)."'\" value='".$text['button-send']."'>\n";
+		echo "<input type='button' class='btn' name='' alt='".$text['button-stop']."' onclick=\"window.location='call_broadcast_stop.php?id=".escape($call_broadcast_uuid)."'\" value='".$text['button-stop']."'>\n";
 	}
 	echo "	<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
@@ -345,10 +345,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//$prep_statement->execute();
 	//while($row = $prep_statement->fetch()) {
 	//	if ($recording_uuid == $row['recording_uuid']) {
-	//		echo "		<option value='".$row['recording_uuid']."' selected='yes'>".$row['recordingname']."</option>\n";
+	//		echo "		<option value='".$row['recording_uuid']."' selected='yes'>".escape($row['recordingname'])."</option>\n";
 	//	}
 	//	else {
-	//		echo "		<option value='".$row['recording_uuid']."'>".$row['recordingname']."</option>\n";
+	//		echo "		<option value='".$row['recording_uuid']."'>".escape($row['recordingname'])."</option>\n";
 	//	}
 	//}
 	//unset ($prep_statement);
@@ -496,10 +496,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$prep_statement->execute();
 		while($row = $prep_statement->fetch()) {
 			if ($user_category   == $row['user_category']) {
-				echo "		<option value='".$row['user_category']."' selected='yes'>".$row['user_category']."</option>\n";
+				echo "		<option value='".escape($row['user_category'])."' selected='yes'>".escape($row['user_category'])."</option>\n";
 			}
 			else {
-				echo "		<option value='".$row['user_category']."'>".$row['user_category']."</option>\n";
+				echo "		<option value='".escape($row['user_category'])."'>".escape($row['user_category'])."</option>\n";
 			}
 		}
 		unset ($prep_statement);
@@ -524,10 +524,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$prep_statement->execute();
 		while($row = $prep_statement->fetch()) {
 			if ($recording_uuid == $row['group_name']) {
-				echo "		<option value='".$row['group_name']."' selected='yes'>".$row['group_name']."</option>\n";
+				echo "		<option value='".escape($row['group_name'])."' selected='yes'>".escape($row['group_name'])."</option>\n";
 			}
 			else {
-				echo "		<option value='".$row['group_name']."'>".$row['group_name']."</option>\n";
+				echo "		<option value='".escape($row['group_name'])."'>".escape($row['group_name'])."</option>\n";
 			}
 		}
 		unset ($prep_statement);
@@ -553,10 +553,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$prep_statement->execute();
 		while($row = $prep_statement->fetch()) {
 			if ($gateway == $row['gateway']) {
-				echo "		<option value='".$row['gateway']."' selected='yes'>".$row['gateway']."</option>\n";
+				echo "		<option value='".escape($row['gateway'])."' selected='yes'>".escape($row['gateway'])."</option>\n";
 			}
 			else {
-				echo "		<option value='".$row['gateway']."'>".$row['gateway']."</option>\n";
+				echo "		<option value='".escape($row['gateway'])."'>".escape($row['gateway'])."</option>\n";
 			}
 		}
 		unset ($prep_statement);
@@ -609,7 +609,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		echo "	<tr>\n";
 		echo "		<td colspan='2' align='right'>\n";
-		echo "				<input type='hidden' name='call_broadcast_uuid' value='$call_broadcast_uuid'>\n";
+		echo "				<input type='hidden' name='call_broadcast_uuid' value='".escape($call_broadcast_uuid)."'>\n";
 		echo "				<input type='submit' name='submit' class='btn' value='Send Broadcast'>\n";
 		echo "		</td>\n";
 		echo "	</tr>";
@@ -620,5 +620,4 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	*/
 
 require_once "resources/footer.php";
-
 ?>
