@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -337,8 +337,8 @@ else {
 	echo "	".$text['label-address_address']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<textarea class='formfld' name='address_street' style='margin-bottom: 3px;'>$address_street</textarea><br>\n";
-	echo "	<input class='formfld' type='text' name='address_extended' maxlength='255' value=\"$address_extended\">\n";
+	echo "	<textarea class='formfld' name='address_street' style='margin-bottom: 3px;'>".escape($address_street)."</textarea><br>\n";
+	echo "	<input class='formfld' type='text' name='address_extended' maxlength='255' value=\"".escape($address_extended)."\">\n";
 	echo "<br />\n";
 	echo $text['description-address_address']."\n";
 	echo "</td>\n";
@@ -349,7 +349,7 @@ else {
 	echo "	".$text['label-address_community']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='address_community' maxlength='255' value=\"$address_community\">\n";
+	echo "	<input class='formfld' type='text' name='address_community' maxlength='255' value=\"".escape($address_community)."\">\n";
 	echo "<br />\n";
 	echo $text['description-address_community']."\n";
 	echo "</td>\n";
@@ -360,7 +360,7 @@ else {
 	echo "	".$text['label-address_locality']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='address_locality' maxlength='255' value=\"$address_locality\">\n";
+	echo "	<input class='formfld' type='text' name='address_locality' maxlength='255' value=\"".escape($address_locality)."\">\n";
 	echo "<br />\n";
 	echo $text['description-address_locality']."\n";
 	echo "</td>\n";
@@ -371,7 +371,7 @@ else {
 	echo "	".$text['label-address_region']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='address_region' maxlength='255' value=\"$address_region\">\n";
+	echo "	<input class='formfld' type='text' name='address_region' maxlength='255' value=\"".escape($address_region)."\">\n";
 	echo "<br />\n";
 	echo $text['description-address_region']."\n";
 	echo "</td>\n";
@@ -382,7 +382,7 @@ else {
 	echo "	".$text['label-address_postal_code']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='address_postal_code' maxlength='255' value=\"$address_postal_code\">\n";
+	echo "	<input class='formfld' type='text' name='address_postal_code' maxlength='255' value=\"".escape($address_postal_code)."\">\n";
 	echo "<br />\n";
 	echo $text['description-address_postal_code']."\n";
 	echo "</td>\n";
@@ -393,7 +393,7 @@ else {
 	echo "	".$text['label-address_country']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='address_country' maxlength='255' value=\"$address_country\">\n";
+	echo "	<input class='formfld' type='text' name='address_country' maxlength='255' value=\"".escape($address_country)."\">\n";
 	echo "<br />\n";
 	echo $text['description-address_country']."\n";
 	echo "</td>\n";
@@ -404,7 +404,7 @@ else {
 	echo "	".$text['label-address_latitude']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='number' name='address_latitude' maxlength='255' min='-90' max='90' value=\"$address_latitude\">\n";
+	echo "	<input class='formfld' type='number' name='address_latitude' maxlength='255' min='-90' max='90' value=\"".escape($address_latitude)."\">\n";
 	echo "<br />\n";
 	echo $text['description-address_latitude']."\n";
 	echo "</td>\n";
@@ -415,7 +415,7 @@ else {
 	echo "	".$text['label-address_longitude']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='number' name='address_longitude' maxlength='255' min='-180' max='180' value=\"$address_longitude\">\n";
+	echo "	<input class='formfld' type='number' name='address_longitude' maxlength='255' min='-180' max='180' value=\"".escape($address_longitude)."\">\n";
 	echo "<br />\n";
 	echo $text['description-address_longitude']."\n";
 	echo "</td>\n";
@@ -440,7 +440,7 @@ else {
 	echo "	".$text['label-address_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='address_description' maxlength='255' value=\"$address_description\">\n";
+	echo "	<input class='formfld' type='text' name='address_description' maxlength='255' value=\"".escape($address_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-address_description']."\n";
 	echo "</td>\n";
@@ -449,9 +449,9 @@ else {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	echo "			<br>\n";
-	echo "			<input type='hidden' name='contact_uuid' value='$contact_uuid'>\n";
+	echo "			<input type='hidden' name='contact_uuid' value='".escape($contact_uuid)."'>\n";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='contact_address_uuid' value='$contact_address_uuid'>\n";
+		echo "		<input type='hidden' name='contact_address_uuid' value='".escape($contact_address_uuid)."'>\n";
 	}
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
