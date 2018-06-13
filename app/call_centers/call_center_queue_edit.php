@@ -583,7 +583,7 @@
 			echo "	<tr>\n";
 			echo "		<td class=''>";
 			if (strlen($field['call_center_tier_uuid']) > 0) {
-				echo "		<input name='call_center_tiers[".$x."][call_center_tier_uuid]' type='hidden' value=\"".$field['call_center_tier_uuid']."\">\n";
+				echo "		<input name='call_center_tiers[".$x."][call_center_tier_uuid]' type='hidden' value=\"".escape($field['call_center_tier_uuid'])."\">\n";
 			}
 			echo "				<select name=\"call_center_tiers[$x][call_center_agent_uuid]\" class=\"formfld\">\n";
 			echo "					<option value=\"\"></option>\n";
@@ -592,7 +592,7 @@
 				if ($row['call_center_agent_uuid'] == $field['call_center_agent_uuid']) {
 					$selected = "selected=\"selected\"";
 				}
-				echo "				<option value=\"".$row['call_center_agent_uuid']."\" $selected>".$row['agent_name']."</option>\n";
+				echo "				<option value=\"".$row['call_center_agent_uuid']."\" $selected>".escape($row['agent_name'])."</option>\n";
 			}
 			echo "				</select>";
 			echo "		</td>\n";
@@ -601,7 +601,7 @@
 			$i=0;
 			while($i<=9) {
 				$selected = ($i == $field['tier_level']) ? "selected" : null;
-				echo "				<option value=\"$i\" ".$selected.">$i</option>\n";
+				echo "				<option value=\"$i\" ".escape($selected).">$i</option>\n";
 				$i++;
 			}
 			echo "				</select>\n";
@@ -612,14 +612,14 @@
 			$i=0;
 			while($i<=9) {
 				$selected = ($i == $field['tier_position']) ? "selected" : null;
-				echo "				<option value=\"$i\" ".$selected.">$i</option>\n";
+				echo "				<option value=\"$i\" ".escape($selected).">$i</option>\n";
 				$i++;
 			}
 			echo "				</select>\n";
 			echo "		</td>\n";
 			echo "		<td class=''>";
 			if (permission_exists('call_center_tier_delete')) {
-				echo "			<a href=\"call_center_queue_edit.php?id=".escape($call_center_queue_uuid)."&call_center_tier_uuid=".$field['call_center_tier_uuid']."&a=delete\" alt=\"".$text['button-delete']."\" onclick=\"return confirm('".$text['confirm-delete']."');\">$v_link_label_delete</a>";
+				echo "			<a href=\"call_center_queue_edit.php?id=".escape($call_center_queue_uuid)."&call_center_tier_uuid=".escape($field['call_center_tier_uuid'])."&a=delete\" alt=\"".$text['button-delete']."\" onclick=\"return confirm('".$text['confirm-delete']."');\">$v_link_label_delete</a>";
 			}
 			echo "		</td>\n";
 			echo "	</tr>\n";
@@ -657,10 +657,10 @@
 	$record_template = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}/\${uuid}.\${record_ext}";
 	echo "	<select class='formfld' name='queue_record_template'>\n";
 	if (strlen($queue_record_template) > 0) {
-		echo "	<option value='$record_template' selected='selected' >".$text['option-true']."</option>\n";
+		echo "	<option value='".escape($record_template)."' selected='selected' >".$text['option-true']."</option>\n";
 	}
 	else {
-		echo "	<option value='$record_template'>".$text['option-true']."</option>\n";
+		echo "	<option value='".escape($record_template)."'>".$text['option-true']."</option>\n";
 	}
 	if (strlen($queue_record_template) == 0) {
 		echo "	<option value='' selected='selected' >".$text['option-false']."</option>\n";
