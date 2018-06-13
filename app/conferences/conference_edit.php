@@ -421,9 +421,9 @@
 			$result_count = count($result);
 			foreach($result as $field) {
 				echo "			<tr>\n";
-				echo "				<td class='vtable'>".$field['username']."</td>\n";
+				echo "				<td class='vtable'>".escape($field['username'])."</td>\n";
 				echo "				<td>\n";
-				echo "					<a href='conference_edit.php?id=".$conference_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete-2']."')\">$v_link_label_delete</a>\n";
+				echo "					<a href='conference_edit.php?id=".escape($conference_uuid)."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".escape($field['user_uuid'])."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete-2']."')\">$v_link_label_delete</a>\n";
 				echo "				</td>\n";
 				echo "			</tr>\n";
 			}
@@ -439,7 +439,7 @@
 			echo "			<option value=\"\"></option>\n";
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			foreach($result as $field) {
-				echo "			<option value='".$field['user_uuid']."'>".$field['username']."</option>\n";
+				echo "			<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
 			}
 			echo "			</select>";
 			echo "			<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
@@ -460,10 +460,10 @@
 	echo "    <select class='formfld' name='conference_profile'>\n";
 	foreach ($conference_profiles as $row) {
 		if ($conference_profile === $row['profile_name']) {
-				echo "<option value='". $row['profile_name'] ."' selected='selected'>". $row['profile_name'] ."</option>\n";
+				echo "<option value='".escape($row['profile_name'])."' selected='selected'>".escape($row['profile_name'])."</option>\n";
 		}
 		else {
-				echo "<option value='". $row['profile_name'] ."'>". $row['profile_name'] ."</option>\n";
+				echo "<option value='".escape($row['profile_name'])."'>".escape($row['profile_name'])."</option>\n";
 		}
 	}
 	echo "    </select>\n";
