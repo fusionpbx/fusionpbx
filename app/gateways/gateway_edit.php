@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -43,7 +43,7 @@
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (isset($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		if (isset($_POST["id"])) {
 			$gateway_uuid = check_str($_REQUEST["id"]);
@@ -368,7 +368,7 @@
 	echo "		<td width='50%' align='right'>\n";
 	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='gateways.php'\" value='".$text['button-back']."'>\n";
 	if ($action == "update") {
-		echo "			<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"if (confirm('".$text['confirm-copy']."')){window.location='gateway_copy.php?id=".".escape($gateway_uuid)."."';}\" value='".$text['button-copy']."'>\n";
+		echo "			<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"if (confirm('".$text['confirm-copy']."')){window.location='gateway_copy.php?id=".escape($gateway_uuid)."';}\" value='".$text['button-copy']."'>\n";
 	}
 	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
 	echo "		</td>\n";
