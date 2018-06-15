@@ -136,8 +136,8 @@
 				dbh:query(sql, params, function(row)
 					--set the variable to true
 						auth = true;
-					--set the authorized pin number that was used
-						session:setVariable("pin_number", digits);
+					--set the authorized user extension that was used
+						session:setVariable("pin_number", user_ext);
 				end);
 			else
 				pin_number_table = explode(",",pin_number);
