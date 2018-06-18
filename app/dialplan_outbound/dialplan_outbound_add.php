@@ -52,7 +52,7 @@
 	require_once "resources/paging.php";
 
 //get the http post values and set theme as php variables
-	if (count($_POST) > 0) {
+	if (is_array($_POST) > 0) {
 		//set the variables
 			$dialplan_name = check_str($_POST["dialplan_name"]);
 			$dialplan_order = check_str($_POST["dialplan_order"]);
@@ -66,8 +66,6 @@
 			$limit = check_str($_POST["limit"]);
 			$accountcode = check_str($_POST["accountcode"]);
 			$toll_allow = check_str($_POST["toll_allow"]);
-
-		
 
 		//set the default type
 			$gateway_type = 'gateway';
@@ -550,17 +548,16 @@
 						}
 
 						if (strlen($toll_allow) > 0) {
-                                                                $y++;
-                                                       $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
-                                                       $array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
-                                                       $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
-                                                       $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'condition';
-                                                       $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = '${toll_allow}';
-                                                       $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $toll_allow;
-                                                       $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
-                                                       $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
-                                                        }
-
+							$y++;
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+							$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'condition';
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = '${toll_allow}';
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $toll_allow;
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
+						}
 
 						if ($gateway_type == "transfer") { $dialplan_detail_type = 'transfer'; } else { $dialplan_detail_type = 'bridge'; }
 						$y++;
@@ -797,7 +794,6 @@ function type_onchange(dialplan_detail_type) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-alt1']."\n";
@@ -1007,16 +1003,15 @@ function type_onchange(dialplan_detail_type) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-        echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-        echo "    ".$text['label-toll_allow']."\n";
-        echo "</td>\n";
-        echo "<td colspan='4' class='vtable' align='left'>\n";
-        echo "    <input class='formfld' type='text' name='toll_allow' maxlength='255' value=\"$toll_allow\">\n";
-        echo "<br />\n";
-        echo $text['description-enable-toll_allow']."\n";
-        echo "</td>\n";
-        echo "</tr>\n";
-
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "    ".$text['label-toll_allow']."\n";
+	echo "</td>\n";
+	echo "<td colspan='4' class='vtable' align='left'>\n";
+	echo "    <input class='formfld' type='text' name='toll_allow' maxlength='255' value=\"$toll_allow\">\n";
+	echo "<br />\n";
+	echo $text['description-enable-toll_allow']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
