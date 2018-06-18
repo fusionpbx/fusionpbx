@@ -145,9 +145,24 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 					// update dialplans
 						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/dialplans/app_config.php")){
-							$sql = "update v_dialplans set ";
-							$sql .= "dialplan_context = '".$domain_name."' ";
+							$sql = "update v_dialplans ";
+							$sql .= "set dialplan_context = '".$domain_name."' ";
 							$sql .= "where dialplan_context = '".$original_domain_name."' ";
+							$sql .= "and domain_uuid = '".$domain_uuid."' ";
+							$db->exec(check_sql($sql));
+							unset($sql);
+
+							$sql = "update v_dialplans ";
+							$sql .= "set dialplan_xml = replace(dialplan_xml, $original_domain_name, $domain_name); ";
+							$sql .= "and domain_uuid = '".$domain_uuid."' ";
+							$db->exec(check_sql($sql));
+							unset($sql);
+						}
+
+					// update destinations
+						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/destinations/app_config.php")){
+							$sql = "update v_destinations ";
+							$sql .= "set destination_data = replace(destination_data, $original_domain_name, $domain_name); ";
 							$sql .= "and domain_uuid = '".$domain_uuid."' ";
 							$db->exec(check_sql($sql));
 							unset($sql);
@@ -717,4 +732,5 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>
