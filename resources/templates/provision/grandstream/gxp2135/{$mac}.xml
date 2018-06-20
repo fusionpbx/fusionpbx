@@ -100,8 +100,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0. -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($nat_traversal_1) }
-<P52>{$nat_traversal_1}</P52>
+{if isset($grandstream_nat_traversal_1) }
+<P52>{$grandstream_nat_traversal_1}</P52>
 {else}
 <P52>0</P52>
 {/if}
@@ -131,7 +131,7 @@
 <!--  Register Expiration (in minutes). Default is 60. Max about 45 days -->
 <!--  Number: 1 - 64800 -->
 <!--  Mandatory -->
-<P32>3</P32>
+<P32>{$register_expires_1}</P32>
 
 <!--  Subscribe Expiration. Default is 60. Max about 45 days -->
 <!--  Number: 1 - 64800 -->
@@ -869,8 +869,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($nat_traversal_2) }
-<P414>{$nat_traversal_2}</P414>
+{if isset($grandstream_nat_traversal_2) }
+<P414>{$grandstream_nat_traversal_2}</P414>
 {else}
 <P414>0</P414>
 {/if}
@@ -900,7 +900,7 @@
 <!--  Register Expiration (in minutes). Default is 60. Max is 45 days -->
 <!--  Number: 1 - 64800 -->
 <!--  Mandatory -->
-<P412>3</P412>
+<P412>{$register_expires_2}</P412>
 
 <!--  Subscribe Expiration. Default is 60. Max about 45 days -->
 <!--  Number: 1 - 64800 -->
@@ -1623,8 +1623,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($nat_traversal_3) }
-<P514>{$nat_traversal_3}</P514>
+{if isset($grandstream_nat_traversal_3) }
+<P514>{$grandstream_nat_traversal_3}</P514>
 {else}
 <P514>0</P514>
 {/if}
@@ -1654,7 +1654,7 @@
 <!--  Register Expiration (in minutes). Default is 60. Max is 45 days -->
 <!--  Number: 1 - 64800 -->
 <!--  Mandatory -->
-<P512>3</P512>
+<P512>{$register_expires_3}</P512>
 
 <!--  Subscribe Expiration. Default is 60. Max about 45 days -->
 <!--  Number: 1 - 64800 -->
@@ -2376,8 +2376,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($nat_traversal_4) }
-<P614>{$nat_traversal_4}</P614>
+{if isset($grandstream_nat_traversal_4) }
+<P614>{$grandstream_nat_traversal_4}</P614>
 {else}
 <P614>0</P614>
 {/if}
@@ -2407,7 +2407,7 @@
 <!--  Register Expiration (in minutes). Default is 60. Max is 45 days -->
 <!--  Number: 1 - 64800 -->
 <!--  Mandatory -->
-<P612>3</P612>
+<P612>{$register_expires_4}</P612>
 
 <!--  Subscribe Expiration. Default is 60. Max about 45 days -->
 <!--  Number: 1 - 64800 -->
@@ -3131,8 +3131,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($nat_traversal_5) }
-<P1714>{$nat_traversal_5}</P1714>
+{if isset($grandstream_nat_traversal_5) }
+<P1714>{$grandstream_nat_traversal_5}</P1714>
 {else}
 <P1714>0</P1714>
 {/if}
@@ -3162,7 +3162,7 @@
 <!--  Register Expiration (in minutes. default 1 hour, max 45 days) -->
 <!--  Number: 1-64800 -->
 <!--  Mandatory -->
-<P1712>3</P1712>
+<P1712>{$register_expires_5}</P1712>
 
 <!--  Subscribe Expiration. Default is 60. Max about 45 days -->
 <!--  Number: 1 - 64800 -->
@@ -3885,8 +3885,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($nat_traversal_6) }
-<P1814>{$nat_traversal_6}</P1814>
+{if isset($grandstream_nat_traversal_6) }
+<P1814>{$grandstream_nat_traversal_6}</P1814>
 {else}
 <P1814>0</P1814>
 {/if}
@@ -3917,7 +3917,7 @@
 <!--  Register Expiration (in minutes). Default is 60. Max is 45 days -->
 <!--  Number: 1 - 64800 -->
 <!--  Mandatory -->
-<P1812>3</P1812>
+<P1812>{$register_expires_6}</P1812>
 
 <!--  Subscribe Expiration. Default is 60. Max about 45 days -->
 <!--  Number: 1 - 64800 -->
