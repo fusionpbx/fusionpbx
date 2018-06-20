@@ -707,7 +707,7 @@
 										$prep_statement->execute();
 										$gateways = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 										if (is_array($gateways)) {
-											$gateway_name = $result[0]['gateway'];
+											$gateway_name = $gateways[0]['gateway'];
 											$dialplan_detail_data_mod = str_replace($bridge_statement[2], $gateway_name, $dialplan_detail_data);
 										}
 										unset ($prep_statement, $sql, $bridge_statement, $gateways);
