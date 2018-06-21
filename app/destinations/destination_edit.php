@@ -52,8 +52,14 @@
 	}
 
 //set the type
-	if ($_GET['type'] == 'outbound') {
+	if ($_GET['type'] == 'inbound') {
+		$destination_type = 'inbound';
+	}
+	elseif ($_GET['type'] == 'outbound') {
 		$destination_type = 'outbound';
+	}
+	elseif ($_GET['type'] == 'local') {
+		$destination_type = 'local';
 	}
 	else {
 		$destination_type = 'inbound';
@@ -137,8 +143,13 @@
 			}
 
 		//set the default context
-			if ($destination_type =="outbound" && strlen($destination_context) == 0) { $destination_context = $_SESSION['domain_name']; }
-	
+			if ($destination_type =="outbound" && strlen($destination_context) == 0) {
+				$destination_context = $_SESSION['domain_name'];
+			}
+			if ($destination_type =="inbound" && strlen($destination_context) == 0) {
+				$destination_context = $_SESSION['domain_name'];
+			}
+
 		//check for all required data
 			$msg = '';
 			if (strlen($destination_type) == 0) { $msg .= $text['message-required']." ".$text['label-destination_type']."<br>\n"; }
@@ -176,7 +187,7 @@
 			}
 
 		//save the inbound destination and add the dialplan for the inbound route
-			if ($destination_type == 'inbound') {
+			if ($destination_type == 'inbound' || $destination_type == 'local') {
 				//get the array
 					$dialplan_details = $_POST["dialplan_details"];
 
@@ -224,7 +235,12 @@
 					$destination["dialplan_uuid"] = $dialplan_uuid;
 
 				//build the dialplan array
-					$dialplan["app_uuid"] = "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4";
+					if ($destination_type == "inbound") {
+						$dialplan["app_uuid"] = "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4";
+					}
+					if ($destination_type == "local") {
+						$dialplan["app_uuid"] = "b5242951-686f-448f-8b4e-5031ba0601a4";
+					}
 					$dialplan["dialplan_uuid"] = $dialplan_uuid;
 					$dialplan["domain_uuid"] = $domain_uuid;
 					$dialplan["dialplan_name"] = ($dialplan_name != '') ? $dialplan_name : format_phone($destination_number);
@@ -558,6 +574,9 @@
 				//build the destination array
 					$destination = $_POST;
 					$destination["destination_uuid"] = $destination_uuid;
+					if ($destination_type == 'inbound' || $destination_type == 'local') {
+						$destination["dialplan_uuid"] = $dialplan_uuid;
+					}
 
 				//prepare the array
 					$array['destinations'][] = $destination;
@@ -725,8 +744,8 @@
 //set the defaults
 	if (strlen($destination_type) == 0) { $destination_type = 'inbound'; }
 	if (strlen($destination_context) == 0) { $destination_context = 'public'; }
-	if ($destination_type =="outbound" && $destination_context == "public") { $destination_context = $_SESSION['domain_name']; }
-	if ($destination_type =="outbound" && strlen($destination_context) == 0) { $destination_context = $_SESSION['domain_name']; }
+	if ($destination_type =="outbound") { $destination_context = $_SESSION['domain_name']; }
+	if ($destination_type =="local") { $destination_context = $_SESSION['domain_name']; }
 
 //show the header
 	require_once "resources/header.php";
@@ -750,6 +769,7 @@
 	echo "			if (document.getElementById('tr_buy')) { document.getElementById('tr_buy').style.display = 'none'; }\n";
 	echo "			if (document.getElementById('tr_carrier')) { document.getElementById('tr_carrier').style.display = 'none'; }\n";
 	echo "			document.getElementById('tr_account_code').style.display = 'none';\n";
+//	echo "			document.getElementById('destination_context').value = '".$destination_context."'";
 	echo "		}\n";
 	echo "		else if (dir == 'inbound') {\n";
 	echo "			if (document.getElementById('tr_caller_id_name')) { document.getElementById('tr_caller_id_name').style.display = ''; }\n";
@@ -762,6 +782,18 @@
 	echo "			if (document.getElementById('tr_carrier')) { document.getElementById('tr_carrier').style.display = ''; }\n";
 	echo "			document.getElementById('tr_account_code').style.display = '';\n";
 	echo "			document.getElementById('destination_context').value = 'public'";
+	echo "		}\n";
+	echo "		else if (dir == 'local') {\n";
+	echo "			if (document.getElementById('tr_caller_id_name')) { document.getElementById('tr_caller_id_name').style.display = 'none'; }\n";
+	echo "			if (document.getElementById('tr_caller_id_number')) { document.getElementById('tr_caller_id_number').style.display = 'none'; }\n";
+	echo "			document.getElementById('tr_actions').style.display = '';\n";
+	echo "			if (document.getElementById('tr_fax_detection')) { document.getElementById('tr_fax_detection').style.display = 'none'; }\n";
+	echo "			document.getElementById('tr_cid_name_prefix').style.display = 'none';\n";
+	echo "			if (document.getElementById('tr_sell')) { document.getElementById('tr_sell').style.display = 'none'; }\n";
+	echo "			if (document.getElementById('tr_buy')) { document.getElementById('tr_buy').style.display = 'none'; }\n";
+	echo "			if (document.getElementById('tr_carrier')) { document.getElementById('tr_carrier').style.display = 'none'; }\n";
+	echo "			document.getElementById('tr_account_code').style.display = '';\n";
+//	echo "			document.getElementById('destination_context').value = '".$destination_context."'";
 	echo "		}\n";
 	echo "		";
 	echo "	}\n";
@@ -808,11 +840,13 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='destination_type' id='destination_type' onchange='type_control(this.options[this.selectedIndex].value);context_control();'>\n";
 	switch ($destination_type) {
-		case "inbound" : 	$selected[1] = "selected='selected'";	break;
-		case "outbound" : 	$selected[2] = "selected='selected'";	break;
+		case "inbound" :	$selected[0] = "selected='selected'";	break;
+		case "outbound" :	$selected[1] = "selected='selected'";	break;
+		case "local" :	$selected[2] = "selected='selected'";	break;
 	}
-	echo "	<option value='inbound' ".$selected[1].">".$text['option-type_inbound']."</option>\n";
-	echo "	<option value='outbound' ".$selected[2].">".$text['option-type_outbound']."</option>\n";
+	echo "	<option value='inbound' ".$selected[0].">".$text['option-inbound']."</option>\n";
+	echo "	<option value='outbound' ".$selected[1].">".$text['option-outbound']."</option>\n";
+	echo "	<option value='local' ".$selected[2].">".$text['option-local']."</option>\n";
 	unset($selected);
 	echo "	</select>\n";
 	echo "<br />\n";
@@ -855,16 +889,18 @@
 		echo "</tr>\n";
 	}
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-destination_context']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='destination_context' id='destination_context' maxlength='255' value=\"".escape($destination_context)."\">\n";
-	echo "<br />\n";
-	echo $text['description-destination_context']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists('destination_context')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-destination_context']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='destination_context' id='destination_context' maxlength='255' value=\"".escape($destination_context)."\">\n";
+		echo "<br />\n";
+		echo $text['description-destination_context']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	if ($_SESSION['destinations']['dialplan_details']['boolean'] == "false") {
 		echo "<tr id='tr_actions'>\n";
@@ -921,7 +957,7 @@
 		echo "</tr>\n";
 	}
 
-	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/fax/app_config.php")){
+	if (permission_exists('destination_fax')) {
 		$sql = "select * from v_fax ";
 		$sql .= "where domain_uuid = '".$domain_uuid."' ";
 		$sql .= "order by fax_name asc ";
