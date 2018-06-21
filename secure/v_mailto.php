@@ -65,7 +65,7 @@
 	}
 
 //save output to
-	$fp = fopen(sys_get_temp_dir()."/mailer-app.log", "w");
+	$fp = fopen(sys_get_temp_dir()."/mailer-app.log", "a");
 
 //prepare the output buffers
 	ob_end_clean();
