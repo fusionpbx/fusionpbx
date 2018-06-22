@@ -117,9 +117,11 @@
 					$record_name = str_replace('${year}', date("Y"), $record_name);
 					$record_name = str_replace('${month}', date("M"), $record_name);
 					$record_name = str_replace('${day}', date("d"), $record_name);
+					$record_name = str_replace('${source}', $src, $record_name);
 					$record_name = str_replace('${caller_id_name}', $src_cid_name, $record_name);
 					$record_name = str_replace('${caller_id_number}', $src_cid_number, $record_name);
 					$record_name = str_replace('${caller_destination}', $dest, $record_name);
+					$record_name = str_replace('${destination}', $dest, $record_name);
 					$record_name = str_replace('${uuid}', $origination_uuid, $record_name);
 					$record_name = str_replace('${record_extension}', $record_extension, $record_name);
 				}
