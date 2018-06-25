@@ -115,6 +115,16 @@
 		end
 	end
 
+--sangoma
+	if (vendor == "sangoma") then
+		if (command == "reboot") then
+			event:addHeader('event-string', 'check-sync;reboot=true');
+		end
+		if (command == "check_sync") then
+			event:addHeader('event-string', 'resync');
+		end
+	end
+
 --linksys
 	if (vendor == "linksys") then
 		if (command == "reboot") then
