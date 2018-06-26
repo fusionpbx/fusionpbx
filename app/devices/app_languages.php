@@ -4041,6 +4041,26 @@ $text['label-add_to_conference']['ru-ru'] = "";
 $text['label-add_to_conference']['sv-se'] = "";
 $text['label-add_to_conference']['uk-ua'] = "";
 
+$text['label-custom']['en-us'] = "Custom";
+$text['label-custom']['ar-eg'] = "";
+$text['label-custom']['de-at'] = "";
+$text['label-custom']['de-ch'] = "";
+$text['label-custom']['de-de'] = "";
+$text['label-custom']['es-cl'] = "";
+$text['label-custom']['es-mx'] = "";
+$text['label-custom']['fr-ca'] = "";
+$text['label-custom']['fr-fr'] = "";
+$text['label-custom']['he-il'] = "";
+$text['label-custom']['it-it'] = "";
+$text['label-custom']['nl-nl'] = "";
+$text['label-custom']['pl-pl'] = "";
+$text['label-custom']['pt-br'] = "";
+$text['label-custom']['pt-pt'] = "";
+$text['label-custom']['ro-ro'] = "";
+$text['label-custom']['ru-ru'] = "";
+$text['label-custom']['sv-se'] = "";
+$text['label-custom']['uk-ua'] = "";
+
 $text['header-profiles']['en-us'] = "Profiles";
 $text['header-profiles']['ar-eg'] = "";
 $text['header-profiles']['de-at'] = "Profile"; //copied from de-de
