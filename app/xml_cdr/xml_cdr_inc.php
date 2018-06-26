@@ -120,10 +120,10 @@
 		$mod_caller_id_name = str_replace("*", "%", $caller_id_name);
 		$sql_where_ands[] = "caller_id_name like '".$mod_caller_id_name."'";
 	}
-	if (strlen($caller_extension_uuid) > 0 and is_uuid($caller_extension_uuid)) {
+	if (strlen($caller_extension_uuid) > 0) {
 		$sql_where_ands[] = "extension_uuid = '".$caller_extension_uuid."'";
 	}
-	if (strlen($caller_id_number) > 0 && is_numeric($caller_id_number)) {
+	if (strlen($caller_id_number) > 0) {
 		$mod_caller_id_number = str_replace("*", "%", $caller_id_number);
 		$sql_where_ands[] = "caller_id_number like '".$mod_caller_id_number."'";
 	}
