@@ -24,9 +24,9 @@
 
 --set default variables
 	min_digits = "1";
-	max_digits = "11";
+	max_digits = "17";
 	max_tries = "3";
-	digit_timeout = "3000";
+	digit_timeout = "5000";
 
 --define the trim function
 	require "resources.functions.trim"
