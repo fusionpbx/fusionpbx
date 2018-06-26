@@ -143,11 +143,11 @@
 			}
 
 		//set the default context
-			if ($destination_type =="outbound" && strlen($destination_context) == 0) {
-				$destination_context = $_SESSION['domain_name'];
-			}
 			if ($destination_type =="inbound" && strlen($destination_context) == 0) {
 				$destination_context = 'public';
+			}
+			if ($destination_type =="outbound" && strlen($destination_context) == 0) {
+				$destination_context = $_SESSION['domain_name'];
 			}
 
 		//check for all required data
