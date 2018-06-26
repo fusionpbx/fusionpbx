@@ -1086,6 +1086,14 @@
 		$vendors[$y]['functions'][$z]['value'] = "66";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "2effe694-8d44-4757-b3df-8217fd13dcd5";
+		$vendors[$y]['functions'][$z]['label'] = "label-custom";
+		$vendors[$y]['functions'][$z]['name'] = "custom";
+		$vendors[$y]['functions'][$z]['value'] = "73";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
 
 		$y++;
 		$vendors[$y]['uuid'] = "8b0ce477-92c7-4bbc-a4fd-ee09c261fa2e";
