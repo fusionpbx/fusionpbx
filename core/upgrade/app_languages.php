@@ -181,6 +181,26 @@ $text['message-upgrade_schema']['ru-ru'] = "Структура БД провер
 $text['message-upgrade_schema']['sv-se'] = "Schema Verifierat";
 $text['message-upgrade_schema']['uk-ua'] = "Схеми перевірено";
 
+$text['message-upgrade_schema_failed']['en-us'] = "Schema Update Failed";
+$text['message-upgrade_schema_failed']['ar-eg'] = "فشل تحديث المخطط"; //translation provided by google translate
+$text['message-upgrade_schema_failed']['de-at'] = "Schema-Update fehlgeschlagen"; //copied from de-de
+$text['message-upgrade_schema_failed']['de-ch'] = "Schema-Update fehlgeschlagen"; //copied from de-de
+$text['message-upgrade_schema_failed']['de-de'] = "Schema-Update fehlgeschlagen"; //translation provided by google translate
+$text['message-upgrade_schema_failed']['es-cl'] = "Error al actualizar el esquema"; //copied from es-cl
+$text['message-upgrade_schema_failed']['es-mx'] = "Error al actualizar el esquema"; //translation provided by google translate
+$text['message-upgrade_schema_failed']['fr-ca'] = "Échec de la mise à jour du schéma"; //copied from fr-fr
+$text['message-upgrade_schema_failed']['fr-fr'] = "Échec de la mise à jour du schéma"; //translation provided by google translate
+$text['message-upgrade_schema_failed']['he-il'] = "עדכון הסכימה נכשל"; //translation provided by google translate
+$text['message-upgrade_schema_failed']['it-it'] = "Aggiornamento dello schema non riuscito"; //translation provided by google translate
+$text['message-upgrade_schema_failed']['nl-nl'] = "Schema-update mislukt"; //translation provided by google translate
+$text['message-upgrade_schema_failed']['pl-pl'] = "Aktualizacja schematu nie powiodła się"; //translation provided by google translate
+$text['message-upgrade_schema_failed']['pt-br'] = "Falha na atualização de esquema"; //copied from pt-pt
+$text['message-upgrade_schema_failed']['pt-pt'] = "Falha na atualização de esquema"; //translation provided by google translate
+$text['message-upgrade_schema_failed']['ro-ro'] = "Schema de actualizare a eșuat"; //translation provided by google translate
+$text['message-upgrade_schema_failed']['ru-ru'] = "Ошибка обновления схемы"; //translation provided by google translate
+$text['message-upgrade_schema_failed']['sv-se'] = "Schema Uppdatering misslyckades"; //translation provided by google translate
+$text['message-upgrade_schema_failed']['uk-ua'] = "Не вдалося оновити схему"; //translation provided by google translate
+
 $text['message-upgrade_menu']['en-us'] = "Menu Defaults Restored";
 $text['message-upgrade_menu']['ar-eg'] = "";
 $text['message-upgrade_menu']['de-at'] = "Menüs zurückgesetzt"; //copied from de-de

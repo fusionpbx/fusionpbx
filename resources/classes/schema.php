@@ -17,11 +17,12 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2013 - 2016
+	Copyright (C) 2013 - 2018
 	All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Matthew Vale <github@mafoo.org>
 */
 include "root.php";
 
@@ -457,7 +458,7 @@ if (!class_exists('schema')) {
 			public function schema ($format = '') {
  
  				//set the global variable
-					global $db, $upgrade_data_types, $text,$output_format;
+					global $db, $upgrade_data_types, $text, $output_format;
 					if ($format=='') $format = $output_format;
 
 				//get the db variables
@@ -747,25 +748,65 @@ if (!class_exists('schema')) {
 				// initialize response variable
 					$response = '';
 
+				//show the updates
+					if (strlen($sql_update) > 0) {
+						//display header
+							if ($format == "text") {
+								$response .= "	".$text['label-schema']."\n";
+								$response .= "  ".$text['label-sql_changes']."\n";
+							}
+							elseif ($format == "html") {
+								$response .= "<strong>".$text['header-database_type'].": ".$db_type. "</strong><br />";
+								$response .= "<strong>".$text['label-sql_changes'].":</strong><br />\n";
+							}
+							//$this->db->beginTransaction();
+						//iterate each update
+							$update_array = explode(";", $sql_update);
+							foreach($update_array as $sql) {
+								if (strlen(trim($sql)) > 0) {
+									try {
+										if(!$this->db->query(trim($sql))) 
+											throw new Exception("Failed to execute query");
+										if ($format == "text") {
+											$response .= "	$sql\n";
+										}
+										elseif ($format == "html") {
+											$response .= "<pre>$sql</pre>\n";
+										}
+									}
+									catch (Exception $error) {
+										//Fetch the exception message
+											$message = $error->getMessage();
+											$sql_error = $this->db->errorInfo();
+										//override it with the SQL specific one if it is set
+											if($sql_error) $message = $sql_error[2];
+											if ($format == "text") {
+												$response .= "  ".$text['message-upgrade_schema_failed'].": $message\n";
+												$response .= "  SQL: $sql";
+											}
+											elseif ($format == "html") {
+												$response .= "<p>".$text['message-upgrade_schema_failed'].":</p>\n";
+												$response .= "<pre>$message</pre>\n";
+												$response .= "<p>SQL:</p>\n";
+												$response .= "<pre>$sql</pre>\n";
+											}
+									}
+								}
+							}
+							//$this->db->commit();
+							$response .= "\n";
+					}
+					else {
+						if ($format == "text") {
+							$response .= "	".$text['label-schema'].":			".$text['label-no_change']."\n";
+						}
+					}
+
+						
 				//display results as html
 					if ($format == "html") {
-						//show the database type
-							$response .= "<strong>".$text['header-database_type'].": ".$db_type. "</strong><br /><br />";
 						//start the table
 							$response .= "<table width='100%' border='0' cellpadding='20' cellspacing='0'>\n";
-						//show the changes
-							if (strlen($sql_update) > 0) {
-								$response .= "<tr>\n";
-								$response .= "<td class='row_style1' colspan='3'>\n";
-								$response .= "<br />\n";
-								$response .= "<strong>".$text['label-sql_changes'].":</strong><br />\n";
-								$response .= "<pre>\n";
-								$response .= $sql_update;
-								$response .= "</pre>\n";
-								$response .= "<br />\n";
-								$response .= "</td>\n";
-								$response .= "</tr>\n";
-							}
 						//list all tables
 							$response .= "<tr>\n";
 							$response .= "<th>".$text['label-table']."</th>\n";
@@ -847,38 +888,9 @@ if (!class_exists('schema')) {
 							$response .= "</table>\n";
 							$response .= "<br />\n";
 
-					}
-
-					//loop line by line through all the lines of sql code
-						$x = 0;
-						if (strlen($sql_update) == 0 && $format == "text") {
-							$response .= "	".$text['label-schema'].":			".$text['label-no_change']."\n";
-						}
-						else {
-							if ($format == "text") {
-								$response .= "	".$text['label-schema']."\n";
-							}
-							//$this->db->beginTransaction();
-							$update_array = explode(";", $sql_update);
-							foreach($update_array as $sql) {
-								if (strlen(trim($sql))) {
-									try {
-										$this->db->query(trim($sql));
-										if ($format == "text") {
-											$response .= "	$sql\n";
-										}
-									}
-									catch (PDOException $error) {
-										$response .= "	error: " . $error->getMessage() . "	sql: $sql<br/>";
-									}
-								}
-							}
-							//$this->db->commit();
-							$response .= "\n";
-							unset ($file_contents, $sql_update, $sql);
-						}
-
+					}						
 				//handle response
+						unset ($file_contents, $sql_update, $sql);
 					//if ($output == "echo") {
 					//	echo $response;
 					//}
