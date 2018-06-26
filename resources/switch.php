@@ -438,87 +438,98 @@ function save_var_xml() {
 }
 
 function outbound_route_to_bridge ($domain_uuid, $destination_number) {
-	//get the database connection
-	require_once "resources/classes/database.php";
-	$database = new database;
-	$database->connect();
-	$db = $database->db;
+        //get the database connection
+        require_once "resources/classes/database.php";
+        $database = new database;
+        $database->connect();
+        $db = $database->db;
 
-	$destination_number = trim($destination_number);
-	preg_match('/^[\*\+0-9]*$/', $destination_number, $matches, PREG_OFFSET_CAPTURE);
-	if (count($matches) > 0) {
-		//not found, continue to process the function
-	}
-	else {
-		//not a number, brige_array and exit the function
-		$bridge_array[0] = $destination_number;
-		return $bridge_array;
-	}
+        $destination_number = trim($destination_number);
+        preg_match('/^[\*\+0-9]*$/', $destination_number, $matches, PREG_OFFSET_CAPTURE);
+        if (count($matches) > 0) {
+                //not found, continue to process the function
+        }
+        else {
+                //not a number, brige_array and exit the function
+                $bridge_array[0] = $destination_number;
+                return $bridge_array;
+        }
 
-	$sql = "select * from v_dialplans ";
-	$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
-	$sql .= "and app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
-	$sql .= "and dialplan_enabled = 'true' ";
-	$sql .= "order by dialplan_order asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-	$x = 0;
-	foreach ($result as &$row) {
-		//set as variables
-			$dialplan_uuid = $row['dialplan_uuid'];
-			$dialplan_detail_tag = $row["dialplan_detail_tag"];
-			$dialplan_detail_type = $row['dialplan_detail_type'];
-			$dialplan_continue = $row['dialplan_continue'];
+        $sql = "select * from v_dialplans ";
+        $sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
+        $sql .= "and app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
+        $sql .= "and dialplan_enabled = 'true' ";
+        $sql .= "order by dialplan_order asc ";
+        $prep_statement = $db->prepare(check_sql($sql));
+        $prep_statement->execute();
+        $result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+        $x = 0;
+        foreach ($result as &$row) {
+                //set as variables
+                        $dialplan_uuid = $row['dialplan_uuid'];
+                        $dialplan_detail_tag = $row["dialplan_detail_tag"];
+                        $dialplan_detail_type = $row['dialplan_detail_type'];
+                        $dialplan_continue = $row['dialplan_continue'];
 
-		//get the extension number using the dialplan_uuid
-			$sql = "select * ";
-			$sql .= "from v_dialplan_details ";
-			$sql .= "where dialplan_uuid = '$dialplan_uuid' ";
-			$sql .= "order by dialplan_detail_order asc ";
-			$sub_result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-			$regex_match = false;
-			foreach ($sub_result as &$sub_row) {
-				if ($sub_row['dialplan_detail_tag'] == "condition") {
-					if ($sub_row['dialplan_detail_type'] == "destination_number") {
-							$dialplan_detail_data = $sub_row['dialplan_detail_data'];
-							$pattern = '/'.$dialplan_detail_data.'/';
-							preg_match($pattern, $destination_number, $matches, PREG_OFFSET_CAPTURE);
-							if (count($matches) == 0) {
-								$regex_match = false;
-							}
-							else {
-								$regex_match = true;
-								$regex_match_1 = $matches[1][0];
-								$regex_match_2 = $matches[2][0];
-								$regex_match_3 = $matches[3][0];
-								$regex_match_4 = $matches[4][0];
-								$regex_match_5 = $matches[5][0];
-							}
-					}
-				}
-			}
-			if ($regex_match) {
-				foreach ($sub_result as &$sub_row) {
-					$dialplan_detail_data = $sub_row['dialplan_detail_data'];
-					if ($sub_row['dialplan_detail_tag'] == "action" && $sub_row['dialplan_detail_type'] == "bridge" && $dialplan_detail_data != "\${enum_auto_route}") {
-					$dialplan_detail_data = str_replace("\$1", $regex_match_1, $dialplan_detail_data);
-						$dialplan_detail_data = str_replace("\$2", $regex_match_2, $dialplan_detail_data);
-						$dialplan_detail_data = str_replace("\$3", $regex_match_3, $dialplan_detail_data);
-						$dialplan_detail_data = str_replace("\$4", $regex_match_4, $dialplan_detail_data);
-						$dialplan_detail_data = str_replace("\$5", $regex_match_5, $dialplan_detail_data);
-						//echo "dialplan_detail_data: $dialplan_detail_data";
-						$bridge_array[$x] = $dialplan_detail_data;
-						$x++;
-						if ($dialplan_continue == "false") {
-							break 2;
-						}
-					}
-				}
-			}
-	}
-	return $bridge_array;
-	unset ($prep_statement);
+                //get the extension number using the dialplan_uuid
+//                      $sql = "select * ";
+//                      $sql .= "from v_dialplan_details ";
+//                      $sql .= "where dialplan_uuid = '$dialplan_uuid' ";
+//                      $sql .= "order by dialplan_detail_order asc ";
+                        $sql = "select vdp1.dialplan_detail_tag, vdp1.dialplan_detail_type, vdp1.dialplan_detail_data, vdp1.dialplan_detail_group, vdp1.dialplan_detail_order ";
+                        $sql .= "from v_dialplan_details as vdp1, v_dialplan_details as vdp2 ";
+                        $sql .= "where vdp1.dialplan_uuid = '$dialplan_uuid' ";
+                        $sql .= "and (vdp1.dialplan_detail_type = 'destination_number' or vdp1.dialplan_detail_type = 'bridge') ";
+                        $sql .= "and vdp2.dialplan_uuid = '$dialplan_uuid' ";
+                        $sql .= "and vdp2.dialplan_detail_type = 'bridge' ";
+                        $sql .= "and vdp1.dialplan_detail_group = vdp2.dialplan_detail_group ";
+                        $sql .= "order by dialplan_detail_group, dialplan_detail_order";
+                        $sub_result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+                        $regex_match = false;
+                        foreach ($sub_result as &$sub_row) {
+                                if ($sub_row['dialplan_detail_tag'] == "condition") {
+                                        if ($sub_row['dialplan_detail_type'] == "destination_number") {
+                                                        $dialplan_detail_data = $sub_row['dialplan_detail_data'];
+                                                        $pattern = '/'.$dialplan_detail_data.'/';
+                                                        preg_match($pattern, $destination_number, $matches, PREG_OFFSET_CAPTURE);
+                                                        if (count($matches) == 0) {
+                                                                $regex_match = false;
+                                                        }
+                                                        else {
+                                                                $regex_match = true;
+                                                                $regex_match_1 = $matches[1][0];
+                                                                $regex_match_2 = $matches[2][0];
+                                                                $regex_match_3 = $matches[3][0];
+                                                                $regex_match_4 = $matches[4][0];
+                                                                $regex_match_5 = $matches[5][0];
+                                                                $dialplan_detail_group = $sub_row['dialplan_detail_group'];
+                                                        }
+                                        }
+                                }
+                        }
+                        if ($regex_match) {
+                                foreach ($sub_result as &$sub_row) {
+                                        if ($sub_row['dialplan_detail_group'] == $dialplan_detail_group) {
+                                                $dialplan_detail_data = $sub_row['dialplan_detail_data'];
+                                                if ($sub_row['dialplan_detail_tag'] == "action" && $sub_row['dialplan_detail_type'] == "bridge" && $dialplan_detail_data != "\${enum_auto_route}") {
+                                                        $dialplan_detail_data = str_replace("\$1", $regex_match_1, $dialplan_detail_data);
+                                                        $dialplan_detail_data = str_replace("\$2", $regex_match_2, $dialplan_detail_data);
+                                                        $dialplan_detail_data = str_replace("\$3", $regex_match_3, $dialplan_detail_data);
+                                                        $dialplan_detail_data = str_replace("\$4", $regex_match_4, $dialplan_detail_data);
+                                                        $dialplan_detail_data = str_replace("\$5", $regex_match_5, $dialplan_detail_data);
+                                                        //echo "dialplan_detail_data: $dialplan_detail_data";
+                                                        $bridge_array[$x] = $dialplan_detail_data;
+                                                        $x++;
+                                                        if ($dialplan_continue == "false") {
+                                                                break 2;
+                                                        }
+                                                }
+                                        }
+                                }
+                        }
+        }
+        return $bridge_array;
+        unset ($prep_statement);
 }
 //$destination_number = '1231234';
 //$bridge_array = outbound_route_to_bridge ($domain_uuid, $destination_number);
