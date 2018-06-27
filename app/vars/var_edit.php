@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -52,18 +52,20 @@
 	}
 
 //set http values as php variables
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
+		$var_category = check_str($_POST["var_category"]);
 		$var_name = check_str($_POST["var_name"]);
-		$var_hostname = check_str($_POST["var_hostname"]);
 		$var_value = check_str($_POST["var_value"]);
-		$var_cat = check_str($_POST["var_cat"]);
-		if (strlen($_POST["var_cat_other"]) > 0) {
-			$var_cat = check_str($_POST["var_cat_other"]);
-		}
+		$var_command = check_str($_POST["var_command"]);
+		$var_hostname = check_str($_POST["var_hostname"]);
 		$var_enabled = check_str($_POST["var_enabled"]);
 		$var_order = check_str($_POST["var_order"]);
 		$var_description = $_POST["var_description"];
 		$var_description = str_replace("''", "'", $var_description);
+
+		if (strlen($_POST["var_category_other"]) > 0) {
+			$var_category = check_str($_POST["var_category_other"]);
+		}
 	}
 
 //process the post
@@ -76,9 +78,10 @@
 
 		//check for all required data
 			$msg = '';
+			//if (strlen($var_category) == 0) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
 			if (strlen($var_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
 			//if (strlen($var_value) == 0) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
-			//if (strlen($var_cat) == 0) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
+			//if (strlen($var_command) == 0) { $msg .= $text['message-required'].$text['label-command']."<br>\n"; }
 			if (strlen($var_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
 			if (strlen($var_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -102,10 +105,11 @@
 						$sql = "insert into v_vars ";
 						$sql .= "(";
 						$sql .= "var_uuid, ";
+						$sql .= "var_category, ";
 						$sql .= "var_name, ";
-						$sql .= "var_hostname, ";
 						$sql .= "var_value, ";
-						$sql .= "var_cat, ";
+						$sql .= "var_command, ";
+						$sql .= "var_hostname, ";
 						$sql .= "var_enabled, ";
 						$sql .= "var_order, ";
 						$sql .= "var_description ";
@@ -113,15 +117,16 @@
 						$sql .= "values ";
 						$sql .= "(";
 						$sql .= "'$var_uuid', ";
+						$sql .= "'$var_category', ";
 						$sql .= "'$var_name', ";
+						$sql .= "'$var_value', ";
+						$sql .= "'$var_command', ";
 						if (strlen($var_hostname) > 0) {
 							$sql .= "'$var_hostname', ";
 						}
 						else {
 							$sql .= "null, ";
 						}
-						$sql .= "'$var_value', ";
-						$sql .= "'$var_cat', ";
 						$sql .= "'$var_enabled', ";
 						$sql .= "'$var_order', ";
 						$sql .= "'".base64_encode($var_description)."' ";
@@ -144,15 +149,16 @@
 				if ($action == "update" && permission_exists('var_edit')) {
 					//update the variables
 						$sql = "update v_vars set ";
+						$sql .= "var_category = '$var_category', ";
 						$sql .= "var_name = '$var_name', ";
+						$sql .= "var_value = '$var_value', ";
+						$sql .= "var_command = '$var_command', ";
 						if (strlen($var_hostname) > 0) {
 							$sql .= "var_hostname = '$var_hostname', ";
 						}
 						else {
 							$sql .= "var_hostname = null, ";
 						}
-						$sql .= "var_value = '$var_value', ";
-						$sql .= "var_cat = '$var_cat', ";
 						$sql .= "var_enabled = '$var_enabled', ";
 						$sql .= "var_order = '$var_order', ";
 						$sql .= "var_description = '".base64_encode($var_description)."' ";
@@ -175,7 +181,7 @@
 	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
 		$var_uuid = $_GET["id"];
 		$sql = "select * from v_vars ";
 		$sql .= "where var_uuid = '$var_uuid' ";
@@ -183,10 +189,11 @@
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
+			$var_category = $row["var_category"];
 			$var_name = $row["var_name"];
-			$var_hostname = $row["var_hostname"];
 			$var_value = $row["var_value"];
-			$var_cat = $row["var_cat"];
+			$var_command = $row["var_command"];
+			$var_hostname = $row["var_hostname"];
 			$var_enabled = $row["var_enabled"];
 			$var_order = $row["var_order"];
 			$var_description = base64_decode($row["var_description"]);
@@ -221,7 +228,19 @@
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-category']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	$table_name = 'v_vars';$field_name = 'var_category';$sql_where_optional = "";$field_current_value = $var_category;
+	echo html_select_other($db, $table_name, $field_name, $sql_where_optional, $field_current_value);
+	//echo "<br />\n";
+	echo $text['description-category']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -232,13 +251,37 @@
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-value']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='var_value' maxlength='255' value=\"$var_value\">\n";
 	echo "<br />\n";
 	echo $text['description-value']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "    ".$text['label-command']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <select class='formfld' name='var_command'>\n";
+	if ($var_command == "set") {
+		echo "    <option value='set' selected='selected'>".$text['option-set']."</option>\n";
+	}
+	else {
+		echo "    <option value='set'>".$text['option-set']."</option>\n";
+	}
+	if ($var_command == "exec-set") {
+		echo "    <option value='exec-set' selected='selected'>".$text['option-exec-set']."</option>\n";
+	}
+	else {
+		echo "    <option value='exec-set'>".$text['option-exec-set']."</option>\n";
+	}
+	echo "    </select>\n";
+	echo "<br />\n";
+	echo $text['description-command']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -254,50 +297,38 @@
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-category']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	$table_name = 'v_vars';$field_name = 'var_cat';$sql_where_optional = "";$field_current_value = $var_cat;
-	echo html_select_other($db, $table_name, $field_name, $sql_where_optional, $field_current_value);
-	echo "<br />\n";
-	echo $text['description-category']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    ".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='var_enabled'>\n";
 	if ($var_enabled == "true") {
-		echo "    <option value='true' SELECTED >".$text['option-true']."</option>\n";
+		echo "    <option value='true' selected='selected'>".$text['option-true']."</option>\n";
 	}
 	else {
 		echo "    <option value='true'>".$text['option-true']."</option>\n";
 	}
 	if ($var_enabled == "false") {
-		echo "    <option value='false' SELECTED >".$text['option-false']."</option>\n";
+		echo "    <option value='false' selected='selected'>".$text['option-false']."</option>\n";
 	}
 	else {
 		echo "    <option value='false'>".$text['option-false']."</option>\n";
 	}
 	echo "    </select>\n";
 	echo "<br />\n";
-	echo "\n";
+	echo $text['description-enabled']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    ".$text['label-order']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select name='var_order' class='formfld'>\n";
 	$i=0;
 	while($i<=999) {
-		$selected = ($var_order == $i) ? "selected" : null;
+		$selected = ($var_order == $i) ? "selected='selected'" : null;
 		if (strlen($i) == 1) {
 			echo "	<option value='00$i' ".$selected.">00$i</option>\n";
 		}
@@ -311,17 +342,18 @@
 	}
 	echo "	</select>\n";
 	echo "	<br />\n";
+	echo $text['description-order']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<textarea class='formfld' name='var_description' rows='17'>$var_description</textarea>\n";
 	echo "<br />\n";
-	echo "\n";
+	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "	<tr>\n";

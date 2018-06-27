@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -120,7 +120,7 @@
 		$mod_caller_id_name = str_replace("*", "%", $caller_id_name);
 		$sql_where_ands[] = "caller_id_name like '".$mod_caller_id_name."'";
 	}
-	if (strlen($caller_extension_uuid) > 0) {
+	if (strlen($caller_extension_uuid) > 0 && is_uuid($caller_extension_uuid)) {
 		$sql_where_ands[] = "extension_uuid = '".$caller_extension_uuid."'";
 	}
 	if (strlen($caller_id_number) > 0) {
@@ -321,41 +321,39 @@
 	if ($_REQUEST['export_format'] == "csv") { $rows_per_page = 0; }
 	if ($_REQUEST['export_format'] == "pdf") { $rows_per_page = 0; }
 
-//page results if rows_per_page is greater than zero
-	if ($rows_per_page > 0) {
-
-		//get the number of rows in the v_xml_cdr
-			$sql = "select count(uuid) as num_rows from v_xml_cdr ";
-			$sql .= "where domain_uuid = '".$domain_uuid."' ".$sql_where;
-			$prep_statement = $db->prepare(check_sql($sql));
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-				if ($row['num_rows'] > 0) {
-					$num_rows = $row['num_rows'];
-				}
-				else {
-					$num_rows = '0';
-				}
+//count the records in the database
+	/*
+	if ($_SESSION['cdr']['limit']['numeric'] == 0) {
+		$sql = "select count(uuid) as num_rows from v_xml_cdr ";
+		$sql .= "where domain_uuid = '".$domain_uuid."' ".$sql_where;
+		$prep_statement = $db->prepare(check_sql($sql));
+		if ($prep_statement) {
+			$prep_statement->execute();
+			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+			if ($row['num_rows'] > 0) {
+				$num_rows = $row['num_rows'];
 			}
-			unset($prep_statement, $result);
-
-		//limit the number of results
-			if ($_SESSION['cdr']['limit']['numeric'] > 0) {
-				$num_rows = $_SESSION['cdr']['limit']['numeric'];
+			else {
+				$num_rows = '0';
 			}
-
-		//set the default paging
-			$rows_per_page = $_SESSION['domain']['paging']['numeric'];
-
-		//prepare to page the results
-			//$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50; //set on the page that includes this page
-			$page = $_GET['page'];
-			if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-			list($paging_controls_mini, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page, true); //top
-			list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); //bottom
-			$offset = $rows_per_page * $page;
+		}
+		unset($prep_statement, $result);
 	}
+	*/
+
+//limit the number of results
+	if ($_SESSION['cdr']['limit']['numeric'] > 0) {
+		$num_rows = $_SESSION['cdr']['limit']['numeric'];
+	}
+
+//set the default paging
+	$rows_per_page = $_SESSION['domain']['paging']['numeric'];
+
+//prepare to page the results
+	//$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50; //set on the page that includes this page
+	if (is_numeric($_GET['page'])) { $page = $_GET['page']; }
+	if (!isset($_GET['page'])) { $page = 0; $_GET['page'] = 0; }
+	$offset = $rows_per_page * $page;
 
 //get the results from the db
 	$sql = "select ";
@@ -383,6 +381,11 @@
 			$array = explode(",", $field);
 			$field_name = end($array);
 			$sql .= $field_name.", ";
+		}
+	}
+	if (is_array($_SESSION['cdr']['export'])) {
+		foreach ($_SESSION['cdr']['export'] as $field) {
+			$sql .= $field.", ";
 		}
 	}
 	$sql .= "accountcode, ";
@@ -417,12 +420,28 @@
 	}
 	$sql= str_replace("  ", " ", $sql);
 	$sql= str_replace("where and", "where", $sql);
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+	$database = new database;
+	if ($archive_request == 'true') {
+		if ($_SESSION['cdr']['archive_database']['boolean'] == 'true') {
+			$database->driver = $_SESSION['cdr']['archive_database_driver']['text'];
+			$database->host = $_SESSION['cdr']['archive_database_host']['text'];
+			$database->type = $_SESSION['cdr']['archive_database_type']['text'];
+			$database->port = $_SESSION['cdr']['archive_database_port']['text'];
+			$database->db_name = $_SESSION['cdr']['archive_database_name']['text'];
+			$database->username = $_SESSION['cdr']['archive_database_username']['text'];
+			$database->password = $_SESSION['cdr']['archive_database_password']['text'];
+		}
+	}
+	$database->select($sql);
+	$result = $database->result;
 	$result_count = count($result);
-	unset ($prep_statement, $sql);
+	unset($database);
 
+//return the paging
+	list($paging_controls_mini, $rows_per_page, $offset) = paging($num_rows, $param, $rows_per_page, true, $result_count); //top
+	list($paging_controls, $rows_per_page, $offset) = paging($num_rows, $param, $rows_per_page, false, $result_count); //bottom
+
+//set the row style
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";

@@ -196,34 +196,34 @@
 		foreach($result as $row) {
 			$app_uuid = $row['app_uuid'];
 
-			$tr_link = "href='".PROJECT_PATH."/app/time_conditions/time_condition_edit.php?id=".$row['dialplan_uuid'].(($app_uuid != '') ? "&app_uuid=".$app_uuid : null)."'";
+			$tr_link = "href='".PROJECT_PATH."/app/time_conditions/time_condition_edit.php?id=".escape($row['dialplan_uuid']).(($app_uuid != '') ? "&app_uuid=".escape($app_uuid) : null)."'";
 
 			echo "<tr ".$tr_link.">\n";
 			if (permission_exists("time_condition_delete")) {
-				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' name='id[]' id='checkbox_".$row['dialplan_uuid']."' value='".$row['dialplan_uuid']."'></td>\n";
-				$dialplan_ids[] = 'checkbox_'.$row['dialplan_uuid'];
+				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' name='id[]' id='checkbox_".escape($row['dialplan_uuid'])."' value='".$row['dialplan_uuid']."'></td>\n";
+				$dialplan_ids[] = 'checkbox_'.escape($row['dialplan_uuid']);
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('time_condition_edit')) {
-				echo "<a href='".PROJECT_PATH."/app/time_conditions/time_condition_edit.php?id=".$row['dialplan_uuid'].(($app_uuid != '') ? "&app_uuid=".$app_uuid : null)."'>".$row['dialplan_name']."</a>";
+				echo "<a href='".PROJECT_PATH."/app/time_conditions/time_condition_edit.php?id=".escape($row['dialplan_uuid']).(($app_uuid != '') ? "&app_uuid=".escape($app_uuid) : null)."'>".escape($row['dialplan_name'])."</a>";
 			}
 			else {
-				echo $row['dialplan_name'];
+				echo escape($row['dialplan_name']);
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".((strlen($row['dialplan_number']) > 0) ? $row['dialplan_number'] : "&nbsp;")."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['dialplan_context']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>".$row['dialplan_order']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['dialplan_context'])."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>".escape($row['dialplan_order'])."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center;'>";
-			echo "		<a href='?id=".$row['dialplan_uuid']."&enabled=".(($row['dialplan_enabled'] == 'true') ? 'false' : 'true').(($app_uuid != '') ? "&app_uuid=".$app_uuid : null).(($search != '') ? "&search=".$search : null).(($order_by != '') ? "&order_by=".$order_by."&order=".$order : null)."'>".ucwords($row['dialplan_enabled'])."</a>\n";
+			echo "		<a href='?id=".$row['dialplan_uuid']."&enabled=".(($row['dialplan_enabled'] == 'true') ? 'false' : 'true').(($app_uuid != '') ? "&app_uuid=".escape($app_uuid) : null).(($search != '') ? "&search=".$search : null).(($order_by != '') ? "&order_by=".escape($order_by)."&order=".escape($order) : null)."'>".ucwords(escape($row['dialplan_enabled']))."</a>\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='row_stylebg' width='30%'>".((strlen($row['dialplan_description']) > 0) ? $row['dialplan_description'] : "&nbsp;")."</td>\n";
 			echo "	<td class='list_control_icons'>\n";
  			if (permission_exists('time_condition_edit')) {
- 				echo "<a href='".PROJECT_PATH."/app/time_conditions/time_condition_edit.php?id=".$row['dialplan_uuid'].(($app_uuid != '') ? "&app_uuid=".$app_uuid : null)."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+ 				echo "<a href='".PROJECT_PATH."/app/time_conditions/time_condition_edit.php?id=".escape($row['dialplan_uuid']).(($app_uuid != '') ? "&app_uuid=".escape($app_uuid) : null)."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
  			}
 			if (permission_exists('time_condition_delete')) {
-				echo "<a href=\"time_condition_delete.php?id[]=".$row['dialplan_uuid'].(($app_uuid != '') ? "&app_uuid=".$app_uuid : null)."\" alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href=\"time_condition_delete.php?id[]=".escape($row['dialplan_uuid']).(($app_uuid != '') ? "&app_uuid=".escape($app_uuid) : null)."\" alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";

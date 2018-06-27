@@ -304,7 +304,7 @@ class destinations {
 				if ($action == 'delete') {
 					foreach($destinations as $row) {
 						if ($row['action'] == 'delete' or $row['checked'] == 'true') {
-							//get the list of dialplan uuid
+							//get the list destinations
 							$sql = "select * from v_destinations ";
 							$sql .= "where destination_uuid = '".$row['destination_uuid']."';";
 							$prep_statement = $this->db->prepare($sql);

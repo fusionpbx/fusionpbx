@@ -34,6 +34,9 @@
 	require "resources.functions.trim";
 	require "resources.functions.base64";
 
+--load libraries
+	require 'resources.functions.send_mail'
+
 --check the missed calls
 	function missed()
 		if (missed_call_app ~= nil and missed_call_data ~= nil) then
@@ -46,24 +49,34 @@
 					if (not default_dialect) then default_dialect = 'us'; end
 					if (not default_voice) then default_voice = 'callie'; end
 
-				--prepare the files
-					file_subject = scripts_dir.."/app/missed_calls/resources/templates/"..default_language.."/"..default_dialect.."/email_subject.tpl";
-					file_body = scripts_dir.."/app/missed_calls/resources/templates/"..default_language.."/"..default_dialect.."/email_body.tpl";
-					if (not file_exists(file_subject)) then
-						file_subject = scripts_dir.."/app/missed_calls/resources/templates/en/us/email_subject.tpl";
-						file_body = scripts_dir.."/app/missed_calls/resources/templates/en/us/email_body.tpl";
+				--connect to the database
+					local Database = require "resources.functions.database";
+					local dbh = Database.new('system');
+
+				--get the templates
+					local sql = "SELECT * FROM v_email_templates ";
+					sql = sql .. "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					sql = sql .. "AND template_language = :template_language ";
+					sql = sql .. "AND template_category = 'missed' "
+					sql = sql .. "AND template_enabled = 'true' "
+					sql = sql .. "ORDER BY domain_uuid DESC "
+					local params = {domain_uuid = domain_uuid, template_language = default_language.."-"..default_dialect};
+					if (debug["sql"]) then
+						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 					end
+					dbh:query(sql, params, function(row)
+						subject = row["template_subject"];
+						body = row["template_body"];
+					end);
 
 				--prepare the headers
-					headers = '{"X-FusionPBX-Domain-UUID":"'..domain_uuid..'",';
-					headers = headers..'"X-FusionPBX-Domain-Name":"'..domain_name..'",';
-					headers = headers..'"X-FusionPBX-Call-UUID":"'..uuid..'",';
-					headers = headers..'"X-FusionPBX-Email-Type":"missed"}';
+					local headers = {}
+					headers["X-FusionPBX-Domain-UUID"] = domain_uuid;
+					headers["X-FusionPBX-Domain-Name"] = domain_name;
+					headers["X-FusionPBX-Call-UUID"]   = uuid;
+					headers["X-FusionPBX-Email-Type"]  = 'missed';
 
 				--prepare the subject
-					local f = io.open(file_subject, "r");
-					local subject = f:read("*all");
-					f:close();
 					subject = subject:gsub("${caller_id_name}", caller_id_name);
 					subject = subject:gsub("${caller_id_number}", caller_id_number);
 					subject = subject:gsub("${sip_to_user}", sip_to_user);
@@ -72,9 +85,6 @@
 					subject = '=?utf-8?B?'..base64.encode(subject)..'?=';
 
 				--prepare the body
-					local f = io.open(file_body, "r");
-					local body = f:read("*all");
-					f:close();
 					body = body:gsub("${caller_id_name}", caller_id_name);
 					body = body:gsub("${caller_id_number}", caller_id_number);
 					body = body:gsub("${sip_to_user}", sip_to_user);
@@ -88,13 +98,15 @@
 					body = body:gsub([["]], "&#34;");
 					body = trim(body);
 
-				--send the email
-					cmd = "luarun email.lua "..missed_call_data.." "..missed_call_data.." "..headers.." '"..subject.."' '"..body.."'";
+				--send the emails
+					send_mail(headers,
+						missed_call_data,
+						{subject, body}
+					);
+
 					if (debug["info"]) then
-						freeswitch.consoleLog("notice", "[missed call] cmd: " .. cmd .. "\n");
+						freeswitch.consoleLog("notice", "[missed call] " .. caller_id_number .. "->" .. sip_to_user .. "emailed to " .. missed_call_data .. "\n");
 					end
-					api = freeswitch.API();
-					result = api:executeString(cmd);
 			end
 		end
 	end

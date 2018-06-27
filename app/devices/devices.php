@@ -63,6 +63,16 @@
 	}
 	unset($sql, $prep_statement, $row);
 
+//get the devices profiles
+	$sql = "select * from v_device_profiles ";
+	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+		$prep_statement->execute();
+		$device_profiles = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+	}
+	unset($sql, $prep_statement, $row);
+
 //prepare to page the results
 	$sql = "select count(*) as num_rows from v_devices as d ";
 	if ($_GET['show'] == "all" && permission_exists('device_all')) {
@@ -82,7 +92,7 @@
 	}
 	if (strlen($search) > 0) {
 		$sql .= "(";
-		$sql .= "	d.device_mac_address like '%".$search."%' ";
+		$sql .= "	lower(d.device_mac_address) like '%".strtolower($search)."%' ";
 		$sql .= "	or d.device_label like '%".$search."%' ";
 		$sql .= "	or d.device_vendor like '%".$search."%' ";
 		$sql .= "	or d.device_enabled like '%".$search."%' ";
@@ -94,7 +104,7 @@
 	}
 	$prep_statement = $db->prepare($sql);
 	if ($prep_statement) {
-	$prep_statement->execute();
+		$prep_statement->execute();
 		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 		if ($row['num_rows'] > 0) {
 			$num_rows = $row['num_rows'];
@@ -135,7 +145,7 @@
 	}
 	if (strlen($search) > 0) {
 		$sql .= "and (";
-		$sql .= "	d.device_mac_address like '%".$search."%' ";
+		$sql .= "	lower(d.device_mac_address) like '%".strtolower($search)."%' ";
 		$sql .= "	or d.device_label like '%".$search."%' ";
 		$sql .= "	or d.device_vendor like '%".$search."%' ";
 		$sql .= "	or d.device_enabled like '%".$search."%' ";
@@ -169,30 +179,33 @@
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='100%' align='left' valign='top'>";
-	echo "			<b>".$text['header-devices']." (".$num_rows.")</b>";
+	echo "		<td width='100%' align='left' valign='top'>\n";
+	echo "			<b>".$text['header-devices']." (".$num_rows.")</b>\n";
 	echo "		</td>\n";
 	echo "		<td align='right' nowrap='nowrap' valign='top'>\n";
 	echo "			<form method='get' action=''>\n";
-	if (if_group("superadmin")) {
-		echo "				<input type='button' class='btn' style='margin-right: 15px;' value='".$text['button-export']."' onclick=\"window.location.href='device_download.php'\">\n";
-	}
 	if (permission_exists('device_all')) {
 		if ($_GET['show'] == 'all') {
-			echo "	<input type='hidden' name='show' value='all'>";
+			echo "			<input type='hidden' name='show' value='all'>\n";
 		}
 		else {
-			echo "	<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='devices.php?show=all';\">\n";
+			echo "			<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='devices.php?show=all';\">\n";
 		}
 	}
 	if (permission_exists('device_vendor_view')) {
-		echo "		<input type='button' class='btn' value='".$text['button-vendors']."' onclick=\"document.location.href='device_vendors.php';\">";
+		echo "			<input type='button' class='btn' value='".$text['button-vendors']."' onclick=\"document.location.href='device_vendors.php';\">\n";
 	}
 	if (permission_exists('device_profile_view')) {
-		echo "		<input type='button' class='btn' value='".$text['button-profiles']."' onclick=\"document.location.href='device_profiles.php';\">&nbsp;&nbsp;&nbsp;&nbsp;";
+		echo "			<input type='button' class='btn' value='".$text['button-profiles']."' onclick=\"document.location.href='device_profiles.php';\">\n";
 	}
-	echo "			<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
-	echo "			<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
+	if (permission_exists('device_import')) {
+		echo "			<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='/app/device_imports/device_imports.php'\" value='".$text['button-import']."'>\n";
+	}
+	if (permission_exists('device_export')) {
+		echo "			<input type='button' class='btn' value='".$text['button-export']."' onclick=\"window.location.href='device_download.php'\">\n";
+	}
+	echo "			<input type='text' class='txt' style='width: 150px; margin-left: 15px;' name='search' value='".escape($search)."'>\n";
+	echo "			<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
 	echo "			</form>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
@@ -202,7 +215,7 @@
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
-	echo "<br />";
+	echo "<br />\n";
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
@@ -220,6 +233,7 @@
 	}
 	echo th_order_by('device_vendor', $text['label-device_vendor'], $order_by, $order);
 	echo th_order_by('device_template', $text['label-device_template'], $order_by, $order);
+	echo "<th>". $text['label-device_profiles']."</th>\n";
 	echo th_order_by('device_enabled', $text['label-device_enabled'], $order_by, $order);
 	echo th_order_by('device_status', $text['label-device_status'], $order_by, $order);
 	echo th_order_by('device_description', $text['label-device_description'], $order_by, $order);
@@ -235,35 +249,44 @@
 	echo "</td>\n";
 	echo "<tr>\n";
 
-	if (count($devices) > 0) {
+	if (is_array($devices)) {
 		foreach($devices as $row) {
-			$tr_link = (permission_exists('device_edit')) ? "href='device_edit.php?id=".$row['device_uuid']."'" : null;
+
+			$device_profile_name = '';
+			foreach($device_profiles as $profile) {
+				if ($profile['device_profile_uuid'] == $row['device_profile_uuid']) {
+					$device_profile_name = $profile['device_profile_name'];
+				}
+			}
+
+			$tr_link = (permission_exists('device_edit')) ? "href='device_edit.php?id=".escape($row['device_uuid'])."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			if ($_GET['show'] == "all" && permission_exists('device_all')) {
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
 			}
-			echo "	<td valign='top' class='".$row_style[$c]."'>";
-			echo (permission_exists('device_edit')) ? "<a href='device_edit.php?id=".$row['device_uuid']."'>".format_mac($row['device_mac_address'])."</a>" : format_mac($row['device_mac_address']);
+			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
+			echo (permission_exists('device_edit')) ? "<a href='device_edit.php?id=".escape($row['device_uuid'])."'>".format_mac(escape($row['device_mac_address']))."</a>" : format_mac(escape($row['device_mac_address']));
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_label']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['device_label'])."&nbsp;</td>\n";
 			if ($device_alternate) {
 				echo "	<td valign='top' class='".$row_style[$c]."'>\n";
 				if (strlen($row['device_uuid_alternate']) > 0) {
-					echo "		<a href='device_edit.php?id=".$row['device_uuid_alternate']."' alt=''>".$row['alternate_label']."</a>\n";
+					echo "		<a href='device_edit.php?id=".escape($row['device_uuid_alternate'])."' alt=''>".escape($row['alternate_label'])."</a>\n";
 				}
 				echo "	</td>\n";
 			}
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_vendor']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_template']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['device_enabled']]."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_provisioned_date']." - ".$row['device_provisioned_method']." - <a href='http://".$row['device_provisioned_ip']."' target='_blank'>".$row['device_provisioned_ip']."</a>&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".$row['device_description']."&nbsp;</td>\n";
-			echo "	<td class='list_control_icons'>";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['device_vendor'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['device_template'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($device_profile_name)."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.escape($row['device_enabled'])]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['device_provisioned_date'])." - ".escape($row['device_provisioned_method'])." - <a href='http://".escape($row['device_provisioned_ip'])."' target='_blank'>".escape($row['device_provisioned_ip'])."</a>&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($row['device_description'])."&nbsp;</td>\n";
+			echo "	<td class='list_control_icons'>\n";
 			if (permission_exists('device_edit')) {
-				echo "<a href='device_edit.php?id=".$row['device_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='device_edit.php?id=".$row['device_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('device_delete')) {
-				echo "<a href='device_delete.php?id=".$row['device_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='device_delete.php?id=".$row['device_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";

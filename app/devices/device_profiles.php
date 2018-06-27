@@ -114,7 +114,7 @@
 	echo "		<td align='right' nowrap='nowrap' valign='top'>\n";
 	echo "			<form method='get' action=''>\n";
 	echo "			<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"document.location='devices.php'\" value='".$text['button-back']."'>&nbsp;&nbsp;&nbsp;&nbsp;";
-	echo "			<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
+	echo "			<input type='text' class='txt' style='width: 150px' name='search' value='".escape($search)."'>";
 	echo "			<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	echo "			</form>\n";
 	echo "		</td>\n";
@@ -136,20 +136,20 @@
 
 	if (is_array($device_profiles)) {
 		foreach($device_profiles as $row) {
-			$tr_link = (permission_exists('device_profile_edit')) ? "href='device_profile_edit.php?id=".$row['device_profile_uuid']."'" : null;
+			$tr_link = (permission_exists('device_profile_edit')) ? "href='device_profile_edit.php?id=".escape($row['device_profile_uuid'])."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
-			echo (permission_exists('device_profile_edit')) ? "<a href='device_profile_edit.php?id=".$row['device_profile_uuid']."'>".$row['device_profile_name']."</a>" : $row['device_profile_name'];
+			echo (permission_exists('device_profile_edit')) ? "<a href='device_profile_edit.php?id=".escape($row['device_profile_uuid'])."'>".escape($row['device_profile_name'])."</a>" : escape($row['device_profile_name']);
 			echo ($row['domain_uuid'] == '') ? "&nbsp;&nbsp;&nbsp;&nbsp;<span style='color: #888; font-size: 80%'>".$text['select-global']."</span>" : null;
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['device_profile_enabled']]."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".$row['device_profile_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.escape($row['device_profile_enabled'])]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($row['device_profile_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('device_profile_edit')) {
-				echo "<a href='device_profile_edit.php?id=".$row['device_profile_uuid']."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
+				echo "<a href='device_profile_edit.php?id=".escape($row['device_profile_uuid'])."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
 			}
 			if (permission_exists('device_profile_delete')) {
-				echo "<a href='device_profile_delete.php?id=".$row['device_profile_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+				echo "<a href='device_profile_delete.php?id=".escape($row['device_profile_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2014-2016
+	Copyright (C) 2014-2018
 	All Rights Reserved.
 
 	Contributor(s):
@@ -169,6 +169,9 @@ include "root.php";
 				break;
 			case "yealink":
 				$mac = strtolower($mac);
+				break;
+			case "gigaset":
+				$mac = strtoupper($mac);
 				break;
 			default:
 				$mac = strtolower($mac);
@@ -505,6 +508,11 @@ include "root.php";
 					}
 				}
 
+			//add the http auth password to the array
+				if (is_array($_SESSION['provision']["http_auth_password"])) {
+					$provision["http_auth_password"] = $_SESSION['provision']["http_auth_password"][0];
+				}
+
 			//check to see if the mac_address exists in devices
 				if (strlen($_REQUEST['user_id']) == 0 || strlen($_REQUEST['userid']) == 0) {
 					if ($this->mac_exists($mac)) {
@@ -812,6 +820,15 @@ include "root.php";
 					}
 					unset ($prep_statement);
 				}
+			//set the template directory
+				if (strlen($provision["template_dir"]) > 0) {
+					$template_dir = $provision["template_dir"];
+				}
+
+			//if the domain name directory exists then only use templates from it
+				if (is_dir($template_dir.'/'.$domain_name)) {
+					$device_template = $domain_name.'/'.$device_template;
+				}
 
 			//initialize a template object
 				$view = new template();
@@ -874,6 +891,7 @@ include "root.php";
 										$lines[$line_number]['auth_id'] = $row["auth_id"];
 										$lines[$line_number]['user_id'] = $row["user_id"];
 										$lines[$line_number]['password'] = $row["password"];
+										$lines[$line_number]['shared_line'] = $row["shared_line"];
 
 									//assign the variables for line one - short name
 										if ($line_number == "1") {
@@ -888,6 +906,7 @@ include "root.php";
 											$view->assign("sip_transport", $sip_transport);
 											$view->assign("sip_port", $sip_port);
 											$view->assign("register_expires", $register_expires);
+											$view->assign("shared_line", $row["shared_line"]);
 										}
 
 									//assign the variables with the line number as part of the name
@@ -902,6 +921,7 @@ include "root.php";
 										$view->assign("sip_transport_".$line_number, $sip_transport);
 										$view->assign("sip_port_".$line_number, $sip_port);
 										$view->assign("register_expires_".$line_number, $register_expires);
+										$view->assign("shared_line_".$line_number, $row["shared_line"]);
 								}
 							}
 							unset ($prep_statement);
@@ -1175,9 +1195,17 @@ include "root.php";
 
 				//set the mac address in the correct format
 					$mac = $this->format_mac($mac, $device_vendor);
+				
+				// set date/time for versioning provisioning templates
+					if (strlen($_SESSION['provision']['version_format']['text']) > 0) {
+						$time = date($_SESSION['provision']['version_format']['text']);
+					} else {
+						$time = date("dmyHi");
+					}
 
 				//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
 					$view->assign("mac" , $mac);
+					$view->assign("time" , $time);
 					$view->assign("label", $device_label);
 					$view->assign("device_label", $device_label);
 					$view->assign("firmware_version", $device_firmware_version);
@@ -1236,16 +1264,6 @@ include "root.php";
 						foreach($provision as $key=>$val) {
 							$view->assign($key, $val);
 						}
-					}
-
-				//set the template directory
-					if (strlen($provision["template_dir"]) > 0) {
-						$template_dir = $provision["template_dir"];
-					}
-
-				//if the domain name directory exists then only use templates from it
-					if (is_dir($template_dir.'/'.$domain_name)) {
-						$device_template = $domain_name.'/'.$device_template;
 					}
 
 				//if $file is not provided then look for a default file that exists

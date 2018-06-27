@@ -49,7 +49,7 @@
 --set the dialplan cache key
 	local dialplan_cache_key = "dialplan:" .. call_context;
 	if (context_name == 'public' and context_type == "single") then
-		key = "dialplan:" .. call_context .. ":" .. destination_number;
+		dialplan_cache_key = "dialplan:" .. call_context .. ":" .. destination_number;
 	end
 
 --get the cache

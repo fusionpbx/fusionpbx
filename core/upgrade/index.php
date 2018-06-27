@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -97,14 +97,7 @@
 		if ($do["apps"] && permission_exists("upgrade_apps")) {
 			require_once "resources/classes/domains.php";
 			$domain = new domains;
-			ob_start();
-			$domain->display_type = 'text';
 			$domain->upgrade();
-			$_SESSION["response"]["upgrade_apps"] = ob_get_flush();
-			if (strlen($_SESSION["response"]["upgrade_apps"]) == 0) {
-				$_SESSION["response"]["upgrade_apps"] = "No items updated or added";
-			}
-			$_SESSION["response"]["upgrade_apps"] = explode("\n", $_SESSION["response"]["upgrade_apps"]);
 			messages::add($text['message-upgrade_apps'], null, $message_timeout);
 		}
 
@@ -253,22 +246,24 @@
 	echo "</form>\n";
 
 	echo "<br /><br />";
-	foreach($_SESSION["response"] as $part => $response){
-		echo "<b>". $text["label-results"]." - ".$text["label-${part}"]."</b>";
-		echo "<br /><br />";
-		if (is_array($response)) {
-			echo "<pre>";
-			echo implode("\n", $response);
-			echo "</pre>";
+	if (is_array($_SESSION["response"])) {
+		foreach($_SESSION["response"] as $part => $response){
+			echo "<b>". $text["label-results"]." - ".$text["label-${part}"]."</b>";
+			echo "<br /><br />";
+			if (is_array($response)) {
+				echo "<pre>";
+				echo implode("\n", $response);
+				echo "</pre>";
+			}
+			else {
+				echo $response;
+			}
+			echo "<br /><br />";
 		}
-		else {
-			echo $response;
-		}
-		echo "<br /><br />";
+		unset($_SESSION["response"]);
 	}
-	unset($_SESSION["response"]);		
-
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

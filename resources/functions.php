@@ -27,7 +27,7 @@
 
 	if (!function_exists('software_version')) {
 		function software_version() {
-			return '4.3.4';
+			return '4.5.1';
 		}
 	}
 
@@ -998,13 +998,21 @@ function format_string ($format, $data) {
 	}
 
 //check password strength against requirements (if any)
-	function check_password_strength($password, $text) {
+	function check_password_strength($password, $text, $type = 'default') {
 		if ($password != '') {
-			$req['length'] = $_SESSION['security']['password_length']['numeric'];
-			$req['number'] = ($_SESSION['security']['password_number']['boolean'] == 'true') ? true : false;
-			$req['lowercase'] = ($_SESSION['security']['password_lowercase']['boolean'] == 'true') ? true : false;
-			$req['uppercase'] = ($_SESSION['security']['password_uppercase']['boolean'] == 'true') ? true : false;
-			$req['special'] = ($_SESSION['security']['password_special']['boolean'] == 'true') ? true : false;
+			if ($type == 'default') {
+				$req['length'] = $_SESSION['security']['password_length']['numeric'];
+				$req['number'] = ($_SESSION['security']['password_number']['boolean'] == 'true') ? true : false;
+				$req['lowercase'] = ($_SESSION['security']['password_lowercase']['boolean'] == 'true') ? true : false;
+				$req['uppercase'] = ($_SESSION['security']['password_uppercase']['boolean'] == 'true') ? true : false;
+				$req['special'] = ($_SESSION['security']['password_special']['boolean'] == 'true') ? true : false;
+			} elseif ($type == 'user') {
+				$req['length'] = $_SESSION['user']['password_length']['numeric'];
+				$req['number'] = ($_SESSION['user']['password_number']['boolean'] == 'true') ? true : false;
+				$req['lowercase'] = ($_SESSION['user']['password_lowercase']['boolean'] == 'true') ? true : false;
+				$req['uppercase'] = ($_SESSION['user']['password_uppercase']['boolean'] == 'true') ? true : false;
+				$req['special'] = ($_SESSION['user']['password_special']['boolean'] == 'true') ? true : false;
+			}
 			if (is_numeric($req['length']) && $req['length'] != 0 && !preg_match_all('$\S*(?=\S{'.$req['length'].',})\S*$', $password)) { // length
 				$msg_errors[] = $req['length'].'+ '.$text['label-characters'];
 			}
@@ -1058,8 +1066,8 @@ function format_string ($format, $data) {
 	if(!function_exists('csv_to_named_array')) {
 		function csv_to_named_array($tmp_str, $tmp_delimiter) {
 			$tmp_array = explode ("\n", $tmp_str);
-			$result = '';
-			if (trim(strtoupper($tmp_array[0])) != "+OK") {
+			$result = array();
+			if (trim(strtoupper($tmp_array[0])) !== "+OK") {
 				$tmp_field_name_array = explode ($tmp_delimiter, $tmp_array[0]);
 				$x = 0;
 				foreach ($tmp_array as $row) {
@@ -1068,7 +1076,7 @@ function format_string ($format, $data) {
 						$y = 0;
 						foreach ($tmp_field_value_array as $tmp_value) {
 							$tmp_name = $tmp_field_name_array[$y];
-							if (trim(strtoupper($tmp_value)) != "+OK") {
+							if (trim(strtoupper($tmp_value)) !== "+OK") {
 								$result[$x][$tmp_name] = $tmp_value;
 							}
 							$y++;
@@ -1416,25 +1424,25 @@ function number_pad($number,$n) {
 
 			$mail = new PHPMailer();
 			$mail -> IsSMTP();
-			$mail -> Host = $_SESSION['email']['smtp_host']['var'];
-			if ($_SESSION['email']['smtp_port']['var'] != '') {
-				$mail -> Port = $_SESSION['email']['smtp_port']['var'];
+			$mail -> Host = $_SESSION['email']['smtp_host']['text'];
+			if ($_SESSION['email']['smtp_port']['text'] != '') {
+				$mail -> Port = $_SESSION['email']['smtp_port']['text'];
 			}
-			if ($_SESSION['email']['smtp_auth']['var'] == "true") {
-				$mail -> SMTPAuth = $_SESSION['email']['smtp_auth']['var'];
+			if ($_SESSION['email']['smtp_auth']['text'] == "true") {
+				$mail -> SMTPAuth = $_SESSION['email']['smtp_auth']['text'];
 			}
-			if ($_SESSION['email']['smtp_username']['var']) {
-				$mail -> Username = $_SESSION['email']['smtp_username']['var'];
-				$mail -> Password = $_SESSION['email']['smtp_password']['var'];
+			if ($_SESSION['email']['smtp_username']['text']) {
+				$mail -> Username = $_SESSION['email']['smtp_username']['text'];
+				$mail -> Password = $_SESSION['email']['smtp_password']['text'];
 			}
-			if ($_SESSION['email']['smtp_secure']['var'] == "none") {
-				$_SESSION['email']['smtp_secure']['var'] = '';
+			if ($_SESSION['email']['smtp_secure']['text'] == "none") {
+				$_SESSION['email']['smtp_secure']['text'] = '';
 			}
-			if ($_SESSION['email']['smtp_secure']['var'] != '') {
-				$mail -> SMTPSecure = $_SESSION['email']['smtp_secure']['var'];
+			if ($_SESSION['email']['smtp_secure']['text'] != '') {
+				$mail -> SMTPSecure = $_SESSION['email']['smtp_secure']['text'];
 			}
-			$eml_from_address = ($eml_from_address != '') ? $eml_from_address : $_SESSION['email']['smtp_from']['var'];
-			$eml_from_name = ($eml_from_name != '') ? $eml_from_name : $_SESSION['email']['smtp_from_name']['var'];
+			$eml_from_address = ($eml_from_address != '') ? $eml_from_address : $_SESSION['email']['smtp_from']['text'];
+			$eml_from_name = ($eml_from_name != '') ? $eml_from_name : $_SESSION['email']['smtp_from_name']['text'];
 			$mail -> SetFrom($eml_from_address, $eml_from_name);
 			$mail -> AddReplyTo($eml_from_address, $eml_from_name);
 			$mail -> Subject = $eml_subject;

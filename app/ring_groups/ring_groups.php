@@ -70,7 +70,7 @@
 //	echo "		<td width='50%' align='right'>&nbsp;</td>\n";
 	echo "		<form method='get' action=''>\n";
 	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
-	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>\n";
+	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".escape($search)."'>\n";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
 	echo "			</td>\n";
 	echo "		</form>\n";
@@ -95,7 +95,7 @@
 //prepare to page the results (reuse $sql from above)
 	$prep_statement = $db->prepare($sql);
 	if ($prep_statement) {
-	$prep_statement->execute();
+		$prep_statement->execute();
 		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 		if (strlen($row['num_rows']) > 0) {
 			$num_rows = $row['num_rows'];
@@ -159,23 +159,23 @@
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('ring_group_edit')) {
-				echo "<a href='ring_group_edit.php?id=".$row['ring_group_uuid']."'>".$row['ring_group_name']."</a>";
+				echo "<a href='ring_group_edit.php?id=".escape($row['ring_group_uuid'])."'>".escape($row['ring_group_name'])."</a>";
 			}
 			else {
 				echo $row['ring_group_name'];
 			}
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_extension']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['option-'.$row['ring_group_strategy']]."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".(($row['ring_group_forward_enabled'] == 'true') ? format_phone($row['ring_group_forward_destination']) : null)."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['ring_group_enabled']]."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".$row['ring_group_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['ring_group_extension'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['option-'.escape($row['ring_group_strategy'])]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".(($row['ring_group_forward_enabled'] == 'true') ? format_phone(escape($row['ring_group_forward_destination'])) : null)."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.escape($row['ring_group_enabled'])]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($row['ring_group_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('ring_group_edit')) {
-				echo "<a href='ring_group_edit.php?id=".$row['ring_group_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='ring_group_edit.php?id=".escape($row['ring_group_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('ring_group_delete')) {
-				echo "<a href='ring_group_delete.php?id=".$row['ring_group_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='ring_group_delete.php?id=".escape($row['ring_group_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";

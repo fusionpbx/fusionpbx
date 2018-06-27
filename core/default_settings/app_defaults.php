@@ -26,61 +26,20 @@
 
 //process this only one time
 	if ($domains_processed == 1) {
-	
+
+		//default settings - change the type from var to text
+			$sql = "update v_default_settings ";
+			$sql .= "set default_setting_name = 'text' ";
+			$sql .= "where default_setting_name = 'var' ";
+			$db->exec(check_sql($sql));
+			unset($sql);
+
 		//set domains with enabled status of empty or null to true
 			$sql = "delete from v_default_settings ";
 			$sql .= "where (default_setting_category is null and default_setting_subcategory is null) ";
 			$sql .= "or (default_setting_category = '' and default_setting_subcategory = '') ";
 			$db->exec(check_sql($sql));
 			unset($sql);
-
-		//move the dynamic provision variables that from v_vars table to v_default_settings
-			/* if (count($_SESSION['provision']) == 0) {
-				$sql = "select * from v_vars ";
-				$sql .= "where var_cat = 'Provision' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				foreach ($result as &$row) {
-					//set the variable
-						$var_name = check_str($row['var_name']);
-					//remove the 'v_' prefix from the variable name
-						if (substr($var_name, 0, 2) == "v_") {
-							$var_name = substr($var_name, 2);
-						}
-					//add the provision variable to the default settings table
-						$sql = "insert into v_default_settings ";
-						$sql .= "(";
-						$sql .= "default_setting_uuid, ";
-						$sql .= "default_setting_category, ";
-						$sql .= "default_setting_subcategory, ";
-						$sql .= "default_setting_name, ";
-						$sql .= "default_setting_value, ";
-						$sql .= "default_setting_enabled, ";
-						$sql .= "default_setting_description ";
-						$sql .= ") ";
-						$sql .= "values ";
-						$sql .= "(";
-						$sql .= "'".uuid()."', ";
-						$sql .= "'provision', ";
-						$sql .= "'".$var_name."', ";
-						$sql .= "'var', ";
-						$sql .= "'".check_str($row['var_value'])."', ";
-						$sql .= "'".check_str($row['var_enabled'])."', ";
-						$sql .= "'".check_str($row['var_description'])."' ";
-						$sql .= ")";
-						$db->exec(check_sql($sql));
-						unset($sql);
-				}
-				unset($prep_statement);
-				//delete the provision variables from system -> variables
-				//$sql = "delete from v_vars ";
-				//$sql .= "where var_cat = 'Provision' ";
-				//echo $sql ."\n";
-				//$db->exec(check_sql($sql));
-				//echo "$var_name $var_value \n";
-			}
-			*/
 
 		//populate the languages table, if necessary
 			$sql = "select count(*) as num_rows from v_languages";

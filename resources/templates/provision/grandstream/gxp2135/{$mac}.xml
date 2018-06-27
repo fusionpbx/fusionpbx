@@ -10,7 +10,7 @@
 <!--  Account Settings                                                ## -->
 <!-- ################################################################### -->
 <!-- ################################################################### -->
-<!--  Account 1                                                       ## -->
+<!--  Account 1                                                       ## -->f
 <!-- ################################################################### -->
 <!-- ############################################################## -->
 <!--  Account 1/General Settings -->
@@ -100,8 +100,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0. -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($nat_traversal_1) }
-<P52>{$nat_traversal_1}</P52>
+{if isset($grandstream_nat_traversal_1) }
+<P52>{$grandstream_nat_traversal_1}</P52>
 {else}
 <P52>0</P52>
 {/if}
@@ -131,7 +131,7 @@
 <!--  Register Expiration (in minutes). Default is 60. Max about 45 days -->
 <!--  Number: 1 - 64800 -->
 <!--  Mandatory -->
-<P32>3</P32>
+<P32>{$register_expires_1}</P32>
 
 <!--  Subscribe Expiration. Default is 60. Max about 45 days -->
 <!--  Number: 1 - 64800 -->
@@ -441,7 +441,7 @@
 <!--  Accept Incoming SIP from Proxy Only. 0 - No, 1 - Yes. Default is 0 -->
 <!--  Number: 0, 1 -->
 <!--  Mandatory -->
-<P2347>0</P2347>
+<P2347>1</P2347>
 
 <!--  Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
 <!--  Number: 0, 1 -->
@@ -612,7 +612,7 @@
 <!--  Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
 <!--  String -->
 <!--  Mandatory -->
-<P290>{ x+ | *x+ | *xx | *xxx | *xxxx | *xxxxx | *xxxxxx | **xx | **xxx | **xxxx | **xxxxx | **xxxxxx | **xxxxxxx | **xxxxxxxx | *xx*x+ | \+x+ | \p\a\r\k\+*x+ }</P290>
+<P290>{$grandstream_dial_plan}</P290>
 
 <!--  Call Log. 0 - Log All Calls, 1 - Log Incoming/Outgoing only (missed calls NOT recorded), 2 - Disable Call Log. Default is 0 -->
 <!--  Number: 0, 1, 2 -->
@@ -716,7 +716,7 @@
 <!--  Disable Recovery on Blind Transfer. 0 - No, 1 - Yes. Default is 0 -->
 <!--  Number: 0, 1 -->
 <!--  Mandatory -->
-<P2384>0</P2384>
+<P2384>1</P2384>
 
 <!--  No Key Entry Timeout (in seconds). Default is 4 -->
 <!--  Number: 1 - 15 -->
@@ -869,8 +869,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($nat_traversal_2) }
-<P414>{$nat_traversal_2}</P414>
+{if isset($grandstream_nat_traversal_2) }
+<P414>{$grandstream_nat_traversal_2}</P414>
 {else}
 <P414>0</P414>
 {/if}
@@ -900,7 +900,7 @@
 <!--  Register Expiration (in minutes). Default is 60. Max is 45 days -->
 <!--  Number: 1 - 64800 -->
 <!--  Mandatory -->
-<P412>3</P412>
+<P412>{$register_expires_2}</P412>
 
 <!--  Subscribe Expiration. Default is 60. Max about 45 days -->
 <!--  Number: 1 - 64800 -->
@@ -1207,7 +1207,7 @@
 <!--  Accept Incoming SIP from Proxy Only. 0 - No, 1 - Yes. Default is 0 -->
 <!--  Number: 0, 1 -->
 <!--  Mandatory -->
-<P2447>0</P2447>
+<P2447>1</P2447>
 
 <!--  Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
 <!--  Number: 0, 1 -->
@@ -1586,7 +1586,7 @@
 <!--  Name -->
 <!--  String -->
 <P507>{$display_name_3}</P507>
-	
+
 <!--  Voice Mail UserID -->
 <!--  String -->
 <P526>*97</P526>
@@ -1623,8 +1623,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($nat_traversal_3) }
-<P514>{$nat_traversal_3}</P514>
+{if isset($grandstream_nat_traversal_3) }
+<P514>{$grandstream_nat_traversal_3}</P514>
 {else}
 <P514>0</P514>
 {/if}
@@ -1654,7 +1654,7 @@
 <!--  Register Expiration (in minutes). Default is 60. Max is 45 days -->
 <!--  Number: 1 - 64800 -->
 <!--  Mandatory -->
-<P512>3</P512>
+<P512>{$register_expires_3}</P512>
 
 <!--  Subscribe Expiration. Default is 60. Max about 45 days -->
 <!--  Number: 1 - 64800 -->
@@ -1961,7 +1961,7 @@
 <!--  Accept Incoming SIP from Proxy Only. 0 - No, 1 - Yes. Default is 0 -->
 <!--  Number: 0, 1 -->
 <!--  Mandatory -->
-<P2547>0</P2547>
+<P2547>1</P2547>
 
 <!--  Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
 <!--  Number: 0, 1 -->
@@ -2376,8 +2376,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($nat_traversal_4) }
-<P614>{$nat_traversal_4}</P614>
+{if isset($grandstream_nat_traversal_4) }
+<P614>{$grandstream_nat_traversal_4}</P614>
 {else}
 <P614>0</P614>
 {/if}
@@ -2407,7 +2407,7 @@
 <!--  Register Expiration (in minutes). Default is 60. Max is 45 days -->
 <!--  Number: 1 - 64800 -->
 <!--  Mandatory -->
-<P612>3</P612>
+<P612>{$register_expires_4}</P612>
 
 <!--  Subscribe Expiration. Default is 60. Max about 45 days -->
 <!--  Number: 1 - 64800 -->
@@ -2715,7 +2715,7 @@
 <!--  Accept Incoming SIP from Proxy Only. 0 - No, 1 - Yes. Default is 0 -->
 <!--  Number: 0, 1 -->
 <!--  Mandatory -->
-<P2647>0</P2647>
+<P2647>1</P2647>
 
 <!--  Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
 <!--  Number: 0, 1 -->
@@ -3131,8 +3131,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($nat_traversal_5) }
-<P1714>{$nat_traversal_5}</P1714>
+{if isset($grandstream_nat_traversal_5) }
+<P1714>{$grandstream_nat_traversal_5}</P1714>
 {else}
 <P1714>0</P1714>
 {/if}
@@ -3162,7 +3162,7 @@
 <!--  Register Expiration (in minutes. default 1 hour, max 45 days) -->
 <!--  Number: 1-64800 -->
 <!--  Mandatory -->
-<P1712>3</P1712>
+<P1712>{$register_expires_5}</P1712>
 
 <!--  Subscribe Expiration. Default is 60. Max about 45 days -->
 <!--  Number: 1 - 64800 -->
@@ -3469,7 +3469,7 @@
 <!--  Accept Incoming SIP from Proxy Only. 0 - No, 1 - Yes. Default is 0 -->
 <!--  Number: 0, 1 -->
 <!--  Mandatory -->
-<P2747>0</P2747>
+<P2747>1</P2747>
 
 <!--  Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
 <!--  Number: 0, 1 -->
@@ -3885,8 +3885,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($nat_traversal_6) }
-<P1814>{$nat_traversal_6}</P1814>
+{if isset($grandstream_nat_traversal_6) }
+<P1814>{$grandstream_nat_traversal_6}</P1814>
 {else}
 <P1814>0</P1814>
 {/if}
@@ -3917,7 +3917,7 @@
 <!--  Register Expiration (in minutes). Default is 60. Max is 45 days -->
 <!--  Number: 1 - 64800 -->
 <!--  Mandatory -->
-<P1812>3</P1812>
+<P1812>{$register_expires_6}</P1812>
 
 <!--  Subscribe Expiration. Default is 60. Max about 45 days -->
 <!--  Number: 1 - 64800 -->
@@ -4226,7 +4226,7 @@
 <!--  Accept Incoming SIP from Proxy Only. 0 - No, 1 - Yes. Default is 0 -->
 <!--  Number: 0, 1 -->
 <!--  Mandatory -->
-<P2847>0</P2847>
+<P2847>1</P2847>
 
 <!--  Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
 <!--  Number: 0, 1 -->
@@ -4573,7 +4573,7 @@
 <!--  String -->
 <!--  For GXP2130, Default value is Grandstream GXP2130. -->
 <!-- P148>Grandstream GXP2130</P148> -->
- 
+
 <!--  For GXP2140, Default value is Grandstream GXP2140. -->
 <!-- P148>Grandstream GXP2140</P148> -->
 
@@ -5493,7 +5493,7 @@
 <!--  User-Agent Prefix -->
 <!--  String -->
 <P8358></P8358>
- 
+
 <!--  Auto Provision List Starting Point. 0 - Extension Boards, 1 - VPKs, 2 - MPK . Default is 0.  - VPK/MPK is for GXP2130 only. Extension Boards/VPK is for GXP2140/2160/2170. -->
 <!--  Number: 0, 1, 2  -->
 <!--  Mandatory -->
@@ -5503,12 +5503,12 @@
 <!--  Number: 10 - 900 -->
 <!--  Mandatory -->
 <P26055>10</P26055>
- 
+
 <!--  Play Tone On Receiving IM. 0 - Disable, 1 - Enable. Default is 0 -->
 <!--  Number: 0, 1 -->
 <!--  Mandatory -->
 <P26056>0</P26056>
- 
+
 <!--  Allow Incoming Call Before Ringing. 0 - No, 1 - Yes. Default is 0 -->
 <!--  Number: 0, 1 -->
 <!--  Mandatory -->
@@ -5970,11 +5970,16 @@
 <!--  0 - Self-Defined City Code, 1 - Automatic. Default is 1 -->
 <!--  Number: 0, 1 -->
 <!--  Mandatory -->
+{if isset($grandstream_city_code)}
+<P1405>0</P1405>
+{else}
 <P1405>1</P1405>
+{/if}
 
-<!--  Self-Defined City Code -->
-<!--  String -->
-<P1377></P1377>
+
+<!-- # Self-Defined City Code -->
+<!-- # String -->
+<P1377>{$grandstream_city_code}</P1377>
 
 <!--  Update Interval (in minutes). Default is 15 -->
 <!--  Number: 5 - 360 -->
@@ -5984,7 +5989,11 @@
 <!--  Degree Unit. auto - Automatic, f - Fahrenheit, c - Celsius. Default is auto -->
 <!--  String: auto, f, c -->
 <!--  Mandatory -->
-<P1379>c</P1379>
+{if isset($grandstream_temp_unit)}
+<P1379>{$grandstream_temp_unit}</P1379>
+{else}
+<P1379>auto</P1379>
+{/if}
 
 <!--  Currency Update -->
 <!--  Enable Currency update. 0 - No, 1 - Yes. Default is 1 -->

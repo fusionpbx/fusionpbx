@@ -52,21 +52,20 @@ if ($domains_processed == 1) {
 					//<X-PRE-PROCESS cmd="set" data="global_codec_prefs=G7221@32000h,G7221@16000h,G722,PCMU,PCMA" category="Codecs" enabled="true"/>
 					$x = 0;
 					foreach ($variables['X-PRE-PROCESS'] as $variable) {
-						$cmd = $variable['@attributes']['cmd'];
-
+						$var_category = $variable['@attributes']['category'];
 						$data = explode('=', $variable['@attributes']['data']);
 						$var_name = $data[0];
 						$var_value = $data[1];
-
-						$var_cat = $variable['@attributes']['category'];
+						$var_command = $variable['@attributes']['cmd'];
 						$var_enabled = $variable['@attributes']['enabled'];
 						$var_order = '';
 						$var_description = '';
 
+						$array['vars'][$x]['var_category'] = $var_category;
 						$array['vars'][$x]['var_uuid'] = uuid();
 						$array['vars'][$x]['var_name'] = $var_name;
 						$array['vars'][$x]['var_value'] = $var_value;
-						$array['vars'][$x]['var_cat'] = $var_cat;
+						$array['vars'][$x]['var_command'] = $var_command;
 						$array['vars'][$x]['var_enabled'] = $var_enabled;
 						$array['vars'][$x]['var_order'] = $var_order;
 						$array['vars'][$x]['var_description'] = $var_description;
@@ -124,7 +123,7 @@ if ($domains_processed == 1) {
 					// Set default Country ISO code
 					$sql = "select count(*) as num_rows from v_vars ";
 					$sql .= "where var_name = 'default_country' ";
-					$sql .= "and var_cat = 'Defaults' ";
+					$sql .= "and var_category = 'Defaults' ";
 					$prep_statement = $db->prepare(check_sql($sql));
 					if ($prep_statement) {
 						$prep_statement->execute();
@@ -136,7 +135,7 @@ if ($domains_processed == 1) {
 							$sql .= "var_uuid, ";
 							$sql .= "var_name, ";
 							$sql .= "var_value, ";
-							$sql .= "var_cat, ";
+							$sql .= "var_category, ";
 							$sql .= "var_enabled, ";
 							$sql .= "var_order, ";
 							$sql .= "var_description ";
@@ -161,7 +160,7 @@ if ($domains_processed == 1) {
 					//Set default Country code
 					$sql = "select count(*) as num_rows from v_vars ";
 					$sql .= "where var_name = 'default_countrycode' ";
-					$sql .= "and var_cat = 'Defaults' ";
+					$sql .= "and var_category = 'Defaults' ";
 					$prep_statement = $db->prepare(check_sql($sql));
 					if ($prep_statement) {
 						$prep_statement->execute();
@@ -172,7 +171,7 @@ if ($domains_processed == 1) {
 							$sql .= "var_uuid, ";
 							$sql .= "var_name, ";
 							$sql .= "var_value, ";
-							$sql .= "var_cat, ";
+							$sql .= "var_category, ";
 							$sql .= "var_enabled, ";
 							$sql .= "var_order, ";
 							$sql .= "var_description ";
@@ -197,7 +196,7 @@ if ($domains_processed == 1) {
 					// Set default International Direct Dialing code
 					$sql = "select count(*) as num_rows from v_vars ";
 					$sql .= "where var_name = 'default_exitcode' ";
-					$sql .= "and var_cat = 'Defaults' ";
+					$sql .= "and var_category = 'Defaults' ";
 					$prep_statement = $db->prepare(check_sql($sql));
 					if ($prep_statement) {
 						$prep_statement->execute();
@@ -208,7 +207,7 @@ if ($domains_processed == 1) {
 							$sql .= "var_uuid, ";
 							$sql .= "var_name, ";
 							$sql .= "var_value, ";
-							$sql .= "var_cat, ";
+							$sql .= "var_category, ";
 							$sql .= "var_enabled, ";
 							$sql .= "var_order, ";
 							$sql .= "var_description ";
@@ -257,7 +256,7 @@ if ($domains_processed == 1) {
 							$sql .= "var_uuid, ";
 							$sql .= "var_name, ";
 							$sql .= "var_value, ";
-							$sql .= "var_cat, ";
+							$sql .= "var_category, ";
 							$sql .= "var_enabled, ";
 							$sql .= "var_order, ";
 							$sql .= "var_description ";

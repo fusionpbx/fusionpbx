@@ -233,20 +233,20 @@
 		$tr_link = "xhref='xml_cdr.php?'";
 		echo "<tr ".$tr_link.">\n";
 		if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_name']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['domain_name'])."</td>\n";
 		}
-		echo "	<td valign='top' class='".$row_style[$c]."'>".$row['extension']."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".$row['number_alias']."&nbsp;</td>\n";
-		//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['answered']."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".$row['missed']."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".$row['no_answer']."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".$row['busy']."&nbsp;</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['extension'])."</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['number_alias'])."&nbsp;</td>\n";
+		//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['answered'])."&nbsp;</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['missed'])."&nbsp;</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['no_answer'])."&nbsp;</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['busy'])."&nbsp;</td>\n";
 		echo "  <td valign='top' class='".$row_style[$c]."'>".gmdate("H:i:s",$row['aloc'])."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>&nbsp;". $row['inbound_calls'] ."</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>&nbsp;". escape($row['inbound_calls']) ."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".(($row['inbound_duration'] != '0') ? gmdate("G:i:s", $row['inbound_duration']) : '0:00:00')."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>&nbsp;".(($row['outbound_calls'] != '') ? $row['outbound_calls'] : "0")."</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>&nbsp;".(($row['outbound_calls'] != '') ? escape($row['outbound_calls']) : "0")."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".(($row['outbound_duration'] != '') ? gmdate("G:i:s", $row['outbound_duration']) : '0:00:00')."</td>\n";
-		echo "	<td valign='top' class='row_stylebg'>".$row['description']."&nbsp;</td>\n";
+		echo "	<td valign='top' class='row_stylebg'>".escape($row['description'])."&nbsp;</td>\n";
 		echo "</tr>\n";
 		$c = ($c==0) ? 1 : 0;
 	}

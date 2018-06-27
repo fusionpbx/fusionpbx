@@ -73,7 +73,7 @@
 
 --set defaults
 	if (not digit_min_length) then
-		digit_min_length = "2";
+		digit_min_length = "7";
 	end
 
 	if (not digit_max_length) then

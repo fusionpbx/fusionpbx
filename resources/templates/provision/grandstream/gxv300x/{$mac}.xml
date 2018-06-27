@@ -65,7 +65,13 @@
     <!-- Firmware Upgrade. 0 - TFTP Upgrade,  1 - HTTP Upgrade. -->
     <P212>1</P212>
     <!-- Firmware Server Path -->
-    <P192>fm.grandstream.com/gs</P192>
+    
+    {if isset($grandstream_firmware_path)}
+    <P192>{$grandstream_firmware_path}</P192>
+    {else}
+    <P192>{$domain_name}{$project_path}/app/provision</P192>
+    {/if}
+    
     <!-- Config Server Path -->
     <P237>{$domain_name}{$project_path}/app/provision</P237>
     <!-- Firmware File Prefix -->
@@ -191,7 +197,7 @@
     <!-- SIP Server: max. length = 96 -->
     <P47>{$server_address_1}</P47>
     <!-- Outbound Proxy -->
-    <P48>proxy.mycompany.com</P48>
+    <P48>{$outbound_proxy_primary_1}</P48>
     <!-- SIP User ID -->
     <P35>{$user_id_1}</P35>
     <!-- Authenticate ID -->
@@ -237,7 +243,7 @@
     <!-- Dial Plan Prefix (dial plan prefix string) -->
     <P66></P66>
     <!-- Dial Plan. Maxlength = 128 character. Defalut is allow all {x+|*x+} -->
-    <P290>{x+|*x+}</P290>
+    <P290>{$grandstream_dial_plan}</P290>
     <!-- Delayed Call Forward Wait Time. Default is 20 seconds, maxlength = 5  -->
     <P139>20</P139>
     <!-- Enable Call Features.  0 - no, 1 - yes -->

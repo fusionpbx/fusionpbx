@@ -329,13 +329,13 @@
 		foreach($recordings as $row) {
 			//playback progress bar
 			if (permission_exists('recording_play')) {
-				echo "<tr id='recording_progress_bar_".$row['recording_uuid']."' style='display: none;'><td class='".$row_style[$c]." playback_progress_bar_background' style='padding: 0; border: none;' colspan='".$colspan."'><span class='playback_progress_bar' id='recording_progress_".$row['recording_uuid']."'></span></td></tr>\n";
+				echo "<tr id='recording_progress_bar_".escape($row['recording_uuid'])."' style='display: none;'><td class='".$row_style[$c]." playback_progress_bar_background' style='padding: 0; border: none;' colspan='".$colspan."'><span class='playback_progress_bar' id='recording_progress_".escape($row['recording_uuid'])."'></span></td></tr>\n";
 			}
-			$tr_link = (permission_exists('recording_edit')) ? "href='recording_edit.php?id=".$row['recording_uuid']."'" : null;
+			$tr_link = (permission_exists('recording_edit')) ? "href='recording_edit.php?id=".escape($row['recording_uuid'])."'" : null;
 			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['recording_name']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['recording_name'])."</td>\n";
 			if ($_SESSION['recordings']['storage_type']['text'] != 'base64') {
-				echo "	<td valign='top' class='".$row_style[$c]."'>".str_replace('_', '_&#8203;', $row['recording_filename'])."</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".str_replace('_', '_&#8203;', escape($row['recording_filename']))."</td>\n";
 			}
 			if (permission_exists('recording_play') || permission_exists('recording_download')) {
 				echo "	<td valign='top' class='".$row_style[$c]." row_style_slim tr_link_void' style='width: 55px;'>";
@@ -348,11 +348,11 @@
 						case "mp3" : $recording_type = "audio/mpeg"; break;
 						case "ogg" : $recording_type = "audio/ogg"; break;
 					}
-					echo "<audio id='recording_audio_".$row['recording_uuid']."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row['recording_uuid']."')\" onended=\"recording_reset('".$row['recording_uuid']."');\" src=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&id=".$row['recording_uuid']."\" type='".$recording_type."'></audio>";
-					echo "<span id='recording_button_".$row['recording_uuid']."' onclick=\"recording_play('".$row['recording_uuid']."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
+					echo "<audio id='recording_audio_".escape($row['recording_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['recording_uuid'])."')\" onended=\"recording_reset('".escape($row['recording_uuid'])."');\" src=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&id=".escape($row['recording_uuid'])."\" type='".$recording_type."'></audio>";
+					echo "<span id='recording_button_".escape($row['recording_uuid'])."' onclick=\"recording_play('".escape($row['recording_uuid'])."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
 				}
 				if (permission_exists('recording_download')) {
-					echo "<a href=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&t=bin&id=".$row['recording_uuid']."\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
+					echo "<a href=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&t=bin&id=".escape($row['recording_uuid'])."\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
 				}
 				echo "	</td>\n";
 			}
@@ -372,14 +372,14 @@
 				echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".$file_date."</td>\n";
 			}
 			else {
-				echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['recording_description']."&nbsp;</td>\n";
+				echo "	<td valign='top' class='row_stylebg' width='30%'>".escape($row['recording_description'])."&nbsp;</td>\n";
 			}
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('recording_edit')) {
-				echo "<a href='recording_edit.php?id=".$row['recording_uuid']."' alt='edit'>$v_link_label_edit</a>";
+				echo "<a href='recording_edit.php?id=".escape($row['recording_uuid'])."' alt='edit'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('recording_delete')) {
-				echo "<a href='recording_delete.php?id=".$row['recording_uuid']."' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='recording_delete.php?id=".escape($row['recording_uuid'])."' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";

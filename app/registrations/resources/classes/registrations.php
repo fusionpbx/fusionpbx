@@ -62,13 +62,11 @@ if (!class_exists('registrations')) {
 					//get sofia status profile information including registrations
 						$cmd = "api sofia xmlstatus profile ".$field['sip_profile_name']." reg";
 						$xml_response = trim(event_socket_request($fp, $cmd));
-
 						if ($xml_response == "Invalid Profile!") { $xml_response = "<error_msg>".$text['label-message']."</error_msg>"; }
 						$xml_response = str_replace("<profile-info>", "<profile_info>", $xml_response);
 						$xml_response = str_replace("</profile-info>", "</profile_info>", $xml_response);
 						if (strlen($xml_response) > 101) {
 							try {
-								$xml_response = str_ireplace("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>", "<?xml version=\"1.0\" encoding=\"UTF-8\"?>", $xml_response);
 								$xml = new SimpleXMLElement($xml_response);
 							}
 							catch(Exception $e) {
@@ -107,9 +105,9 @@ if (!class_exists('registrations')) {
 
 								//get network-ip to url or blank
 									if(isset($row['network-ip'])) {
-										$registrations[$id]['network-ip'] = "<a href='http://".$row['network-ip']."' target='_blank'>".$row['network-ip']."</a>";
+										$registrations[$id]['network-ip'] = $row['network-ip'];
 									} else {
-										$registrations[$id]['network-ip'] = "&nbsp;";
+										$registrations[$id]['network-ip'] = '';
 									}
 
 								//get the LAN IP address if it exists replace the external ip
@@ -123,9 +121,13 @@ if (!class_exists('registrations')) {
 												array('0','1','2','3','4','5','6','7','8','9'),
 												$lan_ip);
 										}
-										$registrations[$id]['lan-ip'] = "<a href='http://".$lan_ip."' target='_blank'>".$lan_ip."</a>";
+                                        					elseif(1 === preg_match('/\ACL750A/', $agent)) {
+											//required for GIGASET Sculpture CL750A puts _ in it's lan ip account
+											$lan_ip = preg_replace('/_/', '.', $lan_ip);
+                                        					}
+										$registrations[$id]['lan-ip'] = $lan_ip;
 									} else {
-										$registrations[$id]['lan-ip'] = "&nbsp;";
+										$registrations[$id]['lan-ip'] = '';
 									}
 
 								//remove unrelated domains
@@ -153,7 +155,7 @@ if (!class_exists('registrations')) {
 		/**
 		 * get the registration count
 		 */
-		public function count($profile) {
+		public function count($profile = 'all') {
 
 			//set the initial count value to 0
 				$count = 0;

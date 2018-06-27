@@ -366,7 +366,9 @@ if (is_array($activity)) foreach ($activity as $extension => $ext) {
 			$block .= 			"<img id='destination_control_".$extension."_transfer' class='destination_control' src='resources/images/keypad_transfer.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' onclick=\"toggle_destination('".$extension."', 'transfer');\" ".$onhover_pause_refresh.">";
 		}
 		$block .= "			</td></tr></table>";
-		$block .= "			<span id='op_caller_details_".$extension."'><strong>".$call_name."</strong><br>".$call_number."</span>";
+		if (permission_exists('operator_panel_call_details')) {
+			$block .= "			<span id='op_caller_details_".$extension."'><strong>".$call_name."</strong><br>".$call_number."</span>";
+		}
 		$block .= "		</span>";
 		//transfer
 		if (in_array($extension, $_SESSION['user']['extensions']) && $ext_state == 'active') {

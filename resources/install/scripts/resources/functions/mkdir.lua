@@ -1,6 +1,6 @@
-
 --add the mkdir function
 	function mkdir(dir)
+		api = freeswitch.API();
 		dir = dir:gsub([[\]], "/");
 		if (package.config:sub(1,1) == "/") then
 			--unix
@@ -9,6 +9,7 @@
 			--windows
 			cmd = [[mkdir "]] .. dir .. [["]];
 		end
-		os.execute(cmd);
+		-- os.execute(cmd);
+		api:executeString("system " .. cmd  );
 		return cmd;
 	end

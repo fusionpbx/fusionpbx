@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2015 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2015-2018 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -28,13 +28,13 @@
 
 --define the explode function
 	require "resources.functions.explode";
+	require "resources.functions.trim";
 
 --set the defaults
 	max_tries = 3;
 	digit_timeout = 5000;
 	max_retries = 3;
 	tries = 0;
-	profile = "internal";
 
 --connect to the database
 	local Database = require "resources.functions.database";
@@ -55,8 +55,12 @@
 --get the domain_uuid
 	domain_uuid = session:getVariable("domain_uuid");
 
---get the action
+--get the variables
 	action = session:getVariable("action");
+	reboot = session:getVariable("reboot");
+
+--set defaults
+	if (not reboot) then reboot = 'true'; end
 
 --set the sounds path for the language, dialect and voice
 	default_language = session:getVariable("default_language");
@@ -173,6 +177,12 @@
 					freeswitch.consoleLog("NOTICE", "[provision] SQL: ".. sql .. "; params: " .. json.encode(params) .. "\n");
 				end
 				dbh:query(sql, params);
+			--get the sip profile
+				api = freeswitch.API();
+				local sofia_contact = trim(api:executeString("sofia_contact */"..row.user_id.."@"..row.server_address));
+				array = explode("/", sofia_contact);
+				profile = array[2];
+				freeswitch.consoleLog("NOTICE", "[provision] profile: ".. profile .. "\n");
 			--send a sync command to the previous device
 				--create the event notify object
 					local event = freeswitch.Event('NOTIFY');
@@ -182,7 +192,7 @@
 					event:addHeader('host', row.server_address);
 					event:addHeader('content-type', 'application/simple-message-summary');
 				--check sync
-					event:addHeader('event-string', 'check-sync;reboot=true');
+					event:addHeader('event-string', 'check-sync;reboot='..reboot);
 				--send the event
 					event:fire();
 		end);
@@ -222,6 +232,12 @@
 
 --found the device send a sync command
 	if (authorized == 'true') then
+		--get the sip profile
+			api = freeswitch.API();
+			local sofia_contact = trim(api:executeString("sofia_contact */"..user.."@"..domain));
+			array = explode("/", sofia_contact);
+			profile = array[2];
+			freeswitch.consoleLog("NOTICE", "[provision] profile: ".. profile .. "\n");
 		--send a hangup
 			session:hangup();
 		--create the event notify object
@@ -232,7 +248,7 @@
 			event:addHeader('host', domain);
 			event:addHeader('content-type', 'application/simple-message-summary');
 		--check sync
-			event:addHeader('event-string', 'check-sync;reboot=true');
+			event:addHeader('event-string', 'check-sync;reboot='..reboot);
 		--send the event
 			event:fire();
 	end

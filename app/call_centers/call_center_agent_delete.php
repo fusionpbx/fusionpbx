@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -43,29 +43,19 @@
 	$text = $language->get();
 
 //get the primary key
-	if (count($_GET)>0) {
+	if (isset($_GET["id"]) && is_uuid($_GET["id"])) {
 		$id = check_str($_GET["id"]);
 	}
-
-//get the agent details
-	$sql = "select * from v_call_center_agents ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and call_center_agent_uuid = '$id' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($result as &$row) {
-		$agent_name = $row["agent_name"];
-		break; //limit to 1 row
+	else {
+		exit;
 	}
-	unset ($prep_statement);
 
 //delete the agent from the freeswitch
 	//setup the event socket connection
 		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 	//delete the agent over event socket
 		if ($fp) {
-			$cmd = "api callcenter_config agent del ".$agent_name."@".$_SESSION['domains'][$domain_uuid]['domain_name'];
+			$cmd = "api callcenter_config agent del ".$id;
 			$response = event_socket_request($fp, $cmd);
 		}
 

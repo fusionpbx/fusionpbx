@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -259,7 +259,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-number']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_block_number' maxlength='255' value=\"$call_block_number\" required='required'>\n";
+	echo "	<input class='formfld' type='text' name='call_block_number' maxlength='255' value=\"".escape($call_block_number)."\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-number']."\n";
 	echo "<br />\n";
@@ -271,7 +271,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_block_name' maxlength='255' value=\"$call_block_name\" required='required'>\n";
+	echo "	<input class='formfld' type='text' name='call_block_name' maxlength='255' value=\"".escape($call_block_name)."\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-name']."\n";
 	echo "</td>\n";
@@ -330,7 +330,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='call_block_uuid' value='$call_block_uuid'>\n";
+		echo "		<input type='hidden' name='call_block_uuid' value='".escape($call_block_uuid)."'>\n";
 	}
 	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
@@ -420,9 +420,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					echo "	<td valign='top' class='".$row_style[$c]."' ".$tr_onclick.">".gmdate("G:i:s", $seconds)."</td>\n";
 					echo "	<td class='list_control_icons' ".((!(if_group("admin") || if_group("superadmin"))) ? "style='width: 25px;'" : null).">";
 					if (if_group("admin") || if_group("superadmin")) {
-						echo "	<a href='".PROJECT_PATH."/app/xml_cdr/xml_cdr_details.php?uuid=".$row['uuid']."' alt='".$text['button-view']."'>".$v_link_label_view."</a>";
+						echo "	<a href='".PROJECT_PATH."/app/xml_cdr/xml_cdr_details.php?uuid=".escape($row['uuid'])."' alt='".$text['button-view']."'>".$v_link_label_view."</a>";
 					}
-					echo 		"<a href='javascript:void(0);' onclick=\"call_block_recent('".$row['uuid']."','".urlencode($row['caller_id_name'])."');\" alt='".$text['button-add']."'>".$v_link_label_add."</a>";
+					echo 		"<a href='javascript:void(0);' onclick=\"call_block_recent('".escape($row['uuid'])."','".urlencode(escape($row['caller_id_name']))."');\" alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 					echo "  </td>";
 					echo "</tr>\n";
 					if ($c==0) { $c=1; } else { $c=0; }

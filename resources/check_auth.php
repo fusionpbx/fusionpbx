@@ -53,10 +53,10 @@
 	}
 
 //if the username session is not set the check username and password
-	if (strlen($_SESSION['username']) == 0 && isset($_REQUEST["username"]) && isset($_REQUEST["password"])) {
+	if (strlen($_SESSION['username']) == 0) {
 
 		//clear the menu
-			$_SESSION["menu"] = "";
+			unset($_SESSION["menu"]);
 
 		//clear the template only if the template has not been assigned by the superadmin
 			if (strlen($_SESSION['domain']['template']['name']) == 0) {
@@ -65,11 +65,11 @@
 
 		//validate the username and password
 			$auth = new authentication;
-			if (strlen($_REQUEST["username"]) > 0) {
+			if (isset($_REQUEST["username"]) && isset($_REQUEST["password"])) {
 				$auth->username = $_REQUEST["username"];
 				$auth->password = $_REQUEST["password"];
 			}
-			if (strlen($_REQUEST["key"]) > 0) {
+			if (isset($_REQUEST["key"])) {
 				$auth->key = $_REQUEST["key"];
 			}
 			$auth->debug = false;
@@ -97,6 +97,7 @@
 					openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
 					syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] authentication failed for ".$result["username"]);
 					closelog();
+
 				//redirect the user to the login page
 					$target_path = ($_REQUEST["path"] != '') ? $_REQUEST["path"] : $_SERVER["PHP_SELF"];
 					messages::add($text['message-invalid_credentials'], 'negative');

@@ -573,6 +573,12 @@ local function outbound_route_to_bridge(dbh, domain_uuid, fields, actions)
 	local context = fields.context
 	if context == '' then context = nil end
 
+	--connect to the database
+	if (dbh == nil) then
+		local Database = require "resources.functions.database";
+		dbh = Database.new('system');
+	end
+
 	local current_dialplan_uuid, extension
 	dbh:query(select_outbound_dialplan_sql, {domain_uuid=domain_uuid, hostname=hostname}, function(route)
 		if (route.dialplan_context ~= '${domain_name}') and (context and context ~= route.dialplan_context) then
@@ -630,8 +636,8 @@ local function apply_vars(actions, fields)
 end
 
 local function wrap_dbh(t)
-	local i = 0
 	return {query = function(self, sql, params, callback)
+		local i = 0
 		while true do
 			i = i + 1
 			local row = t[i]

@@ -17,23 +17,27 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-require_once "resources/paging.php";
-if (permission_exists('gateway_add')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
+
+//check permissions
+	if (permission_exists('gateway_add')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -46,12 +50,11 @@ else {
 
 //get the data
 	$sql = "select * from v_gateways ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and gateway_uuid = '$gateway_uuid' ";
+	$sql .= "where gateway_uuid = '$gateway_uuid' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($result as &$row) {
+	$gateways = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	foreach ($gateways as &$row) {
 		$gateway = $row["gateway"];
 		$username = $row["username"];
 		$password = $row["password"];
@@ -80,9 +83,16 @@ else {
 		$context = $row["context"];
 		$enabled = $row["enabled"];
 		$description = 'copy: '.$row["description"];
-		break; //limit to 1 row
 	}
 	unset ($prep_statement);
+
+//set defaults
+	if (strlen($expire_seconds) == 0) {
+		$expire_seconds = '800';
+	}
+	if (strlen($retry_seconds) == 0) {
+		$retry_seconds = '30';
+	}
 
 //copy the gateways
 	$gateway_uuid = uuid();
@@ -107,7 +117,7 @@ else {
 	$sql .= "extension, ";
 	$sql .= "codec_prefs, ";
 	$sql .= "ping, ";
-	$sql .= "channels, ";
+	//$sql .= "channels, ";
 	$sql .= "caller_id_in_from, ";
 	$sql .= "supress_cng, ";
 	$sql .= "extension_in_contact, ";
@@ -117,7 +127,12 @@ else {
 	$sql .= ")";
 	$sql .= "values ";
 	$sql .= "(";
-	$sql .= "'$domain_uuid', ";
+	if (strlen($domain_uuid) == 0) {
+		$sql .= "'$domain_uuid', ";
+	}
+	else {
+		$sql .= "null, ";
+	}
 	$sql .= "'$gateway_uuid', ";
 	$sql .= "'$gateway', ";
 	$sql .= "'$username', ";
@@ -136,7 +151,7 @@ else {
 	$sql .= "'$extension', ";
 	$sql .= "'$codec_prefs', ";
 	$sql .= "'$ping', ";
-	$sql .= "'$channels', ";
+	//$sql .= "'$channels', ";
 	$sql .= "'$caller_id_in_from', ";
 	$sql .= "'$supress_cng', ";
 	$sql .= "'$extension_in_contact', ";

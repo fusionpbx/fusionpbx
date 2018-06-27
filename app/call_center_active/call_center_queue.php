@@ -17,22 +17,25 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('call_center_active_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('call_center_active_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -61,6 +64,7 @@ else {
 	echo "</tr>\n";
 	echo "</tr></table>\n";
 
+	//get the call center queue count
 	$sql = "select * from v_call_center_queues ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
@@ -76,14 +80,15 @@ else {
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
+	//get the call center queues
 	$sql = "select * from v_call_center_queues ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 	$sql .= " limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
+	$call_center_queues = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$num_rows = count($call_center_queues);
 	unset ($prep_statement, $sql);
 
 	$c = 0;
@@ -113,32 +118,30 @@ else {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($result_count == 0) { //no results
-	}
-	else { //received results
-		foreach($result as $row) {
-			$tr_link = "href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".$row[queue_name]."'";
+	if (is_array($call_center_queues)) {
+		foreach($call_center_queues as $row) {
+			$tr_link = "href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".$row['call_center_queue_uuid']."&name=".urlencode($row['queue_name'])."'";
 			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'><a href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".$row[queue_name]."'>".$row[queue_name]."</a></td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_extension]."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_strategy]."</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_moh_sound]."</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_record_template]."</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_time_base_score]."</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_max_wait_time]."</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_max_wait_time_with_no_agent]."</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_tier_rules_apply]."</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_tier_rule_wait_second]."</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_tier_rule_no_agent_no_wait]."</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_discard_abandoned_after]."</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_abandoned_resume_allowed]."</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_tier_rule_wait_multiply_level]."</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".$row[queue_description]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'><a href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".escape($row['call_center_queue_uuid'])."&name=".urlencode(escape($row['queue_name']))."'>".escape($row['queue_name'])."</a></td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['queue_extension'])."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['queue_strategy'])."</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_moh_sound])."</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_record_template])."</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_time_base_score])."</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_max_wait_time])."</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_max_wait_time_with_no_agent])."</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_tier_rules_apply])."</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_tier_rule_wait_second])."</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_tier_rule_no_agent_no_wait])."</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_discard_abandoned_after])."</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_abandoned_resume_allowed])."</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_tier_rule_wait_multiply_level])."</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($row['queue_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icon'>\n";
-			echo "		<a href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".$row[queue_name]."' alt='".$text['button-view']."'>$v_link_label_view</a>\n";
-			//echo "		<a href='call_center_queue_delete.php?id=".$row[call_center_queue_uuid]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
-			//echo "		<input type='button' class='btn' name='' alt='edit' onclick=\"window.location='call_center_queue_edit.php?id=".$row[call_center_queue_uuid]."'\" value='e'>\n";
-			//echo "		<input type='button' class='btn' name='' alt='delete' onclick=\"if (confirm('Are you sure you want to delete this?')) { window.location='call_center_queue_delete.php?id=".$row[call_center_queue_uuid]."' }\" value='x'>\n";
+			echo "		<a href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".escape($row['call_center_queue_uuid'])."&name=".urlencode(escape($row['queue_name']))."' alt='".$text['button-view']."'>$v_link_label_view</a>\n";
+			//echo "		<a href='call_center_queue_delete.php?id=".escape($row[call_center_queue_uuid])."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			//echo "		<input type='button' class='btn' name='' alt='edit' onclick=\"window.location='call_center_queue_edit.php?id=".escape($row[call_center_queue_uuid])."'\" value='e'>\n";
+			//echo "		<input type='button' class='btn' name='' alt='delete' onclick=\"if (confirm('Are you sure you want to delete this?')) { window.location='call_center_queue_delete.php?id=".escape($row[call_center_queue_uuid])."' }\" value='x'>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }

@@ -261,6 +261,46 @@
 		$text['description-template_body']['sv-se'] = '';
 		$text['description-template_body']['uk-ua'] = '';
 
+		$text['label-template_type']['en-us'] = 'Type';
+		$text['label-template_type']['ar-eg'] = '';
+		$text['label-template_type']['de-at'] = '';
+		$text['label-template_type']['de-ch'] = '';
+		$text['label-template_type']['de-de'] = '';
+		$text['label-template_type']['es-cl'] = '';
+		$text['label-template_type']['es-mx'] = '';
+		$text['label-template_type']['fr-ca'] = '';
+		$text['label-template_type']['fr-fr'] = '';
+		$text['label-template_type']['he-il'] = '';
+		$text['label-template_type']['it-it'] = '';
+		$text['label-template_type']['nl-nl'] = '';
+		$text['label-template_type']['pl-pl'] = '';
+		$text['label-template_type']['pt-br'] = '';
+		$text['label-template_type']['pt-pt'] = '';
+		$text['label-template_type']['ro-ro'] = '';
+		$text['label-template_type']['ru-ru'] = '';
+		$text['label-template_type']['sv-se'] = '';
+		$text['label-template_type']['uk-ua'] = '';
+
+		$text['description-template_type']['en-us'] = 'Set the type as html or text.';
+		$text['description-template_type']['ar-eg'] = '';
+		$text['description-template_type']['de-at'] = '';
+		$text['description-template_type']['de-ch'] = '';
+		$text['description-template_type']['de-de'] = '';
+		$text['description-template_type']['es-cl'] = '';
+		$text['description-template_type']['es-mx'] = '';
+		$text['description-template_type']['fr-ca'] = '';
+		$text['description-template_type']['fr-fr'] = '';
+		$text['description-template_type']['he-il'] = '';
+		$text['description-template_type']['it-it'] = '';
+		$text['description-template_type']['nl-nl'] = '';
+		$text['description-template_type']['pl-pl'] = '';
+		$text['description-template_type']['pt-br'] = '';
+		$text['description-template_type']['pt-pt'] = '';
+		$text['description-template_type']['ro-ro'] = '';
+		$text['description-template_type']['ru-ru'] = '';
+		$text['description-template_type']['sv-se'] = '';
+		$text['description-template_type']['uk-ua'] = '';
+
 		$text['label-template_enabled']['en-us'] = 'Enabled';
 		$text['label-template_enabled']['ar-eg'] = '';
 		$text['label-template_enabled']['de-at'] = '';

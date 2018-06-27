@@ -160,10 +160,13 @@
 			echo "	<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='extensions.php?show=all';\">\n";
 		}
 	}
-	if (permission_exists('extension_export')) {
-		echo "				<input type='button' class='btn' style='margin-right: 15px;' value='".$text['button-export']."' onclick=\"window.location.href='extension_download.php'\">\n";
+	if (permission_exists('extension_import')) {
+		echo 				"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='/app/extension_imports/extension_imports.php'\" value='".$text['button-import']."'>\n";
 	}
-	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>";
+	if (permission_exists('extension_export')) {
+		echo "				<input type='button' class='btn' value='".$text['button-export']."' onclick=\"window.location.href='extension_download.php'\">\n";
+	}
+	echo "				<input type='text' class='txt' style='width: 150px; margin-left: 15px;' name='search' id='search' value='".escape($search)."'>";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	if ($paging_controls_mini != '') {
 		echo 			"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
@@ -222,19 +225,19 @@
 				$ext_ids[] = 'checkbox_'.$row['extension_uuid'];
 			}
 			if ($_GET['show'] == "all" && permission_exists('extension_all')) {
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('extension_edit')) {
-				echo "<a href='extension_edit.php?id=".$row['extension_uuid']."'>".$row['extension']."</a>";
+				echo "<a href='extension_edit.php?id=".$row['extension_uuid']."'>".escape($row['extension'])."</a>";
 			}
 			else {
-				echo $row['extension'];
+				echo escape($row['extension']);
 			}
 			echo "</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_group']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_group'])."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['voicemail_mail_to']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['user_context']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['user_context'])."</td>\n";
 
 			if (permission_exists('extension_registered')) {
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
@@ -263,8 +266,8 @@
 				echo "&nbsp;</td>\n";
 			}
 
-			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['enabled'])."</td>\n";
-			echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape(ucwords($row['enabled']))."</td>\n";
+			echo "	<td valign='top' class='row_stylebg' width='30%'>".escape($row['description'])."&nbsp;</td>\n";
 
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('extension_edit')) {

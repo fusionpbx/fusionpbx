@@ -344,6 +344,7 @@ function replace_param(obj){
 		echo "	<option value='\${sip_to_uri}'>\${sip_to_uri}</option>\n";
 		echo "	<option value='\${sip_to_user}'>\${sip_to_user}</option>\n";
 		echo "	<option value='\${sip_to_host}'>\${sip_to_host}</option>\n";
+		echo "  <option value='\${sip_h_Diversion}'>\$sip_h_Diversion}</option>\n";
 		echo "</optgroup>\n";
 	}
 	if (strlen($dialplan_detail_tag) == 0 || $dialplan_detail_tag == "action" || $dialplan_detail_tag == "anti-action") {

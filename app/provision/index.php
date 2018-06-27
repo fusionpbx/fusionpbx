@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2016 All Rights Reserved.
+	Copyright (C) 2008-2018 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -95,6 +95,11 @@
 				} else { //take mac as is - fixes T5X series
 					$mac = substr($_SERVER['HTTP_USER_AGENT'],-12);
 				}
+			}
+		//HTek: $_SERVER['HTTP_USER_AGENT'] = "Htek UC926 2.0.4.2 00:1f:c1:00:00:00"
+			if (substr($_SERVER['HTTP_USER_AGENT'],0,4) == "Htek") {
+				$mac = substr($_SERVER['HTTP_USER_AGENT'],-17);
+				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
 			}
 		//Panasonic: $_SERVER['HTTP_USER_AGENT'] = "Panasonic_KX-UT670/01.022 (0080f000000)"
 			if (substr($_SERVER['HTTP_USER_AGENT'],0,9) == "Panasonic") {
@@ -305,7 +310,7 @@
 
 //http authentication - digest
 	if (strlen($provision["http_auth_username"]) > 0 && strlen($provision["http_auth_type"]) == 0) { $provision["http_auth_type"] = "digest"; }
-	if (strlen($provision["http_auth_username"]) > 0 && strlen($provision["http_auth_password"]) > 0 && $provision["http_auth_type"] === "digest" && $provision["http_auth_disable"] !== "true") {
+	if (strlen($provision["http_auth_username"]) > 0 && $provision["http_auth_type"] === "digest" && $provision["http_auth_disable"] !== "true") {
 		//function to parse the http auth header
 			function http_digest_parse($txt) {
 				//protect against missing data
@@ -340,20 +345,32 @@
 			}
 
 		//check for valid digest authentication details
-			if (!($data = http_digest_parse($_SERVER['PHP_AUTH_DIGEST'])) || ($data['username'] != $provision["http_auth_username"])) {
-				header('HTTP/1.1 401 Unauthorized');
-				header("Content-Type: text/html");
-				$content = 'Unauthorized '.$__line__;
-				header("Content-Length: ".strval(strlen($content)));
-				echo $content;
-				exit;
+			if (isset($provision["http_auth_username"]) > 0 && strlen($provision["http_auth_username"])) {
+				if (!($data = http_digest_parse($_SERVER['PHP_AUTH_DIGEST'])) || ($data['username'] != $provision["http_auth_username"])) {
+					header('HTTP/1.1 401 Unauthorized');
+					header("Content-Type: text/html");
+					$content = 'Unauthorized '.$__line__;
+					header("Content-Length: ".strval(strlen($content)));
+					echo $content;
+					exit;
+				}
 			}
 
 		//generate the valid response
-			$A1 = md5($provision["http_auth_username"] . ':' . $realm . ':' . $provision["http_auth_password"]);
-			$A2 = md5($_SERVER['REQUEST_METHOD'].':'.$data['uri']);
-			$valid_response = md5($A1.':'.$data['nonce'].':'.$data['nc'].':'.$data['cnonce'].':'.$data['qop'].':'.$A2);
-			if ($data['response'] != $valid_response) {
+			$authorized = false;
+			if (!$authorized && is_array($_SESSION['provision']["http_auth_password"])) {
+				foreach ($_SESSION['provision']["http_auth_password"] as $password) {
+					$A1 = md5($provision["http_auth_username"] . ':' . $realm . ':' . $password);
+					$A2 = md5($_SERVER['REQUEST_METHOD'].':'.$data['uri']);
+					$valid_response = md5($A1.':'.$data['nonce'].':'.$data['nc'].':'.$data['cnonce'].':'.$data['qop'].':'.$A2);
+					if ($data['response'] == $valid_response) {
+						$authorized = true;
+						break;
+					}
+				}
+				unset($password);
+			}
+			if (!$authorized) {
 				header('HTTP/1.0 401 Unauthorized');
 				header("Content-Type: text/html");
 				$content = 'Unauthorized '.$__line__;
@@ -364,7 +381,7 @@
 	}
 
 //http authentication - basic
-	if (strlen($provision["http_auth_username"]) > 0 && strlen($provision["http_auth_password"]) > 0 && $provision["http_auth_type"] === "basic" && $provision["http_auth_disable"] !== "true") {
+	if (strlen($provision["http_auth_username"]) > 0 && $provision["http_auth_type"] === "basic" && $provision["http_auth_disable"] !== "true") {
 		if (!isset($_SERVER['PHP_AUTH_USER'])) {
 			header('WWW-Authenticate: Basic realm="'.$_SESSION['domain_name'].'"');
 			header('HTTP/1.0 401 Authorization Required');
@@ -374,10 +391,17 @@
 			echo $content;
 			exit;
 		} else {
-			if ($_SERVER['PHP_AUTH_USER'] == $provision["http_auth_username"] && $_SERVER['PHP_AUTH_PW'] == $provision["http_auth_password"]) {
-				//authorized
+			$authorized = false;
+			if (is_array($_SESSION['provision']["http_auth_password"])) {
+				foreach ($_SESSION['provision']["http_auth_password"] as $password) {
+					if ($_SERVER['PHP_AUTH_PW'] == $password) {
+						$authorized = true;
+						break;
+					}
+				}
+				unset($password);
 			}
-			else {
+			if (!$authorized) {
 				//access denied
 				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but failed http basic authentication for ".check_str($_REQUEST['mac']));
 				header('HTTP/1.0 401 Unauthorized');
@@ -444,14 +468,14 @@
 			header("Content-Type: text/plain; charset=iso-8859-1");
 			header("Content-Length: ".strlen($file_contents));
 		} else {
-                        $result = simplexml_load_string ($file_contents, 'SimpleXmlElement', LIBXML_NOERROR+LIBXML_ERR_FATAL+LIBXML_ERR_NONE);
-                        if (false == $result){
-                            header("Content-Type: text/plain");
-                            header("Content-Length: ".strval(strlen($file_contents)));
-                        } else {
-                            header("Content-Type: text/xml; charset=utf-8");
-                            header("Content-Length: ".strlen($file_contents));
-                        }
+			$result = simplexml_load_string ($file_contents, 'SimpleXmlElement', LIBXML_NOERROR+LIBXML_ERR_FATAL+LIBXML_ERR_NONE);
+			if (false == $result){
+				header("Content-Type: text/plain");
+				header("Content-Length: ".strval(strlen($file_contents)));
+			} else {
+				header("Content-Type: text/xml; charset=utf-8");
+				header("Content-Length: ".strlen($file_contents));
+			}
 		}
 	}
 	echo $file_contents;

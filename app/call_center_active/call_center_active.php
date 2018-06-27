@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -43,8 +43,12 @@
 	$text = $language->get();
 
 //get the queue_name and set it as a variable
-	$queue_name = $_GET[queue_name];
-	$queue_name = str_replace(" ", "-", $queue_name);
+	$queue_name = $_GET['queue_name'];
+	$name = $_GET['name'];
+
+//get a new session array
+	unset($_SESSION['queues']);
+	unset($_SESSION['agents']);
 
 //get the header
 	require_once "resources/header.php";
@@ -72,7 +76,7 @@
 			catch (e){try{f.xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");}catch(e){f.xmlHttp=null;}}
 			@end @*/
 		}
-		if(f.xmlHttp != null){
+		if(f.xmlHttp != null) {
 			f.el = document.getElementById(id);
 			f.xmlHttp.open("GET",url,true);
 			f.xmlHttp.onreadystatechange = function(){f.stateChanged();};
@@ -87,7 +91,7 @@
 	}
 
 	var requestTime = function() {
-		var url = 'call_center_active_inc.php?queue_name=<?php echo $queue_name; ?>';
+		var url = 'call_center_active_inc.php?queue_name=<?php echo $queue_name; ?>&name=<?php echo urlencode($name); ?>';
 		new loadXmlHttp(url, 'ajax_response');
 		<?php
 		if (strlen($_SESSION["ajax_refresh_rate"]) == 0) { $_SESSION["ajax_refresh_rate"] = "1777"; }

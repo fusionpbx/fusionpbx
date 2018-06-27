@@ -57,14 +57,29 @@
 
 		//if call center app is installed then update the user_status
 			if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/call_centers')) {
+				//get the call center agent uuid
+					$sql = "select call_center_agent_uuid from v_call_center_agents ";
+					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+					$sql .= "and user_uuid = '".$_SESSION['user']['user_uuid']."' ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					if ($prep_statement) {
+						$prep_statement->execute();
+						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+						$call_center_agent_uuid = $row['call_center_agent_uuid'];
+					}
+					unset($sql, $prep_statement, $result);
 				//update the user_status
-					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-					$switch_cmd .= "callcenter_config agent set status ".$_SESSION['user']['username']."@".$_SESSION['domain_name']." '".$user_status."'";
-					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+					if (isset($call_center_agent_uuid)) {
+						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+						$switch_cmd .= "callcenter_config agent set status ".$call_center_agent_uuid." '".$user_status."'";
+						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+					}
 
 				//update the user state
-					$cmd = "api callcenter_config agent set state ".$_SESSION['user']['username']."@".$_SESSION['domain_name']." Waiting";
-					$response = event_socket_request($fp, $cmd);
+					if (isset($call_center_agent_uuid)) {
+						$cmd = "api callcenter_config agent set state ".$call_center_agent_uuid." Waiting";
+						$response = event_socket_request($fp, $cmd);
+					}
 			}
 
 		//stop execution
@@ -83,6 +98,7 @@
 <input type='hidden' class='formfld' id='vd_call_id' value=''>
 <input type='hidden' class='formfld' id='vd_ext_from' value=''>
 <input type='hidden' class='formfld' id='vd_ext_to' value=''>
+<input type='hidden' class='formfld' id='sort1' value=''>
 
 <!-- autocomplete for contact lookup -->
 <link rel="stylesheet" type="text/css" href="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-ui.css">
@@ -126,6 +142,10 @@
 	if (this.xmlHttp.readyState == 4 && (this.xmlHttp.status == 200 || !/^http/.test(window.location.href)))
 		//this.el.innerHTML = this.xmlHttp.responseText;
 		document.getElementById('ajax_reponse').innerHTML = this.xmlHttp.responseText;
+		if(document.getElementById('sort')){
+			 if(document.getElementById('sort').value != "") 
+				document.getElementById('sort1').value=document.getElementById('sort').value;
+		}
 	}
 
 	var requestTime = function() {
@@ -134,6 +154,8 @@
 		url += '&vd_ext_to=' + document.getElementById('vd_ext_to').value;
 		url += '&group=' + ((document.getElementById('group')) ? document.getElementById('group').value : '');
 		url += '&eavesdrop_dest=' + ((document.getElementById('eavesdrop_dest')) ? document.getElementById('eavesdrop_dest').value : '');
+		if (document.getElementById('sort1'))
+			if (document.getElementById('sort1').value == '1') url += '&sort';
 		<?php
 		if (isset($_GET['debug'])) {
 			echo "url += '&debug';";
@@ -219,6 +241,8 @@
 			url += '&vd_ext_to=' + document.getElementById('vd_ext_to').value;
 			url += '&group=' + ((document.getElementById('group')) ? document.getElementById('group').value : '');
 			url += '&eavesdrop_dest=' + ((document.getElementById('eavesdrop_dest')) ? document.getElementById('eavesdrop_dest').value : '');
+			if (document.getElementById('sort1'))
+				if (document.getElementById('sort1').value == '1') url += '&sort';
 			<?php
 			if (isset($_GET['debug'])) {
 				echo "url += '&debug';";

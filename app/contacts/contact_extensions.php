@@ -17,22 +17,26 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('contact_extension_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('contact_extension_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //javascript function: send_cmd
 	echo "<script type=\"text/javascript\">\n";
@@ -88,24 +92,24 @@ else {
 	echo "</tr>\n";
 	if ($result_count > 0) {
 		foreach($result as $row) {
-			$tr_link = (permission_exists('extension_edit')) ? "href='/app/extensions/extension_edit.php?id=".$row['extension_uuid']."'" : null;
+			$tr_link = (permission_exists('extension_edit')) ? "href='/app/extensions/extension_edit.php?id=".escape($row['extension_uuid'])."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('extension_edit')) {
-				echo 	"<a href='".PROJECT_PATH."/app/extensions/extension_edit.php?id=".$row['extension_uuid']."'>".$row['extension']."</a>";
+				echo 	"<a href='".PROJECT_PATH."/app/extensions/extension_edit.php?id=".escape($row['extension_uuid'])."'>".escape($row['extension'])."</a>";
 			}
 			else {
 				echo $row['extension'];
 			}
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['enabled']]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.escape($row['enabled'])]."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('extension_edit')) {
-				echo "<a href='".PROJECT_PATH."/app/extensions/extension_edit.php?id=".$row['extension_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='".PROJECT_PATH."/app/extensions/extension_edit.php?id=".escape($row['extension_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('extension_delete')) {
-				echo "<a href='".PROJECT_PATH."/app/extensions/extension_delete.php?id=".$row['extension_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='".PROJECT_PATH."/app/extensions/extension_delete.php?id=".escape($row['extension_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";

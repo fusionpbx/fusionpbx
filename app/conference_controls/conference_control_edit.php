@@ -128,7 +128,7 @@
 	echo "	".$text['label-control_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='control_name' maxlength='255' value=\"$control_name\">\n";
+	echo "	<input class='formfld' type='text' name='control_name' maxlength='255' value=\"".escape($control_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-control_name']."\n";
 	echo "</td>\n";
@@ -164,7 +164,7 @@
 	echo "	".$text['label-control_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='control_description' maxlength='255' value=\"$control_description\">\n";
+	echo "	<input class='formfld' type='text' name='control_description' maxlength='255' value=\"".escape($control_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-control_description']."\n";
 	echo "</td>\n";
@@ -172,7 +172,7 @@
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='conference_control_uuid' value='$conference_control_uuid'>\n";
+		echo "				<input type='hidden' name='conference_control_uuid' value='".escape($conference_control_uuid)."'>\n";
 	}
 	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";

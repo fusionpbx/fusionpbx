@@ -62,7 +62,7 @@ else {
 	$sql = "select ";
 	$sql .= "e.extension, ";
 	$sql .= "e.effective_caller_id_name, ";
-	$sql .= "e.directory_full_name ";
+	$sql .= "concat(e.directory_first_name, ' ', e.directory_last_name) as directory_full_name ";
 	$sql .= "from ";
 	$sql .= "v_extensions e ";
 	$sql .= "where ";
@@ -70,7 +70,7 @@ else {
 		$sql .= "( ";
 		$sql .= "	lower(e.effective_caller_id_name) like lower('%".$term."%') or ";
 		$sql .= "	lower(e.outbound_caller_id_name) like lower('%".$term."%') or ";
-		$sql .= "	lower(e.directory_full_name) like lower('%".$term."%') or ";
+		$sql .= "	lower(concat(e.directory_first_name, ' ', e.directory_last_name)) like lower('%".$term."%') or ";
 		$sql .= "	lower(e.description) like lower('%".$term."%') or ";
 		$sql .= "	lower(e.call_group) like lower('%".$term."%') or ";
 		$sql .= "	e.extension like '%".$term."%' ";
@@ -82,7 +82,7 @@ else {
 	$sql .= "and e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	$sql .= "and e.enabled = 'true' ";
 	$sql .= "order by ";
-	$sql .= "e.directory_full_name asc, ";
+	$sql .= "directory_full_name asc, ";
 	$sql .= "e.effective_caller_id_name asc ";
 	if (isset($_GET['debug'])) { echo $sql."<br><br>"; }
 	$prep_statement = $db->prepare(check_sql($sql));
@@ -92,6 +92,7 @@ else {
 	unset ($prep_statement, $sql);
 
 	if ($result_count > 0) {
+		if (isset($_GET['debug'])) { echo $result."<br><br>"; }
 		foreach($result as $row) {
 			if ($row['directory_full_name'] != '') { $values[] = $row['directory_full_name']; }
 			if ($row['effective_caller_id_name'] != '') { $values[] = $row['effective_caller_id_name']; }

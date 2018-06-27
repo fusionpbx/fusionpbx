@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2010-2016
+	Portions created by the Initial Developer are Copyright (C) 2010-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -96,9 +96,13 @@
 		//set variables from http values
 			$ring_group_name = check_str($_POST["ring_group_name"]);
 			$ring_group_extension = check_str($_POST["ring_group_extension"]);
+			$ring_group_greeting = check_str($_POST["ring_group_greeting"]);
 			$ring_group_context = check_str($_POST["ring_group_context"]);
 			$ring_group_strategy = check_str($_POST["ring_group_strategy"]);
 			$ring_group_timeout_action = check_str($_POST["ring_group_timeout_action"]);
+			$ring_group_call_timeout = check_str($_POST["ring_group_call_timeout"]);
+			$ring_group_caller_id_name = check_str($_POST["ring_group_caller_id_name"]);
+			$ring_group_caller_id_number = check_str($_POST["ring_group_caller_id_number"]);
 			$ring_group_cid_name_prefix = check_str($_POST["ring_group_cid_name_prefix"]);
 			$ring_group_cid_number_prefix = check_str($_POST["ring_group_cid_number_prefix"]);
 			$ring_group_distinctive_ring = check_str($_POST["ring_group_distinctive_ring"]);
@@ -167,6 +171,7 @@
 			$msg = '';
 			if (strlen($ring_group_name) == 0) { $msg .= $text['message-name']."<br>\n"; }
 			if (strlen($ring_group_extension) == 0) { $msg .= $text['message-extension']."<br>\n"; }
+			//if (strlen($ring_group_greeting) == 0) { $msg .= $text['message-greeting']."<br>\n"; }
 			if (strlen($ring_group_strategy) == 0) { $msg .= $text['message-strategy']."<br>\n"; }
 			//if (strlen($ring_group_timeout_app) == 0) { $msg .= $text['message-timeout-action']."<br>\n"; }
 			//if (strlen($ring_group_cid_name_prefix) == 0) { $msg .= "Please provide: Caller ID Name Prefix<br>\n"; }
@@ -363,10 +368,14 @@
 		foreach ($result as &$row) {
 			$ring_group_name = $row["ring_group_name"];
 			$ring_group_extension = $row["ring_group_extension"];
+			$ring_group_greeting = $row["ring_group_greeting"];
 			$ring_group_context = $row["ring_group_context"];
 			$ring_group_strategy = $row["ring_group_strategy"];
 			$ring_group_timeout_app = $row["ring_group_timeout_app"];
 			$ring_group_timeout_data = $row["ring_group_timeout_data"];
+			$ring_group_call_timeout = $row["ring_group_call_timeout"];
+			$ring_group_caller_id_name = $row["ring_group_caller_id_name"];
+			$ring_group_caller_id_number = $row["ring_group_caller_id_number"];
 			$ring_group_cid_name_prefix = $row["ring_group_cid_name_prefix"];
 			$ring_group_cid_number_prefix = $row["ring_group_cid_number_prefix"];
 			$ring_group_distinctive_ring = $row["ring_group_distinctive_ring"];
@@ -455,8 +464,45 @@
 	$ringbacks = new ringbacks;
 	$ringbacks = $ringbacks->select('ring_group_ringback', $ring_group_ringback);
 
+//get the sounds
+	$sounds = new sounds;
+	$sounds = $sounds->get();
+
 //show the header
 	require_once "resources/header.php";
+
+//option to change select to text
+	if (if_group("superadmin")) {
+		echo "<script>\n";
+		echo "var Objs;\n";
+		echo "\n";
+		echo "function changeToInput(obj){\n";
+		echo "	tb=document.createElement('INPUT');\n";
+		echo "	tb.type='text';\n";
+		echo "	tb.name=obj.name;\n";
+		echo "	tb.setAttribute('class', 'formfld');\n";
+		//echo "	tb.setAttribute('style', 'width: 380px;');\n";
+		echo "	tb.value=obj.options[obj.selectedIndex].value;\n";
+		echo "	tbb=document.createElement('INPUT');\n";
+		echo "	tbb.setAttribute('class', 'btn');\n";
+		echo "	tbb.setAttribute('style', 'margin-left: 4px;');\n";
+		echo "	tbb.type='button';\n";
+		echo "	tbb.value=$('<div />').html('&#9665;').text();\n";
+		echo "	tbb.objs=[obj,tb,tbb];\n";
+		echo "	tbb.onclick=function(){ Replace(this.objs); }\n";
+		echo "	obj.parentNode.insertBefore(tb,obj);\n";
+		echo "	obj.parentNode.insertBefore(tbb,obj);\n";
+		echo "	obj.parentNode.removeChild(obj);\n";
+		echo "}\n";
+		echo "\n";
+		echo "function Replace(obj){\n";
+		echo "	obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
+		echo "	obj[0].parentNode.removeChild(obj[1]);\n";
+		echo "	obj[0].parentNode.removeChild(obj[2]);\n";
+		echo "}\n";
+		echo "</script>\n";
+		echo "\n";
+	}
 
 //show the content
 	echo "<form method='post' name='frm' action=''>\n";
@@ -479,7 +525,7 @@
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='ring_group_name' maxlength='255' value=\"$ring_group_name\" required='required'>\n";
+	echo "	<input class='formfld' type='text' name='ring_group_name' maxlength='255' value=\"".escape($ring_group_name)."\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-name']."\n";
 	echo "</td>\n";
@@ -490,9 +536,42 @@
 	echo "	".$text['label-extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='ring_group_extension' maxlength='255' value=\"$ring_group_extension\" required='required'>\n";
+	echo "	<input class='formfld' type='text' name='ring_group_extension' maxlength='255' value=\"".escape($ring_group_extension)."\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-extension']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-greeting']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "<select name='ring_group_greeting' class='formfld' style='width: 200px;' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
+	echo "	<option value=''></option>\n";
+	foreach($sounds as $key => $value) {
+		echo "<optgroup label=".$text['label-'.$key].">\n";
+		$selected = false;
+		foreach($value as $row) {
+			if ($ring_group_greeting == $row["value"]) { 
+				$selected = true;
+				echo "	<option value='".escape($row["value"])."' selected='selected'>".escape($row["name"])."</option>\n";
+			}
+			else {
+				echo "	<option value='".escape($row["value"])."'>".escape($row["name"])."</option>\n";
+			}
+		}
+		echo "</optgroup>\n";
+	}
+	if (if_group("superadmin")) {
+		if (!$selected && strlen($ring_group_greeting) > 0) {
+			echo "	<option value='".escape($ring_group_greeting)."' selected='selected'>".escape($ring_group_greeting)."</option>\n";
+		}
+		unset($selected);
+	}
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo $text['description-greeting']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -535,12 +614,12 @@
 		if (strlen($row['destination_timeout']) == 0) { $row['destination_timeout'] = "30"; }
 
 		if (strlen($row['ring_group_destination_uuid']) > 0) {
-			echo "		<input name='ring_group_destinations[".$x."][ring_group_destination_uuid]' type='hidden' value=\"".$row['ring_group_destination_uuid']."\">\n";
+			echo "		<input name='ring_group_destinations[".$x."][ring_group_destination_uuid]' type='hidden' value=\"".escape($row['ring_group_destination_uuid'])."\">\n";
 		}
 
 		echo "			<tr>\n";
 		echo "				<td>\n";
-		echo "					<input type=\"text\" name=\"ring_group_destinations[".$x."][destination_number]\" class=\"formfld\" style=\"width: 90%;\"value=\"".$row['destination_number']."\">\n";
+		echo "					<input type=\"text\" name=\"ring_group_destinations[".$x."][destination_number]\" class=\"formfld\" style=\"width: 90%;\"value=\"".escape($row['destination_number'])."\">\n";
 		echo "				</td>\n";
 		echo "				<td>\n";
 		echo "					<select name='ring_group_destinations[".$x."][destination_delay]' class='formfld' style='width:55px'>\n";
@@ -583,7 +662,7 @@
 		echo "				<td>&nbsp;</td>\n";
 		echo "				<td class='list_control_icons' style='width: 25px;'>";
 		if (strlen($row['ring_group_destination_uuid']) > 0) {
-			echo				"<a href='ring_group_destination_delete.php?id=".$row['ring_group_destination_uuid']."&ring_group_uuid=".$row['ring_group_uuid']."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+			echo "				<a href='ring_group_destination_delete.php?id=".escape($row['ring_group_destination_uuid'])."&ring_group_uuid=".escape($row['ring_group_uuid'])."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 		}
 		echo "				</td>\n";
 		echo "			</tr>\n";
@@ -608,32 +687,73 @@
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-cid-name-prefix']."\n";
+	echo "	".$text['label-call_timeout']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='ring_group_cid_name_prefix' maxlength='255' value='$ring_group_cid_name_prefix'>\n";
+	echo "  <input class='formfld' type='text' name='ring_group_call_timeout' maxlength='255' value='".escape($ring_group_call_timeout)."'>\n";
 	echo "<br />\n";
-	echo $text['description-cid-name-prefix']." \n";
+	echo $text['description-ring_group_call_timeout']." \n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-cid-number-prefix']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='number' name='ring_group_cid_number_prefix' maxlength='255' min='0' step='1' value='$ring_group_cid_number_prefix'>\n";
-	echo "<br />\n";
-	echo $text['description-cid-number-prefix']." \n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists('ring_group_caller_id_name')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-caller_id_name']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "  <input class='formfld' type='text' name='ring_group_caller_id_name' maxlength='255' value='".escape($ring_group_caller_id_name)."'>\n";
+		echo "<br />\n";
+		echo $text['description-caller_id_name']." \n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('ring_group_caller_id_number')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-caller_id_number']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "  <input class='formfld' type='number' name='ring_group_caller_id_number' maxlength='255' min='0' step='1' value='".escape($ring_group_caller_id_number)."'>\n";
+		echo "<br />\n";
+		echo $text['description-caller_id_number']." \n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('ring_group_cid_name_prefix')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-cid-name-prefix']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "  <input class='formfld' type='text' name='ring_group_cid_name_prefix' maxlength='255' value='".escape($ring_group_cid_name_prefix)."'>\n";
+		echo "<br />\n";
+		echo $text['description-cid-name-prefix']." \n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('ring_group_cid_number_prefix')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-cid-number-prefix']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "  <input class='formfld' type='number' name='ring_group_cid_number_prefix' maxlength='255' min='0' step='1' value='".escape($ring_group_cid_number_prefix)."'>\n";
+		echo "<br />\n";
+		echo $text['description-cid-number-prefix']." \n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-distinctive_ring']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='ring_group_distinctive_ring' maxlength='255' value='$ring_group_distinctive_ring'>\n";
+	echo "  <input class='formfld' type='text' name='ring_group_distinctive_ring' maxlength='255' value='".escape($ring_group_distinctive_ring)."'>\n";
 	echo "<br />\n";
 	echo $text['description-distinctive_ring']." \n";
 	echo "</td>\n";
@@ -653,12 +773,12 @@
 	echo "	<tr>";
 	echo "		<td class='vncell' valign='top'>".$text['label-user_list']."</td>";
 	echo "		<td class='vtable'>";
-	echo "			<table width='52%'>\n";
+	echo "			<table width='300px'>\n";
 	if (isset($ring_group_users)) foreach($ring_group_users as $field) {
 		echo "			<tr>\n";
-		echo "				<td class='vtable'>".$field['username']."</td>\n";
+		echo "				<td class='vtable'>".escape($field['username'])."</td>\n";
 		echo "				<td>\n";
-		echo "					<a href='ring_group_edit.php?id=".$ring_group_uuid."&user_uuid=".$field['user_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+		echo "					<a href='ring_group_edit.php?id=".escape($ring_group_uuid)."&user_uuid=".escape($field['user_uuid'])."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>\n";
 		echo "				</td>\n";
 		echo "			</tr>\n";
 	}
@@ -691,7 +811,7 @@
 		//echo "    	<option value='url' ".(($ring_group_missed_call_app == "url" && $ring_group_missed_call_data != '') ? "selected='selected'" : null).">".$text['label-url']."</option>\n";
 		echo "    </select>\n";
 		$ring_group_missed_call_data = ($ring_group_missed_call_app == 'text') ? format_phone($ring_group_missed_call_data) : $ring_group_missed_call_data;
-		echo "    <input class='formfld' type='text' name='ring_group_missed_call_data' id='ring_group_missed_call_data' maxlength='255' value=\"$ring_group_missed_call_data\" style='min-width: 200px; width: 200px; ".(($ring_group_missed_call_app == '' || $ring_group_missed_call_data == '') ? "display: none;" : null)."'>\n";
+		echo "    <input class='formfld' type='text' name='ring_group_missed_call_data' id='ring_group_missed_call_data' maxlength='255' value=\"".escape($ring_group_missed_call_data)."\" style='min-width: 200px; width: 200px; ".(($ring_group_missed_call_app == '' || $ring_group_missed_call_data == '') ? "display: none;" : null)."'>\n";
 		echo "<br />\n";
 		echo $text['description-missed_call']."\n";
 		echo "</td>\n";
@@ -707,7 +827,7 @@
 	echo "		<option value='false'>".$text['option-disabled']."</option>";
 	echo "		<option value='true' ".(($ring_group_forward_enabled == 'true') ? "selected='selected'" : null).">".$text['option-enabled']."</option>";
 	echo "	</select>";
-	echo 	"<input class='formfld' style='min-width: 95px;' type='text' name='ring_group_forward_destination' id='ring_group_forward_destination' placeholder=\"".$text['label-forward_destination']."\" maxlength='255' value=\"".$ring_group_forward_destination."\">";
+	echo 	"<input class='formfld' style='min-width: 95px;' type='text' name='ring_group_forward_destination' id='ring_group_forward_destination' placeholder=\"".$text['label-forward_destination']."\" maxlength='255' value=\"".escape($ring_group_forward_destination)."\">";
 	echo "<br />\n";
 	echo $text['description-ring-group-forward']."\n";
 	echo "</td>\n";
@@ -719,7 +839,7 @@
 		echo "	".$text['label-ring_group_forward_toll_allow']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='ring_group_forward_toll_allow' maxlength='255' value=".$ring_group_forward_toll_allow.">\n";
+		echo "	<input class='formfld' type='text' name='ring_group_forward_toll_allow' maxlength='255' value=".escape($ring_group_forward_toll_allow).">\n";
 		echo "<br />\n";
 		echo $text['description-ring_group_forward_toll_allow']."\n";
 		echo "</td>\n";
@@ -732,7 +852,7 @@
 		echo "	".$text['label-context']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='ring_group_context' maxlength='255' value=\"$ring_group_context\" required='required'>\n";
+		echo "	<input class='formfld' type='text' name='ring_group_context' maxlength='255' value=\"".escape($ring_group_context)."\" required='required'>\n";
 		echo "<br />\n";
 		echo $text['description-enter-context']."\n";
 		echo "</td>\n";
@@ -768,7 +888,7 @@
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='ring_group_description' maxlength='255' value=\"$ring_group_description\">\n";
+	echo "	<input class='formfld' type='text' name='ring_group_description' maxlength='255' value=\"".escape($ring_group_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
@@ -777,10 +897,10 @@
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if (strlen($dialplan_uuid) > 0) {
-		echo "		<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
+		echo "		<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	}
 	if (strlen($ring_group_uuid) > 0) {
-		echo "		<input type='hidden' name='ring_group_uuid' value='$ring_group_uuid'>\n";
+		echo "		<input type='hidden' name='ring_group_uuid' value='".escape($ring_group_uuid)."'>\n";
 	}
 	echo "			<br>";
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";

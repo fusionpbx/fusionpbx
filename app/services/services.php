@@ -17,15 +17,19 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
+
+//includes
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
+
+//check permissions
 if (permission_exists('service_view')) {
 	//access granted
 }
@@ -102,182 +106,187 @@ if (strlen($_GET["a"]) > 0) {
 	return;
 }
 
+//get the service count
+$sql = "select * from v_services ";
+if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+$prep_statement = $db->prepare(check_sql($sql));
+$prep_statement->execute();
+$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+$num_rows = count($result);
+unset ($prep_statement, $result, $sql);
+
+//paging
+$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+$param = "";
+$page = $_GET['page'];
+if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
+$offset = $rows_per_page * $page;
+
+//get the service data
+$sql = "select * from v_services ";
+if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+$sql .= " limit $rows_per_page offset $offset ";
+$prep_statement = $db->prepare(check_sql($sql));
+$prep_statement->execute();
+$services = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+unset ($prep_statement, $sql);
+
+//set the row style
+$c = 0;
+$row_style["0"] = "row_style0";
+$row_style["1"] = "row_style1";
+
+
 //check if a process is running
-	function is_process_running($pid) {
-		$status = shell_exec( 'ps -p ' . $pid );
-		$status_array = explode ("\n", $status);
-		if (strlen(trim($status_array[1])) > 0) {
-			return true;
+function is_process_running($pid) {
+	$status = shell_exec( 'ps -p ' . $pid );
+	$status_array = explode ("\n", $status);
+	if (strlen(trim($status_array[1])) > 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+//show the table content
+echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
+echo "<tr>\n";
+echo "<td width='50%' align='left' nowrap='nowrap'><b>".$text['header-services']."</b></td>\n";
+echo "<td width='50%' align='right'>&nbsp;</td>\n";
+echo "</tr>\n";
+echo "<tr>\n";
+echo "<td align='left' colspan='2'>\n";
+echo $text['description-services']."<br /><br />\n";
+echo "</td>\n";
+echo "</tr>\n";
+echo "</tr></table>\n";
+
+echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+echo "<tr>\n";
+echo th_order_by('service_name', $text['label-name'], $order_by, $order);
+echo "<th>".$text['label-status']."</th>\n";
+echo "<th>".$text['label-action']."</th>\n";
+echo th_order_by('service_description', $text['label-description'], $order_by, $order);
+echo "<td class='list_control_icons'>";
+if (permission_exists('service_add')) {
+	echo "<a href='service_edit.php' alt='add'>$v_link_label_add</a>";
+}
+echo "</td>\n";
+echo "</tr>\n";
+
+if (is_array($services)) {
+	foreach($services as $row) {
+		$tr_link = (permission_exists('service_edit')) ? "href='service_edit.php?id=".escape($row[service_uuid])."'" : null;
+		echo "<tr ".$tr_link.">\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>";
+		if (permission_exists('service_edit')) {
+			echo "<a href='service_edit.php?id=".escape($row[service_uuid])."'>".escape($row[service_name])."</a>";
 		}
 		else {
-			return false;
+			echo escape($row[service_name]);
 		}
-	}
+		echo "	</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>\n";
+		$service_running = false;
 
-	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
-	echo "<tr>\n";
-	echo "<td width='50%' align='left' nowrap='nowrap'><b>".$text['header-services']."</b></td>\n";
-	echo "<td width='50%' align='right'>&nbsp;</td>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td align='left' colspan='2'>\n";
-	echo $text['description-services']."<br /><br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</tr></table>\n";
-
-	$sql = "select * from v_services ";
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$num_rows = count($result);
-	unset ($prep_statement, $result, $sql);
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "";
-	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
-	$offset = $rows_per_page * $page;
-
-	$sql = "select * from v_services ";
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$sql .= " limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
-	unset ($prep_statement, $sql);
-
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
-
-	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo th_order_by('service_name', $text['label-name'], $order_by, $order);
-	echo "<th>".$text['label-status']."</th>\n";
-	echo "<th>".$text['label-action']."</th>\n";
-	echo th_order_by('service_description', $text['label-description'], $order_by, $order);
-	echo "<td class='list_control_icons'>";
-	if (permission_exists('service_add')) {
-		echo "<a href='service_edit.php' alt='add'>$v_link_label_add</a>";
-	}
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	if ($result_count > 0) {
-		foreach($result as $row) {
-			$tr_link = (permission_exists('service_edit')) ? "href='service_edit.php?id=".$row[service_uuid]."'" : null;
-			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>";
-			if (permission_exists('service_edit')) {
-				echo "<a href='service_edit.php?id=".$row[service_uuid]."'>".$row[service_name]."</a>";
-			}
-			else {
-				echo $row[service_name];
-			}
-			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
-			$service_running = false;
-
-			if ($row[service_type] == "svc") {
-				if ($HAS_WIN_SVC) {
-					$service_data = $row[service_data];
-					$svc = new win_service($service_data);
-					$svc_state = $svc->state() or $svc->last_error();
-					if(!$svc_state){
-						$svc_state = 'NOT_INSTALL';
-					}
-					$service_running = (($svc_state == 'RUNNING') || ($svc_state == 'START_PENDING'));
-
-					echo "<strong>$svc_state</strong>";
-
-					echo "</td>\n";
-					echo "	<td valign='top' class='".$row_style[$c]."'>\n";
-					if ($svc_state == 'NOT_INSTALL') {
-						echo "<strong>$svc_state</strong>";
-					}
-					else {
-						if ($service_running) {
-							echo "		<a href='services.php?id=".$row[service_uuid]."&a=stop' alt='stop'>".$text['label-stop']."</a>";
-						}
-						else {
-							echo "		<a href='services.php?id=".$row[service_uuid]."&a=start' alt='start'>".$text['label-start']."</a>";
-						}
-					}
+		if ($row[service_type] == "svc") {
+			if ($HAS_WIN_SVC) {
+				$service_data = $row[service_data];
+				$svc = new win_service($service_data);
+				$svc_state = $svc->state() or $svc->last_error();
+				if(!$svc_state){
+					$svc_state = 'NOT_INSTALL';
 				}
-				else{
-					echo "<strong>UNSUPPORT</strong>";
-					echo "</td>\n";
-					echo "	<td valign='top' class='".$row_style[$c]."'>\n";
-					echo "<strong>UNSUPPORT</strong>";
-				}
-			}
-			else {
-				if ($row[service_type] == "pid" || $row[service_type] == "pid_file") {
-					$pid = file_get_contents($row[service_data]);
-					$service_running = is_process_running($pid);
-				}
-				if ($row[service_type] == "file") {
-					$service_data = $row[service_data];
-					$service_running = file_exists($service_data);
-				}
+				$service_running = (($svc_state == 'RUNNING') || ($svc_state == 'START_PENDING'));
 
-				if ($service_running) {
-					echo "<strong>".$text['label-running']."</strong>";
-				}
-				else {
-					echo "<strong>".$text['label-stopped']."</strong>";
-				}
+				echo "<strong>$svc_state</strong>";
 
 				echo "</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>\n";
-				if ($service_running) {
-					echo "		<a href='services.php?id=".$row[service_uuid]."&a=stop' alt='stop'>".$text['label-stop']."</a>";
+				if ($svc_state == 'NOT_INSTALL') {
+					echo "<strong>$svc_state</strong>";
 				}
 				else {
-					echo "		<a href='services.php?id=".$row[service_uuid]."&a=start' alt='start'>".$text['label-start']."</a>";
+					if ($service_running) {
+						echo "		<a href='services.php?id=".escape($row[service_uuid])."&a=stop' alt='stop'>".$text['label-stop']."</a>";
+					}
+					else {
+						echo "		<a href='services.php?id=".escape($row[service_uuid])."&a=start' alt='start'>".$text['label-start']."</a>";
+					}
 				}
 			}
+			else{
+				echo "<strong>UNSUPPORT</strong>";
+				echo "</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>\n";
+				echo "<strong>UNSUPPORT</strong>";
+			}
+		}
+		else {
+			if ($row[service_type] == "pid" || $row[service_type] == "pid_file") {
+				$pid = file_get_contents($row[service_data]);
+				$service_running = is_process_running($pid);
+			}
+			if ($row[service_type] == "file") {
+				$service_data = $row[service_data];
+				$service_running = file_exists($service_data);
+			}
 
+			if ($service_running) {
+				echo "<strong>".$text['label-running']."</strong>";
+			}
+			else {
+				echo "<strong>".$text['label-stopped']."</strong>";
+			}
 
 			echo "</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".$row[service_description]."&nbsp;</td>\n";
-			echo "	<td class='list_control_icons'>";
-			if (permission_exists('service_edit')) {
-				echo "<a href='service_edit.php?id=".$row[service_uuid]."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
+			if ($service_running) {
+				echo "		<a href='services.php?id=".escape($row[service_uuid])."&a=stop' alt='stop'>".$text['label-stop']."</a>";
 			}
-			if (permission_exists('service_delete')) {
-				echo "<a href='service_delete.php?id=".$row[service_uuid]."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+			else {
+				echo "		<a href='services.php?id=".escape($row[service_uuid])."&a=start' alt='start'>".$text['label-start']."</a>";
 			}
-			echo "	</td>\n";
-			echo "</tr>\n";
-			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $result, $row_count);
-	} //end if results
+		}
 
-	echo "<tr>\n";
-	echo "<td colspan='5' align='left'>\n";
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td class='list_control_icons'>";
-	if (permission_exists('service_add')) {
-		echo 		"<a href='service_edit.php' alt='add'>$v_link_label_add</a>";
-	}
-	echo "		</td>\n";
-	echo "	</tr>\n";
- 	echo "	</table>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+		echo "</td>\n";
+		echo "	<td valign='top' class='row_stylebg'>".escape($row[service_description])."&nbsp;</td>\n";
+		echo "	<td class='list_control_icons'>";
+		if (permission_exists('service_edit')) {
+			echo "<a href='service_edit.php?id=".escape($row[service_uuid])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+		}
+		if (permission_exists('service_delete')) {
+			echo "<a href='service_delete.php?id=".escape($row[service_uuid])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+		}
+		echo "	</td>\n";
+		echo "</tr>\n";
+		if ($c==0) { $c=1; } else { $c=0; }
+	} //end foreach
+	unset($sql, $services);
+} //end if results
 
-	echo "</table>";
-	echo "<br><br>";
+echo "<tr>\n";
+echo "<td colspan='5' align='left'>\n";
+echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
+echo "	<tr>\n";
+echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
+echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
+echo "		<td class='list_control_icons'>";
+if (permission_exists('service_add')) {
+	echo 		"<a href='service_edit.php' alt='add'>$v_link_label_add</a>";
+}
+echo "		</td>\n";
+echo "	</tr>\n";
+echo "	</table>\n";
+echo "</td>\n";
+echo "</tr>\n";
+
+echo "</table>";
+echo "<br><br>";
 
 //include the footer
-	require_once "resources/footer.php";
+require_once "resources/footer.php";
 
 ?>

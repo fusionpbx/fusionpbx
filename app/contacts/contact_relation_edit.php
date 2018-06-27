@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -206,7 +206,7 @@ else {
 	echo "	<b>".$text['header-contact_relation']."</b>";
 	echo "</td>\n";
 	echo "<td align='right' valign='top'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contact_edit.php?id=".$contact_uuid."'\" value='".$text['button-back']."'>";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contact_edit.php?id=".escape($contact_uuid)."'\" value='".$text['button-back']."'>";
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -275,7 +275,7 @@ else {
 				$contact_name = $row['contact_organization'];
 			}
 		}
-		echo "<option value='".$row['contact_uuid']."' ".(($row['contact_uuid'] == $relation_contact_uuid) ? "selected='selected'" : null).">".$contact_name."</option>\n";
+		echo "<option value='".escape($row['contact_uuid'])."' ".(($row['contact_uuid'] == $relation_contact_uuid) ? "selected='selected'" : null).">".escape($contact_name)."</option>\n";
 	}
 	unset($sql, $result, $row_count);
 	echo "</select>\n";
@@ -326,9 +326,9 @@ else {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	echo "			<br>\n";
-	echo "			<input type='hidden' name='contact_uuid' value='".$contact_uuid."'>\n";
+	echo "			<input type='hidden' name='contact_uuid' value='".escape($contact_uuid)."'>\n";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='contact_relation_uuid' value='".$contact_relation_uuid."'>\n";
+		echo "		<input type='hidden' name='contact_relation_uuid' value='".escape($contact_relation_uuid)."'>\n";
 	}
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
