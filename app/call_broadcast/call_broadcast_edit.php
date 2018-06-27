@@ -24,16 +24,20 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('call_broadcast_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('call_broadcast_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -48,47 +52,45 @@ else {
 		$action = "add";
 	}
 
-//Function to Upload CSV/TXT file
-function uplode_file($sql,$broadcast_phone_numbers) {
-$upload_csv = $sql = '';
-if (isset($_FILES['broadcast_phone_numbers_file']) && !empty($_FILES['broadcast_phone_numbers_file']) && $_FILES['broadcast_phone_numbers_file']['size'] > 0) {
-				
-				$filename=$_FILES["broadcast_phone_numbers_file"]["tmp_name"];
-				$file_extension = array('application/octet-stream','application/vnd.ms-excel','text/plain','text/csv','text/tsv');
-				if (in_array($_FILES['broadcast_phone_numbers_file']['type'],$file_extension)) {											
-						$file = fopen($filename, "r");
-						$count = 0;
-						while (($getData = fgetcsv($file, 0, "\n")) !== FALSE)
-						{
-							$count++;
-							if ($count == 1) { continue; }
-							$getData = preg_split('/[ ,|]/', $getData[0], null, PREG_SPLIT_NO_EMPTY);						
-							$separator = $getData[0];
-							$separator .= (isset($getData[1]) && $getData[1] != '')? '|'.$getData[1] : '';
-							$separator .= (isset($getData[2]) && $getData[2] != '')? ','.$getData[2] : '';
-							$separator .= '\n';
-							$upload_csv .= $separator;
-						}
-					 fclose($file);  		
-				}
-				else {					  
-					return array('code'=>false,'sql'=>'');
-				}	
-			}				
-			if (!empty($broadcast_phone_numbers) && !empty($upload_csv)) { 					
-				$sql .= "E'"; 
-				$sql .= $broadcast_phone_numbers.'\n'.$upload_csv;
-				$sql .= "',";
-				
+//function to Upload CSV/TXT file
+	function upload_file($sql,$broadcast_phone_numbers) {
+		$upload_csv = $sql = '';
+		if (isset($_FILES['broadcast_phone_numbers_file']) && !empty($_FILES['broadcast_phone_numbers_file']) && $_FILES['broadcast_phone_numbers_file']['size'] > 0) {
+			$filename=$_FILES["broadcast_phone_numbers_file"]["tmp_name"];
+			$file_extension = array('application/octet-stream','application/vnd.ms-excel','text/plain','text/csv','text/tsv');
+			if (in_array($_FILES['broadcast_phone_numbers_file']['type'],$file_extension)) {											
+					$file = fopen($filename, "r");
+					$count = 0;
+					while (($getData = fgetcsv($file, 0, "\n")) !== FALSE)
+					{
+						$count++;
+						if ($count == 1) { continue; }
+						$getData = preg_split('/[ ,|]/', $getData[0], null, PREG_SPLIT_NO_EMPTY);						
+						$separator = $getData[0];
+						$separator .= (isset($getData[1]) && $getData[1] != '')? '|'.$getData[1] : '';
+						$separator .= (isset($getData[2]) && $getData[2] != '')? ','.$getData[2] : '';
+						$separator .= '\n';
+						$upload_csv .= $separator;
+					}
+				 fclose($file);  		
 			}
-			elseif (empty($broadcast_phone_numbers) && !empty($upload_csv)) {
-				$sql .= "E'$upload_csv', ";
-			}
-			else {
-				$sql .= "E'$broadcast_phone_numbers', ";
-			}
-	return array('code'=>true,'sql'=> $sql);
-}
+			else {					  
+				return array('code'=>false,'sql'=>'');
+			}	
+		}				
+		if (!empty($broadcast_phone_numbers) && !empty($upload_csv)) { 					
+			$sql .= "E'"; 
+			$sql .= $broadcast_phone_numbers.'\n'.$upload_csv;
+			$sql .= "',";
+		}
+		elseif (empty($broadcast_phone_numbers) && !empty($upload_csv)) {
+			$sql .= "E'$upload_csv', ";
+		}
+		else {
+			$sql .= "E'$broadcast_phone_numbers', ";
+		}
+		return array('code'=>true,'sql'=> $sql);
+	}
 
 //get the http post variables and set them to php variables
 	if (count($_POST)>0) {
@@ -125,7 +127,7 @@ if (isset($_FILES['broadcast_phone_numbers_file']) && !empty($_FILES['broadcast_
 		}
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
@@ -202,7 +204,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'$broadcast_destination_type', ";
 
 			//Add File selection and download sample 
- 		        $file_res = uplode_file($sql,$broadcast_phone_numbers);
+ 		        $file_res = upload_file($sql,$broadcast_phone_numbers);
 			if ($file_res['code'] == true) {
 				$sql .= $file_res['sql'];
 			}
@@ -248,7 +250,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			//Update File selection and download sample 
 			$sql .= "broadcast_phone_numbers = "; 
-			$file_res = uplode_file($sql,$broadcast_phone_numbers);
+			$file_res = upload_file($sql,$broadcast_phone_numbers);
 			if ($file_res['code'] == true) {
 				$sql .= $file_res['sql'];
 			}
@@ -695,5 +697,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	*/
 
-require_once "resources/footer.php";
+//include the footer
+	require_once "resources/footer.php";
+
 ?>
