@@ -48,6 +48,48 @@ else {
 		$action = "add";
 	}
 
+//Function to Upload CSV/TXT file
+function uplode_file($sql,$broadcast_phone_numbers) {
+$upload_csv = $sql = '';
+if (isset($_FILES['broadcast_phone_numbers_file']) && !empty($_FILES['broadcast_phone_numbers_file']) && $_FILES['broadcast_phone_numbers_file']['size'] > 0) {
+				
+				$filename=$_FILES["broadcast_phone_numbers_file"]["tmp_name"];
+				$file_extension = array('application/octet-stream','application/vnd.ms-excel','text/plain','text/csv','text/tsv');
+				if (in_array($_FILES['broadcast_phone_numbers_file']['type'],$file_extension)) {											
+						$file = fopen($filename, "r");
+						$count = 0;
+						while (($getData = fgetcsv($file, 0, "\n")) !== FALSE)
+						{
+							$count++;
+							if ($count == 1) { continue; }
+							$getData = preg_split('/[ ,|]/', $getData[0], null, PREG_SPLIT_NO_EMPTY);						
+							$separator = $getData[0];
+							$separator .= (isset($getData[1]) && $getData[1] != '')? '|'.$getData[1] : '';
+							$separator .= (isset($getData[2]) && $getData[2] != '')? ','.$getData[2] : '';
+							$separator .= '\n';
+							$upload_csv .= $separator;
+						}
+					 fclose($file);  		
+				}
+				else {					  
+					return array('code'=>false,'sql'=>'');
+				}	
+			}				
+			if (!empty($broadcast_phone_numbers) && !empty($upload_csv)) { 					
+				$sql .= "E'"; 
+				$sql .= $broadcast_phone_numbers.'\n'.$upload_csv;
+				$sql .= "',";
+				
+			}
+			elseif (empty($broadcast_phone_numbers) && !empty($upload_csv)) {
+				$sql .= "E'$upload_csv', ";
+			}
+			else {
+				$sql .= "E'$broadcast_phone_numbers', ";
+			}
+	return array('code'=>true,'sql'=> $sql);
+}
+
 //get the http post variables and set them to php variables
 	if (count($_POST)>0) {
 		$broadcast_name = check_str($_POST["broadcast_name"]);
@@ -158,7 +200,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'$broadcast_caller_id_name', ";
 			$sql .= "'$broadcast_caller_id_number', ";
 			$sql .= "'$broadcast_destination_type', ";
-			$sql .= "'$broadcast_phone_numbers', ";
+
+			//Add File selection and download sample 
+ 		        $file_res = uplode_file($sql,$broadcast_phone_numbers);
+			if ($file_res['code'] == true) {
+				$sql .= $file_res['sql'];
+			}
+			else {
+				$_SESSION["message_mood"] = "negative";
+				$_SESSION["message"] = $text['file-error'];
+				header("Location: call_broadcast_edit.php");
+				return false;
+			}
+			
 			$sql .= "'$broadcast_avmd', ";
 			$sql .= "'$broadcast_destination_data', ";
 			$sql .= "'$broadcast_accountcode' ";
@@ -191,7 +245,20 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "broadcast_caller_id_name = '$broadcast_caller_id_name', ";
 			$sql .= "broadcast_caller_id_number = '$broadcast_caller_id_number', ";
 			$sql .= "broadcast_destination_type = '$broadcast_destination_type', ";
-			$sql .= "broadcast_phone_numbers = '$broadcast_phone_numbers', ";
+
+			//Update File selection and download sample 
+			$sql .= "broadcast_phone_numbers = "; 
+			$file_res = uplode_file($sql,$broadcast_phone_numbers);
+			if ($file_res['code'] == true) {
+				$sql .= $file_res['sql'];
+			}
+			else {
+				$_SESSION["message_mood"] = "negative";
+				$_SESSION["message"] = $text['file-error'];
+				header("Location: call_broadcast_edit.php?id=".$_GET['id']);
+				return false;
+			}
+			
 			$sql .= "broadcast_avmd = '$broadcast_avmd', ";
 			$sql .= "broadcast_destination_data = '$broadcast_destination_data', ";
 			$sql .= "broadcast_accountcode = '$broadcast_accountcode' ";
@@ -238,7 +305,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	require_once "resources/header.php";
 
 //begin content
-	echo "<form method='post' name='frm' action=''>\n";
+	echo "<form method='post' name='frm' action='' enctype='multipart/form-data'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
@@ -425,7 +492,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-phone']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<textarea class='formfld' type='text' name='broadcast_phone_numbers' rows='10'>$broadcast_phone_numbers</textarea>\n";
+	echo "	<textarea class='formfld' type='text' name='broadcast_phone_numbers' rows='10'>$broadcast_phone_numbers</textarea>";
+	
+	echo "<br>";
+	echo " <span class='' style='margin-left: 37px;'>OR </span> ";
+	echo "<br>";
+	echo " <input type='file' name='broadcast_phone_numbers_file' accept='.csv,.txt' style=\"display:inline-block;\"><a href='sample.csv' download>Sample File <i class='glyphicon glyphicon-download-alt'></i></a>";
+	echo "<br>";
+	echo " (Upload TXT- Plain Text, CSV- Comma Separated Values file format only.)";
+	echo "<br>";
+
 	echo "<br />\n";
 	echo "".$text['description-phone']." <br /><br />\n";
 	echo "</td>\n";
