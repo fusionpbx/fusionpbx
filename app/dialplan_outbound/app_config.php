@@ -50,6 +50,8 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['description'] = "Add outbound routes for any gateways on any domain.";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "outbound_route_toll_allow_lua";
+		$apps[$x]['permissions'][$y]['name'] = "outbound_route_pin_codes";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 
 ?>
