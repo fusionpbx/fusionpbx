@@ -121,6 +121,8 @@ $text['label-toll_allow']['ru-ru'] = "Разрешить ВСЕ";
 $text['label-toll_allow']['sv-se'] = "Tillåta fjärrsamtal";
 $text['label-toll_allow']['uk-ua'] = "TOLL дозволено";
 
+$text['label-pin_codes']['en-us'] = "Pin Numbers";
+
 $text['label-sip-gateway']['en-us'] = "SIP Gateways";
 $text['label-sip-gateway']['ar-eg'] = "";
 $text['label-sip-gateway']['de-at'] = "SIP Gateways"; //copied from de-de

@@ -66,8 +66,8 @@
 			$limit = check_str($_POST["limit"]);
 			$accountcode = check_str($_POST["accountcode"]);
 			$toll_allow = check_str($_POST["toll_allow"]);
-			$pin_codes_enable = check_str($_POST["pin_codes_enabled"]);
-			if (strlen($pin_codes_enable) == 0) { $pin_codes_enable = "false"; }
+			$pin_numbers_enable = check_str($_POST["pin_numbers_enabled"]);
+			if (strlen($pin_numbers_enable) == 0) { $pin_numbers_enable = "false"; }
 		//set the default type
 			$gateway_type = 'gateway';
 			$gateway_2_type = 'gateway';
@@ -561,7 +561,7 @@
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 						}
 
-						if ($pin_codes_enable == "true") {
+						if ($pin_numbers_enable == "true") {
 							$y++;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
 							$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -1027,6 +1027,23 @@ function type_onchange(dialplan_detail_type) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
+if (permission_exists('outbound_route_pin_numbers')) {
+         echo "<tr>\n";
+         echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+         echo "    ".$text['label-pin_numbers']."\n";
+         echo "</td>\n";
+         echo "<td class='vtable' align='left'>\n";
+         echo "  <select class='formfld' name='pin_numbers_enabled'>\n";
+         echo "          <option value='true'>".$text['label-true']."</option>\n";
+         echo "          <option value='false' selected='true'>".$text['label-false']."</option>\n";
+         echo "  </select>\n";
+         echo "<br />\n";
+         echo $text['description-enable-pin_numbers']."\n";
+         echo "</td>\n";
+         echo "</tr>\n";
+        }
+	
+
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-order']."\n";
@@ -1050,22 +1067,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (permission_exists('outbound_route_pin_codes')) {
-                echo "<tr>\n";
-                echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-                echo "    ".$text['label-pin_codes']."\n";
-                echo "</td>\n";
-                echo "<td class='vtable' align='left'>\n";
-                echo "  <select class='formfld' name='pin_codes_enabled'>\n";
-                echo "          <option value='true'>".$text['label-true']."</option>\n";
-                echo "          <option value='false' selected='true'>".$text['label-false']."</option>\n";
-                echo "  </select>\n";
-                echo "<br />\n";
-                echo $text['description-enable-pin_codes']."\n";
-                echo "</td>\n";
-                echo "</tr>\n";
-        }
-
+	
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
