@@ -39,7 +39,7 @@
 	}
 
 //additional includes
-	require_once "resources/paging.php";
+//	require_once "resources/paging.php";
 
 //set 24hr or 12hr clock
 	define('TIME_24HR', 1);
@@ -263,43 +263,43 @@
 	}
 
 //set the param variable which is used with paging
-	$param = "&cdr_id=".$cdr_id;
-	$param .= "&missed=".$missed;
-	$param .= "&direction=".$direction;
-	$param .= "&caller_id_name=".$caller_id_name;
-	$param .= "&caller_id_number=".$caller_id_number;
-	$param .= "&caller_destination=".$caller_destination;
-	$param .= "&caller_extension_uuid=".$caller_extension_uuid;
-	$param .= "&destination_number=".$destination_number;
-	$param .= "&context=".$context;
-	$param .= "&start_stamp_begin=".$start_stamp_begin;
-	$param .= "&start_stamp_end=".$start_stamp_end;
-	$param .= "&answer_stamp_begin=".$answer_stamp_begin;
-	$param .= "&answer_stamp_end=".$answer_stamp_end;
-	$param .= "&end_stamp_begin=".$end_stamp_begin;
-	$param .= "&end_stamp_end=".$end_stamp_end;
-	$param .= "&start_epoch=".$start_epoch;
-	$param .= "&stop_epoch=".$stop_epoch;
-	$param .= "&duration=".$duration;
-	$param .= "&billsec=".$billsec;
-	$param .= "&hangup_cause=".$hangup_cause;
-	$param .= "&call_result=".$call_result;
-	$param .= "&uuid=".$uuid;
-	$param .= "&bleg_uuid=".$bleg_uuid;
-	$param .= "&accountcode=".$accountcode;
-	$param .= "&read_codec=".$read_codec;
-	$param .= "&write_codec=".$write_codec;
-	$param .= "&remote_media_ip=".$remote_media_ip;
-	$param .= "&network_addr=".$network_addr;
-	$param .= "&bridge_uuid=".$bridge_uuid;
-	$param .= "&mos_comparison=".$mos_comparison;
-	$param .= "&mos_score=".$mos_score;
+	$param = "&cdr_id=".escape($cdr_id);
+	$param .= "&missed=".escape($missed);
+	$param .= "&direction=".escape($direction);
+	$param .= "&caller_id_name=".escape($caller_id_name);
+	$param .= "&caller_id_number=".escape($caller_id_number);
+	$param .= "&caller_destination=".escape($caller_destination);
+	$param .= "&caller_extension_uuid=".escape($caller_extension_uuid);
+	$param .= "&destination_number=".escape($destination_number);
+	$param .= "&context=".escape($context);
+	$param .= "&start_stamp_begin=".escape($start_stamp_begin);
+	$param .= "&start_stamp_end=".escape($start_stamp_end);
+	$param .= "&answer_stamp_begin=".escape($answer_stamp_begin);
+	$param .= "&answer_stamp_end=".escape($answer_stamp_end);
+	$param .= "&end_stamp_begin=".escape($end_stamp_begin);
+	$param .= "&end_stamp_end=".escape($end_stamp_end);
+	$param .= "&start_epoch=".escape($start_epoch);
+	$param .= "&stop_epoch=".escape($stop_epoch);
+	$param .= "&duration=".escape($duration);
+	$param .= "&billsec=".escape($billsec);
+	$param .= "&hangup_cause=".escape($hangup_cause);
+	$param .= "&call_result=".escape($call_result);
+	$param .= "&uuid=".escape($uuid);
+	$param .= "&bleg_uuid=".escape($bleg_uuid);
+	$param .= "&accountcode=".escape($accountcode);
+	$param .= "&read_codec=".escape($read_codec);
+	$param .= "&write_codec=".escape($write_codec);
+	$param .= "&remote_media_ip=".escape($remote_media_ip);
+	$param .= "&network_addr=".escape($network_addr);
+	$param .= "&bridge_uuid=".escape($bridge_uuid);
+	$param .= "&mos_comparison=".escape($mos_comparison);
+	$param .= "&mos_score=".escape($mos_score);
 	if (is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
 			$array = explode(",", $field);
 			$field_name = end($array);
 			if (isset($$field_name)) {
-				$param .= "&".$field_name."=".$$field_name;
+				$param .= "&".$field_name."=".escape($$field_name);
 			}
 		}
 	}
@@ -307,7 +307,7 @@
 		$param .= "&show=all";
 	}
 	if (isset($order_by)) {
-		$param .= "&order_by=".$order_by."&order=".$order;
+		$param .= "&order_by=".escape($order_by)."&order=".escape($order);
 	}
 
 //create the sql query to get the xml cdr records
