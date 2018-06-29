@@ -1027,18 +1027,18 @@ function type_onchange(dialplan_detail_type) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-if (permission_exists('outbound_route_pin_codes')) {
+if (permission_exists('outbound_route_pin_numbers')) {
          echo "<tr>\n";
          echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-         echo "    ".$text['label-pin_codes']."\n";
+         echo "    ".$text['label-pin_numbers']."\n";
          echo "</td>\n";
          echo "<td class='vtable' align='left'>\n";
-         echo "  <select class='formfld' name='pin_codes_enabled'>\n";
+         echo "  <select class='formfld' name='pin_numbers_enabled'>\n";
          echo "          <option value='true'>".$text['label-true']."</option>\n";
          echo "          <option value='false' selected='true'>".$text['label-false']."</option>\n";
          echo "  </select>\n";
          echo "<br />\n";
-         echo $text['description-enable-pin_codes']."\n";
+         echo $text['description-enable-pin_numbers']."\n";
          echo "</td>\n";
          echo "</tr>\n";
         }
