@@ -262,7 +262,7 @@ class destinations {
 					$select_label = trim($select_label);
 					if ($select_value == $destination_value) { $selected = "selected='selected' "; $select_found = true; } else { $selected = ''; }
 					if ($label2 == 'destinations') { $select_label = format_phone($select_label); }
-					$response .= "			<option value='".$select_value."' ".$selected.">".$select_label."</option>\n";
+					$response .= "			<option value='".escape($select_value)."' ".$selected.">".escape($select_label)."</option>\n";
 				}
 				$response .= "		</optgroup>\n";
 				unset($text);
@@ -273,7 +273,7 @@ class destinations {
 			$destination_label = str_replace("menu-exec-app", "", $destination_label);
 			$destination_label = str_replace("transfer", "", $destination_label);
 			$destination_label = str_replace("XML ".$_SESSION['domain_name'], "", $destination_label);
-			$response .= "			<option value='".$destination_value."' selected='selected'>".trim($destination_label)."</option>\n";
+			$response .= "			<option value='".escape($destination_value)."' selected='selected'>".escape(trim($destination_label))."</option>\n";
 		}
 		$response .= "	</select>\n";
 		if (if_group("superadmin")) {
