@@ -67,7 +67,7 @@
 			$accountcode = check_str($_POST["accountcode"]);
 			$toll_allow = check_str($_POST["toll_allow"]);
 			$pin_numbers_enable = check_str($_POST["pin_numbers_enabled"]);
-			if (strlen($pin_numbers_enable) == 0) { $pin_number_enable = "false"; }
+			if (strlen($pin_numbers_enable) == 0) { $pin_numbers_enable = "false"; }
 		//set the default type
 			$gateway_type = 'gateway';
 			$gateway_2_type = 'gateway';
