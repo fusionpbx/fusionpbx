@@ -58,78 +58,79 @@
 		$description = check_str($_POST["description"]);
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+//process the data
+	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
-	$msg = '';
-	if ($action == "update") {
-		$device_vendor_uuid = check_str($_POST["device_vendor_uuid"]);
-	}
+		//get the uuid
+			if ($action == "update") {
+				$device_vendor_uuid = check_str($_POST["device_vendor_uuid"]);
+			}
 
-	//check for all required data
-		if (strlen($name) == 0) { $msg .= $text['message-required']." ".$text['label-name']."<br>\n"; }
-		if (strlen($enabled) == 0) { $msg .= $text['message-required']." ".$text['label-enabled']."<br>\n"; }
-		//if (strlen($description) == 0) { $msg .= $text['message-required']." ".$text['label-description']."<br>\n"; }
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-			require_once "resources/header.php";
-			require_once "resources/persist_form_var.php";
-			echo "<div align='center'>\n";
-			echo "<table><tr><td>\n";
-			echo $msg."<br />";
-			echo "</td></tr></table>\n";
-			persistformvar($_POST);
-			echo "</div>\n";
-			require_once "resources/footer.php";
-			return;
-		}
-
-	//add or update the database
-		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add" && permission_exists('device_vendor_add')) {
-				$sql = "insert into v_device_vendors ";
-				$sql .= "(";
-				$sql .= "device_vendor_uuid, ";
-				$sql .= "name, ";
-				$sql .= "enabled, ";
-				$sql .= "description ";
-				$sql .= ")";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'".uuid()."', ";
-				$sql .= "'$name', ";
-				$sql .= "'$enabled', ";
-				$sql .= "'$description' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
-
-				messages::add($text['message-add']);
-				header("Location: device_vendors.php");
+		//check for all required data
+			$msg = '';
+			if (strlen($name) == 0) { $msg .= $text['message-required']." ".$text['label-name']."<br>\n"; }
+			if (strlen($enabled) == 0) { $msg .= $text['message-required']." ".$text['label-enabled']."<br>\n"; }
+			//if (strlen($description) == 0) { $msg .= $text['message-required']." ".$text['label-description']."<br>\n"; }
+			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+				require_once "resources/header.php";
+				require_once "resources/persist_form_var.php";
+				echo "<div align='center'>\n";
+				echo "<table><tr><td>\n";
+				echo $msg."<br />";
+				echo "</td></tr></table>\n";
+				persistformvar($_POST);
+				echo "</div>\n";
+				require_once "resources/footer.php";
 				return;
+			}
 
-			} //if ($action == "add")
+		//add or update the database
+			if ($_POST["persistformvar"] != "true") {
+				if ($action == "add" && permission_exists('device_vendor_add')) {
+					$sql = "insert into v_device_vendors ";
+					$sql .= "(";
+					$sql .= "device_vendor_uuid, ";
+					$sql .= "name, ";
+					$sql .= "enabled, ";
+					$sql .= "description ";
+					$sql .= ")";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'".uuid()."', ";
+					$sql .= "'$name', ";
+					$sql .= "'$enabled', ";
+					$sql .= "'$description' ";
+					$sql .= ")";
+					$db->exec(check_sql($sql));
+					unset($sql);
 
-			if ($action == "update" && permission_exists('device_vendor_edit')) {
-				$sql = "update v_device_vendors set ";
-				$sql .= "name = '$name', ";
-				$sql .= "enabled = '$enabled', ";
-				$sql .= "description = '$description' ";
-				$sql .= "where device_vendor_uuid = '$device_vendor_uuid'";
-				$db->exec(check_sql($sql));
-				unset($sql);
+					messages::add($text['message-add']);
+					header("Location: device_vendors.php");
+					return;
 
-				messages::add($text['message-update']);
-				header("Location: device_vendors.php");
-				return;
+				} //if ($action == "add")
 
-			} //if ($action == "update")
-		} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+				if ($action == "update" && permission_exists('device_vendor_edit')) {
+					$sql = "update v_device_vendors set ";
+					$sql .= "name = '$name', ";
+					$sql .= "enabled = '$enabled', ";
+					$sql .= "description = '$description' ";
+					$sql .= "where device_vendor_uuid = '$device_vendor_uuid'";
+					$db->exec(check_sql($sql));
+					unset($sql);
+
+					messages::add($text['message-update']);
+					header("Location: device_vendors.php");
+					return;
+				} //if ($action == "update")
+			} //if ($_POST["persistformvar"] != "true")
+	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$device_vendor_uuid = check_str($_GET["id"]);
 		$sql = "select * from v_device_vendors ";
-		$sql .= "where device_vendor_uuid = '$device_vendor_uuid' ";
+		$sql .= "where device_vendor_uuid = '".$device_vendor_uuid."' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -160,7 +161,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='name' maxlength='255' value=\"$name\">\n";
+	echo "	<input class='formfld' type='text' name='name' maxlength='255' value=\"".escape($name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-name']."\n";
 	echo "</td>\n";
@@ -196,7 +197,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='description' maxlength='255' value=\"$description\">\n";
+	echo "	<input class='formfld' type='text' name='description' maxlength='255' value=\"".escape($description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
@@ -204,7 +205,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='device_vendor_uuid' value='$device_vendor_uuid'>\n";
+		echo "				<input type='hidden' name='device_vendor_uuid' value='".escape($device_vendor_uuid)."'>\n";
 	}
 	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
