@@ -146,7 +146,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$access_control_uuid = check_str($_GET["id"]);
 		$sql = "select * from v_access_controls ";
 		$sql .= "where access_control_uuid = '$access_control_uuid' ";
@@ -181,7 +181,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-access_control_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='access_control_name' maxlength='255' value=\"$access_control_name\">\n";
+	echo "	<input class='formfld' type='text' name='access_control_name' maxlength='255' value=\"".escape($access_control_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-access_control_name']."\n";
 	echo "</td>\n";
@@ -217,7 +217,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-access_control_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='access_control_description' maxlength='255' value=\"$access_control_description\">\n";
+	echo "	<input class='formfld' type='text' name='access_control_description' maxlength='255' value=\"".escape($access_control_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-access_control_description']."\n";
 	echo "</td>\n";
@@ -225,7 +225,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='access_control_uuid' value='$access_control_uuid'>\n";
+		echo "				<input type='hidden' name='access_control_uuid' value='".escape($access_control_uuid)."'>\n";
 	}
 	echo "				<br><input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
@@ -241,4 +241,5 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>
