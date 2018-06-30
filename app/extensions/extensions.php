@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -103,7 +103,7 @@
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "&search=".$search;
+	$param = "&search=".escape($search);
 	if (!isset($_GET['page'])) { $_GET['page'] = 0; }
 	$_GET['page'] = check_str($_GET['page']);
 	list($paging_controls_mini, $rows_per_page, $var_3) = paging($total_extensions, $param, $rows_per_page, true); //top
@@ -216,11 +216,11 @@
 	if (is_array($extensions)) {
 
 		foreach($extensions as $row) {
-			$tr_link = (permission_exists('extension_edit')) ? " href='extension_edit.php?id=".$row['extension_uuid']."'" : null;
+			$tr_link = (permission_exists('extension_edit')) ? " href='extension_edit.php?id=".escape($row['extension_uuid'])."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			if (permission_exists('extension_delete')) {
 				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; vertical-align: middle; padding: 0px;'>";
-				echo "		<input type='checkbox' name='id[]' id='checkbox_".$row['extension_uuid']."' value='".$row['extension_uuid']."' onclick=\"if (!this.checked) { document.getElementById('chk_all').checked = false; }\">";
+				echo "		<input type='checkbox' name='id[]' id='checkbox_".escape($row['extension_uuid'])."' value='".escape($row['extension_uuid'])."' onclick=\"if (!this.checked) { document.getElementById('chk_all').checked = false; }\">";
 				echo "	</td>";
 				$ext_ids[] = 'checkbox_'.$row['extension_uuid'];
 			}
@@ -229,7 +229,7 @@
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('extension_edit')) {
-				echo "<a href='extension_edit.php?id=".$row['extension_uuid']."'>".escape($row['extension'])."</a>";
+				echo "<a href='extension_edit.php?id=".escape($row['extension_uuid'])."'>".escape($row['extension'])."</a>";
 			}
 			else {
 				echo escape($row['extension']);
@@ -247,13 +247,13 @@
 					$extension_number_alias .= '@'.$_SESSION['domain_name'];
 				}
 				$found_count = 0;
-				foreach ($registrations as $arr) {
-					if(
-						($extension_number == $arr['user']) ||
+				foreach ($registrations as $array) {
+					if (
+						($extension_number == $array['user']) ||
 						($extension_number_alias != '' &&
-							$extension_number_alias == $arr['user']
+							$extension_number_alias == $array['user']
 						)
-					){
+					) {
 						$found_count++;
 					}
 				}
@@ -262,7 +262,7 @@
 				} else {
 					echo "No";
 				}
-				unset($extension_number, $extension_number_alias, $found_count, $arr);
+				unset($extension_number, $extension_number_alias, $found_count, $array);
 				echo "&nbsp;</td>\n";
 			}
 
@@ -271,10 +271,10 @@
 
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('extension_edit')) {
-				echo "<a href='extension_edit.php?id=".$row['extension_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='extension_edit.php?id=".escape($row['extension_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('extension_delete')) {
-				echo "<a href='extension_delete.php?id[]=".$row['extension_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='extension_delete.php?id[]=".escape($row['extension_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "</td>\n";
 			echo "</tr>\n";
