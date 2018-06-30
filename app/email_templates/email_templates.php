@@ -150,8 +150,8 @@
 	echo "	function checkbox_toggle(item) {\n";
 	echo "		var inputs = document.getElementsByTagName(\"input\");\n";
 	echo "		for (var i = 0, max = inputs.length; i < max; i++) {\n";
-	echo "		    if (inputs[i].type === 'checkbox') {\n";
-	echo "		       	if (document.getElementById('checkbox_all').checked == true) {\n";
+	echo "			if (inputs[i].type === 'checkbox') {\n";
+	echo "				if (document.getElementById('checkbox_all').checked == true) {\n";
 	echo "				inputs[i].checked = true;\n";
 	echo "			}\n";
 	echo "				else {\n";
@@ -176,7 +176,7 @@
 			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='email_templates.php?show=all';\">\n";
 		}
 	}
-	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>\n";
+	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".escape($search)."'>\n";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
 	echo "			</td>\n";
 	echo "		</form>\n";
@@ -213,12 +213,12 @@
 		$x = 0;
 		foreach($result as $row) {
 			if (permission_exists('email_template_edit')) {
-				$tr_link = "href='email_template_edit.php?id=".$row['email_template_uuid']."'";
+				$tr_link = "href='email_template_edit.php?id=".escape($row['email_template_uuid'])."'";
 			}
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='align: center; padding: 3px 3px 0px 8px;'>\n";
 			echo "		<input type='checkbox' name=\"email_templates[$x][checked]\" id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$x."').checked = false; }\">\n";
-			echo "		<input type='hidden' name=\"email_templates[$x][email_template_uuid]\" value='".$row['email_template_uuid']."' />\n";
+			echo "		<input type='hidden' name=\"email_templates[$x][email_template_uuid]\" value='".escape($row['email_template_uuid'])."' />\n";
 			echo "	</td>\n";
 			if ($_GET['show'] == "all" && permission_exists('email_template_all')) {
 				if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
@@ -227,20 +227,20 @@
 				else {
 					$domain = $text['label-global'];
 				}
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$domain."</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($domain)."</td>\n";
 			}
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['template_language']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['template_category']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['template_subcategory']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['template_subject']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['template_body']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_uuid']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['template_type']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['template_enabled']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".$row['template_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['template_language'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['template_category'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['template_subcategory'])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['template_subject'])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['template_body'])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['domain_uuid'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['template_type'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['template_enabled'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($row['template_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('email_template_edit')) {
-				echo "<a href='email_template_edit.php?id=".$row['email_template_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='email_template_edit.php?id=".escape($row['email_template_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('email_template_delete')) {
 				echo "<button type='submit' class='btn btn-default list_control_icon' name=\"email_templates[$x][action]\" alt='".$text['button-delete']."' value='delete'><span class='glyphicon glyphicon-remove'></span></button>";
