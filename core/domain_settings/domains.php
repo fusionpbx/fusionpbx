@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2015
+ Portions created by the Initial Developer are Copyright (C) 2008-2018
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -177,7 +177,7 @@
 	echo "		<td width='50%' align='left' valign='top' nowrap='nowrap'><b>".$text['header-domains']." (".$num_rows.")</b></td>\n";
 	echo "		<td width='50%' align='right' valign='top'>\n";
 	echo "			<form method='get' action=''>\n";
-	echo "			<input type='text' class='txt' style='width: 150px' name='search' value='$search'>";
+	echo "			<input type='text' class='txt' style='width: 150px' name='search' value='".escape($search)."'>";
 	echo "			<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	echo "			</form>\n";
 	echo "		</td>\n";
@@ -203,27 +203,27 @@
 
 	if (count($domains) > 0) {
 		foreach ($domains as $domain_uuid => $domain) {
-			$tr_link = (permission_exists('domain_edit')) ? "href='domain_edit.php?id=".$domain_uuid."'" : null;
+			$tr_link = (permission_exists('domain_edit')) ? "href='domain_edit.php?id=".escape($domain_uuid)."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' ".(($indent != 0) ? "style='padding-left: ".($indent * 20)."px;'" : null).">";
-			echo "		<a href='domain_edit.php?id=".$domain_uuid."'>".$domain['name']."</a>";
+			echo "		<a href='domain_edit.php?id=".escape($domain_uuid)."'>".escape($domain['name'])."</a>";
 			if ($domain['enabled'] != '' && $domain['enabled'] != 'true') {
 				echo "	<span style='color: #aaa; font-size: 80%;'>&nbsp;&nbsp;(".$text['label-disabled'].")</span>";
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('domain_edit')) {
-				echo "<a href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".$domain_uuid."&domain_change=true'>".$text['label-manage']."</a>";
+				echo "<a href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".escape($domain_uuid)."&domain_change=true'>".$text['label-manage']."</a>";
 			}
 			echo "	</td>";
-			echo "	<td valign='top' class='row_stylebg'>".$domain['description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($domain['description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('domain_edit')) {
-				echo "<a href='domain_edit.php?id=".$domain_uuid."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
+				echo "<a href='domain_edit.php?id=".escape($domain_uuid)."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
 			}
 			if (permission_exists('domain_delete')) {
 				if ($_SESSION["groups"][0]["domain_uuid"] != $domain_uuid && count($_SESSION['domains']) > 1) {
-					echo "<a href='domain_delete.php?id=".$domain_uuid."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+					echo "<a href='domain_delete.php?id=".escape($domain_uuid)."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 				}
 				else {
 					echo "<span onclick=\"alert('You cannot delete your own domain.\\n\\nPlease login with a user account under a different domain, then try again.');\">".$v_link_label_delete."</span>";
