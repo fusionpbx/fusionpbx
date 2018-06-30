@@ -96,7 +96,7 @@
 				sql = sql .. "	or (p.dialplan_context like '%public%' and p.domain_uuid is null) ";
 				sql = sql .. ") ";
 				sql = sql .. "and p.domain_uuid = d.domain_uuid ";
-				sql = sql .. "and (p.hostname = :hostname or p.hostname is null) ";
+				sql = sql .. "and (p.hostname = :hostname or p.hostname is null or p.hostname LIKE :hostname) ";
 				sql = sql .. "and p.dialplan_enabled = 'true' ";
 				sql = sql .. "order by p.dialplan_order asc ";
 				local params = {destination_number = destination_number, hostname = hostname};
@@ -126,7 +126,7 @@
 				else
 					sql = sql .. "where (p.dialplan_context = :call_context or p.dialplan_context = '${domain_name}') ";
 				end
-				sql = sql .. "and (p.hostname = :hostname or p.hostname is null) ";
+				sql = sql .. "and (p.hostname = :hostname or p.hostname is null or p.hostname LIKE :hostname) ";
 				sql = sql .. "and p.dialplan_enabled = 'true' ";
 				sql = sql .. "order by p.dialplan_order asc ";
 				local params = {call_context = call_context, hostname = hostname};
