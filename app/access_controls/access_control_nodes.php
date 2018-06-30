@@ -72,7 +72,7 @@
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "&id=".$access_control_uuid;
+	$param = "&id=".escape($access_control_uuid);
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
@@ -81,7 +81,7 @@
 //get the list
 	$sql = "select * from v_access_control_nodes ";
 	$sql .= "where access_control_uuid = '".$access_control_uuid."' ";
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+	if (strlen($order_by) > 0) { $sql .= "order by $order_by $order "; }
 	$sql .= "limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
