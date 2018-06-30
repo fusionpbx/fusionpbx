@@ -40,7 +40,7 @@
 			$db->exec(check_sql($sql));
 		//redirect the browser
 			messages::add($text['message-delete']);
-			header("Location: device_vendor_function_edit.php?id=".$device_vendor_function_uuid ."&device_vendor_uuid=".$device_vendor_uuid);
+			header("Location: device_vendor_function_edit.php?id=".escape($device_vendor_function_uuid) ."&device_vendor_uuid=".escape($device_vendor_uuid));
 			return;
 	}
 
@@ -186,7 +186,7 @@
 
 				//redirect the user
 					$_SESSION["message"] = $text['message-'.$action];
-					header("Location: device_vendor_function_edit.php?id=".$device_vendor_function_uuid ."&device_vendor_uuid=".$device_vendor_uuid);
+					header("Location: device_vendor_function_edit.php?id=".escape($device_vendor_function_uuid) ."&device_vendor_uuid=".escape($device_vendor_uuid));
 					return;
 			} //if ($_POST["persistformvar"] != "true")
 	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
@@ -260,7 +260,7 @@
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-device_vendor_function']."</b><br><br></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='device_vendor_edit.php?id=$device_vendor_uuid'\" value='".$text['button-back']."'>";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='device_vendor_edit.php?id=".escape($device_vendor_uuid)."'\" value='".$text['button-back']."'>";
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -270,7 +270,7 @@
 	//echo "	".$text['label-label']."\n";
 	//echo "</td>\n";
 	//echo "<td class='vtable' align='left'>\n";
-	//echo "	<input class='formfld' type='text' name='label' maxlength='255' value=\"$label\">\n";
+	//echo "	<input class='formfld' type='text' name='label' maxlength='255' value=\"".escape($label)."\">\n";
 	//echo "<br />\n";
 	//echo $text['description-label']."\n";
 	//echo "</td>\n";
@@ -281,7 +281,7 @@
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='name' maxlength='255' value=\"$name\">\n";
+	echo "	<input class='formfld' type='text' name='name' maxlength='255' value=\"".escape($name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-name']."\n";
 	echo "</td>\n";
@@ -292,7 +292,7 @@
 	echo "	".$text['label-value']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='value' maxlength='255' value=\"$value\">\n";
+	echo "	<input class='formfld' type='text' name='value' maxlength='255' value=\"".escape($value)."\">\n";
 	echo "<br />\n";
 	echo $text['description-value']."\n";
 	echo "</td>\n";
@@ -330,7 +330,7 @@
 			if ($field['group_name'] == "superadmin" && !if_group("superadmin")) { continue; }	//only show the superadmin group to other superadmins
 			if ($field['group_name'] == "admin" && (!if_group("superadmin") && !if_group("admin") )) { continue; }	//only show the admin group to other admins
 			if (!in_array($field["group_uuid"], $assigned_groups)) {
-				echo "	<option value='".$field['group_uuid']."|".$field['group_name']."'>".$field['group_name'].(($field['domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['domain_uuid']]['domain_name'] : null)."</option>\n";
+				echo "	<option value='".escape($field['group_uuid'])."|".escape($field['group_name'])."'>".escape($field['group_name']).(($field['domain_uuid'] != '') ? "@".escape($_SESSION['domains'][$field['domain_uuid']]['domain_name']) : null)."</option>\n";
 			}
 		}
 		echo "</select>";
@@ -369,16 +369,16 @@
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='description' maxlength='255' value=\"$description\">\n";
+	echo "	<input class='formfld' type='text' name='description' maxlength='255' value=\"".escape($description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
-	echo "				<input type='hidden' name='device_vendor_uuid' value='$device_vendor_uuid'>\n";
+	echo "				<input type='hidden' name='device_vendor_uuid' value='".escape($device_vendor_uuid)."'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='device_vendor_function_uuid' value='$device_vendor_function_uuid'>\n";
+		echo "				<input type='hidden' name='device_vendor_function_uuid' value='".escape($device_vendor_function_uuid)."'>\n";
 	}
 	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
