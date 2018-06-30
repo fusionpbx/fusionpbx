@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -324,10 +324,10 @@
 	
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-name']."\n";
+	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='dialplan_name' maxlength='255' value=\"$dialplan_name\">\n";
+	echo "	<input class='formfld' type='text' name='dialplan_name' maxlength='255' value=\"".escape($dialplan_name)."\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
@@ -341,13 +341,13 @@
 	//echo "    <select class='formfld' name='dialplan_continue' style='width: 60%;'>\n";
 	//echo "    <option value=''></option>\n";
 	//if ($dialplan_continue == "true") {
-	//	echo "    <option value='true' SELECTED >true</option>\n";
+	//	echo "    <option value='true' selected='selected'>true</option>\n";
 	//}
 	//else {
 	//	echo "    <option value='true'>true</option>\n";
 	//}
 	//if ($dialplan_continue == "false") {
-	//	echo "    <option value='false' SELECTED >false</option>\n";
+	//	echo "    <option value='false' selected='selected'>false</option>\n";
 	//}
 	//else {
 	//	echo "    <option value='false'>false</option>\n";
@@ -403,7 +403,7 @@
 	echo "    <select class='formfld' name='condition_field_1' id='condition_field_1' onchange='changeToInput_condition_field_1(this);this.style.visibility = \"hidden\";' style='width:85%'>\n";
 	echo "    <option value=''></option>\n";
 	if (strlen($condition_field_1) > 0) {
-		echo "    <option value='$condition_field_1' selected='selected'>$condition_field_1</option>\n";
+		echo "    <option value='".escape($condition_field_1)."' selected='selected'>".escape($condition_field_1)."</option>\n";
 	}
 	echo "	<optgroup label='Field'>\n";
 	echo "		<option value='context'>".$text['option-context']."</option>\n";
@@ -438,7 +438,7 @@
 	echo "	</td>\n";
 	//echo "	<td>&nbsp;&nbsp;&nbsp;".$text['label-expression']."</td>\n";
 	echo "	<td>\n";
-	echo "		&nbsp;<input class='formfld' type='text' name='condition_expression_1' maxlength='255' value=\"$condition_expression_1\">\n";
+	echo "		&nbsp;<input class='formfld' type='text' name='condition_expression_1' maxlength='255' value=\"".escape($condition_expression_1)."\">\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";
@@ -492,7 +492,7 @@
 	echo "    <select class='formfld' name='condition_field_2' id='condition_field_2' onchange='changeToInput_condition_field_2(this);this.style.visibility = \"hidden\";'>\n";
 	echo "    <option value=''></option>\n";
 	if (strlen($condition_field_2) > 0) {
-		echo "    <option value='$condition_field_2' selected>$condition_field_2</option>\n";
+		echo "    <option value='".escape($condition_field_2)."' selected>".escape($condition_field_2)."</option>\n";
 	}
 	echo "	<optgroup label='Field'>\n";
 	echo "		<option value='context'>".$text['option-context']."</option>\n";
@@ -527,7 +527,7 @@
 	echo "	</td>\n";
 	//echo "	<td>&nbsp;&nbsp;&nbsp;".$text['label-expression']."</td>\n";
 	echo "	<td>\n";
-	echo "		&nbsp;<input class='formfld' type='text' name='condition_expression_2' maxlength='255' value=\"$condition_expression_2\">\n";
+	echo "		&nbsp;<input class='formfld' type='text' name='condition_expression_2' maxlength='255' value=\"".escape($condition_expression_2)."\">\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";
@@ -540,7 +540,7 @@
 	echo "    ".$text['label-action_1']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo $destination->select('dialplan', 'action_1', $action_1);
+	echo $destination->select('dialplan', 'action_1', escape($action_1));
 	echo "</td>\n";
 	echo "</tr>\n";
 	
@@ -552,7 +552,7 @@
 	echo "    ".$text['label-action_2']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo $destination->select('dialplan', 'action_2', $action_2);
+	echo $destination->select('dialplan', 'action_2', escape($action_2));
 	echo "</td>\n";
 	echo "</tr>\n";
 	
@@ -561,7 +561,7 @@
 	echo " 		".$text['label-context']."\n";
 	echo "	</td>\n";
 	echo "	<td colspan='4' class='vtable' align='left'>\n";
-	echo "		<input class='formfld' style='width: 60%;' type='text' name='dialplan_context' maxlength='255' value=\"$dialplan_context\">\n";
+	echo "		<input class='formfld' style='width: 60%;' type='text' name='dialplan_context' maxlength='255' value=\"".escape($dialplan_context)."\">\n";
 	echo "		<br />\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
@@ -573,8 +573,8 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select name='dialplan_order' class='formfld'>\n";
 	//echo "		<option></option>\n";
-	if (strlen(htmlspecialchars($dialplan_order)) > 0) {
-		echo "		 <option selected='selected' value='".htmlspecialchars($dialplan_order)."'>".htmlspecialchars($dialplan_order)."</option>\n";
+	if (strlen($dialplan_order) > 0) {
+		echo "		 <option selected='selected' value='".escape($dialplan_order)."'>".escape($dialplan_order)."</option>\n";
 	}
 	$i = 200;
 	while($i <= 999) {
@@ -614,7 +614,7 @@
 	echo " 		".$text['label-description']."\n";
 	echo "	</td>\n";
 	echo "	<td colspan='4' class='vtable' align='left'>\n";
-	echo "		<input class='formfld' type='text' name='dialplan_description' maxlength='255' value=\"$dialplan_description\">\n";
+	echo "		<input class='formfld' type='text' name='dialplan_description' maxlength='255' value=\"".escape($dialplan_description)."\">\n";
 	echo "		<br />\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
@@ -622,7 +622,7 @@
 	echo "<tr>\n";
 	echo "	<td colspan='5' align='right'>\n";
 	if ($action == "update") {
-		echo "	<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
+		echo "	<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	}
 	echo "		<br>";
 	echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
