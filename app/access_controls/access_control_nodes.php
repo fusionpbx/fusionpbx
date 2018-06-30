@@ -56,7 +56,7 @@
 
 	//prepare to page the results
 		$sql = "select count(*) as num_rows from v_access_control_nodes ";
-		$sql .= "where access_control_uuid = '$access_control_uuid' ";
+		$sql .= "where access_control_uuid = '".$access_control_uuid."' ";
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
@@ -80,7 +80,7 @@
 
 	//get the list
 		$sql = "select * from v_access_control_nodes ";
-		$sql .= "where access_control_uuid = '$access_control_uuid' ";
+		$sql .= "where access_control_uuid = '".$access_control_uuid."' ";
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$sql .= "limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -101,7 +101,7 @@
 	echo th_order_by('node_description', $text['label-node_description'], $order_by, $order);
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('access_control_node_add')) {
-		echo "<a href='access_control_node_edit.php?access_control_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo "<a href='access_control_node_edit.php?access_control_uuid=".escape($_GET['id'])."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	else {
 		echo "&nbsp;\n";
@@ -109,22 +109,22 @@
 	echo "</td>\n";
 	echo "<tr>\n";
 
-	if ($result_count > 0) {
-		foreach($result as $row) {
+	if (is_array($access_control_nodes)) {
+		foreach($access_control_nodes as $row) {
 			if (permission_exists('access_control_node_edit')) {
-				$tr_link = "href='access_control_node_edit.php?access_control_uuid=".$row['access_control_uuid']."&id=".$row['access_control_node_uuid']."'";
+				$tr_link = "href='access_control_node_edit.php?access_control_uuid=".escape($row['access_control_uuid'])."&id=".escape($row['access_control_node_uuid'])."'";
 			}
 			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['node_type']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['node_cidr']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['node_domain']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['node_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['node_type'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['node_cidr'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['node_domain'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['node_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('access_control_node_edit')) {
-				echo "<a href='access_control_node_edit.php?access_control_uuid=".$row['access_control_uuid']."&id=".$row['access_control_node_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='access_control_node_edit.php?access_control_uuid=".escape($row['access_control_uuid'])."&id=".escape($row['access_control_node_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('access_control_node_delete')) {
-				echo "<a href='access_control_node_delete.php?access_control_uuid=".$row['access_control_uuid']."&id=".$row['access_control_node_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='access_control_node_delete.php?access_control_uuid=".escape($row['access_control_uuid'])."&id=".escape($row['access_control_node_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
