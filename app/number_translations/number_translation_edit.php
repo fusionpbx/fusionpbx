@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2017
+	Portions created by the Initial Developer are Copyright (C) 2017-2018
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -134,7 +134,7 @@
 				if ($action == "update") {
 					$_SESSION["message"] = $text['message-update'];
 				}
-				header('Location: number_translation_edit.php?id='.$number_translation_uuid);
+				header('Location: number_translation_edit.php?id='.escape($number_translation_uuid));
 				return;
 			}
 	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
@@ -203,7 +203,7 @@
 	echo "	".$text['label-number_translation_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='number_translation_name' maxlength='255' value=\"$number_translation_name\">\n";
+	echo "	<input class='formfld' type='text' name='number_translation_name' maxlength='255' value=\"".escape($number_translation_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-number_translation_name']."\n";
 	echo "</td>\n";
@@ -224,19 +224,19 @@
 	$x = 0;
 	foreach($number_translation_details as $row) {
 		echo "			<tr>\n";
-		echo "				<input type='hidden' name='number_translation_details[$x][number_translation_uuid]' value=\"".$row["number_translation_uuid"]."\">\n";
-		echo "				<input type='hidden' name='number_translation_details[$x][number_translation_detail_uuid]' value=\"".$row["number_translation_detail_uuid"]."\">\n";
+		echo "				<input type='hidden' name='number_translation_details[$x][number_translation_uuid]' value=\"".escape($row["number_translation_uuid"])."\">\n";
+		echo "				<input type='hidden' name='number_translation_details[$x][number_translation_detail_uuid]' value=\"".escape($row["number_translation_detail_uuid"])."\">\n";
 		echo "				<td>\n";
-		echo "					<input class='formfld' type='text' name='number_translation_details[$x][number_translation_detail_regex]' maxlength='255' value=\"".$row["number_translation_detail_regex"]."\">\n";
+		echo "					<input class='formfld' type='text' name='number_translation_details[$x][number_translation_detail_regex]' maxlength='255' value=\"".escape($row["number_translation_detail_regex"])."\">\n";
 		echo "				</td>\n";
 		echo "				<td>\n";
-		echo "					<input class='formfld' type='text' name='number_translation_details[$x][number_translation_detail_replace]' maxlength='255' value=\"".$row["number_translation_detail_replace"]."\">\n";
+		echo "					<input class='formfld' type='text' name='number_translation_details[$x][number_translation_detail_replace]' maxlength='255' value=\"".escape($row["number_translation_detail_replace"])."\">\n";
 		echo "				</td>\n";
 		echo "				<td>\n";
-			echo "				<input class='formfld' type='text' name='number_translation_details[$x][number_translation_detail_order]' maxlength='255' value=\"".$row["number_translation_detail_order"]."\">\n";
+			echo "				<input class='formfld' type='text' name='number_translation_details[$x][number_translation_detail_order]' maxlength='255' value=\"".escape($row["number_translation_detail_order"])."\">\n";
 		echo "				</td>\n";
 		echo "				<td class='list_control_icons' style='width: 25px;'>\n";
-		echo "					<a href=\"number_translation_delete.php?number_translation_detail_uuid=".$row["number_translation_detail_uuid"]."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\"><button type='button' class='btn btn-default list_control_icon'><span class='glyphicon glyphicon-remove'></span></button></a>\n";
+		echo "					<a href=\"number_translation_delete.php?number_translation_detail_uuid=".escape($row["number_translation_detail_uuid"])."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\"><button type='button' class='btn btn-default list_control_icon'><span class='glyphicon glyphicon-remove'></span></button></a>\n";
 		echo "				</td>\n";
 		echo "			</tr>\n";
 		$x++;
@@ -277,7 +277,7 @@
 	echo "	".$text['label-number_translation_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='number_translation_description' maxlength='255' value=\"$number_translation_description\">\n";
+	echo "	<input class='formfld' type='text' name='number_translation_description' maxlength='255' value=\"".escape($number_translation_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-number_translation_description']."\n";
 	echo "</td>\n";
@@ -285,7 +285,7 @@
 
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
-	echo "			<input type='hidden' name='number_translation_uuid' value='$number_translation_uuid'>\n";
+	echo "			<input type='hidden' name='number_translation_uuid' value='".escape($number_translation_uuid)."'>\n";
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
