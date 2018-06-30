@@ -1,4 +1,23 @@
 <?php
+/*
+	FusionPBX
+	Version: MPL 1.1
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
+	The Original Code is FusionPBX
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2018
+	the Initial Developer. All Rights Reserved.
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+*/
 
 //includes
 	require_once "root.php";
@@ -110,7 +129,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				messages::add($text['message-add']);
 
 				//redirect the browser
-				header('Location: access_control_edit.php?id='.$access_control_uuid);
+				header('Location: access_control_edit.php?id='.escape($access_control_uuid));
 				return;
 
 			} //if ($action == "add")
@@ -140,7 +159,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				messages::add($text['message-update']);
 
 				//redirect the browser
-				header('Location: access_control_edit.php?id='.$access_control_uuid);
+				header('Location: access_control_edit.php?id='.escape($access_control_uuid));
 				return;
 
 			} //if ($action == "update")
@@ -148,10 +167,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$access_control_node_uuid = check_str($_GET["id"]);
 		$sql = "select * from v_access_control_nodes ";
-		$sql .= "where access_control_node_uuid = '$access_control_node_uuid' ";
+		$sql .= "where access_control_node_uuid = '".$access_control_node_uuid."' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -160,7 +179,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$node_cidr = $row["node_cidr"];
 			$node_domain = $row["node_domain"];
 			$node_description = $row["node_description"];
-			break; //limit to 1 row
 		}
 		unset ($prep_statement);
 	}
@@ -174,7 +192,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-access_control_node']."</b><br><br></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='access_control_edit.php?id=$access_control_uuid'\" value='".$text['button-back']."'>";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='access_control_edit.php?id=".escape($access_control_uuid)."'\" value='".$text['button-back']."'>";
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -209,7 +227,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-node_cidr']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='node_cidr' maxlength='255' value=\"$node_cidr\">\n";
+	echo "	<input class='formfld' type='text' name='node_cidr' maxlength='255' value=\"".escape($node_cidr)."\">\n";
 	echo "<br />\n";
 	echo $text['description-node_cidr']."\n";
 	echo "</td>\n";
@@ -220,7 +238,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-node_domain']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='node_domain' maxlength='255' value=\"$node_domain\">\n";
+	echo "	<input class='formfld' type='text' name='node_domain' maxlength='255' value=\"".escape($node_domain)."\">\n";
 	echo "<br />\n";
 	echo $text['description-node_domain']."\n";
 	echo "</td>\n";
@@ -231,16 +249,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-node_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='node_description' maxlength='255' value=\"$node_description\">\n";
+	echo "	<input class='formfld' type='text' name='node_description' maxlength='255' value=\"".escape($node_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-node_description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
-	echo "				<input type='hidden' name='access_control_uuid' value='$access_control_uuid'>\n";
+	echo "				<input type='hidden' name='access_control_uuid' value='".escape($access_control_uuid)."'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='access_control_node_uuid' value='$access_control_node_uuid'>\n";
+		echo "				<input type='hidden' name='access_control_node_uuid' value='".escape($access_control_node_uuid)."'>\n";
 	}
 	echo "				<br><input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
@@ -251,4 +269,5 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>
