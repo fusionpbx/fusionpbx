@@ -13,7 +13,7 @@
 	The Original Code is FusionPBX
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2017
+	Portions created by the Initial Developer are Copyright (C) 2017-2018
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -123,8 +123,8 @@
 	echo "	function checkbox_toggle(item) {\n";
 	echo "		var inputs = document.getElementsByTagName(\"input\");\n";
 	echo "		for (var i = 0, max = inputs.length; i < max; i++) {\n";
-	echo "		    if (inputs[i].type === 'checkbox') {\n";
-	echo "		       	if (document.getElementById('checkbox_all').checked == true) {\n";
+	echo "			if (inputs[i].type === 'checkbox') {\n";
+	echo "				if (document.getElementById('checkbox_all').checked == true) {\n";
 	echo "				inputs[i].checked = true;\n";
 	echo "			}\n";
 	echo "				else {\n";
@@ -141,7 +141,7 @@
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-number_translations']."</b></td>\n";
 	echo "		<form method='get' action=''>\n";
 	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
-	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>\n";
+	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".escape($search)."'>\n";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
 	echo "			</td>\n";
 	echo "		</form>\n";
@@ -176,19 +176,19 @@
 		$x = 0;
 		foreach($result as $row) {
 			if (permission_exists('number_translation_edit')) {
-				$tr_link = "href='number_translation_edit.php?id=".$row['number_translation_uuid']."'";
+				$tr_link = "href='number_translation_edit.php?id=".escape($row['number_translation_uuid'])."'";
 			}
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='align: center; padding: 3px 3px 0px 8px;'>\n";
 			echo "		<input type='checkbox' name=\"number_translations[$x][checked]\" id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$x."').checked = false; }\">\n";
-			echo "		<input type='hidden' name=\"number_translations[$x][number_translation_uuid]\" value='".$row['number_translation_uuid']."' />\n";
+			echo "		<input type='hidden' name=\"number_translations[$x][number_translation_uuid]\" value='".escape($row['number_translation_uuid'])."' />\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['number_translation_name'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['number_translation_enabled'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".escape($row['number_translation_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('number_translation_edit')) {
-				echo "<a href='number_translation_edit.php?id=".$row['number_translation_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='number_translation_edit.php?id=".escape($row['number_translation_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('number_translation_delete')) {
 				echo "<button type='submit' class='btn btn-default list_control_icon' name=\"number_translations[$x][action]\" alt='".$text['button-delete']."' value='delete'><span class='glyphicon glyphicon-remove'></span></button>";
