@@ -253,7 +253,7 @@
 
 				$tr_link = (permission_exists('conference_room_edit')) ? "href='conference_room_edit.php?id=".escape($row['conference_room_uuid'])."'" : null;
 				echo "<tr ".$tr_link.">\n";
-				echo "	<td valign='middle' class='".$row_style[$c]."'>".(($conference_room_name != '') ? "<a ".$tr_link.">".$conference_room_name."</a>" : "&nbsp;")."</td>\n";
+				echo "	<td valign='middle' class='".$row_style[$c]."'>".(($conference_room_name != '') ? "<a ".$tr_link.">".escape($conference_room_name)."</a>" : "&nbsp;")."</td>\n";
 				echo "	<td valign='middle' class='".$row_style[$c]."'>".$moderator_pin."</td>\n";
 				echo "	<td valign='middle' class='".$row_style[$c]."'>".$participant_pin."</td>\n";
 				//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['conference_center_uuid'])."&nbsp;</td>\n";
@@ -261,10 +261,10 @@
 				//echo "	<td valign='middle' class='".$row_style[$c]."'>".escape($row['profile'])."&nbsp;</td>\n";
 				echo "	<td valign='middle' class='".$row_style[$c]."'>";
 				if ($row['record'] == "true") {
-					echo "		<a href=\"?conference_room_uuid=".escape($row['conference_room_uuid'])."&record=false&meeting_uuid=".$meeting_uuid."\">".$text['label-true']."</a>";
+					echo "		<a href=\"?conference_room_uuid=".escape($row['conference_room_uuid'])."&record=false&meeting_uuid=".escape($meeting_uuid)."\">".$text['label-true']."</a>";
 				}
 				else {
-					echo "		<a href=\"?conference_room_uuid=".escape($row['conference_room_uuid'])."&record=true&meeting_uuid=".$meeting_uuid."\">".$text['label-false']."</a>";
+					echo "		<a href=\"?conference_room_uuid=".escape($row['conference_room_uuid'])."&record=true&meeting_uuid=".escape($meeting_uuid)."\">".$text['label-false']."</a>";
 				}
 				echo "		&nbsp;\n";
 				echo "	</td>\n";
@@ -308,7 +308,7 @@
 				echo "	</td>\n";
 
 				if (strlen($conference[$meeting_uuid]["session_uuid"])) {
-					echo "	<td valign='middle' class='".$row_style[$c]."'>".$conference[$meeting_uuid]["member_count"]."&nbsp;</td>\n";
+					echo "	<td valign='middle' class='".$row_style[$c]."'>".escape($conference[$meeting_uuid]["member_count"])."&nbsp;</td>\n";
 				}
 				else {
 					echo "	<td valign='middle' class='".$row_style[$c]."'>0</td>\n";
