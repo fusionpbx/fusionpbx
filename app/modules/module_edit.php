@@ -17,22 +17,26 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('module_add') || permission_exists('module_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('module_add') || permission_exists('module_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -58,92 +62,94 @@ else {
 		$module_default_enabled = check_str($_POST["module_default_enabled"]);
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+//process the data
+	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
-	$msg = '';
-	if ($action == "update") {
-		$module_uuid = check_str($_POST["module_uuid"]);
-	}
+		//get the uuid
+			if ($action == "update") {
+				$module_uuid = check_str($_POST["module_uuid"]);
+			}
 
-	//check for all required data
-		if (strlen($module_label) == 0) { $msg .= $text['message-required'].$text['label-label']."<br>\n"; }
-		if (strlen($module_name) == 0) { $msg .= $text['message-required'].$text['label-module_name']."<br>\n"; }
-		//if (strlen($module_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-		if (strlen($module_category) == 0) { $msg .= $text['message-required'].$text['label-module_category']."<br>\n"; }
-		if (strlen($module_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
-		if (strlen($module_default_enabled) == 0) { $msg .= $text['message-required'].$text['label-default_enabled']."<br>\n"; }
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-			require_once "resources/header.php";
-			require_once "resources/persist_form_var.php";
-			echo "<div align='center'>\n";
-			echo "<table><tr><td>\n";
-			echo $msg."<br />";
-			echo "</td></tr></table>\n";
-			persistformvar($_POST);
-			echo "</div>\n";
-			require_once "resources/footer.php";
-			return;
-		}
-
-	//add or update the database
-		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add" && permission_exists('module_add')) {
-				$module_uuid = uuid();
-				$sql = "insert into v_modules ";
-				$sql .= "(";
-				$sql .= "module_uuid, ";
-				$sql .= "module_label, ";
-				$sql .= "module_name, ";
-				$sql .= "module_description, ";
-				$sql .= "module_category, ";
-				$sql .= "module_order, ";
-				$sql .= "module_enabled, ";
-				$sql .= "module_default_enabled ";
-				$sql .= ")";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'$module_uuid', ";
-				$sql .= "'$module_label', ";
-				$sql .= "'$module_name', ";
-				$sql .= "'$module_description', ";
-				$sql .= "'$module_category', ";
-				$sql .= "'$module_order', ";
-				$sql .= "'$module_enabled', ";
-				$sql .= "'$module_default_enabled' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
-
-				$module = new modules;;
-				$module->xml();
-
-				messages::add($text['message-add']);
-				header("Location: modules.php");
+		//check for all required data
+			$msg = '';
+			if (strlen($module_label) == 0) { $msg .= $text['message-required'].$text['label-label']."<br>\n"; }
+			if (strlen($module_name) == 0) { $msg .= $text['message-required'].$text['label-module_name']."<br>\n"; }
+			//if (strlen($module_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
+			if (strlen($module_category) == 0) { $msg .= $text['message-required'].$text['label-module_category']."<br>\n"; }
+			if (strlen($module_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+			if (strlen($module_default_enabled) == 0) { $msg .= $text['message-required'].$text['label-default_enabled']."<br>\n"; }
+			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+				require_once "resources/header.php";
+				require_once "resources/persist_form_var.php";
+				echo "<div align='center'>\n";
+				echo "<table><tr><td>\n";
+				echo $msg."<br />";
+				echo "</td></tr></table>\n";
+				persistformvar($_POST);
+				echo "</div>\n";
+				require_once "resources/footer.php";
 				return;
-			} //if ($action == "add")
+			}
 
-			if ($action == "update" && permission_exists('module_edit')) {
-				$sql = "update v_modules set ";
-				$sql .= "module_label = '$module_label', ";
-				$sql .= "module_name = '$module_name', ";
-				$sql .= "module_description = '$module_description', ";
-				$sql .= "module_category = '$module_category', ";
-				$sql .= "module_order = '$module_order', ";
-				$sql .= "module_enabled = '$module_enabled', ";
-				$sql .= "module_default_enabled = '$module_default_enabled' ";
-				$sql .= "where module_uuid = '$module_uuid' ";
-				$db->exec(check_sql($sql));
-				unset($sql);
+		//add or update the database
+			if ($_POST["persistformvar"] != "true") {
+				if ($action == "add" && permission_exists('module_add')) {
+					$module_uuid = uuid();
+					$sql = "insert into v_modules ";
+					$sql .= "(";
+					$sql .= "module_uuid, ";
+					$sql .= "module_label, ";
+					$sql .= "module_name, ";
+					$sql .= "module_description, ";
+					$sql .= "module_category, ";
+					$sql .= "module_order, ";
+					$sql .= "module_enabled, ";
+					$sql .= "module_default_enabled ";
+					$sql .= ")";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'$module_uuid', ";
+					$sql .= "'$module_label', ";
+					$sql .= "'$module_name', ";
+					$sql .= "'$module_description', ";
+					$sql .= "'$module_category', ";
+					$sql .= "'$module_order', ";
+					$sql .= "'$module_enabled', ";
+					$sql .= "'$module_default_enabled' ";
+					$sql .= ")";
+					$db->exec(check_sql($sql));
+					unset($sql);
 
-				$module = new modules;;
-				$module->xml();
+					$module = new modules;;
+					$module->xml();
 
-				messages::add($text['message-update']);
-				header("Location: modules.php");
-				return;
-			} //if ($action == "update")
-		} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+					messages::add($text['message-add']);
+					header("Location: modules.php");
+					return;
+				} //if ($action == "add")
+
+				if ($action == "update" && permission_exists('module_edit')) {
+					$sql = "update v_modules set ";
+					$sql .= "module_label = '$module_label', ";
+					$sql .= "module_name = '$module_name', ";
+					$sql .= "module_description = '$module_description', ";
+					$sql .= "module_category = '$module_category', ";
+					$sql .= "module_order = '$module_order', ";
+					$sql .= "module_enabled = '$module_enabled', ";
+					$sql .= "module_default_enabled = '$module_default_enabled' ";
+					$sql .= "where module_uuid = '$module_uuid' ";
+					$db->exec(check_sql($sql));
+					unset($sql);
+
+					$module = new modules;;
+					$module->xml();
+
+					messages::add($text['message-update']);
+					header("Location: modules.php");
+					return;
+				} //if ($action == "update")
+			} //if ($_POST["persistformvar"] != "true")
+	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
@@ -161,7 +167,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$module_order = $row["module_order"];
 			$module_enabled = $row["module_enabled"];
 			$module_default_enabled = $row["module_default_enabled"];
-			break; //limit to 1 row
 		}
 		unset ($prep_statement);
 	}
@@ -197,18 +202,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-label']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='module_label' maxlength='255' value=\"$module_label\">\n";
+	echo "    <input class='formfld' type='text' name='module_label' maxlength='255' value=\"".escape($module_label)."\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    ".$text['label-module_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='module_name' maxlength='255' value=\"$module_name\">\n";
+	echo "    <input class='formfld' type='text' name='module_name' maxlength='255' value=\"".escape($module_name)."\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
@@ -219,7 +224,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-order']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='module_order' maxlength='255' value=\"$module_order\">\n";
+	echo "    <input class='formfld' type='text' name='module_order' maxlength='255' value=\"".escape($module_order)."\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
@@ -230,7 +235,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-module_category']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	$table_name = 'v_modules';$field_name = 'module_category';$sql_where_optional = "";$field_current_value = $module_category;
+	$table_name = 'v_modules'; $field_name = 'module_category'; $sql_where_optional = ''; $field_current_value = $module_category;
 	echo html_select_other($db, $table_name, $field_name, $sql_where_optional, $field_current_value);
 	echo "<br />\n";
 	echo "\n";
@@ -290,7 +295,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='module_description' maxlength='255' value=\"$module_description\">\n";
+	echo "    <input class='formfld' type='text' name='module_description' maxlength='255' value=\"".escape($module_description)."\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
@@ -299,7 +304,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='module_uuid' value='$module_uuid'>\n";
+		echo "		<input type='hidden' name='module_uuid' value='".escape($module_uuid)."'>\n";
 	}
 	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
@@ -309,5 +314,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<br><br>";
 	echo "</form>";
 
+//include the footer
 	require_once "resources/footer.php";
+
 ?>
