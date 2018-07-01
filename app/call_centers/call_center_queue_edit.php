@@ -340,7 +340,7 @@
 			remove_config_from_cache('configuration:callcenter.conf');
 
 		//redirect the user
-			header("Location: call_center_queue_edit.php?id=".$call_center_queue_uuid);
+			header("Location: call_center_queue_edit.php?id=".escape($call_center_queue_uuid));
 			return;
 
 	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
