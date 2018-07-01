@@ -67,7 +67,7 @@
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-ring_groups']."</b></td>\n";
-//	echo "		<td width='50%' align='right'>&nbsp;</td>\n";
+	//echo "		<td width='50%' align='right'>&nbsp;</td>\n";
 	echo "		<form method='get' action=''>\n";
 	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
 	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".escape($search)."'>\n";
@@ -126,8 +126,7 @@
 	$sql .= " limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	$result = $prep_statement->fetchAll();
-	$result_count = count($result);
+	$ring_groups = $prep_statement->fetchAll();
 	unset ($prep_statement, $sql);
 
 //set the row styles
@@ -153,8 +152,8 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($result_count > 0) {
-		foreach($result as $row) {
+	if (is_array($ring_groups)) {
+		foreach($ring_groups as $row) {
 			$tr_link = (permission_exists('ring_group_edit')) ? "href='ring_group_edit.php?id=".$row['ring_group_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
@@ -181,7 +180,7 @@
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($sql, $ring_groups);
 	} //end if results
 
 	echo "<tr>\n";
@@ -207,4 +206,5 @@
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>
