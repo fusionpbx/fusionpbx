@@ -383,7 +383,7 @@
 				if (strlen($row['domain_uuid']) == 0) {
 					if (strlen($row['music_on_hold_rate']) == 0) { $option_name = $row['music_on_hold_name']; }
 					if (strlen($row['music_on_hold_rate']) > 0) { $option_name = $row['music_on_hold_name'] .'/'.$row['music_on_hold_rate']; }
-					echo "						<option value='".escape($row['music_on_hold_uuid'])."'>".$option_name."</option>\n";
+					echo "						<option value='".escape($row['music_on_hold_uuid'])."'>".escape($option_name)."</option>\n";
 				}
 			}
 			echo "					</optgroup>\n";
@@ -395,7 +395,7 @@
 			if (strlen($row['domain_uuid']) > 0) {
 			if (strlen($row['music_on_hold_rate']) == 0) { $option_name = $row['music_on_hold_name']; }
 			if (strlen($row['music_on_hold_rate']) > 0) { $option_name = $row['music_on_hold_name'] .'/'.$row['music_on_hold_rate']; }
-				echo "						<option value='".escape($row['music_on_hold_uuid'])."'>".$option_name."</option>\n";
+				echo "						<option value='".escape($row['music_on_hold_uuid'])."'>".escape($option_name)."</option>\n";
 			}
 		}
 		if (permission_exists('music_on_hold_domain')) {
@@ -489,7 +489,7 @@
 					if ($previous_name != $music_on_hold_name) {
 						echo "<tr class='tr_link_void'><td colspan='5'><div style='width: 1px; height: 20px;'></div></td></tr>\n";
 						echo "<tr class='tr_link_void'>\n";
-						echo "	<td colspan='5'><b><i>".$music_on_hold_name."</i></b>";
+						echo "	<td colspan='5'><b><i>".escape($music_on_hold_name)."</i></b>";
 						if ($row['domain_uuid'] == null) { 
 							echo "&nbsp;&nbsp;- ".$text['label-global']."\n";
 						}
@@ -581,14 +581,14 @@
 							echo "<tr id='recording_progress_bar_".$row_uuid."' style='display: none;'><td colspan='4' class='".$row_style[$c]." playback_progress_bar_background' style='padding: 0; border: none;'><span class='playback_progress_bar' id='recording_progress_".$row_uuid."'></span></td></tr>\n";
 							$tr_link = "href=\"javascript:recording_play('".$row_uuid."');\"";
 							echo "<tr ".$tr_link.">\n";
-							echo "	<td class='".$row_style[$c]."'>".str_replace('_', '_&#8203;', $stream_file)."</td>\n";
+							echo "	<td class='".$row_style[$c]."'>".escape($stream_file)."</td>\n";
 							echo "	<td valign='top' class='".$row_style[$c]." row_style_slim tr_link_void'>";
-							echo 		"<audio id='recording_audio_".$row_uuid."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row_uuid."')\" onended=\"recording_reset('".$row_uuid."');\" src='?action=download&id=".$row['music_on_hold_uuid']."&file=".base64_encode($stream_file)."' type='".$stream_file_type."'></audio>";
+							echo 		"<audio id='recording_audio_".$row_uuid."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row_uuid."')\" onended=\"recording_reset('".$row_uuid."');\" src='?action=download&id=".escape($row['music_on_hold_uuid'])."&file=".base64_encode($stream_file)."' type='".escape($stream_file_type)."'></audio>";
 							echo 		"<span id='recording_button_".$row_uuid."' onclick=\"recording_play('".$row_uuid."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
 							echo 		"<span onclick=\"recording_stop('".$row_uuid."')\" title='".$text['label-stop']."'>".$v_link_label_stop."</span>";
 							echo "	</td>\n";
-							echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right; white-space: nowrap;'>".$stream_file_size."</td>\n";
-							echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".$stream_file_date."</td>\n";
+							echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right; white-space: nowrap;'>".escape($stream_file_size)."</td>\n";
+							echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".escape($stream_file_date)."</td>\n";
 							echo "	<td valign='top' class='".((!permission_exists('music_on_hold_domain')) ? 'list_control_icon' : 'list_control_icons')."'>\n";
 							echo 		"<a href='?action=download&id=".escape($row['music_on_hold_uuid'])."&file=".base64_encode($stream_file)."' title='".$text['label-download']."'>".$v_link_label_download."</a>";
 							if ( ($domain_uuid == '' && permission_exists('music_on_hold_domain')) || ($domain_uuid != '' && permission_exists('music_on_hold_delete')) ) {
