@@ -145,7 +145,7 @@
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
-			$tr_link = (permission_exists('call_center_queue_edit')) ? "href='call_center_queue_edit.php?id=".$row[call_center_queue_uuid]."'" : null;
+			$tr_link = (permission_exists('call_center_queue_edit')) ? "href='call_center_queue_edit.php?id=".escape($row[call_center_queue_uuid])."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('call_center_queue_edit')) {
