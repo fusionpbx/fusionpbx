@@ -202,7 +202,7 @@
 				echo $row['voicemail_id'];
 			}
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['voicemail_mail_to']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['voicemail_mail_to'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".(($row['voicemail_file'] == 'attach') ? $text['label-true'] : $text['label-false'])."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['voicemail_local_after_email'])."&nbsp;</td>\n";
 			echo "	<td valign='middle' class='".$row_style[$c]."' style='white-space: nowrap;'>\n";
@@ -214,7 +214,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['voicemail_enabled']]."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['voicemail_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg' width='30%'>".escape($row['voicemail_description'])."&nbsp;</td>\n";
 			if (permission_exists('voicemail_edit') || permission_exists('voicemail_delete')) {
 				echo "	<td class='list_control_icons' style='width: 25px;'>";
 				if (permission_exists('voicemail_edit')) {
