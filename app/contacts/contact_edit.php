@@ -178,7 +178,7 @@ else {
 						unset($sql);
 
 						messages::add($text['message-update']);
-						$location = "contact_edit.php?id=".$contact_uuid;
+						$location = "contact_edit.php?id=".escape($contact_uuid);
 					} //if ($action == "update")
 
 				//assign the contact to the user that added the contact
@@ -235,7 +235,7 @@ else {
 
 				//handle redirect
 					if ($_POST['submit'] == $text['button-add']) {
-						$location = "contact_edit.php?id=".$contact_uuid;
+						$location = "contact_edit.php?id=".escape($contact_uuid);
 					}
 
 				//redirect the browser
@@ -401,13 +401,13 @@ else {
 				$btn_mod = "style='background-color: #3693df; background-image: none;'";
 			}
 			unset ($sql, $prep_statement, $result);
-			echo "	<input type='button' class='btn' ".$btn_mod." alt='".$text['button-timer']."' ".(($time_start != '') ? "title='".$time_start."'" : null)." onclick=\"window.open('contact_timer.php?domain_uuid=".$domain_uuid."&contact_uuid=".$contact_uuid."','contact_time_".$contact_uuid."','width=300, height=375, top=30, left='+(screen.width - 350)+', menubar=no, scrollbars=no, status=no, toolbar=no, resizable=no');\" value='".$text['button-timer']."'>\n";
+			echo "	<input type='button' class='btn' ".$btn_mod." alt='".$text['button-timer']."' ".(($time_start != '') ? "title='".escape($time_start)."'" : null)." onclick=\"window.open('contact_timer.php?domain_uuid=".escape($domain_uuid)."&contact_uuid=".escape($contact_uuid)."','contact_time_".escape($contact_uuid)."','width=300, height=375, top=30, left='+(screen.width - 350)+', menubar=no, scrollbars=no, status=no, toolbar=no, resizable=no');\" value='".$text['button-timer']."'>\n";
 		}
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-qr_code']."' onclick=\"$('#qr_code_container').fadeIn(400);\" value='".$text['button-qr_code']."'>\n";
-		echo "	<input type='button' class='btn' name='' alt='".$text['button-vcard']."' onclick=\"window.location='contacts_vcard.php?id=".$contact_uuid."&type=download'\" value='".$text['button-vcard']."'>\n";
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-vcard']."' onclick=\"window.location='contacts_vcard.php?id=".escape($contact_uuid)."&type=download'\" value='".$text['button-vcard']."'>\n";
 	}
 	if ($action == "update" && is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/invoices')) {
-		echo "	<input type='button' class='btn' name='' alt='".$text['button-invoices']."' onclick=\"window.location='".PROJECT_PATH."/app/invoices/invoices.php?id=$contact_uuid'\" value='".$text['button-invoices']."'>\n";
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-invoices']."' onclick=\"window.location='".PROJECT_PATH."/app/invoices/invoices.php?id=escape($contact_uuid)'\" value='".$text['button-invoices']."'>\n";
 	}
 	if ($action == "update" && is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/certificates')) {
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-certificate']."' onclick=\"window.location='".PROJECT_PATH."/app/certificates/index.php?name=".urlencode(escape($contact_name_given)." ".escape($contact_name_family))."'\" value='".$text['button-certificate']."'>\n";
@@ -441,7 +441,7 @@ else {
 			echo "	<select class='formfld' name='contact_type'>\n";
 			echo "		<option value=''></option>\n";
 			foreach($_SESSION["contact"]["type"] as $row) {
-				echo "	<option value='".$row."' ".(($row == $contact_type) ? "selected='selected'" : null).">".$row."</option>\n";
+				echo "	<option value='".escape($row)."' ".(($row == $contact_type) ? "selected='selected'" : null).">".escape($row)."</option>\n";
 			}
 			echo "	</select>\n";
 		}
@@ -719,7 +719,7 @@ else {
 					foreach($result as $field) {
 						if ($field['group_name'] == "superadmin" && !if_group("superadmin")) { continue; }	//only show superadmin group to superadmins
 						if ($field['group_name'] == "admin" && (!if_group("superadmin") && !if_group("admin"))) { continue; }	//only show admin group to admins
-						echo "<option value='".$field['group_uuid']."'>".$field['group_name']."</option>\n";
+						echo "<option value='".escape($field['group_uuid'])."'>".escape($field['group_name'])."</option>\n";
 					}
 					echo "	</select>";
 
