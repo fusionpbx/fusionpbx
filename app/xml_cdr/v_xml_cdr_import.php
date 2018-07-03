@@ -358,7 +358,7 @@
 					$record_path = $path;
 					$record_name = $bridge_uuid.'.wav';
 					$record_length = urldecode($xml->variables->duration);
-				} elseif (file_exists($record_path.'/'.$bridge_uuid.'.mp3')) {
+				} elseif (file_exists($path.'/'.$bridge_uuid.'.mp3')) {
 					$record_path = $path;
 					$record_name = $bridge_uuid.'.mp3';
 					$record_length = urldecode($xml->variables->duration);
@@ -370,7 +370,7 @@
 					$record_path = $path;
 					$record_name = $uuid.'.wav';
 					$record_length = urldecode($xml->variables->duration);
-				} elseif (file_exists($record_path.'/'.$uuid.'.mp3')) {
+				} elseif (file_exists($path.'/'.$uuid.'.mp3')) {
 					$record_path = $path;
 					$record_name = $uuid.'.mp3';
 					$record_length = urldecode($xml->variables->duration);
