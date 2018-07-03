@@ -2878,32 +2878,32 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 //algo
 		$y++;
-		$vendors[$y]['uuid'] = ""dc5ffcb9-5195-4fb8-8b23-f4216ed7f0f6"";
-		$vendors[$y]['name'] = ""algo"";
+		$vendors[$y]['uuid'] = "dc5ffcb9-5195-4fb8-8b23-f4216ed7f0f6";
+		$vendors[$y]['name'] = "algo";
 		$z=0;
 //atcom
 		$y++;
-		$vendors[$y]['uuid'] = ""da636c41-4551-444b-8b8b-f01fac95bfb5"";
-		$vendors[$y]['name'] = ""atcom"";
+		$vendors[$y]['uuid'] = "da636c41-4551-444b-8b8b-f01fac95bfb5";
+		$vendors[$y]['name'] = "atcom";
 		$z=0;
 //digium
 		$y++;
-		$vendors[$y]['uuid'] = ""9ec868f0-8c18-42f1-8eb0-8e80b10891c2"";
-		$vendors[$y]['name'] = ""digium"";
+		$vendors[$y]['uuid'] = "9ec868f0-8c18-42f1-8eb0-8e80b10891c2";
+		$vendors[$y]['name'] = "digium";
 		$z=0;
 //panasonic
 		$y++;
-		$vendors[$y]['uuid'] = ""86cd5298-3599-4254-9ce5-ce84a31a3596"";
-		$vendors[$y]['name'] = ""panasonic"";
+		$vendors[$y]['uuid'] = "86cd5298-3599-4254-9ce5-ce84a31a3596";
+		$vendors[$y]['name'] = "panasonic";
 		$z=0;
 //spectralink
 		$y++;
-		$vendors[$y]['uuid'] = ""699676f9-2690-492b-a40b-043653a8b7d5"";
-		$vendors[$y]['name'] = ""spectralink"";
+		$vendors[$y]['uuid'] = "699676f9-2690-492b-a40b-043653a8b7d5";
+		$vendors[$y]['name'] = "spectralink";
 		$z=0;
 //vtech
 		$y++;
-		$vendors[$y]['uuid'] = ""d07e0905-9788-4039-ba8e-ca1b50fbf643"";
-		$vendors[$y]['name'] = ""vtech"";
+		$vendors[$y]['uuid'] = "d07e0905-9788-4039-ba8e-ca1b50fbf643";
+		$vendors[$y]['name'] = "vtech";
 		$z=0;
 ?>
