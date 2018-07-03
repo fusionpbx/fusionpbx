@@ -56,13 +56,13 @@ if (count($_GET)>0) {
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
 			$contact_type = $row["contact_type"];
-			$contact_organization = $row["contact_organization"];
-			$contact_name_given = $row["contact_name_given"];
-			$contact_name_family = $row["contact_name_family"];
-			$contact_nickname = $row["contact_nickname"];
-			$contact_title = $row["contact_title"];
-			$contact_role = $row["contact_role"];
-			$contact_time_zone = $row["contact_time_zone"];
+			$contact_organization = escape($row["contact_organization"]);
+			$contact_name_given = escape($row["contact_name_given"]);
+			$contact_name_family = escape($row["contact_name_family"]);
+			$contact_nickname = escape($row["contact_nickname"]);
+			$contact_title = escape($row["contact_title"]);
+			$contact_role = escape($row["contact_role"]);
+			$contact_time_zone = escape($row["contact_time_zone"]);
 			$contact_note = $row["contact_note"];
 			break; //limit to 1 row
 		}
@@ -82,7 +82,7 @@ if (count($_GET)>0) {
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		$e = 0;
 		foreach ($result as &$row) {
-			$vcard->data['email'.$e] = $row["email_address"];
+			$vcard->data['email'.$e] = escape($row["email_address"]);
 			if (++$e == 2) { break; } //limit to 2 rows
 		}
 		unset ($prep_statement);
@@ -96,7 +96,7 @@ if (count($_GET)>0) {
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
-			$vcard->data['url'] = $row["url_address"];
+			$vcard->data['url'] = escape($row["url_address"]);
 			break;	//limit to 1 row
 		}
 		unset ($prep_statement);
@@ -148,13 +148,13 @@ if (count($_GET)>0) {
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			foreach ($result as &$row) {
-				$address_type = $row["address_type"];
-				$address_street = $row["address_street"];
-				$address_extended = $row["address_extended"];
-				$address_locality = $row["address_locality"];
-				$address_region = $row["address_region"];
-				$address_postal_code = $row["address_postal_code"];
-				$address_country = $row["address_country"];
+				$address_type = escape($row["address_type"]);
+				$address_street = escape($row["address_street"]);
+				$address_extended = escape($row["address_extended"]);
+				$address_locality = escape($row["address_locality"]);
+				$address_region = escape($row["address_region"]);
+				$address_postal_code = escape($row["address_postal_code"]);
+				$address_country = escape($row["address_country"]);
 				$address_latitude = $row["address_latitude"];
 				$address_longitude = $row["address_longitude"];
 				$address_type = strtolower(trim($address_type));
