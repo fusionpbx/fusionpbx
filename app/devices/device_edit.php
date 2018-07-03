@@ -440,10 +440,19 @@
 	$device_keys[$x]['device_key_extension'] = '';
 	$device_keys[$x]['device_key_label'] = '';
 
+//get the device vendors
+	$sql = "SELECT name ";
+	$sql .= "FROM v_device_vendors ";
+	$sql .= "WHERE enabled = 'true' ";
+	$sql .= "ORDER BY name ASC ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$device_vendors = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+
 //get the vendor functions
 	$sql = "SELECT v.name as vendor_name, f.name, f.value ";
 	$sql .= "FROM v_device_vendors as v, v_device_vendor_functions as f ";
-	$sql .= "where v.device_vendor_uuid = f.device_vendor_uuid ";
+	$sql .= "WHERE v.device_vendor_uuid = f.device_vendor_uuid ";
 	$sql .= "and v.enabled = 'true' ";
 	$sql .= "and f.enabled = 'true' ";
 	$sql .= "order by v.name asc, f.name asc ";
@@ -787,40 +796,28 @@
 		echo "<td class='vtable' align='left'>\n";
 		$device = new device;
 		$template_dir = $device->get_template_dir();
-
-		echo "<select id='device_template' name='device_template' class='formfld'>\n";
-		echo "<option value=''></option>\n";
-
-		if (is_dir($template_dir)) {
-				$templates = scandir($template_dir);
-				foreach($templates as $dir) {
-					if($file != "." && $dir != ".." && $dir[0] != '.') {
-						if(is_dir($template_dir . "/" . $dir)) {
-							echo "<optgroup label='$dir'>";
-							$dh_sub=$template_dir . "/" . $dir;
-							if(is_dir($dh_sub)) {
-								$templates_sub = scandir($dh_sub);
-								foreach($templates_sub as $dir_sub) {
-									if($file_sub != '.' && $dir_sub != '..' && $dir_sub[0] != '.' && $dir_sub[0] != 'include') {
-										if(is_dir($template_dir . '/' . $dir .'/'. $dir_sub)) {
-											if ($device_template == $dir."/".$dir_sub) {
-												echo "<option value='".escape($dir)."/".escape($dir_sub)."' selected='selected'>".escape($dir)."/".escape($dir_sub)."</option>\n";
-											}
-											else {
-												echo "<option value='".escape($dir)."/".escape($dir_sub)."'>".$dir."/".escape($dir_sub)."</option>\n";
-											}
-										}
-									}
-								}
-							}
-							echo "</optgroup>";
+		echo "	<select id='device_template' name='device_template' class='formfld'>\n";
+		echo "		<option value=''></option>\n";
+		foreach($device_vendors as $row) {
+			echo "		<optgroup label='".escape($row["name"])."'>\n";
+			$templates = scandir($template_dir.'/'.$row["name"]);
+			foreach($templates as $dir) {
+				if ($file != "." && $dir != ".." && $dir[0] != '.') {
+					if (is_dir($template_dir . '/' . $row["name"] .'/'. $dir)) {
+						if ($device_template == $row["name"]."/".$dir) {
+							echo "			<option value='".escape($row["name"])."/".escape($dir)."' selected='selected'>".escape($row["name"])."/".escape($dir)."</option>\n";
+						}
+						else {
+							echo "			<option value='".escape($row["name"])."/".escape($dir)."'>".$row["name"]."/".escape($dir)."</option>\n";
 						}
 					}
 				}
 			}
-		echo "</select>\n";
-		echo "<br />\n";
-		echo $text['description-device_template']."\n";
+			echo "		</optgroup>\n";
+		}
+		echo "	</select>\n";
+		echo "	<br />\n";
+		echo "	".$text['description-device_template']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
