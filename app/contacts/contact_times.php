@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -95,7 +95,7 @@ else {
 			echo "	<td valign='top' class='".$row_style[$c]."' width='20%'><span ".(($row['user_domain_uuid'] != $domain_uuid) ? "title='".$_SESSION['domains'][$row['user_domain_uuid']]['domain_name']."' style='cursor: help;'" : null).">".$row["username"]."</span>&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' width='20%'>".$time_start."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' width='20%'>".$time."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg' style='width: 40%; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>".$row['time_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg' style='width: 40%; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>".escape($row['time_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons' nowrap>";
 			if (permission_exists('contact_time_edit')) {
 				if ($row['user_uuid'] == $_SESSION["user"]["user_uuid"]) {
