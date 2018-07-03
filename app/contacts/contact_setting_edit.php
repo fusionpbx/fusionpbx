@@ -64,7 +64,7 @@ else {
 		$contact_setting_value = check_str($_POST["contact_setting_value"]);
 		$contact_setting_order = check_str($_POST["contact_setting_order"]);
 		$contact_setting_enabled = strtolower(check_str($_POST["contact_setting_enabled"]));
-		$contact_setting_description = check_str($_POST["contact_setting_description"]);
+		$contact_setting_description = check_str(escape($_POST["contact_setting_description"]));
 	}
 
 //process the form data
@@ -188,7 +188,7 @@ else {
 			$contact_setting_value = $row["contact_setting_value"];
 			$contact_setting_order = $row["contact_setting_order"];
 			$contact_setting_enabled = $row["contact_setting_enabled"];
-			$contact_setting_description = $row["contact_setting_description"];
+			$contact_setting_description = escape($row["contact_setting_description"]);
 			break; //limit to 1 row
 		}
 		unset ($prep_statement);
