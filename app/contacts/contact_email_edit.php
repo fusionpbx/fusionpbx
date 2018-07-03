@@ -167,10 +167,10 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
-			$email_label = $row["email_label"];
-			$email_address = $row["email_address"];
-			$email_primary = $row["email_primary"];
-			$email_description = $row["email_description"];
+			$email_label = escape($row["email_label"]);
+			$email_address = escape($row["email_address"]);
+			$email_primary = escape($row["email_primary"]);
+			$email_description = escape($row["email_description"]);
 			break; //limit to 1 row
 		}
 		unset ($prep_statement);
