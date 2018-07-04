@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016
+	Portions created by the Initial Developer are Copyright (C) 2016-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -172,7 +172,7 @@
 				if ($action == "update") {
 					messages::add($text['message-update']);
 				}
-				header('Location: sip_profile_edit.php?id='.$sip_profile_uuid);
+				header('Location: sip_profile_edit.php?id='.escape($sip_profile_uuid));
 				return;
 			}
 	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
@@ -184,8 +184,9 @@
 		$sql .= "where sip_profile_uuid = '$sip_profile_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sip_profiles = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($sip_profiles as &$row) {
+			$row = array_map("escape", $row);
 			$sip_profile_name = $row["sip_profile_name"];
 			$sip_profile_hostname = $row["sip_profile_hostname"];
 			$sip_profile_enabled = $row["sip_profile_enabled"];
@@ -201,6 +202,7 @@
 	$prep_statement = $db->prepare($sql);
 	$prep_statement->execute();
 	$sip_profile_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	foreach ($sip_profile_settings as &$row) { $row = array_map("escape", $row); }
 
 //add an empty row
 	$x = count($sip_profile_settings);
@@ -217,6 +219,7 @@
 	$prep_statement = $db->prepare($sql);
 	$prep_statement->execute();
 	$sip_profile_domains = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	foreach ($sip_profile_domains as &$row) { $row = array_map("escape", $row); }
 
 //add an empty row
 	$x = count($sip_profile_domains);
@@ -228,7 +231,6 @@
 
 //show the header
 	require_once "resources/header.php";
-
 	
 //label to form input
 	echo "<script language='javascript'>\n";
