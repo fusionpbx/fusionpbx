@@ -92,7 +92,7 @@
 	$sql .= "limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$sip_profiles = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
 
 //alternate the row style
@@ -106,7 +106,7 @@
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-sip_profiles']."</b></td>\n";
 	echo "		<form method='get' action=''>\n";
 	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
-	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>\n";
+	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".escape($search)."'>\n";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
 	echo "			</td>\n";
 	echo "		</form>\n";
@@ -134,28 +134,28 @@
 	echo "</td>\n";
 	echo "<tr>\n";
 
-	if (is_array($result)) {
-		foreach($result as $row) {
+	if (is_array($sip_profiles)) {
+		foreach($sip_profiles as $row) {
 			if (permission_exists('sip_profile_edit')) {
-				$tr_link = "href='sip_profile_edit.php?id=".$row['sip_profile_uuid']."'";
+				$tr_link = "href='sip_profile_edit.php?id=".escape($row['sip_profile_uuid'])."'";
 			}
 			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['sip_profile_name']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['sip_profile_hostname']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['sip_profile_enabled']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".$row['sip_profile_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['sip_profile_name'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['sip_profile_hostname'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['sip_profile_enabled'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($row['sip_profile_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('sip_profile_edit')) {
-				echo "<a href='sip_profile_edit.php?id=".$row['sip_profile_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='sip_profile_edit.php?id=".escape($row['sip_profile_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('sip_profile_delete')) {
-				echo "<a href='sip_profile_delete.php?id=".$row['sip_profile_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='sip_profile_delete.php?id=".escape($row['sip_profile_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($sql, $sip_profiles);
 	} //end if results
 
 	echo "<tr>\n";
