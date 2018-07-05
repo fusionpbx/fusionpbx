@@ -571,6 +571,16 @@
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'pin_number=database';
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
+							
+							$y++;
+                                                       $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+                                                       $array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
+                                                       $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
+                                                       $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
+                                                       $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'lua';
+                                                       $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'pin_number.lua';
+                                                       $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
+                                                       $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 						}
 
 						if ($gateway_type == "transfer") { $dialplan_detail_type = 'transfer'; } else { $dialplan_detail_type = 'bridge'; }
