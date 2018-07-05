@@ -79,8 +79,6 @@
 		}
 	}
 	$sql .= $sql_mod; //add search mod from above
-
-//execute select count query
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$row = $prep_statement->fetch(PDO::FETCH_NAMED);
@@ -100,17 +98,35 @@
 	list($paging_controls, $rows_per_page, $var_3) = paging($result_count, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
-//rework select data query
-	$sql = str_replace('count(extension_uuid) as count', '*', $sql);
+//select the extensions
+	$sql = "select * from v_extensions ";
+	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "and enabled = 'true' ";
+	if (!(if_group("admin") || if_group("superadmin"))) {
+		if (count($_SESSION['user']['extension']) > 0) {
+			$sql .= "and (";
+			$x = 0;
+			foreach($_SESSION['user']['extension'] as $row) {
+				if ($x > 0) { $sql .= "or "; }
+				$sql .= "extension = '".$row['user']."' ";
+				$x++;
+			}
+			$sql .= ")";
+		}
+		else {
+			//used to hide any results when a user has not been assigned an extension
+			$sql .= "and extension = 'disabled' ";
+		}
+	}
+	$sql .= $sql_mod; //add search mod from above
 	$sql .= ' order by extension asc';
 	$sql .= " limit ".$rows_per_page." offset ".$offset." ";
-
-//execute select data query
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$extensions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
 
+//set the row style
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
@@ -157,8 +173,8 @@
 	echo "<td class='list_control_icon'>&nbsp;</td>\n";
 	echo "</tr>\n";
 
-	if ($result_count > 0) {
-		foreach($result as $row) {
+	if (is_array($extensions)) {
+		foreach($extensions as $row) {
 			$tr_url = PROJECT_PATH."/app/calls/call_edit.php?id=".$row['extension_uuid']."&return_url=".urlencode($_SERVER['REQUEST_URI']);
 			$tr_link = (permission_exists('call_forward') || permission_exists('follow_me') || permission_exists('do_not_disturb')) ? "href='".$tr_url."'" : null;
 			echo "<tr ".$tr_link.">\n";
@@ -200,7 +216,7 @@
 			echo "</tr>\n";
 			$c = ($c) ? 0 : 1;
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($sql, $extensions);
 	} //end if results
 
 	echo "</table>";
