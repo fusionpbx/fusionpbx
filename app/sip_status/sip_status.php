@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -171,10 +171,10 @@ if ($_GET['a'] == "download") {
 		echo "</tr>\n";
 		foreach ($xml->profile as $row) {
 			echo "<tr>\n";
-			echo "	<td class='".$row_style[$c]."'>".$row->name."</td>\n";
-			echo "	<td class='".$row_style[$c]."'>".$row->type."</td>\n";
-			echo "	<td class='".$row_style[$c]."'>".$row->data."</td>\n";
-			echo "	<td class='".$row_style[$c]."'>".$row->state."</td>\n";
+			echo "	<td class='".$row_style[$c]."'>".escape($row->name)."</td>\n";
+			echo "	<td class='".$row_style[$c]."'>".escape($row->type)."</td>\n";
+			echo "	<td class='".$row_style[$c]."'>".escape($row->data)."</td>\n";
+			echo "	<td class='".$row_style[$c]."'>".escape($row->state)."</td>\n";
 			echo "	<td class='".$row_style[$c]."'>&nbsp;</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
@@ -192,7 +192,7 @@ if ($_GET['a'] == "download") {
 			echo "<tr>\n";
 			echo "	<td class='".$row_style[$c]."'>";
 			if ($_SESSION["domain_name"] == $gateway_domain_name) {
-				echo "<a href='".PROJECT_PATH."/app/gateways/gateway_edit.php?id=".strtolower($row->name)."'>".$gateway_name."@".$gateway_domain_name."</a>";
+				echo "<a href='".PROJECT_PATH."/app/gateways/gateway_edit.php?id=".strtolower(escape($row->name))."'>".escape($gateway_name)."@".escape($gateway_domain_name)."</a>";
 			}
 			elseif ($gateway_domain_name == '') {
 				echo $gateway_name ? $gateway_name : $row->name;
@@ -201,19 +201,19 @@ if ($_GET['a'] == "download") {
 			}
 			echo "	</td>\n";
 			echo "	<td class='".$row_style[$c]."'>Gateway</td>\n";
-			echo "	<td class='".$row_style[$c]."'>".$row->to."</td>\n";
-			echo "	<td class='".$row_style[$c]."'>".$row->state."</td>\n";
-			echo "	<td class='".$row_style[$c]."'><a onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".$row->profile."+killgw+".$row->name."';\" />".$text['button-stop']."</a></td>\n";
+			echo "	<td class='".$row_style[$c]."'>".escape($row->to)."</td>\n";
+			echo "	<td class='".$row_style[$c]."'>".escape($row->state)."</td>\n";
+			echo "	<td class='".$row_style[$c]."'><a onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".escape($row->profile)."+killgw+".escape($row->name)."';\" />".$text['button-stop']."</a></td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		}
 		foreach ($xml->alias as $row) {
 			//print_r($row);
 			echo "<tr>\n";
-			echo "	<td class='".$row_style[$c]."'>".$row->name."</td>\n";
-			echo "	<td class='".$row_style[$c]."'>".$row->type."</td>\n";
-			echo "	<td class='".$row_style[$c]."'>".$row->data."</td>\n";
-			echo "	<td class='".$row_style[$c]."'>".$row->state."</td>\n";
+			echo "	<td class='".$row_style[$c]."'>".escape($row->name)."</td>\n";
+			echo "	<td class='".$row_style[$c]."'>".escape($row->type)."</td>\n";
+			echo "	<td class='".$row_style[$c]."'>".escape($row->data)."</td>\n";
+			echo "	<td class='".$row_style[$c]."'>".escape($row->state)."</td>\n";
 			echo "	<td class='".$row_style[$c]."'>&nbsp;</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
@@ -250,26 +250,26 @@ if ($_GET['a'] == "download") {
 				echo "<table width='100%' cellpadding='0' cellspacing='0' border='0' style='margin-bottom: 10px;'>\n";
 				echo "<tr>\n";
 				echo "<td width='100%'>\n";
-				echo "  <b><a href='javascript:void(0);' onclick=\"$('#".$sip_profile_name."').slideToggle();\">".$text['title-sofia-status-profile']." ".$sip_profile_name."</a></b> \n";
+				echo "  <b><a href='javascript:void(0);' onclick=\"$('#".escape($sip_profile_name)."').slideToggle();\">".$text['title-sofia-status-profile']." ".escape($sip_profile_name)."</a></b> \n";
 				echo "</td>\n";
 				echo "<td align='right' nowrap>\n";
 				if ($sip_profile_name != "external") {
-					echo "  <input type='button' class='btn' value='".$text['button-flush_registrations']."' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".$sip_profile_name."+flush_inbound_reg';\" />\n";
+					echo "  <input type='button' class='btn' value='".$text['button-flush_registrations']."' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".escape($sip_profile_name)."+flush_inbound_reg';\" />\n";
 				}
-				echo "  <input type='button' class='btn' value='".$text['button-registrations']."' onclick=\"document.location.href='".PROJECT_PATH."/app/registrations/registrations.php?show_reg=1&profile=".$sip_profile_name."';\" />\n";
+				echo "  <input type='button' class='btn' value='".$text['button-registrations']."' onclick=\"document.location.href='".PROJECT_PATH."/app/registrations/registrations.php?show_reg=1&profile=".escape($sip_profile_name)."';\" />\n";
 				if ($profile_state == 'stopped') {
-					echo "  <input type='button' class='btn' value='".$text['button-start']."' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".$sip_profile_name."+start';\" />\n";
+					echo "  <input type='button' class='btn' value='".$text['button-start']."' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".escape($sip_profile_name)."+start';\" />\n";
 				}
 				if ($profile_state == 'running') {
-					echo "  <input type='button' class='btn' value='".$text['button-stop']."' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".$sip_profile_name."+stop';\" />\n";
+					echo "  <input type='button' class='btn' value='".$text['button-stop']."' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".escape($sip_profile_name)."+stop';\" />\n";
 				}
-				echo "  <input type='button' class='btn' value='".$text['button-restart']."' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".$sip_profile_name."+restart';\" />\n";
-				echo "  <input type='button' class='btn' value='".$text['button-rescan']."' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".$sip_profile_name."+rescan';\" />\n";
+				echo "  <input type='button' class='btn' value='".$text['button-restart']."' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".escape($sip_profile_name)."+restart';\" />\n";
+				echo "  <input type='button' class='btn' value='".$text['button-rescan']."' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".escape($sip_profile_name)."+rescan';\" />\n";
 				echo "</td>\n";
 				echo "</tr>\n";
 				echo "</table>\n";
 
-				echo "<div id='".$sip_profile_name."' style='display: none; margin-bottom: 30px;'>";
+				echo "<div id='".escape($sip_profile_name)."' style='display: none; margin-bottom: 30px;'>";
 				echo "<table width='100%' cellspacing='0' cellpadding='5'>\n";
 				echo "<tr>\n";
 				echo "<th width='20%'>&nbsp;</th>\n";
@@ -277,43 +277,43 @@ if ($_GET['a'] == "download") {
 				echo "</tr>\n";
 
 				foreach ($xml->profile_info as $row) {
-					echo "	<tr><td class='vncell'>name</td><td class='vtable'>&nbsp; &nbsp;".$row->name."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>domain-name</td><td class='vtable'>&nbsp; &nbsp;".$row->{'domain-name'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>auto-nat</td><td class='vtable'>&nbsp;".$row->{'auto-nat'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>db-name</td><td class='vtable'>&nbsp;".$row->{'db-name'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>pres-hosts</td><td class='vtable'>&nbsp;".$row->{'pres-hosts'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>dialplan</td><td class='vtable'>&nbsp;".$row->dialplan."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>context</td><td class='vtable'>&nbsp;".$row->context."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>challenge-realm</td><td class='vtable'>&nbsp;".$row->{'challenge-realm'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>rtp-ip</td><td class='vtable'>&nbsp;".$row->{'rtp-ip'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>ext-rtp-ip</td><td class='vtable'>&nbsp;".$row->{'ext-rtp-ip'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>sip-ip</td><td class='vtable'>&nbsp;".$row->{'sip-ip'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>ext-sip-ip</td><td class='vtable'>&nbsp;".$row->{'ext-sip-ip'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>url</td><td class='vtable'>&nbsp;".$row->url."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>bind-url</td><td class='vtable'>&nbsp;".$row->{'bind-url'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>tls-url</td><td class='vtable'>&nbsp;".$row->{'tls-url'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>tls-bind-url</td><td class='vtable'>&nbsp;".$row->{'tls-bind-url'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>hold-music</td><td class='vtable'>&nbsp;".$row->{'hold-music'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>outbound-proxy</td><td class='vtable'>&nbsp;".$row->{'outbound-proxy'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>inbound-codecs</td><td class='vtable'>&nbsp;".$row->{'inbound-codecs'}."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>name</td><td class='vtable'>&nbsp; &nbsp;".escape($row->name)."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>domain-name</td><td class='vtable'>&nbsp; &nbsp;".escape($row->{'domain-name'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>auto-nat</td><td class='vtable'>&nbsp;".escape($row->{'auto-nat'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>db-name</td><td class='vtable'>&nbsp;".escape($row->{'db-name'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>pres-hosts</td><td class='vtable'>&nbsp;".escape($row->{'pres-hosts'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>dialplan</td><td class='vtable'>&nbsp;".escape($row->dialplan)."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>context</td><td class='vtable'>&nbsp;".escape($row->context)."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>challenge-realm</td><td class='vtable'>&nbsp;".escape($row->{'challenge-realm'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>rtp-ip</td><td class='vtable'>&nbsp;".escape($row->{'rtp-ip'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>ext-rtp-ip</td><td class='vtable'>&nbsp;".escape($row->{'ext-rtp-ip'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>sip-ip</td><td class='vtable'>&nbsp;".escape($row->{'sip-ip'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>ext-sip-ip</td><td class='vtable'>&nbsp;".escape($row->{'ext-sip-ip'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>url</td><td class='vtable'>&nbsp;".escape($row->url)."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>bind-url</td><td class='vtable'>&nbsp;".escape($row->{'bind-url'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>tls-url</td><td class='vtable'>&nbsp;".escape($row->{'tls-url'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>tls-bind-url</td><td class='vtable'>&nbsp;".escape($row->{'tls-bind-url'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>hold-music</td><td class='vtable'>&nbsp;".escape($row->{'hold-music'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>outbound-proxy</td><td class='vtable'>&nbsp;".escape($row->{'outbound-proxy'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>inbound-codecs</td><td class='vtable'>&nbsp;".escape($row->{'inbound-codecs'})."&nbsp;</td></tr>\n";
 					echo "	<tr><td class='vncell'>outbound-codecs</td><td class='vtable'>&nbsp;".$row->{'outbound-codecs'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>tel-event</td><td class='vtable'>&nbsp;".$row->{'tel-event'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>dtmf-mode</td><td class='vtable'>&nbsp;".$row->{'dtmf-mode'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>cng</td><td class='vtable'>&nbsp;".$row->cng."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>session-to</td><td class='vtable'>&nbsp;".$row->{'session-to'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>max-dialog</td><td class='vtable'>&nbsp;".$row->{'max-dialog'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>nomedia</td><td class='vtable'>&nbsp;".$row->nomedia."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>late-neg</td><td class='vtable'>&nbsp;".$row->{'late-neg'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>proxy-media</td><td class='vtable'>&nbsp;".$row->{'proxy-media'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>aggressive-nat</td><td class='vtable'>&nbsp;".$row->{'aggressive-nat'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>stun-enabled</td><td class='vtable'>&nbsp;".$row->{'stun-enabled'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>stun-auto-disable</td><td class='vtable'>&nbsp;".$row->{'stun-auto-disable'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>user-agent-filter</td><td class='vtable'>&nbsp;".$row->{'user-agent-filter'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>max-registrations-per-extension</td><td class='vtable'>&nbsp;".$row->{'max-registrations-per-extension'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>calls-in</td><td class='vtable'>&nbsp;".$row->{'calls-in'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>calls-out</td><td class='vtable'>&nbsp;".$row->{'calls-out'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>failed-calls-in</td><td class='vtable'>&nbsp;".$row->{'failed-calls-in'}."&nbsp;</td></tr>\n";
-					echo "	<tr><td class='vncell'>failed-calls-out</td><td class='vtable'>&nbsp;".$row->{'failed-calls-out'}."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>tel-event</td><td class='vtable'>&nbsp;".escape($row->{'tel-event'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>dtmf-mode</td><td class='vtable'>&nbsp;".escape($row->{'dtmf-mode'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>cng</td><td class='vtable'>&nbsp;".escape($row->cng)."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>session-to</td><td class='vtable'>&nbsp;".escape($row->{'session-to'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>max-dialog</td><td class='vtable'>&nbsp;".escape($row->{'max-dialog'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>nomedia</td><td class='vtable'>&nbsp;".escape($row->{'nomedia'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>late-neg</td><td class='vtable'>&nbsp;".escape($row->{'late-neg'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>proxy-media</td><td class='vtable'>&nbsp;".escape($row->{'proxy-media'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>aggressive-nat</td><td class='vtable'>&nbsp;".escape($row->{'aggressive-nat'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>stun-enabled</td><td class='vtable'>&nbsp;".escape($row->{'stun-enabled'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>stun-auto-disable</td><td class='vtable'>&nbsp;".escape($row->{'stun-auto-disable'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>user-agent-filter</td><td class='vtable'>&nbsp;".escape($row->{'user-agent-filter'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>max-registrations-per-extension</td><td class='vtable'>&nbsp;".escape($row->{'max-registrations-per-extension'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>calls-in</td><td class='vtable'>&nbsp;".escape($row->{'calls-in'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>calls-out</td><td class='vtable'>&nbsp;".escape($row->{'calls-out'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>failed-calls-in</td><td class='vtable'>&nbsp;".escape($row->{'failed-calls-in'})."&nbsp;</td></tr>\n";
+					echo "	<tr><td class='vncell'>failed-calls-out</td><td class='vtable'>&nbsp;".escape($row->{'failed-calls-out'})."&nbsp;</td></tr>\n";
 				}
 				echo "</table>\n";
 				echo "</div>";
@@ -329,7 +329,7 @@ if ($_GET['a'] == "download") {
 		echo "<b><a href='javascript:void(0);' onclick=\"$('#status').slideToggle();\">".$text['title-status']."</a></b>\n";
 		echo "<div id='status' style='margin-top: 20px; font-size: 9pt;'>";
 		echo "<pre>";
-		echo trim($response);
+		echo trim(escape($response));
 		echo "</pre>\n";
 		echo "</div>";
 		fclose($fp);
