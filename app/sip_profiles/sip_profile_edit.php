@@ -185,8 +185,8 @@
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$sip_profiles = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($sip_profiles as &$row) {
-			$row = array_map("escape", $row);
+		foreach ($sip_profiles as $key => $row) {
+			$sip_profiles[$key] = array_map("escape", $row); }
 			$sip_profile_name = $row["sip_profile_name"];
 			$sip_profile_hostname = $row["sip_profile_hostname"];
 			$sip_profile_enabled = $row["sip_profile_enabled"];
@@ -202,7 +202,7 @@
 	$prep_statement = $db->prepare($sql);
 	$prep_statement->execute();
 	$sip_profile_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($sip_profile_settings as &$row) { $row = array_map("escape", $row); }
+	foreach ($sip_profile_settings as $key => $row) { $sip_profile_settings[$key] = array_map("escape", $row); }
 
 //add an empty row
 	$x = count($sip_profile_settings);
@@ -219,7 +219,7 @@
 	$prep_statement = $db->prepare($sql);
 	$prep_statement->execute();
 	$sip_profile_domains = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($sip_profile_domains as &$row) { $row = array_map("escape", $row); }
+	foreach ($sip_profile_domains as $key => $row) { $sip_profile_domains[$key] = array_map("escape", $row); }
 
 //add an empty row
 	$x = count($sip_profile_domains);
