@@ -93,7 +93,7 @@
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$sip_profiles = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($sip_profiles as &$row) { $row = array_map("escape", $row); }
+	foreach ($sip_profiles as $key => $row) { $sip_profiles[$key] = array_map("escape", $row); }
 	unset ($prep_statement, $sql);
 
 //escape the search
