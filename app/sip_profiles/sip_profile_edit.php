@@ -186,7 +186,7 @@
 		$prep_statement->execute();
 		$sip_profiles = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($sip_profiles as $key => $row) {
-			$sip_profiles[$key] = array_map("escape", $row); }
+			$sip_profiles[$key] = array_map("escape", $row);
 			$sip_profile_name = $row["sip_profile_name"];
 			$sip_profile_hostname = $row["sip_profile_hostname"];
 			$sip_profile_enabled = $row["sip_profile_enabled"];
