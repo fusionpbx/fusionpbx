@@ -490,7 +490,7 @@
 				}
 
 				if ($row['raw_data_exists'] && permission_exists('xml_cdr_details')) {
-					$tr_link = "href='xml_cdr_details.php?uuid=".$row['uuid'].(($_REQUEST['show']) ? "&show=all" : null)."'";
+					$tr_link = "href='xml_cdr_details.php?uuid=".escape($row['uuid']).(($_REQUEST['show']) ? "&show=all" : null)."'";
 				}
 				else {
 					$tr_link = null;
@@ -682,7 +682,7 @@
 				}
 			//hangup cause/call result
 				if (permission_exists('hangup_cause')) {
-					echo "	<td valign='top' class='".$row_style[$c]."' nowrap='nowrap'><a ".escape($tr_link).">".escape($hangup_cause)."</a></td>\n";
+					echo "	<td valign='top' class='".$row_style[$c]."' nowrap='nowrap'><a ".$tr_link.">".escape($hangup_cause)."</a></td>\n";
 				}
 				else {
 					echo "	<td valign='top' class='".$row_style[$c]."' nowrap='nowrap'>".ucwords(escape($call_result))."</td>\n";
