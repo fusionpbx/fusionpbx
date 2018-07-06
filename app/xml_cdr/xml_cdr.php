@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -82,47 +82,47 @@
 	echo "<td align='left' nowrap='nowrap' style='vertical-align: top;'><b>".$text['title']."</b><br><br><br></td>\n";
 	echo "<td align='right' width='100%' style='vertical-align: top;'>\n";
 	echo "	<form id='frm_export' method='post' action='xml_cdr_export.php'>\n";
-	echo "	<input type='hidden' name='cdr_id' value='".$cdr_id."'>\n";
-	echo "	<input type='hidden' name='direction' value='".$direction."'>\n";
-	echo "	<input type='hidden' name='caller_id_name' value='".$caller_id_name."'>\n";
-	echo "	<input type='hidden' name='start_stamp_begin' value='".$start_stamp_begin."'>\n";
-	echo "	<input type='hidden' name='start_stamp_end' value='".$start_stamp_end."'>\n";
-	echo "	<input type='hidden' name='hangup_cause' value='".$hangup_cause."'>\n";
-	echo "	<input type='hidden' name='call_result' value='".$call_result."'>\n";
-	echo "	<input type='hidden' name='caller_extension_uuid' value='".$caller_extension_uuid."'>\n";
-	echo "	<input type='hidden' name='caller_id_number' value='".$caller_id_number."'>\n";
-	echo "	<input type='hidden' name='caller_destination' value='".$caller_destination."'>\n";
-	echo "	<input type='hidden' name='destination_number' value='".$destination_number."'>\n";
-	echo "	<input type='hidden' name='context' value='".$context."'>\n";
-	echo "	<input type='hidden' name='answer_stamp_begin' value='".$answer_stamp_begin."'>\n";
-	echo "	<input type='hidden' name='answer_stamp_end' value='".$answer_stamp_end."'>\n";
-	echo "	<input type='hidden' name='end_stamp_begin' value='".$end_stamp_begin."'>\n";
-	echo "	<input type='hidden' name='end_stamp_end' value='".$end_stamp_end."'>\n";
-	echo "	<input type='hidden' name='start_epoch' value='".$start_epoch."'>\n";
-	echo "	<input type='hidden' name='stop_epoch' value='".$stop_epoch."'>\n";
-	echo "	<input type='hidden' name='duration' value='".$duration."'>\n";
-	echo "	<input type='hidden' name='billsec' value='".$billsec."'>\n";
-	echo "	<input type='hidden' name='uuid' value='".$uuid."'>\n";
-	echo "	<input type='hidden' name='bleg_uuid' value='".$bleg_uuid."'>\n";
-	echo "	<input type='hidden' name='accountcode' value='".$accountcode."'>\n";
-	echo "	<input type='hidden' name='read_codec' value='".$read_codec."'>\n";
-	echo "	<input type='hidden' name='write_codec' value='".$write_codec."'>\n";
-	echo "	<input type='hidden' name='remote_media_ip' value='".$remote_media_ip."'>\n";
-	echo "	<input type='hidden' name='network_addr' value='".$network_addr."'>\n";
-	echo "	<input type='hidden' name='bridge_uuid' value='".$bridge_uuid."'>\n";
-	echo "	<input type='hidden' name='leg' value='".$leg."'>\n";
+	echo "	<input type='hidden' name='cdr_id' value='".escape($cdr_id)."'>\n";
+	echo "	<input type='hidden' name='direction' value='".escape($direction)."'>\n";
+	echo "	<input type='hidden' name='caller_id_name' value='".escape($caller_id_name)."'>\n";
+	echo "	<input type='hidden' name='start_stamp_begin' value='".escape($start_stamp_begin)."'>\n";
+	echo "	<input type='hidden' name='start_stamp_end' value='".escape($start_stamp_end)."'>\n";
+	echo "	<input type='hidden' name='hangup_cause' value='".escape($hangup_cause)."'>\n";
+	echo "	<input type='hidden' name='call_result' value='".escape($call_result)."'>\n";
+	echo "	<input type='hidden' name='caller_extension_uuid' value='".escape($caller_extension_uuid)."'>\n";
+	echo "	<input type='hidden' name='caller_id_number' value='".escape($caller_id_number)."'>\n";
+	echo "	<input type='hidden' name='caller_destination' value='".escape($caller_destination)."'>\n";
+	echo "	<input type='hidden' name='destination_number' value='".escape($destination_number)."'>\n";
+	echo "	<input type='hidden' name='context' value='".escape($context)."'>\n";
+	echo "	<input type='hidden' name='answer_stamp_begin' value='".escape($answer_stamp_begin)."'>\n";
+	echo "	<input type='hidden' name='answer_stamp_end' value='".escape($answer_stamp_end)."'>\n";
+	echo "	<input type='hidden' name='end_stamp_begin' value='".escape($end_stamp_begin)."'>\n";
+	echo "	<input type='hidden' name='end_stamp_end' value='".escape($end_stamp_end)."'>\n";
+	echo "	<input type='hidden' name='start_epoch' value='".escape($start_epoch)."'>\n";
+	echo "	<input type='hidden' name='stop_epoch' value='".escape($stop_epoch)."'>\n";
+	echo "	<input type='hidden' name='duration' value='".escape($duration)."'>\n";
+	echo "	<input type='hidden' name='billsec' value='".escape($billsec)."'>\n";
+	echo "	<input type='hidden' name='uuid' value='".escape($uuid)."'>\n";
+	echo "	<input type='hidden' name='bleg_uuid' value='".escape($bleg_uuid)."'>\n";
+	echo "	<input type='hidden' name='accountcode' value='".escape($accountcode)."'>\n";
+	echo "	<input type='hidden' name='read_codec' value='".escape($read_codec)."'>\n";
+	echo "	<input type='hidden' name='write_codec' value='".escape($write_codec)."'>\n";
+	echo "	<input type='hidden' name='remote_media_ip' value='".escape($remote_media_ip)."'>\n";
+	echo "	<input type='hidden' name='network_addr' value='".escape($network_addr)."'>\n";
+	echo "	<input type='hidden' name='bridge_uuid' value='".escape($bridge_uuid)."'>\n";
+	echo "	<input type='hidden' name='leg' value='".escape($leg)."'>\n";
 	if (is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
 			$array = explode(",", $field);
 			$field_name = $array[count($array) - 1];
 			if (isset($_REQUEST[$field_name])) {
-				echo "	<input type='hidden' name='$field_name' value='".$$field_name."'>\n";
+				echo "	<input type='hidden' name='".escape($field_name)."' value='".escape($$field_name)."'>\n";
 			}
 		}
 	}
 	if (isset($order_by)) {
-		echo "	<input type='hidden' name='order_by' value='".$order_by."'>\n";
-		echo "	<input type='hidden' name='order' value='".$order."'>\n";
+		echo "	<input type='hidden' name='order_by' value='".escape($order_by)."'>\n";
+		echo "	<input type='hidden' name='order' value='".escape($order)."'>\n";
 	}
 	if (permission_exists('xml_cdr_all') && $_REQUEST['show'] == 'all') {
 		echo "	<input type='hidden' name='show' value='all'>\n";
@@ -139,12 +139,18 @@
 		if ($_REQUEST['show'] == 'all') {
 			$query_string = "show=all";
 		}
-		echo "			<input type='button' class='btn' value='".$text['button-advanced_search']."' onclick=\"window.location='xml_cdr_search.php?$query_string';\">\n";
+		echo "			<input type='button' class='btn' value='".$text['button-advanced_search']."' onclick=\"window.location='xml_cdr_search.php?".escape($query_string)."';\">\n";
 	}
 	if ($_GET['call_result'] != 'missed') {
 		echo "			<input type='button' class='btn' value='".$text['button-missed']."' onclick=\"document.location.href='xml_cdr.php?call_result=missed';\">\n";
 	}
 	echo "				<input type='button' class='btn' value='".$text['button-statistics']."' onclick=\"document.location.href='xml_cdr_statistics.php';\">\n";
+	if (permission_exists('xml_cdr_archive')) {
+		if ($_REQUEST['show'] == 'all') {
+			$query_string = "show=all";
+		}
+		echo "			<input type='button' class='btn' value='".$text['button-archive']."' onclick=\"window.location='xml_cdr_archive.php?".escape($query_string)."';\">\n";
+	}
 	echo "				<input type='button' class='btn' value='".$text['button-export']."' onclick=\"toggle_select('export_format');\">\n";
 	echo "				<input type='button' class='btn' value='".$text['button-refresh']."' onclick=\"document.location.href='xml_cdr.php';\" />\n";
 	echo "			</td>";
@@ -155,9 +161,7 @@
 	echo "					<option value='pdf'>PDF</option>\n";
 	echo "				</select>\n";
 	echo "			</td>\n";
-	if ($result_count == $rows_per_page && $paging_controls_mini != '') {
-		echo "		<td style='vertical-align: top; padding-left: 15px;'>".$paging_controls_mini."</td>\n";
-	}
+	echo "			<td style='vertical-align: top; padding-left: 15px;'>".$paging_controls_mini."</td>\n";
 	echo "		</tr>\n";
 	echo "	</table>\n";
 	echo "	</form>\n";
@@ -228,7 +232,7 @@
 				echo "			".$text['label-caller_id_number']."\n";
 				echo "		</td>\n";
 				echo "		<td class='vtable' align='left' style='white-space: nowrap;'>\n";
-				echo "			<input type='text' class='formfld' style='".$style['caller_id_number']."' name='caller_id_number' id='caller_id_number' value='".$caller_id_number."'>\n";
+				echo "			<input type='text' class='formfld' style='".escape($style['caller_id_number'])."' name='caller_id_number' id='caller_id_number' value='".escape($caller_id_number)."'>\n";
 				echo "		</td>\n";
 				echo "	</tr>\n";
 				echo "	<tr>\n";
@@ -236,7 +240,7 @@
 				echo "			".$text['label-destination']."\n";
 				echo "		</td>\n";
 				echo "		<td class='vtable' align='left' style='white-space: nowrap;'>\n";
-				echo "			<input type='text' class='formfld' name='destination_number' id='destination_number' value='".$destination_number."'>\n";
+				echo "			<input type='text' class='formfld' name='destination_number' id='destination_number' value='".escape($destination_number)."'>\n";
 				echo "		</td>\n";
 				echo "	</tr>\n";
 				echo "</table>\n";
@@ -250,8 +254,8 @@
 				echo "			".$text['label-start_range']."\n";
 				echo "		</td>\n";
 				echo "		<td class='vtable' align='left' style='position: relative; min-width: 250px;'>\n";
-				echo "			<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px;' name='start_stamp_begin' placeholder='".$text['label-from']."' value='$start_stamp_begin'>\n";
-				echo "			<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px;' name='start_stamp_end' placeholder='".$text['label-to']."' value='$start_stamp_end'>\n";
+				echo "			<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px;' name='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin)."'>\n";
+				echo "			<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px;' name='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end)."'>\n";
 				echo "		</td>\n";
 				echo "	</tr>\n";
 				echo "	<tr>\n";
@@ -259,7 +263,7 @@
 				echo "			".$text['label-caller_id_name']."\n";
 				echo "		</td>\n";
 				echo "		<td class='vtable' align='left'>\n";
-				echo "			<input type='text' class='formfld' name='caller_id_name' value='$caller_id_name'>\n";
+				echo "			<input type='text' class='formfld' name='caller_id_name' value='".escape($caller_id_name)."'>\n";
 				echo "		</td>\n";
 				echo "	</tr>\n";
 				echo "</table>\n";
@@ -314,7 +318,7 @@
 					foreach ($cdr_status_options as $cdr_status) {
 						$selected = ($hangup_cause == $cdr_status) ? "selected='selected'" : null;
 						$cdr_status_label = ucwords(strtolower(str_replace("_", " ", $cdr_status)));
-						echo "			<option value='".$cdr_status."' ".$selected.">".$cdr_status_label."</option>\n";
+						echo "			<option value='".escape($cdr_status)."' ".escape($selected).">".escape($cdr_status_label)."</option>\n";
 					}
 					echo "			</select>\n";
 					echo "		</td>\n";
@@ -326,7 +330,7 @@
 					echo "			".$text['label-caller_destination']."\n";
 					echo "		</td>\n";
 					echo "		<td class='vtable' align='left'>\n";
-					echo "			<input type='text' class='formfld' name='caller_destination' value='$caller_destination'>\n";
+					echo "			<input type='text' class='formfld' name='caller_destination' value='".escape($caller_destination)."'>\n";
 					echo "		</td>\n";
 					echo "	</tr>\n";
 				}
@@ -486,7 +490,7 @@
 				}
 
 				if ($row['raw_data_exists'] && permission_exists('xml_cdr_details')) {
-					$tr_link = "href='xml_cdr_details.php?uuid=".$row['uuid'].(($_REQUEST['show']) ? "&show=all" : null)."'";
+					$tr_link = "href='xml_cdr_details.php?uuid=".escape($row['uuid']).(($_REQUEST['show']) ? "&show=all" : null)."'";
 				}
 				else {
 					$tr_link = null;
@@ -494,8 +498,8 @@
 				echo "<tr ".$tr_link.">\n";
 				if (permission_exists('xml_cdr_delete')) {
 					echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; vertical-align: middle; padding: 0px;'>";
-					echo "		<input type='checkbox' name='id[".$index."]' id='checkbox_".$row['uuid']."' value='".$row['uuid']."' onclick=\"if (this.checked) { document.getElementById('recording_".$row['uuid']."').value='".base64_encode($record_path.'/'.$record_name)."' } else { document.getElementById('recording_".$row['uuid']."').value=''; document.getElementById('chk_all').checked = false; }\">";
-					echo "		<input type='hidden' name='rec[".$index."]' id='recording_".$row['uuid']."'>";
+					echo "		<input type='checkbox' name='id[".$index."]' id='checkbox_".escape($row['uuid'])."' value='".escape($row['uuid'])."' onclick=\"if (this.checked) { document.getElementById('recording_".escape($row['uuid'])."').value='".base64_encode(escape($record_path).'/'.escape($record_name))."' } else { document.getElementById('recording_".escape($row['uuid'])."').value=''; document.getElementById('chk_all').checked = false; }\">";
+					echo "		<input type='hidden' name='rec[".$index."]' id='recording_".escape($row['uuid'])."'>";
 					echo "	</td>";
 					$xml_ids[] = 'checkbox_'.$row['uuid'];
 				}
@@ -519,7 +523,7 @@
 							$image_name .= '_b';
 						}
 						$image_name .= ".png";
-						echo "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/$image_name' width='16' style='border: none; cursor: help;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]. ($row['leg']=='b'?'(b)':'') . "'>\n";
+						echo "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/".escape($image_name)."' width='16' style='border: none; cursor: help;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]. ($row['leg']=='b'?'(b)':'') . "'>\n";
 					}
 				}
 				else { echo "&nbsp;"; }
@@ -531,39 +535,39 @@
 					echo "	</td>\n";
 				}
 			//caller id name
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['caller_id_name']."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['caller_id_name'])."&nbsp;</td>\n";
 			//source
 				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>";
-				echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['caller_id_name'])."&src_cid_number=".urlencode($row['caller_id_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['caller_id_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
+				echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode(escape($row['caller_id_name']))."&src_cid_number=".urlencode(escape($row['caller_id_number']))."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode(escape($row['caller_id_number']))."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 				if (is_numeric($row['caller_id_number'])) {
 					echo "		".format_phone($row['caller_id_number']).' ';
 				}
 				else {
-					echo "		".$row['caller_id_number'].' ';
+					echo "		".escape($row['caller_id_number']).' ';
 				}
 				echo "		</a>";
 				echo "	</td>\n";
 			//caller destination
 				if (permission_exists('caller_destination')) {
 					echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>";
-					echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['caller_id_name'])."&src_cid_number=".urlencode($row['caller_id_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['caller_destination'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
+					echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode(escape($row['caller_id_name']))."&src_cid_number=".urlencode(escape($row['caller_id_number']))."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode(escape($row['caller_destination']))."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 					if (is_numeric($row['caller_destination'])) {
-						echo "		".format_phone($row['caller_destination']).' ';
+						echo "		".format_phone(escape($row['caller_destination'])).' ';
 					}
 					else {
-						echo "		".$row['caller_destination'].' ';
+						echo "		".escape($row['caller_destination']).' ';
 					}
 					echo "		</a>";
 					echo "	</td>\n";
 				}
 			//destination
 				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>";
-				echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['destination_number'])."&src_cid_number=".urlencode($row['destination_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['destination_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
+				echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode(escape($row['destination_number']))."&src_cid_number=".urlencode(escape($row['destination_number']))."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode(escape($row['destination_number']))."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 				if (is_numeric($row['destination_number'])) {
-					echo format_phone($row['destination_number'])."\n";
+					echo format_phone(escape($row['destination_number']))."\n";
 				}
 				else {
-					echo "		".$row['destination_number']."\n";
+					echo "		".escape($row['destination_number'])."\n";
 				}
 				echo "		</a>\n";
 				echo "	</td>\n";
@@ -572,14 +576,14 @@
 					if ($record_path != '' && file_exists($record_path.'/'.$record_name)) {
 						echo "	<td valign='top' align='center' class='".$row_style[$c]." row_style_slim tr_link_void' nowrap='nowrap'>";
 						if (permission_exists('recording_play')) {
-							echo 	"<audio id='recording_audio_".$row['uuid']."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row['uuid']."')\" onended=\"recording_reset('".$row['uuid']."');\" src=\"download.php?id=".$row['uuid']."&t=record\" type='".$record_type."'></audio>";
-							echo 	"<span id='recording_button_".$row['uuid']."' onclick=\"recording_play('".$row['uuid']."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
+							echo 	"<audio id='recording_audio_".escape($row['uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['uuid'])."')\" onended=\"recording_reset('".escape($row['uuid'])."');\" src=\"download.php?id=".escape($row['uuid'])."&t=record\" type='".escape($record_type)."'></audio>";
+							echo 	"<span id='recording_button_".escape($row['uuid'])."' onclick=\"recording_play('".escape($row['uuid'])."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
 						}
 						else {
 							echo "don't have recording_play permission ";
 						}
 						if (permission_exists('recording_download')) {
-							echo 	"<a href=\"download.php?id=".$row['uuid']."&t=bin\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
+							echo 	"<a href=\"download.php?id=".escape($row['uuid'])."&t=bin\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
 						}
 						echo "	</td>\n";
 					}
@@ -593,12 +597,12 @@
 						$array = explode(",", $field);
 						$field_name = $array[count($array) - 1];
 						if ($field_name != "destination_number") {
-							echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;' nowrap='nowrap'>".$row[$field_name] ."</td>\n";
+							echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;' nowrap='nowrap'>".escape($row[$field_name])."</td>\n";
 						}
 					}
 				}
 			//start
-				echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;' nowrap='nowrap'>".$tmp_start_epoch."</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;' nowrap='nowrap'>".escape($tmp_start_epoch)."</td>\n";
 			//tta (time to answer)
 				echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".(($row['tta'] > 0) ? $row['tta']."s" : "&nbsp;")."</td>\n";
 			//duration
@@ -666,7 +670,7 @@
 				}
 			//pdd (post dial delay)
 				if (permission_exists("xml_cdr_pdd")) {
-					echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".number_format($row['pdd_ms']/1000,2)."s</td>\n";
+					echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".number_format(escape($row['pdd_ms'])/1000,2)."s</td>\n";
 				}
 			//mos (mean opinion score)
 				if (permission_exists("xml_cdr_mos")) {
@@ -678,10 +682,10 @@
 				}
 			//hangup cause/call result
 				if (permission_exists('hangup_cause')) {
-					echo "	<td valign='top' class='".$row_style[$c]."' nowrap='nowrap'><a ".$tr_link.">".$hangup_cause."</a></td>\n";
+					echo "	<td valign='top' class='".$row_style[$c]."' nowrap='nowrap'><a ".$tr_link.">".escape($hangup_cause)."</a></td>\n";
 				}
 				else {
-					echo "	<td valign='top' class='".$row_style[$c]."' nowrap='nowrap'>".ucwords($call_result)."</td>\n";
+					echo "	<td valign='top' class='".$row_style[$c]."' nowrap='nowrap'>".ucwords(escape($call_result))."</td>\n";
 				}
 			//control icons
 				if (permission_exists('xml_cdr_details')) {
@@ -690,7 +694,7 @@
 						echo "		<a $tr_link title='".$text['button-view']."'>$v_link_label_view</a>"; //CJB
 					}
 					if (permission_exists('xml_cdr_delete')) {
-						echo 	"<a href='xml_cdr_delete.php?id[]=".$row['uuid']."&rec[]=".(($record_path != '') ? base64_encode($record_path.'/'.$record_name) : null)."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+						echo 	"<a href='xml_cdr_delete.php?id[]=".escape($row['uuid'])."&rec[]=".(($record_path != '') ? base64_encode($record_path.'/'.$record_name) : null)."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 					}
 					echo "	</td>\n";
 				}
@@ -704,9 +708,7 @@
 	echo "</table>";
 	echo "</form>";
 	echo "<br><br>";
-	if ($result_count == $rows_per_page) {
-		echo $paging_controls;
-	}
+	echo $paging_controls;
 	echo "<br><br>";
 
 	// check or uncheck all checkboxes
