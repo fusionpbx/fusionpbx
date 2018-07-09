@@ -54,7 +54,7 @@
 		$sql .= "or domain_uuid is null ";
 	}
 	$sql .= ") ";
-	$sql .= "order by domain_uuid desc, music_on_hold_rate asc, music_on_hold_name asc";
+	$sql .= "order by domain_uuid desc, music_on_hold_name asc, music_on_hold_rate asc";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$streams = $prep_statement->fetchAll(PDO::FETCH_NAMED);
