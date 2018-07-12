@@ -81,6 +81,12 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_fax";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "destination_caller_id_name";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "destination_caller_id_number";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//default settings
 		$y = 0;
