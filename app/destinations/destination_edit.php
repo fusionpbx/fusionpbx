@@ -823,7 +823,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (permission_exists('outbound_caller_id_select')) {
+	if (permission_exists('destination_caller_id_name')) {
 		echo "<tr id='tr_caller_id_name'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-destination_caller_id_name']."\n";
@@ -834,7 +834,9 @@
 		echo $text['description-destination_caller_id_name']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
+	}
 
+	if (permission_exists('destination_caller_id_number')) {
 		echo "<tr id='tr_caller_id_number'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-destination_caller_id_number']."\n";
