@@ -167,10 +167,8 @@
 	if (permission_exists('call_forward')) { echo "<th>".$text['label-call-forward']."</th>\n"; }
 	if (permission_exists('follow_me')) { echo "<th>".$text['label-follow-me']."</th>\n"; }
 	if (permission_exists('do_not_disturb')) { echo "<th>".$text['label-dnd']."</th>\n"; }
-	if (!$is_included) {
-		echo "<th class='hidden-xs'>".$text['table-description']."</th>\n";
-	}
-	echo "<td class='list_control_icon'>&nbsp;</td>\n";
+	echo "<th>".$text['label-description']."</th>\n";
+	echo "	<td class='list_control_icon'>&nbsp;</td>\n";
 	echo "</tr>\n";
 
 	if (is_array($extensions)) {
@@ -180,7 +178,7 @@
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'><a ".$tr_link.">".escape($row['extension'])."</a></td>\n";
 			if (permission_exists('call_forward')) {
-				echo "<td valign='top' class='".$row_style[$c]."'>".(($row['forward_all_enabled'] == 'true') ? escape(format_phone($row['forward_all_destination'])) : '&nbsp;')."</td>";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".(($row['forward_all_enabled'] == 'true') ? escape(format_phone($row['forward_all_destination'])) : '&nbsp;')."</td>";
 			}
 			if (permission_exists('follow_me')) {
 				if ($row['follow_me_uuid'] != '') {
@@ -204,14 +202,13 @@
 				else {
 					$follow_me_enabled = false;
 				}
-				echo "<td valign='top' class='".$row_style[$c]."'>".(($follow_me_enabled) ? $text['label-enabled']." (".$follow_me_destination_count.")" : '&nbsp;')."</td>";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".(($follow_me_enabled) ? $text['label-enabled']." (".$follow_me_destination_count.")" : '&nbsp;')."</td>";
 			}
 			if (permission_exists('do_not_disturb')) {
-				echo "<td valign='top' class='".$row_style[$c]."'>".(($row['do_not_disturb'] == 'true') ? $text['label-enabled'] : '&nbsp;')."</td>";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".(($row['do_not_disturb'] == 'true') ? $text['label-enabled'] : '&nbsp;')."</td>";
 			}
-			if (!$is_included) {
-				echo "<td valign='top' class='row_stylebg hidden-xs'>".escape($row['description'])."&nbsp;</td>\n";
-			}
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['description'])."&nbsp;</td>\n";
+
 			echo "	<td class='list_control_icon'><a href='".$tr_url."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a></td>\n";
 			echo "</tr>\n";
 			$c = ($c) ? 0 : 1;
