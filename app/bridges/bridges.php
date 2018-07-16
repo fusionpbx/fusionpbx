@@ -134,7 +134,7 @@
 	$sql .= "limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$bridges = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
 
 //alternate the row style
@@ -206,11 +206,11 @@
 	echo "	</td>\n";
 	echo "<tr>\n";
 
-	if (is_array($result)) {
+	if (is_array($bridges)) {
 		$x = 0;
-		foreach($result as $row) {
+		foreach($bridges as $row) {
 			if (permission_exists('bridge_edit')) {
-				$tr_link = "href='bridge_edit.php?id=".$row['bridge_uuid']."'";
+				$tr_link = "href='bridge_edit.php?id=".escape($row['bridge_uuid'])."'";
 			}
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='align: center; padding: 3px 3px 0px 8px;'>\n";
@@ -232,7 +232,7 @@
 			$x++;
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($sql, $bridges);
 	} //end if results
 
 	echo "<tr>\n";
