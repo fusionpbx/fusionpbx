@@ -704,12 +704,12 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 		echo "<select name=\"contact_uuid\" id=\"contact_uuid\" class=\"formfld\">\n";
 		echo "<option value=\"\"></option>\n";
 		foreach($result as $row) {
-				$contact_name = array();
-				if ($row['contact_organization'] != '') { $contact_name[] = $row['contact_organization']; }
-				if ($row['contact_name_family'] != '') { $contact_name[] = $row['contact_name_family']; }
-				if ($row['contact_name_given'] != '') { $contact_name[] = $row['contact_name_given']; }
-				if ($row['contact_name_family'] == '' && $row['contact_name_family'] == '' && $row['contact_nickname'] != '') { $contact_name[] = $row['contact_nickname']; }
-				echo "<option value='".escape($row['contact_uuid'])."' ".(($row['contact_uuid'] == $contact_uuid) ? "selected='selected'" : null).">".implode(', ', escape($contact_name))."</option>\n";
+			$contact_name = array();
+			if ($row['contact_organization'] != '') { $contact_name[] = $row['contact_organization']; }
+			if ($row['contact_name_family'] != '') { $contact_name[] = $row['contact_name_family']; }
+			if ($row['contact_name_given'] != '') { $contact_name[] = $row['contact_name_given']; }
+			if ($row['contact_name_family'] == '' && $row['contact_name_family'] == '' && $row['contact_nickname'] != '') { $contact_name[] = $row['contact_nickname']; }
+			echo "<option value='".escape($row['contact_uuid'])."' ".(($row['contact_uuid'] == $contact_uuid) ? "selected='selected'" : null).">".escape(implode(', ', $contact_name))."</option>\n";
 		}
 		unset($sql, $result, $row_count);
 		echo "</select>\n";
