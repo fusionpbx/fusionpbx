@@ -194,9 +194,9 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_dtmf_type";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0-INBAND, 1-RFC 2833; 2-SIP INFO, 3-RFC2833 + SIP INFO";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0-INBAND, 1-RFC 2833 (default), 2-SIP INFO, 3-RFC2833 + SIP INFO";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "6fd955ef-2f65-41f0-84cf-5b3ad917cc20";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
