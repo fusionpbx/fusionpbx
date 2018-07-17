@@ -132,7 +132,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The value is 0(default) or 1.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The value is 0 (default) or 1.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2f5e8429-6890-4da7-84ae-65c9c29b5091";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -148,7 +148,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "(0-Disabled;1-Enabled) ";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0-Disabled, 1-Enabled";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c45264b7-6e85-42e4-b245-f22caff091d4";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -156,7 +156,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "(0-Disabled;1-Enabled)";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0-Disabled, 1-Enabled";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ada36bd5-51ab-4bf8-a2ad-bc39671b2a3a";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -164,7 +164,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "(0-Disabled:power indicator LED is off;1-Enabled:power indicator LED is solid red)";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0-Disabled:power indicator LED is off, 1-Enabled:power indicator LED is solid red";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "fb13e647-ca3f-4da6-901c-584b8cde4055";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -204,7 +204,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0-Disabled 1-Enabled";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0-Disabled, 1-Enabled";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "968c9f53-305c-4fbd-a7dd-4dd6099e829e";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -445,7 +445,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "DSS Key Label Length Default-0 Extended-1 Mid Range-2";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "DSS Key Label Length 0-Default, 1-Extended, 2-Mid Range";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3dee932a-6987-4693-b289-825d192e8f85";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -453,7 +453,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable or disable the feature key synchronization; 0-Disabled (default) 1-Enabled";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable or disable the feature key synchronization; 0-Disabled (default), 1-Enabled";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c7227e2b-870f-4c11-aab8-dfff8d626ded";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -461,7 +461,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Auto dial after digit timeout 0-Disabled (default), 1-Enabled;";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Auto dial after digit timeout 0-Disabled (default), 1-Enabled";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "627ef79d-1a49-4bae-b215-56182e308351";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
