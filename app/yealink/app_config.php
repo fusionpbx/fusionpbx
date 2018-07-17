@@ -92,7 +92,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "subscribe to the voicemail MWI 0-Disabled (default), 1-Enabled";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Subscribe to the voicemail MWI 0-Disabled (default), 1-Enabled";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1374da96-dc40-4f12-8269-0b94278b7c55";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -190,13 +190,21 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The type of SIP header(s) to carry the caller ID; 0-FROM (default), 1-PAI 2-PAI-FROM, 3-PRID-PAI-FROM, 4-PAI-RPID-FROM, 5-RPID-FROM";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ba0ebf59-6364-47b2-9a98-73430669a4c4";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_dtmf_type";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0-INBAND, 1-RFC 2833; 2-SIP INFO, 3-RFC2833 + SIP INFO";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "6fd955ef-2f65-41f0-84cf-5b3ad917cc20";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_dtmf_hide";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " 0-Disabled 1-Enabled";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0-Disabled 1-Enabled";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "968c9f53-305c-4fbd-a7dd-4dd6099e829e";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -204,7 +212,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5060";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " 5060 default";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "5060 default";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3f903069-c0fc-4bf1-9c33-907bf238475e";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -212,7 +220,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server.yourdomain.com/app/yealink/resources/firmware";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Base URL for Yealink Firmware.  Download from http://support.yealink.com";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Base URL for Yealink Firmware. Download from http://support.yealink.com";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e8f3e617-a6b3-4859-af59-04e2349f3d49";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -220,7 +228,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "cp860-37.81.0.10.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the CP860 firmware ROM";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the CP860 firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7a769f2f-2833-4b90-9789-ff96a4723773";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -228,7 +236,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "cp960-73.80.0.25.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the CP960 firmware ROM";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the CP960 firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "311d2739-a340-42f5-8e3e-6e6ecce1faa2";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -236,7 +244,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t29g-46.81.0.110.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the T29G firmware ROM";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T29G firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "758509689226450f-a3e1-414ec1d610ee";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -244,7 +252,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t38g-38.70.0.185.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the T38G firmware ROM";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T38G firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7223c3a7-5ef9-46a8-84be-39338a6788a6";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -252,7 +260,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t40g-76.81.0.110.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the T40G firmware ROM";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T40G firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c5d9b7ea-8e3b44289845438be7be0baa";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -260,7 +268,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t40p-54.81.0.110.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the T40P firmware ROM";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T40P firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f714e8a0-9753-48e0-9674-0f4efc7e4ff1";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -268,7 +276,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t41p-36.81.0.110.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the T41P firmware ROM";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T41P firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9480f346-c038-462b-b440329383290b84";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -276,7 +284,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t41s-66.81.0.110.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the T41S firmware ROM";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T41S firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "84eb10e2-bd9f-4bd0-8073-ac8cf002e7f0";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -284,7 +292,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t42g-29.81.0.110.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the T42G firmware ROM";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T42G firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "768f216e-fc19-4c97-b843-03d48ce70c4e";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -292,7 +300,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t42s-66.81.0.110.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the T42S firmware ROM";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T42S firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5fb6ef46-0a7f-4bb6-b415-49b437454321";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -300,7 +308,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t46g-28.81.0.110.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the T46G firmware ROM";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T46G firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4e2b8fcb-7d06-4553-becf-9904e1331c4c";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -308,7 +316,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t46s-66.81.0.110.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the T46S firmware ROM";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T46S firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0276b965-0ef6-493a-bdd0-b9786bf8aad7";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -316,7 +324,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t48g-35.81.0.110.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the T48G firmware ROM";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T48G firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "77314a84-6304-47d8-a6b4-fb6d12b8804f";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -332,7 +340,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t49g-51.80.0.100.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the T49Gfirmware ROM";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T49Gfirmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "804003fc-f0e9-4b3b-a35b-6c2742f965eb";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -340,7 +348,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t52s-70.81.0.10.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the T52Sfirmware ROM";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T52Sfirmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7378c0b632424989-8af6-903dfb437285";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -348,7 +356,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "T54S(T52S)-70.82.0.20.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Firmware tested 2017-11-26";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Firmware tested 2017-11-26";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4ffd1ad7-1b00-41f7-8e9319412127245a";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -356,7 +364,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t56a-58.80.0.25.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the T56A firmware ROM";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T56A firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "616d6358-d07e-4e42-8560-7de0f42cd5b1";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -364,7 +372,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t58a-58.80.0.25.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the T58A firmware ROM";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T58A firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2cdd8b87-db72-4ad1-b18b-745fc1f7e906";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -372,7 +380,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t58v-58.80.0.25.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the T58V firmware ROM";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T58V firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a39fc1af-9c30-46c7-a564-212e4af0331f";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -380,7 +388,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "vp530-23.70.0.40.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the VP530 firmware ROM";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the VP530 firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "68eba481-aeb1-4c7e-a4e4-630946abc0e7";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -388,7 +396,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " (0-Disabled;1-Enabled)";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "(0-Disabled;1-Enabled)";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "85675560-82cf-48a5-8056-227c01a44f37";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -396,7 +404,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "hxxps://replace-this.url/openvpn.tar";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " (URL within 511 characters)";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "(URL within 511 characters)";
 
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b75ef82b-a225-43a5-a208-78d545cca8aa";
@@ -413,7 +421,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " LLDP 0-Disabled, 1-Enabled";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "LLDP 0-Disabled, 1-Enabled";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2d380c07-aba5-46a9-8ef5-7e6b713868fd";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -421,7 +429,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " CDP 0-Disabled, 1-Enabled";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "CDP 0-Disabled, 1-Enabled";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f54bd090-723c-47c8-a9cd-c1e875134501";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -429,7 +437,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Overwrite Mode 0-Disabled, 1-Enabled";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Overwrite Mode 0-Disabled, 1-Enabled";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "709945c3-7fc4-4903-b6b2-7c0d695fea43";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -437,7 +445,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " DSS Key Label Length Default-0 Extended-1 Mid Range-2";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "DSS Key Label Length Default-0 Extended-1 Mid Range-2";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3dee932a-6987-4693-b289-825d192e8f85";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -445,7 +453,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Enable or disable the feature key synchronization; 0-Disabled (default) 1-Enabled";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable or disable the feature key synchronization; 0-Disabled (default) 1-Enabled";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c7227e2b-870f-4c11-aab8-dfff8d626ded";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -461,7 +469,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "custom.wav";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "custom ring tone (Busy.wav);";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Custom ring tone (Busy.wav);";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7af991ec-ddb9-4942-a05d-d1acc529fef5";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
