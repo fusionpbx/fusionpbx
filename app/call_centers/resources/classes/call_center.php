@@ -144,16 +144,26 @@
 						$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 						$y++;
 					}
-				
-                                       if (strlen($this->queue_cc_exit_keys) > 0) {
-                                               $dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
-                                               $dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-                                               $dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
-                                               $dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "cc_exit_keys=".$this->queue_cc_exit_keys;
-                                               $dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "2";
-                                               $dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
-                                               $y++;
-                                       }
+
+					if (strlen($this->queue_greeting) > 0) {
+						$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
+						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "playback";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "".$this->queue_greeting;
+						$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "2";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
+						$y++;
+					}
+
+					if (strlen($this->queue_cc_exit_keys) > 0) {
+						$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
+						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "cc_exit_keys=".$this->queue_cc_exit_keys;
+						$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "2";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
+						$y++;
+					}
 
 					$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
 					$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
