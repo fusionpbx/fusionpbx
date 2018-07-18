@@ -666,7 +666,7 @@
 <!-- # Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone, 4 - silent. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3, 4 -->
 <!-- # Mandatory -->
-<P104>0	</P104>
+<P104>1</P104>
 
 <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
 <!-- # String -->
@@ -690,7 +690,7 @@
 
 <!-- # Matching Incoming Caller ID. Matching Rule 3 -->
 <!-- # String -->
-<P1492>ring</P1492>
+<P1492></P1492>
 
 <!-- # Matching Rule 3 Distinctive Ringtone -->
 <!-- # 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent. Default is 0. -->
@@ -5271,7 +5271,7 @@
 {if isset($grandstream_pc_port_vlan) }
 <P229>{$grandstream_pc_port_vlan}</P229>
 {else}
-<P229>0</P229>
+<P229>1</P229>
 {/if}
 
 <!-- # PC Port Priority Value. Default is 0  -->
@@ -6614,7 +6614,7 @@
 <!-- # Mandatory -->
 <P6760>0</P6760>
 
-<!-- # Saved Local Call Recording Location. 0 - Internal Storage 1 - USB. Default is 0. --for GXP2140/2160/2170 only -->
+<!-- # Saved Local Call Recording Location. 0 - Internal Storage 1 - USB. Default is 0. For GXP2140/2160/2170 only -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
 <P6761>0</P6761>
@@ -6634,8 +6634,8 @@
 <P8358></P8358>
 
 <!-- # Auto Provision List Starting Point. 0 - Extension Boards, 1 - VPK, 2 - MPK. -->
-<!-- # For GXP2140/GXP2170--Number: 0, 1. Default is 0 -->
-<!-- # For GXP2130/GXP2160--Number: 1, 2. Default is 1 -->
+<!-- # For GXP2140/GXP2170 Number: 0, 1. Default is 0 -->
+<!-- # For GXP2130/GXP2160 Number: 1, 2. Default is 1 -->
 <!-- # Mandatory -->
 <!-- #P8349 = 0 -->
 <!--   -->
@@ -7093,7 +7093,7 @@
 <P2918>1</P2918>
 {/if}
 
-<!-- # Screensaver Source.  0 - Default, 1 - USB, 2 - Download. Default is 0. --for GXP2140/2160/2170 only -->
+<!-- # Screensaver Source.  0 - Default, 1 - USB, 2 - Download. Default is 0. For GXP2140/2160/2170 only -->
 <!-- # Number: 0, 1, 2 -->
 <!-- # Mandatory -->
 {if isset($grandstream_screensaver_source)}
@@ -7207,14 +7207,12 @@
 <!-- # Speaker Ring Volume -->
 <!-- # Number: 0-7. Default is 5. -->
 <!-- # Mandatory -->
-<!-- ##### We should NOT force the user's volume!!! ### -->
-<!-- <P8352>5</P8352> -->
+<!--<P8352>5</P8352>-->
 
 <!-- # Notification Tone Volume -->
 <!-- # Number: 0-7. Default is 5. -->
 <!-- # Mandatory -->
-<!-- ##### We should NOT force the user's volume!!! ### -->
-<!-- <P8399>5</P8399> -->
+<!--<P8399>5</P8399>-->
 
 <!-- # Lock Volumne. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
@@ -7265,7 +7263,7 @@
 <!-- # Degree Unit. auto - Automatic, f - Fahrenheit, c - Celsius. Default is auto -->
 <!-- # String: auto, f, c -->
 <!-- # Mandatory -->
-<P1379>{if isset ($grandstream_temp_unit)}
+{if isset ($grandstream_temp_unit)}
 <P1379>{$grandstream_temp_unit}</P1379>
 {else}
 <P1379>auto</P1379>
@@ -7425,7 +7423,7 @@
 {$pid=$mem*3-3}
 {if isset($keys.memory.$mem.device_key_category) && isset($keys.memory.$mem.device_key_type) && $keys.memory.$mem.device_key_type|in_array:$key_types}
 <!-- # Key Mode. -->
-<!-- # Number: -1 -- 20 -->
+<!-- # Number: -1 to 20 -->
 <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
 <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
 <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -7613,7 +7611,7 @@
 <!-- # EXT 1 to 160-->
 <!-- ###################################################################################### -->
 <!-- # Key Mode. -->
-<!-- # Number: -1 -- 20 -->
+<!-- # Number: -1 to 20 -->
 <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
 <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
 <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
