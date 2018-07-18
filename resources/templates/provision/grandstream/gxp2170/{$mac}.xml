@@ -6613,7 +6613,7 @@
 <!-- # Mandatory -->
 <P6760>0</P6760>
 
-<!-- # Saved Local Call Recording Location. 0 - Internal Storage 1 - USB. Default is 0. --for GXP2140/2160/2170 only -->
+<!-- # Saved Local Call Recording Location. 0 - Internal Storage 1 - USB. Default is 0. For GXP2140/2160/2170 only -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
 <P6761>0</P6761>
@@ -6633,8 +6633,8 @@
 <P8358></P8358>
 
 <!-- # Auto Provision List Starting Point. 0 - Extension Boards, 1 - VPK, 2 - MPK. -->
-<!-- # For GXP2140/GXP2170--Number: 0, 1. Default is 0 -->
-<!-- # For GXP2130/GXP2160--Number: 1, 2. Default is 1 -->
+<!-- # For GXP2140/GXP2170 Number: 0, 1. Default is 0 -->
+<!-- # For GXP2130/GXP2160 Number: 1, 2. Default is 1 -->
 <!-- # Mandatory -->
 <!-- #P8349 = 0 -->
 <!--   -->
@@ -7092,7 +7092,7 @@
 <P2918>1</P2918>
 {/if}
 
-<!-- # Screensaver Source.  0 - Default, 1 - USB, 2 - Download. Default is 0. --for GXP2140/2160/2170 only -->
+<!-- # Screensaver Source.  0 - Default, 1 - USB, 2 - Download. Default is 0. For GXP2140/2160/2170 only -->
 <!-- # Number: 0, 1, 2 -->
 <!-- # Mandatory -->
 {if isset($grandstream_screensaver_source)}
@@ -7262,7 +7262,7 @@
 <!-- # Degree Unit. auto - Automatic, f - Fahrenheit, c - Celsius. Default is auto -->
 <!-- # String: auto, f, c -->
 <!-- # Mandatory -->
-<P1379>{if isset ($grandstream_temp_unit)}
+{if isset ($grandstream_temp_unit)}
 <P1379>{$grandstream_temp_unit}</P1379>
 {else}
 <P1379>auto</P1379>
@@ -7422,7 +7422,7 @@
 {$pid=$mem*3-3}
 {if isset($keys.memory.$mem.device_key_category) && isset($keys.memory.$mem.device_key_type) && $keys.memory.$mem.device_key_type|in_array:$key_types}
 <!-- # Key Mode. -->
-<!-- # Number: -1 -- 20 -->
+<!-- # Number: -1 to 20 -->
 <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
 <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
 <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -7610,7 +7610,7 @@
 <!-- # EXT 1 to 160-->
 <!-- ###################################################################################### -->
 <!-- # Key Mode. -->
-<!-- # Number: -1 -- 20 -->
+<!-- # Number: -1 to 20 -->
 <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
 <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
 <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
