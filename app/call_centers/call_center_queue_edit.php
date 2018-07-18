@@ -79,6 +79,7 @@
 			$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
 			$queue_name = check_str($_POST["queue_name"]);
 			$queue_extension = check_str($_POST["queue_extension"]);
+			$queue_greeting = check_str($_POST["queue_greeting"]);
 			$queue_strategy = check_str($_POST["queue_strategy"]);
 			$queue_moh_sound = check_str($_POST["queue_moh_sound"]);
 			$queue_record_template = check_str($_POST["queue_record_template"]);
@@ -363,6 +364,7 @@
 				$dialplan_uuid = $row["dialplan_uuid"];
 				$database_queue_name = $row["queue_name"];
 				$queue_extension = $row["queue_extension"];
+				$queue_greeting = $row["queue_greeting"];
 				$queue_strategy = $row["queue_strategy"];
 				$queue_moh_sound = $row["queue_moh_sound"];
 				$queue_record_template = $row["queue_record_template"];
@@ -497,6 +499,39 @@
 	echo "	<input class='formfld' type='number' name='queue_extension' maxlength='255' min='0' step='1' value=\"".escape($queue_extension)."\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-extension']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-greeting']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "<select name='queue_greeting' class='formfld' style='width: 200px;' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
+	echo "	<option value=''></option>\n";
+	foreach($sounds as $key => $value) {
+		echo "<optgroup label=".$text['label-'.$key].">\n";
+		$selected = false;
+		foreach($value as $row) {
+			if ($queue_greeting == $row["value"]) { 
+				$selected = true;
+				echo "	<option value='".escape($row["value"])."' selected='selected'>".escape($row["name"])."</option>\n";
+			}
+			else {
+				echo "	<option value='".escape($row["value"])."'>".escape($row["name"])."</option>\n";
+			}
+		}
+		echo "</optgroup>\n";
+	}
+	if (if_group("superadmin")) {
+		if (!$selected && strlen($queue_greeting) > 0) {
+			echo "	<option value='".escape($queue_greeting)."' selected='selected'>".escape($queue_greeting)."</option>\n";
+		}
+		unset($selected);
+	}
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo $text['description-greeting']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
