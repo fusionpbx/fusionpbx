@@ -129,7 +129,7 @@
 <!-- # Register Expiration (in minutes). Default is 60. Max about 45 days -->
 <!-- # Number: 1 - 64800 -->
 <!-- # Mandatory -->
-<P32>60</P32>
+<P32>{$register_expires_1}</P32>
 
 <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
 <!-- # Number: 1 - 64800 -->
@@ -666,27 +666,27 @@
 <!-- # Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone, 4 - silent. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3, 4 -->
 <!-- # Mandatory -->
-<P104>0	</P104>
+<P104>1</P104>
 
 <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
 <!-- # String -->
-<P1488></P1488>
+<P1488>ring1</P1488>
 
 <!-- # Matching Rule 1 Distinctive Ringtone -->
 <!-- # 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent. Default is 0. -->
 <!-- # Number: 0, 1, 2, 3, 4 -->
 <!-- # Mandatory -->
-<P1489>0</P1489>
+<P1489>1</P1489>
 
 <!-- # Matching Incoming Caller ID. Matching Rule 2 -->
 <!-- # String -->
-<P1490></P1490>
+<P1490>ring2</P1490>
 
 <!-- # Matching Rule 2 Distinctive Ringtone -->
 <!-- # 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent. Default is 0. -->
 <!-- # Number: 0, 1, 2, 3, 4 -->
 <!-- # Mandatory -->
-<P1491>0</P1491>
+<P1491>2</P1491>
 
 <!-- # Matching Incoming Caller ID. Matching Rule 3 -->
 <!-- # String -->
@@ -696,7 +696,7 @@
 <!-- # 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent. Default is 0. -->
 <!-- # Number: 0, 1, 2, 3, 4 -->
 <!-- # Mandatory -->
-<P1493>0</P1493>
+<P1493>3</P1493>
 
 <!-- # Ring Timeout (in seconds). Default is 60 -->
 <!-- # Number: 30 - 3600 -->
@@ -806,7 +806,8 @@
 <!-- #Enable Call Features.  0 - No, 1 - Yes. Default is 1 -->
 <!-- #Number: 0, 1  -->
 <!-- #Mandatory -->
-<P191>1</P191>
+<!-- # This must be 0 for FusionPBX features to work!!! -->
+<P191>0</P191>
 
 <!-- #Do Not Disturb (DND) - On -->
 <!-- # String -->
@@ -966,7 +967,7 @@
 <!-- # Register Expiration (in minutes). Default is 60. Max is 45 days -->
 <!-- # Number: 1 - 64800 -->
 <!-- # Mandatory -->
-<P412>60</P412>
+<P412>{$register_expires_2}</P412>
 
 <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
 <!-- # Number: 1 - 64800 -->
@@ -1803,7 +1804,7 @@
 <!-- # Register Expiration (in minutes). Default is 60. Max is 45 days -->
 <!-- # Number: 1 - 64800 -->
 <!-- # Mandatory -->
-<P512>60</P512>
+<P512>{$register_expires_3}</P512>
 
 <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
 <!-- # Number: 1 - 64800 -->
@@ -2639,7 +2640,7 @@
 <!-- # Register Expiration (in minutes). Default is 60. Max is 45 days -->
 <!-- # Number: 1 - 64800 -->
 <!-- # Mandatory -->
-<P612>60</P612>
+<P612>{$register_expires_4}</P612>
 
 <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
 <!-- # Number: 1 - 64800 -->
@@ -3477,7 +3478,7 @@
 <!-- # Register Expiration (in minutes. default 1 hour, max 45 days) -->
 <!-- # Number: 1-64800 -->
 <!-- # Mandatory -->
-<P1712>60</P1712>
+<P1712>{$register_expires_5}</P1712>
 
 <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
 <!-- # Number: 1 - 64800 -->
@@ -4315,7 +4316,7 @@
 <!-- # Register Expiration (in minutes). Default is 60. Max is 45 days -->
 <!-- # Number: 1 - 64800 -->
 <!-- # Mandatory -->
-<P1812>60</P1812>
+<P1812>{$register_expires_6}</P1812>
 
 <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
 <!-- # Number: 1 - 64800 -->
@@ -7206,12 +7207,12 @@
 <!-- # Speaker Ring Volume -->
 <!-- # Number: 0-7. Default is 5. -->
 <!-- # Mandatory -->
-<P8352>5</P8352>
+<!--<P8352>5</P8352>-->
 
 <!-- # Notification Tone Volume -->
 <!-- # Number: 0-7. Default is 5. -->
 <!-- # Mandatory -->
-<P8399>5</P8399>
+<!--<P8399>5</P8399>-->
 
 <!-- # Lock Volumne. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
