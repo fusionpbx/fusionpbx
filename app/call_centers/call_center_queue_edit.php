@@ -427,6 +427,10 @@
 	$prep_statement->execute();
 	$agents = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
+//get the sounds
+	$sounds = new sounds;
+	$sounds = $sounds->get();
+
 //set default values
 	if (strlen($queue_strategy) == 0) { $queue_strategy = "longest-idle-agent"; }
 	if (strlen($queue_moh_sound) == 0) { $queue_moh_sound = "\$\${hold_music}"; }
