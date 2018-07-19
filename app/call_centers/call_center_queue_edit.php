@@ -224,6 +224,14 @@
 			unset($action_array[0]);
 			$queue_timeout_data = implode($action_array);
 
+		//add the recording path if needed
+			if (file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$queue_greeting)) {
+				$queue_greeting_path = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$queue_greeting;
+			}
+			else {
+				$queue_greeting_path = $queue_greeting;
+			}
+
 		//build the xml dialplan
 			$dialplan_xml = "<extension name=\"".$queue_name."\" continue=\"\" uuid=\"".escape($dialplan_uuid)."\">\n";
 			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^([^#]+#)(.*)\$\" break=\"never\">\n";
@@ -232,7 +240,7 @@
 			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".escape($queue_extension)."$\">\n";
 			$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
-			$dialplan_xml .= "		<action application=\"playback\" data=\"".escape($queue_greeting)."\"/>\n";
+			$dialplan_xml .= "		<action application=\"playback\" data=\"".escape($queue_greeting_path)."\"/>\n";
 			if (strlen($queue_cid_prefix) > 0) {
 				$dialplan_xml .= "		<action application=\"set\" data=\"effective_caller_id_name=".$queue_cid_prefix."#\${caller_id_name}\"/>\n";
 			}
