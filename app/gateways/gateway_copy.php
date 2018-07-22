@@ -128,7 +128,7 @@
 	$sql .= ")";
 	$sql .= "values ";
 	$sql .= "(";
-	if (strlen($domain_uuid) == 0) {
+	if (strlen($domain_uuid) > 0) {
 		$sql .= "'$domain_uuid', ";
 	}
 	else {
