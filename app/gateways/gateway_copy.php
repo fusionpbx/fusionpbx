@@ -55,6 +55,7 @@
 	$prep_statement->execute();
 	$gateways = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach ($gateways as &$row) {
+		$domain_uuid = $row["domain_uuid"];
 		$gateway = $row["gateway"];
 		$username = $row["username"];
 		$password = $row["password"];
