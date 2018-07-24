@@ -247,9 +247,7 @@
 	
 				//clear the cache
 					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-					if ($fp) {
-						$hostname = trim(event_socket_request($fp, 'api switchname')); }
-					}
+					$hostname = trim(event_socket_request($fp, 'api switchname'));
 					$cache = new cache;
 					$cache->delete("configuration:sofia.conf:".$hostname);
 	
