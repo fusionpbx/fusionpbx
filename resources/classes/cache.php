@@ -116,7 +116,7 @@ class cache {
 					if ($fp === false) {
 						return false;
 					}
-					
+
 				//send a custom event
 					$event = "sendevent CUSTOM\n";
 					$event .= "Event-Name: CUSTOM\n";
@@ -124,7 +124,7 @@ class cache {
 					$event .= "API-Command: cache\n";
 					$event .= "API-Command-Argument: delete ".$key."\n";
 					event_socket_request($fp, $event);
-				
+
 				//remove the local files
 					if (file_exists($_SESSION['cache']['location']['text'] . "/" . $key)) {
 						unlink($_SESSION['cache']['location']['text'] . "/" . $key);
@@ -132,6 +132,7 @@ class cache {
 					if (file_exists($_SESSION['cache']['location']['text'] . "/" . $key . ".tmp")) {
 						unlink($_SESSION['cache']['location']['text'] . "/" . $key . ".tmp");
 					}
+					
 			}
 
 		// return result
@@ -149,7 +150,7 @@ class cache {
 					if ($fp === false) {
 						return false;
 					}
-		
+
 				//send a custom event
 					$event = "sendevent CUSTOM\n";
 					$event .= "Event-Name: CUSTOM\n";
@@ -157,11 +158,11 @@ class cache {
 					$event .= "API-Command: memcache\n";
 					$event .= "API-Command-Argument: flush\n";
 					event_socket_request($fp, $event);
-		
+
 				//run the memcache
 					$command = "memcache flush";
 					$result = event_socket_request($fp, 'api '.$command);
-		
+
 				//close event socket
 					fclose($fp);
 
