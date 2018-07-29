@@ -161,7 +161,7 @@
 	echo "	".$text['label-bridge_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='bridge_name' maxlength='255' value=\"".escape($bridge_name)."\">\n";
+	echo "	<input class='formfld' type='text' name='bridge_name' maxlength='255' value='".escape($bridge_name)."'>\n";
 	echo "<br />\n";
 	echo $text['description-bridge_name']."\n";
 	echo "</td>\n";
@@ -172,7 +172,7 @@
 	echo "	".$text['label-bridge_destination']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='bridge_destination' maxlength='255' value=\"".escape($bridge_destination)."\">\n";
+	echo "	<input class='formfld' type='text' name='bridge_destination' maxlength='255' value='".escape($bridge_destination)."'>\n";
 	echo "<br />\n";
 	echo $text['description-bridge_destination']."\n";
 	echo "</td>\n";
