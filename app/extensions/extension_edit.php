@@ -338,7 +338,9 @@
 									}
 									$array["extensions"][$i]["call_group"] = $call_group;
 									$array["extensions"][$i]["call_screen_enabled"] = $call_screen_enabled;
-									$array["extensions"][$i]["user_record"] = $user_record;
+									if (permission_exists('extension_user_record')) {
+										$array["extensions"][$i]["user_record"] = $user_record;
+									}
 									$array["extensions"][$i]["hold_music"] = $hold_music;
 									$array["extensions"][$i]["auth_acl"] = $auth_acl;
 									$array["extensions"][$i]["cidr"] = $cidr;
