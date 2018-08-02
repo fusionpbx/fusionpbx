@@ -626,14 +626,25 @@
 			$mode = '4';
 		}
 
-		//build the xml
+		//get the device line settings
 		$row = $device_lines[0];
+
+		//set the outbound proxy settings
+		if (strlen($row['outbound_proxy_primary']) == 0) {
+			$outbound_proxy_primary = $row['server_address'];
+		}
+		else {
+			$outbound_proxy_primary = $row['outbound_proxy_primary'];
+		}
+		$outbound_proxy_secondary = $row['outbound_proxy_secondary'];
+
+		//build the xml
 		$xml =  "<?xml version='1.0' encoding='utf-8'?>";
 		$xml .= "<AccountConfig version='1'>";
 		$xml .= "<Account>";
 		$xml .= "<RegisterServer>".$row['server_address']."</RegisterServer>";
-		$xml .= "<OutboundServer>".$row['outbound_proxy_primary'].":".$row['sip_port']."</OutboundServer>";
-		$xml .= "<SecOutboundServer>".$row['outbound_proxy_secondary'].":".$row['sip_port']."</SecOutboundServer>";
+		$xml .= "<OutboundServer>".$outbound_proxy_primary.":".$row['sip_port']."</OutboundServer>";
+		$xml .= "<SecOutboundServer>".$outbound_proxy_secondary.":".$row['sip_port']."</SecOutboundServer>";
 		$xml .= "<UserID>".$row['user_id']."</UserID>";
 		$xml .= "<AuthID>".$row['auth_id']."</AuthID>";
 		$xml .= "<AuthPass>".$row['password']."</AuthPass>";
