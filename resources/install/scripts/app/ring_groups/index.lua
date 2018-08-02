@@ -684,20 +684,25 @@
 						--find destination route
 							if (tonumber(destination_number) == nil) then
 								--user define direct destination like `[key=value]sofia/gateway/carrier/123456`
-									local variables, destination = string.match(destination_number, "^%[(.-)%](.+)$")
-									if not variables then
-										destination = destination_number
-									else
-										for action in split_vars_pairs(variables) do
-											route[#route + 1] = action
-										end
+								local variables, destination = string.match(destination_number, "^%[(.-)%](.+)$")
+								if not variables then
+									destination = destination_number
+								else
+									for action in split_vars_pairs(variables) do
+										route[#route + 1] = action
 									end
-									route = route_to_bridge.apply_vars(route, params)
-									route.bridge = destination
+								end
+								route = route_to_bridge.apply_vars(route, params)
+								route.bridge = destination
 							else
+								if (user_exists == "true") then
+									route.bridge = 'user/'..destination_number..'@'..domain_name;
+								else
+									route.bridge = 'loopback/'..destination_number;
+								end
 								--user define external number as destination
-									route = route_to_bridge.apply_vars(route, params)
-									route = route_to_bridge(dialplans, domain_uuid, params, route)
+								--route = route_to_bridge.apply_vars(route, params)
+								--route = route_to_bridge(dialplans, domain_uuid, params, route)
 							end
 
 						--build the dial string
