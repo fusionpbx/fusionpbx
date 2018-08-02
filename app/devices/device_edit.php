@@ -632,8 +632,8 @@
 		$xml .= "<AccountConfig version='1'>";
 		$xml .= "<Account>";
 		$xml .= "<RegisterServer>".$row['server_address']."</RegisterServer>";
-		$xml .= "<OutboundServer>".$row['outbound_proxy_primary']."</OutboundServer>";
-		$xml .= "<SecOutboundServer>".$row['outbound_proxy_secondary']."</SecOutboundServer>";
+		$xml .= "<OutboundServer>".$row['outbound_proxy_primary'].":".$row['sip_port']."</OutboundServer>";
+		$xml .= "<SecOutboundServer>".$row['outbound_proxy_secondary'].":".$row['sip_port']."</SecOutboundServer>";
 		$xml .= "<UserID>".$row['user_id']."</UserID>";
 		$xml .= "<AuthID>".$row['auth_id']."</AuthID>";
 		$xml .= "<AuthPass>".$row['password']."</AuthPass>";
