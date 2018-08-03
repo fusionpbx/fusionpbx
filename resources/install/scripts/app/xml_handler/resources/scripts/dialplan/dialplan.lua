@@ -121,7 +121,7 @@
 				end
 			else
 				sql = "select dialplan_xml from v_dialplans as p ";
-				if (context_name == "public") then
+				if (context_name == "public" or string.match(context_name, "@")) then
 					sql = sql .. "where p.dialplan_context = :call_context ";
 				else
 					sql = sql .. "where (p.dialplan_context = :call_context or p.dialplan_context = '${domain_name}') ";
