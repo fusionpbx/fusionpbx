@@ -1,0 +1,179 @@
+<?php
+/*
+	FusionPBX
+	Version: MPL 1.1
+
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
+
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
+
+	The Original Code is FusionPBX
+
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+*/
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('extension_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
+
+//add multi-lingual support
+	$language = new text;
+	$text = $language->get();
+
+//verify the id is as uuid then set as a variable
+	if (is_uuid($_GET['id'])) {
+		$extension_uuid = $_GET['id'];
+	}
+
+//get the extensions
+	$sql = "select * from v_extensions ";
+	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "and enabled = 'true' ";
+	$sql .= "order by extension asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$extensions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset ($prep_statement, $sql);
+
+//get the extension
+	if (is_uuid($_GET['id'])) {
+		$sql = "select * from v_extensions ";
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and extension_uuid = '".$extension_uuid."' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$extension = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		$field = $extension[0];
+		unset ($prep_statement, $sql);
+	}
+
+//get the username
+	$username = $field['extension'];
+	if (isset($row['number_alias']) && strlen($row['number_alias']) > 0) {
+		$username = $field['number_alias'];
+	}
+
+//build the xml
+	if (is_uuid($_GET['id'])) {
+		$xml =  "<?xml version='1.0' encoding='utf-8'?>";
+		$xml .= "<AccountConfig version='1'>";
+		$xml .= "<Account>";
+		$xml .= "<RegisterServer>".$_SESSION['domain_name']."</RegisterServer>";
+		//$xml .= "<OutboundServer>".$_SESSION['domain_name']."</OutboundServer>";
+		//$xml .= "<SecOutboundServer>".$_SESSION['domain_name']."</SecOutboundServer>";
+		$xml .= "<OutboundServer>".$_SESSION['domain_name'].":".$_SESSION['provision']['line_sip_port']['numeric']."</OutboundServer>";
+		$xml .= "<SecOutboundServer>".$_SESSION['domain_name'].":".$_SESSION['provision']['line_sip_port']['numeric']."</SecOutboundServer>";
+		$xml .= "<UserID>".$username."</UserID>";
+		$xml .= "<AuthID>".$username."</AuthID>";
+		$xml .= "<AuthPass>".$field['password']."</AuthPass>";
+		$xml .= "<AccountName>".$username."</AccountName>";
+		$xml .= "<DisplayName>".$username."</DisplayName>";
+		$xml .= "<Dialplan>{x+|*x+|*++}</Dialplan>";
+		$xml .= "<RandomPort>0</RandomPort>";
+		$xml .= "<Voicemail>*97</Voicemail>";
+		$xml .= "</Account>";
+		$xml .= "</AccountConfig>";
+	}
+
+//debian
+	//apt install qrencode
+
+//additional includes
+	require_once "resources/header.php";
+
+//show the content
+	echo "<table width='100%' border='0'>\n";
+	echo "	<tr>\n";
+	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-gswave']."</b></td>\n";
+	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
+	//echo "			<input type='button' class='btn' name='' alt='Grandstream Wave' onclick=\"window.location='http://www.grandstream.com/products/ip-voice-telephony/softphone-app/product/grandstream-wave'\" value='Website'>";
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "	<tr>\n";
+	echo "		<td align='left' colspan='2'>\n";
+	echo "			<br />".$text['title_description-gswave']."<br /><br />\n";
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "</table>\n";
+
+//show the content
+	echo "<form name='frm' id='frm' method='get' action=''>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+
+	//echo "<tr>\n";
+	//echo "<td width='70%' colspan='2' align='left' valign='top'>\n";
+	//echo "	<br />\n";
+	//echo "</td>\n";
+	//echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-extension']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<select class='formfld' onchange='this.form.submit();' name='id'>\n";
+	echo "		<option value=''></option>\n";
+	foreach($extensions as $row) {
+		if ($row['extension_uuid'] == $extension_uuid) { $selected = "selected='selected'"; } else { $selected = ''; }
+		echo "		<option value='".escape($row['extension_uuid'])."' $selected>".escape($row['extension'])." ".escape($row['number_alias'])." ".escape($row['description'])."</option>\n";
+	}
+	echo "	</select>\n";
+	//echo "<br />\n";
+	//echo $text['description-extension']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	//echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-message']."</b><br><br></td>\n";
+	echo "<td width='70%' colspan='2' align='left' valign='top'>\n";
+	echo "	<br />\n";
+	echo "	<a href=\"https://play.google.com/store/apps/details?id=com.grandstream.wave\" target=\"_blank\"><img src=\"/app/gswave/resources/images/google_play.png\" style=\"height:103px;\"/></a>";
+	echo "	<a href=\"https://itunes.apple.com/us/app/grandstream-wave/id1029274043?ls=1&mt=8\" target=\"_blank\"><img src=\"/app/gswave/resources/images/apple_app_store.png\" style=\"height:71px;\" /></a>";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "</table>";
+	echo "</form>";
+	//echo "<br />";
+
+//stream the file
+	if (is_uuid($_GET['id'])) {
+		//header("Content-Type: image/png");
+		$image = shell_exec('qrencode -o - -s 6 -m 5 "'.$xml.'"');
+	}
+
+//html image
+	if (is_uuid($_GET['id'])) {
+		echo "<img src=\"data:image/png;base64,". base64_encode($image) ."\">\n";
+	}
+
+//save to a file
+	//$output = '/tmp/'.$row['user_id'].'.'.$row['server_address'].'.png';
+	//$result = shell_exec('qrencode -o '.$output.' -m 5 "'.$xml.'"');
+
+//add the footer
+	require_once "resources/footer.php";
+
+?>
