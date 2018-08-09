@@ -486,5 +486,37 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "http://localhost/all,delete";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "http://localhost/all,delete all the customized ring tones";
-
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7af991ec-ddb9-4942-a05d-d1acc529fef5";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ringtone_url";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "custom.wav";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Before using this parameter, you should store the desired ring tone (custom.wav) to the provisioning server";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "95862d61-18ac-41b5-ac69-467e0ef3afd7";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_remote_phonebook_1_name";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Personal";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Remote Phonebook Users on Yealink";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "32cdd450-2ba4-43d7-95d8-dcd825084455";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_remote_phonebook_2_name";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Global";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Remote Phonebook Groups on Yealink";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0abb1daf-e88f-4151-9bbb-fed244b9d3e4";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_remote_phonebook_3_name";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Local";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Remote Phonebook Extensions on Yealink";
+		
 ?>
