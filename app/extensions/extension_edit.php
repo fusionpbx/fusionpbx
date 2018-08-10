@@ -494,6 +494,8 @@
 							$array["devices"][0]["device_lines"][0]["device_line_uuid"] = $device_line_uuid;
 							$array["devices"][0]["device_lines"][0]["domain_uuid"] = $_SESSION['domain_uuid'];
 							$array["devices"][0]["device_lines"][0]["server_address"] = $_SESSION['domain_name'];
+							$array["devices"][0]["device_lines"][0]["outbound_proxy_primary"] = $_SESSION['provision']['outbound_proxy_primary']['text'];
+							$array["devices"][0]["device_lines"][0]["outbound_proxy_secondary"] = $_SESSION['provision']['outbound_proxy_secondary']['text'];
 							if (strlen($effective_caller_id_name) > 0) {
 								$array["devices"][0]["device_lines"][0]["display_name"] = $effective_caller_id_name;
 							}
@@ -508,7 +510,6 @@
 							$array["devices"][0]["device_lines"][0]["sip_transport"] = $_SESSION['provision']['line_sip_transport']['text'];
 							$array["devices"][0]["device_lines"][0]["register_expires"] = $_SESSION['provision']['line_register_expires']['numeric'];
 							$array["devices"][0]["device_lines"][0]["enabled"] = "true";
-
 					}
 
 				//save to the data
@@ -803,7 +804,7 @@
 	if ($action == "update" && permission_exists('extension_copy')) {
 		echo "	<input type='button' class='btn' alt='".$text['button-copy']."' onclick=\"copy_extension();\" value='".$text['button-copy']."'>\n";
 	}
-	echo "	<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
+	echo "	<input type='submit' class='btn' value='".$text['button-save']."' onclick=''>\n";
 	echo "	<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -899,7 +900,7 @@
 				echo "		<tr>\n";
 				echo "			<td class='vtable'><a href='/core/users/user_edit.php?id=".escape($field['user_uuid'])."'>".escape($field['username'])."</a></td>\n";
 				echo "			<td>\n";
-				echo "				<a href='#' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('delete_type').value = 'user'; document.getElementById('delete_uuid').value = '".$field['user_uuid']."'; submit_form(); }\" alt='".$text['button-delete']."'>$v_link_label_delete</a>\n";
+				echo "				<a href='#' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('delete_type').value = 'user'; document.getElementById('delete_uuid').value = '".$field['user_uuid']."'; document.getElementById('frm').submit(); }\" alt='".$text['button-delete']."'>$v_link_label_delete</a>\n";
 				//echo "				<a href='extension_edit.php?id=".escape($extension_uuid)."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".escape($field['user_uuid'])."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 				echo "			</td>\n";
 				echo "		</tr>\n";
@@ -914,7 +915,7 @@
 			echo "			<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
 		}
 		echo "			</select>";
-		echo "			<input type='button' class='btn' value=\"".$text['button-add']."\" onclick='submit_form();'>\n";
+		echo "			<input type='submit' class='btn' value=\"".$text['button-add']."\" onclick=''>\n";
 
 		echo "			<br>\n";
 		echo "			".$text['description-user_list']."\n";
@@ -987,7 +988,7 @@
 				echo "			<td class='vtable'>".escape($row['device_template'])."&nbsp;</td>\n";
 				//echo "			<td class='vtable'>".$row['device_description']."&nbsp;</td>\n";
 				echo "			<td>\n";
-				echo "				<a href='#' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('delete_type').value = 'device_line'; document.getElementById('delete_uuid').value = '".escape($row['device_line_uuid'])."'; submit_form(); }\" alt='".$text['button-delete']."'>$v_link_label_delete</a>\n";
+				echo "				<a href='#' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('delete_type').value = 'device_line'; document.getElementById('delete_uuid').value = '".escape($row['device_line_uuid'])."'; document.getElementById('frm').submit(); }\" alt='".$text['button-delete']."'>$v_link_label_delete</a>\n";
 				echo "			</td>\n";
 				echo "		</tr>\n";
 			}
@@ -1096,7 +1097,7 @@
 			echo "</select>\n";
 			echo "		</td>\n";
 			echo "		<td>\n";
-			echo "			<input type='button' class='btn' value=\"".$text['button-add']."\" onclick='submit_form();'>\n";
+			echo "			<input type='submit' class='btn' value=\"".$text['button-add']."\" onclick=''>\n";
 			echo "		</td>\n";
 			echo "		</table>\n";
 			echo "		<br />\n";
@@ -1196,7 +1197,7 @@
 			echo $text['description-outbound_caller_id_number-select']."\n";
 		}
 		else {
-			echo "	<input type=\"button\" class=\"btn\" name=\"\" alt=\"".$text['button-add']."\" onclick=\"window.location='".PROJECT_PATH."/app/destinations/destinations.php'\" value='".$text['button-add']."'>\n";
+			echo "	<input type=\"submit\" class=\"btn\" name=\"\" alt=\"".$text['button-add']."\" onclick=\"window.location='".PROJECT_PATH."/app/destinations/destinations.php'\" value='".$text['button-add']."'>\n";
 		}
 		unset ($prep_statement);
 	}
@@ -1816,25 +1817,12 @@
 		echo "		<input type='hidden' name='delete_uuid' id='delete_uuid' value=''>";
 	}
 	echo "			<br>";
-	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
+	echo "			<input type='submit' class='btn' value='".$text['button-save']."' onclick=''>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
 	echo "<br><br>";
 	echo "</form>";
-
-//capture enter key to submit form
-	echo "<script>\n";
-	echo "	$(window).keypress(function(event){\n";
-	echo "		if (event.which == 13) { submit_form(); }\n";
-	echo "	});\n";
-	// convert password fields to
-	echo "	function submit_form() {\n";
-	echo "		$('input:password').css('visibility','hidden');\n";
-	echo "		$('input:password').attr({type:'text'});\n";
-	echo "		$('form#frm').submit();\n";
-	echo "	}\n";
-	echo "</script>\n";
 
 //include the footer
 	require_once "resources/footer.php";
