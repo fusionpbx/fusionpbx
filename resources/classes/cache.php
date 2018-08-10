@@ -109,7 +109,8 @@ class cache {
 
 		//cache method file
 			if ($_SESSION['cache']['method']['text'] == "file") {
-				$key = str_replace(":", ".", $key);
+				//change the delimiter
+					$key = str_replace(":", ".", $key);
 
 				// connect to event socket
 					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
@@ -132,7 +133,6 @@ class cache {
 					if (file_exists($_SESSION['cache']['location']['text'] . "/" . $key . ".tmp")) {
 						unlink($_SESSION['cache']['location']['text'] . "/" . $key . ".tmp");
 					}
-					
 			}
 
 		// return result
