@@ -45,20 +45,37 @@
 //handle enable toggle
 	$dialplan_uuid = check_str($_REQUEST['id']);
 	$dialplan_enabled = check_str($_REQUEST['enabled']);
-	if ($dialplan_uuid != '' && $dialplan_enabled != '') {
+	if (isset($dialplan_uuid) && is_uuid($dialplan_uuid) && $dialplan_enabled != '') {
+		//make sure enabled is only true or false
+		if ($dialplan_enabled == "true") {
+			$dialplan_enabled = 'true';	
+		}
+		else {
+			$dialplan_enabled == 'false';
+		}
+
+		//get the dialplan context
+		$sql = "select * from v_dialplans ";
+		$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$row = $prep_statement->fetch(PDO::FETCH_NAMED);
+		$dialplan_context = $row["dialplan_context"];
+		unset($sql);
+
+		//change the status
 		$sql = "update v_dialplans set ";
 		$sql .= "dialplan_enabled = '".$dialplan_enabled."' ";
 		$sql .= "where dialplan_uuid = '".$dialplan_uuid."'";
 		$db->exec(check_sql($sql));
 		unset($sql);
-		messages::add($text['message-update']);
-	}
 
-//delete the dialplan context from memcache
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-	if ($fp) {
-		$switch_cmd = "memcache delete dialplan:".$_SESSION["context"];
-		$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+		//clear the cache
+		$cache = new cache;
+		$cache->delete("dialplan:".$dialplan_context);
+
+		//set the message
+		messages::add($text['message-update']);
 	}
 
 //set the http values as php variables
@@ -164,7 +181,7 @@
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$dialplans = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($dialplans);
+	$dialplan_count = count($dialplans);
 	unset ($prep_statement, $sql);
 
 //set the alternating row style
@@ -260,7 +277,7 @@
 	echo "<input type='hidden' name='app_uuid' value='".$app_uuid."'>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	if (permission_exists('dialplan_delete') && $result_count > 0) {
+	if (permission_exists('dialplan_delete') && $dialplan_count > 0) {
 		echo "<th style='width: 30px; text-align: center; padding: 3px 0px 0px 0px;' width='1'><input type='checkbox' style='margin: 0px 0px 0px 2px;' onchange=\"(this.checked) ? check('all') : check('none');\"></th>";
 	}
 	echo th_order_by('dialplan_name', $text['label-name'], $order_by, $order, $app_uuid, null, (($search != '') ? "search=".escape($search) : null));
@@ -285,7 +302,7 @@
 	elseif (permission_exists('dialplan_add')) {
 		echo "<a href='dialplan_add.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
-	if (permission_exists('dialplan_delete') && $result_count > 0) {
+	if (permission_exists('dialplan_delete') && $dialplan_count > 0) {
 		echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.forms.frm_delete.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
 	}
 	echo "</td>\n";
@@ -397,7 +414,7 @@
 	elseif (permission_exists('dialplan_add')) {
 		echo "<a href='dialplan_add.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
-	if (permission_exists('dialplan_delete') && $result_count > 0) {
+	if (permission_exists('dialplan_delete') && $dialplan_count > 0) {
 		echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.forms.frm_delete.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
 	}
 	echo "		</td>\n";
@@ -424,7 +441,7 @@
 	require_once "resources/footer.php";
 
 //unset the variables
-	unset ($result_count);
+	unset ($dialplan_count);
 	unset ($result);
 	unset ($key);
 	unset ($val);
