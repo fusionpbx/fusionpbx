@@ -90,17 +90,17 @@ if (!class_exists('registrations')) {
 								//build the registrations array
 									//$registrations[0] = $row;
 									$user_array = explode('@', $row['user']);				
-									$registrations[$id]['user'] = $row['user'] ?: "&nbsp;";
-									$registrations[$id]['call-id'] = $row['call-id'] ?: "&nbsp;";
-									$registrations[$id]['contact'] = $row['contact'] ?: "&nbsp;";
-									$registrations[$id]['sip-auth-user'] = $row['sip-auth-user'] ?: "&nbsp;";
-									$registrations[$id]['agent'] = $row['agent'] ?: "&nbsp;";
-									$registrations[$id]['host'] = $row['host'] ?: "&nbsp;";
-									$registrations[$id]['network-port'] = $row['network-port'] ?: "&nbsp;";
-									$registrations[$id]['sip-auth-realm'] = $row['sip-auth-realm'] ?: "&nbsp;";
-									$registrations[$id]['mwi-account'] = $row['mwi-account'] ?: "&nbsp;";
-									$registrations[$id]['status'] = $row['status'] ?: "&nbsp;";
-									$registrations[$id]['ping-time'] = $row['ping-time'] ?: "&nbsp;";
+									$registrations[$id]['user'] = $row['user'] ?: '';
+									$registrations[$id]['call-id'] = $row['call-id'] ?: '';
+									$registrations[$id]['contact'] = $row['contact'] ?: '';
+									$registrations[$id]['sip-auth-user'] = $row['sip-auth-user'] ?: '';
+									$registrations[$id]['agent'] = $row['agent'] ?: '';
+									$registrations[$id]['host'] = $row['host'] ?: '';
+									$registrations[$id]['network-port'] = $row['network-port'] ?: '';
+									$registrations[$id]['sip-auth-realm'] = $row['sip-auth-realm'] ?: '';
+									$registrations[$id]['mwi-account'] = $row['mwi-account'] ?: '';
+									$registrations[$id]['status'] = $row['status'] ?: '';
+									$registrations[$id]['ping-time'] = $row['ping-time'] ?: '';
 									$registrations[$id]['sip_profile_name'] = $field['sip_profile_name'];
 
 								//get network-ip to url or blank
