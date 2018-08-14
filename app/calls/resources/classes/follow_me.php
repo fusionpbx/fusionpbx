@@ -38,6 +38,7 @@ include "root.php";
 		public $cid_number_prefix;
 		public $accountcode;
 		public $follow_me_enabled;
+		public $follow_me_destinations;
 		public $follow_me_caller_id_uuid;
 		public $follow_me_ignore_busy;
 		public $outbound_caller_id_name;
@@ -158,7 +159,7 @@ include "root.php";
 						. "follow_me_delay,"
 						. "follow_me_prompt,"
 						. "follow_me_order"
-					. ")values(?,?,?,?,?,?,?,?)"
+					. ") values(?,?,?,?,?,?,?,?)"
 				);
 
 			//delete related follow me destinations
@@ -263,6 +264,8 @@ include "root.php";
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				if (is_array($result)) foreach ($result as &$row) {
 					$follow_me_uuid = $row["follow_me_uuid"];
+					$this->follow_me_enabled = $row["follow_me_enabled"];
+					$this->follow_me_destinations = $row["follow_me_destinations"];
 					$this->cid_name_prefix = $row["cid_name_prefix"];
 					$this->cid_number_prefix = $row["cid_number_prefix"];
 				}
@@ -403,7 +406,7 @@ include "root.php";
 							}
 							else {
 								//set the outbound caller id number if the caller id number is a user
-							        $dial_string .=',origination_caller_id_number=${cond(${from_user_exists} == true ? ${outbound_caller_id_number} : ${origination_caller_id_number})}';
+								$dial_string .=',origination_caller_id_number=${cond(${from_user_exists} == true ? ${outbound_caller_id_number} : ${origination_caller_id_number})}';
 								$dial_string .=',effective_caller_id_number=${cond(${from_user_exists} == true ? ${outbound_caller_id_number} : ${effective_caller_id_number})}';
 								$dial_string .=',origination_caller_id_name=${cond(${from_user_exists} == true ? ${outbound_caller_id_name} : ${origination_caller_id_name})}';
 								$dial_string .=',effective_caller_id_name=${cond(${from_user_exists} == true ? ${outbound_caller_id_name} : ${effective_caller_id_name})}';
@@ -453,11 +456,17 @@ include "root.php";
 				$dial_string = '';
 				if ($this->follow_me_enabled == "true") {
 					$dial_string = $this->dial_string;
+					$this->follow_me_destinations = $this->dial_string;
+				}
+				else {
+					$this->follow_me_destinations = '';
 				}
 
 				$sql  = "update v_extensions set ";
 				$sql .= "dial_string = '".check_str($dial_string)."', ";
-				$sql .= "dial_domain = '".$_SESSION['domain_name']."' ";
+				$sql .= "dial_domain = '".$_SESSION['domain_name']."', ";
+				$sql .= "follow_me_destinations = '".$this->follow_me_destinations."', ";
+				$sql .= "follow_me_enabled = '".$this->follow_me_enabled."' ";
 				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
 				$sql .= "and follow_me_uuid = '".$this->follow_me_uuid."' ";
 				if ($this->debug) {
