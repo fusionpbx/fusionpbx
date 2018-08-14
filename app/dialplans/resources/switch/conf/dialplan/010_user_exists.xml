@@ -14,6 +14,9 @@
 			<action application="set" data="forward_no_answer_destination=${user_data ${destination_number}@${domain_name} var forward_no_answer_destination}" inline="true"/>
 			<action application="set" data="forward_user_not_registered_enabled=${user_data ${destination_number}@${domain_name} var forward_user_not_registered_enabled}" inline="true"/>
 			<action application="set" data="forward_user_not_registered_destination=${user_data ${destination_number}@${domain_name} var forward_user_not_registered_destination}" inline="true"/>
+			<action application="set" data="forward_all_enabled=${user_data ${destination_number}@${domain_name} var forward_all_enabled}" inline="true"/>
+			<action application="set" data="follow_me_enabled=${user_data ${destination_number}@${domain_name} var follow_me_enabled}" inline="true"/>
+			<action application="set" data="follow_me_destinations=${user_data ${destination_number}@${domain_name} var follow_me_destinations}" inline="true"/>
 			<action application="set" data="do_not_disturb=${user_data ${destination_number}@${domain_name} var do_not_disturb}" inline="true"/>
 			<action application="set" data="call_timeout=${user_data ${destination_number}@${domain_name} var call_timeout}" inline="true"/>
 			<action application="set" data="missed_call_app=${user_data ${destination_number}@${domain_name} var missed_call_app}" inline="true"/>
