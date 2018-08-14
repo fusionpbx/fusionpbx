@@ -1,6 +1,6 @@
 --	xml_handler.lua
 --	Part of FusionPBX
---	Copyright (C) 2013 - 2016 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013 - 2018 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -338,8 +338,14 @@
 								forward_no_answer_destination = row.forward_no_answer_destination;
 								forward_user_not_registered_enabled = row.forward_user_not_registered_enabled;
 								forward_user_not_registered_destination = row.forward_user_not_registered_destination;
-
 								do_not_disturb = row.do_not_disturb;
+
+							-- get the follow me information
+								if (row.follow_me_uuid ~= nil and string.len(row.follow_me_uuid) > 0) then
+									follow_me_uuid = row.follow_me_uuid;
+									follow_me_enabled = row.follow_me_enabled;
+									follow_me_destinations= row.follow_me_destinations;
+								end
 
 							-- check matching UserID and AuthName
 								if sip_auth_method then
@@ -349,7 +355,6 @@
 									else
 										continue = (sip_from_user == user) and ((not check_from_number) or (from_user == user))
 									end
-
 									if not continue then
 										XML_STRING = nil;
 										return 1;
@@ -605,6 +610,12 @@
 							end
 							if (forward_user_not_registered_destination ~= nil) and (string.len(forward_user_not_registered_destination) > 0) then
 								table.insert(xml, [[								<variable name="forward_user_not_registered_destination" value="]] .. forward_user_not_registered_destination .. [["/>]]);
+							end
+							if (follow_me_enabled ~= nil) and (string.len(follow_me_enabled) > 0) then
+								table.insert(xml, [[								<variable name="follow_me_enabled" value="]] .. follow_me_enabled .. [["/>]]);
+							end
+							if (follow_me_destinations ~= nil) and (string.len(follow_me_destinations) > 0) then
+								table.insert(xml, [[								<variable name="follow_me_destinations" value="]] .. follow_me_destinations .. [["/>]]);
 							end
 							if (do_not_disturb ~= nil) and (string.len(do_not_disturb) > 0) then
 								table.insert(xml, [[								<variable name="do_not_disturb" value="]] .. do_not_disturb .. [["/>]]);
