@@ -95,9 +95,11 @@ function event_socket_request_cmd($cmd) {
 
 function byte_convert($bytes, $decimals = 2) {
 	if ($bytes <= 0) { return '0 Bytes'; }
-	$convention = 1024;
-	$formattedbytes = array_reduce( array(' B', ' KB', ' MB', ' GB', ' TB', ' PB', ' EB', 'ZB'), create_function( '$a,$b', 'return is_numeric($a)?($a>='.$convention.'?$a/'.$convention.':number_format($a,'.$decimals.').$b):$a;' ), $bytes );
-	return $formattedbytes;
+	$units = array('B', 'KB', 'MB', 'GB', 'TB'); 
+	$bytes = max($bytes, 0); 
+	$pow = floor(($bytes ? log($bytes) : 0) / log(1024)); 
+	$pow = min($pow, count($units) - 1);
+	return round($bytes, $precision) . ' ' . $units[$pow]; 
 }
 
 function remove_config_from_cache($name) {
