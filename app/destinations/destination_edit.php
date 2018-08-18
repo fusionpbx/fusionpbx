@@ -740,6 +740,9 @@
  		if ($row['dialplan_detail_type'] == "tone_detect") {
 			unset($dialplan_details[$x]);
 		}
+ 		if ($row['dialplan_detail_type'] == "answer") {
+			unset($dialplan_details[$x]);
+		}
  		if ($row['dialplan_detail_type'] == "sleep") {
 			unset($dialplan_details[$x]);
 		}
