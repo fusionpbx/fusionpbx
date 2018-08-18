@@ -433,6 +433,17 @@
 								//increment the dialplan detail order
 									$dialplan_detail_order = $dialplan_detail_order + 10;
 
+								// answer
+									$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
+									$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+									$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "answer";
+									$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "";
+									$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+									$y++;
+
+								//increment the dialplan detail order
+									$dialplan_detail_order = $dialplan_detail_order + 10;
+
 								// execute on tone detect
 									$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 									$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
