@@ -658,9 +658,7 @@
 
 		//qr code generation
 		$_GET['type'] = "text";
-		$qr_vcard = true;
-		include "contacts_vcard.php";
-		echo "<input type='hidden' id='qr_vcard' value=\"".escape($xml)."\">";
+		echo "<input type='hidden' id='qr_card' value=\"".escape($xml)."\">";
 		echo "<style>";
 		echo "	#qr_code_container {";
 		echo "		z-index: 999999; ";
@@ -699,7 +697,7 @@
 		echo "				mPosX: 0.5, ";
 		echo "				mPosY: 0.5, ";
 		echo "				image: $('#img-buffer')[0], ";
-		echo "				text: document.getElementById('qr_vcard').value ";
+		echo "				text: document.getElementById('qr_card').value ";
 		echo "			});";
 		echo "		});";
 		echo "	});";
