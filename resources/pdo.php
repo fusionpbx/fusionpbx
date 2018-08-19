@@ -333,8 +333,8 @@ if ($db_type == "pgsql") {
 		$domain_uuid = uuid();
 	}
 
-//check the domain cidr range
-	if (is_array($_SESSION['domain']["cidr"])) {
+//check the domain cidr range 
+	if (is_array($_SESSION['domain']["cidr"]) && !defined('STDIN')) {
 		$found = false;
 		foreach($_SESSION['domain']["cidr"] as $cidr) {
 			if (check_cidr($cidr, $_SERVER['REMOTE_ADDR'])) {
