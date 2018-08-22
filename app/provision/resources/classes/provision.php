@@ -1149,6 +1149,7 @@ include "root.php";
 												case "call return": $device_key_type  = "17"; break;
 												case "transfer": $device_key_type  = "18"; break;
 												case "call park": $device_key_type  = "19"; break;
+												case "monitored call park": $device_key_type  = "26"; break;
 												case "intercom": $device_key_type  = "20"; break;
 												case "ldap search": $device_key_type  = "21"; break;
 											}
