@@ -1900,6 +1900,13 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "ee15ab3b-4c3d-4017-b290-adc885f2dd50";
+		$vendors[$y]['functions'][$z]['label'] = "label-monitored_call_park";
+		$vendors[$y]['functions'][$z]['name'] = "monitored_call_park";
+		$vendors[$y]['functions'][$z]['value'] = "monitored call park";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
 		$vendors[$y]['functions'][$z]['uuid'] = "bc318271-5232-477e-ab53-01b3532f74a9";
 		$vendors[$y]['functions'][$z]['label'] = "label-intercom";
 		$vendors[$y]['functions'][$z]['name'] = "intercom";
