@@ -754,6 +754,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 	//vendor details
+//yealink
 		$y=0;
 		$vendors[$y]['uuid'] = "c795c58e-7fcc-4aa1-bcc3-e23d9bc45209";
 		$vendors[$y]['name'] = "yealink";
@@ -1086,7 +1087,15 @@
 		$vendors[$y]['functions'][$z]['value'] = "66";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
-
+		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "2effe694-8d44-4757-b3df-8217fd13dcd5";
+		$vendors[$y]['functions'][$z]['label'] = "label-custom";
+		$vendors[$y]['functions'][$z]['name'] = "custom";
+		$vendors[$y]['functions'][$z]['value'] = "73";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+//snom
 		$y++;
 		$vendors[$y]['uuid'] = "8b0ce477-92c7-4bbc-a4fd-ee09c261fa2e";
 		$vendors[$y]['name'] = "snom";
@@ -1244,7 +1253,7 @@
 		$vendors[$y]['functions'][$z]['value'] = "recorder";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
-
+//polycom
 		$y++;
 		$vendors[$y]['uuid'] = "6baf1a7e-7a43-4a66-9007-bbb911bf947b";
 		$vendors[$y]['name'] = "polycom";
@@ -1318,7 +1327,7 @@
 		$vendors[$y]['functions'][$z]['value'] = "URL";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
-
+//aastra
 		$y++;
 		$vendors[$y]['uuid'] = "a287e444-95e0-47c4-9742-0a8cec73c799";
 		$vendors[$y]['name'] = "aastra";
@@ -1511,7 +1520,7 @@
 		$vendors[$y]['functions'][$z]['value'] = "xml";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
-
+//cisco
 		$y++;
 		$vendors[$y]['uuid'] = "cbedd8ac-e3f0-45ac-9fd8-dc3089ca133a";
 		$vendors[$y]['name'] = "cisco";
@@ -1543,7 +1552,7 @@
 		$vendors[$y]['functions'][$z]['value'] = "shared";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
-
+//linksys
 		$y++;
 		$vendors[$y]['uuid'] = "8116f44f-ccd6-46d5-8e65-46cc2c8cca32";
 		$vendors[$y]['name'] = "linksys";
@@ -1568,7 +1577,7 @@
 		$vendors[$y]['functions'][$z]['value'] = "shared";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
-
+//escene
 		$y++;
 		$vendors[$y]['uuid'] = "30f714c0-b364-4d5b-83f6-d778eaf0dfd0";
 		$vendors[$y]['name'] = "escene";
@@ -1629,7 +1638,7 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		//BLA type 3 Paging type 6
-
+//escene programmable
 		$y++;
 		$vendors[$y]['uuid'] = "425ae7ef-a25a-402e-91f0-c4a1fbc45cf9";
 		$vendors[$y]['name'] = "escene programmable";
@@ -1802,7 +1811,7 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$vendors[$y]['functions'][$z]['description'] = "Hot Desking";
-
+//grandstream
 		$y++;
 		$vendors[$y]['uuid'] = "c486dd68-1462-4128-901e-d902d17d1951";
 		$vendors[$y]['name'] = "grandstream";
@@ -1891,6 +1900,13 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "ee15ab3b-4c3d-4017-b290-adc885f2dd50";
+		$vendors[$y]['functions'][$z]['label'] = "label-monitored_call_park";
+		$vendors[$y]['functions'][$z]['name'] = "monitored_call_park";
+		$vendors[$y]['functions'][$z]['value'] = "monitored call park";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
 		$vendors[$y]['functions'][$z]['uuid'] = "bc318271-5232-477e-ab53-01b3532f74a9";
 		$vendors[$y]['functions'][$z]['label'] = "label-intercom";
 		$vendors[$y]['functions'][$z]['name'] = "intercom";
@@ -1946,7 +1962,7 @@
 		$vendors[$y]['functions'][$z]['value'] = "none";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
-
+//mitel
 		$y++;
 		$vendors[$y]['uuid'] = "03931359-917e-455b-b4fc-f875c530b79c";
 		$vendors[$y]['name'] = "mitel";
@@ -2048,7 +2064,7 @@
 		$vendors[$y]['functions'][$z]['value'] = "19";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
-
+//sangoma
 		$y++;
 		$vendors[$y]['uuid'] = "6a495141-7443-47d9-976d-59f8590b03cf";
 		$vendors[$y]['name'] = "sangoma";
@@ -2304,7 +2320,7 @@
 		$vendors[$y]['functions'][$z]['value'] = "47";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
-
+//audiocodes
 		$y++; //vendors array index
 		$vendors[$y]['uuid'] = "c4a8bfa2-e91f-4adb-a1df-24c51ef506c7";
 		$vendors[$y]['name'] = "audiocodes";
@@ -2329,7 +2345,7 @@
 		$vendors[$y]['functions'][$z]['value'] = "PAGING";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
-
+//obihai
 		$y++; //vendors array index
 		$vendors[$y]['uuid'] = "bd2ffe34-30c4-441a-9c1d-5ec0773b9c9b";
 		$vendors[$y]['name'] = "obihai";
@@ -2537,7 +2553,7 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
-
+//htek
 		$y++;
 		$vendors[$y]['uuid'] = "d0449b9e-4f03-4931-a808-30ece1dffcc3";
 		$vendors[$y]['name'] = "htek";
@@ -2793,7 +2809,7 @@
 		$vendors[$y]['functions'][$z]['value'] = "47";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
-
+//fanvil
 		$y++;
 		$vendors[$y]['uuid'] = "cb966a64-34b8-4825-b05a-f243adc0014f";
 		$vendors[$y]['name'] = "fanvil";
@@ -2867,5 +2883,34 @@
 		$vendors[$y]['functions'][$z]['value'] = "10";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
-
+//algo
+		$y++;
+		$vendors[$y]['uuid'] = "dc5ffcb9-5195-4fb8-8b23-f4216ed7f0f6";
+		$vendors[$y]['name'] = "algo";
+		$z=0;
+//atcom
+		$y++;
+		$vendors[$y]['uuid'] = "da636c41-4551-444b-8b8b-f01fac95bfb5";
+		$vendors[$y]['name'] = "atcom";
+		$z=0;
+//digium
+		$y++;
+		$vendors[$y]['uuid'] = "9ec868f0-8c18-42f1-8eb0-8e80b10891c2";
+		$vendors[$y]['name'] = "digium";
+		$z=0;
+//panasonic
+		$y++;
+		$vendors[$y]['uuid'] = "86cd5298-3599-4254-9ce5-ce84a31a3596";
+		$vendors[$y]['name'] = "panasonic";
+		$z=0;
+//spectralink
+		$y++;
+		$vendors[$y]['uuid'] = "699676f9-2690-492b-a40b-043653a8b7d5";
+		$vendors[$y]['name'] = "spectralink";
+		$z=0;
+//vtech
+		$y++;
+		$vendors[$y]['uuid'] = "d07e0905-9788-4039-ba8e-ca1b50fbf643";
+		$vendors[$y]['name'] = "vtech";
+		$z=0;
 ?>
