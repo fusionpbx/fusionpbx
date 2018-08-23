@@ -69,8 +69,14 @@
 	$order = check_str($_GET["order"]);
 
 //set the type
-	if ($_GET['type'] == 'outbound') {
+	if ($_GET['type'] == 'inbound') {
+		$destination_type = 'inbound';
+	}
+	elseif ($_GET['type'] == 'outbound') {
 		$destination_type = 'outbound';
+	}
+	elseif ($_GET['type'] == 'local') {
+		$destination_type = 'local';
 	}
 	else {
 		$destination_type = 'inbound';
@@ -180,14 +186,12 @@
 	echo "		<form method='get' action=''>\n";
 	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
 
-	if ($_GET['type'] == 'outbound') {
-		echo "		<input type='button' class='btn' value='".$text['button-inbound']."' onclick=\"window.location='destinations.php?type=inbound';\">\n";
-	} else {
-		echo "		<input type='button' class='btn' value='".$text['button-outbound']."' onclick=\"window.location='destinations.php?type=outbound';\">\n";
-	}
-
+	echo "				<input type='button' class='btn' value='".$text['button-inbound']."' onclick=\"window.location='destinations.php?type=inbound';\">\n";
+	echo "				<input type='button' class='btn' value='".$text['button-outbound']."' onclick=\"window.location='destinations.php?type=outbound';\">\n";
+	echo "				<input type='button' class='btn' value='".$text['button-local']."' onclick=\"window.location='destinations.php?type=local';\">\n";
+	echo "				&nbsp;\n";
 	if (permission_exists('destination_import')) {
-		echo 				"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='/app/destination_imports/destination_imports.php'\" value='".$text['button-import']."'>\n";
+		echo "				<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='/app/destination_imports/destination_imports.php'\" value='".$text['button-import']."'>\n";
 	}
 
 	if (permission_exists('destination_all')) {
@@ -220,15 +224,15 @@
 	if ($_GET['show'] == "all" && permission_exists('destination_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param);
 	}
-	echo th_order_by('destination_type', $text['label-destination_type'], $order_by, $order);
-	echo th_order_by('destination_number', $text['label-destination_number'], $order_by, $order);
-	echo th_order_by('destination_context', $text['label-destination_context'], $order_by, $order);
+	echo th_order_by('destination_type', $text['label-destination_type'], $order_by, $order, $param);
+	echo th_order_by('destination_number', $text['label-destination_number'], $order_by, $order, $param);
+	echo th_order_by('destination_context', $text['label-destination_context'], $order_by, $order, $param);
 	if (permission_exists('outbound_caller_id_select')) {
-		echo th_order_by('destination_caller_id_name', $text['label-destination_caller_id_name'], $order_by, $order);
-		echo th_order_by('destination_caller_id_number', $text['label-destination_caller_id_number'], $order_by, $order);
+		echo th_order_by('destination_caller_id_name', $text['label-destination_caller_id_name'], $order_by, $order, $param);
+		echo th_order_by('destination_caller_id_number', $text['label-destination_caller_id_number'], $order_by, $order, $param);
 	}
-	echo th_order_by('destination_enabled', $text['label-destination_enabled'], $order_by, $order);
-	echo th_order_by('destination_description', $text['label-destination_description'], $order_by, $order);
+	echo th_order_by('destination_enabled', $text['label-destination_enabled'], $order_by, $order, $param);
+	echo th_order_by('destination_description', $text['label-destination_description'], $order_by, $order, $param);
 	echo "	<td class='list_control_icons'>";
 	if (permission_exists('destination_add')) {
 		echo "		<a href='destination_edit.php?type=$destination_type' alt='".$text['button-add']."'>$v_link_label_add</a>";
