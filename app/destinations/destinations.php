@@ -224,15 +224,15 @@
 	if ($_GET['show'] == "all" && permission_exists('destination_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param);
 	}
-	echo th_order_by('destination_type', $text['label-destination_type'], $order_by, $order);
-	echo th_order_by('destination_number', $text['label-destination_number'], $order_by, $order);
-	echo th_order_by('destination_context', $text['label-destination_context'], $order_by, $order);
+	echo th_order_by('destination_type', $text['label-destination_type'], $order_by, $order, $param);
+	echo th_order_by('destination_number', $text['label-destination_number'], $order_by, $order, $param);
+	echo th_order_by('destination_context', $text['label-destination_context'], $order_by, $order, $param);
 	if (permission_exists('outbound_caller_id_select')) {
-		echo th_order_by('destination_caller_id_name', $text['label-destination_caller_id_name'], $order_by, $order);
-		echo th_order_by('destination_caller_id_number', $text['label-destination_caller_id_number'], $order_by, $order);
+		echo th_order_by('destination_caller_id_name', $text['label-destination_caller_id_name'], $order_by, $order, $param);
+		echo th_order_by('destination_caller_id_number', $text['label-destination_caller_id_number'], $order_by, $order, $param);
 	}
-	echo th_order_by('destination_enabled', $text['label-destination_enabled'], $order_by, $order);
-	echo th_order_by('destination_description', $text['label-destination_description'], $order_by, $order);
+	echo th_order_by('destination_enabled', $text['label-destination_enabled'], $order_by, $order, $param);
+	echo th_order_by('destination_description', $text['label-destination_description'], $order_by, $order, $param);
 	echo "	<td class='list_control_icons'>";
 	if (permission_exists('destination_add')) {
 		echo "		<a href='destination_edit.php?type=$destination_type' alt='".$text['button-add']."'>$v_link_label_add</a>";
