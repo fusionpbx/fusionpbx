@@ -123,6 +123,10 @@
 		hangup_on_call_reject = session:getVariable("hangup_on_call_reject");
 		caller_id_name = session:getVariable("caller_id_name");
 		caller_id_number = session:getVariable("caller_id_number");
+		call_direction = session:getVariable("call_direction");
+		if (caller_direction == "local") then
+			caller_id_name = session:getVariable("effective_caller_id_name");
+		end
 		sip_to_user = session:getVariable("sip_to_user");
 		dialed_user = session:getVariable("dialed_user");
 		missed_call_app = session:getVariable("missed_call_app");
