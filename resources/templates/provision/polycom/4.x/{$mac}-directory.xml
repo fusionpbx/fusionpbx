@@ -15,7 +15,6 @@
 			{else}
 			<ct>{$row.phone_extension}</ct>
 			{/if}
-			<sd>{$x}</sd>
 			<rt>7</rt>
 			<dc/>
 			<ad>0</ad>
