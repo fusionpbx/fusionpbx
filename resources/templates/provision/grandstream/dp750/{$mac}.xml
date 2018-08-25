@@ -2257,6 +2257,8 @@
 <P4603>1</P4603>
 <P4604>1</P4604>
 
+{foreach $keys['line'] as $row}
+{/foreach}
 <!-- ################################# -->
 <!-- #  DECT/Handset Line Settings  ## -->
 <!-- ################################# -->
@@ -2264,6 +2266,7 @@
 <!-- Handset Line Settings -->
 <!-- HS 1 Line Settings -->
 <!-- Number: 0 - 10, according with None and account 1 - 10. First line Default is 1 (account 1), other line have default is 0 - NULL. -->
+{if $device_key_category == 'line' && $device_key_id == 1 && isset($device_key_line)}
 <P4300>1</P4300>
 <P4301>0</P4301>
 <P4302>0</P4302>
@@ -2574,7 +2577,7 @@
 {if isset($grandstream_firmware_path) && isset($device_firmware_version)}
 <P192>{$grandstream_firmware_path}/dp750/{$device_firmware_version}</P192>
 {elseif isset($grandstream_firmware_path)}
-<P192>{$grandstream_firmware_path}</P192>
+<P192>{$grandstream_firmware_path}/dp750</P192>
 {else}
 <P192>{$domain_name}{$project_path}/app/provision</P192>
 {/if}
