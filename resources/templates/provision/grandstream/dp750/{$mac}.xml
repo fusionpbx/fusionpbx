@@ -2571,7 +2571,9 @@
 
 <!-- Firmware Server Path -->
 <!-- String: serveraddress  -->
-{if isset($grandstream_firmware_path)}
+{if isset($grandstream_firmware_path) && isset($device_firmware_version)}
+<P192>{$grandstream_firmware_path}/dp750/{$device_firmware_version}</P192>
+{elseif isset($grandstream_firmware_path)}
 <P192>{$grandstream_firmware_path}</P192>
 {else}
 <P192>{$domain_name}{$project_path}/app/provision</P192>
