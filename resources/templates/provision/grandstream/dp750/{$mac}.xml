@@ -2264,16 +2264,8 @@
 <!-- Handset Line Settings -->
 <!-- HS 1 Line Settings -->
 <!-- Number: 0 - 10, according with None and account 1 - 10. First line Default is 1 (account 1), other line have default is 0 - NULL. -->
-{if isset($handset_1_line_1) }
-<P4300>{$handset_1_line_1}</P4300>
-{else}
 <P4300>1</P4300>
-{/if}
-{if isset($handset_1_line_2) }
-<P4301>{$handset_1_line_2}</P4301>
-{else}
-<P4301>2</P4301>
-{/if}
+<P4301>0</P4301>
 <P4302>0</P4302>
 <P4303>0</P4303>
 <P4304>0</P4304>
@@ -2285,16 +2277,8 @@
 
 <!-- HS 2 Line Settings -->
 <!-- Number: 0 - 10, according with None and account 1 - 10. First line Default is 1 (account 1), other line have default is 0 - NULL. -->
-{if isset($handset_2_line_1) }
-<P4310>{$handset_2_line_1}</P4310>
-{else}
 <P4310>1</P4310>
-{/if}
-{if isset($handset_2_line_2) }
-<P4311>{$handset_2_line_2}</P4311>
-{else}
-<P4311>2</P4311>
-{/if}
+<P4311>0</P4311>
 <P4312>0</P4312>
 <P4313>0</P4313>
 <P4314>0</P4314>
@@ -2306,16 +2290,8 @@
 
 <!-- HS 3 Line Settings -->
 <!-- Number: 0 - 10, according with None and account 1 - 10. First line Default is 1 (account 1), other line have default is 0 - NULL. -->
-{if isset($handset_3_line_1) }
-<P4320>{$handset_3_line_1}</P4320>
-{else}
 <P4320>1</P4320>
-{/if}
-{if isset($handset_3_line_2) }
-<P4321>{$handset_3_line_2}</P4321>
-{else}
-<P4321>2</P4321>
-{/if}
+<P4321>0</P4321>
 <P4322>0</P4322>
 <P4323>0</P4323>
 <P4324>0</P4324>
@@ -2327,16 +2303,8 @@
 
 <!-- HS 4 Line Settings -->
 <!-- Number: 0 - 10, according with None and account 1 - 10. First line Default is 1 (account 1), other line have default is 0 - NULL. -->
-{if isset($handset_4_line_1) }
-<P4250>{$handset_4_line_1}</P4250>
-{else}
 <P4250>1</P4250>
-{/if}
-{if isset($handset_4_line_2) }
-<P4251>{$handset_4_line_2}</P4251>
-{else}
-<P4251>2</P4251>
-{/if}
+<P4251>0</P4251>
 <P21320>0</P21320>
 <P21321>0</P21321>
 <P21322>0</P21322>
@@ -2348,16 +2316,8 @@
 
 <!-- HS 5 Line Settings -->
 <!-- Number: 0 - 10, according with None and account 1 - 10. First line Default is 1 (account 1), other line have default is 0 - NULL. -->
-{if isset($handset_5_line_1) }
-<P21328>{$handset_5_line_1}</P21328>
-{else}
 <P21328>1</P21328>
-{/if}
-{if isset($handset_5_line_2) }
-<P21329>{$handset_5_line_2}</P21329>
-{else}
-<P21329>2</P21329>
-{/if}
+<P21329>0</P21329>
 <P21330>0</P21330>
 <P21331>0</P21331>
 <P21332>0</P21332>
