@@ -1255,7 +1255,6 @@
 <P212>2</P212>
 
 <!-- Firmware Server Path, MaxLength 128 -->
-
 {if isset($grandstream_firmware_path) && isset($firmware_version)}
 <P192>{$grandstream_firmware_path}/gxv3175/{$firmware_version}</P192>
 {elseif isset($grandstream_firmware_path)}
