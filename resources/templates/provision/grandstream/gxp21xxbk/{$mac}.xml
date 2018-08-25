@@ -34,9 +34,10 @@
 
 <!-- Firmware Server Path -->
 <!-- String -->
-
-{if isset($grandstream_firmware_path)}
-<P192>{$grandstream_firmware_path}</P192>
+{if isset($grandstream_firmware_path) && isset($firmware_version)}
+<P192>{$grandstream_firmware_path}/gxp21xx/{$firmware_version}</P192>
+{elseif isset($grandstream_firmware_path)}
+<P192>{$grandstream_firmware_path}/gxp21xx</P192>
 {else}
 <P192>{$domain_name}{$project_path}/app/provision</P192>
 {/if}
