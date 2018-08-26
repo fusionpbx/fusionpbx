@@ -1541,7 +1541,7 @@
 <!-- Check SIP User ID for Incoming INVITE. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
 <P549>0</P549>
- 
+
 <!-- Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
 <P2546>0 </P2546>
@@ -4758,8 +4758,10 @@
 <P6767>1</P6767>
 
 <!-- Firmware Server Path -->
-{if isset($grandstream_firmware_path)}
-<P192>{$grandstream_firmware_path}</P192>
+{if isset($grandstream_firmware_path) && isset($firmware_version)}
+<P192>{$grandstream_firmware_path}/gxv3240/{$firmware_version}</P192>
+{elseif isset($grandstream_firmware_path)}
+<P192>{$grandstream_firmware_path}/gxv3240</P192>
 {else}
 <P192>{$domain_name}{$project_path}/app/provision</P192>
 {/if}

@@ -1165,13 +1165,15 @@
     <P212>2</P212>
     <!--  Firmware Server Path -->
     <!--  String -->
-    
-    {if isset($grandstream_firmware_path)}
-    <P192>{$grandstream_firmware_path}</P192>
+
+    {if isset($grandstream_firmware_path) && isset($firmware_version)}
+    <P192>{$grandstream_firmware_path}/gxp140x/{$firmware_version}</P192>
+    {elseif isset($grandstream_firmware_path)}
+    <P192>{$grandstream_firmware_path}/gxp140x</P192>
     {else}
     <P192>{$domain_name}{$project_path}/app/provision</P192>
     {/if}
-    
+
     <!--  Config Server Path -->
     <!--  String -->
     <P237>{$domain_name}{$project_path}/app/provision</P237>
@@ -1313,7 +1315,7 @@
     <!--  This is a string of up to 256 characters that should contain a path to the XML file. It MUST be in the host/path format. -->
     <!--  For example: directory.grandstream.com/engineering -->
     <!--  String -->
-    
+
     {if isset($contact_grandstream)}
 <P331>{$grandstream_phonebook_xml_server_path}{$mac}/</P331>
 {elseif isset($grandstream_phonebook_xml_server_path)}
@@ -1321,7 +1323,7 @@
 {else}
 <P331></P331>
 {/if}
-    
+
     <!--  Phonebook Download Interval (in minutes) -->
     <!--  Valid value range is 5-720. Default is 0 for disabled -->
     <!--  Number: 0, 5-720;  -->

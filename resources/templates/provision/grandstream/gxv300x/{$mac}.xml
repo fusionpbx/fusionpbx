@@ -65,13 +65,14 @@
     <!-- Firmware Upgrade. 0 - TFTP Upgrade,  1 - HTTP Upgrade. -->
     <P212>1</P212>
     <!-- Firmware Server Path -->
-    
-    {if isset($grandstream_firmware_path)}
-    <P192>{$grandstream_firmware_path}</P192>
+    {if isset($grandstream_firmware_path) && isset($firmware_version)}
+    <P192>{$grandstream_firmware_path}/gxv300x/{$firmware_version}</P192>
+    {elseif isset($grandstream_firmware_path)}
+    <P192>{$grandstream_firmware_path}/gxv300x</P192>
     {else}
     <P192>{$domain_name}{$project_path}/app/provision</P192>
     {/if}
-    
+
     <!-- Config Server Path -->
     <P237>{$domain_name}{$project_path}/app/provision</P237>
     <!-- Firmware File Prefix -->

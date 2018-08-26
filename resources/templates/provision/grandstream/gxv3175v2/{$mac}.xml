@@ -736,7 +736,7 @@
     <P7070>1</P7070>
     <!-- Lock KeyPad UPdate. 0 - No, 1 - Yes -->
     <P88>0</P88>
-    
+
     <!-- XML Config File Password -->
     <!-- String; between ascii values 33 and 126 -->
     <!-- Mandatory -->
@@ -749,17 +749,19 @@
     <!--  HTTP/HTTPS Password -->
     <!--  String; between ascii values 33 and 126 -->
     <P1361>{$http_auth_password}</P1361>
-    
-    <!-- UPgrade Via: (0 - TFTP,1 - HTTP and 2 - HTTPS) -->
+
+    <!-- Upgrade Via: (0 - TFTP,1 - HTTP and 2 - HTTPS) -->
     <P212>2</P212>
+
     <!-- Firmware Server Path, MaxLength 128 -->
-    
-    {if isset($grandstream_firmware_path)}
-    <P192>{$grandstream_firmware_path}</P192>
+    {if isset($grandstream_firmware_path) && isset($firmware_version)}
+    <P192>{$grandstream_firmware_path}/gxv3175v2/{$firmware_version}</P192>
+    {elseif isset($grandstream_firmware_path)}
+    <P192>{$grandstream_firmware_path}/gxv3175v2</P192>
     {else}
     <P192>{$domain_name}{$project_path}/app/provision</P192>
     {/if}
-    
+
     <!-- Config Server Path, MaxLength 128 -->
     <P237>{$domain_name}{$project_path}/app/provision</P237>
     <!-- Firmware File Prefix, MaxLength 128 -->

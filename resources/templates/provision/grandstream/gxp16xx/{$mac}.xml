@@ -1199,7 +1199,7 @@
 <!--  Name -->
 <!--  String -->
 <P507>{$display_name_3}</P507>
-	
+
 <!--  Voice Mail UserID -->
 <!--  String -->
 <P526>*97</P526>
@@ -2045,8 +2045,10 @@
 <P6767>2</P6767>
 <!--  Firmware Server Path -->
 <!--  String -->
-{if isset($grandstream_firmware_path)}
-<P192>{$grandstream_firmware_path}</P192>
+{if isset($grandstream_firmware_path) && isset($firmware_version)}
+<P192>{$grandstream_firmware_path}/gxp16xx/{$firmware_version}</P192>
+{elseif isset($grandstream_firmware_path)}
+<P192>{$grandstream_firmware_path}/gxp16xx</P192>
 {else}
 <P192>{$domain_name}{$project_path}/app/provision</P192>
 {/if}
@@ -3048,4 +3050,3 @@
 <P2986></P2986>
 </config>
 </gs_provision>
-
