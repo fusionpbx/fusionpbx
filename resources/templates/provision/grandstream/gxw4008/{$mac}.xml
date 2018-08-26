@@ -12,6 +12,14 @@
 	<!-- Firmware Upgrade -->
 		<!-- Firmware Upgrade and Privisioning. 0 - TFTP Upgrade, 1 - HTTP Upgrade, 2 - HTTPS Upgrade., Number: 0 to 2. Mandatory -->
 		<P212>1</P212>
+		<!-- Firmware Server Path -->
+    {if isset($grandstream_firmware_path) && isset($firmware_version)}
+    <P192>{$grandstream_firmware_path}/gxw4008/{$firmware_version}</P192>
+    {elseif isset($grandstream_firmware_path)}
+    <P192>{$grandstream_firmware_path}/gxw4008</P192>
+    {else}
+    <P192>{$domain_name}{$project_path}/app/provision</P192>
+    {/if}
 		<!-- Config Server Path , String: serveraddress -->
 		<P237>{$domain_name}{$project_path}/app/provision</P237>
 

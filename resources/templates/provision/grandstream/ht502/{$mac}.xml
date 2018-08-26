@@ -39,11 +39,14 @@
 	<!-- Firmware Upgrade -->
 		<!-- Firmware Upgrade and Privisioning. 0 - TFTP Upgrade, 1 - HTTP Upgrade, 2 - HTTPS Upgrade. -->
 		<P212>2</P212>
-		{if isset($grandstream_firmware_path)}
-		<P192>{$grandstream_firmware_path}</P192>
-		{else}
-		<P192>{$domain_name}{$project_path}/app/provision</P192>
-		{/if}
+		<!-- Firmware Server Path -->
+    {if isset($grandstream_firmware_path) && isset($firmware_version)}
+    <P192>{$grandstream_firmware_path}/ht502/{$firmware_version}</P192>
+    {elseif isset($grandstream_firmware_path)}
+    <P192>{$grandstream_firmware_path}/ht502</P192>
+    {else}
+    <P192>{$domain_name}{$project_path}/app/provision</P192>
+    {/if}
 		<!-- Config Server Path. Server address -->
 		<P237>{$domain_name}{$project_path}/app/provision</P237>
 		<!-- XML Config File Password. Max Length: 40 characters; between ascii values 33 and 126 -->
