@@ -1,4 +1,3 @@
-======================
 Device Specific Firmware Versions
 ======================
 Select Grandstream phones (particularly the GXP2140 and similar) need firmware upgrades in a certain order.
