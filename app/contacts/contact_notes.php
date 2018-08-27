@@ -83,19 +83,19 @@
 			$contact_note = escape($row['contact_note']);
 			$contact_note = str_replace("\n","<br />",$contact_note);
 			if (permission_exists('contact_note_add')) {
-				$tr_link = "href='contact_note_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_note_uuid']."'";
+				$tr_link = "href='contact_note_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_note_uuid'])."'";
 			}
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' colspan='2'>";
-			echo "		<div style='display: inline-block; float: right; margin: -5px -7px 5px 5px; padding: 3px 4px; font-size: 10px; background-color: #f0f2f6;'><span style='color: #000; font-weight: bold;'>".$row['last_mod_user']."</span>: ".date("j M Y @ H:i:s", strtotime($row['last_mod_date']))."</div>";
-			echo 		$contact_note."&nbsp;";
+			echo "		<div style='display: inline-block; float: right; margin: -5px -7px 5px 5px; padding: 3px 4px; font-size: 10px; background-color: #f0f2f6;'><span style='color: #000; font-weight: bold;'>".escape($row['last_mod_user'])."</span>: ".date("j M Y @ H:i:s", strtotime($row['last_mod_date']))."</div>";
+			echo 		escape($contact_note)."&nbsp;";
 			echo "	</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('contact_note_edit')) {
-				echo "<a href='contact_note_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_note_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='contact_note_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_note_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('contact_note_delete')) {
-				echo "<a href='contact_note_delete.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_note_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='contact_note_delete.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_note_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
