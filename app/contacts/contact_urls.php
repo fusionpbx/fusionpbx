@@ -85,7 +85,7 @@
 			echo "	<td valign='top' class='row_stylebg'>".escape($row['url_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('contact_url_edit')) {
-				echo "<a href='contact_url_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".$row['contact_url_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='contact_url_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_url_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('contact_url_delete')) {
 				echo "<a href='contact_url_delete.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_url_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
