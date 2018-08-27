@@ -414,7 +414,7 @@
 			}
 		//add the primary key uuid
 			if (strlen($row['device_key_uuid']) > 0) {
-				echo "	<input name='device_keys[".$x."][device_key_uuid]' type='hidden' value=\"".$row['device_key_uuid']."\">\n";
+				echo "	<input name='device_keys[".$x."][device_key_uuid]' type='hidden' value=\"".escape($row['device_key_uuid'])."\">\n";
 			}
 		//show all the rows in the array
 			echo "<tr>\n";
@@ -549,12 +549,12 @@
 			echo "</td>\n";
 
 			echo "<td class='' align='left'>\n";
-			echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_value]' style='width: 120px;' maxlength='255' value=\"".$row['device_key_value']."\">\n";
+			echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_value]' style='width: 120px;' maxlength='255' value=\"".escape($row['device_key_value'])."\">\n";
 			echo "</td>\n";
 
 			if (permission_exists('device_key_extension')) {
 				echo "<td class='' align='left'>\n";
-				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_extension]' style='width: 120px;' maxlength='255' value=\"".$row['device_key_extension']."\">\n";
+				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_extension]' style='width: 120px;' maxlength='255' value=\"".escape($row['device_key_extension'])."\">\n";
 				echo "</td>\n";
 			}
 
@@ -569,13 +569,13 @@
 			}
 
 			echo "<td class='' align='left'>\n";
-			echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_label]' style='width: 150px;' maxlength='255' value=\"".$row['device_key_label']."\">\n";
+			echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_label]' style='width: 150px;' maxlength='255' value=\"".escape($row['device_key_label'])."\">\n";
 			echo "</td>\n";
 
 			echo "<td nowrap='nowrap'>\n";
 			if (strlen($row['device_key_uuid']) > 0) {
 				if (permission_exists('device_key_delete')) {
-					echo "					<a href='device_key_delete.php?device_profile_uuid=".$row['device_profile_uuid']."&id=".$row['device_key_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+					echo "					<a href='device_key_delete.php?device_profile_uuid=".escape($row['device_profile_uuid'])."&id=".escape($row['device_key_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 				}
 			}
 			echo "				</td>\n";
@@ -618,17 +618,17 @@
 			}
 		//add the primary key uuid
 			if (strlen($row['device_setting_uuid']) > 0) {
-				echo "	<input name='device_settings[".$x."][device_setting_uuid]' type='hidden' value=\"".$row['device_setting_uuid']."\"/>\n";
+				echo "	<input name='device_settings[".$x."][device_setting_uuid]' type='hidden' value=\"".escape($row['device_setting_uuid'])."\"/>\n";
 			}
 
 		//show alls rows in the array
 			echo "<tr>\n";
 			echo "<td align='left'>\n";
-			echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_subcategory]' style='width: 120px;' maxlength='255' value=\"".$row['device_setting_subcategory']."\"/>\n";
+			echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_subcategory]' style='width: 120px;' maxlength='255' value=\"".escape($row['device_setting_subcategory'])."\"/>\n";
 			echo "</td>\n";
 
 			echo "<td align='left'>\n";
-			echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_value]' style='width: 120px;' maxlength='255' value=\"".$row['device_setting_value']."\"/>\n";
+			echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_value]' style='width: 120px;' maxlength='255' value=\"".escape($row['device_setting_value'])."\"/>\n";
 			echo "</td>\n";
 
 			echo "<td align='left'>\n";
@@ -650,7 +650,7 @@
 			echo "</td>\n";
 
 			echo "<td align='left'>\n";
-			echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_description]' style='width: 150px;' maxlength='255' value=\"".$row['device_setting_description']."\"/>\n";
+			echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_description]' style='width: 150px;' maxlength='255' value=\"".escape($row['device_setting_description'])."\"/>\n";
 			echo "</td>\n";
 
 			if (strlen($text['description-settings']) > 0) {
@@ -660,7 +660,7 @@
 
 			echo "				<td>\n";
 			if (strlen($row['device_setting_uuid']) > 0) {
-				echo "					<a href='device_setting_delete.php?device_profile_uuid=".$row['device_profile_uuid']."&id=".$row['device_setting_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+				echo "					<a href='device_setting_delete.php?device_profile_uuid=".escape($row['device_profile_uuid'])."&id=".escape($row['device_setting_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			}
 			echo "				</td>\n";
 			echo "			</tr>\n";
@@ -684,13 +684,13 @@
 		if ($action == "update") {
 			echo "	<option value='' ".(($device_profile_domain_uuid == '') ? "selected='selected'" : null).">".$text['select-global']."</option>\n";
 			foreach ($_SESSION['domains'] as $dom) {
-				echo "<option value='".$dom['domain_uuid']."' ".(($device_profile_domain_uuid == $dom['domain_uuid']) ? "selected='selected'" : null).">".$dom['domain_name']."</option>\n";
+				echo "<option value='".escape($dom['domain_uuid'])."' ".(($device_profile_domain_uuid == $dom['domain_uuid']) ? "selected='selected'" : null).">".escape($dom['domain_name'])."</option>\n";
 			}
 		}
 		else {
 			echo "	<option value=''>".$text['select-global']."</option>\n";
 			foreach ($_SESSION['domains'] as $dom) {
-				echo "<option value='".$dom['domain_uuid']."' ".(($domain_uuid == $dom['domain_uuid']) ? "selected='selected'" : null).">".$dom['domain_name']."</option>\n";
+				echo "<option value='".escape($dom['domain_uuid'])."' ".(($domain_uuid == $dom['domain_uuid']) ? "selected='selected'" : null).">".escape($dom['domain_name'])."</option>\n";
 			}
 		}
 		echo "	</select>\n";
@@ -717,7 +717,7 @@
 	echo "	".$text['label-profile_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='device_profile_description' maxlength='255' value=\"".$device_profile_description."\">\n";
+	echo "	<input class='formfld' type='text' name='device_profile_description' maxlength='255' value=\"".escape($device_profile_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-profile_description']."\n";
 	echo "</td>\n";
@@ -726,7 +726,7 @@
 	echo "<tr>\n";
 	echo "	<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "	<input type='hidden' name='device_profile_uuid' value='".$device_profile_uuid."'>\n";
+		echo "	<input type='hidden' name='device_profile_uuid' value='".escape($device_profile_uuid)."'>\n";
 	}
 	echo "		<br>";
 	echo "		<input type='submit' class='btn' value='".$text['button-save']."'>\n";
