@@ -216,7 +216,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "				<select class='formfld' style='width: 45px;' name='line_number'>\n";
-	echo "				<option value='$line_number' SELECTED='SELECTED'>$line_number</option>\n";
+	echo "				<option value='".escape($line_number)."' SELECTED='SELECTED'>".escape($line_number)."</option>\n";
 	echo "				<option value=''></option>\n";
 	echo "				<option value='1'>1</option>\n";
 	echo "				<option value='2'>2</option>\n";
@@ -261,7 +261,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-server_address']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='server_address' maxlength='255' value=\"$server_address\">\n";
+	echo "	<input class='formfld' type='text' name='server_address' maxlength='255' value=\"".escape($server_address)."\">\n";
 	echo "<br />\n";
 	echo $text['description-server_address']."\n";
 	echo "</td>\n";
@@ -272,7 +272,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-outbound_proxy']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='outbound_proxy' maxlength='255' value=\"$outbound_proxy\">\n";
+	echo "	<input class='formfld' type='text' name='outbound_proxy' maxlength='255' value=\"".escape($outbound_proxy)."\">\n";
 	echo "<br />\n";
 	echo $text['description-outbound_proxy']."\n";
 	echo "</td>\n";
@@ -283,7 +283,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-display_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='display_name' maxlength='255' value=\"$display_name\">\n";
+	echo "	<input class='formfld' type='text' name='display_name' maxlength='255' value=\"".escape($display_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-display_name']."\n";
 	echo "</td>\n";
@@ -294,7 +294,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-user_id']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='user_id' maxlength='255' value=\"$user_id\">\n";
+	echo "	<input class='formfld' type='text' name='user_id' maxlength='255' value=\"".escape($user_id)."\">\n";
 	echo "<br />\n";
 	echo $text['description-user_id']."\n";
 	echo "</td>\n";
@@ -305,7 +305,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-auth_id']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='auth_id' maxlength='255' value=\"$auth_id\">\n";
+	echo "	<input class='formfld' type='text' name='auth_id' maxlength='255' value=\"".escape($auth_id)."\">\n";
 	echo "<br />\n";
 	echo $text['description-auth_id']."\n";
 	echo "</td>\n";
@@ -316,7 +316,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-password']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='password' name='password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' value=\"$password\">\n";
+	echo "	<input class='formfld' type='password' name='password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' value=\"".escape($password),"\">\n";
 	echo "<br />\n";
 	echo $text['description-password']."\n";
 	echo "</td>\n";
@@ -327,7 +327,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-sip_port']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='sip_port' maxlength='255' value=\"$sip_port\">\n";
+	echo "	<input class='formfld' type='text' name='sip_port' maxlength='255' value=\"".escape($sip_port)."\">\n";
 	echo "<br />\n";
 	echo $text['description-sip_port']."\n";
 	echo "</td>\n";
@@ -338,7 +338,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-sip_transport']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='sip_transport' maxlength='255' value=\"$sip_transport\">\n";
+	echo "	<input class='formfld' type='text' name='sip_transport' maxlength='255' value=\"".escape($sip_transport)."\">\n";
 	echo "<br />\n";
 	echo $text['description-sip_transport']."\n";
 	echo "</td>\n";
@@ -349,7 +349,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-register_expires']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='register_expires' maxlength='255' value=\"$register_expires\">\n";
+	echo "	<input class='formfld' type='text' name='register_expires' maxlength='255' value=\"".escape($register_expires)."\">\n";
 	echo "<br />\n";
 	echo $text['description-register_expires']."\n";
 	echo "</td>\n";
