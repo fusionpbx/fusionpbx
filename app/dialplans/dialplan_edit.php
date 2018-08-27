@@ -499,10 +499,10 @@
 		}
 		if (is_array($_SESSION['domains'])) foreach ($_SESSION['domains'] as $row) {
 			if ($row['domain_uuid'] == $domain_uuid) {
-				echo "		<option value='".$row['domain_uuid']."' selected='selected'>".escape($row['domain_name'])."</option>\n";
+				echo "		<option value='".escape($row['domain_uuid'])."' selected='selected'>".escape($row['domain_name'])."</option>\n";
 			}
 			else {
-				echo "		<option value='".$row['domain_uuid']."'>".escape($row['domain_name'])."</option>\n";
+				echo "		<option value='".escape($row['domain_uuid'])."'>".escape($row['domain_name'])."</option>\n";
 			}
 		}
 		echo "		</select>\n";
