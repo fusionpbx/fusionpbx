@@ -328,7 +328,7 @@
 	echo "		if (new_group_name != null) {\n";
 	echo "			new_group_desc = prompt('".$text['message-new_group_description']."');\n";
 	echo "			if (new_group_desc != null) {\n";
-	echo "				window.location = 'permissions_copy.php?group_name=".$group_name."&new_group_name=' + new_group_name + '&new_group_desc=' + new_group_desc;\n";
+	echo "				window.location = 'permissions_copy.php?group_name=".escape($group_name)."&new_group_name=' + new_group_name + '&new_group_desc=' + new_group_desc;\n";
 	echo "			}\n";
 	echo "		}\n";
 	echo "	}\n";
@@ -352,11 +352,11 @@
 
 //show the content
 	echo "<form method='post' name='frm' action=''>\n";
-	echo "<input type='hidden' name='domain_uuid' value='".$domain_uuid."'>\n";
+	echo "<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>\n";
 	echo "<table cellpadding='0' cellspacing='0' width='100%' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' align=\"left\" nowrap=\"nowrap\" valign='top'>";
-	echo "			<b>".$text['header-group_permissions'].$group_name."</b>";
+	echo "			<b>".$text['header-group_permissions'].escape($group_name)."</b>";
 	echo "			<br><br>";
 	echo "		</td>\n";
 	echo "		<td width='50%' align=\"right\" valign='top'>\n";
@@ -404,9 +404,9 @@
 			foreach ($app['permissions'] as $permission_index => $row) {
 				$checked = ($permissions_db_checklist[$row['name']] == "true") ? "checked='checked'" : null;
 				echo "<tr id='permission_".$row['name']."'>\n";
-				echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' name='permissions_form[]' id='perm_".$app_index."_".$permission_index."' ".$checked." value='".$row['name']."'></td>\n";
-				echo "	<td valign='top' nowrap='nowrap' class='".$row_style[$c]."' onclick=\"(document.getElementById('perm_".$app_index."_".$permission_index."').checked) ? document.getElementById('perm_".$app_index."_".$permission_index."').checked = false : document.getElementById('perm_".$app_index."_".$permission_index."').checked = true;\">".$row['name']."</td>\n";
-				echo "	<td valign='top' class='row_stylebg' onclick=\"(document.getElementById('perm_".$app_index."_".$permission_index."').checked) ? document.getElementById('perm_".$app_index."_".$permission_index."').checked = false : document.getElementById('perm_".$app_index."_".$permission_index."').checked = true;\">".$row['description']."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' name='permissions_form[]' id='perm_".$app_index."_".$permission_index."' ".$checked." value='".escape($row['name'])."'></td>\n";
+				echo "	<td valign='top' nowrap='nowrap' class='".$row_style[$c]."' onclick=\"(document.getElementById('perm_".$app_index."_".$permission_index."').checked) ? document.getElementById('perm_".$app_index."_".$permission_index."').checked = false : document.getElementById('perm_".$app_index."_".$permission_index."').checked = true;\">".escape($row['name'])."</td>\n";
+				echo "	<td valign='top' class='row_stylebg' onclick=\"(document.getElementById('perm_".$app_index."_".$permission_index."').checked) ? document.getElementById('perm_".$app_index."_".$permission_index."').checked = false : document.getElementById('perm_".$app_index."_".$permission_index."').checked = true;\">".escape($row['description'])."&nbsp;</td>\n";
 				echo "</tr>\n";
 				$c = ($c == 0) ? 1 : 0;
 
