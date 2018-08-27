@@ -911,7 +911,7 @@ if (!$included) {
 		echo "	".$text['label-fax-sender']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input type='text' name='fax_sender' class='formfld' style='' value='".$fax_caller_id_name."'>\n";
+		echo "	<input type='text' name='fax_sender' class='formfld' style='' value='".escape($fax_caller_id_name)."'>\n";
 		echo "	<br />\n";
 		echo "	".$text['description-fax-sender']."\n";
 		echo "</td>\n";
@@ -1099,10 +1099,10 @@ if (!$included) {
 		echo "	<tr>\n";
 		echo "		<td colspan='2' align='right'>\n";
 		echo "			<br>\n";
-		echo "			<input type='hidden' name='fax_caller_id_name' value='".$fax_caller_id_name."'>\n";
-		echo "			<input type='hidden' name='fax_caller_id_number' value='".$fax_caller_id_number."'>\n";
-		echo "			<input type='hidden' name='fax_extension' value='".$fax_extension."'>\n";
-		echo "			<input type='hidden' name='id' value='".$fax_uuid."'>\n";
+		echo "			<input type='hidden' name='fax_caller_id_name' value='".escape($fax_caller_id_name)."'>\n";
+		echo "			<input type='hidden' name='fax_caller_id_number' value='".escape($fax_caller_id_number)."'>\n";
+		echo "			<input type='hidden' name='fax_extension' value='".escape($fax_extension)."'>\n";
+		echo "			<input type='hidden' name='id' value='".escape($fax_uuid)."'>\n";
 		echo "			<input type='hidden' name='action' value='send'>\n";
 		echo "			<input type='submit' name='submit' class='btn' id='preview' value='".$text['button-preview']."'>\n";
 		echo "			<input type='submit' name='submit' class='btn' id='upload' value='".$text['button-send']."'>\n";
