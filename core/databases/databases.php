@@ -117,17 +117,17 @@ else {
 		foreach($result as $row) {
 			$tr_link = "href='database_edit.php?id=".$row['database_uuid']."'";
 			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['database_driver']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['database_type']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['database_host']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['database_port']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'><a href='database_edit.php?id=".$row['database_uuid']."'>".$row['database_name']."</a>&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['database_username']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['database_path']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".$row['database_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['database_driver'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['database_type'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['database_host'])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['database_port'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'><a href='database_edit.php?id=".$row['database_uuid']."'>".escape($row['database_name'])."</a>&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['database_username'])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['database_path'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($row['database_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
-			echo 		"<a href='database_edit.php?id=".$row['database_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
-			echo 		"<a href='database_delete.php?id=".$row['database_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+			echo 		"<a href='database_edit.php?id=".escape($row['database_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+			echo 		"<a href='database_delete.php?id=".escape($row['database_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
