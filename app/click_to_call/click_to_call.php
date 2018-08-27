@@ -255,7 +255,7 @@
 	echo "<tr>\n";
 	echo "	<td class='vncellreq' width='40%'>".$text['label-src-caller-id-nam']."</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
-	echo "		<input name=\"src_cid_name\" value='$src_cid_name' class='formfld'>\n";
+	echo "		<input name=\"src_cid_name\" value='".escape($src_cid_name)."' class='formfld'>\n";
 	echo "		<br />\n";
 	echo "		".$text['desc-src-caller-id-nam']."\n";
 	echo "	</td>\n";
@@ -264,7 +264,7 @@
 	echo "<tr>\n";
 	echo "	<td class='vncellreq'>".$text['label-src-caller-id-num']."</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
-	echo "		<input name=\"src_cid_number\" value='$src_cid_number' class='formfld'>\n";
+	echo "		<input name=\"src_cid_number\" value='".escape($src_cid_number)."' class='formfld'>\n";
 	echo "		<br />\n";
 	echo "		".$text['desc-src-caller-id-num']."\n";
 	echo "	</td>\n";
@@ -273,7 +273,7 @@
 	echo "<tr>\n";
 	echo "	<td class='vncell' width='40%'>".$text['label-dest-caller-id-nam']."</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
-	echo "		<input name=\"dest_cid_name\" value='$dest_cid_name' class='formfld'>\n";
+	echo "		<input name=\"dest_cid_name\" value='".escape($dest_cid_name)."' class='formfld'>\n";
 	echo "		<br />\n";
 	echo "		".$text['desc-dest-caller-id-nam']."\n";
 	echo "	</td>\n";
@@ -282,7 +282,7 @@
 	echo "<tr>\n";
 	echo "	<td class='vncell'>".$text['label-dest-caller-id-num']."</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
-	echo "		<input name=\"dest_cid_number\" value='$dest_cid_number' class='formfld'>\n";
+	echo "		<input name=\"dest_cid_number\" value='".escape($dest_cid_number)."' class='formfld'>\n";
 	echo "		<br />\n";
 	echo "		".$text['desc-dest-caller-id-num']."\n";
 	echo "	</td>\n";
