@@ -276,7 +276,7 @@
 	$category = $row['contact_setting_category'];
 	$subcategory = $row['contact_setting_subcategory'];
 	$name = $row['contact_setting_name'];
-	echo "	<input class='formfld' type='text' name='contact_setting_value' maxlength='255' value=\"".$row['contact_setting_value']."\">\n";
+	echo "	<input class='formfld' type='text' name='contact_setting_value' maxlength='255' value=\"".escape($row['contact_setting_value'])."\">\n";
 	echo "<br />\n";
 	echo $text['description-contact_setting_value']."\n";
 	echo "</td>\n";
