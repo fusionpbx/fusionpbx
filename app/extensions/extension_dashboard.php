@@ -190,7 +190,7 @@
 
 		//add the primary key uuid
 			if (strlen($row['extension_uuid']) > 0) {
-				echo "				<input name='extensions[".$x."][extension_uuid]' type='hidden' value=\"".$row['extension_uuid']."\">\n";
+				echo "				<input name='extensions[".$x."][extension_uuid]' type='hidden' value=\"".escape($row['extension_uuid'])."\">\n";
 			}
 
 		//show the destination
@@ -208,10 +208,10 @@
 					foreach ($destinations as &$field) {
 						if(strlen($field['destination_caller_id_number']) > 0) {
 							if ($outbound_caller_id_number == $field['destination_caller_id_number']) {
-								echo "		<option value='".$field['destination_caller_id_name']."@".$field['destination_caller_id_number']."' selected='selected'>".$field['destination_caller_id_name']." ".$field['destination_caller_id_number']."</option>\n";
+								echo "		<option value='".escape($field['destination_caller_id_name'])."@".escape($field['destination_caller_id_number'])."' selected='selected'>".escape($field['destination_caller_id_name'])." ".escape($field['destination_caller_id_number'])."</option>\n";
 							}
 							else {
-								echo "		<option value='".$field['destination_caller_id_name']."@".$field['destination_caller_id_number']."'>".$field['destination_caller_id_name']." ".$field['destination_caller_id_number']."</option>\n";
+								echo "		<option value='".escape($field['destination_caller_id_name'])."@".escape($field['destination_caller_id_number'])."'>".escape($field['destination_caller_id_name'])." ".escape($field['destination_caller_id_number'])."</option>\n";
 							}
 						}
 					}
@@ -222,7 +222,7 @@
 			else {
 				//caller id name an number input text
 				echo "				<td class='row_style".$c." row_style_slim'>\n";
-				echo "					<input class='formfld' style='min-width: 50px; max-width: 100px;' type='text' name='extensions[".$x."][outbound_caller_id_name]' maxlength='255' value=\"".$row['outbound_caller_id_name']."\">\n";
+				echo "					<input class='formfld' style='min-width: 50px; max-width: 100px;' type='text' name='extensions[".$x."][outbound_caller_id_name]' maxlength='255' value=\"".escape($row['outbound_caller_id_name'])."\">\n";
 				echo "				</td>\n";
 				echo "				<td class='row_style".$c." row_style_slim'>\n";
 				echo "					<input class='formfld' style='min-width: 50px; max-width: 100px;' type='text' name='extensions[".$x."][outbound_caller_id_number]' maxlength='255' value=\"".$row['outbound_caller_id_number']."\">\n";
