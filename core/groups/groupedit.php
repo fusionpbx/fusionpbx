@@ -228,7 +228,7 @@
 	echo "		if (new_group_name != null) {\n";
 	echo "			new_group_desc = prompt('".$text['message-new_group_description']."');\n";
 	echo "			if (new_group_desc != null) {\n";
-	echo "				window.location = 'permissions_copy.php?group_name=".$group_name."&new_group_name=' + new_group_name + '&new_group_desc=' + new_group_desc;\n";
+	echo "				window.location = 'permissions_copy.php?group_name=".escape($group_name)."&new_group_name=' + new_group_name + '&new_group_desc=' + new_group_desc;\n";
 	echo "			}\n";
 	echo "		}\n";
 	echo "	}\n";
@@ -236,7 +236,7 @@
 
 //show the content
 	echo "<form name='login' method='post' action=''>\n";
-	echo "<input type='hidden' name='group_uuid' value='".$group_uuid."'>\n";
+	echo "<input type='hidden' name='group_uuid' value='".escape($group_uuid)."'>\n";
 
 	echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
@@ -260,8 +260,8 @@
 	echo 	$text['label-group_name']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' align='left' class='vtable'>\n";
-	echo "	<input type='hidden' name='group_name_previous' value=\"".$group_name."\">\n";
-	echo "  <input type='text' class='formfld' name='group_name' value=\"".$group_name."\">\n";
+	echo "	<input type='hidden' name='group_name_previous' value=\"".escape($group_name)."\">\n";
+	echo "  <input type='text' class='formfld' name='group_name' value=\"".escape($group_name)."\">\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -271,11 +271,11 @@
 		echo "	".$text['label-domain']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input type='hidden' name='domain_uuid_previous' value='".$domain_uuid."'>\n";
+		echo "	<input type='hidden' name='domain_uuid_previous' value='".escape($domain_uuid)."'>\n";
 		echo "	<select class='formfld' name='domain_uuid'>\n";
 		echo "	<option value='' ".((strlen($domain_uuid) == 0) ? "selected='selected'" : null).">".$text['option-global']."</option>\n";
 		foreach ($_SESSION['domains'] as $row) {
-			echo "<option value='".$row['domain_uuid']."' ".(($row['domain_uuid'] == $domain_uuid) ? "selected='selected'" : null).">".$row['domain_name']."</option>\n";
+			echo "<option value='".escape($row['domain_uuid'])."' ".(($row['domain_uuid'] == $domain_uuid) ? "selected='selected'" : null).">".escape($row['domain_name'])."</option>\n";
 		}
 		echo "	</select>\n";
 		echo "	<br />\n";
@@ -284,7 +284,7 @@
 		echo "</tr>\n";
 	}
 	else {
-		echo "<input type='hidden' name='domain_uuid' value='".$domain_uuid."'>";
+		echo "<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>";
 	}
 
 	echo "<tr>\n";
@@ -292,7 +292,7 @@
 	echo 	$text['label-group_description']."\n";
 	echo "</td>\n";
 	echo "<td align='left' class='vtable' valign='top'>\n";
-	echo "	<textarea name='group_description' class='formfld' style='width: 250px; height: 50px;'>".$group_description."</textarea>\n";
+	echo "	<textarea name='group_description' class='formfld' style='width: 250px; height: 50px;'>".escape($group_description)."</textarea>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
