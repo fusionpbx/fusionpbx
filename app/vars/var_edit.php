@@ -244,7 +244,7 @@
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='var_name' maxlength='255' value=\"$var_name\">\n";
+	echo "	<input class='formfld' type='text' name='var_name' maxlength='255' value=\"".escape($var_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-name']."\n";
 	echo "</td>\n";
@@ -255,7 +255,7 @@
 	echo "	".$text['label-value']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='var_value' maxlength='255' value=\"$var_value\">\n";
+	echo "	<input class='formfld' type='text' name='var_value' maxlength='255' value=\"".escape($var_value)."\">\n";
 	echo "<br />\n";
 	echo $text['description-value']."\n";
 	echo "</td>\n";
@@ -290,7 +290,7 @@
 	echo "	".$text['label-hostname']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='var_hostname' maxlength='255' value=\"$var_hostname\">\n";
+	echo "	<input class='formfld' type='text' name='var_hostname' maxlength='255' value=\"".escape($var_hostname)."\">\n";
 	echo "<br />\n";
 	echo $text['description-hostname']."\n";
 	echo "</td>\n";
@@ -351,7 +351,7 @@
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<textarea class='formfld' name='var_description' rows='17'>$var_description</textarea>\n";
+	echo "	<textarea class='formfld' name='var_description' rows='17'>".escape($var_description)."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
@@ -359,7 +359,7 @@
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='var_uuid' value='$var_uuid'>\n";
+		echo "		<input type='hidden' name='var_uuid' value='".escape($var_uuid)."'>\n";
 	}
 	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
