@@ -197,7 +197,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-category']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='device_setting_category' maxlength='255' value=\"$device_setting_category\">\n";
+	echo "	<input class='formfld' type='text' name='device_setting_category' maxlength='255' value=\"".escape($device_setting_category)."\">\n";
 	echo "<br />\n";
 	echo $text['description-category']."\n";
 	echo "</td>\n";
@@ -208,7 +208,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-subcategory']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='device_setting_subcategory' maxlength='255' value=\"$device_setting_subcategory\">\n";
+	echo "	<input class='formfld' type='text' name='device_setting_subcategory' maxlength='255' value=\"".escape($device_setting_subcategory)."\">\n";
 	echo "<br />\n";
 	echo $text['description-subcategory']."\n";
 	echo "</td>\n";
@@ -219,7 +219,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-type']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='device_setting_name' maxlength='255' value=\"$device_setting_name\">\n";
+	echo "	<input class='formfld' type='text' name='device_setting_name' maxlength='255' value=\"".escape($device_setting_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-type']."\n";
 	echo "</td>\n";
@@ -230,7 +230,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-value']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='device_setting_value' maxlength='255' value=\"$device_setting_value\">\n";
+	echo "	<input class='formfld' type='text' name='device_setting_value' maxlength='255' value=\"".escape($device_setting_value)."\">\n";
 	echo "<br />\n";
 	echo $text['description-value']."\n";
 	echo "</td>\n";
@@ -266,7 +266,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='device_setting_description' maxlength='255' value=\"$device_setting_description\">\n";
+	echo "	<input class='formfld' type='text' name='device_setting_description' maxlength='255' value=\"".escape($device_setting_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
