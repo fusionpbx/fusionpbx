@@ -188,7 +188,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['title-ring_group_destination']."</b></td>\n";
 	echo "<td width='70%' align='right'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='ring_group_edit.php?id=$ring_group_uuid'\" value='".$text['button-back']."'>";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='ring_group_edit.php?id=".escape($ring_group_uuid)."'\" value='".$text['button-back']."'>";
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -198,7 +198,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-destination_number']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='destination_number' maxlength='255' value=\"$destination_number\">\n";
+	echo "	<input class='formfld' type='text' name='destination_number' maxlength='255' value=\"".escape($destination_number)."\">\n";
 	echo "<br />\n";
 	echo $text['description-destination_number']."\n";
 	echo "</td>\n";
@@ -210,7 +210,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	destination_select('destination_delay', $destination_delay, '0');
-	//echo "  <input class='formfld' type='text' name='destination_delay' maxlength='255' value='$destination_delay'>\n";
+	//echo "  <input class='formfld' type='text' name='destination_delay' maxlength='255' value='".escape($destination_delay)."'>\n";
 	echo "<br />\n";
 	echo $text['description-destination_delay']."\n";
 	echo "</td>\n";
@@ -222,7 +222,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	destination_select('destination_timeout', $destination_timeout, '30');
-	//echo "  <input class='formfld' type='text' name='destination_timeout' maxlength='255' value='$destination_timeout'>\n";
+	//echo "  <input class='formfld' type='text' name='destination_timeout' maxlength='255' value='".escape($destination_timeout)."'>\n";
 	echo "<br />\n";
 	echo $text['description-destination_timeout']."\n";
 	echo "</td>\n";
@@ -256,9 +256,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
-	echo "			<input type='hidden' name='ring_group_uuid' value='$ring_group_uuid'>\n";
+	echo "			<input type='hidden' name='ring_group_uuid' value='".escape($ring_group_uuid)."'>\n";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='ring_group_destination_uuid' value='$ring_group_destination_uuid'>\n";
+		echo "		<input type='hidden' name='ring_group_destination_uuid' value='".escape($ring_group_destination_uuid)."'>\n";
 	}
 	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
