@@ -184,7 +184,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap'><b>Voicemail Messages</b></td>\n";
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='voicemail_edit.php?id=$voicemail_uuid'\" value='Back'></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='voicemail_edit.php?id=".escape($voicemail_uuid)."'\" value='Back'></td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
@@ -192,7 +192,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	Created Epoch\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='created_epoch' maxlength='255' value='$created_epoch'>\n";
+	echo "  <input class='formfld' type='text' name='created_epoch' maxlength='255' value='".escape($created_epoch)."'>\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
@@ -203,7 +203,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	Read Epoch\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='read_epoch' maxlength='255' value='$read_epoch'>\n";
+	echo "  <input class='formfld' type='text' name='read_epoch' maxlength='255' value='".escape($read_epoch)."'>\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
@@ -214,7 +214,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	Caller ID Name\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='caller_id_name' maxlength='255' value=\"$caller_id_name\">\n";
+	echo "	<input class='formfld' type='text' name='caller_id_name' maxlength='255' value=\"".escape($caller_id_name)."\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
@@ -225,7 +225,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	Caller ID Number\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='caller_id_number' maxlength='255' value=\"$caller_id_number\">\n";
+	echo "	<input class='formfld' type='text' name='caller_id_number' maxlength='255' value=\"".escape($caller_id_number)."\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
@@ -236,7 +236,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	Length\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='message_length' maxlength='255' value='$message_length'>\n";
+	echo "  <input class='formfld' type='text' name='message_length' maxlength='255' value='".escape($message_length)."'>\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
@@ -247,7 +247,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	Status\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='message_status' maxlength='255' value=\"$message_status\">\n";
+	echo "	<input class='formfld' type='text' name='message_status' maxlength='255' value=\"".escape($message_status)."\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
@@ -258,16 +258,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	Priority\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='message_priority' maxlength='255' value=\"$message_priority\">\n";
+	echo "	<input class='formfld' type='text' name='message_priority' maxlength='255' value=\"".escape($message_priority)."\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
-	echo "			<input type='hidden' name='voicemail_uuid' value='$voicemail_uuid'>\n";
+	echo "			<input type='hidden' name='voicemail_uuid' value='".escape($voicemail_uuid)."'>\n";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='voicemail_message_uuid' value='$voicemail_message_uuid'>\n";
+		echo "		<input type='hidden' name='voicemail_message_uuid' value='".escape($voicemail_message_uuid)."'>\n";
 	}
 	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='Save'>\n";
