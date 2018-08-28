@@ -312,7 +312,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-host']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='database_host' maxlength='255' value=\"$database_host\">\n";
+	echo "	<input class='formfld' type='text' name='database_host' maxlength='255' value=\"".escape($database_host)."\">\n";
 	echo "<br />\n";
 	echo $text['description-host']."\n";
 	echo "</td>\n";
@@ -323,7 +323,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-port']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='database_port' maxlength='255' value=\"$database_port\">\n";
+	echo "	<input class='formfld' type='text' name='database_port' maxlength='255' value=\"".escape($database_port)."\">\n";
 	echo "<br />\n";
 	echo $text['description-port']."\n";
 	echo "</td>\n";
@@ -334,7 +334,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='database_name' maxlength='255' value=\"$database_name\">\n";
+	echo "	<input class='formfld' type='text' name='database_name' maxlength='255' value=\"".escape($database_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-name']."\n";
 	echo "</td>\n";
@@ -345,7 +345,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-username']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='database_username' maxlength='255' value=\"$database_username\">\n";
+	echo "	<input class='formfld' type='text' name='database_username' maxlength='255' value=\"".escape($database_username)."\">\n";
 	echo "<br />\n";
 	echo $text['description-username']."\n";
 	echo "</td>\n";
@@ -356,7 +356,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-password']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='database_password' maxlength='255' value=\"$database_password\">\n";
+	echo "	<input class='formfld' type='text' name='database_password' maxlength='255' value=\"".escape($database_password)."\">\n";
 	echo "<br />\n";
 	echo $text['description-password']."\n";
 	echo "</td>\n";
@@ -367,7 +367,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-path']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='database_path' maxlength='255' value=\"$database_path\">\n";
+	echo "	<input class='formfld' type='text' name='database_path' maxlength='255' value=\"".escape($database_path)."\">\n";
 	echo "<br />\n";
 	echo $text['description-path']."\n";
 	echo "</td>\n";
@@ -378,7 +378,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='database_description' maxlength='255' value=\"$database_description\">\n";
+	echo "	<input class='formfld' type='text' name='database_description' maxlength='255' value=\"".escape($database_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
@@ -386,7 +386,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='database_uuid' value='$database_uuid'>\n";
+		echo "		<input type='hidden' name='database_uuid' value='".escape($database_uuid)."'>\n";
 	}
 	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
