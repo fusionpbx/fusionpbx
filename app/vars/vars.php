@@ -161,10 +161,10 @@
 			echo "	<td valign='top' align='left' class='row_stylebg'>".$var_description."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>";
 			if (permission_exists('var_edit')) {
-				echo "<a href='var_edit.php?id=".$row['var_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='var_edit.php?id=".escape($row['var_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('var_delete')) {
-				echo "<a href='var_delete.php?id=".$row['var_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='var_delete.php?id=".escape($row['var_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
