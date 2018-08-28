@@ -197,7 +197,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='menu_name' maxlength='255' value=\"$menu_name\">\n";
+	echo "	<input class='formfld' type='text' name='menu_name' maxlength='255' value=\"".escape($menu_name)."\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo $text['description-name']."</td>\n";
@@ -208,7 +208,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-language']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='menu_language' maxlength='255' value=\"$menu_language\">\n";
+	echo "	<input class='formfld' type='text' name='menu_language' maxlength='255' value=\"".escape($menu_language)."\">\n";
 	echo "<br />\n";
 	echo $text['description-language']."\n";
 	echo "</td>\n";
@@ -219,7 +219,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='menu_description' maxlength='255' value=\"$menu_description\">\n";
+	echo "	<input class='formfld' type='text' name='menu_description' maxlength='255' value=\"".escape($menu_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
@@ -227,7 +227,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='menu_uuid' value='$menu_uuid'>\n";
+		echo "		<input type='hidden' name='menu_uuid' value='".escape($menu_uuid)."'>\n";
 	}
 	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
