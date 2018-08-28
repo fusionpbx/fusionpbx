@@ -920,7 +920,7 @@ echo "<td width='20%' class='vncellreq' valign='top' align='left' nowrap>\n";
 echo "    ".$text['label-name']."\n";
 echo "</td>\n";
 echo "<td width='80%' class='vtable' align='left'>\n";
-echo "    <input class='formfld' type='text' name='dialplan_name' maxlength='255' value=\"".$dialplan_name."\">\n";
+echo "    <input class='formfld' type='text' name='dialplan_name' maxlength='255' value=\"".escape($dialplan_name)."\">\n";
 echo "	<br />\n";
 echo "	".$text['description-name']."\n";
 echo "<br />\n";
@@ -933,7 +933,7 @@ echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 echo "	".$text['label-extension']."\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
-echo "	<input class='formfld' type='text' name='dialplan_number' id='dialplan_number' maxlength='255' value=\"".$dialplan_number."\">\n";
+echo "	<input class='formfld' type='text' name='dialplan_number' id='dialplan_number' maxlength='255' value=\"".escape($dialplan_number)."\">\n";
 echo "	<br />\n";
 echo "	".$text['description-extension']."<br />\n";
 echo "</td>\n";
@@ -1197,10 +1197,10 @@ if ($action == 'update') {
 		}
 		foreach ($_SESSION['domains'] as $row) {
 			if ($row['domain_uuid'] == $domain_uuid) {
-				echo "    <option value='".$row['domain_uuid']."' selected='selected'>".$row['domain_name']."</option>\n";
+				echo "    <option value='".escape($row['domain_uuid'])."' selected='selected'>".escape($row['domain_name'])."</option>\n";
 			}
 			else {
-				echo "    <option value='".$row['domain_uuid']."'>".$row['domain_name']."</option>\n";
+				echo "    <option value='".escape($row['domain_uuid'])."'>".escape($row['domain_name'])."</option>\n";
 			}
 		}
 		echo "    </select>\n";
@@ -1228,7 +1228,7 @@ if ($action == 'update') {
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td colspan='4' class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='dialplan_description' maxlength='255' value=\"".$dialplan_description."\">\n";
+	echo "	<input class='formfld' type='text' name='dialplan_description' maxlength='255' value=\"".escape($dialplan_description)."\">\n";
 	echo "<br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -1238,7 +1238,7 @@ if ($action == 'update') {
 
 	echo "<div align='right'>\n";
 	if ($action == "update") {
-		echo "	<input type='hidden' name='dialplan_uuid' value='".$dialplan_uuid."'>\n";
+		echo "	<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	}
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</div>";
