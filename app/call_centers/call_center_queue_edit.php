@@ -592,7 +592,7 @@
 				if ($row['call_center_agent_uuid'] == $field['call_center_agent_uuid']) {
 					$selected = "selected=\"selected\"";
 				}
-				echo "				<option value=\"".$row['call_center_agent_uuid']."\" $selected>".escape($row['agent_name'])."</option>\n";
+				echo "				<option value=\"".escape($row['call_center_agent_uuid'])."\" $selected>".escape($row['agent_name'])."</option>\n";
 			}
 			echo "				</select>";
 			echo "		</td>\n";
