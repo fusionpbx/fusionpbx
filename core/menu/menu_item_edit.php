@@ -394,7 +394,7 @@ else {
 	echo "	</b>\n";
 	echo "</td>\n";
 	echo "<td width='70%' align='right' valign='top'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='menu_edit.php?id=".$menu_uuid."'\" value='".$text['button-back']."'>";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='menu_edit.php?id=".escape($menu_uuid)."'\" value='".$text['button-back']."'>";
 	echo "	<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
 	echo "	<br><br>";
 	echo "</td>\n";
@@ -402,12 +402,12 @@ else {
 
 	echo "	<tr>";
 	echo "		<td class='vncellreq'>".$text['label-title']."</td>";
-	echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_title' value='$menu_item_title'></td>";
+	echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_title' value='".escape($menu_item_title)."'></td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
 	echo "		<td class='vncellreq'>".$text['label-link']."</td>";
-	echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_link' value='$menu_item_link'></td>";
+	echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_link' value='".escape($menu_item_link)."'></td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
@@ -459,7 +459,7 @@ else {
 		}
 	}
 	else {
-		echo "		<input type='text' class='formfld' name='menu_item_icon' value='".$menu_item_icon."'>";
+		echo "		<input type='text' class='formfld' name='menu_item_icon' value='".escape($menu_item_icon)."'>";
 	}
 	echo "		</td>";
 	echo "	</tr>";
@@ -471,10 +471,10 @@ else {
 	echo "<option value=\"\"></option>\n";
 	foreach($menu_items as $field) {
 			if ($menu_item_parent_uuid == $field['menu_item_uuid']) {
-				echo "<option value='".$field['menu_item_uuid']."' selected>".$field['menu_item_title']."</option>\n";
+				echo "<option value='".escape($field['menu_item_uuid'])."' selected>".escape($field['menu_item_title'])."</option>\n";
 			}
 			else {
-				echo "<option value='".$field['menu_item_uuid']."'>".$field['menu_item_title']."</option>\n";
+				echo "<option value='".escape($field['menu_item_uuid'])."'>".escape($field['menu_item_title'])."</option>\n";
 			}
 	}
 	echo "</select>";
@@ -495,7 +495,7 @@ else {
 				echo "	</td>\n";
 				if (permission_exists('group_member_delete') || if_group("superadmin")) {
 					echo "	<td class='list_control_icons' style='width: 25px;'>";
-					echo 		"<a href='menu_item_edit.php?id=".$field['menu_uuid']."&menu_item_group_uuid=".$field['menu_item_group_uuid']."&menu_item_uuid=".$menu_item_uuid."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+					echo 		"<a href='menu_item_edit.php?id=".escape($field['menu_uuid'])."&menu_item_group_uuid=".escape($field['menu_item_group_uuid'])."&menu_item_uuid=".escape($menu_item_uuid)."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 					echo "	</td>";
 				}
 				echo "</tr>\n";
@@ -548,14 +548,14 @@ else {
 		if ($menu_item_parent_uuid == "") {
 			echo "	<tr>";
 			echo "		<td class='vncell'>".$text['label-menu_order']."</td>";
-			echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_order' value='$menu_item_order'></td>";
+			echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_order' value='".escape($menu_item_order)."'></td>";
 			echo "	</tr>";
 		}
 	}
 
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-description']."</td>";
-	echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_description' value='$menu_item_description'></td>";
+	echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_description' value='".escape($menu_item_description)."'></td>";
 	echo "	</tr>";
 
 	if (permission_exists('menu_add') || permission_exists('menu_edit')) {
@@ -567,10 +567,10 @@ else {
 		echo "			</td>\n";
 		echo "			<td align='right'>";
 		if ($action == "update") {
-			echo "			<input type='hidden' name='menu_item_uuid' value='$menu_item_uuid'>";
+			echo "			<input type='hidden' name='menu_item_uuid' value='".escape($menu_item_uuid)."'>";
 		}
-		echo "				<input type='hidden' name='menu_uuid' value='$menu_uuid'>";
-		echo "				<input type='hidden' name='menu_item_uuid' value='$menu_item_uuid'>";
+		echo "				<input type='hidden' name='menu_uuid' value='".escape($menu_uuid)."'>";
+		echo "				<input type='hidden' name='menu_item_uuid' value='".escape($menu_item_uuid)."'>";
 		echo "				<br>";
 		echo "				<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
 		echo "			</td>";
