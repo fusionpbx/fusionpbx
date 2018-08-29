@@ -161,7 +161,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<br><br>";
 	echo "</td>\n";
 	echo "<td width='70%' align='right' nowrap='nowrap' valign='top'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='voicemail_edit.php?id=".$voicemail_uuid."'\" value='".$text['button-back']."'>";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='voicemail_edit.php?id=".escape($voicemail_uuid)."'\" value='".$text['button-back']."'>";
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -171,7 +171,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-option']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='voicemail_option_digits' maxlength='255' value='$voicemail_option_digits'>\n";
+	echo "  <input class='formfld' type='text' name='voicemail_option_digits' maxlength='255' value='".escape($voicemail_option_digits)."'>\n";
 	echo "<br />\n";
 	echo $text['description-option']."\n";
 	echo "</td>\n";
@@ -226,15 +226,15 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='voicemail_option_description' maxlength='255' value=\"".$voicemail_option_description."\">\n";
+	echo "	<input class='formfld' type='text' name='voicemail_option_description' maxlength='255' value=\"".escape($voicemail_option_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
-	echo "			<input type='hidden' name='voicemail_uuid' value='$voicemail_uuid'>\n";
-	echo "			<input type='hidden' name='voicemail_option_uuid' value='$voicemail_option_uuid'>\n";
+	echo "			<input type='hidden' name='voicemail_uuid' value='".escape($voicemail_uuid)."'>\n";
+	echo "			<input type='hidden' name='voicemail_option_uuid' value='".escape($voicemail_option_uuid)."'>\n";
 	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
