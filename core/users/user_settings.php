@@ -234,13 +234,13 @@
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center;'>\n";
 			echo "		<a href='?user_id=".$row['user_uuid']."&id[]=".$row['user_setting_uuid']."&enabled=".(($row['user_setting_enabled'] == 'true') ? 'false' : 'true')."'>".$text['label-'.$row['user_setting_enabled']]."</a>\n";
 			echo "	</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".$row['user_setting_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($row['user_setting_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('user_setting_edit')) {
-				echo "<a href='user_setting_edit.php?user_uuid=".$row['user_uuid']."&id=".$row['user_setting_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='user_setting_edit.php?user_uuid=".escape($row['user_uuid'])."&id=".escape($row['user_setting_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('user_setting_delete')) {
-				echo "<a href='user_setting_delete.php?user_uuid=".$row['user_uuid']."&id[]=".$row['user_setting_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='user_setting_delete.php?user_uuid=".escape($row['user_uuid'])."&id[]=".escape($row['user_setting_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
