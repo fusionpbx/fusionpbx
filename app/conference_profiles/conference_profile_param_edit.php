@@ -156,7 +156,7 @@
 	echo "	".$text['label-profile_param_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='profile_param_name' maxlength='255' value=\"$profile_param_name\">\n";
+	echo "	<input class='formfld' type='text' name='profile_param_name' maxlength='255' value=\"".escape($profile_param_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-profile_param_name']."\n";
 	echo "</td>\n";
@@ -167,7 +167,7 @@
 	echo "	".$text['label-profile_param_value']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='profile_param_value' maxlength='255' value=\"$profile_param_value\">\n";
+	echo "	<input class='formfld' type='text' name='profile_param_value' maxlength='255' value=\"".escape($profile_param_value)."\">\n";
 	echo "<br />\n";
 	echo $text['description-profile_param_value']."\n";
 	echo "</td>\n";
@@ -203,7 +203,7 @@
 	echo "	".$text['label-profile_param_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='profile_param_description' maxlength='255' value=\"$profile_param_description\">\n";
+	echo "	<input class='formfld' type='text' name='profile_param_description' maxlength='255' value=\"".escape($profile_param_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-profile_param_description']."\n";
 	echo "</td>\n";
