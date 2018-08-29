@@ -841,7 +841,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 			echo "<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>";
 		}
 
-		if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/api/app_config.php')) {
+		if (permission_exists('api_key')) {
 			echo "	<tr>";
 			echo "		<td class='vncell' valign='top'>".$text['label-api_key']."</td>";
 			echo "		<td class='vtable'>\n";
