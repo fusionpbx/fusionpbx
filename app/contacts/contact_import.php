@@ -351,16 +351,16 @@
 				foreach($results as $row) {
 					echo "<tr>\n";
 					echo "	<td class='vncell' valign='top' align='left'>\n";
-					echo 		$row['FirstName'] ." ".$row['LastName'];
+					echo 		escape($row['FirstName'])." ".escape($row['LastName']);
 					echo "	</td>\n";
 					echo "	<td class='vncell' valign='top' align='left'>\n";
-					echo 	$row['Company']."&nbsp;\n";
+					echo 	escape($row['Company'])."&nbsp;\n";
 					echo "	</td>\n";
 					echo "	<td class='vncell' valign='top' align='left'>\n";
-					echo 		$row['EmailAddress']."&nbsp;\n";
+					echo 		escape($row['EmailAddress'])."&nbsp;\n";
 					echo "	</td>\n";
 					echo "	<td class='vncell' valign='top' align='left'>\n";
-					echo 		$row['Web Page']."&nbsp;\n";
+					echo 		escape($row['Web Page'])."&nbsp;\n";
 					echo "	</td>\n";
 					echo "</tr>\n";
 				}
