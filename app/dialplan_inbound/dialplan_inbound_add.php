@@ -488,7 +488,7 @@
 	echo "    ".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='dialplan_name' maxlength='255' value=\"$dialplan_name\">\n";
+	echo "    <input class='formfld' type='text' name='dialplan_name' maxlength='255' value=\"".escape($dialplan_name)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-name']."<br />\n";
 	echo "</td>\n";
@@ -541,7 +541,7 @@
 		echo "    <select class='formfld' name='condition_field_1' id='condition_field_1' onchange='changeToInput_condition_field_1(this);this.style.visibility = \"hidden\";'>\n";
 		echo "    <option value=''></option>\n";
 		if (strlen($condition_field_1) > 0) {
-			echo "    <option value='$condition_field_1' selected>$condition_field_1</option>\n";
+			echo "    <option value='".escape($condition_field_1)."' selected>".escape($condition_field_1)."</option>\n";
 		}
 		echo "    <option value='context'>".$text['option-context']."</option>\n";
 		echo "    <option value='username'>".$text['option-username']."</option>\n";
@@ -562,7 +562,7 @@
 		echo "	</td>\n";
 
 		echo "	<td>\n";
-		echo "		&nbsp;<input class='formfld' type='text' name='condition_expression_1' maxlength='255' value=\"$condition_expression_1\">\n";
+		echo "		&nbsp;<input class='formfld' type='text' name='condition_expression_1' maxlength='255' value=\"".escape($condition_expression_1)."\">\n";
 		echo "	</td>\n";
 		echo "	</tr>\n";
 		echo "	</table>\n";
@@ -616,7 +616,7 @@
 		echo "    <select class='formfld' name='condition_field_2' id='condition_field_2' onchange='changeToInput_condition_field_2(this);this.style.visibility = \"hidden\";'>\n";
 		echo "    <option value=''></option>\n";
 		if (strlen($condition_field_2) > 0) {
-			echo "    <option value='$condition_field_2' selected>$condition_field_2</option>\n";
+			echo "    <option value='".escape($condition_field_2)."' selected>".escape($condition_field_2)."</option>\n";
 		}
 		echo "    <option value='context'>".$text['option-context']."</option>\n";
 		echo "    <option value='username'>".$text['option-username']."</option>\n";
@@ -638,7 +638,7 @@
 		//echo "	<td align='left'>&nbsp;&nbsp;&nbsp;".$text['label-expression']."\n";
 		//echo "	</td>\n";
 		echo "	<td>\n";
-		echo "		&nbsp;<input class='formfld' type='text' name='condition_expression_2' maxlength='255' value=\"$condition_expression_2\">\n";
+		echo "		&nbsp;<input class='formfld' type='text' name='condition_expression_2' maxlength='255' value=\"".escape($condition_expression_2)."\">\n";
 		echo "	</td>\n";
 		echo "	</tr>\n";
 		echo "	</table>\n";
@@ -665,10 +665,10 @@
 			echo "	<option></option>\n";
 			foreach ($result as &$row) {
 				if (strlen($row["dialplan_uuid"]) == 0) {
-					echo "		<option value='".$row["destination_uuid"]."' style=\"font-weight:bold;\">".$row["destination_number"]." ".$row["destination_description"]."</option>\n";
+					echo "		<option value='".escape($row["destination_uuid"])."' style=\"font-weight:bold;\">".escape($row["destination_number"])." ".escape($row["destination_description"])."</option>\n";
 				}
 				else {
-					echo "		<option value='".$row["destination_uuid"]."'>".$row["destination_number"]." ".$row["destination_description"]."</option>\n";
+					echo "		<option value='".escape($row["destination_uuid"])."'>".escape($row["destination_number"])." ".escape($row["destination_description"])."</option>\n";
 				}
 			}
 			echo "		</select>\n";
@@ -717,7 +717,7 @@
 	echo "    ".$text['label-limit']."\n";
 	echo "</td>\n";
 	echo "<td colspan='4' class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='limit' maxlength='255' value=\"$limit\">\n";
+	echo "    <input class='formfld' type='text' name='limit' maxlength='255' value=\"".escape($limit)."\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
@@ -728,7 +728,7 @@
 	echo "    ".$text['label-caller-id-number-prefix']."\n";
 	echo "</td>\n";
 	echo "<td colspan='4' class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='caller_id_outbound_prefix' maxlength='255' value=\"$limit\">\n";
+	echo "    <input class='formfld' type='text' name='caller_id_outbound_prefix' maxlength='255' value=\"".escape($limit)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-caller-id-number-prefix']."<br />\n";
 	echo "\n";
@@ -786,7 +786,7 @@
 	echo "    ".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td colspan='4' class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='dialplan_description' maxlength='255' value=\"$dialplan_description\">\n";
+	echo "    <input class='formfld' type='text' name='dialplan_description' maxlength='255' value=\"".escape($dialplan_description)."\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
@@ -795,7 +795,7 @@
 	echo "<tr>\n";
 	echo "	<td colspan='5' align='right'>\n";
 	if ($action == "update" && permission_exists("inbound_route_edit")) {
-		echo "	<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
+		echo "	<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	}
 	echo "		<br>";
 	echo "		<input type='submit' class='btn' value='".$text['button-save']."'>\n";
