@@ -170,7 +170,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-pin_number']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='pin_number' maxlength='255' value=\"$pin_number\">\n";
+	echo "	<input class='formfld' type='text' name='pin_number' maxlength='255' value=\"".escape($pin_number)."\">\n";
 	echo "<br />\n";
 	echo $text['description-pin_number']."\n";
 	echo "</td>\n";
@@ -181,7 +181,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-accountcode']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='accountcode' maxlength='255' value=\"$accountcode\">\n";
+	echo "	<input class='formfld' type='text' name='accountcode' maxlength='255' value=\"".escape($accountcode)."\">\n";
 	echo "<br />\n";
 	echo $text['description-accountcode']."\n";
 	echo "</td>\n";
@@ -217,7 +217,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='description' maxlength='255' value=\"$description\">\n";
+	echo "	<input class='formfld' type='text' name='description' maxlength='255' value=\"".escape($description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
@@ -225,7 +225,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='pin_number_uuid' value='$pin_number_uuid'>\n";
+		echo "				<input type='hidden' name='pin_number_uuid' value='".escape($pin_number_uuid)."'>\n";
 	}
 	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
