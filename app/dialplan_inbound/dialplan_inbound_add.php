@@ -717,7 +717,7 @@
 	echo "    ".$text['label-limit']."\n";
 	echo "</td>\n";
 	echo "<td colspan='4' class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='limit' maxlength='255' value=\"".escape($limit).""\">\n";
+	echo "    <input class='formfld' type='text' name='limit' maxlength='255' value=\"".escape($limit)."\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
