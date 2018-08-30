@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -160,20 +160,42 @@
 
 //stream the file
 	if (is_uuid($_GET['id'])) {
-		//header("Content-Type: image/png");
-		$image = shell_exec('qrencode -o - -s 6 -m 5 "'.$xml.'"');
+		$include_path = get_include_path();
+		$xml = html_entity_decode( $xml, ENT_QUOTES, 'UTF-8' );
+		set_include_path ($_SERVER["PROJECT_ROOT"].'/resources/qr_code');
+		
+		require_once 'QRErrorCorrectLevel.php';
+		require_once 'QRCode.php';
+		require_once 'QRCodeImage.php';
+  
+		try {
+			$code = new QRCode (- 1, QRErrorCorrectLevel::H);
+			$code->addData($xml);
+			$code->make();
+			
+			$img = new QRCodeImage ($code, $width=420, $height=420, $quality=50);
+			$img->draw();
+			$image = $img->getImage();
+			$img->finish();
+			
+			//if ($image) {
+			//  header ( 'Content-Type: image/jpeg' );
+			//  header ( 'Content-Length: ' . strlen ( $imgdata ) );
+			//  echo $image;
+			//}
+		}
+		catch (Exception $error) {
+			echo $error;
+		}
 	}
 
 //html image
 	if (is_uuid($_GET['id'])) {
-		echo "<img src=\"data:image/png;base64,". base64_encode($image) ."\">\n";
+		echo "<img src=\"data:image/jpeg;base64,". base64_encode($image) ."\">\n";
 	}
 
-//save to a file
-	//$output = '/tmp/'.$row['user_id'].'.'.$row['server_address'].'.png';
-	//$result = shell_exec('qrencode -o '.$output.' -m 5 "'.$xml.'"');
-
 //add the footer
+	set_include_path ($include_path);
 	require_once "resources/footer.php";
 
 ?>
