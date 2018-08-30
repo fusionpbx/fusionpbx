@@ -777,7 +777,7 @@ function type_onchange(dialplan_detail_type) {
 				echo "<option value=\"".$row['gateway_uuid'].":".escape($row['gateway'])."\" $onchange selected=\"selected\">".escape($row['gateway'])."</option>\n";
 			}
 			else {
-				echo "<option value=\"".$row['gateway_uuid'].":".escape($row['gateway'])."\">".escape($row['gateway']."</option>\n";
+				echo "<option value=\"".$row['gateway_uuid'].":".escape($row['gateway'])."\">".escape($row['gateway'])."</option>\n";
 			}
 		}
 		$previous_domain_uuid = $row['domain_uuid'];
