@@ -240,7 +240,7 @@
 	echo "	".$text['label-contact_setting_category']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='contact_setting_category' maxlength='255' value=\"".$contact_setting_category."\" required='required'>\n";
+	echo "	<input class='formfld' type='text' name='contact_setting_category' maxlength='255' value=\"".escape($contact_setting_category)."\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-contact_setting_category']."\n";
 	echo "</td>\n";
@@ -251,7 +251,7 @@
 	echo "	".$text['label-contact_setting_subcategory']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='contact_setting_subcategory' maxlength='255' value=\"".$contact_setting_subcategory."\">\n";
+	echo "	<input class='formfld' type='text' name='contact_setting_subcategory' maxlength='255' value=\"".escape($contact_setting_subcategory)."\">\n";
 	echo "<br />\n";
 	echo $text['description-contact_setting_subcategory']."\n";
 	echo "</td>\n";
@@ -262,7 +262,7 @@
 	echo "	".$text['label-contact_setting_type']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='contact_setting_name' maxlength='255' value=\"".$contact_setting_name."\">\n";
+	echo "	<input class='formfld' type='text' name='contact_setting_name' maxlength='255' value=\"".escape($contact_setting_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-contact_setting_type']."\n";
 	echo "</td>\n";
@@ -339,7 +339,7 @@
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='contact_setting_description' maxlength='255' value=\"".$contact_setting_description."\">\n";
+	echo "	<input class='formfld' type='text' name='contact_setting_description' maxlength='255' value=\"".escape($contact_setting_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
