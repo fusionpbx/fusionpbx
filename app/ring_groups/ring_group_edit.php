@@ -787,7 +787,7 @@
 	echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
 	echo "			<option value=\"\"></option>\n";
 	foreach($users as $field) {
-		echo "			<option value='".$field['user_uuid']."'>".$field['username']."</option>\n";
+		echo "			<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
 	}
 	echo "			</select>";
 	echo "			<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
