@@ -64,6 +64,13 @@ if (!class_exists('messages')) {
 			}
 		} //end the delete function
 
+		
+		/**
+		 * add messages
+		 */
+		public function add() {
+
+		} //end the add function
 	}  //end the class
 }
 
