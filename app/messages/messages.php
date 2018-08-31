@@ -88,12 +88,13 @@
 
 //prepare to page the results
 	$sql = "select count(message_uuid) as num_rows from v_messages ";
+	$sql .= "where user_uuid = '".$_SESSION['user_uuid']."' ";
 	if ($_GET['show'] == "all" && permission_exists('message_all')) {
 		if (isset($sql_search)) {
-			$sql .= "where ".$sql_search;
+			$sql .= "and ".$sql_search;
 		}
 	} else {
-		$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
+		$sql .= "and (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
 		if (isset($sql_search)) {
 			$sql .= "and ".$sql_search;
 		}
@@ -123,12 +124,13 @@
 
 //get the list
 	$sql = "select * from v_messages ";
+	$sql .= "where user_uuid = '".$_SESSION['user_uuid']."' ";
 	if ($_GET['show'] == "all" && permission_exists('message_all')) {
 		if (isset($sql_search)) {
-			$sql .= "where ".$sql_search;
+			$sql .= "and ".$sql_search;
 		}
 	} else {
-		$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
+		$sql .= "and (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
 		if (isset($sql_search)) {
 				$sql .= "and ".$sql_search;
 		}
