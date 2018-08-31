@@ -230,6 +230,12 @@
 	else {
 		echo "		<option value='sms'>".$text['label-sms']."</option>\n";
 	}
+	if ($message_type == "mms") {
+		echo "		<option value='mms' selected='selected'>".$text['label-mms']."</option>\n";
+	}
+	else {
+		echo "		<option value='mms'>".$text['label-mms']."</option>\n";
+	}
 	if ($message_type == "chat") {
 		echo "		<option value='chat' selected='selected'>".$text['label-chat']."</option>\n";
 	}
