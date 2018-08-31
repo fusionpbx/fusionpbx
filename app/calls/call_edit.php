@@ -446,10 +446,10 @@
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach ($result as &$row) {
 		if (strlen($number_alias) == 0) {
-			echo "		\"".$row["extension"]."\",\n";
+			echo "		\"".escape($row["extension"])."\",\n";
 		}
 		else {
-			echo "		\"".$row["number_alias"]."\",\n";
+			echo "		\"".escape($row["number_alias"])."\",\n";
 		}
 	}
 	echo "	];\n";
