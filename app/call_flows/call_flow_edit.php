@@ -376,7 +376,7 @@
 					$recording_filename = $row["recording_filename"];
 					if ($var == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename && strlen($var) > 0) {
 						$tmp_selected = true;
-						echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename."' selected='selected'>".$recording_name."</option>\n";
+						echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
 					}
 					else if ($var == $recording_filename && strlen($var) > 0) {
 						$tmp_selected = true;
@@ -510,7 +510,7 @@
 	echo "	<option value=''></option>\n";
 	if ($call_flow_status == "true") {
 		if (strlen($call_flow_label) > 0) {
-			echo "	<option value='true' selected='selected'>$call_flow_label</option>\n";
+			echo "	<option value='true' selected='selected'>".escape($call_flow_label)."</option>\n";
 		}
 		else {
 			echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
@@ -518,7 +518,7 @@
 	}
 	else {
 		if (strlen($call_flow_label) > 0) {
-			echo "	<option value='true'>$call_flow_label</option>\n";
+			echo "	<option value='true'>".escape($call_flow_label)."</option>\n";
 		}
 		else {
 			echo "	<option value='true'>".$text['label-true']."</option>\n";
@@ -526,7 +526,7 @@
 	}
 	if ($call_flow_status == "false") {
 		if (strlen($call_flow_alternate_label) > 0) {
-			echo "	<option value='false' selected='selected'>$call_flow_alternate_label</option>\n";
+			echo "	<option value='false' selected='selected'>".escape($call_flow_alternate_label)."</option>\n";
 		}
 		else {
 			echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
@@ -534,7 +534,7 @@
 	}
 	else {
 		if (strlen($call_flow_alternate_label) > 0) {
-			echo "	<option value='false'>$call_flow_alternate_label</option>\n";
+			echo "	<option value='false'>".escape($call_flow_alternate_label)."</option>\n";
 		}
 		else {
 			echo "	<option value='false'>".$text['label-false']."</option>\n";
