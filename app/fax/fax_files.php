@@ -221,10 +221,10 @@
 	echo "	<tr>\n";
 	echo "		<td align='left' valign='top'>\n";
 	if ($_REQUEST['box'] == 'inbox' && permission_exists('fax_inbox_view')) {
-		echo "			<b>".$text['header-inbox'].": ".$fax_name." (".$fax_extension.")</b>\n";
+		echo "			<b>".$text['header-inbox'].": ".escape($fax_name)." (".escape($fax_extension).")</b>\n";
 	}
 	if ($_REQUEST['box'] == 'sent' && permission_exists('fax_sent_view')) {
-		echo "			<b>".$text['header-sent'].": ".$fax_name." (".$fax_extension.")</b>\n";
+		echo "			<b>".$text['header-sent'].": ".escape($fax_name)." (".escape($fax_extension).")</b>\n";
 	}
 	echo "		</td>\n";
 	echo "		<td width='70%' align='right' valign='top'>\n";
@@ -342,10 +342,10 @@
 			}
 			echo "  <td class='".$row_style[$c]."' ondblclick=\"\">\n";
 			if ($_REQUEST['box'] == 'inbox' && permission_exists('fax_inbox_view')) {
-				echo "	  <a href=\"fax_files.php?id=".$fax_uuid."&a=download&type=fax_inbox&t=bin&ext=".urlencode($fax_extension)."&filename=".urlencode($file)."\">\n";
+				echo "	  <a href=\"fax_files.php?id=".$fax_uuid."&a=download&type=fax_inbox&t=bin&ext=".escape(urlencode($fax_extension))."&filename=".escape(urlencode($file))."\">\n";
 			}
 			if ($_REQUEST['box'] == 'sent' && permission_exists('fax_sent_view')) {
-				echo "	  <a href=\"fax_files.php?id=".$fax_uuid."&a=download&type=fax_sent&t=bin&ext=".urlencode($fax_extension)."&filename=".urlencode($file)."\">\n";
+				echo "	  <a href=\"fax_files.php?id=".$fax_uuid."&a=download&type=fax_sent&t=bin&ext=".escape(urlencode($fax_extension))."&filename=".escape(urlencode($file))."\">\n";
 			}
 			echo "    	$file_name";
 			echo "	  </a>";
@@ -359,10 +359,10 @@
 			}
 			if (file_exists($dir_fax.'/'.$file_name.".pdf")) {
 				if ($_REQUEST['box'] == 'inbox' && permission_exists('fax_inbox_view')) {
-					echo "	  <a href=\"fax_files.php?id=".$fax_uuid."&a=download&type=fax_inbox&t=bin&ext=".urlencode($fax_extension)."&filename=".urlencode($file_name).".pdf\">PDF</a>\n";
+					echo "	  <a href=\"fax_files.php?id=".escape($fax_uuid)."&a=download&type=fax_inbox&t=bin&ext=".escape(urlencode($fax_extension))."&filename=".escape(urlencode($file_name)).".pdf\">PDF</a>\n";
 				}
 				if ($_REQUEST['box'] == 'sent' && permission_exists('fax_sent_view')) {
-					echo "	  <a href=\"fax_files.php?id=".$fax_uuid."&a=download&type=fax_sent&t=bin&ext=".urlencode($fax_extension)."&filename=".urlencode($file_name).".pdf\">PDF</a>\n";
+					echo "	  <a href=\"fax_files.php?id=".escape($fax_uuid)."&a=download&type=fax_sent&t=bin&ext=".escape(urlencode($fax_extension))."&filename=".escape(urlencode($file_name)).".pdf\">PDF</a>\n";
 				}
 			}
 			else {
