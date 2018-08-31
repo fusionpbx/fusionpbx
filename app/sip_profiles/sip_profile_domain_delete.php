@@ -70,7 +70,7 @@
 	}
 
 //redirect the user
-	messages::add($text['message-delete']);
+	message::add($text['message-delete']);
 	header('Location: sip_profile_edit.php?id='.$sip_profile_uuid);
 
 ?>

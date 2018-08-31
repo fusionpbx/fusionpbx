@@ -172,7 +172,7 @@
 	save_gateway_xml();
 
 //redirect the user
-	messages::add($text['message-copy']);
+	message::add($text['message-copy']);
 	header("Location: gateways.php");
 	return;
 

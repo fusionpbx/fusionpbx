@@ -102,7 +102,7 @@ else {
 		$db->exec(check_sql($sql));
 		unset($sql);
 
-		messages::add($text['label-add-complete']);
+		message::add($text['label-add-complete']);
 
 	}
 

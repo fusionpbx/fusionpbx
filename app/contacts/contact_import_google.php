@@ -333,7 +333,7 @@ if ($_POST['a'] == 'import') {
 	else {
 
 		// no contacts imported
-		messages::add($text['message-contacts_imported']." ".$contacts_imported, 'negative');
+		message::add($text['message-contacts_imported']." ".$contacts_imported, 'negative');
 
 	}
 }

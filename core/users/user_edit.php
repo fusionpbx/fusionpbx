@@ -63,7 +63,7 @@
 		}
 		unset($prep_statement, $row);
 		if ($total_users >= $_SESSION['limit']['users']['numeric']) {
-			messages::add($text['message-maximum_users'].' '.$_SESSION['limit']['users']['numeric'], 'negative');
+			message::add($text['message-maximum_users'].' '.$_SESSION['limit']['users']['numeric'], 'negative');
 			header('Location: users.php');
 			exit;
 		}
@@ -90,7 +90,7 @@
 			$sql .= "and user_uuid = '".$user_uuid."' ";
 			$db->exec(check_sql($sql));
 		//redirect the user
-			messages::add($text['message-update']);
+			message::add($text['message-update']);
 			header("Location: user_edit.php?id=".$user_uuid);
 			return;
 	}
@@ -152,7 +152,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 		}
 
 		if ($msg_error != '') {
-			messages::add($msg_error, 'negative');
+			message::add($msg_error, 'negative');
 			if ($action == 'edit') {
 				header("Location: user_edit.php?id=".$user_uuid);
 			}
@@ -467,7 +467,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 		}
 
 	//redirect the browser
-		messages::add($text['message-update']);
+		message::add($text['message-update']);
 		if ($_REQUEST['action'] == $text['button-add'] || !permission_exists('user_edit')) {
 			header("Location: user_edit.php?id=".$user_uuid);
 		}

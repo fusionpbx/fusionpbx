@@ -55,7 +55,7 @@ else {
 	}
 
 //save the message to a session variable
-	messages::add($text['message-delete']);
+	message::add($text['message-delete']);
 
 //redirect the browser
 	header("Location: ring_group_edit.php?id=$ring_group_uuid");

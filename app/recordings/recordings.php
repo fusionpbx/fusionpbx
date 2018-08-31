@@ -139,7 +139,7 @@
 				move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$recording_filename);
 
 			//set the message
-				messages::add($text['message-uploaded'].": ".htmlentities($recording_filename));
+				message::add($text['message-uploaded'].": ".htmlentities($recording_filename));
 
 			//set the file name to be inserted as the recording description
 				$recording_description = base64_encode($_FILES['ulfile']['name']);

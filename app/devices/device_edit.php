@@ -120,7 +120,7 @@
 			}
 			unset($prep_statement, $row);
 			if ($total_devices >= $_SESSION['limit']['devices']['numeric']) {
-				messages::add($text['message-maximum_devices'].' '.$_SESSION['limit']['devices']['numeric'], 'negative');
+				message::add($text['message-maximum_devices'].' '.$_SESSION['limit']['devices']['numeric'], 'negative');
 				header('Location: devices.php');
 				return;
 			}
@@ -325,11 +325,11 @@
 						if ($save) {
 							if ($action == "add") {
 								//save the message to a session variable
-									messages::add($text['message-add']);
+									message::add($text['message-add']);
 							}
 							if ($action == "update") {
 								//save the message to a session variable
-									messages::add($text['message-update']);
+									message::add($text['message-update']);
 							}
 							//redirect the browser
 								header("Location: device_edit.php?id=$device_uuid");

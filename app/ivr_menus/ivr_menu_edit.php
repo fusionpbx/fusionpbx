@@ -72,7 +72,7 @@
 			}
 			unset($prep_statement, $row);
 			if ($total_ivr_menus >= $_SESSION['limit']['ivr_menus']['numeric']) {
-				messages::add($text['message-maximum_ivr_menus'].' '.$_SESSION['limit']['ivr_menus']['numeric'], 'negative');
+				message::add($text['message-maximum_ivr_menus'].' '.$_SESSION['limit']['ivr_menus']['numeric'], 'negative');
 				header('Location: ivr_menus.php');
 				return;
 			}
@@ -311,12 +311,12 @@
 
 				//set the add message
 					if ($action == "add" && permission_exists('ivr_menu_add')) {
-						messages::add($text['message-add']);
+						message::add($text['message-add']);
 					}
 
 				//set the update message
 					if ($action == "update" && permission_exists('ivr_menu_edit')) {
-						messages::add($text['message-update']);
+						message::add($text['message-update']);
 					}
 
 				//redirect the user

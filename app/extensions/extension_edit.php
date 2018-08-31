@@ -63,7 +63,7 @@
 			}
 			unset($prep_statement, $row);
 			if ($total_extensions >= $_SESSION['limit']['extensions']['numeric']) {
-				messages::add($text['message-maximum_extensions'].' '.$_SESSION['limit']['extensions']['numeric'], 'negative');
+				message::add($text['message-maximum_extensions'].' '.$_SESSION['limit']['extensions']['numeric'], 'negative');
 				header('Location: extensions.php');
 				return;
 			}
@@ -552,7 +552,7 @@
 
 				//show the action and redirect the user
 					if ($action == "add") {
-							messages::add($text['message-add']);
+							message::add($text['message-add']);
 						//prepare for alternating the row style
 							$c = 0;
 							$row_style["0"] = "row_style0";
@@ -590,7 +590,7 @@
 							return;
 					}
 					if ($action == "update") {
-						messages::add($text['message-update']);
+						message::add($text['message-update']);
 						header("Location: extension_edit.php?id=".$extension_uuid);
 						return;
 					}

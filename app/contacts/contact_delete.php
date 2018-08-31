@@ -132,7 +132,7 @@ if (strlen($contact_uuid) > 0) {
 }
 
 if (!$included) {
-	messages::add($text['message-delete']);
+	message::add($text['message-delete']);
 	header("Location: contacts.php");
 	return;
 }

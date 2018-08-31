@@ -55,7 +55,7 @@
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-				messages::add($text['message-update']);
+				message::add($text['message-update']);
 				header("Location: domain_edit.php?id=".$domain_uuid);
 				exit;
 			}
@@ -79,7 +79,7 @@
 				}
 				else {
 					// set message
-					messages::add($text['message-delete_failed'], 'negative');
+					message::add($text['message-delete_failed'], 'negative');
 				}
 
 				header("Location: domain_edit.php?id=".escape($_REQUEST["domain_uuid"]));

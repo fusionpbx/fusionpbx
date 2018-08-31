@@ -67,13 +67,13 @@ else {
 
 //redirect to device profile
 	if (is_uuid($device_profile_uuid)) {
-		messages::add($text['message-delete']);
+		message::add($text['message-delete']);
 		header("Location: device_profile_edit.php?id=".$device_profile_uuid);
 		return;
 	}
 	
 //send a redirect
-	messages::add($text['message-delete']);
+	message::add($text['message-delete']);
 	header("Location: device_edit.php?id=".$device_uuid);
 	return;
 

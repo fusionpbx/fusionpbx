@@ -651,7 +651,7 @@
 			save_dialplan_xml();
 
 		//redirect the browser
-			messages::add($text['message-update']);
+			message::add($text['message-update']);
 			header("Location: ".PROJECT_PATH."/app/dialplans/dialplans.php?app_uuid=8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3");
 			return;
 	} //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)

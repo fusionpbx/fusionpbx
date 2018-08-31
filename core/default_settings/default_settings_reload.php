@@ -45,7 +45,7 @@ $domain = new domains();
 $domain->db = $db;
 $domain->set();
 
-messages::add($text['message-settings_reloaded']);
+message::add($text['message-settings_reloaded']);
 header("Location: default_settings.php".(($search != '') ? "?search=".$search : null));
 
 ?>

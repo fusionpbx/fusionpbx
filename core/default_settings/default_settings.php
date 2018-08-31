@@ -57,7 +57,7 @@
 			$db->exec(check_sql($sql));
 			unset($sql);
 
-			messages::add($text['message-update']);
+			message::add($text['message-update']);
 			header("Location: default_settings.php".(($search != '') ? "?search=".escape($search) : null)."#anchor_".escape($category));
 			exit;
 		}
@@ -171,7 +171,7 @@
 			}
 			else {
 				// set message
-				messages::add($text['message-copy_failed']);
+				message::add($text['message-copy_failed']);
 			}
 
 			header("Location: default_settings.php".(($search != '') ? "?search=".escape($search) : null));
@@ -194,7 +194,7 @@
 			}
 			else {
 				// set message
-				messages::add($text['message-delete_failed'], 'negative');
+				message::add($text['message-delete_failed'], 'negative');
 			}
 
 			header("Location: default_settings.php".(($search != '') ? "?search=".escape($search) : null));

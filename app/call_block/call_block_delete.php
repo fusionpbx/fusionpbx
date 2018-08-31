@@ -76,7 +76,7 @@ else {
 	}
 
 	//redirect the browser
-		messages::add($text['label-delete-complete']);
+		message::add($text['label-delete-complete']);
 		header("Location: call_block.php");
 		return;
 

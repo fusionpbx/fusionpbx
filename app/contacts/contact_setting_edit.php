@@ -166,10 +166,10 @@
 
 				//redirect the browser
 					if ($action == "update") {
-						messages::add($text['message-update']);
+						message::add($text['message-update']);
 					}
 					if ($action == "add") {
-						messages::add($text['message-add']);
+						message::add($text['message-add']);
 					}
 					header("Location: contact_edit.php?id=".escape($contact_uuid));
 					return;

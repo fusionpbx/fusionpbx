@@ -62,7 +62,7 @@
 	}
 
 //redirect the browser
-	messages::add($text['message-delete']);
+	message::add($text['message-delete']);
 	header('Location: access_control_edit.php?id='.$access_control_uuid);
 
 ?>

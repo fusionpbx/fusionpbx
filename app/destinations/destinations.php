@@ -60,7 +60,7 @@
 				$obj = new destinations;
 				$obj->delete($destinations);
 			//delete message
-				messages::add($text['message-delete']);
+				message::add($text['message-delete']);
 		}
 	}
 

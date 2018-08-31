@@ -57,7 +57,7 @@
 				$obj = new email_templates;
 				$obj->delete($email_templates);
 			//delete message
-				messages::add($text['message-delete']);
+				message::add($text['message-delete']);
 		}
 	}
 

@@ -157,7 +157,7 @@
 						$music->reload();
 
 					//set the message and redirect the user
-						messages::add($text['message-add']);
+						message::add($text['message-add']);
 						header("Location: music_on_hold.php");
 						return;
 				} //if ($action == "add")
@@ -199,7 +199,7 @@
 						$music->reload();
 
 					//set the message and redirect the user
-						messages::add($text['message-update']);
+						message::add($text['message-update']);
 						header("Location: music_on_hold.php");
 						return;
 				} //if ($action == "update")

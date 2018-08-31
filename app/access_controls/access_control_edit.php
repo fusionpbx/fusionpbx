@@ -108,7 +108,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				if ($fp) { event_socket_request($fp, "api reloadacl"); }
 
 				//add the message
-				messages::add($text['message-add']);
+				message::add($text['message-add']);
 				
 				//redirect the user
 				header("Location: access_controls.php");
@@ -135,7 +135,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				if ($fp) { event_socket_request($fp, "api reloadacl"); }
 
 				//add the message
-				messages::add($text['message-update']);
+				message::add($text['message-update']);
 
 				//redirect the user
 				header("Location: access_controls.php");

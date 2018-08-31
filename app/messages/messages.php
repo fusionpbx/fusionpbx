@@ -60,7 +60,7 @@
 				$obj = new messages;
 				$obj->delete($messages);
 			//delete message
-				messages::add($text['message-delete']);
+				message::add($text['message-delete']);
 		}
 	}
 

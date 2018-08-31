@@ -412,7 +412,7 @@
 			save_dialplan_xml();
 
 		//redirect message
-			messages::add($text['confirm-update-complete']);
+			message::add($text['confirm-update-complete']);
 			header("Location: ".PROJECT_PATH."/app/dialplans/dialplans.php?app_uuid=c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4");
 			return;
 	} //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
