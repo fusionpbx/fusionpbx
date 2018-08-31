@@ -160,6 +160,25 @@
 		$text['label-sms']['sv-se'] = '';
 		$text['label-sms']['uk-ua'] = '';
 
+		$text['label-mms']['en-us'] = 'mms';
+		$text['label-mms']['ar-eg'] = '';
+		$text['label-mms']['de-at'] = '';
+		$text['label-mms']['de-ch'] = '';
+		$text['label-mms']['de-de'] = '';
+		$text['label-mms']['es-mx'] = '';
+		$text['label-mms']['fr-ca'] = '';
+		$text['label-mms']['fr-fr'] = '';
+		$text['label-mms']['he-il'] = '';
+		$text['label-mms']['it-it'] = '';
+		$text['label-mms']['nl-nl'] = '';
+		$text['label-mms']['pl-pl'] = '';
+		$text['label-mms']['pt-br'] = '';
+		$text['label-mms']['pt-pt'] = '';
+		$text['label-mms']['ro-ro'] = '';
+		$text['label-mms']['ru-ru'] = '';
+		$text['label-mms']['sv-se'] = '';
+		$text['label-mms']['uk-ua'] = '';
+
 		$text['label-chat']['en-us'] = 'chat';
 		$text['label-chat']['ar-eg'] = '';
 		$text['label-chat']['de-at'] = '';
