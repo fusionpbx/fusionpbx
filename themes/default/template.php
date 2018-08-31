@@ -77,7 +77,7 @@
 					object.clearQueue().finish();
 					object.animate({height: '0', 'font-size': '0', 'border-bottom-width': '0'}, 1000).animate({opacity: 0});
 				} );
-				$("#messages_container").append(message_text);
+				$("#message_container").append(message_text);
 				message_text.animate({opacity: 1}, 'fast').delay(delay).animate({height: '0', 'font-size': '0', 'border-bottom-width': '0'}, 1000).animate({opacity: 0});
 			}
 		}
@@ -290,7 +290,7 @@
 
 <body onload="<?php echo $onload;?>">
 
-	<div id='messages_container'></div>
+	<div id='message_container'></div>
 
 	<?php
 	//logged in show the domains block
