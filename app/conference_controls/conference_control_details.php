@@ -86,7 +86,7 @@
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-conference_control_details']."</b></td>\n";
 	//echo "		<form method='get' action=''>\n";
 	//echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
-	//echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>\n";
+	//echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".escape($search)."'>\n";
 	//echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
 	//echo "			</td>\n";
 	//echo "		</form>\n";
@@ -112,19 +112,19 @@
 	if (is_array($result)) {
 		foreach($result as $row) {
 			if (permission_exists('conference_control_detail_edit')) {
-				$tr_link = "href='conference_control_detail_edit.php?conference_control_uuid=".$row['conference_control_uuid']."&id=".$row['conference_control_detail_uuid']."'";
+				$tr_link = "href='conference_control_detail_edit.php?conference_control_uuid=".escape($row['conference_control_uuid'])."&id=".escape($row['conference_control_detail_uuid'])."'";
 			}
 			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['control_digits']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['control_action']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['control_data']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['control_enabled']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['control_digits'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['control_action'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['control_data'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['control_enabled'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('conference_control_detail_edit')) {
-				echo "<a href='conference_control_detail_edit.php?conference_control_uuid=".$row['conference_control_uuid']."&id=".$row['conference_control_detail_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='conference_control_detail_edit.php?conference_control_uuid=".escape($row['conference_control_uuid'])."&id=".escape($row['conference_control_detail_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('conference_control_detail_delete')) {
-				echo "<a href='conference_control_detail_delete.php?conference_control_uuid=".$row['conference_control_uuid']."&id=".$row['conference_control_detail_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='conference_control_detail_delete.php?conference_control_uuid=".escape($row['conference_control_uuid'])."&id=".escape($row['conference_control_detail_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
