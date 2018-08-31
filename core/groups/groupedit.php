@@ -188,11 +188,11 @@
 						}
 				}
 
-				messages::add($text['message-update']);
+				message::add($text['message-update']);
 				header("Location: groups.php");
 			}
 			else {
-				messages::add($text['message-group_exists'], 'negative');
+				message::add($text['message-group_exists'], 'negative');
 				header("Location: groupedit.php?id=".$group_uuid);
 			}
 

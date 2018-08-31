@@ -314,7 +314,7 @@
 				}
 			}
 
-		messages::add($text['message-update']);
+		message::add($text['message-update']);
 		header("Location: groups.php");
 		return;
 	}

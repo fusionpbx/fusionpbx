@@ -141,7 +141,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				//synchronize settings
 				save_setting_xml();
 
-				messages::add($text['message-add']);
+				message::add($text['message-add']);
 				header("Location: setting_edit.php");
 				return;
 			} //if ($action == "add")
@@ -163,7 +163,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				//synchronize settings
 				save_setting_xml();
 
-				messages::add($text['message-update']);
+				message::add($text['message-update']);
 				header("Location: setting_edit.php");
 				return;
 			} //if ($action == "update")

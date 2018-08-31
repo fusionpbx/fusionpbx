@@ -54,7 +54,7 @@ else {
 	}
 
 //send a redirect
-	messages::add($text['message-delete']);
+	message::add($text['message-delete']);
 	header("Location: device_edit.php?id=".$device_uuid);
 	return;
 

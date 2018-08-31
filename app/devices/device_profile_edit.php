@@ -177,11 +177,11 @@
 						if ($save) {
 							if ($action == "add") {
 								//save the message to a session variable
-									messages::add($text['message-add']);
+									message::add($text['message-add']);
 							}
 							if ($action == "update") {
 								//save the message to a session variable
-									messages::add($text['message-update']);
+									message::add($text['message-update']);
 
 							}
 							//redirect the browser

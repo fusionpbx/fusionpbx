@@ -383,7 +383,7 @@
 			}
 
 		//redirect the user
-			messages::add($text['confirm-update']);
+			message::add($text['confirm-update']);
 			header("Location: ".$_REQUEST['return_url']);
 			return;
 

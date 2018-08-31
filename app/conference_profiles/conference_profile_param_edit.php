@@ -93,7 +93,7 @@
 					$db->exec(check_sql($sql));
 					unset($sql);
 	
-					messages::add($text['message-add']);
+					message::add($text['message-add']);
 					header('Location: conference_profile_edit.php?id='.$conference_profile_uuid);
 					return;
 	
@@ -111,7 +111,7 @@
 					$db->exec(check_sql($sql));
 					unset($sql);
 	
-					messages::add($text['message-update']);
+					message::add($text['message-update']);
 					header('Location: conference_profile_edit.php?id='.$conference_profile_uuid);
 					return;
 	

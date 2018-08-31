@@ -35,7 +35,7 @@
 			require_once "secure/v_mailto.php";
 			if ($mailer_error == '') {
 				//get the message
-				messages::add($text['message-message_resent']);
+				message::add($text['message-message_resent']);
 
 				//delete the email
 				$sql = "delete from v_emails ";

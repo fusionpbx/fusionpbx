@@ -105,7 +105,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				unset($sql);
 
 				//redirect the user
-					messages::add($text['message-update']);
+					message::add($text['message-update']);
 					header('Location: voicemail_edit.php?id='.$voicemail_uuid);
 					return;
 			}

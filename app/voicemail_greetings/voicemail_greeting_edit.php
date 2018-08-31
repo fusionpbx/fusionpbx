@@ -90,7 +90,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				unset($sql);
 
 			//redirect the user
-				messages::add($text['message-update']);
+				message::add($text['message-update']);
 				header("Location: voicemail_greetings.php?id=".$voicemail_id);
 				return;
 		} //if (permission_exists('voicemail_greeting_edit')) {

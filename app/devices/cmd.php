@@ -67,7 +67,7 @@ else {
 			$response = event_socket_request($fp, "api log notice ".$command);
 
 		//show the response
-			messages::add($text['label-event']." ".ucwords($cmd)."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$text['label-response'].htmlentities($response));
+			message::add($text['label-event']." ".ucwords($cmd)."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$text['label-response'].htmlentities($response));
 
 		//close the connection
 			fclose($fp);
@@ -80,7 +80,7 @@ else {
 	}
 	else {
 		//send the message
-			messages::add($text['button-applied'], 'positive', 3500);
+			message::add($text['button-applied'], 'positive', 3500);
 
 		//send the redirect
 			if (isset($_SERVER['HTTP_REFERER'])) {

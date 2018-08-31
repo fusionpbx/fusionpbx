@@ -123,7 +123,7 @@
 					$module = new modules;;
 					$module->xml();
 
-					messages::add($text['message-add']);
+					message::add($text['message-add']);
 					header("Location: modules.php");
 					return;
 				} //if ($action == "add")
@@ -144,7 +144,7 @@
 					$module = new modules;;
 					$module->xml();
 
-					messages::add($text['message-update']);
+					message::add($text['message-update']);
 					header("Location: modules.php");
 					return;
 				} //if ($action == "update")

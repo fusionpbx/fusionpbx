@@ -57,7 +57,7 @@
 			$sql .= "and user_uuid = '".$user_uuid."' ";
 			$db->exec(check_sql($sql));
 		//save the message to a session variable
-			messages::add($text['message-delete']);
+			message::add($text['message-delete']);
 		//redirect the browser
 			header("Location: ring_group_edit.php?id=$ring_group_uuid");
 			exit;
@@ -84,7 +84,7 @@
 			}
 			unset($prep_statement, $row);
 			if ($total_ring_groups >= $_SESSION['limit']['ring_groups']['numeric']) {
-				messages::add($text['message-maximum_ring_groups'].' '.$_SESSION['limit']['ring_groups']['numeric'], 'negative');
+				message::add($text['message-maximum_ring_groups'].' '.$_SESSION['limit']['ring_groups']['numeric'], 'negative');
 				header('Location: ring_groups.php');
 				return;
 			}
@@ -152,7 +152,7 @@
 			$sql_insert .= ")";
 			$db->exec($sql_insert);
 		//save the message to a session variable
-			messages::add($text['message-add']);
+			message::add($text['message-add']);
 		//redirect the browser
 			header("Location: ring_group_edit.php?id=$ring_group_uuid");
 			exit;
@@ -341,14 +341,14 @@
 		//set the message
 			if ($action == "add") {
 				//save the message to a session variable
-					messages::add($text['message-add']);
+					message::add($text['message-add']);
 				//redirect the browser
 					header("Location: ring_group_edit.php?id=$ring_group_uuid");
 					exit;
 			}
 			if ($action == "update") {
 				//save the message to a session variable
-					messages::add($text['message-update']);
+					message::add($text['message-update']);
 			}
 
 	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)

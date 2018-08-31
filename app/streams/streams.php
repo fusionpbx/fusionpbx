@@ -57,7 +57,7 @@
 				$obj = new streams;
 				$obj->delete($streams);
 			//delete message
-				messages::add($text['message-delete']);
+				message::add($text['message-delete']);
 		}
 	}
 

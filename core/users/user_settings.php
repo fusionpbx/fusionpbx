@@ -52,7 +52,7 @@
 			$db->exec(check_sql($sql));
 			unset($sql);
 
-			messages::add($text['message-update']);
+			message::add($text['message-update']);
 			header("Location: user_edit.php?id=".$user_uuid);
 			exit;
 		}

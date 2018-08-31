@@ -150,7 +150,7 @@
 	save_dialplan_xml();
 
 //send a redirect
-	messages::add($text['message-copy']);
+	message::add($text['message-copy']);
 	switch ($app_uuid) {
 		case "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4": //inbound routes
 		case "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3": //outbound routes

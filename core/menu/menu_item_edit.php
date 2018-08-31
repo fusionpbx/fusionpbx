@@ -51,7 +51,7 @@ else {
 			$sql .= "where menu_item_group_uuid = '".$menu_item_group_uuid."' ";
 			$db->exec(check_sql($sql));
 		//redirect the browser
-			messages::add($text['message-delete']);
+			message::add($text['message-delete']);
 			header("Location: menu_item_edit.php?id=".$menu_uuid."&menu_item_uuid=".$menu_item_uuid."&menu_uuid=".$menu_uuid);
 			return;
 	}
@@ -280,10 +280,10 @@ else {
 
 			//set response message
 				if ($action == "add") {
-					messages::add($text['message-add']);
+					message::add($text['message-add']);
 				}
 				if ($action == "update") {
-					messages::add($text['message-update']);
+					message::add($text['message-update']);
 				}
 
 			//redirect the user

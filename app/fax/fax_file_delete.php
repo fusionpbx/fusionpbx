@@ -94,7 +94,7 @@ else {
 			$prep_statement->execute();
 			unset($prep_statement);
 
-		messages::add($text['message-delete']);
+		message::add($text['message-delete']);
 	}
 
 //redirect the user

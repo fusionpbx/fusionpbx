@@ -55,7 +55,7 @@
 		//synchronize the configuration
 		save_var_xml();
 
-		messages::add($text['message-update']);
+		message::add($text['message-update']);
 		header("Location: vars.php?id=".$_REQUEST['id']);
 		exit;
 	}

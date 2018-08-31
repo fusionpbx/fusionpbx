@@ -56,7 +56,7 @@ else {
 	}
 
 //redirect the user
-	messages::add($text['message-delete']);
+	message::add($text['message-delete']);
 	header("Location: domain_edit.php?id=".$domain_uuid);
 	return;
 

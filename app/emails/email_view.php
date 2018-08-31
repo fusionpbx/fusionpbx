@@ -66,7 +66,7 @@ else {
 	}
 
 	if (!$msg_found) {
-		messages::add($text['message-invalid_email']);
+		message::add($text['message-invalid_email']);
 		header("Location: emails.php");
 		exit;
 	}
@@ -121,7 +121,7 @@ else {
 			}
 	}
 	else {
-		messages::add($text['message-decoding_error'].(($mime->error != '') ? ': '.htmlspecialchars($mime->error) : null));
+		message::add($text['message-decoding_error'].(($mime->error != '') ? ': '.htmlspecialchars($mime->error) : null));
 		header("Location: emails.php");
 		exit;
 	}

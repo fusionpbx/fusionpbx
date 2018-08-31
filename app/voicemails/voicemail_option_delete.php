@@ -58,7 +58,7 @@
 	}
 
 //redirect the user
-	messages::add($text['message-delete']);
+	message::add($text['message-delete']);
 	header('Location: voicemail_edit.php?id='.$voicemail_uuid);
 
 ?>

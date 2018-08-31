@@ -141,7 +141,7 @@
 						save_var_xml();
 
 					//set the message and redirect the user
-						messages::add($text['message-add']);
+						message::add($text['message-add']);
 						header("Location: vars.php");
 						return;
 				} //if ($action == "add")
@@ -173,7 +173,7 @@
 						save_var_xml();
 
 					//set the message and redirect the user
-						messages::add($text['message-update']);
+						message::add($text['message-update']);
 						header("Location: vars.php");
 						return;
 				} //if ($action == "update")

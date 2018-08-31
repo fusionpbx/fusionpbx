@@ -112,7 +112,7 @@
 					}
 
 				//set the message
-					messages::add($text['message-update']);
+					message::add($text['message-update']);
 
 				//redirect the browser
 					header("Location: /core/user_settings/user_dashboard.php");

@@ -80,7 +80,7 @@
 			$sql .= "and user_uuid = '".$user_uuid."' ";
 			$db->exec(check_sql($sql));
 
-		messages::add($text['confirm-delete']);
+		message::add($text['confirm-delete']);
 		header("Location: conference_edit.php?id=".$conference_uuid);
 		return;
 	}
@@ -107,7 +107,7 @@
 			$sql_insert .= ")";
 			$db->exec($sql_insert);
 		//send a message
-			messages::add($text['confirm-add']);
+			message::add($text['confirm-add']);
 			header("Location: conference_edit.php?id=".$conference_uuid);
 			return;
 	}
@@ -217,7 +217,7 @@
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
 					//add the message
-						messages::add($text['confirm-add']);
+						message::add($text['confirm-add']);
 				} //if ($action == "add")
 
 				if ($action == "update") {
@@ -273,7 +273,7 @@
 						$db->query($sql);
 
 					//add the message
-						messages::add($text['confirm-update']);
+						message::add($text['confirm-update']);
 				} //if ($action == "update")
 
 				//update the dialplan xml

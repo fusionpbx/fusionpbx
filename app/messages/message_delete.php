@@ -33,7 +33,7 @@
 	$text = $language->get();
 
 //delete the message
-	messages::add($text['message-delete']);
+	message::add($text['message-delete']);
 
 //delete the data
 	if (isset($_GET["id"]) && is_uuid($_GET["id"]) && permission_exists('message_delete')) {

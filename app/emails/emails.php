@@ -85,7 +85,7 @@ else {
 			$msg = $email;
 			require_once "secure/v_mailto.php";
 			if ($mailer_error == '') {
-				messages::add($text['message-message_resent']);
+				message::add($text['message-message_resent']);
 				if (permission_exists('emails_all') && $_REQUEST['showall'] == 'true') {
 					header("Location: email_delete.php?id=".$email_uuid."&showall=true");
 				} else {
@@ -93,7 +93,7 @@ else {
 				}
 			}
 			else {
-				messages::add($text['message-resend_failed'].": ".$mailer_error, 'negative', 4000);
+				message::add($text['message-resend_failed'].": ".$mailer_error, 'negative', 4000);
 				if (permission_exists('emails_all') && $_REQUEST['showall'] == 'true') {
 					header("Location: emails.php?showall=true");
 				} else {

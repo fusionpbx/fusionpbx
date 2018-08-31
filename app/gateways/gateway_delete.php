@@ -113,7 +113,7 @@ if (strlen($_GET["id"])>0) {
 }
 
 //redirect the users
-	messages::add($text['message-delete']);
+	message::add($text['message-delete']);
 	header("Location: gateways.php");
 	return;
 

@@ -52,7 +52,7 @@
 		$sql .= "and app_uuid = '4b821450-926b-175a-af93-a03c441818b1' ";
 		$db->exec(check_sql($sql));
 		unset($sql);
-		messages::add($text['message-update']);
+		message::add($text['message-update']);
 	}
 
 //set the http values as php variables

@@ -77,10 +77,10 @@
 			}
 			chdir($cwd);
 			if ($update_failed) {
-				messages::add($text['message-upgrade_source_failed'], 'negative', $message_timeout);
+				message::add($text['message-upgrade_source_failed'], 'negative', $message_timeout);
 			}
 			else {
-				messages::add($text['message-upgrade_source'], null, $message_timeout);
+				message::add($text['message-upgrade_source'], null, $message_timeout);
 			}
 		}
 
@@ -90,7 +90,7 @@
 			require_once "resources/classes/schema.php";
 			$obj = new schema();
 			$_SESSION["response"]["schema"] = $obj->schema("html");
-			messages::add($text['message-upgrade_schema'], null, $message_timeout);
+			message::add($text['message-upgrade_schema'], null, $message_timeout);
 		}
 
 		// process the apps defaults
@@ -98,7 +98,7 @@
 			require_once "resources/classes/domains.php";
 			$domain = new domains;
 			$domain->upgrade();
-			messages::add($text['message-upgrade_apps'], null, $message_timeout);
+			message::add($text['message-upgrade_apps'], null, $message_timeout);
 		}
 
 		// restore defaults of the selected menu
@@ -109,14 +109,14 @@
 			$included = true;
 			require_once("core/menu/menu_restore_default.php");
 			unset($sel_menu);
-			messages::add($text['message-upgrade_menu'], null, $message_timeout);
+			message::add($text['message-upgrade_menu'], null, $message_timeout);
 		}
 
 		// restore default permissions
 		if ($do["permissions"] && permission_exists("group_edit")) {
 			$included = true;
 			require_once("core/groups/permissions_default.php");
-			messages::add($text['message-upgrade_permissions'], null, $message_timeout);
+			message::add($text['message-upgrade_permissions'], null, $message_timeout);
 		}
 
 		header("Location: ".PROJECT_PATH."/core/upgrade/index.php");

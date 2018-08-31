@@ -210,7 +210,7 @@ if (strlen($id) > 0) {
 	}
 
 //redirect the browser
-	messages::add($text['message-delete']);
+	message::add($text['message-delete']);
 	header("Location: domains.php");
 	return;
 

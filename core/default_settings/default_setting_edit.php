@@ -153,12 +153,12 @@
 
 				//set the message and redirect the user
 				if ($action == "add" && permission_exists('default_setting_add')) {
-					messages::add($text['message-add']);
+					message::add($text['message-add']);
 					header("Location: default_settings.php".(($search != '') ? "?search=".$search : null)."#anchor_".$default_setting_category);
 					return;
 				}
 				if ($action == "update" && permission_exists('default_setting_edit')) {
-					messages::add($text['message-update']);
+					message::add($text['message-update']);
 					header("Location: default_settings.php".(($search != '') ? "?search=".$search : null)."#anchor_".$default_setting_category);
 					return;
 				}
