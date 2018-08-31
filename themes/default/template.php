@@ -84,7 +84,7 @@
 
 	$(document).ready(function() {
 
-<?php	echo messages::html(true, "		");?>
+<?php	echo message::html(true, "		");?>
 
 		//hide message bar on hover
 			$("#message_text").mouseover(function() { $(this).hide(); $("#message_container").hide(); });
