@@ -146,13 +146,13 @@
 	echo "	</td>\n";
 	echo "	<td align='right' valign='top' nowrap='nowrap' style='padding-left: 50px;'>\n";
 	echo "		<form name='frm_search' method='get' action=''>\n";
-	echo "		<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
+	echo "		<input type='text' class='txt' style='width: 150px' name='search' value='".escape($search)."'>";
 	if (strlen($app_uuid) > 0) {
-		echo "		<input type='hidden' class='txt' name='app_uuid' value='".$app_uuid."'>";
+		echo "		<input type='hidden' class='txt' name='app_uuid' value='".escape($app_uuid)."'>";
 	}
 	if (strlen($order_by) > 0) {
-		echo "		<input type='hidden' class='txt' name='order_by' value='".$order_by."'>";
-		echo "		<input type='hidden' class='txt' name='order' value='".$order."'>";
+		echo "		<input type='hidden' class='txt' name='order_by' value='".escape($order_by)."'>";
+		echo "		<input type='hidden' class='txt' name='order' value='".escape($order)."'>";
 	}
 	echo "		<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	echo "		</form>\n";
@@ -170,7 +170,7 @@
 
 //show the content
 	echo "<form name='frm_delete' method='post' action='time_condition_delete.php'>\n";
-	echo "<input type='hidden' name='app_uuid' value='".$app_uuid."'>\n";
+	echo "<input type='hidden' name='app_uuid' value='".escape($app_uuid)."'>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	if (permission_exists('dialplan_delete') && $result_count > 0) {
