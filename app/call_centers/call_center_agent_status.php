@@ -234,10 +234,10 @@
 	$x = 0;
 	foreach($agents as $row) {
 		$html = "<tr>\n";
-		$html .= "		<td valign='top' class='".$row_style[$c]."'>".$row['agent_name']."&nbsp;</td>\n";
+		$html .= "		<td valign='top' class='".$row_style[$c]."'>".escape($row['agent_name'])."&nbsp;</td>\n";
 
 		//$html .= "	<td valign='top' class='".$row_style[$c]."'>".$row['agent_name']."&nbsp;</td>\n";
-		$html .= "	<td valign='top' class='".$row_style[$c]."'>".$row['agent_status']."&nbsp;</td>\n";
+		$html .= "	<td valign='top' class='".$row_style[$c]."'>".escape($row['agent_status'])."&nbsp;</td>\n";
 		$html .= "	<td valign='top' class='".$row_style[$c]."' nowrap='nowrap'>";
 		$html .= "		<input type='hidden' name='agents[".$x."][agent_name]' id='agent_".$x."_name' value='".escape($row['agent_name'])."'>\n";
 		$html .= "		<input type='hidden' name='agents[".$x."][agent_uuid]' id='agent_".$x."_uuid' value='".escape($row['call_center_agent_uuid'])."'>\n";
@@ -277,10 +277,10 @@
 				//$html .= "			<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_no_change' value='' checked='checked'>&nbsp;<label for='agent_".$x."_status_no_change'>".$text['option-no_change']."</label>&nbsp;\n";
 				$html .= "			<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_available' value='Available'>&nbsp;<label for='agent_".$x."_status_available'>".$text['option-available']."</label>&nbsp;\n";
 				$html .= "			<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_logged_out' value='Logged Out'>&nbsp;<label for='agent_".$x."_status_logged_out'>".$text['option-logged_out']."</label>&nbsp;\n";
-				$html .= "			<input type='hidden' name='agents[".$x."][queue_name]' id='queue_".$x."_name' value='".$queue['queue_name']."'>\n";
+				$html .= "			<input type='hidden' name='agents[".$x."][queue_name]' id='queue_".$x."_name' value='".escape($queue['queue_name'])."'>\n";
 				$html .= "			<input type='hidden' name='agents[".$x."][agent_name]' id='agent_".$x."_name' value='".escape($row['agent_name'])."'>\n";
 				$html .= "			<input type='hidden' name='agents[".$x."][user_uuid]' id='agent_".$x."_name' value='".escape($row['user_uuid'])."'>\n";
-				$html .= "			<input type='hidden' name='agents[".$x."][queue_uuid]' id='queue_".$x."_uuid' value='".$queue['call_center_queue_uuid']."'>\n";
+				$html .= "			<input type='hidden' name='agents[".$x."][queue_uuid]' id='queue_".$x."_uuid' value='".escape($queue['call_center_queue_uuid'])."'>\n";
 				$html .= "			<input type='hidden' name='agents[".$x."][agent_uuid]' id='agent_".$x."_uuid' value='".escape($row['call_center_agent_uuid'])."'>\n";
 				$html .= "		</td>\n";
 				$html .= "	</tr>\n";
