@@ -332,7 +332,7 @@
 	echo "</td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='device_profiles.php'\" value='".$text['button-back']."'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"window.location='device_profile_copy.php?id=".$device_profile_uuid."'\" value='".$text['button-copy']."'>\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"window.location='device_profile_copy.php?id=".escape($device_profile_uuid)."'\" value='".$text['button-copy']."'>\n";
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -342,7 +342,7 @@
 	echo "	".$text['label-profile_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='device_profile_name' maxlength='255' value=\"".$device_profile_name."\">\n";
+	echo "	<input class='formfld' type='text' name='device_profile_name' maxlength='255' value=\"".escape($device_profile_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-profile_name']."\n";
 	echo "</td>\n";
@@ -502,7 +502,7 @@
 					$selected = "selected='selected'";
 				}
 				if (strlen($vendor['name']) > 0) {
-					echo "		<option value='".$vendor['name']."' $selected >".ucwords($vendor['name'])."</option>\n";
+					echo "		<option value='".escape($vendor['name'])."' $selected >".escape(ucwords($vendor['name']))."</option>\n";
 				}
 			}
 			echo "</select>\n";
@@ -516,17 +516,17 @@
 			foreach ($vendor_functions as $function) {
 				if (strlen($row['device_key_vendor']) == 0 && $function['vendor_name'] != $previous_vendor) {
 					if ($i > 0) { echo "	</optgroup>\n"; }
-					echo "	<optgroup label='".ucwords($function['vendor_name'])."'>\n";
+					echo "	<optgroup label='".escape(ucwords($function['vendor_name']))."'>\n";
 				}
 				$selected = '';
 				if ($row['device_key_vendor'] == $function['vendor_name'] && $row['device_key_type'] == $function['value']) {
 					$selected = "selected='selected'";
 				}
 				if (strlen($row['device_key_vendor']) == 0) {
-					echo "		<option value='".$function['value']."' vendor='".$function['vendor_name']."' $selected >".$text['label-'.$function['name']]."</option>\n";
+					echo "		<option value='".escape($function['value'])."' vendor='".escape($function['vendor_name'])."' $selected >".$text['label-'.escape($function['name'])]."</option>\n";
 				}
 				if (strlen($row['device_key_vendor']) > 0 && $row['device_key_vendor'] == $function['vendor_name']) {
-					echo "		<option value='".$function['value']."' vendor='".$function['vendor_name']."' $selected >".$text['label-'.$function['name']]."</option>\n";
+					echo "		<option value='".escape($function['value'])."' vendor='".escape($function['vendor_name'])."' $selected >".$text['label-'.escape($function['name'])]."</option>\n";
 					
 				}
 				$previous_vendor = $function['vendor_name'];
