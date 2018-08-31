@@ -788,18 +788,18 @@ function type_onchange(dialplan_detail_type) {
 				echo "<optgroup label='&nbsp; &nbsp;".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."'>";
 			}
 			if ($row['gateway'] == $gateway_name) {
-				echo "<option value=\"".$row['gateway_uuid'].":".$row['gateway']."\" selected=\"selected\">&nbsp; &nbsp;".$row['gateway']."</option>\n";
+				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\" selected=\"selected\">&nbsp; &nbsp;".escape($row['gateway'])."</option>\n";
 			}
 			else {
-				echo "<option value=\"".$row['gateway_uuid'].":".$row['gateway']."\">&nbsp; &nbsp;".$row['gateway']."</option>\n";
+				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\">&nbsp; &nbsp;".escape($row['gateway'])."</option>\n";
 			}
 		}
 		else {
 			if ($row['gateway'] == $gateway_name) {
-				echo "<option value=\"".$row['gateway_uuid'].":".$row['gateway']."\" $onchange selected=\"selected\">".$row['gateway']."</option>\n";
+				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\" $onchange selected=\"selected\">".escape($row['gateway'])."</option>\n";
 			}
 			else {
-				echo "<option value=\"".$row['gateway_uuid'].":".$row['gateway']."\">".$row['gateway']."</option>\n";
+				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\">".escape($row['gateway'])."</option>\n";
 			}
 		}
 		$previous_domain_uuid = $row['domain_uuid'];
@@ -1061,7 +1061,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "	<select name='dialplan_order' class='formfld'>\n";
 	//echo "		<option></option>\n";
 	if (strlen(htmlspecialchars($dialplan_order))> 0) {
-		echo "		<option selected='yes' value='".htmlspecialchars($dialplan_order)."'>".htmlspecialchars($dialplan_order)."</option>\n";
+		echo "		<option selected='yes' value='".escape($dialplan_order)."'>".escape($dialplan_order)."</option>\n";
 	}
 	$i = 100;
 	while($i <= 999) {
