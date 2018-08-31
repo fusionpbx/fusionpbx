@@ -25,8 +25,8 @@
 	Matthew Vale <github@mafoo.org>
 */
 
-if (!class_exists('messages')) {
-	class messages {
+if (!class_exists('message')) {
+	class message {
 		
 		static function add($message, $mood = NULL, $delay = NULL) {
 			$mood = $mood ?: 'positive';
