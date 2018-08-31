@@ -985,7 +985,7 @@ if (!$included) {
 			echo "	<select class='formfld' style='display: none;' id='fax_recipient_select' onchange='contact_load(this);'>\n";
 			echo "		<option value=''></option>\n";
 			foreach ($contact_labels as $index => $contact_label) {
-				echo "	<option value=\"".$contact_values[$index]."\">".$contact_label."</option>\n";
+				echo "	<option value=\"".escape($contact_values[$index])."\">".escape($contact_label)."</option>\n";
 			}
 			echo "	</select>\n";
 		}
