@@ -302,7 +302,7 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 		$(document).ready(function(){
 			//ajax for refresh
 			var refresh = 1500;
-			var source_url = 'contact_timer_inc.php?domain_uuid=<?php echo $domain_uuid; ?>&contact_uuid=<?php echo $contact_uuid; ?>&contact_time_uuid=<?php echo $contact_time_uuid; ?>';
+			var source_url = 'contact_timer_inc.php?domain_uuid=<?php echo escape($domain_uuid); ?>&contact_uuid=<?php echo escape($contact_uuid); ?>&contact_time_uuid=<?php echo escape($contact_time_uuid); ?>';
 
 			var ajax_get = function () {
 				$.ajax({
@@ -330,20 +330,20 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 	<br><br>
 	<?php echo $text['description_timer']; ?>
 	<br><br>
-	<strong><a href="javascript:void(0);" onclick="window.opener.location.href='contact_edit.php?id=<?php echo $contact_uuid; ?>';"><?php echo $contact; ?></a></strong>
+	<strong><a href="javascript:void(0);" onclick="window.opener.location.href='contact_edit.php?id=<?php echo escape($contact_uuid); ?>';"><?php echo escape($contact); ?></a></strong>
 	<br><br>
-	<div id='ajax_reponse' class='timer_<?php echo $timer_state;?>'>00:00:00</div>
+	<div id='ajax_reponse' class='timer_<?php echo escape($timer_state);?>'>00:00:00</div>
 	<br>
 	<form name='frm' id='frm' method='post' action=''>
-	<input type='hidden' name='domain_uuid' value="<?php echo $domain_uuid; ?>">
-	<input type='hidden' name='contact_time_uuid' value="<?php echo $contact_time_uuid; ?>">
-	<input type='hidden' name='contact_uuid' value="<?php echo $contact_uuid; ?>">
-	<input type='hidden' name='time_action' value="<?php echo $timer_action; ?>">
+	<input type='hidden' name='domain_uuid' value="<?php echo escape($domain_uuid); ?>">
+	<input type='hidden' name='contact_time_uuid' value="<?php echo escape($contact_time_uuid); ?>">
+	<input type='hidden' name='contact_uuid' value="<?php echo escape($contact_uuid); ?>">
+	<input type='hidden' name='time_action' value="<?php echo escape($timer_action); ?>">
 	<table cellpadding='0' cellspacing='0' border='0' style='width: 100%;'>
 		<tr>
 			<td class='vncell' style='text-align: center; padding: 10px;'>
 				<?php echo $text['label-description']; ?>
-				<textarea name='time_description' id='timer_description' class='formfld' style='width: 100%; height: 50px; margin-top: 5px;'><?php echo $time_description; ?></textarea>
+				<textarea name='time_description' id='timer_description' class='formfld' style='width: 100%; height: 50px; margin-top: 5px;'><?php echo escape($time_description); ?></textarea>
 				<? if ($timer_state == 'stopped') { ?><script>document.getElementById('timer_description').focus();</script><? } ?>
 			</td>
 		</tr>
