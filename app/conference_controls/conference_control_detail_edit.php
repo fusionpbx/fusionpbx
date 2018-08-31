@@ -145,7 +145,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-conference_control_detail']."</b><br><br></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='conference_control_edit.php?id=$conference_control_uuid'\" value='".$text['button-back']."'>";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='conference_control_edit.php?id=".escape($conference_control_uuid)."'\" value='".$text['button-back']."'>";
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -155,7 +155,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-control_digits']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='control_digits' maxlength='255' value='$control_digits'>\n";
+	echo "  <input class='formfld' type='text' name='control_digits' maxlength='255' value='".escape($control_digits)."'>\n";
 	echo "<br />\n";
 	echo $text['description-control_digits']."\n";
 	echo "</td>\n";
@@ -166,7 +166,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-control_action']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='control_action' maxlength='255' value=\"$control_action\">\n";
+	echo "	<input class='formfld' type='text' name='control_action' maxlength='255' value=\"".escape($control_action)."\">\n";
 	echo "<br />\n";
 	echo $text['description-control_action']."\n";
 	echo "</td>\n";
@@ -177,7 +177,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-control_data']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='control_data' maxlength='255' value=\"$control_data\">\n";
+	echo "	<input class='formfld' type='text' name='control_data' maxlength='255' value=\"".escape($control_data)."\">\n";
 	echo "<br />\n";
 	echo $text['description-control_data']."\n";
 	echo "</td>\n";
@@ -209,9 +209,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
-	echo "				<input type='hidden' name='conference_control_uuid' value='$conference_control_uuid'>\n";
+	echo "				<input type='hidden' name='conference_control_uuid' value='".escape($conference_control_uuid)."'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='conference_control_detail_uuid' value='$conference_control_detail_uuid'>\n";
+		echo "				<input type='hidden' name='conference_control_detail_uuid' value='".escape($conference_control_detail_uuid)."'>\n";
 	}
 	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
