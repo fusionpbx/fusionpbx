@@ -5991,7 +5991,7 @@
 <!--  Degree Unit. auto - Automatic, f - Fahrenheit, c - Celsius. Default is auto -->
 <!--  String: auto, f, c -->
 <!--  Mandatory -->
-<P1379>{if isset ($grandstream_temp_unit)}
+{if isset ($grandstream_temp_unit)}
 <P1379>{$grandstream_temp_unit}</P1379>
 {else}
 <P1379>auto</P1379>
