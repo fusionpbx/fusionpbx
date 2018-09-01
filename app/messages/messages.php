@@ -204,12 +204,7 @@
 				echo th_order_by('message_to', $text['label-message_to'], $order_by, $order);
 				echo th_order_by('message_text', $text['label-message_text'], $order_by, $order);
 				echo "	<td class='list_control_icons'>";
-				if (permission_exists('message_add')) {
-					echo "		<a href='message_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
-				}
-				else {
-					echo "&nbsp;\n";
-				}
+				echo "		&nbsp;\n";
 				echo "	</td>\n";
 				echo "</tr>\n";
 
@@ -255,12 +250,7 @@
 	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
 	echo "		<td class='list_control_icons'>";
-	if (permission_exists('message_add')) {
-		echo 		"<a href='message_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
-	}
-	else {
-		echo 		"&nbsp;";
-	}
+	echo "			&nbsp;";
 	echo "		</td>\n";
 	echo "	</tr>\n";
  	echo "	</table>\n";
