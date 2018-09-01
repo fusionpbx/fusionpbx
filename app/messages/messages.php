@@ -170,13 +170,14 @@
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-messages']."</b></td>\n";
 	echo "		<form method='get' action=''>\n";
 	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
+	echo "				<input type='button' class='btn' value='".$text['button-send']."' onclick=\"window.location='message_send.php';\">\n";
 
 	if (permission_exists('message_all')) {
 		if ($_GET['show'] == 'all') {
-			echo "		<input type='hidden' name='show' value='all'>";
+			echo "				<input type='hidden' name='show' value='all'>";
 		}
 		else {
-			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='messages.php?show=all';\">\n";
+			echo "				<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='messages.php?show=all';\">\n";
 		}
 	}
 
