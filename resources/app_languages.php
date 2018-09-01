@@ -441,6 +441,27 @@ $text['button-save']['sv-se'] = "Spara";
 $text['button-save']['uk-ua'] = "Зберегти";
 $text['button-save']['tr-tr'] = "Kaydet";
 
+$text['button-send']['en-us'] = "Send";
+$text['button-send']['ar-eg'] = "";
+$text['button-send']['de-at'] = "";
+$text['button-send']['de-ch'] = "";
+$text['button-send']['de-de'] = "";
+$text['button-send']['es-cl'] = "";
+$text['button-send']['es-mx'] = "";
+$text['button-send']['fr-ca'] = "";
+$text['button-send']['fr-fr'] = "";
+$text['button-send']['he-il'] = "";
+$text['button-send']['it-it'] = "";
+$text['button-send']['nl-nl'] = "";
+$text['button-send']['pl-pl'] = "";
+$text['button-send']['pt-br'] = "";
+$text['button-send']['pt-pt'] = "";
+$text['button-send']['ro-ro'] = "";
+$text['button-send']['ru-ru'] = "";
+$text['button-send']['sv-se'] = "";
+$text['button-send']['uk-ua'] = "";
+$text['button-send']['tr-tr'] = "";
+
 $text['button-search']['en-us'] = "Search";
 $text['button-search']['ar-eg'] = "";
 $text['button-search']['de-at'] = "Suchen"; //copied from de-de
