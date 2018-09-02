@@ -641,6 +641,26 @@ $text['label-system_counts']['ru-ru'] = "Системные показатели
 $text['label-system_counts']['sv-se'] = "System Counts";
 $text['label-system_counts']['uk-ua'] = "система зараховує";
 
+$text['label-domain_counts']['en-us'] = "Domain Counts";
+$text['label-domain_counts']['ar-eg'] = "عدد النطاقات"; //translation provided by google translate
+$text['label-domain_counts']['de-at'] = "Domain zählt"; //translation provided by google translate
+$text['label-domain_counts']['de-ch'] = "Domain zählt"; //translation provided by google translate
+$text['label-domain_counts']['de-de'] = "Domain zählt"; //translation provided by google translate
+$text['label-domain_counts']['es-cl'] = "Cuenta de dominio"; //translation provided by google translate
+$text['label-domain_counts']['es-mx'] = "Cuenta de dominio"; //translation provided by google translate
+$text['label-domain_counts']['fr-ca'] = "Domain Counts"; //translation provided by google translate
+$text['label-domain_counts']['fr-fr'] = "Domain Counts"; //translation provided by google translate
+$text['label-domain_counts']['he-il'] = "ספירת דומיינים"; //translation provided by google translate
+$text['label-domain_counts']['it-it'] = "Conteggi di dominio"; //translation provided by google translate
+$text['label-domain_counts']['nl-nl'] = "Domein tellingen"; //translation provided by google translate
+$text['label-domain_counts']['pl-pl'] = "Liczba domen"; //translation provided by google translate
+$text['label-domain_counts']['pt-br'] = "Domain Counts"; //translation provided by google translate
+$text['label-domain_counts']['pt-pt'] = "Domain Counts"; //translation provided by google translate
+$text['label-domain_counts']['ro-ro'] = "Domeniul contează"; //translation provided by google translate
+$text['label-domain_counts']['ru-ru'] = "Количество доменов";
+$text['label-domain_counts']['sv-se'] = "Domänräkning"; //translation provided by google translate
+$text['label-domain_counts']['uk-ua'] = "Кількість доменів"; //translation provided by google translate
+
 $text['label-switch_uptime']['en-us'] = "Switch Uptime";
 $text['label-switch_uptime']['ar-eg'] = "";
 $text['label-switch_uptime']['de-at'] = "Switch Uptime"; //copied from de-de

@@ -100,14 +100,15 @@
 		}
 	}
 	if (is_array($hud_blocks) && sizeof($hud_blocks) > 0) {
-		$selected_blocks = array_unique($hud_blocks);
-		sort($selected_blocks, SORT_NATURAL);
+		foreach(array_values(array_unique($hud_blocks)) as $v) {
+			$selected_blocks[$v] = 1;
+		}
 	}
 	unset($group, $group_name, $index, $hud_block, $hud_blocks);
 
 
 //collect stats for counts and limits
-	if ((is_array($selected_blocks) && in_array('counts', $selected_blocks)) || (is_array($selected_blocks) && in_array('limits', $selected_blocks))) {
+	if ( isset($selected_blocks['counts']) || isset($selected_blocks['system_counts']) || isset($selected_blocks['limits']) ) {
 
 		//domains
 			if (permission_exists('domain_view')) {
@@ -120,213 +121,112 @@
 
 		//devices
 			if (permission_exists('device_view')) {
-				$stats['system']['devices']['total'] = 0;
-				$stats['system']['devices']['disabled'] = 0;
-				$stats['domain']['devices']['total'] = 0;
-				$stats['domain']['devices']['disabled'] = 0;
-				$sql = "select domain_uuid, device_enabled from v_devices";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				$stats['system']['devices']['total'] = count($result);
-				foreach ($result as $row) {
-					$stats['system']['devices']['disabled'] += ($row['device_enabled'] != 'true') ? 1 : 0;
-					if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
-						$stats['domain']['devices']['total']++;
-						$stats['domain']['devices']['disabled'] += ($row['device_enabled'] != 'true') ? 1 : 0;
-					}
-				}
-				unset ($sql, $prep_statement, $result);
+				$array['devices']['table'] = 'devices';
+				$array['devices']['count_field'] = 'device_enabled';
 			}
 
 		//extensions
 			if (permission_exists('extension_view')) {
-				$stats['system']['extensions']['total'] = 0;
-				$stats['system']['extensions']['disabled'] = 0;
-				$stats['domain']['extensions']['total'] = 0;
-				$stats['domain']['extensions']['disabled'] = 0;
-				$sql = "select domain_uuid, enabled from v_extensions";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				$stats['system']['extensions']['total'] = count($result);
-				foreach ($result as $row) {
-					$stats['system']['extensions']['disabled'] += ($row['enabled'] != 'true') ? 1 : 0;
-					if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
-						$stats['domain']['extensions']['total']++;
-						$stats['domain']['extensions']['disabled'] += ($row['enabled'] != 'true') ? 1 : 0;
-					}
-				}
-				unset ($sql, $prep_statement, $result);
+				$array['extensions']['table'] = 'extensions';
+				$array['extensions']['count_field'] = 'enabled';
 			}
 
 		//gateways
 			if (permission_exists('gateway_view')) {
-				$stats['system']['gateways']['total'] = 0;
-				$stats['system']['gateways']['disabled'] = 0;
-				$stats['domain']['gateways']['total'] = 0;
-				$stats['domain']['gateways']['disabled'] = 0;
-				$sql = "select domain_uuid, enabled from v_gateways";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				$stats['system']['gateways']['total'] = count($result);
-				foreach ($result as $row) {
-					$stats['system']['gateways']['disabled'] += ($row['enabled'] != 'true') ? 1 : 0;
-					if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
-						$stats['domain']['gateways']['total']++;
-						$stats['domain']['gateways']['disabled'] += ($row['enabled'] != 'true') ? 1 : 0;
-					}
-				}
-				unset ($sql, $prep_statement, $result);
+				$array['gateways']['table'] = 'gateways';
+				$array['gateways']['count_field'] = 'enabled';
 			}
 
 		//users
 			if (permission_exists('user_view') || if_group("superadmin")) {
-				$stats['system']['users']['total'] = 0;
-				$stats['system']['users']['disabled'] = 0;
-				$stats['domain']['users']['total'] = 0;
-				$stats['domain']['users']['disabled'] = 0;
-				$sql = "select domain_uuid, user_enabled from v_users";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				$stats['system']['users']['total'] = count($result);
-				foreach ($result as $row) {
-					$stats['system']['users']['disabled'] += ($row['user_enabled'] != 'true') ? 1 : 0;
-					if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
-						$stats['domain']['users']['total']++;
-						$stats['domain']['users']['disabled'] += ($row['user_enabled'] != 'true') ? 1 : 0;
-					}
-				}
-				unset ($sql, $prep_statement, $result);
+				$array['users']['table'] = 'users';
+				$array['users']['count_field'] = 'user_enabled';
 			}
 
 		//destinations
 			if (permission_exists('destination_view')) {
-				$stats['system']['destinations']['total'] = 0;
-				$stats['system']['destinations']['disabled'] = 0;
-				$stats['domain']['destinations']['total'] = 0;
-				$stats['domain']['destinations']['disabled'] = 0;
-				$sql = "select domain_uuid, destination_enabled from v_destinations";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				$stats['system']['destinations']['total'] = count($result);
-				foreach ($result as $row) {
-					$stats['system']['destinations']['disabled'] += ($row['destination_enabled'] != 'true') ? 1 : 0;
-					if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
-						$stats['domain']['destinations']['total']++;
-						$stats['domain']['destinations']['disabled'] += ($row['destination_enabled'] != 'true') ? 1 : 0;
-					}
-				}
-				unset ($sql, $prep_statement, $result);
+				$array['destinations']['table'] = 'destinations';
+				$array['destinations']['count_field'] = 'destination_enabled';
 			}
 
 		//call center queues
 			if (permission_exists('call_center_active_view')) {
-				$stats['system']['call_center_queues']['total'] = 0;
-				$stats['system']['call_center_queues']['disabled'] = 0;
-				$stats['domain']['call_center_queues']['total'] = 0;
-				$stats['domain']['call_center_queues']['disabled'] = 0;
-				$sql = "select domain_uuid from v_call_center_queues";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				$stats['system']['call_center_queues']['total'] = count($result);
-				foreach ($result as $row) {
-					//$stats['system']['call_center_queues']['disabled'] += ($row['queue_enabled'] != 'true') ? 1 : 0;
-					if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
-						$stats['domain']['call_center_queues']['total']++;
-						//$stats['domain']['call_center_queues']['disabled'] += ($row['queue_enabled'] != 'true') ? 1 : 0;
-					}
-				}
-				unset ($sql, $prep_statement, $result);
+				$array['call_center_queues']['table'] = 'call_center_queues';
 			}
 
 		//ivr menus
 			if (permission_exists('ivr_menu_view')) {
-				$stats['system']['ivr_menus']['total'] = 0;
-				$stats['system']['ivr_menus']['disabled'] = 0;
-				$stats['domain']['ivr_menus']['total'] = 0;
-				$stats['domain']['ivr_menus']['disabled'] = 0;
-				$sql = "select domain_uuid, ivr_menu_enabled from v_ivr_menus";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				$stats['system']['ivr_menus']['total'] = count($result);
-				foreach ($result as $row) {
-					$stats['system']['ivr_menus']['disabled'] += ($row['ivr_menu_enabled'] != 'true') ? 1 : 0;
-					if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
-						$stats['domain']['ivr_menus']['total']++;
-						$stats['domain']['ivr_menus']['disabled'] += ($row['ivr_menu_enabled'] != 'true') ? 1 : 0;
-					}
-				}
-				unset ($sql, $prep_statement, $result);
+				$array['ivr_menus']['table'] = 'ivr_menus';
+				$array['ivr_menus']['count_field'] = 'ivr_menu_enabled';
 			}
 
 		//ring groups
 			if (permission_exists('ring_group_view')) {
-				$stats['system']['ring_groups']['total'] = 0;
-				$stats['system']['ring_groups']['disabled'] = 0;
-				$stats['domain']['ring_groups']['total'] = 0;
-				$stats['domain']['ring_groups']['disabled'] = 0;
-				$sql = "select domain_uuid, ring_group_enabled from v_ring_groups";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				$stats['system']['ring_groups']['total'] = count($result);
-				foreach ($result as $row) {
-					$stats['system']['ring_groups']['disabled'] += ($row['ring_group_enabled'] != 'true') ? 1 : 0;
-					if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
-						$stats['domain']['ring_groups']['total']++;
-						$stats['domain']['ring_groups']['disabled'] += ($row['ring_group_enabled'] != 'true') ? 1 : 0;
-					}
-				}
-				unset ($sql, $prep_statement, $result);
+				$array['ring_groups']['table'] = 'ring_groups';
+				$array['ring_groups']['count_field'] = 'ring_group_enabled';
 			}
 
 		//voicemails
 			if (permission_exists('voicemail_view')) {
-				$stats['system']['voicemails']['total'] = 0;
-				$stats['system']['voicemails']['disabled'] = 0;
-				$stats['domain']['voicemails']['total'] = 0;
-				$stats['domain']['voicemails']['disabled'] = 0;
-				$sql = "select domain_uuid, voicemail_enabled from v_voicemails";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				$stats['system']['voicemails']['total'] = count($result);
-				foreach ($result as $row) {
-					$stats['system']['voicemails']['disabled'] += ($row['voicemail_enabled'] != 'true') ? 1 : 0;
-					if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
-						$stats['domain']['voicemails']['total']++;
-						$stats['domain']['voicemails']['disabled'] += ($row['voicemail_enabled'] != 'true') ? 1 : 0;
-					}
-				}
-				unset ($sql, $prep_statement, $result);
+				$array['voicemails']['table'] = 'voicemails';
+				$array['voicemails']['count_field'] = 'voicemail_enabled';
 			}
 
 		//voicemail messages
 			if (permission_exists('voicemail_message_view')) {
-				$stats['system']['messages']['total'] = 0;
-				$stats['system']['messages']['new'] = 0;
-				$stats['domain']['messages']['total'] = 0;
-				$stats['domain']['messages']['new'] = 0;
-				$sql = "select domain_uuid, message_status from v_voicemail_messages";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				$stats['system']['messages']['total'] = count($result);
-				foreach ($result as $row) {
-					$stats['system']['messages']['new'] += ($row['message_status'] != 'saved') ? 1 : 0;
-					if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
-						$stats['domain']['messages']['total']++;
-						$stats['domain']['messages']['new'] += ($row['message_status'] != 'saved') ? 1 : 0;
+				$array['voicemail_messages']['table'] = 'voicemail_messages';
+				$array['voicemail_messages']['count_field'] = 'message_status';
+				$array['voicemail_messages']['count_value'] = 'saved';
+				$array['voicemail_messages']['type'] = 'new';
+			}
+			
+
+			$sub_queries = array();
+			foreach($array as $section => $data) {
+				$table = $data['table'];
+				$sub_queries[] = "SELECT count(*) AS ${section}_system_total FROM v_$table";
+				$sub_queries[] = "SELECT count(*) AS ${section}_domain_total FROM v_$table WHERE domain_uuid = :domain_uuid";
+				if (strlen($data['count_field']) > 0) {
+					$count_type = (strlen($data['count_type']) > 0 ? $data['count_type'] : 'not' );
+					$count_field = $data['count_field']; 
+					$count_value = (strlen($data['count_value']) > 0 ? $data['count_value'] : 'true' );
+					if ($count_type == 'not') {
+						$sub_queries[] = "SELECT count(*) AS ${section}_system_count FROM v_$table " .
+							"WHERE ($count_field != '$count_value' or $count_field is NULL)";
+						$sub_queries[] = "SELECT count(*) AS ${section}_domain_count FROM v_$table " .
+							"WHERE ($count_field != '$count_value' or $count_field is NULL) AND domain_uuid = :domain_uuid";
+					}
+					else {
+						$sub_queries[] = "SELECT count(*) AS ${section}_system_count FROM v_$table " .
+							"WHERE $count_field = '$count_value'";
+						$sub_queries[] = "SELECT count(*) AS ${section}_domain_count FROM v_$table " .
+							"WHERE $count_field = '$count_value' AND domain_uuid = :domain_uuid";
 					}
 				}
-				unset ($sql, $prep_statement, $result);
 			}
+			unset ($table, $count_field, $count_value, $count_type);
+			if (count($sub_queries) > 0) {
+				$sql = "SELECT (";
+				$sql .= implode("), (", $sub_queries);
+				$sql .= ")";
+				$prep_statement = $db->prepare(check_sql($sql));
+				if ($prep_statement) {
+					$prep_statement->bindParam(':domain_uuid', $_SESSION['domain_uuid']);
+					$prep_statement->execute();
+					$result = $prep_statement->fetch(PDO::FETCH_ASSOC);
+					foreach($array as $section => $data) {
+						$type = (strlen($data['type']) > 0 ? $data['type'] : 'disabled');
+						$stats['system'][$section]['total'] = $result["${section}_system_total"];
+						$stats['domain'][$section]['total'] = $result["${section}_domain_total"];
+						if (strlen($data['count_field']) > 0) {
+							$stats['system'][$section][$type] = $result["${section}_system_count"];
+							$stats['domain'][$section][$type] = $result["${section}_domain_count"];
+						}
+					}
+				}
+				unset ($sql, $prep_statement, $result, $type);
+			}
+			unset ($array, $sub_queries);
 	}
 
 
@@ -335,7 +235,7 @@
 	$theme_image_path = $_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/"; // used for missed and recent calls
 
 	//voicemail
-		if (is_array($selected_blocks) && in_array('voicemail', $selected_blocks) && permission_exists('voicemail_message_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/voicemails/")) {
+		if (isset($selected_blocks['voicemail']) && permission_exists('voicemail_message_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/voicemails/")) {
 			//required class
 				require_once "app/voicemails/resources/classes/voicemail.php";
 			//get the voicemail
@@ -404,13 +304,13 @@
 		}
 
 	//missed calls
-		if (is_array($selected_blocks) && in_array('missed', $selected_blocks) && permission_exists('xml_cdr_view') && is_array($_SESSION['user']['extension']) && sizeof($_SESSION['user']['extension']) > 0) {
+		if (isset($selected_blocks['missed']) && permission_exists('xml_cdr_view') && is_array($_SESSION['user']['extension']) && sizeof($_SESSION['user']['extension']) > 0) {
 			foreach ($_SESSION['user']['extension'] as $assigned_extension) {
 				$assigned_extensions[$assigned_extension['extension_uuid']] = $assigned_extension['user'];
 			}
 
-			//if also viewing system status, show more recent calls (more room avaialble)
-			$missed_limit = (is_array($selected_blocks) && in_array('counts', $selected_blocks)) ? 10 : 5;
+			//if also viewing system status, show more recent calls (more room available)
+			$missed_limit = isset($selected_blocks['counts']) ? 10 : 5;
 
 			$sql = "
 				select
@@ -520,13 +420,13 @@
 		}
 
 	//recent calls
-		if (is_array($selected_blocks) && in_array('recent', $selected_blocks) && permission_exists('xml_cdr_view') && is_array($_SESSION['user']['extension']) && sizeof($_SESSION['user']['extension']) > 0) {
+		if (isset($selected_blocks['recent']) && permission_exists('xml_cdr_view') && is_array($_SESSION['user']['extension']) && sizeof($_SESSION['user']['extension']) > 0) {
 			foreach ($_SESSION['user']['extension'] as $assigned_extension) {
 				$assigned_extensions[$assigned_extension['extension_uuid']] = $assigned_extension['user'];
 			}
 
 			//if also viewing system status, show more recent calls (more room avaialble)
-			$recent_limit = (is_array($selected_blocks) && in_array('counts', $selected_blocks)) ? 10 : 5;
+			$recent_limit = isset($selected_blocks['counts']) ? 10 : 5;
 
 			$sql = "
 				select
@@ -668,7 +568,7 @@
 
 
 	//domain limits
-		if (is_array($selected_blocks) && in_array('limits', $selected_blocks) && is_array($_SESSION['limit']) && sizeof($_SESSION['limit']) > 0) {
+		if (isset($selected_blocks['limits']) && is_array($_SESSION['limit']) && sizeof($_SESSION['limit']) > 0) {
 			$c = 0;
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
@@ -755,15 +655,21 @@
 
 
 	//system/domain counts
-		if (is_array($selected_blocks) && in_array('counts', $selected_blocks)) {
-			$c = 0;
+		if (isset($selected_blocks['counts']) || isset($selected_blocks['system_counts'])) {
+			if (isset($selected_blocks['counts'])) {
+				$scopes[] = 'domain';
+			}
+			if (permission_exists('domain_view') && isset($selected_blocks['system_counts'])) {
+				$scopes[] = 'system';
+			}
+	
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
-
-			$scope = (permission_exists('dialplan_add')) ? 'system' : 'domain';
-
+	
+			foreach ($scopes as $scope){
+			$c = 0;
 			$show_stat = true;
-			if (permission_exists('domain_view')) {
+			if ($scope == 'system') {
 				$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/core/domain_settings/domains.php'\"";
 				$hud_stat = $stats[$scope]['domains']['total'] - $stats[$scope]['domains']['disabled'];
 				$hud_stat_title = $text['label-active_domains'];
@@ -782,7 +688,7 @@
 				$show_stat = false;
 			}
 
-			$hud[$n]['html'] .= "<span class='hud_title' ".$onclick.">".$text['label-system_counts']."</span>";
+			$hud[$n]['html'] .= "<span class='hud_title' ".$onclick.">".$text["label-${scope}_counts"]."</span>";
 
 			if ($show_stat) {
 				$hud[$n]['html'] .= "<span class='hud_stat' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$hud_stat."</span>";
@@ -798,7 +704,7 @@
 			$hud[$n]['html'] .= "</tr>\n";
 
 			//domains
-				if (permission_exists('domain_view')) {
+				if ($scope == 'system') {
 					$tr_link = "href='".PROJECT_PATH."/core/domain_settings/domains.php'";
 					$hud[$n]['html'] .= "<tr ".$tr_link.">\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-domains']."</a></td>\n";
@@ -868,7 +774,7 @@
 					$tr_link = "href='".PROJECT_PATH."/app/call_centers/call_center_queues.php'";
 					$hud[$n]['html'] .= "<tr ".$tr_link.">\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-call_center_queues']."</a></td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['call_center_queues']['disabled']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>-</td>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['call_center_queues']['total']."</td>\n";
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
@@ -918,8 +824,8 @@
 					$tr_link = "href='".PROJECT_PATH."/app/voicemails/voicemails.php'";
 					$hud[$n]['html'] .= "<tr ".$tr_link.">\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-messages']."</a></td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['messages']['new']."</td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['messages']['total']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['voicemail_messages']['new']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['voicemail_messages']['total']."</td>\n";
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
@@ -927,10 +833,11 @@
 			$hud[$n]['html'] .= "</table>\n";
 			$hud[$n]['html'] .= "</div>";
 			$n++;
+			}
 		}
 
 	//system status
-		if (is_array($selected_blocks) && in_array('system', $selected_blocks)) {
+		if (isset($selected_blocks['system'])) {
 			$c = 0;
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
@@ -1137,7 +1044,7 @@
 	if (is_array($hud) && sizeof($hud) > 0) {
 
 		//javascript function: send_cmd
-		if (((is_array($selected_blocks) && in_array('missed', $selected_blocks)) || (is_array($selected_blocks) && in_array('recent', $selected_blocks))) && permission_exists('xml_cdr_view')) {
+		if ((isset($selected_blocks['missed']) || isset($selected_blocks['recent'])) && permission_exists('xml_cdr_view')) {
 			echo "<script type=\"text/javascript\">\n";
 			echo "	function send_cmd(url) {\n";
 			//echo "		alert(url);\n";
@@ -1191,10 +1098,10 @@
 	}
 
 //additional items for the dashbaord
-	if (!is_array($selected_blocks) || in_array('call_routing', $selected_blocks) || in_array('ring_groups', $selected_blocks)) {
+	if (isset($selected_blocks['call_routing']) || isset($selected_blocks['ring_groups'])) {
 		echo "<div class='row' style='margin-top: 30px;'>\n";
 
-		if (!is_array($selected_blocks) || in_array('caller_id', $selected_blocks)) {
+		if (isset($selected_blocks['caller_id'])) {
 			//caller id management
 				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/extensions/extension_dashboard.php")) {
 						if (permission_exists('extension_caller_id')) {
@@ -1206,7 +1113,7 @@
 				}
 		}
 
-		if (!is_array($selected_blocks) || in_array('call_routing', $selected_blocks)) {
+		if (isset($selected_blocks['call_routing'])) {
 			//call routing
 				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/calls/calls.php")) {
 					if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
@@ -1218,7 +1125,7 @@
 				}
 		}
 
-		if (!is_array($selected_blocks) || in_array('ring_groups', $selected_blocks)) {
+		if (isset($selected_blocks['ring_groups'])) {
 			//ring group forward
 				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/ring_groups/ring_group_forward.php")) {
 					if (permission_exists('ring_group_forward')) {
@@ -1230,7 +1137,7 @@
 				}
 		}
 
-		if (!is_array($selected_blocks) || in_array('call_center_agents', $selected_blocks)) {
+		if (isset($selected_blocks['call_center_agents'])) {
 			//call center agent
 				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/call_centers/call_center_agent_dashboard.php")) {
 					if (permission_exists('call_center_agent_view')) {
@@ -1242,7 +1149,7 @@
 				}
 		}
 
-		if (!is_array($selected_blocks) || in_array('device_keys', $selected_blocks)) {
+		if (isset($selected_blocks['device_keys'])) {
 			//device key management
 				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/devices/device_dashboard.php")) {
 					if (permission_exists('device_key_edit')) {
@@ -1265,5 +1172,5 @@
 
 //show the footer
 	require_once "resources/footer.php";
-
+	
 ?>
