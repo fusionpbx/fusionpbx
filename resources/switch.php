@@ -1307,7 +1307,6 @@ if (!function_exists('switch_conf_xml')) {
 			else {
 				if (file_exists(PHP_BINDIR.'/php')) { define("PHP_BIN", "php"); }
 				$v_mailer_app = PHP_BINDIR."/".PHP_BIN." ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/secure/v_mailto.php";
-				$v_mailer_app = sprintf('"%s"', $v_mailer_app);
 				$v_mailer_app_args = "-t";
 			}
 
