@@ -688,7 +688,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
-		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_device_vendor";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_device_vendors";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "device_vendor_uuid";
 		$z++;
 		//$apps[$x]['db'][$y]['fields'][$z]['name'] = "label";
