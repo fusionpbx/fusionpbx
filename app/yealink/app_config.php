@@ -30,6 +30,14 @@
 
 	//default settings
 		$y=0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a9f1e1a3-8165-45ed-b598-a09ea8965966";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_provision_url";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Provisioning URL for Yealink";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "fc2fa8cd-b14e-48e3-99bd-7c01c9d6208d";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_time_zone";
@@ -405,7 +413,6 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "hxxps://replace-this.url/openvpn.tar";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "(URL within 511 characters)";
-
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b75ef82b-a225-43a5-a208-78d545cca8aa";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -518,5 +525,5 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Local";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Remote Phonebook Extensions on Yealink";
-		
+
 ?>
