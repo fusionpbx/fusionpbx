@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2018
+	Portions created by the Initial Developer are Copyright (C) 2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -84,7 +84,6 @@
 	$phone_number = preg_replace('{[\D]}', '', $phone_number);
 
 //get the contact uuid
-	//$sql = "SELECT trim(c.contact_name_given || ' ' || c.contact_name_family || ' (' || c.contact_organization || ')') AS name, p.phone_number AS number ";
 	$sql = "SELECT c.contact_uuid ";
 	$sql .= "FROM v_contacts as c, v_contact_phones as p ";
 	$sql .= "WHERE p.contact_uuid = c.contact_uuid ";
@@ -96,6 +95,9 @@
 	$prep_statement->execute();
 	$row = $prep_statement->fetch(PDO::FETCH_NAMED);
 	$contact_uuid = $row['contact_uuid'];
+	//$contact_name_given = $row['contact_name_given'];
+	//$contact_name_family = $row['contact_name_family'];
+	//$contact_organization = $row['contact_organization'];
 
 //build the array
 	$array['messages'][0]["domain_uuid"] = $domain_uuid;
@@ -141,23 +143,36 @@
 	$p->delete("message_add", "temp");
 
 //get the list of extensions using the user_uuid
-	//$user_uuid
-
-//forward the messages over SIP
-	//
+	$sql = "select * from v_domains as d, v_extensions as e ";
+	$sql .= "where extension_uuid in (select extension_uuid from v_extension_users where user_uuid = '".$user_uuid."') ";
+	$sql .= "and e.domain_uuid = d.domain_uuid ";
+	$sql .= "and e.enabled = 'true' ";
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+		$prep_statement->execute();
+		$extensions = $prep_statement->fetchall(PDO::FETCH_NAMED);
+	}
 
 //create the event socket connection
-	//$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-	//if ($fp) {
-		//prepare the command
-	//		$command = "";
-		//send the command
-	//		$response = event_socket_request($fp, "api ".$command);
-	//		$response = event_socket_request($fp, "api log notice ".$command);
-		//close the connection
-	//		fclose($fp);
-	//}
-	
+	if (is_array($extensions)) {
+		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	}
+
+//send the sip message
+	if (is_array($extensions)) {
+		foreach ($extensions as $row) {
+			$domain_name = $row['domain_name'];
+			$extension = $row['extension'];
+			$number_alias = $row['number_alias'];
+
+			//send the sip messages
+			$command = "luarun app/messages/resources/send.lua ".$message["from"]."@".$domain_name." ".$extension."@".$domain_name."  '".$message["text"]."'";
+
+			//send the command
+			$response = event_socket_request($fp, "api ".$command);
+			$response = event_socket_request($fp, "api log notice ".$command);
+		}
+	}
 
 //set the file
 	//$file = '/tmp/sms.txt';
