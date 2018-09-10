@@ -295,6 +295,19 @@
 									number_alias = row.number_alias;
 									number_alias_string = [[ number-alias="]] .. row.number_alias .. [["]];
 								end
+
+							--get the user_uuid
+								local sql = "SELECT user_uuid FROM v_extension_users WHERE domain_uuid = :domain_uuid and extension_uuid = :extension_uuid "
+								local params = {domain_uuid=domain_uuid, extension_uuid=extension_uuid};
+								user_uuid = dbh:first_value(sql, params);
+
+							--get the contact_uuid
+								if (user_uuid ~= nil) and (string.len(user_uuid) > 0) then
+									local sql = "SELECT contact_uuid FROM v_users WHERE domain_uuid = :domain_uuid and user_uuid = :user_uuid "
+									local params = {domain_uuid=domain_uuid, user_uuid=user_uuid};
+									contact_uuid = dbh:first_value(sql, params);
+								end
+
 							--params
 								password = row.password;
 								mwi_account = row.mwi_account;
@@ -499,6 +512,12 @@
 							table.insert(xml, [[								<variable name="domain_uuid" value="]] .. domain_uuid .. [["/>]]);
 							table.insert(xml, [[								<variable name="domain_name" value="]] .. domain_name .. [["/>]]);
 							table.insert(xml, [[								<variable name="extension_uuid" value="]] .. extension_uuid .. [["/>]]);
+							if (user_uuid ~= nil) and (string.len(user_uuid) > 0) then
+								table.insert(xml, [[								<variable name="user_uuid" value="]] .. user_uuid .. [["/>]]);
+							end
+							if (contact_uuid ~= nil) and (string.len(contact_uuid) > 0) then
+								table.insert(xml, [[								<variable name="contact_uuid" value="]] .. contact_uuid .. [["/>]]);
+							end
 							table.insert(xml, [[								<variable name="call_timeout" value="]] .. call_timeout .. [["/>]]);
 							table.insert(xml, [[								<variable name="caller_id_name" value="]] .. sip_from_user .. [["/>]]);
 							table.insert(xml, [[								<variable name="caller_id_number" value="]] .. sip_from_number .. [["/>]]);
