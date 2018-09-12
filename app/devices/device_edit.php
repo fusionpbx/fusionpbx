@@ -841,10 +841,16 @@
 		if (permission_exists('device_line_server_address')) {
 			echo "				<td class='vtable'>".$text['label-server_address']."</td>\n";
 		}
-		if (permission_exists('device_outbound_proxy_primary')) {
+		if (permission_exists('device_line_server_address_primary')) {
+			echo "				<td class='vtable'>".$text['label-server_address_primary']."</td>\n";
+		}
+		if (permission_exists('device_line_server_address_secondary')) {
+			echo "				<td class='vtable'>".$text['label-server_address_secondary']."</td>\n";
+		}
+		if (permission_exists('device_line_outbound_proxy_primary')) {
 			echo "				<td class='vtable'>".$text['label-outbound_proxy_primary']."</td>\n";
 		}
-		if (permission_exists('device_outbound_proxy_secondary')) {
+		if (permission_exists('device_line_outbound_proxy_secondary')) {
 			echo "				<td class='vtable'>".$text['label-outbound_proxy_secondary']."</td>\n";
 		}
 		echo "				<td class='vtable'>".$text['label-display_name']."</td>\n";
@@ -933,6 +939,7 @@
 				echo "				<option value='32' ".($row['line_number'] == "32" ? $selected:"").">32</option>\n";
 				echo "				</select>\n";
 				echo "			</td>\n";
+
 				if (permission_exists('device_line_server_address')) {
 					echo "			<td valign='top' align='left' nowrap='nowrap'>\n";
 					echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][server_address]' maxlength='255' value=\"".escape($row['server_address'])."\"/>\n";
@@ -942,8 +949,19 @@
 					echo "				<input type='hidden' name='device_lines[".$x."][server_address]' value=\"".escape($row['server_address'])."\"/>\n";
 				}
 
-				if (permission_exists('device_outbound_proxy_primary')) {
-					if (permission_exists('device_outbound_proxy_secondary')) {
+				if (permission_exists('device_line_server_address_primary')) {
+					echo "			<td valign='top' align='left' nowrap='nowrap'>\n";
+					echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][server_address_primary]' maxlength='255' value=\"".escape($row['server_address_primary'])."\"/>\n";
+					echo "			</td>\n";
+				}
+				if (permission_exists('device_line_server_address_secondary')) {
+					echo "			<td valign='top' align='left' nowrap='nowrap'>\n";
+					echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][server_address_secondary]' maxlength='255' value=\"".escape($row['server_address_secondary'])."\"/>\n";
+					echo "			</td>\n";
+				}
+
+				if (permission_exists('device_line_outbound_proxy_primary')) {
+					if (permission_exists('device_line_outbound_proxy_secondary')) {
 						$placeholder_label = $text['label-primary'];
 					}
 					echo "			<td align='left'>\n";
@@ -952,7 +970,7 @@
 					unset($placeholder_label);
 				}
 				
-				if (permission_exists('device_outbound_proxy_secondary')) {
+				if (permission_exists('device_line_outbound_proxy_secondary')) {
 					echo "			<td align='left'>\n";
 					echo "				<input class='formfld' style='width: 65px;' type='text' name='device_lines[".$x."][outbound_proxy_secondary]' placeholder=\"".$text['label-secondary']."\" maxlength='255' value=\"".escape($row['outbound_proxy_secondary'])."\"/>\n";
 					echo "			</td>\n";
