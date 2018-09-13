@@ -444,7 +444,15 @@
 						$db->exec(check_sql($sql));
 						unset($sql);
 					}
-
+				//update device key label
+					if (strlen($effective_caller_id_name) > 0) {​
+						$sql = "update v_device_keys set ";​
+						$sql .= "device_key_label = '".$effective_caller_id_name."' ";​
+						$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";​
+						$sql .= "and device_key_value = '".$extension."' ";​
+						$db->exec(check_sql($sql));​
+						unset($sql);​
+					}​
 				//assign the user to the extension 
 					if ($action == "update" && strlen($_POST["extension_users"][0]["user_uuid"]) > 0) {
 						$array["extension_users"][0]["extension_user_uuid"] = uuid();
