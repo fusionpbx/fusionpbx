@@ -91,7 +91,7 @@
 			$sql = "update v_dialplans set dialplan_order = '890' where dialplan_order = '999' and dialplan_name = 'local_extension';\n";
 			$db->query($sql);
 			unset($sql);
-		
+
 		//set empty strings to null
 			$sql = "update v_device_lines set outbound_proxy_primary = null where outbound_proxy_primary = '';\n";
 			$db->query($sql);
