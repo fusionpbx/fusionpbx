@@ -193,7 +193,7 @@
 
 		//add the call_center_queue_uuid
 			if (strlen($_POST["call_center_queue_uuid"]) == 0) {
-				$call_center_queue_uuid = uuid();
+				$call_center_queue_uuid = strtoupper(uuid());
 				$_POST["call_center_queue_uuid"] = $call_center_queue_uuid;
 			}
 
