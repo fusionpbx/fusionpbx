@@ -392,7 +392,7 @@
 //get device lines
 	$sql = "SELECT * FROM v_device_lines ";
 	$sql .= "where device_uuid = '".$device_uuid."' ";
-	$sql .= "order by line_number asc ";
+	$sql .= "order by cast(line_number as int) asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$device_lines = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -937,6 +937,22 @@
 				echo "				<option value='30' ".($row['line_number'] == "30" ? $selected:"").">30</option>\n";
 				echo "				<option value='31' ".($row['line_number'] == "31" ? $selected:"").">31</option>\n";
 				echo "				<option value='32' ".($row['line_number'] == "32" ? $selected:"").">32</option>\n";
+				echo "				<option value='33' ".($row['line_number'] == "33" ? $selected:"").">33</option>\n";
+				echo "				<option value='34' ".($row['line_number'] == "34" ? $selected:"").">34</option>\n";
+				echo "				<option value='35' ".($row['line_number'] == "35" ? $selected:"").">35</option>\n";
+				echo "				<option value='36' ".($row['line_number'] == "36" ? $selected:"").">36</option>\n";
+				echo "				<option value='37' ".($row['line_number'] == "37" ? $selected:"").">37</option>\n";
+				echo "				<option value='38' ".($row['line_number'] == "38" ? $selected:"").">38</option>\n";
+				echo "				<option value='39' ".($row['line_number'] == "39" ? $selected:"").">39</option>\n";
+				echo "				<option value='40' ".($row['line_number'] == "40" ? $selected:"").">40</option>\n";
+				echo "				<option value='41' ".($row['line_number'] == "41" ? $selected:"").">41</option>\n";
+				echo "				<option value='42' ".($row['line_number'] == "42" ? $selected:"").">42</option>\n";
+				echo "				<option value='43' ".($row['line_number'] == "43" ? $selected:"").">43</option>\n";
+				echo "				<option value='44' ".($row['line_number'] == "44" ? $selected:"").">44</option>\n";
+				echo "				<option value='45' ".($row['line_number'] == "45" ? $selected:"").">45</option>\n";
+				echo "				<option value='46' ".($row['line_number'] == "46" ? $selected:"").">46</option>\n";
+				echo "				<option value='47' ".($row['line_number'] == "47" ? $selected:"").">47</option>\n";
+				echo "				<option value='48' ".($row['line_number'] == "48" ? $selected:"").">48</option>\n";
 				echo "				</select>\n";
 				echo "			</td>\n";
 
