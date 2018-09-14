@@ -63,6 +63,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Feature Key Sync 1=enabled 0=disable";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "51697088-2ecf-4c9c-95d5-429c972606c2";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_nat_ip";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = " ";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c927e677-61c8-45c6-b827-8d3811584090";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_bluetooth_radio_on";
@@ -70,6 +78,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Bluetooth Radio 1=enabled 0=disable";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "deca02ea-2a9a-4741-90bd-ad4c1aa1bcbe";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_default_transfer_method";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Consultative";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Blind, Consultative";
 		$y++;
 
 ?>
