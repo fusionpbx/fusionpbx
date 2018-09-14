@@ -85,7 +85,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Consultative";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Blind, Consultative";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Transfer method: Blind, Consultative";
 		$y++;
 
 ?>
