@@ -161,9 +161,6 @@
 			//echo "</pre>";
 			//exit;
 
-		//santize the from
-			$message_from = preg_replace('{[\D]}', '', $message_from);
-
 		//send the message to the provider
 			$array["to"] = $message_to;
 			$array["text"] = $message_text;
@@ -179,6 +176,11 @@
 			$http_auth_user = $_SESSION['message']['http_auth_user']['text'];
 			$http_auth_password = $_SESSION['message']['http_auth_password']['text'];
 
+		//santize the from
+			$message_from = preg_replace('{[\D]}', '', $message_from);
+
+		//exchange variable name with their values
+			$http_destination = str_replace("${from}", $message_from, $http_destination);
 		//send the message to the provider
 			$headers[] = "Content-type: ".trim($http_content_type);
 			if ($http_auth_enabled == 'true' && $http_auth_type == 'basic') {
