@@ -66,7 +66,11 @@
 
 <!--  Voice Mail UserID -->
 <!--  String -->
+{if isset($grandstream_voicemail_id) }
+<P33>{$grandstream_voicemail_id}</P33>
+{else}
 <P33>*97</P33>
+{/if}
 
 <!-- ############################################################## -->
 <!--  Account 1/Network Settings -->
