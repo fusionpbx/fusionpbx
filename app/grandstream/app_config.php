@@ -98,7 +98,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Default VLAN for phone LAN port.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Default VLAN for phone LAN port. Default 0 is disabled.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5200174e-b644-438f-a2f8-b721ee052cea";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
