@@ -138,7 +138,7 @@
 			$message['user_uuid'] = $_SESSION["user_uuid"];
 			$message['contact_uuid'] = $contact_uuid;
 			$message['message_type'] = $message_type;
-			$message['message_direction'] = 'outbound';
+			$message['message_direction'] = 'send';
 			$message['message_date'] = 'now()';
 			$message['message_from'] = $message_from;
 			$message['message_to'] = $message_to;
