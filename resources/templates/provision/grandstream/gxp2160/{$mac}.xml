@@ -4870,8 +4870,10 @@
 
 <!--  Firmware Server Path Default fm.grandstream.com/gs -->
 <!--  String -->
-{if isset($grandstream_firmware_path)}
-<P192>{$grandstream_firmware_path}</P192>
+{if isset($grandstream_firmware_path) && isset($firmware_version)}
+<P192>{$grandstream_firmware_path}/gxp2160/{$firmware_version}</P192>
+{elseif isset($grandstream_firmware_path)}
+<P192>{$grandstream_firmware_path}/gxp2160</P192>
 {else}
 <P192>{$domain_name}{$project_path}/app/provision</P192>
 {/if}
@@ -5989,7 +5991,7 @@
 <!--  Degree Unit. auto - Automatic, f - Fahrenheit, c - Celsius. Default is auto -->
 <!--  String: auto, f, c -->
 <!--  Mandatory -->
-<P1379>{if isset ($grandstream_temp_unit)}
+{if isset ($grandstream_temp_unit)}
 <P1379>{$grandstream_temp_unit}</P1379>
 {else}
 <P1379>auto</P1379>

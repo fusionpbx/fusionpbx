@@ -47,7 +47,7 @@
 	$obj->delete($_GET["id"]);
 
 //delete message
-	messages::add($text['message-delete']);
+	message::add($text['message-delete']);
 
 //redirect the user
 	header('Location: call_recordings.php');

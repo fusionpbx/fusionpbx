@@ -171,7 +171,7 @@
 				unset($sql);
 		}
 
-		messages::add($text['message-delete']);
+		message::add($text['message-delete']);
 		header("Location: conference_room_edit.php?id=".escape($conference_room_uuid));
 		return;
 	}
@@ -360,7 +360,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						unset($sql);
 					}
 
-				messages::add($text['message-add']);
+				message::add($text['message-add']);
 			} //if ($action == "add")
 
 			if ($action == "update" && permission_exists('conference_room_edit')) {
@@ -426,7 +426,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$db->exec(check_sql($sql));
 					unset($sql);
 
-				messages::add($text['message-update']);
+				message::add($text['message-update']);
 			} //if ($action == "update")
 
 			//assign the user to the meeting
@@ -450,7 +450,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$db->exec(check_sql($sql));
 					unset($sql);
 
-					messages::add($text['message-add']);
+					message::add($text['message-add']);
 				}
 
 			header("Location: conference_room_edit.php?id=".escape($conference_room_uuid));

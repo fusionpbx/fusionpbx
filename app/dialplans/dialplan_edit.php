@@ -201,10 +201,10 @@
 
 		//set the message
 			if ($action == "add") {
-				messages::add($text['message-add']);
+				message::add($text['message-add']);
 			}
 			else if ($action == "update") {
-				messages::add($text['message-update']);
+				message::add($text['message-update']);
 			}
 			header("Location: ?id=".escape($dialplan_uuid).(($app_uuid != '') ? "&app_uuid=".escape($app_uuid) : null));
 			exit;
@@ -499,10 +499,10 @@
 		}
 		if (is_array($_SESSION['domains'])) foreach ($_SESSION['domains'] as $row) {
 			if ($row['domain_uuid'] == $domain_uuid) {
-				echo "		<option value='".$row['domain_uuid']."' selected='selected'>".escape($row['domain_name'])."</option>\n";
+				echo "		<option value='".escape($row['domain_uuid'])."' selected='selected'>".escape($row['domain_name'])."</option>\n";
 			}
 			else {
-				echo "		<option value='".$row['domain_uuid']."'>".escape($row['domain_name'])."</option>\n";
+				echo "		<option value='".escape($row['domain_uuid'])."'>".escape($row['domain_name'])."</option>\n";
 			}
 		}
 		echo "		</select>\n";

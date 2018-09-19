@@ -140,7 +140,7 @@
 			$db->exec(check_sql($sql));
 
 		//redirect the browser
-			messages::add($text['message-delete']);
+			message::add($text['message-delete']);
 			header("Location: fax_edit.php?id=".$fax_uuid);
 			return;
 	}
@@ -168,7 +168,7 @@
 			$db->exec($sql_insert);
 
 		//redirect the browser
-			messages::add($text['confirm-add']);
+			message::add($text['confirm-add']);
 			header("Location: fax_edit.php?id=".$fax_uuid);
 			return;
 	}
@@ -381,10 +381,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			//redirect the browser
 				if ($action == "update" && permission_exists('fax_extension_edit')) {
-					messages::add($text['confirm-update']);
+					message::add($text['confirm-update']);
 				}
 				if ($action == "add" && permission_exists('fax_extension_add')) {
-					messages::add($text['confirm-add']);
+					message::add($text['confirm-add']);
 				}
 				header("Location: fax.php");
 				return;

@@ -651,98 +651,26 @@
 						--sip uri
 						dial_string = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
 					else
-						--external number or direct dial
-							dial_string = nil
+						--external number
+							route_bridge = 'loopback/'..destination_number;
 
-						--prepare default actions
-							local confirm = string.gsub(group_confirm, ',$', '') -- remove `,` from end of string
-							local route = { -- predefined actions
-								"domain_name=${domain_name}",
-								"domain_uuid=${domain_uuid}",
-								"sip_invite_domain=${domain_name}",
-								"call_direction=${call_direction}",
-								"leg_timeout=${destination_timeout}",
-								delay_name .. "=${destination_delay}",
-								"ignore_early_media=true",
-								confirm,
-							}
-
-						--prepare default variables
-							local session_mt = {__index = function(_, k) return session:getVariable(k) end}
-							local params = setmetatable({
-								__api__             = api,
-								destination_number  = destination_number,
-								user_exists         = 'false',
-								call_direction      = 'outbound',
-								domain_name         = domain_name,
-								domain_uuid         = domain_uuid,
-								destination_timeout = destination_timeout,
-								destination_delay   = destination_delay,
-								toll_allow			= toll_allow,
-							}, session_mt)
-
-						--find destination route
-							if (tonumber(destination_number) == nil) then
-								--user define direct destination like `[key=value]sofia/gateway/carrier/123456`
-								local variables, destination = string.match(destination_number, "^%[(.-)%](.+)$")
-								if not variables then
-									destination = destination_number
-								else
-									for action in split_vars_pairs(variables) do
-										route[#route + 1] = action
-									end
-								end
-								route = route_to_bridge.apply_vars(route, params)
-								route.bridge = destination
-							else
-								if (user_exists == "true") then
-									route.bridge = 'user/'..destination_number..'@'..domain_name;
-								else
-									route.bridge = 'loopback/'..destination_number;
-								end
-								--user define external number as destination
-								--route = route_to_bridge.apply_vars(route, params)
-								--route = route_to_bridge(dialplans, domain_uuid, params, route)
+						--set the toll allow to an empty string
+							if (toll_allow == nil) then
+								toll_allow = '';
 							end
 
-						--build the dial string
-							if route and route.bridge then
-								local remove_actions = {
-									["effective_caller_id_name="]   = true;
-									["effective_caller_id_number="] = true;
-									['sip_h_X-accountcode=']        = true;
-								}
-
-								-- cleanup variables
-								local i = 1 while i < #route do
-									-- remove vars from prev variant
-									if remove_actions[ route[i] ] then
-										table.remove(route, i)
-										i = i - 1
-									-- remove vars with unresolved vars
-									elseif string.find(route[i], '%${.+}') then
-										table.remove(route, i)
-										i = i - 1
-									-- remove vars with empty values
-									elseif string.find(route[i], '=$') then
-										table.remove(route, i)
-										i = i - 1
-									end
-									i = i + 1
-								end
-
-								--set the caller id
-								caller_id = '';
-								if (ring_group_caller_id_name ~= nil) then
-									caller_id = "origination_caller_id_name='"..ring_group_caller_id_name.."'"
-								end
-								if (ring_group_caller_id_number ~= nil) then
-									caller_id = caller_id .. ",origination_caller_id_number="..ring_group_caller_id_number..",";
-								end
-
-								--set the destination dial string
-								dial_string = '['.. caller_id .. table.concat(route, ',') .. ']' .. route.bridge
+						--set the caller id
+							caller_id = '';
+							if (ring_group_caller_id_name ~= nil) then
+								caller_id = "origination_caller_id_name='"..ring_group_caller_id_name.."'"
 							end
+							if (ring_group_caller_id_number ~= nil) then
+								caller_id = caller_id .. ",origination_caller_id_number="..ring_group_caller_id_number..",";
+							end
+
+						--set the destination dial string
+							dial_string = "[ignore_early_media=true,toll_allow=".. toll_allow ..",".. caller_id .."sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]"..route_bridge
+
 					end
 
 				--add a delimiter between destinations

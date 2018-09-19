@@ -54,7 +54,7 @@ else {
 	}
 
 
-messages::add($text['confirm-delete']);
+message::add($text['confirm-delete']);
 header("Location: call_broadcast.php");
 return;
 

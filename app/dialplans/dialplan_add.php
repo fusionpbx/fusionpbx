@@ -259,7 +259,7 @@
 				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 			}
 	
-		messages::add($text['message-update']);
+		message::add($text['message-update']);
 		header("Location: ".PROJECT_PATH."/app/dialplans/dialplans.php");
 		return;
 	} //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)

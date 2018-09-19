@@ -52,7 +52,7 @@ else {
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		unset($sql, $prep_statement);
-		messages::add($text['message-delete']);
+		message::add($text['message-delete']);
 	}
 
 //redirect user

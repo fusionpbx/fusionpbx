@@ -656,7 +656,7 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 		else {
 			if (!$included) {
 				//nothing to send, redirect the browser
-				messages::add($text['message-invalid-fax'], 'negative');
+				message::add($text['message-invalid-fax'], 'negative');
 				header("Location: fax_send.php?id=".$fax_uuid);
 				exit;
 			}
@@ -806,7 +806,7 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 
 		if (!$included) {
 			//redirect the browser
-			messages::add($response, 'default');
+			message::add($response, 'default');
 			if (permission_exists('fax_active_view')) {
 				header("Location: fax_active.php?id=".$fax_uuid);
 			}
@@ -911,7 +911,7 @@ if (!$included) {
 		echo "	".$text['label-fax-sender']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input type='text' name='fax_sender' class='formfld' style='' value='".$fax_caller_id_name."'>\n";
+		echo "	<input type='text' name='fax_sender' class='formfld' style='' value='".escape($fax_caller_id_name)."'>\n";
 		echo "	<br />\n";
 		echo "	".$text['description-fax-sender']."\n";
 		echo "</td>\n";
@@ -985,7 +985,7 @@ if (!$included) {
 			echo "	<select class='formfld' style='display: none;' id='fax_recipient_select' onchange='contact_load(this);'>\n";
 			echo "		<option value=''></option>\n";
 			foreach ($contact_labels as $index => $contact_label) {
-				echo "	<option value=\"".$contact_values[$index]."\">".$contact_label."</option>\n";
+				echo "	<option value=\"".escape($contact_values[$index])."\">".escape($contact_label)."</option>\n";
 			}
 			echo "	</select>\n";
 		}
@@ -1099,10 +1099,10 @@ if (!$included) {
 		echo "	<tr>\n";
 		echo "		<td colspan='2' align='right'>\n";
 		echo "			<br>\n";
-		echo "			<input type='hidden' name='fax_caller_id_name' value='".$fax_caller_id_name."'>\n";
-		echo "			<input type='hidden' name='fax_caller_id_number' value='".$fax_caller_id_number."'>\n";
-		echo "			<input type='hidden' name='fax_extension' value='".$fax_extension."'>\n";
-		echo "			<input type='hidden' name='id' value='".$fax_uuid."'>\n";
+		echo "			<input type='hidden' name='fax_caller_id_name' value='".escape($fax_caller_id_name)."'>\n";
+		echo "			<input type='hidden' name='fax_caller_id_number' value='".escape($fax_caller_id_number)."'>\n";
+		echo "			<input type='hidden' name='fax_extension' value='".escape($fax_extension)."'>\n";
+		echo "			<input type='hidden' name='id' value='".escape($fax_uuid)."'>\n";
 		echo "			<input type='hidden' name='action' value='send'>\n";
 		echo "			<input type='submit' name='submit' class='btn' id='preview' value='".$text['button-preview']."'>\n";
 		echo "			<input type='submit' name='submit' class='btn' id='upload' value='".$text['button-send']."'>\n";

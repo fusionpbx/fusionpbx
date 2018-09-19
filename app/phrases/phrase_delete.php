@@ -65,7 +65,7 @@ if ($phrase_uuid != '') {
 save_phrases_xml();
 
 //redirect the user
-	messages::add($text['message-delete']);
+	message::add($text['message-delete']);
 	header("Location: phrases.php");
 	return;
 ?>

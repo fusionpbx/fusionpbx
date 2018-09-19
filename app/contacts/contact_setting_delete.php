@@ -56,7 +56,7 @@ else {
 	}
 
 //redirect the user
-	messages::add($text['message-delete']);
+	message::add($text['message-delete']);
 	header("Location: contact_edit.php?id=".$contact_uuid);
 	return;
 

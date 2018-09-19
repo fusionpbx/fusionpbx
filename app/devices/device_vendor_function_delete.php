@@ -59,7 +59,7 @@
 	}
 
 //redirect the user
-	messages::add($text['message-delete']);
+	message::add($text['message-delete']);
 	header('Location: device_vendor_function_edit.php?id='.$device_vendor_uuid);
 
 ?>

@@ -68,7 +68,7 @@ if (count($_GET)>0) {
 		unset($sql);
 
 	//redirect the user
-		messages::add($text['message-delete']);
+		message::add($text['message-delete']);
 		header("Location: menu_edit.php?id=".$menu_uuid);
 		return;
 }

@@ -602,7 +602,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		//redirect the browser
 			if ($action == "update") {
-				messages::add($text['message-update']);
+				message::add($text['message-update']);
 				if (!permission_exists('domain_add')) { //admin, updating own domain
 					header("Location: domain_edit.php");
 				}
@@ -611,7 +611,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 			}
 			if ($action == "add") {
-				messages::add($text['message-add']);
+				message::add($text['message-add']);
 				header("Location: domains.php");
 			}
 			return;

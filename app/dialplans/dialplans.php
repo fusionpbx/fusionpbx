@@ -75,7 +75,7 @@
 		$cache->delete("dialplan:".$dialplan_context);
 
 		//set the message
-		messages::add($text['message-update']);
+		message::add($text['message-update']);
 	}
 
 //set the http values as php variables

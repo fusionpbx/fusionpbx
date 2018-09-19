@@ -52,7 +52,7 @@
 			<action application="set" data="recording_follow_transfer=true" inline="true"/>
 			<action application="set" data="record_append=true" inline="true"/>
 			<action application="set" data="record_in_progress=true" inline="true"/>
-			<action application="set" data="execute_on_answer=record_session ${record_path}/${record_name}" inline="false"/>
+			<action application="set" data="${uuid_record ${uuid} start ${record_path}/${record_name}}" inline="false"/>
 		</condition>
 	</extension>
 </context>

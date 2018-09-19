@@ -56,7 +56,7 @@
 	}
 
 //delete the message
-	messages::add($text['message-delete']);
+	message::add($text['message-delete']);
 
 //redirect the user
 	header('Location: email_templates.php');

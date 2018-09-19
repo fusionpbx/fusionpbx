@@ -81,7 +81,7 @@
 	}
 
 //redirect the user
-	messages::add($text['message-update']);
+	message::add($text['message-update']);
 	header("Location: groupmembers.php?group_uuid=".$group_uuid."&group_name=".$group_name);
 
 ?>

@@ -120,7 +120,7 @@
 			}
 			unset($prep_statement, $row);
 			if ($total_devices >= $_SESSION['limit']['devices']['numeric']) {
-				messages::add($text['message-maximum_devices'].' '.$_SESSION['limit']['devices']['numeric'], 'negative');
+				message::add($text['message-maximum_devices'].' '.$_SESSION['limit']['devices']['numeric'], 'negative');
 				header('Location: devices.php');
 				return;
 			}
@@ -325,11 +325,11 @@
 						if ($save) {
 							if ($action == "add") {
 								//save the message to a session variable
-									messages::add($text['message-add']);
+									message::add($text['message-add']);
 							}
 							if ($action == "update") {
 								//save the message to a session variable
-									messages::add($text['message-update']);
+									message::add($text['message-update']);
 							}
 							//redirect the browser
 								header("Location: device_edit.php?id=$device_uuid");
@@ -392,7 +392,7 @@
 //get device lines
 	$sql = "SELECT * FROM v_device_lines ";
 	$sql .= "where device_uuid = '".$device_uuid."' ";
-	$sql .= "order by line_number asc ";
+	$sql .= "order by cast(line_number as int) asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$device_lines = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -841,10 +841,16 @@
 		if (permission_exists('device_line_server_address')) {
 			echo "				<td class='vtable'>".$text['label-server_address']."</td>\n";
 		}
-		if (permission_exists('device_outbound_proxy_primary')) {
+		if (permission_exists('device_line_server_address_primary')) {
+			echo "				<td class='vtable'>".$text['label-server_address_primary']."</td>\n";
+		}
+		if (permission_exists('device_line_server_address_secondary')) {
+			echo "				<td class='vtable'>".$text['label-server_address_secondary']."</td>\n";
+		}
+		if (permission_exists('device_line_outbound_proxy_primary')) {
 			echo "				<td class='vtable'>".$text['label-outbound_proxy_primary']."</td>\n";
 		}
-		if (permission_exists('device_outbound_proxy_secondary')) {
+		if (permission_exists('device_line_outbound_proxy_secondary')) {
 			echo "				<td class='vtable'>".$text['label-outbound_proxy_secondary']."</td>\n";
 		}
 		echo "				<td class='vtable'>".$text['label-display_name']."</td>\n";
@@ -931,8 +937,25 @@
 				echo "				<option value='30' ".($row['line_number'] == "30" ? $selected:"").">30</option>\n";
 				echo "				<option value='31' ".($row['line_number'] == "31" ? $selected:"").">31</option>\n";
 				echo "				<option value='32' ".($row['line_number'] == "32" ? $selected:"").">32</option>\n";
+				echo "				<option value='33' ".($row['line_number'] == "33" ? $selected:"").">33</option>\n";
+				echo "				<option value='34' ".($row['line_number'] == "34" ? $selected:"").">34</option>\n";
+				echo "				<option value='35' ".($row['line_number'] == "35" ? $selected:"").">35</option>\n";
+				echo "				<option value='36' ".($row['line_number'] == "36" ? $selected:"").">36</option>\n";
+				echo "				<option value='37' ".($row['line_number'] == "37" ? $selected:"").">37</option>\n";
+				echo "				<option value='38' ".($row['line_number'] == "38" ? $selected:"").">38</option>\n";
+				echo "				<option value='39' ".($row['line_number'] == "39" ? $selected:"").">39</option>\n";
+				echo "				<option value='40' ".($row['line_number'] == "40" ? $selected:"").">40</option>\n";
+				echo "				<option value='41' ".($row['line_number'] == "41" ? $selected:"").">41</option>\n";
+				echo "				<option value='42' ".($row['line_number'] == "42" ? $selected:"").">42</option>\n";
+				echo "				<option value='43' ".($row['line_number'] == "43" ? $selected:"").">43</option>\n";
+				echo "				<option value='44' ".($row['line_number'] == "44" ? $selected:"").">44</option>\n";
+				echo "				<option value='45' ".($row['line_number'] == "45" ? $selected:"").">45</option>\n";
+				echo "				<option value='46' ".($row['line_number'] == "46" ? $selected:"").">46</option>\n";
+				echo "				<option value='47' ".($row['line_number'] == "47" ? $selected:"").">47</option>\n";
+				echo "				<option value='48' ".($row['line_number'] == "48" ? $selected:"").">48</option>\n";
 				echo "				</select>\n";
 				echo "			</td>\n";
+
 				if (permission_exists('device_line_server_address')) {
 					echo "			<td valign='top' align='left' nowrap='nowrap'>\n";
 					echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][server_address]' maxlength='255' value=\"".escape($row['server_address'])."\"/>\n";
@@ -942,8 +965,19 @@
 					echo "				<input type='hidden' name='device_lines[".$x."][server_address]' value=\"".escape($row['server_address'])."\"/>\n";
 				}
 
-				if (permission_exists('device_outbound_proxy_primary')) {
-					if (permission_exists('device_outbound_proxy_secondary')) {
+				if (permission_exists('device_line_server_address_primary')) {
+					echo "			<td valign='top' align='left' nowrap='nowrap'>\n";
+					echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][server_address_primary]' maxlength='255' value=\"".escape($row['server_address_primary'])."\"/>\n";
+					echo "			</td>\n";
+				}
+				if (permission_exists('device_line_server_address_secondary')) {
+					echo "			<td valign='top' align='left' nowrap='nowrap'>\n";
+					echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][server_address_secondary]' maxlength='255' value=\"".escape($row['server_address_secondary'])."\"/>\n";
+					echo "			</td>\n";
+				}
+
+				if (permission_exists('device_line_outbound_proxy_primary')) {
+					if (permission_exists('device_line_outbound_proxy_secondary')) {
 						$placeholder_label = $text['label-primary'];
 					}
 					echo "			<td align='left'>\n";
@@ -952,7 +986,7 @@
 					unset($placeholder_label);
 				}
 				
-				if (permission_exists('device_outbound_proxy_secondary')) {
+				if (permission_exists('device_line_outbound_proxy_secondary')) {
 					echo "			<td align='left'>\n";
 					echo "				<input class='formfld' style='width: 65px;' type='text' name='device_lines[".$x."][outbound_proxy_secondary]' placeholder=\"".$text['label-secondary']."\" maxlength='255' value=\"".escape($row['outbound_proxy_secondary'])."\"/>\n";
 					echo "			</td>\n";

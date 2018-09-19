@@ -3218,8 +3218,10 @@ Account 5 Codec Settings
 <!-- Config Server Path -->
 <P237>{$domain_name}{$project_path}/app/provision</P237>
 
-{if isset($grandstream_firmware_path)}
-<P192>{$grandstream_firmware_path}</P192>
+{if isset($grandstream_firmware_path) && isset($firmware_version)}
+<P192>{$grandstream_firmware_path}/gxv3275/{$firmware_version}</P192>
+{elseif isset($grandstream_firmware_path)}
+<P192>{$grandstream_firmware_path}/gxv3275</P192>
 {else}
 <P192>{$domain_name}{$project_path}/app/provision</P192>
 {/if}

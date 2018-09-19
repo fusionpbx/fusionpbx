@@ -51,7 +51,7 @@
 //redirect the users
 	if (!$included) {
 		//show a message to the user
-		messages::add($text['message-restore']);
+		message::add($text['message-restore']);
 		header("Location: groups.php");
 		return;
 	}

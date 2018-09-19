@@ -52,7 +52,7 @@ else {
 		if ($fp) {
 			$cmd = "sched_del ".$uuid;
 			$result = event_socket_request($fp, 'api '.$cmd);
-			messages::add(htmlentities($result));
+			message::add(htmlentities($result));
 		}
 	}
 

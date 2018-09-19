@@ -63,7 +63,7 @@
 		}
 		unset($prep_statement, $row);
 		if ($total_users >= $_SESSION['limit']['users']['numeric']) {
-			messages::add($text['message-maximum_users'].' '.$_SESSION['limit']['users']['numeric'], 'negative');
+			message::add($text['message-maximum_users'].' '.$_SESSION['limit']['users']['numeric'], 'negative');
 			header('Location: users.php');
 			exit;
 		}
@@ -90,7 +90,7 @@
 			$sql .= "and user_uuid = '".$user_uuid."' ";
 			$db->exec(check_sql($sql));
 		//redirect the user
-			messages::add($text['message-update']);
+			message::add($text['message-update']);
 			header("Location: user_edit.php?id=".$user_uuid);
 			return;
 	}
@@ -121,6 +121,9 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 		$group_uuid_name = check_str($_POST["group_uuid_name"]);
 		$user_enabled = check_str($_POST["user_enabled"]);
 		$api_key = check_str($_POST["api_key"]);
+		if (permission_exists('message_view')) {
+			$message_key = check_str($_POST["message_key"]);
+		}
 
 	//check required values
 		if ($username == '') { $msg_error = $text['message-required'].$text['label-username']; }
@@ -149,7 +152,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 		}
 
 		if ($msg_error != '') {
-			messages::add($msg_error, 'negative');
+			message::add($msg_error, 'negative');
 			if ($action == 'edit') {
 				header("Location: user_edit.php?id=".$user_uuid);
 			}
@@ -259,6 +262,53 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 						$array['user_settings'][$i]['user_setting_value'] = $user_time_zone;
 						$array['user_settings'][$i]['user_setting_enabled'] = 'true';
 						$i++;
+				}
+			}
+		}
+
+	//check to see if message key is set
+		if (permission_exists('message_view')) {
+			$sql = "select user_setting_uuid, user_setting_value from v_user_settings ";
+			$sql .= "where user_setting_category = 'message' ";
+			$sql .= "and user_setting_subcategory = 'key' ";
+			$sql .= "and user_uuid = '".$user_uuid."' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				if ($row['user_setting_uuid'] == '' && $message_key != '') {
+					//add user setting to array for insert
+						$array['user_settings'][$i]['user_setting_uuid'] = uuid();
+						$array['user_settings'][$i]['user_uuid'] = $user_uuid;
+						$array['user_settings'][$i]['domain_uuid'] = $domain_uuid;
+						$array['user_settings'][$i]['user_setting_category'] = 'message';
+						$array['user_settings'][$i]['user_setting_subcategory'] = 'key';
+						$array['user_settings'][$i]['user_setting_name'] = 'text';
+						$array['user_settings'][$i]['user_setting_value'] = $message_key;
+						$array['user_settings'][$i]['user_setting_enabled'] = 'true';
+						$i++;
+				}
+				else {
+					if ($row['user_setting_value'] == '' || $message_key == '') {
+						$sql = "delete from v_user_settings ";
+						$sql .= "where user_setting_category = 'message' ";
+						$sql .= "and user_setting_subcategory = 'key' ";
+						$sql .= "and user_uuid = '".$user_uuid."' ";
+						$db->exec(check_sql($sql));
+						unset($sql);
+					}
+					else {
+						//add user setting to array for update
+							$array['user_settings'][$i]['user_setting_uuid'] = $row['user_setting_uuid'];
+							$array['user_settings'][$i]['user_uuid'] = $user_uuid;
+							$array['user_settings'][$i]['domain_uuid'] = $domain_uuid;
+							$array['user_settings'][$i]['user_setting_category'] = 'message';
+							$array['user_settings'][$i]['user_setting_subcategory'] = 'key';
+							$array['user_settings'][$i]['user_setting_name'] = 'text';
+							$array['user_settings'][$i]['user_setting_value'] = $message_key;
+							$array['user_settings'][$i]['user_setting_enabled'] = 'true';
+							$i++;
+					}
 				}
 			}
 		}
@@ -417,7 +467,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 		}
 
 	//redirect the browser
-		messages::add($text['message-update']);
+		message::add($text['message-update']);
 		if ($_REQUEST['action'] == $text['button-add'] || !permission_exists('user_edit')) {
 			header("Location: user_edit.php?id=".$user_uuid);
 		}
@@ -841,7 +891,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 			echo "<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>";
 		}
 
-		if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/api/app_config.php')) {
+		if (permission_exists('api_key')) {
 			echo "	<tr>";
 			echo "		<td class='vncell' valign='top'>".$text['label-api_key']."</td>";
 			echo "		<td class='vtable'>\n";
@@ -849,6 +899,19 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 			echo "			<input type='button' class='btn' value='".$text['button-generate']."' onclick=\"getElementById('api_key').value='".uuid()."';\">";
 			if (strlen($text['description-api_key']) > 0) {
 				echo "			<br />".$text['description-api_key']."<br />\n";
+			}
+			echo "		</td>";
+			echo "	</tr>";
+		}
+
+		if (permission_exists('message_view')) {
+			echo "	<tr>";
+			echo "		<td class='vncell' valign='top'>".$text['label-message_key']."</td>";
+			echo "		<td class='vtable'>\n";
+			echo "			<input type=\"text\" class='formfld' name=\"message_key\" id='message_key' value=\"".escape($user_settings["message"]["key"]["text"])."\" >";
+			echo "			<input type='button' class='btn' value='".$text['button-generate']."' onclick=\"getElementById('message_key').value='".uuid()."';\">";
+			if (strlen($text['description-message_key']) > 0) {
+				echo "			<br />".$text['description-message_key']."<br />\n";
 			}
 			echo "		</td>";
 			echo "	</tr>";

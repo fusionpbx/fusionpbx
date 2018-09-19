@@ -60,7 +60,7 @@
 				$obj = new bridges;
 				$obj->delete($bridges);
 			//delete message
-				messages::add($text['message-delete']);
+				message::add($text['message-delete']);
 		}
 	}
 

@@ -54,7 +54,7 @@
 	$cache->delete("dialplan:".$_SESSION["context"]);
 
 //set the add message
-	messages::add($text['message-add']);
+	message::add($text['message-add']);
 
 //redirect the user
 	header("Location: providers.php");

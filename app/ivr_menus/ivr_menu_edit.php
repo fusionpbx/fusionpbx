@@ -72,7 +72,7 @@
 			}
 			unset($prep_statement, $row);
 			if ($total_ivr_menus >= $_SESSION['limit']['ivr_menus']['numeric']) {
-				messages::add($text['message-maximum_ivr_menus'].' '.$_SESSION['limit']['ivr_menus']['numeric'], 'negative');
+				message::add($text['message-maximum_ivr_menus'].' '.$_SESSION['limit']['ivr_menus']['numeric'], 'negative');
 				header('Location: ivr_menus.php');
 				return;
 			}
@@ -311,12 +311,12 @@
 
 				//set the add message
 					if ($action == "add" && permission_exists('ivr_menu_add')) {
-						messages::add($text['message-add']);
+						message::add($text['message-add']);
 					}
 
 				//set the update message
 					if ($action == "update" && permission_exists('ivr_menu_edit')) {
-						messages::add($text['message-update']);
+						message::add($text['message-update']);
 					}
 
 				//redirect the user
@@ -685,7 +685,7 @@
 		}
 	echo "	</select>\n";
 	if (if_group("superadmin")) {
-		echo "<input type='button' id='btn_select_to_input_".$destination_id."' class='btn' name='' alt='back' onclick='changeToInput".$destination_id."(document.getElementById(\"".$destination_id."\"));this.style.visibility = \"hidden\";' value='&#9665;'>";
+		echo "<input type='button' id='btn_select_to_input_".escape($destination_id)."' class='btn' name='' alt='back' onclick='changeToInput".escape($destination_id)."(document.getElementById(\"".escape($destination_id)."\"));this.style.visibility = \"hidden\";' value='&#9665;'>";
 		unset($destination_id);
 	}
 	echo "	<br />\n";
@@ -827,7 +827,7 @@
 		}
 	echo "	</select>\n";
 	if (if_group("superadmin")) {
-		echo "<input type='button' id='btn_select_to_input_".$destination_id."' class='btn' name='' alt='back' onclick='changeToInput".$destination_id."(document.getElementById(\"".$destination_id."\"));this.style.visibility = \"hidden\";' value='&#9665;'>";
+		echo "<input type='button' id='btn_select_to_input_".escape($destination_id)."' class='btn' name='' alt='back' onclick='changeToInput".escape($destination_id)."(document.getElementById(\"".escape($destination_id)."\"));this.style.visibility = \"hidden\";' value='&#9665;'>";
 		unset($destination_id);
 	}
 	echo "<br />\n";
@@ -856,7 +856,7 @@
 			}
 
 			echo "<td class='formfld' align='left'>\n";
-			echo "  <input class='formfld' style='width:70px' type='text' name='ivr_menu_options[".$c."][ivr_menu_option_digits]' maxlength='255' value='".$field['ivr_menu_option_digits']."'>\n";
+			echo "  <input class='formfld' style='width:70px' type='text' name='ivr_menu_options[".$c."][ivr_menu_option_digits]' maxlength='255' value='".escape($field['ivr_menu_option_digits'])."'>\n";
 			echo "</td>\n";
 
 			echo "<td class='formfld' align='left' nowrap='nowrap'>\n";

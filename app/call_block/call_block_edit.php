@@ -151,7 +151,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-				messages::add($text['label-add-complete']);
+				message::add($text['label-add-complete']);
 				header("Location: call_block.php");
 				return;
 			} //if ($action == "add")
@@ -186,7 +186,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-				messages::add($text['label-update-complete']);
+				message::add($text['label-update-complete']);
 				header("Location: call_block.php");
 				return;
 			} //if ($action == "update")
@@ -370,7 +370,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		if ($result_count > 0) {
 			foreach($result as $row) {
-				$tr_onclick = " onclick=\"call_block_recent('".$row['uuid']."','".urlencode($row['caller_id_name'])."');\" ";
+				$tr_onclick = " onclick=\"call_block_recent('".escape($row['uuid'])."','".urlencode(escape($row['caller_id_name']))."');\" ";
 				if (strlen($row['caller_id_number']) >= 7) {
 					if (defined('TIME_24HR') && TIME_24HR == 1) {
 						$tmp_start_epoch = date("j M Y H:i:s", $row['start_epoch']);

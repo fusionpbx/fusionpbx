@@ -83,7 +83,7 @@
 	remove_config_from_cache('configuration:callcenter.conf');
 
 //redirect the browser
-	messages::add($text['message-delete']);
+	message::add($text['message-delete']);
 	header("Location: call_center_agents.php");
 	return;
 

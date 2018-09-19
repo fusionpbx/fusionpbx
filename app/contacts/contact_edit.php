@@ -154,7 +154,7 @@
 						$db->exec(check_sql($sql));
 						unset($sql);
 
-						messages::add($text['message-add']);
+						message::add($text['message-add']);
 						$location = "contact_edit.php?id=".$contact_uuid;
 					} //if ($action == "add")
 
@@ -181,7 +181,7 @@
 						$db->exec(check_sql($sql));
 						unset($sql);
 
-						messages::add($text['message-update']);
+						message::add($text['message-update']);
 						$location = "contact_edit.php?id=".escape($contact_uuid);
 					} //if ($action == "update")
 

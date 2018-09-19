@@ -289,7 +289,7 @@
 					}
 
 				//set the message
-					messages::add($text["message-$action"]);
+					message::add($text["message-$action"]);
 
 				//redirect the browser
 					header("Location: /core/user_settings/user_dashboard.php");

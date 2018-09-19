@@ -383,7 +383,7 @@
 			}
 
 		//redirect the user
-			messages::add($text['confirm-update']);
+			message::add($text['confirm-update']);
 			header("Location: ".$_REQUEST['return_url']);
 			return;
 
@@ -446,10 +446,10 @@
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach ($result as &$row) {
 		if (strlen($number_alias) == 0) {
-			echo "		\"".$row["extension"]."\",\n";
+			echo "		\"".escape($row["extension"])."\",\n";
 		}
 		else {
-			echo "		\"".$row["number_alias"]."\",\n";
+			echo "		\"".escape($row["number_alias"])."\",\n";
 		}
 	}
 	echo "	];\n";
@@ -491,7 +491,7 @@
 	$on_click .= "document.getElementById('dnd_disabled').checked=true; ";
 	$on_click .= "document.getElementById('forward_all_destination').focus(); ";
 	echo "	<label for='forward_all_disabled'><input type='radio' name='forward_all_enabled' id='forward_all_disabled' onclick=\"\" value='false' ".(($forward_all_enabled == "false" || $forward_all_enabled == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
-	echo "	<label for='forward_all_enabled'><input type='radio' name='forward_all_enabled' id='forward_all_enabled' onclick=\"".$on_click."\" value='true' ".(($forward_all_enabled == "true") ? "checked='checked'" : null)." /> ".$text['label-enabled']."</label> \n";
+	echo "	<label for='forward_all_enabled'><input type='radio' name='forward_all_enabled' id='forward_all_enabled' onclick=\"$on_click\" value='true' ".(($forward_all_enabled == "true") ? "checked='checked'" : null)." /> ".$text['label-enabled']."</label> \n";
 	unset($on_click);
 	echo "&nbsp;&nbsp;&nbsp;";
 	echo "	<input class='formfld' type='text' name='forward_all_destination' id='forward_all_destination' maxlength='255' placeholder=\"".$text['label-destination']."\" value=\"".escape($forward_all_destination)."\">\n";
@@ -507,7 +507,7 @@
 	$on_click = "document.getElementById('dnd_disabled').checked=true;";
 	$on_click .= "document.getElementById('forward_busy_destination').focus();";
 	echo "	<label for='forward_busy_disabled'><input type='radio' name='forward_busy_enabled' id='forward_busy_disabled' onclick=\"\" value='false' ".(($forward_busy_enabled == "false" || $forward_busy_enabled == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
-	echo "	<label for='forward_busy_enabled'><input type='radio' name='forward_busy_enabled' id='forward_busy_enabled' onclick=\"".escape($on_click)."\" value='true' ".(($forward_busy_enabled == "true") ? "checked='checked'" : null)."/> ".$text['label-enabled']."</label> \n";
+	echo "	<label for='forward_busy_enabled'><input type='radio' name='forward_busy_enabled' id='forward_busy_enabled' onclick=\"$on_click\" value='true' ".(($forward_busy_enabled == "true") ? "checked='checked'" : null)."/> ".$text['label-enabled']."</label> \n";
 	unset($on_click);
 	echo "&nbsp;&nbsp;&nbsp;";
 	echo "	<input class='formfld' type='text' name='forward_busy_destination' id='forward_busy_destination' maxlength='255' placeholder=\"".$text['label-destination']."\" value=\"".escape($forward_busy_destination)."\">\n";
@@ -547,7 +547,7 @@
 	echo "</tr>\n";
 
 	if (permission_exists('call_forward_caller_id')) {
-		$sql_forward = "select destination_uuid, destination_number, destination_description, destination_caller_id_number, destination_caller_id_name from v_destinations where domain_uuid = '$domain_uuid' and destination_type = 'inbound' order by destination_number asc ";
+		$sql_forward = "select destination_uuid, destination_number, destination_description, destination_caller_id_number, destination_caller_id_name from v_destinations where domain_uuid = '".escape($domain_uuid)."' and destination_type = 'inbound' order by destination_number asc ";
 		$prep_statement_forward = $db->prepare(check_sql($sql_forward));
 		$prep_statement_forward->execute();
 		$result_forward = $prep_statement_forward->fetchAll(PDO::FETCH_ASSOC);
@@ -592,7 +592,7 @@
 		$on_click .= "document.getElementById('follow_me_caller_id_uuid').focus(); ";
 	}
 	echo "	<label for='follow_me_disabled'><input type='radio' name='follow_me_enabled' id='follow_me_disabled' onclick=\"$('#tr_follow_me_settings').slideUp('fast');\" value='false' ".(($follow_me_enabled == "false" || $follow_me_enabled == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
-	echo "	<label for='follow_me_enabled'><input type='radio' name='follow_me_enabled' id='follow_me_enabled' onclick=\"$('#tr_follow_me_settings').slideDown('fast'); ".escape($on_click)."\" value='true' ".(($follow_me_enabled == "true") ? "checked='checked'" : null)."/> ".$text['label-enabled']."</label> \n";
+	echo "	<label for='follow_me_enabled'><input type='radio' name='follow_me_enabled' id='follow_me_enabled' onclick=\"$('#tr_follow_me_settings').slideDown('fast'); $on_click\" value='true' ".(($follow_me_enabled == "true") ? "checked='checked'" : null)."/> ".$text['label-enabled']."</label> \n";
 	unset($on_click);
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -652,7 +652,7 @@
 		echo "			</td>\n";
 		echo "			<td class='vtable' align='left'>\n";
 		echo "				<label for='follow_me_ignore_busy_false'><input type='radio' name='follow_me_ignore_busy' id='follow_me_ignore_busy_false' value='false' onclick=\"\" ".(($follow_me_ignore_busy == "false" || $follow_me_ignore_busy == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
-		echo "				<label for='follow_me_ignore_busy_true'><input type='radio' name='follow_me_ignore_busy' id='follow_me_ignore_busy_true' value='true' onclick=\"".escape($on_click)."\" ".(($follow_me_ignore_busy == "true") ? "checked='checked'" : null)." /> ".$text['label-enabled']."</label> \n";
+		echo "				<label for='follow_me_ignore_busy_true'><input type='radio' name='follow_me_ignore_busy' id='follow_me_ignore_busy_true' value='true' onclick=\"$on_click\" ".(($follow_me_ignore_busy == "true") ? "checked='checked'" : null)." /> ".$text['label-enabled']."</label> \n";
 		echo "				<br />\n";
 		echo 				$text['description-ignore_busy']."\n";
 		echo "			</td>\n";
@@ -660,7 +660,7 @@
 	}
 
 	if (permission_exists('follow_me_caller_id')) {
-		$sql_follow_me = "select destination_uuid, destination_number, destination_description, destination_caller_id_number, destination_caller_id_name from v_destinations where domain_uuid = '$domain_uuid' and destination_type = 'inbound' order by destination_number asc ";
+		$sql_follow_me = "select destination_uuid, destination_number, destination_description, destination_caller_id_number, destination_caller_id_name from v_destinations where domain_uuid = '".escape($domain_uuid)."' and destination_type = 'inbound' order by destination_number asc ";
 		$prep_statement_follow_me = $db->prepare(check_sql($sql_follow_me));
 		$prep_statement_follow_me->execute();
 		$result_follow_me = $prep_statement_follow_me->fetchAll(PDO::FETCH_ASSOC);

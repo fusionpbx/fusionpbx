@@ -65,7 +65,7 @@
 			}
 			unset($prep_statement, $row);
 			if ($total_call_center_queues >= $_SESSION['limit']['call_center_queues']['numeric']) {
-				messages::add($text['message-maximum_queues'].' '.$_SESSION['limit']['call_center_queues']['numeric'], 'negative');
+				message::add($text['message-maximum_queues'].' '.$_SESSION['limit']['call_center_queues']['numeric'], 'negative');
 				header('Location: call_center_queues.php');
 				return;
 			}
@@ -301,10 +301,10 @@
 		//redirect the user
 			if (isset($action)) {
 				if ($action == "add") {
-					messages::add($text['message-add']);
+					message::add($text['message-add']);
 				}
 				if ($action == "update") {
-					messages::add($text['message-update']);
+					message::add($text['message-update']);
 				}
 			}
 
@@ -640,7 +640,7 @@
 				if ($row['call_center_agent_uuid'] == $field['call_center_agent_uuid']) {
 					$selected = "selected=\"selected\"";
 				}
-				echo "				<option value=\"".$row['call_center_agent_uuid']."\" $selected>".escape($row['agent_name'])."</option>\n";
+				echo "				<option value=\"".escape($row['call_center_agent_uuid'])."\" $selected>".escape($row['agent_name'])."</option>\n";
 			}
 			echo "				</select>";
 			echo "		</td>\n";

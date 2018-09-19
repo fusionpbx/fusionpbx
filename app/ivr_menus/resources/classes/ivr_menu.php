@@ -190,12 +190,12 @@ include "root.php";
 
 			//set the add message
 				if ($action == "add" && permission_exists('ivr_menu_add')) {
-					messages::add($text['message-add']);
+					message::add($text['message-add']);
 				}
 
 			//set the update message
 				if ($action == "update" && permission_exists('ivr_menu_edit')) {
-					messages::add($text['message-update']);
+					message::add($text['message-update']);
 				}
 				
 			//return the result

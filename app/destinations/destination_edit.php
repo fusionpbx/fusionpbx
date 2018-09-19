@@ -78,7 +78,7 @@
 				}
 				unset($prep_statement, $row);
 				if ($total_destinations >= $_SESSION['limit']['destinations']['numeric']) {
-					messages::add($text['message-maximum_destinations'].' '.$_SESSION['limit']['destinations']['numeric'], 'negative');
+					message::add($text['message-maximum_destinations'].' '.$_SESSION['limit']['destinations']['numeric'], 'negative');
 					header('Location: destinations.php');
 					return;
 				}
@@ -656,10 +656,10 @@
 
 		//redirect the user
 			if ($action == "add") {
-				messages::add($text['message-add']);
+				message::add($text['message-add']);
 			}
 			if ($action == "update") {
-				messages::add($text['message-update']);
+				message::add($text['message-update']);
 			}
 			header("Location: destination_edit.php?id=".escape($destination_uuid)."&type=".$destination_type);
 			return;

@@ -27,7 +27,7 @@
 
 	if (!function_exists('software_version')) {
 		function software_version() {
-			return '4.5.1';
+			return '4.5.2';
 		}
 	}
 
@@ -1029,7 +1029,7 @@ function format_string ($format, $data) {
 				$msg_errors[] = '1+ '.$text['label-special_characters'];
 			}
 			if (is_array($msg_errors) && sizeof($msg_errors) > 0) {
-				messages::add($_SESSION["message"] = $text['message-password_requirements'].': '.implode(', ', $msg_errors), 'negative', 6000);
+				message::add($_SESSION["message"] = $text['message-password_requirements'].': '.implode(', ', $msg_errors), 'negative', 6000);
 				return false;
 			}
 			else {

@@ -93,7 +93,7 @@
 					$db->exec(check_sql($sql));
 					unset($sql);
 	
-					messages::add($text['message-add']);
+					message::add($text['message-add']);
 					header('Location: conference_profile_edit.php?id='.$conference_profile_uuid);
 					return;
 	
@@ -111,7 +111,7 @@
 					$db->exec(check_sql($sql));
 					unset($sql);
 	
-					messages::add($text['message-update']);
+					message::add($text['message-update']);
 					header('Location: conference_profile_edit.php?id='.$conference_profile_uuid);
 					return;
 	
@@ -156,7 +156,7 @@
 	echo "	".$text['label-profile_param_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='profile_param_name' maxlength='255' value=\"$profile_param_name\">\n";
+	echo "	<input class='formfld' type='text' name='profile_param_name' maxlength='255' value=\"".escape($profile_param_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-profile_param_name']."\n";
 	echo "</td>\n";
@@ -167,7 +167,7 @@
 	echo "	".$text['label-profile_param_value']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='profile_param_value' maxlength='255' value=\"$profile_param_value\">\n";
+	echo "	<input class='formfld' type='text' name='profile_param_value' maxlength='255' value=\"".escape($profile_param_value)."\">\n";
 	echo "<br />\n";
 	echo $text['description-profile_param_value']."\n";
 	echo "</td>\n";
@@ -203,7 +203,7 @@
 	echo "	".$text['label-profile_param_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='profile_param_description' maxlength='255' value=\"$profile_param_description\">\n";
+	echo "	<input class='formfld' type='text' name='profile_param_description' maxlength='255' value=\"".escape($profile_param_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-profile_param_description']."\n";
 	echo "</td>\n";

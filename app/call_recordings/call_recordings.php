@@ -77,7 +77,7 @@
 				$obj = new call_recordings;
 				$obj->delete($call_recordings);
 			//delete message
-				messages::add($text['message-delete']);
+				message::add($text['message-delete']);
 		}
 	}
 

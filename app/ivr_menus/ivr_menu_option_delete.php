@@ -63,7 +63,7 @@
 	$cache->delete("dialplan:".$_SESSION["context"]);
 
 //redirect the user
-	messages::add($text['message-delete']);
+	message::add($text['message-delete']);
 	header('Location: ivr_menu_edit.php?id='.$ivr_menu_uuid);
 
 ?>

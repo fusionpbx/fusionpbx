@@ -651,7 +651,7 @@
 			save_dialplan_xml();
 
 		//redirect the browser
-			messages::add($text['message-update']);
+			message::add($text['message-update']);
 			header("Location: ".PROJECT_PATH."/app/dialplans/dialplans.php?app_uuid=8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3");
 			return;
 	} //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
@@ -788,18 +788,18 @@ function type_onchange(dialplan_detail_type) {
 				echo "<optgroup label='&nbsp; &nbsp;".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."'>";
 			}
 			if ($row['gateway'] == $gateway_name) {
-				echo "<option value=\"".$row['gateway_uuid'].":".$row['gateway']."\" selected=\"selected\">&nbsp; &nbsp;".$row['gateway']."</option>\n";
+				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\" selected=\"selected\">&nbsp; &nbsp;".escape($row['gateway'])."</option>\n";
 			}
 			else {
-				echo "<option value=\"".$row['gateway_uuid'].":".$row['gateway']."\">&nbsp; &nbsp;".$row['gateway']."</option>\n";
+				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\">&nbsp; &nbsp;".escape($row['gateway'])."</option>\n";
 			}
 		}
 		else {
 			if ($row['gateway'] == $gateway_name) {
-				echo "<option value=\"".$row['gateway_uuid'].":".$row['gateway']."\" $onchange selected=\"selected\">".$row['gateway']."</option>\n";
+				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\" $onchange selected=\"selected\">".escape($row['gateway'])."</option>\n";
 			}
 			else {
-				echo "<option value=\"".$row['gateway_uuid'].":".$row['gateway']."\">".$row['gateway']."</option>\n";
+				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\">".escape($row['gateway'])."</option>\n";
 			}
 		}
 		$previous_domain_uuid = $row['domain_uuid'];
@@ -847,18 +847,18 @@ function type_onchange(dialplan_detail_type) {
 				echo "<optgroup label='&nbsp; &nbsp;".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."'>";
 			}
 			if ($row['gateway'] == $gateway_2_name) {
-				echo "<option value=\"".$row['gateway_uuid'].":".$row['gateway']."\" selected=\"selected\">&nbsp; &nbsp;".$row['gateway']."</option>\n";
+				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\" selected=\"selected\">&nbsp; &nbsp;".escape($row['gateway'])."</option>\n";
 			}
 			else {
-				echo "<option value=\"".$row['gateway_uuid'].":".$row['gateway']."\">&nbsp; &nbsp;".$row['gateway']."</option>\n";
+				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\">&nbsp; &nbsp;".escape($row['gateway'])."</option>\n";
 			}
 		}
 		else {
 			if ($row['gateway'] == $gateway_2_name) {
-				echo "<option value=\"".$row['gateway_uuid'].":".$row['gateway']."\" selected=\"selected\">".$row['gateway']."</option>\n";
+				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\" selected=\"selected\">".escape($row['gateway'])."</option>\n";
 			}
 			else {
-				echo "<option value=\"".$row['gateway_uuid'].":".$row['gateway']."\">".$row['gateway']."</option>\n";
+				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\">".escape($row['gateway'])."</option>\n";
 			}
 		}
 		$previous_domain_uuid = $row['domain_uuid'];
@@ -907,18 +907,18 @@ function type_onchange(dialplan_detail_type) {
 				echo "<optgroup label='&nbsp; &nbsp;".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."'>";
 			}
 			if ($row['gateway'] == $gateway_3_name) {
-				echo "<option value=\"".$row['gateway_uuid'].":".$row['gateway']."\" selected=\"selected\">&nbsp; &nbsp;".$row['gateway']."</option>\n";
+				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\" selected=\"selected\">&nbsp; &nbsp;".escape($row['gateway'])."</option>\n";
 			}
 			else {
-				echo "<option value=\"".$row['gateway_uuid'].":".$row['gateway']."\">&nbsp; &nbsp;".$row['gateway']."</option>\n";
+				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\">&nbsp; &nbsp;".escape($row['gateway'])."</option>\n";
 			}
 		}
 		else {
 			if ($row['gateway'] == $gateway_3_name) {
-				echo "<option value=\"".$row['gateway_uuid'].":".$row['gateway']."\" selected=\"selected\">".$row['gateway']."</option>\n";
+				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\" selected=\"selected\">".escape($row['gateway'])."</option>\n";
 			}
 			else {
-				echo "<option value=\"".$row['gateway_uuid'].":".$row['gateway']."\">".$row['gateway']."</option>\n";
+				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\">".escape($row['gateway'])."</option>\n";
 			}
 		}
 		$previous_domain_uuid = $row['domain_uuid'];
@@ -998,7 +998,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "	".$text['label-prefix']."\n";
 	echo "</td>\n";
 	echo "<td colspan='4' class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='prefix_number' maxlength='255' value=\"$prefix_number\">\n";
+	echo "	<input class='formfld' type='text' name='prefix_number' maxlength='255' value=\"".escape($prefix_number)."\">\n";
 	echo "<br />\n";
 	echo $text['description-enter-prefix']."\n";
 	echo "</td>\n";
@@ -1009,7 +1009,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "	".$text['label-limit']."\n";
 	echo "</td>\n";
 	echo "<td colspan='4' class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='limit' maxlength='255' value=\"$limit\">\n";
+	echo "	<input class='formfld' type='text' name='limit' maxlength='255' value=\"".escape($limit)."\">\n";
 	echo "<br />\n";
 	echo $text['description-limit']."\n";
 	echo "</td>\n";
@@ -1020,7 +1020,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "	".$text['label-accountcode']."\n";
 	echo "</td>\n";
 	echo "<td colspan='4' class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='accountcode' maxlength='255' value=\"$accountcode\">\n";
+	echo "	<input class='formfld' type='text' name='accountcode' maxlength='255' value=\"".escape($accountcode)."\">\n";
 	echo "<br />\n";
 	echo $text['description-accountcode']."\n";
 	echo "</td>\n";
@@ -1031,7 +1031,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "	".$text['label-toll_allow']."\n";
 	echo "</td>\n";
 	echo "<td colspan='4' class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='toll_allow' maxlength='255' value=\"$toll_allow\">\n";
+	echo "	<input class='formfld' type='text' name='toll_allow' maxlength='255' value=\"".escape($toll_allow)."\">\n";
 	echo "<br />\n";
 	echo $text['description-enable-toll_allow']."\n";
 	echo "</td>\n";
@@ -1061,7 +1061,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "	<select name='dialplan_order' class='formfld'>\n";
 	//echo "		<option></option>\n";
 	if (strlen(htmlspecialchars($dialplan_order))> 0) {
-		echo "		<option selected='yes' value='".htmlspecialchars($dialplan_order)."'>".htmlspecialchars($dialplan_order)."</option>\n";
+		echo "		<option selected='yes' value='".escape($dialplan_order)."'>".escape($dialplan_order)."</option>\n";
 	}
 	$i = 100;
 	while($i <= 999) {
@@ -1106,7 +1106,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td colspan='4' class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='dialplan_description' maxlength='255' value=\"$dialplan_description\">\n";
+	echo "	<input class='formfld' type='text' name='dialplan_description' maxlength='255' value=\"".escape($dialplan_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
@@ -1115,7 +1115,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "<tr>\n";
 	echo "	<td colspan='5' align='right'>\n";
 	if ($action == "update") {
-		echo "	<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
+		echo "	<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	}
 	echo "		<br>";
 	echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";

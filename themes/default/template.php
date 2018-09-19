@@ -77,14 +77,14 @@
 					object.clearQueue().finish();
 					object.animate({height: '0', 'font-size': '0', 'border-bottom-width': '0'}, 1000).animate({opacity: 0});
 				} );
-				$("#messages_container").append(message_text);
+				$("#message_container").append(message_text);
 				message_text.animate({opacity: 1}, 'fast').delay(delay).animate({height: '0', 'font-size': '0', 'border-bottom-width': '0'}, 1000).animate({opacity: 0});
 			}
 		}
 
 	$(document).ready(function() {
 
-<?php	echo messages::html(true, "		");?>
+<?php	echo message::html(true, "		");?>
 
 		//hide message bar on hover
 			$("#message_text").mouseover(function() { $(this).hide(); $("#message_container").hide(); });
@@ -290,7 +290,7 @@
 
 <body onload="<?php echo $onload;?>">
 
-	<div id='messages_container'></div>
+	<div id='message_container'></div>
 
 	<?php
 	//logged in show the domains block
@@ -484,7 +484,7 @@
 												$menu_sub_icon = null;
 											}
 										}
-										echo "<li><a href='".$mod_a_2."' ".$mod_a_3.">".(($_SESSION['theme']['menu_sub_icons']) ? "<span class='glyphicon glyphicon-minus visible-xs pull-left' style='margin: 4px 10px 0 25px;'></span>" : null).escape($menu_sub['menu_language_title']).escape($menu_sub_icon)."</a></li>\n";
+										echo "<li><a href='".$mod_a_2."' ".$mod_a_3.">".(($_SESSION['theme']['menu_sub_icons']) ? "<span class='glyphicon glyphicon-minus visible-xs pull-left' style='margin: 4px 10px 0 25px;'></span>" : null).escape($menu_sub['menu_language_title']).$menu_sub_icon."</a></li>\n";
 									}
 									echo "</ul>\n";
 								}
