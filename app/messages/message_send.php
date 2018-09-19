@@ -142,7 +142,7 @@
 			$message['message_date'] = 'now()';
 			$message['message_from'] = $message_from;
 			$message['message_to'] = $message_to;
-			$message['$message_text'] = $message_text;
+			$message['message_text'] = $message_text;
 
 		//prepare the array
 			$array['messages'][0] = $message;
@@ -171,7 +171,7 @@
 			$http_method = $_SESSION['message']['http_method']['text'];
 			$http_content_type = $_SESSION['message']['http_content_type']['text'];
 			$http_destination = $_SESSION['message']['http_destination']['text'];
-			$http_auth_enabled = $_SESSION['message']['http_auth_enabled']['text'];
+			$http_auth_enabled = $_SESSION['message']['http_auth_enabled']['boolean'];
 			$http_auth_type = $_SESSION['message']['http_auth_type']['text'];
 			$http_auth_user = $_SESSION['message']['http_auth_user']['text'];
 			$http_auth_password = $_SESSION['message']['http_auth_password']['text'];
@@ -180,17 +180,18 @@
 			$message_from = preg_replace('{[\D]}', '', $message_from);
 
 		//exchange variable name with their values
-			$http_destination = str_replace("${from}", $message_from, $http_destination);
+			$http_destination = str_replace("\${from}", $message_from, $http_destination);
+
 		//send the message to the provider
 			$headers[] = "Content-type: ".trim($http_content_type);
-			if ($http_auth_enabled == 'true' && $http_auth_type == 'basic') {
-				$headers[] = "Authorization: Basic ".base64_encode($http_auth_username.':'.$http_auth_password);
+			if ($http_auth_type == 'basic') {
+				$headers[] = "Authorization: Basic ".base64_encode($http_auth_user.':'.$http_auth_password);
 			}
 			$response = http_request($http_destination, $http_method, $headers, $http_content);
-			echo $response;
+			//echo $response;
 
 		//redirect the user
-			$_SESSION["message"] = $text['message-sent'];
+			//$_SESSION["message"] = $text['message-sent'];
 			header('Location: messages.php');
 			return;
 	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
