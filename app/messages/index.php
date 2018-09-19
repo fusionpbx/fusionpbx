@@ -105,7 +105,7 @@
 	$array['messages'][0]["contact_uuid"] = $contact_uuid;
 	$array['messages'][0]['message_uuid'] = $message_uuid;
 	$array['messages'][0]['message_json'] = $json;
-	$array['messages'][0]['message_direction'] = 'inbound';
+	$array['messages'][0]['message_direction'] = 'receive';
 	$array['messages'][0]['message_date'] = 'now()';
 	$array['messages'][0]['message_type'] = 'sms';
 	$array['messages'][0]['message_from'] = $message["from"];
