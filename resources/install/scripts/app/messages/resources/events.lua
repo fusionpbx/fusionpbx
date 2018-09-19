@@ -51,7 +51,7 @@
 	to_user            = event:getHeader("to_user");
 	to_host            = event:getHeader("to_host");
 	content_type       = event:getHeader("type");
-	message_content    = event:getBody();
+	message_text       = event:getBody();
 
 --set required variables
 	if (from_user ~= nil and from_host ~= nil) then
@@ -131,7 +131,7 @@
 			sql = sql .."message_from, ";
 		end
 		sql = sql .."message_to, ";
-		sql = sql .."message_content ";
+		sql = sql .."message_text ";
 		sql = sql ..") ";
 		sql = sql .."VALUES ( ";
 		sql = sql ..":domain_uuid, ";
@@ -147,7 +147,7 @@
 			sql = sql ..":message_from, ";
 		end
 		sql = sql ..":message_to, ";
-		sql = sql ..":message_content ";
+		sql = sql ..":message_text ";
 		sql = sql ..") ";
 
 		--set the parameters
@@ -164,7 +164,7 @@
 			params['message_from'] = message_from;
 		end
 		params['message_to'] = message_to;
-		params['message_content'] = message_content;
+		params['message_text'] = message_text;
 
 		--show debug info
 		if (debug["sql"]) then
@@ -191,7 +191,7 @@
 			sql = sql .."message_from, ";
 		end
 		sql = sql .."message_to, ";
-		sql = sql .."message_content ";
+		sql = sql .."message_text ";
 		sql = sql ..") ";
 		sql = sql .."VALUES ( ";
 		sql = sql ..":domain_uuid, ";
@@ -207,7 +207,7 @@
 			sql = sql ..":message_from, ";
 		end
 		sql = sql ..":message_to, ";
-		sql = sql ..":message_content ";
+		sql = sql ..":message_text ";
 		sql = sql ..") ";
 
 		--set the direction
@@ -240,7 +240,7 @@
 		params['message_type'] = message_type;
 		params['message_from'] = message_from;
 		params['message_to'] = message_to;
-		params['message_content'] = message_content;
+		params['message_text'] = message_text;
 
 		--show debug info
 		if (debug["sql"]) then
@@ -324,7 +324,7 @@
 			if (http_auth_type == 'basic') then
 				cmd = cmd .. [[-H "Authorization: Basic ]]..base64.encode(http_auth_user..":"..http_auth_password)..[[" ]];
 			end
-			cmd = cmd .. [[-d '{"to":"]]..to_user..[[","text":"]]..message_content..[["}']]
+			cmd = cmd .. [[-d '{"to":"]]..to_user..[[","text":"]]..message_text..[["}']]
 			result = api:executeString("system "..cmd);
 			--status = os.execute (cmd);
 
