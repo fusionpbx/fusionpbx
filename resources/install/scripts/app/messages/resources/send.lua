@@ -22,12 +22,12 @@
 	script_name = argv[0];
 	message_from = argv[1];
 	message_to = argv[2];
-	message_content = argv[3];
+	message_text = argv[3];
 
 --send a message to the console
 	freeswitch.consoleLog("NOTICE",[[[message] from ]]..message_from);
 	freeswitch.consoleLog("NOTICE",[[[message] to ]] .. message_to);
-	freeswitch.consoleLog("NOTICE",[[[message] from ]]..message_content);
+	freeswitch.consoleLog("NOTICE",[[[message] from ]]..message_text);
 
 --connect to the database
 	--local Database = require "resources.functions.database";
@@ -64,7 +64,7 @@
 	event:addHeader("hint", "the hint");
 	event:addHeader("replying", "true");
 	event:addHeader("sip_profile", sip_profile);
-	event:addBody(message_content);
+	event:addBody(message_text);
 
 --send info to the console
 	freeswitch.consoleLog("info", event:serialize());
