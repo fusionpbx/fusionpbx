@@ -255,17 +255,17 @@
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 		echo "	<select class='formfld' name='message_direction'>\n";
 		echo "		<option value=''></option>\n";
-		if ($message_direction == "inbound") {
-			echo "		<option value='inbound' selected='selected'>".$text['label-inbound']."</option>\n";
+		if ($message_direction == "receive") {
+			echo "		<option value='inbound' selected='selected'>".$text['label-receive']."</option>\n";
 		}
 		else {
-			echo "		<option value='inbound'>".$text['label-inbound']."</option>\n";
+			echo "		<option value='inbound'>".$text['label-receive']."</option>\n";
 		}
-		if ($message_direction == "outbound") {
-			echo "		<option value='outbound' selected='selected'>".$text['label-outbound']."</option>\n";
+		if ($message_direction == "send") {
+			echo "		<option value='outbound' selected='selected'>".$text['label-send']."</option>\n";
 		}
 		else {
-			echo "		<option value='outbound'>".$text['label-outbound']."</option>\n";
+			echo "		<option value='outbound'>".$text['label-send']."</option>\n";
 		}
 		echo "	</select>\n";
 	echo "<br />\n";
