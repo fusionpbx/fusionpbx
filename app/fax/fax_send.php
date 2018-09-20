@@ -788,7 +788,7 @@ if (!function_exists('fax_split_dtmf')) {
 				}
 				fclose($fp);
 			}
-			else{ // enqueue
+			else { // enqueue
 				$wav_file = ''; //! @todo add custom message
 				$response = fax_enqueue($fax_uuid, $fax_file, $wav_file, $mailto_address, $fax_uri, $fax_dtmf, $dial_string);
 			}
@@ -809,7 +809,7 @@ if (!function_exists('fax_split_dtmf')) {
 		if (!$included) {
 			//redirect the browser
 			message::add($response, 'default');
-			if (permission_exists('fax_active_view')) {
+			if (isset($_SESSION['fax']['send_mode']['text']) && $_SESSION['fax']['send_mode']['text'] == 'queue') {
 				header("Location: fax_active.php?id=".$fax_uuid);
 			}
 			else {
