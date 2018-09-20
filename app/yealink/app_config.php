@@ -670,5 +670,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Ring tone for each text ranges from 1 to 8. The value 8 stands for Ring8.wav.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "35f217f6-8551-4cdd-80f9-9c98ae702e30";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_dsskey_transfer_mode";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "2";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "DSS key transfer mode: 0-Display Number, 1 Attended Transfer, 2 Blind Transfer (default).";
+		$y++;
 
 ?>
