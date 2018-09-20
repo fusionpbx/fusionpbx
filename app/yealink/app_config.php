@@ -525,5 +525,20 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Local";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Remote Phonebook Extensions on Yealink";
-
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "765e18d9-9440-42be-a858-2c0ef90ee50f";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ring_text_1";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Text to map the keywords contained in the Alert-info header.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ddc70c4e-69be-43e7-8ad0-1e934ac47d0e";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ring_file_1";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Ring tone for each text ranges from 1 to 8. The default value 1 stands for Ring1.wav.";
 ?>
