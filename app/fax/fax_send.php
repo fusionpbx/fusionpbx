@@ -809,7 +809,7 @@ if (!function_exists('fax_split_dtmf')) {
 		if (!$included) {
 			//redirect the browser
 			messages::add($response, 'default');
-			if (permission_exists('fax_active_view')) {
+			if (isset($_SESSION['fax']['send_mode']['text']) && $_SESSION['fax']['send_mode']['text'] == 'queue') {
 				header("Location: fax_active.php?id=".$fax_uuid);
 			}
 			else {
