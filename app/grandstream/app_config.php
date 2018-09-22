@@ -105,7 +105,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_pc_port_vlan";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Default VLAN for phone PC port.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a3adbb11-4e9f-4a56-86f8-0fefa5fb8c1d";
