@@ -161,7 +161,7 @@
 		}
 	}
 	if (permission_exists('extension_import')) {
-		echo 				"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='/app/extension_imports/extension_imports.php'\" value='".$text['button-import']."'>\n";
+		echo 				"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='extension_imports.php'\" value='".$text['button-import']."'>\n";
 	}
 	if (permission_exists('extension_export')) {
 		echo "				<input type='button' class='btn' value='".$text['button-export']."' onclick=\"window.location.href='extension_download.php'\">\n";
