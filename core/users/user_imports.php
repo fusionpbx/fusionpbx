@@ -30,7 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('user_add')) {
+	if (permission_exists('user_import')) {
 		//access granted
 	}
 	else {
