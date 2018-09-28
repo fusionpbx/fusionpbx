@@ -2120,6 +2120,27 @@ $text['label-order']['sv-se'] = "Ordning";
 $text['label-order']['uk-ua'] = "Інше";
 $text['label-order']['tr-tr'] = "Sipariş";
 
+$text['label-add']['en-us'] = "Add";
+$text['label-add']['ar-eg'] = "اضافة";
+$text['label-add']['de-at'] = "Hinzufügen"; //copied from de-de
+$text['label-add']['de-ch'] = "Hinzufügen"; //copied from de-de
+$text['label-add']['de-de'] = "Hinzufügen";
+$text['label-add']['es-cl'] = "Agregar";
+$text['label-add']['es-mx'] = "Agregar"; //copied from es-cl
+$text['label-add']['fr-ca'] = "Ajouter"; //copied from fr-fr
+$text['label-add']['fr-fr'] = "Ajouter";
+$text['label-add']['he-il'] = " להוסיף";
+$text['label-add']['it-it'] = "Inserisci";
+$text['label-add']['nl-nl'] = "";
+$text['label-add']['pl-pl'] = "Dodaj";
+$text['label-add']['pt-br'] = "Adicionar"; //copied from pt-pt
+$text['label-add']['pt-pt'] = "Adicionar";
+$text['label-add']['ro-ro'] = "Adăuga";
+$text['label-add']['ru-ru'] = "Добавить";
+$text['label-add']['sv-se'] = "Lägg Till";
+$text['label-add']['uk-ua'] = "Додати";
+$text['label-add']['tr-tr'] = "Ekle";
+
 $text['label-delete']['en-us'] = "Delete";
 $text['label-delete']['ar-eg'] = "";
 $text['label-delete']['de-at'] = "Löschen"; //copied from de-de
