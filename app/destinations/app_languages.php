@@ -621,6 +621,26 @@ $text['label-account_code']['ru-ru'] = "Код Учетной Записи";
 $text['label-account_code']['sv-se'] = "Account Code";
 $text['label-account_code']['uk-ua'] = "Код облікового запису";
 
+$text['label-detail_action']['en-us'] = "Actions";
+$text['label-detail_action']['ar-eg'] = "الأفعال";
+$text['label-detail_action']['de-at'] = "Aktionen"; //copied from de-de
+$text['label-detail_action']['de-ch'] = "Aktionen"; //copied from de-de
+$text['label-detail_action']['de-de'] = "Aktionen";
+$text['label-detail_action']['es-cl'] = "Accións";
+$text['label-detail_action']['es-mx'] = "Accións"; //copied from es-cl
+$text['label-detail_action']['fr-ca'] = "Actions"; //copied from fr-fr
+$text['label-detail_action']['fr-fr'] = "Actions";
+$text['label-detail_action']['he-il'] = "פעולות";
+$text['label-detail_action']['it-it'] = "Azioni";
+$text['label-detail_action']['nl-nl'] = "";
+$text['label-detail_action']['pl-pl'] = "Operacje (gdzie przesłać rozmowę).";
+$text['label-detail_action']['pt-br'] = "Ações"; //copied from pt-pt
+$text['label-detail_action']['pt-pt'] = "Ações";
+$text['label-detail_action']['ro-ro'] = "";
+$text['label-detail_action']['ru-ru'] = "Действия";
+$text['label-detail_action']['sv-se'] = "Åtgärder";
+$text['label-detail_action']['uk-ua'] = "Дії";
+
 $text['header-destinations']['en-us'] = "Destinations";
 $text['header-destinations']['ar-eg'] = "جهات الأتصال";
 $text['header-destinations']['de-at'] = "Ziele"; //copied from de-de
