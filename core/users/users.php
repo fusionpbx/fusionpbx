@@ -159,7 +159,7 @@
 		}
 	}
 	if (permission_exists('user_import')) {
-		echo 				"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='/app/user_imports/user_imports.php'\" value='".$text['button-import']."'>\n";
+		echo 				"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='user_imports.php'\" value='".$text['button-import']."'>\n";
 	}
 	echo 	"<input type='text' class='txt' style='width: 150px; margin-left: 15px; margin-right: 3px;' name='search_value' value=\"".escape($search_value)."\">";
 	echo 	"<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
