@@ -143,7 +143,7 @@
 
 			echo "	<tr>\n";
 			echo "	<td valign='top' align='left' nowrap='nowrap'>\n";
-			echo "		<b>".$text['header-extension']."</b><br />\n";
+			echo "		<b>".$text['header-extensions']."</b><br />\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='../extensions/extensions.php'\" value='".$text['button-back']."'>\n";
