@@ -832,7 +832,7 @@
 
 			echo "<tr>\n";
 			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-			echo "	".$text['label-action']."\n";
+			echo "	".$text['label-actions']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
 			echo "	<select class='formfld' name='action' id='action'>\n";
@@ -840,7 +840,7 @@
 			echo "	<option value='delete'>".$text['label-delete']."</option>\n";
 			echo "	</select>\n";
 			echo "<br />\n";
-			echo $text['description-action']."\n";
+			echo $text['description-actions']."\n";
 			echo "</td>\n";
 			echo "</tr>\n";
 
