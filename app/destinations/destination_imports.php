@@ -458,7 +458,7 @@
 					}
 
 				//send the redirect header
-					header("Location: /app/destinations/destinations.php");
+					header("Location: destinations.php");
 					return;
 			}
 
