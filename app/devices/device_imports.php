@@ -329,7 +329,7 @@
 					}
 
 				//send the redirect header
-					header("Location: ../devices/devices.php");
+					header("Location: devices.php");
 					return;
 			}
 	}
