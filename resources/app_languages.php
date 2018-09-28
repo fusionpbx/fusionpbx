@@ -2162,6 +2162,26 @@ $text['label-delete']['sv-se'] = "Ta Bort";
 $text['label-delete']['uk-ua'] = "Видалити";
 $text['label-delete']['tr-tr'] = "Sil";
 
+$text['label-actions']['en-us'] = "Actions";
+$text['label-actions']['ar-eg'] = "الأفعال";
+$text['label-actions']['de-at'] = "Aktionen"; //copied from de-de
+$text['label-actions']['de-ch'] = "Aktionen"; //copied from de-de
+$text['label-actions']['de-de'] = "Aktionen";
+$text['label-actions']['es-cl'] = "Accións";
+$text['label-actions']['es-mx'] = "Accións"; //copied from es-cl
+$text['label-actions']['fr-ca'] = "Actions"; //copied from fr-fr
+$text['label-actions']['fr-fr'] = "Actions";
+$text['label-actions']['he-il'] = "פעולות";
+$text['label-actions']['it-it'] = "Azioni";
+$text['label-actions']['nl-nl'] = "";
+$text['label-actions']['pl-pl'] = "Operacje (gdzie przesłać rozmowę).";
+$text['label-actions']['pt-br'] = "Ações"; //copied from pt-pt
+$text['label-actions']['pt-pt'] = "Ações";
+$text['label-actions']['ro-ro'] = "";
+$text['label-actions']['ru-ru'] = "Действия";
+$text['label-actions']['sv-se'] = "Åtgärder";
+$text['label-actions']['uk-ua'] = "Дії";
+
 $text['label-music_on_hold']['en-us'] = "Music on Hold";
 $text['label-music_on_hold']['ar-eg'] = "موسيقى المؤجلة";
 $text['label-music_on_hold']['de-at'] = "Wartemusik"; //copied from de-de
