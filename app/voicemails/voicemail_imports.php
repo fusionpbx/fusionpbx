@@ -138,7 +138,7 @@
 		//form to match the fields to the column names
 			require_once "resources/header.php";
 
-			echo "<form action='voicemails_imports.php' method='POST' enctype='multipart/form-data' name='frmUpload' onSubmit=''>\n";
+			echo "<form action='voicemail_imports.php' method='POST' enctype='multipart/form-data' name='frmUpload' onSubmit=''>\n";
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 			echo "	<tr>\n";
