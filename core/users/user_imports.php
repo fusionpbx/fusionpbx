@@ -143,10 +143,10 @@
 
 			echo "	<tr>\n";
 			echo "	<td valign='top' align='left' nowrap='nowrap'>\n";
-			echo "		<b>".$text['header-import']."</b><br />\n";
+			echo "		<b>".$text['header-users']."</b><br />\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='../../core/users/users.php'\" value='".$text['button-back']."'>\n";
+			echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='users.php'\" value='".$text['button-back']."'>\n";
 			echo "		<input name='submit' type='submit' class='btn' id='import' value=\"".$text['button-import']."\">\n";
 			echo "	</td>\n";
 			echo "	</tr>\n";
@@ -159,7 +159,7 @@
 			//echo "<tr>\n";
 			//echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-import']."</b></td>\n";
 			//echo "<td width='70%' align='right'>\n";
-			//echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='../../core/users/users.php'\" value='".$text['button-back']."'>\n";
+			//echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='users.php'\" value='".$text['button-back']."'>\n";
 			//echo "</td>\n";
 			//echo "</tr>\n";
 
