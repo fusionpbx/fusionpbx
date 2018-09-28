@@ -381,26 +381,6 @@ $text['label-domain']['ru-ru'] = "Домен";
 $text['label-domain']['sv-se'] = "Domän";
 $text['label-domain']['uk-ua'] = "Домен";
 
-$text['label-detail_action']['en-us'] = "Actions";
-$text['label-detail_action']['ar-eg'] = "الأفعال";
-$text['label-detail_action']['de-at'] = "Aktionen"; //copied from de-de
-$text['label-detail_action']['de-ch'] = "Aktionen"; //copied from de-de
-$text['label-detail_action']['de-de'] = "Aktionen";
-$text['label-detail_action']['es-cl'] = "Accións";
-$text['label-detail_action']['es-mx'] = "Accións"; //copied from es-cl
-$text['label-detail_action']['fr-ca'] = "Actions"; //copied from fr-fr
-$text['label-detail_action']['fr-fr'] = "Actions";
-$text['label-detail_action']['he-il'] = "פעולות";
-$text['label-detail_action']['it-it'] = "Azioni";
-$text['label-detail_action']['nl-nl'] = "";
-$text['label-detail_action']['pl-pl'] = "Operacje (gdzie przesłać rozmowę).";
-$text['label-detail_action']['pt-br'] = "Ações"; //copied from pt-pt
-$text['label-detail_action']['pt-pt'] = "Ações";
-$text['label-detail_action']['ro-ro'] = "";
-$text['label-detail_action']['ru-ru'] = "Действия";
-$text['label-detail_action']['sv-se'] = "Åtgärder";
-$text['label-detail_action']['uk-ua'] = "Дії";
-
 $text['label-destination_type']['en-us'] = "Type";
 $text['label-destination_type']['ar-eg'] = "النوع";
 $text['label-destination_type']['de-at'] = "Art"; //copied from de-de
