@@ -981,6 +981,26 @@ $text['description-carrier']['ru-ru'] = "Введите имя оператор�
 $text['description-carrier']['sv-se'] = "Ange operatörens namn. Detta används för att hålla reda på debitering.";
 $text['description-carrier']['uk-ua'] = "Введіть назву оператора. Використовується для тарифікації";
 
+$text['description-destination_record']['en-us'] = "Save the recording.";
+$text['description-destination_record']['ar-eg'] = "";
+$text['description-destination_record']['de-at'] = "Aufnahme speichern.";
+$text['description-destination_record']['de-ch'] = "Aufnahme speichern."; //copied from de-de
+$text['description-destination_record']['de-de'] = "Aufnahme speichern.";
+$text['description-destination_record']['es-cl'] = "Guardar la grabación.";
+$text['description-destination_record']['es-mx'] = "Guardar la grabación."; //copied from es-cl
+$text['description-destination_record']['fr-ca'] = "Sauvegarder l'enregistrement."; //copied from fr-fr
+$text['description-destination_record']['fr-fr'] = "Sauvegarder l'enregistrement.";
+$text['description-destination_record']['he-il'] = "";
+$text['description-destination_record']['it-it'] = "";
+$text['description-destination_record']['nl-nl'] = "";
+$text['description-destination_record']['pl-pl'] = "Zachowaj nagranie";
+$text['description-destination_record']['pt-br'] = "Salva a gravação.";
+$text['description-destination_record']['pt-pt'] = "Salve a gravação.";
+$text['description-destination_record']['ro-ro'] = "";
+$text['description-destination_record']['ru-ru'] = "Сохранить запись.";
+$text['description-destination_record']['sv-se'] = "Spara inspelningen.";
+$text['description-destination_record']['uk-ua'] = "";
+
 $text['description-account_code']['en-us'] = "Enter account code.";
 $text['description-account_code']['ar-eg'] = "";
 $text['description-account_code']['de-at'] = "Geben Sie einen Kontoschlüssel an."; //copied from de-de
