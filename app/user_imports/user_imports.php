@@ -146,7 +146,7 @@
 			echo "		<b>".$text['header-import']."</b><br />\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='../users/users.php'\" value='".$text['button-back']."'>\n";
+			echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='../../core/users/users.php'\" value='".$text['button-back']."'>\n";
 			echo "		<input name='submit' type='submit' class='btn' id='import' value=\"".$text['button-import']."\">\n";
 			echo "	</td>\n";
 			echo "	</tr>\n";
@@ -159,7 +159,7 @@
 			//echo "<tr>\n";
 			//echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-import']."</b></td>\n";
 			//echo "<td width='70%' align='right'>\n";
-			//echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='../users/users.php'\" value='".$text['button-back']."'>\n";
+			//echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='../../core/users/users.php'\" value='".$text['button-back']."'>\n";
 			//echo "</td>\n";
 			//echo "</tr>\n";
 
@@ -363,7 +363,7 @@
 					}
 
 				//send the redirect header
-					header("Location: ../users/users.php");
+					header("Location: ../../core/users/users.php");
 					return;
 			}
 	}
@@ -379,7 +379,7 @@
 	echo "		".$text['description-import']."\n";
 	echo "	</td>\n";
 	echo "	<td valign='top' width='70%' align='right'>\n";
-	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='../users/users.php?".$_GET["query_string"]."'\" value='".$text['button-back']."'>\n";
+	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='../../core/users/users.php?".$_GET["query_string"]."'\" value='".$text['button-back']."'>\n";
 	//echo "		<input name='submit' type='submit' class='btn' id='import' value=\"".$text['button-import']."\">\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
