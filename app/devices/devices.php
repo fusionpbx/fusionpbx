@@ -199,7 +199,7 @@
 		echo "			<input type='button' class='btn' value='".$text['button-profiles']."' onclick=\"document.location.href='device_profiles.php';\">\n";
 	}
 	if (permission_exists('device_import')) {
-		echo "			<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='/app/device_imports/device_imports.php'\" value='".$text['button-import']."'>\n";
+		echo "			<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='device_imports.php'\" value='".$text['button-import']."'>\n";
 	}
 	if (permission_exists('device_export')) {
 		echo "			<input type='button' class='btn' value='".$text['button-export']."' onclick=\"window.location.href='device_download.php'\">\n";
