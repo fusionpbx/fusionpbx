@@ -666,7 +666,9 @@
 <!-- # Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone, 4 - silent. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3, 4 -->
 <!-- # Mandatory -->
-<P104>1</P104>
+{if isset($grandstream_account_ring_tone_1)}
+<P104>{$grandstream_account_ring_tone_1}</P104>
+{/if}
 
 <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
 <!-- # String -->
