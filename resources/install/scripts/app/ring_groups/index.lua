@@ -25,7 +25,6 @@
 --
 --	Contributor(s):
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Luis Daniel Lucio Qurioz <dlucio@okay.com.mx>
 
 --include the log
 	log = require "resources.functions.log".ring_group
@@ -431,8 +430,8 @@
 				freeswitch.consoleLog("notice", "[ring group] SQL:" .. sql .. "; params:" .. json.encode(params) .. "\n");
 			end
 			destinations = {};
-			x = 1;
 			destination_count = 0;
+			x = 1;
 			assert(dbh:query(sql, params, function(row)
 				if (row.destination_prompt == "1" or row.destination_prompt == "2") then
 					prompt = "true";
@@ -487,8 +486,104 @@
 				)
 			end
 
+		--prepare the array of destinations
+			x = 1;
+			for key, row in pairs(destinations) do
+				--set the values from the database as variables
+				user_exists = row.user_exists;
+				ring_group_strategy = row.ring_group_strategy;
+				ring_group_timeout_app = row.ring_group_timeout_app;
+				ring_group_timeout_data = row.ring_group_timeout_data;
+				ring_group_caller_id_name = row.ring_group_caller_id_name;
+				ring_group_caller_id_number = row.ring_group_caller_id_number;
+				ring_group_cid_name_prefix = row.ring_group_cid_name_prefix;
+				ring_group_cid_number_prefix = row.ring_group_cid_number_prefix;
+				ring_group_distinctive_ring = row.ring_group_distinctive_ring;
+				ring_group_ringback = row.ring_group_ringback;
+				destination_number = row.destination_number;
+				destination_delay = row.destination_delay;
+				destination_timeout = row.destination_timeout;
+				destination_prompt = row.destination_prompt;
+				domain_name = row.domain_name;
+				toll_allow = row.toll_allow;
+
+				--determine if the user is registered if not registered then lookup 
+				cmd = "sofia_contact */".. destination_number .."@" ..domain_name;
+				if (api:executeString(cmd) == "error/user_not_registered") then
+					freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
+					cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_user_not_registered_enabled";
+					freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
+					if (api:executeString(cmd) == "true") then
+						--get the new destination number
+						cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_user_not_registered_destination";
+						freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
+						not_registered_destination_number = api:executeString(cmd);
+						freeswitch.consoleLog("NOTICE", "[ring_group] "..not_registered_destination_number.."\n");
+						if (not_registered_destination_number ~= nil) then
+							destination_number = not_registered_destination_number;	
+						end
+
+						--check the new destination number for user_exists
+						cmd = "user_exists id ".. destination_number .." "..domain_name;
+						user_exists = api:executeString(cmd);
+						if (user_exists == "true") then
+							destinations[key]['user_exists'] = "true";
+						else
+							destinations[key]['user_exists'] = "false";
+						end
+					end
+				end
+
+				---get destination that are using follow me
+				cmd = "user_data ".. destination_number .."@" ..domain_name.." var follow_me_enabled";
+				if (api:executeString(cmd) == "true") then
+					--get the follow me destinations
+					cmd = "user_data ".. destination_number .."@" ..domain_name.." var follow_me_destinations";
+					result_follow_me_destinations = api:executeString(cmd);
+					freeswitch.consoleLog("notice", "[ring groups][follow_me] key " .. key .. " " .. cmd .. " ".. result_follow_me_destinations .."\n");
+
+					follow_me_destinations = explode(",[", result_follow_me_destinations);
+					for k, v in pairs(follow_me_destinations) do
+						--increment the ordinal value
+						x = x + 1;
+
+						--seperate the variables from the destination
+						destination = explode("]", v);
+
+						--set the variables and clean the variables string
+						variables = destination[1];
+						variables = variables:gsub("%[", "");
+
+						--send details to the console
+						freeswitch.consoleLog("notice", "[ring groups][follow_me] variables ".. variables .."\n");
+						freeswitch.consoleLog("notice", "[ring groups][follow_me] destination ".. destination[2] .."\n");
+
+						--add to the destinations array
+						if destinations[x] == nil then destinations[x] = {} end
+						destinations[x]['destination_number'] = destination[2];
+						destinations[x]['domain_name'] = domain_name;
+						destinations[x]['destination_delay'] = '0';
+						destinations[x]['destination_timeout'] = '30';
+
+						--add the variables to the destinations array
+						variable_array = explode(",", variables);
+						for k2, v2 in pairs(variable_array) do
+							array = explode("=", v2);
+							if (array[2] ~= nil) then
+								destinations[x][array[1]] = array[2];
+							end
+						end
+
+						--if confirm is true true then set it to prompt
+						if (destinations[x]['confirm']  ~= nil and destinations[x]['confirm']  == 'true') then
+							destinations[x]['destination_prompt'] = '1';
+						end
+					end
+				end
+			end
+
 		--process the destinations
-			x = 0;
+			x = 1;
 			for key, row in pairs(destinations) do
 				--set the values from the database as variables
 					user_exists = row.user_exists;
@@ -505,35 +600,11 @@
 					destination_delay = row.destination_delay;
 					destination_timeout = row.destination_timeout;
 					destination_prompt = row.destination_prompt;
+					group_confirm_key = row.group_confirm_key;
+					group_confirm_file = row.group_confirm_file;
 					domain_name = row.domain_name;
 					toll_allow = row.toll_allow;
-
-				--determine if the user is registered if not registered then lookup 
-					cmd = "sofia_contact */".. destination_number .."@" ..domain_name;
-					if (api:executeString(cmd) == "error/user_not_registered") then
-						freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
-						cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_user_not_registered_enabled";
-						freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
-						if (api:executeString(cmd) == "true") then
-							--get the new destination number
-							cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_user_not_registered_destination";
-							freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
-							not_registered_destination_number = api:executeString(cmd);
-							freeswitch.consoleLog("NOTICE", "[ring_group] "..not_registered_destination_number.."\n");
-							if (not_registered_destination_number ~= nil) then
-								destination_number = not_registered_destination_number;	
-							end
-
-							--check the new destination number for user_exists
-							cmd = "user_exists id ".. destination_number .." "..domain_name;
-							user_exists = api:executeString(cmd);
-							if (user_exists == "true") then
-								row['user_exists'] = "true";
-							else
-								row['user_exists'] = "false";
-							end
-						end
-					end
+					user_exists = row.user_exists;
 
 				--follow the forwards
 					count, destination_number = get_forward_all(0, destination_number, leg_domain_name);
@@ -670,13 +741,12 @@
 
 						--set the destination dial string
 							dial_string = "[ignore_early_media=true,toll_allow=".. toll_allow ..",".. caller_id .."sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]"..route_bridge
-
 					end
 
 				--add a delimiter between destinations
 					if (dial_string ~= nil) then
 						--freeswitch.consoleLog("notice", "[ring group] dial_string: " .. dial_string .. "\n");
-						if (x == 0) then
+						if (x == 1) then
 							if (ring_group_strategy == "enterprise") then
 								app_data = dial_string;
 							else
