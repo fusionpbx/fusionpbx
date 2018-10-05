@@ -53,18 +53,18 @@
 
 //set http values as php variables
 	if (count($_POST) > 0) {
-		$var_category = check_str($_POST["var_category"]);
-		$var_name = check_str($_POST["var_name"]);
-		$var_value = check_str($_POST["var_value"]);
-		$var_command = check_str($_POST["var_command"]);
-		$var_hostname = check_str($_POST["var_hostname"]);
-		$var_enabled = check_str($_POST["var_enabled"]);
-		$var_order = check_str($_POST["var_order"]);
-		$var_description = $_POST["var_description"];
+		$var_category = check_str(trim($_POST["var_category"]));
+		$var_name = check_str(trim($_POST["var_name"]));
+		$var_value = check_str(trim($_POST["var_value"]));
+		$var_command = check_str(trim($_POST["var_command"]));
+		$var_hostname = check_str(trim($_POST["var_hostname"]));
+		$var_enabled = check_str(trim($_POST["var_enabled"]));
+		$var_order = check_str(trim($_POST["var_order"]));
+		$var_description = check_str(trim($_POST["var_description"]));
 		$var_description = str_replace("''", "'", $var_description);
 
 		if (strlen($_POST["var_category_other"]) > 0) {
-			$var_category = check_str($_POST["var_category_other"]);
+			$var_category = check_str(trim($_POST["var_category_other"]));
 		}
 	}
 
