@@ -1419,7 +1419,9 @@ include "root.php";
 												$file_contents = $this->render();
 
 											//write the file
-												mkdir($directory,0777,true);
+												if(!is_dir($directory)) {
+													mkdir($directory,0777,true);
+												}
 												$fh = fopen($dest_path,"w") or die("Unable to write to $directory for provisioning. Make sure the path exists and permissons are set correctly.");
 												fwrite($fh, $file_contents);
 												fclose($fh);
