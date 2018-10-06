@@ -2,7 +2,10 @@
   <extension name="follow me bridge" number="" app_uuid="fc07e3d5-b9d1-4480-9bae-8da911d43eac" global="true">
     <condition field="${user_exists}" expression="true"/>
     <condition field="${follow_me_enabled}" expression="true">
+      <action application="set" data="hangup_after_bridge=true"/>
+      <action application="set" data="continue_on_fail=true"/>
       <action application="bridge" data="${follow_me_destinations}"/>
+      <action application="transfer" data="*99${destination_number} XML ${domain_name}"/>
     </condition>
   </extension>
 </context>
