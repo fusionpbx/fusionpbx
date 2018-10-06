@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010 - 2016
+	Copyright (C) 2010 - 2018
 	All Rights Reserved.
 
 	Contributor(s):
@@ -314,12 +314,12 @@ include "root.php";
 					}
 					if (($presence_id = extension_presence_id($row["follow_me_destination"])) !== false) {
 						$dial_string .= "[";
-						$dial_string .= "presence_id=".$presence_id."@".$_SESSION['domain_name'].',';
+						$dial_string .= "presence_id=".$presence_id."@".$_SESSION['domain_name'];
 						if ($row["follow_me_prompt"] == "1") {
-							$dial_string .= "group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true,";
+							$dial_string .= ",group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true";
 						}
 						if ($this->follow_me_ignore_busy != 'true') {
-							$dial_string .= "fail_on_single_reject=USER_BUSY,";
+							$dial_string .= ",fail_on_single_reject=USER_BUSY";
 						}
 						//accountcode
 						if (strlen($this->accountcode) == 0) {
@@ -334,16 +334,16 @@ include "root.php";
 							$dial_string .= ",toll_allow='".$this->toll_allow."'";
 						}
 		
-						$dial_string .= "instant_ringback=true,";
-						$dial_string .= "ignore_early_media=true";
+						$dial_string .= ",instant_ringback=true";
+						$dial_string .= ",ignore_early_media=true";
 						$dial_string .= ",domain_uuid=".$_SESSION['domain_uuid'];
 						$dial_string .= ",sip_invite_domain=".$_SESSION['domain_name'];
 						$dial_string .= ",domain_name=".$_SESSION['domain_name'];
 						$dial_string .= ",domain=".$_SESSION['domain_name'];
 						$dial_string .= ",extension_uuid=".$this->extension_uuid;
 
-						$dial_string .= "leg_delay_start=".$row["follow_me_delay"].",";
-						$dial_string .= "leg_timeout=".$row["follow_me_timeout"]."]";
+						$dial_string .= ",leg_delay_start=".$row["follow_me_delay"];
+						$dial_string .= ",leg_timeout=".$row["follow_me_timeout"]."]";
 						//$dial_string .= "\${sofia_contact(".$row["follow_me_destination"]."@".$_SESSION['domain_name'].")}";
 						$dial_string .= "user/".$row["follow_me_destination"]."@".$_SESSION['domain_name'];
 					}
@@ -390,21 +390,21 @@ include "root.php";
 							$dial_string .= ",sip_h_X-accountcode=".$this->accountcode;
 							$dial_string .= ",accountcode=".$this->accountcode;
 						}
-		
+
 						//toll allow
 						if ($this->toll_allow != '') {
 							$dial_string .= ",toll_allow='".$this->toll_allow."'";
 						}
 
 						if ($this->follow_me_ignore_busy != 'true') {
-							$dial_string .= "fail_on_single_reject=USER_BUSY,";
+							$dial_string .= ",fail_on_single_reject=USER_BUSY";
 						}
 
 						if ($row["follow_me_prompt"] == "1") {
-							$dial_string .= ",group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true,";
+							$dial_string .= ",group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true";
 						}
-						$dial_string .= "instant_ringback=true,";
-						$dial_string .= "ignore_early_media=true";
+						$dial_string .= ",instant_ringback=true";
+						$dial_string .= ",ignore_early_media=true";
 						$dial_string .= ",domain_uuid=".$_SESSION['domain_uuid'];
 						$dial_string .= ",sip_invite_domain=".$_SESSION['domain_name'];
 						$dial_string .= ",domain_name=".$_SESSION['domain_name'];
@@ -433,7 +433,7 @@ include "root.php";
 					}
 					$x++;
 				}
-				$dial_string = str_replace(",]", "]", $dial_string);
+				//$dial_string = str_replace(",]", "]", $dial_string);
 				$this->dial_string = $dial_string;
 
 				$sql  = "update v_follow_me set ";
