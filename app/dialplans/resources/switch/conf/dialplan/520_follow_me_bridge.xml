@@ -1,4 +1,5 @@
-<extension name="follow me bridge" continue="" uuid="3ddb9142-8e3a-4a92-8f80-a49c6a21fb04">
+<context name="${domain_name}">
+  <extension name="follow me bridge" number="" app_uuid="fc07e3d5-b9d1-4480-9bae-8da911d43eac" global="true">
 	<condition field="${user_exists}" expression="true"/>
 	<condition field="${follow_me_enabled}" expression="true"/>
 	<condition field="${sofia_contact ${destination_number}@${domain_name}}" expression="error/user_not_registered" break="never"/>
@@ -20,4 +21,5 @@
 	<condition field="${follow_me_enabled}" expression="true">
 		<action application="transfer" data="*99${destination_number} XML ${domain_name}"/>
 	</condition>
-</extension>
+  </extension>
+</context>
