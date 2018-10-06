@@ -627,7 +627,7 @@ a!-- # Number: 0, 1 -->
 
 <!-- # Disable Call Waiting. 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
 <!-- # Number: 0, 1, 2 -->
-<P26063>{$grandstream_disable_call_waiting}</P26063>
+<P26063>{$grandstream_call_waiting}</P26063>
 
 <!-- ############################################################### -->
 <!-- # Account 1/Intercom Settings -->
@@ -1283,7 +1283,7 @@ a!-- # Number: 0, 1 -->
 
 <!-- # Disable Call Waiting. 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
 <!-- # Number: 0, 1, 2 -->
-<P26163>{$grandstream_disable_call_waiting}</P26163>
+<P26163>{$grandstream_call_waiting}</P26163>
 
 <!-- ############################################################### -->
 <!-- # Account 2/Intercom Settings -->
@@ -1962,7 +1962,7 @@ a!-- # Number: 0, 1 -->
 
 <!-- # Disable Call Waiting. 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
 <!-- # Number: 0, 1, 2 -->
-<P26263>0</P26263>
+<P26263>{$grandstream_call_waiting}</P26263>
 
 <!-- ############################################################### -->
 <!-- # Account 3/Intercom Settings -->
@@ -2677,7 +2677,7 @@ a!-- # Number: 0, 1 -->
 
 <!-- # Disable Call Waiting. 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
 <!-- # Number: 0, 1, 2 -->
-<P26363>0</P26363>
+<P26363>{$grandstream_call_waiting}</P26363>
 
 <!-- ############################################################### -->
 <!-- # Account 4/Intercom Settings -->
@@ -3390,7 +3390,7 @@ a!-- # Number: 0, 1 -->
 
 <!-- # Disable Call Waiting. 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
 <!-- # Number: 0, 1, 2 -->
-<P26463>0</P26463>
+<P26463>{$grandstream_call_waiting}</P26463>
 
 <!-- ############################################################### -->
 <!-- # Account 5/Intercom Settings -->
@@ -4106,7 +4106,7 @@ a!-- # Number: 0, 1 -->
 
 <!-- # Disable Call Waiting. 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
 <!-- # Number: 0, 1, 2 -->
-<P26563>0</P26563>
+<P26563>{$grandstream_call_waiting}</P26563>
 
 <!-- ############################################################### -->
 <!-- # Account 6/Intercom Settings -->
@@ -4214,7 +4214,7 @@ a!-- # Number: 0, 1 -->
 <!-- ########################################## -->
 <!-- # IP Address. Ignore if DHCP or PPPoE is used -->
 <!-- # Number: 0 - 255 -->
-<!-- <P9>192</P9>  --> 
+<!-- <P9>192</P9>  -->
 
 <!-- # Number: 0 - 255 -->
 <!-- <P10>168</P10> -->
@@ -4369,8 +4369,8 @@ a!-- # Number: 0, 1 -->
 
 <!-- # Layer 2 QoS. 802.1Q/VLAN Tag (VLAN classification for RTP). Default is 0 -->
 <!-- # Number: 0 - 4094 -->
-{if isset($grandstream_phone_vlan) }
-<P51>{$grandstream_phone_vlan}</P51>
+{if isset($grandstream_lan_port_vlan) }
+<P51>{$grandstream_lan_port_vlan}</P51>
 {else}
 <P51>0</P51>
 {/if}
@@ -5255,15 +5255,24 @@ a!-- # Number: 0, 1 -->
 
 <!-- # Disable Call Waiting. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
-<P91>0</P91>
+{if isset{$grandstream_call_waiting}}
+{if $grandstream_call_waiting == "1"}<P91>0</P91>{/if}
+{if $grandstream_call_waiting == "2"}<P91>1</P91>{/if}
+{/if}
 
 <!-- # Disable Call Waiting Tone. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
-<P186>0</P186>
+{if isset{$grandstream_call_waiting}}
+{if $grandstream_call_waiting == "1"}<P186>0</P186>{/if}
+{if $grandstream_call_waiting == "2"}<P186>1</P186>{/if}
+{/if}
 
 <!-- # Ring for Call Waiting. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
-<P22102>0</P22102>
+{if isset{$grandstream_call_waiting}}
+{if $grandstream_call_waiting == "1"}<P22102>0</P22102>{/if}
+{if $grandstream_call_waiting == "2"}<P22102>1</P22102>{/if}
+{/if}
 
 <!-- # Disable Busy Tone on Remote Disconnect. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
