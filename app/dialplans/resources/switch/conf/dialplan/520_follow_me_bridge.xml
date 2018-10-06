@@ -15,6 +15,9 @@
 	<condition field="${follow_me_enabled}" expression="true"/>
 	<condition field="${forward_no_answer_enabled}" expression="true" break="never">
 		<action application="transfer" data="${forward_no_answer_destination} XML ${domain_name}"/>
-		<anti-action application="transfer" data="*99${destination_number} XML ${domain_name}"/>
+	</condition>
+	<condition field="${user_exists}" expression="true"/>
+	<condition field="${follow_me_enabled}" expression="true">
+		<action application="transfer" data="*99${destination_number} XML ${domain_name}"/>
 	</condition>
 </extension>
