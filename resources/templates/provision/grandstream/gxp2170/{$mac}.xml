@@ -362,6 +362,31 @@ a!-- # Number: 0, 1 -->
 <!-- # Number: 0, 1 -->
 <P2311>0</P2311>
 
+<!-- # Broadsoft Features, might be useful in the future -->
+<!-- # Broadsoft Call Center. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<!-- <P2341>0</P2341> -->
+<!-- # Hoteling Event. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<!-- # Mandatory -->
+<!-- <P2342>0</P2342> -->
+<!-- # Call Center Status. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<!-- # Mandatory -->
+<!-- <P2343>0</P2343> -->
+<!-- # Broadsoft Executive Assistant. 0 - Disabled, 1 - Enabled. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<!-- # Mandatory -->
+<!-- <P2364>0 </P2364> -->
+<!-- # Feature Key Synchronization. 0 - Disabled, 1 - Enabled. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<!-- # Mandatory -->
+<!-- <P2325>0</P2325> -->
+<!-- # Broadsoft Call Park. 0 - Disabled, 1 - Enabled. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<!-- # Mandatory -->
+<!-- <P2388>0</P2388> -->
+
 <!-- # Validate Certification Chain. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <P2367>0</P2367>
