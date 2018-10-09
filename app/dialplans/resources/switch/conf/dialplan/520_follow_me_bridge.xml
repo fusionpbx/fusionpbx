@@ -1,8 +1,25 @@
 <context name="${domain_name}">
   <extension name="follow me bridge" number="" app_uuid="fc07e3d5-b9d1-4480-9bae-8da911d43eac" global="true">
-    <condition field="${user_exists}" expression="true"/>
-    <condition field="${follow_me_enabled}" expression="true">
-      <action application="bridge" data="${follow_me_destinations}"/>
-    </condition>
+	<condition field="${user_exists}" expression="true"/>
+	<condition field="${follow_me_enabled}" expression="true"/>
+	<condition field="${sofia_contact ${destination_number}@${domain_name}}" expression="error/user_not_registered" break="never"/>
+	<condition field="${forward_user_not_registered_enabled}" expression="true" break="never">
+		<action application="transfer" data="${forward_user_not_registered_destination} XML ${domain_name}"/>
+	</condition>
+	<condition field="${user_exists}" expression="true"/>
+	<condition field="${follow_me_enabled}" expression="true">
+		<action application="set" data="hangup_after_bridge=true"/>
+		<action application="set" data="continue_on_fail=true"/>
+		<action application="bridge" data="${follow_me_destinations}"/>
+	</condition>
+	<condition field="${user_exists}" expression="true"/>
+	<condition field="${follow_me_enabled}" expression="true"/>
+	<condition field="${forward_no_answer_enabled}" expression="true" break="never">
+		<action application="transfer" data="${forward_no_answer_destination} XML ${domain_name}"/>
+	</condition>
+	<condition field="${user_exists}" expression="true"/>
+	<condition field="${follow_me_enabled}" expression="true">
+		<action application="transfer" data="*99${destination_number} XML ${domain_name}"/>
+	</condition>
   </extension>
 </context>
