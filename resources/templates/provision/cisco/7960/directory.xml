@@ -11,7 +11,7 @@
 	</MenuItem>
 	<MenuItem>
 		<Name>Enterprise</Name>
-		<URL>http://{$domain_name}/app/provision/?file=directory_enterprise.xml&mac=$mac}</URL>
+		<URL>http://{$domain_name}/app/provision/?file=directory_enterprise.xml&mac={$mac}</URL>
 	</MenuItem>
 	<MenuItem>
 		<Name>Speed Dial</Name>
