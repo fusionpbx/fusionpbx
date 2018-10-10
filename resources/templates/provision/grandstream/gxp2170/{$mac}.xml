@@ -3,7 +3,7 @@
 <gs_provision version="1">
 <mac>{$mac|replace:'-':''}</mac>
 <config version="1">
-<!-- ######################################################################################## -->
+<!-- ﻿########################################################################################## -->
 <!-- ## Configuration Template For GXP2130/2140/2160/2170/2135 Firmware Version 1.0.9.26     ## -->
 <!-- ########################################################################################## -->
 
@@ -35,11 +35,11 @@
 
 <!--  Outbound Proxy -->
 <!--  String -->
-<P48>{$outbound_proxy_1}</P48>
+<P48>{$outbound_proxy_primary}</P48>
 
 <!--  Backup Outbound Proxy -->
 <!--  String -->
-<P2333>{$outbound_proxy_2}</P2333>
+<P2333>{$outbound_proxy_secondary}</P2333>
 
 <!--  BLF Server -->
 <!--  String -->
@@ -112,7 +112,7 @@
 <P63>0</P63>
 
 <!-- # SIP Registration. 0 - No, 1 - Yes. Default is 1 -->
-a!-- # Number: 0, 1 -->
+<!-- # Number: 0, 1 -->
 <P31>1</P31>
 
 <!-- # Unregister On Reboot. 0 - No, 1 - Yes, 2 - Instance. Default is 0 -->
@@ -271,6 +271,10 @@ a!-- # Number: 0, 1 -->
 <!-- # Number: 15 - 60 -->
 <P2313>15</P2313>
 
+<!-- # Eventlist BLF URI -->
+<!-- # String -->
+<!--<P134></P134>-->
+
 <!-- #Auto Provision Eventlist BLFs. 0-Disabled, 1-Enabled. Default is 0 -->
 <!-- #Number:0,1 -->
 <P2389>0</P2389>
@@ -312,6 +316,33 @@ a!-- # Number: 0, 1 -->
 <!-- # Default is 100 -->
 <!-- # Number: 100, 101, 102, 108, 109, 110, 117, 119 -->
 <P198>100</P198>
+
+<!-- # Broadsoft Features, might be useful in the future -->
+<!-- # Broadsoft Call Center. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<!-- <P2341>0</P2341> -->
+
+<!-- # Hoteling Event. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<!-- <P2342>0</P2342> -->
+
+<!-- # Call Center Status. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<!-- # Mandatory -->
+<!-- <P2343>0</P2343> -->
+
+<!-- # Broadsoft Executive Assistant. 0 - Disabled, 1 - Enabled. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<!-- <P2364>0 </P2364> -->
+
+<!-- # Feature Key Synchronization. 0 - Disabled, 1 - Enabled. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<!-- # Mandatory -->
+<!-- <P2325>0</P2325> -->
+
+<!-- # Broadsoft Call Park. 0 - Disabled, 1 - Enabled. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<!-- <P2388>0</P2388> -->
 
 <!-- ############################################################### -->
 <!-- # Account 1/SIP Settings/Session Timer -->
@@ -361,31 +392,6 @@ a!-- # Number: 0, 1 -->
 <!-- # 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <P2311>0</P2311>
-
-<!-- # Broadsoft Features, might be useful in the future -->
-<!-- # Broadsoft Call Center. 0 - No, 1 - Yes. Default is 0 -->
-<!-- # Number: 0, 1 -->
-<!-- <P2341>0</P2341> -->
-<!-- # Hoteling Event. 0 - No, 1 - Yes. Default is 0 -->
-<!-- # Number: 0, 1 -->
-<!-- # Mandatory -->
-<!-- <P2342>0</P2342> -->
-<!-- # Call Center Status. 0 - No, 1 - Yes. Default is 0 -->
-<!-- # Number: 0, 1 -->
-<!-- # Mandatory -->
-<!-- <P2343>0</P2343> -->
-<!-- # Broadsoft Executive Assistant. 0 - Disabled, 1 - Enabled. Default is 0 -->
-<!-- # Number: 0, 1 -->
-<!-- # Mandatory -->
-<!-- <P2364>0 </P2364> -->
-<!-- # Feature Key Synchronization. 0 - Disabled, 1 - Enabled. Default is 0 -->
-<!-- # Number: 0, 1 -->
-<!-- # Mandatory -->
-<!-- <P2325>0</P2325> -->
-<!-- # Broadsoft Call Park. 0 - Disabled, 1 - Enabled. Default is 0 -->
-<!-- # Number: 0, 1 -->
-<!-- # Mandatory -->
-<!-- <P2388>0</P2388> -->
 
 <!-- # Validate Certification Chain. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
@@ -562,8 +568,8 @@ a!-- # Number: 0, 1 -->
 
 <!-- # Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone, 4 - silent. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3, 4 -->
-{if isset($grandstream_default_ringtone)}
-<P104>{$grandstream_default_ringtone}</P104>
+{if isset($grandstream_account_ring_tone_1)}
+<P104>{$grandstream_account_ring_tone_1}</P104>
 {/if}
 
 <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
@@ -684,6 +690,43 @@ a!-- # Number: 0, 1 -->
 <!-- #Number: 0, 1  -->
 <!-- # This must be 0 for FusionPBX features to work!!! -->
 <P191>0</P191>
+
+<!-- #Do Not Disturb (DND) - On -->
+<!-- # String -->
+<!--<P2344></P2344>-->
+
+<!-- #Do Not Disturb (DND) - Off -->
+<!-- # String -->
+<!--<P2345></P2345>-->
+
+<!-- #Call Forward Unconditionally (All) - On -->
+<!-- # String -->
+<!--<P26013></P26013>-->
+
+<!-- #Call Forward Unconditionally (All) - Off -->
+<!-- # String -->
+<!--<P26014></P26014>-->
+
+<!-- #Call Forward Busy - On -->
+<!-- # String -->
+<!--<P26009></P26009>-->
+
+<!-- #Call Forward Busy - Off -->
+<!-- # String -->
+<!--<P26010></P26010>-->
+
+<!-- #Call Forward Delayed (No Answer) - On -->
+<!-- #String -->
+<!--<P26011></P26011>-->
+
+<!-- #Call Forward Delayed (No Answer) - Off -->
+<!-- #String -->
+<!--<P26012></P26012>-->
+
+<!-- #Delayed Call Forward Wait Time (in seconds). Default is 20 -->
+<!-- #Number: 1 - 120 -->
+<!-- #Mandatory -->
+<!--<P139>20</P139>-->
 
 <!-- #################################################################### -->
 <!-- # Account 2 -->
@@ -992,6 +1035,30 @@ a!-- # Number: 0, 1 -->
 <!-- # Number: 100, 101, 102, 108, 109, 110, 117. Default is 100 -->
 <P424>100</P424>
 
+<!-- # Broadsoft -->
+<!-- # Broadsoft Call Center. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<!--<P2441>0</P2441>-->
+
+<!-- # Hoteling Event. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<!--<P2442>0</P2442>-->
+
+<!-- # Call Center Status. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<!--<P2443>0</P2443>-->
+
+<!-- # Broadsoft Executive Assistant. 0 - Disabled, 1 - Enabled. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<!--<P2464>0</P2464>-->
+
+<!-- # Feature Key Synchronization. 0 - Disabled, 1 - Enabled. Default is 0. -->
+<!-- # Number: 0, 1 -->
+<!--<P2425>0</P2425>-->
+
+<!-- # Broadsoft Call Park. 0 - Disabled, 1 - Enabled. Default is 0. -->
+<!-- # Number: 0, 1 -->
+<!--<P2488>0</P2488>-->
 <!-- ############################################################### -->
 <!-- # Account 2/SIP Settings/Session Timer -->
 <!-- ############################################################### -->
@@ -1229,7 +1296,7 @@ a!-- # Number: 0, 1 -->
 <!-- # Matching Rule 1 Distinctive Ringtone -->
 <!-- # 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent. Default is 0. -->
 <!-- # Number: 0, 1, 2, 3, 4 -->
-<P1495>1</P1495>
+<P1495>0</P1495>
 
 <!-- # Matching Incoming Caller ID. Matching Rule 2. -->
 <!-- # String -->
@@ -1238,7 +1305,7 @@ a!-- # Number: 0, 1 -->
 <!-- # Matching Rule 2 Distinctive Ringtone. -->
 <!-- # 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent. Default is 0. -->
 <!-- # Number: 0, 1, 2, 3, 4 -->
-<P1497>2</P1497>
+<P1497>0</P1497>
 
 <!-- # Matching Incoming Caller ID. Matching Rule 3. -->
 <!-- # String -->
@@ -1247,7 +1314,7 @@ a!-- # Number: 0, 1 -->
 <!-- # Matching Rule 3 Distinctive Ringtone. -->
 <!-- # 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent. Default is 0. -->
 <!-- # Number: 0, 1, 2, 3, 4 -->
-<P1499>3</P1499>
+<P1499>0</P1499>
 
 <!-- # Ring Timeout (in seconds) Default is 60 -->
 <!-- # Number: 30 - 3600 -->
@@ -1339,8 +1406,44 @@ a!-- # Number: 0, 1 -->
 <!-- ############################################################### -->
 <!-- #Enable Call Features.  0 - No, 1 - Yes. Default is 1 -->
 <!-- #Number: 0, 1  -->
-<!-- MUST be DISABLED (0) for Fusion features to work -->
 <P420>0</P420>
+
+<!-- #Do Not Disturb (DND) - On -->
+<!-- # String -->
+<!--<P2444></P2444>-->
+
+<!-- #Do Not Disturb (DND) - Off -->
+<!-- # String -->
+<!--<P2445></P2445>-->
+
+<!-- #Call Forward Unconditionally (All) - On -->
+<!-- # String -->
+<!--<P26113></P26113>-->
+
+<!-- #Call Forward Unconditionally (All) - Off -->
+<!-- # String -->
+<!--<P26114></P26114>-->
+
+<!-- #Call Forward Busy - On -->
+<!-- # String -->
+<!--<P26109></P26109>-->
+
+<!-- #Call Forward Busy - Off -->
+<!-- # String -->
+<!--<P26110></P26110>-->
+
+<!-- #Call Forward Delayed (No Answer) - On -->
+<!-- #String -->
+<!--<P26111></P26111>-->
+
+<!-- #Call Forward Delayed (No Answer) - Off -->
+<!-- #String -->
+<!--<P26112></P26112>-->
+
+<!-- #Delayed Call Forward Wait Time (in seconds). Default is 20 -->
+<!-- #Number: 1 - 120 -->
+<!-- #Mandatory -->
+<!--<P470></P470>-->
 
 <!-- #################################################################### -->
 <!-- # Account 3 -->
@@ -4215,8 +4318,25 @@ a!-- # Number: 0, 1 -->
 <!-- ########################################## -->
 <!-- # Host name, DHCP option 12. Max length allowed is 64 characters -->
 <!-- # String -->
-<!-- Set to acct 1 display name for easier identification in dhcp logs for troubleshooting -->
 <P146>phone-{$display_name_1}</P146>
+<!-- Set to acct 1 display name for easier identification in dhcp logs for troubleshooting -->
+
+<!-- # Vendor Class ID, DHCP option 60. Max length allowed is 64 characters -->
+<!-- # String -->
+<!-- # For GXP2130, Default value is Grandstream GXP2130. -->
+<!-- # P148 = Grandstream GXP2130 -->
+<!--   -->
+<!-- # For GXP2140, Default value is Grandstream GXP2140. -->
+<!-- # P148 = Grandstream GXP2140 -->
+
+<!-- # For GXP2160, Default value is Grandstream GXP2160. -->
+<!-- # P148 = Grandstream GXP2160 -->
+
+<!-- # For GXP2170, Default value is Grandstream GXP2170. -->
+<!-- # P148 = Grandstream GXP2170 -->
+
+<!-- # For GXP2135, Default value is Grandstream GXP2135. -->
+<!-- # P148 = Grandstream GXP2135 -->
 
 <!-- ########################################## -->
 <!-- # PPPoE -->
@@ -4469,6 +4589,51 @@ a!-- # Number: 0, 1 -->
 <!-- #P8364 = -->
 
 <!-- ############################################################################## -->
+<!-- ## Network/OpenVPN Settings                     ## -->
+<!-- ############################################################################## -->
+<!-- # OpenVPN Enable.  0 - No, 1 - Yes. Default is 1 -->
+<!-- #Number: 0, 1  -->
+<!-- #Mandatory -->
+<P7050>0</P7050>
+
+<!-- # OpenVPN Server Address -->
+<!-- # String -->
+<P7051></P7051>
+
+<!-- # OpenVPN Port. Default is 1194 -->
+<!-- # Number -->
+<P7052>1194</P7052>
+
+<!-- # OpenVPN Transport.  0 - UDP, 1 - TCP. Default is 0 -->
+<!-- #Number: 0, 1  -->
+<!-- #Mandatory -->
+<P2912>0</P2912>
+
+<!-- # OpenVPN CA -->
+<!-- # String -->
+<P9902></P9902>
+
+<!-- # OpenVPN Certificate -->
+<!-- # String -->
+<P9903></P9903>
+
+<!-- # OpenVPN Client Key -->
+<!-- # String -->
+<P9904></P9904>
+
+<!-- # OpenVPN Cipher Method. 0 - Blowfish, 1 - AES-128, 2 - AES-256, 3 - Triple-DES. Default is 0 -->
+<!-- # Number: 0, 1, 2, 3  -->
+<P8396>0</P8396>
+
+<!-- # OpenVPN Username -->
+<!-- # String -->
+<P8394></P8394>
+
+<!-- # OpenVPN Password -->
+<!-- # String -->
+<P8395></P8395>
+
+<!-- ############################################################################## -->
 <!-- ##  Maintenance/ Web Access     ## -->
 <!-- ############################################################################## -->
 
@@ -4673,6 +4838,49 @@ a!-- # Number: 0, 1 -->
 <!-- # Auto language download. 0 - Yes, 1 - No. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <P2961>0</P2961>
+
+<!-- ############################################################################## -->
+<!-- ##  Maintenance/TR-069 -->
+<!-- ############################################################################## -->
+<!-- # ACS URL -->
+<!-- # String -->
+<!-- # P4503 = -->
+
+<!-- # TR-069 Username -->
+<!-- # String -->
+<!--<P4504></P4504>-->
+
+<!-- # TR-069 Password -->
+<!-- # String -->
+<!--<P4505></P4505>-->
+
+<!-- # Periodic Inform Enable. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<!--<P4506>0</P4506>-->
+
+<!-- # Periodic Inform Interval. Default is 86400. -->
+<!-- # Number -->
+<!--<P4507>86400</P4507>-->
+
+<!-- # Connection Request Username	 -->
+<!-- # String: a-z, A-Z, 0-9 -->
+<!--<P4511></P4511>-->
+
+<!-- # Connection Request Password	 -->
+<!-- # String: a-z, A-Z, 0-9 -->
+<!--<P4512></P4512>-->
+
+<!-- # Connection Request Port. Default is 7547. -->
+<!-- # Number -->
+<!--<P4518>7547</P4518>-->
+
+<!-- # CPE SSL Certificate -->
+<!-- # String: a-z, A-Z, 0-9 -->
+<!--<P8220></P8220>-->
+
+<!-- # CPE SSL Private Key -->
+<!-- # String: a-z, A-Z, 0-9 -->
+<!--<P8221></P8221>-->
 
 <!-- ############################################################################## -->
 <!-- ##  Maintenance/Security Settings/Security   ## -->
@@ -4971,6 +5179,171 @@ a!-- # Number: 0, 1 -->
 <!-- # Delay Registration. Default is 0. -->
 <!-- # Number: 0 - 90 -->
 <P8359>0</P8359>
+
+<!-- ############################################################################## -->
+<!-- ##  Settings/Broadsoft -->
+<!-- ############################################################################## -->
+<!-- ################################################################### -->
+<!-- # Broadsoft XSI -->
+<!-- ################################################################### -->
+<!-- # XSI -->
+<!-- # Server address -->
+<!-- # String -->
+<!--<P1591> </P1591>-->
+
+<!-- # Port -->
+<!-- # Number -->
+<!--<P1592> </P1592>-->
+
+<!-- # XSI Actions Path -->
+<!-- # String -->
+<!--<P2937></P2937>-->
+
+<!-- # Broadsoft Contact Download Interval. Default is 0. If set to 0, automatic download will be disabled. Valid range is 5 to 720.  -->
+<!-- # Number: 5 - 720 -->
+<!--<P8362>0</P8362>-->
+
+<!-- # XSI Authentication Type. 0 - Login Credentials, 1 - SIP Credentials, 2 - Account 1, 3 - Account 2, 4 - Account 3, 5 - Account 4, 6 - Account 5, 7 - Account 6.  -->
+<!-- # Number: 0,1,2,3,4,5,6,7.Default is 0. -->
+<!--<P22054>0</P22054>-->
+
+<!-- # Login Credentials -->
+<!-- # Login Username -->
+<!-- # String -->
+<!--<P1593></P1593>-->
+
+<!-- # Login Password -->
+<!-- # String -->
+<!--<P1594></P1594>-->
+
+<!-- # SIP Credentials -->
+<!-- # SIP UserName  -->
+<!-- # String -->
+<!--<P6772></P6772>-->
+
+<!-- # SIP User ID -->
+<!-- # String -->
+<!--<P22034></P22034>-->
+
+<!-- # SIP Password  -->
+<!-- # String -->
+<!--<P6773></P6773>-->
+
+<!-- # Sort Phonebook by. 0 - Last Name, 1 - First Name. Defaut is 0. -->
+<!-- # Number: 0, 1 -->
+<!--<P22131>0</P22131>-->
+
+<!-- ###################################################################################### -->
+<!-- # Network Directories -->
+<!-- ###################################################################################### -->
+<!-- ### Group Directory ### -->
+<!-- # Disabled/Enabled. 0 - Disabled, 1 - Enabled. -->
+<!-- # Number: 0, 1. Default is 0 -->
+<!--<P2971>0</P2971>-->
+
+<!-- # Name.  -->
+<!-- # String -->
+<!--<P2972></P2972>-->
+
+<!-- ### Enterprise Directory ### -->
+<!-- # Disabled/Enabled. 0 - Disabled, 1 - Enabled. -->
+<!-- # Number: 0, 1. Default is 0 -->
+<!--<P2973>0</P2973>-->
+
+<!-- # Name.  -->
+<!-- # String -->
+<!--<P2974></P2974>-->
+
+<!-- ### Group Common ### -->
+<!-- # Disabled/Enabled. 0 - Disabled, 1 - Enabled. -->
+<!-- # Number: 0, 1. Default is 0 -->
+<!--<P2975>0</P2975>-->
+
+<!-- # Name.  -->
+<!-- # String -->
+<!--<P2976></P2976>-->
+
+<!-- ### Enterprise Common ### -->
+<!-- # Disabled/Enabled. 0 - Disabled, 1 - Enabled. -->
+<!-- # Number: 0, 1. Default is 0 -->
+<!--<P2977>0</P2977>-->
+
+<!-- # Name.  -->
+<!-- # String -->
+<!--<P2978></P2978>-->
+
+<!-- ### Personal Directory ### -->
+<!-- # Disabled/Enabled. 0 - Disabled, 1 - Enabled. -->
+<!-- # Number: 0, 1. Default is 0 -->
+<!--<P2979>0</P2979>-->
+
+<!-- # Name.  -->
+<!-- # String -->
+<!--<P2980></P2980>-->
+
+<!-- ### Missed Call Log ###  -->
+<!-- # Disabled/Enabled. 0 - Disabled, 1 - Enabled. -->
+<!-- # Number: 0, 1. Default is 0 -->
+<!--<P2981>0</P2981>-->
+
+<!-- # Name.  -->
+<!-- # String -->
+<!--<P2982></P2982>-->
+
+<!-- ### Placed Call Log ###  -->
+<!-- # Disabled/Enabled. 0 - Disabled, 1 - Enabled. -->
+<!-- # Number: 0, 1. Default is 0 -->
+<!--<P2983>0</P2983>-->
+
+<!-- # Name.  -->
+<!-- # String -->
+<!--<P2984></P2984>-->
+
+<!-- ### Received Call Log ###  -->
+<!-- # Disabled/Enabled. 0 - Disabled, 1 - Enabled. -->
+<!-- # Number: 0, 1. Default is 0 -->
+<!--<P2985>0</P2985>-->
+
+<!-- # Name.  -->
+<!-- # String -->
+<!--<P2986></P2986>-->
+
+<!-- ############################################################################## -->
+<!-- ##  Phonebook/Broadsoft Instant Message and Presence -->
+<!-- ############################################################################## -->
+<!-- # Login Credentials  -->
+<!-- # Server. -->
+<!-- # String -->
+<!--<P6006></P6006>-->
+
+<!-- # Port.  -->
+<!-- # String -->
+<!--<P6005></P6005>-->
+
+<!-- # Username.  -->
+<!-- # String -->
+<!--<P2966></P2966>-->
+
+<!-- # Password.  -->
+<!-- # String -->
+<!--<P2967></P2967>-->
+
+<!-- # IM&P Settings  -->
+<!-- # Broadsoft IM&P. Default is 0. -->
+<!-- # Number: 0,1. 1 - Enabled, 0 - Disabled -->
+<!--<P2964>0</P2964>-->
+
+<!-- # Associated Broadsoft Account. Default is 0. -->
+<!-- # Number: 0 - 5 : Account 1 - Account 6 -->
+<!--<P2965>0</P2965>-->
+
+<!-- # Auto Login. Default is 0. -->
+<!-- # 0 - No, 1 - Yes -->
+<!--<P2968>0</P2968>-->
+
+<!-- # Display Non XMPP Contacts. Default is 0. -->
+<!-- # 0 - No, 1 - Yes -->
+<!--<P2969>0</P2969>-->
 
 <!-- ############################################################################## -->
 <!-- ##  Settings/External Service -->
@@ -5952,7 +6325,6 @@ a!-- # Number: 0, 1 -->
 
 <!-- # Default Ringtone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3, 4 -->
-<!-- FIXME with grandstream_default_ring_tone -->
 {if isset($grandstream_default_ringtone)}
 <P8398>{$grandstream_default_ringtone}</P8398>
 {/if}
