@@ -1285,8 +1285,8 @@
 
 <!-- # Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone, 4 - silent. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3, 4 -->
-{if isset($grandstream_default_ringtone)
-<P423>{$grandstream_default_ringtone}</P423>
+{if isset($grandstream_account_ring_tone_2)}
+<P423>{$grandstream_account_ring_tone_2}</P423>
 {/if}
 
 <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
@@ -2002,7 +2002,9 @@
 
 <!-- # Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone, 4 - silent. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3, 4 -->
-<P523>0</P523>
+{if isset($grandstream_account_ring_tone_3)}
+<P523>{$grandstream_account_ring_tone_3}</P523>
+{/if}
 
 <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
 <!-- # String -->
@@ -2717,7 +2719,9 @@
 
 <!-- # Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone, 4 - silent. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3, 4 -->
-<P623>0</P623>
+{if isset($grandstream_account_ring_tone_4)}
+<P623>{$grandstream_account_ring_tone_4}</P623>
+{/if}
 
 <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
 <!-- # String -->
@@ -3430,7 +3434,9 @@
 
 <!-- # Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone, 4 - silent. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3, 4 -->
-<P1723>0</P1723>
+{if isset($grandstream_account_ring_tone_5)}
+<P1723>{$grandstream_account_ring_tone_5}</P1723>
+{/if}
 
 <!-- # Matching Incoming Caller ID. Matching Rule 1. -->
 <!-- # String -->
@@ -4146,7 +4152,9 @@
 
 <!-- # Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone, 4 - silent. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3, 4 -->
-<P1823>0</P1823>
+{if isset($grandstream_account_ring_tone_6)}
+<P1823>{$grandstream_account_ring_tone_6}</P1823>
+{/if}
 
 <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
 <!-- # String -->
