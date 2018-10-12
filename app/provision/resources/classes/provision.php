@@ -285,10 +285,10 @@ include "root.php";
 			// Easier than assigning these common groups to every user.
 			// Check provision global_contact_groups and sanitize for sql.
 			$global_contact_groups['enabled']=false;
-			if ( preg_match('/[a-zA-Z0-9-_, ]/',$_SESSION['provision']['grandstream_global_contact_groups']['text'])){
+			if ( preg_match('/[a-zA-Z0-9-_, ]/',$_SESSION['provision']['gs_global_contact_groups']['text'])){
 				$global_contact_groups['enabled']=true;
 				$gp=array();
-				$groups=explode(',',$_SESSION['provision']['grandstream_global_contact_groups']['text']);
+				$groups=explode(',',$_SESSION['provision']['gs_global_contact_groups']['text']);
 				foreach ($groups as $group){
 					$gp[] = trim($group);
 				}
@@ -945,7 +945,7 @@ include "root.php";
 								$this->contact_append($contacts, $line, $domain_uuid, $device_user_uuid, false);
 							}
 						// Grandstream get the contacts assigned to the user and groups and add to the contacts array
-							if ($_SESSION['provision']['contact_grandstream']['boolean'] == "true") {
+							if ($_SESSION['provision']['contact_grandstream']['text'] == "true") {
 								$this->contact_grandstream($contacts, $line, $domain_uuid, $device_user_uuid);
 							}
 					}
