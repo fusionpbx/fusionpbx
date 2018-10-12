@@ -56,6 +56,9 @@
 	echo "<tr>\n";
 	echo "<td width='50%' align='left' nowrap='nowrap'><b>".$text['header-call_center_queues']."</b></td>\n";
 	echo "<td width='50%' align='right'>\n";
+	if (permission_exists('call_center_wallboard')) {
+		echo "  <input type='button' class='btn' value='".$text['button-wallboard']."' onclick=\"document.location.href='".PROJECT_PATH."/app/call_center_wallboard/call_center_wallboard.php';\" />\n";
+	}
 	echo "	<input type='button' class='btn' value='".$text['button-agents']."' alt='".$text['button-agents']."' onclick=\"window.location='call_center_agents.php'\">\n";
 	echo "</td>\n";
 	echo "</tr>\n";
