@@ -143,7 +143,6 @@
 							$x++;
 					}
 
-
 				//prepare the array
 					$array['device_profiles'][] = $_POST;
 
@@ -415,6 +414,9 @@
 		//add the primary key uuid
 			if (strlen($row['device_key_uuid']) > 0) {
 				echo "	<input name='device_keys[".$x."][device_key_uuid]' type='hidden' value=\"".escape($row['device_key_uuid'])."\">\n";
+			}
+			else {
+				echo "	<input name='device_keys[".$x."][device_key_uuid]' type='hidden' value=\"".uuid()."\">\n";
 			}
 		//show all the rows in the array
 			echo "<tr>\n";
