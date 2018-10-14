@@ -11,7 +11,7 @@
         <context name="public">
                 <extension name="demo">
                         <condition field="to" expression="^(.*)$">
-                                    <action application="lua" data="app.lua sms outbound"/>
+                                    <!-- <action application="lua" data="app.lua sms outbound"/> -->
                         </condition>
                 </extension>
         </context>
