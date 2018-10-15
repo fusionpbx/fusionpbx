@@ -284,10 +284,11 @@
 
 				//build the xml dialplan
 					$dialplan_xml = "<extension name=\"ring group\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
-					$dialplan_xml .= "<condition field=\"destination_number\" expression=\"^".$ring_group_extension."$\">\n";
-					$dialplan_xml .= "<action application=\"set\" data=\"ring_group_uuid=".$ring_group_uuid."\"/>\n";
-					$dialplan_xml .= "<action application=\"lua\" data=\"app.lua ring_groups\"/>\n";
-					$dialplan_xml .= "</condition>\n";
+					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$ring_group_extension."$\">\n";
+					$dialplan_xml .= "		<action application=\"ring_ready\" data=\"\"/>\n";
+					$dialplan_xml .= "		<action application=\"set\" data=\"ring_group_uuid=".$ring_group_uuid."\"/>\n";
+					$dialplan_xml .= "		<action application=\"lua\" data=\"app.lua ring_groups\"/>\n";
+					$dialplan_xml .= "	</condition>\n";
 					$dialplan_xml .= "</extension>\n";
 
 				//build the dialplan array
