@@ -241,11 +241,11 @@
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['missed'])."&nbsp;</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['no_answer'])."&nbsp;</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['busy'])."&nbsp;</td>\n";
-		echo "  <td valign='top' class='".$row_style[$c]."'>".gmdate("H:i:s",$row['aloc'])."&nbsp;</td>\n";
+		echo "  <td valign='top' class='".$row_style[$c]."'>".format_hours($row['aloc'])."&nbsp;</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>&nbsp;". escape($row['inbound_calls']) ."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".(($row['inbound_duration'] != '0') ? gmdate("G:i:s", $row['inbound_duration']) : '0:00:00')."</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".(($row['inbound_duration'] != '0') ? format_hours($row['inbound_duration']) : '0:00:00')."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>&nbsp;".(($row['outbound_calls'] != '') ? escape($row['outbound_calls']) : "0")."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".(($row['outbound_duration'] != '') ? gmdate("G:i:s", $row['outbound_duration']) : '0:00:00')."</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".(($row['outbound_duration'] != '') ? format_hours($row['outbound_duration']) : '0:00:00')."</td>\n";
 		echo "	<td valign='top' class='row_stylebg'>".escape($row['description'])."&nbsp;</td>\n";
 		echo "</tr>\n";
 		$c = ($c==0) ? 1 : 0;
