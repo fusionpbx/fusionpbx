@@ -850,6 +850,16 @@ function format_string ($format, $data) {
 		return $phone_number;
 	}
 
+//format seconds into hh:mm:ss
+	function format_hours($seconds) {
+		$hours = floor($seconds / 3600);
+		$minutes = floor(($seconds / 60) % 60);
+		$seconds = $seconds % 60;
+		if (strlen($minutes) == 1) { $minutes = '0'.$minutes; }
+		if (strlen($seconds) == 1) { $seconds = '0'.$seconds; }
+		return "$hours:$minutes:$seconds";
+	}
+
 //browser detection without browscap.ini dependency
 	function http_user_agent($info = '') {
 		$u_agent = $_SERVER['HTTP_USER_AGENT'];
