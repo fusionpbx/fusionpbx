@@ -315,10 +315,18 @@
 									}
 									$array["extensions"][$i]["effective_caller_id_name"] = $effective_caller_id_name;
 									$array["extensions"][$i]["effective_caller_id_number"] = $effective_caller_id_number;
-									$array["extensions"][$i]["outbound_caller_id_name"] = $outbound_caller_id_name;
-									$array["extensions"][$i]["outbound_caller_id_number"] = $outbound_caller_id_number;
-									$array["extensions"][$i]["emergency_caller_id_name"] = $emergency_caller_id_name;
-									$array["extensions"][$i]["emergency_caller_id_number"] = $emergency_caller_id_number;
+									if (permission_exists("outbound_caller_id_name")) {
+										$array["extensions"][$i]["outbound_caller_id_name"] = $outbound_caller_id_name;
+									}
+									if (permission_exists("outbound_caller_id_number")) {
+										$array["extensions"][$i]["outbound_caller_id_number"] = $outbound_caller_id_number;
+									}
+									if (permission_exists("emergency_caller_id_name")) {
+										$array["extensions"][$i]["emergency_caller_id_name"] = $emergency_caller_id_name;
+									}
+									if (permission_exists("emergency_caller_id_number")) {
+										$array["extensions"][$i]["emergency_caller_id_number"] = $emergency_caller_id_number;
+									}
 									$array["extensions"][$i]["directory_first_name"] = $directory_first_name;
 									$array["extensions"][$i]["directory_last_name"] = $directory_last_name;
 									$array["extensions"][$i]["directory_visible"] = $directory_visible;
@@ -1130,106 +1138,114 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-outbound_caller_id_name']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	if (permission_exists('outbound_caller_id_select')) {
-		if (count($destinations) > 0) {
-			echo "	<select name='outbound_caller_id_name' id='outbound_caller_id_name' class='formfld'>\n";
-			echo "	<option value=''></option>\n";
-			foreach ($destinations as &$row) {
-				$tmp = $row["destination_caller_id_name"];
-				if(strlen($tmp) == 0){
-					$tmp = $row["destination_description"];
-				}
-				if(strlen($tmp) > 0){
-					if ($outbound_caller_id_name == $tmp) {
-						echo "		<option value='".escape($tmp)."' selected='selected'>".escape($tmp)."</option>\n";
+	if (permission_exists("outbound_caller_id_name")) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-outbound_caller_id_name']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		if (permission_exists('outbound_caller_id_select')) {
+			if (count($destinations) > 0) {
+				echo "	<select name='outbound_caller_id_name' id='outbound_caller_id_name' class='formfld'>\n";
+				echo "	<option value=''></option>\n";
+				foreach ($destinations as &$row) {
+					$tmp = $row["destination_caller_id_name"];
+					if(strlen($tmp) == 0){
+						$tmp = $row["destination_description"];
 					}
-					else {
-						echo "		<option value='".escape($tmp)."'>".escape($tmp)."</option>\n";
+					if(strlen($tmp) > 0){
+						if ($outbound_caller_id_name == $tmp) {
+							echo "		<option value='".escape($tmp)."' selected='selected'>".escape($tmp)."</option>\n";
+						}
+						else {
+							echo "		<option value='".escape($tmp)."'>".escape($tmp)."</option>\n";
+						}
 					}
 				}
+				echo "		</select>\n";
+				echo "<br />\n";
+				echo $text['description-outbound_caller_id_name-select']."\n";
 			}
-			echo "		</select>\n";
-			echo "<br />\n";
-			echo $text['description-outbound_caller_id_name-select']."\n";
+			else {
+				echo "	<input type=\"button\" class=\"btn\" name=\"\" alt=\"".$text['button-add']."\" onclick=\"window.location='".PROJECT_PATH."/app/destinations/destinations.php'\" value='".$text['button-add']."'>\n";
+			}
 		}
 		else {
-			echo "	<input type=\"button\" class=\"btn\" name=\"\" alt=\"".$text['button-add']."\" onclick=\"window.location='".PROJECT_PATH."/app/destinations/destinations.php'\" value='".$text['button-add']."'>\n";
-		}
-	}
-	else {
-		echo "    <input class='formfld' type='text' name='outbound_caller_id_name' maxlength='255' value=\"".escape($outbound_caller_id_name)."\">\n";
-		echo "<br />\n";
-		echo $text['description-outbound_caller_id_name-custom']."\n";
-	}
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-outbound_caller_id_number']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	if (permission_exists('outbound_caller_id_select')) {
-		if (count($destinations) > 0) {
-			echo "	<select name='outbound_caller_id_number' id='outbound_caller_id_number' class='formfld'>\n";
-			echo "	<option value=''></option>\n";
-			foreach ($destinations as &$row) {
-				$tmp = $row["destination_caller_id_number"];
-				if(strlen($tmp) == 0){
-					$tmp = $row["destination_number"];
-				}
-				if(strlen($tmp) > 0){
-					if ($outbound_caller_id_number == $tmp) {
-						echo "		<option value='".escape($tmp)."' selected='selected'>".escape($tmp)."</option>\n";
-					}
-					else {
-						echo "		<option value='".escape($tmp)."'>".escape($tmp)."</option>\n";
-					}
-				}
-			}
-			echo "		</select>\n";
+			echo "    <input class='formfld' type='text' name='outbound_caller_id_name' maxlength='255' value=\"".escape($outbound_caller_id_name)."\">\n";
 			echo "<br />\n";
-			echo $text['description-outbound_caller_id_number-select']."\n";
+			echo $text['description-outbound_caller_id_name-custom']."\n";
+		}
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists("outbound_caller_id_number")) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-outbound_caller_id_number']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		if (permission_exists('outbound_caller_id_select')) {
+			if (count($destinations) > 0) {
+				echo "	<select name='outbound_caller_id_number' id='outbound_caller_id_number' class='formfld'>\n";
+				echo "	<option value=''></option>\n";
+				foreach ($destinations as &$row) {
+					$tmp = $row["destination_caller_id_number"];
+					if(strlen($tmp) == 0){
+						$tmp = $row["destination_number"];
+					}
+					if(strlen($tmp) > 0){
+						if ($outbound_caller_id_number == $tmp) {
+							echo "		<option value='".escape($tmp)."' selected='selected'>".escape($tmp)."</option>\n";
+						}
+						else {
+							echo "		<option value='".escape($tmp)."'>".escape($tmp)."</option>\n";
+						}
+					}
+				}
+				echo "		</select>\n";
+				echo "<br />\n";
+				echo $text['description-outbound_caller_id_number-select']."\n";
+			}
+			else {
+				echo "	<input type=\"submit\" class=\"btn\" name=\"\" alt=\"".$text['button-add']."\" onclick=\"window.location='".PROJECT_PATH."/app/destinations/destinations.php'\" value='".$text['button-add']."'>\n";
+			}
+			unset ($prep_statement);
 		}
 		else {
-			echo "	<input type=\"submit\" class=\"btn\" name=\"\" alt=\"".$text['button-add']."\" onclick=\"window.location='".PROJECT_PATH."/app/destinations/destinations.php'\" value='".$text['button-add']."'>\n";
+			echo "    <input class='formfld' type='text' name='outbound_caller_id_number' maxlength='255' min='0' step='1' value=\"".escape($outbound_caller_id_number)."\">\n";
+			echo "<br />\n";
+			echo $text['description-outbound_caller_id_number-custom']."\n";
 		}
-		unset ($prep_statement);
+		echo "</td>\n";
+		echo "</tr>\n";
 	}
-	else {
-		echo "    <input class='formfld' type='text' name='outbound_caller_id_number' maxlength='255' min='0' step='1' value=\"".escape($outbound_caller_id_number)."\">\n";
+
+	if (permission_exists("emergency_caller_id_name")) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-emergency_caller_id_name']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <input class='formfld' type='text' name='emergency_caller_id_name' maxlength='255' value=\"".escape($emergency_caller_id_name)."\">\n";
 		echo "<br />\n";
-		echo $text['description-outbound_caller_id_number-custom']."\n";
+		echo $text['description-emergency_caller_id_name']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 	}
-	echo "</td>\n";
-	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-emergency_caller_id_name']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='emergency_caller_id_name' maxlength='255' value=\"".escape($emergency_caller_id_name)."\">\n";
-	echo "<br />\n";
-	echo $text['description-emergency_caller_id_name']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-emergency_caller_id_number']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='emergency_caller_id_number' maxlength='255' min='0' step='1' value=\"".escape($emergency_caller_id_number)."\">\n";
-	echo "<br />\n";
-	echo $text['description-emergency_caller_id_number']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists("emergency_caller_id_number")) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-emergency_caller_id_number']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <input class='formfld' type='text' name='emergency_caller_id_number' maxlength='255' min='0' step='1' value=\"".escape($emergency_caller_id_number)."\">\n";
+		echo "<br />\n";
+		echo $text['description-emergency_caller_id_number']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
