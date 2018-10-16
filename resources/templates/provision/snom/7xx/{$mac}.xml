@@ -3,7 +3,7 @@
 <phone-settings e="2">
 <language perm="">English</language>
 <update_policy perm="">auto_update</update_policy>
-<setting_server perm="RW">http://{$domain_name}{$project_path}/app/provision/index.php?mac={$mac}</setting_server>
+<setting_server perm="RW">https://{$domain_name}{$project_path}/app/provision/index.php?mac={$mac}</setting_server>
 <setting-files>
 <!-- Include directory xml -->
 <file url="https://{if isset($http_auth_username)}{$http_auth_username}:{$http_auth_password}@{/if}{$domain_name}{$project_path}/app/provision/?file=directory.xml" />
