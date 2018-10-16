@@ -287,6 +287,198 @@ class destinations {
 	}
 
 	/**
+	 * Get all the destinations
+	 * @var string $destination_type can be ivr, dialplan, call_center_contact or bridge
+	 */
+	public function all($destination_type) {
+
+		//set the global variables
+		global $db_type;
+
+		//get the destinations	
+		if (!is_array($this->destinations)) {
+
+			//get the array from the app_config.php files
+			$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
+			$x = 0;
+			foreach ($config_list as &$config_path) {
+				include($config_path);
+				$x++;
+			}
+			$i = 0;
+			foreach ($apps as $x => &$app) {
+				if (isset($app['destinations'])) foreach ($app['destinations'] as &$row) {
+					$this->destinations[] = $row;
+				}
+			}
+	
+			//put the array in order
+			foreach ($this->destinations as $row) {
+				$option_groups[] = $row['label'];
+			}
+			array_multisort($option_groups, SORT_ASC, $this->destinations);
+	
+			//add the sql and data to the array
+			$x = 0;
+			foreach ($this->destinations as $row) {
+				if ($row['type'] = 'sql') {
+					if (isset($row['sql'])) {
+						if (is_array($row['sql'])) {
+							$sql = trim($row['sql'][$db_type])." ";
+						}
+						else {
+							$sql = trim($row['sql'])." ";
+						}
+					}
+					else {
+						$field_count = count($row['field']);
+						$fields = '';
+						$c = 1;
+						foreach ($row['field'] as $key => $value) {
+							if ($field_count != $c) { $delimiter = ','; } else { $delimiter = ''; }
+							$fields .= $value." as ".$key.$delimiter." ";
+							$c++;
+						}
+						$sql = "select ".$fields;
+						$sql .= " from v_".$row['name']." ";
+					}
+					if (isset($row['where'])) {
+						$sql .= trim($row['where'])." ";
+					}
+					$sql .= "order by ".trim($row['order_by']);
+					$sql = str_replace("\${domain_uuid}", $_SESSION['domain_uuid'], $sql);
+					$sql = trim($sql);
+					$statement = $this->db->prepare($sql);
+					$statement->execute();
+					$result = $statement->fetchAll(PDO::FETCH_NAMED);
+					unset($statement);
+
+					$this->destinations[$x]['result']['sql'] = $sql;
+					$this->destinations[$x]['result']['data'] = $result;
+				}
+				$x++;
+			}
+			$this->destinations[$x]['type'] = 'array';
+			$this->destinations[$x]['label'] = 'other';
+			$this->destinations[$x]['name'] = 'dialplans';
+			$this->destinations[$x]['field']['name'] = "name";
+			$this->destinations[$x]['field']['destination'] = "destination";
+			$this->destinations[$x]['select_value']['dialplan'] = "transfer:\${destination}";
+			$this->destinations[$x]['select_value']['ivr'] = "menu-exec-app:transfer \${destination}";
+			$this->destinations[$x]['select_label'] = "\${name}";
+			$y = 0;
+			$this->destinations[$x]['result']['data'][$y]['label'] = 'check_voicemail';
+			$this->destinations[$x]['result']['data'][$y]['name'] = '*98';
+			$this->destinations[$x]['result']['data'][$y]['destination'] = '*98 XML ${context}';
+			$y++;
+			$this->destinations[$x]['result']['data'][$y]['label'] = 'company_directory';
+			$this->destinations[$x]['result']['data'][$y]['name'] = '*411';
+			$this->destinations[$x]['result']['data'][$y]['destination'] = '*411 XML ${context}';
+			$y++;
+			$this->destinations[$x]['result']['data'][$y]['label'] = 'hangup';
+			$this->destinations[$x]['result']['data'][$y]['name'] = 'hangup';
+			$this->destinations[$x]['result']['data'][$y]['application'] = 'hangup';
+			$this->destinations[$x]['result']['data'][$y]['destination'] = '';
+			$y++;
+			$this->destinations[$x]['result']['data'][$y]['label'] = 'record';
+			$this->destinations[$x]['result']['data'][$y]['name'] = '*732';
+			$this->destinations[$x]['result']['data'][$y]['destination'] = '*732 XML ${context}';
+			$y++;
+		}
+
+		//remove special characters from the name
+		$destination_id = str_replace("]", "", $destination_name);
+		$destination_id = str_replace("[", "_", $destination_id);
+
+		//set default to false
+		$select_found = false;
+
+		foreach ($this->destinations as $row) {
+
+			$name = $row['name'];
+			$label = $row['label'];
+			$destination = $row['field']['destination'];
+
+			//add multi-lingual support
+			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$name."/app_languages.php")) {
+				$language2 = new text;
+				$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$name);
+			}
+
+			if (count($row['result']['data']) > 0 and strlen($row['select_value'][$destination_type]) > 0) {
+				$label2 = $label;
+				foreach ($row['result']['data'] as $data) {
+					$select_value = $row['select_value'][$destination_type];
+					$select_label = $row['select_label'];
+					foreach ($row['field'] as $key => $value) {
+						if ($key == 'destination' and is_array($value)){
+							if ($value['type'] == 'csv') {
+								$array = explode($value['delimiter'], $data[$key]);
+								$select_value = str_replace("\${destination}", $array[0], $select_value);
+								$select_label = str_replace("\${destination}", $array[0], $select_label);
+							}
+						}
+						else {
+							if (strpos($value,',') !== false) {
+								$keys = explode(",", $value);
+								foreach ($keys as $k) {
+									if (strlen($data[$k]) > 0) {
+										$select_value = str_replace("\${".$key."}", $data[$k], $select_value);
+										if (strlen($data['label']) == 0) {
+											$select_label = str_replace("\${".$key."}", $data[$k], $select_label);
+										}
+										else {
+											$label = $data['label'];
+											$select_label = str_replace("\${".$key."}", $text2['option-'.$label], $select_label);
+										}
+									}
+								}
+
+							}
+							else {
+								$select_value = str_replace("\${".$key."}", $data[$key], $select_value);
+								if (strlen($data['label']) == 0) {
+									$select_label = str_replace("\${".$key."}", $data[$key], $select_label);
+								}
+								else {
+									$label = $data['label'];
+									$select_label = str_replace("\${".$key."}", $text2['option-'.$label], $select_label);
+								}
+							}
+							//application: hangup
+							if (strlen($data['application']) > 0) {
+								$select_value = str_replace("transfer", $data['application'], $select_value);
+							}
+						}
+					}
+
+					$select_value = str_replace("\${domain_name}", $_SESSION['domain_name'], $select_value);
+					$select_value = str_replace("\${context}", $_SESSION['domain_name'], $select_value);
+					$select_label = str_replace("\${domain_name}", $_SESSION['domain_name'], $select_label);
+					$select_label = str_replace("\${context}", $_SESSION['domain_name'], $select_label);
+					$select_label = str_replace("&#9993", '{email-icon}', $select_label);
+					$select_label = escape(trim($select_label));
+					$select_label = str_replace('{email-icon}', '&#9993', $select_label);
+					if ($select_value == $destination_value) { $selected = "selected='selected' "; $select_found = true; } else { $selected = ''; }
+					if ($label2 == 'destinations') { $select_label = format_phone($select_label); }
+					$array[$label][$select_label] = $select_value;
+				}
+				unset($text);
+			}
+		}
+		if (!$select_found) {
+			$destination_label = str_replace(":", " ", $destination_value);
+			$destination_label = str_replace("menu-exec-app", "", $destination_label);
+			$destination_label = str_replace("transfer", "", $destination_label);
+			$destination_label = str_replace("XML ".$_SESSION['domain_name'], "", $destination_label);
+			$array[$label][$destination_label] = $destination_value;
+		}
+
+		//return the formatted destinations
+		return $array;
+	}
+
+	/**
 	 * delete destinations
 	 */
 	public function delete($destinations) {
