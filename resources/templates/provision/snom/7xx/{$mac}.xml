@@ -10,7 +10,7 @@
 </setting-files>
 <dhcp perm="R">on</dhcp>
 <timezone perm="">{$snom_time_zone}</timezone>
-<firmware_status perm="R">http://{$domain_name}{$project_path}/app/provision/firmware.xml</firmware_status>
+<firmware_status perm="R">https://{$domain_name}{$project_path}/app/provision/firmware.xml</firmware_status>
 {if isset($admin_password) }
 <http_user perm="">{$admin_name}</http_user>
 <http_pass perm="">{$admin_password}</http_pass>
