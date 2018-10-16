@@ -4,10 +4,6 @@
 <language perm="">English</language>
 <update_policy perm="">auto_update</update_policy>
 <setting_server perm="RW">https://{$domain_name}{$project_path}/app/provision/index.php?mac={$mac}</setting_server>
-<setting-files>
-<!-- Include directory xml -->
-<file url="https://{if isset($http_auth_username)}{$http_auth_username}:{$http_auth_password}@{/if}{$domain_name}{$project_path}/app/provision/?file=directory.xml" />
-</setting-files>
 <dhcp perm="R">on</dhcp>
 <timezone perm="">{$snom_time_zone}</timezone>
 <firmware_status perm="R">https://{$domain_name}{$project_path}/app/provision/firmware.xml</firmware_status>
@@ -100,6 +96,28 @@
 {/if}
 {/foreach}
 </functionKeys>
-<tbook e="2">
+<!--<setting-files>-->
+<!-- Include directory xml -->
+<!--<file url="https://{if isset($http_auth_username)}{$http_auth_username}:{$http_auth_password}@{/if}{$domain_name}{$project_path}/app/provision/?file=directory.xml" />-->
+<!--</setting-files>-->
+<tbook complete="true">
+{assign var=x value=1}
+{foreach $contacts as $row}
+	<item context="active" type="" fav="false" mod="false" index="{$x}">
+		{if $row.contact_name_given != ""}
+			<name>{$row.contact_name_given} {$row.contact_name_family}</name>
+		{else}
+			<name>{$row.contact_organization}</name>
+		{/if}
+		{foreach $row.numbers as $number}
+			{if $number.phone_number != ""}
+				<number>{$number.phone_number}</number>
+			{else}		
+				<number>{$number.phone_extension}</number>
+			{/if}
+		{/foreach}
+	</item>
+    {assign var=x value=$x+1}
+{/foreach}
 </tbook>
 </settings>
