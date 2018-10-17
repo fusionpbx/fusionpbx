@@ -204,10 +204,10 @@
 					$database->fields['context'] = $context;
 					$database->fields['network_addr'] = check_str(urldecode($row->caller_profile->network_addr));
 				}
-				if (strlen($caller_id_name) == 0) {
+				if (strlen($database->fields['caller_id_name']) == 0) {
 					$database->fields['caller_id_name'] = check_str(urldecode($row->caller_profile->caller_id_name));
 				}
-				if (strlen($caller_id_number) == 0) {
+				if (strlen($database->fields['caller_id_number']) == 0) {
 					$database->fields['caller_id_number'] = check_str(urldecode($row->caller_profile->caller_id_number));
 				}
 				$x++;
