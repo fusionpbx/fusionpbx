@@ -184,8 +184,12 @@
 				foreach($schema as $row) {
 					echo "			<optgroup label='".$row['table']."'>\n";
 					foreach($row['fields'] as $field) {
+						$selected = '';
+						if ($field == $line_field) {
+							$selected = "selected='selected'";
+						}
 						if (substr($field, -5) != '_uuid') {
-							echo "    			<option value='".$row['table'].".$field'>$field</option>\n";
+							echo "    			<option value='".$row['table'].".$field' $selected>$field</option>\n";
 						}
 					}
 					echo "			</optgroup>\n";
