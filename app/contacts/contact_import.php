@@ -128,6 +128,13 @@
 					$i++;
 				}
 			}
+			$schema[$i]['table'] = 'contact_groups';
+			$schema[$i]['parent'] = 'contacts';
+			$schema[$i]['fields'][] = 'group_name';
+			$i++;
+			$schema[$i]['table'] = 'contact_users';
+			$schema[$i]['parent'] = 'contacts';
+			$schema[$i]['fields'][] = 'username';
 	}
 
 //match the column names to the field names
@@ -237,6 +244,18 @@
 		//set the domain_uuid
 			$domain_uuid = $_SESSION['domain_uuid'];
 
+		//get the groups
+			$sql = "select * from v_groups where domain_uuid is null ";
+			$prep_statement = $db->prepare($sql);
+			$prep_statement->execute();
+			$groups = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+
+		//get the users
+			$sql = "select * from v_users where domain_uuid = '".$domain_uuid."' ";
+			$prep_statement = $db->prepare($sql);
+			$prep_statement->execute();
+			$users = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+
 		//get the contents of the csv file and convert them into an array
 			$handle = @fopen($_SESSION['file'], "r");
 			if ($handle) {
@@ -264,9 +283,9 @@
 								$parent = get_parent($schema, $table_name);
 
 								//remove formatting from the phone number
-								if ($field_name == "phone_number") {
-									$result[$key] = preg_replace('{\D}', '', $result[$key]);
-								}
+							//	if ($field_name == "phone_number") {
+							//		$result[$key] = preg_replace('{\D}', '', $result[$key]);
+							//	}
 
 								//build the data array
 								if (strlen($table_name) > 0) {
@@ -275,11 +294,35 @@
 										$array[$table_name][$row_id][$field_name] = $result[$key];
 									}
 									else {
-										$array[$parent][$row_id][$table_name][$y]['domain_uuid'] = $domain_uuid;
-										$array[$parent][$row_id][$table_name][$y][$field_name] = $result[$key];
+										if ($field_name != "username" && $field_name != "group_name") {
+											$array[$parent][$row_id][$table_name][$y]['domain_uuid'] = $domain_uuid;
+											$array[$parent][$row_id][$table_name][$y][$field_name] = $result[$key];
+										}
 									}
-								}
-							}
+
+									if ($field_name == "group_name") {
+											foreach ($groups as $field) {
+												if ($field['group_name'] == $result[$key]) {
+													//$array[$parent][$row_id]['contact_group_uuid'] = uuid();
+													$array[$parent][$row_id]['contact_groups'][$y]['domain_uuid'] = $domain_uuid;
+													//$array['contact_groups'][$x]['contact_uuid'] = $row['contact_uuid'];
+													$array[$parent][$row_id]['contact_groups'][$y]['group_uuid'] = $field['group_uuid'];
+												}
+											}
+									}
+
+									if ($field_name == "username") {
+											foreach ($users as $field) {
+												if ($field['username'] == $result[$key]) {
+													//$array[$parent][$row_id]['contact_users'][$y]['contact_group_uuid'] = uuid();
+													$array[$parent][$row_id]['contact_users'][$y]['domain_uuid'] = $domain_uuid;
+													//$array['contact_groups'][$x]['contact_uuid'] = $row['contact_uuid'];
+													$array[$parent][$row_id]['contact_users'][$y]['user_uuid'] = $field['user_uuid'];
+												}
+											}
+									}
+								} //if (strlen($table_name) > 0)
+							} //end foreach
 
 						//process a chunk of the array
 							if ($row_id === 1000) {
@@ -302,7 +345,7 @@
 							$row_id++;
 					}
 					fclose($handle);
-				
+	
 				//debug info
 					//echo "<pre>\n";
 					//print_r($array);
