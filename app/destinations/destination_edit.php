@@ -556,15 +556,12 @@
 						//remove empty dialplan details from the POST array
 							unset($_POST["dialplan_details"]);
 
-						//make sure the dialplan_uuid is set
-							if(strlen($_POST["dialplan_uuid"]) == 0) {
-								$_POST["dialplan_uuid"] = $dialplan_uuid;
-							}
 					}
 
 				//build the destination array
 					$destination = $_POST;
 					$destination["destination_uuid"] = $destination_uuid;
+					$destination["dialplan_uuid"] = $dialplan_uuid;
 
 				//prepare the array
 					$array['destinations'][] = $destination;
