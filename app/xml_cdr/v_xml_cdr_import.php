@@ -191,6 +191,10 @@
 				$database->fields['rtp_audio_in_mos'] = $rtp_audio_in_mos;
 			}
 
+		//get the caller details
+			$database->fields['caller_id_name'] = urldecode($xml->variables->effective_caller_id_name);
+			$database->fields['caller_id_number'] = urldecode($xml->variables->effective_caller_id_number);
+
 		//get the values from the callflow.
 			$x = 0;
 			foreach ($xml->callflow as $row) {
@@ -200,8 +204,12 @@
 					$database->fields['context'] = $context;
 					$database->fields['network_addr'] = check_str(urldecode($row->caller_profile->network_addr));
 				}
-				$database->fields['caller_id_name'] = check_str(urldecode($row->caller_profile->caller_id_name));
-				$database->fields['caller_id_number'] = check_str(urldecode($row->caller_profile->caller_id_number));
+				if (strlen($caller_id_name) == 0) {
+					$database->fields['caller_id_name'] = check_str(urldecode($row->caller_profile->caller_id_name));
+				}
+				if (strlen($caller_id_number) == 0) {
+					$database->fields['caller_id_number'] = check_str(urldecode($row->caller_profile->caller_id_number));
+				}
 				$x++;
 			}
 			unset($x);
