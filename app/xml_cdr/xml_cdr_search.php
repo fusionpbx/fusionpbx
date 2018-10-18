@@ -108,7 +108,7 @@
 	}
 	echo "			</select>\n";
 
-	if(permission_exists('xml_cdr_b_leg')){
+	if (permission_exists('xml_cdr_b_leg')){
 		echo "			<select name='leg' class='formfld'>\n";
 		echo "			<option value='' selected='selected'></option>\n";
 		echo "			<option value='a'>a-leg</option>\n";
@@ -220,7 +220,7 @@
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-uuid']."</td>";
-	echo "		<td class='vtable'><input type='text' class='formfld' name='uuid' value='".escape($uuid)."'></td>";
+	echo "		<td class='vtable'><input type='text' class='formfld' name='xml_cdr_uuid' value='".escape($xml_cdr_uuid)."'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-bridge_uuid']."</td>";
