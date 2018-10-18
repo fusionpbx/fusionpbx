@@ -67,7 +67,7 @@
 		$billsec = check_str($_REQUEST["billsec"]);
 		$hangup_cause = check_str($_REQUEST["hangup_cause"]);
 		$call_result = check_str($_REQUEST["call_result"]);
-		$uuid = check_str($_REQUEST["uuid"]);
+		$xml_cdr_uuid = check_str($_REQUEST["xml_cdr_uuid"]);
 		$bleg_uuid = check_str($_REQUEST["bleg_uuid"]);
 		$accountcode = check_str($_REQUEST["accountcode"]);
 		$read_codec = check_str($_REQUEST["read_codec"]);
@@ -206,7 +206,7 @@
 				$sql_where_ands[] = "(answer_stamp is null and bridge_uuid is null and billsec = 0 and sip_hangup_disposition = 'send_refuse')";
 		}
 	}
-	if (strlen($uuid) > 0) { $sql_where_ands[] = "uuid = '".$uuid."'"; }
+	if (strlen($xml_cdr_uuid) > 0) { $sql_where_ands[] = "xml_cdr_uuid = '".$xml_cdr_uuid."'"; }
 	if (strlen($bleg_uuid) > 0) { $sql_where_ands[] = "bleg_uuid = '".$bleg_uuid."'"; }
 	if (strlen($accountcode) > 0) { $sql_where_ands[] = "accountcode = '".$accountcode."'"; }
 	if (strlen($read_codec) > 0) { $sql_where_ands[] = "read_codec like '%".$read_codec."%'"; }
@@ -284,7 +284,7 @@
 	$param .= "&billsec=".escape($billsec);
 	$param .= "&hangup_cause=".escape($hangup_cause);
 	$param .= "&call_result=".escape($call_result);
-	$param .= "&uuid=".escape($uuid);
+	$param .= "&xml_cdr_uuid=".escape($xml_cdr_uuid);
 	$param .= "&bleg_uuid=".escape($bleg_uuid);
 	$param .= "&accountcode=".escape($accountcode);
 	$param .= "&read_codec=".escape($read_codec);
@@ -321,41 +321,39 @@
 	if ($_REQUEST['export_format'] == "csv") { $rows_per_page = 0; }
 	if ($_REQUEST['export_format'] == "pdf") { $rows_per_page = 0; }
 
-//page results if rows_per_page is greater than zero
-	if ($rows_per_page > 0) {
-
-		//get the number of rows in the v_xml_cdr
-			$sql = "select count(uuid) as num_rows from v_xml_cdr ";
-			$sql .= "where domain_uuid = '".$domain_uuid."' ".$sql_where;
-			$prep_statement = $db->prepare(check_sql($sql));
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-				if ($row['num_rows'] > 0) {
-					$num_rows = $row['num_rows'];
-				}
-				else {
-					$num_rows = '0';
-				}
+//count the records in the database
+	/*
+	if ($_SESSION['cdr']['limit']['numeric'] == 0) {
+		$sql = "select count(xml_cdr_uuid) as num_rows from v_xml_cdr ";
+		$sql .= "where domain_uuid = '".$domain_uuid."' ".$sql_where;
+		$prep_statement = $db->prepare(check_sql($sql));
+		if ($prep_statement) {
+			$prep_statement->execute();
+			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+			if ($row['num_rows'] > 0) {
+				$num_rows = $row['num_rows'];
 			}
-			unset($prep_statement, $result);
-
-		//limit the number of results
-			if ($_SESSION['cdr']['limit']['numeric'] > 0) {
-				$num_rows = $_SESSION['cdr']['limit']['numeric'];
+			else {
+				$num_rows = '0';
 			}
-
-		//set the default paging
-			$rows_per_page = $_SESSION['domain']['paging']['numeric'];
-
-		//prepare to page the results
-			//$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50; //set on the page that includes this page
-			$page = $_GET['page'];
-			if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-			list($paging_controls_mini, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page, true); //top
-			list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); //bottom
-			$offset = $rows_per_page * $page;
+		}
+		unset($prep_statement, $result);
 	}
+	*/
+
+//limit the number of results
+	if ($_SESSION['cdr']['limit']['numeric'] > 0) {
+		$num_rows = $_SESSION['cdr']['limit']['numeric'];
+	}
+
+//set the default paging
+	$rows_per_page = $_SESSION['domain']['paging']['numeric'];
+
+//prepare to page the results
+	//$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50; //set on the page that includes this page
+	if (is_numeric($_GET['page'])) { $page = $_GET['page']; }
+	if (!isset($_GET['page'])) { $page = 0; $_GET['page'] = 0; }
+	$offset = $rows_per_page * $page;
 
 //get the results from the db
 	$sql = "select ";
@@ -367,7 +365,7 @@
 	$sql .= "billmsec, ";
 	$sql .= "record_path, ";
 	$sql .= "record_name, ";
-	$sql .= "uuid, ";
+	$sql .= "xml_cdr_uuid, ";
 	$sql .= "bridge_uuid, ";
 	$sql .= "direction, ";
 	$sql .= "billsec, ";
