@@ -135,7 +135,7 @@
 			$database->fields['caller_destination'] = check_str(urldecode($xml->variables->caller_destination));
 		//misc
 			$uuid = check_str(urldecode($xml->variables->uuid));
-			$database->fields['uuid'] = $uuid;
+			$database->fields['xml_cdr_uuid'] = $uuid;
 			$database->fields['accountcode'] = check_str(urldecode($xml->variables->accountcode));
 			$database->fields['default_language'] = check_str(urldecode($xml->variables->default_language));
 			$database->fields['bridge_uuid'] = check_str(urldecode($xml->variables->bridge_uuid));
