@@ -125,6 +125,9 @@
 					}
 					$i++;	
 				}
+				$schema[$i]['table'] = 'contact_groups';
+				$schema[$i]['parent'] = 'contacts';
+				$schema[$i]['fields'][] = 'group_name';
 			}
 			//echo "<pre>\n";
 			//print_r($schema);
@@ -244,16 +247,12 @@
 		//set the domain_uuid
 			$domain_uuid = $_SESSION['domain_uuid'];
 
-		//get the user group_uuid
-			$sql = "select group_uuid from v_groups ";
-			$sql .= "where group_name = 'user' ";
+
+		//get the groups
+			$sql = "select * from v_groups where domain_uuid is null ";
 			$prep_statement = $db->prepare($sql);
-		
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-				$group_uuid = $row['group_uuid'];
-			}
+			$prep_statement->execute();
+			$groups = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 
 		//get the contents of the csv file and convert them into an array
 			$handle = @fopen($_SESSION['file'], "r");
@@ -265,9 +264,13 @@
 				//loop through the array
 					while (($line = fgets($handle, 4096)) !== false) {
 						if ($from_row <= $row_number) {
+							//get the user_uuid
+								$user_uuid = uuid();
+
 							//format the data
 								$y = 0;
 								foreach ($fields as $key => $value) {
+
 									//get the line
 									$result = str_getcsv($line, $delimiter, $enclosure);
 									
@@ -297,6 +300,19 @@
 											$array[$parent][$row_id][$table_name][$y]['domain_uuid'] = $domain_uuid;
 											$array[$parent][$row_id][$table_name][$y][$field_name] = $result[$key];
 										}
+
+										if ($field_name == "group_users") {
+												foreach ($groups as $field) {
+													if ($field['group_name'] == $result[$key]) {
+														//$array[$parent][$row_id]['contact_group_uuid'] = uuid();
+														$array[$parent][$row_id]['group_users'][$y]['group_user_uuid'] = uuid();
+														$array[$parent][$row_id]['group_users'][$y]['domain_uuid'] = $domain_uuid;
+														$array[$parent][$row_id]['group_users'][$y]['group_name'] = $field['group_name'];
+														$array[$parent][$row_id]['group_users'][$y]['group_uuid'] = $field['group_uuid'];
+														$array[$parent][$row_id]['group_users'][$y]['user_uuid'] = $user_uuid;
+													}
+												}
+										}
 									}
 								}
 
@@ -312,15 +328,7 @@
 								$array['users'][$row_id]['password'] = md5($salt.$password);
 
 								//set the user_uuid
-								$user_uuid = uuid();
 								$array['users'][$row_id]['user_uuid'] = $user_uuid;
-
-								//add the users to the users group
-								$array['group_users'][$row_id]['group_user_uuid'] = uuid();
-								$array['group_users'][$row_id]['domain_uuid'] = $domain_uuid;
-								$array['group_users'][$row_id]['group_name'] = 'user';
-								$array['group_users'][$row_id]['group_uuid'] = $group_uuid;
-								$array['group_users'][$row_id]['user_uuid'] = $user_uuid;
 
 								//debug
 								//echo "<pre>\n";
