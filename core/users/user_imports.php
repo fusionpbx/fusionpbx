@@ -306,13 +306,22 @@
 										}
 
 										if ($field_name == "group_name") {
+												$group_name = '';
 												foreach ($groups as $field) {
 													if ($field['group_name'] == $result[$key]) {
+														$group_name = $field['group_name'];
 														$array['group_users'][$row_id]['group_user_uuid'] = uuid();
 														$array['group_users'][$row_id]['domain_uuid'] = $domain_uuid;
 														$array['group_users'][$row_id]['group_name'] = $field['group_name'];
 														$array['group_users'][$row_id]['group_uuid'] = $field['group_uuid'];
 														$array['group_users'][$row_id]['user_uuid'] = $user_uuid;
+													}
+												}
+	
+												//remove superadmin if not the correct permission
+												if ($group_name == 'superadmin') {
+													if (!permission_exists('group_domain')) {
+														unset($array['group_users'][$row_id]);
 													}
 												}
 										}
