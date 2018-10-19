@@ -31,11 +31,11 @@
 <ring_sound>Ringer9</ring_sound>
 <no_dnd>off</no_dnd>
 <call_waiting>on</call_waiting>
-<user_realname idx="1">{$display_name_1}</user_realname>
-<user_name idx="1">{$user_id_1}</user_name>
-<user_host idx="1">{$server_address_1}</user_host>
-<user_outbound idx="1">{$outbound_proxy_1}</user_outbound>
-<user_password idx="1">{$user_password_1}</user_password>
+<user_realname idx="1">{$user.1.display_name}</user_realname>
+<user_name idx="1">{$user.1.user_id}</user_name>
+<user_host idx="1">{$user.1.server_address}</user_host>
+<user_outbound idx="1">{$user.1.outbound_proxy}</user_outbound>
+<user_password idx="1">{$user.1.user_password}</user_password>
 <user_ringer idx="1">Ringer9</user_ringer>
 <user_mailbox idx="1">4000</user_mailbox>
 <user_srtp idx="1" perm="">off</user_srtp>
