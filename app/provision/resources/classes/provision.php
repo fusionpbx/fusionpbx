@@ -929,9 +929,10 @@ include "root.php";
 							unset ($prep_statement);
 					}
 
-				//assign the lines and accounts array
+				//assign the arrays
 					$view->assign("lines", $lines);
 					$view->assign("account", $lines);
+					$view->assign("user", $lines);
 
 				//get the list of contact directly assigned to the user
 					if (strlen($device_user_uuid) > 0 and strlen($domain_uuid) > 0) {
