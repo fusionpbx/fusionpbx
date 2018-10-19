@@ -125,10 +125,12 @@
 					}
 					$i++;	
 				}
-				$schema[$i]['table'] = 'contact_groups';
-				$schema[$i]['parent'] = 'contacts';
-				$schema[$i]['fields'][] = 'group_name';
 			}
+			$schema[$i]['table'] = 'group_users';
+			$schema[$i]['parent'] = 'users';
+			$schema[$i]['fields'][] = 'group_name';
+
+		//debug info
 			//echo "<pre>\n";
 			//print_r($schema);
 			//echo "</pre>\n";
@@ -297,26 +299,27 @@
 											$array[$table_name][$row_id][$field_name] = $result[$key];
 										}
 										else {
-											$array[$parent][$row_id][$table_name][$y]['domain_uuid'] = $domain_uuid;
-											$array[$parent][$row_id][$table_name][$y][$field_name] = $result[$key];
+											if ($field_name != "group_name") {
+												$array[$parent][$row_id][$table_name][$y]['domain_uuid'] = $domain_uuid;
+												$array[$parent][$row_id][$table_name][$y][$field_name] = $result[$key];
+											}
 										}
 
-										if ($field_name == "group_users") {
+										if ($field_name == "group_name") {
 												foreach ($groups as $field) {
 													if ($field['group_name'] == $result[$key]) {
-														//$array[$parent][$row_id]['contact_group_uuid'] = uuid();
-														$array[$parent][$row_id]['group_users'][$y]['group_user_uuid'] = uuid();
-														$array[$parent][$row_id]['group_users'][$y]['domain_uuid'] = $domain_uuid;
-														$array[$parent][$row_id]['group_users'][$y]['group_name'] = $field['group_name'];
-														$array[$parent][$row_id]['group_users'][$y]['group_uuid'] = $field['group_uuid'];
-														$array[$parent][$row_id]['group_users'][$y]['user_uuid'] = $user_uuid;
+														$array['group_users'][$row_id]['group_user_uuid'] = uuid();
+														$array['group_users'][$row_id]['domain_uuid'] = $domain_uuid;
+														$array['group_users'][$row_id]['group_name'] = $field['group_name'];
+														$array['group_users'][$row_id]['group_uuid'] = $field['group_uuid'];
+														$array['group_users'][$row_id]['user_uuid'] = $user_uuid;
 													}
 												}
 										}
 									}
 								}
 
-								//get the password, salt and hash the user password
+							//get the password, salt and hash the user password
 								$password = $array['users'][$row_id]['password'];
 								if (isset($array['users'][$row_id]['salt'])) {
 									$salt = $array['users'][$row_id]['salt'];
@@ -327,10 +330,10 @@
 								}
 								$array['users'][$row_id]['password'] = md5($salt.$password);
 
-								//set the user_uuid
+							//set the user_uuid
 								$array['users'][$row_id]['user_uuid'] = $user_uuid;
 
-								//debug
+							//debug
 								//echo "<pre>\n";
 								//print_r($array);
 								//echo "</pre>\n";
