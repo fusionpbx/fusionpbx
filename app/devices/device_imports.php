@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -127,10 +127,11 @@
 					$i++;	
 				}
 			}
-			//echo "<pre>\n";
-			//print_r($schema);
-			//echo "</pre>\n";
-			//exit;
+
+			$i++;
+			$schema[$i]['table'] = 'devices';
+			$schema[$i]['parent'] = '';
+			$schema[$i]['fields'][] = 'username';
 	}
 
 //match the column names to the field names
@@ -245,6 +246,12 @@
 		//set the domain_uuid
 			$domain_uuid = $_SESSION['domain_uuid'];
 
+		//get the users
+			$sql = "select * from v_users where domain_uuid = '".$domain_uuid."' ";
+			$prep_statement = $db->prepare($sql);
+			$prep_statement->execute();
+			$users = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+
 		//get the contents of the csv file and convert them into an array
 			$handle = @fopen($_SESSION['file'], "r");
 			if ($handle) {
@@ -280,12 +287,22 @@
 									//build the data array
 									if (strlen($table_name) > 0) {
 										if (strlen($parent) == 0) {
-											$array[$table_name][$row_id]['domain_uuid'] = $domain_uuid;
-											$array[$table_name][$row_id][$field_name] = $result[$key];
+											if ($field_name != "username") {
+												$array[$table_name][$row_id]['domain_uuid'] = $domain_uuid;
+												$array[$table_name][$row_id][$field_name] = $result[$key];
+											}
 										}
 										else {
 											$array[$parent][$row_id][$table_name][$y]['domain_uuid'] = $domain_uuid;
 											$array[$parent][$row_id][$table_name][$y][$field_name] = $result[$key];
+										}
+
+										if ($field_name == "username") {
+											foreach ($users as $field) {
+												if ($field['username'] == $result[$key]) {
+													$array[$table_name][$row_id]['device_user_uuid'] = $field['user_uuid'];
+												}
+											}
 										}
 									}
 								}
