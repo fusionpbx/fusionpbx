@@ -10,7 +10,7 @@
 		<P2>{$admin_password}</P2>
 
 		<!-- End User Password, MaxLength 32 -->
-		<P196>{$user_password}</P196>
+		<P196>{$password}</P196>
 		<!-- Layer 3 QoS (IP Diff-Serv or Precedence value for RTP) -->
 		<!-- Number: 0 to 63. Reboot required -->
 		<P38>12</P38>
@@ -176,7 +176,7 @@
 		<!-- Account Active. 0 - No, 1 - Yes. -->
 		<P271>1</P271>
 		<!-- Primary SIP Server -->
-		<P47>{$server_address_1}</P47>
+		<P47>{$account.1.server_address}</P47>
 		<!-- Failover SIP Server -->
 		<P967></P967>
 		<!-- Prefer Primary SIP Server. 0 - No, 1 - Yes. -->
@@ -517,7 +517,7 @@
 		<!-- Account Active. 0 - No, 1 - Yes. -->
 		<P401>1</P401>
 		<!-- Primary SIP Server -->
-		<P747>{$server_address_2}</P747>
+		<P747>{$account.2.server_address}</P747>
 		<!-- Failover SIP Server -->
 		<P987></P987>
 		<!-- Prefer Primary SIP Server. 0 - No, 1 - Yes. -->
@@ -529,13 +529,13 @@
 		<!-- NAT Traversal (STUN). 0 - No, 2 - No but send keep-alive, 1 - Yes -->
 		<P730>0</P730>
 		<!-- SIP User ID -->
-		<P735>{$user_id_2}</P735>
+		<P735>{$account.2.user_id}</P735>
 		<!-- Authentication ID -->
-		<P736>{$user_id_2}</P736>
+		<P736>{$account.2.user_id}</P736>
 		<!-- Authentication password -->
-		<P734>{$user_password_2}</P734>
+		<P734>{$account.2.password}</P734>
 		<!-- Display Name -->
-		<P703>{$display_name_2}</P703>
+		<P703>{$account.2.display_name}</P703>
 		<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP . -->
 		<P702>0</P702>
 		<!-- Primary IP -->
