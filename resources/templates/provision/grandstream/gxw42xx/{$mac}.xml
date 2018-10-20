@@ -522,7 +522,7 @@
 
 <!-- Primary SIP Server -->
 <!-- String: serveraddress -->
-<P47>{$server_address_1}</P47>
+<P47>{$account.1.server_address}</P47>
 
 <!-- Failover SIP Server -->
 <!-- String: serveraddress -->
@@ -2539,7 +2539,7 @@
 
 <!-- Primary SIP Server -->
 <!-- String: serveraddress -->
-<P602>{$server_address_4}</P602>
+<P602>{$account.4.server_address}</P602>
 
 <!-- Failover SIP Server -->
 <!-- String: serveraddress -->
@@ -3220,10 +3220,10 @@
 <!-- Map to FXO Gateway Port -->
 
 <!-- FXS 1 -->
-<P4060>{$user_id_1}</P4060>
-<P4090>{$user_id_1}</P4090>
-<P4120>{$user_password_1}</P4120>
-<P4180>{$display_name_1}</P4180>
+<P4060>{$account.1.user_id}</P4060>
+<P4090>{$account.1.user_id}</P4090>
+<P4120>{$account.1.password}</P4120>
+<P4180>{$account.1.display_name}</P4180>
 <P4150>0</P4150>
 <P4595>1</P4595>
 
@@ -3235,10 +3235,10 @@
 <P4858>5060</P4858>
 
 <!-- FXS 2 -->
-<P4061>{$user_id_2}</P4061>
-<P4091>{$user_id_2}</P4091>
-<P4121>{$user_password_2}</P4121>
-<P4181>{$display_name_2}</P4181>
+<P4061>{$account.2.user_id}</P4061>
+<P4091>{$account.2.user_id}</P4091>
+<P4121>{$account.2.password}</P4121>
+<P4181>{$account.2.display_name}</P4181>
 <P4151>0</P4151>
 <P4596>1</P4596>
 
@@ -3250,10 +3250,10 @@
 <P4859>5060</P4859>
 
 <!-- FXS 3 -->
-<P4062>{$user_id_3}</P4062>
-<P4092>{$user_id_3}</P4092>
-<P4122>{$user_password_3}</P4122>
-<P4182>{$display_name_3}</P4182>
+<P4062>{$account.3.user_id}</P4062>
+<P4092>{$account.3.user_id}</P4092>
+<P4122>{$account.3.password}</P4122>
+<P4182>{$account.3.display_name}</P4182>
 <P4152>0</P4152>
 <P4597>1</P4597>
 
@@ -3265,10 +3265,10 @@
 <P4860>5060</P4860>
 
 <!-- FXS 4 -->
-<P4063>{$user_id_4}</P4063>
-<P4093>{$user_id_4}</P4093>
-<P4123>{$user_password_4}</P4123>
-<P4183>{$display_name_4}</P4183>
+<P4063>{$account.4.user_id}</P4063>
+<P4093>{$account.4.user_id}</P4093>
+<P4123>{$account.4.password}</P4123>
+<P4183>{$account.4.display_name}</P4183>
 <P4153></P4153>
 <P4598>1</P4598>
 
@@ -3280,10 +3280,10 @@
 <P4861>5060</P4861>
 
 <!-- FXS 5 -->
-<P4064>{$user_id_5}</P4064>
-<P4094>{$user_id_5}</P4094>
-<P4124>{$user_password_5}</P4124>
-<P4184>{$display_name_5}</P4184>
+<P4064>{$account.5.user_id}</P4064>
+<P4094>{$account.5.user_id}</P4094>
+<P4124>{$account.5.password}</P4124>
+<P4184>{$account.5.display_name}</P4184>
 <P4154>0</P4154>
 <P4599>1</P4599>
 
@@ -3295,10 +3295,10 @@
 <P4862>5060</P4862>
 
 <!-- FXS 6 -->
-<P4065>{$user_id_6}</P4065>
-<P4095>{$user_id_6}</P4095>
-<P4125>{$user_password_6}</P4125>
-<P4185>{$display_name_6}</P4185>
+<P4065>{$account.6.user_id}</P4065>
+<P4095>{$account.6.user_id}</P4095>
+<P4125>{$account.6.password}</P4125>
+<P4185>{$account.6.display_name}</P4185>
 <P4155>0</P4155>
 <P4600>1</P4600>
 
@@ -3310,10 +3310,10 @@
 <P4863>5060</P4863>
 
 <!-- FXS 7 -->
-<P4066>{$user_id_7}</P4066>
-<P4096>{$user_id_7}</P4096>
-<P4126>{$user_password_7}</P4126>
-<P4186>{$display_name_7}</P4186>
+<P4066>{$account.7.user_id}</P4066>
+<P4096>{$account.7.user_id}</P4096>
+<P4126>{$account.7.password}</P4126>
+<P4186>{$account.7.display_name}</P4186>
 <P4156>0</P4156>
 <P4601>1</P4601>
 
@@ -3325,10 +3325,10 @@
 <P4864>5060</P4864>
 
 <!-- FXS 8 -->
-<P4067>{$user_id_8}</P4067>
-<P4097>{$user_id_8}</P4097>
-<P4127>{$user_password_8}</P4127>
-<P4187>{$display_name_8}</P4187>
+<P4067>{$account.8.user_id}</P4067>
+<P4097>{$account.8.user_id}</P4097>
+<P4127>{$account.8.password}</P4127>
+<P4187>{$account.8.display_name}</P4187>
 <P4157>0</P4157>
 <P4602>1</P4602>
 
@@ -3340,10 +3340,10 @@
 <P4865>5060</P4865>
 
 <!-- FXS 9 -->
-<P4068>{$user_id_9}</P4068>
-<P4098>{$user_id_9}</P4098>
-<P4128>{$user_password_9}</P4128>
-<P4188>{$display_name_9}</P4188>
+<P4068>{$account.9.user_id}</P4068>
+<P4098>{$account.9.user_id}</P4098>
+<P4128>{$account.9.password}</P4128>
+<P4188>{$account.9.display_name}</P4188>
 <P4158>0</P4158>
 <P4603>1</P4603>
 
@@ -3355,10 +3355,10 @@
 <P4866>5060</P4866>
 
 <!-- FXS 10 -->
-<P4069>{$user_id_10}</P4069>
-<P4099>{$user_id_10}</P4099>
-<P4129>{$user_password_10}</P4129>
-<P4189>{$display_name_10}</P4189>
+<P4069>{$account.10.user_id}</P4069>
+<P4099>{$account.10.user_id}</P4099>
+<P4129>{$account.10.password}</P4129>
+<P4189>{$account.10.display_name}</P4189>
 <P4159>0</P4159>
 <P4604>1</P4604>
 
@@ -3370,10 +3370,10 @@
 <P4867>5060</P4867>
 
 <!-- FXS 11 -->
-<P4070>{$user_id_11}</P4070>
-<P4100>{$user_id_11}</P4100>
-<P4130>{$user_password_11}</P4130>
-<P4190>{$display_name_11}</P4190>
+<P4070>{$account.11.user_id}</P4070>
+<P4100>{$account.11.user_id}</P4100>
+<P4130>{$account.11.password}</P4130>
+<P4190>{$account.11.display_name}</P4190>
 <P4160>0</P4160>
 <P4605>1</P4605>
 
@@ -3385,10 +3385,10 @@
 <P4868>5060</P4868>
 
 <!-- FXS 12 -->
-<P4071>{$user_id_12}</P4071>
-<P4101>{$user_id_12}</P4101>
-<P4131>{$user_password_12}</P4131>
-<P4191>{$display_name_12}</P4191>
+<P4071>{$account.12.user_id}</P4071>
+<P4101>{$account.12.user_id}</P4101>
+<P4131>{$account.12.password}</P4131>
+<P4191>{$account.12.display_name}</P4191>
 <P4161>0</P4161>
 <P4606>1</P4606>
 
@@ -3400,10 +3400,10 @@
 <P4869>5060</P4869>
 
 <!-- FXS 13 -->
-<P4072>{$user_id_13}</P4072>
-<P4102>{$user_id_13}</P4102>
-<P4132>{$user_password_13}</P4132>
-<P4192>{$display_name_13}</P4192>
+<P4072>{$account.13.user_id}</P4072>
+<P4102>{$account.13.user_id}</P4102>
+<P4132>{$account.13.password}</P4132>
+<P4192>{$account.13.display_name}</P4192>
 <P4162>0</P4162>
 <P4607>1</P4607>
 
@@ -3415,10 +3415,10 @@
 <P4870>5060</P4870>
 
 <!-- FXS 14 -->
-<P4073>{$user_id_14}</P4073>
-<P4103>{$user_id_14}</P4103>
-<P4133>{$user_password_14}</P4133>
-<P4193>{$display_name_14}</P4193>
+<P4073>{$account.14.user_id}</P4073>
+<P4103>{$account.14.user_id}</P4103>
+<P4133>{$account.14.password}</P4133>
+<P4193>{$account.14.display_name}</P4193>
 <P4163>0</P4163>
 <P4608>1</P4608>
 
@@ -3430,10 +3430,10 @@
 <P4871>5060</P4871>
 
 <!-- FXS 15 -->
-<P4074>{$user_id_15}</P4074>
-<P4104>{$user_id_15}</P4104>
-<P4134>{$user_password_15}</P4134>
-<P4194>{$display_name_15}</P4194>
+<P4074>{$account.15.user_id}</P4074>
+<P4104>{$account.15.user_id}</P4104>
+<P4134>{$account.15.password}</P4134>
+<P4194>{$account.15.display_name}</P4194>
 <P4164>0</P4164>
 <P4609>1</P4609>
 
@@ -3445,10 +3445,10 @@
 <P4872>5060</P4872>
 
 <!-- FXS 16 -->
-<P4075>{$user_id_16}</P4075>
-<P4105>{$user_id_16}</P4105>
-<P4135>{$user_password_16}</P4135>
-<P4195>{$display_name_16}</P4195>
+<P4075>{$account.16.user_id}</P4075>
+<P4105>{$account.16.user_id}</P4105>
+<P4135>{$account.16.password}</P4135>
+<P4195>{$account.16.display_name}</P4195>
 <P4165>0</P4165>
 <P4610>1</P4610>
 
@@ -3460,10 +3460,10 @@
 <P4873>5060</P4873>
 
 <!-- FXS 17 -->
-<P4076>{$user_id_17}</P4076>
-<P4106>{$user_id_17}</P4106>
-<P4136>{$user_password_17}</P4136>
-<P4196>{$display_name_17}</P4196>
+<P4076>{$account.17.user_id}</P4076>
+<P4106>{$account.17.user_id}</P4106>
+<P4136>{$account.17.password}</P4136>
+<P4196>{$account.17.display_name}</P4196>
 <P4166>0</P4166>
 <P4611>1</P4611>
 
@@ -3475,10 +3475,10 @@
 <P4874>5060</P4874>
 
 <!-- FXS 18 -->
-<P4077>{$user_id_18}</P4077>
-<P4107>{$user_id_18}</P4107>
-<P4137>{$user_password_18}</P4137>
-<P4197>{$display_name_18}</P4197>
+<P4077>{$account.18.user_id}</P4077>
+<P4107>{$account.18.user_id}</P4107>
+<P4137>{$account.18.password}</P4137>
+<P4197>{$account.18.display_name}</P4197>
 <P4167>0</P4167>
 <P4612>1</P4612>
 
@@ -3490,10 +3490,10 @@
 <P4875>5060</P4875>
 
 <!-- FXS 19 -->
-<P4078>{$user_id_19}</P4078>
-<P4108>{$user_id_19}</P4108>
-<P4138>{$user_password_19}</P4138>
-<P4198>{$display_name_19}</P4198>
+<P4078>{$account.19.user_id}</P4078>
+<P4108>{$account.19.user_id}</P4108>
+<P4138>{$account.19.password}</P4138>
+<P4198>{$account.19.display_name}</P4198>
 <P4168>0</P4168>
 <P4613>1</P4613>
 
@@ -3505,10 +3505,10 @@
 <P4876>5060</P4876>
 
 <!-- FXS 20 -->
-<P4079>{$user_id_20}</P4079>
-<P4109>{$user_id_20}</P4109>
-<P4139>{$user_password_20}</P4139>
-<P4199>{$display_name_20}</P4199>
+<P4079>{$account.20.user_id}</P4079>
+<P4109>{$account.20.user_id}</P4109>
+<P4139>{$account.20.password}</P4139>
+<P4199>{$account.20.display_name}</P4199>
 <P4169>0</P4169>
 <P4614>1</P4614>
 
@@ -3520,10 +3520,10 @@
 <P4877>5060</P4877>
 
 <!-- FXS 21 -->
-<P4080>{$user_id_21}</P4080>
-<P4110>{$user_id_21}</P4110>
-<P4140>{$user_password_21}</P4140>
-<P4252>{$display_name_21}</P4252>
+<P4080>{$account.21.user_id}</P4080>
+<P4110>{$account.21.user_id}</P4110>
+<P4140>{$account.21.password}</P4140>
+<P4252>{$account.21.display_name}</P4252>
 <P4170>0</P4170>
 <P4615>1</P4615>
 
@@ -3535,10 +3535,10 @@
 <P4878>5060</P4878>
 
 <!-- FXS 22 -->
-<P4081>{$user_id_22}</P4081>
-<P4111>{$user_id_22}</P4111>
-<P4141>{$user_password_22}</P4141>
-<P4253>{$display_name_22}</P4253>
+<P4081>{$account.22.user_id}</P4081>
+<P4111>{$account.22.user_id}</P4111>
+<P4141>{$account.22.password}</P4141>
+<P4253>{$account.22.display_name}</P4253>
 <P4171>0</P4171>
 <P4616>1</P4616>
 
@@ -3550,10 +3550,10 @@
 <P4879>5060</P4879>
 
 <!-- FXS 23 -->
-<P4082>{$user_id_23}</P4082>
-<P4112>{$user_id_23}</P4112>
-<P4142>{$user_password_23}</P4142>
-<P4254>{$display_name_23}</P4254>
+<P4082>{$account.23.user_id}</P4082>
+<P4112>{$account.23.user_id}</P4112>
+<P4142>{$account.23.password}</P4142>
+<P4254>{$account.23.display_name}</P4254>
 <P4172>0</P4172>
 <P4617>1</P4617>
 
@@ -3565,10 +3565,10 @@
 <P4880>5060</P4880>
 
 <!-- FXS 24 -->
-<P4083>{$user_id_24}</P4083>
-<P4113>{$user_id_24}</P4113>
-<P4143>{$user_password_24}</P4143>
-<P4255>{$display_name_24}</P4255>
+<P4083>{$account.24.user_id}</P4083>
+<P4113>{$account.24.user_id}</P4113>
+<P4143>{$account.24.password}</P4143>
+<P4255>{$account.24.display_name}</P4255>
 <P4173>0</P4173>
 <P4618>1</P4618>
 
@@ -3580,10 +3580,10 @@
 <P4881>5060</P4881>
 
 <!-- FXS 25 -->
-<P4084>{$user_id_25}</P4084>
-<P4114>{$user_id_25}</P4114>
-<P4144>{$user_password_25}</P4144>
-<P4256>{$display_name_25}</P4256>
+<P4084>{$account.25.user_id}</P4084>
+<P4114>{$account.25.user_id}</P4114>
+<P4144>{$account.25.password}</P4144>
+<P4256>{$account.25.display_name}</P4256>
 <P4174>0</P4174>
 <P4619>1</P4619>
 
@@ -3596,10 +3596,10 @@
 
 
 <!-- FXS 26 -->
-<P4085>{$user_id_26}</P4085>
-<P4115>{$user_id_26}</P4115>
-<P4145>{$user_password_26}</P4145>
-<P4257>{$display_name_26}</P4257>
+<P4085>{$account.26.user_id}</P4085>
+<P4115>{$account.26.user_id}</P4115>
+<P4145>{$account.26.password}</P4145>
+<P4257>{$account.26.display_name}</P4257>
 <P4175>0</P4175>
 <P4620>1</P4620>
 
@@ -3611,10 +3611,10 @@
 <P4883>5060</P4883>
 
 <!-- FXS 27 -->
-<P4086>{$user_id_27}</P4086>
-<P4116>{$user_id_27}</P4116>
-<P4146>{$user_password_27}</P4146>
-<P4258>{$display_name_27}</P4258>
+<P4086>{$account.27.user_id}</P4086>
+<P4116>{$account.27.user_id}</P4116>
+<P4146>{$account.27.password}</P4146>
+<P4258>{$account.27.display_name}</P4258>
 <P4176>0</P4176>
 <P4621>1</P4621>
 
@@ -3626,10 +3626,10 @@
 <P4884>5060</P4884>
 
 <!-- FXS 28 -->
-<P4087>{$user_id_28}</P4087>
-<P4117>{$user_id_28}</P4117>
-<P4147>{$user_password_28}</P4147>
-<P4259>{$display_name_28}</P4259>
+<P4087>{$account.28.user_id}</P4087>
+<P4117>{$account.28.user_id}</P4117>
+<P4147>{$account.28.password}</P4147>
+<P4259>{$account.28.display_name}</P4259>
 <P4177>0</P4177>
 <P4622>1</P4622>
 
@@ -3641,10 +3641,10 @@
 <P4885>5060</P4885>
 
 <!-- FXS 29 -->
-<P4088>{$user_id_29}</P4088>
-<P4118>{$user_id_29}</P4118>
-<P4148>{$user_password_29}</P4148>
-<P4260>{$display_name_29}</P4260>
+<P4088>{$account.29.user_id}</P4088>
+<P4118>{$account.29.user_id}</P4118>
+<P4148>{$account.29.password}</P4148>
+<P4260>{$account.29.display_name}</P4260>
 <P4178>0</P4178>
 <P4623>1</P4623>
 
@@ -3656,10 +3656,10 @@
 <P4886>5060</P4886>
 
 <!-- FXS 30 -->
-<P4089>{$user_id_30}</P4089>
-<P4119>{$user_id_30}</P4119>
-<P4149>{$user_password_30}</P4149>
-<P4261>{$display_name_30}</P4261>
+<P4089>{$account.30.user_id}</P4089>
+<P4119>{$account.30.user_id}</P4119>
+<P4149>{$account.30.password}</P4149>
+<P4261>{$account.30.display_name}</P4261>
 <P4179>0</P4179>
 <P4624>1</P4624>
 
@@ -3671,10 +3671,10 @@
 <P4887>5060</P4887>
 
 <!-- FXS 31 -->
-<P4240>{$user_id_31}</P4240>
-<P4242>{$user_id_31}</P4242>
-<P4244>{$user_password_31}</P4244>
-<P4262>{$display_name_31}</P4262>
+<P4240>{$account.31.user_id}</P4240>
+<P4242>{$account.31.user_id}</P4242>
+<P4244>{$account.31.password}</P4244>
+<P4262>{$account.31.display_name}</P4262>
 <P4246>0</P4246>
 <P4625>1</P4625>
 
@@ -3686,10 +3686,10 @@
 <P4888>5060</P4888>
 
 <!-- FXS 32 -->
-<P4241>{$user_id_32}</P4241>
-<P4243>{$user_id_32}</P4243>
-<P4245>{$user_password_32}</P4245>
-<P4263>{$display_name_32}</P4263>
+<P4241>{$account.32.user_id}</P4241>
+<P4243>{$account.32.user_id}</P4243>
+<P4245>{$account.32.password}</P4245>
+<P4263>{$account.32.display_name}</P4263>
 <P4247>0</P4247>
 <P4626>1</P4626>
 
@@ -3701,10 +3701,10 @@
 <P4889>5060</P4889>
 
 <!-- FXS 33 -->
-<P21000>{$user_id_33}</P21000>
-<P21064>{$user_id_33}</P21064>
-<P21128>{$user_password_33}</P21128>
-<P21192>{$display_name_33}</P21192>
+<P21000>{$account.33.user_id}</P21000>
+<P21064>{$account.33.user_id}</P21064>
+<P21128>{$account.33.password}</P21128>
+<P21192>{$account.33.display_name}</P21192>
 <P21256>0</P21256>
 <P21384>1</P21384>
 
@@ -3716,10 +3716,10 @@
 <P21640>5060</P21640>
 
 <!-- FXS 34 -->
-<P21001>{$user_id_34}</P21001>
-<P21065>{$user_id_34}</P21065>
-<P21129>{$user_password_34}</P21129>
-<P21193>{$display_name_34}</P21193>
+<P21001>{$account.34.user_id}</P21001>
+<P21065>{$account.34.user_id}</P21065>
+<P21129>{$account.34.password}</P21129>
+<P21193>{$account.34.display_name}</P21193>
 <P21257>0</P21257>
 <P21385>1</P21385>
 
@@ -3731,10 +3731,10 @@
 <P21641>5060</P21641>
 
 <!-- FXS 35 -->
-<P21002>{$user_id_35}</P21002>
-<P21066>{$user_id_35}</P21066>
-<P21130>{$user_password_35}</P21130>
-<P21194>{$display_name_35}</P21194>
+<P21002>{$account.34.user_id}</P21002>
+<P21066>{$account.34.user_id}</P21066>
+<P21130>{$account.34.password}</P21130>
+<P21194>{$account.34.display_name}</P21194>
 <P21258>0</P21258>
 <P21386>1</P21386>
 
@@ -3746,10 +3746,10 @@
 <P21642>5060</P21642>
 
 <!-- FXS 36 -->
-<P21003>{$user_id_36}</P21003>
-<P21067>{$user_id_36}</P21067>
-<P21131>{$user_password_36}</P21131>
-<P21195>{$display_name_36}</P21195>
+<P21003>{$account.36.user_id}</P21003>
+<P21067>{$account.36.user_id}</P21067>
+<P21131>{$account.36.password}</P21131>
+<P21195>{$account.36.display_name}</P21195>
 <P21259>0</P21259>
 <P21387>1</P21387>
 
@@ -3761,10 +3761,10 @@
 <P21643>5060</P21643>
 
 <!-- FXS 37 -->
-<P21004>{$user_id_37}</P21004>
-<P21068>{$user_id_37}</P21068>
-<P21132>{$user_password_37}</P21132>
-<P21196>{$display_name_37}</P21196>
+<P21004>{$account.37.user_id}</P21004>
+<P21068>{$account.37.user_id}</P21068>
+<P21132>{$account.37.password}</P21132>
+<P21196>{$account.37.display_name}</P21196>
 <P21260>0</P21260>
 <P21388>1</P21388>
 
@@ -3776,10 +3776,10 @@
 <P21644>5060</P21644>
 
 <!-- FXS 38 -->
-<P21005>{$user_id_38}</P21005>
-<P21069>{$user_id_38}</P21069>
-<P21133>{$user_password_38}</P21133>
-<P21197>{$display_name_38}</P21197>
+<P21005>{$account.38.user_id}</P21005>
+<P21069>{$account.38.user_id}</P21069>
+<P21133>{$account.38.password}</P21133>
+<P21197>{$account.38.display_name}</P21197>
 <P21261>0</P21261>
 <P21389>1</P21389>
 
@@ -3791,10 +3791,10 @@
 <P21645>5060</P21645>
 
 <!-- FXS 39 -->
-<P21006>{$user_id_39}</P21006>
-<P21070>{$user_id_39}</P21070>
-<P21134>{$user_password_39}</P21134>
-<P21198>{$display_name_39}</P21198>
+<P21006>{$account.39.user_id}</P21006>
+<P21070>{$account.39.user_id}</P21070>
+<P21134>{$account.39.password}</P21134>
+<P21198>{$account.39.display_name}</P21198>
 <P21262>0</P21262>
 <P21390>1</P21390>
 
@@ -3806,10 +3806,10 @@
 <P21646>5060</P21646>
 
 <!-- FXS 40 -->
-<P21007>{$user_id_40}</P21007>
-<P21071>{$user_id_40}</P21071>
-<P21145>{$user_password_40}</P21145>
-<P21199>{$display_name_40}</P21199>
+<P21007>{$account.40.user_id}</P21007>
+<P21071>{$account.40.user_id}</P21071>
+<P21145>{$account.40.password}</P21145>
+<P21199>{$account.40.display_name}</P21199>
 <P21263>0</P21263>
 <P21391>1</P21391>
 
@@ -3821,10 +3821,10 @@
 <P21647>5060</P21647>
 
 <!-- FXS 41 -->
-<P21008>{$user_id_41}</P21008>
-<P21072>{$user_id_41}</P21072>
-<P21146>{$user_password_41}</P21146>
-<P21200>{$display_name_41}</P21200>
+<P21008>{$account.41.user_id}</P21008>
+<P21072>{$account.41.user_id}</P21072>
+<P21146>{$account.41.password}</P21146>
+<P21200>{$account.41.display_name}</P21200>
 <P21264>0</P21264>
 <P21392>1</P21392>
 
@@ -3836,10 +3836,10 @@
 <P21648>5060</P21648>
 
 <!-- FXS 42 -->
-<P21009>{$user_id_42}</P21009>
-<P21073>{$user_id_42}</P21073>
-<P21147>{$user_password_42}</P21147>
-<P21201>{$display_name_42}</P21201>
+<P21009>{$account.42.user_id}</P21009>
+<P21073>{$account.42.user_id}</P21073>
+<P21147>{$account.42.password}</P21147>
+<P21201>{$account.42.display_name}</P21201>
 <P21265>0</P21265>
 <P21393>1</P21393>
 
@@ -3851,10 +3851,10 @@
 <P21649>5060</P21649>
 
 <!-- FXS 43 -->
-<P21010>{$user_id_43}</P21010>
-<P21074>{$user_id_43}</P21074>
-<P21148>{$user_password_43}</P21148>
-<P21202>{$display_name_43}</P21202>
+<P21010>{$account.43.user_id}</P21010>
+<P21074>{$account.43.user_id}</P21074>
+<P21148>{$account.43.password}</P21148>
+<P21202>{$account.43.display_name}</P21202>
 <P21266>0</P21266>
 <P21394>1</P21394>
 
@@ -3866,10 +3866,10 @@
 <P21650>5060</P21650>
 
 <!-- FXS 44 -->
-<P21011>{$user_id_44}</P21011>
-<P21075>{$user_id_44}</P21075>
-<P21139>{$user_password_44}</P21139>
-<P21203>{$display_name_44}</P21203>
+<P21011>{$account.44.user_id}</P21011>
+<P21075>{$account.44.user_id}</P21075>
+<P21139>{$account.44.password}</P21139>
+<P21203>{$account.44.display_name}</P21203>
 <P21267>0</P21267>
 <P21395>1</P21395>
 
@@ -3881,10 +3881,10 @@
 <P21651>5060</P21651>
 
 <!-- FXS 45 -->
-<P21012>{$user_id_45}</P21012>
-<P21076>{$user_id_45}</P21076>
-<P21140>{$user_password_45}</P21140>
-<P21204>{$display_name_45}</P21204>
+<P21012>{$account.45.user_id}</P21012>
+<P21076>{$account.45.user_id}</P21076>
+<P21140>{$account.45.password}</P21140>
+<P21204>{$account.45.display_name}</P21204>
 <P21268>0</P21268>
 <P21396>1</P21396>
 
@@ -3896,10 +3896,10 @@
 <P21652>5060</P21652>
 
 <!-- FXS 46 -->
-<P21013>{$user_id_46}</P21013>
-<P21077>{$user_id_46}</P21077>
-<P21141>{$user_password_46}</P21141>
-<P21205>{$display_name_46}</P21205>
+<P21013>{$account.46.user_id}</P21013>
+<P21077>{$account.46.user_id}</P21077>
+<P21141>{$account.46.password}</P21141>
+<P21205>{$account.46.display_name}</P21205>
 <P21269>0</P21269>
 <P21397>1</P21397>
 
@@ -3911,10 +3911,10 @@
 <P21653>5060</P21653>
 
 <!-- FXS 47 -->
-<P21014>{$user_id_47}</P21014>
-<P21078>{$user_id_47}</P21078>
-<P21142>{$user_password_47}</P21142>
-<P21206>{$display_name_47}</P21206>
+<P21014>{$account.47.user_id}</P21014>
+<P21078>{$account.47.user_id}</P21078>
+<P21142>{$account.47.password}</P21142>
+<P21206>{$account.47.display_name}</P21206>
 <P21270>0</P21270>
 <P21398>1</P21398>
 
@@ -3926,10 +3926,10 @@
 <P21654>5060</P21654>
 
 <!-- FXS 48 -->
-<P21015>{$user_id_48}</P21015>
-<P21079>{$user_id_48}</P21079>
-<P21143>{$user_password_48}</P21143>
-<P21207>{$display_name_48}</P21207>
+<P21015>{$account.48.user_id}</P21015>
+<P21079>{$account.48.user_id}</P21079>
+<P21143>{$account.48.password}</P21143>
+<P21207>{$account.48.display_name}</P21207>
 <P21271>0</P21271>
 <P21399>1</P21399>
 
