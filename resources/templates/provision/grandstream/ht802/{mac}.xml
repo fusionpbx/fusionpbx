@@ -25,12 +25,12 @@
     {/if}
 
     <!-- Account 1 -->
-    <P47>{$server_address_1}</P47> <!-- SIP Server -->
-    <P48>{$outbound_proxy_1}</P48> <!-- Outbound Proxy -->
-    <P35>{$user_id_1}</P35> <!-- SIP User ID -->
-    <P36>{$user_id_1}</P36> <!-- Authenticate ID -->
-    <P34>{$user_password_1}</P34> <!-- Authenticate Password -->
-    <P3>{$display_name_1}</P3> <!-- Display Name -->
+    <P47>{$account.1.server_address}</P47> <!-- SIP Server -->
+    <P48>{$account.1.outbound_proxy}</P48> <!-- Outbound Proxy -->
+    <P35>{$account.1.user_id}</P35> <!-- SIP User ID -->
+    <P36>{$account.1.user_id}</P36> <!-- Authenticate ID -->
+    <P34>{$account.1.password}</P34> <!-- Authenticate Password -->
+    <P3>{$account.1.display_name}</P3> <!-- Display Name -->
     <P52>2</P52> <!-- NAT Traversal (STUN) 0 - No, 2 - No but send keep-alive, 1 - Yes, 3 - UPnP -->
     <P84>20</P84> <!-- Keep-alive interval (in seconds. default 20 seconds, number: 10 to 160) -->
     <P81>1</P81> <!-- Unregister On Reboot. 0 - No, 1 - Yes -->
@@ -42,19 +42,19 @@
     <P133>1</P133> <!-- Jitter buffer type.  0 - Fixed, 1 - Adaptive -->
     <P132>0</P132> <!-- Jitter buffer length. 0 - Low, 1 - Medium, 2 - High -->
     <!-- SIP transport -->
-    {if $sip_transport_1 == 'udp'}<P130>0</P130>{/if}
-    {if $sip_transport_1 == 'tcp'}<P130>1</P130>{/if}
-    {if $sip_transport_1 == 'tls'}<P130>2</P130>{/if}
-    {if $sip_transport_1 == 'dns srv'}<P130>1</P130>{/if}
+    {if $account.1.sip_transport == 'udp'}<P130>0</P130>{/if}
+    {if $account.1.sip_transport == 'tcp'}<P130>1</P130>{/if}
+    {if $account.1.sip_transport == 'tls'}<P130>2</P130>{/if}
+    {if $account.1.sip_transport == 'dns srv'}<P130>1</P130>{/if}
 
     <!-- Account 2 -->
     <!-- {if isset($user_id_2)} -->
-    <P747>{$server_address_2}</P747>
-    <P748>{$outbound_proxy_2}</P748> <!-- Outbound Proxy -->
-    <P735>{$user_id_2}</P735> <!-- SIP User ID -->
-    <P736>{$user_id_2}</P736> <!-- Authenticate ID -->
-    <P734>{$user_password_2}</P734> <!-- Authenticate Password -->
-    <P703>{$display_name_2}</P703> <!-- Display Name -->
+    <P747>{$account.2.server_address}</P747>
+    <P748>{$account.2.outbound_proxy}</P748> <!-- Outbound Proxy -->
+    <P735>{$account.2.user_id}</P735> <!-- SIP User ID -->
+    <P736>{$account.2.user_id}</P736> <!-- Authenticate ID -->
+    <P734>{$account.2.password}</P734> <!-- Authenticate Password -->
+    <P703>{$account.2.display_name}</P703> <!-- Display Name -->
     <P710>1</P710> <!-- FAX Mode. 0 - T.38 (Auto Detect), 1 - Pass Through -->
     <P4417>0</P4417> <!-- Re-INVITE After Fax Tone Detected. 0 - Disabled, 1 - Enabled. -->
     <P832>0</P832> <!-- Jitter buffer length. 0 - Low, 1 - Medium, 2 - High -->
@@ -62,10 +62,10 @@
     <P752>1</P752> <!-- Unregister On Reboot. 0 - No, 1 - Yes -->
     <P2430>0</P2430> <!-- Reregister before Expiration (in seconds. Default 0 second) -->
     <!-- SIP transport -->
-    {if $sip_transport_2 == 'udp'}<P830>0</P830>{/if}
-    {if $sip_transport_2 == 'tcp'}<P830>1</P830>{/if}
-    {if $sip_transport_2 == 'tls'}<P830>2</P830>{/if}
-    {if $sip_transport_2 == 'dns srv'}<P830>1</P830>{/if}
+    {if $account.2.sip_transport == 'udp'}<P830>0</P830>{/if}
+    {if $account.2.sip_transport == 'tcp'}<P830>1</P830>{/if}
+    {if $account.2.sip_transport == 'tls'}<P830>2</P830>{/if}
+    {if $account.2.sip_transport == 'dns srv'}<P830>1</P830>{/if}
     <!-- {/if} -->
   </config>
 </gs_provision>
