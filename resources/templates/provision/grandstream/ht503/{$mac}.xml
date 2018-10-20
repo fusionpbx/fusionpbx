@@ -402,19 +402,19 @@
 
 <!--  SIP User ID -->
 <!--  String -->
-<P35>{$user_id_1}</P35>
+<P35>{$account.1.user_id}</P35>
 
 <!--  Authentication ID -->
 <!--  String -->
-<P36>{$user_id_1}</P36>
+<P36>{$account.1.user_id}</P36>
 
 <!--  Authentication password -->
 <!--  String -->
-<P34>{$user_password_1}</P34>
+<P34>{$account.1.password}</P34>
 
 <!--  Name (John Doe) -->
 <!--  String -->
-<P3>{$display_name_1}</P3>
+<P3>{$account.1.display_name}</P3>
 
 <!--  DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP . -->
 <!--  Number: 0, 1, 2, 3 -->
@@ -1063,19 +1063,19 @@
 
 <!--  SIP User ID -->
 <!--  String -->
-<P735>{$user_id_1}</P735>
+<P735>{$account.1.user_id}</P735>
 
 <!--  Authentication ID -->
 <!--  String -->
-<P736>{$user_id_1}</P736>
+<P736>{$account.1.user_id}</P736>
 
 <!--  Authentication password -->
 <!--  String -->
-<P734>{$user_password_1}</P734>
+<P734>{$account.1.password}</P734>
 
 <!--  Name (John Doe) -->
 <!--  String -->
-<P703>{Display_name_1}</P703>
+<P703>{$account.1.display_name}</P703>
 
 <!--  DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP . -->
 <!--  Number: 0, 1, 2, 3 -->
