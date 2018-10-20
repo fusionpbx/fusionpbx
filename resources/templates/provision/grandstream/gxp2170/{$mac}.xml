@@ -23,23 +23,23 @@
 
 <!--  Account Name -->
 <!--  String -->
-<P270>{$display_name_1}</P270>
+<P270>{$account.1.display_name}</P270>
 
 <!--  SIP Server -->
 <!--  String -->
-<P47>{$server_address_1}</P47>
+<P47>{$account.1.server.1.address}</P47>
 
 <!--  Secondary SIP Server -->
 <!--  String -->
-<P2312>{$secondary_server_address_1}</P2312>
+<P2312>{$account.1.server.2.address}</P2312>
 
 <!--  Outbound Proxy -->
 <!--  String -->
-<P48>{$outbound_proxy_primary}</P48>
+<P48>{$account.1.outbound_proxy_primary}</P48>
 
 <!--  Backup Outbound Proxy -->
 <!--  String -->
-<P2333>{$outbound_proxy_secondary}</P2333>
+<P2333>{$account.1.outbound_proxy_secondary}</P2333>
 
 <!--  BLF Server -->
 <!--  String -->
@@ -47,19 +47,19 @@
 
 <!--  SIP User ID -->
 <!--  String -->
-<P35>{$user_id_1}</P35>
+<P35>{$account.1.user_id}</P35>
 
 <!--  Authenticate ID -->
 <!--  String -->
-<P36>{$auth_id_1}</P36>
+<P36>{$account.1.auth_id}</P36>
 
 <!--  Authenticate Password -->
 <!--  String -->
-<P34>{$user_password_1}</P34>
+<P34>{$account.1.user_password}</P34>
 
 <!--  Name -->
 <!--  String -->
-<P3>{$display_name_1}</P3>
+<P3>{$account.1.display_name}</P3>
 
 <!--  Voice Mail UserID -->
 <!--  String -->
