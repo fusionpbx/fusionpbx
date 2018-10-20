@@ -10,7 +10,7 @@
 		<P2>{$admin_password}</P2>
 
 		<!-- End User Password, MaxLength 32 -->
-		<P196>{$password}</P196>
+		<P196>{$user_password}</P196>
 		<!-- Layer 3 QoS (IP Diff-Serv or Precedence value for RTP) -->
 		<!-- Number: 0 to 63. Reboot required -->
 		<P38>12</P38>
