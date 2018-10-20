@@ -568,8 +568,8 @@
 
 <!-- # Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone, 4 - silent. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3, 4 -->
-{if isset($account.1.grandstream_account_ring_tone)}
-<P104>{$account.1.grandstream_account_ring_tone}</P104>
+{if isset($grandstream_account_ring_tone_1)}
+<P104>{$grandstream_account_ring_tone_1}</P104>
 {/if}
 
 <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
@@ -841,7 +841,7 @@
 
 <!-- # Register Expiration (in minutes). Default is 60. Max is 45 days -->
 <!-- # Number: 1 - 64800 -->
-<P412>{$register_expires_2}</P412>
+<P412>{$account.2.register_expires}</P412>
 
 <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
 <!-- # Number: 1 - 64800 -->
@@ -1285,8 +1285,8 @@
 
 <!-- # Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone, 4 - silent. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3, 4 -->
-{if isset($account.2.grandstream_account_ring_tone)}
-<P423>{$account.2.grandstream_account_ring_tone}</P423>
+{if isset($grandstream_account_ring_tone_2)}
+<P423>{$grandstream_account_ring_tone_2}</P423>
 {/if}
 
 <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
@@ -2002,8 +2002,8 @@
 
 <!-- # Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone, 4 - silent. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3, 4 -->
-{if isset($account.3.grandstream_account_ring_tone)}
-<P523>{$account.3.grandstream_account_ring_tone}</P523>
+{if isset($grandstream_account_ring_tone_3)}
+<P523>{$grandstream_account_ring_tone_3}</P523>
 {/if}
 
 <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
@@ -2719,8 +2719,8 @@
 
 <!-- # Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone, 4 - silent. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3, 4 -->
-{if isset($account.4.grandstream_account_ring_tone)}
-<P623>{$account.4.grandstream_account_ring_tone}</P623>
+{if isset($grandstream_account_ring_tone_4)}
+<P623>{$grandstream_account_ring_tone_4}</P623>
 {/if}
 
 <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
@@ -2992,7 +2992,7 @@
 
 <!-- # Register Expiration (in minutes. default 1 hour, max 45 days) -->
 <!-- # Number: 1-64800 -->
-<P1712>{$register_expires_5}</P1712>
+<P1712>{$account.5.register_expires}</P1712>
 
 <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
 <!-- # Number: 1 - 64800 -->
@@ -3434,8 +3434,8 @@
 
 <!-- # Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone, 4 - silent. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3, 4 -->
-{if isset($account.5.grandstream_account_ring_tone)}
-<P1723>{$account.5.grandstream_account_ring_tone}</P1723>
+{if isset($grandstream_account_ring_tone_5)}
+<P1723>{$grandstream_account_ring_tone_5}</P1723>
 {/if}
 
 <!-- # Matching Incoming Caller ID. Matching Rule 1. -->
@@ -4152,8 +4152,8 @@
 
 <!-- # Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone, 4 - silent. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3, 4 -->
-{if isset($account.6.grandstream_account_ring_tone)}
-<P1823>{$account.6.grandstream_account_ring_tone}</P1823>
+{if isset($grandstream_account_ring_tone_6)}
+<P1823>{$grandstream_account_ring_tone_6}</P1823>
 {/if}
 
 <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
