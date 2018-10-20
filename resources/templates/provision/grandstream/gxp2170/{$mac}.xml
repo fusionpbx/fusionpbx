@@ -5661,21 +5661,21 @@
 
 <!-- # Disable Call Waiting. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
-{if isset{$grandstream_call_waiting}}
+{if isset($grandstream_call_waiting)}
 {if $grandstream_call_waiting == "1"}<P91>0</P91>{/if}
 {if $grandstream_call_waiting == "2"}<P91>1</P91>{/if}
 {/if}
 
 <!-- # Disable Call Waiting Tone. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
-{if isset{$grandstream_call_waiting}}
+{if isset($grandstream_call_waiting)}
 {if $grandstream_call_waiting == "1"}<P186>0</P186>{/if}
 {if $grandstream_call_waiting == "2"}<P186>1</P186>{/if}
 {/if}
 
 <!-- # Ring for Call Waiting. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
-{if isset{$grandstream_call_waiting}}
+{if isset($grandstream_call_waiting)}
 {if $grandstream_call_waiting == "1"}<P22102>0</P22102>{/if}
 {if $grandstream_call_waiting == "2"}<P22102>1</P22102>{/if}
 {/if}
@@ -5722,7 +5722,7 @@
 
 <!-- # Attended Transfer Mode. 0 - Static, 1 - Dynamic. Default is 0 -->
 <!-- # Number: 0, 1 -->
-{if isset($grandstream_auto_attended_transfer) }
+{if isset($grandstream_auto_attended_transfer)}
 <P1376>{$grandstream_auto_attended_transfer}</P1376>
 {else}
 <P1376>1</P1376>
