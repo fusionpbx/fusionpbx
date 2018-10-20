@@ -124,6 +124,15 @@
 //process the http data
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
+		//set the domain_uuid
+			if (permission_exists('ivr_menu_domain')) {
+				$domain_uuid = $_POST["domain_uuid"];
+			}
+			else {
+				$_POST["domain_uuid"] = $_SESSION['domain_uuid'];
+				$domain_uuid = $_SESSION['domain_uuid'];
+			}
+
 		//check for all required data
 			$msg = '';
 			if (strlen($ivr_menu_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
@@ -1318,6 +1327,28 @@
 		echo $text['description-digit_length']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
+
+		if (permission_exists('ivr_menu_domain')) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "	".$text['label-domain']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "    <select class='formfld' name='domain_uuid'>\n";
+			foreach ($_SESSION['domains'] as $row) {
+				if ($row['domain_uuid'] == $domain_uuid) {
+					echo "    <option value='".escape($row['domain_uuid'])."' selected='selected'>".escape($row['domain_name'])."</option>\n";
+				}
+				else {
+					echo "    <option value='".escape($row['domain_uuid'])."'>".escape($row['domain_name'])."</option>\n";
+				}
+			}
+			echo "    </select>\n";
+			echo "<br />\n";
+			echo $text['description-domain_name']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
 
 		echo "	</table>\n";
 		echo "	</div>";
