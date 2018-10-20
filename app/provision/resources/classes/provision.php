@@ -893,6 +893,7 @@ include "root.php";
 										$lines[$line_number]['auth_id'] = $row["auth_id"];
 										$lines[$line_number]['user_id'] = $row["user_id"];
 										$lines[$line_number]['password'] = $row["password"];
+										$lines[$line_number]['user_password'] = $row["password"];
 										$lines[$line_number]['shared_line'] = $row["shared_line"];
 
 									//assign the variables for line one - short name
