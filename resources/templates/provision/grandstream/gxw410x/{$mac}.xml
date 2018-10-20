@@ -85,7 +85,7 @@
     <!--  Profile Name -->
     <P270></P270>
     <!--  SIP Server: max. length = 96 -->
-    <P47>{$server_address_1}</P47>
+    <P47>{$account.1.server_address}</P47>
     <!--  Outbound Proxy -->
     <P48></P48>
     <!--  Use DNS SRV. 0 - No, 1 - Yes. -->
@@ -158,7 +158,7 @@
     <!--  Profile Name -->
     <P417></P417>
     <!--  SIP Server -->
-    <P402>{$server_address_2}</P402>
+    <P402>{$account.2.server_address}</P402>
     <!--  Outbound Proxy Server -->
     <P403></P403>
     <!--  Use DNS SRV. 0 - No, 1 - Yes. -->
@@ -230,7 +230,7 @@
     <!--  Profile Name -->
     <P517></P517>
     <!--  SIP Server -->
-    <P502>{$server_address_3}</P502>
+    <P502>{$account.3.server_address}</P502>
     <!--  Outbound Proxy Server -->
     <P503></P503>
     <!--  Use DNS SRV. 0 - No, 1 - Yes. -->
@@ -426,30 +426,30 @@
     <!--  FXO Port 1 -->
     <!--  Channel(s), SIP USER ID, Authenticate ID, Password, Profile ID (3000 - Profile 1, 3001 - Profile 2, 3003 - Profile 3) -->
     <P3030></P3030>
-    <P3060>{$user_id_1}</P3060>
-    <P3090>{$user_id_1}</P3090>
-    <P3120>{$user_password_1}</P3120>
+    <P3060>{$account.1.user_id}</P3060>
+    <P3090>{$account.1.user_id}</P3090>
+    <P3120>{$account.1.password}</P3120>
     <P3150>3000</P3150>
     <!--  FXO Port 2 -->
     <!--  Channel(s), SIP USER ID, Authenticate ID, Password, Profile ID (3000 - Profile 1, 3001 - Profile 2, 3003 - Profile 3) -->
     <P3031></P3031>
-    <P3061>{$user_id_2}</P3061>
-    <P3091>{$user_id_2}</P3091>
-    <P3121>{$user_password_2}</P3121>
+    <P3061>{$account.2.user_id}</P3061>
+    <P3091>{$account.2.user_id}</P3091>
+    <P3121>{$account.2.password}</P3121>
     <P3151>3000</P3151>
     <!--  FXO Port 3 -->
     <!--  Channel(s), SIP USER ID, Authenticate ID, Password, Profile ID (3000 - Profile 1, 3001 - Profile 2, 3003 - Profile 3) -->
     <P3032></P3032>
-    <P3062>{$user_id_3}</P3062>
-    <P3092>{$user_id_3}</P3092>
-    <P3122>{$user_password_3}</P3122>
+    <P3062>{$account.3.user_id}</P3062>
+    <P3092>{$account.3.user_id}</P3092>
+    <P3122>{$account.3.password}</P3122>
     <P3152>3000</P3152>
     <!--  FXO Port 4 -->
     <!--  Channel(s), SIP USER ID, Authenticate ID, Password, Profile ID (3000 - Profile 1, 3001 - Profile 2, 3003 - Profile 3) -->
     <P3033></P3033>
-    <P3063>{$user_id_4}</P3063>
-    <P3093>{$user_id_4}</P3093>
-    <P3123>{$user_password_4}</P3123>
+    <P3063>{$account.4.user_id}</P3063>
+    <P3093>{$account.4.user_id}</P3093>
+    <P3123>{$account.4.password}</P3123>
     <P3153>3000</P3153>
     <!--  FXO Port 5 (Uncomment the following P-values if using GXW4108) -->
     <!--  Channel(s), SIP USER ID, Authenticate ID, Password, Profile ID (3000 - Profile 1, 3001 - Profile 2, 3003 - Profile 3) -->
