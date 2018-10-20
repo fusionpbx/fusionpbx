@@ -8,21 +8,21 @@
     <!-- Account Active. 0 - No, 1 - Yes. Default is 1 -->
     <P271>1</P271>
     <!-- Account Name -->
-    <P270>{$display_name_1}</P270>
+    <P270>{$account.1.display_name}</P270>
     <!-- SIP Server -->
-    <P47>{$server_address_1}</P47>
+    <P47>{$account.1.server_address}</P47>
     <!-- Secondary SIP Server -->
     <P2312></P2312>
     <!-- Outbound Proxy -->
     <P48></P48>
     <!-- SIP User ID -->
-    <P35>{$user_id_1}</P35>
+    <P35>{$account.1.user_id}</P35>
     <!-- Authenticate ID -->
-    <P36>{$auth_id_1}</P36>
+    <P36>{$account.1.auth_id}</P36>
     <!-- Authenticate Password -->
-    <P34>{$user_password_1}</P34>
+    <P34>{$account.1.password}</P34>
     <!-- Display Name -->
-    <P3>{$display_name_1}</P3>
+    <P3>{$account.1.display_name}</P3>
     <!-- Voice Mail UserID -->
     <P33>*97</P33>
     <!-- Account 1/Network Settings -->
@@ -60,10 +60,10 @@
     <!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default is 400 -->
     <P250>400</P250>
     <!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS/TCP. Default is 0 -->
-    {if $sip_transport_1 == 'udp'}<P130>0</P130>{/if}
-    {if $sip_transport_1 == 'tcp'}<P130>1</P130>{/if}
-    {if $sip_transport_1 == 'tls'}<P130>2</P130>{/if}
-    {if $sip_transport_1 == 'dns srv'}<P130>1</P130>{/if}
+    {if $account.1.sip_transport == 'udp'}<P130>0</P130>{/if}
+    {if $account.1.sip_transport == 'tcp'}<P130>1</P130>{/if}
+    {if $account.1.sip_transport == 'tls'}<P130>2</P130>{/if}
+    {if $account.1.sip_transport == 'dns srv'}<P130>1</P130>{/if}
     <!-- SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1 -->
     <P2329>1</P2329>
     <!-- Use Actual Ephemeral Port in Contact with TCP/TLS. 0 - No, 1 - Yes. Default is 0 -->
@@ -388,10 +388,10 @@
     <P401>1</P401>
     <!-- Account Name -->
     <!-- String -->
-    <P417>{$display_name_2}</P417>
+    <P417>{$account.2.display_name}</P417>
     <!-- SIP Server -->
     <!-- String -->
-    <P402>{$server_address_2}</P402>
+    <P402>{$account.2.server_address}</P402>
     <!-- Secondary SIP Server -->
     <!-- String -->
     <P2412></P2412>
@@ -400,16 +400,16 @@
     <P403></P403>
     <!-- SIP User ID -->
     <!-- String -->
-    <P404>{$user_id_2}</P404>
+    <P404>{$account.2.user_id}</P404>
     <!-- Authenticate ID -->
     <!-- String -->
-    <P405>{$user_id_2}</P405>
+    <P405>{$account.2.user_id}</P405>
     <!-- Authenticate Password -->
     <!-- String -->
-    <P406>{$user_password_2}</P406>
+    <P406>{$account.2.password}</P406>
     <!-- Display Name -->
     <!-- String -->
-    <P407>{$display_name_2}</P407>
+    <P407>{$account.2.display_name}</P407>
     <!-- Voice Mail UserID -->
     <!-- String -->
     <P426>*97</P426>
@@ -476,10 +476,10 @@
     <!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TCP/TLS. Default is 0 -->
     <!-- Number: 0, 1, 2 -->
     <!-- Mandatory -->
-    {if $sip_transport_2 == 'udp'}<P448>0</P448>{/if}
-    {if $sip_transport_2 == 'tcp'}<P448>1</P448>{/if}
-    {if $sip_transport_2 == 'tls'}<P448>2</P448>{/if}
-    {if $sip_transport_2 == 'dns srv'}<P448>1</P448>{/if}
+    {if $account.2.sip_transport == 'udp'}<P448>0</P448>{/if}
+    {if $account.2.sip_transport == 'tcp'}<P448>1</P448>{/if}
+    {if $account.2.sip_transport == 'tls'}<P448>2</P448>{/if}
+    {if $account.2.sip_transport == 'dns srv'}<P448>1</P448>{/if}
     <!-- SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1 -->
     <!-- Number: 0, 1 -->
     <!-- Mandatory -->
@@ -819,10 +819,10 @@
     <P501>1</P501>
     <!-- Account Name -->
     <!-- String -->
-    <P517>{$display_name_3}</P517>
+    <P517>{$account.3.display_name}</P517>
     <!-- SIP Server -->
     <!-- String -->
-    <P502>{$server_address_3}</P502>
+    <P502>{$account.3.server_address}</P502>
     <!-- Secondary SIP Server -->
     <!-- String -->
     <P2512></P2512>
@@ -831,16 +831,16 @@
     <P503></P503>
     <!-- SIP User ID -->
     <!-- String -->
-    <P504>{$user_id_3}</P504>
+    <P504>{$account.3.user_id}</P504>
     <!-- Authenticate ID -->
     <!-- String -->
-    <P505>{$user_id_3}</P505>
+    <P505>{$account.3.user_id}</P505>
     <!-- Authenticate Password -->
     <!-- String -->
-    <P506>{$user_password_3}</P506>
+    <P506>{$account.3.password}</P506>
     <!-- Display Name -->
     <!-- String -->
-    <P507>{$display_name_3}</P507>
+    <P507>{$account.3.display_name}</P507>
     <!-- Voice Mail UserID -->
     <!-- String -->
     <P526>*97</P526>
@@ -907,10 +907,10 @@
     <!-- SIP Transport. 0 - UDP, 1 - TCP. 2- TCP/TLS. Default is 0 -->
     <!-- Number: 0, 1, 2 -->
     <!-- Mandatory -->
-    {if $sip_transport_3 == 'udp'}<P548>0</P548>{/if}
-    {if $sip_transport_3 == 'tcp'}<P548>1</P548>{/if}
-    {if $sip_transport_3 == 'tls'}<P548>2</P548>{/if}
-    {if $sip_transport_3 == 'dns srv'}<P548>1</P548>{/if}
+    {if $account.3.sip_transport == 'udp'}<P548>0</P548>{/if}
+    {if $account.3.sip_transport == 'tcp'}<P548>1</P548>{/if}
+    {if $account.3.sip_transport == 'tls'}<P548>2</P548>{/if}
+    {if $account.3.sip_transport == 'dns srv'}<P548>1</P548>{/if}
     <!-- SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1 -->
     <!-- Number: 0, 1 -->
     <!-- Mandatory -->
@@ -1249,10 +1249,10 @@
     <P601>1</P601>
     <!-- Account Name -->
     <!-- String -->
-    <P617>{$display_name_4}</P617>
+    <P617>{$account.4.display_name}</P617>
     <!-- SIP Server -->
     <!-- String -->
-    <P602>{$server_address_4}</P602>
+    <P602>{$account.4.server_address}</P602>
     <!-- Secondary SIP Server -->
     <!-- String -->
     <P2612></P2612>
@@ -1261,16 +1261,16 @@
     <P603></P603>
     <!-- SIP User ID -->
     <!-- String -->
-    <P604>{$user_id_4}</P604>
+    <P604>{$account.4.user_id}</P604>
     <!-- Authenticate ID -->
     <!-- String -->
-    <P605>{$user_id_4}</P605>
+    <P605>{$account.4.user_id}</P605>
     <!-- Authenticate password -->
     <!-- String -->
-    <P606>{$user_password_4}</P606>
+    <P606>{$account.4.password}</P606>
     <!-- Display Name -->
     <!-- String -->
-    <P607>{$display_name_4}</P607>
+    <P607>{$account.4.display_name}</P607>
     <!-- Voice Mail UserID -->
     <!-- String -->
     <P626>*97</P626>
@@ -1337,10 +1337,10 @@
     <!-- SIP Transport. 0 - UDP, 1 - TCP. 2 - TCP/TLS. Default is 0 -->
     <!-- Number: 0, 1, 2 -->
     <!-- Mandatory -->
-    {if $sip_transport_4 == 'udp'}<P648>0</P648>{/if}
-    {if $sip_transport_4 == 'tcp'}<P648>1</P648>{/if}
-    {if $sip_transport_4 == 'tls'}<P648>2</P648>{/if}
-    {if $sip_transport_4 == 'dns srv'}<P648>1</P648>{/if}
+    {if $account.4.sip_transport == 'udp'}<P648>0</P648>{/if}
+    {if $account.4.sip_transport == 'tcp'}<P648>1</P648>{/if}
+    {if $account.4.sip_transport == 'tls'}<P648>2</P648>{/if}
+    {if $account.4.sip_transport == 'dns srv'}<P648>1</P648>{/if}
     <!-- SIP URI Scheme When Using TLS. 0 - sip, 1 - sips. Default is 1 -->
     <!-- Number: 0, 1 -->
     <!-- Mandatory -->
@@ -1674,10 +1674,10 @@
     <P1701>1</P1701>
     <!-- Account Name -->
     <!-- String -->
-    <P1717>{$display_name_5}</P1717>
+    <P1717>{$account.5.display_name}</P1717>
     <!-- SIP Server -->
     <!-- String -->
-    <P1702>{$server_address_5}</P1702>
+    <P1702>{$account.5.server_address}</P1702>
     <!-- Secondary SIP Server -->
     <!-- String -->
     <P2712></P2712>
@@ -1686,16 +1686,16 @@
     <P1703></P1703>
     <!-- SIP User ID -->
     <!-- String -->
-    <P1704>{$user_id_5}</P1704>
+    <P1704>{$account.5.user_id}</P1704>
     <!-- Authenticate ID -->
     <!-- String -->
-    <P1705>{$user_id_5}</P1705>
+    <P1705>{$account.5.user_id}</P1705>
     <!-- Authenticate Password -->
     <!-- String -->
-    <P1706>{$user_password_5}</P1706>
+    <P1706>{$account.5.password}</P1706>
     <!-- Display Name -->
     <!-- String -->
-    <P1707>{$display_name_5}</P1707>
+    <P1707>{$account.5.display_name}</P1707>
     <!-- Voice Mail UserID -->
     <!-- String -->
     <P1726>*97</P1726>
@@ -1763,10 +1763,10 @@
     <!-- Number: 0, 1, 2 -->
     <!-- Mandatory -->
 
-    {if $sip_transport_5 == 'udp'}<P1748>0</P1748>{/if}
-    {if $sip_transport_5 == 'tcp'}<P1748>1</P1748>{/if}
-    {if $sip_transport_5 == 'tls'}<P1748>2</P1748>{/if}
-    {if $sip_transport_5 == 'dns srv'}<P1748>1</P1748>{/if}
+    {if $account.5.sip_transport == 'udp'}<P1748>0</P1748>{/if}
+    {if $account.5.sip_transport == 'tcp'}<P1748>1</P1748>{/if}
+    {if $account.5.sip_transport == 'tls'}<P1748>2</P1748>{/if}
+    {if $account.5.sip_transport == 'dns srv'}<P1748>1</P1748>{/if}
     <!-- SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1 -->
     <!-- Number: 0, 1 -->
     <!-- Mandatory -->
@@ -2103,10 +2103,10 @@
     <P1801>1</P1801>
     <!-- Account Name -->
     <!-- String -->
-    <P1817>{$display_name_6}</P1817>
+    <P1817>{$account.6.display_name}</P1817>
     <!-- SIP Server -->
     <!-- String -->
-    <P1802>{$server_address_6}</P1802>
+    <P1802>{$account.6.server_address}</P1802>
     <!-- Secondary SIP Server -->
     <!-- String -->
     <P2812></P2812>
@@ -2115,16 +2115,16 @@
     <P1803></P1803>
     <!-- SIP User ID -->
     <!-- String -->
-    <P1804>{$user_id_6}</P1804>
+    <P1804>{$account.6.user_id}</P1804>
     <!-- Authenticate ID -->
     <!-- String -->
-    <P1805>{$user_id_6}</P1805>
+    <P1805>{$account.6.user_id}</P1805>
     <!-- Authenticate password -->
     <!-- String -->
-    <P1806>{$user_password_6}</P1806>
+    <P1806>{$account.6.password}</P1806>
     <!-- Display Name -->
     <!-- String -->
-    <P1807>{$display_name_6}</P1807>
+    <P1807>{$account.6.display_name}</P1807>
     <!-- Voice Mail UserID -->
     <!-- String -->
     <P1826>*97</P1826>
@@ -2192,10 +2192,10 @@
     <!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TCP/TLS. Default is 2 -->
     <!-- Number: 0, 1, 2 -->
     <!-- Mandatory -->
-    {if $sip_transport_6 == 'udp'}<P1848>0</P1848>{/if}
-    {if $sip_transport_6 == 'tcp'}<P1848>1</P1848>{/if}
-    {if $sip_transport_6 == 'tls'}<P1848>2</P1848>{/if}
-    {if $sip_transport_6 == 'dns srv'}<P1848>1</P1848>{/if}
+    {if $account.6.sip_transport == 'udp'}<P1848>0</P1848>{/if}
+    {if $account.6.sip_transport == 'tcp'}<P1848>1</P1848>{/if}
+    {if $account.6.sip_transport == 'tls'}<P1848>2</P1848>{/if}
+    {if $account.6.sip_transport == 'dns srv'}<P1848>1</P1848>{/if}
     <!-- SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1 -->
     <!-- Number: 0, 1 -->
     <!-- Mandatory -->
