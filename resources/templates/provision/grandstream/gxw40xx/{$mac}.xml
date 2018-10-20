@@ -285,7 +285,7 @@
     <P271>1</P271>
     <!-- Primary SIP Server -->
     <!-- String: serveraddress  -->
-    <P47>{$server_address_1}</P47>
+    <P47>{$account.1.server_address}</P47>
     <!-- Failover SIP Server -->
     <!-- String: serveraddress -->
     <P967></P967>
@@ -811,7 +811,7 @@
     <P401>1</P401>
     <!-- Primary SIP Server -->
     <!-- String: serveraddress -->
-    <P747>{$server_address_2}</P747>
+    <P747>{$account.2.server_address}</P747>
     <!-- Failover SIP Server -->
     <!-- String: serveraddress -->
     <P987></P987>
@@ -1861,14 +1861,14 @@
     <!-- Request URI Routing ID -->
     <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
     <!-- String Max Length: 64 -->
-    <P4060>{$user_id_1}</P4060>
+    <P4060>{$account.1.user_id}</P4060>
     <!-- String Max Length: 64 -->
-    <P4090>{$user_id_1}</P4090>
+    <P4090>{$account.1.user_id}</P4090>
     <!-- String Max Length: 64 -->
     <!-- Mandatory -->
-    <P4120>{$user_password_1}</P4120>
+    <P4120>{$account.1.password}</P4120>
     <!-- String Max Length: 64 -->
-    <P4180>{$display_name_1}</P4180>
+    <P4180>{$account.1.display_name}</P4180>
     <!-- Number: 0 to 3 -->
     <!-- Mandatory -->
     <P4150>0</P4150>
@@ -1885,13 +1885,13 @@
     <!-- Request URI Routing ID -->
     <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
     <!-- String Max Length: 64 -->
-    <P4061>{$user_id_2}</P4061>
+    <P4061>{$account.2.user_id}</P4061>
     <!-- String Max Length: 64 -->
-    <P4091>{$user_id_2}</P4091>
+    <P4091>{$account.2.user_id}</P4091>
     <!-- String Max Length: 64 -->
-    <P4121>{$user_password_2}</P4121>
+    <P4121>{$account.2.password}</P4121>
     <!-- String Max Length: 64 -->
-    <P4181>{$display_name_2}</P4181>
+    <P4181>{$account.2.display_name}</P4181>
     <!-- Number: 0 to 3 -->
     <!-- Mandatory -->
     <P4151>0</P4151>
@@ -1908,14 +1908,14 @@
     <!-- Request URI Routing ID -->
     <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
     <!-- String Max Length: 64 -->
-    <P4062>{$user_id_3}</P4062>
+    <P4062>{$account.3.user_id}</P4062>
     <!-- String Max Length: 64 -->
-    <P4092>{$user_id_3}</P4092>
+    <P4092>{$account.3.user_id}</P4092>
     <!-- String Max Length: 64 -->
     <!-- Mandatory -->
-    <P4122>{$user_password_3}</P4122>
+    <P4122>{$account.3.password}</P4122>
     <!-- String Max Length: 64 -->
-    <P4182>{$display_name_3}</P4182>
+    <P4182>{$account.3.display_name}</P4182>
     <!-- Number: 0 to 3 -->
     <!-- Mandatory -->
     <P4152>0</P4152>
@@ -1933,13 +1933,13 @@
     <!-- Request URI Routing ID -->
     <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
     <!-- String Max Length: 64 -->
-    <P4063>{$user_id_4}</P4063>
+    <P4063>{$account.4.user_id}</P4063>
     <!-- String Max Length: 64 -->
-    <P4093>{$user_id_4}</P4093>
+    <P4093>{$account.4.user_id}</P4093>
     <!-- String Max Length: 64 -->
-    <P4123>{$user_password_4}</P4123>
+    <P4123>{$account.4.password}</P4123>
     <!-- String Max Length: 64 -->
-    <P4183>{$display_name_4}</P4183>
+    <P4183>{$account.4.display_name}</P4183>
     <!-- Number: 0 to 3 -->
     <!-- Mandatory -->
     <P4153>0</P4153>
@@ -1957,14 +1957,14 @@
     <!-- Request URI Routing ID -->
     <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
     <!-- String Max Length: 64 -->
-    <P4064>{$user_id_5}</P4064>
+    <P4064>{$account.5.user_id}</P4064>
     <!-- String Max Length: 64 -->
-    <P4094>{$user_id_5}</P4094>
+    <P4094>{$account.5.user_id}</P4094>
     <!-- String Max Length: 64 -->
     <!-- Mandatory -->
-    <P4124>{$user_password_5}</P4124>
+    <P4124>{$account.5.password}</P4124>
     <!-- String Max Length: 64 -->
-    <P4184>{$display_name_5}</P4184>
+    <P4184>{$account.5.display_name}</P4184>
     <!-- Number: 0 to 3 -->
     <!-- Mandatory -->
     <P4154>0</P4154>
@@ -1981,14 +1981,14 @@
     <!-- Request URI Routing ID -->
     <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
     <!-- String Max Length: 64 -->
-    <P4065>{$user_id_6}</P4065>
+    <P4065>{$account.6.user_id}</P4065>
     <!-- String Max Length: 64  -->
-    <P4095>{$user_id_6}</P4095>
+    <P4095>{$account.6.user_id}</P4095>
     <!-- String Max Length: 64 -->
     <!-- Mandatory -->
-    <P4125>{$user_password_6}</P4125>
+    <P4125>{$account.6.password}</P4125>
     <!-- String Max Length: 64 -->
-    <P4185>{$display_name_6}</P4185>
+    <P4185>{$account.6.display_name}</P4185>
     <!-- Number: 0 to 3 -->
     <!-- Mandatory -->
     <P4155>0</P4155>
@@ -2005,14 +2005,14 @@
     <!-- Request URI Routing ID -->
     <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
     <!-- String Max Length: 64 -->
-    <P4066>{$user_id_7}</P4066>
+    <P4066>{$account.7.user_id}</P4066>
     <!-- String Max Length: 64 -->
-    <P4096>{$user_id_7}</P4096>
+    <P4096>{$account.7.user_id}</P4096>
     <!-- String Max Length: 64 -->
     <!-- Mandatory -->
-    <P4126>{$user_password_7}</P4126>
+    <P4126>{$account.7.password}</P4126>
     <!-- String Max Length: 64 -->
-    <P4186>{$display_name_7}</P4186>
+    <P4186>{$account.7.display_name}</P4186>
     <!-- Number: 0 to 3 -->
     <!-- Mandatory -->
     <P4156>0</P4156>
@@ -2029,14 +2029,14 @@
     <!-- Request URI Routing ID -->
     <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
     <!-- String Max Length: 64 -->
-    <P4067>{$user_id_8}</P4067>
+    <P4067>{$account.8.user_id}</P4067>
     <!-- String Max Length: 64 -->
-    <P4097>{$user_id_8}</P4097>
+    <P4097>{$account.8.user_id}</P4097>
     <!-- String Max Length: 64 -->
     <!-- Mandatory -->
-    <P4127>{$user_password_8}</P4127>
+    <P4127>{$account.8.password}</P4127>
     <!-- String Max Length: 64 -->
-    <P4187>{$display_name_8}</P4187>
+    <P4187>{$account.8.display_name}</P4187>
     <!-- Number: 0 to 3 -->
     <!-- Mandatory -->
     <P4157>0</P4157>
@@ -2055,14 +2055,14 @@
     <!-- Request URI Routing ID -->
     <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
     <!-- String Max Length: 64 -->
-    <P4068>{$user_id_9}</P4068>
+    <P4068>{$account.9.user_id}</P4068>
     <!-- String Max Length: 64 -->
-    <P4098>{$user_id_9}</P4098>
+    <P4098>{$account.9.user_id}</P4098>
     <!-- String Max Length: 64 -->
     <!-- Mandatory -->
-    <P4128>{$user_password_9}</P4128>
+    <P4128>{$account.9.password}</P4128>
     <!-- String Max Length: 64 -->
-    <P4188>{$display_name_9}</P4188>
+    <P4188>{$account.9.display_name}</P4188>
     <!-- Number: 0 to 3 -->
     <!-- Mandatory -->
     <P4158>0</P4158>
@@ -2080,14 +2080,14 @@
     <!-- Request URI Routing ID -->
     <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
     <!-- String Max Length: 64 -->
-    <P4069>{$user_id_10}</P4069>
+    <P4069>{$account.10.user_id}</P4069>
     <!-- String Max Length: 64 -->
-    <P4099>{$user_id_10}</P4099>
+    <P4099>{$account.10.user_id}</P4099>
     <!-- String Max Length: 64 -->
     <!-- Mandatory -->
-    <P4129>{$user_password_10}</P4129>
+    <P4129>{$account.10.password}</P4129>
     <!-- String Max Length: 64 -->
-    <P4189>{$display_name_10}</P4189>
+    <P4189>{$account.10.display_name}</P4189>
     <!-- Number: 0 to 3 -->
     <!-- Mandatory -->
     <P4159>0</P4159>
@@ -2105,14 +2105,14 @@
     <!-- Request URI Routing ID -->
     <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
     <!-- String Max Length: 64 -->
-    <P4070>{$user_id_11}</P4070>
+    <P4070>{$account.11.user_id}</P4070>
     <!-- String Max Length: 64 -->
-    <P4100>{$user_id_11}</P4100>
+    <P4100>{$account.11.user_id}</P4100>
     <!-- String Max Length: 64 -->
     <!-- Mandatory -->
-    <P4130>{$user_password_11}</P4130>
+    <P4130>{$account.11.password}</P4130>
     <!-- String Max Length: 64 -->
-    <P4190>{$display_name_11}</P4190>
+    <P4190>{$account.11.display_name}</P4190>
     <!-- Number: 0 to 3 -->
     <!-- Mandatory -->
     <P4160>0</P4160>
@@ -2130,14 +2130,14 @@
     <!-- Request URI Routing ID -->
     <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
     <!-- String Max Length: 64 -->
-    <P4071>{$user_id_12}</P4071>
+    <P4071>{$account.12.user_id}</P4071>
     <!-- String Max Length: 64 -->
-    <P4101>{$user_id_12}</P4101>
+    <P4101>{$account.12.user_id}</P4101>
     <!-- String Max Length: 64 -->
     <!-- Mandatory -->
-    <P4131>{$user_password_12}</P4131>
+    <P4131>{$account.12.password}</P4131>
     <!-- String Max Length: 64 -->
-    <P4191>{$display_name_12}</P4191>
+    <P4191>{$account.12.display_name}</P4191>
     <!-- Number: 0 to 3 -->
     <!-- Mandatory -->
     <P4161>0</P4161>
@@ -2155,14 +2155,14 @@
     <!-- Request URI Routing ID -->
     <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
     <!-- String Max Length: 64 -->
-    <P4072>{$user_id_13}</P4072>
+    <P4072>{$account.13.user_id}</P4072>
     <!-- String Max Length: 64 -->
-    <P4102>{$user_id_13}</P4102>
+    <P4102>{$account.13.user_id}</P4102>
     <!-- String Max Length: 64 -->
     <!-- Mandatory -->
-    <P4132>{$user_password_13}</P4132>
+    <P4132>{$account.13.password}</P4132>
     <!-- String Max Length: 64 -->
-    <P4192>{$display_name_13}</P4192>
+    <P4192>{$account.13.display_name}</P4192>
     <!-- Number: 0 to 3 -->
     <!-- Mandatory -->
     <P4162>0</P4162>
@@ -2180,14 +2180,14 @@
     <!-- Request URI Routing ID -->
     <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
     <!-- String Max Length: 64 -->
-    <P4073>{$user_id_14}</P4073>
+    <P4073>{$account.14.user_id}</P4073>
     <!-- String Max Length: 64 -->
-    <P4103>{$user_id_14}</P4103>
+    <P4103>{$account.14.user_id}</P4103>
     <!-- String Max Length: 64 -->
     <!-- Mandatory -->
-    <P4133>{$user_password_14}</P4133>
+    <P4133>{$account.14.password}</P4133>
     <!-- String Max Length: 64 -->
-    <P4193>{$display_name_14}</P4193>
+    <P4193>{$account.14.display_name}</P4193>
     <!-- Number: 0 to 3 -->
     <!-- Mandatory -->
     <P4163>0</P4163>
@@ -2205,14 +2205,14 @@
     <!-- Request URI Routing ID -->
     <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
     <!-- String Max Length: 64 -->
-    <P4074>{$user_id_15}</P4074>
+    <P4074>{$account.15.user_id}</P4074>
     <!-- String Max Length: 64 -->
-    <P4104>{$user_id_15}</P4104>
+    <P4104>{$account.15.user_id}</P4104>
     <!-- String Max Length: 64 -->
     <!-- Mandatory -->
-    <P4134>{$user_password_15}</P4134>
+    <P4134>{$account.15.password}</P4134>
     <!-- String Max Length: 64 -->
-    <P4194>{$display_name_15}</P4194>
+    <P4194>{$account.15.display_name}</P4194>
     <!-- Number: 0 to 3 -->
     <!-- Mandatory -->
     <P4164>0</P4164>
@@ -2230,14 +2230,14 @@
     <!-- Request URI Routing ID -->
     <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
     <!-- String Max Length: 64 -->
-    <P4075>{$user_id_16}</P4075>
+    <P4075>{$account.16.user_id}</P4075>
     <!-- String Max Length: 64 -->
-    <P4105>{$user_id_16}</P4105>
+    <P4105>{$account.16.user_id}</P4105>
     <!-- String Max Length: 64 -->
     <!-- Mandatory -->
-    <P4135>{$user_password_16}</P4135>
+    <P4135>{$account.16.password}</P4135>
     <!-- String Max Length: 64 -->
-    <P4195>{$display_name_16}</P4195>
+    <P4195>{$account.16.display_name}</P4195>
     <!-- Number: 0 to 3 -->
     <!-- Mandatory -->
     <P4165>0</P4165>
@@ -2255,14 +2255,14 @@
     <!-- Request URI Routing ID -->
     <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
     <!-- String Max Length: 64 -->
-    <P4076>{$user_id_17}</P4076>
+    <P4076>{$account.17.user_id}</P4076>
     <!-- String Max Length: 64 -->
-    <P4106>{$user_id_17}</P4106>
+    <P4106>{$account.17.user_id}</P4106>
     <!-- String Max Length: 64 -->
     <!-- Mandatory -->
-    <P4136>{$user_password_17}</P4136>
+    <P4136>{$account.17.password}</P4136>
     <!-- String Max Length: 64 -->
-    <P4196>{$display_name_17}</P4196>
+    <P4196>{$account.17.display_name}</P4196>
     <!-- Number: 0 to 3 -->
     <!-- Mandatory -->
     <P4166>0</P4166>
@@ -2280,14 +2280,14 @@
     <!-- Request URI Routing ID -->
     <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
     <!-- String Max Length: 64 -->
-    <P4077>{$user_id_18}</P4077>
+    <P4077>{$account.18.user_id}</P4077>
     <!-- String Max Length: 64 -->
-    <P4107>{$user_id_18}</P4107>
+    <P4107>{$account.18.user_id}</P4107>
     <!-- String Max Length: 64 -->
     <!-- Mandatory -->
-    <P4137>{$user_password_18}</P4137>
+    <P4137>{$account.18.user_password}</P4137>
     <!-- String Max Length: 64 -->
-    <P4197>{$display_name_18}</P4197>
+    <P4197>{$account.18.display_name}</P4197>
     <!-- Number: 0 to 3 -->
     <!-- Mandatory -->
     <P4167>0</P4167>
@@ -2305,14 +2305,14 @@
     <!-- Request URI Routing ID -->
     <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
     <!-- String Max Length: 64 -->
-    <P4078>{$user_id_19}</P4078>
+    <P4078>{$account.19.user_id}</P4078>
     <!-- String Max Length: 64 -->
-    <P4108>{$user_id_19}</P4108>
+    <P4108>{$account.19.user_id}</P4108>
     <!-- String Max Length: 64 -->
     <!-- Mandatory -->
-    <P4138>{$user_password_19}</P4138>
+    <P4138>{$account.19.password}</P4138>
     <!-- String Max Length: 64 -->
-    <P4198>{$display_name_19}</P4198>
+    <P4198>{$account.19.display_name}</P4198>
     <!-- Number: 0 to 3 -->
     <!-- Mandatory -->
     <P4168>0</P4168>
@@ -2330,14 +2330,14 @@
     <!-- Request URI Routing ID -->
     <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
     <!-- String Max Length: 64 -->
-    <P4079>{$user_id_20}</P4079>
+    <P4079>{$account.20.user_id}</P4079>
     <!-- String Max Length: 64 -->
-    <P4109>{$user_id_20}</P4109>
+    <P4109>{$account.20.user_id}</P4109>
     <!-- String Max Length: 64 -->
     <!-- Mandatory -->
-    <P4139>{$user_password_20}</P4139>
+    <P4139>{$account.20.password}</P4139>
     <!-- String Max Length: 64 -->
-    <P4199>{$display_name_20}</P4199>
+    <P4199>{$account.20.display_name}</P4199>
     <!-- Number: 0 to 3 -->
     <!-- Mandatory -->
     <P4169>0</P4169>
@@ -2355,14 +2355,14 @@
     <!-- Request URI Routing ID -->
     <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
     <!-- String Max Length: 64 -->
-    <P4080>{$user_id_21}</P4080>
+    <P4080>{$account.21.user_id}</P4080>
     <!-- String Max Length: 64 -->
-    <P4110>{$user_id_21}</P4110>
+    <P4110>{$account.21.user_id}</P4110>
     <!-- String Max Length: 64 -->
     <!-- Mandatory -->
-    <P4140>{$user_password_21}</P4140>
+    <P4140>{$account.21.password}</P4140>
     <!-- String Max Length: 64 -->
-    <P4252>{$display_name_21}</P4252>
+    <P4252>{$account.21.display_name}</P4252>
     <!-- Number: 0 to 3 -->
     <!-- Mandatory -->
     <P4170>0</P4170>
@@ -2380,14 +2380,14 @@
     <!-- Request URI Routing ID -->
     <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
     <!-- String Max Length: 64 -->
-    <P4081>{$user_id_22}</P4081>
+    <P4081>{$account.22.user_id}</P4081>
     <!-- String Max Length: 64 -->
-    <P4111>{$user_id_22}</P4111>
+    <P4111>{$account.22.user_id}</P4111>
     <!-- String Max Length: 64 -->
     <!-- Mandatory -->
-    <P4141>{$user_password_22}</P4141>
+    <P4141>{$account.22.password}</P4141>
     <!-- String Max Length: 64 -->
-    <P4253>{$display_name_22}</P4253>
+    <P4253>{$account.22.display_name}</P4253>
     <!-- Number: 0 to 3 -->
     <!-- Mandatory -->
     <P4171>0</P4171>
@@ -2405,14 +2405,14 @@
     <!-- Request URI Routing ID -->
     <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
     <!-- String Max Length: 64 -->
-    <P4082>{$user_id_23}</P4082>
+    <P4082>{$account.23.user_id}</P4082>
     <!-- String Max Length: 64 -->
-    <P4112>{$user_id_23}</P4112>
+    <P4112>{$account.23.user_id}</P4112>
     <!-- String Max Length: 64 -->
     <!-- Mandatory -->
-    <P4142>{$user_password_23}</P4142>
+    <P4142>{$account.23.password}</P4142>
     <!-- String Max Length: 64 -->
-    <P4254>{$display_name_23}</P4254>
+    <P4254>{$account.23.display_name}</P4254>
     <!-- Number: 0 to 3 -->
     <!-- Mandatory -->
     <P4172>0</P4172>
@@ -2430,14 +2430,14 @@
     <!-- Request URI Routing ID -->
     <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
     <!-- String Max Length: 64 -->
-    <P4083>{$user_id_24}</P4083>
+    <P4083>{$account.24.user_id}</P4083>
     <!-- String Max Length: 64 -->
-    <P4113>{$user_id_24}</P4113>
+    <P4113>{$account.24.user_id}</P4113>
     <!-- String Max Length: 64 -->
     <!-- Mandatory -->
-    <P4143>{$user_password_24}</P4143>
+    <P4143>{$account.24.password}</P4143>
     <!-- String Max Length: 64 -->
-    <P4255>{$display_name_24}</P4255>
+    <P4255>{$account.24.display_name}</P4255>
     <!-- Number: 0 to 3 -->
     <!-- Mandatory -->
     <P4173>0</P4173>
