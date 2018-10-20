@@ -362,8 +362,8 @@
 
 <!-- NAT Traversal. 0 - NAT No, 1 - STUN, 2 - Keep-alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default value is 2 -->
 <!-- Number: 0, 1, 2, 3, 4, 5 -->
-{if isset($account.1.grandstream_nat_traversal)}
-<P52>{$account.1.grandstream_nat_traversal}</P52>
+{if isset($grandstream_nat_traversal)}
+<P52>{$grandstream_nat_traversal}</P52>
 {else}
 <P52>0</P52>
 {/if}
