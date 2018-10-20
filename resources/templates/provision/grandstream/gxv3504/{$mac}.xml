@@ -475,19 +475,19 @@
 <P270></P270>
 
 <!-- SIP server -->
-<P47>{$server_address_1}</P47>
+<P47>{$account.1.server_address}</P47>
 
 <!-- SIP proxy server-->
 <P48></P48>
 
 <!-- SIP password-->
-<P34>{$user_password_1}</P34>
+<P34>{$account.1.password}</P34>
 
 <!-- SIP user id-->
-<P35>{$user_id_1}</P35>
+<P35>{$account.1.user_id}</P35>
 
 <!-- SIP authenticate id-->
-<P36>{$user_id_1}</P36>
+<P36>{$account.1.user_id}</P36>
 
 <!-- SIP stun server -->
 <P76></P76>
