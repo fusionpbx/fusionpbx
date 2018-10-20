@@ -27,11 +27,11 @@
 
 <!--  SIP Server -->
 <!--  String -->
-<P47>{$account.1.server.1.address}</P47>
+<P47>{$account.1.server_address}</P47>
 
 <!--  Secondary SIP Server -->
 <!--  String -->
-<P2312>{$account.1.server.2.address}</P2312>
+<P2312>{$account.1.server_address_secondary}</P2312>
 
 <!--  Outbound Proxy -->
 <!--  String -->
