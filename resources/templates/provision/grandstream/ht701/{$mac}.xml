@@ -304,8 +304,8 @@
 <!-- NAT Traversal (STUN) 0 - No, 2 - No but send keep-alive, 1 - Yes, 3 - UPnP -->
 <!-- Number: 0, 1, 2, 3 -->
 <!-- Mandatory -->
-{if isset($account.1.grandstream_nat_traversal)}
-<P52>{$account.1.grandstream_nat_traversal}</P52>
+{if isset($grandstream_nat_traversal_1)}
+<P52>{$grandstream_nat_traversal_1}</P52>
 {else}
 <P52>0</P52>
 {/if}
