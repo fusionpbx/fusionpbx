@@ -236,24 +236,24 @@
 <P270></P270>
 
 <!-- SIP Server -->
-<P47>{$server_address_1}</P47>
+<P47>{$account.1.server_address}</P47>
 
 
 <!-- SIP User ID -->
-<P35>{$user_id_1}</P35>
+<P35>{$account.1.user_id}</P35>
 
 
 <!-- SIP Authenticate ID -->
-<P36>{$user_id_1}</P36>
+<P36>{$account.1.user_id}</P36>
 
 <!-- SIP Authenticate Password -->
-<P34>{$user_password_1}</P34>
+<P34>{$account.1.password}</P34>
 
 <!-- Voice Mail UserID -->
 <P33>*97</P33>
 
 <!-- Name (Display Name, e.g., John Doe) -->
-<P3>{$display_name_1}</P3>
+<P3>{$account.1.display_name}</P3>
 
 <!-- Tel URI. 0 - Disable, 1 - User=Phone, 2 - Enabled. Default value is 0 -->
 <!-- Number: 0, 1, 2 -->
@@ -674,22 +674,22 @@
 <P417></P417>
 
 <!-- SIP Server -->
-<P402>{$server_address_2}</P402>
+<P402>{$account.2.server_address}</P402>
 
 <!-- SIP User ID -->
-<P404>{$user_id_2}</P404>
+<P404>{$account.2.user_id}</P404>
 
 <!-- SIP Authenticate ID -->
-<P405>{$user_id_2}</P405>
+<P405>{$account.2.user_id}</P405>
 
 <!-- SIP Authenticate Password -->
-<P406>{$user_password_2}</P406>
+<P406>{$account.2.password}</P406>
 
 <!-- Voice Mail UserID -->
 <P426>*97</P426>
 
 <!-- Name (Display name, e.g., John Doe) -->
-<P407>{$display_name_2}</P407>
+<P407>{$account.2.display_name}</P407>
 
 <!-- Tel URL Support. 0 - Disabled, 1 - User=Phone, 2 - Enabled. Default value is 0 -->
 <!-- Number: 0, 1, 2 -->
@@ -1097,22 +1097,22 @@
 <P517></P517>
 
 <!-- SIP Server -->
-<P502>{$server_address_3}</P502>
+<P502>{$account.3.server_address}</P502>
 
 <!-- SIP User ID -->
-<P504>{$user_id_3}</P504>
+<P504>{$account.3.user_id}</P504>
 
 <!-- SIP Authenticate ID -->
-<P505>{$user_id_3}</P505>
+<P505>{$account.3.user_id}</P505>
 
 <!-- SIP Authenticate Password -->
-<P506>{$user_password_3}</P506>
+<P506>{$account.3.password}</P506>
 
 <!-- Voice Mail UserID -->
 <P526>*97</P526> =
 
 <!-- Name (Display name: John Doe) -->
-<P507>{$display_name_3}</P507>
+<P507>{$account.3.display_name}</P507>
 
 <!-- Tel URL Support. 0 - Disable, 1 - User=Phone, 2 - Enabled. Default value is 0 -->
 <!-- Number: 0, 1, 2 -->
