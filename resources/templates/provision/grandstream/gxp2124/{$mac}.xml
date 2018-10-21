@@ -30,7 +30,7 @@
     <P35>{$account.1.user_id}</P35>
     <!-- Authenticate ID -->
     <!-- String -->
-    <P36>{$account.1.user_id}</P36>
+    <P36>{$account.1.auth_id}</P36>
     <!-- Authenticate Password -->
     <!-- String -->
     <P34>{$account.1.password}</P34>
@@ -463,7 +463,7 @@
     <P404>{$account.2.user_id}</P404>
     <!-- Authenticate ID -->
     <!-- String -->
-    <P405>{$account.2.user_id}</P405>
+    <P405>{$account.2.auth_id}</P405>
     <!-- Authenticate password -->
     <!-- String -->
     <P406>{$account.2.password}</P406>
@@ -895,7 +895,7 @@
     <P504>{$account.3.user_id}</P504>
     <!-- Authenticate ID -->
     <!-- String -->
-    <P505>{$account.3.user_id}</P505>
+    <P505>{$account.3.auth_id}</P505>
     <!-- Authenticate Password -->
     <!-- String -->
     <P506>{$account.3.password}</P506>
@@ -1326,7 +1326,7 @@
     <P604>{$account.4.user_id}</P604>
     <!-- Authenticate ID -->
     <!-- String -->
-    <P605>{$account.4.user_id}</P605>
+    <P605>{$account.4.auth_id}</P605>
     <!-- Authenticate password -->
     <!-- String -->
     <P606>{$account.4.password}</P606>
