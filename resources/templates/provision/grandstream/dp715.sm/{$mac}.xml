@@ -741,16 +741,16 @@
 <P4300>0</P4300>
 
 <!--SIP User ID -->
-<P4060>{$user_id_1}</P4060>
+<P4060>{$account.1.user_id}</P4060>
 
 <!--Authenticate ID -->
-<P4090>{$user_id_2}</P4090>
+<P4090>{$account.1.user_id}</P4090>
 
 <!--Authenticate Password -->
-<P4120>{$user_password_1}</P4120>
+<P4120>{$account.1.password}</P4120>
 
 <!--Name -->
-<P4180>{$displayname_1}</P4180>
+<P4180>{$account.1.display_name}</P4180>
 
 <!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
 <P4150>0</P4150>
@@ -767,16 +767,16 @@
 <P4301>0</P4301>
 
 <!--SIP User ID -->
-<P4061>{$user_id_2}</P4061>
+<P4061>{$account.2.user_id}</P4061>
 
 <!--Authenticate ID -->
-<P4091>{$user_id_2}</P4091>
+<P4091>{$account.2.user_id}</P4091>
 
 <!--Authenticate Password -->
-<P4121>{$user_password_2}</P4121>
+<P4121>{$account.2.password}</P4121>
 
 <!--Name -->
-<P4181>{$displayname_2}</P4181>
+<P4181>{$account.2.display_name}</P4181>
 
 <!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
 <P4151>0</P4151>
@@ -792,16 +792,16 @@
 <P4302>0</P4302>
 
 <!--SIP User ID -->
-<P4062>{$user_id_3}</P4062>
+<P4062>{$account.3.user_id}</P4062>
 
 <!--Authenticate ID -->
-<P4092>{$user_id_3}</P4092>
+<P4092>{$account.3.user_id}</P4092>
 
 <!--Authenticate Password -->
-<P4122>{$password_3}</P4122>
+<P4122>{$account.3.password}</P4122>
 
 <!--Name -->
-<P4182>{$displayname_3}</P4182>
+<P4182>{$account.3.display_name}</P4182>
 
 <!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
 <P4152>0</P4152>
@@ -817,16 +817,16 @@
 <P4303>0</P4303>
 
 <!--SIP User ID -->
-<P4063>{$user_id_4}</P4063>
+<P4063>{$account.4.user_id}</P4063>
 
 <!--Authenticate ID -->
-<P4093>{$user_id_4}</P4093>
+<P4093>{$account.4.user_id}</P4093>
 
 <!--Authenticate Password -->
-<P4123>{$user_password_4}</P4123>
+<P4123>{$account.4.password}</P4123>
 
 <!--Name -->
-<P4183>{$displayname_4}</P4183>
+<P4183>{$account.4.display_name}</P4183>
 
 <!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
 <P4153>0</P4153>
@@ -842,16 +842,16 @@
 <P4304>0</P4304>
 
 <!--SIP User ID -->
-<P4064>{$user_id_5}</P4064>
+<P4064>{$account.5.user_id}</P4064>
 
 <!--Authenticate ID -->
-<P4094>{$user_id_5}</P4094>
+<P4094>{$account.5.user_id}</P4094>
 
 <!--Authenticate Password -->
-<P4124>{$user_password_5}</P4124>
+<P4124>{$account.5.password}</P4124>
 
 <!--Name -->
-<P4184>{$displayname_5}</P4184>
+<P4184>{$account.5.display_name}</P4184>
 
 <!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
 <P4154>0</P4154>
