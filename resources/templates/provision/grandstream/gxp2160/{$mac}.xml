@@ -50,11 +50,11 @@
 
 <!--  SIP User ID -->
 <!--  String -->
-<P35>{$user_id}</P35>
+<P35>{$account.1.user_id}</P35>
 
 <!--  Authenticate ID -->
 <!--  String -->
-<P36>{$auth_id}</P36>
+<P36>{$account.1.auth_id}</P36>
 
 <!--  Authenticate Password -->
 <!--  String -->
@@ -100,8 +100,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0. -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($nat_traversal_1) }
-<P52>{$nat_traversal_1}</P52>
+{if isset($grandstream_nat_traversal) }
+<P52>{$grandstream_nat_traversal}</P52>
 {else}
 <P52>0</P52>
 {/if}
@@ -869,8 +869,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($account.2.nat_traversal) }
-<P414>{$account.2.nat_traversal}</P414>
+{if isset($grandstream_nat_traversal) }
+<P414>{$grandstream_nat_traversal}</P414>
 {else}
 <P414>0</P414>
 {/if}
@@ -1623,8 +1623,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($account.3.nat_traversal) }
-<P514>{$account.3.nat_traversal}</P514>
+{if isset($grandstream_nat_traversal) }
+<P514>{$grandstream_nat_traversal}</P514>
 {else}
 <P514>0</P514>
 {/if}
@@ -2376,8 +2376,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($account.4.nat_traversal) }
-<P614>{$account.4.nat_traversal}</P614>
+{if isset($grandstream_nat_traversal) }
+<P614>{$grandstream_nat_traversal}</P614>
 {else}
 <P614>0</P614>
 {/if}
@@ -3131,8 +3131,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($account.5.nat_traversal) }
-<P1714>{$account.5.nat_traversal}</P1714>
+{if isset($grandstream_nat_traversal) }
+<P1714>{$grandstream_nat_traversal}</P1714>
 {else}
 <P1714>0</P1714>
 {/if}
@@ -3885,8 +3885,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($account.6.nat_traversal) }
-<P1814>{$account.6.nat_traversal}</P1814>
+{if isset($grandstream_nat_traversal) }
+<P1814>{$grandstream_nat_traversal}</P1814>
 {else}
 <P1814>0</P1814>
 {/if}
