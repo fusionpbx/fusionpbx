@@ -212,7 +212,7 @@
 
 <!-- SIP Server -->
 <!-- String -->
-<P47>{$server_address_1}</P47>
+<P47>{$account.1.server_address}</P47>
 
 <!-- Secondary SIP Server -->
 <!-- String -->
@@ -766,7 +766,7 @@
 
 <!-- SIP Server -->
 <!-- String -->
-<P402>{$server_address_2}</P402>
+<P402>{$account.2.server_address}</P402>
 
 <!-- Secondary SIP Server -->
 <!-- String -->
@@ -778,15 +778,15 @@
 
 <!-- SIP User ID -->
 <!-- String -->
-<P404>{$user_id_2}</P404>
+<P404>{$account.2.user_id}</P404>
 
 <!-- Authenticate ID -->
 <!-- String -->
-<P405>{$user_id_2}</P405>
+<P405>{$account.2.auth_id}</P405>
 
 <!-- Authenticate password -->
 <!-- String -->
-<P406>{$user_password_2}</P406>
+<P406>{$account.2.password}</P406>
 
 <!-- Display Name -->
 <!-- String -->
