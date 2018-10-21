@@ -17,11 +17,11 @@
 
 <!-- Account Name -->
 <!-- String -->
-<P270>{$display_name_1}</P270>
+<P270>{$account.1.display_name}</P270>
 
 <!-- SIP Server -->
 <!-- String -->
-<P47>{$server_address_1}</P47>
+<P47>{$account.1.server_address}</P47>
 
 <!-- Secondary SIP Server -->
 <!-- String -->
@@ -33,19 +33,19 @@
 
 <!-- SIP User ID -->
 <!-- String -->
-<P35>{$user_id_1}</P35>
+<P35>{$account.1.user_id}</P35>
 
 <!-- Authenticate ID -->
 <!-- String -->
-<P36>{$user_id_1}</P36>
+<P36>{$account.1.auth_id}</P36>
 
 <!-- Authenticate Password -->
 <!-- String -->
-<P34>{$user_password_1}</P34>
+<P34>{$account.1.password}</P34>
 
 <!-- Display Name -->
 <!-- String -->
-<P3>{$display_name_1}</P3>
+<P3>{$account.1.display_name}</P3>
 
 <!-- Voice Mail UserID -->
 <!-- String -->
@@ -571,11 +571,11 @@
 
 <!-- Account Name -->
 <!-- String -->
-<P417>{$display_name_2}</P417>
+<P417>{$account.2.display_name}</P417>
 
 <!-- SIP Server -->
 <!-- String -->
-<P402>{$server_address_2}</P402>
+<P402>{$account.2.server_address}</P402>
 
 <!-- Secondary SIP Server -->
 <!-- String -->
@@ -587,19 +587,19 @@
 
 <!-- SIP User ID -->
 <!-- String -->
-<P404>{$user_id_2}</P404>
+<P404>{$account.2.user_id}</P404>
 
 <!-- Authenticate ID -->
 <!-- String -->
-<P405>{$user_id_2}</P405>
+<P405>{$account.2.auth_id}</P405>
 
 <!-- Authenticate password -->
 <!-- String -->
-<P406>{$user_password_2}</P406>
+<P406>{$account.2.password}</P406>
 
 <!-- Display Name -->
 <!-- String -->
-<P407>{$display_name_2}</P407>
+<P407>{$account.2.display_name}</P407>
 
 <!-- Voice Mail UserID -->
 <!-- String -->
