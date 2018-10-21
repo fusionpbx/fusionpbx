@@ -782,7 +782,7 @@
 
 <!-- Authenticate ID -->
 <!-- String -->
-<P405>{$account.2.user_id}</P405>
+<P405>{$account.2.auth_id}</P405>
 
 <!-- Authenticate password -->
 <!-- String -->
