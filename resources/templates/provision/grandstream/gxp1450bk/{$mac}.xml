@@ -37,7 +37,7 @@
 
 <!-- Authenticate ID -->
 <!-- String -->
-<P36>{$account.1.user_id}</P36>
+<P36>{$account.1.auth_id}</P36>
 
 <!-- Authenticate Password -->
 <!-- String -->
@@ -591,7 +591,7 @@
 
 <!-- Authenticate ID -->
 <!-- String -->
-<P405>{$account.2.user_id}</P405>
+<P405>{$account.2.auth_id}</P405>
 
 <!-- Authenticate password -->
 <!-- String -->
