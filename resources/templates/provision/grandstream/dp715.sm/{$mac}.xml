@@ -750,7 +750,7 @@
 <P4120>{$account.1.password}</P4120>
 
 <!--Name -->
-<P4180>{$account.1.displayname}</P4180>
+<P4180>{$account.1.display_name}</P4180>
 
 <!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
 <P4150>0</P4150>
@@ -776,7 +776,7 @@
 <P4121>{$account.2.password}</P4121>
 
 <!--Name -->
-<P4181>{$account.2.displayname}</P4181>
+<P4181>{$account.2.display_name}</P4181>
 
 <!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
 <P4151>0</P4151>
@@ -801,7 +801,7 @@
 <P4122>{$account.3.password}</P4122>
 
 <!--Name -->
-<P4182>{$account.3.displayname}</P4182>
+<P4182>{$account.3.display_name}</P4182>
 
 <!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
 <P4152>0</P4152>
@@ -826,7 +826,7 @@
 <P4123>{$account.4.password}</P4123>
 
 <!--Name -->
-<P4183>{$account.4.displayname}</P4183>
+<P4183>{$account.4.display_name}</P4183>
 
 <!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
 <P4153>0</P4153>
@@ -851,7 +851,7 @@
 <P4124>{$account.5.password}</P4124>
 
 <!--Name -->
-<P4184>{$account.5.displayname}</P4184>
+<P4184>{$account.5.display_name}</P4184>
 
 <!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
 <P4154>0</P4154>
