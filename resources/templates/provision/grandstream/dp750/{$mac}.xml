@@ -19,7 +19,7 @@
 <!-- Profile Active.  0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
 <!-- Mandatory -->
-{if isset($user_password_1)}
+{if isset($account.1.password)}
 <P271>1</P271>
 {else}
 <P271>0</P271>
@@ -27,7 +27,7 @@
 
 <!-- Primary SIP Server -->
 <!-- String: serveraddress  -->
-<P47>{$server_address_1}</P47>
+<P47>{$account.1.server_address}</P47>
 
 <!-- Failover SIP Server -->
 <!-- String: serveraddress  -->
@@ -40,7 +40,7 @@
 
 <!-- Outbound Proxy -->
 <!-- String: serveraddress  -->
-<P48>{$outbound_proxy_1}</P48>
+<P48>{$account.1.outbound_proxy}</P48>
 
 <!-- Voice Mail Access Number -->
 <!-- String -->
@@ -106,10 +106,10 @@
 <!-- Number: 0,1,2 -->
 <!-- Mandatory -->
 {$tp=0}
-{if $sip_transport_1 == 'udp'}{$tp=0}{/if}
-{if $sip_transport_1 == 'tcp'}{$tp=1}{/if}
-{if $sip_transport_1 == 'tls'}{$tp=2}{/if}
-{if $sip_transport_1 == 'dns srv'}{$tp=1}{/if}
+{if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.1.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.1.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.1.sip_transport == 'dns srv'}{$tp=1}{/if}
 <P130>{$tp}</P130>
 
 <!-- SIP Registration. 0 - no, 1 - yes -->
@@ -552,7 +552,7 @@
 <!-- Profile Active.  0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
 <!-- Mandatory -->
-{if isset($user_password_2)}
+{if isset($account.2.password)}
 <P401>1</P401>
 {else}
 <P401>0</P401>
@@ -560,7 +560,7 @@
 
 <!-- Primary SIP Server -->
 <!-- String: serveraddress  -->
-<P747>{$server_address_2}</P747>
+<P747>{$account.2.server_address}</P747>
 
 <!-- Failover SIP Server -->
 <!-- String: serveraddress  -->
@@ -573,7 +573,7 @@
 
 <!-- Outbound Proxy -->
 <!-- String: serveraddress  -->
-<P748>{$outbound_proxy_2}</P748>
+<P748>{$account.2.outbound_proxy}</P748>
 
 <!-- Voice Mail Access Number -->
 <!-- String -->
@@ -596,8 +596,8 @@
 <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP . -->
 <!-- Number: 0,1,2,3 -->
 <!-- Mandatory  -->
-{if isset($dns_mode_2)}
-<P702>{$dns_mode_2}</P702>
+{if isset($account.2.dns_mode)}
+<P702>{$account.2.dns_mode}</P702>
 {else}
 <P702>0</P702>
 {/if}
@@ -639,10 +639,10 @@
 <!-- Number: 0,1,2 -->
 <!-- Mandatory -->
 {$tp=0}
-{if $sip_transport_2 == 'udp'}{$tp=0}{/if}
-{if $sip_transport_2 == 'tcp'}{$tp=1}{/if}
-{if $sip_transport_2 == 'tls'}{$tp=2}{/if}
-{if $sip_transport_2 == 'dns srv'}{$tp=1}{/if}
+{if $account.2.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.2.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.2.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.2.sip_transport == 'dns srv'}{$tp=1}{/if}
 <P830>{$tp}</P830>
 
 <!-- SIP Registration. 0 - no, 1 - yes -->
@@ -1077,14 +1077,14 @@
 <!-- Profile Active.  0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
 <!-- Mandatory -->
-{if isset($user_password_3)}
+{if isset($account.3.password)}
 <P501>1</P501>
 {else}
 <P501>0</P501>
 {/if}
 <!-- Primary SIP Server -->
 <!-- String: serveraddress  -->
-<P547>{$server_address_3}</P547>
+<P547>{$account.3.server_address}</P547>
 
 <!-- Failover SIP Server -->
 <!-- String: serveraddress  -->
@@ -1097,7 +1097,7 @@
 
 <!-- Outbound Proxy -->
 <!-- String: serveraddress  -->
-<P548>{$outbound_proxy_3}</P548>
+<P548>{$account.3.outbound_proxy}</P548>
 
 <!-- Voice Mail Access Number -->
 <!-- String -->
@@ -1120,8 +1120,8 @@
 <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP . -->
 <!-- Number: 0,1,2,3 -->
 <!-- Mandatory  -->
-{if isset($dns_mode_3) }
-<P502>{$dns_mode_3}</P502>
+{if isset($account.3.dns_mode) }
+<P502>{$account.3.dns_mode}</P502>
 {else}
 <P502>0</P502>
 {/if}
@@ -1163,10 +1163,10 @@
 <!-- Number: 0,1,2 -->
 <!-- Mandatory -->
 {$tp=0}
-{if $sip_transport_3 == 'udp'}{$tp=0}{/if}
-{if $sip_transport_3 == 'tcp'}{$tp=1}{/if}
-{if $sip_transport_3 == 'tls'}{$tp=2}{/if}
-{if $sip_transport_3 == 'dns srv'}{$tp=1}{/if}
+{if $account.3.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.3.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.3.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.3.sip_transport == 'dns srv'}{$tp=1}{/if}
 <P530>{$tp}</P530>
 
 <!-- SIP Registration. 0 - no, 1 - yes -->
@@ -1601,7 +1601,7 @@
 <!-- Profile Active.  0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
 <!-- Mandatory -->
-{if isset($user_password_4)}
+{if isset($account.4.password)}
 <P601>1</P601>
 {else}
 <P601>0</P601>
@@ -1609,7 +1609,7 @@
 
 <!-- Primary SIP Server -->
 <!-- String: serveraddress  -->
-<P602>{$server_address_4}</P602>
+<P602>{$account.4.server_address}</P602>
 
 <!-- Failover SIP Server -->
 <!-- String: serveraddress  -->
@@ -1622,7 +1622,7 @@
 
 <!-- Outbound Proxy -->
 <!-- String: serveraddress  -->
-<P603>{$outbound_proxy_4}</P603>
+<P603>{$account.4.outbound_proxy}</P603>
 
 <!-- Voice Mail Access Number -->
 <!-- String -->
@@ -1645,8 +1645,8 @@
 <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP . -->
 <!-- Number: 0,1,2,3 -->
 <!-- Mandatory  -->
-{if isset($dns_mode_4) }
-<P608>{$dns_mode_4}</P608>
+{if isset($account.4.dns_mode) }
+<P608>{$account.4.dns_mode}</P608>
 {else}
 <P608>0</P608>
 {/if}
@@ -1688,10 +1688,10 @@
 <!-- Number: 0,1,2 -->
 <!-- Mandatory -->
 {$tp=0}
-{if $sip_transport_4 == 'udp'}{$tp=0}{/if}
-{if $sip_transport_4 == 'tcp'}{$tp=1}{/if}
-{if $sip_transport_4 == 'tls'}{$tp=2}{/if}
-{if $sip_transport_4 == 'dns srv'}{$tp=1}{/if}
+{if $account.4.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.4.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.4.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.4.sip_transport == 'dns srv'}{$tp=1}{/if}
 <P4648>{$tp}</P4648>
 
 <!-- SIP Registration. 0 - no, 1 - yes -->
@@ -2143,11 +2143,11 @@
 <!-- Handset name. Displaying in handset screen. -->
 <!-- Strings: maximum 10 characters. -->
 <!-- Mandatory -->
-<P27020>{$user_id_1}</P27020>
-<P27021>{$user_id_2}</P27021>
-<P27022>{$user_id_3}</P27022>
-<P27023>{$user_id_4}</P27023>
-<P27024>{$user_id_5}</P27024>
+<P27020>{$account.1.user_id}</P27020>
+<P27021>{$account.2.user_id}</P27021>
+<P27022>{$account.3.user_id}</P27022>
+<P27023>{$account.4.user_id}</P27023>
+<P27024>{$account.5.user_id}</P27024>
 
 <!-- Handset Phonebook. 1 - PB1, 2 - PB2, 3 - PB3, 4 - PB4, 5 - PB5 -->
 <!-- Mandatory -->
@@ -2169,52 +2169,52 @@
 <!-- ################################ -->
 
 <!-- SIP User ID for SIP account 1 - 10. -->
-<P4060>{$user_id_1}</P4060>
-<P4061>{$user_id_2}</P4061>
-<P4062>{$user_id_3}</P4062>
-<P4063>{$user_id_4}</P4063>
-<P4064>{$user_id_5}</P4064>
-<P4065>{$user_id_6}</P4065>
-<P4066>{$user_id_7}</P4066>
-<P4067>{$user_id_8}</P4067>
-<P4068>{$user_id_9}</P4068>
-<P4069>{$user_id_10}</P4069>
+<P4060>{$account.1.user_id}</P4060>
+<P4061>{$account.2.user_id}</P4061>
+<P4062>{$account.3.user_id}</P4062>
+<P4063>{$account.4.user_id}</P4063>
+<P4064>{$account.5.user_id}</P4064>
+<P4065>{$account.6.user_id}</P4065>
+<P4066>{$account.7.user_id}</P4066>
+<P4067>{$account.8.user_id}</P4067>
+<P4068>{$account.9.user_id}</P4068>
+<P4069>{$account.10.user_id}</P4069>
 
 <!-- Authenticate ID for SIP account 1 - 10. -->
-<P4090>{$auth_id_1}</P4090>
-<P4091>{$auth_id_2}</P4091>
-<P4092>{$auth_id_3}</P4092>
-<P4093>{$auth_id_4}</P4093>
-<P4094>{$auth_id_5}</P4094>
-<P4095>{$auth_id_6}</P4095>
-<P4096>{$auth_id_7}</P4096>
-<P4097>{$auth_id_8}</P4097>
-<P4098>{$auth_id_9}</P4098>
-<P4099>{$auth_id_10}</P4099>
+<P4090>{$account.1.auth_id}</P4090>
+<P4091>{$account.2.auth_id}</P4091>
+<P4092>{$account.3.auth_id}</P4092>
+<P4093>{$account.4.auth_id}</P4093>
+<P4094>{$account.5.auth_id}</P4094>
+<P4095>{$account.6.auth_id}</P4095>
+<P4096>{$account.7.auth_id}</P4096>
+<P4097>{$account.8.auth_id}</P4097>
+<P4098>{$account.9.auth_id}</P4098>
+<P4099>{$account.10.auth_id}</P4099>
 
 <!-- Password for SIP account 1 - 10 -->
-<P4120>{$user_password_1}</P4120>
-<P4121>{$user_password_2}</P4121>
-<P4122>{$user_password_3}</P4122>
-<P4123>{$user_password_4}</P4123>
-<P4124>{$user_password_5}</P4124>
-<P4125>{$user_password_6}</P4125>
-<P4126>{$user_password_7}</P4126>
-<P4127>{$user_password_8}</P4127>
-<P4128>{$user_password_9}</P4128>
-<P4129>{$user_password_10}</P4129>
+<P4120>{$account.1.password}</P4120>
+<P4121>{$account.2.password}</P4121>
+<P4122>{$account.3.password}</P4122>
+<P4123>{$account.4.password}</P4123>
+<P4124>{$account.5.password}</P4124>
+<P4125>{$account.6.password}</P4125>
+<P4126>{$account.7.password}</P4126>
+<P4127>{$account.8.password}</P4127>
+<P4128>{$account.9.password}</P4128>
+<P4129>{$account.10.password}</P4129>
 
 <!-- SIP Name for SIP account 1 - 10 -->
-<P4180>{$display_name_1}</P4180>
-<P4181>{$display_name_2}</P4181>
-<P4182>{$display_name_3}</P4182>
-<P4183>{$display_name_4}</P4183>
-<P4184>{$display_name_5}</P4184>
-<P4185>{$display_name_6}</P4185>
-<P4186>{$display_name_7}</P4186>
-<P4187>{$display_name_8}</P4187>
-<P4188>{$display_name_9}</P4188>
-<P4189>{$display_name_10}</P4189>
+<P4180>{$account.1.display_name}</P4180>
+<P4181>{$account.2.display_name}</P4181>
+<P4182>{$account.3.display_name}</P4182>
+<P4183>{$account.4.display_name}</P4183>
+<P4184>{$account.5.display_name}</P4184>
+<P4185>{$account.6.display_name}</P4185>
+<P4186>{$account.7.display_name}</P4186>
+<P4187>{$account.8.display_name}</P4187>
+<P4188>{$account.9.display_name}</P4188>
+<P4189>{$account.10.display_name}</P4189>
 
 <!-- Profile Settings for SIP account 1 - 10.  -->
 <!-- Number: 0 - 3. 0 - Profile 1, 1 - Profile 2, 2 - Profile 3, 3 - Profile 4. Default is 0. -->
