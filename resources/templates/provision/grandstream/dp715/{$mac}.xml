@@ -481,7 +481,7 @@
 		<!--SIP User ID -->
 		<P4060>{$account.1.user_id}</P4060>
 		<!--Authenticate ID -->
-		<P4090>{$account.1.user_id}</P4090>
+		<P4090>{$account.1.auth_id}</P4090>
 		<!--Authenticate Password -->
 		<P4120>{$account.1.password}</P4120>
 		<!--Name -->
@@ -496,7 +496,7 @@
 		<!--SIP User ID -->
 		<P4061>{$account.2.user_id}</P4061>
 		<!--Authenticate ID -->
-		<P4091>{$account.2.user_id}</P4091>
+		<P4091>{$account.2.auth_id}</P4091>
 		<!--Authenticate Password -->
 		<P4121>{$account.2.password}</P4121>
 		<!--Name -->
@@ -511,7 +511,7 @@
 		<!--SIP User ID -->
 		<P4062>{$account.3.user_id}</P4062>
 		<!--Authenticate ID -->
-		<P4092>{$account.3.user_id}</P4092>
+		<P4092>{$account.3.auth_id}</P4092>
 		<!--Authenticate Password -->
 		<P4122>{$account.3.password}</P4122>
 		<!--Name -->
@@ -526,7 +526,7 @@
 		<!--SIP User ID -->
 		<P4063>{$account.4.user_id}</P4063>
 		<!--Authenticate ID -->
-		<P4093>{$account.4.user_id}</P4093>
+		<P4093>{$account.4.auth_id}</P4093>
 		<!--Authenticate Password -->
 		<P4123>{$account.4.password}</P4123>
 		<!-- Name -->
@@ -541,7 +541,7 @@
 		<!--SIP User ID -->
 		<P4064>{$account.5.user_id}</P4064>
 		<!--Authenticate ID -->
-		<P4094>{$account.5.user_id}</P4094>
+		<P4094>{$account.5.auth_id}</P4094>
 		<!--Authenticate Password -->
 		<P4124>{$account.5.password}</P4124>
 		<!--Name -->
