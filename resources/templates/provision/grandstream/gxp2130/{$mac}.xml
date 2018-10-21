@@ -18,7 +18,7 @@
 <!--  Account Active. 0 - No, 1 - Yes. Default is 1 -->
 <!--  Number: 0, 1 -->
 <!--  Mandatory -->
-{if isset($user_password_1)}
+{if isset($account.1.password)}
 <P271>1</P271>
 {else}
 <P271>0</P271>
@@ -26,23 +26,23 @@
 
 <!--  Account Name -->
 <!--  String -->
-<P270>{$display_name_1}</P270>
+<P270>{$account.1.display_name}</P270>
 
 <!--  SIP Server -->
 <!--  String -->
-<P47>{$server_address_1}</P47>
+<P47>{$account.1.server_address}</P47>
 
 <!--  Secondary SIP Server -->
 <!--  String -->
-<P2312>{$secondary_server_address_1}</P2312>
+<P2312>{$account.1.secondary_server_address}</P2312>
 
 <!--  Outbound Proxy -->
 <!--  String -->
-<P48>{$outbound_proxy_1}</P48>
+<P48>{$account.1.outbound_proxy}</P48>
 
 <!--  Backup Outbound Proxy -->
 <!--  String -->
-<P2333>{$outbound_proxy_secondary_1}</P2333>
+<P2333>{$account.1.outbound_proxy_secondary}</P2333>
 
 <!--  BLF Server -->
 <!--  String -->
@@ -50,19 +50,19 @@
 
 <!--  SIP User ID -->
 <!--  String -->
-<P35>{$user_id_1}</P35>
+<P35>{$account.1.user_id}</P35>
 
 <!--  Authenticate ID -->
 <!--  String -->
-<P36>{$auth_id_1}</P36>
+<P36>{$account.1.auth_id}</P36>
 
 <!--  Authenticate Password -->
 <!--  String -->
-<P34>{$user_password_1}</P34>
+<P34>{$account.1.password}</P34>
 
 <!--  Name -->
 <!--  String -->
-<P3>{$display_name_1}</P3>
+<P3>{$account.1.display_name}</P3>
 
 <!--  Voice Mail UserID -->
 <!--  String -->
@@ -100,8 +100,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0. -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($nat_traversal_1) }
-<P52>{$nat_traversal_1}</P52>
+{if isset($account.1.nat_traversal) }
+<P52>{$account.1.nat_traversal}</P52>
 {else}
 <P52>0</P52>
 {/if}
@@ -169,10 +169,10 @@
 <!--  Number: 0, 1, 2 -->
 <!--  Mandatory -->
 {$tp=0}
-{if $sip_transport_1 == 'udp'}{$tp=0}{/if}
-{if $sip_transport_1 == 'tcp'}{$tp=1}{/if}
-{if $sip_transport_1 == 'tls'}{$tp=2}{/if}
-{if $sip_transport_1 == 'dns srv'}{$tp=1}{/if}
+{if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.1.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.1.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.1.sip_transport == 'dns srv'}{$tp=1}{/if}
 <P130>{$tp}</P130>
 
 <!--  SIP Listening Mode.  -->
@@ -787,7 +787,7 @@
 <!--  Account Active. 0 - No, 1 - Yes. Default is 1 -->
 <!--  Number: 0, 1 -->
 <!--  Mandatory -->
-{if isset($user_password_2)}
+{if isset($account.2.password)}
 <P401>1</P401>
 {else}
 <P401>0</P401>
@@ -795,11 +795,11 @@
 
 <!--  Account Name -->
 <!--  String -->
-<P417>{$display_name_2}</P417>
+<P417>{$account.2.display_name}</P417>
 
 <!--  SIP Server -->
 <!--  String -->
-<P402>{$server_address_2}</P402>
+<P402>{$account.2.server_address}</P402>
 
 <!--  Secondary SIP Server -->
 <!--  String -->
@@ -807,11 +807,11 @@
 
 <!--  Outbound Proxy -->
 <!--  String -->
-<P403>{$outbound_proxy_2}</P403>
+<P403>{$account.2.outbound_proxy}</P403>
 
 <!--  Backup Outbound Proxy -->
 <!--  String -->
-<P2433>{$outbound_proxy_secondary_2}</P2433>
+<P2433>{$account.2.outbound_proxy_secondary}</P2433>
 
 <!--  BLF Server -->
 <!--  String -->
@@ -819,19 +819,19 @@
 
 <!--  SIP User ID -->
 <!--  String -->
-<P404>{$user_id_2}</P404>
+<P404>{$account.2.user_id}</P404>
 
 <!--  Authenticate ID -->
 <!--  String -->
-<P405>{$auth_id_2}</P405>
+<P405>{$account.2.auth_id}</P405>
 
 <!--  Authenticate password -->
 <!--  String -->
-<P406>{$user_password_2}</P406>
+<P406>{$account.2.password}</P406>
 
 <!--  Name -->
 <!--  String -->
-<P407>{$display_name_2}</P407>
+<P407>{$account.2.display_name}</P407>
 
 <!--  Voice Mail UserID -->
 <!--  String -->
@@ -869,8 +869,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($nat_traversal_2) }
-<P414>{$nat_traversal_2}</P414>
+{if isset($account.2.nat_traversal) }
+<P414>{$account.2.nat_traversal}</P414>
 {else}
 <P414>0</P414>
 {/if}
@@ -938,10 +938,10 @@
 <!--  Number: 0, 1, 2 -->
 <!--  Mandatory -->
 {$tp=0}
-{if $sip_transport_2 == 'udp'}{$tp=0}{/if}
-{if $sip_transport_2 == 'tcp'}{$tp=1}{/if}
-{if $sip_transport_2 == 'tls'}{$tp=2}{/if}
-{if $sip_transport_2 == 'dns srv'}{$tp=1}{/if}
+{if $account.2.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.2.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.2.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.2.sip_transport == 'dns srv'}{$tp=1}{/if}
 <P448>{$tp}</P448>
 
 <!--  SIP Listening Mode.  -->
@@ -1541,7 +1541,7 @@
 <!--  Account Active. 0 - No, 1 - Yes. Default is 1 -->
 <!--  Number: 0, 1 -->
 <!--  Mandatory -->
-{if isset($user_password_3)}
+{if isset($account.3.password)}
 <P501>1</P501>
 {else}
 <P501>0</P501>
@@ -1549,11 +1549,11 @@
 
 <!--  Account Name -->
 <!--  String -->
-<P517>{$display_name_3}</P517>
+<P517>{$account.3.display_name}</P517>
 
 <!--  SIP Server -->
 <!--  String -->
-<P502>{$server_address_3}</P502>
+<P502>{$account.3.server_address}</P502>
 
 <!--  Secondary SIP Server -->
 <!--  String -->
@@ -1561,11 +1561,11 @@
 
 <!--  Outbound Proxy -->
 <!--  String -->
-<P503>{$outbound_proxy_3}</P503>
+<P503>{$account.3.outbound_proxy}</P503>
 
 <!--  Backup Outbound Proxy -->
 <!--  String -->
-<P2533>{$outbound_proxy_secondary_3}</P2533>
+<P2533>{$account.3.outbound_proxy_secondary}</P2533>
 
 <!--  BLF Server -->
 <!--  String -->
@@ -1573,19 +1573,19 @@
 
 <!--  SIP User ID -->
 <!--  String -->
-<P504>{$user_id_3}</P504>
+<P504>{$account.3.user_id}</P504>
 
 <!--  Authenticate ID -->
 <!--  String -->
-<P505>{$auth_id_3}</P505>
+<P505>{$account.3.auth_id}</P505>
 
 <!--  Authenticate Password -->
 <!--  String -->
-<P506>{$user_password_3}</P506>
+<P506>{$account.3.password}</P506>
 
 <!--  Name -->
 <!--  String -->
-<P507>{$display_name_3}</P507>
+<P507>{$account.3.display_name}</P507>
 
 <!--  Voice Mail UserID -->
 <!--  String -->
@@ -1623,8 +1623,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($nat_traversal_3) }
-<P514>{$nat_traversal_3}</P514>
+{if isset($account.3.nat_traversal) }
+<P514>{$account.3.nat_traversal}</P514>
 {else}
 <P514>0</P514>
 {/if}
@@ -1692,10 +1692,10 @@
 <!--  Number: 0, 1, 2 -->
 <!--  Mandatory -->
 {$tp=0}
-{if $sip_transport_3 == 'udp'}{$tp=0}{/if}
-{if $sip_transport_3 == 'tcp'}{$tp=1}{/if}
-{if $sip_transport_3 == 'tls'}{$tp=2}{/if}
-{if $sip_transport_3 == 'dns srv'}{$tp=1}{/if}
+{if $account.3.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.3.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.3.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.3.sip_transport == 'dns srv'}{$tp=1}{/if}
 <P548>{$tp}</P548>
 
 <!--  SIP Listening Mode.  -->
@@ -2294,7 +2294,7 @@
 <!--  Account Active. 0 - No, 1 - Yes. Default is 1 -->
 <!--  Number: 0, 1 -->
 <!--  Mandatory -->
-{if isset($user_password_4)}
+{if isset($account.4.password)}
 <P601>1</P601>
 {else}
 <P601>0</P601>
@@ -2302,11 +2302,11 @@
 
 <!--  Account Name -->
 <!--  String -->
-<P617>{$display_name_4}</P617>
+<P617>{$account.4.display_name}</P617>
 
 <!--  SIP Server -->
 <!--  String -->
-<P602>{$server_address_4}</P602>
+<P602>{$account.4.server_address}</P602>
 
 <!--  Secondary SIP Server -->
 <!--  String -->
@@ -2314,11 +2314,11 @@
 
 <!--  Outbound Proxy -->
 <!--  String -->
-<P603>{$outbound_proxy_4}</P603>
+<P603>{$account.4.outbound_proxy}</P603>
 
 <!--  Backup Outbound Proxy -->
 <!--  String -->
-<P2633>{$outbound_proxy_secondary_4}</P2633>
+<P2633>{$account.4.outbound_proxy_secondary}</P2633>
 
 <!--  BLF Server -->
 <!--  String -->
@@ -2326,19 +2326,19 @@
 
 <!--  SIP User ID -->
 <!--  String -->
-<P604>{$user_id_4}</P604>
+<P604>{$account.4.user_id}</P604>
 
 <!--  Authenticate ID -->
 <!--  String -->
-<P605>{$auth_id_4}</P605>
+<P605>{$account.4.auth_id}</P605>
 
 <!--  Authenticate password -->
 <!--  String -->
-<P606>{$user_password_4}</P606>
+<P606>{$account.4.password}</P606>
 
 <!--  Name -->
 <!--  String -->
-<P607>{$display_name_4}</P607>
+<P607>{$account.4.display_name}</P607>
 
 <!--  Voice Mail UserID -->
 <!--  String -->
@@ -2376,8 +2376,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($nat_traversal_4) }
-<P614>{$nat_traversal_4}</P614>
+{if isset($account.4.nat_traversal) }
+<P614>{$account.4.nat_traversal}</P614>
 {else}
 <P614>0</P614>
 {/if}
@@ -2445,10 +2445,10 @@
 <!--  Number: 0, 1, 2 -->
 <!--  Mandatory -->
 {$tp=0}
-{if $sip_transport_4 == 'udp'}{$tp=0}{/if}
-{if $sip_transport_4 == 'tcp'}{$tp=1}{/if}
-{if $sip_transport_4 == 'tls'}{$tp=2}{/if}
-{if $sip_transport_4 == 'dns srv'}{$tp=1}{/if}
+{if $account.4.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.4.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.4.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.4.sip_transport == 'dns srv'}{$tp=1}{/if}
 <P648>{$tp}</P648>
 
 <!--  SIP Listening Mode.  -->
@@ -3049,7 +3049,7 @@
 <!--  Account Active. 0 - No, 1 - Yes. Default is 1 -->
 <!--  Number: 0, 1 -->
 <!--  Mandatory -->
-{if isset($user_password_5)}
+{if isset($account.5.password)}
 <P1701>1</P1701>
 {else}
 <P1701>0</P1701>
@@ -3057,11 +3057,11 @@
 
 <!--  Account Name -->
 <!--  String -->
-<P1717>{$display_name_5}</P1717>
+<P1717>{$account.5.display_name}</P1717>
 
 <!--  SIP Server -->
 <!--  String -->
-<P1702>{$server_address_5}</P1702>
+<P1702>{$account.5.server_address}</P1702>
 
 <!--  Secondary SIP Server -->
 <!--  String -->
@@ -3069,11 +3069,11 @@
 
 <!--  Outbound Proxy -->
 <!--  String -->
-<P1703>{$outbound_proxy_5}</P1703>
+<P1703>{$account.5.outbound_proxy}</P1703>
 
 <!--  Backup Outbound Proxy -->
 <!--  String -->
-<P2733>{$outbound_proxy_secondary_5}</P2733>
+<P2733>{$account.5.outbound_proxy_secondary}</P2733>
 
 <!--  BLF Server -->
 <!--  String -->
@@ -3081,19 +3081,19 @@
 
 <!--  SIP User ID -->
 <!--  String -->
-<P1704>{$user_id_5}</P1704>
+<P1704>{$account.5.user_id}</P1704>
 
 <!--  Authenticate ID -->
 <!--  String -->
-<P1705>{$auth_id_5}</P1705>
+<P1705>{$account.5.auth_id}</P1705>
 
 <!--  Authenticate Password -->
 <!--  String -->
-<P1706>{$user_password_5}</P1706>
+<P1706>{$account.5.password}</P1706>
 
 <!--  Name -->
 <!--  String -->
-<P1707>{$display_name_5}</P1707>
+<P1707>{$account.5.display_name}</P1707>
 
 <!--  Voice Mail UserID -->
 <!--  String -->
@@ -3131,8 +3131,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($nat_traversal_5) }
-<P1714>{$nat_traversal_5}</P1714>
+{if isset($account.5.nat_traversal) }
+<P1714>{$account.5.nat_traversal}</P1714>
 {else}
 <P1714>0</P1714>
 {/if}
@@ -3200,10 +3200,10 @@
 <!--  Number: 0, 1, 2 -->
 <!--  Mandatory -->
 {$tp=0}
-{if $sip_transport_5 == 'udp'}{$tp=0}{/if}
-{if $sip_transport_5 == 'tcp'}{$tp=1}{/if}
-{if $sip_transport_5 == 'tls'}{$tp=2}{/if}
-{if $sip_transport_5 == 'dns srv'}{$tp=1}{/if}
+{if $account.5.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.5.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.5.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.5.sip_transport == 'dns srv'}{$tp=1}{/if}
 <P1748>{$tp}</P1748>
 
 <!--  SIP Listening Mode.  -->
@@ -3802,7 +3802,7 @@
 <!--  Account Active. 0 - No, 1 - Yes. Default is 1 -->
 <!--  Number: 0, 1 -->
 <!--  Mandatory -->
-{if isset($user_password_6)}
+{if isset($account.6.password)}
 <P1801>1</P1801>
 {else}
 <P1801>0</P1801>
@@ -3810,11 +3810,11 @@
 
 <!--  Account Name -->
 <!--  String -->
-<P1817>{$display_name_6}</P1817>
+<P1817>{$account.6.display_name}</P1817>
 
 <!--  SIP Server -->
 <!--  String -->
-<P1802>{$server_address_6}</P1802>
+<P1802>{$account.6.server_address}</P1802>
 
 <!--  Secondary SIP Server -->
 <!--  String -->
@@ -3822,11 +3822,11 @@
 
 <!--  Outbound Proxy -->
 <!--  String -->
-<P1803>{$outbound_proxy_6}</P1803>
+<P1803>{$account.6.outbound_proxy}</P1803>
 
 <!--  Backup Outbound Proxy -->
 <!--  String -->
-<P2833>{$outbound_proxy_secondary_6}</P2833>
+<P2833>{$account.6.outbound_proxy_secondary}</P2833>
 
 <!--  BLF Server -->
 <!--  String -->
@@ -3834,19 +3834,19 @@
 
 <!--  SIP User ID -->
 <!--  String -->
-<P1804>{$user_id_6}</P1804>
+<P1804>{$account.6.user_id}</P1804>
 
 <!--  Authenticate ID -->
 <!--  String -->
-<P1805>{$auth_id_6}</P1805>
+<P1805>{$account.6.auth_id}</P1805>
 
 <!--  Authenticate password -->
 <!--  String -->
-<P1806>{$user_password_6}</P1806>
+<P1806>{$account.6.password}</P1806>
 
 <!--  Display Name -->
 <!--  String -->
-<P1807>{$display_name_6}</P1807>
+<P1807>{$account.6.display_name}</P1807>
 
 <!--  Voice Mail UserID -->
 <!--  String -->
@@ -3885,8 +3885,8 @@
 <!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!--  Number: 0, 1, 2, 3, 4, 5 -->
 <!--  Mandatory -->
-{if isset($nat_traversal_6) }
-<P1814>{$nat_traversal_6}</P1814>
+{if isset($account.6.nat_traversal) }
+<P1814>{$account.6.nat_traversal}</P1814>
 {else}
 <P1814>0</P1814>
 {/if}
@@ -3955,10 +3955,10 @@
 <!--  Number: 0, 1, 2 -->
 <!--  Mandatory -->
 {$tp=0}
-{if $sip_transport_6 == 'udp'}{$tp=0}{/if}
-{if $sip_transport_6 == 'tcp'}{$tp=1}{/if}
-{if $sip_transport_6 == 'tls'}{$tp=2}{/if}
-{if $sip_transport_6 == 'dns srv'}{$tp=1}{/if}
+{if $account.6.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.6.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.6.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.6.sip_transport == 'dns srv'}{$tp=1}{/if}
 <P1848>{$tp}</P1848>
 
 <!--  SIP Listening Mode.  -->
