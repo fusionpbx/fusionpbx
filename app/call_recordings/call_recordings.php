@@ -257,7 +257,7 @@
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_recording_base64'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('xml_cdr_details')) {
-				echo "		<a href='/app/xml_cdr/xml_cdr_details.php?uuid=".escape($row['call_recording_uuid'])."' title='".$text['button-view']."'>$v_link_label_view</a>";
+				echo "		<a href='/app/xml_cdr/xml_cdr_details.php?id=".escape($row['call_recording_uuid'])."' title='".$text['button-view']."'>$v_link_label_view</a>";
 			}
 			if (permission_exists('call_recording_edit')) {
 				echo "<button type='button' class='btn btn-default list_control_icon' name='' alt='".$text['button-edit']."' onclick=\"window.location='call_recording_edit.php?id=".escape($row['call_recording_uuid'])."'\" value='edit'><span class='glyphicon glyphicon-pencil'></span></input>\n";
