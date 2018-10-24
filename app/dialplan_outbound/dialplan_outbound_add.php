@@ -235,7 +235,7 @@
 							$label = $text['label-711'];
 							$abbrv = "711";
 							break;
-						case "^(911)$":
+						case "(^911$|^933$)":
 							$label = $text['label-911'];
 							$abbrv = "911";
 							break;
@@ -460,7 +460,7 @@
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
-							if ($dialplan_expression == '^(911)$') {
+							if ($dialplan_expression == '(^911$|^933$)') {
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'effective_caller_id_name=${emergency_caller_id_name}';
 							}
 							else {
@@ -475,7 +475,7 @@
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
-							if ($dialplan_expression == '^(911)$') {
+							if ($dialplan_expression == '(^911$|^933$)') {
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'effective_caller_id_number=${emergency_caller_id_number}';
 							}
 							else {
@@ -971,7 +971,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "	<option value='^(311)\$'>".$text['label-311']."</option>\n";
 	echo "	<option value='^(411)\$'>".$text['label-411']."</option>\n";
 	echo "	<option value='^(711)\$'>".$text['label-711']."</option>\n";
-	echo "	<option value='^(911)\$'>".$text['label-911']."</option>\n";
+	echo "	<option value='(^911\$|^933\$)'>".$text['label-911']."</option>\n";
 	echo "	<option value='^1?(8(00|55|66|77|88)[2-9]\\d{6})\$'>".$text['label-800']."</option>\n";
 	echo "	<option value='^0118835100\d{8}\$'>".$text['label-inum']."</option>\n";
 	echo "	<option value='^9(\\d{2})\$'>".$text['label-9d2']."</option>\n";
