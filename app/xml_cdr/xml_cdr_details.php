@@ -88,6 +88,7 @@
 //parse the xml to get the call detail record info
 	try {
 		if ($format == 'json') {
+			$json_string = stripcslashes($json_string);
 			$array = json_decode($json_string,true);
 		}
 		if ($format == 'xml') {
