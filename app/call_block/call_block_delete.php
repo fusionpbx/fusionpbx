@@ -79,7 +79,7 @@
 	}
 
 	//redirect the browser
-		message::add($text['label-delete-complete']);
+		messages::add($text['label-delete-complete']);
 		header("Location: call_block.php");
 		return;
 
