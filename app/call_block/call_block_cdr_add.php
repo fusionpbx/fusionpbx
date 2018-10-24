@@ -106,7 +106,7 @@
 		unset($sql);
 
 		//add a message
-		message::add($text['label-add-complete']);
+		messages::add($text['label-add-complete']);
 	}
 
 //redirect the browser
