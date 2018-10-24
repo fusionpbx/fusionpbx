@@ -26,7 +26,7 @@
 */
 
 //check the permission
-	if(defined('STDIN')) {
+	if (defined('STDIN')) {
 		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
 		preg_match("/^(.*)\/app\/.*$/", $document_root, $matches);
 		$document_root = $matches[1];
@@ -42,7 +42,7 @@
 
 //set debug
 	$debug = false; //true //false
-	if($debug){
+	if ($debug){
 		$time5 = microtime(true);
 		$insert_time=$insert_count=0;
 	}
@@ -312,7 +312,7 @@
 				$record_name = urldecode($xml->variables->record_name);
 				$record_length = urldecode($xml->variables->record_seconds);
 			}
-			elseif (strlen($record_path) == 0 and urldecode($xml->variables->last_app) == "record_session") {
+			elseif (!isset($record_path) && urldecode($xml->variables->last_app) == "record_session") {
 				$record_path = dirname(urldecode($xml->variables->last_arg));
 				$record_name = basename(urldecode($xml->variables->last_arg));
 				$record_length = urldecode($xml->variables->record_seconds);
