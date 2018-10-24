@@ -154,7 +154,7 @@
 					$db->exec(check_sql($sql));
 					unset($sql);
 	
-					message::add($text['label-add-complete']);
+					messages::add($text['label-add-complete']);
 					header("Location: call_block.php");
 					return;
 				} //if ($action == "add")
@@ -189,7 +189,7 @@
 					$db->exec(check_sql($sql));
 					unset($sql);
 	
-					message::add($text['label-update-complete']);
+					messages::add($text['label-update-complete']);
 					header("Location: call_block.php");
 					return;
 				} //if ($action == "update")
