@@ -255,7 +255,7 @@ if ($db_type == "pgsql") {
 } //end if db_type pgsql
 
 //get the domain list
-	if (!is_array($_SESSION['domains']) or (!isset($_SESSION["domain_uuid"])) or (strlen($_SESSION["domain_uuid"]) == 0)) {
+	if (!is_array($_SESSION['domains']) or !isset($_SESSION["domain_uuid"])) {
 
 		//get the domain
 			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
