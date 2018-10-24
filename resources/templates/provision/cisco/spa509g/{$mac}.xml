@@ -350,7 +350,7 @@
 
 <!-- Phone/General -->
 <Station_Name group="Phone/General">{$device_label}</Station_Name>
-<Station_Display_Name group="Phone/General">{$display_name_1}</Station_Display_Name>
+<Station_Display_Name group="Phone/General">{$account.1.display_name}</Station_Display_Name>
 <Voice_Mail_Number group="Phone/General">{$voicemail_number}</Voice_Mail_Number>
 <Text_Logo group="Phone/General" />
 <BMP_Picture_Download_URL group="Phone/General">http://{$domain_name}/themes/enhanced/images/logo.bmp</BMP_Picture_Download_URL>
@@ -523,7 +523,7 @@
 <Line_Enable_1_ group="Ext_1/General">Yes</Line_Enable_1_>
 
 <!-- Ext_1/Share_Line_Appearance -->
-<Share_Ext_1_ group="Ext_1/Share_Line_Appearance">{if $shared_line_1 == "shared"}shared{else}private{/if}</Share_Ext_1_>
+<Share_Ext_1_ group="Ext_1/Share_Line_Appearance">{if $account.1.shared_line == "shared"}shared{else}private{/if}</Share_Ext_1_>
 <Shared_User_ID_1_ group="Ext_1/Share_Line_Appearance" />
 <Subscription_Expires_1_ group="Ext_1/Share_Line_Appearance">3600</Subscription_Expires_1_>
 <Restrict_MWI_1_ group="Ext_1/Share_Line_Appearance">No</Restrict_MWI_1_>
@@ -586,18 +586,18 @@
 <Call_Park_Monitor_Enable_1_ group="Ext_1/Call_Feature_Settings">No</Call_Park_Monitor_Enable_1_>
 
 <!-- Ext_1/Proxy_and_Registration -->
-<Proxy_1_ group="Ext_1/Proxy_and_Registration">{$server_address_1}</Proxy_1_>
-<Use_Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">{if isset($outbound_proxy_primary_1)}Yes{else}No{/if}</Use_Outbound_Proxy_1_>
-<Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">{$outbound_proxy_primary_1}</Outbound_Proxy_1_>
-<Alternate_Proxy_1_ group="Ext_1/Proxy_and_Registration">{$server_address_1}</Alternate_Proxy_1_>
-<Alternate_Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">{$outbound_proxy_secondary_1}</Alternate_Outbound_Proxy_1_>
+<Proxy_1_ group="Ext_1/Proxy_and_Registration">{$account.1.server_address}</Proxy_1_>
+<Use_Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">{if isset($account.1.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_1_>
+<Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">{$account.1.outbound_proxy_primary}</Outbound_Proxy_1_>
+<Alternate_Proxy_1_ group="Ext_1/Proxy_and_Registration">{$account.1.server_address}</Alternate_Proxy_1_>
+<Alternate_Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">{$account.1.outbound_proxy_secondary}</Alternate_Outbound_Proxy_1_>
 <Use_OB_Proxy_In_Dialog_1_ group="Ext_1/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_1_>
 <Register_1_ group="Ext_1/Proxy_and_Registration">Yes</Register_1_>
 <Make_Call_Without_Reg_1_ group="Ext_1/Proxy_and_Registration">No</Make_Call_Without_Reg_1_>
-<Register_Expires_1_ group="Ext_1/Proxy_and_Registration">{$register_expires_1}</Register_Expires_1_>
+<Register_Expires_1_ group="Ext_1/Proxy_and_Registration">{$account.1.register_expires}</Register_Expires_1_>
 <Ans_Call_Without_Reg_1_ group="Ext_1/Proxy_and_Registration">No</Ans_Call_Without_Reg_1_>
-{if $sip_transport_1 == 'dns srv'}<Use_DNS_SRV_1_ group="Ext_1/Proxy_and_Registration">Yes</Use_DNS_SRV_1_>{/if}
-{if $sip_transport_1 != 'dns srv'}<Use_DNS_SRV_1_ group="Ext_1/Proxy_and_Registration">No</Use_DNS_SRV_1_>{/if}
+{if $account.1.sip_transport == 'dns srv'}<Use_DNS_SRV_1_ group="Ext_1/Proxy_and_Registration">Yes</Use_DNS_SRV_1_>{/if}
+{if $account.1.sip_transport != 'dns srv'}<Use_DNS_SRV_1_ group="Ext_1/Proxy_and_Registration">No</Use_DNS_SRV_1_>{/if}
 <DNS_SRV_Auto_Prefix_1_ group="Ext_1/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_1_>
 <Proxy_Fallback_Intvl_1_ group="Ext_1/Proxy_and_Registration">600</Proxy_Fallback_Intvl_1_>
 <Proxy_Redundancy_Method_1_ group="Ext_1/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_1_>
@@ -605,9 +605,9 @@
 <Auto_Register_When_Failover_1_ group="Ext_1/Proxy_and_Registration">{if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_1_>
 
 <!-- Ext_1/Subscriber_Information -->
-<Display_Name_1_ group="Ext_1/Subscriber_Information">{$display_name_1}</Display_Name_1_>
-<User_ID_1_ group="Ext_1/Subscriber_Information">{$user_id_1}</User_ID_1_>
-<Password_1_ group="Ext_1/Subscriber_Information">{$user_password_1}</Password_1_>
+<Display_Name_1_ group="Ext_1/Subscriber_Information">{$account.1.display_name}</Display_Name_1_>
+<User_ID_1_ group="Ext_1/Subscriber_Information">{$account.1.user_id}</User_ID_1_>
+<Password_1_ group="Ext_1/Subscriber_Information">{$account.1.password}</Password_1_>
 <Use_Auth_ID_1_ group="Ext_1/Subscriber_Information">No</Use_Auth_ID_1_>
 <Auth_ID_1_ group="Ext_1/Subscriber_Information" />
 <Reversed_Auth_Realm_1_ group="Ext_1/Subscriber_Information" />
@@ -646,7 +646,7 @@
 <Line_Enable_2_ group="Ext_2/General">Yes</Line_Enable_2_>
 
 <!-- Ext_2/Share_Line_Appearance -->
-<Share_Ext_2_ group="Ext_2/Share_Line_Appearance">{if $shared_line_2 == "shared"}shared{else}private{/if}</Share_Ext_2_>
+<Share_Ext_2_ group="Ext_2/Share_Line_Appearance">{if $account.2.shared_line == "shared"}shared{else}private{/if}</Share_Ext_2_>
 <Shared_User_ID_2_ group="Ext_2/Share_Line_Appearance" />
 <Subscription_Expires_2_ group="Ext_2/Share_Line_Appearance">3600</Subscription_Expires_2_>
 <Restrict_MWI_2_ group="Ext_2/Share_Line_Appearance">No</Restrict_MWI_2_>
@@ -667,8 +667,8 @@
 <Jitter_Buffer_Adjustment_2_ group="Ext_2/Network_Settings">up and down</Jitter_Buffer_Adjustment_2_>
 
 <!-- Ext_2/SIP_Settings -->
-<SIP_Transport_2_ group="Ext_2/SIP_Settings">{$sip_transport_2|upper}</SIP_Transport_2_>
-<SIP_Port_2_ group="Ext_2/SIP_Settings">{$sip_port_2}</SIP_Port_2_>
+<SIP_Transport_2_ group="Ext_2/SIP_Settings">{$account.2.sip_transport|upper}</SIP_Transport_2_>
+<SIP_Port_2_ group="Ext_2/SIP_Settings">{$account.2.sip_port}</SIP_Port_2_>
 <SIP_100REL_Enable_2_ group="Ext_2/SIP_Settings">No</SIP_100REL_Enable_2_>
 <EXT_SIP_Port_2_ group="Ext_2/SIP_Settings" />
 <Auth_Resync-Reboot_2_ group="Ext_2/SIP_Settings">Yes</Auth_Resync-Reboot_2_>
@@ -709,18 +709,18 @@
 <Call_Park_Monitor_Enable_2_ group="Ext_2/Call_Feature_Settings">No</Call_Park_Monitor_Enable_2_>
 
 <!-- Ext_2/Proxy_and_Registration -->
-<Proxy_2_ group="Ext_2/Proxy_and_Registration">{$server_address_2}</Proxy_2_>
-<Use_Outbound_Proxy_2_ group="Ext_2/Proxy_and_Registration">{if isset($outbound_proxy_primary_2)}Yes{else}No{/if}</Use_Outbound_Proxy_2_>
-<Outbound_Proxy_2_ group="Ext_2/Proxy_and_Registration">{$outbound_proxy_primary_2}</Outbound_Proxy_2_>
-<Alternate_Proxy_2_ group="Ext_2/Proxy_and_Registration">{$server_address_2}</Alternate_Proxy_2_>
-<Alternate_Outbound_Proxy_2_ group="Ext_2/Proxy_and_Registration">{$outbound_proxy_secondary_2}</Alternate_Outbound_Proxy_2_>
+<Proxy_2_ group="Ext_2/Proxy_and_Registration">{$account.2.server_address}</Proxy_2_>
+<Use_Outbound_Proxy_2_ group="Ext_2/Proxy_and_Registration">{if isset($account.2.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_2_>
+<Outbound_Proxy_2_ group="Ext_2/Proxy_and_Registration">{$account.2.outbound_proxy_primary}</Outbound_Proxy_2_>
+<Alternate_Proxy_2_ group="Ext_2/Proxy_and_Registration">{$account.2.server_address}</Alternate_Proxy_2_>
+<Alternate_Outbound_Proxy_2_ group="Ext_2/Proxy_and_Registration">{$account.2.outbound_proxy_secondary}</Alternate_Outbound_Proxy_2_>
 <Use_OB_Proxy_In_Dialog_2_ group="Ext_2/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_2_>
 <Register_2_ group="Ext_2/Proxy_and_Registration">Yes</Register_2_>
 <Make_Call_Without_Reg_2_ group="Ext_2/Proxy_and_Registration">No</Make_Call_Without_Reg_2_>
-<Register_Expires_2_ group="Ext_2/Proxy_and_Registration">{$register_expires_2}</Register_Expires_2_>
+<Register_Expires_2_ group="Ext_2/Proxy_and_Registration">{$account.2.register_expires}</Register_Expires_2_>
 <Ans_Call_Without_Reg_2_ group="Ext_2/Proxy_and_Registration">No</Ans_Call_Without_Reg_2_>
-{if $sip_transport_2 == 'dns srv'}<Use_DNS_SRV_2_ group="Ext_2/Proxy_and_Registration">Yes</Use_DNS_SRV_2_>{/if}
-{if $sip_transport_2 != 'dns srv'}<Use_DNS_SRV_2_ group="Ext_2/Proxy_and_Registration">No</Use_DNS_SRV_2_>{/if}
+{if $account.2.sip_transport == 'dns srv'}<Use_DNS_SRV_2_ group="Ext_2/Proxy_and_Registration">Yes</Use_DNS_SRV_2_>{/if}
+{if $account.2.sip_transport != 'dns srv'}<Use_DNS_SRV_2_ group="Ext_2/Proxy_and_Registration">No</Use_DNS_SRV_2_>{/if}
 <DNS_SRV_Auto_Prefix_2_ group="Ext_2/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_2_>
 <Proxy_Fallback_Intvl_2_ group="Ext_2/Proxy_and_Registration">600</Proxy_Fallback_Intvl_2_>
 <Proxy_Redundancy_Method_2_ group="Ext_2/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_2_>
@@ -728,9 +728,9 @@
 <Auto_Register_When_Failover_2_ group="Ext_2/Proxy_and_Registration">{if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_2_>
 
 <!-- Ext_2/Subscriber_Information -->
-<Display_Name_2_ group="Ext_2/Subscriber_Information">{$display_name_2}</Display_Name_2_>
-<User_ID_2_ group="Ext_2/Subscriber_Information">{$user_id_2}</User_ID_2_>
-<Password_2_ group="Ext_2/Subscriber_Information">{$user_password_2}</Password_2_>
+<Display_Name_2_ group="Ext_2/Subscriber_Information">{$account.2.display_name}</Display_Name_2_>
+<User_ID_2_ group="Ext_2/Subscriber_Information">{$account.2.user_id}</User_ID_2_>
+<Password_2_ group="Ext_2/Subscriber_Information">{$account.2.password}</Password_2_>
 <Use_Auth_ID_2_ group="Ext_2/Subscriber_Information">No</Use_Auth_ID_2_>
 <Auth_ID_2_ group="Ext_2/Subscriber_Information" />
 <Reversed_Auth_Realm_2_ group="Ext_2/Subscriber_Information" />
@@ -769,7 +769,7 @@
 <Line_Enable_3_ group="Ext_3/General">Yes</Line_Enable_3_>
 
 <!-- Ext_3/Share_Line_Appearance -->
-<Share_Ext_3_ group="Ext_3/Share_Line_Appearance">{if $shared_line_3 == "shared"}shared{else}private{/if}</Share_Ext_3_>
+<Share_Ext_3_ group="Ext_3/Share_Line_Appearance">{if $account.3.shared_line == "shared"}shared{else}private{/if}</Share_Ext_3_>
 <Shared_User_ID_3_ group="Ext_3/Share_Line_Appearance" />
 <Subscription_Expires_3_ group="Ext_3/Share_Line_Appearance">3600</Subscription_Expires_3_>
 <Restrict_MWI_3_ group="Ext_3/Share_Line_Appearance">No</Restrict_MWI_3_>
@@ -790,8 +790,8 @@
 <Jitter_Buffer_Adjustment_3_ group="Ext_3/Network_Settings">up and down</Jitter_Buffer_Adjustment_3_>
 
 <!-- Ext_3/SIP_Settings -->
-<SIP_Transport_3_ group="Ext_3/SIP_Settings">{$sip_transport_3|upper}</SIP_Transport_3_>
-<SIP_Port_3_ group="Ext_3/SIP_Settings">{$sip_port_3}</SIP_Port_3_>
+<SIP_Transport_3_ group="Ext_3/SIP_Settings">{$account.3.sip_transport|upper}</SIP_Transport_3_>
+<SIP_Port_3_ group="Ext_3/SIP_Settings">{$account.3.sip_port}</SIP_Port_3_>
 <SIP_100REL_Enable_3_ group="Ext_3/SIP_Settings">No</SIP_100REL_Enable_3_>
 <EXT_SIP_Port_3_ group="Ext_3/SIP_Settings" />
 <Auth_Resync-Reboot_3_ group="Ext_3/SIP_Settings">Yes</Auth_Resync-Reboot_3_>
@@ -832,18 +832,18 @@
 <Call_Park_Monitor_Enable_3_ group="Ext_3/Call_Feature_Settings">No</Call_Park_Monitor_Enable_3_>
 
 <!-- Ext_3/Proxy_and_Registration -->
-<Proxy_3_ group="Ext_3/Proxy_and_Registration">{$server_address_3}</Proxy_3_>
-<Use_Outbound_Proxy_3_ group="Ext_3/Proxy_and_Registration">{if isset($outbound_proxy_primary_3)}Yes{else}No{/if}</Use_Outbound_Proxy_3_>
-<Outbound_Proxy_3_ group="Ext_3/Proxy_and_Registration">{$outbound_proxy_primary_3}</Outbound_Proxy_3_>
-<Alternate_Proxy_3_ group="Ext_3/Proxy_and_Registration">{$server_address_3}</Alternate_Proxy_3_>
-<Alternate_Outbound_Proxy_3_ group="Ext_3/Proxy_and_Registration">{$outbound_proxy_secondary_3}</Alternate_Outbound_Proxy_3_>
+<Proxy_3_ group="Ext_3/Proxy_and_Registration">{$account.3.server_address}</Proxy_3_>
+<Use_Outbound_Proxy_3_ group="Ext_3/Proxy_and_Registration">{if isset($account.3.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_3_>
+<Outbound_Proxy_3_ group="Ext_3/Proxy_and_Registration">{$account.3.outbound_proxy_primary}</Outbound_Proxy_3_>
+<Alternate_Proxy_3_ group="Ext_3/Proxy_and_Registration">{$account.3.server_address}</Alternate_Proxy_3_>
+<Alternate_Outbound_Proxy_3_ group="Ext_3/Proxy_and_Registration">{$account.3.outbound_proxy_secondary}</Alternate_Outbound_Proxy_3_>
 <Use_OB_Proxy_In_Dialog_3_ group="Ext_3/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_3_>
 <Register_3_ group="Ext_3/Proxy_and_Registration">Yes</Register_3_>
 <Make_Call_Without_Reg_3_ group="Ext_3/Proxy_and_Registration">No</Make_Call_Without_Reg_3_>
-<Register_Expires_3_ group="Ext_3/Proxy_and_Registration">{$register_expires_1}</Register_Expires_3_>
+<Register_Expires_3_ group="Ext_3/Proxy_and_Registration">{$account.3.register_expires}</Register_Expires_3_>
 <Ans_Call_Without_Reg_3_ group="Ext_3/Proxy_and_Registration">No</Ans_Call_Without_Reg_3_>
-{if $sip_transport_3 == 'dns srv'}<Use_DNS_SRV_1_ group="Ext_3/Proxy_and_Registration">Yes</Use_DNS_SRV_3_>{/if}
-{if $sip_transport_3 != 'dns srv'}<Use_DNS_SRV_3_ group="Ext_3/Proxy_and_Registration">No</Use_DNS_SRV_3_>{/if}
+{if $account.3.sip_transport == 'dns srv'}<Use_DNS_SRV_1_ group="Ext_3/Proxy_and_Registration">Yes</Use_DNS_SRV_3_>{/if}
+{if $account.3.sip_transport != 'dns srv'}<Use_DNS_SRV_3_ group="Ext_3/Proxy_and_Registration">No</Use_DNS_SRV_3_>{/if}
 <DNS_SRV_Auto_Prefix_3_ group="Ext_3/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_3_>
 <Proxy_Fallback_Intvl_3_ group="Ext_3/Proxy_and_Registration">600</Proxy_Fallback_Intvl_3_>
 <Proxy_Redundancy_Method_3_ group="Ext_3/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_3_>
@@ -851,9 +851,9 @@
 <Auto_Register_When_Failover_3_ group="Ext_3/Proxy_and_Registration">{if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_3_>
 
 <!-- Ext_3/Subscriber_Information -->
-<Display_Name_3_ group="Ext_3/Subscriber_Information">{$display_name_3}</Display_Name_3_>
-<User_ID_3_ group="Ext_3/Subscriber_Information">{$user_id_3}</User_ID_3_>
-<Password_3_ group="Ext_3/Subscriber_Information">{$user_password_3}</Password_3_>
+<Display_Name_3_ group="Ext_3/Subscriber_Information">{$account.3.display_name}</Display_Name_3_>
+<User_ID_3_ group="Ext_3/Subscriber_Information">{$account.3.user_id}</User_ID_3_>
+<Password_3_ group="Ext_3/Subscriber_Information">{$account.3.assword}</Password_3_>
 <Use_Auth_ID_3_ group="Ext_3/Subscriber_Information">No</Use_Auth_ID_3_>
 <Auth_ID_3_ group="Ext_3/Subscriber_Information" />
 <Reversed_Auth_Realm_3_ group="Ext_3/Subscriber_Information" />
@@ -892,7 +892,7 @@
 <Line_Enable_4_ group="Ext_4/General">Yes</Line_Enable_4_>
 
 <!-- Ext_4/Share_Line_Appearance -->
-<Share_Ext_4_ group="Ext_4/Share_Line_Appearance">{if $shared_line_4 == "shared"}shared{else}private{/if}</Share_Ext_4_>
+<Share_Ext_4_ group="Ext_4/Share_Line_Appearance">{if $account.4.shared_line == "shared"}shared{else}private{/if}</Share_Ext_4_>
 <Shared_User_ID_4_ group="Ext_4/Share_Line_Appearance" />
 <Subscription_Expires_4_ group="Ext_4/Share_Line_Appearance">3600</Subscription_Expires_4_>
 <Restrict_MWI_4_ group="Ext_4/Share_Line_Appearance">No</Restrict_MWI_4_>
@@ -1015,7 +1015,7 @@
 <Line_Enable_5_ group="Ext_5/General">Yes</Line_Enable_5_>
 
 <!-- Ext_5/Share_Line_Appearance -->
-<Share_Ext_5_ group="Ext_5/Share_Line_Appearance">{if $shared_line_5 == "shared"}shared{else}private{/if}</Share_Ext_5_>
+<Share_Ext_5_ group="Ext_5/Share_Line_Appearance">{if $account.5.shared_line == "shared"}shared{else}private{/if}</Share_Ext_5_>
 <Shared_User_ID_5_ group="Ext_5/Share_Line_Appearance" />
 <Subscription_Expires_5_ group="Ext_5/Share_Line_Appearance">3600</Subscription_Expires_5_>
 <Restrict_MWI_5_ group="Ext_5/Share_Line_Appearance">No</Restrict_MWI_5_>
@@ -1036,8 +1036,8 @@
 <Jitter_Buffer_Adjustment_5_ group="Ext_5/Network_Settings">up and down</Jitter_Buffer_Adjustment_5_>
 
 <!-- Ext_5/SIP_Settings -->
-<SIP_Transport_5_ group="Ext_5/SIP_Settings">{$sip_transport_5|upper}</SIP_Transport_5_>
-<SIP_Port_5_ group="Ext_5/SIP_Settings">{$sip_port_5}</SIP_Port_5_>
+<SIP_Transport_5_ group="Ext_5/SIP_Settings">{$account.5.sip_transport|upper}</SIP_Transport_5_>
+<SIP_Port_5_ group="Ext_5/SIP_Settings">{$account.5.sip_port}</SIP_Port_5_>
 <SIP_100REL_Enable_5_ group="Ext_5/SIP_Settings">No</SIP_100REL_Enable_5_>
 <EXT_SIP_Port_5_ group="Ext_5/SIP_Settings" />
 <Auth_Resync-Reboot_5_ group="Ext_5/SIP_Settings">Yes</Auth_Resync-Reboot_5_>
@@ -1078,18 +1078,18 @@
 <Call_Park_Monitor_Enable_5_ group="Ext_5/Call_Feature_Settings">No</Call_Park_Monitor_Enable_5_>
 
 <!-- Ext_5/Proxy_and_Registration -->
-<Proxy_5_ group="Ext_5/Proxy_and_Registration">{$server_address_5}</Proxy_5_>
-<Use_Outbound_Proxy_5_ group="Ext_5/Proxy_and_Registration">{if isset($outbound_proxy_primary_5)}Yes{else}No{/if}</Use_Outbound_Proxy_5_>
-<Outbound_Proxy_5_ group="Ext_5/Proxy_and_Registration">{$outbound_proxy_primary_5}</Outbound_Proxy_5_>
-<Alternate_Proxy_5_ group="Ext_5/Proxy_and_Registration">{$server_address_5}</Alternate_Proxy_5_>
+<Proxy_5_ group="Ext_5/Proxy_and_Registration">{$account.5.server_address}</Proxy_5_>
+<Use_Outbound_Proxy_5_ group="Ext_5/Proxy_and_Registration">{if isset($account.5.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_5_>
+<Outbound_Proxy_5_ group="Ext_5/Proxy_and_Registration">{$account.5.outbound_proxy_primary}</Outbound_Proxy_5_>
+<Alternate_Proxy_5_ group="Ext_5/Proxy_and_Registration">{$account.5.server_address}</Alternate_Proxy_5_>
 <Alternate_Outbound_Proxy_5_ group="Ext_5/Proxy_and_Registration">{$outbound_proxy_secondary_5}</Alternate_Outbound_Proxy_5_>
 <Use_OB_Proxy_In_Dialog_5_ group="Ext_5/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_5_>
 <Register_5_ group="Ext_5/Proxy_and_Registration">Yes</Register_5_>
 <Make_Call_Without_Reg_5_ group="Ext_5/Proxy_and_Registration">No</Make_Call_Without_Reg_5_>
-<Register_Expires_5_ group="Ext_5/Proxy_and_Registration">{$register_expires_5}</Register_Expires_5_>
+<Register_Expires_5_ group="Ext_5/Proxy_and_Registration">{$account.5.register_expires}</Register_Expires_5_>
 <Ans_Call_Without_Reg_5_ group="Ext_5/Proxy_and_Registration">No</Ans_Call_Without_Reg_5_>
-{if $sip_transport_5 == 'dns srv'}<Use_DNS_SRV_5_ group="Ext_5/Proxy_and_Registration">Yes</Use_DNS_SRV_5_>{/if}
-{if $sip_transport_5 != 'dns srv'}<Use_DNS_SRV_5_ group="Ext_5/Proxy_and_Registration">No</Use_DNS_SRV_5_>{/if}
+{if $account.5.sip_transport == 'dns srv'}<Use_DNS_SRV_5_ group="Ext_5/Proxy_and_Registration">Yes</Use_DNS_SRV_5_>{/if}
+{if $account.5.sip_transport != 'dns srv'}<Use_DNS_SRV_5_ group="Ext_5/Proxy_and_Registration">No</Use_DNS_SRV_5_>{/if}
 <DNS_SRV_Auto_Prefix_5_ group="Ext_5/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_5_>
 <Proxy_Fallback_Intvl_5_ group="Ext_5/Proxy_and_Registration">600</Proxy_Fallback_Intvl_5_>
 <Proxy_Redundancy_Method_5_ group="Ext_5/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_5_>
@@ -1138,7 +1138,7 @@
 <Line_Enable_6_ group="Ext_6/General">Yes</Line_Enable_6_>
 
 <!-- Ext_6/Share_Line_Appearance -->
-<Share_Ext_6_ group="Ext_6/Share_Line_Appearance">{if $shared_line_6 == "shared"}shared{else}private{/if}</Share_Ext_6_>
+<Share_Ext_6_ group="Ext_6/Share_Line_Appearance">{if $account.6.shared_line == "shared"}shared{else}private{/if}</Share_Ext_6_>
 <Shared_User_ID_6_ group="Ext_6/Share_Line_Appearance" />
 <Subscription_Expires_6_ group="Ext_6/Share_Line_Appearance">3600</Subscription_Expires_6_>
 <Restrict_MWI_6_ group="Ext_6/Share_Line_Appearance">No</Restrict_MWI_6_>
@@ -1159,8 +1159,8 @@
 <Jitter_Buffer_Adjustment_6_ group="Ext_6/Network_Settings">up and down</Jitter_Buffer_Adjustment_6_>
 
 <!-- Ext_6/SIP_Settings -->
-<SIP_Transport_6_ group="Ext_6/SIP_Settings">{$sip_transport_6|upper}</SIP_Transport_6_>
-<SIP_Port_6_ group="Ext_6/SIP_Settings">{$sip_port_6}</SIP_Port_6_>
+<SIP_Transport_6_ group="Ext_6/SIP_Settings">{$account.6.sip_transport|upper}</SIP_Transport_6_>
+<SIP_Port_6_ group="Ext_6/SIP_Settings">{$account.6.sip_port}</SIP_Port_6_>
 <SIP_100REL_Enable_6_ group="Ext_6/SIP_Settings">No</SIP_100REL_Enable_6_>
 <EXT_SIP_Port_6_ group="Ext_6/SIP_Settings" />
 <Auth_Resync-Reboot_6_ group="Ext_6/SIP_Settings">Yes</Auth_Resync-Reboot_6_>
@@ -1201,18 +1201,18 @@
 <Call_Park_Monitor_Enable_6_ group="Ext_6/Call_Feature_Settings">No</Call_Park_Monitor_Enable_6_>
 
 <!-- Ext_6/Proxy_and_Registration -->
-<Proxy_6_ group="Ext_6/Proxy_and_Registration">{$server_address_6}</Proxy_6_>
-<Use_Outbound_Proxy_6_ group="Ext_6/Proxy_and_Registration">{if isset($outbound_proxy_primary_6)}Yes{else}No{/if}</Use_Outbound_Proxy_6_>
-<Outbound_Proxy_6_ group="Ext_6/Proxy_and_Registration">{$outbound_proxy_primary_6}</Outbound_Proxy_6_>
-<Alternate_Proxy_6_ group="Ext_6/Proxy_and_Registration">{$server_address_6}</Alternate_Proxy_6_>
-<Alternate_Outbound_Proxy_6_ group="Ext_6/Proxy_and_Registration">{$outbound_proxy_secondary_6}</Alternate_Outbound_Proxy_6_>
+<Proxy_6_ group="Ext_6/Proxy_and_Registration">{$account.6.server_address}</Proxy_6_>
+<Use_Outbound_Proxy_6_ group="Ext_6/Proxy_and_Registration">{if isset($account.6.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_6_>
+<Outbound_Proxy_6_ group="Ext_6/Proxy_and_Registration">{$account.6.outbound_proxy_primary}</Outbound_Proxy_6_>
+<Alternate_Proxy_6_ group="Ext_6/Proxy_and_Registration">{$account.6.server_address}</Alternate_Proxy_6_>
+<Alternate_Outbound_Proxy_6_ group="Ext_6/Proxy_and_Registration">{$account.6.outbound_proxy_secondary}</Alternate_Outbound_Proxy_6_>
 <Use_OB_Proxy_In_Dialog_6_ group="Ext_6/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_6_>
 <Register_6_ group="Ext_6/Proxy_and_Registration">Yes</Register_6_>
 <Make_Call_Without_Reg_6_ group="Ext_6/Proxy_and_Registration">No</Make_Call_Without_Reg_6_>
-<Register_Expires_6_ group="Ext_6/Proxy_and_Registration">{$register_expires_6}</Register_Expires_6_>
+<Register_Expires_6_ group="Ext_6/Proxy_and_Registration">{$account.6.register_expires}</Register_Expires_6_>
 <Ans_Call_Without_Reg_6_ group="Ext_6/Proxy_and_Registration">No</Ans_Call_Without_Reg_6_>
-{if $sip_transport_6 == 'dns srv'}<Use_DNS_SRV_6_ group="Ext_6/Proxy_and_Registration">Yes</Use_DNS_SRV_6_>{/if}
-{if $sip_transport_6 != 'dns srv'}<Use_DNS_SRV_6_ group="Ext_6/Proxy_and_Registration">No</Use_DNS_SRV_6_>{/if}
+{if $account.6.sip_transport == 'dns srv'}<Use_DNS_SRV_6_ group="Ext_6/Proxy_and_Registration">Yes</Use_DNS_SRV_6_>{/if}
+{if $account.6.sip_transport != 'dns srv'}<Use_DNS_SRV_6_ group="Ext_6/Proxy_and_Registration">No</Use_DNS_SRV_6_>{/if}
 <DNS_SRV_Auto_Prefix_6_ group="Ext_6/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_6_>
 <Proxy_Fallback_Intvl_6_ group="Ext_6/Proxy_and_Registration">600</Proxy_Fallback_Intvl_6_>
 <Proxy_Redundancy_Method_6_ group="Ext_6/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_6_>
@@ -1220,9 +1220,9 @@
 <Auto_Register_When_Failover_6_ group="Ext_6/Proxy_and_Registration">{if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_6_>
 
 <!-- Ext_6/Subscriber_Information -->
-<Display_Name_6_ group="Ext_6/Subscriber_Information">{$display_name_6}</Display_Name_6_>
-<User_ID_6_ group="Ext_6/Subscriber_Information">{$user_id_6}</User_ID_6_>
-<Password_6_ group="Ext_6/Subscriber_Information">{$user_password_6}</Password_6_>
+<Display_Name_6_ group="Ext_6/Subscriber_Information">{$account.6.display_name}</Display_Name_6_>
+<User_ID_6_ group="Ext_6/Subscriber_Information">{$account.6.user_id}</User_ID_6_>
+<Password_6_ group="Ext_6/Subscriber_Information">{$account.6.password}</Password_6_>
 <Use_Auth_ID_6_ group="Ext_6/Subscriber_Information">No</Use_Auth_ID_6_>
 <Auth_ID_6_ group="Ext_6/Subscriber_Information" />
 <Reversed_Auth_Realm_6_ group="Ext_6/Subscriber_Information" />
@@ -1261,7 +1261,7 @@
 <Line_Enable_7_ group="Ext_7/General">Yes</Line_Enable_7_>
 
 <!-- Ext_7/Share_Line_Appearance -->
-<Share_Ext_7_ group="Ext_7/Share_Line_Appearance">{if $shared_line_7 == "shared"}shared{else}private{/if}</Share_Ext_7_>
+<Share_Ext_7_ group="Ext_7/Share_Line_Appearance">{if $account.7.shared_line == "shared"}shared{else}private{/if}</Share_Ext_7_>
 <Shared_User_ID_7_ group="Ext_7/Share_Line_Appearance" />
 <Subscription_Expires_7_ group="Ext_7/Share_Line_Appearance">3600</Subscription_Expires_7_>
 <Restrict_MWI_7_ group="Ext_7/Share_Line_Appearance">No</Restrict_MWI_7_>
@@ -1282,8 +1282,8 @@
 <Jitter_Buffer_Adjustment_7_ group="Ext_7/Network_Settings">up and down</Jitter_Buffer_Adjustment_7_>
 
 <!-- Ext_7/SIP_Settings -->
-<SIP_Transport_7_ group="Ext_7/SIP_Settings">{$sip_transport_7|upper}</SIP_Transport_7_>
-<SIP_Port_7_ group="Ext_7/SIP_Settings">{$sip_port_7}</SIP_Port_7_>
+<SIP_Transport_7_ group="Ext_7/SIP_Settings">{$account.7.sip_transport|upper}</SIP_Transport_7_>
+<SIP_Port_7_ group="Ext_7/SIP_Settings">{$account.7.sip_port}</SIP_Port_7_>
 <SIP_100REL_Enable_7_ group="Ext_7/SIP_Settings">No</SIP_100REL_Enable_7_>
 <EXT_SIP_Port_7_ group="Ext_7/SIP_Settings" />
 <Auth_Resync-Reboot_7_ group="Ext_7/SIP_Settings">Yes</Auth_Resync-Reboot_7_>
@@ -1324,18 +1324,18 @@
 <Call_Park_Monitor_Enable_7_ group="Ext_7/Call_Feature_Settings">No</Call_Park_Monitor_Enable_7_>
 
 <!-- Ext_7/Proxy_and_Registration -->
-<Proxy_7_ group="Ext_7/Proxy_and_Registration">{$server_address_7}</Proxy_7_>
-<Use_Outbound_Proxy_7_ group="Ext_7/Proxy_and_Registration">{if isset($outbound_proxy_primary_7)}Yes{else}No{/if}</Use_Outbound_Proxy_7_>
-<Outbound_Proxy_7_ group="Ext_7/Proxy_and_Registration">{$outbound_proxy_primary_7}</Outbound_Proxy_7_>
-<Alternate_Proxy_7_ group="Ext_7/Proxy_and_Registration">{$server_address_7}</Alternate_Proxy_7_>
-<Alternate_Outbound_Proxy_7_ group="Ext_7/Proxy_and_Registration">{$outbound_proxy_secondary_7}</Alternate_Outbound_Proxy_7_>
+<Proxy_7_ group="Ext_7/Proxy_and_Registration">{$account.7.server_address}</Proxy_7_>
+<Use_Outbound_Proxy_7_ group="Ext_7/Proxy_and_Registration">{if isset($account.7.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_7_>
+<Outbound_Proxy_7_ group="Ext_7/Proxy_and_Registration">{$account.7.outbound_proxy_primary}</Outbound_Proxy_7_>
+<Alternate_Proxy_7_ group="Ext_7/Proxy_and_Registration">{$account.7.server_address}</Alternate_Proxy_7_>
+<Alternate_Outbound_Proxy_7_ group="Ext_7/Proxy_and_Registration">{$account.7.outbound_proxy_secondary}</Alternate_Outbound_Proxy_7_>
 <Use_OB_Proxy_In_Dialog_7_ group="Ext_7/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_7_>
 <Register_7_ group="Ext_7/Proxy_and_Registration">Yes</Register_7_>
 <Make_Call_Without_Reg_7_ group="Ext_7/Proxy_and_Registration">No</Make_Call_Without_Reg_7_>
-<Register_Expires_7_ group="Ext_7/Proxy_and_Registration">{$register_expires_7}</Register_Expires_7_>
+<Register_Expires_7_ group="Ext_7/Proxy_and_Registration">{$account.7.register_expires}</Register_Expires_7_>
 <Ans_Call_Without_Reg_7_ group="Ext_7/Proxy_and_Registration">No</Ans_Call_Without_Reg_7_>
-{if $sip_transport_7 == 'dns srv'}<Use_DNS_SRV_7_ group="Ext_7/Proxy_and_Registration">Yes</Use_DNS_SRV_7_>{/if}
-{if $sip_transport_7 != 'dns srv'}<Use_DNS_SRV_7_ group="Ext_7/Proxy_and_Registration">No</Use_DNS_SRV_7_>{/if}
+{if $account.7.sip_transport == 'dns srv'}<Use_DNS_SRV_7_ group="Ext_7/Proxy_and_Registration">Yes</Use_DNS_SRV_7_>{/if}
+{if $account.7.sip_transport != 'dns srv'}<Use_DNS_SRV_7_ group="Ext_7/Proxy_and_Registration">No</Use_DNS_SRV_7_>{/if}
 <DNS_SRV_Auto_Prefix_7_ group="Ext_7/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_7_>
 <Proxy_Fallback_Intvl_7_ group="Ext_7/Proxy_and_Registration">600</Proxy_Fallback_Intvl_7_>
 <Proxy_Redundancy_Method_7_ group="Ext_7/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_7_>
@@ -1343,9 +1343,9 @@
 <Auto_Register_When_Failover_7_ group="Ext_7/Proxy_and_Registration">{if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_7_>
 
 <!-- Ext_7/Subscriber_Information -->
-<Display_Name_7_ group="Ext_7/Subscriber_Information">{$display_name_7}</Display_Name_7_>
-<User_ID_7_ group="Ext_7/Subscriber_Information">{$user_id_7}</User_ID_7_>
-<Password_7_ group="Ext_7/Subscriber_Information">{$user_password_7}</Password_7_>
+<Display_Name_7_ group="Ext_7/Subscriber_Information">{$account.7.display_name}</Display_Name_7_>
+<User_ID_7_ group="Ext_7/Subscriber_Information">{$account.7.user_id}</User_ID_7_>
+<Password_7_ group="Ext_7/Subscriber_Information">{$account.7.password}</Password_7_>
 <Use_Auth_ID_7_ group="Ext_7/Subscriber_Information">No</Use_Auth_ID_7_>
 <Auth_ID_7_ group="Ext_7/Subscriber_Information" />
 <Reversed_Auth_Realm_7_ group="Ext_7/Subscriber_Information" />
@@ -1384,7 +1384,7 @@
 <Line_Enable_8_ group="Ext_8/General">Yes</Line_Enable_8_>
 
 <!-- Ext_8/Share_Line_Appearance -->
-<Share_Ext_8_ group="Ext_8/Share_Line_Appearance">{if $shared_line_8 == "shared"}shared{else}private{/if}</Share_Ext_8_>
+<Share_Ext_8_ group="Ext_8/Share_Line_Appearance">{if $account.8.shared_line == "shared"}shared{else}private{/if}</Share_Ext_8_>
 <Shared_User_ID_8_ group="Ext_8/Share_Line_Appearance" />
 <Subscription_Expires_8_ group="Ext_8/Share_Line_Appearance">3600</Subscription_Expires_8_>
 <Restrict_MWI_8_ group="Ext_8/Share_Line_Appearance">No</Restrict_MWI_8_>
@@ -1405,8 +1405,8 @@
 <Jitter_Buffer_Adjustment_8_ group="Ext_8/Network_Settings">up and down</Jitter_Buffer_Adjustment_8_>
 
 <!-- Ext_8/SIP_Settings -->
-<SIP_Transport_8_ group="Ext_8/SIP_Settings">{$sip_transport_8|upper}</SIP_Transport_8_>
-<SIP_Port_8_ group="Ext_8/SIP_Settings">{$sip_port_8}</SIP_Port_8_>
+<SIP_Transport_8_ group="Ext_8/SIP_Settings">{$account.8.sip_transport|upper}</SIP_Transport_8_>
+<SIP_Port_8_ group="Ext_8/SIP_Settings">{$account.8.sip_port}</SIP_Port_8_>
 <SIP_100REL_Enable_8_ group="Ext_8/SIP_Settings">No</SIP_100REL_Enable_8_>
 <EXT_SIP_Port_8_ group="Ext_8/SIP_Settings" />
 <Auth_Resync-Reboot_8_ group="Ext_8/SIP_Settings">Yes</Auth_Resync-Reboot_8_>
@@ -1447,18 +1447,18 @@
 <Call_Park_Monitor_Enable_8_ group="Ext_8/Call_Feature_Settings">No</Call_Park_Monitor_Enable_8_>
 
 <!-- Ext_8/Proxy_and_Registration -->
-<Proxy_8_ group="Ext_8/Proxy_and_Registration">{$server_address_8}</Proxy_8_>
-<Use_Outbound_Proxy_8_ group="Ext_8/Proxy_and_Registration">{if isset($outbound_proxy_primary_8)}Yes{else}No{/if}</Use_Outbound_Proxy_8_>
-<Outbound_Proxy_8_ group="Ext_8/Proxy_and_Registration">{$outbound_proxy_primary_8}</Outbound_Proxy_8_>
-<Alternate_Proxy_8_ group="Ext_8/Proxy_and_Registration">{$server_address_8}</Alternate_Proxy_8_>
-<Alternate_Outbound_Proxy_8_ group="Ext_8/Proxy_and_Registration">{$outbound_proxy_secondary_8}</Alternate_Outbound_Proxy_8_>
+<Proxy_8_ group="Ext_8/Proxy_and_Registration">{$account.8.server_address}</Proxy_8_>
+<Use_Outbound_Proxy_8_ group="Ext_8/Proxy_and_Registration">{if isset($account.8.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_8_>
+<Outbound_Proxy_8_ group="Ext_8/Proxy_and_Registration">{$account.8.outbound_proxy_primary}</Outbound_Proxy_8_>
+<Alternate_Proxy_8_ group="Ext_8/Proxy_and_Registration">{$account.8.server_address}</Alternate_Proxy_8_>
+<Alternate_Outbound_Proxy_8_ group="Ext_8/Proxy_and_Registration">{$account.8.outbound_proxy_secondary}</Alternate_Outbound_Proxy_8_>
 <Use_OB_Proxy_In_Dialog_8_ group="Ext_8/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_8_>
 <Register_8_ group="Ext_8/Proxy_and_Registration">Yes</Register_8_>
 <Make_Call_Without_Reg_8_ group="Ext_8/Proxy_and_Registration">No</Make_Call_Without_Reg_8_>
-<Register_Expires_8_ group="Ext_8/Proxy_and_Registration">{$register_expires_8}</Register_Expires_8_>
+<Register_Expires_8_ group="Ext_8/Proxy_and_Registration">{$account.8.register_expires}</Register_Expires_8_>
 <Ans_Call_Without_Reg_8_ group="Ext_8/Proxy_and_Registration">No</Ans_Call_Without_Reg_8_>
-{if $sip_transport_8 == 'dns srv'}<Use_DNS_SRV_8_ group="Ext_8/Proxy_and_Registration">Yes</Use_DNS_SRV_8_>{/if}
-{if $sip_transport_8 != 'dns srv'}<Use_DNS_SRV_8_ group="Ext_8/Proxy_and_Registration">No</Use_DNS_SRV_8_>{/if}
+{if $account.8.sip_transport == 'dns srv'}<Use_DNS_SRV_8_ group="Ext_8/Proxy_and_Registration">Yes</Use_DNS_SRV_8_>{/if}
+{if $account.8.sip_transport != 'dns srv'}<Use_DNS_SRV_8_ group="Ext_8/Proxy_and_Registration">No</Use_DNS_SRV_8_>{/if}
 <DNS_SRV_Auto_Prefix_8_ group="Ext_8/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_8_>
 <Proxy_Fallback_Intvl_8_ group="Ext_8/Proxy_and_Registration">600</Proxy_Fallback_Intvl_8_>
 <Proxy_Redundancy_Method_8_ group="Ext_8/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_8_>
@@ -1466,9 +1466,9 @@
 <Auto_Register_When_Failover_8_ group="Ext_8/Proxy_and_Registration">{if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_8_>
 
 <!-- Ext_8/Subscriber_Information -->
-<Display_Name_8_ group="Ext_8/Subscriber_Information">{$display_name_8}</Display_Name_8_>
-<User_ID_8_ group="Ext_8/Subscriber_Information">{$user_id_8}</User_ID_8_>
-<Password_8_ group="Ext_8/Subscriber_Information">{$user_password_8}</Password_8_>
+<Display_Name_8_ group="Ext_8/Subscriber_Information">{$account.8.display_name}</Display_Name_8_>
+<User_ID_8_ group="Ext_8/Subscriber_Information">{$account.8.user_id}</User_ID_8_>
+<Password_8_ group="Ext_8/Subscriber_Information">{$account.8.password}</Password_8_>
 <Use_Auth_ID_8_ group="Ext_8/Subscriber_Information">No</Use_Auth_ID_8_>
 <Auth_ID_8_ group="Ext_8/Subscriber_Information" />
 <Reversed_Auth_Realm_8_ group="Ext_8/Subscriber_Information" />
@@ -1507,7 +1507,7 @@
 <Line_Enable_9_ group="Ext_9/General">Yes</Line_Enable_9_>
 
 <!-- Ext_9/Share_Line_Appearance -->
-<Share_Ext_9_ group="Ext_9/Share_Line_Appearance">{if $shared_line_9 == "shared"}shared{else}private{/if}</Share_Ext_9_>
+<Share_Ext_9_ group="Ext_9/Share_Line_Appearance">{if $account.9.shared_line == "shared"}shared{else}private{/if}</Share_Ext_9_>
 <Shared_User_ID_9_ group="Ext_9/Share_Line_Appearance" />
 <Subscription_Expires_9_ group="Ext_9/Share_Line_Appearance">3600</Subscription_Expires_9_>
 <Restrict_MWI_9_ group="Ext_9/Share_Line_Appearance">No</Restrict_MWI_9_>
@@ -1528,8 +1528,8 @@
 <Jitter_Buffer_Adjustment_9_ group="Ext_9/Network_Settings">up and down</Jitter_Buffer_Adjustment_9_>
 
 <!-- Ext_9/SIP_Settings -->
-<SIP_Transport_9_ group="Ext_9/SIP_Settings">{$sip_transport_9|upper}</SIP_Transport_9_>
-<SIP_Port_9_ group="Ext_9/SIP_Settings">{$sip_port_9}</SIP_Port_9_>
+<SIP_Transport_9_ group="Ext_9/SIP_Settings">{$account.9.sip_transport|upper}</SIP_Transport_9_>
+<SIP_Port_9_ group="Ext_9/SIP_Settings">{$account.9.sip_port}</SIP_Port_9_>
 <SIP_100REL_Enable_9_ group="Ext_9/SIP_Settings">No</SIP_100REL_Enable_9_>
 <EXT_SIP_Port_9_ group="Ext_9/SIP_Settings" />
 <Auth_Resync-Reboot_9_ group="Ext_9/SIP_Settings">Yes</Auth_Resync-Reboot_9_>
@@ -1570,18 +1570,18 @@
 <Call_Park_Monitor_Enable_9_ group="Ext_9/Call_Feature_Settings">No</Call_Park_Monitor_Enable_9_>
 
 <!-- Ext_9/Proxy_and_Registration -->
-<Proxy_9_ group="Ext_9/Proxy_and_Registration">{$server_address_9}</Proxy_9_>
-<Use_Outbound_Proxy_9_ group="Ext_9/Proxy_and_Registration">{if isset($outbound_proxy_primary_9)}Yes{else}No{/if}</Use_Outbound_Proxy_9_>
-<Outbound_Proxy_9_ group="Ext_9/Proxy_and_Registration">{$outbound_proxy_primary_9}</Outbound_Proxy_9_>
-<Alternate_Proxy_9_ group="Ext_9/Proxy_and_Registration">{$server_address_9}</Alternate_Proxy_9_>
-<Alternate_Outbound_Proxy_9_ group="Ext_9/Proxy_and_Registration">{$outbound_proxy_secondary_9}</Alternate_Outbound_Proxy_9_>
+<Proxy_9_ group="Ext_9/Proxy_and_Registration">{$account.9.server_address}</Proxy_9_>
+<Use_Outbound_Proxy_9_ group="Ext_9/Proxy_and_Registration">{if isset($account.9.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_9_>
+<Outbound_Proxy_9_ group="Ext_9/Proxy_and_Registration">{$account.9.outbound_proxy_primary}</Outbound_Proxy_9_>
+<Alternate_Proxy_9_ group="Ext_9/Proxy_and_Registration">{$account.9.server_address}</Alternate_Proxy_9_>
+<Alternate_Outbound_Proxy_9_ group="Ext_9/Proxy_and_Registration">{$account.9.outbound_proxy_secondary}</Alternate_Outbound_Proxy_9_>
 <Use_OB_Proxy_In_Dialog_9_ group="Ext_9/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_9_>
 <Register_9_ group="Ext_9/Proxy_and_Registration">Yes</Register_9_>
 <Make_Call_Without_Reg_9_ group="Ext_9/Proxy_and_Registration">No</Make_Call_Without_Reg_9_>
-<Register_Expires_9_ group="Ext_9/Proxy_and_Registration">{$register_expires_9}</Register_Expires_9_>
+<Register_Expires_9_ group="Ext_9/Proxy_and_Registration">{$account.9.register_expires}</Register_Expires_9_>
 <Ans_Call_Without_Reg_9_ group="Ext_9/Proxy_and_Registration">No</Ans_Call_Without_Reg_9_>
-{if $sip_transport_9 == 'dns srv'}<Use_DNS_SRV_9_ group="Ext_9/Proxy_and_Registration">Yes</Use_DNS_SRV_9_>{/if}
-{if $sip_transport_9 != 'dns srv'}<Use_DNS_SRV_9_ group="Ext_9/Proxy_and_Registration">No</Use_DNS_SRV_9_>{/if}
+{if $account.9.sip_transport == 'dns srv'}<Use_DNS_SRV_9_ group="Ext_9/Proxy_and_Registration">Yes</Use_DNS_SRV_9_>{/if}
+{if $account.9.sip_transport != 'dns srv'}<Use_DNS_SRV_9_ group="Ext_9/Proxy_and_Registration">No</Use_DNS_SRV_9_>{/if}
 <DNS_SRV_Auto_Prefix_9_ group="Ext_9/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_9_>
 <Proxy_Fallback_Intvl_9_ group="Ext_9/Proxy_and_Registration">600</Proxy_Fallback_Intvl_9_>
 <Proxy_Redundancy_Method_9_ group="Ext_9/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_9_>
@@ -1589,9 +1589,9 @@
 <Auto_Register_When_Failover_9_ group="Ext_9/Proxy_and_Registration">{if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_9_>
 
 <!-- Ext_9/Subscriber_Information -->
-<Display_Name_9_ group="Ext_9/Subscriber_Information">{$display_name_9}</Display_Name_9_>
-<User_ID_9_ group="Ext_9/Subscriber_Information">{$user_id_9}</User_ID_9_>
-<Password_9_ group="Ext_9/Subscriber_Information">{$user_password_9}</Password_9_>
+<Display_Name_9_ group="Ext_9/Subscriber_Information">{$account.9.display_name}</Display_Name_9_>
+<User_ID_9_ group="Ext_9/Subscriber_Information">{$account.9.user_id}</User_ID_9_>
+<Password_9_ group="Ext_9/Subscriber_Information">{$account.9.password}</Password_9_>
 <Use_Auth_ID_9_ group="Ext_9/Subscriber_Information">No</Use_Auth_ID_9_>
 <Auth_ID_9_ group="Ext_9/Subscriber_Information" />
 <Reversed_Auth_Realm_9_ group="Ext_9/Subscriber_Information" />
@@ -1630,7 +1630,7 @@
 <Line_Enable_10_ group="Ext_10/General">Yes</Line_Enable_10_>
 
 <!-- Ext_10/Share_Line_Appearance -->
-<Share_Ext_10_ group="Ext_10/Share_Line_Appearance">{if $shared_line_10 == "shared"}shared{else}private{/if}</Share_Ext_10_>
+<Share_Ext_10_ group="Ext_10/Share_Line_Appearance">{if $account.10.shared_line == "shared"}shared{else}private{/if}</Share_Ext_10_>
 <Shared_User_ID_10_ group="Ext_10/Share_Line_Appearance" />
 <Subscription_Expires_10_ group="Ext_10/Share_Line_Appearance">3600</Subscription_Expires_10_>
 <Restrict_MWI_10_ group="Ext_10/Share_Line_Appearance">No</Restrict_MWI_10_>
@@ -1651,8 +1651,8 @@
 <Jitter_Buffer_Adjustment_10_ group="Ext_10/Network_Settings">up and down</Jitter_Buffer_Adjustment_10_>
 
 <!-- Ext_10/SIP_Settings -->
-<SIP_Transport_10_ group="Ext_10/SIP_Settings">{$sip_transport_10|upper}</SIP_Transport_10_>
-<SIP_Port_10_ group="Ext_10/SIP_Settings">{$sip_port_10}</SIP_Port_10_>
+<SIP_Transport_10_ group="Ext_10/SIP_Settings">{$account.10.sip_transport|upper}</SIP_Transport_10_>
+<SIP_Port_10_ group="Ext_10/SIP_Settings">{$account.10.sip_port}</SIP_Port_10_>
 <SIP_100REL_Enable_10_ group="Ext_10/SIP_Settings">No</SIP_100REL_Enable_10_>
 <EXT_SIP_Port_10_ group="Ext_10/SIP_Settings" />
 <Auth_Resync-Reboot_10_ group="Ext_10/SIP_Settings">Yes</Auth_Resync-Reboot_10_>
@@ -1693,18 +1693,18 @@
 <Call_Park_Monitor_Enable_10_ group="Ext_10/Call_Feature_Settings">No</Call_Park_Monitor_Enable_10_>
 
 <!-- Ext_10/Proxy_and_Registration -->
-<Proxy_10_ group="Ext_10/Proxy_and_Registration">{$server_address_7}</Proxy_10_>
-<Use_Outbound_Proxy_10_ group="Ext_10/Proxy_and_Registration">{if isset($outbound_proxy_primary_10)}Yes{else}No{/if}</Use_Outbound_Proxy_10_>
-<Outbound_Proxy_10_ group="Ext_10/Proxy_and_Registration">{$outbound_proxy_primary_10}</Outbound_Proxy_10_>
-<Alternate_Proxy_10_ group="Ext_10/Proxy_and_Registration">{$server_address_10}</Alternate_Proxy_10_>
-<Alternate_Outbound_Proxy_10_ group="Ext_10/Proxy_and_Registration">{$outbound_proxy_secondary_10}</Alternate_Outbound_Proxy_10_>
+<Proxy_10_ group="Ext_10/Proxy_and_Registration">{$account.10.server_address}</Proxy_10_>
+<Use_Outbound_Proxy_10_ group="Ext_10/Proxy_and_Registration">{if isset($account.10.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_10_>
+<Outbound_Proxy_10_ group="Ext_10/Proxy_and_Registration">{$account.10.outbound_proxy_primary}</Outbound_Proxy_10_>
+<Alternate_Proxy_10_ group="Ext_10/Proxy_and_Registration">{$account.10.server_address}</Alternate_Proxy_10_>
+<Alternate_Outbound_Proxy_10_ group="Ext_10/Proxy_and_Registration">{$account.10.outbound_proxy_secondary}</Alternate_Outbound_Proxy_10_>
 <Use_OB_Proxy_In_Dialog_10_ group="Ext_10/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_10_>
 <Register_10_ group="Ext_10/Proxy_and_Registration">Yes</Register_10_>
 <Make_Call_Without_Reg_10_ group="Ext_10/Proxy_and_Registration">No</Make_Call_Without_Reg_10_>
-<Register_Expires_10_ group="Ext_10/Proxy_and_Registration">{$register_expires_10}</Register_Expires_10_>
+<Register_Expires_10_ group="Ext_10/Proxy_and_Registration">{$account.10.register_expires}</Register_Expires_10_>
 <Ans_Call_Without_Reg_10_ group="Ext_10/Proxy_and_Registration">No</Ans_Call_Without_Reg_10_>
-{if $sip_transport_10 == 'dns srv'}<Use_DNS_SRV_10_ group="Ext_10/Proxy_and_Registration">Yes</Use_DNS_SRV_10_>{/if}
-{if $sip_transport_10 != 'dns srv'}<Use_DNS_SRV_10_ group="Ext_10/Proxy_and_Registration">No</Use_DNS_SRV_10_>{/if}
+{if $account.10.sip_transport == 'dns srv'}<Use_DNS_SRV_10_ group="Ext_10/Proxy_and_Registration">Yes</Use_DNS_SRV_10_>{/if}
+{if $account.10.sip_transport != 'dns srv'}<Use_DNS_SRV_10_ group="Ext_10/Proxy_and_Registration">No</Use_DNS_SRV_10_>{/if}
 <DNS_SRV_Auto_Prefix_10_ group="Ext_10/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_10_>
 <Proxy_Fallback_Intvl_10_ group="Ext_10/Proxy_and_Registration">600</Proxy_Fallback_Intvl_10_>
 <Proxy_Redundancy_Method_10_ group="Ext_10/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_10_>
@@ -1712,9 +1712,9 @@
 <Auto_Register_When_Failover_10_ group="Ext_10/Proxy_and_Registration">{if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_10_>
 
 <!-- Ext_10/Subscriber_Information -->
-<Display_Name_10_ group="Ext_10/Subscriber_Information">{$display_name_10}</Display_Name_10_>
-<User_ID_10_ group="Ext_10/Subscriber_Information">{$user_id_10}</User_ID_10_>
-<Password_10_ group="Ext_10/Subscriber_Information">{$user_password_10}</Password_10_>
+<Display_Name_10_ group="Ext_10/Subscriber_Information">{$account.10.display_name}</Display_Name_10_>
+<User_ID_10_ group="Ext_10/Subscriber_Information">{$account.10.user_id}</User_ID_10_>
+<Password_10_ group="Ext_10/Subscriber_Information">{$account.10.password}</Password_10_>
 <Use_Auth_ID_10_ group="Ext_10/Subscriber_Information">No</Use_Auth_ID_10_>
 <Auth_ID_10_ group="Ext_10/Subscriber_Information" />
 <Reversed_Auth_Realm_10_ group="Ext_10/Subscriber_Information" />
@@ -1753,7 +1753,7 @@
 <Line_Enable_11_ group="Ext_11/General">Yes</Line_Enable_11_>
 
 <!-- Ext_11/Share_Line_Appearance -->
-<Share_Ext_11_ group="Ext_11/Share_Line_Appearance">{if $shared_line_11 == "shared"}shared{else}private{/if}</Share_Ext_11_>
+<Share_Ext_11_ group="Ext_11/Share_Line_Appearance">{if $account.11.shared_line == "shared"}shared{else}private{/if}</Share_Ext_11_>
 <Shared_User_ID_11_ group="Ext_11/Share_Line_Appearance" />
 <Subscription_Expires_11_ group="Ext_11/Share_Line_Appearance">3600</Subscription_Expires_11_>
 <Restrict_MWI_11_ group="Ext_11/Share_Line_Appearance">No</Restrict_MWI_11_>
@@ -1774,8 +1774,8 @@
 <Jitter_Buffer_Adjustment_11_ group="Ext_11/Network_Settings">up and down</Jitter_Buffer_Adjustment_11_>
 
 <!-- Ext_11/SIP_Settings -->
-<SIP_Transport_11_ group="Ext_11/SIP_Settings">{$sip_transport_11|upper}</SIP_Transport_11_>
-<SIP_Port_11_ group="Ext_11/SIP_Settings">{$sip_port_11}</SIP_Port_11_>
+<SIP_Transport_11_ group="Ext_11/SIP_Settings">{$account.11.sip_transport|upper}</SIP_Transport_11_>
+<SIP_Port_11_ group="Ext_11/SIP_Settings">{$account.11.sip_port}</SIP_Port_11_>
 <SIP_100REL_Enable_11_ group="Ext_11/SIP_Settings">No</SIP_100REL_Enable_11_>
 <EXT_SIP_Port_11_ group="Ext_11/SIP_Settings" />
 <Auth_Resync-Reboot_11_ group="Ext_11/SIP_Settings">Yes</Auth_Resync-Reboot_11_>
@@ -1816,18 +1816,18 @@
 <Call_Park_Monitor_Enable_11_ group="Ext_11/Call_Feature_Settings">No</Call_Park_Monitor_Enable_11_>
 
 <!-- Ext_11/Proxy_and_Registration -->
-<Proxy_11_ group="Ext_11/Proxy_and_Registration">{$server_address_11}</Proxy_11_>
-<Use_Outbound_Proxy_11_ group="Ext_11/Proxy_and_Registration">{if isset($outbound_proxy_primary_11)}Yes{else}No{/if}</Use_Outbound_Proxy_11_>
-<Outbound_Proxy_11_ group="Ext_11/Proxy_and_Registration">{$outbound_proxy_primary_11}</Outbound_Proxy_11_>
-<Alternate_Proxy_11_ group="Ext_11/Proxy_and_Registration">{$server_address_11}</Alternate_Proxy_11_>
-<Alternate_Outbound_Proxy_11_ group="Ext_11/Proxy_and_Registration">{$outbound_proxy_secondary_11}</Alternate_Outbound_Proxy_11_>
+<Proxy_11_ group="Ext_11/Proxy_and_Registration">{$account.11.server_address}</Proxy_11_>
+<Use_Outbound_Proxy_11_ group="Ext_11/Proxy_and_Registration">{if isset($account.11.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_11_>
+<Outbound_Proxy_11_ group="Ext_11/Proxy_and_Registration">{$account.11.outbound_proxy_primary}</Outbound_Proxy_11_>
+<Alternate_Proxy_11_ group="Ext_11/Proxy_and_Registration">{$account.11.server_address}</Alternate_Proxy_11_>
+<Alternate_Outbound_Proxy_11_ group="Ext_11/Proxy_and_Registration">{$account.11.outbound_proxy_secondary}</Alternate_Outbound_Proxy_11_>
 <Use_OB_Proxy_In_Dialog_11_ group="Ext_11/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_11_>
 <Register_11_ group="Ext_11/Proxy_and_Registration">Yes</Register_11_>
 <Make_Call_Without_Reg_11_ group="Ext_11/Proxy_and_Registration">No</Make_Call_Without_Reg_11_>
-<Register_Expires_11_ group="Ext_11/Proxy_and_Registration">{$register_expires_11}</Register_Expires_11_>
+<Register_Expires_11_ group="Ext_11/Proxy_and_Registration">{$account.11.register_expires}</Register_Expires_11_>
 <Ans_Call_Without_Reg_11_ group="Ext_11/Proxy_and_Registration">No</Ans_Call_Without_Reg_11_>
-{if $sip_transport_11 == 'dns srv'}<Use_DNS_SRV_11_ group="Ext_11/Proxy_and_Registration">Yes</Use_DNS_SRV_11_>{/if}
-{if $sip_transport_11 != 'dns srv'}<Use_DNS_SRV_11_ group="Ext_11/Proxy_and_Registration">No</Use_DNS_SRV_11_>{/if}
+{if $account.11.sip_transport == 'dns srv'}<Use_DNS_SRV_11_ group="Ext_11/Proxy_and_Registration">Yes</Use_DNS_SRV_11_>{/if}
+{if $account.11.sip_transport != 'dns srv'}<Use_DNS_SRV_11_ group="Ext_11/Proxy_and_Registration">No</Use_DNS_SRV_11_>{/if}
 <DNS_SRV_Auto_Prefix_11_ group="Ext_11/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_11_>
 <Proxy_Fallback_Intvl_11_ group="Ext_11/Proxy_and_Registration">600</Proxy_Fallback_Intvl_11_>
 <Proxy_Redundancy_Method_11_ group="Ext_11/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_11_>
@@ -1835,9 +1835,9 @@
 <Auto_Register_When_Failover_11_ group="Ext_11/Proxy_and_Registration">{if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_11_>
 
 <!-- Ext_11/Subscriber_Information -->
-<Display_Name_11_ group="Ext_11/Subscriber_Information">{$display_name_11}</Display_Name_11_>
-<User_ID_11_ group="Ext_11/Subscriber_Information">{$user_id_11}</User_ID_11_>
-<Password_11_ group="Ext_11/Subscriber_Information">{$user_password_11}</Password_11_>
+<Display_Name_11_ group="Ext_11/Subscriber_Information">{$account.11.display_name}</Display_Name_11_>
+<User_ID_11_ group="Ext_11/Subscriber_Information">{$account.11.user_id}</User_ID_11_>
+<Password_11_ group="Ext_11/Subscriber_Information">{$account.11.password}</Password_11_>
 <Use_Auth_ID_11_ group="Ext_11/Subscriber_Information">No</Use_Auth_ID_11_>
 <Auth_ID_11_ group="Ext_11/Subscriber_Information" />
 <Reversed_Auth_Realm_11_ group="Ext_11/Subscriber_Information" />
@@ -1876,7 +1876,7 @@
 <Line_Enable_12_ group="Ext_12/General">Yes</Line_Enable_12_>
 
 <!-- Ext_12/Share_Line_Appearance -->
-<Share_Ext_12_ group="Ext_12/Share_Line_Appearance">{if $shared_line_12 == "shared"}shared{else}private{/if}</Share_Ext_12_>
+<Share_Ext_12_ group="Ext_12/Share_Line_Appearance">{if $account.12.shared_line == "shared"}shared{else}private{/if}</Share_Ext_12_>
 <Shared_User_ID_12_ group="Ext_12/Share_Line_Appearance" />
 <Subscription_Expires_12_ group="Ext_12/Share_Line_Appearance">3600</Subscription_Expires_12_>
 <Restrict_MWI_12_ group="Ext_12/Share_Line_Appearance">No</Restrict_MWI_12_>
@@ -1939,18 +1939,18 @@
 <Call_Park_Monitor_Enable_12_ group="Ext_12/Call_Feature_Settings">No</Call_Park_Monitor_Enable_12_>
 
 <!-- Ext_12/Proxy_and_Registration -->
-<Proxy_12_ group="Ext_12/Proxy_and_Registration">{$server_address_12}</Proxy_12_>
-<Use_Outbound_Proxy_12_ group="Ext_12/Proxy_and_Registration">{if isset($outbound_proxy_primary_12)}Yes{else}No{/if}</Use_Outbound_Proxy_12_>
-<Outbound_Proxy_12_ group="Ext_12/Proxy_and_Registration">{$outbound_proxy_primary_12}</Outbound_Proxy_12_>
-<Alternate_Proxy_12_ group="Ext_12/Proxy_and_Registration">{$server_address_12}</Alternate_Proxy_12_>
-<Alternate_Outbound_Proxy_12_ group="Ext_12/Proxy_and_Registration">{$outbound_proxy_secondary_12}</Alternate_Outbound_Proxy_12_>
+<Proxy_12_ group="Ext_12/Proxy_and_Registration">{$account.12.server_address}</Proxy_12_>
+<Use_Outbound_Proxy_12_ group="Ext_12/Proxy_and_Registration">{if isset($account.12.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_12_>
+<Outbound_Proxy_12_ group="Ext_12/Proxy_and_Registration">{$account.12.outbound_proxy_primary}</Outbound_Proxy_12_>
+<Alternate_Proxy_12_ group="Ext_12/Proxy_and_Registration">{$account.12.server_address}</Alternate_Proxy_12_>
+<Alternate_Outbound_Proxy_12_ group="Ext_12/Proxy_and_Registration">{$account.12.outbound_proxy_secondary}</Alternate_Outbound_Proxy_12_>
 <Use_OB_Proxy_In_Dialog_12_ group="Ext_12/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_12_>
 <Register_12_ group="Ext_12/Proxy_and_Registration">Yes</Register_12_>
 <Make_Call_Without_Reg_12_ group="Ext_12/Proxy_and_Registration">No</Make_Call_Without_Reg_12_>
-<Register_Expires_12_ group="Ext_12/Proxy_and_Registration">{$register_expires_12}</Register_Expires_12_>
+<Register_Expires_12_ group="Ext_12/Proxy_and_Registration">{$account.12.register_expires}</Register_Expires_12_>
 <Ans_Call_Without_Reg_12_ group="Ext_12/Proxy_and_Registration">No</Ans_Call_Without_Reg_12_>
-{if $sip_transport_12 == 'dns srv'}<Use_DNS_SRV_12_ group="Ext_12/Proxy_and_Registration">Yes</Use_DNS_SRV_12_>{/if}
-{if $sip_transport_12 != 'dns srv'}<Use_DNS_SRV_12_ group="Ext_12/Proxy_and_Registration">No</Use_DNS_SRV_12_>{/if}
+{if $account.12.sip_transport == 'dns srv'}<Use_DNS_SRV_12_ group="Ext_12/Proxy_and_Registration">Yes</Use_DNS_SRV_12_>{/if}
+{if $account.12.sip_transport != 'dns srv'}<Use_DNS_SRV_12_ group="Ext_12/Proxy_and_Registration">No</Use_DNS_SRV_12_>{/if}
 <DNS_SRV_Auto_Prefix_12_ group="Ext_12/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_12_>
 <Proxy_Fallback_Intvl_12_ group="Ext_12/Proxy_and_Registration">600</Proxy_Fallback_Intvl_12_>
 <Proxy_Redundancy_Method_12_ group="Ext_12/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_12_>
@@ -1958,9 +1958,9 @@
 <Auto_Register_When_Failover_12_ group="Ext_12/Proxy_and_Registration">{if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_12_>
 
 <!-- Ext_12/Subscriber_Information -->
-<Display_Name_12_ group="Ext_12/Subscriber_Information">{$display_name_12}</Display_Name_12_>
-<User_ID_12_ group="Ext_12/Subscriber_Information">{$user_id_12}</User_ID_12_>
-<Password_12_ group="Ext_12/Subscriber_Information">{$user_password_12}</Password_12_>
+<Display_Name_12_ group="Ext_12/Subscriber_Information">{$account.12.display_name}</Display_Name_12_>
+<User_ID_12_ group="Ext_12/Subscriber_Information">{$account.12.user_id}</User_ID_12_>
+<Password_12_ group="Ext_12/Subscriber_Information">{$account.12.password}</Password_12_>
 <Use_Auth_ID_12_ group="Ext_12/Subscriber_Information">No</Use_Auth_ID_12_>
 <Auth_ID_12_ group="Ext_12/Subscriber_Information" />
 <Reversed_Auth_Realm_12_ group="Ext_12/Subscriber_Information" />
