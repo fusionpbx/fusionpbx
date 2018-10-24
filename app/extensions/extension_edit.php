@@ -698,6 +698,15 @@
 	$devices = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset($sql, $prep_statement);
 
+//get the device vendors
+	$sql = "SELECT name ";
+	$sql .= "FROM v_device_vendors ";
+	$sql .= "WHERE enabled = 'true' ";
+	$sql .= "ORDER BY name ASC ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$device_vendors = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+
 //get assigned users
 	if (is_uuid($extension_uuid)) {
 		$sql = "SELECT u.username, e.user_uuid FROM v_extension_users as e, v_users as u ";
@@ -1066,32 +1075,24 @@
 			$device = new device;
 			$template_dir = $device->get_template_dir();
 			echo "<select id='device_template' name='devices[0][device_template]' class='formfld'>\n";
-			echo "<option value=''></option>\n";
-			if (is_dir($template_dir)) {
-				$templates = scandir($template_dir);
-				foreach($templates as $dir) {
-					if($file != "." && $dir != ".." && $dir[0] != '.') {
-						if(is_dir($template_dir . "/" . $dir)) {
-							echo "<optgroup label='$dir'>";
-							$dh_sub=$template_dir . "/" . $dir;
-							if(is_dir($dh_sub)) {
-								$templates_sub = scandir($dh_sub);
-								foreach($templates_sub as $dir_sub) {
-									if($file_sub != '.' && $dir_sub != '..' && $dir_sub[0] != '.') {
-										if(is_dir($template_dir . '/' . $dir .'/'. $dir_sub)) {
-											if ($device_template == $dir."/".$dir_sub) {
-												echo "<option value='".escape($dir)."/".escape($dir_sub)."' selected='selected'>".escape($dir)."/".escape($dir_sub)."</option>\n";
-											}
-											else {
-												echo "<option value='".escape($dir)."/".escape($dir_sub)."'>".escape($dir)."/".escape($dir_sub)."</option>\n";
-											}
-										}
-									}
+			echo "		<option value=''></option>\n";
+			if (is_dir($template_dir) && is_array($device_vendors)) {
+				foreach($device_vendors as $row) {
+					echo "		<optgroup label='".escape($row["name"])."'>\n";
+					$templates = scandir($template_dir.'/'.$row["name"]);
+					foreach($templates as $dir) {
+						if ($file != "." && $dir != ".." && $dir[0] != '.') {
+							if (is_dir($template_dir . '/' . $row["name"] .'/'. $dir)) {
+								if ($device_template == $row["name"]."/".$dir) {
+									echo "			<option value='".escape($row["name"])."/".escape($dir)."' selected='selected'>".escape($row["name"])."/".escape($dir)."</option>\n";
+								}
+								else {
+									echo "			<option value='".escape($row["name"])."/".escape($dir)."'>".$row["name"]."/".escape($dir)."</option>\n";
 								}
 							}
-							echo "</optgroup>";
 						}
 					}
+					echo "		</optgroup>\n";
 				}
 			}
 			echo "</select>\n";
