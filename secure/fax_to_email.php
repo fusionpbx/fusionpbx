@@ -516,6 +516,7 @@ if (!function_exists('fax_split_dtmf')) {
 				$dial_string .= "fax_retry_sleep=180"  . ",";
 				$dial_string .= "fax_verbose=true"     . ",";
 				$dial_string .= "fax_use_ecm=off"      . ",";
+				$dial_string .= "fax_enable_t38=true"  . ",";
 				$dial_string .= "api_hangup_hook='lua fax_retry.lua'";
 				$dial_string  = "{" . $dial_string . "}" . $fax_uri." &txfax('".$fax_file."')";
 
