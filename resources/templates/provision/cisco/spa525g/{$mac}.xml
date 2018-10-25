@@ -290,23 +290,23 @@
 
 <!-- Proxy and Registration -->
 <Proxy_1_ ua="na">{$domain_name}</Proxy_1_>
-<Outbound_Proxy_1_ ua="na">{$outbound_proxy_primary_1}</Outbound_Proxy_1_>
-<Use_Outbound_Proxy_1_ ua="na">{if isset($outbound_proxy_primary_1)}Yes{else}No{/if}</Use_Outbound_Proxy_1_>
+<Outbound_Proxy_1_ ua="na">{$account.1.outbound_proxy_primary}</Outbound_Proxy_1_>
+<Use_Outbound_Proxy_1_ ua="na">{if isset($account.1.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_1_>
 <Use_OB_Proxy_In_Dialog_1_ ua="na">Yes</Use_OB_Proxy_In_Dialog_1_>
 <Register_1_ ua="na">Yes</Register_1_>
 <Make_Call_Without_Reg_1_ ua="na">No</Make_Call_Without_Reg_1_>
-<Register_Expires_1_ ua="na">{$register_expires_1}</Register_Expires_1_>
+<Register_Expires_1_ ua="na">{$account.1.register_expires}</Register_Expires_1_>
 <Ans_Call_Without_Reg_1_ ua="na">No</Ans_Call_Without_Reg_1_>
-{if $sip_transport_1 == 'dns srv'}<Use_DNS_SRV_1_ ua="na">Yes</Use_DNS_SRV_1_>{/if}
-{if $sip_transport_1 != 'dns srv'}<Use_DNS_SRV_1_ ua="na">No</Use_DNS_SRV_1_>{/if}
+{if $account.1.sip_transport == 'dns srv'}<Use_DNS_SRV_1_ ua="na">Yes</Use_DNS_SRV_1_>{/if}
+{if $account.1.sip_transport != 'dns srv'}<Use_DNS_SRV_1_ ua="na">No</Use_DNS_SRV_1_>{/if}
 <DNS_SRV_Auto_Prefix_1_ ua="na">No</DNS_SRV_Auto_Prefix_1_>
 <Proxy_Fallback_Intvl_1_ ua="na">600</Proxy_Fallback_Intvl_1_>
 <Proxy_Redundancy_Method_1_ ua="na">Normal</Proxy_Redundancy_Method_1_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
-<Display_Name_1_ ua="na">{$display_name_1}</Display_Name_1_>
-<User_ID_1_ ua="na">{$user_id_1}</User_ID_1_>
-<Password_1_ ua="na">{$user_password_1}</Password_1_>
+<Display_Name_1_ ua="na">{$account.1.display_name}</Display_Name_1_>
+<User_ID_1_ ua="na">{$account.1.user_id}</User_ID_1_>
+<Password_1_ ua="na">{$account.1.password}</Password_1_>
 <Use_Auth_ID_1_ ua="na">No</Use_Auth_ID_1_>
 <Auth_ID_1_ ua="na"></Auth_ID_1_>
 <Mini_Certificate_1_ ua="na"></Mini_Certificate_1_>
@@ -343,7 +343,7 @@
 <Line_Enable_2_ ua="na">Yes</Line_Enable_2_>
 
 <!-- Share Line Appearance -->
-<Share_Ext_2_ ua="na">{if $shared_line_2 == "shared"}shared{else}private{/if}</Share_Ext_2_> <!-- options: private/shared -->
+<Share_Ext_2_ ua="na">{if $account.2.shared_line == "shared"}shared{else}private{/if}</Share_Ext_2_> <!-- options: private/shared -->
 <Shared_User_ID_2_ ua="na"></Shared_User_ID_2_>
 <Subscription_Expires_2_ ua="na">3600</Subscription_Expires_2_>
 <Restrict_MWI_2_ ua="na">No</Restrict_MWI_2_>
@@ -404,23 +404,23 @@
 
 <!-- Proxy and Registration -->
 <Proxy_2_ ua="na">{$domain_name}</Proxy_2_>
-<Outbound_Proxy_2_ ua="na">{$outbound_proxy_primary_2}</Outbound_Proxy_2_>
-<Use_Outbound_Proxy_2_ ua="na">{if isset($outbound_proxy_primary_2)}Yes{else}No{/if}</Use_Outbound_Proxy_2_>
+<Outbound_Proxy_2_ ua="na">{$account.2.outbound_proxy_primary}</Outbound_Proxy_2_>
+<Use_Outbound_Proxy_2_ ua="na">{if isset($account.2.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_2_>
 <Use_OB_Proxy_In_Dialog_2_ ua="na">Yes</Use_OB_Proxy_In_Dialog_2_>
 <Register_2_ ua="na">Yes</Register_2_>
 <Make_Call_Without_Reg_2_ ua="na">No</Make_Call_Without_Reg_2_>
-<Register_Expires_2_ ua="na">{$register_expires_2}</Register_Expires_2_>
+<Register_Expires_2_ ua="na">{$account.2.register_expires}</Register_Expires_2_>
 <Ans_Call_Without_Reg_2_ ua="na">No</Ans_Call_Without_Reg_2_>
-{if $sip_transport_2 == 'dns srv'}<Use_DNS_SRV_2_ ua="na">Yes</Use_DNS_SRV_2_>{/if}
-{if $sip_transport_2 != 'dns srv'}<Use_DNS_SRV_2_ ua="na">No</Use_DNS_SRV_2_>{/if}
+{if $account.2.sip_transport == 'dns srv'}<Use_DNS_SRV_2_ ua="na">Yes</Use_DNS_SRV_2_>{/if}
+{if $account.2.sip_transport != 'dns srv'}<Use_DNS_SRV_2_ ua="na">No</Use_DNS_SRV_2_>{/if}
 <DNS_SRV_Auto_Prefix_2_ ua="na">No</DNS_SRV_Auto_Prefix_2_>
 <Proxy_Fallback_Intvl_2_ ua="na">600</Proxy_Fallback_Intvl_2_>
 <Proxy_Redundancy_Method_2_ ua="na">Normal</Proxy_Redundancy_Method_2_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
-<Display_Name_2_ ua="na">{$display_name_2}</Display_Name_2_>
-<User_ID_2_ ua="na">{$user_id_2}</User_ID_2_>
-<Password_2_ ua="na">{$user_password_2}</Password_2_>
+<Display_Name_2_ ua="na">{$account.2.display_name}</Display_Name_2_>
+<User_ID_2_ ua="na">{$account.2.user_id}</User_ID_2_>
+<Password_2_ ua="na">{$account.2.password}</Password_2_>
 <Use_Auth_ID_2_ ua="na">No</Use_Auth_ID_2_>
 <Auth_ID_2_ ua="na"></Auth_ID_2_>
 <Mini_Certificate_2_ ua="na"></Mini_Certificate_2_>
@@ -457,7 +457,7 @@
 <Line_Enable_3_ ua="na">Yes</Line_Enable_3_>
 
 <!-- Share Line Appearance -->
-<Share_Ext_3_ ua="na">{if $shared_line_3 == "shared"}shared{else}private{/if}</Share_Ext_3_> <!-- options: private/shared -->
+<Share_Ext_3_ ua="na">{if $account.3.shared_line == "shared"}shared{else}private{/if}</Share_Ext_3_> <!-- options: private/shared -->
 <Shared_User_ID_3_ ua="na"></Shared_User_ID_3_>
 <Subscription_Expires_3_ ua="na">3600</Subscription_Expires_3_>
 <Restrict_MWI_3_ ua="na">No</Restrict_MWI_3_>
@@ -478,8 +478,8 @@
 <Jitter_Buffer_Adjustment_3_ ua="na">up and down</Jitter_Buffer_Adjustment_3_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_3_ ua="na">{$sip_transport_3|upper}</SIP_Transport_3_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_3_ ua="na">{$sip_port_3}</SIP_Port_3_>
+<SIP_Transport_3_ ua="na">{$account.3.sip_transport|upper}</SIP_Transport_3_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_3_ ua="na">{$account.3.sip_port}</SIP_Port_3_>
 <SIP_100REL_Enable_3_ ua="na">No</SIP_100REL_Enable_3_>
 <EXT_SIP_Port_3_ ua="na"></EXT_SIP_Port_3_>
 <Auth_Resync-Reboot_3_ ua="na">Yes</Auth_Resync-Reboot_3_>
@@ -518,23 +518,23 @@
 
 <!-- Proxy and Registration -->
 <Proxy_3_ ua="na">{$domain_name}</Proxy_3_>
-<Outbound_Proxy_3_ ua="na">{$outbound_proxy_primary_3}</Outbound_Proxy_3_>
-<Use_Outbound_Proxy_3_ ua="na">{if isset($outbound_proxy_primary_3)}Yes{else}No{/if}</Use_Outbound_Proxy_3_>
+<Outbound_Proxy_3_ ua="na">{$account.3.outbound_proxy_primary}</Outbound_Proxy_3_>
+<Use_Outbound_Proxy_3_ ua="na">{if isset($account.3.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_3_>
 <Use_OB_Proxy_In_Dialog_3_ ua="na">Yes</Use_OB_Proxy_In_Dialog_3_>
 <Register_3_ ua="na">Yes</Register_3_>
 <Make_Call_Without_Reg_3_ ua="na">No</Make_Call_Without_Reg_3_>
-<Register_Expires_3_ ua="na">{$register_expires_3}</Register_Expires_3_>
+<Register_Expires_3_ ua="na">{$account.3.register_expires}</Register_Expires_3_>
 <Ans_Call_Without_Reg_3_ ua="na">No</Ans_Call_Without_Reg_3_>
-{if $sip_transport_3 == 'dns srv'}<Use_DNS_SRV_3_ ua="na">Yes</Use_DNS_SRV_3_>{/if}
-{if $sip_transport_3 != 'dns srv'}<Use_DNS_SRV_3_ ua="na">No</Use_DNS_SRV_3_>{/if}
+{if $account.3.sip_transport == 'dns srv'}<Use_DNS_SRV_3_ ua="na">Yes</Use_DNS_SRV_3_>{/if}
+{if $account.3.sip_transport != 'dns srv'}<Use_DNS_SRV_3_ ua="na">No</Use_DNS_SRV_3_>{/if}
 <DNS_SRV_Auto_Prefix_3_ ua="na">No</DNS_SRV_Auto_Prefix_3_>
 <Proxy_Fallback_Intvl_3_ ua="na">600</Proxy_Fallback_Intvl_3_>
 <Proxy_Redundancy_Method_3_ ua="na">Normal</Proxy_Redundancy_Method_3_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
-<Display_Name_3_ ua="na">{$display_name_3}</Display_Name_3_>
-<User_ID_3_ ua="na">{$user_id_3}</User_ID_3_>
-<Password_3_ ua="na">{$user_password_3}</Password_3_>
+<Display_Name_3_ ua="na">{$account.3.display_name}</Display_Name_3_>
+<User_ID_3_ ua="na">{$account.3.user_id}</User_ID_3_>
+<Password_3_ ua="na">{$account.3.password}</Password_3_>
 <Use_Auth_ID_3_ ua="na">No</Use_Auth_ID_3_>
 <Auth_ID_3_ ua="na"></Auth_ID_3_>
 <Mini_Certificate_3_ ua="na"></Mini_Certificate_3_>
@@ -571,7 +571,7 @@
 <Line_Enable_4_ ua="na">Yes</Line_Enable_4_>
 
 <!-- Share Line Appearance -->
-<Share_Ext_4_ ua="na">{if $shared_line_4 == "shared"}shared{else}private{/if}</Share_Ext_4_> <!-- options: private/shared -->
+<Share_Ext_4_ ua="na">{if $account.4.shared_line == "shared"}shared{else}private{/if}</Share_Ext_4_> <!-- options: private/shared -->
 <Shared_User_ID_4_ ua="na"></Shared_User_ID_4_>
 <Subscription_Expires_4_ ua="na">3600</Subscription_Expires_4_>
 <Restrict_MWI_4_ ua="na">No</Restrict_MWI_4_>
@@ -592,8 +592,8 @@
 <Jitter_Buffer_Adjustment_4_ ua="na">up and down</Jitter_Buffer_Adjustment_4_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_4_ ua="na">{$sip_transport_4|upper}</SIP_Transport_4_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_4_ ua="na">{$sip_port_4}</SIP_Port_4_>
+<SIP_Transport_4_ ua="na">{$account.4.sip_transport|upper}</SIP_Transport_4_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_4_ ua="na">{$account.4.sip_port}</SIP_Port_4_>
 <SIP_100REL_Enable_4_ ua="na">No</SIP_100REL_Enable_4_>
 <EXT_SIP_Port_4_ ua="na"></EXT_SIP_Port_4_>
 <Auth_Resync-Reboot_4_ ua="na">Yes</Auth_Resync-Reboot_4_>
@@ -632,23 +632,23 @@
 
 <!-- Proxy and Registration -->
 <Proxy_4_ ua="na">{$domain_name}</Proxy_4_>
-<Outbound_Proxy_4_ ua="na">{$outbound_proxy_primary_4}</Outbound_Proxy_4_>
-<Use_Outbound_Proxy_4_ ua="na">{if isset($outbound_proxy_primary_4)}Yes{else}No{/if}</Use_Outbound_Proxy_4_>
+<Outbound_Proxy_4_ ua="na">{$account.4.outbound_proxy_primary}</Outbound_Proxy_4_>
+<Use_Outbound_Proxy_4_ ua="na">{if isset($account.4.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_4_>
 <Use_OB_Proxy_In_Dialog_4_ ua="na">Yes</Use_OB_Proxy_In_Dialog_4_>
 <Register_4_ ua="na">Yes</Register_4_>
 <Make_Call_Without_Reg_4_ ua="na">No</Make_Call_Without_Reg_4_>
-<Register_Expires_4_ ua="na">{$register_expires_4}</Register_Expires_4_>
+<Register_Expires_4_ ua="na">{$account.4.register_expires}</Register_Expires_4_>
 <Ans_Call_Without_Reg_4_ ua="na">No</Ans_Call_Without_Reg_4_>
-{if $sip_transport_4 == 'dns srv'}<Use_DNS_SRV_4_ ua="na">Yes</Use_DNS_SRV_4_>{/if}
-{if $sip_transport_4 != 'dns srv'}<Use_DNS_SRV_4_ ua="na">No</Use_DNS_SRV_4_>{/if}
+{if $account.4.sip_transport == 'dns srv'}<Use_DNS_SRV_4_ ua="na">Yes</Use_DNS_SRV_4_>{/if}
+{if $account.4.sip_transport != 'dns srv'}<Use_DNS_SRV_4_ ua="na">No</Use_DNS_SRV_4_>{/if}
 <DNS_SRV_Auto_Prefix_4_ ua="na">No</DNS_SRV_Auto_Prefix_4_>
 <Proxy_Fallback_Intvl_4_ ua="na">600</Proxy_Fallback_Intvl_4_>
 <Proxy_Redundancy_Method_4_ ua="na">Normal</Proxy_Redundancy_Method_4_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
-<Display_Name_4_ ua="na">{$display_name_4}</Display_Name_4_>
-<User_ID_4_ ua="na">{$user_id_4}</User_ID_4_>
-<Password_4_ ua="na">{$user_password_4}</Password_4_>
+<Display_Name_4_ ua="na">{$account.4.display_name}</Display_Name_4_>
+<User_ID_4_ ua="na">{$account.4.user_id}</User_ID_4_>
+<Password_4_ ua="na">{$account.4.password}</Password_4_>
 <Use_Auth_ID_4_ ua="na">No</Use_Auth_ID_4_>
 <Auth_ID_4_ ua="na"></Auth_ID_4_>
 <Mini_Certificate_4_ ua="na"></Mini_Certificate_4_>
@@ -685,7 +685,7 @@
 <Line_Enable_5_ ua="na">Yes</Line_Enable_5_>
 
 <!-- Share Line Appearance -->
-<Share_Ext_5_ ua="na">{if $shared_line_5 == "shared"}shared{else}private{/if}</Share_Ext_5_> <!-- options: private/shared -->
+<Share_Ext_5_ ua="na">{if $account.5.shared_line == "shared"}shared{else}private{/if}</Share_Ext_5_> <!-- options: private/shared -->
 <Shared_User_ID_5_ ua="na"></Shared_User_ID_5_>
 <Subscription_Expires_5_ ua="na">3600</Subscription_Expires_5_>
 <Restrict_MWI_5_ ua="na">No</Restrict_MWI_5_>
@@ -706,8 +706,8 @@
 <Jitter_Buffer_Adjustment_5_ ua="na">up and down</Jitter_Buffer_Adjustment_5_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_5_ ua="na">{$sip_transport_5|upper}</SIP_Transport_5_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_5_ ua="na">{$sip_port_5}</SIP_Port_5_>
+<SIP_Transport_5_ ua="na">{$account.5.sip_transport|upper}</SIP_Transport_5_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_5_ ua="na">{$account.5.sip_port}</SIP_Port_5_>
 <SIP_100REL_Enable_5_ ua="na">No</SIP_100REL_Enable_5_>
 <EXT_SIP_Port_5_ ua="na"></EXT_SIP_Port_5_>
 <Auth_Resync-Reboot_5_ ua="na">Yes</Auth_Resync-Reboot_5_>
@@ -746,22 +746,22 @@
 
 <!-- Proxy and Registration -->
 <Proxy_5_ ua="na">{$domain_name}</Proxy_5_>
-<Outbound_Proxy_5_ ua="na">{$outbound_proxy_primary_5}</Outbound_Proxy_5_>
-<Use_Outbound_Proxy_5_ ua="na">{if isset($outbound_proxy_primary_5)}Yes{else}No{/if}</Use_Outbound_Proxy_5_>
+<Outbound_Proxy_5_ ua="na">{$account.5.outbound_proxy_primary}</Outbound_Proxy_5_>
+<Use_Outbound_Proxy_5_ ua="na">{if isset($account.5.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_5_>
 <Use_OB_Proxy_In_Dialog_5_ ua="na">Yes</Use_OB_Proxy_In_Dialog_5_>
 <Register_5_ ua="na">Yes</Register_5_>
 <Make_Call_Without_Reg_5_ ua="na">No</Make_Call_Without_Reg_5_>
-<Register_Expires_5_ ua="na">{$register_expires_5}</Register_Expires_5_>
+<Register_Expires_5_ ua="na">{$account.5.register_expires}</Register_Expires_5_>
 <Ans_Call_Without_Reg_5_ ua="na">No</Ans_Call_Without_Reg_5_>
-{if $sip_transport_5 == 'dns srv'}<Use_DNS_SRV_5_ ua="na">Yes</Use_DNS_SRV_5_>{/if}
-{if $sip_transport_5 != 'dns srv'}<Use_DNS_SRV_5_ ua="na">No</Use_DNS_SRV_5_>{/if}
+{if $account.5.sip_transport == 'dns srv'}<Use_DNS_SRV_5_ ua="na">Yes</Use_DNS_SRV_5_>{/if}
+{if $account.5.sip_transport != 'dns srv'}<Use_DNS_SRV_5_ ua="na">No</Use_DNS_SRV_5_>{/if}
 <Proxy_Fallback_Intvl_5_ ua="na">600</Proxy_Fallback_Intvl_5_>
 <Proxy_Redundancy_Method_5_ ua="na">Normal</Proxy_Redundancy_Method_5_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
-<Display_Name_5_ ua="na">{$display_name_5}</Display_Name_5_>
-<User_ID_5_ ua="na">{$user_id_5}</User_ID_5_>
-<Password_5_ ua="na">{$user_password_5}</Password_5_>
+<Display_Name_5_ ua="na">{$account.5.display_name}</Display_Name_5_>
+<User_ID_5_ ua="na">{$account.5.user_id}</User_ID_5_>
+<Password_5_ ua="na">{$account.5.user_password}</Password_5_>
 <Use_Auth_ID_5_ ua="na">No</Use_Auth_ID_5_>
 <Auth_ID_5_ ua="na"></Auth_ID_5_>
 <Mini_Certificate_5_ ua="na"></Mini_Certificate_5_>
@@ -798,7 +798,7 @@
 <Line_Enable_6_ ua="na">Yes</Line_Enable_6_>
 
 <!-- Share Line Appearance -->
-<Share_Ext_6_ ua="na">{if $shared_line_6 == "shared"}shared{else}private{/if}</Share_Ext_6_> <!-- options: private/shared -->
+<Share_Ext_6_ ua="na">{if $account.6.shared_line == "shared"}shared{else}private{/if}</Share_Ext_6_> <!-- options: private/shared -->
 <Shared_User_ID_6_ ua="na"></Shared_User_ID_6_>
 <Subscription_Expires_6_ ua="na">3600</Subscription_Expires_6_>
 <Restrict_MWI_6_ ua="na">No</Restrict_MWI_6_>
@@ -819,8 +819,8 @@
 <Jitter_Buffer_Adjustment_6_ ua="na">up and down</Jitter_Buffer_Adjustment_6_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_6_ ua="na">{$sip_transport_6|upper}</SIP_Transport_6_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_6_ ua="na">{$sip_port_6}</SIP_Port_6_>
+<SIP_Transport_6_ ua="na">{$account.6.sip_transport|upper}</SIP_Transport_6_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_6_ ua="na">{$account.6.sip_port}</SIP_Port_6_>
 <SIP_100REL_Enable_6_ ua="na">No</SIP_100REL_Enable_6_>
 <EXT_SIP_Port_6_ ua="na"></EXT_SIP_Port_6_>
 <Auth_Resync-Reboot_6_ ua="na">Yes</Auth_Resync-Reboot_6_>
@@ -859,23 +859,23 @@
 
 <!-- Proxy and Registration -->
 <Proxy_6_ ua="na">{$domain_name}</Proxy_6_>
-<Outbound_Proxy_6_ ua="na">{$outbound_proxy_primary_6}</Outbound_Proxy_6_>
-<Use_Outbound_Proxy_6_ ua="na">{if isset($outbound_proxy_primary_6)}Yes{else}No{/if}</Use_Outbound_Proxy_6_>
+<Outbound_Proxy_6_ ua="na">{$account.6.outbound_proxy_primary}</Outbound_Proxy_6_>
+<Use_Outbound_Proxy_6_ ua="na">{if isset($account.6.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_6_>
 <Use_OB_Proxy_In_Dialog_6_ ua="na">Yes</Use_OB_Proxy_In_Dialog_6_>
 <Register_6_ ua="na">Yes</Register_6_>
 <Make_Call_Without_Reg_6_ ua="na">No</Make_Call_Without_Reg_6_>
-<Register_Expires_6_ ua="na">{$register_expires_6}</Register_Expires_6_>
+<Register_Expires_6_ ua="na">{$account.6.register_expires}</Register_Expires_6_>
 <Ans_Call_Without_Reg_6_ ua="na">No</Ans_Call_Without_Reg_6_>
-{if $sip_transport_6 == 'dns srv'}<Use_DNS_SRV_6_ ua="na">Yes</Use_DNS_SRV_6_>{/if}
-{if $sip_transport_6 != 'dns srv'}<Use_DNS_SRV_6_ ua="na">No</Use_DNS_SRV_6_>{/if}
+{if $account.6.sip_transport == 'dns srv'}<Use_DNS_SRV_6_ ua="na">Yes</Use_DNS_SRV_6_>{/if}
+{if $account.6.sip_transport != 'dns srv'}<Use_DNS_SRV_6_ ua="na">No</Use_DNS_SRV_6_>{/if}
 <DNS_SRV_Auto_Prefix_6_ ua="na">No</DNS_SRV_Auto_Prefix_6_>
 <Proxy_Fallback_Intvl_6_ ua="na">600</Proxy_Fallback_Intvl_6_>
 <Proxy_Redundancy_Method_6_ ua="na">Normal</Proxy_Redundancy_Method_6_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
-<Display_Name_6_ ua="na">{$display_name_6}</Display_Name_6_>
-<User_ID_6_ ua="na">{$user_id_6}</User_ID_6_>
-<Password_6_ ua="na">{$user_password_6}</Password_6_>
+<Display_Name_6_ ua="na">{$account.6.display_name}</Display_Name_6_>
+<User_ID_6_ ua="na">{$account.6.user_id}</User_ID_6_>
+<Password_6_ ua="na">{$account.6.password}</Password_6_>
 <Use_Auth_ID_6_ ua="na">No</Use_Auth_ID_6_>
 <Auth_ID_6_ ua="na"></Auth_ID_6_>
 <Mini_Certificate_6_ ua="na"></Mini_Certificate_6_>
@@ -912,7 +912,7 @@
 <Line_Enable_7_ ua="na">Yes</Line_Enable_7_>
 
 <!-- Share Line Appearance -->
-<Share_Ext_7_ ua="na">{if $shared_line_7 == "shared"}shared{else}private{/if}</Share_Ext_7_> <!-- options: private/shared -->
+<Share_Ext_7_ ua="na">{if $account.7.shared_line == "shared"}shared{else}private{/if}</Share_Ext_7_> <!-- options: private/shared -->
 <Shared_User_ID_7_ ua="na"></Shared_User_ID_7_>
 <Subscription_Expires_7_ ua="na">3600</Subscription_Expires_7_>
 <Restrict_MWI_7_ ua="na">No</Restrict_MWI_7_>
@@ -933,8 +933,8 @@
 <Jitter_Buffer_Adjustment_7_ ua="na">up and down</Jitter_Buffer_Adjustment_7_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_7_ ua="na">{$sip_transport_7|upper}</SIP_Transport_7_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_7_ ua="na">{$sip_port_7}</SIP_Port_7_>
+<SIP_Transport_7_ ua="na">{$account.7.sip_transport|upper}</SIP_Transport_7_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_7_ ua="na">{$account.7.sip_port}</SIP_Port_7_>
 <SIP_100REL_Enable_7_ ua="na">No</SIP_100REL_Enable_7_>
 <EXT_SIP_Port_7_ ua="na"></EXT_SIP_Port_7_>
 <Auth_Resync-Reboot_7_ ua="na">Yes</Auth_Resync-Reboot_7_>
@@ -973,22 +973,22 @@
 
 <!-- Proxy and Registration -->
 <Proxy_7_ ua="na">{$domain_name}</Proxy_7_>
-<Outbound_Proxy_7_ ua="na">{$outbound_proxy_primary_7}</Outbound_Proxy_7_>
-<Use_Outbound_Proxy_7_ ua="na">{if isset($outbound_proxy_primary_7)}Yes{else}No{/if}</Use_Outbound_Proxy_7_>
+<Outbound_Proxy_7_ ua="na">{$account.7.outbound_proxy_primary}</Outbound_Proxy_7_>
+<Use_Outbound_Proxy_7_ ua="na">{if isset($account.7.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_7_>
 <Use_OB_Proxy_In_Dialog_7_ ua="na">Yes</Use_OB_Proxy_In_Dialog_7_>
 <Register_7_ ua="na">Yes</Register_7_>
 <Make_Call_Without_Reg_7_ ua="na">No</Make_Call_Without_Reg_7_>
-<Register_Expires_7_ ua="na">{$register_expires_7}</Register_Expires_7_>
+<Register_Expires_7_ ua="na">{$account.7.register_expires}</Register_Expires_7_>
 <Ans_Call_Without_Reg_7_ ua="na">No</Ans_Call_Without_Reg_7_>
-{if $sip_transport_7 == 'dns srv'}<Use_DNS_SRV_7_ ua="na">Yes</Use_DNS_SRV_7_>{/if}
-{if $sip_transport_7 != 'dns srv'}<Use_DNS_SRV_7_ ua="na">No</Use_DNS_SRV_7_>{/if}
+{if $account.7.sip_transport == 'dns srv'}<Use_DNS_SRV_7_ ua="na">Yes</Use_DNS_SRV_7_>{/if}
+{if $account.7.sip_transport != 'dns srv'}<Use_DNS_SRV_7_ ua="na">No</Use_DNS_SRV_7_>{/if}
 <Proxy_Fallback_Intvl_7_ ua="na">600</Proxy_Fallback_Intvl_7_>
 <Proxy_Redundancy_Method_7_ ua="na">Normal</Proxy_Redundancy_Method_7_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
-<Display_Name_7_ ua="na">{$display_name_7}</Display_Name_7_>
-<User_ID_7_ ua="na">{$user_id_7}</User_ID_7_>
-<Password_7_ ua="na">{$user_password_7}</Password_7_>
+<Display_Name_7_ ua="na">{$account.7.display_name}</Display_Name_7_>
+<User_ID_7_ ua="na">{$account.7.user_id}</User_ID_7_>
+<Password_7_ ua="na">{$account.7.password}</Password_7_>
 <Use_Auth_ID_7_ ua="na">No</Use_Auth_ID_7_>
 <Auth_ID_7_ ua="na"></Auth_ID_7_>
 <Mini_Certificate_7_ ua="na"></Mini_Certificate_7_>
@@ -1025,7 +1025,7 @@
 <Line_Enable_8_ ua="na">Yes</Line_Enable_8_>
 
 <!-- Share Line Appearance -->
-<Share_Ext_8_ ua="na">{if $shared_line_8 == "shared"}shared{else}private{/if}</Share_Ext_8_> <!-- options: private/shared -->
+<Share_Ext_8_ ua="na">{if $account.8.shared_line == "shared"}shared{else}private{/if}</Share_Ext_8_> <!-- options: private/shared -->
 <Shared_User_ID_8_ ua="na"></Shared_User_ID_8_>
 <Subscription_Expires_8_ ua="na">3600</Subscription_Expires_8_>
 <Restrict_MWI_8_ ua="na">No</Restrict_MWI_8_>
@@ -1046,8 +1046,8 @@
 <Jitter_Buffer_Adjustment_8_ ua="na">up and down</Jitter_Buffer_Adjustment_8_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_8_ ua="na">{$sip_transport_8|upper}</SIP_Transport_8_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_8_ ua="na">{$sip_port_8}</SIP_Port_8_>
+<SIP_Transport_8_ ua="na">{$account.8.sip_transport|upper}</SIP_Transport_8_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_8_ ua="na">{$account.8.sip_port}</SIP_Port_8_>
 <SIP_100REL_Enable_8_ ua="na">No</SIP_100REL_Enable_8_>
 <EXT_SIP_Port_8_ ua="na"></EXT_SIP_Port_8_>
 <Auth_Resync-Reboot_8_ ua="na">Yes</Auth_Resync-Reboot_8_>
@@ -1086,22 +1086,22 @@
 
 <!-- Proxy and Registration -->
 <Proxy_8_ ua="na">{$domain_name}</Proxy_8_>
-<Outbound_Proxy_8_ ua="na">{$outbound_proxy_primary_8}</Outbound_Proxy_8_>
-<Use_Outbound_Proxy_8_ ua="na">{if isset($outbound_proxy_primary_8)}Yes{else}No{/if}</Use_Outbound_Proxy_8_>
+<Outbound_Proxy_8_ ua="na">{$account.8.outbound_proxy_primary}</Outbound_Proxy_8_>
+<Use_Outbound_Proxy_8_ ua="na">{if isset($account.8.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_8_>
 <Use_OB_Proxy_In_Dialog_8_ ua="na">Yes</Use_OB_Proxy_In_Dialog_8_>
 <Register_8_ ua="na">Yes</Register_8_>
 <Make_Call_Without_Reg_8_ ua="na">No</Make_Call_Without_Reg_8_>
-<Register_Expires_8_ ua="na">{$register_expires_8}</Register_Expires_8_>
+<Register_Expires_8_ ua="na">{$account.8.register_expires}</Register_Expires_8_>
 <Ans_Call_Without_Reg_8_ ua="na">No</Ans_Call_Without_Reg_8_>
-{if $sip_transport_8 == 'dns srv'}<Use_DNS_SRV_8_ ua="na">Yes</Use_DNS_SRV_8_>{/if}
-{if $sip_transport_8 != 'dns srv'}<Use_DNS_SRV_8_ ua="na">No</Use_DNS_SRV_8_>{/if}
+{if $account.8.sip_transport == 'dns srv'}<Use_DNS_SRV_8_ ua="na">Yes</Use_DNS_SRV_8_>{/if}
+{if $account.8.sip_transport != 'dns srv'}<Use_DNS_SRV_8_ ua="na">No</Use_DNS_SRV_8_>{/if}
 <Proxy_Fallback_Intvl_8_ ua="na">600</Proxy_Fallback_Intvl_8_>
 <Proxy_Redundancy_Method_8_ ua="na">Normal</Proxy_Redundancy_Method_8_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
-<Display_Name_8_ ua="na">{$display_name_8}</Display_Name_8_>
-<User_ID_8_ ua="na">{$user_id_8}</User_ID_8_>
-<Password_8_ ua="na">{$user_password_8}</Password_8_>
+<Display_Name_8_ ua="na">{$account.8.display_name}</Display_Name_8_>
+<User_ID_8_ ua="na">{$account.8.user_id}</User_ID_8_>
+<Password_8_ ua="na">{$account.8.password}</Password_8_>
 <Use_Auth_ID_8_ ua="na">No</Use_Auth_ID_8_>
 <Auth_ID_8_ ua="na"></Auth_ID_8_>
 <Mini_Certificate_8_ ua="na"></Mini_Certificate_8_>
@@ -1138,7 +1138,7 @@
 <Line_Enable_9_ ua="na">Yes</Line_Enable_9_>
 
 <!-- Share Line Appearance -->
-<Share_Ext_9_ ua="na">{if $shared_line_9 == "shared"}shared{else}private{/if}</Share_Ext_9_> <!-- options: private/shared -->
+<Share_Ext_9_ ua="na">{if $account.9.shared_line == "shared"}shared{else}private{/if}</Share_Ext_9_> <!-- options: private/shared -->
 <Shared_User_ID_9_ ua="na"></Shared_User_ID_9_>
 <Subscription_Expires_9_ ua="na">3600</Subscription_Expires_9_>
 <Restrict_MWI_9_ ua="na">No</Restrict_MWI_9_>
@@ -1159,8 +1159,8 @@
 <Jitter_Buffer_Adjustment_9_ ua="na">up and down</Jitter_Buffer_Adjustment_9_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_9_ ua="na">{$sip_transport_9|upper}</SIP_Transport_9_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_9_ ua="na">{$sip_port_9}</SIP_Port_9_>
+<SIP_Transport_9_ ua="na">{$account.9.sip_transport|upper}</SIP_Transport_9_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_9_ ua="na">{$account.9.sip_port}</SIP_Port_9_>
 <SIP_100REL_Enable_9_ ua="na">No</SIP_100REL_Enable_9_>
 <EXT_SIP_Port_9_ ua="na"></EXT_SIP_Port_9_>
 <Auth_Resync-Reboot_9_ ua="na">Yes</Auth_Resync-Reboot_9_>
@@ -1199,22 +1199,22 @@
 
 <!-- Proxy and Registration -->
 <Proxy_9_ ua="na">{$domain_name}</Proxy_9_>
-<Outbound_Proxy_9_ ua="na">{$outbound_proxy_primary_9}</Outbound_Proxy_9_>
-<Use_Outbound_Proxy_9_ ua="na">{if isset($outbound_proxy_primary_9)}Yes{else}No{/if}</Use_Outbound_Proxy_9_>
+<Outbound_Proxy_9_ ua="na">{$account.9.outbound_proxy_primary}</Outbound_Proxy_9_>
+<Use_Outbound_Proxy_9_ ua="na">{if isset($account.9.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_9_>
 <Use_OB_Proxy_In_Dialog_9_ ua="na">Yes</Use_OB_Proxy_In_Dialog_9_>
 <Register_9_ ua="na">Yes</Register_9_>
 <Make_Call_Without_Reg_9_ ua="na">No</Make_Call_Without_Reg_9_>
-<Register_Expires_9_ ua="na">{$register_expires_9}</Register_Expires_9_>
+<Register_Expires_9_ ua="na">{$account.9.register_expires}</Register_Expires_9_>
 <Ans_Call_Without_Reg_9_ ua="na">No</Ans_Call_Without_Reg_9_>
-{if $sip_transport_9 == 'dns srv'}<Use_DNS_SRV_9_ ua="na">Yes</Use_DNS_SRV_9_>{/if}
-{if $sip_transport_9 != 'dns srv'}<Use_DNS_SRV_9_ ua="na">No</Use_DNS_SRV_9_>{/if}
+{if $account.9.sip_transport == 'dns srv'}<Use_DNS_SRV_9_ ua="na">Yes</Use_DNS_SRV_9_>{/if}
+{if $account.9.sip_transport != 'dns srv'}<Use_DNS_SRV_9_ ua="na">No</Use_DNS_SRV_9_>{/if}
 <Proxy_Fallback_Intvl_9_ ua="na">600</Proxy_Fallback_Intvl_9_>
 <Proxy_Redundancy_Method_9_ ua="na">Normal</Proxy_Redundancy_Method_9_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
-<Display_Name_9_ ua="na">{$display_name_9}</Display_Name_9_>
-<User_ID_9_ ua="na">{$user_id_9}</User_ID_9_>
-<Password_9_ ua="na">{$user_password_9}</Password_9_>
+<Display_Name_9_ ua="na">{$account.9.display_name}</Display_Name_9_>
+<User_ID_9_ ua="na">{$account.9.user_id}</User_ID_9_>
+<Password_9_ ua="na">{$account.9.password}</Password_9_>
 <Use_Auth_ID_9_ ua="na">No</Use_Auth_ID_9_>
 <Auth_ID_9_ ua="na"></Auth_ID_9_>
 <Mini_Certificate_9_ ua="na"></Mini_Certificate_9_>
@@ -1251,7 +1251,7 @@
 <Line_Enable_10_ ua="na">Yes</Line_Enable_10_>
 
 <!-- Share Line Appearance -->
-<Share_Ext_10_ ua="na">{if $shared_line_10 == "shared"}shared{else}private{/if}</Share_Ext_10_> <!-- options: private/shared -->
+<Share_Ext_10_ ua="na">{if $account.10.shared_line == "shared"}shared{else}private{/if}</Share_Ext_10_> <!-- options: private/shared -->
 <Shared_User_ID_10_ ua="na"></Shared_User_ID_10_>
 <Subscription_Expires_10_ ua="na">3600</Subscription_Expires_10_>
 <Restrict_MWI_10_ ua="na">No</Restrict_MWI_10_>
@@ -1272,8 +1272,8 @@
 <Jitter_Buffer_Adjustment_10_ ua="na">up and down</Jitter_Buffer_Adjustment_10_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_10_ ua="na">{$sip_transport_10|upper}</SIP_Transport_10_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_10_ ua="na">{$sip_port_10}</SIP_Port_10_>
+<SIP_Transport_10_ ua="na">{$account.10.sip_transport|upper}</SIP_Transport_10_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_10_ ua="na">{$account.10.sip_port}</SIP_Port_10_>
 <SIP_100REL_Enable_10_ ua="na">No</SIP_100REL_Enable_10_>
 <EXT_SIP_Port_10_ ua="na"></EXT_SIP_Port_10_>
 <Auth_Resync-Reboot_10_ ua="na">Yes</Auth_Resync-Reboot_10_>
@@ -1312,22 +1312,22 @@
 
 <!-- Proxy and Registration -->
 <Proxy_10_ ua="na">{$domain_name}</Proxy_10_>
-<Outbound_Proxy_10_ ua="na">{$outbound_proxy_primary_10}</Outbound_Proxy_10_>
-<Use_Outbound_Proxy_10_ ua="na">{if isset($outbound_proxy_primary_10)}Yes{else}No{/if}</Use_Outbound_Proxy_10_>
+<Outbound_Proxy_10_ ua="na">{$account.10.outbound_proxy_primary}</Outbound_Proxy_10_>
+<Use_Outbound_Proxy_10_ ua="na">{if isset($account.10.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_10_>
 <Use_OB_Proxy_In_Dialog_10_ ua="na">Yes</Use_OB_Proxy_In_Dialog_10_>
 <Register_10_ ua="na">Yes</Register_10_>
 <Make_Call_Without_Reg_10_ ua="na">No</Make_Call_Without_Reg_10_>
-<Register_Expires_10_ ua="na">{$register_expires_10}</Register_Expires_10_>
+<Register_Expires_10_ ua="na">{$account.10.register_expires}</Register_Expires_10_>
 <Ans_Call_Without_Reg_10_ ua="na">No</Ans_Call_Without_Reg_10_>
-{if $sip_transport_10 == 'dns srv'}<Use_DNS_SRV_10_ ua="na">Yes</Use_DNS_SRV_10_>{/if}
-{if $sip_transport_10 != 'dns srv'}<Use_DNS_SRV_10_ ua="na">No</Use_DNS_SRV_10_>{/if}
+{if $account.10.sip_transport == 'dns srv'}<Use_DNS_SRV_10_ ua="na">Yes</Use_DNS_SRV_10_>{/if}
+{if $account.10.sip_transport != 'dns srv'}<Use_DNS_SRV_10_ ua="na">No</Use_DNS_SRV_10_>{/if}
 <Proxy_Fallback_Intvl_10_ ua="na">600</Proxy_Fallback_Intvl_10_>
 <Proxy_Redundancy_Method_10_ ua="na">Normal</Proxy_Redundancy_Method_10_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
-<Display_Name_10_ ua="na">{$display_name_10}</Display_Name_10_>
-<User_ID_10_ ua="na">{$user_id_10}</User_ID_10_>
-<Password_10_ ua="na">{$user_password_10}</Password_10_>
+<Display_Name_10_ ua="na">{$account.10.display_name}</Display_Name_10_>
+<User_ID_10_ ua="na">{$account.10.user_id}</User_ID_10_>
+<Password_10_ ua="na">{$account.10.password}</Password_10_>
 <Use_Auth_ID_10_ ua="na">No</Use_Auth_ID_10_>
 <Auth_ID_10_ ua="na"></Auth_ID_10_>
 <Mini_Certificate_10_ ua="na"></Mini_Certificate_10_>
@@ -1364,7 +1364,7 @@
 <Line_Enable_11_ ua="na">Yes</Line_Enable_11_>
 
 <!-- Share Line Appearance -->
-<Share_Ext_11_ ua="na">{if $shared_line_11 == "shared"}shared{else}private{/if}</Share_Ext_11_> <!-- options: private/shared -->
+<Share_Ext_11_ ua="na">{if $account.11.shared_line == "shared"}shared{else}private{/if}</Share_Ext_11_> <!-- options: private/shared -->
 <Shared_User_ID_11_ ua="na"></Shared_User_ID_11_>
 <Subscription_Expires_11_ ua="na">3600</Subscription_Expires_11_>
 <Restrict_MWI_11_ ua="na">No</Restrict_MWI_11_>
@@ -1385,8 +1385,8 @@
 <Jitter_Buffer_Adjustment_11_ ua="na">up and down</Jitter_Buffer_Adjustment_11_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_11_ ua="na">{$sip_transport_11|upper}</SIP_Transport_11_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_11_ ua="na">{$sip_port_11}</SIP_Port_11_>
+<SIP_Transport_11_ ua="na">{$account.11.sip_transport|upper}</SIP_Transport_11_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_11_ ua="na">{$account.11.sip_port}</SIP_Port_11_>
 <SIP_100REL_Enable_11_ ua="na">No</SIP_100REL_Enable_11_>
 <EXT_SIP_Port_11_ ua="na"></EXT_SIP_Port_11_>
 <Auth_Resync-Reboot_11_ ua="na">Yes</Auth_Resync-Reboot_11_>
@@ -1425,22 +1425,22 @@
 
 <!-- Proxy and Registration -->
 <Proxy_11_ ua="na">{$domain_name}</Proxy_11_>
-<Outbound_Proxy_11_ ua="na">{$outbound_proxy_primary_11}</Outbound_Proxy_11_>
-<Use_Outbound_Proxy_11_ ua="na">{if isset($outbound_proxy_primary_11)}Yes{else}No{/if}</Use_Outbound_Proxy_11_>
+<Outbound_Proxy_11_ ua="na">{$account.11.outbound_proxy_primary}</Outbound_Proxy_11_>
+<Use_Outbound_Proxy_11_ ua="na">{if isset($account.11.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_11_>
 <Use_OB_Proxy_In_Dialog_11_ ua="na">Yes</Use_OB_Proxy_In_Dialog_11_>
 <Register_11_ ua="na">Yes</Register_11_>
 <Make_Call_Without_Reg_11_ ua="na">No</Make_Call_Without_Reg_11_>
-<Register_Expires_11_ ua="na">{$register_expires_11}</Register_Expires_11_>
+<Register_Expires_11_ ua="na">{$account.11.register_expires}</Register_Expires_11_>
 <Ans_Call_Without_Reg_11_ ua="na">No</Ans_Call_Without_Reg_11_>
-{if $sip_transport_11 == 'dns srv'}<Use_DNS_SRV_11_ ua="na">Yes</Use_DNS_SRV_11_>{/if}
-{if $sip_transport_11 != 'dns srv'}<Use_DNS_SRV_11_ ua="na">No</Use_DNS_SRV_11_>{/if}
+{if $account.11.sip_transport == 'dns srv'}<Use_DNS_SRV_11_ ua="na">Yes</Use_DNS_SRV_11_>{/if}
+{if $account.11.sip_transport != 'dns srv'}<Use_DNS_SRV_11_ ua="na">No</Use_DNS_SRV_11_>{/if}
 <Proxy_Fallback_Intvl_11_ ua="na">600</Proxy_Fallback_Intvl_11_>
 <Proxy_Redundancy_Method_11_ ua="na">Normal</Proxy_Redundancy_Method_11_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
-<Display_Name_11_ ua="na">{$display_name_11}</Display_Name_11_>
-<User_ID_11_ ua="na">{$user_id_11}</User_ID_11_>
-<Password_11_ ua="na">{$user_password_11}</Password_11_>
+<Display_Name_11_ ua="na">{$account.11.display_name}</Display_Name_11_>
+<User_ID_11_ ua="na">{$account.11.user_id}</User_ID_11_>
+<Password_11_ ua="na">{$account.11.password}</Password_11_>
 <Use_Auth_ID_11_ ua="na">No</Use_Auth_ID_11_>
 <Auth_ID_11_ ua="na"></Auth_ID_11_>
 <Mini_Certificate_11_ ua="na"></Mini_Certificate_11_>
@@ -1477,7 +1477,7 @@
 <Line_Enable_12_ ua="na">Yes</Line_Enable_12_>
 
 <!-- Share Line Appearance -->
-<Share_Ext_12_ ua="na">{if $shared_line_12 == "shared"}shared{else}private{/if}</Share_Ext_12_> <!-- options: private/shared -->
+<Share_Ext_12_ ua="na">{if $account.12.shared_line == "shared"}shared{else}private{/if}</Share_Ext_12_> <!-- options: private/shared -->
 <Shared_User_ID_12_ ua="na"></Shared_User_ID_12_>
 <Subscription_Expires_12_ ua="na">3600</Subscription_Expires_12_>
 <Restrict_MWI_12_ ua="na">No</Restrict_MWI_12_>
@@ -1498,8 +1498,8 @@
 <Jitter_Buffer_Adjustment_12_ ua="na">up and down</Jitter_Buffer_Adjustment_12_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_12_ ua="na">{$sip_transport_12|upper}</SIP_Transport_12_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_12_ ua="na">{$sip_port_12}</SIP_Port_12_>
+<SIP_Transport_12_ ua="na">{$account.12.sip_transport|upper}</SIP_Transport_12_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_12_ ua="na">{$account.12.sip_port}</SIP_Port_12_>
 <SIP_100REL_Enable_12_ ua="na">No</SIP_100REL_Enable_12_>
 <EXT_SIP_Port_12_ ua="na"></EXT_SIP_Port_12_>
 <Auth_Resync-Reboot_12_ ua="na">Yes</Auth_Resync-Reboot_12_>
@@ -1538,22 +1538,22 @@
 
 <!-- Proxy and Registration -->
 <Proxy_12_ ua="na">{$domain_name}</Proxy_12_>
-<Outbound_Proxy_12_ ua="na">{$outbound_proxy_primary_12}</Outbound_Proxy_12_>
-<Use_Outbound_Proxy_12_ ua="na">{if isset($outbound_proxy_primary_12)}Yes{else}No{/if}</Use_Outbound_Proxy_12_>
+<Outbound_Proxy_12_ ua="na">{$account.12.outbound_proxy_primary}</Outbound_Proxy_12_>
+<Use_Outbound_Proxy_12_ ua="na">{if isset($account.12.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_12_>
 <Use_OB_Proxy_In_Dialog_12_ ua="na">Yes</Use_OB_Proxy_In_Dialog_12_>
 <Register_12_ ua="na">Yes</Register_12_>
 <Make_Call_Without_Reg_12_ ua="na">No</Make_Call_Without_Reg_12_>
-<Register_Expires_12_ ua="na">{$register_expires_12}</Register_Expires_12_>
+<Register_Expires_12_ ua="na">{$account.12.register_expires}</Register_Expires_12_>
 <Ans_Call_Without_Reg_12_ ua="na">No</Ans_Call_Without_Reg_12_>
-{if $sip_transport_12 == 'dns srv'}<Use_DNS_SRV_12_ ua="na">Yes</Use_DNS_SRV_12_>{/if}
-{if $sip_transport_12 != 'dns srv'}<Use_DNS_SRV_12_ ua="na">No</Use_DNS_SRV_12_>{/if}
+{if $account.12.sip_transport == 'dns srv'}<Use_DNS_SRV_12_ ua="na">Yes</Use_DNS_SRV_12_>{/if}
+{if $account.12.sip_transport != 'dns srv'}<Use_DNS_SRV_12_ ua="na">No</Use_DNS_SRV_12_>{/if}
 <Proxy_Fallback_Intvl_12_ ua="na">600</Proxy_Fallback_Intvl_12_>
 <Proxy_Redundancy_Method_12_ ua="na">Normal</Proxy_Redundancy_Method_12_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
-<Display_Name_12_ ua="na">{$display_name_12}</Display_Name_12_>
-<User_ID_12_ ua="na">{$user_id_12}</User_ID_12_>
-<Password_12_ ua="na">{$user_password_12}</Password_12_>
+<Display_Name_12_ ua="na">{$account.12.display_name}</Display_Name_12_>
+<User_ID_12_ ua="na">{$account.12.user_id}</User_ID_12_>
+<Password_12_ ua="na">{$account.12.password}</Password_12_>
 <Use_Auth_ID_12_ ua="na">No</Use_Auth_ID_12_>
 <Auth_ID_12_ ua="na"></Auth_ID_12_>
 <Mini_Certificate_12_ ua="na"></Mini_Certificate_12_>
