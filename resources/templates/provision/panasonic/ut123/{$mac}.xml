@@ -61,14 +61,14 @@
  </Codec>
 <Line ID="1">
  <Enable LINE_ENABLE_1="Enabled"/>
- <DirectoryNumber PHONE_NUMBER_1="{$user_id_1}"/>
+ <DirectoryNumber PHONE_NUMBER_1="{$account.1.user_id}"/>
 <SIP>
- <AuthUserName SIP_AUTHID_1="{$user_id_1}"/>
- <AuthPassword SIP_PASS_1="{$user_password_1}"/>
- <URI SIP_URI_1="{$user_id_1}"/>
+ <AuthUserName SIP_AUTHID_1="{$account.1.auth_id}"/>
+ <AuthPassword SIP_PASS_1="{$account.1.password}"/>
+ <URI SIP_URI_1="{$account.1.user_id}"/>
  </SIP>
 <CallingFeatures>
- <CallerIDName DISPLAY_NAME_1="{$display_name_1}"/>
+ <CallerIDName DISPLAY_NAME_1="{$account.1.display_name}"/>
  <CallWaitingEnable CW_ENABLE_1="Y"/>
  </CallingFeatures>
 <CallFeat>
@@ -144,14 +144,14 @@
  </Line>
 <Line ID="2">
  <Enable LINE_ENABLE_2="Enabled"/>
- <DirectoryNumber PHONE_NUMBER_2="{$user_id_2}"/>
+ <DirectoryNumber PHONE_NUMBER_2="{$account.2.user_id}"/>
 <SIP>
- <AuthUserName SIP_AUTHID_2="{$user_id_2}"/>
- <AuthPassword SIP_PASS_2="{$user_password_2}"/>
- <URI SIP_URI_2="{$user_id_2}"/>
+ <AuthUserName SIP_AUTHID_2="{$account.2.auth_id}"/>
+ <AuthPassword SIP_PASS_2="{$account.2.password}"/>
+ <URI SIP_URI_2="{$account.2.user_id}"/>
  </SIP>
 <CallingFeatures>
- <CallerIDName DISPLAY_NAME_2="{$display_name_2}"/>
+ <CallerIDName DISPLAY_NAME_2="{$account.2.display_name}"/>
  <CallWaitingEnable CW_ENABLE_2="Y"/>
  </CallingFeatures>
 <CallFeat>
