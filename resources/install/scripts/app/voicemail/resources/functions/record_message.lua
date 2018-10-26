@@ -81,6 +81,11 @@
 						return ''
 					end
 					local transcribe_json = JSON.decode(transcribe_result);
+					--Trancribe result can be nil
+					if (transcribe_json["results"] == nil) then
+						freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: results = (null) \n");
+						return ''
+					end
 					if (debug["info"]) then
 						if (transcribe_json["results"][1]["name"] == nil) then
 							freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: (null) \n");
