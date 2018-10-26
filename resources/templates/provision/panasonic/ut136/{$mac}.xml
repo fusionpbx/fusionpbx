@@ -7,12 +7,12 @@
         <DTMFMethod OUTBANDDTMF_1="Y" OUTBANDDTMF_2="Y" OUTBANDDTMF_3="Y" OUTBANDDTMF_4="Y"/>
         <DigitMap DIAL_PLAN_1="1XXXXXXXXXX|X11|480XXXXXXX|602XXXXXXX|623XXXXXXX" DIAL_PLAN_2="1XXXXXXXXXX|X11|480XXXXXXX|602XXXXXXX|623XXXXXXX" DIAL_PLAN_3="" DIAL_PLAN_4=""/>
         <SIP>
-          <ProxyServer SIP_PRXY_ADDR_1="{$server_address_1}" SIP_PRXY_ADDR_2="{$server_address_2}" SIP_PRXY_ADDR_3="{$server_address_3}" SIP_PRXY_ADDR_4="{$server_address_4}"/>
+          <ProxyServer SIP_PRXY_ADDR_1="{$account.1.server_address}" SIP_PRXY_ADDR_2="{$account.2.server_address}" SIP_PRXY_ADDR_3="{$account.3.server_address}" SIP_PRXY_ADDR_4="{$account.4.server_address}"/>
           <ProxyServerPort SIP_PRXY_PORT_1="5060" SIP_PRXY_PORT_2="5060" SIP_PRXY_PORT_3="5060" SIP_PRXY_PORT_4="5060"/>
           <ProxyServerTransport SIP_TRANSPORT_1="0" SIP_TRANSPORT_2="0" SIP_TRANSPORT_3="0" SIP_TRANSPORT_4="0"/>
-          <RegistrarServer SIP_RGSTR_ADDR_1="{$server_address_1}" SIP_RGSTR_ADDR_2="{$server_address_2}" SIP_RGSTR_ADDR_3="{$server_address_3}" SIP_RGSTR_ADDR_4="{$server_address_4}"/>
+          <RegistrarServer SIP_RGSTR_ADDR_1="{$account.1.server_address}" SIP_RGSTR_ADDR_2="{$account.2.server_address}" SIP_RGSTR_ADDR_3="{$account.3.server_address}" SIP_RGSTR_ADDR_4="{$account.4.server_address}"/>
           <RegistrarServerPort SIP_RGSTR_PORT_1="5060" SIP_RGSTR_PORT_2="5060" SIP_RGSTR_PORT_3="5060" SIP_RGSTR_PORT_4="5060"/>
-          <UserAgentDomain SIP_SVCDOMAIN_1="{$server_address_1}" SIP_SVCDOMAIN_2="{$server_address_2}" SIP_SVCDOMAIN_3="{$server_address_3}" SIP_SVCDOMAIN_4="{$server_address_4}"/>
+          <UserAgentDomain SIP_SVCDOMAIN_1="{$account.1.server_address}" SIP_SVCDOMAIN_2="{$account.2.server_address}" SIP_SVCDOMAIN_3="{$account.3.server_address}" SIP_SVCDOMAIN_4="{$account.4.server_address}"/>
           <UserAgentPort1 SIP_SRC_PORT_1="5060"/>
           <UserAgentPort2 SIP_SRC_PORT_2="5070"/>
           <UserAgentPort3 SIP_SRC_PORT_3="5080"/>
@@ -40,7 +40,7 @@
           <HoldSoundPath HOLD_SOUND_PATH_1="0" HOLD_SOUND_PATH_2="0" HOLD_SOUND_PATH_3="0" HOLD_SOUND_PATH_4="0"/>
           <SIPRequestURIPort SIP_REQURI_PORT_1="Y" SIP_REQURI_PORT_2="Y" SIP_REQURI_PORT_3="Y" SIP_REQURI_PORT_4="Y"/>
           <EventSubscribe>
-            <Notifier SIP_PRSNC_ADDR_1="{$server_address_1}" SIP_PRSNC_ADDR_2="{$server_address_2}" SIP_PRSNC_ADDR_3="{$server_address_3}" SIP_PRSNC_ADDR_4="{$server_address_4}"/>
+            <Notifier SIP_PRSNC_ADDR_1="{$account.1.server_address}" SIP_PRSNC_ADDR_2="{$account.2.server_address}" SIP_PRSNC_ADDR_3="{$account.3.server_address}" SIP_PRSNC_ADDR_4="{$account.4.server_address}"/>
             <NotifierPort SIP_PRSNC_PORT_1="5060" SIP_PRSNC_PORT_2="5060" SIP_PRSNC_PORT_3="5060" SIP_PRSNC_PORT_4="5060"/>
             <ExpireTime SIP_SUBS_EXPIRE_1="3600" SIP_SUBS_EXPIRE_2="3600" SIP_SUBS_EXPIRE_3="3600" SIP_SUBS_EXPIRE_4="3600"/>
             <X_P_IPTEL_SIPNotifier2 SIP_2NDPRSNC_ADDR_1="" SIP_2NDPRSNC_ADDR_2="" SIP_2NDPRSNC_ADDR_3="" SIP_2NDPRSNC_ADDR_4=""/>
@@ -292,14 +292,14 @@
         </Line>
         <Line ID="2">
           <Enable LINE_ENABLE_2="Enabled"/>
-          <DirectoryNumber PHONE_NUMBER_2="{$user_id_2}"/>
+          <DirectoryNumber PHONE_NUMBER_2="{$account.2.user_id}"/>
           <SIP>
-            <AuthUserName SIP_AUTHID_2="{$user_id_2}"/>
-            <AuthPassword SIP_PASS_2="{$user_password_2}"/>
+            <AuthUserName SIP_AUTHID_2="{$account.2.auth_id}"/>
+            <AuthPassword SIP_PASS_2="{$account.2.password}"/>
             <URI SIP_URI_2="{$user_id_2}"/>
           </SIP>
           <CallingFeatures>
-            <CallerIDName DISPLAY_NAME_2="{$display_name_2}"/>
+            <CallerIDName DISPLAY_NAME_2="{$account.2.display_name}"/>
             <CallWaitingEnable CW_ENABLE_2="Y"/>
           </CallingFeatures>
           <CallFeat>
@@ -635,7 +635,7 @@
       <ProvisionEnable PROVISION_ENABLE="Y"/>
       <Option66Enable OPTION66_ENABLE="Y"/>
       <Option66Reboot OPTION66_REBOOT="Y"/>
-      <StandardFileURL CFG_STANDARD_FILE_PATH="https://{$server_address_1}{$project_path}/app/provision"/>
+      <StandardFileURL CFG_STANDARD_FILE_PATH="https://{$account.1.server_address}{$project_path}/app/provision"/>
       <ProductFileURL CFG_PRODUCT_FILE_PATH=""/>
       <MasterFileURL CFG_MASTER_FILE_PATH=""/>
       <CyclicEnable CFG_CYCLIC="Y"/>
