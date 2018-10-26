@@ -100,18 +100,18 @@
 					return transcription;
 				end
 			end
-			--start of my section
 			if (transcribe_provider == "selfhosted") then
 				local transcription_server = settings:get('voicemail', 'transcription_server', 'text') or '';
-				freeswitch.consoleLog("notice", "[voicemail] transcription provider: " .. transcription_server .. "\n");
 				local api_key2 = settings:get('voicemail', 'api_key', 'text') or '';
 				if (transcription_server ~= '') then
 					transcribe_cmd = "curl -L " .. transcription_server .. " -F file=@"..file_path
 					local handle = io.popen(transcribe_cmd);
 					local transcribe_result = handle:read("*a");
 					handle:close();
-					freeswitch.consoleLog("notice", "[voicemail] CMD: " .. transcribe_cmd .. "\n");
-					freeswitch.consoleLog("notice", "[voicemail] RESULT: " .. transcribe_result .. "\n");
+					if (debug["info"]) then
+						freeswitch.consoleLog("notice", "[voicemail] CMD: " .. transcribe_cmd .. "\n");
+						freeswitch.consoleLog("notice", "[voicemail] RESULT: " .. transcribe_result .. "\n");
+					end
 					--Trancribe request can fail
 					if (transcribe_result == '') then
 						freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: (null) \n");
@@ -120,7 +120,6 @@
 					return transcribe_result;
 				end
 			end
-			--end of my function
 		else
 			if (debug["info"]) then
 				freeswitch.consoleLog("notice", "[voicemail] message too short for transcription.\n");
