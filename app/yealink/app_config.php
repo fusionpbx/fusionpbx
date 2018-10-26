@@ -124,7 +124,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call Waiting Tone 0-Disabled, 1-Enabled (default)"
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call Waiting Tone 0-Disabled, 1-Enabled (default)";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2c3445ff-0339-43d4-8762-3c87ec37be57";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
