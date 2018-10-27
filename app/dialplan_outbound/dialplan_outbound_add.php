@@ -263,7 +263,7 @@
 							$label = $text['label-9d.12-20'];
 							$abbrv = "9.12-20";
 							break;
-						case "^1?(8(00|55|66|77|88)[2-9]\d{6})$":
+						case "^1?(8(00|33|44|55|66|77|88)[2-9]\d{6})$":
 							$label = $text['label-800'];
 							$abbrv = "800";
 							break;
@@ -972,7 +972,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "	<option value='^(411)\$'>".$text['label-411']."</option>\n";
 	echo "	<option value='^(711)\$'>".$text['label-711']."</option>\n";
 	echo "	<option value='(^911\$|^933\$)'>".$text['label-911']."</option>\n";
-	echo "	<option value='^1?(8(00|55|66|77|88)[2-9]\\d{6})\$'>".$text['label-800']."</option>\n";
+	echo "	<option value='^1?(8(00|33|44|55|66|77|88)[2-9]\\d{6})\$'>".$text['label-800']."</option>\n";
 	echo "	<option value='^0118835100\d{8}\$'>".$text['label-inum']."</option>\n";
 	echo "	<option value='^9(\\d{2})\$'>".$text['label-9d2']."</option>\n";
 	echo "	<option value='^9(\\d{3})\$'>".$text['label-9d3']."</option>\n";
