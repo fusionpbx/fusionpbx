@@ -38,6 +38,22 @@
 		end)
 	end
 
+--define escape function (prevents lua injection attacks)
+	local function esc(x)
+   return (x:gsub('%%', '%%%%')
+            :gsub('^%^', '%%^')
+            :gsub('%$$', '%%$')
+            :gsub('%(', '%%(')
+            :gsub('%)', '%%)')
+            :gsub('%.', '%%.')
+            :gsub('%[', '%%[')
+            :gsub('%]', '%%]')
+            :gsub('%*', '%%*')
+            :gsub('%+', '%%+')
+            :gsub('%-', '%%-')
+            :gsub('%?', '%%?'))
+	end
+
 	local function transcribe(file_path,settings,start_epoch)
 		--transcription variables
 		if (os.time() - start_epoch > 2) then
@@ -106,7 +122,7 @@
 				if (transcription_server ~= '') then
 					transcribe_cmd = "curl -L " .. transcription_server .. " -F file=@"..file_path
 					local handle = io.popen(transcribe_cmd);
-					local transcribe_result = handle:read("*a");
+					local transcribe_result = esc(handle:read("*a"));
 					handle:close();
 					if (debug["info"]) then
 						freeswitch.consoleLog("notice", "[voicemail] CMD: " .. transcribe_cmd .. "\n");
