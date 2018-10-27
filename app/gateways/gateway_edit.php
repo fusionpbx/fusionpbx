@@ -135,7 +135,7 @@
 			//if (strlen($realm) == 0) { $msg .= $text['message-required']." ".$text['label-realm']."<br>\n"; }
 			//if (strlen($from_user) == 0) { $msg .= $text['message-required']." ".$text['label-from_user']."<br>\n"; }
 			//if (strlen($from_domain) == 0) { $msg .= $text['message-required']." ".$text['label-from_domain']."<br>\n"; }
-			//if (strlen($proxy) == 0) { $msg .= $text['message-required']." ".$text['label-proxy']."<br>\n"; }
+			if (strlen($proxy) == 0) { $msg .= $text['message-required']." ".$text['label-proxy']."<br>\n"; }
 			//if (strlen($register_proxy) == 0) { $msg .= $text['message-required']." ".$text['label-register_proxy']."<br>\n"; }
 			//if (strlen($outbound_proxy) == 0) { $msg .= $text['message-required']." ".$text['label-outbound_proxy']."<br>\n"; }
 			if (strlen($expire_seconds) == 0) { $msg .= $text['message-required']." ".$text['label-expire_seconds']."<br>\n"; }
