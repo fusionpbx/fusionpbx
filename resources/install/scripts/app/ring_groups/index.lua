@@ -352,7 +352,7 @@
 --get the destination and follow the forward
 	function get_forward_all(count, destination_number, domain_name)
 		cmd = "user_exists id ".. destination_number .." "..domain_name;
-		freeswitch.consoleLog("notice", "[ring groups][call forward all] " .. cmd .. "\n");
+		--freeswitch.consoleLog("notice", "[ring groups][call forward all] " .. cmd .. "\n");
 		user_exists = api:executeString(cmd);
 		if (user_exists == "true") then
 			---check to see if the new destination is forwarded - third forward
@@ -361,12 +361,12 @@
 					--get the toll_allow var	
 						cmd = "user_data ".. destination_number .."@" ..leg_domain_name.." var toll_allow";
 						toll_allow = api:executeString(cmd);
-						freeswitch.consoleLog("notice", "[ring groups][call forward all] " .. destination_number .. " toll_allow is ".. toll_allow .."\n");
-						
+						--freeswitch.consoleLog("notice", "[ring groups][call forward all] " .. destination_number .. " toll_allow is ".. toll_allow .."\n");
+
 					--get the new destination - third foward
 						cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_all_destination";
 						destination_number = api:executeString(cmd);
-						freeswitch.consoleLog("notice", "[ring groups][call forward all] " .. count .. " " .. cmd .. " ".. destination_number .."\n");
+						--freeswitch.consoleLog("notice", "[ring groups][call forward all] " .. count .. " " .. cmd .. " ".. destination_number .."\n");
 						count = count + 1;
 						if (count < 5) then
 							count, destination_number = get_forward_all(count, destination_number, domain_name);
@@ -543,6 +543,7 @@
 					freeswitch.consoleLog("notice", "[ring groups][follow_me] key " .. key .. " " .. cmd .. " ".. result_follow_me_destinations .."\n");
 
 					follow_me_destinations = explode(",[", result_follow_me_destinations);
+					x = 0;
 					for k, v in pairs(follow_me_destinations) do
 						--increment the ordinal value
 						x = x + 1;
@@ -578,9 +579,16 @@
 						if (destinations[x]['confirm']  ~= nil and destinations[x]['confirm']  == 'true') then
 							destinations[x]['destination_prompt'] = '1';
 						end
+
 					end
 				end
 			end
+
+		--process the destinations
+			--x = 1;
+			--for key, row in pairs(destinations) do
+			--	freeswitch.consoleLog("NOTICE", "[ring group] zzz destination_number: "..row.destination_number.."\n");
+			--end
 
 		--process the destinations
 			x = 1;
