@@ -28,7 +28,7 @@
 	require_once "root.php";
 	require_once "resources/functions.php";
 	require_once "resources/classes/text.php";
-	require_once "resources/classes/messages.php";
+	require_once "resources/classes/message.php";
 
 //start a php session
 	if (!isset($_SESSION)) { session_start(); }
