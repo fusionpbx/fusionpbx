@@ -416,9 +416,9 @@ include "root.php";
 						$variables[] = "domain=".$_SESSION['domain_name'];
 						$variables[] = "extension_uuid=".$this->extension_uuid;
 						$variables[] = "leg_delay_start=".$row["follow_me_delay"];
+						$variables[] = "originate_delay_start=".$row["follow_me_delay"];
+						$variables[] = "sleep=".($row["follow_me_delay"] * 1000);
 						$variables[] = "leg_timeout=".$row["follow_me_timeout"];
-						$variables[] = "outbound_caller_id_name=".$row["outbound_caller_id_name"];
-						$variables[] = "outbound_caller_id_number=".$row["outbound_caller_id_number"];
 
 						if (is_numeric($row["follow_me_destination"])) {
 							if ($_SESSION['domain']['bridge']['text'] == "outbound" || $_SESSION['domain']['bridge']['text'] == "bridge") {
