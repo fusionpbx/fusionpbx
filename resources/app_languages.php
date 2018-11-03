@@ -2263,6 +2263,26 @@ $text['label-actions']['ru-ru'] = "Действия";
 $text['label-actions']['sv-se'] = "Åtgärder";
 $text['label-actions']['uk-ua'] = "Дії";
 
+$text['label-context']['en-us'] = "Context";
+$text['label-context']['ar-eg'] = "";
+$text['label-context']['de-at'] = "Kontext"; //copied from de-de
+$text['label-context']['de-ch'] = "Kontext"; //copied from de-de
+$text['label-context']['de-de'] = "Kontext";
+$text['label-context']['es-cl'] = "Contexto";
+$text['label-context']['es-mx'] = "Contexto"; //copied from es-cl
+$text['label-context']['fr-ca'] = "Contexte"; //copied from fr-fr
+$text['label-context']['fr-fr'] = "Contexte";
+$text['label-context']['he-il'] = "";
+$text['label-context']['it-it'] = "Contesto";
+$text['label-context']['nl-nl'] = "";
+$text['label-context']['pl-pl'] = "Kontekst";
+$text['label-context']['pt-br'] = "Contexto"; //copied from pt-pt
+$text['label-context']['pt-pt'] = "Contexto";
+$text['label-context']['ro-ro'] = "";
+$text['label-context']['ru-ru'] = "Контекст";
+$text['label-context']['sv-se'] = "Context";
+$text['label-context']['uk-ua'] = "Контекст";
+  
 $text['label-music_on_hold']['en-us'] = "Music on Hold";
 $text['label-music_on_hold']['ar-eg'] = "موسيقى المؤجلة";
 $text['label-music_on_hold']['de-at'] = "Wartemusik"; //copied from de-de
@@ -3007,5 +3027,25 @@ $text['description-enabled']['ru-ru'] = "";
 $text['description-enabled']['sv-se'] = "";
 $text['description-enabled']['uk-ua'] = "";
 $text['description-enabled']['tr-tr'] = "";
+
+$text['description-enter-context']['en-us'] = "Enter the context.";
+$text['description-enter-context']['ar-eg'] = "";
+$text['description-enter-context']['de-at'] = "Geben Sie den Kontext ein."; //copied from de-de
+$text['description-enter-context']['de-ch'] = "Geben Sie den Kontext ein."; //copied from de-de
+$text['description-enter-context']['de-de'] = "Geben Sie den Kontext ein.";
+$text['description-enter-context']['es-cl'] = "Ingrese un contexto";
+$text['description-enter-context']['es-mx'] = "Ingrese un contexto"; //copied from es-cl
+$text['description-enter-context']['fr-ca'] = "Entrez le contexte"; //copied from fr-fr
+$text['description-enter-context']['fr-fr'] = "Entrez le contexte";
+$text['description-enter-context']['he-il'] = "";
+$text['description-enter-context']['it-it'] = "Inserire il contesto.";
+$text['description-enter-context']['nl-nl'] = "";
+$text['description-enter-context']['pl-pl'] = "Wprowadź kontekst";
+$text['description-enter-context']['pt-br'] = "Insira um contexto";
+$text['description-enter-context']['pt-pt'] = "Introduza um contexto.";
+$text['description-enter-context']['ro-ro'] = "";
+$text['description-enter-context']['ru-ru'] = "Введите контекст.";
+$text['description-enter-context']['sv-se'] = "Ange Context";
+$text['description-enter-context']['uk-ua'] = "";
 
 ?>
