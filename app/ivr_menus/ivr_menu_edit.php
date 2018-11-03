@@ -1366,6 +1366,7 @@
 
 	//--- end: show_advanced -----------------------
 
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	if (permission_exists('ivr_menu_context')) {
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
@@ -1379,7 +1380,6 @@
 		echo "</tr>\n";
 	}
 
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td width=\"30%\" class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-enabled']."\n";
