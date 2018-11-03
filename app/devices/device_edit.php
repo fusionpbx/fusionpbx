@@ -1450,27 +1450,22 @@
 		echo "</tr>\n";
 	}
 
-	if (permission_exists('device_alternate')) {
+	if (permission_exists('device_alternate') && strlen($device_uuid_alternate) > 0) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-device_uuid_alternate']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left' nowrap='nowrap'>\n";
-		if (strlen($device_uuid_alternate) == 0) {
-			echo "	<input class='formfld' type='text' name='device_uuid_alternate' id='device_uuid_alternate' maxlength='255' value=\"".escape($device_uuid_alternate)."\"/>";
-		}
-		else {
-			$label = $device_alternate[0]['device_label'];
-			if (strlen($label) == 0) { $label = $device_alternate[0]['device_description']; }
-			if (strlen($label) == 0) { $label = $device_alternate[0]['device_mac_address']; }
-			echo "	<table>\n";
-			echo "	<tr>\n";
-			echo "		<td><a href='?id=".escape($device_uuid_alternate)."' id='device_uuid_alternate_link'>".escape($label)."</a><input class='formfld' type='hidden' name='device_uuid_alternate' id='device_uuid_alternate' maxlength='255' value=\"".escape($device_uuid_alternate)."\" />&nbsp;</td>";
-			echo "		<td><a href='#' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('device_uuid_alternate').value = '';  document.getElementById('device_uuid_alternate_link').hidden = 'true'; submit_form(); }\" alt='".$text['button-delete']."'>$v_link_label_delete</a></td>\n";
-			echo "	</tr>\n";
-			echo "	</table>\n";
-			unset($label);
-		}
+		$label = $device_alternate[0]['device_label'];
+		if (strlen($label) == 0) { $label = $device_alternate[0]['device_description']; }
+		if (strlen($label) == 0) { $label = $device_alternate[0]['device_mac_address']; }
+		echo "	<table>\n";
+		echo "	<tr>\n";
+		echo "		<td><a href='?id=".escape($device_uuid_alternate)."' id='device_uuid_alternate_link'>".escape($label)."</a><input class='formfld' type='hidden' name='device_uuid_alternate' id='device_uuid_alternate' maxlength='255' value=\"".escape($device_uuid_alternate)."\" />&nbsp;</td>";
+		echo "		<td><a href='#' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('device_uuid_alternate').value = '';  document.getElementById('device_uuid_alternate_link').hidden = 'true'; submit_form(); }\" alt='".$text['button-delete']."'>$v_link_label_delete</a></td>\n";
+		echo "	</tr>\n";
+		echo "	</table>\n";
+		unset($label);
 		echo $text['description-device_uuid_alternate']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
