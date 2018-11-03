@@ -458,7 +458,7 @@
 	if (strlen($ring_group_enabled) == 0) { $ring_group_enabled = 'true'; }
 
 //set the context for users that do not have the permission
-	if (!permission_exists('ring_group_context') {
+	if (!permission_exists('ring_group_context')) {
 		$ring_group_context = $_SESSION['domain_name'];
 	}
 
