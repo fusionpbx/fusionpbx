@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -57,7 +57,8 @@ if ($domains_processed == 1) {
 	$sql .= "default_setting_value = 'true', ";
 	$sql .= "default_setting_name = 'boolean', ";
 	$sql .= "default_setting_enabled = 'true' ";
-	$sql .= "where default_setting_subcategory = 'http_domain_filter' ";
+	$sql .= "where default_setting_category = 'provision' ";
+	$sql .= "and default_setting_subcategory = 'http_domain_filter' ";
 	$sql .= "and default_setting_name = 'text' ";
 	$sql .= "and default_setting_value = 'false' ";
 	$sql .= "and default_setting_enabled = 'false' ";
@@ -67,7 +68,8 @@ if ($domains_processed == 1) {
 	//update default settings
 	$sql = "update v_default_settings set ";
 	$sql .= "default_setting_name = 'array' ";
-	$sql .= "where default_setting_subcategory = 'http_auth_password' ";
+	$sql .= "where default_setting_category = 'provision' ";
+	$sql .= "and default_setting_subcategory = 'http_auth_password' ";
 	$sql .= "and default_setting_name = 'text' ";
 	$db->exec($sql);
 	unset($sql);
@@ -75,7 +77,8 @@ if ($domains_processed == 1) {
 	//update domain settings
 	$sql = "update v_domain_settings set ";
 	$sql .= "domain_setting_name = 'array' ";
-	$sql .= "where domain_setting_subcategory = 'http_auth_password' ";
+	$sql .= "where domain_setting_category = 'provision' ";
+	$sql .= "and domain_setting_subcategory = 'http_auth_password' ";
 	$sql .= "and domain_setting_name = 'text' ";
 	$db->exec($sql);
 	unset($sql);

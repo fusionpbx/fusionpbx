@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2015
+ Portions created by the Initial Developer are Copyright (C) 2008-2018
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -184,6 +184,26 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						}
 						$db->query($sql);
 						unset($sql);
+
+					//get the dialplan_uuid
+						$sql = "select * from v_domains ";
+						$sql .= "where domain_uuid = '".$domain_uuid."' ";
+						$prep_statement = $db->prepare(check_sql($sql));
+						$prep_statement->execute();
+						$row = $prep_statement->fetch(PDO::FETCH_NAMED);
+						$domain_name = $row["domain_name"];
+						unset ($prep_statement);
+
+					//update the dialplan xml
+						$dialplans = new dialplan;
+						$dialplans->source = "details";
+						$dialplans->destination = "database";
+						$dialplans->uuid = $dialplan_uuid;
+						$dialplans->xml();
+
+					//clear the cache
+						$cache = new cache;
+						$cache->delete("dialplan:".$domain_name);
 				}
 
 			//add the domain

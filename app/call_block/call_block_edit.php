@@ -26,17 +26,19 @@
 
 	Call Block is written by Gerrit Visser <gerrit308@gmail.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
-if (permission_exists('call_block_edit') || permission_exists('call_block_add')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//check permissions
+	if (permission_exists('call_block_edit') || permission_exists('call_block_add')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -84,114 +86,115 @@ else {
 		$call_block_enabled = check_str($_POST["call_block_enabled"]);
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
-
-	$msg = '';
-	if ($action == "update") {
-		//$call_block_uuid = check_str($_POST["call_block_uuid"]);
-	}
-
-	//check for all required data
-		if (strlen($call_block_name) == 0) { $msg .= $text['label-provide-name']."<br>\n"; }
-		if ($action == "add") {
-			if (strlen($call_block_number) == 0) { $msg .= $text['label-provide-number']."<br>\n"; }
+//handle the http post
+	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+	
+		$msg = '';
+		if ($action == "update") {
+			//$call_block_uuid = check_str($_POST["call_block_uuid"]);
 		}
-		if (strlen($call_block_enabled) == 0) { $msg .= $text['label-provide-enabled']."<br>\n"; }
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-			require_once "resources/header.php";
-			require_once "resources/persist_form_var.php";
-			echo "<div align='center'>\n";
-			echo "<table><tr><td>\n";
-			echo $msg."<br />";
-			echo "</td></tr></table>\n";
-			persistformvar($_POST);
-			echo "</div>\n";
-			require_once "resources/footer.php";
-			return;
-		}
-
-	//add or update the database
-		if (($_POST["persistformvar"] != "true")>0) {
-
-			if ($action == "add" || $action == "update") {
-				//ensure call block is enabled in the dialplan
-				$sql = "update v_dialplans set ";
-				$sql .= "dialplan_enabled = 'true' ";
-				$sql .= "where ";
-				$sql .= "app_uuid = 'b1b31930-d0ee-4395-a891-04df94599f1f' and ";
-				$sql .= "domain_uuid = '".$domain_uuid."' and ";
-				$sql .= "dialplan_enabled <> 'true' ";
-				$db->exec(check_sql($sql));
-				unset($sql);
-			}
-
+	
+		//check for all required data
+			if (strlen($call_block_name) == 0) { $msg .= $text['label-provide-name']."<br>\n"; }
 			if ($action == "add") {
-				$sql = "insert into v_call_block ";
-				$sql .= "(";
-				$sql .= "domain_uuid, ";
-				$sql .= "call_block_uuid, ";
-				$sql .= "call_block_name, ";
-				$sql .= "call_block_number, ";
-				$sql .= "call_block_count, ";
-				$sql .= "call_block_action, ";
-				$sql .= "call_block_enabled, ";
-				$sql .= "date_added ";
-				$sql .= ") ";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'".$_SESSION['domain_uuid']."', ";
-				$sql .= "'".uuid()."', ";
-				$sql .= "'$call_block_name', ";
-				$sql .= "'$call_block_number', ";
-				$sql .= "0, ";
-				$sql .= "'$call_block_action', ";
-				$sql .= "'$call_block_enabled', ";
-				$sql .= "'".time()."' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
-
-				message::add($text['label-add-complete']);
-				header("Location: call_block.php");
+				if (strlen($call_block_number) == 0) { $msg .= $text['label-provide-number']."<br>\n"; }
+			}
+			if (strlen($call_block_enabled) == 0) { $msg .= $text['label-provide-enabled']."<br>\n"; }
+			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+				require_once "resources/header.php";
+				require_once "resources/persist_form_var.php";
+				echo "<div align='center'>\n";
+				echo "<table><tr><td>\n";
+				echo $msg."<br />";
+				echo "</td></tr></table>\n";
+				persistformvar($_POST);
+				echo "</div>\n";
+				require_once "resources/footer.php";
 				return;
-			} //if ($action == "add")
-
-			if ($action == "update") {
-				$sql = " select c.call_block_number, d.domain_name from v_call_block as c ";
-				$sql  .= "JOIN v_domains as d ON c.domain_uuid=d.domain_uuid ";
-				$sql .= "where c.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-				$sql .= "and c.call_block_uuid = '$call_block_uuid'";
-
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll();
-				$result_count = count($result);
-				if ($result_count > 0) {
-					//set the domain_name
-					$domain_name = $result[0]["domain_name"];
-
-					//clear the cache
-					$cache = new cache;
-					$cache->delete("app:call_block:".$domain_name.":".$call_block_number);
+			}
+	
+		//add or update the database
+			if (($_POST["persistformvar"] != "true")>0) {
+	
+				if ($action == "add" || $action == "update") {
+					//ensure call block is enabled in the dialplan
+					$sql = "update v_dialplans set ";
+					$sql .= "dialplan_enabled = 'true' ";
+					$sql .= "where ";
+					$sql .= "app_uuid = 'b1b31930-d0ee-4395-a891-04df94599f1f' and ";
+					$sql .= "domain_uuid = '".$domain_uuid."' and ";
+					$sql .= "dialplan_enabled <> 'true' ";
+					$db->exec(check_sql($sql));
+					unset($sql);
 				}
-				unset ($prep_statement, $sql);
-
-				$sql = "update v_call_block set ";
-				$sql .= "call_block_name = '$call_block_name', ";
-				$sql .= "call_block_number = '$call_block_number', ";
-				$sql .= "call_block_action = '$call_block_action', ";
-				$sql .= "call_block_enabled = '$call_block_enabled' ";
-				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-				$sql .= "and call_block_uuid = '$call_block_uuid'";
-				$db->exec(check_sql($sql));
-				unset($sql);
-
-				message::add($text['label-update-complete']);
-				header("Location: call_block.php");
-				return;
-			} //if ($action == "update")
-		} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+	
+				if ($action == "add") {
+					$sql = "insert into v_call_block ";
+					$sql .= "(";
+					$sql .= "domain_uuid, ";
+					$sql .= "call_block_uuid, ";
+					$sql .= "call_block_name, ";
+					$sql .= "call_block_number, ";
+					$sql .= "call_block_count, ";
+					$sql .= "call_block_action, ";
+					$sql .= "call_block_enabled, ";
+					$sql .= "date_added ";
+					$sql .= ") ";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'".$_SESSION['domain_uuid']."', ";
+					$sql .= "'".uuid()."', ";
+					$sql .= "'$call_block_name', ";
+					$sql .= "'$call_block_number', ";
+					$sql .= "0, ";
+					$sql .= "'$call_block_action', ";
+					$sql .= "'$call_block_enabled', ";
+					$sql .= "'".time()."' ";
+					$sql .= ")";
+					$db->exec(check_sql($sql));
+					unset($sql);
+	
+					message::add($text['label-add-complete']);
+					header("Location: call_block.php");
+					return;
+				} //if ($action == "add")
+	
+				if ($action == "update") {
+					$sql = " select c.call_block_number, d.domain_name from v_call_block as c ";
+					$sql  .= "JOIN v_domains as d ON c.domain_uuid=d.domain_uuid ";
+					$sql .= "where c.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+					$sql .= "and c.call_block_uuid = '$call_block_uuid'";
+	
+					$prep_statement = $db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$result = $prep_statement->fetchAll();
+					$result_count = count($result);
+					if ($result_count > 0) {
+						//set the domain_name
+						$domain_name = $result[0]["domain_name"];
+	
+						//clear the cache
+						$cache = new cache;
+						$cache->delete("app:call_block:".$domain_name.":".$call_block_number);
+					}
+					unset ($prep_statement, $sql);
+	
+					$sql = "update v_call_block set ";
+					$sql .= "call_block_name = '$call_block_name', ";
+					$sql .= "call_block_number = '$call_block_number', ";
+					$sql .= "call_block_action = '$call_block_action', ";
+					$sql .= "call_block_enabled = '$call_block_enabled' ";
+					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+					$sql .= "and call_block_uuid = '$call_block_uuid'";
+					$db->exec(check_sql($sql));
+					unset($sql);
+	
+					message::add($text['label-update-complete']);
+					header("Location: call_block.php");
+					return;
+				} //if ($action == "update")
+			} //if ($_POST["persistformvar"] != "true")
+	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
@@ -343,7 +346,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //get recent calls from the db (if not editing an existing call block record)
 	if (!isset($_REQUEST["id"])) {
-		$sql = "select caller_id_number, caller_id_name, start_epoch, direction, hangup_cause, duration, billsec, uuid from v_xml_cdr ";
+		$sql = "select caller_id_number, caller_id_name, start_epoch, direction, hangup_cause, duration, billsec, xml_cdr_uuid from v_xml_cdr ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "and direction != 'outbound' ";
 		$sql .= "order by start_stamp DESC ";
@@ -370,7 +373,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		if ($result_count > 0) {
 			foreach($result as $row) {
-				$tr_onclick = " onclick=\"call_block_recent('".escape($row['uuid'])."','".urlencode(escape($row['caller_id_name']))."');\" ";
+				$tr_onclick = " onclick=\"call_block_recent('".escape($row['xml_cdr_uuid'])."','".urlencode(escape($row['caller_id_name']))."');\" ";
 				if (strlen($row['caller_id_number']) >= 7) {
 					if (defined('TIME_24HR') && TIME_24HR == 1) {
 						$tmp_start_epoch = date("j M Y H:i:s", $row['start_epoch']);
@@ -420,9 +423,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					echo "	<td valign='top' class='".$row_style[$c]."' ".$tr_onclick.">".gmdate("G:i:s", $seconds)."</td>\n";
 					echo "	<td class='list_control_icons' ".((!(if_group("admin") || if_group("superadmin"))) ? "style='width: 25px;'" : null).">";
 					if (if_group("admin") || if_group("superadmin")) {
-						echo "	<a href='".PROJECT_PATH."/app/xml_cdr/xml_cdr_details.php?uuid=".escape($row['uuid'])."' alt='".$text['button-view']."'>".$v_link_label_view."</a>";
+						echo "	<a href='".PROJECT_PATH."/app/xml_cdr/xml_cdr_details.php?id=".escape($row['xml_cdr_uuid'])."' alt='".$text['button-view']."'>".$v_link_label_view."</a>";
 					}
-					echo 		"<a href='javascript:void(0);' onclick=\"call_block_recent('".escape($row['uuid'])."','".urlencode(escape($row['caller_id_name']))."');\" alt='".$text['button-add']."'>".$v_link_label_add."</a>";
+					echo 		"<a href='javascript:void(0);' onclick=\"call_block_recent('".escape($row['xml_cdr_uuid'])."','".urlencode(escape($row['caller_id_name']))."');\" alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 					echo "  </td>";
 					echo "</tr>\n";
 					if ($c==0) { $c=1; } else { $c=0; }
@@ -441,7 +444,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 	}
-// end of Display Last 5-10 Calls
+	// end of Display Last 5-10 Calls
 
 //include the footer
 	require_once "resources/footer.php";
