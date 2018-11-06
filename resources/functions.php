@@ -992,8 +992,8 @@ function format_string ($format, $data) {
 		$password = '';
 		$charset = '';
 		if ($length === 0 && $strength === 0) { //set length and strenth if specified in default settings and strength isn't numeric-only
-			$length = (is_numeric($_SESSION["security"]["password_length"]["numeric"])) ? $_SESSION["security"]["password_length"]["numeric"] : 10;
-			$strength = (is_numeric($_SESSION["security"]["password_strength"]["numeric"])) ? $_SESSION["security"]["password_strength"]["numeric"] : 4;
+			$length = (is_numeric($_SESSION["extension"]["password_length"]["numeric"])) ? $_SESSION["extension"]["password_length"]["numeric"] : 10;
+			$strength = (is_numeric($_SESSION["extension"]["password_strength"]["numeric"])) ? $_SESSION["extension"]["password_strength"]["numeric"] : 4;
 		}
 		if ($strength >= 1) { $charset .= "0123456789"; }
 		if ($strength >= 2) { $charset .= "abcdefghijkmnopqrstuvwxyz";	}
@@ -1011,11 +1011,11 @@ function format_string ($format, $data) {
 	function check_password_strength($password, $text, $type = 'default') {
 		if ($password != '') {
 			if ($type == 'default') {
-				$req['length'] = $_SESSION['security']['password_length']['numeric'];
-				$req['number'] = ($_SESSION['security']['password_number']['boolean'] == 'true') ? true : false;
-				$req['lowercase'] = ($_SESSION['security']['password_lowercase']['boolean'] == 'true') ? true : false;
-				$req['uppercase'] = ($_SESSION['security']['password_uppercase']['boolean'] == 'true') ? true : false;
-				$req['special'] = ($_SESSION['security']['password_special']['boolean'] == 'true') ? true : false;
+				$req['length'] = $_SESSION['extension']['password_length']['numeric'];
+				$req['number'] = ($_SESSION['extension']['password_number']['boolean'] == 'true') ? true : false;
+				$req['lowercase'] = ($_SESSION['extension']['password_lowercase']['boolean'] == 'true') ? true : false;
+				$req['uppercase'] = ($_SESSION['extension']['password_uppercase']['boolean'] == 'true') ? true : false;
+				$req['special'] = ($_SESSION['extension']['password_special']['boolean'] == 'true') ? true : false;
 			} elseif ($type == 'user') {
 				$req['length'] = $_SESSION['user']['password_length']['numeric'];
 				$req['number'] = ($_SESSION['user']['password_number']['boolean'] == 'true') ? true : false;
