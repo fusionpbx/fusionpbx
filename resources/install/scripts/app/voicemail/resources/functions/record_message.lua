@@ -38,22 +38,6 @@
 		end)
 	end
 
---define escape function (prevents lua injection attacks)
-	local function esc(x)
-   return (x:gsub('%%', '%%%%')
-            :gsub('^%^', '%%^')
-            :gsub('%$$', '%%$')
-            :gsub('%(', '%%(')
-            :gsub('%)', '%%)')
-            :gsub('%.', '%%.')
-            :gsub('%[', '%%[')
-            :gsub('%]', '%%]')
-            :gsub('%*', '%%*')
-            :gsub('%+', '%%+')
-            :gsub('%-', '%%-')
-            :gsub('%?', '%%?'))
-	end
-
 	local function transcribe(file_path,settings,start_epoch)
 		--transcription variables
 		if (os.time() - start_epoch > 2) then
@@ -64,7 +48,7 @@
 				freeswitch.consoleLog("notice", "[voicemail] transcribe_provider: " .. transcribe_provider .. "\n");
 				freeswitch.consoleLog("notice", "[voicemail] transcribe_language: " .. transcribe_language .. "\n");
 
-			end
+			end	
 
 			if (transcribe_provider == "microsoft") then
 				local api_key1 = settings:get('voicemail', 'microsoft_key1', 'text') or '';
@@ -114,53 +98,19 @@
 							freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: " .. transcribe_json["results"][1]["confidence"] .. "\n");
 						end
 					end
-
+							
 					transcription = transcribe_json["results"][1]["name"];
 					transcription = transcription:gsub("<profanity>.*<%/profanity>","...");
 					confidence = transcribe_json["results"][1]["confidence"];
 					return transcription;
 				end
 			end
-			if (transcribe_provider == "selfhosted") then
-				local transcription_server = settings:get('voicemail', 'transcription_server', 'text') or '';
-				local api_key = settings:get('voicemail', 'api_key', 'text') or '';
-				local json_enabled = settings:get('voicemail', 'json_enabled', 'boolean') or "false";
-				if (transcription_server ~= '') then
-					transcribe_cmd = "curl -X POST " .. transcription_server .. " -H 'Authorization: Bearer " .. api_key .. "' -F file=@"..file_path
-					local handle = io.popen(transcribe_cmd);
-					local transcribe_result = esc(handle:read("*a"));
-					handle:close();
-
-					if (debug["info"]) then
-						freeswitch.consoleLog("notice", "[voicemail] CMD: " .. transcribe_cmd .. "\n");
-						freeswitch.consoleLog("notice", "[voicemail] RESULT: " .. transcribe_result .. "\n");
-					end
-					--Trancribe request can fail
-					if (transcribe_result == '') then
-						freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: (null) \n");
-						return ''
-					end
-					if (json_enabled == "true") then
-						local transcribe_json = JSON.decode(transcribe_result);
-						if (transcribe_json["message"] == nil) then
-							freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: " .. transcribe_result .. "\n");
-							transcribe_result = '';
-						end
-						if (transcribe_json["error"] ~= nil) then
-							freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: " .. transcribe_result .. "\n");
-							transcribe_result = '';
-						end
-						transcribe_result = transcribe_json["message"];
-					end
-					return transcribe_result;
-				end
-			end
 		else
 			if (debug["info"]) then
 				freeswitch.consoleLog("notice", "[voicemail] message too short for transcription.\n");
-			end
+			end	
 		end
-
+		
 		return '';
 	end
 
@@ -171,12 +121,12 @@
 
 		local max_len_seconds = settings:get('voicemail', 'message_max_length', 'numeric') or 300;
 		transcribe_enabled = settings:get('voicemail', 'transcribe_enabled', 'boolean') or "false";
-
+		
 		if (debug["info"]) then
 			freeswitch.consoleLog("notice", "[voicemail] transcribe_enabled: " .. transcribe_enabled .. "\n");
 			freeswitch.consoleLog("notice", "[voicemail] voicemail_transcription_enabled: " .. voicemail_transcription_enabled .. "\n");
 		end
-
+		
 		--record your message at the tone press any key or stop talking to end the recording
 			if (skip_instructions == "true") then
 				--skip the instructions
