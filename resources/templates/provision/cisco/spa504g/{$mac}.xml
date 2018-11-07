@@ -367,8 +367,8 @@
 <RTP_CoS_Value_2_ group="Ext_2/Network_Settings">6</RTP_CoS_Value_2_>
 <Network_Jitter_Level_2_ group="Ext_2/Network_Settings">high</Network_Jitter_Level_2_>
 <Jitter_Buffer_Adjustment_2_ group="Ext_2/Network_Settings">up and down</Jitter_Buffer_Adjustment_2_>
-<SIP_Transport_2_ group="Ext_2/SIP_Settings">{$sip_transport_2|upper}</SIP_Transport_2_>
-<SIP_Port_2_ group="Ext_2/SIP_Settings">{$sip_port_2}</SIP_Port_2_>
+<SIP_Transport_2_ group="Ext_2/SIP_Settings">{$account.2.sip_transport|upper}</SIP_Transport_2_>
+<SIP_Port_2_ group="Ext_2/SIP_Settings">{$account.2.sip_port}</SIP_Port_2_>
 <SIP_100REL_Enable_2_ group="Ext_2/SIP_Settings">No</SIP_100REL_Enable_2_>
 <EXT_SIP_Port_2_ group="Ext_2/SIP_Settings" />
 <Auth_Resync-Reboot_2_ group="Ext_2/SIP_Settings">Yes</Auth_Resync-Reboot_2_>
