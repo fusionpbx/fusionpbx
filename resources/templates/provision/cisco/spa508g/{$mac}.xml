@@ -790,8 +790,8 @@
 <Jitter_Buffer_Adjustment_3_ group="Ext_3/Network_Settings">up and down</Jitter_Buffer_Adjustment_3_>
 
 <!-- Ext_3/SIP_Settings -->
-<SIP_Transport_3_ group="Ext_3/SIP_Settings">{$sip_transport_3|upper}</SIP_Transport_3_>
-<SIP_Port_3_ group="Ext_3/SIP_Settings">{$sip_port_3}</SIP_Port_3_>
+<SIP_Transport_3_ group="Ext_3/SIP_Settings">{$account.3.sip_transport|upper}</SIP_Transport_3_>
+<SIP_Port_3_ group="Ext_3/SIP_Settings">{$account.3.sip_port}</SIP_Port_3_>
 <SIP_100REL_Enable_3_ group="Ext_3/SIP_Settings">No</SIP_100REL_Enable_3_>
 <EXT_SIP_Port_3_ group="Ext_3/SIP_Settings" />
 <Auth_Resync-Reboot_3_ group="Ext_3/SIP_Settings">Yes</Auth_Resync-Reboot_3_>
