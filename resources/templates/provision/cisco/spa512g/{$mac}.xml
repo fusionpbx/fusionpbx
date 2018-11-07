@@ -520,8 +520,8 @@
 <Jitter_Buffer_Adjustment_1_ group="Ext_1/Network_Settings">up and down</Jitter_Buffer_Adjustment_1_>
 
 <!-- Ext_1/SIP_Settings -->
-<SIP_Transport_1_ group="Ext_1/SIP_Settings">{$sip_transport_1|upper}</SIP_Transport_1_>
-<SIP_Port_1_ group="Ext_1/SIP_Settings">{$sip_port_1}</SIP_Port_1_>
+<SIP_Transport_1_ group="Ext_1/SIP_Settings">{$account.1.sip_transport|upper}</SIP_Transport_1_>
+<SIP_Port_1_ group="Ext_1/SIP_Settings">{$account.1.sip_port}</SIP_Port_1_>
 <SIP_100REL_Enable_1_ group="Ext_1/SIP_Settings">No</SIP_100REL_Enable_1_>
 <EXT_SIP_Port_1_ group="Ext_1/SIP_Settings" />
 <Auth_Resync-Reboot_1_ group="Ext_1/SIP_Settings">Yes</Auth_Resync-Reboot_1_>
