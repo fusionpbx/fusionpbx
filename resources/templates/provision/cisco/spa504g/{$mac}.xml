@@ -414,7 +414,7 @@
 <Proxy_Redundancy_Method_2_ group="Ext_2/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_2_>
 <Dual_Registration_2_ group="Ext_2/Proxy_and_Registration">{if isset($spa_dual_registration)}Yes{else}No{/if}</Dual_Registration_2_>
 <Auto_Register_When_Failover_2_ group="Ext_2/Proxy_and_Registration">{if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_2_>
-<Display_Name_2_ group="Ext_2/Subscriber_Information">{account.2.$display_name}</Display_Name_2_>
+<Display_Name_2_ group="Ext_2/Subscriber_Information">{$account.2.$display_name}</Display_Name_2_>
 <User_ID_2_ group="Ext_2/Subscriber_Information">{$account.2.user_id}</User_ID_2_>
 <Password_2_ group="Ext_2/Subscriber_Information">{$account.2.password}</Password_2_>
 <Use_Auth_ID_2_ group="Ext_2/Subscriber_Information">No</Use_Auth_ID_2_>
