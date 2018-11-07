@@ -1,6 +1,6 @@
 --	xml_handler.lua
 --	Part of FusionPBX
---	Copyright (C) 2013 - 2016 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013 - 2018 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -295,6 +295,19 @@
 									number_alias = row.number_alias;
 									number_alias_string = [[ number-alias="]] .. row.number_alias .. [["]];
 								end
+
+							--get the user_uuid
+								local sql = "SELECT user_uuid FROM v_extension_users WHERE domain_uuid = :domain_uuid and extension_uuid = :extension_uuid "
+								local params = {domain_uuid=domain_uuid, extension_uuid=extension_uuid};
+								user_uuid = dbh:first_value(sql, params);
+
+							--get the contact_uuid
+								if (user_uuid ~= nil) and (string.len(user_uuid) > 0) then
+									local sql = "SELECT contact_uuid FROM v_users WHERE domain_uuid = :domain_uuid and user_uuid = :user_uuid "
+									local params = {domain_uuid=domain_uuid, user_uuid=user_uuid};
+									contact_uuid = dbh:first_value(sql, params);
+								end
+
 							--params
 								password = row.password;
 								mwi_account = row.mwi_account;
@@ -338,8 +351,14 @@
 								forward_no_answer_destination = row.forward_no_answer_destination;
 								forward_user_not_registered_enabled = row.forward_user_not_registered_enabled;
 								forward_user_not_registered_destination = row.forward_user_not_registered_destination;
-
 								do_not_disturb = row.do_not_disturb;
+
+							-- get the follow me information
+								if (row.follow_me_uuid ~= nil and string.len(row.follow_me_uuid) > 0) then
+									follow_me_uuid = row.follow_me_uuid;
+									follow_me_enabled = row.follow_me_enabled;
+									follow_me_destinations= row.follow_me_destinations;
+								end
 
 							-- check matching UserID and AuthName
 								if sip_auth_method then
@@ -349,7 +368,6 @@
 									else
 										continue = (sip_from_user == user) and ((not check_from_number) or (from_user == user))
 									end
-
 									if not continue then
 										XML_STRING = nil;
 										return 1;
@@ -494,6 +512,12 @@
 							table.insert(xml, [[								<variable name="domain_uuid" value="]] .. domain_uuid .. [["/>]]);
 							table.insert(xml, [[								<variable name="domain_name" value="]] .. domain_name .. [["/>]]);
 							table.insert(xml, [[								<variable name="extension_uuid" value="]] .. extension_uuid .. [["/>]]);
+							if (user_uuid ~= nil) and (string.len(user_uuid) > 0) then
+								table.insert(xml, [[								<variable name="user_uuid" value="]] .. user_uuid .. [["/>]]);
+							end
+							if (contact_uuid ~= nil) and (string.len(contact_uuid) > 0) then
+								table.insert(xml, [[								<variable name="contact_uuid" value="]] .. contact_uuid .. [["/>]]);
+							end
 							table.insert(xml, [[								<variable name="call_timeout" value="]] .. call_timeout .. [["/>]]);
 							table.insert(xml, [[								<variable name="caller_id_name" value="]] .. sip_from_user .. [["/>]]);
 							table.insert(xml, [[								<variable name="caller_id_number" value="]] .. sip_from_number .. [["/>]]);
@@ -605,6 +629,12 @@
 							end
 							if (forward_user_not_registered_destination ~= nil) and (string.len(forward_user_not_registered_destination) > 0) then
 								table.insert(xml, [[								<variable name="forward_user_not_registered_destination" value="]] .. forward_user_not_registered_destination .. [["/>]]);
+							end
+							if (follow_me_enabled ~= nil) and (string.len(follow_me_enabled) > 0) then
+								table.insert(xml, [[								<variable name="follow_me_enabled" value="]] .. follow_me_enabled .. [["/>]]);
+							end
+							if (follow_me_destinations ~= nil) and (string.len(follow_me_destinations) > 0) then
+								table.insert(xml, [[								<variable name="follow_me_destinations" value="]] .. follow_me_destinations .. [["/>]]);
 							end
 							if (do_not_disturb ~= nil) and (string.len(do_not_disturb) > 0) then
 								table.insert(xml, [[								<variable name="do_not_disturb" value="]] .. do_not_disturb .. [["/>]]);

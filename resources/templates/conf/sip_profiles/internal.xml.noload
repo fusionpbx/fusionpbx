@@ -378,5 +378,7 @@
 		<param name="registration-thread-frequency" value="30"  enabled="false"/>
 		<param name="nat-options-ping" value="true" enabled="false"/>
 
+		<!-- Secure Web Sockets -->
+		<param name="wss-binding" value=":7443" enabled="false"/>
 	</settings>
 </profile>

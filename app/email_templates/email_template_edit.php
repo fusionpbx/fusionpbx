@@ -126,7 +126,7 @@
 				if ($action == "update") {
 					$_SESSION["message"] = $text['message-update'];
 				}
-				header('Location: email_template_edit.php?id='.$email_template_uuid);
+				header('Location: email_template_edit.php?id='.escape($email_template_uuid));
 				return;
 			}
 	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
@@ -174,7 +174,7 @@
 	echo "	".$text['label-template_language']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='template_language' maxlength='255' value=\"$template_language\">\n";
+	echo "	<input class='formfld' type='text' name='template_language' maxlength='255' value=\"".escape($template_language)."\">\n";
 	echo "<br />\n";
 	echo $text['description-template_language']."\n";
 	echo "</td>\n";
@@ -185,7 +185,7 @@
 	echo "	".$text['label-template_category']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='template_category' maxlength='255' value=\"$template_category\">\n";
+	echo "	<input class='formfld' type='text' name='template_category' maxlength='255' value=\"".escape($template_category)."\">\n";
 	echo "<br />\n";
 	echo $text['description-template_category']."\n";
 	echo "</td>\n";
@@ -196,7 +196,7 @@
 	echo "	".$text['label-template_subcategory']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='template_subcategory' maxlength='255' value=\"$template_subcategory\">\n";
+	echo "	<input class='formfld' type='text' name='template_subcategory' maxlength='255' value=\"".escape($template_subcategory)."\">\n";
 	echo "<br />\n";
 	echo $text['description-template_subcategory']."\n";
 	echo "</td>\n";
@@ -207,7 +207,7 @@
 	echo "	".$text['label-template_subject']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='template_subject' maxlength='255' value=\"$template_subject\">\n";
+	echo "	<input class='formfld' type='text' name='template_subject' maxlength='255' value=\"".escape($template_subject)."\">\n";
 	echo "<br />\n";
 	echo $text['description-template_subject']."\n";
 	echo "</td>\n";
@@ -218,7 +218,7 @@
 	echo "	".$text['label-template_body']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<textarea class='formfld' name='template_body' rows='8' style='width: 100%'>$template_body</textarea>\n";
+	echo "	<textarea class='formfld' name='template_body' rows='8' style='width: 100%'>".escape($template_body)."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-template_body']."\n";
 	echo "</td>\n";
@@ -238,10 +238,10 @@
 	}
 	foreach ($_SESSION['domains'] as $row) {
 		if ($row['domain_uuid'] == $domain_uuid) {
-			echo "		<option value='".$row['domain_uuid']."' selected='selected'>".$row['domain_name']."</option>\n";
+			echo "		<option value='".escape($row['domain_uuid'])."' selected='selected'>".escape($row['domain_name'])."</option>\n";
 		}
 		else {
-			echo "		<option value='".$row['domain_uuid']."'>".$row['domain_name']."</option>\n";
+			echo "		<option value='".escape($row['domain_uuid'])."'>".escape($row['domain_name'])."</option>\n";
 		}
 	}
 	echo "	</select>\n";
@@ -255,7 +255,7 @@
 	echo "	".$text['label-template_type']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='template_type' maxlength='255' value=\"$template_type\">\n";
+	echo "	<input class='formfld' type='text' name='template_type' maxlength='255' value=\"".escape($template_type)."\">\n";
 	echo "<br />\n";
 	echo $text['description-template_type']."\n";
 	echo "</td>\n";
@@ -291,7 +291,7 @@
 	echo "	".$text['label-template_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='template_description' maxlength='255' value=\"$template_description\">\n";
+	echo "	<input class='formfld' type='text' name='template_description' maxlength='255' value=\"".escape($template_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-template_description']."\n";
 	echo "</td>\n";
@@ -300,7 +300,7 @@
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='email_template_uuid' value='$email_template_uuid'>\n";
+		echo "				<input type='hidden' name='email_template_uuid' value='".escape($email_template_uuid)."'>\n";
 	}
 	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";

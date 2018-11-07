@@ -67,7 +67,7 @@
 		$billsec = check_str($_REQUEST["billsec"]);
 		$hangup_cause = check_str($_REQUEST["hangup_cause"]);
 		$call_result = check_str($_REQUEST["call_result"]);
-		$uuid = check_str($_REQUEST["uuid"]);
+		$xml_cdr_uuid = check_str($_REQUEST["xml_cdr_uuid"]);
 		$bleg_uuid = check_str($_REQUEST["bleg_uuid"]);
 		$accountcode = check_str($_REQUEST["accountcode"]);
 		$read_codec = check_str($_REQUEST["read_codec"]);
@@ -120,10 +120,10 @@
 		$mod_caller_id_name = str_replace("*", "%", $caller_id_name);
 		$sql_where_ands[] = "caller_id_name like '".$mod_caller_id_name."'";
 	}
-	if (strlen($caller_extension_uuid) > 0 and is_uuid($caller_extension_uuid)) {
+	if (strlen($caller_extension_uuid) > 0 && is_uuid($caller_extension_uuid)) {
 		$sql_where_ands[] = "extension_uuid = '".$caller_extension_uuid."'";
 	}
-	if (strlen($caller_id_number) > 0 && is_numeric($caller_id_number)) {
+	if (strlen($caller_id_number) > 0) {
 		$mod_caller_id_number = str_replace("*", "%", $caller_id_number);
 		$sql_where_ands[] = "caller_id_number like '".$mod_caller_id_number."'";
 	}
@@ -206,7 +206,7 @@
 				$sql_where_ands[] = "(answer_stamp is null and bridge_uuid is null and billsec = 0 and sip_hangup_disposition = 'send_refuse')";
 		}
 	}
-	if (strlen($uuid) > 0) { $sql_where_ands[] = "uuid = '".$uuid."'"; }
+	if (strlen($xml_cdr_uuid) > 0) { $sql_where_ands[] = "xml_cdr_uuid = '".$xml_cdr_uuid."'"; }
 	if (strlen($bleg_uuid) > 0) { $sql_where_ands[] = "bleg_uuid = '".$bleg_uuid."'"; }
 	if (strlen($accountcode) > 0) { $sql_where_ands[] = "accountcode = '".$accountcode."'"; }
 	if (strlen($read_codec) > 0) { $sql_where_ands[] = "read_codec like '%".$read_codec."%'"; }
@@ -263,43 +263,43 @@
 	}
 
 //set the param variable which is used with paging
-	$param = "&cdr_id=".$cdr_id;
-	$param .= "&missed=".$missed;
-	$param .= "&direction=".$direction;
-	$param .= "&caller_id_name=".$caller_id_name;
-	$param .= "&caller_id_number=".$caller_id_number;
-	$param .= "&caller_destination=".$caller_destination;
-	$param .= "&caller_extension_uuid=".$caller_extension_uuid;
-	$param .= "&destination_number=".$destination_number;
-	$param .= "&context=".$context;
-	$param .= "&start_stamp_begin=".$start_stamp_begin;
-	$param .= "&start_stamp_end=".$start_stamp_end;
-	$param .= "&answer_stamp_begin=".$answer_stamp_begin;
-	$param .= "&answer_stamp_end=".$answer_stamp_end;
-	$param .= "&end_stamp_begin=".$end_stamp_begin;
-	$param .= "&end_stamp_end=".$end_stamp_end;
-	$param .= "&start_epoch=".$start_epoch;
-	$param .= "&stop_epoch=".$stop_epoch;
-	$param .= "&duration=".$duration;
-	$param .= "&billsec=".$billsec;
-	$param .= "&hangup_cause=".$hangup_cause;
-	$param .= "&call_result=".$call_result;
-	$param .= "&uuid=".$uuid;
-	$param .= "&bleg_uuid=".$bleg_uuid;
-	$param .= "&accountcode=".$accountcode;
-	$param .= "&read_codec=".$read_codec;
-	$param .= "&write_codec=".$write_codec;
-	$param .= "&remote_media_ip=".$remote_media_ip;
-	$param .= "&network_addr=".$network_addr;
-	$param .= "&bridge_uuid=".$bridge_uuid;
-	$param .= "&mos_comparison=".$mos_comparison;
-	$param .= "&mos_score=".$mos_score;
+	$param = "&cdr_id=".escape($cdr_id);
+	$param .= "&missed=".escape($missed);
+	$param .= "&direction=".escape($direction);
+	$param .= "&caller_id_name=".escape($caller_id_name);
+	$param .= "&caller_id_number=".escape($caller_id_number);
+	$param .= "&caller_destination=".escape($caller_destination);
+	$param .= "&caller_extension_uuid=".escape($caller_extension_uuid);
+	$param .= "&destination_number=".escape($destination_number);
+	$param .= "&context=".escape($context);
+	$param .= "&start_stamp_begin=".escape($start_stamp_begin);
+	$param .= "&start_stamp_end=".escape($start_stamp_end);
+	$param .= "&answer_stamp_begin=".escape($answer_stamp_begin);
+	$param .= "&answer_stamp_end=".escape($answer_stamp_end);
+	$param .= "&end_stamp_begin=".escape($end_stamp_begin);
+	$param .= "&end_stamp_end=".escape($end_stamp_end);
+	$param .= "&start_epoch=".escape($start_epoch);
+	$param .= "&stop_epoch=".escape($stop_epoch);
+	$param .= "&duration=".escape($duration);
+	$param .= "&billsec=".escape($billsec);
+	$param .= "&hangup_cause=".escape($hangup_cause);
+	$param .= "&call_result=".escape($call_result);
+	$param .= "&xml_cdr_uuid=".escape($xml_cdr_uuid);
+	$param .= "&bleg_uuid=".escape($bleg_uuid);
+	$param .= "&accountcode=".escape($accountcode);
+	$param .= "&read_codec=".escape($read_codec);
+	$param .= "&write_codec=".escape($write_codec);
+	$param .= "&remote_media_ip=".escape($remote_media_ip);
+	$param .= "&network_addr=".escape($network_addr);
+	$param .= "&bridge_uuid=".escape($bridge_uuid);
+	$param .= "&mos_comparison=".escape($mos_comparison);
+	$param .= "&mos_score=".escape($mos_score);
 	if (is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
 			$array = explode(",", $field);
 			$field_name = end($array);
 			if (isset($$field_name)) {
-				$param .= "&".$field_name."=".$$field_name;
+				$param .= "&".$field_name."=".escape($$field_name);
 			}
 		}
 	}
@@ -307,7 +307,7 @@
 		$param .= "&show=all";
 	}
 	if (isset($order_by)) {
-		$param .= "&order_by=".$order_by."&order=".$order;
+		$param .= "&order_by=".escape($order_by)."&order=".escape($order);
 	}
 
 //create the sql query to get the xml cdr records
@@ -324,7 +324,7 @@
 //count the records in the database
 	/*
 	if ($_SESSION['cdr']['limit']['numeric'] == 0) {
-		$sql = "select count(uuid) as num_rows from v_xml_cdr ";
+		$sql = "select count(xml_cdr_uuid) as num_rows from v_xml_cdr ";
 		$sql .= "where domain_uuid = '".$domain_uuid."' ".$sql_where;
 		$prep_statement = $db->prepare(check_sql($sql));
 		if ($prep_statement) {
@@ -365,7 +365,7 @@
 	$sql .= "billmsec, ";
 	$sql .= "record_path, ";
 	$sql .= "record_name, ";
-	$sql .= "uuid, ";
+	$sql .= "xml_cdr_uuid, ";
 	$sql .= "bridge_uuid, ";
 	$sql .= "direction, ";
 	$sql .= "billsec, ";

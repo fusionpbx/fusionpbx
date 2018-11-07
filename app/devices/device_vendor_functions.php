@@ -126,7 +126,7 @@
 	echo th_order_by('description', $text['label-description'], $order_by, $order);
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('device_vendor_function_add')) {
-		echo "<a href='device_vendor_function_edit.php?device_vendor_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo "<a href='device_vendor_function_edit.php?device_vendor_uuid=".escape($_GET['id'])."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	else {
 		echo "&nbsp;\n";
@@ -160,28 +160,28 @@
 				unset($sql, $prep_statement);
 				unset($group_list);
 				foreach ($vendor_function_groups as &$sub_row) {
-					$group_list[] = $sub_row["group_name"].(($sub_row['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$sub_row['group_domain_uuid']]['domain_name'] : null);
+					$group_list[] = escape($sub_row["group_name"]).(($sub_row['group_domain_uuid'] != '') ? "@".escape($_SESSION['domains'][$sub_row['group_domain_uuid']]['domain_name']) : null);
 				}
 				$group_list = isset($group_list) ? implode(', ', $group_list) : '';
 				unset ($vendor_function_groups);
 			//build the edit link
 				if (permission_exists('device_vendor_function_edit')) {
-					$tr_link = "href='device_vendor_function_edit.php?device_vendor_uuid=".$row['device_vendor_uuid']."&id=".$row['device_vendor_function_uuid']."'";
+					$tr_link = "href='device_vendor_function_edit.php?device_vendor_uuid=".escape($row['device_vendor_uuid'])."&id=".escape($row['device_vendor_function_uuid'])."'";
 				}
 			//show the row of data
 				echo "<tr ".$tr_link.">\n";
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['name']]."&nbsp;</td>\n";
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['name']." &nbsp;</td>\n";
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['value']."&nbsp;</td>\n";
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$group_list."&nbsp;</td>\n";
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['enabled']."&nbsp;</td>\n";
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['description']."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.escape($row['name'])]."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['name'])." &nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['value'])."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($group_list)."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['enabled'])."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['description'])."&nbsp;</td>\n";
 				echo "	<td class='list_control_icons'>";
 				if (permission_exists('device_vendor_function_edit')) {
-					echo "<a href='device_vendor_function_edit.php?device_vendor_uuid=".$row['device_vendor_uuid']."&id=".$row['device_vendor_function_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+					echo "<a href='device_vendor_function_edit.php?device_vendor_uuid=".escape($row['device_vendor_uuid'])."&id=".escape($row['device_vendor_function_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 				}
 				if (permission_exists('device_vendor_function_delete')) {
-					echo "<a href='device_vendor_function_delete.php?device_vendor_uuid=".$row['device_vendor_uuid']."&id=".$row['device_vendor_function_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+					echo "<a href='device_vendor_function_delete.php?device_vendor_uuid=".escape($row['device_vendor_uuid'])."&id=".escape($row['device_vendor_function_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 				}
 				echo "	</td>\n";
 				echo "</tr>\n";
@@ -199,7 +199,7 @@
 	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
 	echo "		<td class='list_control_icons'>";
 	if (permission_exists('device_vendor_function_add')) {
-		echo 		"<a href='device_vendor_function_edit.php?device_vendor_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo 		"<a href='device_vendor_function_edit.php?device_vendor_uuid=".escape($_GET['id'])."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	else {
 		echo 		"&nbsp;";

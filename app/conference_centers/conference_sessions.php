@@ -22,16 +22,20 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('conference_session_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('conference_session_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -140,12 +144,12 @@ else {
 			}
 
 			if (strlen( $row['start_epoch']) > 0) {
-				$tr_link = "href='conference_session_details.php?uuid=".$row['conference_session_uuid']."'";
+				$tr_link = "href='conference_session_details.php?uuid=".escape($row['conference_session_uuid'])."'";
 				echo "<tr ".$tr_link.">\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$time_difference."&nbsp;</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$start_date."&nbsp;</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$end_date."&nbsp;</td>\n";
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['profile']."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['profile'])."&nbsp;</td>\n";
 				$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
 				$tmp_name = '';
 				if (file_exists($tmp_dir.'/'.$row['conference_session_uuid'].'.mp3')) {
@@ -172,7 +176,7 @@ else {
 				}
 				echo "	</td>\n";
 				echo "	<td class='list_control_icon'>";
-				echo "		<a href='conference_session_details.php?uuid=".$row['conference_session_uuid']."' alt='".$text['button-view']."'>$v_link_label_view</a>";
+				echo "		<a href='conference_session_details.php?uuid=".escape($row['conference_session_uuid'])."' alt='".$text['button-view']."'>$v_link_label_view</a>";
 				echo "	</td>\n";
 				echo "</tr>\n";
 			}
@@ -200,4 +204,5 @@ else {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

@@ -60,7 +60,7 @@
 				$obj = new bridges;
 				$obj->delete($bridges);
 			//delete message
-				messages::add($text['message-delete']);
+				message::add($text['message-delete']);
 		}
 	}
 
@@ -134,7 +134,7 @@
 	$sql .= "limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$bridges = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
 
 //alternate the row style
@@ -175,7 +175,7 @@
 		}
 	}
 
-	echo "				<input type='text' class='txt' style='width: 150px; margin-left: 15px;' name='search' id='search' value='".$search."'>\n";
+	echo "				<input type='text' class='txt' style='width: 150px; margin-left: 15px;' name='search' id='search' value='".escape($search)."'>\n";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
 	echo "			</td>\n";
 	echo "		</form>\n";
@@ -206,23 +206,23 @@
 	echo "	</td>\n";
 	echo "<tr>\n";
 
-	if (is_array($result)) {
+	if (is_array($bridges)) {
 		$x = 0;
-		foreach($result as $row) {
+		foreach($bridges as $row) {
 			if (permission_exists('bridge_edit')) {
-				$tr_link = "href='bridge_edit.php?id=".$row['bridge_uuid']."'";
+				$tr_link = "href='bridge_edit.php?id=".escape($row['bridge_uuid'])."'";
 			}
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='align: center; padding: 3px 3px 0px 8px;'>\n";
 			echo "		<input type='checkbox' name=\"bridges[$x][checked]\" id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$x."').checked = false; }\">\n";
-			echo "		<input type='hidden' name=\"bridges[$x][bridge_uuid]\" value='".$row['bridge_uuid']."' />\n";
+			echo "		<input type='hidden' name=\"bridges[$x][bridge_uuid]\" value='".escape($row['bridge_uuid'])."' />\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['bridge_name'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['bridge_destination'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['bridge_enabled'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('bridge_edit')) {
-				echo "<a href='bridge_edit.php?id=".$row['bridge_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='bridge_edit.php?id=".escape($row['bridge_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('bridge_delete')) {
 				echo "<button type='submit' class='btn btn-default list_control_icon' name=\"bridges[$x][action]\" alt='".$text['button-delete']."' value='delete'><span class='glyphicon glyphicon-remove'></span></button>";
@@ -232,7 +232,7 @@
 			$x++;
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($sql, $bridges);
 	} //end if results
 
 	echo "<tr>\n";

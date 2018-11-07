@@ -17,22 +17,26 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('contact_email_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('contact_email_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //show the content
 	echo "<table width='100%' border='0'>\n";
@@ -73,18 +77,18 @@ else {
 	if ($result_count > 0) {
 		foreach($result as $row) {
 			if (permission_exists('contact_email_edit')) {
-				$tr_link = "href='contact_email_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_email_uuid']."'";
+				$tr_link = "href='contact_email_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_email_uuid'])."'";
 			}
-			echo "<tr ".$tr_link." ".(($row['email_primary']) ? "style='font-weight: bold;'" : null).">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['email_label']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void'><a href='mailto:".$row['email_address']."'>".$row['email_address']."</a>&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".$row['email_description']."&nbsp;</td>\n";
+			echo "<tr ".$tr_link." ".((escape($row['email_primary'])) ? "style='font-weight: bold;'" : null).">\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['email_label'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void'><a href='mailto:".escape($row['email_address'])."'>".escape($row['email_address'])."</a>&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($row['email_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('contact_email_edit')) {
-				echo "<a href='contact_email_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_email_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='contact_email_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_email_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('contact_email_delete')) {
-				echo "<a href='contact_email_delete.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_email_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='contact_email_delete.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_email_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";

@@ -27,7 +27,7 @@
 
 	if (!function_exists('software_version')) {
 		function software_version() {
-			return '4.5.1';
+			return '4.5.3';
 		}
 	}
 
@@ -850,6 +850,16 @@ function format_string ($format, $data) {
 		return $phone_number;
 	}
 
+//format seconds into hh:mm:ss
+	function format_hours($seconds) {
+		$hours = floor($seconds / 3600);
+		$minutes = floor(($seconds / 60) % 60);
+		$seconds = $seconds % 60;
+		if (strlen($minutes) == 1) { $minutes = '0'.$minutes; }
+		if (strlen($seconds) == 1) { $seconds = '0'.$seconds; }
+		return "$hours:$minutes:$seconds";
+	}
+
 //browser detection without browscap.ini dependency
 	function http_user_agent($info = '') {
 		$u_agent = $_SERVER['HTTP_USER_AGENT'];
@@ -1029,7 +1039,7 @@ function format_string ($format, $data) {
 				$msg_errors[] = '1+ '.$text['label-special_characters'];
 			}
 			if (is_array($msg_errors) && sizeof($msg_errors) > 0) {
-				messages::add($_SESSION["message"] = $text['message-password_requirements'].': '.implode(', ', $msg_errors), 'negative', 6000);
+				message::add($_SESSION["message"] = $text['message-password_requirements'].': '.implode(', ', $msg_errors), 'negative', 6000);
 				return false;
 			}
 			else {

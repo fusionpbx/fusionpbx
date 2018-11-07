@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -178,7 +178,7 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*) as num_rows', '*', $sql); // modify query created above
+	$sql = str_replace('count(*) as num_rows', '*', $sql);
 	if (strlen($order_by) > 0) {
 		$sql .= "order by ".$order_by." ".$order." ";
 	}
@@ -191,8 +191,7 @@
 	$sql .= "limit ".$rows_per_page." offset ".$offset." ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
+	$contacts = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
 
 //show the content
@@ -204,7 +203,7 @@
 	echo "		</td>\n";
 	echo "		<td align='right' valign='top' width='50%' nowrap='nowrap'>\n";
 	echo "			<form method='get' name='frm_search' action=''>\n";
-	echo "				<input class='formfld' style='text-align: right;' type='text' name='search_all' id='search_all' value=\"".$search_all."\">\n";
+	echo "				<input class='formfld' style='text-align: right;' type='text' name='search_all' id='search_all' value=\"".escape($search_all)."\">\n";
 	echo "				<input class='btn' type='submit' name='submit' value=\"".$text['button-search']."\">\n";
 	if (permission_exists('contact_add')) {
 		echo 				"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='contact_import.php'\" value='".$text['button-import']."'>\n";
@@ -242,17 +241,17 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($result_count > 0) {
-		foreach($result as $row) {
-			$tr_link = "href='contact_edit.php?id=".$row['contact_uuid']."&query_string=".urlencode($_SERVER["QUERY_STRING"])."'";
+	if (is_array($contacts)) {
+		foreach($contacts as $row) {
+			$tr_link = "href='contact_edit.php?id=".escape($row['contact_uuid'])."&query_string=".urlencode($_SERVER["QUERY_STRING"])."'";
 			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['contact_type'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style='width: 35%; max-width: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><a href='contact_edit.php?id=".$row['contact_uuid']."&query_string=".urlencode($_SERVER["QUERY_STRING"])."'>".$row['contact_organization']."</a>&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style='white-space: nowrap;'><a href='contact_edit.php?id=".$row['contact_uuid']."&query_string=".urlencode($_SERVER["QUERY_STRING"])."'>".$row['contact_name_given']."</a>&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style='white-space: nowrap;'><a href='contact_edit.php?id=".$row['contact_uuid']."&query_string=".urlencode($_SERVER["QUERY_STRING"])."'>".$row['contact_name_family']."</a>&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style='white-space: nowrap;'>".$row['contact_nickname']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style='width: 10%; max-width: 40px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>".$row['contact_title']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style='width: 10%; max-width: 40px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>".$row['contact_role']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords(escape($row['contact_type']))."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='width: 35%; max-width: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><a href='contact_edit.php?id=".escape($row['contact_uuid'])."&query_string=".urlencode($_SERVER["QUERY_STRING"])."'>".escape($row['contact_organization'])."</a>&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='white-space: nowrap;'><a href='contact_edit.php?id=".escape($row['contact_uuid'])."&query_string=".urlencode($_SERVER["QUERY_STRING"])."'>".escape($row['contact_name_given'])."</a>&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='white-space: nowrap;'><a href='contact_edit.php?id=".escape($row['contact_uuid'])."&query_string=".urlencode($_SERVER["QUERY_STRING"])."'>".escape($row['contact_name_family'])."</a>&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='white-space: nowrap;'>".escape($row['contact_nickname'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='width: 10%; max-width: 40px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>".escape($row['contact_title'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='width: 10%; max-width: 40px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>".escape($row['contact_role'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' style='padding: 2px 2px; text-align: center; width: 25px;'>";
 				if (sizeof($contact_sync_sources[$row['contact_uuid']]) > 0) {
 					foreach ($contact_sync_sources[$row['contact_uuid']] as $contact_sync_source) {
@@ -264,13 +263,13 @@
 				else { echo "&nbsp;"; }
 			echo "	</td>\n";
 			echo "	<td class='list_control_icons'>";
-			echo 		"<a href='contact_edit.php?id=".$row['contact_uuid']."&query_string=".urlencode($_SERVER["QUERY_STRING"])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
-			echo 		"<a href='contact_delete.php?id=".$row['contact_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+			echo 		"<a href='contact_edit.php?id=".escape($row['contact_uuid'])."&query_string=".urlencode($_SERVER["QUERY_STRING"])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+			echo 		"<a href='contact_delete.php?id=".escape($row['contact_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($sql, $contacts);
 	} //end if results
 
 	echo "<tr>\n";

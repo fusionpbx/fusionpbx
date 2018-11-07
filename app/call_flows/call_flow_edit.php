@@ -242,10 +242,10 @@
 		//redirect the user
 			if (isset($action)) {
 				if ($action == "add") {
-					messages::add($text['message-add']);
+					message::add($text['message-add']);
 				}
 				if ($action == "update") {
-					messages::add($text['message-update']);
+					message::add($text['message-update']);
 				}
 				header("Location: call_flows.php");
 				return;
@@ -358,7 +358,7 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 
-		echo "<select name='$name' class='formfld' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
+		echo "<select name='".escape($name)."' class='formfld' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
 		echo "	<option value=''></option>\n";
 		//misc optgroup
 			if (if_group("superadmin")) {
@@ -376,14 +376,14 @@
 					$recording_filename = $row["recording_filename"];
 					if ($var == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename && strlen($var) > 0) {
 						$tmp_selected = true;
-						echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename."' selected='selected'>".$recording_name."</option>\n";
+						echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
 					}
 					else if ($var == $recording_filename && strlen($var) > 0) {
 						$tmp_selected = true;
-						echo "	<option value='".$recording_filename."' selected='selected'>".$recording_name."</option>\n";
+						echo "	<option value='".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
 					}
 					else {
-						echo "	<option value='".$recording_filename."'>".$recording_name."</option>\n";
+						echo "	<option value='".escape($recording_filename)."'>".escape($recording_name)."</option>\n";
 					}
 				}
 				echo "</optgroup>\n";
@@ -398,10 +398,10 @@
 				foreach ($result as &$row) {
 					if ($var == "phrase:".$row["phrase_uuid"]) {
 						$tmp_selected = true;
-						echo "	<option value='phrase:".$row["phrase_uuid"]."' selected='selected'>".$row["phrase_name"]."</option>\n";
+						echo "	<option value='phrase:".escape($row["phrase_uuid"])."' selected='selected'>".escape($row["phrase_name"])."</option>\n";
 					}
 					else {
-						echo "	<option value='phrase:".$row["phrase_uuid"]."'>".$row["phrase_name"]."</option>\n";
+						echo "	<option value='phrase:".escape($row["phrase_uuid"])."'>".escape($row["phrase_name"])."</option>\n";
 					}
 				}
 				unset ($prep_statement);
@@ -420,10 +420,10 @@
 							}
 							if ($var == $value) {
 								$tmp_selected = true;
-								echo "	<option value='$value' selected='selected'>$value</option>\n";
+								echo "	<option value='".escape($value)."' selected='selected'>".escape($value)."</option>\n";
 							}
 							else {
-								echo "	<option value='$value'>$value</option>\n";
+								echo "	<option value='".escape($value)."'>".escape($value)."</option>\n";
 							}
 						}
 					}
@@ -435,13 +435,13 @@
 				if (!$tmp_selected && strlen($var) > 0) {
 					echo "<optgroup label='Selected'>\n";
 					if (file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$var)) {
-						echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$var."' selected='selected'>".$var."</option>\n";
+						echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".escape($var)."' selected='selected'>".escape($var)."</option>\n";
 					}
 					else if (substr($var, -3) == "wav" || substr($var, -3) == "mp3") {
-						echo "	<option value='".$var."' selected='selected'>".$var."</option>\n";
+						echo "	<option value='".escape($var)."' selected='selected'>".escape($var)."</option>\n";
 					}
 					else {
-						echo "	<option value='".$var."' selected='selected'>".$var."</option>\n";
+						echo "	<option value='".escape($var)."' selected='selected'>".escape($var)."</option>\n";
 					}
 					echo "</optgroup>\n";
 				}
@@ -473,7 +473,7 @@
 	echo "	".$text['label-call_flow_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_name' maxlength='255' value=\"$call_flow_name\">\n";
+	echo "	<input class='formfld' type='text' name='call_flow_name' maxlength='255' value=\"".escape($call_flow_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_flow_name']."\n";
 	echo "</td>\n";
@@ -484,7 +484,7 @@
 	echo "	".$text['label-call_flow_extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_extension' maxlength='255' value=\"$call_flow_extension\">\n";
+	echo "	<input class='formfld' type='text' name='call_flow_extension' maxlength='255' value=\"".escape($call_flow_extension)."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_flow_extension']."\n";
 	echo "</td>\n";
@@ -495,7 +495,7 @@
 	echo "	".$text['label-call_flow_feature_code']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_feature_code' maxlength='255' value=\"$call_flow_feature_code\">\n";
+	echo "	<input class='formfld' type='text' name='call_flow_feature_code' maxlength='255' value=\"".escape($call_flow_feature_code)."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_flow_feature_code']."\n";
 	echo "</td>\n";
@@ -510,7 +510,7 @@
 	echo "	<option value=''></option>\n";
 	if ($call_flow_status == "true") {
 		if (strlen($call_flow_label) > 0) {
-			echo "	<option value='true' selected='selected'>$call_flow_label</option>\n";
+			echo "	<option value='true' selected='selected'>".escape($call_flow_label)."</option>\n";
 		}
 		else {
 			echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
@@ -518,7 +518,7 @@
 	}
 	else {
 		if (strlen($call_flow_label) > 0) {
-			echo "	<option value='true'>$call_flow_label</option>\n";
+			echo "	<option value='true'>".escape($call_flow_label)."</option>\n";
 		}
 		else {
 			echo "	<option value='true'>".$text['label-true']."</option>\n";
@@ -526,7 +526,7 @@
 	}
 	if ($call_flow_status == "false") {
 		if (strlen($call_flow_alternate_label) > 0) {
-			echo "	<option value='false' selected='selected'>$call_flow_alternate_label</option>\n";
+			echo "	<option value='false' selected='selected'>".escape($call_flow_alternate_label)."</option>\n";
 		}
 		else {
 			echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
@@ -534,7 +534,7 @@
 	}
 	else {
 		if (strlen($call_flow_alternate_label) > 0) {
-			echo "	<option value='false'>$call_flow_alternate_label</option>\n";
+			echo "	<option value='false'>".escape($call_flow_alternate_label)."</option>\n";
 		}
 		else {
 			echo "	<option value='false'>".$text['label-false']."</option>\n";
@@ -551,7 +551,7 @@
 	echo "	".$text['label-call_flow_pin_number']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_pin_number' maxlength='255' value=\"$call_flow_pin_number\">\n";
+	echo "	<input class='formfld' type='text' name='call_flow_pin_number' maxlength='255' value=\"".escape($call_flow_pin_number)."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_flow_pin_number']."\n";
 	echo "</td>\n";
@@ -562,7 +562,7 @@
 	echo "	".$text['label-call_flow_label']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_label' maxlength='255' value=\"$call_flow_label\">\n";
+	echo "	<input class='formfld' type='text' name='call_flow_label' maxlength='255' value=\"".escape($call_flow_label)."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_flow_label']."\n";
 	echo "</td>\n";
@@ -576,7 +576,7 @@
 	echo "	".$text['label-call_flow_sound']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_sound' maxlength='255' value=\"$call_flow_sound\">\n";
+	echo "	<input class='formfld' type='text' name='call_flow_sound' maxlength='255' value=\"".escape($call_flow_sound)."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_flow_sound']."\n";
 	echo "</td>\n";
@@ -606,7 +606,7 @@
 	echo "	".$text['label-call_flow_alternate_label']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_alternate_label' maxlength='255' value=\"$call_flow_alternate_label\">\n";
+	echo "	<input class='formfld' type='text' name='call_flow_alternate_label' maxlength='255' value=\"".escape($call_flow_alternate_label)."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_flow_alternate_label']."\n";
 	echo "</td>\n";
@@ -620,7 +620,7 @@
 	echo "	".$text['label-call_flow_alternate_sound']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_alternate_sound' maxlength='255' value=\"$call_flow_alternate_sound\">\n";
+	echo "	<input class='formfld' type='text' name='call_flow_alternate_sound' maxlength='255' value=\"".escape($call_flow_alternate_sound)."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_flow_alternate_sound']."\n";
 	echo "</td>\n";
@@ -649,7 +649,7 @@
 		echo "	".$text['label-call_flow_context']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='call_flow_context' maxlength='255' value=\"$call_flow_context\">\n";
+		echo "	<input class='formfld' type='text' name='call_flow_context' maxlength='255' value=\"".escape($call_flow_context)."\">\n";
 		echo "<br />\n";
 		echo $text['description-call_flow_context']."\n";
 		echo "</td>\n";
@@ -661,7 +661,7 @@
 	echo "	".$text['label-call_flow_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_description' maxlength='255' value=\"$call_flow_description\">\n";
+	echo "	<input class='formfld' type='text' name='call_flow_description' maxlength='255' value=\"".escape($call_flow_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_flow_description']."\n";
 	echo "</td>\n";
@@ -669,8 +669,8 @@
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='call_flow_uuid' value='$call_flow_uuid'>\n";
-		echo "				<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
+		echo "				<input type='hidden' name='call_flow_uuid' value='".escape($call_flow_uuid)."'>\n";
+		echo "				<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	}
 	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";

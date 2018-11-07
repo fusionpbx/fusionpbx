@@ -31,15 +31,15 @@
 <link rel="stylesheet" type="text/css" href="<!--{project_path}-->/resources/bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="<!--{project_path}-->/resources/bootstrap/css/bootstrap-datetimepicker.min.css" />
 <link rel="stylesheet" type="text/css" href="<!--{project_path}-->/resources/bootstrap/css/bootstrap-colorpicker.min.css">
-<link rel="stylesheet" type="text/css" href="<!--{project_path}-->/themes/<?php echo $_SESSION['domain']['template']['name']; ?>/css.php<?php echo ($default_login) ? '?login=default' : null; ?>">
+<link rel="stylesheet" type="text/css" href="<!--{project_path}-->/themes/<?php echo escape($_SESSION['domain']['template']['name']); ?>/css.php<?php echo ($default_login) ? '?login=default' : null; ?>">
 <?php
 //load custom css
 	if ($_SESSION['theme']['custom_css']['text'] != '') {
-		echo "<link rel='stylesheet' type='text/css' href='".$_SESSION['theme']['custom_css']['text']."'>\n\n";
+		echo "<link rel='stylesheet' type='text/css' href='".escape($_SESSION['theme']['custom_css']['text'])."'>\n\n";
 	}
 
 //set fav icon
-	$favicon = (isset($_SESSION['theme']['favicon']['text'])) ? $_SESSION['theme']['favicon']['text'] : '<!--{project_path}-->/themes/default/favicon.ico';
+	$favicon = (isset($_SESSION['theme']['favicon']['text'])) ? escape($_SESSION['theme']['favicon']['text']) : '<!--{project_path}-->/themes/default/favicon.ico';
 	echo "<link rel='icon' href='".$favicon."'>\n";
 ?>
 
@@ -56,10 +56,10 @@
 //web font loader
 	if ($_SESSION['theme']['font_loader']['text'] == 'true') {
 		if ($_SESSION['theme']['font_retrieval']['text'] != 'asynchronous') {
-			$font_loader_version = ($_SESSION['theme']['font_loader_version']['text'] != '') ? $_SESSION['theme']['font_loader_version']['text'] : 1;
-			echo "<script language='JavaScript' type='text/javascript' src='//ajax.googleapis.com/ajax/libs/webfont/".$font_loader_version."/webfont.js'></script>\n";
+			$font_loader_version = ($_SESSION['theme']['font_loader_version']['text'] != '') ? escape($_SESSION['theme']['font_loader_version']['text']) : 1;
+			echo "<script language='JavaScript' type='text/javascript' src='//ajax.googleapis.com/ajax/libs/webfont/".escape($font_loader_version)."/webfont.js'></script>\n";
 		}
-		echo "<script language='JavaScript' type='text/javascript' src='<!--{project_path}-->/resources/fonts/web_font_loader.php?v=".$font_loader_version."'></script>\n";
+		echo "<script language='JavaScript' type='text/javascript' src='<!--{project_path}-->/resources/fonts/web_font_loader.php?v=".escape($font_loader_version)."'></script>\n";
 	}
 ?>
 <script language="JavaScript" type="text/javascript">
@@ -77,14 +77,14 @@
 					object.clearQueue().finish();
 					object.animate({height: '0', 'font-size': '0', 'border-bottom-width': '0'}, 1000).animate({opacity: 0});
 				} );
-				$("#messages_container").append(message_text);
+				$("#message_container").append(message_text);
 				message_text.animate({opacity: 1}, 'fast').delay(delay).animate({height: '0', 'font-size': '0', 'border-bottom-width': '0'}, 1000).animate({opacity: 0});
 			}
 		}
 
 	$(document).ready(function() {
 
-<?php	echo messages::html(true, "		");?>
+<?php	echo message::html(true, "		");?>
 
 		//hide message bar on hover
 			$("#message_text").mouseover(function() { $(this).hide(); $("#message_container").hide(); });
@@ -290,7 +290,7 @@
 
 <body onload="<?php echo $onload;?>">
 
-	<div id='messages_container'></div>
+	<div id='message_container'></div>
 
 	<?php
 	//logged in show the domains block
@@ -320,14 +320,14 @@
 					foreach($_SESSION['domains'] as $domain) {
 						$bgcolor = ($bgcolor == $bgcolor1) ? $bgcolor2 : $bgcolor1;
 						$bgcolor = ($domain['domain_uuid'] == $_SESSION['domain_uuid']) ? "#eeffee" : $bgcolor;
-						echo "<div id=\"".$domain['domain_name']."\" class='domains_list_item' style='background-color: ".$bgcolor."' onclick=\"document.location.href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".$domain['domain_uuid']."&domain_change=true';\">";
-						echo "<a href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".$domain['domain_uuid']."&domain_change=true' ".(($domain['domain_uuid'] == $_SESSION['domain_uuid']) ? "style='font-weight: bold;'" : null).">".$domain['domain_name']."</a>\n";
+						echo "<div id=\"".escape($domain['domain_name'])."\" class='domains_list_item' style='background-color: ".$bgcolor."' onclick=\"document.location.href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true';\">";
+						echo "<a href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true' ".(($domain['domain_uuid'] == $_SESSION['domain_uuid']) ? "style='font-weight: bold;'" : null).">".escape($domain['domain_name'])."</a>\n";
 						if ($domain['domain_description'] != '') {
-							echo "<span class=\"domain_list_item_description\"> - ".$domain['domain_description']."</span>\n";
+							echo "<span class=\"domain_list_item_description\"> - ".escape($domain['domain_description'])."</span>\n";
 						}
 						echo "</div>\n";
-						$ary_domain_names[] = $domain['domain_name'];
-						$ary_domain_descs[] = str_replace('"','\"',$domain['domain_description']);
+						$ary_domain_names[] = escape($domain['domain_name']);
+						$ary_domain_descs[] = str_replace('"','\"',escape($domain['domain_description']));
 					}
 					?>
 				</div>
@@ -411,13 +411,13 @@
 									$menu_brand_link = '/';
 								}
 							//define menu brand mark
-								$menu_brand_text = ($_SESSION['theme']['menu_brand_text']['text'] != '') ? $_SESSION['theme']['menu_brand_text']['text'] : "FusionPBX";
+								$menu_brand_text = ($_SESSION['theme']['menu_brand_text']['text'] != '') ? escape($_SESSION['theme']['menu_brand_text']['text']) : "FusionPBX";
 								if ($_SESSION['theme']['menu_brand_type']['text'] == 'image' || $_SESSION['theme']['menu_brand_type']['text'] == '') {
-									$menu_brand_image = ($_SESSION['theme']['menu_brand_image']['text'] != '') ? $_SESSION['theme']['menu_brand_image']['text'] : PROJECT_PATH."/themes/default/images/logo.png";
+									$menu_brand_image = ($_SESSION['theme']['menu_brand_image']['text'] != '') ? escape($_SESSION['theme']['menu_brand_image']['text']) : PROJECT_PATH."/themes/default/images/logo.png";
 									echo "<a href='".$menu_brand_link."'>";
-									echo "<img id='menu_brand_image' class='navbar-logo' ".(($menu_style == 'fixed') ? "style='margin-right: -2%;'" : null)." src='".$menu_brand_image."' title=\"".$menu_brand_text."\">";
+									echo "<img id='menu_brand_image' class='navbar-logo' ".(($menu_style == 'fixed') ? "style='margin-right: -2%;'" : null)." src='".$menu_brand_image."' title=\"".escape($menu_brand_text)."\">";
 									if ($_SESSION['theme']['menu_brand_image_hover']['text'] != '') {
-										echo "<img id='menu_brand_image_hover' class='navbar-logo' style='display: none;' src='".$_SESSION['theme']['menu_brand_image_hover']['text']."' title=\"".$menu_brand_text."\">";
+										echo "<img id='menu_brand_image_hover' class='navbar-logo' style='display: none;' src='".$_SESSION['theme']['menu_brand_image_hover']['text']."' title=\"".escape($menu_brand_text)."\">";
 									}
 									echo "</a>";
 								}
@@ -427,7 +427,7 @@
 						}
 						//domain name/selector (xs)
 							if ($_SESSION["username"] != '' && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
-								echo "<span class='pull-right visible-xs'><a href='#' class='domain_selector_domain' title='".$text['theme-label-open_selector']."'>".$_SESSION['domain_name']."</a></span>\n";
+								echo "<span class='pull-right visible-xs'><a href='#' class='domain_selector_domain' title='".escape($text['theme-label-open_selector'])."'>".escape($_SESSION['domain_name'])."</a></span>\n";
 							}
 						?>
 					</div>
@@ -447,7 +447,7 @@
 								$mod_a_3 = ($menu_parent['menu_item_category'] == 'external') ? "target='_blank' " : null;
 								if ($_SESSION['theme']['menu_main_icons']['boolean'] != 'false') {
 									if ($menu_parent['menu_item_icon'] != '' && substr_count($menu_parent['menu_item_icon'], 'glyphicon-') > 0) {
-										$menu_main_icon = "<span class='glyphicon ".$menu_parent['menu_item_icon']."' title=\"".$menu_parent['menu_language_title']."\"></span>";
+										$menu_main_icon = "<span class='glyphicon ".$menu_parent['menu_item_icon']."' title=\"".escape($menu_parent['menu_language_title'])."\"></span>";
 									}
 									else {
 										$menu_main_icon = null;
@@ -478,13 +478,13 @@
 										$mod_a_3 = ($menu_sub['menu_item_category'] == 'external') ? "target='_blank' " : null;
 										if ($_SESSION['theme']['menu_sub_icons']['boolean'] != 'false') {
 											if ($menu_sub['menu_item_icon'] != '' && substr_count($menu_sub['menu_item_icon'], 'glyphicon-') > 0) {
-												$menu_sub_icon = "<span class='glyphicon ".$menu_sub['menu_item_icon']."'></span>";
+												$menu_sub_icon = "<span class='glyphicon ".escape($menu_sub['menu_item_icon'])."'></span>";
 											}
 											else {
 												$menu_sub_icon = null;
 											}
 										}
-										echo "<li><a href='".$mod_a_2."' ".$mod_a_3.">".(($_SESSION['theme']['menu_sub_icons']) ? "<span class='glyphicon glyphicon-minus visible-xs pull-left' style='margin: 4px 10px 0 25px;'></span>" : null).$menu_sub['menu_language_title'].$menu_sub_icon."</a></li>\n";
+										echo "<li><a href='".$mod_a_2."' ".$mod_a_3.">".(($_SESSION['theme']['menu_sub_icons']) ? "<span class='glyphicon glyphicon-minus visible-xs pull-left' style='margin: 4px 10px 0 25px;'></span>" : null).escape($menu_sub['menu_language_title']).$menu_sub_icon."</a></li>\n";
 									}
 									echo "</ul>\n";
 								}
@@ -496,7 +496,7 @@
 						echo "<span class='pull-right hidden-xs' style='white-space: nowrap;'>";
 						//domain name/selector (sm+)
 							if ($_SESSION["username"] != '' && permission_exists("domain_select") && count($_SESSION['domains']) > 1 && $_SESSION['theme']['domain_visible']['text'] == 'true') {
-								echo "<a href='#' class='domain_selector_domain' title='".$text['theme-label-open_selector']."'>".$_SESSION['domain_name']."</a>";
+								echo "<a href='#' class='domain_selector_domain' title='".$text['theme-label-open_selector']."'>".escape($_SESSION['domain_name'])."</a>";
 							}
 						//logout icon
 							if ($_SESSION['username'] != '' && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
@@ -564,7 +564,7 @@
 		$logo = (isset($_SESSION['theme']['logo']['text'])) ? $_SESSION['theme']['logo']['text'] : PROJECT_PATH."/themes/default/images/logo.png";
 		?>
 		<div id='default_login'>
-			<a href='<?php echo PROJECT_PATH; ?>/'><img id='login_logo' src='<?php echo $logo; ?>'></a><br />
+			<a href='<?php echo PROJECT_PATH; ?>/'><img id='login_logo' src='<?php echo escape($logo); ?>'></a><br />
 			<!--{body}-->
 		</div>
 		<div id='footer_login'>

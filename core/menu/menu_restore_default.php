@@ -66,7 +66,7 @@
 //redirect
 	if (!$included) {
 		//show a message to the user
-		messages::add($text['message-restore']);
+		message::add($text['message-restore']);
 		header("Location: ".PROJECT_PATH."/core/menu/menu_edit.php?id=".$menu_uuid);
 		return;
 	}

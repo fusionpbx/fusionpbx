@@ -49,7 +49,7 @@
 			if ($cmd == "api reloadxml") {
 				//reloadxml
 					if ($cmd == "api reloadxml") {
-						messages::add(rtrim(event_socket_request($fp, $cmd)), 'alert');
+						message::add(rtrim(event_socket_request($fp, $cmd)), 'alert');
 						unset($cmd);
 					}
 
@@ -58,7 +58,7 @@
 
 				//rescan the external profile to look for new or stopped gateways
 					$tmp_cmd = 'api sofia profile external rescan';
-					messages::add(rtrim(event_socket_request($fp, $tmp_cmd)), 'alert');
+					message::add(rtrim(event_socket_request($fp, $tmp_cmd)), 'alert');
 					unset($tmp_cmd);
 			}
 
@@ -70,13 +70,13 @@
 
 		//reloadacl
 			if ($cmd == "api reloadacl") {
-				messages::add(rtrim(event_socket_request($fp, $cmd)), 'alert');
+				message::add(rtrim(event_socket_request($fp, $cmd)), 'alert');
 				unset($cmd);
 			}
 
 		//sofia profile
 			if (substr($cmd, 0, 17) == "api sofia profile") {
-				messages::add(rtrim(event_socket_request($fp, $cmd)), 'alert');
+				message::add(rtrim(event_socket_request($fp, $cmd)), 'alert');
 			}
 
 		//close the connection

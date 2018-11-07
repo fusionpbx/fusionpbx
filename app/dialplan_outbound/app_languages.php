@@ -121,6 +121,26 @@ $text['label-toll_allow']['ru-ru'] = "Разрешить ВСЕ";
 $text['label-toll_allow']['sv-se'] = "Tillåta fjärrsamtal";
 $text['label-toll_allow']['uk-ua'] = "TOLL дозволено";
 
+$text['label-pin_numbers']['en-us'] = "PIN Numbers";
+$text['label-pin_numbers']['ar-eg'] = "";
+$text['label-pin_numbers']['de-at'] = "";
+$text['label-pin_numbers']['de-ch'] = "";
+$text['label-pin_numbers']['de-de'] = "";
+$text['label-pin_numbers']['es-cl'] = "";
+$text['label-pin_numbers']['es-mx'] = "";
+$text['label-pin_numbers']['fr-ca'] = "";
+$text['label-pin_numbers']['fr-fr'] = "";
+$text['label-pin_numbers']['he-il'] = "";
+$text['label-pin_numbers']['it-it'] = "";
+$text['label-pin_numbers']['nl-nl'] = "";
+$text['label-pin_numbers']['pl-pl'] = "";
+$text['label-pin_numbers']['pt-br'] = "";
+$text['label-pin_numbers']['pt-pt'] = "";
+$text['label-pin_numbers']['ro-ro'] = "";
+$text['label-pin_numbers']['ru-ru'] = "";
+$text['label-pin_numbers']['sv-se'] = "";
+$text['label-pin_numbers']['uk-ua'] = "";
+
 $text['label-sip-gateway']['en-us'] = "SIP Gateways";
 $text['label-sip-gateway']['ar-eg'] = "";
 $text['label-sip-gateway']['de-at'] = "SIP Gateways"; //copied from de-de

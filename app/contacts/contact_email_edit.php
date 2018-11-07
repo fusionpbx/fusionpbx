@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -133,7 +133,7 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 					$db->exec(check_sql($sql));
 					unset($sql);
 
-					messages::add($text['message-add']);
+					message::add($text['message-add']);
 					header("Location: contact_edit.php?id=".$contact_uuid);
 					return;
 				} //if ($action == "add")
@@ -150,7 +150,7 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 					$db->exec(check_sql($sql));
 					unset($sql);
 
-					messages::add($text['message-update']);
+					message::add($text['message-update']);
 					header("Location: contact_edit.php?id=".$contact_uuid);
 					return;
 				} //if ($action == "update")
@@ -209,7 +209,7 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 	}
 	echo "</b></td>\n";
 	echo "<td align='right' valign='top'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contact_edit.php?id=".$contact_uuid."'\" value='".$text['button-back']."'>";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contact_edit.php?id=".escape($contact_uuid)."'\" value='".$text['button-back']."'>";
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -262,7 +262,7 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 	echo "	".$text['label-email_address']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='email_address' maxlength='255' value=\"".$email_address."\">\n";
+	echo "	<input class='formfld' type='text' name='email_address' maxlength='255' value=\"".escape($email_address)."\">\n";
 	echo "<br />\n";
 	echo $text['description-email_address']."\n";
 	echo "</td>\n";
@@ -287,7 +287,7 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 	echo "	".$text['label-email_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='email_description' maxlength='255' value=\"".$email_description."\">\n";
+	echo "	<input class='formfld' type='text' name='email_description' maxlength='255' value=\"".escape($email_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-email_description']."\n";
 	echo "</td>\n";
@@ -296,9 +296,9 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	echo "			<br>\n";
-	echo "			<input type='hidden' name='contact_uuid' value='$contact_uuid'>\n";
+	echo "			<input type='hidden' name='contact_uuid' value='".escape($contact_uuid)."'>\n";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='contact_email_uuid' value='".$contact_email_uuid."'>\n";
+		echo "		<input type='hidden' name='contact_email_uuid' value='".escape($contact_email_uuid)."'>\n";
 	}
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,17 +25,20 @@
 
 	Call Block is written by Gerrit Visser <gerrit308@gmail.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
 
-if (permission_exists('call_block_edit') || permission_exists('call_block_add')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('call_block_edit') || permission_exists('call_block_add')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -45,7 +48,7 @@ else {
 	if (isset($_REQUEST["cdr_id"])) {
 
 		$action = "cdr_add";
-		$cdr_uuid = check_str($_REQUEST["cdr_id"]);
+		$xml_cdr_uuid = check_str($_REQUEST["cdr_id"]);
 		$call_block_name = check_str($_REQUEST["name"]);
 
 		// get the caller id info from cdr that user chose
@@ -55,7 +58,7 @@ else {
 		}
 		$sql .= "caller_id_number ";
 		$sql .= "from v_xml_cdr ";
-		$sql .= "where uuid = '".$cdr_uuid."' ";
+		$sql .= "where xml_cdr_uuid = '".$xml_cdr_uuid."' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetch();
@@ -76,7 +79,7 @@ else {
 		$db->exec(check_sql($sql));
 		unset($sql);
 
-		// insert call block record
+		//insert call block record
 		$sql = "insert into v_call_block ";
 		$sql .= "(";
 		$sql .= "domain_uuid, ";
@@ -102,9 +105,11 @@ else {
 		$db->exec(check_sql($sql));
 		unset($sql);
 
-		messages::add($text['label-add-complete']);
-
+		//add a message
+		message::add($text['label-add-complete']);
 	}
 
-header("Location: call_block.php");
+//redirect the browser
+	header("Location: call_block.php");
+
 ?>

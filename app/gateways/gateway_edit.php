@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -43,7 +43,7 @@
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (isset($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		if (isset($_POST["id"])) {
 			$gateway_uuid = check_str($_REQUEST["id"]);
@@ -74,7 +74,7 @@
 			}
 			unset($prep_statement, $row);
 			if ($total_gateways >= $_SESSION['limit']['gateways']['numeric']) {
-				messages::add($text['message-maximum_gateways'].' '.$_SESSION['limit']['gateways']['numeric'], 'negative');
+				message::add($text['message-maximum_gateways'].' '.$_SESSION['limit']['gateways']['numeric'], 'negative');
 				header('Location: gateways.php');
 				return;
 			}
@@ -135,7 +135,7 @@
 			//if (strlen($realm) == 0) { $msg .= $text['message-required']." ".$text['label-realm']."<br>\n"; }
 			//if (strlen($from_user) == 0) { $msg .= $text['message-required']." ".$text['label-from_user']."<br>\n"; }
 			//if (strlen($from_domain) == 0) { $msg .= $text['message-required']." ".$text['label-from_domain']."<br>\n"; }
-			//if (strlen($proxy) == 0) { $msg .= $text['message-required']." ".$text['label-proxy']."<br>\n"; }
+			if (strlen($proxy) == 0) { $msg .= $text['message-required']." ".$text['label-proxy']."<br>\n"; }
 			//if (strlen($register_proxy) == 0) { $msg .= $text['message-required']." ".$text['label-register_proxy']."<br>\n"; }
 			//if (strlen($outbound_proxy) == 0) { $msg .= $text['message-required']." ".$text['label-outbound_proxy']."<br>\n"; }
 			if (strlen($expire_seconds) == 0) { $msg .= $text['message-required']." ".$text['label-expire_seconds']."<br>\n"; }
@@ -245,13 +245,11 @@
 				//syncrhonize configuration
 					save_gateway_xml();
 	
-				//delete the sip profiles from memcache
+				//clear the cache
 					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-					if ($fp) {
-						$hostname = trim(event_socket_request($fp, 'api switchname'));
-						$switch_cmd = "memcache delete configuration:sofia.conf:".$hostname;
-						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-					}
+					$hostname = trim(event_socket_request($fp, 'api switchname'));
+					$cache = new cache;
+					$cache->delete("configuration:sofia.conf:".$hostname);
 	
 				//rescan the external profile to look for new or stopped gateways
 					//create the event socket connection
@@ -270,10 +268,10 @@
 		//redirect the user
 			if (isset($action)) {
 				if ($action == "add") {
-					messages::add($text['message-add']);
+					message::add($text['message-add']);
 				}
 				if ($action == "update") {
-					messages::add($text['message-update']);
+					message::add($text['message-update']);
 				}
 				header("Location: gateways.php");
 				return;
@@ -368,7 +366,7 @@
 	echo "		<td width='50%' align='right'>\n";
 	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='gateways.php'\" value='".$text['button-back']."'>\n";
 	if ($action == "update") {
-		echo "			<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"if (confirm('".$text['confirm-copy']."')){window.location='gateway_copy.php?id=".$gateway_uuid."';}\" value='".$text['button-copy']."'>\n";
+		echo "			<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"if (confirm('".$text['confirm-copy']."')){window.location='gateway_copy.php?id=".escape($gateway_uuid)."';}\" value='".$text['button-copy']."'>\n";
 	}
 	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
 	echo "		</td>\n";
@@ -389,7 +387,7 @@
 	echo "    ".$text['label-gateway']."\n";
 	echo "</td>\n";
 	echo "<td width=\"70%\" class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='gateway' maxlength='255' value=\"$gateway\" required='required'>\n";
+	echo "    <input class='formfld' type='text' name='gateway' maxlength='255' value=\"".escape($gateway)."\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-gateway-name']."\n";
 	echo "</td>\n";
@@ -400,7 +398,7 @@
 	echo "    ".$text['label-username']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='username' maxlength='255' autocomplete='off' value=\"$username\">\n";
+	echo "    <input class='formfld' type='text' name='username' maxlength='255' autocomplete='off' value=\"".escape($username)."\">\n";
 	echo "<br />\n";
 	echo $text['description-username']."\n";
 	echo "</td>\n";
@@ -411,7 +409,7 @@
 	echo "    ".$text['label-password']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='password' name='password' id='password' autocomplete='off' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"$password\">\n";
+	echo "    <input class='formfld' type='password' name='password' id='password' autocomplete='off' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"".escape($password)."\">\n";
 	echo "    <br />\n";
 	echo "    ".$text['description-password']."\n";
 	echo "</td>\n";
@@ -422,7 +420,7 @@
 	echo "    ".$text['label-from_user']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='from_user' maxlength='255' value=\"$from_user\">\n";
+	echo "    <input class='formfld' type='text' name='from_user' maxlength='255' value=\"".escape($from_user)."\">\n";
 	echo "<br />\n";
 	echo $text['description-from_user']."\n";
 	echo "</td>\n";
@@ -433,7 +431,7 @@
 	echo "    ".$text['label-from_domain']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='from_domain' maxlength='255' value=\"$from_domain\">\n";
+	echo "    <input class='formfld' type='text' name='from_domain' maxlength='255' value=\"".escape($from_domain)."\">\n";
 	echo "<br />\n";
 	echo $text['description-from_domain']."\n";
 	echo "</td>\n";
@@ -444,7 +442,7 @@
 	echo "    ".$text['label-proxy']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='proxy' maxlength='255' value=\"$proxy\" required='required'>\n";
+	echo "    <input class='formfld' type='text' name='proxy' maxlength='255' value=\"".escape($proxy)."\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-proxy']."\n";
 	echo "</td>\n";
@@ -455,7 +453,7 @@
 	echo "    ".$text['label-realm']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='realm' maxlength='255' value=\"$realm\">\n";
+	echo "    <input class='formfld' type='text' name='realm' maxlength='255' value=\"".escape($realm)."\">\n";
 	echo "<br />\n";
 	echo $text['description-realm']."\n";
 	echo "</td>\n";
@@ -467,7 +465,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	if (strlen($expire_seconds) == 0) { $expire_seconds = "800"; }
-	echo "  <input class='formfld' type='number' name='expire_seconds' maxlength='255' value='$expire_seconds' min='1' max='65535' step='1' required='required'>\n";
+	echo "  <input class='formfld' type='number' name='expire_seconds' maxlength='255' value='".escape($expire_seconds)."' min='1' max='65535' step='1' required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-expire_seconds']."\n";
 	echo "</td>\n";
@@ -502,7 +500,7 @@
 	echo "    ".$text['label-retry_seconds']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='number' name='retry_seconds' maxlength='255' value='$retry_seconds' min='1' max='65535' step='1' required='required'>\n";
+	echo "  <input class='formfld' type='number' name='retry_seconds' maxlength='255' value='".escape($retry_seconds)."' min='1' max='65535' step='1' required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-retry_seconds']."\n";
 	echo "</td>\n";
@@ -556,7 +554,7 @@
 	echo "    ".$text['label-auth_username']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='auth_username' maxlength='255' value=\"$auth_username\">\n";
+	echo "    <input class='formfld' type='text' name='auth_username' maxlength='255' value=\"".escape($auth_username)."\">\n";
 	echo "<br />\n";
 	echo $text['description-auth_username']."\n";
 	echo "</td>\n";
@@ -567,7 +565,7 @@
 	echo "    ".$text['label-extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='extension' maxlength='255' value=\"$extension\">\n";
+	echo "    <input class='formfld' type='text' name='extension' maxlength='255' value=\"".escape($extension)."\">\n";
 	echo "<br />\n";
 	echo $text['description-extension']."\n";
 	echo "</td>\n";
@@ -609,7 +607,7 @@
 	echo "    ".$text['label-register_proxy']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='register_proxy' maxlength='255' value=\"$register_proxy\">\n";
+	echo "    <input class='formfld' type='text' name='register_proxy' maxlength='255' value=\"".escape($register_proxy)."\">\n";
 	echo "<br />\n";
 	echo $text['description-register_proxy']."\n";
 	echo "</td>\n";
@@ -620,7 +618,7 @@
 	echo "    ".$text['label-outbound_proxy']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='outbound_proxy' maxlength='255' value=\"$outbound_proxy\">\n";
+	echo "    <input class='formfld' type='text' name='outbound_proxy' maxlength='255' value=\"".escape($outbound_proxy)."\">\n";
 	echo "<br />\n";
 	echo $text['description-outbound_proxy']."\n";
 	echo "</td>\n";
@@ -681,7 +679,7 @@
 	echo "    ".$text['label-sip_cid_type']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='sip_cid_type' maxlength='255' value=\"$sip_cid_type\" pattern='^(none|pid|rpid)$'>\n";
+	echo "    <input class='formfld' type='text' name='sip_cid_type' maxlength='255' value=\"".escape($sip_cid_type)."\" pattern='^(none|pid|rpid)$'>\n";
 	echo "<br />\n";
 	echo $text['description-sip_cid_type']."\n";
 	echo "</td>\n";
@@ -692,7 +690,7 @@
 	echo "    ".$text['label-codec_prefs']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='codec_prefs' maxlength='255' value=\"$codec_prefs\">\n";
+	echo "    <input class='formfld' type='text' name='codec_prefs' maxlength='255' value=\"".escape($codec_prefs)."\">\n";
 	echo "<br />\n";
 	echo $text['description-codec_prefs']."\n";
 	echo "</td>\n";
@@ -728,7 +726,7 @@
 	echo "    ".$text['label-ping']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='number' name='ping' maxlength='255' min='1' max='65535' step='1' value=\"$ping\">\n";
+	echo "    <input class='formfld' type='number' name='ping' maxlength='255' min='1' max='65535' step='1' value=\"".escape($ping)."\">\n";
 	echo "<br />\n";
 	echo $text['description-ping']."\n";
 	echo "</td>\n";
@@ -740,7 +738,7 @@
 		echo "    ".$text['label-channels']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='number' name='channels' maxlength='255' value=\"$channels\" min='0' max='65535' step='1'>\n";
+		echo "    <input class='formfld' type='number' name='channels' maxlength='255' value=\"".escape($channels)."\" min='0' max='65535' step='1'>\n";
 		echo "<br />\n";
 		echo $text['description-channels']."\n";
 		echo "</td>\n";
@@ -752,7 +750,7 @@
 	echo "	".$text['label-hostname']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='hostname' maxlength='255' value=\"$hostname\">\n";
+	echo "	<input class='formfld' type='text' name='hostname' maxlength='255' value=\"".escape($hostname)."\">\n";
 	echo "<br />\n";
 	echo $text['description-hostname']."\n";
 	echo "</td>\n";
@@ -773,10 +771,10 @@
 		}
 		foreach ($_SESSION['domains'] as $row) {
 			if ($row['domain_uuid'] == $domain_uuid) {
-				echo "    <option value='".$row['domain_uuid']."' selected='selected'>".$row['domain_name']."</option>\n";
+				echo "    <option value='".escape($row['domain_uuid'])."' selected='selected'>".escape($row['domain_name'])."</option>\n";
 			}
 			else {
-				echo "    <option value='".$row['domain_uuid']."'>".$row['domain_name']."</option>\n";
+				echo "    <option value='".escape($row['domain_uuid'])."'>".escape($row['domain_name'])."</option>\n";
 			}
 		}
 		echo "    </select>\n";
@@ -799,7 +797,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	if (strlen($context) == 0) { $context = "public"; }
-	echo "	<input class='formfld' type='text' name='context' maxlength='255' value=\"$context\">\n";
+	echo "	<input class='formfld' type='text' name='context' maxlength='255' value=\"".escape($context)."\">\n";
 	echo "<br />\n";
 	echo $text['description-context']."\n";
 	echo "</td>\n";
@@ -814,10 +812,10 @@
 	foreach ($sip_profiles as $row) {
 		$sip_profile_name = $row["sip_profile_name"];
 		if ($profile == $sip_profile_name) {
-			echo "	<option value='$sip_profile_name' selected='selected'>".$sip_profile_name."</option>\n";
+			echo "	<option value='$sip_profile_name' selected='selected'>".escape($sip_profile_name)."</option>\n";
 		}
 		else {
-			echo "	<option value='$sip_profile_name'>".$sip_profile_name."</option>\n";
+			echo "	<option value='".escape($sip_profile_name)."'>".escape($sip_profile_name)."</option>\n";
 		}
 	}
 	echo "	</select>\n";
@@ -855,7 +853,7 @@
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='description' maxlength='255' value=\"$description\">\n";
+	echo "	<input class='formfld' type='text' name='description' maxlength='255' value=\"".escape($description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
@@ -864,7 +862,7 @@
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='gateway_uuid' value='$gateway_uuid'>\n";
+		echo "		<input type='hidden' name='gateway_uuid' value='".escape($gateway_uuid)."'>\n";
 	}
 	echo "			<br>";
 	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";

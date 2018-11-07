@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -80,7 +80,7 @@
 			$sql .= "and user_uuid = '".$user_uuid."' ";
 			$db->exec(check_sql($sql));
 
-		messages::add($text['confirm-delete']);
+		message::add($text['confirm-delete']);
 		header("Location: conference_edit.php?id=".$conference_uuid);
 		return;
 	}
@@ -107,7 +107,7 @@
 			$sql_insert .= ")";
 			$db->exec($sql_insert);
 		//send a message
-			messages::add($text['confirm-add']);
+			message::add($text['confirm-add']);
 			header("Location: conference_edit.php?id=".$conference_uuid);
 			return;
 	}
@@ -217,7 +217,7 @@
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
 					//add the message
-						messages::add($text['confirm-add']);
+						message::add($text['confirm-add']);
 				} //if ($action == "add")
 
 				if ($action == "update") {
@@ -273,7 +273,7 @@
 						$db->query($sql);
 
 					//add the message
-						messages::add($text['confirm-update']);
+						message::add($text['confirm-update']);
 				} //if ($action == "update")
 
 				//update the dialplan xml
@@ -361,7 +361,7 @@
 	echo "	<td align='right' valign='top'>";
 	echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='conferences.php'\" value='".$text['button-back']."'>";
 	if (permission_exists('conference_active_view')) {
-		echo "	<input type='button' class='btn' alt='".$text['button-view']."' onclick=\"window.location='".PROJECT_PATH."/app/conferences_active/conferences_active.php?c=".str_replace(" ", "-", $conference_name)."';\" value='".$text['button-view']."'>\n";
+		echo "	<input type='button' class='btn' alt='".$text['button-view']."' onclick=\"window.location='".PROJECT_PATH."/app/conferences_active/conferences_active.php?c=".escape(str_replace(" ", "-", $conference_name))."';\" value='".$text['button-view']."'>\n";
 	}
 	echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "	</td>\n";
@@ -375,7 +375,7 @@
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='conference_name' maxlength='255' value=\"$conference_name\">\n";
+	echo "	<input class='formfld' type='text' name='conference_name' maxlength='255' value=\"".escape($conference_name)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-name']."\n";
 	echo "</td>\n";
@@ -386,7 +386,7 @@
 	echo "	".$text['label-extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='conference_extension' maxlength='255' value=\"$conference_extension\">\n";
+	echo "	<input class='formfld' type='text' name='conference_extension' maxlength='255' value=\"".escape($conference_extension)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-extension']."\n";
 	echo "</td>\n";
@@ -397,7 +397,7 @@
 	echo "	".$text['label-pin']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='conference_pin_number' maxlength='255' value=\"$conference_pin_number\">\n";
+	echo "	<input class='formfld' type='text' name='conference_pin_number' maxlength='255' value=\"".escape($conference_pin_number)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-pin']."\n";
 	echo "</td>\n";
@@ -421,9 +421,9 @@
 			$result_count = count($result);
 			foreach($result as $field) {
 				echo "			<tr>\n";
-				echo "				<td class='vtable'>".$field['username']."</td>\n";
+				echo "				<td class='vtable'>".escape($field['username'])."</td>\n";
 				echo "				<td>\n";
-				echo "					<a href='conference_edit.php?id=".$conference_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete-2']."')\">$v_link_label_delete</a>\n";
+				echo "					<a href='conference_edit.php?id=".escape($conference_uuid)."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".escape($field['user_uuid'])."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete-2']."')\">$v_link_label_delete</a>\n";
 				echo "				</td>\n";
 				echo "			</tr>\n";
 			}
@@ -439,7 +439,7 @@
 			echo "			<option value=\"\"></option>\n";
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			foreach($result as $field) {
-				echo "			<option value='".$field['user_uuid']."'>".$field['username']."</option>\n";
+				echo "			<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
 			}
 			echo "			</select>";
 			echo "			<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
@@ -460,10 +460,10 @@
 	echo "    <select class='formfld' name='conference_profile'>\n";
 	foreach ($conference_profiles as $row) {
 		if ($conference_profile === $row['profile_name']) {
-				echo "<option value='". $row['profile_name'] ."' selected='selected'>". $row['profile_name'] ."</option>\n";
+				echo "<option value='".escape($row['profile_name'])."' selected='selected'>".escape($row['profile_name'])."</option>\n";
 		}
 		else {
-				echo "<option value='". $row['profile_name'] ."'>". $row['profile_name'] ."</option>\n";
+				echo "<option value='".escape($row['profile_name'])."'>".escape($row['profile_name'])."</option>\n";
 		}
 	}
 	echo "    </select>\n";
@@ -477,7 +477,7 @@
 	echo "	".$text['label-flags']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='conference_flags' maxlength='255' value=\"$conference_flags\">\n";
+	echo "	<input class='formfld' type='text' name='conference_flags' maxlength='255' value=\"".escape($conference_flags)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-flags']."\n";
 	echo "</td>\n";
@@ -535,7 +535,7 @@
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='conference_description' maxlength='255' value=\"$conference_description\">\n";
+	echo "	<input class='formfld' type='text' name='conference_description' maxlength='255' value=\"".escape($conference_description)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-info']."\n";
 	echo "</td>\n";
@@ -544,8 +544,8 @@
 	echo "<tr>\n";
 	echo "	<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "	<input type='hidden' name='dialplan_uuid' value=\"$dialplan_uuid\">\n";
-		echo "	<input type='hidden' name='conference_uuid' value='$conference_uuid'>\n";
+		echo "	<input type='hidden' name='dialplan_uuid' value=\"".escape($dialplan_uuid)."\">\n";
+		echo "	<input type='hidden' name='conference_uuid' value='".escape($conference_uuid)."'>\n";
 	}
 	echo "		<br>";
 	echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";

@@ -33,16 +33,19 @@ if (stristr(PHP_OS, 'WIN')) { $IS_WINDOWS = true; } else { $IS_WINDOWS = false; 
 
 if (!$included) {
 
-	include "root.php";
-	require_once "resources/require.php";
-	require_once "resources/check_auth.php";
-	if (permission_exists('fax_send')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
-	}
+	//includes
+		include "root.php";
+		require_once "resources/require.php";
+		require_once "resources/check_auth.php";
+
+	//check permissions
+		if (permission_exists('fax_send')) {
+			//access granted
+		}
+		else {
+			echo "access denied";
+			exit;
+		}
 
 	//add multi-lingual support
 		$language = new text;
@@ -110,11 +113,11 @@ if (!$included) {
 	// set fax cover font to generate pdf
 		$fax_cover_font = $_SESSION['fax']['cover_font']['text'];
 }
-else{
+else {
 	require_once "resources/classes/event_socket.php";
 }
 
-if(!function_exists('correct_path')) {
+if (!function_exists('correct_path')) {
 	function correct_path($p) {
 		global $IS_WINDOWS;
 		if ($IS_WINDOWS) {
@@ -124,7 +127,7 @@ if(!function_exists('correct_path')) {
 	}
 }
 
-if(!function_exists('gs_cmd')) {
+if (!function_exists('gs_cmd')) {
 	function gs_cmd($args) {
 		global $IS_WINDOWS;
 		if ($IS_WINDOWS) {
@@ -134,7 +137,7 @@ if(!function_exists('gs_cmd')) {
 	}
 }
 
-if(!function_exists('fax_enqueue')) {
+if (!function_exists('fax_enqueue')) {
 	function fax_enqueue($fax_uuid, $fax_file, $wav_file, $reply_address, $fax_uri, $fax_dtmf, $dial_string){
 		global $db, $db_type;
 
@@ -186,15 +189,15 @@ HERE;
 	}
 }
 
-if(!function_exists('fax_split_dtmf')) {
-function fax_split_dtmf(&$fax_number, &$fax_dtmf){
-	$tmp = array();
-	$fax_dtmf = '';
-	if(preg_match('/^\s*(.*?)\s*\((.*)\)\s*$/', $fax_number, $tmp)){
-		$fax_number = $tmp[1];
-		$fax_dtmf = $tmp[2];
+if (!function_exists('fax_split_dtmf')) {
+	function fax_split_dtmf(&$fax_number, &$fax_dtmf){
+		$tmp = array();
+		$fax_dtmf = '';
+		if(preg_match('/^\s*(.*?)\s*\((.*)\)\s*$/', $fax_number, $tmp)){
+			$fax_number = $tmp[1];
+			$fax_dtmf = $tmp[2];
+		}
 	}
-}
 }
 
 //get the fax extension
@@ -346,7 +349,6 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 				$fax_name = str_replace(")", "_", $fax_name);
 				$fax_name = str_replace("+", "_", $fax_name);
 				$fax_name = str_replace("=", "_", $fax_name);
-
 
 				$attachment_file_name = $_files['name'][$index];
 				rename($dir_fax_temp.'/'.$attachment_file_name, $dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
@@ -656,7 +658,7 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 		else {
 			if (!$included) {
 				//nothing to send, redirect the browser
-				messages::add($text['message-invalid-fax'], 'negative');
+				message::add($text['message-invalid-fax'], 'negative');
 				header("Location: fax_send.php?id=".$fax_uuid);
 				exit;
 			}
@@ -786,7 +788,7 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 				}
 				fclose($fp);
 			}
-			else{ // enqueue
+			else { // enqueue
 				$wav_file = ''; //! @todo add custom message
 				$response = fax_enqueue($fax_uuid, $fax_file, $wav_file, $mailto_address, $fax_uri, $fax_dtmf, $dial_string);
 			}
@@ -806,8 +808,8 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 
 		if (!$included) {
 			//redirect the browser
-			messages::add($response, 'default');
-			if (permission_exists('fax_active_view')) {
+			message::add($response, 'default');
+			if (isset($_SESSION['fax']['send_mode']['text']) && $_SESSION['fax']['send_mode']['text'] == 'queue') {
 				header("Location: fax_active.php?id=".$fax_uuid);
 			}
 			else {
@@ -911,7 +913,7 @@ if (!$included) {
 		echo "	".$text['label-fax-sender']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input type='text' name='fax_sender' class='formfld' style='' value='".$fax_caller_id_name."'>\n";
+		echo "	<input type='text' name='fax_sender' class='formfld' style='' value='".escape($fax_caller_id_name)."'>\n";
 		echo "	<br />\n";
 		echo "	".$text['description-fax-sender']."\n";
 		echo "</td>\n";
@@ -960,11 +962,10 @@ if (!$included) {
 			$sql .= ") \n";
 		}
 		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement -> execute();
-		$result = $prep_statement -> fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
-		if ($result_count > 0) {
-			foreach ($result as &$row) {
+		$prep_statement->execute();
+		$contacts = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		if (is_array($contacts)) {
+			foreach ($contacts as &$row) {
 				if ($row['contact_organization'] != '') {
 					$contact_option_label = $row['contact_organization'];
 				}
@@ -976,7 +977,7 @@ if (!$included) {
 				}
 				$contact_option_value_recipient = $contact_option_label;
 				$contact_option_value_faxnumber = $row['phone_number'];
-				$contact_option_label .= ":&nbsp;&nbsp;".format_phone($row['phone_number']);
+				$contact_option_label .= ":&nbsp;&nbsp;".escape(format_phone($row['phone_number']));
 				$contact_labels[] = $contact_option_label;
 				$contact_values[] = $contact_option_value_faxnumber."|".$contact_option_value_recipient;
 				unset($contact_option_label);
@@ -985,13 +986,13 @@ if (!$included) {
 			echo "	<select class='formfld' style='display: none;' id='fax_recipient_select' onchange='contact_load(this);'>\n";
 			echo "		<option value=''></option>\n";
 			foreach ($contact_labels as $index => $contact_label) {
-				echo "	<option value=\"".$contact_values[$index]."\">".$contact_label."</option>\n";
+				echo "	<option value=\"".escape($contact_values[$index])."\">".$contact_label."</option>\n";
 			}
 			echo "	</select>\n";
 		}
-		unset ($prep_statement);
+		unset($prep_statement);
 		echo "	<input type='text' name='fax_recipient' id='fax_recipient' class='formfld' style='max-width: 250px;' value=''>\n";
-		if ($result_count > 0) {
+		if (is_array($contacts)) {
 			echo "	<input type='button' id='btn_toggle_recipient' class='btn' name='' alt='".$text['button-back']."' value='&#9665;' onclick=\"toggle('fax_recipient');\">\n";
 		}
 		echo "	<br />\n";
@@ -1099,10 +1100,10 @@ if (!$included) {
 		echo "	<tr>\n";
 		echo "		<td colspan='2' align='right'>\n";
 		echo "			<br>\n";
-		echo "			<input type='hidden' name='fax_caller_id_name' value='".$fax_caller_id_name."'>\n";
-		echo "			<input type='hidden' name='fax_caller_id_number' value='".$fax_caller_id_number."'>\n";
-		echo "			<input type='hidden' name='fax_extension' value='".$fax_extension."'>\n";
-		echo "			<input type='hidden' name='id' value='".$fax_uuid."'>\n";
+		echo "			<input type='hidden' name='fax_caller_id_name' value='".escape($fax_caller_id_name)."'>\n";
+		echo "			<input type='hidden' name='fax_caller_id_number' value='".escape($fax_caller_id_number)."'>\n";
+		echo "			<input type='hidden' name='fax_extension' value='".escape($fax_extension)."'>\n";
+		echo "			<input type='hidden' name='id' value='".escape($fax_uuid)."'>\n";
 		echo "			<input type='hidden' name='action' value='send'>\n";
 		echo "			<input type='submit' name='submit' class='btn' id='preview' value='".$text['button-preview']."'>\n";
 		echo "			<input type='submit' name='submit' class='btn' id='upload' value='".$text['button-send']."'>\n";

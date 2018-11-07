@@ -91,16 +91,36 @@
 			$sql = "update v_dialplans set dialplan_order = '890' where dialplan_order = '999' and dialplan_name = 'local_extension';\n";
 			$db->query($sql);
 			unset($sql);
+
+		//set empty strings to null
+			$sql = "update v_device_lines set outbound_proxy_primary = null where outbound_proxy_primary = '';\n";
+			$db->query($sql);
+			$sql = "update v_device_lines set outbound_proxy_secondary = null where outbound_proxy_secondary = '';\n";
+			$db->query($sql);
+			unset($sql);
 	}
 
 //add xml for each dialplan where the dialplan xml is empty
 	if ($domains_processed == 1) {
+		$sql = "select domain_name ";
+		$sql .= "from v_domains \n";
+		$prep_statement = $this->db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$results = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($results as $row) {
+			$dialplans = new dialplan;
+			$dialplans->source = "details";
+			$dialplans->destination = "database";
+			$dialplans->context = $row["domain_name"];
+			$dialplans->is_empty = "dialplan_xml";
+			$array = $dialplans->xml();
+			//print_r($array);
+		}
 		$dialplans = new dialplan;
 		$dialplans->source = "details";
 		$dialplans->destination = "database";
 		$dialplans->is_empty = "dialplan_xml";
 		$array = $dialplans->xml();
-		//print_r($array);
 	}
 
 //add not found dialplan to inbound routes

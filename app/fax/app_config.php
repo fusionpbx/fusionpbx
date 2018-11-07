@@ -154,6 +154,7 @@
 		$apps[$x]['permissions'][$y]['name'] = "fax_file_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "fax_active_view";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";

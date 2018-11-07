@@ -621,4 +621,24 @@ $text['button-send']['ru-ru'] = "Запустить";
 $text['button-send']['sv-se'] = "Skicka Samtalsdistribution";
 $text['button-send']['uk-ua'] = "Транслювати";
 
+$text['file-error']['en-us'] = "Sorry, File type not allowed";
+$text['file-error']['ar-eg'] = "";
+$text['file-error']['de-at'] = "Entschuldigung, Dateityp nicht erlaubt"; //copied from de-de
+$text['file-error']['de-ch'] = "Entschuldigung, Dateityp nicht erlaubt"; //copied from de-de
+$text['file-error']['de-de'] = "Entschuldigung, Dateityp nicht erlaubt";
+$text['file-error']['es-cl'] = "Lo sentimos, no se permite el tipo de archivo";
+$text['file-error']['es-mx'] = "Lo sentimos, no se permite el tipo de archivo"; //copied from es-cl
+$text['file-error']['fr-ca'] = "Désolé, le type de fichier n'est pas autorisé"; //copied from fr-fr
+$text['file-error']['fr-fr'] = "Désolé, le type de fichier n'est pas autorisé";
+$text['file-error']['he-il'] = "מצטערים, סוג הקובץ אינו מותר";
+$text['file-error']['it-it'] = "";
+$text['file-error']['nl-nl'] = "";
+$text['file-error']['pl-pl'] = "Niestety, Typ pliku jest niedozwolony";
+$text['file-error']['pt-br'] = "Desculpe, tipo de arquivo não permitido";
+$text['file-error']['pt-pt'] = "Desculpe, tipo de arquivo não permitido";
+$text['file-error']['ro-ro'] = "";
+$text['file-error']['ru-ru'] = "Обновление завершено";
+$text['file-error']['sv-se'] = "Uppdatering Klar";
+$text['file-error']['uk-ua'] = "Оновлення завершено";
+
 ?>

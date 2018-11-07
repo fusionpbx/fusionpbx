@@ -52,8 +52,14 @@
 	}
 
 //set the type
-	if ($_GET['type'] == 'outbound') {
+	if ($_GET['type'] == 'inbound') {
+		$destination_type = 'inbound';
+	}
+	elseif ($_GET['type'] == 'outbound') {
 		$destination_type = 'outbound';
+	}
+	elseif ($_GET['type'] == 'local') {
+		$destination_type = 'local';
 	}
 	else {
 		$destination_type = 'inbound';
@@ -72,7 +78,7 @@
 				}
 				unset($prep_statement, $row);
 				if ($total_destinations >= $_SESSION['limit']['destinations']['numeric']) {
-					messages::add($text['message-maximum_destinations'].' '.$_SESSION['limit']['destinations']['numeric'], 'negative');
+					message::add($text['message-maximum_destinations'].' '.$_SESSION['limit']['destinations']['numeric'], 'negative');
 					header('Location: destinations.php');
 					return;
 				}
@@ -137,8 +143,13 @@
 			}
 
 		//set the default context
-			if ($destination_type =="outbound" && strlen($destination_context) == 0) { $destination_context = $_SESSION['domain_name']; }
-	
+			if ($destination_type =="inbound" && strlen($destination_context) == 0) {
+				$destination_context = 'public';
+			}
+			if ($destination_type =="outbound" && strlen($destination_context) == 0) {
+				$destination_context = $_SESSION['domain_name'];
+			}
+
 		//check for all required data
 			$msg = '';
 			if (strlen($destination_type) == 0) { $msg .= $text['message-required']." ".$text['label-destination_type']."<br>\n"; }
@@ -176,7 +187,7 @@
 			}
 
 		//save the inbound destination and add the dialplan for the inbound route
-			if ($destination_type == 'inbound') {
+			if ($destination_type == 'inbound' || $destination_type == 'local') {
 				//get the array
 					$dialplan_details = $_POST["dialplan_details"];
 
@@ -224,7 +235,12 @@
 					$destination["dialplan_uuid"] = $dialplan_uuid;
 
 				//build the dialplan array
-					$dialplan["app_uuid"] = "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4";
+					if ($destination_type == "inbound") {
+						$dialplan["app_uuid"] = "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4";
+					}
+					if ($destination_type == "local") {
+						$dialplan["app_uuid"] = "b5242951-686f-448f-8b4e-5031ba0601a4";
+					}
 					$dialplan["dialplan_uuid"] = $dialplan_uuid;
 					$dialplan["domain_uuid"] = $domain_uuid;
 					$dialplan["dialplan_name"] = ($dialplan_name != '') ? $dialplan_name : format_phone($destination_number);
@@ -274,6 +290,7 @@
 							$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"tone_detect_hits=1\" inline=\"true\"/>\n";
 							$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"execute_on_tone_detect=transfer ".$fax_extension." XML \${domain_name}\" inline=\"true\"/>\n";
 							$dialplan["dialplan_xml"] .= "		<action application=\"tone_detect\" data=\"fax 1100 r +5000\"/>\n";
+							$dialplan["dialplan_xml"] .= "		<action application=\"answer\" data=\"\"/>\n";
 							$dialplan["dialplan_xml"] .= "		<action application=\"sleep\" data=\"3000\"/>\n";
 						}
 						$dialplan["dialplan_xml"] .= "		<action application=\"".$destination_app."\" data=\"".$destination_data."\"/>\n";
@@ -416,6 +433,17 @@
 								//increment the dialplan detail order
 									$dialplan_detail_order = $dialplan_detail_order + 10;
 
+								// answer
+									$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
+									$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+									$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "answer";
+									$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "";
+									$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+									$y++;
+
+								//increment the dialplan detail order
+									$dialplan_detail_order = $dialplan_detail_order + 10;
+
 								// execute on tone detect
 									$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 									$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
@@ -548,16 +576,15 @@
 
 						//remove empty dialplan details from the POST array
 							unset($_POST["dialplan_details"]);
-
-						//make sure the dialplan_uuid is set
-							if(strlen($_POST["dialplan_uuid"]) == 0) {
-								$_POST["dialplan_uuid"] = $dialplan_uuid;
-							}
 					}
 
 				//build the destination array
 					$destination = $_POST;
 					$destination["destination_uuid"] = $destination_uuid;
+					$destination["dialplan_uuid"] = $dialplan_uuid;
+					if ($destination_type == 'inbound' || $destination_type == 'local') {
+						$destination["dialplan_uuid"] = $dialplan_uuid;
+					}
 
 				//prepare the array
 					$array['destinations'][] = $destination;
@@ -625,12 +652,12 @@
 
 		//redirect the user
 			if ($action == "add") {
-				messages::add($text['message-add']);
+				message::add($text['message-add']);
 			}
 			if ($action == "update") {
-				messages::add($text['message-update']);
+				message::add($text['message-update']);
 			}
-			header("Location: destination_edit.php?id=".$destination_uuid."&type=".$destination_type);
+			header("Location: destination_edit.php?id=".escape($destination_uuid)."&type=".$destination_type);
 			return;
 
 	} //(count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0)
@@ -709,6 +736,9 @@
  		if ($row['dialplan_detail_type'] == "tone_detect") {
 			unset($dialplan_details[$x]);
 		}
+ 		if ($row['dialplan_detail_type'] == "answer") {
+			unset($dialplan_details[$x]);
+		}
  		if ($row['dialplan_detail_type'] == "sleep") {
 			unset($dialplan_details[$x]);
 		}
@@ -725,8 +755,8 @@
 //set the defaults
 	if (strlen($destination_type) == 0) { $destination_type = 'inbound'; }
 	if (strlen($destination_context) == 0) { $destination_context = 'public'; }
-	if ($destination_type =="outbound" && $destination_context == "public") { $destination_context = $_SESSION['domain_name']; }
-	if ($destination_type =="outbound" && strlen($destination_context) == 0) { $destination_context = $_SESSION['domain_name']; }
+	if ($destination_type =="outbound") { $destination_context = $_SESSION['domain_name']; }
+	if ($destination_type =="local") { $destination_context = $_SESSION['domain_name']; }
 
 //show the header
 	require_once "resources/header.php";
@@ -750,6 +780,7 @@
 	echo "			if (document.getElementById('tr_buy')) { document.getElementById('tr_buy').style.display = 'none'; }\n";
 	echo "			if (document.getElementById('tr_carrier')) { document.getElementById('tr_carrier').style.display = 'none'; }\n";
 	echo "			document.getElementById('tr_account_code').style.display = 'none';\n";
+//	echo "			document.getElementById('destination_context').value = '".$destination_context."'";
 	echo "		}\n";
 	echo "		else if (dir == 'inbound') {\n";
 	echo "			if (document.getElementById('tr_caller_id_name')) { document.getElementById('tr_caller_id_name').style.display = ''; }\n";
@@ -762,6 +793,18 @@
 	echo "			if (document.getElementById('tr_carrier')) { document.getElementById('tr_carrier').style.display = ''; }\n";
 	echo "			document.getElementById('tr_account_code').style.display = '';\n";
 	echo "			document.getElementById('destination_context').value = 'public'";
+	echo "		}\n";
+	echo "		else if (dir == 'local') {\n";
+	echo "			if (document.getElementById('tr_caller_id_name')) { document.getElementById('tr_caller_id_name').style.display = 'none'; }\n";
+	echo "			if (document.getElementById('tr_caller_id_number')) { document.getElementById('tr_caller_id_number').style.display = 'none'; }\n";
+	echo "			document.getElementById('tr_actions').style.display = '';\n";
+	echo "			if (document.getElementById('tr_fax_detection')) { document.getElementById('tr_fax_detection').style.display = 'none'; }\n";
+	echo "			document.getElementById('tr_cid_name_prefix').style.display = 'none';\n";
+	echo "			if (document.getElementById('tr_sell')) { document.getElementById('tr_sell').style.display = 'none'; }\n";
+	echo "			if (document.getElementById('tr_buy')) { document.getElementById('tr_buy').style.display = 'none'; }\n";
+	echo "			if (document.getElementById('tr_carrier')) { document.getElementById('tr_carrier').style.display = 'none'; }\n";
+	echo "			document.getElementById('tr_account_code').style.display = '';\n";
+//	echo "			document.getElementById('destination_context').value = '".$destination_context."'";
 	echo "		}\n";
 	echo "		";
 	echo "	}\n";
@@ -791,7 +834,7 @@
 		echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['header-destination-edit']."</b></td>\n";
 	}
 	echo "<td width='70%' align='right' valign='top'>";
-	echo "	<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"window.location='destinations.php?type=".$destination_type."'\" value='".$text['button-back']."'>";
+	echo "	<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"window.location='destinations.php?type=".escape($destination_type)."'\" value='".$text['button-back']."'>";
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -808,11 +851,13 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='destination_type' id='destination_type' onchange='type_control(this.options[this.selectedIndex].value);context_control();'>\n";
 	switch ($destination_type) {
-		case "inbound" : 	$selected[1] = "selected='selected'";	break;
-		case "outbound" : 	$selected[2] = "selected='selected'";	break;
+		case "inbound" :	$selected[0] = "selected='selected'";	break;
+		case "outbound" :	$selected[1] = "selected='selected'";	break;
+		case "local" :	$selected[2] = "selected='selected'";	break;
 	}
-	echo "	<option value='inbound' ".$selected[1].">".$text['option-type_inbound']."</option>\n";
-	echo "	<option value='outbound' ".$selected[2].">".$text['option-type_outbound']."</option>\n";
+	echo "	<option value='inbound' ".$selected[0].">".$text['option-inbound']."</option>\n";
+	echo "	<option value='outbound' ".$selected[1].">".$text['option-outbound']."</option>\n";
+	echo "	<option value='local' ".$selected[2].">".$text['option-local']."</option>\n";
 	unset($selected);
 	echo "	</select>\n";
 	echo "<br />\n";
@@ -825,46 +870,50 @@
 	echo "	".$text['label-destination_number']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='destination_number' maxlength='255' value=\"$destination_number\" required='required'>\n";
+	echo "	<input class='formfld' type='text' name='destination_number' maxlength='255' value=\"".escape($destination_number)."\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-destination_number']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (permission_exists('outbound_caller_id_select')) {
+	if (permission_exists('destination_caller_id_name')) {
 		echo "<tr id='tr_caller_id_name'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-destination_caller_id_name']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='destination_caller_id_name' maxlength='255' value=\"$destination_caller_id_name\">\n";
+		echo "	<input class='formfld' type='text' name='destination_caller_id_name' maxlength='255' value=\"".escape($destination_caller_id_name)."\">\n";
 		echo "<br />\n";
 		echo $text['description-destination_caller_id_name']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
+	}
 
+	if (permission_exists('destination_caller_id_number')) {
 		echo "<tr id='tr_caller_id_number'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-destination_caller_id_number']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='number' name='destination_caller_id_number' maxlength='255' min='0' step='1' value=\"$destination_caller_id_number\">\n";
+		echo "	<input class='formfld' type='number' name='destination_caller_id_number' maxlength='255' min='0' step='1' value=\"".escape($destination_caller_id_number)."\">\n";
 		echo "<br />\n";
 		echo $text['description-destination_caller_id_number']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-destination_context']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='destination_context' id='destination_context' maxlength='255' value=\"$destination_context\">\n";
-	echo "<br />\n";
-	echo $text['description-destination_context']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists('destination_context')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-destination_context']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='destination_context' id='destination_context' maxlength='255' value=\"".escape($destination_context)."\">\n";
+		echo "<br />\n";
+		echo $text['description-destination_context']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	if ($_SESSION['destinations']['dialplan_details']['boolean'] == "false") {
 		echo "<tr id='tr_actions'>\n";
@@ -896,9 +945,9 @@
 				echo "				<tr>\n";
 				echo "					<td style='padding-top: 5px; padding-right: 3px; white-space: nowrap;'>\n";
 				if (strlen($row['dialplan_detail_uuid']) > 0) {
-					echo "	<input name='dialplan_details[".$x."][dialplan_detail_uuid]' type='hidden' value=\"".$row['dialplan_detail_uuid']."\">\n";
+					echo "	<input name='dialplan_details[".$x."][dialplan_detail_uuid]' type='hidden' value=\"".escape($row['dialplan_detail_uuid'])."\">\n";
 				}
-				echo "	<input name='dialplan_details[".$x."][dialplan_detail_type]' type='hidden' value=\"".$row['dialplan_detail_type']."\">\n";
+				echo "	<input name='dialplan_details[".$x."][dialplan_detail_type]' type='hidden' value=\"".escape($row['dialplan_detail_type'])."\">\n";
 				echo "	<input name='dialplan_details[".$x."][dialplan_detail_order]' type='hidden' value=\"".$order."\">\n";
 				$data = $row['dialplan_detail_data'];
 				$label = explode("XML", $data);
@@ -908,7 +957,7 @@
 				echo "					</td>\n";
 				echo "					<td class='list_control_icons' style='width: 25px;'>";
 				if (strlen($row['destination_uuid']) > 0) {
-					echo					"<a href='destination_delete.php?id=".$row['destination_uuid']."&destination_uuid=".$row['destination_uuid']."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>\n";
+					echo "				<a href='destination_delete.php?id=".escape($row['destination_uuid'])."&destination_uuid=".escape($row['destination_uuid'])."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>\n";
 				}
 				echo "					</td>\n";
 				echo "				</tr>\n";
@@ -921,7 +970,7 @@
 		echo "</tr>\n";
 	}
 
-	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/fax/app_config.php")){
+	if (permission_exists('destination_fax')) {
 		$sql = "select * from v_fax ";
 		$sql .= "where domain_uuid = '".$domain_uuid."' ";
 		$sql .= "order by fax_name asc ";
@@ -939,10 +988,10 @@
 			echo "	<option value=''></option>\n";
 			foreach ($result as &$row) {
 				if ($row["fax_uuid"] == $fax_uuid) {
-					echo "		<option value='".$row["fax_uuid"]."' selected='selected'>".$row["fax_extension"]." ".$row["fax_name"]."</option>\n";
+					echo "		<option value='".escape($row["fax_uuid"])."' selected='selected'>".escape($row["fax_extension"])." ".escape($row["fax_name"])."</option>\n";
 				}
 				else {
-					echo "		<option value='".$row["fax_uuid"]."'>".$row["fax_extension"]." ".$row["fax_name"]."</option>\n";
+					echo "		<option value='".escape($row["fax_uuid"])."'>".escape($row["fax_extension"])." ".escape($row["fax_name"])."</option>\n";
 				}
 			}
 			echo "	</select>\n";
@@ -958,7 +1007,7 @@
 	echo "	".$text['label-destination_cid_name_prefix']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='destination_cid_name_prefix' maxlength='255' value=\"$destination_cid_name_prefix\">\n";
+	echo "	<input class='formfld' type='text' name='destination_cid_name_prefix' maxlength='255' value=\"".escape($destination_cid_name_prefix)."\">\n";
 	echo "<br />\n";
 	echo $text['description-destination_cid_name_prefix']."\n";
 	echo "</td>\n";
@@ -993,7 +1042,7 @@
 	echo "	".$text['label-account_code']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='destination_accountcode' maxlength='255' value=\"$destination_accountcode\">\n";
+	echo "	<input class='formfld' type='text' name='destination_accountcode' maxlength='255' value=\"".escape($destination_accountcode)."\">\n";
 	echo "<br />\n";
 	echo $text['description-account_code']."\n";
 	echo "</td>\n";
@@ -1013,10 +1062,10 @@
 		}
 		foreach ($_SESSION['domains'] as $row) {
 			if ($row['domain_uuid'] == $domain_uuid) {
-				echo "    <option value='".$row['domain_uuid']."' selected='selected'>".$row['domain_name']."</option>\n";
+				echo "    <option value='".escape($row['domain_uuid'])."' selected='selected'>".escape($row['domain_name'])."</option>\n";
 			}
 			else {
-				echo "    <option value='".$row['domain_uuid']."'>".$row['domain_name']."</option>\n";
+				echo "    <option value='".escape($row['domain_uuid'])."'>".escape($row['domain_name'])."</option>\n";
 			}
 		}
 		echo "    </select>\n";
@@ -1026,7 +1075,7 @@
 		echo "</tr>\n";
 	}
 	else {
-		echo "<input type='hidden' name='domain_uuid' value='".$domain_uuid."'>\n";
+		echo "<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>\n";
 	}
 
 	echo "<tr>\n";
@@ -1053,7 +1102,7 @@
 	echo "	".$text['label-destination_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='destination_description' maxlength='255' value=\"$destination_description\">\n";
+	echo "	<input class='formfld' type='text' name='destination_description' maxlength='255' value=\"".escape($destination_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-destination_description']."\n";
 	echo "</td>\n";
@@ -1061,9 +1110,9 @@
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='db_destination_number' value='$destination_number'>\n";
-		echo "		<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
-		echo "		<input type='hidden' name='destination_uuid' value='$destination_uuid'>\n";
+		echo "		<input type='hidden' name='db_destination_number' value='".escape($destination_number)."'>\n";
+		echo "		<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
+		echo "		<input type='hidden' name='destination_uuid' value='".escape($destination_uuid)."'>\n";
 	}
 	echo "			<br>";
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";

@@ -29,7 +29,6 @@
 	$text = $language->get(null,'core/user_settings');
 
 //get the http values and set as variables
-	if (isset($_GET["path"])) { $path = check_str($_GET["path"]); } else { $path = null; }
 	if (isset($_GET["msg"])) { $msg = check_str($_GET["msg"]); } else { $msg = null; }
 
 //set variable if not set
@@ -88,7 +87,6 @@
 //show the content
 	echo "<div id='login_form'>\n";
 	echo "<form name='login' method='post' action='".$_SESSION['login']['destination']['url']."'>\n";
-	echo "<input type='hidden' name='path' value='".$path."'>\n";
 	echo "<input type='text' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='username' id='username' placeholder=\"".$text['label-username']."\"><br />\n";
 	echo "<input type='password' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='password' placeholder=\"".$text['label-password']."\"><br />\n";
 	if ($_SESSION['login']['domain_name_visible']['boolean'] == "true") {

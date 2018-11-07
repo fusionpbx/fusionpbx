@@ -1,4 +1,23 @@
 <?php
+/*
+	FusionPBX
+	Version: MPL 1.1
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
+	The Original Code is FusionPBX
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2018
+	the Initial Developer. All Rights Reserved.
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+*/
 
 //includes
 	require_once "root.php";
@@ -89,7 +108,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				if ($fp) { event_socket_request($fp, "api reloadacl"); }
 
 				//add the message
-				messages::add($text['message-add']);
+				message::add($text['message-add']);
 				
 				//redirect the user
 				header("Location: access_controls.php");
@@ -116,7 +135,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				if ($fp) { event_socket_request($fp, "api reloadacl"); }
 
 				//add the message
-				messages::add($text['message-update']);
+				message::add($text['message-update']);
 
 				//redirect the user
 				header("Location: access_controls.php");
@@ -127,7 +146,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$access_control_uuid = check_str($_GET["id"]);
 		$sql = "select * from v_access_controls ";
 		$sql .= "where access_control_uuid = '$access_control_uuid' ";
@@ -162,7 +181,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-access_control_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='access_control_name' maxlength='255' value=\"$access_control_name\">\n";
+	echo "	<input class='formfld' type='text' name='access_control_name' maxlength='255' value=\"".escape($access_control_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-access_control_name']."\n";
 	echo "</td>\n";
@@ -198,7 +217,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-access_control_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='access_control_description' maxlength='255' value=\"$access_control_description\">\n";
+	echo "	<input class='formfld' type='text' name='access_control_description' maxlength='255' value=\"".escape($access_control_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-access_control_description']."\n";
 	echo "</td>\n";
@@ -206,7 +225,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='access_control_uuid' value='$access_control_uuid'>\n";
+		echo "				<input type='hidden' name='access_control_uuid' value='".escape($access_control_uuid)."'>\n";
 	}
 	echo "				<br><input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
@@ -222,4 +241,5 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

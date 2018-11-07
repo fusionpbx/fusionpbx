@@ -285,10 +285,10 @@ include "root.php";
 			// Easier than assigning these common groups to every user.
 			// Check provision global_contact_groups and sanitize for sql.
 			$global_contact_groups['enabled']=false;
-			if ( preg_match('/[a-zA-Z0-9-_, ]/',$_SESSION['provision']['gs_global_contact_groups']['text'])){
+			if ( preg_match('/[a-zA-Z0-9-_, ]/',$_SESSION['provision']['grandstream_global_contact_groups']['text'])){
 				$global_contact_groups['enabled']=true;
 				$gp=array();
-				$groups=explode(',',$_SESSION['provision']['gs_global_contact_groups']['text']);
+				$groups=explode(',',$_SESSION['provision']['grandstream_global_contact_groups']['text']);
 				foreach ($groups as $group){
 					$gp[] = trim($group);
 				}
@@ -856,8 +856,7 @@ include "root.php";
 							$prep_statement = $this->db->prepare(check_sql($sql));
 							$prep_statement->execute();
 							$device_lines = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-						//assign the keys array
-							$view->assign("lines", $device_lines);
+
 						//set the variables
 							if (is_array($device_lines)) {
 								foreach($device_lines as $row) {
@@ -880,17 +879,21 @@ include "root.php";
 										}
 
 									//set a lines array index is the line number
+										$lines[$line_number] = $row;
 										$lines[$line_number]['register_expires'] = $register_expires;
 										$lines[$line_number]['sip_transport'] = strtolower($sip_transport);
 										$lines[$line_number]['sip_port'] = $sip_port;
 										$lines[$line_number]['server_address'] = $row["server_address"];
 										$lines[$line_number]['outbound_proxy'] = $row["outbound_proxy_primary"];
+										$lines[$line_number]['server'][1]['address'] = $row["server_address_primary"];
+										$lines[$line_number]['server'][2]['address'] = $row["server_address_secondary"];
 										$lines[$line_number]['outbound_proxy_primary'] = $row["outbound_proxy_primary"];
 										$lines[$line_number]['outbound_proxy_secondary'] = $row["outbound_proxy_secondary"];
 										$lines[$line_number]['display_name'] = $row["display_name"];
 										$lines[$line_number]['auth_id'] = $row["auth_id"];
 										$lines[$line_number]['user_id'] = $row["user_id"];
 										$lines[$line_number]['password'] = $row["password"];
+										$lines[$line_number]['user_password'] = $row["password"];
 										$lines[$line_number]['shared_line'] = $row["shared_line"];
 
 									//assign the variables for line one - short name
@@ -927,6 +930,11 @@ include "root.php";
 							unset ($prep_statement);
 					}
 
+				//assign the arrays
+					$view->assign("lines", $lines);
+					$view->assign("account", $lines);
+					$view->assign("user", $lines);
+
 				//get the list of contact directly assigned to the user
 					if (strlen($device_user_uuid) > 0 and strlen($domain_uuid) > 0) {
 						//get the contacts assigned to the groups and add to the contacts array
@@ -939,7 +947,7 @@ include "root.php";
 								$this->contact_append($contacts, $line, $domain_uuid, $device_user_uuid, false);
 							}
 						// Grandstream get the contacts assigned to the user and groups and add to the contacts array
-							if ($_SESSION['provision']['contact_grandstream']['text'] == "true") {
+							if ($_SESSION['provision']['contact_grandstream']['boolean'] == "true") {
 								$this->contact_grandstream($contacts, $line, $domain_uuid, $device_user_uuid);
 							}
 					}
@@ -1149,6 +1157,7 @@ include "root.php";
 												case "call return": $device_key_type  = "17"; break;
 												case "transfer": $device_key_type  = "18"; break;
 												case "call park": $device_key_type  = "19"; break;
+												case "monitored call park": $device_key_type  = "26"; break;
 												case "intercom": $device_key_type  = "20"; break;
 												case "ldap search": $device_key_type  = "21"; break;
 											}
@@ -1165,6 +1174,7 @@ include "root.php";
 												case "call return": $device_key_type  = "7"; break;
 												case "transfer": $device_key_type  = "8"; break;
 												case "call park": $device_key_type  = "9"; break;
+												case "monitored call park": $device_key_type  = "16"; break;
 												case "intercom": $device_key_type  = "10"; break;
 												case "ldap search": $device_key_type  = "11"; break;
 											}
@@ -1411,7 +1421,9 @@ include "root.php";
 												$file_contents = $this->render();
 
 											//write the file
-												mkdir($directory,0777,true);
+												if(!is_dir($directory)) {
+													mkdir($directory,0777,true);
+												}
 												$fh = fopen($dest_path,"w") or die("Unable to write to $directory for provisioning. Make sure the path exists and permissons are set correctly.");
 												fwrite($fh, $file_contents);
 												fclose($fh);

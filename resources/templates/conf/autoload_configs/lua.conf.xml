@@ -57,6 +57,6 @@
     <!--<param name="startup-script" value="app/voicemail/resources/scripts/mwi_subscribe.lua"/>-->
 
     <!-- Subscribe to events -->
-	  <!-- <hook event="PHONE_FEATURE_SUBSCRIBE" subclass="" script="app.lua feature_event"/>-->
+    <!--<hook event="PHONE_FEATURE_SUBSCRIBE" subclass="" script="app.lua feature_event"/>-->
   </settings>
 </configuration>

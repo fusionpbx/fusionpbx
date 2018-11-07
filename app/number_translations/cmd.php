@@ -47,13 +47,13 @@
 	if ($fp) {
 		//reloadxml
 			if ($cmd == "api reloadxml") {
-				messages::add(rtrim(event_socket_request($fp, $cmd)), 'alert');
+				message::add(rtrim(event_socket_request($fp, $cmd)), 'alert');
 				unset($cmd);
 			}
 
 		//reload mod_translate
 			if ($cmd == "api reload mod_translate") {
-				messages::add(rtrim(event_socket_request($fp, $cmd)), 'alert');
+				message::add(rtrim(event_socket_request($fp, $cmd)), 'alert');
 				unset($cmd);
 			}
 

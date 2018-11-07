@@ -118,6 +118,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_cid_name_prefix";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_cid_number_prefix";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "ring_group_context";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//default settings
 		$y=0;

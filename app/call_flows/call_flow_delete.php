@@ -91,7 +91,7 @@ if (strlen($id)>0) {
 }
 
 
-messages::add($text['message-delete']);
+message::add($text['message-delete']);
 header("Location: call_flows.php");
 return;
 

@@ -54,7 +54,7 @@ else {
 	}
 
 //redirect the browser
-	messages::add($text['message-delete']);
+	message::add($text['message-delete']);
 	header("Location: databases.php");
 	return;
 

@@ -143,7 +143,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 				}
 
-				messages::add($text['message-add']);
+				message::add($text['message-add']);
 				header("Location: dialplan_edit.php?id=".$dialplan_uuid."&app_uuid=".$app_uuid);
 				return;
 			} //if ($action == "add")
@@ -178,7 +178,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 				}
 
-				messages::add($text['message-update']);
+				message::add($text['message-update']);
 				header("Location: dialplan_edit.php?id=".$dialplan_uuid."&app_uuid=".$app_uuid);
 				return;
 		   } //if ($action == "update")

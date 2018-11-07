@@ -36,7 +36,7 @@
 	}
 
 //redirect the user
-	messages::add($text['message-delete']);
+	message::add($text['message-delete']);
 	header('Location: conference_control_detail_edit.php?id='.$conference_control_uuid);
 
 ?>

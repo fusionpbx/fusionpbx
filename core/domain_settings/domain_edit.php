@@ -145,9 +145,24 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 					// update dialplans
 						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/dialplans/app_config.php")){
-							$sql = "update v_dialplans set ";
-							$sql .= "dialplan_context = '".$domain_name."' ";
+							$sql = "update v_dialplans ";
+							$sql .= "set dialplan_context = '".$domain_name."' ";
 							$sql .= "where dialplan_context = '".$original_domain_name."' ";
+							$sql .= "and domain_uuid = '".$domain_uuid."' ";
+							$db->exec(check_sql($sql));
+							unset($sql);
+
+							$sql = "update v_dialplans ";
+							$sql .= "set dialplan_xml = replace(dialplan_xml, $original_domain_name, $domain_name); ";
+							$sql .= "and domain_uuid = '".$domain_uuid."' ";
+							$db->exec(check_sql($sql));
+							unset($sql);
+						}
+
+					// update destinations
+						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/destinations/app_config.php")){
+							$sql = "update v_destinations ";
+							$sql .= "set destination_data = replace(destination_data, $original_domain_name, $domain_name); ";
 							$sql .= "and domain_uuid = '".$domain_uuid."' ";
 							$db->exec(check_sql($sql));
 							unset($sql);
@@ -587,7 +602,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		//redirect the browser
 			if ($action == "update") {
-				messages::add($text['message-update']);
+				message::add($text['message-update']);
 				if (!permission_exists('domain_add')) { //admin, updating own domain
 					header("Location: domain_edit.php");
 				}
@@ -596,7 +611,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 			}
 			if ($action == "add") {
-				messages::add($text['message-add']);
+				message::add($text['message-add']);
 				header("Location: domains.php");
 			}
 			return;
@@ -644,7 +659,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='domains.php'\" value='".$text['button-back']."'>\n";
 	}
 	if (permission_exists('domain_export')) {
-		echo "	<input type='button' class='btn' name='' alt='".$text['button-export']."' onclick=\"window.location='".PROJECT_PATH."/app/domain_export/index.php?id=".$domain_uuid."'\" value='".$text['button-export']."'>\n";
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-export']."' onclick=\"window.location='".PROJECT_PATH."/app/domain_export/index.php?id=".escape($domain_uuid)."'\" value='".$text['button-export']."'>\n";
 	}
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
@@ -666,7 +681,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='domain_name' maxlength='255' value=\"".$domain_name."\">\n";
+	echo "	<input class='formfld' type='text' name='domain_name' maxlength='255' value=\"".escape($domain_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-name']."\n";
 	echo "</td>\n";
@@ -691,7 +706,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='domain_description' maxlength='255' value=\"".$domain_description."\">\n";
+	echo "	<input class='formfld' type='text' name='domain_description' maxlength='255' value=\"".escape($domain_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
@@ -700,7 +715,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='domain_uuid' value='$domain_uuid'>\n";
+		echo "		<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>\n";
 	}
 	echo "			<br />";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
@@ -717,4 +732,5 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

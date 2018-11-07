@@ -104,7 +104,7 @@
 			$cache->delete("dialplan:".$dialplan_context);
 
 		//save the message to a session variable
-			messages::add($text['message-update']);
+			message::add($text['message-update']);
 
 		//redirect the user
 			header("Location: dialplan_edit.php?id=".$dialplan_uuid."&".((strlen($app_uuid) > 0) ? "app_uuid=".$app_uuid : null));

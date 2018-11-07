@@ -115,7 +115,7 @@
 		$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 		$database->save($array);
 		$response = $database->message;
-		messages::add($text['message-copy']);
+		message::add($text['message-copy']);
 	}
 
 //redirect

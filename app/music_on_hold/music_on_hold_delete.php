@@ -65,7 +65,7 @@
 	$music->reload();
 
 //redirect the user
-	messages::add($text['message-delete']);
+	message::add($text['message-delete']);
 	header('Location: music_on_hold.php');
 
 ?>
