@@ -539,8 +539,8 @@
 <RTP_CoS_Value_4_ group="Ext_4/Network_Settings">6</RTP_CoS_Value_4_>
 <Network_Jitter_Level_4_ group="Ext_4/Network_Settings">high</Network_Jitter_Level_4_>
 <Jitter_Buffer_Adjustment_4_ group="Ext_4/Network_Settings">up and down</Jitter_Buffer_Adjustment_4_>
-<SIP_Transport_4_ group="Ext_4/SIP_Settings">{$sip_transport_4|upper}</SIP_Transport_4_>
-<SIP_Port_4_ group="Ext_4/SIP_Settings">{$sip_port_4}</SIP_Port_4_>
+<SIP_Transport_4_ group="Ext_4/SIP_Settings">{$account.4.sip_transport|upper}</SIP_Transport_4_>
+<SIP_Port_4_ group="Ext_4/SIP_Settings">{$account.4.sip_port}</SIP_Port_4_>
 <SIP_100REL_Enable_4_ group="Ext_4/SIP_Settings">No</SIP_100REL_Enable_4_>
 <EXT_SIP_Port_4_ group="Ext_4/SIP_Settings" />
 <Auth_Resync-Reboot_4_ group="Ext_4/SIP_Settings">Yes</Auth_Resync-Reboot_4_>
