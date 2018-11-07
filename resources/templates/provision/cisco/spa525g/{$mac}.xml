@@ -250,8 +250,8 @@
 <Jitter_Buffer_Adjustment_1_ ua="na">up and down</Jitter_Buffer_Adjustment_1_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_1_ ua="na">{$sip_transport_1|upper}</SIP_Transport_1_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_1_ ua="na">{$sip_port_1}</SIP_Port_1_>
+<SIP_Transport_1_ ua="na">{$account.1.sip_transport|upper}</SIP_Transport_1_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_1_ ua="na">{$account.1.sip_port}</SIP_Port_1_>
 <SIP_100REL_Enable_1_ ua="na">No</SIP_100REL_Enable_1_>
 <EXT_SIP_Port_1_ ua="na"></EXT_SIP_Port_1_>
 <Auth_Resync-Reboot_1_ ua="na">Yes</Auth_Resync-Reboot_1_>
@@ -364,8 +364,8 @@
 <Jitter_Buffer_Adjustment_2_ ua="na">up and down</Jitter_Buffer_Adjustment_2_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_2_ ua="na">{$sip_transport_2|upper}</SIP_Transport_2_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_2_ ua="na">{$sip_port_2}</SIP_Port_2_>
+<SIP_Transport_2_ ua="na">{$account.2.sip_transport|upper}</SIP_Transport_2_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_2_ ua="na">{$account.2.sip_port}</SIP_Port_2_>
 <SIP_100REL_Enable_2_ ua="na">No</SIP_100REL_Enable_2_>
 <EXT_SIP_Port_2_ ua="na"></EXT_SIP_Port_2_>
 <Auth_Resync-Reboot_2_ ua="na">Yes</Auth_Resync-Reboot_2_>
