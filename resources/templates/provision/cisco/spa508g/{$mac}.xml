@@ -960,7 +960,7 @@
 <Use_Outbound_Proxy_4_ group="Ext_4/Proxy_and_Registration">{if isset($account.4.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_4_>
 <Outbound_Proxy_4_ group="Ext_4/Proxy_and_Registration">{$account.4.outbound_proxy_primary}</Outbound_Proxy_4_>
 <Alternate_Proxy_4_ group="Ext_4/Proxy_and_Registration">{$account.4.server_address}</Alternate_Proxy_4_>
-<Alternate_Outbound_Proxy_4_ group="Ext_4/Proxy_and_Registration">{account.4.$outbound_proxy_secondary}</Alternate_Outbound_Proxy_4_>
+<Alternate_Outbound_Proxy_4_ group="Ext_4/Proxy_and_Registration">{$account.4.$outbound_proxy_secondary}</Alternate_Outbound_Proxy_4_>
 <Use_OB_Proxy_In_Dialog_4_ group="Ext_4/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_4_>
 <Register_4_ group="Ext_4/Proxy_and_Registration">Yes</Register_4_>
 <Make_Call_Without_Reg_4_ group="Ext_4/Proxy_and_Registration">No</Make_Call_Without_Reg_4_>
