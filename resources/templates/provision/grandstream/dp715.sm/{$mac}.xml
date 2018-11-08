@@ -228,7 +228,7 @@
 <P271>1</P271>
 
 <!-- Primary SIP Server -->
-<P47>{domain_name}</P47>
+<P47>{$domain_name}</P47>
 
 <!-- Failover SIP Server -->
 <P967></P967>
