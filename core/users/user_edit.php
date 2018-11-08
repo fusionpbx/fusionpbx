@@ -35,10 +35,8 @@
 	$text = $language->get();
 
 //get user uuid
-	if (
-		(is_uuid($_REQUEST["id"]) && permission_exists('user_edit')) ||
-		(is_uuid($_REQUEST["id"]) && $_REQUEST["id"] == $_SESSION['user_uuid'])
-		)  {
+	if ((is_uuid($_REQUEST["id"]) && permission_exists('user_edit')) ||
+		(is_uuid($_REQUEST["id"]) && $_REQUEST["id"] == $_SESSION['user_uuid']))  {
 		$user_uuid = check_str($_REQUEST["id"]);
 		$action = 'edit';
 	}
@@ -48,8 +46,8 @@
 	}
 	else {
 		// load users own account
-			header("Location: user_edit.php?id=".$_SESSION['user_uuid']);
-			exit;
+		header("Location: user_edit.php?id=".$_SESSION['user_uuid']);
+		exit;
 	}
 
 //get total user count from the database, check limit, if defined
@@ -95,119 +93,127 @@
 			return;
 	}
 
-if (count($_POST) > 0 && $_POST["persistform"] != "1") {
+//prepare the data
+	if (count($_POST) > 0) {
 
-	//get the HTTP values and set as variables
-		if (permission_exists('user_edit') && $action == 'edit') {
-			$user_uuid = $_REQUEST["id"];
-			$username_old = check_str($_POST["username_old"]);
-		}
-		$domain_uuid = check_str($_POST["domain_uuid"]);
-		$username = check_str($_POST["username"]);
-		$password = check_str($_POST["password"]);
-		$password_confirm = check_str($_POST["password_confirm"]);
-		$user_status = check_str($_POST["user_status"]);
-		$user_language = check_str($_POST["user_language"]);
-		$user_time_zone = check_str($_POST["user_time_zone"]);
-		if (permission_exists('user_edit') && $action == 'edit') {
-			$contact_uuid = check_str($_POST["contact_uuid"]);
-		}
-		else if (permission_exists('user_add') && $action == 'add') {
-			$user_email = check_str($_POST["user_email"]);
-			$contact_organization = check_str($_POST["contact_organization"]);
-			$contact_name_given = check_str($_POST["contact_name_given"]);
-			$contact_name_family = check_str($_POST["contact_name_family"]);
-		}
-		$group_uuid_name = check_str($_POST["group_uuid_name"]);
-		$user_enabled = check_str($_POST["user_enabled"]);
-		$api_key = check_str($_POST["api_key"]);
-		if (permission_exists('message_view')) {
-			$message_key = check_str($_POST["message_key"]);
-		}
+		//get the HTTP values and set as variables
+			if (permission_exists('user_edit') && $action == 'edit') {
+				$user_uuid = $_REQUEST["id"];
+				$username_old = check_str($_POST["username_old"]);
+			}
+			$domain_uuid = check_str($_POST["domain_uuid"]);
+			$username = check_str($_POST["username"]);
+			$password = check_str($_POST["password"]);
+			$password_confirm = check_str($_POST["password_confirm"]);
+			$user_status = check_str($_POST["user_status"]);
+			$user_language = check_str($_POST["user_language"]);
+			$user_time_zone = check_str($_POST["user_time_zone"]);
+			if (permission_exists('user_edit') && $action == 'edit') {
+				$contact_uuid = check_str($_POST["contact_uuid"]);
+			}
+			else if (permission_exists('user_add') && $action == 'add') {
+				$user_email = check_str($_POST["user_email"]);
+				$contact_organization = check_str($_POST["contact_organization"]);
+				$contact_name_given = check_str($_POST["contact_name_given"]);
+				$contact_name_family = check_str($_POST["contact_name_family"]);
+			}
+			$group_uuid_name = check_str($_POST["group_uuid_name"]);
+			$user_enabled = check_str($_POST["user_enabled"]);
+			$api_key = check_str($_POST["api_key"]);
+			if (permission_exists('message_view')) {
+				$message_key = check_str($_POST["message_key"]);
+			}
 
-	//check required values
-		if ($username == '') { $msg_error = $text['message-required'].$text['label-username']; }
-		if (permission_exists('user_edit') && $action == 'edit') {
-			if ($username != $username_old && $username != '') {
-				$sql = "select count(*) as num_rows from v_users where username = '".$username."'";
-				if ($_SESSION["user"]["unique"]["text"] != "global"){
-					$sql .= " and domain_uuid = '".$domain_uuid."'";
-				}
-				$prep_statement = $db->prepare(check_sql($sql));
-				if ($prep_statement) {
-					$prep_statement->execute();
-					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-					if (0 < $row['num_rows']) {
-						$msg_error = $text['message-username_exists'];
+		//get the password requirements
+			$required['length'] = $_SESSION['user']['password_length']['numeric'];
+			$required['number'] = ($_SESSION['user']['password_number']['boolean'] == 'true') ? true : false;
+			$required['lowercase'] = ($_SESSION['user']['password_lowercase']['boolean'] == 'true') ? true : false;
+			$required['uppercase'] = ($_SESSION['user']['password_uppercase']['boolean'] == 'true') ? true : false;
+			$required['special'] = ($_SESSION['user']['password_special']['boolean'] == 'true') ? true : false;
+
+		//check required values
+			$msg = '';
+			if ($username == '') {
+				$msg .= $text['message-required'].$text['label-username']."<br>\n";
+			}
+			if (permission_exists('user_edit') && $action == 'edit') {
+				if ($username != $username_old && $username != '') {
+					$sql = "select count(*) as num_rows from v_users where username = '".$username."'";
+					if ($_SESSION["user"]["unique"]["text"] != "global"){
+						$sql .= " and domain_uuid = '".$domain_uuid."'";
 					}
-				}
-				unset($sql);
-			}
-		}
-		if ($password != '' && $password != $password_confirm) { $msg_error = $text['message-password_mismatch']; }
-		if (permission_exists('user_add') && $action == 'add') {
-			if ($password == '') { $msg_error = $text['message-password_blank']; }
-			if ($user_email == '') { $msg_error = $text['message-required'].$text['label-email']; }
-			if ($group_uuid_name == '') { $msg_error = $text['message-required'].$text['label-group']; }
-		}
-
-		if ($msg_error != '') {
-			message::add($msg_error, 'negative');
-			if ($action == 'edit') {
-				header("Location: user_edit.php?id=".$user_uuid);
-			}
-			else {
-				header("Location: user_edit.php");
-			}
-			exit;
-		}
-
-		if (!check_password_strength($password, $text, 'user')) {
-			if ($action == 'edit') {
-				header("Location: user_edit.php?id=".$user_uuid);
-			}
-			else {
-				header("Location: user_edit.php");
-			}
-			exit;
-		}
-
-	//set initial array indexes
-		$i = $n = $x = $c = 0;
-
-	//check to see if user language is set
-		$sql = "select user_setting_uuid, user_setting_value from v_user_settings ";
-		$sql .= "where user_setting_category = 'domain' ";
-		$sql .= "and user_setting_subcategory = 'language' ";
-		$sql .= "and user_uuid = '".$user_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['user_setting_uuid'] == '' && $user_language != '') {
-				//add user setting to array for insert
-					$array['user_settings'][$i]['user_setting_uuid'] = uuid();
-					$array['user_settings'][$i]['user_uuid'] = $user_uuid;
-					$array['user_settings'][$i]['domain_uuid'] = $domain_uuid;
-					$array['user_settings'][$i]['user_setting_category'] = 'domain';
-					$array['user_settings'][$i]['user_setting_subcategory'] = 'language';
-					$array['user_settings'][$i]['user_setting_name'] = 'code';
-					$array['user_settings'][$i]['user_setting_value'] = $user_language;
-					$array['user_settings'][$i]['user_setting_enabled'] = 'true';
-					$i++;
-			}
-			else {
-				if ($row['user_setting_value'] == '' || $user_language == '') {
-					$sql = "delete from v_user_settings ";
-					$sql .= "where user_setting_category = 'domain' ";
-					$sql .= "and user_setting_subcategory = 'language' ";
-					$sql .= "and user_uuid = '".$user_uuid."' ";
-					$db->exec(check_sql($sql));
+					$prep_statement = $db->prepare(check_sql($sql));
+					if ($prep_statement) {
+						$prep_statement->execute();
+						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+						if (0 < $row['num_rows']) {
+							$msg .= $text['message-username_exists']."<br>\n";
+						}
+					}
 					unset($sql);
 				}
-				else {
-					//add user setting to array for update
-						$array['user_settings'][$i]['user_setting_uuid'] = $row['user_setting_uuid'];
+			}
+			if ($password != '' && $password != $password_confirm) {
+				$msg .= $text['message-password_mismatch']."<br>\n";
+			}
+			if (permission_exists('user_add') && $action == 'add') {
+				if ($password == '') {
+					$msg .= $text['message-password_blank']."<br>\n";
+				}
+				if ($user_email == '') {
+					$msg .= $text['message-required'].$text['label-email']."<br>\n";
+				}
+				if ($group_uuid_name == '') {
+					$msg .= $text['message-required'].$text['label-group']."<br>\n";
+				}
+			}
+
+			if (strlen($password) > 0) {
+				if (is_numeric($required['length']) && $required['length'] != 0) {
+					if (strlen($password) < $required['length']) {
+						$msg .= $text['message-required'].$text['label-characters']."<br>\n";
+					}
+				}
+				if ($required['number']) {
+					if (!preg_match('/(?=.*[\d])/', $password)) {
+						$msg .= $text['message-required'].$text['label-numbers']."<br>\n";
+					}
+				}
+				if ($required['lowercase']) {
+					if (!preg_match('/(?=.*[a-z])/', $password)) {
+						$msg .= $text['message-required'].$text['label-lowercase_letters']."<br>\n";
+					}
+				}
+				if ($required['uppercase']) {
+					if (!preg_match('/(?=.*[A-Z])/', $password)) {
+						$msg .= $text['message-required'].$text['label-uppercase_letters']."<br>\n";
+					}
+				}
+				if ($required['special']) {
+					if (!preg_match('/(?=.*[\W])/', $password)) {
+						$msg .= $text['message-required'].$text['label-special_characters']."<br>\n";
+					}
+				}
+			}
+	}
+
+//save the data
+	if (strlen($msg) == 0) {
+		//set initial array indexes
+			$i = $n = $x = $c = 0;
+
+		//check to see if user language is set
+			$sql = "select user_setting_uuid, user_setting_value from v_user_settings ";
+			$sql .= "where user_setting_category = 'domain' ";
+			$sql .= "and user_setting_subcategory = 'language' ";
+			$sql .= "and user_uuid = '".$user_uuid."' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				if ($row['user_setting_uuid'] == '' && $user_language != '') {
+					//add user setting to array for insert
+						$array['user_settings'][$i]['user_setting_uuid'] = uuid();
 						$array['user_settings'][$i]['user_uuid'] = $user_uuid;
 						$array['user_settings'][$i]['domain_uuid'] = $domain_uuid;
 						$array['user_settings'][$i]['user_setting_category'] = 'domain';
@@ -217,82 +223,11 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 						$array['user_settings'][$i]['user_setting_enabled'] = 'true';
 						$i++;
 				}
-			}
-		}
-		unset($sql, $prep_statement, $row);
-
-	//check to see if user time zone is set
-		$sql = "select user_setting_uuid, user_setting_value from v_user_settings ";
-		$sql .= "where user_setting_category = 'domain' ";
-		$sql .= "and user_setting_subcategory = 'time_zone' ";
-		$sql .= "and user_uuid = '".$user_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['user_setting_uuid'] == '' && $user_time_zone != '') {
-				//add user setting to array for insert
-					$array['user_settings'][$i]['user_setting_uuid'] = uuid();
-					$array['user_settings'][$i]['user_uuid'] = $user_uuid;
-					$array['user_settings'][$i]['domain_uuid'] = $domain_uuid;
-					$array['user_settings'][$i]['user_setting_category'] = 'domain';
-					$array['user_settings'][$i]['user_setting_subcategory'] = 'time_zone';
-					$array['user_settings'][$i]['user_setting_name'] = 'name';
-					$array['user_settings'][$i]['user_setting_value'] = $user_time_zone;
-					$array['user_settings'][$i]['user_setting_enabled'] = 'true';
-					$i++;
-			}
-			else {
-				if ($row['user_setting_value'] == '' || $user_time_zone == '') {
-					$sql = "delete from v_user_settings ";
-					$sql .= "where user_setting_category = 'domain' ";
-					$sql .= "and user_setting_subcategory = 'time_zone' ";
-					$sql .= "and user_uuid = '".$user_uuid."' ";
-					$db->exec(check_sql($sql));
-					unset($sql);
-				}
 				else {
-					//add user setting to array for update
-						$array['user_settings'][$i]['user_setting_uuid'] = $row['user_setting_uuid'];
-						$array['user_settings'][$i]['user_uuid'] = $user_uuid;
-						$array['user_settings'][$i]['domain_uuid'] = $domain_uuid;
-						$array['user_settings'][$i]['user_setting_category'] = 'domain';
-						$array['user_settings'][$i]['user_setting_subcategory'] = 'time_zone';
-						$array['user_settings'][$i]['user_setting_name'] = 'name';
-						$array['user_settings'][$i]['user_setting_value'] = $user_time_zone;
-						$array['user_settings'][$i]['user_setting_enabled'] = 'true';
-						$i++;
-				}
-			}
-		}
-
-	//check to see if message key is set
-		if (permission_exists('message_view')) {
-			$sql = "select user_setting_uuid, user_setting_value from v_user_settings ";
-			$sql .= "where user_setting_category = 'message' ";
-			$sql .= "and user_setting_subcategory = 'key' ";
-			$sql .= "and user_uuid = '".$user_uuid."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-				if ($row['user_setting_uuid'] == '' && $message_key != '') {
-					//add user setting to array for insert
-						$array['user_settings'][$i]['user_setting_uuid'] = uuid();
-						$array['user_settings'][$i]['user_uuid'] = $user_uuid;
-						$array['user_settings'][$i]['domain_uuid'] = $domain_uuid;
-						$array['user_settings'][$i]['user_setting_category'] = 'message';
-						$array['user_settings'][$i]['user_setting_subcategory'] = 'key';
-						$array['user_settings'][$i]['user_setting_name'] = 'text';
-						$array['user_settings'][$i]['user_setting_value'] = $message_key;
-						$array['user_settings'][$i]['user_setting_enabled'] = 'true';
-						$i++;
-				}
-				else {
-					if ($row['user_setting_value'] == '' || $message_key == '') {
+					if ($row['user_setting_value'] == '' || $user_language == '') {
 						$sql = "delete from v_user_settings ";
-						$sql .= "where user_setting_category = 'message' ";
-						$sql .= "and user_setting_subcategory = 'key' ";
+						$sql .= "where user_setting_category = 'domain' ";
+						$sql .= "and user_setting_subcategory = 'language' ";
 						$sql .= "and user_uuid = '".$user_uuid."' ";
 						$db->exec(check_sql($sql));
 						unset($sql);
@@ -302,6 +237,77 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 							$array['user_settings'][$i]['user_setting_uuid'] = $row['user_setting_uuid'];
 							$array['user_settings'][$i]['user_uuid'] = $user_uuid;
 							$array['user_settings'][$i]['domain_uuid'] = $domain_uuid;
+							$array['user_settings'][$i]['user_setting_category'] = 'domain';
+							$array['user_settings'][$i]['user_setting_subcategory'] = 'language';
+							$array['user_settings'][$i]['user_setting_name'] = 'code';
+							$array['user_settings'][$i]['user_setting_value'] = $user_language;
+							$array['user_settings'][$i]['user_setting_enabled'] = 'true';
+							$i++;
+					}
+				}
+			}
+			unset($sql, $prep_statement, $row);
+
+		//check to see if user time zone is set
+			$sql = "select user_setting_uuid, user_setting_value from v_user_settings ";
+			$sql .= "where user_setting_category = 'domain' ";
+			$sql .= "and user_setting_subcategory = 'time_zone' ";
+			$sql .= "and user_uuid = '".$user_uuid."' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				if ($row['user_setting_uuid'] == '' && $user_time_zone != '') {
+					//add user setting to array for insert
+						$array['user_settings'][$i]['user_setting_uuid'] = uuid();
+						$array['user_settings'][$i]['user_uuid'] = $user_uuid;
+						$array['user_settings'][$i]['domain_uuid'] = $domain_uuid;
+						$array['user_settings'][$i]['user_setting_category'] = 'domain';
+						$array['user_settings'][$i]['user_setting_subcategory'] = 'time_zone';
+						$array['user_settings'][$i]['user_setting_name'] = 'name';
+						$array['user_settings'][$i]['user_setting_value'] = $user_time_zone;
+						$array['user_settings'][$i]['user_setting_enabled'] = 'true';
+						$i++;
+				}
+				else {
+					if ($row['user_setting_value'] == '' || $user_time_zone == '') {
+						$sql = "delete from v_user_settings ";
+						$sql .= "where user_setting_category = 'domain' ";
+						$sql .= "and user_setting_subcategory = 'time_zone' ";
+						$sql .= "and user_uuid = '".$user_uuid."' ";
+						$db->exec(check_sql($sql));
+						unset($sql);
+					}
+					else {
+						//add user setting to array for update
+							$array['user_settings'][$i]['user_setting_uuid'] = $row['user_setting_uuid'];
+							$array['user_settings'][$i]['user_uuid'] = $user_uuid;
+							$array['user_settings'][$i]['domain_uuid'] = $domain_uuid;
+							$array['user_settings'][$i]['user_setting_category'] = 'domain';
+							$array['user_settings'][$i]['user_setting_subcategory'] = 'time_zone';
+							$array['user_settings'][$i]['user_setting_name'] = 'name';
+							$array['user_settings'][$i]['user_setting_value'] = $user_time_zone;
+							$array['user_settings'][$i]['user_setting_enabled'] = 'true';
+							$i++;
+					}
+				}
+			}
+
+		//check to see if message key is set
+			if (permission_exists('message_view')) {
+				$sql = "select user_setting_uuid, user_setting_value from v_user_settings ";
+				$sql .= "where user_setting_category = 'message' ";
+				$sql .= "and user_setting_subcategory = 'key' ";
+				$sql .= "and user_uuid = '".$user_uuid."' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				if ($prep_statement) {
+					$prep_statement->execute();
+					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+					if ($row['user_setting_uuid'] == '' && $message_key != '') {
+						//add user setting to array for insert
+							$array['user_settings'][$i]['user_setting_uuid'] = uuid();
+							$array['user_settings'][$i]['user_uuid'] = $user_uuid;
+							$array['user_settings'][$i]['domain_uuid'] = $domain_uuid;
 							$array['user_settings'][$i]['user_setting_category'] = 'message';
 							$array['user_settings'][$i]['user_setting_subcategory'] = 'key';
 							$array['user_settings'][$i]['user_setting_name'] = 'text';
@@ -309,174 +315,184 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 							$array['user_settings'][$i]['user_setting_enabled'] = 'true';
 							$i++;
 					}
+					else {
+						if ($row['user_setting_value'] == '' || $message_key == '') {
+							$sql = "delete from v_user_settings ";
+							$sql .= "where user_setting_category = 'message' ";
+							$sql .= "and user_setting_subcategory = 'key' ";
+							$sql .= "and user_uuid = '".$user_uuid."' ";
+							$db->exec(check_sql($sql));
+							unset($sql);
+						}
+						else {
+							//add user setting to array for update
+								$array['user_settings'][$i]['user_setting_uuid'] = $row['user_setting_uuid'];
+								$array['user_settings'][$i]['user_uuid'] = $user_uuid;
+								$array['user_settings'][$i]['domain_uuid'] = $domain_uuid;
+								$array['user_settings'][$i]['user_setting_category'] = 'message';
+								$array['user_settings'][$i]['user_setting_subcategory'] = 'key';
+								$array['user_settings'][$i]['user_setting_name'] = 'text';
+								$array['user_settings'][$i]['user_setting_value'] = $message_key;
+								$array['user_settings'][$i]['user_setting_enabled'] = 'true';
+								$i++;
+						}
+					}
 				}
 			}
-		}
 
-	//assign the user to the group
-		if ((permission_exists('user_add') || permission_exists('user_edit')) && $_REQUEST["group_uuid_name"] != '') {
-			$group_data = explode('|', $group_uuid_name);
-			$group_uuid = $group_data[0];
-			$group_name = $group_data[1];
-			//only a superadmin can add other superadmins or admins, admins can only add other admins
-				switch ($group_name) {
-					case "superadmin": if (!if_group("superadmin")) { break; }
-					case "admin": if (!if_group("superadmin") && !if_group("admin")) { break; }
-					default: //add group user to array for insert
-						$array['group_users'][$n]['group_user_uuid'] = uuid();
-						$array['group_users'][$n]['domain_uuid'] = $domain_uuid;
-						$array['group_users'][$n]['group_name'] = $group_name;
-						$array['group_users'][$n]['group_uuid'] = $group_uuid;
-						$array['group_users'][$n]['user_uuid'] = $user_uuid;
-						$n++;
-				}
-		}
-
-	//update domain, if changed
-		if ((permission_exists('user_add') || permission_exists('user_edit')) && permission_exists('user_domain')) {
-			//adjust group user records
-				$sql = "select group_user_uuid from v_group_users ";
-				$sql .= "where user_uuid = '".$user_uuid."' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				if ($prep_statement) {
-					$prep_statement->execute();
-					$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-					foreach ($result as $row) {
-						//add group user to array for update
-							$array['group_users'][$n]['group_user_uuid'] = $row['group_user_uuid'];
+		//assign the user to the group
+			if ((permission_exists('user_add') || permission_exists('user_edit')) && $_REQUEST["group_uuid_name"] != '') {
+				$group_data = explode('|', $group_uuid_name);
+				$group_uuid = $group_data[0];
+				$group_name = $group_data[1];
+				//only a superadmin can add other superadmins or admins, admins can only add other admins
+					switch ($group_name) {
+						case "superadmin": if (!if_group("superadmin")) { break; }
+						case "admin": if (!if_group("superadmin") && !if_group("admin")) { break; }
+						default: //add group user to array for insert
+							$array['group_users'][$n]['group_user_uuid'] = uuid();
 							$array['group_users'][$n]['domain_uuid'] = $domain_uuid;
+							$array['group_users'][$n]['group_name'] = $group_name;
+							$array['group_users'][$n]['group_uuid'] = $group_uuid;
+							$array['group_users'][$n]['user_uuid'] = $user_uuid;
 							$n++;
 					}
-				}
-				unset($sql, $prep_statement, $result, $row);
-			//adjust user setting records
-				$sql = "select user_setting_uuid from v_user_settings ";
-				$sql .= "where user_uuid = '".$user_uuid."' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				if ($prep_statement) {
-					$prep_statement->execute();
-					$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-					foreach ($result as $row) {
-						//add user setting to array for update
-							$array['user_settings'][$i]['user_setting_uuid'] = $row['user_setting_uuid'];
-							$array['user_settings'][$i]['domain_uuid'] = $domain_uuid;
-							$i++;
+			}
+
+		//update domain, if changed
+			if ((permission_exists('user_add') || permission_exists('user_edit')) && permission_exists('user_domain')) {
+				//adjust group user records
+					$sql = "select group_user_uuid from v_group_users ";
+					$sql .= "where user_uuid = '".$user_uuid."' ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					if ($prep_statement) {
+						$prep_statement->execute();
+						$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+						foreach ($result as $row) {
+							//add group user to array for update
+								$array['group_users'][$n]['group_user_uuid'] = $row['group_user_uuid'];
+								$array['group_users'][$n]['domain_uuid'] = $domain_uuid;
+								$n++;
+						}
 					}
-				}
-				unset($sql, $prep_statement, $result, $row);
-			//unassign any foreign domain groups
-				$sql = "delete from v_group_users where ";
-				$sql .= "domain_uuid = '".$domain_uuid."' ";
-				$sql .= "and user_uuid = '".$user_uuid."' ";
-				$sql .= "and group_uuid not in (";
-				$sql .= "	select group_uuid from v_groups where domain_uuid = '".$domain_uuid."' or domain_uuid is null ";
-				$sql .= ") ";
-				$db->exec(check_sql($sql));
-				unset($sql);
-		}
+					unset($sql, $prep_statement, $result, $row);
+				//adjust user setting records
+					$sql = "select user_setting_uuid from v_user_settings ";
+					$sql .= "where user_uuid = '".$user_uuid."' ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					if ($prep_statement) {
+						$prep_statement->execute();
+						$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+						foreach ($result as $row) {
+							//add user setting to array for update
+								$array['user_settings'][$i]['user_setting_uuid'] = $row['user_setting_uuid'];
+								$array['user_settings'][$i]['domain_uuid'] = $domain_uuid;
+								$i++;
+						}
+					}
+					unset($sql, $prep_statement, $result, $row);
+				//unassign any foreign domain groups
+					$sql = "delete from v_group_users where ";
+					$sql .= "domain_uuid = '".$domain_uuid."' ";
+					$sql .= "and user_uuid = '".$user_uuid."' ";
+					$sql .= "and group_uuid not in (";
+					$sql .= "	select group_uuid from v_groups where domain_uuid = '".$domain_uuid."' or domain_uuid is null ";
+					$sql .= ") ";
+					$db->exec(check_sql($sql));
+					unset($sql);
+			}
 
-	//add contact to array for insert
-		if ($action == 'add' && permission_exists('user_add') && permission_exists('contact_add')) {
-			$contact_uuid = uuid();
-			$array['contacts'][$c]['domain_uuid'] = $domain_uuid;
-			$array['contacts'][$c]['contact_uuid'] = $contact_uuid;
-			$array['contacts'][$c]['contact_type'] = 'user';
-			$array['contacts'][$c]['contact_organization'] = $contact_organization;
-			$array['contacts'][$c]['contact_name_given'] = $contact_name_given;
-			$array['contacts'][$c]['contact_name_family'] = $contact_name_family;
-			$array['contacts'][$c]['contact_nickname'] = $username;
-			$c++;
-			if (permission_exists('contact_email_add')) {
-				$contact_email_uuid = uuid();
-				$array['contact_emails'][$c]['contact_email_uuid'] = $contact_email_uuid;
-				$array['contact_emails'][$c]['domain_uuid'] = $domain_uuid;
-				$array['contact_emails'][$c]['contact_uuid'] = $contact_uuid;
-				$array['contact_emails'][$c]['email_address'] = $user_email;
-				$array['contact_emails'][$c]['email_primary'] = '1';
+		//add contact to array for insert
+			if ($action == 'add' && permission_exists('user_add') && permission_exists('contact_add')) {
+				$contact_uuid = uuid();
+				$array['contacts'][$c]['domain_uuid'] = $domain_uuid;
+				$array['contacts'][$c]['contact_uuid'] = $contact_uuid;
+				$array['contacts'][$c]['contact_type'] = 'user';
+				$array['contacts'][$c]['contact_organization'] = $contact_organization;
+				$array['contacts'][$c]['contact_name_given'] = $contact_name_given;
+				$array['contacts'][$c]['contact_name_family'] = $contact_name_family;
+				$array['contacts'][$c]['contact_nickname'] = $username;
 				$c++;
+				if (permission_exists('contact_email_add')) {
+					$contact_email_uuid = uuid();
+					$array['contact_emails'][$c]['contact_email_uuid'] = $contact_email_uuid;
+					$array['contact_emails'][$c]['domain_uuid'] = $domain_uuid;
+					$array['contact_emails'][$c]['contact_uuid'] = $contact_uuid;
+					$array['contact_emails'][$c]['email_address'] = $user_email;
+					$array['contact_emails'][$c]['email_primary'] = '1';
+					$c++;
+				}
 			}
-		}
 
-	//add user setting to array for update
-		$array['users'][$x]['user_uuid'] = $user_uuid;
-		$array['users'][$x]['domain_uuid'] = $domain_uuid;
-		if ($username != '' && $username != $username_old) {
-			$array['users'][$x]['username'] = $username;
-		}
-		if ($password != '' && $password == $password_confirm) {
-			$salt = uuid();
-			$array['users'][$x]['password'] = md5($salt.$password);
-			$array['users'][$x]['salt'] = $salt;
-		}
-		$array['users'][$x]['user_status'] = $user_status;
-		if (permission_exists('user_add') || permission_exists('user_edit')) {
-			$array['users'][$x]['api_key'] = ($api_key != '') ? $api_key : null;
-			$array['users'][$x]['user_enabled'] = $user_enabled;
-			$array['users'][$x]['contact_uuid'] = ($contact_uuid != '') ? $contact_uuid : null;
-			if ($action == 'add') {
-				$array['users'][$x]['add_user'] = $_SESSION["user"]["username"];
-				$array['users'][$x]['add_date'] = date("Y-m-d H:i:s.uO");
+		//add user setting to array for update
+			$array['users'][$x]['user_uuid'] = $user_uuid;
+			$array['users'][$x]['domain_uuid'] = $domain_uuid;
+			if ($username != '' && $username != $username_old) {
+				$array['users'][$x]['username'] = $username;
 			}
-		}
-		$x++;
-
-	//add the user_edit permission
-		$p = new permissions;
-		$p->add("user_setting_add", "temp");
-		$p->add("user_setting_edit", "temp");
-		$p->add("user_edit", "temp");
-
-	//save the data
-		$database = new database;
-		$database->app_name = 'users';
-		$database->app_uuid = '112124b3-95c2-5352-7e9d-d14c0b88f207';
-		$database->save($array);
-		//$message = $database->message;
-
-	//remove the temporary permission
-		$p->delete("user_setting_add", "temp");
-		$p->delete("user_setting_edit", "temp");
-		$p->delete("user_edit", "temp");
-
-	//if call center installed
-		if ($action == 'edit' && permission_exists('user_edit') && file_exists($_SERVER["PROJECT_ROOT"]."/app/call_centers/app_config.php")) {
-			//get the call center agent uuid
-				$sql = "select call_center_agent_uuid from v_call_center_agents ";
-				$sql .= "where domain_uuid = '".$domain_uuid."' ";
-				$sql .= "and user_uuid = '".$user_uuid."' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				if ($prep_statement) {
-					$prep_statement->execute();
-					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-					$call_center_agent_uuid = $row['call_center_agent_uuid'];
+			if ($password != '' && $password == $password_confirm) {
+				$salt = uuid();
+				$array['users'][$x]['password'] = md5($salt.$password);
+				$array['users'][$x]['salt'] = $salt;
+			}
+			$array['users'][$x]['user_status'] = $user_status;
+			if (permission_exists('user_add') || permission_exists('user_edit')) {
+				$array['users'][$x]['api_key'] = ($api_key != '') ? $api_key : null;
+				$array['users'][$x]['user_enabled'] = $user_enabled;
+				$array['users'][$x]['contact_uuid'] = ($contact_uuid != '') ? $contact_uuid : null;
+				if ($action == 'add') {
+					$array['users'][$x]['add_user'] = $_SESSION["user"]["username"];
+					$array['users'][$x]['add_date'] = date("Y-m-d H:i:s.uO");
 				}
-				unset($sql, $prep_statement, $result);
+			}
+			$x++;
 
-			//update the user_status
-				if (isset($call_center_agent_uuid)) {
-					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-					$switch_cmd .= "callcenter_config agent set status ".$call_center_agent_uuid." '".$user_status."'";
-					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-				}
+		//add the user_edit permission
+			$p = new permissions;
+			$p->add("user_setting_add", "temp");
+			$p->add("user_setting_edit", "temp");
+			$p->add("user_edit", "temp");
 
-			//update the user state
-				if (isset($call_center_agent_uuid)) {
-					$cmd = "api callcenter_config agent set state ".$call_center_agent_uuid." Waiting";
-					$response = event_socket_request($fp, $cmd);
-				}
-		}
+		//save the data
+			$database = new database;
+			$database->app_name = 'users';
+			$database->app_uuid = '112124b3-95c2-5352-7e9d-d14c0b88f207';
+			$database->save($array);
+			//$message = $database->message;
 
-	//redirect the browser
-		message::add($text['message-update']);
-		if ($_REQUEST['action'] == $text['button-add'] || !permission_exists('user_edit')) {
-			header("Location: user_edit.php?id=".$user_uuid);
-		}
-		else {
-			header("Location: users.php");
-		}
-		return;
+		//remove the temporary permission
+			$p->delete("user_setting_add", "temp");
+			$p->delete("user_setting_edit", "temp");
+			$p->delete("user_edit", "temp");
 
-}
+		//if call center installed
+			if ($action == 'edit' && permission_exists('user_edit') && file_exists($_SERVER["PROJECT_ROOT"]."/app/call_centers/app_config.php")) {
+				//get the call center agent uuid
+					$sql = "select call_center_agent_uuid from v_call_center_agents ";
+					$sql .= "where domain_uuid = '".$domain_uuid."' ";
+					$sql .= "and user_uuid = '".$user_uuid."' ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					if ($prep_statement) {
+						$prep_statement->execute();
+						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+						$call_center_agent_uuid = $row['call_center_agent_uuid'];
+					}
+					unset($sql, $prep_statement, $result);
+
+				//update the user_status
+					if (isset($call_center_agent_uuid)) {
+						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+						$switch_cmd .= "callcenter_config agent set status ".$call_center_agent_uuid." '".$user_status."'";
+						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+					}
+
+				//update the user state
+					if (isset($call_center_agent_uuid)) {
+						$cmd = "api callcenter_config agent set state ".$call_center_agent_uuid." Waiting";
+						$response = event_socket_request($fp, $cmd);
+					}
+			}
+	}
 
 //pre-populate the form
 	if ($action == 'edit') {
@@ -531,6 +547,15 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	require_once "resources/header.php";
 	$document['title'] = $text['title-user_edit'];
 
+//show the error message
+	if (isset($msg) && strlen($msg) > 0) {
+		echo "<div align='center'>\n";
+		echo "<table><tr><td>\n";
+		echo $msg."<br />";
+		echo "</td></tr></table>\n";
+		echo "</div>\n";
+	}
+
 //show the content
 	echo "<script>\n";
 	echo "	function compare_passwords() {\n";
@@ -558,49 +583,6 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	echo "		}\n";
 	echo "	}\n";
 
-	$req['length'] = $_SESSION['user']['password_length']['numeric'];
-	$req['number'] = ($_SESSION['user']['password_number']['boolean'] == 'true') ? true : false;
-	$req['lowercase'] = ($_SESSION['user']['password_lowercase']['boolean'] == 'true') ? true : false;
-	$req['uppercase'] = ($_SESSION['user']['password_uppercase']['boolean'] == 'true') ? true : false;
-	$req['special'] = ($_SESSION['user']['password_special']['boolean'] == 'true') ? true : false;
-
-	echo "	function check_password_strength(pwd) {\n";
-	echo "		if ($('#password').val() != '' || $('#password_confirm').val() != '') {\n";
-	echo "			var msg_errors = [];\n";
-	if (is_numeric($req['length']) && $req['length'] != 0) {
-		echo "		var re = /.{".$req['length'].",}/;\n"; //length
-		echo "		if (!re.test(pwd)) { msg_errors.push('".$req['length']."+ ".$text['label-characters']."'); }\n";
-	}
-	if ($req['number']) {
-		echo "		var re = /(?=.*[\d])/;\n";  //number
-		echo "		if (!re.test(pwd)) { msg_errors.push('1+ ".$text['label-numbers']."'); }\n";
-	}
-	if ($req['lowercase']) {
-		echo "		var re = /(?=.*[a-z])/;\n";  //lowercase
-		echo "		if (!re.test(pwd)) { msg_errors.push('1+ ".$text['label-lowercase_letters']."'); }\n";
-	}
-	if ($req['uppercase']) {
-		echo "		var re = /(?=.*[A-Z])/;\n";  //uppercase
-		echo "		if (!re.test(pwd)) { msg_errors.push('1+ ".$text['label-uppercase_letters']."'); }\n";
-	}
-	if ($req['special']) {
-		echo "		var re = /(?=.*[\W])/;\n";  //special
-		echo "		if (!re.test(pwd)) { msg_errors.push('1+ ".$text['label-special_characters']."'); }\n";
-	}
-	echo "			if (msg_errors.length > 0) {\n";
-	echo "				var msg = '".$text['message-password_requirements'].": ' + msg_errors.join(', ');\n";
-	echo "				display_message(msg, 'negative', '6000');\n";
-	echo "				return false;\n";
-	echo "			}\n";
-	echo "			else {\n";
-	echo "				return true;\n";
-	echo "			}\n";
-	echo "		}\n";
-	echo "		else {\n";
-	echo "			return true;\n";
-	echo "		}\n";
-	echo "	}\n";
-
 	echo "	function show_strength_meter() {\n";
 	echo "		$('#pwstrength_progress').slideDown();\n";
 	echo "	}\n";
@@ -616,7 +598,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	if (permission_exists('user_add') || permission_exists('user_edit')) {
 		echo "	<input type='button' class='btn' onclick=\"window.location='users.php'\" value='".$text['button-back']."'>";
 	}
-	echo "	<input type='button' class='btn' value='".$text['button-save']."' onclick=\"document.getElementById('action').value = '".$text['button-save']."'; submit_form();\">";
+	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
@@ -848,17 +830,17 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 		$sql .= "order by domain_uuid desc, group_name asc ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
-		if ($result_count > 0) {
+		$groups = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		if (is_array($groups)) {
 			if (isset($assigned_groups)) { echo "<br />\n"; }
 			echo "<select name='group_uuid_name' class='formfld' style='width: auto; margin-right: 3px;'>\n";
 			echo "	<option value=''></option>\n";
-			foreach($result as $field) {
+			foreach($groups as $field) {
 				if ($field['group_name'] == "superadmin" && !if_group("superadmin")) { continue; }	//only show the superadmin group to other superadmins
 				if ($field['group_name'] == "admin" && (!if_group("superadmin") && !if_group("admin") )) { continue; }	//only show the admin group to other admins
 				if ( !isset($assigned_groups) || (isset($assigned_groups) && !in_array($field["group_uuid"], $assigned_groups)) ) {
-					echo "	<option value='".$field['group_uuid']."|".$field['group_name']."'>".$field['group_name'].(($field['domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['domain_uuid']]['domain_name'] : null)."</option>\n";
+					if ($group_uuid_name == $field['group_uuid']."|".$field['group_name']) { $selected = "selected='selected'"; } else { $selected = ''; }
+					echo "	<option value='".$field['group_uuid']."|".$field['group_name']."' $selected>".$field['group_name'].(($field['domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['domain_uuid']]['domain_name'] : null)."</option>\n";
 				}
 			}
 			echo "</select>";
@@ -866,7 +848,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 				echo "<input type='button' class='btn' value=\"".$text['button-add']."\" onclick=\"document.getElementById('action').value = '".$text['button-add']."'; submit_form();\">\n";
 			}
 		}
-		unset($sql, $prep_statement, $result);
+		unset($sql, $prep_statement, $groups);
 
 		echo "		</td>";
 		echo "	</tr>";
@@ -944,25 +926,12 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 		}
 	}
 	echo "			<br>";
-	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick=\"document.getElementById('action').value = '".$text['button-save']."'; if (check_password_strength(document.getElementById('password').value)) { submit_form(); }\">";
+	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>";
 	echo "		</td>";
 	echo "	</tr>";
 	echo "</table>";
 	echo "<br><br>";
 	echo "</form>";
-
-	echo "<script>\n";
-	//capture enter key to submit form
-		echo "	$(window).keypress(function(event){\n";
-		echo "		if (event.which == 13) { submit_form(); }\n";
-		echo "	});\n";
-	// convert password fields to text
-		echo "	function submit_form() {\n";
-		echo "		$('input:password').css('visibility','hidden');\n";
-		echo "		$('input:password').attr({type:'text'});\n";
-		echo "		$('form#frm').submit();\n";
-		echo "	}\n";
-	echo "</script>\n";
 
 	if (permission_exists("user_edit") && permission_exists('user_setting_view') && $action == 'edit') {
 		require "user_settings.php";
