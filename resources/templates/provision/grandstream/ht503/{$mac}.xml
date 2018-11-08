@@ -1036,7 +1036,7 @@
 
 <!--  Primary SIP Server -->
 <!--  Server address -->
-<P747>{$server_address_1</P747>
+<P747>{$server_address_1}</P747>
 
 <!--  Failover SIP Server -->
 <!--  Server address -->
