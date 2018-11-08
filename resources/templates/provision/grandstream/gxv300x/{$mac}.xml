@@ -243,8 +243,8 @@
     <P29>0</P29>
     <!-- Dial Plan Prefix (dial plan prefix string) -->
     <P66></P66>
-    <!-- Dial Plan. Maxlength = 128 character. Defalut is allow all {x+|*x+} -->
-    <P290>{$grandstream_dial_plan}</P290>
+    <!-- Dial Plan. Maxlength = 128 character. Defalut is allow all  -->
+    <P290>{{$grandstream_dial_plan}}</P290>
     <!-- Delayed Call Forward Wait Time. Default is 20 seconds, maxlength = 5  -->
     <P139>20</P139>
     <!-- Enable Call Features.  0 - no, 1 - yes -->
@@ -382,8 +382,8 @@
     <P422>0</P422>
     <!-- Dial Plan Prefix -->
     <P419></P419>
-    <!-- Dial Plan. Maxlength = 128, default is allow all {x+|*x+}-->
-    <P459>{x+|*x+}</P459>
+    <!-- Dial Plan. Maxlength = 128, default is allow all -->
+    <P459>{literal}{x+|*x+}{/literal}</P459>
     <!-- Delayed Call Forward Wait Time. Default is 20 seconds, maxlength = 5 -->
     <P470>20</P470>
     <!-- Enable Call Features. 0 - no, 1 - yes.-->
@@ -521,8 +521,8 @@
     <P522>0</P522>
     <!-- Dial Plan Prefix -->
     <P519></P519>
-    <!-- Dial Plan: Maxlength = 128, default is allow all {x+|*x+} -->
-    <P559>{x+|*x+}</P559>
+    <!-- Dial Plan: Maxlength = 128, default is allow all  -->
+    <P559>{literal}{x+|*x+}{/literal}</P559>
     <!-- Delayed Call Forward Wait Time. Default is 20 seconds, maxlength = 5  -->
     <P570>20</P570>
     <!-- Enable Call Features. 0 - no, 1 - yes. -->
