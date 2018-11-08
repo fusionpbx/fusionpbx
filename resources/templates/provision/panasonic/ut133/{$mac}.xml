@@ -12,7 +12,7 @@
           <ProxyServerTransport SIP_TRANSPORT_1="0" SIP_TRANSPORT_2="0" SIP_TRANSPORT_3="0" SIP_TRANSPORT_4="0"/>
           <RegistrarServer SIP_RGSTR_ADDR_1="{$account.1.server_address}" SIP_RGSTR_ADDR_2="{$account.2.server_address}" SIP_RGSTR_ADDR_3="{$account.3.server_address}" SIP_RGSTR_ADDR_4="{$account.4.server_address}"/>
           <RegistrarServerPort SIP_RGSTR_PORT_1="5060" SIP_RGSTR_PORT_2="5060" SIP_RGSTR_PORT_3="5060" SIP_RGSTR_PORT_4="5060"/>
-          <UserAgentDomain SIP_SVCDOMAIN_1="{$account.1.server_address}" SIP_SVCDOMAIN_2="{$account.2.server_address}" SIP_SVCDOMAIN_3="{$account.3.server_address}" SIP_SVCDOMAIN_4$="{account.4.server_address}"/>
+          <UserAgentDomain SIP_SVCDOMAIN_1="{$account.1.server_address}" SIP_SVCDOMAIN_2="{$account.2.server_address}" SIP_SVCDOMAIN_3="{$account.3.server_address}" SIP_SVCDOMAIN_4="{$account.4.server_address}"/>
           <UserAgentPort1 SIP_SRC_PORT_1="5060"/>
           <UserAgentPort2 SIP_SRC_PORT_2="5070"/>
           <UserAgentPort3 SIP_SRC_PORT_3="5080"/>
