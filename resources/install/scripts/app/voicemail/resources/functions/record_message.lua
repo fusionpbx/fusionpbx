@@ -121,7 +121,7 @@
 					return transcription;
 				end
 			end
-			if (transcribe_provider == "selfhosted") then
+			if (transcribe_provider == "custom") then
 				local transcription_server = settings:get('voicemail', 'transcription_server', 'text') or '';
 				local api_key = settings:get('voicemail', 'api_key', 'text') or '';
 				local json_enabled = settings:get('voicemail', 'json_enabled', 'boolean') or "false";
