@@ -1075,8 +1075,8 @@
 <Jitter_Buffer_Adjustment_6_ group="Ext_6/Network_Settings">up and down</Jitter_Buffer_Adjustment_6_>
 
 <!-- Ext_6/SIP_Settings -->
-<SIP_Transport_6_ group="Ext_6/SIP_Settings">{$sip_transport_6|upper}</SIP_Transport_6_>
-<SIP_Port_6_ group="Ext_6/SIP_Settings">{$sip_port_6}</SIP_Port_6_>
+<SIP_Transport_6_ group="Ext_6/SIP_Settings">{$account.6.sip_transport|upper}</SIP_Transport_6_>
+<SIP_Port_6_ group="Ext_6/SIP_Settings">{$account.6.sip_port}</SIP_Port_6_>
 <SIP_100REL_Enable_6_ group="Ext_6/SIP_Settings">No</SIP_100REL_Enable_6_>
 <EXT_SIP_Port_6_ group="Ext_6/SIP_Settings" />
 <Auth_Resync-Reboot_6_ group="Ext_6/SIP_Settings">Yes</Auth_Resync-Reboot_6_>
