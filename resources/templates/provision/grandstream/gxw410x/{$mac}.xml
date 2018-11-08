@@ -556,7 +556,7 @@
     <P3408></P3408>
     <!--  Dial Plan -->
     <!--  PSTN Outgoing calls. -->
-    <P3331>{x+)</P3331>
+    <P3331>{literal}{x+}{/literal}</P3331>
     <!--  Hookflash Duration (X10ms). Default 60. -->
     <!--  For GXW4104 (uncomment the following line by removing #) -->
     <!--  P3308 = ch1-4:60; -->
