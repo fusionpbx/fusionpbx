@@ -155,8 +155,7 @@
 			if (strlen($ivr_menu_digit_len) == 0) { $msg .= $text['message-required'].$text['label-digit_length']."<br>\n"; }
 			if (strlen($ivr_menu_direct_dial) == 0) { $msg .= $text['message-required'].$text['label-direct_dial']."<br>\n"; }
 			//if (strlen($ivr_menu_ringback) == 0) { $msg .= $text['message-required'].$text['label-ring_back']."<br>\n"; }
-			if (strlen($ivr_menu_context) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
-			if (strlen($ivr_menu_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+			
 			//if (strlen($ivr_menu_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "resources/header.php";
