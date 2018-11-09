@@ -49,10 +49,10 @@
 	// moved to functions.php
 
 //action add or update
-	if (strlen($_REQUEST["id"]) > 0) {
+	if (isset($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$ivr_menu_uuid = check_str($_REQUEST["id"]);
-		if (strlen($_REQUEST["ivr_menu_uuid"]) > 0) {
+		if (isset($_REQUEST["ivr_menu_uuid"]) > 0) {
 			$ivr_menu_uuid = $_REQUEST["ivr_menu_uuid"];
 		}
 	}
@@ -103,10 +103,19 @@
 			$ivr_menu_direct_dial = check_str($_POST["ivr_menu_direct_dial"]);
 			$ivr_menu_ringback = check_str($_POST["ivr_menu_ringback"]);
 			$ivr_menu_cid_prefix = check_str($_POST["ivr_menu_cid_prefix"]);
-			$ivr_menu_context = check_str($_POST["ivr_menu_context"]);
 			$ivr_menu_enabled = check_str($_POST["ivr_menu_enabled"]);
 			$ivr_menu_description = check_str($_POST["ivr_menu_description"]);
 			$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
+
+		//set the context for users that do not have the permission
+			if (permission_exists('ivr_menu_context')) {
+				$ivr_menu_context = check_str($_POST["ivr_menu_context"]);
+			}
+			else {
+				if ($action == 'add') {
+					$ivr_menu_context = $_SESSION['domain_name'];
+				}
+			}
 
 		//process the values
 			$ivr_menu_exit_action = check_str($_POST["ivr_menu_exit_action"]);
@@ -119,7 +128,6 @@
 			if (strlen($ivr_menu_option_action) == 0) {
 				$ivr_menu_option_action = "menu-exec-app";
 			}
-
 	}
 
 //process the http data
@@ -249,10 +257,10 @@
 					$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"ringback=".$ivr_menu_ringback."\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"presence_id=".$ivr_menu_extension."@".$_SESSION['domain_name']."\"/>\n";
-					if (strlen($_POST["ivr_menu_language"]) > 0){
-					$dialplan_xml .= "		<action application=\"set\" data=\"default_language=".$ivr_menu_language[0]."\"/>\n";
-					$dialplan_xml .= "		<action application=\"set\" data=\"default_dialect=".$ivr_menu_language[1]."\"/>\n";
-					$dialplan_xml .= "		<action application=\"set\" data=\"default_voice=".$ivr_menu_language[2]."\"/>\n";
+					if (isset($_POST["ivr_menu_language"])) {
+						$dialplan_xml .= "		<action application=\"set\" data=\"default_language=".$ivr_menu_language[0]."\"/>\n";
+						$dialplan_xml .= "		<action application=\"set\" data=\"default_dialect=".$ivr_menu_language[1]."\"/>\n";
+						$dialplan_xml .= "		<action application=\"set\" data=\"default_voice=".$ivr_menu_language[2]."\"/>\n";
 					}
 					$dialplan_xml .= "		<action application=\"set\" data=\"transfer_ringback=".$ivr_menu_ringback."\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"ivr_menu_uuid=".$ivr_menu_uuid."\"/>\n";
@@ -273,7 +281,9 @@
 					$dialplan["dialplan_uuid"] = $dialplan_uuid;
 					$dialplan["dialplan_name"] = $ivr_menu_name;
 					$dialplan["dialplan_number"] = $ivr_menu_extension;
-					$dialplan["dialplan_context"] = $ivr_menu_context;
+					if (isset($ivr_menu_context)) {
+						$dialplan["dialplan_context"] = $ivr_menu_context;
+					}
 					$dialplan["dialplan_continue"] = "false";
 					$dialplan["dialplan_xml"] = $dialplan_xml;
 					$dialplan["dialplan_order"] = "101";
@@ -432,14 +442,9 @@
 	if (strlen($ivr_menu_max_timeouts) == 0) { $ivr_menu_max_timeouts = '1'; }
 	if (strlen($ivr_menu_digit_len) == 0) { $ivr_menu_digit_len = '5'; }
 	if (strlen($ivr_menu_direct_dial) == 0) { $ivr_menu_direct_dial = 'false'; }
-	if (strlen($ivr_menu_context) == 0) { $ivr_menu_context = $_SESSION['domain_name']; }
+	if (!isset($ivr_menu_context)) { $ivr_menu_context = $_SESSION['domain_name']; }
 	if (strlen($ivr_menu_enabled) == 0) { $ivr_menu_enabled = 'true'; }
 	if (!isset($ivr_menu_exit_action)) { $ivr_menu_exit_action = ''; }
-
-//set the context for users that do not have the permission
-	if (!permission_exists('ivr_menu_context')) {
-		$ivr_menu_context = $_SESSION['domain_name'];
-	}
 
 //get installed languages
 	$language_paths = glob($_SESSION["switch"]['sounds']['dir']."/*/*/*");
