@@ -207,8 +207,8 @@
     <P2326>0</P2326>
     <!-- Dial Plan Prefix, MaxLength 32 -->
     <P66></P66>
-    <!-- Dial Plan Maxlength = unlimited, default is allow all {x+|*x+} -->
-    <P290>{$grandstream_dial_plan}</P290>
+    <!-- Dial Plan Maxlength = unlimited, default is allow all  -->
+    <P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P290>
     <!-- Early Dial. 0 - No, 1 - Yes -->
     <P29>0</P29>
     <!-- Refer-To Use Target Contact. 0 - No, 1 - Yes -->
@@ -417,9 +417,9 @@
     <P2526>0</P2526>
     <!-- Dial Plan Prefix, MaxLength 32 -->
     <P519></P519>
-    <!-- Dial Plan, default is allow all { x+ | *x+ | *xx*x+ } -->
+    <!-- Dial Plan, default is allow all  -->
     <!-- Maxlength: unlimited -->
-    <P559>{ x+ | *x+ | *xx*x+ }</P559>
+    <P559>{literal}{ x+ | *x+ | *xx*x+ }{/literal}</P559>
     <!-- Early Dial. 0 - No, 1 - Yes -->
     <P522>0</P522>
     <!-- Refer-To Use Target Contact. 0 - No, 1 - Yes -->
