@@ -2961,6 +2961,26 @@ $text['label-special_characters']['ru-ru'] = "Специальные симво�
 $text['label-special_characters']['sv-se'] = "Speciella Karaktärer";
 $text['label-special_characters']['uk-ua'] = "спеціальні символи";
 
+$text['label-bridges']['en-us'] = 'Bridges';
+$text['label-bridges']['ar-eg'] = '';
+$text['label-bridges']['de-at'] = '';
+$text['label-bridges']['de-ch'] = '';
+$text['label-bridges']['de-de'] = '';
+$text['label-bridges']['es-cl'] = '';
+$text['label-bridges']['es-mx'] = '';
+$text['label-bridges']['fr-ca'] = '';
+$text['label-bridges']['fr-fr'] = '';
+$text['label-bridges']['he-il'] = '';
+$text['label-bridges']['it-it'] = '';
+$text['label-bridges']['nl-nl'] = '';
+$text['label-bridges']['pl-pl'] = '';
+$text['label-bridges']['pt-br'] = '';
+$text['label-bridges']['pt-pt'] = '';
+$text['label-bridges']['ro-ro'] = '';
+$text['label-bridges']['ru-ru'] = '';
+$text['label-bridges']['sv-se'] = '';
+$text['label-bridges']['uk-ua'] = '';
+
 $text['description-greeting']['en-us'] = "Select the desired Greeting.";
 $text['description-greeting']['ar-eg'] = "";
 $text['description-greeting']['de-at'] = "Geben Sie die Begrüßungs-ID an."; //copied from de-de
