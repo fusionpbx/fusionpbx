@@ -67,7 +67,7 @@
 <P212>2</P212>
 
 <!-- Firmware Server Path -->
-<P192>{domain_name}/firmware/gs</P192>
+<P192>{$domain_name}/firmware/gs</P192>
 
 <!-- Config Server Path -->
 <P237>{$domain_name}{$project_path}/app/provision</P237>
@@ -222,7 +222,7 @@
 <P271>1</P271>
 
 <!-- Primary SIP Server -->
-<P47>{domain_name}</P47>
+<P47>{$domain_name}</P47>
 
 <!-- Failover SIP Server -->
 <P967></P967>
