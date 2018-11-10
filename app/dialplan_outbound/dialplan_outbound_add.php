@@ -72,20 +72,23 @@
 			$gateway_type = 'gateway';
 			$gateway_2_type = 'gateway';
 			$gateway_3_type = 'gateway';
-
-		//set the gateway type to enum
-			if (strtolower(substr($gateway, 0, 7)) == "enum") {
+		//set the gateway type to bridge
+			if (strtolower(substr($gateway, 0, 6)) == "bridge") {
+				$gateway_type = 'bridge';
+			}
+		//set the type to enum
+			if (strtolower(substr($gateway, 0, 4)) == "enum") {
 				$gateway_type = 'enum';
 			}
-		//set the gateway type to freetdm
+		//set the type to freetdm
 			if (strtolower(substr($gateway, 0, 7)) == "freetdm") {
 				$gateway_type = 'freetdm';
 			}
-		//set the gateway type to transfer
+		//set the type to transfer
 			if (strtolower(substr($gateway, 0, 8)) == "transfer") {
 				$gateway_type = 'transfer';
 			}
-		//set the gateway type to dingaling
+		//set the type to dingaling
 			if (strtolower(substr($gateway, 0, 4)) == "xmpp") {
 				$gateway_type = 'xmpp';
 			}
@@ -102,15 +105,23 @@
 
 		//set the gateway_2 variable
 			$gateway_2 = check_str($_POST["gateway_2"]);
-		//set the gateway type to enum
+		//set the type to bridge
+			if (strtolower(substr($gateway_2, 0, 6)) == "bridge") {
+				$gateway_2_type = 'bridge';
+			}
+		//set type to enum
 			if (strtolower(substr($gateway_2, 0, 4)) == "enum") {
 				$gateway_2_type = 'enum';
 			}
-		//set the gateway type to freetdm
+		//set the type to freetdm
 			if (strtolower(substr($gateway_2, 0, 7)) == "freetdm") {
 				$gateway_2_type = 'freetdm';
 			}
-		//set the gateway type to dingaling
+		//set the type to transfer
+			if (strtolower(substr($gateway_2, 0, 8)) == "transfer") {
+				$gateway_type = 'transfer';
+			}
+		//set the type to dingaling
 			if (strtolower(substr($gateway_2, 0, 4)) == "xmpp") {
 				$gateway_2_type = 'xmpp';
 			}
@@ -127,17 +138,25 @@
 
 		//set the gateway_3 variable
 			$gateway_3 = check_str($_POST["gateway_3"]);
-		//set the gateway type to enum
+		//set the type to bridge
+			if (strtolower(substr($gateway_3, 0, 6)) == "bridge") {
+				$gateway_3_type = 'bridge';
+			}
+		//set the type to enum
 			if (strtolower(substr($gateway_3, 0, 4)) == "enum") {
 				$gateway_3_type = 'enum';
 			}
-		//set the gateway type to freetdm
+		//set the type to freetdm
 			if (strtolower(substr($gateway_3, 0, 7)) == "freetdm") {
 				$gateway_3_type = 'freetdm';
 			}
-		//set the gateway type to dingaling
+		//set the type to dingaling
 			if (strtolower(substr($gateway_3, 0, 4)) == "xmpp") {
 				$gateway_3_type = 'xmpp';
+			}
+		//set the type to transfer
+			if (strtolower(substr($gateway_3, 0, 8)) == "transfer") {
+				$gateway_type = 'transfer';
 			}
 		//set the gateway_3_id and gateway_3_name
 			if ($gateway_3_type == "gateway" && strlen($_POST["gateway_3"]) > 0) {
@@ -284,7 +303,7 @@
 	
 						if ($gateway_type == "gateway") {
 							$dialplan_name = $gateway_name.".".$abbrv;
-							$action_data = "sofia/gateway/".$gateway_uuid."/".$prefix_number."\$1";
+							$bridge_data = "sofia/gateway/".$gateway_uuid."/".$prefix_number."\$1";
 						}
 						if (strlen($gateway_2_name) > 0 && $gateway_2_type == "gateway") {
 							$extension_2_name = $gateway_2_id.".".$abbrv;
@@ -296,7 +315,7 @@
 						}
 						if ($gateway_type == "freetdm") {
 							$dialplan_name = "freetdm.".$abbrv;
-							$action_data = $gateway."/1/a/".$prefix_number."\$1";
+							$bridge_data = $gateway."/1/a/".$prefix_number."\$1";
 						}
 						if ($gateway_2_type == "freetdm") {
 							$extension_2_name = "freetdm.".$abbrv;
@@ -308,7 +327,7 @@
 						}
 						if ($gateway_type == "xmpp") {
 							$dialplan_name = "xmpp.".$abbrv;
-							$action_data = "dingaling/gtalk/+".$prefix_number."\$1@voice.google.com";
+							$bridge_data = "dingaling/gtalk/+".$prefix_number."\$1@voice.google.com";
 						}
 						if ($gateway_2_type == "xmpp") {
 							$extension_2_name = "xmpp.".$abbrv;
@@ -318,6 +337,23 @@
 							$extension_3_name = "xmpp.".$abbrv;
 							$bridge_3_data .= "dingaling/gtalk/+".$prefix_number."\$1@voice.google.com";
 						}
+
+						if ($gateway_type == "bridge") {
+							$dialplan_name = "bridge.".$abbrv;
+							$gateway_array = explode(":",$gateway);
+							$bridge_data = $gateway_array[1];
+						}
+						if ($gateway_2_type == "bridge") {
+							$dialplan_name = "bridge.".$abbrv;
+							$gateway_array = explode(":",$gateway_2);
+							$bridge_2_data = $gateway_array[1];
+						}
+						if ($gateway_3_type == "bridge") {
+							$dialplan_name = "bridge.".$abbrv;
+							$gateway_array = explode(":",$gateway_3);
+							$bridge_3_data = $gateway_array[1];
+						}
+
 						if ($gateway_type == "enum") {
 							if (strlen($bridge_2_data) == 0) {
 								$dialplan_name = "enum.".$abbrv;
@@ -325,7 +361,7 @@
 							else {
 								$dialplan_name = $extension_2_name;
 							}
-							$action_data = "\${enum_auto_route}";
+							$bridge_data = "\${enum_auto_route}";
 						}
 						if ($gateway_2_type == "enum") {
 							$bridge_2_data .= "\${enum_auto_route}";
@@ -333,10 +369,11 @@
 						if ($gateway_3_type == "enum") {
 							$bridge_3_data .= "\${enum_auto_route}";
 						}
+
 						if ($gateway_type == "transfer") {
 							$dialplan_name = "transfer.".$abbrv;
 							$gateway_array = explode(":",$gateway);
-							$action_data = $gateway_array[1];
+							$bridge_data = $gateway_array[1];
 						}
 						if ($gateway_2_type == "transfer") {
 							$gateway_array = explode(":",$gateway_2);
@@ -346,6 +383,7 @@
 							$gateway_array = explode(":",$gateway_3);
 							$bridge_3_data = $gateway_array[1];
 						}
+
 						if (strlen($dialplan_order) == 0) {
 							$dialplan_order ='333';
 						}
@@ -600,7 +638,7 @@
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = $dialplan_detail_type;
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $action_data;
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $bridge_data;
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 
@@ -628,12 +666,13 @@
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 						}
 
+
+						unset($bridge_data);
 						unset($bridge_2_data);
 						unset($bridge_3_data);
 						unset($label);
 						unset($abbrv);
 						unset($dialplan_expression);
-						unset($action_data);
 					} //if strlen
 					$x++;
 				} //end foreach
@@ -665,6 +704,40 @@
 			header("Location: ".PROJECT_PATH."/app/dialplans/dialplans.php?app_uuid=8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3");
 			return;
 	} //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+
+//get the domains
+	$sql = "select * from v_domains ";
+	$sql .= "where domain_enabled = 'true' ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$domains = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset ($prep_statement, $sql);
+
+//get the gateways
+	$sql = "select * from v_gateways ";
+	$sql .= "where enabled = 'true' ";
+	if (permission_exists('outbound_route_any_gateway')) {
+		$sql .= "order by domain_uuid ";
+	}
+	else {
+		$sql .= "and domain_uuid = '$domain_uuid' ";
+	}
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$gateways = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset ($prep_statement, $sql);
+
+//get the bridges
+	if (permission_exists('bridge_view')) {
+		$sql = "select * from v_bridges ";
+		$sql .= "where bridge_enabled = 'true' ";
+		$sql .= "and domain_uuid = '$domain_uuid' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$bridges = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		unset ($prep_statement, $sql);
+	}
+
 ?>
 
 <script type="text/javascript">
@@ -775,33 +848,29 @@ function type_onchange(dialplan_detail_type) {
 	//set the onchange
 	if (if_group("superadmin")) { $onchange = "onchange='changeToInput(this);'"; } else { $onchange = ''; }
 
-	$sql = "select * from v_gateways ";
-	$sql .= "where enabled = 'true' ";
-	if (permission_exists('outbound_route_any_gateway')) {
-		$sql .= " order by domain_uuid = '$domain_uuid' ";
-	}
-	else {
-		$sql .= " and domain_uuid = '$domain_uuid' ";
-	}
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
 	echo "<select name=\"gateway\" id=\"gateway\" class=\"formfld\" $onchange>\n";
 	echo "<option value=''></option>\n";
-	echo "<optgroup label='".$text['label-gateway']."'>";
+	echo "<optgroup label='".$text['label-gateway']."'>\n";
 	$previous_domain_uuid = '';
-	foreach($result as $row) {
+	foreach($gateways as $row) {
 		if (permission_exists('outbound_route_any_gateway')) {
 			if ($previous_domain_uuid != $row['domain_uuid']) {
+				$domain_name = '';
+				foreach($domains as $field) {
+					if ($row['domain_uuid'] == $field['domain_uuid']) {
+						$domain_name = $field['domain_name'];
+						break;
+					}
+				}
+				if (strlen($domain_name) == 0) { $domain_name = $text['label-global']; }
 				echo "</optgroup>";
-				echo "<optgroup label='&nbsp; &nbsp;".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."'>";
+				echo "<optgroup label='&nbsp; &nbsp;".$domain_name."'>\n";
 			}
 			if ($row['gateway'] == $gateway_name) {
-				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\" selected=\"selected\">&nbsp; &nbsp;".escape($row['gateway'])."</option>\n";
+				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\" selected=\"selected\">".escape($row['gateway'])."</option>\n";
 			}
 			else {
-				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\">&nbsp; &nbsp;".escape($row['gateway'])."</option>\n";
+				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\">".escape($row['gateway'])."</option>\n";
 			}
 		}
 		else {
@@ -814,14 +883,20 @@ function type_onchange(dialplan_detail_type) {
 		}
 		$previous_domain_uuid = $row['domain_uuid'];
 	}
-	unset($sql, $result, $row_count);
-	echo "</optgroup>";
-	echo "	<optgroup label='".$text['label-add-options']."'>";
-	echo "	<option value=\"enum\">enum</option>\n";
-	echo "	<option value=\"freetdm\">freetdm</option>\n";
-	echo "	<option value=\"transfer:\$1 XML \${domain_name}\">transfer</option>\n";
-	echo "	<option value=\"xmpp\">xmpp</option>\n";
-	echo "</optgroup>";
+	echo "	</optgroup>\n";
+	if (permission_exists('bridge_view')) {
+		echo "	<optgroup label='".$text['label-bridges']."'>\n";
+		foreach($bridges as $row) {
+			echo "		<option value=\"bridge:".$row['bridge_destination']."\">".$row['bridge_name']."</option>\n";
+		}
+		echo "	</optgroup>\n";
+	}
+	echo "	<optgroup label='".$text['label-add-options']."'>\n";
+	echo "		<option value=\"enum\">enum</option>\n";
+	echo "		<option value=\"freetdm\">freetdm</option>\n";
+	echo "		<option value=\"transfer:\$1 XML \${domain_name}\">transfer</option>\n";
+	echo "		<option value=\"xmpp\">xmpp</option>\n";
+	echo "	</optgroup>\n";
 	echo "</select>\n";
 	echo "<br />\n";
 	echo $text['message-add-options']."\n";
@@ -833,114 +908,115 @@ function type_onchange(dialplan_detail_type) {
 	echo "	".$text['label-alt1']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-
-	$sql = "select * from v_gateways ";
-	$sql .= "where enabled = 'true' ";
-	if (permission_exists('outbound_route_any_gateway')) {
-		$sql .= "order by domain_uuid = '$domain_uuid' ";
-	}
-	else {
-		$sql .= "and domain_uuid = '$domain_uuid' ";
-	}
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
 	echo "<select name=\"gateway_2\" id=\"gateway\" class=\"formfld\" $onchange>\n";
-	echo "<option value=''></option>\n";
-	echo "<optgroup label='".$text['label-sip-gateway']."'>";
+	echo "	<option value=''></option>\n";
+	echo "	<optgroup label='".$text['label-sip-gateway']."'>\n";
 	$previous_domain_uuid = '';
-	foreach($result as $row) {
+	foreach($gateways as $row) {
 		if (permission_exists('outbound_route_any_gateway')) {
 			if ($previous_domain_uuid != $row['domain_uuid']) {
-				echo "</optgroup>";
-				echo "<optgroup label='&nbsp; &nbsp;".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."'>";
+				$domain_name = '';
+				foreach($domains as $field) {
+					if ($row['domain_uuid'] == $field['domain_uuid']) {
+						$domain_name = $field['domain_name'];
+						break;
+					}
+				}
+				if (strlen($domain_name) == 0) { $domain_name = $text['label-global']; }
+				echo "	</optgroup>\n";
+				echo "	<optgroup label='&nbsp; &nbsp;".$domain_name."'>\n";
 			}
 			if ($row['gateway'] == $gateway_2_name) {
-				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\" selected=\"selected\">&nbsp; &nbsp;".escape($row['gateway'])."</option>\n";
+				echo "		<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\" selected=\"selected\">".escape($row['gateway'])."</option>\n";
 			}
 			else {
-				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\">&nbsp; &nbsp;".escape($row['gateway'])."</option>\n";
+				echo "		<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\">".escape($row['gateway'])."</option>\n";
 			}
 		}
 		else {
 			if ($row['gateway'] == $gateway_2_name) {
-				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\" selected=\"selected\">".escape($row['gateway'])."</option>\n";
+				echo "		<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\" selected=\"selected\">".escape($row['gateway'])."</option>\n";
 			}
 			else {
-				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\">".escape($row['gateway'])."</option>\n";
+				echo "		<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\">".escape($row['gateway'])."</option>\n";
 			}
 		}
 		$previous_domain_uuid = $row['domain_uuid'];
 	}
-	unset($sql, $result, $row_count, $previous_domain_uuid);
-	echo "</optgroup>";
-	echo "<optgroup label='".$text['label-add-options']."'>";
-	echo "	<option value=\"enum\">enum</option>\n";
-	echo "	<option value=\"freetdm\">freetdm</option>\n";
-	echo "	<option value=\"transfer:\$1 XML \${domain_name}\">transfer</option>\n";
-	echo "	<option value=\"xmpp\">xmpp</option>\n";
-	echo "</optgroup>";
+	echo "	</optgroup>\n";
+	if (permission_exists('bridge_view')) {
+		echo "	<optgroup label='".$text['label-bridges']."'>\n";
+		foreach($bridges as $row) {
+			echo "		<option value=\"bridge:".$row['bridge_destination']."\">".$row['bridge_name']."</option>\n";
+		}
+		echo "	</optgroup>\n";
+	}
+	echo "	<optgroup label='".$text['label-add-options']."'>\n";
+	echo "		<option value=\"enum\">enum</option>\n";
+	echo "		<option value=\"freetdm\">freetdm</option>\n";
+	echo "		<option value=\"transfer:\$1 XML \${domain_name}\">transfer</option>\n";
+	echo "		<option value=\"xmpp\">xmpp</option>\n";
+	echo "	</optgroup>\n";
 	echo "</select>\n";
 	echo "<br />\n";
 	echo $text['message-add-options1']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-alt2']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-
-	$sql = "select * from v_gateways ";
-	$sql .= "where enabled = 'true' ";
-	if (permission_exists('outbound_route_any_gateway')) {
-		$sql .= "order by domain_uuid = '$domain_uuid' ";
-	}
-	else {
-		$sql .= "and domain_uuid = '$domain_uuid' ";
-	}
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
 	echo "<select name=\"gateway_3\" id=\"gateway\" class=\"formfld\" $onchange>\n";
-	echo "<option value=''></option>\n";
-	echo "<optgroup label='".$text['label-sip-gateway']."'>";
+	echo "	<option value=''></option>\n";
+	echo "	<optgroup label='".$text['label-sip-gateway']."'>\n";
 	$previous_domain_uuid = '';
-	foreach($result as $row) {
+	foreach($gateways as $row) {
 		if (permission_exists('outbound_route_any_gateway')) {
 			if ($previous_domain_uuid != $row['domain_uuid']) {
-				echo "</optgroup>";
-				echo "<optgroup label='&nbsp; &nbsp;".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."'>";
+				$domain_name = '';
+				foreach($domains as $field) {
+					if ($row['domain_uuid'] == $field['domain_uuid']) {
+						$domain_name = $field['domain_name'];
+						break;
+					}
+				}
+				if (strlen($domain_name) == 0) { $domain_name = $text['label-global']; }
+				echo "	</optgroup>\n";
+				echo "	<optgroup label='&nbsp; &nbsp;".$domain_name."'>\n";
 			}
 			if ($row['gateway'] == $gateway_3_name) {
-				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\" selected=\"selected\">&nbsp; &nbsp;".escape($row['gateway'])."</option>\n";
+				echo "		<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\" selected=\"selected\">".escape($row['gateway'])."</option>\n";
 			}
 			else {
-				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\">&nbsp; &nbsp;".escape($row['gateway'])."</option>\n";
+				echo "		<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\">".escape($row['gateway'])."</option>\n";
 			}
 		}
 		else {
 			if ($row['gateway'] == $gateway_3_name) {
-				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\" selected=\"selected\">".escape($row['gateway'])."</option>\n";
+				echo "		<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\" selected=\"selected\">".escape($row['gateway'])."</option>\n";
 			}
 			else {
-				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\">".escape($row['gateway'])."</option>\n";
+				echo "		<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\">".escape($row['gateway'])."</option>\n";
 			}
 		}
 		$previous_domain_uuid = $row['domain_uuid'];
 	}
-	unset($sql, $result, $row_count, $previous_domain_uuid);
-	echo "</optgroup>";
-	echo "<optgroup label='".$text['label-add-options']."'>";
-	echo "	<option value=\"enum\">enum</option>\n";
-	echo "	<option value=\"freetdm\">freetdm</option>\n";
-	echo "	<option value=\"transfer:\$1 XML \${domain_name}\">transfer</option>\n";
-	echo "	<option value=\"xmpp\">xmpp</option>\n";
-	echo "</optgroup>";
+	echo "	</optgroup>\n";
+	if (permission_exists('bridge_view')) {
+		echo "	<optgroup label='".$text['label-bridges']."'>\n";
+		foreach($bridges as $row) {
+			echo "		<option value=\"bridge:".$row['bridge_destination']."\">".$row['bridge_name']."</option>\n";
+		}
+		echo "	</optgroup>\n";
+	}
+	echo "	<optgroup label='".$text['label-add-options']."'>\n";
+	echo "		<option value=\"enum\">enum</option>\n";
+	echo "		<option value=\"freetdm\">freetdm</option>\n";
+	echo "		<option value=\"transfer:\$1 XML \${domain_name}\">transfer</option>\n";
+	echo "		<option value=\"xmpp\">xmpp</option>\n";
+	echo "	</optgroup>\n";
 	echo "</select>\n";
 	echo "<br />\n";
 	echo $text['message-add-options2']."\n";
