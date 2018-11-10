@@ -509,12 +509,11 @@
 <!--# String-->
 <!--# Mandatory-->
 <!--# P290 = { x+ | *x+ | *xx*x+ }-->
-{if isset($grandstream_dial_plan)}
-    <P290>{$grandstream_dial_plan}</P290>
+
+{if isset($grandstream_dial_plan) }
+<P290>{$grandstream_dial_plan}</P290>
 {else}
-{literal}
-    <P290>{x+|*x+|*xx*x+}</P290>
-{/literal}
+<P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P290>
 {/if}
 
 <!--# Delayed Call Forward Wait Time (in seconds). Default is 20-->
