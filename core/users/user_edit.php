@@ -40,7 +40,7 @@
 		$user_uuid = check_str($_REQUEST["id"]);
 		$action = 'edit';
 	}
-	else if (permission_exists('user_add') && $_REQUEST["id"] == '') {
+	elseif (permission_exists('user_add') && !isset($_REQUEST["id"])) {
 		$user_uuid = uuid();
 		$action = 'add';
 	}
@@ -198,7 +198,7 @@
 	}
 
 //save the data
-	if (strlen($msg) == 0) {
+	if (strlen($msg) == 0 && count($_POST) > 0) {
 		//set initial array indexes
 			$i = $n = $x = $c = 0;
 
