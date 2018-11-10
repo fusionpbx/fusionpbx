@@ -473,9 +473,9 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cache";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "method";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "memcache";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "file";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Cache methods file and memcache.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Cache methods file or memcache.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7b644bfb-124f-4212-9541-1ca564be9d79";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cache";
