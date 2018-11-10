@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <gs_provision version="1">
   <config version="1">
     <!--  Configuration Template For GXP140x Firmware Version 1.0.5.26 -->
@@ -477,7 +477,13 @@
     <!--  Dial Plan. Default is { x+ | *x+ | *xx*x+ } -->
     <!--  String -->
     <!--  Mandatory -->
+    
+    {if isset($grandstream_dial_plan) }
     <P290>{$grandstream_dial_plan}</P290>
+    {else}
+   <P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P290>
+    {/if}
+    
     <!--  Delayed Call Forward Wait Time (in seconds). Default is 20 -->
     <!--  Number: 1 - 120 -->
     <!--  Mandatory -->
