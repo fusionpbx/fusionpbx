@@ -846,7 +846,8 @@ function type_onchange(dialplan_detail_type) {
 	}
 
 	//set the onchange
-	if (if_group("superadmin")) { $onchange = "onchange='changeToInput(this);'"; } else { $onchange = ''; }
+	$onchange = '';
+	//if (if_group("superadmin")) { $onchange = "onchange='changeToInput(this);'"; } else { $onchange = ''; }
 
 	echo "<select name=\"gateway\" id=\"gateway\" class=\"formfld\" $onchange>\n";
 	echo "<option value=''></option>\n";
