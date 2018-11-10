@@ -500,7 +500,12 @@
 <P66></P66>
 
 <!-- Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
+	
+{if isset($grandstream_dial_plan) }
 <P290>{$grandstream_dial_plan}</P290>
+{else}
+<P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P290>
+{/if}
 
 <!-- Refer-To Use Target Contact. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
