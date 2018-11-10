@@ -319,7 +319,13 @@
 		<!-- Use # as Dial Key. 0 - No, 1 - Yes (if set to Yes, "#" will function as the "(Re-)Dial" key) -->
 		<P72>1</P72>
 		<!-- Dial Plan -->
+		
+		{if isset($grandstream_dial_plan) }
 		<P4200>{$grandstream_dial_plan}</P4200>
+		{else}
+		<P4200>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P4200>
+		{/if}
+		
 		<!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes -->
 		<P99>0</P99>
 		<!-- Send Anonymous. 0 - No, 1 - Yes  (caller ID will be blocked if set to Yes) -->
