@@ -994,7 +994,12 @@
 
 <!-- Dial Plan -->
 <!-- String Max Length: 1024 -->
+		
+{if isset($grandstream_dial_plan) }
 <P4200>{$grandstream_dial_plan}</P4200>
+{else}
+<P4200>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P4200>
+{/if}
 
 <!-- Use # as Dial Key (if set to Yes, "#" will function as the "(Re-)Dial" key). 0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
