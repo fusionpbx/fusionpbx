@@ -3,7 +3,7 @@
 <gs_provision version="1">
 <mac>{$mac|replace:'-':''}</mac>
 <config version="1">
-<!-- ﻿########################################################################################## -->
+<!-- ########################################################################################## -->
 <!-- ## Configuration Template For GXP2130/2140/2160/2170/2135 Firmware Version 1.0.9.26     ## -->
 <!-- ########################################################################################## -->
 
@@ -656,7 +656,12 @@
 <!-- # Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
 <!-- # String -->
 <!-- # Mandatory -->
+	
+{if isset($grandstream_dial_plan) }
 <P290>{$grandstream_dial_plan}</P290>
+{else}
+<P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P290>
+{/if}
 
 <!-- # Call Log. 0 - Log All Calls, 1 - Log Incoming/Outgoing only (missed calls NOT recorded), 2 - Disable Call Log. Default is 0 -->
 <!-- # Number: 0, 1, 2 -->
