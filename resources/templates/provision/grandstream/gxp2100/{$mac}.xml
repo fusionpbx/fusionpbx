@@ -509,7 +509,7 @@
 <!--# String-->
 <!--# Mandatory-->
 <!--# P290 = { x+ | *x+ | *xx*x+ }-->
-    
+
 {if isset($grandstream_dial_plan) }
 <P290>{$grandstream_dial_plan}</P290>
 {else}
