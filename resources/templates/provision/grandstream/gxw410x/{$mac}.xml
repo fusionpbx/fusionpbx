@@ -556,7 +556,13 @@
     <P3408></P3408>
     <!--  Dial Plan -->
     <!--  PSTN Outgoing calls. -->
-    <P3331>{literal}{x+}{/literal}</P3331>
+    
+    {if isset($grandstream_dial_plan) }
+    <P3331>{$grandstream_dial_plan}</P3331>
+    {else}
+    <P3331>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P3331>
+    {/if}
+    
     <!--  Hookflash Duration (X10ms). Default 60. -->
     <!--  For GXW4104 (uncomment the following line by removing #) -->
     <!--  P3308 = ch1-4:60; -->
