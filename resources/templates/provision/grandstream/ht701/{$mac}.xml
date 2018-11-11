@@ -610,7 +610,12 @@
 
 <!-- Dial Plan -->
 <!--  String -->
+	
+{if isset($grandstream_dial_plan) }
 <P4200>{$grandstream_dial_plan}</P4200>
+{else}
+<P4200>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P4200>
+{/if}
 
 <!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
