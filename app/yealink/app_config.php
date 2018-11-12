@@ -76,7 +76,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Send the response back to the source it came from.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable or disable the NAT Rport. 0-Disabled (default), 1-Enabled.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "70894b7b-2edd-41ad8526060589df4e11";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
