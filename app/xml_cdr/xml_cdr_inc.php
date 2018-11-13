@@ -420,12 +420,17 @@
 	}
 	$sql= str_replace("  ", " ", $sql);
 	$sql= str_replace("where and", "where", $sql);
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+	$database = new database;
+	$database->select($sql);
+	$result = $database->result;
 	$result_count = count($result);
-	unset ($prep_statement, $sql);
+	unset($database);
 
+//return the paging
+	list($paging_controls_mini, $rows_per_page, $offset) = paging($num_rows, $param, $rows_per_page, true, $result_count); //top
+	list($paging_controls, $rows_per_page, $offset) = paging($num_rows, $param, $rows_per_page, false, $result_count); //bottom
+
+//set the row style
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
