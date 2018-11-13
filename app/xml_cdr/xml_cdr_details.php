@@ -43,8 +43,8 @@
 	$text = $language->get();
 
 //get the http values and set them to a variable
-	if (strlen($_REQUEST["uuid"]) > 0) {
-		$uuid = trim($_REQUEST["uuid"]);
+	if (strlen($_REQUEST["id"]) > 0) {
+		$uuid = trim($_REQUEST["id"]);
 	}
 
 //get the cdr string from the database
