@@ -3041,6 +3041,26 @@ $text['label-blf']['ru-ru'] = "BLF";
 $text['label-blf']['sv-se'] = "BLF";
 $text['label-blf']['uk-ua'] = "";
 
+$text['label-blf_new']['en-us'] = "BLF/New Call";
+$text['label-blf_new']['ar-eg'] = "";
+$text['label-blf_new']['de-at'] = "BLF/New Call"; //copied from de-de
+$text['label-blf_new']['de-ch'] = "BLF/New Call"; //copied from de-de
+$text['label-blf_new']['de-de'] = "BLF/New Call";
+$text['label-blf_new']['es-cl'] = "BLF/New Call";
+$text['label-blf_new']['es-mx'] = "BLF/New Call"; //copied from es-cl
+$text['label-blf_new']['fr-ca'] = "BLF/New Call"; //copied from fr-fr
+$text['label-blf_new']['fr-fr'] = "BLF/New Call";
+$text['label-blf_new']['he-il'] = "";
+$text['label-blf_new']['it-it'] = "BLF/New Call";
+$text['label-blf_new']['nl-nl'] = "";
+$text['label-blf_new']['pl-pl'] = "Dostępności kontaktu (BLF)";
+$text['label-blf_new']['pt-br'] = "BLF/New Call"; //copied from pt-pt
+$text['label-blf_new']['pt-pt'] = "BLF/New Call";
+$text['label-blf_new']['ro-ro'] = "";
+$text['label-blf_new']['ru-ru'] = "BLF/New Call";
+$text['label-blf_new']['sv-se'] = "BLF/New Call";
+$text['label-blf_new']['uk-ua'] = "";
+
 $text['label-callers']['en-us'] = "Callers";
 $text['label-callers']['ar-eg'] = "";
 $text['label-callers']['de-at'] = "Anrufer"; //copied from de-de
