@@ -152,7 +152,6 @@
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$conference_session_details = $prep_statement->fetchAll();
-		$result_count = count($result);
 		unset ($prep_statement, $sql);
 
 	$c = 0;
