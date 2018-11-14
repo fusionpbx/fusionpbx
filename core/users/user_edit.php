@@ -845,7 +845,7 @@
 			}
 			echo "</select>";
 			if ($action == 'edit') {
-				echo "<input type='button' class='btn' value=\"".$text['button-add']."\" onclick=\"document.getElementById('action').value = '".$text['button-add']."'; submit_form();\">\n";
+				echo "<input type='submit' class='btn' value=\"".$text['button-add']."\" >\n";
 			}
 		}
 		unset($sql, $prep_statement, $groups);
