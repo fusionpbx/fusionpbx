@@ -2893,6 +2893,13 @@
 		$vendors[$y]['functions'][$z]['value'] = "10";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "b047d0d7-27a8-4a82-ba7f-44efb5bf1734";
+		$vendors[$y]['functions'][$z]['label'] = "label-blf_new";
+		$vendors[$y]['functions'][$z]['name'] = "blf_new";
+		$vendors[$y]['functions'][$z]['value'] = "11";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 //algo
 		$y++;
 		$vendors[$y]['uuid'] = "dc5ffcb9-5195-4fb8-8b23-f4216ed7f0f6";
