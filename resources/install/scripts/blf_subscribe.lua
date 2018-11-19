@@ -9,6 +9,7 @@ end
 
 require "resources.functions.config"
 require "resources.functions.split"
+require "resources.functions.trim";
 
 local log = require "resources.functions.log"[service_name]
 local presence_in = require "resources.functions.presence_in"
@@ -82,6 +83,34 @@ end
 
 end
 
+local find_agent_status do
+
+local find_agent_uuid_sql = [[select t1.call_center_agent_uuid
+from v_call_center_agents t1 inner join v_domains t2 on t1.domain_uuid = t2.domain_uuid
+where t2.domain_name = :domain_name and t1.agent_name = :agent_name
+]]
+
+function find_agent_status(user)
+	local agent_name, domain_name = split_first(user, '@', true)
+	local _, short = split_first(agent_name, '+', true)
+	if not domain_name then return end
+	local dbh = Database.new('system')
+	if not dbh then return end
+	local row = dbh:first_row(find_agent_uuid_sql, {
+		domain_name = domain_name, agent_name = agent_name
+	})
+	dbh:release()
+	if not row then return end
+	if row.call_center_agent_uuid then
+		local cmd = "callcenter_config agent get status "..row.call_center_agent_uuid.."";
+		freeswitch.consoleLog("notice", "[user status][login] "..cmd.."\n");
+		user_status = trim(api:executeString(cmd));
+	end
+	return row.call_center_agent_uuid, user_status
+end
+
+end
+
 local protocols = {}
 
 protocols.flow = function(event)
@@ -134,6 +163,24 @@ protocols.forward = function(event)
 			presence_in.turn_lamp(status == "true", to)
 		else
 			log.warningf("Can not find CF: %s", to)
+		end
+	else
+		log.noticef("%s UNSUBSCRIBE from %s", from, to)
+	end
+end
+
+protocols.agent = function(event)
+	local from, to = event:getHeader('from'), event:getHeader('to')
+	local expires = tonumber(event:getHeader('expires'))
+	if expires and expires > 0 then
+		local proto, user = split_first(to, '+', true)
+		user = user or proto
+		local call_center_agent_uuid, agent_status = find_agent_status(user)
+		if agent_status then
+			log.noticef("Find agent: %s status: %s", user, tostring(agent_status))
+			presence_in.turn_lamp(agent_status == "Available", to)
+		else
+			log.warningf("Can not find agent status: %s", to)
 		end
 	else
 		log.noticef("%s UNSUBSCRIBE from %s", from, to)
