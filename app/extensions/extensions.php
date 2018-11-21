@@ -112,10 +112,10 @@
 
 //to cast or not to cast
 	if ($db_type == "pgsql") {
-		$order_text = ($total_extensions == $numeric_extensions) ? "cast(extension as bigint)" : "extension asc";
+		$order_text = ($total_extensions == $numeric_extensions) ? "cast(extension as bigint)" : "extension";
 	}
 	else {
-		$order_text = "extension asc";
+		$order_text = "extension";
 	}
 
 //get the extensions
@@ -131,7 +131,7 @@
 		$sql .= ($order_by == 'extension') ? "order by $order_text ".$order." " : "order by ".$order_by." ".$order." ";
 	}
 	else {
-		$sql .= "order by $order_text ";
+		$sql .= "order by $order_text $order";
 	}
 	$sql .= "limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
