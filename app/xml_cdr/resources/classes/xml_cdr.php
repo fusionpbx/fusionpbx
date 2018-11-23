@@ -977,18 +977,9 @@ if (!class_exists('xml_cdr')) {
 
 				$sql .= "SUM(c.billsec) \n";
 				$sql .= "FILTER ( \n";
-				$sql .= " WHERE (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
-				$sql .= "   OR \n";
-				$sql .= "   c.destination_number = e.extension) \n";
-				$sql .= "  OR ( \n";
-				$sql .= "   e.number_alias IS NOT NULL \n";
-				$sql .= "   AND ( \n";
-				$sql .= "    c.caller_id_number = e.number_alias \n";
-				$sql .= "    OR \n";
-				$sql .= "    c.destination_number = e.number_alias))) \n";
-				$sql .= " AND ( \n";
-				$sql .= " c.direction = 'outbound')) \n";
+				$sql .= " WHERE c.extension_uuid = e.extension_uuid \n";
+				$sql .= " AND c.direction = 'outbound' \n";
+				$sql .= ") \n";
 				$sql .= "AS outbound_duration, \n";
 
 				$sql .= "e.description \n";
