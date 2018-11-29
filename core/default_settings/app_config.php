@@ -213,6 +213,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "82bfc038-5e8d-427e-9773-0eb31bc3a6c3";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "email";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "smtp_hostname";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Define the local hostname to be used when sending mail.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0bd788c1-3262-4336-92f4-ef7869062380";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "email";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "smtp_host";
