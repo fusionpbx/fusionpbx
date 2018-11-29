@@ -127,14 +127,12 @@
    <X-PRE-PROCESS cmd="set" data="sip_tls_version=tlsv1" category="SIP" enabled="true" uuid="3fff6ed5-fde0-49ca-abe6-7db15f7f54d4"/>
 
    <!-- SIP Profile: External -->
-   <X-PRE-PROCESS cmd="set" data="external_auth_calls=false" category="SIP Profile: External" enabled="true" uuid="e296bea7-2153-4405-b87b-954531979ea8"/>
    <X-PRE-PROCESS cmd="set" data="external_sip_port=5080" category="SIP Profile: External" enabled="true" uuid="9594ab5c-884a-4d16-87ec-1a9f5b9c3247"/>
    <X-PRE-PROCESS cmd="set" data="external_tls_port=5081" category="SIP Profile: External" enabled="true" uuid="ea87e722-8b8f-4c11-b4cd-16eabd99450b"/>
    <X-PRE-PROCESS cmd="set" data="external_ssl_enable=false" category="SIP Profile: External" enabled="true" uuid="428d5aad-3116-4cfb-bbfa-d4c424707efb"/>
    <X-PRE-PROCESS cmd="set" data="external_ssl_dir=$${conf_dir}/tls" category="SIP Profile: External" enabled="true" uuid="ad813484-bd8a-4fe9-9342-82ef8834da96"/>
 
    <!-- SIP Profile: Internal -->
-   <X-PRE-PROCESS cmd="set" data="internal_auth_calls=true" category="SIP Profile: Internal" enabled="true" uuid="23fc152f-22f1-4edf-8b34-4066c3c1febf"/>
    <X-PRE-PROCESS cmd="set" data="internal_sip_port=5060" category="SIP Profile: Internal" enabled="true" uuid="562e0395-4059-4421-b648-2ed991edb0fb"/>
    <X-PRE-PROCESS cmd="set" data="internal_tls_port=5061" category="SIP Profile: Internal" enabled="true" uuid="82e185df-2835-419b-b79c-f5f3cf373c08"/>
    <X-PRE-PROCESS cmd="set" data="internal_ssl_enable=false" category="SIP Profile: Internal" enabled="true" uuid="ee58ced9-75b2-49ae-9595-ea95a3781d85"/>
