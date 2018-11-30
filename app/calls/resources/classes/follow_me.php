@@ -332,7 +332,7 @@ include "root.php";
 						}
 						//toll allow
 						if ($this->toll_allow != '') {
-							$variables[] = "toll_allow='".$this->toll_allow."'";
+							$variables[] = "toll_allow=''".$this->toll_allow."''";
 						}
 
 						$variables[] = "instant_ringback=true";
@@ -395,7 +395,7 @@ include "root.php";
 
 						//toll allow
 						if ($this->toll_allow != '') {
-							$variables[] = "toll_allow='".$this->toll_allow."'";
+							$variables[] = "toll_allow=''".$this->toll_allow."''";
 						}
 
 						if ($this->follow_me_ignore_busy != 'true') {
