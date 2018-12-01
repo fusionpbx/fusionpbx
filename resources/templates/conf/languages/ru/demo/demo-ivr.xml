@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="Windows-1252"?>
-<include><!--This line will be ignored it's here to validate the xml and is optional -->
-
+<include>
 
   <macro name="demo_ivr_count">
     <input pattern="^(\d+)$">
@@ -12,7 +10,7 @@
     </input>
   </macro>
 
-  <macro name="demo_ivr_main_menu" pause="250"> <!-- See conf/autoload_config/ivr.conf.xml for an example on how to use this macro in an IVR -->
+  <macro name="demo_ivr_main_menu" pause="100"> <!-- See conf/autoload_config/ivr.conf.xml for an example on how to use this macro in an IVR -->
     <input pattern="(.*)">
       <match>
         <!-- string together several existing sound files to create one long greeting -->
@@ -23,7 +21,7 @@
 
         <!-- Menu option 1: Call FreeSWITCH conference-->
         <action function="play-file" data="ivr/ivr-enter_ext_pound.wav"/>
-        <action function="execute" data="sleep(1500)"/>
+        <action function="play-file" data="silence_stream://1500"/>
         <action function="play-file" data="ivr/ivr-to_call_the_freeswitch_conference.wav"/>
         <action function="play-file" data="ivr/ivr-please.wav"/>
         <action function="play-file" data="voicemail/vm-press.wav"/>
@@ -41,36 +39,39 @@
         <action function="play-file" data="voicemail/vm-press.wav"/>
         <action function="play-file" data="digits/3.wav"/>
 
-        <!-- Menu option 4: Hear a sample submenu -->
-        <action function="play-file" data="ivr/ivr-to_hear_sample_submenu.wav"/>
-        <action function="play-file" data="ivr/ivr-please.wav"/>
-        <action function="play-file" data="voicemail/vm-press.wav"/>
+        <!-- Menu option 4: Register for ClueCon -->
+        <action function="play-file" data="ivr/ivr-register_for_cluecon.wav"/>
         <action function="play-file" data="digits/4.wav"/>
 
         <!-- Menu option 5: Listen to screaming monkeys -->
         <action function="play-file" data="ivr/ivr-to_hear_screaming_monkeys.wav"/>
-
         <action function="play-file" data="ivr/ivr-please.wav"/>
         <action function="play-file" data="voicemail/vm-press.wav"/>
         <action function="play-file" data="digits/5.wav"/>
+
+        <!-- Menu option 6: Hear a sample submenu -->
+        <action function="play-file" data="ivr/ivr-to_hear_sample_submenu.wav"/>
+        <action function="play-file" data="ivr/ivr-please.wav"/>
+        <action function="play-file" data="voicemail/vm-press.wav"/>
+        <action function="play-file" data="digits/6.wav"/>
 
         <!-- Menu option 9: Repeat these options -->
         <action function="play-file" data="ivr/ivr-to_repeat_these_options.wav"/>
         <action function="play-file" data="ivr/ivr-please.wav"/>
         <action function="play-file" data="voicemail/vm-press.wav"/>
         <action function="play-file" data="digits/9.wav"/>
-        <action function="execute" data="sleep(2000)"/>
+        <action function="play-file" data="silence_stream://2000"/>
       </match>
     </input>
   </macro>
 
   <!-- The following macro is the same as demo_ivr_main_menu except it is the "short" version -->
   <!-- The short version has all the options but not the initial greeting -->
-  <macro name="demo_ivr_main_menu_short" pause="250">
+  <macro name="demo_ivr_main_menu_short" pause="100">
     <input pattern="(.*)">
       <match>
         <!-- Menu option 1: Call FreeSWITCH conference-->
-        <action function="execute" data="sleep(1000)"/>
+        <action function="play-file" data="silence_stream://1000"/>
         <action function="play-file" data="ivr/ivr-to_call_the_freeswitch_conference.wav"/>
         <action function="play-file" data="ivr/ivr-please.wav"/>
         <action function="play-file" data="voicemail/vm-press.wav"/>
@@ -105,7 +106,7 @@
         <action function="play-file" data="ivr/ivr-please.wav"/>
         <action function="play-file" data="voicemail/vm-press.wav"/>
         <action function="play-file" data="digits/9.wav"/>
-        <action function="execute" data="sleep(2000)"/>
+        <action function="play-file" data="silence_stream://2000"/>
       </match>
     </input>
   </macro>
@@ -137,9 +138,8 @@
         <action function="play-file" data="ivr/ivr-please.wav"/>
         <action function="play-file" data="voicemail/vm-press.wav"/>
         <action function="play-file" data="digits/star.wav"/>
-
       </match>
     </input>
   </macro>
 
-</include><!--This line will be ignored it's here to validate the xml and is optional -->
+</include>
