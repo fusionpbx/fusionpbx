@@ -52,6 +52,14 @@
 				}
 			}
 
+		//change category security to extension
+			$sql = "UPDATE v_default_settings ";
+			$sql .= "SET default_setting_category = 'extension' ";
+			$sql .= "WHERE default_setting_category = 'security' ";
+			$sql .= "AND default_setting_subcategory like 'password_%' ";
+			$db->exec(check_sql($sql));
+			unset($sql);
+
 	}
 
 ?>
