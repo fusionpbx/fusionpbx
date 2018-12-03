@@ -3,7 +3,7 @@
 	<condition field="${user_exists}" expression="true"/>
 	<condition field="${follow_me_enabled}" expression="true"/>
 	<condition field="${forward_user_not_registered_enabled}" expression="true" break="never"/>
-	<condition field="${sofia_contact ${destination_number}@${domain_name}}" expression="error/user_not_registered" break="on-true">
+	<condition field="${sofia_contact */${destination_number}@${domain_name}}" expression="error/user_not_registered" break="on-true">
 		<action application="transfer" data="${forward_user_not_registered_destination} XML ${domain_name}"/>
 	</condition>
 	<condition field="${user_exists}" expression="true"/>
