@@ -106,7 +106,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "device_key_line, ";
 				$sql .= "device_key_value, ";
 				$sql .= "device_key_extension, ";
-				$sql .= "device_key_label ";
+				$sql .= "device_key_label, ";
                                 $sql .= "device_key_icon ";
 				$sql .= ")";
 				$sql .= "values ";
@@ -120,7 +120,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'$device_key_line', ";
 				$sql .= "'$device_key_value', ";
 				$sql .= "'$device_key_extension', ";
-				$sql .= "'$device_key_label' ";
+				$sql .= "'$device_key_label', ";
 				$sql .= "'$device_key_icon' ";
 				$sql .= ")";
 				$db->exec(check_sql($sql));
@@ -139,7 +139,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "device_key_line = '$device_key_line', ";
 				$sql .= "device_key_value = '$device_key_value', ";
 				$sql .= "device_key_extension = '$device_key_extension', ";
-				$sql .= "device_key_label = '$device_key_label' ";
+				$sql .= "device_key_label = '$device_key_label', ";
 				$sql .= "device_key_icon = '$device_key_icon' ";
 				$sql .= "where domain_uuid = '$domain_uuid' ";
 				$sql .= "and device_key_uuid = '$device_key_uuid' ";

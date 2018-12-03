@@ -272,7 +272,7 @@
 										}
 										$sql .= "device_key_type = '".$device_key_type."', ";
 										$sql .= "device_key_value = '".$device_key_value."', ";
-										$sql .= "device_key_label = '".$device_key_label."' ";
+										$sql .= "device_key_label = '".$device_key_label."', ";
 										$sql .= "device_key_icon = '".$device_key_icon."' ";
 										$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 										$sql .= "and device_key_uuid = '".$device_key_uuid."'; ";
