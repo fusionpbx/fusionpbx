@@ -1105,6 +1105,7 @@ include "root.php";
 										$device_keys[$k]['device_key_value'] = str_replace("\${".$name."}", $value, $field['device_key_value']);
 										$device_keys[$k]['device_key_extension'] = str_replace("\${".$name."}", $value, $field['device_key_extension']);
 										$device_keys[$k]['device_key_label'] = str_replace("\${".$name."}", $value, $field['device_key_label']);
+										$device_keys[$k]['device_key_icon'] = str_replace("\${".$name."}", $value, $field['device_key_icon']);										
 								}
 								else {
 									if (is_array($field)) {
@@ -1112,6 +1113,7 @@ include "root.php";
 											$device_keys[$k][$key]['device_key_value'] = str_replace("\${".$name."}", $value, $row['device_key_value']);
 											$device_keys[$k][$key]['device_key_extension'] = str_replace("\${".$name."}", $value, $row['device_key_extension']);
 											$device_keys[$k][$key]['device_key_label'] = str_replace("\${".$name."}", $value, $row['device_key_label']);
+											$device_keys[$k][$key]['device_key_icon'] = str_replace("\${".$name."}", $value, $row['device_key_icon']);											
 										}
 									}
 								}
@@ -1135,11 +1137,13 @@ include "root.php";
 									$device_key_value = $row['device_key_value']; //1
 									$device_key_extension = $row['device_key_extension'];
 									$device_key_label = $row['device_key_label']; //label
+									$device_key_icon = $row['device_key_icon']; //icon
 
 								//add general variables
 									$device_key_value = str_replace("\${domain_name}", $domain_name, $device_key_value);
 									$device_key_extension = str_replace("\${domain_name}", $domain_name, $device_key_extension);
 									$device_key_label = str_replace("\${domain_name}", $domain_name, $device_key_label);
+									$device_key_icon = str_replace("\${domain_name}", $domain_name, $device_key_icon);
 
 								//grandstream modes are different based on the category
 									if ($device_vendor == "grandstream") {
@@ -1189,6 +1193,7 @@ include "root.php";
 										$view->assign("key_value_".$device_key_id, $device_key_value);
 										$view->assign("key_extension_".$device_key_id, $device_key_extension);
 										$view->assign("key_label_".$device_key_id, $device_key_label);
+										$view->assign("key_icon_".$device_key_id, $device_key_icon);
 									}
 									else {
 										$view->assign($device_key_category."_key_id_".$device_key_id, $device_key_id);
@@ -1197,6 +1202,7 @@ include "root.php";
 										$view->assign($device_key_category."_key_value_".$device_key_id, $device_key_value);
 										$view->assign($device_key_category."_key_extension_".$device_key_id, $device_key_extension);
 										$view->assign($device_key_category."_key_label_".$device_key_id, $device_key_label);
+										$view->assign($device_key_category."_key_icon_".$device_key_id, $device_key_icon);
 									}
 							}
 						}

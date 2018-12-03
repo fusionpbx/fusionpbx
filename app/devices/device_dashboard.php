@@ -173,6 +173,7 @@
 								if (strlen($row["device_key_type"]) > 25) { $save = false; echo "type "; }
 								if (strlen($row["device_key_value"]) > 25) { $save = false; echo "value "; }
 								if (strlen($row["device_key_label"]) > 25) { $save = false; echo "label "; }
+								if (strlen($row["device_key_icon"]) > 25) { $save = false; echo "icon "; }
 
 							//escape characters in the string
 								$device_uuid = check_str($row["device_uuid"]);
