@@ -70,9 +70,8 @@
 		if (settings['recordings']['storage_path'] ~= nil) then
 			if (settings['recordings']['storage_path']['text'] ~= nil) then
 				storage_path = settings['recordings']['storage_path']['text'];
-				storage_path = storage_path:gsub("${domain_name}", domain_name);
-				storage_path = storage_path:gsub("${voicemail_id}", voicemail_id);
-				storage_path = storage_path:gsub("${voicemail_dir}", voicemail_dir);
+				storage_path = storage_path:gsub("${domain_name}",  session:getVariable("domain_name"));
+				storage_path = storage_path:gsub("${domain_uuid}", domain_uuid);
 			end
 		end
 	end
@@ -130,13 +129,13 @@
 			session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-recording_started.wav");
 			session:execute("set", "playback_terminators=#");
 
+		--make the directory
+			mkdir(recordings_dir);
+
 		--begin recording
 			if (storage_type == "base64") then
 				--include the file io
 					local file = require "resources.functions.file"
-
-				--make the directory
-					mkdir(recordings_dir);
 
 				--record the file to the file system
 					-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs);
@@ -152,6 +151,7 @@
 				freeswitch.consoleLog("notice", "[recordings] ".. storage_type .. " ".. storage_path .."\n");
 				session:execute("record", storage_path .."/"..recording_name);
 			else
+				freeswitch.consoleLog("notice", "[recordings] ".. storage_type .. " ".. recordings_dir .."\n");
 				-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs);
 				session:execute("record", "'"..recordings_dir.."/"..recording_name.."' 10800 500 500");
 			end
@@ -270,6 +270,9 @@ if ( session:ready() ) then
 	--add the domain name to the recordings directory
 		recordings_dir = recordings_dir .. "/"..domain_name;
 
+	--if a recording directory is specified, use that instead
+		if storage_path ~= nil then recordings_dir = storage_path; end
+	
 	--set the sounds path for the language, dialect and voice
 		default_language = session:getVariable("default_language");
 		default_dialect = session:getVariable("default_dialect");
