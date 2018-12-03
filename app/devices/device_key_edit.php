@@ -61,6 +61,7 @@ else {
 		$device_key_value = check_str($_POST["device_key_value"]);
 		$device_key_extension = check_str($_POST["device_key_extension"]);
 		$device_key_label = check_str($_POST["device_key_label"]);
+		$device_key_icon = check_str($_POST["device_key_icon"]);
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
@@ -106,6 +107,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "device_key_value, ";
 				$sql .= "device_key_extension, ";
 				$sql .= "device_key_label ";
+                                $sql .= "device_key_icon ";
 				$sql .= ")";
 				$sql .= "values ";
 				$sql .= "(";
@@ -119,6 +121,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'$device_key_value', ";
 				$sql .= "'$device_key_extension', ";
 				$sql .= "'$device_key_label' ";
+				$sql .= "'$device_key_icon' ";
 				$sql .= ")";
 				$db->exec(check_sql($sql));
 				unset($sql);
@@ -137,6 +140,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "device_key_value = '$device_key_value', ";
 				$sql .= "device_key_extension = '$device_key_extension', ";
 				$sql .= "device_key_label = '$device_key_label' ";
+				$sql .= "device_key_icon = '$device_key_icon' ";
 				$sql .= "where domain_uuid = '$domain_uuid' ";
 				$sql .= "and device_key_uuid = '$device_key_uuid' ";
 				$db->exec(check_sql($sql));
@@ -167,6 +171,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$device_key_value = $row["device_key_value"];
 			$device_key_extension = $row["device_key_extension"];
 			$device_key_label = $row["device_key_label"];
+			$device_key_icon = $row["device_key_icon"];
 		}
 		unset ($prep_statement);
 	}
@@ -541,6 +546,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<input class='formfld' type='text' name='device_key_label' maxlength='255' value=\"$device_key_label\">\n";
 	echo "<br />\n";
 	echo $text['description-device_key_label']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	
+        echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-device_key_icon']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='device_key_icon' maxlength='255' value=\"$device_key_icon\">\n";
+	echo "<br />\n";
+	echo $text['description-device_key_icon']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "	<tr>\n";

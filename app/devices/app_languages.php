@@ -2681,6 +2681,26 @@ $text['label-device_key_label']['ru-ru'] = "Метка";
 $text['label-device_key_label']['sv-se'] = "Etikett";
 $text['label-device_key_label']['uk-ua'] = "";
 
+$text['label-device_key_icon']['en-us'] = "ICON";
+$text['label-device_key_icon']['ar-eg'] = "";
+$text['label-device_key_icon']['de-at'] = "";
+$text['label-device_key_icon']['de-ch'] = "";
+$text['label-device_key_icon']['de-de'] = "";
+$text['label-device_key_icon']['es-cl'] = "";
+$text['label-device_key_icon']['es-mx'] = "";
+$text['label-device_key_icon']['fr-ca'] = "";
+$text['label-device_key_icon']['fr-fr'] = "";
+$text['label-device_key_icon']['he-il'] = "";
+$text['label-device_key_icon']['it-it'] = "";
+$text['label-device_key_icon']['nl-nl'] = "";
+$text['label-device_key_icon']['pl-pl'] = "";
+$text['label-device_key_icon']['pt-br'] = "";
+$text['label-device_key_icon']['pt-pt'] = "";
+$text['label-device_key_icon']['ro-ro'] = "";
+$text['label-device_key_icon']['ru-ru'] = "";
+$text['label-device_key_icon']['sv-se'] = "";
+$text['label-device_key_icon']['uk-ua'] = "";
+
 $text['label-device_key_id']['en-us'] = "Key";
 $text['label-device_key_id']['ar-eg'] = "";
 $text['label-device_key_id']['de-at'] = "Taste"; //copied from de-de
