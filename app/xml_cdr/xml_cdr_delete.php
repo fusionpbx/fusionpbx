@@ -51,7 +51,7 @@
 			foreach ($xml_cdr_uuids as $index => $xml_cdr_uuid) {
 				// delete record
 				$sql = "delete from v_xml_cdr ";
-				$sql .= "where uuid = '".$xml_cdr_uuid."' ";
+				$sql .= "where xml_cdr_uuid = '".$xml_cdr_uuid."' ";
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				unset($sql, $prep_statement);

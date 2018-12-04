@@ -52,19 +52,20 @@
 	require_once "resources/header.php";
 
 //send the call
-	if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])) {
+	if (is_array($_GET) && isset($_GET['src']) && isset($_GET['dest'])) {
+
 		//retrieve submitted variables
-			$src = check_str($_REQUEST['src']);
-			$src_cid_name = check_str($_REQUEST['src_cid_name']);
-			$src_cid_number = check_str($_REQUEST['src_cid_number']);
+			$src = check_str($_GET['src']);
+			$src_cid_name = check_str($_GET['src_cid_name']);
+			$src_cid_number = check_str($_GET['src_cid_number']);
 
-			$dest = check_str($_REQUEST['dest']);
-			$dest_cid_name = check_str($_REQUEST['dest_cid_name']);
-			$dest_cid_number = check_str($_REQUEST['dest_cid_number']);
+			$dest = check_str($_GET['dest']);
+			$dest_cid_name = check_str($_GET['dest_cid_name']);
+			$dest_cid_number = check_str($_GET['dest_cid_number']);
 
-			$auto_answer = check_str($_REQUEST['auto_answer']); //true,false
-			$rec = check_str($_REQUEST['rec']); //true,false
-			$ringback = check_str($_REQUEST['ringback']);
+			$auto_answer = check_str($_GET['auto_answer']); //true,false
+			$rec = check_str($_GET['rec']); //true,false
+			$ringback = check_str($_GET['ringback']);
 			$context = $_SESSION['context'];
 
 		//clean up variable values
@@ -250,7 +251,7 @@
 
 	echo "	<br />";
 
-	echo "<form>\n";
+	echo "<form method=\"get\">\n";
 	echo "<table border='0' width='100%' cellpadding='0' cellspacing='0'\n";
 	echo "<tr>\n";
 	echo "	<td class='vncellreq' width='40%'>".$text['label-src-caller-id-nam']."</td>\n";
