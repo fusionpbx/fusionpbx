@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -50,7 +50,7 @@
 //set the variables
 	$order_by = check_str($_GET["order_by"]);
 	$order = check_str($_GET["order"]);
-	$search_value = check_str($_REQUEST["search_value"]);
+	$search = check_str($_REQUEST["search"]);
 
 //get the list of superadmins
 	$superadmins = superadmin_list($db);
@@ -97,8 +97,9 @@
 	unset($prep_statement, $row);
 
 //get the users from the database (reuse $sql from above)
-	if (strlen($search_value) > 0) {
-		$sql .= "and username = '".$search_value."' ";
+	if (strlen($search) > 0) {
+		$search = strtolower($search);
+		$sql .= "and lower(username) = '".$search."' ";
 	}
 	if (strlen($order_by) > 0) { $sql .= "order by ".$order_by." ".$order." "; }
 	$prep_statement = $db->prepare($sql);
@@ -114,7 +115,7 @@
 	}
 	unset ($prep_statement, $result, $sql);
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "search=".escape($search_value);
+	$param = "search=".escape($search);
 	if (permission_exists('user_all') && $_GET['show'] == 'all') {
 		$param .= "&show=all";
 	}
@@ -127,8 +128,8 @@
 	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
 		$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	}
-	if (strlen($search_value) > 0) {
-		$sql .= "and username like '%".$search_value."%' ";
+	if (strlen($search) > 0) {
+		$sql .= "and lower(username) like '%".$search."%' ";
 	}
 	if (strlen($order_by)> 0) {
 		$sql .= "order by ".$order_by." ".$order." ";
@@ -161,7 +162,7 @@
 	if (permission_exists('user_import')) {
 		echo 				"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='user_imports.php'\" value='".$text['button-import']."'>\n";
 	}
-	echo 	"<input type='text' class='txt' style='width: 150px; margin-left: 15px; margin-right: 3px;' name='search_value' value=\"".escape($search_value)."\">";
+	echo 	"<input type='text' class='txt' style='width: 150px; margin-left: 15px; margin-right: 3px;' name='search' value=\"".escape($search)."\">";
 	echo 	"<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	echo "</td>";
 	echo "</tr>\n";
