@@ -617,6 +617,9 @@ include "root.php";
 							$templates['snom370-SIP'] = 'snom/370';
 							$templates['snom820-SIP'] = 'snom/820';
 							$templates['snom-m3-SIP'] = 'snom/m3';
+							
+							$templates['Fanvil X6'] = 'fanvil/x6';
+							$templates['Fanvil i30'] = 'fanvil/i30';
 
 							$templates['yealink SIP-CP860'] = 'yealink/cp860';
 #							$templates['yealink SIP-CP860'] = 'yealink/cp920';							
