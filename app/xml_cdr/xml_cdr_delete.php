@@ -57,11 +57,11 @@
 				unset($sql, $prep_statement);
 				//delete recording from fs and v_call_recordings respectively, if any
 				if ($recording_file_path[$index] != '' ) {
-                    $sql = "delete from v_call_recordings ";
-                    $sql .= "where call_recording_uuid = '".$xml_cdr_uuid."' ";
-                    $prep_statement = $db->prepare(check_sql($sql));
-                    $prep_statement->execute();
-                    unset($sql, $prep_statement);
+					$sql = "delete from v_call_recordings ";
+					$sql .= "where call_recording_uuid = '".$xml_cdr_uuid."' ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					unset($sql, $prep_statement);
 					if (file_exists(base64_decode($recording_file_path[$index]))) {
 						@unlink(base64_decode($recording_file_path[$index]));
 					}
