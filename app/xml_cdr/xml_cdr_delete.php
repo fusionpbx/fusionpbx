@@ -49,15 +49,22 @@
 
 		if (sizeof($xml_cdr_uuids) > 0) {
 			foreach ($xml_cdr_uuids as $index => $xml_cdr_uuid) {
-				// delete record
+				// delete record from v_xml_cdr
 				$sql = "delete from v_xml_cdr ";
 				$sql .= "where xml_cdr_uuid = '".$xml_cdr_uuid."' ";
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				unset($sql, $prep_statement);
-				//delete recording, if any
-				if ($recording_file_path[$index] != '' && file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].base64_decode($recording_file_path[$index]))) {
-					@unlink($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].base64_decode($recording_file_path[$index]));
+				//delete recording from fs and v_call_recordings respectively, if any
+				if ($recording_file_path[$index] != '' ) {
+                    $sql = "delete from v_call_recordings ";
+                    $sql .= "where call_recording_uuid = '".$xml_cdr_uuid."' ";
+                    $prep_statement = $db->prepare(check_sql($sql));
+                    $prep_statement->execute();
+                    unset($sql, $prep_statement);
+					if (file_exists(base64_decode($recording_file_path[$index]))) {
+						@unlink(base64_decode($recording_file_path[$index]));
+					}
 				}
 			}
 		}
