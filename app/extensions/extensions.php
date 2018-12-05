@@ -56,12 +56,13 @@
 //handle search term
 	$search = check_str($_GET["search"]);
 	if (strlen($search) > 0) {
+		$search = strtolower($search);
 		$sql_search = "and ( ";
-		$sql_search .= "extension like '%".$search."%' ";
-		$sql_search .= "or call_group like '%".$search."%' ";
-		$sql_search .= "or user_context like '%".$search."%' ";
-		$sql_search .= "or enabled like '%".$search."%' ";
-		$sql_search .= "or description like '%".$search."%' ";
+		$sql_search .= "lower(extension) like '%".$search."%' ";
+		$sql_search .= "or lower(call_group) like '%".$search."%' ";
+		$sql_search .= "or lower(user_context) like '%".$search."%' ";
+		$sql_search .= "or lower(enabled) like '%".$search."%' ";
+		$sql_search .= "or lower(description) like '%".$search."%' ";
 		$sql_search .= ") ";
 	}
 
