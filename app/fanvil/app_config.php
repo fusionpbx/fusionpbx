@@ -54,7 +54,7 @@
 		$y++;
                 $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a9e4cb6c-4d22-44d8-88a3-e556a5b16c59";
                 $apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-                $apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_enable_DST";
+                $apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_enable_dst";
                 $apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
                 $apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
                 $apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
@@ -62,7 +62,7 @@
                 $y++;
                 $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "983a969a-f96f-469f-8af2-ccbd6e3d62f6";
                 $apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-                $apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_DST_fixed_type";
+                $apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_dst_fixed_type";
                 $apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
                 $apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
                 $apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
@@ -70,7 +70,7 @@
                 $y++;
                 $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0c5fe247-0361-4c69-a247-d14b5417e53e";
                 $apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-                $apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_DST_Minute_offset";
+                $apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_dst_minute_offset";
                 $apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
                 $apps[$x]['default_settings'][$y]['default_setting_value'] = "60";
                 $apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
