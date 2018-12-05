@@ -3,6 +3,11 @@
 {if $smarty.get.contacts == "users" && $row.category == "users"}
 	<DirectoryEntry>
 	{if $row.contact_name_given != ""}
+		{if $row.contact_organization != ""}
+			<Name>{$row.contact_organization} {$row.contact_name_given} {$row.contact_name_family}</Name>
+		{else}
+			<Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
+		{/if}
 		<Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
 	{else}
 		<Name>{$row.effective_caller_id_name}</Name>
@@ -19,7 +24,11 @@
 {elseif $smarty.get.contacts == "groups" && $row.category == "groups"}
 	<DirectoryEntry>
 	{if $row.contact_name_given != ""}
-		<Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
+		{if $row.contact_organization != ""}
+			<Name>{$row.contact_organization} {$row.contact_name_given} {$row.contact_name_family}</Name>
+		{else}
+			<Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
+		{/if}
 	{else}
 		<Name>{$row.effective_caller_id_name}</Name>
 	{/if}
@@ -48,7 +57,11 @@
 {elseif $smarty.get.contacts == "all"}
 	<DirectoryEntry>
 	{if $row.contact_name_given != ""}
-		<Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
+		{if $row.contact_organization != ""}
+			<Name>{$row.contact_organization} {$row.contact_name_given} {$row.contact_name_family}</Name>
+		{else}
+			<Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
+		{/if}
 	{else}
 		<Name>{$row.effective_caller_id_name}</Name>
 	{/if}
