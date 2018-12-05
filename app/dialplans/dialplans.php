@@ -112,16 +112,17 @@
 		$sql .= "and app_uuid = '".$app_uuid."' ";
 	}
 	if (strlen($search) > 0) {
+		$search = strtolower($search);
 		$sql .= "and (";
-		$sql .= " 	dialplan_context like '%".$search."%' ";
-		$sql .= " 	or dialplan_name like '%".$search."%' ";
+		$sql .= " 	lower(dialplan_context) like '%".$search."%' ";
+		$sql .= " 	or lower(dialplan_name) like '%".$search."%' ";
 		$sql .= " 	or dialplan_number like '%".$search."%' ";
 		$sql .= " 	or dialplan_continue like '%".$search."%' ";
 		if (is_numeric($search)) {
 			$sql .= " 	or dialplan_order = '".$search."' ";
 		}
 		$sql .= " 	or dialplan_enabled like '%".$search."%' ";
-		$sql .= " 	or dialplan_description like '%".$search."%' ";
+		$sql .= " 	or lower(dialplan_description) like '%".$search."%' ";
 		$sql .= ") ";
 	}
 	$prep_statement = $db->prepare(check_sql($sql));
