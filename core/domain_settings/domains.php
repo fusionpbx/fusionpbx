@@ -143,9 +143,10 @@
 //get the domains
 	$sql = "select * from v_domains ";
 	if (strlen($search) > 0) {
+		$search = strtolower($search);
 		$sql .= "where (";
-		$sql .= "	domain_name like '%".$search."%' ";
-		$sql .= "	or domain_description like '%".$search."%' ";
+		$sql .= "	lower(domain_name) like '%".$search."%' ";
+		$sql .= "	or lower(domain_description) like '%".$search."%' ";
 		$sql .= ") ";
 	}
 	if (strlen($order_by) == 0) {

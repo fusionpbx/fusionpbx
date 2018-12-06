@@ -150,6 +150,7 @@
 			$array['dialplans'][$x]['hostname'] = $hostname;
 			$array['dialplans'][$x]['dialplan_name'] = $dialplan_name;
 			$array['dialplans'][$x]['dialplan_number'] = $_POST["dialplan_number"];
+			$array['dialplans'][$x]['dialplan_destination'] = $_POST["dialplan_destination"];
 			$array['dialplans'][$x]['dialplan_context'] = $_POST["dialplan_context"];
 			$array['dialplans'][$x]['dialplan_continue'] = $_POST["dialplan_continue"];
 			$array['dialplans'][$x]['dialplan_order'] = $_POST["dialplan_order"];
@@ -223,6 +224,7 @@
 			$hostname = $row["hostname"];
 			$dialplan_name = $row["dialplan_name"];
 			$dialplan_number = $row["dialplan_number"];
+			$dialplan_destination = $row["dialplan_destination"];
 			$dialplan_order = $row["dialplan_order"];
 			$dialplan_continue = $row["dialplan_continue"];
 			$dialplan_context = $row["dialplan_context"];
@@ -239,6 +241,10 @@
 	if (strlen($dialplan_order) == 0) {
 		$dialplan_order = '200';
 	}
+	if (strlen($dialplan_destination) == 0) {
+		$dialplan_destination = 'false';
+	}
+
 
 //get the dialplan details in an array
 	$sql = "select * from v_dialplan_details ";
@@ -459,6 +465,7 @@
 	echo "<td width='50%' style='vertical-align: top;'>\n";
 
 	echo "	<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+
 	echo "	<tr>\n";
 	echo "	<td class='vncellreq' valign='top' align='left' nowrap='nowrap' width='30%'>\n";
 	echo "		".$text['label-order']."\n";
@@ -481,6 +488,29 @@
 	}
 	echo "		</select>\n";
 	echo "		<br />\n";
+	echo "	</td>\n";
+	echo "	</tr>\n";
+
+	echo "	<tr>\n";
+	echo "	<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "		".$text['label-destination']."\n";
+	echo "	</td>\n";
+	echo "	<td class='vtable' align='left'>\n";
+	echo "		<select class='formfld' name='dialplan_destination'>\n";
+	echo "			<option value=''></option>\n";
+	if ($dialplan_destination == "true") {
+		echo "			<option value='true' selected='selected'>".$text['option-true']."</option>\n";
+	}
+	else {
+		echo "			<option value='true'>".$text['option-true']."</option>\n";
+	}
+	if ($dialplan_destination == "false") {
+		echo "			<option value='false' selected='selected'>".$text['option-false']."</option>\n";
+	}
+	else {
+		echo "			<option value='false'>".$text['option-false']."</option>\n";
+	}
+	echo "		</select>\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 
@@ -539,9 +569,11 @@
 	echo "		".$text['label-description']."\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' align='left' width='70%'>\n";
-	echo "		<textarea class='formfld' style='width: 250px; height: 68px;' name='dialplan_description'>".escape($dialplan_description)."</textarea>\n";
+	//echo "		<textarea class='formfld' style='width: 250px;' name='dialplan_description'>".escape($dialplan_description)."</textarea>\n";
+	echo "		<input class='formfld' type='text' name='dialplan_description' maxlength='255' value=\"".escape($dialplan_description)."\">\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
+
 	echo "	</table>\n";
 
 	echo "</td>";
