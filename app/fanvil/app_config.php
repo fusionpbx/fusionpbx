@@ -430,6 +430,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Filename of the X6 firmware ROM";
 		$y++;
+                $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c6842526-ca39-47f1-85af-1c4448b2fbd4";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_egs_switch_open_duration";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Time to hold switch in open position in seconds. ";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4b7f56f3-31a9-46dd-b588-35b253024b1f";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_egs_switch_mode";
