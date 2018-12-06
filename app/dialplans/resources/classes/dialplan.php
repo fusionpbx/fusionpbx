@@ -93,7 +93,8 @@ include "root.php";
 				$sql .= "dialplan_order, ";
 				$sql .= "dialplan_context, ";
 				$sql .= "dialplan_enabled, ";
-				$sql .= "dialplan_description ";
+				$sql .= "dialplan_description, ";
+				$sql .= "dialplan_destination ";
 				$sql .= ")";
 				$sql .= "values ";
 				$sql .= "(";
@@ -111,7 +112,8 @@ include "root.php";
 				$sql .= "'".check_str($this->dialplan_order)."', ";
 				$sql .= "'".check_str($this->dialplan_context)."', ";
 				$sql .= "'".check_str($this->dialplan_enabled)."', ";
-				$sql .= "'".check_str($this->dialplan_description)."' ";
+				$sql .= "'".check_str($this->dialplan_description)."', ";
+				$sql .= "'".check_str($this->dialplan_destination)."' ";
 				$sql .= ")";
 				$this->db->exec(check_sql($sql));
 				unset($sql);
@@ -347,6 +349,9 @@ include "root.php";
 								else {
 									$this->dialplan_enabled = "true";
 								}
+								if (strlen($dialplan['extension']['@attributes']['destination']) > 0) {
+									$this->dialplan_destination = $dialplan['extension']['@attributes']['destination'];
+								}								
 								$this->dialplan_description = '';
 								$this->dialplan_add();
 							//loop through the condition array
