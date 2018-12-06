@@ -2144,7 +2144,18 @@
 <!-- Repeater mode only support Europe region in 1.0.2.16. -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
+{if isset($grandstream_repeater_mode_enable) }
+<P20002>{$grandstream_repeater_mode_enable}</P20002>
+{else}
 <P20002>0</P20002>
+{/if}
+
+<!-- Enable Repeater Management. 0 - No, 1 - Yes. Default is 0. -->
+{if isset($grandstream_repeater_management_enable) }
+<P27019>{$grandstream_repeater_management_enable}</P27019>
+{else}
+<P27019>0</P27019>
+{/if}
 
 <!-- Handset name. Displaying in handset screen. -->
 <!-- Strings: maximum 10 characters. -->
@@ -2157,11 +2168,11 @@
 
 <!-- Handset Phonebook. 1 - PB1, 2 - PB2, 3 - PB3, 4 - PB4, 5 - PB5 -->
 <!-- Mandatory -->
-<P27040>PB1</P27040>
-<P27041>PB2</P27041>
-<P27042>PB3</P27042>
-<P27043>PB4</P27043>
-<P27044>PB5</P27044>
+<P27040>1</P27040>
+<P27041>2</P27041>
+<P27042>3</P27042>
+<P27043>4</P27043>
+<P27044>5</P27044>
 
 <!-- Offhook Auto-dial destination number. If configure this, the handset will auto-dial when offhook.  -->
 <P4210></P4210>
@@ -2239,6 +2250,18 @@
 <!-- HS Mode. Set the hanging group mode for handset, set 1 - 5 to non-hanging group mode. -->
 <!-- Number: 1 - 5; 101 - 104. 1 - HS1, 2 - HS2, 3 - HS3, 4 - HS4, 5 - HS5; 101 - Circular, 102 - Linear, 103 - Parallel, 104 - Shared. Default is 101. -->
 <!-- Mandatory -->
+{if isset($grandstream_hanging_group_mode) }
+<P27080>{$grandstream_hanging_group_mode}</P27080>
+<P27081>{$grandstream_hanging_group_mode}</P27081>
+<P27082>{$grandstream_hanging_group_mode}</P27082>
+<P27083>{$grandstream_hanging_group_mode}</P27083>
+<P27084>{$grandstream_hanging_group_mode}</P27084>
+<P27085>{$grandstream_hanging_group_mode}</P27085>
+<P27086>{$grandstream_hanging_group_mode}</P27086>
+<P27087>{$grandstream_hanging_group_mode}</P27087>
+<P27088>{$grandstream_hanging_group_mode}</P27088>
+<P27089>{$grandstream_hanging_group_mode}</P27089>
+{else}
 <P27080>101</P27080>
 <P27081>101</P27081>
 <P27082>101</P27082>
@@ -2249,6 +2272,7 @@
 <P27087>101</P27087>
 <P27088>101</P27088>
 <P27089>101</P27089>
+{/if}
 
 <!-- Active. Configure if the account is active or disabled. 0 - Disabled, 1 - Active. -->
 <!-- Number: 0, 1. Default is 1. -->
@@ -2270,68 +2294,268 @@
 <!-- Handset Line Settings -->
 <!-- HS 1 Line Settings -->
 <!-- Number: 0 - 10, according with None and account 1 - 10. First line Default is 1 (account 1), other line have default is 0 - NULL. -->
+{if isset($grandstream_handset_1_line_1_enable) }
+<P4300>{$grandstream_handset_1_line_1_enable}</P4300>
+{else}
 <P4300>1</P4300>
+{/if}
+{if isset($grandstream_handset_1_line_2_enable) }
+<P4301>{$grandstream_handset_1_line_2_enable}</P4301>
+{else}
 <P4301>0</P4301>
+{/if}
+{if isset($grandstream_handset_1_line_3_enable) }
+<P4302>{$grandstream_handset_1_line_3_enable}</P4302>
+{else}
 <P4302>0</P4302>
+{/if}
+{if isset($grandstream_handset_1_line_4_enable) }
+<P4303>{$grandstream_handset_1_line_4_enable}</P4303>
+{else}
 <P4303>0</P4303>
+{/if}
+{if isset($grandstream_handset_1_line_5_enable) }
+<P4304>{$grandstream_handset_1_line_5_enable}</P4304>
+{else}
 <P4304>0</P4304>
+{/if}
+{if isset($grandstream_handset_1_line_6_enable) }
+<P4305>{$grandstream_handset_1_line_6_enable}</P4305>
+{else}
 <P4305>0</P4305>
+{/if}
+{if isset($grandstream_handset_1_line_7_enable) }
+<P4306>{$grandstream_handset_1_line_7_enable}</P4306>
+{else}
 <P4306>0</P4306>
+{/if}
+{if isset($grandstream_handset_1_line_8_enable) }
+<P4307>{$grandstream_handset_1_line_8_enable}</P4307>
+{else}
 <P4307>0</P4307>
+{/if}
+{if isset($grandstream_handset_1_line_9_enable) }
+<P4308>{$grandstream_handset_1_line_9_enable}</P4308>
+{else}
 <P4308>0</P4308>
+{/if}
+{if isset($grandstream_handset_1_line_10_enable) }
+<P4309>{$grandstream_handset_1_line_10_enable}</P4309>
+{else}
 <P4309>0</P4309>
+{/if}
 
 <!-- HS 2 Line Settings -->
 <!-- Number: 0 - 10, according with None and account 1 - 10. First line Default is 1 (account 1), other line have default is 0 - NULL. -->
+{if isset($grandstream_handset_2_line_1_enable) }
+<P4310>{$grandstream_handset_2_line_1_enable}</P4310>
+{else}
 <P4310>1</P4310>
+{/if}
+{if isset($grandstream_handset_2_line_2_enable) }
+<P4311>{$grandstream_handset_2_line_2_enable}</P4311>
+{else}
 <P4311>0</P4311>
+{/if}
+{if isset($grandstream_handset_2_line_3_enable) }
+<P4312>{$grandstream_handset_2_line_3_enable}</P4312>
+{else}
 <P4312>0</P4312>
+{/if}
+{if isset($grandstream_handset_2_line_4_enable) }
+<P4313>{$grandstream_handset_2_line_4_enable}</P4313>
+{else}
 <P4313>0</P4313>
+{/if}
+{if isset($grandstream_handset_2_line_5_enable) }
+<P4314>{$grandstream_handset_2_line_5_enable}</P4314>
+{else}
 <P4314>0</P4314>
+{/if}
+{if isset($grandstream_handset_2_line_6_enable) }
+<P4315>{$grandstream_handset_2_line_6_enable}</P4315>
+{else}
 <P4315>0</P4315>
+{/if}
+{if isset($grandstream_handset_2_line_7_enable) }
+<P4316>{$grandstream_handset_2_line_7_enable}</P4316>
+{else}
 <P4316>0</P4316>
+{/if}
+{if isset($grandstream_handset_2_line_8_enable) }
+<P4317>{$grandstream_handset_2_line_8_enable}</P4317>
+{else}
 <P4317>0</P4317>
+{/if}
+{if isset($grandstream_handset_2_line_9_enable) }
+<P4318>{$grandstream_handset_2_line_9_enable}</P4318>
+{else}
 <P4318>0</P4318>
+{/if}
+{if isset($grandstream_handset_2_line_10_enable) }
+<P4319>{$grandstream_handset_2_line_10_enable}</P4319>
+{else}
 <P4319>0</P4319>
+{/if}
 
 <!-- HS 3 Line Settings -->
 <!-- Number: 0 - 10, according with None and account 1 - 10. First line Default is 1 (account 1), other line have default is 0 - NULL. -->
+{if isset($grandstream_handset_3_line_1_enable) }
+<P4320>{$grandstream_handset_3_line_1_enable}</P4320>
+{else}
 <P4320>1</P4320>
+{/if}
+{if isset($grandstream_handset_3_line_2_enable) }
+<P4321>{$grandstream_handset_3_line_2_enable}</P4321>
+{else}
 <P4321>0</P4321>
+{/if}
+{if isset($grandstream_handset_3_line_3_enable) }
+<P4322>{$grandstream_handset_3_line_3_enable}</P4322>
+{else}
 <P4322>0</P4322>
+{/if}
+{if isset($grandstream_handset_3_line_4_enable) }
+<P4323>{$grandstream_handset_3_line_4_enable}</P4323>
+{else}
 <P4323>0</P4323>
+{/if}
+{if isset($grandstream_handset_3_line_5_enable) }
+<P4324>{$grandstream_handset_3_line_5_enable}</P4324>
+{else}
 <P4324>0</P4324>
+{/if}
+{if isset($grandstream_handset_3_line_6_enable) }
+<P4325>{$grandstream_handset_3_line_6_enable}</P4325>
+{else}
 <P4325>0</P4325>
+{/if}
+{if isset($grandstream_handset_3_line_7_enable) }
+<P4326>{$grandstream_handset_3_line_7_enable}</P4326>
+{else}
 <P4326>0</P4326>
+{/if}
+{if isset($grandstream_handset_3_line_8_enable) }
+<P4327>{$grandstream_handset_3_line_8_enable}</P4327>
+{else}
 <P4327>0</P4327>
+{/if}
+{if isset($grandstream_handset_3_line_9_enable) }
+<P4328>{$grandstream_handset_3_line_9_enable}</P4328>
+{else}
 <P4328>0</P4328>
+{/if}
+{if isset($grandstream_handset_3_line_10_enable) }
+<P4329>{$grandstream_handset_3_line_10_enable}</P4329>
+{else}
 <P4329>0</P4329>
+{/if}
 
 <!-- HS 4 Line Settings -->
 <!-- Number: 0 - 10, according with None and account 1 - 10. First line Default is 1 (account 1), other line have default is 0 - NULL. -->
+{if isset($grandstream_handset_4_line_1_enable) }
+<P4250>{$grandstream_handset_4_line_1_enable}</P4250>
+{else}
 <P4250>1</P4250>
+{/if}
+{if isset($grandstream_handset_4_line_2_enable) }
+<P4251>{$grandstream_handset_4_line_2_enable}</P4251>
+{else}
 <P4251>0</P4251>
+{/if}
+{if isset($grandstream_handset_4_line_3_enable) }
+<P21320>{$grandstream_handset_4_line_3_enable}</P21320>
+{else}
 <P21320>0</P21320>
+{/if}
+{if isset($grandstream_handset_4_line_4_enable) }
+<P21321>{$grandstream_handset_4_line_4_enable}</P21321>
+{else}
 <P21321>0</P21321>
+{/if}
+{if isset($grandstream_handset_4_line_5_enable) }
+<P21322>{$grandstream_handset_4_line_5_enable}</P21322>
+{else}
 <P21322>0</P21322>
+{/if}
+{if isset($grandstream_handset_4_line_6_enable) }
+<P21323>{$grandstream_handset_4_line_6_enable}</P21323>
+{else}
 <P21323>0</P21323>
+{/if}
+{if isset($grandstream_handset_4_line_7_enable) }
+<P21324>{$grandstream_handset_4_line_7_enable}</P21324>
+{else}
 <P21324>0</P21324>
+{/if}
+{if isset($grandstream_handset_4_line_8_enable) }
+<P21325>{$grandstream_handset_4_line_8_enable}</P21325>
+{else}
 <P21325>0</P21325>
+{/if}
+{if isset($grandstream_handset_4_line_9_enable) }
+<P21326>{$grandstream_handset_4_line_9_enable}</P21326>
+{else}
 <P21326>0</P21326>
+{/if}
+{if isset($grandstream_handset_4_line_10_enable) }
+<P21327>{$grandstream_handset_4_line_10_enable}</P21327>
+{else}
 <P21327>0</P21327>
+{/if}
 
 <!-- HS 5 Line Settings -->
 <!-- Number: 0 - 10, according with None and account 1 - 10. First line Default is 1 (account 1), other line have default is 0 - NULL. -->
+{if isset($grandstream_handset_5_line_1_enable) }
+<P21328>{$grandstream_handset_5_line_1_enable}</P21328>
+{else}
 <P21328>1</P21328>
+{/if}
+{if isset($grandstream_handset_5_line_2_enable) }
+<P21329>{$grandstream_handset_5_line_2_enable}</P21329>
+{else}
 <P21329>0</P21329>
+{/if}
+{if isset($grandstream_handset_5_line_3_enable) }
+<P21330>{$grandstream_handset_5_line_3_enable}</P21330>
+{else}
 <P21330>0</P21330>
+{/if}
+{if isset($grandstream_handset_5_line_4_enable) }
+<P21331>{$grandstream_handset_5_line_4_enable}</P21331>
+{else}
 <P21331>0</P21331>
+{/if}
+{if isset($grandstream_handset_5_line_5_enable) }
+<P21332>{$grandstream_handset_5_line_5_enable}</P21332>
+{else}
 <P21332>0</P21332>
+{/if}
+{if isset($grandstream_handset_5_line_6_enable) }
+<P21333>{$grandstream_handset_5_line_6_enable}</P21333>
+{else}
 <P21333>0</P21333>
+{/if}
+{if isset($grandstream_handset_5_line_7_enable) }
+<P21334>{$grandstream_handset_5_line_7_enable}</P21334>
+{else}
 <P21334>0</P21334>
+{/if}
+{if isset($grandstream_handset_5_line_8_enable) }
+<P21335>{$grandstream_handset_5_line_8_enable}</P21335>
+{else}
 <P21335>0</P21335>
+{/if}
+{if isset($grandstream_handset_5_line_9_enable) }
+<P21336>{$grandstream_handset_5_line_9_enable}</P21336>
+{else}
 <P21336>0</P21336>
+{/if}
+{if isset($grandstream_handset_5_line_10_enable) }
+<P21337>{$grandstream_handset_5_line_10_enable}</P21337>
+{else}
 <P21337>0</P21337>
+{/if}
 
 <!-- ############### -->
 <!-- #  Settings  ## -->
