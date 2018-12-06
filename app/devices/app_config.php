@@ -2846,38 +2846,6 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
-		$vendors[$y]['functions'][$z]['uuid'] = "dcb10855-c3cf-4dd6-8ef6-8acc5f22df60";
-		$vendors[$y]['functions'][$z]['label'] = "label-dtmf";
-		$vendors[$y]['functions'][$z]['name'] = "dtmf";
-		$vendors[$y]['functions'][$z]['value'] = "4";
-		$vendors[$y]['functions'][$z]['description'] = "Redial via DTMF - You can press the key during a call to send the configured number sequence to the remote end.";
-		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
-		$vendors[$y]['functions'][$z]['groups'][] = "admin";
-		$z++;
-		$vendors[$y]['functions'][$z]['uuid'] = "000882b9-3c02-4e63-b235-13e0745bd230";
-		$vendors[$y]['functions'][$z]['label'] = "label-blf_list";
-		$vendors[$y]['functions'][$z]['name'] = "blf_list";
-		$vendors[$y]['functions'][$z]['value'] = "13";
-		$vendors[$y]['functions'][$z]['description'] = "Subscribe to BLF Group on Broadsoft Server.";
-		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
-		$vendors[$y]['functions'][$z]['groups'][] = "admin";
-		$z++;
-		$vendors[$y]['functions'][$z]['uuid'] = "8b42f992-33b8-4320-9b0f-9d904acfa088";
-		$vendors[$y]['functions'][$z]['label'] = "label-url";
-		$vendors[$y]['functions'][$z]['name'] = "url";
-		$vendors[$y]['functions'][$z]['value'] = "7";
-		$vendors[$y]['functions'][$z]['description'] = "URL Address to Visit";
-		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
-		$vendors[$y]['functions'][$z]['groups'][] = "admin";
-		$z++;
-		$vendors[$y]['functions'][$z]['uuid'] = "335176a5-f06e-4ccf-827e-1f65e839b6f3";
-		$vendors[$y]['functions'][$z]['label'] = "label-multicast";
-		$vendors[$y]['functions'][$z]['name'] = "multicast";
-		$vendors[$y]['functions'][$z]['value'] = "14";
-		$vendors[$y]['functions'][$z]['description'] = "Transmit RTP streams via multicast group. Value=maddress Subtype=codec";
-		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
-		$vendors[$y]['functions'][$z]['groups'][] = "admin";
-		$z++;
 		$vendors[$y]['functions'][$z]['uuid'] = "5fc20c48-e619-4671-86d1-3fa88a83d88c";
 		$vendors[$y]['functions'][$z]['label'] = "label-intercom";
 		$vendors[$y]['functions'][$z]['name'] = "intercom";
@@ -2889,7 +2857,7 @@
 		$vendors[$y]['functions'][$z]['uuid'] = "1cc1b4ff-52cd-4ea7-ab15-5930fc530fec";
 		$vendors[$y]['functions'][$z]['label'] = "label-call_park";
 		$vendors[$y]['functions'][$z]['name'] = "call_park";
-		$vendors[$y]['functions'][$z]['value'] = "9";
+		$vendors[$y]['functions'][$z]['value'] = "c";
 		$vendors[$y]['functions'][$z]['description'] = "If you need to move to another place during a call, use this function.";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
@@ -2897,7 +2865,7 @@
 		$vendors[$y]['functions'][$z]['uuid'] = "330ac56c-c87e-4a65-a0bd-5f8332faeeab";
 		$vendors[$y]['functions'][$z]['label'] = "label-call_forward";
 		$vendors[$y]['functions'][$z]['name'] = "call_forward";
-		$vendors[$y]['functions'][$z]['value'] = "10";
+		$vendors[$y]['functions'][$z]['value'] = "a";
                 $vendors[$y]['functions'][$z]['description'] = "When receiving a call, you can press the key to transfer the call to the specified number.";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
@@ -2926,7 +2894,6 @@
                 $vendors[$y]['functions'][$z]['groups'][] = "superadmin";
                 $vendors[$y]['functions'][$z]['groups'][] = "admin";
                 $z++;
-                
                 $vendors[$y]['functions'][$z]['uuid'] = "55b0a1df-a9a1-48c7-9665-e84925631a6d";
                 $vendors[$y]['functions'][$z]['label'] = "label-blf_axfer";
                 $vendors[$y]['functions'][$z]['name'] = "blf_axfer";
@@ -2935,21 +2902,7 @@
                 $vendors[$y]['functions'][$z]['groups'][] = "superadmin";
                 $vendors[$y]['functions'][$z]['groups'][] = "admin";
                 $z++;
-                $vendors[$y]['functions'][$z]['uuid'] = "b0a940ee-5686-448b-8312-74b700d721c9";
-                $vendors[$y]['functions'][$z]['label'] = "label-action_url_post";
-                $vendors[$y]['functions'][$z]['name'] = "action_url_post";
-                $vendors[$y]['functions'][$z]['value'] = "20_post";
-                $vendors[$y]['functions'][$z]['description'] = "Http Post Event";
-                $vendors[$y]['functions'][$z]['groups'][] = "superadmin";
-                $vendors[$y]['functions'][$z]['groups'][] = "admin";
-                $z++;
-                $vendors[$y]['functions'][$z]['uuid'] = "cfd70620-245a-4277-a02a-0c2d154a2808";
-                $vendors[$y]['functions'][$z]['label'] = "label-action_url_get";
-                $vendors[$y]['functions'][$z]['name'] = "20_get";
-                $vendors[$y]['functions'][$z]['value'] = "http(s) get";
-                $vendors[$y]['functions'][$z]['description'] = "Http GET Event";
-                $vendors[$y]['functions'][$z]['groups'][] = "superadmin";
-                $vendors[$y]['functions'][$z]['groups'][] = "admin";  
+
 //algo
 		$y++;
 		$vendors[$y]['uuid'] = "dc5ffcb9-5195-4fb8-8b23-f4216ed7f0f6";
