@@ -2870,6 +2870,14 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
+                $vendors[$y]['functions'][$z]['uuid'] = "6f5d1a1d-19f8-48bb-b4e1-f934b710988f";
+		$vendors[$y]['functions'][$z]['label'] = "label-speed_dial";
+		$vendors[$y]['functions'][$z]['name'] = "speed_dial";
+		$vendors[$y]['functions'][$z]['value'] = "f";
+		$vendors[$y]['functions'][$z]['description'] = "Automatically call the specified number when key is pressed. (No BFL)";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
 		$vendors[$y]['functions'][$z]['uuid'] = "b047d0d7-27a8-4a82-ba7f-44efb5bf1734";
 		$vendors[$y]['functions'][$z]['label'] = "label-blf_new";
 		$vendors[$y]['functions'][$z]['name'] = "blf_new";
