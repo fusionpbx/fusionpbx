@@ -2857,7 +2857,7 @@
 		$vendors[$y]['functions'][$z]['uuid'] = "000882b9-3c02-4e63-b235-13e0745bd230";
 		$vendors[$y]['functions'][$z]['label'] = "label-blf_list";
 		$vendors[$y]['functions'][$z]['name'] = "blf_list";
-		$vendors[$y]['functions'][$z]['value'] = "5";
+		$vendors[$y]['functions'][$z]['value'] = "13";
 		$vendors[$y]['functions'][$z]['description'] = "Subscribe to BLF Group on Broadsoft Server.";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
@@ -2865,7 +2865,7 @@
 		$vendors[$y]['functions'][$z]['uuid'] = "8b42f992-33b8-4320-9b0f-9d904acfa088";
 		$vendors[$y]['functions'][$z]['label'] = "label-url";
 		$vendors[$y]['functions'][$z]['name'] = "url";
-		$vendors[$y]['functions'][$z]['value'] = "6";
+		$vendors[$y]['functions'][$z]['value'] = "7";
 		$vendors[$y]['functions'][$z]['description'] = "URL Address to Visit";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
@@ -2873,7 +2873,7 @@
 		$vendors[$y]['functions'][$z]['uuid'] = "335176a5-f06e-4ccf-827e-1f65e839b6f3";
 		$vendors[$y]['functions'][$z]['label'] = "label-multicast";
 		$vendors[$y]['functions'][$z]['name'] = "multicast";
-		$vendors[$y]['functions'][$z]['value'] = "7";
+		$vendors[$y]['functions'][$z]['value'] = "14";
 		$vendors[$y]['functions'][$z]['description'] = "Transmit RTP streams via multicast group. Value=maddress Subtype=codec";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
@@ -2881,7 +2881,7 @@
 		$vendors[$y]['functions'][$z]['uuid'] = "5fc20c48-e619-4671-86d1-3fa88a83d88c";
 		$vendors[$y]['functions'][$z]['label'] = "label-intercom";
 		$vendors[$y]['functions'][$z]['name'] = "intercom";
-		$vendors[$y]['functions'][$z]['value'] = "8";
+		$vendors[$y]['functions'][$z]['value'] = "i";
 		$vendors[$y]['functions'][$z]['description'] = "Directly speak without answering the call.";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
@@ -2921,11 +2921,12 @@
                 $vendors[$y]['functions'][$z]['uuid'] = "e80b6d6d-dedc-456d-9118-8d8f010a0697";
                 $vendors[$y]['functions'][$z]['label'] = "label-blf_bxfer";
                 $vendors[$y]['functions'][$z]['name'] = "blf_bxfer";
-                $vendors[$y]['functions'][$z]['value'] = "12";
+                $vendors[$y]['functions'][$z]['value'] = "bb";
                 $vendors[$y]['functions'][$z]['description'] = "BLF - Blind Transfer";
                 $vendors[$y]['functions'][$z]['groups'][] = "superadmin";
                 $vendors[$y]['functions'][$z]['groups'][] = "admin";
                 $z++;
+                
                 $vendors[$y]['functions'][$z]['uuid'] = "55b0a1df-a9a1-48c7-9665-e84925631a6d";
                 $vendors[$y]['functions'][$z]['label'] = "label-blf_axfer";
                 $vendors[$y]['functions'][$z]['name'] = "blf_axfer";
@@ -2937,14 +2938,14 @@
                 $vendors[$y]['functions'][$z]['uuid'] = "b0a940ee-5686-448b-8312-74b700d721c9";
                 $vendors[$y]['functions'][$z]['label'] = "label-action_url_post";
                 $vendors[$y]['functions'][$z]['name'] = "action_url_post";
-                $vendors[$y]['functions'][$z]['value'] = "http(s) post";
+                $vendors[$y]['functions'][$z]['value'] = "20_post";
                 $vendors[$y]['functions'][$z]['description'] = "Http Post Event";
                 $vendors[$y]['functions'][$z]['groups'][] = "superadmin";
                 $vendors[$y]['functions'][$z]['groups'][] = "admin";
                 $z++;
                 $vendors[$y]['functions'][$z]['uuid'] = "cfd70620-245a-4277-a02a-0c2d154a2808";
                 $vendors[$y]['functions'][$z]['label'] = "label-action_url_get";
-                $vendors[$y]['functions'][$z]['name'] = "action_url_get";
+                $vendors[$y]['functions'][$z]['name'] = "20_get";
                 $vendors[$y]['functions'][$z]['value'] = "http(s) get";
                 $vendors[$y]['functions'][$z]['description'] = "Http GET Event";
                 $vendors[$y]['functions'][$z]['groups'][] = "superadmin";
