@@ -502,7 +502,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Default: 6789";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0c5fe247-0361-4c69-a247-d14b5417e53e";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "717573af-0247-41c1-9566-79fe38bef630";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_egs_enable_syslog";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
