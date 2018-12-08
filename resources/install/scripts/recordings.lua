@@ -271,7 +271,7 @@ if ( session:ready() ) then
 		recordings_dir = recordings_dir .. "/"..domain_name;
 
 	--if a recording directory is specified, use that instead
-		if storage_path ~= nil then recordings_dir = storage_path; end
+		if (storage_path ~= nil and string.len(storage_path) > 0) then recordings_dir = storage_path; end
 	
 	--set the sounds path for the language, dialect and voice
 		default_language = session:getVariable("default_language");
