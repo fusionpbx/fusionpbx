@@ -169,6 +169,13 @@ else {
 							$modes['text'] = 'Text';
 							$modes['xml'] = 'XML';
 							$modes['sql'] = 'SQL';
+							$modes['sh'] = 'SH';
+							$modes['smarty'] = 'Smarty';
+							$modes['svg'] = 'SVG';
+							$modes['makefile'] = 'Makefile';
+							$modes['c_cpp'] = 'C';
+							$modes['c_cpp'] = 'CPP';
+							$modes['pgsql'] = 'PGSQL';
 							$preview = ($setting_preview == 'true') ? "onmouseover=\"editor.getSession().setMode('ace/mode/' + this.value);\"" : null;
 							foreach ($modes as $value => $label) {
 								$selected = ($value == $mode) ? 'selected' : null;
