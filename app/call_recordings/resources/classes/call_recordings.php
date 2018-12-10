@@ -109,7 +109,7 @@ if (!class_exists('call_recordings')) {
 		} //end download method
 
 		/**
-		 * download the recordings
+		 * delete the recordings
 		 */
 		public function delete($id) {
 			if (permission_exists('call_recording_delete')) {
