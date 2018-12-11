@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2013
+ Portions created by the Initial Developer are Copyright (C) 2008-2018
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -27,6 +27,7 @@
 
 //define the conference center class
 	class conference_centers {
+
 		public $db;
 		public $domain_uuid;
 		public $meeting_uuid;
@@ -39,6 +40,32 @@
 		public $count;
 		public $created_by;
 
+		/**
+		 * Called when the object is created
+		 */
+		public function __construct() {
+			//connect to the database if not connected
+			if (!$this->db) {
+				require_once "resources/classes/database.php";
+				$database = new database;
+				$database->connect();
+				$this->db = $database->db;
+			}
+		}
+
+		/**
+		 * Called when there are no references to a particular object
+		 * unset the variables used in the class
+		 */
+		public function __destruct() {
+			foreach ($this as $key => $value) {
+				unset($this->$key);
+			}
+		}
+
+		/**
+		 * count the conference rooms
+		 */
 		public function room_count() {
 			//get the room count
 				$not_admin = 1;
@@ -76,6 +103,9 @@
 				}
 		}
 
+		/**
+		 * get the list of conference rooms
+		 */
 		public function rooms() {
 			//get the list of rooms
 				$not_admin = 1;
@@ -153,6 +183,92 @@
 				}
 				return $result;
 		}
+		
+
+		/**
+		 * download the recordings
+		 */
+		public function download() {
+			if (permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
+
+				//cache limiter
+					session_cache_limiter('public');
+
+				//get call recording from database
+					if (is_uuid($_GET['id'])) {
+						$conference_session_uuid = check_str($_GET['id']);
+					}
+					if ($conference_session_uuid != '') {
+						$sql = "select recording from v_conference_sessions ";
+						$sql .= "where conference_session_uuid = '".$conference_session_uuid."' ";
+						//$sql .= "and domain_uuid = '".$domain_uuid."' \n";
+						$prep_statement = $this->db->prepare($sql);
+						$prep_statement->execute();
+						$conference_sessions = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+						if (is_array($conference_sessions)) {
+							foreach($conference_sessions as &$row) {
+								$recording = $row['recording'];
+								break;
+							}
+						}
+						unset ($sql, $prep_statement, $conference_sessions);
+					}
+
+				//set the path for the directory
+					$default_path = $_SESSION['switch']['call_recordings']['dir']."/".$_SESSION['domain_name'];
+					
+				//get the file path and name
+					$record_path = dirname($recording);
+					$record_name = basename($recording);
+
+				//download the file
+					if (file_exists($record_path . '/' . $record_name . '.wav')) {
+						$record_name = $record_name . '.wav';
+					}
+					else {
+						if (file_exists($record_path . '/' . $record_name . '.mp3')) {
+							$record_name = $record_name . '.mp3';
+						}
+					}
+
+				//download the file
+					if (file_exists($record_path . '/' . $record_name)) {
+						//content-range
+						//if (isset($_SERVER['HTTP_RANGE']))  {
+						//	range_download($full_recording_path);
+						//}
+						ob_clean();
+						$fd = fopen($record_path . '/' . $record_name, "rb");
+						if ($_GET['t'] == "bin") {
+							header("Content-Type: application/force-download");
+							header("Content-Type: application/octet-stream");
+							header("Content-Type: application/download");
+							header("Content-Description: File Transfer");
+						}
+						else {
+							$file_ext = substr($record_name, -3);
+							if ($file_ext == "wav") {
+								header("Content-Type: audio/x-wav");
+							}
+							if ($file_ext == "mp3") {
+								header("Content-Type: audio/mpeg");
+							}
+						}
+						header('Content-Disposition: attachment; filename="'.$record_name.'"');
+						header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+						header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+						// header("Content-Length: " . filesize($full_recording_path));
+						ob_clean();
+						fpassthru($fd);
+					}
+
+				//if base64, remove temp recording file
+					//if ($_SESSION['conference']['storage_type']['text'] == 'base64' && $row['conference_recording_base64'] != '') {
+					//	@unlink($record_path . '/' . $record_name);
+					//}
+			}
+		} //end download method
+
 	}
 
 //example conference center
