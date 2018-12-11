@@ -710,8 +710,9 @@ include "root.php";
 						//mac address does not exist in the table so add it
 							if ($_SESSION['provision']['auto_insert_enabled']['boolean'] == "true" and strlen($domain_uuid) > 0) {
 
+								//get a new primary key
 								$device_uuid = uuid();
-								
+
 								//prepare the array
 								$x = 0;
 								$array['devices'][$x]['domain_uuid'] = $domain_uuid;
