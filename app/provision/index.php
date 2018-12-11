@@ -140,8 +140,10 @@
 	if ((!isset($_SESSION['provision']['http_domain_filter'])) or $_SESSION['provision']['http_domain_filter']['text'] == "false") {
 		//get the domain_uuid
 			$sql = "SELECT domain_uuid FROM v_devices ";
-			$sql .= "WHERE device_mac_address = '".$mac."' ";
+			$sql .= "WHERE device_mac_address = :mac ";
+			//$sql .= "WHERE device_mac_address = '".$mac."' ";
 			$prep_statement = $db->prepare($sql);
+			$prep_statement->bindParam(':mac', $mac);
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			foreach($result as $row) {
@@ -196,7 +198,7 @@
 			}
 
 		//get the domains settings
-			if (strlen($_SESSION["domain_uuid"]) > 0) {
+			if (strlen($domain_uuid) > 0 && is_uuid($domain_uuid)) {
 				$sql = "select * from v_domain_settings ";
 				$sql .= "where domain_uuid = '" . $domain_uuid . "' ";
 				$sql .= "and domain_setting_enabled = 'true' ";
@@ -250,8 +252,10 @@
 
 		//get the domain_uuid
 			$sql = "SELECT * FROM v_domains ";
-			$sql .= "WHERE domain_name = '".$domain_name."' ";
+			$sql .= "WHERE domain_name = :domain_name ";
+			//$sql .= "WHERE domain_name = '".$domain_name."' ";
 			$prep_statement = $db->prepare($sql);
+			$prep_statement->bindParam(':domain_name', $domain_name);
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			foreach($result as $row) {
