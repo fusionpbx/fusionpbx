@@ -716,10 +716,12 @@ include "root.php";
 								$array['devices'][$x]['device_enabled'] = 'true';
 								$array['devices'][$x]['device_template'] = $device_template;
 								$array['devices'][$x]['device_description'] = $_SERVER['HTTP_USER_AGENT'];
+
 								//add the dialplan permission
 								$p = new permissions;
 								$p->add("device_add", "temp");
 								$p->add("device_edit", "temp");
+
 								//save to the data
 								$database = new database;
 								$database->app_name = 'devices';
@@ -729,6 +731,7 @@ include "root.php";
 								}
 								$database->save($array);
 								$message = $database->message;
+
 								//remove the temporary permission
 								$p->delete("device_add", "temp");
 								$p->delete("device_edit", "temp");
