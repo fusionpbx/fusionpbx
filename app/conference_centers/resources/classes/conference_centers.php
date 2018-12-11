@@ -26,7 +26,7 @@
 */
 
 //define the conference center class
-	class conference_center {
+	class conference_centers {
 		public $db;
 		public $domain_uuid;
 		public $meeting_uuid;
