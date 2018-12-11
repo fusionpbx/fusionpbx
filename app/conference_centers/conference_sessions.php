@@ -166,7 +166,7 @@
 						echo "		</a>\n";
 						echo "		&nbsp;\n";
 					}
-					echo "		<a href=\"../recordings/recordings.php?a=download&type=rec&t=bin&filename=".base64_encode("archive/".$tmp_year."/".$tmp_month."/".$tmp_day."/".$tmp_name)."\">\n";
+					echo "		<a href=\"download.php?id=".escape($row['conference_session_uuid'])."\">\n";
 					echo "			".$text['label-download']."\n";
 					echo "		</a>\n";
 					echo "		&nbsp;\n";
