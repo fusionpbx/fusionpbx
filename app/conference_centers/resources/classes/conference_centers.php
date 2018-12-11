@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2013
+ Portions created by the Initial Developer are Copyright (C) 2008-2018
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -27,6 +27,7 @@
 
 //define the conference center class
 	class conference_centers {
+
 		public $db;
 		public $domain_uuid;
 		public $meeting_uuid;
@@ -38,6 +39,29 @@
 		public $search;
 		public $count;
 		public $created_by;
+
+		/**
+		 * Called when the object is created
+		 */
+		public function __construct() {
+			//connect to the database if not connected
+			if (!$this->db) {
+				require_once "resources/classes/database.php";
+				$database = new database;
+				$database->connect();
+				$this->db = $database->db;
+			}
+		}
+
+		/**
+		 * Called when there are no references to a particular object
+		 * unset the variables used in the class
+		 */
+		public function __destruct() {
+			foreach ($this as $key => $value) {
+				unset($this->$key);
+			}
+		}
 
 		/**
 		 * count the conference rooms
