@@ -958,4 +958,5 @@
                 $apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
                 $apps[$x]['default_settings'][$y]['default_setting_description'] = "EGS Syslog Server Port";
                 $y++;
+
 ?>
