@@ -312,11 +312,9 @@
 	echo "<th class='listhdr' nowrap>".$text['label-tools']."</th>\n";
 	if ($_SESSION['recordings']['storage_type']['text'] != 'base64') {
 		echo "<th class='listhdr' style='text-align: center;' nowrap>".$text['label-file-size']."</th>\n";
-		echo "<th class='listhdr' style='text-align: right;'>".$text['label-uploaded']."</th>\n";
+		echo "<th class='listhdr' style='text-align: center;'>".$text['label-uploaded']."</th>\n";
 	}
-	else {
-		echo th_order_by('recording_description', $text['label-description'], $order_by, $order);
-	}
+	echo th_order_by('recording_description', $text['label-description'], $order_by, $order);
 	echo "<td class='list_control_icons'>&nbsp;</td>\n";
 	echo "</tr>\n";
 
@@ -369,11 +367,9 @@
 				}
 				echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center; white-space: nowrap;'>".$file_size."</td>\n";
 				
-				echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".$file_date."</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>".$file_date."</td>\n";
 			}
-			else {
-				echo "	<td valign='top' class='row_stylebg' width='30%'>".escape($row['recording_description'])."&nbsp;</td>\n";
-			}
+			echo "	<td valign='top' class='row_stylebg' width='30%'>".escape($row['recording_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('recording_edit')) {
 				echo "<a href='recording_edit.php?id=".escape($row['recording_uuid'])."' alt='edit'>$v_link_label_edit</a>";
