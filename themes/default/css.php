@@ -1335,66 +1335,9 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		padding: 4px 7px;
 		}
 
-/* RESPONSE MESSAGES *******************************************************/
+/* RESPONSE MESSAGE STACK *******************************************************/
 
 	#message_container {
-		z-index: 99998;
-		position: absolute;
-		top: -80px;
-		left: 0;
-		right: 0;
-		filter: alpha(opacity=0);
-		opacity: 0;
-		-moz-opacity:0;
-		-khtml-opacity: 0;
-		padding: 15px 0;
-	}
-
-	#message_text {
-		z-index: 99999;
-		position: absolute;
-		top: -80px;
-		left: 0;
-		right: 0;
-		filter: alpha(opacity=0);
-		opacity: 0;
-		-moz-opacity:0;
-		-khtml-opacity: 0;
-		margin: 0 auto;
-		vertical-align: middle;
-		padding: 15px 0;
-		text-align: center;
-		font-family: arial, san-serif;
-		font-size: 10pt;
-	}
-
-	.message_container_mood_default {
-		background: <?php echo $_SESSION['theme']['message_default_background_color']['text']; ?>;
-		}
-
-	.message_container_mood_negative {
-		background: <?php echo $_SESSION['theme']['message_negative_background_color']['text']; ?>;
-		}
-
-	.message_container_mood_alert {
-		background: <?php echo $_SESSION['theme']['message_alert_background_color']['text']; ?>;
-		}
-
-	.message_text_mood_default {
-		color: <?php echo $_SESSION['theme']['message_default_color']['text']; ?>;
-		}
-
-	.message_text_mood_negative {
-		color: <?php echo $_SESSION['theme']['message_negative_color']['text']; ?>;
-		}
-
-	.message_text_mood_alert {
-		color: <?php echo $_SESSION['theme']['message_alert_color']['text']; ?>;
-		}
-
-/* MESSAGES STACK *******************************************************/
-
-	#messages_container {
 		z-index: 99998;
 		position: absolute;
 		top: 0;
@@ -1406,33 +1349,37 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	.message_text {
 		z-index: 99999;
 		margin: 0 auto;
-		padding: 0.5em 0;
+		padding: 10px;
 		text-align: center;
 		font-family: arial, san-serif;
 		font-size: 10pt;
 		display: block;
-		border-bottom: solid 1px;
 		color: <?php echo $_SESSION['theme']['message_default_color']['text']; ?>;
 		background: <?php echo $_SESSION['theme']['message_default_background_color']['text']; ?>;
-		border-bottom-color: <?php echo $_SESSION['theme']['message_default_color']['text']; ?>;
+		box-shadow: inset 0px 7px 8px -10px <?php echo $_SESSION['theme']['message_default_color']['text']; ?>;
+		border-bottom: solid 1px <?php echo $_SESSION['theme']['message_default_color']['text']; ?>;
+		opacity: 0;
 		}
 
 	.message_mood_positive {
 		color: <?php echo $_SESSION['theme']['message_positive_color']['text']; ?>;
 		background: <?php echo $_SESSION['theme']['message_positive_background_color']['text']; ?>;
-		border-bottom-color: <?php echo $_SESSION['theme']['message_positive_color']['text']; ?>;
+		box-shadow: inset 0px 7px 8px -10px <?php echo $_SESSION['theme']['message_positive_color']['text']; ?>;
+		border-bottom: solid 1px <?php echo $_SESSION['theme']['message_positive_color']['text']; ?>;
 		}
 
 	.message_mood_negative {
 		color: <?php echo $_SESSION['theme']['message_negative_color']['text']; ?>;
 		background: <?php echo $_SESSION['theme']['message_negative_background_color']['text']; ?>;
-		border-bottom-color: <?php echo $_SESSION['theme']['message_negative_color']['text']; ?>;
+		box-shadow: inset 0px 7px 8px -10px <?php echo $_SESSION['theme']['message_negative_color']['text']; ?>;
+		border-bottom: solid 1px <?php echo $_SESSION['theme']['message_negative_color']['text']; ?>;
 		}
 
 	.message_mood_alert {
 		color: <?php echo $_SESSION['theme']['message_alert_color']['text']; ?>;
 		background: <?php echo $_SESSION['theme']['message_alert_background_color']['text']; ?>;
-		border-bottom-color: <?php echo $_SESSION['theme']['message_alert_color']['text']; ?>;
+		box-shadow: inset 0px 7px 8px -10px <?php echo $_SESSION['theme']['message_alert_color']['text']; ?>;
+		border-bottom: solid 1px <?php echo $_SESSION['theme']['message_alert_color']['text']; ?>;
 		}
 
 /* OPERATOR PANEL ****************************************************************/
