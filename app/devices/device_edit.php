@@ -177,6 +177,7 @@
 			$device_key_value = check_str($_POST["device_key_value"]);
 			$device_key_extension = check_str($_POST["device_key_extension"]);
 			$device_key_label = check_str($_POST["device_key_label"]);
+			$device_key_icon = check_str($_POST["device_key_icon"]);
 		//settings
 			//$device_setting_category = check_str($_POST["device_setting_category"]);
 			$device_setting_subcategory = check_str($_POST["device_setting_subcategory"]);
@@ -439,6 +440,7 @@
 	$device_keys[$x]['device_key_value'] = '';
 	$device_keys[$x]['device_key_extension'] = '';
 	$device_keys[$x]['device_key_label'] = '';
+	$device_keys[$x]['device_key_icon'] = '';
 
 //get the device vendors
 	$sql = "SELECT name ";
@@ -1127,6 +1129,7 @@
 				echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
 			}
 			echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
+			echo "				<td class='vtable'>".$text['label-device_key_icon']."</td>\n";
 			echo "				<td>&nbsp;</td>\n";
 			echo "			</tr>\n";
 		}
@@ -1149,6 +1152,7 @@
 						echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
 					}
 					echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
+					echo "				<td class='vtable'>".$text['label-device_key_icon']."</td>\n";
 					echo "				<td>&nbsp;</td>\n";
 					echo "			</tr>\n";
 				}
@@ -1302,6 +1306,10 @@
 
 				echo "<td align='left'>\n";
 				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_label]' style='width: 75px;' maxlength='255' value=\"".escape($row['device_key_label'])."\"/>\n";
+				echo "</td>\n";
+				
+                                echo "<td align='left'>\n";
+				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_icon]' style='width: 75px;' maxlength='255' value=\"".escape($row['device_key_icon'])."\"/>\n";
 				echo "</td>\n";
 
 				//echo "			<td align='left'>\n";
