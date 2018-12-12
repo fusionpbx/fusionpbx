@@ -637,7 +637,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "device_key_label";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the label.";
-
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "device_key_icon";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "ICON Name.";
+		
 		$y++;
 		$apps[$x]['db'][$y]['table']['name'] = "v_device_profiles";
 		$apps[$x]['db'][$y]['table']['parent'] = "";
@@ -2910,7 +2914,6 @@
                 $vendors[$y]['functions'][$z]['groups'][] = "superadmin";
                 $vendors[$y]['functions'][$z]['groups'][] = "admin";
                 $z++;
-
 //algo
 		$y++;
 		$vendors[$y]['uuid'] = "dc5ffcb9-5195-4fb8-8b23-f4216ed7f0f6";
