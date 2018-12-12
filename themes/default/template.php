@@ -75,19 +75,22 @@
 				message_text.click(function() {
 					var object = $(this);
 					object.clearQueue().finish();
-					object.animate({height: '0', 'font-size': '0', 'border-bottom-width': '0'}, 1000).animate({opacity: 0});
+					$("#message_container").css({'display':'none'});
 				} );
 				$("#message_container").append(message_text);
-				message_text.animate({opacity: 1}, 'fast').delay(delay).animate({height: '0', 'font-size': '0', 'border-bottom-width': '0'}, 1000).animate({opacity: 0});
+				message_text.animate({opacity: 1}, 250, function(){
+					$("#message_container").delay(delay).animate({opacity: 0, height: '0'}, 1000);
+				});
+
 			}
 		}
 
 	$(document).ready(function() {
 
-<?php	echo message::html(true, "		");?>
+		<?php echo message::html(true, "		"); ?>
 
 		//hide message bar on hover
-			$("#message_text").mouseover(function() { $(this).hide(); $("#message_container").hide(); });
+			$(".message_text").mouseover(function() { $("#message_container").css({display:'none'}); });
 
 		<?php
 		if (permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
@@ -232,7 +235,7 @@
 
 				$("[id*=recording_button]").not("[id*=recording_button_"+recording_id+"]").html("<?php echo $v_link_label_play; ?>");
 				$("[id*=recording_progress_bar]").not("[id*=recording_progress_bar_"+recording_id+"]").css('display', 'none');
-				
+
 				$('audio').each(function(){
 					if ($(this).get(0) != recording_audio) {
 						$(this).get(0).pause(); // Stop playing
