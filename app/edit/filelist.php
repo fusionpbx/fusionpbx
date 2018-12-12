@@ -112,6 +112,9 @@
 		case 'grammer':
 			$edit_directory = $_SESSION['switch']['grammar']['dir'];
 			break;
+		case 'path':
+			$edit_directory = $_SESSION['editor']['path']['text'];
+			break;
 		case 'provision':
 			switch (PHP_OS) {
 				case "Linux":

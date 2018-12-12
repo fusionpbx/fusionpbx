@@ -96,7 +96,7 @@
 			local settings = Settings.new(dbh, domain_name, domain_uuid)
 			local storage_type = settings:get('recordings', 'storage_type', 'text')
 			local storage_path = settings:get('recordings', 'storage_path', 'text')
-                        if (storage_path ~= nil) then
+			if (storage_path ~= nil) then
 				storage_path = storage_path:gsub("${domain_name}", domain_name)
 				storage_path = storage_path:gsub("${domain_uuid}", domain_uuid)
 			end
