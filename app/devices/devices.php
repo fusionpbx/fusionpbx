@@ -134,7 +134,7 @@
 	$sql .= "	or d.device_uuid_alternate is null and d.device_uuid = d2.device_uuid ";
 	$sql .= ") ";
 	if ($_GET['show'] == "all" && permission_exists('device_all')) {
-		//echo __line__."<br \>\n";
+
 	} else {
 		$sql .= "and (";
 		$sql .= "	d.domain_uuid = '$domain_uuid' ";
@@ -143,6 +143,10 @@
 		}
 		$sql .= ") ";
 	}
+		if (permission_exists('device_all') <> 1) {
+			$user_uuid = $_SESSION["user_uuid"];
+			$sql .= "and (	d.device_user_uuid = '$user_uuid' ) ";
+		}
 	if (strlen($search) > 0) {
 		$sql .= "and (";
 		$sql .= "	lower(d.device_mac_address) like '%".strtolower($search)."%' ";
