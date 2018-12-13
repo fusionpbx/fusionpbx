@@ -25,8 +25,14 @@
 --	POSSIBILITY OF SUCH DAMAGE.
 
 --connect to the database
-	require "resources.functions.database_handle";
-	dbh = database_handle('system');
+	local Database = require "resources.functions.database";
+	dbh = Database.new('system');
+
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
 
 --exits the script if we didn't connect properly
 	assert(dbh:connected());
@@ -45,19 +51,20 @@
 	if (debug["sql"]) then
 		freeswitch.consoleLog("notice", "[conference_control] SQL: " .. sql .. "\n");
 	end
-	status = dbh:query(sql, function(field)
+	dbh:query(sql, function(field)
 		conference_control_uuid = field["conference_control_uuid"];
 		table.insert(xml, [[				<group name="]]..field["control_name"]..[[">]]);
 
 		--get the conference control details from the database
 		sql = [[SELECT * FROM v_conference_control_details
-			WHERE conference_control_uuid = ']] .. conference_control_uuid ..[['
+			WHERE conference_control_uuid = :conference_control_uuid
 			AND control_enabled = 'true' ]];
+		local params = {conference_control_uuid = conference_control_uuid};
 		if (debug["sql"]) then
-			freeswitch.consoleLog("notice", "[conference_control] SQL: " .. sql .. "\n");
+			freeswitch.consoleLog("notice", "[conference_control] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 		end
 
-		status = dbh:query(sql, function(row)
+		dbh:query(sql, params, function(row)
 			--conference_control_uuid = row["conference_control_uuid"];
 			--conference_control_detail_uuid = row["conference_control_detail_uuid"];
 			table.insert(xml, [[					<control digits="]]..row["control_digits"]..[[" action="]]..row["control_action"]..[[" data="]]..row["control_data"]..[["/>]]);
@@ -74,19 +81,20 @@
 	if (debug["sql"]) then
 		freeswitch.consoleLog("notice", "[conference_profiles] SQL: " .. sql .. "\n");
 	end
-	status = dbh:query(sql, function(field)
+	dbh:query(sql, function(field)
 		conference_profile_uuid = field["conference_profile_uuid"];
 		table.insert(xml, [[				<profile name="]]..field["profile_name"]..[[">]]);
 
 		--get the conference profile parameters from the database
 		sql = [[SELECT * FROM v_conference_profile_params
-			WHERE conference_profile_uuid = ']] .. conference_profile_uuid ..[['
+			WHERE conference_profile_uuid = :conference_profile_uuid
 			AND profile_param_enabled = 'true' ]];
+		local params = {conference_profile_uuid = conference_profile_uuid};
 		if (debug["sql"]) then
-			freeswitch.consoleLog("notice", "[conference_profiles] SQL: " .. sql .. "\n");
+			freeswitch.consoleLog("notice", "[conference_profiles] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 		end
 
-		status = dbh:query(sql, function(row)
+		dbh:query(sql, params, function(row)
 			--conference_profile_uuid = row["conference_profile_uuid"];
 			--conference_profile_param_uuid = row["conference_profile_param_uuid"];
 			--profile_param_description = row["profile_param_description"];

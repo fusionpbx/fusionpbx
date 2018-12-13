@@ -77,7 +77,7 @@ if (strlen($voicemail_greeting_uuid) > 0) {
 }
 
 //redirect the user
-	$_SESSION["message"] = $text['message-delete'];
+	message::add($text['message-delete']);
 	header("Location: voicemail_greetings.php?id=".$voicemail_id);
 	return;
 ?>

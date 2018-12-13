@@ -26,7 +26,11 @@
 //includes
 	require_once "resources/require.php";
 
-//for compatability require this library if less than version 5.5
+//add multi-lingual support
+	$language = new text;
+	$text = $language->get(null, 'resources');
+
+//for compatibility require this library if less than version 5.5
 	if (version_compare(phpversion(), '5.5', '<')) {
 		require_once "resources/functions/password.php";
 	}
@@ -35,51 +39,68 @@
 	ini_set("session.use_only_cookies", True);
 	ini_set("session.cookie_httponly", True);
 	if ($_SERVER["HTTPS"] == "on") { ini_set("session.cookie_secure", True); }
-	session_start();
+	if (!isset($_SESSION)) { session_start(); }
+
+//define variables
+	if (!isset($_SESSION['login']['destination']['url'])) { $_SESSION['login']['destination']['url'] = null; }
+	if (!isset($_SESSION['template_content'])) { $_SESSION["template_content"] = null; }
+
+//if the username is not provided then send to login.php
+	if (strlen($_SESSION['username']) == 0 && strlen($_REQUEST["username"]) == 0 && strlen($_REQUEST["key"]) == 0) {
+		$target_path = ($_REQUEST["path"] != '') ? $_REQUEST["path"] : $_SERVER["REQUEST_URI"];
+		header("Location: ".PROJECT_PATH."/login.php?path=".urlencode($target_path));
+		exit;
+	}
 
 //if the username session is not set the check username and password
-	 if (strlen($_SESSION['username']) == 0) {
+	if (strlen($_SESSION['username']) == 0) {
 
 		//clear the menu
-			$_SESSION["menu"] = "";
+			unset($_SESSION["menu"]);
 
 		//clear the template only if the template has not been assigned by the superadmin
 			if (strlen($_SESSION['domain']['template']['name']) == 0) {
 				$_SESSION["template_content"] = '';
 			}
 
-		//if the username is not provided then send to login.php
-			if (strlen(check_str($_REQUEST["username"])) == 0 && strlen(check_str($_REQUEST["key"])) == 0) {
-				$target_path = ($_REQUEST["path"] != '') ? $_REQUEST["path"] : $_SERVER["REQUEST_URI"];
-				$_SESSION["message_mood"] = "negative";
-				$_SESSION["message"] = "Invalid Username and/or Password";
-				header("Location: ".PROJECT_PATH."/login.php?path=".urlencode($target_path));
-				exit;
-			}
-
 		//validate the username and password
 			$auth = new authentication;
-			$auth->username = $_REQUEST["username"];
-			$auth->password = $_REQUEST["password"];
+			if (isset($_REQUEST["username"]) && isset($_REQUEST["password"])) {
+				$auth->username = $_REQUEST["username"];
+				$auth->password = $_REQUEST["password"];
+			}
+			if (isset($_REQUEST["key"])) {
+				$auth->key = $_REQUEST["key"];
+			}
 			$auth->debug = false;
 			$result = $auth->validate();
 			if ($result["authorized"] == "true") {
-				// add the user settings
+				// set the session variables
+					$_SESSION["domain_uuid"] = $result["domain_uuid"];
 					$_SESSION["user_uuid"] = $result["user_uuid"];
+
 				// user session array
 					$_SESSION["user"]["username"] = $result["username"];
 					$_SESSION["user"]["user_uuid"] = $result["user_uuid"];
 					$_SESSION["user"]["contact_uuid"] = $result["contact_uuid"];
 			}
 			else {
+				//debug
+					if ($debug) {
+						echo "<pre>";
+						print_r($result);
+						echo "</pre>";
+						exit;
+					}
+
 				//log the failed auth attempt to the system, to be available for fail2ban.
 					openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
 					syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] authentication failed for ".$result["username"]);
 					closelog();
+
 				//redirect the user to the login page
 					$target_path = ($_REQUEST["path"] != '') ? $_REQUEST["path"] : $_SERVER["PHP_SELF"];
-					$_SESSION["message_mood"] = "negative";
-					$_SESSION["message"] = "Invalid Username and/or Password";
+					message::add($text['message-invalid_credentials'], 'negative');
 					header("Location: ".PROJECT_PATH."/login.php?path=".urlencode($target_path));
 					exit;
 			}
@@ -91,7 +112,7 @@
 			$sql .= "where domain_uuid=:domain_uuid ";
 			$sql .= "and user_uuid=:user_uuid ";
 			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->bindParam(':domain_uuid', $domain_uuid);
+			$prep_statement->bindParam(':domain_uuid', $_SESSION["domain_uuid"] );
 			$prep_statement->bindParam(':user_uuid', $_SESSION["user_uuid"]);
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -105,10 +126,10 @@
 				foreach($_SESSION["groups"] as $field) {
 					if (strlen($field['group_name']) > 0) {
 						if ($x == 0) {
-							$sql .= "where (domain_uuid = '".$domain_uuid."' and domain_uuid = null) ";
+							$sql .= "where (domain_uuid = '".$_SESSION["domain_uuid"]."' and domain_uuid = null) ";
 						}
 						else {
-							$sql .= "or (domain_uuid = '".$domain_uuid."' and domain_uuid = null) ";
+							$sql .= "or (domain_uuid = '".$_SESSION["domain_uuid"]."' and domain_uuid = null) ";
 						}
 						$sql .= "or group_name = '".$field['group_name']."' ";
 						$x++;
@@ -164,14 +185,15 @@
 			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/extensions/app_config.php")) {
 				if (isset($_SESSION["user"]) && isset($_SESSION["user_uuid"]) && $db && strlen($_SESSION["domain_uuid"]) > 0 && strlen($_SESSION["user_uuid"]) > 0 && count($_SESSION['user']['extension']) == 0) {
 					//get the user extension list
-						unset($_SESSION['user']['extension']);
+						$_SESSION['user']['extension'] = null;
 						$sql = "select ";
+						$sql .= "	e.extension_uuid, ";
 						$sql .= "	e.extension, ";
 						$sql .= "	e.number_alias, ";
 						$sql .= "	e.user_context, ";
-						$sql .= "	e.extension_uuid, ";
 						$sql .= "	e.outbound_caller_id_name, ";
-						$sql .= "	e.outbound_caller_id_number ";
+						$sql .= "	e.outbound_caller_id_number, ";
+						$sql .= "	e.description ";
 						$sql .= "from ";
 						$sql .= "	v_extension_users as u, ";
 						$sql .= "	v_extensions as e ";
@@ -187,16 +209,23 @@
 							$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 							$x = 0;
 							foreach($result as $row) {
+								//set the destination
 								$destination = $row['extension'];
 								if (strlen($row['number_alias']) > 0) {
 									$destination = $row['number_alias'];
 								}
+								
+								//build the uers array
 								$_SESSION['user']['extension'][$x]['user'] = $row['extension'];
 								$_SESSION['user']['extension'][$x]['number_alias'] = $row['number_alias'];
 								$_SESSION['user']['extension'][$x]['destination'] = $destination;
 								$_SESSION['user']['extension'][$x]['extension_uuid'] = $row['extension_uuid'];
 								$_SESSION['user']['extension'][$x]['outbound_caller_id_name'] = $row['outbound_caller_id_name'];
 								$_SESSION['user']['extension'][$x]['outbound_caller_id_number'] = $row['outbound_caller_id_number'];
+								$_SESSION['user']['extension'][$x]['user_context'] = $row['user_context'];
+								$_SESSION['user']['extension'][$x]['description'] = $row['description'];
+								
+								//set the user context
 								$_SESSION['user_context'] = $row["user_context"];
 								$x++;
 							}
@@ -225,6 +254,7 @@
 	}
 
 //set the time zone
+	if (!isset($_SESSION["time_zone"]["user"])) { $_SESSION["time_zone"]["user"] = null; }
 	if (strlen($_SESSION["time_zone"]["user"]) == 0) {
 		//set the domain time zone as the default time zone
 		date_default_timezone_set($_SESSION['domain']['time_zone']['name']);

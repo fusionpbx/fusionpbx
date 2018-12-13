@@ -1,24 +1,30 @@
 <?php
 
-$apps[$x]['menu'][0]['title']['en-us'] = "Extensions";
-$apps[$x]['menu'][0]['title']['es-cl'] = "Extensiones";
-$apps[$x]['menu'][0]['title']['es-mx'] = "Extensiones";
-$apps[$x]['menu'][0]['title']['fr-fr'] = "Extensions";
-$apps[$x]['menu'][0]['title']['fr-ca'] = "Post téléphonique";
-$apps[$x]['menu'][0]['title']['pt-pt'] = "Extensões";
-$apps[$x]['menu'][0]['title']['pt-br'] = "Extensões";
-$apps[$x]['menu'][0]['title']['pl'] = "Numery wewnętrzne";
-$apps[$x]['menu'][0]['title']['uk'] = "Розширення";
-$apps[$x]['menu'][0]['title']['sv-se'] = "Anknytningar";
-$apps[$x]['menu'][0]['title']['ro'] = "Extensii";
-$apps[$x]['menu'][0]['title']['de-at'] = "Nebenstellen";
-$apps[$x]['menu'][0]['title']['ar-eg'] = "الأرقام الداخلية";
-$apps[$x]['menu'][0]['title']['he'] = "שלוחות";
-$apps[$x]['menu'][0]['uuid'] = "d3036a99-9a9f-2ad6-a82a-1fe7bebbe2d3";
-$apps[$x]['menu'][0]['parent_uuid'] = "bc96d773-ee57-0cdd-c3ac-2d91aba61b55";
-$apps[$x]['menu'][0]['category'] = "internal";
-$apps[$x]['menu'][0]['path'] = "/app/extensions/extensions.php";
-$apps[$x]['menu'][0]['groups'][] = "admin";
-$apps[$x]['menu'][0]['groups'][] = "superadmin";
+	$y=0;
+	$apps[$x]['menu'][$y]['title']['en-us'] = "Extensions";
+	$apps[$x]['menu'][$y]['title']['ar-eg'] = "الأرقام الداخلية";
+	$apps[$x]['menu'][$y]['title']['de-at'] = "Nebenstellen";
+	$apps[$x]['menu'][$y]['title']['de-ch'] = "";
+	$apps[$x]['menu'][$y]['title']['de-de'] = "Nebenstellen";
+	$apps[$x]['menu'][$y]['title']['es-cl'] = "Extensiones";
+	$apps[$x]['menu'][$y]['title']['es-mx'] = "Extensiones";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Post téléphonique";
+	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Extensions";
+	$apps[$x]['menu'][$y]['title']['he-il'] = "שלוחות";
+	$apps[$x]['menu'][$y]['title']['it-it'] = "Interni";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Numery wewnętrzne";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Extensões";
+	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Extensões";
+	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Extensii";
+	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Внутренние номера";
+	$apps[$x]['menu'][$y]['title']['sv-se'] = "Anknytningar";
+	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Розширення";
+	$apps[$x]['menu'][$y]['uuid'] = "d3036a99-9a9f-2ad6-a82a-1fe7bebbe2d3";
+	$apps[$x]['menu'][$y]['parent_uuid'] = "bc96d773-ee57-0cdd-c3ac-2d91aba61b55";
+	$apps[$x]['menu'][$y]['category'] = "internal";
+	$apps[$x]['menu'][$y]['path'] = "/app/extensions/extensions.php";
+	$apps[$x]['menu'][$y]['groups'][] = "admin";
+	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 
 ?>

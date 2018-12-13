@@ -17,160 +17,146 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-require_once "resources/paging.php";
-if (permission_exists('ivr_menu_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
+
+//check permissions
+	if (permission_exists('ivr_menu_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
 //set the http get/post variable(s) to a php variable
-	if (isset($_REQUEST["id"])) {
+	if (isset($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$ivr_menu_uuid = $_GET["id"];
 	}
+	else {
+		echo "access denied";
+		exit;
+	}	
 
 //get the ivr_menus data
 	$sql = "select * from v_ivr_menus ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and ivr_menu_uuid = '$ivr_menu_uuid' ";
+	$sql .= "where ivr_menu_uuid = '$ivr_menu_uuid' ";
+	$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($result as &$row) {
-		$ivr_menu_name = 'copy-'.$row["ivr_menu_name"];
-		$ivr_menu_extension = $row["ivr_menu_extension"];
-		$ivr_menu_greet_long = $row["ivr_menu_greet_long"];
-		$ivr_menu_greet_short = $row["ivr_menu_greet_short"];
-		$ivr_menu_invalid_sound = $row["ivr_menu_invalid_sound"];
-		$ivr_menu_exit_sound = $row["ivr_menu_exit_sound"];
-		$ivr_menu_confirm_macro = $row["ivr_menu_confirm_macro"];
-		$ivr_menu_confirm_key = $row["ivr_menu_confirm_key"];
-		$ivr_menu_tts_engine = $row["ivr_menu_tts_engine"];
-		$ivr_menu_tts_voice = $row["ivr_menu_tts_voice"];
-		$ivr_menu_confirm_attempts = $row["ivr_menu_confirm_attempts"];
-		$ivr_menu_timeout = $row["ivr_menu_timeout"];
-		$ivr_menu_inter_digit_timeout = $row["ivr_menu_inter_digit_timeout"];
-		$ivr_menu_max_failures = $row["ivr_menu_max_failures"];
-		$ivr_menu_max_timeouts = $row["ivr_menu_max_timeouts"];
-		$ivr_menu_digit_len = $row["ivr_menu_digit_len"];
-		$ivr_menu_direct_dial = $row["ivr_menu_direct_dial"];
-		$ivr_menu_enabled = $row["ivr_menu_enabled"];
-		$ivr_menu_description = 'copy: '.$row["ivr_menu_description"];
+	$ivr_menus = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	if (!is_array($ivr_menus)) {
+		echo "access denied 63";
+		exit;
 	}
-	unset ($prep_statement);
 
 //get the the ivr menu options
 	$sql = "select * from v_ivr_menu_options ";
 	$sql .= "where ivr_menu_uuid = '$ivr_menu_uuid' ";
-	$sql .= "and domain_uuid = '$domain_uuid' ";
+	$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	$sql .= "order by ivr_menu_uuid asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	$result_options = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$ivr_menu_options = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
-//copy the ivr_menus
+//create the uuids
 	$ivr_menu_uuid = uuid();
-	$sql = "insert into v_ivr_menus ";
-	$sql .= "(";
-	$sql .= "domain_uuid, ";
-	$sql .= "ivr_menu_uuid, ";
-	$sql .= "ivr_menu_name, ";
-	$sql .= "ivr_menu_extension, ";
-	$sql .= "ivr_menu_greet_long, ";
-	$sql .= "ivr_menu_greet_short, ";
-	$sql .= "ivr_menu_invalid_sound, ";
-	$sql .= "ivr_menu_exit_sound, ";
-	$sql .= "ivr_menu_confirm_macro, ";
-	$sql .= "ivr_menu_confirm_key, ";
-	$sql .= "ivr_menu_tts_engine, ";
-	$sql .= "ivr_menu_tts_voice, ";
-	$sql .= "ivr_menu_confirm_attempts, ";
-	$sql .= "ivr_menu_timeout, ";
-	$sql .= "ivr_menu_inter_digit_timeout, ";
-	$sql .= "ivr_menu_max_failures, ";
-	$sql .= "ivr_menu_max_timeouts, ";
-	$sql .= "ivr_menu_digit_len, ";
-	$sql .= "ivr_menu_direct_dial, ";
-	$sql .= "ivr_menu_enabled, ";
-	$sql .= "ivr_menu_description ";
-	$sql .= ")";
-	$sql .= "values ";
-	$sql .= "(";
-	$sql .= "'$domain_uuid', ";
-	$sql .= "'$ivr_menu_uuid', ";
-	$sql .= "'$ivr_menu_name', ";
-	$sql .= "'$ivr_menu_extension', ";
-	$sql .= "'$ivr_menu_greet_long', ";
-	$sql .= "'$ivr_menu_greet_short', ";
-	$sql .= "'$ivr_menu_invalid_sound', ";
-	$sql .= "'$ivr_menu_exit_sound', ";
-	$sql .= "'$ivr_menu_confirm_macro', ";
-	$sql .= "'$ivr_menu_confirm_key', ";
-	$sql .= "'$ivr_menu_tts_engine', ";
-	$sql .= "'$ivr_menu_tts_voice', ";
-	$sql .= "'$ivr_menu_confirm_attempts', ";
-	$sql .= "'$ivr_menu_timeout', ";
-	$sql .= "'$ivr_menu_inter_digit_timeout', ";
-	$sql .= "'$ivr_menu_max_failures', ";
-	$sql .= "'$ivr_menu_max_timeouts', ";
-	$sql .= "'$ivr_menu_digit_len', ";
-	$sql .= "'$ivr_menu_direct_dial', ";
-	$sql .= "'$ivr_menu_enabled', ";
-	$sql .= "'$ivr_menu_description' ";
-	$sql .= ")";
-	$db->exec(check_sql($sql));
-	unset($sql);
+	$dialplan_uuid = uuid();
+
+//set the row id
+	$x = 0;
+
+//set the variables
+	$ivr_menu_name = 'copy-'.$ivr_menus[$x]['ivr_menu_name'];
+	$ivr_menu_extension = $ivr_menus[$x]['ivr_menu_extension'];
+	$ivr_menu_ringback = $ivr_menus[$x]['ivr_menu_ringback'];
+	$ivr_menu_description = 'copy-'.$ivr_menus[$x]['ivr_menu_description'];
+
+//prepare the ivr menu array
+	$ivr_menus[$x]['ivr_menu_uuid'] = $ivr_menu_uuid;
+	$ivr_menus[$x]['dialplan_uuid'] = $dialplan_uuid;
+	$ivr_menus[$x]['ivr_menu_name'] = $ivr_menu_name;
+	$ivr_menus[$x]['ivr_menu_description'] = $ivr_menu_description;
 
 //get the the ivr menu options
-	foreach ($result_options as &$row) {
-		$ivr_menu_option_digits = $row["ivr_menu_option_digits"];
-		$ivr_menu_option_action = $row["ivr_menu_option_action"];
-		$ivr_menu_option_param = $row["ivr_menu_option_param"];
-		$ivr_menu_option_order = $row["ivr_menu_option_order"];
-		$ivr_menu_option_description = $row["ivr_menu_option_description"];
+	$y = 0;
+	foreach ($ivr_menu_options as &$row) {
 
-		//copy the ivr menu options
-			$ivr_menu_option_uuid = uuid();
-			$sql = "insert into v_ivr_menu_options ";
-			$sql .= "(";
-			$sql .= "domain_uuid, ";
-			$sql .= "ivr_menu_uuid, ";
-			$sql .= "ivr_menu_option_uuid, ";
-			$sql .= "ivr_menu_option_digits, ";
-			$sql .= "ivr_menu_option_action, ";
-			$sql .= "ivr_menu_option_param, ";
-			$sql .= "ivr_menu_option_order, ";
-			$sql .= "ivr_menu_option_description ";
-			$sql .= ")";
-			$sql .= "values ";
-			$sql .= "(";
-			$sql .= "'$domain_uuid', ";
-			$sql .= "'$ivr_menu_uuid', ";
-			$sql .= "'$ivr_menu_option_uuid', ";
-			$sql .= "'$ivr_menu_option_digits', ";
-			$sql .= "'$ivr_menu_option_action', ";
-			$sql .= "'$ivr_menu_option_param', ";
-			$sql .= "'$ivr_menu_option_order', ";
-			$sql .= "'$ivr_menu_option_description' ";
-			$sql .= ")";
-			$db->exec(check_sql($sql));
-			unset($sql);
+		//update the uuids
+			$row['ivr_menu_uuid'] = $ivr_menu_uuid;
+			$row['ivr_menu_option_uuid'] = uuid();
+		
+		//add the row to the array
+			$ivr_menus[$x]["ivr_menu_options"][$y] = $row; 
+		
+		//increment the ivr menu option row id
+			$y++;
+
 	}
+
+//build the xml dialplan
+	$dialplan_xml = "<extension name=\"".$ivr_menu_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
+	$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$ivr_menu_extension."\">\n";
+	$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
+	$dialplan_xml .= "		<action application=\"sleep\" data=\"1000\"/>\n";
+	$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
+	$dialplan_xml .= "		<action application=\"set\" data=\"ringback=".$ivr_menu_ringback."\"/>\n";
+	$dialplan_xml .= "		<action application=\"set\" data=\"transfer_ringback=".$ivr_menu_ringback."\"/>\n";
+	$dialplan_xml .= "		<action application=\"set\" data=\"ivr_menu_uuid=".$ivr_menu_uuid."\"/>\n";
+	$dialplan_xml .= "		<action application=\"ivr\" data=\"".$ivr_menu_uuid."\"/>\n";
+	$dialplan_xml .= "		<action application=\"hangup\" data=\"\"/>\n";
+	$dialplan_xml .= "	</condition>\n";
+	$dialplan_xml .= "</extension>\n";
+
+//build the dialplan array
+	$dialplan[$x]["domain_uuid"] = $_SESSION['domain_uuid'];
+	$dialplan[$x]["dialplan_uuid"] = $dialplan_uuid;
+	$dialplan[$x]["dialplan_name"] = $ivr_menu_name;
+	$dialplan[$x]["dialplan_number"] = $ivr_menu_extension;
+	$dialplan[$x]["dialplan_context"] = $_SESSION["context"];
+	$dialplan[$x]["dialplan_continue"] = "false";
+	$dialplan[$x]["dialplan_xml"] = $dialplan_xml;
+	$dialplan[$x]["dialplan_order"] = "101";
+	$dialplan[$x]["dialplan_enabled"] = "true";
+	$dialplan[$x]["dialplan_description"] = $ivr_menu_description;
+	$dialplan[$x]["app_uuid"] = "a5788e9b-58bc-bd1b-df59-fff5d51253ab";
+
+//prepare the array
+	$array['ivr_menus'] = $ivr_menus;
+	$array['dialplans'] = $dialplan;
+
+//add the dialplan permission
+	$p = new permissions;
+	$p->add("dialplan_add", "temp");
+	$p->add("dialplan_edit", "temp");
+
+//save the array to the database
+	$database = new database;
+	$database->app_name = 'ivr_menus';
+	$database->app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
+	if (strlen($ivr_menu_uuid) > 0) {
+		$database->uuid($ivr_menu_uuid);
+	}
+	$database->save($array);
+	$message = $database->message;
+
+//remove the temporary permission
+	$p->delete("dialplan_add", "temp");
+	$p->delete("dialplan_edit", "temp");
 
 //synchronize the xml config
 	save_dialplan_xml();
@@ -183,7 +169,7 @@ else {
 	}
 
 //redirect the user
-	$_SESSION["message"] = $text['message-copy'];
+	message::add($text['message-copy']);
 	header("Location: ivr_menus.php");
 	return;
 

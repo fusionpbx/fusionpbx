@@ -52,14 +52,15 @@
 
 		--get voicemail message details
 			if (session:ready()) then
-				sql = [[SELECT * FROM v_voicemail_messages
-					WHERE domain_uuid = ']] .. domain_uuid ..[['
-					AND voicemail_uuid = ']] .. voicemail_uuid ..[['
-					AND voicemail_message_uuid = ']] .. uuid ..[[']]
+				local sql = [[SELECT * FROM v_voicemail_messages
+					WHERE domain_uuid = :domain_uuid
+					AND voicemail_uuid = :voicemail_uuid
+					AND voicemail_message_uuid = :uuid]]
+				local params = {domain_uuid = domain_uuid, voicemail_uuid = voicemail_uuid, uuid = uuid};
 				if (debug["sql"]) then
-					freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+					freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 				end
-				status = dbh:query(sql, function(row)
+				dbh:query(sql, params, function(row)
 					--get the values from the database
 						created_epoch = row["created_epoch"];
 						caller_id_name = row["caller_id_name"];
@@ -72,14 +73,15 @@
 			end
 
 		--get the voicemail settings
-			sql = [[SELECT * FROM v_voicemails
-				WHERE domain_uuid = ']] .. domain_uuid ..[['
-				AND voicemail_id = ']] .. forward_voicemail_id ..[['
+			local sql = [[SELECT * FROM v_voicemails
+				WHERE domain_uuid = :domain_uuid
+				AND voicemail_id = :voicemail_id
 				AND voicemail_enabled = 'true' ]];
+			local params = {domain_uuid = domain_uuid, voicemail_id = forward_voicemail_id};
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 			end
-			status = dbh:query(sql, function(row)
+			dbh:query(sql, params, function(row)
 				forward_voicemail_uuid = string.lower(row["voicemail_uuid"]);
 				forward_voicemail_mail_to = row["voicemail_mail_to"];
 				forward_voicemail_attach_file = row["voicemail_attach_file"];
@@ -87,7 +89,8 @@
 			end);
 
 		--get a new uuid
-			voicemail_message_uuid = session:get_uuid();
+			api = freeswitch.API();
+			voicemail_message_uuid = trim(api:execute("create_uuid", ""));
 
 		--save the message to the voicemail messages
 			local sql = {}
@@ -108,33 +111,41 @@
 			table.insert(sql, ") ");
 			table.insert(sql, "VALUES ");
 			table.insert(sql, "( ");
-			table.insert(sql, "'".. voicemail_message_uuid .."', ");
-			table.insert(sql, "'".. domain_uuid .."', ");
-			table.insert(sql, "'".. forward_voicemail_uuid .."', ");
+			table.insert(sql, ":voicemail_message_uuid, ");
+			table.insert(sql, ":domain_uuid, ");
+			table.insert(sql, ":forward_voicemail_uuid, ");
 			if (storage_type == "base64") then
-				table.insert(sql, "'".. message_base64 .."', ");
+				table.insert(sql, ":message_base64, ");
 			end
-			table.insert(sql, "'".. created_epoch .."', ");
-			table.insert(sql, "'".. caller_id_name .."', ");
-			table.insert(sql, "'".. caller_id_number .."', ");
-			table.insert(sql, "'".. message_length .."' ");
-			--table.insert(sql, "'".. message_status .."', ");
-			--table.insert(sql, "'".. message_priority .."' ");
+			table.insert(sql, ":created_epoch, ");
+			table.insert(sql, ":caller_id_name, ");
+			table.insert(sql, ":caller_id_number, ");
+			table.insert(sql, ":message_length ");
+			--table.insert(sql, ":message_status, ");
+			--table.insert(sql, ":message_priority ");
 			table.insert(sql, ") ");
 			sql = table.concat(sql, "\n");
+			local params = {
+				voicemail_message_uuid = voicemail_message_uuid;
+				domain_uuid = domain_uuid;
+				forward_voicemail_uuid = forward_voicemail_uuid;
+				message_base64 = message_base64;
+				created_epoch = created_epoch;
+				caller_id_name = caller_id_name;
+				caller_id_number = caller_id_number;
+				message_length = message_length;
+				-- message_status = message_status;
+				-- message_priority = message_priority;
+			};
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 			end
 			if (storage_type == "base64") then
-				array = explode("://", database["system"]);
-				local luasql = require "luasql.postgres";
-				local env = assert (luasql.postgres());
-				local dbh = env:connect(array[2]);
-				res, serr = dbh:execute(sql);
-				dbh:close();
-				env:close();
+				local dbh = Database.new('system', 'base64')
+				dbh:query(sql, params);
+				dbh:release();
 			else
-				dbh:query(sql);
+				dbh:query(sql, params);
 			end
 
 		--offer to add an intro to the forwarded message

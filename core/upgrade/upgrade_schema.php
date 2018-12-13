@@ -33,7 +33,8 @@
 		preg_match("/^(.*)\/core\/.*$/", $document_root, $matches);
 		$document_root = $matches[1];
 		set_include_path($document_root);
-		require_once "resources/require.php";
+		include "root.php";
+		include "resources/functions.php";
 		require_once "resources/classes/text.php";
 		$_SERVER["DOCUMENT_ROOT"] = $document_root;
 		$format = 'text'; //html, text

@@ -17,23 +17,27 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-require_once "resources/paging.php";
-if (permission_exists('extension_add')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
+
+//check permissions
+	if (permission_exists('extension_copy')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -47,7 +51,15 @@ else {
 			$number_alias_new = check_str($_REQUEST["alias"]);
 		}
 	}
-
+	
+// skip the copy if the domain extension already exists
+	$extension = new extension;
+	if ($extension->exists($_SESSION['domain_uuid'], $extension_new)) {
+		message::add($text['message-duplicate'], 'negative');
+		header("Location: extensions.php");
+		return;
+	}
+	
 //get the v_extensions data
 	$sql = "select * from v_extensions ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
@@ -224,7 +236,7 @@ else {
 	}
 
 //redirect the user
-	$_SESSION["message"] = $text['message-copy'];
+	message::add($text['message-copy']);
 	header("Location: extensions.php");
 	return;
 

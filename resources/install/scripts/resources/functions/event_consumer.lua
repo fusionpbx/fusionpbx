@@ -129,7 +129,7 @@ function BasicEventEmitter:off(event, handler)
 			end
 		end
 
-		self._handlers[event] = nil 
+		self._handlers[event] = nil
 
 	end
 
@@ -375,7 +375,7 @@ end
 
 function TimeEvents:fire(this, ...)
 	self._lock = true
-	local i, events = 0, self._events
+	local events = self._events
 	for i = 1, #events do
 		local event = events[i]
 		if event:rest() == 0 then
@@ -433,7 +433,7 @@ local default_timeout       = 60000
 local default_poll_interval = 60000 * 30
 
 function EventConsumer:__init(pid_file, timeout)
-	self.__base.__init(self)
+	self = EventConsumer.__base.__init(self)
 
 	if pid_file then
 		assert(type(pid_file) == 'string')
@@ -584,7 +584,7 @@ end
 
 ---
 --
--- @param events [string|array]- array of events to subscribe. To specify subclass you 
+-- @param events [string|array]- array of events to subscribe. To specify subclass you
 --   can use string like `<EVENT>::<SUBCLASS>` or array like `{<EVENT>, <SUBCLASS>}`.
 --   If `events` is string then it specify single event.
 -- @param block [booolean?] - by default it use block
@@ -595,7 +595,7 @@ end
 -- for event in ievents{'MEMCACHE','SHUTDOWN'} do ... end
 --
 -- -- do blocked iterate with timeout 1 sec
--- for event in ievents('SHUTDOWN', 1000) do 
+-- for event in ievents('SHUTDOWN', 1000) do
 --   if event then -- has event
 --   else -- timeout
 --   end
@@ -609,9 +609,9 @@ local ievents = function(events, block, timeout)
 		for _, event in ipairs(array) do
 			local name, class
 			if type(event) == 'table' then
-				base, sub = event[1], event[2]
+				name, class = event[1], event[2]
 			else
-				name, class = split_event(base)
+				name, class = split_event(event)
 			end
 			if not class then events:bind(name)
 			else events:bind(name, class) end

@@ -17,22 +17,26 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('call_center_agent_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('call_center_agent_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -100,7 +104,6 @@ else {
 	$result_count = count($result);
 	unset ($prep_statement, $sql);
 
-
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
@@ -129,20 +132,20 @@ else {
 	}
 	else { //received results
 		foreach($result as $row) {
-			$tr_link = (permission_exists('call_center_agent_edit')) ? "href='call_center_agent_edit.php?id=".$row['call_center_agent_uuid']."'" : null;
+			$tr_link = (permission_exists('call_center_agent_edit')) ? "href='call_center_agent_edit.php?id=".escape($row['call_center_agent_uuid'])."'" : null;
 			echo "<tr ".$tr_link.">\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[domain_uuid]."</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[domain_uuid])."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('call_center_agent_edit')) {
-				echo "<a href='call_center_agent_edit.php?id=".$row['call_center_agent_uuid']."'>".$row['agent_name']."</a>";
+				echo "<a href='call_center_agent_edit.php?id=".escape($row['call_center_agent_uuid'])."'>".escape($row['agent_name'])."</a>";
 			}
 			else {
-				echo $row['agent_name'];
+				echo escape($row['agent_name']);
 			}
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['agent_id']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['agent_type']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['agent_call_timeout']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['agent_id'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['agent_type'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['agent_call_timeout'])."&nbsp;</td>\n";
 			$agent_contact = $row['agent_contact'];
 			// parse out gateway uuid
 			$bridge_statement = explode('/', $row['agent_contact']);
@@ -159,20 +162,20 @@ else {
 				unset ($prep_statement, $sql, $bridge_statement);
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$agent_contact."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['agent_max_no_answer']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['agent_status']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['agent_max_no_answer'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['agent_status'])."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_wrap_up_time]."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_reject_delay_time]."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_busy_delay_time]."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>\n";
 			if (permission_exists('call_center_agent_edit')) {
-				echo "<a href='call_center_agent_edit.php?id=".$row['call_center_agent_uuid']."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
+				echo "<a href='call_center_agent_edit.php?id=".escape($row['call_center_agent_uuid'])."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
 			}
 			if (permission_exists('call_center_agent_delete')) {
-				echo "<a href='call_center_agent_delete.php?id=".$row['call_center_agent_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+				echo "<a href='call_center_agent_delete.php?id=".escape($row['call_center_agent_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 			}
-			//echo "		<input type='button' class='btn' name='' alt='edit' onclick=\"window.location='call_center_agent_edit.php?id=".$row[call_center_agent_uuid]."'\" value='e'>\n";
-			//echo "		<input type='button' class='btn' name='' alt='delete' onclick=\"if (confirm('Are you sure you want to delete this?')) { window.location='call_center_agent_delete.php?id=".$row[call_center_agent_uuid]."' }\" value='x'>\n";
+			//echo "		<input type='button' class='btn' name='' alt='edit' onclick=\"window.location='call_center_agent_edit.php?id=".escape($row[call_center_agent_uuid])."'\" value='e'>\n";
+			//echo "		<input type='button' class='btn' name='' alt='delete' onclick=\"if (confirm('Are you sure you want to delete this?')) { window.location='call_center_agent_delete.php?id=".escape($row[call_center_agent_uuid])."' }\" value='x'>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
@@ -201,4 +204,5 @@ else {
 
 //show the footer
 	require_once "resources/footer.php";
+
 ?>

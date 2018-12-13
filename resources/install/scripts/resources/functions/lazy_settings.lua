@@ -55,7 +55,7 @@ function Settings.new(db, domain_name, domain_uuid)
   self._db          = db
   self._domain_name = domain_name
   self._domain_uuid = domain_uuid
-  self._use_cache   = not not settings_in_cache
+  self._use_cache   = not not cache.settings
 
   return self
 end
@@ -105,15 +105,21 @@ function Settings:_load(category, subcategory, name)
   if domain_uuid then
     local sql = "SELECT domain_setting_uuid,domain_setting_category,domain_setting_subcategory,domain_setting_name,domain_setting_value "
     sql = sql .. "FROM v_domain_settings ";
-    sql = sql .. "WHERE domain_uuid = '" .. domain_uuid .. "'";
+    sql = sql .. "WHERE domain_uuid = :domain_uuid ";
     sql = sql .. "AND domain_setting_enabled = 'true' ";
-    sql = sql .. "AND domain_setting_category = '" .. category .."'";
-    sql = sql .. "AND domain_setting_subcategory = '" .. subcategory .. "'";
-    sql = sql .. "AND domain_setting_name = '" .. name .. "'";
+    sql = sql .. "AND domain_setting_category = :category ";
+    sql = sql .. "AND domain_setting_subcategory = :subcategory ";
+    sql = sql .. "AND domain_setting_name = :name ";
     sql = sql .. "AND domain_setting_value is not null ";
     sql = sql .. "ORDER BY domain_setting_category, domain_setting_subcategory ASC ";
+    local params = {
+      domain_uuid = domain_uuid,
+      category = category,
+      subcategory = subcategory,
+      name = name,
+    };
 
-    db:query(sql, function(row)
+    db:query(sql, params, function(row)
       found = true;
       self:set(
         row.domain_setting_category,
@@ -129,13 +135,18 @@ function Settings:_load(category, subcategory, name)
     local sql = "SELECT default_setting_uuid,default_setting_category,default_setting_subcategory,default_setting_name,default_setting_value "
     sql = sql .. "FROM v_default_settings ";
     sql = sql .. "WHERE default_setting_enabled = 'true' ";
-    sql = sql .. "AND default_setting_category = '" .. category .."'";
-    sql = sql .. "AND default_setting_subcategory = '" .. subcategory .. "'";
-    sql = sql .. "AND default_setting_name = '" .. name .. "'";
+    sql = sql .. "AND default_setting_category = :category ";
+    sql = sql .. "AND default_setting_subcategory = :subcategory ";
+    sql = sql .. "AND default_setting_name = :name ";
     sql = sql .. "AND default_setting_value is not null ";
     sql = sql .. "ORDER BY default_setting_category, default_setting_subcategory ASC";
+    local params = {
+      category = category,
+      subcategory = subcategory,
+      name = name,
+    };
 
-    db:query(sql, function(row)
+    db:query(sql, params, function(row)
       found = true;
       self:set(
         row.default_setting_category,

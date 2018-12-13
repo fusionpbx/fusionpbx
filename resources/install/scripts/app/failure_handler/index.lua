@@ -16,12 +16,13 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010-2015
+--	Copyright (C) 2010-2018
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
 --	Salvatore Caruso <salvatore.caruso@nems.it>
 --	Riccardo Granchi <riccardo.granchi@nems.it>
+--	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 
 --debug
 	debug["info"] = false;
@@ -32,6 +33,9 @@
 	require "resources.functions.explode";
 	require "resources.functions.trim";
 	require "resources.functions.base64";
+
+--load libraries
+	require 'resources.functions.send_mail'
 
 --check the missed calls
 	function missed()
@@ -45,24 +49,34 @@
 					if (not default_dialect) then default_dialect = 'us'; end
 					if (not default_voice) then default_voice = 'callie'; end
 
-				--prepare the files
-					file_subject = scripts_dir.."/app/missed_calls/resources/templates/"..default_language.."/"..default_dialect.."/email_subject.tpl";
-					file_body = scripts_dir.."/app/missed_calls/resources/templates/"..default_language.."/"..default_dialect.."/email_body.tpl";
-					if (not file_exists(file_subject)) then
-						file_subject = scripts_dir.."/app/missed_calls/resources/templates/en/us/email_subject.tpl";
-						file_body = scripts_dir.."/app/missed_calls/resources/templates/en/us/email_body.tpl";
+				--connect to the database
+					local Database = require "resources.functions.database";
+					local dbh = Database.new('system');
+
+				--get the templates
+					local sql = "SELECT * FROM v_email_templates ";
+					sql = sql .. "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					sql = sql .. "AND template_language = :template_language ";
+					sql = sql .. "AND template_category = 'missed' "
+					sql = sql .. "AND template_enabled = 'true' "
+					sql = sql .. "ORDER BY domain_uuid DESC "
+					local params = {domain_uuid = domain_uuid, template_language = default_language.."-"..default_dialect};
+					if (debug["sql"]) then
+						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 					end
+					dbh:query(sql, params, function(row)
+						subject = row["template_subject"];
+						body = row["template_body"];
+					end);
 
 				--prepare the headers
-					headers = '{"X-FusionPBX-Domain-UUID":"'..domain_uuid..'",';
-					headers = headers..'"X-FusionPBX-Domain-Name":"'..domain_name..'",';
-					headers = headers..'"X-FusionPBX-Call-UUID":"'..uuid..'",';
-					headers = headers..'"X-FusionPBX-Email-Type":"missed"}';
+					local headers = {}
+					headers["X-FusionPBX-Domain-UUID"] = domain_uuid;
+					headers["X-FusionPBX-Domain-Name"] = domain_name;
+					headers["X-FusionPBX-Call-UUID"]   = uuid;
+					headers["X-FusionPBX-Email-Type"]  = 'missed';
 
 				--prepare the subject
-					local f = io.open(file_subject, "r");
-					local subject = f:read("*all");
-					f:close();
 					subject = subject:gsub("${caller_id_name}", caller_id_name);
 					subject = subject:gsub("${caller_id_number}", caller_id_number);
 					subject = subject:gsub("${sip_to_user}", sip_to_user);
@@ -71,9 +85,6 @@
 					subject = '=?utf-8?B?'..base64.encode(subject)..'?=';
 
 				--prepare the body
-					local f = io.open(file_body, "r");
-					local body = f:read("*all");
-					f:close();
 					body = body:gsub("${caller_id_name}", caller_id_name);
 					body = body:gsub("${caller_id_number}", caller_id_number);
 					body = body:gsub("${sip_to_user}", sip_to_user);
@@ -87,13 +98,15 @@
 					body = body:gsub([["]], "&#34;");
 					body = trim(body);
 
-				--send the email
-					cmd = "luarun email.lua "..missed_call_data.." "..missed_call_data.." "..headers.." '"..subject.."' '"..body.."'";
+				--send the emails
+					send_mail(headers,
+						missed_call_data,
+						{subject, body}
+					);
+
 					if (debug["info"]) then
-						freeswitch.consoleLog("notice", "[missed call] cmd: " .. cmd .. "\n");
+						freeswitch.consoleLog("notice", "[missed call] " .. caller_id_number .. "->" .. sip_to_user .. "emailed to " .. missed_call_data .. "\n");
 					end
-					api = freeswitch.API();
-					result = api:executeString(cmd);
 			end
 		end
 	end
@@ -110,21 +123,27 @@
 		hangup_on_call_reject = session:getVariable("hangup_on_call_reject");
 		caller_id_name = session:getVariable("caller_id_name");
 		caller_id_number = session:getVariable("caller_id_number");
+		call_direction = session:getVariable("call_direction");
+		if (caller_direction == "local") then
+			caller_id_name = session:getVariable("effective_caller_id_name");
+		end
 		sip_to_user = session:getVariable("sip_to_user");
 		dialed_user = session:getVariable("dialed_user");
 		missed_call_app = session:getVariable("missed_call_app");
 		missed_call_data = session:getVariable("missed_call_data");
+		sip_code = session:getVariable("last_bridge_proto_specific_hangup_cause");
 
 		if (debug["info"] == true) then
 			freeswitch.consoleLog("INFO", "[failure_handler] originate_causes: " .. tostring(originate_causes) .. "\n");
 			freeswitch.consoleLog("INFO", "[failure_handler] originate_disposition: " .. tostring(originate_disposition) .. "\n");
 			freeswitch.consoleLog("INFO", "[failure_handler] hangup_on_subscriber_absent: " .. tostring(hangup_on_subscriber_absent) .. "\n");
 			freeswitch.consoleLog("INFO", "[failure_handler] hangup_on_call_reject: " .. tostring(hangup_on_call_reject) .. "\n");
+			freeswitch.consoleLog("INFO", "[failure_handler] sip_code: " .. tostring(sip_code) .. "\n");
 		end
 
 		if (originate_causes ~= nil) then
 			array = explode("|",originate_causes);
-			if (string.find(array[1], "USER_BUSY")) then
+			if (string.find(array[1], "USER_BUSY")) or (sip_code == "sip:486") then
 				originate_disposition = "USER_BUSY";
 				session:setVariable("originate_disposition", originate_disposition);
 			end
@@ -166,7 +185,7 @@
 						end
 					end
 
-			elseif (originate_disposition == "NO_ANSWER") then
+			elseif (originate_disposition == "NO_ANSWER") or (sip_code == "sip:480") then
 
 				--handle NO_ANSWER
 				forward_no_answer_enabled = session:getVariable("forward_no_answer_enabled");

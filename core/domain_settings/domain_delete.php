@@ -23,16 +23,20 @@
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('domain_delete')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('domain_delete')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -43,6 +47,7 @@ else {
 		$id = check_str($_GET["id"]);
 	}
 
+//delete domain data and files
 if (strlen($id) > 0) {
 	//get the domain using the id
 		$sql = "select * from v_domains ";
@@ -96,18 +101,26 @@ if (strlen($id) > 0) {
 		$db->beginTransaction();
 		if (isset($apps)) foreach ($apps as &$app) {
 			if (isset($app['db'])) foreach ($app['db'] as $row) {
-				$table_name = $row['table'];
-				if (isset($row['fields'])) foreach ($row['fields'] as $field) {
-					if ($field['name'] == "domain_uuid") {
-						$sql = "delete from $table_name where domain_uuid = '$id' ";
-						$db->query($sql);
+				if (is_array($row['table'])) {
+					$table_name = $row['table']['name'];
+				}
+				else {
+					$table_name = $row['table'];
+				}
+				if ($table_name !== "v" && isset($row['fields'])) {
+					foreach ($row['fields'] as $field) {
+						if ($field['name'] == "domain_uuid") {
+							$sql = "delete from $table_name where domain_uuid = '$id' ";
+							$db->query($sql);
+						}
 					}
 				}
 			}
 		}
 		$db->commit();
 
-	if (strlen($domain_name) > 0) {
+	//delete the directories
+		if (strlen($domain_name) > 0) {
 		//set the needle
 			if (count($_SESSION["domains"]) > 1) {
 				$v_needle = 'v_'.$domain_name.'_';
@@ -129,75 +142,75 @@ if (strlen($id) > 0) {
 			}
 
 		//delete the extension
-			unlink($_SESSION['switch']['extensions']['dir'].'/'.$domain_name.'.xml');
-			if (strlen($_SESSION['switch']['extensions']['dir']) > 0) {
-				system('rm -rf '.$_SESSION['switch']['extensions']['dir'].'/'.$domain_name);
-			}
+				unlink($_SESSION['switch']['extensions']['dir'].'/'.$domain_name.'.xml');
+				if (strlen($_SESSION['switch']['extensions']['dir']) > 0) {
+					system('rm -rf '.$_SESSION['switch']['extensions']['dir'].'/'.$domain_name);
+				}
 
-		//delete fax
-			if (strlen($_SESSION['switch']['storage']['dir']) > 0) {
-				system('rm -rf '.$_SESSION['switch']['storage']['dir'].'/fax/'.$domain_name);
-			}
+			//delete fax
+				if (strlen($_SESSION['switch']['storage']['dir']) > 0) {
+					system('rm -rf '.$_SESSION['switch']['storage']['dir'].'/fax/'.$domain_name);
+					}
 
-		//delete the gateways
-			if($dh = opendir($_SESSION['switch']['sip_profiles']['dir'])) {
-				$files = Array();
-				while($file = readdir($dh)) {
-					if($file != "." && $file != ".." && $file[0] != '.') {
-						if(is_dir($dir . "/" . $file)) {
-							//this is a directory do nothing
-						} else {
-							//check if file extension is xml
-							if (strpos($file, $v_needle) !== false && substr($file,-4) == '.xml') {
-								unlink($_SESSION['switch']['sip_profiles']['dir']."/".$file);
+				//delete the gateways
+					if($dh = opendir($_SESSION['switch']['sip_profiles']['dir'])) {
+						$files = Array();
+						while($file = readdir($dh)) {
+							if($file != "." && $file != ".." && $file[0] != '.') {
+								if(is_dir($dir . "/" . $file)) {
+									//this is a directory do nothing
+								} else {
+									//check if file extension is xml
+									if (strpos($file, $v_needle) !== false && substr($file,-4) == '.xml') {
+										unlink($_SESSION['switch']['sip_profiles']['dir']."/".$file);
+									}
+								}
 							}
 						}
+						closedir($dh);
 					}
-				}
-				closedir($dh);
-			}
 
-		//delete the ivr menu
-			if($dh = opendir($_SESSION['switch']['conf']['dir']."/ivr_menus/")) {
-				$files = Array();
-				while($file = readdir($dh)) {
-					if($file != "." && $file != ".." && $file[0] != '.') {
-						if(is_dir($dir . "/" . $file)) {
-							//this is a directory
-						} else {
-							if (strpos($file, $v_needle) !== false && substr($file,-4) == '.xml') {
-								unlink($_SESSION['switch']['conf']['dir']."/ivr_menus/".$file);
+				//delete the ivr menu
+					if($dh = opendir($_SESSION['switch']['conf']['dir']."/ivr_menus/")) {
+						$files = Array();
+						while($file = readdir($dh)) {
+							if($file != "." && $file != ".." && $file[0] != '.') {
+								if(is_dir($dir . "/" . $file)) {
+									//this is a directory
+								} else {
+									if (strpos($file, $v_needle) !== false && substr($file,-4) == '.xml') {
+										unlink($_SESSION['switch']['conf']['dir']."/ivr_menus/".$file);
+									}
+								}
 							}
 						}
+						closedir($dh);
 					}
-				}
-				closedir($dh);
+
+				//delete the recordings
+					if (strlen($_SESSION['switch'][recordings]['dir']) > 0) {
+						system('rm -rf '.$_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$domain_name);
+					}
+
+				//delete voicemail
+					if (strlen($_SESSION['switch']['voicemail']['dir']) > 0) {
+						system('rm -rf '.$_SESSION['switch']['voicemail']['dir'].'/'.$domain_name);
+					}
 			}
 
-		//delete the recordings
-			if (strlen($_SESSION['switch'][recordings]['dir']) > 0) {
-				system('rm -rf '.$_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$domain_name);
-			}
+		//apply settings reminder
+			$_SESSION["reload_xml"] = true;
 
-		//delete voicemail
-			if (strlen($_SESSION['switch']['voicemail']['dir']) > 0) {
-				system('rm -rf '.$_SESSION['switch']['voicemail']['dir'].'/'.$domain_name);
-			}
+		//clear the domains session array to update it
+			unset($_SESSION["domains"]);
+			unset($_SESSION["domain_uuid"]);
+			unset($_SESSION["domain_name"]);
+			unset($_SESSION['domain']);
+			unset($_SESSION['switch']);
 	}
 
-	//apply settings reminder
-		$_SESSION["reload_xml"] = true;
-
-	//clear the domains session array to update it
-		unset($_SESSION["domains"]);
-		unset($_SESSION["domain_uuid"]);
-		unset($_SESSION["domain_name"]);
-		unset($_SESSION['domain']);
-		unset($_SESSION['switch']);
-}
-
 //redirect the browser
-	$_SESSION["message"] = $text['message-delete'];
+	message::add($text['message-delete']);
 	header("Location: domains.php");
 	return;
 

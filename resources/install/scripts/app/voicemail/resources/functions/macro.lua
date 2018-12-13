@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013 - 2016 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -12,7 +12,7 @@
 --	  notice, this list of conditions and the following disclaimer in the
 --	  documentation and/or other materials provided with the distribution.
 --
---	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--	THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 --	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
 --	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
@@ -41,7 +41,13 @@
 				if (name == "person_not_available_record_message") then
 					table.insert(actions, {app="streamFile",data="voicemail/vm-person.wav"});
 					--pronounce the voicemail_id
-					table.insert(actions, {app="say.number.iterated",data=voicemail_id});
+					if (voicemail_alternate_greet_id and string.len(voicemail_alternate_greet_id) > 0) then
+						table.insert(actions, {app="say.number.iterated",data=voicemail_alternate_greet_id});
+					elseif (voicemail_greet_id and string.len(voicemail_greet_id) > 0) then
+						table.insert(actions, {app="say.number.iterated",data=voicemail_greet_id});
+					else
+						table.insert(actions, {app="say.number.iterated",data=voicemail_id});
+					end
 					table.insert(actions, {app="streamFile",data="voicemail/vm-not_available.wav"});
 				end
 			--record your message at the tone press any key or stop talking to end the recording
@@ -258,7 +264,52 @@
 					if (name == "goodbye") then
 						table.insert(actions, {app="streamFile",data="voicemail/vm-goodbye.wav"});
 					end
+				--Password is not secure
+					if (name == "password_not_secure") then
+						table.insert(actions, {app="streamFile",data="voicemail/vm-password_is_not_secure.wav"});
+					end
+				--Password is below minimum length
+					if (name == "password_below_minimum") then
+						table.insert(actions, {app="streamFile",data="voicemail/vm-pin_below_minimum_length.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-minimum_pin_length_is.wav"});
+						table.insert(actions, {app="streamFile",data="digits/"..param..".wav"});
+					end
+			--Tutorial
+				--Tutorial intro
+					if (name == "tutorial_intro") then
+						table.insert(actions, {app="streamFile",data="voicemail/vm-tutorial_yes_no.wav"});
+					end
+				
+				--Tutorial to record your name 1
+					if (name == "tutorial_to_record_name") then
+						table.insert(actions, {app="streamFile",data="voicemail/vm-tutorial_record_name.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-record_name2.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
+						table.insert(actions, {app="streamFile",data="digits/1.wav"});
+					end
+					
+				--Tutorial to change your password press 1
+					if (name == "tutorial_change_password") then
+						table.insert(actions, {app="streamFile",data="voicemail/vm-tutorial_change_pin.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-change_password.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
+						table.insert(actions, {app="streamFile",data="digits/1.wav"});
+					end
 
+				--Tutorial to record your greeting press 1
+					if (name == "tutorial_record_greeting") then
+						table.insert(actions, {app="streamFile",data="voicemail/vm-to_record_greeting.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
+						table.insert(actions, {app="streamFile",data="digits/1.wav"});
+					end					
+					
+				--Tutorial To skip
+					if (name == "tutorial_skip") then
+						table.insert(actions, {app="streamFile",data="ivr/ivr-to_skip.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
+						table.insert(actions, {app="streamFile",data="digits/2.wav"});
+					end
+		
 			--if actions table exists then process it
 				if (actions) then
 					--set default values

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -26,9 +26,40 @@
 
 //if the extensions dir doesn't exist then create it
 	if ($domains_processed == 1) {
-		if (strlen($_SESSION['switch']['extensions']['dir']) > 0) {
-			if (!is_dir($_SESSION['switch']['extensions']['dir'])) { event_socket_mkdir($_SESSION['switch']['extensions']['dir']); }
-		}
+
+		//create the directory
+			if (strlen($_SESSION['switch']['extensions']['dir']) > 0) {
+				if (!is_dir($_SESSION['switch']['extensions']['dir'])) { event_socket_mkdir($_SESSION['switch']['extensions']['dir']); }
+			}
+
+		//update the directory first and last names
+			$sql = "select * from v_extensions ";
+			$sql .= "where directory_first_name <> '' and directory_last_name is null ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$extensions = $prep_statement->fetchall(PDO::FETCH_ASSOC);
+				foreach($extensions as $row) {
+					$name = explode(' ', $row['directory_first_name']);
+					if (strlen($name[1]) > 0) {
+						$sql = "UPDATE v_extensions ";
+						$sql .= "SET directory_first_name = '".$name[0]."', ";
+						$sql .= "directory_last_name = '".$name[1]."' ";
+						$sql .= "WHERE extension_uuid = '". $row['extension_uuid'] ."' ";
+						$db->exec(check_sql($sql));
+						unset($sql);
+					}
+				}
+			}
+
+		//change category security to extension
+			$sql = "UPDATE v_default_settings ";
+			$sql .= "SET default_setting_category = 'extension' ";
+			$sql .= "WHERE default_setting_category = 'security' ";
+			$sql .= "AND default_setting_subcategory like 'password_%' ";
+			$db->exec(check_sql($sql));
+			unset($sql);
+
 	}
 
 ?>

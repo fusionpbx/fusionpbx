@@ -35,16 +35,32 @@
 --define the explode function
 	require "resources.functions.explode";
 
---define the leading_zeros function
-	function leading_zeros(str)
-		zeros = '';
-		for i = 1, string.len(str) do
-			c = string.sub(str, i, i);
-			if (c == '0') then
-				zeros = zeros .. '0';
-			else 
-				return zeros;
+--define the split function
+	require "resources.functions.split";
+
+--iterator over numbers.
+	local function each_number(value)
+		local begin_value, end_value = split_first(value, "-", true)
+		if (not end_value) or (begin_value == end_value) then
+			return function()
+				local result = begin_value
+				begin_value = nil
+				return result
 			end
+		end
+
+		if string.find(begin_value, "^0") then
+			assert(#begin_value == #end_value, "number in range with leading `0` should have same length")
+		end
+
+		local number_length = ("." .. tostring(#begin_value))
+		begin_value, end_value = tonumber(begin_value), tonumber(end_value)
+		assert(begin_value and end_value and (begin_value <= end_value), "Invalid range: " .. value)
+
+		return function()
+			value, begin_value = begin_value, begin_value + 1
+			if value > end_value then return end
+			return string.format("%" .. number_length .. "d", value)
 		end
 	end
 
@@ -82,7 +98,7 @@
 			end
 
 		--define the conference name
-			local conference_name = "page-"..destination_number.."-"..domain_name.."@page"
+			local conference_name = "page-"..destination_number.."@"..domain_name.."@page"
 
 		--set the caller id
 			if (caller_id_name) then
@@ -138,15 +154,7 @@
 			destination_count = 0;
 			api = freeswitch.API();
 			for index,value in pairs(destination_table) do
-				if (string.find(value, "-") == nil) then
-					value = value..'-'..value;
-				end
-				sub_table = explode("-",value);
-				zeros = leading_zeros(sub_table[1]);
-				for destination=sub_table[1],sub_table[2] do
-
-					--add the leading zeros back again
-					destination = zeros .. destination;
+				for destination in each_number(value) do
 
 					--get the destination required for number-alias
 					destination = api:execute("user_data", destination .. "@" .. domain_name .. " attr id");
@@ -160,21 +168,21 @@
 							reply = trim(api:executeString(destination_status));
 							if (reply == "0 total.") then
 								freeswitch.consoleLog("NOTICE", "[page] destination "..destination.." available\n");
-								if (destination == tonumber(sip_from_user)) then
+								if destination == sip_from_user then
 									--this destination is the caller that initated the page
 								else
 									--originate the call
-									cmd_string = "bgapi originate {sip_auto_answer=true,sip_h_Alert-Info='Ring Answer',hangup_after_bridge=false,rtp_secure_media="..rtp_secure_media..",origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:"..conference_name.."+"..flags.." inline";
+										cmd_string = "bgapi originate {sip_auto_answer=true,sip_h_Alert-Info='Ring Answer',hangup_after_bridge=false,rtp_secure_media="..rtp_secure_media..",origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:"..conference_name.."+"..flags.." inline";
 									api:executeString(cmd_string);
 									destination_count = destination_count + 1;
 								end
 								--freeswitch.consoleLog("NOTICE", "cmd_string "..cmd_string.."\n");
 							else
-								--look inside the reply to check for the correct domain_name
+ 								--look inside the reply to check for the correct domain_name
 								if string.find(reply, domain_name) then
 									--found: user is busy
 								else
-									--not found
+ 									--not found
 									if (destination == tonumber(sip_from_user)) then
 										--this destination is the caller that initated the page
 									else

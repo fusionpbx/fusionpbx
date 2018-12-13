@@ -17,39 +17,45 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-function paging($num_rows, $param, $rows_per_page, $mini = false) {
+function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count = 0) {
 
-	if (strlen($rows_per_page)==0) {
-		$rows_per_page = 50; //default number of rows per page
-	}
-
-
-// by default we show first page
-	$pagenum = 0;
+	//validate the data
+	if (!is_numeric($num_rows)) { $num_rows = 0; }
+	if (!is_numeric($rows_per_page)) { $rows_per_page = 100; }
+	if (!is_numeric($result_count)) { $result_count = 0; }
 
 	// if $_get['page'] defined, use it as page number
-	if(isset($_GET['page'])) {
-		$pagenum = $_GET['page'];
+	if(isset($_GET['page']) && is_numeric($_GET['page'])) {
+		$page_number = $_GET['page'];
+	}
+	else {
+		$page_number = 0;
 	}
 
-	// counting the offset
-	$offset = ($pagenum - 1) * $rows_per_page;
+	//get the offset
+	$offset = ($page_number - 1) * $rows_per_page;
 
-	// how many pages we have when using paging?
-	$maxpage = ceil($num_rows/$rows_per_page);
+	//how many pages we have when using paging
+	if ($num_rows > 0) {
+		$max_page = ceil($num_rows/$rows_per_page);
+	}
+
+	//add multi-lingual support
+	$language = new text;
+	$text = $language->get();
 
 	// print the link to access each page
 	$self = $_SERVER['PHP_SELF'];
 	$nav = '';
-	for($page = 1; $page <= $maxpage; $page++){
-		if ($page == $pagenum) {
+	for($page = 1; $page <= $max_page; $page++){
+		if ($page == $page_number) {
 			$nav .= " $page ";   // no need to create a link to current page
 		}
 		else {
@@ -57,31 +63,33 @@ function paging($num_rows, $param, $rows_per_page, $mini = false) {
 		}
 	}
 
-	if ($pagenum > 0) {
-        $page = $pagenum - 1;
-		$prev = "<input class='btn' type='button' value='&#9664;' alt='".($page+1)."' title='".($page+1)."' onClick=\"window.location = '".$self."?page=$page".$param."';\">\n";
-		$first = "<input class='btn' type='button' value='&#9650;' onClick=\"window.location = '".$self."?page=1".$param."';\">\n";
-
+	if ($page_number > 0) {
+        $page = $page_number - 1;
+		$prev = "<input class='btn' type='button' value='".$text['button-back']."' alt='".($page+1)."' title='".($page+1)."' onClick=\"window.location = '".$self."?page=$page".$param."';\">\n"; //&#9664;
+		$first = "<input class='btn' type='button' value='".$text['button-next']."' onClick=\"window.location = '".$self."?page=1".$param."';\">\n"; //&#9650;
 	}
 	else {
-		$prev = "<input class='btn' type='button' disabled value='&#9664;' style='opacity: 0.4; -moz-opacity: 0.4; cursor: default;'>\n";
+		$prev = "<input class='btn' type='button' disabled value='".$text['button-back']."' style='opacity: 0.4; -moz-opacity: 0.4; cursor: default;'>\n"; //&#9664;
 	}
 
-	if (($pagenum + 1) < $maxpage) {
-        $page = $pagenum + 1;
-		$next = "<input class='btn' type='button' value='&#9654;' alt='".($page+1)."' title='".($page+1)."' onClick=\"window.location = '".$self."?page=$page".$param."';\">\n";
-		$last = "<input class='btn' type='button' value='&#9660;' onClick=\"window.location = '".$self."?page=$maxpage".$param."';\">\n";
-
+	if (($page_number + 1) < $max_page) {
+        $page = $page_number + 1;
+		$next = "<input class='btn' type='button' value='".$text['button-next']."' alt='".($page+1)."' title='".($page+1)."' onClick=\"window.location = '".$self."?page=$page".$param."';\">\n"; //&#9654;
+		$last = "<input class='btn' type='button' value='".$text['button-back']."' onClick=\"window.location = '".$self."?page=$max_page".$param."';\">\n"; //&#9660;
 	}
 	else {
-		$last = "<input class='btn' type='button' value='&#9660;' onClick=\"window.location = '".$self."?page=$maxpage".$param."';\">\n";
-		$next = "<input class='btn' type='button' disabled value='&#9654;' style='opacity: 0.4; -moz-opacity: 0.4; cursor: default;'>\n";
-
+		$last = "<input class='btn' type='button' value='".$text['button-next']."' onClick=\"window.location = '".$self."?page=$max_page".$param."';\">\n"; //&#9660;
+		$next = "<input class='btn' type='button' disabled value='".$text['button-next']."' style='opacity: 0.4; -moz-opacity: 0.4; cursor: default;'>\n"; //&#9654;
 	}
 
-	$returnearray = array();
+	//if the result count is less than the rows per page then this is the last page of results
+	if ($result_count > 0 and $result_count < $rows_per_page) {
+			$next = "<input class='btn' type='button' disabled value='".$text['button-next']."' style='opacity: 0.4; -moz-opacity: 0.4; cursor: default;'>\n"; //&#9654;
+	}
+
+	$array = array();
 	$code = '';
-	if ($maxpage > 1) {
+	if ($max_page > 1) {
 		//define javascript to include
 			$script = "<script>\n".
 					"function go(e) {\n".
@@ -114,23 +122,39 @@ function paging($num_rows, $param, $rows_per_page, $mini = false) {
 						"if (do_action) {\n".
 							"// action to peform when enter is hit\n".
 							"if (page_num < 1) { page_num = 1; }\n".
-							"if (page_num > ".$maxpage.") { page_num = ".$maxpage."; }\n".
+							"if (page_num > ".$max_page.") { page_num = ".$max_page."; }\n".
 							"document.location.href = '".$self."?page='+(--page_num)+'".$param."';\n".
 						"}\n".
 					"}\n".
 				"</script>\n";
 		//determine size
-			$code = ($mini) ? $prev.$next."\n".$script : "<center nowrap>".$prev."&nbsp;&nbsp;&nbsp;<input id='paging_page_num' class='formfld' style='max-width: 50px; min-width: 50px; text-align: center;' type='text' value='".($pagenum+1)."' onfocus='this.select();' onkeypress='return go(event);'>&nbsp;&nbsp;<strong>".$maxpage."</strong>&nbsp;&nbsp;&nbsp;&nbsp;".$next."</center>\n".$script;
+			if ($mini) {
+				$code = $prev.$next."\n".$script;
+			}
+			else {
+				$code .= "<center nowrap=\"nowrap\">";
+				$code .= "	".$prev;
+				$code .= "	&nbsp;&nbsp;&nbsp;";
+				$code .= "	<input id='paging_page_num' class='formfld' style='max-width: 50px; min-width: 50px; text-align: center;' type='text' value='".($page_number+1)."' onfocus='this.select();' onkeypress='return go(event);'>";
+				if ($result_count == 0) {
+					$code .= "	&nbsp;&nbsp;<strong>".$max_page."</strong>";
+				}
+				$code .= "	&nbsp;&nbsp;&nbsp;";
+				$code .= "	".$next;
+				$code .= "</center>\n".$script;
+			}
+
 		//add to array
-			$returnearray[] = $code;
+			$array[] = $code;
 	}
 	else {
-		$returnearray[] = "";
+		$array[] = "";
 	}
-	$returnearray[] = $rows_per_page;
-	$returnearray[] = $offset;
+	$array[] = $rows_per_page;
+	$array[] = $offset;
 
-	return $returnearray;
+	return $array;
 
 }
+
 ?>

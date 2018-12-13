@@ -17,35 +17,56 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('call_center_active_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('call_center_active_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-//get the queue_name and set it as a variable
-	$queue_name = $_GET[queue_name].'@'. $_SESSION['domains'][$domain_uuid]['domain_name'];
+//get the queue uuid and set it as a variable
+	$queue_uuid = $_GET['queue_name'];
+
+//get the queues from the database
+	if (!is_array($_SESSION['queues'])) {
+		$sql = "select * from v_call_center_queues ";
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "order by queue_name ASC ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$_SESSION['queues'] = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	}
+
+//get the queue name
+	foreach ($_SESSION['queues'] as $row) {
+		if ($row['call_center_queue_uuid'] == $queue_uuid) {
+			$queue_name = $row['queue_name'];
+		}
+	}
 
 //convert the string to a named array
 	function str_to_named_array($tmp_str, $tmp_delimiter) {
 		$tmp_array = explode ("\n", $tmp_str);
-		$result = '';
+		$result = array();
 		if (trim(strtoupper($tmp_array[0])) != "+OK") {
 			$tmp_field_name_array = explode ($tmp_delimiter, $tmp_array[0]);
 			$x = 0;
@@ -100,19 +121,21 @@ else {
 
 			//send the event socket command and get the response
 				//callcenter_config queue list tiers [queue_name] |
-				$switch_cmd = 'callcenter_config queue list tiers '.$queue_name;
+				$switch_cmd = 'callcenter_config queue list tiers '.$queue_uuid;
 				$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
 				$result = str_to_named_array($event_socket_str, '|');
 
 			//prepare the result for array_multisort
 				$x = 0;
-				if (isset($result)) foreach ($result as $row) {
-					$tier_result[$x]['level'] = $row['level'];
-					$tier_result[$x]['position'] = $row['position'];
-					$tier_result[$x]['agent'] = $row['agent'];
-					$tier_result[$x]['state'] = trim($row['state']);
-					$tier_result[$x]['queue'] = $row['queue'];
-					$x++;
+				if (is_array($result)) {
+					foreach ($result as $row) {
+						$tier_result[$x]['level'] = $row['level'];
+						$tier_result[$x]['position'] = $row['position'];
+						$tier_result[$x]['agent'] = $row['agent'];
+						$tier_result[$x]['state'] = trim($row['state']);
+						$tier_result[$x]['queue'] = $row['queue'];
+						$x++;
+					}
 				}
 
 			//sort the array //SORT_ASC, SORT_DESC, SORT_REGULAR, SORT_NUMERIC, SORT_STRING
@@ -120,9 +143,19 @@ else {
 
 			//send the event socket command and get the response
 				//callcenter_config queue list agents [queue_name] [status] |
-				$switch_cmd = 'callcenter_config queue list agents '.$queue_name;
+				$switch_cmd = 'callcenter_config queue list agents '.$queue_uuid;
 				$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
 				$agent_result = str_to_named_array($event_socket_str, '|');
+
+			//get the agents from the database
+				if (!is_array($_SESSION['agents'])) {
+					$sql = "select * from v_call_center_agents ";
+					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+					$sql .= "order by agent_name ASC ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$_SESSION['agents'] = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				}
 
 			//list the agents
 				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
@@ -152,15 +185,23 @@ else {
 
 					if (isset($agent_result)) foreach ($agent_result as $agent_row) {
 						if ($tier_row['agent'] == $agent_row['name']) {
-							$name = $agent_row['name'];
-							$name = str_replace('@'.$_SESSION['domain_name'], '', $name);
+							$agent_uuid = $agent_row['name'];
+
+							//get the agent name
+							$agent_name = '';
+							if (is_array($_SESSION['agents'])) foreach ($_SESSION['agents'] as $agent) {
+								if ($agent['call_center_agent_uuid'] == $agent_uuid) {
+									$agent_name = $agent['agent_name'];
+								}
+							}
+
 							//$system = $agent_row['system'];
-							$a_uuid = $agent_row['uuid'];
+							$agent_uuid = $agent_row['uuid'];
 							//$type = $agent_row['type'];
 							$contact = $agent_row['contact'];
-							$a_exten = preg_replace("/user\//", "", $contact);
-							$a_exten = preg_replace("/@.*/", "", $a_exten);
-							$a_exten = preg_replace("/{.*}/", "", $a_exten);
+							$agent_extension = preg_replace("/user\//", "", $contact);
+							$agent_extension = preg_replace("/@.*/", "", $agent_extension);
+							$agent_extension = preg_replace("/{.*}/", "", $agent_extension);
 							$status = $agent_row['status'];
 							$state = $agent_row['state'];
 							$max_no_answer = $agent_row['max_no_answer'];
@@ -193,8 +234,8 @@ else {
 							$last_status_change_length = $last_status_change_length_hour.':'.$last_status_change_length_min.':'.$last_status_change_length_sec;
 
 							echo "<tr>\n";
-							echo "<td valign='top' class='".$row_style[$c]."'>".$name."</td>\n";
-							echo "<td valign='top' class='".$row_style[$c]."'>".$a_exten."</td>\n";
+							echo "<td valign='top' class='".$row_style[$c]."'>".$agent_name."</td>\n";
+							echo "<td valign='top' class='".$row_style[$c]."'>".$agent_extension."</td>\n";
 							echo "<td valign='top' class='".$row_style[$c]."'>".$status."</td>\n";
 							echo "<td valign='top' class='".$row_style[$c]."'>".$state."</td>\n";
 							echo "<td valign='top' class='".$row_style[$c]."'>".$last_status_change_length."</td>\n";
@@ -210,20 +251,20 @@ else {
 
 								//need to check state to so only waiting gets call, and trying/answer gets eavesdrop
 								if ($tier_state == "Offering" || $tier_state == "Active Inbound") {
-									$orig_command="{origination_caller_id_name=eavesdrop,origination_caller_id_number=".$a_exten."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26eavesdrop(".$a_uuid.")";
+									$orig_command="{origination_caller_id_name=eavesdrop,origination_caller_id_number=".$agent_extension."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26eavesdrop(".$agent_uuid.")";
 
 									//debug
 									//echo $orig_command;
 									//echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=log+".$orig_command.")');}\">log_cmd</a>&nbsp;\n";
 									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=originate+".$orig_command.")');}\">".$text['label-eavesdrop']."</a>&nbsp;\n";
 
-									$xfer_command = $a_uuid." -bleg ".$_SESSION['user']['extension'][0]['user']." XML ".$_SESSION['domain_name'];
-									//$xfer_command = $a_uuid." ".$_SESSION['user']['extension'][0]['user']." XML default";
+									$xfer_command = $agent_uuid." -bleg ".$_SESSION['user']['extension'][0]['user']." XML ".$_SESSION['domain_name'];
+									//$xfer_command = $agent_uuid." ".$_SESSION['user']['extension'][0]['user']." XML default";
 									$xfer_command = urlencode($xfer_command);
 									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=uuid_transfer+".$xfer_command."');}\">".$text['label-transfer']."</a>&nbsp;\n";
 								}
 								else {
-									$orig_call="{origination_caller_id_name=c2c-".urlencode($name).",origination_caller_id_number=".$a_exten."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26bridge(user/".$a_exten."@".$_SESSION['domain_name'].")";
+									$orig_call="{origination_caller_id_name=c2c-".urlencode($name).",origination_caller_id_number=".$agent_extension."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26bridge(user/".$agent_extension."@".$_SESSION['domain_name'].")";
 									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=originate+".$orig_call.")');}\">".$text['label-call']."</a>&nbsp;\n";
 								}
 								echo "</td>";
@@ -245,7 +286,7 @@ else {
 		//get the queue list
 			//send the event socket command and get the response
 				//callcenter_config queue list members [queue_name]
-				$switch_cmd = 'callcenter_config queue list members '.$queue_name;
+				$switch_cmd = 'callcenter_config queue list members '.$queue_uuid;
 				$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
 				$result = str_to_named_array($event_socket_str, '|');
 				if (!is_array($result)) { unset($result); }
@@ -257,7 +298,7 @@ else {
 
 				echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 				echo "  <tr>\n";
-				echo "	<td align='left'><b>".$text['label-queue'].": ".ucfirst($_GET[queue_name])."</b><br />\n";
+				echo "	<td align='left'><b>".$text['label-queue'].": ".ucfirst($queue_name)."</b><br />\n";
 				echo "		".$text['description-queue']."<br />\n";
 				echo "	</td>\n";
 				echo "	<td align='right' valign='top'>";
@@ -313,13 +354,13 @@ else {
 				$joined_length_sec = sprintf("%02d", $joined_length_sec);
 				$joined_length = $joined_length_hour.':'.$joined_length_min.':'.$joined_length_sec;
 
-				//$system_seconds = time() - $system_epoch;
-				//$system_length_hour = floor($system_seconds/3600);
-				//$system_length_min = floor($system_seconds/60 - ($system_length_hour * 60));
-				//$system_length_sec = $system_seconds - (($system_length_hour * 3600) + ($system_length_min * 60));
-				//$system_length_min = sprintf("%02d", $system_length_min);
-				//$system_length_sec = sprintf("%02d", $system_length_sec);
-				//$system_length = $system_length_hour.':'.$system_length_min.':'.$system_length_sec;
+				//get the serving agent name
+				$serving_agent_name = '';
+				if (is_array($_SESSION['agents'])) foreach ($_SESSION['agents'] as $agent) {
+					if ($agent['call_center_agent_uuid'] == $serving_agent) {
+						$serving_agent_name = $agent['agent_name'];
+					}
+				}
 
 				echo "<tr>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>".$joined_length."</td>\n";
@@ -344,7 +385,7 @@ else {
 					}
 					echo "</td>";
 				}
-				echo "<td valign='top' class='".$row_style[$c]."'>".$serving_agent."&nbsp;</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".$serving_agent_name."&nbsp;</td>\n";
 				echo "</tr>\n";
 				if ($c==0) { $c=1; } else { $c=0; }
 			}

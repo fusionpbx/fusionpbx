@@ -37,8 +37,14 @@
 	require "resources.functions.config";
 
 --connect to the database
-	require "resources.functions.database_handle";
-	dbh = database_handle('system');
+	local Database = require "resources.functions.database";
+	dbh = Database.new('system');
+
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
 
 --get the domain_uuid
 	domain_uuid = session:getVariable("domain_uuid");
@@ -64,9 +70,8 @@
 		if (settings['recordings']['storage_path'] ~= nil) then
 			if (settings['recordings']['storage_path']['text'] ~= nil) then
 				storage_path = settings['recordings']['storage_path']['text'];
-				storage_path = storage_path:gsub("${domain_name}", domain_name);
-				storage_path = storage_path:gsub("${voicemail_id}", voicemail_id);
-				storage_path = storage_path:gsub("${voicemail_dir}", voicemail_dir);
+				storage_path = storage_path:gsub("${domain_name}",  session:getVariable("domain_name"));
+				storage_path = storage_path:gsub("${domain_uuid}", domain_uuid);
 			end
 		end
 	end
@@ -124,13 +129,13 @@
 			session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-recording_started.wav");
 			session:execute("set", "playback_terminators=#");
 
+		--make the directory
+			mkdir(recordings_dir);
+
 		--begin recording
 			if (storage_type == "base64") then
 				--include the file io
 					local file = require "resources.functions.file"
-
-				--make the directory
-					mkdir(recordings_dir);
 
 				--record the file to the file system
 					-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs);
@@ -146,15 +151,24 @@
 				freeswitch.consoleLog("notice", "[recordings] ".. storage_type .. " ".. storage_path .."\n");
 				session:execute("record", storage_path .."/"..recording_name);
 			else
+				freeswitch.consoleLog("notice", "[recordings] ".. storage_type .. " ".. recordings_dir .."\n");
 				-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs);
 				session:execute("record", "'"..recordings_dir.."/"..recording_name.."' 10800 500 500");
 			end
 
+		--get the description of the previous recording
+			sql = "SELECT recording_description FROM v_recordings ";
+			sql = sql .. "where domain_uuid = :domain_uuid ";
+			sql = sql .. "and recording_filename = :recording_name ";
+			sql = sql .. "limit 1";
+			local params = {domain_uuid = domain_uuid, recording_name = recording_name};
+			local recording_description = dbh:first_value(sql, params) or ''
+			
 		--delete the previous recording
 			sql = "delete from v_recordings ";
-			sql = sql .. "where domain_uuid = '".. domain_uuid .. "' ";
-			sql = sql .. "and recording_filename = '".. recording_name .."'";
-			dbh:query(sql);
+			sql = sql .. "where domain_uuid = :domain_uuid ";
+			sql = sql .. "and recording_filename = :recording_name";
+			dbh:query(sql, {domain_uuid = domain_uuid, recording_name = recording_name});
 
 		--get a new uuid
 			recording_uuid = api:execute("create_uuid");
@@ -166,6 +180,7 @@
 			table.insert(array, "recording_uuid, ");
 			table.insert(array, "domain_uuid, ");
 			table.insert(array, "recording_filename, ");
+			table.insert(array, "recording_description, ");			
 			if (storage_type == "base64") then
 				table.insert(array, "recording_base64, ");
 			end
@@ -173,25 +188,36 @@
 			table.insert(array, ") ");
 			table.insert(array, "VALUES ");
 			table.insert(array, "( ");
-			table.insert(array, "'"..recording_uuid.."', ");
-			table.insert(array, "'"..domain_uuid.."', ");
-			table.insert(array, "'"..recording_name.."', ");
+			table.insert(array, ":recording_uuid, ");
+			table.insert(array, ":domain_uuid, ");
+			table.insert(array, ":recording_name, ");
+			table.insert(array, ":recording_description, ");				
 			if (storage_type == "base64") then
-				table.insert(array, "'"..recording_base64.."', ");
+				table.insert(array, ":recording_base64, ");
 			end
-			table.insert(array, "'"..recording_name.."' ");
+			table.insert(array, ":recording_name ");
 			table.insert(array, ") ");
 			sql = table.concat(array, "\n");
+
+			local params = {
+				recording_uuid = recording_uuid;
+				domain_uuid = domain_uuid;
+				recording_name = recording_name;
+				recording_description = recording_description;
+				recording_base64 = recording_base64;
+			};
+
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[recording] SQL: " .. sql .. "\n");
+				freeswitch.consoleLog("notice", "[recording] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
 			end
+
 			if (storage_type == "base64") then
 				local Database = require "resources.functions.database"
 				local dbh = Database.new('system', 'base64');
-				dbh:query(sql);
+				dbh:query(sql, params);
 				dbh:release();
 			else
-				dbh:query(sql);
+				dbh:query(sql, params);
 			end
 
 		--preview the recording
@@ -255,6 +281,9 @@ if ( session:ready() ) then
 	--add the domain name to the recordings directory
 		recordings_dir = recordings_dir .. "/"..domain_name;
 
+	--if a recording directory is specified, use that instead
+		if (storage_path ~= nil and string.len(storage_path) > 0) then recordings_dir = storage_path; end
+	
 	--set the sounds path for the language, dialect and voice
 		default_language = session:getVariable("default_language");
 		default_dialect = session:getVariable("default_dialect");

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2013 - 2014
+	Copyright (C) 2013 - 2016
 	All Rights Reserved.
 
 	Contributor(s):
@@ -63,8 +63,8 @@ if (!class_exists('schema')) {
 					if (isset($app['db']) && count($app['db'])) {
 						foreach ($app['db'] as $row) {
 							//create the sql string
-								$table_name = $row['table'];
-								$sql = "CREATE TABLE " . $row['table'] . " (\n";
+								$table_name = $row['table']['name'];
+								$sql = "CREATE TABLE " . $row['table']['name'] . " (\n";
 								$field_count = 0;
 								foreach ($row['fields'] as $field) {
 									if (isset($field['deprecated']) and ($field['deprecated'] == "true")) {
@@ -143,7 +143,6 @@ if (!class_exists('schema')) {
 
 		//check if a column exists
 			public function column_exists ($db_name, $table_name, $column_name) {
-				global $display_type;
 
 				if ($this->db_type == "sqlite") {
 					$table_info = $this->table_info($db_name, $table_name);
@@ -305,7 +304,6 @@ if (!class_exists('schema')) {
 
 		//database column exists
 			private function db_column_exists ($db_type, $db_name, $table_name, $column_name) {
-				global $display_type;
 
 				if ($db_type == "sqlite") {
 					$table_info = $this->db_table_info($db_name, $db_type, $table_name);
@@ -348,12 +346,12 @@ if (!class_exists('schema')) {
 
 		//database create table
 			public function db_create_table ($apps, $db_type, $table) {
-				foreach ($apps as $x => &$app) {
-					foreach ($app['db'] as $y => $row) {
-						if ($row['table'] == $table) {
-							$sql = "CREATE TABLE " . $row['table'] . " (\n";
+				if (is_array($apps)) foreach ($apps as $x => &$app) {
+					if (is_array($app['db'])) foreach ($app['db'] as $y => $row) {
+						if ($row['table']['name'] == $table) {
+							$sql = "CREATE TABLE " . $row['table']['name'] . " (\n";
 							$field_count = 0;
-							foreach ($row['fields'] as $field) {
+							if (is_array($row['fields'])) foreach ($row['fields'] as $field) {
 								if ($field['deprecated'] == "true") {
 									//skip this row
 								}
@@ -389,8 +387,8 @@ if (!class_exists('schema')) {
 				global $db_name;
 				foreach ($apps as $x => &$app) {
 					foreach ($app['db'] as $y => $row) {
-						if ($row['table'] == $table) {
-							$sql = "INSERT INTO " . $row['table'] . " (";
+						if ($row['table']['name'] == $table) {
+							$sql = "INSERT INTO " . $row['table']['name'] . " (";
 							$field_count = 0;
 							foreach ($row['fields'] as $field) {
 								if ($field['deprecated'] == "true") {
@@ -463,6 +461,7 @@ if (!class_exists('schema')) {
 					if ($format=='') $format = $output_format;
 
 				//get the db variables
+					require_once "resources/classes/config.php";
 					$config = new config;
 					$config_exists = $config->exists();
 					$config_path = $config->find();
@@ -522,11 +521,22 @@ if (!class_exists('schema')) {
 					$sql = '';
 					foreach ($apps as $x => &$app) {
 						if (isset($app['db'])) foreach ($app['db'] as $y => &$row) {
-							if (is_array($row['table'])) {
-								$table_name = $row['table']['text'];
+							if (isset($row['table']['name'])) {
+								if (is_array($row['table']['name'])) {
+									$table_name = $row['table']['name']['text'];
+								}
+								else {
+									$table_name = $row['table']['name'];
+								}
 							}
 							else {
-								$table_name = $row['table'];
+								//old array syntax
+								if (is_array($row['table'])) {
+									$table_name = $row['table']['text'];
+								}
+								else {
+									$table_name = $row['table'];
+								}
 							}
 							if (strlen($table_name) > 0) {
 								//check if the table exists
@@ -573,25 +583,25 @@ if (!class_exists('schema')) {
 				//add missing tables and fields
 					foreach ($apps as $x => &$app) {
 						if (isset($app['db'])) foreach ($app['db'] as $y => &$row) {
-							if (is_array($row['table'])) {
-								$table_name = $row['table']['text'];
-								if (!$this->db_table_exists($db_type, $db_name, $row['table']['text'])) {
+							if (is_array($row['table']['name'])) {
+								$table_name = $row['table']['name']['text'];
+								if (!$this->db_table_exists($db_type, $db_name, $row['table']['name']['text'])) {
 									$row['exists'] = "true"; //testing
-									//if (db_table_exists($db_type, $db_name, $row['table']['deprecated'])) {
+									//if (db_table_exists($db_type, $db_name, $row['table']['name']['deprecated'])) {
 										if ($db_type == "pgsql") {
-											$sql_update .= "ALTER TABLE ".$row['table']['deprecated']." RENAME TO ".$row['table']['text'].";\n";
+											$sql_update .= "ALTER TABLE ".$row['table']['name']['deprecated']." RENAME TO ".$row['table']['name']['text'].";\n";
 										}
 										if ($db_type == "mysql") {
-											$sql_update .= "RENAME TABLE ".$row['table']['deprecated']." TO ".$row['table']['text'].";\n";
+											$sql_update .= "RENAME TABLE ".$row['table']['name']['deprecated']." TO ".$row['table']['name']['text'].";\n";
 										}
 										if ($db_type == "sqlite") {
-											$sql_update .= "ALTER TABLE ".$row['table']['deprecated']." RENAME TO ".$row['table']['text'].";\n";
+											$sql_update .= "ALTER TABLE ".$row['table']['name']['deprecated']." RENAME TO ".$row['table']['name']['text'].";\n";
 										}
 									//}
 								}
 							}
 							else {
-								$table_name = $row['table'];
+								$table_name = $row['table']['name'];
 							}
 							//check if the table exists
 								if ($row['exists'] == "true") {
@@ -700,8 +710,8 @@ if (!class_exists('schema')) {
 								}
 								else {
 									//create table
-										if (!is_array($row['table'])) {
-											$sql_update .= $this->db_create_table($apps, $db_type, $row['table']);
+										if (!is_array($row['table']['name'])) {
+											$sql_update .= $this->db_create_table($apps, $db_type, $row['table']['name']);
 										}
 								}
 						}
@@ -709,11 +719,11 @@ if (!class_exists('schema')) {
 				//rebuild and populate the table
 					foreach ($apps as $x => &$app) {
 						if (isset($app['db'])) foreach ($app['db'] as $y => &$row) {
-							if (is_array($row['table'])) {
-								$table_name = $row['table']['text'];
+							if (is_array($row['table']['name'])) {
+								$table_name = $row['table']['name']['text'];
 							}
 							else {
-								$table_name = $row['table'];
+								$table_name = $row['table']['name'];
 							}
 							if ($row['rebuild'] == "true") {
 								if ($db_type == "sqlite") {
@@ -766,11 +776,11 @@ if (!class_exists('schema')) {
 							$sql = '';
 							foreach ($apps as &$app) {
 								if (isset($app['db'])) foreach ($app['db'] as $row) {
-									if (is_array($row['table'])) {
-										$table_name = $row['table']['text'];
+									if (is_array($row['table']['name'])) {
+										$table_name = $row['table']['name']['text'];
 									}
 									else {
-										$table_name = $row['table'];
+										$table_name = $row['table']['name'];
 									}
 									$response .= "<tr>\n";
 
@@ -886,3 +896,5 @@ if (!class_exists('schema')) {
 	//$obj->schema();
 	//$result_array = $schema->obj['sql'];
 	//print_r($result_array);
+
+?>

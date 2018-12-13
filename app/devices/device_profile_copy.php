@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -53,9 +53,9 @@
 //get the device
 	$sql = "SELECT * FROM v_device_profiles ";
 	$sql .= "where device_profile_uuid = '".$device_profile_uuid."' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$device_profiles = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$database = new database;
+	$database->select($sql);
+	$device_profiles = $database->result;
 
 //get device keys
 	$sql = "SELECT * FROM v_device_keys ";
@@ -68,23 +68,23 @@
 	$sql .= "WHEN 'expansion' THEN 4 ";
 	$sql .= "ELSE 100 END, ";
 	$sql .= "cast(device_key_id as numeric) asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$device_keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$database = new database;
+	$database->select($sql);
+	$device_keys = $database->result;
 
 //get device settings
-	//$sql = "SELECT * FROM v_device_settings ";
-	//$sql .= "WHERE device_uuid = '".$device_uuid."' ";
-	//$sql .= "ORDER by device_setting_subcategory asc ";
-	//$prep_statement = $db->prepare(check_sql($sql));
-	//$prep_statement->execute();
-	//$device_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$sql = "SELECT * FROM v_device_settings ";
+	$sql .= "WHERE device_profile_uuid = '".$device_profile_uuid."' ";
+	$sql .= "ORDER by device_setting_subcategory asc ";
+	$database = new database;
+	$database->select($sql);
+	$device_settings = $database->result;
 
 //prepare the devices array
 	unset($device_profiles[0]["device_profile_uuid"]);
 
 //add copy to the device description
-	$device_profiles[0]["device_profile_name"] = $device_profiles[0]["device_profile_name"]."-".strtolower($text['button-copy']);
+	//$device_profiles[0]["device_profile_name"] = $device_profiles[0]["device_profile_name"]."-".strtolower($text['button-copy']);
 	$device_profiles[0]["device_profile_description"] = $text['button-copy']." ".$device_profiles[0]["device_profile_description"];
 
 //prepare the device_keys array
@@ -96,25 +96,26 @@
 	}
 
 //prepare the device_settings array
-	//$x = 0;
-	//foreach ($device_settings as $row) {
-	//	unset($device_settings[$x]["device_uuid"]);
-	//	unset($device_settings[$x]["device_setting_uuid"]);
-	//	$x++;
-	//}
+	$x = 0;
+	foreach ($device_settings as $row) {
+		unset($device_settings[$x]["device_profile_uuid"]);
+		unset($device_settings[$x]["device_setting_uuid"]);
+		$x++;
+	}
 
 //create the device array
-	$device_profile = $device_profiles[0];
-	$device_profile["device_keys"] = $device_keys;
-	//$device["device_settings"] = $device_settings;
+	$array["device_profiles"] = $device_profiles;
+	$array["device_profiles"][0]["device_keys"] = $device_keys;
+	$array["device_profiles"][0]["device_settings"] = $device_settings;
 
 //copy the device
 	if ($save) {
-		$orm = new orm;
-		$orm->name('device_profiles');
-		$orm->save($device_profile);
-		$response = $orm->message;
-		$_SESSION["message"] = $text['message-copy'];
+		$database = new database;
+		$database->app_name = 'devices';
+		$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+		$database->save($array);
+		$response = $database->message;
+		message::add($text['message-copy']);
 	}
 
 //redirect

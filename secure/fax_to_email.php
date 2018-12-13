@@ -17,13 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
+
+$output_type = "file"; //file or console
 
 if (defined('STDIN')) {
 	//get the document root php file must be executed with the full path
@@ -39,7 +41,7 @@ if (defined('STDIN')) {
 
 if (stristr(PHP_OS, 'WIN')) { $IS_WINDOWS = true; } else { $IS_WINDOWS = false; }
 
-if(!function_exists('exec_in_dir')) {
+if (!function_exists('exec_in_dir')) {
 	function exec_in_dir($dir, $cmd, &$ok){
 		$args = func_get_args();
 		$cwd = getcwd();
@@ -47,14 +49,14 @@ if(!function_exists('exec_in_dir')) {
 		$output = array();
 		$ret = 0;
 		$result = exec($cmd, $output, $ret);
-		if($cwd)
+		if ($cwd)
 			chdir($cwd);
 		$ok = ($ret == 0);
 		return join($output, "\n");
 	}
 }
 
-if(!function_exists('correct_path')) {
+if (!function_exists('correct_path')) {
 	function correct_path($p) {
 		global $IS_WINDOWS;
 		if ($IS_WINDOWS) {
@@ -64,7 +66,7 @@ if(!function_exists('correct_path')) {
 	}
 }
 
-if(!function_exists('path_join')) {
+if (!function_exists('path_join')) {
 	function path_join() {
 		$args = func_get_args();
 		$paths = array();
@@ -74,31 +76,30 @@ if(!function_exists('path_join')) {
 
 		$prefix = null;
 		foreach($paths as &$path) {
-			if($prefix === null && strlen($path) > 0) {
-				if(substr($path, 0, 1) == '/') $prefix = '/';
+			if ($prefix === null && strlen($path) > 0) {
+				if (substr($path, 0, 1) == '/') $prefix = '/';
 				else $prefix = '';
 			}
 			$path = trim( $path, '/' );
 		}
 
-		if($prefix === null){
+		if ($prefix === null){
 			return '';
 		}
 
 		$paths = array_filter($paths);
-
 		return $prefix . join('/', $paths);
 	}
 }
 
-if(!function_exists('tiff2pdf')) {
+if (!function_exists('tiff2pdf')) {
 	function tiff2pdf($tiff_file_name){
 		//convert the tif to a pdf
 		//Ubuntu: apt-get install libtiff-tools
 
 		global $IS_WINDOWS;
 
-		if(!file_exists($tiff_file_name)){
+		if (!file_exists($tiff_file_name)){
 			echo "tiff file does not exists";
 			return false; // "tiff file does not exists";
 		}
@@ -109,15 +110,15 @@ if(!function_exists('tiff2pdf')) {
 		$fax_file_name = $tiff_file['filename'];
 		$pdf_file_name = path_join( $dir_fax, $fax_file_name . '.pdf' );
 
-		if(file_exists($pdf_file_name))
+		if (file_exists($pdf_file_name))
 			return $pdf_file_name;
 
 		$dir_fax_temp = $_SESSION['server']['temp']['dir'];
-		if(!$dir_fax_temp){
+		if (!$dir_fax_temp){
 			$dir_fax_temp = path_join(dirname($dir_fax), 'temp');
 		}
 
-		if(!file_exists($dir_fax_temp)){
+		if (!file_exists($dir_fax_temp)){
 			echo"can not create temporary directory";
 			return false; //
 		}
@@ -125,7 +126,7 @@ if(!function_exists('tiff2pdf')) {
 		$cmd  = "tiffinfo " . correct_path($tiff_file_name) . ' | grep "Resolution:"';
 		$ok   = false;
 		$resp = exec_in_dir($dir_fax, $cmd, $ok);
-		if(!$ok){
+		if (!$ok){
 			echo"can not find fax resoulution";
 			return false; // "can not find fax resoulution"
 		}
@@ -133,14 +134,14 @@ if(!function_exists('tiff2pdf')) {
 		$ppi_w = 0;
 		$ppi_h = 0;
 		$tmp = array();
-		if(preg_match('/Resolution.*?(\d+).*?(\d+)/', $resp, $tmp)){
+		if (preg_match('/Resolution.*?(\d+).*?(\d+)/', $resp, $tmp)){
 			$ppi_w = $tmp[1];
 			$ppi_h = $tmp[2];
 		}
 
 		$cmd = "tiffinfo " . $tiff_file_name . ' | grep "Image Width:"';
 		$resp = exec_in_dir($dir_fax, $cmd, $ok);
-		if(!$ok){
+		if (!$ok){
 			echo"can not find fax size";
 			return false; // "can not find fax size"
 		}
@@ -148,7 +149,7 @@ if(!function_exists('tiff2pdf')) {
 		$pix_w = 0;
 		$pix_h = 0;
 		$tmp = array();
-		if(preg_match('/Width.*?(\d+).*?Length.*?(\d+)/', $resp, $tmp)){
+		if (preg_match('/Width.*?(\d+).*?Length.*?(\d+)/', $resp, $tmp)){
 			$pix_w = $tmp[1];
 			$pix_h = $tmp[2];
 		}
@@ -178,20 +179,20 @@ if(!function_exists('tiff2pdf')) {
 		$cmd = join(array('tiff2pdf', 
 			'-o', correct_path($pdf_file_name),
 			correct_path($tiff_file_name),
-                ), ' ');
+		), ' ');
 
-                $resp = exec_in_dir($dir_fax, $cmd, $ok);
+		$resp = exec_in_dir($dir_fax, $cmd, $ok);
 
-                if(!file_exists($pdf_file_name)){
-                        echo "can not create pdf: $resp";
-                        return false;
-                }
+		if (!file_exists($pdf_file_name)){
+			echo "can not create pdf: $resp";
+			return false;
+		}
 
 		return $pdf_file_name;
 	}
 }
 
-if(!function_exists('fax_enqueue')) {
+if (!function_exists('fax_enqueue')) {
 	function fax_enqueue($fax_uuid, $fax_file, $wav_file, $reply_address, $fax_uri, $fax_dtmf, $dial_string){
 		global $db, $db_type;
 
@@ -207,47 +208,47 @@ if(!function_exists('fax_enqueue')) {
 		if ($db_type == "sqlite") {
 			$date_utc_now_sql  = "datetime('now')";
 		}
-		$sql = <<<HERE
-INSERT INTO v_fax_tasks( fax_task_uuid, fax_uuid,
-	task_next_time, task_lock_time,
-	task_fax_file, task_wav_file, task_uri, task_dial_string, task_dtmf,
-	task_interrupted, task_status, task_no_answer_counter, task_no_answer_retry_counter, task_retry_counter,
-	task_reply_address, task_description)
-VALUES (?, ?,
-	$date_utc_now_sql, NULL,
-	?, ?, ?, ?, ?,
-	'false', 0, 0, 0, 0,
-	?, ?);
-HERE;
-		$stmt = $db->prepare($sql);
-		$i = 0;
-		$stmt->bindValue(++$i, $fax_task_uuid);
-		$stmt->bindValue(++$i, $fax_uuid);
-		$stmt->bindValue(++$i, $fax_file);
-		$stmt->bindValue(++$i, $wav_file);
-		$stmt->bindValue(++$i, $fax_uri);
-		$stmt->bindValue(++$i, $dial_string);
-		$stmt->bindValue(++$i, $fax_dtmf);
-		$stmt->bindValue(++$i, $reply_address);
-		$stmt->bindValue(++$i, $description);
-		if ($stmt->execute()) {
-			$response = 'Enqueued';
+
+		$sql = "INSERT INTO v_fax_tasks (fax_task_uuid, fax_uuid, ";
+		$sql .= "	task_next_time, task_lock_time, ";
+		$sql .= "	task_fax_file, task_wav_file, task_uri, task_dial_string, task_dtmf, ";
+		$sql .= "	task_interrupted, task_status, task_no_answer_counter, task_no_answer_retry_counter, task_retry_counter, ";
+		$sql .= "	task_reply_address, task_description) ";
+		$sql .= "VALUES ( ";
+		$sql .= " :fax_task_uuid, :fax_uuid, ";
+		$sql .= " ".$date_utc_now_sql.", NULL, ";
+		$sql .= "	:fax_file, :wav_file, :fax_uri, :dial_string, :fax_dtmf, ";
+		$sql .= " 'false', 0, 0, 0, 0, ";
+		$sql .= " :reply_address, :description, ";
+		$sql .= "); ";
+		$statement = $db->prepare($sql);
+		$statement->bindParam(':fax_task_uuid', $fax_task_uuid);
+		$statement->bindParam(':fax_uuid', $fax_uuid);
+		$statement->bindParam(':fax_file', $fax_file);
+		$statement->bindParam(':wav_file', $wav_file);
+		$statement->bindParam(':fax_uri', $fax_uri);
+		$statement->bindParam(':dial_string', $dial_string);
+		$statement->bindParam(':fax_dtmf', $fax_dtmf);
+		$statement->bindParam(':reply_address', $reply_address);
+		$statement->bindParam(':description', $description);
+		if ($statement->execute()) {
+			$response = 'Success';
 		}
 		else{
 			//! @todo log error
-			$response = 'Fail enqueue';
+			$response = 'Failed';
 			var_dump($db->errorInfo());
 		}
-		unset($stmt);
+		unset($statement);
 		return $response;
 	}
 }
 
-if(!function_exists('fax_split_dtmf')) {
+if (!function_exists('fax_split_dtmf')) {
 	function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 		$tmp = array();
 		$fax_dtmf = '';
-		if(preg_match('/^\s*(.*?)\s*\((.*)\)\s*$/', $fax_number, $tmp)){
+		if (preg_match('/^\s*(.*?)\s*\((.*)\)\s*$/', $fax_number, $tmp)){
 			$fax_number = $tmp[1];
 			$fax_dtmf = $tmp[2];
 		}
@@ -266,8 +267,10 @@ if(!function_exists('fax_split_dtmf')) {
 	ini_set('memory_limit', '96M');
 
 //start the to cache the output
-	ob_end_clean();
-	ob_start();
+	if ($output_type == "file") {
+		ob_end_clean();
+		ob_start();
+	}
 
 //add a delimeter to the log
 	echo "\n---------------------------------\n";
@@ -319,6 +322,10 @@ if(!function_exists('fax_split_dtmf')) {
 		unset($tmp_array);
 
 		$tmp_array = explode("=", $_SERVER["argv"][9]);
+		$fax_prefix = $tmp_array[1];
+		unset($tmp_array);
+	
+		$tmp_array = explode("=", $_SERVER["argv"][10]);
 		$mailfrom_address = $tmp_array[1];
 		unset($tmp_array);
 
@@ -326,7 +333,6 @@ if(!function_exists('fax_split_dtmf')) {
 		//$destination_number = $tmp_array[1];
 		//unset($tmp_array);
 	}
-
 	$mailto_address = $fax_email;
 
 //get the fax file name (only) if a full path
@@ -353,6 +359,59 @@ if(!function_exists('fax_split_dtmf')) {
 	}
 	unset ($prep_statement);
 
+//prepare smtp server settings
+	// load default smtp settings
+	$smtp['method']   = $_SESSION['email']['smtp_method']['text'];
+	$smtp['host']     = (strlen($_SESSION['email']['smtp_host']['text'])?$_SESSION['email']['smtp_host']['text']:'127.0.0.1');
+	if (isset($_SESSION['email']['smtp_port'])) {
+		$smtp['port'] = (int)$_SESSION['email']['smtp_port']['numeric'];
+	} else {
+		$smtp['port'] = 0;
+	}
+
+	$smtp['secure']   = $_SESSION['email']['smtp_secure']['text'];
+	$smtp['auth']     = $_SESSION['email']['smtp_auth']['text'];
+	$smtp['username'] = $_SESSION['email']['smtp_username']['text'];
+	$smtp['password'] = $_SESSION['email']['smtp_password']['text'];
+	$smtp['from'] = $_SESSION['email']['smtp_from']['text'];
+	$smtp['from_name'] = $_SESSION['email']['smtp_from_name']['text'];
+
+	if (isset($_SESSION['fax']['smtp_from']) && strlen($_SESSION['fax']['smtp_from']['text']) > 0) {
+		$smtp['from'] = $_SESSION['fax']['smtp_from']['text'];
+	}
+	if (isset($_SESSION['fax']['smtp_from_name']) && strlen($_SESSION['fax']['smtp_from_name']['text']) > 0) {
+		$smtp['from_name'] = $_SESSION['fax']['smtp_from_name']['text'];
+	}
+
+	// overwrite with domain-specific smtp server settings, if any
+	if ($domain_uuid != '') {
+		$sql = "select domain_setting_subcategory, domain_setting_value ";
+		$sql .= "from v_domain_settings ";
+		$sql .= "where domain_uuid = '".$domain_uuid."' ";
+		$sql .= "and (domain_setting_category = 'email' ";
+		$sql .= "or domain_setting_category = 'fax') ";
+		$sql .= "and domain_setting_name = 'text' ";
+		$sql .= "and domain_setting_enabled = 'true' ";
+		$prep_statement = $db->prepare($sql);
+		if ($prep_statement) {
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			foreach ($result as $row) {
+				if ($row['domain_setting_value'] != '') {
+					$smtp[str_replace('smtp_','',$row["domain_setting_subcategory"])] = $row['domain_setting_value'];
+				}
+			}
+		}
+		unset($sql, $prep_statement);
+	}
+
+	// value adjustments
+	$smtp['method'] 	= ($smtp['method'] == '') ? 'smtp' : $smtp['method'];
+	$smtp['auth'] 		= ($smtp['auth'] == "true") ? true : false;
+	$smtp['password'] 	= ($smtp['password'] != '') ? $smtp['password'] : null;
+	$smtp['secure'] 	= ($smtp['secure'] != "none") ? $smtp['secure'] : null;
+	$smtp['username'] 	= ($smtp['username'] != '') ? $smtp['username'] : null;
+
 //get the fax details from the database
 	$sql = "select * from v_fax ";
 	$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
@@ -365,6 +424,7 @@ if(!function_exists('fax_split_dtmf')) {
 			//$fax_email = $row["fax_email"];
 			$fax_uuid = $row["fax_uuid"];
 			$fax_accountcode = $row["fax_accountcode"];
+			$fax_prefix = $row["fax_prefix"];
 			$fax_pin_number = $row["fax_pin_number"];
 			$fax_caller_id_name = $row["fax_caller_id_name"];
 			$fax_caller_id_number = $row["fax_caller_id_number"];
@@ -381,42 +441,42 @@ if(!function_exists('fax_split_dtmf')) {
 			$dir_fax = $_SESSION['switch']['storage']['dir'].'/fax/'.$fax_extension.'/inbox';
 		}
 	}
-
 	$fax_file = path_join($dir_fax, $fax_file_only);
 
 //used for debug
-	echo "mailto_adress is $mailto_address\n";
-	echo "fax_email is $fax_email\n";
-	echo "fax_extension is $fax_extension\n";
-	echo "fax_name is $fax_file_only\n";
-	echo "dir_fax is $dir_fax\n";
-	echo "full_path is $fax_file\n";
+	echo "fax_prefix: $fax_prefix\n";
+	echo "mailto_adress: $mailto_address\n";
+	echo "fax_email: $fax_email\n";
+	echo "fax_extension: $fax_extension\n";
+	echo "fax_name: $fax_file_only\n";
+	echo "dir_fax: $dir_fax\n";
+	echo "full_path: $fax_file\n";
 
 	$pdf_file = tiff2pdf($fax_file);
-	echo "file is $pdf_file \n";
-	if(!$pdf_file){
-		$fax_file_warning = ' Fax image not available on server.';
+	echo "file: $pdf_file \n";
+	if (!$pdf_file){
+		$fax_file_warning = 'warning: Fax image not available on server.';
 	}
 	else{
 		$fax_file_warning = '';
 	}
 
 //used for debug
-	echo "pdf file is $pdf_file\n";
+	echo "pdf file: $pdf_file\n";
 
 //forward the fax
-	if(file_exists($fax_file)) {
+	if (file_exists($fax_file)) {
 		if (strpos($fax_file_name,'#') !== false) {
 			$tmp = explode("#",$fax_file_name);
-			$fax_forward_number = $tmp[0];
+			$fax_forward_number = $fax_prefix.$tmp[0];
 		}
 
-		echo "fax_forward_number is $fax_forward_number\n";
+		echo "fax_forward_number: $fax_forward_number\n";
 		if (strlen($fax_forward_number) > 0) {
 			fax_split_dtmf($fax_forward_number, $fax_dtmf);
 
 			$fax_send_mode = $_SESSION['fax']['send_mode']['text'];
-			if(strlen($fax_send_mode) == 0){
+			if (strlen($fax_send_mode) == 0){
 				$fax_send_mode = 'direct';
 			}
 
@@ -424,27 +484,30 @@ if(!function_exists('fax_split_dtmf')) {
 			if (count($route_array) == 0) {
 				//send the internal call to the registered extension
 					$fax_uri = "user/".$fax_forward_number."@".$domain_name;
-					$t38 = "";
+					$fax_variables = "";
 			}
 			else {
 				//send the external call
 					$fax_uri = $route_array[0];
-					$t38 = "fax_enable_t38=true,fax_enable_t38_request=true";
+					$fax_variables = "";
+					foreach($_SESSION['fax']['variable'] as $variable) {
+						$fax_variables .= $variable.",";
+					}
 			}
 
-			$common_dial_string  = "absolute_codec_string='PCMU,PCMA',";
-			$common_dial_string .= "accountcode='"                  . $fax_accountcode         . "',";
-			$common_dial_string .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
-			$common_dial_string .= "domain_uuid="                   . $_SESSION["domain_uuid"] . ",";
-			$common_dial_string .= "domain_name="                   . $_SESSION["domain_name"] . ",";
-			$common_dial_string .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
-			$common_dial_string .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
-			$common_dial_string .= "fax_ident='"                    . $fax_caller_id_number    . "',";
-			$common_dial_string .= "fax_header='"                   . $fax_caller_id_name      . "',";
-			$common_dial_string .= "fax_file='"                     . $fax_file                . "',";
+			$dial_string  = "absolute_codec_string='PCMU,PCMA',";
+			$dial_string .= "accountcode='"                  . $fax_accountcode         . "',";
+			$dial_string .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
+			$dial_string .= "domain_uuid="                   . $_SESSION["domain_uuid"] . ",";
+			$dial_string .= "domain_name="                   . $_SESSION["domain_name"] . ",";
+			$dial_string .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
+			$dial_string .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
+			$dial_string .= "fax_ident='"                    . $fax_caller_id_number    . "',";
+			$dial_string .= "fax_header='"                   . $fax_caller_id_name      . "',";
+			$dial_string .= "fax_file='"                     . $fax_file                . "',";
 
 			if ($fax_send_mode != 'queue') {
-				$dial_string .= $t38;
+				$dial_string .= $fax_variables;
 				$dial_string .= "mailto_address='"     . $mailto_address   . "',";
 				$dial_string .= "mailfrom_address='"   . $mailfrom_address . "',";
 				$dial_string .= "fax_uri=" . $fax_uri  . ",";
@@ -514,22 +577,50 @@ if(!function_exists('fax_split_dtmf')) {
 
 		//prepare the mail object
 			$mail = new PHPMailer();
-			$mail->IsSMTP(); // set mailer to use SMTP
+			if (isset($smtp['method'])) {
+				switch($smtp['method']) {
+					case 'sendmail': $mail->IsSendmail(); break;
+					case 'qmail': $mail->IsQmail(); break;
+					case 'mail': $mail->IsMail(); break;
+					default: $mail->IsSMTP(); break;
+				}
+			}
+			else {
+				$mail->IsSMTP(); // set mailer to use SMTP
+			}
 
-			if ($_SESSION['email']['smtp_auth']['var'] == "true") {
-				$mail->SMTPAuth = $_SESSION['email']['smtp_auth']['var']; // turn on/off SMTP authentication
+		//optionally skip certificate validation
+			if (isset($_SESSION['email']['smtp_validate_certificate'])) {
+				if ($_SESSION['email']['smtp_validate_certificate']['boolean'] == "false") {
+
+					// this works around TLS certificate problems e.g. self-signed certificates
+					$mail->SMTPOptions = array(
+						'ssl' => array(
+						'verify_peer' => false,
+						'verify_peer_name' => false,
+						'allow_self_signed' => true
+						)
+					);
+				}
 			}
-			$mail->Host = $_SESSION['email']['smtp_host']['var'];
-			if (strlen($_SESSION['email']['smtp_secure']['var']) > 0 && $_SESSION['email']['smtp_secure']['var'] != 'none') {
-				$mail->SMTPSecure = $_SESSION['email']['smtp_secure']['var'];
+
+			if ($smtp['auth'] == "true") {
+				$mail->SMTPAuth = $smtp['auth']; // turn on/off SMTP authentication
 			}
-			if ($_SESSION['email']['smtp_username']['var'] != '') {
-				$mail->Username = $_SESSION['email']['smtp_username']['var'];
-				$mail->Password = $_SESSION['email']['smtp_password']['var'];
+			$mail->Host = $smtp['host'];
+			if (strlen($smtp['port']) > 0) {
+				$mail->Port = $smtp['port'];
+			}
+			if (strlen($smtp['secure']) > 0 && $smtp['secure'] != 'none') {
+				$mail->SMTPSecure = $smtp['secure'];
+			}
+			if ($smtp['username'] != '') {
+				$mail->Username = $smtp['username'];
+				$mail->Password = $smtp['password'];
 			}
 			$mail->SMTPDebug  = 2;
-			$mail->From = $_SESSION['email']['smtp_from']['var'];
-			$mail->FromName = $_SESSION['email']['smtp_from_name']['var'];
+			$mail->From = $smtp['from'];
+			$mail->FromName = $smtp['from_name'];
 			$mail->Subject = $tmp_subject;
 			$mail->AltBody = $tmp_text_plain;
 			$mail->MsgHTML($tmp_text_html);
@@ -545,8 +636,9 @@ if(!function_exists('fax_split_dtmf')) {
 			}
 
 		//output to the log
-			echo "smtp_from: ".$_SESSION['email']['smtp_from']['var']."\n";
-			echo "smtp_from_name: ".$_SESSION['email']['smtp_from_name']['var']."\n";
+			echo "smtp_host: ".$smtp['host']."\n";
+			echo "smtp_from: ".$smtp['from']."\n";
+			echo "smtp_from_name: ".$smtp['from_name']."\n";
 			echo "tmp_subject: $tmp_subject\n";
 
 		//add the attachments
@@ -562,7 +654,7 @@ if(!function_exists('fax_split_dtmf')) {
 			}
 
 		//send the email
-			if(!$mail->Send()) {
+			if (!$mail->Send()) {
 				echo "Mailer Error: " . $mail->ErrorInfo;
 				$email_status=$mail;
 			}
@@ -615,13 +707,16 @@ if(!function_exists('fax_split_dtmf')) {
 	}
 
 //open the file for writing
-	$fp = fopen($_SESSION['server']['temp']['dir']."/fax_to_email.log", "w");
-//get the output from the buffer
-	$content = ob_get_contents();
-//clean the buffer
-	ob_end_clean();
-//write the contents of the buffer
-	fwrite($fp, $content);
-	fclose($fp);
+	if ($output_type == "file") {
+		//open the file
+			$fp = fopen($_SESSION['server']['temp']['dir']."/fax_to_email.log", "w");
+		//get the output from the buffer
+			$content = ob_get_contents();
+		//clean the buffer
+			ob_end_clean();
+		//write the contents of the buffer
+			fwrite($fp, $content);
+			fclose($fp);
+	}
 
 ?>

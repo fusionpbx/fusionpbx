@@ -42,6 +42,7 @@ else {
 	if (isset($_GET["id"])) {
 		$id = $_GET["id"];
 		$device_uuid = $_GET["device_uuid"];
+		$device_profile_uuid = $_GET["device_profile_uuid"];
 	}
 
 //delete device settings
@@ -53,9 +54,26 @@ else {
 		$prep_statement->execute();
 		unset($sql);
 	}
+	
+//delete profile device settings
+	if (is_uuid($id) and is_uuid($device_profile_uuid)) {
+		$sql = "delete from v_device_settings ";
+		$sql .= "where device_profile_uuid = '$device_profile_uuid' ";
+		$sql .= "and device_setting_uuid = '$id' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		unset($sql);
+	}	
 
+//redirect to device profile
+	if (is_uuid($device_profile_uuid)) {
+		message::add($text['message-delete']);
+		header("Location: device_profile_edit.php?id=".$device_profile_uuid);
+		return;
+	}
+	
 //send a redirect
-	$_SESSION["message"] = $text['message-delete'];
+	message::add($text['message-delete']);
 	header("Location: device_edit.php?id=".$device_uuid);
 	return;
 

@@ -1,6 +1,6 @@
 --	xml_handler.lua
 --	Part of FusionPBX
---	Copyright (C) 2013 - 2015 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013 - 2018 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -13,7 +13,7 @@
 --	   notice, this list of conditions and the following disclaimer in the
 --	   documentation and/or other materials provided with the distribution.
 --
---	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--	THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 --	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
 --	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
@@ -25,15 +25,17 @@
 --	POSSIBILITY OF SUCH DAMAGE.
 
 --get the cache
-	hostname = trim(api:execute("switchname", ""));
-	if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
-		XML_STRING = trim(api:execute("memcache", "get configuration:sofia.conf:" .. hostname));
-	else
-		XML_STRING = "-ERR NOT FOUND";
-	end
+	local cache = require "resources.functions.cache"
+	local hostname = trim(api:execute("switchname", ""))
+	local sofia_cache_key = "configuration:sofia.conf:" .. hostname
+	XML_STRING, err = cache.get(sofia_cache_key)
 
 --set the cache
-	if (XML_STRING == "-ERR NOT FOUND") or (XML_STRING == "-ERR CONNECTION FAILURE") then
+	if not XML_STRING then
+		--log cache error
+			if (debug["cache"]) then
+				freeswitch.consoleLog("warning", "[xml_handler] " .. sofia_cache_key .. " can not be get from the cache: " .. tostring(err) .. "\n");
+			end
 
 		--set a default value
 			if (expire["sofia"] == nil) then
@@ -41,8 +43,14 @@
 			end
 
 		--connect to the database
-			require "resources.functions.database_handle";
-			dbh = database_handle('system');
+			local Database = require "resources.functions.database";
+			dbh = Database.new('system');
+
+		--include json library
+			local json
+			if (debug["sql"]) then
+				json = require "resources.functions.lunajson"
+			end
 
 		--exits the script if we didn't connect properly
 			assert(dbh:connected());
@@ -52,12 +60,13 @@
 				--get the domain_uuid
 					if (domain_name ~= nil) then
 						sql = "SELECT domain_uuid FROM v_domains ";
-						sql = sql .. "WHERE domain_name = '" .. domain_name .."' ";
+						sql = sql .. "WHERE domain_name = :domain_name";
+						local params = {domain_name = domain_name};
 						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 						end
-						status = dbh:query(sql, function(rows)
-							domain_uuid = rows["domain_uuid"];
+						dbh:query(sql, params, function(row)
+							domain_uuid = row.domain_uuid;
 						end);
 					end
 			end
@@ -84,19 +93,21 @@
 			profile_tag_status = "closed";
 
 		--run the query
-			sql = "select p.sip_profile_name, p.sip_profile_description, s.sip_profile_setting_name, s.sip_profile_setting_value ";
+			sql = "select p.sip_profile_uuid, p.sip_profile_name, p.sip_profile_description, s.sip_profile_setting_name, s.sip_profile_setting_value ";
 			sql = sql .. "from v_sip_profiles as p, v_sip_profile_settings as s ";
 			sql = sql .. "where s.sip_profile_setting_enabled = 'true' ";
 			sql = sql .. "and p.sip_profile_enabled = 'true' ";
-			sql = sql .. "and (p.sip_profile_hostname = '" .. hostname.. "' or p.sip_profile_hostname is null or p.sip_profile_hostname = '') ";
+			sql = sql .. "and (p.sip_profile_hostname = :hostname or p.sip_profile_hostname is null or p.sip_profile_hostname = '') ";
 			sql = sql .. "and p.sip_profile_uuid = s.sip_profile_uuid ";
 			sql = sql .. "order by p.sip_profile_name asc ";
+			local params = {hostname = hostname};
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
 			end
 			x = 0;
-			dbh:query(sql, function(row)
+			dbh:query(sql, params, function(row)
 				--set as variables
+					sip_profile_uuid = row.sip_profile_uuid;
 					sip_profile_name = row.sip_profile_name;
 					--sip_profile_description = row.sip_profile_description;
 					sip_profile_setting_name = row.sip_profile_setting_name;
@@ -117,19 +128,20 @@
 						--get the gateways
 							if (domain_count > 1) then
 								sql = "select * from v_gateways as g, v_domains as d ";
-								sql = sql .. "where g.profile = '"..sip_profile_name.."' ";
+								sql = sql .. "where g.profile = :profile ";
 								sql = sql .. "and g.enabled = 'true' ";
 								sql = sql .. "and (g.domain_uuid = d.domain_uuid or g.domain_uuid is null) ";
 							else
 								sql = "select * from v_gateways as g ";
-								sql = sql .. "where g.enabled = 'true' and g.profile = '"..sip_profile_name.."' ";
+								sql = sql .. "where g.enabled = 'true' and g.profile = :profile ";
 							end
-							sql = sql .. "and (g.hostname = '" .. hostname.. "' or g.hostname is null or g.hostname = '') ";
+							sql = sql .. "and (g.hostname = :hostname or g.hostname is null or g.hostname = '') ";
+							local params = {profile = sip_profile_name, hostname = hostname};
 							if (debug["sql"]) then
-								freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+								freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 							end
 							x = 0;
-							dbh:query(sql, function(field)
+							dbh:query(sql, params, function(field)
 								table.insert(xml, [[						<gateway name="]] .. string.lower(field.gateway_uuid) .. [[">]]);
 
 								if (string.len(field.username) > 0) then
@@ -200,18 +212,41 @@
 								if (string.len(field.supress_cng) > 0) then
 									table.insert(xml, [[							<param name="supress-cng" value="]] .. field.supress_cng .. [["/>]]);
 								end
-								if (string.len(field.sip_cid_type) > 0) then
-									table.insert(xml, [[							<param name="sip_cid_type" value="]] .. field.sip_cid_type .. [["/>]]);
-								end
 								if (string.len(field.extension_in_contact) > 0) then
 									table.insert(xml, [[							<param name="extension-in-contact" value="]] .. field.extension_in_contact .. [["/>]]);
 								end
+								table.insert(xml, [[							<variables>]]);
+								if (string.len(field.sip_cid_type) > 0) then
+									table.insert(xml, [[								<variable name="sip_cid_type" value="]] .. field.sip_cid_type .. [["/>]]);
+								end
+								table.insert(xml, [[							</variables>]]);
 								table.insert(xml, [[						</gateway>]]);
 							end)
 
 						table.insert(xml, [[					</gateways>]]);
 						table.insert(xml, [[					<domains>]]);
-						table.insert(xml, [[						<domain name="all" alias="false" parse="true"/>]]);
+
+						--add sip profile domain: name, alias, and parse
+						table.insert(xml, [[						<!-- indicator to parse the directory for domains with parse="true" to get gateways-->]]);
+						table.insert(xml, [[						<!--<domain name="$${domain}" parse="true"/>-->]]);
+						table.insert(xml, [[						<!-- indicator to parse the directory for domains with parse="true" to get gateways and alias every domain to this profile -->]]);
+						table.insert(xml, [[						<!--<domain name="all" alias="true" parse="true"/>-->]]);
+						sql = "SELECT sip_profile_domain_name, sip_profile_domain_alias, sip_profile_domain_parse FROM v_sip_profile_domains ";
+						sql = sql .. "WHERE sip_profile_uuid = :sip_profile_uuid";
+						local params = {sip_profile_uuid = sip_profile_uuid};
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; sip_profile_uuid:" .. sip_profile_uuid .. "\n");
+						end
+						dbh:query(sql, params, function(row)
+							name = row.sip_profile_domain_name;
+							alias = row.sip_profile_domain_alias;
+							parse = row.sip_profile_domain_parse;
+							if (name == nil or name == '') then name = 'false'; end
+							if (alias == nil or alias == '') then alias = 'false'; end
+							if (parse == nil or parse == '') then parse = 'false'; end
+							table.insert(xml, [[						<domain name="]] .. name .. [[" alias="]] .. alias .. [[" parse="]] .. parse .. [["/>]]);
+						end);
+						
 						table.insert(xml, [[					</domains>]]);
 						table.insert(xml, [[					<settings>]]);
 						profile_tag_status = "open";
@@ -263,25 +298,29 @@
 			dbh:release();
 
 		--set the cache
-			result = trim(api:execute("memcache", "set configuration:sofia.conf:" .. hostname .." '"..XML_STRING:gsub("'", "&#39;").."' "..expire["sofia"]));
-
-		--send the xml to the console
-			if (debug["xml_string"]) then
-				local file = assert(io.open(temp_dir .. "/sofia.conf.xml", "w"));
-				file:write(XML_STRING);
-				file:close();
+			local ok, err = cache.set(sofia_cache_key, XML_STRING, expire["sofia"])
+			if debug["cache"] then
+				if ok then
+					freeswitch.consoleLog("notice", "[xml_handler] " .. sofia_cache_key .. " stored in the cache\n");
+				else
+					freeswitch.consoleLog("warning", "[xml_handler] " .. sofia_cache_key .. " can not be stored in the cache: " .. tostring(err) .. "\n");
+				end
 			end
 
 		--send to the console
 			if (debug["cache"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] configuration:sofia.conf:" .. hostname .." source: database\n");
+				freeswitch.consoleLog("notice", "[xml_handler] " .. sofia_cache_key .. " source: database\n");
 			end
 	else
-		--replace the &#39 back to a single quote
-			XML_STRING = XML_STRING:gsub("&#39;", "'");
-
 		--send to the console
 			if (debug["cache"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] configuration:sofia.conf source: memcache\n");
+				freeswitch.consoleLog("notice", "[xml_handler] " .. sofia_cache_key .. " source: cache\n");
 			end
 	end --if XML_STRING
+
+--send the xml to the console
+	if (debug["xml_string"]) then
+		local file = assert(io.open(temp_dir .. "/sofia.conf.xml", "w"));
+		file:write(XML_STRING);
+		file:close();
+	end

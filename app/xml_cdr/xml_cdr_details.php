@@ -17,39 +17,42 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
 
-if (permission_exists('xml_cdr_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions 
+	if (permission_exists('xml_cdr_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
 //get the http values and set them to a variable
-	if (strlen($_REQUEST["uuid"]) > 0) {
-		$uuid = trim($_REQUEST["uuid"]);
+	if (strlen($_REQUEST["id"]) > 0) {
+		$uuid = trim($_REQUEST["id"]);
 	}
 
 //get the cdr string from the database
 	$sql = "select * from v_xml_cdr ";
-	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
-		$sql .= "where uuid  = '$uuid' ";
+	if (permission_exists('xml_cdr_all')) {
+		$sql .= "where xml_cdr_uuid  = '$uuid' ";
 	} else {
-		$sql .= "where uuid  = '$uuid' and domain_uuid  = '$domain_uuid' ";
+		$sql .= "where xml_cdr_uuid  = '$uuid' and domain_uuid  = '$domain_uuid' ";
 	}
 	$row = $db->query($sql)->fetch();
 	$start_stamp = trim($row["start_stamp"]);
@@ -119,7 +122,7 @@ else {
 
 //detail summary
 	//get the variables
-		$uuid = check_str(urldecode($array["variables"]["uuid"]));
+		$xml_cdr_uuid = check_str(urldecode($array["variables"]["uuid"]));
 		$direction = check_str(urldecode($array["channel_data"]["direction"]));
 		$language = check_str(urldecode($array["variables"]["language"]));
 		$start_epoch = check_str(urldecode($array["variables"]["start_epoch"]));
@@ -189,15 +192,15 @@ else {
 	echo "</tr>\n";
 
 	echo "<tr >\n";
-	echo "	<td valign='top' class='".$row_style[$c]."'><a href='xml_cdr_details.php?uuid=".$uuid."'>".$direction."</a></td>\n";
+	echo "	<td valign='top' class='".$row_style[$c]."'><a href='xml_cdr_details.php?id=".$uuid."'>".$direction."</a></td>\n";
 	//echo "	<td valign='top' class='".$row_style[$c]."'>".$language."</td>\n";
 	//echo "	<td valign='top' class='".$row_style[$c]."'>".$context."</td>\n";
 	echo "	<td valign='top' class='".$row_style[$c]."'>";
 	if (file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$uuid.'.wav')) {
-		//echo "		<a href=\"../recordings/v_recordings.php?a=download&type=rec&t=bin&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$uuid.'.wav')."\">\n";
+		//echo "		<a href=\"../recordings/recordings.php?a=download&type=rec&t=bin&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$uuid.'.wav')."\">\n";
 		//echo "	  </a>";
 
-		echo "	  <a href=\"javascript:void(0);\" onclick=\"window.open('../recordings/v_recording_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$uuid.'.wav')."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
+		echo "	  <a href=\"javascript:void(0);\" onclick=\"window.open('../recordings/recording_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$uuid.'.wav')."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
 		//$tmp_file_array = explode("\.",$file);
 		echo 	$caller_id_name.' ';
 		echo "	  </a>";
@@ -208,7 +211,7 @@ else {
 	echo "	</td>\n";
 	echo "	<td valign='top' class='".$row_style[$c]."'>";
 	if (file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$uuid.'.wav')) {
-		echo "		<a href=\"../recordings/v_recordings.php?a=download&type=rec&t=bin&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$uuid.'.wav')."\">\n";
+		echo "		<a href=\"../recordings/recordings.php?a=download&type=rec&t=bin&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$uuid.'.wav')."\">\n";
 		echo 	$caller_id_number.' ';
 		echo "	  </a>";
 	}
@@ -275,7 +278,7 @@ else {
 			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".$key."</td>\n";
 			if ($key == "bridge_uuid" || $key == "signal_bond") {
 				echo "	<td valign='top' align='left' class='".$row_style[$c]."'>\n";
-				echo "		<a href='xml_cdr_details.php?uuid=$value'>".$value."</a>&nbsp;\n";
+				echo "		<a href='xml_cdr_details.php?id=$value'>".$value."</a>&nbsp;\n";
 				$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
 				$tmp_name = '';
 				if (file_exists($tmp_dir.'/'.$value.'.wav')) {
@@ -291,12 +294,12 @@ else {
 					$tmp_name = $value."_1.mp3";
 				}
 				if (strlen($tmp_name) > 0 && file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
-					echo "	<a href=\"javascript:void(0);\" onclick=\"window.open('../recordings/v_recording_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
+					echo "	<a href=\"javascript:void(0);\" onclick=\"window.open('../recordings/recording_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
 					echo "		play";
 					echo "	</a>&nbsp;";
 				}
 				if (strlen($tmp_name) > 0 && file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
-					echo "	<a href=\"../recordings/v_recordings.php?a=download&type=rec&t=bin&filename=".base64_encode("archive/".$tmp_year."/".$tmp_month."/".$tmp_day."/".$tmp_name)."\">\n";
+					echo "	<a href=\"../recordings/recordings.php?a=download&type=rec&t=bin&filename=".base64_encode("archive/".$tmp_year."/".$tmp_month."/".$tmp_day."/".$tmp_name)."\">\n";
 					echo "		download";
 					echo "	</a>";
 				}
@@ -466,7 +469,7 @@ else {
 							echo "					<td valign='top' align='left' class='".$row_style[$c]."'>".wordwrap($value,75,"<br />\n", TRUE)."&nbsp;</td>\n";
 						}
 						else {
-							echo "					<td valign='top' align='left' class='".$row_style[$c]."'><a href='xml_cdr_details.php?uuid=$value'>".$value."</a>&nbsp;</td>\n";
+							echo "					<td valign='top' align='left' class='".$row_style[$c]."'><a href='xml_cdr_details.php?id=$value'>".$value."</a>&nbsp;</td>\n";
 						}
 						echo "				</tr>\n";
 					}

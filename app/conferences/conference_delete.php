@@ -91,7 +91,7 @@ else {
 	}
 
 //redirect the browser
-	$_SESSION["message"] = $text['confirm-delete'];
+	message::add($text['confirm-delete']);
 	header("Location: conferences.php");
 	return;
 

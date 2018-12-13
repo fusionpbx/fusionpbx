@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2013
+	Portions created by the Initial Developer are Copyright (C) 2013-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -69,7 +69,7 @@
 				unset($sql);
 			}
 			//redirect the user
-				$_SESSION["message"] = $text['message-update'];
+				message::add($text['message-update']);
 				header("Location: ".$_REQUEST['return_url']);
 				exit;
 		}
@@ -122,7 +122,9 @@
 	}
 	else {
 		//show only assigned ring groups
-		$sql = "select r.ring_group_uuid, r.ring_group_extension, r.ring_group_description from v_ring_groups as r, v_ring_group_users as u ";
+		$sql = "select r.ring_group_name, r.ring_group_uuid, r.ring_group_extension, r.ring_group_forward_destination, ";
+		$sql .= "r.ring_group_forward_enabled, r.ring_group_description ";
+		$sql .= "from v_ring_groups as r, v_ring_group_users as u ";
 		$sql .= "where r.ring_group_uuid = u.ring_group_uuid ";
 		$sql .= "and r.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "and u.user_uuid = '".$_SESSION['user_uuid']."' ";

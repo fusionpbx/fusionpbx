@@ -17,34 +17,38 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('destination_delete')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('destination_delete')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
 //get the ID
-	if (count($_GET) > 0) {
+	if (is_array($_GET)) {
 		$id = check_str($_GET["id"]);
 	}
 
 //if the ID is not set then exit
-	if (!isset($id)) {
+	if (!is_uuid($id)) {
 		echo "ID is required.";
 		exit;
 	}
@@ -54,11 +58,12 @@ else {
 	$p = new permissions;
 	$p->add($permission, 'temp');
 
-//get the dialplan_uuid
-	$orm = new orm;
-	$orm->name('destinations');
-	$orm->uuid($id);
-	$result = $orm->find()->get();
+//get the dialplan uuid and context
+	$sql = "select * from v_destinations ";
+	$sql .= "where destination_uuid = '$id' ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach ($result as &$row) {
 		if (permission_exists('destination_domain')) {
 			$domain_uuid = $row["domain_uuid"];
@@ -77,22 +82,22 @@ else {
 //delete the dialplan
 	if (isset($dialplan_uuid)) {
 		$sql = "delete from v_dialplan_details ";
-		$sql .= "where domain_uuid = '".$domain_uuid."' ";
-		$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
+		$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
+		//echo $sql."<br />\n";
 		$db->exec(check_sql($sql));
 		unset($sql);
 
 		$sql = "delete from v_dialplans ";
-		$sql .= "where domain_uuid = '".$domain_uuid."' ";
-		$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
+		$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
+		//echo $sql."<br />\n";
 		$db->exec(check_sql($sql));
 		unset($sql);
 	 }
 
 //delete the destination
 	$sql = "delete from v_destinations ";
-	$sql .= "where domain_uuid = '".$domain_uuid."' ";
-	$sql .= "and destination_uuid = '".$id."' ";
+	$sql .= "where destination_uuid = '".$id."' ";
+	//echo $sql."<br />\n";
 	$db->exec(check_sql($sql));
 	unset($sql);
 
@@ -107,7 +112,7 @@ else {
 	$cache->delete("dialplan:".$destination_context);
 
 //redirect the user
-	$_SESSION["message"] = $text['message-delete'];
+	message::add($text['message-delete']);
 	header("Location: destinations.php");
 	return;
 

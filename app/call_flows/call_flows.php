@@ -17,41 +17,115 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('call_flow_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+
+//check permissions
+	require_once "resources/check_auth.php";
+	if (permission_exists('call_flow_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-require_once "resources/header.php";
+//set the page title
 	$document['title'] = $text['title-call_flows'];
 
-require_once "resources/paging.php";
-
 //get variables used to control the order
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = check_str($_GET["order_by"]);
+	$order = check_str($_GET["order"]);
+
+//add the search term
+	$search = strtolower(check_str($_GET["search"]));
+	if (strlen($search) > 0) {
+		$sql_search = "and (";
+		$sql_search .= "lower(call_flow_name) like '%".$search."%' ";
+		$sql_search .= "or lower(call_flow_extension) like '%".$search."%' ";
+		$sql_search .= "or lower(call_flow_feature_code) like '%".$search."%' ";
+		$sql_search .= "or lower(call_flow_context) like '%".$search."%' ";
+		//$sql_search .= "or lower(call_flow_status) like '%".$search."%' ";
+		$sql_search .= "or lower(call_flow_pin_number) like '%".$search."%' ";
+		$sql_search .= "or lower(call_flow_label) like '%".$search."%' ";
+		//$sql_search .= "or lower(call_flow_sound) like '%".$search."%' ";
+		//$sql_search .= "or lower(call_flow_app) like '%".$search."%' ";
+		//$sql_search .= "or lower(call_flow_data) like '%".$search."%' ";
+		$sql_search .= "or lower(call_flow_alternate_label) like '%".$search."%' ";
+		//$sql_search .= "or lower(call_flow_alternate_sound) like '%".$search."%' ";
+		//$sql_search .= "or lower(call_flow_alternate_app) like '%".$search."%' ";
+		//$sql_search .= "or lower(call_flow_alternate_data) like '%".$search."%' ";
+		$sql_search .= "or lower(call_flow_description) like '%".$search."%' ";
+		$sql_search .= ") ";
+	}
+
+//additional includes
+	require_once "resources/header.php";
+	require_once "resources/paging.php";
+
+//prepare to page the results
+	$sql = "select count(call_flow_uuid) as num_rows from v_call_flows ";
+	$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
+	$sql .= $sql_search;
+	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+		$prep_statement->execute();
+		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+		if ($row['num_rows'] > 0) {
+			$num_rows = $row['num_rows'];
+		}
+		else {
+			$num_rows = '0';
+		}
+	}
+
+//prepare to page the results
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$param = "";
+	$page = $_GET['page'];
+	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+	$offset = $rows_per_page * $page;
+
+//get the list
+	$sql = "select * from v_call_flows ";
+	$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
+	$sql .= $sql_search;
+	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+	$sql .= "limit $rows_per_page offset $offset ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$call_flows = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset ($prep_statement, $sql);
+
+//alternate the row style
+	$c = 0;
+	$row_style["0"] = "row_style0";
+	$row_style["1"] = "row_style1";
 
 //show the content
-	echo "<table width='100%' cellpadding='0' cellspacing='0 border='0'>\n";
+	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['header-call_flows']."</b></td>\n";
-	echo "		<td width='50%' align='right'>&nbsp;</td>\n";
+	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-call_flows']."</b></td>\n";
+	echo "		<form method='get' action=''>\n";
+	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
+	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".escape($search)."'>\n";
+	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
+	echo "			</td>\n";
+	echo "		</form>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
@@ -60,113 +134,103 @@ require_once "resources/paging.php";
 	echo "	</tr>\n";
 	echo "</table>\n";
 
-	//prepare to page the results
-		$sql = "select count(*) as num_rows from v_call_flows ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-		$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] > 0) {
-				$num_rows = $row['num_rows'];
-			}
-			else {
-				$num_rows = '0';
-			}
-		}
-
-	//prepare to page the results
-		$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-		$param = "";
-		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
-		$offset = $rows_per_page * $page;
-
-	//get the list
-		$sql = "select * from v_call_flows ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-		$sql .= "limit $rows_per_page offset $offset ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll();
-		$result_count = count($result);
-		unset ($prep_statement, $sql);
-
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
-
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo th_order_by('call_flow_status', $text['label-status'], $order_by, $order);
-	//echo th_order_by('call_flow_name', $text['label-name'], $order_by, $order);
-	echo th_order_by('call_flow_extension', $text['label-extension'], $order_by, $order);
-	echo th_order_by('call_flow_feature_code', $text['label-feature_code'], $order_by, $order);
-	//echo "<th>".$text['label-destination']."</th>\n";
-	//echo "<th>".$text['label-alternate_destination']."</th>\n";
-	echo th_order_by('call_flow_description', $text['label-description'], $order_by, $order);
+	echo th_order_by('call_flow_status', $text['label-call_flow_status'], $order_by, $order);
+	//echo th_order_by('call_flow_name', $text['label-call_flow_name'], $order_by, $order);
+	echo th_order_by('call_flow_extension', $text['label-call_flow_extension'], $order_by, $order);
+	echo th_order_by('call_flow_feature_code', $text['label-call_flow_feature_code'], $order_by, $order);
+	//echo th_order_by('call_flow_context', $text['label-call_flow_context'], $order_by, $order);
+	//echo th_order_by('call_flow_pin_number', $text['label-call_flow_pin_number'], $order_by, $order);
+	//echo th_order_by('call_flow_label', $text['label-call_flow_label'], $order_by, $order);
+	//echo th_order_by('call_flow_sound', $text['label-call_flow_sound'], $order_by, $order);
+	//echo th_order_by('call_flow_app', $text['label-call_flow_app'], $order_by, $order);
+	//echo th_order_by('call_flow_data', $text['label-call_flow_data'], $order_by, $order);
+	//echo th_order_by('call_flow_alternate_label', $text['label-call_flow_alternate_label'], $order_by, $order);
+	//echo th_order_by('call_flow_alternate_sound', $text['label-call_flow_alternate_sound'], $order_by, $order);
+	//echo th_order_by('call_flow_alternate_app', $text['label-call_flow_alternate_app'], $order_by, $order);
+	//echo th_order_by('call_flow_alternate_data', $text['label-call_flow_alternate_data'], $order_by, $order);
+	if (permission_exists('call_flow_context')) {
+		echo th_order_by('call_flow_context', $text['label-call_flow_context'], $order_by, $order);
+	}
+	echo th_order_by('call_flow_description', $text['label-call_flow_description'], $order_by, $order);
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('call_flow_add')) {
 		echo "<a href='call_flow_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
+	else {
+		echo "&nbsp;\n";
+	}
 	echo "</td>\n";
-	echo "</tr>\n";
+	echo "<tr>\n";
 
-	if ($result_count > 0) {
-		foreach($result as $row) {
-			$tr_link = (permission_exists('call_flow_edit')) ? "href='call_flow_edit.php?id=".$row['call_flow_uuid']."'" : null;
+	if (is_array($call_flows)) {
+		foreach($call_flows as $row) {
+			if (permission_exists('call_flow_edit')) {
+				$tr_link = "href='call_flow_edit.php?id=".$row['call_flow_uuid']."'";
+			}
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if ($row['call_flow_status'] != "false") {
-				echo $row['call_flow_label'];
+				echo escape($row['call_flow_label']);
 			}
 			else {
-				echo $row['call_flow_alternate_label'];
+				echo escape($row['call_flow_alternate_label']);
 			}
 			echo 		"&nbsp;\n";
 			echo "	</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_name']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_extension']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_feature_code']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_app']." ".$row['call_flow_data']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_alternate_app']." ".$row['call_flow_alternate_data']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['call_flow_description']."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_flow_name'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_flow_extension'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_flow_feature_code'])."&nbsp;</td>\n";
+			if (permission_exists('call_flow_context')) {
+				echo "	<td valign='top' class='row_stylebg'>".escape($row['call_flow_context'])."&nbsp;</td>\n";
+			}
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_flow_pin_number'])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_flow_label'])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_flow_sound'])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_flow_app'])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_flow_data'])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_flow_alternate_label'])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_flow_alternate_sound'])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_flow_alternate_app'])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_flow_alternate_data'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($row['call_flow_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('call_flow_edit')) {
-				echo "<a href='call_flow_edit.php?id=".$row['call_flow_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='call_flow_edit.php?id=".escape($row['call_flow_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('call_flow_delete')) {
-				echo "<a href='call_flow_delete.php?id=".$row['call_flow_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='call_flow_delete.php?id=".escape($row['call_flow_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($sql, $call_flows, $row_count);
 	} //end if results
 
 	echo "<tr>\n";
-	echo "<td colspan='10' align='left'>\n";
+	echo "<td colspan='19' align='left'>\n";
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
+	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
+	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
 	echo "		<td class='list_control_icons'>";
 	if (permission_exists('call_flow_add')) {
 		echo 		"<a href='call_flow_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+	}
+	else {
+		echo 		"&nbsp;";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
  	echo "	</table>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-
 	echo "</table>";
 	echo "<br /><br />";
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,7 +25,7 @@
 */
 
 //set a timeout
-	set_time_limit(900); //15 minutes
+	set_time_limit(15*60); //15 minutes
 
 //includes
 	include "root.php";
@@ -48,6 +48,9 @@
 	$language = new text;
 	$text = $language->get();
 
+//set a default message_timeout
+	$message_timeout = 4*1000;
+
 //process the http post
 	if (sizeof($_POST) > 0) {
 
@@ -55,41 +58,47 @@
 
 		// run source update
 		if ($do["source"] && permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx")) {
+			$cwd = getcwd();
 			chdir($_SERVER["PROJECT_ROOT"]);
-			exec("git pull", $response_source_update);
+			exec("git pull 2>&1", $response_source_update);
 			$update_failed = true;
 			if (sizeof($response_source_update) > 0) {
-				$_SESSION["response_source_update"] = $response_source_update;
+				$_SESSION["response"]["upgrade_source"] = $response_source_update;
 				foreach ($response_source_update as $response_line) {
 					if (substr_count($response_line, "Updating ") > 0 || substr_count($response_line, "Already up-to-date.") > 0) {
 						$update_failed = false;
 					}
+					
+					if (substr_count($response_line, "error") > 0) {
+						$update_failed = true;
+						break;
+					}
 				}
 			}
+			chdir($cwd);
 			if ($update_failed) {
-				$_SESSION["message_delay"] = 3500;
-				$_SESSION["message_mood"] = 'negative';
-				$response_message = $text['message-upgrade_source_failed'];
+				message::add($text['message-upgrade_source_failed'], 'negative', $message_timeout);
+			}
+			else {
+				message::add($text['message-upgrade_source'], null, $message_timeout);
 			}
 		}
 
 		// load an array of the database schema and compare it with the active database
 		if ($do["schema"] && permission_exists("upgrade_schema")) {
-			$response_message = $text['message-upgrade_schema'];
-
 			$upgrade_data_types = check_str($do["data_types"]);
 			require_once "resources/classes/schema.php";
 			$obj = new schema();
-			$_SESSION["schema"]["response"] = $obj->schema("html");
+			$_SESSION["response"]["schema"] = $obj->schema("html");
+			message::add($text['message-upgrade_schema'], null, $message_timeout);
 		}
 
 		// process the apps defaults
 		if ($do["apps"] && permission_exists("upgrade_apps")) {
-			$response_message = $text['message-upgrade_apps'];
-
 			require_once "resources/classes/domains.php";
 			$domain = new domains;
 			$domain->upgrade();
+			message::add($text['message-upgrade_apps'], null, $message_timeout);
 		}
 
 		// restore defaults of the selected menu
@@ -100,21 +109,16 @@
 			$included = true;
 			require_once("core/menu/menu_restore_default.php");
 			unset($sel_menu);
-			$response_message = $text['message-upgrade_menu'];
+			message::add($text['message-upgrade_menu'], null, $message_timeout);
 		}
 
 		// restore default permissions
 		if ($do["permissions"] && permission_exists("group_edit")) {
 			$included = true;
-			require_once("core/users/permissions_default.php");
-			$response_message = "Permission Defaults Restored";
+			require_once("core/groups/permissions_default.php");
+			message::add($text['message-upgrade_permissions'], null, $message_timeout);
 		}
 
-		if (sizeof($_POST['do']) > 1) {
-			$response_message = $text['message-upgrade'];
-		}
-
-		$_SESSION["message"] = $response_message;
 		header("Location: ".PROJECT_PATH."/core/upgrade/index.php");
 		exit;
 
@@ -126,12 +130,12 @@
 
 //show the content
 	echo "<b>".$text['header-upgrade']."</b>";
-	echo "<br><br>";
+	echo "<br /><br />";
 	echo $text['description-upgrade'];
-	echo "<br><br>";
-	
+	echo "<br /><br />";
+
 	echo "<form name='frm' method='post' action=''>\n";
-	
+
 	if (permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx") && is_writeable($_SERVER["PROJECT_ROOT"]."/.git")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
@@ -139,12 +143,28 @@
 		echo "		".$text['label-upgrade_source'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-		echo "		<input type='checkbox' name='do[source]' id='do_source' value='1'> &nbsp;".$text['description-upgrade_source']."\n";
+		echo "		<input type='checkbox' name='do[source]' id='do_source' value='1'> &nbsp;".$text['description-upgrade_source']."<br />\n";
+
+		// show current git version info
+		chdir($_SERVER["PROJECT_ROOT"]);
+		exec("git rev-parse --abbrev-ref HEAD 2>&1", $git_current_branch, $branch_return_value);
+		$git_current_branch = $git_current_branch[0];
+		exec("git log --pretty=format:'%H' -n 1 2>&1", $git_current_commit, $commit_return_value);
+		$git_current_commit = $git_current_commit[0];
+		if (($branch_return_value == 0) && ($commit_return_value == 0)) {
+			echo $text['label-git_branch'].' '.$git_current_branch." \n";
+			//echo $text['label-git_commit'].' '." ";
+			echo "<a href='https://github.com/fusionpbx/fusionpbx/compare/";
+			echo $git_current_commit . "..." . "$git_current_branch' target='_blank'> \n";
+			echo $git_current_commit . "</a><br />\n";
+			echo "</a>";
+		}
+
 		echo "	</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
 	}
-	
+
 	if (permission_exists("upgrade_schema")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
@@ -156,7 +176,7 @@
 		echo "	</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
-	
+
 		echo "<div id='tr_data_types' style='display: none;'>\n";
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
@@ -170,7 +190,7 @@
 		echo "</table>\n";
 		echo "</div>\n";
 	}
-	
+
 	if (permission_exists("upgrade_apps")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
@@ -183,7 +203,7 @@
 		echo "</tr>\n";
 		echo "</table>\n";
 	}
-	
+
 	if (permission_exists("menu_restore")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
@@ -207,7 +227,7 @@
 		echo "</tr>\n";
 		echo "</table>\n";
 	}
-	
+
 	if (permission_exists("group_edit")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
@@ -220,33 +240,30 @@
 		echo "</tr>\n";
 		echo "</table>\n";
 	}
-	
-	echo "<br>";
+
+	echo "<br />";
 	echo "<div style='text-align: right;'><input type='submit' class='btn' value='".$text['button-upgrade_execute']."'></div>";
-	echo "<br><br>";
 	echo "</form>\n";
-	
-	// output result of source update
-	if (sizeof($_SESSION["response_source_update"]) > 0) {
-		echo "<br />";
-		echo "<b>".$text['header-source_update_results']."</b>";
-		echo "<br /><br />";
-		echo "<pre>";
-		echo implode("\n", $_SESSION["response_source_update"]);
-		echo "</pre>";
-		echo "<br /><br />";
-		unset($_SESSION["response_source_update"]);
-	}
-	
-	// output result of upgrade schema
-	if ($_SESSION["schema"]["response"] != '') {
-		echo "<br />";
-		echo "<b>".$text['header-upgrade_schema_results']."</b>";
-		echo "<br /><br />";
-		echo $_SESSION["schema"]["response"];
-		unset($_SESSION["schema"]["response"]);
+
+	echo "<br /><br />";
+	if (is_array($_SESSION["response"])) {
+		foreach($_SESSION["response"] as $part => $response){
+			echo "<b>". $text["label-results"]." - ".$text["label-${part}"]."</b>";
+			echo "<br /><br />";
+			if (is_array($response)) {
+				echo "<pre>";
+				echo implode("\n", $response);
+				echo "</pre>";
+			}
+			else {
+				echo $response;
+			}
+			echo "<br /><br />";
+		}
+		unset($_SESSION["response"]);
 	}
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

@@ -96,7 +96,7 @@ if ($domains_processed == 1) {
 							foreach ($vendor['functions'] as $function) {
 								//get the id
 									$device_vendor_function_uuid = uuid();
-								//add the device vendor funtction
+								//add the device vendor function
 									$sql = "insert into v_device_vendor_functions ";
 									$sql .= "(";
 									$sql .= "device_vendor_uuid, ";

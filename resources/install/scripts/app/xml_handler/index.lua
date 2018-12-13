@@ -66,6 +66,9 @@
 	if (domain_name == nil) then
 		domain_name = params:getHeader("variable_domain_name");
 	end
+	if (domain_name == nil) then
+		domain_name = params:getHeader("variable_sip_from_host");
+	end
 	purpose   = params:getHeader("purpose");
 	profile   = params:getHeader("profile");
 	key    = params:getHeader("key");

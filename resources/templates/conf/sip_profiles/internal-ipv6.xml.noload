@@ -2,12 +2,14 @@
 	<!--
 		This is an example of a sofia profile setup to listen on IPv6.
 	-->
-	<!-- http://wiki.freeswitch.org/wiki/Sofia_Configuration_Files -->
-	<!--aliases are other names that will work as a valid profile name for this profile-->
+	<domains>
+		<domain name="all" alias="false" parse="false"/>
+	</domains>
 	<settings>
 		<param name="user-agent-string" value="FreeSWITCH" enabled="true"/>
 		<param name="debug" value="0"/>
 		<param name="sip-trace" value="no"/>
+		<param name="track-calls" value="false"/>
 		<param name="context" value="public"/>
 		<param name="rfc2833-pt" value="101"/>
 		<!-- port to bind to for sip traffic -->
@@ -103,7 +105,7 @@
 		<param name="NDLB-broken-auth-hash" value="true" enabled="false"/>
 		<!-- add a ;received="<ip>:<port>" to the contact when replying to register for nat handling -->
 		<param name="NDLB-received-in-nat-reg-contact" value="true" enabled="false"/>
-		<param name="auth-calls" value="$${internal_auth_calls}"/>
+		<param name="auth-calls" value="true"/>
 		<!-- on authed calls, authenticate *all* the packets not just invite -->
 		<param name="auth-all-packets" value="false"/>
 		<param name="ext-rtp-ip" value="$${external_rtp_ip}" enabled="false"/>

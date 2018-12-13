@@ -17,30 +17,47 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2010-2013
+	Portions created by the Initial Developer are Copyright (C) 2010-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('ring_group_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('ring_group_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-require_once "resources/header.php";
-require_once "resources/paging.php";
+//add the search term
+	$search = strtolower(check_str($_GET["search"]));
+	if (strlen($search) > 0) {
+		$sql_search = "and (";
+		$sql_search .= "lower(ring_group_name) like '%".$search."%' ";
+		$sql_search .= "or lower(ring_group_extension) like '%".$search."%' ";
+		$sql_search .= "or lower(ring_group_description) like '%".$search."%' ";
+		$sql_search .= "or lower(ring_group_enabled) like '%".$search."%' ";
+		$sql_search .= "or lower(ring_group_strategy) like '%".$search."%' ";
+		$sql_search .= ")";
+	}	
+
+//additional includes
+	require_once "resources/header.php";
+	require_once "resources/paging.php";
 
 //get variables used to control the order
 	$order_by = $_GET["order_by"];
@@ -50,7 +67,13 @@ require_once "resources/paging.php";
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-ring_groups']."</b></td>\n";
-	echo "		<td width='50%' align='right'>&nbsp;</td>\n";
+	//echo "		<td width='50%' align='right'>&nbsp;</td>\n";
+	echo "		<form method='get' action=''>\n";
+	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
+	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".escape($search)."'>\n";
+	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
+	echo "			</td>\n";
+	echo "		</form>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
@@ -59,57 +82,59 @@ require_once "resources/paging.php";
 	echo "	</tr>\n";
 	echo "</table>\n";
 
-	//get total ring group count from the database
-		$sql = "select count(*) as num_rows from v_ring_groups where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			$total_ring_groups = $row['num_rows'];
-		}
-		unset($prep_statement, $row);
-
-	//prepare to page the results (reuse $sql from above)
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
+//get total ring group count from the database
+	$sql = "select count(*) as num_rows from v_ring_groups where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
 		$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if (strlen($row['num_rows']) > 0) {
-				$num_rows = $row['num_rows'];
-			}
-			else {
-				$num_rows = '0';
-			}
-		}
+		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+		$total_ring_groups = $row['num_rows'];
+	}
+	unset($prep_statement, $row);
 
-	//prepare to page the results
-		$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-		$param = "";
-		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
-		$offset = $rows_per_page * $page;
-
-	//get the  list
-		$sql = "select * from v_ring_groups ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		if (strlen($order_by) == 0) {
-			$sql .= "order by ring_group_name, ring_group_extension asc ";
+//prepare to page the results (reuse $sql from above)
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+		$prep_statement->execute();
+		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+		if (strlen($row['num_rows']) > 0) {
+			$num_rows = $row['num_rows'];
 		}
 		else {
-			$sql .= "order by $order_by $order ";
+			$num_rows = '0';
 		}
-		$sql .= " limit $rows_per_page offset $offset ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll();
-		$result_count = count($result);
-		unset ($prep_statement, $sql);
+	}
 
+//prepare to page the results
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$param = "";
+	$page = $_GET['page'];
+	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+	$offset = $rows_per_page * $page;
+
+//get the  list
+	$sql = "select * from v_ring_groups ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= $sql_search;
+	if (strlen($order_by) == 0) {
+		$sql .= "order by ring_group_name, ring_group_extension asc ";
+	}
+	else {
+		$sql .= "order by $order_by $order ";
+	}
+	$sql .= " limit $rows_per_page offset $offset ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$ring_groups = $prep_statement->fetchAll();
+	unset ($prep_statement, $sql);
+
+//set the row styles
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
+//show the content
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('ring_group_name', $text['label-name'], $order_by, $order);
@@ -127,35 +152,35 @@ require_once "resources/paging.php";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($result_count > 0) {
-		foreach($result as $row) {
+	if (is_array($ring_groups)) {
+		foreach($ring_groups as $row) {
 			$tr_link = (permission_exists('ring_group_edit')) ? "href='ring_group_edit.php?id=".$row['ring_group_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('ring_group_edit')) {
-				echo "<a href='ring_group_edit.php?id=".$row['ring_group_uuid']."'>".$row['ring_group_name']."</a>";
+				echo "<a href='ring_group_edit.php?id=".escape($row['ring_group_uuid'])."'>".escape($row['ring_group_name'])."</a>";
 			}
 			else {
 				echo $row['ring_group_name'];
 			}
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_extension']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['option-'.$row['ring_group_strategy']]."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".(($row['ring_group_forward_enabled'] == 'true') ? format_phone($row['ring_group_forward_destination']) : null)."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['ring_group_enabled']]."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".$row['ring_group_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['ring_group_extension'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['option-'.escape($row['ring_group_strategy'])]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".(($row['ring_group_forward_enabled'] == 'true') ? format_phone(escape($row['ring_group_forward_destination'])) : null)."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.escape($row['ring_group_enabled'])]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($row['ring_group_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('ring_group_edit')) {
-				echo "<a href='ring_group_edit.php?id=".$row['ring_group_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='ring_group_edit.php?id=".escape($row['ring_group_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('ring_group_delete')) {
-				echo "<a href='ring_group_delete.php?id=".$row['ring_group_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='ring_group_delete.php?id=".escape($row['ring_group_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($sql, $ring_groups);
 	} //end if results
 
 	echo "<tr>\n";
@@ -178,8 +203,8 @@ require_once "resources/paging.php";
 
 	echo "</table>";
 	echo "<br><br>";
-	echo "</div>";
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

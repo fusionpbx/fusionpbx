@@ -30,6 +30,7 @@ if (!class_exists('domains')) {
 
 		//define variables
 		public $db;
+		public $display_type;
 
 		//class constructor
 		public function __construct() {
@@ -228,6 +229,9 @@ if (!class_exists('domains')) {
 			//get the PROJECT PATH
 				include "root.php";
 
+			//check for default settings
+				$this->settings();
+
 			//get the list of installed apps from the core and app directories (note: GLOB_BRACE doesn't work on some systems)
 				$config_list_1 = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
 				$config_list_2 = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_menu.php");
@@ -236,6 +240,8 @@ if (!class_exists('domains')) {
 				$db = $this->db;
 				$x=0;
 				foreach ($config_list as &$config_path) {
+					$app_path = dirname($config_path);
+					$app_path = preg_replace('/\A.*(\/.*\/.*)\z/', '$1', $app_path);
 					include($config_path);
 					$x++;
 				}
@@ -263,6 +269,7 @@ if (!class_exists('domains')) {
 				$database_default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				unset($prep_statement);
 
+
 			//get the domain_uuid
 				foreach($domains as $row) {
 					if (count($domains) == 1) {
@@ -289,13 +296,6 @@ if (!class_exists('domains')) {
 
 					//get the context
 						$context = $domain_name;
-
-					//show the domain when display_type is set to text
-						if ($display_type == "text") {
-							echo "\n";
-							echo $domain_name;
-							echo "\n";
-						}
 
 					//get the default settings - this needs to be done to reset the session values back to the defaults for each domain in the loop
 						foreach($database_default_settings as $row) {
@@ -363,7 +363,114 @@ if (!class_exists('domains')) {
 				unset($_SESSION['domain']);
 				unset($_SESSION['switch']);
 
-		}
+		} //end upgrade method
+
+		public function settings() {
+
+			//connect to the database if not connected
+				if (!$this->db) {
+					require_once "resources/classes/database.php";
+					$database = new database;
+					$database->connect();
+					$this->db = $database->db;
+				}
+
+			//get the list of installed apps from the core and mod directories
+				$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
+				$x=0;
+				foreach ($config_list as $config_path) {
+					include($config_path);
+					$x++;
+				}
+				$x = 0;
+				foreach ($apps as $app) {
+					if (is_array($app['default_settings'])) {
+						foreach ($app['default_settings'] as $setting) {
+								$array[$x] = ($setting);
+								$array[$x]['app_uuid'] = $app['uuid'];
+								$x++;
+						}
+					}
+				}
+
+			//get an array of the default settings
+				$sql = "select * from v_default_settings ";
+				$sql .= "order by default_setting_category asc, default_setting_subcategory asc";
+				$prep_statement = $this->db->prepare($sql);
+				$prep_statement->execute();
+				$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				unset ($prep_statement, $sql);
+
+			//named array
+				foreach ($default_settings as $row) {
+					$default_settings[$row['default_setting_category']][$row['default_setting_subcategory']][$row['default_setting_name']]['uuid'] = $row['default_setting_uuid'];
+					$default_settings[$row['default_setting_category']][$row['default_setting_subcategory']][$row['default_setting_name']]['value'] = $row['default_setting_value'];
+					$default_settings[$row['default_setting_category']][$row['default_setting_subcategory']][$row['default_setting_name']]['app_uuid'] = $row['app_uuid'];
+					//echo "[".$row['default_setting_category']."][".$row['default_setting_subcategory']."][".$row['default_setting_name']."]  = ".$row['default_setting_value']."\n";
+				}
+
+			//update matching settings with the correct default_setting_uuid and app_uuid and if they exist remove them from the array
+				$x = 0;
+				foreach ($array as $row) {
+					$category = $row['default_setting_category'];
+					$subcategory = $row['default_setting_subcategory'];
+					$name = $row['default_setting_name'];
+
+					if (isset($default_settings[$category][$subcategory][$name]['value'])) {
+						//set the variables
+							$default_setting_uuid = $default_settings[$category][$subcategory][$name]['uuid'];
+							$app_uuid = $default_settings[$category][$subcategory][$name]['app_uuid'];
+						//update matching settings
+							if ($app_uuid == null) {
+								$sql = "update v_default_settings set ";
+								if ($default_setting_uuid != $row['default_setting_uuid']) {
+									$sql .= "default_setting_uuid = '".$row['default_setting_uuid']."', ";
+								}
+								$sql .= "app_uuid = '".$row['app_uuid']."' ";
+								$sql .= "where default_setting_uuid = '".$row['default_setting_uuid']."';";
+								//echo $category." ".$subcategory." ".$name." ".$app_uuid."\n";
+								//echo $sql."\n";
+								$this->db->exec(check_sql($sql));
+								//echo "\n";
+							}
+
+						//remove settings from the array that were found
+							unset($array[$x]);
+					}
+					$x++;
+				}
+				unset($default_settings);
+
+			//get the missing count
+				$array_count = count($array);
+
+			//add the missing default settings
+				if (is_array($array) && count($array) > 0) {
+					foreach ($array as $row) {
+						$sql = "insert into v_default_settings (";
+						$sql .= "default_setting_uuid, ";
+						$sql .= "default_setting_category, ";
+						$sql .= "default_setting_subcategory, ";
+						$sql .= "default_setting_name, ";
+						$sql .= "default_setting_value, ";
+						$sql .= "default_setting_enabled, ";
+						$sql .= "default_setting_description ";
+						$sql .= ") values \n";
+						$sql .= "(";
+						$sql .= "'".check_str($row['default_setting_uuid'])."', ";
+						$sql .= "'".check_str($row['default_setting_category'])."', ";
+						$sql .= "'".check_str($row['default_setting_subcategory'])."', ";
+						$sql .= "'".check_str($row['default_setting_name'])."', ";
+						$sql .= "'".check_str($row['default_setting_value'])."', ";
+						$sql .= "'".check_str($row['default_setting_enabled'])."', ";
+						$sql .= "'".check_str($row['default_setting_description'])."' ";
+						$sql .= ");";
+						//echo $sql."\n";
+						$this->db->exec(check_sql($sql));
+						unset($array);
+					}
+				}		
+		} //end settings method
 	}
 }
 

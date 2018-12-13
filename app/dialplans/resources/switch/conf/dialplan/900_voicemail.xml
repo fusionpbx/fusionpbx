@@ -1,0 +1,12 @@
+<context name="{v_context}">
+	<extension name="voicemail" number="[ext]" continue="false" app_uuid="e3c14f2f-7697-4b5d-9c62-2443c0e22bf2">
+		<condition field="${user_exists}" expression="true">
+			<!--<action application="voicemail" data="default ${domain_name} ${dialed_extension}"/>-->
+			<action application="set" data="record_append=false"/>
+			<action application="set" data="voicemail_action=save"/>
+			<action application="set" data="voicemail_id=${destination_number}"/>
+			<action application="set" data="voicemail_profile=default"/>
+			<action application="lua" data="app.lua voicemail"/>
+		</condition>
+	</extension>
+</context>

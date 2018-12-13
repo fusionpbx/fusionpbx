@@ -28,88 +28,76 @@
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST)>0) {
+	if (is_array($_POST)) {
 		$control_name = check_str($_POST["control_name"]);
 		$control_enabled = check_str($_POST["control_enabled"]);
 		$control_description = check_str($_POST["control_description"]);
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+//process the user data and save it to the database
+	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
-	$msg = '';
-	if ($action == "update") {
-		$conference_control_uuid = check_str($_POST["conference_control_uuid"]);
-	}
+		//get the uuid from the POST
+			if ($action == "update") {
+				$conference_control_uuid = check_str($_POST["conference_control_uuid"]);
+			}
 
-	//check for all required data
-		if (strlen($control_name) == 0) { $msg .= $text['message-required']." ".$text['label-control_name']."<br>\n"; }
-		if (strlen($control_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-control_enabled']."<br>\n"; }
-		//if (strlen($control_description) == 0) { $msg .= $text['message-required']." ".$text['label-control_description']."<br>\n"; }
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-			require_once "resources/header.php";
-			require_once "resources/persist_form_var.php";
-			echo "<div align='center'>\n";
-			echo "<table><tr><td>\n";
-			echo $msg."<br />";
-			echo "</td></tr></table>\n";
-			persistformvar($_POST);
-			echo "</div>\n";
-			require_once "resources/footer.php";
-			return;
-		}
+		//check for all required data
+			$msg = '';
+			if (strlen($control_name) == 0) { $msg .= $text['message-required']." ".$text['label-control_name']."<br>\n"; }
+			if (strlen($control_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-control_enabled']."<br>\n"; }
+			//if (strlen($control_description) == 0) { $msg .= $text['message-required']." ".$text['label-control_description']."<br>\n"; }
+			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+				require_once "resources/header.php";
+				require_once "resources/persist_form_var.php";
+				echo "<div align='center'>\n";
+				echo "<table><tr><td>\n";
+				echo $msg."<br />";
+				echo "</td></tr></table>\n";
+				persistformvar($_POST);
+				echo "</div>\n";
+				require_once "resources/footer.php";
+				return;
+			}
 
-	//add or update the database
-		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add" && permission_exists('conference_control_add')) {
-				$sql = "insert into v_conference_controls ";
-				$sql .= "(";
-				//$sql .= "domain_uuid, ";
-				$sql .= "conference_control_uuid, ";
-				$sql .= "control_name, ";
-				$sql .= "control_enabled, ";
-				$sql .= "control_description ";
-				$sql .= ")";
-				$sql .= "values ";
-				$sql .= "(";
-				//$sql .= "'$domain_uuid', ";
-				$sql .= "'".uuid()."', ";
-				$sql .= "'$control_name', ";
-				$sql .= "'$control_enabled', ";
-				$sql .= "'$control_description' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
+		//add the conference_control_uuid
+			if (strlen($_POST["conference_control_uuid"]) == 0) {
+				$conference_control_uuid = uuid();
+				$_POST["conference_control_uuid"] = $conference_control_uuid;
+			}
 
-				$_SESSION["message"] = $text['message-add'];
+		//prepare the array
+			$array['conference_controls'][] = $_POST;
+
+		//save to the data
+			$database = new database;
+			$database->app_name = 'conference_controls';
+			$database->app_uuid = null;
+			if (strlen($conference_control_uuid) > 0) {
+				$database->uuid($conference_control_uuid);
+			}
+			$database->save($array);
+			$message = $database->message;
+
+		//redirect the user
+			if (isset($action)) {
+				if ($action == "add") {
+					message::add($text['message-add']);
+				}
+				if ($action == "update") {
+					message::add($text['message-update']);
+				}
 				header("Location: conference_controls.php");
 				return;
-
-			} //if ($action == "add")
-
-			if ($action == "update" && permission_exists('conference_control_edit')) {
-				$sql = "update v_conference_controls set ";
-				$sql .= "control_name = '$control_name', ";
-				$sql .= "control_enabled = '$control_enabled', ";
-				$sql .= "control_description = '$control_description' ";
-				$sql .= "where conference_control_uuid = '$conference_control_uuid'";
-				//$sql .= "and domain_uuid = '$domain_uuid' ";
-				$db->exec(check_sql($sql));
-				unset($sql);
-
-				$_SESSION["message"] = $text['message-update'];
-				header("Location: conference_controls.php");
-				return;
-
-			} //if ($action == "update")
-		} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+			}
+	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
+	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
 		$conference_control_uuid = check_str($_GET["id"]);
 		$sql = "select * from v_conference_controls ";
+		//$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "where conference_control_uuid = '$conference_control_uuid' ";
-		//$sql .= "and domain_uuid = '$domain_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -131,7 +119,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-conference_control']."</b><br><br></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='conference_controls.php'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
+	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -140,7 +128,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-control_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='control_name' maxlength='255' value=\"$control_name\">\n";
+	echo "	<input class='formfld' type='text' name='control_name' maxlength='255' value=\"".escape($control_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-control_name']."\n";
 	echo "</td>\n";
@@ -176,7 +164,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-control_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='control_description' maxlength='255' value=\"$control_description\">\n";
+	echo "	<input class='formfld' type='text' name='control_description' maxlength='255' value=\"".escape($control_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-control_description']."\n";
 	echo "</td>\n";
@@ -184,9 +172,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='conference_control_uuid' value='$conference_control_uuid'>\n";
+		echo "				<input type='hidden' name='conference_control_uuid' value='".escape($conference_control_uuid)."'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

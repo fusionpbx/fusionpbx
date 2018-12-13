@@ -3,7 +3,7 @@
 <Web_Server_Port group="System/System_Configuration">80</Web_Server_Port>
 <Enable_Web_Admin_Access group="System/System_Configuration">Yes</Enable_Web_Admin_Access>
 <Admin_Passwd group="System/System_Configuration">{$admin_password}</Admin_Passwd>
-<User_Password group="System/System_Configuration"/>
+<User_Password group="System/System_Configuration"></User_Password>
 <Connection_Type group="System/Internet_Connection_Type_">DHCP</Connection_Type>
 <Static_IP group="System/_Static_IP_Settings"/>
 <NetMask group="System/_Static_IP_Settings"/>
@@ -13,15 +13,15 @@
 <PPPoE_Service_Name group="System/_PPPoE_Settings"/>
 <HostName group="System/Optional_Network_Configuration"/>
 <Domain group="System/Optional_Network_Configuration"/>
-<Primary_DNS group="System/Optional_Network_Configuration"/>
-<Secondary_DNS group="System/Optional_Network_Configuration"/>
-<DNS_Server_Order group="System/Optional_Network_Configuration">Manual</DNS_Server_Order>
+<Primary_DNS group="System/Optional_Network_Configuration">{$dns_server_primary}</Primary_DNS>
+<Secondary_DNS group="System/Optional_Network_Configuration">{$dns_server_secondary}</Secondary_DNS>
+<DNS_Server_Order group="System/Optional_Network_Configuration">DHCP,Manual</DNS_Server_Order>
 <DNS_Query_Mode group="System/Optional_Network_Configuration">Parallel</DNS_Query_Mode>
 <Syslog_Server group="System/Optional_Network_Configuration"/>
 <Debug_Server group="System/Optional_Network_Configuration"/>
 <Debug_Level group="System/Optional_Network_Configuration">0</Debug_Level>
-<Primary_NTP_Server group="System/Optional_Network_Configuration">uk.pool.ntp.org</Primary_NTP_Server>
-<Secondary_NTP_Server group="System/Optional_Network_Configuration"/>
+<Primary_NTP_Server>{$ntp_server_primary}</Primary_NTP_Server>
+<Secondary_NTP_Server>{$ntp_server_secondary}</Secondary_NTP_Server>
 <Enable_VLAN group="System/VLAN_Settings">No</Enable_VLAN>
 <Enable_CDP group="System/VLAN_Settings">Yes</Enable_CDP>
 <VLAN_ID group="System/VLAN_Settings">1</VLAN_ID>
@@ -109,9 +109,9 @@
 <G723_Codec_Name group="SIP/SDP_Payload_Types">G723</G723_Codec_Name>
 <EncapRTP_Codec_Name group="SIP/SDP_Payload_Types">encaprtp</EncapRTP_Codec_Name>
 <Handle_VIA_received group="SIP/NAT_Support_Parameters">No</Handle_VIA_received>
-<Handle_VIA_rport group="SIP/NAT_Support_Parameters">Yes</Handle_VIA_rport>
+<Handle_VIA_rport group="SIP/NAT_Support_Parameters">{$cisco_handle_via_rport}</Handle_VIA_rport>
 <Insert_VIA_received group="SIP/NAT_Support_Parameters">No</Insert_VIA_received>
-<Insert_VIA_rport group="SIP/NAT_Support_Parameters">Yes</Insert_VIA_rport>
+<Insert_VIA_rport group="SIP/NAT_Support_Parameters">{$cisco_insert_via_rport}</Insert_VIA_rport>
 <Substitute_VIA_Addr group="SIP/NAT_Support_Parameters">No</Substitute_VIA_Addr>
 <Send_Resp_To_Src_Port group="SIP/NAT_Support_Parameters">No</Send_Resp_To_Src_Port>
 <STUN_Enable group="SIP/NAT_Support_Parameters">No</STUN_Enable>
@@ -126,9 +126,9 @@
 <Provision_Enable group="Provisioning/Configuration_Profile">Yes</Provision_Enable>
 <Resync_On_Reset group="Provisioning/Configuration_Profile">Yes</Resync_On_Reset>
 <Resync_Random_Delay group="Provisioning/Configuration_Profile">2</Resync_Random_Delay>
-<Resync_Periodic group="Provisioning/Configuration_Profile">3600</Resync_Periodic>
-<Resync_Error_Retry_Delay group="Provisioning/Configuration_Profile">3600</Resync_Error_Retry_Delay>
-<Forced_Resync_Delay group="Provisioning/Configuration_Profile">14400</Forced_Resync_Delay>
+<Resync_Periodic group="Provisioning/Configuration_Profile">0</Resync_Periodic>
+<Resync_Error_Retry_Delay group="Provisioning/Configuration_Profile">300</Resync_Error_Retry_Delay>
+<Forced_Resync_Delay group="Provisioning/Configuration_Profile">30</Forced_Resync_Delay>
 <Resync_From_SIP group="Provisioning/Configuration_Profile">Yes</Resync_From_SIP>
 <Resync_After_Upgrade_Attempt group="Provisioning/Configuration_Profile">Yes</Resync_After_Upgrade_Attempt>
 <Resync_Trigger_1 group="Provisioning/Configuration_Profile"/>
@@ -256,9 +256,9 @@
 <Force_G729a_Code group="Regional/Outbound_Call_Codec_Selection_Codes">*02729</Force_G729a_Code>
 <Set_Local_Date__mm_dd_ group="Regional/Miscellaneous"/>
 <Set_Local_Time__HH_mm_ group="Regional/Miscellaneous"/>
-<Time_Zone group="Regional/Miscellaneous">GMT</Time_Zone>
+<Time_Zone group="Regional/Miscellaneous">{$spa_time_zone}</Time_Zone>
 <Time_Offset__HH_mm_ group="Regional/Miscellaneous"/>
-<Daylight_Saving_Time_Rule group="Regional/Miscellaneous">start=3/8/7/02:0:0;end=11/1/7/02:0:0;save=1</Daylight_Saving_Time_Rule>
+<Daylight_Saving_Time_Rule group="Regional/Miscellaneous">start={$daylight_savings_start_month}/{$daylight_savings_start_day}/{$daylight_savings_start_weekday}/{$daylight_savings_start_time}:0:0;end={$daylight_savings_stop_month}/{$daylight_savings_stop_day}/{$daylight_savings_stop_weekday}/{$daylight_savings_stop_time}:0:0;save=1</Daylight_Saving_Time_Rule>
 <Daylight_Saving_Time_Enable group="Regional/Miscellaneous">Yes</Daylight_Saving_Time_Enable>
 <DTMF_Playback_Level group="Regional/Miscellaneous">-16</DTMF_Playback_Level>
 <DTMF_Playback_Length group="Regional/Miscellaneous">.1</DTMF_Playback_Length>
@@ -266,7 +266,7 @@
 <Dictionary_Server_Script group="Regional/Miscellaneous"/>
 <Language_Selection group="Regional/Miscellaneous"/>
 <Default_Character_Encoding group="Regional/Miscellaneous">ISO-8859-1</Default_Character_Encoding>
-<Station_Name group="Phone/General">{$Company}</Station_Name>
+<Station_Name group="Phone/General">{$device_label}</Station_Name>
 <Voice_Mail_Number group="Phone/General">*97</Voice_Mail_Number>
 <Text_Logo group="Phone/General"/>
 <BMP_Picture_Download_URL group="Phone/General"/>
@@ -277,19 +277,15 @@
 <Screen_Saver_Icon group="Phone/General">Background Picture</Screen_Saver_Icon>
 
 {foreach $keys["line"] as $row}
-{if $row.device_key_type == "line"}
+{if $row.device_key_category == "line"}
 <!-- Phone/Line_Key_{$row.device_key_id} -->
-<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
+<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_line}</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
 <Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
-<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{if $row.device_key_extension == "shared"}shared{else}private{/if}</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
+<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{if $row.device_key_type == "shared"}shared{else}private{/if}</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
 <Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}"/>
-{else}
-<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">Enabled</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
-<Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
-<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">private</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
 <Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extended_Function_{$row.device_key_id}_>
-{/if}
 
+{/if}
 {/foreach}
 
 <Extension_2_ group="Phone/Line_Key_2">{$ExtLineStatus_2}</Extension_2_>
@@ -302,7 +298,7 @@
 <Server_Type group="Phone/Line_Key_Extended_Function">Asterisk</Server_Type>
 <SPA932_Call_Pickup_Code group="Phone/Line_Key_Extended_Function">*98</SPA932_Call_Pickup_Code>
 <SCA_Line_ID_Mapping group="Phone/Miscellaneous_Line_Key_Settings">Vertical First</SCA_Line_ID_Mapping>
-<SCA_Barge-In_Enable group="Phone/Miscellaneous_Line_Key_Settings">No</SCA_Barge-In_Enable>
+<SCA_Barge-In_Enable group="Phone/Miscellaneous_Line_Key_Settings">Yes</SCA_Barge-In_Enable>
 <Idle_LED group="Phone/Line_Key_LED_Pattern"/>
 <Remote_Undefined_LED group="Phone/Line_Key_LED_Pattern"/>
 <Local_Seized_LED group="Phone/Line_Key_LED_Pattern"/>
@@ -327,7 +323,7 @@
 <Call_Back_Serv group="Phone/Supplementary_Services">Yes</Call_Back_Serv>
 <Block_CID_Serv group="Phone/Supplementary_Services">Yes</Block_CID_Serv>
 <Secure_Call_Serv group="Phone/Supplementary_Services">Yes</Secure_Call_Serv>
-<Cfwd_All_Serv group="Phone/Supplementary_Services">No</Cfwd_All_Serv>
+<Cfwd_All_Serv group="Phone/Supplementary_Services">Yes</Cfwd_All_Serv>
 <Cfwd_Busy_Serv group="Phone/Supplementary_Services">No</Cfwd_Busy_Serv>
 <Cfwd_No_Ans_Serv group="Phone/Supplementary_Services">No</Cfwd_No_Ans_Serv>
 <Paging_Serv group="Phone/Supplementary_Services">Yes</Paging_Serv>
@@ -372,7 +368,7 @@
 <EM_Enable group="Phone/Extension_Mobility">No</EM_Enable>
 <EM_User_Domain group="Phone/Extension_Mobility"/>
 <Line_Enable_1_ group="Ext_1/General">Yes</Line_Enable_1_>
-<Share_Ext_1_ group="Ext_1/Share_Line_Appearance">private</Share_Ext_1_>
+<Share_Ext_1_ group="Ext_1/Share_Line_Appearance">{if $account.1.shared_line == "shared"}shared{else}private{/if}</Share_Ext_1_>
 <Shared_User_ID_1_ group="Ext_1/Share_Line_Appearance"/>
 <Subscription_Expires_1_ group="Ext_1/Share_Line_Appearance">3600</Subscription_Expires_1_>
 <NAT_Mapping_Enable_1_ group="Ext_1/NAT_Settings">Yes</NAT_Mapping_Enable_1_>
@@ -415,21 +411,21 @@
 <State_Agent_1_ group="Ext_1/Call_Feature_Settings"/>
 <CFWD_Notify_Serv_1_ group="Ext_1/Call_Feature_Settings">No</CFWD_Notify_Serv_1_>
 <CFWD_Notifier_1_ group="Ext_1/Call_Feature_Settings"/>
-<Proxy_1_ group="Ext_1/Proxy_and_Registration">{$server_address_1}</Proxy_1_>
+<Proxy_1_ group="Ext_1/Proxy_and_Registration">{$account.1.server_address}</Proxy_1_>
 <Use_Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">No</Use_Outbound_Proxy_1_>
 <Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration"/>
 <Use_OB_Proxy_In_Dialog_1_ group="Ext_1/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_1_>
 <Register_1_ group="Ext_1/Proxy_and_Registration">Yes</Register_1_>
 <Make_Call_Without_Reg_1_ group="Ext_1/Proxy_and_Registration">No</Make_Call_Without_Reg_1_>
-<Register_Expires_1_ group="Ext_1/Proxy_and_Registration">{$register_expires_1}</Register_Expires_1_>
+<Register_Expires_1_ group="Ext_1/Proxy_and_Registration">{$account.1.register_expires}</Register_Expires_1_>
 <Ans_Call_Without_Reg_1_ group="Ext_1/Proxy_and_Registration">No</Ans_Call_Without_Reg_1_>
 <Use_DNS_SRV_1_ group="Ext_1/Proxy_and_Registration">No</Use_DNS_SRV_1_>
 <DNS_SRV_Auto_Prefix_1_ group="Ext_1/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_1_>
 <Proxy_Fallback_Intvl_1_ group="Ext_1/Proxy_and_Registration">3600</Proxy_Fallback_Intvl_1_>
 <Proxy_Redundancy_Method_1_ group="Ext_1/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_1_>
-<Display_Name_1_ group="Ext_1/Subscriber_Information">{$display_name_1}</Display_Name_1_>
-<User_ID_1_ group="Ext_1/Subscriber_Information">{$user_id_1}</User_ID_1_>
-<Password_1_ group="Ext_1/Subscriber_Information">{$user_password_1}</Password_1_>
+<Display_Name_1_ group="Ext_1/Subscriber_Information">{$account.1.display_name}</Display_Name_1_>
+<User_ID_1_ group="Ext_1/Subscriber_Information">{$account.1.user_id}</User_ID_1_>
+<Password_1_ group="Ext_1/Subscriber_Information">{$account.1.password}</Password_1_>
 <Use_Auth_ID_1_ group="Ext_1/Subscriber_Information">No</Use_Auth_ID_1_>
 <Auth_ID_1_ group="Ext_1/Subscriber_Information"/>
 <Mini_Certificate_1_ group="Ext_1/Subscriber_Information"/>
@@ -448,12 +444,12 @@
 <DTMF_Process_AVT_1_ group="Ext_1/Audio_Configuration">Yes</DTMF_Process_AVT_1_>
 <Silence_Supp_Enable_1_ group="Ext_1/Audio_Configuration">No</Silence_Supp_Enable_1_>
 <DTMF_Tx_Method_1_ group="Ext_1/Audio_Configuration">Auto</DTMF_Tx_Method_1_>
-<Dial_Plan_1_ group="Ext_1/Dial_Plan">(*xxxxxxx|*xxxxxx|*xxxxx|*xxxx|*xxx|*xx*|*x|**xxxxx|**xxxx|**xxx|**xx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_1_>
+<Dial_Plan_1_ group="Ext_1/Dial_Plan">{$spa_dial_plan}</Dial_Plan_1_>
 <Caller_ID_Map_1_ group="Ext_1/Dial_Plan"/>
 <Enable_IP_Dialing_1_ group="Ext_1/Dial_Plan">Yes</Enable_IP_Dialing_1_>
 <Emergency_Number_1_ group="Ext_1/Dial_Plan"/>
 <Line_Enable_2_ group="Ext_2/General">Yes</Line_Enable_2_>
-<Share_Ext_2_ group="Ext_2/Share_Line_Appearance">private</Share_Ext_2_>
+<Share_Ext_2_ group="Ext_2/Share_Line_Appearance">{if $account.2.shared_line == "shared"}shared{else}private{/if}</Share_Ext_2_>
 <Shared_User_ID_2_ group="Ext_2/Share_Line_Appearance"/>
 <Subscription_Expires_2_ group="Ext_2/Share_Line_Appearance">3600</Subscription_Expires_2_>
 <NAT_Mapping_Enable_2_ group="Ext_2/NAT_Settings">Yes</NAT_Mapping_Enable_2_>
@@ -502,7 +498,7 @@
 <Use_OB_Proxy_In_Dialog_2_ group="Ext_2/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_2_>
 <Register_2_ group="Ext_2/Proxy_and_Registration">Yes</Register_2_>
 <Make_Call_Without_Reg_2_ group="Ext_2/Proxy_and_Registration">No</Make_Call_Without_Reg_2_>
-<Register_Expires_2_ group="Ext_2/Proxy_and_Registration">{$register_expires_2}</Register_Expires_2_>
+<Register_Expires_2_ group="Ext_2/Proxy_and_Registration">{$account.2.register_expires}</Register_Expires_2_>
 <Ans_Call_Without_Reg_2_ group="Ext_2/Proxy_and_Registration">No</Ans_Call_Without_Reg_2_>
 <Use_DNS_SRV_2_ group="Ext_2/Proxy_and_Registration">No</Use_DNS_SRV_2_>
 <DNS_SRV_Auto_Prefix_2_ group="Ext_2/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_2_>
@@ -529,12 +525,12 @@
 <DTMF_Process_AVT_2_ group="Ext_2/Audio_Configuration">Yes</DTMF_Process_AVT_2_>
 <Silence_Supp_Enable_2_ group="Ext_2/Audio_Configuration">No</Silence_Supp_Enable_2_>
 <DTMF_Tx_Method_2_ group="Ext_2/Audio_Configuration">Auto</DTMF_Tx_Method_2_>
-<Dial_Plan_2_ group="Ext_2/Dial_Plan">(*xxxxxxx|*xxxxxx|*xxxxx|*xxxx|*xxx|*xx*|*x|**xxxxx|**xxxx|**xxx|**xx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_2_>
+<Dial_Plan_2_ group="Ext_2/Dial_Plan">{$spa_dial_plan}</Dial_Plan_2_>
 <Caller_ID_Map_2_ group="Ext_2/Dial_Plan"/>
 <Enable_IP_Dialing_2_ group="Ext_2/Dial_Plan">Yes</Enable_IP_Dialing_2_>
 <Emergency_Number_2_ group="Ext_2/Dial_Plan"/>
 <Line_Enable_3_ group="Ext_3/General">Yes</Line_Enable_3_>
-<Share_Ext_3_ group="Ext_3/Share_Line_Appearance">private</Share_Ext_3_>
+<Share_Ext_3_ group="Ext_3/Share_Line_Appearance">{if $account.3.shared_line == "shared"}shared{else}private{/if}</Share_Ext_3_>
 <Shared_User_ID_3_ group="Ext_3/Share_Line_Appearance"/>
 <Subscription_Expires_3_ group="Ext_3/Share_Line_Appearance">3600</Subscription_Expires_3_>
 <NAT_Mapping_Enable_3_ group="Ext_3/NAT_Settings">Yes</NAT_Mapping_Enable_3_>
@@ -610,12 +606,12 @@
 <DTMF_Process_AVT_3_ group="Ext_3/Audio_Configuration">Yes</DTMF_Process_AVT_3_>
 <Silence_Supp_Enable_3_ group="Ext_3/Audio_Configuration">No</Silence_Supp_Enable_3_>
 <DTMF_Tx_Method_3_ group="Ext_3/Audio_Configuration">Auto</DTMF_Tx_Method_3_>
-<Dial_Plan_3_ group="Ext_3/Dial_Plan">(*xxxxxxx|*xxxxxx|*xxxxx|*xxxx|*xxx|*xx*|*x|**xxxxx|**xxxx|**xxx|**xx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_3_>
+<Dial_Plan_3_ group="Ext_3/Dial_Plan">{$spa_dial_plan}</Dial_Plan_3_>
 <Caller_ID_Map_3_ group="Ext_3/Dial_Plan"/>
 <Enable_IP_Dialing_3_ group="Ext_3/Dial_Plan">Yes</Enable_IP_Dialing_3_>
 <Emergency_Number_3_ group="Ext_3/Dial_Plan"/>
 <Line_Enable_4_ group="Ext_4/General">Yes</Line_Enable_4_>
-<Share_Ext_4_ group="Ext_4/Share_Line_Appearance">private</Share_Ext_4_>
+<Share_Ext_4_ group="Ext_4/Share_Line_Appearance">{if $account.4.shared_line == "shared"}shared{else}private{/if}</Share_Ext_4_>
 <Shared_User_ID_4_ group="Ext_4/Share_Line_Appearance"/>
 <Subscription_Expires_4_ group="Ext_4/Share_Line_Appearance">3600</Subscription_Expires_4_>
 <NAT_Mapping_Enable_4_ group="Ext_4/NAT_Settings">Yes</NAT_Mapping_Enable_4_>
@@ -691,7 +687,7 @@
 <DTMF_Process_AVT_4_ group="Ext_4/Audio_Configuration">Yes</DTMF_Process_AVT_4_>
 <Silence_Supp_Enable_4_ group="Ext_4/Audio_Configuration">No</Silence_Supp_Enable_4_>
 <DTMF_Tx_Method_4_ group="Ext_4/Audio_Configuration">Auto</DTMF_Tx_Method_4_>
-<Dial_Plan_4_ group="Ext_4/Dial_Plan">(*xxxxxxx|*xxxxxx|*xxxxx|*xxxx|*xxx|*xx*|*x|**xxxxx|**xxxx|**xxx|**xx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_4_>
+<Dial_Plan_4_ group="Ext_4/Dial_Plan">{$spa_dial_plan}</Dial_Plan_4_>
 <Caller_ID_Map_4_ group="Ext_4/Dial_Plan"/>
 <Enable_IP_Dialing_4_ group="Ext_4/Dial_Plan">Yes</Enable_IP_Dialing_4_>
 <Emergency_Number_4_ group="Ext_4/Dial_Plan"/>
@@ -707,7 +703,7 @@
 <Speed_Dial_7 group="User/Speed_Dial"/>
 <Speed_Dial_8 group="User/Speed_Dial"/>
 <Speed_Dial_9 group="User/Speed_Dial"/>
-<CW_Setting group="User/Supplementary_Services">Yes</CW_Setting>
+<CW_Setting group="User/Supplementary_Services">{$spa_call_waiting}</CW_Setting>
 <Block_CID_Setting group="User/Supplementary_Services">No</Block_CID_Setting>
 <Block_ANC_Setting group="User/Supplementary_Services">No</Block_ANC_Setting>
 <DND_Setting group="User/Supplementary_Services">No</DND_Setting>
@@ -716,8 +712,8 @@
 <Auto_Answer_Page group="User/Supplementary_Services">Yes</Auto_Answer_Page>
 <Preferred_Audio_Device group="User/Supplementary_Services">Speaker</Preferred_Audio_Device>
 <Send_Audio_To_Speaker group="User/Supplementary_Services">No</Send_Audio_To_Speaker>
-<Time_Format group="User/Supplementary_Services">24hr</Time_Format>
-<Date_Format group="User/Supplementary_Services">day/month</Date_Format>
+<Time_Format group="User/Supplementary_Services">{$spa_time_format}</Time_Format>
+<Date_Format group="User/Supplementary_Services">{$spa_date_format}</Date_Format>
 <Miss_Call_Shortcut group="User/Supplementary_Services">Yes</Miss_Call_Shortcut>
 <Accept_Media_Loopback_Request group="User/Supplementary_Services">automatic</Accept_Media_Loopback_Request>
 <Media_Loopback_Mode group="User/Supplementary_Services">source</Media_Loopback_Mode>

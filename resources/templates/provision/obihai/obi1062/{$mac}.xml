@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- OBi Configuration File -->
+<ParameterList>
+  {foreach $lines as $row} 
+  <Object>                         
+    <Name>VoiceService.1.VoiceProfile.1.Line.{$row.line_number}.SIP.</Name>
+    <ParameterValueStruct>
+      <Name>AuthUserName</Name>
+      <Value>{$row.user_id}</Value>
+    </ParameterValueStruct>
+    <ParameterValueStruct>
+      <Name>AuthPassword</Name>
+      <Value>{$row.password}</Value>
+    </ParameterValueStruct>
+  </Object>
+  <Object>
+    <Name>VoiceService.1.VoiceProfile.1.Line.{$row.line_number}.</Name>
+    <ParameterValueStruct>
+      <Name>Enable</Name>
+      <Value X_UseDefault="Yes"/>
+    </ParameterValueStruct>
+    <ParameterValueStruct>
+      <Name>X_DisplayLabel</Name>
+      <Value>{$row.display_name}</Value>
+    </ParameterValueStruct>
+    <ParameterValueStruct>
+      <Name>X_DisplayNumber</Name>
+      <Value>{$row.user_id}</Value>
+    </ParameterValueStruct>
+  </Object>
+  <Object>
+    <Name>VoiceService.1.VoiceProfile.{$row.line_number}.</Name>
+    <ParameterValueStruct>
+      <Name>DigitMap</Name>
+      <Value>(*xx|*xxx|*xxxx|*xxxxx|*xxxxxx|*xxxxxxx|**xx|**xxx|**xxxx|**xxxxx|**xxxxxx|**xxxxxxx|1xxxxxxxxxx|&lt;1&gt;[2-9]xxxxxxxxx|011xx.|xx.|(Mipd)|[^*#]@@.)</Value>
+    </ParameterValueStruct>
+  </Object>
+  <Object>
+    <Name>VoiceService.1.VoiceProfile.{$row.line_number}.SIP.</Name>
+    <ParameterValueStruct>
+      <Name>ProxyServer</Name>
+      <Value>{$row.server_address}</Value>
+    </ParameterValueStruct>
+    <ParameterValueStruct>
+      <Name>ProxyServerPort</Name>
+      {if isset($row.sip_port)}<Value>{$row.sip_port}</Value>{else}<Value>5060</Value>{/if}
+    </ParameterValueStruct>
+    <ParameterValueStruct>
+      <Name>ProxyServerTransport</Name>
+      {if $row.sip_transport == ''}<Value>TCP</Value>{/if}
+      {if $row.sip_transport == 'tcp'}<Value>TCP</Value>{/if}
+      {if $row.sip_transport == 'udp'}<Value>UDP</Value>{/if}
+      {if $row.sip_transport == 'tls'}<Value>TLS</Value>{/if}
+      {if $row.sip_transport == 'dns srv'}<Value>SRV</Value>{/if}
+    </ParameterValueStruct>
+    <ParameterValueStruct>
+      <Name>RegisterExpires</Name>
+      <Value>{$row.register_expires}</Value>
+    </ParameterValueStruct>
+  </Object>
+  {/foreach}
+  {foreach $keys["line"] as $row}
+    <Object>
+    <Name>VoiceService.1.Phone.LineKey.{$row.device_key_id}.</Name>
+    <ParameterValueStruct>
+      <Name>Function</Name>
+      <Value>{$row.device_key_type}</Value>
+    </ParameterValueStruct>
+    <ParameterValueStruct>
+      <Name>Service</Name>
+      <Value>SP{$row.device_key_line}</Value>
+    </ParameterValueStruct>
+    <ParameterValueStruct>
+      <Name>Number</Name>
+      <Value>{$row.device_key_value}</Value>
+    </ParameterValueStruct>
+    <ParameterValueStruct>
+      <Name>Name</Name>
+      <Value>{$row.device_key_label}</Value>
+    </ParameterValueStruct>
+  </Object>
+  {/foreach}
+</ParameterList>

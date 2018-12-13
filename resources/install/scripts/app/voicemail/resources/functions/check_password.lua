@@ -44,14 +44,15 @@
 			--get the voicemail settings from the database
 				if (voicemail_id) then
 					if (session:ready()) then
-						sql = [[SELECT * FROM v_voicemails
-							WHERE domain_uuid = ']] .. domain_uuid ..[['
-							AND voicemail_id = ']] .. voicemail_id ..[['
+						local sql = [[SELECT * FROM v_voicemails
+							WHERE domain_uuid = :domain_uuid
+							AND voicemail_id = :voicemail_id
 							AND voicemail_enabled = 'true' ]];
+						local params = {domain_uuid = domain_uuid, voicemail_id = voicemail_id};
 						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 						end
-						status = dbh:query(sql, function(row)
+						dbh:query(sql, params, function(row)
 							voicemail_uuid = string.lower(row["voicemail_uuid"]);
 							voicemail_password = row["voicemail_password"];
 							greeting_id = row["greeting_id"];
@@ -68,9 +69,13 @@
 				end
 
 			--please enter your password followed by pound
-				dtmf_digits = '';
-				password = macro(session, "voicemail_password", 20, 5000, '');
+				min_digits = 2;
+				max_digits = 20;
+				digit_timeout = 5000;
+				max_tries = 3;
+				password = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
 				--freeswitch.consoleLog("notice", "[voicemail] password: " .. password .. "\n");
+
 			--compare the password from the database with the password provided by the user
 				if (voicemail_password ~= password) then
 					--incorrect password

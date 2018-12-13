@@ -31,15 +31,15 @@
 <link rel="stylesheet" type="text/css" href="<!--{project_path}-->/resources/bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="<!--{project_path}-->/resources/bootstrap/css/bootstrap-datetimepicker.min.css" />
 <link rel="stylesheet" type="text/css" href="<!--{project_path}-->/resources/bootstrap/css/bootstrap-colorpicker.min.css">
-<link rel="stylesheet" type="text/css" href="<!--{project_path}-->/themes/<?php echo $_SESSION['domain']['template']['name']; ?>/css.php<?php echo ($default_login) ? '?login=default' : null; ?>">
+<link rel="stylesheet" type="text/css" href="<!--{project_path}-->/themes/<?php echo escape($_SESSION['domain']['template']['name']); ?>/css.php<?php echo ($default_login) ? '?login=default' : null; ?>">
 <?php
 //load custom css
 	if ($_SESSION['theme']['custom_css']['text'] != '') {
-		echo "<link rel='stylesheet' type='text/css' href='".$_SESSION['theme']['custom_css']['text']."'>\n\n";
+		echo "<link rel='stylesheet' type='text/css' href='".escape($_SESSION['theme']['custom_css']['text'])."'>\n\n";
 	}
 
 //set fav icon
-	$favicon = (isset($_SESSION['theme']['favicon']['text'])) ? $_SESSION['theme']['favicon']['text'] : '<!--{project_path}-->/themes/default/favicon.ico';
+	$favicon = (isset($_SESSION['theme']['favicon']['text'])) ? escape($_SESSION['theme']['favicon']['text']) : '<!--{project_path}-->/themes/default/favicon.ico';
 	echo "<link rel='icon' href='".$favicon."'>\n";
 ?>
 
@@ -56,56 +56,41 @@
 //web font loader
 	if ($_SESSION['theme']['font_loader']['text'] == 'true') {
 		if ($_SESSION['theme']['font_retrieval']['text'] != 'asynchronous') {
-			$font_loader_version = ($_SESSION['theme']['font_loader_version']['text'] != '') ? $_SESSION['theme']['font_loader_version']['text'] : 1;
-			echo "<script language='JavaScript' type='text/javascript' src='//ajax.googleapis.com/ajax/libs/webfont/".$font_loader_version."/webfont.js'></script>\n";
+			$font_loader_version = ($_SESSION['theme']['font_loader_version']['text'] != '') ? escape($_SESSION['theme']['font_loader_version']['text']) : 1;
+			echo "<script language='JavaScript' type='text/javascript' src='//ajax.googleapis.com/ajax/libs/webfont/".escape($font_loader_version)."/webfont.js'></script>\n";
 		}
-		echo "<script language='JavaScript' type='text/javascript' src='<!--{project_path}-->/resources/fonts/web_font_loader.php?v=".$font_loader_version."'></script>\n";
+		echo "<script language='JavaScript' type='text/javascript' src='<!--{project_path}-->/resources/fonts/web_font_loader.php?v=".escape($font_loader_version)."'></script>\n";
 	}
 ?>
 <script language="JavaScript" type="text/javascript">
 
 	//display message bar via js
 		function display_message(msg, mood, delay) {
-			var mood = (typeof mood !== 'undefined') ? mood : 'default';
-			var delay = (typeof delay !== 'undefined') ? delay : <?php echo (1000 * (float) $_SESSION['theme']['message_delay']['text']); ?>;
-			if (msg != '') {
-				var inner_width = $(window).width();
-				// add class by mood
-				$("#message_container").addClass('message_container_mood_'+mood);
-				$("#message_text").addClass('message_text_mood_'+mood);
-				// output message
-				$("#message_text").html(msg);
-				$("#message_container").css({height: $("#message_text").css("height")});
-				$("#message_container").css({width: inner_width});
-				$("#message_text").show().animate({top: '+=80'}, 500).animate({opacity: 1}, 'fast').delay(delay).animate({top: '-=80'}, 1000).animate({opacity: 0});
-				$("#message_container").show().animate({top: '+=80'}, 500).animate({opacity: <?php echo $_SESSION['theme']['message_opacity']['text']; ?>}, "fast").delay(delay).animate({top: '-=80'}, 1000).animate({opacity: 0}, function() {
-					$("#message_container").removeClass('message_container_mood_'+mood);
+			mood = (typeof mood !== 'undefined') ? mood : 'default';
+			delay = (typeof delay !== 'undefined') ? delay : <?php echo (1000 * (float) $_SESSION['theme']['message_delay']['text']); ?>;
+			if (msg !== '') {
+				var message_text = $(document.createElement('div'));
+				message_text.addClass('message_text message_mood_'+mood);
+				message_text.html(msg);
+				message_text.click(function() {
+					var object = $(this);
+					object.clearQueue().finish();
+					$("#message_container").css({'display':'none'});
+				} );
+				$("#message_container").append(message_text);
+				message_text.animate({opacity: 1}, 250, function(){
+					$("#message_container").delay(delay).animate({opacity: 0, height: '0'}, 1000);
 				});
+
 			}
 		}
 
 	$(document).ready(function() {
 
-		//set response message, if any
-			<?php
-			if (strlen($_SESSION['message']) > 0) {
-				$message_text = addslashes($_SESSION['message']);
-				$message_mood = $_SESSION['message_mood'];
-				$message_delay = $_SESSION['message_delay'];
-
-				echo "display_message('".$message_text."'";
-				echo ($message_mood != '') ? ", '".$message_mood."'" : ", 'default'";
-				if ($message_delay != '') {
-					echo ", '".$message_delay."'";
-				}
-				echo "); ";
-				unset($_SESSION['message'], $_SESSION['message_mood'], $_SESSION['message_delay']);
-			}
-			?>
-
+		<?php echo message::html(true, "		"); ?>
 
 		//hide message bar on hover
-			$("#message_text").mouseover(function() { $(this).hide(); $("#message_container").hide(); });
+			$(".message_text").mouseover(function() { $("#message_container").css({display:'none'}); });
 
 		<?php
 		if (permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
@@ -250,11 +235,11 @@
 
 				$("[id*=recording_button]").not("[id*=recording_button_"+recording_id+"]").html("<?php echo $v_link_label_play; ?>");
 				$("[id*=recording_progress_bar]").not("[id*=recording_progress_bar_"+recording_id+"]").css('display', 'none');
-				
+
 				$('audio').each(function(){
 					if ($(this).get(0) != recording_audio) {
-					    $(this).get(0).pause(); // Stop playing
-					    $(this).get(0).currentTime = 0; // Reset time
+						$(this).get(0).pause(); // Stop playing
+						$(this).get(0).currentTime = 0; // Reset time
 					}
 				});
 			}
@@ -301,15 +286,14 @@
 </head>
 
 <?php
-//add multi-lingual support
+//add multilingual support
 	$language = new text;
 	$text = $language->get(null,'themes/default');
 ?>
 
 <body onload="<?php echo $onload;?>">
 
-	<div id='message_container' class='message_container_mood_default'></div>
-	<div id='message_text' class='message_container_text_default'></div>
+	<div id='message_container'></div>
 
 	<?php
 	//logged in show the domains block
@@ -339,14 +323,14 @@
 					foreach($_SESSION['domains'] as $domain) {
 						$bgcolor = ($bgcolor == $bgcolor1) ? $bgcolor2 : $bgcolor1;
 						$bgcolor = ($domain['domain_uuid'] == $_SESSION['domain_uuid']) ? "#eeffee" : $bgcolor;
-						echo "<div id=\"".$domain['domain_name']."\" class='domains_list_item' style='background-color: ".$bgcolor."' onclick=\"document.location.href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".$domain['domain_uuid']."&domain_change=true';\">";
-						echo "<a href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".$domain['domain_uuid']."&domain_change=true' ".(($domain['domain_uuid'] == $_SESSION['domain_uuid']) ? "style='font-weight: bold;'" : null).">".$domain['domain_name']."</a>\n";
+						echo "<div id=\"".escape($domain['domain_name'])."\" class='domains_list_item' style='background-color: ".$bgcolor."' onclick=\"document.location.href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true';\">";
+						echo "<a href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true' ".(($domain['domain_uuid'] == $_SESSION['domain_uuid']) ? "style='font-weight: bold;'" : null).">".escape($domain['domain_name'])."</a>\n";
 						if ($domain['domain_description'] != '') {
-							echo "<span class=\"domain_list_item_description\"> - ".$domain['domain_description']."</span>\n";
+							echo "<span class=\"domain_list_item_description\"> - ".escape($domain['domain_description'])."</span>\n";
 						}
 						echo "</div>\n";
-						$ary_domain_names[] = $domain['domain_name'];
-						$ary_domain_descs[] = str_replace('"','\"',$domain['domain_description']);
+						$ary_domain_names[] = escape($domain['domain_name']);
+						$ary_domain_descs[] = str_replace('"','\"',escape($domain['domain_description']));
 					}
 					?>
 				</div>
@@ -393,6 +377,7 @@
 						$menu_type = 'default';
 						$menu_width = 'calc(100% - 20px)';
 						$menu_brand = false;
+						$menu_corners = null;
 						break;
 					case 'static':
 						$menu_type = 'static-top';
@@ -406,6 +391,7 @@
 						$menu_type = 'fixed-'.$menu_position;
 						$menu_width = 'calc(90% - 20px)';
 						$menu_brand = true;
+						$menu_corners = null;
 				}
 			?>
 
@@ -428,13 +414,13 @@
 									$menu_brand_link = '/';
 								}
 							//define menu brand mark
-								$menu_brand_text = ($_SESSION['theme']['menu_brand_text']['text'] != '') ? $_SESSION['theme']['menu_brand_text']['text'] : "FusionPBX";
+								$menu_brand_text = ($_SESSION['theme']['menu_brand_text']['text'] != '') ? escape($_SESSION['theme']['menu_brand_text']['text']) : "FusionPBX";
 								if ($_SESSION['theme']['menu_brand_type']['text'] == 'image' || $_SESSION['theme']['menu_brand_type']['text'] == '') {
-									$menu_brand_image = ($_SESSION['theme']['menu_brand_image']['text'] != '') ? $_SESSION['theme']['menu_brand_image']['text'] : PROJECT_PATH."/themes/default/images/logo.png";
+									$menu_brand_image = ($_SESSION['theme']['menu_brand_image']['text'] != '') ? escape($_SESSION['theme']['menu_brand_image']['text']) : PROJECT_PATH."/themes/default/images/logo.png";
 									echo "<a href='".$menu_brand_link."'>";
-									echo "<img id='menu_brand_image' class='navbar-logo' ".(($menu_style == 'fixed') ? "style='margin-right: -2%;'" : null)." src='".$menu_brand_image."' title=\"".$menu_brand_text."\">";
+									echo "<img id='menu_brand_image' class='navbar-logo' ".(($menu_style == 'fixed') ? "style='margin-right: -2%;'" : null)." src='".$menu_brand_image."' title=\"".escape($menu_brand_text)."\">";
 									if ($_SESSION['theme']['menu_brand_image_hover']['text'] != '') {
-										echo "<img id='menu_brand_image_hover' class='navbar-logo' style='display: none;' src='".$_SESSION['theme']['menu_brand_image_hover']['text']."' title=\"".$menu_brand_text."\">";
+										echo "<img id='menu_brand_image_hover' class='navbar-logo' style='display: none;' src='".$_SESSION['theme']['menu_brand_image_hover']['text']."' title=\"".escape($menu_brand_text)."\">";
 									}
 									echo "</a>";
 								}
@@ -444,7 +430,7 @@
 						}
 						//domain name/selector (xs)
 							if ($_SESSION["username"] != '' && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
-								echo "<span class='pull-right visible-xs'><a href='#' class='domain_selector_domain' title='".$text['theme-label-open_selector']."'>".$_SESSION['domain_name']."</a></span>\n";
+								echo "<span class='pull-right visible-xs'><a href='#' class='domain_selector_domain' title='".escape($text['theme-label-open_selector'])."'>".escape($_SESSION['domain_name'])."</a></span>\n";
 							}
 						?>
 					</div>
@@ -452,6 +438,8 @@
 						<ul class="nav navbar-nav">
 							<?php
 							foreach ($menu_array as $index_main => $menu_parent) {
+								$mod_li = "";
+								$mod_a_1 = "";
 								$submenu = false;
 								if (is_array($menu_parent['menu_items']) && sizeof($menu_parent['menu_items']) > 0) {
 									$mod_li = "class='dropdown' ";
@@ -462,10 +450,10 @@
 								$mod_a_3 = ($menu_parent['menu_item_category'] == 'external') ? "target='_blank' " : null;
 								if ($_SESSION['theme']['menu_main_icons']['boolean'] != 'false') {
 									if ($menu_parent['menu_item_icon'] != '' && substr_count($menu_parent['menu_item_icon'], 'glyphicon-') > 0) {
-										$menu_main_icon = "<span class='glyphicon ".$menu_parent['menu_item_icon']."' title=\"".$menu_parent['menu_language_title']."\"></span>";
+										$menu_main_icon = "<span class='glyphicon ".$menu_parent['menu_item_icon']."' title=\"".escape($menu_parent['menu_language_title'])."\"></span>";
 									}
 									else {
-										unset($menu_main_icon);
+										$menu_main_icon = null;
 									}
 									$menu_main_item = "<span class='hidden-sm' style='margin-left: 5px;'>".$menu_parent['menu_language_title']."</span>";
 								}
@@ -493,13 +481,13 @@
 										$mod_a_3 = ($menu_sub['menu_item_category'] == 'external') ? "target='_blank' " : null;
 										if ($_SESSION['theme']['menu_sub_icons']['boolean'] != 'false') {
 											if ($menu_sub['menu_item_icon'] != '' && substr_count($menu_sub['menu_item_icon'], 'glyphicon-') > 0) {
-												$menu_sub_icon = "<span class='glyphicon ".$menu_sub['menu_item_icon']."'></span>";
+												$menu_sub_icon = "<span class='glyphicon ".escape($menu_sub['menu_item_icon'])."'></span>";
 											}
 											else {
-												unset($menu_sub_icon);
+												$menu_sub_icon = null;
 											}
 										}
-										echo "<li><a href='".$mod_a_2."' ".$mod_a_3.">".(($_SESSION['theme']['menu_sub_icons']) ? "<span class='glyphicon glyphicon-minus visible-xs pull-left' style='margin: 4px 10px 0 25px;'></span>" : null).$menu_sub['menu_language_title'].$menu_sub_icon."</a></li>\n";
+										echo "<li><a href='".$mod_a_2."' ".$mod_a_3.">".(($_SESSION['theme']['menu_sub_icons']) ? "<span class='glyphicon glyphicon-minus visible-xs pull-left' style='margin: 4px 10px 0 25px;'></span>" : null).escape($menu_sub['menu_language_title']).$menu_sub_icon."</a></li>\n";
 									}
 									echo "</ul>\n";
 								}
@@ -511,7 +499,7 @@
 						echo "<span class='pull-right hidden-xs' style='white-space: nowrap;'>";
 						//domain name/selector (sm+)
 							if ($_SESSION["username"] != '' && permission_exists("domain_select") && count($_SESSION['domains']) > 1 && $_SESSION['theme']['domain_visible']['text'] == 'true') {
-								echo "<a href='#' class='domain_selector_domain' title='".$text['theme-label-open_selector']."'>".$_SESSION['domain_name']."</a>";
+								echo "<a href='#' class='domain_selector_domain' title='".$text['theme-label-open_selector']."'>".escape($_SESSION['domain_name'])."</a>";
 							}
 						//logout icon
 							if ($_SESSION['username'] != '' && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
@@ -543,10 +531,11 @@
 			switch ($menu_style) {
 				case 'inline':
 					$logo_align = ($_SESSION['theme']['logo_align']['text'] != '') ? $_SESSION['theme']['logo_align']['text'] : 'left';
+					$logo_style = ($_SESSION['theme']['logo_style']['text'] != '') ? $_SESSION['theme']['logo_style']['text'] : '';
 					echo str_replace("center", $logo_align, $open_container);
 					if ($_SERVER['PHP_SELF'] != PROJECT_PATH."/core/install/install.php") {
 						$logo = ($_SESSION['theme']['logo']['text'] != '') ? $_SESSION['theme']['logo']['text'] : PROJECT_PATH."/themes/default/images/logo.png";
-						echo "<a href='".((PROJECT_PATH != '') ? PROJECT_PATH : '/')."'><img src='".$logo."' style='padding: 15px 20px;'></a>";
+						echo "<a href='".((PROJECT_PATH != '') ? PROJECT_PATH : '/')."'><img src='".$logo."' style='padding: 15px 20px;$logo_style'></a>";
 					}
 
 					show_menu($menu_array, $menu_style, $menu_position);
@@ -578,7 +567,7 @@
 		$logo = (isset($_SESSION['theme']['logo']['text'])) ? $_SESSION['theme']['logo']['text'] : PROJECT_PATH."/themes/default/images/logo.png";
 		?>
 		<div id='default_login'>
-			<a href='<?php echo PROJECT_PATH; ?>/'><img id='login_logo' src='<?php echo $logo; ?>'></a><br />
+			<a href='<?php echo PROJECT_PATH; ?>/'><img id='login_logo' src='<?php echo escape($logo); ?>'></a><br />
 			<!--{body}-->
 		</div>
 		<div id='footer_login'>

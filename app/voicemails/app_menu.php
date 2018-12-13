@@ -1,18 +1,29 @@
 <?php
 
-$apps[$x]['menu'][0]['title']['en-us'] = "Voicemail";
-$apps[$x]['menu'][0]['title']['fr-fr'] = "Messagerie Vocale";
-$apps[$x]['menu'][0]['title']['pl'] = "Poczta głosowa";
-$apps[$x]['menu'][0]['title']['pt-br'] = "Correio de voz";
-$apps[$x]['menu'][0]['title']['sv-se'] = "Röstbrevlåda";
-$apps[$x]['menu'][0]['title']['uk'] = "Голосова пошта";
-$apps[$x]['menu'][0]['title']['de-at'] = "Mailbox";
-$apps[$x]['menu'][0]['title']['he'] = "תא קולי";
-$apps[$x]['menu'][0]['uuid'] = "0347f82a-62a0-49d0-bacd-511d080c46d5";
-$apps[$x]['menu'][0]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
-$apps[$x]['menu'][0]['category'] = "internal";
-$apps[$x]['menu'][0]['path'] = "/app/voicemails/voicemails.php";
-$apps[$x]['menu'][0]['groups'][] = "superadmin";
-$apps[$x]['menu'][0]['groups'][] = "admin";
+	$y=0;
+	$apps[$x]['menu'][$y]['title']['en-us'] = "Voicemail";
+	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
+	$apps[$x]['menu'][$y]['title']['de-at'] = "Sprachnachrichten";
+	$apps[$x]['menu'][$y]['title']['de-de'] = "Sprachnachrichten";
+	$apps[$x]['menu'][$y]['title']['es-cl'] = "";
+	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Messagerie Vocale";
+	$apps[$x]['menu'][$y]['title']['he-il'] = "תא קולי";
+	$apps[$x]['menu'][$y]['title']['it-it'] = "Caselle Vocali";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Poczta głosowa";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Correio de voz";
+	$apps[$x]['menu'][$y]['title']['pt-pt'] = "";
+	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
+	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Голосовая почта";
+	$apps[$x]['menu'][$y]['title']['sv-se'] = "Röstbrevlåda";
+	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Голосова пошта";
+	$apps[$x]['menu'][$y]['uuid'] = "0347f82a-62a0-49d0-bacd-511d080c46d5";
+	$apps[$x]['menu'][$y]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
+	$apps[$x]['menu'][$y]['category'] = "internal";
+	$apps[$x]['menu'][$y]['path'] = "/app/voicemails/voicemails.php";
+	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
+	$apps[$x]['menu'][$y]['groups'][] = "admin";
 
 ?>

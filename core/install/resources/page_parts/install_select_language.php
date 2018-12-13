@@ -47,7 +47,9 @@
 		echo "/>";
 		echo "				</td>";
 		echo "				<td class='vtable' align='left' valign='top' nowrap='nowrap'>\n";
-		echo "					<img src='<!--{project_path}-->/core/install/resources/images/flags/$lang_code.png' alt='$lang_code'/>&nbsp;".$text["language-$lang_code"];
+		if (file_exists($_SERVER["PROJECT_ROOT"]."/core/install/resources/images/flags/$lang_code.png")) {
+			echo "					<img src='<!--{project_path}-->/core/install/resources/images/flags/$lang_code.png' alt='$lang_code'/>&nbsp;".$text["language-$lang_code"];
+		}
 		echo "				</td>";
 		echo "				<td width='100%' class='vtable' valign='top'>\n";
 		echo "					&nbsp;\n";

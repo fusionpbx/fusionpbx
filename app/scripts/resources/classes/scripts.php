@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -93,15 +93,12 @@ if (!class_exists('scripts')) {
 		 * Copy the switch scripts from the web directory to the switch directory
 		 */
 		public function copy_files() {
-			if (strlen($_SESSION['switch']['scripts']['dir']) > 0) {
+			if (is_array($_SESSION['switch']['scripts'])) {
 				$dst_dir = $_SESSION['switch']['scripts']['dir'];
-				if(strlen($dst_dir) == 0) {
-					throw new Exception("Cannot copy scripts the 'script_dir' is empty");
-				}
 				if (file_exists($dst_dir)) {
 					//get the source directory
-					if (file_exists('/usr/share/examples/fusionpbx/resources/install/scripts')){
-						$src_dir = '/usr/share/examples/fusionpbx/resources/install/scripts';
+					if (file_exists('/usr/share/examples/fusionpbx/scripts')) {
+						$src_dir = '/usr/share/examples/fusionpbx/scripts';
 					}
 					else {
 						$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/scripts';
@@ -109,7 +106,15 @@ if (!class_exists('scripts')) {
 					if (is_readable($dst_dir)) {
 						recursive_copy($src_dir,$dst_dir);
 						unset($src_dir);
-					}else{
+						
+						// Copy the app/*/resource/install/scripts
+						$app_scripts = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'app/*/resource/install/scripts');
+						foreach ($app_scripts as $app_script){
+							recursive_copy($app_script, $dst_dir);
+						}
+						unset($app_scripts);
+					}
+					else {
 						throw new Exception("Cannot read from '$src_dir' to get the scripts");
 					}
 					chmod($dst_dir, 0775);
@@ -122,7 +127,7 @@ if (!class_exists('scripts')) {
 		 * Writes the config.lua
 		 */
 		public function write_config() {
-			if (is_dir($_SESSION['switch']['scripts']['dir'])) {
+			if (is_array($_SESSION['switch']['scripts'])) {
 
 				//replace the backslash with a forward slash
 					$this->db_path = str_replace("\\", "/", $this->db_path);
@@ -143,13 +148,15 @@ if (!class_exists('scripts')) {
 							$prep_statement = $this->db->prepare(check_sql($sql));
 							$prep_statement->execute();
 							$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-							foreach ($result as &$row) {
-								$this->dsn_name = $row["database_name"];
-								$this->dsn_username = $row["database_username"];
-								$this->dsn_password = $row["database_password"];
-								break; //limit to 1 row
+							if (is_array($result)) {
+								foreach ($result as &$row) {
+									$this->dsn_name = $row["database_name"];
+									$this->dsn_username = $row["database_username"];
+									$this->dsn_password = $row["database_password"];
+									break; //limit to 1 row
+								}
+								unset ($prep_statement);
 							}
-							unset ($prep_statement);
 						}
 						else {
 							$odbc_num_rows = '0';
@@ -157,7 +164,9 @@ if (!class_exists('scripts')) {
 					}
 
 				//get the recordings directory
-					$recordings_dir = $_SESSION['switch']['recordings']['dir'];
+					if (is_array($_SESSION['switch']['recordings'])) {
+						$recordings_dir = $_SESSION['switch']['recordings']['dir'];
+					}
 
 				//get the http_protocol
 					if (!isset($_SERVER['HTTP_PROTOCOL'])) {
@@ -209,16 +218,26 @@ if (!class_exists('scripts')) {
 					if (substr(strtoupper(PHP_OS), 0, 3) == "WIN") {
 						$tmp .= "	php_bin = \"php.exe\";\n";
 					}
+					elseif (file_exists(PHP_BINDIR."/php5")) { 
+	 					$tmp .= "	php_bin = \"php5\";\n";
+ 					}
 					else {
-						$tmp .= "	php_bin = \"php5\";\n";
+						$tmp .= "	php_bin = \"php\";\n";
 					}
 					$tmp .= $this->correct_path("	document_root = [[".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."]];\n");
 					$tmp .= $this->correct_path("	project_path = [[".PROJECT_PATH."]];\n");
 					$tmp .= $this->correct_path("	http_protocol = [[".$_SERVER['HTTP_PROTOCOL']."]];\n");
 					$tmp .= "\n";
 
-					$tmp .= "--store settings in memcache\n";
-					$tmp .= "	settings_in_cache = false;\n";
+					$tmp .= "--cache settings\n";
+					$tmp .= "	cache = {}\n";
+					if (strlen($_SESSION['cache']['method']['text']) > 0) {
+						$tmp .= "	cache.method = [[".$_SESSION['cache']['method']['text']."]];\n";  //file, memcache
+					}
+					if (strlen($_SESSION['cache']['location']['text']) > 0) {
+						$tmp .= "	cache.location = [[".$_SESSION['cache']['location']['text']."]];\n";
+					}
+					$tmp .= "	cache.settings = false;\n";
 					$tmp .= "\n";
 
 					if ((strlen($this->db_type) > 0) || (strlen($this->dsn_name) > 0)) {
@@ -234,8 +253,8 @@ if (!class_exists('scripts')) {
 						}
 						elseif ($this->db_type == "pgsql") {
 							if ($this->db_host == "localhost") { $this->db_host = "127.0.0.1"; }
-							$tmp .= "	database.system = \"pgsql://hostaddr=".$this->db_host." port=".$this->db_port." dbname=".$this->db_name." user=".$this->db_username." password=".$this->db_password." options='' application_name='".$this->db_name."'\";\n";
-							$tmp .= "	database.switch = \"pgsql://hostaddr=".$this->db_host." port=".$this->db_port." dbname=freeswitch user=".$this->db_username." password=".$this->db_password." options='' application_name='freeswitch'\";\n";
+							$tmp .= "	database.system = \"pgsql://hostaddr=".$this->db_host." port=".$this->db_port." dbname=".$this->db_name." user=".$this->db_username." password=".$this->db_password." options=''\";\n";
+							$tmp .= "	database.switch = \"pgsql://hostaddr=".$this->db_host." port=".$this->db_port." dbname=freeswitch user=".$this->db_username." password=".$this->db_password." options=''\";\n";
 						}
 						elseif ($this->db_type == "sqlite") {
 							$tmp .= "	database.system = \"sqlite://".$this->db_path."/".$this->db_name."\";\n";
@@ -252,15 +271,19 @@ if (!class_exists('scripts')) {
 					}
 					$tmp .= "--set defaults\n";
 					$tmp .= "	expire = {}\n";
+					$tmp .= "	expire.default = \"3600\";\n";
 					$tmp .= "	expire.directory = \"3600\";\n";
 					$tmp .= "	expire.dialplan = \"3600\";\n";
 					$tmp .= "	expire.languages = \"3600\";\n";
 					$tmp .= "	expire.sofia = \"3600\";\n";
 					$tmp .= "	expire.acl = \"3600\";\n";
+					$tmp .= "	expire.ivr = \"3600\";\n";
 					$tmp .= "\n";
 					$tmp .= "--set xml_handler\n";
 					$tmp .= "	xml_handler = {}\n";
 					$tmp .= "	xml_handler.fs_path = false;\n";
+					$tmp .= "	xml_handler.reg_as_number_alias = false;\n";
+					$tmp .= "	xml_handler.number_as_presence_id = true;\n";
 					$tmp .= "\n";
 					$tmp .= "--set settings\n";
 					$tmp .= "	settings = {}\n";

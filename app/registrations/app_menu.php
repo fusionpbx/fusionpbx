@@ -1,19 +1,29 @@
 <?php
 
-$apps[$x]['menu'][0]['title']['en-us'] = "Registrations";
-$apps[$x]['menu'][0]['title']['es-cl'] = "Registros";
-$apps[$x]['menu'][0]['title']['fr-fr'] = "Enregistrements SIP";
-$apps[$x]['menu'][0]['title']['pt-pt'] = "Registos";
-$apps[$x]['menu'][0]['title']['pt-br'] = "Registros";
-$apps[$x]['menu'][0]['title']['pl'] = "Rejestracje";
-$apps[$x]['menu'][0]['title']['sv-se'] = "Registreringar";
-$apps[$x]['menu'][0]['title']['uk'] = "Реєстрації";
-$apps[$x]['menu'][0]['title']['de-at'] = "Registrierungen";
-$apps[$x]['menu'][0]['uuid'] = "17dbfd56-291d-8c1c-bc43-713283a9dd5a";
-$apps[$x]['menu'][0]['parent_uuid'] = "0438b504-8613-7887-c420-c837ffb20cb1";
-$apps[$x]['menu'][0]['category'] = "internal";
-$apps[$x]['menu'][0]['path'] = "/app/registrations/status_registrations.php";
-$apps[$x]['menu'][0]['groups'][] = "admin";
-$apps[$x]['menu'][0]['groups'][] = "superadmin";
+	$y=0;
+	$apps[$x]['menu'][$y]['title']['en-us'] = "Registrations";
+	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
+	$apps[$x]['menu'][$y]['title']['de-at'] = "Registrierungen";
+	$apps[$x]['menu'][$y]['title']['de-de'] = "Registrierungen";
+	$apps[$x]['menu'][$y]['title']['es-cl'] = "Registros";
+	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Enregistrements SIP";
+	$apps[$x]['menu'][$y]['title']['he-il'] = "";
+	$apps[$x]['menu'][$y]['title']['it-it'] = "Registrazioni SIP";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Rejestracje";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Registros";
+	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Registos";
+	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
+	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Регистрации SIP";
+	$apps[$x]['menu'][$y]['title']['sv-se'] = "Registreringar";
+	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Реєстрації";
+	$apps[$x]['menu'][$y]['uuid'] = "17dbfd56-291d-8c1c-bc43-713283a9dd5a";
+	$apps[$x]['menu'][$y]['parent_uuid'] = "0438b504-8613-7887-c420-c837ffb20cb1";
+	$apps[$x]['menu'][$y]['category'] = "internal";
+	$apps[$x]['menu'][$y]['path'] = "/app/registrations/registrations.php";
+	$apps[$x]['menu'][$y]['groups'][] = "admin";
+	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 
 ?>

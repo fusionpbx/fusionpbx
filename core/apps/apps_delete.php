@@ -89,7 +89,7 @@ if (strlen($id) > 0) {
 }
 
 //redirect the browser
-	$_SESSION["message"] = $text['message-delete'];
+	message::add($text['message-delete']);
 	header("Location: apps.php");
 	return;
 

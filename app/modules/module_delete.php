@@ -51,7 +51,7 @@ if (strlen($id)>0) {
 	unset($sql);
 }
 
-$_SESSION["message"] = $text['message-delete'];
+message::add($text['message-delete']);
 header("Location: modules.php");
 return;
 

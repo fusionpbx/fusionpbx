@@ -24,8 +24,13 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-include "root.php";
-require_once "resources/require.php";
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+
+//destroy session
+	session_unset();
+	session_destroy();
 
 //check for login return preference
 	if ($_SESSION["user_uuid"] != '') {

@@ -1,0 +1,9 @@
+<context name="{v_context}">
+	<extension name="caller-details" continue="true" app_uuid="5c491a3e-f587-44df-970a-cd4352aa6f64">
+		<condition field="${caller_destination}" expression="^$" break="never">
+			<action application="set" data="caller_destination=${destination_number}" inline="true"/>
+			<action application="set" data="caller_id_name=${caller_id_name}" inline="true"/>
+			<action application="set" data="caller_id_number=${caller_id_number}"/>
+		</condition>
+	</extension>
+</context>

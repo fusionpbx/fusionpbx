@@ -136,8 +136,14 @@
 <!--  Mandatory -->
 <P212>2</P212>
 
-<!--  Firmware Server Path -->
-<P192>fm.grandstream.com/gs</P192>
+<!-- Firmware Server Path -->
+{if isset($grandstream_firmware_path) && isset($firmware_version)}
+<P192>{$grandstream_firmware_path}/ht503/{$firmware_version}</P192>
+{elseif isset($grandstream_firmware_path)}
+<P192>{$grandstream_firmware_path}/ht503</P192>
+{else}
+<P192>{$domain_name}{$project_path}/app/provision</P192>
+{/if}
 
 <!--  Config Server Path -->
 <P237>{$domain_name}{$project_path}/app/provision</P237>
@@ -148,11 +154,11 @@
 
 <!--  HTTP/HTTPS User Name -->
 <!--  String; between ascii values 33 and 126 -->
-<P1360></P1360>
+<P1360>{$http_auth_username}</P1360>
 
 <!--  HTTP/HTTPS Password -->
 <!--  String; between ascii values 33 and 126 -->
-<P1361></P1361>
+<P1361>{$http_auth_password}</P1361>
 
 <!--  Firmware File Prefix -->
 <!--  String; between ascii values 33 and 126 -->
@@ -396,19 +402,19 @@
 
 <!--  SIP User ID -->
 <!--  String -->
-<P35>{$user_id_1}</P35>
+<P35>{$account.1.user_id}</P35>
 
 <!--  Authentication ID -->
 <!--  String -->
-<P36>{$user_id_1}</P36>
+<P36>{$account.1.user_id}</P36>
 
 <!--  Authentication password -->
 <!--  String -->
-<P34>{$user_password_1}</P34>
+<P34>{$account.1.password}</P34>
 
 <!--  Name (John Doe) -->
 <!--  String -->
-<P3>{$display_name_1}</P3>
+<P3>{$account.1.display_name}</P3>
 
 <!--  DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP . -->
 <!--  Number: 0, 1, 2, 3 -->
@@ -564,7 +570,7 @@
 <!--  Enable Call Features. 0 - No, 1 - Yes -->
 <!--  Number: 0, 1 -->
 <!--  Mandatory -->
-<P191>1</P191>
+<P191>0</P191>
 
 <!--  Offhook Auto-Dial (User ID/extension to dial automatically when offhook) -->
 <!--  String: 0 to 9, *, # -->
@@ -677,7 +683,12 @@
 
 <!--  Dial Plan -->
 <!--  String -->
-<P4200>{ x+ | *x+ }</P4200>
+	
+{if isset($grandstream_dial_plan) }
+<P4200>{$grandstream_dial_plan}</P4200>
+{else}
+<P4200>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P4200>
+{/if}
 
 <!--  SUBSCRIBE for MWI. 0 - No, 1 - Yes -->
 <!--  Number: 0, 1 -->
@@ -1030,7 +1041,7 @@
 
 <!--  Primary SIP Server -->
 <!--  Server address -->
-<P747>{$server_address_1</P747>
+<P747>{$server_address_1}</P747>
 
 <!--  Failover SIP Server -->
 <!--  Server address -->
@@ -1057,19 +1068,19 @@
 
 <!--  SIP User ID -->
 <!--  String -->
-<P735>{$user_id_1}</P735>
+<P735>{$account.1.user_id}</P735>
 
 <!--  Authentication ID -->
 <!--  String -->
-<P736>{$user_id_1}</P736>
+<P736>{$account.1.user_id}</P736>
 
 <!--  Authentication password -->
 <!--  String -->
-<P734>{$user_password_1}</P734>
+<P734>{$account.1.password}</P734>
 
 <!--  Name (John Doe) -->
 <!--  String -->
-<P703>{Display_name_1}</P703>
+<P703>{$account.1.display_name}</P703>
 
 <!--  DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP . -->
 <!--  Number: 0, 1, 2, 3 -->

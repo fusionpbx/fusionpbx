@@ -5,39 +5,49 @@
 		$apps[$x]['uuid'] = "35ff1f56-513a-1f6c-a393-955838ff12ee";
 		$apps[$x]['category'] = "System";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "";
+		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Monitor System Services.";
+		$apps[$x]['description']['ar-eg'] = "";
+		$apps[$x]['description']['de-at'] = "Systemdienste überwachen.";
+		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-de'] = "Systemdienste überwachen.";
 		$apps[$x]['description']['es-cl'] = "Monitor de Servicios de Sistema";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['de-de'] = "";
-		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
-		$apps[$x]['description']['fr-fr'] = "Contrôler les services du système.";
 		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "Monitorizar Serviços do Sistema.";
+		$apps[$x]['description']['fr-fr'] = "Contrôler les services du système.";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-pt'] = "Monitorizar Serviços do Sistema.";
+		$apps[$x]['description']['ro-ro'] = "";
+		$apps[$x]['description']['ru-ru'] = "";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = "service_view";
-		$apps[$x]['permissions'][0]['menu']['uuid'] = "c28f14e9-e5ad-e992-0931-d5f5f0db6a79";
-		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][1]['name'] = "service_add";
-		$apps[$x]['permissions'][1]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][2]['name'] = "service_edit";
-		$apps[$x]['permissions'][2]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][3]['name'] = "service_delete";
-		$apps[$x]['permissions'][3]['groups'][] = "superadmin";
+		$y=0;
+		$apps[$x]['permissions'][$y]['name'] = "service_view";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "c28f14e9-e5ad-e992-0931-d5f5f0db6a79";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "service_add";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "service_edit";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "service_delete";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_services";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_services";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "service_id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";

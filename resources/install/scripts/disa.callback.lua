@@ -23,15 +23,18 @@
 --	Mark J Crane <markjcrane@fusionpbx.com>
 --	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 
---debug
-	debug["sql"] = false;
-
 --include config.lua
 	require "resources.functions.config";
 
 --connect to the database
-	require "resources.functions.database_handle";
-	dbh = database_handle('system');
+	local Database = require "resources.functions.database";
+	dbh = Database.new('system');
+
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
 
 	api = freeswitch.API();
 
@@ -44,14 +47,14 @@ context = argv[3];
 accountcode = argv[4];
 t_started = os.time();
 
-sql = "SELECT domain_uuid FROM v_domains WHERE domain_name='"..context.."'";
+local sql = "SELECT domain_uuid FROM v_domains WHERE domain_name=:context";
+local params = {context = context};
 if (debug["sql"]) then
-	freeswitch.consoleLog("debug", "[disa.callback] "..sql.."\n");
+	freeswitch.consoleLog("debug", "[disa.callback] SQL: "..sql.."; params: " .. json.encode(params) .. "\n");
 end
-
-status = dbh:query(sql, function(row)
+dbh:query(sql, params, function(row)
 	domain_uuid = row.domain_uuid;
-	end);
+end);
 
 cmd = "user_exists id ".. aleg_number .." "..context;
 a_user_exists = trim(api:executeString(cmd));
@@ -63,8 +66,8 @@ if (a_user_exists == "true") then
 	extension_uuid = trim(api:executeString(cmd));
 	a_dialstring = "[origination_caller_id_number=*3472,outbound_caller_id_number=*3472,call_timeout=30,context="..context..",sip_invite_domain="..context..",domain_name="..context..",domain="..context..",accountcode="..accountcode..",domain_uuid="..domain_uuid.."]user/"..aleg_number.."@"..context;
 else
-	sql = [[select * from v_dialplans as d, v_dialplan_details as s
-			where (d.domain_uuid = ']] .. domain_uuid .. [[' or d.domain_uuid is null)
+	local sql = [[select * from v_dialplans as d, v_dialplan_details as s
+			where (d.domain_uuid = :domain_uuid or d.domain_uuid is null)
 				and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3'
 				and d.dialplan_enabled = 'true'
 				and d.dialplan_uuid = s.dialplan_uuid
@@ -79,15 +82,16 @@ else
 				WHEN 'anti-action' THEN 3
 				ELSE 100 END,
 				s.dialplan_detail_order asc ]]
+	local params = {domain_uuid = domain_uuid};
 	if (debug["sql"]) then
-		freeswitch.consoleLog("notice", "[disa ] sql for dialplans:" .. sql .. "\n");
+		freeswitch.consoleLog("notice", "[disa ] sql for dialplans:" .. sql .. "; params: " .. json.encode(params) .. "\n");
 	end
 	dialplans = {};
 	x = 1;
-	assert(dbh:query(sql, function(row)
+	assert(dbh:query(sql, params, function(row)
 		dialplans[x] = row;
 		x = x + 1;
-		end));
+	end));
 
 	y = 0;
 	previous_dialplan_uuid = '';
@@ -176,8 +180,8 @@ if session1:ready() and session1:answered() then
 		extension_uuid = trim(api:executeString(cmd));
 		b_dialstring = "[origination_caller_id_number=*3472,outbound_caller_id_number=*3472,call_timeout=30,context="..context..",sip_invite_domain="..context..",domain_name="..context..",domain="..context..",accountcode="..accountcode..",domain_uuid="..domain_uuid.."]user/"..bleg_number.."@"..context;
 	else
-		sql = [[select * from v_dialplans as d, v_dialplan_details as s
-			where (d.domain_uuid = ']] .. domain_uuid .. [[' or d.domain_uuid is null)
+		local sql = [[select * from v_dialplans as d, v_dialplan_details as s
+			where (d.domain_uuid = :domain_uuid or d.domain_uuid is null)
 				and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3'
 				and d.dialplan_enabled = 'true'
 				and d.dialplan_uuid = s.dialplan_uuid
@@ -192,12 +196,13 @@ if session1:ready() and session1:answered() then
 				WHEN 'anti-action' THEN 3
 				ELSE 100 END,
 				s.dialplan_detail_order asc ]]
+		local params = {domain_uuid = domain_uuid};
 		if (debug["sql"]) then
-			freeswitch.consoleLog("notice", "[disa ] sql for dialplans:" .. sql .. "\n");
+			freeswitch.consoleLog("notice", "[disa ] sql for dialplans:" .. sql .. "; params: " .. json.encode(params) .. "\n");
 		end
 		dialplans = {};
 		x = 1;
-		assert(dbh:query(sql, function(row)
+		assert(dbh:query(sql, params, function(row)
 			dialplans[x] = row;
 			x = x + 1;
 			end));

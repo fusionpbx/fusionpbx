@@ -45,9 +45,12 @@
 			sounds_dir = session:getVariable("sounds_dir");
 
 		--connect to the database
-			if (pin_number == "database") then
-				require "resources.functions.database_handle";
-				dbh = database_handle('system');
+			local Database = require "resources.functions.database";
+			dbh = Database.new('system');
+
+		--include json library
+			if (debug["sql"]) then
+				json = require "resources.functions.lunajson"
 			end
 	end
 
@@ -66,14 +69,29 @@
 				--get the domain_name
 				domain_name = session:getVariable("domain_name");
 				--get the domain_uuid using the domain_name
-				sql = [[SELECT domain_name FROM v_domains
-					WHERE domain_name = ']] .. domain_name ..[[' ]];
+				local sql = "SELECT domain_name FROM v_domains WHERE domain_name = :domain_name";
+				local params = {domain_name = domain_name};
 				if (debug["sql"]) then
-					freeswitch.consoleLog("NOTICE", "SQL: "..sql.."\n");
+					freeswitch.consoleLog("NOTICE", "[pin_number] SQL: "..sql.."; params: " .. json.encode(params) .. "\n");
 				end
-				dbh:query(sql, function(row)
+				dbh:query(sql, params, function(row)
 					domain_uuid = row["domain_uuid"];
 				end);
+			end
+
+		--introduce authentication process
+			session:streamFile("phrase:pin_number_start:#");
+
+		--get the user ext, if applicable
+			if (pin_number == "voicemail") then
+				min_digits = 1;
+				max_digits = 6;
+				user_ext = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:pin_number_enter_extension:#", "", "\\d+");
+				if (not user_ext or user_ext == "") then
+					session:streamFile("phrase:voicemail_fail_auth:#");
+					session:hangup("NORMAL_CLEARING");
+					return;
+				end
 			end
 
 		--get the user pin number
@@ -83,15 +101,16 @@
 
 		--validate the user pin number
 			if (pin_number == "database") then
-				sql = [[SELECT * FROM v_pin_numbers
-					WHERE pin_number = ']] .. digits ..[['
-					AND domain_uuid = ']] .. domain_uuid .. [['
+				local sql = [[SELECT * FROM v_pin_numbers
+					WHERE pin_number = :digits
+					AND domain_uuid = :domain_uuid
 					AND enabled = 'true' ]];
+				local params = {digits = digits, domain_uuid = domain_uuid};
 				if (debug["sql"]) then
-					freeswitch.consoleLog("NOTICE", "SQL: "..sql.."\n");
+					freeswitch.consoleLog("NOTICE", "[pin_number] SQL: "..sql.."; params: " .. json.encode(params) .. "\n");
 				end
 				auth = false;
-				dbh:query(sql, function(row)
+				dbh:query(sql, params, function(row)
 					--get the values from the database
 						accountcode = row["accountcode"];
 					--set the variable to true
@@ -100,6 +119,23 @@
 						if (accountcode ~= nil) then
 							session:setVariable("sip_h_X-accountcode", accountcode);
 						end
+					--set the authorized pin number that was used
+						session:setVariable("pin_number", digits);
+				end);
+			elseif (pin_number == "voicemail") then
+				local sql = [[SELECT * FROM v_voicemails
+					WHERE voicemail_id = :user_ext
+					AND voicemail_password = :digits
+					AND domain_uuid = :domain_uuid 
+					AND voicemail_enabled = 'true' ]];
+				local params = {user_ext = user_ext, digits = digits, domain_uuid = domain_uuid};
+				if (debug["sql"]) then
+					freeswitch.consoleLog("NOTICE", "[pin_number] SQL: "..sql.."; params: " .. json.encode(params) .. "\n");
+				end
+				auth = false;
+				dbh:query(sql, params, function(row)
+					--set the variable to true
+						auth = true;
 					--set the authorized pin number that was used
 						session:setVariable("pin_number", digits);
 				end);

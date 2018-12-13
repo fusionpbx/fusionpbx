@@ -40,8 +40,8 @@
 	runonce = false;
 
 --connect to the database
-	require "resources.functions.database_handle";
-	dbh = database_handle('system');
+	local Database = require "resources.functions.database";
+	dbh = Database.new('system');
 
 --used to stop the lua service
 	local file = assert(io.open(run_file, "w"));

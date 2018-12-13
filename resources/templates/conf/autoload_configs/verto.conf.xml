@@ -8,8 +8,10 @@
 		<profile name="mine">
 			<param name="bind-local" value="0.0.0.0:8081"/>
 			<param name="bind-local" value="0.0.0.0:8082" secure="true"/>
-			<param name="secure-combined" value="/usr/local/freeswitch/certs/wss.pem"/>
-			<param name="secure-chain" value="/usr/local/freeswitch/certs/wss.pem"/>
+			<param name="secure-combined" value="/etc/freeswitch/tls/wss.pem"/>
+			<param name="secure-chain" value="/etc/freeswitch/tls/wss.pem"/>		
+			<!--<param name="secure-combined" value="/usr/local/freeswitch/tls/wss.pem"/>-->
+			<!--<param name="secure-chain" value="/usr/local/freeswitch/tls/wss.pem"/>-->
 			<param name="userauth" value="true"/>
 			<param name="context" value="public"/>
 			<param name="dialplan" value="XML"/>

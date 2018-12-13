@@ -17,23 +17,27 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('contact_phone_edit') || permission_exists('contact_phone_add')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+	
+//check permissions
+	if (permission_exists('contact_phone_edit') || permission_exists('contact_phone_add')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -48,9 +52,10 @@ else {
 		$action = "add";
 	}
 
-if (strlen($_GET["contact_uuid"]) > 0) {
-	$contact_uuid = check_str($_GET["contact_uuid"]);
-}
+//get the uuid
+	if (strlen($_GET["contact_uuid"]) > 0) {
+		$contact_uuid = check_str($_GET["contact_uuid"]);
+	}
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
@@ -60,6 +65,7 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 		$phone_type_text = check_str($_POST["phone_type_text"]);
 		$phone_label = check_str($_POST["phone_label"]);
 		$phone_label_custom = check_str($_POST["phone_label_custom"]);
+		$phone_speed_dial = check_str($_POST["phone_speed_dial"]);
 		$phone_number = check_str($_POST["phone_number"]);
 		$phone_extension = check_str($_POST["phone_extension"]);
 		$phone_primary = check_str($_POST["phone_primary"]);
@@ -128,6 +134,7 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 					$sql .= "phone_type_video, ";
 					$sql .= "phone_type_text, ";
 					$sql .= "phone_label, ";
+					$sql .= "phone_speed_dial, ";
 					$sql .= "phone_number, ";
 					$sql .= "phone_extension, ";
 					$sql .= "phone_primary, ";
@@ -143,6 +150,7 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 					$sql .= (($phone_type_video) ? 1 : 'null').", ";
 					$sql .= (($phone_type_text) ? 1 : 'null').", ";
 					$sql .= "'".$phone_label."', ";
+					$sql .= "'".$phone_speed_dial."', ";
 					$sql .= "'".$phone_number."', ";
 					$sql .= "'".$phone_extension."', ";
 					$sql .= (($phone_primary) ? 1 : 0).", ";
@@ -151,7 +159,7 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 					$db->exec(check_sql($sql));
 					unset($sql);
 
-					$_SESSION["message"] = $text['message-add'];
+					message::add($text['message-add']);
 					header("Location: contact_edit.php?id=".$contact_uuid);
 					return;
 				} //if ($action == "add")
@@ -164,6 +172,7 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 					$sql .= "phone_type_video = ".(($phone_type_video) ? 1 : 'null').", ";
 					$sql .= "phone_type_text = ".(($phone_type_text) ? 1 : 'null').", ";
 					$sql .= "phone_label = '".$phone_label."', ";
+					$sql .= "phone_speed_dial = '".$phone_speed_dial."', ";
 					$sql .= "phone_number = '".$phone_number."', ";
 					$sql .= "phone_extension = '".$phone_extension."', ";
 					$sql .= "phone_primary = ".(($phone_primary) ? 1 : 0).", ";
@@ -173,7 +182,7 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 					$db->exec(check_sql($sql));
 					unset($sql);
 
-					$_SESSION["message"] = $text['message-update'];
+					message::add($text['message-update']);
 					header("Location: contact_edit.php?id=".$contact_uuid);
 					return;
 				} //if ($action == "update")
@@ -195,6 +204,7 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 			$phone_type_video = $row["phone_type_video"];
 			$phone_type_text = $row["phone_type_text"];
 			$phone_label = $row["phone_label"];
+			$phone_speed_dial = $row["phone_speed_dial"];
 			$phone_number = $row["phone_number"];
 			$phone_extension = $row["phone_extension"];
 			$phone_primary = $row["phone_primary"];
@@ -299,10 +309,21 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-phone_speed_dial']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='phone_speed_dial' maxlength='255' min='0' step='1' value=\"".escape($phone_speed_dial)."\">\n";
+	echo "<br />\n";
+	echo $text['description-phone_speed_dial']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-phone_number']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='phone_number' maxlength='255' min='0' step='1' value=\"$phone_number\">\n";
+	echo "	<input class='formfld' type='text' name='phone_number' maxlength='255' min='0' step='1' value=\"".escape($phone_number)."\">\n";
 	echo "<br />\n";
 	echo $text['description-phone_number']."\n";
 	echo "</td>\n";
@@ -313,7 +334,7 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 	echo "	".$text['label-phone_extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='number' name='phone_extension' min='0' step='1' maxlength='255' value=\"$phone_extension\">\n";
+	echo "	<input class='formfld' type='number' name='phone_extension' min='0' step='1' maxlength='255' value=\"".escape($phone_extension)."\">\n";
 	echo "<br />\n";
 	echo $text['description-phone_extension']."\n";
 	echo "</td>\n";
@@ -338,7 +359,7 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 	echo "	".$text['label-phone_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='phone_description' maxlength='255' value=\"$phone_description\">\n";
+	echo "	<input class='formfld' type='text' name='phone_description' maxlength='255' value=\"".escape($phone_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-phone_description']."\n";
 	echo "</td>\n";
@@ -347,9 +368,9 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	echo "			<br>\n";
-	echo "			<input type='hidden' name='contact_uuid' value='$contact_uuid'>\n";
+	echo "			<input type='hidden' name='contact_uuid' value='".escape($contact_uuid)."'>\n";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='contact_phone_uuid' value='$contact_phone_uuid'>\n";
+		echo "		<input type='hidden' name='contact_phone_uuid' value='".escape($contact_phone_uuid)."'>\n";
 	}
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
@@ -360,4 +381,5 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

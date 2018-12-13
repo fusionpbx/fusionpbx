@@ -31,22 +31,31 @@
 		--group_call - call group has been called
 		--user_call - user has been called
 
+--get logger
+	local log = require "resources.functions.log".xml_handler;
+
 --connect to the database
-	require "resources.functions.database_handle";
-	dbh = database_handle('system');
+	local Database = require "resources.functions.database";
+	dbh = Database.new('system');
+
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
 
 --exits the script if we didn't connect properly
 	assert(dbh:connected());
-
 --get the domain_uuid
-	if (domain_uuid == nil and domain_name ~= nil) then
+	if (domain_uuid == nil) then
 		if (domain_name ~= nil) then
-			sql = "SELECT domain_uuid FROM v_domains ";
-			sql = sql .. "WHERE domain_name = '" .. domain_name .."' ";
+			local sql = "SELECT domain_uuid FROM v_domains ";
+			sql = sql .. "WHERE domain_name = :domain_name ";
+			local params = {domain_name = domain_name}
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+				log.noticef("SQL: %s; params %s", sql, json.encode(params));
 			end
-			status = dbh:query(sql, function(rows)
+			dbh:query(sql, params, function(rows)
 				domain_uuid = rows["domain_uuid"];
 			end);
 		end
@@ -54,11 +63,14 @@
 
 --get the extension information
 	if (domain_uuid ~= nil) then
-		sql = "SELECT * FROM v_extensions WHERE domain_uuid = '" .. domain_uuid .. "' and (extension = '" .. user .. "' or number_alias = '" .. user .. "') and enabled = 'true' ";
+		local sql = "SELECT * FROM v_extensions WHERE domain_uuid = :domain_uuid "
+			.. "and (extension = :user or number_alias = :user) "
+			.. "and enabled = 'true' ";
+		local params = {domain_uuid=domain_uuid, user=user};
 		if (debug["sql"]) then
-			freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+			log.noticef("SQL: %s; params %s", sql, json.encode(params));
 		end
-		dbh:query(sql, function(row)
+		dbh:query(sql, params, function(row)
 			--general
 				domain_uuid = row.domain_uuid;
 				extension_uuid = row.extension_uuid;
@@ -83,7 +95,7 @@
 		table.insert(xml, [[<document type="freeswitch/xml">]]);
 		table.insert(xml, [[	<section name="directory">]]);
 		table.insert(xml, [[		<domain name="]] .. domain_name .. [[" alias="true">]]);
-		table.insert(xml, [[			<user id="]] .. extension .. [[">]]);
+		table.insert(xml, [[			<user id="]] .. extension .. [["]] .. number_alias .. [[>]]);
 		table.insert(xml, [[				<params>]]);
 		table.insert(xml, [[					<param name="reverse-auth-user" value="]] .. extension .. [["/>]]);
 		table.insert(xml, [[					<param name="reverse-auth-pass" value="]] .. password .. [["/>]]);

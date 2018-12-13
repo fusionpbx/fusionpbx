@@ -19,12 +19,12 @@ servers[#servers + 1] = {
 
 require "resources.functions.config"
 
-local log           = require "resources.functions.log".ha_monitor
-local EventConsumer = require "resources.functions.event_consumer"
-local api           = require "resources.functions.api"
-
 local service_name = 'ha_monitor'
-local pid_file = scripts_dir .. '/run/' .. service_name .. '.tmp'
+
+local log               = require "resources.functions.log"[service_name]
+local BasicEventService = require "resources.functions.basic_event_service"
+local api               = require "resources.functions.api"
+
 local method   = 'curl' -- default method
 
 local function trim(s)
@@ -110,33 +110,14 @@ local function remote_execute_all(...)
 	end
 end
 
-local events = EventConsumer.new(pid_file)
-
--- FS shutdown
-events:bind('SHUTDOWN', function(self, name, event)
-	log.notice('shutdown')
-	return self:stop()
-end)
-
--- Control commands from FusionPBX
-events:bind("CUSTOM::fusion::service::control", function(self, name, event)
-	if service_name ~= event:getHeader('service-name') then return end
-
-	local command = event:getHeader('service-command')
-	if command == "stop" then
-		log.notice("get stop command")
-		return self:stop()
-	end
-
-	log.warningf('Unknown service command: %s', command or '<NONE>')
-end)
+local service = BasicEventService.new(log, service_name)
 
 -- Lua code can not generate 'MEMCACHE' event so we use `CUSTOM::fusion::memcache`
--- and forwart MEMCACHE to it for backward compatability
-events:bind('MEMCACHE', emit'CUSTOM::fusion::memcache')
+-- and forward MEMCACHE to it for backward compatability
+service:bind('MEMCACHE', emit'CUSTOM::fusion::memcache')
 
 -- Memcache event
-events:bind('CUSTOM::fusion::memcache', function(self, name, event)
+service:bind('CUSTOM::fusion::memcache', function(self, name, event)
 	-- log.noticef('event: %s\n%s', name, event:serialize('xml'))
 
 	local api_command = trim(event:getHeader('API-Command'))
@@ -155,7 +136,7 @@ events:bind('CUSTOM::fusion::memcache', function(self, name, event)
 end)
 
 -- start gateway
-events:bind('CUSTOM::sofia::gateway_add', function(self, name, event)
+service:bind('CUSTOM::sofia::gateway_add', function(self, name, event)
 	-- log.noticef('event: %s\n%s', name, event:serialize('xml'))
 
 	local profile = event:getHeader('profile-name')
@@ -166,7 +147,7 @@ events:bind('CUSTOM::sofia::gateway_add', function(self, name, event)
 end)
 
 -- stop gateway
-events:bind('CUSTOM::sofia::gateway_delete', function(self, name, event)
+service:bind('CUSTOM::sofia::gateway_delete', function(self, name, event)
 	-- log.noticef('event: %s\n%s', name, event:serialize('xml'))
 
 	local profile = event:getHeader('profile-name')
@@ -178,7 +159,7 @@ end)
 
 log.notice('start')
 
-events:run()
+service:run()
 
 log.notice('stop')
 

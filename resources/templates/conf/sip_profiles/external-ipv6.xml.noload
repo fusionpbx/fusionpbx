@@ -25,6 +25,7 @@
 		<param name="enable-rfc-5626" value="true" enabled="false"/>
 		<param name="sip-port" value="$${external_sip_port}"/>
 		<param name="dialplan" value="XML"/>
+		<param name="track-calls" value="false"/>
 		<param name="context" value="public"/>
 		<param name="dtmf-type" value="rfc2833"/>
 		<param name="dtmf-duration" value="2000"/>
@@ -55,7 +56,7 @@
 		<!--<param name="aggressive-nat-detection" value="true"/>-->
 		<param name="inbound-codec-negotiation" value="generous"/>
 		<param name="nonce-ttl" value="60"/>
-		<param name="auth-calls" value="false"/>
+		<param name="auth-calls" value="true"/>
 		<!-- ip address to use for rtp, DO NOT USE HOSTNAMES ONLY IP ADDRESSES -->
 		<param name="rtp-ip" value="$${local_ip_v6}"/>
 		<!-- ip address to bind to, DO NOT USE HOSTNAMES ONLY IP ADDRESSES -->

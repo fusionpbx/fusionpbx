@@ -23,16 +23,20 @@
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('user_setting_add') || permission_exists('user_setting_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('user_setting_add') || permission_exists('user_setting_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -315,12 +319,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 			//redirect the browser
 				if ($action == "update") {
-					$_SESSION["message"] = $text['message-update'];
+					message::add($text['message-update']);
 				}
 				if ($action == "add") {
-					$_SESSION["message"] = $text['message-add'];
+					message::add($text['message-add']);
 				}
-				header("Location: usersupdate.php?id=".$user_uuid);
+				header("Location: user_edit.php?id=".$user_uuid);
 				return;
 		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
@@ -369,7 +373,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "</b></td>\n";
 	echo "<td width='70%' align='right' valign='top'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='usersupdate.php?id=$user_uuid'\" value='".$text['button-back']."'>";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='user_edit.php?id=".escape($user_uuid)."'\" value='".$text['button-back']."'>";
 	echo "	<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -391,7 +395,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	if (permission_exists('user_setting_category_edit')) {
-		echo "	<input type='text' class='formfld' name='user_setting_category' id='user_setting_category' maxlength='255' value=\"".$user_setting_category."\">\n";
+		echo "	<input type='text' class='formfld' name='user_setting_category' id='user_setting_category' maxlength='255' value=\"".escape($user_setting_category)."\">\n";
 	}
 	else {
 		echo "	<select class='formfld' name='user_setting_category' id='user_setting_category' onchange=\"$('#user_setting_subcategory').focus();\">\n";
@@ -414,7 +418,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-subcategory']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld lowercase' type='text' name='user_setting_subcategory' id='user_setting_subcategory' maxlength='255' value=\"$user_setting_subcategory\">\n";
+	echo "	<input class='formfld lowercase' type='text' name='user_setting_subcategory' id='user_setting_subcategory' maxlength='255' value=\"".escape($user_setting_subcategory)."\">\n";
 	echo "<br />\n";
 	echo $text['description-subcategory']."\n";
 	echo "</td>\n";
@@ -425,7 +429,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-type']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld lowercase' type='text' name='user_setting_name' id='user_setting_name' maxlength='255' value=\"$user_setting_name\">\n";
+	echo "	<input class='formfld lowercase' type='text' name='user_setting_name' id='user_setting_name' maxlength='255' value=\"".escape($user_setting_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-type']."\n";
 	echo "</td>\n";
@@ -450,10 +454,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$sub_result = $sub_prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($sub_result as $sub_row) {
 			if (strtolower($row['user_setting_value']) == strtolower($sub_row["menu_uuid"])) {
-				echo "		<option value='".strtolower($sub_row["menu_uuid"])."' selected='selected'>".$sub_row["menu_language"]." - ".$sub_row["menu_name"]."\n";
+				echo "		<option value='".strtolower($sub_row["menu_uuid"])."' selected='selected'>".escape($sub_row["menu_language"])." - ".escape($sub_row["menu_name"])."\n";
 			}
 			else {
-				echo "		<option value='".strtolower($sub_row["menu_uuid"])."'>".$sub_row["menu_language"]." - ".$sub_row["menu_name"]."</option>\n";
+				echo "		<option value='".strtolower($sub_row["menu_uuid"])."'>".escape($sub_row["menu_language"])." - ".escape($sub_row["menu_name"])."</option>\n";
 			}
 		}
 		unset ($sub_prep_statement);
@@ -470,10 +474,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$dir_label = str_replace('_', ' ', $dir_name);
 					$dir_label = str_replace('-', ' ', $dir_label);
 					if ($dir_name == $row['user_setting_value']) {
-						echo "		<option value='$dir_name' selected='selected'>".ucwords($dir_label)."</option>\n";
+						echo "		<option value='".escape($dir_name)."' selected='selected'>".ucwords($dir_label)."</option>\n";
 					}
 					else {
-						echo "		<option value='$dir_name'>".ucwords($dir_label)."</option>\n";
+						echo "		<option value='".escape($dir_name)."'>".ucwords($dir_label)."</option>\n";
 					}
 				}
 			}
@@ -528,7 +532,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "			<option value='".$val."' selected='selected'>(UTC ".$time_zone_offset_hours.":".$time_zone_offset_minutes.") ".$val."</option>\n";
 			}
 			else {
-				echo "			<option value='".$val."'>(UTC ".$time_zone_offset_hours.":".$time_zone_offset_minutes.") ".$val."</option>\n";
+				echo "			<option value='".$val."'>(UTC ".escape($time_zone_offset_hours).":".escape($time_zone_offset_minutes).") ".$val."</option>\n";
 			}
 			$previous_category = $category;
 			$x++;
@@ -542,7 +546,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	</select>\n";
 	}
 	elseif ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
-		echo "	<input class='formfld' type='password' id='user_setting_value' name='user_setting_value' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"".$row['user_setting_value']."\">\n";
+		echo "	<input class='formfld' type='password' id='user_setting_value' name='user_setting_value' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"".escape($row['user_setting_value'])."\">\n";
 	}
 	elseif ($category == "theme" && substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
 		echo "	<input type='text' class='formfld colorpicker' id='user_setting_value' name='user_setting_value' value=\"".$row['user_setting_value']."\">\n";
@@ -568,10 +572,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "		<option value='' disabled='disabled'></option>\n";
 			echo "		<option value='' ".(($row['user_setting_value'] != '' && $option_found == false) ? 'selected' : null).">".$text['label-other']."...</option>\n";
 			echo "	</select>";
-			echo "	<input type='text' class='formfld' ".(($row['user_setting_value'] == '' || $option_found) ? "style='display: none;'" : null)." id='txt_user_setting_value' name='user_setting_value' value=\"".$row['user_setting_value']."\">\n";
+			echo "	<input type='text' class='formfld' ".(($row['user_setting_value'] == '' || $option_found) ? "style='display: none;'" : null)." id='txt_user_setting_value' name='user_setting_value' value=\"".escape($row['user_setting_value'])."\">\n";
 		}
 		else {
-			echo "	<input type='text' class='formfld' id='user_setting_value' name='user_setting_value' value=\"".$row['user_setting_value']."\">\n";
+			echo "	<input type='text' class='formfld' id='user_setting_value' name='user_setting_value' value=\"".escape($row['user_setting_value'])."\">\n";
 		}
 	}
 	elseif ($category == "fax" && $subcategory == "page_size" && $name == "text" ) {
@@ -637,7 +641,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    </select>\n";
 	}
 	else {
-		echo "	<input class='formfld' type='text' id='user_setting_value' name='user_setting_value' maxlength='255' value=\"".$row['user_setting_value']."\">\n";
+		echo "	<input class='formfld' type='text' id='user_setting_value' name='user_setting_value' maxlength='255' value=\"".escape($row['user_setting_value'])."\">\n";
 	}
 	echo "<br />\n";
 	echo $text['description-value']."\n";
@@ -708,7 +712,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='user_setting_description' maxlength='255' value=\"".$user_setting_description."\">\n";
+	echo "	<input class='formfld' type='text' name='user_setting_description' maxlength='255' value=\"".escape($user_setting_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
@@ -716,9 +720,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
-	echo "			<input type='hidden' name='user_uuid' value='$user_uuid'>\n";
+	echo "			<input type='hidden' name='user_uuid' value='".escape($user_uuid)."'>\n";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='user_setting_uuid' value='$user_setting_uuid'>\n";
+		echo "		<input type='hidden' name='user_setting_uuid' value='".escape($user_setting_uuid)."'>\n";
 	}
 	echo "			<br />";
 	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";

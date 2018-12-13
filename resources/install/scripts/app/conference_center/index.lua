@@ -37,8 +37,14 @@
 	debug["sql"] = false;
 
 --connect to the database
-	require "resources.functions.database_handle";
-	dbh = database_handle('system');
+	local Database = require "resources.functions.database";
+	dbh = Database.new('system');
+
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
 
 --prepare the api object
 	api = freeswitch.API();
@@ -56,6 +62,12 @@
 
 --answer the call
 	session:answer();
+
+--get record_ext
+	record_ext = session:getVariable("record_ext");
+	if (not record_ext) then
+			record_ext = "wav";
+	end
 
 --define a function to send email
 	function send_email(email, attachment, default_language, default_dialect)
@@ -80,11 +92,11 @@
 					end
 
 				--get the moderator_pin
-					sql = [[SELECT moderator_pin FROM v_meetings
-					WHERE meeting_uuid = ']] .. meeting_uuid ..[[']];
-					freeswitch.consoleLog("notice", "[voicemail] sql: " .. sql .. "\n");
-					status = dbh:query(sql, function(row)
-					moderator_pin = string.lower(row["moderator_pin"]);
+					local sql = "SELECT moderator_pin FROM v_meetings WHERE meeting_uuid = :meeting_uuid";
+					local params = {meeting_uuid = meeting_uuid}
+					freeswitch.consoleLog("notice", "[voicemail] sql: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+					dbh:query(sql, params, function(row)
+						moderator_pin = string.lower(row["moderator_pin"]);
 					end);
 
 				--get the link_address
@@ -159,19 +171,19 @@
 			end_epoch = os.time();
 
 		--connect to the database
-			require "resources.functions.database_handle";
-			dbh = database_handle('system');
+			dbh = Database.new('system');
 
 		--get the conference sessions
 			if (conference_session_uuid) then
-				sql = [[SELECT count(*) as num_rows
+				local sql = [[SELECT count(*) as num_rows
 					FROM v_conference_sessions
-					WHERE conference_session_uuid = ']] .. conference_session_uuid ..[[']];
-				status = dbh:query(sql, function(row)
-				num_rows = string.lower(row["num_rows"]);
+					WHERE conference_session_uuid = :conference_session_uuid]];
+				local params = {conference_session_uuid = conference_session_uuid};
+				dbh:query(sql, params, function(row)
+					num_rows = string.lower(row["num_rows"]);
 				end);
 				if (debug["sql"]) then
-					freeswitch.consoleLog("notice", "[conference center] SQL: " .. sql .. " Rows: "..num_rows.."\n");
+					freeswitch.consoleLog("notice", "[conference center] SQL: " .. sql .. "; params:" .. json.encode(params) .. "; Rows: "..num_rows.."\n");
 				end
 				if (tonumber(num_rows) == 0) then
 					local sql = {}
@@ -191,22 +203,35 @@
 					table.insert(sql, ") ");
 					table.insert(sql, "VALUES ");
 					table.insert(sql, "( ");
-					table.insert(sql, "'".. conference_session_uuid .."', ");
-					table.insert(sql, "'".. domain_uuid .."', ");
-					table.insert(sql, "'".. meeting_uuid .."', ");
+					table.insert(sql, ":conference_session_uuid, ");
+					table.insert(sql, ":domain_uuid, ");
+					table.insert(sql, ":meeting_uuid, ");
 					--if (conference_recording) then
-					--	table.insert(sql, "'".. conference_recording .."', ");
+					--	table.insert(sql, ":conference_recording, ");
 					--end
 					--if (wait_mod) then
-					--	table.insert(sql, "'".. wait_mod .."', ");
+					--	table.insert(sql, ":wait_mod, ");
 					--end
-					--table.insert(sql, "'".. start_epoch .."', ");
-					table.insert(sql, "'".. profile .."' ");
+					--table.insert(sql, ":start_epoch, ");
+					table.insert(sql, ":profile ");
 					table.insert(sql, ") ");
-					SQL_STRING = table.concat(sql, "\n");
-					dbh:query(SQL_STRING);
+
+					sql = table.concat(sql, "\n");
+
+					local params = {
+						conference_session_uuid = conference_session_uuid;
+						domain_uuid = domain_uuid;
+						meeting_uuid = meeting_uuid;
+						-- conference_recording = conference_recording;
+						-- wait_mod = wait_mod;
+						-- start_epoch = start_epoch;
+						profile = profile;
+					};
+
+					dbh:query(sql, params);
+
 					if (debug["sql"]) then
-						freeswitch.consoleLog("notice", "[conference center] SQL: " .. SQL_STRING .. "\n");
+						freeswitch.consoleLog("notice", "[conference center] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 					end
 				end
 			end
@@ -233,40 +258,55 @@
 				table.insert(sql, ") ");
 				table.insert(sql, "VALUES ");
 				table.insert(sql, "( ");
-				table.insert(sql, "'".. conference_session_detail_uuid .."', ");
-				table.insert(sql, "'".. domain_uuid .."', ");
-				table.insert(sql, "'".. conference_session_uuid .."', ");
-				table.insert(sql, "'".. meeting_uuid .."', ");
-				table.insert(sql, "'".. username .."', ");
-				table.insert(sql, "'".. caller_id_name .."', ");
-				table.insert(sql, "'".. caller_id_number .."', ");
-				table.insert(sql, "'".. network_addr .."', ");
-				table.insert(sql, "'".. uuid .."', ");
+				table.insert(sql, ":conference_session_detail_uuid, ");
+				table.insert(sql, ":domain_uuid, ");
+				table.insert(sql, ":conference_session_uuid, ");
+				table.insert(sql, ":meeting_uuid, ");
+				table.insert(sql, ":username, ");
+				table.insert(sql, ":caller_id_name, ");
+				table.insert(sql, ":caller_id_number, ");
+				table.insert(sql, ":network_addr, ");
+				table.insert(sql, ":uuid, ");
 				if (conference_moderator) then
-					table.insert(sql, "'".. conference_moderator .."', ");
+					table.insert(sql, ":conference_moderator, ");
 				end
-				table.insert(sql, "'".. start_epoch .."', ");
-				table.insert(sql, "'".. end_epoch .."' ");
+				table.insert(sql, ":start_epoch, ");
+				table.insert(sql, ":end_epoch ");
 				table.insert(sql, ") ");
-				SQL_STRING = table.concat(sql, "\n");
-				dbh:query(SQL_STRING);
+				sql = table.concat(sql, "\n");
+				local params = {
+					conference_session_detail_uuid = conference_session_detail_uuid;
+					domain_uuid = domain_uuid;
+					conference_session_uuid = conference_session_uuid;
+					meeting_uuid = meeting_uuid;
+					username = username;
+					caller_id_name = caller_id_name;
+					caller_id_number = caller_id_number;
+					network_addr = network_addr;
+					uuid = uuid;
+					conference_moderator = conference_moderator;
+					start_epoch = start_epoch;
+					end_epoch = end_epoch;
+				};
+				dbh:query(sql, params);
 			end
 
 		--if the conference is empty
 			if (conference_session_uuid) then
-				cmd = "conference "..meeting_uuid.."-"..domain_name.." xml_list";
+				cmd = "conference "..meeting_uuid.."@"..domain_name.." xml_list";
 				result = trim(api:executeString(cmd));
 				if (string.sub(result, -9) == "not found") then
 					--get the conference start_epoch
-						sql = [[SELECT start_epoch
+						local sql = [[SELECT start_epoch
 							FROM v_conference_session_details
-							WHERE conference_session_uuid = ']] .. conference_session_uuid ..[['
+							WHERE conference_session_uuid = :conference_session_uuid
 							ORDER BY start_epoch ASC
 							LIMIT 1]];
-						status = dbh:query(sql, function(row)
-						start_epoch = string.lower(row["start_epoch"]);
+						local params = {conference_session_uuid = conference_session_uuid};
+						dbh:query(sql, params, function(row)
+							start_epoch = string.lower(row["start_epoch"]);
 						end);
-						--freeswitch.consoleLog("notice", "[conference center] <conference_start_epoch> sql: " .. sql .. "\n");
+						--freeswitch.consoleLog("notice", "[conference center] <conference_start_epoch> sql: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 
 					--set the conference_recording
 						conference_recording = recordings_dir.."/archive/"..os.date("%Y", start_epoch).."/"..os.date("%b", start_epoch).."/"..os.date("%d", start_epoch) .."/"..conference_session_uuid;
@@ -274,15 +314,21 @@
 					--conference has ended set the end_epoch
 						local sql = {}
 						table.insert(sql, "update v_conference_sessions set ");
-						table.insert(sql, "recording = '".. conference_recording .."', ");
-						table.insert(sql, "start_epoch = '".. start_epoch .."', ");
-						table.insert(sql, "end_epoch = '".. end_epoch .."' ");
-						table.insert(sql, "where conference_session_uuid = '"..conference_session_uuid.."' ");
-						SQL_STRING = table.concat(sql, "\n");
+						table.insert(sql, "recording = :conference_recording, ");
+						table.insert(sql, "start_epoch = :start_epoch, ");
+						table.insert(sql, "end_epoch = :end_epoch ");
+						table.insert(sql, "where conference_session_uuid = :conference_session_uuid ");
+						sql = table.concat(sql, "\n");
+						local params = {
+							conference_recording = conference_recording;
+							start_epoch = start_epoch;
+							end_epoch = end_epoch;
+							conference_session_uuid = conference_session_uuid;
+						};
 						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[conference center] SQL: " .. SQL_STRING .. "\n");
+							freeswitch.consoleLog("notice", "[conference center] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 						end
-						dbh:query(SQL_STRING);
+						dbh:query(sql, params);
 					--convert the wav to an mp3
 						if (record == "true") then
 							--cmd = "sox "..conference_recording..".wav -r 16000 -c 1 "..conference_recording..".mp3";
@@ -358,21 +404,23 @@
 
 		--get the domain_uuid
 			if (domain_name ~= nil and domain_uuid == nil) then
-				sql = "SELECT domain_uuid FROM v_domains ";
-				sql = sql .. "WHERE domain_name = '" .. domain_name .."' ";
+				local sql = "SELECT domain_uuid FROM v_domains ";
+				sql = sql .. "WHERE domain_name = :domain_name ";
+				local params = {domain_name = domain_name};
 				if (debug["sql"]) then
-					freeswitch.consoleLog("notice", "[conference center] SQL: " .. sql .. "\n");
+					freeswitch.consoleLog("notice", "[conference center] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 				end
-				status = dbh:query(sql, function(rows)
+				dbh:query(sql, params, function(rows)
 					domain_uuid = string.lower(rows["domain_uuid"]);
 				end);
 			end
 
 		--conference center details
-			sql = [[SELECT * FROM v_conference_centers
-				WHERE domain_uuid = ']] .. domain_uuid ..[['
-				AND conference_center_extension = ']] .. destination_number .. [[']];
-			status = dbh:query(sql, function(row)
+			local sql = [[SELECT * FROM v_conference_centers
+				WHERE domain_uuid = :domain_uuid
+				AND conference_center_extension = :destination_number]];
+			local params = {domain_uuid = domain_uuid, destination_number = destination_number};
+			dbh:query(sql, params, function(row)
 				conference_center_uuid = string.lower(row["conference_center_uuid"]);
 				conference_center_greeting = row["conference_center_greeting"];
 			end);
@@ -381,28 +429,23 @@
 			end
 
 		--connect to the switch database
-			if (file_exists(database_dir.."/core.db")) then
-				dbh_switch = freeswitch.Dbh("sqlite://"..database_dir.."/core.db");
-				if (debug["sql"]) then
-					freeswitch.consoleLog("notice", "[conference center] dbh_switch sqlite\n");
-				end
-			else
-				if (debug["sql"]) then
-					freeswitch.consoleLog("notice", "[conference center] dbh_switch pgsql/mysql\n");
-				end
-				dbh_switch = database_handle('switch');
-			end
+			local dbh_switch = Database.new('switch')
 
 		--check if someone has already joined the conference
 			local_hostname = trim(api:execute("switchname", ""));
 			freeswitch.consoleLog("notice", "[conference center] local_hostname is " .. local_hostname .. "\n");
-			sql = "SELECT hostname FROM channels WHERE application = 'conference' AND dest = '" .. destination_number .. "' AND cid_num <> '".. caller_id_number .."' LIMIT 1";
+			sql = "SELECT hostname FROM channels WHERE application = 'conference' "
+				.. "AND dest = :destination_number AND cid_num <> :caller_id_number LIMIT 1";
+			params = {destination_number = destination_number, caller_id_number = caller_id_number};
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[conference center] SQL: " .. sql .. "\n");
+				freeswitch.consoleLog("notice", "[conference center] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 			end
-			status = dbh_switch:query(sql, function(rows)
+			dbh_switch:query(sql, params, function(rows)
 				conference_hostname = rows["hostname"];
 			end);
+
+		--close the database connection
+			dbh_switch:release();
 
 		--if conference hosntame exist, then we bridge there
 			if (conference_hostname ~= nil) then
@@ -447,42 +490,46 @@
 						digit_timeout = 5000;
 						pin_number = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", prompt_audio_file, "", "\\d+");
 					end
-				if (pin_number ~= "") then
-					sql = [[SELECT * FROM v_conference_rooms as r, v_meetings as m
-						WHERE r.domain_uuid = ']] .. domain_uuid ..[['
-						AND r.meeting_uuid = m.meeting_uuid
-						AND m.domain_uuid = ']] .. domain_uuid ..[['
-						AND (m.moderator_pin = ']] .. pin_number ..[[' or m.participant_pin = ']] .. pin_number ..[[')
-						AND r.enabled = 'true'
-						AND m.enabled = 'true'
-						AND (
-								( r.start_datetime <> '' AND r.start_datetime is not null AND r.start_datetime <= ']] .. os.date("%Y-%m-%d %X") .. [[' ) OR
-								( r.start_datetime = '' OR r.start_datetime is null )
-							)
-						AND (
-								( r.stop_datetime <> '' AND r.stop_datetime is not null AND r.stop_datetime > ']] .. os.date("%Y-%m-%d %X") .. [[' ) OR
-								( r.stop_datetime = '' OR r.stop_datetime is null )
-							) ]];
-					if (debug["sql"]) then
-						freeswitch.consoleLog("notice", "[conference center] SQL: " .. sql .. "\n");
+				--use the pin_number to find the conference room
+					if (pin_number ~= "") then
+						local sql = [[SELECT * FROM v_conference_rooms as r, v_meetings as m
+							WHERE r.domain_uuid = :domain_uuid
+							AND r.meeting_uuid = m.meeting_uuid
+							AND m.domain_uuid = :domain_uuid
+							AND (m.moderator_pin = :pin_number or m.participant_pin = :pin_number)
+							AND r.enabled = 'true'
+							AND m.enabled = 'true'
+							AND (
+									( r.start_datetime <> '' AND r.start_datetime is not null AND r.start_datetime <= :timestam ) OR
+									( r.start_datetime = '' OR r.start_datetime is null )
+								)
+							AND (
+									( r.stop_datetime <> '' AND r.stop_datetime is not null AND r.stop_datetime > :timestam ) OR
+									( r.stop_datetime = '' OR r.stop_datetime is null )
+								) ]];
+						local params = {
+							domain_uuid = domain_uuid;
+							pin_number = pin_number;
+							timestam = os.date("%Y-%m-%d %X");
+						};
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "[conference center] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+						end
+						dbh:query(sql, params, function(row)
+							conference_room_uuid = string.lower(row["conference_room_uuid"]);
+						end);
 					end
-					status = dbh:query(sql, function(row)
-						conference_room_uuid = string.lower(row["conference_room_uuid"]);
-					end);
-				end
-				if (conference_room_uuid == nil) then
-					return nil;
-				else
-					return pin_number;
-				end
+				--if the conference room was not found then return nil
+					if (conference_room_uuid == nil) then
+						return nil;
+					else
+						return pin_number;
+					end
 			end
 
 		--get the pin
 			pin_number = session:getVariable("pin_number");
-			if (not pin_number) then
-				pin_number = nil;
-				pin_number = get_pin_number(domain_uuid, conference_center_greeting);
-			end
+			pin_number = get_pin_number(domain_uuid, conference_center_greeting);
 			if (pin_number == nil) then
 				pin_number = get_pin_number(domain_uuid, conference_center_greeting);
 			end
@@ -495,19 +542,24 @@
 				pin_number = get_pin_number(domain_uuid, conference_center_greeting);
 			end
 			if (pin_number ~= nil) then
-				sql = [[SELECT * FROM v_conference_rooms as r, v_meetings as m
-					WHERE r.domain_uuid = ']] .. domain_uuid ..[['
+				local sql = [[SELECT * FROM v_conference_rooms as r, v_meetings as m
+					WHERE r.domain_uuid = :domain_uuid
 					AND r.meeting_uuid = m.meeting_uuid
-					AND r.conference_center_uuid = ']] .. conference_center_uuid ..[['
-					AND m.domain_uuid = ']] .. domain_uuid ..[['
-					AND (m.moderator_pin = ']] .. pin_number ..[[' or m.participant_pin = ']] .. pin_number ..[[')
+					AND r.conference_center_uuid = :conference_center_uuid
+					AND m.domain_uuid = :domain_uuid
+					AND (m.moderator_pin = :pin_number or m.participant_pin = :pin_number)
 					AND r.enabled = 'true'
 					AND m.enabled = 'true'
-					]];
+				]];
+				local params = {
+					domain_uuid = domain_uuid;
+					conference_center_uuid = conference_center_uuid;
+					pin_number = pin_number;
+				};
 				if (debug["sql"]) then
-					freeswitch.consoleLog("notice", "[conference center] SQL: " .. sql .. "\n");
+					freeswitch.consoleLog("notice", "[conference center] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 				end
-				status = dbh:query(sql, function(row)
+				dbh:query(sql, params, function(row)
 					conference_room_uuid = string.lower(row["conference_room_uuid"]);
 					meeting_uuid = string.lower(row["meeting_uuid"]);
 					record = string.lower(row["record"]);
@@ -551,7 +603,7 @@
 		else
 			if (meeting_uuid) then
 				--check if the conference exists
-					cmd = "conference "..meeting_uuid.."-"..domain_name.." xml_list";
+					cmd = "conference "..meeting_uuid.."@"..domain_name.." xml_list";
 					result = trim(api:executeString(cmd));
 					if (string.sub(result, -9) == "not found") then
 						conference_exists = false;
@@ -572,7 +624,7 @@
 							--max members must be 2 or more
 							session:execute("set","conference_max_members="..max_members);
 							if (conference_exists) then
-								cmd = "conference "..meeting_uuid.."-"..domain_name.." get count";
+								cmd = "conference "..meeting_uuid.."@"..domain_name.." get count";
 								count = trim(api:executeString(cmd));
 								if (count ~= nil) then
 									if (tonumber(count) >= tonumber(max_members)) then
@@ -641,7 +693,7 @@
 					end
 
 				--get the conference xml_list
-					cmd = "conference "..meeting_uuid.."-"..domain_name.." xml_list";
+					cmd = "conference "..meeting_uuid.."@"..domain_name.." xml_list";
 					freeswitch.consoleLog("INFO","" .. cmd .. "\n");
 					result = trim(api:executeString(cmd));
 
@@ -677,7 +729,7 @@
 						--play a message that the conference is being a recorded
 							session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-recording_started.wav");
 						--play a message that the conference is being a recorded
-							--cmd = "conference "..meeting_uuid.."-"..domain_name.." play "..sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-recording_started.wav";
+							--cmd = "conference "..meeting_uuid.."@"..domain_name.." play "..sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-recording_started.wav";
 							--freeswitch.consoleLog("notice", "[conference center] ".. cmd .."\n");
 							--response = api:executeString(cmd);
 					end
@@ -685,24 +737,24 @@
 				--announce the caller
 					if (announce == "true") then
 						--announce the caller - play the recording
-							cmd = "conference "..meeting_uuid.."-"..domain_name.." play " .. temp_dir:gsub("\\", "/") .. "/conference-"..uuid..".wav";
+							cmd = "conference "..meeting_uuid.."@"..domain_name.." play " .. temp_dir:gsub("\\", "/") .. "/conference-"..uuid..".wav";
 							--freeswitch.consoleLog("notice", "[conference center] ".. cmd .."\n");
 							response = api:executeString(cmd);
 						--play has entered the conference
-							cmd = "conference "..meeting_uuid.."-"..domain_name.." play "..sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-has_joined.wav";
+							cmd = "conference "..meeting_uuid.."@"..domain_name.." play "..sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-has_joined.wav";
 							--freeswitch.consoleLog("notice", "[conference center] ".. cmd .."\n");
 							response = api:executeString(cmd);
 					else
 						if (not conference_locked) then
 							if (sounds == "true") then
-								cmd = "conference "..meeting_uuid.."-"..domain_name.." play "..enter_sound;
+								cmd = "conference "..meeting_uuid.."@"..domain_name.." play "..enter_sound;
 								response = api:executeString(cmd);
 							end
 						end
 					end
 
 				--get the conference member count
-					cmd = "conference "..meeting_uuid.."-"..domain_name.." list count";
+					cmd = "conference "..meeting_uuid.."@"..domain_name.." list count";
 					--freeswitch.consoleLog("notice", "[conference center] cmd: ".. cmd .."\n");
 					member_count = api:executeString(cmd);
 					if (string.sub(trim(member_count), -9) == "not found") then
@@ -723,11 +775,11 @@
 					end
 				--record the conference
 					if (record == "true") then
-						cmd="sched_api (+5 none lua app/conference_center/resources/scripts/start_recording.lua "..meeting_uuid.." "..domain_name.." )";
+						cmd="sched_api +5 none lua "..scripts_dir.."/app/conference_center/resources/scripts/start_recording.lua "..meeting_uuid.." "..domain_name.." "..record_ext;
 						api:executeString(cmd);
 					end
 				--send the call to the conference
-					cmd = meeting_uuid.."-"..domain_name.."@"..profile.."+flags{".. flags .."}";
+					cmd = meeting_uuid.."@"..domain_name.."@"..profile.."+flags{".. flags .."}";
 					freeswitch.consoleLog("INFO","[conference center] conference " .. cmd .. "\n");
 					session:execute("conference", cmd);
 			end

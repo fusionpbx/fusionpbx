@@ -23,21 +23,13 @@
 	Contributor(s):
 	Mark J. Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
+//includes
+	include "root.php";
+	require_once "resources/require.php";
 
 //start session
 	ini_set("session.cookie_httponly", True);
-	session_start();
-
-//retain message
-	if (isset($_SESSION["message"])) {
-		$message_mood = $_SESSION["message_mood"];
-		$message = $_SESSION["message"];
-	}
-
-//destroy session
-	session_unset();
-	session_destroy();
+	if (!isset($_SESSION)) { session_start(); }
 
 //if config.php file does not exist then redirect to the install page
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/resources/config.php")) {
@@ -56,15 +48,6 @@ include "root.php";
 	else {
 		header("Location: ".PROJECT_PATH."/core/install/install.php");
 		exit;
-	}
-
-//adds multiple includes
-	require_once "resources/require.php";
-
-//restore message
-	if ($message != '') {
-		$_SESSION["message_mood"] = $message_mood;
-		$_SESSION["message"] = $message;
 	}
 
 //use custom login, if present, otherwise use default login

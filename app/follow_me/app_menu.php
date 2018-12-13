@@ -1,21 +1,31 @@
 <?php
 
-	$apps[$x]['menu'][0]['title']['en-us'] = "Follow Me";
-	$apps[$x]['menu'][0]['title']['es-mx'] = "Sígueme";
-	$apps[$x]['menu'][0]['title']['de-de'] = "Follow Me";
-	$apps[$x]['menu'][0]['title']['de-ch'] = "Follow Me";
-	$apps[$x]['menu'][0]['title']['de-at'] = "Follow Me";
-	$apps[$x]['menu'][0]['title']['fr-fr'] = "Follow Me";
-	$apps[$x]['menu'][0]['title']['fr-ca'] = "";
-	$apps[$x]['menu'][0]['title']['fr-ch'] = "";
-	$apps[$x]['menu'][0]['title']['pt-pt'] = "";
-	$apps[$x]['menu'][0]['title']['pt-br'] = "";
-	$apps[$x]['menu'][0]['uuid'] = "a1144e12-873e-4722-9818-02da1adb6ba3";
-	$apps[$x]['menu'][0]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
-	$apps[$x]['menu'][0]['category'] = "internal";
-	$apps[$x]['menu'][0]['path'] = "/app/calls/calls.php";
-	$apps[$x]['menu'][0]['groups'][] = "user";
-	$apps[$x]['menu'][0]['groups'][] = "admin";
-	$apps[$x]['menu'][0]['groups'][] = "superadmin";
+	$y=0;
+	$apps[$x]['menu'][$y]['title']['en-us'] = "Follow Me";
+	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
+	$apps[$x]['menu'][$y]['title']['de-at'] = "Follow Me";
+	$apps[$x]['menu'][$y]['title']['de-ch'] = "Follow Me";
+	$apps[$x]['menu'][$y]['title']['de-de'] = "Follow Me";
+	$apps[$x]['menu'][$y]['title']['es-cl'] = "";
+	$apps[$x]['menu'][$y]['title']['es-mx'] = "Sígueme";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Follow Me";
+	$apps[$x]['menu'][$y]['title']['he-il'] = "";
+	$apps[$x]['menu'][$y]['title']['it-it'] = "Seguimi";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['pl-pl'] = "";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "";
+	$apps[$x]['menu'][$y]['title']['pt-pt'] = "";
+	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
+	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Следуй за мной";
+	$apps[$x]['menu'][$y]['title']['sv-se'] = "";
+	$apps[$x]['menu'][$y]['title']['uk-ua'] = "";
+	$apps[$x]['menu'][$y]['uuid'] = "a1144e12-873e-4722-9818-02da1adb6ba3";
+	$apps[$x]['menu'][$y]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
+	$apps[$x]['menu'][$y]['category'] = "internal";
+	$apps[$x]['menu'][$y]['path'] = "/app/calls/calls.php";
+	$apps[$x]['menu'][$y]['groups'][] = "user";
+	$apps[$x]['menu'][$y]['groups'][] = "admin";
+	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 
 ?>

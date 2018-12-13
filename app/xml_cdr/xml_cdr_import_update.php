@@ -32,7 +32,6 @@
 		set_include_path($document_root);
 		require_once "resources/require.php";
 		$_SERVER["DOCUMENT_ROOT"] = $document_root;
-		$display_type = 'text'; //html, text
 	}
 	else {
 		echo "access denied";
@@ -47,17 +46,17 @@
 	$var_value = trim($row["var_value"]);
 	switch ($var_value) {
 	case "dir":
-			$xml_cdr_archive = 'dir';
-			break;
+		$xml_cdr_archive = 'dir';
+		break;
 	case "db":
-			$xml_cdr_archive = 'db';
-			break;
+		$xml_cdr_archive = 'db';
+		break;
 	case "none":
-			$xml_cdr_archive = 'none';
-			break;
+		$xml_cdr_archive = 'none';
+		break;
 	default:
-			$xml_cdr_archive = 'dir';
-			break;
+		$xml_cdr_archive = 'dir';
+		break;
 	}
 
 //get the list of installed apps from the core and mod directories
@@ -141,8 +140,7 @@
 				//update the database
 					//if ($num_rows == "0" && strlen($waitsec) > 0) {
 					if (strlen($waitsec) > 0) {
-						$sql = "";
-						$sql .= "update v_xml_cdr ";
+						$sql = "update v_xml_cdr ";
 						$sql .= "set waitsec = '$waitsec' ";
 						$sql .= "where uuid = '$uuid' ";
 						echo $sql."\n";
@@ -155,4 +153,5 @@
 		//echo finished
 			echo "completed\n";
 	}
+
 ?>

@@ -17,22 +17,25 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('var_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('var_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -52,7 +55,7 @@ else {
 		//synchronize the configuration
 		save_var_xml();
 
-		$_SESSION["message"] = $text['message-update'];
+		message::add($text['message-update']);
 		header("Location: vars.php?id=".$_REQUEST['id']);
 		exit;
 	}
@@ -79,7 +82,7 @@ else {
 		$sql .= "order by $order_by $order ";
 	}
 	else {
-		$sql .= "order by var_cat, var_order asc ";
+		$sql .= "order by var_category, var_order asc ";
 	}
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
@@ -108,13 +111,13 @@ else {
 	$tmp_var_header .= "<tr>\n";
 
 	if ($result_count > 0) {
-		$prev_var_cat = '';
+		$prev_var_category = '';
 		foreach($result as $row) {
-			$var_value = $row[var_value];
+			$var_value = $row['var_value'];
 			$var_value = substr($var_value, 0, 50);
-			if ($prev_var_cat != $row[var_cat]) {
+			if ($prev_var_category != $row['var_category']) {
 				$c=0;
-				if (strlen($prev_var_cat) > 0) {
+				if (strlen($prev_var_category) > 0) {
 					echo "<tr>\n";
 					echo "<td colspan='6'>\n";
 					echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
@@ -134,7 +137,7 @@ else {
 				echo "<tr><td colspan='4' align='left'>\n";
 				echo "	<br />\n";
 				echo "	<br />\n";
-				echo "	<b>".$row['var_cat']."</b>&nbsp;</td></tr>\n";
+				echo "	<b>".$row['var_category']."</b>&nbsp;</td></tr>\n";
 				echo $tmp_var_header;
 			}
 
@@ -158,15 +161,15 @@ else {
 			echo "	<td valign='top' align='left' class='row_stylebg'>".$var_description."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>";
 			if (permission_exists('var_edit')) {
-				echo "<a href='var_edit.php?id=".$row['var_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='var_edit.php?id=".escape($row['var_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('var_delete')) {
-				echo "<a href='var_delete.php?id=".$row['var_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='var_delete.php?id=".escape($row['var_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 
-			$prev_var_cat = $row[var_cat];
+			$prev_var_category = $row['var_category'];
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
 		unset($sql, $result, $row_count);

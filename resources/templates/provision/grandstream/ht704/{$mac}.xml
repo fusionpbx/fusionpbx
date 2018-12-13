@@ -68,7 +68,13 @@
 <P212>2</P212>
 
 <!-- Firmware Server Path -->
-<P192>fm.grandstream.com/gs</P192>
+{if isset($grandstream_firmware_path) && isset($firmware_version)}
+<P192>{$grandstream_firmware_path}/ht704/{$firmware_version}</P192>
+{elseif isset($grandstream_firmware_path)}
+<P192>{$grandstream_firmware_path}/ht704</P192>
+{else}
+<P192>{$domain_name}{$project_path}/app/provision</P192>
+{/if}
 
 <!-- Config Server Path -->
 <P237>{$domain_name}{$project_path}/app/provision</P237>
@@ -77,13 +83,13 @@
 <!-- String-->
 <P1359></P1359>
 
-<!-- HTTP/HTTPS User Name-->
-<!-- String-->
-<P1360></P1360>
+<!--  HTTP/HTTPS User Name -->
+<!--  String; between ascii values 33 and 126 -->
+<P1360>{$http_auth_username}</P1360>
 
-<!-- HTTP/HTTPS Password-->
-<!-- String-->
-<P1361></P1361>
+<!--  HTTP/HTTPS Password -->
+<!--  String; between ascii values 33 and 126 -->
+<P1361>{$http_auth_password}</P1361>
 
 <!-- Firmware File Prefix-->
 <!-- String-->
@@ -110,7 +116,11 @@
 <!-- Automatic Upgrade. 0 - No, 1 - Check daily, 2 - Check weekly, 3 - Check every () minutes. Default is No.-->
 <!-- Number: 0, 1, 2, 3-->
 <!-- Mandatory-->
+{if isset($grandstream_auto_upgrade)}
+<P194>{$grandstream_auto_upgrade}</P194>
+{else}
 <P194>0</P194>
+{/if}
 
 <!-- Check for new firmware/config file every () minutes, unit is in minute, minimum 60 minutes, default is 7 days. -->
 <!-- Number: 60 to 5256000-->
@@ -245,18 +255,26 @@
 
 <!-- Syslog Server (name of the server, max length is 64 characters)-->
 <!-- Server address-->
-<P207></P207>
+<P207>{$grandstream_syslog_server}</P207>
 
 <!-- Syslog Level (Default setting is NONE)-->
 <!-- 0 - NONE, 1 - DEBUG, 2 - INFO, 3 - WARNING, 4 - ERROR, 5 - EXTRA DEBUG-->
 <!-- Number: 0, 1, 2, 3, 4, 5-->
 <!-- Mandatory-->
+{if isset($grandstream_syslog_level)}
+<P208>{$grandstream_syslog_level}</P208>
+{else}
 <P208>0</P208>
+{/if}
 
 <!-- Send SIP Log. 0 - No, 1 - Yes. (If set to yes, The unit will replicate the received and send SIP packets on the syslog)-->
 <!-- Number: 0, 1-->
 <!-- Mandatory-->
+{if isset($grandstream_send_sip_log)}
+<P1387>{$grandstream_send_sip_log}</P1387>
+{else}
 <P1387>0</P1387>
+{/if}
 
 <!-- Primary RADIUS Server-->
 <!-- Server address-->
@@ -313,7 +331,7 @@
 
 <!-- Primary SIP Server-->
 <!-- Server address-->
-<P47>{$server_address_1}</P47>
+<P47>{$account.1.server_address}</P47>
 
 <!-- Failover SIP Server-->
 <!-- Server address-->
@@ -338,10 +356,17 @@
 <!-- Mandatory-->
 <P130>0</P130>
 
-<!-- NAT Traversal (STUN) 0 - No, 2 - No but send keep-alive, 1 - Yes, 3 - UPnP-->
-<!-- Number: 0, 1, 2, 3-->
-<!-- Mandatory-->
+<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P103>1</P103>
+
+<!-- NAT Traversal. 0 - NAT No, 1 - STUN, 2 - Keep-alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default value is 2 -->
+<!-- Number: 0, 1, 2, 3, 4, 5 -->
+{if isset($grandstream_nat_traversal)}
+<P52>{$grandstream_nat_traversal}</P52>
+{else}
 <P52>0</P52>
+{/if}
 
 <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV.-->
 <!-- Number: 0, 1, 2-->
@@ -438,10 +463,15 @@
 <!-- Mandatory-->
 <P4340>0</P4340>
 
-<!-- Check SIP UserID for incoming INVITE. 0 - No, 1 - Yes (no direct IP calling if Yes)-->
-<!-- Number: 0, 1-->
-<!-- Mandatory-->
+<!-- Check SIP User ID for Incoming INVITE -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+
+{if isset($grandstream_check_sip_user_id)}
+<P258>1</P258>
+{else}
 <P258>0</P258>
+{/if}
 
 <!-- Authenticate incoming INVITE-->
 <!-- Number: 0, 1-->
@@ -509,7 +539,7 @@
 <!-- Enable Call Features. 0 - No, 1 - Yes-->
 <!-- Number: 0, 1-->
 <!-- Mandatory-->
-<P191>1</P191>
+<P191>0</P191>
 
 <!-- Offhook Auto-Dial Delay (0-60 seconds, default is 0)-->
 <!-- Number: 0 to 60-->
@@ -626,7 +656,12 @@
 
 <!-- Dial Plan -->
 <!-- String -->
-<P4200>{ x+ | *x+ }</P4200>
+
+{if isset($grandstream_dial_plan) }
+<P4200>{$grandstream_dial_plan}</P4200>
+{else}
+<P4200>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P4200>
+{/if}
 
 <!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
@@ -969,7 +1004,7 @@
 
 <!-- Primary SIP Server -->
 <!-- Server address -->
-<P747>{$server_address_2}</P747>
+<P747>{$account.2.server_address}</P747>
 
 <!-- Failover SIP Server -->
 <!-- Server address -->
@@ -1619,16 +1654,16 @@
 <!-- Enable Port (0 - No, 1 - Yes) -->
 
 <!-- String -->
-<P4060>{$user_id_1}</P4060>
+<P4060>{$account.1.user_id}</P4060>
 
 <!-- String -->
-<P4090>{$user_id_1}</P4090>
+<P4090>{$account.1.user_id}</P4090>
 
 <!-- String -->
-<P4120>{$user_password_1}</P4120>
+<P4120>{$account.1.password}</P4120>
 
 <!-- String -->
-<P4180>{$display_name_1}</P4180>
+<P4180>{$account.1.display_name}</P4180>
 
 <!-- Number: 0, 1, 2, 3 -->
 <P4150>0</P4150>
@@ -1644,16 +1679,16 @@
 <!-- Enable Port (0 - No, 1 - Yes) -->
 
 <!-- String -->
-<P4061>{$user_id_2}</P4061>
+<P4061>{$account.2.user_id}</P4061>
 
 <!-- String -->
-<P4091>{$user_id_2}</P4091>
+<P4091>{$account.2.user_id}</P4091>
 
 <!-- String -->
-<P4121>{$user_password_2}</P4121>
+<P4121>{$account.2.password}</P4121>
 
 <!-- String -->
-<P4181>{$display_name_2}</P4181>
+<P4181>{$account.2.display_name}</P4181>
 
 <!-- Number: 0, 1, 2, 3 -->
 <P4151>0</P4151>
@@ -1669,16 +1704,16 @@
 <!-- Enable Port (0 - No, 1 - Yes) -->
 
 <!-- String -->
-<P4062>{$user_id_3}</P4062>
+<P4062>{$account.3.user_id}</P4062>
 
 <!-- String -->
-<P4092>{$user_id_3}</P4092>
+<P4092>{$account.3.user_id}</P4092>
 
 <!-- String -->
-<P4122>{$user_password_3}</P4122>
+<P4122>{$account.3.password}</P4122>
 
 <!-- String -->
-<P4182>{$display_name_3}</P4182>
+<P4182>{$account.3.display_name}</P4182>
 
 <!-- Number: 0, 1, 2, 3 -->
 <P4152>0</P4152>
@@ -1694,16 +1729,16 @@
 <!-- Enable Port (0 - No, 1 - Yes) -->
 
 <!-- String -->
-<P4063>{$user_id_4}</P4063>
+<P4063>{$account.4.user_id}</P4063>
 
 <!-- String -->
-<P4093>{$user_id_4}</P4093>
+<P4093>{$account.4.user_id}</P4093>
 
 <!-- String -->
-<P4123>{$user_password_3}</P4123>
+<P4123>{$account.4.password}</P4123>
 
 <!-- String -->
-<P4183>{$display_name_4}</P4183>
+<P4183>{$account.4.display_name}</P4183>
 
 <!-- Number: 0, 1, 2, 3 -->
 <P4153>1</P4153>
@@ -1943,7 +1978,7 @@
 <!-- <value=customize> Using self-defined Time Zone -->
 <!-- String -->
 <!-- Mandatory  -->
-<P64>customize</P64>
+<P64>{$grandstream_gxp_time_zone}</P64>
 
 <!-- Self-Defined Time Zone -->
 <!-- String -->

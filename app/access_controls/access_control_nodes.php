@@ -1,14 +1,37 @@
 <?php
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('access_control_node_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+/*
+	FusionPBX
+	Version: MPL 1.1
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
+	The Original Code is FusionPBX
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2018
+	the Initial Developer. All Rights Reserved.
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+*/
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('access_control_node_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -31,45 +54,46 @@ else {
 	echo "	</tr>\n";
 	echo "</table>\n";
 
-	//prepare to page the results
-		$sql = "select count(*) as num_rows from v_access_control_nodes ";
-		$sql .= "where access_control_uuid = '$access_control_uuid' ";
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-		$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] > 0) {
-				$num_rows = $row['num_rows'];
-			}
-			else {
-				$num_rows = '0';
-			}
+//prepare to page the results
+	$sql = "select count(*) as num_rows from v_access_control_nodes ";
+	$sql .= "where access_control_uuid = '".$access_control_uuid."' ";
+	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+	$prep_statement->execute();
+		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+		if ($row['num_rows'] > 0) {
+			$num_rows = $row['num_rows'];
 		}
+		else {
+			$num_rows = '0';
+		}
+	}
 
-	//prepare to page the results
-		$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-		$param = "&id=".$access_control_uuid;
-		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
-		$offset = $rows_per_page * $page;
+//prepare to page the results
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$param = "&id=".escape($access_control_uuid);
+	$page = $_GET['page'];
+	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+	$offset = $rows_per_page * $page;
 
-	//get the list
-		$sql = "select * from v_access_control_nodes ";
-		$sql .= "where access_control_uuid = '$access_control_uuid' ";
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-		$sql .= "limit $rows_per_page offset $offset ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
-		unset ($prep_statement, $sql);
+//get the list
+	$sql = "select * from v_access_control_nodes ";
+	$sql .= "where access_control_uuid = '".$access_control_uuid."' ";
+	if (strlen($order_by) > 0) { $sql .= "order by $order_by $order "; }
+	$sql .= "limit $rows_per_page offset $offset ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$access_control_nodes = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset ($prep_statement, $sql);
 
+//set the row styles
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
+//show the nodes
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('node_type', $text['label-node_type'], $order_by, $order);
@@ -78,7 +102,7 @@ else {
 	echo th_order_by('node_description', $text['label-node_description'], $order_by, $order);
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('access_control_node_add')) {
-		echo "<a href='access_control_node_edit.php?access_control_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo "<a href='access_control_node_edit.php?access_control_uuid=".escape($_GET['id'])."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	else {
 		echo "&nbsp;\n";
@@ -86,22 +110,22 @@ else {
 	echo "</td>\n";
 	echo "<tr>\n";
 
-	if ($result_count > 0) {
-		foreach($result as $row) {
+	if (is_array($access_control_nodes)) {
+		foreach($access_control_nodes as $row) {
 			if (permission_exists('access_control_node_edit')) {
-				$tr_link = "href='access_control_node_edit.php?access_control_uuid=".$row['access_control_uuid']."&id=".$row['access_control_node_uuid']."'";
+				$tr_link = "href='access_control_node_edit.php?access_control_uuid=".escape($row['access_control_uuid'])."&id=".escape($row['access_control_node_uuid'])."'";
 			}
 			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['node_type']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['node_cidr']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['node_domain']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['node_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['node_type'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['node_cidr'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['node_domain'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['node_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('access_control_node_edit')) {
-				echo "<a href='access_control_node_edit.php?access_control_uuid=".$row['access_control_uuid']."&id=".$row['access_control_node_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='access_control_node_edit.php?access_control_uuid=".escape($row['access_control_uuid'])."&id=".escape($row['access_control_node_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('access_control_node_delete')) {
-				echo "<a href='access_control_node_delete.php?access_control_uuid=".$row['access_control_uuid']."&id=".$row['access_control_node_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='access_control_node_delete.php?access_control_uuid=".escape($row['access_control_uuid'])."&id=".escape($row['access_control_node_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -134,4 +158,5 @@ else {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

@@ -23,16 +23,20 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('call_active_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('call_active_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -51,6 +55,49 @@ else {
 //create the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 
+//send the event socket command and get the array
+	if ($fp) {
+		$json = trim(event_socket_request($fp, 'api '.$switch_cmd));
+		$results = json_decode($json, "true");
+	}
+
+//build a new array with domain_name
+	$rows = array();
+	if (isset($results["rows"])) {
+		foreach ($results["rows"] as &$row) {
+			//get the domain
+				if (strlen($row['context']) > 0 and $row['context'] != "public") {
+					if (substr_count($row['context'], '@') > 0) {
+						$context_array = explode('@', $row['context']);
+						$row['domain_name'] = $context_array[1];
+					}
+					else {
+						$row['domain_name'] = $row['context'];
+					}
+				}
+				else if (substr_count($row['presence_id'], '@') > 0) {
+					$presence_id_array = explode('@', $row['presence_id']);
+					$row['domain_name'] = $presence_id_array[1].' '.__line__.' '.$row['presence_id'];
+				}
+			//add the row to the array
+				if (($show == 'all' && permission_exists('call_active_all'))) {
+					$rows[] = $row;
+				}
+				else {
+					if ($row['domain_name'] == $_SESSION['domain_name']) {
+						$rows[] = $row;
+					}
+				}
+		}
+		unset($results);
+	}
+
+
+//set the alternating color for each row
+	$c = 0;
+	$row_style["0"] = "row_style0";
+	$row_style["1"] = "row_style1";
+
 //if the connnection is available then run it and return the results
 	if (!$fp) {
 		$msg = "<div align='center'>".$text['confirm-socket']."<br /></div>";
@@ -66,11 +113,6 @@ else {
 		echo "</div>\n";
 	}
 	else {
-		//send the event socket command
-			$json = trim(event_socket_request($fp, 'api '.$switch_cmd));
-		//set the array
-			$results = json_decode($json, "true");
-
 		//define js function call var
 			$onhover_pause_refresh = " onmouseover='refresh_stop();' onmouseout='refresh_start();'";
 
@@ -93,29 +135,10 @@ else {
 			echo "	</tr>";
 			echo "</table>";
 
-			$rows = array();
-			if (isset($results["rows"])) foreach ($results["rows"] as &$row) {
-				//determine show all
-					if (!($show == 'all' && permission_exists('call_active_all'))) {
-						$foreign_call = true;
-						foreach ($row as $key => $value) {
-							if (substr_count($value, $_SESSION['domain_name']) > 0) { $foreign_call = false; }
-						}
-						if ($foreign_call) { continue; }
-					}
-				// append call
-					$rows[] = $row;
-			}
-
 			echo "<b>".$text['title']." (" . count($rows) . ")"."</b>";
 			echo "<br><br>\n";
 			echo $text['description']."\n";
 			echo "<br><br>\n";
-
-		//set the alternating color for each row
-			$c = 0;
-			$row_style["0"] = "row_style0";
-			$row_style["1"] = "row_style1";
 
 		//show the results
 			echo "<div id='cmd_reponse'></div>\n";
@@ -156,23 +179,6 @@ else {
 					$tmp_number = $temp_array[0];
 					$tmp_number = str_replace("sip:", "", $tmp_number);
 
-				//get the domain
-					if ($show == 'all') {
-						if (substr_count($presence_id, '@') > 0) {
-							$presence_id_array = explode('@', $presence_id);
-							$domain_name = $presence_id_array[1];
-						}
-						else if ($context != '') {
-							if (substr_count($context, '@') > 0) {
-								$context_array = explode('@', $context);
-								$domain_name = $context_array[1];
-							}
-							else {
-								$domain_name = $context;
-							}
-						}
-					}
-
 				//remove the '+' because it breaks the call recording
 					$cid_num = str_replace("+", "", $cid_num);
 
@@ -188,44 +194,29 @@ else {
 						$application_data = substr($application_data, 0, 512) . ' <b>...</b>';
 					}
 
-				echo "<tr>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>".$sip_profile."&nbsp;</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>".$created."&nbsp;</td>\n";
-				if ($show == 'all') {
-					echo "<td valign='top' class='".$row_style[$c]."'>".$domain_name."&nbsp;</td>\n";
-				}
-				echo "<td valign='top' class='".$row_style[$c]."'>".$tmp_number."&nbsp;</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>".$cid_name."&nbsp;</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>".$cid_num."&nbsp;</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>".$dest."&nbsp;</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>".((strlen($application) > 0) ? $application.":".$application_data : null)."&nbsp;</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>".$read_codec.":".$read_rate." / ".$write_codec.":".$write_rate."&nbsp;</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>".$secure."&nbsp;</td>\n";
-				echo "<td class='list_control_icons' style='width: 25px; text-align: left;'><a href='javascript:void(0);' alt='".$text['label-hangup']."' onclick=\"hangup(escape('".$uuid."'));\">".$v_link_label_delete."</a></td>\n";
-				echo "</tr>\n";
-				$c = ($c) ? 0 : 1;
+				//send the html
+					echo "<tr>\n";
+					echo "<td valign='top' class='".$row_style[$c]."'>".$sip_profile."&nbsp;</td>\n";
+					echo "<td valign='top' class='".$row_style[$c]."'>".$created."&nbsp;</td>\n";
+					if ($show == 'all') {
+						echo "<td valign='top' class='".$row_style[$c]."'>".$domain_name."&nbsp;</td>\n";
+					}
+					echo "<td valign='top' class='".$row_style[$c]."'>".$tmp_number."&nbsp;</td>\n";
+					echo "<td valign='top' class='".$row_style[$c]."'>".$cid_name."&nbsp;</td>\n";
+					echo "<td valign='top' class='".$row_style[$c]."'>".$cid_num."&nbsp;</td>\n";
+					echo "<td valign='top' class='".$row_style[$c]."'>".$dest."&nbsp;</td>\n";
+					echo "<td valign='top' class='".$row_style[$c]."'>".((strlen($application) > 0) ? $application.":".$application_data : null)."&nbsp;</td>\n";
+					echo "<td valign='top' class='".$row_style[$c]."'>".$read_codec.":".$read_rate." / ".$write_codec.":".$write_rate."&nbsp;</td>\n";
+					echo "<td valign='top' class='".$row_style[$c]."'>".$secure."&nbsp;</td>\n";
+					echo "<td class='list_control_icons' style='width: 25px; text-align: left;'><a href='javascript:void(0);' alt='".$text['label-hangup']."' onclick=\"hangup(escape('".$uuid."'));\">".$v_link_label_delete."</a></td>\n";
+					echo "</tr>\n";
+				
+				//alternate the row style
+					$c = ($c) ? 0 : 1;
 			}
 			echo "</td>\n";
 			echo "</tr>\n";
 			echo "</table>\n";
 	}
 
-/*
-// deprecated features for this page
-
-	//park
-		echo "	<a href='javascript:void(0);' onclick=\"send_cmd('calls_exec.php?cmd='+get_park_cmd(escape('$uuid'), '".$tmp_domain."'));\">".$text['label-park']."</a>&nbsp;\n";
-	//record start/stop
-		$tmp_dir = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d");
-		event_socket_mkdir($tmp_dir);
-		$tmp_file = $tmp_dir."/".$uuid.".wav";
-		if (file_exists($tmp_file)) {
-			//stop
-			echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"send_cmd('calls_exec.php?cmd='+get_record_cmd(escape('$uuid'), 'active_calls_', escape('$cid_num'))+'&uuid='+escape('$uuid')+'&action=record&action2=stop&prefix=active_calls_&name='+escape('$cid_num'));\">".$text['label-stop']."</a>&nbsp;\n";
-		}
-		else {
-			//start
-			echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"send_cmd('calls_exec.php?cmd='+get_record_cmd(escape('$uuid'), 'active_calls_', escape('$cid_num'))+'&uuid='+escape('$uuid')+'&action=record&action2=start&prefix=active_calls_');\">".$text['label-start']."</a>&nbsp;\n";
-		}
-*/
 ?>

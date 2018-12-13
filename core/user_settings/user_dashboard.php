@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -62,9 +62,8 @@
 	$language = new text;
 	$text = $language->get();
 
-//load header and set the title
+//load the header
 	require_once "resources/header.php";
-	$document['title'] = $text['title-user_dashboard'];
 
 //start the content
 	echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
@@ -73,7 +72,7 @@
 	echo "			<b>".$text['header-user_dashboard']."</b><br />";
 	echo "		</td>\n";
 	echo "		<td valign='top' style='text-align: right; white-space: nowrap;'>\n";
-	echo "			".$text['label-welcome']." <a href='".PROJECT_PATH."/core/user_settings/user_edit.php'>".$_SESSION["username"]."</a>";
+	echo "			".$text['label-welcome']." <a href='".PROJECT_PATH."/core/users/user_edit.php?id=user'>".$_SESSION["username"]."</a>";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
@@ -108,7 +107,7 @@
 
 
 //collect stats for counts and limits
-	if (in_array('counts', $selected_blocks) || in_array('limits', $selected_blocks)) {
+	if ((is_array($selected_blocks) && in_array('counts', $selected_blocks)) || (is_array($selected_blocks) && in_array('limits', $selected_blocks))) {
 
 		//domains
 			if (permission_exists('domain_view')) {
@@ -336,7 +335,7 @@
 	$theme_image_path = $_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/"; // used for missed and recent calls
 
 	//voicemail
-		if (in_array('voicemail', $selected_blocks) && permission_exists('voicemail_message_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/voicemails/")) {
+		if (is_array($selected_blocks) && in_array('voicemail', $selected_blocks) && permission_exists('voicemail_message_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/voicemails/")) {
 			//required class
 				require_once "app/voicemails/resources/classes/voicemail.php";
 			//get the voicemail
@@ -405,13 +404,13 @@
 		}
 
 	//missed calls
-		if (in_array('missed', $selected_blocks) && permission_exists('xml_cdr_view') && is_array($_SESSION['user']['extension']) && sizeof($_SESSION['user']['extension']) > 0) {
+		if (is_array($selected_blocks) && in_array('missed', $selected_blocks) && permission_exists('xml_cdr_view') && is_array($_SESSION['user']['extension']) && sizeof($_SESSION['user']['extension']) > 0) {
 			foreach ($_SESSION['user']['extension'] as $assigned_extension) {
 				$assigned_extensions[$assigned_extension['extension_uuid']] = $assigned_extension['user'];
 			}
 
 			//if also viewing system status, show more recent calls (more room avaialble)
-			$missed_limit = (in_array('counts', $selected_blocks)) ? 10 : 5;
+			$missed_limit = (is_array($selected_blocks) && in_array('counts', $selected_blocks)) ? 10 : 5;
 
 			$sql = "
 				select
@@ -483,25 +482,27 @@
 					$tmp_day = date("d", strtotime($row['start_stamp']));
 					$tmp_start_epoch = ($_SESSION['domain']['time_format']['text'] == '12h') ? date("n/j g:ia", $row['start_epoch']) : date("n/j H:i", $row['start_epoch']);
 					//set click-to-call variables
-						if (permission_exists('click_to_call_call')) {
-							$tr_link = "onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php".
-								"?src_cid_name=".urlencode($row['caller_id_name']).
-								"&src_cid_number=".urlencode($row['caller_id_number']).
-								"&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name']).
-								"&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number']).
-								"&src=".urlencode($_SESSION['user']['extension'][0]['user']).
-								"&dest=".urlencode($row['caller_id_number']).
-								"&rec=".(isset($_SESSION['click_to_call']['record']['boolean'])?$_SESSION['click_to_call']['record']['boolean']:"false").
-								"&ringback=".(isset($_SESSION['click_to_call']['ringback']['text'])?$_SESSION['click_to_call']['ringback']['text']:"us-ring").
-								"&auto_answer=".(isset($_SESSION['click_to_call']['auto_answer']['boolean'])?$_SESSION['click_to_call']['auto_answer']['boolean']:"true").
-								"');\" ".
-								"style='cursor: pointer;'";
-						}
+					if (permission_exists('click_to_call_call')) {
+						$tr_link = "onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php".
+							"?src_cid_name=".urlencode($row['caller_id_name']).
+							"&src_cid_number=".urlencode($row['caller_id_number']).
+							"&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name']).
+							"&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number']).
+							"&src=".urlencode($_SESSION['user']['extension'][0]['user']).
+							"&dest=".urlencode($row['caller_id_number']).
+							"&rec=".(isset($_SESSION['click_to_call']['record']['boolean'])?$_SESSION['click_to_call']['record']['boolean']:"false").
+							"&ringback=".(isset($_SESSION['click_to_call']['ringback']['text'])?$_SESSION['click_to_call']['ringback']['text']:"us-ring").
+							"&auto_answer=".(isset($_SESSION['click_to_call']['auto_answer']['boolean'])?$_SESSION['click_to_call']['auto_answer']['boolean']:"true").
+							"');\" ".
+							"style='cursor: pointer;'";
+					}
 					$hud[$n]['html'] .= "<tr ".$tr_link.">\n";
 					$hud[$n]['html'] .= "<td valign='middle' class='".$row_style[$c]."' style='cursor: help; padding: 0 0 0 6px;'>\n";
 					if ($theme_cdr_images_exist) {
 						$call_result = ($row['answer_stamp'] != '') ? 'voicemail' : 'cancelled';
-						$hud[$n]['html'] .= "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_".$row['direction']."_".$call_result.".png' width='16' style='border: none;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]."'>\n";
+						if (isset($row['direction'])) {
+							$hud[$n]['html'] .= "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_".$row['direction']."_".$call_result.".png' width='16' style='border: none;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]."'>\n";
+						}
 					}
 					$hud[$n]['html'] .= "</td>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'><a href='javascript:void(0);' ".(($row['caller_id_name'] != '') ? "title=\"".$row['caller_id_name']."\"" : null).">".((is_numeric($row['caller_id_number'])) ? format_phone($row['caller_id_number']) : $row['caller_id_number'])."</td>\n";
@@ -518,15 +519,14 @@
 			$n++;
 		}
 
-
 	//recent calls
-		if (in_array('recent', $selected_blocks) && permission_exists('xml_cdr_view') && is_array($_SESSION['user']['extension']) && sizeof($_SESSION['user']['extension']) > 0) {
+		if (is_array($selected_blocks) && in_array('recent', $selected_blocks) && permission_exists('xml_cdr_view') && is_array($_SESSION['user']['extension']) && sizeof($_SESSION['user']['extension']) > 0) {
 			foreach ($_SESSION['user']['extension'] as $assigned_extension) {
 				$assigned_extensions[$assigned_extension['extension_uuid']] = $assigned_extension['user'];
 			}
 
 			//if also viewing system status, show more recent calls (more room avaialble)
-			$recent_limit = (in_array('counts', $selected_blocks)) ? 10 : 5;
+			$recent_limit = (is_array($selected_blocks) && in_array('counts', $selected_blocks)) ? 10 : 5;
 
 			$sql = "
 				select
@@ -605,13 +605,13 @@
 					$tmp_start_epoch = ($_SESSION['domain']['time_format']['text'] == '12h') ? date("n/j g:ia", $row['start_epoch']) : date("n/j H:i", $row['start_epoch']);
 
 					//determine name
-						$cdr_name = ($row['direction'] == 'inbound' || ($row['direction'] == 'local' && in_array($row['destination_number'], $assigned_extensions))) ? $row['caller_id_name'] : $row['destination_number'];
+						$cdr_name = ($row['direction'] == 'inbound' || ($row['direction'] == 'local' && is_array($assigned_extensions) && in_array($row['destination_number'], $assigned_extensions))) ? $row['caller_id_name'] : $row['destination_number'];
 					//determine number to display
-						if ($row['direction'] == 'inbound' || ($row['direction'] == 'local' && in_array($row['destination_number'], $assigned_extensions))) {
+						if ($row['direction'] == 'inbound' || ($row['direction'] == 'local' && is_array($assigned_extensions) && in_array($row['destination_number'], $assigned_extensions))) {
 							$cdr_number = (is_numeric($row['caller_id_number'])) ? format_phone($row['caller_id_number']) : $row['caller_id_number'];
 							$dest = $row['caller_id_number'];
 						}
-						else if ($row['direction'] == 'outbound' || ($row['direction'] == 'local' && in_array($row['caller_id_number'], $assigned_extensions))) {
+						else if ($row['direction'] == 'outbound' || ($row['direction'] == 'local' && is_array($assigned_extensions) && in_array($row['caller_id_number'], $assigned_extensions))) {
 							$cdr_number = (is_numeric($row['destination_number'])) ? format_phone($row['destination_number']) : $row['destination_number'];
 							$dest = $row['destination_number'];
 						}
@@ -645,7 +645,9 @@
 								else if ($row['answer_stamp'] == '' && $row['bridge_uuid'] != '') { $call_result = 'cancelled'; }
 								else { $call_result = 'failed'; }
 							}
-							$hud[$n]['html'] .= "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_".$row['direction']."_".$call_result.".png' width='16' style='border: none;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]."'>\n";
+							if (isset($row['direction'])) {
+								$hud[$n]['html'] .= "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_".$row['direction']."_".$call_result.".png' width='16' style='border: none;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]."'>\n";
+							}
 						}
 						$hud[$n]['html'] .= "</td>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'><a href='javascript:void(0);' ".(($cdr_name != '') ? "title=\"".$cdr_name."\"" : null).">".$cdr_number."</a></td>\n";
@@ -666,7 +668,7 @@
 
 
 	//domain limits
-		if (in_array('limits', $selected_blocks) && is_array($_SESSION['limit']) && sizeof($_SESSION['limit']) > 0) {
+		if (is_array($selected_blocks) && in_array('limits', $selected_blocks) && is_array($_SESSION['limit']) && sizeof($_SESSION['limit']) > 0) {
 			$c = 0;
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
@@ -706,7 +708,7 @@
 				switch ($category) {
 					case 'users':
 						if (!permission_exists('user_view')) { continue 2; }
-						$url = '/core/users/index.php';
+						$url = '/core/users/users.php';
 						break;
 					case 'call_center_queues':
 						if (!permission_exists('call_center_active_view')) { continue 2; }
@@ -753,7 +755,7 @@
 
 
 	//system/domain counts
-		if (in_array('counts', $selected_blocks)) {
+		if (is_array($selected_blocks) && in_array('counts', $selected_blocks)) {
 			$c = 0;
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
@@ -772,7 +774,7 @@
 				$hud_stat_title = $text['label-active_extensions'];
 			}
 			else if ((permission_exists('user_view') || if_group("superadmin")) && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/core/users/")) {
-				$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/core/users/index.php'\"";
+				$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/core/users/users.php'\"";
 				$hud_stat = $stats[$scope]['users']['total'] - $stats[$scope]['users']['disabled'];
 				$hud_stat_title = $text['label-active_users'];
 			}
@@ -841,7 +843,7 @@
 
 			//users
 				if ((permission_exists('user_view') || if_group("superadmin")) && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/core/users/")) {
-					$tr_link = "href='".PROJECT_PATH."/core/users/index.php'";
+					$tr_link = "href='".PROJECT_PATH."/core/users/users.php'";
 					$hud[$n]['html'] .= "<tr ".$tr_link.">\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-users']."</a></td>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['users']['disabled']."</td>\n";
@@ -927,9 +929,8 @@
 			$n++;
 		}
 
-
 	//system status
-		if (in_array('system', $selected_blocks)) {
+		if (is_array($selected_blocks) && in_array('system', $selected_blocks)) {
 			$c = 0;
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
@@ -937,9 +938,8 @@
 			$hud[$n]['html'] .= "<span class='hud_title' style='cursor: default;'>".$text['label-system_status']."</span>";
 
 			//disk usage
-			if (stristr(PHP_OS, 'Linux')) {
-				$df = shell_exec("/usr/bin/which df");
-				$tmp = shell_exec($df." /home 2>&1");
+			if (PHP_OS == 'FreeBSD' || PHP_OS == 'Linux') {
+				$tmp = shell_exec("df /home 2>&1");
 				$tmp = explode("\n", $tmp);
 				$tmp = preg_replace('!\s+!', ' ', $tmp[1]); // multiple > single space
 				$tmp = explode(' ', $tmp);
@@ -1118,10 +1118,9 @@
 
 			//registration count
 				if ($fp && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/registrations/")) {
-					$tmp = event_socket_request($fp, 'api sofia xmlstatus profile internal reg');
-					$registrations = substr_count($tmp, '<registration>');
-					$registrations = (is_numeric($registrations)) ? $registrations : 0;
-					$tr_link = "href='".PROJECT_PATH."/app/registrations/status_registrations.php'";
+					$registration = new registrations;
+					$registrations = $registration->count();
+					$tr_link = "href='".PROJECT_PATH."/app/registrations/registrations.php'";
 					$hud[$n]['html'] .= "<tr ".$tr_link.">\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-registrations']."</a></td>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$registrations."</td>\n";
@@ -1138,7 +1137,7 @@
 	if (is_array($hud) && sizeof($hud) > 0) {
 
 		//javascript function: send_cmd
-		if ((in_array('missed', $selected_blocks) || in_array('recent', $selected_blocks)) && permission_exists('xml_cdr_view')) {
+		if (((is_array($selected_blocks) && in_array('missed', $selected_blocks)) || (is_array($selected_blocks) && in_array('recent', $selected_blocks))) && permission_exists('xml_cdr_view')) {
 			echo "<script type=\"text/javascript\">\n";
 			echo "	function send_cmd(url) {\n";
 			//echo "		alert(url);\n";
@@ -1195,6 +1194,18 @@
 	if (!is_array($selected_blocks) || in_array('call_routing', $selected_blocks) || in_array('ring_groups', $selected_blocks)) {
 		echo "<div class='row' style='margin-top: 30px;'>\n";
 
+		if (!is_array($selected_blocks) || in_array('caller_id', $selected_blocks)) {
+			//caller id management
+				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/extensions/extension_dashboard.php")) {
+						if (permission_exists('extension_caller_id')) {
+							$is_included = true;
+							echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6' style='margin: 0 0 30px 0;'>\n";
+							require_once "app/extensions/extension_dashboard.php";
+							echo "</div>";
+						}
+				}
+		}
+
 		if (!is_array($selected_blocks) || in_array('call_routing', $selected_blocks)) {
 			//call routing
 				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/calls/calls.php")) {
@@ -1219,6 +1230,18 @@
 				}
 		}
 
+		if (!is_array($selected_blocks) || in_array('call_center_agents', $selected_blocks)) {
+			//call center agent
+				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/call_centers/call_center_agent_dashboard.php")) {
+					if (permission_exists('call_center_agent_view')) {
+						$is_included = true;
+						echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6' style='margin: 0 0 30px 0;'>\n";
+						require_once "app/call_centers/call_center_agent_dashboard.php";
+						echo "</div>";
+					}
+				}
+		}
+
 		if (!is_array($selected_blocks) || in_array('device_keys', $selected_blocks)) {
 			//device key management
 				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/devices/device_dashboard.php")) {
@@ -1232,6 +1255,13 @@
 		}
 		echo "</div>\n";
 	}
+
+//add multi-lingual support
+	$language = new text;
+	$text = $language->get();
+
+//set the title
+	$document['title'] = $text['title-user_dashboard'];
 
 //show the footer
 	require_once "resources/footer.php";

@@ -1,0 +1,7 @@
+<context name="{v_context}">
+	<extension name="speed_dial" number="*0[ext]" continue="false" app_uuid="1a4a2611-01e3-4582-982b-4ada4d314ea3" enabled="true">
+		<condition field="destination_number" expression="^\*0(.*)$">
+			<action application="lua" data="app.lua speed_dial $1"/>
+		</condition>
+	</extension>
+</context>

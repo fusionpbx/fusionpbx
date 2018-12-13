@@ -6,8 +6,8 @@
 <Enable_Web_Server ua="na">Yes</Enable_Web_Server>
 <Web_Server_Port ua="na">80</Web_Server_Port>
 <Enable_Web_Admin_Access ua="na">Yes</Enable_Web_Admin_Access>
-<Admin_Passwd ua="na">{$admin_password}</Admin_Passwd>
-<User_Password ua="rw">{$user_password}</User_Password>
+{if isset ($admin_password)}<Admin_Passwd ua="na">{$admin_password}</Admin_Passwd>{/if}
+<User_Password ua="rw"></User_Password>
 <Signaling_Protocol ua="na">SIP</Signaling_Protocol> <!-- options: SIP/SPCP -->
 <SPCP_Auto-detect ua="na">Yes</SPCP_Auto-detect>
 <Phone-UI-readonly ua="na">No</Phone-UI-readonly>
@@ -55,8 +55,8 @@
 <Resync_Random_Delay ua="na">2</Resync_Random_Delay>
 <Resync_At__HHmm_ ua="na"></Resync_At__HHmm_>
 <Resync_Periodic ua="na">0</Resync_Periodic>
-<Resync_Error_Retry_Delay ua="na">3600</Resync_Error_Retry_Delay>
-<Forced_Resync_Delay ua="na">14400</Forced_Resync_Delay>
+<Resync_Error_Retry_Delay ua="na">300</Resync_Error_Retry_Delay>
+<Forced_Resync_Delay ua="na">30</Forced_Resync_Delay>
 <Resync_From_SIP ua="na">Yes</Resync_From_SIP>
 <Resync_After_Upgrade_Attempt ua="na">Yes</Resync_After_Upgrade_Attempt>
 <Resync_Trigger_1 ua="na"></Resync_Trigger_1>
@@ -206,9 +206,9 @@
 
 <!-- NAT Support Parameters -->
 <Handle_VIA_received ua="na">No</Handle_VIA_received>
-<Handle_VIA_rport ua="na">No</Handle_VIA_rport>
+<Handle_VIA_rport ua="na">{$spa_handle_via_rport}</Handle_VIA_rport>
 <Insert_VIA_received ua="na">No</Insert_VIA_received>
-<Insert_VIA_rport ua="na">No</Insert_VIA_rport>
+<Insert_VIA_rport ua="na">{$spa_insert_via_rport}</Insert_VIA_rport>
 <Substitute_VIA_Addr ua="na">No</Substitute_VIA_Addr>
 <Send_Resp_To_Src_Port ua="na">No</Send_Resp_To_Src_Port>
 <STUN_Enable ua="na">No</STUN_Enable>
@@ -250,8 +250,8 @@
 <Jitter_Buffer_Adjustment_1_ ua="na">up and down</Jitter_Buffer_Adjustment_1_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_1_ ua="na">{$sip_transport_1|upper}</SIP_Transport_1_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_1_ ua="na">{$sip_port_1}</SIP_Port_1_>
+<SIP_Transport_1_ ua="na">{$account.1.sip_transport|upper}</SIP_Transport_1_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_1_ ua="na">{$account.1.sip_port}</SIP_Port_1_>
 <SIP_100REL_Enable_1_ ua="na">No</SIP_100REL_Enable_1_>
 <EXT_SIP_Port_1_ ua="na"></EXT_SIP_Port_1_>
 <Auth_Resync-Reboot_1_ ua="na">Yes</Auth_Resync-Reboot_1_>
@@ -288,13 +288,13 @@
 <Auto_Ans_Page_On_Active_Call_1_ ua="na">Yes</Auto_Ans_Page_On_Active_Call_1_>
 
 <!-- Proxy and Registration -->
-<Proxy_1_ ua="na">{$server_address_1}</Proxy_1_>
-<Outbound_Proxy_1_ ua="na"></Outbound_Proxy_1_>
-<Use_Outbound_Proxy_1_ ua="na">No</Use_Outbound_Proxy_1_>
+<Proxy_1_ ua="na">{$account.1.server_address}</Proxy_1_>
+<Outbound_Proxy_1_>{$account.1.outbound_proxy_primary}</Outbound_Proxy_1_>
+<Use_Outbound_Proxy_1_>{if isset ($account.1.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_1_>
 <Use_OB_Proxy_In_Dialog_1_ ua="na">Yes</Use_OB_Proxy_In_Dialog_1_>
 <Register_1_ ua="na">Yes</Register_1_>
 <Make_Call_Without_Reg_1_ ua="na">No</Make_Call_Without_Reg_1_>
-<Register_Expires_1_ ua="na">{$register_expires_1}</Register_Expires_1_>
+<Register_Expires_1_ ua="na">{$account.1.register_expires}</Register_Expires_1_>
 <Ans_Call_Without_Reg_1_ ua="na">No</Ans_Call_Without_Reg_1_>
 <Use_DNS_SRV_1_ ua="na">No</Use_DNS_SRV_1_>
 <DNS_SRV_Auto_Prefix_1_ ua="na">No</DNS_SRV_Auto_Prefix_1_>
@@ -302,9 +302,9 @@
 <Proxy_Redundancy_Method_1_ ua="na">Normal</Proxy_Redundancy_Method_1_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
-<Display_Name_1_ ua="na">{$display_name_1}</Display_Name_1_>
-<User_ID_1_ ua="na">{$user_id_1}</User_ID_1_>
-<Password_1_ ua="na">{$user_password_1}</Password_1_>
+<Display_Name_1_ ua="na">{$account.1.display_name}</Display_Name_1_>
+<User_ID_1_ ua="na">{$account.1.user_id}</User_ID_1_>
+<Password_1_ ua="na">{$account.1.password}</Password_1_>
 <Use_Auth_ID_1_ ua="na">No</Use_Auth_ID_1_>
 <Auth_ID_1_ ua="na"></Auth_ID_1_>
 <Mini_Certificate_1_ ua="na"></Mini_Certificate_1_>
@@ -332,7 +332,7 @@
 <Codec_Negotiation_1_ ua="na">Default</Codec_Negotiation_1_> <!-- options: Default/List All -->
 
 <!-- Dial Plan -->
-<Dial_Plan_1_ ua="na">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_1_>
+<Dial_Plan_1_ ua="na">{$spa_dial_plan}</Dial_Plan_1_>
 <Caller_ID_Map_1_ ua="na"></Caller_ID_Map_1_>
 <Enable_IP_Dialing_1_ ua="na">Yes</Enable_IP_Dialing_1_>
 <Emergency_Number_1_ ua="na"></Emergency_Number_1_>
@@ -362,8 +362,8 @@
 <Jitter_Buffer_Adjustment_2_ ua="na">up and down</Jitter_Buffer_Adjustment_2_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_2_ ua="na">{$sip_transport_2|upper}</SIP_Transport_2_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_2_ ua="na">{$sip_port_2}</SIP_Port_2_>
+<SIP_Transport_2_ ua="na">{$account.2.sip_transport|upper}</SIP_Transport_2_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_2_ ua="na">{$account.2.sip_port}</SIP_Port_2_>
 <SIP_100REL_Enable_2_ ua="na">No</SIP_100REL_Enable_2_>
 <EXT_SIP_Port_2_ ua="na"></EXT_SIP_Port_2_>
 <Auth_Resync-Reboot_2_ ua="na">Yes</Auth_Resync-Reboot_2_>
@@ -400,9 +400,9 @@
 <Auto_Ans_Page_On_Active_Call_2_ ua="na">Yes</Auto_Ans_Page_On_Active_Call_2_>
 
 <!-- Proxy and Registration -->
-<Proxy_2_ ua="na">{$server_address_2}</Proxy_2_>
-<Outbound_Proxy_2_ ua="na"></Outbound_Proxy_2_>
-<Use_Outbound_Proxy_2_ ua="na">No</Use_Outbound_Proxy_2_>
+<Proxy_2_ ua="na">{$account.2.server_address}</Proxy_2_>
+<Outbound_Proxy_2_>{$account.2.outbound_proxy_primary}</Outbound_Proxy_2_>
+<Use_Outbound_Proxy_2_>{if isset ($account.2.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_2_>
 <Use_OB_Proxy_In_Dialog_2_ ua="na">Yes</Use_OB_Proxy_In_Dialog_2_>
 <Register_2_ ua="na">Yes</Register_2_>
 <Make_Call_Without_Reg_2_ ua="na">No</Make_Call_Without_Reg_2_>
@@ -414,9 +414,9 @@
 <Proxy_Redundancy_Method_2_ ua="na">Normal</Proxy_Redundancy_Method_2_> <!-- options: Normal/Based on SRV Port -->
 
 <!-- Subscriber Information -->
-<Display_Name_2_ ua="na">{$display_name_2}</Display_Name_2_>
-<User_ID_2_ ua="na">{$user_id_2}</User_ID_2_>
-<Password_2_ ua="na">{$user_password_2}</Password_2_>
+<Display_Name_2_ ua="na">{$account.2.display_name}</Display_Name_2_>
+<User_ID_2_ ua="na">{$account.2.user_id}</User_ID_2_>
+<Password_2_ ua="na">{$account.2.password}</Password_2_>
 <Use_Auth_ID_2_ ua="na">No</Use_Auth_ID_2_>
 <Auth_ID_2_ ua="na"></Auth_ID_2_>
 <Mini_Certificate_2_ ua="na"></Mini_Certificate_2_>
@@ -444,7 +444,7 @@
 <Codec_Negotiation_2_ ua="na">Default</Codec_Negotiation_2_> <!-- options: Default/List All -->
 
 <!-- Dial Plan -->
-<Dial_Plan_2_ ua="na">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_2_>
+<Dial_Plan_2_ ua="na">{$spa_dial_plan}</Dial_Plan_2_>
 <Caller_ID_Map_2_ ua="na"></Caller_ID_Map_2_>
 <Enable_IP_Dialing_2_ ua="na">Yes</Enable_IP_Dialing_2_>
 <Emergency_Number_2_ ua="na"></Emergency_Number_2_>
@@ -474,8 +474,8 @@
 <Jitter_Buffer_Adjustment_3_ ua="na">up and down</Jitter_Buffer_Adjustment_3_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_3_ ua="na">{$sip_transport_3|upper}</SIP_Transport_3_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_3_ ua="na">{$sip_port_3}</SIP_Port_3_>
+<SIP_Transport_3_ ua="na">{$account.3.sip_transport|upper}</SIP_Transport_3_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_3_ ua="na">{$account.3.sip_port}</SIP_Port_3_>
 <SIP_100REL_Enable_3_ ua="na">No</SIP_100REL_Enable_3_>
 <EXT_SIP_Port_3_ ua="na"></EXT_SIP_Port_3_>
 <Auth_Resync-Reboot_3_ ua="na">Yes</Auth_Resync-Reboot_3_>
@@ -512,7 +512,7 @@
 <Auto_Ans_Page_On_Active_Call_3_ ua="na">Yes</Auto_Ans_Page_On_Active_Call_3_>
 
 <!-- Proxy and Registration -->
-<Proxy_3_ ua="na">{$server_address_3}</Proxy_3_>
+<Proxy_3_ ua="na">{$account.3.server_address}</Proxy_3_>
 <Outbound_Proxy_3_ ua="na"></Outbound_Proxy_3_>
 <Use_Outbound_Proxy_3_ ua="na">No</Use_Outbound_Proxy_3_>
 <Use_OB_Proxy_In_Dialog_3_ ua="na">Yes</Use_OB_Proxy_In_Dialog_3_>
@@ -556,7 +556,7 @@
 <Codec_Negotiation_3_ ua="na">Default</Codec_Negotiation_3_> <!-- options: Default/List All -->
 
 <!-- Dial Plan -->
-<Dial_Plan_3_ ua="na">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_3_>
+<Dial_Plan_3_ ua="na">{$spa_dial_plan}</Dial_Plan_3_>
 <Caller_ID_Map_3_ ua="na"></Caller_ID_Map_3_>
 <Enable_IP_Dialing_3_ ua="na">Yes</Enable_IP_Dialing_3_>
 <Emergency_Number_3_ ua="na"></Emergency_Number_3_>
@@ -586,8 +586,8 @@
 <Jitter_Buffer_Adjustment_4_ ua="na">up and down</Jitter_Buffer_Adjustment_4_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_4_ ua="na">{$sip_transport_4|upper}</SIP_Transport_4_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_4_ ua="na">{$sip_port_4}</SIP_Port_4_>
+<SIP_Transport_4_ ua="na">{$account.4.sip_transport|upper}</SIP_Transport_4_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_4_ ua="na">{$account.4.sip_port}</SIP_Port_4_>
 <SIP_100REL_Enable_4_ ua="na">No</SIP_100REL_Enable_4_>
 <EXT_SIP_Port_4_ ua="na"></EXT_SIP_Port_4_>
 <Auth_Resync-Reboot_4_ ua="na">Yes</Auth_Resync-Reboot_4_>
@@ -630,7 +630,7 @@
 <Use_OB_Proxy_In_Dialog_4_ ua="na">Yes</Use_OB_Proxy_In_Dialog_4_>
 <Register_4_ ua="na">Yes</Register_4_>
 <Make_Call_Without_Reg_4_ ua="na">No</Make_Call_Without_Reg_4_>
-<Register_Expires_4_ ua="na">{$register_expires_4}</Register_Expires_4_>
+<Register_Expires_4_ ua="na">{$account.4.register_expires}</Register_Expires_4_>
 <Ans_Call_Without_Reg_4_ ua="na">No</Ans_Call_Without_Reg_4_>
 <Use_DNS_SRV_4_ ua="na">No</Use_DNS_SRV_4_>
 <DNS_SRV_Auto_Prefix_4_ ua="na">No</DNS_SRV_Auto_Prefix_4_>
@@ -668,7 +668,7 @@
 <Codec_Negotiation_4_ ua="na">Default</Codec_Negotiation_4_> <!-- options: Default/List All -->
 
 <!-- Dial Plan -->
-<Dial_Plan_4_ ua="na">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_4_>
+<Dial_Plan_4_ ua="na">{$spa_dial_plan}</Dial_Plan_4_>
 <Caller_ID_Map_4_ ua="na"></Caller_ID_Map_4_>
 <Enable_IP_Dialing_4_ ua="na">Yes</Enable_IP_Dialing_4_>
 <Emergency_Number_4_ ua="na"></Emergency_Number_4_>
@@ -698,8 +698,8 @@
 <Jitter_Buffer_Adjustment_5_ ua="na">up and down</Jitter_Buffer_Adjustment_5_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_5_ ua="na">{$sip_transport_5|upper}</SIP_Transport_5_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_5_ ua="na">{$sip_port_5}</SIP_Port_5_>
+<SIP_Transport_5_ ua="na">{$account.5.sip_transport|upper}</SIP_Transport_5_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_5_ ua="na">{$account.5.sip_port}</SIP_Port_5_>
 <SIP_100REL_Enable_5_ ua="na">No</SIP_100REL_Enable_5_>
 <EXT_SIP_Port_5_ ua="na"></EXT_SIP_Port_5_>
 <Auth_Resync-Reboot_5_ ua="na">Yes</Auth_Resync-Reboot_5_>
@@ -780,7 +780,7 @@
 <Codec_Negotiation_5_ ua="na">Default</Codec_Negotiation_5_> <!-- options: Default/List All -->
 
 <!-- Dial Plan -->
-<Dial_Plan_5_ ua="na">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_5_>
+<Dial_Plan_5_ ua="na">{$spa_dial_plan}</Dial_Plan_5_>
 <Caller_ID_Map_5_ ua="na"></Caller_ID_Map_5_>
 <Enable_IP_Dialing_5_ ua="na">Yes</Enable_IP_Dialing_5_>
 <Emergency_Number_5_ ua="na"></Emergency_Number_5_>
@@ -810,8 +810,8 @@
 <Jitter_Buffer_Adjustment_6_ ua="na">up and down</Jitter_Buffer_Adjustment_6_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_6_ ua="na">{$sip_transport_6|upper}</SIP_Transport_6_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_6_ ua="na">{$sip_port_6}</SIP_Port_6_>
+<SIP_Transport_6_ ua="na">{$account.6.sip_transport|upper}</SIP_Transport_6_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_6_ ua="na">{$account.6.sip_port}</SIP_Port_6_>
 <SIP_100REL_Enable_6_ ua="na">No</SIP_100REL_Enable_6_>
 <EXT_SIP_Port_6_ ua="na"></EXT_SIP_Port_6_>
 <Auth_Resync-Reboot_6_ ua="na">Yes</Auth_Resync-Reboot_6_>
@@ -854,7 +854,7 @@
 <Use_OB_Proxy_In_Dialog_6_ ua="na">Yes</Use_OB_Proxy_In_Dialog_6_>
 <Register_6_ ua="na">Yes</Register_6_>
 <Make_Call_Without_Reg_6_ ua="na">No</Make_Call_Without_Reg_6_>
-<Register_Expires_6_ ua="na">{$register_expires_6}</Register_Expires_6_>
+<Register_Expires_6_ ua="na">{$account.6.register_expires}</Register_Expires_6_>
 <Ans_Call_Without_Reg_6_ ua="na">No</Ans_Call_Without_Reg_6_>
 <Use_DNS_SRV_6_ ua="na">No</Use_DNS_SRV_6_>
 <DNS_SRV_Auto_Prefix_6_ ua="na">No</DNS_SRV_Auto_Prefix_6_>
@@ -892,7 +892,7 @@
 <Codec_Negotiation_6_ ua="na">Default</Codec_Negotiation_6_> <!-- options: Default/List All -->
 
 <!-- Dial Plan -->
-<Dial_Plan_6_ ua="na">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_6_>
+<Dial_Plan_6_ ua="na">{$spa_dial_plan}</Dial_Plan_6_>
 <Caller_ID_Map_6_ ua="na"></Caller_ID_Map_6_>
 <Enable_IP_Dialing_6_ ua="na">Yes</Enable_IP_Dialing_6_>
 <Emergency_Number_6_ ua="na"></Emergency_Number_6_>
@@ -922,8 +922,8 @@
 <Jitter_Buffer_Adjustment_7_ ua="na">up and down</Jitter_Buffer_Adjustment_7_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_7_ ua="na">{$sip_transport_7|upper}</SIP_Transport_7_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_7_ ua="na">{$sip_port_7}</SIP_Port_7_>
+<SIP_Transport_7_ ua="na">{$account.7.sip_transport|upper}</SIP_Transport_7_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_7_ ua="na">{$account.7.sip_port}</SIP_Port_7_>
 <SIP_100REL_Enable_7_ ua="na">No</SIP_100REL_Enable_7_>
 <EXT_SIP_Port_7_ ua="na"></EXT_SIP_Port_7_>
 <Auth_Resync-Reboot_7_ ua="na">Yes</Auth_Resync-Reboot_7_>
@@ -966,7 +966,7 @@
 <Use_OB_Proxy_In_Dialog_7_ ua="na">Yes</Use_OB_Proxy_In_Dialog_7_>
 <Register_7_ ua="na">Yes</Register_7_>
 <Make_Call_Without_Reg_7_ ua="na">No</Make_Call_Without_Reg_7_>
-<Register_Expires_7_ ua="na">{$register_expires_7}</Register_Expires_7_>
+<Register_Expires_7_ ua="na">{$account.7.register_expires}</Register_Expires_7_>
 <Ans_Call_Without_Reg_7_ ua="na">No</Ans_Call_Without_Reg_7_>
 <Use_DNS_SRV_7_ ua="na">No</Use_DNS_SRV_7_>
 <DNS_SRV_Auto_Prefix_7_ ua="na">No</DNS_SRV_Auto_Prefix_7_>
@@ -1004,7 +1004,7 @@
 <Codec_Negotiation_7_ ua="na">Default</Codec_Negotiation_7_> <!-- options: Default/List All -->
 
 <!-- Dial Plan -->
-<Dial_Plan_7_ ua="na">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_7_>
+<Dial_Plan_7_ ua="na">{$spa_dial_plan}</Dial_Plan_7_>
 <Caller_ID_Map_7_ ua="na"></Caller_ID_Map_7_>
 <Enable_IP_Dialing_7_ ua="na">Yes</Enable_IP_Dialing_7_>
 <Emergency_Number_7_ ua="na"></Emergency_Number_7_>
@@ -1034,8 +1034,8 @@
 <Jitter_Buffer_Adjustment_8_ ua="na">up and down</Jitter_Buffer_Adjustment_8_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_8_ ua="na">{$sip_transport_8|upper}</SIP_Transport_8_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_8_ ua="na">{$sip_port_8}</SIP_Port_8_>
+<SIP_Transport_8_ ua="na">{$account.8.sip_transport|upper}</SIP_Transport_8_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_8_ ua="na">{$account.8.sip_port}</SIP_Port_8_>
 <SIP_100REL_Enable_8_ ua="na">No</SIP_100REL_Enable_8_>
 <EXT_SIP_Port_8_ ua="na"></EXT_SIP_Port_8_>
 <Auth_Resync-Reboot_8_ ua="na">Yes</Auth_Resync-Reboot_8_>
@@ -1078,7 +1078,7 @@
 <Use_OB_Proxy_In_Dialog_8_ ua="na">Yes</Use_OB_Proxy_In_Dialog_8_>
 <Register_8_ ua="na">Yes</Register_8_>
 <Make_Call_Without_Reg_8_ ua="na">No</Make_Call_Without_Reg_8_>
-<Register_Expires_8_ ua="na">{$register_expires_8}</Register_Expires_8_>
+<Register_Expires_8_ ua="na">{$account.8.register_expires}</Register_Expires_8_>
 <Ans_Call_Without_Reg_8_ ua="na">No</Ans_Call_Without_Reg_8_>
 <Use_DNS_SRV_8_ ua="na">No</Use_DNS_SRV_8_>
 <DNS_SRV_Auto_Prefix_8_ ua="na">No</DNS_SRV_Auto_Prefix_8_>
@@ -1116,7 +1116,7 @@
 <Codec_Negotiation_8_ ua="na">Default</Codec_Negotiation_8_> <!-- options: Default/List All -->
 
 <!-- Dial Plan -->
-<Dial_Plan_8_ ua="na">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_8_>
+<Dial_Plan_8_ ua="na">{$spa_dial_plan}</Dial_Plan_8_>
 <Caller_ID_Map_8_ ua="na"></Caller_ID_Map_8_>
 <Enable_IP_Dialing_8_ ua="na">Yes</Enable_IP_Dialing_8_>
 <Emergency_Number_8_ ua="na"></Emergency_Number_8_>
@@ -1146,8 +1146,8 @@
 <Jitter_Buffer_Adjustment_9_ ua="na">up and down</Jitter_Buffer_Adjustment_9_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_9_ ua="na">{$sip_transport_9|upper}</SIP_Transport_9_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_9_ ua="na">{$sip_port_9}</SIP_Port_9_>
+<SIP_Transport_9_ ua="na">{$account.9.sip_transport|upper}</SIP_Transport_9_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_9_ ua="na">{$account.9.sip_port}</SIP_Port_9_>
 <SIP_100REL_Enable_9_ ua="na">No</SIP_100REL_Enable_9_>
 <EXT_SIP_Port_9_ ua="na"></EXT_SIP_Port_9_>
 <Auth_Resync-Reboot_9_ ua="na">Yes</Auth_Resync-Reboot_9_>
@@ -1190,7 +1190,7 @@
 <Use_OB_Proxy_In_Dialog_9_ ua="na">Yes</Use_OB_Proxy_In_Dialog_9_>
 <Register_9_ ua="na">Yes</Register_9_>
 <Make_Call_Without_Reg_9_ ua="na">No</Make_Call_Without_Reg_9_>
-<Register_Expires_9_ ua="na">{$register_expires_9}</Register_Expires_9_>
+<Register_Expires_9_ ua="na">{$account.9.register_expires}</Register_Expires_9_>
 <Ans_Call_Without_Reg_9_ ua="na">No</Ans_Call_Without_Reg_9_>
 <Use_DNS_SRV_9_ ua="na">No</Use_DNS_SRV_9_>
 <DNS_SRV_Auto_Prefix_9_ ua="na">No</DNS_SRV_Auto_Prefix_9_>
@@ -1228,7 +1228,7 @@
 <Codec_Negotiation_9_ ua="na">Default</Codec_Negotiation_9_> <!-- options: Default/List All -->
 
 <!-- Dial Plan -->
-<Dial_Plan_9_ ua="na">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_9_>
+<Dial_Plan_9_ ua="na">{$spa_dial_plan}</Dial_Plan_9_>
 <Caller_ID_Map_9_ ua="na"></Caller_ID_Map_9_>
 <Enable_IP_Dialing_9_ ua="na">Yes</Enable_IP_Dialing_9_>
 <Emergency_Number_9_ ua="na"></Emergency_Number_9_>
@@ -1258,8 +1258,8 @@
 <Jitter_Buffer_Adjustment_10_ ua="na">up and down</Jitter_Buffer_Adjustment_10_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_10_ ua="na">{$sip_transport_10|upper}</SIP_Transport_10_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_10_ ua="na">{$sip_port_10}</SIP_Port_10_>
+<SIP_Transport_10_ ua="na">{$account.10.sip_transport|upper}</SIP_Transport_10_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_10_ ua="na">{$account.10.sip_port}</SIP_Port_10_>
 <SIP_100REL_Enable_10_ ua="na">No</SIP_100REL_Enable_10_>
 <EXT_SIP_Port_10_ ua="na"></EXT_SIP_Port_10_>
 <Auth_Resync-Reboot_10_ ua="na">Yes</Auth_Resync-Reboot_10_>
@@ -1340,7 +1340,7 @@
 <Codec_Negotiation_10_ ua="na">Default</Codec_Negotiation_10_> <!-- options: Default/List All -->
 
 <!-- Dial Plan -->
-<Dial_Plan_10_ ua="na">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_10_>
+<Dial_Plan_10_ ua="na">{$spa_dial_plan}</Dial_Plan_10_>
 <Caller_ID_Map_10_ ua="na"></Caller_ID_Map_10_>
 <Enable_IP_Dialing_10_ ua="na">Yes</Enable_IP_Dialing_10_>
 <Emergency_Number_10_ ua="na"></Emergency_Number_10_>
@@ -1370,8 +1370,8 @@
 <Jitter_Buffer_Adjustment_11_ ua="na">up and down</Jitter_Buffer_Adjustment_11_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_11_ ua="na">{$sip_transport_11|upper}</SIP_Transport_11_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_11_ ua="na">{$sip_port_11}</SIP_Port_11_>
+<SIP_Transport_11_ ua="na">{$account.11.sip_transport|upper}</SIP_Transport_11_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_11_ ua="na">{$account.11.sip_port}</SIP_Port_11_>
 <SIP_100REL_Enable_11_ ua="na">No</SIP_100REL_Enable_11_>
 <EXT_SIP_Port_11_ ua="na"></EXT_SIP_Port_11_>
 <Auth_Resync-Reboot_11_ ua="na">Yes</Auth_Resync-Reboot_11_>
@@ -1452,7 +1452,7 @@
 <Codec_Negotiation_11_ ua="na">Default</Codec_Negotiation_11_> <!-- options: Default/List All -->
 
 <!-- Dial Plan -->
-<Dial_Plan_11_ ua="na">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_11_>
+<Dial_Plan_11_ ua="na">{$spa_dial_plan}</Dial_Plan_11_>
 <Caller_ID_Map_11_ ua="na"></Caller_ID_Map_11_>
 <Enable_IP_Dialing_11_ ua="na">Yes</Enable_IP_Dialing_11_>
 <Emergency_Number_11_ ua="na"></Emergency_Number_11_>
@@ -1482,8 +1482,8 @@
 <Jitter_Buffer_Adjustment_12_ ua="na">up and down</Jitter_Buffer_Adjustment_12_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_12_ ua="na">{$sip_transport_12|upper}</SIP_Transport_12_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_12_ ua="na">{$sip_port_12}</SIP_Port_12_>
+<SIP_Transport_12_ ua="na">{$account.12.sip_transport|upper}</SIP_Transport_12_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_12_ ua="na">{$account.12.sip_port}</SIP_Port_12_>
 <SIP_100REL_Enable_12_ ua="na">No</SIP_100REL_Enable_12_>
 <EXT_SIP_Port_12_ ua="na"></EXT_SIP_Port_12_>
 <Auth_Resync-Reboot_12_ ua="na">Yes</Auth_Resync-Reboot_12_>
@@ -1564,7 +1564,7 @@
 <Codec_Negotiation_12_ ua="na">Default</Codec_Negotiation_12_> <!-- options: Default/List All -->
 
 <!-- Dial Plan -->
-<Dial_Plan_12_ ua="na">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_12_>
+<Dial_Plan_12_ ua="na">{$spa_dial_plan}</Dial_Plan_12_>
 <Caller_ID_Map_12_ ua="na"></Caller_ID_Map_12_>
 <Enable_IP_Dialing_12_ ua="na">Yes</Enable_IP_Dialing_12_>
 <Emergency_Number_12_ ua="na"></Emergency_Number_12_>
@@ -1586,7 +1586,7 @@
 <Speed_Dial_9 ua="rw"></Speed_Dial_9>
 
 <!-- Supplementary Services -->
-<CW_Setting ua="rw">Yes</CW_Setting>
+<CW_Setting ua="rw">{$spa_call_waiting}</CW_Setting>
 <Block_CID_Setting ua="rw">No</Block_CID_Setting>
 <Block_ANC_Setting ua="rw">No</Block_ANC_Setting>
 <DND_Setting ua="rw">No</DND_Setting>
@@ -1630,12 +1630,12 @@
 <Back_Light_Timer ua="na">10 s</Back_Light_Timer> <!-- options: Off/10 s/20 s/30 s/Always On -->
 
 <!-- General -->
-<Station_Name ua="na">{$display_name_1}</Station_Name>
-<Station_Display_Name ua="na"></Station_Display_Name>
+<Station_Name ua="na">{$device_label}</Station_Name>
+<Station_Display_Name ua="na">{$display_name_1}</Station_Display_Name>
 <Voice_Mail_Number ua="na">*97</Voice_Mail_Number>
 <Text_Logo ua="na"></Text_Logo>
 <BMP_Picture_Download_URL ua="na"></BMP_Picture_Download_URL>
-<Select_Logo ua="na"></Select_Logo> <!-- options: Default/BMP Picture/Text Logo/None -->
+<Select_Logo ua="na">Default</Select_Logo> <!-- options: Default/BMP Picture/Text Logo/None -->
 <Select_Background_Picture ua="na">None</Select_Background_Picture> <!-- options: None/BMP Picture/Text Logo -->
 <Softkey_Labels_Font ua="na">Auto</Softkey_Labels_Font> <!-- options: Normal/Narrow/Auto -->
 <Screen_Saver_Enable ua="rw">No</Screen_Saver_Enable>
@@ -1643,24 +1643,19 @@
 <Screen_Saver_Icon ua="rw">Background Picture</Screen_Saver_Icon> <!-- options: StationTime/Lock/Phone/DateTime/Background Picture -->
 
 {foreach $keys["line"] as $row}
-{if $row.device_key_type == "line"}
+{if $row.device_key_category == "line"}
 <!-- Phone/Line_Key_{$row.device_key_id} -->
-<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
+<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_line}</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
 <Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
-<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">private</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
-<Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}"/>
-{else}
-<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">Disabled</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
-<Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
-<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">private</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
+<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{if $row.device_key_type == "shared"}shared{else}private{/if}</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
 <Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extended_Function_{$row.device_key_id}_>
-{/if}
 
+{/if}
 {/foreach}
 
 <!-- Miscellaneous Line Key Settings -->
 <Line_ID_Mapping ua="na">Vertical First</Line_ID_Mapping> <!-- options: Horizontal First/Vertical First -->
-<SCA_Barge-In_Enable ua="na">No</SCA_Barge-In_Enable>
+<SCA_Barge-In_Enable ua="na">Yes</SCA_Barge-In_Enable>
 <SCA_Sticky_Auto_Line_Seize ua="na">No</SCA_Sticky_Auto_Line_Seize>
 <Line_Navigation ua="na">Per Line</Line_Navigation> <!-- options: Per Call/Per Line -->
 <Call_Appearance_Per_Line ua="na">2</Call_Appearance_Per_Line> <!-- options: 2/3/4/5/6/7/8/9/10 -->
@@ -1738,7 +1733,7 @@
 <Directory_Type ua="na">Enterprise</Directory_Type> <!-- options: Enterprise/Group/Personal -->
 <Directory_UserID ua="na"></Directory_UserID>
 <Directory_Password ua="na"></Directory_Password>
-<Call_Feature_Sync_Ext ua="na">Disabled</Call_Feature_Sync_Ext> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
+<Call_Feature_Sync_Ext ua="na">{$spa_feature_key_sync}</Call_Feature_Sync_Ext> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
 
 <!-- LDAP Corporate Directory Search -->
 <LDAP_Dir_Enable ua="na">No</LDAP_Dir_Enable>
@@ -1904,7 +1899,7 @@
 <Time_Zone ua="na">{$spa_time_zone}</Time_Zone> <!-- options: GMT-12:00/GMT-11:00/GMT-10:00/GMT-09:00/GMT-08:00/GMT-07:00/GMT-06:00/GMT-05:00/GMT-04:00/GMT-03:30/GMT-03:00/GMT-02:00/GMT-01:00/GMT/GMT+01:00/GMT+02:00/GMT+03:00/GMT+03:30/GMT+04:00/GMT+05:00/GMT+05:30/GMT+05:45/GMT+06:00/GMT+06:30/GMT+07:00/GMT+08:00/GMT+09:00/GMT+09:30/GMT+10:00/GMT+11:00/GMT+12:00/GMT+13:00 -->
 <Time_Offset__HH_mm_ ua="na"></Time_Offset__HH_mm_>
 <Ignore_DHCP_Time_Offset ua="na">Yes</Ignore_DHCP_Time_Offset>
-<Daylight_Saving_Time_Rule ua="na">start=3/8/7/02:0:0;end=11/1/7/02:0:0;save=1</Daylight_Saving_Time_Rule>
+<Daylight_Saving_Time_Rule ua="na">start={$daylight_savings_start_month}/{$daylight_savings_start_day}/{$daylight_savings_start_weekday}/{$daylight_savings_start_time}:0:0;end={$daylight_savings_stop_month}/{$daylight_savings_stop_day}/{$daylight_savings_stop_weekday}/{$daylight_savings_stop_time}:0:0;save=1</Daylight_Saving_Time_Rule>
 <Daylight_Saving_Time_Enable ua="na">No</Daylight_Saving_Time_Enable>
 <DTMF_Playback_Level ua="na">-16</DTMF_Playback_Level>
 <DTMF_Playback_Length ua="na">.1</DTMF_Playback_Length>

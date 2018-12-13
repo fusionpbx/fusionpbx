@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,7 +28,6 @@
 	include "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
-	require_once $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/registrations/resources/classes/status_registrations.php";
 
 //check permissions
 	if (permission_exists('extension_view')) {
@@ -41,16 +40,8 @@
 
 //get the registrations
 	if (permission_exists('extension_registered')) {
-		//create the event socket connection
-		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-		if (!$fp) {
-			$msg = "<div align='center'>".$text['error-event-socket']."<br /></div>";
-		}
-		$registrations = get_registrations('internal');
-		//order the array
-		require_once "resources/classes/array_order.php";
-		$order = new array_order();
-		$registrations = $order->sort($registrations, 'sip-auth-realm', 'user');
+		$obj = new registrations;
+		$registrations = $obj->get('all');
 	}
 
 //add multi-lingual support
@@ -65,13 +56,14 @@
 //handle search term
 	$search = check_str($_GET["search"]);
 	if (strlen($search) > 0) {
-		$sql_mod = "and ( ";
-		$sql_mod .= "extension like '%".$search."%' ";
-		$sql_mod .= "or call_group like '%".$search."%' ";
-		$sql_mod .= "or user_context like '%".$search."%' ";
-		$sql_mod .= "or enabled like '%".$search."%' ";
-		$sql_mod .= "or description like '%".$search."%' ";
-		$sql_mod .= ") ";
+		$search = strtolower($search);
+		$sql_search = "and ( ";
+		$sql_search .= "lower(extension) like '%".$search."%' ";
+		$sql_search .= "or lower(call_group) like '%".$search."%' ";
+		$sql_search .= "or lower(user_context) like '%".$search."%' ";
+		$sql_search .= "or lower(enabled) like '%".$search."%' ";
+		$sql_search .= "or lower(description) like '%".$search."%' ";
+		$sql_search .= ") ";
 	}
 
 //additional includes
@@ -81,10 +73,22 @@
 
 //get total extension count from the database
 	$sql = "select ";
-	$sql .= "(select count(*) from v_extensions where domain_uuid = '".$_SESSION['domain_uuid']."' ".$sql_mod.") as num_rows ";
+	$sql .= "(select count(*) from v_extensions ";
+	$sql .= "where 1 = 1 ";
+	if ($_GET['show'] == "all" && permission_exists('extension_all')) {
+		//show all extensions
+	} else {
+		$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	}
+	$sql .= " ".$sql_search.") as num_rows ";
 	if ($db_type == "pgsql") {
-		$sql .= ",(select count(*) as count from v_extensions ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= ", (select count(*) as count from v_extensions ";
+		$sql .= "where 1 = 1 ";
+		if ($_GET['show'] == "all" && permission_exists('extension_all')) {
+			//show all extensions
+		} else {
+			$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		}
 		$sql .= "and extension ~ '^[0-9]+$') as numeric_extensions ";
 	}
 	$prep_statement = $db->prepare($sql);
@@ -100,7 +104,7 @@
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "&search=".$search;
+	$param = "&search=".escape($search);
 	if (!isset($_GET['page'])) { $_GET['page'] = 0; }
 	$_GET['page'] = check_str($_GET['page']);
 	list($paging_controls_mini, $rows_per_page, $var_3) = paging($total_extensions, $param, $rows_per_page, true); //top
@@ -109,21 +113,26 @@
 
 //to cast or not to cast
 	if ($db_type == "pgsql") {
-		$order_text = ($total_extensions == $numeric_extensions) ? "cast(extension as bigint)" : "extension asc";
+		$order_text = ($total_extensions == $numeric_extensions) ? "cast(extension as bigint)" : "extension";
 	}
 	else {
-		$order_text = "extension asc";
+		$order_text = "extension";
 	}
 
 //get the extensions
 	$sql = "select * from v_extensions ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= $sql_mod; //add search mod from above
+	$sql .= "where 1 = 1 ";
+	if ($_GET['show'] == "all" && permission_exists('extension_all')) {
+		//show all gateways
+	} else {
+		$sql .= "and domain_uuid = '$domain_uuid' ";
+	}
+	$sql .= $sql_search; //add search mod from above
 	if (strlen($order_by) > 0) {
 		$sql .= ($order_by == 'extension') ? "order by $order_text ".$order." " : "order by ".$order_by." ".$order." ";
 	}
 	else {
-		$sql .= "order by $order_text ";
+		$sql .= "order by $order_text $order";
 	}
 	$sql .= "limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
@@ -144,10 +153,21 @@
 	echo "	</td>\n";
 	echo "		<form method='get' action=''>\n";
 	echo "			<td style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
-	if (if_group("superadmin")) {
-		echo "				<input type='button' class='btn' style='margin-right: 15px;' value='".$text['button-export']."' onclick=\"window.location.href='extension_download.php'\">\n";
+	if (permission_exists('extension_all')) {
+		if ($_GET['show'] == 'all') {
+			echo "	<input type='hidden' name='show' value='all'>";
+		}
+		else {
+			echo "	<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='extensions.php?show=all';\">\n";
+		}
 	}
-	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>";
+	if (permission_exists('extension_import')) {
+		echo 				"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='extension_imports.php'\" value='".$text['button-import']."'>\n";
+	}
+	if (permission_exists('extension_export')) {
+		echo "				<input type='button' class='btn' value='".$text['button-export']."' onclick=\"window.location.href='extension_download.php'\">\n";
+	}
+	echo "				<input type='text' class='txt' style='width: 150px; margin-left: 15px;' name='search' id='search' value='".escape($search)."'>";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	if ($paging_controls_mini != '') {
 		echo 			"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
@@ -168,6 +188,9 @@
 	echo "<tr>\n";
 	if (permission_exists('extension_delete') && is_array($extensions)) {
 		echo "<th style='width: 30px; text-align: center; padding: 0px;'><input type='checkbox' id='chk_all' onchange=\"(this.checked) ? check('all') : check('none');\"></th>";
+	}
+	if ($_GET['show'] == "all" && permission_exists('extension_all')) {
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param);
 	}
 	echo th_order_by('extension', $text['label-extension'], $order_by, $order);
 	echo th_order_by('call_group', $text['label-call_group'], $order_by, $order);
@@ -194,53 +217,65 @@
 	if (is_array($extensions)) {
 
 		foreach($extensions as $row) {
-			$tr_link = (permission_exists('extension_edit')) ? " href='extension_edit.php?id=".$row['extension_uuid']."'" : null;
+			$tr_link = (permission_exists('extension_edit')) ? " href='extension_edit.php?id=".escape($row['extension_uuid'])."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			if (permission_exists('extension_delete')) {
 				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; vertical-align: middle; padding: 0px;'>";
-				echo "		<input type='checkbox' name='id[]' id='checkbox_".$row['extension_uuid']."' value='".$row['extension_uuid']."' onclick=\"if (!this.checked) { document.getElementById('chk_all').checked = false; }\">";
+				echo "		<input type='checkbox' name='id[]' id='checkbox_".escape($row['extension_uuid'])."' value='".escape($row['extension_uuid'])."' onclick=\"if (!this.checked) { document.getElementById('chk_all').checked = false; }\">";
 				echo "	</td>";
 				$ext_ids[] = 'checkbox_'.$row['extension_uuid'];
 			}
+			if ($_GET['show'] == "all" && permission_exists('extension_all')) {
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
+			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('extension_edit')) {
-				echo "<a href='extension_edit.php?id=".$row['extension_uuid']."'>".$row['extension']."</a>";
+				echo "<a href='extension_edit.php?id=".escape($row['extension_uuid'])."'>".escape($row['extension'])."</a>";
 			}
 			else {
-				echo $row['extension'];
+				echo escape($row['extension']);
 			}
 			echo "</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_group']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_group'])."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['voicemail_mail_to']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['user_context']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['user_context'])."</td>\n";
 
 			if (permission_exists('extension_registered')) {
- 				echo "	<td valign='top' class='".$row_style[$c]."'>";
- 				$found = false;
- 				$found_count = 0;
- 				foreach ($registrations as $arr) {
- 					if (in_array($row['extension'],$arr)) {
- 						$found = true;
- 						$found_count++;
- 					}
- 				}
- 				if ($found) {
- 					echo "Yes ($found_count)";
- 				} else {
- 					echo "No";
- 				}
- 				echo "&nbsp;</td>\n";
- 			}
+				echo "	<td valign='top' class='".$row_style[$c]."'>";
+				$extension_number = $row['extension'].'@'.$_SESSION['domain_name'];
+				$extension_number_alias = $row['number_alias'];
+				if(strlen($extension_number_alias) > 0) {
+					$extension_number_alias .= '@'.$_SESSION['domain_name'];
+				}
+				$found_count = 0;
+				foreach ($registrations as $array) {
+					if (
+						($extension_number == $array['user']) ||
+						($extension_number_alias != '' &&
+							$extension_number_alias == $array['user']
+						)
+					) {
+						$found_count++;
+					}
+				}
+				if ($found_count > 0) {
+					echo "Yes ($found_count)";
+				} else {
+					echo "No";
+				}
+				unset($extension_number, $extension_number_alias, $found_count, $array);
+				echo "&nbsp;</td>\n";
+			}
 
-			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['enabled'])."</td>\n";
-			echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape(ucwords($row['enabled']))."</td>\n";
+			echo "	<td valign='top' class='row_stylebg' width='30%'>".escape($row['description'])."&nbsp;</td>\n";
 
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('extension_edit')) {
-				echo "<a href='extension_edit.php?id=".$row['extension_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='extension_edit.php?id=".escape($row['extension_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('extension_delete')) {
-				echo "<a href='extension_delete.php?id[]=".$row['extension_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='extension_delete.php?id[]=".escape($row['extension_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "</td>\n";
 			echo "</tr>\n";
@@ -296,4 +331,5 @@
 
 //show the footer
 	require_once "resources/footer.php";
+
 ?>

@@ -26,9 +26,18 @@
 --include config.lua
 	require "resources.functions.config";
 
+--set debug
+	-- debug["sql"] = true;
+
 --connect to the database
-	require "resources.functions.database_handle";
-	dbh = database_handle('system');
+	local Database = require "resources.functions.database";
+	dbh = Database.new('system');
+
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
 
 --set default variables
 	sounds_dir = "";
@@ -105,17 +114,21 @@
 		freeswitch.consoleLog("NOTICE", "[ring_group] menu_selection: "..menu_selection.."\n");
 		if (menu_selection == "1") then
 			--first, check to see if the destination is already in this ring group
-			sql = [[
+			local sql = [[
 				SELECT COUNT(*) AS in_group FROM
 					v_ring_group_destinations
 				WHERE
-					domain_uuid = ']]..domain_uuid..[['
-					AND ring_group_uuid = ']]..ring_group_uuid..[['
-					AND destination_number = ']]..destination..[['
+					domain_uuid = :domain_uuid
+					AND ring_group_uuid = :ring_group_uuid
+					AND destination_number = :destination
 			]];
-			--freeswitch.consoleLog("NOTICE", "[ring_group] SQL "..sql.."\n");
+			local params = {domain_uuid = domain_uuid, ring_group_uuid = ring_group_uuid,
+				destination = destination};
+			if debug["sql"] then
+				freeswitch.consoleLog("NOTICE", "[ring_group] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
+			end
 
-			assert(dbh:query(sql, function(row)
+			assert(dbh:query(sql, params, function(row)
 				if (row.in_group == "0") then
 					sql = [[
 						INSERT INTO
@@ -128,15 +141,28 @@
 									destination_timeout
 								)
 						VALUES
-								(	']]..ring_group_destination_uuid..[[',
-									']]..domain_uuid..[[',
-									']]..ring_group_uuid..[[',
-									']]..destination..[[',
-									]]..destination_delay..[[,
-									]]..destination_timeout..[[
+								(	:ring_group_destination_uuid,
+									:domain_uuid,
+									:ring_group_uuid,
+									:destination,
+									:destination_delay,
+									:destination_timeout
 								)]];
-					freeswitch.consoleLog("NOTICE", "[ring_group][destination] SQL "..sql.."\n");
-					dbh:query(sql);
+
+					params = {
+						ring_group_destination_uuid = ring_group_destination_uuid;
+						domain_uuid = domain_uuid;
+						ring_group_uuid = ring_group_uuid;
+						destination = destination;
+						destination_delay = destination_delay;
+						destination_timeout = destination_timeout;
+						
+					};
+
+					if debug["sql"] then
+						freeswitch.consoleLog("NOTICE", "[ring_group][destination] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
+					end
+					dbh:query(sql, params);
 
 					freeswitch.consoleLog("NOTICE", "[ring_group][destination] LOG IN\n");
 					session:streamFile("ivr/ivr-you_are_now_logged_in.wav");
@@ -147,16 +173,20 @@
 			end));
 		end
 		if (menu_selection == "2") then
-			sql = [[
+			local sql = [[
 				DELETE FROM
 					v_ring_group_destinations
 				WHERE
-					domain_uuid =']]..domain_uuid..[['
-					AND ring_group_uuid=']]..ring_group_uuid..[['
-					AND destination_number=']]..destination..[['
+					domain_uuid =:domain_uuid
+					AND ring_group_uuid=:ring_group_uuid
+					AND destination_number=:destination
 				]];
-			freeswitch.consoleLog("NOTICE", "[ring_group][destination] SQL "..sql.."\n");
-			dbh:query(sql);
+			local params = {domain_uuid = domain_uuid, ring_group_uuid = ring_group_uuid,
+				destination = destination};
+			if debug["sql"] then
+				freeswitch.consoleLog("NOTICE", "[ring_group][destination] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
+			end
+			dbh:query(sql, params);
 
 			freeswitch.consoleLog("NOTICE", "[ring_group][destination] LOG OUT\n");
 			session:streamFile("ivr/ivr-you_are_now_logged_out.wav");

@@ -68,7 +68,7 @@ CREATE TABLE channels (
     ip_addr character varying(256),
     dest character varying(1024),
     application character varying(128),
-    application_data character varying(4096),
+    application_data text,
     dialplan character varying(128),
     context character varying(128),
     read_codec character varying(128),
@@ -448,7 +448,7 @@ CREATE TABLE sip_subscriptions (
     network_ip character varying(255),
     version integer DEFAULT 0 NOT NULL,
     orig_proto character varying(255),
-    full_to character varying(255),
+    full_to character varying(1024),
 sip_subscription_uuid uuid PRIMARY KEY default gen_random_uuid()
 );
 ALTER TABLE sip_subscriptions OWNER TO fusionpbx;
@@ -481,6 +481,17 @@ CREATE TABLE tiers (
 );
 ALTER TABLE tiers OWNER TO fusionpbx;
 
+
+--
+-- Name: json_store; Type: TABLE; Schema: public; Owner: fusionpbx; Tablespace:
+--
+CREATE TABLE json_store (
+	name varchar(255) not null,
+	data text,
+   json_store_uuid uuid PRIMARY KEY default gen_random_uuid()
+);
+ ALTER TABLE json_store OWNER TO fusionpbx;
+  
 --Create Views
 
 -- Name: basic_calls; Type: VIEW; Schema: public; Owner: fusionpbx
@@ -609,7 +620,6 @@ b.read_bit_rate AS b_read_bit_rate,
 
 
 ALTER TABLE detailed_calls OWNER TO fusionpbx;
-
 
 
 --Indexes and Constraints

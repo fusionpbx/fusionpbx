@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010 - 2016
+	Copyright (C) 2010 - 2018
 	All Rights Reserved.
 
 	Contributor(s):
@@ -38,11 +38,13 @@ include "root.php";
 		public $cid_number_prefix;
 		public $accountcode;
 		public $follow_me_enabled;
+		public $follow_me_destinations;
 		public $follow_me_caller_id_uuid;
 		public $follow_me_ignore_busy;
 		public $outbound_caller_id_name;
 		public $outbound_caller_id_number;
 		private $extension;
+		private $number_alias;
 		private $toll_allow;
 
 		public $destination_data_1;
@@ -157,7 +159,7 @@ include "root.php";
 						. "follow_me_delay,"
 						. "follow_me_prompt,"
 						. "follow_me_order"
-					. ")values(?,?,?,?,?,?,?,?)"
+					. ") values(?,?,?,?,?,?,?,?)"
 				);
 
 			//delete related follow me destinations
@@ -248,6 +250,7 @@ include "root.php";
 					$this->extension = $row["extension"];
 					$this->accountcode = $row["accountcode"];
 					$this->toll_allow = $row["toll_allow"];
+					$this->number_alias = $row["number_alias"];
 					$this->outbound_caller_id_name = $row["outbound_caller_id_name"];
 					$this->outbound_caller_id_number = $row["outbound_caller_id_number"];
 				}
@@ -261,158 +264,191 @@ include "root.php";
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				if (is_array($result)) foreach ($result as &$row) {
 					$follow_me_uuid = $row["follow_me_uuid"];
+					$this->follow_me_enabled = $row["follow_me_enabled"];
+					$this->follow_me_destinations = $row["follow_me_destinations"];
 					$this->cid_name_prefix = $row["cid_name_prefix"];
 					$this->cid_number_prefix = $row["cid_number_prefix"];
 				}
 				unset ($prep_statement);
 
-			//add follow me
-				if (strlen($follow_me_uuid) == 0) {
-					$this->add();
+			//set the extension dial string
+				$sql = "select * from v_follow_me_destinations ";
+				$sql .= "where follow_me_uuid = '".$this->follow_me_uuid."' ";
+				$sql .= "order by follow_me_order asc ";
+				$prep_statement_2 = $db->prepare(check_sql($sql));
+				$prep_statement_2->execute();
+				$result = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
+
+				/*
+				$dial_string = "{";
+				$dial_string_caller_id_name = "\${effective_caller_id_name}";
+				$dial_string_caller_id_number = "\${effective_caller_id_number}";
+
+				if (strlen($this->follow_me_caller_id_uuid) > 0) {
+					$sql_caller = "select destination_number, destination_description, destination_caller_id_number, destination_caller_id_name ";
+					$sql_caller .= "from v_destinations ";
+					$sql_caller .= "where domain_uuid = '$this->domain_uuid' ";
+					$sql_caller .= "and destination_type = 'inbound' ";
+					$sql_caller .= "and destination_uuid = '$this->follow_me_caller_id_uuid'";
+					$prep_statement_caller = $db->prepare($sql_caller);
+					if ($prep_statement_caller) {
+						$prep_statement_caller->execute();
+						$row_caller = $prep_statement_caller->fetch(PDO::FETCH_ASSOC);
+						$caller_id_number = $row_caller['destination_caller_id_number'];
+						if(strlen($caller_id_number) == 0){
+							$caller_id_number = $row_caller['destination_number'];
+						}
+						$caller_id_name = $row_caller['destination_caller_id_name'];
+						if(strlen($caller_id_name) == 0){
+							$caller_id_name = $row_caller['destination_description'];
+						}
+					}
 				}
+				$dial_string = "}";
+				*/
 
-				//set the extension dial string
-					$sql = "select * from v_follow_me_destinations ";
-					$sql .= "where follow_me_uuid = '".$this->follow_me_uuid."' ";
-					$sql .= "order by follow_me_order asc ";
-					$prep_statement_2 = $db->prepare(check_sql($sql));
-					$prep_statement_2->execute();
-					$result = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
-					$dial_string = "{";
-					if ($this->follow_me_ignore_busy != 'true') {
-						$dial_string .= "fail_on_single_reject=USER_BUSY,";
+				$x = 0;
+				if (is_array($result)) foreach ($result as &$row) {
+					if ($x > 0) {
+						$dial_string .= ",";
 					}
-					$dial_string .= "instant_ringback=true,";
-					$dial_string .= "ignore_early_media=true";
-					$dial_string .= ",domain_uuid=".$_SESSION['domain_uuid'];
-					$dial_string .= ",sip_invite_domain=".$_SESSION['domain_name'];
-					$dial_string .= ",domain_name=".$_SESSION['domain_name'];
-					$dial_string .= ",domain=".$_SESSION['domain_name'];
-					$dial_string .= ",extension_uuid=".$this->extension_uuid;
-					$dial_string .= ",group_confirm_key=exec,group_confirm_file=lua confirm.lua";
-
-					$dial_string_caller_id_name = "\${effective_caller_id_name}";
-					$dial_string_caller_id_number = "\${effective_caller_id_number}";
-
-					if (strlen($this->follow_me_caller_id_uuid) > 0){
-						$sql_caller = "select destination_number, destination_description, destination_caller_id_number, destination_caller_id_name from v_destinations where domain_uuid = '$this->domain_uuid' and destination_type = 'inbound' and destination_uuid = '$this->follow_me_caller_id_uuid'";
-						$prep_statement_caller = $db->prepare($sql_caller);
-						if ($prep_statement_caller) {
-							$prep_statement_caller->execute();
-							$row_caller = $prep_statement_caller->fetch(PDO::FETCH_ASSOC);
-
-							$caller_id_number = $row_caller['destination_caller_id_number'];
-							if(strlen($caller_id_number) == 0){
-								$caller_id_number = $row_caller['destination_number'];
-							}
-							$caller_id_name = $row_caller['destination_caller_id_name'];
-							if(strlen($caller_id_name) == 0){
-								$caller_id_name = $row_caller['destination_description'];
-							}
-
-							if (strlen($caller_id_name) > 0) {
-								$dial_string_caller_id_name = $caller_id_name;
-							}
-							if (strlen($caller_id_number) > 0) {
-								$dial_string_caller_id_number = $caller_id_number;
-							}
+					if (($presence_id = extension_presence_id($row["follow_me_destination"])) !== false) {
+						$variables[] = "presence_id=".$presence_id."@".$_SESSION['domain_name'];
+						if ($row["follow_me_prompt"] == "1") {
+							$variables[] = "group_confirm_key=exec";
+							$variables[] = "group_confirm_file=lua confirm.lua";
+							$variables[] = "confirm=true";
 						}
-					}
+						if ($this->follow_me_ignore_busy != 'true') {
+							$variables[] = "fail_on_single_reject=USER_BUSY";
+						}
+						//accountcode
+						if (strlen($this->accountcode) == 0) {
+							$variables[] = "sip_h_X-accountcode=\${accountcode}";
+						}
+						else {
+							$variables[] = "sip_h_X-accountcode=".$this->accountcode;
+							$variables[] = "accountcode=".$this->accountcode;
+						}
+						//toll allow
+						if ($this->toll_allow != '') {
+							$variables[] = "toll_allow=''".$this->toll_allow."''";
+						}
 
-					if (strlen($this->cid_name_prefix) > 0) {
-						$dial_string .= ",origination_caller_id_name=".$this->cid_name_prefix."$dial_string_caller_id_name";
+						$variables[] = "instant_ringback=true";
+						$variables[] = "ignore_early_media=true";
+						$variables[] = "domain_uuid=".$_SESSION['domain_uuid'];
+						$variables[] = "sip_invite_domain=".$_SESSION['domain_name'];
+						$variables[] = "domain_name=".$_SESSION['domain_name'];
+						$variables[] = "domain=".$_SESSION['domain_name'];
+						$variables[] = "extension_uuid=".$this->extension_uuid;
+						$variables[] = "leg_delay_start=".$row["follow_me_delay"];
+						$variables[] = "leg_timeout=".$row["follow_me_timeout"];
+
+						//$dial_string .= "\${sofia_contact(".$row["follow_me_destination"]."@".$_SESSION['domain_name'].")}";
+						$dial_string .= "[".implode(",", $variables)."]user/".$row["follow_me_destination"]."@".$_SESSION['domain_name'];
+						unset($variables);
 					}
 					else {
-						$dial_string .= ",origination_caller_id_name=$dial_string_caller_id_name";
-					}
+						$presence_id = extension_presence_id($this->extension, $this->number_alias);
+						$variables[] = "presence_id=".$presence_id."@".$_SESSION['domain_name'];
 
-					if (strlen($this->cid_number_prefix) > 0) {
-						//$dial_string .= ",origination_caller_id_number=".$this->cid_number_prefix."";
-					$dial_string .= ",origination_caller_id_number=".$this->cid_number_prefix."$dial_string_caller_id_number";
-					}
-					else {
-						$dial_string .= ",origination_caller_id_number=$dial_string_caller_id_number";
-					}
-
-					if (strlen($this->accountcode) > 0) {
-						$dial_string .= ",sip_h_X-accountcode=".$this->accountcode;
-						$dial_string .= ",accountcode=".$this->accountcode;
-					}
-					$dial_string .= ",toll_allow='".$this->toll_allow."'";
-					$dial_string .= "}";
-					$x = 0;
-					if (is_array($result)) foreach ($result as &$row) {
-						if ($x > 0) {
-							$dial_string .= ",";
-						}
-						if (extension_exists($row["follow_me_destination"])) {
-							//set the dial string
-							if (strlen($_SESSION['domain']['dial_string']['text']) == 0) {
-								$dial_string .= "[";
-								$dial_string .= "outbound_caller_id_number=$dial_string_caller_id_number,";
-								$dial_string .= "presence_id=".$row["follow_me_destination"]."@".$_SESSION['domain_name'].",";
-								if ($row["follow_me_prompt"] == "1") {
-									$dial_string .= "group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true,";
-								}
-								$dial_string .= "leg_delay_start=".$row["follow_me_delay"].",";
-								$dial_string .= "leg_timeout=".$row["follow_me_timeout"]."]";
-								$dial_string .= "\${sofia_contact(".$row["follow_me_destination"]."@".$_SESSION['domain_name'].")}";
+						/*
+						//set the caller id
+						if ($_SESSION['cdr']['follow_me_fix']['boolean'] == "true") {
+							if (strlen($this->outbound_caller_id_name) > 0) {
+								$variables[] = "origination_caller_id_name=".$this->cid_name_prefix.$this->outbound_caller_id_name;
+								$variables[] = "effective_caller_id_name=".$this->cid_name_prefix.$this->outbound_caller_id_name;
 							}
-							else {
-								$replace_value = $row["follow_me_destination"];
-								if ($row["follow_me_prompt"] == "1") {
-									$replace_value .= "[group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true]";
-								}
-								$local_dial_string = $_SESSION['domain']['dial_string']['text'];
-								$local_dial_string = str_replace("\${dialed_user}", $replace_value, $local_dial_string);
-								$local_dial_string = str_replace("\${dialed_domain}", $_SESSION['domain_name'], $local_dial_string);
-								$local_dial_string = str_replace("\${call_timeout}", $row["follow_me_timeout"], $local_dial_string);
-								$local_dial_string = str_replace("\${leg_timeout}", $row["follow_me_timeout"], $local_dial_string);
-								$dial_string .= $local_dial_string;
+							if (strlen($this->outbound_caller_id_number) > 0) {
+								$variables[] = "origination_caller_id_number=".$this->cid_number_prefix.$this->outbound_caller_id_number;
+								$variables[] = "effective_caller_id_number=".$this->cid_number_prefix.$this->outbound_caller_id_number;
 							}
 						}
 						else {
-							$dial_string .= "[";
-							if ($_SESSION['cdr']['follow_me_fix']['boolean'] == "true"){
-								$dial_string .= "outbound_caller_id_name=".$this->outbound_caller_id_name;
-								$dial_string .= ",outbound_caller_id_number=".$this->outbound_caller_id_number;
-								$dial_string .= ",origination_caller_id_name=".$this->outbound_caller_id_name;
-								$dial_string .= ",origination_caller_id_number=".$this->outbound_caller_id_number;
-							}
-							else{
-								$dial_string .= "outbound_caller_id_number=$dial_string_caller_id_number";
-							}
-							$dial_string .= ",presence_id=".$this->extension."@".$_SESSION['domain_name'];
-							if ($row["follow_me_prompt"] == "1") {
-								$dial_string .= ",group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true,";
-							}
-							$dial_string .= ",leg_delay_start=".$row["follow_me_delay"];
-							$dial_string .= ",leg_timeout=".$row["follow_me_timeout"]."]";
-							if (is_numeric($row["follow_me_destination"])) {
-								if ($_SESSION['domain']['bridge']['text'] == "outbound" || $_SESSION['domain']['bridge']['text'] == "bridge") {
-									$bridge = outbound_route_to_bridge ($_SESSION['domain_uuid'], $row["follow_me_destination"]);
-									$dial_string .= $bridge[0];
+							if (strlen($caller_id_number) > 0) {
+								//set the caller id if it is set
+								if (strlen($caller_id_name) > 0) { 
+									$variables[] = "origination_caller_id_name=".$this->cid_name_prefix.$caller_id_name; 
+									$variables[] = "effective_caller_id_name=".$this->cid_name_prefix.$caller_id_name;
 								}
-								elseif ($_SESSION['domain']['bridge']['text'] == "loopback") {
-									$dial_string .= "loopback/".$row["follow_me_destination"]."/".$_SESSION['domain_name'];
-								}
-								elseif ($_SESSION['domain']['bridge']['text'] == "lcr") {
-									$dial_string .= "lcr/".$_SESSION['lcr']['profile']['text']."/".$_SESSION['domain_name']."/".$row["follow_me_destination"];
-								}
-								else {
-									$dial_string .= "loopback/".$row["follow_me_destination"]."/".$_SESSION['domain_name'];
-								}
+								$variables[] = "origination_caller_id_number=".$this->cid_number_prefix.$caller_id_number;
+								$variables[] = "effective_caller_id_number=".$this->cid_number_prefix.$caller_id_number;
 							}
 							else {
-								$dial_string .= $row["follow_me_destination"];
+								//set the outbound caller id number if the caller id number is a user
+								$variables[] = "origination_caller_id_number=${cond(${from_user_exists} == true ? ${outbound_caller_id_number} : ${origination_caller_id_number})}';
+								$variables[] = "effective_caller_id_number=${cond(${from_user_exists} == true ? ${outbound_caller_id_number} : ${effective_caller_id_number})}';
+								$variables[] = "origination_caller_id_name=${cond(${from_user_exists} == true ? ${outbound_caller_id_name} : ${origination_caller_id_name})}';
+								$variables[] = "effective_caller_id_name=${cond(${from_user_exists} == true ? ${outbound_caller_id_name} : ${effective_caller_id_name})}';
 							}
 						}
-						$x++;
+						*/
+						//accountcode
+						if (strlen($this->accountcode) == 0) {
+							$variables[] = "sip_h_X-accountcode=\${accountcode}";
+						}
+						else {
+							$variables[] = "sip_h_X-accountcode=".$this->accountcode;
+							$variables[] = "accountcode=".$this->accountcode;
+						}
+
+						//toll allow
+						if ($this->toll_allow != '') {
+							$variables[] = "toll_allow=''".$this->toll_allow."''";
+						}
+
+						if ($this->follow_me_ignore_busy != 'true') {
+							$variables[] = "fail_on_single_reject=USER_BUSY";
+						}
+
+						if ($row["follow_me_prompt"] == "1") {
+							$variables[] = "group_confirm_key=exec";
+							$variables[] = "group_confirm_file=lua confirm.lua";
+							$variables[] = "confirm=true";
+						}
+
+						$variables[] = "instant_ringback=true";
+						$variables[] = "ignore_early_media=true";
+						$variables[] = "domain_uuid=".$_SESSION['domain_uuid'];
+						$variables[] = "sip_invite_domain=".$_SESSION['domain_name'];
+						$variables[] = "domain_name=".$_SESSION['domain_name'];
+						$variables[] = "domain=".$_SESSION['domain_name'];
+						$variables[] = "extension_uuid=".$this->extension_uuid;
+						$variables[] = "leg_delay_start=".$row["follow_me_delay"];
+						$variables[] = "originate_delay_start=".$row["follow_me_delay"];
+						$variables[] = "sleep=".($row["follow_me_delay"] * 1000);
+						$variables[] = "leg_timeout=".$row["follow_me_timeout"];
+
+						if (is_numeric($row["follow_me_destination"])) {
+							if ($_SESSION['domain']['bridge']['text'] == "outbound" || $_SESSION['domain']['bridge']['text'] == "bridge") {
+								$bridge = outbound_route_to_bridge ($_SESSION['domain_uuid'], $row["follow_me_destination"]);
+								$dial_string .= "[".implode(",", $variables)."]".$bridge[0];
+							}
+							elseif ($_SESSION['domain']['bridge']['text'] == "loopback") {
+								//$dial_string .= "loopback/".$row["follow_me_destination"]."/".$_SESSION['domain_name'];
+								$dial_string .= "loopback/export:".implode("\,export:", $variables)."\,transfer:".$row["follow_me_destination"]."/".$_SESSION['domain_name']."/inline";
+							}
+							elseif ($_SESSION['domain']['bridge']['text'] == "lcr") {
+								$dial_string .= "[".implode(",", $variables)."]lcr/".$_SESSION['lcr']['profile']['text']."/".$_SESSION['domain_name']."/".$row["follow_me_destination"];
+							}
+							else {
+								//$dial_string .= "loopback/".$row["follow_me_destination"]."/".$_SESSION['domain_name'];
+								$dial_string .= "loopback/export:".implode("\,export:", $variables)."\,transfer:".$row["follow_me_destination"]."/".$_SESSION['domain_name']."/inline";
+							}
+						}
+						else {
+							$dial_string .= $row["follow_me_destination"];
+						}
 					}
-					$this->dial_string = $dial_string;
+					$x++;
+				}
+				//$dial_string = str_replace(",]", "]", $dial_string);
+				$this->dial_string = "{ignore_early_media=true}".$dial_string;
+				unset($variables);
 
 				$sql  = "update v_follow_me set ";
-				$sql .= "dial_string = '".$this->dial_string."' ";
+				$sql .= "dial_string = '".check_str($this->dial_string)."' ";
 				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
 				$sql .= "and follow_me_uuid = '".$this->follow_me_uuid."' ";
 				if ($this->debug) {
@@ -425,11 +461,16 @@ include "root.php";
 				$dial_string = '';
 				if ($this->follow_me_enabled == "true") {
 					$dial_string = $this->dial_string;
+					$this->follow_me_destinations = $this->dial_string;
+				}
+				else {
+					$this->follow_me_destinations = '';
 				}
 
 				$sql  = "update v_extensions set ";
-				$sql .= "dial_string = '".check_str($dial_string)."', ";
-				$sql .= "dial_domain = '".$_SESSION['domain_name']."' ";
+				$sql .= "dial_domain = '".$_SESSION['domain_name']."', ";
+				$sql .= "follow_me_destinations = '".$this->follow_me_destinations."', ";
+				$sql .= "follow_me_enabled = '".$this->follow_me_enabled."' ";
 				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
 				$sql .= "and follow_me_uuid = '".$this->follow_me_uuid."' ";
 				if ($this->debug) {

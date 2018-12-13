@@ -23,8 +23,6 @@
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
 
-	local Database = require "resources.functions.database"
-
 --define function to listen to the recording
 	function listen_to_recording (message_number, uuid, created_epoch, caller_id_name, caller_id_number)
 
@@ -66,23 +64,28 @@
 		--say the message date
 			if (session:ready()) then
 				if (string.len(dtmf_digits) == 0) then
-					if (current_time_zone ~= nil) then
-						session:execute("set", "timezone="..current_time_zone.."");
+					if (vm_say_date_time ~= nil) then
+						if (vm_say_date_time == "true") then
+							if (current_time_zone ~= nil) then
+								session:execute("set", "timezone="..current_time_zone.."");
+							end
+							session:say(created_epoch, default_language, "current_date_time", "pronounced");
+						end
 					end
-					session:say(created_epoch, default_language, "current_date_time", "pronounced");
 				end
 			end
 		--get the recordings from the database
 			if (storage_type == "base64") then
 				local dbh = Database.new('system', 'base64/read')
 
-				sql = [[SELECT * FROM v_voicemail_messages
-					WHERE domain_uuid = ']] .. domain_uuid ..[['
-					AND voicemail_message_uuid = ']].. uuid.. [[' ]];
+				local sql = [[SELECT * FROM v_voicemail_messages
+					WHERE domain_uuid = :domain_uuid
+					AND voicemail_message_uuid = :uuid]];
+				local params = {domain_uuid = domain_uuid, uuid = uuid};
 				if (debug["sql"]) then
-					freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "\n");
+					freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 				end
-				status = dbh:query(sql, function(row)
+				dbh:query(sql, params, function(row)
 					--set the voicemail message path
 						mkdir(voicemail_dir.."/"..voicemail_id);
 						message_intro_location = voicemail_dir.."/"..voicemail_id.."/intro_"..uuid.."."..vm_message_ext;
@@ -214,6 +217,10 @@
 				elseif (dtmf_digits == "7") then
 					delete_recording(voicemail_id, uuid);
 					message_waiting(voicemail_id, domain_uuid);
+					--fix for extensions that start with 0 (Ex: 0712)
+						if (voicemail_id_copy ~= voicemail_id  and voicemail_id_copy ~= nil) then
+							message_waiting(voicemail_id_copy, domain_uuid);
+						end
 				elseif (dtmf_digits == "8") then
 					forward_to_extension(voicemail_id, uuid);
 					dtmf_digits = '';

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2016 All Rights Reserved.
+	Copyright (C) 2008-2018 All Rights Reserved.
 
 */
 
@@ -120,8 +120,7 @@
 			}
 			unset($prep_statement, $row);
 			if ($total_devices >= $_SESSION['limit']['devices']['numeric']) {
-				$_SESSION['message_mood'] = 'negative';
-				$_SESSION['message'] = $text['message-maximum_devices'].' '.$_SESSION['limit']['devices']['numeric'];
+				message::add($text['message-maximum_devices'].' '.$_SESSION['limit']['devices']['numeric'], 'negative');
 				header('Location: devices.php');
 				return;
 			}
@@ -137,11 +136,11 @@
 				$_POST["device_mac_address"] = $device_mac_address;
 			}
 			else {
-				$orm = new orm;
-				$orm->name('devices');
-				$orm->uuid($device_uuid);
-				$result = $orm->find()->get();
-				//$message = $orm->message;
+				$sql = "select * from v_devices ";
+				$sql .= "where device_uuid = '$device_uuid' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				foreach ($result as &$row) {
 					$device_mac_address = $row["device_mac_address"];
 					$_POST["device_mac_address"] = $device_mac_address;
@@ -178,6 +177,7 @@
 			$device_key_value = check_str($_POST["device_key_value"]);
 			$device_key_extension = check_str($_POST["device_key_extension"]);
 			$device_key_label = check_str($_POST["device_key_label"]);
+			$device_key_icon = check_str($_POST["device_key_icon"]);
 		//settings
 			//$device_setting_category = check_str($_POST["device_setting_category"]);
 			$device_setting_subcategory = check_str($_POST["device_setting_subcategory"]);
@@ -296,15 +296,19 @@
 						$save = true;
 					}
 
+				//prepare the array
+					$array['devices'][] = $_POST;
+
 				//save the device
 					if ($save) {
-						$orm = new orm;
-						$orm->name('devices');
+						$database = new database;
+						$database->app_name = 'devices';
+						$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 						if (strlen($device_uuid) > 0) {
-							$orm->uuid($device_uuid);
+							$database->uuid($device_uuid);
 						}
-						$orm->save($_POST);
-						$response = $orm->message;
+						$database->save($array);
+						$response = $database->message;
 						if (strlen($response['uuid']) > 0) {
 							$device_uuid = $response['uuid'];
 						}
@@ -312,7 +316,9 @@
 
 				//write the provision files
 					if (strlen($_SESSION['provision']['path']['text']) > 0) {
-						require_once "app/provision/provision_write.php";
+						$prov = new provision;
+						$prov->domain_uuid = $domain_uuid;
+						$response = $prov->write();
 					}
 
 				//set the message
@@ -320,11 +326,11 @@
 						if ($save) {
 							if ($action == "add") {
 								//save the message to a session variable
-									$_SESSION['message'] = $text['message-add'];
+									message::add($text['message-add']);
 							}
 							if ($action == "update") {
 								//save the message to a session variable
-									$_SESSION['message'] = $text['message-update'];
+									message::add($text['message-update']);
 							}
 							//redirect the browser
 								header("Location: device_edit.php?id=$device_uuid");
@@ -337,13 +343,14 @@
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-		$orm = new orm;
-		$orm->name('devices');
-		$orm->uuid($device_uuid);
-		$result = $orm->find()->get();
-		//$message = $orm->message;
+		$sql = "select * from v_devices ";
+		$sql .= "where device_uuid = '$device_uuid' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
 			$device_mac_address = $row["device_mac_address"];
+			$device_provisioned_ip = $row["device_provisioned_ip"];
 			$domain_uuid = $row["domain_uuid"];
 			$device_label = $row["device_label"];
 			//$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
@@ -386,7 +393,7 @@
 //get device lines
 	$sql = "SELECT * FROM v_device_lines ";
 	$sql .= "where device_uuid = '".$device_uuid."' ";
-	$sql .= "order by line_number asc ";
+	$sql .= "order by cast(line_number as int) asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$device_lines = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -398,6 +405,7 @@
 	$device_lines[$x]['user_id'] = '';
 	$device_lines[$x]['auth_id'] = '';
 	$device_lines[$x]['password'] = '';
+	$device_lines[$x]['shared_line'] = '';
 	$device_lines[$x]['enabled'] = '';
 	$device_lines[$x]['sip_port'] = $_SESSION['provision']['line_sip_port']['numeric'];
 	$device_lines[$x]['sip_transport'] = $_SESSION['provision']['line_sip_transport']['text'];
@@ -413,6 +421,8 @@
 	$sql .= "WHEN 'memory' THEN 2 ";
 	$sql .= "WHEN 'programmable' THEN 3 ";
 	$sql .= "WHEN 'expansion' THEN 4 ";
+	$sql .= "WHEN 'expansion-1' THEN 5 ";
+	$sql .= "WHEN 'expansion-2' THEN 6 ";
 	$sql .= "ELSE 100 END, ";
 	if ($db_type == "mysql") {
 		$sql .= "device_key_id asc ";
@@ -430,11 +440,21 @@
 	$device_keys[$x]['device_key_value'] = '';
 	$device_keys[$x]['device_key_extension'] = '';
 	$device_keys[$x]['device_key_label'] = '';
+	$device_keys[$x]['device_key_icon'] = '';
+
+//get the device vendors
+	$sql = "SELECT name ";
+	$sql .= "FROM v_device_vendors ";
+	$sql .= "WHERE enabled = 'true' ";
+	$sql .= "ORDER BY name ASC ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$device_vendors = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
 //get the vendor functions
 	$sql = "SELECT v.name as vendor_name, f.name, f.value ";
 	$sql .= "FROM v_device_vendors as v, v_device_vendor_functions as f ";
-	$sql .= "where v.device_vendor_uuid = f.device_vendor_uuid ";
+	$sql .= "WHERE v.device_vendor_uuid = f.device_vendor_uuid ";
 	$sql .= "and v.enabled = 'true' ";
 	$sql .= "and f.enabled = 'true' ";
 	$sql .= "order by v.name asc, f.name asc ";
@@ -457,6 +477,7 @@
 //get the users
 	$sql = "SELECT * FROM v_users ";
 	$sql .= "WHERE domain_uuid = '".$domain_uuid."' ";
+	$sql .= "AND user_enabled = 'true' ";
 	$sql .= "ORDER by username asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
@@ -465,6 +486,30 @@
 //use the mac address to get the vendor
 	if (strlen($device_vendor) == 0) {
 		$device_vendor = device::get_vendor($device_mac_address);
+	}
+
+//get the device line info for provision button
+	foreach($device_lines as $row) {
+		if (strlen($row['user_id']) > 0) {
+			$user_id = $row['user_id'];
+		}
+		if (strlen($row['server_address']) > 0) {
+			$server_address = $row['server_address'];
+		}
+	}
+
+//get the sip profile name
+	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	if ($fp) {
+		$command = "sofia_contact */".$user_id."@".$server_address;
+		$contact_string = event_socket_request($fp, "api ".$command);
+		if (substr($contact_string, 0, 5) == "sofia") {
+			$contact_array = explode("/", $contact_string);
+			$sip_profile_name = $contact_array[1];
+		}
+		else {
+			$sip_profile_name = 'internal';
+		}
 	}
 
 //show the header
@@ -502,50 +547,6 @@
 			obj[0].parentNode.removeChild(obj[2]);
 		}
 
-		function check_duplicates() {
-			//check mac
-			var mac_addr = document.getElementById('device_mac_address').value;
-			$("#duplicate_mac_response").load("device_edit.php?check=duplicate&mac="+mac_addr+"&device_uuid=<?php echo $device_uuid;?>", function() {
-				var duplicate_mac = false;
-
-				if ($("#duplicate_mac_response").html() != '') {
-					$('#device_mac_address').addClass('formfld_highlight_bad');
-					display_message($("#duplicate_mac_response").html(), 'negative'<?php if (if_group("superadmin")) { echo ', 3000'; } ?>);
-					duplicate_mac = true;
-				}
-				else {
-					$("#duplicate_mac_response").html('');
-					$('#device_mac_address').removeClass('formfld_highlight_bad');
-					duplicate_mac = false;
-				}
-
-				//check username
-				if (duplicate_mac == false) {
-					var username = document.getElementById('device_username').value;
-					var domain_uuid = document.getElementById('domain_uuid').value;
-					if (username != '') {
-						$("#duplicate_username_response").load("device_edit.php?check=duplicate&username="+username+"&domain_uuid="+domain_uuid+"&device_uuid=<?php echo $device_uuid;?>", function() {
-							var duplicate_username = false;
-
-							if ($("#duplicate_username_response").html() != '') {
-								$('#device_username').addClass('formfld_highlight_bad');
-								display_message($("#duplicate_username_response").html(), 'negative'<?php if (if_group("superadmin")) { echo ', 3000'; } ?>);
-								duplicate_username = true;
-							}
-							else {
-								$("#duplicate_username_response").html('');
-								$('#device_username').removeClass('formfld_highlight_bad');
-								duplicate_username = false;
-								submit_form_2();
-							}
-						});
-					}
-					else {
-						submit_form_2();
-					}
-				}
-			});
-		}
 	</script>
 
 <?php
@@ -589,7 +590,7 @@
 			if ($_SERVER['HTTPS'] == 'on') { $_SERVER['HTTP_PROTOCOL'] = 'https'; }
 			if ($_SERVER['SERVER_PORT'] == '443') { $_SERVER['HTTP_PROTOCOL'] = 'https'; }
 		}
-		echo "		window.location = '".$_SERVER['HTTP_PROTOCOL']."://".$domain_name.PROJECT_PATH."/app/provision?mac=".$device_mac_address."&file=' + d + '&content_type=application/octet-stream';\n";
+		echo "		window.location = '".$_SERVER['HTTP_PROTOCOL']."://".$domain_name.PROJECT_PATH."/app/provision/index.php?mac=".escape($device_mac_address)."&file=' + d + '&content_type=application/octet-stream';\n";
 		echo "	}\n";
 
 		echo "\n";
@@ -612,6 +613,105 @@
 		echo "</script>";
 	}
 
+//add the QR code
+	if (permission_exists("device_line_password") && $device_template == "grandstream/wave") {
+		//set the mode
+		if (isset($_SESSION['theme']['qr_image'])) {
+			if (strlen($_SESSION['theme']['qr_image']) > 0) {
+				$mode = '4';
+			}
+			else {
+				$mode = '0';
+			}
+		}
+		else {
+			$mode = '4';
+		}
+
+		//get the device line settings
+		$row = $device_lines[0];
+
+		//set the outbound proxy settings
+		if (strlen($row['outbound_proxy_primary']) == 0) {
+			$outbound_proxy_primary = $row['server_address'];
+		}
+		else {
+			$outbound_proxy_primary = $row['outbound_proxy_primary'];
+		}
+		$outbound_proxy_secondary = $row['outbound_proxy_secondary'];
+
+		//build the xml
+		$xml =  "<?xml version='1.0' encoding='utf-8'?>";
+		$xml .= "<AccountConfig version='1'>";
+		$xml .= "<Account>";
+		$xml .= "<RegisterServer>".$row['server_address']."</RegisterServer>";
+		$xml .= "<OutboundServer>".$outbound_proxy_primary.":".$row['sip_port']."</OutboundServer>";
+		$xml .= "<SecOutboundServer>".$outbound_proxy_secondary.":".$row['sip_port']."</SecOutboundServer>";
+		$xml .= "<UserID>".$row['user_id']."</UserID>";
+		$xml .= "<AuthID>".$row['auth_id']."</AuthID>";
+		$xml .= "<AuthPass>".$row['password']."</AuthPass>";
+		$xml .= "<AccountName>".$row['user_id']."</AccountName>";
+		$xml .= "<DisplayName>".$row['display_name']."</DisplayName>";
+		$xml .= "<Dialplan>{x+|*x+|*++}</Dialplan>";
+		$xml .= "<RandomPort>0</RandomPort>";
+		$xml .= "<Voicemail>*97</Voicemail>";
+		$xml .= "</Account>";
+		$xml .= "</AccountConfig>";
+
+		//qr code generation
+		$_GET['type'] = "text";
+		echo "<input type='hidden' id='qr_card' value=\"".escape($xml)."\">";
+		echo "<style>";
+		echo "	#qr_code_container {";
+		echo "		z-index: 999999; ";
+		echo "		position: absolute; ";
+		echo "		left: 0px; ";
+		echo "		top: 0px; ";
+		echo "		right: 0px; ";
+		echo "		bottom: 0px; ";
+		echo "		text-align: center; ";
+		echo "		vertical-align: middle;";
+		echo "	}";
+		echo "	#qr_code {";
+		echo "		display: block; ";
+		echo "		width: 650px; ";
+		echo "		height: 650px; ";
+		echo "		-webkit-box-shadow: 0px 1px 20px #888; ";
+		echo "		-moz-box-shadow: 0px 1px 20px #888; ";
+		echo "		box-shadow: 0px 1px 20px #888;";
+		echo "	}";
+		echo "</style>";
+		echo "<script src='".PROJECT_PATH."/resources/jquery/jquery.qrcode-0.8.0.min.js'></script>";
+		echo "<script language='JavaScript' type='text/javascript'>";
+		echo "	$(document).ready(function() {";
+		echo "		$(window).load(function() {";
+		echo "			$('#qr_code').qrcode({ ";
+		echo "				render: 'canvas', ";
+		echo "				minVersion: 6, ";
+		echo "				maxVersion: 40, ";
+		echo "				ecLevel: 'H', ";
+		echo "				size: 650, ";
+		echo "				radius: 0.2, ";
+		echo "				quiet: 6, ";
+		echo "				background: '#fff', ";
+		echo "				mode: ".$mode.", ";
+		echo "				mSize: 0.2, ";
+		echo "				mPosX: 0.5, ";
+		echo "				mPosY: 0.5, ";
+		echo "				image: $('#img-buffer')[0], ";
+		echo "				text: document.getElementById('qr_card').value ";
+		echo "			});";
+		echo "		});";
+		echo "	});";
+		echo "</script>";
+		if (isset($_SESSION['theme']['qr_image'])) {
+			echo "<img id='img-buffer' src='".$_SESSION["theme"]["qr_image"]["text"]."' style='display: none;'>";
+		}
+		else {
+			echo "<img id='img-buffer' src='".PROJECT_PATH."/themes/".$_SESSION["domain"]["template"]["name"]."/images/qr_code.png' style='display: none;'>";
+		}
+	}
+
 //show the content
 	echo "<form name='frm' id='frm' method='post' action=''>\n";
 	echo "<input type='hidden' name='file_action' id='file_action' value='' />\n";
@@ -622,6 +722,10 @@
 	echo "</td>\n";
 	echo "<td align='right' valign='top'>\n";
 	echo "	<input type='button' class='btn' id='button_back_location' name='' alt='".$text['button-back']."' onclick=\"window.location='devices.php'\" value='".$text['button-back']."'/>\n";
+	if (permission_exists("device_line_password") && $device_template == "grandstream/wave") {
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-qr_code']."' onclick=\"$('#qr_code_container').fadeIn(400);\" value='".$text['button-qr_code']."'>\n";
+	}
+	echo "	<input type='button' class='btn' value='".$text['button-provision']."' onclick=\"document.location.href='".PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&profile=".escape($sip_profile_name)."&user=".escape($user_id)."@".escape($server_address)."&domain=".$server_address."&agent=".escape($device_vendor)."';\">&nbsp;\n";
 	if (permission_exists("device_files")) {
 		//get the template directory
 			$prov = new provision;
@@ -645,10 +749,9 @@
 			echo "		</select>\n";
 			//echo "		<input type='button' class='btn' id='button_download' style='display: none;' alt='".$text['button-download']."' value='".$text['button-download']."' onclick='document.forms.frm.submit();'>";
 	}
-//	echo "		<input type='button' class='btn' alt='".$text['button-provision']."' value='".$text['button-provision']."' onclick=\"document.location.href='".PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&profile=".$sip_profile_name."&show=".$show."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" ".$onhover_pause_refresh.">\n";
 
 	if (permission_exists('device_add') && $action != "add") {
-		echo "	<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"var new_mac = prompt('".$text['message_device']."'); if (new_mac != null) { window.location='device_copy.php?id=".$device_uuid."&mac=' + new_mac; }\" value='".$text['button-copy']."'/>\n";
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"var new_mac = prompt('".$text['message_device']."'); if (new_mac != null) { window.location='device_copy.php?id=".escape($device_uuid)."&mac=' + new_mac; }\" value='".$text['button-copy']."'/>\n";
 	}
 	echo "	<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'/>\n";
 	echo "</td>\n";
@@ -668,17 +771,17 @@
 	echo "</td>\n";
 	echo "<td class='vtable' width='70%' align='left'>\n";
 	if (permission_exists('device_mac_address')) {
-		echo "	<input class='formfld' type='text' name='device_mac_address' id='device_mac_address' maxlength='255' value=\"$device_mac_address\"/>\n";
+		echo "	<input class='formfld' type='text' name='device_mac_address' id='device_mac_address' maxlength='255' value=\"".escape($device_mac_address)."\"/>\n";
 		echo "<br />\n";
 		echo $text['description-device_mac_address']."\n";
 	}
 	else {
-		echo $device_mac_address;
+		echo escape($device_mac_address);
 	}
 	echo "	<div style='display: none;' id='duplicate_mac_response'></div>\n";
+	echo " ".escape($device_provisioned_ip)."(<a href='http://".escape($device_provisioned_ip)."' target='_blank'>http</a>|<a href='https://".escape($device_provisioned_ip)."' target='_blank'>https</a>)\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -686,14 +789,13 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	if (permission_exists('device_label')) {
-		echo "	<input class='formfld' type='text' name='device_label' maxlength='255' value=\"$device_label\"/>\n";
+		echo "	<input class='formfld' type='text' name='device_label' maxlength='255' value=\"".escape($device_label)."\"/>\n";
 		echo "<br />\n";
 		echo $text['description-device_label']."\n";
 	}
 	else {
-		echo $device_label;
+		echo escape($device_label);
 	}
-
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -705,40 +807,30 @@
 		echo "<td class='vtable' align='left'>\n";
 		$device = new device;
 		$template_dir = $device->get_template_dir();
-
-		echo "<select id='device_template' name='device_template' class='formfld'>\n";
-		echo "<option value=''></option>\n";
-
-		if (is_dir($template_dir)) {
-				$templates = scandir($template_dir);
+		echo "	<select id='device_template' name='device_template' class='formfld'>\n";
+		echo "		<option value=''></option>\n";
+		if (is_dir($template_dir) && is_array($device_vendors)) {
+			foreach($device_vendors as $row) {
+				echo "		<optgroup label='".escape($row["name"])."'>\n";
+				$templates = scandir($template_dir.'/'.$row["name"]);
 				foreach($templates as $dir) {
-					if($file != "." && $dir != ".." && $dir[0] != '.') {
-						if(is_dir($template_dir . "/" . $dir)) {
-							echo "<optgroup label='$dir'>";
-							$dh_sub=$template_dir . "/" . $dir;
-							if(is_dir($dh_sub)) {
-								$templates_sub = scandir($dh_sub);
-								foreach($templates_sub as $dir_sub) {
-									if($file_sub != '.' && $dir_sub != '..' && $dir_sub[0] != '.') {
-										if(is_dir($template_dir . '/' . $dir .'/'. $dir_sub)) {
-											if ($device_template == $dir."/".$dir_sub) {
-												echo "<option value='".$dir."/".$dir_sub."' selected='selected'>".$dir."/".$dir_sub."</option>\n";
-											}
-											else {
-												echo "<option value='".$dir."/".$dir_sub."'>".$dir."/".$dir_sub."</option>\n";
-											}
-										}
-									}
-								}
+					if ($file != "." && $dir != ".." && $dir[0] != '.') {
+						if (is_dir($template_dir . '/' . $row["name"] .'/'. $dir)) {
+							if ($device_template == $row["name"]."/".$dir) {
+								echo "			<option value='".escape($row["name"])."/".escape($dir)."' selected='selected'>".escape($row["name"])."/".escape($dir)."</option>\n";
 							}
-							echo "</optgroup>";
+							else {
+								echo "			<option value='".escape($row["name"])."/".escape($dir)."'>".$row["name"]."/".escape($dir)."</option>\n";
+							}
 						}
 					}
 				}
+				echo "		</optgroup>\n";
 			}
-		echo "</select>\n";
-		echo "<br />\n";
-		echo $text['description-device_template']."\n";
+		}
+		echo "	</select>\n";
+		echo "	<br />\n";
+		echo "	".$text['description-device_template']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
@@ -753,10 +845,16 @@
 		if (permission_exists('device_line_server_address')) {
 			echo "				<td class='vtable'>".$text['label-server_address']."</td>\n";
 		}
-		if (permission_exists('device_outbound_proxy_primary')) {
+		if (permission_exists('device_line_server_address_primary')) {
+			echo "				<td class='vtable'>".$text['label-server_address_primary']."</td>\n";
+		}
+		if (permission_exists('device_line_server_address_secondary')) {
+			echo "				<td class='vtable'>".$text['label-server_address_secondary']."</td>\n";
+		}
+		if (permission_exists('device_line_outbound_proxy_primary')) {
 			echo "				<td class='vtable'>".$text['label-outbound_proxy_primary']."</td>\n";
 		}
-		if (permission_exists('device_outbound_proxy_secondary')) {
+		if (permission_exists('device_line_outbound_proxy_secondary')) {
 			echo "				<td class='vtable'>".$text['label-outbound_proxy_secondary']."</td>\n";
 		}
 		echo "				<td class='vtable'>".$text['label-display_name']."</td>\n";
@@ -773,6 +871,9 @@
 		}
 		if (permission_exists('device_line_register_expires')) {
 			echo "				<td class='vtable'>".$text['label-register_expires']."</td>\n";
+		}
+		if (permission_exists('device_line_shared')) {
+			echo "				<td class='vtable'>".$text['label-shared_line']."</td>\n";
 		}
 		echo "				<td class='vtable'>".$text['label-enabled']."</td>\n";
 		echo "				<td>&nbsp;</td>\n";
@@ -800,7 +901,7 @@
 				}
 			//add the primary key uuid
 				if (strlen($row['device_line_uuid']) > 0) {
-					echo "	<input name='device_lines[".$x."][device_line_uuid]' type='hidden' value=\"".$row['device_line_uuid']."\"/>\n";
+					echo "	<input name='device_lines[".$x."][device_line_uuid]' type='hidden' value=\"".escape($row['device_line_uuid'])."\"/>\n";
 				}
 			//show each row in the array
 				echo "			<tr>\n";
@@ -820,55 +921,103 @@
 				echo "				<option value='10' ".($row['line_number'] == "10" ? $selected:"").">10</option>\n";
 				echo "				<option value='11' ".($row['line_number'] == "11" ? $selected:"").">11</option>\n";
 				echo "				<option value='12' ".($row['line_number'] == "12" ? $selected:"").">12</option>\n";
+				echo "				<option value='13' ".($row['line_number'] == "13" ? $selected:"").">13</option>\n";
+				echo "				<option value='14' ".($row['line_number'] == "14" ? $selected:"").">14</option>\n";
+				echo "				<option value='15' ".($row['line_number'] == "15" ? $selected:"").">15</option>\n";
+				echo "				<option value='16' ".($row['line_number'] == "16" ? $selected:"").">16</option>\n";
+				echo "				<option value='17' ".($row['line_number'] == "17" ? $selected:"").">17</option>\n";
+				echo "				<option value='18' ".($row['line_number'] == "18" ? $selected:"").">18</option>\n";
+				echo "				<option value='19' ".($row['line_number'] == "19" ? $selected:"").">19</option>\n";
+				echo "				<option value='20' ".($row['line_number'] == "20" ? $selected:"").">20</option>\n";
+				echo "				<option value='21' ".($row['line_number'] == "21" ? $selected:"").">21</option>\n";
+				echo "				<option value='22' ".($row['line_number'] == "22" ? $selected:"").">22</option>\n";
+				echo "				<option value='23' ".($row['line_number'] == "23" ? $selected:"").">23</option>\n";
+				echo "				<option value='24' ".($row['line_number'] == "24" ? $selected:"").">24</option>\n";
+				echo "				<option value='25' ".($row['line_number'] == "25" ? $selected:"").">25</option>\n";
+				echo "				<option value='26' ".($row['line_number'] == "26" ? $selected:"").">26</option>\n";
+				echo "				<option value='27' ".($row['line_number'] == "27" ? $selected:"").">27</option>\n";
+				echo "				<option value='28' ".($row['line_number'] == "28" ? $selected:"").">28</option>\n";
+				echo "				<option value='29' ".($row['line_number'] == "29" ? $selected:"").">29</option>\n";
+				echo "				<option value='30' ".($row['line_number'] == "30" ? $selected:"").">30</option>\n";
+				echo "				<option value='31' ".($row['line_number'] == "31" ? $selected:"").">31</option>\n";
+				echo "				<option value='32' ".($row['line_number'] == "32" ? $selected:"").">32</option>\n";
+				echo "				<option value='33' ".($row['line_number'] == "33" ? $selected:"").">33</option>\n";
+				echo "				<option value='34' ".($row['line_number'] == "34" ? $selected:"").">34</option>\n";
+				echo "				<option value='35' ".($row['line_number'] == "35" ? $selected:"").">35</option>\n";
+				echo "				<option value='36' ".($row['line_number'] == "36" ? $selected:"").">36</option>\n";
+				echo "				<option value='37' ".($row['line_number'] == "37" ? $selected:"").">37</option>\n";
+				echo "				<option value='38' ".($row['line_number'] == "38" ? $selected:"").">38</option>\n";
+				echo "				<option value='39' ".($row['line_number'] == "39" ? $selected:"").">39</option>\n";
+				echo "				<option value='40' ".($row['line_number'] == "40" ? $selected:"").">40</option>\n";
+				echo "				<option value='41' ".($row['line_number'] == "41" ? $selected:"").">41</option>\n";
+				echo "				<option value='42' ".($row['line_number'] == "42" ? $selected:"").">42</option>\n";
+				echo "				<option value='43' ".($row['line_number'] == "43" ? $selected:"").">43</option>\n";
+				echo "				<option value='44' ".($row['line_number'] == "44" ? $selected:"").">44</option>\n";
+				echo "				<option value='45' ".($row['line_number'] == "45" ? $selected:"").">45</option>\n";
+				echo "				<option value='46' ".($row['line_number'] == "46" ? $selected:"").">46</option>\n";
+				echo "				<option value='47' ".($row['line_number'] == "47" ? $selected:"").">47</option>\n";
+				echo "				<option value='48' ".($row['line_number'] == "48" ? $selected:"").">48</option>\n";
 				echo "				</select>\n";
 				echo "			</td>\n";
+
 				if (permission_exists('device_line_server_address')) {
 					echo "			<td valign='top' align='left' nowrap='nowrap'>\n";
-					echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][server_address]' maxlength='255' value=\"".$row['server_address']."\"/>\n";
+					echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][server_address]' maxlength='255' value=\"".escape($row['server_address'])."\"/>\n";
 					echo "			</td>\n";
 				}
 				else {
-					echo "				<input type='hidden' name='device_lines[".$x."][server_address]' value=\"".$row['server_address']."\"/>\n";
+					echo "				<input type='hidden' name='device_lines[".$x."][server_address]' value=\"".escape($row['server_address'])."\"/>\n";
 				}
 
-				if (permission_exists('device_outbound_proxy_primary')) {
-					if (permission_exists('device_outbound_proxy_secondary')) {
+				if (permission_exists('device_line_server_address_primary')) {
+					echo "			<td valign='top' align='left' nowrap='nowrap'>\n";
+					echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][server_address_primary]' maxlength='255' value=\"".escape($row['server_address_primary'])."\"/>\n";
+					echo "			</td>\n";
+				}
+				if (permission_exists('device_line_server_address_secondary')) {
+					echo "			<td valign='top' align='left' nowrap='nowrap'>\n";
+					echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][server_address_secondary]' maxlength='255' value=\"".escape($row['server_address_secondary'])."\"/>\n";
+					echo "			</td>\n";
+				}
+
+				if (permission_exists('device_line_outbound_proxy_primary')) {
+					if (permission_exists('device_line_outbound_proxy_secondary')) {
 						$placeholder_label = $text['label-primary'];
 					}
 					echo "			<td align='left'>\n";
-					echo "				<input class='formfld' style='width: 65px;' type='text' name='device_lines[".$x."][outbound_proxy_primary]' placeholder=\"".$placeholder_label."\" maxlength='255' value=\"".$row['outbound_proxy_primary']."\"/>\n";
+					echo "				<input class='formfld' style='width: 65px;' type='text' name='device_lines[".$x."][outbound_proxy_primary]' placeholder=\"".escape($placeholder_label)."\" maxlength='255' value=\"".escape($row['outbound_proxy_primary'])."\"/>\n";
 					echo "			</td>\n";
 					unset($placeholder_label);
 				}
 				
-				if (permission_exists('device_outbound_proxy_secondary')) {
+				if (permission_exists('device_line_outbound_proxy_secondary')) {
 					echo "			<td align='left'>\n";
-					echo "				<input class='formfld' style='width: 65px;' type='text' name='device_lines[".$x."][outbound_proxy_secondary]' placeholder=\"".$text['label-secondary']."\" maxlength='255' value=\"".$row['outbound_proxy_secondary']."\"/>\n";
+					echo "				<input class='formfld' style='width: 65px;' type='text' name='device_lines[".$x."][outbound_proxy_secondary]' placeholder=\"".$text['label-secondary']."\" maxlength='255' value=\"".escape($row['outbound_proxy_secondary'])."\"/>\n";
 					echo "			</td>\n";
 				}
 
 				echo "			<td align='left'>\n";
-				echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][display_name]' maxlength='255' value=\"".$row['display_name']."\"/>\n";
+				echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][display_name]' maxlength='255' value=\"".escape($row['display_name'])."\"/>\n";
 				echo "			</td>\n";
 
 				echo "			<td align='left'>\n";
-				echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][user_id]' maxlength='255' value=\"".$row['user_id']."\"/>\n";
+				echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][user_id]' maxlength='255' autocomplete=\"off\" value=\"".escape($row['user_id'])."\"/>\n";
 				echo "			</td>\n";
 
 				if (permission_exists('device_line_auth_id')) {
 					echo "			<td align='left'>\n";
-					echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][auth_id]' maxlength='255' value=\"".$row['auth_id']."\"/>\n";
+					echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][auth_id]' maxlength='255' autocomplete=\"off\" value=\"".escape($row['auth_id'])."\"/>\n";
 					echo "			</td>\n";
 				}
 
 				if (permission_exists('device_line_password')) {
 					echo "			<td align='left'>\n";
-					echo "				<input class='formfld' style='width:75px;' type='password' name='device_lines[".$x."][password]' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" autocomplete=\"off\" maxlength='255' value=\"".$row['password']."\"/>\n";
+					echo "				<input class='formfld' style='width:75px;' type='password' name='device_lines[".$x."][password]' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" autocomplete=\"off\" maxlength='255' value=\"".escape($row['password'])."\"/>\n";
 					echo "			</td>\n";
 				}
 
 				echo "			<td align='left'>\n";
-				echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][sip_port]' maxlength='255' value=\"".$row['sip_port']."\"/>\n";
+				echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][sip_port]' maxlength='255' value=\"".escape($row['sip_port'])."\"/>\n";
 				echo "			</td>\n";
 
 				if (permission_exists('device_line_transport')) {
@@ -882,16 +1031,25 @@
 					echo "			</td>\n";
 				}
 				else {
-					echo "				<input type='hidden' name='device_lines[".$x."][sip_transport]' value=\"".$row['sip_transport']."\" />\n";
+					echo "				<input type='hidden' name='device_lines[".$x."][sip_transport]' value=\"".escape($row['sip_transport'])."\" />\n";
 				}
 
 				if (permission_exists('device_line_register_expires')) {
 					echo "			<td align='left'>\n";
-					echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][register_expires]' maxlength='255' value=\"".$row['register_expires']."\"/>\n";
+					echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][register_expires]' maxlength='255' value=\"".escape($row['register_expires'])."\"/>\n";
 					echo "			</td>\n";
 				}
 				else {
-					echo "				<input type='hidden' name='device_lines[".$x."][register_expires]' value=\"".$row['register_expires']."\"/>\n";
+					echo "				<input type='hidden' name='device_lines[".$x."][register_expires]' value=\"".escape($row['register_expires'])."\"/>\n";
+				}
+
+				if (permission_exists('device_line_shared')) {
+					echo "			<td align='left'>\n";
+					echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][shared_line]' maxlength='255' value=\"".escape($row['shared_line'])."\"/>\n";
+					echo "			</td>\n";
+				}
+				else {
+					echo "				<input type='hidden' name='device_lines[".$x."][shared_line]' value=\"".escape($row['shared_line'])."\"/>\n";
 				}
 
 				echo "			<td align='left'>\n";
@@ -904,7 +1062,7 @@
 			echo "				<td>\n";
 			if (strlen($row['device_line_uuid']) > 0) {
 				if (permission_exists('device_delete')) {
-					echo "					<a href='device_line_delete.php?device_uuid=".$row['device_uuid']."&id=".$row['device_line_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+					echo "					<a href='device_line_delete.php?device_uuid=".escape($row['device_uuid'])."&id=".escape($row['device_line_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 				}
 			}
 			echo "				</td>\n";
@@ -936,7 +1094,7 @@
 			echo "			<select class='formfld' id='device_profile_uuid' name='device_profile_uuid'>\n";
 			echo "				<option value=''></option>\n";
 			foreach($result as $row) {
-				echo "			<option value='".$row['device_profile_uuid']."' ".(($row['device_profile_uuid'] == $device_profile_uuid) ? "selected='selected'" : null).">".$row['device_profile_name']." ".(($row['domain_uuid'] == '') ? "&nbsp;&nbsp;(".$text['select-global'].")" : null)."</option>\n";
+				echo "			<option value='".escape($row['device_profile_uuid'])."' ".(($row['device_profile_uuid'] == $device_profile_uuid) ? "selected='selected'" : null).">".escape($row['device_profile_name'])." ".(($row['domain_uuid'] == '') ? "&nbsp;&nbsp;(".$text['select-global'].")" : null)."</option>\n";
 			}
 			echo "			</select>\n";
 			echo "			<button type='button' class='btn btn-default list_control_icon' id='device_profile_edit' onclick=\"if($('#device_profile_uuid').val() != '') window.location='device_profile_edit.php?id='+$('#device_profile_uuid').val();\"><span class='glyphicon glyphicon-pencil'></span></button>";
@@ -971,6 +1129,7 @@
 				echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
 			}
 			echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
+			echo "				<td class='vtable'>".$text['label-device_key_icon']."</td>\n";
 			echo "				<td>&nbsp;</td>\n";
 			echo "			</tr>\n";
 		}
@@ -993,6 +1152,7 @@
 						echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
 					}
 					echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
+					echo "				<td class='vtable'>".$text['label-device_key_icon']."</td>\n";
 					echo "				<td>&nbsp;</td>\n";
 					echo "			</tr>\n";
 				}
@@ -1007,7 +1167,7 @@
 				}
 			//add the primary key uuid
 				if (strlen($row['device_key_uuid']) > 0) {
-					echo "	<input name='device_keys[".$x."][device_key_uuid]' type='hidden' value=\"".$row['device_key_uuid']."\"/>\n";
+					echo "	<input name='device_keys[".$x."][device_key_uuid]' type='hidden' value=\"".escape($row['device_key_uuid'])."\"/>\n";
 				}
 			//show all the rows in the array
 				echo "			<tr>\n";
@@ -1020,11 +1180,13 @@
 				else {
 					echo "	<option value='line'>".$text['label-line']."</option>\n";
 				}
-				if ($row['device_key_category'] == "memory") {
-					echo "	<option value='memory' selected='selected'>".$text['label-memory']."</option>\n";
-				}
-				else {
-					echo "	<option value='memory'>".$text['label-memory']."</option>\n";
+				if ($row['device_key_vendor'] !== "polycom") {
+					if ($row['device_key_category'] == "memory") {
+						echo "	<option value='memory' selected='selected'>".$text['label-memory']."</option>\n";
+					}
+					else {
+						echo "	<option value='memory'>".$text['label-memory']."</option>\n";
+					}
 				}
 				if ($row['device_key_category'] == "programmable") {
 					echo "	<option value='programmable' selected='selected'>".$text['label-programmable']."</option>\n";
@@ -1032,21 +1194,13 @@
 				else {
 					echo "	<option value='programmable'>".$text['label-programmable']."</option>\n";
 				}
-				if (strlen($device_vendor) == 0) {
-					if ($row['device_key_category'] == "expansion") {
-						echo "	<option value='expansion' selected='selected'>".$text['label-expansion']."</option>\n";
-					}
-					else {
-						echo "	<option value='expansion'>".$text['label-expansion']."</option>\n";
-					}
-				}
-				else {
-					if (strtolower($device_vendor) == "cisco") {
-						if ($row['device_key_category'] == "expansion-1" || $row['device_key_category'] == "expansion") {
-							echo "	<option value='expansion-1' selected='selected'>".$text['label-expansion']." 1</option>\n";
+				if ($row['device_key_vendor'] !== "polycom") {
+					if (strlen($device_vendor) == 0) {
+						if ($row['device_key_category'] == "expansion") {
+							echo "	<option value='expansion' selected='selected'>".$text['label-expansion']."</option>\n";
 						}
 						else {
-							echo "	<option value='expansion-1'>".$text['label-expansion']." 1</option>\n";
+							echo "	<option value='expansion'>".$text['label-expansion']."</option>\n";
 						}
 						if ($row['device_key_category'] == "expansion-2") {
 							echo "	<option value='expansion-2' selected='selected'>".$text['label-expansion']." 2</option>\n";
@@ -1056,14 +1210,29 @@
 						}
 					}
 					else {
-						if ($row['device_key_category'] == "expansion") {
-							echo "	<option value='expansion' selected='selected'>".$text['label-expansion']."</option>\n";
+						if (strtolower($device_vendor) == "cisco" or strtolower($row['device_key_vendor']) == "yealink") {
+							if ($row['device_key_category'] == "expansion-1" || $row['device_key_category'] == "expansion") {
+								echo "	<option value='expansion-1' selected='selected'>".$text['label-expansion']." 1</option>\n";
+							}
+							else {
+								echo "	<option value='expansion-1'>".$text['label-expansion']." 1</option>\n";
+							}
+							if ($row['device_key_category'] == "expansion-2") {
+								echo "	<option value='expansion-2' selected='selected'>".$text['label-expansion']." 2</option>\n";
+							}
+							else {
+								echo "	<option value='expansion-2'>".$text['label-expansion']." 2</option>\n";
+							}
 						}
 						else {
-							echo "	<option value='expansion'>".$text['label-expansion']."</option>\n";
+							if ($row['device_key_category'] == "expansion") {
+								echo "	<option value='expansion' selected='selected'>".$text['label-expansion']."</option>\n";
+							}
+							else {
+								echo "	<option value='expansion'>".$text['label-expansion']."</option>\n";
+							}
 						}
 					}
-
 				}
 				echo "	</select>\n";
 				echo "</td>\n";
@@ -1099,19 +1268,17 @@
 						echo "	<optgroup label='".ucwords($function['vendor_name'])."'>\n";
 					}
 					$selected = '';
-					if ($row['device_key_vendor'] == $function['vendor_name'] && $row['device_key_type'] == $function['value']) {
+					if (strtolower($row['device_key_vendor']) == $function['vendor_name'] && $row['device_key_type'] == $function['value']) {
 						$selected = "selected='selected'";
 					}
 					if (strlen($row['device_key_vendor']) == 0) {
 						echo "		<option value='".$function['value']."' vendor='".$function['vendor_name']."' $selected >".$text['label-'.$function['name']]."</option>\n";
 					}
-					if (strlen($row['device_key_vendor']) > 0 && $row['device_key_vendor'] == $function['vendor_name']) {
+					if (strlen($row['device_key_vendor']) > 0 && strtolower($row['device_key_vendor']) == $function['vendor_name']) {
 						echo "		<option value='".$function['value']."' vendor='".$function['vendor_name']."' $selected >".$text['label-'.$function['name']]."</option>\n";
-						
 					}
 					$previous_vendor = $function['vendor_name'];
 					$i++;
-					
 				}
 				if (strlen($row['device_key_vendor']) == 0) {
 					echo "	</optgroup>\n";
@@ -1128,17 +1295,21 @@
 				echo "</td>\n";
 
 				echo "<td align='left'>\n";
-				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_value]' style='width: 120px;' maxlength='255' value=\"".$row['device_key_value']."\"/>\n";
+				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_value]' style='width: 120px;' maxlength='255' value=\"".escape($row['device_key_value'])."\"/>\n";
 				echo "</td>\n";
 
 				if (permission_exists('device_key_extension')) {
 					echo "<td align='left'>\n";
-					echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_extension]' style='width: 75px;' maxlength='255' value=\"".$row['device_key_extension']."\"/>\n";
+					echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_extension]' style='width: 75px;' maxlength='255' value=\"".escape($row['device_key_extension'])."\"/>\n";
 					echo "</td>\n";
 				}
 
 				echo "<td align='left'>\n";
-				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_label]' style='width: 75px;' maxlength='255' value=\"".$row['device_key_label']."\"/>\n";
+				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_label]' style='width: 75px;' maxlength='255' value=\"".escape($row['device_key_label'])."\"/>\n";
+				echo "</td>\n";
+				
+                                echo "<td align='left'>\n";
+				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_icon]' style='width: 75px;' maxlength='255' value=\"".escape($row['device_key_icon'])."\"/>\n";
 				echo "</td>\n";
 
 				//echo "			<td align='left'>\n";
@@ -1147,7 +1318,7 @@
 				echo "				<td nowrap='nowrap'>\n";
 				if (strlen($row['device_key_uuid']) > 0) {
 					if (permission_exists('device_key_delete')) {
-						echo "					<a href='device_key_delete.php?device_uuid=".$row['device_uuid']."&id=".$row['device_key_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+						echo "					<a href='device_key_delete.php?device_uuid=".escape($row['device_uuid'])."&id=".escape($row['device_key_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 					}
 				}
 				echo "				</td>\n";
@@ -1192,17 +1363,17 @@
 				}
 			//add the primary key uuid
 				if (strlen($row['device_setting_uuid']) > 0) {
-					echo "	<input name='device_settings[".$x."][device_setting_uuid]' type='hidden' value=\"".$row['device_setting_uuid']."\"/>\n";
+					echo "	<input name='device_settings[".$x."][device_setting_uuid]' type='hidden' value=\"".escape($row['device_setting_uuid'])."\"/>\n";
 				}
 
 			//show alls rows in the array
 				echo "<tr>\n";
 				echo "<td align='left'>\n";
-				echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_subcategory]' style='width: 120px;' maxlength='255' value=\"".$row['device_setting_subcategory']."\"/>\n";
+				echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_subcategory]' style='width: 120px;' maxlength='255' value=\"".escape($row['device_setting_subcategory'])."\"/>\n";
 				echo "</td>\n";
 
 				echo "<td align='left'>\n";
-				echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_value]' style='width: 120px;' maxlength='255' value=\"".$row['device_setting_value']."\"/>\n";
+				echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_value]' style='width: 120px;' maxlength='255' value=\"".escape($row['device_setting_value'])."\"/>\n";
 				echo "</td>\n";
 
 				echo "<td align='left'>\n";
@@ -1224,7 +1395,7 @@
 				echo "</td>\n";
 
 				echo "<td align='left'>\n";
-				echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_description]' style='width: 150px;' maxlength='255' value=\"".$row['device_setting_description']."\"/>\n";
+				echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_description]' style='width: 150px;' maxlength='255' value=\"".escape($row['device_setting_description'])."\"/>\n";
 				echo "</td>\n";
 
 				if (strlen($text['description-settings']) > 0) {
@@ -1235,10 +1406,10 @@
 				echo "				<td>\n";
 				if (strlen($row['device_setting_uuid']) > 0) {
 					if (permission_exists('device_edit')) {
-						echo "					<a href='device_setting_edit.php?device_uuid=".$row['device_uuid']."&id=".$row['device_setting_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+						echo "					<a href='device_setting_edit.php?device_uuid=".escape($row['device_uuid'])."&id=".escape($row['device_setting_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
 					}
 					if (permission_exists('device_delete')) {
-						echo "					<a href='device_setting_delete.php?device_uuid=".$row['device_uuid']."&id=".$row['device_setting_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+						echo "					<a href='device_setting_delete.php?device_uuid=".escape($row['device_uuid'])."&id=".escape($row['device_setting_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 					}
 				}
 				echo "				</td>\n";
@@ -1264,7 +1435,7 @@
 		echo "			<option value=\"\"></option>\n";
 		foreach($users as $field) {
 			if ($field['user_uuid'] == $device_user_uuid) { $selected = "selected='selected'"; } else { $selected = ''; }
-			echo "			<option value='".$field['user_uuid']."' $selected>".$field['username']."</option>\n";
+			echo "			<option value='".escape($field['user_uuid'])."' $selected>".escape($field['username'])."</option>\n";
 		}
 		echo "			</select>";
 		unset($users);
@@ -1278,8 +1449,8 @@
 		echo "	".$text['label-device']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='device_username' id='device_username' autocomplete=\"off\" maxlength='255' placeholder=\"".$text['label-device_username']."\" value=\"$device_username\"/>\n";
-		echo "	<input class='formfld' type='password' name='device_password' id='device_password' autocomplete=\"off\" onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' placeholder=\"".$text['label-device_password']."\" value=\"$device_password\"/>\n";
+		echo "	<input class='formfld' type='text' name='device_username' id='device_username' autocomplete=\"off\" maxlength='255' placeholder=\"".$text['label-device_username']."\" value=\"".escape($device_username)."\"/>\n";
+		echo "	<input class='formfld' type='password' name='device_password' id='device_password' autocomplete=\"off\" onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' placeholder=\"".$text['label-device_password']."\" value=\"".escape($device_password)."\"/>\n";
 		echo "	<div style='display: none;' id='duplicate_username_response'></div>\n";
 		echo "<br />\n";
 		echo $text['description-device']."\n";
@@ -1287,27 +1458,22 @@
 		echo "</tr>\n";
 	}
 
-	if (permission_exists('device_alternate')) {
+	if (permission_exists('device_alternate') && strlen($device_uuid_alternate) > 0) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-device_uuid_alternate']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left' nowrap='nowrap'>\n";
-		if (strlen($device_uuid_alternate) == 0) {
-			echo "	<input class='formfld' type='text' name='device_uuid_alternate' id='device_uuid_alternate' maxlength='255' value=\"$device_uuid_alternate\"/>";
-		}
-		else {
-			$label = $device_alternate[0]['device_label'];
-			if (strlen($label) == 0) { $label = $device_alternate[0]['device_description']; }
-			if (strlen($label) == 0) { $label = $device_alternate[0]['device_mac_address']; }
-			echo "	<table>\n";
-			echo "	<tr>\n";
-			echo "		<td><a href='?id=$device_uuid_alternate' id='device_uuid_alternate_link'>$label</a><input class='formfld' type='hidden' name='device_uuid_alternate' id='device_uuid_alternate' maxlength='255' value=\"$device_uuid_alternate\" />&nbsp;</td>";
-			echo "		<td><a href='#' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('device_uuid_alternate').value = '';  document.getElementById('device_uuid_alternate_link').hidden = 'true'; submit_form(); }\" alt='".$text['button-delete']."'>$v_link_label_delete</a></td>\n";
-			echo "	</tr>\n";
-			echo "	</table>\n";
-			unset($label);
-		}
+		$label = $device_alternate[0]['device_label'];
+		if (strlen($label) == 0) { $label = $device_alternate[0]['device_description']; }
+		if (strlen($label) == 0) { $label = $device_alternate[0]['device_mac_address']; }
+		echo "	<table>\n";
+		echo "	<tr>\n";
+		echo "		<td><a href='?id=".escape($device_uuid_alternate)."' id='device_uuid_alternate_link'>".escape($label)."</a><input class='formfld' type='hidden' name='device_uuid_alternate' id='device_uuid_alternate' maxlength='255' value=\"".escape($device_uuid_alternate)."\" />&nbsp;</td>";
+		echo "		<td><a href='#' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('device_uuid_alternate').value = '';  document.getElementById('device_uuid_alternate_link').hidden = 'true'; submit_form(); }\" alt='".$text['button-delete']."'>$v_link_label_delete</a></td>\n";
+		echo "	</tr>\n";
+		echo "	</table>\n";
+		unset($label);
 		echo $text['description-device_uuid_alternate']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
@@ -1319,7 +1485,7 @@
 		echo "	".$text['label-device_vendor']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='device_vendor' maxlength='255' value=\"$device_vendor\"/>\n";
+		echo "	<input class='formfld' type='text' name='device_vendor' maxlength='255' value=\"".escape($device_vendor)."\"/>\n";
 		echo "<br />\n";
 		echo $text['description-device_vendor']."\n";
 		echo "</td>\n";
@@ -1332,7 +1498,7 @@
 		echo "	".$text['label-device_model']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='device_model' maxlength='255' value=\"$device_model\"/>\n";
+		echo "	<input class='formfld' type='text' name='device_model' maxlength='255' value=\"".escape($device_model)."\"/>\n";
 		echo "<br />\n";
 		echo $text['description-device_model']."\n";
 		echo "</td>\n";
@@ -1345,7 +1511,7 @@
 		echo "	".$text['label-device_firmware_version']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='device_firmware_version' maxlength='255' value=\"$device_firmware_version\"/>\n";
+		echo "	<input class='formfld' type='text' name='device_firmware_version' maxlength='255' value=\"".escape($device_firmware_version)."\"/>\n";
 		echo "<br />\n";
 		echo $text['description-device_firmware_version']."\n";
 		echo "</td>\n";
@@ -1367,10 +1533,10 @@
 		}
 		foreach ($_SESSION['domains'] as $row) {
 			if ($row['domain_uuid'] == $domain_uuid) {
-				echo "    <option value='".$row['domain_uuid']."' selected='selected'>".$row['domain_name']."</option>\n";
+				echo "    <option value='".escape($row['domain_uuid'])."' selected='selected'>".escape($row['domain_name'])."</option>\n";
 			}
 			else {
-				echo "    <option value='".$row['domain_uuid']."'>".$row['domain_name']."</option>\n";
+				echo "    <option value='".escape($row['domain_uuid'])."'>".escape($row['domain_name'])."</option>\n";
 			}
 		}
 		echo "    </select>\n";
@@ -1378,7 +1544,8 @@
 		echo $text['description-domain_name']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
-	} else {
+	}
+	else {
 		echo "	<input type='hidden' name='domain_uuid' id='domain_uuid' value=\"".$_SESSION['domain_uuid']."\"/>\n";
 	}
 
@@ -1414,12 +1581,12 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	if (permission_exists('device_description')) {
-		echo "	<input class='formfld' type='text' name='device_description' maxlength='255' value=\"$device_description\"/>\n";
+		echo "	<input class='formfld' type='text' name='device_description' maxlength='255' value=\"".escape($device_description)."\"/>\n";
 		echo "<br />\n";
 		echo $text['description-device_description']."\n";
 	}
 	else {
-		echo $device_description."\n";
+		echo escape($device_description)."\n";
 	}
 
 	echo "</td>\n";
@@ -1427,7 +1594,7 @@
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='device_uuid' value='$device_uuid'/>\n";
+		echo "		<input type='hidden' name='device_uuid' value='".escape($device_uuid)."'/>\n";
 	}
 	echo "			<br>";
 	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'/>\n";
@@ -1452,7 +1619,7 @@
 	echo "	}); \n";
 	// convert password fields to
 	echo "	function submit_form() {\n";
-	echo "		check_duplicates();\n";
+	echo "		$('form#frm').submit();\n";
 	echo "	}\n";
 	echo "	function submit_form_2() {\n";
 	echo "		$('input:password').css('visibility','hidden');\n";

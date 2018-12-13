@@ -37,26 +37,34 @@ This method causes the script to get its manadatory arguments directly from the 
 	12 Jun, 2013: update the database connection, change table name from v_callblock to v_call_block
 	14 Jun, 2013: Change Voicemail option to use Transfer, avoids mod_voicemail dependency
 	27 Sep, 2013: Changed the name of the fields to conform with the table name
+	12 Feb, 2018: Added support for regular expressions and SQL "like" matching  on the phone number
 ]]
 
 --set defaults
 	expire = {}
-	expire["call_block"] = "3600";
+	expire["call_block"] = "60";
 	source = "";
 
 -- Command line parameters
 	local params = {
-			cid_num = string.match(tostring(session:getVariable("caller_id_number")), "%d+"),
-			cid_name = session:getVariable("caller_id_name"),
-			domain_name = session:getVariable("domain_name"),
-			userid = "", -- session:getVariable("id")
-			loglevel = "W" -- Warning, Debug, Info
-			}
+		cid_num = string.match(tostring(session:getVariable("caller_id_number")), "%d+"),
+		cid_name = session:getVariable("caller_id_name"),
+		domain_name = session:getVariable("domain_name"),
+		userid = "", -- session:getVariable("id")
+		loglevel = "W" -- Warning, Debug, Info
+		}
+
+--check if cid_num is numeric
+	if (tonumber(params["cid_num"]) == nil) then
+		return
+	end
 
 -- local storage
 	local sql = nil
 
 --define the functions
+	local Settings = require "resources.functions.lazy_settings"
+	local Database = require "resources.functions.database"
 	require "resources.functions.trim";
 
 --define the logger function
@@ -73,6 +81,12 @@ This method causes the script to get its manadatory arguments directly from the 
 -- ensure that we have a fresh status on exit
 	session:setVariable("call_block", "")
 
+-- get the configuration variables from the DB
+	local db = dbh or Database.new('system')
+	local settings = Settings.new(db, domain_name, domain_uuid)
+	local call_block_matching = settings:get('call block', 'call_block_matching', 'text');
+
+
 --send to the log
 	logger("D", "NOTICE", "params are: " .. string.format("'%s', '%s', '%s', '%s'", params["cid_num"],
 			params["cid_name"], params["userid"], params["domain_name"]));
@@ -88,8 +102,8 @@ This method causes the script to get its manadatory arguments directly from the 
 	--if not cached then get the information from the database
 	if (cache == "-ERR NOT FOUND") then
 		--connect to the database
-			require "resources.functions.database_handle";
-			dbh = database_handle('system');
+			Database = require "resources.functions.database";
+			dbh = Database.new('system');
 
 		--log if not connect
 			if dbh:connected() == false then
@@ -99,14 +113,26 @@ This method causes the script to get its manadatory arguments directly from the 
 		--check if the the call block is blocked
 			sql = "SELECT * FROM v_call_block as c "
 			sql = sql .. "JOIN v_domains as d ON c.domain_uuid=d.domain_uuid "
-			sql = sql .. "WHERE c.call_block_number = '" .. params["cid_num"] .. "' AND d.domain_name = '" .. params["domain_name"] .."'"
-			status = dbh:query(sql, function(rows)
+			if ((database["type"] == "pgsql") and (call_block_matching == "regex")) then
+				logger("W", "NOTICE", "call_block using regex match on cid_num")
+				sql = sql .. "WHERE :cid_num ~ c.call_block_number AND d.domain_name = :domain_name "
+			elseif (((database["type"] == "mysql") or (database["type"] == "sqlite")) and (call_block_matching == "regex")) then
+				logger("W", "NOTICE", "call_block using regex match on cid_num")
+				sql = sql .. "WHERE :cid_num REGEXP c.call_block_number AND d.domain_name = :domain_name "
+			elseif call_block_matching == "like" then
+				logger("W", "NOTICE", "call_block using like match on cid_num")
+				sql = sql .. "WHERE :cid_num LIKE c.call_block_number AND d.domain_name = :domain_name "
+			else
+				logger("W", "NOTICE", "call_block using exact match on cid_num")
+				sql = sql .. "WHERE :cid_num = c.call_block_number AND d.domain_name = :domain_name "
+			end
+			dbh:query(sql, params, function(rows)
 				found_cid_num = rows["call_block_number"];
 				found_uuid = rows["call_block_uuid"];
 				found_enabled = rows["call_block_enabled"];
 				found_action = rows["call_block_action"];
 				found_count = rows["call_block_count"];
-				end)
+			end)
 			-- dbh:affected_rows() doesn't do anything if using core:db so this is the workaround:
 
 		--set the cache
@@ -171,7 +197,9 @@ This method causes the script to get its manadatory arguments directly from the 
 				k = k + 1
 			end
 			if (source == "database") then
-				dbh:query("UPDATE v_call_block SET call_block_count = " .. found_count + 1 .. " WHERE call_block_uuid = '" .. found_uuid .. "'")
+				dbh:query("UPDATE v_call_block SET call_block_count = :call_block_count WHERE call_block_uuid = :call_block_uuid",{
+					call_block_count = found_count + 1, call_block_uuid = found_uuid
+				})
 			end
 			session:execute("set", "call_blocked=true");
 			logger("W", "NOTICE", "number " .. params["cid_num"] .. " blocked with " .. found_count .. " previous hits, domain_name: " .. params["domain_name"])

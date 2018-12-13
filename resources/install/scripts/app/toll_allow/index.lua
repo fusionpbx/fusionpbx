@@ -61,11 +61,18 @@
 			};
 			RU = {
 				{"international", "810%d+|8[89]40%d+|87%d%d%d%d%d%d%d%d%d"};
-				{"mobile",        "89%d%d%d%d%d%d%d%d%d"                  };
-				{"tollfree",      "8800%d%d%d%d%d%d%d|10[1-9]"            };
-				{"landline",      "8[3-68]%d%d%d%d%d%d%d%d%d%d"           };
-				{"unknown",       ""                                      };
+				{"mobile",        "89%d%d%d%d%d%d%d%d%d"                          };
+				{"tollfree",      "8800%d%d%d%d%d%d%d|10[1-9]"                    };
+				{"landline",      "8[3-68]%d%d%d%d%d%d%d%d%d"                     };
+				{"unknown",       ""                                              };
 			};
+			ZA = {
+                                {"international", "00%d+"         };
+                                {"mobile",        "0[6-8]%d%d%d%d%d%d%d%d"                      };
+                                {"landline",      "0[1-5]%d%d%d%d%d%d%d%d"                      };
+                                {"unknown",       ""                                            };
+                        };
+
 		}
 
 	--Set to true to allow all calls for extensions without toll_allow

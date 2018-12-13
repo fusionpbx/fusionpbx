@@ -1,0 +1,30 @@
+<context name="{v_context}">
+	<extension name="local_extension" number="[ext]" continue="true" app_uuid="71cf1310-b6e3-415b-8745-3cbdc8e15212">
+		<condition field="${user_exists}" expression="true">
+			<!--<action application="pre_answer"/>-->
+			<action application="export" data="dialed_extension=${destination_number}" inline="true"/>
+			<action application="limit" data="hash ${domain_name} ${destination_number} ${limit_max} ${limit_destination}" inline="false" />
+		</condition>
+		<condition>
+			<!--<action application="set" data="ringback=${ringback}"/>-->
+			<action application="set" data="hangup_after_bridge=true"/>
+			<!--<action application="set" data="continue_on_fail=NORMAL_TEMPORARY_FAILURE,USER_BUSY,NO_ANSWER,TIMEOUT,NO_ROUTE_DESTINATION"/> -->
+			<action application="set" data="continue_on_fail=true"/>
+			<action application="hash" data="insert/${domain_name}-call_return/${dialed_extension}/${caller_id_number}"/>
+			<action application="hash" data="insert/${domain_name}-last_dial_ext/${dialed_extension}/${uuid}"/>
+			<action application="set" data="called_party_call_group=${user_data(${dialed_extension}@${domain_name} var call_group)}"/>
+			<!--<action application="export" data="nolocal:sip_secure_media=${user_data(${dialed_extension}@${domain_name} var sip_secure_media)}"/>-->
+			<action application="hash" data="insert/${domain_name}-last_dial/${called_party_call_group}/${uuid}"/>
+			<action application="set" data="api_hangup_hook=lua app.lua hangup"/>
+			<action application="export" data="domain_name=${domain_name}"/>
+			<!-- standard method -->
+			<action application="bridge" data="user/${destination_number}@${domain_name}"/>
+			<!-- sofia contact -->
+			<!--<action application="bridge" data="${sofia_contact(${dialed_extension}@${domain_name})}"/>-->
+			<!-- number-alias / https://confluence.freeswitch.org/display/FREESWITCH/XML+User+Directory -->
+			<!--<action application="bridge" data="user/${user_data(${destination_number}@${domain_name} attr id)}@${domain_name}"/> -->
+			<!-- handles bridge failures before answer -->
+			<action application="lua" data="app.lua failure_handler"/>
+		</condition>
+	</extension>
+</context>

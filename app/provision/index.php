@@ -17,23 +17,25 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2015 All Rights Reserved.
+	Copyright (C) 2008-2018 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/functions/device_by.php";
-openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/functions/device_by.php";
+
+//logging
+	openlog("FusionPBX", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 
 //set default variables
 	$dir_count = 0;
 	$file_count = 0;
 	$row_count = 0;
-	$tmp_array = '';
 	$device_template = '';
 
 //define PHP variables from the HTTP values
@@ -54,25 +56,48 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 	}
 
 // Escence make request based on UserID for Memory keys
-/*
-The file name is fixed to `Account1_Extern.xml`.
-(Account1 is the first account you register)
-*/
+	// The file name is fixed to `Account1_Extern.xml`.
+	// (Account1 is the first account you register)
 	if(empty($mac) && !empty($ext)){
 		$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 		$domain_name = $domain_array[0];
 		$device = device_by_ext($db, $ext, $domain_name);
-		if(($device !== false)&&($device['device_vendor']=='escene')){
+		if(($device !== false)&&(($device['device_vendor']=='escene')||($device['device_vendor']=='grandstream'))){
 			$mac = $device['device_mac_address'];
 		}
+	}
+
+//send http error
+	function http_error($error) {
+		if ($error === "404") {
+			header("HTTP/1.0 404 Not Found");
+			echo "<html>\n";
+			echo "<head><title>404 Not Found</title></head>\n";
+			echo "<body bgcolor=\"white\">\n";
+			echo "<center><h1>404 Not Found</h1></center>\n";
+			echo "<hr><center>nginx/1.12.1</center>\n";
+			echo "</body>\n";
+			echo "</html>\n";
+		}
+		exit();
 	}
 
 //check alternate MAC source
 	if (empty($mac)){
 		//set the http user agent
 			//$_SERVER['HTTP_USER_AGENT'] = "Yealink SIP-T38G  38.70.0.125 00:15:65:00:00:00";
+			//$_SERVER['HTTP_USER_AGENT'] = "Yealink SIP-T56A  58.80.0.25 001565f429a4"; 
 		//Yealink: 17 digit mac appended to the user agent, so check for a space exactly 17 digits before the end.
 			if (strtolower(substr($_SERVER['HTTP_USER_AGENT'],0,7)) == "yealink" || strtolower(substr($_SERVER['HTTP_USER_AGENT'],0,5)) == "vp530") {
+				if (strstr(substr($_SERVER['HTTP_USER_AGENT'],-4), ':')) { //remove colons if they exist
+					$mac = substr($_SERVER['HTTP_USER_AGENT'],-17);
+					$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+				} else { //take mac as is - fixes T5X series
+					$mac = substr($_SERVER['HTTP_USER_AGENT'],-12);
+				}
+			}
+		//HTek: $_SERVER['HTTP_USER_AGENT'] = "Htek UC926 2.0.4.2 00:1f:c1:00:00:00"
+			if (substr($_SERVER['HTTP_USER_AGENT'],0,4) == "Htek") {
 				$mac = substr($_SERVER['HTTP_USER_AGENT'],-17);
 				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
 			}
@@ -81,10 +106,26 @@ The file name is fixed to `Account1_Extern.xml`.
 				$mac = substr($_SERVER['HTTP_USER_AGENT'],-14);
 				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
 			}
+		//Grandstream: $_SERVER['HTTP_USER_AGENT'] = "Grandstream Model HW GXP2135 SW 1.0.7.97 DevId 000b828aa872"
+			if (substr($_SERVER['HTTP_USER_AGENT'],0,11) == "Grandstream") {
+				$mac = substr($_SERVER['HTTP_USER_AGENT'],-12);
+				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+			}
+		//Audiocodes: $_SERVER['HTTP_USER_AGENT'] = "AUDC-IPPhone/2.2.8.61 (440HDG-Rev0; 00908F602AAC)"
+			if (substr($_SERVER['HTTP_USER_AGENT'],0,12) == "AUDC-IPPhone") {
+				$mac = substr($_SERVER['HTTP_USER_AGENT'],-13);
+				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+			}
+		//Aastra: $_SERVER['HTTP_USER_AGENT'] = "Aastra6731i MAC:00-08-5D-29-4C-6B V:3.3.1.4365-SIP"
+			if (substr($_SERVER['HTTP_USER_AGENT'],0,6) == "Aastra") {
+				preg_match("/MAC:([A-F0-9-]{17})/", $_SERVER['HTTP_USER_AGENT'], $matches);
+				$mac = $matches[1];
+				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+			}
 	}
 
 //prepare the mac address
-	if (isset($_REQUEST['mac'])) {
+	if (isset($mac)) {
 		//normalize the mac address to lower case
 			$mac = strtolower($mac);
 		//replace all non hexadecimal values and validate the mac address
@@ -99,8 +140,10 @@ The file name is fixed to `Account1_Extern.xml`.
 	if ((!isset($_SESSION['provision']['http_domain_filter'])) or $_SESSION['provision']['http_domain_filter']['text'] == "false") {
 		//get the domain_uuid
 			$sql = "SELECT domain_uuid FROM v_devices ";
-			$sql .= "WHERE device_mac_address = '".$mac."' ";
+			$sql .= "WHERE device_mac_address = :mac ";
+			//$sql .= "WHERE device_mac_address = '".$mac."' ";
 			$prep_statement = $db->prepare($sql);
+			$prep_statement->bindParam(':mac', $mac);
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			foreach($result as $row) {
@@ -155,7 +198,7 @@ The file name is fixed to `Account1_Extern.xml`.
 			}
 
 		//get the domains settings
-			if (strlen($_SESSION["domain_uuid"]) > 0) {
+			if (strlen($domain_uuid) > 0 && is_uuid($domain_uuid)) {
 				$sql = "select * from v_domain_settings ";
 				$sql .= "where domain_uuid = '" . $domain_uuid . "' ";
 				$sql .= "and domain_setting_enabled = 'true' ";
@@ -209,8 +252,10 @@ The file name is fixed to `Account1_Extern.xml`.
 
 		//get the domain_uuid
 			$sql = "SELECT * FROM v_domains ";
-			$sql .= "WHERE domain_name = '".$domain_name."' ";
+			$sql .= "WHERE domain_name = :domain_name ";
+			//$sql .= "WHERE domain_name = '".$domain_name."' ";
 			$prep_statement = $db->prepare($sql);
+			$prep_statement->bindParam(':domain_name', $domain_name);
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			foreach($result as $row) {
@@ -223,22 +268,24 @@ The file name is fixed to `Account1_Extern.xml`.
 	foreach($_SESSION['provision'] as $key=>$val) {
 		if (strlen($val['var']) > 0) { $value = $val['var']; }
 		if (strlen($val['text']) > 0) { $value = $val['text']; }
+		if (strlen($val['boolean']) > 0) { $value = $val['boolean']; }
+		if (strlen($val['numeric']) > 0) { $value = $val['numeric']; }
 		if (strlen($value) > 0) { $provision[$key] = $value; }
 		unset($value);
 	}
 
 //check if provisioning has been enabled
 	if ($provision["enabled"] != "true") {
-		echo "access denied";
-		exit;
+		syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but provisioning is not enabled for ".check_str($_REQUEST['mac']));
+		http_error('404');
 	}
 
 //send a request to a remote server to validate the MAC address and secret
 	if (strlen($_SERVER['auth_server']) > 0) {
 		$result = send_http_request($_SERVER['auth_server'], 'mac='.check_str($_REQUEST['mac']).'&secret='.check_str($_REQUEST['secret']));
 		if ($result == "false") {
-			echo "access denied";
-			exit;
+			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but the remote auth server said no for ".check_str($_REQUEST['mac']));
+			http_error('404');
 		}
 	}
 
@@ -260,14 +307,14 @@ The file name is fixed to `Account1_Extern.xml`.
 			}
 		}
 		if (!$found) {
-			echo "access denied";
-			exit;
+			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but failed CIDR check for ".check_str($_REQUEST['mac']));
+			http_error('404');
 		}
 	}
 
 //http authentication - digest
 	if (strlen($provision["http_auth_username"]) > 0 && strlen($provision["http_auth_type"]) == 0) { $provision["http_auth_type"] = "digest"; }
-	if (strlen($provision["http_auth_username"]) > 0 && strlen($provision["http_auth_password"]) > 0 && $provision["http_auth_type"] == "digest") {
+	if (strlen($provision["http_auth_username"]) > 0 && $provision["http_auth_type"] === "digest" && $provision["http_auth_disable"] !== "true") {
 		//function to parse the http auth header
 			function http_digest_parse($txt) {
 				//protect against missing data
@@ -302,20 +349,32 @@ The file name is fixed to `Account1_Extern.xml`.
 			}
 
 		//check for valid digest authentication details
-			if (!($data = http_digest_parse($_SERVER['PHP_AUTH_DIGEST'])) || ($data['username'] != $provision["http_auth_username"])) {
-				header('HTTP/1.1 401 Unauthorized');
-				header("Content-Type: text/html");
-				$content = 'Unauthorized '.$__line__;
-				header("Content-Length: ".strval(strlen($content)));
-				echo $content;
-				exit;
+			if (isset($provision["http_auth_username"]) > 0 && strlen($provision["http_auth_username"])) {
+				if (!($data = http_digest_parse($_SERVER['PHP_AUTH_DIGEST'])) || ($data['username'] != $provision["http_auth_username"])) {
+					header('HTTP/1.1 401 Unauthorized');
+					header("Content-Type: text/html");
+					$content = 'Unauthorized '.$__line__;
+					header("Content-Length: ".strval(strlen($content)));
+					echo $content;
+					exit;
+				}
 			}
 
 		//generate the valid response
-			$A1 = md5($provision["http_auth_username"] . ':' . $realm . ':' . $provision["http_auth_password"]);
-			$A2 = md5($_SERVER['REQUEST_METHOD'].':'.$data['uri']);
-			$valid_response = md5($A1.':'.$data['nonce'].':'.$data['nc'].':'.$data['cnonce'].':'.$data['qop'].':'.$A2);
-			if ($data['response'] != $valid_response) {
+			$authorized = false;
+			if (!$authorized && is_array($_SESSION['provision']["http_auth_password"])) {
+				foreach ($_SESSION['provision']["http_auth_password"] as $password) {
+					$A1 = md5($provision["http_auth_username"] . ':' . $realm . ':' . $password);
+					$A2 = md5($_SERVER['REQUEST_METHOD'].':'.$data['uri']);
+					$valid_response = md5($A1.':'.$data['nonce'].':'.$data['nc'].':'.$data['cnonce'].':'.$data['qop'].':'.$A2);
+					if ($data['response'] == $valid_response) {
+						$authorized = true;
+						break;
+					}
+				}
+				unset($password);
+			}
+			if (!$authorized) {
 				header('HTTP/1.0 401 Unauthorized');
 				header("Content-Type: text/html");
 				$content = 'Unauthorized '.$__line__;
@@ -326,7 +385,7 @@ The file name is fixed to `Account1_Extern.xml`.
 	}
 
 //http authentication - basic
-	if (strlen($provision["http_auth_username"]) > 0 && strlen($provision["http_auth_password"]) > 0 && $provision["http_auth_type"] == "basic") {
+	if (strlen($provision["http_auth_username"]) > 0 && $provision["http_auth_type"] === "basic" && $provision["http_auth_disable"] !== "true") {
 		if (!isset($_SERVER['PHP_AUTH_USER'])) {
 			header('WWW-Authenticate: Basic realm="'.$_SESSION['domain_name'].'"');
 			header('HTTP/1.0 401 Authorization Required');
@@ -336,11 +395,19 @@ The file name is fixed to `Account1_Extern.xml`.
 			echo $content;
 			exit;
 		} else {
-			if ($_SERVER['PHP_AUTH_USER'] == $provision["http_auth_username"] && $_SERVER['PHP_AUTH_PW'] == $provision["http_auth_password"]) {
-				//authorized
+			$authorized = false;
+			if (is_array($_SESSION['provision']["http_auth_password"])) {
+				foreach ($_SESSION['provision']["http_auth_password"] as $password) {
+					if ($_SERVER['PHP_AUTH_PW'] == $password) {
+						$authorized = true;
+						break;
+					}
+				}
+				unset($password);
 			}
-			else {
+			if (!$authorized) {
 				//access denied
+				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but failed http basic authentication for ".check_str($_REQUEST['mac']));
 				header('HTTP/1.0 401 Unauthorized');
 				header('WWW-Authenticate: Basic realm="'.$_SESSION['domain_name'].'"');
 				unset($_SERVER['PHP_AUTH_USER'],$_SERVER['PHP_AUTH_PW']);
@@ -356,29 +423,14 @@ The file name is fixed to `Account1_Extern.xml`.
 	if (strlen($provision['password']) > 0) {
 		//deny access if the password doesn't match
 		if ($provision['password'] != check_str($_REQUEST['password'])) {
+			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt bad password for ".check_str($_REQUEST['mac']));
 			//log the failed auth attempt to the system, to be available for fail2ban.
 			openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
 			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt bad password for ".check_str($_REQUEST['mac']));
 			closelog();
-			echo "access denied 4";
+			echo "access denied";
 			return;
 		}
-	}
-
-//register that we have seen the device
-	$sql = "UPDATE v_devices "; 
-	$sql .= "SET device_provisioned_date=:date, device_provisioned_method=:method, device_provisioned_ip=:ip ";
-	$sql .= "WHERE domain_uuid=:domain_uuid AND device_mac_address=:mac ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	if ($prep_statement) {
-		//use the prepared statement
-			$prep_statement->bindValue(':domain_uuid', $domain_uuid);
-			$prep_statement->bindValue(':mac', strtolower($mac));
-			$prep_statement->bindValue(':date', date("Y-m-d H:i:s"));
-			$prep_statement->bindValue(':method', (isset($_SERVER["HTTPS"]) ? 'https' : 'http'));
-			$prep_statement->bindValue(':ip', $_SERVER['REMOTE_ADDR']);
-			$prep_statement->execute();
-			unset($prep_statement);
 	}
 	
 //output template to string for header processing
@@ -420,8 +472,14 @@ The file name is fixed to `Account1_Extern.xml`.
 			header("Content-Type: text/plain; charset=iso-8859-1");
 			header("Content-Length: ".strlen($file_contents));
 		} else {
-			header("Content-Type: text/xml; charset=utf-8");
-			header("Content-Length: ".strlen($file_contents));
+			$result = simplexml_load_string ($file_contents, 'SimpleXmlElement', LIBXML_NOERROR+LIBXML_ERR_FATAL+LIBXML_ERR_NONE);
+			if (false == $result){
+				header("Content-Type: text/plain");
+				header("Content-Length: ".strval(strlen($file_contents)));
+			} else {
+				header("Content-Type: text/xml; charset=utf-8");
+				header("Content-Length: ".strlen($file_contents));
+			}
 		}
 	}
 	echo $file_contents;

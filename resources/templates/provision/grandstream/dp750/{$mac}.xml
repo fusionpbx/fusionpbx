@@ -1,0 +1,3389 @@
+<?xml version="1.0" encoding="utf-8"?>
+<gs_provision version="1">
+<config version="1">
+<!-- ######################################################################################## -->
+<!-- #  Configuration template for DP750 firmware version 1.0.2.16                         ## -->
+<!-- ######################################################################################## -->
+<!-- ######################## -->
+<!-- #  Profiles Settings  ## -->
+<!-- ######################## -->
+
+<!-- ################ -->
+<!-- #  Profile 1  ## -->
+<!-- ################ -->
+
+<!-- ################################# -->
+<!-- #  Profile 1/General Settings  ## -->
+<!-- ################################# -->
+
+<!-- Profile Active.  0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+{if isset($account.1.password)}
+<P271>1</P271>
+{else}
+<P271>0</P271>
+{/if}
+
+<!-- Primary SIP Server -->
+<!-- String: serveraddress  -->
+<P47>{$account.1.server_address}</P47>
+
+<!-- Failover SIP Server -->
+<!-- String: serveraddress  -->
+<P967></P967>
+
+<!-- Prefer Primary SIP Server. 0 - No, 1 - Yes. -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+<P4567>0</P4567>
+
+<!-- Outbound Proxy -->
+<!-- String: serveraddress  -->
+<P48>{$account.1.outbound_proxy}</P48>
+
+<!-- Voice Mail Access Number -->
+<!-- String -->
+<P27680>*97</P27680>
+
+<!-- ################################# -->
+<!-- #  Profile 1/Network Settings  ## -->
+<!-- ################################# -->
+
+<!-- Layer 3 QoS SIP Diff-Serv (default 24) -->
+<!-- Number -->
+<!-- Mandatory -->
+<P5046>24</P5046>
+
+<!-- Layer 3 QoS RTP Diff-Serv (default 46) -->
+<!-- Number -->
+<!-- Mandatory -->
+<P5050>46</P5050>
+
+<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP . -->
+<!-- Number: 0,1,2,3 -->
+<!-- Mandatory  -->
+{if isset($grandstream_dns_mode_1) }
+<P103>{$grandstream_dns_mode_1}</P103>
+{else}
+<P103>0</P103>
+{/if}
+
+<!-- Primary IP -->
+<!-- IP address -->
+<P2308></P2308>
+
+<!-- Backup IP1 -->
+<!-- IP address -->
+<P2309></P2309>
+
+<!-- Backup IP2 -->
+<!-- IP address -->
+<P2310></P2310>
+
+<!-- NAT Traversal (STUN). 0 - No, 2 - No but send keep-alive, 1 - Yes -->
+<!-- Number: 0,1,2 -->
+<!-- Mandatory -->
+{if isset($grandstream_nat_traversal_1) }
+<P52>{$grandstream_nat_traversal_1}</P52>
+{else}
+<P52>0</P52>
+{/if}
+
+<!-- Use NAT IP.  This will enable our SIP client to use this IP in the SIP message. Example 64.3.153.50. -->
+<!-- String: ipaddress  -->
+<P101></P101>
+
+<!-- Proxy-Require (A SIP extension to enable firewall penetration) -->
+<!-- String: ipaddress  -->
+<P197></P197>
+
+<!-- ############################################ -->
+<!-- #  Profile 1/SIP Settings/Basic Settings  ## -->
+<!-- ############################################ -->
+
+<!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS -->
+<!-- Number: 0,1,2 -->
+<!-- Mandatory -->
+{$tp=0}
+{if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.1.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.1.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.1.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P130>{$tp}</P130>
+
+<!-- SIP Registration. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P31>1</P31>
+
+<!-- Unregister On Reboot. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P81>0</P81>
+
+<!-- Add Auth Header On Initial REGISTER -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P2359>0</P2359>
+
+<!-- Outgoing call without Registration. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P109>1</P109>
+
+<!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
+<!-- Number: 1 to 64800 -->
+<!-- Mandatory  -->
+<P32>3</P32>
+
+<!-- SIP Registration Failure Retry Wait Time (in seconds. Between 1-3600, default is 30) -->
+<!-- Number: 1 to 3600 -->
+<!-- Mandatory  -->
+<P138>20</P138>
+
+<!-- SIP Registration Failure Retry Wait Time upon 403 Forbidden. 0 second means stop retry registration. Default is 1200 sec. -->
+<!-- Number 0 to 3600 -->
+<!-- Mandatory -->
+<P26002>1200</P26002>
+
+<!-- Reregister before Expiration -->
+<!-- Number -->
+<!-- Mandatory -->
+<P2330>0</P2330>
+
+<!-- Local SIP port (default 5060) -->
+<!-- Number: 1 to 65535 -->
+<!-- Mandatory  -->
+<P40>5060</P40>
+
+<!-- Use Random SIP Port 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P78>0</P78>
+
+<!-- SIP T1 Timeout. RFC 3261 T1 value. -->
+<!-- 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default 100. -->
+<!-- Number: 50,100,200,400,800 -->
+<!-- Mandatory -->
+<P209>50</P209>
+
+<!-- SIP T2 Timeout. RFC 3261 T2 value. -->
+<!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec, 1600 - 16 sec, 3200 - 32 sec. Default 400. -->
+<!-- Number: 1600,3200,200,400,800 -->
+<!-- Mandatory  -->
+<P250>400</P250>
+
+<!-- SIP TIMER D. Config Timer D defined in RFC 3261.  -->
+<!-- Range 0-64 sec. Default 0 -->
+<!-- Number: 0-64 -->
+<!-- Mandatory  -->
+<P2387>0</P2387>
+
+<!-- Remove OBP from Route Header. 0 - no, 1 - yes -->
+<!-- NUmber: 0,1 -->
+<!-- Mandatory -->
+<P4562>0</P4562>
+
+<!-- Support SIP Instance ID. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+<P288>1</P288>
+
+<!-- Hold Target Before Refer 0 - No, 1 - Yes -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P26003>1</P26003>
+
+<!-- Refer-To Use Target Contact. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P135></P135>
+
+<!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes. -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+{if isset($subscribe_mwi)}
+<P99>{$subscribe_mwi}</P99>
+{else}
+<P99>0</P99>
+{/if}
+
+<!-- Enable 100rel. 0 - No, 1 - Yes -->
+<!-- Number: 0 to 1 -->
+<!-- Mandatory  -->
+<P272>0</P272>
+
+<!-- Tel URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled -->
+<!-- Number: 0,1,2 -->
+<!-- Mandatory  -->
+<P63>0</P63>
+
+<!-- Do Not Escape '#' as %23 in SIP URI. 0 - No, 1 - Yes -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P1406>0</P1406>
+
+<!-- Disable Multiple m Line in SDP. 0 - No, 1 - Yes -->
+<P137>0</P137>
+
+<!-- Use Privacy Header. 0 - Default, 1 - No, 2 - Yes -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
+<P2338>0</P2338>
+
+<!-- Use P-Preferred-Identity Header. 0 - Default, 1 - No, 2 - Yes -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
+<P2339>0</P2339>
+
+<!-- ########################################### -->
+<!-- #  Profile 1/SIP Settings/Session Timer  ## -->
+<!-- ########################################### -->
+
+<!-- Session Expiration (in seconds. default 180 seconds. Allowed value: 90-65535) -->
+<!-- Number: 90 to 64800 -->
+<!-- Mandatory  -->
+<P260>180</P260>
+
+<!-- Minimum SE (in seconds. default 90 seconds, must be lower than or equal to P260) -->
+<!-- Number 90 to 64800 -->
+<!-- Mandatory  -->
+<P261>90</P261>
+
+<!-- Caller Request Timer (Request for timer when calling) 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P262>0</P262>
+
+<!-- Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P263>0</P263>
+
+<!-- Force Timer (Still use timer when remote party does not support timer) 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P264>0</P264>
+
+<!-- UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS -->
+<!-- Number: 0,1,2 -->
+<!-- Mandatory  -->
+<P266>0</P266>
+
+<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS -->
+<!-- Number: 1,2 -->
+<!-- Mandatory  -->
+<P267>1</P267>
+
+<!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P265>0</P265>
+
+<!-- ############################################### -->
+<!-- #  Profile 1/SIP Settings/Security Settings  ## -->
+<!-- ############################################### -->
+
+<!-- Validate Incoming Messages. 0 - No, 1 - Yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P4340>0</P4340>
+
+<!-- Check SIP User ID for Incoming INVITE. 0 - No, 1 - Yes (no direct IP calling if Yes) -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P258>0</P258>
+
+<!-- Allow Incoming SIP Messages from SIP Proxy Only -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P243>0</P243>
+
+<!-- Authenticate incoming INVITE  -->
+<!-- Number: 0,1 -->
+<P2346>0</P2346>
+
+<!-- Authenticate server certificate domain. 0 - No, 1 - Yes, default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P2311>0</P2311>
+
+<!-- Authenticate server certificate chain. 0 - No, 1 - Yes, default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P2367>0</P2367>
+
+<!-- Trusted CA certificates. -->
+<!-- String -->
+<P2386></P2386>
+
+<!-- ############################### -->
+<!-- #  Profile 1/Audio Settings  ## -->
+<!-- ############################### -->
+
+<!-- Preferred DTMF Method 1  -->
+<!-- 100 - In-audio, 101 - RFC2833, 102 - SIP INFO -->
+<!-- Priority 1 -->
+<!-- Number: 100 to 102 -->
+<!-- Mandatory -->
+<P850>101</P850>
+
+<!-- Preferred DTMF Method 2 -->
+<!-- Number: 100 to 102 -->
+<!-- Mandatory  -->
+<P851>102</P851>
+
+<!-- Preferred DTMF Method 3 -->
+<!-- Number: 100 to 102 -->
+<!-- Mandatory  -->
+<P852>100</P852>
+
+<!-- Disable DTMF Negotiation. 0 - no, 1 - yes  -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+<P4825>0</P4825>
+
+<!-- DTMF Payload Type -->
+<!-- Number: 96 to 127 -->
+<P79>101</P79>
+
+<!-- Preferred Vocoder -->
+<!-- 0 - PCMU, 8 - PCMA, 4 - G.723, 18 - G.729, 2 - G.726-32, 100 - AAL2-G.726-16, -->
+<!-- 102 - AAL2-G.726-24, 104 - AAL2-G726-32, 103 - AAL2-G.726-40, 98 - iLBC, 9 - G.722(wide band) -->
+<!-- Choice 1.  -->
+<!-- Mandatory -->
+<!-- <P57>0</P57> -->
+<P57>0</P57>
+
+<!-- Choice 2.  -->
+<!-- Mandatory -->
+<!-- <P58>8</P58> -->
+<P58>8</P58>
+
+<!-- Choice 3.  -->
+<!-- Mandatory -->
+<!-- <P59>4</P59> -->
+<P59>4</P59>
+
+<!-- Choice 4.  -->
+<!-- Mandatory  -->
+<!-- <P60>18</P60> -->
+<P60>18</P60>
+
+<!-- Choice 5.  -->
+<!-- Mandatory -->
+<!-- <P61>2</P61> -->
+<P61>2</P61>
+
+<!-- Choice 6.  -->
+<!-- Mandatory  -->
+<!-- <P62>98</P62> -->
+<P62>98</P62>
+
+<!-- Choice 7.  -->
+<!-- Mandatory -->
+<!-- <P46>104</P46> -->
+<P46>104</P46>
+
+<!-- Choice 8.  -->
+<!-- Mandatory -->
+<!-- <P98>100</P98> -->
+<P98>100</P98>
+
+<!-- Voice Frame per TX. (Default 2, from 1 to 4 for G711/G726/G729) -->
+<!-- Number: 1 to 4 -->
+<P37>2</P37>
+
+<!-- G723 rate. 0 - 6.3kbps encoding rate, 1 - 5.3kbps encoding rate -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P49>0</P49>
+
+<!-- G726-32 Packing Mode. 0 - ITU, 1 - IETF -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P2323>0</P2323>
+
+<!-- iLBC Frame Size. 0 - 20ms(default), 1 - 30ms. -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P97>0</P97>
+
+<!-- iLBC payload type. Between 96 and 127, default is 97. -->
+<!-- Number: 96 to 127 -->
+<!-- Mandatory  -->
+<P96>97</P96>
+
+<!-- Disable OPUS stereo in SDP, default is 0. -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P20529></P20529>
+
+<!-- OPUS Payload Type, default is 125. -->
+<!-- Number: 96 to 127 -->
+<!-- Mandatory  -->
+<P2385>125</P2385>
+
+<!-- Use First Matching Vocoder in 200OK SDP. 0 - No, 1 - Yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P4363>0</P4363>
+
+<!-- SRTP Mode -->
+<!-- 0=Disabled -->
+<!-- 1=Enabled but not forced -->
+<!-- 2=Enabled and forced -->
+<!-- Number: 0,1,2 -->
+<!-- Mandatory -->
+<P183>0</P183>
+
+<!-- Crypto Life Time -->
+<!-- 0=Disabled -->
+<!-- 1=Enabled -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P2363>1</P2363>
+
+<!-- Silence Suppression (VAD). 0 - No, 1 - Yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P50>0</P50>
+
+<!-- Jitter Buffer Type. 0 - Fixed, 1 - Adaptive -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+<P133>1</P133>
+
+<!-- Jitter Buffer Length. 0 - Low, 1 - Medium, 2 - High -->
+<!-- Number: 0,1,2 -->
+<!-- Mandatory -->
+<P132>1</P132>
+
+<!-- ############################## -->
+<!-- #  Profile 1/Call Settings  ## -->
+<!-- ############################## -->
+
+<!-- Early Dial. 0 - No, 1 - Yes (use "Yes" only if proxy supports 484 response). 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P29>0</P29>
+
+<!-- Dial Plan Prefix.(this prefix string is added to each dialed number) -->
+<!-- String Max Length: 32 -->
+<P66></P66>
+
+<!-- Dial Plan  -->
+<!-- String Max Length: 1024 -->
+  
+{if isset($grandstream_dial_plan) }
+<P4200>{$grandstream_dial_plan}</P4200>
+{else}
+<P4200>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P4200>
+{/if}
+  
+<!-- <P4200>{ x+ | *x+ | *xx | *xxx | *xxxx | *xxxxx | *xxxxxx | **xx | **xxx | **xxxx | **xxxxx | **xxxxxx | **xxxxxxx | **xxxxxxxx | *xx*x+ | \+x+ | \p\a\r\k\+*x+ }</P4200> -->
+
+<!-- Use #as Dial Key (if set to Yes, "#" will function as the "(Re-)Dial" key). 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P72>1</P72>
+
+<!-- No Key Entry Timeout. Default - 4 seconds. -->
+<!-- Number: 1 to 15 -->
+<!-- Mandatory -->
+<P85>4</P85>
+
+<!-- Offhook Auto-Dial Delay (default is 0) -->
+<!-- String: 0 to 60 -->
+<P4045>0</P4045>
+
+<!-- Enable Call Features. 0 - No, 1 - Yes, 2 - Enable All -->
+<P191>1</P191>
+
+<!-- Disable Call Waiting Caller ID. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P714>0</P714>
+
+<!-- Disable Call Waiting Tone. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P186>0</P186>
+
+<!-- Disable Visual MWI. 0 - No, 1 - Yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P855>0</P855>
+
+<!-- Transfer on Conference Hangup. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P4560>0</P4560>
+
+<!-- Ring Timeout. (10-300, default is 60 seconds) -->
+<!-- Number: 10 to 300 -->
+<!-- Mandatory  -->
+<P185>60</P185>
+
+<!-- Hunting Group Ring Timeout. (5-300, default is 20 seconds) -->
+<!-- Number: 5 to 300 -->
+<!-- Mandatory  -->
+<P4330>20</P4330>
+
+<!-- Send Anonymous. 0 - no, 1 - yes (caller ID will be blocked if set to Yes). -->
+<!-- Number: 0 to 1 -->
+<!-- Mandatory  -->
+<P65>0</P65>
+
+<!-- Anonymous Call Rejection. 0 - No, 1 - Yes. -->
+<!-- Number: 0 to 1 -->
+<!-- Mandatory  -->
+<P129>0</P129>
+
+<!-- Special Feature -->
+<!-- 100 - Standard, 102 - BroadSoft, 108 - CBCOM, 109 - RNK, 111 - Huawei, 114 - ZTE IMS, 119 - PhonePower, 120 - TELKOM SA. -->
+<!-- Number: 100, 102, 108, 109, 111, 114, 119, 120 -->
+<!-- Mandatory  -->
+<P198>100</P198>
+
+<!-- ################ -->
+<!-- #  Profile 2  ## -->
+<!-- ################ -->
+
+<!-- ################################# -->
+<!-- #  Profile 2/General Settings  ## -->
+<!-- #################################  -->
+
+<!-- Profile Active.  0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+{if isset($account.2.password)}
+<P401>1</P401>
+{else}
+<P401>0</P401>
+{/if}
+
+<!-- Primary SIP Server -->
+<!-- String: serveraddress  -->
+<P747>{$account.2.server_address}</P747>
+
+<!-- Failover SIP Server -->
+<!-- String: serveraddress  -->
+<P987></P987>
+
+<!-- Prefer Primary SIP Server. 0 - No, 1 - Yes. -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+<P4568>0</P4568>
+
+<!-- Outbound Proxy -->
+<!-- String: serveraddress  -->
+<P748>{$account.2.outbound_proxy}</P748>
+
+<!-- Voice Mail Access Number -->
+<!-- String -->
+<P27681>*97</P27681>
+
+<!-- ################################# -->
+<!-- #  Profile 2/Network Settings  ## -->
+<!-- #################################  -->
+
+<!-- Layer 3 QoS SIP Diff-Serv (default 24) -->
+<!-- Number -->
+<!-- Mandatory -->
+<P5047>24</P5047>
+
+<!-- Layer 3 QoS RTP Diff-Serv (default 46) -->
+<!-- Number -->
+<!-- Mandatory -->
+<P5051>46</P5051>
+
+<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP . -->
+<!-- Number: 0,1,2,3 -->
+<!-- Mandatory  -->
+{if isset($account.2.dns_mode)}
+<P702>{$account.2.dns_mode}</P702>
+{else}
+<P702>0</P702>
+{/if}
+
+<!-- Primary IP -->
+<!-- IP address -->
+<P2408></P2408>
+
+<!-- Backup IP1 -->
+<!-- IP address -->
+<P2409></P2409>
+
+<!-- Backup IP2 -->
+<!-- IP address -->
+<P2410></P2410>
+
+<!-- NAT Traversal (STUN). 0 - No, 2 - No but send keep-alive, 1 - Yes -->
+<!-- Number: 0,1,2 -->
+<!-- Mandatory -->
+{if isset($grandstream_nat_traversal_2) }
+<P730>{$grandstream_nat_traversal_2}</P730>
+{else}
+<P730>0</P730>
+{/if}
+
+<!-- Use NAT IP.  This will enable our SIP client to use this IP in the SIP message. Example 64.3.153.50. -->
+<!-- String: ipaddress  -->
+<P866></P866>
+
+<!-- Proxy-Require (A SIP extension to enable firewall penetration) -->
+<!-- String: ipaddress  -->
+<P792></P792>
+
+<!-- ############################################ -->
+<!-- #  Profile 2/SIP Settings/Basic Settings  ## -->
+<!-- ############################################ -->
+
+<!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS -->
+<!-- Number: 0,1,2 -->
+<!-- Mandatory -->
+{$tp=0}
+{if $account.2.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.2.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.2.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.2.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P830>{$tp}</P830>
+
+<!-- SIP Registration. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P731>1</P731>
+
+<!-- Unregister On Reboot. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P752>0</P752>
+
+<!-- Add Auth Header On Initial REGISTER -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P2459>0</P2459>
+
+<!-- Outgoing call without Registration. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P813>1</P813>
+
+<!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
+<!-- Number: 1 to 64800 -->
+<!-- Mandatory  -->
+<P732>60</P732>
+
+<!-- SIP Registration Failure Retry Wait Time (in seconds. Between 1-3600, default is 30) -->
+<!-- Number: 1 to 3600 -->
+<!-- Mandatory  -->
+<P471>30</P471>
+
+<!-- SIP Registration Failure Retry Wait Time upon 403 Forbidden. 0 second means stop retry registration. Default is 1200 sec. -->
+<!-- Number 0 to 3600 -->
+<!-- Mandatory -->
+<P26102>1200</P26102>
+
+<!-- Reregister before Expiration -->
+<!-- Number -->
+<!-- Mandatory -->
+<P2430>0</P2430>
+
+<!-- Local SIP port (default 5060) -->
+<!-- Number: 1 to 65535 -->
+<!-- Mandatory  -->
+<P740>5060</P740>
+
+<!-- Use Random SIP Port 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P778>0</P778>
+
+<!-- SIP T1 Timeout. RFC 3261 T1 value. -->
+<!-- 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default 100. -->
+<!-- Number: 50,100,200,400,800 -->
+<!-- Mandatory -->
+<P440>50</P440>
+
+<!-- SIP T2 Timeout. RFC 3261 T2 value. -->
+<!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec, 1600 - 16 sec, 3200 - 32 sec. Default 400. -->
+<!-- Number: 1600,3200,200,400,800 -->
+<!-- Mandatory  -->
+<P441>400</P441>
+
+<!-- SIP TIMER D. Config Timer D defined in RFC 3261.  -->
+<!-- Range 0-64 sec. Default 0 -->
+<!-- Number: 0-64 -->
+<!-- Mandatory  -->
+<P2487>0</P2487>
+
+<!-- Remove OBP from Route Header. 0 - no, 1 - yes -->
+<!-- NUmber: 0,1 -->
+<!-- Mandatory -->
+<P4563>0</P4563>
+
+<!-- Support SIP Instance ID. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+<P489>1</P489>
+
+<!-- Hold Target Before Refer 0 - No, 1 - Yes -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P26103>1</P26103>
+
+<!-- Refer-To Use Target Contact. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P469></P469>
+
+<!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes. -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+{if isset($subscribe_mwi)}
+<P709>{$subscribe_mwi}</P709>
+{else}
+<P709>0</P709>
+{/if}
+
+<!-- Enable 100rel. 0 - No, 1 - Yes -->
+<!-- Number: 0 to 1 -->
+<!-- Mandatory  -->
+<P435>0</P435>
+
+<!-- Tel URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled -->
+<!-- Number: 0,1,2 -->
+<!-- Mandatory  -->
+<P763>0</P763>
+
+<!-- Do Not Escape '#' as %23 in SIP URI. 0 - No, 1 - Yes -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P4895>0</P4895>
+
+<!-- Disable Multiple m Line in SDP. 0 - No, 1 - Yes -->
+<P487>0</P487>
+
+<!-- Use Privacy Header. 0 - Default, 1 - No, 2 - Yes -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
+<P2438>0</P2438>
+
+<!-- Use P-Preferred-Identity Header. 0 - Default, 1 - No, 2 - Yes -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
+<P2439>0</P2439>
+
+<!-- ########################################### -->
+<!-- #  Profile 2/SIP Settings/Session Timer  ## -->
+<!-- ########################################### -->
+
+<!-- Session Expiration (in seconds. default 180 seconds. Allowed value: 90-65535) -->
+<!-- Number: 90 to 64800 -->
+<!-- Mandatory  -->
+<P434>180</P434>
+
+<!-- Minimum SE (in seconds. default 90 seconds, must be lower than or equal to P260) -->
+<!-- Number 90 to 64800 -->
+<!-- Mandatory  -->
+<P427>90</P427>
+
+<!-- Caller Request Timer (Request for timer when calling) 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P428>0</P428>
+
+<!-- Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P429>0</P429>
+
+<!-- Force Timer (Still use timer when remote party does not support timer) 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P430>0</P430>
+
+<!-- UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS -->
+<!-- Number: 0,1,2 -->
+<!-- Mandatory  -->
+<P432>0</P432>
+
+<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS -->
+<!-- Number: 1,2 -->
+<!-- Mandatory  -->
+<P433>1</P433>
+
+<!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P431>0</P431>
+
+<!-- ############################################### -->
+<!-- #  Profile 2/SIP Settings/Security Settings  ## -->
+<!-- ############################################### -->
+
+<!-- Validate Incoming Messages. 0 - No, 1 - Yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P4341>0</P4341>
+
+<!-- Check SIP User ID for Incoming INVITE. 0 - No, 1 - Yes (no direct IP calling if Yes) -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P449>0</P449>
+
+<!-- Allow Incoming SIP Messages from SIP Proxy Only -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P743>0</P743>
+
+<!-- Authenticate incoming INVITE  -->
+<!-- Number: 0,1 -->
+<P2446>0</P2446>
+
+<!-- Authenticate server certificate domain. 0 - No, 1 - Yes, default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P2411>0</P2411>
+
+<!-- Authenticate server certificate chain. 0 - No, 1 - Yes, default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P2467>0</P2467>
+
+<!-- Trusted CA certificates. -->
+<!-- String -->
+<P2486></P2486>
+
+<!-- ############################### -->
+<!-- #  Profile 2/Audio Settings  ## -->
+<!-- ############################### -->
+
+<!-- Preferred DTMF Method 1  -->
+<!-- 100 - In-audio, 101 - RFC2833, 102 - SIP INFO -->
+<!-- Priority 1 -->
+<!-- Number: 100 to 102 -->
+<!-- Mandatory -->
+<P860>101</P860>
+
+<!-- Preferred DTMF Method 2 -->
+<!-- Number: 100 to 102 -->
+<!-- Mandatory  -->
+<P861>102</P861>
+
+<!-- Preferred DTMF Method 3 -->
+<!-- Number: 100 to 102 -->
+<!-- Mandatory  -->
+<P862>100</P862>
+
+<!-- Disable DTMF Negotiation. 0 - no, 1 - yes  -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+<P4826>0</P4826>
+
+<!-- DTMF Payload Type -->
+<!-- Number: 96 to 127 -->
+<P779>101</P779>
+
+<!-- Preferred Vocoder -->
+<!-- 0 - PCMU, 8 - PCMA, 4 - G.723, 18 - G.729, 2 - G.726-32, 100 - AAL2-G.726-16, -->
+<!-- 102 - AAL2-G.726-24, 104 - AAL2-G726-32, 103 - AAL2-G.726-40, 98 - iLBC, 9 - G.722(wide band) -->
+<!-- Choice 1.  -->
+<!-- Mandatory -->
+<P757>0</P757>
+
+<!-- Choice 2.  -->
+<!-- Mandatory -->
+<P758>8</P758>
+
+<!-- Choice 3.  -->
+<!-- Mandatory -->
+<P759>4</P759>
+
+<!-- Choice 4.  -->
+<!-- Mandatory  -->
+<P760>18</P760>
+
+<!-- Choice 5.  -->
+<!-- Mandatory -->
+<P761>2</P761>
+
+<!-- Choice 6.  -->
+<!-- Mandatory  -->
+<P762>98</P762>
+
+<!-- Choice 7.  -->
+<!-- Mandatory -->
+<P814>104</P814>
+
+<!-- Choice 8.  -->
+<!-- Mandatory -->
+<P815>100</P815>
+
+<!-- Voice Frame per TX. (Default 2, from 1 to 4 for G711/G726/G729) -->
+<!-- Number: 1 to 4 -->
+<P737>2</P737>
+
+<!-- G723 rate. 0 - 6.3kbps encoding rate, 1 - 5.3kbps encoding rate -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P749>0</P749>
+
+<!-- G726-32 Packing Mode. 0 - ITU, 1 - IETF -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P2423>0</P2423>
+
+<!-- iLBC Frame Size. 0 - 20ms(default), 1 - 30ms. -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P705>0</P705>
+
+<!-- iLBC payload type. Between 96 and 127, default is 97. -->
+<!-- Number: 96 to 127 -->
+<!-- Mandatory  -->
+<P704>97</P704>
+
+<!-- Disable OPUS stereo in SDP, default is 0. -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P20530></P20530>
+
+<!-- OPUS Payload Type, default is 125. -->
+<!-- Number: 96 to 127 -->
+<!-- Mandatory  -->
+<P2485>125</P2485>
+
+<!-- Use First Matching Vocoder in 200OK SDP. 0 - No, 1 - Yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P4364>0</P4364>
+
+<!-- SRTP Mode -->
+<!-- 0=Disabled -->
+<!-- 1=Enabled but not forced -->
+<!-- 2=Enabled and forced -->
+<!-- Number: 0,1,2 -->
+<!-- Mandatory -->
+<P443>0</P443>
+
+<!-- Crypto Life Time -->
+<!-- 0=Disabled -->
+<!-- 1=Enabled -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P2463>1</P2463>
+
+<!-- Silence Suppression (VAD). 0 - No, 1 - Yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P750>0</P750>
+
+<!-- Jitter Buffer Type. 0 - Fixed, 1 - Adaptive -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+<P831>1</P831>
+
+<!-- Jitter Buffer Length. 0 - Low, 1 - Medium, 2 - High -->
+<!-- Number: 0,1,2 -->
+<!-- Mandatory -->
+<P832>1</P832>
+
+<!-- ############################## -->
+<!-- #  Profile 2/Call Settings  ## -->
+<!-- ############################## -->
+
+<!-- Early Dial. 0 - No, 1 - Yes (use "Yes" only if proxy supports 484 response). 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P729>0</P729>
+
+<!-- Dial Plan Prefix.(this prefix string is added to each dialed number) -->
+<!-- String Max Length: 32 -->
+<P766></P766>
+
+<!-- Dial Plan  -->
+<!-- String Max Length: 1024 -->
+<P4201>{ x+ | *x+ | *xx | *xxx | *xxxx | *xxxxx | *xxxxxx | **xx | **xxx | **xxxx | **xxxxx | **xxxxxx | **xxxxxxx | **xxxxxxxx | *xx*x+ }</P4201>
+<!-- <P4201>{ x+ | *x+ | *xx | *xxx | *xxxx | *xxxxx | *xxxxxx | **xx | **xxx | **xxxx | **xxxxx | **xxxxxx | **xxxxxxx | **xxxxxxxx | *xx*x+ | \+x+ | \p\a\r\k\+*x+ }</P4201> -->
+
+<!-- Use #as Dial Key (if set to Yes, "#" will function as the "(Re-)Dial" key). 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P772>1</P772>
+
+<!-- No Key Entry Timeout. Default - 4 seconds. -->
+<!-- Number: 1 to 15 -->
+<!-- Mandatory -->
+<P292>4</P292>
+
+<!-- Offhook Auto-Dial Delay (default is 0) -->
+<!-- String: 0 to 60 -->
+<P4046>0</P4046>
+
+<!-- Enable Call Features. 0 - No, 1 - Yes, 2 - Enable All -->
+<P751>1</P751>
+
+<!-- Disable Call Waiting Caller ID. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P823>0</P823>
+
+<!-- Disable Call Waiting Tone. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P817>0</P817>
+
+<!-- Disable Visual MWI. 0 - No, 1 - Yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P869>0</P869>
+
+<!-- Transfer on Conference Hangup. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P4561>0</P4561>
+
+<!-- Ring Timeout. (10-300, default is 60 seconds) -->
+<!-- Number: 10 to 300 -->
+<!-- Mandatory  -->
+<P816>60</P816>
+
+<!-- Hunting Group Ring Timeout. (5-300, default is 20 seconds) -->
+<!-- Number: 5 to 300 -->
+<!-- Mandatory  -->
+<P4331>20</P4331>
+
+<!-- Send Anonymous. 0 - no, 1 - yes (caller ID will be blocked if set to Yes). -->
+<!-- Number: 0 to 1 -->
+<!-- Mandatory  -->
+<P765>0</P765>
+
+<!-- Anonymous Call Rejection. 0 - No, 1 - Yes. -->
+<!-- Number: 0 to 1 -->
+<!-- Mandatory  -->
+<P446>0</P446>
+
+<!-- Special Feature -->
+<!-- 100 - Standard, 102 - BroadSoft, 108 - CBCOM, 109 - RNK, 111 - Huawei, 114 - ZTE IMS, 119 - PhonePower, 120 - TELKOM SA. -->
+<!-- Number: 100, 102, 108, 109, 111, 114, 119, 120 -->
+<!-- Mandatory  -->
+<P767>100</P767>
+
+<!-- ################# -->
+<!-- #  Profile 3   ## -->
+<!-- ################# -->
+
+<!-- ################################# -->
+<!-- #  Profile 3/General Settings  ## -->
+<!-- ################################# -->
+
+<!-- Profile Active.  0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+{if isset($account.3.password)}
+<P501>1</P501>
+{else}
+<P501>0</P501>
+{/if}
+<!-- Primary SIP Server -->
+<!-- String: serveraddress  -->
+<P547>{$account.3.server_address}</P547>
+
+<!-- Failover SIP Server -->
+<!-- String: serveraddress  -->
+<P997></P997>
+
+<!-- Prefer Primary SIP Server. 0 - No, 1 - Yes. -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+<P4569>0</P4569>
+
+<!-- Outbound Proxy -->
+<!-- String: serveraddress  -->
+<P548>{$account.3.outbound_proxy}</P548>
+
+<!-- Voice Mail Access Number -->
+<!-- String -->
+<P27682>*97</P27682>
+
+<!-- ################################# -->
+<!-- #  Profile 3/Network Settings  ## -->
+<!-- ################################# -->
+
+<!-- Layer 3 QoS SIP Diff-Serv (default 24) -->
+<!-- Number -->
+<!-- Mandatory -->
+<P5048>24</P5048>
+
+<!-- Layer 3 QoS RTP Diff-Serv (default 46) -->
+<!-- Number -->
+<!-- Mandatory -->
+<P5052>46</P5052>
+
+<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP . -->
+<!-- Number: 0,1,2,3 -->
+<!-- Mandatory  -->
+{if isset($account.3.dns_mode) }
+<P502>{$account.3.dns_mode}</P502>
+{else}
+<P502>0</P502>
+{/if}
+
+<!-- Primary IP -->
+<!-- IP address -->
+<P2508></P2508>
+
+<!-- Backup IP1 -->
+<!-- IP address -->
+<P2509></P2509>
+
+<!-- Backup IP2 -->
+<!-- IP address -->
+<P2510></P2510>
+
+<!-- NAT Traversal (STUN). 0 - No, 2 - No but send keep-alive, 1 - Yes -->
+<!-- Number: 0,1,2 -->
+<!-- Mandatory -->
+{if isset($grandstream_nat_traversal_3)}
+<P630>{$grandstream_nat_traversal_3}</P630>
+{else}
+<P630>0</P630>
+{/if}
+
+<!-- Use NAT IP.  This will enable our SIP client to use this IP in the SIP message. Example 64.3.153.50. -->
+<!-- String: ipaddress  -->
+<P566></P566>
+
+<!-- Proxy-Require (A SIP extension to enable firewall penetration) -->
+<!-- String: ipaddress  -->
+<P592></P592>
+
+<!-- ############################################ -->
+<!-- #  Profile 3/SIP Settings/Basic Settings  ## -->
+<!-- ############################################ -->
+
+<!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS -->
+<!-- Number: 0,1,2 -->
+<!-- Mandatory -->
+{$tp=0}
+{if $account.3.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.3.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.3.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.3.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P530>{$tp}</P530>
+
+<!-- SIP Registration. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P531>1</P531>
+
+<!-- Unregister On Reboot. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P552>0</P552>
+
+<!-- Add Auth Header On Initial REGISTER -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P2559>0</P2559>
+
+<!-- Outgoing call without Registration. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P513>1</P513>
+
+<!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
+<!-- Number: 1 to 64800 -->
+<!-- Mandatory  -->
+<P532>60</P532>
+
+<!-- SIP Registration Failure Retry Wait Time (in seconds. Between 1-3600, default is 30) -->
+<!-- Number: 1 to 3600 -->
+<!-- Mandatory  -->
+<P571>30</P571>
+
+<!-- SIP Registration Failure Retry Wait Time upon 403 Forbidden. 0 second means stop retry registration. Default is 1200 sec. -->
+<!-- Number 0 to 3600 -->
+<!-- Mandatory -->
+<P26202>1200</P26202>
+
+<!-- Reregister before Expiration -->
+<!-- Number -->
+<!-- Mandatory -->
+<P2530>0</P2530>
+
+<!-- Local SIP port (default 5060) -->
+<!-- Number: 1 to 65535 -->
+<!-- Mandatory  -->
+<P640>5060</P640>
+
+<!-- Use Random SIP Port 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P578>0</P578>
+
+<!-- SIP T1 Timeout. RFC 3261 T1 value. -->
+<!-- 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default 100. -->
+<!-- Number: 50,100,200,400,800 -->
+<!-- Mandatory -->
+<P540>50</P540>
+
+<!-- SIP T2 Timeout. RFC 3261 T2 value. -->
+<!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec, 1600 - 16 sec, 3200 - 32 sec. Default 400. -->
+<!-- Number: 1600,3200,200,400,800 -->
+<!-- Mandatory  -->
+<P541>400</P541>
+
+<!-- SIP TIMER D. Config Timer D defined in RFC 3261.  -->
+<!-- Range 0-64 sec. Default 0 -->
+<!-- Number: 0-64 -->
+<!-- Mandatory  -->
+<P2587>0</P2587>
+
+<!-- Remove OBP from Route Header. 0 - no, 1 - yes -->
+<!-- NUmber: 0,1 -->
+<!-- Mandatory -->
+<P4564>0</P4564>
+
+<!-- Support SIP Instance ID. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+<P589>1</P589>
+
+<!-- Hold Target Before Refer 0 - No, 1 - Yes -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P26203>1</P26203>
+
+<!-- Refer-To Use Target Contact. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P569></P569>
+
+<!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes. -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+{if isset($subscribe_mwi)}
+<P509>{$subscribe_mwi}</P509>
+{else}
+<P509>0</P509>
+{/if}
+
+<!-- Enable 100rel. 0 - No, 1 - Yes -->
+<!-- Number: 0 to 1 -->
+<!-- Mandatory  -->
+<P535>0</P535>
+
+<!-- Tel URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled -->
+<!-- Number: 0,1,2 -->
+<!-- Mandatory  -->
+<P563>0</P563>
+
+<!-- Do Not Escape '#' as %23 in SIP URI. 0 - No, 1 - Yes -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P4896>0</P4896>
+
+<!-- Disable Multiple m Line in SDP. 0 - No, 1 - Yes -->
+<P587>0</P587>
+
+<!-- Use Privacy Header. 0 - Default, 1 - No, 2 - Yes -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
+<P2538>0</P2538>
+
+<!-- Use P-Preferred-Identity Header. 0 - Default, 1 - No, 2 - Yes -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
+<P2539>0</P2539>
+
+<!-- ########################################### -->
+<!-- #  Profile 3/SIP Settings/Session Timer  ## -->
+<!-- ########################################### -->
+
+<!-- Session Expiration (in seconds. default 180 seconds. Allowed value: 90-65535) -->
+<!-- Number: 90 to 64800 -->
+<!-- Mandatory  -->
+<P534>180</P534>
+
+<!-- Minimum SE (in seconds. default 90 seconds, must be lower than or equal to P260) -->
+<!-- Number 90 to 64800 -->
+<!-- Mandatory  -->
+<P527>90</P527>
+
+<!-- Caller Request Timer (Request for timer when calling) 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P528>0</P528>
+
+<!-- Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P629>0</P629>
+
+<!-- Force Timer (Still use timer when remote party does not support timer) 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P664>0</P664>
+
+<!-- UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS -->
+<!-- Number: 0,1,2 -->
+<!-- Mandatory  -->
+<P632>0</P632>
+
+<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS -->
+<!-- Number: 1,2 -->
+<!-- Mandatory  -->
+<P533>1</P533>
+
+<!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P365>0</P365>
+
+<!-- ############################################### -->
+<!-- #  Profile 3/SIP Settings/Security Settings  ## -->
+<!-- ############################################### -->
+
+<!-- Validate Incoming Messages. 0 - No, 1 - Yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P4342>0</P4342>
+
+<!-- Check SIP User ID for Incoming INVITE. 0 - No, 1 - Yes (no direct IP calling if Yes) -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P549>0</P549>
+
+<!-- Allow Incoming SIP Messages from SIP Proxy Only -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P4043>0</P4043>
+
+<!-- Authenticate incoming INVITE  -->
+<!-- Number: 0,1 -->
+<P2546>0</P2546>
+
+<!-- Authenticate server certificate domain. 0 - No, 1 - Yes, default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P2511>0</P2511>
+
+<!-- Authenticate server certificate chain. 0 - No, 1 - Yes, default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P2567>0</P2567>
+
+<!-- Trusted CA certificates. -->
+<!-- String -->
+<P2586></P2586>
+
+<!-- ############################### -->
+<!-- #  Profile 3/Audio Settings  ## -->
+<!-- ############################### -->
+
+<!-- Preferred DTMF Method 1  -->
+<!-- 100 - In-audio, 101 - RFC2833, 102 - SIP INFO -->
+<!-- Priority 1 -->
+<!-- Number: 100 to 102 -->
+<!-- Mandatory -->
+<P560>101</P560>
+
+<!-- Preferred DTMF Method 2 -->
+<!-- Number: 100 to 102 -->
+<!-- Mandatory  -->
+<P561>102</P561>
+
+<!-- Preferred DTMF Method 3 -->
+<!-- Number: 100 to 102 -->
+<!-- Mandatory  -->
+<P562>100</P562>
+
+<!-- Disable DTMF Negotiation. 0 - no, 1 - yes  -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+<P4827>0</P4827>
+
+<!-- DTMF Payload Type -->
+<!-- Number: 96 to 127 -->
+<P579>101</P579>
+
+<!-- Preferred Vocoder -->
+<!-- 0 - PCMU, 8 - PCMA, 4 - G.723, 18 - G.729, 2 - G.726-32, 100 - AAL2-G.726-16, -->
+<!-- 102 - AAL2-G.726-24, 104 - AAL2-G726-32, 103 - AAL2-G.726-40, 98 - iLBC, 9 - G.722(wide band) -->
+<!-- Choice 1.  -->
+<!-- Mandatory -->
+<P557>0</P557>
+
+<!-- Choice 2.  -->
+<!-- Mandatory -->
+<P558>8</P558>
+
+<!-- Choice 3.  -->
+<!-- Mandatory -->
+<P559>4</P559>
+
+<!-- Choice 4.  -->
+<!-- Mandatory  -->
+<P660>18</P660>
+
+<!-- Choice 5.  -->
+<!-- Mandatory -->
+<P661>2</P661>
+
+<!-- Choice 6.  -->
+<!-- Mandatory  -->
+<P662>98</P662>
+
+<!-- Choice 7.  -->
+<!-- Mandatory -->
+<P514>104</P514>
+
+<!-- Choice 8.  -->
+<!-- Mandatory -->
+<P515>100</P515>
+
+<!-- Voice Frame per TX. (Default 2, from 1 to 4 for G711/G726/G729) -->
+<!-- Number: 1 to 4 -->
+<P4593>2</P4593>
+
+<!-- G723 rate. 0 - 6.3kbps encoding rate, 1 - 5.3kbps encoding rate -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P4350>0</P4350>
+
+<!-- G726-32 Packing Mode. 0 - ITU, 1 - IETF -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P2523>0</P2523>
+
+<!-- iLBC Frame Size. 0 - 20ms(default), 1 - 30ms. -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P505>0</P505>
+
+<!-- iLBC payload type. Between 96 and 127, default is 97. -->
+<!-- Number: 96 to 127 -->
+<!-- Mandatory  -->
+<P504>97</P504>
+
+<!-- Disable OPUS stereo in SDP, default is 0. -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P20531></P20531>
+
+<!-- OPUS Payload Type, default is 125. -->
+<!-- Number: 96 to 127 -->
+<!-- Mandatory  -->
+<P2585>125</P2585>
+
+<!-- Use First Matching Vocoder in 200OK SDP. 0 - No, 1 - Yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P4365>0</P4365>
+
+<!-- SRTP Mode -->
+<!-- 0=Disabled -->
+<!-- 1=Enabled but not forced -->
+<!-- 2=Enabled and forced -->
+<!-- Number: 0,1,2 -->
+<!-- Mandatory -->
+<P543>0</P543>
+
+<!-- Crypto Life Time -->
+<!-- 0=Disabled -->
+<!-- 1=Enabled -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P2563>1</P2563>
+
+<!-- Silence Suppression (VAD). 0 - No, 1 - Yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P550>0</P550>
+
+<!-- Jitter Buffer Type. 0 - Fixed, 1 - Adaptive -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+<P631>1</P631>
+
+<!-- Jitter Buffer Length. 0 - Low, 1 - Medium, 2 - High -->
+<!-- Number: 0,1,2 -->
+<!-- Mandatory -->
+<P835>1</P835>
+
+<!-- ############################## -->
+<!-- #  Profile 3/Call Settings  ## -->
+<!-- ############################## -->
+
+<!-- Early Dial. 0 - No, 1 - Yes (use "Yes" only if proxy supports 484 response). 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P529>0</P529>
+
+<!-- Dial Plan Prefix.(this prefix string is added to each dialed number) -->
+<!-- String Max Length: 32 -->
+<P666></P666>
+
+<!-- Dial Plan  -->
+<!-- String Max Length: 1024 -->
+<P4202>{ x+ | *x+ | *xx | *xxx | *xxxx | *xxxxx | *xxxxxx | **xx | **xxx | **xxxx | **xxxxx | **xxxxxx | **xxxxxxx | **xxxxxxxx | *xx*x+ }</P4202>
+<!-- <P4202>{ x+ | *x+ | *xx | *xxx | *xxxx | *xxxxx | *xxxxxx | **xx | **xxx | **xxxx | **xxxxx | **xxxxxx | **xxxxxxx | **xxxxxxxx | *xx*x+ | \+x+ | \p\a\r\k\+*x+ }</P4202> -->
+
+<!-- Use #as Dial Key (if set to Yes, "#" will function as the "(Re-)Dial" key). 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P572>1</P572>
+
+<!-- No Key Entry Timeout. Default - 4 seconds. -->
+<!-- Number: 1 to 15 -->
+<!-- Mandatory -->
+<P492>4</P492>
+
+<!-- Offhook Auto-Dial Delay (default is 0) -->
+<!-- String: 0 to 60 -->
+<P4047>0</P4047>
+
+<!-- Enable Call Features. 0 - No, 1 - Yes, 2 - Enable All -->
+<P551>1</P551>
+
+<!-- Disable Call Waiting Caller ID. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P523>0</P523>
+
+<!-- Disable Call Waiting Tone. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P517>0</P517>
+
+<!-- Disable Visual MWI. 0 - No, 1 - Yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P669>0</P669>
+
+<!-- Transfer on Conference Hangup. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P4565>0</P4565>
+
+<!-- Ring Timeout. (10-300, default is 60 seconds) -->
+<!-- Number: 10 to 300 -->
+<!-- Mandatory  -->
+<P516>60</P516>
+
+<!-- Hunting Group Ring Timeout. (5-300, default is 20 seconds) -->
+<!-- Number: 5 to 300 -->
+<!-- Mandatory  -->
+<P4332>20</P4332>
+
+<!-- Send Anonymous. 0 - no, 1 - yes (caller ID will be blocked if set to Yes). -->
+<!-- Number: 0 to 1 -->
+<!-- Mandatory  -->
+<P565>0</P565>
+
+<!-- Anonymous Call Rejection. 0 - No, 1 - Yes. -->
+<!-- Number: 0 to 1 -->
+<!-- Mandatory  -->
+<P546>0</P546>
+
+<!-- Special Feature -->
+<!-- 100 - Standard, 102 - BroadSoft, 108 - CBCOM, 109 - RNK, 111 - Huawei, 114 - ZTE IMS, 119 - PhonePower, 120 - TELKOM SA. -->
+<!-- Number: 100, 102, 108, 109, 111, 114, 119, 120 -->
+<!-- Mandatory  -->
+<P567>100</P567>
+
+<!-- ################ -->
+<!-- #  Profile 4  ## -->
+<!-- ################ -->
+
+<!-- ################################# -->
+<!-- #  Profile 4/General Settings  ## -->
+<!-- ################################# -->
+
+<!-- Profile Active.  0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+{if isset($account.4.password)}
+<P601>1</P601>
+{else}
+<P601>0</P601>
+{/if}
+
+<!-- Primary SIP Server -->
+<!-- String: serveraddress  -->
+<P602>{$account.4.server_address}</P602>
+
+<!-- Failover SIP Server -->
+<!-- String: serveraddress  -->
+<P998></P998>
+
+<!-- Prefer Primary SIP Server. 0 - No, 1 - Yes. -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+<P4570>0</P4570>
+
+<!-- Outbound Proxy -->
+<!-- String: serveraddress  -->
+<P603>{$account.4.outbound_proxy}</P603>
+
+<!-- Voice Mail Access Number -->
+<!-- String -->
+<P27683>*97</P27683>
+
+<!-- ################################# -->
+<!-- #  Profile 4/Network Settings  ## -->
+<!-- ################################# -->
+
+<!-- Layer 3 QoS SIP Diff-Serv (default 24) -->
+<!-- Number -->
+<!-- Mandatory -->
+<P5049>24</P5049>
+
+<!-- Layer 3 QoS RTP Diff-Serv (default 46) -->
+<!-- Number -->
+<!-- Mandatory -->
+<P5053>46</P5053>
+
+<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP . -->
+<!-- Number: 0,1,2,3 -->
+<!-- Mandatory  -->
+{if isset($account.4.dns_mode) }
+<P608>{$account.4.dns_mode}</P608>
+{else}
+<P608>0</P608>
+{/if}
+
+<!-- Primary IP -->
+<!-- IP address -->
+<P2608></P2608>
+
+<!-- Backup IP1 -->
+<!-- IP address -->
+<P2609></P2609>
+
+<!-- Backup IP2 -->
+<!-- IP address -->
+<P2610></P2610>
+
+<!-- NAT Traversal (STUN). 0 - No, 2 - No but send keep-alive, 1 - Yes -->
+<!-- Number: 0,1,2 -->
+<!-- Mandatory -->
+{if isset($grandstream_nat_traversal_4)}
+<P614>{$grandstream_nat_traversal_4}</P614>
+{else}
+<P614>0</P614>
+{/if}
+
+<!-- Use NAT IP.  This will enable our SIP client to use this IP in the SIP message. Example 64.3.153.50. -->
+<!-- String: ipaddress  -->
+<P4576></P4576>
+
+<!-- Proxy-Require (A SIP extension to enable firewall penetration) -->
+<!-- String: ipaddress  -->
+<P618></P618>
+
+<!-- ############################################ -->
+<!-- #  Profile 4/SIP Settings/Basic Settings  ## -->
+<!-- ############################################ -->
+
+<!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS -->
+<!-- Number: 0,1,2 -->
+<!-- Mandatory -->
+{$tp=0}
+{if $account.4.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.4.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.4.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.4.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P4648>{$tp}</P4648>
+
+<!-- SIP Registration. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P610>1</P610>
+
+<!-- Unregister On Reboot. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P611>0</P611>
+
+<!-- Add Auth Header On Initial REGISTER -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P2659>0</P2659>
+
+<!-- Outgoing call without Registration. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P4378>1</P4378>
+
+<!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
+<!-- Number: 1 to 64800 -->
+<!-- Mandatory  -->
+<P612>60</P612>
+
+<!-- SIP Registration Failure Retry Wait Time (in seconds. Between 1-3600, default is 30) -->
+<!-- Number: 1 to 3600 -->
+<!-- Mandatory  -->
+<P671>30</P671>
+
+<!-- SIP Registration Failure Retry Wait Time upon 403 Forbidden. 0 second means stop retry registration. Default is 1200 sec. -->
+<!-- Number 0 to 3600 -->
+<!-- Mandatory -->
+<P26302>1200</P26302>
+
+<!-- Reregister before Expiration -->
+<!-- Number -->
+<!-- Mandatory -->
+<P2630>0</P2630>
+
+<!-- Local SIP port (default 5060) -->
+<!-- Number: 1 to 65535 -->
+<!-- Mandatory  -->
+<P613>5060</P613>
+
+<!-- Use Random SIP Port 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P4792>0</P4792>
+
+<!-- SIP T1 Timeout. RFC 3261 T1 value. -->
+<!-- 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default 100. -->
+<!-- Number: 50,100,200,400,800 -->
+<!-- Mandatory -->
+<P4640>50</P4640>
+
+<!-- SIP T2 Timeout. RFC 3261 T2 value. -->
+<!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec, 1600 - 16 sec, 3200 - 32 sec. Default 400. -->
+<!-- Number: 1600,3200,200,400,800 -->
+<!-- Mandatory  -->
+<P641>400</P641>
+
+<!-- SIP TIMER D. Config Timer D defined in RFC 3261.  -->
+<!-- Range 0-64 sec. Default 0 -->
+<!-- Number: 0-64 -->
+<!-- Mandatory  -->
+<P2687></P2687>
+
+<!-- Remove OBP from Route Header. 0 - no, 1 - yes -->
+<!-- NUmber: 0,1 -->
+<!-- Mandatory -->
+<P4790>0</P4790>
+
+<!-- Support SIP Instance ID. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+<P689>1</P689>
+
+<!-- Hold Target Before Refer 0 - No, 1 - Yes -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P26303>1</P26303>
+
+<!-- Refer-To Use Target Contact. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P4649></P4649>
+
+<!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes. -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+{if isset($subscribe_mwi)}
+<P615>{$subscribe_mwi}</P615>
+{else}
+<P615>0</P615>
+{/if}
+
+<!-- Enable 100rel. 0 - No, 1 - Yes -->
+<!-- Number: 0 to 1 -->
+<!-- Mandatory  -->
+<P635>0</P635>
+
+<!-- Tel URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled -->
+<!-- Number: 0,1,2 -->
+<!-- Mandatory  -->
+<P609>0</P609>
+
+<!-- Do Not Escape '#' as %23 in SIP URI. 0 - No, 1 - Yes -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P4897>0</P4897>
+
+<!-- Disable Multiple m Line in SDP. 0 - No, 1 - Yes -->
+<P687>0</P687>
+
+<!-- Use Privacy Header. 0 - Default, 1 - No, 2 - Yes -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
+<P2638>0</P2638>
+
+<!-- Use P-Preferred-Identity Header. 0 - Default, 1 - No, 2 - Yes -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
+<P2639>0</P2639>
+
+<!-- ########################################### -->
+<!-- #  Profile 4/SIP Settings/Session Timer  ## -->
+<!-- ########################################### -->
+
+<!-- Session Expiration (in seconds. default 180 seconds. Allowed value: 90-65535) -->
+<!-- Number: 90 to 64800 -->
+<!-- Mandatory  -->
+<P4634>180</P4634>
+
+<!-- Minimum SE (in seconds. default 90 seconds, must be lower than or equal to P260) -->
+<!-- Number 90 to 64800 -->
+<!-- Mandatory  -->
+<P627>90</P627>
+
+<!-- Caller Request Timer (Request for timer when calling) 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P628>0</P628>
+
+<!-- Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P4629>0</P4629>
+
+<!-- Force Timer (Still use timer when remote party does not support timer) 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P4630>0</P4630>
+
+<!-- UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS -->
+<!-- Number: 0,1,2 -->
+<!-- Mandatory  -->
+<P4632>0</P4632>
+
+<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS -->
+<!-- Number: 1,2 -->
+<!-- Mandatory  -->
+<P633>1</P633>
+
+<!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P4631>0</P4631>
+
+<!-- ############################################### -->
+<!-- #  Profile 4/SIP Settings/Security Settings  ## -->
+<!-- ############################################### -->
+
+<!-- Validate Incoming Messages. 0 - No, 1 - Yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P4343>0</P4343>
+
+<!-- Check SIP User ID for Incoming INVITE. 0 - No, 1 - Yes (no direct IP calling if Yes) -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P649>0</P649>
+
+<!-- Allow Incoming SIP Messages from SIP Proxy Only -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P4044>0</P4044>
+
+<!-- Authenticate incoming INVITE  -->
+<!-- Number: 0,1 -->
+<P2646>0</P2646>
+
+<!-- Authenticate server certificate domain. 0 - No, 1 - Yes, default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P2611>0</P2611>
+
+<!-- Authenticate server certificate chain. 0 - No, 1 - Yes, default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P2667>0</P2667>
+
+<!-- Trusted CA certificates. -->
+<!-- String -->
+<P2686></P2686>
+
+<!-- ############################### -->
+<!-- #  Profile 4/Audio Settings  ## -->
+<!-- ############################### -->
+
+<!-- Preferred DTMF Method 1  -->
+<!-- 100 - In-audio, 101 - RFC2833, 102 - SIP INFO -->
+<!-- Priority 1 -->
+<!-- Number: 100 to 102 -->
+<!-- Mandatory -->
+<P4583>101</P4583>
+
+<!-- Preferred DTMF Method 2 -->
+<!-- Number: 100 to 102 -->
+<!-- Mandatory  -->
+<P4584>102</P4584>
+
+<!-- Preferred DTMF Method 3 -->
+<!-- Number: 100 to 102 -->
+<!-- Mandatory  -->
+<P4585>100</P4585>
+
+<!-- Disable DTMF Negotiation. 0 - no, 1 - yes  -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+<P4828>0</P4828>
+
+<!-- DTMF Payload Type -->
+<!-- Number: 96 to 127 -->
+<P4574>101</P4574>
+
+<!-- Preferred Vocoder -->
+<!-- 0 - PCMU, 8 - PCMA, 4 - G.723, 18 - G.729, 2 - G.726-32, 100 - AAL2-G.726-16, -->
+<!-- 102 - AAL2-G.726-24, 104 - AAL2-G726-32, 103 - AAL2-G.726-40, 98 - iLBC, 9 - G.722(wide band) -->
+<!-- Choice 1.  -->
+<!-- Mandatory -->
+<P651>0</P651>
+
+<!-- Choice 2.  -->
+<!-- Mandatory -->
+<P652>8</P652>
+
+<!-- Choice 3.  -->
+<!-- Mandatory -->
+<P653>4</P653>
+
+<!-- Choice 4.  -->
+<!-- Mandatory  -->
+<P654>18</P654>
+
+<!-- Choice 5.  -->
+<!-- Mandatory -->
+<P655>2</P655>
+
+<!-- Choice 6.  -->
+<!-- Mandatory  -->
+<P656>98</P656>
+
+<!-- Choice 7.  -->
+<!-- Mandatory -->
+<P4657>104</P4657>
+
+<!-- Choice 8.  -->
+<!-- Mandatory -->
+<P658>100</P658>
+
+<!-- Voice Frame per TX. (Default 2, from 1 to 4 for G711/G726/G729) -->
+<!-- Number: 1 to 4 -->
+<P4594>2</P4594>
+
+<!-- G723 rate. 0 - 6.3kbps encoding rate, 1 - 5.3kbps encoding rate -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P4349>0</P4349>
+
+<!-- G726-32 Packing Mode. 0 - ITU, 1 - IETF -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P2623>0</P2623>
+
+<!-- iLBC Frame Size. 0 - 20ms(default), 1 - 30ms. -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P695>0</P695>
+
+<!-- iLBC payload type. Between 96 and 127, default is 97. -->
+<!-- Number: 96 to 127 -->
+<!-- Mandatory  -->
+<P694>97</P694>
+
+<!-- Disable OPUS stereo in SDP, default is 0. -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P20532></P20532>
+
+<!-- OPUS Payload Type, default is 125. -->
+<!-- Number: 96 to 127 -->
+<!-- Mandatory  -->
+<P2685>125</P2685>
+
+<!-- Use First Matching Vocoder in 200OK SDP. 0 - No, 1 - Yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P4791>0</P4791>
+
+<!-- SRTP Mode -->
+<!-- 0=Disabled -->
+<!-- 1=Enabled but not forced -->
+<!-- 2=Enabled and forced -->
+<!-- Number: 0,1,2 -->
+<!-- Mandatory -->
+<P643>0</P643>
+
+<!-- Crypto Life Time -->
+<!-- 0=Disabled -->
+<!-- 1=Enabled -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P2663>1</P2663>
+
+<!-- Silence Suppression (VAD). 0 - No, 1 - Yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P685>0</P685>
+
+<!-- Jitter Buffer Type. 0 - Fixed, 1 - Adaptive -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+<P698>1</P698>
+
+<!-- Jitter Buffer Length. 0 - Low, 1 - Medium, 2 - High -->
+<!-- Number: 0,1,2 -->
+<!-- Mandatory -->
+<P697>1</P697>
+
+<!-- ############################## -->
+<!-- #  Profile 4/Call Settings  ## -->
+<!-- ############################## -->
+
+<!-- Early Dial. 0 - No, 1 - Yes (use "Yes" only if proxy supports 484 response). 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P622>0</P622>
+
+<!-- Dial Plan Prefix.(this prefix string is added to each dialed number) -->
+<!-- String Max Length: 32 -->
+<P619></P619>
+
+<!-- Dial Plan  -->
+<!-- String Max Length: 1024 -->
+<P4203>{ x+ | *x+ | *xx | *xxx | *xxxx | *xxxxx | *xxxxxx | **xx | **xxx | **xxxx | **xxxxx | **xxxxxx | **xxxxxxx | **xxxxxxxx | *xx*x+ }</P4203>
+<!-- <P4203>{ x+ | *x+ | *xx | *xxx | *xxxx | *xxxxx | *xxxxxx | **xx | **xxx | **xxxx | **xxxxx | **xxxxxx | **xxxxxxx | **xxxxxxxx | *xx*x+ | \+x+ | \p\a\r\k\+*x+ }</P4203> -->
+
+<!-- Use #as Dial Key (if set to Yes, "#" will function as the "(Re-)Dial" key). 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P692>1</P692>
+
+<!-- No Key Entry Timeout. Default - 4 seconds. -->
+<!-- Number: 1 to 15 -->
+<!-- Mandatory -->
+<P4588>4</P4588>
+
+<!-- Offhook Auto-Dial Delay (default is 0) -->
+<!-- String: 0 to 60 -->
+<P4048>0</P4048>
+
+<!-- Enable Call Features. 0 - No, 1 - Yes, 2 - Enable All -->
+<P620>1</P620>
+
+<!-- Disable Call Waiting Caller ID. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P4578>0</P4578>
+
+<!-- Disable Call Waiting Tone. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P4579>0</P4579>
+
+<!-- Disable Visual MWI. 0 - No, 1 - Yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P4375>0</P4375>
+
+<!-- Transfer on Conference Hangup. 0 - no, 1 - yes -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P4566>0</P4566>
+
+<!-- Ring Timeout. (10-300, default is 60 seconds) -->
+<!-- Number: 10 to 300 -->
+<!-- Mandatory  -->
+<P676>60</P676>
+
+<!-- Hunting Group Ring Timeout. (5-300, default is 20 seconds) -->
+<!-- Number: 5 to 300 -->
+<!-- Mandatory  -->
+<P4333>20</P4333>
+
+<!-- Send Anonymous. 0 - no, 1 - yes (caller ID will be blocked if set to Yes). -->
+<!-- Number: 0 to 1 -->
+<!-- Mandatory  -->
+<P621>0</P621>
+
+<!-- Anonymous Call Rejection. 0 - No, 1 - Yes. -->
+<!-- Number: 0 to 1 -->
+<!-- Mandatory  -->
+<P646>0</P646>
+
+<!-- Special Feature -->
+<!-- 100 - Standard, 102 - BroadSoft, 108 - CBCOM, 109 - RNK, 111 - Huawei, 114 - ZTE IMS, 119 - PhonePower, 120 - TELKOM SA. -->
+<!-- Number: 100, 102, 108, 109, 111, 114, 119, 120 -->
+<!-- Mandatory  -->
+<P624>100</P624>
+
+<!-- ########### -->
+<!-- #  DECT  ## -->
+<!-- ########### -->
+
+<!-- ############################ -->
+<!-- #  DECT/General Settings  ## -->
+<!-- ############################ -->
+
+<!-- Base Station Name. Sets the display name of this base station -->
+<!-- String -->
+<P27001>DP750</P27001>
+
+<!-- Admin PIN Code. Sets the admin PIN code for authentication, default is 0000. -->
+<!-- Number: 4 digit number -->
+<!-- Mandatory -->
+<P27008>0000</P27008>
+
+<!-- Enable Repeater Mode. 0 - No, 1 - Yes. Default is 0 - No. Enable repeater mode to allow repeater pair with DP750. Need reboot to take effect. -->
+<!-- To pair with repeater, need enable DP750 subscription first. User can do it by Clicking "Subscribe" button at Web -> Status Page -> DECT Status Page or the physical Page button on device back side. -->
+<!-- Then power up repeater to scan for base and auto pair. -->
+<!-- Repeater mode only support Europe region in 1.0.2.16. -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+{if isset($grandstream_repeater_mode_enable) }
+<P20002>{$grandstream_repeater_mode_enable}</P20002>
+{else}
+<P20002>0</P20002>
+{/if}
+
+<!-- Enable Repeater Management. 0 - No, 1 - Yes. Default is 0. -->
+{if isset($grandstream_repeater_management_enable) }
+<P27019>{$grandstream_repeater_management_enable}</P27019>
+{else}
+<P27019>0</P27019>
+{/if}
+
+<!-- Handset name. Displaying in handset screen. -->
+<!-- Strings: maximum 10 characters. -->
+<!-- Mandatory -->
+<P27020>{$account.1.user_id}</P27020>
+<P27021>{$account.2.user_id}</P27021>
+<P27022>{$account.3.user_id}</P27022>
+<P27023>{$account.4.user_id}</P27023>
+<P27024>{$account.5.user_id}</P27024>
+
+<!-- Handset Phonebook. 1 - PB1, 2 - PB2, 3 - PB3, 4 - PB4, 5 - PB5 -->
+<!-- Mandatory -->
+<P27040>1</P27040>
+<P27041>2</P27041>
+<P27042>3</P27042>
+<P27043>4</P27043>
+<P27044>5</P27044>
+
+<!-- Offhook Auto-dial destination number. If configure this, the handset will auto-dial when offhook.  -->
+<P4210></P4210>
+<P4211></P4211>
+<P4212></P4212>
+<P4213></P4213>
+<P4214></P4214>
+
+<!-- ################################ -->
+<!-- #  DECT/SIP Account Settings  ## -->
+<!-- ################################ -->
+
+<!-- SIP User ID for SIP account 1 - 10. -->
+<P4060>{$account.1.user_id}</P4060>
+<P4061>{$account.2.user_id}</P4061>
+<P4062>{$account.3.user_id}</P4062>
+<P4063>{$account.4.user_id}</P4063>
+<P4064>{$account.5.user_id}</P4064>
+<P4065>{$account.6.user_id}</P4065>
+<P4066>{$account.7.user_id}</P4066>
+<P4067>{$account.8.user_id}</P4067>
+<P4068>{$account.9.user_id}</P4068>
+<P4069>{$account.10.user_id}</P4069>
+
+<!-- Authenticate ID for SIP account 1 - 10. -->
+<P4090>{$account.1.auth_id}</P4090>
+<P4091>{$account.2.auth_id}</P4091>
+<P4092>{$account.3.auth_id}</P4092>
+<P4093>{$account.4.auth_id}</P4093>
+<P4094>{$account.5.auth_id}</P4094>
+<P4095>{$account.6.auth_id}</P4095>
+<P4096>{$account.7.auth_id}</P4096>
+<P4097>{$account.8.auth_id}</P4097>
+<P4098>{$account.9.auth_id}</P4098>
+<P4099>{$account.10.auth_id}</P4099>
+
+<!-- Password for SIP account 1 - 10 -->
+<P4120>{$account.1.password}</P4120>
+<P4121>{$account.2.password}</P4121>
+<P4122>{$account.3.password}</P4122>
+<P4123>{$account.4.password}</P4123>
+<P4124>{$account.5.password}</P4124>
+<P4125>{$account.6.password}</P4125>
+<P4126>{$account.7.password}</P4126>
+<P4127>{$account.8.password}</P4127>
+<P4128>{$account.9.password}</P4128>
+<P4129>{$account.10.password}</P4129>
+
+<!-- SIP Name for SIP account 1 - 10 -->
+<P4180>{$account.1.display_name}</P4180>
+<P4181>{$account.2.display_name}</P4181>
+<P4182>{$account.3.display_name}</P4182>
+<P4183>{$account.4.display_name}</P4183>
+<P4184>{$account.5.display_name}</P4184>
+<P4185>{$account.6.display_name}</P4185>
+<P4186>{$account.7.display_name}</P4186>
+<P4187>{$account.8.display_name}</P4187>
+<P4188>{$account.9.display_name}</P4188>
+<P4189>{$account.10.display_name}</P4189>
+
+<!-- Profile Settings for SIP account 1 - 10.  -->
+<!-- Number: 0 - 3. 0 - Profile 1, 1 - Profile 2, 2 - Profile 3, 3 - Profile 4. Default is 0. -->
+<!-- Mandatory -->
+<P4150>0</P4150>
+<P4151>0</P4151>
+<P4152>0</P4152>
+<P4153>0</P4153>
+<P4154>0</P4154>
+<P4155>0</P4155>
+<P4156>0</P4156>
+<P4157>0</P4157>
+<P4158>0</P4158>
+<P4159>0</P4159>
+
+<!-- HS Mode. Set the hanging group mode for handset, set 1 - 5 to non-hanging group mode. -->
+<!-- Number: 1 - 5; 101 - 104. 1 - HS1, 2 - HS2, 3 - HS3, 4 - HS4, 5 - HS5; 101 - Circular, 102 - Linear, 103 - Parallel, 104 - Shared. Default is 101. -->
+<!-- Mandatory -->
+{if isset($grandstream_hanging_group_mode) }
+<P27080>{$grandstream_hanging_group_mode}</P27080>
+<P27081>{$grandstream_hanging_group_mode}</P27081>
+<P27082>{$grandstream_hanging_group_mode}</P27082>
+<P27083>{$grandstream_hanging_group_mode}</P27083>
+<P27084>{$grandstream_hanging_group_mode}</P27084>
+<P27085>{$grandstream_hanging_group_mode}</P27085>
+<P27086>{$grandstream_hanging_group_mode}</P27086>
+<P27087>{$grandstream_hanging_group_mode}</P27087>
+<P27088>{$grandstream_hanging_group_mode}</P27088>
+<P27089>{$grandstream_hanging_group_mode}</P27089>
+{else}
+<P27080>101</P27080>
+<P27081>101</P27081>
+<P27082>101</P27082>
+<P27083>101</P27083>
+<P27084>101</P27084>
+<P27085>101</P27085>
+<P27086>101</P27086>
+<P27087>101</P27087>
+<P27088>101</P27088>
+<P27089>101</P27089>
+{/if}
+
+<!-- Active. Configure if the account is active or disabled. 0 - Disabled, 1 - Active. -->
+<!-- Number: 0, 1. Default is 1. -->
+<P4595>1</P4595>
+<P4596>1</P4596>
+<P4597>1</P4597>
+<P4598>1</P4598>
+<P4599>1</P4599>
+<P4600>1</P4600>
+<P4601>1</P4601>
+<P4602>1</P4602>
+<P4603>1</P4603>
+<P4604>1</P4604>
+
+<!-- ################################# -->
+<!-- #  DECT/Handset Line Settings  ## -->
+<!-- ################################# -->
+
+<!-- Handset Line Settings -->
+<!-- HS 1 Line Settings -->
+<!-- Number: 0 - 10, according with None and account 1 - 10. First line Default is 1 (account 1), other line have default is 0 - NULL. -->
+{if isset($grandstream_handset_1_line_1_enable) }
+<P4300>{$grandstream_handset_1_line_1_enable}</P4300>
+{else}
+<P4300>1</P4300>
+{/if}
+{if isset($grandstream_handset_1_line_2_enable) }
+<P4301>{$grandstream_handset_1_line_2_enable}</P4301>
+{else}
+<P4301>0</P4301>
+{/if}
+{if isset($grandstream_handset_1_line_3_enable) }
+<P4302>{$grandstream_handset_1_line_3_enable}</P4302>
+{else}
+<P4302>0</P4302>
+{/if}
+{if isset($grandstream_handset_1_line_4_enable) }
+<P4303>{$grandstream_handset_1_line_4_enable}</P4303>
+{else}
+<P4303>0</P4303>
+{/if}
+{if isset($grandstream_handset_1_line_5_enable) }
+<P4304>{$grandstream_handset_1_line_5_enable}</P4304>
+{else}
+<P4304>0</P4304>
+{/if}
+{if isset($grandstream_handset_1_line_6_enable) }
+<P4305>{$grandstream_handset_1_line_6_enable}</P4305>
+{else}
+<P4305>0</P4305>
+{/if}
+{if isset($grandstream_handset_1_line_7_enable) }
+<P4306>{$grandstream_handset_1_line_7_enable}</P4306>
+{else}
+<P4306>0</P4306>
+{/if}
+{if isset($grandstream_handset_1_line_8_enable) }
+<P4307>{$grandstream_handset_1_line_8_enable}</P4307>
+{else}
+<P4307>0</P4307>
+{/if}
+{if isset($grandstream_handset_1_line_9_enable) }
+<P4308>{$grandstream_handset_1_line_9_enable}</P4308>
+{else}
+<P4308>0</P4308>
+{/if}
+{if isset($grandstream_handset_1_line_10_enable) }
+<P4309>{$grandstream_handset_1_line_10_enable}</P4309>
+{else}
+<P4309>0</P4309>
+{/if}
+
+<!-- HS 2 Line Settings -->
+<!-- Number: 0 - 10, according with None and account 1 - 10. First line Default is 1 (account 1), other line have default is 0 - NULL. -->
+{if isset($grandstream_handset_2_line_1_enable) }
+<P4310>{$grandstream_handset_2_line_1_enable}</P4310>
+{else}
+<P4310>1</P4310>
+{/if}
+{if isset($grandstream_handset_2_line_2_enable) }
+<P4311>{$grandstream_handset_2_line_2_enable}</P4311>
+{else}
+<P4311>0</P4311>
+{/if}
+{if isset($grandstream_handset_2_line_3_enable) }
+<P4312>{$grandstream_handset_2_line_3_enable}</P4312>
+{else}
+<P4312>0</P4312>
+{/if}
+{if isset($grandstream_handset_2_line_4_enable) }
+<P4313>{$grandstream_handset_2_line_4_enable}</P4313>
+{else}
+<P4313>0</P4313>
+{/if}
+{if isset($grandstream_handset_2_line_5_enable) }
+<P4314>{$grandstream_handset_2_line_5_enable}</P4314>
+{else}
+<P4314>0</P4314>
+{/if}
+{if isset($grandstream_handset_2_line_6_enable) }
+<P4315>{$grandstream_handset_2_line_6_enable}</P4315>
+{else}
+<P4315>0</P4315>
+{/if}
+{if isset($grandstream_handset_2_line_7_enable) }
+<P4316>{$grandstream_handset_2_line_7_enable}</P4316>
+{else}
+<P4316>0</P4316>
+{/if}
+{if isset($grandstream_handset_2_line_8_enable) }
+<P4317>{$grandstream_handset_2_line_8_enable}</P4317>
+{else}
+<P4317>0</P4317>
+{/if}
+{if isset($grandstream_handset_2_line_9_enable) }
+<P4318>{$grandstream_handset_2_line_9_enable}</P4318>
+{else}
+<P4318>0</P4318>
+{/if}
+{if isset($grandstream_handset_2_line_10_enable) }
+<P4319>{$grandstream_handset_2_line_10_enable}</P4319>
+{else}
+<P4319>0</P4319>
+{/if}
+
+<!-- HS 3 Line Settings -->
+<!-- Number: 0 - 10, according with None and account 1 - 10. First line Default is 1 (account 1), other line have default is 0 - NULL. -->
+{if isset($grandstream_handset_3_line_1_enable) }
+<P4320>{$grandstream_handset_3_line_1_enable}</P4320>
+{else}
+<P4320>1</P4320>
+{/if}
+{if isset($grandstream_handset_3_line_2_enable) }
+<P4321>{$grandstream_handset_3_line_2_enable}</P4321>
+{else}
+<P4321>0</P4321>
+{/if}
+{if isset($grandstream_handset_3_line_3_enable) }
+<P4322>{$grandstream_handset_3_line_3_enable}</P4322>
+{else}
+<P4322>0</P4322>
+{/if}
+{if isset($grandstream_handset_3_line_4_enable) }
+<P4323>{$grandstream_handset_3_line_4_enable}</P4323>
+{else}
+<P4323>0</P4323>
+{/if}
+{if isset($grandstream_handset_3_line_5_enable) }
+<P4324>{$grandstream_handset_3_line_5_enable}</P4324>
+{else}
+<P4324>0</P4324>
+{/if}
+{if isset($grandstream_handset_3_line_6_enable) }
+<P4325>{$grandstream_handset_3_line_6_enable}</P4325>
+{else}
+<P4325>0</P4325>
+{/if}
+{if isset($grandstream_handset_3_line_7_enable) }
+<P4326>{$grandstream_handset_3_line_7_enable}</P4326>
+{else}
+<P4326>0</P4326>
+{/if}
+{if isset($grandstream_handset_3_line_8_enable) }
+<P4327>{$grandstream_handset_3_line_8_enable}</P4327>
+{else}
+<P4327>0</P4327>
+{/if}
+{if isset($grandstream_handset_3_line_9_enable) }
+<P4328>{$grandstream_handset_3_line_9_enable}</P4328>
+{else}
+<P4328>0</P4328>
+{/if}
+{if isset($grandstream_handset_3_line_10_enable) }
+<P4329>{$grandstream_handset_3_line_10_enable}</P4329>
+{else}
+<P4329>0</P4329>
+{/if}
+
+<!-- HS 4 Line Settings -->
+<!-- Number: 0 - 10, according with None and account 1 - 10. First line Default is 1 (account 1), other line have default is 0 - NULL. -->
+{if isset($grandstream_handset_4_line_1_enable) }
+<P4250>{$grandstream_handset_4_line_1_enable}</P4250>
+{else}
+<P4250>1</P4250>
+{/if}
+{if isset($grandstream_handset_4_line_2_enable) }
+<P4251>{$grandstream_handset_4_line_2_enable}</P4251>
+{else}
+<P4251>0</P4251>
+{/if}
+{if isset($grandstream_handset_4_line_3_enable) }
+<P21320>{$grandstream_handset_4_line_3_enable}</P21320>
+{else}
+<P21320>0</P21320>
+{/if}
+{if isset($grandstream_handset_4_line_4_enable) }
+<P21321>{$grandstream_handset_4_line_4_enable}</P21321>
+{else}
+<P21321>0</P21321>
+{/if}
+{if isset($grandstream_handset_4_line_5_enable) }
+<P21322>{$grandstream_handset_4_line_5_enable}</P21322>
+{else}
+<P21322>0</P21322>
+{/if}
+{if isset($grandstream_handset_4_line_6_enable) }
+<P21323>{$grandstream_handset_4_line_6_enable}</P21323>
+{else}
+<P21323>0</P21323>
+{/if}
+{if isset($grandstream_handset_4_line_7_enable) }
+<P21324>{$grandstream_handset_4_line_7_enable}</P21324>
+{else}
+<P21324>0</P21324>
+{/if}
+{if isset($grandstream_handset_4_line_8_enable) }
+<P21325>{$grandstream_handset_4_line_8_enable}</P21325>
+{else}
+<P21325>0</P21325>
+{/if}
+{if isset($grandstream_handset_4_line_9_enable) }
+<P21326>{$grandstream_handset_4_line_9_enable}</P21326>
+{else}
+<P21326>0</P21326>
+{/if}
+{if isset($grandstream_handset_4_line_10_enable) }
+<P21327>{$grandstream_handset_4_line_10_enable}</P21327>
+{else}
+<P21327>0</P21327>
+{/if}
+
+<!-- HS 5 Line Settings -->
+<!-- Number: 0 - 10, according with None and account 1 - 10. First line Default is 1 (account 1), other line have default is 0 - NULL. -->
+{if isset($grandstream_handset_5_line_1_enable) }
+<P21328>{$grandstream_handset_5_line_1_enable}</P21328>
+{else}
+<P21328>1</P21328>
+{/if}
+{if isset($grandstream_handset_5_line_2_enable) }
+<P21329>{$grandstream_handset_5_line_2_enable}</P21329>
+{else}
+<P21329>0</P21329>
+{/if}
+{if isset($grandstream_handset_5_line_3_enable) }
+<P21330>{$grandstream_handset_5_line_3_enable}</P21330>
+{else}
+<P21330>0</P21330>
+{/if}
+{if isset($grandstream_handset_5_line_4_enable) }
+<P21331>{$grandstream_handset_5_line_4_enable}</P21331>
+{else}
+<P21331>0</P21331>
+{/if}
+{if isset($grandstream_handset_5_line_5_enable) }
+<P21332>{$grandstream_handset_5_line_5_enable}</P21332>
+{else}
+<P21332>0</P21332>
+{/if}
+{if isset($grandstream_handset_5_line_6_enable) }
+<P21333>{$grandstream_handset_5_line_6_enable}</P21333>
+{else}
+<P21333>0</P21333>
+{/if}
+{if isset($grandstream_handset_5_line_7_enable) }
+<P21334>{$grandstream_handset_5_line_7_enable}</P21334>
+{else}
+<P21334>0</P21334>
+{/if}
+{if isset($grandstream_handset_5_line_8_enable) }
+<P21335>{$grandstream_handset_5_line_8_enable}</P21335>
+{else}
+<P21335>0</P21335>
+{/if}
+{if isset($grandstream_handset_5_line_9_enable) }
+<P21336>{$grandstream_handset_5_line_9_enable}</P21336>
+{else}
+<P21336>0</P21336>
+{/if}
+{if isset($grandstream_handset_5_line_10_enable) }
+<P21337>{$grandstream_handset_5_line_10_enable}</P21337>
+{else}
+<P21337>0</P21337>
+{/if}
+
+<!-- ############### -->
+<!-- #  Settings  ## -->
+<!-- ############### -->
+
+<!-- ################################ -->
+<!-- #  Settings/Network Settings  ## -->
+<!-- ################################ -->
+
+<!-- ############################################### -->
+<!-- #  Settings/Network Settings/Basic Settings  ## -->
+<!-- ############################################### -->
+
+<!-- IP Address Mode. 0 - DHCP, 1 - Static IP, 2 - PPPoE -->
+<!-- Number: 0,1,2 -->
+<!-- Mandatory  -->
+<!-- Reboot required  -->
+<P8>0</P8>
+
+<!-- Preferred DNS server -->
+<!-- Mandatory  -->
+<P92>0</P92>
+<P93>0</P93>
+<P94>0</P94>
+<P95>0</P95>
+
+<!-- Host name (Option 12). Max length allowed is 32 bytes. -->
+<!-- String: address  -->
+<P146></P146>
+
+<!-- DHCP Domain -->
+<!-- String: address  -->
+<P147></P147>
+
+<!-- Vendor Class ID (Option 60). Max length allowed is 32 bytes. -->
+<!-- String Max Length: 32  -->
+<P148>DP7XX</P148>
+
+<!-- PPPoE account ID -->
+<!--  <P82></P82> -->
+
+<!-- PPPoE password -->
+<!--  <P83></P83> -->
+
+<!-- PPPoE Service Name -->
+<!-- String Max Length: 64 -->
+<!-- Reboot required  -->
+<P269></P269>
+
+<!-- IP Address. Ignore if DHCP or PPPoE is used -->
+<!--  <P9>192</P9> -->
+<!--  <P10>168</P10> -->
+<!--  <P11>0</P11> -->
+<!--  <P12>160</P12> -->
+
+<!-- Subnet mask. Ignore if DHCP or PPPoE is used -->
+<!--  <P13>255</P13> -->
+<!--  <P14>255</P14> -->
+<!--  <P15>0</P15> -->
+<!--  <P16>0</P16> -->
+
+<!-- Gateway. Ignore if DHCP or PPPoE is used -->
+<!--  <P17>0</P17> -->
+<!--  <P18>0</P18> -->
+<!--  <P19>0</P19> -->
+<!--  <P20>0</P20> -->
+
+<!-- DNS server 1. Ignore if DHCP or PPPoE is used -->
+<!--  <P21>0</P21> -->
+<!--  <P22>0</P22> -->
+<!--  <P23>0</P23> -->
+<!--  <P24>0</P24> -->
+
+<!-- DNS server 2. Ignore if DHCP or PPPoE is used -->
+<!--  <P25>0</P25> -->
+<!--  <P26>0</P26> -->
+<!--  <P27>0</P27> -->
+<!--  <P28>0</P28> -->
+
+<!-- ################################################## -->
+<!-- #  Settings/Network Settings/Advanced Settings  ## -->
+<!-- ################################################## -->
+
+<!-- 802.1X Mode. Enables/disables 802.1X mode. To enable 802.1X mode, this field should be set to EAP-MD5 -->
+<!-- 0 - Close, 1 - EAP-MD5, 2 - EAP-TLS, 3-EAP-PEAP. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
+<P7901>0</P7901>
+
+<!-- 802.1X Identity. The Identity for the 802.1X mode. -->
+<!-- String Max Length: 64 -->
+<P7902></P7902>
+
+<!-- MD5 Password. 802.1X mode MD5 Password. -->
+<!-- String Max Length: 64 -->
+<P7903></P7903>
+
+<!-- Enable LLDP. 0 - Disable, 1 - Enable -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory                                       -->
+<P1684>1</P1684>
+
+<!-- Enable VLAN。 Config to enable or disable virtual LAN. 0 - Disabled, 1 - Enabled. Default is 0 - disabled. -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+{if isset($grandstream_lan_port_vlan) }
+<P27004>1</P27004>
+{else}
+<P27004>0</P27004>
+{/if}
+
+<!-- Layer 2 QoS 802.1Q/VLAN Tag -->
+<!-- Number -->
+<!-- Mandatory -->
+{if isset($grandstream_lan_port_vlan) }
+<P51>{$grandstream_lan_port_vlan}</P51>
+{else}
+<P51>0</P51>
+{/if}
+
+<!-- Layer 2 QoS 802.1p Priority Value for SIP signaling -->
+<!-- Number: 0 to 7 -->
+<!-- Mandatory -->
+{if isset($grandstream_qos_sip)}
+<P5038>{$grandstream_qos_sip}</P5038>
+{else}
+<P5038>0</P5038>
+{/if}
+
+<!-- Layer 2 QoS 802.1p Priority Value for RTP media -->
+<!-- Number: 0 to 7 -->
+<!-- Mandatory -->
+{if isset($grandstream_qos_rtp)}
+<P5042>{$grandstream_qos_rtp}</P5042>
+{else}
+<P5042>0</P5042>
+{/if}
+
+<!-- Use STUN to detect network connectivity. 0 - No, 1 - Yes.  -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+<P474>0</P474>
+
+<!-- STUN server -->
+<!-- String: serveraddress  -->
+<P76>stun.ipvideotalk.com</P76>
+
+<!-- Number of STUN Response Misses Allowed -->
+<!-- Number: 3 to 15 -->
+<!-- Mandatory -->
+<P475>3</P475>
+
+<!-- Keep-alive interval (in seconds. default 20 seconds) -->
+<!-- Number: 10 to 160 -->
+<!-- Mandatory -->
+<P84>20</P84>
+
+<!-- ########################## -->
+<!-- #  Settings/Ring Tones  ## -->
+<!-- ########################## -->
+
+<!-- System Ring Cadence  -->
+<!-- Syntax: c=on1/ off1[- on2/ off2[- on3/ off3]](Cadence on and off are in 10 ms units) -->
+<!-- String Max Length: 256 -->
+<P4040>c=2000/4000;</P4040>
+
+<!-- Call Progress Tones -->
+<!-- Syntax: f1=val, f2=val[, c=on1/ off1[- on2/ off2[- on3/ off3]]](Frequencies are in Hz and cadence on and off are in 10 ms units)  -->
+
+<!-- Dial Tone -->
+<!-- String Max Length: 256  -->
+<P4000>f1=350@-17,f2=440@-17,c=0/0;</P4000>
+
+<!-- Ringback Tone -->
+<!-- String Max Length: 256  -->
+<P4001>f1=440@-17,f2=480@-17,c=2000/4000;</P4001>
+
+<!-- Busy Tone -->
+<!-- String Max Length: 256  -->
+<P4002>f1=480@-21,f2=620@-21,c=500/500;</P4002>
+
+<!-- Reorder Tone -->
+<!-- String Max Length: 256  -->
+<P4003>f1=480@-21,f2=620@-21,c=250/250;</P4003>
+
+<!-- Confirmation Tone -->
+<!-- String Max Length: 256  -->
+<P4004>f1=350@-11,f2=440@-11,c=100/100-100/100-100/100;</P4004>
+
+<!-- Call Waiting tone -->
+<!-- String Max Length: 256  -->
+<P4005>f1=440@-13,c=300/300-300/10000;</P4005>
+
+<!-- ############################### -->
+<!-- #  Settings/System Features  ## -->
+<!-- ############################### -->
+
+<!-- Disable Direct IP Call. 0 - No, 1 - Yes. -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+<P277>0</P277>
+
+<!-- ################## -->
+<!-- #  Maintenance  ## -->
+<!-- ################## -->
+
+<!-- ################################### -->
+<!-- #  Maintenance/Firmware Upgrade  ## -->
+<!-- ################################### -->
+<!-- Firmware Upgrade -->
+<!-- Use firmware pre/postfix to determine if f/w is required -->
+<!-- 0=Always Check for New Firmware  -->
+<!-- 1=Check New Firmware only when F/W pre/suffix changes  -->
+<!-- 2=Always Skip the Firmware Check -->
+<!-- For Firmware only. -->
+<!-- Number: 0,1,2 -->
+<!-- Mandatory  -->
+<P238>0</P238>
+
+<!-- HTTP/HTTPS User Name for firmware server -->
+<!-- String Max Length: 40; between ascii values 33 and 126 -->
+<P6768></P6768>
+
+<!-- HTTP/HTTPS Password for firmware server -->
+<!-- String Max Length: 40; between ascii values 33 and 126 -->
+<!-- Mandatory -->
+<P6769></P6769>
+
+<!-- Always send HTTP Basic Authentication Information. 0 - No, 1- Yes. -->
+<!-- Number: 0,1. Default is 0 -->
+<!-- Mandatory -->
+<P20718>0</P20718>
+
+<!-- Verify host when using HTTPS. 0 - No, 1- Yes. -->
+<!-- Number: 0,1. Default is 1 -->
+<!-- Mandatory -->
+<P20724>1</P20724>
+
+<!-- Upgrade via. 0 - TFTP Upgrade, 1 - HTTP Upgrade, 2 - HTTPS Upgrade. -->
+<!-- Number: 0 to 2 -->
+<!-- Mandatory -->
+<P6767>1</P6767>
+
+<!-- Firmware Server Path -->
+<!-- String: serveraddress  -->
+{if isset($grandstream_firmware_path) && isset($firmware_version)}
+<P192>{$grandstream_firmware_path}/dp750/{$firmware_version}</P192>
+{elseif isset($grandstream_firmware_path)}
+<P192>{$grandstream_firmware_path}/dp750</P192>
+{else}
+<P192>{$domain_name}{$project_path}/app/provision</P192>
+{/if}
+
+<!-- Firmware File Prefix -->
+<!-- String Max Length: 32; between ascii values 33 and 126 -->
+<P232></P232>
+
+<!-- Firmware File Postfix -->
+<!-- String Max Length: 32; between ascii values 33 and 126 -->
+<P233></P233>
+
+<!-- Allow DHCP Option 43 and Option 66 to override server. 0 - No, 1 - Yes. Default is 1 -->
+<!-- When set to Yes(1), it will override the configured provision path and method -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P20719>1</P20719>
+
+<!-- Automatic Upgrade. 0 - No, 1 - Check daily, 2 - Check weekly, 3 - Check every () minutes. Default is No. -->
+<!-- Number: 0,1,2,3 -->
+<!-- Mandatory -->
+<P20721>0</P20721>
+
+<!-- Automatic Upgrade. Check for new firmware/config file every () minutes, unit is in minute, minimum 60 minutes, default is 7 days. P20721=3 -->
+<!-- Number: 60 to 5256000 -->
+<!-- Mandatory -->
+<P20720>10080</P20720>
+
+<!-- Automatic Upgrade. Daily at hour(0-23). Defines the hour of the day to check the HTTP/TFTP server for firmware upgrades. Default is 1. -->
+<!-- Number: 0 to 23 -->
+<!-- Mandatory -->
+<P20722>1</P20722>
+
+<!-- Automatic Upgrade. Weekly on day (0-6). 0 - Sunday, 1 - Monday. Defines the day of the week to check HTTP/TFTP server for firmware upgrades. Defalt is 1. -->
+<!-- Number: 0 to 6 -->
+<!-- Mandatory  -->
+<P20723>1</P20723>
+
+<!-- Firmware Key (AES 128, in Hexadecimal Representation) -->
+<!-- String Max Length: 32 0-9,A-Z,a-z -->
+<P242></P242>
+
+<!-- Automatic Upgrade handset firmware.  -->
+<!-- Number: 0 - No, 1 - Yes. Default is 0 - No. -->
+<!-- Mandatory -->
+<P27740>0</P27740>
+
+<!-- ############################### -->
+<!-- #  Maintenance/Provisioning  ## -->
+<!-- ############################### -->
+
+<!-- Lock keypad update.  0 - No, 1 - Yes. -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+<P88>0</P88>
+
+<!-- XML Config File Password -->
+<!-- String Max Length: 40 -->
+<!-- Mandatory; between ascii values 33 and 126 -->
+<P1359></P1359>
+
+<!-- HTTP/HTTPS User Name for config server -->
+<!-- String Max Length: 40; between ascii values 33 and 126 -->
+<P1360>{$http_auth_username}</P1360>
+
+<!-- HTTP/HTTPS Password for config server -->
+<!-- String Max Length: 40; between ascii values 33 and 126 -->
+<!-- Mandatory -->
+<P1361>{$http_auth_password}</P1361>
+
+<!-- Always send HTTP Basic Authentication Information. 0 - No, 1- Yes. -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P20713>0</P20713>
+
+<!-- Verify host when using HTTPS. Verify host name in server certificate when using HTTPS. 0 - No, 1 - Yes. -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P22030>0</P22030>
+
+<!-- Provisioning via. 0 - TFTP Upgrade, 1 - HTTP Upgrade, 2 - HTTPS Upgrade. -->
+<!-- Number: 0 to 2 -->
+<!-- Mandatory -->
+<P212>1</P212>
+
+<!-- Config Server Path -->
+<!-- String: serveraddress  -->
+{if $grandstream_config_server_path=="none"}
+<P237></P237>
+{elseif isset($grandstream_config_server_path)}
+<P237>{$grandstream_config_server_path}</P237>
+{else}
+<P237>{$domain_name}{$project_path}/app/provision</P237>
+{/if}
+
+<!-- Config File Prefix -->
+<!-- String Max Length: 32; between ascii values 33 and 126 -->
+<P234></P234>
+
+<!-- Config File Postfix -->
+<!-- String Max Length: 32; between ascii values 33 and 126 -->
+<P235></P235>
+
+<!-- Allow DHCP Option 66 to override server. 0 - No, 1 - Yes. Default is Yes. -->
+<!-- When set to Yes(1), it will override the configured provision path and method. -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+<!-- Reboot required  -->
+<P145>1</P145>
+
+<!-- Allow DHCP Option 120 to Override SIP Server -->
+<!-- 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P1411>0</P1411>
+
+<!-- 3CX Auto Provision. 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P1414>1</P1414>
+
+<!-- Automatic Provisioning.  -->
+<!-- 0 - No,  -->
+<!-- 1 - Yes, check for provisioning based on minute(s) setting, -->
+<!-- 2 - Yes, check for provisioning based on Hour of Day setting, -->
+<!-- 3 - Yes, check for provisioning based on Day of Week setting, -->
+<!-- Default is No. -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
+<P194>0</P194>
+
+<!-- Automatic Provisioning. Check for new config file every () minutes. Default is 7 days. -->
+<!-- Number: 60-86400 -->
+<!-- Mandatory -->
+<P193>10080</P193>
+
+<!-- Automatic Provisioning. Hour of the Day (0-23). Defines the hour of the day to check the HTTP/TFTP server for configuration file changes. Default is 1.  -->
+<!-- Number: 0 - 23 -->
+<P285>1</P285>
+
+<!-- Automatic Provisioning. Day of the Week (0-6). Defines the day of the week to check HTTP/TFTP server for configuration file changes. Default is 1. -->
+<!-- Number: 0-6 -->
+<P286>1</P286>
+
+<!-- Authenticate Conf File. 0 - No, 1 - Yes. Default is No -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P240>0</P240>
+
+<!-- ################################# -->
+<!-- #  Maintenance/Web/SSH Access  ## -->
+<!-- ################################# -->
+
+<!-- User Password -->
+<!--  <P196>123</P196> -->
+<P196>{$user_password}</P196>
+
+<!-- Admin password -->
+<!-- String Max Length: 30; between ascii values 33 and 126 -->
+<!-- Mandatory -->
+<!--  <P2>admin</P2> -->
+<P2>{$admin_password}</P2>
+
+<!-- White list for WAN side. Only the IP address in white list can access Web and Telnet. -->
+<!-- String ipaddress -->
+<P20701></P20701>
+
+<!-- Black list for WAN side. The IP address in black list can not access Web or Telnet -->
+<!-- String ipaddress -->
+<P20701></P20701>
+
+<!-- ########################### -->
+<!-- #  Maintenance/TR - 069  ## -->
+<!-- ########################### -->
+
+<!-- Enable TR-069. 0 - No, 1 - Yes. Default is 0. -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P1409>0</P1409>
+
+<!-- ACS URL. URL of the TR-069 Auto Configuration Servers (e.g., http://acs.mycompany.com, or IP address). -->
+<!-- String -->
+<!--  <P4503></P4503> -->
+
+<!-- ACS Username. ACS username for TR-069. -->
+<!-- String -->
+<P4504></P4504>
+
+<!-- ACS Password. ACS password for TR-069. -->
+<!-- String -->
+<P4505></P4505>
+
+<!-- Periodic Inform Enable. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P4506>0</P4506>
+
+<!-- Periodic Inform Interval. Default is 300. -->
+<!-- Number -->
+<P4507>300</P4507>
+
+<!-- Connection Request Username	 -->
+<!-- String: a-z, A-Z, 0-9 -->
+<P4511></P4511>
+
+<!-- Connection Request Password	 -->
+<!-- String: a-z, A-Z, 0-9 -->
+<P4512></P4512>
+
+<!-- ##################################################### -->
+<!-- #  Maintenance/Security Settings/Web/SSH Settings  ## -->
+<!-- ##################################################### -->
+
+<!-- HTTP Web Port. Default HTTP port is 80. -->
+<!-- Number: 1 to 65535 -->
+<!-- Mandatory  -->
+<!-- Reboot required  -->
+<P901>80</P901>
+
+<!-- HTTPS Web Port. Default HTTPS port is 443. -->
+<!-- Number: 1 to 65535 -->
+<!-- Mandatory  -->
+<!-- Reboot required  -->
+<P27010>443</P27010>
+
+<!-- Web Access Mode. 0 - HTTPS, 1 - HTTP. Default is 1 - HTTP. -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<!-- Reboot required -->
+<P1650>1</P1650>
+
+<!-- Disable SSH. 0 - No, 1 - Yes. Default is 0. -->
+<!-- Number: 0,1 -->
+<!-- Mandatory  -->
+<P276>0</P276>
+
+<!-- SSH Port. Port for SSH access. Default is 22. -->
+<!-- Number:  -->
+<P27006>22</P27006>
+
+<!-- ############################################ -->
+<!-- #  Maintenance/Security Settings/SIP TLS  ## -->
+<!-- ############################################ -->
+
+<!-- SIP TLS Certificate -->
+<!-- String -->
+<!--  <P280></P280> -->
+
+<!-- SIP TLS Private Key -->
+<!-- String -->
+<!--  <P279></P279> -->
+
+<!-- SIP TLS Private Key Password -->
+<!-- String -->
+<!-- Max Length: 64 characters -->
+<P281></P281>
+
+<!-- ########################################### -->
+<!-- #  Maintenance/Security Settings/Radius  ## -->
+<!-- ########################################### -->
+
+<!-- Primary RADIUS Server -->
+<!--  <P4550></P4550> -->
+
+<!-- Primary RADIUS Auth Port (default 1812).  -->
+<!-- Number: 1 to 65535 -->
+<!-- Mandatory -->
+<P4551>1812</P4551>
+
+<!-- Primary RADIUS Acct Port (default 1813). -->
+<!-- Number: 1 to 65535 -->
+<!-- Mandatory -->
+<P4552>1813</P4552>
+
+<!-- Primary RADIUS Server Secret -->
+<!-- String Max Length: 32 -->
+<!-- Mandatory  -->
+<P4553></P4553>
+
+<!-- Secondary RADIUS Server -->
+<!--  <P4554></P4554> -->
+
+<!-- Secondary RADIUS Auth Port (default 1812). -->
+<!-- Number: 1 to 65535 -->
+<!-- Mandatory  -->
+<P4555>1812</P4555>
+
+<!-- Secondary RADIUS Acct Port (default 1813). -->
+<!-- Number: 1 to 65535  -->
+<!-- Mandatory -->
+<P4556>1813</P4556>
+
+<!-- Secondary RADIUS Server Secret -->
+<!-- String Max Length: 32 -->
+<!-- Mandatory  -->
+<P4557></P4557>
+
+<!-- RADIUS Timeout (default 2). -->
+<!-- Number: 1 to 65535 -->
+<!-- Mandatory  -->
+<P4558>2</P4558>
+
+<!-- RADIUS Retry (default 3). -->
+<!-- Number: 1 to 65535 -->
+<!-- Mandatory -->
+<P4559>3</P4559>
+
+<!-- ################################ -->
+<!-- #  Maintenance/Date and Time  ## -->
+<!-- ################################ -->
+
+<!-- NTP Server -->
+<!-- String: serveraddress  -->
+{if isset($ntp_server_primary)}
+<P30>{$ntp_server_primary}</P30>
+{else}
+<P30>pool.ntp.org</P30>
+{/if}
+
+<!-- NTP Update Interval in minutes(5-1440)(Default is set to 60 minutes) -->
+<!-- Number: 5 to 1440 -->
+<!-- Mandatory  -->
+<P5005>60</P5005>
+
+<!-- Allow DHCP Option 42 to NTP Server. (If DHCP Option 42 is enabled, the NTP server can be changed.) -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P144>1</P144>
+
+<!-- Time Zone. Offset in minutes to GMT -->
+<!-- <value="TZA+12"> GMT-12:00 </option> -->
+<!-- <value="TZB+11"> GMT-11:00 </option> -->
+<!-- <value="TZC+10"> GMT-10:00 </option> -->
+<!-- <value="TZD+9"> GMT-09:00 </option> -->
+<!-- <value="TZE+8"> GMT-08:00 </option> -->
+<!-- <value="TZF+7"> GMT-07:00 </option> -->
+<!-- <value="TZG+6"> GMT-06:00 </option> -->
+<!-- <value="TZH+5"> GMT-05:00 </option> -->
+<!-- <value="TZf+4:30"> GMT-04:30 </option> -->
+<!-- <value="TZI+4"> GMT-04:00 </option> -->
+<!-- <value="TZJ+3:30"> GMT-03:30 </option> -->
+<!-- <value="TZK+3"> GMT-03:00 </option> -->
+<!-- <value="TZL+2"> GMT-02:00 </option> -->
+<!-- <value="TZM+1"> GMT-01:00 </option> -->
+<!-- <value="TZN+0"> GMT </option> -->
+<!-- <value="TZO-1"> GMT+01:00 </option> -->
+<!-- <value="TZP-2"> GMT+02:00 </option> -->
+<!-- <value="TZQ-3"> GMT+03:00 </option> -->
+<!-- <value="TZR-4"> GMT+04:00 </option> -->
+<!-- <value="TZS-5"> GMT+05:00 </option> -->
+<!-- <value="TZT-5:30"> GMT+05:30 </option> -->
+<!-- <value="TZU-5:45"> GMT+05:45 </option> -->
+<!-- <value="TZV-6"> GMT+06:00 </option> -->
+<!-- <value="TZW-6:30"> GMT+06:30 </option> -->
+<!-- <value="TZX-7"> GMT+07:00 </option> -->
+<!-- <value="TZY-8"> GMT+08:00 </option> -->
+<!-- <value="TZZ-9"> GMT+09:00 </option> -->
+<!-- <value="TZa-9:30"> GMT+09:30 </option> -->
+<!-- <value="TZb-10"> GMT+10:00 </option> -->
+<!-- <value="TZc-11"> GMT+11:00 </option> -->
+<!-- <value="TZd-12"> GMT+12:00 </option> -->
+<!-- <value="TZe-13"> GMT+13:00 </option> -->
+<!-- <value="customize"> Self-Defined Time Zone </option> -->
+<!-- Mandatory Category: string Max Length: 9 Range0: Min=a Max=z Range1: Min=A Max=Z Range2: Min=+ Max=: -->
+{if isset($grandstream_gxp_time_zone)}
+<P64>{$grandstream_gxp_time_zone}</P64>
+{/if}
+
+<!-- Self-Defined Time Zone -->
+<!-- String Max Length: 32 a-z, A-Z, +,: -->
+<P246>PST+8PDT,M3.2.0,M11.1.0</P246>
+
+<!-- Allow DHCP Option 2 to override time zone (If DHCP Option 2 is enabled, the timezone can be offset.) -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P143>1</P143>
+
+<!-- ######################### -->
+<!-- #  Maintenance/Syslog  ## -->
+<!-- ######################### -->
+
+<!-- Syslog Server (name of the server, max length is 64 charactors) -->
+<!-- String: serveraddress  -->
+<P207>{$grandstream_syslog_server}</P207>
+
+<!-- Syslog Level (Default setting is NONE) -->
+<!-- 0 - NONE, 1 - DEBUG, 2 - INFO, 3 - WARNING, 4 - ERROR -->
+<!-- Number: 0,1,2,3,4 -->
+<!-- Mandatory -->
+{if isset($grandstream_syslog_level)}
+<P208>{$grandstream_syslog_level}</P208>
+{else}
+<P208>0</P208>
+{/if}
+
+<!-- Send SIP Log (0 - No, 1 - Yes, Default set to No) -->
+<!-- Number: 0,1  -->
+{if isset($grandstream_send_sip_log)}
+<P1387>{$grandstream_send_sip_log}</P1387>
+{else}
+<P1387>0</P1387>
+{/if}
+
+<!-- ################################# -->
+<!-- #  Maintenance/Packet Capture  ## -->
+<!-- ################################# -->
+
+<!-- With RTP Packets. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P6007>0</P6007>
+
+<!-- ################ -->
+<!-- #  Phonebook  ## -->
+<!-- ################ -->
+
+<!-- ###################################### -->
+<!-- #  Phonebook/Global Phonebook Type  ## -->
+<!-- ###################################### -->
+
+<!-- Global Phonebook Type. Select type of global phonebook to use. XML is stored locally on the base station, LDAP is stored remotely. 0 - XML, 1 - LDAP. Default is 0 - XML. -->
+<!-- The Global Phonebook XML Settings and Phonebook/Global Phonebook LDAP Settings are depend on this settings. -->
+<!-- If this is set to XML, then all Global Phonebook XML Settings will take effect while all the LDAP settings will be ignored. -->
+<!-- If this is set to LDAP, then all the Global Phonebook LDAP Settings will take effect while all the XML settings will be ignored. -->
+<!-- Number: 0, 1 -->
+<P27002>0</P27002>
+
+<!-- ############################################## -->
+<!-- #  Phonebook/Global Phonebook XML Settings  ## -->
+<!-- ############################################## -->
+
+<!-- Enable Phonebook XML Download. # 0 - No, 1 - YES, HTTP, 2 - YES, TFTP, 3 - Yes, HTTPS. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
+{if isset($contact_grandstream)}
+<P330>1</P330>
+{else}
+<P330>0</P330>
+{/if}
+
+<!-- HTTP/HTTPS User Name -->
+<!-- String -->
+<!-- P6713 -->
+
+<!-- HTTP/HTTPS Password -->
+<!-- String -->
+<!-- P6714 -->
+
+<!-- Phonebook XML Server Path -->
+<!-- This is a string of up to 256 characters that should contain a path to the XML file. It MUST be in the host/path format. -->
+<!-- For example: directory.grandstream.com/engineering -->
+<!-- String -->
+{if isset($contact_grandstream)}
+<P331>{$grandstream_phonebook_xml_server_path}{$mac}/</P331>
+{elseif isset($grandstream_phonebook_xml_server_path)}
+<P331>{$grandstream_phonebook_xml_server_path}</P331>
+{else}
+<P331></P331>
+{/if}
+
+<!-- Phonebook Download Interval (in minutes) -->
+<!-- Valid value range is 5-720. Default is 0 for disabled -->
+<!-- Number: 0, 5-720;  -->
+<P332>120</P332>
+
+<!-- Remove Manually-edited entries on Download. 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P333>1</P333>
+
+<!-- ############################################### -->
+<!-- #  Phonebook/Global Phonebook LDAP Settings  ## -->
+<!-- ############################################### -->
+
+<!-- LDAP protocol. 0 - LDAP, 1 - LDAPS -->
+<!-- Number: 0,1 -->
+<!-- Mandatory -->
+<P8037>0</P8037>
+
+<!-- LDAP Server Address, up to 256 characters can be used. It can be IP address or Domain name -->
+<!-- String -->
+<P8020>{$grandstream_ldap_server}</P8020>
+
+<!-- LDAP Server Port. Default is 389. -->
+<!-- Number: 1 - 65535 -->
+<P8021>389</P8021>
+
+<!-- Base. The LDAP search base refers to the location in the directory where the search is requested to begin -->
+<!-- Example 1: dc=grandstream,dc=com -->
+<!-- Example 2: ou=Boston, dc=grandstream,dc=com -->
+<!-- String -->
+<P8022>{$grandstream_ldap_base_dn}</P8022>
+
+<!-- User name. The bind "Username" for querying LDAP servers. Some LDAP servers allow anonymous binds in which case the setting can be left blank -->
+<!-- String -->
+<P8023>{$ldap_username}</P8023>
+
+<!-- Password. The bind "Password" for querying LDAP servers. And the field can be left blank if the LDAP server allows anonymous binds -->
+<!-- String -->
+<P8024>{$ldap_password}</P8024>
+
+<!-- LDAP Number Filter -->
+<!-- LDAP name filter is the filter used for name look ups. Please refer to user manual for examples -->
+<!-- String -->
+<P8025>{$grandstream_ldap_number_filter}</P8025>
+
+<!-- LDAP Name Filter -->
+<!-- LDAP name filter is the filter used for name look ups. Please refer to user manual for examples -->
+<!-- String -->
+<P8026>{$grandstream_ldap_name_filter}</P8026>
+
+<!-- LDAP Version. Protocol version for the phone when send the bind requests -->
+<!-- 2 - version 2, 3 - version 3. Default is 3 -->
+<!-- Mandatory -->
+<P8027>3</P8027>
+
+<!-- LDAP Name Attributes. This setting specifies the "name" attributes of each record which are returned in the LDAP search result -->
+<!-- The setting allows the users to configure multiple space separated name attributes -->
+<!-- String -->
+<P8028>{$grandstream_ldap_name_attr}</P8028>
+
+<!-- LDAP Number Attributes. This setting specifies the “number” attributes of each record which are returned in the LDAP search result -->
+<!-- The setting allows the users to configure multiple space separated number attributes -->
+<!-- String -->
+<P8029>{$grandstream_ldap_number_attr}</P8029>
+
+<!-- LDAP Display Name. The entry information to be shown on phone LCD. Grandstream phones will display up to 3 fields -->
+<!-- String -->
+<P8030>givenName sn</P8030>
+
+<!-- Max Hits. The setting specifies the maximum number of results to be returned by the LDAP server -->
+<!-- If the value is set to 0, server will return all search results. Default is 500 -->
+<!-- Number: 0 - 32000 -->
+<!-- Mandatory -->
+<P8031>500</P8031>
+
+<!-- Search Timeout (in seconds). Default is 30 -->
+<!-- The setting specifies how long the server should process the request and client waits for server to return -->
+<!-- Number: 0 - 180 -->
+<!-- Mandatory -->
+<P8032>30</P8032>
+
+<!-- Sort Results. This setting is used for sorting searching result. Default is 0 -->
+<!-- Number: 0, 1. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Mandatory -->
+<P8033>0</P8033>
+
+<!-- LDAP Lookup -->
+<!-- Incoming calls. 0 - No, 1 - Yes. Default is 0 -->
+<P8035>1</P8035>
+
+<!-- Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
+<P8034>1</P8034>
+
+<!-- Lookup Display Name -->
+<!-- String -->
+<P8036>givenName sn</P8036>
+
+<!-- ########################################### -->
+<!-- #  Phonebook/Private Phonebook Settings  ## -->
+<!-- ########################################### -->
+
+<!-- Phonebook 1 Name. Default is PB1 -->
+<!-- String -->
+<P27060>PB1</P27060>
+
+<!-- Phonebook 2 Name. Default is PB2 -->
+<!-- String -->
+<P27061>PB2</P27061>
+
+<!-- Phonebook 3 Name. Default is PB3 -->
+<!-- String -->
+<P27062>PB3</P27062>
+
+<!-- Phonebook 4 Name. Default is PB4 -->
+<!-- String -->
+<P27063>PB4</P27063>
+
+<!-- Phonebook 5 Name. Default is PB5 -->
+<!-- String -->
+<P27064>PB5</P27064></config>
+</gs_provision>

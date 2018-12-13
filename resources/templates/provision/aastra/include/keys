@@ -1,0 +1,50 @@
+# #################
+# Key assignment types blf, blfxfer, park, speeddial, dnd
+# #################
+{foreach $keys["line"] as $row}
+topsoftkey{$row.device_key_id} type: {$row.device_key_type}
+topsoftkey{$row.device_key_id} line: {$row.device_key_line}
+topsoftkey{$row.device_key_id} value: {$row.device_key_value}
+topsoftkey{$row.device_key_id} label: {$row.device_key_label}
+
+{/foreach}
+
+{foreach $keys["memory"] as $row}
+softkey{$row.device_key_id} type: {$row.device_key_type}
+softkey{$row.device_key_id} line: {$row.device_key_line}
+softkey{$row.device_key_id} value: {$row.device_key_value}
+softkey{$row.device_key_id} label: {$row.device_key_label}
+
+{/foreach}
+
+{foreach $keys["programmable"] as $row}
+prgkey{$row.device_key_id} type: {$row.device_key_type}
+prgkey{$row.device_key_id} line: {$row.device_key_line}
+prgkey{$row.device_key_id} value: {$row.device_key_value}
+
+{/foreach}
+
+{foreach $keys["expansion"] as $row}
+{if $row.device_key_category == "expansion" && $row.device_key_id <= 60}
+expmod1 key{$row.device_key_id} type: {$row.device_key_type}
+expmod1 key{$row.device_key_id} line: {$row.device_key_line}
+expmod1 key{$row.device_key_id} value: {$row.device_key_value}
+expmod1 key{$row.device_key_id} label: {$row.device_key_label}
+{elseif $row.device_key_category == "expansion" && $row.device_key_id <= 120}
+expmod2 key{$row.device_key_id-60} type: {$row.device_key_type}
+expmod2 key{$row.device_key_id-60} line: {$row.device_key_line}
+expmod2 key{$row.device_key_id-60} value: {$row.device_key_value}
+expmod2 key{$row.device_key_id-60} label: {$row.device_key_label}
+{elseif $row.device_key_category == "expansion" && $row.device_key_id <= 180}
+expmod3 key{$row.device_key_id-120} type: {$row.device_key_type}
+expmod3 key{$row.device_key_id-120} line: {$row.device_key_line}
+expmod3 key{$row.device_key_id-120} value: {$row.device_key_value}
+expmod3 key{$row.device_key_id-120} label: {$row.device_key_label}
+{elseif $row.device_key_category == "expansion"}
+expmod4 key{$row.device_key_id-180} type: {$row.device_key_type}
+expmod4 key{$row.device_key_id-180} line: {$row.device_key_line}
+expmod4 key{$row.device_key_id-180} value: {$row.device_key_value}
+expmod4 key{$row.device_key_id-180} label: {$row.device_key_label}
+{/if}
+
+{/foreach}

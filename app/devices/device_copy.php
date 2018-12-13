@@ -17,22 +17,26 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('device_add')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('device_add')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -64,7 +68,7 @@ else {
 			}
 			else {
 				$save = false;
-				$_SESSION['message'] =  $text['message-duplicate'];
+				message::add($text['message-duplicate']);
 			}
 		}
 		unset($prep_statement);
@@ -145,13 +149,17 @@ else {
 	$device["device_keys"] = $device_keys;
 	$device["device_settings"] = $device_settings;
 
+//prepare the array
+	$array['devices'][] = $device;
+
 //copy the device
 	if ($save) {
-		$orm = new orm;
-		$orm->name('devices');
-		$orm->save($device);
-		$response = $orm->message;
-		$_SESSION["message"] = $text['message-copy'];
+		$database = new database;
+		$database->app_name = 'devices';
+		$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+		$database->save($array);
+		$response = $database->message;
+		message::add($text['message-copy']);
 	}
 
 //redirect

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016
+	Portions created by the Initial Developer are Copyright (C) 2016-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -148,12 +148,16 @@
 						$db->exec(check_sql($sql));
 						unset($sql);
 
+					//clear the cache
+						$cache = new cache;
+						$cache->delete("configuration:local_stream.conf");
+
 					//reload mod local stream
 						$music = new switch_music_on_hold;
 						$music->reload();
 
 					//set the message and redirect the user
-						$_SESSION["message"] = $text['message-add'];
+						message::add($text['message-add']);
 						header("Location: music_on_hold.php");
 						return;
 				} //if ($action == "add")
@@ -186,12 +190,16 @@
 						$db->exec(check_sql($sql));
 						unset($sql);
 
+					//clear the cache
+						$cache = new cache;
+						$cache->delete("configuration:local_stream.conf");
+
 					//reload mod local stream
 						$music = new switch_music_on_hold;
 						$music->reload();
 
 					//set the message and redirect the user
-						$_SESSION["message"] = $text['message-update'];
+						message::add($text['message-update']);
 						header("Location: music_on_hold.php");
 						return;
 				} //if ($action == "update")
@@ -245,7 +253,7 @@
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='music_on_hold_name' maxlength='255' value=\"$music_on_hold_name\">\n";
+	echo "	<input class='formfld' type='text' name='music_on_hold_name' maxlength='255' value=\"".escape($music_on_hold_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-music_on_hold_name']."\n";
 	echo "</td>\n";
@@ -256,7 +264,7 @@
 	echo "	".$text['label-path']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='music_on_hold_path' maxlength='255' value=\"$music_on_hold_path\">\n";
+	echo "	<input class='formfld' type='text' name='music_on_hold_path' maxlength='255' value=\"".escape($music_on_hold_path)."\">\n";
 	echo "<br />\n";
 	echo $text['description-music_on_hold_path']."\n";
 	echo "</td>\n";
@@ -348,7 +356,7 @@
 	echo "	".$text['label-interval']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='music_on_hold_interval' maxlength='255' value='$music_on_hold_interval'>\n";
+	echo "  <input class='formfld' type='text' name='music_on_hold_interval' maxlength='255' value='".escape($music_on_hold_interval)."'>\n";
 	echo "<br />\n";
 	echo $text['description-music_on_hold_interval']."\n";
 	echo "</td>\n";
@@ -359,7 +367,7 @@
 	echo "	".$text['label-timer_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='music_on_hold_timer_name' maxlength='255' value=\"$music_on_hold_timer_name\">\n";
+	echo "	<input class='formfld' type='text' name='music_on_hold_timer_name' maxlength='255' value=\"".escape($music_on_hold_timer_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-music_on_hold_timer_name']."\n";
 	echo "</td>\n";
@@ -395,14 +403,14 @@
 				$recording_filename = $row["recording_filename"];
 				if ($music_on_hold_chime_list == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename && strlen($music_on_hold_chime_list) > 0) {
 					$tmp_selected = true;
-					echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename."' selected='selected'>".$recording_name."</option>\n";
+					echo "	<option value='".escape($_SESSION['switch']['recordings']['dir'])."/".escape($_SESSION['domain_name'])."/".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
 				}
 				else if ($music_on_hold_chime_list == $recording_filename && strlen($music_on_hold_chime_list) > 0) {
 					$tmp_selected = true;
-					echo "	<option value='".$recording_filename."' selected='selected'>".$recording_name."</option>\n";
+					echo "	<option value='".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
 				}
 				else {
-					echo "	<option value='".$recording_filename."'>".$recording_name."</option>\n";
+					echo "	<option value='".escape($recording_filename)."'>".escape($recording_name)."</option>\n";
 				}
 			}
 			echo "</optgroup>\n";
@@ -417,10 +425,10 @@
 			foreach ($result as &$row) {
 				if ($music_on_hold_chime_list == "phrase:".$row["phrase_uuid"]) {
 					$tmp_selected = true;
-					echo "	<option value='phrase:".$row["phrase_uuid"]."' selected='selected'>".$row["phrase_name"]."</option>\n";
+					echo "	<option value='phrase:".escape($row["phrase_uuid"])."' selected='selected'>".escape($row["phrase_name"])."</option>\n";
 				}
 				else {
-					echo "	<option value='phrase:".$row["phrase_uuid"]."'>".$row["phrase_name"]."</option>\n";
+					echo "	<option value='phrase:".escape($row["phrase_uuid"])."'>".escape($row["phrase_name"])."</option>\n";
 				}
 			}
 			unset ($prep_statement);
@@ -438,10 +446,10 @@
 					}
 					if ($music_on_hold_chime_list == $value) {
 						$tmp_selected = true;
-						echo "	<option value='$value' selected='selected'>$value</option>\n";
+						echo "	<option value='".escape($value)."' selected='selected'>".escape($value)."</option>\n";
 					}
 					else {
-						echo "	<option value='$value'>$value</option>\n";
+						echo "	<option value='".escape($value)."'>".escape($value)."</option>\n";
 					}
 				}
 			}
@@ -452,10 +460,10 @@
 			if (!$tmp_selected && strlen($music_on_hold_chime_list) > 0) {
 				echo "<optgroup label='Selected'>\n";
 				if (file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$music_on_hold_chime_list)) {
-					echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$music_on_hold_chime_list."' selected='selected'>".$music_on_hold_chime_list."</option>\n";
+					echo "	<option value='".escape($_SESSION['switch']['recordings']['dir'])."/".escape($_SESSION['domain_name'])."/".escape($music_on_hold_chime_list)."' selected='selected'>".escape($music_on_hold_chime_list)."</option>\n";
 				}
 				else if (substr($music_on_hold_chime_list, -3) == "wav" || substr($music_on_hold_chime_list, -3) == "mp3") {
-					echo "	<option value='".$music_on_hold_chime_list."' selected='selected'>".$music_on_hold_chime_list."</option>\n";
+					echo "	<option value='".escape($music_on_hold_chime_list)."' selected='selected'>".escape($music_on_hold_chime_list)."</option>\n";
 				}
 				echo "</optgroup>\n";
 			}
@@ -470,7 +478,7 @@
 	echo "	".$text['label-chime_frequency']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='music_on_hold_chime_freq' maxlength='255' value=\"$music_on_hold_chime_freq\">\n";
+	echo "	<input class='formfld' type='text' name='music_on_hold_chime_freq' maxlength='255' value=\"".escape($music_on_hold_chime_freq)."\">\n";
 	echo "<br />\n";
 	echo $text['description-music_on_hold_chime_freq']."\n";
 	echo "</td>\n";
@@ -481,7 +489,7 @@
 	echo "	".$text['label-chime_maximum']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='music_on_hold_chime_max' maxlength='255' value=\"$music_on_hold_chime_max\">\n";
+	echo "	<input class='formfld' type='text' name='music_on_hold_chime_max' maxlength='255' value=\"".escape($music_on_hold_chime_max)."\">\n";
 	echo "<br />\n";
 	echo $text['description-music_on_hold_chime_max']."\n";
 	echo "</td>\n";
@@ -502,10 +510,10 @@
 		}
 		foreach ($_SESSION['domains'] as $row) {
 			if ($row['domain_uuid'] == $domain_uuid) {
-				echo "		<option value='".$row['domain_uuid']."' selected='selected'>".$row['domain_name']."</option>\n";
+				echo "		<option value='".escape($row['domain_uuid'])."' selected='selected'>".escape($row['domain_name'])."</option>\n";
 			}
 			else {
-				echo "		<option value='".$row['domain_uuid']."'>".$row['domain_name']."</option>\n";
+				echo "		<option value='".escape($row['domain_uuid'])."'>".escape($row['domain_name'])."</option>\n";
 			}
 		}
 		echo "	</select>\n";
@@ -516,7 +524,7 @@
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='music_on_hold_uuid' value='$music_on_hold_uuid'>\n";
+		echo "				<input type='hidden' name='music_on_hold_uuid' value='".escape($music_on_hold_uuid)."'>\n";
 	}
 	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";

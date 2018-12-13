@@ -139,7 +139,7 @@ else {
 	unset($sql);
 
 //redirect the user
-	$_SESSION["message"] = $text['confirm-copy'];
+	message::add($text['confirm-copy']);
 	header("Location: fax.php");
 	return;
 

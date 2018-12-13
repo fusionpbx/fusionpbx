@@ -30,9 +30,6 @@
 -- we can use any number because other box should check sip_h_X_*** headers first
 	local pickup_number = '*8' -- extension and '**' or '*8'
 
---set the debug options
-	debug["sql"] = false;
-
 --include config.lua
 	require "resources.functions.config";
 
@@ -49,6 +46,12 @@
 
 --include database class
 	local Database = require "resources.functions.database"
+
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
 
 --get the hostname
 	local hostname = trim(api:execute("switchname", ""));
@@ -165,34 +168,40 @@
 
 		--get the call groups the extension is a member of
 			local sql = "SELECT call_group FROM v_extensions ";
-			sql = sql .. "WHERE domain_uuid = '"..domain_uuid.."' ";
-			sql = sql .. "AND (extension = '"..caller_id_number.."'";
-			sql = sql .. "OR  number_alias = '"..caller_id_number.."')";
+			sql = sql .. "WHERE domain_uuid = :domain_uuid ";
+			sql = sql .. "AND (extension = :caller_id_number ";
+			sql = sql .. "OR  number_alias = :caller_id_number)";
 			sql = sql .. "limit 1";
-			local call_group = dbh:first_value(sql) or ''
+			local params = {domain_uuid = domain_uuid, caller_id_number = caller_id_number};
+			if (debug["sql"]) then
+				log.noticef("SQL: %s; params: %s", sql, json.encode(params));
+			end
+			local call_group = dbh:first_value(sql, params) or ''
 			log.noticef("call_group: `%s`", call_group);
 			call_groups = explode(",", call_group);
 
+			params = {domain_uuid = domain_uuid};
+
 		--get the extensions in the call groups
 			sql = "SELECT extension, number_alias FROM v_extensions ";
-			sql = sql .. "WHERE domain_uuid = '"..domain_uuid.."' ";
+			sql = sql .. "WHERE domain_uuid = :domain_uuid ";
 			sql = sql .. "AND (";
 			for key,call_group in ipairs(call_groups) do
-				if (key > 1) then
-					sql = sql .. "OR ";
-				end
-				if (#call_group > 0) then
-					sql = sql .. "call_group like '%"..call_group.."%' ";
+				if key > 1 then sql = sql .. " OR " end
+				if #call_group == 0 then
+					sql = sql .. "call_group = '' or call_group is NULL";
 				else
-					sql = sql .. "call_group = '' ";
+					local param_name = "call_group_" .. tostring(key)
+					sql = sql .. "call_group like :" .. param_name;
+					params[param_name] = '%' .. call_group .. '%';
 				end
 			end
 			sql = sql .. ") ";
 			if (debug["sql"]) then
-				log.notice("sql "..sql);
+				log.noticef("SQL: %s; params: %s", sql, json.encode(params));
 			end
 			local extensions = {}
-			dbh:query(sql, function(row)
+			dbh:query(sql, params, function(row)
 				local member = row.extension
 				if row.number_alias and #row.number_alias > 0 then
 					member = row.number_alias
@@ -246,19 +255,12 @@
 			end
 
 		--connect to FS database
-			--local dbh = Database.new('switch')
-			if (file_exists(database_dir.."/core.db")) then
-				--dbh = freeswitch.Dbh("core:core"); -- when using sqlite
-				dbh = freeswitch.Dbh("sqlite://"..database_dir.."/core.db");
-			else
-				dofile(scripts_dir.."/resources/functions/database_handle.lua");
-				dbh = database_handle('switch');
-			end
+			local dbh = Database.new('switch')
 
 		--check the database to get the uuid of a ringing call
 			call_hostname = "";
 			sql = "SELECT uuid, call_uuid, hostname FROM channels ";
-			sql = sql .. "WHERE callstate in ('RINGING', 'EARLY') ";
+			sql = sql .. "WHERE callstate IN ('RINGING', 'EARLY') ";
 			-- next check should prevent pickup call from extension
 			-- e.g. if extension 100 dial some cell phone and some one else dial *8
 			-- he can pickup this call.
@@ -273,30 +275,34 @@
 					if direction:find('outbound') then
 						sql = sql .. "OR direction = 'inbound' ";
 					end
-				sql = sql .. ")"
+				sql = sql .. ") "
 			end
 
 			sql = sql .. "AND (1<>1 ";
+			local params = {};
 			for key,extension in pairs(extensions) do
-				sql = sql .. "OR presence_id = '"..extension.."@"..domain_name.."' ";
+				local param_name = "presence_id_" .. tostring(key);
+				sql = sql .. "OR presence_id = :" .. param_name .. " ";
+				params[param_name] = extension.."@"..domain_name;
 			end
 			sql = sql .. ") ";
-			sql = sql .. "and call_uuid is not null ";
-			sql = sql .. "limit 1 ";
+			sql = sql .. "AND call_uuid IS NOT NULL ";
+			sql = sql .. "LIMIT 1 ";
 			if (debug["sql"]) then
-				log.notice("sql "..sql);
+				log.noticef("SQL: %s; params: %s", sql, json.encode(params));
 			end
 			local is_child
-			dbh:query(sql, function(row)
-				-- for key, val in pairs(row) do
-				-- 	log.notice("row "..key.." "..val);
-				-- end
-				-- log.notice("-----------------------");
+			dbh:query(sql, params, function(row)
+				--for key, val in pairs(row) do
+			 	--	log.notice("row "..key.." "..val);
+				--end
+				--log.notice("-----------------------");
 				is_child = (row.uuid == row.call_uuid)
 				uuid = row.call_uuid;
 				call_hostname = row.hostname;
 			end);
-
+			--log.notice("uuid: "..uuid);
+			--log.notice("call_hostname: "..call_hostname);
 			if is_child then
 				-- we need intercept `parent` call e.g. call in FIFO/CallCenter Queue
 				if (call_hostname == hostname) then

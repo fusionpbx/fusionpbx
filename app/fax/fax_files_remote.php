@@ -90,8 +90,7 @@ else {
 		$fax_email_connection .= "/".(($fax_email_connection_validate == 'false') ? "no" : null)."validate-cert";
 		$fax_email_connection .= "}".$fax_email_connection_mailbox;
 		if (!$connection = imap_open($fax_email_connection, $fax_email_connection_username, $fax_email_connection_password)) {
-			$_SESSION["message_mood"] = 'negative';
-			$_SESSION["message"] = $text['message-cannot_connect']."(".imap_last_error().")";
+			message::add($text['message-cannot_connect']."(".imap_last_error().")", 'neative');
 			header("Location: fax.php");
 			exit;
 		}
@@ -132,8 +131,7 @@ else {
 			}
 			else{
 				//redirect user
-				$_SESSION["message_mood"] = "negative";
-				$_SESSION["message"] = $text['message-download_failed'];
+				message::add($text['message-download_failed'], 'negative');
 				header("Location: ?id=".$fax_uuid);
 				exit;
 			}
@@ -150,23 +148,21 @@ else {
 					$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
 					@unlink($fax_dir.'/'.$fax_extension.'/inbox/'.$attachment['name']);
 					//redirect user
-					$_SESSION["message"] = $text['message-delete'];
+					message::add($text['message-delete']);
 					header("Location: ?id=".$fax_uuid);
 					exit;
 				}
 			}
 			else {
 				//redirect user
-				$_SESSION["message_mood"] = "negative";
-				$_SESSION["message"] = $text['message-delete_failed'];
+				message::add($text['message-delete_failed'], 'negative');
 				header("Location: ?id=".$fax_uuid);
 				exit;
 			}
 		}
 		else {
 			//redirect user
-			$_SESSION["message_mood"] = "negative";
-			$_SESSION["message"] = $text['message-delete_failed'];
+			message::add($text['message-delete_failed'], 'negative');
 			header("Location: ?id=".$fax_uuid);
 			exit;
 		}

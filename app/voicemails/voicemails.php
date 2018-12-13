@@ -23,24 +23,34 @@
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('voicemail_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+	
+//check permissions
+	if (permission_exists('voicemail_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-//retrieve order by
+//set the variables
 	$order_by = check_str($_GET["order_by"]);
 	$order = check_str($_GET["order"]);
+	$search = check_str($_GET["search"]);
+
+//sterilize the user data
+	$order_by = preg_replace('/\s+/', '', $order_by);
+	if (!(strtolower($order) == "asc" or strtolower($order) == "desc")) { $order = ''; }
+	if (strlen($search) > 15) {	$search = substr($search, 0, 15); }
 
 //set the voicemail id and voicemail uuid arrays
 	if (isset($_SESSION['user']['extension'])) foreach ($_SESSION['user']['extension'] as $index => $row) {
@@ -62,15 +72,15 @@ else {
 	require_once "resources/paging.php";
 
 //prepare to page the results
-	$sql = "select count(*) as num_rows from v_voicemails ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql = "SELECT count(*) AS num_rows FROM v_voicemails ";
+	$sql .= "WHERE domain_uuid = '$domain_uuid' ";
 	if (strlen($search) > 0) {
 		$sql .= "and (";
-		$sql .= "	voicemail_id like '%".$search."%' ";
-		$sql .= " 	or voicemail_mail_to like '%".$search."%' ";
-		$sql .= " 	or voicemail_local_after_email like '%".$search."%' ";
-		$sql .= " 	or voicemail_enabled like '%".$search."%' ";
-		$sql .= " 	or voicemail_description like '%".$search."%' ";
+		$sql .= "	CAST(voicemail_id AS TEXT) LIKE '%".$search."%' ";
+		$sql .= " 	OR voicemail_mail_to LIKE '%".$search."%' ";
+		$sql .= " 	OR voicemail_local_after_email LIKE '%".$search."%' ";
+		$sql .= " 	OR voicemail_enabled LIKE '%".$search."%' ";
+		$sql .= " 	OR voicemail_description LIKE '%".$search."%' ";
 		$sql .= ") ";
 	}
 	if (!permission_exists('voicemail_delete')) {
@@ -82,14 +92,14 @@ else {
 					$sql .= "voicemail_uuid = '".$row['voicemail_uuid']."' ";
 				}
 				else {
-					$sql .= " or voicemail_uuid = '".$row['voicemail_uuid']."'";
+					$sql .= " OR voicemail_uuid = '".$row['voicemail_uuid']."'";
 				}
 				$x++;
 			}
 			$sql .= ")";
 		}
 		else {
-			$sql .= "and voicemail_uuid is null ";
+			$sql .= "AND voicemail_uuid IS NULL ";
 		}
 	}
 	$prep_statement = $db->prepare($sql);
@@ -114,14 +124,14 @@ else {
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*) as num_rows', '*', $sql);
+	$sql = str_replace('count(*) AS num_rows', '*', $sql);
 	if (strlen($order_by) > 0) {
-		$sql .= ($order_by == 'voicemail_id') ? "order by voicemail_id ".$order." " : "order by ".$order_by." ".$order." ";
+		$sql .= ($order_by == 'voicemail_id') ? "ORDER BY voicemail_id ".$order." " : "ORDER BY ".$order_by." ".$order." ";
 	}
 	else {
-		$sql .= "order by voicemail_id asc ";
+		$sql .= "ORDER BY voicemail_id ASC ";
 	}
-	$sql .= "limit ".$rows_per_page." offset ".$offset." ";
+	$sql .= "LIMIT ".$rows_per_page." OFFSET ".$offset." ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$voicemails = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -138,7 +148,11 @@ else {
 	echo "		</td>\n";
 	echo "			<td width='30%' align='right' valign='top'>\n";
 	echo "				<form method='get' action=''>\n";
-	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>";
+	if (permission_exists('voicemail_import')) {
+		echo "				<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='voicemail_imports.php'\" value='".$text['button-import']."'>\n";
+	}
+
+	echo "				<input type='text' class='txt' style='width: 150px; margin-left: 15px;' name='search' id='search' value='".escape($search)."'>";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	echo "				</form>\n";
 	echo "			</td>\n";
@@ -176,42 +190,42 @@ else {
 	if ($num_rows > 0) {
 
 		foreach($voicemails as $row) {
-			$tr_link = (permission_exists('voicemail_edit')) ? "href='voicemail_edit.php?id=".$row['voicemail_uuid']."'" : null;
+			$tr_link = (permission_exists('voicemail_edit')) ? "href='voicemail_edit.php?id=".escape($row['voicemail_uuid'])."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			if (permission_exists('voicemail_delete')) {
 				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; vertical-align: middle; padding: 0px;'>";
-				echo "		<input type='checkbox' name='id[]' id='checkbox_".$row['voicemail_uuid']."' value='".$row['voicemail_uuid']."' onclick=\"if (!this.checked) { document.getElementById('chk_all').checked = false; }\">";
+				echo "		<input type='checkbox' name='id[]' id='checkbox_".escape($row['voicemail_uuid'])."' value='".escape($row['voicemail_uuid'])."' onclick=\"if (!this.checked) { document.getElementById('chk_all').checked = false; }\">";
 				echo "	</td>";
 				$vm_ids[] = 'checkbox_'.$row['voicemail_uuid'];
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('voicemail_edit')) {
-				echo "<a href='voicemail_edit.php?id=".$row['voicemail_uuid']."'>".$row['voicemail_id']."</a>";
+				echo "<a href='voicemail_edit.php?id=".escape($row['voicemail_uuid'])."'>".escape($row['voicemail_id'])."</a>";
 			}
 			else {
-				echo $row['voicemail_id'];
+				echo escape($row['voicemail_id']);
 			}
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['voicemail_mail_to']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['voicemail_mail_to'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".(($row['voicemail_file'] == 'attach') ? $text['label-true'] : $text['label-false'])."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['voicemail_local_after_email'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords(escape($row['voicemail_local_after_email']))."&nbsp;</td>\n";
 			echo "	<td valign='middle' class='".$row_style[$c]."' style='white-space: nowrap;'>\n";
 			if (permission_exists('voicemail_message_view')) {
-				echo "		<a href='voicemail_messages.php?id=".$row['voicemail_uuid']."'>".$text['label-messages']."</a>&nbsp;&nbsp;\n";
+				echo "		<a href='voicemail_messages.php?id=".escape($row['voicemail_uuid'])."'>".$text['label-messages']."</a>&nbsp;&nbsp;\n";
 			}
 			if (permission_exists('voicemail_greeting_view')) {
 				echo "		<a href='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$row['voicemail_id']."&back=".urlencode($_SERVER["REQUEST_URI"])."'>".$text['label-greetings']."</a>\n";
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['voicemail_enabled']]."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['voicemail_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg' width='30%'>".escape($row['voicemail_description'])."&nbsp;</td>\n";
 			if (permission_exists('voicemail_edit') || permission_exists('voicemail_delete')) {
 				echo "	<td class='list_control_icons' style='width: 25px;'>";
 				if (permission_exists('voicemail_edit')) {
-					echo "<a href='voicemail_edit.php?id=".$row['voicemail_uuid']."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
+					echo "<a href='voicemail_edit.php?id=".escape($row['voicemail_uuid'])."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
 				}
 				if (permission_exists('voicemail_delete')) {
-					echo "<a href='voicemail_delete.php?id[]=".$row['voicemail_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+					echo "<a href='voicemail_delete.php?id[]=".escape($row['voicemail_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 				}
 				echo "	</td>\n";
 			}
@@ -266,4 +280,5 @@ else {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

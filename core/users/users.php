@@ -17,30 +17,40 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists("user_view") || if_group("superadmin")) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
 
-//additional includes
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
+
+//check permissions
+	if (permission_exists("user_view") || if_group("superadmin")) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
+
+//add multi-lingual support
+	$language = new text;
+	$text = $language->get();
+
+//include the header
+	require_once "resources/header.php";
+	$document['title'] = $text['title-user_manager'];
 
 //set the variables
 	$order_by = check_str($_GET["order_by"]);
 	$order = check_str($_GET["order"]);
-	$search_value = check_str($_REQUEST["search_value"]);
+	$search = check_str($_REQUEST["search"]);
 
 //get the list of superadmins
 	$superadmins = superadmin_list($db);
@@ -53,7 +63,7 @@ else {
 	$sql .= "	v_groups as g ";
 	$sql .= "where ";
 	$sql .= "	gu.group_uuid = g.group_uuid ";
-	if (!(permission_exists('user_all') && $_GET['showall'] == 'true')) {
+	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
 		$sql .= "	and (";
 		$sql .= "		g.domain_uuid = '".$domain_uuid."' ";
 		$sql .= "		or g.domain_uuid is null ";
@@ -75,7 +85,7 @@ else {
 
 //get total user count from the database
 	$sql = "select count(*) as num_rows from v_users where 1 = 1 ";
-	if (!(permission_exists('user_all') && $_GET['showall'] == 'true')) {
+	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
 		$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	}
 	$prep_statement = $db->prepare($sql);
@@ -87,8 +97,9 @@ else {
 	unset($prep_statement, $row);
 
 //get the users from the database (reuse $sql from above)
-	if (strlen($search_value) > 0) {
-		$sql .= "and username = '".$search_value."' ";
+	if (strlen($search) > 0) {
+		$search = strtolower($search);
+		$sql .= "and lower(username) = '".$search."' ";
 	}
 	if (strlen($order_by) > 0) { $sql .= "order by ".$order_by." ".$order." "; }
 	$prep_statement = $db->prepare($sql);
@@ -104,9 +115,9 @@ else {
 	}
 	unset ($prep_statement, $result, $sql);
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "search=".$search_value;
-	if (permission_exists('user_all') && $_GET['showall'] == 'true') {
-		$param .= "&showall=true";
+	$param = "search=".escape($search);
+	if (permission_exists('user_all') && $_GET['show'] == 'all') {
+		$param .= "&show=all";
 	}
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
@@ -114,11 +125,11 @@ else {
 	$offset = $rows_per_page * $page;
 
 	$sql = "select * from v_users where 1 = 1 ";
-	if (!(permission_exists('user_all') && $_GET['showall'] == 'true')) {
+	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
 		$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	}
-	if (strlen($search_value) > 0) {
-		$sql .= "and username like '%".$search_value."%' ";
+	if (strlen($search) > 0) {
+		$sql .= "and lower(username) like '%".$search."%' ";
 	}
 	if (strlen($order_by)> 0) {
 		$sql .= "order by ".$order_by." ".$order." ";
@@ -140,15 +151,18 @@ else {
 	echo "<td align='left' width='90%' nowrap='nowrap' valign='top'><b>".$text['header-user_manager']." (".$num_rows.")</b></td>\n";
 	echo "<td align='right' nowrap='nowrap'>";
 	if (permission_exists('user_all')) {
-		if ($_GET['showall'] == 'true') {
-			echo "<input type='button' class='btn' value='".$text['button-back']."' onclick=\"window.location='index.php';\">\n";
-			echo "<input type='hidden' name='showall' value='true'>";
+		if ($_GET['show'] == 'all') {
+			echo "<input type='button' class='btn' value='".$text['button-back']."' onclick=\"window.location='users.php';\">\n";
+			echo "<input type='hidden' name='show' value='all'>";
 		}
 		else {
-			echo "<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='index.php?showall=true';\">\n";
+			echo "<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='users.php?show=all';\">\n";
 		}
 	}
-	echo 	"<input type='text' class='txt' style='width: 150px; margin-right: 3px;' name='search_value' value=\"".$search_value."\">";
+	if (permission_exists('user_import')) {
+		echo 				"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='user_imports.php'\" value='".$text['button-import']."'>\n";
+	}
+	echo 	"<input type='text' class='txt' style='width: 150px; margin-left: 15px; margin-right: 3px;' name='search' value=\"".escape($search)."\">";
 	echo 	"<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	echo "</td>";
 	echo "</tr>\n";
@@ -171,7 +185,7 @@ else {
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	if (permission_exists('user_all') && $_GET['showall'] == 'true') {
+	if (permission_exists('user_all') && $_GET['show'] == 'all') {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, '', '', $param);
 	}
 	echo th_order_by('username', $text['label-username'], $order_by, $order);
@@ -180,33 +194,33 @@ else {
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('user_add')) {
 		if ($_SESSION['limit']['users']['numeric'] == '' || ($_SESSION['limit']['users']['numeric'] != '' && $total_users < $_SESSION['limit']['users']['numeric'])) {
-			echo "<a href='signup.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
+			echo "<a href='user_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 		}
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($user_count > 0) {
+	if (is_array($users)) {
 		foreach($users as $row) {
 			if (if_superadmin($superadmins, $row['user_uuid']) && !if_group("superadmin")) {
 				//hide
 			} else {
-				$tr_link = (permission_exists('user_edit')) ? "href='usersupdate.php?id=".$row['user_uuid']."'" : null;
+				$tr_link = (permission_exists('user_edit')) ? "href='user_edit.php?id=".escape($row['user_uuid'])."'" : null;
 				echo "<tr ".$tr_link.">\n";
-				if (permission_exists('user_all') && $_GET['showall'] == 'true') {
-					echo "	<td valign='top' class='".$row_style[$c]."'>".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."</td>\n";
+				if (permission_exists('user_all') && $_GET['show'] == 'all') {
+					echo "	<td valign='top' class='".$row_style[$c]."'>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
 				}
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
 				if (permission_exists('user_edit')) {
-					echo "<a href='usersupdate.php?id=".$row['user_uuid']."'>".$row['username']."</a>";
+					echo "<a href='user_edit.php?id=".escape($row['user_uuid'])."'>".escape($row['username'])."</a>";
 				}
 				else {
-					echo $row['username'];
+					echo escape($row['username']);
 				}
 				echo "	</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
 				if (sizeof($user_groups[$row['user_uuid']]) > 0) {
-					echo implode(', ', $user_groups[$row['user_uuid']]);
+					echo escape(implode(', ', $user_groups[$row['user_uuid']]));
 				}
 				echo "&nbsp;</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
@@ -219,11 +233,11 @@ else {
 				echo "&nbsp;</td>\n";
 				echo "	<td valign='top' align='right' class='tr_link_void'>";
 				if (permission_exists('user_edit')) {
-					echo "<a href='usersupdate.php?id=".$row['user_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+					echo "<a href='user_edit.php?id=".$row['user_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 				}
 				if (permission_exists('user_delete')) {
 					if ($_SESSION["user"]["user_uuid"] != $row['user_uuid']) {
-						echo "<a href='userdelete.php?id=".$row['user_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+						echo "<a href='user_delete.php?id=".$row['user_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 					}
 					else {
 						echo "<span onclick=\"alert('".$text['message-cannot_delete_own_account']."');\">".str_replace("list_control_icon", "list_control_icon_disabled", $v_link_label_delete)."</span>";
@@ -243,5 +257,8 @@ else {
 
 	echo $paging_controls."\n";
 	echo "<br /><br />\n";
+
+//include the footer
+	include "resources/footer.php";
 
 ?>

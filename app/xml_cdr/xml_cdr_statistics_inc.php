@@ -122,16 +122,30 @@ else {
 					$mos_comparison = "<>";
 					break;
 			}
-         } else {
-             $mos_comparison = '';
-        }
+		} else {
+			$mos_comparison = '';
+		}
 		//$mos_comparison = check_str($_REQUEST["mos_comparison"]);
 		$mos_score = check_str($_REQUEST["mos_score"]);
+		if(permission_exists('xml_cdr_b_leg')){
+			$leg = check_str($_REQUEST["leg"]);
+		}
+		$show_all = permission_exists('xml_cdr_all') && ($_REQUEST['showall'] == 'true');
+	}
+	else {
+		$show_all = permission_exists('xml_cdr_all') && ($_GET['showall'] == 'true');
+		$direction = 'inbound';
 	}
 
-
+//if we do not see b-leg then use only a-leg to generate statistics
+	if(!permission_exists('xml_cdr_b_leg')){
+		$leg = 'a';
+	}
 
 //build the sql where string
+	if (!$show_all) {
+		$sql_where_ands[] = "domain_uuid = '".$_SESSION['domain_uuid']."'";
+	}
 	if ($missed == true) {
 		$sql_where_ands[] = "billsec = '0'";
 	}
@@ -156,21 +170,15 @@ else {
 		$sql_where_ands[] = "destination_number like '".$mod_destination_number."'";
 	}
 	if (strlen($context) > 0) { $sql_where_ands[] = "context like '%".$context."%'"; }
-/*	if (strlen($start_stamp_begin) > 0 && strlen($start_stamp_end) > 0) { $sql_where_ands[] = "start_stamp BETWEEN '".$start_stamp_begin.":00.000' AND '".$start_stamp_end.":59.999'"; }
-	else {
-		if (strlen($start_stamp_begin) > 0) { $sql_where_ands[] = "start_stamp >= '".$start_stamp_begin.":00.000'"; }
-		if (strlen($start_stamp_end) > 0) { $sql_where_ands[] = "start_stamp <= '".$start_stamp_end.":59.999'"; }
-	}
-*/	if (strlen($answer_stamp_begin) > 0 && strlen($answer_stamp_end) > 0) { $sql_where_ands[] = "answer_stamp BETWEEN '".$answer_stamp_begin.":00.000' AND '".$answer_stamp_end.":59.999'"; }
-	else {
-		if (strlen($answer_stamp_begin) > 0) { $sql_where_ands[] = "answer_stamp >= '".$answer_stamp_begin.":00.000'"; }
-		if (strlen($answer_stamp_end) > 0) { $sql_where_ands[] = "answer_stamp <= '".$answer_stamp_end.":59.999'"; }
-	}
+	// if (strlen($start_stamp_begin) > 0 && strlen($start_stamp_end) > 0) { $sql_where_ands[] = "start_stamp BETWEEN '".$start_stamp_begin.":00.000' AND '".$start_stamp_end.":59.999'"; }
+	// else if (strlen($start_stamp_begin) > 0) { $sql_where_ands[] = "start_stamp >= '".$start_stamp_begin.":00.000'"; }
+	// else if (strlen($start_stamp_end) > 0) { $sql_where_ands[] = "start_stamp <= '".$start_stamp_end.":59.999'"; }
+	if (strlen($answer_stamp_begin) > 0 && strlen($answer_stamp_end) > 0) { $sql_where_ands[] = "answer_stamp BETWEEN '".$answer_stamp_begin.":00.000' AND '".$answer_stamp_end.":59.999'"; }
+	else if (strlen($answer_stamp_begin) > 0) { $sql_where_ands[] = "answer_stamp >= '".$answer_stamp_begin.":00.000'"; }
+	else if (strlen($answer_stamp_end) > 0) { $sql_where_ands[] = "answer_stamp <= '".$answer_stamp_end.":59.999'"; }
 	if (strlen($end_stamp_begin) > 0 && strlen($end_stamp_end) > 0) { $sql_where_ands[] = "end_stamp BETWEEN '".$end_stamp_begin.":00.000' AND '".$end_stamp_end.":59.999'"; }
-	else {
-		if (strlen($end_stamp_begin) > 0) { $sql_where_ands[] = "end_stamp >= '".$end_stamp_begin.":00.000'"; }
-		if (strlen($end_stamp_end) > 0) { $sql_where_ands[] = "end_stamp <= '".$end_stamp_end.":59.999'"; }
-	}
+	else if (strlen($end_stamp_begin) > 0) { $sql_where_ands[] = "end_stamp >= '".$end_stamp_begin.":00.000'"; }
+	else if (strlen($end_stamp_end) > 0) { $sql_where_ands[] = "end_stamp <= '".$end_stamp_end.":59.999'"; }
 	if (strlen($duration) > 0) { $sql_where_ands[] = "duration like '%".$duration."%'"; }
 	if (strlen($billsec) > 0) { $sql_where_ands[] = "billsec like '%".$billsec."%'"; }
 	if (strlen($hangup_cause) > 0) { $sql_where_ands[] = "hangup_cause like '%".$hangup_cause."%'"; }
@@ -182,6 +190,7 @@ else {
 	if (strlen($remote_media_ip) > 0) { $sql_where_ands[] = "remote_media_ip like '%".$remote_media_ip."%'"; }
 	if (strlen($network_addr) > 0) { $sql_where_ands[] = "network_addr like '%".$network_addr."%'"; }
 	if (strlen($mos_comparison) > 0 && strlen($mos_score) > 0 ) { $sql_where_ands[] = "rtp_audio_in_mos " . $mos_comparison . " ".$mos_score.""; }
+	if (strlen($leg) > 0) { $sql_where_ands[] = "leg='$leg'"; }
 
 	//if not admin or superadmin, only show own calls
 	if (!permission_exists('xml_cdr_domain')) {
@@ -224,9 +233,10 @@ else {
 		}
 	}
 
+	$sql_where = ' where ';
 	// concatenate the 'ands's array, add to where clause
 	if (sizeof($sql_where_ands) > 0) {
-                $sql_where = " where ".implode(" and ", $sql_where_ands)." and ";
+		$sql_where .= implode(" and ", $sql_where_ands)." and ";
 	}
 
 //calculate the seconds in different time frames
@@ -238,15 +248,7 @@ else {
 //get the call volume between a start end end time in seconds
 	function get_call_volume_between($start, $end, $where) {
 		global $db;
-		if (strlen($where) == 0) {
-			if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
-				$where = "where ";
-			}
-			else {
-				$where = "where domain_uuid = '".$_SESSION['domain_uuid']."' and ";
-			}
-		}
-		$sql = "select count(*) as count from v_xml_cdr ";
+		$sql = "select count(*) as count, sum(billsec) as seconds from v_xml_cdr ";
 		$sql .= $where;
 		$sql .= " start_epoch BETWEEN ".$start." AND ".$end." ";
 
@@ -255,170 +257,99 @@ else {
 		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 		unset ($prep_statement, $sql);
 		if (count($result) > 0) {
-			foreach($result as $row) {
-				return $row['count'];
+			foreach ($result as $row) {
+				return array(
+					'volume' => $row['count'], 'seconds' => $row['seconds'],
+				);
 			}
 		}
-		else {
-			return false;
-		}
-		unset($prep_statement, $result, $sql);
+		return false;
 	}
 
-//get the call time in seconds between the start and end time in seconds
-	function get_call_seconds_between($start, $end, $where) {
-		global $db;
-		if (strlen($where) == 0) {
-			if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
-				$where = "where ";
-			}
-			else {
-				$where = "where domain_uuid = '".$_SESSION['domain_uuid']."' and ";
-			}
-		}
-		$sql = "select sum(billsec) as seconds from v_xml_cdr ";
-		$sql .= $where;
-		$sql .= " start_epoch BETWEEN ".$start." AND ".$end." ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-		unset ($prep_statement, $sql);
-		if (count($result) > 0) {
-			foreach($result as $row) {
-				$result = $row['seconds'];
-				if (strlen($result) == 0) {
-					return 0;
-				}
-				else {
-					return $row['seconds'];
-				}
-			}
+	function append_stats(&$stats, $hours, $start_epoch, $stop_epoch){
+		global $db, $sql_where, $missed;
+
+		$i = count($stats);
+
+		$stats[$i]['hours'] = $hours;
+		$stats[$i]['start_stamp'] = date('Y-m-d h:n:s', $start_epoch);
+		$stats[$i]['stop_stamp'] = date('Y-m-d h:n:s', $stop_epoch);
+		$stats[$i]['start_epoch'] = $start_epoch;
+		$stats[$i]['stop_epoch'] = $stop_epoch;
+		$stat_range = get_call_volume_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], $sql_where);
+		$stats[$i]['volume'] = $stat_range ? $stat_range['volume'] : 0;
+		$stats[$i]['seconds'] = $stat_range ? $stat_range['seconds'] : 0;
+		$stats[$i]['minutes'] = $stats[$i]['seconds'] / 60;
+		$stats[$i]['avg_sec'] = ($stats[$i]['volume']==0) ? 0 : $stats[$i]['seconds'] / $stats[$i]['volume'];
+
+		if($missed) {
+			// we select only missed calls at first plase. so there no reasons to select it again.
+			$stats[$i]['missed'] = $stats[$i]['volume'];
 		}
 		else {
-			return false;
+			$where = $sql_where . "billsec = '0' and ";
+			$stat_range = get_call_volume_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], $where);
+			$stats[$i]['missed'] = $stat_range ? $stat_range['volume'] : 0;
 		}
-		unset($prep_statement, $result, $sql);
+
+		$delta_min = ($stop_epoch - $start_epoch) / 60;
+		$success_volume = ($stats[$i]['volume']==0) ? 0 : ($stats[$i]['volume'] - $stats[$i]['missed']);
+
+		// Calls per minute (answered)
+		$stats[$i]['cpm_ans'] = $success_volume / $delta_min;
+
+		// Calls per minute
+		$stats[$i]['avg_min'] = $stats[$i]['volume'] / $delta_min;
+
+		//answer / seizure ratio
+		$stats[$i]['asr'] = ($stats[$i]['volume']==0) ? 0 : ($success_volume / $stats[$i]['volume'] * 100);
+
+		//average length of call
+		$stats[$i]['aloc'] = ($success_volume==0) ? 0 : $stats[$i]['minutes'] / $success_volume;
 	}
-	//$call_seconds_1st_hour = get_call_seconds_between(3600, 0);
-	//if (strlen($call_seconds_1st_hour) == 0) { $call_seconds_1st_hour = 0; }
 
 	if (strlen(check_str($_GET['start_stamp_begin'])) > 0 && strlen(check_str($_GET['start_stamp_end'])) > 0 ) {
 		$start_date = new DateTime(check_str($_GET['start_stamp_begin']));
 		$end_date = new DateTime(check_str($_GET['start_stamp_end']));
 		$time = $end_date->getTimestamp();
 		$time = $time - $time % 3600;
-		$hours = ($end_date->getTimestamp() - $start_date->getTimestamp()) / 3600;
+		$hours = floor(($end_date->getTimestamp() - $start_date->getTimestamp()) / 3600);
 	} else {
 		//round down to the nearest hour
 		$time = time() - time() % 3600;
 		$hours = 23;
 	}
 
-//call info hour by hour
-	for ($i = 0; $i <= $hours; $i++) {
-		$start_epoch = $time - 3600*$i;
-		$stop_epoch = $start_epoch + 3600;
-		$stats[$i]['hours'] = $i + 1;
-		$stats[$i]['start_stamp'] = date('Y-m-d h:n:s', $start_epoch);
-		$stats[$i]['stop_stamp'] = date('Y-m-d h:n:s', $stop_epoch);
-		$stats[$i]['start_epoch'] = $start_epoch;
-		$stats[$i]['stop_epoch'] = $stop_epoch;
-		$stats[$i]['volume'] = get_call_volume_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], $sql_where);
-		$stats[$i]['seconds'] = get_call_seconds_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], '');
-		$stats[$i]['minutes'] = $stats[$i]['seconds'] / 60;
-		$stats[$i]['avg_sec'] = ($stats[$i]['volume']==0) ? 0 : $stats[$i]['seconds'] / $stats[$i]['volume'];
-		$stats[$i]['avg_min'] = (($stats[$i]['volume']==0) ? 0 : $stats[$i]['volume'] - $stats[$i]['missed']) / 60;
-
-		//answer / seizure ratio
-		if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
-			$where = "where ";
-		} else {
-			$where = "where domain_uuid = '".$_SESSION['domain_uuid']."' and ";
+	if (isset($_SESSION['cdr']['stat_hours_limit']['numeric'])) {
+		$limit = $_SESSION['cdr']['stat_hours_limit']['numeric'] - 1;
+		if ($hours > $limit) {
+			$hours = $limit;
 		}
-		$where .= " billsec = '0' and ";
-		$where .= " direction = 'inbound' and ";
-		$stats[$i]['missed'] = get_call_volume_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], $where);
-		$stats[$i]['asr'] = ($stats[$i]['volume']==0) ? 0 : (($stats[$i]['volume'] - $stats[$i]['missed']) / ($stats[$i]['volume']) * 100);
-
-		//average length of call
-		$stats[$i]['aloc'] = ($stats[$i]['volume']==0) ? 0 : $stats[$i]['minutes'] / ($stats[$i]['volume'] - $stats[$i]['missed']);
+		unset($limit);
 	}
 
-//call info for a day
-	$i = $hours+1;
-	$start_epoch = time() - $seconds_day;
-	$stop_epoch = time();
-	$stats[$i]['hours'] = 24;
-	$stats[$i]['start_stamp'] = date('Y-m-d h:n:s', $start_epoch);
-	$stats[$i]['stop_stamp'] = date('Y-m-d h:n:s', $stop_epoch);
-	$stats[$i]['start_epoch'] = $start_epoch;
-	$stats[$i]['stop_epoch'] = $stop_epoch;
-	$stats[$i]['volume'] = get_call_volume_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], $sql_where);
-	$stats[$i]['seconds'] = get_call_seconds_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], '');
-	$stats[$i]['minutes'] = $stats[$i]['seconds'] / 60;
-	$stats[$i]['avg_sec'] = ($stats[$i]['volume']==0) ? 0 : $stats[$i]['seconds'] / $stats[$i]['volume'];
-	$stats[$i]['avg_min'] = ($stats[$i]['volume'] - $stats[$i]['missed']) / (60*24);
-	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
-		$where = "where ";
-	} else {
-		$where = "where domain_uuid = '".$_SESSION['domain_uuid']."' and ";
-	}
-	$where .= " billsec = '0' and ";
-	$where .= " direction = 'inbound' and ";
-	$stats[$i]['missed'] = get_call_volume_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], $where);
-	$stats[$i]['asr'] = ($stats[$i]['volume']==0) ? 0 :(($stats[$i]['volume'] - $stats[$i]['missed']) / ($stats[$i]['volume']) * 100);
-	$stats[$i]['aloc'] = ($stats[$i]['volume']==0) ? 0 :$stats[$i]['minutes'] / ($stats[$i]['volume'] - $stats[$i]['missed']);
-	$i++;
+	$stats = array();
 
-//call info for a week
-	$start_epoch = time() - $seconds_week;
-	$stop_epoch = time();
-	$stats[$i]['hours'] = 24 * 7;
-	$stats[$i]['start_stamp'] = date('Y-m-d h:n:s', $start_epoch);
-	$stats[$i]['stop_stamp'] = date('Y-m-d h:n:s', $stop_epoch);
-	$stats[$i]['start_epoch'] = $start_epoch;
-	$stats[$i]['stop_epoch'] = $stop_epoch;
-	$stats[$i]['volume'] = get_call_volume_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], $sql_where);
-	$stats[$i]['seconds'] = get_call_seconds_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], '');
-	$stats[$i]['minutes'] = $stats[$i]['seconds'] / 60;
-	$stats[$i]['avg_sec'] = ($stats[$i]['volume']==0) ? 0 :$stats[$i]['seconds'] / $stats[$i]['volume'];
-	$stats[$i]['avg_min'] = ($stats[$i]['volume']==0) ? 0 :($stats[$i]['volume'] - $stats[$i]['missed']) / (60*24*7);
-	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
-		$where = "where ";
-	} else {
-		$where = "where domain_uuid = '".$_SESSION['domain_uuid']."' and ";
+//call info hour by hour for last n hours
+	for ($i = $hours; $i >= 0 ; $i--) {
+		$start_epoch = $time - 3600 * $i;
+		$stop_epoch = $start_epoch + 3600;
+		append_stats($stats, 1, $start_epoch, $stop_epoch);
 	}
-	$where .= " billsec = '0' and ";
-	$where .= " direction = 'inbound' and ";
-	$stats[$i]['missed'] = get_call_volume_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], $where);
-	$stats[$i]['asr'] = ($stats[$i]['volume']==0) ? 0 :(($stats[$i]['volume'] - $stats[$i]['missed']) / ($stats[$i]['volume']) * 100);
-	$stats[$i]['aloc'] = ($stats[$i]['volume']==0) ? 0 :$stats[$i]['minutes'] / ($stats[$i]['volume'] - $stats[$i]['missed']);
-	$i++;
 
-//call info for a month
-	$start_epoch = time() - $seconds_month;
-	$stop_epoch = time();
-	$stats[$i]['hours'] = 24 * 30;
-	$stats[$i]['start_stamp'] = date('Y-m-d h:n:s', $start_epoch);
-	$stats[$i]['stop_stamp'] = date('Y-m-d h:n:s', $stop_epoch);
-	$stats[$i]['start_epoch'] = $start_epoch;
-	$stats[$i]['stop_epoch'] = $stop_epoch;
-	$stats[$i]['volume'] = get_call_volume_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], $sql_where);
-	$stats[$i]['seconds'] = get_call_seconds_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], '');
-	$stats[$i]['minutes'] = $stats[$i]['seconds'] / 60;
-	$stats[$i]['avg_sec'] = ($stats[$i]['volume']==0) ? 0 :$stats[$i]['seconds'] / $stats[$i]['volume'];
-	$stats[$i]['avg_min'] = ($stats[$i]['volume'] - $stats[$i]['missed']) / (60*24*30);
-	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
-		$where = "where ";
-	} else {
-		$where = "where domain_uuid = '".$_SESSION['domain_uuid']."' and ";
+//call info for entire period
+	if (strlen(check_str($_GET['start_stamp_begin'])) > 0 && strlen(check_str($_GET['start_stamp_end'])) > 0 ) {
+		$start_epoch = new DateTime(check_str($_GET['start_stamp_begin']));
+		$stop_epoch = new DateTime(check_str($_GET['start_stamp_end']));
+		$days = $start_epoch->diff($stop_epoch)->d;
+		append_stats($stats, 24 * $days, $start_epoch->getTimestamp(), $stop_epoch->getTimestamp() );
 	}
-	$where .= " billsec = '0' and ";
-	$where .= " direction = 'inbound' and ";
-	$stats[$i]['missed'] = get_call_volume_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], $where);
-	$stats[$i]['asr'] = ($stats[$i]['volume']==0) ? 0 :(($stats[$i]['volume'] - $stats[$i]['missed']) / ($stats[$i]['volume']) * 100);
-	$stats[$i]['aloc'] =($stats[$i]['volume']==0) ? 0 : $stats[$i]['minutes'] / ($stats[$i]['volume'] - $stats[$i]['missed']);
-	$i++;
+	else {
+		$stop_epoch = time();
+		append_stats($stats, 24,      $stop_epoch - $seconds_day,   $stop_epoch );
+		append_stats($stats, 24 * 7,  $stop_epoch - $seconds_week,  $stop_epoch );
+		append_stats($stats, 24 * 30, $stop_epoch - $seconds_month, $stop_epoch );
+	}
 
 //show the graph
 

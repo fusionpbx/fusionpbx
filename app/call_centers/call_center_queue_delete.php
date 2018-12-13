@@ -17,22 +17,26 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('call_center_queue_delete')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('call_center_queue_delete')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -60,7 +64,7 @@ else {
 		//delete the tier from the database
 			$sql = "delete from v_call_center_tiers ";
 			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and queue_name = '$queue_name' ";
+			$sql .= "and (call_center_queue_uuid = '$id' or queue_name = '".$queue_name."@".$_SESSION['domain_name']."') ";
 			$db->query($sql);
 			unset($sql);
 
@@ -99,7 +103,8 @@ else {
 	}
 
 //redirect the browser
-	$_SESSION["message"] = $text['message-delete'];
+	message::add($text['message-delete']);
 	header("Location: call_center_queues.php");
 	return;
+
 ?>

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -128,6 +128,7 @@
 							$('#iframe').prop('src','');
 							$('#sql_response').hide();
 						<?php } ?>
+						$('#response').show();
 						break;
 				<?php } ?>
 				<?php if (permission_exists('exec_php')) { ?>
@@ -142,6 +143,7 @@
 							$('#iframe').prop('src','');
 							$('#sql_response').hide();
 						<?php } ?>
+						$('#response').show();
 						break;
 				<?php } ?>
 				<?php if (permission_exists('exec_command')) { ?>
@@ -156,6 +158,7 @@
 							$('#iframe').prop('src','');
 							$('#sql_response').hide();
 						<?php } ?>
+						$('#response').show();
 						break;
 				<?php } ?>
 				<?php if (permission_exists('exec_sql')) { ?>
@@ -164,6 +167,7 @@
 						editor.getSession().setMode('ace/mode/sql');
 						$('#mode option[value=sql]').prop('selected',true);
 						$('.sql_controls').show();
+						$('#response').hide();
 						break;
 				<?php } ?>
 				default:
@@ -443,7 +447,7 @@
 			switch ($handler) {
 				case 'shell':
 					if (permission_exists('exec_command')) {
-						$result = htmlentities(shell_exec($cmd));
+						$result = htmlentities(shell_exec($cmd . " 2>&1"));
 					}
 					break;
 				case 'php':
@@ -457,7 +461,10 @@
 				case 'switch':
 					if (permission_exists('exec_switch')) {
 						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-						if ($fp) { $result = htmlentities(event_socket_request($fp, 'api '.$cmd)); }
+						if ($fp) { 
+							$result = event_socket_request($fp, 'api '.$cmd);
+							$result = htmlspecialchars(utf8_encode($result), ENT_QUOTES);
+						}
 					}
 					break;
 			}

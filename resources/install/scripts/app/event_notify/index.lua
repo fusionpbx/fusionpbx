@@ -16,7 +16,7 @@
 --
 --      The Initial Developer of the Original Code is
 --      Mark J Crane <markjcrane@fusionpbx.com>
---      Copyright (C) 2013 - 2014
+--      Copyright (C) 2013 - 2018
 --      the Initial Developer. All Rights Reserved.
 --
 --      Contributor(s):
@@ -85,13 +85,43 @@
 		end
 	end
 
+--fanvil
+	if (vendor == "fanvil") then
+		if (command == "reboot") then
+			event:addHeader('event-string', 'check-sync;reboot=true');
+		end
+		if (command == "check_sync") then
+			event:addHeader('event-string', 'resync');
+		end
+	end
+
 --grandstream
 	if (vendor == "grandstream") then
 		if (command == "reboot") then
 			event:addHeader('event-string', 'check-sync;reboot=true');
 		end
 		if (command == "check_sync") then
-			event:addHeader('event-string', 'check-sync;reboot=false');
+			event:addHeader('event-string', 'resync');
+		end
+	end
+
+--htek
+	if (vendor == "htek") then
+		if (command == "reboot") then
+			event:addHeader('event-string', 'check-sync;reboot=true');
+		end
+		if (command == "check_sync") then
+			event:addHeader('event-string', 'resync');
+		end
+	end
+
+--sangoma
+	if (vendor == "sangoma") then
+		if (command == "reboot") then
+			event:addHeader('event-string', 'check-sync;reboot=true');
+		end
+		if (command == "check_sync") then
+			event:addHeader('event-string', 'resync');
 		end
 	end
 
@@ -105,6 +135,16 @@
 		end
 	end
 
+--panasonic
+	if (vendor == "panasonic") then
+		if (command == "reboot") then
+			event:addHeader('event-string', 'check-sync;reboot=true');
+		end
+		if (command == "check_sync") then
+			event:addHeader('event-string', 'check-sync;reboot=true');
+		end
+	end
+
 --polycom
 	if (vendor == "polycom") then
 		if (command == "reboot") then
@@ -115,8 +155,8 @@
 		end
 	end
 
---yealink
-	if (vendor == "yealink") then
+--snom
+	if (vendor == "snom") then
 		if (command == "reboot") then
 			event:addHeader('event-string', 'check-sync;reboot=true');
 		end
@@ -124,13 +164,14 @@
 			event:addHeader('event-string', 'check-sync;reboot=false');
 		end
 	end
---snom
-	if (vendor == "snom") then
+
+--yealink
+	if (vendor == "yealink") then
 		if (command == "reboot") then
 			event:addHeader('event-string', 'check-sync;reboot=true');
 		end
 		if (command == "check_sync") then
-			event:addHeader('event-string', 'check-sync;reboot=true');
+			event:addHeader('event-string', 'check-sync;reboot=false');
 		end
 	end
 

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016
+	Portions created by the Initial Developer are Copyright (C) 2016-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,7 +30,8 @@ if (!class_exists('ringbacks')) {
 
 		//define variables
 		public $db;
-		private $ringbacks;
+		public $domain_uuid;
+		private $ringtones_list;
 		private $tones_list;
 		private $music_list;
 		private $recordings_list;
@@ -46,29 +47,31 @@ if (!class_exists('ringbacks')) {
 					$this->db = $database->db;
 				}
 
+			//set the domain_uuid
+				$this->domain_uuid = $_SESSION['domain_uuid'];
+
 			//add multi-lingual support
 				$language = new text;
 				$text = $language->get();
 
-			//get the ringback types
+			//get the ringtones
 				$sql = "select * from v_vars ";
-				$sql .= "where var_cat = 'Ringtones' ";
+				$sql .= "where var_category = 'Ringtones' ";
 				$sql .= "order by var_name asc ";
 				$prep_statement = $this->db->prepare(check_sql($sql));
 				$prep_statement->execute();
-				$ringbacks = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				$ringtones = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				unset ($prep_statement, $sql);
-				foreach($ringbacks as $ringback) {
-					$ringback = $ringback['var_name'];
-					$label = $text['label-'.$ringback];
+				foreach($ringtones as $ringtone) {
+					$ringtone = $ringtone['var_name'];
+					$label = $text['label-'.$ringtone];
 					if ($label == "") {
-						$label = $ringback;
+						$label = $ringtone;
 					}
-					$ringback_list[$ringback] = $label;
+					$ringtones_list[$ringtone] = $label;
 				}
-				$this->ringbacks = $ringback_list;
-				unset($ringback_list);
-			
+				$this->ringtones_list = $ringtones_list;
+
 			//get the default_ringback label
 				/*
 				$sql = "select * from v_vars where var_name = 'ringback' ";
@@ -88,10 +91,10 @@ if (!class_exists('ringbacks')) {
 				*/
 
 			//get the tones
-					require_once "resources/classes/tones.php";
-					$tones = new tones;
-					$this->tones_list = $tones->tones_list();
-				
+				require_once "resources/classes/tones.php";
+				$tones = new tones;
+				$this->tones_list = $tones->tones_list();
+
 			//get music on hold	and recordings
 				if (is_dir($_SERVER["PROJECT_ROOT"].'/app/music_on_hold')) {
 					require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
@@ -140,18 +143,36 @@ if (!class_exists('ringbacks')) {
 					$select .= "	</optgroup>\n";
 				}
 
-			//ringbacks
-				if (sizeof($this->ringbacks) > 0) {
-					$selected_ringback = $selected;
-					$selected_ringback = preg_replace('/\A\${/',"",$selected_ringback);
-					$selected_ringback = preg_replace('/}\z/',"",$selected_ringback);
-					$select .= "	<optgroup label='".$text['label-ringback']."'>";
-					//$select .= "		<option value='default_ringback'".(($selected == "default_ringback") ? ' selected="selected"' : '').">".$text['label-default']." (".$this->default_ringback_label.")</option>\n";
-					foreach($this->ringbacks as $ringback_value => $ringback_name) {
-						$select .= "		<option value='\${".$ringback_value."}'".(($selected_ringback == $ringback_value) ? ' selected="selected"' : '').">".$ringback_name."</option>\n";
+			//streams
+				if (is_dir($_SERVER["PROJECT_ROOT"].'/app/streams')) {
+					$sql = "select * from v_streams ";
+					$sql .= "where (domain_uuid = '".$this->domain_uuid."' or domain_uuid is null) ";
+					$sql .= "and stream_enabled = 'true' ";
+					$sql .= "order by stream_name asc ";
+					$prep_statement = $this->db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$streams = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					if (sizeof($streams) > 0) {
+						$select .= "	<optgroup label='".$text['label-streams']."'>";
+						foreach($streams as $row){
+							$select .= "		<option value='".$row['stream_location']."' ".(($selected == $row['stream_location']) ? 'selected="selected"' : null).">".$row['stream_name']."</option>\n";
+						}
+						$select .= "	</optgroup>\n";
+					}
+				}
+
+			//ringtones
+				if (sizeof($this->ringtones_list) > 0) {
+					$selected_ringtone = $selected;
+					$selected_ringtone = preg_replace('/\A\${/',"",$selected_ringtone);
+					$selected_ringtone = preg_replace('/}\z/',"",$selected_ringtone);
+					$select .= "	<optgroup label='".$text['label-ringtones']."'>";
+					//$select .= "		<option value='default_ringtones'".(($selected == "default_ringback") ? ' selected="selected"' : '').">".$text['label-default']." (".$this->default_ringtone_label.")</option>\n";
+					foreach($this->ringtones_list as $ringtone_value => $ringtone_name) {
+						$select .= "		<option value='\${".$ringtone_value."}'".(($selected_ringtone == $ringtone_value) ? ' selected="selected"' : '').">".$ringtone_name."</option>\n";
 					}
 					$select .= "	</optgroup>\n";
-					unset($selected_ringback);
+					unset($selected_ringtone);
 				}
 
 			//tones
@@ -159,7 +180,7 @@ if (!class_exists('ringbacks')) {
 					$selected_tone = $selected;
 					$selected_tone = preg_replace('/\A\${/',"",$selected_tone);
 					$selected_tone = preg_replace('/}\z/',"",$selected_tone);
-					$select .= "	<optgroup label='".$text['label-tone']."'>";
+					$select .= "	<optgroup label='".$text['label-tones']."'>";
 					foreach($this->tones_list as $tone_value => $tone_name) {
 						$select .= "		<option value='\${".$tone_value."}'".(($selected_tone == $tone_value) ? ' selected="selected"' : '').">".$tone_name."</option>\n";
 					}

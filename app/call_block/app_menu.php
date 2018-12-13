@@ -1,22 +1,30 @@
 <?php
 
-$apps[$x]['menu'][0]['title']['en-us'] = "Call Block";
-$apps[$x]['menu'][0]['title']['es-cl'] = "Bloqueo de llamadas";
-$apps[$x]['menu'][0]['title']['fr-fr'] = "Liste Noire";
-$apps[$x]['menu'][0]['title']['pt-pt'] = "Bloqueio de Chamadas";
-$apps[$x]['menu'][0]['title']['pt-br'] = "Bloqueio de chamadas";
-$apps[$x]['menu'][0]['title']['pl'] = "Blokowanie rozmów";
-$apps[$x]['menu'][0]['title']['sv-se'] = "Blockera Samtal";
-$apps[$x]['menu'][0]['title']['uk'] = "Блокування дзвінків";
-$apps[$x]['menu'][0]['title']['ro'] = "Blocare apel";
-$apps[$x]['menu'][0]['title']['de-at'] = "Sperrlisten";
-$apps[$x]['menu'][0]['title']['ar-eg'] = "حظر المكالمات";
-$apps[$x]['menu'][0]['title']['he'] = "חסימת מספר";
-$apps[$x]['menu'][0]['uuid'] = "29295c90-b1b9-440b-9c7E-c8363c6e8975";
-$apps[$x]['menu'][0]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
-$apps[$x]['menu'][0]['category'] = "internal";
-$apps[$x]['menu'][0]['path'] = "/app/call_block/call_block.php";
-$apps[$x]['menu'][0]['groups'][] = "superadmin";
-$apps[$x]['menu'][0]['groups'][] = "admin";
+	$y=0;
+	$apps[$x]['menu'][$y]['title']['en-us'] = "Call Block";
+	$apps[$x]['menu'][$y]['title']['ar-eg'] = "حظر المكالمات";
+	$apps[$x]['menu'][$y]['title']['de-at'] = "Sperrlisten";
+	$apps[$x]['menu'][$y]['title']['de-ch'] = "";
+	$apps[$x]['menu'][$y]['title']['de-de'] = "Sperrlisten";
+	$apps[$x]['menu'][$y]['title']['es-cl'] = "Bloqueo de llamadas";
+	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Liste Noire";
+	$apps[$x]['menu'][$y]['title']['he-il'] = "חסימת מספר";
+	$apps[$x]['menu'][$y]['title']['it-it'] = "Blocco Chiamate";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Blokowanie rozmów";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Bloqueio de chamadas";
+	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Bloqueio de Chamadas";
+	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Blocare apel";
+	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Черный список";
+	$apps[$x]['menu'][$y]['title']['sv-se'] = "Blockera Samtal";
+	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Блокування дзвінків";
+	$apps[$x]['menu'][$y]['uuid'] = "29295c90-b1b9-440b-9c7E-c8363c6e8975";
+	$apps[$x]['menu'][$y]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
+	$apps[$x]['menu'][$y]['category'] = "internal";
+	$apps[$x]['menu'][$y]['path'] = "/app/call_block/call_block.php";
+	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
+	$apps[$x]['menu'][$y]['groups'][] = "admin";
 
 ?>

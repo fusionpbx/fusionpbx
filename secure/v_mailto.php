@@ -1,5 +1,4 @@
 <?php
-
 /*
 	FusionPBX
 	Version: MPL 1.1
@@ -18,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -40,24 +39,23 @@
 	require_once "resources/require.php";
 
 //define a function to remove html tags
-	function rip_tags($string) {
-		// ----- remove HTML TAGs -----
+	function remove_tags($string) {
+		//remove HTML tags
 		$string = preg_replace ('/<[^>]*>/', ' ', $string);
 
-		// ----- remove control characters -----
-
+		//remove control characters
 		$string = str_replace("\r", '', $string);    // --- replace with empty space
 		$string = str_replace("\n", ' ', $string);   // --- replace with space
 		$string = str_replace("\t", ' ', $string);   // --- replace with space
 
-		// ----- remove multiple spaces -----
+		//remove multiple spaces
 		$string = trim(preg_replace('/ {2,}/', ' ', $string));
 		return $string;
 	}
 
 //set init settings
 	ini_set('max_execution_time',1800); //30 minutes
-	ini_set('memory_limit', '128M');
+	ini_set('memory_limit', '512M');
 
 //listen for standard input
 	if ($msg == '') {
@@ -67,7 +65,7 @@
 	}
 
 //save output to
-	$fp = fopen(sys_get_temp_dir()."/mailer-app.log", "w");
+	$fp = fopen(sys_get_temp_dir()."/mailer-app.log", "a");
 
 //prepare the output buffers
 	ob_end_clean();
@@ -137,26 +135,36 @@
 
 //prepare smtp server settings
 	// load default smtp settings
-	$smtp['host'] 		= (strlen($_SESSION['email']['smtp_host']['var'])?$_SESSION['email']['smtp_host']['var']:'127.0.0.1');
+	if ($_SESSION['email']['smtp_hostname']['text'] != '') { 
+		$smtp['hostname'] = $_SESSION['email']['smtp_hostname']['text'];
+	}
+	$smtp['host'] 		= (strlen($_SESSION['email']['smtp_host']['text'])?$_SESSION['email']['smtp_host']['text']:'127.0.0.1');
 	if (isset($_SESSION['email']['smtp_port'])) {
 		$smtp['port'] = (int)$_SESSION['email']['smtp_port']['numeric'];
 	} else {
 		$smtp['port'] = 0;
 	}
-	$smtp['secure'] 	= $_SESSION['email']['smtp_secure']['var'];
-	$smtp['auth'] 		= $_SESSION['email']['smtp_auth']['var'];
-	$smtp['username'] 	= $_SESSION['email']['smtp_username']['var'];
-	$smtp['password'] 	= $_SESSION['email']['smtp_password']['var'];
-	$smtp['from'] 		= (strlen($_SESSION['email']['smtp_from']['var'])?$_SESSION['email']['smtp_from']['var']:'fusionpbx@example.com');
-	$smtp['from_name'] 	= (strlen($_SESSION['email']['smtp_from_name']['var'])?$_SESSION['email']['smtp_from_name']['var']:'FusionPBX Voicemail');
+	$smtp['secure'] 	= $_SESSION['email']['smtp_secure']['text'];
+	$smtp['auth'] 		= $_SESSION['email']['smtp_auth']['text'];
+	$smtp['username'] 	= $_SESSION['email']['smtp_username']['text'];
+	$smtp['password'] 	= $_SESSION['email']['smtp_password']['text'];
+	$smtp['from'] 		= $_SESSION['email']['smtp_from']['text'];
+	$smtp['from_name'] 	= $_SESSION['email']['smtp_from_name']['text'];
+
+	if (isset($_SESSION['voicemail']['smtp_from']) && strlen($_SESSION['voicemail']['smtp_from']['text']) > 0) {
+		$smtp['from'] = $_SESSION['voicemail']['smtp_from']['text'];
+	}
+	if (isset($_SESSION['voicemail']['smtp_from_name']) && strlen($_SESSION['voicemail']['smtp_from_name']['text']) > 0) {
+		$smtp['from_name'] = $_SESSION['voicemail']['smtp_from_name']['text'];
+	}
 
 	// overwrite with domain-specific smtp server settings, if any
 	if ($headers["X-FusionPBX-Domain-UUID"] != '') {
 		$sql = "select domain_setting_subcategory, domain_setting_value ";
 		$sql .= "from v_domain_settings ";
 		$sql .= "where domain_uuid = '".$headers["X-FusionPBX-Domain-UUID"]."' ";
-		$sql .= "and domain_setting_category = 'email' ";
-		$sql .= "and domain_setting_name = 'var' ";
+		$sql .= "and (domain_setting_category = 'email' or domain_setting_category = 'voicemail') ";
+		$sql .= "and domain_setting_name = 'text' ";
 		$sql .= "and domain_setting_enabled = 'true' ";
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
@@ -170,7 +178,6 @@
 		}
 		unset($sql, $prep_statement);
 	}
-
 	// value adjustments
 	$smtp['auth'] 		= ($smtp['auth'] == "true") ? true : false;
 	$smtp['password'] 	= ($smtp['password'] != '') ? $smtp['password'] : null;
@@ -189,7 +196,26 @@
 			default: $mail->IsSMTP(); break;
 		}
 	} else $mail->IsSMTP();
+
+// optional bypass TLS certificate check e.g. for self-signed certificates
+	if (isset($_SESSION['email']['smtp_validate_certificate'])) {
+	    if ($_SESSION['email']['smtp_validate_certificate']['boolean'] == "false") {
+
+		    // this is needed to work around TLS certificate problems
+		    $mail->SMTPOptions = array(
+			    'ssl' => array(
+			    'verify_peer' => false,
+			    'verify_peer_name' => false,
+			    'allow_self_signed' => true
+			    )
+		    );
+	    }
+	}
+
 	$mail->SMTPAuth = $smtp['auth'];
+	if (isset($smtp['hostname'])) { 
+		$mail->Hostname = $smtp['hostname'];
+	}
 	$mail->Host = $smtp['host'];
 	if ($smtp['port']!=0) $mail->Port=$smtp['port'];
 	if ($smtp['secure'] != '') {
@@ -297,7 +323,7 @@
 	}
 
 //add the body to the email
-	$body_plain = rip_tags($body);
+	$body_plain = remove_tags($body);
 	//echo "body_plain = $body_plain\n";
 	if ((substr($body, 0, 5) == "<html") ||  (substr($body, 0, 9) == "<!doctype")) {
 		$mail->ContentType = "text/html";
@@ -320,30 +346,32 @@
 			echo "Retained in v_emails \n";
 		} else {
 			// log/store message in database for review
-			$email_uuid = uuid();
-			$sql = "insert into v_emails ( ";
-			$sql .= "email_uuid, ";
-			if ($call_uuid) {
-				$sql .= "call_uuid, ";
+			if (!isset($email_uuid)) {
+				$email_uuid = uuid();
+				$sql = "insert into v_emails ( ";
+				$sql .= "email_uuid, ";
+				if ($call_uuid) {
+					$sql .= "call_uuid, ";
+				}
+				$sql .= "domain_uuid, ";
+				$sql .= "sent_date, ";
+				$sql .= "type, ";
+				$sql .= "status, ";
+				$sql .= "email ";
+				$sql .= ") values ( ";
+				$sql .= "'".$email_uuid."', ";
+				if ($call_uuid) {
+					$sql .= "'".$call_uuid."', ";
+				}
+				$sql .= "'".$headers["X-FusionPBX-Domain-UUID"]."', ";
+				$sql .= "now(),";
+				$sql .= "'".$headers["X-FusionPBX-Email-Type"]."', ";
+				$sql .= "'failed', ";
+				$sql .= "'".str_replace("'", "''", $msg)."' ";
+				$sql .= ") ";
+				$db->exec(check_sql($sql));
+				unset($sql);
 			}
-			$sql .= "domain_uuid, ";
-			$sql .= "sent_date, ";
-			$sql .= "type, ";
-			$sql .= "status, ";
-			$sql .= "email ";
-			$sql .= ") values ( ";
-			$sql .= "'".$email_uuid."', ";
-			if ($call_uuid) {
-				$sql .= "'".$call_uuid."', ";
-			}
-			$sql .= "'".$headers["X-FusionPBX-Domain-UUID"]."', ";
-			$sql .= "now(),";
-			$sql .= "'".$headers["X-FusionPBX-Email-Type"]."', ";
-			$sql .= "'failed', ";
-			$sql .= "'".str_replace("'", "''", $msg)."' ";
-			$sql .= ") ";
-			$db->exec(check_sql($sql));
-			unset($sql);
 
 			echo "Retained in v_emails as email_uuid = ".$email_uuid."\n";
 		}
@@ -362,13 +390,10 @@
 	fwrite($fp, $content);
 	fclose($fp);
 
-
-/********************************************************************************************
-
+/*
 // save in /tmp as eml file
 
 $fp = fopen(sys_get_temp_dir()."/email.eml", "w");
-
 ob_end_clean();
 ob_start();
 

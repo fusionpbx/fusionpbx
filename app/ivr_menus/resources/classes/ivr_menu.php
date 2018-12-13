@@ -170,15 +170,17 @@ include "root.php";
 			//add or update the dialplan
 				$this->dialplan($array);
 				$array['dialplan_uuid'] = $this->dialplan_uuid;
+				$data['ivr_menus'][] = $array;
 
 			//save the ivr_menus
-				$orm = new orm;
-				$orm->name('ivr_menus');
+				$database = new database;
+				$database->app_name = 'ivr_menus';
+				$database->app_uuid = $this->app_uuid;
 				if (strlen($this->ivr_menu_uuid) > 0) {
-					$orm->uuid($this->ivr_menu_uuid);
+					$database->uuid($this->ivr_menu_uuid);
 				}
-				$orm->save($array);
-				$this->ivr_menu_uuid = $orm->message['uuid'];
+				$result = $database->save($data);
+				$this->ivr_menu_uuid = $database->message['uuid'];
 
 			//update dialplan with the ivr_menu_uuid
 				if ($action == "add") {
@@ -188,16 +190,16 @@ include "root.php";
 
 			//set the add message
 				if ($action == "add" && permission_exists('ivr_menu_add')) {
-					$_SESSION['message'] = $text['message-add'];
+					message::add($text['message-add']);
 				}
 
 			//set the update message
 				if ($action == "update" && permission_exists('ivr_menu_edit')) {
-					$_SESSION['message'] = $text['message-update'];
+					message::add($text['message-update']);
 				}
 				
 			//return the result
-				return $orm->message;
+				return $database->message;
 		}
 
 		function delete() {
@@ -390,7 +392,7 @@ include "root.php";
 
 				$x++;
 				$details[$x]['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
-				if ($_SESSION['ivr menu']['application']['text'] == "lua") {
+				if ($_SESSION['ivr_menu']['application']['text'] == "lua") {
 					$details[$x]['dialplan_detail_type'] = 'lua';
 					$details[$x]['dialplan_detail_data'] = 'ivr_menu.lua';
 				}
@@ -450,11 +452,20 @@ include "root.php";
 				//echo "</pre>\n";
 				//exit;
 
+			//add the dialplan permission
+				$p = new permissions;
+				$p->add("dialplan_add", 'temp');
+				$p->add("dialplan_detail_add", 'temp');
+				$p->add("dialplan_edit", 'temp');
+				$p->add("dialplan_detail_edit", 'temp');
+
 			//save the dialplan
-				$orm = new orm;
-				$orm->name('dialplans');
-				$orm->save($array);
-				$response = $orm->message;
+				$database = new database;
+				$database->name('dialplans');
+				$database->app_name = 'dialplans';
+				$database->app_uuid = $this->app_uuid;
+				$database->save($array);
+				$response = $database->message;
 				if (strlen($response['uuid']) > 0) {
 					$this->dialplan_uuid = $response['uuid'];
 				}
@@ -464,6 +475,12 @@ include "root.php";
 				//print_r($response);
 				//echo "</pre>\n";
 				//exit;
+
+			//remove the temporary permission
+				$p->delete("dialplan_add", 'temp');
+				$p->delete("dialplan_detail_add", 'temp');
+				$p->delete("dialplan_edit", 'temp');
+				$p->delete("dialplan_detail_edit", 'temp');
 
 			//synchronize the xml config
 				save_dialplan_xml();

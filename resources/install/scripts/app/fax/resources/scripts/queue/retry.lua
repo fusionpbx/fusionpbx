@@ -9,6 +9,12 @@
 	local Tasks     = require "app.fax.resources.scripts.queue.tasks"
 	local send_mail = require "resources.functions.send_mail"
 
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
+
 	local fax_task_uuid  = env:getHeader('fax_task_uuid')
 	if not fax_task_uuid then
 		log.warning("No [fax_task_uuid] channel variable")
@@ -204,42 +210,49 @@
 			"fax_retry_limit";
 			"fax_retry_sleep";
 			"fax_uri";
-			"fax_date";
 			"fax_epoch";
 		}
 
-		local values = {
-			"'"..uuid .. "'";
-			"'"..domain_uuid .. "'";
-			opt(fax_uuid);
-			opt(fax_success);
-			opt(fax_result_code);
-			opt(fax_result_text);
-			opt(fax_file);
-			opt(fax_ecm_used);
-			opt(fax_local_station_id);
-			opt(fax_document_transferred_pages, "'0'");
-			opt(fax_document_total_pages, "'0'");
-			opt(fax_image_resolution);
-			opt(fax_image_size);
-			opt(fax_bad_rows);
-			opt(fax_transfer_rate);
-			opt(fax_retry_attempts);
-			opt(fax_retry_limit);
-			opt(fax_retry_sleep);
-			opt(fax_uri);
-			now_sql();
-			"'"..os.time().."' ";
+		local params = {
+			fax_log_uuid                   = uuid;
+			domain_uuid                    = domain_uuid;
+			fax_uuid                       = fax_uuid or dbh.NULL;
+			fax_success                    = fax_success or dbh.NULL;
+			fax_result_code                = fax_result_code or dbh.NULL;
+			fax_result_text                = fax_result_text or dbh.NULL;
+			fax_file                       = fax_file or dbh.NULL;
+			fax_ecm_used                   = fax_ecm_used or dbh.NULL;
+			fax_local_station_id           = fax_local_station_id or dbh.NULL;
+			fax_document_transferred_pages = fax_document_transferred_pages or "'0'";
+			fax_document_total_pages       = fax_document_total_pages or "'0'";
+			fax_image_resolution           = fax_image_resolution or dbh.NULL;
+			fax_image_size                 = fax_image_size or dbh.NULL;
+			fax_bad_rows                   = fax_bad_rows or dbh.NULL;
+			fax_transfer_rate              = fax_transfer_rate or dbh.NULL;
+			fax_retry_attempts             = fax_retry_attempts or dbh.NULL;
+			fax_retry_limit                = fax_retry_limit or dbh.NULL;
+			fax_retry_sleep                = fax_retry_sleep or dbh.NULL;
+			fax_uri                        = fax_uri or dbh.NULL;
+			fax_epoch                      = os.time();
 		}
 
-		local sql = "insert into v_fax_logs(" .. table.concat(fields, ",") .. ")" ..
-			"values(" .. table.concat(values, ",") .. ")"
+		local values = ":" .. table.concat(fields, ",:")
+		fields = table.concat(fields, ",") .. ",fax_date"
 
-		if (debug["sql"]) then
-			log.noticef("SQL: %s", sql);
+		if database["type"] == "sqlite" then
+			params.fax_date = os.date("%Y-%m-%d %X");
+			values = values .. ",:fax_date"
+		else
+			values = values .. ",now()"
 		end
 
-		dbh:query(sql);
+		local sql = "insert into v_fax_logs(" .. fields .. ")values(" .. values .. ")"
+
+		if (debug["sql"]) then
+			log.noticef("SQL: %s; params: %s", sql, json.encode(params, dbh.NULL));
+		end
+
+		dbh:query(sql, params);
 	end
 
 -- add the fax files
@@ -259,49 +272,58 @@
 
 	-- build SQL
 		local sql do
-			sql = {
-				"insert into v_fax_files(";
-					"fax_file_uuid";                    ",";
-					"fax_uuid";                         ",";
-					"fax_mode";                         ",";
-					"fax_destination";                  ",";
-					"fax_file_type";                    ",";
-					"fax_file_path";                    ",";
-					"fax_caller_id_name";               ",";
-					"fax_caller_id_number";             ",";
-					"fax_date";                         ",";
-					"fax_epoch";                        ",";
-					"fax_base64";                       ",";
-					"domain_uuid";                      " ";
-				") values (";
-					opt(uuid);                          ",";
-					opt(fax_uuid);                      ",";
-					"'tx'";                             ",";
-					opt(sip_to_user);                   ",";
-					"'tif'";                            ",";
-					opt(fax_file);                      ",";
-					opt(origination_caller_id_name);    ",";
-					opt(origination_caller_id_number);  ",";
-					now_sql();                          ",";
-					"'" .. os.time() .. "'";            ",";
-					opt(fax_base64);                    ",";
-					opt(domain_uuid);                   " ";
-				")"
+
+			local fields = {
+				"fax_file_uuid";
+				"fax_uuid";
+				"fax_mode";
+				"fax_destination";
+				"fax_file_type";
+				"fax_file_path";
+				"fax_caller_id_name";
+				"fax_caller_id_number";
+				"fax_epoch";
+				"fax_base64";
+				"domain_uuid";
 			}
 
-			sql = table.concat(sql, "\n");
-			if (debug["sql"]) then
-				log.noticef("SQL: %s", sql);
-			end
-		end
+			local params = {
+				fax_file_uuid        = uuid;
+				fax_uuid             = fax_uuid or dbh.NULL;
+				fax_mode             = "tx";
+				fax_destination      = sip_to_user or dbh.NULL;
+				fax_file_type        = "tif";
+				fax_file_path        = fax_file or dbh.NULL;
+				fax_caller_id_name   = origination_caller_id_name or dbh.NULL;
+				fax_caller_id_number = origination_caller_id_number or dbh.NULL;
+				fax_epoch            = os.time();
+				fax_base64           = fax_base64 or dbh.NULL;
+				domain_uuid          = domain_uuid or dbh.NULL;
+			}
 
-		if storage_type == "base64" then
-			local Database = require "resources.functions.database"
-			local dbh = Database.new('system', 'base64');
-			dbh:query(sql);
-			dbh:release();
-		else
-			result = dbh:query(sql)
+			local values = ":" .. table.concat(fields, ",:")
+			fields = table.concat(fields, ",") .. ",fax_date"
+
+			if database["type"] == "sqlite" then
+				params.fax_date = os.date("%Y-%m-%d %X");
+				values = values .. ",:fax_date"
+			else
+				values = values .. ",now()"
+			end
+
+			local sql = "insert into v_fax_files(" .. fields .. ")values(" .. values .. ")"
+
+			if (debug["sql"]) then
+				log.noticef("SQL: %s; params: %s", sql, json.encode(params, dbh.NULL));
+			end
+
+			if storage_type == "base64" then
+				local dbh = Database.new('system', 'base64');
+				dbh:query(sql, params);
+				dbh:release();
+			else
+				dbh:query(sql, params)
+			end
 		end
 	end
 
@@ -390,7 +412,7 @@
 					os.remove(fax_file);
 				end
 
-				end
 			end
 		end
+	end
 

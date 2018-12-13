@@ -24,9 +24,6 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-// set included, if not
-	if (!isset($included)) { $included = false; }
-
 //check the permission
 	if(defined('STDIN')) {
 		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
@@ -35,7 +32,7 @@
 		set_include_path($document_root);
 		require_once "resources/require.php";
 		$_SERVER["DOCUMENT_ROOT"] = $document_root;
-		$format = 'text'; //html, text
+		$display_type = 'text'; //html, text
 	}
 	else if (!$included) {
 		include "root.php";
@@ -48,13 +45,14 @@
 			echo "access denied";
 			exit;
 		}
-		$format = 'html'; //html, text
+		$display_type = 'html'; //html, text
 	}
 
 //run all app_defaults.php files
 	require_once "resources/classes/config.php";
 	require_once "resources/classes/domains.php";
 	$domain = new domains;
+	$domain->display_type = $display_type;
 	$domain->upgrade();
 
 ?>

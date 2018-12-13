@@ -129,7 +129,9 @@
 					unset($prep_statement);
 
 				//rename the file
-					rename($xml_dir.'/acl.conf.xml', $xml_dir.'/acl.conf');
+					if (file_exists($xml_dir.'/acl.conf.xml')) {
+						rename($xml_dir.'/acl.conf.xml', $xml_dir.'/acl.conf');
+					}
 			}
 		}
 

@@ -23,16 +23,20 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (if_group("superadmin")) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (if_group("superadmin")) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //set the variables
 	$cmd = check_str($_GET['cmd']);
@@ -45,7 +49,7 @@ else {
 			if ($cmd == "api reloadxml") {
 				//reloadxml
 					if ($cmd == "api reloadxml") {
-						$response = event_socket_request($fp, $cmd);
+						message::add(rtrim(event_socket_request($fp, $cmd)), 'alert');
 						unset($cmd);
 					}
 
@@ -54,25 +58,25 @@ else {
 
 				//rescan the external profile to look for new or stopped gateways
 					$tmp_cmd = 'api sofia profile external rescan';
-					$response = event_socket_request($fp, $tmp_cmd);
+					message::add(rtrim(event_socket_request($fp, $tmp_cmd)), 'alert');
 					unset($tmp_cmd);
 			}
 
-		//memcache flush
-			if ($cmd == "api memcache flush") {
+		//cache flush
+			if ($cmd == "api cache flush") {
 				$cache = new cache;
 				$cache->flush();
 			}
 
 		//reloadacl
 			if ($cmd == "api reloadacl") {
-				$response = event_socket_request($fp, $cmd);
+				message::add(rtrim(event_socket_request($fp, $cmd)), 'alert');
 				unset($cmd);
 			}
 
 		//sofia profile
 			if (substr($cmd, 0, 17) == "api sofia profile") {
-				$response = event_socket_request($fp, $cmd);
+				message::add(rtrim(event_socket_request($fp, $cmd)), 'alert');
 			}
 
 		//close the connection
@@ -85,7 +89,6 @@ else {
 		echo $response;
 	}
 	else {
-		$_SESSION["message"] = $response;
 		header("Location: sip_status.php");
 	}
 

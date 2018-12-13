@@ -52,6 +52,8 @@ class plugin_database {
 				//$sql .= "and domain_uuid='".$this->domain_uuid."' ";
 			}
 			$sql .= "and (user_enabled = 'true' or user_enabled is null) ";
+			//echo $sql."<br />\n";
+			//echo "domain name: ".$this->domain_name;
 			$prep_statement = $db->prepare(check_sql($sql));
 			if ($_SESSION["user"]["unique"]["text"] != "global") {
 				$prep_statement->bindParam(':domain_uuid', $this->domain_uuid);
@@ -67,7 +69,8 @@ class plugin_database {
 			$user_authorized = false;
 			if (is_array($result)) {
 				foreach ($result as &$row) {
-					//get the domain uuid
+
+					//get the domain uuid when users are unique globally
 						if ($_SESSION["user"]["unique"]["text"] == "global" && $row["domain_uuid"] != $this->domain_uuid) {
 							//set the domain_uuid
 								$this->domain_uuid = $row["domain_uuid"];
@@ -95,10 +98,8 @@ class plugin_database {
 					//compare the password provided by the user with the one in the database
 						if (md5($row["salt"].$this->password) == $row["password"]) {
 							$user_authorized = true;
-							 $_SESSION['username'] = $row["username"]; //return the username
 						} elseif (strlen($this->key) >  30 && $this->key == $row["api_key"]) {
 							$user_authorized = true;
-							$_SESSION['username'] = $row["username"]; //return the username
 						} else {
 							$user_authorized = false;
 						}

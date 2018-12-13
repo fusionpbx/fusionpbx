@@ -17,23 +17,27 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2015
+ Portions created by the Initial Developer are Copyright (C) 2008-2017
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
  Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('domain_add') || permission_exists('domain_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('domain_add') || permission_exists('domain_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -140,10 +144,25 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				if ($original_domain_name != $domain_name) {
 
 					// update dialplans
-						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/dialplan/app_config.php")){
-							$sql = "update v_dialplans set ";
-							$sql .= "dialplan_context = '".$domain_name."' ";
+						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/dialplans/app_config.php")){
+							$sql = "update v_dialplans ";
+							$sql .= "set dialplan_context = '".$domain_name."' ";
 							$sql .= "where dialplan_context = '".$original_domain_name."' ";
+							$sql .= "and domain_uuid = '".$domain_uuid."' ";
+							$db->exec(check_sql($sql));
+							unset($sql);
+
+							$sql = "update v_dialplans ";
+							$sql .= "set dialplan_xml = replace(dialplan_xml, $original_domain_name, $domain_name); ";
+							$sql .= "and domain_uuid = '".$domain_uuid."' ";
+							$db->exec(check_sql($sql));
+							unset($sql);
+						}
+
+					// update destinations
+						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/destinations/app_config.php")){
+							$sql = "update v_destinations ";
+							$sql .= "set destination_data = replace(destination_data, $original_domain_name, $domain_name); ";
 							$sql .= "and domain_uuid = '".$domain_uuid."' ";
 							$db->exec(check_sql($sql));
 							unset($sql);
@@ -404,13 +423,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							unset($sql, $prep_statement, $result);
 						}
 
-					// update call flows data, anti-data and contexts
+					// update call flows data, alternate-data and contexts
 						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_flows/app_config.php")){
-							$sql = "select call_flow_uuid, call_flow_data, call_flow_anti_data, call_flow_context from v_call_flows ";
+							$sql = "select call_flow_uuid, call_flow_data, call_flow_alternate_data, call_flow_context from v_call_flows ";
 							$sql .= "where domain_uuid = '".$domain_uuid."' ";
 							$sql .= "and ( ";
 							$sql .= "call_flow_data like '%".$original_domain_name."%' or ";
-							$sql .= "call_flow_anti_data like '%".$original_domain_name."%' or ";
+							$sql .= "call_flow_alternate_data like '%".$original_domain_name."%' or ";
 							$sql .= "call_flow_context like '%".$original_domain_name."%' ";
 							$sql .= ") ";
 							$prep_statement = $db->prepare(check_sql($sql));
@@ -420,16 +439,16 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 								// get current values
 								$call_flow_uuid = $row["call_flow_uuid"];
 								$call_flow_data = $row["call_flow_data"];
-								$call_flow_anti_data = $row["call_flow_anti_data"];
+								$call_flow_alternate_data = $row["call_flow_alternate_data"];
 								$call_flow_context = $row["call_flow_context"];
 								// replace old domain name with new domain
 								$call_flow_data = str_replace($original_domain_name, $domain_name, $call_flow_data);
-								$call_flow_anti_data = str_replace($original_domain_name, $domain_name, $call_flow_anti_data);
+								$call_flow_alternate_data = str_replace($original_domain_name, $domain_name, $call_flow_alternate_data);
 								$call_flow_context = str_replace($original_domain_name, $domain_name, $call_flow_context);
 								// update db record
 								$sql = "update v_call_flows set ";
 								$sql .= "call_flow_data = '".$call_flow_data."', ";
-								$sql .= "call_flow_anti_data = '".$call_flow_anti_data."', ";
+								$sql .= "call_flow_alternate_data = '".$call_flow_alternate_data."', ";
 								$sql .= "call_flow_context = '".$call_flow_context."' ";
 								$sql .= "where call_flow_uuid = '".$call_flow_uuid."' ";
 								$sql .= "and domain_uuid = '".$domain_uuid."' ";
@@ -476,11 +495,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 					// update device lines server address, outbound proxy
 						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/devices/app_config.php")){
-							$sql = "select device_line_uuid, server_address, outbound_proxy from v_device_lines ";
+							$sql = "select device_line_uuid, server_address, outbound_proxy_primary, outbound_proxy_secondary from v_device_lines ";
 							$sql .= "where domain_uuid = '".$domain_uuid."' ";
 							$sql .= "and ( ";
 							$sql .= "server_address like '%".$original_domain_name."%' or ";
-							$sql .= "outbound_proxy like '%".$original_domain_name."%' ";
+							$sql .= "outbound_proxy_primary like '%".$original_domain_name."%' or ";
+							$sql .= "outbound_proxy_secondary like '%".$original_domain_name."%' ";
 							$sql .= ") ";
 							$prep_statement = $db->prepare(check_sql($sql));
 							$prep_statement->execute();
@@ -489,14 +509,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 								// get current values
 								$device_line_uuid = $row["device_line_uuid"];
 								$server_address = $row["server_address"];
-								$outbound_proxy = $row["outbound_proxy"];
+								$outbound_proxy_primary = $row["outbound_proxy_primary"];
+								$outbound_proxy_secondary = $row["outbound_proxy_secondary"];
 								// replace old domain name with new domain
 								$server_address = str_replace($original_domain_name, $domain_name, $server_address);
-								$outbound_proxy = str_replace($original_domain_name, $domain_name, $outbound_proxy);
+								$outbound_proxy_primary = str_replace($original_domain_name, $domain_name, $outbound_proxy_primary);
+								$outbound_proxy_secondary = str_replace($original_domain_name, $domain_name, $outbound_proxy_secondary);
 								// update db record
 								$sql = "update v_device_lines set ";
 								$sql .= "server_address = '".$server_address."', ";
-								$sql .= "outbound_proxy = '".$outbound_proxy."' ";
+								$sql .= "outbound_proxy_primary = '".$outbound_proxy_primary."' ";
+								$sql .= "outbound_proxy_secondary = '".$outbound_proxy_secondary."' ";
 								$sql .= "where device_line_uuid = '".$device_line_uuid."' ";
 								$sql .= "and domain_uuid = '".$domain_uuid."' ";
 								$db->exec(check_sql($sql));
@@ -517,7 +540,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						unset($dialplan_public_xml);
 
 					// update dialplan details
-						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/dialplan/app_config.php")){
+						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/dialplans/app_config.php")){
 							$sql = "select dialplan_detail_uuid, dialplan_detail_data from v_dialplan_details ";
 							$sql .= "where domain_uuid = '".$domain_uuid."' ";
 							$sql .= "and dialplan_detail_data like '%".$original_domain_name."%' ";
@@ -579,7 +602,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		//redirect the browser
 			if ($action == "update") {
-				$_SESSION["message"] = $text['message-update'];
+				message::add($text['message-update']);
 				if (!permission_exists('domain_add')) { //admin, updating own domain
 					header("Location: domain_edit.php");
 				}
@@ -588,7 +611,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 			}
 			if ($action == "add") {
-				$_SESSION["message"] = $text['message-add'];
+				message::add($text['message-add']);
 				header("Location: domains.php");
 			}
 			return;
@@ -619,6 +642,47 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$document['title'] = $text['title-domain-add'];
 	}
 
+//copy settings javascript
+	if (permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) {
+		echo "<script language='javascript' type='text/javascript'>\n";
+		echo "	var fade_speed = 400;\n";
+		echo "	function show_domains() {\n";
+		echo "		document.getElementById('action').value = 'copy';\n";
+		echo "		$('#button_copy').fadeOut(fade_speed, function() {\n";
+		echo "			$('#button_back').fadeIn(fade_speed);\n";
+		echo "			$('#target_domain_uuid').fadeIn(fade_speed);\n";
+		echo "			$('#button_paste').fadeIn(fade_speed);\n";
+		echo "		});";
+		echo "	}";
+		echo "	function hide_domains() {\n";
+		echo "		document.getElementById('action').value = '';\n";
+		echo "		$('#button_back').fadeOut(fade_speed);\n";
+		echo "		$('#target_domain_uuid').fadeOut(fade_speed);\n";
+		echo "		$('#button_paste').fadeOut(fade_speed, function() {\n";
+		echo "			$('#button_copy').fadeIn(fade_speed);\n";
+		echo "			document.getElementById('target_domain_uuid').selectedIndex = 0;\n";
+		echo "		});\n";
+		echo "	}\n";
+		echo "\n";
+		echo "	$( document ).ready(function() {\n";
+		echo "		$('#domain_setting_search').focus();\n";
+		if ($search == '') {
+			echo "		// scroll to previous category\n";
+			echo "		var category_span_id;\n";
+			echo "		var url = document.location.href;\n";
+			echo "		var hashindex = url.indexOf('#');\n";
+			echo "		if (hashindex == -1) { }\n";
+			echo "		else {\n";
+			echo "			category_span_id = url.substr(hashindex + 1);\n";
+			echo "		}\n";
+			echo "		if (category_span_id) {\n";
+			echo "			$('#page').animate({scrollTop: $('#anchor_'+category_span_id).offset().top - 200}, 'slow');\n";
+			echo "		}\n";
+		}
+		echo "	});\n";
+		echo "</script>";
+	}
+
 //show the content
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
@@ -635,8 +699,19 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if (permission_exists('domain_add')) { //only for superadmin, not admin editing their own domain
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='domains.php'\" value='".$text['button-back']."'>\n";
 	}
+	//if (permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) {
+	//	echo "		<input type='button' class='btn' id='button_copy' alt='".$text['button-copy']."' onclick='show_domains();' value='".$text['button-copy']."'>";
+	//	echo "		<input type='button' class='btn' style='display: none;' id='button_back' alt='".$text['button-back']."' onclick='hide_domains();' value='".$text['button-back']."'> ";
+	//	echo "		<select class='formfld' style='display: none; width: auto;' name='target_domain_uuid' id='target_domain_uuid'>\n";
+	//	echo "			<option value=''>Select Domain...</option>\n";
+	//	foreach ($_SESSION['domains'] as $domain) {
+	//		echo "		<option value='".escape($domain["domain_uuid"])."'>".escape($domain["domain_name"])."</option>\n";
+	//	}
+	//	echo "		</select>\n";
+	//	echo "		<input type='button' class='btn' id='button_paste' style='display: none;' alt='".$text['button-paste']."' value='".$text['button-paste']."' onclick=\"$('#frm').attr('action', 'domain_settings.php?search='+$('#domain_setting_search').val()).submit();\">";
+	//}
 	if (permission_exists('domain_export')) {
-		echo "	<input type='button' class='btn' name='' alt='".$text['button-export']."' onclick=\"window.location='".PROJECT_PATH."/app/domain_export/index.php?id=".$domain_uuid."'\" value='".$text['button-export']."'>\n";
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-export']."' onclick=\"window.location='".PROJECT_PATH."/app/domain_export/index.php?id=".escape($domain_uuid)."'\" value='".$text['button-export']."'>\n";
 	}
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
@@ -658,7 +733,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='domain_name' maxlength='255' value=\"".$domain_name."\">\n";
+	echo "	<input class='formfld' type='text' name='domain_name' maxlength='255' value=\"".escape($domain_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-name']."\n";
 	echo "</td>\n";
@@ -683,7 +758,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='domain_description' maxlength='255' value=\"".$domain_description."\">\n";
+	echo "	<input class='formfld' type='text' name='domain_description' maxlength='255' value=\"".escape($domain_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
@@ -692,7 +767,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='domain_uuid' value='$domain_uuid'>\n";
+		echo "		<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>\n";
 	}
 	echo "			<br />";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
@@ -709,4 +784,5 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

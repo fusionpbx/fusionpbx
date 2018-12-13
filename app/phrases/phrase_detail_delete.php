@@ -66,7 +66,7 @@ else {
 	}
 
 //redirect the user
-	$_SESSION['message'] = $text['message-delete'];
+	message::add($text['message-delete']);
 	header('Location: phrase_edit.php?id='.$phrase_uuid);
 
 ?>

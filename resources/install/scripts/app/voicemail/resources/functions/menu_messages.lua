@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2017 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -12,7 +12,7 @@
 --	  notice, this list of conditions and the following disclaimer in the
 --	  documentation and/or other materials provided with the distribution.
 --
---	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--	THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 --	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
 --	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
@@ -41,19 +41,32 @@
 		--message_status new,saved
 			if (session:ready()) then
 				if (voicemail_id ~= nil) then
-					sql = [[SELECT voicemail_message_uuid, created_epoch, caller_id_name, caller_id_number FROM v_voicemail_messages
-						WHERE domain_uuid = ']] .. domain_uuid ..[['
-						AND voicemail_uuid = ']] .. voicemail_uuid ..[[']]
+					--get the voicemail_id
+					--fix for extensions that start with 0 (Ex: 0712)
+							sql = [[SELECT voicemail_id FROM v_voicemails WHERE voicemail_uuid = :voicemail_uuid]];
+							local params = {voicemail_uuid = voicemail_uuid};
+							if (debug["sql"]) then
+								freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+							end
+							dbh:query(sql, params, function(result)
+								voicemail_id_copy = result["voicemail_id"];
+							end);
+
+					local sql = [[SELECT voicemail_message_uuid, created_epoch, caller_id_name, caller_id_number 
+						FROM v_voicemail_messages
+						WHERE domain_uuid = :domain_uuid
+						AND voicemail_uuid = :voicemail_uuid ]]
 					if (message_status == "new") then
 						sql = sql .. [[AND (message_status is null or message_status = '') ]];
 					elseif (message_status == "saved") then
 						sql = sql .. [[AND message_status = 'saved' ]];
 					end
-					sql = sql .. [[ORDER BY created_epoch desc;]];
+					sql = sql .. [[ORDER BY created_epoch ]]..message_order;
+					local params = {domain_uuid = domain_uuid, voicemail_uuid = voicemail_uuid};
 					if (debug["sql"]) then
-						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 					end
-					status = dbh:query(sql, function(row)
+					dbh:query(sql, params, function(row)
 						--get the values from the database
 							--row["voicemail_message_uuid"];
 							--row["created_epoch"];
@@ -83,6 +96,10 @@
 					)
 				--send the message waiting event
 					mwi_notify(voicemail_id.."@"..domain_name, new_messages, saved_messages)
+					--fix for extensions that start with 0 (Ex: 0712)
+						if (voicemail_id_copy ~= voicemail_id  and voicemail_id_copy ~= nil) then
+							message_waiting(voicemail_id_copy, domain_uuid);
+						end
 			end
 
 		--set the display

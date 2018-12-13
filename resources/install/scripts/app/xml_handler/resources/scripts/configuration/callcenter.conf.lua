@@ -1,6 +1,6 @@
 --      xml_handler.lua
 --      Part of FusionPBX
---      Copyright (C) 2015 Mark J Crane <markjcrane@fusionpbx.com>
+--      Copyright (C) 2015-2018 Mark J Crane <markjcrane@fusionpbx.com>
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -13,7 +13,7 @@
 --         notice, this list of conditions and the following disclaimer in the
 --         documentation and/or other materials provided with the distribution.
 --
---      THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--      THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --      INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 --      AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
 --      AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
@@ -28,19 +28,21 @@
 	require "resources.functions.format_ringback"
 
 --get the cache
+	local cache = require "resources.functions.cache"
 	hostname = trim(api:execute("switchname", ""));
-	if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
-		XML_STRING = trim(api:execute("memcache", "get configuration:callcenter.conf:" .. hostname));
-	else
-		XML_STRING = "-ERR NOT FOUND";
-	end
+	local cc_cache_key = "configuration:callcenter.conf:" .. hostname
+	XML_STRING, err = cache.get(cc_cache_key)
 
 --set the cache
-	if (XML_STRING == "-ERR NOT FOUND") or (XML_STRING == "-ERR CONNECTION FAILURE") then
+	if not XML_STRING then
+		--log cache error
+			if (debug["cache"]) then
+				freeswitch.consoleLog("warning", "[xml_handler] " .. cc_cache_key .. " can not be get from the cache: " .. tostring(err) .. "\n");
+			end
 
 		--connect to the database
-			require "resources.functions.database_handle";
-			dbh = database_handle('system');
+			local Database = require "resources.functions.database";
+			dbh = Database.new('system');
 
 		--exits the script if we didn't connect properly
 			assert(dbh:connected());
@@ -74,6 +76,7 @@
 			x = 0;
 			dbh:query(sql, function(row)
 				--set as variables
+					queue_uuid = row.call_center_queue_uuid;
 					domain_uuid = row.domain_uuid;
 					domain_name = row.domain_name;
 					queue_name = row.queue_name;
@@ -94,7 +97,11 @@
 					queue_announce_frequency = row.queue_announce_frequency;
 					queue_description = row.queue_description;
 
-					table.insert(xml, [[                            <queue name="]]..queue_name..[[@]]..domain_name..[[">]]);
+				--replace the space with a dash
+					queue_name = queue_name:gsub(" ", "-");
+
+				--start the xml
+					table.insert(xml, [[                            <queue name="]]..queue_uuid..[[" label="]]..queue_name..[[@]]..domain_name..[[">]]);
 					table.insert(xml, [[                                    <param name="strategy" value="]]..queue_strategy..[["/>]]);
 				--set ringback
 					queue_ringback = format_ringback(queue_moh_sound);
@@ -155,6 +162,7 @@
 			x = 0;
 			dbh:query(sql, function(row)
 				--get the values from the database and set as variables
+					agent_uuid = row.call_center_agent_uuid;
 					domain_uuid = row.domain_uuid;
 					domain_name = row.domain_name;
 					agent_name = row.agent_name;
@@ -216,7 +224,8 @@
 
 				--build the xml string
 					table.insert(xml, [[                            <agent ]]);
-					table.insert(xml, [[                            	name="]]..agent_name..[[@]]..domain_name..[[" ]]);
+					table.insert(xml, [[                            	name="]]..agent_uuid..[[" ]]);
+					table.insert(xml, [[                            	label="]]..agent_name..[[@]]..domain_name..[[" ]]);
 					table.insert(xml, [[                            	type="]]..agent_type..[[" ]]);
 					table.insert(xml, [[                            	contact="]]..agent_contact..[[" ]]);
 					table.insert(xml, [[                            	status="]]..agent_status..[[" ]]);
@@ -250,17 +259,20 @@
 				--get the values from the database and set as variables
 					domain_uuid = row.domain_uuid;
 					domain_name = row.domain_name;
-					agent_name = row.agent_name;
-					queue_name = row.queue_name;
+					agent_uuid = row.call_center_agent_uuid;
+					queue_uuid = row.call_center_queue_uuid;
 					tier_level = row.tier_level;
 					tier_position = row.tier_position;
 				--build the xml
 					table.insert(xml, [[                            <tier ]]);
-					table.insert(xml, [[				agent="]]..agent_name..[[@]]..domain_name..[[" ]]);
-					table.insert(xml, [[				queue="]]..queue_name..[[@]]..domain_name..[[" ]]);
-					table.insert(xml, [[				level="]]..tier_level..[[" ]]);
-					table.insert(xml, [[				position="]]..tier_position..[[" ]]);
-					table.insert(xml, [[				/>]]);
+					table.insert(xml, [[                            	agent="]]..agent_uuid..[[" ]]);
+					table.insert(xml, [[                            	queue="]]..queue_uuid..[[" ]]);
+					table.insert(xml, [[                            	domain_name="]]..domain_name..[[" ]]);
+					--table.insert(xml, [[                            	agent_name="]]..agent_name..[[" ]]);
+					--table.insert(xml, [[                            	queue_name="]]..queue_name..[[" ]]);
+					table.insert(xml, [[                            	level="]]..tier_level..[[" ]]);
+					table.insert(xml, [[                            	position="]]..tier_position..[[" ]]);
+					table.insert(xml, [[                            />]]);
 			end)
 			table.insert(xml, [[                    </tiers>]]);
 
@@ -278,24 +290,29 @@
 			--freeswitch.consoleLog("notice", "[xml_handler]"..api:execute("eval ${dsn}"));
 
 		--set the cache
-			result = trim(api:execute("memcache", "set configuration:callcenter.conf:" .. hostname .." '"..XML_STRING:gsub("'", "&#39;").."' ".."expire['callcenter.conf']"));
-
-		--send the xml to the console
-			if (debug["xml_string"]) then
-				local file = assert(io.open(temp_dir .. "/callcenter.conf.xml", "w"));
-				file:write(XML_STRING);
-				file:close();
+			local ok, err = cache.set(cc_cache_key, XML_STRING, expire["callcenter"]);
+			if debug["cache"] then
+				if ok then
+					freeswitch.consoleLog("notice", "[xml_handler] " .. cc_cache_key .. " stored in the cache\n");
+				else
+					freeswitch.consoleLog("warning", "[xml_handler] " .. cc_cache_key .. " can not be stored in the cache: " .. tostring(err) .. "\n");
+				end
 			end
 
 		--send to the console
 			if (debug["cache"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] configuration:callcenter.conf:" .. hostname .." source: database\n");
+				freeswitch.consoleLog("notice", "[xml_handler] " .. cc_cache_key .. " source: database\n");
 			end
 	else
-		--replace the &#39 back to a single quote
-			XML_STRING = XML_STRING:gsub("&#39;", "'");
 		--send to the console
 			if (debug["cache"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] configuration:callcenter.conf source: memcache\n");
+				freeswitch.consoleLog("notice", "[xml_handler] " .. cc_cache_key .. " source: cache\n");
 			end
 	end --if XML_STRING
+
+--send the xml to the console
+	if (debug["xml_string"]) then
+		local file = assert(io.open(temp_dir .. "/callcenter.conf.xml", "w"));
+		file:write(XML_STRING);
+		file:close();
+	end

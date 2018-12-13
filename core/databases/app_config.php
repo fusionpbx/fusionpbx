@@ -5,22 +5,31 @@
 		$apps[$x]['uuid'] = "8d229b6d-1383-fcec-74c6-4ce1682479e2";
 		$apps[$x]['category'] = "Core";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "";
+		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Stored database connection information.";
-		$apps[$x]['description']['es-cl'] = "Información de conexiones a bases de datos";
-		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['ar-eg'] = "";
+		$apps[$x]['description']['de-at'] = "Gespeicherte Informationen zu Datenbank-Verbindungen.";
 		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
-		$apps[$x]['description']['fr-fr'] = "Information de connexions au BDD";
+		$apps[$x]['description']['de-de'] = "Gespeicherte Informationen zu Datenbank-Verbindungen.";
+		$apps[$x]['description']['es-cl'] = "Información de conexiones a bases de datos";
+		$apps[$x]['description']['es-mx'] = "";
 		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "Armazena informações de conexão com a base de dados.";
+		$apps[$x]['description']['fr-fr'] = "Information de connexions au BDD";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-pt'] = "Armazena informações de conexão com a base de dados.";
+		$apps[$x]['description']['ro-ro'] = "";
+		$apps[$x]['description']['ru-ru'] = "Информация о подключении к базам данных";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "database_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "ebbd754d-ca74-d5b1-a77e-9206ba3ecc3f";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -35,9 +44,10 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_databases";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_databases";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "database_connection_id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
@@ -102,5 +112,5 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "db_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
-		$z++;
+
 ?>

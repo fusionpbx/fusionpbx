@@ -27,7 +27,7 @@
 
 	if (!function_exists('software_version')) {
 		function software_version() {
-			return '4.2.0';
+			return '4.5.3';
 		}
 	}
 
@@ -143,8 +143,7 @@
 
 	if (!function_exists('is_uuid')) {
 		function is_uuid($uuid) {
-			//uuid version 4
-			$regex = '/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i';
+			$regex = '/^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i';
 			return preg_match($regex, $uuid);
 		}
 	}
@@ -461,20 +460,20 @@
 
 	if (!function_exists('th_order_by')) {
 		//html table header order by
-		function th_order_by($field_name, $columntitle, $order_by, $order, $app_uuid = '', $css = '', $additional_get_params='') {
+		function th_order_by($field_name, $columntitle, $order_by, $order, $app_uuid = '', $css = '', $additional_get_params='', $description='') {
 			if (strlen($app_uuid) > 0) { $app_uuid = "&app_uuid=".$app_uuid; }	// accomodate need to pass app_uuid where necessary (inbound/outbound routes lists)
 			if (strlen($additional_get_params) > 0) {$additional_get_params = '&'.$additional_get_params; } // you may need to pass other parameters
 			$html = "<th ".$css." nowrap>";
-			if (strlen($order_by)==0) {
-				$html .= "<a href='?order_by=$field_name&order=desc".$app_uuid."$additional_get_params' title='ascending'>$columntitle</a>";
+			$description = (strlen($description) > 0) ? $description . ', ': '';
+			if (strlen($order_by) == 0)
+				$order = 'asc';
+			if ($order == "asc") {
+				$description .= 'sort(ascending)';
+				$html .= "<a href='?order_by=$field_name&order=desc".$app_uuid."$additional_get_params' title='$description'>$columntitle</a>";
 			}
 			else {
-				if ($order=="asc") {
-					$html .= "<a href='?order_by=$field_name&order=desc".$app_uuid."$additional_get_params' title='ascending'>$columntitle</a>";
-				}
-				else {
-					$html .= "<a href='?order_by=$field_name&order=asc".$app_uuid."$additional_get_params' title='descending'>$columntitle</a>";
-				}
+				$description .= 'sort(descending)';
+				$html .= "<a href='?order_by=$field_name&order=asc".$app_uuid."$additional_get_params' title='$description'>$columntitle</a>";
 			}
 			$html .= "</th>";
 			return $html;
@@ -851,6 +850,16 @@ function format_string ($format, $data) {
 		return $phone_number;
 	}
 
+//format seconds into hh:mm:ss
+	function format_hours($seconds) {
+		$hours = floor($seconds / 3600);
+		$minutes = floor(($seconds / 60) % 60);
+		$seconds = $seconds % 60;
+		if (strlen($minutes) == 1) { $minutes = '0'.$minutes; }
+		if (strlen($seconds) == 1) { $seconds = '0'.$seconds; }
+		return "$hours:$minutes:$seconds";
+	}
+
 //browser detection without browscap.ini dependency
 	function http_user_agent($info = '') {
 		$u_agent = $_SERVER['HTTP_USER_AGENT'];
@@ -983,8 +992,8 @@ function format_string ($format, $data) {
 		$password = '';
 		$charset = '';
 		if ($length === 0 && $strength === 0) { //set length and strenth if specified in default settings and strength isn't numeric-only
-			$length = (is_numeric($_SESSION["security"]["password_length"]["numeric"])) ? $_SESSION["security"]["password_length"]["numeric"] : 10;
-			$strength = (is_numeric($_SESSION["security"]["password_strength"]["numeric"])) ? $_SESSION["security"]["password_strength"]["numeric"] : 4;
+			$length = (is_numeric($_SESSION["extension"]["password_length"]["numeric"])) ? $_SESSION["extension"]["password_length"]["numeric"] : 10;
+			$strength = (is_numeric($_SESSION["extension"]["password_strength"]["numeric"])) ? $_SESSION["extension"]["password_strength"]["numeric"] : 4;
 		}
 		if ($strength >= 1) { $charset .= "0123456789"; }
 		if ($strength >= 2) { $charset .= "abcdefghijkmnopqrstuvwxyz";	}
@@ -999,13 +1008,21 @@ function format_string ($format, $data) {
 	}
 
 //check password strength against requirements (if any)
-	function check_password_strength($password, $text) {
+	function check_password_strength($password, $text, $type = 'default') {
 		if ($password != '') {
-			$req['length'] = $_SESSION['security']['password_length']['numeric'];
-			$req['number'] = ($_SESSION['security']['password_number']['boolean'] == 'true') ? true : false;
-			$req['lowercase'] = ($_SESSION['security']['password_lowercase']['boolean'] == 'true') ? true : false;
-			$req['uppercase'] = ($_SESSION['security']['password_uppercase']['boolean'] == 'true') ? true : false;
-			$req['special'] = ($_SESSION['security']['password_special']['boolean'] == 'true') ? true : false;
+			if ($type == 'default') {
+				$req['length'] = $_SESSION['extension']['password_length']['numeric'];
+				$req['number'] = ($_SESSION['extension']['password_number']['boolean'] == 'true') ? true : false;
+				$req['lowercase'] = ($_SESSION['extension']['password_lowercase']['boolean'] == 'true') ? true : false;
+				$req['uppercase'] = ($_SESSION['extension']['password_uppercase']['boolean'] == 'true') ? true : false;
+				$req['special'] = ($_SESSION['extension']['password_special']['boolean'] == 'true') ? true : false;
+			} elseif ($type == 'user') {
+				$req['length'] = $_SESSION['user']['password_length']['numeric'];
+				$req['number'] = ($_SESSION['user']['password_number']['boolean'] == 'true') ? true : false;
+				$req['lowercase'] = ($_SESSION['user']['password_lowercase']['boolean'] == 'true') ? true : false;
+				$req['uppercase'] = ($_SESSION['user']['password_uppercase']['boolean'] == 'true') ? true : false;
+				$req['special'] = ($_SESSION['user']['password_special']['boolean'] == 'true') ? true : false;
+			}
 			if (is_numeric($req['length']) && $req['length'] != 0 && !preg_match_all('$\S*(?=\S{'.$req['length'].',})\S*$', $password)) { // length
 				$msg_errors[] = $req['length'].'+ '.$text['label-characters'];
 			}
@@ -1022,9 +1039,7 @@ function format_string ($format, $data) {
 				$msg_errors[] = '1+ '.$text['label-special_characters'];
 			}
 			if (is_array($msg_errors) && sizeof($msg_errors) > 0) {
-				$_SESSION["message"] = $text['message-password_requirements'].': '.implode(', ', $msg_errors);
-				$_SESSION['message_mood'] = 'negative';
-				$_SESSION['message_delay'] = '6000';
+				message::add($_SESSION["message"] = $text['message-password_requirements'].': '.implode(', ', $msg_errors), 'negative', 6000);
 				return false;
 			}
 			else {
@@ -1061,8 +1076,8 @@ function format_string ($format, $data) {
 	if(!function_exists('csv_to_named_array')) {
 		function csv_to_named_array($tmp_str, $tmp_delimiter) {
 			$tmp_array = explode ("\n", $tmp_str);
-			$result = '';
-			if (trim(strtoupper($tmp_array[0])) != "+OK") {
+			$result = array();
+			if (trim(strtoupper($tmp_array[0])) !== "+OK") {
 				$tmp_field_name_array = explode ($tmp_delimiter, $tmp_array[0]);
 				$x = 0;
 				foreach ($tmp_array as $row) {
@@ -1071,7 +1086,7 @@ function format_string ($format, $data) {
 						$y = 0;
 						foreach ($tmp_field_value_array as $tmp_value) {
 							$tmp_name = $tmp_field_name_array[$y];
-							if (trim(strtoupper($tmp_value)) != "+OK") {
+							if (trim(strtoupper($tmp_value)) !== "+OK") {
 								$result[$x][$tmp_name] = $tmp_value;
 							}
 							$y++;
@@ -1101,7 +1116,7 @@ function number_pad($number,$n) {
 // validate email address syntax
 	if(!function_exists('valid_email')) {
 		function valid_email($email) {
-			$regex = '/^[A-z0-9][\w.-]*@[A-z0-9][\w\-\.]+\.[A-z0-9]{2,6}$/';
+			$regex = '/^[A-z0-9][\w.-]*@[A-z0-9][\w\-\.]+(\.[A-z0-9]{2,6})?$/';
 			if ($email != "" && preg_match($regex, $email) == 1) {
 				return true; // email address has valid syntax
 			}
@@ -1419,25 +1434,25 @@ function number_pad($number,$n) {
 
 			$mail = new PHPMailer();
 			$mail -> IsSMTP();
-			$mail -> Host = $_SESSION['email']['smtp_host']['var'];
-			if ($_SESSION['email']['smtp_port']['var'] != '') {
-				$mail -> Port = $_SESSION['email']['smtp_port']['var'];
+			$mail -> Host = $_SESSION['email']['smtp_host']['text'];
+			if ($_SESSION['email']['smtp_port']['text'] != '') {
+				$mail -> Port = $_SESSION['email']['smtp_port']['text'];
 			}
-			if ($_SESSION['email']['smtp_auth']['var'] == "true") {
-				$mail -> SMTPAuth = $_SESSION['email']['smtp_auth']['var'];
+			if ($_SESSION['email']['smtp_auth']['text'] == "true") {
+				$mail -> SMTPAuth = $_SESSION['email']['smtp_auth']['text'];
 			}
-			if ($_SESSION['email']['smtp_username']['var']) {
-				$mail -> Username = $_SESSION['email']['smtp_username']['var'];
-				$mail -> Password = $_SESSION['email']['smtp_password']['var'];
+			if ($_SESSION['email']['smtp_username']['text']) {
+				$mail -> Username = $_SESSION['email']['smtp_username']['text'];
+				$mail -> Password = $_SESSION['email']['smtp_password']['text'];
 			}
-			if ($_SESSION['email']['smtp_secure']['var'] == "none") {
-				$_SESSION['email']['smtp_secure']['var'] = '';
+			if ($_SESSION['email']['smtp_secure']['text'] == "none") {
+				$_SESSION['email']['smtp_secure']['text'] = '';
 			}
-			if ($_SESSION['email']['smtp_secure']['var'] != '') {
-				$mail -> SMTPSecure = $_SESSION['email']['smtp_secure']['var'];
+			if ($_SESSION['email']['smtp_secure']['text'] != '') {
+				$mail -> SMTPSecure = $_SESSION['email']['smtp_secure']['text'];
 			}
-			$eml_from_address = ($eml_from_address != '') ? $eml_from_address : $_SESSION['email']['smtp_from']['var'];
-			$eml_from_name = ($eml_from_name != '') ? $eml_from_name : $_SESSION['email']['smtp_from_name']['var'];
+			$eml_from_address = ($eml_from_address != '') ? $eml_from_address : $_SESSION['email']['smtp_from']['text'];
+			$eml_from_name = ($eml_from_name != '') ? $eml_from_name : $_SESSION['email']['smtp_from_name']['text'];
 			$mail -> SetFrom($eml_from_address, $eml_from_name);
 			$mail -> AddReplyTo($eml_from_address, $eml_from_name);
 			$mail -> Subject = $eml_subject;
@@ -1897,6 +1912,7 @@ function number_pad($number,$n) {
 		}
 	}
 
+//make directory with event socket
 	function event_socket_mkdir($dir) {
 		//connect to fs
 			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
@@ -1916,6 +1932,12 @@ function number_pad($number,$n) {
 			}
 		//can not create directory
 			return false;
+	}
+
+//escape user data
+	function escape($string) {
+		return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+		//return htmlentities($string, ENT_QUOTES, 'UTF-8');
 	}
 
 ?>

@@ -23,16 +23,20 @@
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('user_setting_delete')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('user_setting_delete')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -56,11 +60,10 @@ else {
 	}
 	else {
 		// set message
-		$_SESSION["message"] = $text['message-delete_failed'];
-		$_SESSION["message_mood"] = "negative";
+		message::add($text['message-delete_failed'], 'negative');
 	}
 
-	header("Location: usersupdate.php?id=".check_str($_REQUEST["user_uuid"]));
+	header("Location: user_edit.php?id=".check_str($_REQUEST["user_uuid"]));
 	exit;
 
 ?>

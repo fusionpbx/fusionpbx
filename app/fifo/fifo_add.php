@@ -276,8 +276,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$cache->delete("dialplan:".$_SESSION["context"]);
 
 	//redirect the user
-		$_SESSION["message"] = $text['message-add'];
-		header("Location: ".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=16589224-c876-aeb3-f59f-523a1c0801f7");
+		message::add($text['message-add']);
+		header("Location: ".PROJECT_PATH."/app/dialplans/dialplans.php?app_uuid=16589224-c876-aeb3-f59f-523a1c0801f7");
 		return;
 
 } //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
@@ -288,7 +288,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td align='left'><span class=\"vexpl\"><span class='title'>".$text['header-queue_add']."</span></span></td>\n";
 	echo "		<td align='right'>\n";
-	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=16589224-c876-aeb3-f59f-523a1c0801f7'\" value='".$text['button-back']."'>\n";
+	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='".PROJECT_PATH."/app/dialplans/dialplans.php?app_uuid=16589224-c876-aeb3-f59f-523a1c0801f7'\" value='".$text['button-back']."'>\n";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
@@ -428,7 +428,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<br><br>";
 	echo "</form>";
 
-
 //show the footer
 	require_once "resources/footer.php";
+
 ?>

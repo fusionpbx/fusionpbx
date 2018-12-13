@@ -1,0 +1,14 @@
+<context name="{v_context}">
+	<extension name="provision" number="*11,*12" continue="false" app_uuid="d31d267d-7235-4887-a01b-d59f3a1dfcca" enabled="false">
+		<condition field="destination_number" expression="^\*11$" break="on-true">
+			<action application="set" data="reboot=true"/>
+			<action application="set" data="action=login"/>
+			<action application="lua" data="app.lua provision"/>
+		</condition>
+		<condition field="destination_number" expression="^\*12$">
+			<action application="set" data="reboot=true"/>
+			<action application="set" data="action=logout"/>
+			<action application="lua" data="app.lua provision"/>
+		</condition>
+	</extension>
+</context>

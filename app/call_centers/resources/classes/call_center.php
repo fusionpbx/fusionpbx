@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2015
+	Copyright (C) 2015 - 2016
 	All Rights Reserved.
 
 	Contributor(s):
@@ -41,6 +41,7 @@
 			public $queue_name;
 			public $queue_description;
 			public $destination_number;
+			public $queue_cc_exit_keys;
 
 			/**
 			 * Called when the object is created
@@ -143,6 +144,27 @@
 						$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 						$y++;
 					}
+
+					if (strlen($this->queue_greeting) > 0) {
+						$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
+						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "playback";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "".$this->queue_greeting;
+						$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "2";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
+						$y++;
+					}
+
+					if (strlen($this->queue_cc_exit_keys) > 0) {
+						$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
+						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "cc_exit_keys=".$this->queue_cc_exit_keys;
+						$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "2";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
+						$y++;
+					}
+
 					$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
 					$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 					$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "callcenter";
@@ -173,12 +195,16 @@
 					$p->add("dialplan_detail_add", 'temp');
 					$p->add("dialplan_edit", 'temp');
 					$p->add("dialplan_detail_edit", 'temp');
+				
+				//prepare the array
+					$array["dialplans"][0] = $dialplan;
 
 				//save the dialplan
-					$orm = new orm;
-					$orm->name('dialplans');
-					$orm->save($dialplan);
-					$dialplan_response = $orm->message;
+					$database = new database;
+					$database->app_name = 'dialplans';
+					$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
+					$database->save($array);
+					$dialplan_response = $database->message;
 					$this->dialplan_uuid = $dialplan_response['uuid'];
 
 				//if new dialplan uuid then update the call center queue
@@ -218,6 +244,7 @@ $c->queue_cid_prefix = "";
 $c->queue_timeout_action = "";
 $c->queue_description = "";
 $c->destination_number = "";
+$c->queue_cc_exit_keys = "";
 $c->dialplan();
 */
 

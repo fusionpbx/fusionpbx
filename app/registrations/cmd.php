@@ -17,22 +17,26 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists("registration_domain") || permission_exists("registration_all") || if_group("superadmin")) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//permissions
+	if (permission_exists("registration_domain") || permission_exists("registration_all") || if_group("superadmin")) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -66,7 +70,7 @@ else {
 			$response = event_socket_request($fp, "api ".$command);
 			$response = event_socket_request($fp, "api log notice ".$command);
 		//show the response
-			$_SESSION['message'] = $text['label-event']." ".ucwords($cmd)."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$text['label-response'].$response;
+			message::add($text['label-event']." ".ucwords($cmd)."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$text['label-response'].htmlentities($response));
 		//close the connection
 			fclose($fp);
 	}
@@ -77,7 +81,7 @@ else {
 		echo $response;
 	}
 	else {
-		header("Location: status_registrations.php?profile=".$profile."&show=".$show);
+		header("Location: registrations.php?profile=".$profile."&show=".$show);
 	}
 
 ?>

@@ -333,8 +333,7 @@ if ($_POST['a'] == 'import') {
 	else {
 
 		// no contacts imported
-		$_SESSION['message_mood'] = 'negative';
-		$_SESSION["message"] = $text['message-contacts_imported']." ".$contacts_imported;
+		message::add($text['message-contacts_imported']." ".$contacts_imported, 'negative');
 
 	}
 }

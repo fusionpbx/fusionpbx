@@ -1,8 +1,8 @@
 <?php
 /* $Id$ */
 /*
-	call.php
-	Copyright (C) 2008, 2009 Mark J Crane
+	click_to_call.php
+	Copyright (C) 2008, 2018 Mark J Crane
 	All rights reserved.
 
 	Redistribution and use in source and binary forms, with or without
@@ -28,18 +28,21 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
-
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('click_to_call_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('click_to_call_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -48,134 +51,181 @@ else {
 //include the header
 	require_once "resources/header.php";
 
-if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])) {
-	//retrieve submitted variables
-		$src = check_str($_REQUEST['src']);
-		$src_cid_name = check_str($_REQUEST['src_cid_name']);
-		$src_cid_number = check_str($_REQUEST['src_cid_number']);
+//send the call
+	if (is_array($_GET) && isset($_GET['src']) && isset($_GET['dest'])) {
 
-		$dest = check_str($_REQUEST['dest']);
-		$dest_cid_name = check_str($_REQUEST['dest_cid_name']);
-		$dest_cid_number = check_str($_REQUEST['dest_cid_number']);
+		//retrieve submitted variables
+			$src = check_str($_GET['src']);
+			$src_cid_name = check_str($_GET['src_cid_name']);
+			$src_cid_number = check_str($_GET['src_cid_number']);
 
-		$auto_answer = check_str($_REQUEST['auto_answer']); //true,false
-		$rec = check_str($_REQUEST['rec']); //true,false
-		$ringback = check_str($_REQUEST['ringback']);
-		$context = $_SESSION['context'];
+			$dest = check_str($_GET['dest']);
+			$dest_cid_name = check_str($_GET['dest_cid_name']);
+			$dest_cid_number = check_str($_GET['dest_cid_number']);
 
-	//clean up variable values
-		$src = str_replace(array('.','(',')','-',' '), '', $src);
-		$dest = (strpbrk($dest, '@') != FALSE) ? str_replace(array('(',')',' '), '', $dest) : str_replace(array('.','(',')','-',' '), '', $dest); //don't strip periods or dashes in sip-uri calls, only phone numbers
+			$auto_answer = check_str($_GET['auto_answer']); //true,false
+			$rec = check_str($_GET['rec']); //true,false
+			$ringback = check_str($_GET['ringback']);
+			$context = $_SESSION['context'];
 
-	//adjust variable values
-		$sip_auto_answer = ($auto_answer == "true") ? ",sip_auto_answer=true" : null;
+		//clean up variable values
+			$src = str_replace(array('.','(',')','-',' '), '', $src);
+			$dest = (strpbrk($dest, '@') != FALSE) ? str_replace(array('(',')',' '), '', $dest) : str_replace(array('.','(',')','-',' '), '', $dest); //don't strip periods or dashes in sip-uri calls, only phone numbers
 
-	//mozilla thunderbird TBDialout workaround (seems it can only handle the first %NUM%)
-		$dest = ($dest == "%NUM%") ? $src_cid_number : $dest;
+		//adjust variable values
+			$sip_auto_answer = ($auto_answer == "true") ? ",sip_auto_answer=true" : null;
 
-	//translate ringback
-		switch ($ringback) {
-			case "music": $ringback_value = "\'local_stream://moh\'"; break;
-			case "uk-ring": $ringback_value = "\'%(400,200,400,450);%(400,2200,400,450)\'"; break;
-			case "fr-ring": $ringback_value = "\'%(1500,3500,440.0,0.0)\'"; break;
-			case "pt-ring": $ringback_value = "\'%(1000,5000,400.0,0.0)\'"; break;
-			case "rs-ring": $ringback_value = "\'%(1000,4000,425.0,0.0)\'"; break;
-			case "it-ring": $ringback_value = "\'%(1000,4000,425.0,0.0)\'"; break;
-			case "us-ring":
-			default:
-				$ringback = 'us-ring';
-				$ringback_value = "\'%(2000,4000,440.0,480.0)\'";
-		}
+		//mozilla thunderbird TBDialout workaround (seems it can only handle the first %NUM%)
+			$dest = ($dest == "%NUM%") ? $src_cid_number : $dest;
 
-	//determine call direction
-		$dir = (strlen($dest) < 7) ? 'local' : 'outbound';
-
-	//define a leg - set source to display the defined caller id name and number
-		$source_common = "{".
-			"click_to_call=true".
-			",origination_caller_id_name='".$src_cid_name."'".
-			",origination_caller_id_number=".$src_cid_number.
-			",instant_ringback=true".
-			",ringback=".$ringback_value.
-			",presence_id=".$src."@".$_SESSION['domains'][$domain_uuid]['domain_name'].
-			",call_direction=".$dir;
-		if (strlen($src) < 7) {
-			//source is a local extension
-			$source = $source_common.$sip_auto_answer.
-				",domain_uuid=".$domain_uuid.
-				",domain_name=".$_SESSION['domains'][$domain_uuid]['domain_name']."}user/".$src."@".$_SESSION['domains'][$domain_uuid]['domain_name'];
-		}
-		else {
-			//source is an external number
-			$bridge_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $src);
-			$source = $source_common."}".$bridge_array[0];
-		}
-		unset($source_common);
-
-	//define b leg - set destination to display the defined caller id name and number
-		$destination_common = " &bridge({origination_caller_id_name='".$dest_cid_name."',origination_caller_id_number=".$dest_cid_number;
-		if (strlen($dest) < 7) {
-			//destination is a local extension
-			if (strpbrk($dest, '@') != FALSE) { //sip-uri
-				$switch_cmd = $destination_common.",call_direction=outbound}sofia/external/".$dest.")";
+		//translate ringback
+			switch ($ringback) {
+				case "music": $ringback_value = "\'local_stream://moh\'"; break;
+				case "uk-ring": $ringback_value = "\'%(400,200,400,450);%(400,2200,400,450)\'"; break;
+				case "fr-ring": $ringback_value = "\'%(1500,3500,440.0,0.0)\'"; break;
+				case "pt-ring": $ringback_value = "\'%(1000,5000,400.0,0.0)\'"; break;
+				case "rs-ring": $ringback_value = "\'%(1000,4000,425.0,0.0)\'"; break;
+				case "it-ring": $ringback_value = "\'%(1000,4000,425.0,0.0)\'"; break;
+				case "de-ring": $ringback_value = "\'%(1000,4000,425.0,0.0)\'"; break;
+				case "us-ring":
+				default:
+					$ringback = 'us-ring';
+					$ringback_value = "\'%(2000,4000,440.0,480.0)\'";
 			}
-			else { //not sip-uri
-				$switch_cmd = " &transfer('".$dest." XML ".$context."')";
+
+		//create the even socket connection and send the event socket command
+			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			if (!$fp) {
+				//error message
+				echo "<div align='center'><strong>Connection to Event Socket failed.</strong></div>";
 			}
-		}
-		else {
-			//local extension (source) > external number (destination)
-			if (strlen($src) < 7 && strlen($dest_cid_number) == 0) {
-				//retrieve outbound caller id from the (source) extension
-				$sql = "select outbound_caller_id_name, outbound_caller_id_number from v_extensions where domain_uuid = '".$_SESSION['domain_uuid']."' and extension = '".$src."' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				foreach ($result as &$row) {
-					$dest_cid_name = $row["outbound_caller_id_name"];
-					$dest_cid_number = $row["outbound_caller_id_number"];
-					break; //limit to 1 row
+
+		//set call uuid
+			$origination_uuid = trim(event_socket_request($fp, "api create_uuid"));
+
+		//add record path and name
+			if ($rec == "true") {
+				$record_path = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d");
+				if (isset($_SESSION['recordings']['extension']['text'])) {
+					$record_extension = $_SESSION['recordings']['extension']['text'];
 				}
-				unset ($prep_statement);
+				else {
+					$record_extension = 'wav';
+				}
+				if (isset($_SESSION['recordings']['template']['text'])) {
+					//${year}${month}${day}-${caller_id_number}-${caller_destination}-${uuid}.${record_extension}
+					$record_name = $_SESSION['recordings']['template']['text'];
+					$record_name = str_replace('${year}', date("Y"), $record_name);
+					$record_name = str_replace('${month}', date("M"), $record_name);
+					$record_name = str_replace('${day}', date("d"), $record_name);
+					$record_name = str_replace('${source}', $src, $record_name);
+					$record_name = str_replace('${caller_id_name}', $src_cid_name, $record_name);
+					$record_name = str_replace('${caller_id_number}', $src_cid_number, $record_name);
+					$record_name = str_replace('${caller_destination}', $dest, $record_name);
+					$record_name = str_replace('${destination}', $dest, $record_name);
+					$record_name = str_replace('${uuid}', $origination_uuid, $record_name);
+					$record_name = str_replace('${record_extension}', $record_extension, $record_name);
+				}
+				else {
+					$record_name = $origination_uuid.'.'.$record_extension;
+				}
 			}
-			if (permission_exists('click_to_call_call')) {
+
+		//determine call direction
+			$dir = (strlen($dest) < 7) ? 'local' : 'outbound';
+
+		//define a leg - set source to display the defined caller id name and number
+			$source_common = "{";
+			$source_common .= "origination_uuid=".$origination_uuid;
+			$source_common .= ",click_to_call=true";
+			$source_common .= ",origination_caller_id_name='".$src_cid_name."'";
+			$source_common .= ",origination_caller_id_number=".$src_cid_number;
+			$source_common .= ",instant_ringback=true";
+			$source_common .= ",ringback=".$ringback_value;
+			$source_common .= ",presence_id=".$src."@".$_SESSION['domains'][$domain_uuid]['domain_name'];
+			$source_common .= ",call_direction=".$dir;
+			if ($rec == "true") {
+				$source_common .= ",record_path='".$record_path."'";
+				$source_common .= ",record_name='".$record_name."'";
+			}
+
+			if (strlen($src) < 7) {
+				//source is a local extension
+				$source = $source_common.$sip_auto_answer.
+					",domain_uuid=".$domain_uuid.
+					",domain_name=".$_SESSION['domains'][$domain_uuid]['domain_name']."}user/".$src."@".$_SESSION['domains'][$domain_uuid]['domain_name'];
+			}
+			else {
+				//source is an external number
+				$bridge_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $src);
+				$source = $source_common."}".$bridge_array[0];
+			}
+			unset($source_common);
+
+		//define b leg - set destination to display the defined caller id name and number
+			$destination_common = " &bridge({origination_caller_id_name='".$dest_cid_name."',origination_caller_id_number=".$dest_cid_number;
+			if (strlen($dest) < 7) {
+				//destination is a local extension
 				if (strpbrk($dest, '@') != FALSE) { //sip-uri
 					$switch_cmd = $destination_common.",call_direction=outbound}sofia/external/".$dest.")";
 				}
 				else { //not sip-uri
-					$bridge_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $dest);
-					//$switch_cmd = $destination_common."}".$bridge_array[0].")";  // wouldn't set cdr destination correctly, so below used instead
 					$switch_cmd = " &transfer('".$dest." XML ".$context."')";
 				}
 			}
-		}
-		unset($destination_common);
-
-	//create the even socket connection and send the event socket command
-		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-		if (!$fp) {
-			//error message
-			echo "<div align='center'><strong>Connection to Event Socket failed.</strong></div>";
-		}
-		else {
-			//display the last command
-				$switch_cmd = "api originate ".$source.$switch_cmd;
-				echo "<div align='center'>".$switch_cmd."<br /><br /><strong>".$src." has called ".$dest."</strong></div>\n";
-			//show the command result
-			$result = trim(event_socket_request($fp, $switch_cmd));
-			if (substr($result, 0,3) == "+OK") {
-				$uuid = substr($result, 4);
-				if ($rec == "true") {
-					//use the server's time zone to ensure it matches the time zone used by freeswitch
-						date_default_timezone_set($_SESSION['time_zone']['system']);
-					//create the api record command and send it over event socket
-						$switch_cmd = "api uuid_record ".$uuid." start ".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d")."/".$uuid.".wav";
-						$result2 = trim(event_socket_request($fp, $switch_cmd));
+			else {
+				//local extension (source) > external number (destination)
+				if (strlen($src) < 7 && strlen($dest_cid_number) == 0) {
+					//retrieve outbound caller id from the (source) extension
+					$sql = "select outbound_caller_id_name, outbound_caller_id_number from v_extensions where domain_uuid = '".$_SESSION['domain_uuid']."' and extension = '".$src."' ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					foreach ($result as &$row) {
+						$dest_cid_name = $row["outbound_caller_id_name"];
+						$dest_cid_number = $row["outbound_caller_id_number"];
+						break; //limit to 1 row
+					}
+					unset ($prep_statement);
+				}
+				if (permission_exists('click_to_call_call')) {
+					if (strpbrk($dest, '@') != FALSE) { //sip-uri
+						$switch_cmd = $destination_common.",call_direction=outbound}sofia/external/".$dest.")";
+					}
+					else { //not sip-uri
+						$bridge_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $dest);
+						//$switch_cmd = $destination_common."}".$bridge_array[0].")";  // wouldn't set cdr destination correctly, so below used instead
+						$switch_cmd = " &transfer('".$dest." XML ".$context."')";
+					}
 				}
 			}
-			echo "<div align='center'><br />".$result."<br /><br /></div>\n";
-		}
-}
+			unset($destination_common);
+
+		//create the even socket connection and send the event socket command
+			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			if (!$fp) {
+				//error message
+				echo "<div align='center'><strong>Connection to Event Socket failed.</strong></div>";
+			}
+			else {
+				//display the last command
+					$switch_cmd = "api originate ".$source.$switch_cmd;
+					echo "<div align='center'>".$switch_cmd."<br /><br /><strong>".$src." has called ".$dest."</strong></div>\n";
+				//show the command result
+				$result = trim(event_socket_request($fp, $switch_cmd));
+				if (substr($result, 0,3) == "+OK") {
+					//$uuid = substr($result, 4);
+					if ($rec == "true") {
+						//use the server's time zone to ensure it matches the time zone used by freeswitch
+							date_default_timezone_set($_SESSION['time_zone']['system']);
+						//create the api record command and send it over event socket
+							$switch_cmd = "api uuid_record ".$origination_uuid." start ".$record_path."/".$record_name;
+							$result2 = trim(event_socket_request($fp, $switch_cmd));
+					}
+				}
+				echo "<div align='center'><br />".$result."<br /><br /></div>\n";
+			}
+	}
 
 //show html form
 	echo "	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
@@ -201,12 +251,12 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 
 	echo "	<br />";
 
-	echo "<form>\n";
+	echo "<form method=\"get\">\n";
 	echo "<table border='0' width='100%' cellpadding='0' cellspacing='0'\n";
 	echo "<tr>\n";
 	echo "	<td class='vncellreq' width='40%'>".$text['label-src-caller-id-nam']."</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
-	echo "		<input name=\"src_cid_name\" value='$src_cid_name' class='formfld'>\n";
+	echo "		<input name=\"src_cid_name\" value='".escape($src_cid_name)."' class='formfld'>\n";
 	echo "		<br />\n";
 	echo "		".$text['desc-src-caller-id-nam']."\n";
 	echo "	</td>\n";
@@ -215,7 +265,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	echo "<tr>\n";
 	echo "	<td class='vncellreq'>".$text['label-src-caller-id-num']."</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
-	echo "		<input name=\"src_cid_number\" value='$src_cid_number' class='formfld'>\n";
+	echo "		<input name=\"src_cid_number\" value='".escape($src_cid_number)."' class='formfld'>\n";
 	echo "		<br />\n";
 	echo "		".$text['desc-src-caller-id-num']."\n";
 	echo "	</td>\n";
@@ -224,7 +274,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	echo "<tr>\n";
 	echo "	<td class='vncell' width='40%'>".$text['label-dest-caller-id-nam']."</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
-	echo "		<input name=\"dest_cid_name\" value='$dest_cid_name' class='formfld'>\n";
+	echo "		<input name=\"dest_cid_name\" value='".escape($dest_cid_name)."' class='formfld'>\n";
 	echo "		<br />\n";
 	echo "		".$text['desc-dest-caller-id-nam']."\n";
 	echo "	</td>\n";
@@ -233,7 +283,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	echo "<tr>\n";
 	echo "	<td class='vncell'>".$text['label-dest-caller-id-num']."</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
-	echo "		<input name=\"dest_cid_number\" value='$dest_cid_number' class='formfld'>\n";
+	echo "		<input name=\"dest_cid_number\" value='".escape($dest_cid_number)."' class='formfld'>\n";
 	echo "		<br />\n";
 	echo "		".$text['desc-dest-caller-id-num']."\n";
 	echo "	</td>\n";
@@ -344,6 +394,12 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	else {
 		echo "    <option value='rs-ring'>".$text['opt-rsring']."</option>\n";
 	}
+	if ($ringback == "ru-ring") {
+		echo "    <option value='ru-ring' selected='selected'>".$text['opt-ruring']."</option>\n";
+	}
+	else {
+		echo "    <option value='ru-ring'>".$text['opt-ruring']."</option>\n";
+	}
 	if ($ringback == "it-ring") {
 		echo "    <option value='it-ring' selected='selected'>".$text['opt-itring']."</option>\n";
 	}
@@ -374,4 +430,5 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 
 //show the footer
 	require_once "resources/footer.php";
+
 ?>

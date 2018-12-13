@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -27,9 +27,9 @@
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
-	require_once "resources/check_auth.php";
 
 //check permissions
+	require_once "resources/check_auth.php";
 	if (permission_exists('conference_center_add') || permission_exists('conference_center_edit')) {
 		//access granted
 	}
@@ -52,30 +52,27 @@
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST) > 0) {
+	if (is_array($_POST)) {
+		$conference_center_uuid = check_str($_POST["conference_center_uuid"]);
 		$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
 		$conference_center_name = check_str($_POST["conference_center_name"]);
 		$conference_center_extension = check_str($_POST["conference_center_extension"]);
 		$conference_center_greeting = check_str($_POST["conference_center_greeting"]);
 		$conference_center_pin_length = check_str($_POST["conference_center_pin_length"]);
-		$conference_center_description = check_str($_POST["conference_center_description"]);
 		$conference_center_enabled = check_str($_POST["conference_center_enabled"]);
-
-		//sanitize the conference name
-		$conference_center_name = preg_replace("/[^A-Za-z0-9\- ]/", "", $conference_center_name);
-		$conference_center_name = str_replace(" ", "-", $conference_center_name);
+		$conference_center_description = check_str($_POST["conference_center_description"]);
 	}
 
-//process user data
-	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+//process the user data and save it to the database
+	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
-		//get the id
+		//get the uuid from the POST
 			if ($action == "update") {
 				$conference_center_uuid = check_str($_POST["conference_center_uuid"]);
 			}
 
 		//check for all required data
-					$msg = '';
+			$msg = '';
 			//if (strlen($dialplan_uuid) == 0) { $msg .= "Please provide: Dialplan UUID<br>\n"; }
 			if (strlen($conference_center_name) == 0) { $msg .= "Please provide: Name<br>\n"; }
 			if (strlen($conference_center_extension) == 0) { $msg .= "Please provide: Extension<br>\n"; }
@@ -96,163 +93,118 @@
 				return;
 			}
 
-		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+		//set the domain_uuid
+			$_POST["domain_uuid"] = $_SESSION["domain_uuid"];
+
+		//add the conference_center_uuid
+			if (!isset($_POST["conference_center_uuid"])) {
+				$conference_center_uuid = uuid();
+				$_POST["conference_center_uuid"] = $conference_center_uuid;
+			}
+
+		//add the dialplan_uuid
+			if (!isset($_POST["dialplan_uuid"])) {
+				$dialplan_uuid = uuid();
+				$_POST["dialplan_uuid"] = $dialplan_uuid;
+			}
+
+		//build the xml dialplan
+			$dialplan_xml = "<extension name=\"".$conference_center_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
+			if ($conference_center_pin_length > 1 && $conference_center_pin_length < 4) {
+				$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^(".$conference_center_extension.")(\d{".$conference_center_pin_length."})$\" break=\"on-true\">\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"destination_number=$1\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"pin_number=$2\"/>\n";
+				$dialplan_xml .= "		<action application=\"lua\" data=\"app.lua conference_center\"/>\n";
+				$dialplan_xml .= "	</condition>\n";
+			}
+			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$conference_center_extension."$\">\n";
+			$dialplan_xml .= "		<action application=\"lua\" data=\"app.lua conference_center\"/>\n";
+			$dialplan_xml .= "	</condition>\n";
+			$dialplan_xml .= "</extension>\n";
+
+		//build the dialplan array
+			$dialplan["domain_uuid"] = $_SESSION['domain_uuid'];
+			$dialplan["dialplan_uuid"] = $dialplan_uuid;
+			$dialplan["dialplan_name"] = $conference_center_name;
+			$dialplan["dialplan_number"] = $conference_center_extension;
+			$dialplan["dialplan_context"] = $_SESSION['context'];
+			$dialplan["dialplan_continue"] = "false";
+			$dialplan["dialplan_xml"] = $dialplan_xml;
+			$dialplan["dialplan_order"] = "333";
+			$dialplan["dialplan_enabled"] = $conference_center_enabled;
+			$dialplan["dialplan_description"] = $conference_center_description;
+			$dialplan["app_uuid"] = "b81412e8-7253-91f4-e48e-42fc2c9a38d9";
+
+		//prepare the array
+			$array['conference_centers'][] = $_POST;
+			$array['dialplans'][] = $dialplan;
+
+		//add the dialplan permission
+			$p = new permissions;
+			$p->add("dialplan_add", "temp");
+			$p->add("dialplan_edit", "temp");
+
+		//save to the data
+			$database = new database;
+			$database->app_name = "conference_centers";
+			$database->app_uuid = "b81412e8-7253-91f4-e48e-42fc2c9a38d9";
+			if (strlen($conference_center_uuid) > 0) {
+				$database->uuid($conference_center_uuid);
+			}
+			$database->save($array);
+			$message = $database->message;
+
+		//remove the temporary permission
+			$p->delete("dialplan_add", "temp");
+			$p->delete("dialplan_edit", "temp");
+
+		//debug information
+			//echo "<pre>\n";
+			//print_r($message);
+			//echo "</pre>\n";
+			//exit;
+
+		//syncrhonize configuration
+			save_dialplan_xml();
+
+		//apply settings reminder
+			$_SESSION["reload_xml"] = true;
+
+		//clear the cache
+			$cache = new cache;
+			$cache->delete("dialplan:".$_SESSION["context"]);
+
+		//redirect the user
+			if (isset($action)) {
 				if ($action == "add") {
-					//prepare the uuids
-						$conference_center_uuid = uuid();
-						$dialplan_uuid = uuid();
-					//add the conference
-						$sql = "insert into v_conference_centers ";
-						$sql .= "(";
-						$sql .= "domain_uuid, ";
-						$sql .= "conference_center_uuid, ";
-						$sql .= "dialplan_uuid, ";
-						$sql .= "conference_center_name, ";
-						$sql .= "conference_center_extension, ";
-						$sql .= "conference_center_pin_length, ";
-						$sql .= "conference_center_greeting, ";
-						$sql .= "conference_center_description, ";
-						$sql .= "conference_center_enabled ";
-						$sql .= ")";
-						$sql .= "values ";
-						$sql .= "(";
-						$sql .= "'$domain_uuid', ";
-						$sql .= "'$conference_center_uuid', ";
-						$sql .= "'$dialplan_uuid', ";
-						$sql .= "'$conference_center_name', ";
-						$sql .= "'$conference_center_extension', ";
-						$sql .= "'$conference_center_pin_length', ";
-						$sql .= "'$conference_center_greeting', ";
-						$sql .= "'$conference_center_description', ";
-						$sql .= "'$conference_center_enabled' ";
-						$sql .= ")";
-						$db->exec(check_sql($sql));
-						unset($sql);
-
-					//create the dialplan entry
-						$dialplan_name = $conference_center_name;
-						$dialplan_order ='333';
-						$dialplan_context = $_SESSION['context'];
-						$dialplan_enabled = 'true';
-						$dialplan_description = $conference_center_description;
-						$app_uuid = 'b81412e8-7253-91f4-e48e-42fc2c9a38d9';
-						dialplan_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_name, $dialplan_order, $dialplan_context, $dialplan_enabled, $dialplan_description, $app_uuid);
-
-						//<condition destination_number="500" />
-						$dialplan_detail_tag = 'condition'; //condition, action, antiaction
-						$dialplan_detail_type = 'destination_number';
-						$dialplan_detail_data = '^'.$conference_center_extension.'$';
-						$dialplan_detail_order = '010';
-						$dialplan_detail_group = '2';
-						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-
-						//<action application="lua" />
-						$dialplan_detail_tag = 'action'; //condition, action, antiaction
-						$dialplan_detail_type = 'lua';
-						$dialplan_detail_data = 'app.lua conference_center';
-						$dialplan_detail_order = '020';
-						$dialplan_detail_group = '2';
-						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-
-					//save the xml
-						save_dialplan_xml();
-
-					$_SESSION["message"] = $text['message-add'];
-					header("Location: conference_centers.php");
-					return;
-				} //if ($action == "add")
-
+					message::add($text['message-add']);
+				}
 				if ($action == "update") {
-					//update the conference center extension
-						$sql = "update v_conference_centers set ";
-						$sql .= "conference_center_name = '$conference_center_name', ";
-						$sql .= "conference_center_extension = '$conference_center_extension', ";
-						$sql .= "conference_center_pin_length = '$conference_center_pin_length', ";
-						$sql .= "conference_center_greeting = '$conference_center_greeting', ";
-						$sql .= "conference_center_description = '$conference_center_description', ";
-						$sql .= "conference_center_enabled = '$conference_center_enabled' ";
-						$sql .= "where domain_uuid = '$domain_uuid' ";
-						$sql .= "and conference_center_uuid = '$conference_center_uuid'";
-						$db->exec(check_sql($sql));
-						unset($sql);
-
-					//udpate the conference center dialplan
-						$sql = "update v_dialplans set ";
-						$sql .= "dialplan_name = '$conference_center_name', ";
-						if (strlen($dialplan_order) > 0) {
-							$sql .= "dialplan_order = '333', ";
-						}
-						$sql .= "dialplan_context = '".$_SESSION['context']."', ";
-						$sql .= "dialplan_enabled = 'true', ";
-						$sql .= "dialplan_description = '$conference_center_description' ";
-						$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-						$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-						$db->query($sql);
-						unset($sql);
-
-					//update dialplan detail condition
-						$sql = "update v_dialplan_details set ";
-						$sql .= "dialplan_detail_data = '^".$conference_center_extension."$' ";
-						$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-						$sql .= "and dialplan_detail_tag = 'condition' ";
-						$sql .= "and dialplan_detail_type = 'destination_number' ";
-						$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-						$db->query($sql);
-						unset($sql);
-
-					//update dialplan detail action
-						$dialplan_detail_type = 'lua';
-						$dialplan_detail_data = 'app.lua conference_center';
-						$sql = "update v_dialplan_details set ";
-						$sql .= "dialplan_detail_type = '".$dialplan_detail_type."', ";
-						$sql .= "dialplan_detail_data = '".$dialplan_detail_data."' ";
-						$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-						$sql .= "and dialplan_detail_tag = 'action' ";
-						$sql .= "and dialplan_detail_type = 'lua' ";
-						$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-						$db->query($sql);
-
-					//syncrhonize configuration
-						save_dialplan_xml();
-
-					//apply settings reminder
-						$_SESSION["reload_xml"] = true;
-
-					//clear the cache
-						$cache = new cache;
-						$cache->delete("dialplan:".$_SESSION["context"]);
-
-					//redirect the browser
-						$_SESSION["message"] = $text['message-update'];
-						header("Location: conference_centers.php");
-						return;
-				} //if ($action == "update")
-			} //if ($_POST["persistformvar"] != "true")
-	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
-
-//function to show the list of sound files
-	// moved to functions.php
+					message::add($text['message-update']);
+				}
+				header("Location: conference_centers.php");
+				return;
+			}
+	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
-		$conference_center_uuid = $_GET["id"];
+	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+		$conference_center_uuid = check_str($_GET["id"]);
 		$sql = "select * from v_conference_centers ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and conference_center_uuid = '$conference_center_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
-		$result = $prep_statement->fetchAll();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
+			$conference_center_uuid = $row["conference_center_uuid"];
 			$dialplan_uuid = $row["dialplan_uuid"];
 			$conference_center_name = $row["conference_center_name"];
-			$conference_center_greeting = $row["conference_center_greeting"];
 			$conference_center_extension = $row["conference_center_extension"];
+			$conference_center_greeting = $row["conference_center_greeting"];
 			$conference_center_pin_length = $row["conference_center_pin_length"];
-			$conference_center_order = $row["conference_center_order"];
-			$conference_center_description = $row["conference_center_description"];
 			$conference_center_enabled = $row["conference_center_enabled"];
-			$conference_center_name = str_replace("-", " ", $conference_center_name);
+			$conference_center_description = $row["conference_center_description"];
 		}
 		unset ($prep_statement);
 	}
@@ -271,60 +223,62 @@
 
 //get the phrases
 	$sql = "select * from v_phrases ";
-	$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
+	$sql .= "where (domain_uuid = '".$_SESSION["domain_uuid"]."' or domain_uuid is null) ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$phrases = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+
+//get the streams
+	$sql = "select * from v_streams ";
+	$sql .= "where (domain_uuid = '".$_SESSION["domain_uuid"]."' or domain_uuid is null) ";
+	$sql .= "and stream_enabled = 'true' ";
+	$sql .= "order by stream_name asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$streams = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
 //show the header
 	require_once "resources/header.php";
 
 //show the content
-	echo "<form method='post' name='frm' action=''>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-conference_center']."</b></td>\n";
-	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='conference_centers.php'\" value='".$text['button-back']."'>\n";
-	if (permission_exists('conference_active_advanced_view')) {
-		echo "	<input type='button' class='btn' name='' alt='".$text['button-view']."' onclick=\"window.location='".PROJECT_PATH."/app/conferences_active/conferences_active.php'\" value='".$text['button-view']."'>\n";
-	}
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
-	echo "<br />";
-	echo $text['description-conference_center']."\n";
-	echo "<br /><br />\n";
-
+	echo "<form name='frm' id='frm' method='post' action=''>\n";
 	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-name']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='conference_center_name' maxlength='255' value=\"$conference_center_name\">\n";
-	echo "	<br />\n";
-	echo "	".$text['description-name']."\n";
+	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-conference_center']."</b><br><br></td>\n";
+	echo "<td width='70%' align='right' valign='top'>\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='conference_centers.php'\" value='".$text['button-back']."'>";
+	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-extension']."\n";
+	echo "	".$text['label-conference_center_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='conference_center_extension' maxlength='255' value=\"$conference_center_extension\">\n";
-	echo "	<br />\n";
-	echo " ".$text['description-extension']."\n";
+	echo "	<input class='formfld' type='text' name='conference_center_name' maxlength='255' value=\"".escape($conference_center_name)."\">\n";
+	echo "<br />\n";
+	echo $text['description-conference_center_name']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-conference_center_extension']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='conference_center_extension' maxlength='255' value=\"".escape($conference_center_extension)."\">\n";
+	echo "<br />\n";
+	echo $text['description-conference_center_extension']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-greeting']."\n";
+	echo "	".$text['label-conference_center_greeting']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
+	//echo "	<input class='formfld' type='text' name='conference_center_greeting' maxlength='255' value=\"".escape($conference_center_greeting)."\">\n";
 	if (permission_exists('conference_center_add') || permission_exists('conference_center_edit')) {
 		echo "<script>\n";
 		echo "var Objs;\n";
@@ -356,14 +310,12 @@
 		echo "</script>\n";
 		echo "\n";
 	}
-
 	echo "	<select name='conference_center_greeting' class='formfld' ".((permission_exists('conference_center_add') || permission_exists('conference_center_edit')) ? "onchange='changeToInput(this);'" : null).">\n";
 	echo "		<option></option>\n";
-
 	//recordings
 		$tmp_selected = false;
 		if (is_array($recordings)) {
-			echo "<optgroup label='Recordings'>\n";
+			echo "<optgroup label='".$text['label-recordings']."'>\n";
 			foreach ($recordings as &$row) {
 				$recording_name = $row["recording_name"];
 				$recording_filename = $row["recording_filename"];
@@ -372,17 +324,17 @@
 				if ($conference_center_greeting == $recording_path."/".$recording_filename) {
 					$selected = "selected='selected'";
 				}
-				echo "	<option value='".$recording_path."/".$recording_filename."' ".$selected.">".$recording_name."</option>\n";
+				echo "	<option value='".escape($recording_path)."/".escape($recording_filename)."' ".escape($selected).">".escape($recording_name)."</option>\n";
 				unset($selected);
 			}
 			echo "</optgroup>\n";
 		}
 	//phrases
 		if (count($phrases) > 0) {
-			echo "<optgroup label='Phrases'>\n";
+			echo "<optgroup label='".$text['label-phrases']."'>\n";
 			foreach ($phrases as &$row) {
 				$selected = ($conference_center_greeting == "phrase:".$row["phrase_uuid"]) ? true : false;
-				echo "	<option value='phrase:".$row["phrase_uuid"]."' ".(($selected) ? "selected='selected'" : null).">".$row["phrase_name"]."</option>\n";
+				echo "	<option value='phrase:".escape($row["phrase_uuid"])."' ".(($selected) ? "selected='selected'" : null).">".escape($row["phrase_name"])."</option>\n";
 				if ($selected) { $tmp_selected = true; }
 			}
 			unset ($prep_statement);
@@ -392,14 +344,14 @@
 		$file = new file;
 		$sound_files = $file->sounds();
 		if (is_array($sound_files)) {
-			echo "<optgroup label='Sounds'>\n";
+			echo "<optgroup label='".$text['label-sounds']."'>\n";
 			foreach ($sound_files as $key => $value) {
 				if (strlen($value) > 0) {
 					if (substr($conference_center_greeting, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
 						$conference_center_greeting = substr($conference_center_greeting, 71);
 					}
 					$selected = ($conference_center_greeting == $value) ? true : false;
-					echo "	<option value='".$value."' ".(($selected) ? "selected='selected'" : null).">".$value."</option>\n";
+					echo "	<option value='".escape($value)."' ".(($selected) ? "selected='selected'" : null).">".escape($value)."</option>\n";
 					if ($selected) { $tmp_selected = true; }
 				}
 			}
@@ -411,13 +363,13 @@
 				if (!$tmp_selected) {
 					echo "<optgroup label='selected'>\n";
 					if (file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$conference_center_greeting)) {
-						echo "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$conference_center_greeting."' selected='selected'>".$ivr_menu_greet_long."</option>\n";
+						echo "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".escape($conference_center_greeting)."' selected='selected'>".escape($ivr_menu_greet_long)."</option>\n";
 					}
 					else if (substr($conference_center_greeting, -3) == "wav" || substr($conference_center_greeting, -3) == "mp3") {
-						echo "		<option value='".$conference_center_greeting."' selected='selected'>".$conference_center_greeting."</option>\n";
+						echo "		<option value='".escape($conference_center_greeting)."' selected='selected'>".escape($conference_center_greeting)."</option>\n";
 					}
 					else {
-						echo "		<option value='".$conference_center_greeting."' selected='selected'>".$conference_center_greeting."</option>\n";
+						echo "		<option value='".escape($conference_center_greeting)."' selected='selected'>".escape($conference_center_greeting)."</option>\n";
 					}
 					echo "</optgroup>\n";
 				}
@@ -425,28 +377,29 @@
 			}
 		}
 	echo "	</select>\n";
-	echo "<br />\n";
-	echo $text['description-greeting']."\n";
+	echo "	<br />\n";
+	echo "	".$text['description-conference_center_greeting']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-pin-length']."\n";
+	echo "	".$text['label-conference_center_pin_length']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='conference_center_pin_length' maxlength='255' value=\"$conference_center_pin_length\">\n";
-	echo "	<br />\n";
-	echo "	".$text['description-pin-length']."\n";
+	echo "  <input class='formfld' type='text' name='conference_center_pin_length' maxlength='255' value='".escape($conference_center_pin_length)."'>\n";
+	echo "<br />\n";
+	echo $text['description-conference_center_pin_length']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-enabled']."\n";
+	echo "	".$text['label-conference_center_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='conference_center_enabled'>\n";
+	echo "	<option value=''></option>\n";
 	if ($conference_center_enabled == "true") {
 		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
@@ -460,36 +413,35 @@
 		echo "	<option value='false'>".$text['label-false']."</option>\n";
 	}
 	echo "	</select>\n";
-	echo "	<br />\n";
-	echo "	".$text['description-enabled']."\n";
+	echo "<br />\n";
+	echo $text['description-conference_center_enabled']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-description']."\n";
+	echo "	".$text['label-conference_center_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='conference_center_description' maxlength='255' value=\"$conference_center_description\">\n";
-	echo "	<br />\n";
-	echo "	".$text['description-description']."\n";
+	echo "	<input class='formfld' type='text' name='conference_center_description' maxlength='255' value=\"".escape($conference_center_description)."\">\n";
+	echo "<br />\n";
+	echo $text['description-conference_center_description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='dialplan_uuid' value=\"$dialplan_uuid\">\n";
-		echo "		<input type='hidden' name='conference_center_uuid' value='$conference_center_uuid'>\n";
+		echo "			<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
+		echo "			<input type='hidden' name='conference_center_uuid' value='".escape($conference_center_uuid)."'>\n";
 	}
-	echo "			<br>";
-	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
-	echo "<br><br>";
 	echo "</form>";
+	echo "<br /><br />";
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

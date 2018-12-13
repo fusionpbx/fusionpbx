@@ -1,6 +1,6 @@
 --      xml_handler.lua
 --      Part of FusionPBX
---      Copyright (C) 2016 Mark J Crane <markjcrane@fusionpbx.com>
+--      Copyright (C) 2016-2018 Mark J Crane <markjcrane@fusionpbx.com>
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -30,16 +30,27 @@
 	local log = require "resources.functions.log".ivr_menu
 
 --get the cache
-	if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
-		XML_STRING = trim(api:execute("memcache", "get configuration:ivr.conf:" .. ivr_menu_uuid));
-	else
-		XML_STRING = "-ERR NOT FOUND";
-	end
+	local cache = require "resources.functions.cache"
+	local ivr_menu_cache_key = "configuration:ivr.conf:" .. ivr_menu_uuid
+	XML_STRING, err = cache.get(ivr_menu_cache_key)
 
 --set the cache
-	if (XML_STRING == "-ERR NOT FOUND" or XML_STRING == "-ERR CONNECTION FAILURE") then
+	if not XML_STRING  then
+		--log cache error
+			if (debug["cache"]) then
+				freeswitch.consoleLog("warning", "[xml_handler] " .. ivr_menu_cache_key .. " can not be get from the cache: " .. tostring(err) .. "\n");
+			end
+
+		--required includes
 			local Database = require "resources.functions.database"
 			local Settings = require "resources.functions.lazy_settings"
+			local json
+			if (debug["sql"]) then
+				json = require "resources.functions.lunajson"
+			end
+
+		--set the sound prefix
+			sound_prefix = sounds_dir.."/${default_language}/${default_dialect}/${default_voice}/";
 
 		--connect to the database
 			local dbh = Database.new('system');
@@ -48,14 +59,15 @@
 			assert(dbh:connected());
 
 		--get the ivr menu from the database
-			sql = [[SELECT * FROM v_ivr_menus
-				WHERE ivr_menu_uuid = ']] .. ivr_menu_uuid ..[['
+			local sql = [[SELECT * FROM v_ivr_menus
+				WHERE ivr_menu_uuid = :ivr_menu_uuid
 				AND ivr_menu_enabled = 'true' ]];
+			local params = {ivr_menu_uuid = ivr_menu_uuid};
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "\n");
+				freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 			end
 
-			status = dbh:query(sql, function(row)
+			dbh:query(sql, params, function(row)
 				domain_uuid = row["domain_uuid"];
 				ivr_menu_name = row["ivr_menu_name"];
 				ivr_menu_extension = row["ivr_menu_extension"];
@@ -83,7 +95,11 @@
 
 			local settings = Settings.new(dbh, domain_name, domain_uuid)
 			local storage_type = settings:get('recordings', 'storage_type', 'text')
-
+			local storage_path = settings:get('recordings', 'storage_path', 'text')
+			if (storage_path ~= nil) then
+				storage_path = storage_path:gsub("${domain_name}", domain_name)
+				storage_path = storage_path:gsub("${domain_uuid}", domain_uuid)
+			end
 		--get the recordings from the database
 			ivr_menu_greet_long_is_base64 = false;
 			ivr_menu_greet_short_is_base64 = false;
@@ -101,27 +117,27 @@
 
 				--function to get recording to local fs
 					local function load_record(name)
-						local path, is_base64 = base_path .. "/" .. name
+						local path = base_path .. "/" .. name;
+						local is_base64 = false;
 
 						if not file_exists(path) then
 							local sql = "SELECT recording_base64 FROM v_recordings " .. 
-								"WHERE domain_uuid = '" .. domain_uuid .. "' " ..
-								"AND recording_filename = '" .. name .. "' "
+								"WHERE domain_uuid = :domain_uuid " ..
+								"AND recording_filename = :name "
+							local params = {domain_uuid = domain_uuid, name = name};
 							if (debug["sql"]) then
-								freeswitch.consoleLog("notice", "[ivr_menu] SQL: "..sql.."\n");
+								freeswitch.consoleLog("notice", "[ivr_menu] SQL: "..sql.."; params:" .. json.encode(params) .. "\n");
 							end
 
-							dbh:query(sql, function(row)
-							--get full path to recording
-								is_base64, name = true, path
-
-							--save the recording to the file system
+							dbh:query(sql, params, function(row)
+								--save the recording to the file system
 								if #row.recording_base64 > 32 then
+									is_base64 = true;
 									file.write_base64(path, row.recording_base64);
+									--add the full path and file name
+									name = path;
 								end
 							end);
-						else
-							name = path
 						end
 						return name, is_base64
 					end
@@ -167,10 +183,10 @@
 		--greet short
 			if (string.len(ivr_menu_greet_short) > 1) then
 				if (not ivr_menu_greet_short_is_base64 and not file_exists(ivr_menu_greet_short)) then
-					if (file_exists(recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_long)) then
-						ivr_menu_greet_short = recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_long;
-					elseif (file_exists(sounds_dir.."/en/us/callie/8000/"..ivr_menu_greet_long)) then
-						ivr_menu_greet_short = sounds_dir.."/${default_language}/${default_dialect}/${default_voice}/"..ivr_menu_greet_long;
+					if (file_exists(recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_short)) then
+						ivr_menu_greet_short = recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_short;
+					elseif (file_exists(sounds_dir.."/en/us/callie/8000/"..ivr_menu_greet_short)) then
+						ivr_menu_greet_short = sounds_dir.."/${default_language}/${default_dialect}/${default_voice}/"..ivr_menu_greet_short;
 					end
 				end
 			else
@@ -221,25 +237,26 @@
 			table.insert(xml, [[				digit-len="]]..ivr_menu_digit_len..[[" ]]);
 			table.insert(xml, [[				>]]);
 
-		--direct dial
-			if (ivr_menu_direct_dial == "true") then
-				table.insert(xml, [[<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="set ${cond(${user_exists id $1 ]]..domain_name..[[} == true ? user_exists=true : user_exists=false)}" description="direct dial"/>\n]]);
-				table.insert(xml, [[<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="playback ${cond(${user_exists} == true ? ivr/ivr-call_being_transferred.wav : ivr/ivr-that_was_an_invalid_entry.wav)}" description="direct dial"/>\n]]);
-				table.insert(xml, [[<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="transfer ${cond(${user_exists} == true ? $1 XML ]]..domain_name..[[ : ]]..ivr_menu_extension..[[ XML ]]..domain_name..[[)}" description="direct dial"/>\n]]);
-			end
-
 		--get the ivr menu options
-			sql = [[SELECT * FROM v_ivr_menu_options WHERE ivr_menu_uuid = ']] .. ivr_menu_uuid ..[[' ORDER BY ivr_menu_option_order asc ]];
+			local sql = [[SELECT * FROM v_ivr_menu_options WHERE ivr_menu_uuid = :ivr_menu_uuid ORDER BY ivr_menu_option_order asc ]];
+			local params = {ivr_menu_uuid = ivr_menu_uuid};
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "\n");
+				freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 			end
-			status = dbh:query(sql, function(r)
+			dbh:query(sql, params, function(r)
 				ivr_menu_option_digits = r.ivr_menu_option_digits
 				ivr_menu_option_action = r.ivr_menu_option_action
 				ivr_menu_option_param = r.ivr_menu_option_param
 				ivr_menu_option_description = r.ivr_menu_option_description
 				table.insert(xml, [[					<entry action="]]..ivr_menu_option_action..[[" digits="]]..ivr_menu_option_digits..[[" param="]]..ivr_menu_option_param..[[" description="]]..ivr_menu_option_description..[["/>]]);
 			end);
+
+		--direct dial
+			if (ivr_menu_direct_dial == "true") then
+				table.insert(xml, [[					<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="set ${cond(${user_exists id $1 ]]..domain_name..[[} == true ? user_exists=true : user_exists=false)}" description="direct dial"/>\n]]);
+				table.insert(xml, [[					<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="playback ${cond(${user_exists} == true ? ]]..sound_prefix..[[ivr/ivr-call_being_transferred.wav : ]]..sound_prefix..[[ivr/ivr-that_was_an_invalid_entry.wav)}" description="direct dial"/>\n]]);
+				table.insert(xml, [[					<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="transfer ${cond(${user_exists} == true ? $1 XML ]]..domain_name..[[)}" description="direct dial"/>\n]]);
+			end
 
 		--close the extension tag if it was left open
 			table.insert(xml, [[				</menu>]]);
@@ -257,25 +274,30 @@
 			--freeswitch.consoleLog("notice", "[xml_handler]"..api:execute("eval ${dsn}"));
 
 		--set the cache
-			result = trim(api:execute("memcache", "set configuration:ivr.conf:".. ivr_menu_uuid .." '"..XML_STRING:gsub("'", "&#39;").."' ".."expire['ivr.conf']"));
+			local ok, err = cache.set(ivr_menu_uuid, XML_STRING, expire["ivr"]);
+			if debug["cache"] then
+				if ok then
+					freeswitch.consoleLog("notice", "[xml_handler] " .. ivr_menu_uuid .. " stored in the cache\n");
+				else
+					freeswitch.consoleLog("warning", "[xml_handler] " .. ivr_menu_uuid .. " can not be stored in the cache: " .. tostring(err) .. "\n");
+				end
+			end
 
 		--send the xml to the console
 			if (debug["xml_string"]) then
-				local file = assert(io.open(temp_dir .. "/ivr.conf.xml", "w"));
+				local file = assert(io.open(temp_dir .. "/ivr-"..ivr_menu_uuid..".conf.xml", "w"));
 				file:write(XML_STRING);
 				file:close();
 			end
 
 		--send to the console
 			if (debug["cache"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] configuration:ivr.conf:" .. ivr_menu_uuid .." source: database\n");
+				freeswitch.consoleLog("notice", "[xml_handler] " .. ivr_menu_cache_key .. " source: database\n");
 			end
 
 	else
-		--replace the &#39 back to a single quote
-			XML_STRING = XML_STRING:gsub("&#39;", "'");
 		--send to the console
 			if (debug["cache"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] configuration:ivr.conf" .. ivr_menu_uuid .." source: memcache\n");
+				freeswitch.consoleLog("notice", "[xml_handler] " .. ivr_menu_cache_key .. " source: cache\n");
 			end
 	end --if XML_STRING

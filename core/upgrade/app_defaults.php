@@ -85,7 +85,7 @@ if ($domains_processed == 1) {
 				$sql .= ")";
 				$sql .= "values ";
 				$sql .= "(";
-				$sql .= "'".uuid()."', ";
+				$sql .= "'e2bff94b-2c68-45ee-9141-d4cdb437c644', ";
 				$sql .= "'login', ";
 				$sql .= "'message', ";
 				$sql .= "'text', ";

@@ -90,7 +90,7 @@ else {
 	}
 
 //redirect the browser
-	$_SESSION["message"] = $text['message-delete'];
+	message::add($text['message-delete']);
 	header("Location: conference_centers.php");
 	return;
 

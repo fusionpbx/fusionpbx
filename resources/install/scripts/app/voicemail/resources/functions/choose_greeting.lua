@@ -40,11 +40,13 @@
 		--check to see if the greeting file exists
 			if (storage_type == "base64" or storage_type == "http_cache") then
 				greeting_invalid = true;
-				sql = [[SELECT * FROM v_voicemail_greetings
-					WHERE domain_uuid = ']] .. domain_uuid ..[['
-					AND voicemail_id = ']].. voicemail_id.. [['
-					AND greeting_id = ']].. greeting_id.. [[' ]];
-				status = dbh:query(sql, function(row)
+				local sql = [[SELECT * FROM v_voicemail_greetings
+					WHERE domain_uuid = :domain_uuid
+					AND voicemail_id = :voicemail_id
+					AND greeting_id = :greeting_id]];
+				local params = {domain_uuid = domain_uuid, voicemail_id = voicemail_id,
+					greeting_id = greeting_id};
+				dbh:query(sql, params, function(row)
 					--greeting found
 					greeting_invalid = false;
 				end);
@@ -74,31 +76,39 @@
 
 				--valid greeting_id update the database
 					if (session:ready()) then
+						local params = {domain_uuid = domain_uuid, voicemail_uuid = voicemail_uuid};
+						local sql = "UPDATE v_voicemails SET "
 						if (greeting_id == "0") then
-							sql = [[UPDATE v_voicemails SET greeting_id = null ]];
+							sql = sql .. "greeting_id = null ";
 						else
-							sql = [[UPDATE v_voicemails SET greeting_id = ']]..greeting_id..[[' ]];
+							sql = sql .. "greeting_id = :greeting_id ";
+							params.greeting_id = greeting_id;
 						end
-						sql = sql ..[[WHERE domain_uuid = ']] .. domain_uuid ..[[' ]]
-						sql = sql ..[[AND voicemail_uuid = ']] .. voicemail_uuid ..[[' ]];
+						sql = sql .. "WHERE domain_uuid = :domain_uuid ";
+						sql = sql .. "AND voicemail_uuid = :voicemail_uuid ";
 						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 						end
-						dbh:query(sql);
+						dbh:query(sql, params);
 					end
 
 				--get the greeting from the database
 					if (storage_type == "base64") then
 						local dbh = Database.new('system', 'base64/read')
-
-						sql = [[SELECT * FROM v_voicemail_greetings
-							WHERE domain_uuid = ']] .. domain_uuid ..[['
-							AND voicemail_id = ']].. voicemail_id.. [['
-							AND greeting_id = ']].. greeting_id.. [[' ]];
+						local sql = [[SELECT greeting_base64
+							FROM v_voicemail_greetings
+							WHERE domain_uuid = :domain_uuid
+							AND voicemail_id = :voicemail_id
+							AND greeting_id = :greeting_id]];
+						local params = {
+							domain_uuid = domain_uuid;
+							voicemail_id = voicemail_id;
+							greeting_id = greeting_id;
+						};
 						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 						end
-						status = dbh:query(sql, function(row)
+						dbh:query(sql, params, function(row)
 							--set the voicemail message path
 								greeting_location = voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav"; --vm_message_ext;
 

@@ -17,23 +17,27 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('call_broadcast_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('call_broadcast_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -46,6 +50,46 @@ else {
 	}
 	else {
 		$action = "add";
+	}
+
+//function to Upload CSV/TXT file
+	function upload_file($sql,$broadcast_phone_numbers) {
+		$upload_csv = $sql = '';
+		if (isset($_FILES['broadcast_phone_numbers_file']) && !empty($_FILES['broadcast_phone_numbers_file']) && $_FILES['broadcast_phone_numbers_file']['size'] > 0) {
+			$filename=$_FILES["broadcast_phone_numbers_file"]["tmp_name"];
+			$file_extension = array('application/octet-stream','application/vnd.ms-excel','text/plain','text/csv','text/tsv');
+			if (in_array($_FILES['broadcast_phone_numbers_file']['type'],$file_extension)) {											
+					$file = fopen($filename, "r");
+					$count = 0;
+					while (($getData = fgetcsv($file, 0, "\n")) !== FALSE)
+					{
+						$count++;
+						if ($count == 1) { continue; }
+						$getData = preg_split('/[ ,|]/', $getData[0], null, PREG_SPLIT_NO_EMPTY);						
+						$separator = $getData[0];
+						$separator .= (isset($getData[1]) && $getData[1] != '')? '|'.$getData[1] : '';
+						$separator .= (isset($getData[2]) && $getData[2] != '')? ','.$getData[2] : '';
+						$separator .= '\n';
+						$upload_csv .= $separator;
+					}
+				 fclose($file);  		
+			}
+			else {					  
+				return array('code'=>false,'sql'=>'');
+			}	
+		}				
+		if (!empty($broadcast_phone_numbers) && !empty($upload_csv)) { 					
+			$sql .= "E'"; 
+			$sql .= $broadcast_phone_numbers.'\n'.$upload_csv;
+			$sql .= "',";
+		}
+		elseif (empty($broadcast_phone_numbers) && !empty($upload_csv)) {
+			$sql .= "E'$upload_csv', ";
+		}
+		else {
+			$sql .= "E'$broadcast_phone_numbers', ";
+		}
+		return array('code'=>true,'sql'=> $sql);
 	}
 
 //get the http post variables and set them to php variables
@@ -83,7 +127,7 @@ else {
 		}
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
@@ -158,7 +202,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'$broadcast_caller_id_name', ";
 			$sql .= "'$broadcast_caller_id_number', ";
 			$sql .= "'$broadcast_destination_type', ";
-			$sql .= "'$broadcast_phone_numbers', ";
+
+			//Add File selection and download sample 
+ 		        $file_res = upload_file($sql,$broadcast_phone_numbers);
+			if ($file_res['code'] == true) {
+				$sql .= $file_res['sql'];
+			}
+			else {
+				$_SESSION["message_mood"] = "negative";
+				$_SESSION["message"] = $text['file-error'];
+				header("Location: call_broadcast_edit.php");
+				return false;
+			}
+			
 			$sql .= "'$broadcast_avmd', ";
 			$sql .= "'$broadcast_destination_data', ";
 			$sql .= "'$broadcast_accountcode' ";
@@ -166,7 +222,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$db->exec(check_sql($sql));
 			unset($sql);
 
-			$_SESSION["message"] = $text['confirm-add'];
+			message::add($text['confirm-add']);
 			header("Location: call_broadcast.php");
 			return;
 		} //if ($action == "add")
@@ -191,7 +247,20 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "broadcast_caller_id_name = '$broadcast_caller_id_name', ";
 			$sql .= "broadcast_caller_id_number = '$broadcast_caller_id_number', ";
 			$sql .= "broadcast_destination_type = '$broadcast_destination_type', ";
-			$sql .= "broadcast_phone_numbers = '$broadcast_phone_numbers', ";
+
+			//Update File selection and download sample 
+			$sql .= "broadcast_phone_numbers = "; 
+			$file_res = upload_file($sql,$broadcast_phone_numbers);
+			if ($file_res['code'] == true) {
+				$sql .= $file_res['sql'];
+			}
+			else {
+				$_SESSION["message_mood"] = "negative";
+				$_SESSION["message"] = $text['file-error'];
+				header("Location: call_broadcast_edit.php?id=".$_GET['id']);
+				return false;
+			}
+			
 			$sql .= "broadcast_avmd = '$broadcast_avmd', ";
 			$sql .= "broadcast_destination_data = '$broadcast_destination_data', ";
 			$sql .= "broadcast_accountcode = '$broadcast_accountcode' ";
@@ -201,7 +270,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$db->exec(check_sql($sql));
 			unset($sql);
 
-			$_SESSION["message"] = $text['confirm-update'];
+			message::add($text['confirm-update']);
 			header("Location: call_broadcast.php");
 			return;
 		} //if ($action == "update")
@@ -238,7 +307,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	require_once "resources/header.php";
 
 //begin content
-	echo "<form method='post' name='frm' action=''>\n";
+	echo "<form method='post' name='frm' action='' enctype='multipart/form-data'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
@@ -246,9 +315,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td width='70%' align='right'>\n";
 	echo "	<input type='button' class='btn' name='back' alt='".$text['button-back']."' onclick=\"window.location='call_broadcast.php'\" value='".$text['button-back']."'>\n";
 	if ($action == "update") {
-		echo "<input type='hidden' name='call_broadcast_uuid' value='$call_broadcast_uuid'>\n";
-		echo "<input type='button' class='btn' name='' alt='".$text['button-send']."' onclick=\"window.location='call_broadcast_send.php?id=$call_broadcast_uuid'\" value='".$text['button-send']."'>\n";
-		echo "<input type='button' class='btn' name='' alt='".$text['button-stop']."' onclick=\"window.location='call_broadcast_stop.php?id=".$call_broadcast_uuid."'\" value='".$text['button-stop']."'>\n";
+		echo "<input type='hidden' name='call_broadcast_uuid' value='".escape($call_broadcast_uuid)."'>\n";
+		echo "<input type='button' class='btn' name='' alt='".$text['button-send']."' onclick=\"window.location='call_broadcast_send.php?id=".escape($call_broadcast_uuid)."'\" value='".$text['button-send']."'>\n";
+		echo "<input type='button' class='btn' name='' alt='".$text['button-stop']."' onclick=\"window.location='call_broadcast_stop.php?id=".escape($call_broadcast_uuid)."'\" value='".$text['button-stop']."'>\n";
 	}
 	echo "	<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
@@ -259,7 +328,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='broadcast_name' maxlength='255' value=\"$broadcast_name\" required='required'>\n";
+	echo "	<input class='formfld' type='text' name='broadcast_name' maxlength='255' value=\"".escape($broadcast_name)."\" required='required'>\n";
 	echo "<br />\n";
 	echo "".$text['description-name']."\n";
 	echo "</td>\n";
@@ -272,7 +341,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		if ($action == "add"){ $accountcode=$_SESSION['domain_name']; }
-		echo "    <input class='formfld' type='text' name='broadcast_accountcode' maxlength='255' value=\"$broadcast_accountcode\">\n";
+		echo "    <input class='formfld' type='text' name='broadcast_accountcode' maxlength='255' value=\"".escape($broadcast_accountcode)."\">\n";
 		echo "<br />\n";
 		echo $text['description-accountcode']."\n";
 		echo "</td>\n";
@@ -313,7 +382,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-timeout']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='number' name='broadcast_timeout' maxlength='255' min='1' step='1' value=\"$broadcast_timeout\">\n";
+	echo "	<input class='formfld' type='number' name='broadcast_timeout' maxlength='255' min='1' step='1' value=\"".escape($broadcast_timeout)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-timeout']."\n";
 	echo "</td>\n";
@@ -324,7 +393,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-concurrent-limit']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='number' name='broadcast_concurrent_limit' maxlength='255' min='1' step='1' value=\"$broadcast_concurrent_limit\">\n";
+	echo "	<input class='formfld' type='number' name='broadcast_concurrent_limit' maxlength='255' min='1' step='1' value=\"".escape($broadcast_concurrent_limit)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-concurrent-limit']."\n";
 	echo "</td>\n";
@@ -345,10 +414,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//$prep_statement->execute();
 	//while($row = $prep_statement->fetch()) {
 	//	if ($recording_uuid == $row['recording_uuid']) {
-	//		echo "		<option value='".$row['recording_uuid']."' selected='yes'>".$row['recordingname']."</option>\n";
+	//		echo "		<option value='".$row['recording_uuid']."' selected='yes'>".escape($row['recordingname'])."</option>\n";
 	//	}
 	//	else {
-	//		echo "		<option value='".$row['recording_uuid']."'>".$row['recordingname']."</option>\n";
+	//		echo "		<option value='".$row['recording_uuid']."'>".escape($row['recordingname'])."</option>\n";
 	//	}
 	//}
 	//unset ($prep_statement);
@@ -365,7 +434,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-caller-id-name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='broadcast_caller_id_name' maxlength='255' value=\"$broadcast_caller_id_name\">\n";
+	echo "	<input class='formfld' type='text' name='broadcast_caller_id_name' maxlength='255' value=\"".escape($broadcast_caller_id_name)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-caller-id-name']."\n";
 	echo "</td>\n";
@@ -376,7 +445,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-callerid-number']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='number' name='broadcast_caller_id_number' maxlength='255' min='0' step='1' value=\"$broadcast_caller_id_number\">\n";
+	echo "	<input class='formfld' type='number' name='broadcast_caller_id_number' maxlength='255' min='0' step='1' value=\"".escape($broadcast_caller_id_number)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-caller-id-number']."\n";
 	echo "</td>\n";
@@ -387,7 +456,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	Type\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='broadcast_destination_type' maxlength='255' value=\"$broadcast_destination_type\">\n";
+	echo "	<input class='formfld' type='text' name='broadcast_destination_type' maxlength='255' value=\"".escape($broadcast_destination_type)."\">\n";
 	echo "<br />\n";
 	echo "Optional, Destination Type: bridge, transfer, voicemail, conference, fifo, etc.\n";
 	echo "</td>\n";
@@ -398,7 +467,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	Destination\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='broadcast_destination_data' maxlength='255' value=\"$broadcast_destination_data\">\n";
+	echo "	<input class='formfld' type='text' name='broadcast_destination_data' maxlength='255' value=\"".escape($broadcast_destination_data)."\">\n";
 	echo "<br />\n";
 	echo "Optional, send the call to an auto attendant, conference room, or any other destination. <br /><br />\n";
 	echo "conference (8khz): 01-\${domain}@default <br />\n";
@@ -414,7 +483,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-destination']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='broadcast_destination_data' maxlength='255' value=\"$broadcast_destination_data\">\n";
+	echo "	<input class='formfld' type='text' name='broadcast_destination_data' maxlength='255' value=\"".escape($broadcast_destination_data)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-destination']." <br /><br />\n";
 	echo "</td>\n";
@@ -425,7 +494,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-phone']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<textarea class='formfld' type='text' name='broadcast_phone_numbers' rows='10'>$broadcast_phone_numbers</textarea>\n";
+
+	echo "	<textarea class='formfld' type='text' name='broadcast_phone_numbers' rows='10'>".escape($broadcast_phone_numbers)."</textarea>";
+	echo "<br>";
+	echo " <span class='' style='margin-left: 37px;'>OR </span> ";
+	echo "<br>";
+	echo " <input type='file' name='broadcast_phone_numbers_file' accept='.csv,.txt' style=\"display:inline-block;\"><a href='sample.csv' download>Sample File <i class='glyphicon glyphicon-download-alt'></i></a>";
+	echo "<br>";
+	echo " (Upload TXT- Plain Text, CSV- Comma Separated Values file format only.)";
+	echo "<br>";
+
 	echo "<br />\n";
 	echo "".$text['description-phone']." <br /><br />\n";
 	echo "</td>\n";
@@ -451,7 +529,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='broadcast_description' maxlength='255' value=\"$broadcast_description\">\n";
+	echo "	<input class='formfld' type='text' name='broadcast_description' maxlength='255' value=\"".escape($broadcast_description)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-info']."\n";
 	echo "</td>\n";
@@ -496,10 +574,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$prep_statement->execute();
 		while($row = $prep_statement->fetch()) {
 			if ($user_category   == $row['user_category']) {
-				echo "		<option value='".$row['user_category']."' selected='yes'>".$row['user_category']."</option>\n";
+				echo "		<option value='".escape($row['user_category'])."' selected='yes'>".escape($row['user_category'])."</option>\n";
 			}
 			else {
-				echo "		<option value='".$row['user_category']."'>".$row['user_category']."</option>\n";
+				echo "		<option value='".escape($row['user_category'])."'>".escape($row['user_category'])."</option>\n";
 			}
 		}
 		unset ($prep_statement);
@@ -524,10 +602,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$prep_statement->execute();
 		while($row = $prep_statement->fetch()) {
 			if ($recording_uuid == $row['group_name']) {
-				echo "		<option value='".$row['group_name']."' selected='yes'>".$row['group_name']."</option>\n";
+				echo "		<option value='".escape($row['group_name'])."' selected='yes'>".escape($row['group_name'])."</option>\n";
 			}
 			else {
-				echo "		<option value='".$row['group_name']."'>".$row['group_name']."</option>\n";
+				echo "		<option value='".escape($row['group_name'])."'>".escape($row['group_name'])."</option>\n";
 			}
 		}
 		unset ($prep_statement);
@@ -553,10 +631,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$prep_statement->execute();
 		while($row = $prep_statement->fetch()) {
 			if ($gateway == $row['gateway']) {
-				echo "		<option value='".$row['gateway']."' selected='yes'>".$row['gateway']."</option>\n";
+				echo "		<option value='".escape($row['gateway'])."' selected='yes'>".escape($row['gateway'])."</option>\n";
 			}
 			else {
-				echo "		<option value='".$row['gateway']."'>".$row['gateway']."</option>\n";
+				echo "		<option value='".escape($row['gateway'])."'>".escape($row['gateway'])."</option>\n";
 			}
 		}
 		unset ($prep_statement);
@@ -609,7 +687,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		echo "	<tr>\n";
 		echo "		<td colspan='2' align='right'>\n";
-		echo "				<input type='hidden' name='call_broadcast_uuid' value='$call_broadcast_uuid'>\n";
+		echo "				<input type='hidden' name='call_broadcast_uuid' value='".escape($call_broadcast_uuid)."'>\n";
 		echo "				<input type='submit' name='submit' class='btn' value='Send Broadcast'>\n";
 		echo "		</td>\n";
 		echo "	</tr>";
@@ -619,5 +697,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	*/
 
-require_once "resources/footer.php";
+//include the footer
+	require_once "resources/footer.php";
+
 ?>

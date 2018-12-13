@@ -14,8 +14,8 @@
 <Resync_At__HHmm_></Resync_At__HHmm_>
 <Resync_At_Random_Delay>600</Resync_At_Random_Delay>
 <Resync_Periodic>0</Resync_Periodic>
-<Resync_Error_Retry_Delay>3600</Resync_Error_Retry_Delay>
-<Forced_Resync_Delay>14400</Forced_Resync_Delay>
+<Resync_Error_Retry_Delay>300</Resync_Error_Retry_Delay>
+<Forced_Resync_Delay>30</Forced_Resync_Delay>
 <Resync_From_SIP>Yes</Resync_From_SIP>
 <Resync_After_Upgrade_Attempt>Yes</Resync_After_Upgrade_Attempt>
 <Resync_Trigger_1></Resync_Trigger_1>
@@ -126,9 +126,9 @@
 <G729a_Codec_Name>G729a</G729a_Codec_Name>
 <EncapRTP_Codec_Name>encaprtp</EncapRTP_Codec_Name>
 <Handle_VIA_received>No</Handle_VIA_received>
-<Handle_VIA_rport>No</Handle_VIA_rport>
+<Handle_VIA_rport>{$spa_handle_via_rport}</Handle_VIA_rport>
 <Insert_VIA_received>No</Insert_VIA_received>
-<Insert_VIA_rport>No</Insert_VIA_rport>
+<Insert_VIA_rport>{$spa_insert_via_rport}</Insert_VIA_rport>
 <Substitute_VIA_Addr>No</Substitute_VIA_Addr>
 <Send_Resp_To_Src_Port>No</Send_Resp_To_Src_Port>
 <STUN_Enable>No</STUN_Enable>
@@ -143,7 +143,7 @@
 <Key_System_Auto_Discovery>Yes</Key_System_Auto_Discovery>
 <Key_System_IP_Address></Key_System_IP_Address>
 <Force_LAN_Codec>none</Force_LAN_Codec>
-<Station_Name></Station_Name>
+<Station_Name>{$device_label}</Station_Name>
 <Line_Enable_1_>Yes</Line_Enable_1_>
 <SAS_Enable_1_>No</SAS_Enable_1_>
 <SAS_DLG_Refresh_Intvl_1_>30</SAS_DLG_Refresh_Intvl_1_>
@@ -158,8 +158,8 @@
 <RTP_CoS_Value_1_>6</RTP_CoS_Value_1_>
 <Network_Jitter_Level_1_>high</Network_Jitter_Level_1_>
 <Jitter_Buffer_Adjustment_1_>Yes</Jitter_Buffer_Adjustment_1_>
-<SIP_Transport_1_>{$sip_transport_1|upper}</SIP_Transport_1_>
-<SIP_Port_1_>{$sip_port_1}</SIP_Port_1_>
+<SIP_Transport_1_>{$account.1.sip_transport|upper}</SIP_Transport_1_>
+<SIP_Port_1_>{$account.1.sip_port}</SIP_Port_1_>
 <SIP_100REL_Enable_1_>No</SIP_100REL_Enable_1_>
 <EXT_SIP_Port_1_></EXT_SIP_Port_1_>
 <Auth_Resync-Reboot_1_>Yes</Auth_Resync-Reboot_1_>
@@ -187,12 +187,12 @@
 <Emergency_Number_1_></Emergency_Number_1_>
 <Mailbox_ID_1_></Mailbox_ID_1_>
 <Proxy_1_>{$domain_name}</Proxy_1_>
-<Outbound_Proxy_1_></Outbound_Proxy_1_>
-<Use_Outbound_Proxy_1_>No</Use_Outbound_Proxy_1_>
+<Outbound_Proxy_1_>{$account.1.outbound_proxy_primary}</Outbound_Proxy_1_>
+<Use_Outbound_Proxy_1_>{if isset ($account.1.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_1_>
 <Use_OB_Proxy_In_Dialog_1_>Yes</Use_OB_Proxy_In_Dialog_1_>
 <Register_1_>Yes</Register_1_>
 <Make_Call_Without_Reg_1_>No</Make_Call_Without_Reg_1_>
-<Register_Expires_1_>{$register_expires_1}</Register_Expires_1_>
+<Register_Expires_1_>{$account.1.register_expires}</Register_Expires_1_>
 <Ans_Call_Without_Reg_1_>No</Ans_Call_Without_Reg_1_>
 <Use_DNS_SRV_1_>No</Use_DNS_SRV_1_>
 <DNS_SRV_Auto_Prefix_1_>No</DNS_SRV_Auto_Prefix_1_>
@@ -200,14 +200,14 @@
 <Proxy_Redundancy_Method_1_>Normal</Proxy_Redundancy_Method_1_>
 <Mailbox_Subscribe_URL_1_></Mailbox_Subscribe_URL_1_>
 <Mailbox_Subscribe_Expires_1_></Mailbox_Subscribe_Expires_1_>
-<Display_Name_1_>{$display_name_1}</Display_Name_1_>
-<User_ID_1_>{$user_id_1}</User_ID_1_>
-<Password_1_>{$user_password_1}</Password_1_>
+<Display_Name_1_>{$account.1.display_name}</Display_Name_1_>
+<User_ID_1_>{$account.1.user_id}</User_ID_1_>
+<Password_1_>{$account.1.password}</Password_1_>
 <Use_Auth_ID_1_>No</Use_Auth_ID_1_>
 <Auth_ID_1_></Auth_ID_1_>
 <Resident_Online_Number_1_></Resident_Online_Number_1_>
 <SIP_URI_1_></SIP_URI_1_>
-<Call_Waiting_Serv_1_>Yes</Call_Waiting_Serv_1_>
+<Call_Waiting_Serv_1_>{$spa_call_waiting}</Call_Waiting_Serv_1_>
 <Block_CID_Serv_1_>Yes</Block_CID_Serv_1_>
 <Block_ANC_Serv_1_>Yes</Block_ANC_Serv_1_>
 <Dist_Ring_Serv_1_>Yes</Dist_Ring_Serv_1_>
@@ -266,7 +266,7 @@
 <FAX_Tone_Detect_Mode_1_>caller or callee</FAX_Tone_Detect_Mode_1_>
 <Symmetric_RTP_1_>No</Symmetric_RTP_1_>
 <FAX_T38_Return_to_Voice_1_>No</FAX_T38_Return_to_Voice_1_>
-<Dial_Plan_1_>(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|*x|#x|**xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_1_>
+<Dial_Plan_1_>{$spa_dial_plan}</Dial_Plan_1_>
 <Idle_Polarity_1_>Forward</Idle_Polarity_1_>
 <Caller_Conn_Polarity_1_>Forward</Caller_Conn_Polarity_1_>
 <Callee_Conn_Polarity_1_>Forward</Callee_Conn_Polarity_1_>
@@ -284,8 +284,8 @@
 <RTP_CoS_Value_2_>6</RTP_CoS_Value_2_>
 <Network_Jitter_Level_2_>high</Network_Jitter_Level_2_>
 <Jitter_Buffer_Adjustment_2_>Yes</Jitter_Buffer_Adjustment_2_>
-<SIP_Transport_2_>{$sip_transport_2|upper}</SIP_Transport_2_>
-<SIP_Port_2_>{$sip_port_2}</SIP_Port_2_>
+<SIP_Transport_2_>{$account.2.sip_transport|upper}</SIP_Transport_2_>
+<SIP_Port_2_>{$account.2.sip_port}</SIP_Port_2_>
 <SIP_100REL_Enable_2_>No</SIP_100REL_Enable_2_>
 <EXT_SIP_Port_2_></EXT_SIP_Port_2_>
 <Auth_Resync-Reboot_2_>Yes</Auth_Resync-Reboot_2_>
@@ -313,8 +313,8 @@
 <Emergency_Number_2_></Emergency_Number_2_>
 <Mailbox_ID_2_></Mailbox_ID_2_>
 <Proxy_2_>{$domain_name}</Proxy_2_>
-<Outbound_Proxy_2_></Outbound_Proxy_2_>
-<Use_Outbound_Proxy_2_>No</Use_Outbound_Proxy_2_>
+<Outbound_Proxy_2_>{$account.2.outbound_proxy_primary}</Outbound_Proxy_2_>
+<Use_Outbound_Proxy_2_>{if isset ($account.2.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_2_>
 <Use_OB_Proxy_In_Dialog_2_>Yes</Use_OB_Proxy_In_Dialog_2_>
 <Register_2_>Yes</Register_2_>
 <Make_Call_Without_Reg_2_>No</Make_Call_Without_Reg_2_>
@@ -327,14 +327,14 @@
 <Proxy_Redundancy_Method_2_>Normal</Proxy_Redundancy_Method_2_>
 <Mailbox_Subscribe_URL_2_></Mailbox_Subscribe_URL_2_>
 <Mailbox_Subscribe_Expires_2_></Mailbox_Subscribe_Expires_2_>
-<Display_Name_2_>{$display_name_2}</Display_Name_2_>
-<User_ID_2_>{$user_id_2}</User_ID_2_>
-<Password_2_>{$user_password_2}</Password_2_>
+<Display_Name_2_>{$account.2.display_name}</Display_Name_2_>
+<User_ID_2_>{$account.2.user_id}</User_ID_2_>
+<Password_2_>{$account.2.password}</Password_2_>
 <Use_Auth_ID_2_>No</Use_Auth_ID_2_>
 <Auth_ID_2_></Auth_ID_2_>
 <Resident_Online_Number_2_></Resident_Online_Number_2_>
 <SIP_URI_2_></SIP_URI_2_>
-<Call_Waiting_Serv_2_>Yes</Call_Waiting_Serv_2_>
+<Call_Waiting_Serv_2_>{$spa_call_waiting}</Call_Waiting_Serv_2_>
 <Block_CID_Serv_2_>Yes</Block_CID_Serv_2_>
 <Block_ANC_Serv_2_>Yes</Block_ANC_Serv_2_>
 <Dist_Ring_Serv_2_>Yes</Dist_Ring_Serv_2_>
@@ -393,7 +393,7 @@
 <FAX_Tone_Detect_Mode_2_>caller or callee</FAX_Tone_Detect_Mode_2_>
 <Symmetric_RTP_2_>No</Symmetric_RTP_2_>
 <FAX_T38_Return_to_Voice_2_>No</FAX_T38_Return_to_Voice_2_>
-<Dial_Plan_2_></Dial_Plan_2_>
+<Dial_Plan_2_>{$spa_dial_plan}</Dial_Plan_2_>
 <Idle_Polarity_2_>Forward</Idle_Polarity_2_>
 <Caller_Conn_Polarity_2_>Forward</Caller_Conn_Polarity_2_>
 <Callee_Conn_Polarity_2_>Forward</Callee_Conn_Polarity_2_>
@@ -748,7 +748,7 @@
 </Software_DMZ>
 <Bonjour_Enable>1</Bonjour_Enable>
 <Reset_Button_Enable>1</Reset_Button_Enable>
-<Router_Mode>0</Router_Mode>
+<Router_Mode>{$cisco_router_mode}</Router_Mode>
 <VPN_Passthrough>
 <IPSec_Passthrough>1</IPSec_Passthrough>
 <PPTP_Passthrough>1</PPTP_Passthrough>
@@ -805,10 +805,10 @@
 <MAIL>0</MAIL>
 </System>
 </Log_Configuration>
-<Web_Login_Admin_Name>{$admin_name}</Web_Login_Admin_Name>
-<Web_Login_Admin_Password>{$admin_password}</Web_Login_Admin_Password>
-<Web_Login_Guest_Name>{$user_name}</Web_Login_Guest_Name>
-<Web_Login_Guest_Password>{$user_password}</Web_Login_Guest_Password>
+{if isset ($admin_name)}<Web_Login_Admin_Name>{$admin_name}</Web_Login_Admin_Name>{/if}
+{if isset ($admin_password)}<Web_Login_Admin_Password>{$admin_password}</Web_Login_Admin_Password>{/if}
+{if isset ($admin_name)}<Web_Login_Guest_Name>{$admin_name}</Web_Login_Guest_Name>{/if}
+{if isset ($admin_password)}<Web_Login_Guest_Password>{$admin_password}</Web_Login_Guest_Password>{/if}
 <Firmware_Version>1.2.1</Firmware_Version>
 <Firmware_Build_Version>004</Firmware_Build_Version>
 <System_Model_Number>SPA122</System_Model_Number>

@@ -1,20 +1,19 @@
 require "resources.functions.config"
 require "resources.functions.split"
 
-local log           = require "resources.functions.log".mwi_subscribe
-local EventConsumer = require "resources.functions.event_consumer"
-local Database      = require "resources.functions.database"
-local cache         = require "resources.functions.cache"
-local mwi_notify    = require "app.voicemail.resources.functions.mwi_notify"
-
 local service_name = "mwi"
-local pid_file = scripts_dir .. "/run/" .. service_name .. ".tmp"
+
+local log               = require "resources.functions.log"[service_name]
+local BasicEventService = require "resources.functions.basic_event_service"
+local Database          = require "resources.functions.database"
+local cache             = require "resources.functions.cache"
+local mwi_notify        = require "app.voicemail.resources.functions.mwi_notify"
 
 local vm_message_count do
 
 local vm_to_uuid_sql = [[SELECT v.voicemail_uuid
 FROM v_voicemails as v inner join v_domains as d on v.domain_uuid = d.domain_uuid
-WHERE v.voicemail_id = '%s' and d.domain_name = '%s']]
+WHERE v.voicemail_id = :voicemail_id and d.domain_name = :domain_name]]
 
 local vm_messages_sql = [[SELECT
 ( SELECT count(*)
@@ -47,10 +46,9 @@ function vm_message_count(account, use_cache)
 	if use_cache and cache.support() then
 		local uuid = cache.get('voicemail_uuid:' .. account)
 		if not uuid then
-			local sql = string.format(vm_to_uuid_sql,
-				dbh:escape(id), dbh:escape(domain_name)
-			)
-			uuid = dbh:first_value(sql)
+			uuid = dbh:first_value(vm_to_uuid_sql, {
+				voicemail_id = id, domain_name = domain_name
+			})
 
 			if uuid and #uuid > 0 then
 				cache.set('voicemail_uuid:' .. account, uuid, 3600)
@@ -58,22 +56,21 @@ function vm_message_count(account, use_cache)
 		end
 	end
 
-	local sql 
+	local row
 	if uuid and #uuid > 0 then
-		sql = string.format(vm_messages_sql,
-			dbh:quoted(uuid), dbh:quoted(uuid)
-		)
+		local sql = string.format(vm_messages_sql, ":voicemail_uuid", ":voicemail_uuid")
+		row = dbh:first_row(sql, {voicemail_uuid = uuid})
 	else
-		local uuid_sql = '(' .. string.format(vm_to_uuid_sql,
-			dbh:escape(id), dbh:escape(domain_name)
-		) .. ')'
+		local uuid_sql = '(' .. vm_to_uuid_sql .. ')'
 
-		sql = string.format(vm_messages_sql,
+		local sql = string.format(vm_messages_sql,
 			uuid_sql, uuid_sql
 		)
-	end
 
-	local row = sql and dbh:first_row(sql)
+		row = dbh:first_row(sql, {
+			voicemail_id = id, domain_name = domain_name
+		})
+	end
 
 	dbh:release()
 
@@ -84,29 +81,10 @@ end
 
 end
 
-local events = EventConsumer.new(pid_file)
-
--- FS shutdown
-events:bind("SHUTDOWN", function(self, name, event)
-	log.notice("shutdown")
-	return self:stop()
-end)
-
--- Control commands from FusionPBX
-events:bind("CUSTOM::fusion::service::control", function(self, name, event)
-	if service_name ~= event:getHeader('service-name') then return end
-
-	local command = event:getHeader('service-command')
-	if command == "stop" then
-		log.notice("get stop command")
-		return self:stop()
-	end
-
-	log.warningf('Unknown service command: %s', command or '<NONE>')
-end)
+local service = BasicEventService.new(log, service_name)
 
 -- MWI SUBSCRIBE
-events:bind("MESSAGE_QUERY", function(self, name, event)
+service:bind("MESSAGE_QUERY", function(self, name, event)
 	local account_header = event:getHeader('Message-Account')
 	if not account_header then
 		return log.warningf("MWI message without `Message-Account` header")
@@ -129,6 +107,6 @@ end)
 
 log.notice("start")
 
-events:run()
+service:run()
 
 log.notice("stop")

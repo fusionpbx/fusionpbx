@@ -43,7 +43,7 @@ else {
 	$conference_uuid = check_str($_REQUEST["c"]);
 
 //replace the space with underscore
-	$conference_name = $conference_uuid.'-'.$_SESSION['domain_name'];
+	$conference_name = $conference_uuid.'@'.$_SESSION['domain_name'];
 
 //create the conference list command
 	$switch_cmd = "conference '".$conference_name."' xml_list";
@@ -199,7 +199,7 @@ else {
 						}
 					//volume
 						if (permission_exists('conference_interactive_volume')) {
-							echo "	<input type='button' class='btn' onclick=\"send_cmd('conference_exec.php?direction=up&cmd=conference&name=".$conference_name."%&data=volume_in&id=".$id."');\" value='+".$text['label-volume']."'>\n";
+							echo "	<input type='button' class='btn' onclick=\"send_cmd('conference_exec.php?direction=up&cmd=conference&name=".$conference_name."&data=volume_in&id=".$id."');\" value='+".$text['label-volume']."'>\n";
 							echo "	<input type='button' class='btn' onclick=\"send_cmd('conference_exec.php?direction=down&cmd=conference&name=".$conference_name."&data=volume_in&id=".$id."');\" value='-".$text['label-volume']."'>\n";
 						}
 						if (permission_exists('conference_interactive_gain')) {

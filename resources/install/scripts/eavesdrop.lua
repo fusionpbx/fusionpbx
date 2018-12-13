@@ -36,14 +36,13 @@
 	require "resources.functions.file_exists";
 
 --connect to the database
-	if (file_exists(database_dir.."/core.db")) then
-		--dbh = freeswitch.Dbh("core:core"); -- when using sqlite
-		dbh = freeswitch.Dbh("sqlite://"..database_dir.."/core.db");
-		freeswitch.consoleLog("NOTICE", "[eavesdrop] using core.db\n");
-	else
-		require "resources.functions.database_handle";
-		dbh = database_handle('switch');
-		freeswitch.consoleLog("NOTICE", "[eavesdrop] using the database\n");
+	local Database = require "resources.functions.database"
+	local dbh = Database.new('switch')
+
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
 	end
 
 --exits the script if we didn't connect properly
@@ -110,9 +109,12 @@
 
 --check the database to get the uuid to eavesdrop on
 	if (session:ready()) then
-		sql = "select uuid from channels where presence_id = '"..extension.."@"..domain_name.."' ";
-		freeswitch.consoleLog("NOTICE", "[eavesdrop] sql "..sql.."\n");
-		dbh:query(sql, function(result)
+		local sql = "select uuid from channels where presence_id = :presence_id ";
+		local params = {presence_id = extension.."@"..domain_name};
+		if (debug["sql"]) then
+			freeswitch.consoleLog("notice", "[eavesdrop] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+		end
+		dbh:query(sql, params, function(result)
 			for key, val in pairs(result) do
 				freeswitch.consoleLog("NOTICE", "[eavesdrop] result "..key.." "..val.."\n");
 			end

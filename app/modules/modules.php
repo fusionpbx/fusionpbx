@@ -17,22 +17,26 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('module_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('module_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -47,31 +51,33 @@ else {
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
-$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-if (strlen($_GET["a"]) > 0) {
-	if ($_GET["a"] == "stop") {
-		$module_name = $_GET["m"];
-		if ($fp) {
-			$cmd = "api unload $module_name";
-			$response = trim(event_socket_request($fp, $cmd));
-			$msg = "<strong>".$text['label-unload_module'].":</strong> <pre>".$response."</pre>";
+//start or stop a module
+	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	if (strlen($_GET["a"]) > 0) {
+		if ($_GET["a"] == "stop") {
+			$module_name = $_GET["m"];
+			if ($fp) {
+				$cmd = "api unload $module_name";
+				$response = trim(event_socket_request($fp, $cmd));
+				$msg = "<strong>".$text['label-unload_module'].":</strong> <pre>".$response."</pre>";
+			}
+		}
+		if ($_GET["a"] == "start") {
+			$module_name = $_GET["m"];
+			if ($fp) {
+				$cmd = "api load $module_name";
+				$response = trim(event_socket_request($fp, $cmd));
+				$msg = "<strong>".$text['label-load_module'].":</strong> <pre>".$response."</pre>";
+			}
 		}
 	}
-	if ($_GET["a"] == "start") {
-		$module_name = $_GET["m"];
-		if ($fp) {
-			$cmd = "api load $module_name";
-			$response = trim(event_socket_request($fp, $cmd));
-			$msg = "<strong>".$text['label-load_module'].":</strong> <pre>".$response."</pre>";
-		}
-	}
-}
 
-$esl_alive = false;
-if($fp){
-	$esl_alive = true;
-	fclose($fp);
-}
+//check connection status
+	$esl_alive = false;
+	if($fp){
+		$esl_alive = true;
+		fclose($fp);
+	}
 
 //Warning if FS not start
 	if(!$esl_alive){
@@ -168,11 +174,11 @@ if($fp){
 				echo $tmp_module_header;
 			}
 
-			$tr_link = (permission_exists('module_edit')) ? "href='module_edit.php?id=".$row["module_uuid"]."'" : null;
+			$tr_link = (permission_exists('module_edit')) ? "href='module_edit.php?id=".escape($row["module_uuid"])."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "   <td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('module_edit')) {
-				echo "<a href='module_edit.php?id=".$row["module_uuid"]."'>".$row["module_label"]."</a>";
+				echo "<a href='module_edit.php?id=".escape($row["module_uuid"])."'>".escape($row["module_label"])."</a>";
 			}
 			else {
 				echo $row["module_label"];
@@ -181,16 +187,16 @@ if($fp){
 			if($esl_alive) {
 				if ($module->active($row["module_name"])) {
 					echo "   <td valign='top' class='".$row_style[$c]."'>".$text['label-running']."</td>\n";
-					echo "   <td valign='top' class='".$row_style[$c]."'><a href='modules.php?a=stop&m=".$row["module_name"]."' alt='".$text['label-stop']."'>".$text['label-stop']."</a></td>\n";
+					echo "   <td valign='top' class='".$row_style[$c]."'><a href='modules.php?a=stop&m=".escape($row["module_name"])."' alt='".$text['label-stop']."'>".$text['label-stop']."</a></td>\n";
 				}
 				else {
 					if ($row['module_enabled']=="true") {
 						echo "   <td valign='top' class='".$row_style[$c]."'><b>".$text['label-stopped']."</b></td>\n";
 					}
 					else {
-						echo "   <td valign='top' class='".$row_style[$c]."'>".$text['label-stopped']." ".$notice."</td>\n";
+						echo "   <td valign='top' class='".$row_style[$c]."'>".$text['label-stopped']." ".escape($notice)."</td>\n";
 					}
-					echo "   <td valign='top' class='".$row_style[$c]."'><a href='modules.php?a=start&m=".$row["module_name"]."' alt='".$text['label-start']."'>".$text['label-start']."</a></td>\n";
+					echo "   <td valign='top' class='".$row_style[$c]."'><a href='modules.php?a=start&m=".escape($row["module_name"])."' alt='".$text['label-start']."'>".$text['label-start']."</a></td>\n";
 				}
 			}
 			else{
@@ -205,13 +211,13 @@ if($fp){
 				echo $text['option-false'];
 			}
 			echo "</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".$row["module_description"]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($row["module_description"])."&nbsp;</td>\n";
 			echo "   <td class='list_control_icons'>";
 			if (permission_exists('module_edit')) {
-				echo "<a href='module_edit.php?id=".$row["module_uuid"]."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='module_edit.php?id=".escape($row["module_uuid"])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('module_delete')) {
-				echo "<a href='module_delete.php?id=".$row["module_uuid"]."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='module_delete.php?id=".escape($row["module_uuid"])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "</td>\n";
 			echo "</tr>\n";
@@ -243,4 +249,5 @@ if($fp){
 
 //show the footer
 	require_once "resources/footer.php";
+
 ?>

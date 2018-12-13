@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2015	All Rights Reserved.
+	Copyright (C) 2016	All Rights Reserved.
 
 */
 
@@ -28,78 +28,64 @@
  * @method string delete
  * @method string exists
  */
-	if (!class_exists('permissions')) {
-		class permissions {
+if (!class_exists('permissions')) {
+	class permissions {
 
-				/**
-				 * Add a permission
-				 * @var string $permission
-				 */
-				public function add($permission, $type = '') {
-					if (!$this->exists($permission)) {
-						//set the ordinal number
-							$i = count($_SESSION["permissions"])+1;
+		/**
+		 * Add the permission
+		 * @var string $permission
+		 */
+		public function add($permission, $type) {
+			//add the permission if it is not in array
+			if (!$this->exists($permission)) {
+				$_SESSION["permissions"][$permission] = $type;
+			}
+		}
 
-						//set the permission
-							$_SESSION["permissions"][$i]["permission_name"] = $permission;
-							$_SESSION["permissions"][$i]["permission_type"] = "temp";
+		/**
+		 * Remove the permission
+		 * @var string $permission
+		 */
+		public function delete($permission, $type) {
+			if ($this->exists($permission)) {
+				if ($type === "temp") {
+					if ($_SESSION["permissions"][$permission] === "temp") {
+						unset($_SESSION["permissions"][$permission]);
 					}
 				}
-
-				/**
-				 * Remove the permission
-				 * @var string $permission
-				 */
-				public function delete($permission, $type = '') {
-					if ($this->exists($permission)) {
-						foreach($_SESSION["permissions"] as $key => $row) {
-							if ($row['permission_name'] == $permission) {
-								if ($row['permission_name'] == $permission) {
-									if ($type == 'temp') {
-										if ($row['permission_type'] == "temp") {
-											unset($_SESSION["permissions"][$key]);
-										}
-									}
-									else {
-										unset($_SESSION["permissions"][$key]);
-									}
-								}
-								break;
-							}
-						}
+				else {
+					if ($_SESSION["permissions"][$permission] !== "temp") {
+						unset($_SESSION["permissions"][$permission]);
 					}
 				}
+			}
+		}
 
-				/**
-				 * Check to see if the permission exists
-				 * @var string $permission
-				 */
-				function exists($permission) {
-					//set default false
-						$result = false;
-					//search for the permission
-						if (count($_SESSION["permissions"]) > 0) {
-							foreach($_SESSION["permissions"] as $row) {
-								if ($row['permission_name'] == $permission) {
-									$result = true;
-									break;
-								}
-							}
-						}
-					//return the result
-						return $result;
+		/**
+		 * Check to see if the permission exists
+		 * @var string $permission
+		 */
+		function exists($permission) {
+			//set default false
+				$result = false;
+			//search for the permission
+				if (is_array($_SESSION["permissions"]) && isset($_SESSION["permissions"][$permission])) {
+					$result = true;
 				}
+			//return the result
+				return $result;
 		}
 	}
+}
 
-	//examples
-		/*
-		//add the permission
-			$p = new permissions;
-			$p->add($permission);
-		//delete the permission
-			$p = new permissions;
-			$p->delete($permission);
-		*/
+//examples
+	/*
+	//add the permission
+		$p = new permissions;
+		$p->add($permission);
+	//delete the permission
+		$p = new permissions;
+		$p->delete($permission);
+	*/
 
 ?>

@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010
+--	Copyright (C) 2010-2018
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -24,14 +24,16 @@
 
 --predefined variables
 	predefined_destination = "";
-	max_tries = "3";
-	digit_timeout = "5000";
+	fallback_destination = "";
 
 --define the trim function
 	require "resources.functions.trim";
 
 --define the explode function
 	require "resources.functions.explode";
+
+--prepare the api object
+	api = freeswitch.API();
 
 --answer the call
 	if (session:ready()) then
@@ -40,16 +42,23 @@
 
 --get and save the variables
 	if (session:ready()) then
+		sound_greeting = session:getVariable("sound_greeting");
+		sound_pin = session:getVariable("sound_pin");
+		sound_extension = session:getVariable("sound_extension");
 		pin_number = session:getVariable("pin_number");
 		sounds_dir = session:getVariable("sounds_dir");
 		caller_id_name = session:getVariable("caller_id_name");
 		caller_id_number = session:getVariable("caller_id_number");
 		predefined_destination = session:getVariable("predefined_destination");
+		fallback_destination = session:getVariable("fallback_destination");
 		digit_min_length = session:getVariable("digit_min_length");
 		digit_max_length = session:getVariable("digit_max_length");
-		gateway = session:getVariable("gateway");
+		digit_timeout = session:getVariable("digit_timeout");
 		context = session:getVariable("context");
 		privacy = session:getVariable("privacy");
+		max_tries = session:getVariable("max_tries");
+		pin_tries = session:getVariable("pin_tries");
+		extension_tries = session:getVariable("extension_tries");
 	end
 
 --set the sounds path for the language, dialect and voice
@@ -63,23 +72,49 @@
 	end
 
 --set defaults
-	if (digit_min_length) then
-		--do nothing
-	else
-		digit_min_length = "2";
+	if (not digit_min_length) then
+		digit_min_length = "7";
 	end
 
-	if (digit_max_length) then
-		--do nothing
-	else
+	if (not digit_max_length) then
 		digit_max_length = "11";
+	end
+
+	if (not digit_timeout) then
+	    digit_timeout = "5000";
+	end
+
+	if (not sound_pin) then
+	    sound_pin = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-please_enter_pin_followed_by_pound.wav";
+	end
+
+	if (not sound_extension) then
+	    sound_extension = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-enter_destination_telephone_number.wav";
+	end
+
+	if (not max_tries) then
+	    max_tries = "3";
+	end
+
+	if (not pin_tries) then
+	    pin_tries = max_tries;
+	end
+
+	if (not extension_tries) then
+	    extension_tries = max_tries;
+	end
+
+--if the sound_greeting is provided then play it
+	if (session:ready() and sound_greeting) then
+		session:streamFile(sound_greeting);
+		session:sleep(200);
 	end
 
 --if the pin number is provided then require it
 	if (session:ready() and pin_number) then
 		min_digits = string.len(pin_number);
 		max_digits = string.len(pin_number)+1;
-		digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-please_enter_pin_followed_by_pound.wav", "", "\\d+");
+		digits = session:playAndGetDigits(min_digits, max_digits, pin_tries, digit_timeout, "#", sound_pin, "", "\\d+");
 		if (digits == pin_number) then
 			--pin is correct
 		else
@@ -97,14 +132,28 @@
 			destination_number = predefined_destination;
 		else
 			dtmf = ""; --clear dtmf digits to prepare for next dtmf request
-			destination_number = session:playAndGetDigits(digit_min_length, digit_max_length, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-enter_destination_telephone_number.wav", "", "\\d+");
+			destination_number = session:playAndGetDigits(digit_min_length, digit_max_length, extension_tries, digit_timeout, "#", sound_extension, "", "\\d+");
+			if (string.len(destination_number) == 0 and fallback_destination) then
+			    destination_number = fallback_destination;
+			end
 			--if (string.len(destination_number) == 10) then destination_number = "1"..destination_number; end
+		end
+	end
+
+--set privacy
+	if (session:ready()) then
+		if (privacy == "true") then
+			session:execute("privacy", "full");
+			session:execute("set", "sip_h_Privacy=id");
+			session:execute("set", "privacy=yes");
 		end
 	end
 
 --set the caller id name and number
 	if (session:ready()) then
-		if (string.len(destination_number) < 7) then
+		cmd = "user_exists id ".. destination_number .." "..context;
+		user_exists = trim(api:executeString(cmd));
+		if (user_exists == "true") then
 			if (caller_id_name) then
 				--caller id name provided do nothing
 			else
@@ -129,28 +178,15 @@
 		end
 	end
 
---transfer or bridge the call
+--send the destination
 	if (session:ready()) then
-		if (string.len(destination_number) < 7) then
+		if (user_exists == true) then
 			--local call
 			session:execute("transfer", destination_number .. " XML " .. context);
 		else
-			--remote call
-			if (gateway) then
-				gateway_table = explode(",",gateway);
-				for index,value in pairs(gateway_table) do
-					session:execute("bridge", "{continue_on_fail=true,hangup_after_bridge=true,origination_caller_id_name="..caller_id_name..",origination_caller_id_number="..caller_id_number.."}sofia/gateway/"..value.."/"..destination_number);
-				end
-		else
-				session:execute("set", "effective_caller_id_name="..caller_id_name);
-				session:execute("set", "effective_caller_id_number="..caller_id_number);
-				session:execute("transfer", destination_number .. " XML " .. context);
-			end
+			--exteernal call
+			session:execute("set", "effective_caller_id_name="..caller_id_name);
+			session:execute("set", "effective_caller_id_number="..caller_id_number);
+			session:execute("transfer", destination_number .. " XML " .. context);
 		end
 	end
-
---alternate method
-	--local session2 = freeswitch.Session("{ignore_early_media=true}sofia/gateway/flowroute.com/"..destination_number);
-	--t1 = os.date('*t');
-	--call_start_time = os.time(t1);
-	--freeswitch.bridge(session, session2);

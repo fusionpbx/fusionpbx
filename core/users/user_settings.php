@@ -23,16 +23,20 @@
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('user_setting_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('user_setting_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //toggle setting enabled
 	if (sizeof($_REQUEST) > 1) {
@@ -48,8 +52,8 @@ else {
 			$db->exec(check_sql($sql));
 			unset($sql);
 
-			$_SESSION["message"] = $text['message-update'];
-			header("Location: usersupdate.php?id=".$user_uuid);
+			message::add($text['message-update']);
+			header("Location: user_edit.php?id=".$user_uuid);
 			exit;
 		}
 	}
@@ -95,6 +99,7 @@ else {
 	$sql .= "and not ( ";
 	$sql .= "(user_setting_category = 'domain' and user_setting_subcategory = 'language') ";
 	$sql .= "or (user_setting_category = 'domain' and user_setting_subcategory = 'time_zone') ";
+	$sql .= "or (user_setting_category = 'message' and user_setting_subcategory = 'key') ";
 	$sql .= ") ";
 	if (strlen($order_by) == 0) {
 		$sql .= "order by user_setting_category, user_setting_subcategory, user_setting_order asc ";
@@ -105,8 +110,7 @@ else {
 	$sql .= "limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
+	$user_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
 
 	$c = 0;
@@ -116,9 +120,9 @@ else {
 //show the content
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
-	if ($result_count > 0) {
+	if (is_array($user_settings)) {
 		$previous_category = '';
-		foreach($result as $row) {
+		foreach($user_settings as $row) {
 			if ($previous_category != $row['user_setting_category']) {
 				$c = 0;
 				echo "<tr>\n";
@@ -230,20 +234,20 @@ else {
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center;'>\n";
 			echo "		<a href='?user_id=".$row['user_uuid']."&id[]=".$row['user_setting_uuid']."&enabled=".(($row['user_setting_enabled'] == 'true') ? 'false' : 'true')."'>".$text['label-'.$row['user_setting_enabled']]."</a>\n";
 			echo "	</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".$row['user_setting_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($row['user_setting_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('user_setting_edit')) {
-				echo "<a href='user_setting_edit.php?user_uuid=".$row['user_uuid']."&id=".$row['user_setting_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='user_setting_edit.php?user_uuid=".escape($row['user_uuid'])."&id=".escape($row['user_setting_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('user_setting_delete')) {
-				echo "<a href='user_setting_delete.php?user_uuid=".$row['user_uuid']."&id[]=".$row['user_setting_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='user_setting_delete.php?user_uuid=".escape($row['user_uuid'])."&id[]=".escape($row['user_setting_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 			$previous_category = $row['user_setting_category'];
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($sql, $user_settings);
 	} //end if results
 
 	echo "<tr>\n";
@@ -256,7 +260,7 @@ else {
 	if (permission_exists('user_setting_add')) {
 		echo 		"<a href='user_setting_edit.php?user_uuid=".check_str($_GET['id'])."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
-	if (permission_exists('user_setting_delete') && $result_count > 0) {
+	if (permission_exists('user_setting_delete') && is_array($user_settings)) {
 		echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm_settings').submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
 	}
 	echo "		</td>\n";

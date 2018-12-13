@@ -61,6 +61,7 @@ include "root.php";
 			//music on hold
 				$music_list = $this->get();
 				if (count($music_list) > 0) {
+					$select .= "	<option value=''>\n";
 					$select .= "	<optgroup label='".$text['label-music_on_hold']."'>\n";
 					$previous_name = '';
 					foreach($music_list as $row) {
@@ -89,6 +90,23 @@ include "root.php";
 						$select .= "	</optgroup>\n";
 					}
 				}
+			//streams
+				if (is_dir($_SERVER["PROJECT_ROOT"].'/app/streams')) {
+					$sql = "select * from v_streams ";
+					$sql .= "where (domain_uuid = '".$this->domain_uuid."' or domain_uuid is null) ";
+					$sql .= "and stream_enabled = 'true' ";
+					$sql .= "order by stream_name asc ";
+					$prep_statement = $this->db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$streams = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					if (sizeof($streams) > 0) {
+						$select .= "	<optgroup label='".$text['label-streams']."'>";
+						foreach($streams as $row){
+							$select .= "		<option value='".$row['stream_location']."' ".(($selected == $row['stream_location']) ? 'selected="selected"' : null).">".$row['stream_name']."</option>\n";
+						}
+						$select .= "	</optgroup>\n";
+					}
+				}
 			//add additional options
 				if (sizeof($options) > 0) {
 					$select .= "	<optgroup label='".$text['label-others']."'>";
@@ -111,7 +129,7 @@ include "root.php";
 				$sql .= "from v_music_on_hold as m ";
 				$sql .= "left join v_domains as d ON d.domain_uuid = m.domain_uuid ";
 				$sql .= "where (m.domain_uuid = '".$this->domain_uuid."' or m.domain_uuid is null) ";
-				$sql .= "order by m.domain_uuid desc, music_on_hold_rate asc, music_on_hold_name asc";
+				$sql .= "order by m.domain_uuid desc, music_on_hold_name asc, music_on_hold_rate asc ";
 				$prep_statement = $this->db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				return $prep_statement->fetchAll(PDO::FETCH_NAMED);

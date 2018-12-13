@@ -25,24 +25,26 @@
         James Rose <james.o.rose@gmail.com>
         Mark J Crane <markjcrane@fusionpbx.com>
 */
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+	require_once "resources/header.php";
+	//require_once "xml_cdr_statistics_inc.php";
 
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-require_once "resources/header.php";
-require_once "resources/schema.php";
-//require_once "xml_cdr_statistics_inc.php";
-if (permission_exists('xml_cdr_view')) {
-        //access granted
-}
-else {
-        echo "access denied";
-        exit;
-}
+//check permissions
+	if (permission_exists('xml_cdr_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //additional includes
         //require_once "xml_cdr_statistics_inc.php";
-require_once "resources/header.php";
+	require_once "resources/header.php";
+
 
 global $db;
 

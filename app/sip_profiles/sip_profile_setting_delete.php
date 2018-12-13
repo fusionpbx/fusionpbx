@@ -59,7 +59,7 @@ if (strlen($id)>0) {
 }
 
 //redirect the browser
-	$_SESSION["message"] = $text['message-delete'];
+	message::add($text['message-delete']);
 	header("Location: sip_profile_edit.php?id=".$sip_profile_uuid);
 	return;
 

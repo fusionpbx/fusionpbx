@@ -138,7 +138,7 @@ else {
 
 			if ($response['result'] == 'submitted') {
 				// set message
-				$_SESSION["message"] = $text['message-demographics_submitted'];
+				message::add($text['message-demographics_submitted']);
 			}
 
 			header("Location: notification_edit.php");
@@ -196,7 +196,7 @@ else {
 				}
 			}
 			// redirect
-			$_SESSION["message"] = $text['message-update'];
+			message::add($text['message-update']);
 			header("Location: notification_edit.php");
 			exit;
 		}
@@ -208,8 +208,7 @@ else {
 				($project_notification_method == 'email' && $project_notification_recipient == '')
 				) {
 					$_SESSION["postback"] = $_POST;
-					$_SESSION["message_mood"] = 'negative';
-					$_SESSION["message"] = $text['message-invalid_recipient'];
+					message::add($text['message-invalid_recipient'], 'negative');
 					header("Location: notification_edit.php");
 					exit;
 			}
@@ -254,15 +253,16 @@ else {
 			$db->exec(check_sql($sql));
 			unset($sql);
 			// set message
-			$_SESSION["message"] = $text['message-update'];
 			if (
 				$project_security == 'false' &&
 				$project_releases == 'false' &&
 				$project_events == 'false' &&
 				$project_news == 'false'
 				) {
-				$_SESSION["message_mood"] = 'alert';
-				$_SESSION["message"] = $_SESSION["message"]." - ".$text['message-no_channels'];
+				message::add($text['message-update']." - ".$text['message-no_channels'], 'alert');
+			}
+			else {
+				message::add($text['message-update']);
 			}
 			// redirect
 			header("Location: notification_edit.php");

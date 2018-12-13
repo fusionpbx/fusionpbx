@@ -102,6 +102,7 @@
 	$row_style["1"] = "row_style1";
 
 //show the content
+     
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-pin_numbers']."</b></td>\n";
@@ -109,6 +110,7 @@
 	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
 	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>\n";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
+	echo "<input type='button' class='btn' style='margin-right: 15px;' value='".$text['button-export']."' onclick=\"window.location.href='pin_download.php'\">\n";
 	echo "			</td>\n";
 	echo "		</form>\n";
 	echo "	</tr>\n";
@@ -138,7 +140,7 @@
 	if (is_array($result)) {
 		foreach($result as $row) {
 			if (permission_exists('pin_number_edit')) {
-				$tr_link = "href='pin_number_edit.php?id=".$row['pin_number_uuid']."'";
+				$tr_link = "href='pin_number_edit.php?id=".escape($row['pin_number_uuid'])."'";
 			}
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['pin_number']."&nbsp;</td>\n";
@@ -147,10 +149,10 @@
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('pin_number_edit')) {
-				echo "<a href='pin_number_edit.php?id=".$row['pin_number_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='pin_number_edit.php?id=".escape($row['pin_number_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('pin_number_delete')) {
-				echo "<a href='pin_number_delete.php?id=".$row['pin_number_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='pin_number_delete.php?id=".escape($row['pin_number_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -182,5 +184,4 @@
 
 //include the footer
 	require_once "resources/footer.php";
-
 ?>

@@ -17,24 +17,27 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
 
-if (permission_exists('operator_panel_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('operator_panel_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -42,39 +45,60 @@ else {
 
 //set user status
 	if (isset($_REQUEST['status']) && $_REQUEST['status'] != '') {
-		$user_status = check_str($_REQUEST['status']);
-	//sql update
-		$sql  = "update v_users set ";
-		$sql .= "user_status = '".$user_status."' ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and user_uuid = '".$_SESSION['user']['user_uuid']."' ";
-		if (permission_exists("user_account_setting_edit")) {
-			$count = $db->exec(check_sql($sql));
-		}
+		//update the status
+			$user_status = check_str($_REQUEST['status']);
+			$sql  = "update v_users set ";
+			$sql .= "user_status = '".$user_status."' ";
+			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "and user_uuid = '".$_SESSION['user']['user_uuid']."' ";
+			if (permission_exists("user_account_setting_edit")) {
+				$count = $db->exec(check_sql($sql));
+			}
 
-	//if call center app is installed then update the user_status
-		if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/call_centers')) {
-			//update the user_status
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-				$switch_cmd .= "callcenter_config agent set status ".$_SESSION['user']['username']."@".$_SESSION['domain_name']." '".$user_status."'";
-				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+		//if call center app is installed then update the user_status
+			if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/call_centers')) {
+				//get the call center agent uuid
+					$sql = "select call_center_agent_uuid from v_call_center_agents ";
+					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+					$sql .= "and user_uuid = '".$_SESSION['user']['user_uuid']."' ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					if ($prep_statement) {
+						$prep_statement->execute();
+						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+						$call_center_agent_uuid = $row['call_center_agent_uuid'];
+					}
+					unset($sql, $prep_statement, $result);
+				//update the user_status
+					if (isset($call_center_agent_uuid)) {
+						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+						$switch_cmd .= "callcenter_config agent set status ".$call_center_agent_uuid." '".$user_status."'";
+						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+					}
 
-			//update the user state
-				$cmd = "api callcenter_config agent set state ".$_SESSION['user']['username']."@".$_SESSION['domain_name']." Waiting";
-				$response = event_socket_request($fp, $cmd);
-		}
+				//update the user state
+					if (isset($call_center_agent_uuid)) {
+						$cmd = "api callcenter_config agent set state ".$call_center_agent_uuid." Waiting";
+						$response = event_socket_request($fp, $cmd);
+					}
+			}
 
-		exit;
+		//stop execution
+			exit;
 	}
 
-$document['title'] = $text['title-operator_panel'];
-require_once "resources/header.php";
+//set the title
+	$document['title'] = $text['title-operator_panel'];
+
+//include the header
+	require_once "resources/header.php";
+
 ?>
 
 <!-- virtual_drag function holding elements -->
 <input type='hidden' class='formfld' id='vd_call_id' value=''>
 <input type='hidden' class='formfld' id='vd_ext_from' value=''>
 <input type='hidden' class='formfld' id='vd_ext_to' value=''>
+<input type='hidden' class='formfld' id='sort1' value=''>
 
 <!-- autocomplete for contact lookup -->
 <link rel="stylesheet" type="text/css" href="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-ui.css">
@@ -118,6 +142,10 @@ require_once "resources/header.php";
 	if (this.xmlHttp.readyState == 4 && (this.xmlHttp.status == 200 || !/^http/.test(window.location.href)))
 		//this.el.innerHTML = this.xmlHttp.responseText;
 		document.getElementById('ajax_reponse').innerHTML = this.xmlHttp.responseText;
+		if(document.getElementById('sort')){
+			 if(document.getElementById('sort').value != "") 
+				document.getElementById('sort1').value=document.getElementById('sort').value;
+		}
 	}
 
 	var requestTime = function() {
@@ -126,6 +154,8 @@ require_once "resources/header.php";
 		url += '&vd_ext_to=' + document.getElementById('vd_ext_to').value;
 		url += '&group=' + ((document.getElementById('group')) ? document.getElementById('group').value : '');
 		url += '&eavesdrop_dest=' + ((document.getElementById('eavesdrop_dest')) ? document.getElementById('eavesdrop_dest').value : '');
+		if (document.getElementById('sort1'))
+			if (document.getElementById('sort1').value == '1') url += '&sort';
 		<?php
 		if (isset($_GET['debug'])) {
 			echo "url += '&debug';";
@@ -211,6 +241,8 @@ require_once "resources/header.php";
 			url += '&vd_ext_to=' + document.getElementById('vd_ext_to').value;
 			url += '&group=' + ((document.getElementById('group')) ? document.getElementById('group').value : '');
 			url += '&eavesdrop_dest=' + ((document.getElementById('eavesdrop_dest')) ? document.getElementById('eavesdrop_dest').value : '');
+			if (document.getElementById('sort1'))
+				if (document.getElementById('sort1').value == '1') url += '&sort';
 			<?php
 			if (isset($_GET['debug'])) {
 				echo "url += '&debug';";
@@ -427,11 +459,15 @@ require_once "resources/header.php";
 </style>
 
 <?php
+
 //create simple array of users own extensions
 unset($_SESSION['user']['extensions']);
-foreach ($_SESSION['user']['extension'] as $assigned_extensions) {
-	$_SESSION['user']['extensions'][] = $assigned_extensions['user'];
+if (is_array($_SESSION['user']['extension'])) {
+	foreach ($_SESSION['user']['extension'] as $assigned_extensions) {
+		$_SESSION['user']['extensions'][] = $assigned_extensions['user'];
+	}
 }
+
 ?>
 
 <div id='ajax_reponse'></div>
@@ -439,5 +475,6 @@ foreach ($_SESSION['user']['extension'] as $assigned_extensions) {
 <br><br>
 
 <?php
-require_once "resources/footer.php";
+//include the footer
+	require_once "resources/footer.php";
 ?>

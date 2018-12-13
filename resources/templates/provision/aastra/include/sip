@@ -1,0 +1,40 @@
+# #################
+# SIP settings
+# #################
+
+# === Global ===
+# most can be overridden per line; see below
+sip vmail: {$voicemail_number}              # Voice Mail Extenstion
+
+sip transport protocol: 1       # 0 - UDP and TCP; 1 - UDP; 2 - TCP
+sip use basic codecs: 1         # 0 - Disable; 1 - Enable
+sip customized codec: payload=0;ptime=20;silsupp=off,payload=8;ptime=20;silsup=off  #see page A-59
+sip out-of-band dtmf: 1         # 0 - Disable; 1 - Enable
+sip dtmf method: 1              # 0 - RTP; 1 - SIP INFO; 2 - BOTH
+
+# #################
+# SIP settings - per-line
+# #################
+{foreach $lines as $row}
+sip line{$row.line_number} screen name: {$row.display_name}
+sip line{$row.line_number} user name: {$row.user_id}  # used in SIP URI
+sip line{$row.line_number} password: {$row.password}
+sip line{$row.line_number} auth name: {$row.user_id}  # used in Authorization header field of SIP REGISTER request
+sip line{$row.line_number} registrar ip: {$row.server_address}
+{if isset($row.sip_port) }
+sip line{$row.line_number} registrar port: {$row.sip_port}
+{else}
+sip line{$row.line_number} registrar port: {$line_sip_port}
+{/if}
+sip line{$row.line_number} proxy ip: {$row.server_address}
+{if isset($row.sip_port) }
+sip line{$row.line_number} proxy port: {$row.sip_port}
+{else}
+sip line{$row.line_number} proxy port: {$line_sip_port}
+{/if}
+{if isset($row.register_expires) }
+sip line{$row.line_number} registration period: {$row.register_expires}    # requested registration period, defaults to 0
+{else}
+sip line{$row.line_number} registration period: {$line_register_expires}    # requested registration period, defaults to 0
+{/if}
+{/foreach}

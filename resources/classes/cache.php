@@ -81,26 +81,59 @@ class cache {
 	 * @var string $key		cache id
 	 */
 	public function delete($key) {
-		// connect to event socket
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-			if ($fp === false) {
-				return false;
+
+		//cache method memcache 
+			if ($_SESSION['cache']['method']['text'] == "memcache") {
+				// connect to event socket
+					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					if ($fp === false) {
+						return false;
+					}
+
+				//send a custom event
+					$event = "sendevent CUSTOM\n";
+					$event .= "Event-Name: CUSTOM\n";
+					$event .= "Event-Subclass: fusion::memcache\n";
+					$event .= "API-Command: memcache\n";
+					$event .= "API-Command-Argument: delete ".$key."\n";
+					event_socket_request($fp, $event);
+
+				//run the memcache
+					$command = "memcache delete ".$key;
+					$result = event_socket_request($fp, 'api '.$command);
+
+				//close event socket
+					fclose($fp);
+
 			}
 
-		//send a custom event
-			$event = "sendevent CUSTOM\n";
-			$event .= "Event-Name: CUSTOM\n";
-			$event .= "Event-Subclass: fusion::memcache\n";
-			$event .= "API-Command: memcache\n";
-			$event .= "API-Command-Argument: delete ".$key."\n";
-			event_socket_request($fp, $event);
+		//cache method file
+			if ($_SESSION['cache']['method']['text'] == "file") {
+				//change the delimiter
+					$key = str_replace(":", ".", $key);
 
-		//run the memcache
-			$command = "memcache delete ".$key;
-			$result = event_socket_request($fp, 'api '.$command);
+				// connect to event socket
+					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					if ($fp === false) {
+						return false;
+					}
 
-		//close event socket
-			fclose($fp);
+				//send a custom event
+					$event = "sendevent CUSTOM\n";
+					$event .= "Event-Name: CUSTOM\n";
+					$event .= "Event-Subclass: fusion::file\n";
+					$event .= "API-Command: cache\n";
+					$event .= "API-Command-Argument: delete ".$key."\n";
+					event_socket_request($fp, $event);
+
+				//remove the local files
+					if (file_exists($_SESSION['cache']['location']['text'] . "/" . $key)) {
+						unlink($_SESSION['cache']['location']['text'] . "/" . $key);
+					}
+					if (file_exists($_SESSION['cache']['location']['text'] . "/" . $key . ".tmp")) {
+						unlink($_SESSION['cache']['location']['text'] . "/" . $key . ".tmp");
+					}
+			}
 
 		// return result
 			return $result;
@@ -110,26 +143,51 @@ class cache {
 	 * Delete the entire cache
 	 */
 	public function flush() {
-		// connect to event socket
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-			if ($fp === false) {
-				return false;
+		//cache method memcache 
+			if ($_SESSION['cache']['method']['text'] == "memcache") {
+				// connect to event socket
+					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					if ($fp === false) {
+						return false;
+					}
+
+				//send a custom event
+					$event = "sendevent CUSTOM\n";
+					$event .= "Event-Name: CUSTOM\n";
+					$event .= "Event-Subclass: fusion::memcache\n";
+					$event .= "API-Command: memcache\n";
+					$event .= "API-Command-Argument: flush\n";
+					event_socket_request($fp, $event);
+
+				//run the memcache
+					$command = "memcache flush";
+					$result = event_socket_request($fp, 'api '.$command);
+
+				//close event socket
+					fclose($fp);
+
 			}
 
-		//send a custom event
-			$event = "sendevent CUSTOM\n";
-			$event .= "Event-Name: CUSTOM\n";
-			$event .= "Event-Subclass: fusion::memcache\n";
-			$event .= "API-Command: memcache\n";
-			$event .= "API-Command-Argument: flush\n";
-			event_socket_request($fp, $event);
+		//cache method file 
+			if ($_SESSION['cache']['method']['text'] == "file") {
+				// connect to event socket
+					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					if ($fp === false) {
+						return false;
+					}
 
-		//run the memcache
-			$command = "memcache flush";
-			$result = event_socket_request($fp, 'api '.$command);
+				//send a custom event
+					$event = "sendevent CUSTOM\n";
+					$event .= "Event-Name: CUSTOM\n";
+					$event .= "Event-Subclass: fusion::file\n";
+					$event .= "API-Command: cache\n";
+					$event .= "API-Command-Argument: flush\n";
+					event_socket_request($fp, $event);
 
-		//close event socket
-			fclose($fp);
+				//remove the cache
+					recursive_delete($_SESSION['cache']['location']['text']);
+
+			}
 
 		// return result
 			return $result;

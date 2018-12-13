@@ -1,0 +1,31 @@
+{$rows=8}
+{$cols=1}
+{if $template == "grandstream/gxp16xx"}{$rows=8}{$cols=1}{/if}
+{if $template == "grandstream/gxp1628"}{$rows=8}{$cols=1}{/if}
+{if $template == "grandstream/gxp1630"}{$rows=8}{$cols=1}{/if}
+{if $template == "grandstream/gxp2160"}{$rows=12}{$cols=2}{/if}
+{if $template == "grandstream/gxp2130"}{$rows=4}{$cols=2}{/if}
+{if $cols == 2}
+{for $row=1 to $rows}
+{$mem=$row+$rows}
+{if isset($keys.memory.$mem.device_key_category) && isset($keys.memory.$mem.device_key_type)}
+	{$keys.memory.$mem.device_key_label}
+{else}
+
+{/if}
+{$mem=$row}
+{if isset($keys.memory.$mem.device_key_category) && isset($keys.memory.$mem.device_key_type)}
+{$keys.memory.$mem.device_key_label}
+{else}
+
+{/if}
+{/for}
+{else}
+{for $mem=1 to $rows}
+{if isset($keys.memory.$mem.device_key_category) && isset($keys.memory.$mem.device_key_type)}
+{$keys.memory.$mem.device_key_label}
+{else}
+
+{/if}
+{/for}
+{/if}

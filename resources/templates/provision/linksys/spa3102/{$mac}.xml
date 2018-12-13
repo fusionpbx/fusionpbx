@@ -35,10 +35,9 @@
 
   <!-- network config -->
   <DHCP>yes</DHCP> <!-- for WAN port -->
-  <!--
-  <Primary_NTP_Server>{$domain_name}</Primary_NTP_Server>
-  <Secondary_NTP_Server>pool.ntp.org</Secondary_NTP_Server>
-  -->
+
+<Primary_NTP_Server>{$ntp_server_primary}</Primary_NTP_Server>
+<Secondary_NTP_Server>{$ntp_server_secondary}</Secondary_NTP_Server>
 
   <!-- remote logging - valid debug levels are 0, 1, 2 and 3
   <Syslog_Server>{$domain_name}</Syslog_Server>
@@ -63,11 +62,11 @@
   <Admin_Passwd/>
   <User_Password/>
   -->
-  <Time_Zone>GMT-{$time_zone_offset}</Time_Zone>
+  <Time_Zone group="Regional/Miscellaneous">{$spa_time_zone}</Time_Zone>
 
   <!-- SIP settings -->
-  <Proxy_1_>{$server_address_1}</Proxy_1_>
-  <SIP_Port_1_>{$sip_port_1}</SIP_Port_1_>
+  <Proxy_1_>{$account.1.server_address}</Proxy_1_>
+  <SIP_Port_1_>{$account.1.sip_port}</SIP_Port_1_>
   <Use_Outbound_Proxy_1_>no</Use_Outbound_Proxy_1_>
   <!-- only allow proxy IP to connect
   <Restrict_Source_IP_1_>yes</Restrict_Source_IP_1_>
@@ -79,9 +78,9 @@
 
   <!-- FXS port aka "Line 1" in web interface -->
   <Register_1_>yes</Register_1_>
-  <User_ID_1_>{$user_id_1}</User_ID_1_>
-  <Password_1_>{$user_password_1}</Password_1_>
-  <Display_Name_1_>{$display_name_1}</Display_Name_1_>
+  <User_ID_1_>{$account.1.user_id}</User_ID_1_>
+  <Password_1_>{$account.1.password}</Password_1_>
+  <Display_Name_1_>{$account.1.display_name}</Display_Name_1_>
   <Use_Auth_ID_1_>no</Use_Auth_ID_1_> <!-- Use authentication ID instead of user ID for SIP registration -->
 
   <Line_Enable_1_>yes</Line_Enable_1_>

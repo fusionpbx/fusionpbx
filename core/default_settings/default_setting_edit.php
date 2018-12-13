@@ -23,16 +23,20 @@
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('default_setting_add') || permission_exists('default_setting_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('default_setting_add') || permission_exists('default_setting_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -59,131 +63,117 @@ else {
 		$default_setting_description = check_str($_POST["default_setting_description"]);
 	}
 
-if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+//process the http post
+	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
-	$msg = '';
-	if ($action == "update") {
-		$default_setting_uuid = check_str($_POST["default_setting_uuid"]);
-	}
-
-	//check for all required data
-		if (strlen($default_setting_category) == 0) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
-		if (strlen($default_setting_subcategory) == 0) { $msg .= $text['message-required'].$text['label-subcategory']."<br>\n"; }
-		if (strlen($default_setting_name) == 0) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
-		//if (strlen($default_setting_value) == 0) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
-		if (strlen($default_setting_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
-		if (strlen($default_setting_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
-		//if (strlen($default_setting_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-			require_once "resources/header.php";
-			require_once "resources/persist_form_var.php";
-			echo "<div align='center'>\n";
-			echo "<table><tr><td>\n";
-			echo $msg."<br />";
-			echo "</td></tr></table>\n";
-			persistformvar($_POST);
-			echo "</div>\n";
-			require_once "resources/footer.php";
-			return;
-		}
-
-	//add or update the database
-		if ($_POST["persistformvar"] != "true") {
-			// fix null
-			$default_setting_order = ($default_setting_order != '') ? $default_setting_order : 'null';
-
-			//update switch timezone variables
-			if ($default_setting_category == "domain" && $default_setting_subcategory == "time_zone" && $default_setting_name == "name" ) {
-				//get the action
-					$sql = "select * from v_vars ";
-					$sql .= "where var_name = 'timezone' ";
-					$prep_statement = $db->prepare(check_sql($sql));
-					$prep_statement->execute();
-					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-					$var_action = "add";
-					foreach ($result as $row) {
-						$var_action = "update";
-					}
-					unset ($prep_statement);
-
-				//update the timezone
-					if ($var_action == "update") {
-						$sql = "update v_vars ";
-						$sql .= "set var_value = '".$default_setting_value."' ";
-						$sql .= "where var_name = 'timezone' ";
-					}
-					else {
-						$sql = "insert into v_vars ";
-						$sql .= "(var_uuid, var_name, var_value, var_cat, var_enabled) ";
-						$sql .= "values ('".uuid()."', 'timezone', '$default_setting_value', 'Defaults', 'true'); ";
-					}
-					$db->query($sql);
-					unset($sql);
-
-				//synchronize the configuration
-					save_var_xml();
+		//set the default_setting_uuid
+			if ($action == "update") {
+				$default_setting_uuid = check_str($_POST["default_setting_uuid"]);
+			}
+			else {
+				$default_setting_uuid = uuid();
 			}
 
-			if ($action == "add" && permission_exists('default_setting_add')) {
-				$sql = "insert into v_default_settings ";
-				$sql .= "(";
-				$sql .= "default_setting_uuid, ";
-				$sql .= "default_setting_category, ";
-				$sql .= "default_setting_subcategory, ";
-				$sql .= "default_setting_name, ";
-				$sql .= "default_setting_value, ";
-				$sql .= "default_setting_order, ";
-				$sql .= "default_setting_enabled, ";
-				$sql .= "default_setting_description ";
-				$sql .= ")";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'".uuid()."', ";
-				$sql .= "'$default_setting_category', ";
-				$sql .= "'$default_setting_subcategory', ";
-				$sql .= "'$default_setting_name', ";
-				$sql .= "'$default_setting_value', ";
-				$sql .= "$default_setting_order, ";
-				$sql .= "'$default_setting_enabled', ";
-				$sql .= "'$default_setting_description' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
-
-				$_SESSION["message"] = $text['message-add'];
-				header("Location: default_settings.php".(($search != '') ? "?search=".$search : null)."#".$default_setting_category);
+		//check for all required data
+			$msg = '';
+			if (strlen($default_setting_category) == 0) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
+			if (strlen($default_setting_subcategory) == 0) { $msg .= $text['message-required'].$text['label-subcategory']."<br>\n"; }
+			if (strlen($default_setting_name) == 0) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
+			//if (strlen($default_setting_value) == 0) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
+			if (strlen($default_setting_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
+			if (strlen($default_setting_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+			//if (strlen($default_setting_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
+			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+				require_once "resources/header.php";
+				require_once "resources/persist_form_var.php";
+				echo "<div align='center'>\n";
+				echo "<table><tr><td>\n";
+				echo $msg."<br />";
+				echo "</td></tr></table>\n";
+				persistformvar($_POST);
+				echo "</div>\n";
+				require_once "resources/footer.php";
 				return;
-			} //if ($action == "add")
+			}
 
-			if ($action == "update" && permission_exists('default_setting_edit')) {
-				$sql = "update v_default_settings set ";
-				$sql .= "default_setting_category = '$default_setting_category', ";
-				$sql .= "default_setting_subcategory = '$default_setting_subcategory', ";
-				$sql .= "default_setting_name = '$default_setting_name', ";
-				$sql .= "default_setting_value = '$default_setting_value', ";
-				$sql .= "default_setting_order = $default_setting_order, ";
-				$sql .= "default_setting_enabled = '$default_setting_enabled', ";
-				$sql .= "default_setting_description = '$default_setting_description' ";
-				$sql .= "where default_setting_uuid = '$default_setting_uuid'";
-				$db->exec(check_sql($sql));
-				unset($sql);
+		//add or update the database
+			if ($_POST["persistformvar"] != "true") {
+				// fix null
+				$default_setting_order = ($default_setting_order != '') ? $default_setting_order : 'null';
 
-				$_SESSION["message"] = $text['message-update'];
-				header("Location: default_settings.php".(($search != '') ? "?search=".$search : null)."#".$default_setting_category);
-				return;
-			} //if ($action == "update")
-		} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+				//update switch timezone variables
+				if ($default_setting_category == "domain" && $default_setting_subcategory == "time_zone" && $default_setting_name == "name" ) {
+					//get the action
+						$sql = "select * from v_vars ";
+						$sql .= "where var_name = 'timezone' ";
+						$prep_statement = $db->prepare(check_sql($sql));
+						$prep_statement->execute();
+						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+						$var_action = "add";
+						foreach ($result as $row) {
+							$var_action = "update";
+						}
+						unset ($prep_statement);
+
+					//update the timezone
+						if ($var_action == "update") {
+							$sql = "update v_vars ";
+							$sql .= "set var_value = '".$default_setting_value."' ";
+							$sql .= "where var_name = 'timezone' ";
+						}
+						else {
+							$sql = "insert into v_vars ";
+							$sql .= "(var_uuid, var_name, var_value, var_category, var_command, var_enabled) ";
+							$sql .= "values ('".uuid()."', 'timezone', '$default_setting_value', 'Defaults', 'set', 'true'); ";
+						}
+						$db->query($sql);
+						unset($sql);
+
+					//synchronize the configuration
+						save_var_xml();
+				}
+
+				//build the array of data
+				$x = 0;
+				$array['default_settings'][$x]['default_setting_uuid'] = $default_setting_uuid;
+				$array['default_settings'][$x]['default_setting_category'] = $default_setting_category;
+				$array['default_settings'][$x]['default_setting_subcategory'] = $default_setting_subcategory;
+				$array['default_settings'][$x]['default_setting_name'] = $default_setting_name;
+				$array['default_settings'][$x]['default_setting_value'] = $default_setting_value;
+				$array['default_settings'][$x]['default_setting_order'] = $default_setting_order;
+				$array['default_settings'][$x]['default_setting_enabled'] = $default_setting_enabled;
+				$array['default_settings'][$x]['default_setting_description'] = $default_setting_description;
+
+				//save to the data
+				$database = new database;
+				$database->app_name = 'default_settings';
+				$database->app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
+				$database->save($array);
+				$message = $database->message;
+
+				//set the message and redirect the user
+				if ($action == "add" && permission_exists('default_setting_add')) {
+					message::add($text['message-add']);
+					header("Location: default_settings.php".(($search != '') ? "?search=".$search : null)."#anchor_".$default_setting_category);
+					return;
+				}
+				if ($action == "update" && permission_exists('default_setting_edit')) {
+					message::add($text['message-update']);
+					header("Location: default_settings.php".(($search != '') ? "?search=".$search : null)."#anchor_".$default_setting_category);
+					return;
+				}
+			} //if ($_POST["persistformvar"] != "true")
+	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$default_setting_uuid = check_str($_GET["id"]);
 		$sql = "select * from v_default_settings ";
 		$sql .= "where default_setting_uuid = '$default_setting_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($default_settings as &$row) {
 			$default_setting_category = $row["default_setting_category"];
 			$default_setting_subcategory = $row["default_setting_subcategory"];
 			$default_setting_name = $row["default_setting_name"];
@@ -489,6 +479,24 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "		<option value='superfine' ".(($default_setting_value == 'superfine') ? 'selected' : null).">".$text['label-superfine']."</option>";
 		echo "	</select>";
 	}
+	elseif ($category == "provision" && $subcategory == "aastra_time_format" && $name == "text" ) {
+		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "		<option value='1' ".(($default_setting_value == "1") ? "selected='selected'" : null).">".$text['label-24-hour']."</option>\n";
+		echo "		<option value='0' ".(($default_setting_value == "0") ? "selected='selected'" : null).">".$text['label-12-hour']."</option>\n";
+		echo "	</select>\n";
+	}
+	elseif ($category == "provision" && $subcategory == "aastra_date_format" && $name == "text" ) {
+		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "		<option value='0' ".(($default_setting_value == "0") ? "selected='selected'" : null).">WWW MMM DD</option>\n";
+		echo "		<option value='1' ".(($default_setting_value == "1") ? "selected='selected'" : null).">DD-MMM-YY</option>\n";
+		echo "		<option value='2' ".(($default_setting_value == "2") ? "selected='selected'" : null).">YYYY-MM-DD</option>\n";
+		echo "		<option value='3' ".(($default_setting_value == "3") ? "selected='selected'" : null).">DD/MM/YYYY</option>\n";
+		echo "		<option value='4' ".(($default_setting_value == "4") ? "selected='selected'" : null).">DD/MM/YY</option>\n";
+		echo "		<option value='5' ".(($default_setting_value == "5") ? "selected='selected'" : null).">DD-MM-YY</option>\n";
+		echo "		<option value='6' ".(($default_setting_value == "6") ? "selected='selected'" : null).">MM/DD/YY</option>\n";
+		echo "		<option value='7' ".(($default_setting_value == "7") ? "selected='selected'" : null).">MMM DD</option>\n";
+		echo "	</select>\n";
+	}
 	elseif ($category == "theme" && $subcategory == "domain_visible" && $name == "text" ) {
 		echo "    <select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
 		echo "    	<option value='false' ".(($default_setting_value == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
@@ -668,4 +676,5 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

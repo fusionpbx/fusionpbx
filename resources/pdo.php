@@ -17,15 +17,17 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2015
+ Portions created by the Initial Developer are Copyright (C) 2008-2016
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
  Raymond Chandler <intralanman@gmail.com>
  */
-include "root.php";
-require_once "resources/functions.php";
+
+//includes
+	include "root.php";
+	require_once "resources/functions.php";
 
 //set defaults
 	if (isset($dbtype)) {
@@ -252,10 +254,12 @@ if ($db_type == "pgsql") {
 	}
 } //end if db_type pgsql
 
-//domain list
-	if ( ( !isset($_SESSION["domain_uuid"])) or (strlen($_SESSION["domain_uuid"]) == 0)) {
+//get the domain list
+	if (!is_array($_SESSION['domains']) or !isset($_SESSION["domain_uuid"])) {
+
 		//get the domain
 			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
+
 		//get the domains from the database
 			$sql = "select * from v_domains";
 			$prep_statement = $db->prepare($sql);
@@ -267,31 +271,38 @@ if ($db_type == "pgsql") {
 			unset($prep_statement);
 
 		//put the domains in natural order
-			natsort($domain_names);
-		//build the domains array in the correct order
-			foreach ($domain_names as $dn) {
-				foreach ($result as $row) {
-					if ($row['domain_name'] == $dn) {
-						$domains[] = $row;
-					}
-				}
+			if (is_array($domain_names)) {
+				natsort($domain_names);
 			}
-			unset($result);
 
-			foreach($domains as $row) {
-				if (count($domains) == 1) {
-					$_SESSION["domain_uuid"] = $row["domain_uuid"];
-					$_SESSION["domain_name"] = $row['domain_name'];
-				}
-				else {
-					if ($row['domain_name'] == $domain_array[0] || $row['domain_name'] == 'www.'.$domain_array[0]) {
-						$_SESSION["domain_uuid"] = $row["domain_uuid"];
-						$_SESSION["domain_name"] = $row["domain_name"];
+		//build the domains array in the correct order
+			if (is_array($domain_names)) { 
+				foreach ($domain_names as $dn) {
+					foreach ($result as $row) {
+						if ($row['domain_name'] == $dn) {
+							$domains[] = $row;
+						}
 					}
 				}
-				$_SESSION['domains'][$row['domain_uuid']] = $row;
+				unset($result);
 			}
-			unset($domains, $prep_statement);
+
+			if (is_array($domains)) { 
+				foreach($domains as $row) {
+					if (count($domains) == 1) {
+						$_SESSION["domain_uuid"] = $row["domain_uuid"];
+						$_SESSION["domain_name"] = $row['domain_name'];
+					}
+					else {
+						if ($row['domain_name'] == $domain_array[0] || $row['domain_name'] == 'www.'.$domain_array[0]) {
+							$_SESSION["domain_uuid"] = $row["domain_uuid"];
+							$_SESSION["domain_name"] = $row["domain_name"];
+						}
+					}
+					$_SESSION['domains'][$row['domain_uuid']] = $row;
+				}
+				unset($domains, $prep_statement);
+			}
 	}
 
 //get the software name
@@ -322,8 +333,8 @@ if ($db_type == "pgsql") {
 		$domain_uuid = uuid();
 	}
 
-//check the domain cidr range
-	if (array_key_exists('cidr',$_SESSION['domain']) and is_array($_SESSION['domain']["cidr"])) {
+//check the domain cidr range 
+	if (isset($_SESSION['domain']["cidr"]) && !defined('STDIN')) {
 		$found = false;
 		foreach($_SESSION['domain']["cidr"] as $cidr) {
 			if (check_cidr($cidr, $_SERVER['REMOTE_ADDR'])) {
@@ -338,7 +349,7 @@ if ($db_type == "pgsql") {
 	}
 
 //check the api cidr range
-	if (array_key_exists('api',$_SESSION) and is_array($_SESSION['api']["cidr"])) {
+	if (isset($_SESSION['api']["cidr"])) {
 		$found = false;
 		foreach($_SESSION['api']["cidr"] as $cidr) {
 			if (check_cidr($cidr, $_SERVER['REMOTE_ADDR'])) {

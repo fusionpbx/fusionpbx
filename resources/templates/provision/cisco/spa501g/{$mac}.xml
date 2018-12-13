@@ -7,7 +7,7 @@
 <Web_Server_Port group="System/System_Configuration">80</Web_Server_Port>
 <Enable_Web_Admin_Access group="System/System_Configuration">Yes</Enable_Web_Admin_Access>
 <Admin_Passwd group="System/System_Configuration">{$admin_password}</Admin_Passwd>
-<User_Password group="System/System_Configuration">{$user_password}</User_Password>
+<User_Password group="System/System_Configuration"></User_Password>
 <Signaling_Protocol group="System/System_Configuration">SIP</Signaling_Protocol>
 <SPCP_Auto-detect group="System/System_Configuration">Yes</SPCP_Auto-detect>
 <Phone-UI-readonly group="System/System_Configuration">No</Phone-UI-readonly>
@@ -37,8 +37,8 @@
 <Debug_Level group="System/Optional_Network_Configuration">0</Debug_Level>
 <Layer_2_Logging group="System/Optional_Network_Configuration">No</Layer_2_Logging>
 <NTP_Enable group="System/Optional_Network_Configuration">Yes</NTP_Enable>
-<Primary_NTP_Server group="System/Optional_Network_Configuration" />
-<Secondary_NTP_Server group="System/Optional_Network_Configuration" />
+<Primary_NTP_Server>{$ntp_server_primary}</Primary_NTP_Server>
+<Secondary_NTP_Server>{$ntp_server_secondary}</Secondary_NTP_Server>
 
 <!-- System/VLAN_Settings -->
 <Enable_VLAN group="System/VLAN_Settings">No</Enable_VLAN>
@@ -148,12 +148,12 @@
 <EncapRTP_Codec_Name group="SIP/SDP_Payload_Types">encaprtp</EncapRTP_Codec_Name>
 
 <!-- SIP/NAT_Support_Parameters -->
-<Handle_VIA_received group="SIP/NAT_Support_Parameters">{$cisco_spa_rport}</Handle_VIA_received>
-<Handle_VIA_rport group="SIP/NAT_Support_Parameters">{$cisco_spa_rport}</Handle_VIA_rport>
-<Insert_VIA_received group="SIP/NAT_Support_Parameters">{$cisco_spa_rport}</Insert_VIA_received>
-<Insert_VIA_rport group="SIP/NAT_Support_Parameters">{$cisco_spa_rport}</Insert_VIA_rport>
-<Substitute_VIA_Addr group="SIP/NAT_Support_Parameters">{$cisco_spa_rport}</Substitute_VIA_Addr>
-<Send_Resp_To_Src_Port group="SIP/NAT_Support_Parameters">{$cisco_spa_rport}</Send_Resp_To_Src_Port>
+<Handle_VIA_received group="SIP/NAT_Support_Parameters">No</Handle_VIA_received>
+<Handle_VIA_rport group="SIP/NAT_Support_Parameters">{$spa_handle_via_rport}</Handle_VIA_rport>
+<Insert_VIA_received group="SIP/NAT_Support_Parameters">No</Insert_VIA_received>
+<Insert_VIA_rport group="SIP/NAT_Support_Parameters">{$spa_insert_via_rport}</Insert_VIA_rport>
+<Substitute_VIA_Addr group="SIP/NAT_Support_Parameters">No</Substitute_VIA_Addr>
+<Send_Resp_To_Src_Port group="SIP/NAT_Support_Parameters">No</Send_Resp_To_Src_Port>
 <STUN_Enable group="SIP/NAT_Support_Parameters">No</STUN_Enable>
 <STUN_Test_Enable group="SIP/NAT_Support_Parameters">No</STUN_Test_Enable>
 <STUN_Server group="SIP/NAT_Support_Parameters" />
@@ -175,8 +175,8 @@
 <Resync_At__HHmm_ group="Provisioning/Configuration_Profile" />
 <Resync_At_Random_Delay group="Provisioning/Configuration_Profile">600</Resync_At_Random_Delay>
 <Resync_Periodic group="Provisioning/Configuration_Profile">0</Resync_Periodic>
-<Resync_Error_Retry_Delay group="Provisioning/Configuration_Profile">3600</Resync_Error_Retry_Delay>
-<Forced_Resync_Delay group="Provisioning/Configuration_Profile">14400</Forced_Resync_Delay>
+<Resync_Error_Retry_Delay group="Provisioning/Configuration_Profile">300</Resync_Error_Retry_Delay>
+<Forced_Resync_Delay group="Provisioning/Configuration_Profile">30</Forced_Resync_Delay>
 <Resync_From_SIP group="Provisioning/Configuration_Profile">Yes</Resync_From_SIP>
 <Resync_After_Upgrade_Attempt group="Provisioning/Configuration_Profile">Yes</Resync_After_Upgrade_Attempt>
 <Resync_Trigger_1 group="Provisioning/Configuration_Profile" />
@@ -333,7 +333,7 @@
 <Time_Zone group="Regional/Miscellaneous">{$spa_time_zone}</Time_Zone>
 <Time_Offset__HH_mm_ group="Regional/Miscellaneous" />
 <Ignore_DHCP_Time_Offset group="Regional/Miscellaneous">Yes</Ignore_DHCP_Time_Offset>
-<Daylight_Saving_Time_Rule group="Regional/Miscellaneous" />
+<Daylight_Saving_Time_Rule group="Regional/Miscellaneous">start={$daylight_savings_start_month}/{$daylight_savings_start_day}/{$daylight_savings_start_weekday}/{$daylight_savings_start_time}:0:0;end={$daylight_savings_stop_month}/{$daylight_savings_stop_day}/{$daylight_savings_stop_weekday}/{$daylight_savings_stop_time}:0:0;save=1</Daylight_Saving_Time_Rule>
 <Daylight_Saving_Time_Enable group="Regional/Miscellaneous">Yes</Daylight_Saving_Time_Enable>
 <DTMF_Playback_Level group="Regional/Miscellaneous">-16</DTMF_Playback_Level>
 <DTMF_Playback_Length group="Regional/Miscellaneous">.1</DTMF_Playback_Length>
@@ -341,30 +341,25 @@
 <Locale group="Regional/Miscellaneous">en-US</Locale>
 
 <!-- Phone/General -->
-<Station_Name group="Phone/General">{$display_name_1}</Station_Name>
+<Station_Name group="Phone/General">{$device_label}</Station_Name>
 <Station_Display_Name group="Phone/General">{$display_name_1}</Station_Display_Name>
 <Voice_Mail_Number group="Phone/General">{$voicemail_number}</Voice_Mail_Number>
 
 {foreach $keys["line"] as $row}
-{if $row.device_key_type == "line"}
+{if $row.device_key_category == "line"}
 <!-- Phone/Line_Key_{$row.device_key_id} -->
-<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
+<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_line}</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
 <Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
-<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">private</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
-<Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}"/>
-{else}
-<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">Disabled</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
-<Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
-<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">private</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
+<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{if $row.device_key_type == "shared"}shared{else}private{/if}</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
 <Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extended_Function_{$row.device_key_id}_>
-{/if}
 
+{/if}
 {/foreach}
 
 <!-- Phone/Miscellaneous_Line_Key_Settings -->
 <Line_ID_Mapping group="Phone/Miscellaneous_Line_Key_Settings">Vertical First</Line_ID_Mapping>
-<SCA_Barge-In_Enable group="Phone/Miscellaneous_Line_Key_Settings">No</SCA_Barge-In_Enable>
-<SCA_Sticky_Auto_Line_Seize group="Phone/Miscellaneous_Line_Key_Settings">No</SCA_Sticky_Auto_Line_Seize>
+<SCA_Line_ID_Mapping group="Phone/Miscellaneous_Line_Key_Settings">Vertical First</SCA_Line_ID_Mapping>
+<SCA_Barge-In_Enable group="Phone/Miscellaneous_Line_Key_Settings">Yes</SCA_Barge-In_Enable>
 <Line_Navigation group="Phone/Miscellaneous_Line_Key_Settings">Per Line</Line_Navigation>
 
 <!-- Phone/Line_Key_LED_Pattern -->
@@ -439,7 +434,7 @@
 <Line_Enable_1_ group="Ext_1/General">Yes</Line_Enable_1_>
 
 <!-- Ext_1/Share_Line_Appearance -->
-<Share_Ext_1_ group="Ext_1/Share_Line_Appearance">private</Share_Ext_1_>
+<Share_Ext_1_ group="Ext_1/Share_Line_Appearance">{if $account.1.shared_line == "shared"}shared{else}private{/if}</Share_Ext_1_>
 <Shared_User_ID_1_ group="Ext_1/Share_Line_Appearance" />
 <Subscription_Expires_1_ group="Ext_1/Share_Line_Appearance">3600</Subscription_Expires_1_>
 <Restrict_MWI_1_ group="Ext_1/Share_Line_Appearance">No</Restrict_MWI_1_>
@@ -460,8 +455,8 @@
 <Jitter_Buffer_Adjustment_1_ group="Ext_1/Network_Settings">up and down</Jitter_Buffer_Adjustment_1_>
 
 <!-- Ext_1/SIP_Settings -->
-<SIP_Transport_1_ group="Ext_1/SIP_Settings">{$sip_transport_1|upper}</SIP_Transport_1_>
-<SIP_Port_1_ group="Ext_1/SIP_Settings">{$sip_port_1}</SIP_Port_1_>
+<SIP_Transport_1_ group="Ext_1/SIP_Settings">{$account.1.sip_transport|upper}</SIP_Transport_1_>
+<SIP_Port_1_ group="Ext_1/SIP_Settings">{$account.1.sip_port}</SIP_Port_1_>
 <SIP_100REL_Enable_1_ group="Ext_1/SIP_Settings">No</SIP_100REL_Enable_1_>
 <EXT_SIP_Port_1_ group="Ext_1/SIP_Settings" />
 <Auth_Resync-Reboot_1_ group="Ext_1/SIP_Settings">Yes</Auth_Resync-Reboot_1_>
@@ -486,6 +481,7 @@
 <Message_Waiting_1_ group="Ext_1/Call_Feature_Settings">No</Message_Waiting_1_>
 <Auth_Page_1_ group="Ext_1/Call_Feature_Settings">No</Auth_Page_1_>
 <Default_Ring__1__ group="Ext_1/Call_Feature_Settings">1</Default_Ring__1__>
+<Feature_Key_Sync_1_ group="Ext_1/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_1_>
 <Auth_Page_Realm_1_ group="Ext_1/Call_Feature_Settings" />
 <Conference_Bridge_URL_1_ group="Ext_1/Call_Feature_Settings" />
 <Auth_Page_Password_1_ group="Ext_1/Call_Feature_Settings" />
@@ -498,30 +494,32 @@
 <User_ID_with_Domain_1_ group="Ext_1/Call_Feature_Settings">No</User_ID_with_Domain_1_>
 <Broadsoft_ACD_1_ group="Ext_1/Call_Feature_Settings">No</Broadsoft_ACD_1_>
 <Auto_Ans_Page_On_Active_Call_1_ group="Ext_1/Call_Feature_Settings">Yes</Auto_Ans_Page_On_Active_Call_1_>
-<Feature_Key_Sync_1_ group="Ext_1/Call_Feature_Settings">No</Feature_Key_Sync_1_>
+<Feature_Key_Sync_1_ group="Ext_1/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_1_>
 <Call_Park_Monitor_Enable_1_ group="Ext_1/Call_Feature_Settings">No</Call_Park_Monitor_Enable_1_>
 
 <!-- Ext_1/Proxy_and_Registration -->
-<Proxy_1_ group="Ext_1/Proxy_and_Registration">{$server_address_1}</Proxy_1_>
-<Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration" />
-<Alternate_Proxy_1_ group="Ext_1/Proxy_and_Registration" />
-<Alternate_Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration" />
-<Use_Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">No</Use_Outbound_Proxy_1_>
+<Proxy_1_ group="Ext_1/Proxy_and_Registration">{$account.1.server_address}</Proxy_1_>
+<Use_Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">{if isset($account.1.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_1_>
+<Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">{$account.1.outbound_proxy_primary}</Outbound_Proxy_1_>
+<Alternate_Proxy_1_ group="Ext_1/Proxy_and_Registration">{$account.1.server_address}</Alternate_Proxy_1_>
+<Alternate_Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">{$account.1.outbound_proxy_secondary}</Alternate_Outbound_Proxy_1_>
 <Use_OB_Proxy_In_Dialog_1_ group="Ext_1/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_1_>
 <Register_1_ group="Ext_1/Proxy_and_Registration">Yes</Register_1_>
 <Make_Call_Without_Reg_1_ group="Ext_1/Proxy_and_Registration">No</Make_Call_Without_Reg_1_>
-<Register_Expires_1_ group="Ext_1/Proxy_and_Registration">{$register_expires_1}</Register_Expires_1_>
+<Register_Expires_1_ group="Ext_1/Proxy_and_Registration">{$account.1.register_expires}</Register_Expires_1_>
 <Ans_Call_Without_Reg_1_ group="Ext_1/Proxy_and_Registration">No</Ans_Call_Without_Reg_1_>
-<Use_DNS_SRV_1_ group="Ext_1/Proxy_and_Registration">No</Use_DNS_SRV_1_>
+{if $account.1.sip_transport == 'dns srv'}<Use_DNS_SRV_1_ group="Ext_1/Proxy_and_Registration">Yes</Use_DNS_SRV_1_>{/if}
+{if $account.1.sip_transport != 'dns srv'}<Use_DNS_SRV_1_ group="Ext_1/Proxy_and_Registration">No</Use_DNS_SRV_1_>{/if}
 <DNS_SRV_Auto_Prefix_1_ group="Ext_1/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_1_>
-<Proxy_Fallback_Intvl_1_ group="Ext_1/Proxy_and_Registration">3600</Proxy_Fallback_Intvl_1_>
+<Proxy_Fallback_Intvl_1_ group="Ext_1/Proxy_and_Registration">600</Proxy_Fallback_Intvl_1_>
 <Proxy_Redundancy_Method_1_ group="Ext_1/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_1_>
-<Dual_Registration_1_ group="Ext_1/Proxy_and_Registration">No</Dual_Registration_1_>
+<Dual_Registration_1_ group="Ext_1/Proxy_and_Registration">{if isset($spa_dual_registration)}Yes{else}No{/if}</Dual_Registration_1_>
+<Auto_Register_When_Failover_1_ group="Ext_1/Proxy_and_Registration">{if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_1_>
 
 <!-- Ext_1/Subscriber_Information -->
-<Display_Name_1_ group="Ext_1/Subscriber_Information">{$display_name_1}</Display_Name_1_>
-<User_ID_1_ group="Ext_1/Subscriber_Information">{$user_id_1}</User_ID_1_>
-<Password_1_ group="Ext_1/Subscriber_Information">{$user_password_1}</Password_1_>
+<Display_Name_1_ group="Ext_1/Subscriber_Information">{$account.1.display_name}</Display_Name_1_>
+<User_ID_1_ group="Ext_1/Subscriber_Information">{$account.1.user_id}</User_ID_1_>
+<Password_1_ group="Ext_1/Subscriber_Information">{$account.1.password}</Password_1_>
 <Use_Auth_ID_1_ group="Ext_1/Subscriber_Information">No</Use_Auth_ID_1_>
 <Auth_ID_1_ group="Ext_1/Subscriber_Information" />
 <Reversed_Auth_Realm_1_ group="Ext_1/Subscriber_Information" />
@@ -551,7 +549,7 @@
 <Codec_Negotiation_1_ group="Ext_1/Audio_Configuration">Default</Codec_Negotiation_1_>
 
 <!-- Ext_1/Dial_Plan -->
-<Dial_Plan_1_ group="Ext_1/Dial_Plan">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_1_>
+<Dial_Plan_1_ group="Ext_1/Dial_Plan">{$spa_dial_plan}</Dial_Plan_1_>
 <Caller_ID_Map_1_ group="Ext_1/Dial_Plan" />
 <Enable_IP_Dialing_1_ group="Ext_1/Dial_Plan">Yes</Enable_IP_Dialing_1_>
 <Emergency_Number_1_ group="Ext_1/Dial_Plan" />
@@ -560,7 +558,7 @@
 <Line_Enable_2_ group="Ext_2/General">Yes</Line_Enable_2_>
 
 <!-- Ext_2/Share_Line_Appearance -->
-<Share_Ext_2_ group="Ext_2/Share_Line_Appearance">private</Share_Ext_2_>
+<Share_Ext_2_ group="Ext_2/Share_Line_Appearance">{if $account.2.shared_line == "shared"}shared{else}private{/if}</Share_Ext_2_>
 <Shared_User_ID_2_ group="Ext_2/Share_Line_Appearance" />
 <Subscription_Expires_2_ group="Ext_2/Share_Line_Appearance">3600</Subscription_Expires_2_>
 <Restrict_MWI_2_ group="Ext_2/Share_Line_Appearance">No</Restrict_MWI_2_>
@@ -581,8 +579,8 @@
 <Jitter_Buffer_Adjustment_2_ group="Ext_2/Network_Settings">up and down</Jitter_Buffer_Adjustment_2_>
 
 <!-- Ext_2/SIP_Settings -->
-<SIP_Transport_2_ group="Ext_2/SIP_Settings">{$sip_transport_2|upper}</SIP_Transport_2_>
-<SIP_Port_2_ group="Ext_2/SIP_Settings">{$sip_transport_2}</SIP_Port_2_>
+<SIP_Transport_2_ group="Ext_2/SIP_Settings">{$account.2.sip_transport|upper}</SIP_Transport_2_>
+<SIP_Port_2_ group="Ext_2/SIP_Settings">{$account.2.sip_port}</SIP_Port_2_>
 <SIP_100REL_Enable_2_ group="Ext_2/SIP_Settings">No</SIP_100REL_Enable_2_>
 <EXT_SIP_Port_2_ group="Ext_2/SIP_Settings" />
 <Auth_Resync-Reboot_2_ group="Ext_2/SIP_Settings">Yes</Auth_Resync-Reboot_2_>
@@ -607,6 +605,7 @@
 <Message_Waiting_2_ group="Ext_2/Call_Feature_Settings">No</Message_Waiting_2_>
 <Auth_Page_2_ group="Ext_2/Call_Feature_Settings">No</Auth_Page_2_>
 <Default_Ring__2__ group="Ext_2/Call_Feature_Settings">1</Default_Ring__2__>
+<Feature_Key_Sync_2_ group="Ext_2/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_2_>
 <Auth_Page_Realm_2_ group="Ext_2/Call_Feature_Settings" />
 <Conference_Bridge_URL_2_ group="Ext_2/Call_Feature_Settings" />
 <Auth_Page_Password_2_ group="Ext_2/Call_Feature_Settings" />
@@ -619,30 +618,32 @@
 <User_ID_with_Domain_2_ group="Ext_2/Call_Feature_Settings">No</User_ID_with_Domain_2_>
 <Broadsoft_ACD_2_ group="Ext_2/Call_Feature_Settings">No</Broadsoft_ACD_2_>
 <Auto_Ans_Page_On_Active_Call_2_ group="Ext_2/Call_Feature_Settings">Yes</Auto_Ans_Page_On_Active_Call_2_>
-<Feature_Key_Sync_2_ group="Ext_2/Call_Feature_Settings">No</Feature_Key_Sync_2_>
+<Feature_Key_Sync_2_ group="Ext_2/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_2_>
 <Call_Park_Monitor_Enable_2_ group="Ext_2/Call_Feature_Settings">No</Call_Park_Monitor_Enable_2_>
 
 <!-- Ext_2/Proxy_and_Registration -->
-<Proxy_2_ group="Ext_2/Proxy_and_Registration">{$server_address_2}</Proxy_2_>
-<Outbound_Proxy_2_ group="Ext_2/Proxy_and_Registration" />
-<Alternate_Proxy_2_ group="Ext_2/Proxy_and_Registration" />
-<Alternate_Outbound_Proxy_2_ group="Ext_2/Proxy_and_Registration" />
-<Use_Outbound_Proxy_2_ group="Ext_2/Proxy_and_Registration">No</Use_Outbound_Proxy_2_>
+<Proxy_2_ group="Ext_2/Proxy_and_Registration">{$account.2.server_address}</Proxy_2_>
+<Use_Outbound_Proxy_2_ group="Ext_2/Proxy_and_Registration">{if isset($account.2.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_2_>
+<Outbound_Proxy_2_ group="Ext_2/Proxy_and_Registration">{$account.2.outbound_proxy_primary}</Outbound_Proxy_2_>
+<Alternate_Proxy_2_ group="Ext_2/Proxy_and_Registration">{$account.2.server_address}</Alternate_Proxy_2_>
+<Alternate_Outbound_Proxy_2_ group="Ext_2/Proxy_and_Registration">{$account.2.outbound_proxy_secondary}</Alternate_Outbound_Proxy_2_>
 <Use_OB_Proxy_In_Dialog_2_ group="Ext_2/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_2_>
 <Register_2_ group="Ext_2/Proxy_and_Registration">Yes</Register_2_>
 <Make_Call_Without_Reg_2_ group="Ext_2/Proxy_and_Registration">No</Make_Call_Without_Reg_2_>
-<Register_Expires_2_ group="Ext_2/Proxy_and_Registration">{$register_expires_2}</Register_Expires_2_>
+<Register_Expires_2_ group="Ext_2/Proxy_and_Registration">{$account.2.register_expires}</Register_Expires_2_>
 <Ans_Call_Without_Reg_2_ group="Ext_2/Proxy_and_Registration">No</Ans_Call_Without_Reg_2_>
-<Use_DNS_SRV_2_ group="Ext_2/Proxy_and_Registration">No</Use_DNS_SRV_2_>
+{if $account.2.sip_transport == 'dns srv'}<Use_DNS_SRV_2_ group="Ext_2/Proxy_and_Registration">Yes</Use_DNS_SRV_2_>{/if}
+{if $account.2.sip_transport != 'dns srv'}<Use_DNS_SRV_2_ group="Ext_2/Proxy_and_Registration">No</Use_DNS_SRV_2_>{/if}
 <DNS_SRV_Auto_Prefix_2_ group="Ext_2/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_2_>
-<Proxy_Fallback_Intvl_2_ group="Ext_2/Proxy_and_Registration">3600</Proxy_Fallback_Intvl_2_>
+<Proxy_Fallback_Intvl_2_ group="Ext_2/Proxy_and_Registration">600</Proxy_Fallback_Intvl_2_>
 <Proxy_Redundancy_Method_2_ group="Ext_2/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_2_>
-<Dual_Registration_2_ group="Ext_2/Proxy_and_Registration">No</Dual_Registration_2_>
+<Dual_Registration_2_ group="Ext_2/Proxy_and_Registration">{if isset($spa_dual_registration)}Yes{else}No{/if}</Dual_Registration_2_>
+<Auto_Register_When_Failover_2_ group="Ext_2/Proxy_and_Registration">{if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_2_>
 
 <!-- Ext_2/Subscriber_Information -->
-<Display_Name_2_ group="Ext_2/Subscriber_Information">{$display_name_2}</Display_Name_2_>
-<User_ID_2_ group="Ext_2/Subscriber_Information">{$user_id_2}</User_ID_2_>
-<Password_2_ group="Ext_2/Subscriber_Information">{$user_password_2}</Password_2_>
+<Display_Name_2_ group="Ext_2/Subscriber_Information">{$account.2.display_name}</Display_Name_2_>
+<User_ID_2_ group="Ext_2/Subscriber_Information">{$account.2.user_id}</User_ID_2_>
+<Password_2_ group="Ext_2/Subscriber_Information">{$account.2.password}</Password_2_>
 <Use_Auth_ID_2_ group="Ext_2/Subscriber_Information">No</Use_Auth_ID_2_>
 <Auth_ID_2_ group="Ext_2/Subscriber_Information" />
 <Reversed_Auth_Realm_2_ group="Ext_2/Subscriber_Information" />
@@ -672,7 +673,7 @@
 <Codec_Negotiation_2_ group="Ext_2/Audio_Configuration">Default</Codec_Negotiation_2_>
 
 <!-- Ext_2/Dial_Plan -->
-<Dial_Plan_2_ group="Ext_2/Dial_Plan">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_2_>
+<Dial_Plan_2_ group="Ext_2/Dial_Plan">{$spa_dial_plan}</Dial_Plan_2_>
 <Caller_ID_Map_2_ group="Ext_2/Dial_Plan" />
 <Enable_IP_Dialing_2_ group="Ext_2/Dial_Plan">Yes</Enable_IP_Dialing_2_>
 <Emergency_Number_2_ group="Ext_2/Dial_Plan" />
@@ -681,7 +682,7 @@
 <Line_Enable_3_ group="Ext_3/General">Yes</Line_Enable_3_>
 
 <!-- Ext_3/Share_Line_Appearance -->
-<Share_Ext_3_ group="Ext_3/Share_Line_Appearance">private</Share_Ext_3_>
+<Share_Ext_3_ group="Ext_3/Share_Line_Appearance">{if $account.3.shared_line == "shared"}shared{else}private{/if}</Share_Ext_3_>
 <Shared_User_ID_3_ group="Ext_3/Share_Line_Appearance" />
 <Subscription_Expires_3_ group="Ext_3/Share_Line_Appearance">3600</Subscription_Expires_3_>
 <Restrict_MWI_3_ group="Ext_3/Share_Line_Appearance">No</Restrict_MWI_3_>
@@ -702,8 +703,8 @@
 <Jitter_Buffer_Adjustment_3_ group="Ext_3/Network_Settings">up and down</Jitter_Buffer_Adjustment_3_>
 
 <!-- Ext_3/SIP_Settings -->
-<SIP_Transport_3_ group="Ext_3/SIP_Settings">{$sip_transport_3|upper}</SIP_Transport_3_>
-<SIP_Port_3_ group="Ext_3/SIP_Settings">{$sip_port_3}</SIP_Port_3_>
+<SIP_Transport_3_ group="Ext_3/SIP_Settings">{$account.3.sip_transport|upper}</SIP_Transport_3_>
+<SIP_Port_3_ group="Ext_3/SIP_Settings">{$account.3.sip_port}</SIP_Port_3_>
 <SIP_100REL_Enable_3_ group="Ext_3/SIP_Settings">No</SIP_100REL_Enable_3_>
 <EXT_SIP_Port_3_ group="Ext_3/SIP_Settings" />
 <Auth_Resync-Reboot_3_ group="Ext_3/SIP_Settings">Yes</Auth_Resync-Reboot_3_>
@@ -728,6 +729,7 @@
 <Message_Waiting_3_ group="Ext_3/Call_Feature_Settings">No</Message_Waiting_3_>
 <Auth_Page_3_ group="Ext_3/Call_Feature_Settings">No</Auth_Page_3_>
 <Default_Ring__3__ group="Ext_3/Call_Feature_Settings">1</Default_Ring__3__>
+<Feature_Key_Sync_3_ group="Ext_3/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_3_>
 <Auth_Page_Realm_3_ group="Ext_3/Call_Feature_Settings" />
 <Conference_Bridge_URL_3_ group="Ext_3/Call_Feature_Settings" />
 <Auth_Page_Password_3_ group="Ext_3/Call_Feature_Settings" />
@@ -740,25 +742,27 @@
 <User_ID_with_Domain_3_ group="Ext_3/Call_Feature_Settings">No</User_ID_with_Domain_3_>
 <Broadsoft_ACD_3_ group="Ext_3/Call_Feature_Settings">No</Broadsoft_ACD_3_>
 <Auto_Ans_Page_On_Active_Call_3_ group="Ext_3/Call_Feature_Settings">Yes</Auto_Ans_Page_On_Active_Call_3_>
-<Feature_Key_Sync_3_ group="Ext_3/Call_Feature_Settings">No</Feature_Key_Sync_3_>
+<Feature_Key_Sync_3_ group="Ext_3/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_3_>
 <Call_Park_Monitor_Enable_3_ group="Ext_3/Call_Feature_Settings">No</Call_Park_Monitor_Enable_3_>
 
 <!-- Ext_3/Proxy_and_Registration -->
-<Proxy_3_ group="Ext_3/Proxy_and_Registration">{$server_address_3}</Proxy_3_>
-<Outbound_Proxy_3_ group="Ext_3/Proxy_and_Registration" />
-<Alternate_Proxy_3_ group="Ext_3/Proxy_and_Registration" />
-<Alternate_Outbound_Proxy_3_ group="Ext_3/Proxy_and_Registration" />
-<Use_Outbound_Proxy_3_ group="Ext_3/Proxy_and_Registration">No</Use_Outbound_Proxy_3_>
+<Proxy_3_ group="Ext_3/Proxy_and_Registration">{$account.3.server_address}</Proxy_3_>
+<Use_Outbound_Proxy_3_ group="Ext_3/Proxy_and_Registration">{if isset($account.3.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_3_>
+<Outbound_Proxy_3_ group="Ext_3/Proxy_and_Registration">{$account.3.outbound_proxy_primary}</Outbound_Proxy_3_>
+<Alternate_Proxy_3_ group="Ext_3/Proxy_and_Registration">{$account.3.server_address}</Alternate_Proxy_3_>
+<Alternate_Outbound_Proxy_3_ group="Ext_3/Proxy_and_Registration">{$account.3.outbound_proxy_secondary}</Alternate_Outbound_Proxy_3_>
 <Use_OB_Proxy_In_Dialog_3_ group="Ext_3/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_3_>
 <Register_3_ group="Ext_3/Proxy_and_Registration">Yes</Register_3_>
 <Make_Call_Without_Reg_3_ group="Ext_3/Proxy_and_Registration">No</Make_Call_Without_Reg_3_>
-<Register_Expires_3_ group="Ext_3/Proxy_and_Registration">{$register_expires_3}</Register_Expires_3_>
+<Register_Expires_3_ group="Ext_3/Proxy_and_Registration">{$account.3.register_expires}</Register_Expires_3_>
 <Ans_Call_Without_Reg_3_ group="Ext_3/Proxy_and_Registration">No</Ans_Call_Without_Reg_3_>
-<Use_DNS_SRV_3_ group="Ext_3/Proxy_and_Registration">No</Use_DNS_SRV_3_>
+{if $account.3.sip_transport == 'dns srv'}<Use_DNS_SRV_3_ group="Ext_3/Proxy_and_Registration">Yes</Use_DNS_SRV_3_>{/if}
+{if $account.3.sip_transport != 'dns srv'}<Use_DNS_SRV_3_ group="Ext_3/Proxy_and_Registration">No</Use_DNS_SRV_3_>{/if}
 <DNS_SRV_Auto_Prefix_3_ group="Ext_3/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_3_>
-<Proxy_Fallback_Intvl_3_ group="Ext_3/Proxy_and_Registration">3600</Proxy_Fallback_Intvl_3_>
+<Proxy_Fallback_Intvl_3_ group="Ext_3/Proxy_and_Registration">600</Proxy_Fallback_Intvl_3_>
 <Proxy_Redundancy_Method_3_ group="Ext_3/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_3_>
-<Dual_Registration_3_ group="Ext_3/Proxy_and_Registration">No</Dual_Registration_3_>
+<Dual_Registration_3_ group="Ext_3/Proxy_and_Registration">{if isset($spa_dual_registration)}Yes{else}No{/if}</Dual_Registration_3_>
+<Auto_Register_When_Failover_3_ group="Ext_3/Proxy_and_Registration">{if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_3_>
 
 <!-- Ext_3/Subscriber_Information -->
 <Display_Name_3_ group="Ext_3/Subscriber_Information">{$display_name_3}</Display_Name_3_>
@@ -793,7 +797,7 @@
 <Codec_Negotiation_3_ group="Ext_3/Audio_Configuration">Default</Codec_Negotiation_3_>
 
 <!-- Ext_3/Dial_Plan -->
-<Dial_Plan_3_ group="Ext_3/Dial_Plan">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_3_>
+<Dial_Plan_3_ group="Ext_3/Dial_Plan">{$spa_dial_plan}</Dial_Plan_3_>
 <Caller_ID_Map_3_ group="Ext_3/Dial_Plan" />
 <Enable_IP_Dialing_3_ group="Ext_3/Dial_Plan">Yes</Enable_IP_Dialing_3_>
 <Emergency_Number_3_ group="Ext_3/Dial_Plan" />
@@ -802,7 +806,7 @@
 <Line_Enable_4_ group="Ext_4/General">Yes</Line_Enable_4_>
 
 <!-- Ext_4/Share_Line_Appearance -->
-<Share_Ext_4_ group="Ext_4/Share_Line_Appearance">private</Share_Ext_4_>
+<Share_Ext_4_ group="Ext_4/Share_Line_Appearance">{if $account.4.shared_line == "shared"}shared{else}private{/if}</Share_Ext_4_>
 <Shared_User_ID_4_ group="Ext_4/Share_Line_Appearance" />
 <Subscription_Expires_4_ group="Ext_4/Share_Line_Appearance">3600</Subscription_Expires_4_>
 <Restrict_MWI_4_ group="Ext_4/Share_Line_Appearance">No</Restrict_MWI_4_>
@@ -823,8 +827,8 @@
 <Jitter_Buffer_Adjustment_4_ group="Ext_4/Network_Settings">up and down</Jitter_Buffer_Adjustment_4_>
 
 <!-- Ext_4/SIP_Settings -->
-<SIP_Transport_4_ group="Ext_4/SIP_Settings">{$sip_transport_4|upper}</SIP_Transport_4_>
-<SIP_Port_4_ group="Ext_4/SIP_Settings">{$sip_port_4}</SIP_Port_4_>
+<SIP_Transport_4_ group="Ext_4/SIP_Settings">{$account.4.sip_transport|upper}</SIP_Transport_4_>
+<SIP_Port_4_ group="Ext_4/SIP_Settings">{$account.4.sip_port}</SIP_Port_4_>
 <SIP_100REL_Enable_4_ group="Ext_4/SIP_Settings">No</SIP_100REL_Enable_4_>
 <EXT_SIP_Port_4_ group="Ext_4/SIP_Settings" />
 <Auth_Resync-Reboot_4_ group="Ext_4/SIP_Settings">Yes</Auth_Resync-Reboot_4_>
@@ -849,6 +853,7 @@
 <Message_Waiting_4_ group="Ext_4/Call_Feature_Settings">No</Message_Waiting_4_>
 <Auth_Page_4_ group="Ext_4/Call_Feature_Settings">No</Auth_Page_4_>
 <Default_Ring__4__ group="Ext_4/Call_Feature_Settings">1</Default_Ring__4__>
+<Feature_Key_Sync_4_ group="Ext_4/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_4_>
 <Auth_Page_Realm_4_ group="Ext_4/Call_Feature_Settings" />
 <Conference_Bridge_URL_4_ group="Ext_4/Call_Feature_Settings" />
 <Auth_Page_Password_4_ group="Ext_4/Call_Feature_Settings" />
@@ -861,30 +866,32 @@
 <User_ID_with_Domain_4_ group="Ext_4/Call_Feature_Settings">No</User_ID_with_Domain_4_>
 <Broadsoft_ACD_4_ group="Ext_4/Call_Feature_Settings">No</Broadsoft_ACD_4_>
 <Auto_Ans_Page_On_Active_Call_4_ group="Ext_4/Call_Feature_Settings">Yes</Auto_Ans_Page_On_Active_Call_4_>
-<Feature_Key_Sync_4_ group="Ext_4/Call_Feature_Settings">No</Feature_Key_Sync_4_>
+<Feature_Key_Sync_4_ group="Ext_4/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_4_>
 <Call_Park_Monitor_Enable_4_ group="Ext_4/Call_Feature_Settings">No</Call_Park_Monitor_Enable_4_>
 
 <!-- Ext_4/Proxy_and_Registration -->
-<Proxy_4_ group="Ext_4/Proxy_and_Registration">{$server_address_4}</Proxy_4_>
-<Outbound_Proxy_4_ group="Ext_4/Proxy_and_Registration" />
-<Alternate_Proxy_4_ group="Ext_4/Proxy_and_Registration" />
-<Alternate_Outbound_Proxy_4_ group="Ext_4/Proxy_and_Registration" />
-<Use_Outbound_Proxy_4_ group="Ext_4/Proxy_and_Registration">No</Use_Outbound_Proxy_4_>
+<Proxy_4_ group="Ext_4/Proxy_and_Registration">{$account.4.server_address}</Proxy_4_>
+<Use_Outbound_Proxy_4_ group="Ext_4/Proxy_and_Registration">{if isset($account.4.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_4_>
+<Outbound_Proxy_4_ group="Ext_4/Proxy_and_Registration">{$account.4.outbound_proxy_primary}</Outbound_Proxy_4_>
+<Alternate_Proxy_4_ group="Ext_4/Proxy_and_Registration">{$account.4.server_address}</Alternate_Proxy_4_>
+<Alternate_Outbound_Proxy_4_ group="Ext_4/Proxy_and_Registration">{$account.4.outbound_proxy_secondary}</Alternate_Outbound_Proxy_4_>
 <Use_OB_Proxy_In_Dialog_4_ group="Ext_4/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_4_>
 <Register_4_ group="Ext_4/Proxy_and_Registration">Yes</Register_4_>
 <Make_Call_Without_Reg_4_ group="Ext_4/Proxy_and_Registration">No</Make_Call_Without_Reg_4_>
-<Register_Expires_4_ group="Ext_4/Proxy_and_Registration">{$register_expires_4}</Register_Expires_4_>
+<Register_Expires_4_ group="Ext_4/Proxy_and_Registration">{$account.4.register_expires}</Register_Expires_4_>
 <Ans_Call_Without_Reg_4_ group="Ext_4/Proxy_and_Registration">No</Ans_Call_Without_Reg_4_>
-<Use_DNS_SRV_4_ group="Ext_4/Proxy_and_Registration">No</Use_DNS_SRV_4_>
+{if $account.4.sip_transport == 'dns srv'}<Use_DNS_SRV_4_ group="Ext_4/Proxy_and_Registration">Yes</Use_DNS_SRV_4_>{/if}
+{if $account.4.sip_transport != 'dns srv'}<Use_DNS_SRV_4_ group="Ext_4/Proxy_and_Registration">No</Use_DNS_SRV_4_>{/if}
 <DNS_SRV_Auto_Prefix_4_ group="Ext_4/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_4_>
-<Proxy_Fallback_Intvl_4_ group="Ext_4/Proxy_and_Registration">3600</Proxy_Fallback_Intvl_4_>
+<Proxy_Fallback_Intvl_4_ group="Ext_4/Proxy_and_Registration">600</Proxy_Fallback_Intvl_4_>
 <Proxy_Redundancy_Method_4_ group="Ext_4/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_4_>
-<Dual_Registration_4_ group="Ext_4/Proxy_and_Registration">No</Dual_Registration_4_>
+<Dual_Registration_4_ group="Ext_4/Proxy_and_Registration">{if isset($spa_dual_registration)}Yes{else}No{/if}</Dual_Registration_4_>
+<Auto_Register_When_Failover_4_ group="Ext_4/Proxy_and_Registration">{if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_4_>
 
 <!-- Ext_4/Subscriber_Information -->
-<Display_Name_4_ group="Ext_4/Subscriber_Information">{$display_name_4}</Display_Name_4_>
-<User_ID_4_ group="Ext_4/Subscriber_Information">{$user_id_4}</User_ID_4_>
-<Password_4_ group="Ext_4/Subscriber_Information">{$user_password_4}</Password_4_>
+<Display_Name_4_ group="Ext_4/Subscriber_Information">{$account.4.display_name}</Display_Name_4_>
+<User_ID_4_ group="Ext_4/Subscriber_Information">{$account.4.user_id}</User_ID_4_>
+<Password_4_ group="Ext_4/Subscriber_Information">{$account.4.password}</Password_4_>
 <Use_Auth_ID_4_ group="Ext_4/Subscriber_Information">No</Use_Auth_ID_4_>
 <Auth_ID_4_ group="Ext_4/Subscriber_Information" />
 <Reversed_Auth_Realm_4_ group="Ext_4/Subscriber_Information" />
@@ -914,7 +921,7 @@
 <Codec_Negotiation_4_ group="Ext_4/Audio_Configuration">Default</Codec_Negotiation_4_>
 
 <!-- Ext_4/Dial_Plan -->
-<Dial_Plan_4_ group="Ext_4/Dial_Plan">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_4_>
+<Dial_Plan_4_ group="Ext_4/Dial_Plan">{$spa_dial_plan}</Dial_Plan_4_>
 <Caller_ID_Map_4_ group="Ext_4/Dial_Plan" />
 <Enable_IP_Dialing_4_ group="Ext_4/Dial_Plan">Yes</Enable_IP_Dialing_4_>
 <Emergency_Number_4_ group="Ext_4/Dial_Plan" />
@@ -923,7 +930,7 @@
 <Line_Enable_5_ group="Ext_5/General">Yes</Line_Enable_5_>
 
 <!-- Ext_5/Share_Line_Appearance -->
-<Share_Ext_5_ group="Ext_5/Share_Line_Appearance">private</Share_Ext_5_>
+<Share_Ext_5_ group="Ext_5/Share_Line_Appearance">{if $account.5.shared_line == "shared"}shared{else}private{/if}</Share_Ext_5_>
 <Shared_User_ID_5_ group="Ext_5/Share_Line_Appearance" />
 <Subscription_Expires_5_ group="Ext_5/Share_Line_Appearance">3600</Subscription_Expires_5_>
 <Restrict_MWI_5_ group="Ext_5/Share_Line_Appearance">No</Restrict_MWI_5_>
@@ -944,8 +951,8 @@
 <Jitter_Buffer_Adjustment_5_ group="Ext_5/Network_Settings">up and down</Jitter_Buffer_Adjustment_5_>
 
 <!-- Ext_5/SIP_Settings -->
-<SIP_Transport_5_ group="Ext_5/SIP_Settings">{$sip_transport_5|upper}</SIP_Transport_5_>
-<SIP_Port_5_ group="Ext_5/SIP_Settings">{$sip_port_5}</SIP_Port_5_>
+<SIP_Transport_5_ group="Ext_5/SIP_Settings">{$account.5.sip_transport|upper}</SIP_Transport_5_>
+<SIP_Port_5_ group="Ext_5/SIP_Settings">{$account.5.sip_port}</SIP_Port_5_>
 <SIP_100REL_Enable_5_ group="Ext_5/SIP_Settings">No</SIP_100REL_Enable_5_>
 <EXT_SIP_Port_5_ group="Ext_5/SIP_Settings" />
 <Auth_Resync-Reboot_5_ group="Ext_5/SIP_Settings">Yes</Auth_Resync-Reboot_5_>
@@ -970,6 +977,7 @@
 <Message_Waiting_5_ group="Ext_5/Call_Feature_Settings">No</Message_Waiting_5_>
 <Auth_Page_5_ group="Ext_5/Call_Feature_Settings">No</Auth_Page_5_>
 <Default_Ring__5__ group="Ext_5/Call_Feature_Settings">1</Default_Ring__5__>
+<Feature_Key_Sync_5_ group="Ext_5/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_5_>
 <Auth_Page_Realm_5_ group="Ext_5/Call_Feature_Settings" />
 <Conference_Bridge_URL_5_ group="Ext_5/Call_Feature_Settings" />
 <Auth_Page_Password_5_ group="Ext_5/Call_Feature_Settings" />
@@ -982,30 +990,32 @@
 <User_ID_with_Domain_5_ group="Ext_5/Call_Feature_Settings">No</User_ID_with_Domain_5_>
 <Broadsoft_ACD_5_ group="Ext_5/Call_Feature_Settings">No</Broadsoft_ACD_5_>
 <Auto_Ans_Page_On_Active_Call_5_ group="Ext_5/Call_Feature_Settings">Yes</Auto_Ans_Page_On_Active_Call_5_>
-<Feature_Key_Sync_5_ group="Ext_5/Call_Feature_Settings">No</Feature_Key_Sync_5_>
+<Feature_Key_Sync_5_ group="Ext_5/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_5_>
 <Call_Park_Monitor_Enable_5_ group="Ext_5/Call_Feature_Settings">No</Call_Park_Monitor_Enable_5_>
 
 <!-- Ext_5/Proxy_and_Registration -->
-<Proxy_5_ group="Ext_5/Proxy_and_Registration">{$server_address_5}</Proxy_5_>
-<Outbound_Proxy_5_ group="Ext_5/Proxy_and_Registration" />
-<Alternate_Proxy_5_ group="Ext_5/Proxy_and_Registration" />
-<Alternate_Outbound_Proxy_5_ group="Ext_5/Proxy_and_Registration" />
-<Use_Outbound_Proxy_5_ group="Ext_5/Proxy_and_Registration">No</Use_Outbound_Proxy_5_>
+<Proxy_5_ group="Ext_5/Proxy_and_Registration">{$account.5.server_address}</Proxy_5_>
+<Use_Outbound_Proxy_5_ group="Ext_5/Proxy_and_Registration">{if isset($account.5.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_5_>
+<Outbound_Proxy_5_ group="Ext_5/Proxy_and_Registration">{$account.5.outbound_proxy_primary}</Outbound_Proxy_5_>
+<Alternate_Proxy_5_ group="Ext_5/Proxy_and_Registration">{$account.5.server_address}</Alternate_Proxy_5_>
+<Alternate_Outbound_Proxy_5_ group="Ext_5/Proxy_and_Registration">{$account.5.outbound_proxy_secondary}</Alternate_Outbound_Proxy_5_>
 <Use_OB_Proxy_In_Dialog_5_ group="Ext_5/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_5_>
 <Register_5_ group="Ext_5/Proxy_and_Registration">Yes</Register_5_>
 <Make_Call_Without_Reg_5_ group="Ext_5/Proxy_and_Registration">No</Make_Call_Without_Reg_5_>
-<Register_Expires_5_ group="Ext_5/Proxy_and_Registration">{$register_expires_5}</Register_Expires_5_>
+<Register_Expires_5_ group="Ext_5/Proxy_and_Registration">{$account.5.register_expires}</Register_Expires_5_>
 <Ans_Call_Without_Reg_5_ group="Ext_5/Proxy_and_Registration">No</Ans_Call_Without_Reg_5_>
-<Use_DNS_SRV_5_ group="Ext_5/Proxy_and_Registration">No</Use_DNS_SRV_5_>
+{if $account.5.sip_transport == 'dns srv'}<Use_DNS_SRV_5_ group="Ext_5/Proxy_and_Registration">Yes</Use_DNS_SRV_5_>{/if}
+{if $account.5.sip_transport != 'dns srv'}<Use_DNS_SRV_5_ group="Ext_5/Proxy_and_Registration">No</Use_DNS_SRV_5_>{/if}
 <DNS_SRV_Auto_Prefix_5_ group="Ext_5/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_5_>
-<Proxy_Fallback_Intvl_5_ group="Ext_5/Proxy_and_Registration">3600</Proxy_Fallback_Intvl_5_>
+<Proxy_Fallback_Intvl_5_ group="Ext_5/Proxy_and_Registration">600</Proxy_Fallback_Intvl_5_>
 <Proxy_Redundancy_Method_5_ group="Ext_5/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_5_>
-<Dual_Registration_5_ group="Ext_5/Proxy_and_Registration">No</Dual_Registration_5_>
+<Dual_Registration_5_ group="Ext_5/Proxy_and_Registration">{if isset($spa_dual_registration)}Yes{else}No{/if}</Dual_Registration_5_>
+<Auto_Register_When_Failover_5_ group="Ext_5/Proxy_and_Registration">{if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_5_>
 
 <!-- Ext_5/Subscriber_Information -->
-<Display_Name_5_ group="Ext_5/Subscriber_Information">{$display_name_5}</Display_Name_5_>
-<User_ID_5_ group="Ext_5/Subscriber_Information">{$user_id_5}</User_ID_5_>
-<Password_5_ group="Ext_5/Subscriber_Information">{$user_password_5}</Password_5_>
+<Display_Name_5_ group="Ext_5/Subscriber_Information">{$account.5.display_name}</Display_Name_5_>
+<User_ID_5_ group="Ext_5/Subscriber_Information">{$account.5.user_id}</User_ID_5_>
+<Password_5_ group="Ext_5/Subscriber_Information">{$account.5.password}</Password_5_>
 <Use_Auth_ID_5_ group="Ext_5/Subscriber_Information">No</Use_Auth_ID_5_>
 <Auth_ID_5_ group="Ext_5/Subscriber_Information" />
 <Reversed_Auth_Realm_5_ group="Ext_5/Subscriber_Information" />
@@ -1035,7 +1045,7 @@
 <Codec_Negotiation_5_ group="Ext_5/Audio_Configuration">Default</Codec_Negotiation_5_>
 
 <!-- Ext_5/Dial_Plan -->
-<Dial_Plan_5_ group="Ext_5/Dial_Plan">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_5_>
+<Dial_Plan_5_ group="Ext_5/Dial_Plan">{$spa_dial_plan}</Dial_Plan_5_>
 <Caller_ID_Map_5_ group="Ext_5/Dial_Plan" />
 <Enable_IP_Dialing_5_ group="Ext_5/Dial_Plan">Yes</Enable_IP_Dialing_5_>
 <Emergency_Number_5_ group="Ext_5/Dial_Plan" />
@@ -1044,7 +1054,7 @@
 <Line_Enable_6_ group="Ext_6/General">Yes</Line_Enable_6_>
 
 <!-- Ext_6/Share_Line_Appearance -->
-<Share_Ext_6_ group="Ext_6/Share_Line_Appearance">private</Share_Ext_6_>
+<Share_Ext_6_ group="Ext_6/Share_Line_Appearance">{if $account.6.shared_line == "shared"}shared{else}private{/if}</Share_Ext_6_>
 <Shared_User_ID_6_ group="Ext_6/Share_Line_Appearance" />
 <Subscription_Expires_6_ group="Ext_6/Share_Line_Appearance">3600</Subscription_Expires_6_>
 <Restrict_MWI_6_ group="Ext_6/Share_Line_Appearance">No</Restrict_MWI_6_>
@@ -1065,8 +1075,8 @@
 <Jitter_Buffer_Adjustment_6_ group="Ext_6/Network_Settings">up and down</Jitter_Buffer_Adjustment_6_>
 
 <!-- Ext_6/SIP_Settings -->
-<SIP_Transport_6_ group="Ext_6/SIP_Settings">{$sip_transport_6|upper}</SIP_Transport_6_>
-<SIP_Port_6_ group="Ext_6/SIP_Settings">{$sip_port_6}</SIP_Port_6_>
+<SIP_Transport_6_ group="Ext_6/SIP_Settings">{$account.6.sip_transport|upper}</SIP_Transport_6_>
+<SIP_Port_6_ group="Ext_6/SIP_Settings">{$account.6.sip_port}</SIP_Port_6_>
 <SIP_100REL_Enable_6_ group="Ext_6/SIP_Settings">No</SIP_100REL_Enable_6_>
 <EXT_SIP_Port_6_ group="Ext_6/SIP_Settings" />
 <Auth_Resync-Reboot_6_ group="Ext_6/SIP_Settings">Yes</Auth_Resync-Reboot_6_>
@@ -1091,6 +1101,7 @@
 <Message_Waiting_6_ group="Ext_6/Call_Feature_Settings">No</Message_Waiting_6_>
 <Auth_Page_6_ group="Ext_6/Call_Feature_Settings">No</Auth_Page_6_>
 <Default_Ring__6__ group="Ext_6/Call_Feature_Settings">1</Default_Ring__6__>
+<Feature_Key_Sync_6_ group="Ext_6/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_6_>
 <Auth_Page_Realm_6_ group="Ext_6/Call_Feature_Settings" />
 <Conference_Bridge_URL_6_ group="Ext_6/Call_Feature_Settings" />
 <Auth_Page_Password_6_ group="Ext_6/Call_Feature_Settings" />
@@ -1103,30 +1114,32 @@
 <User_ID_with_Domain_6_ group="Ext_6/Call_Feature_Settings">No</User_ID_with_Domain_6_>
 <Broadsoft_ACD_6_ group="Ext_6/Call_Feature_Settings">No</Broadsoft_ACD_6_>
 <Auto_Ans_Page_On_Active_Call_6_ group="Ext_6/Call_Feature_Settings">Yes</Auto_Ans_Page_On_Active_Call_6_>
-<Feature_Key_Sync_6_ group="Ext_6/Call_Feature_Settings">No</Feature_Key_Sync_6_>
+<Feature_Key_Sync_6_ group="Ext_6/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_6_>
 <Call_Park_Monitor_Enable_6_ group="Ext_6/Call_Feature_Settings">No</Call_Park_Monitor_Enable_6_>
 
 <!-- Ext_6/Proxy_and_Registration -->
-<Proxy_6_ group="Ext_6/Proxy_and_Registration">{$server_address_6}</Proxy_6_>
-<Outbound_Proxy_6_ group="Ext_6/Proxy_and_Registration" />
-<Alternate_Proxy_6_ group="Ext_6/Proxy_and_Registration" />
-<Alternate_Outbound_Proxy_6_ group="Ext_6/Proxy_and_Registration" />
-<Use_Outbound_Proxy_6_ group="Ext_6/Proxy_and_Registration">No</Use_Outbound_Proxy_6_>
+<Proxy_6_ group="Ext_6/Proxy_and_Registration">{$account.6.server_address}</Proxy_6_>
+<Use_Outbound_Proxy_6_ group="Ext_6/Proxy_and_Registration">{if isset($account.6.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_6_>
+<Outbound_Proxy_6_ group="Ext_6/Proxy_and_Registration">{$account.6.outbound_proxy_primary}</Outbound_Proxy_6_>
+<Alternate_Proxy_6_ group="Ext_6/Proxy_and_Registration">{$account.6.server_address}</Alternate_Proxy_6_>
+<Alternate_Outbound_Proxy_6_ group="Ext_6/Proxy_and_Registration">{$account.6.outbound_proxy_secondary}</Alternate_Outbound_Proxy_6_>
 <Use_OB_Proxy_In_Dialog_6_ group="Ext_6/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_6_>
 <Register_6_ group="Ext_6/Proxy_and_Registration">Yes</Register_6_>
 <Make_Call_Without_Reg_6_ group="Ext_6/Proxy_and_Registration">No</Make_Call_Without_Reg_6_>
-<Register_Expires_6_ group="Ext_6/Proxy_and_Registration">{$register_expires_6}</Register_Expires_6_>
+<Register_Expires_6_ group="Ext_6/Proxy_and_Registration">{$account.6.register_expires}</Register_Expires_6_>
 <Ans_Call_Without_Reg_6_ group="Ext_6/Proxy_and_Registration">No</Ans_Call_Without_Reg_6_>
-<Use_DNS_SRV_6_ group="Ext_6/Proxy_and_Registration">No</Use_DNS_SRV_6_>
+{if $account.6.sip_transport == 'dns srv'}<Use_DNS_SRV_6_ group="Ext_6/Proxy_and_Registration">Yes</Use_DNS_SRV_6_>{/if}
+{if $account.6.sip_transport != 'dns srv'}<Use_DNS_SRV_6_ group="Ext_6/Proxy_and_Registration">No</Use_DNS_SRV_6_>{/if}
 <DNS_SRV_Auto_Prefix_6_ group="Ext_6/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_6_>
-<Proxy_Fallback_Intvl_6_ group="Ext_6/Proxy_and_Registration">3600</Proxy_Fallback_Intvl_6_>
+<Proxy_Fallback_Intvl_6_ group="Ext_6/Proxy_and_Registration">600</Proxy_Fallback_Intvl_6_>
 <Proxy_Redundancy_Method_6_ group="Ext_6/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_6_>
-<Dual_Registration_6_ group="Ext_6/Proxy_and_Registration">No</Dual_Registration_6_>
+<Dual_Registration_6_ group="Ext_6/Proxy_and_Registration">{if isset($spa_dual_registration)}Yes{else}No{/if}</Dual_Registration_6_>
+<Auto_Register_When_Failover_6_ group="Ext_6/Proxy_and_Registration">{if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_6_>
 
 <!-- Ext_6/Subscriber_Information -->
-<Display_Name_6_ group="Ext_6/Subscriber_Information">{$display_name_6}</Display_Name_6_>
-<User_ID_6_ group="Ext_6/Subscriber_Information">{$user_id_6}</User_ID_6_>
-<Password_6_ group="Ext_6/Subscriber_Information">{$user_password_6}</Password_6_>
+<Display_Name_6_ group="Ext_6/Subscriber_Information">{$account.6.display_name}</Display_Name_6_>
+<User_ID_6_ group="Ext_6/Subscriber_Information">{$account.6.user_id}</User_ID_6_>
+<Password_6_ group="Ext_6/Subscriber_Information">{$account.6.password}</Password_6_>
 <Use_Auth_ID_6_ group="Ext_6/Subscriber_Information">No</Use_Auth_ID_6_>
 <Auth_ID_6_ group="Ext_6/Subscriber_Information" />
 <Reversed_Auth_Realm_6_ group="Ext_6/Subscriber_Information" />
@@ -1156,7 +1169,7 @@
 <Codec_Negotiation_6_ group="Ext_6/Audio_Configuration">Default</Codec_Negotiation_6_>
 
 <!-- Ext_6/Dial_Plan -->
-<Dial_Plan_6_ group="Ext_6/Dial_Plan">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_6_>
+<Dial_Plan_6_ group="Ext_6/Dial_Plan">{$spa_dial_plan}</Dial_Plan_6_>
 <Caller_ID_Map_6_ group="Ext_6/Dial_Plan" />
 <Enable_IP_Dialing_6_ group="Ext_6/Dial_Plan">Yes</Enable_IP_Dialing_6_>
 <Emergency_Number_6_ group="Ext_6/Dial_Plan" />
@@ -1165,7 +1178,7 @@
 <Line_Enable_7_ group="Ext_7/General">Yes</Line_Enable_7_>
 
 <!-- Ext_7/Share_Line_Appearance -->
-<Share_Ext_7_ group="Ext_7/Share_Line_Appearance">private</Share_Ext_7_>
+<Share_Ext_7_ group="Ext_7/Share_Line_Appearance">{if $account.7.shared_line == "shared"}shared{else}private{/if}</Share_Ext_7_>
 <Shared_User_ID_7_ group="Ext_7/Share_Line_Appearance" />
 <Subscription_Expires_7_ group="Ext_7/Share_Line_Appearance">3600</Subscription_Expires_7_>
 <Restrict_MWI_7_ group="Ext_7/Share_Line_Appearance">No</Restrict_MWI_7_>
@@ -1186,8 +1199,8 @@
 <Jitter_Buffer_Adjustment_7_ group="Ext_7/Network_Settings">up and down</Jitter_Buffer_Adjustment_7_>
 
 <!-- Ext_7/SIP_Settings -->
-<SIP_Transport_7_ group="Ext_7/SIP_Settings">{$sip_transport_7|upper}</SIP_Transport_7_>
-<SIP_Port_7_ group="Ext_7/SIP_Settings">{$sip_port_7}</SIP_Port_7_>
+<SIP_Transport_7_ group="Ext_7/SIP_Settings">{$account.7.sip_transport|upper}</SIP_Transport_7_>
+<SIP_Port_7_ group="Ext_7/SIP_Settings">{$account.7.sip_port}</SIP_Port_7_>
 <SIP_100REL_Enable_7_ group="Ext_7/SIP_Settings">No</SIP_100REL_Enable_7_>
 <EXT_SIP_Port_7_ group="Ext_7/SIP_Settings" />
 <Auth_Resync-Reboot_7_ group="Ext_7/SIP_Settings">Yes</Auth_Resync-Reboot_7_>
@@ -1212,6 +1225,7 @@
 <Message_Waiting_7_ group="Ext_7/Call_Feature_Settings">No</Message_Waiting_7_>
 <Auth_Page_7_ group="Ext_7/Call_Feature_Settings">No</Auth_Page_7_>
 <Default_Ring__7__ group="Ext_7/Call_Feature_Settings">1</Default_Ring__7__>
+<Feature_Key_Sync_7_ group="Ext_7/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_7_>
 <Auth_Page_Realm_7_ group="Ext_7/Call_Feature_Settings" />
 <Conference_Bridge_URL_7_ group="Ext_7/Call_Feature_Settings" />
 <Auth_Page_Password_7_ group="Ext_7/Call_Feature_Settings" />
@@ -1224,30 +1238,32 @@
 <User_ID_with_Domain_7_ group="Ext_7/Call_Feature_Settings">No</User_ID_with_Domain_7_>
 <Broadsoft_ACD_7_ group="Ext_7/Call_Feature_Settings">No</Broadsoft_ACD_7_>
 <Auto_Ans_Page_On_Active_Call_7_ group="Ext_7/Call_Feature_Settings">Yes</Auto_Ans_Page_On_Active_Call_7_>
-<Feature_Key_Sync_7_ group="Ext_7/Call_Feature_Settings">No</Feature_Key_Sync_7_>
+<Feature_Key_Sync_7_ group="Ext_7/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_7_>
 <Call_Park_Monitor_Enable_7_ group="Ext_7/Call_Feature_Settings">No</Call_Park_Monitor_Enable_7_>
 
 <!-- Ext_7/Proxy_and_Registration -->
-<Proxy_7_ group="Ext_7/Proxy_and_Registration">{$server_address_7}</Proxy_7_>
-<Outbound_Proxy_7_ group="Ext_7/Proxy_and_Registration" />
-<Alternate_Proxy_7_ group="Ext_7/Proxy_and_Registration" />
-<Alternate_Outbound_Proxy_7_ group="Ext_7/Proxy_and_Registration" />
-<Use_Outbound_Proxy_7_ group="Ext_7/Proxy_and_Registration">No</Use_Outbound_Proxy_7_>
+<Proxy_7_ group="Ext_7/Proxy_and_Registration">{$account.7.server_address}</Proxy_7_>
+<Use_Outbound_Proxy_7_ group="Ext_7/Proxy_and_Registration">{if isset($account.7.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_7_>
+<Outbound_Proxy_7_ group="Ext_7/Proxy_and_Registration">{$account.7.outbound_proxy_primary}</Outbound_Proxy_7_>
+<Alternate_Proxy_7_ group="Ext_7/Proxy_and_Registration">{$account.7.server_address}</Alternate_Proxy_7_>
+<Alternate_Outbound_Proxy_7_ group="Ext_7/Proxy_and_Registration">{$account.7.outbound_proxy_secondary}</Alternate_Outbound_Proxy_7_>
 <Use_OB_Proxy_In_Dialog_7_ group="Ext_7/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_7_>
 <Register_7_ group="Ext_7/Proxy_and_Registration">Yes</Register_7_>
 <Make_Call_Without_Reg_7_ group="Ext_7/Proxy_and_Registration">No</Make_Call_Without_Reg_7_>
-<Register_Expires_7_ group="Ext_7/Proxy_and_Registration">{$register_expires_7}</Register_Expires_7_>
+<Register_Expires_7_ group="Ext_7/Proxy_and_Registration">{$account.7.register_expires}</Register_Expires_7_>
 <Ans_Call_Without_Reg_7_ group="Ext_7/Proxy_and_Registration">No</Ans_Call_Without_Reg_7_>
-<Use_DNS_SRV_7_ group="Ext_7/Proxy_and_Registration">No</Use_DNS_SRV_7_>
+{if $account.7.sip_transport == 'dns srv'}<Use_DNS_SRV_7_ group="Ext_7/Proxy_and_Registration">Yes</Use_DNS_SRV_7_>{/if}
+{if $account.7.sip_transport != 'dns srv'}<Use_DNS_SRV_7_ group="Ext_7/Proxy_and_Registration">No</Use_DNS_SRV_7_>{/if}
 <DNS_SRV_Auto_Prefix_7_ group="Ext_7/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_7_>
-<Proxy_Fallback_Intvl_7_ group="Ext_7/Proxy_and_Registration">3600</Proxy_Fallback_Intvl_7_>
+<Proxy_Fallback_Intvl_7_ group="Ext_7/Proxy_and_Registration">600</Proxy_Fallback_Intvl_7_>
 <Proxy_Redundancy_Method_7_ group="Ext_7/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_7_>
-<Dual_Registration_7_ group="Ext_7/Proxy_and_Registration">No</Dual_Registration_7_>
+<Dual_Registration_7_ group="Ext_7/Proxy_and_Registration">{if isset($spa_dual_registration)}Yes{else}No{/if}</Dual_Registration_7_>
+<Auto_Register_When_Failover_7_ group="Ext_7/Proxy_and_Registration">{if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_7_>
 
 <!-- Ext_7/Subscriber_Information -->
-<Display_Name_7_ group="Ext_7/Subscriber_Information">{$display_name_7}</Display_Name_7_>
-<User_ID_7_ group="Ext_7/Subscriber_Information">{$user_id_7}</User_ID_7_>
-<Password_7_ group="Ext_7/Subscriber_Information">{$user_password_7}</Password_7_>
+<Display_Name_7_ group="Ext_7/Subscriber_Information">{$account.7.display_name}</Display_Name_7_>
+<User_ID_7_ group="Ext_7/Subscriber_Information">{$account.7.user_id}</User_ID_7_>
+<Password_7_ group="Ext_7/Subscriber_Information">{$account.7.password}</Password_7_>
 <Use_Auth_ID_7_ group="Ext_7/Subscriber_Information">No</Use_Auth_ID_7_>
 <Auth_ID_7_ group="Ext_7/Subscriber_Information" />
 <Reversed_Auth_Realm_7_ group="Ext_7/Subscriber_Information" />
@@ -1277,7 +1293,7 @@
 <Codec_Negotiation_7_ group="Ext_7/Audio_Configuration">Default</Codec_Negotiation_7_>
 
 <!-- Ext_7/Dial_Plan -->
-<Dial_Plan_7_ group="Ext_7/Dial_Plan">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_7_>
+<Dial_Plan_7_ group="Ext_7/Dial_Plan">{$spa_dial_plan}</Dial_Plan_7_>
 <Caller_ID_Map_7_ group="Ext_7/Dial_Plan" />
 <Enable_IP_Dialing_7_ group="Ext_7/Dial_Plan">Yes</Enable_IP_Dialing_7_>
 <Emergency_Number_7_ group="Ext_7/Dial_Plan" />
@@ -1286,7 +1302,7 @@
 <Line_Enable_8_ group="Ext_8/General">Yes</Line_Enable_8_>
 
 <!-- Ext_8/Share_Line_Appearance -->
-<Share_Ext_8_ group="Ext_8/Share_Line_Appearance">private</Share_Ext_8_>
+<Share_Ext_8_ group="Ext_8/Share_Line_Appearance">{if $account.8.shared_line == "shared"}shared{else}private{/if}</Share_Ext_8_>
 <Shared_User_ID_8_ group="Ext_8/Share_Line_Appearance" />
 <Subscription_Expires_8_ group="Ext_8/Share_Line_Appearance">3600</Subscription_Expires_8_>
 <Restrict_MWI_8_ group="Ext_8/Share_Line_Appearance">No</Restrict_MWI_8_>
@@ -1307,8 +1323,8 @@
 <Jitter_Buffer_Adjustment_8_ group="Ext_8/Network_Settings">up and down</Jitter_Buffer_Adjustment_8_>
 
 <!-- Ext_8/SIP_Settings -->
-<SIP_Transport_8_ group="Ext_8/SIP_Settings">{$sip_transport_8|upper}</SIP_Transport_8_>
-<SIP_Port_8_ group="Ext_8/SIP_Settings">{$sip_port_8}</SIP_Port_8_>
+<SIP_Transport_8_ group="Ext_8/SIP_Settings">{$account.8.sip_transport|upper}</SIP_Transport_8_>
+<SIP_Port_8_ group="Ext_8/SIP_Settings">{$account.8.sip_port}</SIP_Port_8_>
 <SIP_100REL_Enable_8_ group="Ext_8/SIP_Settings">No</SIP_100REL_Enable_8_>
 <EXT_SIP_Port_8_ group="Ext_8/SIP_Settings" />
 <Auth_Resync-Reboot_8_ group="Ext_8/SIP_Settings">Yes</Auth_Resync-Reboot_8_>
@@ -1333,6 +1349,7 @@
 <Message_Waiting_8_ group="Ext_8/Call_Feature_Settings">No</Message_Waiting_8_>
 <Auth_Page_8_ group="Ext_8/Call_Feature_Settings">No</Auth_Page_8_>
 <Default_Ring__8__ group="Ext_8/Call_Feature_Settings">1</Default_Ring__8__>
+<Feature_Key_Sync_8_ group="Ext_8/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_8_>
 <Auth_Page_Realm_8_ group="Ext_8/Call_Feature_Settings" />
 <Conference_Bridge_URL_8_ group="Ext_8/Call_Feature_Settings" />
 <Auth_Page_Password_8_ group="Ext_8/Call_Feature_Settings" />
@@ -1345,30 +1362,32 @@
 <User_ID_with_Domain_8_ group="Ext_8/Call_Feature_Settings">No</User_ID_with_Domain_8_>
 <Broadsoft_ACD_8_ group="Ext_8/Call_Feature_Settings">No</Broadsoft_ACD_8_>
 <Auto_Ans_Page_On_Active_Call_8_ group="Ext_8/Call_Feature_Settings">Yes</Auto_Ans_Page_On_Active_Call_8_>
-<Feature_Key_Sync_8_ group="Ext_8/Call_Feature_Settings">No</Feature_Key_Sync_8_>
+<Feature_Key_Sync_8_ group="Ext_8/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_8_>
 <Call_Park_Monitor_Enable_8_ group="Ext_8/Call_Feature_Settings">No</Call_Park_Monitor_Enable_8_>
 
 <!-- Ext_8/Proxy_and_Registration -->
-<Proxy_8_ group="Ext_8/Proxy_and_Registration">{$server_address_8}</Proxy_8_>
-<Outbound_Proxy_8_ group="Ext_8/Proxy_and_Registration" />
-<Alternate_Proxy_8_ group="Ext_8/Proxy_and_Registration" />
-<Alternate_Outbound_Proxy_8_ group="Ext_8/Proxy_and_Registration" />
-<Use_Outbound_Proxy_8_ group="Ext_8/Proxy_and_Registration">No</Use_Outbound_Proxy_8_>
+<Proxy_8_ group="Ext_8/Proxy_and_Registration">{$account.8.server_address}</Proxy_8_>
+<Use_Outbound_Proxy_8_ group="Ext_8/Proxy_and_Registration">{if isset($account.8.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_8_>
+<Outbound_Proxy_8_ group="Ext_8/Proxy_and_Registration">{$account.8.outbound_proxy_primary}</Outbound_Proxy_8_>
+<Alternate_Proxy_8_ group="Ext_8/Proxy_and_Registration">{$account.8.server_address}</Alternate_Proxy_8_>
+<Alternate_Outbound_Proxy_8_ group="Ext_8/Proxy_and_Registration">{$account.8.outbound_proxy_secondary}</Alternate_Outbound_Proxy_8_>
 <Use_OB_Proxy_In_Dialog_8_ group="Ext_8/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_8_>
 <Register_8_ group="Ext_8/Proxy_and_Registration">Yes</Register_8_>
 <Make_Call_Without_Reg_8_ group="Ext_8/Proxy_and_Registration">No</Make_Call_Without_Reg_8_>
-<Register_Expires_8_ group="Ext_8/Proxy_and_Registration">{$register_expires_8}</Register_Expires_8_>
+<Register_Expires_8_ group="Ext_8/Proxy_and_Registration">{$account.8.register_expires}</Register_Expires_8_>
 <Ans_Call_Without_Reg_8_ group="Ext_8/Proxy_and_Registration">No</Ans_Call_Without_Reg_8_>
-<Use_DNS_SRV_8_ group="Ext_8/Proxy_and_Registration">No</Use_DNS_SRV_8_>
+{if $account.8.sip_transport == 'dns srv'}<Use_DNS_SRV_8_ group="Ext_8/Proxy_and_Registration">Yes</Use_DNS_SRV_8_>{/if}
+{if $account.8.sip_transport != 'dns srv'}<Use_DNS_SRV_8_ group="Ext_8/Proxy_and_Registration">No</Use_DNS_SRV_8_>{/if}
 <DNS_SRV_Auto_Prefix_8_ group="Ext_8/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_8_>
-<Proxy_Fallback_Intvl_8_ group="Ext_8/Proxy_and_Registration">3600</Proxy_Fallback_Intvl_8_>
+<Proxy_Fallback_Intvl_8_ group="Ext_8/Proxy_and_Registration">600</Proxy_Fallback_Intvl_8_>
 <Proxy_Redundancy_Method_8_ group="Ext_8/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_8_>
-<Dual_Registration_8_ group="Ext_8/Proxy_and_Registration">No</Dual_Registration_8_>
+<Dual_Registration_8_ group="Ext_8/Proxy_and_Registration">{if isset($spa_dual_registration)}Yes{else}No{/if}</Dual_Registration_8_>
+<Auto_Register_When_Failover_8_ group="Ext_8/Proxy_and_Registration">{if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_8_>
 
 <!-- Ext_8/Subscriber_Information -->
-<Display_Name_8_ group="Ext_8/Subscriber_Information">{$display_name_8}</Display_Name_8_>
-<User_ID_8_ group="Ext_8/Subscriber_Information">{$user_id_8}</User_ID_8_>
-<Password_8_ group="Ext_8/Subscriber_Information">{$user_password_8}</Password_8_>
+<Display_Name_8_ group="Ext_8/Subscriber_Information">{$account.8.display_name}</Display_Name_8_>
+<User_ID_8_ group="Ext_8/Subscriber_Information">{$account.8.user_id}</User_ID_8_>
+<Password_8_ group="Ext_8/Subscriber_Information">{$account.8.password}</Password_8_>
 <Use_Auth_ID_8_ group="Ext_8/Subscriber_Information">No</Use_Auth_ID_8_>
 <Auth_ID_8_ group="Ext_8/Subscriber_Information" />
 <Reversed_Auth_Realm_8_ group="Ext_8/Subscriber_Information" />
@@ -1398,7 +1417,7 @@
 <Codec_Negotiation_8_ group="Ext_8/Audio_Configuration">Default</Codec_Negotiation_8_>
 
 <!-- Ext_8/Dial_Plan -->
-<Dial_Plan_8_ group="Ext_8/Dial_Plan">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_8_>
+<Dial_Plan_8_ group="Ext_8/Dial_Plan">{$spa_dial_plan}</Dial_Plan_8_>
 <Caller_ID_Map_8_ group="Ext_8/Dial_Plan" />
 <Enable_IP_Dialing_8_ group="Ext_8/Dial_Plan">Yes</Enable_IP_Dialing_8_>
 <Emergency_Number_8_ group="Ext_8/Dial_Plan" />
@@ -1421,7 +1440,7 @@
 <Speed_Dial_9 group="User/Speed_Dial" />
 
 <!-- User/Supplementary_Services -->
-<CW_Setting group="User/Supplementary_Services">Yes</CW_Setting>
+<CW_Setting group="User/Supplementary_Services">{$spa_call_waiting}</CW_Setting>
 <Block_CID_Setting group="User/Supplementary_Services">No</Block_CID_Setting>
 <Block_ANC_Setting group="User/Supplementary_Services">No</Block_ANC_Setting>
 <DND_Setting group="User/Supplementary_Services">No</DND_Setting>

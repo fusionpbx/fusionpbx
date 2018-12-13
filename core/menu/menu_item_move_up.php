@@ -67,7 +67,7 @@ if (count($_GET)>0) {
 	}
 
 	//redirect the user
-		$_SESSION["message"] = $text['message-moved_up'];
+		message::add($text['message-moved_up']);
 		header("Location: menu_list.php?menu_item_id=".$menu_item_id);
 		return;
 }

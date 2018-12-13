@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010-2015
+	Copyright (C) 2010-2016
 	All Rights Reserved.
 
 	Contributor(s):
@@ -52,7 +52,7 @@ include "root.php";
 		}
 
 		function write_progress($message) {
-			if($this->echo_progress){
+			if ($this->echo_progress){
 				echo "$message\n";
 			}
 		}
@@ -68,7 +68,8 @@ include "root.php";
 			$this->write_debug("backing up to $dst_tar");
 			if (file_exists('/bin/tar')) {
 				exec('tar -cvf ' .$dst_tar. ' -C '.$dir .' .');
-			}else{
+			}
+			else {
 				$this->write_debug('WARN: old config could not be compressed');
 				$dst_dir = join( DIRECTORY_SEPARATOR, array(sys_get_temp_dir(), "$backup_name"));
 				recursive_copy($dir, $dst_dir);
@@ -100,7 +101,7 @@ include "root.php";
 			//make sure the conf directory exists
 				if (!is_dir($this->global_settings->switch_conf_dir())) {
 					if (!mkdir($this->global_settings->switch_conf_dir(), 02770, true)) {
-						throw new Exception("Failed to create the switch conf directory '".$this->global_settings->switch_conf_dir()."'. ");
+						$this->write_progress("Switch conf directory does not exist");
 					}
 				}
 
@@ -135,10 +136,10 @@ include "root.php";
 		protected function restart_switch() {
 			$esl = new event_socket;
 			if(!$esl->connect($this->global_settings->switch_event_host(), $this->global_settings->switch_event_port(), $this->global_settings->switch_event_password())) {
-				throw new Exception("Failed to connect to switch");
+				$this->write_progress("Failed to connect to switch");
 			}
 			if (!$esl->request('api fsctl shutdown restart elegant')){
-				throw new Exception("Failed to send switch restart");
+				$this->write_progress("Failed to send switch restart");
 			}
 			$esl->reset_fp();
 		}

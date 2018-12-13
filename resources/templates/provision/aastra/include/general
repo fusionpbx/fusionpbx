@@ -1,0 +1,38 @@
+# #################
+# General settings
+# #################
+
+# === passwords and access control ===
+{if isset($admin_password)}admin password: {$admin_password}{"\n"}{/if}   # 22222 is the default
+#user password: 123                 # default is blank
+#web interface enabled: 1           # Enable/Disable Web UI
+#options password enabled: 1        # default is 0 == not protected
+#options simple menu: 1             # default is 0 == full options menu
+
+tone set: UK                        # Australia, Europe (generic tones), France, Germany, Italy, UK, US (also used in Canada)
+
+# === display date and time ===
+#time format: 0                  # 1 for 24 hr format
+#date format: 3                  # 0 == WWW MMM DD, 1 == DD-MMM-YY, 2 == YYYY-MM-DD, see reference for others
+#time zone name: GB-London       # Check reference for list of named time zones on page A-27, or set offset below
+#time zone code: GMT             # Check reference for list of named time zones on page A-27, or set offset below
+#time zone minutes: 300         # Offset in minutes from GMT, 300 = GMT-5 = Eastern Standard Time, -120 = GMT+2 = Eastern European Time
+{if isset($aastra_time_format)}time format: {$aastra_time_format}{"\n"}{/if}
+{if isset($aastra_date_format)}date format: {$aastra_date_format}{"\n"}{/if}
+{if isset($aastra_gmt_offset)}time zone minutes: {$aastra_gmt_offset}{"\n"}{/if}
+dst config: 3                   # Day Light Savings, 0 == off, 1 == 30 min summertime, 2 == 1 hr summertime, 3 (default) == automatic
+dst minutes: 60                 # amount of time to offset the clock in minutes
+dst start relative date: 1      # Specifies how to interpret the start day, month, and week parameters, 0 - absolute, 1 - relative
+dst end relative date: 1        # Specifies how to interpret the end day, month, and week parameters, 0 - absolute, 1 - relative
+dst start month: {$daylight_savings_start_month}
+{if isset($daylight_savings_start_day)}dst start week: {math equation="( x / 7 ) + 1" x=$daylight_savings_start_day format="%d"}{"\n"}{/if}
+{if isset($daylight_savings_start_weekday)}dst start day: {math equation= "( x + 1 ) % 7" x=$daylight_savings_start_weekday}{"\n"}{/if}
+dst start hour: {$daylight_savings_start_time}
+dst end month: {$daylight_savings_stop_month}
+{if isset($daylight_savings_stop_day)}dst end week: {math equation="( x / 7 ) + 1" x=$daylight_savings_stop_day format="%d"}{"\n"}{/if}
+{if isset($daylight_savings_stop_weekday)}dst end day: {math equation= "( x + 1 ) % 7" x=$daylight_savings_stop_weekday}{"\n"}{/if}
+dst end hour: {$daylight_savings_stop_time}
+
+# === display backlight ===
+backlight mode: 1  # 0 == off, 1 == auto to turn off after period of inactivity
+#bl on time: 600  # time in seconds before backlight turns off if in auto

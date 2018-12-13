@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -38,9 +38,8 @@
 		exit;
 	}
 
-//get the https values and set as variables
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
+//get the domain_uuid from the session
+	$domain_uuid = $_SESSION['domain_uuid'];
 
 //handle search term
 	$search = check_str($_GET["search"]);
@@ -80,8 +79,6 @@
 		}
 	}
 	$sql .= $sql_mod; //add search mod from above
-
-//execute select count query
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$row = $prep_statement->fetch(PDO::FETCH_NAMED);
@@ -101,17 +98,35 @@
 	list($paging_controls, $rows_per_page, $var_3) = paging($result_count, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
-//rework select data query
-	$sql = str_replace('count(extension_uuid) as count', '*', $sql);
+//select the extensions
+	$sql = "select * from v_extensions ";
+	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "and enabled = 'true' ";
+	if (!(if_group("admin") || if_group("superadmin"))) {
+		if (count($_SESSION['user']['extension']) > 0) {
+			$sql .= "and (";
+			$x = 0;
+			foreach($_SESSION['user']['extension'] as $row) {
+				if ($x > 0) { $sql .= "or "; }
+				$sql .= "extension = '".$row['user']."' ";
+				$x++;
+			}
+			$sql .= ")";
+		}
+		else {
+			//used to hide any results when a user has not been assigned an extension
+			$sql .= "and extension = 'disabled' ";
+		}
+	}
+	$sql .= $sql_mod; //add search mod from above
 	$sql .= ' order by extension asc';
 	$sql .= " limit ".$rows_per_page." offset ".$offset." ";
-
-//execute select data query
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$extensions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
 
+//set the row style
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
@@ -128,7 +143,7 @@
 	}
 	if (!$is_included) {
 		echo "				<form method='get' action='' style='display: inline-block;'>\n";
-		echo "				<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
+		echo "				<input type='text' class='txt' style='width: 150px' name='search' value='".escape($search)."'>";
 		echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 		echo "				</form>\n";
 		if ($paging_controls_mini != '') {
@@ -152,20 +167,18 @@
 	if (permission_exists('call_forward')) { echo "<th>".$text['label-call-forward']."</th>\n"; }
 	if (permission_exists('follow_me')) { echo "<th>".$text['label-follow-me']."</th>\n"; }
 	if (permission_exists('do_not_disturb')) { echo "<th>".$text['label-dnd']."</th>\n"; }
-	if (!$is_included) {
-		echo "<th class='hidden-xs'>".$text['table-description']."</th>\n";
-	}
-	echo "<td class='list_control_icon'>&nbsp;</td>\n";
+	echo "<th>".$text['label-description']."</th>\n";
+	echo "	<td class='list_control_icon'>&nbsp;</td>\n";
 	echo "</tr>\n";
 
-	if ($result_count > 0) {
-		foreach($result as $row) {
+	if (is_array($extensions)) {
+		foreach($extensions as $row) {
 			$tr_url = PROJECT_PATH."/app/calls/call_edit.php?id=".$row['extension_uuid']."&return_url=".urlencode($_SERVER['REQUEST_URI']);
 			$tr_link = (permission_exists('call_forward') || permission_exists('follow_me') || permission_exists('do_not_disturb')) ? "href='".$tr_url."'" : null;
 			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'><a ".$tr_link.">".$row['extension']."</a></td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'><a ".$tr_link.">".escape($row['extension'])."</a></td>\n";
 			if (permission_exists('call_forward')) {
-				echo "<td valign='top' class='".$row_style[$c]."'>".(($row['forward_all_enabled'] == 'true') ? format_phone($row['forward_all_destination']) : '&nbsp;')."</td>";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".(($row['forward_all_enabled'] == 'true') ? escape(format_phone($row['forward_all_destination'])) : '&nbsp;')."</td>";
 			}
 			if (permission_exists('follow_me')) {
 				if ($row['follow_me_uuid'] != '') {
@@ -189,19 +202,18 @@
 				else {
 					$follow_me_enabled = false;
 				}
-				echo "<td valign='top' class='".$row_style[$c]."'>".(($follow_me_enabled) ? $text['label-enabled']." (".$follow_me_destination_count.")" : '&nbsp;')."</td>";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".(($follow_me_enabled) ? $text['label-enabled']." (".$follow_me_destination_count.")" : '&nbsp;')."</td>";
 			}
 			if (permission_exists('do_not_disturb')) {
-				echo "<td valign='top' class='".$row_style[$c]."'>".(($row['do_not_disturb'] == 'true') ? $text['label-enabled'] : '&nbsp;')."</td>";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".(($row['do_not_disturb'] == 'true') ? $text['label-enabled'] : '&nbsp;')."</td>";
 			}
-			if (!$is_included) {
-				echo "<td valign='top' class='row_stylebg hidden-xs'>".$row['description']."&nbsp;</td>\n";
-			}
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['description'])."&nbsp;</td>\n";
+
 			echo "	<td class='list_control_icon'><a href='".$tr_url."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a></td>\n";
 			echo "</tr>\n";
 			$c = ($c) ? 0 : 1;
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($sql, $extensions);
 	} //end if results
 
 	echo "</table>";

@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010-2014
+--	Copyright (C) 2010-2018
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -32,6 +32,10 @@
 	local log = require "resources.functions.log".follow_me
 	local cache = require "resources.functions.cache"
 	local Database = require "resources.functions.database"
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
 
 --check if the session is ready
 	if not session:ready() then return end
@@ -62,13 +66,14 @@
 --determine whether to update the dial string
 	local sql = "select extension, number_alias, accountcode, follow_me_uuid ";
 	sql = sql .. "from v_extensions ";
-	sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
-	sql = sql .. "and extension_uuid = '"..extension_uuid.."' ";
+	sql = sql .. "where domain_uuid = :domain_uuid ";
+	sql = sql .. "and extension_uuid = :extension_uuid ";
+	local params = {domain_uuid=domain_uuid, extension_uuid=extension_uuid};
 	if (debug["sql"]) then
-		log.notice(sql);
+		log.notice("SQL: %s; params: %s", sql, json.encode(params));
 	end
 
-	local row = dbh:first_row(sql)
+	local row = dbh:first_row(sql, params)
 	if not row then return end
 
 	local extension = row.extension;
@@ -77,19 +82,19 @@
 	local follow_me_uuid = row.follow_me_uuid;
 
 --determine whether to update the dial string
-	sql = "select follow_me_enabled, call_prompt, cid_name_prefix, cid_number_prefix, dial_string "
+	sql = "select follow_me_enabled, cid_name_prefix, cid_number_prefix, dial_string "
 	sql = sql .. "from v_follow_me ";
-	sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
-	sql = sql .. "and follow_me_uuid = '"..follow_me_uuid.."' ";
+	sql = sql .. "where domain_uuid = :domain_uuid ";
+	sql = sql .. "and follow_me_uuid = :follow_me_uuid ";
+	local params = {domain_uuid=domain_uuid, follow_me_uuid=follow_me_uuid};
 	if (debug["sql"]) then
-		log.notice(sql);
+		log.notice("SQL: %s; params: %s", sql, json.encode(params));
 	end
 
-	row = dbh:first_row(sql)
+	row = dbh:first_row(sql, params)
 	if not row then return end
 
 	local enabled = row.follow_me_enabled;
-	local call_prompt = row.call_prompt;
 	local cid_name_prefix = row.cid_name_prefix;
 	local cid_number_prefix = row.cid_number_prefix;
 	local dial_string = row.dial_string;
@@ -123,28 +128,25 @@
 	else
 		sql = sql .. "follow_me_enabled = 'true' ";
 	end
-	sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
-	sql = sql .. "and follow_me_uuid = '"..follow_me_uuid.."' ";
+	sql = sql .. "where domain_uuid = :domain_uuid ";
+	sql = sql .. "and follow_me_uuid = :follow_me_uuid ";
+	local params = {domain_uuid=domain_uuid, follow_me_uuid=follow_me_uuid};
 	if (debug["sql"]) then
-		log.notice(sql);
+		log.notice("SQL: %s; params: %s", sql, json.encode(params));
 	end
-	dbh:query(sql);
+	dbh:query(sql, params);
 
 --update the extension
 	sql = "update v_extensions set ";
-	if (enabled == "true") then
-		sql = sql .. "dial_string = null, ";
-	else
-		sql = sql .. "dial_string = '"..dial_string:gsub("'", "''").."', ";
-	end
 	sql = sql .. "do_not_disturb = 'false', ";
 	sql = sql .. "forward_all_enabled= 'false' ";
-	sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
-	sql = sql .. "and extension_uuid = '"..extension_uuid.."' ";
+	sql = sql .. "where domain_uuid = :domain_uuid ";
+	sql = sql .. "and extension_uuid = :extension_uuid ";
+	local params = {domain_uuid=domain_uuid, extension_uuid=extension_uuid, dial_string = dial_string};
 	if (debug["sql"]) then
-		log.notice(sql);
+		log.notice("SQL: %s; params: %s", sql, json.encode(params));
 	end
-	dbh:query(sql);
+	dbh:query(sql, params);
 
 --clear the cache
 	if (extension ~= nil) and cache.support() then

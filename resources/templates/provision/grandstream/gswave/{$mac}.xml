@@ -1,0 +1,324 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<gs_provision version="1">
+<config version="1">
+
+<!-- ############################################################################################## -->
+<!-- ###            Configuration Template for Grandstream Wave                                #### -->
+<!-- ############################################################################################## -->
+
+<!-- ############################################################################# -->
+<!-- #  Account 1 Settings                                                      ## -->
+<!-- ############################################################################# -->
+
+<!-- ###################################################################### -->
+<!-- #  Account 1 General Settings                                       ## -->
+<!-- ###################################################################### -->
+
+<!-- Account Active. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+{if isset($account.1.password)}
+<P271>1</P271>
+{else}
+<P271>0</P271>
+{/if}
+
+<!-- Account Name -->
+<P270>{$account.1.display_name}</P270>
+
+<!-- SIP Server -->
+<P47>{$account.1.server_address}</P47>
+
+<!-- SIP User ID -->
+<P35>{$account.1.user_id}</P35>
+
+<!-- SIP Authentication ID -->
+<P36>{$account.1.auth_id}</P36>
+
+<!-- SIP Authentication Password -->
+<P34>{$account.1.password}</P34>
+
+<!-- Voice Mail Access Number -->
+<!--<P33>*97</P33> -->
+<P33>*98</P33>
+
+<!-- Name (Display Name, e.g., John Doe) -->
+<P3>{$account.1.display_name}</P3>
+
+<!-- Show Account Name Only. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2380>0</P2380>
+
+<!-- Tel URI. 0 - Disable, 1 - User=Phone, 2 - Enabled. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P63>0</P63>
+
+<!-- ###################################################################### -->
+<!-- #  Account 1 Network Settings                                       ## -->
+<!-- ###################################################################### -->
+
+<!-- Outbound Proxy -->
+<P48></P48>
+
+<!-- Secondary Outbound Proxy -->
+<P2333></P2333>
+
+<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P103>0</P103>
+
+<!-- NAT Traversal. 0 - NAT No, 1 - STUN, 2 - Keep-alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default value is 2 -->
+<!-- Number: 0, 1, 2, 3, 4, 5 -->
+<P52>2</P52>
+
+<!-- Proxy-Require -->
+<!-- <P197></P197> -->
+
+<!-- Disable DialPlan. 0 - No Selection, 1 - Dial Page, 2 - Contact, 4 - Incoming Call History, 8 -  Outgoing Call History, 16, MPK & Click2Dial.  -->
+<!-- If need to check multiple selections, add the specific values for each selections together. Default value is 0 -->
+<!-- Number: 0-31 -->
+<!--<P2382>0</P2382> -->
+
+<!-- Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
+<P290>{$grandstream_dial_plan}</P290>
+
+
+
+<!-- Use # as Dial Key. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<!-- <P72>1</P72> -->
+
+<!-- ###################################################################### -->
+<!-- #  Account 1 SIP Settings                                           ## -->
+<!-- ###################################################################### -->
+
+<!-- SIP Registration. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<!-- <P31>1</P31> -->
+
+<!-- Unregister Before New Registration. 0 - No, 1 - All, 2 -  Instance . Default value is 2 -->
+<!-- Number: 0, 1, 2 -->
+<!-- <P81>2</P81> -->
+
+<!-- Register Expiration (m). In minutes. Default value is 60 -->
+<!-- Number: 0 - 64800 -->
+<!-- <P32>3</P32> -->
+
+<!-- Re-register before Expiration (s). Default Value is 0 -->
+<!-- Number : 0 -->
+<!-- <P2330>0</P2330> -->
+
+<!-- Registration Retry Wait Time (s). In seconds. Default value is 20 -->
+<!-- Number: 1 - 3600 -->
+<!-- <P138>20</P138> -->
+
+<!-- Local SIP Port. Default value is 5060 -->
+<!-- Number: 5 - 65535 -->
+<P40>5060</P40>
+
+<!-- SIP Transport -->
+<!-- 0 - UDP , 1 - TCP, 2 - TLS. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P130>0</P130>
+
+<!-- ###################################################################### -->
+<!-- #  Account 1 Codec Settings                                         ## -->
+<!-- ###################################################################### -->
+
+<!-- DTMF: in audio. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2301>0</P2301>
+
+<!-- DTMF: via RFC2833. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2302>1</P2302>
+
+<!-- DTMF: via SIP INFO. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2303>0</P2303>
+
+<!-- Preferred Vocoder -->
+<!-- First codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 18 - G729A/B, 98 - iLBC, 123 - Opus. Default value is 0 -->
+<!-- Number: 0, 8, 9, 2, 18, 98, 123 -->
+<P57>9</P57>
+
+<!-- Second codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 18 - G729A/B, 98 - iLBC, 123 - Opus. Default value is 8 -->
+<!-- Number: 0, 8, 9, 2, 18, 98, 123 -->
+<P58>0</P58>
+
+<!-- Third codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 18 - G729A/B, 98 - iLBC, 123 - Opus. Default value is 9 -->
+<!-- Number: 0, 8, 9, 2, 18, 98, 123 -->
+<P59>8</P59>
+
+<!-- Forth codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 18 - G729A/B, 98 - iLBC, 123 - Opus. Default value is 9 -->
+<!-- Number: 0, 8, 9, 2, 18, 98, 123 -->
+<P60>98</P60>
+
+<!-- Fifth codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 18 - G729A/B, 98 - iLBC, 123 - Opus. Default value is 9 -->
+<!-- Number: 0, 8, 9, 2, 18, 98, 123 -->
+<P61>2</P61>
+
+<!-- Sixth codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 18 - G729A/B, 98 - iLBC, 123 - Opus. Default value is 9 -->
+<!-- Number: 0, 8, 9, 2, 18, 98, 123 -->
+<P62>9</P62>
+
+<!-- Seventh codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 18 - G729A/B, 98 - iLBC, 123 - Opus. Default value is 9 -->
+<!-- Number: 0, 8, 9, 2, 18, 98, 123 -->
+<P46>9</P46>
+
+
+<!-- SRTP Mode. Default value is 0. 0 - Disable, 1 - Enable but not forced, 2 - Enable and forced. -->
+<!-- Number: 0, 1, 2 -->
+<!-- <P183>0</P183> -->
+
+<!-- Enable SRTP Key Lifetime. 0 - No, 1 - Yes. -->
+<!-- Number: 0,1 -->
+<!-- <P2363>0</P2363> -->
+
+<!-- ###################################################################### -->
+<!-- #  Maintenance - Contacts                                           ## -->
+<!-- ###################################################################### -->
+
+<!-- Sort Phonebook by. 0 - Last Name, 1 - First Name. Default Value is 0 -->
+<!-- Number : 0, 1 -->
+<P2914>1</P2914>
+
+<!-- Phonebook Key Function. 0 - Default, 1 - LDAP Search, 2 - Local Phonebook, 3 - Local Group, 4 - Broadsoft Phonebook. Default value is 0. -->
+<!-- Number : 0, 1, 2, 3, 4 -->
+<P1526>2</P1526>
+
+<!-- Emergency Call Numbers. Default Value is 911 -->
+<!-- String  -->
+<!-- Example 911,921,931,941 -->
+<P25675>911</P25675>
+
+
+<!-- Clear The Old List. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1435>1</P1435>
+
+<!-- Replace Duplicate Items. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1436>0</P1436>
+
+<!-- Download Mode. 0 - OFF, 1 - TFTP, 2 - HTTP. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P330>2</P330>
+
+<!-- File Encoding. GBK - GBK, UTF-8 - UTF-8, UTF-16 - UTF-16, UTF-32 - UTF-32, Big5 - Big5, Big5-HKSCS - Big5-HKSCS, Shift-JIS - Shift-JIS -->
+<!-- ISO 2022-JP - ISO 2022-JP, KOI8-R - KOI8-R, ISO8859-1 - ISO8859-1, ISO8859-15 - ISO8859-15, Windows-1251 - Windows-1251, EUC-KR - EUC-KR -->
+<!-- Default Value is UTF-8 -->
+<!-- String : GBK, UTF-8, UTF-16, UTF-32, Big5, Big5-HKSCS,  Shift-JIS, ISO 2022-JP, KOI8-R, ISO8859-1, ISO8859-15, Windows-1251, EUC-KR  -->
+<P1681>UTF-8</P1681>
+
+<!-- Download Server. It MUST be in the host/path format -->
+<!-- For example: directory.grandstream.com/engineering -->
+<!-- String -->
+{if isset($contact_grandstream)}
+<P331>{$grandstream_phonebook_xml_server_path}{$user_id_1}/</P331>
+{elseif isset($grandstream_phonebook_xml_server_path)}
+<P331>{$grandstream_phonebook_xml_server_path}</P331>
+{else}
+<P331></P331>
+{/if}
+
+
+<!-- HTTP/HTTPS User Name -->
+<P6713>{$http_auth_username}</P6713>
+
+<!-- HTTP/HTTPS Password -->
+<P6714>{$http_auth_password}</P6714>
+
+
+<!-- Download Interval. Default is 0 for disabled -->
+<!-- Number: 0, 120, 240, 360, 480, 720 -->
+<P332>0</P332>
+
+<!-- ###################################################################### -->
+<!-- #  Maintenance - LDAP Phonebook                                     ## -->
+<!-- ###################################################################### -->
+
+<!-- Connection Mode. 0 - LDAP, 1 - LDAPS. Default Value is 0 -->
+<!-- Number : 0, 1 -->
+<P8037>0</P8037>
+
+<!-- Server Address, up to 256 characters can be used. It can be IP address or Domain name -->
+<!-- String -->
+<P8020>{$grandstream_ldap_server}</P8020>
+
+<!-- Port. Default value is 389 -->
+<!-- Number: 1 - 65535 -->
+<P8021>389</P8021>
+
+<!-- Base DN. The LDAP search base refers to the location in the directory where the search is requested to begin -->
+<!-- Example 1: dc=grandstream,dc=com -->
+<!-- Example 2: ou=Boston, dc=grandstream,dc=com -->
+<!-- String -->
+<P8022>{$grandstream_ldap_base_dn}</P8022>
+
+<!-- User Name. The bind "Username" for querying LDAP servers. Some LDAP servers allow anonymous binds in which case the setting can be left blank -->
+<!-- String -->
+<P8023>{$ldap_username}</P8023>
+
+<!-- Password. The bind "Password" for querying LDAP servers. And the field can be left blank if the LDAP server allows anonymous binds -->
+<!-- String -->
+<P8024>{$ldap_password}</P8024>
+
+<!-- LDAP Name Attributes. This setting specifies the "name" attributes of each record which are returned in the LDAP search result -->
+<!-- The setting allows the users to configure multiple space separated name attributes -->
+<!-- String -->
+<P8028>{$grandstream_ldap_name_attr}</P8028>
+
+<!-- LDAP Number Attributes. This setting specifies the "number" attributes of each record which are returned in the LDAP search result -->
+<!-- The setting allows the users to configure multiple space separated number attributes -->
+<!-- String -->
+<P8029>{$grandstream_ldap_number_attr}</P8029>
+
+<!-- LDAP Mail Attributes. This setting specifies the "mail" attributes of each record which are returned in the LDAP search result -->
+<!-- The setting allows the users to configure multiple space separated mail attributes -->
+<!-- String -->
+<P8038>{$grandstream_ldap_mail_attr}</P8038>
+
+<!-- LDAP Name Filter -->
+<!-- LDAP name filter is the filter used for name look ups. Please refer to usermanual for examples -->
+<!-- P8025 and P8026 are reversed on gswave -->
+<!-- String -->
+<P8025>{$grandstream_ldap_name_filter}</P8025>
+
+<!-- LDAP Number Filter -->
+<!-- LDAP name filter is the filter used for number look ups. Please refer to usermanual for examples -->
+<!-- P8025 and P8026 are reversed on gswave -->
+<!-- String -->
+<P8026>{$grandstream_ldap_number_filter}</P8026>
+
+<!-- LDAP Mail Filter -->
+<!-- LDAP mail filter is the filter used for mail look ups. Please refer to usermanual for examples -->
+<!-- String -->
+<P8039>{$grandstream_ldap_mail_filter}</P8039>
+
+<!-- LDAP Displaying Name Attributes. The entry information to be shown on phone LCD. Grandstream phones will display up to 3 fields -->
+<!-- String -->
+<P8030>givenName sn title</P8030>
+
+<!-- Max Hits. The setting specifies the maximum number of results to be returned by the LDAP server -->
+<!-- If the value is set to 0, server will return all search results. Default is 50 -->
+<!-- Number: 0 - 32000 -->
+<P8032>50</P8032>
+
+<!-- Search Timeout (in seconds). Default is 4 -->
+<!-- The setting specifies how long the server should process the request and client waits for server to return -->
+<!-- Number: 0 - 180 -->
+<P8031>4</P8031>
+
+<!-- LDAP Lookup For Dial. 0 - No, 1 - Yes. Default is 0 -->
+<P8034>1</P8034>
+
+<!-- LDAP Lookup For Incoming Calls. 0 - No, 1 - Yes. Default is 0 -->
+<P8035>1</P8035>
+
+<!-- LDAP Dialing Default Account. 0 - Default, 1 - Account 1, 2 - Account 2, 3 - Account 3, 4 - Account 4, 5 - Account 5, 6 - Account 6. Default is 0 -->
+<!-- Number : 0-6 -->
+<P22039>0</P22039>
+
+
+</config>
+</gs_provision>

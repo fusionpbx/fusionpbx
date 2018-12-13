@@ -17,26 +17,30 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-require_once "resources/paging.php";
-if (permission_exists('dialplan_add')
-	|| permission_exists('inbound_route_add')
-	|| permission_exists('outbound_route_add')
-	|| permission_exists('time_condition_add')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
+
+//check permissions
+	if (permission_exists('dialplan_add')
+		|| permission_exists('inbound_route_add')
+		|| permission_exists('outbound_route_add')
+		|| permission_exists('time_condition_add')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -61,68 +65,104 @@ else {
 		unset ($prep_statement);
 	}
 
-	//copy the v_sip_profiles
-		$sip_profile_uuid_new = uuid();
-		$sql = "insert into v_sip_profiles ";
-		$sql .= "(";
-		$sql .= "sip_profile_uuid, ";
-		$sql .= "sip_profile_name, ";
-		$sql .= "sip_profile_description ";
-		$sql .= ")";
-		$sql .= "values ";
-		$sql .= "(";
-		$sql .= "'".$sip_profile_uuid_new."', ";
-		$sql .= "'".$sip_profile_name."', ";
-		$sql .= "'".$sip_profile_description."' ";
-		$sql .= ")";
-		$db->exec(check_sql($sql));
-		unset($sql);
+//copy the v_sip_profiles
+	$sip_profile_uuid_new = uuid();
+	$sip_profile_enabled = 'true';
+	$sql = "insert into v_sip_profiles ";
+	$sql .= "(";
+	$sql .= "sip_profile_uuid, ";
+	$sql .= "sip_profile_name, ";
+	$sql .= "sip_profile_enabled, ";
+	$sql .= "sip_profile_description ";
+	$sql .= ")";
+	$sql .= "values ";
+	$sql .= "(";
+	$sql .= "'".$sip_profile_uuid_new."', ";
+	$sql .= "'".$sip_profile_name."', ";
+	$sql .= "'".$sip_profile_enabled."', ";
+	$sql .= "'".$sip_profile_description."' ";
+	$sql .= ")";
+	$db->exec(check_sql($sql));
+	unset($sql);
 
-	//get the the sip profile settings
-		$sql = "select * from v_sip_profile_settings ";
-		$sql .= "where sip_profile_uuid = '$sip_profile_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll();
-		foreach ($result as &$row) {
-			$sip_profile_setting_name = $row["sip_profile_setting_name"];
-			$sip_profile_setting_value = $row["sip_profile_setting_value"];
-			$sip_profile_setting_enabled = $row["sip_profile_setting_enabled"];
-			$sip_profile_setting_description = $row["sip_profile_setting_description"];
+//get the the sip profile settings
+	$sql = "select * from v_sip_profile_domains ";
+	$sql .= "where sip_profile_uuid = '$sip_profile_uuid' ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll();
+	foreach ($result as &$row) {
+		$sip_profile_domain_name = $row["sip_profile_domain_name"];
+		$sip_profile_domain_alias = $row["sip_profile_domain_alias"];
+		$sip_profile_domain_parse = $row["sip_profile_domain_parse"];
 
-			//add the sip profile setting
-				$sql = "insert into v_sip_profile_settings ";
-				$sql .= "(";
-				$sql .= "sip_profile_setting_uuid, ";
-				$sql .= "sip_profile_uuid, ";
-				$sql .= "sip_profile_setting_name, ";
-				$sql .= "sip_profile_setting_value, ";
-				$sql .= "sip_profile_setting_enabled, ";
-				$sql .= "sip_profile_setting_description ";
-				$sql .= ")";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'".uuid()."', ";
-				$sql .= "'$sip_profile_uuid_new', ";
-				$sql .= "'$sip_profile_setting_name', ";
-				$sql .= "'$sip_profile_setting_value', ";
-				$sql .= "'$sip_profile_setting_enabled', ";
-				$sql .= "'$sip_profile_setting_description' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
-		}
-		unset ($prep_statement);
+		//add the sip profile setting
+			$sql = "insert into v_sip_profile_domains ";
+			$sql .= "(";
+			$sql .= "sip_profile_domain_uuid, ";
+			$sql .= "sip_profile_uuid, ";
+			$sql .= "sip_profile_domain_name, ";
+			$sql .= "sip_profile_domain_alias, ";
+			$sql .= "sip_profile_domain_parse ";
+			$sql .= ")";
+			$sql .= "values ";
+			$sql .= "(";
+			$sql .= "'".uuid()."', ";
+			$sql .= "'$sip_profile_uuid_new', ";
+			$sql .= "'$sip_profile_domain_name', ";
+			$sql .= "'$sip_profile_domain_alias', ";
+			$sql .= "'$sip_profile_domain_parse' ";
+			$sql .= ")";
+			$db->exec(check_sql($sql));
+			unset($sql);
+	}
+	unset ($prep_statement);
 
-	//save the sip profile xml
-		save_sip_profile_xml();
+//get the the sip profile settings
+	$sql = "select * from v_sip_profile_settings ";
+	$sql .= "where sip_profile_uuid = '$sip_profile_uuid' ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll();
+	foreach ($result as &$row) {
+		$sip_profile_setting_name = $row["sip_profile_setting_name"];
+		$sip_profile_setting_value = $row["sip_profile_setting_value"];
+		$sip_profile_setting_enabled = $row["sip_profile_setting_enabled"];
+		$sip_profile_setting_description = $row["sip_profile_setting_description"];
 
-	//apply settings reminder
-		$_SESSION["reload_xml"] = true;
+		//add the sip profile setting
+			$sql = "insert into v_sip_profile_settings ";
+			$sql .= "(";
+			$sql .= "sip_profile_setting_uuid, ";
+			$sql .= "sip_profile_uuid, ";
+			$sql .= "sip_profile_setting_name, ";
+			$sql .= "sip_profile_setting_value, ";
+			$sql .= "sip_profile_setting_enabled, ";
+			$sql .= "sip_profile_setting_description ";
+			$sql .= ")";
+			$sql .= "values ";
+			$sql .= "(";
+			$sql .= "'".uuid()."', ";
+			$sql .= "'$sip_profile_uuid_new', ";
+			$sql .= "'$sip_profile_setting_name', ";
+			$sql .= "'$sip_profile_setting_value', ";
+			$sql .= "'$sip_profile_setting_enabled', ";
+			$sql .= "'$sip_profile_setting_description' ";
+			$sql .= ")";
+			$db->exec(check_sql($sql));
+			unset($sql);
+	}
+	unset ($prep_statement);
 
-	//redirect the user
-		$_SESSION["message"] = $text['message-copy'];
-		header("Location: ".PROJECT_PATH."/app/sip_profiles/sip_profiles.php");
-		return;
+//save the sip profile xml
+	save_sip_profile_xml();
+
+//apply settings reminder
+	$_SESSION["reload_xml"] = true;
+
+//redirect the user
+	message::add($text['message-copy']);
+	header("Location: ".PROJECT_PATH."/app/sip_profiles/sip_profiles.php");
+	return;
 
 ?>

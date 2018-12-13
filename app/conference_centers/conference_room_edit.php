@@ -24,16 +24,20 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('conference_room_add') || permission_exists('conference_room_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('conference_room_add') || permission_exists('conference_room_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -86,6 +90,19 @@ else {
 		$conference_center_uuid = $conference_centers[0]["conference_center_uuid"];
 	}
 
+//get the conference profiles
+	$sql = "select * ";
+	$sql .= "from v_conference_profiles ";
+	$sql .= "where profile_enabled = 'true' ";
+	$sql .= "and profile_name <> 'sla' ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$conference_profiles = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset ($prep_statement, $sql);
+
+//set the default
+	if ($profile === "") { $profile = "default"; }
+
 //define fucntion get_meeting_pin - used to find a unique pin number
 	function get_meeting_pin($length, $meeting_uuid) {
 		global $db;
@@ -113,7 +130,7 @@ else {
 			$default_language = 'en';
 			$default_dialect = 'us';
 			$default_voice = 'callie';
-			$switch_cmd = "conference ".$meeting_uuid."-".$_SESSION['domain_name']." play ".$_SESSION['switch']['sounds']['dir']."/".$default_language."/".$default_dialect."/".$default_voice."/ivr/ivr-recording_started.wav";
+			$switch_cmd = "conference ".$meeting_uuid."@".$_SESSION['domain_name']." play ".$_SESSION['switch']['sounds']['dir']."/".$default_language."/".$default_dialect."/".$default_voice."/ivr/ivr-recording_started.wav";
 		//connect to event socket
 			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 			if ($fp) {
@@ -154,8 +171,8 @@ else {
 				unset($sql);
 		}
 
-		$_SESSION["message"] = $text['message-delete'];
-		header("Location: conference_room_edit.php?id=".$conference_room_uuid);
+		message::add($text['message-delete']);
+		header("Location: conference_room_edit.php?id=".escape($conference_room_uuid));
 		return;
 	}
 
@@ -343,7 +360,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						unset($sql);
 					}
 
-				$_SESSION["message"] = $text['message-add'];
+				message::add($text['message-add']);
 			} //if ($action == "add")
 
 			if ($action == "update" && permission_exists('conference_room_edit')) {
@@ -409,7 +426,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$db->exec(check_sql($sql));
 					unset($sql);
 
-				$_SESSION["message"] = $text['message-update'];
+				message::add($text['message-update']);
 			} //if ($action == "update")
 
 			//assign the user to the meeting
@@ -433,10 +450,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$db->exec(check_sql($sql));
 					unset($sql);
 
-					$_SESSION["message"] = $text['message-add'];
+					message::add($text['message-add']);
 				}
 
-			header("Location: conference_room_edit.php?id=".$conference_room_uuid);
+			header("Location: conference_room_edit.php?id=".escape($conference_room_uuid));
 			return;
 
 		} //if ($_POST["persistformvar"] != "true")
@@ -536,8 +553,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td width='70%' align='right' valign='top'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='conference_rooms.php'\" value='".$text['button-back']."'>\n";
 	if (strlen($meeting_uuid) > 0) {
-		echo "	<input type='button' class='btn' name='' alt='".$text['button-sessions']."' onclick=\"window.location='conference_sessions.php?id=".$meeting_uuid."'\" value='".$text['button-sessions']."'>\n";
-		echo "	<input type='button' class='btn' name='' alt='".$text['button-view']."' onclick=\"window.location='".PROJECT_PATH."/app/conferences_active/conference_interactive.php?c=".$meeting_uuid."'\" value='".$text['button-view']."'>\n";
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-sessions']."' onclick=\"window.location='conference_sessions.php?id=".escape($meeting_uuid)."'\" value='".$text['button-sessions']."'>\n";
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-view']."' onclick=\"window.location='".PROJECT_PATH."/app/conferences_active/conference_interactive.php?c=".escape($meeting_uuid)."'\" value='".$text['button-view']."'>\n";
 	}
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "<br />\n";
@@ -551,10 +568,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<select class='formfld' name='conference_center_uuid'>\n";
 	foreach ($conference_centers as &$row) {
 		if ($conference_center_uuid == $row["conference_center_uuid"]) {
-			echo "		<option value='".$row["conference_center_uuid"]."' selected='selected'>".$row["conference_center_name"]."</option>\n";
+			echo "		<option value='".escape($row["conference_center_uuid"])."' selected='selected'>".escape($row["conference_center_name"])."</option>\n";
 		}
 		else {
-			echo "		<option value='".$row["conference_center_uuid"]."'>".$row["conference_center_name"]."</option>\n";
+			echo "		<option value='".escape($row["conference_center_uuid"])."'>".escape($row["conference_center_name"])."</option>\n";
 		}
 	}
 	unset ($prep_statement);
@@ -567,7 +584,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>";
 	echo "		<td class='vncell' valign='top'>".$text['label-room-name']."</td>";
 	echo "		<td class='vtable' align='left'>";
-	echo "  		<input class='formfld' type='text' name='conference_room_name' maxlength='255' value='$conference_room_name'>\n";
+	echo "  		<input class='formfld' type='text' name='conference_room_name' maxlength='255' value='".escape($conference_room_name)."'>\n";
 	echo "			<br />\n";
 	echo "			".$text['description-room-name']."\n";
 	echo "		</td>";
@@ -576,7 +593,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>";
 	echo "		<td class='vncell' valign='top'>".$text['label-moderator-pin']."</td>";
 	echo "		<td class='vtable' align='left'>";
-	echo "  		<input class='formfld' type='text' name='moderator_pin' maxlength='255' value='$moderator_pin'>\n";
+	echo "  		<input class='formfld' type='text' name='moderator_pin' maxlength='255' value='".escape($moderator_pin)."'>\n";
 	echo "			<br />\n";
 	echo "			".$text['description-moderator_pin']."\n";
 	echo "		</td>";
@@ -585,7 +602,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>";
 	echo "		<td class='vncell' valign='top'>".$text['label-participant-pin']."</td>";
 	echo "		<td class='vtable' align='left'>";
-	echo "  		<input class='formfld' type='text' name='participant_pin' maxlength='255' value='$participant_pin'>\n";
+	echo "  		<input class='formfld' type='text' name='participant_pin' maxlength='255' value='".escape($participant_pin)."'>\n";
 	echo "			<br />\n";
 	echo "			".$text['description-participant-pin']."\n";
 	echo "		</td>";
@@ -599,10 +616,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "			<table border='0' style='width : 235px;'>\n";
 			foreach($meeting_users as $field) {
 				echo "			<tr>\n";
-				echo "				<td class='vtable'>".$field['username']."</td>\n";
+				echo "				<td class='vtable'>".escape($field['username'])."</td>\n";
 				echo "				<td style='width: 25px;' align='right'>\n";
 				if (permission_exists('conference_room_delete')) {
-					echo "					<a href='conference_room_edit.php?meeting_user_uuid=".$field['meeting_user_uuid']."&conference_room_uuid=".$conference_room_uuid."&a=delete' alt='delete' onclick=\"return confirm(".$text['confirm-delete'].")\">$v_link_label_delete</a>\n";
+					echo "					<a href='conference_room_edit.php?meeting_user_uuid=".escape($field['meeting_user_uuid'])."&conference_room_uuid=".escape($conference_room_uuid)."&a=delete' alt='delete' onclick=\"return confirm(".$text['confirm-delete'].")\">$v_link_label_delete</a>\n";
 				}
 				echo "				</td>\n";
 				echo "			</tr>\n";
@@ -614,7 +631,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
 			echo "			<option value=\"\"></option>\n";
 			foreach($users as $field) {
-				echo "			<option value='".$field['user_uuid']."'>".$field['username']."</option>\n";
+				echo "			<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
 			}
 			echo "			</select>";
 			if ($action == "update") {
@@ -632,7 +649,16 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>".$text['label-profile']."</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='profile' maxlength='255' value='$profile'>\n";
+		echo "	<select class='formfld' name='profile'>\n";
+		foreach ($conference_profiles as $row) {
+			if ($profile === $row['profile_name']) {
+					echo "	<option value='". escape($row['profile_name']) ."' selected='selected'>". escape($row['profile_name']) ."</option>\n";
+			}
+			else {
+					echo "	<option value='". escape($row['profile_name']) ."'>". escape($row['profile_name']) ."</option>\n";
+			}
+		}
+		echo "	</select>\n";
 		echo "	<br />\n";
 		echo "	".$text['description-profile']."\n";
 		echo "</td>\n";
@@ -667,7 +693,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-max-members']."</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "  <input class='formfld' type='text' name='max_members' maxlength='255' value='$max_members'>\n";
+		echo "  <input class='formfld' type='text' name='max_members' maxlength='255' value='".escape($max_members)."'>\n";
 		echo "<br />\n";
 		echo "\n";
 		echo "</td>\n";
@@ -677,8 +703,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' nowrap='nowrap' width='30%'>".$text['label-schedule']."</td>\n";
 	echo "<td class='vtable' width='70%' align='left' style='position: relative; min-width: 275px;'>\n";
-	echo "		<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px; max-width: 115px;' name='start_datetime' id='start_datetime' placeholder='".$text['label-from']."' value='".$start_datetime."'>\n";
-	echo "		<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px; max-width: 115px;' name='stop_datetime' id='stop_datetime' placeholder='".$text['label-to']."' value='".$stop_datetime."'>\n";
+	echo "		<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px; max-width: 115px;' name='start_datetime' id='start_datetime' placeholder='".$text['label-from']."' value='".escape($start_datetime)."'>\n";
+	echo "		<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px; max-width: 115px;' name='stop_datetime' id='stop_datetime' placeholder='".$text['label-to']."' value='".escape($stop_datetime)."'>\n";
 	echo "	<br>".$text['description-schedule'];
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -736,7 +762,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	//echo "	".$text['label-enter-sound']."\n";
 	//echo "</td>\n";
 	//echo "<td class='vtable' align='left'>\n";
-	//echo "	<input class='formfld' type='text' name='enter_sound' maxlength='255' value=\"$enter_sound\">\n";
+	//echo "	<input class='formfld' type='text' name='enter_sound' maxlength='255' value=\"".escape($enter_sound)."\">\n";
 	//echo "<br />\n";
 	//echo "\n";
 	//echo "</td>\n";
@@ -820,7 +846,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-description']."</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='description' maxlength='255' value=\"$description\">\n";
+	echo "	<input class='formfld' type='text' name='description' maxlength='255' value=\"".escape($description)."\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
@@ -830,9 +856,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<td colspan='2' align='right'>\n";
 	echo "		<br>";
 	if ($action == "update") {
-		echo "	<input type='hidden' name='conference_center_uuid' value='$conference_center_uuid'>\n";
-		echo "	<input type='hidden' name='meeting_uuid' value='$meeting_uuid'>\n";
-		echo "	<input type='hidden' name='conference_room_uuid' value='$conference_room_uuid'>\n";
+		echo "	<input type='hidden' name='conference_center_uuid' value='".escape($conference_center_uuid)."'>\n";
+		echo "	<input type='hidden' name='meeting_uuid' value='".escape($meeting_uuid)."'>\n";
+		echo "	<input type='hidden' name='conference_room_uuid' value='".escape($conference_room_uuid)."'>\n";
 	}
 	echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "	</td>\n";
@@ -843,7 +869,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "</form>";
 
-
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

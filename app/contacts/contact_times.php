@@ -17,22 +17,44 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('contact_time_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('contact_time_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
+
+//get the contact list
+	$sql = "select ct.*, u.username, u.domain_uuid as user_domain_uuid ";
+	$sql .= "from v_contact_times as ct, v_users as u ";
+	$sql .= "where ct.user_uuid = u.user_uuid ";
+	$sql .= "and ct.domain_uuid = '".$domain_uuid."' ";
+	$sql .= "and ct.contact_uuid = '".$contact_uuid."' ";
+	$sql .= "order by ct.time_start desc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$result_count = count($result);
+	unset ($prep_statement, $sql);
+
+//set the row style
+	$c = 0;
+	$row_style["0"] = "row_style0";
+	$row_style["1"] = "row_style1";
 
 //show the content
 	echo "<table width='100%' border='0'>\n";
@@ -41,23 +63,6 @@ else {
 	echo "<td width='50%' align='right'>&nbsp;</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
-
-	//get the contact list
-		$sql = "select ct.*, u.username, u.domain_uuid as user_domain_uuid ";
-		$sql .= "from v_contact_times as ct, v_users as u ";
-		$sql .= "where ct.user_uuid = u.user_uuid ";
-		$sql .= "and ct.domain_uuid = '".$domain_uuid."' ";
-		$sql .= "and ct.contact_uuid = '".$contact_uuid."' ";
-		$sql .= "order by ct.time_start desc ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
-		unset ($prep_statement, $sql);
-
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
@@ -82,7 +87,7 @@ else {
 	echo "<table id='table_contact_times' class='tr_hover' style='width: 100%; direction: ltr;' border='0' cellpadding='0' cellspacing='0'>\n";
 	if ($result_count > 0) {
 		foreach($result as $row) {
-			$tr_link = (permission_exists('contact_time_edit') && $row['user_uuid'] == $_SESSION["user"]["user_uuid"]) ? "href='contact_time_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_time_uuid']."'" : null;
+			$tr_link = (permission_exists('contact_time_edit') && $row['user_uuid'] == $_SESSION["user"]["user_uuid"]) ? "href='contact_time_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_time_uuid'])."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			if ($row["time_start"] != '' && $row['time_stop'] != '') {
 				$time_start = strtotime($row["time_start"]);
@@ -92,14 +97,14 @@ else {
 			else { unset($time); }
 			$tmp = explode(' ', $row['time_start']);
 			$time_start = $tmp[0];
-			echo "	<td valign='top' class='".$row_style[$c]."' width='20%'><span ".(($row['user_domain_uuid'] != $domain_uuid) ? "title='".$_SESSION['domains'][$row['user_domain_uuid']]['domain_name']."' style='cursor: help;'" : null).">".$row["username"]."</span>&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' width='20%'><span ".(($row['user_domain_uuid'] != $domain_uuid) ? "title='".$_SESSION['domains'][escape($row['user_domain_uuid'])]['domain_name']."' style='cursor: help;'" : null).">".escape($row["username"])."</span>&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' width='20%'>".$time_start."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' width='20%'>".$time."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg' style='width: 40%; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>".$row['time_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg' style='width: 40%; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>".escape($row['time_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons' nowrap>";
 			if (permission_exists('contact_time_edit')) {
 				if ($row['user_uuid'] == $_SESSION["user"]["user_uuid"]) {
-					echo "<a href='contact_time_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_time_uuid']."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
+					echo "<a href='contact_time_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_time_uuid'])."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
 				}
 				else {
 					echo "<span onclick=\"alert('".$text['message-access_denied']."');\" alt='".$text['button-edit']."'>".str_replace("list_control_icon", "list_control_icon_disabled", $v_link_label_edit)."</span>";
@@ -107,7 +112,7 @@ else {
 			}
 			if (permission_exists('contact_time_delete')) {
 				if ($row['user_uuid'] == $_SESSION["user"]["user_uuid"]) {
-					echo "<a href='contact_time_delete.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_time_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+					echo "<a href='contact_time_delete.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_time_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 				}
 				else {
 					echo "<span onclick=\"alert('".$text['message-access_denied']."');\" alt='".$text['button-delete']."'>".str_replace("list_control_icon", "list_control_icon_disabled", $v_link_label_delete)."</span>";

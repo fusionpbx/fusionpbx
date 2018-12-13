@@ -17,22 +17,25 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2013
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('var_delete')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('var_delete')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -44,19 +47,21 @@ else {
 	}
 
 //delete the data
-	if (strlen($id) > 0) {
+	if (strlen($id) > 0 && is_uuid($id)) {
+		//delete the variable
 		$sql = "delete from v_vars ";
 		$sql .= "where var_uuid = '$id' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		unset($sql);
 
+		//rewrite the xml
 		save_var_xml();
 	}
 
-
-$_SESSION["message"] = $text['message-delete'];
-header("Location: vars.php");
-return;
+//redirect the browser
+	message::add($text['message-delete']);
+	header("Location: vars.php");
+	return;
 
 ?>

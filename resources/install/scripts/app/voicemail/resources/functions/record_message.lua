@@ -26,6 +26,143 @@
 --load libraries
 	local Database = require "resources.functions.database"
 	local Settings = require "resources.functions.lazy_settings"
+	local JSON = require "resources.functions.lunajson"
+
+--define uuid function
+	local random = math.random;
+	local function gen_uuid()
+		local template ='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
+		return string.gsub(template, '[xy]', function (c)
+			local v = (c == 'x') and random(0, 0xf) or random(8, 0xb);
+			return string.format('%x', v);
+		end)
+	end
+
+--define escape function (prevents lua injection attacks)
+	local function esc(x)
+   return (x:gsub('%%', '%%%%')
+            :gsub('^%^', '%%^')
+            :gsub('%$$', '%%$')
+            :gsub('%(', '%%(')
+            :gsub('%)', '%%)')
+            :gsub('%.', '%%.')
+            :gsub('%[', '%%[')
+            :gsub('%]', '%%]')
+            :gsub('%*', '%%*')
+            :gsub('%+', '%%+')
+            :gsub('%-', '%%-')
+            :gsub('%?', '%%?'))
+	end
+
+	local function transcribe(file_path,settings,start_epoch)
+		--transcription variables
+		if (os.time() - start_epoch > 2) then
+			local transcribe_provider = settings:get('voicemail', 'transcribe_provider', 'text') or '';
+			transcribe_language = settings:get('voicemail', 'transcribe_language', 'text') or 'en-US';
+
+			if (debug["info"]) then
+				freeswitch.consoleLog("notice", "[voicemail] transcribe_provider: " .. transcribe_provider .. "\n");
+				freeswitch.consoleLog("notice", "[voicemail] transcribe_language: " .. transcribe_language .. "\n");
+
+			end
+
+			if (transcribe_provider == "microsoft") then
+				local api_key1 = settings:get('voicemail', 'microsoft_key1', 'text') or '';
+				local api_key2 = settings:get('voicemail', 'microsoft_key2', 'text') or '';
+				if (api_key1 ~= '' and api_key2 ~= '') then
+					access_token_cmd = "curl -X POST \"https://api.cognitive.microsoft.com/sts/v1.0/issueToken\" -H \"Content-type: application/x-www-form-urlencoded\" -H \"Content-Length: 0\" -H \"Ocp-Apim-Subscription-Key: "..api_key1.."\""
+					local handle = io.popen(access_token_cmd);
+					local access_token_result = handle:read("*a");
+					handle:close();
+					if (debug["info"]) then
+						freeswitch.consoleLog("notice", "[voicemail] CMD: " .. access_token_cmd .. "\n");
+						freeswitch.consoleLog("notice", "[voicemail] RESULT: " .. access_token_result .. "\n");
+					end
+					--Access token request can fail
+					if (access_token_result == '') then
+						freeswitch.consoleLog("notice", "[voicemail] ACCESS TOKEN: (null) \n");
+						return ''
+					end
+					transcribe_cmd = "curl -X POST \"https://speech.platform.bing.com/recognize?scenarios=smd&appid=D4D52672-91D7-4C74-8AD8-42B1D98141A5&locale=" .. transcribe_language .. "&device.os=Freeswitch&version=3.0&format=json&instanceid=" .. gen_uuid() .. "&requestid=" .. gen_uuid() .. "\" -H 'Authorization: Bearer " .. access_token_result .. "' -H 'Content-type: audio/wav; codec=\"audio/pcm\"; samplerate=8000; trustsourcerate=false' --data-binary @"..file_path
+					local handle = io.popen(transcribe_cmd);
+					local transcribe_result = handle:read("*a");
+					handle:close();
+					if (debug["info"]) then
+						freeswitch.consoleLog("notice", "[voicemail] CMD: " .. transcribe_cmd .. "\n");
+						freeswitch.consoleLog("notice", "[voicemail] RESULT: " .. transcribe_result .. "\n");
+					end
+					--Trancribe request can fail
+					if (transcribe_result == '') then
+						freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: (null) \n");
+						return ''
+					end
+					local transcribe_json = JSON.decode(transcribe_result);
+					--Trancribe result can be nil
+					if (transcribe_json["results"] == nil) then
+						freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: results = (null) \n");
+						return ''
+					end
+					if (debug["info"]) then
+						if (transcribe_json["results"][1]["name"] == nil) then
+							freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: (null) \n");
+						else
+							freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: " .. transcribe_json["results"][1]["name"] .. "\n");
+						end
+						if (transcribe_json["results"][1]["confidence"] == nil) then
+							freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: (null) \n");
+						else
+							freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: " .. transcribe_json["results"][1]["confidence"] .. "\n");
+						end
+					end
+
+					transcription = transcribe_json["results"][1]["name"];
+					transcription = transcription:gsub("<profanity>.*<%/profanity>","...");
+					confidence = transcribe_json["results"][1]["confidence"];
+					return transcription;
+				end
+			end
+			if (transcribe_provider == "custom") then
+				local transcription_server = settings:get('voicemail', 'transcription_server', 'text') or '';
+				local api_key = settings:get('voicemail', 'api_key', 'text') or '';
+				local json_enabled = settings:get('voicemail', 'json_enabled', 'boolean') or "false";
+				if (transcription_server ~= '') then
+					transcribe_cmd = "curl -X POST " .. transcription_server .. " -H 'Authorization: Bearer " .. api_key .. "' -F file=@"..file_path
+					local handle = io.popen(transcribe_cmd);
+					local transcribe_result = esc(handle:read("*a"));
+					handle:close();
+
+					if (debug["info"]) then
+						freeswitch.consoleLog("notice", "[voicemail] CMD: " .. transcribe_cmd .. "\n");
+						freeswitch.consoleLog("notice", "[voicemail] RESULT: " .. transcribe_result .. "\n");
+					end
+					--Trancribe request can fail
+					if (transcribe_result == '') then
+						freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: (null) \n");
+						return ''
+					end
+					if (json_enabled == "true") then
+						local transcribe_json = JSON.decode(transcribe_result);
+						if (transcribe_json["message"] == nil) then
+							freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: " .. transcribe_result .. "\n");
+							transcribe_result = '';
+						end
+						if (transcribe_json["error"] ~= nil) then
+							freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: " .. transcribe_result .. "\n");
+							transcribe_result = '';
+						end
+						transcribe_result = transcribe_json["message"];
+					end
+					return transcribe_result;
+				end
+			end
+		else
+			if (debug["info"]) then
+				freeswitch.consoleLog("notice", "[voicemail] message too short for transcription.\n");
+			end
+		end
+
+		return '';
+	end
 
 --save the recording
 	function record_message()
@@ -33,6 +170,12 @@
 		local settings = Settings.new(db, domain_name, domain_uuid)
 
 		local max_len_seconds = settings:get('voicemail', 'message_max_length', 'numeric') or 300;
+		transcribe_enabled = settings:get('voicemail', 'transcribe_enabled', 'boolean') or "false";
+
+		if (debug["info"]) then
+			freeswitch.consoleLog("notice", "[voicemail] transcribe_enabled: " .. transcribe_enabled .. "\n");
+			freeswitch.consoleLog("notice", "[voicemail] voicemail_transcription_enabled: " .. voicemail_transcription_enabled .. "\n");
+		end
 
 		--record your message at the tone press any key or stop talking to end the recording
 			if (skip_instructions == "true") then
@@ -63,22 +206,29 @@
 					if (session:ready()) then
 						freeswitch.consoleLog("notice", "[voicemail] dtmf_digits: " .. string.sub(dtmf_digits, 0, 1) .. "\n");
 						if (dtmf_digits == "*") then
-							--check the voicemail password
-								check_password(voicemail_id, password_tries);
-							--send to the main menu
-								timeouts = 0;
-								main_menu();
+							if (remote_access == "true") then
+								--check the voicemail password
+									check_password(voicemail_id, password_tries);
+								--send to the main menu
+									timeouts = 0;
+									main_menu();
+							else
+								--remote access is false
+								freeswitch.consoleLog("notice", "[voicemail] remote access is disabled.\n");
+								session:hangup();
+							end
 						elseif (string.sub(dtmf_digits, 0, 1) == "*") then
 							--do not allow dialing numbers prefixed with *
 							session:hangup();
 						else
 							--get the voicemail options
-								sql = [[SELECT * FROM v_voicemail_options WHERE voicemail_uuid = ']] .. voicemail_uuid ..[[' ORDER BY voicemail_option_order asc ]];
+								local sql = [[SELECT * FROM v_voicemail_options WHERE voicemail_uuid = :voicemail_uuid ORDER BY voicemail_option_order asc ]];
+								local params = {voicemail_uuid = voicemail_uuid};
 								if (debug["sql"]) then
-									freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+									freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 								end
 								count = 0;
-								status = dbh:query(sql, function(row)
+								dbh:query(sql, params, function(row)
 									--check for matching options
 										if (tonumber(row.voicemail_option_digits) ~= nil) then
 											row.voicemail_option_digits = "^"..row.voicemail_option_digits.."$";
@@ -157,13 +307,16 @@
 				mkdir(voicemail_dir.."/"..voicemail_id);
 				if (vm_message_ext == "mp3") then
 					shout_exists = trim(api:execute("module_exists", "mod_shout"));
-					if (shout_exists == "true") then
+					if (shout_exists == "true" and transcribe_enabled == "false") or (shout_exists == "true" and transcribe_enabled == "true" and voicemail_transcription_enabled == "false") then
 						freeswitch.consoleLog("notice", "using mod_shout for mp3 encoding\n");
 						--record in mp3 directly
 							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3", max_len_seconds, record_silence_threshold, silence_seconds);
 					else
 						--create initial wav recording
 							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", max_len_seconds, record_silence_threshold, silence_seconds);
+							if (transcribe_enabled == "true" and voicemail_transcription_enabled == "true") then
+								transcription = transcribe(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav",settings,start_epoch);
+							end
 						--use lame to encode, if available
 							if (file_exists("/usr/bin/lame")) then
 								freeswitch.consoleLog("notice", "using lame for mp3 encoding\n");
@@ -183,6 +336,9 @@
 					end
 				else
 					result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, max_len_seconds, record_silence_threshold, silence_seconds);
+					if (transcribe_enabled == "true" and voicemail_transcription_enabled == "true") then
+						transcription = transcribe(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext,settings,start_epoch);
+					end
 				end
 			end
 

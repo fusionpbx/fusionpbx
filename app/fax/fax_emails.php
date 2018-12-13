@@ -98,6 +98,7 @@ if (sizeof($result) != 0) {
 		$fax_email_outbound_subject_tag = $row["fax_email_outbound_subject_tag"];
 		$fax_email_outbound_authorized_senders = $row["fax_email_outbound_authorized_senders"];
 		$fax_send_greeting = $row["fax_send_greeting"];
+		$fax_accountcode = $row["accountcode"];
 
 		//load default settings, then domain settings over top
 		unset($_SESSION);
@@ -172,9 +173,7 @@ if (sizeof($result) != 0) {
 
 				//check sender
 				$sender_authorized = false;
-				foreach ($authorized_senders as $authorized_sender) {
-					if (substr_count($metadata[0]['from'], $authorized_sender) > 0) { $sender_authorized = true; }
-				}
+				if (in_array($metadata[0]['from'],$authorized_senders)) { $sender_authorized = true; }
 
 				if ($sender_authorized) {
 
@@ -218,7 +217,7 @@ if (sizeof($result) != 0) {
 					}
 
 					foreach($message['messages'] as &$msg){
-						if(($msg['size'] > 0) && ($msg['type'] == 'text/plain')) {
+						if(($msg['size'] > 0)) {
 							$fax_message = $msg['data'];
 							break;
 						}
@@ -226,6 +225,7 @@ if (sizeof($result) != 0) {
 
 					if ($fax_message != '') {
 						$fax_message = strip_tags($fax_message);
+						$fax_message = str_replace("&nbsp;", "\r\n", $fax_message);
 						$fax_message = str_replace("\r\n\r\n", "\r\n", $fax_message);
 					}
 
@@ -244,17 +244,18 @@ if (sizeof($result) != 0) {
 							//block unauthorized files
 								if (!$fax_allowed_extension['.' . $fax_file_extension]) { continue; } 
 							//support only attachments
-								if($attachment['disposition'] != 'attachment'){ continue; } 
+								//if($attachment['disposition'] != 'attachment'){ continue; } 
 
 							//store attachment in local fax temp folder
-								$local_filepath = $fax_dir.'/'.$fax_extension.'/temp/'.$attachment['name'];
+								$uuid_filename = uuid();
+								$local_filepath = $fax_dir.'/'.$fax_extension.'/temp/'.$uuid_filename."-".$attachment['name'];
 								file_put_contents($local_filepath, $attachment['data']);
 
 							//load files array with attachments
 								$emailed_files['error'][] = 0;
 								$emailed_files['size'][] = $attachment['size'];
-								$emailed_files['tmp_name'][] = $attachment['name'];
-								$emailed_files['name'][] = $attachment['name'];
+								$emailed_files['tmp_name'][] = $uuid_filename."-".$attachment['name'];
+								$emailed_files['name'][] = $uuid_filename."-".$attachment['name'];
 						}
 					}
 

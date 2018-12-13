@@ -17,23 +17,27 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2012
+ Portions created by the Initial Developer are Copyright (C) 2008-2018
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
  Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('contact_setting_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('contact_setting_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //get the list
 	$sql = "select * from v_contact_settings ";
@@ -79,38 +83,38 @@ else {
 		$previous_category = '';
 		foreach($result as $row) {
 			if (permission_exists('contact_setting_edit')) {
-				$tr_link = " href='contact_setting_edit.php?contact_uuid=".$contact_uuid."&id=".$row['contact_setting_uuid']."'";
+				$tr_link = " href='contact_setting_edit.php?contact_uuid=".$contact_uuid."&id=".escape($row['contact_setting_uuid'])."'";
 			}
 			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['contact_setting_category']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'><a href='contact_setting_edit.php?contact_uuid=".$contact_uuid."&id=".$row['contact_setting_uuid']."'>".$row['contact_setting_subcategory']."</a></td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['contact_setting_name']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['contact_setting_category'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'><a href='contact_setting_edit.php?contact_uuid=".$contact_uuid."&id=".escape($row['contact_setting_uuid'])."'>".escape($row['contact_setting_subcategory'])."</a></td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['contact_setting_name'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
-			$category = $row['contact_setting_category'];
-			$subcategory = $row['contact_setting_subcategory'];
-			$name = $row['contact_setting_name'];
+			$category = escape($row['contact_setting_category']);
+			$subcategory = escape($row['contact_setting_subcategory']);
+			$name = escape($row['contact_setting_name']);
 			if ($category == "callingcard" && $subcategory == "username" && $name == "var" ) {
 				echo "		******** &nbsp;\n";
 			}
 			elseif ($category == "callingcard" && $subcategory == "password" && $name == "var" ) {
 				echo "		******** &nbsp;\n";
 			} else {
-				echo 		$row['contact_setting_value'];
+				echo escape($row['contact_setting_value']);
 			}
 			echo "		&nbsp;\n";
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>".$text['label-'.$row['contact_setting_enabled']]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>".$text['label-'.escape($row['contact_setting_enabled'])]."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['contact_setting_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons' nowrap='nowrap'>";
 			if (permission_exists('contact_setting_edit')) {
-				echo "<a href='contact_setting_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_setting_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='contact_setting_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_setting_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('contact_setting_delete')) {
-				echo 	"<a href='contact_setting_delete.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_setting_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo 	"<a href='contact_setting_delete.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_setting_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
-			$previous_category = $row['contact_setting_category'];
+			$previous_category = escape($row['contact_setting_category']);
 			$c = ($c) ? 0 : 1;
 		} //end foreach
 		unset($sql, $result, $row_count);

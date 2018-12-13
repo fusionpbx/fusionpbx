@@ -3,6 +3,12 @@
 	local log      = require "resources.functions.log"["directory_acl"]
 	local dbh = Database.new('system')
 
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
+
 --build the xml
 	local xml = {}
 	table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]])
@@ -13,18 +19,19 @@
 	local sql = "SELECT * FROM v_domains as d, v_extensions as e "
 	sql = sql .. "where d.domain_uuid = e.domain_uuid and e.cidr is not null and e.cidr <> '' "
 	if domain_name then
-		sql = sql .. "and d.domain_name = '"..domain_name.."' "
+		sql = sql .. "and d.domain_name = :domain_name "
 	else
 		sql = sql .. "order by d.domain_name"
 	end
+	local params = {domain_name = domain_name}
 
 	if debug['sql'] then
-		log.noticef("SQL - %s", sql)
+		log.noticef("SQL: %s; params: %s", sql, json.encode(params))
 	end
 
 	local prev_domain_name
 
-	dbh:query(sql, function(row)
+	dbh:query(sql, params, function(row)
 		if prev_domain_name ~= row.domain_name then
 			if prev_domain_name then
 				table.insert(xml, [[					</users>]])

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -26,51 +26,70 @@
 
 if ($domains_processed == 1) {
 
-//create a json string
-$vars = <<<EOD
-[
-{"var_name":"domain","var_value":"\$\${local_ip_v4}","var_cat":"Domain","var_enabled":"true","var_description":"U2V0cyB0aGUgZGVmYXVsdCBkb21haW4u"},
-{"var_name":"domain_name","var_value":"\$\${domain}","var_cat":"Domain","var_enabled":"true","var_description":""},
-{"var_name":"sound_prefix","var_value":"\$\${sounds_dir}/en/us/callie","var_cat":"Sound","var_enabled":"true","var_description":"U2V0cyB0aGUgc291bmQgZGlyZWN0b3J5Lg=="},
-{"var_name":"hold_music","var_value":"local_stream://default","var_cat":"Music on Hold","var_enabled":"true","var_description":""},
-{"var_name":"global_codec_prefs","var_value":"G7221@32000h,G7221@16000h,G722,PCMU,PCMA,GSM","var_cat":"Codecs","var_enabled":"true","var_description":"RzcyMjFAMzIwMDBoLEc3MjIxQDE2MDAwaCxHNzIyLFBDTVUsUENNQSxpTEJDLEdTTSxIMjYzLEgyNjQ="},
-{"var_name":"outbound_codec_prefs","var_value":"PCMU,PCMA,GSM","var_cat":"Codecs","var_enabled":"true","var_description":"ZGVmYXVsdDogUENNVSxQQ01BLEdTTQ=="},
-{"var_name":"media_mix_inbound_outbound_codecs","var_value":"true","var_cat":"Codecs","var_enabled":"true","var_description":""},
-{"var_name":"xmpp_client_profile","var_value":"xmppc","var_cat":"Dingaling","var_enabled":"true","var_description":"eG1wcF9jbGllbnRfcHJvZmlsZSBhbmQgeG1wcF9zZXJ2ZXJfcHJvZmlsZSB4bXBwX2NsaWVudF9wcm9maWxlIGNhbiBiZSBhbnkgc3RyaW5nLiB4bXBwX3NlcnZlcl9wcm9maWxlIGlzIGFwcGVuZGVkIHRvICJkaW5nYWxpbmdfIiB0byBmb3JtIHRoZSBkYXRhYmFzZSBuYW1lIGNvbnRhaW5pbmcgdGhlICJzdWJzY3JpcHRpb25zIiB0YWJsZS4gdXNlZCBieTogZGluZ2FsaW5nLmNvbmYueG1sIGVudW0uY29uZi54bWw="},
-{"var_name":"xmpp_server_profile","var_value":"xmpps","var_cat":"Dingaling","var_enabled":"true","var_description":""},
-{"var_name":"bind_server_ip","var_value":"auto","var_cat":"Dingaling","var_enabled":"true","var_description":"Q2FuIGJlIGFuIGlwIGFkZHJlc3MsIGEgZG5zIG5hbWUsIG9yICJhdXRvIi4gVGhpcyBkZXRlcm1pbmVzIGFuIGlwIGFkZHJlc3MgYXZhaWxhYmxlIG9uIHRoaXMgaG9zdCB0byBiaW5kLiBJZiB5b3UgYXJlIHNlcGFyYXRpbmcgUlRQIGFuZCBTSVAgdHJhZmZpYywgeW91IHdpbGwgd2FudCB0byBoYXZlIHVzZSBkaWZmZXJlbnQgYWRkcmVzc2VzIHdoZXJlIHRoaXMgdmFyaWFibGUgYXBwZWFycy4gVXNlZCBieTogZGluZ2FsaW5nLmNvbmYueG1s"},
-{"var_name":"external_rtp_ip","var_value":"\$\${local_ip_v4}","var_cat":"IP Address","var_enabled":"true","var_description":"KElmIHlvdScncmUgZ29pbmcgdG8gbG9hZCB0ZXN0IHRoZW4gcGxlYXNlIGlucHV0IHJlYWwgSVAgYWRkcmVzc2VzIGZvciBleHRlcm5hbF9ydHBfaXAgYW5kIGV4dGVybmFsX3NpcF9pcCkNCg0KQ2FuIGJlIGFuIG9uZSBvZjoNCiAgIGlwIGFkZHJlc3M6ICIxMi4zNC41Ni43OCINCiAgIGEgc3R1biBzZXJ2ZXIgbG9va3VwOiAic3R1bjpzdHVuLnNlcnZlci5jb20iDQogICBhIEROUyBuYW1lOiAiaG9zdDpob3N0LnNlcnZlci5jb20iDQoNCndoZXJlIGZzLm15ZG9tYWluLmNvbSBpcyBhIEROUyBBIHJlY29yZC11c2VmdWwgd2hlbiBmcyBpcyBvbiBhIGR5bmFtaWMgSVAgYWRkcmVzcywgYW5kIHVzZXMgYSBkeW5hbWljIEROUyB1cGRhdGVyLiBJZiB1bnNwZWNpZmllZCwgdGhlIGJpbmRfc2VydmVyX2lwIHZhbHVlIGlzIHVzZWQuIFVzZWQgYnk6IHNvZmlhLmNvbmYueG1sIGRpbmdhbGluZy5jb25mLnhtbA=="},
-{"var_name":"external_sip_ip","var_value":"\$\${local_ip_v4}","var_cat":"IP Address","var_enabled":"true","var_description":"VXNlZCBhcyB0aGUgcHVibGljIElQIGFkZHJlc3MgZm9yIFNEUC4NCg0KQ2FuIGJlIGFuIG9uZSBvZjoNCiAgIGlwIGFkZHJlc3M6ICIxMi4zNC41Ni43OCINCiAgIGEgc3R1biBzZXJ2ZXIgbG9va3VwOiAic3R1bjpzdHVuLnNlcnZlci5jb20iDQogICBhIEROUyBuYW1lOiAiaG9zdDpob3N0LnNlcnZlci5jb20iDQoNCndoZXJlIGZzLm15ZG9tYWluLmNvbSBpcyBhIEROUyBBIHJlY29yZC11c2VmdWwgd2hlbiBmcyBpcyBvbiBhIGR5bmFtaWMgSVAgYWRkcmVzcywgYW5kIHVzZXMgYSBkeW5hbWljIEROUyB1cGRhdGVyLiBJZiB1bnNwZWNpZmllZCwgdGhlIGJpbmRfc2VydmVyX2lwIHZhbHVlIGlzIHVzZWQuIFVzZWQgYnk6IHNvZmlhLmNvbmYueG1sIGRpbmdhbGluZy5jb25mLnhtbA=="},
-{"var_name":"hangup_on_subscriber_absent","var_value":"true","var_cat":"SIP","var_enabled":"false","var_description":"SGFuZ3VwIG9uIFNVQlNDUklCRVJfQUJTRU5U"},
-{"var_name":"hangup_on_call_reject","var_value":"true","var_cat":"SIP","var_enabled":"false","var_description":"SGFuZ3VwIG9uIENBTExfUkVKRUNU"},
-{"var_name":"unroll_loops","var_value":"true","var_cat":"SIP","var_enabled":"true","var_description":"VXNlZCB0byB0dXJuIG9uIHNpcCBsb29wYmFjayB1bnJvbGxpbmcu"},
-{"var_name":"call_debug","var_value":"false","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"console_loglevel","var_value":"info","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"default_areacode","var_value":"208","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"us-ring","var_value":"%(2000,4000,440,480)","var_cat":"Ringtones","var_enabled":"true","var_description":"RGVmYXVsdCByaW5ndG9uZSAoVVMp"},
-{"var_name":"sit","var_value":"%(274,0,913.8);%(274,0,1370.6);%(380,0,1776.7)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"sip_tls_version","var_value":"tlsv1","var_cat":"SIP","var_enabled":"true","var_description":"U0lQIGFuZCBUTFMgc2V0dGluZ3Mu"},
-{"var_name":"internal_auth_calls","var_value":"true","var_cat":"SIP Profile: Internal","var_enabled":"true","var_description":""},
-{"var_name":"internal_sip_port","var_value":"5060","var_cat":"SIP Profile: Internal","var_enabled":"true","var_description":""},
-{"var_name":"internal_tls_port","var_value":"5061","var_cat":"SIP Profile: Internal","var_enabled":"true","var_description":""},
-{"var_name":"internal_ssl_enable","var_value":"false","var_cat":"SIP Profile: Internal","var_enabled":"true","var_description":""},
-{"var_name":"internal_ssl_dir","var_value":"\$\${conf_dir}/ssl","var_cat":"SIP Profile: Internal","var_enabled":"true","var_description":""},
-{"var_name":"external_auth_calls","var_value":"false","var_cat":"SIP Profile: External","var_enabled":"true","var_description":""},
-{"var_name":"external_sip_port","var_value":"5080","var_cat":"SIP Profile: External","var_enabled":"true","var_description":""},
-{"var_name":"external_tls_port","var_value":"5081","var_cat":"SIP Profile: External","var_enabled":"true","var_description":""},
-{"var_name":"external_ssl_enable","var_value":"false","var_cat":"SIP Profile: External","var_enabled":"true","var_description":""},
-{"var_name":"external_ssl_dir","var_value":"\$\${conf_dir}/ssl","var_cat":"SIP Profile: External","var_enabled":"true","var_description":""},
-{"var_name":"use_profile","var_value":"internal","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"default_language","var_value":"en","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"default_dialect","var_value":"us","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"default_voice","var_value":"callie","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"ajax_refresh_rate","var_value":"3000","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"xml_cdr_archive","var_value":"dir","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"ringback","var_value":"\$\${us-ring}","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"transfer_ringback","var_value":"\$\${us-ring}","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"record_ext","var_value":"wav","var_cat":"Defaults","var_enabled":"true","var_description":""}
-]
-EOD;
+	//add the variables to the database
+		$sql = "select count(*) as num_rows from v_vars ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		if ($prep_statement) {
+			$prep_statement->execute();
+			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+			if ($row['num_rows'] == 0) {
+				//get the xml
+					if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf/vars.xml')) {
+						$xml_file = '/usr/share/examples/fusionpbx/resources/templates/conf/vars.xml';
+					}
+					elseif (file_exists('/usr/local/share/fusionpbx/resources/templates/conf/vars.xml')) {
+						$xml_file = '/usr/local/share/fusionpbx/resources/templates/conf/vars.xml';
+					}
+					else {
+						$xml_file = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/conf/vars.xml';
+					}
+
+				//load the xml and save it into an array
+					$xml_string = file_get_contents($xml_file);
+					$xml = simplexml_load_string($xml_string);
+					$json = json_encode($xml);
+					$variables = json_decode($json, true);
+					//<X-PRE-PROCESS cmd="set" data="global_codec_prefs=G7221@32000h,G7221@16000h,G722,PCMU,PCMA" category="Codecs" enabled="true"/>
+					$x = 0;
+					foreach ($variables['X-PRE-PROCESS'] as $variable) {
+						$var_category = $variable['@attributes']['category'];
+						$data = explode('=', $variable['@attributes']['data']);
+						$var_name = $data[0];
+						$var_value = $data[1];
+						$var_command = $variable['@attributes']['cmd'];
+						$var_enabled = $variable['@attributes']['enabled'];
+						$var_order = '';
+						$var_description = '';
+
+						$array['vars'][$x]['var_category'] = $var_category;
+						$array['vars'][$x]['var_uuid'] = uuid();
+						$array['vars'][$x]['var_name'] = $var_name;
+						$array['vars'][$x]['var_value'] = $var_value;
+						$array['vars'][$x]['var_command'] = $var_command;
+						$array['vars'][$x]['var_enabled'] = $var_enabled;
+						$array['vars'][$x]['var_order'] = $var_order;
+						$array['vars'][$x]['var_description'] = $var_description;
+						$x++;
+					}
+
+				//add the dialplan permission
+					$p = new permissions;
+					$p->add("var_add", "temp");
+					$p->add("var_edit", "temp");
+
+				//save to the data
+					$database = new database;
+					$database->app_name = 'vars';
+					$database->app_uuid = '54e08402-c1b8-0a9d-a30a-f569fc174dd8';
+					$database->save($array);
+					$message = $database->message;
+
+				//remove the temporary permission
+					$p->delete("var_add", "temp");
+					$p->delete("var_edit", "temp");
+	
+			}
+		}
 
 	// Set country depend variables as country code and international direct dialing code (exit code)
 		if (!function_exists('set_country_vars')) {
@@ -104,7 +123,7 @@ EOD;
 					// Set default Country ISO code
 					$sql = "select count(*) as num_rows from v_vars ";
 					$sql .= "where var_name = 'default_country' ";
-					$sql .= "and var_cat = 'Defaults' ";
+					$sql .= "and var_category = 'Defaults' ";
 					$prep_statement = $db->prepare(check_sql($sql));
 					if ($prep_statement) {
 						$prep_statement->execute();
@@ -116,7 +135,7 @@ EOD;
 							$sql .= "var_uuid, ";
 							$sql .= "var_name, ";
 							$sql .= "var_value, ";
-							$sql .= "var_cat, ";
+							$sql .= "var_category, ";
 							$sql .= "var_enabled, ";
 							$sql .= "var_order, ";
 							$sql .= "var_description ";
@@ -141,7 +160,7 @@ EOD;
 					//Set default Country code
 					$sql = "select count(*) as num_rows from v_vars ";
 					$sql .= "where var_name = 'default_countrycode' ";
-					$sql .= "and var_cat = 'Defaults' ";
+					$sql .= "and var_category = 'Defaults' ";
 					$prep_statement = $db->prepare(check_sql($sql));
 					if ($prep_statement) {
 						$prep_statement->execute();
@@ -152,7 +171,7 @@ EOD;
 							$sql .= "var_uuid, ";
 							$sql .= "var_name, ";
 							$sql .= "var_value, ";
-							$sql .= "var_cat, ";
+							$sql .= "var_category, ";
 							$sql .= "var_enabled, ";
 							$sql .= "var_order, ";
 							$sql .= "var_description ";
@@ -177,7 +196,7 @@ EOD;
 					// Set default International Direct Dialing code
 					$sql = "select count(*) as num_rows from v_vars ";
 					$sql .= "where var_name = 'default_exitcode' ";
-					$sql .= "and var_cat = 'Defaults' ";
+					$sql .= "and var_category = 'Defaults' ";
 					$prep_statement = $db->prepare(check_sql($sql));
 					if ($prep_statement) {
 						$prep_statement->execute();
@@ -188,7 +207,7 @@ EOD;
 							$sql .= "var_uuid, ";
 							$sql .= "var_name, ";
 							$sql .= "var_value, ";
-							$sql .= "var_cat, ";
+							$sql .= "var_category, ";
 							$sql .= "var_enabled, ";
 							$sql .= "var_order, ";
 							$sql .= "var_description ";
@@ -208,117 +227,10 @@ EOD;
 							$x++;
 						}
 					}
-					unset($prep_statement, $sql);
-	
-					unset($countries);
+					unset($prep_statement, $sql, $countries);
 				}
 			}
 		}
-
-	//import default variables
-		$result = json_decode($vars, true);
-
-	//import ringtones from vars.xml
-		$vars_xml = simplexml_load_file($_SERVER["PROJECT_ROOT"] . "/resources/templates/conf/vars.xml");
-		foreach($vars_xml->{'X-PRE-PROCESS'} as $item) {
-			if($item->attributes()->cmd == 'set') {
-				$value = explode('=', $item->attributes()->data, 2);
-				if(preg_match("/-ring/", $value[0])){
-					$row = Array();
-					$row['var_cat'] = 'Ringtones';
-					$row['var_name'] = $value[0];
-					$row['var_value'] = $value[1];
-					$row['var_enabled'] = $item->attributes()->enabled;
-					if(!isset($row['var_enabled'])){
-						$row['var_enabled'] = 'true';
-					}
-					$row['var_description'] = $item->attributes()->description;
-					if(!isset($row['var_description'])){
-						$row['var_description'] = base64_encode('Imported from vars.xml');
-					}
-					$result[] = $row;
-				}
-				elseif(preg_match("/-tone/", $value[0])){
-					$row = Array();
-					$row['var_cat'] = 'Tones';
-					$row['var_name'] = $value[0];
-					$row['var_value'] = $value[1];
-					$row['var_enabled'] = $item->attributes()->enabled;
-					if(!isset($row['var_enabled'])){
-						$row['var_enabled'] = 'true';
-					}
-					$row['var_description'] = $item->attributes()->description;
-					if(!isset($row['var_description'])){
-						$row['var_description'] = base64_encode('Imported from vars.xml');
-					}
-					$result[] = $row;
-				}
-			}
-		}
-
-	//migrate old ringtones
-		$sql = "update v_vars ";
-		$sql .= "set var_cat = 'Ringtones' ";
-		$sql .= "set var_description = 'TWlncmF0ZWQgZnJvbSBEZWZhdWx0cw==' ";
-		$sql .= "where var_name like '%-ring' ";
-		$sql .= "and var_cat = 'Defaults' ";
-		$sql .= "and var_description = '' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		if ($prep_statement) {
-			$prep_statement->execute();
-		}
-		
-		$sql = "update v_vars ";
-		$sql .= "set var_cat = 'Ringtones' ";
-		$sql .= "where var_name like '%-ring' ";
-		$sql .= "and var_cat = 'Defaults' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		if ($prep_statement) {
-			$prep_statement->execute();
-		}
-		unset($prep_statement, $sql);
-
-	//add missing variables
-		$x = 1;
-		foreach($result as $row) {
-
-			$sql = "select count(*) as num_rows from v_vars ";
-			$sql .= "where var_name = '".$row['var_name']."' ";
-			$sql .= "and var_cat = '".$row['var_cat']."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$row2 = $prep_statement->fetch(PDO::FETCH_ASSOC);
-				if ($row2['num_rows'] == 0) {
-
-					$sql = "insert into v_vars ";
-					$sql .= "(";
-					$sql .= "var_uuid, ";
-					$sql .= "var_name, ";
-					$sql .= "var_value, ";
-					$sql .= "var_cat, ";
-					$sql .= "var_enabled, ";
-					$sql .= "var_order, ";
-					$sql .= "var_description ";
-					$sql .= ") ";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'".uuid()."', ";
-					$sql .= "'".$row['var_name']."', ";
-					$sql .= "'".$row['var_value']."', ";
-					$sql .= "'".$row['var_cat']."', ";
-					$sql .= "'".$row['var_enabled']."', ";
-					$sql .= "'".$x."', ";
-					$sql .= "'".$row['var_description']."' ";
-					$sql .= ");";
-					$db->exec($sql);
-					unset($sql);
-					$x++;
-				}
-			}
-			unset($prep_statement, $row2);
-		}
-		unset($result, $row);
 
 	//adjust the variables required variables
 		//set variables that depend on the number of domains
@@ -344,7 +256,7 @@ EOD;
 							$sql .= "var_uuid, ";
 							$sql .= "var_name, ";
 							$sql .= "var_value, ";
-							$sql .= "var_cat, ";
+							$sql .= "var_category, ";
 							$sql .= "var_enabled, ";
 							$sql .= "var_order, ";
 							$sql .= "var_description ";
@@ -372,4 +284,5 @@ EOD;
 		//save the vars.xml file
 			save_var_xml();
 }
+
 ?>

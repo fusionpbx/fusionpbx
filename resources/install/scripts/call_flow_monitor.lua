@@ -38,7 +38,7 @@
 	require "resources.functions.file_exists";
 	require "resources.functions.mkdir";
 
-	require "resources.functions.database_handle";
+	local Database = require "resources.functions.database";
 
 	local log = require "resources.functions.log".call_flow_monitor
 
@@ -78,7 +78,7 @@
 			end
 
 		--connect to the database
-			local dbh = database_handle('system');
+			local dbh = Database.new('system');
 
 		--get the extension list
 			if dbh:connected() then

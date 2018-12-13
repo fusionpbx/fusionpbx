@@ -113,16 +113,16 @@ require_once "resources/check_auth.php";
 		foreach($result as $row) {
 			$tr_link = (permission_exists('phrase_edit')) ? "href='phrase_edit.php?id=".$row['phrase_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['phrase_name']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['phrase_language']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['phrase_enabled']]."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".$row['phrase_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['phrase_name'])."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['phrase_language'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.escape($row['phrase_enabled'])]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($row['phrase_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('phrase_edit')) {
-				echo "<a href='phrase_edit.php?id=".$row['phrase_uuid']."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
+				echo "<a href='phrase_edit.php?id=".escape($row['phrase_uuid'])."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
 			}
 			if (permission_exists('phrase_delete')) {
-				echo "<a href='phrase_delete.php?id=".$row['phrase_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+				echo "<a href='phrase_delete.php?id=".escape($row['phrase_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";

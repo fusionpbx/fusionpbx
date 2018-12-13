@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2015 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2015-2018 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -28,17 +28,23 @@
 
 --define the explode function
 	require "resources.functions.explode";
+	require "resources.functions.trim";
 
 --set the defaults
 	max_tries = 3;
 	digit_timeout = 5000;
 	max_retries = 3;
 	tries = 0;
-	profile = "internal";
 
 --connect to the database
-	require "resources.functions.database_handle";
-	dbh = database_handle('system');
+	local Database = require "resources.functions.database";
+	dbh = Database.new('system');
+
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
 
 --answer
 	session:answer();
@@ -49,8 +55,12 @@
 --get the domain_uuid
 	domain_uuid = session:getVariable("domain_uuid");
 
---get the action
+--get the variables
 	action = session:getVariable("action");
+	reboot = session:getVariable("reboot");
+
+--set defaults
+	if (not reboot) then reboot = 'true'; end
 
 --set the sounds path for the language, dialect and voice
 	default_language = session:getVariable("default_language");
@@ -92,14 +102,15 @@
 
 --get the device uuid for the phone that will have its configuration overridden
 	if (user ~= nil and domain ~= nil and domain_uuid ~= nil) then
-		sql = [[SELECT * FROM v_device_lines ]];
-		sql = sql .. [[WHERE user_id = ']] .. user .. [[' ]];
-		sql = sql .. [[AND server_address = ']]..domain..[[' ]];
-		sql = sql .. [[AND domain_uuid = ']]..domain_uuid..[[' ]];
+		local sql = [[SELECT device_uuid FROM v_device_lines ]];
+		sql = sql .. [[WHERE user_id = :user ]];
+		sql = sql .. [[AND server_address = :domain ]];
+		sql = sql .. [[AND domain_uuid = :domain_uuid ]];
+		local params = {user = user, domain = domain, domain_uuid = domain_uuid};
 		if (debug["sql"]) then
-			freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
+			freeswitch.consoleLog("NOTICE", "[provision] SQL: ".. sql .. "; params: " .. json.encode(params) .. "\n");
 		end
-		dbh:query(sql, function(row)
+		dbh:query(sql, params, function(row)
 			--get device uuid
 			device_uuid = row.device_uuid;
 			freeswitch.consoleLog("NOTICE", "[provision] device_uuid: ".. device_uuid .. "\n");
@@ -109,14 +120,15 @@
 --get the alternate device uuid using the device username and password
 	authorized = 'false';
 	if (user_id ~= nil and password ~= nil and domain_uuid ~= nil) then
-		sql = [[SELECT * FROM v_devices ]];
-		sql = sql .. [[WHERE device_username = ']]..user_id..[[' ]];
-		sql = sql .. [[AND device_password = ']]..password..[[' ]]
-		sql = sql .. [[AND domain_uuid = ']]..domain_uuid..[[' ]];
+		local sql = [[SELECT device_uuid FROM v_devices ]];
+		sql = sql .. [[WHERE device_username = :user_id ]];
+		sql = sql .. [[AND device_password = :password ]]
+		sql = sql .. [[AND domain_uuid = :domain_uuid ]];
+		local params = {user_id = user_id, password = password, domain_uuid = domain_uuid};
 		if (debug["sql"]) then
-			freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
+			freeswitch.consoleLog("NOTICE", "[provision] SQL: ".. sql .. "; params: " .. json.encode(params) .. "\n");
 		end
-		dbh:query(sql, function(row)
+		dbh:query(sql, params, function(row)
 			--get the alternate device_uuid
 				device_uuid_alternate = row.device_uuid;
 				freeswitch.consoleLog("NOTICE", "[provision] alternate device_uuid: ".. device_uuid_alternate .. "\n");
@@ -132,13 +144,14 @@
 
 --this device already has an alternate find the correct device_uuid and then override current one
 	if (authorized == 'true' and action == "login" and device_uuid_alternate ~= nil and device_uuid ~= nil and domain_uuid ~= nil) then
-		sql = [[SELECT * FROM v_devices ]];
-		sql = sql .. [[WHERE device_uuid_alternate = ']]..device_uuid..[[' ]];
-		sql = sql .. [[AND domain_uuid = ']]..domain_uuid..[[' ]];
+		local sql = [[SELECT * FROM v_devices ]];
+		sql = sql .. [[WHERE device_uuid_alternate = :device_uuid ]];
+		sql = sql .. [[AND domain_uuid = :domain_uuid ]];
+		local params = {device_uuid = device_uuid, domain_uuid = domain_uuid};
 		if (debug["sql"]) then
-			freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
+			freeswitch.consoleLog("NOTICE", "[provision] SQL: ".. sql .. "; params: " .. json.encode(params) .. "\n");
 		end
-		dbh:query(sql, function(row)
+		dbh:query(sql, params, function(row)
 			if (row.device_uuid_alternate ~= nil) then
 				device_uuid = row.device_uuid;
 			end
@@ -147,21 +160,29 @@
 
 --remove the alternate device from another device so that it can be added to this device
 	if (authorized == 'true' and action == "login" and device_uuid_alternate ~= nil and domain_uuid ~= nil) then
-		sql = [[SELECT * FROM v_device_lines ]];
-		sql = sql .. [[WHERE device_uuid = ']]..device_uuid_alternate..[[' ]];
-		sql = sql .. [[AND domain_uuid = ']]..domain_uuid..[[' ]];
+		local sql = [[SELECT * FROM v_device_lines ]];
+		sql = sql .. [[WHERE device_uuid = :device_uuid ]];
+		sql = sql .. [[AND domain_uuid = :domain_uuid ]];
+		local params = {device_uuid = device_uuid_alternate, domain_uuid = domain_uuid};
 		if (debug["sql"]) then
-			freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
+			freeswitch.consoleLog("NOTICE", "[provision] SQL: ".. sql .. "; params: " .. json.encode(params) .. "\n");
 		end
-		dbh:query(sql, function(row)
+		dbh:query(sql, params, function(row)
 			--remove the previous alternate device uuid
-				sql = [[UPDATE v_devices SET device_uuid_alternate = null ]];
-				sql = sql .. [[WHERE device_uuid_alternate = ']]..device_uuid_alternate..[[' ]];
-				sql = sql .. [[AND domain_uuid = ']]..domain_uuid..[[' ]];
+				local sql = [[UPDATE v_devices SET device_uuid_alternate = null ]];
+				sql = sql .. [[WHERE device_uuid_alternate = :device_uuid_alternate ]];
+				sql = sql .. [[AND domain_uuid = :domain_uuid ]];
+				local params = {device_uuid_alternate = device_uuid_alternate, domain_uuid = domain_uuid};
 				if (debug["sql"]) then
-					freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
+					freeswitch.consoleLog("NOTICE", "[provision] SQL: ".. sql .. "; params: " .. json.encode(params) .. "\n");
 				end
-				dbh:query(sql);
+				dbh:query(sql, params);
+			--get the sip profile
+				api = freeswitch.API();
+				local sofia_contact = trim(api:executeString("sofia_contact */"..row.user_id.."@"..row.server_address));
+				array = explode("/", sofia_contact);
+				profile = array[2];
+				freeswitch.consoleLog("NOTICE", "[provision] profile: ".. profile .. "\n");
 			--send a sync command to the previous device
 				--create the event notify object
 					local event = freeswitch.Event('NOTIFY');
@@ -171,7 +192,7 @@
 					event:addHeader('host', row.server_address);
 					event:addHeader('content-type', 'application/simple-message-summary');
 				--check sync
-					event:addHeader('event-string', 'check-sync;reboot=false');
+					event:addHeader('event-string', 'check-sync;reboot='..reboot);
 				--send the event
 					event:fire();
 		end);
@@ -183,31 +204,40 @@
 			--send a hangup
 				session:hangup();
 			--add the new alternate
-				sql = [[UPDATE v_devices SET device_uuid_alternate = ']]..device_uuid_alternate..[[']];
-				sql = sql .. [[WHERE device_uuid = ']]..device_uuid..[[' ]];
-				sql = sql .. [[AND domain_uuid = ']]..domain_uuid..[[' ]];
+				local sql = [[UPDATE v_devices SET device_uuid_alternate = :device_uuid_alternate ]];
+				sql = sql .. [[WHERE device_uuid = :device_uuid ]];
+				sql = sql .. [[AND domain_uuid = :domain_uuid ]];
+				local params = {device_uuid_alternate = device_uuid_alternate, 
+					device_uuid = device_uuid, domain_uuid = domain_uuid};
 				if (debug["sql"]) then
-					freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
+					freeswitch.consoleLog("NOTICE", "[provision] SQL: ".. sql .. "; params: " .. json.encode(params) .. "\n");
 				end
-				dbh:query(sql);
+				dbh:query(sql, params);
 		end
 	end
 
 --remove the override to the device uuid (logout)
 	if (authorized == 'true' and action == "logout") then
 		if (device_uuid_alternate ~= nil and device_uuid ~= nil and domain_uuid ~= nil) then
-			sql = [[UPDATE v_devices SET device_uuid_alternate = null ]];
-			sql = sql .. [[WHERE device_uuid_alternate = ']]..device_uuid..[[' ]];
-			sql = sql .. [[AND domain_uuid = ']]..domain_uuid..[[' ]];
+			local sql = [[UPDATE v_devices SET device_uuid_alternate = null ]];
+			sql = sql .. [[WHERE device_uuid_alternate = :device_uuid ]];
+			sql = sql .. [[AND domain_uuid = :domain_uuid ]];
+			local params = {device_uuid = device_uuid, domain_uuid = domain_uuid};
 			if (debug["sql"]) then
-				freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
+				freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "; params: " .. json.encode(params) .. "\n");
 			end
-			dbh:query(sql);
+			dbh:query(sql, params);
 		end
 	end
 
 --found the device send a sync command
 	if (authorized == 'true') then
+		--get the sip profile
+			api = freeswitch.API();
+			local sofia_contact = trim(api:executeString("sofia_contact */"..user.."@"..domain));
+			array = explode("/", sofia_contact);
+			profile = array[2];
+			freeswitch.consoleLog("NOTICE", "[provision] profile: ".. profile .. "\n");
 		--send a hangup
 			session:hangup();
 		--create the event notify object
@@ -218,7 +248,7 @@
 			event:addHeader('host', domain);
 			event:addHeader('content-type', 'application/simple-message-summary');
 		--check sync
-			event:addHeader('event-string', 'check-sync;reboot=false');
+			event:addHeader('event-string', 'check-sync;reboot='..reboot);
 		--send the event
 			event:fire();
 	end

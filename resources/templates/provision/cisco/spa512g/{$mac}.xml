@@ -7,7 +7,7 @@
 <Web_Server_Port group="System/System_Configuration">80</Web_Server_Port>
 <Enable_Web_Admin_Access group="System/System_Configuration">Yes</Enable_Web_Admin_Access>
 <Admin_Passwd group="System/System_Configuration">{$admin_password}</Admin_Passwd>
-<User_Password group="System/System_Configuration">{$user_password}</User_Password>
+<User_Password group="System/System_Configuration"></User_Password>
 <Signaling_Protocol group="System/System_Configuration">SIP</Signaling_Protocol>
 <SPCP_Auto-detect group="System/System_Configuration">Yes</SPCP_Auto-detect>
 <Phone-UI-readonly group="System/System_Configuration">No</Phone-UI-readonly>
@@ -38,8 +38,8 @@
 <Layer_2_Logging group="System/Optional_Network_Configuration">No</Layer_2_Logging>
 <Port_Mirroring group="System/Optional_Network_Configuration">No</Port_Mirroring>
 <NTP_Enable group="System/Optional_Network_Configuration">Yes</NTP_Enable>
-<Primary_NTP_Server group="System/Optional_Network_Configuration" />
-<Secondary_NTP_Server group="System/Optional_Network_Configuration" />
+<Primary_NTP_Server>{$ntp_server_primary}</Primary_NTP_Server>
+<Secondary_NTP_Server>{$ntp_server_secondary}</Secondary_NTP_Server>
 
 <!-- System/VLAN_Settings -->
 <Enable_VLAN group="System/VLAN_Settings">No</Enable_VLAN>
@@ -76,7 +76,7 @@
 <Random_REG_CID_On_Reboot group="SIP/SIP_Parameters">No</Random_REG_CID_On_Reboot>
 <Mark_All_AVT_Packets group="SIP/SIP_Parameters">Yes</Mark_All_AVT_Packets>
 <SIP_TCP_Port_Min group="SIP/SIP_Parameters">5060</SIP_TCP_Port_Min>
-<SIP_TCP_Port_Max group="SIP/SIP_Parameters">5080</SIP_TCP_Port_Max>
+<SIP_TCP_Port_Max group="SIP/SIP_Parameters">15080</SIP_TCP_Port_Max>
 <CTI_Enable group="SIP/SIP_Parameters">No</CTI_Enable>
 <Caller_ID_Header group="SIP/SIP_Parameters">PAID-RPID-FROM</Caller_ID_Header>
 <SRTP_Method group="SIP/SIP_Parameters">x-sipura</SRTP_Method>
@@ -117,7 +117,7 @@
 
 <!-- SIP/RTP_Parameters -->
 <RTP_Port_Min group="SIP/RTP_Parameters">16384</RTP_Port_Min>
-<RTP_Port_Max group="SIP/RTP_Parameters">16538</RTP_Port_Max>
+<RTP_Port_Max group="SIP/RTP_Parameters">32768</RTP_Port_Max>
 <RTP_Packet_Size group="SIP/RTP_Parameters">0.020</RTP_Packet_Size>
 <Max_RTP_ICMP_Err group="SIP/RTP_Parameters">0</Max_RTP_ICMP_Err>
 <RTCP_Tx_Interval group="SIP/RTP_Parameters">0</RTCP_Tx_Interval>
@@ -149,12 +149,12 @@
 <EncapRTP_Codec_Name group="SIP/SDP_Payload_Types">encaprtp</EncapRTP_Codec_Name>
 
 <!-- SIP/NAT_Support_Parameters -->
-<Handle_VIA_received group="SIP/NAT_Support_Parameters">{$cisco_spa_rport}</Handle_VIA_received>
-<Handle_VIA_rport group="SIP/NAT_Support_Parameters">{$cisco_spa_rport}</Handle_VIA_rport>
-<Insert_VIA_received group="SIP/NAT_Support_Parameters">{$cisco_spa_rport}</Insert_VIA_received>
-<Insert_VIA_rport group="SIP/NAT_Support_Parameters">{$cisco_spa_rport}</Insert_VIA_rport>
-<Substitute_VIA_Addr group="SIP/NAT_Support_Parameters">{$cisco_spa_rport}</Substitute_VIA_Addr>
-<Send_Resp_To_Src_Port group="SIP/NAT_Support_Parameters">{$cisco_spa_rport}</Send_Resp_To_Src_Port>
+<Handle_VIA_received group="SIP/NAT_Support_Parameters">No</Handle_VIA_received>
+<Handle_VIA_rport group="SIP/NAT_Support_Parameters">{$spa_handle_via_rport}</Handle_VIA_rport>
+<Insert_VIA_received group="SIP/NAT_Support_Parameters">No</Insert_VIA_received>
+<Insert_VIA_rport group="SIP/NAT_Support_Parameters">{$spa_insert_via_rport}</Insert_VIA_rport>
+<Substitute_VIA_Addr group="SIP/NAT_Support_Parameters">No</Substitute_VIA_Addr>
+<Send_Resp_To_Src_Port group="SIP/NAT_Support_Parameters">No</Send_Resp_To_Src_Port>
 <STUN_Enable group="SIP/NAT_Support_Parameters">No</STUN_Enable>
 <STUN_Test_Enable group="SIP/NAT_Support_Parameters">No</STUN_Test_Enable>
 <STUN_Server group="SIP/NAT_Support_Parameters" />
@@ -177,8 +177,8 @@
 <Resync_At__HHmm_ group="Provisioning/Configuration_Profile" />
 <Resync_At_Random_Delay group="Provisioning/Configuration_Profile">600</Resync_At_Random_Delay>
 <Resync_Periodic group="Provisioning/Configuration_Profile">0</Resync_Periodic>
-<Resync_Error_Retry_Delay group="Provisioning/Configuration_Profile">3600</Resync_Error_Retry_Delay>
-<Forced_Resync_Delay group="Provisioning/Configuration_Profile">14400</Forced_Resync_Delay>
+<Resync_Error_Retry_Delay group="Provisioning/Configuration_Profile">300</Resync_Error_Retry_Delay>
+<Forced_Resync_Delay group="Provisioning/Configuration_Profile">30</Forced_Resync_Delay>
 <Resync_From_SIP group="Provisioning/Configuration_Profile">Yes</Resync_From_SIP>
 <Resync_After_Upgrade_Attempt group="Provisioning/Configuration_Profile">Yes</Resync_After_Upgrade_Attempt>
 <Resync_Trigger_1 group="Provisioning/Configuration_Profile" />
@@ -338,7 +338,7 @@
 <Time_Zone group="Regional/Miscellaneous">{$spa_time_zone}</Time_Zone>
 <Time_Offset__HH_mm_ group="Regional/Miscellaneous" />
 <Ignore_DHCP_Time_Offset group="Regional/Miscellaneous">Yes</Ignore_DHCP_Time_Offset>
-<Daylight_Saving_Time_Rule group="Regional/Miscellaneous" />
+<Daylight_Saving_Time_Rule group="Regional/Miscellaneous">start={$daylight_savings_start_month}/{$daylight_savings_start_day}/{$daylight_savings_start_weekday}/{$daylight_savings_start_time}:0:0;end={$daylight_savings_stop_month}/{$daylight_savings_stop_day}/{$daylight_savings_stop_weekday}/{$daylight_savings_stop_time}:0:0;save=1</Daylight_Saving_Time_Rule>
 <Daylight_Saving_Time_Enable group="Regional/Miscellaneous">Yes</Daylight_Saving_Time_Enable>
 <DTMF_Playback_Level group="Regional/Miscellaneous">-16</DTMF_Playback_Level>
 <DTMF_Playback_Length group="Regional/Miscellaneous">.1</DTMF_Playback_Length>
@@ -349,8 +349,8 @@
 <Locale group="Regional/Miscellaneous">en-US</Locale>
 
 <!-- Phone/General -->
-<Station_Name group="Phone/General">{$display_name_1}</Station_Name>
-<Station_Display_Name group="Phone/General">{$display_name_1}</Station_Display_Name>
+<Station_Name group="Phone/General">{$device_label}</Station_Name>
+<Station_Display_Name group="Phone/General">{$account.1.display_name}</Station_Display_Name>
 <Voice_Mail_Number group="Phone/General">{$voicemail_number}</Voice_Mail_Number>
 <Text_Logo group="Phone/General" />
 <BMP_Picture_Download_URL group="Phone/General" />
@@ -362,19 +362,14 @@
 <Screen_Saver_Icon group="Phone/General">Background Picture</Screen_Saver_Icon>
 
 {foreach $keys["line"] as $row}
-{if $row.device_key_type == "line"}
+{if $row.device_key_category == "line"}
 <!-- Phone/Line_Key_{$row.device_key_id} -->
-<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
+<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_line}</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
 <Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
-<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">private</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
-<Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}"/>
-{else}
-<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">Disabled</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
-<Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
-<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">private</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
+<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{if $row.device_key_type == "shared"}shared{else}private{/if}</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
 <Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extended_Function_{$row.device_key_id}_>
-{/if}
 
+{/if}
 {/foreach}
 
 <!-- Phone/Miscellaneous_Line_Key_Settings -->
@@ -382,6 +377,8 @@
 <Softkey_Navigation_Style group="Phone/Miscellaneous_Line_Key_Settings">Scrollable</Softkey_Navigation_Style>
 
 <!-- Phone/Supplementary_Services -->
+<SCA_Line_ID_Mapping group="Phone/Miscellaneous_Line_Key_Settings">Vertical First</SCA_Line_ID_Mapping>
+<SCA_Barge-In_Enable group="Phone/Miscellaneous_Line_Key_Settings">Yes</SCA_Barge-In_Enable>
 <Conference_Serv group="Phone/Supplementary_Services">Yes</Conference_Serv>
 <Attn_Transfer_Serv group="Phone/Supplementary_Services">Yes</Attn_Transfer_Serv>
 <Blind_Transfer_Serv group="Phone/Supplementary_Services">Yes</Blind_Transfer_Serv>
@@ -502,7 +499,7 @@
 <Line_Enable_1_ group="Ext_1/General">Yes</Line_Enable_1_>
 
 <!-- Ext_1/Share_Line_Appearance -->
-<Share_Ext_1_ group="Ext_1/Share_Line_Appearance">private</Share_Ext_1_>
+<Share_Ext_1_ group="Ext_1/Share_Line_Appearance">{if $account.1.shared_line == "shared"}shared{else}private{/if}</Share_Ext_1_>
 <Shared_User_ID_1_ group="Ext_1/Share_Line_Appearance" />
 <Subscription_Expires_1_ group="Ext_1/Share_Line_Appearance">3600</Subscription_Expires_1_>
 <Restrict_MWI_1_ group="Ext_1/Share_Line_Appearance">No</Restrict_MWI_1_>
@@ -523,8 +520,8 @@
 <Jitter_Buffer_Adjustment_1_ group="Ext_1/Network_Settings">up and down</Jitter_Buffer_Adjustment_1_>
 
 <!-- Ext_1/SIP_Settings -->
-<SIP_Transport_1_ group="Ext_1/SIP_Settings">{$sip_transport_1|upper}</SIP_Transport_1_>
-<SIP_Port_1_ group="Ext_1/SIP_Settings">{$sip_port_1}</SIP_Port_1_>
+<SIP_Transport_1_ group="Ext_1/SIP_Settings">{$account.1.sip_transport|upper}</SIP_Transport_1_>
+<SIP_Port_1_ group="Ext_1/SIP_Settings">{$account.1.sip_port}</SIP_Port_1_>
 <SIP_100REL_Enable_1_ group="Ext_1/SIP_Settings">No</SIP_100REL_Enable_1_>
 <EXT_SIP_Port_1_ group="Ext_1/SIP_Settings" />
 <Auth_Resync-Reboot_1_ group="Ext_1/SIP_Settings">Yes</Auth_Resync-Reboot_1_>
@@ -549,6 +546,7 @@
 <Message_Waiting_1_ group="Ext_1/Call_Feature_Settings">No</Message_Waiting_1_>
 <Auth_Page_1_ group="Ext_1/Call_Feature_Settings">No</Auth_Page_1_>
 <Default_Ring__1__ group="Ext_1/Call_Feature_Settings">1</Default_Ring__1__>
+<Feature_Key_Sync_1_ group="Ext_1/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_1_>
 <Auth_Page_Realm_1_ group="Ext_1/Call_Feature_Settings" />
 <Conference_Bridge_URL_1_ group="Ext_1/Call_Feature_Settings" />
 <Auth_Page_Password_1_ group="Ext_1/Call_Feature_Settings" />
@@ -561,30 +559,32 @@
 <User_ID_with_Domain_1_ group="Ext_1/Call_Feature_Settings">No</User_ID_with_Domain_1_>
 <Broadsoft_ACD_1_ group="Ext_1/Call_Feature_Settings">No</Broadsoft_ACD_1_>
 <Auto_Ans_Page_On_Active_Call_1_ group="Ext_1/Call_Feature_Settings">Yes</Auto_Ans_Page_On_Active_Call_1_>
-<Feature_Key_Sync_1_ group="Ext_1/Call_Feature_Settings">No</Feature_Key_Sync_1_>
+<Feature_Key_Sync_1_ group="Ext_1/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_1_>
 <Call_Park_Monitor_Enable_1_ group="Ext_1/Call_Feature_Settings">No</Call_Park_Monitor_Enable_1_>
 
 <!-- Ext_1/Proxy_and_Registration -->
-<Proxy_1_ group="Ext_1/Proxy_and_Registration">{$server_address_1}</Proxy_1_>
-<Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration" />
-<Alternate_Proxy_1_ group="Ext_1/Proxy_and_Registration" />
-<Alternate_Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration" />
-<Use_Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">No</Use_Outbound_Proxy_1_>
+<Proxy_1_ group="Ext_1/Proxy_and_Registration">{$account.1.server_address}</Proxy_1_>
+<Use_Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">{if isset($account.1.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_1_>
+<Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">{$account.1.outbound_proxy_primary}</Outbound_Proxy_1_>
+<Alternate_Proxy_1_ group="Ext_1/Proxy_and_Registration">{$account.1.server_address}</Alternate_Proxy_1_>
+<Alternate_Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">{$account.1.outbound_proxy_secondary}</Alternate_Outbound_Proxy_1_>
 <Use_OB_Proxy_In_Dialog_1_ group="Ext_1/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_1_>
 <Register_1_ group="Ext_1/Proxy_and_Registration">Yes</Register_1_>
 <Make_Call_Without_Reg_1_ group="Ext_1/Proxy_and_Registration">No</Make_Call_Without_Reg_1_>
-<Register_Expires_1_ group="Ext_1/Proxy_and_Registration">{$register_expires_1}</Register_Expires_1_>
+<Register_Expires_1_ group="Ext_1/Proxy_and_Registration">{$account.1.register_expires}</Register_Expires_1_>
 <Ans_Call_Without_Reg_1_ group="Ext_1/Proxy_and_Registration">No</Ans_Call_Without_Reg_1_>
-<Use_DNS_SRV_1_ group="Ext_1/Proxy_and_Registration">No</Use_DNS_SRV_1_>
+{if $account.1.sip_transport == 'dns srv'}<Use_DNS_SRV_1_ group="Ext_1/Proxy_and_Registration">Yes</Use_DNS_SRV_1_>{/if}
+{if $account.1.sip_transport != 'dns srv'}<Use_DNS_SRV_1_ group="Ext_1/Proxy_and_Registration">No</Use_DNS_SRV_1_>{/if}
 <DNS_SRV_Auto_Prefix_1_ group="Ext_1/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_1_>
-<Proxy_Fallback_Intvl_1_ group="Ext_1/Proxy_and_Registration">3600</Proxy_Fallback_Intvl_1_>
+<Proxy_Fallback_Intvl_1_ group="Ext_1/Proxy_and_Registration">600</Proxy_Fallback_Intvl_1_>
 <Proxy_Redundancy_Method_1_ group="Ext_1/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_1_>
-<Dual_Registration_1_ group="Ext_1/Proxy_and_Registration">No</Dual_Registration_1_>
+<Dual_Registration_1_ group="Ext_1/Proxy_and_Registration">{if isset($spa_dual_registration)}Yes{else}No{/if}</Dual_Registration_1_>
+<Auto_Register_When_Failover_1_ group="Ext_1/Proxy_and_Registration">{if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_1_>
 
 <!-- Ext_1/Subscriber_Information -->
-<Display_Name_1_ group="Ext_1/Subscriber_Information">{$display_name_1}</Display_Name_1_>
-<User_ID_1_ group="Ext_1/Subscriber_Information">{$user_id_1}</User_ID_1_>
-<Password_1_ group="Ext_1/Subscriber_Information">{$user_password_1}</Password_1_>
+<Display_Name_1_ group="Ext_1/Subscriber_Information">{$account.1.display_name}</Display_Name_1_>
+<User_ID_1_ group="Ext_1/Subscriber_Information">{$account.1.user_id}</User_ID_1_>
+<Password_1_ group="Ext_1/Subscriber_Information">{$account.1.password}</Password_1_>
 <Use_Auth_ID_1_ group="Ext_1/Subscriber_Information">No</Use_Auth_ID_1_>
 <Auth_ID_1_ group="Ext_1/Subscriber_Information"></Auth_ID_1_>
 <Reversed_Auth_Realm_1_ group="Ext_1/Subscriber_Information" />
@@ -614,7 +614,7 @@
 <Codec_Negotiation_1_ group="Ext_1/Audio_Configuration">Default</Codec_Negotiation_1_>
 
 <!-- Ext_1/Dial_Plan -->
-<Dial_Plan_1_ group="Ext_1/Dial_Plan">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_1_>
+<Dial_Plan_1_ group="Ext_1/Dial_Plan">{$spa_dial_plan}</Dial_Plan_1_>
 <Caller_ID_Map_1_ group="Ext_1/Dial_Plan" />
 <Enable_IP_Dialing_1_ group="Ext_1/Dial_Plan">Yes</Enable_IP_Dialing_1_>
 <Emergency_Number_1_ group="Ext_1/Dial_Plan" />
@@ -637,7 +637,7 @@
 <Speed_Dial_9 group="User/Speed_Dial" />
 
 <!-- User/Supplementary_Services -->
-<CW_Setting group="User/Supplementary_Services">Yes</CW_Setting>
+<CW_Setting group="User/Supplementary_Services">{$spa_call_waiting}</CW_Setting>
 <Block_CID_Setting group="User/Supplementary_Services">No</Block_CID_Setting>
 <Block_ANC_Setting group="User/Supplementary_Services">No</Block_ANC_Setting>
 <DND_Setting group="User/Supplementary_Services">No</DND_Setting>
@@ -646,8 +646,8 @@
 <Auto_Answer_Page group="User/Supplementary_Services">Yes</Auto_Answer_Page>
 <Preferred_Audio_Device group="User/Supplementary_Services">Speaker</Preferred_Audio_Device>
 <Send_Audio_To_Speaker group="User/Supplementary_Services">No</Send_Audio_To_Speaker>
-<Time_Format group="User/Supplementary_Services">12hr</Time_Format>
-<Date_Format group="User/Supplementary_Services">month/day</Date_Format>
+<Time_Format group="User/Supplementary_Services">{$spa_time_format}</Time_Format>
+<Date_Format group="User/Supplementary_Services">{$spa_date_format}</Date_Format>
 <Miss_Call_Shortcut group="User/Supplementary_Services">Yes</Miss_Call_Shortcut>
 <Miss_Call_Banner group="User/Supplementary_Services">Yes</Miss_Call_Banner>
 <Accept_Media_Loopback_Request group="User/Supplementary_Services">automatic</Accept_Media_Loopback_Request>

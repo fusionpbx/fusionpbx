@@ -28,9 +28,10 @@
 	require_once "root.php";
 	require_once "resources/functions.php";
 	require_once "resources/classes/text.php";
+	require_once "resources/classes/message.php";
 
 //start a php session
-	session_start();
+	if (!isset($_SESSION)) { session_start(); }
 
 //initialize variables we are going to use
 	$event_host = '';
@@ -169,7 +170,12 @@
 		}
 	//test for windows and non sqlite
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' and strlen($db_type) > 0 and $db_type !='sqlite') {
-			$messages[] = "<b>Windows requires a system DSN ODBC connection</b> this must be configured.";
+			//Test for ODBC DSN in ODBC.INI. It should have section:
+			//[fusionpbx]
+			//Driver32=C:\Program Files\psqlODBC\0906\bin\psqlodbc35w.dll
+			if ( preg_match('/\[fusionpbx\]/mi', file_get_contents('c:/Windows/ODBC.INI')) == 0 ) {
+				$messages[] = "<b>Windows requires a system DSN ODBC connection with name 'fusionpbx'.</b>";
+			}
 		}
 
 	//action code
@@ -257,7 +263,7 @@
 		include "resources/page_parts/install_config_database.php";
 	}
 	elseif($install_step == 'execute'){
-		echo "<p><b>".$text['header-installing'][$install_language]."</b></p>\n";
+		echo "<p><b>".$text['header-installing']."</b></p>\n";
 		//$protocol = 'http';
 		//if($_SERVER['HTTPS']) { $protocol = 'https'; }
 		//echo "<iframe src='$protocol://$domain_name/core/install/install_first_time.php' style='border:solid 1px #000;width:100%;height:auto'></iframe>";
@@ -354,10 +360,26 @@
 //set a default template
 	$default_template = 'default';
 	$_SESSION['domain']['template']['name'] = $default_template;
-	$set_session_theme = 1;
-	$domains_processed = 1;
-	include "themes/$default_template/app_defaults.php";
-	unset($set_session_theme, $domains_processed);
+    $x = 0;
+	include "themes/$default_template/app_config.php";
+    $_SESSION['theme'] = Array();
+    foreach ($apps as $app_id => $data) {
+        foreach ($apps[$app_id]['default_settings'] as $index => $default_setting) {
+            $sub_category = $default_setting['default_setting_subcategory'];
+            $name = $default_setting['default_setting_name'];
+            if($default_setting['default_setting_enabled'] == 'true'){
+                if($name == 'array'){
+                    $_SESSION['theme'][$sub_category][(isset($default_setting['default_setting_order']) ? $default_setting['default_setting_order'] : null)] = $default_setting['default_setting_value'];
+                }
+                else {
+                    $_SESSION['theme'][$sub_category][$name] = $default_setting['default_setting_value'];
+                }
+            }else{
+                $_SESSION['theme'][$sub_category][$name] = '';
+            }
+        }
+    }
+	unset($apps, $x);
 	$_SESSION['theme']['menu_brand_type']['text'] = "text";
 
 //set the default template path
