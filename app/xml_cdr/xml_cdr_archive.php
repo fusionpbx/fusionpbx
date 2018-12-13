@@ -157,9 +157,7 @@
 	echo "					<option value='pdf'>PDF</option>\n";
 	echo "				</select>\n";
 	echo "			</td>\n";
-	if ($result_count == $rows_per_page && $paging_controls_mini != '') {
-		echo "		<td style='vertical-align: top; padding-left: 15px;'>".$paging_controls_mini."</td>\n";
-	}
+	echo "			<td style='vertical-align: top; padding-left: 15px;'>".$paging_controls_mini."</td>\n";
 	echo "		</tr>\n";
 	echo "	</table>\n";
 	echo "	</form>\n";
@@ -227,7 +225,7 @@
 				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 				echo "	<tr>\n";
 				echo "		<td class='vncell' valign='top' nowrap='nowrap'>\n";
-				echo "			".$text['label-source']."\n";
+				echo "			".$text['label-caller_id_number']."\n";
 				echo "		</td>\n";
 				echo "		<td class='vtable' align='left' style='white-space: nowrap;'>\n";
 				echo "			<input type='text' class='formfld' style='".$style['caller_id_number']."' name='caller_id_number' id='caller_id_number' value='".escape($caller_id_number)."'>\n";
@@ -258,7 +256,7 @@
 				echo "	</tr>\n";
 				echo "	<tr>\n";
 				echo "		<td class='vncell' valign='top' nowrap='nowrap'>\n";
-				echo "			".$text['label-cid-name']."\n";
+				echo "			".$text['label-caller_id_name']."\n";
 				echo "		</td>\n";
 				echo "		<td class='vtable' align='left'>\n";
 				echo "			<input type='text' class='formfld' name='caller_id_name' value='".escape($caller_id_name)."'>\n";
@@ -378,8 +376,8 @@
 			echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
 			$col_count++;
 		}
-		echo th_order_by('caller_id_name', $text['label-cid-name'], $order_by, $order, null, null, $param);
-		echo th_order_by('caller_id_number', $text['label-source'], $order_by, $order, null, null, $param);
+		echo th_order_by('caller_id_name', $text['label-caller_id_name'], $order_by, $order, null, null, $param);
+		echo th_order_by('caller_id_number', $text['label-caller_id_number'], $order_by, $order, null, null, $param);
 		if (permission_exists('caller_destination')) {
 			echo th_order_by('caller_destination', $text['label-caller_destination'], $order_by, $order, null, null, $param);
 		}
@@ -706,9 +704,7 @@
 	echo "</table>";
 	echo "</form>";
 	echo "<br><br>";
-	if ($result_count == $rows_per_page) {
-		echo $paging_controls;
-	}
+	echo $paging_controls;
 	echo "<br><br>";
 
 	// check or uncheck all checkboxes
