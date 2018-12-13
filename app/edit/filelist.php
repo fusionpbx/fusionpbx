@@ -112,9 +112,6 @@
 		case 'grammer':
 			$edit_directory = $_SESSION['switch']['grammar']['dir'];
 			break;
-		case 'path':
-			$edit_directory = $_SESSION['editor']['path']['text'];
-			break;
 		case 'provision':
 			switch (PHP_OS) {
 				case "Linux":
@@ -147,7 +144,16 @@
 			$edit_directory = $_SESSION['switch']['conf']['dir'];
 			break;
 	}
+	if (!isset($edit_directory)) {
+		foreach ($_SESSION['editor']['path'] as $path) {
+			if ($_SESSION["app"]["edit"]["dir"] == $path) {
+				$edit_directory = $path;
+				break;
+			}
+		}
+	}
 
+//define ajax functions
 echo "<script type=\"text/javascript\" language=\"javascript\">\n";
 echo "    function makeRequest(url, strpost) {\n";
 echo "        var http_request = false;\n";
