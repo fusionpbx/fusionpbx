@@ -103,7 +103,7 @@
 	echo "	<input type='hidden' name='stop_epoch' value='".escape($stop_epoch)."'>\n";
 	echo "	<input type='hidden' name='duration' value='".escape($duration)."'>\n";
 	echo "	<input type='hidden' name='billsec' value='".escape($billsec)."'>\n";
-	echo "	<input type='hidden' name='uuid' value='".escape($uuid)."'>\n";
+	echo "	<input type='hidden' name='xml_cdr_uuid' value='".escape($xml_cdr_uuid)."'>\n";
 	echo "	<input type='hidden' name='bleg_uuid' value='".escape($bleg_uuid)."'>\n";
 	echo "	<input type='hidden' name='accountcode' value='".escape($accountcode)."'>\n";
 	echo "	<input type='hidden' name='read_codec' value='".escape($read_codec)."'>\n";
@@ -482,7 +482,7 @@
 
 			//recording playback
 				if (permission_exists('recording_play') && $record_path != '') {
-					echo "<tr id='recording_progress_bar_".escape($row['uuid'])."' style='display: none;'><td class='".$row_style[$c]." playback_progress_bar_background' style='padding: 0; border: none;' colspan='".escape($col_count)."'><span class='playback_progress_bar' id='recording_progress_".escape($row['uuid'])."'></span></td></tr>\n";
+					echo "<tr id='recording_progress_bar_".escape($row['xml_cdr_uuid'])."' style='display: none;'><td class='".$row_style[$c]." playback_progress_bar_background' style='padding: 0; border: none;' colspan='".escape($col_count)."'><span class='playback_progress_bar' id='recording_progress_".escape($row['xml_cdr_uuid'])."'></span></td></tr>\n";
 				}
 
 			//	if ($row['raw_data_exists'] && permission_exists('xml_cdr_details')) {
@@ -572,14 +572,14 @@
 					if ($record_path != '' && file_exists($record_path.'/'.$record_name)) {
 						echo "	<td valign='top' align='center' class='".$row_style[$c]." row_style_slim tr_link_void' nowrap='nowrap'>";
 						if (permission_exists('recording_play')) {
-							echo 	"<audio id='recording_audio_".escape($row['uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['uuid'])."')\" onended=\"recording_reset('".escape($row['uuid'])."');\" src=\"download.php?id=".escape($row['uuid'])."&t=record\" type='".escape($record_type)."'></audio>";
-							echo 	"<span id='recording_button_".escape($row['uuid'])."' onclick=\"recording_play('".escape($row['uuid'])."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
+							echo 	"<audio id='recording_audio_".escape($row['xml_cdr_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['xml_cdr_uuid'])."')\" onended=\"recording_reset('".escape($row['xml_cdr_uuid'])."');\" src=\"download.php?id=".escape($row['xml_cdr_uuid'])."&t=record\" type='".escape($record_type)."'></audio>";
+							echo 	"<span id='recording_button_".escape($row['xml_cdr_uuid'])."' onclick=\"recording_play('".escape($row['xml_cdr_uuid'])."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
 						}
 						else {
 							echo "don't have recording_play permission ";
 						}
 						if (permission_exists('recording_download')) {
-							echo 	"<a href=\"download.php?id=".escape($row['uuid'])."&t=bin\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
+							echo 	"<a href=\"download.php?id=".escape($row['xml_cdr_uuid'])."&t=bin\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
 						}
 						echo "	</td>\n";
 					}
