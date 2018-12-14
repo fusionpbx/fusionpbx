@@ -363,7 +363,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='mod_shout_volume' maxlength='255' value=\"$mod_shout_volume\">\n";
 	echo "<br />\n";
-	echo $text['description-shout-volume']."\n";
+	echo $text['description-mod_shout_volume']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	if (permission_exists('setting_edit')) {
