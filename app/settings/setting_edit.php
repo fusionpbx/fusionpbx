@@ -298,7 +298,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='xml_rpc_auth_user' maxlength='255' value=\"".escape($xml_rpc_auth_user)."\">\n";
 	echo "<br />\n";
-	echo $text['description-xml-rpc-user']."\n";
+	echo $text['description-xml_rpc_auth_user']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
