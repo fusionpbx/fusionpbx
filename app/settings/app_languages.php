@@ -221,6 +221,26 @@ $text['label-event-socket-ip']['ru-ru'] = "IP Address сокета событи�
 $text['label-event-socket-ip']['sv-se'] = "Event Socket IP Address";
 $text['label-event-socket-ip']['uk-ua'] = "Event Socket IP Address";
 
+$text['label-event_socket_acl']['en-us'] = "Event Socket ACL";
+$text['label-event_socket_acl']['ar-eg'] = "";
+$text['label-event_socket_acl']['de-at'] = ""; //copied from de-de
+$text['label-event_socket_acl']['de-ch'] = ""; //copied from de-de
+$text['label-event_socket_acl']['de-de'] = "Event Socket ACL";
+$text['label-event_socket_acl']['es-cl'] = "ACL del Socket de Eventos";
+$text['label-event_socket_acl']['es-mx'] = "ACL del Socket de Eventos"; //copied from es-cl
+$text['label-event_socket_acl']['fr-ca'] = "ACL pour Event Socket"; //copied from fr-fr
+$text['label-event_socket_acl']['fr-fr'] = "ACL IP pour Event Socket";
+$text['label-event_socket_acl']['he-il'] = "";
+$text['label-event_socket_acl']['it-it'] = "IP Address ACL";
+$text['label-event_socket_acl']['nl-nl'] = "";
+$text['label-event_socket_acl']['pl-pl'] = "ACL 'Event Socket'";
+$text['label-event_socket_acl']['pt-br'] = "ACL do Evento Socket ";
+$text['label-event_socket_acl']['pt-pt'] = "ACL do Event Socket";
+$text['label-event_socket_acl']['ro-ro'] = "";
+$text['label-event_socket_acl']['ru-ru'] = "ACL сокета событий";
+$text['label-event_socket_acl']['sv-se'] = "Event Socket ACL";
+$text['label-event_socket_acl']['uk-ua'] = "Event Socket ACL";
+
 $text['description-xml-rpc-user']['en-us'] = "Enter the XML RPC Auth User. default: xmlrpc";
 $text['description-xml-rpc-user']['ar-eg'] = "";
 $text['description-xml-rpc-user']['de-at'] = "Geben Sie den XML RPC Auth Benutzer an. Standard: xmlrpc"; //copied from de-de
