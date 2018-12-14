@@ -213,10 +213,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	if ($action == "add") {
-	echo "<td align='left' width='30%' nowrap><b>".$text['title-settings-add']."</b><br><br></td>\n";
+	echo "<td align='left' width='30%' nowrap><b>".$text['title-settings_add']."</b><br><br></td>\n";
 	}
 	if ($action == "update") {
-	echo "<td align='left' width='30%' nowrap><b>".$text['title-settings-update']."</b><br><br></td>\n";
+	echo "<td align='left' width='30%' nowrap><b>".$text['title-settings_update']."</b><br><br></td>\n";
 	}
 	echo "<td width='70%' align='right'>";
 	if (permission_exists('setting_edit')) {
@@ -227,34 +227,34 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-event-socket-ip']."\n";
+	echo "    ".$text['label-event_socket_ip']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='event_socket_ip_address' maxlength='255' value=\"".escape($event_socket_ip_address)."\">\n";
 	echo "<br />\n";
-	echo $text['description-event-socket-ip']."\n";
+	echo $text['description-event_socket_ip']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-event-socket-port']."\n";
+	echo "    ".$text['label-event_socket_port']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='event_socket_port' maxlength='255' value=\"".escape($event_socket_port)."\">\n";
 	echo "<br />\n";
-	echo $text['description-event-socket-port']."\n";
+	echo $text['description-event_socket_port']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-event-socket-pw']."\n";
+	echo "    ".$text['label-event_socket_password']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='password' name='event_socket_password' id='event_socket_password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='50' value=\"".escape($event_socket_password)."\">\n";
 	echo "<br />\n";
-	echo $text['description-event-socket-pw']."\n";
+	echo $text['description-event_socket_password']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -271,29 +271,29 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-xml-rpc-port']."\n";
+	echo "    ".$text['label-xml_rpc_http_port']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='xml_rpc_http_port' maxlength='255' value=\"".escape($xml_rpc_http_port)."\">\n";
 	echo "<br />\n";
-	echo $text['description-xml-rpc-port']."\n";
+	echo $text['description-xml_rpc_http_port']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-xml-rpc-realm']."\n";
+	echo "    ".$text['label-xml_rpc_auth_realm']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='xml_rpc_auth_realm' maxlength='255' value=\"".escape($xml_rpc_auth_realm)."\">\n";
 	echo "<br />\n";
-	echo $text['description-xml-rpc-realm']."\n";
+	echo $text['description-xml_rpc_auth_realm']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-xml-rpc-user']."\n";
+	echo "    ".$text['label-xml_rpc_auth_user']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='xml_rpc_auth_user' maxlength='255' value=\"".escape($xml_rpc_auth_user)."\">\n";
@@ -304,18 +304,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-xml-rpc-pw']."\n";
+	echo "    ".$text['label-xml_rpc_auth_pass']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='password' name='xml_rpc_auth_pass' id='xml_rpc_auth_pass' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='50' value=\"".escape($xml_rpc_auth_pass)."\">\n";
 	echo "<br />\n";
-	echo $text['description-xml-rpc-pw']."\n";
+	echo $text['description-xml_rpc_auth_pass']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-shout-decoder']."\n";
+	echo "    ".$text['label-mod_shout_decoder']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='mod_shout_decoder'>\n";
@@ -352,13 +352,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "    </select>\n";
 	echo "<br />\n";
-	echo $text['description-shout-decoder']."\n";
+	echo $text['description-mod_shout_decoder']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-shout-volume']."\n";
+	echo "    ".$text['label-mod_shout_volume']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='mod_shout_volume' maxlength='255' value=\"$mod_shout_volume\">\n";
