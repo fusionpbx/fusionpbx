@@ -79,11 +79,11 @@ if ($_GET['a'] == "download") {
 
 	$msg = $_GET["savemsg"];
 	if ($_SESSION['event_socket_ip_address'] == "0.0.0.0") {
-                $socket_ip = '127.0.0.1';
-                $fp = event_socket_create($socket_ip, $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-        } else {
-                $fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-        }
+		$socket_ip = '127.0.0.1';
+		$fp = event_socket_create($socket_ip, $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	} else {
+		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	}
 	if (!$fp) {
 		$msg = "<div align='center'>".$text['error-event-socket']."<br /></div>";
 	}
