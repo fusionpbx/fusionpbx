@@ -174,7 +174,7 @@ function save_setting_xml() {
 			$xml .= "    <param name=\"listen-ip\" value=\"" . $event_socket_ip_address . "\"/>\n";
 			$xml .= "    <param name=\"listen-port\" value=\"" . $row['event_socket_port'] . "\"/>\n";
 			$xml .= "    <param name=\"password\" value=\"" . $row['event_socket_password'] . "\"/>\n";
-			$xml .= "    <!--<param name=\"apply-inbound-acl\" value=\"lan\"/>-->\n";
+			$xml .= "    <param name=\"apply-inbound-acl\" value=\"" . $row['event_socket_acl'] . "\"/>\n";
 			$xml .= "  </settings>\n";
 			$xml .= "</configuration>";
 			fwrite($fout, $xml);
