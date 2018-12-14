@@ -1,4 +1,5 @@
 <?php
+/*
 	FusionPBX
 	Version: MPL 1.1
 
