@@ -41,7 +41,7 @@ else {
 
 //set the directory title and mode
 	$_SESSION["app"]["edit"]["dir"] = $_GET["dir"];
-	$title = strtoupper($_GET["dir"]);
+	$title = escape($_GET["dir"]);
 	unset($mode);
 	switch ($_GET["dir"]) {
 		case 'xml': $mode = 'xml'; break;
