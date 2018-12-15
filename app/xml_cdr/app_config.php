@@ -275,17 +275,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "xml";
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "xml_cdr";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "json";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "jsonb";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "caller_id_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
@@ -535,5 +524,16 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "sip_hangup_disposition";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Save who hung up or cancelled the leg.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "xml";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "xml_cdr";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "json";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "jsonb";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 ?>
