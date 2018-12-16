@@ -359,6 +359,7 @@
 	$sql = "select ";
 	$sql .= "domain_uuid, ";
 	$sql .= "start_stamp, ";
+	$sql .= "end_stamp, ";
 	$sql .= "start_epoch, ";
 	$sql .= "hangup_cause, ";
 	$sql .= "duration, ";
