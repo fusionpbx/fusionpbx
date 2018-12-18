@@ -124,24 +124,24 @@
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
-	$sql = "select * from v_users where 1 = 1 ";
+	$sql = "select * from v_users as u, v_contacts as c ";
+	$sql .= "where u.contact_uuid = c.contact_uuid ";
 	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
-		$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and u.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	}
 	if (strlen($search) > 0) {
-		$sql .= "and lower(username) like '%".$search."%' ";
+		$sql .= "and lower(u.username) like '%".$search."%' ";
 	}
 	if (strlen($order_by)> 0) {
 		$sql .= "order by ".$order_by." ".$order." ";
 	}
 	else {
-		$sql .= "order by username asc ";
+		$sql .= "order by u.username asc ";
 	}
 	$sql .= " limit ".$rows_per_page." offset ".$offset." ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$user_count = count($users);
 	unset ($prep_statement, $sql);
 
 //page title and description
@@ -181,7 +181,7 @@
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-//show the data
+//show the users
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
@@ -190,6 +190,8 @@
 	}
 	echo th_order_by('username', $text['label-username'], $order_by, $order);
 	echo "<th>".$text['label-groups']."</th>\n";
+	echo "<th>".$text['label-organization']."</th>\n";
+	echo "<th>".$text['label-name']."</th>\n";
 	echo th_order_by('user_enabled', $text['label-enabled'], $order_by, $order, '', '', $param);
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('user_add')) {
@@ -223,6 +225,10 @@
 					echo escape(implode(', ', $user_groups[$row['user_uuid']]));
 				}
 				echo "&nbsp;</td>\n";
+
+				echo "<td class='".$row_style[$c]."'>".$row['contact_organization']." &nbsp;</td>\n";
+				echo "<td class='".$row_style[$c]."'>".$row['contact_name_given']." ".$row['contact_name_family']." &nbsp;</td>\n";
+
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
 				if ($row['user_enabled'] == 'true') {
 					echo $text['option-true'];
@@ -248,7 +254,7 @@
 				if ($c==0) { $c=1; } else { $c=0; }
 			}
 		} //end foreach
-		unset($sql, $users, $user_count);
+		unset($sql, $users);
 	} //end if results
 
 	echo "<tr>\n";
