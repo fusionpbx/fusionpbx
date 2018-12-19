@@ -45,6 +45,9 @@ This method causes the script to get its manadatory arguments directly from the 
 	expire["call_block"] = "60";
 	source = "";
 
+--includes
+	local cache = require"resources.functions.cache"
+
 -- Command line parameters
 	local params = {
 		cid_num = string.match(tostring(session:getVariable("caller_id_number")), "%d+"),
@@ -91,16 +94,22 @@ This method causes the script to get its manadatory arguments directly from the 
 	logger("D", "NOTICE", "params are: " .. string.format("'%s', '%s', '%s', '%s'", params["cid_num"],
 			params["cid_name"], params["userid"], params["domain_name"]));
 
+--set the dialplan cache key
+	local cache_key = "app:call_block:" .. params["domain_name"] .. ":" .. params["cid_num"];
+
 --get the cache
-	if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
-		cache = trim(api:execute("memcache", "get app:call_block:" .. params["domain_name"] .. ":" .. params["cid_num"]));
-	else
-		cache = "-ERR NOT FOUND";
+	cache_data, err = cache.get(cache_key);
+	if (debug['cache']) then
+		if cache then
+			log.notice(cache_key.." source: cache");
+		elseif err ~= 'NOT FOUND' then
+			log.notice("error get element from cache: " .. err);
+		end
 	end
 
 --check if number is in call_block list then increment the counter and block the call
 	--if not cached then get the information from the database
-	if (cache == "-ERR NOT FOUND") then
+	if (cache_data == "-ERR NOT FOUND") then
 		--connect to the database
 			Database = require "resources.functions.database";
 			dbh = Database.new('system');
@@ -139,8 +148,15 @@ This method causes the script to get its manadatory arguments directly from the 
 			if (found_cid_num) then	-- caller id exists
 				if (found_enabled == "true") then
 					--set the cache
-					cache = "found_cid_num=" .. found_cid_num .. "&found_uuid=" .. found_uuid .. "&found_enabled=" .. found_enabled .. "&found_action=" .. found_action .. "&found_count=" .. found_count;
-					result = trim(api:execute("memcache", "set app:call_block:" .. params["domain_name"] .. ":" .. params["cid_num"] .. " '"..cache.."' "..expire["call_block"]));
+					cache_data = "found_cid_num=" .. found_cid_num .. "&found_uuid=" .. found_uuid .. "&found_enabled=" .. found_enabled .. "&found_action=" .. found_action .. "&found_count=" .. found_count;
+					local ok, err = cache.set(cache_key, cache_data, expire["dialplan"]);
+					if debug["cache"] then
+						if ok then
+							freeswitch.consoleLog("notice", "[call_block] " .. cache_key .. " stored in the cache\n");
+						else
+							freeswitch.consoleLog("warning", "[call_block] " .. cache_key .. " can not be stored in the cache: " .. tostring(err) .. "\n");
+						end
+					end
 
 					--set the source
 					source = "database";
@@ -148,12 +164,12 @@ This method causes the script to get its manadatory arguments directly from the 
 			end
 
 	else
-		--get from memcache
+		--get from the cache
 			--add the function
 				require "resources.functions.explode";
 
 			--parse the cache
-				array = explode("&", cache);
+				array = explode("&", cache_data);
 
 			--define the array/table and variables
 				local var = {}
@@ -161,7 +177,7 @@ This method causes the script to get its manadatory arguments directly from the 
 				local value = "";
 
 			--parse the cache
-				key_pairs = explode("&", cache);
+				key_pairs = explode("&", cache_data);
 				for k,v in pairs(key_pairs) do
 					f = explode("=", v);
 					key = f[1];
@@ -177,11 +193,11 @@ This method causes the script to get its manadatory arguments directly from the 
 				found_count = var["found_count"];
 
 			--set the source
-				source = "memcache";
+				source = "cache";
 	end
 
 --debug information
-	--freeswitch.consoleLog("error", "[call_block] " .. cache .. "\n");
+	--freeswitch.consoleLog("error", "[call_block] " .. cache_data .. "\n");
 	--freeswitch.consoleLog("error", "[call_block] found_cid_num = " .. found_cid_num  .. "\n");
 	--freeswitch.consoleLog("error", "[call_block] found_enabled = " .. found_enabled  .. "\n");
 	--freeswitch.consoleLog("error", "[call_block] source = " .. source  .. "\n");
