@@ -37,12 +37,16 @@ This method causes the script to get its manadatory arguments directly from the 
 	12 Jun, 2013: update the database connection, change table name from v_callblock to v_call_block
 	14 Jun, 2013: Change Voicemail option to use Transfer, avoids mod_voicemail dependency
 	27 Sep, 2013: Changed the name of the fields to conform with the table name
+	12 Feb, 2018: Added support for regular expressions and SQL "like" matching  on the phone number
 ]]
 
 --set defaults
 	expire = {}
-	expire["call_block"] = "3600";
+	expire["call_block"] = "900";
 	source = "";
+
+--includes
+	local cache = require"resources.functions.cache"
 
 -- Command line parameters
 	local params = {
@@ -62,6 +66,8 @@ This method causes the script to get its manadatory arguments directly from the 
 	local sql = nil
 
 --define the functions
+	local Settings = require "resources.functions.lazy_settings"
+	local Database = require "resources.functions.database"
 	require "resources.functions.trim";
 
 --define the logger function
@@ -78,20 +84,32 @@ This method causes the script to get its manadatory arguments directly from the 
 -- ensure that we have a fresh status on exit
 	session:setVariable("call_block", "")
 
+-- get the configuration variables from the DB
+	local db = dbh or Database.new('system')
+	local settings = Settings.new(db, domain_name, domain_uuid)
+	local call_block_matching = settings:get('call block', 'call_block_matching', 'text');
+
+
 --send to the log
 	logger("D", "NOTICE", "params are: " .. string.format("'%s', '%s', '%s', '%s'", params["cid_num"],
 			params["cid_name"], params["userid"], params["domain_name"]));
 
+--set the dialplan cache key
+	local cache_key = "app:call_block:" .. params["domain_name"] .. ":" .. params["cid_num"];
+
 --get the cache
-	if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
-		cache = trim(api:execute("memcache", "get app:call_block:" .. params["domain_name"] .. ":" .. params["cid_num"]));
-	else
-		cache = "-ERR NOT FOUND";
+	cache_data, err = cache.get(cache_key);
+	if (debug['cache']) then
+		if cache then
+			log.notice(cache_key.." source: cache");
+		elseif err ~= 'NOT FOUND' then
+			log.notice("error get element from cache: " .. err);
+		end
 	end
 
 --check if number is in call_block list then increment the counter and block the call
 	--if not cached then get the information from the database
-	if (cache == "-ERR NOT FOUND") then
+	if (cache_data == "-ERR NOT FOUND") then
 		--connect to the database
 			Database = require "resources.functions.database";
 			dbh = Database.new('system');
@@ -104,7 +122,19 @@ This method causes the script to get its manadatory arguments directly from the 
 		--check if the the call block is blocked
 			sql = "SELECT * FROM v_call_block as c "
 			sql = sql .. "JOIN v_domains as d ON c.domain_uuid=d.domain_uuid "
-			sql = sql .. "WHERE c.call_block_number = :cid_num AND d.domain_name = :domain_name "
+			if ((database["type"] == "pgsql") and (call_block_matching == "regex")) then
+				logger("W", "NOTICE", "call_block using regex match on cid_num")
+				sql = sql .. "WHERE :cid_num ~ c.call_block_number AND d.domain_name = :domain_name "
+			elseif (((database["type"] == "mysql") or (database["type"] == "sqlite")) and (call_block_matching == "regex")) then
+				logger("W", "NOTICE", "call_block using regex match on cid_num")
+				sql = sql .. "WHERE :cid_num REGEXP c.call_block_number AND d.domain_name = :domain_name "
+			elseif call_block_matching == "like" then
+				logger("W", "NOTICE", "call_block using like match on cid_num")
+				sql = sql .. "WHERE :cid_num LIKE c.call_block_number AND d.domain_name = :domain_name "
+			else
+				logger("W", "NOTICE", "call_block using exact match on cid_num")
+				sql = sql .. "WHERE :cid_num = c.call_block_number AND d.domain_name = :domain_name "
+			end
 			dbh:query(sql, params, function(rows)
 				found_cid_num = rows["call_block_number"];
 				found_uuid = rows["call_block_uuid"];
@@ -118,8 +148,15 @@ This method causes the script to get its manadatory arguments directly from the 
 			if (found_cid_num) then	-- caller id exists
 				if (found_enabled == "true") then
 					--set the cache
-					cache = "found_cid_num=" .. found_cid_num .. "&found_uuid=" .. found_uuid .. "&found_enabled=" .. found_enabled .. "&found_action=" .. found_action .. "&found_count=" .. found_count;
-					result = trim(api:execute("memcache", "set app:call_block:" .. params["domain_name"] .. ":" .. params["cid_num"] .. " '"..cache.."' "..expire["call_block"]));
+					cache_data = "found_cid_num=" .. found_cid_num .. "&found_uuid=" .. found_uuid .. "&found_enabled=" .. found_enabled .. "&found_action=" .. found_action .. "&found_count=" .. found_count;
+					local ok, err = cache.set(cache_key, cache_data, expire["call_block"]);
+					if debug["cache"] then
+						if ok then
+							freeswitch.consoleLog("notice", "[call_block] " .. cache_key .. " stored in the cache\n");
+						else
+							freeswitch.consoleLog("warning", "[call_block] " .. cache_key .. " can not be stored in the cache: " .. tostring(err) .. "\n");
+						end
+					end
 
 					--set the source
 					source = "database";
@@ -127,12 +164,12 @@ This method causes the script to get its manadatory arguments directly from the 
 			end
 
 	else
-		--get from memcache
+		--get from the cache
 			--add the function
 				require "resources.functions.explode";
 
 			--parse the cache
-				array = explode("&", cache);
+				array = explode("&", cache_data);
 
 			--define the array/table and variables
 				local var = {}
@@ -140,7 +177,7 @@ This method causes the script to get its manadatory arguments directly from the 
 				local value = "";
 
 			--parse the cache
-				key_pairs = explode("&", cache);
+				key_pairs = explode("&", cache_data);
 				for k,v in pairs(key_pairs) do
 					f = explode("=", v);
 					key = f[1];
@@ -156,11 +193,11 @@ This method causes the script to get its manadatory arguments directly from the 
 				found_count = var["found_count"];
 
 			--set the source
-				source = "memcache";
+				source = "cache";
 	end
 
 --debug information
-	--freeswitch.consoleLog("error", "[call_block] " .. cache .. "\n");
+	--freeswitch.consoleLog("error", "[call_block] " .. cache_data .. "\n");
 	--freeswitch.consoleLog("error", "[call_block] found_cid_num = " .. found_cid_num  .. "\n");
 	--freeswitch.consoleLog("error", "[call_block] found_enabled = " .. found_enabled  .. "\n");
 	--freeswitch.consoleLog("error", "[call_block] source = " .. source  .. "\n");
