@@ -16,7 +16,7 @@
 --
 --      The Initial Developer of the Original Code is
 --      Gerrit Visser <gerrit308@gmail.com>
---      Copyright (C) 2011 - 2018
+--      Copyright (C) 2011
 --      the Initial Developer. All Rights Reserved.
 --
 --      Contributor(s):
