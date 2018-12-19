@@ -47,7 +47,8 @@ This method causes the script to get its manadatory arguments directly from the 
 
 --includes
 	local cache = require"resources.functions.cache"
-	local log = require"resources.functions.log"["call_block"]
+	local log = require"resources.functions.log"["call_block"];
+	--json = require "resources.functions.lunajson";
 
 -- Command line parameters
 	local params = {
@@ -90,7 +91,6 @@ This method causes the script to get its manadatory arguments directly from the 
 	local settings = Settings.new(db, domain_name, domain_uuid)
 	local call_block_matching = settings:get('call block', 'call_block_matching', 'text');
 
-
 --send to the log
 	logger("D", "NOTICE", "params are: " .. string.format("'%s', '%s', '%s', '%s'", params["cid_num"],
 			params["cid_name"], params["userid"], params["domain_name"]));
@@ -108,49 +108,49 @@ This method causes the script to get its manadatory arguments directly from the 
 		end
 	end
 
+--connect to the database
+	Database = require "resources.functions.database";
+	dbh = Database.new('system');
+
+--log if not connect
+	if dbh:connected() == false then
+		logger("W", "NOTICE", "db was not connected")
+	end
+
+--check if the the call block is blocked
+	sql = "SELECT * FROM v_call_block as c "
+	sql = sql .. "JOIN v_domains as d ON c.domain_uuid=d.domain_uuid "
+	if ((database["type"] == "pgsql") and (call_block_matching == "regex")) then
+		logger("W", "NOTICE", "call_block using regex match on cid_num")
+		sql = sql .. "WHERE :cid_num ~ c.call_block_number AND d.domain_name = :domain_name "
+	elseif (((database["type"] == "mysql") or (database["type"] == "sqlite")) and (call_block_matching == "regex")) then
+		logger("W", "NOTICE", "call_block using regex match on cid_num")
+		sql = sql .. "WHERE :cid_num REGEXP c.call_block_number AND d.domain_name = :domain_name "
+	elseif call_block_matching == "like" then
+		logger("W", "NOTICE", "call_block using like match on cid_num")
+		sql = sql .. "WHERE :cid_num LIKE c.call_block_number AND d.domain_name = :domain_name "
+	else
+		logger("W", "NOTICE", "call_block using exact match on cid_num")
+		sql = sql .. "WHERE :cid_num = c.call_block_number AND d.domain_name = :domain_name "
+	end
+	--freeswitch.consoleLog("notice", "[call_block] " .. sql .. "\n");
+	dbh:query(sql, params, function(rows)
+		found_cid_num = rows["call_block_number"];
+		found_uuid = rows["call_block_uuid"];
+		found_enabled = rows["call_block_enabled"];
+		found_action = rows["call_block_action"];
+		found_count = rows["call_block_count"];
+	end)
+	-- dbh:affected_rows() doesn't do anything if using core:db so this is the workaround:
+
 --check if number is in call_block list then increment the counter and block the call
 	--if not cached then get the information from the database
 	if (not cache_data) then
-		--connect to the database
-			Database = require "resources.functions.database";
-			dbh = Database.new('system');
-
-		--log if not connect
-			if dbh:connected() == false then
-				logger("W", "NOTICE", "db was not connected")
-			end
-
-		--check if the the call block is blocked
-			sql = "SELECT * FROM v_call_block as c "
-			sql = sql .. "JOIN v_domains as d ON c.domain_uuid=d.domain_uuid "
-			if ((database["type"] == "pgsql") and (call_block_matching == "regex")) then
-				logger("W", "NOTICE", "call_block using regex match on cid_num")
-				sql = sql .. "WHERE :cid_num ~ c.call_block_number AND d.domain_name = :domain_name "
-			elseif (((database["type"] == "mysql") or (database["type"] == "sqlite")) and (call_block_matching == "regex")) then
-				logger("W", "NOTICE", "call_block using regex match on cid_num")
-				sql = sql .. "WHERE :cid_num REGEXP c.call_block_number AND d.domain_name = :domain_name "
-			elseif call_block_matching == "like" then
-				logger("W", "NOTICE", "call_block using like match on cid_num")
-				sql = sql .. "WHERE :cid_num LIKE c.call_block_number AND d.domain_name = :domain_name "
-			else
-				logger("W", "NOTICE", "call_block using exact match on cid_num")
-				sql = sql .. "WHERE :cid_num = c.call_block_number AND d.domain_name = :domain_name "
-			end
-			--freeswitch.consoleLog("notice", "[call_block] " .. sql .. "\n");
-			dbh:query(sql, params, function(rows)
-				found_cid_num = rows["call_block_number"];
-				found_uuid = rows["call_block_uuid"];
-				found_enabled = rows["call_block_enabled"];
-				found_action = rows["call_block_action"];
-				found_count = rows["call_block_count"];
-			end)
-			-- dbh:affected_rows() doesn't do anything if using core:db so this is the workaround:
-
 		--set the cache
 			if (found_cid_num) then	-- caller id exists
 				if (found_enabled == "true") then
 					--set the cache
-					cache_data = "found_cid_num=" .. found_cid_num .. "&found_uuid=" .. found_uuid .. "&found_enabled=" .. found_enabled .. "&found_action=" .. found_action .. "&found_count=" .. found_count;
+					cache_data = "found_cid_num=" .. found_cid_num .. "&found_uuid=" .. found_uuid .. "&found_enabled=" .. found_enabled .. "&found_action=" .. found_action;
 					local ok, err = cache.set(cache_key, cache_data, expire["call_block"]);
 					if debug["cache"] then
 						if ok then
@@ -192,7 +192,6 @@ This method causes the script to get its manadatory arguments directly from the 
 				found_uuid = var["found_uuid"];
 				found_enabled = var["found_enabled"];
 				found_action = var["found_action"];
-				found_count = var["found_count"];
 
 			--set the source
 				source = "cache";
@@ -203,6 +202,7 @@ This method causes the script to get its manadatory arguments directly from the 
 	--freeswitch.consoleLog("error", "[call_block] found_cid_num = " .. found_cid_num  .. "\n");
 	--freeswitch.consoleLog("error", "[call_block] found_enabled = " .. found_enabled  .. "\n");
 	--freeswitch.consoleLog("error", "[call_block] source = " .. source  .. "\n");
+	--freeswitch.consoleLog("error", "[call_block] found_count = " .. found_count  .. "\n");
 
 --block the call
 	if found_cid_num then	-- caller id exists
@@ -214,13 +214,21 @@ This method causes the script to get its manadatory arguments directly from the 
 				--logger("W", "INFO", "Details: " .. details[k])
 				k = k + 1
 			end
-			if (source == "database") then
-				dbh:query("UPDATE v_call_block SET call_block_count = :call_block_count WHERE call_block_uuid = :call_block_uuid",{
-					call_block_count = found_count + 1, call_block_uuid = found_uuid
-				})
-			end
-			session:execute("set", "call_blocked=true");
 			logger("W", "NOTICE", "number " .. params["cid_num"] .. " blocked with " .. found_count .. " previous hits, domain_name: " .. params["domain_name"])
+
+			-- Command line parameters
+			local params = {
+				call_block_count = found_count + 1,
+				call_block_uuid = found_uuid
+			}
+			--update the call block count
+			local sql = "UPDATE v_call_block SET call_block_count = :call_block_count WHERE call_block_uuid = :call_block_uuid";
+			dbh:query(sql, params);
+			freeswitch.consoleLog("error", "[call_block] udpate\n");
+			--freeswitch.consoleLog("error", "[call_block] sql = " .. sql  .. "\n");
+			--freeswitch.consoleLog("error", "[call_block] " .. json.encode(params) .. "\n");
+
+			session:execute("set", "call_blocked=true");
 			if (found_action == "Reject") then
 				session:hangup("CALL_REJECTED")
 			elseif (found_action == "Busy") then
@@ -234,4 +242,3 @@ This method causes the script to get its manadatory arguments directly from the 
 			end
 		end
 	end
-
