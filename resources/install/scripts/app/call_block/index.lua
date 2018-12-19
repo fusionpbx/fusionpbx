@@ -149,7 +149,7 @@ This method causes the script to get its manadatory arguments directly from the 
 				if (found_enabled == "true") then
 					--set the cache
 					cache_data = "found_cid_num=" .. found_cid_num .. "&found_uuid=" .. found_uuid .. "&found_enabled=" .. found_enabled .. "&found_action=" .. found_action .. "&found_count=" .. found_count;
-					local ok, err = cache.set(cache_key, cache_data, expire["dialplan"]);
+					local ok, err = cache.set(cache_key, cache_data, expire["call_block"]);
 					if debug["cache"] then
 						if ok then
 							freeswitch.consoleLog("notice", "[call_block] " .. cache_key .. " stored in the cache\n");
