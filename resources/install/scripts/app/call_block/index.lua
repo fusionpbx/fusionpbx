@@ -1,5 +1,5 @@
 --
---      call_block-FS
+--      call_block
 --      Version: MPL 1.1
 --
 --      The contents of this file are subject to the Mozilla Public License Version
@@ -47,6 +47,7 @@ This method causes the script to get its manadatory arguments directly from the 
 
 --includes
 	local cache = require"resources.functions.cache"
+	local log = require"resources.functions.log"["call_block"]
 
 -- Command line parameters
 	local params = {
@@ -74,7 +75,7 @@ This method causes the script to get its manadatory arguments directly from the 
 	local function logger(level, log, data)
 		-- output data to console 'log' if debug level is on
 		if string.find(params["loglevel"], level) then
-			freeswitch.consoleLog(log, "[Call Block]: " .. data .. "\n")
+			freeswitch.consoleLog(log, "[call_block] " .. data .. "\n")
 		end
 	end
 
@@ -82,7 +83,7 @@ This method causes the script to get its manadatory arguments directly from the 
 	api = freeswitch.API();
 
 -- ensure that we have a fresh status on exit
-	session:setVariable("call_block", "")
+	session:setVariable("call_block", "");
 
 -- get the configuration variables from the DB
 	local db = dbh or Database.new('system')
@@ -100,16 +101,16 @@ This method causes the script to get its manadatory arguments directly from the 
 --get the cache
 	cache_data, err = cache.get(cache_key);
 	if (debug['cache']) then
-		if cache then
+		if cache_data then
 			log.notice(cache_key.." source: cache");
-		elseif err ~= 'NOT FOUND' then
+		elseif (not cache_data) then
 			log.notice("error get element from cache: " .. err);
 		end
 	end
 
 --check if number is in call_block list then increment the counter and block the call
 	--if not cached then get the information from the database
-	if (cache_data == "-ERR NOT FOUND") then
+	if (not cache_data) then
 		--connect to the database
 			Database = require "resources.functions.database";
 			dbh = Database.new('system');
@@ -135,6 +136,7 @@ This method causes the script to get its manadatory arguments directly from the 
 				logger("W", "NOTICE", "call_block using exact match on cid_num")
 				sql = sql .. "WHERE :cid_num = c.call_block_number AND d.domain_name = :domain_name "
 			end
+			--freeswitch.consoleLog("notice", "[call_block] " .. sql .. "\n");
 			dbh:query(sql, params, function(rows)
 				found_cid_num = rows["call_block_number"];
 				found_uuid = rows["call_block_uuid"];
