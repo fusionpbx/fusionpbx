@@ -28,6 +28,9 @@
 	require_once "root.php";
 	require_once "resources/require.php";
 
+//default authorized to false
+	$authorized = 'false';
+
 //get the user settings
 	$sql = "select user_uuid, domain_uuid from v_user_settings ";
 	$sql .= "where user_setting_category = 'message' ";
@@ -39,16 +42,11 @@
 	if ($prep_statement) {
 		$prep_statement->execute();
 		$row = $prep_statement->fetch(PDO::FETCH_NAMED);
-	}
-
-//default authorized to false
-	$authorized = 'false';
-
-//get the user
-	if (isset($row['user_uuid']) && strlen($row['user_uuid']) > 0) {
-		$domain_uuid = $row['domain_uuid'];
-		$user_uuid = $row['user_uuid'];
-		$authorized = 'true';
+		if (is_uuid($row['user_uuid'])) {
+			$domain_uuid = $row['domain_uuid'];
+			$user_uuid = $row['user_uuid'];
+			$authorized = 'true';
+		}
 	}
 
 //authorization failed
@@ -70,23 +68,19 @@
 		exit();
 	}
 
-//get the data
+//get the raw input data
 	$json = file_get_contents('php://input');
 
-//decode the json
+//decode the json into array
 	$message = json_decode($json, true);
 
-//get a unique id
-	$message_uuid = uuid();
-
 //get the source phone number
-	$phone_number = $message["from"];
-	$phone_number = preg_replace('{[\D]}', '', $phone_number);
+	$phone_number = preg_replace('{[\D]}', '', $message['from']);
 
 //get the contact uuid
-	$sql = "SELECT c.contact_uuid ";
-	$sql .= "FROM v_contacts as c, v_contact_phones as p ";
-	$sql .= "WHERE p.contact_uuid = c.contact_uuid ";
+	$sql = "select c.contact_uuid ";
+	$sql .= "from v_contacts as c, v_contact_phones as p ";
+	$sql .= "where p.contact_uuid = c.contact_uuid ";
 	//$sql .= "and p.phone_number = :phone_number ";
 	$sql .= "and p.phone_number = '".$phone_number."' ";
 	$sql .= "and c.domain_uuid = '".$domain_uuid."' ";
@@ -99,39 +93,44 @@
 	//$contact_name_family = $row['contact_name_family'];
 	//$contact_organization = $row['contact_organization'];
 
-//build the array
-	$array['messages'][0]["domain_uuid"] = $domain_uuid;
-	$array['messages'][0]["user_uuid"] = $user_uuid;
-	$array['messages'][0]["contact_uuid"] = $contact_uuid;
-	$array['messages'][0]['message_uuid'] = $message_uuid;
-	$array['messages'][0]['message_json'] = $json;
-	$array['messages'][0]['message_direction'] = 'receive';
-	$array['messages'][0]['message_date'] = 'now()';
-	$array['messages'][0]['message_type'] = 'sms';
-	$array['messages'][0]['message_from'] = $message["from"];
-	$array['messages'][0]['message_to'] = $message["to"];
-	$array['messages'][0]['message_text'] = $message["text"];
 
-//get the media
-	if (is_array($message["media"])) {
-		foreach($message["media"] as $media) {
-			$media_extension = pathinfo($media, PATHINFO_EXTENSION);
-			if ($media_extension !== "xml") {
-				$array['messages'][0]['message_media_type'] = $media_extension;
-				$array['messages'][0]['message_media_url'] = $media;
-				$array['messages'][0]['message_media_content'] = base64_encode(file_get_contents($media));
+//build message array
+	$message_uuid = uuid();
+	$array['messages'][0]['message_uuid'] = $message_uuid;
+	$array['messages'][0]['domain_uuid'] = $domain_uuid;
+	$array['messages'][0]['user_uuid'] = $user_uuid;
+	$array['messages'][0]['contact_uuid'] = $contact_uuid;
+	$array['messages'][0]['message_uuid'] = $message_uuid;
+	$array['messages'][0]['message_type'] = is_array($message['media']) ? 'mms' : 'sms';
+	$array['messages'][0]['message_direction'] = 'inbound';
+	$array['messages'][0]['message_date'] = 'now()';
+	$array['messages'][0]['message_from'] = $message['from'];
+	$array['messages'][0]['message_to'] = $message['to'];
+	$array['messages'][0]['message_text'] = $message['text'];
+	$array['messages'][0]['message_json'] = $json;
+
+//build message media array (if necessary)
+	if (is_array($message['media'])) {
+		foreach($message['media'] as $index => $media_url) {
+			$media_type = pathinfo($media_url, PATHINFO_EXTENSION);
+			if ($media_type !== 'xml') {
+				$array['message_media'][$index]['message_media_uuid'] = uuid();
+				$array['message_media'][$index]['message_uuid'] = $message_uuid;
+				$array['message_media'][$index]['domain_uuid'] = $domain_uuid;
+				$array['message_media'][$index]['user_uuid'] = $user_uuid;
+				$array['message_media'][$index]['message_media_type'] = $media_type;
+				$array['message_media'][$index]['message_media_url'] = $media_url;
+				$array['message_media'][$index]['message_media_content'] = base64_encode(file_get_contents($media_url));
 			}
 		}
 	}
 
-//convert the array to json
-	$array_json = json_encode($array);
-
-//add the dialplan permission
+//add the required permission
 	$p = new permissions;
 	$p->add("message_add", "temp");
+	$p->add("message_media_add", "temp");
 
-//save to the data
+//save message to the database
 	$database = new database;
 	$database->app_name = 'messages';
 	$database->app_uuid = '4a20815d-042c-47c8-85df-085333e79b87';
@@ -141,6 +140,10 @@
 
 //remove the temporary permission
 	$p->delete("message_add", "temp");
+	$p->delete("message_media_add", "temp");
+
+//convert the array to json
+	$array_json = json_encode($array);
 
 //get the list of extensions using the user_uuid
 	$sql = "select * from v_domains as d, v_extensions as e ";

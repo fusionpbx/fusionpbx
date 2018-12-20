@@ -43,14 +43,7 @@
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
-		$action = "update";
-		$message_uuid = check_str($_REQUEST["id"]);
-		$id = check_str($_REQUEST["id"]);
-	}
-	else {
-		$action = "add";
-	}
+	$action = "add";
 
 //define the http request
 	function http_request($url, $method, $headers = null, $content)  {
@@ -70,50 +63,26 @@
 
 //get http post variables and set them to php variables
 	if (is_array($_POST)) {
-		//$message_uuid = check_str($_POST["message_uuid"]);
-		//$user_uuid = check_str($_POST["user_uuid"]);
 		$message_type = check_str($_POST["message_type"]);
-		//$message_date = check_str($_POST["message_date"]);
 		$message_from = check_str($_POST["message_from"]);
 		$message_to = check_str($_POST["message_to"]);
 		$message_text = check_str($_POST["message_text"]);
-		//$message_media_type = check_str($_POST["message_media_type"]);
-		//$message_media_url = check_str($_POST["message_media_url"]);
-		//$message_media_content = check_str($_POST["message_media_content"]);
-		//$message_json = check_str($_POST["message_json"]);
 	}
 
 //process the user data and save it to the database
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
-		//check for all required data
-			$msg = '';
-			//if (strlen($user_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-user_uuid']."<br>\n"; }
-			if (strlen($message_type) == 0) { $msg .= $text['message-required']." ".$text['label-message_type']."<br>\n"; }
-			//if (strlen($message_direction) == 0) { $msg .= $text['message-required']." ".$text['label-message_direction']."<br>\n"; }
-			//if (strlen($message_date) == 0) { $msg .= $text['message-required']." ".$text['label-message_date']."<br>\n"; }
-			if (strlen($message_from) == 0) { $msg .= $text['message-required']." ".$text['label-message_from']."<br>\n"; }
-			if (strlen($message_to) == 0) { $msg .= $text['message-required']." ".$text['label-message_to']."<br>\n"; }
-			//if (strlen($message_text) == 0) { $msg .= $text['message-required']." ".$text['label-message_text']."<br>\n"; }
-			//if (strlen($message_media_type) == 0) { $msg .= $text['message-required']." ".$text['label-message_media_type']."<br>\n"; }
-			//if (strlen($message_media_url) == 0) { $msg .= $text['message-required']." ".$text['label-message_media_url']."<br>\n"; }
-			//if (strlen($message_media_content) == 0) { $msg .= $text['message-required']." ".$text['label-message_media_content']."<br>\n"; }
-			//if (strlen($message_json) == 0) { $msg .= $text['message-required']." ".$text['label-message_json']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-				require_once "resources/header.php";
-				require_once "resources/persist_form_var.php";
-				echo "<div align='center'>\n";
-				echo "<table><tr><td>\n";
-				echo $msg."<br />";
-				echo "</td></tr></table>\n";
-				persistformvar($_POST);
-				echo "</div>\n";
-				require_once "resources/footer.php";
-				return;
-			}
-
 		//get the source phone number
 			$phone_number = preg_replace('{[\D]}', '', $message_to);
+
+		//error check
+		if (
+			($message_type != 'sms' && $message_type != 'mms' && $message_type != 'chat') ||
+			!is_numeric($message_from) ||
+			!is_numeric($message_to) ||
+			$message_text == '') {
+				exit;
+		}
 
 		//get the contact uuid
 			//$sql = "SELECT trim(c.contact_name_given || ' ' || c.contact_name_family || ' (' || c.contact_organization || ')') AS name, p.phone_number AS number ";
@@ -138,7 +107,7 @@
 			$message['user_uuid'] = $_SESSION["user_uuid"];
 			$message['contact_uuid'] = $contact_uuid;
 			$message['message_type'] = $message_type;
-			$message['message_direction'] = 'send';
+			$message['message_direction'] = 'outbound';
 			$message['message_date'] = 'now()';
 			$message['message_from'] = $message_from;
 			$message['message_to'] = $message_to;
@@ -192,101 +161,7 @@
 
 		//redirect the user
 			//$_SESSION["message"] = $text['message-sent'];
-			header('Location: messages.php');
-			return;
+			return true;
 	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
-
-//show the header
-	require_once "resources/header.php";
-
-//show the content
-	echo "<form name='frm' id='frm' method='post' action=''>\n";
-	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
-
-	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-message']."</b><br><br></td>\n";
-	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='messages.php'\" value='".$text['button-back']."'>";
-	//echo "	<input type='submit' class='btn' value='".$text['button-send']."'>";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-message_type']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<select class='formfld' name='message_type'>\n";
-	echo "		<option value=''></option>\n";
-	if ($message_type == "sms") {
-		echo "		<option value='sms' selected='selected'>".$text['label-sms']."</option>\n";
-	}
-	else {
-		echo "		<option value='sms'>".$text['label-sms']."</option>\n";
-	}
-	if ($message_type == "mms") {
-		echo "		<option value='mms' selected='selected'>".$text['label-mms']."</option>\n";
-	}
-	else {
-		echo "		<option value='mms'>".$text['label-mms']."</option>\n";
-	}
-	if ($message_type == "chat") {
-		echo "		<option value='chat' selected='selected'>".$text['label-chat']."</option>\n";
-	}
-	else {
-		echo "		<option value='chat'>".$text['label-chat']."</option>\n";
-	}
-	echo "	</select>\n";
-	echo "<br />\n";
-	echo $text['description-message_type']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-message_from']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='message_from' maxlength='255' value=\"".escape($message_from)."\">\n";
-	echo "<br />\n";
-	echo $text['description-message_from']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-message_to']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='message_to' maxlength='255' value=\"".escape($message_to)."\">\n";
-	echo "<br />\n";
-	echo $text['description-message_to']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-message_text']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	//echo "	<input class='formfld' type='text' name='message_text' maxlength='255' value=\"".escape($message_text)."\">\n";
-	echo "  <textarea class='formfld' style='width: 100%; height: 80px;' name='message_text'></textarea>\n";
-	echo "<br />\n";
-	echo $text['description-message_text']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	echo "			<input type='hidden' name='message_uuid' value='".escape($message_uuid)."'>\n";
-	echo "			<input type='submit' class='btn' value='".$text['button-send']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
-	echo "</table>";
-	echo "</form>";
-	echo "<br /><br />";
-
-//include the footer
-	require_once "resources/footer.php";
 
 ?>

@@ -195,7 +195,7 @@
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-message']."</b><br><br></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='messages.php'\" value='".$text['button-back']."'>";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='messages_log.php'\" value='".$text['button-back']."'>";
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -206,10 +206,8 @@
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select class='formfld' name='user_uuid'>\n";
-	echo "		<option value=''></option>\n";
 	foreach($users as $row) {
-		if ($row['user_uuid'] == $user_uuid) { $selected = "selected='selected'"; } else { $selected = ''; }
-		echo "		<option value='".escape($row['user_uuid'])."' $selected>".escape($row['username'])."</option>\n";
+		echo "		<option value='".escape($row['user_uuid'])."' ".($row['user_uuid'] == $user_uuid ? "selected='selected'" : null).">".escape($row['username'])."</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
@@ -223,25 +221,9 @@
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select class='formfld' name='message_type'>\n";
-	echo "		<option value=''></option>\n";
-	if ($message_type == "sms") {
-		echo "		<option value='sms' selected='selected'>".$text['label-sms']."</option>\n";
-	}
-	else {
-		echo "		<option value='sms'>".$text['label-sms']."</option>\n";
-	}
-	if ($message_type == "mms") {
-		echo "		<option value='mms' selected='selected'>".$text['label-mms']."</option>\n";
-	}
-	else {
-		echo "		<option value='mms'>".$text['label-mms']."</option>\n";
-	}
-	if ($message_type == "chat") {
-		echo "		<option value='chat' selected='selected'>".$text['label-chat']."</option>\n";
-	}
-	else {
-		echo "		<option value='chat'>".$text['label-chat']."</option>\n";
-	}
+	echo "		<option value='sms' ".($message_type == 'sms' ? "selected='selected'" : null).">".$text['label-sms']."</option>\n";
+	echo "		<option value='mms' ".($message_type == 'mms' ? "selected='selected'" : null).">".$text['label-mms']."</option>\n";
+	echo "		<option value='chat' ".($message_type == 'chat' ? "selected='selected'" : null).">".$text['label-chat']."</option>\n";
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-message_type']."\n";
@@ -253,21 +235,10 @@
 	echo "	".$text['label-message_direction']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-		echo "	<select class='formfld' name='message_direction'>\n";
-		echo "		<option value=''></option>\n";
-		if ($message_direction == "receive") {
-			echo "		<option value='inbound' selected='selected'>".$text['label-receive']."</option>\n";
-		}
-		else {
-			echo "		<option value='inbound'>".$text['label-receive']."</option>\n";
-		}
-		if ($message_direction == "send") {
-			echo "		<option value='outbound' selected='selected'>".$text['label-send']."</option>\n";
-		}
-		else {
-			echo "		<option value='outbound'>".$text['label-send']."</option>\n";
-		}
-		echo "	</select>\n";
+	echo "	<select class='formfld' name='message_direction'>\n";
+	echo "		<option value='inbound' ".($message_direction == 'inbound' ? "selected='selected'" : null).">".$text['label-inbound']."</option>\n";
+	echo "		<option value='outbound' ".($message_direction == 'outbound' ? "selected='selected'" : null).">".$text['label-outbound']."</option>\n";
+	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-message_direction']."\n";
 	echo "</td>\n";
@@ -316,7 +287,7 @@
 	echo $text['description-message_text']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	
+
 	if (strlen($message_media_type) > 0) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
