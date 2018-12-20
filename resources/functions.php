@@ -1940,4 +1940,68 @@ function number_pad($number,$n) {
 		//return htmlentities($string, ENT_QUOTES, 'UTF-8');
 	}
 
+// output pre-formatted array keys and values
+	if (!function_exists('view_array')) {
+		function view_array($array, $exit = true) {
+			echo '<br><pre>'.print_r($array, true).'</pre><br>';
+			$exit and exit();
+		}
+	}
+
+// format db date and/or time to local date and/or time
+	if (!function_exists('format_when_local')) {
+		function format_when_local($when, $format = 'dt', $include_seconds = false) {
+			if ($when != '') {
+				// determine when format
+				if (substr_count($when, ' ') > 0) { // date and time
+					$tmp = explode(' ', $when);
+					$date = $tmp[0];
+					$time = $tmp[1];
+				}
+				else if (substr_count($when, '-') > 0) { // date only
+					$date = $when;
+				}
+				else if (substr_count($when, ':') > 0) { // time only
+					$time = $when;
+				}
+				unset($when, $tmp);
+
+				// format date
+				if ($date != '') {
+					$tmp = explode('-', $date);
+					$date = $tmp[1].'-'.$tmp[2].'-'.$tmp[0];
+				}
+
+				// format time
+				if ($time != '') {
+					$tmp = explode(':', $time);
+					if ($tmp[0] >= 0 && $tmp[0] <= 11) {
+						$meridiem = 'AM';
+						$hour = ($tmp[0] == 0) ? 12 : $tmp[0];
+					}
+					else {
+						$meridiem = 'PM';
+						$hour = ($tmp[0] > 12) ? ($tmp[0] - 12) : $tmp[0];
+					}
+					$minute = $tmp[1];
+					$second = $tmp[2];
+				}
+
+				// structure requested time format
+				$time = $hour.':'.$minute;
+				if ($include_seconds) { $time .= ':'.$second; }
+				$time .= ' '.$meridiem;
+
+				$return['d'] = $date;
+				$return['t'] = $time;
+				$return['dt'] = $date.' '.$time;
+
+				return $return[$format];
+			}
+			else {
+				return false;
+			}
+		}
+	}
+
 ?>
