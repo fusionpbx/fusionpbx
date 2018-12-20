@@ -30,10 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('message_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('message_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -42,136 +39,118 @@
 	$language = new text;
 	$text = $language->get();
 
-//get the action
-	if (is_array($_POST["messages"])) {
-		$messages = $_POST["messages"];
-		foreach($messages as $row) {
-			if ($row['action'] == 'delete') {
-				$action = 'delete';
-				break;
-			}
+//get (from) destinations
+	$sql = "select destination_number from v_destinations ";
+	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "and destination_enabled = 'true' ";
+	$sql .= "order by destination_number asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$rows = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	//view_array($rows);
+	if (is_array($rows) && sizeof($rows)) {
+		foreach ($rows as $row) {
+			$destinations[] = $row['destination_number'];
 		}
 	}
-
-//delete the messages
-	if (permission_exists('message_delete')) {
-		if ($action == "delete") {
-			//download
-				$obj = new messages;
-				$obj->delete($messages);
-			//delete message
-				message::add($text['message-delete']);
-		}
-	}
-
-//get variables used to control the order
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
-
-//add the search term
-	$search = strtolower(check_str($_GET["search"]));
-	if (strlen($search) > 0) {
-		$sql_search = " (";
-		$sql_search .= "lower(message_type) like '%".$search."%' ";
-		$sql_search .= "or lower(message_direction) like '%".$search."%' ";
-		$sql_search .= "or lower(message_date) like '%".$search."%' ";
-		$sql_search .= "or lower(message_from) like '%".$search."%' ";
-		$sql_search .= "or lower(message_to) like '%".$search."%' ";
-		$sql_search .= "or lower(message_text) like '%".$search."%' ";
-		$sql_search .= "or lower(message_media_type) like '%".$search."%' ";
-		$sql_search .= ") ";
-	}
+	unset ($prep_statement, $sql, $row, $record);
 
 //additional includes
 	require_once "resources/header.php";
-	require_once "resources/paging.php";
 
-//prepare to page the results
-	$sql = "select count(message_uuid) as num_rows from v_messages ";
-	if ($_GET['show'] == "all" && permission_exists('message_all')) {
-		if (isset($sql_search)) {
-			$sql .= "where ".$sql_search;
-		}
-	} else {
-		$sql .= "where user_uuid = '".$_SESSION['user_uuid']."' ";
-		$sql .= "and (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
-		if (isset($sql_search)) {
-			$sql .= "and ".$sql_search;
-		}
-	}
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-	}
+//styles
+	echo "<style>\n";
 
-//prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "&search=".$search;
-	if ($_GET['show'] == "all" && permission_exists('message_all')) {
-		$param .= "&show=all";
-	}
-	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
-	$offset = $rows_per_page * $page;
-
-//get the list
-	$sql = "select * from v_messages ";
-	if ($_GET['show'] == "all" && permission_exists('message_all')) {
-		if (isset($sql_search)) {
-			$sql .= "where ".$sql_search;
-		}
-	} else {
-		$sql .= "where user_uuid = '".$_SESSION['user_uuid']."' ";
-		$sql .= "and (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
-		if (isset($sql_search)) {
-				$sql .= "and ".$sql_search;
-		}
-	}
-	$sql .= "order by message_date desc ";
-	$sql .= "limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$messages = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
-
-//alternate the row style
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
-
-//define the checkbox_toggle function
-	echo "<script type=\"text/javascript\">\n";
-	echo "	function checkbox_toggle(item) {\n";
-	echo "		var inputs = document.getElementsByTagName(\"input\");\n";
-	echo "		for (var i = 0, max = inputs.length; i < max; i++) {\n";
-	echo "		    if (inputs[i].type === 'checkbox') {\n";
-	echo "		       	if (document.getElementById('checkbox_all').checked == true) {\n";
-	echo "				inputs[i].checked = true;\n";
-	echo "			}\n";
-	echo "				else {\n";
-	echo "					inputs[i].checked = false;\n";
-	echo "				}\n";
-	echo "			}\n";
-	echo "		}\n";
+	echo "	#message_new_layer {\n";
+	echo "		z-index: 999999;\n";
+	echo "		position: absolute;\n";
+	echo "		left: 0px;\n";
+	echo "		top: 0px;\n";
+	echo "		right: 0px;\n";
+	echo "		bottom: 0px;\n";
+	echo "		text-align: center;\n";
+	echo "		vertical-align: middle;\n";
 	echo "	}\n";
-	echo "</script>\n";
+
+	echo "	#message_new_container {\n";
+	echo "		display: block;\n";
+	echo "		background-color: #fff;\n";
+	echo "		padding: 20px 30px;\n";
+	echo "		margin: auto 30%;\n";
+	echo "		text-align: left;\n";
+	echo "		-webkit-box-shadow: 0px 1px 20px #888;\n";
+	echo "		-moz-box-shadow: 0px 1px 20px #888;\n";
+	echo "		box-shadow: 0px 1px 20px #888;\n";
+	echo "	}\n";
+
+	echo "</style>\n";
+
+//new message layer
+	echo "<div id='message_new_layer' style='display: none;'>\n";
+	echo "	<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'>\n";
+	echo "		<tr>\n";
+	echo "			<td align='center' valign='middle'>\n";
+	echo "				<form id='message_new'>\n";
+	echo "				<input type='hidden' name='message_type' value='sms'>\n";
+	echo "				<span id='message_new_container'>\n";
+	echo "					<b>New Message</b><br /><br />\n";
+	echo "					<table width='100%'>\n";
+	echo "						<tr>\n";
+	echo "							<td class='vncell'>From</td>\n";
+	echo "							<td class='vtable'>\n";
+	if (is_array($destinations) && sizeof($destinations) != 0) {
+		echo "							<select class='formfld' name='message_from' id='message_new_from'>\n";
+		foreach ($destinations as $destination) {
+			echo "							<option value='".$destination."'>".format_phone($destination)."</option>\n";
+		}
+		echo "							</select>\n";
+	}
+	else {
+		echo "							<input type='text' class='formfld' name='message_from' id='message_new_from'>\n";
+	}
+	echo "							</td>\n";
+	echo "						</tr>\n";
+	echo "						<tr>\n";
+	echo "							<td class='vncell'>To</td>\n";
+	echo "							<td class='vtable'>\n";
+	echo "								<input type='text' class='formfld' name='message_to' id='message_new_to'>\n";
+	echo "							</td>\n";
+	echo "						</tr>\n";
+	echo "						<tr>\n";
+	echo "							<td class='vncell'>Message</td>\n";
+	echo "							<td class='vtable'>\n";
+	echo "								<textarea class='formfld' style='width: 100%; height: 80px;' name='message_text' name='message_new_text'></textarea>\n";
+	echo "							</td>\n";
+	echo "						</tr>\n";
+	/*
+	echo "						<tr>\n";
+	echo "							<td class='vncell'>Media</td>\n";
+	echo "							<td class='vtable'>\n";
+	echo "								<input type='file' class='formfld' name='message_media' id='message_new_media'>\n";
+	echo "							</td>\n";
+	echo "						</tr>\n";
+	*/
+	echo "					</table>\n";
+	echo "					<center>\n";
+	echo "						<input type='reset' class='btn' style='float: left; margin-top: 15px;' value='CLEAR' onclick=\"$('#message_new').reset();\">\n";
+	echo "						<input type='button' class='btn' style='margin-top: 15px;' value='CLOSE' onclick=\"$('#message_new_layer').fadeOut(200);\">\n";
+	echo "						<input type='submit' class='btn' style='float: right; margin-top: 15px;' value='SEND' xtitle='Ctrl + Enter'>\n";
+	echo "					</center>\n";
+	echo "				</span>\n";
+	echo "				</form>\n";
+	echo "			</td>\n";
+	echo "		</tr>\n";
+	echo "	</table>\n";
+	echo "</div>\n";
 
 //show the content
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-messages']."</b></td>\n";
+	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-messages']."</b><br><br></td>\n";
 	echo "		<form method='get' action=''>\n";
 	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
-	echo "				<input type='button' class='btn' value='".$text['button-send']."' onclick=\"window.location='message_send.php';\">\n";
-
+	echo "				<input type='button' class='btn' name='' alt='".$text['button-new-message']."' onclick=\"$('#message_new_layer').fadeIn(200); $('#message_new_to').focus();\" value='".$text['button-new-message']."'>\n";
+	/*
 	if (permission_exists('message_all')) {
 		if ($_GET['show'] == 'all') {
 			echo "				<input type='hidden' name='show' value='all'>";
@@ -180,85 +159,116 @@
 			echo "				<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='messages.php?show=all';\">\n";
 		}
 	}
-
+	*/
+	echo "				<a href='messages_log.php'><input type='button' class='btn' alt=\"".$text['button-log']."\" value=\"".$text['button-log']."\"></a>\n";
+	/*
 	echo "				<input type='text' class='txt' style='width: 150px; margin-left: 15px;' name='search' id='search' value='".escape($search)."'>\n";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
+	*/
 	echo "			</td>\n";
 	echo "		</form>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
 
-	echo "<form method='post' action=''>\n";
-	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	if (is_array($messages)) {
-		$x = 0;
-		foreach($messages as $row) {
-			if ($x == 0) {
-				echo "	<th style='width:30px;'>\n";
-				echo "		<input type='checkbox' name='checkbox_all' id='checkbox_all' value='' onclick=\"checkbox_toggle();\">\n";
-				echo "	</th>\n";
-				echo th_order_by('message_type', $text['label-message_type'], $order_by, $order);
-				echo th_order_by('message_direction', $text['label-message_direction'], $order_by, $order);
-				echo th_order_by('message_date', $text['label-message_date'], $order_by, $order);
-				echo th_order_by('message_from', $text['label-message_from'], $order_by, $order);
-				echo th_order_by('message_to', $text['label-message_to'], $order_by, $order);
-				echo th_order_by('message_text', $text['label-message_text'], $order_by, $order);
-				echo "	<td class='list_control_icons'>";
-				echo "		&nbsp;\n";
-				echo "	</td>\n";
-				echo "</tr>\n";
-
-			}
-			if (permission_exists('message_edit')) {
-				$tr_link = "href='message_edit.php?id=".escape($row['message_uuid'])."'";
-			}
-			echo "<tr ".$tr_link.">\n";
-			//echo "	<td valign='top' class=''>".escape($row['user_uuid'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='align: center; padding: 3px 3px 0px 8px;'>\n";
-			echo "		<input type='checkbox' name=\"messages[$x][checked]\" id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$x."').checked = false; }\">\n";
-			echo "		<input type='hidden' name=\"messages[$x][message_uuid]\" value='".escape($row['message_uuid'])."' />\n";
-			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style=''>".escape($row['message_type'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style=''>".escape($row['message_direction'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style=''>".escape($row['message_date'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style=''>".escape($row['message_from'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style=''>".escape($row['message_to'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style=''>".escape($row['message_text'])."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['message_media_type'])."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['message_media_url'])."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['message_media_content'])."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['message_json'])."&nbsp;</td>\n";
-			echo "	<td class='list_control_icons'>";
-			if (permission_exists('message_edit')) {
-				echo "<a href='message_edit.php?id=".escape($row['message_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
-			}
-			if (permission_exists('message_delete')) {
-				echo "<button type='submit' class='btn btn-default list_control_icon' name=\"messages[$x][action]\" alt='".$text['button-delete']."' value='delete'><span class='glyphicon glyphicon-remove'></span></button>";
-			}
-			echo "	</td>\n";
-			echo "</tr>\n";
-			$x++;
-			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $messages);
-	} //end if results
-
-	echo "<tr>\n";
-	echo "<td colspan='8' align='left'>\n";
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
-	echo "		<td class='list_control_icons'>";
-	echo "			&nbsp;";
-	echo "		</td>\n";
+	echo "		<th width='25%'>Contacts</th>\n";
+	echo "		<th width='75%'>Messages</th>\n";
 	echo "	</tr>\n";
- 	echo "	</table>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>";
-	echo "</form>\n";
+	echo "	<tr>\n";
+	echo "		<td id='contacts' valign='top'>...</td>\n";
+	echo "		<td id='thread' valign='top' style='border-color: #c5d1e5; border-style: solid; border-width: 0 1px 1px 1px; padding: 15px;'>...</td>\n";
+	echo "	</tr>\n";
+	echo "</table>\n";
 	echo "<br /><br />";
+
+	//js to load messages for clicked number
+	echo "<script>\n";
+
+	echo "	var contacts_refresh = 10000;\n";
+	echo "	var thread_refresh = 5000;\n";
+	echo "	var timer_contacts;\n";
+	echo "	var timer_thread;\n";
+
+	echo "	function refresh_contacts() {\n";
+	echo "		clearTimeout(timer_contacts);\n";
+	echo "		$('#contacts').load('messages_contacts.php', function(){\n";
+	echo "			timer_contacts = setTimeout(refresh_contacts, contacts_refresh);\n";
+	echo "		});\n";
+	echo "	}\n";
+
+	echo "	function load_thread(number) {\n";
+	echo "		clearTimeout(timer_thread);\n";
+	echo "		$('#thread').load('messages_thread.php?number=' + encodeURIComponent(number), function(){\n";
+	echo "			$('#thread_messages').scrollTop(Number.MAX_SAFE_INTEGER);\n"; //chrome
+	echo "			$('span#thread_bottom')[0].scrollIntoView(true);\n"; //others
+					//note: the order of the above two lines matters!
+	echo "			if ($('#message_new_layer').is(':hidden')) {\n";
+	echo "				$('#message_text').focus();\n";
+	echo "			}\n";
+	echo "			timer_thread = setTimeout(refresh_thread_start, thread_refresh, number);\n";
+	echo "		});\n";
+	echo "	}\n";
+
+	echo "	function refresh_thread(number, onsent) {\n";
+	echo "		$('#thread_messages').load('messages_thread.php?refresh=true&number=' + encodeURIComponent(number), function(){\n";
+	echo "			$('#thread_messages').scrollTop(Number.MAX_SAFE_INTEGER);\n"; //chrome
+	echo "			$('span#thread_bottom')[0].scrollIntoView(true);\n"; //others
+					//note: the order of the above two lines matters!
+	echo "			if ($('#message_new_layer').is(':hidden')) {\n";
+	echo "				$('#message_text').focus();\n";
+	echo "			}\n";
+	echo "			if (onsent != 'true') {\n";
+	echo "				timer_thread = setTimeout(refresh_thread, thread_refresh, number);\n";
+	echo "			}\n";
+	echo "		});\n";
+	echo "	}\n";
+
+	//refresh controls
+	echo "	function refresh_contacts_stop() {\n";
+	echo "		clearTimeout(timer_contacts);\n";
+	echo "		document.getElementById('contacts_refresh_state').innerHTML = \"<img src='resources/images/refresh_paused.png' style='width: 16px; height: 16px; border: none; margin-top: 1px; cursor: pointer;' onclick='refresh_contacts_start();' alt='".$text['label-refresh_enable']."' title='".$text['label-refresh_enable']."'>\";\n";
+	echo "	}\n";
+
+	echo "	function refresh_contacts_start() {\n";
+	echo "		if (document.getElementById('contacts_refresh_state')) {\n";
+	echo "			document.getElementById('contacts_refresh_state').innerHTML = \"<img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 3px; cursor: pointer;' onclick='refresh_contacts_stop();' alt='".$text['label-refresh_pause']."' title='".$text['label-refresh_pause']."'>\";\n";
+	echo "			refresh_contacts();\n";
+	echo "		}\n";
+	echo "	}\n";
+
+	echo "	function refresh_thread_stop(number) {\n";
+	echo "		clearTimeout(timer_thread);\n";
+	echo "		document.getElementById('thread_refresh_state').innerHTML = \"<img src='resources/images/refresh_paused.png' style='width: 16px; height: 16px; border: none; margin-top: 1px; cursor: pointer;' onclick='refresh_thread_start(\" + number + \");' alt='".$text['label-refresh_enable']."' title='".$text['label-refresh_enable']."'>\";\n";
+	echo "	}\n";
+
+	echo "	function refresh_thread_start(number) {\n";
+	echo "		if (document.getElementById('thread_refresh_state')) {\n";
+	echo "			document.getElementById('thread_refresh_state').innerHTML = \"<img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 3px; cursor: pointer;' onclick='refresh_thread_stop(\" + number + \");' alt='".$text['label-refresh_pause']."' title='".$text['label-refresh_pause']."'>\";\n";
+	echo "			refresh_thread(number);\n";
+	echo "		}\n";
+	echo "	}\n";
+
+	//define form submit function
+	echo "	$('#message_new').submit(function(event) {\n";
+	echo "		event.preventDefault();\n";
+	echo "		$.ajax({\n";
+	echo "			url: 'message_send.php',\n";
+	echo "			type: 'POST',\n";
+	echo "			data: $('#message_new').serialize(),\n";
+	echo "			success: function(){\n";
+	echo "					document.getElementById('message_new').reset();\n";
+	echo "					$('#message_new_layer').fadeOut(400);\n";
+	echo "					refresh_contacts();\n";
+	echo "				}\n";
+	echo "		});\n";
+	echo "	});\n";
+
+	echo "	refresh_contacts();\n";
+
+	echo "</script>\n";
+
+	unset($messages, $message, $numbers, $number);
 
 //include the footer
 	require_once "resources/footer.php";
