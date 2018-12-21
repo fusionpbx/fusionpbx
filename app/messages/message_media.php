@@ -58,7 +58,7 @@
 
 		switch (strtolower($media['message_media_type'])) {
 			case 'jpg':
-			case 'jpeg': $content_type = 'image/jpg'; $displaybreak;
+			case 'jpeg': $content_type = 'image/jpg'; break;
 			case 'png': $content_type = 'image/png'; break;
 			case 'gif': $content_type = 'image/gif'; break;
 			case 'aac': $content_type = 'audio/aac'; break;
