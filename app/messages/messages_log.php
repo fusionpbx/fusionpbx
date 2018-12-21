@@ -167,7 +167,7 @@
 //show the content
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-messages']."</b><br><br></td>\n";
+	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-message_log']."</b><br><br></td>\n";
 	echo "		<form method='get' action=''>\n";
 	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
 	echo "				<a href='messages.php'><input type='button' class='btn' value='".$text['button-back']."'></a>\n";
