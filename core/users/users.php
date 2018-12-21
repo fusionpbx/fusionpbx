@@ -55,7 +55,7 @@
 //get the list of superadmins
 	$superadmins = superadmin_list($db);
 
-//get the users' group(s) from the database
+//get the user group(s) from the database
 	$sql = "select ";
 	$sql .= "	gu.*, g.domain_uuid as group_domain_uuid ";
 	$sql .= "from ";
@@ -83,7 +83,7 @@
 	}
 	unset ($sql, $prep_statement);
 
-//get total user count from the database
+//get the user count from the database
 	$sql = "select count(*) as num_rows from v_users where 1 = 1 ";
 	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
 		$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -124,8 +124,9 @@
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
-	$sql = "select * from v_users as u, v_contacts as c ";
-	$sql .= "where u.contact_uuid = c.contact_uuid ";
+	$sql = "select * from v_contacts as c ";
+	$sql .= "right join v_users u on u.contact_uuid = c.contact_uuid ";
+	$sql .= "where 1 = 1 ";
 	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
 		$sql .= "and u.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	}
