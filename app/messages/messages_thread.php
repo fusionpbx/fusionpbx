@@ -45,7 +45,7 @@
 //set refresh flag
 	$refresh = $_GET['refresh'] == 'true' ? true : false;
 
-//get from messages
+//get messages
 	$since = date("Y-m-d H:i:s", strtotime("-24 hours"));
 	$sql = "select * from v_messages ";
 	$sql .= "where user_uuid = '".$_SESSION['user_uuid']."' ";
@@ -57,6 +57,34 @@
 	$prep_statement->execute();
 	$messages = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
+
+//get media (if any)
+	$sql = "select message_uuid, message_media_uuid, message_media_type, message_media_url, length(message_media_content) as message_media_size from v_message_media ";
+	$sql .= "where user_uuid = '".$_SESSION['user_uuid']."' ";
+	$sql .= "and (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
+	$sql .= "and message_uuid in ( ";
+	foreach ($messages as $message) {
+		$message_uuids[] = "'".$message['message_uuid']."'";
+	}
+	$sql .= implode(',', $message_uuids);
+	$sql .= ") ";
+	$sql .= "and message_media_type <> 'txt' ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$rows = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset ($prep_statement, $sql);
+
+//prep media array
+	if (is_array($rows) && sizeof($rows) != 0) {
+		$x = 0;
+		foreach ($rows as $row) {
+			$message_media[$row['message_uuid']][$x]['uuid'] = $row['message_media_uuid'];
+			$message_media[$row['message_uuid']][$x]['type'] = $row['message_media_type'];
+			//$message_media[$row['message_uuid']][$x]['url'] = $row['message_media_url'];
+			$message_media[$row['message_uuid']][$x]['size'] = $row['message_media_size'];
+			$x++;
+		}
+	}
 
 //css styles
 	echo "<style>\n";
@@ -85,6 +113,27 @@
 	echo "		font-size: 65%;\n";
 	echo "		line-height: 60%;\n";
 	echo "	}\n";
+
+	echo "	.message-media-link-em {\n";
+	echo "		display: block;\n";
+	echo "		position: inline;\n";
+	echo "		margin: 5px 10px;\n";
+	echo "		padding: 8px;\n";
+	echo "		background: #cffec7;\n";
+	echo "		border-radius: 7px;\n";
+	echo "		text-align: center;\n";
+	echo "	}\n";
+
+	echo "	.message-media-link-me {\n";
+	echo "		display: block;\n";
+	echo "		position: inline;\n";
+	echo "		margin: 5px 10px;\n";
+	echo "		padding: 8px;\n";
+	echo "		background: #cbf0ff;\n";
+	echo "		border-radius: 7px;\n";
+	echo "		text-align: center;\n";
+	echo "	}\n";
+
 	echo "</style>\n";
 
 	if (!$refresh) {
@@ -94,14 +143,33 @@
 	//output messages
 		if (is_array($messages) && sizeof($messages) != 0) {
 			foreach ($messages as $message) {
-				echo "<span class='message-bubble message-bubble-".($message['message_direction'] == 'inbound' ? 'em' : 'me')."'>";
-				echo str_replace("\n",'<br />',$message['message_text'])."<br />\n";
-				echo "<span class='message-bubble-when'>".format_when_local($message['message_date'])."</span>\n";
-				echo "</span>\n";
-				//parse from inbound message
+				//parse from message
 				if ($message['message_direction'] == 'inbound') {
 					$message_from = $message['message_to'];
+					$media_source = format_phone($message['message_from']);
 				}
+				if ($message['message_direction'] == 'outbound') {
+					$media_source = format_phone($message['message_to']);
+				}
+
+				//message bubble
+				echo "<span class='message-bubble message-bubble-".($message['message_direction'] == 'inbound' ? 'em' : 'me')."'>";
+				if ($message['message_text'] != '') {
+					echo str_replace("\n",'<br />',$message['message_text'])."<br />\n";
+				}
+				if (is_array($message_media[$message['message_uuid']]) && sizeof($message_media[$message['message_uuid']]) != 0) {
+
+					foreach ($message_media[$message['message_uuid']] as $media) {
+						if ($media['type'] != 'txt') {
+							echo "<a href='message_media.php?id=".$media['uuid']."&src=".$media_source."' class='message-media-link-".($message['message_direction'] == 'inbound' ? 'em' : 'me')."'>";
+							echo "<img src='resources/images/attachment.png' style='width: 16px; height: 16px; border: none; margin-right: 10px;'>";
+							echo "<span style='font-size: 85%;'>".strtoupper($media['type']).' &middot; '.strtoupper(byte_convert($media['size']))."</span>";
+							echo "</a>\n";
+						}
+					}
+				}
+				echo "<span class='message-bubble-when'>".format_when_local($message['message_date'])."</span>\n";
+				echo "</span>\n";
 			}
 			echo "	<span id='thread_bottom'></span>\n";
 		}
