@@ -59,35 +59,33 @@
 	unset ($prep_statement, $sql);
 
 //css styles
-	?>
-	<style>
-		.message-bubble {
-			display: block;
-			padding: 10px;
-			border: 1px solid;
-			margin-bottom: 10px;
-		}
+	echo "<style>\n";
+	echo "	.message-bubble {\n";
+	echo "		display: block;\n";
+	echo "		padding: 10px;\n";
+	echo "		border: 1px solid;\n";
+	echo "		margin-bottom: 10px;\n";
+	echo "	}\n";
 
-		.message-bubble-em {
-			margin-right: 10%;
-			border-radius: 0px 20px 20px 20px;
-			border-color: #cffec7;
-			background-color: #ecffe9;
-		}
+	echo "	.message-bubble-em {\n";
+	echo "		margin-right: 10%;\n";
+	echo "		border-radius: 0px 20px 20px 20px;\n";
+	echo "		border-color: #cffec7;\n";
+	echo "		background-color: #ecffe9;\n";
+	echo "	}\n";
 
-		.message-bubble-me {
-			margin-left: 10%;
-			border-radius: 20px 20px 0px 20px;
-			border-color: #cbf0ff;
-			background-color: #e5f7ff;
-		}
+	echo "	.message-bubble-me {\n";
+	echo "		margin-left: 10%;\n";
+	echo "		border-radius: 20px 20px 0px 20px;\n";
+	echo "		border-color: #cbf0ff;\n";
+	echo "		background-color: #e5f7ff;\n";
+	echo "	}\n";
 
-		.message-bubble-when {
-			font-size: 65%;
-			line-height: 60%;
-		}
-	</style>
-	<?php
+	echo "	.message-bubble-when {\n";
+	echo "		font-size: 65%;\n";
+	echo "		line-height: 60%;\n";
+	echo "	}\n";
+	echo "</style>\n";
 
 	if (!$refresh) {
 		echo "<div id='thread_messages' style='max-height: 400px; overflow: auto;'>\n";
@@ -117,12 +115,12 @@
 			echo "<input type='hidden' name='message_type' value='sms'>\n";
 			echo "<input type='hidden' name='message_from' value='".$message_from."'>\n";
 			echo "<input type='hidden' name='message_to' value='".$number."'>\n";
-			echo "<textarea class='formfld' id='message_text' name='message_text' style='width: 100%; max-width: 100%; height: 40px; border: 1px solid #cbcbcb; resize: vertical; padding: 5px 8px; margin-top: 10px;' placeholder='Enter Response...'></textarea>";
+			echo "<textarea class='formfld' id='message_text' name='message_text' style='width: 100%; max-width: 100%; height: 40px; border: 1px solid #cbcbcb; resize: vertical; padding: 5px 8px; margin-top: 10px;' placeholder=\"".$text['description-enter_response']."\"></textarea>";
 			echo "<span style='position: relative;'>\n";
 			echo "	<center>\n";
-			echo "		<input type='reset' class='btn' style='float: left; margin-top: 15px;' value='CLEAR' onclick=\"$('#message_text').focus();\">\n";
+			echo "		<input type='reset' class='btn' style='float: left; margin-top: 15px;' value='".$text['button-clear']."' onclick=\"$('#message_text').focus();\">\n";
 			echo "		<span id='thread_refresh_state'><img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 3px; cursor: pointer;' onclick=\"refresh_thread_stop('".$number."');\" alt=\"".$text['label-refresh_pause']."\" title=\"".$text['label-refresh_pause']."\"></span> ";
-			echo "		<input type='submit' class='btn' style='float: right; margin-top: 15px;' value='SEND' title='Ctrl + Enter'>\n";
+			echo "		<input type='submit' class='btn' style='float: right; margin-top: 15px;' value='".$text['button-send']."' title=\"".$text['label-ctrl_enter']."\">\n";
 			echo "	</center>\n";
 			echo "</span>\n";
 			echo "</form>\n";
