@@ -50,7 +50,7 @@
 			unset($sql);
 
 		//redirect the user
-			header('Location: messages.php');
+			header('Location: messages_log.php');
 	}
 
 

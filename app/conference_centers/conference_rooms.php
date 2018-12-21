@@ -166,8 +166,7 @@
 	echo "<br /><br>\n";
 
 	//get the conference room count
-		require_once "app/conference_centers/resources/classes/conference_center.php";
-		$conference_center = new conference_center;
+		$conference_center = new conference_centers;
 		$conference_center->db = $db;
 		$conference_center->domain_uuid = $_SESSION['domain_uuid'];
 		if (strlen($meeting_uuid) > 0) {

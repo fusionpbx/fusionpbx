@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -50,12 +50,12 @@
 //set the variables
 	$order_by = check_str($_GET["order_by"]);
 	$order = check_str($_GET["order"]);
-	$search_value = check_str($_REQUEST["search_value"]);
+	$search = check_str($_REQUEST["search"]);
 
 //get the list of superadmins
 	$superadmins = superadmin_list($db);
 
-//get the users' group(s) from the database
+//get the user group(s) from the database
 	$sql = "select ";
 	$sql .= "	gu.*, g.domain_uuid as group_domain_uuid ";
 	$sql .= "from ";
@@ -83,7 +83,7 @@
 	}
 	unset ($sql, $prep_statement);
 
-//get total user count from the database
+//get the user count from the database
 	$sql = "select count(*) as num_rows from v_users where 1 = 1 ";
 	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
 		$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -97,8 +97,9 @@
 	unset($prep_statement, $row);
 
 //get the users from the database (reuse $sql from above)
-	if (strlen($search_value) > 0) {
-		$sql .= "and username = '".$search_value."' ";
+	if (strlen($search) > 0) {
+		$search = strtolower($search);
+		$sql .= "and lower(username) = '".$search."' ";
 	}
 	if (strlen($order_by) > 0) { $sql .= "order by ".$order_by." ".$order." "; }
 	$prep_statement = $db->prepare($sql);
@@ -114,7 +115,7 @@
 	}
 	unset ($prep_statement, $result, $sql);
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "search=".escape($search_value);
+	$param = "search=".escape($search);
 	if (permission_exists('user_all') && $_GET['show'] == 'all') {
 		$param .= "&show=all";
 	}
@@ -123,24 +124,25 @@
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
-	$sql = "select * from v_users where 1 = 1 ";
+	$sql = "select * from v_contacts as c ";
+	$sql .= "right join v_users u on u.contact_uuid = c.contact_uuid ";
+	$sql .= "where 1 = 1 ";
 	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
-		$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and u.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	}
-	if (strlen($search_value) > 0) {
-		$sql .= "and username like '%".$search_value."%' ";
+	if (strlen($search) > 0) {
+		$sql .= "and lower(u.username) like '%".$search."%' ";
 	}
 	if (strlen($order_by)> 0) {
 		$sql .= "order by ".$order_by." ".$order." ";
 	}
 	else {
-		$sql .= "order by username asc ";
+		$sql .= "order by u.username asc ";
 	}
 	$sql .= " limit ".$rows_per_page." offset ".$offset." ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$user_count = count($users);
 	unset ($prep_statement, $sql);
 
 //page title and description
@@ -161,7 +163,7 @@
 	if (permission_exists('user_import')) {
 		echo 				"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='user_imports.php'\" value='".$text['button-import']."'>\n";
 	}
-	echo 	"<input type='text' class='txt' style='width: 150px; margin-left: 15px; margin-right: 3px;' name='search_value' value=\"".escape($search_value)."\">";
+	echo 	"<input type='text' class='txt' style='width: 150px; margin-left: 15px; margin-right: 3px;' name='search' value=\"".escape($search)."\">";
 	echo 	"<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	echo "</td>";
 	echo "</tr>\n";
@@ -180,7 +182,7 @@
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-//show the data
+//show the users
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
@@ -189,6 +191,8 @@
 	}
 	echo th_order_by('username', $text['label-username'], $order_by, $order);
 	echo "<th>".$text['label-groups']."</th>\n";
+	echo "<th>".$text['label-organization']."</th>\n";
+	echo "<th>".$text['label-name']."</th>\n";
 	echo th_order_by('user_enabled', $text['label-enabled'], $order_by, $order, '', '', $param);
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('user_add')) {
@@ -222,6 +226,10 @@
 					echo escape(implode(', ', $user_groups[$row['user_uuid']]));
 				}
 				echo "&nbsp;</td>\n";
+
+				echo "<td class='".$row_style[$c]."'>".$row['contact_organization']." &nbsp;</td>\n";
+				echo "<td class='".$row_style[$c]."'>".$row['contact_name_given']." ".$row['contact_name_family']." &nbsp;</td>\n";
+
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
 				if ($row['user_enabled'] == 'true') {
 					echo $text['option-true'];
@@ -247,7 +255,7 @@
 				if ($c==0) { $c=1; } else { $c=0; }
 			}
 		} //end foreach
-		unset($sql, $users, $user_count);
+		unset($sql, $users);
 	} //end if results
 
 	echo "<tr>\n";

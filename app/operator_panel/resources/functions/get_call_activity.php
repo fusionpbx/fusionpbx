@@ -18,6 +18,7 @@ function get_call_activity() {
 		$sql .= "left outer join v_extension_users as eu on ( eu.extension_uuid = e.extension_uuid and eu.domain_uuid = '".$_SESSION['domain_uuid']."' ) ";
 		$sql .= "left outer join v_users as u on ( u.user_uuid = eu.user_uuid and u.domain_uuid = '".$_SESSION['domain_uuid']."' ) ";
 		$sql .= "where ";
+		$sql .= "e.enabled = 'true' and ";
 		$sql .= "e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "order by ";
 		$sql .= "e.extension asc ";

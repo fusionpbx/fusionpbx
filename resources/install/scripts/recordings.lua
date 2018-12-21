@@ -156,6 +156,14 @@
 				session:execute("record", "'"..recordings_dir.."/"..recording_name.."' 10800 500 500");
 			end
 
+		--get the description of the previous recording
+			sql = "SELECT recording_description FROM v_recordings ";
+			sql = sql .. "where domain_uuid = :domain_uuid ";
+			sql = sql .. "and recording_filename = :recording_name ";
+			sql = sql .. "limit 1";
+			local params = {domain_uuid = domain_uuid, recording_name = recording_name};
+			local recording_description = dbh:first_value(sql, params) or ''
+			
 		--delete the previous recording
 			sql = "delete from v_recordings ";
 			sql = sql .. "where domain_uuid = :domain_uuid ";
@@ -172,6 +180,7 @@
 			table.insert(array, "recording_uuid, ");
 			table.insert(array, "domain_uuid, ");
 			table.insert(array, "recording_filename, ");
+			table.insert(array, "recording_description, ");			
 			if (storage_type == "base64") then
 				table.insert(array, "recording_base64, ");
 			end
@@ -182,6 +191,7 @@
 			table.insert(array, ":recording_uuid, ");
 			table.insert(array, ":domain_uuid, ");
 			table.insert(array, ":recording_name, ");
+			table.insert(array, ":recording_description, ");				
 			if (storage_type == "base64") then
 				table.insert(array, ":recording_base64, ");
 			end
@@ -193,6 +203,7 @@
 				recording_uuid = recording_uuid;
 				domain_uuid = domain_uuid;
 				recording_name = recording_name;
+				recording_description = recording_description;
 				recording_base64 = recording_base64;
 			};
 
@@ -271,7 +282,7 @@ if ( session:ready() ) then
 		recordings_dir = recordings_dir .. "/"..domain_name;
 
 	--if a recording directory is specified, use that instead
-		if storage_path ~= nil then recordings_dir = storage_path; end
+		if (storage_path ~= nil and string.len(storage_path) > 0) then recordings_dir = storage_path; end
 	
 	--set the sounds path for the language, dialect and voice
 		default_language = session:getVariable("default_language");

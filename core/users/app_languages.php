@@ -921,6 +921,26 @@ $text['label-group']['ru-ru'] = "Группа";
 $text['label-group']['sv-se'] = "Grupp";
 $text['label-group']['uk-ua'] = "Група";
 
+$text['label-organization']['en-us'] = "Organization";
+$text['label-organization']['ar-eg'] = "";
+$text['label-organization']['de-at'] = "Organisation"; //copied from de-de
+$text['label-organization']['de-ch'] = "Organisation"; //copied from de-de
+$text['label-organization']['de-de'] = "Organisation";
+$text['label-organization']['es-cl'] = "Organización";
+$text['label-organization']['es-mx'] = "Organización"; //copied from es-cl
+$text['label-organization']['fr-ca'] = "Organisation"; //copied from fr-fr
+$text['label-organization']['fr-fr'] = "Organisation";
+$text['label-organization']['he-il'] = "";
+$text['label-organization']['it-it'] = "Organizzazione";
+$text['label-organization']['nl-nl'] = "";
+$text['label-organization']['pl-pl'] = "";
+$text['label-organization']['pt-br'] = "Organização"; //copied from pt-pt
+$text['label-organization']['pt-pt'] = "Organização";
+$text['label-organization']['ro-ro'] = "";
+$text['label-organization']['ru-ru'] = "Организация";
+$text['label-organization']['sv-se'] = "Organisation";
+$text['label-organization']['uk-ua'] = "";
+
 $text['label-global']['en-us'] = "Global";
 $text['label-global']['ar-eg'] = "";
 $text['label-global']['de-at'] = "Global"; //copied from de-de
