@@ -83,6 +83,17 @@
 	echo "		box-shadow: 0px 1px 20px #888;\n";
 	echo "	}\n";
 
+	echo "	#message_media_layer {\n";
+	echo "		z-index: 999999;\n";
+	echo "		position: absolute;\n";
+	echo "		left: 0px;\n";
+	echo "		top: 0px;\n";
+	echo "		right: 0px;\n";
+	echo "		bottom: 0px;\n";
+	echo "		text-align: center;\n";
+	echo "		vertical-align: middle;\n";
+	echo "	}\n";
+
 	echo "</style>\n";
 
 //new message layer
@@ -142,6 +153,9 @@
 	echo "		</tr>\n";
 	echo "	</table>\n";
 	echo "</div>\n";
+
+//message media layer
+	echo "<div id='message_media_layer' style='display: none;'></div>\n";
 
 //show the content
 	echo "<table width='100%' border='0'>\n";
@@ -263,6 +277,13 @@
 	echo "				}\n";
 	echo "		});\n";
 	echo "	});\n";
+
+	//open message media in layer
+	echo "	function display_media(id, src) {\n";
+	echo "		$('#message_media_layer').load('message_media.php?id=' + id + '&src=' + src + '&action=display', function(){\n";
+	echo "			$('#message_media_layer').fadeIn(200);\n";
+	echo "		});\n";
+	echo "	}\n";
 
 	echo "	refresh_contacts();\n";
 

@@ -42,6 +42,7 @@
 //get media uuid
 	$message_media_uuid = $_GET['id'];
 	$message_media_source = $_GET['src'];
+	$action = $_GET['action'];
 
 //get media
 	if (is_uuid($message_media_uuid)) {
@@ -57,7 +58,7 @@
 
 		switch (strtolower($media['message_media_type'])) {
 			case 'jpg':
-			case 'jpeg': $content_type = 'image/jpg'; break;
+			case 'jpeg': $content_type = 'image/jpg'; $displaybreak;
 			case 'png': $content_type = 'image/png'; break;
 			case 'gif': $content_type = 'image/gif'; break;
 			case 'aac': $content_type = 'audio/aac'; break;
@@ -76,10 +77,23 @@
 			default: $content_type = 'application/octet-stream'; break;
 		}
 
-		header("Content-type: ".$content_type);
-		header("Content-Length: ".strlen($media['message_media_content']));
-		header("Content-Disposition: attachment; filename=\"".$message_media_source."_".$message_media_uuid.".".strtolower($media['message_media_type'])."\"");
-		echo base64_decode($media['message_media_content']);
+		switch ($action) {
+			case 'download':
+				header("Content-type: ".$content_type);
+				header("Content-Length: ".strlen($media['message_media_content']));
+				header("Content-Disposition: attachment; filename=\"".$message_media_source."_".$message_media_uuid.".".strtolower($media['message_media_type'])."\"");
+				echo base64_decode($media['message_media_content']);
+				break;
+			case 'display':
+				echo "	<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'>\n";
+				echo "		<tr>\n";
+				echo "			<td align='center' valign='middle'>\n";
+				echo "				<img src=\"data:".$content_type.";base64, ".$media['message_media_content']."\" style='width: auto; max-width: 95%; height: auto; max-height: 800px; box-shadow: 0px 1px 20px #888; cursor: pointer;' onclick=\"$('#message_media_layer').fadeOut(200);\" oncontextmenu=\"document.location.href='message_media.php?id=".$message_media_uuid."&src=".$message_media_source."&action=download'; return false;\" title=\"Click to Close, Right-Click to Save\">\n";
+				echo "			</td>\n";
+				echo "		</tr>\n";
+				echo "	</table>\n";
+				break;
+		}
 
 	}
 
