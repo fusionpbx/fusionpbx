@@ -59,7 +59,7 @@
 	unset ($prep_statement, $sql);
 
 //get media (if any)
-	$sql = "select message_uuid, message_media_uuid, message_media_type, message_media_url, length(message_media_content) as message_media_size from v_message_media ";
+	$sql = "select message_uuid, message_media_uuid, message_media_type, length(message_media_content) as message_media_size from v_message_media ";
 	$sql .= "where user_uuid = '".$_SESSION['user_uuid']."' ";
 	$sql .= "and (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
 	$sql .= "and message_uuid in ( ";
@@ -80,7 +80,6 @@
 		foreach ($rows as $row) {
 			$message_media[$row['message_uuid']][$x]['uuid'] = $row['message_media_uuid'];
 			$message_media[$row['message_uuid']][$x]['type'] = $row['message_media_type'];
-			//$message_media[$row['message_uuid']][$x]['url'] = $row['message_media_url'];
 			$message_media[$row['message_uuid']][$x]['size'] = $row['message_media_size'];
 			$x++;
 		}
@@ -161,7 +160,12 @@
 
 					foreach ($message_media[$message['message_uuid']] as $media) {
 						if ($media['type'] != 'txt') {
-							echo "<a href='message_media.php?id=".$media['uuid']."&src=".$media_source."' class='message-media-link-".($message['message_direction'] == 'inbound' ? 'em' : 'me')."'>";
+							if ($media['type'] == 'jpg' || $media['type'] == 'jpeg' || $media['type'] == 'gif' || $media['type'] == 'png') {
+								echo "<a href='#' onclick=\"display_media('".$media['uuid']."','".$media_source."');\" class='message-media-link-".($message['message_direction'] == 'inbound' ? 'em' : 'me')."'>";
+							}
+							else {
+								echo "<a href='message_media.php?id=".$media['uuid']."&src=".$media_source."&action=download' class='message-media-link-".($message['message_direction'] == 'inbound' ? 'em' : 'me')."'>";
+							}
 							echo "<img src='resources/images/attachment.png' style='width: 16px; height: 16px; border: none; margin-right: 10px;'>";
 							echo "<span style='font-size: 85%;'>".strtoupper($media['type']).' &middot; '.strtoupper(byte_convert($media['size']))."</span>";
 							echo "</a>\n";
