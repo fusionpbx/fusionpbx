@@ -867,7 +867,7 @@ function format_string ($format, $data) {
 			$user_agent = $_SERVER['HTTP_USER_AGENT'];
 			$browser_name = 'Unknown';
 			$platform = 'Unknown';
-			$version= '';
+			$version = '';
 			$mobile = 'false';
 
 		//get the platform
@@ -955,7 +955,7 @@ function format_string ($format, $data) {
 						'name' => $browser_name,
 						'version' => $version,
 						'platform' => $platform,
-						'mobile' => $true,
+						'mobile' => $mobile,
 						'pattern' => $pattern
 					);
 			}
