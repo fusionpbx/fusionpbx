@@ -1,4 +1,5 @@
 <?php
+
 //get the browser version
 	$user_agent = http_user_agent();
 	$browser_version =  $user_agent['version'];
