@@ -208,7 +208,7 @@
 			echo "			data: $('#message_compose').serialize(),\n";
 			echo "			success: function(){\n";
 			echo "					document.getElementById('message_compose').reset();\n";
-			echo "					if ($('#message_new_layer').is(':hidden')) {\n";
+			echo "					if ($('#message_new_layer').is(':hidden') && !is_mobile()) {\n";
 			echo "						$('#message_text').focus();\n";
 			echo "					}\n";
 			echo "					refresh_thread('".$number."','true');\n";

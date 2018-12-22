@@ -76,7 +76,12 @@
 	echo "		display: block;\n";
 	echo "		background-color: #fff;\n";
 	echo "		padding: 20px 30px;\n";
-	echo "		margin: auto 30%;\n";
+	if (is_mobile() && !is_tablet()) {
+		echo "	margin: 0;\n";
+	}
+	else {
+		echo "	margin: auto 30%;\n";
+	}
 	echo "		text-align: left;\n";
 	echo "		-webkit-box-shadow: 0px 1px 20px #888;\n";
 	echo "		-moz-box-shadow: 0px 1px 20px #888;\n";
@@ -110,7 +115,7 @@
 	echo "							<td class='vncell'>".$text['label-message_from']."</td>\n";
 	echo "							<td class='vtable'>\n";
 	if (is_array($destinations) && sizeof($destinations) != 0) {
-		echo "							<select class='formfld' name='message_from' id='message_new_from'>\n";
+		echo "							<select class='formfld' name='message_from' id='message_new_from' onchange=\" $('#message_new_to').focus();\">\n";
 		foreach ($destinations as $destination) {
 			echo "							<option value='".$destination."'>".format_phone($destination)."</option>\n";
 		}
@@ -163,7 +168,7 @@
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-messages']."</b><br><br></td>\n";
 	echo "		<form method='get' action=''>\n";
 	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
-	echo "				<input type='button' class='btn' name='' alt='".$text['label-new_message']."' onclick=\"$('#message_new_layer').fadeIn(200); $('#message_new_to').focus();\" value='".$text['label-new_message']."'>\n";
+	echo "				<input type='button' class='btn' name='' alt='".$text['label-new_message']."' onclick=\"$('#message_new_layer').fadeIn(200); unload_thread();\" value='".$text['label-new_message']."'>\n";
 	/*
 	if (permission_exists('message_all')) {
 		if ($_GET['show'] == 'all') {
@@ -217,11 +222,18 @@
 	echo "			$('#thread_messages').scrollTop(Number.MAX_SAFE_INTEGER);\n"; //chrome
 	echo "			$('span#thread_bottom')[0].scrollIntoView(true);\n"; //others
 					//note: the order of the above two lines matters!
-	echo "			if ($('#message_new_layer').is(':hidden')) {\n";
-	echo "				$('#message_text').focus();\n";
-	echo "			}\n";
+	if (!is_mobile()) {
+		echo "		if ($('#message_new_layer').is(':hidden')) {\n";
+		echo "			$('#message_text').focus();\n";
+		echo "		}\n";
+	}
 	echo "			timer_thread = setTimeout(refresh_thread_start, thread_refresh, number);\n";
 	echo "		});\n";
+	echo "	}\n";
+
+	echo "	function unload_thread() {\n";
+	echo "		clearTimeout(timer_thread);\n";
+	echo "		$('#thread').html('...');\n";
 	echo "	}\n";
 
 	echo "	function refresh_thread(number, onsent) {\n";
@@ -229,9 +241,11 @@
 	echo "			$('#thread_messages').scrollTop(Number.MAX_SAFE_INTEGER);\n"; //chrome
 	echo "			$('span#thread_bottom')[0].scrollIntoView(true);\n"; //others
 					//note: the order of the above two lines matters!
-	echo "			if ($('#message_new_layer').is(':hidden')) {\n";
-	echo "				$('#message_text').focus();\n";
-	echo "			}\n";
+	if (!is_mobile()) {
+		echo "		if ($('#message_new_layer').is(':hidden')) {\n";
+		echo "			$('#message_text').focus();\n";
+		echo "		}\n";
+	}
 	echo "			if (onsent != 'true') {\n";
 	echo "				timer_thread = setTimeout(refresh_thread, thread_refresh, number);\n";
 	echo "			}\n";
