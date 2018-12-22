@@ -867,49 +867,52 @@ function format_string ($format, $data) {
 			$user_agent = $_SERVER['HTTP_USER_AGENT'];
 			$browser_name = 'Unknown';
 			$platform = 'Unknown';
-			$version= "";
+			$version= '';
+			$mobile = 'false';
 
 		//get the platform
 			if (preg_match('/linux/i', $user_agent)) {
-				$platform = 'linux';
+				$platform = 'Linux';
 			}
 			elseif (preg_match('/macintosh|mac os x/i', $user_agent)) {
-				$platform = 'mac';
+				$platform = 'Apple';
 			}
 			elseif (preg_match('/windows|win32/i', $user_agent)) {
-				$platform = 'windows';
+				$platform = 'Windows';
 			}
 			elseif (preg_match('/mobile/i', $user_agent)) {
-				$platform = 'mobile';
+				$platform = 'Mobile';
+				$mobile = 'true';
 			}
 			elseif (preg_match('/android/i', $user_agent)) {
-				$platform = 'mobile';
+				$platform = 'Android';
+				$mobile = 'true';
 			}
 
 		//get the name of the useragent
 			if (preg_match('/MSIE/i',$user_agent) && !preg_match('/Opera/i',$user_agent)) {
 				$browser_name = 'Internet Explorer';
-				$browser_shortname = "MSIE";
+				$browser_shortname = 'MSIE';
 			}
 			elseif (preg_match('/Firefox/i',$user_agent)) {
 				$browser_name = 'Mozilla Firefox';
-				$browser_shortname = "Firefox";
+				$browser_shortname = 'Firefox';
 			}
 			elseif (preg_match('/Chrome/i',$user_agent)) {
 				$browser_name = 'Google Chrome';
-				$browser_shortname = "Chrome";
+				$browser_shortname = 'Chrome';
 			}
 			elseif (preg_match('/Safari/i',$user_agent)) {
 				$browser_name = 'Apple Safari';
-				$browser_shortname = "Safari";
+				$browser_shortname = 'Safari';
 			}
 			elseif (preg_match('/Opera/i',$user_agent)) {
 				$browser_name = 'Opera';
-				$browser_shortname = "Opera";
+				$browser_shortname = 'Opera';
 			}
 			elseif (preg_match('/Netscape/i',$user_agent)) {
 				$browser_name = 'Netscape';
-				$browser_shortname = "Netscape";
+				$browser_shortname = 'Netscape';
 			}
 
 		//finally get the correct version number
@@ -944,6 +947,7 @@ function format_string ($format, $data) {
 				case "name": return $browser_name; break;
 				case "version": return $version; break;
 				case "platform": return $platform; break;
+				case "mobile": return $mobile; break;
 				case "pattern": return $pattern; break;
 				default :
 					return array(
@@ -951,6 +955,7 @@ function format_string ($format, $data) {
 						'name' => $browser_name,
 						'version' => $version,
 						'platform' => $platform,
+						'mobile' => $true,
 						'pattern' => $pattern
 					);
 			}
