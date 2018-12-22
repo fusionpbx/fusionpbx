@@ -880,7 +880,9 @@ function format_string ($format, $data) {
 			elseif (preg_match('/windows|win32/i', $user_agent)) {
 				$platform = 'Windows';
 			}
-			elseif (preg_match('/mobile/i', $user_agent)) {
+
+		//set mobile to true or false
+			if (preg_match('/mobile/i', $user_agent)) {
 				$platform = 'Mobile';
 				$mobile = 'true';
 			}
