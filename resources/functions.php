@@ -1940,7 +1940,7 @@ function number_pad($number,$n) {
 		//return htmlentities($string, ENT_QUOTES, 'UTF-8');
 	}
 
-// output pre-formatted array keys and values
+//output pre-formatted array keys and values
 	if (!function_exists('view_array')) {
 		function view_array($array, $exit = true) {
 			echo '<br><pre>'.print_r($array, true).'</pre><br>';
@@ -1948,7 +1948,7 @@ function number_pad($number,$n) {
 		}
 	}
 
-// format db date and/or time to local date and/or time
+//format db date and/or time to local date and/or time
 	if (!function_exists('format_when_local')) {
 		function format_when_local($when, $format = 'dt', $include_seconds = false) {
 			if ($when != '') {
@@ -2001,6 +2001,33 @@ function number_pad($number,$n) {
 			else {
 				return false;
 			}
+		}
+	}
+
+//mobile device detection
+	require_once 'resources/mobile-detect/Mobile_Detect.php';
+	if (!function_exists('is_mobile')) {
+		function is_mobile() {
+			$detect = new Mobile_Detect;
+			return $detect->isMobile();
+		}
+	}
+	if (!function_exists('is_tablet')) {
+		function is_tablet() {
+			$detect = new Mobile_Detect;
+			return $detect->isTablet();
+		}
+	}
+	if (!function_exists('is_ios')) {
+		function is_ios() {
+			$detect = new Mobile_Detect;
+			return $detect->isiOS();
+		}
+	}
+	if (!function_exists('is_android')) {
+		function is_android() {
+			$detect = new Mobile_Detect;
+			return $detect->isAndroidOS();
 		}
 	}
 
