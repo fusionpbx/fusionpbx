@@ -880,7 +880,7 @@
 									session:execute(ring_group_timeout_app, ring_group_timeout_data);
 								end
 							--check and report missed call
-								missed()
+								missed();
 						end
 					else
 						if (ring_group_timeout_app ~= nil) then
