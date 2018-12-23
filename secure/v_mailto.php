@@ -329,12 +329,15 @@
 		$mail->ContentType = "text/html";
 		$mail->Body = $body."<br><br>".nl2br($transcription);
 		$mail->AltBody = $body_plain."\n\n$transcription";
+		$mail->isHTML(true);
 	}
 	else {
 		// $mail->Body = ($body != '') ? $body : $body_plain;
 		$mail->Body = $body_plain."\n\n$transcription";
 		$mail->AltBody = $body_plain."\n\n$transcription";
+		$mail->isHTML(false);
 	}
+	$mail->CharSet = "utf-8";
 
 //send the email
 	if(!$mail->Send()) {
