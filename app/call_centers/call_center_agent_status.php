@@ -120,8 +120,31 @@
 								$response = event_socket_request($fp, $cmd);
 							}
 							usleep(200);
-					}
+					
+						//set the blf status
+						//get the agents from the database
+							$sql = "select agent_name from v_call_center_agents ";
+							$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+							$sql .= "and call_center_agent_uuid = '".$row['agent_uuid']."' ";
+							$prep_statement = $db->prepare(check_sql($sql));
+							$prep_statement->execute();
+							$agent_name = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
+							if ($row['agent_status'] == 'Available') {
+								$answer_state = 'confirmed';
+							}
+							else {
+								$answer_state = 'terminated';
+							}
+							
+							$call_center_notify = new call_center_notify;
+							$call_center_notify->domain_name = $_SESSION['domain_name'];
+							$call_center_notify->agent_name = $agent_name[0]['agent_name'];
+							$call_center_notify->answer_state = $answer_state;
+							$call_center_notify->agent_uuid = $row['agent_uuid'];
+							$call_center_notify->send_call_center_notify();
+							unset($call_center_notify);
+					}
 			}
 		}
 	}
