@@ -45,7 +45,7 @@
 //action add or update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
-		$destination_uuid = check_str($_REQUEST["id"]);
+		$destination_uuid = trim($_REQUEST["id"]);
 	}
 	else {
 		$action = "add";
@@ -90,25 +90,25 @@
 	if (count($_POST) > 0) {
 
 		//set the variables
-			$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
-			$domain_uuid = check_str($_POST["domain_uuid"]);
-			$destination_type = check_str($_POST["destination_type"]);
-			$destination_number = check_str($_POST["destination_number"]);
-			$db_destination_number = check_str($_POST["db_destination_number"]);
-			$destination_caller_id_name = check_str($_POST["destination_caller_id_name"]);
-			$destination_caller_id_number = check_str($_POST["destination_caller_id_number"]);
-			$destination_cid_name_prefix = check_str($_POST["destination_cid_name_prefix"]);
-			$destination_context = check_str($_POST["destination_context"]);
-			$fax_uuid = check_str($_POST["fax_uuid"]);
-			$destination_enabled = check_str($_POST["destination_enabled"]);
-			$destination_description = check_str($_POST["destination_description"]);
+			$dialplan_uuid = trim($_POST["dialplan_uuid"]);
+			$domain_uuid = trim($_POST["domain_uuid"]);
+			$destination_type = trim($_POST["destination_type"]);
+			$destination_number = trim($_POST["destination_number"]);
+			$db_destination_number = trim($_POST["db_destination_number"]);
+			$destination_caller_id_name = trim($_POST["destination_caller_id_name"]);
+			$destination_caller_id_number = trim($_POST["destination_caller_id_number"]);
+			$destination_cid_name_prefix = trim($_POST["destination_cid_name_prefix"]);
+			$destination_context = trim($_POST["destination_context"]);
+			$fax_uuid = trim($_POST["fax_uuid"]);
+			$destination_enabled = trim($_POST["destination_enabled"]);
+			$destination_description = trim($_POST["destination_description"]);
 			$destination_sell = check_float($_POST["destination_sell"]);
-			$currency = check_str($_POST["currency"]);
+			$currency = trim($_POST["currency"]);
 			$destination_buy = check_float($_POST["destination_buy"]);
-			$currency_buy = check_str($_POST["currency_buy"]);
-			$destination_record = check_str($_POST["destination_record"]);
-			$destination_accountcode = check_str($_POST["destination_accountcode"]);
-			$destination_carrier = check_str($_POST["destination_carrier"]);
+			$currency_buy = trim($_POST["currency_buy"]);
+			$destination_record = trim($_POST["destination_record"]);
+			$destination_accountcode = trim($_POST["destination_accountcode"]);
+			$destination_carrier = trim($_POST["destination_carrier"]);
 		//convert the number to a regular expression
 			$destination_number_regex = string_to_regex($destination_number);
 			$_POST["destination_number_regex"] = $destination_number_regex;
@@ -136,7 +136,7 @@
 
 		//get the uuid
 			if ($action == "update" && isset($_POST["destination_uuid"])) {
-				$destination_uuid = check_str($_POST["destination_uuid"]);
+				$destination_uuid = trim($_POST["destination_uuid"]);
 			}
 			else {
 				$destination_uuid = uuid();
@@ -190,9 +190,6 @@
 			if ($destination_type == 'inbound' || $destination_type == 'local') {
 				//get the array
 					$dialplan_details = $_POST["dialplan_details"];
-
-				//remove the array from the HTTP POST
-					unset($_POST["dialplan_details"]);
 
 				//array cleanup
 					foreach ($dialplan_details as $index => $row) {
@@ -579,12 +576,25 @@
 					}
 
 				//build the destination array
-					$destination = $_POST;
+					$destination["domain_uuid"] = $domain_uuid;
 					$destination["destination_uuid"] = $destination_uuid;
 					$destination["dialplan_uuid"] = $dialplan_uuid;
-					if ($destination_type == 'inbound' || $destination_type == 'local') {
-						$destination["dialplan_uuid"] = $dialplan_uuid;
-					}
+					$destination["fax_uuid"] = $fax_uuid;
+					$destination["destination_type"] = $destination_type;
+					$destination["destination_number"] = $destination_number;
+					$destination["destination_number_regex"] = $destination_number_regex;
+					$destination["destination_caller_id_name"] = $destination_caller_id_name;
+					$destination["destination_caller_id_number"] = $destination_caller_id_number;
+					$destination["destination_cid_name_prefix"] = $destination_cid_name_prefix;
+					$destination["destination_context"] = $destination_context;
+					$destination["destination_record"] = $destination_record;
+					$destination["destination_accountcode"] = $destination_accountcode;
+					$destination["destination_app"] = $destination_app;
+					$destination["destination_data"] = $destination_data;
+					$destination["destination_alternate_app"] = $destination_alternate_app;
+					$destination["destination_alternate_data"] = $destination_alternate_data;
+					$destination["destination_enabled"] = $destination_enabled;
+					$destination["destination_description"] = $destination_description;
 
 				//prepare the array
 					$array['destinations'][] = $destination;
@@ -635,12 +645,12 @@
 
 				//prepare the array
 					$array['destinations'][0]["destination_uuid"] = $destination_uuid;
-					$array['destinations'][0]["domain_uuid"] = $_POST["domain_uuid"];
-					$array['destinations'][0]["destination_type"] = $_POST["destination_type"];
-					$array['destinations'][0]["destination_number"] = $_POST["destination_number"];
-					$array['destinations'][0]["destination_context"] = $_POST["destination_context"];
-					$array['destinations'][0]["destination_enabled"] = $_POST["destination_enabled"];
-					$array['destinations'][0]["destination_description"] = $_POST["destination_description"];
+					$array['destinations'][0]["domain_uuid"] = $domain_uuid;
+					$array['destinations'][0]["destination_type"] = $destination_type;
+					$array['destinations'][0]["destination_number"] = $destination_number;
+					$array['destinations'][0]["destination_context"] = $destination_context;
+					$array['destinations'][0]["destination_enabled"] = $destination_enabled;
+					$array['destinations'][0]["destination_description"] = $destination_description;
 
 				//save the destination
 					$database = new database;
