@@ -868,7 +868,7 @@ function format_string ($format, $data) {
 			$browser_name = 'Unknown';
 			$platform = 'Unknown';
 			$version = '';
-			$mobile = 'false';
+			$mobile = false;
 
 		//get the platform
 			if (preg_match('/linux/i', $user_agent)) {
@@ -884,11 +884,11 @@ function format_string ($format, $data) {
 		//set mobile to true or false
 			if (preg_match('/mobile/i', $user_agent)) {
 				$platform = 'Mobile';
-				$mobile = 'true';
+				$mobile = true;
 			}
 			elseif (preg_match('/android/i', $user_agent)) {
 				$platform = 'Android';
-				$mobile = 'true';
+				$mobile = true;
 			}
 
 		//get the name of the useragent
@@ -2016,31 +2016,5 @@ function number_pad($number,$n) {
 		}
 	}
 
-//mobile device detection
-	require_once 'resources/mobile-detect/Mobile_Detect.php';
-	if (!function_exists('is_mobile')) {
-		function is_mobile() {
-			$detect = new Mobile_Detect;
-			return $detect->isMobile();
-		}
-	}
-	if (!function_exists('is_tablet')) {
-		function is_tablet() {
-			$detect = new Mobile_Detect;
-			return $detect->isTablet();
-		}
-	}
-	if (!function_exists('is_ios')) {
-		function is_ios() {
-			$detect = new Mobile_Detect;
-			return $detect->isiOS();
-		}
-	}
-	if (!function_exists('is_android')) {
-		function is_android() {
-			$detect = new Mobile_Detect;
-			return $detect->isAndroidOS();
-		}
-	}
 
 ?>
