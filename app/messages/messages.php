@@ -76,7 +76,7 @@
 	echo "		display: block;\n";
 	echo "		background-color: #fff;\n";
 	echo "		padding: 20px 30px;\n";
-	if (is_mobile() && !is_tablet()) {
+	if (http_user_agent('mobile')) {
 		echo "	margin: 0;\n";
 	}
 	else {
@@ -222,7 +222,7 @@
 	echo "			$('#thread_messages').scrollTop(Number.MAX_SAFE_INTEGER);\n"; //chrome
 	echo "			$('span#thread_bottom')[0].scrollIntoView(true);\n"; //others
 					//note: the order of the above two lines matters!
-	if (!is_mobile()) {
+	if (!http_user_agent('mobile')) {
 		echo "		if ($('#message_new_layer').is(':hidden')) {\n";
 		echo "			$('#message_text').focus();\n";
 		echo "		}\n";
@@ -241,7 +241,7 @@
 	echo "			$('#thread_messages').scrollTop(Number.MAX_SAFE_INTEGER);\n"; //chrome
 	echo "			$('span#thread_bottom')[0].scrollIntoView(true);\n"; //others
 					//note: the order of the above two lines matters!
-	if (!is_mobile()) {
+	if (!http_user_agent('mobile')) {
 		echo "		if ($('#message_new_layer').is(':hidden')) {\n";
 		echo "			$('#message_text').focus();\n";
 		echo "		}\n";

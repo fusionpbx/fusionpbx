@@ -88,7 +88,7 @@
 				echo "	<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'>\n";
 				echo "		<tr>\n";
 				echo "			<td align='center' valign='middle'>\n";
-				echo "				<img src=\"data:".$content_type.";base64, ".$media['message_media_content']."\" style='width: auto; max-width: 95%; height: auto; max-height: 800px; box-shadow: 0px 1px 20px #888; cursor: pointer;' onclick=\"$('#message_media_layer').fadeOut(200);\" oncontextmenu=\"document.location.href='message_media.php?id=".$message_media_uuid."&src=".$message_media_source."&action=download'; return false;\" title=\"Click to Close, Right-Click to Save\">\n";
+				echo "				<img src=\"data:".$content_type.";base64, ".$media['message_media_content']."\" style='width: auto; max-width: 95%; height: auto; max-height: 800px; box-shadow: 0px 1px 20px #888; cursor: pointer;' onclick=\"$('#message_media_layer').fadeOut(200);\" oncontextmenu=\"window.open('message_media.php?id=".$message_media_uuid."&src=".$message_media_source."&action=download'); return false;\" title=\"Click to Close, Right-Click to Save\">\n";
 				echo "			</td>\n";
 				echo "		</tr>\n";
 				echo "	</table>\n";
