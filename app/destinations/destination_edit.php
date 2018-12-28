@@ -574,8 +574,6 @@
 					$destination["destination_accountcode"] = $destination_accountcode;
 					$destination["destination_app"] = $destination_app;
 					$destination["destination_data"] = $destination_data;
-					$destination["destination_alternate_app"] = $destination_alternate_app;
-					$destination["destination_alternate_data"] = $destination_alternate_data;
 					$destination["destination_enabled"] = $destination_enabled;
 					$destination["destination_description"] = $destination_description;
 
