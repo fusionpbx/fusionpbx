@@ -187,8 +187,10 @@
 	//js to load messages for clicked number
 	echo "<script>\n";
 
-	echo "	var contacts_refresh = 10000;\n";
-	echo "	var thread_refresh = 5000;\n";
+	$refresh_contacts = is_numeric($_SESSION['message']['refresh_contacts']['numeric']) && $_SESSION['message']['refresh_contacts']['numeric'] > 0 ? $_SESSION['message']['refresh_contacts']['numeric'] : 10; //default (seconds)
+	$refresh_thread = is_numeric($_SESSION['message']['refresh_thread']['numeric']) && $_SESSION['message']['refresh_thread']['numeric'] > 0 ? $_SESSION['message']['refresh_thread']['numeric'] : 5; //default (seconds)
+	echo "	var contacts_refresh = ".($refresh_contacts * 1000).";\n";
+	echo "	var thread_refresh = ".($refresh_thread * 1000).";\n";
 	echo "	var timer_contacts;\n";
 	echo "	var timer_thread;\n";
 
