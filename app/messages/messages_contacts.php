@@ -39,6 +39,9 @@
 	$language = new text;
 	$text = $language->get();
 
+//get selected number/contact
+	$current_contact = $_GET['sel'];
+
 //get the list
 	if (isset($_SESSION['message']['display_last']['text']) && $_SESSION['message']['display_last']['text'] != '') {
 		$array = explode(' ',$_SESSION['message']['display_last']['text']);
@@ -94,6 +97,7 @@
 				$prep_statement->execute();
 				$row = $prep_statement->fetch(PDO::FETCH_NAMED);
 				if (is_array($row) && sizeof($row) != 0) {
+					$contact[$number]['contact_uuid'] = $field['contact_uuid'];
 					$contact[$number]['contact_name_given'] = $row['contact_name_given'];
 					$contact[$number]['contact_name_family'] = $row['contact_name_family'];
 				}
@@ -131,13 +135,28 @@
 	if (is_array($numbers) && sizeof($numbers) != 0) {
 		echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		foreach($numbers as $number) {
-			echo "	<tr><td valign='top' class='".$row_style[$c]."' onclick=\"load_thread('".urlencode($number)."');\">";
-			if ($contact[$number]['contact_name_given'] != '' || $contact[$number]['contact_name_family'] != '') {
-				echo "		<i>".escape($contact[$number]['contact_name_given'].' '.$contact[$number]['contact_name_family']).'</i>';
-				echo "<span style='float: right; font-size: 65%; line-height: 60%; margin-top: 5px; margin-left: 5px;'>".escape(format_phone($number)).'</span>';
+			if ($current_contact != '' && $number == $current_contact) {
+				echo "<tr><td valign='top' class='".$row_style[$c]." contact_selected' style='cursor: default;'>\n";
+				$selected = true;
 			}
 			else {
-				echo "		".escape(format_phone($number));
+				echo "<tr><td valign='top' class='".$row_style[$c]."' onclick=\"load_thread('".urlencode($number)."');\">\n";
+				$selected = false;
+			}
+			if ($contact[$number]['contact_name_given'] != '' || $contact[$number]['contact_name_family'] != '') {
+				echo "<i>".escape($contact[$number]['contact_name_given'].' '.$contact[$number]['contact_name_family']).'</i>';
+				echo "<span style='float: right; font-size: 65%; line-height: 60%; margin-top: 5px; margin-left: 5px; margin-right: ".($selected ? '-4px' : '0').";'>".escape(format_phone($number)).'</span>';
+				if ($selected) {
+					$contact_name = escape($contact[$number]['contact_name_given'].' '.$contact[$number]['contact_name_family']);
+					$contact_html = (permission_exists('contact_view') ? "<a href='".PROJECT_PATH."/app/contacts/contact_edit.php?id=".$contact[$number]['contact_uuid']."' target='_blank'>".$contact_name."</a>" : $contact_name)." : <a href='callto:".escape($number)."'>".escape(format_phone($number))."</a>";
+					echo "<script>$('#contact_current_name').html(\"".$contact_html."\");</script>\n";
+				}
+			}
+			else {
+				echo escape(format_phone($number));
+				if ($selected) {
+					echo "<script>$('#contact_current_name').html(\"<a href='callto:".escape($number)."'>".escape(format_phone($number))."</a>\");</script>\n";
+				}
 			}
 			echo "</td></tr>\n";
 			$c = $c == 0 ? 1 : 0;

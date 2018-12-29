@@ -149,7 +149,7 @@
 	echo "</style>\n";
 
 	if (!$refresh) {
-		echo "<div id='thread_messages' style='max-height: 400px; overflow: auto;'>\n";
+		echo "<div id='thread_messages' style='max-height: 300px; overflow: auto;'>\n";
 	}
 
 	//output messages
@@ -191,6 +191,9 @@
 			echo "<span id='thread_bottom'></span>\n";
 		}
 
+	//set current contact
+		echo "<script>$('#contact_current_number').val('".$number."');</script>\n";
+
 	if (!$refresh) {
 		echo "</div>\n";
 
@@ -208,9 +211,9 @@
 			echo "</table>\n";
 			echo "<table cellpadding='0' cellspacing='0' border='0' width='100%' style='margin-top: 15px;'>\n";
 			echo "	<tr>\n";
-			echo "		<td align='left'><input type='reset' class='btn' value='".$text['button-clear']."' onclick=\"$('#message_text').focus();\"></td>\n";
+			echo "		<td align='left' width='50%'><input type='reset' class='btn' value='".$text['button-clear']."' onclick=\"$('#message_text').focus();\"></td>\n";
 			echo "		<td align='center'><span id='thread_refresh_state'><img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; cursor: pointer;' onclick=\"refresh_thread_stop('".$number."');\" alt=\"".$text['label-refresh_pause']."\" title=\"".$text['label-refresh_pause']."\"></span></td>\n";
-			echo "		<td align='right'><input type='submit' class='btn' value='".$text['button-send']."' title=\"".$text['label-ctrl_enter']."\"></td>\n";
+			echo "		<td align='right' width='50%'><input type='submit' class='btn' value='".$text['button-send']."' title=\"".$text['label-ctrl_enter']."\"></td>\n";
 			echo "	</td>\n";
 			echo "</table>\n";
 			echo "</form>\n";
