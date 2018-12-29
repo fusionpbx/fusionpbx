@@ -30,10 +30,7 @@
 
 //check permissions
 	require_once "resources/check_auth.php";
-	if (permission_exists('message_add') || permission_exists('message_edit')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('message_add') && !permission_exists('message_edit')) {
 		echo "access denied";
 		exit;
 	}
@@ -42,15 +39,12 @@
 	$language = new text;
 	$text = $language->get();
 
-//action add or update
-	$action = "add";
-
 //define the http request
 	function http_request($url, $method, $headers = null, $content)  {
 		$options = array(
 			'http'=>array(
 			'method'=>$method,
-			'header'=> $headers,
+			'header'=>$headers,
 			'content'=>$content
 		));
 		$context = stream_context_create($options);
@@ -63,10 +57,10 @@
 
 //get http post variables and set them to php variables
 	if (is_array($_POST)) {
-		$message_type = check_str($_POST["message_type"]);
 		$message_from = check_str($_POST["message_from"]);
 		$message_to = check_str($_POST["message_to"]);
 		$message_text = check_str($_POST["message_text"]);
+		$message_media = $_FILES["message_media"];
 	}
 
 //process the user data and save it to the database
@@ -76,13 +70,34 @@
 			$phone_number = preg_replace('{[\D]}', '', $message_to);
 
 		//error check
-		if (
-			($message_type != 'sms' && $message_type != 'mms' && $message_type != 'chat') ||
-			!is_numeric($message_from) ||
-			!is_numeric($message_to) ||
-			$message_text == '') {
-				exit;
-		}
+			if (
+				!is_numeric($message_from) ||
+				!is_numeric($message_to) ||
+				$message_text == '') {
+					exit;
+			}
+
+
+
+		// handle media (if any)
+			if (is_array($message_media) && sizeof($message_media) != 0) {
+				// reorganize media array, ignore errored files
+				$f = 0;
+				foreach ($message_media['error'] as $index => $error) {
+					if ($error == 0) {
+						$tmp_media[$f]['uuid'] = uuid();
+						$tmp_media[$f]['name'] = $message_media['name'][$index];
+						$tmp_media[$f]['type'] = $message_media['type'][$index];
+						$tmp_media[$f]['tmp_name'] = $message_media['tmp_name'][$index];
+						$tmp_media[$f]['size'] = $message_media['size'][$index];
+						$f++;
+					}
+				}
+				$message_media = $tmp_media;
+				unset($tmp_media, $f);
+			}
+			$message_type = is_array($message_media) && sizeof($message_media) != 0 ? 'mms' : 'sms';
+
 
 		//get the contact uuid
 			//$sql = "SELECT trim(c.contact_name_given || ' ' || c.contact_name_family || ' (' || c.contact_organization || ')') AS name, p.phone_number AS number ";
@@ -98,23 +113,31 @@
 			$row = $prep_statement->fetch(PDO::FETCH_NAMED);
 			$contact_uuid = $row['contact_uuid'];
 
-		//set the message id
-			$message_uuid = uuid();
-
 		//build the message array
-			$message['domain_uuid'] = $_SESSION["domain_uuid"];
-			$message['message_uuid'] = uuid();
-			$message['user_uuid'] = $_SESSION["user_uuid"];
-			$message['contact_uuid'] = $contact_uuid;
-			$message['message_type'] = $message_type;
-			$message['message_direction'] = 'outbound';
-			$message['message_date'] = 'now()';
-			$message['message_from'] = $message_from;
-			$message['message_to'] = $message_to;
-			$message['message_text'] = $message_text;
+			$message_uuid = uuid();
+			$array['messages'][0]['domain_uuid'] = $_SESSION["domain_uuid"];
+			$array['messages'][0]['message_uuid'] = $message_uuid;
+			$array['messages'][0]['user_uuid'] = $_SESSION["user_uuid"];
+			$array['messages'][0]['contact_uuid'] = $contact_uuid;
+			$array['messages'][0]['message_type'] = $message_type;
+			$array['messages'][0]['message_direction'] = 'outbound';
+			$array['messages'][0]['message_date'] = 'now()';
+			$array['messages'][0]['message_from'] = $message_from;
+			$array['messages'][0]['message_to'] = $message_to;
+			$array['messages'][0]['message_text'] = $message_text;
 
-		//prepare the array
-			$array['messages'][0] = $message;
+		//build message media array (if necessary)
+			if (is_array($message_media)) {
+				foreach($message_media as $index => $media) {
+					$array['message_media'][$index]['message_media_uuid'] = $media['uuid'];
+					$array['message_media'][$index]['message_uuid'] = $message_uuid;
+					$array['message_media'][$index]['domain_uuid'] = $_SESSION["domain_uuid"];
+					$array['message_media'][$index]['user_uuid'] = $_SESSION["user_uuid"];
+					$array['message_media'][$index]['message_media_type'] = strtolower(pathinfo($media['name'], PATHINFO_EXTENSION));
+					$array['message_media'][$index]['message_media_url'] = $media['name'];
+					$array['message_media'][$index]['message_media_content'] = base64_encode(file_get_contents($media['tmp_name']));
+				}
+			}
 
 		//save to the data
 			$database = new database;
@@ -123,18 +146,24 @@
 			$database->uuid($message_uuid);
 			$database->save($array);
 			$message = $database->message;
+			unset($array, $message);
 
 		//debug info
-			//echo "<pre>";
-			//print_r($message);
-			//echo "</pre>";
-			//exit;
+			//echo "<pre>".print_r($message, true)."</pre>"; exit;
 
-		//send the message to the provider
-			$array["to"] = $message_to;
-			$array["text"] = $message_text;
-			//$array["media"] = '';
-			$http_content = json_encode($array);
+		//santize the from
+			$message_from = preg_replace('{[\D]}', '', $message_from);
+
+		//prepare message to send
+			$message['to'] = $message_to;
+			$message['text'] = $message_text;
+			if (is_array($message_media) && sizeof($message_media) != 0) {
+				$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://';
+				foreach ($message_media as $index => $media) {
+					$message['media'][] = $protocol.$_SERVER['HTTP_HOST'].'/app/messages/message_media.php?id='.$media['uuid'].'&action=download';
+				}
+			}
+			$http_content = json_encode($message);
 
 		//settings needed for REST API
 			$http_method = $_SESSION['message']['http_method']['text'];
@@ -145,9 +174,6 @@
 			$http_auth_user = $_SESSION['message']['http_auth_user']['text'];
 			$http_auth_password = $_SESSION['message']['http_auth_password']['text'];
 
-		//santize the from
-			$message_from = preg_replace('{[\D]}', '', $message_from);
-
 		//exchange variable name with their values
 			$http_destination = str_replace("\${from}", $message_from, $http_destination);
 
@@ -157,7 +183,7 @@
 				$headers[] = "Authorization: Basic ".base64_encode($http_auth_user.':'.$http_auth_password);
 			}
 			$response = http_request($http_destination, $http_method, $headers, $http_content);
-			//echo $response;
+			//echo $http_content."<br><br>".$response;
 
 		//redirect the user
 			//$_SESSION["message"] = $text['message-sent'];

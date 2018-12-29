@@ -237,5 +237,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "HTTP Authentication password.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "882007e2-582a-47d6-a830-139c59888ae9";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "message";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "display_last";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "25 messages";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Define the maximum messages, or past time frame of messages, loaded for display.";
 
 ?>

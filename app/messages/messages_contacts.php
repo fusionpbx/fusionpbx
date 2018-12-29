@@ -121,11 +121,11 @@
 		foreach($numbers as $number) {
 			echo "	<tr><td valign='top' class='".$row_style[$c]."' onclick=\"load_thread('".urlencode($number)."');\">";
 			if ($contact[$number]['contact_name_given'] != '' || $contact[$number]['contact_name_family'] != '') {
-				echo "		<i>".$contact[$number]['contact_name_given'].' '.$contact[$number]['contact_name_family'].'</i>';
-				echo "<span style='float: right; font-size: 65%; line-height: 60%; margin-top: 5px; margin-left: 5px;'>".format_phone($number).'</span>';
+				echo "		<i>".escape($contact[$number]['contact_name_given'].' '.$contact[$number]['contact_name_family']).'</i>';
+				echo "<span style='float: right; font-size: 65%; line-height: 60%; margin-top: 5px; margin-left: 5px;'>".escape(format_phone($number)).'</span>';
 			}
 			else {
-				echo "		".format_phone($number);
+				echo "		".escape(format_phone($number));
 			}
 			echo "</td></tr>\n";
 			$c = $c == 0 ? 1 : 0;
