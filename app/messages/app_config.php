@@ -245,5 +245,21 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "25 messages";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Define the maximum messages, or past time frame of messages, loaded for display.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8c944025-f199-440f-be34-c36ce545809a";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "message";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "refresh_contacts";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Define how often (in SECONDS) the list of numbers/Contacts is refreshed.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ba8fd4dd-bd0d-40cc-8f7e-b509107a414b";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "message";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "refresh_thread";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Define how often (in SECONDS) the list of messages in a displayed thread is refreshed.";
 
 ?>
