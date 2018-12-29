@@ -40,12 +40,24 @@
 	$text = $language->get();
 
 //get the list
-	$since = date("Y-m-d H:i:s", strtotime("-24 hours"));
+	if (isset($_SESSION['message']['display_last']['text']) && $_SESSION['message']['display_last']['text'] != '') {
+		$array = explode(' ',$_SESSION['message']['display_last']['text']);
+		if (is_array($array) && is_numeric($array[0]) && $array[0] > 0) {
+			if ($array[1] == 'messages') {
+				$limit = "limit ".$array[0]." offset 0 ";
+			}
+			else {
+				$since = "and message_date >= '".date("Y-m-d H:i:s", strtotime('-'.$_SESSION['message']['display_last']['text']))."' ";
+			}
+		}
+	}
+	if ($limit == '' && $since == '') { $limit = "limit 25 offset 0"; } //default (message count)
 	$sql = "select message_direction, message_from, message_to, contact_uuid from v_messages ";
 	$sql .= "where user_uuid = '".$_SESSION['user_uuid']."' ";
 	$sql .= "and (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
-	//$sql .= "and message_date >= '".$since."' ";
+	$sql .= $since;
 	$sql .= "order by message_date desc ";
+	$sql .= $limit;
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$messages = $prep_statement->fetchAll(PDO::FETCH_NAMED);
