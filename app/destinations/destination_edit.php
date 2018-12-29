@@ -108,6 +108,9 @@
 			$currency_buy = trim($_POST["currency_buy"]);
 			$destination_record = trim($_POST["destination_record"]);
 			$destination_accountcode = trim($_POST["destination_accountcode"]);
+			$destination_type_voice = check_str($_POST["destination_type_voice"]);
+			$destination_type_fax = check_str($_POST["destination_type_fax"]);
+			$destination_type_text = check_str($_POST["destination_type_text"]);
 			$destination_carrier = trim($_POST["destination_carrier"]);
 		//convert the number to a regular expression
 			$destination_number_regex = string_to_regex($destination_number);
@@ -131,7 +134,7 @@
 			unset($_POST["db_destination_number"]);
 	}
 
-//process the http post 
+//process the http post
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		//get the uuid
@@ -589,6 +592,9 @@
 					$destination["destination_context"] = $destination_context;
 					$destination["destination_record"] = $destination_record;
 					$destination["destination_accountcode"] = $destination_accountcode;
+					$destination["destination_type_voice"] = $destination_type_voice ? 1 : null;
+					$destination["destination_type_fax"] = $destination_type_fax ? 1 : null;
+					$destination["destination_type_text"] = $destination_type_text ? 1 : null;
 					$destination["destination_app"] = $destination_app;
 					$destination["destination_data"] = $destination_data;
 					$destination["destination_alternate_app"] = $destination_alternate_app;
@@ -697,6 +703,9 @@
 				$destination_cid_name_prefix = $row["destination_cid_name_prefix"];
 				$destination_record = $row["destination_record"];
 				$destination_accountcode = $row["destination_accountcode"];
+				$destination_type_voice = $row["destination_type_voice"];
+				$destination_type_fax = $row["destination_type_fax"];
+				$destination_type_text = $row["destination_type_text"];
 				$destination_context = $row["destination_context"];
 				$destination_app = $row["destination_app"];
 				$destination_data = $row["destination_data"];
@@ -1056,6 +1065,19 @@
 	echo "<br />\n";
 	echo $text['description-account_code']."\n";
 	echo "</td>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-usage']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<label><input type='checkbox' name='destination_type_voice' id='destination_type_voice' value='1' ".($destination_type_voice ? "checked='checked'" : null)."> ".$text['label-voice']."</label>&nbsp;\n";
+	echo "	<label><input type='checkbox' name='destination_type_fax' id='destination_type_fax' value='1' ".($destination_type_fax ? "checked='checked'" : null)."> ".$text['label-fax']."</label>&nbsp;\n";
+	echo "	<label><input type='checkbox' name='destination_type_text' id='destination_type_text' value='1' ".($destination_type_text ? "checked='checked'" : null)."> ".$text['label-text']."</label>\n";
+	echo "<br />\n";
+	echo $text['description-usage']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	if (permission_exists('destination_domain')) {
 		echo "<tr>\n";

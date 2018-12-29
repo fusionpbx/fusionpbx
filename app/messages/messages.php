@@ -42,6 +42,7 @@
 //get (from) destinations
 	$sql = "select destination_number from v_destinations ";
 	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "and destination_type_text = 1 ";
 	$sql .= "and destination_enabled = 'true' ";
 	$sql .= "order by destination_number asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
@@ -97,6 +98,10 @@
 	echo "		bottom: 0px;\n";
 	echo "		text-align: center;\n";
 	echo "		vertical-align: middle;\n";
+	echo "	}\n";
+
+	echo "	td.contact_selected {\n";
+	echo "		border-right: 5px solid ".($SESSION['theme']['table_row_border_color']['text'] != '' ? $SESSION['theme']['table_row_border_color']['text'] : '#c5d1e5').";\n";
 	echo "	}\n";
 
 	echo "</style>\n";
@@ -175,16 +180,17 @@
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<th width='25%'>".$text['label-contacts']."</th>\n";
-	echo "		<th width='75%'>".$text['label-messages']."</th>\n";
+	echo "		<th style='white-space: nowrap;'><nobr>".$text['label-messages']."<nobr></th>\n";
+	echo "		<th width='75%' style='text-align: right; font-weight: normal;' id='contact_current_name'></th>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
-	echo "		<td id='contacts' valign='top'>...</td>\n";
-	echo "		<td id='thread' valign='top' style='border-color: #c5d1e5; border-style: solid; border-width: 0 1px 1px 1px; padding: 15px;'>...</td>\n";
+	echo "		<td id='contacts' valign='top'><center>&middot;&middot;&middot;</center></td>\n";
+	echo "		<td id='thread' colspan='2' valign='top' style='border-left: 1px solid #c5d1e5; padding: 15px;'><center>&middot;&middot;&middot;</center></td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
-	echo "<br /><br />";
+	echo "<input type='hidden' id='contact_current_number' value=''>\n";
 
-	//js to load messages for clicked number
+//js to load messages for clicked number
 	echo "<script>\n";
 
 	$refresh_contacts = is_numeric($_SESSION['message']['refresh_contacts']['numeric']) && $_SESSION['message']['refresh_contacts']['numeric'] > 0 ? $_SESSION['message']['refresh_contacts']['numeric'] : 10; //default (seconds)
@@ -196,7 +202,7 @@
 
 	echo "	function refresh_contacts() {\n";
 	echo "		clearTimeout(timer_contacts);\n";
-	echo "		$('#contacts').load('messages_contacts.php', function(){\n";
+	echo "		$('#contacts').load('messages_contacts.php?sel=' + $('#contact_current_number').val(), function(){\n";
 	echo "			timer_contacts = setTimeout(refresh_contacts, contacts_refresh);\n";
 	echo "		});\n";
 	echo "	}\n";
@@ -212,13 +218,17 @@
 		echo "			$('#message_text').focus();\n";
 		echo "		}\n";
 	}
+	echo "			refresh_contacts();\n";
 	echo "			timer_thread = setTimeout(refresh_thread_start, thread_refresh, number);\n";
 	echo "		});\n";
 	echo "	}\n";
 
 	echo "	function unload_thread() {\n";
 	echo "		clearTimeout(timer_thread);\n";
-	echo "		$('#thread').html('...');\n";
+	echo "		$('#thread').html('<center>&middot;&middot;&middot;</center>');\n";
+	echo "		$('#contact_current_number').val('');\n";
+	echo "		$('#contact_current_name').html('');\n";
+	echo "		refresh_contacts();\n";
 	echo "	}\n";
 
 	echo "	function refresh_thread(number, onsent) {\n";
@@ -237,7 +247,7 @@
 	echo "		});\n";
 	echo "	}\n";
 
-	//refresh controls
+//refresh controls
 	echo "	function refresh_contacts_stop() {\n";
 	echo "		clearTimeout(timer_contacts);\n";
 	echo "		document.getElementById('contacts_refresh_state').innerHTML = \"<img src='resources/images/refresh_paused.png' style='width: 16px; height: 16px; border: none; margin-top: 1px; cursor: pointer;' onclick='refresh_contacts_start();' alt='".$text['label-refresh_enable']."' title='".$text['label-refresh_enable']."'>\";\n";
@@ -262,7 +272,7 @@
 	echo "		}\n";
 	echo "	}\n";
 
-	//define form submit function
+//define form submit function
 	echo "	$('#message_new').submit(function(event) {\n";
 	echo "		event.preventDefault();\n";
 	echo "		$.ajax({\n";
@@ -273,14 +283,18 @@
 	echo "			contentType: false,\n";
 	echo "			cache: false,\n";
 	echo "			success: function(){\n";
-	echo "				document.getElementById('message_new').reset();\n";
+	echo "				if ($.isNumeric($('#message_new_to').val())) {\n";
+	echo "					$('#contact_current_number').val($('#message_new_to').val());\n";
+	echo "					load_thread($('#message_new_to').val());\n";
+	echo "				}\n";
 	echo "				$('#message_new_layer').fadeOut(400);\n";
+	echo "				document.getElementById('message_new').reset();\n";
 	echo "				refresh_contacts();\n";
 	echo "			}\n";
 	echo "		});\n";
 	echo "	});\n";
 
-	//open message media in layer
+//open message media in layer
 	echo "	function display_media(id, src) {\n";
 	echo "		$('#message_media_layer').load('message_media.php?id=' + id + '&src=' + src + '&action=display', function(){\n";
 	echo "			$('#message_media_layer').fadeIn(200);\n";
