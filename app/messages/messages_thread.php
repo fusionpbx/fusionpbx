@@ -46,16 +46,29 @@
 	$refresh = $_GET['refresh'] == 'true' ? true : false;
 
 //get messages
-	$since = date("Y-m-d H:i:s", strtotime("-24 hours"));
+	if (isset($_SESSION['message']['display_last']['text']) && $_SESSION['message']['display_last']['text'] != '') {
+		$array = explode(' ',$_SESSION['message']['display_last']['text']);
+		if (is_array($array) && is_numeric($array[0]) && $array[0] > 0) {
+			if ($array[1] == 'messages') {
+				$limit = "limit ".$array[0]." offset 0 ";
+			}
+			else {
+				$since = "and message_date >= '".date("Y-m-d H:i:s", strtotime('-'.$_SESSION['message']['display_last']['text']))."' ";
+			}
+		}
+	}
+	if ($limit == '' && $since == '') { $limit = "limit 25 offset 0"; } //default (message count)
 	$sql = "select * from v_messages ";
 	$sql .= "where user_uuid = '".$_SESSION['user_uuid']."' ";
 	$sql .= "and (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
-	//$sql .= "and message_date >= '".$since."' ";
+	$sql .= $since;
 	$sql .= "and (message_from like '%".$number."' or message_to like '%".$number."') ";
-	$sql .= "order by message_date asc ";
+	$sql .= "order by message_date desc ";
+	$sql .= $limit;
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$messages = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$messages = array_reverse($messages);
 	unset ($prep_statement, $sql);
 
 //get media (if any)
@@ -154,7 +167,7 @@
 				//message bubble
 				echo "<span class='message-bubble message-bubble-".($message['message_direction'] == 'inbound' ? 'em' : 'me')."'>";
 				if ($message['message_text'] != '') {
-					echo str_replace("\n",'<br />',$message['message_text'])."<br />\n";
+					echo str_replace("\n",'<br />',escape($message['message_text']))."<br />\n";
 				}
 				if (is_array($message_media[$message['message_uuid']]) && sizeof($message_media[$message['message_uuid']]) != 0) {
 
@@ -172,10 +185,10 @@
 						}
 					}
 				}
-				echo "<span class='message-bubble-when'>".format_when_local($message['message_date'])."</span>\n";
+				echo "	<span class='message-bubble-when'>".format_when_local($message['message_date'])."</span>\n";
 				echo "</span>\n";
 			}
-			echo "	<span id='thread_bottom'></span>\n";
+			echo "<span id='thread_bottom'></span>\n";
 		}
 
 	if (!$refresh) {
@@ -183,18 +196,23 @@
 
 		if (permission_exists('message_add')) {
 			//output input form
-			echo "<form id='message_compose'>\n";
-			echo "<input type='hidden' name='message_type' value='sms'>\n";
+			echo "<form id='message_compose' method='post' enctype='multipart/form-data' action='message_send.php'>\n";
 			echo "<input type='hidden' name='message_from' value='".$message_from."'>\n";
 			echo "<input type='hidden' name='message_to' value='".$number."'>\n";
-			echo "<textarea class='formfld' id='message_text' name='message_text' style='width: 100%; max-width: 100%; height: 40px; border: 1px solid #cbcbcb; resize: vertical; padding: 5px 8px; margin-top: 10px;' placeholder=\"".$text['description-enter_response']."\"></textarea>";
-			echo "<span style='position: relative;'>\n";
-			echo "	<center>\n";
-			echo "		<input type='reset' class='btn' style='float: left; margin-top: 15px;' value='".$text['button-clear']."' onclick=\"$('#message_text').focus();\">\n";
-			echo "		<span id='thread_refresh_state'><img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 3px; cursor: pointer;' onclick=\"refresh_thread_stop('".$number."');\" alt=\"".$text['label-refresh_pause']."\" title=\"".$text['label-refresh_pause']."\"></span> ";
-			echo "		<input type='submit' class='btn' style='float: right; margin-top: 15px;' value='".$text['button-send']."' title=\"".$text['label-ctrl_enter']."\">\n";
-			echo "	</center>\n";
-			echo "</span>\n";
+			echo "<textarea class='formfld' id='message_text' name='message_text' style='width: 100%; max-width: 100%; min-height: 55px; border: 1px solid #cbcbcb; resize: vertical; padding: 5px 8px; margin-top: 10px; margin-bottom: 5px;' placeholder=\"".$text['description-enter_response']."\"></textarea>";
+			echo "<table cellpadding='0' cellspacing='0' border='0' width='100%' style='margin-top: 5px;'>\n";
+			echo "	<tr>\n";
+			echo "		<td><img src='resources/images/attachment.png' style='min-width: 20px; height: 20px; border: none; padding-right: 5px;'></td>\n";
+			echo "		<td width='100%'><input type='file' class='formfld' multiple='multiple' name='message_media[]' id='message_new_media'></td>\n";
+			echo "	</td>\n";
+			echo "</table>\n";
+			echo "<table cellpadding='0' cellspacing='0' border='0' width='100%' style='margin-top: 15px;'>\n";
+			echo "	<tr>\n";
+			echo "		<td align='left'><input type='reset' class='btn' value='".$text['button-clear']."' onclick=\"$('#message_text').focus();\"></td>\n";
+			echo "		<td align='center'><span id='thread_refresh_state'><img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; cursor: pointer;' onclick=\"refresh_thread_stop('".$number."');\" alt=\"".$text['label-refresh_pause']."\" title=\"".$text['label-refresh_pause']."\"></span></td>\n";
+			echo "		<td align='right'><input type='submit' class='btn' value='".$text['button-send']."' title=\"".$text['label-ctrl_enter']."\"></td>\n";
+			echo "	</td>\n";
+			echo "</table>\n";
 			echo "</form>\n";
 
 		//js to load messages for clicked number
@@ -203,9 +221,12 @@
 			echo "	$('#message_compose').submit(function(event) {\n";
 			echo "		event.preventDefault();\n";
 			echo "		$.ajax({\n";
-			echo "			url: 'message_send.php',\n";
-			echo "			type: 'POST',\n";
-			echo "			data: $('#message_compose').serialize(),\n";
+			echo "			url: $(this).attr('action'),\n";
+			echo "			type: $(this).attr('method'),\n";
+			echo "			data: new FormData(this),\n";
+			echo "			processData: false,\n";
+			echo "			contentType: false,\n";
+			echo "			cache: false,\n";
 			echo "			success: function(){\n";
 			echo "					document.getElementById('message_compose').reset();\n";
 			if (!http_user_agent('mobile')) {
@@ -227,7 +248,5 @@
 			echo "</script>\n";
 		}
 	}
-
-
 
 ?>

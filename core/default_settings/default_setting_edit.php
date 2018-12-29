@@ -497,6 +497,18 @@
 		echo "		<option value='7' ".(($default_setting_value == "7") ? "selected='selected'" : null).">MMM DD</option>\n";
 		echo "	</select>\n";
 	}
+	elseif ($category == "message" && $subcategory == "display_last" && $name == "text") {
+		$array = explode(' ',$default_setting_value);
+		if (!is_numeric($array[0])) { $array[1] = $array[0]; $array[0] = ''; }
+		echo "	<input type='text' class='formfld' id='default_setting_value_1' value=\"".$array[0]."\" onchange=\"$('#default_setting_value').val($('#default_setting_value_1').val() + ' ' + $('#default_setting_value_2 option:selected').val());\">\n";
+		echo "	<select class='formfld' id='default_setting_value_2' onchange=\"$('#default_setting_value').val($('#default_setting_value_1').val() + ' ' + $('#default_setting_value_2 option:selected').val());\">\n";
+		echo "		<option value='hours' ".($array[1] == "hours" ? "selected='selected'" : null).">".$text['label-hours']."</option>\n";
+		echo "		<option value='days' ".($array[1] == "days" ? "selected='selected'" : null).">".$text['label-days']."</option>\n";
+		echo "		<option value='messages' ".($array[1] == "messages" ? "selected='selected'" : null).">".$text['label-messages']."</option>\n";
+		echo "	</select>\n";
+		echo "	<input type='hidden' id='default_setting_value' name='default_setting_value' value=\"".$default_setting_value."\">\n";
+		unset($array);
+	}
 	elseif ($category == "theme" && $subcategory == "domain_visible" && $name == "text" ) {
 		echo "    <select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
 		echo "    	<option value='false' ".(($default_setting_value == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";

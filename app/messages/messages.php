@@ -106,8 +106,7 @@
 	echo "	<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'>\n";
 	echo "		<tr>\n";
 	echo "			<td align='center' valign='middle'>\n";
-	echo "				<form id='message_new'>\n";
-	echo "				<input type='hidden' name='message_type' value='sms'>\n";
+	echo "				<form id='message_new' method='post' enctype='multipart/form-data' action='message_send.php'>\n";
 	echo "				<span id='message_new_container'>\n";
 	echo "					<b>".$text['label-new_message']."</b><br /><br />\n";
 	echo "					<table width='100%'>\n";
@@ -138,14 +137,12 @@
 	echo "								<textarea class='formfld' style='width: 100%; height: 80px;' name='message_text' name='message_new_text'></textarea>\n";
 	echo "							</td>\n";
 	echo "						</tr>\n";
-	/*
 	echo "						<tr>\n";
 	echo "							<td class='vncell'>".$text['label-message_media']."</td>\n";
 	echo "							<td class='vtable'>\n";
-	echo "								<input type='file' class='formfld' name='message_media' id='message_new_media'>\n";
+	echo "								<input type='file' class='formfld' multiple='multiple' name='message_media[]' id='message_new_media'>\n";
 	echo "							</td>\n";
 	echo "						</tr>\n";
-	*/
 	echo "					</table>\n";
 	echo "					<center>\n";
 	echo "						<input type='reset' class='btn' style='float: left; margin-top: 15px;' value='".$text['button-clear']."' onclick=\"$('#message_new').reset();\">\n";
@@ -169,21 +166,7 @@
 	echo "		<form method='get' action=''>\n";
 	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
 	echo "				<input type='button' class='btn' name='' alt='".$text['label-new_message']."' onclick=\"$('#message_new_layer').fadeIn(200); unload_thread();\" value='".$text['label-new_message']."'>\n";
-	/*
-	if (permission_exists('message_all')) {
-		if ($_GET['show'] == 'all') {
-			echo "				<input type='hidden' name='show' value='all'>";
-		}
-		else {
-			echo "				<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='messages.php?show=all';\">\n";
-		}
-	}
-	*/
 	echo "				<a href='messages_log.php'><input type='button' class='btn' alt=\"".$text['label-log']."\" value=\"".$text['label-log']."\"></a>\n";
-	/*
-	echo "				<input type='text' class='txt' style='width: 150px; margin-left: 15px;' name='search' id='search' value='".escape($search)."'>\n";
-	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
-	*/
 	echo "			</td>\n";
 	echo "		</form>\n";
 	echo "	</tr>\n";
@@ -281,14 +264,17 @@
 	echo "	$('#message_new').submit(function(event) {\n";
 	echo "		event.preventDefault();\n";
 	echo "		$.ajax({\n";
-	echo "			url: 'message_send.php',\n";
-	echo "			type: 'POST',\n";
-	echo "			data: $('#message_new').serialize(),\n";
+	echo "			url: $(this).attr('action'),\n";
+	echo "			type: $(this).attr('method'),\n";
+	echo "			data: new FormData(this),\n";
+	echo "			processData: false,\n";
+	echo "			contentType: false,\n";
+	echo "			cache: false,\n";
 	echo "			success: function(){\n";
-	echo "					document.getElementById('message_new').reset();\n";
-	echo "					$('#message_new_layer').fadeOut(400);\n";
-	echo "					refresh_contacts();\n";
-	echo "				}\n";
+	echo "				document.getElementById('message_new').reset();\n";
+	echo "				$('#message_new_layer').fadeOut(400);\n";
+	echo "				refresh_contacts();\n";
+	echo "			}\n";
 	echo "		});\n";
 	echo "	});\n";
 
