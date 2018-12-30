@@ -2981,6 +2981,26 @@ $text['label-bridges']['ru-ru'] = '';
 $text['label-bridges']['sv-se'] = '';
 $text['label-bridges']['uk-ua'] = '';
 
+$text['label-interval']['en-us'] = "Interval";
+$text['label-interval']['ar-eg'] = "";
+$text['label-interval']['de-at'] = "Intervall"; //copied from de-de
+$text['label-interval']['de-ch'] = "Intervall"; //copied from de-de
+$text['label-interval']['de-de'] = "Intervall";
+$text['label-interval']['es-cl'] = "Intervalo";
+$text['label-interval']['es-mx'] = "Intervalo"; //copied from es-cl
+$text['label-interval']['fr-ca'] = "Intervalle"; //copied from fr-fr
+$text['label-interval']['fr-fr'] = "Intervalle";
+$text['label-interval']['he-il'] = "";
+$text['label-interval']['it-it'] = "Intervallo";
+$text['label-interval']['nl-nl'] = "";
+$text['label-interval']['pl-pl'] = "Interwał";
+$text['label-interval']['pt-br'] = "Intervalo"; //copied from pt-pt
+$text['label-interval']['pt-pt'] = "Intervalo";
+$text['label-interval']['ro-ro'] = "";
+$text['label-interval']['ru-ru'] = "Интервал";
+$text['label-interval']['sv-se'] = "Intervall";
+$text['label-interval']['uk-ua'] = "Інтервал";
+
 $text['description-greeting']['en-us'] = "Select the desired Greeting.";
 $text['description-greeting']['ar-eg'] = "";
 $text['description-greeting']['de-at'] = "Geben Sie die Begrüßungs-ID an."; //copied from de-de
