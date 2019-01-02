@@ -27,13 +27,6 @@
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
-	require_once "resources/check_auth.php";
-
-//check permissions
-	if (!permission_exists('message_view')) {
-		echo "access denied";
-		exit;
-	}
 
 //add multi-lingual support
 	$language = new text;
@@ -49,7 +42,9 @@
 
 		$sql = "select message_media_type, message_media_url, message_media_content from v_message_media ";
 		$sql .= "where message_media_uuid = '".$message_media_uuid."' ";
-		$sql .= "and user_uuid = '".$_SESSION['user_uuid']."' ";
+		if (is_uuid($_SESSION['user_uuid'])) {
+			$sql .= "and user_uuid = '".$_SESSION['user_uuid']."' ";
+		}
 		$sql .= "and (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
