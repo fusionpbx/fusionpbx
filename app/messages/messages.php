@@ -107,59 +107,61 @@
 	echo "</style>\n";
 
 //new message layer
-	echo "<div id='message_new_layer' style='display: none;'>\n";
-	echo "	<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'>\n";
-	echo "		<tr>\n";
-	echo "			<td align='center' valign='middle'>\n";
-	echo "				<form id='message_new' method='post' enctype='multipart/form-data' action='message_send.php'>\n";
-	echo "				<span id='message_new_container'>\n";
-	echo "					<b>".$text['label-new_message']."</b><br /><br />\n";
-	echo "					<table width='100%'>\n";
-	echo "						<tr>\n";
-	echo "							<td class='vncell'>".$text['label-message_from']."</td>\n";
-	echo "							<td class='vtable'>\n";
-	if (is_array($destinations) && sizeof($destinations) != 0) {
-		echo "							<select class='formfld' name='message_from' id='message_new_from' onchange=\" $('#message_new_to').focus();\">\n";
-		foreach ($destinations as $destination) {
-			echo "							<option value='".$destination."'>".format_phone($destination)."</option>\n";
+	if (permission_exists('message_add')) {
+		echo "<div id='message_new_layer' style='display: none;'>\n";
+		echo "	<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'>\n";
+		echo "		<tr>\n";
+		echo "			<td align='center' valign='middle'>\n";
+		echo "				<form id='message_new' method='post' enctype='multipart/form-data' action='message_send.php'>\n";
+		echo "				<span id='message_new_container'>\n";
+		echo "					<b>".$text['label-new_message']."</b><br /><br />\n";
+		echo "					<table width='100%'>\n";
+		echo "						<tr>\n";
+		echo "							<td class='vncell'>".$text['label-message_from']."</td>\n";
+		echo "							<td class='vtable'>\n";
+		if (is_array($destinations) && sizeof($destinations) != 0) {
+			echo "							<select class='formfld' name='message_from' id='message_new_from' onchange=\" $('#message_new_to').focus();\">\n";
+			foreach ($destinations as $destination) {
+				echo "							<option value='".$destination."'>".format_phone($destination)."</option>\n";
+			}
+			echo "							</select>\n";
 		}
-		echo "							</select>\n";
+		else {
+			echo "							<input type='text' class='formfld' name='message_from' id='message_new_from'>\n";
+		}
+		echo "							</td>\n";
+		echo "						</tr>\n";
+		echo "						<tr>\n";
+		echo "							<td class='vncell'>".$text['label-message_to']."</td>\n";
+		echo "							<td class='vtable'>\n";
+		echo "								<input type='text' class='formfld' name='message_to' id='message_new_to'>\n";
+		echo "							</td>\n";
+		echo "						</tr>\n";
+		echo "						<tr>\n";
+		echo "							<td class='vncell'>".$text['label-message_text']."</td>\n";
+		echo "							<td class='vtable'>\n";
+		echo "								<textarea class='formfld' style='width: 100%; height: 80px;' name='message_text' name='message_new_text'></textarea>\n";
+		echo "							</td>\n";
+		echo "						</tr>\n";
+		echo "						<tr>\n";
+		echo "							<td class='vncell'>".$text['label-message_media']."</td>\n";
+		echo "							<td class='vtable'>\n";
+		echo "								<input type='file' class='formfld' multiple='multiple' name='message_media[]' id='message_new_media'>\n";
+		echo "							</td>\n";
+		echo "						</tr>\n";
+		echo "					</table>\n";
+		echo "					<center>\n";
+		echo "						<input type='reset' class='btn' style='float: left; margin-top: 15px;' value='".$text['button-clear']."' onclick=\"$('#message_new').reset();\">\n";
+		echo "						<input type='button' class='btn' style='margin-top: 15px;' value='".$text['button-close']."' onclick=\"$('#message_new_layer').fadeOut(200);\">\n";
+		echo "						<input type='submit' class='btn' style='float: right; margin-top: 15px;' value='".$text['button-send']."'>\n";
+		echo "					</center>\n";
+		echo "				</span>\n";
+		echo "				</form>\n";
+		echo "			</td>\n";
+		echo "		</tr>\n";
+		echo "	</table>\n";
+		echo "</div>\n";
 	}
-	else {
-		echo "							<input type='text' class='formfld' name='message_from' id='message_new_from'>\n";
-	}
-	echo "							</td>\n";
-	echo "						</tr>\n";
-	echo "						<tr>\n";
-	echo "							<td class='vncell'>".$text['label-message_to']."</td>\n";
-	echo "							<td class='vtable'>\n";
-	echo "								<input type='text' class='formfld' name='message_to' id='message_new_to'>\n";
-	echo "							</td>\n";
-	echo "						</tr>\n";
-	echo "						<tr>\n";
-	echo "							<td class='vncell'>".$text['label-message_text']."</td>\n";
-	echo "							<td class='vtable'>\n";
-	echo "								<textarea class='formfld' style='width: 100%; height: 80px;' name='message_text' name='message_new_text'></textarea>\n";
-	echo "							</td>\n";
-	echo "						</tr>\n";
-	echo "						<tr>\n";
-	echo "							<td class='vncell'>".$text['label-message_media']."</td>\n";
-	echo "							<td class='vtable'>\n";
-	echo "								<input type='file' class='formfld' multiple='multiple' name='message_media[]' id='message_new_media'>\n";
-	echo "							</td>\n";
-	echo "						</tr>\n";
-	echo "					</table>\n";
-	echo "					<center>\n";
-	echo "						<input type='reset' class='btn' style='float: left; margin-top: 15px;' value='".$text['button-clear']."' onclick=\"$('#message_new').reset();\">\n";
-	echo "						<input type='button' class='btn' style='margin-top: 15px;' value='".$text['button-close']."' onclick=\"$('#message_new_layer').fadeOut(200);\">\n";
-	echo "						<input type='submit' class='btn' style='float: right; margin-top: 15px;' value='".$text['button-send']."'>\n";
-	echo "					</center>\n";
-	echo "				</span>\n";
-	echo "				</form>\n";
-	echo "			</td>\n";
-	echo "		</tr>\n";
-	echo "	</table>\n";
-	echo "</div>\n";
 
 //message media layer
 	echo "<div id='message_media_layer' style='display: none;'></div>\n";
@@ -275,26 +277,28 @@
 	echo "	}\n";
 
 //define form submit function
-	echo "	$('#message_new').submit(function(event) {\n";
-	echo "		event.preventDefault();\n";
-	echo "		$.ajax({\n";
-	echo "			url: $(this).attr('action'),\n";
-	echo "			type: $(this).attr('method'),\n";
-	echo "			data: new FormData(this),\n";
-	echo "			processData: false,\n";
-	echo "			contentType: false,\n";
-	echo "			cache: false,\n";
-	echo "			success: function(){\n";
-	echo "				if ($.isNumeric($('#message_new_to').val())) {\n";
-	echo "					$('#contact_current_number').val($('#message_new_to').val());\n";
-	echo "					load_thread($('#message_new_to').val());\n";
-	echo "				}\n";
-	echo "				$('#message_new_layer').fadeOut(400);\n";
-	echo "				document.getElementById('message_new').reset();\n";
-	echo "				refresh_contacts();\n";
-	echo "			}\n";
-	echo "		});\n";
-	echo "	});\n";
+	if (permission_exists('message_add')) {
+		echo "	$('#message_new').submit(function(event) {\n";
+		echo "		event.preventDefault();\n";
+		echo "		$.ajax({\n";
+		echo "			url: $(this).attr('action'),\n";
+		echo "			type: $(this).attr('method'),\n";
+		echo "			data: new FormData(this),\n";
+		echo "			processData: false,\n";
+		echo "			contentType: false,\n";
+		echo "			cache: false,\n";
+		echo "			success: function(){\n";
+		echo "				if ($.isNumeric($('#message_new_to').val())) {\n";
+		echo "					$('#contact_current_number').val($('#message_new_to').val());\n";
+		echo "					load_thread($('#message_new_to').val());\n";
+		echo "				}\n";
+		echo "				$('#message_new_layer').fadeOut(400);\n";
+		echo "				document.getElementById('message_new').reset();\n";
+		echo "				refresh_contacts();\n";
+		echo "			}\n";
+		echo "		});\n";
+		echo "	});\n";
+	}
 
 //open message media in layer
 	echo "	function display_media(id, src) {\n";
