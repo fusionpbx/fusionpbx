@@ -126,6 +126,7 @@
 
 	$sql = "select * from v_contacts as c ";
 	$sql .= "right join v_users u on u.contact_uuid = c.contact_uuid ";
+	$sql .= "inner join v_domains as d on d.domain_uuid = u.domain_uuid ";
 	$sql .= "where 1 = 1 ";
 	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
 		$sql .= "and u.domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -211,7 +212,7 @@
 				$tr_link = (permission_exists('user_edit')) ? "href='user_edit.php?id=".escape($row['user_uuid'])."'" : null;
 				echo "<tr ".$tr_link.">\n";
 				if (permission_exists('user_all') && $_GET['show'] == 'all') {
-					echo "	<td valign='top' class='".$row_style[$c]."'>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
+					echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['domain_name'])."</td>\n";
 				}
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
 				if (permission_exists('user_edit')) {
