@@ -48,9 +48,10 @@
 	$apps[$x]['menu'][$y]['icon'] = "glyphicon-home";
 	$apps[$x]['menu'][$y]['path'] = "";
 	$apps[$x]['menu'][$y]['order'] = "5";
-	$apps[$x]['menu'][$y]['groups'][] = "user";
-	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
+	$apps[$x]['menu'][$y]['groups'][] = "admin";
+	$apps[$x]['menu'][$y]['groups'][] = "user";
+	$apps[$x]['menu'][$y]['groups'][] = "agent";
 	$y++;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Accounts";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
@@ -182,8 +183,9 @@
 	$apps[$x]['menu'][$y]['category'] = 'internal';
 	$apps[$x]['menu'][$y]['icon'] = "glyphicon-log-out";
 	$apps[$x]['menu'][$y]['path'] = '/logout.php';
-	$apps[$x]['menu'][$y]['groups'][] = 'user';
-	$apps[$x]['menu'][$y]['groups'][] = 'admin';
 	$apps[$x]['menu'][$y]['groups'][] = 'superadmin';
+	$apps[$x]['menu'][$y]['groups'][] = 'admin';
+	$apps[$x]['menu'][$y]['groups'][] = 'user';
+	$apps[$x]['menu'][$y]['groups'][] = "agent";
 
 ?>
