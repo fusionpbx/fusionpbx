@@ -160,7 +160,9 @@
 			if (is_array($message_media) && sizeof($message_media) != 0) {
 				$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://';
 				foreach ($message_media as $index => $media) {
-					$message['media'][] = $protocol.$_SERVER['HTTP_HOST'].'/app/messages/message_media.php?id='.$media['uuid'].'&action=download';
+					$path = $protocol.$_SERVER['HTTP_HOST'].'/app/messages/message_media.php?id='.$media['uuid'].'&action=download&.'.strtolower(pathinfo($media['name'], PATHINFO_EXTENSION));
+					$message['media'][] = $path;
+					//echo $path."<br><br>";
 				}
 			}
 			$http_content = json_encode($message);
