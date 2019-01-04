@@ -250,6 +250,7 @@
 --play the greeting
 	if (session:ready()) then
 		if (ring_group_greeting and #ring_group_greeting > 0) then
+			session:answer();
 			session:sleep(1000);
 			play_file(dbh, domain_name, domain_uuid, ring_group_greeting)
 			session:sleep(1000);
