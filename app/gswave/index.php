@@ -149,7 +149,7 @@
 	//echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-message']."</b><br><br></td>\n";
 	echo "<td width='70%' colspan='2' align='left' valign='top'>\n";
 	echo "	<br />\n";
-	echo "	<a href=\"https://play.google.com/store/apps/details?id=com.grandstream.wave\" target=\"_blank\"><img src=\"/app/gswave/resources/images/google_play.png\" style=\"height:103px;\"/></a>";
+	echo "	<a href=\"https://play.google.com/store/apps/details?id=com.grandstream.wave\" target=\"_blank\"><img src=\"/app/gswave/resources/images/google_play.png\" style=\"height:71px;\"/></a>";
 	echo "	<a href=\"https://itunes.apple.com/us/app/grandstream-wave/id1029274043?ls=1&mt=8\" target=\"_blank\"><img src=\"/app/gswave/resources/images/apple_app_store.png\" style=\"height:71px;\" /></a>";
 	echo "</td>\n";
 	echo "</tr>\n";

@@ -103,7 +103,7 @@
 	echo "	<input type='hidden' name='stop_epoch' value='".escape($stop_epoch)."'>\n";
 	echo "	<input type='hidden' name='duration' value='".escape($duration)."'>\n";
 	echo "	<input type='hidden' name='billsec' value='".escape($billsec)."'>\n";
-	echo "	<input type='hidden' name='uuid' value='".escape($uuid)."'>\n";
+	echo "	<input type='hidden' name='xml_cdr_uuid' value='".escape($xml_cdr_uuid)."'>\n";
 	echo "	<input type='hidden' name='bleg_uuid' value='".escape($bleg_uuid)."'>\n";
 	echo "	<input type='hidden' name='accountcode' value='".escape($accountcode)."'>\n";
 	echo "	<input type='hidden' name='read_codec' value='".escape($read_codec)."'>\n";
@@ -157,9 +157,7 @@
 	echo "					<option value='pdf'>PDF</option>\n";
 	echo "				</select>\n";
 	echo "			</td>\n";
-	if ($result_count == $rows_per_page && $paging_controls_mini != '') {
-		echo "		<td style='vertical-align: top; padding-left: 15px;'>".$paging_controls_mini."</td>\n";
-	}
+	echo "			<td style='vertical-align: top; padding-left: 15px;'>".$paging_controls_mini."</td>\n";
 	echo "		</tr>\n";
 	echo "	</table>\n";
 	echo "	</form>\n";
@@ -227,7 +225,7 @@
 				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 				echo "	<tr>\n";
 				echo "		<td class='vncell' valign='top' nowrap='nowrap'>\n";
-				echo "			".$text['label-source']."\n";
+				echo "			".$text['label-caller_id_number']."\n";
 				echo "		</td>\n";
 				echo "		<td class='vtable' align='left' style='white-space: nowrap;'>\n";
 				echo "			<input type='text' class='formfld' style='".$style['caller_id_number']."' name='caller_id_number' id='caller_id_number' value='".escape($caller_id_number)."'>\n";
@@ -258,7 +256,7 @@
 				echo "	</tr>\n";
 				echo "	<tr>\n";
 				echo "		<td class='vncell' valign='top' nowrap='nowrap'>\n";
-				echo "			".$text['label-cid-name']."\n";
+				echo "			".$text['label-caller_id_name']."\n";
 				echo "		</td>\n";
 				echo "		<td class='vtable' align='left'>\n";
 				echo "			<input type='text' class='formfld' name='caller_id_name' value='".escape($caller_id_name)."'>\n";
@@ -378,8 +376,8 @@
 			echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
 			$col_count++;
 		}
-		echo th_order_by('caller_id_name', $text['label-cid-name'], $order_by, $order, null, null, $param);
-		echo th_order_by('caller_id_number', $text['label-source'], $order_by, $order, null, null, $param);
+		echo th_order_by('caller_id_name', $text['label-caller_id_name'], $order_by, $order, null, null, $param);
+		echo th_order_by('caller_id_number', $text['label-caller_id_number'], $order_by, $order, null, null, $param);
 		if (permission_exists('caller_destination')) {
 			echo th_order_by('caller_destination', $text['label-caller_destination'], $order_by, $order, null, null, $param);
 		}
@@ -484,7 +482,7 @@
 
 			//recording playback
 				if (permission_exists('recording_play') && $record_path != '') {
-					echo "<tr id='recording_progress_bar_".escape($row['uuid'])."' style='display: none;'><td class='".$row_style[$c]." playback_progress_bar_background' style='padding: 0; border: none;' colspan='".escape($col_count)."'><span class='playback_progress_bar' id='recording_progress_".escape($row['uuid'])."'></span></td></tr>\n";
+					echo "<tr id='recording_progress_bar_".escape($row['xml_cdr_uuid'])."' style='display: none;'><td class='".$row_style[$c]." playback_progress_bar_background' style='padding: 0; border: none;' colspan='".escape($col_count)."'><span class='playback_progress_bar' id='recording_progress_".escape($row['xml_cdr_uuid'])."'></span></td></tr>\n";
 				}
 
 			//	if ($row['raw_data_exists'] && permission_exists('xml_cdr_details')) {
@@ -574,14 +572,14 @@
 					if ($record_path != '' && file_exists($record_path.'/'.$record_name)) {
 						echo "	<td valign='top' align='center' class='".$row_style[$c]." row_style_slim tr_link_void' nowrap='nowrap'>";
 						if (permission_exists('recording_play')) {
-							echo 	"<audio id='recording_audio_".escape($row['uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['uuid'])."')\" onended=\"recording_reset('".escape($row['uuid'])."');\" src=\"download.php?id=".escape($row['uuid'])."&t=record\" type='".escape($record_type)."'></audio>";
-							echo 	"<span id='recording_button_".escape($row['uuid'])."' onclick=\"recording_play('".escape($row['uuid'])."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
+							echo 	"<audio id='recording_audio_".escape($row['xml_cdr_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['xml_cdr_uuid'])."')\" onended=\"recording_reset('".escape($row['xml_cdr_uuid'])."');\" src=\"download.php?id=".escape($row['xml_cdr_uuid'])."&t=record\" type='".escape($record_type)."'></audio>";
+							echo 	"<span id='recording_button_".escape($row['xml_cdr_uuid'])."' onclick=\"recording_play('".escape($row['xml_cdr_uuid'])."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
 						}
 						else {
 							echo "don't have recording_play permission ";
 						}
 						if (permission_exists('recording_download')) {
-							echo 	"<a href=\"download.php?id=".escape($row['uuid'])."&t=bin\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
+							echo 	"<a href=\"download.php?id=".escape($row['xml_cdr_uuid'])."&t=bin\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
 						}
 						echo "	</td>\n";
 					}
@@ -706,9 +704,7 @@
 	echo "</table>";
 	echo "</form>";
 	echo "<br><br>";
-	if ($result_count == $rows_per_page) {
-		echo $paging_controls;
-	}
+	echo $paging_controls;
 	echo "<br><br>";
 
 	// check or uncheck all checkboxes

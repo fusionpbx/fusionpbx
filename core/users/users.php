@@ -55,7 +55,7 @@
 //get the list of superadmins
 	$superadmins = superadmin_list($db);
 
-//get the users' group(s) from the database
+//get the user group(s) from the database
 	$sql = "select ";
 	$sql .= "	gu.*, g.domain_uuid as group_domain_uuid ";
 	$sql .= "from ";
@@ -83,7 +83,7 @@
 	}
 	unset ($sql, $prep_statement);
 
-//get total user count from the database
+//get the user count from the database
 	$sql = "select count(*) as num_rows from v_users where 1 = 1 ";
 	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
 		$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -124,24 +124,26 @@
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
-	$sql = "select * from v_users where 1 = 1 ";
+	$sql = "select * from v_contacts as c ";
+	$sql .= "right join v_users u on u.contact_uuid = c.contact_uuid ";
+	$sql .= "inner join v_domains as d on d.domain_uuid = u.domain_uuid ";
+	$sql .= "where 1 = 1 ";
 	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
-		$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and u.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	}
 	if (strlen($search) > 0) {
-		$sql .= "and lower(username) like '%".$search."%' ";
+		$sql .= "and lower(u.username) like '%".$search."%' ";
 	}
 	if (strlen($order_by)> 0) {
 		$sql .= "order by ".$order_by." ".$order." ";
 	}
 	else {
-		$sql .= "order by username asc ";
+		$sql .= "order by u.username asc ";
 	}
 	$sql .= " limit ".$rows_per_page." offset ".$offset." ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$user_count = count($users);
 	unset ($prep_statement, $sql);
 
 //page title and description
@@ -181,7 +183,7 @@
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-//show the data
+//show the users
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
@@ -190,6 +192,8 @@
 	}
 	echo th_order_by('username', $text['label-username'], $order_by, $order);
 	echo "<th>".$text['label-groups']."</th>\n";
+	echo "<th>".$text['label-organization']."</th>\n";
+	echo "<th>".$text['label-name']."</th>\n";
 	echo th_order_by('user_enabled', $text['label-enabled'], $order_by, $order, '', '', $param);
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('user_add')) {
@@ -208,7 +212,7 @@
 				$tr_link = (permission_exists('user_edit')) ? "href='user_edit.php?id=".escape($row['user_uuid'])."'" : null;
 				echo "<tr ".$tr_link.">\n";
 				if (permission_exists('user_all') && $_GET['show'] == 'all') {
-					echo "	<td valign='top' class='".$row_style[$c]."'>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
+					echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['domain_name'])."</td>\n";
 				}
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
 				if (permission_exists('user_edit')) {
@@ -223,6 +227,10 @@
 					echo escape(implode(', ', $user_groups[$row['user_uuid']]));
 				}
 				echo "&nbsp;</td>\n";
+
+				echo "<td class='".$row_style[$c]."'>".$row['contact_organization']." &nbsp;</td>\n";
+				echo "<td class='".$row_style[$c]."'>".$row['contact_name_given']." ".$row['contact_name_family']." &nbsp;</td>\n";
+
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
 				if ($row['user_enabled'] == 'true') {
 					echo $text['option-true'];
@@ -248,7 +256,7 @@
 				if ($c==0) { $c=1; } else { $c=0; }
 			}
 		} //end foreach
-		unset($sql, $users, $user_count);
+		unset($sql, $users);
 	} //end if results
 
 	echo "<tr>\n";

@@ -65,6 +65,11 @@
 <!--  String -->
 <P33>*97</P33>
 
+<!-- Account Display -->
+<!-- 0 - Display User Name -->
+<!-- 1 - Display User ID -->
+<P2380>0</P2380>
+
 <!-- ############################################################### -->
 <!-- # Account 1/Network Settings -->
 <!-- ############################################################### -->
@@ -4316,7 +4321,7 @@
 <P1870></P1870>
 
 <!-- ################################################################### -->
-<!-- ## Network/Basic Settings                                                   ## -->
+<!-- ## Network/Basic Settings ## -->
 <!-- ################################################################### -->
 <!-- # Internet Protocol. 0 - Both, prefer IPv4, 1 - Both, prefer IPv6, 2 - IPv4 Only, 3 - IPv6 Only Default is 0 -->
 <!-- # Number: 0, 1, 2, 3 -->
@@ -4647,6 +4652,35 @@
 <P8395></P8395>
 
 <!-- ############################################################################## -->
+<!-- ## Network/SNMP Settings ## -->
+<!-- ############################################################################## -->
+<!-- # SNMP Enable. Default is 0 -->
+<!-- # No - 0  -->
+<!-- # Yes - 1  -->
+<P21896>0</P21896>
+
+<!-- # SNMP Trap Community -->
+<!-- # String  -->
+<P21900></P21900>
+
+<!-- # SNMP Trap IP -->
+<!-- # String  -->
+<P21897></P21897>
+
+<!-- # SNMP Trap Port -->
+<!-- # Number: 1025-65535. Default is 162  -->
+<P21898>162</P21898>
+
+<!-- # SNMP Trap Version. Default is 1 -->
+<!-- # v1 - 0  -->
+<!-- # v2 - 1  -->
+<P21900>1</P21900>
+
+<!-- # SNMP Trap Interval (in minutes) -->
+<!-- # Number: 1-1440. Default is 5  -->
+<P21901>5</P21901>
+
+<!-- ############################################################################## -->
 <!-- ##  Maintenance/ Web Access     ## -->
 <!-- ############################################################################## -->
 
@@ -4699,6 +4733,11 @@
 <!-- # Default is No -->
 <!-- # Number: 0, 1, 2, 3 -->
 <P194>1</P194>
+
+<!-- # Randomized Automatic Upgrade. Default is 0 -->
+<!-- # 0 - No,  -->
+<!-- # 1 - Yes -->
+<P8458>0</P8458>
 
 <!-- # Check for new firmware every () minutes. Default is 7 days. -->
 <!-- # Number: 60-86400 -->
@@ -4933,6 +4972,22 @@
 <!-- # Web/Keypad/Restrict mode Lockout Duration (0-60 minutes). Default is 5 -->
 <!-- # Number: 0-60 -->
 <P1683>5</P1683>
+
+<!-- # Web Session Timeout -->
+<!-- Number, value 2-60. Default is 10 -->
+<P28116>10</P28116>
+
+<!-- # Web Access Attempt Limit (Number failed passwords before account is locked) -->
+<!-- Number, value 1-10. Default is 5 -->
+<P28117>5</P28117>
+
+<!-- Enable User Web Access. 0 - Disabled, 1 - Enabled. Default is 1. -->
+<!-- # Number: 0, 1 -->
+<P8469>1</P8469>
+
+<!-- # Validate Server Certificates. 0 - Disabled, 1 - Enabled. Default is 0. -->
+<!-- # Number: 0, 1 -->
+<P8463>0</P8463>
 
 <!-- ############################################################################## -->
 <!-- ##  Maintenance/Security Settings/Trusted CA Certificates   ## -->
@@ -5192,6 +5247,14 @@
 <!-- # Delay Registration. Default is 0. -->
 <!-- # Number: 0 - 90 -->
 <P8359>0</P8359>
+
+<!-- # Test Password Strength. Default is 0 -->
+<!-- If yes, web password must contain 3 of the following 4 categories and have at least 9 characters: -->
+<!-- 1. Numberics (0-9), 2. Capital Letters (A-Z), 3. Lower Case Letters (a-z). 4. Special symbols (!,@,#,$,%,^,&,*,(,)) -->
+<!-- Disable - 0 -->
+<!-- Enable - 1 -->
+<P8468>0</P8468>
+
 
 <!-- ############################################################################## -->
 <!-- ##  Settings/Broadsoft -->
@@ -5709,6 +5772,14 @@
 <!-- # Number: 0, 1 -->
 <P1339>0</P1339>
 
+<!-- # Enable Active VPK. - 0 No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P22134>0</P22134>
+
+<!-- # Enable DND Feature. 0 - No, 1 - Yes. Default is 1. -->
+<!-- # Number: 0, 1 -->
+<P8446>1</P8446>
+
 <!-- # Mute Key Functions While Idle. 0 - DND, 1 - Idle Mute, 2 - Disabled. Default is 0 -->
 <!-- # Number: 0,1,2 -->
 <P1565>0</P1565>
@@ -5817,6 +5888,9 @@
 <!-- # Enable Call Completion Service. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <P8391>0</P8391>
+
+<!-- # Enable Incoming Call Popup. 0 - No, 1 - Yes. Default is 1 -->
+<P8401>1</P8401>
 
 <!-- ############################################################################## -->
 <!-- ##  Settings/Call History -->
@@ -6193,13 +6267,12 @@
 <P335>60</P335>
 
 <!-- # Active Backlight Timeout. Default is 1 -->
-<!-- # Number: 1 - 90 -->
+<!-- # Number: 0 (Always On), 1 - 90 (in minutes) -->
 <P8356>1</P8356>
 
 <!-- # Disable Missed Call Backlight. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <P351>0</P351>
-
 
 <!-- # Wallpaper Settings -->
 <!-- # Wallpaper Source. 0 - Default, 1 - Download, 2-USB(for GXP2140/2160/2170 only), 3 - Uploaded, 4 - Color Background -->

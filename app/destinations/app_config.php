@@ -184,6 +184,18 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the accountcode.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_type_voice";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Number is used for voice calls.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_type_fax";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Number is used for fax calls.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_type_text";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Number is used for text messages.";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_app";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the application.";

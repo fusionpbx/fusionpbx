@@ -25,9 +25,10 @@
 	$apps[$x]['menu'][$y]['icon'] = "glyphicon-send";
 	$apps[$x]['menu'][$y]['path'] = "";
 	$apps[$x]['menu'][$y]['order'] = "20";
-	$apps[$x]['menu'][$y]['groups'][] = "user";
-	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
+	$apps[$x]['menu'][$y]['groups'][] = "admin";
+	$apps[$x]['menu'][$y]['groups'][] = "user";
+	$apps[$x]['menu'][$y]['groups'][] = "agent";
 	$y++;	
 	$apps[$x]['menu'][$y]['title']['en-us'] = "App Manager";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";

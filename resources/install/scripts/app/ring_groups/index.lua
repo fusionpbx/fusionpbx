@@ -250,6 +250,7 @@
 --play the greeting
 	if (session:ready()) then
 		if (ring_group_greeting and #ring_group_greeting > 0) then
+			session:answer();
 			session:sleep(1000);
 			play_file(dbh, domain_name, domain_uuid, ring_group_greeting)
 			session:sleep(1000);
@@ -879,6 +880,8 @@
 								if ring_group_timeout_app and #ring_group_timeout_app > 0 then
 									session:execute(ring_group_timeout_app, ring_group_timeout_data);
 								end
+							--check and report missed call
+								missed();
 						end
 					else
 						if (ring_group_timeout_app ~= nil) then

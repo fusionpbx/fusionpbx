@@ -47,10 +47,8 @@
 	$order = check_str($_GET["order"]);
 
 //get fax extension
-	if (strlen($_GET['id']) > 0) {
-		if (is_uuid($_GET["id"])) {
-			$fax_uuid = $_GET["id"];
-		}
+	if (isset($_GET['id']) && is_uuid($_GET["id"])) {
+		$fax_uuid = $_GET["id"];
 		if (if_group("superadmin") || if_group("admin")) {
 			//show all fax extensions
 			$sql = "select fax_name, fax_extension from v_fax ";
@@ -239,6 +237,7 @@
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
+//show the fax files
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('fax_caller_id_name', $text['label-fax_caller_id_name'], $order_by, $order, "&id=".$_GET['id']."&box=".$_GET['box']."&page=".$_GET['page']);
@@ -251,7 +250,7 @@
 	echo th_order_by('fax_date', $text['label-fax_date'], $order_by, $order, "&id=".$_GET['id']."&box=".$_GET['box']."&page=".$_GET['page']);
 	echo "<td style='width: 25px;' class='list_control_icons'>&nbsp;</td>\n";
 	echo "</tr>\n";
-	if ($num_rows > 0) {
+	if (is_array($fax_files)) {
 		foreach($fax_files as $row) {
 			$file = basename($row['fax_file_path']);
 			if (strtolower(substr($file, -3)) == "tif" || strtolower(substr($file, -3)) == "pdf") {
