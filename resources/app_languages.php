@@ -1571,6 +1571,27 @@ $text['option-this_year']['sv-se'] = "Detta Året";
 $text['option-this_year']['uk-ua'] = "Цього року";
 $text['option-this_year']['tr-tr'] = "Bu Yıl";
 
+$text['option-hour']['en-us'] = "Hour";
+$text['option-hour']['ar-eg'] = "";
+$text['option-hour']['de-at'] = ""; //copied from de-de
+$text['option-hour']['de-ch'] = ""; //copied from de-de
+$text['option-hour']['de-de'] = "";
+$text['option-hour']['es-cl'] = "";
+$text['option-hour']['es-mx'] = ""; //copied from es-cl
+$text['option-hour']['fr-ca'] = ""; //copied from fr-fr
+$text['option-hour']['fr-fr'] = "";
+$text['option-hour']['he-il'] = "";
+$text['option-hour']['it-it'] = "";
+$text['option-hour']['nl-nl'] = "";
+$text['option-hour']['pl-pl'] = "";
+$text['option-hour']['pt-br'] = "";
+$text['option-hour']['pt-pt'] = "";
+$text['option-hour']['ro-ro'] = "";
+$text['option-hour']['ru-ru'] = "";
+$text['option-hour']['sv-se'] = "";
+$text['option-hour']['uk-ua'] = "";
+$text['option-hour']['tr-tr'] = "";
+
 $text['option-day']['en-us'] = "Day";
 $text['option-day']['ar-eg'] = "";
 $text['option-day']['de-at'] = ""; //copied from de-de
