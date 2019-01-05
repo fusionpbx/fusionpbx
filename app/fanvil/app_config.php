@@ -134,7 +134,31 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Numeric password on phone to access advanced settings.";
 		$y++;
-                $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a5194459-9f2d-4f3c-bdf1-d59b0989de84";
+                $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3d9497c7-9b03-4a4f-a577-d25d243fef44";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_display_brightness_active";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "12";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Display brightness level when phone is active. (1 - 16)";
+		$y++;
+                $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "10593dd2-cf96-4ae8-8488-0f8e49a384fb";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_display_brightness_inactive";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "4";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Display brightness level when phone is inactive. (0 - 16)";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "574b8427-e401-4946-8903-9d133b0adc67";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_display_inactivity_time";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "45";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Backlight inactivity timer in seconds to dim the display. (0 - 120)";
+
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a5194459-9f2d-4f3c-bdf1-d59b0989de84";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_default_ringtone";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -142,7 +166,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Default phone ring tone.";
 		$y++;
-                $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "fee344aa-f6d5-4805-91f5-39abf087b097";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "fee344aa-f6d5-4805-91f5-39abf087b097";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_ringtone_line1";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -150,7 +174,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Line 1 phone ring tone.";
 		$y++;
-                $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a93bbdcd-e4c8-441e-b2cf-255db78de36f";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a93bbdcd-e4c8-441e-b2cf-255db78de36f";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_ringtone_line2";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -158,7 +182,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Line 2 phone ring tone.";
 		$y++;
-                $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8524b964-cd6b-487f-801d-bf92cefb4641";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8524b964-cd6b-487f-801d-bf92cefb4641";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_ringtone_line3";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -166,7 +190,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Line 3 phone ring tone.";
 		$y++;
-                $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c868029d-ae73-4b0f-84e4-b121ea662dac";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c868029d-ae73-4b0f-84e4-b121ea662dac";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_ringtone_line4";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -174,7 +198,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Line 4 phone ring tone.";
 		$y++;
-                $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9effe745-3b05-45fc-8ceb-6cb197310384";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9effe745-3b05-45fc-8ceb-6cb197310384";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_ringtone_line5";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -182,7 +206,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Line 5 phone ring tone.";
 		$y++;
-                $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "88e1bea1-722d-42e5-a3ce-6af8b3790981";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "88e1bea1-722d-42e5-a3ce-6af8b3790981";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_ringtone_line6";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
