@@ -404,7 +404,7 @@
 	$sql .= "where t.call_center_queue_uuid = '".$call_center_queue_uuid."' ";
 	$sql .= "and t.call_center_agent_uuid = a.call_center_agent_uuid ";
 	$sql .= "and t.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "order by tier_level asc, tier_position asc, agent_name asc";
+	$sql .= "order by tier_level asc, tier_position asc, a.agent_name asc";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$tiers = $prep_statement->fetchAll(PDO::FETCH_NAMED);

@@ -157,6 +157,27 @@
 	$destinations = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
 
+//get the destination select list
+	$destination = new destinations;
+	$destination_array = $destination->all('dialplan');
+
+//add a function to return the action_name
+	function action_name($destination_array, $detail_action) {
+		foreach($destination_array as $group => $row) {
+			foreach ($row as $key => $value) {
+				if ($value == $detail_action) {
+					//add multi-lingual support
+						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$group."/app_languages.php")) {
+							$language2 = new text;
+							$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$group);
+						}
+					//return the group and destination name
+						return trim($text2['title-'.$group].' '.$key);
+				}
+			}
+		}
+	}
+
 //alternate the row style
 	$c = 0;
 	$row_style["0"] = "row_style0";
@@ -226,6 +247,7 @@
 	}
 	echo th_order_by('destination_type', $text['label-destination_type'], $order_by, $order, $param);
 	echo th_order_by('destination_number', $text['label-destination_number'], $order_by, $order, $param);
+	echo  "<th>". $text['label-detail_action']."</th>";
 	echo th_order_by('destination_context', $text['label-destination_context'], $order_by, $order, $param);
 	if (permission_exists('outbound_caller_id_select')) {
 		echo th_order_by('destination_caller_id_name', $text['label-destination_caller_id_name'], $order_by, $order, $param);
@@ -242,10 +264,10 @@
 	}
 	echo "	</td>\n";
 	echo "<tr>\n";
-
 	if (is_array($destinations)) {
 		$x = 0;
 		foreach($destinations as $row) {
+			$action_name = action_name($destination_array, $row['destination_app'].':'.$row['destination_data']);
 			if (permission_exists('destination_edit')) {
 				$tr_link = "href='destination_edit.php?id=".$row['destination_uuid']."'";
 			}
@@ -267,6 +289,7 @@
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['destination_type'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape(format_phone($row['destination_number']))."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($action_name)."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_number_regex']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['destination_context'])."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['fax_uuid'])."&nbsp;</td>\n";

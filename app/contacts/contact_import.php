@@ -61,6 +61,7 @@
 	$action = check_str($_POST["action"]);
 	$order_by = check_str($_POST["order_by"]);
 	$order = check_str($_POST["order"]);
+	$from_row = check_str($_POST["from_row"]);
 	$delimiter = check_str($_POST["data_delimiter"]);
 	$enclosure = check_str($_POST["data_enclosure"]);
 
@@ -128,6 +129,13 @@
 					$i++;
 				}
 			}
+			$schema[$i]['table'] = 'contact_groups';
+			$schema[$i]['parent'] = 'contacts';
+			$schema[$i]['fields'][] = 'group_name';
+			$i++;
+			$schema[$i]['table'] = 'contact_users';
+			$schema[$i]['parent'] = 'contacts';
+			$schema[$i]['fields'][] = 'username';
 	}
 
 //match the column names to the field names
@@ -176,8 +184,12 @@
 				foreach($schema as $row) {
 					echo "			<optgroup label='".$row['table']."'>\n";
 					foreach($row['fields'] as $field) {
+						$selected = '';
+						if ($field == $line_field) {
+							$selected = "selected='selected'";
+						}
 						if (substr($field, -5) != '_uuid') {
-							echo "    			<option value='".$row['table'].".$field'>$field</option>\n";
+							echo "    			<option value='".$row['table'].".$field' $selected>$field</option>\n";
 						}
 					}
 					echo "			</optgroup>\n";
@@ -193,6 +205,7 @@
 			echo "		<tr>\n";
 			echo "			<td colspan='2' valign='top' align='right' nowrap='nowrap'>\n";
 			echo "				<input name='action' type='hidden' value='import'>\n";
+			echo "				<input name='from_row' type='hidden' value='$from_row'>\n";
 			echo "				<input name='data_delimiter' type='hidden' value='$delimiter'>\n";
 			echo "				<input name='data_enclosure' type='hidden' value='$enclosure'>\n";
 			echo "				<input type='submit' class='btn' id='import' value=\"".$text['button-import']."\">\n";
@@ -237,72 +250,112 @@
 		//set the domain_uuid
 			$domain_uuid = $_SESSION['domain_uuid'];
 
+		//get the groups
+			$sql = "select * from v_groups where domain_uuid is null ";
+			$prep_statement = $db->prepare($sql);
+			$prep_statement->execute();
+			$groups = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+
+		//get the users
+			$sql = "select * from v_users where domain_uuid = '".$domain_uuid."' ";
+			$prep_statement = $db->prepare($sql);
+			$prep_statement->execute();
+			$users = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+
+
 		//get the contents of the csv file and convert them into an array
 			$handle = @fopen($_SESSION['file'], "r");
 			if ($handle) {
-				//set the row id
+				//pre-set the numbers
+					$row_number = 1;
 					$row_id = 0;
-				
+
 				//loop through the array
 					while (($line = fgets($handle, 4096)) !== false) {
-
-						//format the data
-							$y = 0;
-							foreach ($fields as $key => $value) {
-								//get the line
-								$result = str_getcsv($line, $delimiter, $enclosure);
-								
-								//get the table and field name
-								$field_array = explode(".",$value);
-								$table_name = $field_array[0];
-								$field_name = $field_array[1];
-								//echo "value: $value<br />\n";
-								//echo "table_name: $table_name<br />\n";
-								//echo "field_name: $field_name<br />\n";
-								
-								//get the parent table name
-								$parent = get_parent($schema, $table_name);
-
-								//remove formatting from the phone number
-								if ($field_name == "phone_number") {
-									$result[$key] = preg_replace('{\D}', '', $result[$key]);
-								}
-
-								//build the data array
-								if (strlen($table_name) > 0) {
-									if (strlen($parent) == 0) {
-										$array[$table_name][$row_id]['domain_uuid'] = $domain_uuid;
-										$array[$table_name][$row_id][$field_name] = $result[$key];
-									}
-									else {
-										$array[$parent][$row_id][$table_name][$y]['domain_uuid'] = $domain_uuid;
-										$array[$parent][$row_id][$table_name][$y][$field_name] = $result[$key];
-									}
-								}
-							}
-
-						//process a chunk of the array
-							if ($row_id === 1000) {
-
-								//save to the data
-									$database = new database;
-									$database->app_name = 'contacts';
-									$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
-									$database->save($array);
-									//$message = $database->message;
-
-								//clear the array
-									unset($array);
+						if ($from_row <= $row_number) {
+							//format the data
+								$y = 0;
+								foreach ($fields as $key => $value) {
+									//get the line
+									$result = str_getcsv($line, $delimiter, $enclosure);
 									
-								//set the row id back to 0
-									$row_id = 0;
-							}
-
-						//increment row id
-							$row_id++;
+									//get the table and field name
+									$field_array = explode(".",$value);
+									$table_name = $field_array[0];
+									$field_name = $field_array[1];
+									//echo "value: $value<br />\n";
+									//echo "table_name: $table_name<br />\n";
+									//echo "field_name: $field_name<br />\n";
+									
+									//get the parent table name
+									$parent = get_parent($schema, $table_name);
+	
+									//remove formatting from the phone number
+								//	if ($field_name == "phone_number") {
+								//		$result[$key] = preg_replace('{\D}', '', $result[$key]);
+								//	}
+	
+									//build the data array
+									if (strlen($table_name) > 0) {
+										if (strlen($parent) == 0) {
+											$array[$table_name][$row_id]['domain_uuid'] = $domain_uuid;
+											$array[$table_name][$row_id][$field_name] = $result[$key];
+										}
+										else {
+											if ($field_name != "username" && $field_name != "group_name") {
+												$array[$parent][$row_id][$table_name][$y]['domain_uuid'] = $domain_uuid;
+												$array[$parent][$row_id][$table_name][$y][$field_name] = $result[$key];
+											}
+										}
+	
+										if ($field_name == "group_name") {
+												foreach ($groups as $field) {
+													if ($field['group_name'] == $result[$key]) {
+														//$array[$parent][$row_id]['contact_group_uuid'] = uuid();
+														$array[$parent][$row_id]['contact_groups'][$y]['domain_uuid'] = $domain_uuid;
+														//$array['contact_groups'][$x]['contact_uuid'] = $row['contact_uuid'];
+														$array[$parent][$row_id]['contact_groups'][$y]['group_uuid'] = $field['group_uuid'];
+													}
+												}
+										}
+	
+										if ($field_name == "username") {
+												foreach ($users as $field) {
+													if ($field['username'] == $result[$key]) {
+														//$array[$parent][$row_id]['contact_users'][$y]['contact_group_uuid'] = uuid();
+														$array[$parent][$row_id]['contact_users'][$y]['domain_uuid'] = $domain_uuid;
+														//$array['contact_groups'][$x]['contact_uuid'] = $row['contact_uuid'];
+														$array[$parent][$row_id]['contact_users'][$y]['user_uuid'] = $field['user_uuid'];
+													}
+												}
+										}
+									} //if (strlen($table_name) > 0)
+								} //end foreach
+	
+							//process a chunk of the array
+								if ($row_id === 1000) {
+	
+									//save to the data
+										$database = new database;
+										$database->app_name = 'contacts';
+										$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
+										$database->save($array);
+										//$message = $database->message;
+	
+									//clear the array
+										unset($array);
+										
+									//set the row id back to 0
+										$row_id = 0;
+								}
+	
+							//increment row id
+								$row_id++;
+						} //if ($from_row <= $row_number)
+						$row_number++;
 					}
 					fclose($handle);
-				
+	
 				//debug info
 					//echo "<pre>\n";
 					//print_r($array);
@@ -404,6 +457,24 @@
 	echo "    <textarea name='data' id='data' rows='7' class='formfld' style='width: 100%;' wrap='off'>$data</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-import_data']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "    ".$text['label-from_row']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "		<select class='formfld' name='from_row'>\n";
+	$i=1;
+	while($i<=99) {
+		$selected = ($i == $from_row) ? "selected" : null;
+		echo "			<option value='$i' ".$selected.">$i</option>\n";
+		$i++;
+	}
+	echo "		</select>\n";
+	echo "<br />\n";
+	echo $text['description-from_row']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

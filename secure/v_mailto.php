@@ -135,6 +135,9 @@
 
 //prepare smtp server settings
 	// load default smtp settings
+	if ($_SESSION['email']['smtp_hostname']['text'] != '') { 
+		$smtp['hostname'] = $_SESSION['email']['smtp_hostname']['text'];
+	}
 	$smtp['host'] 		= (strlen($_SESSION['email']['smtp_host']['text'])?$_SESSION['email']['smtp_host']['text']:'127.0.0.1');
 	if (isset($_SESSION['email']['smtp_port'])) {
 		$smtp['port'] = (int)$_SESSION['email']['smtp_port']['numeric'];
@@ -210,6 +213,9 @@
 	}
 
 	$mail->SMTPAuth = $smtp['auth'];
+	if (isset($smtp['hostname'])) { 
+		$mail->Hostname = $smtp['hostname'];
+	}
 	$mail->Host = $smtp['host'];
 	if ($smtp['port']!=0) $mail->Port=$smtp['port'];
 	if ($smtp['secure'] != '') {
@@ -323,12 +329,15 @@
 		$mail->ContentType = "text/html";
 		$mail->Body = $body."<br><br>".nl2br($transcription);
 		$mail->AltBody = $body_plain."\n\n$transcription";
+		$mail->isHTML(true);
 	}
 	else {
 		// $mail->Body = ($body != '') ? $body : $body_plain;
 		$mail->Body = $body_plain."\n\n$transcription";
 		$mail->AltBody = $body_plain."\n\n$transcription";
+		$mail->isHTML(false);
 	}
+	$mail->CharSet = "utf-8";
 
 //send the email
 	if(!$mail->Send()) {

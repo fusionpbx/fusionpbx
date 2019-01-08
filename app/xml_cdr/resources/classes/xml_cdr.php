@@ -92,7 +92,7 @@ if (!class_exists('xml_cdr')) {
 		 */
 		public function fields() {
 
-			$this->fields[] = "uuid";
+			$this->fields[] = "xml_cdr_uuid";
 			$this->fields[] = "domain_uuid";
 			$this->fields[] = "extension_uuid";
 			$this->fields[] = "domain_name";
@@ -248,9 +248,9 @@ if (!class_exists('xml_cdr')) {
 					//Check in the database
 						$database = new database;
 						$database->table = "v_xml_cdr";
-						$where[1]["name"] = "uuid";
+						$where[1]["name"] = "xml_cdr_uuid";
 						$where[1]["operator"] = "=";
-						$where[1]["value"] = "$uuid";
+						$where[1]["value"] = $uuid;
 						$database->where = $where;
 						$result = $database->count();
 						if ($result > 0) {
@@ -292,13 +292,15 @@ if (!class_exists('xml_cdr')) {
 						foreach ($xml->callflow as $row) {
 							$caller_id_number = urldecode($row->caller_profile->caller_id_number);
 						}
-						if (strlen($caller_id_name) == 0) foreach ($xml->callflow as $row) {
-							$caller_id_name = urldecode($row->caller_profile->caller_id_name);
+						if (strlen($caller_id_name) == 0) {
+							foreach ($xml->callflow as $row) {
+								$caller_id_name = urldecode($row->caller_profile->caller_id_name);
+							}
 						}
 
 					//misc
 						$uuid = check_str(urldecode($xml->variables->uuid));
-						$this->array[$key]['uuid'] = $uuid;
+						$this->array[$key]['xml_cdr_uuid'] = $uuid;
 						$this->array[$key]['destination_number'] = check_str($destination_number);
 						$this->array[$key]['source_number'] = check_str(urldecode($xml->variables->effective_caller_id_number));
 						$this->array[$key]['user_context'] = check_str(urldecode($xml->variables->user_context));
@@ -968,34 +970,16 @@ if (!class_exists('xml_cdr')) {
 
 				$sql .= "COUNT(*) \n";
 				$sql .= "FILTER ( \n";
-				$sql .= " WHERE (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
-				$sql .= "   OR \n";
-				$sql .= "   c.destination_number = e.extension) \n";
-				$sql .= "  OR ( \n";
-				$sql .= "   e.number_alias IS NOT NULL \n";
-				$sql .= "   AND ( \n";
-				$sql .= "    c.caller_id_number = e.number_alias \n";
-				$sql .= "    OR \n";
-				$sql .= "    c.destination_number = e.number_alias))) \n";
-				$sql .= " AND \n";
-				$sql .= " c.direction = 'outbound') \n";
+				$sql .= " WHERE c.extension_uuid = e.extension_uuid \n";
+				$sql .= " AND c.direction = 'outbound' \n";
+				$sql .= ") \n";
 				$sql .= "AS outbound_calls, \n";
 
 				$sql .= "SUM(c.billsec) \n";
 				$sql .= "FILTER ( \n";
-				$sql .= " WHERE (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
-				$sql .= "   OR \n";
-				$sql .= "   c.destination_number = e.extension) \n";
-				$sql .= "  OR ( \n";
-				$sql .= "   e.number_alias IS NOT NULL \n";
-				$sql .= "   AND ( \n";
-				$sql .= "    c.caller_id_number = e.number_alias \n";
-				$sql .= "    OR \n";
-				$sql .= "    c.destination_number = e.number_alias))) \n";
-				$sql .= " AND ( \n";
-				$sql .= " c.direction = 'outbound')) \n";
+				$sql .= " WHERE c.extension_uuid = e.extension_uuid \n";
+				$sql .= " AND c.direction = 'outbound' \n";
+				$sql .= ") \n";
 				$sql .= "AS outbound_duration, \n";
 
 				$sql .= "e.description \n";
@@ -1003,6 +987,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "FROM v_extensions AS e, v_domains AS d, \n";
 				$sql .= "( SELECT \n";
 				$sql .= " domain_uuid, \n";
+				$sql .= " extension_uuid, \n";
 				$sql .= " caller_id_number, \n";
 				$sql .= " destination_number, \n";
 				$sql .= " answer_stamp, \n";
@@ -1023,7 +1008,6 @@ if (!class_exists('xml_cdr')) {
 				}
 				$sql .= "GROUP BY e.extension, e.domain_uuid, d.domain_uuid, e.number_alias, e.description \n";
 				$sql .= "ORDER BY extension ASC \n";
-
 				$prep_statement = $this->db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$summary = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -1045,7 +1029,7 @@ if (!class_exists('xml_cdr')) {
 					$uuid = check_str($_GET['id']);
 					if ($uuid != '') {
 						$sql = "select record_name, record_path from v_xml_cdr ";
-						$sql .= "where uuid = '".$uuid."' ";
+						$sql .= "where xml_cdr_uuid = '".$uuid."' ";
 						//$sql .= "and domain_uuid = '".$domain_uuid."' \n";
 						$prep_statement = $this->db->prepare($sql);
 						$prep_statement->execute();

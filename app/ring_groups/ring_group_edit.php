@@ -97,7 +97,7 @@
 			$ring_group_name = check_str($_POST["ring_group_name"]);
 			$ring_group_extension = check_str($_POST["ring_group_extension"]);
 			$ring_group_greeting = check_str($_POST["ring_group_greeting"]);
-			$ring_group_context = check_str($_POST["ring_group_context"]);
+
 			$ring_group_strategy = check_str($_POST["ring_group_strategy"]);
 			$ring_group_timeout_action = check_str($_POST["ring_group_timeout_action"]);
 			$ring_group_call_timeout = check_str($_POST["ring_group_call_timeout"]);
@@ -112,6 +112,7 @@
 			$ring_group_forward_enabled = check_str($_POST["ring_group_forward_enabled"]);
 			$ring_group_forward_destination = check_str($_POST["ring_group_forward_destination"]);
 			$ring_group_forward_toll_allow = check_str($_POST["ring_group_forward_toll_allow"]);
+			$ring_group_context = check_str($_POST["ring_group_context"]);
 			$ring_group_enabled = check_str($_POST["ring_group_enabled"]);
 			$ring_group_description = check_str($_POST["ring_group_description"]);
 			$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
@@ -125,7 +126,7 @@
 			$destination_prompt = check_str($_POST["destination_prompt"]);
 
 		//set the context for users that are not in the superadmin group
-			if (!if_group("superadmin")) {
+			if (!permission_exists("ring_group_context")) {
 				$ring_group_context = $_SESSION['domain_name'];
 			}
 	}
@@ -284,10 +285,11 @@
 
 				//build the xml dialplan
 					$dialplan_xml = "<extension name=\"ring group\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
-					$dialplan_xml .= "<condition field=\"destination_number\" expression=\"^".$ring_group_extension."$\">\n";
-					$dialplan_xml .= "<action application=\"set\" data=\"ring_group_uuid=".$ring_group_uuid."\"/>\n";
-					$dialplan_xml .= "<action application=\"lua\" data=\"app.lua ring_groups\"/>\n";
-					$dialplan_xml .= "</condition>\n";
+					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$ring_group_extension."$\">\n";
+					$dialplan_xml .= "		<action application=\"ring_ready\" data=\"\"/>\n";
+					$dialplan_xml .= "		<action application=\"set\" data=\"ring_group_uuid=".$ring_group_uuid."\"/>\n";
+					$dialplan_xml .= "		<action application=\"lua\" data=\"app.lua ring_groups\"/>\n";
+					$dialplan_xml .= "	</condition>\n";
 					$dialplan_xml .= "</extension>\n";
 
 				//build the dialplan array
@@ -455,7 +457,7 @@
 //set defaults
 	if (strlen($ring_group_enabled) == 0) { $ring_group_enabled = 'true'; }
 
-//set the context for users that are not in the superadmin group
+//set the default ring group context
 	if (strlen($ring_group_context) == 0) {
 		$ring_group_context = $_SESSION['domain_name'];
 	}
@@ -846,7 +848,7 @@
 		echo "</tr>\n";
 	}
 	
-	if (if_group("superadmin")) {
+	if (permission_exists("ring_group_context")) {
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-context']."\n";

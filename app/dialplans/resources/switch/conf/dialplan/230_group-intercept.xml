@@ -8,7 +8,7 @@
 		</condition>
 		<condition>
 			<action application="answer"/>
-			<action application="lua" data="intercept_group.lua"/>
+			<action application="lua" data="intercept_group.lua inbound"/>
 		</condition>
 	</extension>
 </context>

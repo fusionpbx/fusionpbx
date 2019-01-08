@@ -23,23 +23,23 @@
 
 <!--  Account Name -->
 <!--  String -->
-<P270>{$display_name_1}</P270>
+<P270>{$account.1.display_name}</P270>
 
 <!--  SIP Server -->
 <!--  String -->
-<P47>{$server_address_1}</P47>
+<P47>{$account.1.server_address}</P47>
 
 <!--  Secondary SIP Server -->
 <!--  String -->
-<P2312>{$secondary_server_address_1}</P2312>
+<P2312>{$account.1.server_address_secondary}</P2312>
 
 <!--  Outbound Proxy -->
 <!--  String -->
-<P48>{$outbound_proxy_primary}</P48>
+<P48>{$account.1.outbound_proxy_primary}</P48>
 
 <!--  Backup Outbound Proxy -->
 <!--  String -->
-<P2333>{$outbound_proxy_secondary}</P2333>
+<P2333>{$account.1.outbound_proxy_secondary}</P2333>
 
 <!--  BLF Server -->
 <!--  String -->
@@ -47,23 +47,28 @@
 
 <!--  SIP User ID -->
 <!--  String -->
-<P35>{$user_id_1}</P35>
+<P35>{$account.1.user_id}</P35>
 
 <!--  Authenticate ID -->
 <!--  String -->
-<P36>{$auth_id_1}</P36>
+<P36>{$account.1.auth_id}</P36>
 
 <!--  Authenticate Password -->
 <!--  String -->
-<P34>{$user_password_1}</P34>
+<P34>{$account.1.password}</P34>
 
 <!--  Name -->
 <!--  String -->
-<P3>{$display_name_1}</P3>
+<P3>{$account.1.display_name}</P3>
 
 <!--  Voice Mail UserID -->
 <!--  String -->
 <P33>*97</P33>
+
+<!-- Account Display -->
+<!-- 0 - Display User Name -->
+<!-- 1 - Display User ID -->
+<P2380>0</P2380>
 
 <!-- ############################################################### -->
 <!-- # Account 1/Network Settings -->
@@ -121,7 +126,7 @@
 
 <!-- # Register Expiration (in minutes). Default is 60. Max about 45 days -->
 <!-- # Number: 1 - 64800 -->
-<P32>{$register_expires_1}</P32>
+<P32>{$account.1.register_expires}</P32>
 
 <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
 <!-- # Number: 1 - 64800 -->
@@ -164,10 +169,10 @@
 <!-- # SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS/TCP. Default is 0 -->
 <!-- # Number: 0, 1, 2 -->
 {$tp=0}
-{if $sip_transport_1 == 'udp'}{$tp=0}{/if}
-{if $sip_transport_1 == 'tcp'}{$tp=1}{/if}
-{if $sip_transport_1 == 'tls'}{$tp=2}{/if}
-{if $sip_transport_1 == 'dns srv'}{$tp=1}{/if}
+{if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.1.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.1.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.1.sip_transport == 'dns srv'}{$tp=1}{/if}
 <P130>{$tp}</P130>
 
 <!-- # SIP Listening Mode.  -->
@@ -560,7 +565,12 @@
 
 <!-- # Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
 <!-- # String -->
+	
+{if isset($grandstream_dial_plan) }
 <P290>{$grandstream_dial_plan}</P290>
+{else}
+<P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P290>
+{/if}
 
 <!-- # Call Log. 0 - Log All Calls, 1 - Log Incoming/Outgoing only (missed calls NOT recorded), 2 - Disable Call Log. Default is 0 -->
 <!-- # Number: 0, 1, 2 -->
@@ -736,7 +746,7 @@
 <!-- ############################################################### -->
 <!-- # Account Active. 0 - No, 1 - Yes. Default is 1 -->
 <!-- # Number: 0, 1 -->
-{if isset($user_password_2)}
+{if isset($account.2.password)}
 <P401>1</P401>
 {else}
 <P401>0</P401>
@@ -744,11 +754,11 @@
 
 <!-- # Account Name -->
 <!-- # String -->
-<P417>{$display_name_2}</P417>
+<P417>{$account.2.display_name}</P417>
 
 <!-- # SIP Server -->
 <!-- # String -->
-<P402>{$server_address_2}</P402>
+<P402>{$account.2.server_address}</P402>
 
 <!-- # Secondary SIP Server -->
 <!-- # String -->
@@ -756,7 +766,7 @@
 
 <!-- # Outbound Proxy -->
 <!-- # String -->
-<P403>{$outbound_proxy_2}</P403>
+<P403>{$account.2.outbound_proxy}</P403>
 
 <!-- # Backup Outbound Proxy -->
 <!-- # String -->
@@ -768,19 +778,19 @@
 
 <!-- # SIP User ID -->
 <!-- # String -->
-<P404>{$user_id_2}</P404>
+<P404>{$account.2.user_id}</P404>
 
 <!-- # Authenticate ID -->
 <!-- # String -->
-<P405>{$auth_id_2}</P405>
+<P405>{$account.2.auth_id}</P405>
 
 <!-- # Authenticate password -->
 <!-- # String -->
-<P406>{$user_password_2}</P406>
+<P406>{$account.2.password}</P406>
 
 <!-- # Name -->
 <!-- # String -->
-<P407>{$display_name_2}</P407>
+<P407>{$account.2.display_name}</P407>
 
 <!-- # Voice Mail UserID -->
 <!-- # String -->
@@ -841,7 +851,7 @@
 
 <!-- # Register Expiration (in minutes). Default is 60. Max is 45 days -->
 <!-- # Number: 1 - 64800 -->
-<P412>{$register_expires_2}</P412>
+<P412>{$account.2.register_expires}</P412>
 
 <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
 <!-- # Number: 1 - 64800 -->
@@ -884,10 +894,10 @@
 <!-- # SIP Transport. 0 - UDP, 1 - TCP, 2 - TCP/TLS. Default is 0 -->
 <!-- # Number: 0, 1, 2 -->
 {$tp=0}
-{if $sip_transport_2 == 'udp'}{$tp=0}{/if}
-{if $sip_transport_2 == 'tcp'}{$tp=1}{/if}
-{if $sip_transport_2 == 'tls'}{$tp=2}{/if}
-{if $sip_transport_2 == 'dns srv'}{$tp=1}{/if}
+{if $account.2.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.2.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.2.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.2.sip_transport == 'dns srv'}{$tp=1}{/if}
 <P448>{$tp}</P448>
 
 <!-- # SIP Listening Mode.  -->
@@ -1453,7 +1463,7 @@
 <!-- ############################################################### -->
 <!-- # Account Active. 0 - No, 1 - Yes. Default is 1 -->
 <!-- # Number: 0, 1 -->
-{if isset($user_password_3)}
+{if isset($account.3.password)}
 <P501>1</P501>
 {else}
 <P501>0</P501>
@@ -1461,11 +1471,11 @@
 
 <!-- # Account Name -->
 <!-- # String -->
-<P517>{$display_name_3}</P517>
+<P517>{$account.3.display_name}</P517>
 
 <!-- # SIP Server -->
 <!-- # String -->
-<P502>{$server_address_3}</P502>
+<P502>{$account.3.server_address}</P502>
 
 <!-- # Secondary SIP Server -->
 <!-- # String -->
@@ -1473,7 +1483,7 @@
 
 <!-- # Outbound Proxy -->
 <!-- # String -->
-<P503>{$outbound_proxy_3}</P503>
+<P503>{$account.3.outbound_proxy}</P503>
 
 <!-- # Backup Outbound Proxy -->
 <!-- # String -->
@@ -1485,19 +1495,19 @@
 
 <!-- # SIP User ID -->
 <!-- # String -->
-<P504>{$user_id_3}</P504>
+<P504>{$account.3.user_id}</P504>
 
 <!-- # Authenticate ID -->
 <!-- # String -->
-<P505>{$auth_id_3}</P505>
+<P505>{$account.3.auth_id}</P505>
 
 <!-- # Authenticate Password -->
 <!-- # String -->
-<P506>{$user_password_3}</P506>
+<P506>{$account.3.password}</P506>
 
 <!-- # Name -->
 <!-- # String -->
-<P507>{$display_name_3}</P507>
+<P507>{$account.3.display_name}</P507>
 
 <!-- 	 -->
 <!-- # Voice Mail UserID -->
@@ -1560,7 +1570,7 @@
 
 <!-- # Register Expiration (in minutes). Default is 60. Max is 45 days -->
 <!-- # Number: 1 - 64800 -->
-<P512>{$register_expires_3}</P512>
+<P512>{$account.3.register_expires}</P512>
 
 <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
 <!-- # Number: 1 - 64800 -->
@@ -1603,10 +1613,10 @@
 <!-- # SIP Transport. 0 - UDP, 1 - TCP. 2- TCP/TLS. Default is 0 -->
 <!-- # Number: 0, 1, 2 -->
 {$tp=0}
-{if $sip_transport_3 == 'udp'}{$tp=0}{/if}
-{if $sip_transport_3 == 'tcp'}{$tp=1}{/if}
-{if $sip_transport_3 == 'tls'}{$tp=2}{/if}
-{if $sip_transport_3 == 'dns srv'}{$tp=1}{/if}
+{if $account.3.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.3.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.3.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.3.sip_transport == 'dns srv'}{$tp=1}{/if}
 <P548>{$tp}</P548>
 
 <!-- # SIP Listening Mode.  -->
@@ -2169,7 +2179,7 @@
 <!-- ########################################## -->
 <!-- # Account Active. 0 - No, 1 - Yes. Default is 1 -->
 <!-- # Number: 0, 1 -->
-{if isset($user_password_4)}
+{if isset($account.4.password)}
 <P601>1</P601>
 {else}
 <P601>0</P601>
@@ -2177,11 +2187,11 @@
 
 <!-- # Account Name -->
 <!-- # String -->
-<P617>{$display_name_4}</P617>
+<P617>{$account.4.display_name}</P617>
 
 <!-- # SIP Server -->
 <!-- # String -->
-<P602>{$server_address_4}</P602>
+<P602>{$account.4.server_address}</P602>
 
 <!-- # Secondary SIP Server -->
 <!-- # String -->
@@ -2189,7 +2199,7 @@
 
 <!-- # Outbound Proxy -->
 <!-- # String -->
-<P603>{$outbound_proxy_4}</P603>
+<P603>{$account.4.outbound_proxy}</P603>
 
 <!-- # Backup Outbound Proxy -->
 <!-- # String -->
@@ -2201,19 +2211,19 @@
 
 <!-- # SIP User ID -->
 <!-- # String -->
-<P604>{$user_id_4}</P604>
+<P604>{$account.4.user_id}</P604>
 
 <!-- # Authenticate ID -->
 <!-- # String -->
-<P605>{$auth_id_4}</P605>
+<P605>{$account.4.auth_id}</P605>
 
 <!-- # Authenticate password -->
 <!-- # String -->
-<P606>{$user_password_4}</P606>
+<P606>{$account.4.password}</P606>
 
 <!-- # Name -->
 <!-- # String -->
-<P607>{$display_name_4}</P607>
+<P607>{$account.4.display_name}</P607>
 
 <!-- # Voice Mail UserID -->
 <!-- # String -->
@@ -2275,7 +2285,7 @@
 
 <!-- # Register Expiration (in minutes). Default is 60. Max is 45 days -->
 <!-- # Number: 1 - 64800 -->
-<P612>{$register_expires_4}</P612>
+<P612>{$account.4.register_expires}</P612>
 
 <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
 <!-- # Number: 1 - 64800 -->
@@ -2318,10 +2328,10 @@
 <!-- # SIP Transport. 0 - UDP, 1 - TCP. 2 - TCP/TLS. Default is 0 -->
 <!-- # Number: 0, 1, 2 -->
 {$tp=0}
-{if $sip_transport_4 == 'udp'}{$tp=0}{/if}
-{if $sip_transport_4 == 'tcp'}{$tp=1}{/if}
-{if $sip_transport_4 == 'tls'}{$tp=2}{/if}
-{if $sip_transport_4 == 'dns srv'}{$tp=1}{/if}
+{if $account.4.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.4.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.4.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.4.sip_transport == 'dns srv'}{$tp=1}{/if}
 <P648>{$tp}</P648>
 
 <!-- # SIP Listening Mode.  -->
@@ -2886,7 +2896,7 @@
 <!-- ########################################## -->
 <!-- # Account Active. 0 - No, 1 - Yes. Default is 1 -->
 <!-- # Number: 0, 1 -->
-{if isset($user_password_5)}
+{if isset($account.5.password)}
 <P1701>1</P1701>
 {else}
 <P1701>0</P1701>
@@ -2894,11 +2904,11 @@
 
 <!-- # Account Name -->
 <!-- # String -->
-<P1717>{$display_name_5}</P1717>
+<P1717>{$account.5.display_name}</P1717>
 
 <!-- # SIP Server -->
 <!-- # String -->
-<P1702>{$server_address_5}</P1702>
+<P1702>{$account.5.server_address}</P1702>
 
 <!-- # Secondary SIP Server -->
 <!-- # String -->
@@ -2906,7 +2916,7 @@
 
 <!-- # Outbound Proxy -->
 <!-- # String -->
-<P1703>{$outbound_proxy_5}</P1703>
+<P1703>{$account.5.outbound_proxy}</P1703>
 
 <!-- # Backup Outbound Proxy -->
 <!-- # String -->
@@ -2918,19 +2928,19 @@
 
 <!-- # SIP User ID -->
 <!-- # String -->
-<P1704>{$user_id_5}</P1704>
+<P1704>{$account.5.user_id}</P1704>
 
 <!-- # Authenticate ID -->
 <!-- # String -->
-<P1705>{$auth_id_5}</P1705>
+<P1705>{$account.5.auth_id}</P1705>
 
 <!-- # Authenticate Password -->
 <!-- # String -->
-<P1706>{$user_password_5}</P1706>
+<P1706>{$account.5.password}</P1706>
 
 <!-- # Name -->
 <!-- # String -->
-<P1707>{$display_name_5}</P1707>
+<P1707>{$account.5.display_name}</P1707>
 
 <!-- # Voice Mail UserID -->
 <!-- # String -->
@@ -2992,7 +3002,7 @@
 
 <!-- # Register Expiration (in minutes. default 1 hour, max 45 days) -->
 <!-- # Number: 1-64800 -->
-<P1712>{$register_expires_5}</P1712>
+<P1712>{$account.5.register_expires}</P1712>
 
 <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
 <!-- # Number: 1 - 64800 -->
@@ -3035,10 +3045,10 @@
 <!-- # SIP Transport. 0 - UDP, 1 - TCP. 2 - TCP/TLS. Default is 0 -->
 <!-- # Number: 0, 1, 2 -->
 {$tp=0}
-{if $sip_transport_5 == 'udp'}{$tp=0}{/if}
-{if $sip_transport_5 == 'tcp'}{$tp=1}{/if}
-{if $sip_transport_5 == 'tls'}{$tp=2}{/if}
-{if $sip_transport_5 == 'dns srv'}{$tp=1}{/if}
+{if $account.5.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.5.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.5.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.5.sip_transport == 'dns srv'}{$tp=1}{/if}
 <P1748>{$tp}</P1748>
 
 <!-- # SIP Listening Mode.  -->
@@ -3601,7 +3611,7 @@
 <!-- ########################################## -->
 <!-- # Account Active. 0 - No, 1 - Yes. Default is 1 -->
 <!-- # Number: 0, 1 -->
-{if isset($user_password_6)}
+{if isset($account.6.password)}
 <P1801>1</P1801>
 {else}
 <P1801>0</P1801>
@@ -3609,11 +3619,11 @@
 
 <!-- # Account Name -->
 <!-- # String -->
-<P1817>{$display_name_6}</P1817>
+<P1817>{$account.6.display_name}</P1817>
 
 <!-- # SIP Server -->
 <!-- # String -->
-<P1802>{$server_address_6}</P1802>
+<P1802>{$account.6.server_address}</P1802>
 
 <!-- # Secondary SIP Server -->
 <!-- # String -->
@@ -3621,7 +3631,7 @@
 
 <!-- # Outbound Proxy -->
 <!-- # String -->
-<P1803>{$outbound_proxy_6}</P1803>
+<P1803>{$account.6.outbound_proxy}</P1803>
 
 <!-- # Backup Outbound Proxy -->
 <!-- # String -->
@@ -3633,15 +3643,15 @@
 
 <!-- # SIP User ID -->
 <!-- # String -->
-<P1804>{$user_id_6}</P1804>
+<P1804>{$account.6.user_id}</P1804>
 
 <!-- # Authenticate ID -->
 <!-- # String -->
-<P1805>{$auth_id_6}</P1805>
+<P1805>{$account.6.auth_id}</P1805>
 
 <!-- # Authenticate password -->
 <!-- # String -->
-<P1806>{$user_password_6}</P1806>
+<P1806>{$account.6.password}</P1806>
 
 <!-- # Display Name -->
 <!-- # String -->
@@ -3708,7 +3718,7 @@
 
 <!-- # Register Expiration (in minutes). Default is 60. Max is 45 days -->
 <!-- # Number: 1 - 64800 -->
-<P1812>{$register_expires_6}</P1812>
+<P1812>{$account.6.register_expires}</P1812>
 
 <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
 <!-- # Number: 1 - 64800 -->
@@ -3751,10 +3761,10 @@
 <!-- # SIP Transport. 0 - UDP, 1 - TCP, 2 - TCP/TLS. Default is 2 -->
 <!-- # Number: 0, 1, 2 -->
 {$tp=0}
-{if $sip_transport_6 == 'udp'}{$tp=0}{/if}
-{if $sip_transport_6 == 'tcp'}{$tp=1}{/if}
-{if $sip_transport_6 == 'tls'}{$tp=2}{/if}
-{if $sip_transport_6 == 'dns srv'}{$tp=1}{/if}
+{if $account.6.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.6.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.6.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.6.sip_transport == 'dns srv'}{$tp=1}{/if}
 <P1848>{$tp}</P1848>
 
 <!-- # SIP Listening Mode.  -->
@@ -4311,7 +4321,7 @@
 <P1870></P1870>
 
 <!-- ################################################################### -->
-<!-- ## Network/Basic Settings                                                   ## -->
+<!-- ## Network/Basic Settings ## -->
 <!-- ################################################################### -->
 <!-- # Internet Protocol. 0 - Both, prefer IPv4, 1 - Both, prefer IPv6, 2 - IPv4 Only, 3 - IPv6 Only Default is 0 -->
 <!-- # Number: 0, 1, 2, 3 -->
@@ -4326,7 +4336,7 @@
 <!-- ########################################## -->
 <!-- # Host name, DHCP option 12. Max length allowed is 64 characters -->
 <!-- # String -->
-<P146>phone-{$display_name_1}</P146>
+<P146>phone-{$account.1.display_name}</P146>
 <!-- Set to acct 1 display name for easier identification in dhcp logs for troubleshooting -->
 
 <!-- # Vendor Class ID, DHCP option 60. Max length allowed is 64 characters -->
@@ -4642,12 +4652,41 @@
 <P8395></P8395>
 
 <!-- ############################################################################## -->
+<!-- ## Network/SNMP Settings ## -->
+<!-- ############################################################################## -->
+<!-- # SNMP Enable. Default is 0 -->
+<!-- # No - 0  -->
+<!-- # Yes - 1  -->
+<P21896>0</P21896>
+
+<!-- # SNMP Trap Community -->
+<!-- # String  -->
+<P21900></P21900>
+
+<!-- # SNMP Trap IP -->
+<!-- # String  -->
+<P21897></P21897>
+
+<!-- # SNMP Trap Port -->
+<!-- # Number: 1025-65535. Default is 162  -->
+<P21898>162</P21898>
+
+<!-- # SNMP Trap Version. Default is 1 -->
+<!-- # v1 - 0  -->
+<!-- # v2 - 1  -->
+<P21900>1</P21900>
+
+<!-- # SNMP Trap Interval (in minutes) -->
+<!-- # Number: 1-1440. Default is 5  -->
+<P21901>5</P21901>
+
+<!-- ############################################################################## -->
 <!-- ##  Maintenance/ Web Access     ## -->
 <!-- ############################################################################## -->
 
 <!-- # End User Password -->
 <!-- # String: a-z, A-Z, 0-9 -->
-<P196>{$user_password}</P196>
+<P196>{$password}</P196>
 
 <!-- # Admin password for web interface -->
 <!-- # String: a-z, A-Z, 0-9 -->
@@ -4694,6 +4733,11 @@
 <!-- # Default is No -->
 <!-- # Number: 0, 1, 2, 3 -->
 <P194>1</P194>
+
+<!-- # Randomized Automatic Upgrade. Default is 0 -->
+<!-- # 0 - No,  -->
+<!-- # 1 - Yes -->
+<P8458>0</P8458>
 
 <!-- # Check for new firmware every () minutes. Default is 7 days. -->
 <!-- # Number: 60-86400 -->
@@ -4928,6 +4972,22 @@
 <!-- # Web/Keypad/Restrict mode Lockout Duration (0-60 minutes). Default is 5 -->
 <!-- # Number: 0-60 -->
 <P1683>5</P1683>
+
+<!-- # Web Session Timeout -->
+<!-- Number, value 2-60. Default is 10 -->
+<P28116>10</P28116>
+
+<!-- # Web Access Attempt Limit (Number failed passwords before account is locked) -->
+<!-- Number, value 1-10. Default is 5 -->
+<P28117>5</P28117>
+
+<!-- Enable User Web Access. 0 - Disabled, 1 - Enabled. Default is 1. -->
+<!-- # Number: 0, 1 -->
+<P8469>1</P8469>
+
+<!-- # Validate Server Certificates. 0 - Disabled, 1 - Enabled. Default is 0. -->
+<!-- # Number: 0, 1 -->
+<P8463>0</P8463>
 
 <!-- ############################################################################## -->
 <!-- ##  Maintenance/Security Settings/Trusted CA Certificates   ## -->
@@ -5187,6 +5247,14 @@
 <!-- # Delay Registration. Default is 0. -->
 <!-- # Number: 0 - 90 -->
 <P8359>0</P8359>
+
+<!-- # Test Password Strength. Default is 0 -->
+<!-- If yes, web password must contain 3 of the following 4 categories and have at least 9 characters: -->
+<!-- 1. Numberics (0-9), 2. Capital Letters (A-Z), 3. Lower Case Letters (a-z). 4. Special symbols (!,@,#,$,%,^,&,*,(,)) -->
+<!-- Disable - 0 -->
+<!-- Enable - 1 -->
+<P8468>0</P8468>
+
 
 <!-- ############################################################################## -->
 <!-- ##  Settings/Broadsoft -->
@@ -5661,21 +5729,21 @@
 
 <!-- # Disable Call Waiting. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
-{if isset{$grandstream_call_waiting}}
+{if isset($grandstream_call_waiting)}
 {if $grandstream_call_waiting == "1"}<P91>0</P91>{/if}
 {if $grandstream_call_waiting == "2"}<P91>1</P91>{/if}
 {/if}
 
 <!-- # Disable Call Waiting Tone. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
-{if isset{$grandstream_call_waiting}}
+{if isset($grandstream_call_waiting)}
 {if $grandstream_call_waiting == "1"}<P186>0</P186>{/if}
 {if $grandstream_call_waiting == "2"}<P186>1</P186>{/if}
 {/if}
 
 <!-- # Ring for Call Waiting. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
-{if isset{$grandstream_call_waiting}}
+{if isset($grandstream_call_waiting)}
 {if $grandstream_call_waiting == "1"}<P22102>0</P22102>{/if}
 {if $grandstream_call_waiting == "2"}<P22102>1</P22102>{/if}
 {/if}
@@ -5704,6 +5772,14 @@
 <!-- # Number: 0, 1 -->
 <P1339>0</P1339>
 
+<!-- # Enable Active VPK. - 0 No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P22134>0</P22134>
+
+<!-- # Enable DND Feature. 0 - No, 1 - Yes. Default is 1. -->
+<!-- # Number: 0, 1 -->
+<P8446>1</P8446>
+
 <!-- # Mute Key Functions While Idle. 0 - DND, 1 - Idle Mute, 2 - Disabled. Default is 0 -->
 <!-- # Number: 0,1,2 -->
 <P1565>0</P1565>
@@ -5722,7 +5798,7 @@
 
 <!-- # Attended Transfer Mode. 0 - Static, 1 - Dynamic. Default is 0 -->
 <!-- # Number: 0, 1 -->
-{if isset($grandstream_auto_attended_transfer) }
+{if isset($grandstream_auto_attended_transfer)}
 <P1376>{$grandstream_auto_attended_transfer}</P1376>
 {else}
 <P1376>1</P1376>
@@ -5812,6 +5888,9 @@
 <!-- # Enable Call Completion Service. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <P8391>0</P8391>
+
+<!-- # Enable Incoming Call Popup. 0 - No, 1 - Yes. Default is 1 -->
+<P8401>1</P8401>
 
 <!-- ############################################################################## -->
 <!-- ##  Settings/Call History -->
@@ -6188,13 +6267,12 @@
 <P335>60</P335>
 
 <!-- # Active Backlight Timeout. Default is 1 -->
-<!-- # Number: 1 - 90 -->
+<!-- # Number: 0 (Always On), 1 - 90 (in minutes) -->
 <P8356>1</P8356>
 
 <!-- # Disable Missed Call Backlight. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <P351>0</P351>
-
 
 <!-- # Wallpaper Settings -->
 <!-- # Wallpaper Source. 0 - Default, 1 - Download, 2-USB(for GXP2140/2160/2170 only), 3 - Uploaded, 4 - Color Background -->

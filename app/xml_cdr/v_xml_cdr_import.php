@@ -26,7 +26,7 @@
 */
 
 //check the permission
-	if(defined('STDIN')) {
+	if (defined('STDIN')) {
 		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
 		preg_match("/^(.*)\/app\/.*$/", $document_root, $matches);
 		$document_root = $matches[1];
@@ -42,7 +42,7 @@
 
 //set debug
 	$debug = false; //true //false
-	if($debug){
+	if ($debug){
 		$time5 = microtime(true);
 		$insert_time=$insert_count=0;
 	}
@@ -135,7 +135,7 @@
 			$database->fields['caller_destination'] = check_str(urldecode($xml->variables->caller_destination));
 		//misc
 			$uuid = check_str(urldecode($xml->variables->uuid));
-			$database->fields['uuid'] = $uuid;
+			$database->fields['xml_cdr_uuid'] = $uuid;
 			$database->fields['accountcode'] = check_str(urldecode($xml->variables->accountcode));
 			$database->fields['default_language'] = check_str(urldecode($xml->variables->default_language));
 			$database->fields['bridge_uuid'] = check_str(urldecode($xml->variables->bridge_uuid));
@@ -191,6 +191,10 @@
 				$database->fields['rtp_audio_in_mos'] = $rtp_audio_in_mos;
 			}
 
+		//get the caller details
+			$database->fields['caller_id_name'] = urldecode($xml->variables->effective_caller_id_name);
+			$database->fields['caller_id_number'] = urldecode($xml->variables->effective_caller_id_number);
+
 		//get the values from the callflow.
 			$x = 0;
 			foreach ($xml->callflow as $row) {
@@ -200,8 +204,12 @@
 					$database->fields['context'] = $context;
 					$database->fields['network_addr'] = check_str(urldecode($row->caller_profile->network_addr));
 				}
-				$database->fields['caller_id_name'] = check_str(urldecode($row->caller_profile->caller_id_name));
-				$database->fields['caller_id_number'] = check_str(urldecode($row->caller_profile->caller_id_number));
+				if (strlen($database->fields['caller_id_name']) == 0) {
+					$database->fields['caller_id_name'] = check_str(urldecode($row->caller_profile->caller_id_name));
+				}
+				if (strlen($database->fields['caller_id_number']) == 0) {
+					$database->fields['caller_id_number'] = check_str(urldecode($row->caller_profile->caller_id_number));
+				}
 				$x++;
 			}
 			unset($x);
@@ -304,7 +312,7 @@
 				$record_name = urldecode($xml->variables->record_name);
 				$record_length = urldecode($xml->variables->record_seconds);
 			}
-			elseif (strlen($record_path) == 0 and urldecode($xml->variables->last_app) == "record_session") {
+			elseif (!isset($record_path) && urldecode($xml->variables->last_app) == "record_session") {
 				$record_path = dirname(urldecode($xml->variables->last_arg));
 				$record_name = basename(urldecode($xml->variables->last_arg));
 				$record_length = urldecode($xml->variables->record_seconds);

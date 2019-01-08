@@ -5,6 +5,7 @@
 		<condition field="destination_number" expression="^${caller_id_number}$">
 			<action application="answer"/>
 			<action application="sleep" data="1000"/>
+			<action application="set" data="record_append=false"/>
 			<action application="set" data="voicemail_action=check"/>
 			<action application="set" data="voicemail_id=${caller_id_number}"/>
 			<action application="set" data="voicemail_profile=default"/>

@@ -87,5 +87,21 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = " Transfer method: Blind, Consultative";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b327130c-3e82-465a-9db2-f8f5cf801861";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_provision_url";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Provision URL";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3b52eaf2-4cf3-4c17-8802-34ef8e412e25";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_server_type";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0=FTP, 1=TFTP, 2=HTTP,3=HTTPS, 4=FTPS, 5=Invalid";
+		$y++;
 
 ?>

@@ -56,7 +56,11 @@
 		<!--<param name="aggressive-nat-detection" value="true"/>-->
 		<param name="inbound-codec-negotiation" value="generous"/>
 		<param name="nonce-ttl" value="60"/>
-		<param name="auth-calls" value="false"/>
+		<param name="auth-calls" value="true"/>
+		<param name="auth-subscriptions" value="true"/>
+		<!-- on authed calls, authenticate *all* the packets not just invite -->
+		<param name="auth-all-packets" value="false"/>
+
 		<!-- ip address to use for rtp, DO NOT USE HOSTNAMES ONLY IP ADDRESSES -->
 		<param name="rtp-ip" value="$${local_ip_v6}"/>
 		<!-- ip address to bind to, DO NOT USE HOSTNAMES ONLY IP ADDRESSES -->

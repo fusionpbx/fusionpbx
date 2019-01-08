@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,7 +29,7 @@
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
-//ehceck permissions 
+//check permissions 
 	if (permission_exists('xml_cdr_view')) {
 		//access granted
 	}
@@ -43,16 +43,16 @@
 	$text = $language->get();
 
 //get the http values and set them to a variable
-	if (strlen($_REQUEST["uuid"]) > 0) {
-		$uuid = trim($_REQUEST["uuid"]);
+	if (strlen($_REQUEST["id"]) > 0) {
+		$uuid = trim($_REQUEST["id"]);
 	}
 
 //get the cdr string from the database
 	$sql = "select * from v_xml_cdr ";
 	if (permission_exists('xml_cdr_all')) {
-		$sql .= "where uuid  = '$uuid' ";
+		$sql .= "where xml_cdr_uuid  = '$uuid' ";
 	} else {
-		$sql .= "where uuid  = '$uuid' and domain_uuid  = '$domain_uuid' ";
+		$sql .= "where xml_cdr_uuid  = '$uuid' and domain_uuid  = '$domain_uuid' ";
 	}
 	$row = $db->query($sql)->fetch();
 	$start_stamp = trim($row["start_stamp"]);
@@ -122,7 +122,7 @@
 
 //detail summary
 	//get the variables
-		$uuid = check_str(urldecode($array["variables"]["uuid"]));
+		$xml_cdr_uuid = check_str(urldecode($array["variables"]["uuid"]));
 		$direction = check_str(urldecode($array["channel_data"]["direction"]));
 		$language = check_str(urldecode($array["variables"]["language"]));
 		$start_epoch = check_str(urldecode($array["variables"]["start_epoch"]));
@@ -192,7 +192,7 @@
 	echo "</tr>\n";
 
 	echo "<tr >\n";
-	echo "	<td valign='top' class='".$row_style[$c]."'><a href='xml_cdr_details.php?uuid=".$uuid."'>".$direction."</a></td>\n";
+	echo "	<td valign='top' class='".$row_style[$c]."'><a href='xml_cdr_details.php?id=".$uuid."'>".$direction."</a></td>\n";
 	//echo "	<td valign='top' class='".$row_style[$c]."'>".$language."</td>\n";
 	//echo "	<td valign='top' class='".$row_style[$c]."'>".$context."</td>\n";
 	echo "	<td valign='top' class='".$row_style[$c]."'>";
@@ -278,7 +278,7 @@
 			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".$key."</td>\n";
 			if ($key == "bridge_uuid" || $key == "signal_bond") {
 				echo "	<td valign='top' align='left' class='".$row_style[$c]."'>\n";
-				echo "		<a href='xml_cdr_details.php?uuid=$value'>".$value."</a>&nbsp;\n";
+				echo "		<a href='xml_cdr_details.php?id=$value'>".$value."</a>&nbsp;\n";
 				$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
 				$tmp_name = '';
 				if (file_exists($tmp_dir.'/'.$value.'.wav')) {
@@ -469,7 +469,7 @@
 							echo "					<td valign='top' align='left' class='".$row_style[$c]."'>".wordwrap($value,75,"<br />\n", TRUE)."&nbsp;</td>\n";
 						}
 						else {
-							echo "					<td valign='top' align='left' class='".$row_style[$c]."'><a href='xml_cdr_details.php?uuid=$value'>".$value."</a>&nbsp;</td>\n";
+							echo "					<td valign='top' align='left' class='".$row_style[$c]."'><a href='xml_cdr_details.php?id=$value'>".$value."</a>&nbsp;</td>\n";
 						}
 						echo "				</tr>\n";
 					}

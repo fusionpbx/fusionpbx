@@ -121,13 +121,13 @@
 		sql = sql .."domain_uuid, ";
 		sql = sql .."message_uuid, ";
 		sql = sql .."user_uuid, ";
-		if (contact_uuid ~= null) then
+		if (contact_uuid ~= null and string.len(contact_uuid) > 0) then
 			sql = sql .."contact_uuid, ";
 		end
 		sql = sql .."message_direction, ";
 		sql = sql .."message_date, ";
 		sql = sql .."message_type, ";
-		if (message_from ~= null) then
+		if (message_from ~= null and string.len(message_from) > 0) then
 			sql = sql .."message_from, ";
 		end
 		sql = sql .."message_to, ";
@@ -137,13 +137,13 @@
 		sql = sql ..":domain_uuid, ";
 		sql = sql ..":message_uuid, ";
 		sql = sql ..":user_uuid, ";
-		if (contact_uuid ~= null) then
+		if (contact_uuid ~= null and string.len(contact_uuid) > 0) then
 			sql = sql ..":contact_uuid, ";
 		end
 		sql = sql ..":message_direction, ";
 		sql = sql .."now(), ";
 		sql = sql ..":message_type, ";
-		if (message_from ~= null) then
+		if (message_from ~= null and string.len(message_from) > 0) then
 			sql = sql ..":message_from, ";
 		end
 		sql = sql ..":message_to, ";
@@ -155,7 +155,7 @@
 		params['domain_uuid'] = domain_uuid;
 		params['message_uuid'] = message_uuid;
 		params['user_uuid'] = user_uuid;
-		if (contact_uuid ~= null) then
+		if (contact_uuid ~= null and string.len(contact_uuid) > 0) then
 			params['contact_uuid'] = contact_uuid;
 		end
 		params['message_direction'] = message_direction;
@@ -181,13 +181,13 @@
 		sql = sql .."domain_uuid, ";
 		sql = sql .."message_uuid, ";
 		sql = sql .."user_uuid, ";
-		if (contact_uuid ~= null) then
+		if (contact_uuid ~= null and string.len(contact_uuid) > 0) then
 			sql = sql .."contact_uuid, ";
 		end
 		sql = sql .."message_direction, ";
 		sql = sql .."message_date, ";
 		sql = sql .."message_type, ";
-		if (message_from ~= null) then
+		if (message_from ~= null and string.len(message_from) > 0) then
 			sql = sql .."message_from, ";
 		end
 		sql = sql .."message_to, ";
@@ -197,13 +197,13 @@
 		sql = sql ..":domain_uuid, ";
 		sql = sql ..":message_uuid, ";
 		sql = sql ..":user_uuid, ";
-		if (contact_uuid ~= null) then
+		if (contact_uuid ~= null and string.len(contact_uuid) > 0) then
 			sql = sql ..":contact_uuid, ";
 		end
 		sql = sql ..":message_direction, ";
 		sql = sql .."now(), ";
 		sql = sql ..":message_type, ";
-		if (message_from ~= null) then
+		if (message_from ~= null and string.len(message_from) > 0) then
 			sql = sql ..":message_from, ";
 		end
 		sql = sql ..":message_to, ";
@@ -233,7 +233,7 @@
 		params['domain_uuid'] = domain_uuid;
 		params['message_uuid'] = message_uuid;
 		params['user_uuid'] = user_uuid;
-		if (contact_uuid ~= null) then
+		if (contact_uuid ~= null and string.len(message_from) > 0) then
 			params['contact_uuid'] = contact_uuid;
 		end
 		params['message_direction'] = message_direction;

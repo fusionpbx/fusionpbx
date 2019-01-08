@@ -63,6 +63,7 @@
 		$device_key_value = check_str($_POST["device_key_value"]);
 		$device_key_extension = check_str($_POST["device_key_extension"]);
 		$device_key_label = check_str($_POST["device_key_label"]);
+                $device_key_icon = check_str($_POST["device_key_icon"]);
 		
 		//$device_setting_category = check_str($_POST["device_setting_category"]);
 		$device_setting_subcategory = check_str($_POST["device_setting_subcategory"]);
@@ -142,7 +143,6 @@
 						//increment the row
 							$x++;
 					}
-
 
 				//prepare the array
 					$array['device_profiles'][] = $_POST;
@@ -242,6 +242,7 @@
 	$device_keys[$x]['device_key_extension'] = '';
 	$device_keys[$x]['device_key_protected'] = '';
 	$device_keys[$x]['device_key_label'] = '';
+        $device_keys[$x]['device_key_icon'] = '';
 
 //get the vendors
 	$sql = "SELECT * ";
@@ -368,6 +369,8 @@
 		}
 		echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
 		echo "				<td>&nbsp;</td>\n";
+                echo "				<td class='vtable'>".$text['label-device_key_icon']."</td>\n";
+		echo "				<td>&nbsp;</td>\n";
 		echo "			</tr>\n";
 	}
 
@@ -400,6 +403,7 @@
 					echo "				<td class='vtable'>".$text['label-device_key_protected']."</td>\n";
 				}
 				echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
+				echo "				<td class='vtable'>".$text['label-device_key_icon']."</td>\n";
 				echo "				<td>&nbsp;</td>\n";
 				echo "			</tr>\n";
 			}
@@ -415,6 +419,9 @@
 		//add the primary key uuid
 			if (strlen($row['device_key_uuid']) > 0) {
 				echo "	<input name='device_keys[".$x."][device_key_uuid]' type='hidden' value=\"".escape($row['device_key_uuid'])."\">\n";
+			}
+			else {
+				echo "	<input name='device_keys[".$x."][device_key_uuid]' type='hidden' value=\"".uuid()."\">\n";
 			}
 		//show all the rows in the array
 			echo "<tr>\n";
@@ -570,6 +577,10 @@
 
 			echo "<td class='' align='left'>\n";
 			echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_label]' style='width: 150px;' maxlength='255' value=\"".escape($row['device_key_label'])."\">\n";
+			echo "</td>\n";
+			
+			echo "<td class='' align='left'>\n";
+			echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_icon]' style='width: 150px;' maxlength='255' value=\"".escape($row['device_key_icon'])."\">\n";
 			echo "</td>\n";
 
 			echo "<td nowrap='nowrap'>\n";

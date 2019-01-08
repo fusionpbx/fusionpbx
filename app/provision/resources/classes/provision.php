@@ -617,6 +617,9 @@ include "root.php";
 							$templates['snom370-SIP'] = 'snom/370';
 							$templates['snom820-SIP'] = 'snom/820';
 							$templates['snom-m3-SIP'] = 'snom/m3';
+							
+							$templates['Fanvil X6'] = 'fanvil/x6';
+							$templates['Fanvil i30'] = 'fanvil/i30';
 
 							$templates['yealink SIP-CP860'] = 'yealink/cp860';
 #							$templates['yealink SIP-CP860'] = 'yealink/cp920';							
@@ -706,31 +709,38 @@ include "root.php";
 
 						//mac address does not exist in the table so add it
 							if ($_SESSION['provision']['auto_insert_enabled']['boolean'] == "true" and strlen($domain_uuid) > 0) {
+
+								//get a new primary key
 								$device_uuid = uuid();
-								$sql = "INSERT INTO v_devices ";
-								$sql .= "(";
-								$sql .= "domain_uuid, ";
-								$sql .= "device_uuid, ";
-								$sql .= "device_mac_address, ";
-								$sql .= "device_vendor, ";
-								$sql .= "device_model, ";
-								$sql .= "device_enabled, ";
-								$sql .= "device_template, ";
-								$sql .= "device_description ";
-								$sql .= ") ";
-								$sql .= "VALUES ";
-								$sql .= "(";
-								$sql .= "'".$domain_uuid."', ";
-								$sql .= "'$device_uuid', ";
-								$sql .= "'$mac', ";
-								$sql .= "'$device_vendor', ";
-								$sql .= "'', ";
-								$sql .= "'true', ";
-								$sql .= "'$device_template', ";
-								$sql .= "'auto {$_SERVER['HTTP_USER_AGENT']}' ";
-								$sql .= ")";
-								$this->db->exec(check_sql($sql));
-								unset($sql);
+
+								//prepare the array
+								$x = 0;
+								$array['devices'][$x]['domain_uuid'] = $domain_uuid;
+								$array['devices'][$x]['device_uuid'] = $device_uuid;
+								$array['devices'][$x]['device_mac_address'] = $mac;
+								$array['devices'][$x]['device_vendor'] = $device_vendor;
+								$array['devices'][$x]['device_enabled'] = 'true';
+								$array['devices'][$x]['device_template'] = $device_template;
+								$array['devices'][$x]['device_description'] = $_SERVER['HTTP_USER_AGENT'];
+
+								//add the dialplan permission
+								$p = new permissions;
+								$p->add("device_add", "temp");
+								$p->add("device_edit", "temp");
+
+								//save to the data
+								$database = new database;
+								$database->app_name = 'devices';
+								$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+								if (strlen($device_uuid) > 0) {
+									$database->uuid($device_uuid);
+								}
+								$database->save($array);
+								$message = $database->message;
+
+								//remove the temporary permission
+								$p->delete("device_add", "temp");
+								$p->delete("device_edit", "temp");
 							}
 					}
 				}
@@ -893,6 +903,7 @@ include "root.php";
 										$lines[$line_number]['auth_id'] = $row["auth_id"];
 										$lines[$line_number]['user_id'] = $row["user_id"];
 										$lines[$line_number]['password'] = $row["password"];
+										$lines[$line_number]['user_password'] = $row["password"];
 										$lines[$line_number]['shared_line'] = $row["shared_line"];
 
 									//assign the variables for line one - short name
@@ -929,9 +940,10 @@ include "root.php";
 							unset ($prep_statement);
 					}
 
-				//assign the lines and accounts array
+				//assign the arrays
 					$view->assign("lines", $lines);
 					$view->assign("account", $lines);
+					$view->assign("user", $lines);
 
 				//get the list of contact directly assigned to the user
 					if (strlen($device_user_uuid) > 0 and strlen($domain_uuid) > 0) {
@@ -1103,6 +1115,7 @@ include "root.php";
 										$device_keys[$k]['device_key_value'] = str_replace("\${".$name."}", $value, $field['device_key_value']);
 										$device_keys[$k]['device_key_extension'] = str_replace("\${".$name."}", $value, $field['device_key_extension']);
 										$device_keys[$k]['device_key_label'] = str_replace("\${".$name."}", $value, $field['device_key_label']);
+										$device_keys[$k]['device_key_icon'] = str_replace("\${".$name."}", $value, $field['device_key_icon']);										
 								}
 								else {
 									if (is_array($field)) {
@@ -1110,6 +1123,7 @@ include "root.php";
 											$device_keys[$k][$key]['device_key_value'] = str_replace("\${".$name."}", $value, $row['device_key_value']);
 											$device_keys[$k][$key]['device_key_extension'] = str_replace("\${".$name."}", $value, $row['device_key_extension']);
 											$device_keys[$k][$key]['device_key_label'] = str_replace("\${".$name."}", $value, $row['device_key_label']);
+											$device_keys[$k][$key]['device_key_icon'] = str_replace("\${".$name."}", $value, $row['device_key_icon']);											
 										}
 									}
 								}
@@ -1133,11 +1147,13 @@ include "root.php";
 									$device_key_value = $row['device_key_value']; //1
 									$device_key_extension = $row['device_key_extension'];
 									$device_key_label = $row['device_key_label']; //label
+									$device_key_icon = $row['device_key_icon']; //icon
 
 								//add general variables
 									$device_key_value = str_replace("\${domain_name}", $domain_name, $device_key_value);
 									$device_key_extension = str_replace("\${domain_name}", $domain_name, $device_key_extension);
 									$device_key_label = str_replace("\${domain_name}", $domain_name, $device_key_label);
+									$device_key_icon = str_replace("\${domain_name}", $domain_name, $device_key_icon);
 
 								//grandstream modes are different based on the category
 									if ($device_vendor == "grandstream") {
@@ -1187,6 +1203,7 @@ include "root.php";
 										$view->assign("key_value_".$device_key_id, $device_key_value);
 										$view->assign("key_extension_".$device_key_id, $device_key_extension);
 										$view->assign("key_label_".$device_key_id, $device_key_label);
+										$view->assign("key_icon_".$device_key_id, $device_key_icon);
 									}
 									else {
 										$view->assign($device_key_category."_key_id_".$device_key_id, $device_key_id);
@@ -1195,6 +1212,7 @@ include "root.php";
 										$view->assign($device_key_category."_key_value_".$device_key_id, $device_key_value);
 										$view->assign($device_key_category."_key_extension_".$device_key_id, $device_key_extension);
 										$view->assign($device_key_category."_key_label_".$device_key_id, $device_key_label);
+										$view->assign($device_key_category."_key_icon_".$device_key_id, $device_key_icon);
 									}
 							}
 						}

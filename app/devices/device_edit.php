@@ -177,6 +177,7 @@
 			$device_key_value = check_str($_POST["device_key_value"]);
 			$device_key_extension = check_str($_POST["device_key_extension"]);
 			$device_key_label = check_str($_POST["device_key_label"]);
+			$device_key_icon = check_str($_POST["device_key_icon"]);
 		//settings
 			//$device_setting_category = check_str($_POST["device_setting_category"]);
 			$device_setting_subcategory = check_str($_POST["device_setting_subcategory"]);
@@ -439,6 +440,7 @@
 	$device_keys[$x]['device_key_value'] = '';
 	$device_keys[$x]['device_key_extension'] = '';
 	$device_keys[$x]['device_key_label'] = '';
+	$device_keys[$x]['device_key_icon'] = '';
 
 //get the device vendors
 	$sql = "SELECT name ";
@@ -807,22 +809,24 @@
 		$template_dir = $device->get_template_dir();
 		echo "	<select id='device_template' name='device_template' class='formfld'>\n";
 		echo "		<option value=''></option>\n";
-		foreach($device_vendors as $row) {
-			echo "		<optgroup label='".escape($row["name"])."'>\n";
-			$templates = scandir($template_dir.'/'.$row["name"]);
-			foreach($templates as $dir) {
-				if ($file != "." && $dir != ".." && $dir[0] != '.') {
-					if (is_dir($template_dir . '/' . $row["name"] .'/'. $dir)) {
-						if ($device_template == $row["name"]."/".$dir) {
-							echo "			<option value='".escape($row["name"])."/".escape($dir)."' selected='selected'>".escape($row["name"])."/".escape($dir)."</option>\n";
-						}
-						else {
-							echo "			<option value='".escape($row["name"])."/".escape($dir)."'>".$row["name"]."/".escape($dir)."</option>\n";
+		if (is_dir($template_dir) && is_array($device_vendors)) {
+			foreach($device_vendors as $row) {
+				echo "		<optgroup label='".escape($row["name"])."'>\n";
+				$templates = scandir($template_dir.'/'.$row["name"]);
+				foreach($templates as $dir) {
+					if ($file != "." && $dir != ".." && $dir[0] != '.') {
+						if (is_dir($template_dir . '/' . $row["name"] .'/'. $dir)) {
+							if ($device_template == $row["name"]."/".$dir) {
+								echo "			<option value='".escape($row["name"])."/".escape($dir)."' selected='selected'>".escape($row["name"])."/".escape($dir)."</option>\n";
+							}
+							else {
+								echo "			<option value='".escape($row["name"])."/".escape($dir)."'>".$row["name"]."/".escape($dir)."</option>\n";
+							}
 						}
 					}
 				}
+				echo "		</optgroup>\n";
 			}
-			echo "		</optgroup>\n";
 		}
 		echo "	</select>\n";
 		echo "	<br />\n";
@@ -1125,6 +1129,7 @@
 				echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
 			}
 			echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
+			echo "				<td class='vtable'>".$text['label-device_key_icon']."</td>\n";
 			echo "				<td>&nbsp;</td>\n";
 			echo "			</tr>\n";
 		}
@@ -1147,6 +1152,7 @@
 						echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
 					}
 					echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
+					echo "				<td class='vtable'>".$text['label-device_key_icon']."</td>\n";
 					echo "				<td>&nbsp;</td>\n";
 					echo "			</tr>\n";
 				}
@@ -1301,6 +1307,10 @@
 				echo "<td align='left'>\n";
 				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_label]' style='width: 75px;' maxlength='255' value=\"".escape($row['device_key_label'])."\"/>\n";
 				echo "</td>\n";
+				
+                                echo "<td align='left'>\n";
+				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_icon]' style='width: 75px;' maxlength='255' value=\"".escape($row['device_key_icon'])."\"/>\n";
+				echo "</td>\n";
 
 				//echo "			<td align='left'>\n";
 				//echo "				<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'/>\n";
@@ -1448,27 +1458,22 @@
 		echo "</tr>\n";
 	}
 
-	if (permission_exists('device_alternate')) {
+	if (permission_exists('device_alternate') && strlen($device_uuid_alternate) > 0) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-device_uuid_alternate']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left' nowrap='nowrap'>\n";
-		if (strlen($device_uuid_alternate) == 0) {
-			echo "	<input class='formfld' type='text' name='device_uuid_alternate' id='device_uuid_alternate' maxlength='255' value=\"".escape($device_uuid_alternate)."\"/>";
-		}
-		else {
-			$label = $device_alternate[0]['device_label'];
-			if (strlen($label) == 0) { $label = $device_alternate[0]['device_description']; }
-			if (strlen($label) == 0) { $label = $device_alternate[0]['device_mac_address']; }
-			echo "	<table>\n";
-			echo "	<tr>\n";
-			echo "		<td><a href='?id=".escape($device_uuid_alternate)."' id='device_uuid_alternate_link'>".escape($label)."</a><input class='formfld' type='hidden' name='device_uuid_alternate' id='device_uuid_alternate' maxlength='255' value=\"".escape($device_uuid_alternate)."\" />&nbsp;</td>";
-			echo "		<td><a href='#' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('device_uuid_alternate').value = '';  document.getElementById('device_uuid_alternate_link').hidden = 'true'; submit_form(); }\" alt='".$text['button-delete']."'>$v_link_label_delete</a></td>\n";
-			echo "	</tr>\n";
-			echo "	</table>\n";
-			unset($label);
-		}
+		$label = $device_alternate[0]['device_label'];
+		if (strlen($label) == 0) { $label = $device_alternate[0]['device_description']; }
+		if (strlen($label) == 0) { $label = $device_alternate[0]['device_mac_address']; }
+		echo "	<table>\n";
+		echo "	<tr>\n";
+		echo "		<td><a href='?id=".escape($device_uuid_alternate)."' id='device_uuid_alternate_link'>".escape($label)."</a><input class='formfld' type='hidden' name='device_uuid_alternate' id='device_uuid_alternate' maxlength='255' value=\"".escape($device_uuid_alternate)."\" />&nbsp;</td>";
+		echo "		<td><a href='#' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('device_uuid_alternate').value = '';  document.getElementById('device_uuid_alternate_link').hidden = 'true'; submit_form(); }\" alt='".$text['button-delete']."'>$v_link_label_delete</a></td>\n";
+		echo "	</tr>\n";
+		echo "	</table>\n";
+		unset($label);
 		echo $text['description-device_uuid_alternate']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
