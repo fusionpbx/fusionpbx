@@ -128,12 +128,7 @@ include "root.php";
 					return true;
 				}
 				else {
-					//log the invalid mac address attempt to the syslog server
-						openlog("FusionPBX", LOG_PID | LOG_PERROR, LOG_LOCAL0);
-						syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] invalid mac address ".$mac);
-						closelog();
-					//invalid mac address return false
-						return false;
+					return false;
 				}
 		}
 
