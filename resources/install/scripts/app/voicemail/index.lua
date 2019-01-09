@@ -276,14 +276,15 @@
 						--unset bind meta app
 							session:execute("unbind_meta_app", "");
 
-						--set the callback function
-							if (session:ready()) then
-								session:setVariable("playback_terminators", "#");
-								session:setInputCallback("on_dtmf", "");
-							end
 						end
 				end
 			end
+	end
+
+--set the callback function
+	if (session:ready()) then
+		session:setVariable("playback_terminators", "#");
+		session:setInputCallback("on_dtmf", "");
 	end
 
 --general functions
