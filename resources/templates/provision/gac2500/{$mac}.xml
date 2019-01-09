@@ -17,10 +17,10 @@
     <P271>1</P271>
 
     <!-- # Account Name -->
-    <P270>{$display_name_1}</P270>
+    <P270>{$account.1.display_name}</P270>
 
     <!-- # SIP Server -->
-    <P47>{$server_address_1}</P47>
+    <P47>{$account.1.server_address}</P47>
 
     <!-- # SIP User ID -->
     <P35>99</P35>
@@ -29,13 +29,13 @@
     <P36>99</P36>
 
     <!-- # SIP Authentication Password -->
-    <P34>{$user_password_1}</P34>
+    <P34>{$account.1.user_password}</P34>
 
     <!-- # Voice Mail Access Number -->
     <P33>*97</P33>
 
     <!-- # Name (Display Name, e.g., John Doe) -->
-    <P3>{$display_name_1}</P3>
+    <P3>{$account.1.display_name}</P3>
 
     <!-- # Show Account Name Only. 0 - No, 1 - Yes. Default value is 0 -->
     <!-- # Number: 0, 1 -->
