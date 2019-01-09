@@ -372,7 +372,7 @@
 	P183>{$grandstream_srtp}</P183>
 	else}
 	P183>0</P183>
-	/if}
+	{/if}
     <!-- # SRTP Key Length. 0 - AES 128&256 bit, 1 - AES 128 bit, 2 - AES 256 bit. Default value is 0 -->
     <!-- #Number:0, 1, 2 -->
     <P2383>0 </P2383>
@@ -2303,6 +2303,7 @@
 	<P1701>1</P1701>
 	{else}
 	<P1701>0</P1701>
+    {/if}
 
     <!-- # Account Name -->
     <P1717>{$account.5.display_name}</P1717>
