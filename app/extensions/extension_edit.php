@@ -298,7 +298,10 @@
 									}
 
 								//generate a password
-									if (strlen($password) == 0) {
+									if ($action == "add" && strlen($password) == 0) {
+										$password = generate_password();
+									}
+									if ($action == "update" && permission_exists('extension_password') && strlen($password) == 0) {
 										$password = generate_password();
 									}
 
@@ -309,7 +312,9 @@
 									if (permission_exists('number_alias')) {
 										$array["extensions"][$i]["number_alias"] = $number_alias;
 									}
-									$array["extensions"][$i]["password"] = $password;
+									if (strlen($password) > 0) {
+										$array["extensions"][$i]["password"] = $password;
+									}
 									if (permission_exists('extension_accountcode')) {
 										$array["extensions"][$i]["accountcode"] = $accountcode;
 									}
