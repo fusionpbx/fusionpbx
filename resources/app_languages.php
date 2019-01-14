@@ -3106,6 +3106,26 @@ $text['label-interval']['ru-ru'] = "Интервал";
 $text['label-interval']['sv-se'] = "Intervall";
 $text['label-interval']['uk-ua'] = "Інтервал";
 
+$text['label-peak']['en-us'] = "Peak";
+$text['label-peak']['ar-eg'] = "";
+$text['label-peak']['de-at'] = "";
+$text['label-peak']['de-ch'] = "";
+$text['label-peak']['de-de'] = "";
+$text['label-peak']['es-cl'] = "";
+$text['label-peak']['es-mx'] = "";
+$text['label-peak']['fr-ca'] = "";
+$text['label-peak']['fr-fr'] = "";
+$text['label-peak']['he-il'] = "";
+$text['label-peak']['it-it'] = "";
+$text['label-peak']['nl-nl'] = "";
+$text['label-peak']['pl-pl'] = "";
+$text['label-peak']['pt-br'] = "";
+$text['label-peak']['pt-pt'] = "";
+$text['label-peak']['ro-ro'] = "";
+$text['label-peak']['ru-ru'] = "";
+$text['label-peak']['sv-se'] = "";
+$text['label-peak']['uk-ua'] = "";
+
 $text['description-greeting']['en-us'] = "Select the desired Greeting.";
 $text['description-greeting']['ar-eg'] = "";
 $text['description-greeting']['de-at'] = "Geben Sie die Begrüßungs-ID an."; //copied from de-de
