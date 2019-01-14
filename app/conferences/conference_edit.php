@@ -334,6 +334,25 @@
 	$conference_profiles = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
 
+//get conference users
+	$sql = "SELECT * FROM v_conference_users as e, v_users as u ";
+	$sql .= "where e.user_uuid = u.user_uuid  ";
+	$sql .= "and u.user_enabled = 'true' ";
+	$sql .= "and e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "and e.conference_uuid = '".$conference_uuid."' ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$conference_users = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+
+//get the users
+	$sql = "SELECT * FROM v_users ";
+	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "and user_enabled = 'true' ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset($sql);
+
 //set the default
 	if ($conference_profile == "") { $conference_profile = "default"; }
 
@@ -403,23 +422,14 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (if_group("admin") || if_group("superadmin")) {
+	if (permission_exists('conference_user_add') || permission_exists('conference_user_edit')) {
 		if ($action == "update") {
 			echo "	<tr>";
 			echo "		<td class='vncell' valign='top'>".$text['label-user_list']."</td>";
 			echo "		<td class='vtable'>";
 
 			echo "			<table width='52%'>\n";
-			$sql = "SELECT * FROM v_conference_users as e, v_users as u ";
-			$sql .= "where e.user_uuid = u.user_uuid  ";
-			$sql .= "and u.user_enabled = 'true' ";
-			$sql .= "and e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and e.conference_uuid = '".$conference_uuid."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-			$result_count = count($result);
-			foreach($result as $field) {
+			foreach($conference_users as $field) {
 				echo "			<tr>\n";
 				echo "				<td class='vtable'>".escape($field['username'])."</td>\n";
 				echo "				<td>\n";
@@ -428,22 +438,15 @@
 				echo "			</tr>\n";
 			}
 			echo "			</table>\n";
-
 			echo "			<br />\n";
-			$sql = "SELECT * FROM v_users ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and user_enabled = 'true' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
 			echo "			<select name=\"user_uuid\" class='formfld'>\n";
 			echo "			<option value=\"\"></option>\n";
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			foreach($result as $field) {
+			foreach($users as $field) {
 				echo "			<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
 			}
 			echo "			</select>";
 			echo "			<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
-			unset($sql, $result);
+
 			echo "			<br>\n";
 			echo "			".$text['description-user-add']."\n";
 			echo "			<br />\n";
