@@ -1,5 +1,5 @@
-<context name="{v_context}">
-	<extension name="user_exists" number="" continue="true" app_uuid="897845b0-1f13-444c-84fe-432fd47338ca">
+<context name="${domain_name}">
+	<extension name="user_exists" number="" continue="true" app_uuid="897845b0-1f13-444c-84fe-432fd47338ca" global="true">
 		<condition field="" expression="" break="">
 			<action application="set" data="user_exists=${user_exists id ${destination_number} ${domain_name}}" inline="true"/>
 		</condition>
