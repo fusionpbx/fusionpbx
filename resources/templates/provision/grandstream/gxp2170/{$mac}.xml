@@ -122,7 +122,7 @@
 
 <!-- # Unregister On Reboot. 0 - No, 1 - Yes, 2 - Instance. Default is 0 -->
 <!-- # Number: 0, 1 -->
-<P81>0</P81>
+<P81>2</P81>
 
 <!-- # Register Expiration (in minutes). Default is 60. Max about 45 days -->
 <!-- # Number: 1 - 64800 -->
@@ -138,7 +138,7 @@
 
 <!-- # Enable OPTIONS Keep Alive. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0,1 -->
-<P2397>0</P2397>
+<P2397>1</P2397>
 
 <!-- # OPTIONS Keep Alive Interval. Default is 30 -->
 <!-- # Number -->
@@ -762,15 +762,15 @@
 
 <!-- # Secondary SIP Server -->
 <!-- # String -->
-<P2412></P2412>
+<P2412>{$account.2.server_address_secondary}</P2412>
 
 <!-- # Outbound Proxy -->
 <!-- # String -->
-<P403>{$account.2.outbound_proxy}</P403>
+<P403>{$account.2.outbound_proxy_primary}</P403>
 
 <!-- # Backup Outbound Proxy -->
 <!-- # String -->
-<P2433></P2433>
+<P2433>{$account.2.outbound_proxy_secondary}</P2433>
 
 <!-- # BLF Server -->
 <!-- # String -->
@@ -1483,7 +1483,7 @@
 
 <!-- # Outbound Proxy -->
 <!-- # String -->
-<P503>{$account.3.outbound_proxy}</P503>
+<P503>{$account.3.outbound_proxy_primary}</P503>
 
 <!-- # Backup Outbound Proxy -->
 <!-- # String -->
@@ -2195,15 +2195,15 @@
 
 <!-- # Secondary SIP Server -->
 <!-- # String -->
-<P2612></P2612>
+<P2612>{$account.4.server_address_secondary}</P2612>
 
 <!-- # Outbound Proxy -->
 <!-- # String -->
-<P603>{$account.4.outbound_proxy}</P603>
+<P603>{$account.4.outbound_proxy_primary}</P603>
 
 <!-- # Backup Outbound Proxy -->
 <!-- # String -->
-<P2633></P2633>
+<P2633>{$account.4.outbound_proxy_secondary}</P2633>
 
 <!-- # BLF Server -->
 <!-- # String -->
@@ -2912,15 +2912,15 @@
 
 <!-- # Secondary SIP Server -->
 <!-- # String -->
-<P2712></P2712>
+<P2712>{$account.5.server_address_secondary}</P2712>
 
 <!-- # Outbound Proxy -->
 <!-- # String -->
-<P1703>{$account.5.outbound_proxy}</P1703>
+<P1703>{$account.5.outbound_proxy_primary}</P1703>
 
 <!-- # Backup Outbound Proxy -->
 <!-- # String -->
-<P2733></P2733>
+<P2733>{$account.5.outbound_proxy_secondary}</P2733>
 
 <!-- # BLF Server -->
 <!-- # String -->
@@ -3627,15 +3627,15 @@
 
 <!-- # Secondary SIP Server -->
 <!-- # String -->
-<P2812></P2812>
+<P2812>{$account.6.server_address_secondary}</P2812>
 
 <!-- # Outbound Proxy -->
 <!-- # String -->
-<P1803>{$account.6.outbound_proxy}</P1803>
+<P1803>{$account.6.outbound_proxy_primary}</P1803>
 
 <!-- # Backup Outbound Proxy -->
 <!-- # String -->
-<P2833></P2833>
+<P2833>{$account.6.outbound_proxy_secondary}</P2833>
 
 <!-- # BLF Server -->
 <!-- # String -->
