@@ -401,6 +401,8 @@
 	$device_lines[$x]['server_address'] = '';
 	$device_lines[$x]['outbound_proxy_primary'] = $_SESSION['provision']['outbound_proxy_primary']['text'];
 	$device_lines[$x]['outbound_proxy_secondary'] = $_SESSION['provision']['outbound_proxy_secondary']['text'];
+	$device_lines[$x]['server_address_primary'] = $_SESSION['provision']['server_address_primary']['text'];
+	$device_lines[$x]['server_address_secondary'] = $_SESSION['provision']['server_address_secondary']['text'];
 	$device_lines[$x]['display_name'] = '';
 	$device_lines[$x]['user_id'] = '';
 	$device_lines[$x]['auth_id'] = '';
