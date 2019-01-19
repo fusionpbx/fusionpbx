@@ -396,6 +396,7 @@ include "root.php";
 
 						//toll allow
 						if ($this->toll_allow != '') {
+							$this->toll_allow = str_replace(",", "\,", $this->toll_allow);
 							$variables[] = "toll_allow=''".$this->toll_allow."''";
 						}
 
