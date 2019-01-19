@@ -131,6 +131,9 @@
 			if (!is_numeric($voicemail_id)) {
 				$voicemail_id = NULL;
 			}
+			
+			//change toll allow delimiter
+			$toll_allow = str_replace(',',':', $toll_allow);
 	}
 
 //delete the user from the v_extension_users
@@ -768,6 +771,9 @@
 	$prep_statement->execute();
 	$destinations = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 	unset ($sql, $prep_statement);
+
+//change toll allow delimiter
+	$toll_allow = str_replace(':',',', $toll_allow);
 
 //set the defaults
 	if (strlen($user_context) == 0) { $user_context = $_SESSION['domain_name']; }
