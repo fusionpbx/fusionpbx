@@ -344,6 +344,8 @@ include "root.php";
 						$variables[] = "extension_uuid=".$this->extension_uuid;
 						$variables[] = "leg_delay_start=".$row["follow_me_delay"];
 						$variables[] = "leg_timeout=".$row["follow_me_timeout"];
+						$variables[] = "outbound_caller_id_number=".$this->outbound_caller_id_number;
+						$variables[] = "outbound_caller_id_name=".$this->outbound_caller_id_name;
 
 						//$dial_string .= "\${sofia_contact(".$row["follow_me_destination"]."@".$_SESSION['domain_name'].")}";
 						$dial_string .= "[".implode(",", $variables)."]user/".$row["follow_me_destination"]."@".$_SESSION['domain_name'];
@@ -419,6 +421,8 @@ include "root.php";
 						$variables[] = "originate_delay_start=".$row["follow_me_delay"];
 						$variables[] = "sleep=".($row["follow_me_delay"] * 1000);
 						$variables[] = "leg_timeout=".$row["follow_me_timeout"];
+						$variables[] = "outbound_caller_id_number=".$this->outbound_caller_id_number;
+						$variables[] = "outbound_caller_id_name=".$this->outbound_caller_id_name;
 
 						if (is_numeric($row["follow_me_destination"])) {
 							if ($_SESSION['domain']['bridge']['text'] == "outbound" || $_SESSION['domain']['bridge']['text'] == "bridge") {
