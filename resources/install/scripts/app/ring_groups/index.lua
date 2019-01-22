@@ -561,24 +561,24 @@
 						freeswitch.consoleLog("notice", "[ring groups][follow_me] destination ".. destination[2] .."\n");
 
 						--add to the destinations array
-						if destinations[x] == nil then destinations[x] = {} end
-						destinations[x]['destination_number'] = destination[2];
-						destinations[x]['domain_name'] = domain_name;
-						destinations[x]['destination_delay'] = '0';
-						destinations[x]['destination_timeout'] = '30';
+						--if destinations[x] == nil then destinations[x] = {} end
+						destinations[key]['destination_number'] = destination[2];
+						destinations[key]['domain_name'] = domain_name;
+						destinations[key]['destination_delay'] = '0';
+						destinations[key]['destination_timeout'] = '30';
 
 						--add the variables to the destinations array
 						variable_array = explode(",", variables);
 						for k2, v2 in pairs(variable_array) do
 							array = explode("=", v2);
 							if (array[2] ~= nil) then
-								destinations[x][array[1]] = array[2];
+								destinations[key][array[1]] = array[2];
 							end
 						end
 
 						--if confirm is true true then set it to prompt
-						if (destinations[x]['confirm']  ~= nil and destinations[x]['confirm']  == 'true') then
-							destinations[x]['destination_prompt'] = '1';
+						if (destinations[key]['confirm']  ~= nil and destinations[key]['confirm']  == 'true') then
+							destinations[key]['destination_prompt'] = '1';
 						end
 
 					end
