@@ -1446,22 +1446,36 @@ function number_pad($number,$n) {
 
 			$mail = new PHPMailer();
 			$mail -> IsSMTP();
+			if ($_SESSION['email']['smtp_hostname']['text'] != '') {
+				$mail -> Hostname = $_SESSION['email']['smtp_hostname']['text'];
+			}
 			$mail -> Host = $_SESSION['email']['smtp_host']['text'];
-			if ($_SESSION['email']['smtp_port']['text'] != '') {
-				$mail -> Port = $_SESSION['email']['smtp_port']['text'];
+			if (is_numeric($_SESSION['email']['smtp_port']['numeric'])) {
+				$mail -> Port = $_SESSION['email']['smtp_port']['numeric'];
 			}
 			if ($_SESSION['email']['smtp_auth']['text'] == "true") {
 				$mail -> SMTPAuth = $_SESSION['email']['smtp_auth']['text'];
-			}
-			if ($_SESSION['email']['smtp_username']['text']) {
 				$mail -> Username = $_SESSION['email']['smtp_username']['text'];
 				$mail -> Password = $_SESSION['email']['smtp_password']['text'];
+			}
+			else {
+				$mail -> SMTPAuth = 'false';
 			}
 			if ($_SESSION['email']['smtp_secure']['text'] == "none") {
 				$_SESSION['email']['smtp_secure']['text'] = '';
 			}
 			if ($_SESSION['email']['smtp_secure']['text'] != '') {
 				$mail -> SMTPSecure = $_SESSION['email']['smtp_secure']['text'];
+			}
+			if (isset($_SESSION['email']['smtp_validate_certificate']) && $_SESSION['email']['smtp_validate_certificate']['boolean'] == "false") {
+				// bypass TLS certificate check e.g. for self-signed certificates
+				$mail -> SMTPOptions = array(
+					'ssl' => array(
+					'verify_peer' => false,
+					'verify_peer_name' => false,
+					'allow_self_signed' => true
+					)
+				);
 			}
 			$eml_from_address = ($eml_from_address != '') ? $eml_from_address : $_SESSION['email']['smtp_from']['text'];
 			$eml_from_name = ($eml_from_name != '') ? $eml_from_name : $_SESSION['email']['smtp_from_name']['text'];
@@ -1470,6 +1484,7 @@ function number_pad($number,$n) {
 			$mail -> Subject = $eml_subject;
 			$mail -> MsgHTML($eml_body);
 			$mail -> Priority = $eml_priority;
+			$mail -> SMTPDebug = 3;
 
 			$address_found = false;
 
