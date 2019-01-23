@@ -110,7 +110,52 @@ else {
 	require_once "resources/header.php";
 	require_once "resources/paging.php";
 
+//styles
+	echo "<style>\n";
+
+	echo "	#test_result_layer {\n";
+	echo "		z-index: 999999;\n";
+	echo "		position: absolute;\n";
+	echo "		left: 0px;\n";
+	echo "		top: 0px;\n";
+	echo "		right: 0px;\n";
+	echo "		bottom: 0px;\n";
+	echo "		text-align: center;\n";
+	echo "		vertical-align: middle;\n";
+	echo "	}\n";
+
+	echo "	#test_result_container {\n";
+	echo "		display: block;\n";
+	echo "		overflow: auto;\n";
+	echo "		background-color: #fff;\n";
+	echo "		padding: 20px 30px;\n";
+	if (http_user_agent('mobile')) {
+		echo "	margin: 0;\n";
+	}
+	else {
+		echo "	margin: auto 10%;\n";
+	}
+	echo "		text-align: left;\n";
+	echo "		-webkit-box-shadow: 0px 1px 20px #888;\n";
+	echo "		-moz-box-shadow: 0px 1px 20px #888;\n";
+	echo "		box-shadow: 0px 1px 20px #888;\n";
+	echo "	}\n";
+
+	echo "</style>\n";
+
+//test result layer
+	echo "<div id='test_result_layer' style='display: none;'>\n";
+	echo "	<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'>\n";
+	echo "		<tr>\n";
+	echo "			<td align='center' valign='middle'>\n";
+	echo "				<span id='test_result_container'></span>\n";
+	echo "			</td>\n";
+	echo "		</tr>\n";
+	echo "	</table>\n";
+	echo "</div>\n";
+
 //show the content
+	echo "<form id='test_form' method='post' action='email_test.php' target='_blank'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' align='left' valign='top' nowrap='nowrap'>";
@@ -119,6 +164,11 @@ else {
 	echo "			".$text['description-emails'];
 	echo "		</td>\n";
 	echo "		<td width='50%' align='right' valign='top'>\n";
+	echo "			<input type='button' class='btn' id='test_button' alt=\"".$text['button-test']."\" onclick=\"$(this).fadeOut(400, function(){ $('span#test_form').fadeIn(400); $('#to').focus(); });\" value='".$text['button-test']."'>\n";
+	echo "			<span id='test_form' style='display: none;'>\n";
+	echo "				<input type='text' class='formfld' style='min-width: 150px; width:150px; max-width: 150px;' name='to' id='to' placeholder='recipient@domain.com'>\n";
+	echo "				<input type='submit' class='btn' id='send_button' alt=\"".$text['button-send']."\" value='".$text['button-send']."'>\n";
+	echo "			</span>\n";
 	if (permission_exists('emails_all')) {
 		if ($_REQUEST['showall'] != 'true') {
 			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='emails.php?showall=true';\">\n";
@@ -128,6 +178,7 @@ else {
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
+	echo "</form>\n";
 	echo "<br />\n";
 
 	//prepare to page the results
@@ -263,6 +314,30 @@ else {
 
 	echo "</table>";
 	echo "<br /><br />";
+
+//test script
+	echo "<script>\n";
+
+	echo "	$('#test_form').submit(function(event) {\n";
+	echo "		event.preventDefault();\n";
+	echo "		$.ajax({\n";
+	echo "			url: $(this).attr('action'),\n";
+	echo "			type: $(this).attr('method'),\n";
+	echo "			data: new FormData(this),\n";
+	echo "			processData: false,\n";
+	echo "			contentType: false,\n";
+	echo "			cache: false,\n";
+	echo "			success: function(response){\n";
+	echo "				$('#test_result_container').html(response);\n";
+	echo "				$('#test_result_layer').fadeIn(400);\n";
+	echo "				$('span#test_form').fadeOut(400);\n";
+	echo "				$('#test_button').fadeIn(400);\n";
+	echo "				$('#to').val('');\n";
+	echo "			}\n";
+	echo "		});\n";
+	echo "	});\n";
+
+	echo "</script>\n";
 
 //include the footer
 	require_once "resources/footer.php";
