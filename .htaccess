@@ -1,5 +1,9 @@
 RewriteEngine    On
 
+#RewriteCond %{HTTPS} off
+#RewriteCond %{HTTP_HOST} !^127.0.0
+#RewriteRule .* https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
 #REST api
 RewriteRule ^(.*)/api/(.*)$                                                     $1/api/index.php?rewrite_uri=$2 [QSA]
 
