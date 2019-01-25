@@ -198,7 +198,7 @@
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' valign='top' width='50%'>\n";
-	echo "			<b>".$text['header-contacts']."</b>\n";
+	echo "			<b>".$text['header-contacts']." (".$num_rows.")</b>\n";
 	echo "			<br /><br />";
 	echo "		</td>\n";
 	echo "		<td align='right' valign='top' width='50%' nowrap='nowrap'>\n";
