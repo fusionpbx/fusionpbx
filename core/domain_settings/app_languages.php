@@ -841,4 +841,44 @@ $text['description-domain-add']['ru-ru'] = "Введите данные доме
 $text['description-domain-add']['sv-se'] = "Ange domändetaljer nedan.";
 $text['description-domain-add']['uk-ua'] = "Введіть дані домену нижче.";
 
+$text['description-child-of']['en-us'] = "child of";
+$text['description-child-of']['ar-eg'] = "";
+$text['description-child-of']['de-at'] = ""; //copied from de-de
+$text['description-child-of']['de-ch'] = ""; //copied from de-de
+$text['description-child-of']['de-de'] = "";
+$text['description-child-of']['es-cl'] = "hijo de";
+$text['description-child-of']['es-mx'] = "hijo de"; //copied from es-cl
+$text['description-child-of']['fr-ca'] = "fils de"; //copied from fr-fr
+$text['description-child-of']['fr-fr'] = "fils de";
+$text['description-child-of']['he-il'] = "";
+$text['description-child-of']['it-it'] = "";
+$text['description-child-of']['nl-nl'] = "";
+$text['description-child-of']['pl-pl'] = "";
+$text['description-child-of']['pt-br'] = "";
+$text['description-child-of']['pt-pt'] = "";
+$text['description-child-of']['ro-ro'] = "";
+$text['description-child-of']['ru-ru'] = "";
+$text['description-child-of']['sv-se'] = "";
+$text['description-child-of']['uk-ua'] = "";
+
+$text['label-child-of']['en-us'] = "Child of";
+$text['label-child-of']['ar-eg'] = "";
+$text['label-child-of']['de-at'] = ""; //copied from de-de
+$text['label-child-of']['de-ch'] = ""; //copied from de-de
+$text['label-child-of']['de-de'] = "";
+$text['label-child-of']['es-cl'] = "Hijo de";
+$text['label-child-of']['es-mx'] = "Hijo de"; //copied from es-cl
+$text['label-child-of']['fr-ca'] = "Fils de"; //copied from fr-fr
+$text['label-child-of']['fr-fr'] = "Fils de";
+$text['label-child-of']['he-il'] = "";
+$text['label-child-of']['it-it'] = "";
+$text['label-child-of']['nl-nl'] = "";
+$text['label-child-of']['pl-pl'] = "";
+$text['label-child-of']['pt-br'] = "";
+$text['label-child-of']['pt-pt'] = "";
+$text['label-child-of']['ro-ro'] = "";
+$text['label-child-of']['ru-ru'] = "";
+$text['label-child-of']['sv-se'] = "";
+$text['label-child-of']['uk-ua'] = "";
+
 ?>
