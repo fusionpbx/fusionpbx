@@ -261,12 +261,20 @@ if ($db_type == "pgsql") {
 			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 
 		//get the domains from the database
-			$sql = "select * from v_domains";
+		//	$sql = "select * from v_domains";
+			$sql = "WITH RECURSIVE children AS (
+				        SELECT d.domain_uuid, d.domain_parent_uuid, d.domain_name, d.domain_enabled, d.domain_description, '' as parent_domain_name, 1 as depth, domain_name as path
+			                FROM v_domains d ";
+		        $sql .= "WHERE d.domain_parent_uuid IS null ";
+		        $sql .= "UNION
+				        SELECT tp.domain_uuid, tp.domain_parent_uuid, tp.domain_name, tp.domain_enabled, tp.domain_description, c.domain_name as parent_domain_name, depth + 1, CONCAT(path,'.',tp.domain_name)  FROM v_domains tp
+				                JOIN children c ON tp.domain_parent_uuid = c.domain_uuid ) SELECT * FROM children order by path asc, domain_name asc ";
 			$prep_statement = $db->prepare($sql);
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			foreach($result as $row) {
 				$domain_names[] = $row['domain_name'];
+				$_SESSION['domains'][$row['domain_uuid']] = $row;
 			}
 			unset($prep_statement);
 
@@ -276,7 +284,7 @@ if ($db_type == "pgsql") {
 			}
 
 		//build the domains array in the correct order
-			if (is_array($domain_names)) { 
+			if (is_array($domain_names)) {
 				foreach ($domain_names as $dn) {
 					foreach ($result as $row) {
 						if ($row['domain_name'] == $dn) {
@@ -287,7 +295,7 @@ if ($db_type == "pgsql") {
 				unset($result);
 			}
 
-			if (is_array($domains)) { 
+			if (is_array($domains)) {
 				foreach($domains as $row) {
 					if (count($domains) == 1) {
 						$_SESSION["domain_uuid"] = $row["domain_uuid"];
@@ -299,7 +307,7 @@ if ($db_type == "pgsql") {
 							$_SESSION["domain_name"] = $row["domain_name"];
 						}
 					}
-					$_SESSION['domains'][$row['domain_uuid']] = $row;
+					//$_SESSION['domains'][$row['domain_uuid']] = $row;
 				}
 				unset($domains, $prep_statement);
 			}

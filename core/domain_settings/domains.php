@@ -22,6 +22,7 @@
 
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
+ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 //includes
 	require_once "root.php";
@@ -141,7 +142,16 @@
 	$offset = $rows_per_page * $page;
 
 //get the domains
-	$sql = "select * from v_domains ";
+//	$sql = "select * from v_domains ";
+//	$sql = "select ch.*, p.domain_parent_uuid as parent_domain_uuid, p.domain_name as parent_domain_name from v_domains ch left join v_domains p on p.domain_uuid = ch.domain_parent_uuid ";
+//	Only works with PG9 and MariaDB 10.2+
+	$sql = "WITH RECURSIVE children AS (
+	SELECT d.domain_uuid, d.domain_parent_uuid, d.domain_name, d.domain_enabled, d.domain_description, '' as parent_domain_name, 1 as depth, domain_name as path
+		FROM v_domains d ";
+	$sql .= "WHERE d.domain_parent_uuid IS null ";
+	$sql .= "UNION
+	SELECT tp.domain_uuid, tp.domain_parent_uuid, tp.domain_name, tp.domain_enabled, tp.domain_description, c.domain_name as parent_domain_name, depth + 1, CONCAT(path,'.',tp.domain_name)  FROM v_domains tp
+		JOIN children c ON tp.domain_parent_uuid = c.domain_uuid ) SELECT * FROM children ";
 	if (strlen($search) > 0) {
 		$search = strtolower($search);
 		$sql .= "where (";
@@ -150,7 +160,7 @@
 		$sql .= ") ";
 	}
 	if (strlen($order_by) == 0) {
-		$sql .= "order by domain_name asc ";
+		$sql .= "order by path asc, domain_name asc ";
 	}
 	else {
 		$sql .= "order by ".$order_by." ".$order." ";
@@ -166,6 +176,8 @@
 		$domains[$domain['domain_uuid']]['parent_uuid'] = $domain['domain_parent_uuid'];
 		$domains[$domain['domain_uuid']]['enabled'] = $domain['domain_enabled'];
 		$domains[$domain['domain_uuid']]['description'] = $domain['domain_description'];
+		$domains[$domain['domain_uuid']]['parent_name'] = $domain['parent_domain_name'];
+		$domains[$domain['domain_uuid']]['depth'] = $domain['depth'];
 	}
 
 	$c = 0;
@@ -207,9 +219,13 @@
 			$tr_link = (permission_exists('domain_edit')) ? "href='domain_edit.php?id=".escape($domain_uuid)."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' ".(($indent != 0) ? "style='padding-left: ".($indent * 20)."px;'" : null).">";
-			echo "		<a href='domain_edit.php?id=".escape($domain_uuid)."'>".escape($domain['name'])."</a>";
+			$ident = str_repeat('-',$domain['depth'] - 1);
+			echo "		$ident<a href='domain_edit.php?id=".escape($domain_uuid)."'>".escape($domain['name'])."</a>";
 			if ($domain['enabled'] != '' && $domain['enabled'] != 'true') {
 				echo "	<span style='color: #aaa; font-size: 80%;'>&nbsp;&nbsp;(".$text['label-disabled'].")</span>";
+			}
+			if ($domain['parent_uuid']){
+				echo ' <em>'.$text['description-child-of'].' '.$domain['parent_name'].'</em>';
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
@@ -254,6 +270,10 @@
 
 	echo "</table>";
 	echo "<br /><br />";
+
+//	echo "<pre>";
+//	echo htmlspecialchars(print_r($_SESSION, true));
+//	echo "</pre>";
 
 //include the footer
 	require_once "resources/footer.php";

@@ -312,7 +312,10 @@
 					else {
 						$href = '/core/domain_settings/domains.php';
 					}
-					echo "<a href=\"".$href."\"><b style=\"color: #000;\">".$text['theme-title-domains']."</b></a> (".sizeof($_SESSION['domains']).")";
+					echo "<a href=\"".$href."\"><b style=\"color: #000;\">".$text['theme-title-domains']."</b></a>";
+					if (if_group("superadmin")){
+						echo " (".sizeof($_SESSION['domains']).")";
+					}
 					?>
 					<br><br>
 					<input type="text" id="domain_filter" class="formfld" style="margin-left: 0; min-width: 100%; width: 100%;" placeholder="<?php echo $text['theme-label-search']; ?>" onkeyup="domain_search(this.value);">
@@ -321,17 +324,48 @@
 					<?php
 					$bgcolor1 = "#eaedf2";
 					$bgcolor2 = "#fff";
-					foreach($_SESSION['domains'] as $domain) {
-						$bgcolor = ($bgcolor == $bgcolor1) ? $bgcolor2 : $bgcolor1;
-						$bgcolor = ($domain['domain_uuid'] == $_SESSION['domain_uuid']) ? "#eeffee" : $bgcolor;
-						echo "<div id=\"".escape($domain['domain_name'])."\" class='domains_list_item' style='background-color: ".$bgcolor."' onclick=\"document.location.href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true';\">";
-						echo "<a href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true' ".(($domain['domain_uuid'] == $_SESSION['domain_uuid']) ? "style='font-weight: bold;'" : null).">".escape($domain['domain_name'])."</a>\n";
-						if ($domain['domain_description'] != '') {
-							echo "<span class=\"domain_list_item_description\"> - ".escape($domain['domain_description'])."</span>\n";
+					if (if_group("superadmin")){
+						foreach($_SESSION['domains'] as $domain) {
+							$ident = str_repeat('-',$domain['depth'] - 1);
+							$bgcolor = ($bgcolor == $bgcolor1) ? $bgcolor2 : $bgcolor1;
+							$bgcolor = ($domain['domain_uuid'] == $_SESSION['domain_uuid']) ? "#eeffee" : $bgcolor;
+							echo "<div id=\"".escape($domain['domain_name'])."\" class='domains_list_item' style='background-color: ".$bgcolor."' onclick=\"document.location.href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true';\">";
+							echo "$ident<a href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true' ".(($domain['domain_uuid'] == $_SESSION['domain_uuid']) ? "style='font-weight: bold;'" : null).">".escape($domain['domain_name'])."</a>\n";
+							if ($domain['domain_description'] != '') {
+								echo "<span class=\"domain_list_item_description\"> - ".escape($domain['domain_description'])."</span>\n";
+							}
+							echo "</div>\n";
+							$ary_domain_names[] = escape($domain['domain_name']);
+							$ary_domain_descs[] = str_replace('"','\"',escape($domain['domain_description']));
 						}
-						echo "</div>\n";
-						$ary_domain_names[] = escape($domain['domain_name']);
-						$ary_domain_descs[] = str_replace('"','\"',escape($domain['domain_description']));
+					}
+					else{
+						$sql = "WITH RECURSIVE children AS (
+							SELECT d.domain_uuid, d.domain_parent_uuid, d.domain_name, d.domain_enabled, d.domain_description, '' as parent_domain_name, 1 as depth, domain_name as path
+							FROM v_domains d
+							INNER JOIN v_users u ON u.domain_uuid = d.domain_uuid
+							WHERE  u.user_uuid = '".$_SESSION['user_uuid']."' ";
+						$sql .= "UNION
+								SELECT tp.domain_uuid, tp.domain_parent_uuid, tp.domain_name, tp.domain_enabled, tp.domain_description, c.domain_name as parent_domain_name, depth + 1, CONCAT(path,'.',tp.domain_name)  FROM v_domains tp
+								JOIN children c ON tp.domain_parent_uuid = c.domain_uuid ) SELECT * FROM children ORDER BY path asc, domain_name asc ";
+
+						$prep_statement = $db->prepare(check_sql($sql));
+						$prep_statement->execute();
+						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+						unset ($prep_statement, $sql);
+						foreach ($result as $domain) {
+							$ident = str_repeat('-',$domain['depth'] - 1);
+							$bgcolor = ($bgcolor == $bgcolor1) ? $bgcolor2 : $bgcolor1;
+							$bgcolor = ($domain['domain_uuid'] == $_SESSION['domain_uuid']) ? "#eeffee" : $bgcolor;
+							echo "<div id=\"".escape($domain['domain_name'])."\" class='domains_list_item' style='background-color: ".$bgcolor."' onclick=\"document.location.href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true';\">";
+							echo "$ident<a href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true' ".(($domain['domain_uuid'] == $_SESSION['domain_uuid']) ? "style='font-weight: bold;'" : null).">".escape($domain['domain_name'])."</a>\n";
+							if ($domain['domain_description'] != '') {
+								echo "<span class=\"domain_list_item_description\"> - ".escape($domain['domain_description'])."</span>\n";
+							}
+							echo "</div>\n";
+							$ary_domain_names[] = escape($domain['domain_name']);
+							$ary_domain_descs[] = str_replace('"','\"',escape($domain['domain_description']));
+						}
 					}
 					?>
 				</div>
@@ -578,6 +612,5 @@
 		unset($_SESSION['background_image']);
 	}
 	?>
-
 </body>
 </html>

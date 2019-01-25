@@ -64,6 +64,7 @@
 		$domain_name = check_str($_POST["domain_name"]);
 		$domain_enabled = check_str($_POST["domain_enabled"]);
 		$domain_description = check_str($_POST["domain_description"]);
+		$domain_parent_uuid = check_str($_POST["domain_parent_uuid"]);
 	}
 
 if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -104,14 +105,20 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$sql .= "domain_uuid, ";
 						$sql .= "domain_name, ";
 						$sql .= "domain_enabled, ";
-						$sql .= "domain_description ";
+						$sql .= "domain_description";
+						if (strlen($domain_parent_uuid)){
+							$sql .= ", domain_parent_uuid";
+						}
 						$sql .= ")";
 						$sql .= "values ";
 						$sql .= "(";
 						$sql .= "'".uuid()."', ";
 						$sql .= "'".$domain_name."', ";
 						$sql .= "'".$domain_enabled."', ";
-						$sql .= "'".$domain_description."' ";
+						$sql .= "'".$domain_description."'";
+						if (strlen($domain_parent_uuid)){
+							$sql .= ", '".$domain_parent_uuid."' ";
+						}
 						$sql .= ")";
 						$db->exec(check_sql($sql));
 						unset($sql);
@@ -136,7 +143,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql = "update v_domains set ";
 				$sql .= "domain_name = '".$domain_name."', ";
 				$sql .= "domain_enabled = '".$domain_enabled."', ";
-				$sql .= "domain_description = '".$domain_description."' ";
+				$sql .= "domain_description = '".$domain_description."'";
+				if ($domain_parent_uuid){
+					$sql .= ", domain_parent_uuid = '".$domain_parent_uuid."' ";
+				}
 				$sql .= "where domain_uuid = '".$domain_uuid."' ";
 				$db->exec(check_sql($sql));
 				unset($sql);
@@ -629,6 +639,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$domain_name = strtolower($row["domain_name"]);
 			$domain_enabled = $row["domain_enabled"];
 			$domain_description = $row["domain_description"];
+			$domain_parent_uuid = $row["domain_parent_uuid"];
 		}
 		unset ($prep_statement);
 	}
@@ -761,6 +772,31 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<input class='formfld' type='text' name='domain_description' maxlength='255' value=\"".escape($domain_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-child-of']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	$sql = "select domain_uuid, domain_name from v_domains ";
+	$sql .= "where domain_enabled='true' and domain_uuid <> '".$domain_uuid."';";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	echo "  <select class='formfld' name='domain_parent_uuid'>";
+	echo "  <option value=''></option>";
+	foreach ($result as &$row) {
+		$list_domain_name = $row["domain_name"];
+		$list_domain_uuid = $row["domain_uuid"];
+		$list_selected = ($domain_parent_uuid	 == $list_domain_uuid)?" selected='selected' ":'';
+		echo "  <option value='$list_domain_uuid' $list_selected>$list_domain_name</option>";
+	}
+	unset($sql, $prep_statement);
+	echo "  </select>";
+	echo "<br />\n";
+	echo $text['description-child-of']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
