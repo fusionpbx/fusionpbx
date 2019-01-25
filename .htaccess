@@ -1,5 +1,6 @@
 RewriteEngine    On
 
+
 #REST api
 RewriteRule ^(.*)/api/(.*)$                                                     $1/api/index.php?rewrite_uri=$2 [QSA]
 
