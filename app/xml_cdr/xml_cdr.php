@@ -535,15 +535,15 @@
 					echo "	</td>\n";
 				}
 			//caller id name
-				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['caller_id_name'])."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape(substr($row['caller_id_name'], 0, 20))."&nbsp;</td>\n";
 			//source
 				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>";
 				echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode(escape($row['caller_id_name']))."&src_cid_number=".urlencode(escape($row['caller_id_number']))."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode(escape($row['caller_id_number']))."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 				if (is_numeric($row['caller_id_number'])) {
-					echo "		".format_phone($row['caller_id_number']).' ';
+					echo "		".format_phone(substr($row['caller_id_number'], 0, 20)).' ';
 				}
 				else {
-					echo "		".escape($row['caller_id_number']).' ';
+					echo "		".escape(substr($row['caller_id_number'], 0, 20)).' ';
 				}
 				echo "		</a>";
 				echo "	</td>\n";
@@ -552,22 +552,23 @@
 					echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>";
 					echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode(escape($row['caller_id_name']))."&src_cid_number=".urlencode(escape($row['caller_id_number']))."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode(escape($row['caller_destination']))."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 					if (is_numeric($row['caller_destination'])) {
-						echo "		".format_phone(escape($row['caller_destination'])).' ';
+						echo "		".format_phone(escape(substr($row['caller_destination'], 0, 20))).' ';
 					}
 					else {
-						echo "		".escape($row['caller_destination']).' ';
+						echo "		".escape(substr($row['caller_destination'], 0, 20)).' ';
 					}
 					echo "		</a>";
 					echo "	</td>\n";
 				}
 			//destination
+			
 				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>";
 				echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode(escape($row['destination_number']))."&src_cid_number=".urlencode(escape($row['destination_number']))."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode(escape($row['destination_number']))."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 				if (is_numeric($row['destination_number'])) {
-					echo format_phone(escape($row['destination_number']))."\n";
+					echo format_phone(escape(substr($row['destination_number'], 0, 20)))."\n";
 				}
 				else {
-					echo "		".escape($row['destination_number'])."\n";
+					echo "		".escape(substr($row['destination_number'], 0, 20))."\n";
 				}
 				echo "		</a>\n";
 				echo "	</td>\n";
