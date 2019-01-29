@@ -772,9 +772,9 @@
 		echo "	</tr>";
 	}
 
-	if ((permission_exists("user_add") && $action == 'add') || (permission_exists("user_edit") && $action == 'edit')) {
+	if (permission_exists("user_groups")) {
 		echo "	<tr>";
-		echo "		<td class='vncellreq' valign='top'>".$text['label-group'.(($action == 'edit') ? 's' : null)]."</td>";
+		echo "		<td class='vncellreq' valign='top'>".$text['label-groups']."</td>";
 		echo "		<td class='vtable'>";
 
 		$sql = "select ";
@@ -852,64 +852,21 @@
 
 		echo "		</td>";
 		echo "	</tr>";
+	}
 
-		if (permission_exists('user_domain')) {
-			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-			echo "	".$text['label-domain']."\n";
-			echo "</td>\n";
-			echo "<td class='vtable' align='left'>\n";
-			echo "    <select class='formfld' name='domain_uuid'>\n";
-			foreach ($_SESSION['domains'] as $row) {
-				echo "	<option value='".escape($row['domain_uuid'])."' ".(($row['domain_uuid'] == $domain_uuid) ? "selected='selected'" : null).">".escape($row['domain_name'])."</option>\n";
-			}
-			echo "    </select>\n";
-			echo "<br />\n";
-			echo $text['description-domain_name']."\n";
-			echo "</td>\n";
-			echo "</tr>\n";
-		}
-		else {
-			echo "<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>";
-		}
-
-		if (permission_exists('api_key')) {
-			echo "	<tr>";
-			echo "		<td class='vncell' valign='top'>".$text['label-api_key']."</td>";
-			echo "		<td class='vtable'>\n";
-			echo "			<input type=\"text\" class='formfld' name=\"api_key\" id='api_key' value=\"".escape($api_key)."\" >";
-			echo "			<input type='button' class='btn' value='".$text['button-generate']."' onclick=\"getElementById('api_key').value='".uuid()."';\">";
-			if (strlen($text['description-api_key']) > 0) {
-				echo "			<br />".$text['description-api_key']."<br />\n";
-			}
-			echo "		</td>";
-			echo "	</tr>";
-		}
-
-		if (permission_exists('message_view')) {
-			echo "	<tr>";
-			echo "		<td class='vncell' valign='top'>".$text['label-message_key']."</td>";
-			echo "		<td class='vtable'>\n";
-			echo "			<input type=\"text\" class='formfld' name=\"message_key\" id='message_key' value=\"".escape($user_settings["message"]["key"]["text"])."\" >";
-			echo "			<input type='button' class='btn' value='".$text['button-generate']."' onclick=\"getElementById('message_key').value='".uuid()."';\">";
-			if (strlen($text['description-message_key']) > 0) {
-				echo "			<br />".$text['description-message_key']."<br />\n";
-			}
-			echo "		</td>";
-			echo "	</tr>";
-		}
-
+	if (permission_exists('user_domain')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-enabled']."\n";
+		echo "	".$text['label-domain']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<select class='formfld' name='user_enabled'>\n";
-		echo "		<option value='true'>".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".(($user_enabled != "true") ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+		echo "    <select class='formfld' name='domain_uuid'>\n";
+		foreach ($_SESSION['domains'] as $row) {
+			echo "	<option value='".escape($row['domain_uuid'])."' ".(($row['domain_uuid'] == $domain_uuid) ? "selected='selected'" : null).">".escape($row['domain_name'])."</option>\n";
+		}
+		echo "    </select>\n";
 		echo "<br />\n";
-		echo $text['description-enabled']."\n";
+		echo $text['description-domain_name']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
@@ -917,14 +874,55 @@
 		echo "<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>";
 	}
 
+	if (permission_exists('api_key')) {
+		echo "	<tr>";
+		echo "		<td class='vncell' valign='top'>".$text['label-api_key']."</td>";
+		echo "		<td class='vtable'>\n";
+		echo "			<input type=\"text\" class='formfld' name=\"api_key\" id='api_key' value=\"".escape($api_key)."\" >";
+		echo "			<input type='button' class='btn' value='".$text['button-generate']."' onclick=\"getElementById('api_key').value='".uuid()."';\">";
+		if (strlen($text['description-api_key']) > 0) {
+			echo "			<br />".$text['description-api_key']."<br />\n";
+		}
+		echo "		</td>";
+		echo "	</tr>";
+	}
+
+	if (permission_exists('message_view')) {
+		echo "	<tr>";
+		echo "		<td class='vncell' valign='top'>".$text['label-message_key']."</td>";
+		echo "		<td class='vtable'>\n";
+		echo "			<input type=\"text\" class='formfld' name=\"message_key\" id='message_key' value=\"".escape($user_settings["message"]["key"]["text"])."\" >";
+		echo "			<input type='button' class='btn' value='".$text['button-generate']."' onclick=\"getElementById('message_key').value='".uuid()."';\">";
+		if (strlen($text['description-message_key']) > 0) {
+			echo "			<br />".$text['description-message_key']."<br />\n";
+		}
+		echo "		</td>";
+		echo "	</tr>";
+	}
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-enabled']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<select class='formfld' name='user_enabled'>\n";
+	echo "		<option value='true'>".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".(($user_enabled != "true") ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo $text['description-enabled']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
 	echo "	<tr>";
 	echo "		<td colspan='2' align='right'>";
 	if ($action == 'edit') {
 		echo "		<input type='hidden' name='id' value=\"".escape($user_uuid)."\">";
 		if (permission_exists("user_edit")) {
-			echo "	<input type='hidden' name='username_old' value=\"".escape($username)."\">";
+			echo "			<input type='hidden' name='username_old' value=\"".escape($username)."\">";
 		}
 	}
+	echo "			<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>";
 	echo "			<br>";
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>";
 	echo "		</td>";
