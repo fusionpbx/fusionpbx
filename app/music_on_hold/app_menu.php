@@ -24,6 +24,5 @@
 	$apps[$x]['menu'][$y]['category'] = "internal";
 	$apps[$x]['menu'][$y]['path'] = "/app/music_on_hold/music_on_hold.php";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
-	$apps[$x]['menu'][$y]['groups'][] = "admin";
 
 ?>
