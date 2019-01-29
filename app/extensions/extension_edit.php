@@ -321,8 +321,12 @@
 									if (permission_exists('extension_accountcode')) {
 										$array["extensions"][$i]["accountcode"] = $accountcode;
 									}
-									$array["extensions"][$i]["effective_caller_id_name"] = $effective_caller_id_name;
-									$array["extensions"][$i]["effective_caller_id_number"] = $effective_caller_id_number;
+									if (permission_exists("effective_caller_id_name")) {
+										$array["extensions"][$i]["effective_caller_id_name"] = $effective_caller_id_name;
+									}
+									if (permission_exists("effective_caller_id_number")) {
+										$array["extensions"][$i]["effective_caller_id_number"] = $effective_caller_id_number;
+									}
 									if (permission_exists("outbound_caller_id_name")) {
 										$array["extensions"][$i]["outbound_caller_id_name"] = $outbound_caller_id_name;
 									}
@@ -1136,27 +1140,31 @@
 		}
 	}
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-effective_caller_id_name']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='effective_caller_id_name' maxlength='255' value=\"".escape($effective_caller_id_name)."\">\n";
-	echo "<br />\n";
-	echo $text['description-effective_caller_id_name']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists("effective_caller_id_name")) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-effective_caller_id_name']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <input class='formfld' type='text' name='effective_caller_id_name' maxlength='255' value=\"".escape($effective_caller_id_name)."\">\n";
+		echo "<br />\n";
+		echo $text['description-effective_caller_id_name']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-effective_caller_id_number']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='effective_caller_id_number' min='0' step='1' maxlength='255' value=\"".escape($effective_caller_id_number)."\">\n";
-	echo "<br />\n";
-	echo $text['description-effective_caller_id_number']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists("effective_caller_id_number")) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-effective_caller_id_number']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <input class='formfld' type='text' name='effective_caller_id_number' min='0' step='1' maxlength='255' value=\"".escape($effective_caller_id_number)."\">\n";
+		echo "<br />\n";
+		echo $text['description-effective_caller_id_number']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	if (permission_exists("outbound_caller_id_name")) {
 		echo "<tr>\n";
