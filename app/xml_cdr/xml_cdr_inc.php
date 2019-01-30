@@ -356,71 +356,84 @@
 	$offset = $rows_per_page * $page;
 
 //get the results from the db
-	$sql = "select ";
-	$sql .= "domain_uuid, ";
-	$sql .= "start_stamp, ";
-	$sql .= "start_epoch, ";
-	$sql .= "hangup_cause, ";
-	$sql .= "duration, ";
-	$sql .= "billmsec, ";
-	$sql .= "record_path, ";
-	$sql .= "record_name, ";
-	$sql .= "xml_cdr_uuid, ";
-	$sql .= "bridge_uuid, ";
-	$sql .= "direction, ";
-	$sql .= "billsec, ";
-	$sql .= "caller_id_name, ";
-	$sql .= "caller_id_number, ";
-	$sql .= "caller_destination, ";
-	$sql .= "source_number, ";
-	$sql .= "destination_number, ";
-	$sql .= "leg, ";
-	$sql .= "(xml IS NOT NULL OR json IS NOT NULL) AS raw_data_exists, ";
+	$sql = "select \n";
+	$sql .= "c.domain_uuid, \n";
+	$sql .= "e.extension, \n";
+	$sql .= "c.start_stamp, \n";
+	$sql .= "c.end_stamp, \n";
+	$sql .= "c.start_epoch, \n";
+	$sql .= "c.hangup_cause, \n";
+	$sql .= "c.duration, \n";
+	$sql .= "c.billmsec, \n";
+	$sql .= "c.record_path, \n";
+	$sql .= "c.record_name, \n";
+	$sql .= "c.xml_cdr_uuid, \n";
+	$sql .= "c.bridge_uuid, \n";
+	$sql .= "c.direction, \n";
+	$sql .= "c.billsec, \n";
+	$sql .= "c.caller_id_name, \n";
+	$sql .= "c.caller_id_number, \n";
+	$sql .= "c.caller_destination, \n";
+	$sql .= "c.source_number, \n";
+	$sql .= "c.destination_number, \n";
+	$sql .= "c.leg, \n";
+	$sql .= "(c.xml IS NOT NULL OR c.json IS NOT NULL) AS raw_data_exists, \n";
 	if (is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
 			$array = explode(",", $field);
 			$field_name = end($array);
-			$sql .= $field_name.", ";
+			$sql .= $field_name.", \n";
 		}
 	}
 	if (is_array($_SESSION['cdr']['export'])) {
 		foreach ($_SESSION['cdr']['export'] as $field) {
-			$sql .= $field.", ";
+			$sql .= $field.", \n";
 		}
 	}
-	$sql .= "accountcode, ";
-	$sql .= "answer_stamp, ";
-	$sql .= "sip_hangup_disposition, ";
+	$sql .= "c.accountcode, \n";
+	$sql .= "c.answer_stamp, \n";
+	$sql .= "c.sip_hangup_disposition, \n";
 	if (permission_exists("xml_cdr_pdd")) {
-		$sql .= "pdd_ms, ";
+		$sql .= "c.pdd_ms, \n";
 	}
 	if (permission_exists("xml_cdr_mos")) {
-		$sql .= "rtp_audio_in_mos, ";
+		$sql .= "c.rtp_audio_in_mos, \n";
 	}
-	$sql .= "(answer_epoch - start_epoch) as tta ";
+	$sql .= "(c.answer_epoch - c.start_epoch) as tta ";
 	if ($_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
-		$sql .= ", domain_name ";
+		$sql .= ", c.domain_name \n";
 	}
-	$sql .= "from v_xml_cdr ";
+	$sql .= "from v_xml_cdr as c, v_extensions as e \n";
 	if ($_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
 		if ($sql_where) { $sql .= "where "; }
 	} else {
-		$sql .= "where domain_uuid = '".$domain_uuid."' ";
+		$sql .= "where c.domain_uuid = '".$domain_uuid."' \n";
 	}
-
+	$sql .= "and c.extension_uuid = e.extension_uuid \n";
 	$sql .= $sql_where;
 	if (strlen($order_by)> 0) { $sql .= " order by ".$order_by." ".$order." "; }
 	if ($_REQUEST['export_format'] != "csv" && $_REQUEST['export_format'] != "pdf") {
 		if ($rows_per_page == 0) {
-			$sql .= " limit ".$_SESSION['cdr']['limit']['numeric']." offset 0 ";
+			$sql .= " limit ".$_SESSION['cdr']['limit']['numeric']." offset 0 \n";
 		}
 		else {
-			$sql .= " limit ".$rows_per_page." offset ".$offset." ";
+			$sql .= " limit ".$rows_per_page." offset ".$offset." \n";
 		}
 	}
 	$sql= str_replace("  ", " ", $sql);
 	$sql= str_replace("where and", "where", $sql);
 	$database = new database;
+	if ($archive_request == 'true') {
+		if ($_SESSION['cdr']['archive_database']['boolean'] == 'true') {
+			$database->driver = $_SESSION['cdr']['archive_database_driver']['text'];
+			$database->host = $_SESSION['cdr']['archive_database_host']['text'];
+			$database->type = $_SESSION['cdr']['archive_database_type']['text'];
+			$database->port = $_SESSION['cdr']['archive_database_port']['text'];
+			$database->db_name = $_SESSION['cdr']['archive_database_name']['text'];
+			$database->username = $_SESSION['cdr']['archive_database_username']['text'];
+			$database->password = $_SESSION['cdr']['archive_database_password']['text'];
+		}
+	}
 	$database->select($sql);
 	$result = $database->result;
 	$result_count = count($result);
