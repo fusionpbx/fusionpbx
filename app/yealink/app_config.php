@@ -678,5 +678,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "DSS key transfer mode: 0-Display Number, 1 Attended Transfer, 2 Blind Transfer (default).";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "df933bbc-9d69-405f-80b1-99871c4d39e4";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_language_gui";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The language used in phone web interface.";
+		$y++;
 
 ?>
