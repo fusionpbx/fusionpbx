@@ -376,6 +376,9 @@
 	}
 	//column headings
 		echo "<th>&nbsp;</th>\n";
+		if (permission_exists('xml_cdr_extension')) {
+			echo th_order_by('extension', $text['label-extension'], $order_by, $order, null, null, $param);
+		}
 		if ($_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
 			echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
 			$col_count++;
@@ -503,6 +506,7 @@
 					echo "	</td>";
 					$xml_ids[] = 'checkbox_'.$row['xml_cdr_uuid'];
 				}
+
 			//determine call result and appropriate icon
 				echo "<td valign='top' class='".$row_style[$c]."'>\n";
 				if ($theme_cdr_images_exist) {
@@ -528,6 +532,12 @@
 				}
 				else { echo "&nbsp;"; }
 				echo "</td>\n";
+			//extension
+				if (permission_exists('xml_cdr_extension')) {
+					echo "	<td valign='top' class='".$row_style[$c]."'>";
+					echo 	$row['extension'].'&nbsp;';
+					echo "	</td>\n";
+				}
 			//domain name
 				if ($_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
 					echo "	<td valign='top' class='".$row_style[$c]."'>";
