@@ -708,7 +708,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The language used in phone web interface.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The language used in phone interface.";
 		$y++;
 
 ?>
