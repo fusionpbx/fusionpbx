@@ -403,13 +403,14 @@
 	if ($_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
 		$sql .= ", c.domain_name \n";
 	}
-	$sql .= "from v_xml_cdr as c, v_extensions as e \n";
+	$sql .= "from v_xml_cdr as c \n";
+	$sql .= "left join v_extensions as e on e.extension_uuid = c.extension_uuid ";
+	$sql .= "inner join v_domains as d on d.domain_uuid = c.domain_uuid ";
 	if ($_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
 		if ($sql_where) { $sql .= "where "; }
 	} else {
 		$sql .= "where c.domain_uuid = '".$domain_uuid."' \n";
 	}
-	$sql .= "and c.extension_uuid = e.extension_uuid \n";
 	$sql .= $sql_where;
 	if (strlen($order_by)> 0) { $sql .= " order by ".$order_by." ".$order." "; }
 	if ($_REQUEST['export_format'] != "csv" && $_REQUEST['export_format'] != "pdf") {
