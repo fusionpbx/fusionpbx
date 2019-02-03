@@ -98,7 +98,7 @@
 						--define the xml table
 							local xml = {}
 
-						--get hte xml
+						--get the xml
 							table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
 							table.insert(xml, [[<document type="freeswitch/xml">]]);
 							table.insert(xml, [[	<section name="languages">]]);
@@ -187,8 +187,8 @@
 	end --if XML_STRING
 
 --send the xml to the console
-	if (debug["xml_string"]) then
-		local file = assert(io.open(temp_dir .. "/acl.conf.xml", "w"));
+	if (debug["xml_string"] and XML_STRING ~= nil) then
+		local file = assert(io.open(temp_dir .. "/languages.conf.xml", "w"));
 		file:write(XML_STRING);
 		file:close();
 	end
