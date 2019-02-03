@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2010-2018 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2010-2019 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -521,7 +521,8 @@
 						not_registered_destination_number = api:executeString(cmd);
 						freeswitch.consoleLog("NOTICE", "[ring_group] "..not_registered_destination_number.."\n");
 						if (not_registered_destination_number ~= nil) then
-							destination_number = not_registered_destination_number;	
+							destination_number = not_registered_destination_number;
+							destinations[key]['destination_number'] = destination_number;
 						end
 
 						--check the new destination number for user_exists
@@ -590,7 +591,7 @@
 		--process the destinations
 			--x = 1;
 			--for key, row in pairs(destinations) do
-			--	freeswitch.consoleLog("NOTICE", "[ring group] zzz destination_number: "..row.destination_number.."\n");
+			--	freeswitch.consoleLog("NOTICE", "[ring group] destination_number: "..row.destination_number.."\n");
 			--end
 
 		--process the destinations
