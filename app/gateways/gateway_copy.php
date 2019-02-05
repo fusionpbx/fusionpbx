@@ -171,6 +171,12 @@
 //synchronize the xml config
 	save_gateway_xml();
 
+//clear the cache
+	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	$hostname = trim(event_socket_request($fp, 'api switchname'));
+	$cache = new cache;
+	$cache->delete("configuration:sofia.conf:".$hostname);
+
 //redirect the user
 	message::add($text['message-copy']);
 	header("Location: gateways.php");
