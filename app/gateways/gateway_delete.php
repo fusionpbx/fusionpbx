@@ -85,14 +85,12 @@ if (strlen($_GET["id"])>0) {
 	//syncrhonize configuration
 		save_gateway_xml();
 
-	//delete the gateways from memcache
+	//clear the cache
 		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-		if ($fp) {
-			$hostname = trim(event_socket_request($fp, 'api switchname'));
-			$switch_cmd = "memcache delete configuration:sofia.conf:".$hostname;
-			$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-		}
-
+		$hostname = trim(event_socket_request($fp, 'api switchname'));
+		$cache = new cache;
+		$cache->delete("configuration:sofia.conf:".$hostname);
+	
 	//rescan the sip profile to look for new or stopped gateways
 		//create the event socket connection and send a command
 			if (!$fp) {
