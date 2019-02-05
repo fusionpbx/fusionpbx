@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -241,16 +241,16 @@
 							unlink($gateway_xml_file);
 						}
 					}
-	
+
 				//syncrhonize configuration
 					save_gateway_xml();
-	
+
 				//clear the cache
 					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 					$hostname = trim(event_socket_request($fp, 'api switchname'));
 					$cache = new cache;
 					$cache->delete("configuration:sofia.conf:".$hostname);
-	
+
 				//rescan the external profile to look for new or stopped gateways
 					//create the event socket connection
 						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
@@ -264,7 +264,7 @@
 						$_SESSION["reload_xml"] = false;
 
 			} //if ($_POST["persistformvar"] != "true")
-	
+
 		//redirect the user
 			if (isset($action)) {
 				if ($action == "add") {
