@@ -163,7 +163,6 @@
 						//save_phrases_xml();
 
 					//clear the cache
-						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 						$cache = new cache;
 						$cache->delete("languages:".$phrase_language);
 
@@ -229,12 +228,9 @@
 					//save the xml to the file system if the phrase directory is set
 						save_phrases_xml();
 
-					//delete the phrase from memcache
-						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-						if ($fp) {
-							$switch_cmd .= "memcache delete languages:".$phrase_language;
-							$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-						}
+					//clear the cache
+						$cache = new cache;
+						$cache->delete("languages:".$phrase_language);
 
 					//send a redirect
 						message::add($text['message-update']);
