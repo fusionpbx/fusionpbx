@@ -15,13 +15,16 @@
 
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Portions created by the Initial Developer are Copyright (C) 2014
+--	Portions created by the Initial Developer are Copyright (C) 2014-2019
 --	the Initial Developer. All Rights Reserved.
 
 --set defaults
 	expire = {}
 	expire["get_domain"] = "3600";
 	source = "";
+
+--include cache library
+	local cache = require "resources.functions.cache"
 
 --get the variables
 	local destination_number = session:getVariable("destination_number");
@@ -36,8 +39,10 @@
 	dbh = database_handle('system');
 
 --get the cache
-	freeswitch.consoleLog("notice", "[app:dialplan:inbound:get_domain] memcache get app:dialplan:inbound:get_domain:" .. destination_number .. "\n");
-	cache = trim(api:execute("memcache", "get app:dialplan:inbound:get_domain:" .. destination_number));
+	if (cache.support() and destination_number) then
+		local key, err = "app:dialplan:inbound:get_domain:" .. destination_number;
+		cache, err = cache.get(key);
+	end
 
 --get the ring group destinations
 	if (cache == "-ERR NOT FOUND") then
@@ -55,11 +60,21 @@
 				--local destination_context = row.destination_context;
 
 			--set the cache
-				cache = "domain_uuid=" .. domain_uuid .. "&domain_name=" .. domain_name;
-				result = trim(api:execute("memcache", "set app:dialplan:inbound:get_domain:" .. destination_number .. " '"..cache.."' "..expire["get_domain"]));
+				domain = "domain_uuid=" .. domain_uuid .. "&domain_name=" .. domain_name;
+				if cache.support() then
+					local key = app:dialplan:inbound:get_domain:" .. destination_number .. " '"..domain.."' "..expire["get_domain"];
+					if debug['cache'] then
+						freeswitch.consoleLog("notice", "[dialplan][cache] set key: " .. key .. "\n")
+					end
+					local ok, err = cache.set(key, XML_STRING, expire["directory"])
+					if debug["cache"] and not ok then
+						freeswitch.consoleLog("warning", "[dialplan][cache] set key: " .. key .. " fail: " .. tostring(err) .. "\n");
+					end
+				end
 
 			--set the source
 				source = "database";
+
 			end));
 
 	else
@@ -88,7 +103,7 @@
 			domain_name = var["domain_name"];
 
 		--set the source
-			source = "memcache";
+			source = "cache";
 	end
 
 	if (domain_name ~= nil) then
