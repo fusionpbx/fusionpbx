@@ -15,7 +15,7 @@
 
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Portions created by the Initial Developer are Copyright (C) 2016
+--	Portions created by the Initial Developer are Copyright (C) 2019
 --	the Initial Developer. All Rights Reserved.
 
 -- load config
@@ -40,16 +40,15 @@
 --get the argv values
 	destination = argv[2];
 
--- search in memcache first
+-- search in cache first
 	local key = "app:dialplan:outbound:speed_dial:" .. user .. ":" .. destination .. "@" .. domain_name
-	local source = "memcache"
 	local value = cache.get(key)
 
--- decode value from memcache
+-- decode value from cache
 	if value then
 		local t = json.decode(value)
 		if not (t and t.phone_number) then
-			log.warningf("can not decode value from memcache: %s", value)
+			log.warningf("can not decode value from cache: %s", value)
 			value = nil
 		else
 			value = t
