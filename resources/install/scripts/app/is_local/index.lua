@@ -76,10 +76,17 @@
 
 			--set the cache
 				if (destination_number == row.destination_number) then
-					result = trim(api:execute("memcache", "set app:dialplan:outbound:is_local:" .. destination_number .. "@" .. domain_name .. " 'destination_number=" .. row.destination_number .. "&destination_context=" .. destination_context .. "' "..expire["is_local"]));
+					key = "set app:dialplan:outbound:is_local:" .. destination_number .. "@" .. domain_name; 
+					value = 'destination_number=" .. row.destination_number .. "&destination_context=" .. destination_context;
+					ok, err = cache.set(key, value, expire["is_local"]);
 				else
-					result = trim(api:execute("memcache", "set app:dialplan:outbound:is_local:" .. destination_number .. "@" .. domain_name .. " 'destination_number=" .. row.destination_number .. "&destination_context=" .. destination_context .. "' "..expire["is_local"]));
-					result = trim(api:execute("memcache", "set app:dialplan:outbound:is_local:" .. row.destination_number .. "@" .. domain_name .. " 'destination_number=" .. row.destination_number .. "&destination_context=" .. destination_context .. "' "..expire["is_local"]));
+					key = "set app:dialplan:outbound:is_local:" .. destination_number .. "@" .. domain_name;
+					value = 'destination_number=" .. row.destination_number .. "&destination_context=" .. destination_context;
+					ok, err = cache.set(key, value, expire["is_local"]);
+				
+					key = "app:dialplan:outbound:is_local:" .. row.destination_number .. "@" .. domain_name;
+					value = 'destination_number=" .. row.destination_number .. "&destination_context=" .. destination_context;
+					ok, err = cache.set(key, value, expire["is_local"]);
 				end
 
 			--log the result
