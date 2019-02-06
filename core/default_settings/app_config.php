@@ -481,7 +481,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cache";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "location";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/tmp";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/var/cache/fusionpbx";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Location for the file cache.";
 
