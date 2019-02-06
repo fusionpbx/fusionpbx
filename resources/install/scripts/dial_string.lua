@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010 - 2014
+--	Copyright (C) 2010 - 2019
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -228,20 +228,20 @@ if ( session:ready() ) then
 		end
 
 	--clear the cache
-		if (user_name ~= nil) then
-			cmd = "delete directory:"..user_name.."@"..context;
-			result = api:execute("memcache", cmd);
-			if (debug["var"]) then
-				freeswitch.consoleLog("NOTICE", "[dial_string] memcache ".. cmd .. "\n");
-				freeswitch.consoleLog("NOTICE", "[dial_string] result: ".. result .. "\n");
+		if (user_name ~= nil and context ~= nil) then
+			if (cache.support()) then
+				cache.del("directory:"..user_name.."@"..context);
+				if #number_alias > 0 then
+					cache.del("directory:"..number_alias.."@"..domain_name);
+				end
 			end
 		end
-		if (db_extension ~= nil) then
-			cmd = "delete directory:"..db_extension.."@"..context;
-			result = api:execute("memcache", cmd);
-			if (debug["var"]) then
-				freeswitch.consoleLog("NOTICE", "[dial_string] memcache ".. cmd .. "\n");
-				freeswitch.consoleLog("NOTICE", "[dial_string] result: ".. result .. "\n");
+		if (db_extension ~= nil and context ~= nil) then
+			if (cache.support()) then
+				cache.del("directory:"..db_extension.."@"..context);
+				if #number_alias > 0 then
+					cache.del("directory:"..number_alias.."@"..domain_name);
+				end
 			end
 		end
 
