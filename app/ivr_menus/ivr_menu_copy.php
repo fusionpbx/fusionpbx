@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -161,12 +161,9 @@
 //synchronize the xml config
 	save_dialplan_xml();
 
-//delete the dialplan context from memcache
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-	if ($fp) {
-		$switch_cmd = "memcache delete dialplan:".$_SESSION["context"];
-		$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-	}
+//clear the cache
+	$cache = new cache;
+	$cache->delete("dialplan:".$_SESSION["context"]);
 
 //redirect the user
 	message::add($text['message-copy']);

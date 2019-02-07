@@ -170,7 +170,7 @@
 
 --send the xml to the console
 	if (debug["xml_string"]) then
-		local file = assert(io.open(temp_dir .. "/" .. key .. ".xml", "w"));
+		local file = assert(io.open(temp_dir .. "/" .. dialplan_cache_key .. ".xml", "w"));
 		file:write(XML_STRING);
 		file:close();
 	end

@@ -123,10 +123,10 @@
 								$command = "sofia profile ".$row['profile']." flush_inbound_reg ".$row['user']." reboot";
 							}
 							if ($action == "provision") {
-								$command = "lua app.lua event_notify ".$row['profile']." check_sync ".$row['user']." ".$vendor;
+								$command = "lua app.lua event_notify ".$row['profile']." check_sync ".$row['user']." ".$vendor." ".$row['host'];
 							}
 							if ($action == "reboot") {
-								$command = "lua app.lua event_notify ".$row['profile']." reboot ".$row['user']." ".$vendor;
+								$command = "lua app.lua event_notify ".$row['profile']." reboot ".$row['user']." ".$vendor." ".$row['host'];
 							}
 						//send the command
 							$response = event_socket_request($fp, "api ".$command);
@@ -274,6 +274,7 @@
 								echo "		<input type='hidden' name=\"registrations[$x][user]\" value='".escape($row['user'])."' />\n";
 								echo "		<input type='hidden' name=\"registrations[$x][profile]\" value='".escape($row['sip_profile_name'])."' />\n";
 								echo "		<input type='hidden' name=\"registrations[$x][agent]\" value='".escape($row['agent'])."' />\n";
+								echo "		<input type='hidden' name=\"registrations[$x][host]\" value='".escape($row['host'])."' />\n";
 								echo "		<input type='hidden' name=\"registrations[$x][domain]\" value='".escape($row['sip-auth-realm'])."' />\n";
 								echo "	</td>\n";
 								echo "	<td class='".$row_style[$c]."'>".escape($row['user'])."&nbsp;</td>\n";

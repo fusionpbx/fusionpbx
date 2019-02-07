@@ -47,6 +47,7 @@
 	$rdr = check_str($_GET['rdr']);
 	$profile = check_str($_GET['profile']);
 	$domain = check_str($_GET['domain']);
+	$host = check_str($_GET['host']);
 	$show = check_str($_GET['show']);
 	$user = check_str($_GET['user']);
 	$agent = check_str($_GET['agent']);

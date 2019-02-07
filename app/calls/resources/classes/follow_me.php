@@ -310,7 +310,7 @@ include "root.php";
 				$x = 0;
 				if (is_array($result)) foreach ($result as &$row) {
 					if ($x > 0) {
-						$dial_string .= ":_:";
+						$dial_string .= ",";
 					}
 					if (($presence_id = extension_presence_id($row["follow_me_destination"])) !== false) {
 						$variables[] = "presence_id=".$presence_id."@".$_SESSION['domain_name'];
