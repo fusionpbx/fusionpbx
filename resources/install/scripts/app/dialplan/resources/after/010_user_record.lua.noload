@@ -15,8 +15,11 @@
 			end
 			path = path.."/archive/"..(os.date("%Y")).."/"..(os.date("%b")).."/"..(os.date("%d"));
 
-		--make sure the path exists
-			api:executeString("system mkdir -p "..path);
+		--add functions
+			require "resources.functions.mkdir";
+			
+		--make sure the recordings directory exists
+			mkdir(path);
 
 		--check whether to record the to user
 			if (user_exists == "true") then
