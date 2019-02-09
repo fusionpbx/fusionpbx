@@ -83,7 +83,7 @@
 		//set the variables
 			$group_uuid = check_str($_GET["group_uuid"]);
 		//delete the group from the users
-			$sql = "delete from v_group_users ";
+			$sql = "delete from v_user_groups ";
 			$sql .= "where group_uuid = '".$group_uuid."' ";
 			$sql .= "and user_uuid = '".$user_uuid."' ";
 			$db->exec(check_sql($sql));
@@ -362,7 +362,7 @@
 		//update domain, if changed
 			if ((permission_exists('user_add') || permission_exists('user_edit')) && permission_exists('user_domain')) {
 				//adjust group user records
-					$sql = "select group_user_uuid from v_group_users ";
+					$sql = "select user_group_uuid from v_user_groups ";
 					$sql .= "where user_uuid = '".$user_uuid."' ";
 					$prep_statement = $db->prepare(check_sql($sql));
 					if ($prep_statement) {
@@ -392,7 +392,7 @@
 					}
 					unset($sql, $prep_statement, $result, $row);
 				//unassign any foreign domain groups
-					$sql = "delete from v_group_users where ";
+					$sql = "delete from v_user_groups where ";
 					$sql .= "domain_uuid = '".$domain_uuid."' ";
 					$sql .= "and user_uuid = '".$user_uuid."' ";
 					$sql .= "and group_uuid not in (";
@@ -778,18 +778,18 @@
 		echo "		<td class='vtable'>";
 
 		$sql = "select ";
-		$sql .= "	gu.*, g.domain_uuid as group_domain_uuid ";
+		$sql .= "	ug.*, g.domain_uuid as group_domain_uuid ";
 		$sql .= "from ";
-		$sql .= "	v_group_users as gu, ";
+		$sql .= "	v_user_groups as ug, ";
 		$sql .= "	v_groups as g ";
 		$sql .= "where ";
-		$sql .= "	gu.group_uuid = g.group_uuid ";
+		$sql .= "	ug.group_uuid = g.group_uuid ";
 		$sql .= "	and (";
 		$sql .= "		g.domain_uuid = :domain_uuid ";
 		$sql .= "		or g.domain_uuid is null ";
 		$sql .= "	) ";
-		$sql .= "	and gu.domain_uuid = :domain_uuid ";
-		$sql .= "	and gu.user_uuid = :user_uuid ";
+		$sql .= "	and ug.domain_uuid = :domain_uuid ";
+		$sql .= "	and ug.user_uuid = :user_uuid ";
 		$sql .= "order by ";
 		$sql .= "	g.domain_uuid desc, ";
 		$sql .= "	g.group_name asc ";
@@ -798,8 +798,7 @@
 		$prep_statement->bindParam(':user_uuid', $user_uuid);
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
-		if ($result_count > 0) {
+		if (is_array($result)) {
 			echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
 			foreach($result as $field) {
 				if (strlen($field['group_name']) > 0) {
