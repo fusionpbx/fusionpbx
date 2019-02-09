@@ -62,8 +62,8 @@
 			}
 			unset ($prep_statement);
 
-		//delete the group users
-			$sql = "delete from v_group_users ";
+		//delete the user groups
+			$sql = "delete from v_user_groups ";
 			$sql .= "where group_uuid = '".$group_uuid."' ";
 			if (!$db->exec($sql)) {
 				$error = $db->errorInfo();
