@@ -350,11 +350,11 @@
 						case "superadmin": if (!if_group("superadmin")) { break; }
 						case "admin": if (!if_group("superadmin") && !if_group("admin")) { break; }
 						default: //add group user to array for insert
-							$array['group_users'][$n]['user_group_uuid'] = uuid();
-							$array['group_users'][$n]['domain_uuid'] = $domain_uuid;
-							$array['group_users'][$n]['group_name'] = $group_name;
-							$array['group_users'][$n]['group_uuid'] = $group_uuid;
-							$array['group_users'][$n]['user_uuid'] = $user_uuid;
+							$array['user_groups'][$n]['user_group_uuid'] = uuid();
+							$array['user_groups'][$n]['domain_uuid'] = $domain_uuid;
+							$array['user_groups'][$n]['group_name'] = $group_name;
+							$array['user_groups'][$n]['group_uuid'] = $group_uuid;
+							$array['user_groups'][$n]['user_uuid'] = $user_uuid;
 							$n++;
 					}
 			}
@@ -370,8 +370,8 @@
 						$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 						foreach ($result as $row) {
 							//add group user to array for update
-								$array['group_users'][$n]['user_group_uuid'] = $row['user_group_uuid'];
-								$array['group_users'][$n]['domain_uuid'] = $domain_uuid;
+								$array['user_groups'][$n]['user_group_uuid'] = $row['user_group_uuid'];
+								$array['user_groups'][$n]['domain_uuid'] = $domain_uuid;
 								$n++;
 						}
 					}
