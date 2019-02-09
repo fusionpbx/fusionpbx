@@ -70,7 +70,7 @@
 				from v_contact_phones t0
 				inner join v_contacts t1 on t0.contact_uuid = t1.contact_uuid
 				left outer join v_contact_groups t2 on t1.contact_uuid = t2.contact_uuid
-				left outer join v_group_users t3 on t2.group_uuid = t3.group_uuid
+				left outer join v_user_groups t3 on t2.group_uuid = t3.group_uuid
 				left outer join v_users t4 on t3.user_uuid = t4.user_uuid
 				left outer join v_extension_users t5 on t4.user_uuid = t5.user_uuid
 				left outer join v_extensions t6 on t5.extension_uuid = t6.extension_uuid
