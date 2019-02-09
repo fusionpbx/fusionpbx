@@ -48,10 +48,10 @@ if ($domains_processed == 1) {
 						$sub_result = $prep_statement_sub->fetch(PDO::FETCH_ASSOC);
 						unset ($prep_statement_sub);
 						$group_uuid = $sub_result['group_uuid'];
-					//set the group_uuid
+					//set the user_group_uuid
 						$sql = "update v_user_groups set ";
 						$sql .= "group_uuid = '".$group_uuid."' ";
-						$sql .= "where group_user_uuid = '".$row['group_user_uuid']."'; ";
+						$sql .= "where user_group_uuid = '".$row['user_group_uuid']."'; ";
 						$db->exec($sql);
 						unset($sql);
 				}
