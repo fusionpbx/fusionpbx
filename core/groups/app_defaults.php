@@ -31,7 +31,7 @@ if ($domains_processed == 1) {
 		$group->defaults();
 
 	//find rows that have a null group_uuid and set the correct group_uuid
-		$sql = "select * from v_group_users ";
+		$sql = "select * from v_user_groups ";
 		$sql .= "where group_uuid is null; ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		if ($prep_statement) {
@@ -49,7 +49,7 @@ if ($domains_processed == 1) {
 						unset ($prep_statement_sub);
 						$group_uuid = $sub_result['group_uuid'];
 					//set the group_uuid
-						$sql = "update v_group_users set ";
+						$sql = "update v_user_groups set ";
 						$sql .= "group_uuid = '".$group_uuid."' ";
 						$sql .= "where group_user_uuid = '".$row['group_user_uuid']."'; ";
 						$db->exec($sql);
