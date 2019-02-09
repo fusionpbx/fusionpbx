@@ -50,7 +50,7 @@
 	$group_uuid = check_str($_GET["group_uuid"]);
 
 //delete the group membership
-	$sql_delete = "delete from v_group_users ";
+	$sql_delete = "delete from v_user_groups ";
 	$sql_delete .= "where user_uuid = '".$user_uuid."' ";
 	$sql_delete .= "and group_uuid = '".$group_uuid."' ";
 	if (!$db->exec($sql_delete)) {
