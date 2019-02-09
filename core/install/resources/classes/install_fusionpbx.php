@@ -737,7 +737,7 @@ include "root.php";
 				//add the user to the superadmin group
 				$sql = "insert into v_user_groups ";
 				$sql .= "(";
-				$sql .= "group_user_uuid, ";
+				$sql .= "user_group_uuid, ";
 				$sql .= "domain_uuid, ";
 				$sql .= "user_uuid, ";
 				$sql .= "group_name ";
