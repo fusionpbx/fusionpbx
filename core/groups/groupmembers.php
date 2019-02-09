@@ -177,7 +177,7 @@
 
 		$c = ($c) ? 0 : 1;
 
-		$group_users[] = $row["user_uuid"];
+		$user_groups[] = $row["user_uuid"];
 		$count++;
 	}
 
@@ -187,4 +187,5 @@
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>
