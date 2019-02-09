@@ -57,18 +57,18 @@
 
 //get the user group(s) from the database
 	$sql = "select ";
-	$sql .= "	gu.*, g.domain_uuid as group_domain_uuid ";
+	$sql .= "	ug.*, g.domain_uuid as group_domain_uuid ";
 	$sql .= "from ";
-	$sql .= "	v_group_users as gu, ";
+	$sql .= "	v_user_groups as ug, ";
 	$sql .= "	v_groups as g ";
 	$sql .= "where ";
-	$sql .= "	gu.group_uuid = g.group_uuid ";
+	$sql .= "	ug.group_uuid = g.group_uuid ";
 	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
 		$sql .= "	and (";
 		$sql .= "		g.domain_uuid = '".$domain_uuid."' ";
 		$sql .= "		or g.domain_uuid is null ";
 		$sql .= "	) ";
-		$sql .= "	and gu.domain_uuid = '".$domain_uuid."' ";
+		$sql .= "	and ug.domain_uuid = '".$domain_uuid."' ";
 	}
 	$sql .= "order by ";
 	$sql .= "	g.domain_uuid desc, ";
@@ -76,7 +76,7 @@
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	if (count($result) > 0) {
+	if (is_array($result)) {
 		foreach($result as $row) {
 			$user_groups[$row['user_uuid']][] = $row['group_name'].(($row['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$row['group_domain_uuid']]['domain_name'] : null);
 		}
