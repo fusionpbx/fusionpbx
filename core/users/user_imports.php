@@ -126,7 +126,7 @@
 					$i++;	
 				}
 			}
-			$schema[$i]['table'] = 'group_users';
+			$schema[$i]['table'] = 'user_groups';
 			$schema[$i]['parent'] = 'users';
 			$schema[$i]['fields'][] = 'group_name';
 
@@ -310,18 +310,18 @@
 												foreach ($groups as $field) {
 													if ($field['group_name'] == $result[$key]) {
 														$group_name = $field['group_name'];
-														$array['group_users'][$row_id]['user_group_uuid'] = uuid();
-														$array['group_users'][$row_id]['domain_uuid'] = $domain_uuid;
-														$array['group_users'][$row_id]['group_name'] = $field['group_name'];
-														$array['group_users'][$row_id]['group_uuid'] = $field['group_uuid'];
-														$array['group_users'][$row_id]['user_uuid'] = $user_uuid;
+														$array['user_groups'][$row_id]['user_group_uuid'] = uuid();
+														$array['user_groups'][$row_id]['domain_uuid'] = $domain_uuid;
+														$array['user_groups'][$row_id]['group_name'] = $field['group_name'];
+														$array['user_groups'][$row_id]['group_uuid'] = $field['group_uuid'];
+														$array['user_groups'][$row_id]['user_uuid'] = $user_uuid;
 													}
 												}
 	
 												//remove superadmin if not the correct permission
 												if ($group_name == 'superadmin') {
 													if (!permission_exists('group_domain')) {
-														unset($array['group_users'][$row_id]);
+														unset($array['user_groups'][$row_id]);
 													}
 												}
 										}
