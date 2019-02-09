@@ -310,7 +310,7 @@
 												foreach ($groups as $field) {
 													if ($field['group_name'] == $result[$key]) {
 														$group_name = $field['group_name'];
-														$array['group_users'][$row_id]['group_user_uuid'] = uuid();
+														$array['group_users'][$row_id]['user_group_uuid'] = uuid();
 														$array['group_users'][$row_id]['domain_uuid'] = $domain_uuid;
 														$array['group_users'][$row_id]['group_name'] = $field['group_name'];
 														$array['group_users'][$row_id]['group_uuid'] = $field['group_uuid'];
