@@ -85,7 +85,7 @@
 				//group changed from global to domain-specific
 				if ($domain_uuid_previous == '' && $domain_uuid != '') {
 					//remove any users assigned to the group from the old domain
-						$sql = "delete from v_group_users where group_uuid = '".$group_uuid."' and domain_uuid <> '".$domain_uuid."' ";
+						$sql = "delete from v_user_groups where group_uuid = '".$group_uuid."' and domain_uuid <> '".$domain_uuid."' ";
 						if (!$db->exec(check_sql($sql))) {
 							$error = $db->errorInfo();
 							//echo "<pre>".print_r($error, true)."</pre>"; exit;
@@ -99,7 +99,7 @@
 					//change group name
 						if ($group_name != $group_name_previous && $group_name != '') {
 							//change group name in group users
-								$sql = "update v_group_users set group_name = '".$group_name."' where group_uuid = '".$group_uuid."' and group_name = '".$group_name_previous."' ";
+								$sql = "update v_user_groups set group_name = '".$group_name."' where group_uuid = '".$group_uuid."' and group_name = '".$group_name_previous."' ";
 								if (!$db->exec(check_sql($sql))) {
 									$error = $db->errorInfo();
 									//echo "<pre>".print_r($error, true)."</pre>"; exit;
@@ -116,7 +116,7 @@
 				//group changed from one domain to another
 				else if ($domain_uuid_previous != '' && $domain_uuid != '' && $domain_uuid_previous != $domain_uuid) {
 					//remove any users assigned to the group from the old domain
-						$sql = "delete from v_group_users where group_uuid = '".$group_uuid."' and domain_uuid = '".$domain_uuid_previous."' ";
+						$sql = "delete from v_user_groups where group_uuid = '".$group_uuid."' and domain_uuid = '".$domain_uuid_previous."' ";
 						if (!$db->exec(check_sql($sql))) {
 							$error = $db->errorInfo();
 							//echo "<pre>".print_r($error, true)."</pre>"; exit;
@@ -130,7 +130,7 @@
 					//change group name
 						if ($group_name != $group_name_previous && $group_name != '') {
 							//change group name in group users
-								$sql = "update v_group_users set group_name = '".$group_name."' where group_uuid = '".$group_uuid."' and group_name = '".$group_name_previous."' ";
+								$sql = "update v_user_groups set group_name = '".$group_name."' where group_uuid = '".$group_uuid."' and group_name = '".$group_name_previous."' ";
 								if (!$db->exec(check_sql($sql))) {
 									$error = $db->errorInfo();
 									//echo "<pre>".print_r($error, true)."</pre>"; exit;
@@ -149,7 +149,7 @@
 					//change group name
 						if ($group_name != $group_name_previous && $group_name != '') {
 							//change group name in group users
-								$sql = "update v_group_users set group_name = '".$group_name."' where group_uuid = '".$group_uuid."' and group_name = '".$group_name_previous."' ";
+								$sql = "update v_user_groups set group_name = '".$group_name."' where group_uuid = '".$group_uuid."' and group_name = '".$group_name_previous."' ";
 								if (!$db->exec(check_sql($sql))) {
 									$error = $db->errorInfo();
 									//echo "<pre>".print_r($error, true)."</pre>"; exit;
@@ -174,7 +174,7 @@
 					//change group name
 						if ($group_name != $group_name_previous && $group_name != '') {
 							//change group name in group users
-								$sql = "update v_group_users set group_name = '".$group_name."' where group_uuid = '".$group_uuid."' and group_name = '".$group_name_previous."' ";
+								$sql = "update v_user_groups set group_name = '".$group_name."' where group_uuid = '".$group_uuid."' and group_name = '".$group_name_previous."' ";
 								if (!$db->exec(check_sql($sql))) {
 									$error = $db->errorInfo();
 									//echo "<pre>".print_r($error, true)."</pre>"; exit;
