@@ -81,15 +81,19 @@
 //delete the group from the user
 	if ($_GET["a"] == "delete" && permission_exists("user_delete")) {
 		//set the variables
-			$group_uuid = check_str($_GET["group_uuid"]);
+			$group_uuid = $_GET["group_uuid"];
 		//delete the group from the users
-			$sql = "delete from v_user_groups ";
-			$sql .= "where group_uuid = '".$group_uuid."' ";
-			$sql .= "and user_uuid = '".$user_uuid."' ";
-			$db->exec(check_sql($sql));
+			if (is_uuid($group_uuid) && is_uuid($user_uuid)) {
+				$sql = "delete from v_user_groups ";
+				$sql .= "where group_uuid = '".$group_uuid."' ";
+				$sql .= "and user_uuid = '".$user_uuid."' ";
+				$db->exec(check_sql($sql));
+			}
 		//redirect the user
 			message::add($text['message-update']);
-			header("Location: user_edit.php?id=".$user_uuid);
+			if (is_uuid($user_uuid)) {
+				header("Location: user_edit.php?id=".$user_uuid);
+			}
 			return;
 	}
 
@@ -346,17 +350,17 @@
 				$group_uuid = $group_data[0];
 				$group_name = $group_data[1];
 				//only a superadmin can add other superadmins or admins, admins can only add other admins
-					switch ($group_name) {
-						case "superadmin": if (!if_group("superadmin")) { break; }
-						case "admin": if (!if_group("superadmin") && !if_group("admin")) { break; }
-						default: //add group user to array for insert
-							$array['user_groups'][$n]['user_group_uuid'] = uuid();
-							$array['user_groups'][$n]['domain_uuid'] = $domain_uuid;
-							$array['user_groups'][$n]['group_name'] = $group_name;
-							$array['user_groups'][$n]['group_uuid'] = $group_uuid;
-							$array['user_groups'][$n]['user_uuid'] = $user_uuid;
-							$n++;
-					}
+				switch ($group_name) {
+					case "superadmin": if (!if_group("superadmin")) { break; }
+					case "admin": if (!if_group("superadmin") && !if_group("admin")) { break; }
+					default: //add group user to array for insert
+						$array['user_groups'][$n]['user_group_uuid'] = uuid();
+						$array['user_groups'][$n]['domain_uuid'] = $domain_uuid;
+						$array['user_groups'][$n]['group_name'] = $group_name;
+						$array['user_groups'][$n]['group_uuid'] = $group_uuid;
+						$array['user_groups'][$n]['user_uuid'] = $user_uuid;
+						$n++;
+				}
 			}
 
 		//update domain, if changed
@@ -806,12 +810,10 @@
 					echo "	<td class='vtable' style='white-space: nowrap; padding-right: 30px;' nowrap='nowrap'>";
 					echo escape($field['group_name']).(($field['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['group_domain_uuid']]['domain_name'] : null);
 					echo "	</td>\n";
-					if ($result_count > 1) {
-						if (permission_exists('group_member_delete') || if_group("superadmin")) {
-							echo "	<td class='list_control_icons' style='width: 25px;'>\n";
-							echo "		<a href='user_edit.php?id=".escape($user_uuid)."&domain_uuid=".escape($domain_uuid)."&group_uuid=".escape($field['group_uuid'])."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>\n";
-							echo "	</td>\n";
-						}
+					if (permission_exists('group_member_delete') || if_group("superadmin")) {
+						echo "	<td class='list_control_icons' style='width: 25px;'>\n";
+						echo "		<a href='user_edit.php?id=".escape($user_uuid)."&domain_uuid=".escape($domain_uuid)."&group_uuid=".escape($field['group_uuid'])."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>\n";
+						echo "	</td>\n";
 					}
 					echo "</tr>\n";
 					$assigned_groups[] = $field['group_uuid'];
@@ -819,7 +821,7 @@
 			}
 			echo "</table>\n";
 		}
-		unset($sql, $prep_statement, $result, $result_count);
+		unset($sql, $prep_statement, $result);
 
 		$sql = "select * from v_groups ";
 		$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
