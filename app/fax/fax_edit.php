@@ -130,7 +130,7 @@
 		$fax_name = substr($fax_name, 0, 30);
 		$fax_extension = substr($fax_extension, 0, 15);
 		$accountcode = substr($accountcode, 0, 80);
-		$fax_prefix = substr($fax_prefix, 0, 10);
+		$fax_prefix = substr($fax_prefix, 0, 12);
 		$fax_caller_id_name = substr($fax_caller_id_name, 0, 20);
 		$fax_caller_id_number = substr($fax_caller_id_number, 0, 20);
 		$fax_forward_number = substr($fax_forward_number, 0, 20);
@@ -554,7 +554,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	".$text['label-fax_prefix']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='fax_prefix' maxlength='10' value=\"".escape($fax_prefix)."\">\n";
+		echo "	<input class='formfld' type='text' name='fax_prefix' maxlength='12' value=\"".escape($fax_prefix)."\">\n";
 		echo "<br />\n";
 		echo " ".$text['description-fax_prefix']."\n";
 		echo "</td>\n";
