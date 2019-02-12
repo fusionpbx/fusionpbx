@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -303,8 +303,8 @@ if (!function_exists('fax_split_dtmf')) {
 				$gs_g = ((int) ($page_width * 204)).'x'.((int) ($page_height * 196));
 				break;
 			case 'superfine':
-				$gs_r = '408x391';
-				$gs_g = ((int) ($page_width * 408)).'x'.((int) ($page_height * 391));
+				$gs_r = '204x392';
+				$gs_g = ((int) ($page_width * 204)).'x'.((int) ($page_height * 392));
 				break;
 			case 'normal':
 			default:
