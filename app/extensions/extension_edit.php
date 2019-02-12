@@ -363,7 +363,9 @@
 									}
 									$array["extensions"][$i]["hold_music"] = $hold_music;
 									$array["extensions"][$i]["auth_acl"] = $auth_acl;
-									$array["extensions"][$i]["cidr"] = $cidr;
+									if (permission_exists("extension_cidr")) {
+										$array["extensions"][$i]["cidr"] = $cidr;
+									}
 									$array["extensions"][$i]["sip_force_contact"] = $sip_force_contact;
 									$array["extensions"][$i]["sip_force_expires"] = $sip_force_expires;
 									if (permission_exists('extension_nibble_account')) {
@@ -1635,16 +1637,18 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-cidr']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='cidr' maxlength='255' value=\"".escape($cidr)."\">\n";
-	echo "<br />\n";
-	echo $text['description-cidr']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists("extension_cidr")) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-cidr']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <input class='formfld' type='text' name='cidr' maxlength='255' value=\"".escape($cidr)."\">\n";
+		echo "<br />\n";
+		echo $text['description-cidr']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
