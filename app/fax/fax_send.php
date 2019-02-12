@@ -303,8 +303,8 @@ if (!function_exists('fax_split_dtmf')) {
 				$gs_g = ((int) ($page_width * 204)).'x'.((int) ($page_height * 196));
 				break;
 			case 'superfine':
-				$gs_r = '408x391';
-				$gs_g = ((int) ($page_width * 408)).'x'.((int) ($page_height * 391));
+				$gs_r = '204x392';
+				$gs_g = ((int) ($page_width * 204)).'x'.((int) ($page_height * 392));
 				break;
 			case 'normal':
 			default:
@@ -376,8 +376,12 @@ if (!function_exists('fax_split_dtmf')) {
 				if (file_exists($dir_fax_temp.'/'.$fax_name.'.pdf')) {
 					chdir($dir_fax_temp);
 
+					//$cmd = gs_cmd("-q -sDEVICE=psmono -r".$gs_r." -g".$gs_g." -dNOPAUSE -dBATCH -dSAFER -sOutputFile=".correct_path($fax_name).".pdf -- ".correct_path($fax_name).".pdf -c quit");
+					// echo($cmd . "<br/>\n");
+					//exec($cmd);
+
 					//convert pdf to tif
-					$cmd = gs_cmd("-q -sDEVICE=tiffg3 -r".$gs_r." -g".$gs_g." -dNOPAUSE -sOutputFile=".correct_path($fax_name).".tif -- ".correct_path($fax_name).".pdf -c quit");
+					$cmd = gs_cmd("-q -sDEVICE=tiffg32d -r".$gs_r." -g".$gs_g." -dBATCH -dPDFFitPage -dNOPAUSE -sOutputFile=".correct_path($fax_name).".tif -- ".correct_path($fax_name).".pdf -c quit");
 					// echo($cmd . "<br/>\n");
 					exec($cmd);
 					@unlink($dir_fax_temp.'/'.$fax_name.'.pdf');
@@ -596,7 +600,8 @@ if (!function_exists('fax_split_dtmf')) {
 			//convert pdf to tif, add to array of pages, delete pdf
 			if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.'_cover.pdf')) {
 				chdir($dir_fax_temp);
-				$cmd = gs_cmd("-q -sDEVICE=tiffg3 -r".$gs_r." -g".$gs_g." -dNOPAUSE -sOutputFile=".correct_path($fax_instance_uuid)."_cover.tif -- ".correct_path($fax_instance_uuid)."_cover.pdf -c quit");
+
+				$cmd = gs_cmd("-q -sDEVICE=tiffg32d -r".$gs_r." -g".$gs_g." -dBATCH -dPDFFitPage -dNOPAUSE -sOutputFile=".correct_path($fax_instance_uuid)."_cover.tif -- ".correct_path($fax_instance_uuid)."_cover.pdf -c quit");
 				// echo($cmd . "<br/>\n");
 				exec($cmd);
 				if (is_array($tif_files) && sizeof($tif_files) > 0) {
@@ -635,8 +640,12 @@ if (!function_exists('fax_split_dtmf')) {
 
 			chdir($dir_fax_temp);
 
+			//$cmd = gs_cmd("-q -sDEVICE=psmono -r".$gs_r." -g".$gs_g." -dNOPAUSE -dBATCH -dSAFER -sOutputFile=".correct_path($fax_instance_uuid).".pdf -- ".correct_path($fax_instance_uuid).".pdf -c quit");
+			// echo($cmd . "<br/>\n");
+			//exec($cmd);
+
 			//convert pdf to tif
-			$cmd = gs_cmd('-q -sDEVICE=tiffg3 -r'.$gs_r.' -g'.$gs_g.' -dNOPAUSE -sOutputFile='.
+			$cmd = gs_cmd('-q -sDEVICE=tiffg32d -r'.$gs_r.' -g'.$gs_g.' -dBATCH -dPDFFitPage -dNOPAUSE -sOutputFile='.
 				correct_path($fax_instance_uuid.'_temp.tif').
 				' -- '.$fax_instance_uuid.'.pdf -c quit');
 			// echo($cmd . "<br/>\n");
