@@ -348,8 +348,14 @@ if (!class_exists('schema')) {
 			public function db_create_table ($apps, $db_type, $table) {
 				if (is_array($apps)) foreach ($apps as $x => &$app) {
 					if (is_array($app['db'])) foreach ($app['db'] as $y => $row) {
-						if ($row['table']['name'] == $table) {
-							$sql = "CREATE TABLE " . $row['table']['name'] . " (\n";
+						if (is_array($row['table']['name'])) {
+							$table_name = $row['table']['name']['text'];
+						}
+						else {
+							$table_name = $row['table']['name'];
+						}
+						if ($table_name == $table) {
+							$sql = "CREATE TABLE " . $table_name . " (\n";
 							$field_count = 0;
 							if (is_array($row['fields'])) foreach ($row['fields'] as $field) {
 								if ($field['deprecated'] == "true") {
@@ -585,19 +591,26 @@ if (!class_exists('schema')) {
 						if (isset($app['db'])) foreach ($app['db'] as $y => &$row) {
 							if (is_array($row['table']['name'])) {
 								$table_name = $row['table']['name']['text'];
-								if (!$this->db_table_exists($db_type, $db_name, $row['table']['name']['text'])) {
-									$row['exists'] = "true"; //testing
-									//if (db_table_exists($db_type, $db_name, $row['table']['name']['deprecated'])) {
-										if ($db_type == "pgsql") {
-											$sql_update .= "ALTER TABLE ".$row['table']['name']['deprecated']." RENAME TO ".$row['table']['name']['text'].";\n";
-										}
-										if ($db_type == "mysql") {
-											$sql_update .= "RENAME TABLE ".$row['table']['name']['deprecated']." TO ".$row['table']['name']['text'].";\n";
-										}
-										if ($db_type == "sqlite") {
-											$sql_update .= "ALTER TABLE ".$row['table']['name']['deprecated']." RENAME TO ".$row['table']['name']['text'].";\n";
-										}
-									//}
+								if ($this->db_table_exists($db_type, $db_name, $row['table']['name']['deprecated'])) {
+									$row['exists'] = "false"; //testing
+									if ($db_type == "pgsql") {
+										$sql_update .= "ALTER TABLE ".$row['table']['name']['deprecated']." RENAME TO ".$row['table']['name']['text'].";\n";
+									}
+									if ($db_type == "mysql") {
+										$sql_update .= "RENAME TABLE ".$row['table']['name']['deprecated']." TO ".$row['table']['name']['text'].";\n";
+									}
+									if ($db_type == "sqlite") {
+										$sql_update .= "ALTER TABLE ".$row['table']['name']['deprecated']." RENAME TO ".$row['table']['name']['text'].";\n";
+									}
+								}
+								else {
+									if ($this->db_table_exists($db_type, $db_name, $row['table']['name']['text'])) {
+										$row['exists'] = "true";
+									}
+									else {
+										$row['exists'] = "false";
+										$sql_update .= $this->db_create_table($apps, $db_type, $row['table']['name']['text']);
+									}
 								}
 							}
 							else {
