@@ -211,7 +211,7 @@
     <codec4></codec4>
     <codec5></codec5>
     <maxchannel>0</maxchannel>
-    <qualify>no</qualify>
+    <qualify>yes</qualify>
     <dtmfmode>rfc2833</dtmfmode>
     <krdiversion></krdiversion>
     <realm></realm>
