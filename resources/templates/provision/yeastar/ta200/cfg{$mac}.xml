@@ -84,7 +84,7 @@
     <ciddtmfinterval>120</ciddtmfinterval>
     <answeronpolarityswitch>no</answeronpolarityswitch>
     <hanguponpolarityswitch>no</hanguponpolarityswitch>
-    <enablemwi>no</enablemwi>
+    <enablemwi>yes</enablemwi>
     <minrxflash>300</minrxflash>
     <cidmode>default</cidmode>
     <cidsendingmode>ring</cidsendingmode>
@@ -136,7 +136,7 @@
     <ciddtmfinterval>120</ciddtmfinterval>
     <answeronpolarityswitch>no</answeronpolarityswitch>
     <hanguponpolarityswitch>no</hanguponpolarityswitch>
-    <enablemwi>no</enablemwi>
+    <enablemwi>yesy</enablemwi>
     <minrxflash>300</minrxflash>
     <cidmode>default</cidmode>
     <cidsendingmode>ring</cidsendingmode>
