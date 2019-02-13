@@ -136,8 +136,6 @@
 --get the variables
 	if (session:ready()) then
 		session:setAutoHangup(false);
-		domain_name = session:getVariable("domain_name");
-		domain_uuid = session:getVariable("domain_uuid");
 		ring_group_uuid = session:getVariable("ring_group_uuid");
 		recordings_dir = session:getVariable("recordings_dir");
 		sounds_dir = session:getVariable("sounds_dir");
@@ -187,13 +185,6 @@
 		record_ext = "wav";
 	end
 
---set the recording path
-	record_path = recordings_dir .. "/" .. domain_name .. "/archive/" .. os.date("%Y/%b/%d");
-	record_path = record_path:gsub("\\", "/");
-
---set the recording file
-	record_name = uuid .. "." .. record_ext;
-
 --prepare the api object
 	api = freeswitch.API();
 
@@ -206,24 +197,16 @@
 --get current switchname
 	hostname = trim(api:execute("switchname", ""))
 
---get the domain_uuid if it not already set
-	if (domain_uuid == nil or domain_uuid == '' and domain_name) then
-		sql = "SELECT domain_uuid FROM v_domains as d ";
-		sql = sql .. "where d.domain_name = :domain_name ";
-		local params = {domain_name = domain_name};
-		status = dbh:query(sql, params, function(row)
-			domain_uuid = row["domain_uuid"];
-		end);
-	end
-
 --get the ring group
 	ring_group_forward_enabled = "";
 	ring_group_forward_destination = "";
-	sql = "SELECT r.* FROM v_ring_groups as r ";
+	sql = "SELECT d.domain_name, r.* FROM v_ring_groups as r, v_domains as d ";
 	sql = sql .. "where r.ring_group_uuid = :ring_group_uuid ";
-	sql = sql .. "and r.domain_uuid = :domain_uuid ";
-	local params = {ring_group_uuid = ring_group_uuid, domain_uuid = domain_uuid};
+	sql = sql .. "and r.domain_uuid = d.domain_uuid ";
+	local params = {ring_group_uuid = ring_group_uuid};
 	status = dbh:query(sql, params, function(row)
+		domain_uuid = row["domain_uuid"];
+		domain_name = row["domain_name"];
 		ring_group_name = row["ring_group_name"];
 		ring_group_extension = row["ring_group_extension"];
 		ring_group_greeting = row["ring_group_greeting"];
@@ -238,6 +221,13 @@
 		missed_call_app = row["ring_group_missed_call_app"];
 		missed_call_data = row["ring_group_missed_call_data"];
 	end);
+
+--set the recording path
+	record_path = recordings_dir .. "/" .. domain_name .. "/archive/" .. os.date("%Y/%b/%d");
+	record_path = record_path:gsub("\\", "/");
+
+--set the recording file
+	record_name = uuid .. "." .. record_ext;
 
 ---set the call_timeout to a higher value to prevent the early timeout of the ring group
 	if (session:ready()) then
@@ -261,8 +251,7 @@
 	sql = "SELECT r.*, u.user_uuid FROM v_ring_groups as r, v_ring_group_users as u ";
 	sql = sql .. "where r.ring_group_uuid = :ring_group_uuid ";
 	sql = sql .. "and r.ring_group_uuid = u.ring_group_uuid ";
-	sql = sql .. "and r.domain_uuid = :domain_uuid ";
-	local params = {ring_group_uuid = ring_group_uuid, domain_uuid = domain_uuid};
+	local params = {ring_group_uuid = ring_group_uuid};
 	status = dbh:query(sql, params, function(row)
 		user_uuid = row["user_uuid"];
 	end);
