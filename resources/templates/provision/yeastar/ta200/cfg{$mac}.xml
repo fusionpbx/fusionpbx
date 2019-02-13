@@ -196,7 +196,7 @@
     <type>SIP</type>
     <templatename>VoIPServer2</templatename>
     <domain></domain>
-    <host>{$server_address_2</host>
+    <host>{$server_address_2}</host>
     <port>5060</port>
     <transport>udp</transport>
     <enableregister>portregister</enableregister>
