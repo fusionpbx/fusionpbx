@@ -29,7 +29,6 @@
 
 		//add the sip profiles to the database
 			$sql = "select count(*) as num_rows from v_email_templates ";
-			$sql .= "where template_category = 'voicemail' ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			if ($prep_statement) {
 				$prep_statement->execute();
