@@ -76,13 +76,16 @@
 				message_text.click(function() {
 					var object = $(this);
 					object.clearQueue().finish();
-					$("#message_container").css({'display':'none'});
+					$("#message_container div").remove();
+					$("#message_container").css({opacity: 0, 'height': 0}).css({'height': 'auto'});
 				} );
 				$("#message_container").append(message_text);
-				message_text.animate({opacity: 1}, 250, function(){
-					$("#message_container").delay(delay).animate({opacity: 0, height: '0'}, 1000);
+				message_text.css({'height': 'auto'}).animate({opacity: 1}, 250, function(){
+					$("#message_container").delay(delay).animate({opacity: 0, 'height': 0}, 500, function() {
+						$("#message_container div").remove();
+						$("#message_container").animate({opacity: 1}, 300).css({'height': 'auto'});
+					});
 				});
-
 			}
 		}
 
@@ -91,7 +94,10 @@
 		<?php echo message::html(true, "		"); ?>
 
 		//hide message bar on hover
-			$(".message_text").mouseover(function() { $("#message_container").css({display:'none'}); });
+			$("#message_container").mouseover(function() {
+				$("#message_container div").remove();
+				$("#message_container").css({opacity: 0, 'height': 0}).css({'height': 'auto'});
+			});
 
 		<?php
 		if (permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
