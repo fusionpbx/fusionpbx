@@ -237,7 +237,6 @@
 
 				//array cleanup
 					$x = 0;
-					//unset($_POST["autocomplete"]);
 					unset($_POST["target_file"]);
 					unset($_POST["file_action"]);
 
