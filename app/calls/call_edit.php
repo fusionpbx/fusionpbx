@@ -382,11 +382,8 @@
 				$cache->delete("directory:".$number_alias."@".$_SESSION['domain_name']);
 			}
 
-		//redirect the user
+		//add the message
 			message::add($text['confirm-update']);
-			header("Location: ".$_REQUEST['return_url']);
-			return;
-
 	}
 
 //show the header
@@ -463,7 +460,6 @@
 
 //show the content
 	echo "<form method='post' name='frm' action=''>\n";
-	echo "<input type='hidden' name='return_url' value='".$_SERVER["HTTP_REFERER"]."'>\n";
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
@@ -471,7 +467,7 @@
 	echo "	<b>".$text['title']."</b>\n";
 	echo "</td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='".$_SERVER["HTTP_REFERER"]."'\" value='".$text['button-back']."'>\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='/'\" value='".$text['button-back']."'>\n";
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
