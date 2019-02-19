@@ -620,11 +620,11 @@
 	echo "		<td width='30%' class='vncellreq' valign='top'>".$text['label-username']."</td>";
 	echo "		<td width='70%' class='vtable'>";
 	if (permission_exists("user_edit")) {
-		echo "		<input type='text' class='formfld' name='username' id='username' value='".escape($username)."' required='required'>\n";
+		echo "		<input type='text' class='formfld' name='username' id='username' autocomplete='new-password' value='".escape($username)."' required='required'>\n";
 	}
 	else {
 		echo "		".escape($username)."\n";
-		echo "		<input type='hidden' name='username' id='username' value='".escape($username)."'>\n";
+		echo "		<input type='hidden' name='username' id='username' autocomplete='new-password' value='".escape($username)."'>\n";
 	}
 	echo "		</td>";
 	echo "	</tr>";
@@ -633,14 +633,14 @@
 	echo "		<td class='vncell".(($action == 'add') ? 'req' : null)."' valign='top'>".$text['label-password']."</td>";
 	echo "		<td class='vtable'>";
 	echo "			<input style='display: none;' type='password'>";
-	echo "			<input type='password' autocomplete='off' class='formfld' name='password' id='password' value='' onkeypress='show_strength_meter();' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'>";
+	echo "			<input type='password' autocomplete='new-password' class='formfld' name='password' id='password' value='' onkeypress='show_strength_meter();' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'>";
 	echo "			<div id='pwstrength_progress' class='pwstrength_progress'></div>";
 	echo "		</td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncell".(($action == 'add') ? 'req' : null)."' valign='top'>".$text['label-confirm_password']."</td>";
 	echo "		<td class='vtable'>";
-	echo "			<input type='password' autocomplete='off' class='formfld' name='password_confirm' id='password_confirm' value='' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'>";
+	echo "			<input type='password' autocomplete='new-password' class='formfld' name='password_confirm' id='password_confirm' value='' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'>";
 	echo "		</td>";
 	echo "	</tr>";
 
