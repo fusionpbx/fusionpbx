@@ -343,10 +343,12 @@ include "root.php";
 						$variables[] = "domain=".$_SESSION['domain_name'];
 						$variables[] = "extension_uuid=".$this->extension_uuid;
 						$variables[] = "leg_delay_start=".$row["follow_me_delay"];
+						$variables[] = "originate_delay_start=".$row["follow_me_delay"];
 						$variables[] = "leg_timeout=".$row["follow_me_timeout"];
 
-						//$dial_string .= "\${sofia_contact(".$row["follow_me_destination"]."@".$_SESSION['domain_name'].")}";
-						$dial_string .= "[".implode(",", $variables)."]user/".$row["follow_me_destination"]."@".$_SESSION['domain_name'];
+						$dial_string .= "[".implode(",", $variables)."]\${sofia_contact(".$row["follow_me_destination"]."@".$_SESSION['domain_name'].")}";
+						//$dial_string .= "[".implode(",", $variables)."]user/".$row["follow_me_destination"]."@".$_SESSION['domain_name'];
+						//$dial_string .= "loopback/export:".implode("\,export:", $variables)."\,transfer:".$row["follow_me_destination"]."/".$_SESSION['domain_name']."/inline";
 						unset($variables);
 					}
 					else {
@@ -470,6 +472,7 @@ include "root.php";
 
 				$sql  = "update v_extensions set ";
 				$sql .= "dial_domain = '".$_SESSION['domain_name']."', ";
+				$sql .= "dial_string = '".$this->follow_me_destinations."', ";
 				$sql .= "follow_me_destinations = '".$this->follow_me_destinations."', ";
 				$sql .= "follow_me_enabled = '".$this->follow_me_enabled."' ";
 				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
