@@ -419,6 +419,7 @@ include "root.php";
 						$variables[] = "originate_delay_start=".$row["follow_me_delay"];
 						$variables[] = "sleep=".($row["follow_me_delay"] * 1000);
 						$variables[] = "leg_timeout=".$row["follow_me_timeout"];
+						$variables[] = "is_follow_me_loopback=true";
 
 						if (is_numeric($row["follow_me_destination"])) {
 							if ($_SESSION['domain']['bridge']['text'] == "outbound" || $_SESSION['domain']['bridge']['text'] == "bridge") {
