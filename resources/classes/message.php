@@ -35,6 +35,10 @@ if (!class_exists('message')) {
 			$_SESSION["messages"][$mood]['delay'][] = $delay;
 		}
 		
+		static function count() {
+			return is_array($_SESSION["messages"]) ? sizeof($_SESSION["messages"]) : 0;
+		}
+		
 		static function html($clear_messages = true, $spacer = "") {
 			$html = "${spacer}//render the messages\n";
 			$spacer .="\t";
