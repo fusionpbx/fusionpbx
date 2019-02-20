@@ -56,7 +56,7 @@
 				end
 			--beep
 				if (name == "record_beep") then
-					table.insert(actions, {app="tone_stream",data="L=1;%(1000, 0, 640)"});
+					table.insert(actions, {app="tone_stream",data="L=1;%(2000, 0, 640)"});
 				end
 			--to listen to the recording press 1
 				if (name == "to_listen_to_recording") then
