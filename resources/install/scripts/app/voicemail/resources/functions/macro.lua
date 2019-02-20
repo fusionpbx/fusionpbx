@@ -56,7 +56,7 @@
 				end
 			--beep
 				if (name == "record_beep") then
-					table.insert(actions, {app="tone_stream",data="L=1;%(2000, 0, 640)"});
+					table.insert(actions, {app="tone_stream",data="L=1;%(1000, 0, 640)"});
 				end
 			--to listen to the recording press 1
 				if (name == "to_listen_to_recording") then
@@ -145,7 +145,7 @@
 				--At the tone please record your name press any key or stop talking to end the recording
 					if (name == "record_name") then
 						table.insert(actions, {app="streamFile",data="voicemail/vm-record_name1.wav"});
-						table.insert(actions, {app="tone_stream",data="L=1;%(1000, 0, 640)"});
+						table.insert(actions, {app="tone_stream",data="L=1;%(2000, 0, 640)"});
 					end
 				--To change your password press 6
 					if (name == "change_password") then
