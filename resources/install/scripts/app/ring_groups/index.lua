@@ -153,6 +153,7 @@
 		context = session:getVariable("context");
 		call_direction = session:getVariable("call_direction");
 		accountcode = session:getVariable("accountcode");
+		local_ip_v4 = session:getVariable("local_ip_v4")
 	end
 
 --default to local if nil
@@ -198,8 +199,8 @@
 	hostname = trim(api:execute("switchname", ""))
 
 --get the ring group
-	ring_group_forward_enabled = "";
-	ring_group_forward_destination = "";
+	ring_group_forward_enabled = '';
+	ring_group_forward_destination = '';
 	sql = "SELECT d.domain_name, r.* FROM v_ring_groups as r, v_domains as d ";
 	sql = sql .. "where r.ring_group_uuid = :ring_group_uuid ";
 	sql = sql .. "and r.domain_uuid = d.domain_uuid ";
@@ -494,7 +495,6 @@
 				destination_delay = row.destination_delay;
 				destination_timeout = row.destination_timeout;
 				destination_prompt = row.destination_prompt;
-				domain_name = row.domain_name;
 				toll_allow = row.toll_allow;
 
 				--determine if the user is registered if not registered then lookup 
@@ -603,7 +603,6 @@
 					destination_prompt = row.destination_prompt;
 					group_confirm_key = row.group_confirm_key;
 					group_confirm_file = row.group_confirm_file;
-					domain_name = row.domain_name;
 					toll_allow = row.toll_allow;
 					user_exists = row.user_exists;
 
@@ -661,8 +660,12 @@
 
 				--export the ringback
 					if (ring_group_distinctive_ring ~= nil) then
-						ring_group_distinctive_ring = ring_group_distinctive_ring:gsub("${local_ip_v4}", session:getVariable("local_ip_v4"));
-						ring_group_distinctive_ring = ring_group_distinctive_ring:gsub("${domain_name}", session:getVariable("domain_name"));
+						if (local_ip_v4 ~= nil) then
+							ring_group_distinctive_ring = ring_group_distinctive_ring:gsub("${local_ip_v4}", local_ip_v4);
+						end
+						if (domain_name ~= nil) then
+							ring_group_distinctive_ring = ring_group_distinctive_ring:gsub("${domain_name}", domain_name);
+						end
 						session:execute("export", "sip_h_Alert-Info="..ring_group_distinctive_ring);
 					end
 
