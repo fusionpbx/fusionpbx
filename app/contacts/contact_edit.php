@@ -307,8 +307,8 @@
 	}
 
 //set the mode
-	if (isset($_SESSION['theme']['qr_image'])) {
-		if (strlen($_SESSION['theme']['qr_image']) > 0) {
+	if (isset($_SESSION['theme']['qr_image']['text'])) {
+		if (strlen($_SESSION['theme']['qr_image']['text']) == 0) {
 			$mode = '4';
 		}
 		else {
