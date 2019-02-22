@@ -467,8 +467,6 @@ include "root.php";
 				$sql  = "update v_extensions set ";
 				$sql .= "dial_domain = '".$_SESSION['domain_name']."', ";
 				$sql .= "dial_string = '".$dial_string."', ";
-				$sql .= "follow_me_destinations = '".$dial_string."', ";
-				$sql .= "follow_me_enabled = '".$this->follow_me_enabled."' ";
 				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
 				$sql .= "and follow_me_uuid = '".$this->follow_me_uuid."' ";
 				if ($this->debug) {
