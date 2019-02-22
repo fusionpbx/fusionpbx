@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010 - 2018
+	Copyright (C) 2010 - 2019
 	All Rights Reserved.
 
 	Contributor(s):
@@ -38,7 +38,6 @@ include "root.php";
 		public $cid_number_prefix;
 		public $accountcode;
 		public $follow_me_enabled;
-		public $follow_me_destinations;
 		public $follow_me_caller_id_uuid;
 		public $follow_me_ignore_busy;
 		public $outbound_caller_id_name;
@@ -265,7 +264,6 @@ include "root.php";
 				if (is_array($result)) foreach ($result as &$row) {
 					$follow_me_uuid = $row["follow_me_uuid"];
 					$this->follow_me_enabled = $row["follow_me_enabled"];
-					$this->follow_me_destinations = $row["follow_me_destinations"];
 					$this->cid_name_prefix = $row["cid_name_prefix"];
 					$this->cid_number_prefix = $row["cid_number_prefix"];
 				}
@@ -464,16 +462,12 @@ include "root.php";
 				$dial_string = '';
 				if ($this->follow_me_enabled == "true") {
 					$dial_string = $this->dial_string;
-					$this->follow_me_destinations = $this->dial_string;
-				}
-				else {
-					$this->follow_me_destinations = '';
 				}
 
 				$sql  = "update v_extensions set ";
 				$sql .= "dial_domain = '".$_SESSION['domain_name']."', ";
-				$sql .= "dial_string = '".$this->follow_me_destinations."', ";
-				$sql .= "follow_me_destinations = '".$this->follow_me_destinations."', ";
+				$sql .= "dial_string = '".$dial_string."', ";
+				$sql .= "follow_me_destinations = '".$dial_string."', ";
 				$sql .= "follow_me_enabled = '".$this->follow_me_enabled."' ";
 				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
 				$sql .= "and follow_me_uuid = '".$this->follow_me_uuid."' ";
