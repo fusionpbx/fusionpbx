@@ -640,9 +640,10 @@ if (!class_exists('providers')) {
 			//get the hostname
 				if ($fp) {  $sip_profile_hostname = event_socket_request($fp, 'api switchname'); }
 
-			//delete each gateway
-				$gateways = $this->gateways($provider);
-				foreach ($gateways as $row) {
+
+			//delete outbound routes
+				$outbound_routes = $this->outbound_routes($provider);
+				foreach ($outbound_routes as $row) {
 					//delete child data
 					$sql = "delete from v_dialplan_details ";
 					$sql .= "where dialplan_uuid = '".$row['dialplan_uuid']."'; ";
@@ -654,7 +655,11 @@ if (!class_exists('providers')) {
 					$sql .= "where dialplan_uuid = '".$row['dialplan_uuid']."'; ";
 					$this->db->query($sql);
 					unset($sql);
+				}
 
+			//delete each gateway
+				$gateways = $this->gateways($provider);
+				foreach ($gateways as $row) {
 					//stop the gateway
 					$cmd = "sofia profile ".$sip_profile_name." killgw ".$row['uuid'];
 					if ($fp) { event_socket_request($fp, "api ".$cmd); }
