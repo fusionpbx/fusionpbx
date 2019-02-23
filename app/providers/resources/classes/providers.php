@@ -261,25 +261,6 @@ if (!class_exists('providers')) {
 			//set the application uuid
 				$app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3';
 
-
-$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
-$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $row['domain_uuid'];
-$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $row['dialplan_uuid'];
-$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
-$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
-$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = '';
-$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
-$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
-$y++;
-$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
-$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $row['domain_uuid'];
-$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $row['dialplan_uuid'];
-$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
-$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
-$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = '';
-$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
-$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
-
 			//build the array
 				if ($provider == 'skyetel') {
 					$x = 0;
@@ -305,7 +286,7 @@ $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 					$outbound_routes[$x]['dialplan_order'] = '100';
 					$outbound_routes[$x]['dialplan_continue'] = 'false';
 					$outbound_routes[$x]['dialplan_expression'] = '(^911$|^933$)';
-					$outbound_routes[$x]['dialplan_prefix'] = '1';
+					$outbound_routes[$x]['dialplan_prefix'] = '';
 					$outbound_routes[$x]['dialplan_variables'][] = 'sip_h_X-Tenant=${domain_name}';
 					$outbound_routes[$x]['dialplan_variables'][] = 'emergency_caller_id_name=${outbound_caller_id_name}';
 					$outbound_routes[$x]['dialplan_variables'][] = 'emergency_caller_id_number=${outbound_caller_id_number}';
