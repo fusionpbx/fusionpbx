@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2017
+	Portions created by the Initial Developer are Copyright (C) 2017 - 2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -288,8 +288,8 @@ if (!class_exists('providers')) {
 					$outbound_routes[$x]['dialplan_expression'] = '(^911$|^933$)';
 					$outbound_routes[$x]['dialplan_prefix'] = '';
 					$outbound_routes[$x]['dialplan_variables'][] = 'sip_h_X-Tenant=${domain_name}';
-					$outbound_routes[$x]['dialplan_variables'][] = 'emergency_caller_id_name=${outbound_caller_id_name}';
-					$outbound_routes[$x]['dialplan_variables'][] = 'emergency_caller_id_number=${outbound_caller_id_number}';
+					$outbound_routes[$x]['dialplan_variables'][] = 'effective_caller_id_name=${emergency_caller_id_name}';
+					$outbound_routes[$x]['dialplan_variables'][] = 'effective_caller_id_number=${emergency_caller_id_number}';
 					$outbound_routes[$x]['dialplan_context'] = '${domain_name}';
 					$outbound_routes[$x]['dialplan_enabled'] = 'true';
 					$outbound_routes[$x]['dialplan_description'] = '911 emergency';
