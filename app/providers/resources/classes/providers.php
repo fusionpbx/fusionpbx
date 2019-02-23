@@ -261,6 +261,25 @@ if (!class_exists('providers')) {
 			//set the application uuid
 				$app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3';
 
+
+$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $row['domain_uuid'];
+$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $row['dialplan_uuid'];
+$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
+$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
+$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = '';
+$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
+$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
+$y++;
+$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $row['domain_uuid'];
+$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $row['dialplan_uuid'];
+$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
+$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
+$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = '';
+$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
+$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
+
 			//build the array
 				if ($provider == 'skyetel') {
 					$x = 0;
@@ -272,7 +291,9 @@ if (!class_exists('providers')) {
 					$outbound_routes[$x]['dialplan_continue'] = 'false';
 					$outbound_routes[$x]['dialplan_expression'] = '^\+?1?(\d{10})$';
 					$outbound_routes[$x]['dialplan_prefix'] = '1';
-					$outbound_routes[$x]['dialplan_variable'] = 'sip_h_X-Tenant=${domain_name}';
+					$outbound_routes[$x]['dialplan_variables'][] = 'sip_h_X-Tenant=${domain_name}';
+					$outbound_routes[$x]['dialplan_variables'][] = 'effective_caller_id_name=${outbound_caller_id_name}';
+					$outbound_routes[$x]['dialplan_variables'][] = 'effective_caller_id_number=${outbound_caller_id_number}';
 					$outbound_routes[$x]['dialplan_context'] = '${domain_name}';
 					$outbound_routes[$x]['dialplan_enabled'] = 'true';
 					$outbound_routes[$x]['dialplan_description'] = '10-11 digits';
@@ -285,7 +306,9 @@ if (!class_exists('providers')) {
 					$outbound_routes[$x]['dialplan_continue'] = 'false';
 					$outbound_routes[$x]['dialplan_expression'] = '(^911$|^933$)';
 					$outbound_routes[$x]['dialplan_prefix'] = '1';
-					$outbound_routes[$x]['dialplan_variable'] = 'sip_h_X-Tenant=${domain_name}';
+					$outbound_routes[$x]['dialplan_variables'][] = 'sip_h_X-Tenant=${domain_name}';
+					$outbound_routes[$x]['dialplan_variables'][] = 'emergency_caller_id_name=${outbound_caller_id_name}';
+					$outbound_routes[$x]['dialplan_variables'][] = 'emergency_caller_id_number=${outbound_caller_id_number}';
 					$outbound_routes[$x]['dialplan_context'] = '${domain_name}';
 					$outbound_routes[$x]['dialplan_enabled'] = 'true';
 					$outbound_routes[$x]['dialplan_description'] = '911 emergency';
@@ -300,6 +323,8 @@ if (!class_exists('providers')) {
 					$outbound_routes[$x]['dialplan_continue'] = 'false';
 					$outbound_routes[$x]['dialplan_expression'] = '^\+?1?(\d{10})$';
 					$outbound_routes[$x]['dialplan_prefix'] = '1';
+					$outbound_routes[$x]['dialplan_variables'][] = 'effective_caller_id_name=${outbound_caller_id_name}';
+					$outbound_routes[$x]['dialplan_variables'][] = 'effective_caller_id_number=${outbound_caller_id_number}';
 					$outbound_routes[$x]['dialplan_context'] = '${domain_name}';
 					$outbound_routes[$x]['dialplan_enabled'] = 'true';
 					$outbound_routes[$x]['dialplan_description'] = '10-11 digits';
@@ -451,16 +476,19 @@ if (!class_exists('providers')) {
 					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 					$y++;
-					if (strlen($row['dialplan_variable']) > 0) {
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
-						$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $row['domain_uuid'];
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $row['dialplan_uuid'];
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $row['dialplan_variable'];
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
-						$y++;
+
+					if (is_array($row['dialplan_variables'])) {
+						foreach($row['dialplan_variables'] as $value) {
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+							$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $row['domain_uuid'];
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $row['dialplan_uuid'];
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $value;
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
+							$y++;
+						}
 					}
 					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
 					$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $row['domain_uuid'];
@@ -486,24 +514,6 @@ if (!class_exists('providers')) {
 					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
 					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
 					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'hangup_after_bridge=true';
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
-					$y++;
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
-					$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $row['domain_uuid'];
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $row['dialplan_uuid'];
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'effective_caller_id_name=${outbound_caller_id_name}';
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
-					$y++;
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
-					$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $row['domain_uuid'];
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $row['dialplan_uuid'];
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'effective_caller_id_number=${outbound_caller_id_number}';
 					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 					$y++;
@@ -553,22 +563,21 @@ if (!class_exists('providers')) {
 					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 					$y++;
 					foreach ($gateways as $gateway) {
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
-						$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $row['domain_uuid'];
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $row['dialplan_uuid'];
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'bridge';
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'sofia/gateway/'.$gateway['uuid'].'/'.$row['dialplan_prefix'].'$1';
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
+						if ($gateway['enabled'] == 'true') {
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+							$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $row['domain_uuid'];
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $row['dialplan_uuid'];
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'bridge';
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'sofia/gateway/'.$gateway['uuid'].'/'.$row['dialplan_prefix'].'$1';
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
+						}
 						$y++;
 					}
 					$x++;
 				}
-//echo "<pre>\n";
-//print_r($array);
-//echo "<pre>\n";
-//exit;
+
 			//save to the data
 				$database = new database;
 				$database->app_name = 'outbound_routes';
