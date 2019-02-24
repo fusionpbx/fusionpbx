@@ -357,7 +357,7 @@
 								if (row.follow_me_uuid ~= nil and string.len(row.follow_me_uuid) > 0) then
 									follow_me_uuid = row.follow_me_uuid;
 									follow_me_enabled = row.follow_me_enabled;
-									follow_me_destinations= row.follow_me_destinations;
+									--follow_me_destinations= row.follow_me_destinations;
 								end
 
 							-- check matching UserID and AuthName
@@ -633,9 +633,9 @@
 							if (follow_me_enabled ~= nil) and (string.len(follow_me_enabled) > 0) then
 								table.insert(xml, [[								<variable name="follow_me_enabled" value="]] .. follow_me_enabled .. [["/>]]);
 							end
-							if (follow_me_destinations ~= nil) and (string.len(follow_me_destinations) > 0) then
-								table.insert(xml, [[								<variable name="follow_me_destinations" value="]] .. follow_me_destinations .. [["/>]]);
-							end
+							--if (follow_me_destinations ~= nil) and (string.len(follow_me_destinations) > 0) then
+							--	table.insert(xml, [[								<variable name="follow_me_destinations" value="]] .. follow_me_destinations .. [["/>]]);
+							--end
 							if (do_not_disturb ~= nil) and (string.len(do_not_disturb) > 0) then
 								table.insert(xml, [[								<variable name="do_not_disturb" value="]] .. do_not_disturb .. [["/>]]);
 							end

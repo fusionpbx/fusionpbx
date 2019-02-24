@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010 - 2018
+	Copyright (C) 2010 - 2019
 	All Rights Reserved.
 
 	Contributor(s):
@@ -38,7 +38,6 @@ include "root.php";
 		public $cid_number_prefix;
 		public $accountcode;
 		public $follow_me_enabled;
-		public $follow_me_destinations;
 		public $follow_me_caller_id_uuid;
 		public $follow_me_ignore_busy;
 		public $outbound_caller_id_name;
@@ -265,7 +264,6 @@ include "root.php";
 				if (is_array($result)) foreach ($result as &$row) {
 					$follow_me_uuid = $row["follow_me_uuid"];
 					$this->follow_me_enabled = $row["follow_me_enabled"];
-					$this->follow_me_destinations = $row["follow_me_destinations"];
 					$this->cid_name_prefix = $row["cid_name_prefix"];
 					$this->cid_number_prefix = $row["cid_number_prefix"];
 				}
@@ -343,10 +341,12 @@ include "root.php";
 						$variables[] = "domain=".$_SESSION['domain_name'];
 						$variables[] = "extension_uuid=".$this->extension_uuid;
 						$variables[] = "leg_delay_start=".$row["follow_me_delay"];
+						$variables[] = "originate_delay_start=".$row["follow_me_delay"];
 						$variables[] = "leg_timeout=".$row["follow_me_timeout"];
 
-						//$dial_string .= "\${sofia_contact(".$row["follow_me_destination"]."@".$_SESSION['domain_name'].")}";
-						$dial_string .= "[".implode(",", $variables)."]user/".$row["follow_me_destination"]."@".$_SESSION['domain_name'];
+						$dial_string .= "[".implode(",", $variables)."]\${sofia_contact(".$row["follow_me_destination"]."@".$_SESSION['domain_name'].")}";
+						//$dial_string .= "[".implode(",", $variables)."]user/".$row["follow_me_destination"]."@".$_SESSION['domain_name'];
+						//$dial_string .= "loopback/export:".implode("\,export:", $variables)."\,transfer:".$row["follow_me_destination"]."/".$_SESSION['domain_name']."/inline";
 						unset($variables);
 					}
 					else {
@@ -419,6 +419,7 @@ include "root.php";
 						$variables[] = "originate_delay_start=".$row["follow_me_delay"];
 						$variables[] = "sleep=".($row["follow_me_delay"] * 1000);
 						$variables[] = "leg_timeout=".$row["follow_me_timeout"];
+						$variables[] = "is_follow_me_loopback=true";
 
 						if (is_numeric($row["follow_me_destination"])) {
 							if ($_SESSION['domain']['bridge']['text'] == "outbound" || $_SESSION['domain']['bridge']['text'] == "bridge") {
@@ -461,15 +462,12 @@ include "root.php";
 				$dial_string = '';
 				if ($this->follow_me_enabled == "true") {
 					$dial_string = $this->dial_string;
-					$this->follow_me_destinations = $this->dial_string;
-				}
-				else {
-					$this->follow_me_destinations = '';
 				}
 
 				$sql  = "update v_extensions set ";
 				$sql .= "dial_domain = '".$_SESSION['domain_name']."', ";
-				$sql .= "follow_me_destinations = '".$this->follow_me_destinations."', ";
+				$sql .= "dial_string = '".$dial_string."', ";
+				$sql .= "follow_me_destinations = '".$dial_string."', ";
 				$sql .= "follow_me_enabled = '".$this->follow_me_enabled."' ";
 				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
 				$sql .= "and follow_me_uuid = '".$this->follow_me_uuid."' ";

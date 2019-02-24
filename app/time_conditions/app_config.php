@@ -22,7 +22,7 @@
 		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
-        $apps[$x]['description']['pt-pt'] = "Chamada directa com base na hora do dia.";
+        	$apps[$x]['description']['pt-pt'] = "Chamada directa com base na hora do dia.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "Прямые вызовы на основании времени суток.";
 		$apps[$x]['description']['sv-se'] = "";
@@ -64,6 +64,9 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "time_condition_domain";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "time_condition_context";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//default settings

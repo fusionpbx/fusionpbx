@@ -163,16 +163,20 @@
 
 //add a function to return the action_name
 	function action_name($destination_array, $detail_action) {
-		foreach($destination_array as $group => $row) {
-			foreach ($row as $key => $value) {
-				if ($value == $detail_action) {
-					//add multi-lingual support
-						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$group."/app_languages.php")) {
-							$language2 = new text;
-							$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$group);
+		if (is_array($destination_array)) {
+			foreach($destination_array as $group => $row) {
+				if (is_array($row)) {
+					foreach ($row as $key => $value) {
+						if ($value == $detail_action) {
+							//add multi-lingual support
+								if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$group."/app_languages.php")) {
+									$language2 = new text;
+									$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$group);
+								}
+							//return the group and destination name
+								return trim($text2['title-'.$group].' '.$key);
 						}
-					//return the group and destination name
-						return trim($text2['title-'.$group].' '.$key);
+					}
 				}
 			}
 		}
