@@ -808,6 +808,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	textarea.formfld,
 	input[type=text].formfld,
 	input[type=number].formfld,
+	input[type=url].formfld,
 	input[type=password].formfld,
 	label.formfld {
 		font-family: <?php echo ($_SESSION['theme']['input_text_font']['text'] != '') ? $_SESSION['theme']['input_text_font']['text'] : 'Arial'; ?>;
@@ -853,6 +854,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	textarea.formfld,
 	input[type=text].formfld,
 	input[type=number].formfld,
+	input[type=url].formfld,
 	input[type=password].formfld {
 		transition: width 0.25s;
 		-moz-transition: width 0.25s;
@@ -873,6 +875,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	textarea.formfld:hover,
 	input[type=text].formfld:hover,
 	input[type=number].formfld:hover,
+	input[type=url].formfld:hover,
 	input[type=password].formfld:hover,
 	label.formfld:hover {
 		border-color: <?php echo ($_SESSION['theme']['input_border_color_hover']['text'] != '') ? $_SESSION['theme']['input_border_color_hover']['text'] : '#c0c0c0'; ?>;
@@ -886,6 +889,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	textarea.formfld:focus,
 	input[type=text].formfld:focus,
 	input[type=number].formfld:focus,
+	input[type=url].formfld:focus,
 	input[type=password].formfld:focus,
 	label.formfld:focus {
 		border-color: <?php echo ($_SESSION['theme']['input_border_color_focus']['text'] != '') ? $_SESSION['theme']['input_border_color_focus']['text'] : '#c0c0c0'; ?>;
