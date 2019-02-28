@@ -147,7 +147,11 @@
 								$sql .= "'".check_str($_POST['phrase_detail_order'])."', ";
 								$sql .= "'".check_str($_POST['phrase_detail_tag'])."', ";
 								$sql .= "'".check_str($_POST['phrase_detail_pattern'])."', ";
-								$sql .= "'".check_str($_POST['phrase_detail_function'])."', ";
+								if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
+                                                                        $sql .= "'execute', ";
+                                                                } else {
+                                                                        $sql .= "'".check_str($_POST['phrase_detail_function'])."', ";
+                                                                }
 								$sql .= "'".check_str($_POST['phrase_detail_data'])."', ";
 								$sql .= "'".check_str($_POST['phrase_detail_method'])."', ";
 								$sql .= "'".check_str($_POST['phrase_detail_type'])."', ";
@@ -215,7 +219,11 @@
 								$sql .= "'".check_str($_POST['phrase_detail_pattern'])."', ";
 								$sql .= "'".check_str($_POST['phrase_detail_function'])."', ";
 								$sql .= "'".check_str($_POST['phrase_detail_data'])."', ";
-								$sql .= "'".check_str($_POST['phrase_detail_method'])."', ";
+								if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
+                                                                        $sql .= "'execute', ";
+                                                                } else {
+                                                                        $sql .= "'".check_str($_POST['phrase_detail_function'])."', ";
+                                                                }
 								$sql .= "'".check_str($_POST['phrase_detail_type'])."', ";
 								$sql .= "'".check_str($_POST['phrase_detail_group'])."' ";
 								$sql .= ") ";
