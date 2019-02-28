@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -124,7 +124,9 @@
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
-	$sql = "select * from v_contacts as c ";
+	$sql = "select d.domain_name, d.domain_uuid, u.user_uuid, u.username, u.user_enabled, ";
+	$sql .= "c.contact_uuid, c.contact_organization, c.contact_name_given, c.contact_name_family ";
+	$sql .= "from v_contacts as c ";
 	$sql .= "right join v_users u on u.contact_uuid = c.contact_uuid ";
 	$sql .= "inner join v_domains as d on d.domain_uuid = u.domain_uuid ";
 	$sql .= "where 1 = 1 ";
@@ -228,8 +230,8 @@
 				}
 				echo "&nbsp;</td>\n";
 
-				echo "<td class='".$row_style[$c]."'>".$row['contact_organization']." &nbsp;</td>\n";
-				echo "<td class='".$row_style[$c]."'>".$row['contact_name_given']." ".$row['contact_name_family']." &nbsp;</td>\n";
+				echo "<td class='".$row_style[$c]."'><a href='/app/contacts/contact_edit.php?id=".$row['contact_uuid']."'>".$row['contact_organization']."</a> &nbsp;</td>\n";
+				echo "<td class='".$row_style[$c]."'><a href='/app/contacts/contact_edit.php?id=".$row['contact_uuid']."'>".$row['contact_name_given']." ".$row['contact_name_family']."</a> &nbsp;</td>\n";
 
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
 				if ($row['user_enabled'] == 'true') {
