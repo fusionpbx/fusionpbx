@@ -53,9 +53,7 @@
 		//set flag
 		if ($username != '' && $domain_uuid == $_SESSION['domain_uuid'] && $password_submitted == $password_current) {
 			$password_reset = true;
-			if (!isset($_SESSION['valid_username']) || $_SESSION['valid_username'] == '') {
-				$_SESSION['valid_username'] = $username;
-			}
+			$_SESSION['valid_username'] = $username;
 		}
 		else {
 			header("Location: /login.php");
