@@ -96,7 +96,7 @@
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
-	$sql = "select u.user_uuid, u.username, contact_organization, contact_name_given, contact_name_family, \n";
+	$sql = "select u.domain_uuid, u.user_uuid, u.username, u.user_enabled, contact_organization, contact_name_given, contact_name_family, \n";
 	$sql .= "( \n";
 	$sql .= "select \n";
 	$sql .= "	string_agg(g.group_name, ', ') \n";
@@ -117,14 +117,16 @@
 	if (strlen($search) > 0) {
 		$sql .= "and lower(u.username) like '%".$search."%' \n";
 	}
-	$sql .= "group by u.user_uuid, c.contact_organization, c.contact_name_given, c.contact_name_family \n";
 	if (strlen($order_by)> 0) {
 		$sql .= "order by ".$order_by." ".$order." \n";
 	}
 	else {
-		$sql .= "order by u.username asc\n";
+		$sql .= "order by u.username asc \n";
 	}
-	$sql .= " limit ".$rows_per_page." offset ".$offset." ";
+	$sql .= "limit ".$rows_per_page." offset ".$offset." ";
+	//echo "<pre>\n";
+	//print_r($sql);
+	//echo "</pre>\n";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
