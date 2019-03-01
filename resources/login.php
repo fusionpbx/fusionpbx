@@ -51,7 +51,16 @@
 		unset($prep_statement, $result);
 
 		//set flag
-		$password_reset = ($username != '' && $domain_uuid == $_SESSION['domain_uuid'] && $password_submitted == $password_current) ? true : false;
+		if ($username != '' && $domain_uuid == $_SESSION['domain_uuid'] && $password_submitted == $password_current) {
+			$password_reset = true;
+			if (!isset($_SESSION['valid_username']) || $_SESSION['valid_username'] == '') {
+				$_SESSION['valid_username'] = $username;
+			}
+		}
+		else {
+			header("Location: /login.php");
+			exit;
+		}
 	}
 
 //send password reset link
@@ -110,7 +119,7 @@
 		$password_repeat = check_str($_REQUEST['password_repeat']);
 
 		if ($username != '' &&
-			$authorized_username == md5($_SESSION['login']['password_reset_key']['text'].$username) &&
+			$authorized_username == hash('sha256',$_SESSION['login']['password_reset_key']['text'].$username) &&
 			$password_new != '' &&
 			$password_repeat != '' &&
 			$password_new == $password_repeat
@@ -134,6 +143,7 @@
 				unset($prep_statement);
 
 				message::add($text['message-password_reset'], 'positive', 2500);
+				unset($_SESSION['valid_username']);
 				$password_reset = false;
 			}
 		}
@@ -340,7 +350,7 @@
 		echo "<span id='reset_form'>\n";
 		echo "<form name='reset' id='frm' method='post' action=''>\n";
 		echo "<input type='hidden' name='action' value='reset'>\n";
-		echo "<input type='hidden' name='au' value='".md5($_SESSION['login']['password_reset_key']['text'].$username)."'>\n";
+		echo "<input type='hidden' name='au' value='".hash('sha256',$_SESSION['login']['password_reset_key']['text'].$_SESSION['valid_username'])."'>\n";
 		echo "<input type='text' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='username' id='username' placeholder=\"".$text['label-username']."\"><br />\n";
 		echo "<input type='password' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 4px;' name='password_new' id='password' autocomplete='off' placeholder=\"".$text['label-new_password']."\" onkeypress='show_strenth_meter();' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'><br />\n";
 		echo "<div id='pwstrength_progress' class='pwstrength_progress pwstrength_progress_password_reset'></div>";
