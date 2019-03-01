@@ -41,7 +41,7 @@ if (valid_email($_POST['to'])) {
 	$eml_body .= "If you received this message, your current SMTP settings are valid.<br /><br />\n";
 
 	ob_start();
-	$sent = !send_email($recipient, 'Test Message', $eml_body, $eml_error) ? false : true;
+	$sent = !send_email($recipient, 'Test Message', $eml_body, $eml_error, null, null, 3, 3) ? false : true;
 	$response = ob_get_clean();
 
 	echo $response;

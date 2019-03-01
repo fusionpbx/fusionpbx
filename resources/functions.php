@@ -1391,7 +1391,7 @@ function number_pad($number,$n) {
 
 //function to send email
 	if (!function_exists('send_email')) {
-		function send_email($eml_recipients, $eml_subject, $eml_body, &$eml_error = '', $eml_from_address = '', $eml_from_name = '', $eml_priority = 3) {
+		function send_email($eml_recipients, $eml_subject, $eml_body, &$eml_error = '', $eml_from_address = '', $eml_from_name = '', $eml_priority = 3, $eml_debug_level = 0) {
 			/*
 			RECIPIENTS NOTE:
 
@@ -1484,7 +1484,9 @@ function number_pad($number,$n) {
 			$mail -> Subject = $eml_subject;
 			$mail -> MsgHTML($eml_body);
 			$mail -> Priority = $eml_priority;
-			$mail -> SMTPDebug = 3;
+			if (is_numeric($eml_debug_level) && $eml_debug_level > 0) {
+				$mail -> SMTPDebug = $eml_debug_level;
+			}
 
 			$address_found = false;
 
