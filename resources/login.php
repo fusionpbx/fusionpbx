@@ -241,7 +241,7 @@
 		}
 		echo "<input type='submit' id='btn_login' class='btn' style='width: 100px; margin-top: 15px;' value='".$text['button-login']."'>\n";
 		if (
-			function_exists('mcrypt_encrypt') &&
+			function_exists('openssl_encrypt') &&
 			$_SESSION['login']['password_reset_key']['text'] != '' &&
 			$_SESSION['email']['smtp_host']['text'] != ''
 			) {
