@@ -55,34 +55,6 @@
 //get the list of superadmins
 	$superadmins = superadmin_list($db);
 
-//get the user group(s) from the database
-	$sql = "select ";
-	$sql .= "	ug.*, g.domain_uuid as group_domain_uuid ";
-	$sql .= "from ";
-	$sql .= "	v_user_groups as ug, ";
-	$sql .= "	v_groups as g ";
-	$sql .= "where ";
-	$sql .= "	ug.group_uuid = g.group_uuid ";
-	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
-		$sql .= "	and (";
-		$sql .= "		g.domain_uuid = '".$domain_uuid."' ";
-		$sql .= "		or g.domain_uuid is null ";
-		$sql .= "	) ";
-		$sql .= "	and ug.domain_uuid = '".$domain_uuid."' ";
-	}
-	$sql .= "order by ";
-	$sql .= "	g.domain_uuid desc, ";
-	$sql .= "	g.group_name asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	if (is_array($result)) {
-		foreach($result as $row) {
-			$user_groups[$row['user_uuid']][] = $row['group_name'].(($row['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$row['group_domain_uuid']]['domain_name'] : null);
-		}
-	}
-	unset ($sql, $prep_statement);
-
 //get the user count from the database
 	$sql = "select count(*) as num_rows from v_users where 1 = 1 ";
 	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
@@ -124,28 +96,44 @@
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
-	$sql = "select d.domain_name, d.domain_uuid, u.user_uuid, u.username, u.user_enabled, ";
-	$sql .= "c.contact_uuid, c.contact_organization, c.contact_name_given, c.contact_name_family ";
-	$sql .= "from v_contacts as c ";
-	$sql .= "right join v_users u on u.contact_uuid = c.contact_uuid ";
-	$sql .= "inner join v_domains as d on d.domain_uuid = u.domain_uuid ";
-	$sql .= "where 1 = 1 ";
+	$sql = "select u.user_uuid, u.username, contact_organization, contact_name_given, contact_name_family, \n";
+	$sql .= "( \n";
+	$sql .= "select \n";
+	$sql .= "	string_agg(g.group_name, ', ') \n";
+	$sql .= "from \n";
+	$sql .= "	v_user_groups as ug, \n";
+	$sql .= "	v_groups as g \n";
+	$sql .= "where \n";
+	$sql .= "	ug.group_uuid = g.group_uuid \n";
+	$sql .= "	and u.user_uuid = ug.user_uuid  \n";
+	$sql .= ") AS groups \n";
+	$sql .= "from v_contacts as c \n";
+	$sql .= "right join v_users u on u.contact_uuid = c.contact_uuid \n";
+	$sql .= "inner join v_domains as d on d.domain_uuid = u.domain_uuid \n";
+	$sql .= "where 1 = 1 \n";
 	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
-		$sql .= "and u.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and u.domain_uuid = '".$_SESSION['domain_uuid']."' \n";
 	}
 	if (strlen($search) > 0) {
-		$sql .= "and lower(u.username) like '%".$search."%' ";
+		$sql .= "and lower(u.username) like '%".$search."%' \n";
 	}
+	$sql .= "group by u.user_uuid, c.contact_organization, c.contact_name_given, c.contact_name_family \n";
 	if (strlen($order_by)> 0) {
-		$sql .= "order by ".$order_by." ".$order." ";
+		$sql .= "order by ".$order_by." ".$order." \n";
 	}
 	else {
-		$sql .= "order by u.username asc ";
+		$sql .= "order by u.username asc\n";
 	}
 	$sql .= " limit ".$rows_per_page." offset ".$offset." ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	if (!$users) {
+		echo "<pre>\n";
+		print_r($prep_statement->errorInfo());
+		echo "</pre>\n";
+		exit;
+	}
 	unset ($prep_statement, $sql);
 
 //page title and description
@@ -224,15 +212,12 @@
 					echo escape($row['username']);
 				}
 				echo "	</td>\n";
-				echo "	<td valign='top' class='".$row_style[$c]."'>";
-				if (sizeof($user_groups[$row['user_uuid']]) > 0) {
-					echo escape(implode(', ', $user_groups[$row['user_uuid']]));
-				}
-				echo "&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>\n";
+				echo "		".$row['groups']."&nbsp;\n";
+				echo "	</td>\n";
 
 				echo "<td class='".$row_style[$c]."'><a href='/app/contacts/contact_edit.php?id=".$row['contact_uuid']."'>".$row['contact_organization']."</a> &nbsp;</td>\n";
 				echo "<td class='".$row_style[$c]."'><a href='/app/contacts/contact_edit.php?id=".$row['contact_uuid']."'>".$row['contact_name_given']." ".$row['contact_name_family']."</a> &nbsp;</td>\n";
-
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
 				if ($row['user_enabled'] == 'true') {
 					echo $text['option-true'];
