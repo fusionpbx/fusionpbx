@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,6 +29,29 @@ if ($domains_processed == 1) {
 	//if the default groups do not exist add them
 		$group = new groups;
 		$group->defaults();
+
+	//create the user view combines username, organization, contact first and last name
+		$sql = "CREATE OR REPLACE VIEW view_users AS (\n";
+		$sql .= "	select u.domain_uuid, u.user_uuid, u.username, u.user_enabled, \n";
+		$sql .= "	contact_organization, contact_name_given, contact_name_family,\n";
+		$sql .= "	(\n";
+		$sql .= "		select\n";
+		$sql .= "		string_agg(g.group_name, ', ')\n";
+		$sql .= "		from\n";
+		$sql .= "		v_user_groups as ug,\n";
+		$sql .= "		v_groups as g\n";
+		$sql .= "		where\n";
+		$sql .= "		ug.group_uuid = g.group_uuid\n";
+		$sql .= "		and u.user_uuid = ug.user_uuid\n";
+		$sql .= "	) AS groups\n";
+		$sql .= "	from v_contacts as c\n";
+		$sql .= "	right join v_users u on u.contact_uuid = c.contact_uuid\n";
+		$sql .= "	inner join v_domains as d on d.domain_uuid = u.domain_uuid\n";
+		$sql .= "	where 1 = 1\n";
+		$sql .= "	order by u.username asc\n";
+		$sql .= ");\n";
+		$db->exec($sql);
+		unset($sql);
 
 	//find rows that have a null group_uuid and set the correct group_uuid
 		$sql = "select * from v_user_groups ";
