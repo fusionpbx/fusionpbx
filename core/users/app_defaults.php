@@ -32,7 +32,7 @@ if ($domains_processed == 1) {
 
 	//create the user view combines username, organization, contact first and last name
 		$sql = "CREATE OR REPLACE VIEW view_users AS (\n";
-		$sql .= "	select u.domain_uuid, u.user_uuid, u.username, u.user_enabled, \n";
+		$sql .= "	select u.domain_uuid, u.user_uuid, d.domain_name, u.username, u.user_enabled, \n";
 		$sql .= "	c.contact_uuid, c.contact_organization, c.contact_name_given, c.contact_name_family,\n";
 		$sql .= "	(\n";
 		$sql .= "		select\n";
