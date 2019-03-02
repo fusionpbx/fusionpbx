@@ -51,29 +51,25 @@
 	$order_by = check_str($_GET["order_by"]);
 	$order = check_str($_GET["order"]);
 	$search = check_str($_REQUEST["search"]);
+	if (strlen($search) > 0) {
+		$search = strtolower($search);
+	}
 
 //get the list of superadmins
 	$superadmins = superadmin_list($db);
 
 //get the user count from the database
-	$sql = "select count(*) as num_rows from v_users where 1 = 1 ";
+	$sql = "select count(*) as num_rows from view_users where 1 = 1 ";
 	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
 		$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	}
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		$total_users = $row['num_rows'];
-	}
-	unset($prep_statement, $row);
-
-//get the users from the database (reuse $sql from above)
 	if (strlen($search) > 0) {
-		$search = strtolower($search);
-		$sql .= "and lower(username) = '".$search."' ";
+		$sql .= "and (lower(username) like '%".$search."%' \n";
+		$sql .= "or lower(groups) like '%".$search."%' \n";
+		$sql .= "or lower(contact_organization) like '%".$search."%' \n";
+		$sql .= "or lower(contact_name_given) like '%".$search."%' \n";
+		$sql .= "or lower(contact_name_family) like '%".$search."%') \n";
 	}
-	if (strlen($order_by) > 0) { $sql .= "order by ".$order_by." ".$order." "; }
 	$prep_statement = $db->prepare($sql);
 	if ($prep_statement) {
 		$prep_statement->execute();
@@ -86,6 +82,8 @@
 		}
 	}
 	unset ($prep_statement, $result, $sql);
+
+//prepare for paging
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "search=".escape($search);
 	if (permission_exists('user_all') && $_GET['show'] == 'all') {
@@ -96,26 +94,19 @@
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
-	$sql = "select u.domain_uuid, u.user_uuid, u.username, u.user_enabled, contact_organization, contact_name_given, contact_name_family, \n";
-	$sql .= "( \n";
-	$sql .= "select \n";
-	$sql .= "	string_agg(g.group_name, ', ') \n";
-	$sql .= "from \n";
-	$sql .= "	v_user_groups as ug, \n";
-	$sql .= "	v_groups as g \n";
-	$sql .= "where \n";
-	$sql .= "	ug.group_uuid = g.group_uuid \n";
-	$sql .= "	and u.user_uuid = ug.user_uuid  \n";
-	$sql .= ") AS groups \n";
-	$sql .= "from v_contacts as c \n";
-	$sql .= "right join v_users u on u.contact_uuid = c.contact_uuid \n";
-	$sql .= "inner join v_domains as d on d.domain_uuid = u.domain_uuid \n";
+//get the users from the database
+	$sql = "select u.domain_uuid, u.user_uuid, u.username, u.user_enabled, u.contact_organization, u.contact_name_given, u.contact_name_family, u.groups \n";
+	$sql .= "from view_users as u \n";
 	$sql .= "where 1 = 1 \n";
 	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
 		$sql .= "and u.domain_uuid = '".$_SESSION['domain_uuid']."' \n";
 	}
 	if (strlen($search) > 0) {
-		$sql .= "and lower(u.username) like '%".$search."%' \n";
+		$sql .= "and (lower(username) like '%".$search."%' \n";
+		$sql .= "or lower(groups) like '%".$search."%' \n";
+		$sql .= "or lower(contact_organization) like '%".$search."%' \n";
+		$sql .= "or lower(contact_name_given) like '%".$search."%' \n";
+		$sql .= "or lower(contact_name_family) like '%".$search."%') \n";
 	}
 	if (strlen($order_by)> 0) {
 		$sql .= "order by ".$order_by." ".$order." \n";
