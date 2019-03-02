@@ -95,7 +95,7 @@
 	$offset = $rows_per_page * $page;
 
 //get the users from the database
-	$sql = "select u.domain_uuid, u.user_uuid, u.username, u.user_enabled, u.contact_organization, u.contact_name_given, u.contact_name_family, u.groups \n";
+	$sql = "select u.domain_uuid, u.user_uuid, u.contact_uuid, u.username, u.user_enabled, u.contact_organization, u.contact_name_given, u.contact_name_family, u.groups \n";
 	$sql .= "from view_users as u \n";
 	$sql .= "where 1 = 1 \n";
 	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
@@ -174,9 +174,9 @@
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, '', '', $param);
 	}
 	echo th_order_by('username', $text['label-username'], $order_by, $order);
-	echo "<th>".$text['label-groups']."</th>\n";
-	echo "<th>".$text['label-organization']."</th>\n";
-	echo "<th>".$text['label-name']."</th>\n";
+	echo th_order_by('groups', $text['label-groups'], $order_by, $order, '', '', $param);
+	echo th_order_by('contact_organization', $text['label-organization'], $order_by, $order, '', '', $param);
+	echo th_order_by('contact_name_given', $text['label-name'], $order_by, $order, '', '', $param);
 	echo th_order_by('user_enabled', $text['label-enabled'], $order_by, $order, '', '', $param);
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('user_add')) {
