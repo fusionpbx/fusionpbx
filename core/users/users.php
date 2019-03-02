@@ -95,7 +95,7 @@
 	$offset = $rows_per_page * $page;
 
 //get the users from the database
-	$sql = "select u.domain_uuid, u.user_uuid, u.contact_uuid, u.username, u.user_enabled, u.contact_organization, u.contact_name_given, u.contact_name_family, u.groups \n";
+	$sql = "select u.domain_uuid, u.user_uuid, u.contact_uuid, u.domain_name, u.username, u.user_enabled, u.contact_organization, u.contact_name_given, u.contact_name_family, u.groups \n";
 	$sql .= "from view_users as u \n";
 	$sql .= "where 1 = 1 \n";
 	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
@@ -115,18 +115,15 @@
 		$sql .= "order by u.username asc \n";
 	}
 	$sql .= "limit ".$rows_per_page." offset ".$offset." ";
-	//echo "<pre>\n";
-	//print_r($sql);
-	//echo "</pre>\n";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	if (!$users) {
-		echo "<pre>\n";
-		print_r($prep_statement->errorInfo());
-		echo "</pre>\n";
-		exit;
-	}
+	//if (!$users) {
+	//	echo "<pre>\n";
+	//	print_r($prep_statement->errorInfo());
+	//	echo "</pre>\n";
+	//	exit;
+	//}
 	unset ($prep_statement, $sql);
 
 //page title and description
