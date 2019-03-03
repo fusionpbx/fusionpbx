@@ -121,12 +121,12 @@
 		$sql_where_ands[] = "caller_id_name like '".$mod_caller_id_name."'";
 	}
 	if (strlen($caller_extension_uuid) > 0 && is_uuid($caller_extension_uuid)) {
-		$sql_where_ands[] = "extension_uuid = '".$caller_extension_uuid."'";
+		$sql_where_ands[] = "e.extension_uuid = '".$caller_extension_uuid."'";
 	}
 	if (strlen($caller_id_number) > 0) {
-		$mod_caller_id_number = str_replace("*", "%", $caller_id_number);
-		$sql_where_ands[] = "caller_id_number like '".$mod_caller_id_number."'";
+		$sql_where_ands[] = "(caller_id_number like '".str_replace("*", "%", $caller_id_number)."' or e.extension = '".$caller_id_number."')";
 	}
+
 	if (strlen($caller_destination) > 0) {
 		$mod_caller_destination = str_replace("*", "%", $caller_destination);
 		$sql_where_ands[] = "caller_destination like '".$mod_caller_destination."'";
@@ -220,7 +220,9 @@
 	if (!permission_exists('xml_cdr_domain')) {
 		if (count($_SESSION['user']['extension']) > 0) { // extensions are assigned to this user
 			// create simple user extension array
-			foreach ($_SESSION['user']['extension'] as $row) { $user_extensions[] = $row['user']; }
+			foreach ($_SESSION['user']['extension'] as $row) {
+				$user_extensions[] = $row['user'];
+			}
 			// if both a source and destination are submitted, but neither are an assigned extension, restrict results
 			if (
 				$caller_id_number != '' &&
