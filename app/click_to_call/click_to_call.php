@@ -139,7 +139,7 @@
 			$source_common .= "origination_uuid=".$origination_uuid;
 			$source_common .= ",click_to_call=true";
 			$source_common .= ",origination_caller_id_name='".$src_cid_name."'";
-			$source_common .= ",origination_caller_id_number=".$src_cid_number;
+			$source_common .= ",origination_caller_id_number='".$dest."'";
 			$source_common .= ",instant_ringback=true";
 			$source_common .= ",ringback=".$ringback_value;
 			$source_common .= ",presence_id=".$src."@".$_SESSION['domains'][$domain_uuid]['domain_name'];
