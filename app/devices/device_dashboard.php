@@ -72,93 +72,119 @@
 	$prep_statement->execute();
 	$vendor_functions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
+//get device
+	$sql = "SELECT device_uuid, device_profile_uuid FROM v_devices ";
+	$sql .= "WHERE device_user_uuid = '".$_SESSION['user_uuid']."' ";
+ 	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$row = $prep_statement->fetch(PDO::FETCH_NAMED);
+	$device_uuid = $row['device_uuid'];
+	$device_profile_uuid = $row['device_profile_uuid'];
+	unset($row);
+
+//get device lines
+        if (isset($device_uuid)) {
+                $sql = "SELECT * from v_device_lines ";
+                $sql .= "WHERE device_uuid = '".$device_uuid."' ";
+                $prep_statement = $db->prepare(check_sql($sql));
+                $prep_statement->execute();
+                $device_lines = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+        }
+
+//get the user
+        if (is_array($device_lines)) {
+                foreach ($device_lines as $row) {
+                        if ($_SESSION['domain_name'] == $row['server_address']) {
+                                $user_id = $row['user_id'];
+                                $server_address = $row['server_address'];
+                                break;
+                        }
+                }
+        }
+
+//get device profile keys
+	if (isset($device_profile_uuid)) {
+		$sql = "SELECT * FROM v_device_keys ";
+		$sql .= "WHERE device_profile_uuid = '".$device_profile_uuid."' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$device_profile_keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		unset($sql,$prep_statement);
+	}
+	
+//get device keys
+	if (isset($device_uuid)) {
+		$sql = "SELECT * FROM v_device_keys ";
+		$sql .= "WHERE device_uuid = '".$device_uuid."' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$device_keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		unset($sql,$prep_statement);
+	}
+
+//create a list of protected keys - device keys
+	if (is_array($device_keys)) {
+		foreach($device_keys as $row) {
+			//determine if the key is allowed
+			$device_key_authorized = false;
+			foreach($vendor_functions as $function) {
+				if ($function['vendor_name'] == $row['device_key_vendor'] && $function['value'] == $row['device_key_type']) {
+					$device_key_authorized = true;
+				}
+			}
+			//add the protected keys
+			if (!$device_key_authorized) {
+				$protected_keys[$row['device_key_id']] = 'true';
+			}
+			//add to protected
+			if ($row['device_key_protected'] == "true") {
+				$protected_keys[$row['device_key_id']] = 'true';
+			}
+		}
+	}
+
+//create a list of protected keys - device proile keys
+	if (is_array($device_profile_keys)) {
+		foreach($device_profile_keys as $row) {
+			//determine if the key is allowed
+			$device_key_authorized = false;
+			if (is_array($vendor_functions)) {
+				foreach($vendor_functions as $function) {
+					if ($function['vendor_name'] == $row['device_key_vendor'] && $function['value'] == $row['device_key_type']) {
+						$device_key_authorized = true;
+					}
+				}
+			}
+			//add the protected keys
+			if (!$device_key_authorized) {
+				$protected_keys[$row['device_key_id']] = 'true';
+			}
+		}
+	}
+
+//remove the keys the user is not allowed to edit based on the authorized vendor keys
+	$x=0;
+	if (is_array($_POST['device_keys'])) {
+		foreach($_POST['device_keys'] as $row) {
+			//loop through the authorized vendor functions
+			if ($protected_keys[$row['device_key_id']] == "true") {
+				unset($_POST['device_keys'][$x]);
+			}
+			//increment the row id
+			$x++;
+		}
+	}
+
+//escape characters in the string
+	$device_uuid = check_str($row["device_uuid"]);
+	$device_key_category = check_str($row["device_key_category"]);
+	$device_key_vendor = check_str($row["device_key_vendor"]);
+
 //add or update the database
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
-
-				//get device
-					$sql = "SELECT device_uuid, device_profile_uuid FROM v_devices ";
-					$sql .= "WHERE device_user_uuid = '".$_SESSION['user_uuid']."' ";
-					$prep_statement = $db->prepare(check_sql($sql));
-					$prep_statement->execute();
-					$row = $prep_statement->fetch(PDO::FETCH_NAMED);
-					$device_uuid = $row['device_uuid'];
-					$device_profile_uuid = $row['device_profile_uuid'];
-					unset($row);
-
-				//get device profile keys
-					if (isset($device_profile_uuid)) {
-						$sql = "SELECT * FROM v_device_keys ";
-						$sql .= "WHERE device_profile_uuid = '".$device_profile_uuid."' ";
-						$prep_statement = $db->prepare(check_sql($sql));
-						$prep_statement->execute();
-						$device_profile_keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-						unset($sql,$prep_statement);
-					}
-
-				//get device keys
-					if (isset($device_uuid)) {
-						$sql = "SELECT * FROM v_device_keys ";
-						$sql .= "WHERE device_uuid = '".$device_uuid."' ";
-						$prep_statement = $db->prepare(check_sql($sql));
-						$prep_statement->execute();
-						$device_keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-						unset($sql,$prep_statement);
-					}
-
-				//create a list of protected keys - device keys
-					if (is_array($device_keys)) {
-						foreach($device_keys as $row) {
-							//determine if the key is allowed
-								$device_key_authorized = false;
-								foreach($vendor_functions as $function) {
-									if ($function['vendor_name'] == $row['device_key_vendor'] && $function['value'] == $row['device_key_type']) {
-										$device_key_authorized = true;
-									}
-								}
-							//add the protected keys
-								if (!$device_key_authorized) {
-									$protected_keys[$row['device_key_id']] = 'true';
-								}
-							//add to protected
-								if ($row['device_key_protected'] == "true") {
-									$protected_keys[$row['device_key_id']] = 'true';
-								}
-						}
-					}
-				//create a list of protected keys - device proile keys
-					if (is_array($device_profile_keys)) {
-						foreach($device_profile_keys as $row) {
-							//determine if the key is allowed
-								$device_key_authorized = false;
-								if (is_array($vendor_functions)) {
-									foreach($vendor_functions as $function) {
-										if ($function['vendor_name'] == $row['device_key_vendor'] && $function['value'] == $row['device_key_type']) {
-											$device_key_authorized = true;
-										}
-									}
-								}
-							//add the protected keys
-								if (!$device_key_authorized) {
-									$protected_keys[$row['device_key_id']] = 'true';
-								}
-						}
-					}
-
-				//remove the keys the user is not allowed to edit based on the authorized vendor keys
-					$x=0;
-					if (is_array($_POST['device_keys'])) {
-						foreach($_POST['device_keys'] as $row) {
-							//loop through the authorized vendor functions
-								if ($protected_keys[$row['device_key_id']] == "true") {
-									unset($_POST['device_keys'][$x]);
-								}
-							//increment the row id
-								$x++;
-						}
-					}
 
 				//add or update the device keys
 					if (is_array($_POST['device_keys'])) {
@@ -307,99 +333,8 @@
 //set the sub array index
 	$x = "999";
 
-//get device
-	$sql = "SELECT device_uuid, device_profile_uuid FROM v_devices ";
-	$sql .= "WHERE device_user_uuid = '".$_SESSION['user_uuid']."' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$row = $prep_statement->fetch(PDO::FETCH_NAMED);
-	$device_uuid = $row['device_uuid'];
-	$device_profile_uuid = $row['device_profile_uuid'];
-	unset($row);
-
-//get device lines
-	if (isset($device_uuid)) {
-		$sql = "SELECT * from v_device_lines ";
-		$sql .= "WHERE device_uuid = '".$device_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$device_lines = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	}
-
-//get the user
-	if (is_array($device_lines)) {
-		foreach ($device_lines as $row) {
-			if ($_SESSION['domain_name'] == $row['server_address']) {
-				$user_id = $row['user_id'];
-				$server_address = $row['server_address'];
-				break;
-			}
-		}
-	}
-
 //set the sip profile name
 	$sip_profile_name = 'internal';
-
-//get device keys in the right order where device keys are listed after the profile keys
-	if (isset($device_uuid)) {
-		$sql = "SELECT * FROM v_device_keys ";
-		$sql .= "WHERE (";
-		$sql .= "device_uuid = '".$device_uuid."' ";
-		if (strlen($device_profile_uuid) > 0) {
-			$sql .= "or device_profile_uuid = '".$device_profile_uuid."' ";
-		}
-		$sql .= ") ";
-		$sql .= "ORDER BY ";
-		$sql .= "device_key_vendor ASC, ";
-		$sql .= "CASE device_key_category ";
-		$sql .= "WHEN 'line' THEN 1 ";
-		$sql .= "WHEN 'memory' THEN 2 ";
-		$sql .= "WHEN 'programmable' THEN 3 ";
-		$sql .= "WHEN 'expansion' THEN 4 ";
-		$sql .= "ELSE 100 END, ";
-		if ($db_type == "mysql") {
-			$sql .= "device_key_id ASC ";
-		}
-		else {
-			$sql .= "CAST(device_key_id as numeric) ASC, ";
-		}
-		$sql .= "CASE WHEN device_uuid IS NULL THEN 0 ELSE 1 END ASC ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		unset($sql,$prep_statement);
-	}
-
-//override profile keys with device keys
-	if (is_array($device_keys)) {
-		foreach($keys as $row) {
-			$id = $row['device_key_id'];
-			$device_keys[$id] = $row;
-			if (is_uuid($row['device_profile_uuid'])) {
-				$device_keys[$id]['device_key_owner'] = "profile";
-			}
-			else {
-				$device_keys[$id]['device_key_owner'] = "device";
-			}
-		}
-		unset($keys);
-	}
-
-//get the vendor count and last and device information
-	if (is_array($device_keys)) {
-		$vendor_count = 0;
-		foreach($device_keys as $row) {
-			if ($previous_vendor != $row['device_key_vendor']) {
-				$previous_vendor = $row['device_key_vendor'];
-				$device_uuid = $row['device_uuid'];
-				$device_key_vendor = $row['device_key_vendor'];
-				$device_key_id = $row['device_key_id'];
-				$device_key_line = $row['device_key_line'];
-				$device_key_category = $row['device_key_category'];
-				$vendor_count++;
-			}
-		}
-	}
 
 //add a new key
 	if (permission_exists('device_key_add')) {
@@ -413,34 +348,6 @@
 		$device_keys[$x]['device_key_extension'] = '';
 		$device_keys[$x]['device_key_label'] = '';
 		$device_keys[$x]['device_key_icon'] = '';
-	}
-
-//remove the keys the user is not allowed to edit based on the authorized vendor keys
-	if (is_array($device_keys)) {
-		foreach($device_keys as $row) {
-			//loop through the authorized vendor functions
-				$device_key_authorized = false;
-				if (is_array($vendor_functions)) {
-					foreach($vendor_functions as $function) {
-						if (strlen($row['device_key_type'] == 0)) {
-							$device_key_authorized = true;
-						}
-						else {
-							if ($function['vendor_name'] == $row['device_key_vendor'] && $function['value'] == $row['device_key_type']) {
-								$device_key_authorized = true;
-							}
-						}
-					}
-				}
-			//unset vendor functions the is not allowed to edit
-				if (!$device_key_authorized) {
-					unset($device_keys[$row['device_key_id']]);
-				}
-			//hide protected keys
-				if ($row['device_key_protected'] == "true") {
-					unset($device_keys[$row['device_key_id']]);
-				}
-		}
 	}
 
 //show the header
