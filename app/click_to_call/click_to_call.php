@@ -136,8 +136,7 @@
 
 		//define a leg - set source to display the defined caller id name and number
 			$source_common = "{";
-			$source_common .= "origination_uuid=".$origination_uuid;
-			$source_common .= ",click_to_call=true";
+			$source_common .= "click_to_call=true";
 			$source_common .= ",origination_caller_id_name='".$src_cid_name."'";
 			$source_common .= ",origination_caller_id_number=".$src_cid_number;
 			$source_common .= ",instant_ringback=true";
@@ -405,6 +404,12 @@
 	}
 	else {
 		echo "    <option value='it-ring'>".$text['opt-itring']."</option>\n";
+	}
+	if ($ringback == "de-ring") {
+		echo "    <option value='de-ring' selected='selected'>".$text['opt-dering']."</option>\n";
+	}
+	else {
+		echo "    <option value='de-ring'>".$text['opt-dering']."</option>\n";
 	}
 	if ($ringback == "music") {
 		echo "    <option value='music' selected='selected'>".$text['opt-moh']."</option>\n";
