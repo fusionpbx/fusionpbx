@@ -389,5 +389,30 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone, 4 - silent. Default is 0";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ac40fc12-092a-4dbf-96c0-3dc8ec5dbb35";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_account_display_1";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number: 0, 1. 0 - User Name, 1 - User ID. Default is 0";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b9efe780-24af-4561-a173-45d8af45dee0";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_ignore_alert_info_header_1";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0 - No, 1 - Yes. Default is 0";
+		$y++;
+				$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "cf28cfa6-da90-4d6d-a3b9-8d33e47aee8a";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_play_intercom_warning_tone_1";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0 - No, 1 - Yes. Default is 0";
+		$y++;
 
 ?>
