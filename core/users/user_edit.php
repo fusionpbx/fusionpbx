@@ -730,9 +730,13 @@
 		echo "	<tr>";
 		echo "		<td class='vncell' valign='top'>".$text['label-contact']."</td>";
 		echo "		<td class='vtable'>\n";
-		$sql = " select contact_uuid, contact_organization, contact_name_given, contact_name_family, contact_nickname from v_contacts ";
-		$sql .= " where domain_uuid = '".escape($domain_uuid)."' ";
-		$sql .= " order by contact_organization desc, contact_name_family asc, contact_name_given asc, contact_nickname asc ";
+		$sql = "select contact_uuid, contact_organization, contact_name_given, contact_name_family, contact_nickname from v_contacts ";
+		$sql .= "where domain_uuid = '".escape($domain_uuid)."' ";
+		$sql .= "and ( ";
+		$sql .= "	contact_uuid = '".escape($contact_uuid)."' or ";
+		$sql .= "	contact_uuid not in (select contact_uuid from v_users where domain_uuid = '".escape($domain_uuid)."') ";
+		$sql .= ") ";
+		$sql .= "order by contact_organization desc, contact_name_family asc, contact_name_given asc, contact_nickname asc ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
