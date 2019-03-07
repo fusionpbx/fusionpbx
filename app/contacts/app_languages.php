@@ -5381,4 +5381,24 @@ $text['button-add']['ru-ru'] = "Добавить";
 $text['button-add']['sv-se'] = "Lägg Till";
 $text['button-add']['uk-ua'] = "Додати";
 
+$text['button-user']['en-us'] = "User";
+$text['button-user']['ar-eg'] = "";
+$text['button-user']['de-at'] = "Benutzer"; //copied from de-de
+$text['button-user']['de-ch'] = "Benutzer"; //copied from de-de
+$text['button-user']['de-de'] = "Benutzer";
+$text['button-user']['es-cl'] = "Usuario";
+$text['button-user']['es-mx'] = "Usuario"; //copied from es-cl
+$text['button-user']['fr-ca'] = "Utilisateurs"; //copied from fr-fr
+$text['button-user']['fr-fr'] = "Utilisateurs";
+$text['button-user']['he-il'] = "";
+$text['button-user']['it-it'] = "Utente";
+$text['button-user']['nl-nl'] = "";
+$text['button-user']['pl-pl'] = "Użytkownik";
+$text['button-user']['pt-br'] = "Usuário";
+$text['button-user']['pt-pt'] = "Utilizador";
+$text['button-user']['ro-ro'] = "";
+$text['button-user']['ru-ru'] = "Пользователь";
+$text['button-user']['sv-se'] = "Användare";
+$text['button-user']['uk-ua'] = "Користувач";
+
 ?>
