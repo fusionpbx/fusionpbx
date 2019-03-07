@@ -8071,7 +8071,7 @@
 <!--  Number: 0 - 23 -->
 <P285>1</P285>
 
-<!-- Hour of the Day--End (-1, 0-23). Default is 0 -->
+<!-- Hour of the Day-End (-1, 0-23). Default is 0 -->
 <!-- Number: -1, 0 - 23 -->
 <P8459>0</P8459>
 
@@ -8102,7 +8102,7 @@
 {elseif isset($grandstream_config_server_path)}
 <P237>{$grandstream_config_server_path}</P237>
 {else}
-<P237>{$account.1.server_address}/app/provision</P237>
+<P237>{$domain_name}{$project_path}/app/provision</P237>
 {/if}
 
 <!--  HTTP/HTTPS User Name -->
