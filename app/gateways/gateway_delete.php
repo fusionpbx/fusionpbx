@@ -42,7 +42,7 @@
 	$text = $language->get();
 
 //delete the gateway
-	if (is_array($_GET["id"])) {
+	if (is_uuid($_GET["id"])) {
 		//set the variable
 			$id = check_str($_GET["id"]);
 
