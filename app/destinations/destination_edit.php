@@ -554,8 +554,8 @@
 									$dialplan_detail_order = $dialplan_detail_order + 10;
 
 									//set the destination app and data
-									$_POST["destination_app"] = $dialplan_detail_type;
-									$_POST["destination_data"] = $dialplan_detail_data;
+									$destination_app = $dialplan_detail_type;
+									$destination_data = $dialplan_detail_data;
 
 									//increment the array id
 									$y++;
