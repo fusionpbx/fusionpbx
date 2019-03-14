@@ -2038,5 +2038,41 @@ function number_pad($number,$n) {
 		}
 	}
 
+//define email button (src: https://buttons.cm)
+	if (!function_exists('email_button')) {
+		function email_button($text = 'Click Here!', $link = URL, $bg_color = '#dddddd', $fg_color = '#000000', $radius = '') {
+
+			// default button radius
+			$radius = $radius != '' ? $radius : '3px';
+
+			// retrieve single/first numeric radius value for ms arc
+			$tmp = $radius;
+			if (substr_count($radius, ' ') > 0) {
+				$tmp = explode(' ', $radius);
+				$tmp = $tmp[0];
+			}
+			$tmp = preg_replace("/[^0-9,.]/", '', $tmp); // remove non-numeric characters
+			$arc = floor($tmp / 35 * 100); // calculate percentage
+
+			// create button code
+			$btn = "
+				<div>
+					<!--[if mso]>
+					  <v:roundrect xmlns:v='urn:schemas-microsoft-com:vml' xmlns:w='urn:schemas-microsoft-com:office:word' href='".$link."' style='height: 35px; v-text-anchor: middle; width: 140px;' arcsize='".$arc."%' stroke='f' fillcolor='".$bg_color."'>
+							<w:anchorlock/>
+							<center>
+					<![endif]-->
+					<a href='".$link."' style='background-color: ".$bg_color."; border-radius: ".$radius."; color: ".$fg_color."; display: inline-block; font-family: sans-serif; font-size: 13px; font-weight: bold; line-height: 35px; text-align: center; text-decoration: none; width: 140px; -webkit-text-size-adjust: none;'>".$text."</a>
+					<!--[if mso]>
+							</center>
+						</v:roundrect>
+					<![endif]-->
+				</div>
+				";
+
+			return $btn;
+		}
+	}
+
 
 ?>
