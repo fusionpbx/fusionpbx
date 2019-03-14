@@ -390,6 +390,10 @@
 				//add to the xml cdr table
 					$database->fields['record_path'] = $record_path;
 					$database->fields['record_name'] = $record_name;
+					if (isset($xml->variables->record_description)) {
+						$record_description = urldecode($xml->variables->record_description);
+					}
+
 				//add to the call recordings table
 					if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_recordings/app_config.php")) {
 						//build the array
@@ -399,6 +403,7 @@
 						$recordings['call_recordings'][$x]['call_recording_name'] = $record_name;
 						$recordings['call_recordings'][$x]['call_recording_path'] = $record_path;
 						$recordings['call_recordings'][$x]['call_recording_length'] = $record_length;
+						$recordings['call_recordings'][$x]['call_recording_description'] = $record_description;
 						$recordings['call_recordings'][$x]['call_recording_date'] = urldecode($xml->variables->answer_stamp);
 						$recordings['call_recordings'][$x]['call_direction'] = urldecode($xml->variables->call_direction);
 						//$recordings['call_recordings'][$x]['call_recording_description']= $row['zzz'];
