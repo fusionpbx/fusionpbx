@@ -952,21 +952,19 @@
 		echo "	</tr>";
 	}
 
-	if ($user_uuid != $_SESSION['user_uuid']) {
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-enabled']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "	<select class='formfld' name='user_enabled'>\n";
-		echo "		<option value='true'>".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".(($user_enabled != "true") ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
-		echo "<br />\n";
-		echo $text['description-enabled']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-	}
+	echo "<tr ".($user_uuid == $_SESSION['user_uuid'] ? "style='display: none;'" : null).">\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-enabled']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<select class='formfld' name='user_enabled'>\n";
+	echo "		<option value='true'>".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".(($user_enabled != "true") ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo $text['description-enabled']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	echo "	<tr>";
 	echo "		<td colspan='2' align='right' style='white-space: nowrap;'>";
