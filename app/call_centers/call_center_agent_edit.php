@@ -293,7 +293,7 @@
 
 //set default values
 	if (strlen($agent_type) == 0) { $agent_type = "callback"; }
-	if (strlen($agent_call_timeout) == 0) { $agent_call_timeout = "15"; }
+	if (strlen($agent_call_timeout) == 0) { $agent_call_timeout = "20"; }
 	if (strlen($agent_max_no_answer) == 0) { $agent_max_no_answer = "0"; }
 	if (strlen($agent_wrap_up_time) == 0) { $agent_wrap_up_time = "10"; }
 	if (strlen($agent_no_answer_delay_time) == 0) { $agent_no_answer_delay_time = "30"; }
