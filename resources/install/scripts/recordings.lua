@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010
+--	Copyright (C) 2010 - 2019
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -30,7 +30,7 @@
 	recordings_dir = "";
 	file_name = "";
 	recording_number = "";
-	recording_slots = "";
+	recording_id = "";
 	recording_prefix = "";
 
 --include config.lua
@@ -102,14 +102,14 @@
 			if (not default_language) then default_language = 'en'; end
 			if (not default_dialect) then default_dialect = 'us'; end
 			if (not default_voice) then default_voice = 'callie'; end
-			recording_slots = session:getVariable("recording_slots");
+			recording_id = session:getVariable("recording_id");
 			recording_prefix = session:getVariable("recording_prefix");
 			recording_name = session:getVariable("recording_name");
 			record_ext = session:getVariable("record_ext");
 			domain_name = session:getVariable("domain_name");
 
 		--select the recording number
-			if (recording_slots) then
+			if (recording_id) then
 				min_digits = 1;
 				max_digits = 20;
 				session:sleep(1000);
