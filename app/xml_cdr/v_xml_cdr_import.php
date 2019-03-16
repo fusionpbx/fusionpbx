@@ -195,6 +195,17 @@
 			$database->fields['caller_id_name'] = urldecode($xml->variables->effective_caller_id_name);
 			$database->fields['caller_id_number'] = urldecode($xml->variables->effective_caller_id_number);
 
+		//set missed calls
+			$database->fields['missed_call'] = 'false';
+			if ($xml->variables->billsec > 0) {
+				$database->fields['missed_call'] = 'true';
+			}
+			else {
+				if (isset($xml->variables->missed_call)) {
+					$database->fields['missed_call'] = check_str($xml->variables->missed_call);
+				}
+			}
+
 		//get the values from the callflow.
 			$x = 0;
 			foreach ($xml->callflow as $row) {
