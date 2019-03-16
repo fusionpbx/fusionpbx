@@ -428,7 +428,7 @@
 						direction = 'inbound'
 						or direction = 'local'
 					)
-					and bridge_uuid is null
+					and (missed_call = true or bridge_uuid is null)
 					and destination_number in ('".implode("','",$assigned_extensions)."')
 					and (";
 					$x = 0;
