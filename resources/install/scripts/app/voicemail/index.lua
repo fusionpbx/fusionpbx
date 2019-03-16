@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013-2017 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2019 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -383,6 +383,13 @@
 
 --leave a message
 	if (voicemail_action == "save") then
+
+		--set the variables
+			if (session:ready()) then
+				session:setVariable("missed_call", "true");
+				session:setVariable("voicemail_answer_stamp", api:execute("strftime"));
+				session:setVariable("voicemail_answer_epoch", api:execute("strepoch"));
+			end
 
 		--check the voicemail quota
 			if (voicemail_uuid ~= nil and vm_disk_quota ~= nil) then
