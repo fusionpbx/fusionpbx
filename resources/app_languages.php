@@ -3126,6 +3126,26 @@ $text['label-peak']['ru-ru'] = "";
 $text['label-peak']['sv-se'] = "";
 $text['label-peak']['uk-ua'] = "";
 
+$text['label-tools']['en-us'] = "Tools";
+$text['label-tools']['ar-eg'] = "الادوات";
+$text['label-tools']['de-at'] = "Funktionen"; //copied from de-de
+$text['label-tools']['de-ch'] = "Funktionen"; //copied from de-de
+$text['label-tools']['de-de'] = "Funktionen";
+$text['label-tools']['es-cl'] = "Herramientas";
+$text['label-tools']['es-mx'] = "Herramientas"; //copied from es-cl
+$text['label-tools']['fr-ca'] = "Outils"; //copied from fr-fr
+$text['label-tools']['fr-fr'] = "Outils";
+$text['label-tools']['he-il'] = "כלים";
+$text['label-tools']['it-it'] = "Strumenti";
+$text['label-tools']['nl-nl'] = "";
+$text['label-tools']['pl-pl'] = "Narzędzia";
+$text['label-tools']['pt-br'] = "Ferramentas"; //copied from pt-pt
+$text['label-tools']['pt-pt'] = "Ferramentas";
+$text['label-tools']['ro-ro'] = "Utilitare";
+$text['label-tools']['ru-ru'] = "Инструменты";
+$text['label-tools']['sv-se'] = "Verktyg";
+$text['label-tools']['uk-ua'] = "Налаштування";
+
 $text['description-greeting']['en-us'] = "Select the desired Greeting.";
 $text['description-greeting']['ar-eg'] = "";
 $text['description-greeting']['de-at'] = "Geben Sie die Begrüßungs-ID an."; //copied from de-de
