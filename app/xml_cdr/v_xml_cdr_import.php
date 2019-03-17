@@ -197,13 +197,13 @@
 
 		//set missed calls
 			$database->fields['missed_call'] = 'false';
-			if ($xml->variables->billsec > 0) {
-				$database->fields['missed_call'] = 'true';
-			}
-			else {
-				if (isset($xml->variables->missed_call)) {
-					$database->fields['missed_call'] = check_str($xml->variables->missed_call);
+			if ($xml->variables->call_direction == 'local' || $xml->variables->call_direction == 'inbound') {
+				if ($xml->variables->billsec == 0) {
+					$database->fields['missed_call'] = 'true';
 				}
+			}
+			if ($xml->variables->missed_call == 'true') {
+				$database->fields['missed_call'] = 'true';
 			}
 
 		//get the values from the callflow.
