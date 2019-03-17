@@ -191,10 +191,6 @@
 				$database->fields['rtp_audio_in_mos'] = $rtp_audio_in_mos;
 			}
 
-		//get the caller details
-			$database->fields['caller_id_name'] = urldecode($xml->variables->effective_caller_id_name);
-			$database->fields['caller_id_number'] = urldecode($xml->variables->effective_caller_id_number);
-
 		//set missed calls
 			$database->fields['missed_call'] = 'false';
 			if ($xml->variables->call_direction == 'local' || $xml->variables->call_direction == 'inbound') {
@@ -205,6 +201,10 @@
 			if ($xml->variables->missed_call == 'true') {
 				$database->fields['missed_call'] = 'true';
 			}
+
+		//get the caller details
+			$database->fields['caller_id_name'] = urldecode($xml->variables->effective_caller_id_name);
+			$database->fields['caller_id_number'] = urldecode($xml->variables->effective_caller_id_number);
 
 		//get the values from the callflow.
 			$x = 0;
