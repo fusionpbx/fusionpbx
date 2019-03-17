@@ -102,6 +102,7 @@ if (!class_exists('xml_cdr')) {
 			$this->fields[] = "context";
 			$this->fields[] = "xml";
 			$this->fields[] = "json";
+			$this->fields[] = "missed_call";
 			$this->fields[] = "caller_id_name";
 			$this->fields[] = "caller_id_number";
 			$this->fields[] = "caller_destination";
@@ -285,6 +286,17 @@ if (!class_exists('xml_cdr')) {
 							$destination_number = urldecode($xml->variables->last_sent_callee_id_number);
 						}
 
+					//set missed calls
+						$missed_call = 'false';
+						if ($xml->variables->call_direction == 'local' || $xml->variables->call_direction == 'inbound') {
+							if ($xml->variables->billsec == 0) {
+								$missed_call = 'true';
+							}
+						}
+						if ($xml->variables->missed_call == 'true') {
+							$missed_call = 'true';
+						}
+
 					//get the caller details
 						$caller_id_name = urldecode($xml->variables->effective_caller_id_name);
 						$caller_id_number = urldecode($xml->variables->effective_caller_id_number);
@@ -305,6 +317,7 @@ if (!class_exists('xml_cdr')) {
 						$this->array[$key]['source_number'] = check_str(urldecode($xml->variables->effective_caller_id_number));
 						$this->array[$key]['user_context'] = check_str(urldecode($xml->variables->user_context));
 						$this->array[$key]['network_addr'] = check_str(urldecode($xml->variables->sip_network_ip));
+						$this->array[$key]['missed_call'] = check_str($missed_call);
 						$this->array[$key]['caller_id_name'] = check_str($caller_id_name);
 						$this->array[$key]['caller_id_number'] = check_str($caller_id_number);
 						$this->array[$key]['caller_destination'] = check_str(urldecode($xml->variables->caller_destination));
