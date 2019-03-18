@@ -163,7 +163,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_direct_ip_call_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0-Disabled, 1-Enabled";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c45264b7-6e85-42e4-b245-f22caff091d4";
