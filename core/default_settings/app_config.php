@@ -209,7 +209,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "login";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "password_reset_key";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = generate_password('20', '4');
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = base64_encode(openssl_random_pseudo_bytes(32));
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Display a Reset Password link on the login box (requires smtp_host be defined).";
 		$y++;

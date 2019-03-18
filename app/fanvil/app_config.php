@@ -582,7 +582,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable RFID Card Reader. 0 - NO, 1 - Yes";
 		$y++;
-                $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e8480f45-b359-4ad3-9c6f-8d7f471c3057";
+                $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "725a09a9-78a7-40a6-b512-bfdde7e61123";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_egs_enable_digit_pad";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";

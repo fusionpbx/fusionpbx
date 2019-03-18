@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -285,6 +285,16 @@
 	$users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset($prep_statement, $sql);
 
+//determine if contact assigned to a user
+	if (is_array($users) && sizeof($users) != 0) {
+		foreach($users as $user) {
+			if ($user['contact_uuid'] == $contact_uuid) {
+				$contact_user_uuid = $user['user_uuid'];
+				break;
+			}
+		}
+	}
+
 //get the users assigned to this contact
 	$sql = "SELECT u.username, u.user_uuid, a.contact_user_uuid FROM v_contacts as c, v_users as u, v_contact_users as a ";
 	$sql .= "where c.contact_uuid = '".$contact_uuid."' ";
@@ -415,6 +425,9 @@
 	}
 	if ($action == "update" && is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/certificates')) {
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-certificate']."' onclick=\"window.location='".PROJECT_PATH."/app/certificates/index.php?name=".urlencode(escape($contact_name_given)." ".escape($contact_name_family))."'\" value='".$text['button-certificate']."'>\n";
+	}
+	if ($action == "update" && permission_exists('user_edit') && is_uuid($contact_user_uuid)) {
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-user']."' onclick=\"window.location='".PROJECT_PATH."/core/users/user_edit.php?id=".$contact_user_uuid."'\" value='".$text['button-user']."'>\n";
 	}
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
@@ -660,12 +673,8 @@
 			echo "		</td>";
 			echo "	</tr>";
 		}
-		echo "</table>";
 
 		if (permission_exists('contact_group_view')) {
-			$contact_shared = 'true';
-			echo "<div id='div_groups' ".(($contact_shared != 'true') ? "style='display: none;'" : null).">\n";
-			echo "<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
 			echo "<tr>";
 			echo "	<td width='30%' class='vncell' valign='top'>".$text['label-groups']."</td>";
 			echo "	<td width='70%' class='vtable'>";
@@ -739,11 +748,8 @@
 
 			echo "	</td>";
 			echo "</tr>";
-			echo "</table>\n";
-			echo "</div>";
 		}
 
-		echo "<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
 		echo "<tr>\n";
 		echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-contact_note']."\n";
@@ -763,6 +769,7 @@
 		echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 		echo "		</td>\n";
 		echo "	</tr>";
+
 		echo "</table>";
 
 	echo "</td>\n";

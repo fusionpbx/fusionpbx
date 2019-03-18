@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -51,57 +51,25 @@
 	$order_by = check_str($_GET["order_by"]);
 	$order = check_str($_GET["order"]);
 	$search = check_str($_REQUEST["search"]);
+	if (strlen($search) > 0) {
+		$search = strtolower($search);
+	}
 
 //get the list of superadmins
 	$superadmins = superadmin_list($db);
 
-//get the user group(s) from the database
-	$sql = "select ";
-	$sql .= "	ug.*, g.domain_uuid as group_domain_uuid ";
-	$sql .= "from ";
-	$sql .= "	v_user_groups as ug, ";
-	$sql .= "	v_groups as g ";
-	$sql .= "where ";
-	$sql .= "	ug.group_uuid = g.group_uuid ";
-	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
-		$sql .= "	and (";
-		$sql .= "		g.domain_uuid = '".$domain_uuid."' ";
-		$sql .= "		or g.domain_uuid is null ";
-		$sql .= "	) ";
-		$sql .= "	and ug.domain_uuid = '".$domain_uuid."' ";
-	}
-	$sql .= "order by ";
-	$sql .= "	g.domain_uuid desc, ";
-	$sql .= "	g.group_name asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	if (is_array($result)) {
-		foreach($result as $row) {
-			$user_groups[$row['user_uuid']][] = $row['group_name'].(($row['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$row['group_domain_uuid']]['domain_name'] : null);
-		}
-	}
-	unset ($sql, $prep_statement);
-
 //get the user count from the database
-	$sql = "select count(*) as num_rows from v_users where 1 = 1 ";
+	$sql = "select count(*) as num_rows from view_users where 1 = 1 ";
 	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
 		$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	}
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		$total_users = $row['num_rows'];
-	}
-	unset($prep_statement, $row);
-
-//get the users from the database (reuse $sql from above)
 	if (strlen($search) > 0) {
-		$search = strtolower($search);
-		$sql .= "and lower(username) = '".$search."' ";
+		$sql .= "and (lower(username) like '%".$search."%' \n";
+		$sql .= "or lower(groups) like '%".$search."%' \n";
+		$sql .= "or lower(contact_organization) like '%".$search."%' \n";
+		$sql .= "or lower(contact_name_given) like '%".$search."%' \n";
+		$sql .= "or lower(contact_name_family) like '%".$search."%') \n";
 	}
-	if (strlen($order_by) > 0) { $sql .= "order by ".$order_by." ".$order." "; }
 	$prep_statement = $db->prepare($sql);
 	if ($prep_statement) {
 		$prep_statement->execute();
@@ -114,6 +82,8 @@
 		}
 	}
 	unset ($prep_statement, $result, $sql);
+
+//prepare for paging
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "search=".escape($search);
 	if (permission_exists('user_all') && $_GET['show'] == 'all') {
@@ -124,26 +94,36 @@
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
-	$sql = "select * from v_contacts as c ";
-	$sql .= "right join v_users u on u.contact_uuid = c.contact_uuid ";
-	$sql .= "inner join v_domains as d on d.domain_uuid = u.domain_uuid ";
-	$sql .= "where 1 = 1 ";
+//get the users from the database
+	$sql = "select u.domain_uuid, u.user_uuid, u.contact_uuid, u.domain_name, u.username, u.user_enabled, u.contact_organization, u.contact_name_given, u.contact_name_family, u.groups \n";
+	$sql .= "from view_users as u \n";
+	$sql .= "where 1 = 1 \n";
 	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
-		$sql .= "and u.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and u.domain_uuid = '".$_SESSION['domain_uuid']."' \n";
 	}
 	if (strlen($search) > 0) {
-		$sql .= "and lower(u.username) like '%".$search."%' ";
+		$sql .= "and (lower(username) like '%".$search."%' \n";
+		$sql .= "or lower(groups) like '%".$search."%' \n";
+		$sql .= "or lower(contact_organization) like '%".$search."%' \n";
+		$sql .= "or lower(contact_name_given) like '%".$search."%' \n";
+		$sql .= "or lower(contact_name_family) like '%".$search."%') \n";
 	}
 	if (strlen($order_by)> 0) {
-		$sql .= "order by ".$order_by." ".$order." ";
+		$sql .= "order by ".$order_by." ".$order." \n";
 	}
 	else {
-		$sql .= "order by u.username asc ";
+		$sql .= "order by u.username asc \n";
 	}
-	$sql .= " limit ".$rows_per_page." offset ".$offset." ";
+	$sql .= "limit ".$rows_per_page." offset ".$offset." ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	//if (!$users) {
+	//	echo "<pre>\n";
+	//	print_r($prep_statement->errorInfo());
+	//	echo "</pre>\n";
+	//	exit;
+	//}
 	unset ($prep_statement, $sql);
 
 //page title and description
@@ -191,9 +171,12 @@
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, '', '', $param);
 	}
 	echo th_order_by('username', $text['label-username'], $order_by, $order);
-	echo "<th>".$text['label-groups']."</th>\n";
-	echo "<th>".$text['label-organization']."</th>\n";
-	echo "<th>".$text['label-name']."</th>\n";
+	echo th_order_by('groups', $text['label-groups'], $order_by, $order, '', '', $param);
+	echo th_order_by('contact_organization', $text['label-organization'], $order_by, $order, '', '', $param);
+	echo th_order_by('contact_name_given', $text['label-name'], $order_by, $order, '', '', $param);
+	if (permission_exists('ticket_edit')) {
+		echo "<th>".$text['label-tools']."</th>\n";
+	}
 	echo th_order_by('user_enabled', $text['label-enabled'], $order_by, $order, '', '', $param);
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('user_add')) {
@@ -222,15 +205,17 @@
 					echo escape($row['username']);
 				}
 				echo "	</td>\n";
-				echo "	<td valign='top' class='".$row_style[$c]."'>";
-				if (sizeof($user_groups[$row['user_uuid']]) > 0) {
-					echo escape(implode(', ', $user_groups[$row['user_uuid']]));
+				echo "	<td valign='top' class='".$row_style[$c]."'>\n";
+				echo "		".$row['groups']."&nbsp;\n";
+				echo "	</td>\n";
+
+				echo "	<td class='".$row_style[$c]."'><a href='/app/contacts/contact_edit.php?id=".$row['contact_uuid']."'>".$row['contact_organization']."</a> &nbsp;</td>\n";
+				echo "	<td class='".$row_style[$c]."'><a href='/app/contacts/contact_edit.php?id=".$row['contact_uuid']."'>".$row['contact_name_given']." ".$row['contact_name_family']."</a> &nbsp;</td>\n";
+				echo "	<td class='".$row_style[$c]."'>\n";
+				if (permission_exists('ticket_edit')) {
+					echo "		<a href='/app/tickets/tickets.php?user_uuid=".$row['user_uuid']."'><span class='glyphicon glyphicon-tags' title='".$text['label-tickets']."'></span></a>\n";
 				}
-				echo "&nbsp;</td>\n";
-
-				echo "<td class='".$row_style[$c]."'>".$row['contact_organization']." &nbsp;</td>\n";
-				echo "<td class='".$row_style[$c]."'>".$row['contact_name_given']." ".$row['contact_name_family']." &nbsp;</td>\n";
-
+				echo "	</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
 				if ($row['user_enabled'] == 'true') {
 					echo $text['option-true'];

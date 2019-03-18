@@ -730,19 +730,30 @@
 							if ($element['hidden']) {
 								$dialplan_detail_data_mod = $dialplan_detail_data;
 								if ($dialplan_detail_type == 'bridge') {
-									// parse out gateway uuid
-									$bridge_statement = explode('/', $dialplan_detail_data);
-									if ($bridge_statement[0] == 'sofia' && $bridge_statement[1] == 'gateway' && is_uuid($bridge_statement[2])) {
-										// retrieve gateway name from db
-										$sql = "select gateway from v_gateways where gateway_uuid = '".$bridge_statement[2]."' ";
-										$prep_statement = $db->prepare(check_sql($sql));
-										$prep_statement->execute();
-										$gateways = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-										if (is_array($gateways)) {
-											$gateway_name = $gateways[0]['gateway'];
-											$dialplan_detail_data_mod = str_replace($bridge_statement[2], $gateway_name, $dialplan_detail_data);
+									// split up failover bridges and get variables in statement
+									$failover_bridges = explode('|', $dialplan_detail_data);
+									preg_match('/^\{.*\}/', $failover_bridges[0], $bridge_vars);
+									$bridge_vars = $bridge_vars[0];
+									
+									// rename parse and rename each gateway
+									foreach ($failover_bridges as $bridge_statement_exploded) {
+										// parse out gateway uuid
+										$bridge_statement = str_replace($bridge_vars, '', explode('/', $bridge_statement_exploded));
+										array_unshift($bridge_statement, $bridge_vars);
+										
+										if ($bridge_statement[1] == 'sofia' && $bridge_statement[2] == 'gateway' && is_uuid($bridge_statement[3])) {
+											// retrieve gateway name from db
+											$sql = "select gateway from v_gateways where gateway_uuid = '".$bridge_statement[3]."' ";
+											$prep_statement = $db->prepare(check_sql($sql));
+											$prep_statement->execute();
+											$gateways = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+											if (is_array($gateways)) {
+												$gateway_name = $gateways[0]['gateway'];
+												$bridge_statement_exploded_mod = str_replace($bridge_statement[3], $gateway_name, $bridge_statement_exploded);
+											}
+									$dialplan_detail_data_mod = str_replace($bridge_statement_exploded, $bridge_statement_exploded_mod, $dialplan_detail_data_mod);
+									unset ($prep_statement, $sql, $bridge_statement, $gateways, $bridge_statement_exploded, $bridge_statement_exploded_mod);
 										}
-										unset ($prep_statement, $sql, $bridge_statement, $gateways);
 									}
 								}
 								echo "	<label id=\"label_dialplan_detail_data_".$x."\">".escape($dialplan_detail_data_mod)."</label>\n";

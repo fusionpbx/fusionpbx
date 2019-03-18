@@ -1391,7 +1391,7 @@ function number_pad($number,$n) {
 
 //function to send email
 	if (!function_exists('send_email')) {
-		function send_email($eml_recipients, $eml_subject, $eml_body, &$eml_error = '', $eml_from_address = '', $eml_from_name = '', $eml_priority = 3) {
+		function send_email($eml_recipients, $eml_subject, $eml_body, &$eml_error = '', $eml_from_address = '', $eml_from_name = '', $eml_priority = 3, $eml_debug_level = 0) {
 			/*
 			RECIPIENTS NOTE:
 
@@ -1484,7 +1484,9 @@ function number_pad($number,$n) {
 			$mail -> Subject = $eml_subject;
 			$mail -> MsgHTML($eml_body);
 			$mail -> Priority = $eml_priority;
-			$mail -> SMTPDebug = 3;
+			if (is_numeric($eml_debug_level) && $eml_debug_level > 0) {
+				$mail -> SMTPDebug = $eml_debug_level;
+			}
 
 			$address_found = false;
 
@@ -1546,15 +1548,20 @@ function number_pad($number,$n) {
 
 //encrypt a string
 	if (!function_exists('encrypt')) {
-		function encrypt($key, $str_to_enc) {
-			return base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($key), $str_to_enc, MCRYPT_MODE_CBC, md5(md5($key))));
+		function encrypt($key, $data) {
+			$encryption_key = base64_decode($key);
+			$iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+			$encrypted = openssl_encrypt($data, 'aes-256-cbc', $encryption_key, 0, $iv);
+			return base64_encode($encrypted.'::'.$iv);
 		}
 	}
 
 //decrypt a string
 	if (!function_exists('decrypt')) {
-		function decrypt($key, $str_to_dec) {
-			return rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($str_to_dec), MCRYPT_MODE_CBC, md5(md5($key))), "\0");
+		function decrypt($key, $data) {
+			$encryption_key = base64_decode($key);
+			list($encrypted_data, $iv) = explode('::', base64_decode($data), 2);
+			return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
 		}
 	}
 
@@ -2028,6 +2035,42 @@ function number_pad($number,$n) {
 			else {
 				return false;
 			}
+		}
+	}
+
+//define email button (src: https://buttons.cm)
+	if (!function_exists('email_button')) {
+		function email_button($text = 'Click Here!', $link = URL, $bg_color = '#dddddd', $fg_color = '#000000', $radius = '') {
+
+			// default button radius
+			$radius = $radius != '' ? $radius : '3px';
+
+			// retrieve single/first numeric radius value for ms arc
+			$tmp = $radius;
+			if (substr_count($radius, ' ') > 0) {
+				$tmp = explode(' ', $radius);
+				$tmp = $tmp[0];
+			}
+			$tmp = preg_replace("/[^0-9,.]/", '', $tmp); // remove non-numeric characters
+			$arc = floor($tmp / 35 * 100); // calculate percentage
+
+			// create button code
+			$btn = "
+				<div>
+					<!--[if mso]>
+					  <v:roundrect xmlns:v='urn:schemas-microsoft-com:vml' xmlns:w='urn:schemas-microsoft-com:office:word' href='".$link."' style='height: 35px; v-text-anchor: middle; width: 140px;' arcsize='".$arc."%' stroke='f' fillcolor='".$bg_color."'>
+							<w:anchorlock/>
+							<center>
+					<![endif]-->
+					<a href='".$link."' style='background-color: ".$bg_color."; border-radius: ".$radius."; color: ".$fg_color."; display: inline-block; font-family: sans-serif; font-size: 13px; font-weight: bold; line-height: 35px; text-align: center; text-decoration: none; width: 140px; -webkit-text-size-adjust: none;'>".$text."</a>
+					<!--[if mso]>
+							</center>
+						</v:roundrect>
+					<![endif]-->
+				</div>
+				";
+
+			return $btn;
 		}
 	}
 

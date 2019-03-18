@@ -27,7 +27,7 @@
 //if the number of rows is 0 then read the sip profile xml into the database
 	if ($domains_processed == 1) {
 
-		//add the sip profiles to the database
+		//add the email templates to the database
 			$sql = "select count(*) as num_rows from v_email_templates ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			if ($prep_statement) {
@@ -268,7 +268,7 @@
 					$array['email_templates'][$x]['template_body'] .= "<body>\n";
 					$array['email_templates'][$x]['template_body'] = "Missed Call from \${caller_id_name} &lt;<a href=\"tel:\${caller_id_number}\">\${caller_id_number}</a>&gt; to \${sip_to_user} ext \${dialed_user}\n";
 					$array['email_templates'][$x]['template_body'] .= "</body>\n";
-					$array['email_templates'][$x]['template_body'] .= "</html>\n";				
+					$array['email_templates'][$x]['template_body'] .= "</html>\n";
 					$array['email_templates'][$x]['template_type'] = 'html';
 					$array['email_templates'][$x]['template_enabled'] = 'true';
 					$array['email_templates'][$x]['template_description'] = '';
@@ -321,7 +321,7 @@
 					$database->save($array);
 					//$message = $database->message;
 					unset($array);
-					
+
 					//remove the temporary permission
 					$p->delete("email_template_add", 'temp');
 					$p->delete("email_template_edit", 'temp');

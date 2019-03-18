@@ -191,6 +191,17 @@
 				$database->fields['rtp_audio_in_mos'] = $rtp_audio_in_mos;
 			}
 
+		//set missed calls
+			$database->fields['missed_call'] = 'false';
+			if ($xml->variables->call_direction == 'local' || $xml->variables->call_direction == 'inbound') {
+				if ($xml->variables->billsec == 0) {
+					$database->fields['missed_call'] = 'true';
+				}
+			}
+			if ($xml->variables->missed_call == 'true') {
+				$database->fields['missed_call'] = 'true';
+			}
+
 		//get the caller details
 			$database->fields['caller_id_name'] = urldecode($xml->variables->effective_caller_id_name);
 			$database->fields['caller_id_number'] = urldecode($xml->variables->effective_caller_id_number);
@@ -390,6 +401,10 @@
 				//add to the xml cdr table
 					$database->fields['record_path'] = $record_path;
 					$database->fields['record_name'] = $record_name;
+					if (isset($xml->variables->record_description)) {
+						$record_description = urldecode($xml->variables->record_description);
+					}
+
 				//add to the call recordings table
 					if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_recordings/app_config.php")) {
 						//build the array
@@ -399,6 +414,7 @@
 						$recordings['call_recordings'][$x]['call_recording_name'] = $record_name;
 						$recordings['call_recordings'][$x]['call_recording_path'] = $record_path;
 						$recordings['call_recordings'][$x]['call_recording_length'] = $record_length;
+						$recordings['call_recordings'][$x]['call_recording_description'] = $record_description;
 						$recordings['call_recordings'][$x]['call_recording_date'] = urldecode($xml->variables->answer_stamp);
 						$recordings['call_recordings'][$x]['call_direction'] = urldecode($xml->variables->call_direction);
 						//$recordings['call_recordings'][$x]['call_recording_description']= $row['zzz'];

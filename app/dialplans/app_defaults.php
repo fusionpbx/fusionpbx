@@ -98,6 +98,18 @@
 			$sql = "update v_device_lines set outbound_proxy_secondary = null where outbound_proxy_secondary = '';\n";
 			$db->query($sql);
 			unset($sql);
+
+		//change recording_slots to recording_id
+			$sql = "update v_dialplan_details set dialplan_detail_data = 'recording_id=true' ";
+			$sql .= "where dialplan_uuid in (select dialplan_uuid from v_dialplans where app_uuid = '430737df-5385-42d1-b933-22600d3fb79e') ";
+			$sql .= "and dialplan_detail_data = 'recording_slots=true'; \n";
+			$db->query($sql);
+			unset($sql);
+			$sql = "update v_dialplan_details set dialplan_detail_data = 'recording_id=false' ";
+			$sql .= "where dialplan_uuid in (select dialplan_uuid from v_dialplans where app_uuid = '430737df-5385-42d1-b933-22600d3fb79e') ";
+			$sql .= "and dialplan_detail_data = 'recording_slots=false'; \n";
+			$db->query($sql);
+			unset($sql);
 	}
 
 //add xml for each dialplan where the dialplan xml is empty
@@ -121,6 +133,14 @@
 		$dialplans->destination = "database";
 		$dialplans->is_empty = "dialplan_xml";
 		$array = $dialplans->xml();
+	}
+
+//delete the follow me bridge dialplan
+	if ($domains_processed == 1) {
+		$sql = "delete from v_dialplan_details where dialplan_uuid = '8ed73d1f-698f-466c-8a7a-1cf4cd229f7f' ";
+		$db->query($sql);
+		$sql = "delete from v_dialplans where dialplan_uuid = '8ed73d1f-698f-466c-8a7a-1cf4cd229f7f' ";
+		$db->query($sql);
 	}
 
 //add not found dialplan to inbound routes
