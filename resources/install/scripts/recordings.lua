@@ -108,13 +108,17 @@
 			record_ext = session:getVariable("record_ext");
 			domain_name = session:getVariable("domain_name");
 
-		--select the recording number
-			if (recording_id) then
+		--select the recording number and set the recording name
+			if (recording_id == nil) then
 				min_digits = 1;
 				max_digits = 20;
 				session:sleep(1000);
-				recording_number = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-id_number.wav", "", "\\d+");
-				recording_name = recording_prefix..recording_number.."."..record_ext;
+				recording_id = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-id_number.wav", "", "\\d+");
+				recording_name = recording_prefix..recording_id.."."..record_ext;
+			elseif (tonumber(recording_id) ~= nil) then
+				recording_name = recording_prefix..recording_id.."."..record_ext;
+			else
+				recording_name = recording_prefix.."."..record_ext;
 			end
 
 		--set the default recording name if one was not provided
