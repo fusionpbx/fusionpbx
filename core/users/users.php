@@ -177,6 +177,9 @@
 	if (permission_exists('ticket_edit')) {
 		echo "<th>".$text['label-tools']."</th>\n";
 	}
+	else {
+		echo "<th>&nbsp;</th>\n";
+	}
 	echo th_order_by('user_enabled', $text['label-enabled'], $order_by, $order, '', '', $param);
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('user_add')) {
@@ -211,6 +214,7 @@
 
 				echo "	<td class='".$row_style[$c]."'><a href='/app/contacts/contact_edit.php?id=".$row['contact_uuid']."'>".$row['contact_organization']."</a> &nbsp;</td>\n";
 				echo "	<td class='".$row_style[$c]."'><a href='/app/contacts/contact_edit.php?id=".$row['contact_uuid']."'>".$row['contact_name_given']." ".$row['contact_name_family']."</a> &nbsp;</td>\n";
+
 				echo "	<td class='".$row_style[$c]."'>\n";
 				if (permission_exists('ticket_edit')) {
 					echo "		<a href='/app/tickets/tickets.php?user_uuid=".$row['user_uuid']."'><span class='glyphicon glyphicon-tags' title='".$text['label-tickets']."'></span></a>\n";
