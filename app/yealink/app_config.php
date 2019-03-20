@@ -262,6 +262,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T29G firmware ROM";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2f27755a-5082-469d-8ea6-52e350cb9988";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t27g";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t27g-69.84.0.15.rom";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T27G firmware ROM";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "758509689226450f-a3e1-414ec1d610ee";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t38g";
