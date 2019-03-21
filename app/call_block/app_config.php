@@ -28,6 +28,16 @@
 		$apps[$x]['description']['sv-se'] = "";
 		$apps[$x]['description']['uk-ua'] = "";
 
+	//default settings
+		$y=0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e8356e52-3d18-4da5-93b1-9b2e08878982";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_block";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "recent_call_limit";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "50";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number of recent calls to show.";
+
 	//permission details
 		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "call_block_view";
