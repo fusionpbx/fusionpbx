@@ -573,13 +573,10 @@ function extension_presence_id($extension, $number_alias = false) {
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and (extension = '$extension' ";
 		$sql .= "or number_alias = '$extension') ";
-		$sql .= "and enabled = 'true' ";
-
 		$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 		if (count($result) == 0) {
 			return false;
 		}
-
 		foreach ($result as &$row) {
 			$extension = $row['extension'];
 			$number_alias = $row['number_alias'];
