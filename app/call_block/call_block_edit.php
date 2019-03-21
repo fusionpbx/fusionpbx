@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -197,22 +197,19 @@
 	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$call_block_uuid = $_GET["id"];
 		$sql = "select * from v_call_block ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "and call_block_uuid = '$call_block_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
-		$result = $prep_statement->fetchAll();
-		foreach ($result as &$row) {
-			$call_block_name = $row["call_block_name"];
-			$call_block_number = $row["call_block_number"];
-			$call_block_action = $row["call_block_action"];
-			$blocked_call_destination = $row["blocked_call_destination"];
-			$call_block_enabled = $row["call_block_enabled"];
-			break; //limit to 1 row
-		}
+		$row = $prep_statement->fetch();
+		$call_block_name = $row["call_block_name"];
+		$call_block_number = $row["call_block_number"];
+		$call_block_action = $row["call_block_action"];
+		$blocked_call_destination = $row["blocked_call_destination"];
+		$call_block_enabled = $row["call_block_enabled"];
 		unset ($prep_statement, $sql);
 	}
 
@@ -350,11 +347,10 @@
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "and direction != 'outbound' ";
 		$sql .= "order by start_stamp DESC ";
-		$sql .= "limit 20 ";
+		$sql .= "limit '".$_SESSION['call_block']['recent_call_limit']['text']."'";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll();
-		$result_count = count($result);
 		unset ($prep_statement);
 
 		echo "<b>".$text['label-edit-add-recent']."</b>";
@@ -371,7 +367,7 @@
 		$row_style["0"] = "row_style0";
 		$row_style["1"] = "row_style1";
 
-		if ($result_count > 0) {
+		if (is_array($result)) {
 			foreach($result as $row) {
 				$tr_onclick = " onclick=\"call_block_recent('".escape($row['xml_cdr_uuid'])."','".urlencode(escape($row['caller_id_name']))."');\" ";
 				if (strlen($row['caller_id_number']) >= 7) {
