@@ -264,12 +264,14 @@ include "root.php";
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				if (is_array($result)) foreach ($result as &$row) {
-					$follow_me_uuid = $row["follow_me_uuid"];
-					$this->domain_name = $row["domain_name"];
-					$this->follow_me_enabled = $row["follow_me_enabled"];
-					$this->cid_name_prefix = $row["cid_name_prefix"];
-					$this->cid_number_prefix = $row["cid_number_prefix"];
+				if (is_array($result)) {
+					foreach ($result as &$row) {
+						$follow_me_uuid = $row["follow_me_uuid"];
+						$this->domain_name = $row["domain_name"];
+						$this->follow_me_enabled = $row["follow_me_enabled"];
+						$this->cid_name_prefix = $row["cid_name_prefix"];
+						$this->cid_number_prefix = $row["cid_number_prefix"];
+					}
 				}
 				unset ($prep_statement);
 
@@ -280,7 +282,6 @@ include "root.php";
 				$prep_statement_2 = $db->prepare(check_sql($sql));
 				$prep_statement_2->execute();
 				$result = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
-
 				/*
 				$dial_string = "{";
 				$dial_string_caller_id_name = "\${effective_caller_id_name}";
@@ -314,7 +315,20 @@ include "root.php";
 					if ($x > 0) {
 						$dial_string .= ",";
 					}
-					if (($presence_id = extension_presence_id($row["follow_me_destination"])) !== false) {
+
+					//determine if the destination is a local sip user
+					$sql = "select extension, number_alias from v_extensions ";
+					$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+					$sql .= "and (extension = '".$row["follow_me_destination"]."' ";
+					$sql .= "or number_alias = '".$row["follow_me_destination"]."') ";
+					$field = $db->query($sql)->fetch(PDO::FETCH_ASSOC);
+					if (isset($field['extension'])) {
+						if (is_numeric($field['extension'])) {
+							$presence_id = $field['extension'];
+						}
+						else {
+							$presence_id = $field['number_alias'];
+						}
 						$variables[] = "presence_id=".$presence_id."@".$this->domain_name;
 						if ($row["follow_me_prompt"] == "1") {
 							$variables[] = "group_confirm_key=exec";
@@ -354,7 +368,12 @@ include "root.php";
 						unset($variables);
 					}
 					else {
-						$presence_id = extension_presence_id($this->extension, $this->number_alias);
+						if (is_numeric($this->extension)) {
+							$presence_id = $this->extension;
+						}
+						else {
+							$presence_id = $this->number_alias;
+						}
 						$variables[] = "presence_id=".$presence_id."@".$this->domain_name;
 
 						/*
@@ -417,14 +436,13 @@ include "root.php";
 						$variables[] = "domain_uuid=".$this->domain_uuid;
 						$variables[] = "sip_invite_domain=".$this->domain_name;
 						$variables[] = "domain_name=".$this->domain_name;
-						$variables[] = "domain=".$this->domain_name;
+						//$variables[] = "domain=".$this->domain_name;
 						$variables[] = "extension_uuid=".$this->extension_uuid;
 						$variables[] = "leg_delay_start=".$row["follow_me_delay"];
 						$variables[] = "originate_delay_start=".$row["follow_me_delay"];
 						$variables[] = "sleep=".($row["follow_me_delay"] * 1000);
 						$variables[] = "leg_timeout=".$row["follow_me_timeout"];
 						$variables[] = "is_follow_me_loopback=true";
-
 						if (is_numeric($row["follow_me_destination"])) {
 							if ($_SESSION['domain']['bridge']['text'] == "outbound" || $_SESSION['domain']['bridge']['text'] == "bridge") {
 								$bridge = outbound_route_to_bridge ($this->domain_uuid, $row["follow_me_destination"]);
@@ -452,6 +470,7 @@ include "root.php";
 				$this->dial_string = "{ignore_early_media=true}".$dial_string;
 				unset($variables);
 
+			//update follow me
 				$sql  = "update v_follow_me set ";
 				$sql .= "dial_string = '".check_str($this->dial_string)."' ";
 				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
@@ -468,6 +487,7 @@ include "root.php";
 					$dial_string = $this->dial_string;
 				}
 
+			//update the extension follow me and dial string details
 				$sql  = "update v_extensions set ";
 				$sql .= "dial_domain = '".$this->domain_name."', ";
 				$sql .= "dial_string = '".$dial_string."', ";
