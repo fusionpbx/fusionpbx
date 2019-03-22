@@ -282,11 +282,10 @@ include "root.php";
 				$prep_statement_2 = $db->prepare(check_sql($sql));
 				$prep_statement_2->execute();
 				$result = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
+
 				/*
-				$dial_string = "{";
 				$dial_string_caller_id_name = "\${effective_caller_id_name}";
 				$dial_string_caller_id_number = "\${effective_caller_id_number}";
-
 				if (strlen($this->follow_me_caller_id_uuid) > 0) {
 					$sql_caller = "select destination_number, destination_description, destination_caller_id_number, destination_caller_id_name ";
 					$sql_caller .= "from v_destinations ";
@@ -307,7 +306,6 @@ include "root.php";
 						}
 					}
 				}
-				$dial_string = "}";
 				*/
 
 				$x = 0;
@@ -388,22 +386,22 @@ include "root.php";
 							}
 						}
 						else {
-							if (strlen($caller_id_number) > 0) {
+							//if (strlen($caller_id_number) > 0) {
 								//set the caller id if it is set
-								if (strlen($caller_id_name) > 0) { 
-									$variables[] = "origination_caller_id_name=".$this->cid_name_prefix.$caller_id_name; 
-									$variables[] = "effective_caller_id_name=".$this->cid_name_prefix.$caller_id_name;
-								}
-								$variables[] = "origination_caller_id_number=".$this->cid_number_prefix.$caller_id_number;
-								$variables[] = "effective_caller_id_number=".$this->cid_number_prefix.$caller_id_number;
-							}
-							else {
+								//if (strlen($caller_id_name) > 0) { 
+								//	$variables[] = "origination_caller_id_name=".$this->cid_name_prefix.$caller_id_name; 
+								//	$variables[] = "effective_caller_id_name=".$this->cid_name_prefix.$caller_id_name;
+								//}
+								//$variables[] = "origination_caller_id_number=".$this->cid_number_prefix.$caller_id_number;
+								//$variables[] = "effective_caller_id_number=".$this->cid_number_prefix.$caller_id_number;
+							//}
+							//else {
 								//set the outbound caller id number if the caller id number is a user
-								$variables[] = "origination_caller_id_number=\${cond(\${from_user_exists} == true ? \${outbound_caller_id_number} : \${origination_caller_id_number})}";
-								$variables[] = "effective_caller_id_number=\${cond(\${from_user_exists} == true ? \${outbound_caller_id_number} : \${effective_caller_id_number})}";
-								$variables[] = "origination_caller_id_name=\${cond(\${from_user_exists} == true ? \${outbound_caller_id_name} : \${origination_caller_id_name})}";
-								$variables[] = "effective_caller_id_name=\${cond(\${from_user_exists} == true ? \${outbound_caller_id_name} : \${effective_caller_id_name})}";
-							}
+								$variables[] = "origination_caller_id_number=\${cond(\${from_user_exists} == true ? ".$this->outbound_caller_id_number." : \${origination_caller_id_number})}";
+								$variables[] = "effective_caller_id_number=\${cond(\${from_user_exists} == true ? ".$this->outbound_caller_id_number." : \${effective_caller_id_number})}";
+								$variables[] = "origination_caller_id_name=\${cond(\${from_user_exists} == true ? ".$this->outbound_caller_id_name." : \${origination_caller_id_name})}";
+								$variables[] = "effective_caller_id_name=\${cond(\${from_user_exists} == true ? ".$this->outbound_caller_id_name." : \${effective_caller_id_name})}";
+							//}
 						}
 
 						//accountcode
