@@ -376,9 +376,8 @@ include "root.php";
 						}
 						$variables[] = "presence_id=".$presence_id."@".$this->domain_name;
 
-						/*
 						//set the caller id
-						if ($_SESSION['cdr']['follow_me_fix']['boolean'] == "true") {
+						if ($_SESSION['follow_me']['outbound_caller_id']['boolean'] == "true") {
 							if (strlen($this->outbound_caller_id_name) > 0) {
 								$variables[] = "origination_caller_id_name=".$this->cid_name_prefix.$this->outbound_caller_id_name;
 								$variables[] = "effective_caller_id_name=".$this->cid_name_prefix.$this->outbound_caller_id_name;
@@ -400,13 +399,13 @@ include "root.php";
 							}
 							else {
 								//set the outbound caller id number if the caller id number is a user
-								$variables[] = "origination_caller_id_number=${cond(${from_user_exists} == true ? ${outbound_caller_id_number} : ${origination_caller_id_number})}';
-								$variables[] = "effective_caller_id_number=${cond(${from_user_exists} == true ? ${outbound_caller_id_number} : ${effective_caller_id_number})}';
-								$variables[] = "origination_caller_id_name=${cond(${from_user_exists} == true ? ${outbound_caller_id_name} : ${origination_caller_id_name})}';
-								$variables[] = "effective_caller_id_name=${cond(${from_user_exists} == true ? ${outbound_caller_id_name} : ${effective_caller_id_name})}';
+								$variables[] = "origination_caller_id_number=\${cond(\${from_user_exists} == true ? \${outbound_caller_id_number} : \${origination_caller_id_number})}";
+								$variables[] = "effective_caller_id_number=\${cond(\${from_user_exists} == true ? \${outbound_caller_id_number} : \${effective_caller_id_number})}";
+								$variables[] = "origination_caller_id_name=\${cond(\${from_user_exists} == true ? \${outbound_caller_id_name} : \${origination_caller_id_name})}";
+								$variables[] = "effective_caller_id_name=\${cond(\${from_user_exists} == true ? \${outbound_caller_id_name} : \${effective_caller_id_name})}";
 							}
 						}
-						*/
+
 						//accountcode
 						if (strlen($this->accountcode) == 0) {
 							$variables[] = "sip_h_X-accountcode=\${accountcode}";
