@@ -974,7 +974,6 @@
 			echo "			<input type='hidden' name='username_old' value=\"".escape($username)."\">";
 		}
 	}
-	echo "			<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>";
 	echo "			<br>";
 	if ($unsaved) {
 		echo "		<span style='color: #b00;'>".$text['message-unsaved_changes']." <i class='glyphicon glyphicon-warning-sign' style='margin-right: 15px;'></i></span>";
