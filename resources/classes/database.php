@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010 - 2017
+	Copyright (C) 2010 - 2019
 	All Rights Reserved.
 
 	Contributor(s):
@@ -743,7 +743,6 @@ include "root.php";
 				//loop through the array
 					if (is_array($new_array)) {
 						foreach ($new_array as $schema_name => $schema_array) {
-
 							$this->name = preg_replace('#[^a-zA-Z0-9_\-]#', '', $schema_name);
 							if (is_array($schema_array)) {
 								foreach ($schema_array as $schema_id => $array) {
@@ -1033,17 +1032,7 @@ include "root.php";
 					//$this->db->commit();
 
 				//set the action if not set
-					if (strlen($action) == 0) {
-						if (is_array($old_array)) {
-							$transaction_type = 'update';
-						}
-						else {
-							$transaction_type = 'add';
-						}
-					}
-					else {
-						$transaction_type = $action;
-					}
+					$transaction_type = 'delete';
 
 				//get the UUIDs
 					$user_uuid = $_SESSION['user_uuid'];
@@ -1060,7 +1049,9 @@ include "root.php";
 						if (strlen($this->app_uuid) > 0) {
 							$sql .= "app_uuid, ";
 						}
-						$sql .= "app_name, ";
+						if (strlen($this->app_name) > 0) {
+							$sql .= "app_name, ";
+						}
 						$sql .= "transaction_code, ";
 						$sql .= "transaction_address, ";
 						$sql .= "transaction_type, ";
@@ -1074,31 +1065,47 @@ include "root.php";
 						$sql .= "'".uuid()."', ";
 						$sql .= "'".$this->domain_uuid."', ";
 						if (strlen($user_uuid) > 0) {
-							$sql .= "'".$user_uuid."', ";
+							$sql .= ":user_uuid, ";
 						}
 						if (strlen($this->app_uuid) > 0) {
-							$sql .= "'".$this->app_uuid."', ";
+							$sql .= ":app_uuid, ";
 						}
-						$sql .= "'".$this->app_name."', ";
+						if (strlen($this->app_name) > 0) {
+							$sql .= "':app_name, ";
+						}
 						$sql .= "'".$message["code"]."', ";
-						$sql .= "'".$_SERVER['REMOTE_ADDR']."', ";
+						$sql .= ":remote_address, ";
 						$sql .= "'".$transaction_type."', ";
 						$sql .= "now(), ";
 						if (is_array($old_array)) {
-							$sql .= "'".check_str(json_encode($old_array, JSON_PRETTY_PRINT))."', ";
+							$sql .= ":transaction_old, ";
 						}
 						else {
 							$sql .= "null, ";
 						}
 						if (is_array($new_array)) {
-							$sql .= "'".check_str(json_encode($new_array, JSON_PRETTY_PRINT))."', ";
+							$sql .= ":transaction_new, ";
 						}
 						else {
 							$sql .= "null, ";
 						}
-						$sql .= "'".check_str(json_encode($this->message, JSON_PRETTY_PRINT))."' ";
+						$sql .= ":transaction_result ";
 						$sql .= ")";
-						$this->db->exec(check_sql($sql));
+						$statement = $this->db->prepare($sql);
+						if (strlen($user_uuid) > 0) {
+							$statement->bindParam(':user_uuid', $user_uuid);
+						}
+						if (strlen($this->app_uuid) > 0) {
+							$statement->bindParam(':app_uuid', $this->app_uuid);
+						}
+						if (strlen($this->app_name) > 0) {
+							$statement->bindParam(':app_name', $this->app_name);
+						}
+						$statement->bindParam(':remote_address', $_SERVER['REMOTE_ADDR']);
+						$statement->bindParam(':transaction_old', json_encode($old_array, JSON_PRETTY_PRINT));
+						$statement->bindParam(':transaction_new', json_encode($new_array, JSON_PRETTY_PRINT));
+						$statement->bindParam(':transaction_result', json_encode($this->message, JSON_PRETTY_PRINT));
+						$statement->execute();
 						unset($sql);
 					}
 			} //delete
@@ -1946,62 +1953,87 @@ include "root.php";
 
 				//log the transaction results
 					if (file_exists($_SERVER["PROJECT_ROOT"]."/app/database_transactions/app_config.php")) {
-						$sql = "insert into v_database_transactions ";
-						$sql .= "(";
-						$sql .= "database_transaction_uuid, ";
-						$sql .= "domain_uuid, ";
-						if (strlen($user_uuid) > 0) {
-							$sql .= "user_uuid, ";
+						try {
+							$sql = "insert into v_database_transactions ";
+							$sql .= "(";
+							$sql .= "database_transaction_uuid, ";
+							$sql .= "domain_uuid, ";
+							if (strlen($user_uuid) > 0) {
+								$sql .= "user_uuid, ";
+							}
+							if (strlen($this->app_uuid) > 0) {
+								$sql .= "app_uuid, ";
+							}
+							if (strlen($this->app_name) > 0) {
+								$sql .= "app_name, ";
+							}
+							$sql .= "transaction_code, ";
+							$sql .= "transaction_address, ";
+							$sql .= "transaction_type, ";
+							$sql .= "transaction_date, ";
+							$sql .= "transaction_old, ";
+							$sql .= "transaction_new, ";
+							$sql .= "transaction_result ";
+							$sql .= ")";
+							$sql .= "values ";
+							$sql .= "(";
+							$sql .= "'".uuid()."', ";
+							if (is_null($this->domain_uuid)) {
+								$sql .= "null, ";
+							}
+							else {
+								$sql .= "'".$this->domain_uuid."', ";
+							}
+							if (strlen($user_uuid) > 0) {
+								$sql .= ":user_uuid, ";
+							}
+							if (strlen($this->app_uuid) > 0) {
+								$sql .= ":app_uuid, ";
+							}
+							if (strlen($this->app_name) > 0) {
+								$sql .= ":app_name, ";
+							}
+							$sql .= "'".$message["code"]."', ";
+							$sql .= ":remote_address, ";
+							$sql .= "'".$transaction_type."', ";
+							$sql .= "now(), ";
+							if (is_array($old_array)) {
+								$sql .= ":transaction_old, ";
+							}
+							else {
+								$sql .= "null, ";
+							}
+							if (is_array($new_array)) {
+								$sql .= ":transaction_new, ";
+							}
+							else {
+								$sql .= "null, ";
+							}
+							$sql .= ":transaction_result ";
+							$sql .= ")";
+							$statement = $this->db->prepare($sql);
+							if (strlen($user_uuid) > 0) {
+								$statement->bindParam(':user_uuid', $user_uuid);
+							}
+							if (strlen($this->app_uuid) > 0) {
+								$statement->bindParam(':app_uuid', $this->app_uuid);
+							}
+							if (strlen($this->app_name) > 0) {
+								$statement->bindParam(':app_name', $this->app_name);
+							}
+							$statement->bindParam(':remote_address', $_SERVER['REMOTE_ADDR']);
+							$statement->bindParam(':transaction_old', json_encode($old_array, JSON_PRETTY_PRINT));
+							$statement->bindParam(':transaction_new', json_encode($new_array, JSON_PRETTY_PRINT));
+							$statement->bindParam(':transaction_result', json_encode($this->message, JSON_PRETTY_PRINT));
+							$statement->execute();
+							unset($sql);
 						}
-						if (strlen($this->app_uuid) > 0) {
-							$sql .= "app_uuid, ";
+						catch(PDOException $e) {
+							echo $e->getMessage();
+							exit;
 						}
-						$sql .= "app_name, ";
-						$sql .= "transaction_code, ";
-						$sql .= "transaction_address, ";
-						$sql .= "transaction_type, ";
-						$sql .= "transaction_date, ";
-						$sql .= "transaction_old, ";
-						$sql .= "transaction_new, ";
-						$sql .= "transaction_result ";
-						$sql .= ")";
-						$sql .= "values ";
-						$sql .= "(";
-						$sql .= "'".uuid()."', ";
-						if (is_null($this->domain_uuid)) {
-							$sql .= "null, ";
-						}
-						else {
-							$sql .= "'".$this->domain_uuid."', ";
-						}
-						if (strlen($user_uuid) > 0) {
-							$sql .= "'".$user_uuid."', ";
-						}
-						if (strlen($this->app_uuid) > 0) {
-							$sql .= "'".$this->app_uuid."', ";
-						}
-						$sql .= "'".$this->app_name."', ";
-						$sql .= "'".$message["code"]."', ";
-						$sql .= "'".$_SERVER['REMOTE_ADDR']."', ";
-						$sql .= "'".$transaction_type."', ";
-						$sql .= "now(), ";
-						if (is_array($old_array)) {
-							$sql .= "'".check_str(json_encode($old_array, JSON_PRETTY_PRINT))."', ";
-						}
-						else {
-							$sql .= "null, ";
-						}
-						if (is_array($new_array)) {
-							$sql .= "'".check_str(json_encode($new_array, JSON_PRETTY_PRINT))."', ";
-						}
-						else {
-							$sql .= "null, ";
-						}
-						$sql .= "'".check_str(json_encode($this->message, JSON_PRETTY_PRINT))."' ";
-						$sql .= ")";
-						$this->db->exec(check_sql($sql));
-						unset($sql);
 					}
+
 			} //save method
 
 			//define singular function to convert a word in english to singular
