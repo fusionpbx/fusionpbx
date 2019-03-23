@@ -481,6 +481,26 @@ $text['label-fixed']['ru-ru'] = "Фиксированный";
 $text['label-fixed']['sv-se'] = "Fast";
 $text['label-fixed']['uk-ua'] = "фіксований";
 
+$text['label-side']['en-us'] = "Side";
+$text['label-side']['ar-eg'] = "";
+$text['label-side']['de-at'] = "";
+$text['label-side']['de-ch'] = "";
+$text['label-side']['de-de'] = "";
+$text['label-side']['es-cl'] = "";
+$text['label-side']['es-mx'] = "";
+$text['label-side']['fr-ca'] = "";
+$text['label-side']['fr-fr'] = "";
+$text['label-side']['he-il'] = "";
+$text['label-side']['it-it'] = "";
+$text['label-side']['nl-nl'] = "";
+$text['label-side']['pl-pl'] = "";
+$text['label-side']['pt-br'] = "";
+$text['label-side']['pt-pt'] = "";
+$text['label-side']['ro-ro'] = "";
+$text['label-side']['ru-ru'] = "";
+$text['label-side']['sv-se'] = "";
+$text['label-side']['uk-ua'] = "";
+
 $text['label-fine']['en-us'] = "Fine";
 $text['label-fine']['ar-eg'] = "";
 $text['label-fine']['de-at'] = "Fein"; //copied from de-de

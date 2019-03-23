@@ -554,6 +554,64 @@
 				case 'fixed':
 					show_menu($menu_array, $menu_style, $menu_position);
 					echo $open_container;
+					break;
+				case 'side':
+					echo "<div id='menu_side_container'>";
+					//menu brand image/text
+						echo "<div id='menu_side_brand_container'>\n";
+						//define menu brand link
+							if (strlen(PROJECT_PATH) > 0) {
+								$menu_brand_link = PROJECT_PATH;
+							}
+							else if (!$default_login) {
+								$menu_brand_link = '/';
+							}
+						//define menu brand mark
+							$menu_brand_text = ($_SESSION['theme']['menu_brand_text']['text'] != '') ? escape($_SESSION['theme']['menu_brand_text']['text']) : "FusionPBX";
+							if ($_SESSION['theme']['menu_brand_type']['text'] == 'image' || $_SESSION['theme']['menu_brand_type']['text'] == '') {
+								$menu_brand_image = ($_SESSION['theme']['menu_brand_image']['text'] != '') ? escape($_SESSION['theme']['menu_brand_image']['text']) : PROJECT_PATH."/themes/default/images/logo.png";
+								echo "<a href='".$menu_brand_link."' style='text-decoration: none;'>";
+								echo "<img id='menu_brand_image' src='".$menu_brand_image."' title=\"".escape($menu_brand_text)."\">";
+								if ($menu_brand_text != '') { echo "<span class='menu_brand_text'>".$menu_brand_text."</span>"; }
+								echo "</a>";
+							}
+							else if ($_SESSION['theme']['menu_brand_type']['text'] == 'text') {
+								echo "<a class='menu_brand_text' href=\"".$menu_brand_link."\">".$menu_brand_text."</a>\n";
+							}
+						echo "</div>\n";
+					//main menu items
+						if (is_array($menu_array) && sizeof($menu_array) != 0) {
+							foreach ($menu_array as $menu_index_main => $menu_item_main) {
+								echo "<a class='menu_side_item_main' onclick=\"$('#sub_".$menu_item_main['menu_item_uuid']."').slideToggle(180, function() { if (!$(this).is(':hidden')) { $('.menu_side_sub').not($(this)).slideUp(180); } });\">";
+								if ($menu_item_main['menu_item_icon'] != '') {
+									echo "<i class='glyphicon ".$menu_item_main['menu_item_icon']."' style='z-index: 99800; padding-right: 8px;'></i>";
+								}
+								echo $menu_item_main['menu_language_title'];
+								echo "</a>\n";
+								//sub menu items
+									if (is_array($menu_item_main['menu_items']) && sizeof($menu_item_main['menu_items']) != 0) {
+										echo "<div id='sub_".$menu_item_main['menu_item_uuid']."' class='menu_side_sub' style='display: none;'>\n";
+										foreach ($menu_item_main['menu_items'] as $menu_index_sub => $menu_item_sub) {
+											echo "<a class='menu_side_item_sub' ".($menu_item_sub['menu_item_category'] == 'external' ? "target='_blank'" : null)." href='".$menu_item_sub['menu_item_link']."'>";
+											//if ($menu_item_main['menu_item_icon'] != '') {
+											//	echo "<i class='glyphicon ".$menu_item_main['menu_item_icon']."' style='padding-right: 8px;'></i>";
+											//}
+											echo $menu_item_sub['menu_language_title'];
+											echo "</a>\n";
+											/*
+											if ($menu_index_sub == sizeof($menu_item_main['menu_items'])) {
+												echo "<div style='height: 15px;'></div>\n";
+											}
+											*/
+										}
+										echo "</div>\n";
+									}
+							}
+							echo "<div style='height: 100px;'></div>\n";
+						}
+					echo "</div>";
+					echo "<div style='padding: 0; width: calc(100% - 225px); float: right; padding-top: 30px; text-align: center;'>"; // $open_container (modified)
+					break;
 			}
 			?>
 
