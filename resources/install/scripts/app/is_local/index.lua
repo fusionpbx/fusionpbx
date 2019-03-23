@@ -18,6 +18,7 @@
 --	Portions created by the Initial Developer are Copyright (C) 2014
 --	the Initial Developer. All Rights Reserved.
 
+
 --set defaults
 	expire = {}
 	expire["is_local"] = "3600";
@@ -28,8 +29,8 @@
 	outbound_caller_id_name = session:getVariable("outbound_caller_id_name");
 	outbound_caller_id_number = session:getVariable("outbound_caller_id_number");
 
---connect to the database
-	local Database = require "resources.functions.database";
+--includes
+	local cache = require"resources.functions.cache"
 
 --include json library
 	local json
@@ -43,13 +44,27 @@
 --define the trim function
 	require "resources.functions.trim";
 
---get the cache
-	cache = trim(api:execute("memcache", "get app:dialplan:outbound:is_local:" .. destination_number .. "@" .. domain_name));
+--set the cache key
+	key = "app:dialplan:outbound:is_local:" .. destination_number .. "@" .. domain_name;
+
+--set the outbound caller id
+	if (outbound_caller_id_name ~= nil) then
+		session:execute("set", "caller_id_name="..outbound_caller_id_name);
+		session:execute("set", "effective_caller_id_name="..outbound_caller_id_name);
+	end
+	if (outbound_caller_id_number ~= nil) then
+		session:execute("set", "caller_id_number="..outbound_caller_id_number);
+		session:execute("set", "effective_caller_id_number="..outbound_caller_id_number);
+	end
 
 --get the destination number
-	if (cache == "-ERR NOT FOUND") then
+	value, err = cache.get(key);
+	if (err == 'NOT FOUND') then
+		--connect to the database
+		local Database = require "resources.functions.database";
 		local dbh = Database.new('system');
 
+		--select data from the database
 		local sql = "SELECT destination_number, destination_context "
 		sql = sql .. "FROM v_destinations "
 		sql = sql .. "WHERE destination_number = :destination_number "
@@ -61,36 +76,22 @@
 		end
 		dbh:query(sql, params, function(row)
 
-			--set the outbound caller id
-				if (outbound_caller_id_name ~= nil) then
-					session:execute("export", "caller_id_name="..outbound_caller_id_name);
-					session:execute("export", "effective_caller_id_name="..outbound_caller_id_name);
-				end
-				if (outbound_caller_id_number ~= nil) then
-					session:execute("export", "caller_id_number="..outbound_caller_id_number);
-					session:execute("export", "effective_caller_id_number="..outbound_caller_id_number);
-				end
-
 			--set the local variables
 				destination_context = row.destination_context;
 
 			--set the cache
 				if (destination_number == row.destination_number) then
-					key = "set app:dialplan:outbound:is_local:" .. destination_number .. "@" .. domain_name; 
-					value = 'destination_number=" .. row.destination_number .. "&destination_context=" .. destination_context;
+					key = "app:dialplan:outbound:is_local:" .. destination_number .. "@" .. domain_name; 
+					value = "destination_number=" .. row.destination_number .. "&destination_context=" .. destination_context;
 					ok, err = cache.set(key, value, expire["is_local"]);
 				else
-					key = "set app:dialplan:outbound:is_local:" .. destination_number .. "@" .. domain_name;
-					value = 'destination_number=" .. row.destination_number .. "&destination_context=" .. destination_context;
-					ok, err = cache.set(key, value, expire["is_local"]);
-				
-					key = "app:dialplan:outbound:is_local:" .. row.destination_number .. "@" .. domain_name;
-					value = 'destination_number=" .. row.destination_number .. "&destination_context=" .. destination_context;
+					key = "app:dialplan:outbound:is_local:" .. destination_number .. "@" .. domain_name;
+					value = "destination_number=" .. row.destination_number .. "&destination_context=" .. destination_context;
 					ok, err = cache.set(key, value, expire["is_local"]);
 				end
 
 			--log the result
-				freeswitch.consoleLog("notice", "[app:dialplan:outbound:is_local] " .. destination_number .. " XML " .. destination_context .. " source: database\n");
+				freeswitch.consoleLog("notice", "[app:dialplan:outbound:is_local] " .. row.destination_number .. " XML " .. destination_context .. " source: database\n");
 
 			--transfer the call
 				session:transfer(row.destination_number, "XML", row.destination_context);
@@ -106,7 +107,7 @@
 			local value = "";
 
 		--parse the cache
-			key_pairs = explode("&", cache);
+			key_pairs = explode("&", value);
 			for k,v in pairs(key_pairs) do
 				f = explode("=", v);
 				key = f[1];
@@ -114,18 +115,8 @@
 				var[key] = value;
 			end
 
-		--set the outbound caller id
-			if (outbound_caller_id_name ~= nil) then
-				session:execute("export", "caller_id_name="..outbound_caller_id_name);
-				session:execute("export", "effective_caller_id_name="..outbound_caller_id_name);
-			end
-			if (outbound_caller_id_number ~= nil) then
-				session:execute("export", "caller_id_number="..outbound_caller_id_number);
-				session:execute("export", "effective_caller_id_number="..outbound_caller_id_number);
-			end
-
 		--send to the console
-			freeswitch.consoleLog("notice", "[app:dialplan:outbound:is_local] " .. cache .. " source: memcache\n");
+			freeswitch.consoleLog("notice", "[app:dialplan:outbound:is_local] " .. value .. " source: cache\n");
 
 		--transfer the call
 			session:transfer(var["destination_number"], "XML", var["destination_context"]);
