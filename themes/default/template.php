@@ -559,24 +559,29 @@
 					echo "<div id='menu_side_container'>";
 					//menu brand image/text
 						echo "<div id='menu_side_brand_container'>\n";
-						//define menu brand link
+						//define the menu brand link
 							if (strlen(PROJECT_PATH) > 0) {
 								$menu_brand_link = PROJECT_PATH;
 							}
 							else if (!$default_login) {
 								$menu_brand_link = '/';
 							}
-						//define menu brand mark
+						//show the menu brand
+							$menu_brand_image = ($_SESSION['theme']['menu_brand_image']['text'] != '') ? escape($_SESSION['theme']['menu_brand_image']['text']) : PROJECT_PATH."/themes/default/images/logo.png";
 							$menu_brand_text = ($_SESSION['theme']['menu_brand_text']['text'] != '') ? escape($_SESSION['theme']['menu_brand_text']['text']) : "FusionPBX";
 							if ($_SESSION['theme']['menu_brand_type']['text'] == 'image' || $_SESSION['theme']['menu_brand_type']['text'] == '') {
-								$menu_brand_image = ($_SESSION['theme']['menu_brand_image']['text'] != '') ? escape($_SESSION['theme']['menu_brand_image']['text']) : PROJECT_PATH."/themes/default/images/logo.png";
 								echo "<a href='".$menu_brand_link."' style='text-decoration: none;'>";
 								echo "<img id='menu_brand_image' src='".$menu_brand_image."' title=\"".escape($menu_brand_text)."\">";
-								if ($menu_brand_text != '') { echo "<span class='menu_brand_text'>".$menu_brand_text."</span>"; }
+								echo "</a>";
+							}
+							else if ($_SESSION['theme']['menu_brand_type']['text'] == 'both') {
+								echo "<a href='".$menu_brand_link."' style='text-decoration: none;'>";
+								echo "<img id='menu_brand_image' src='".$menu_brand_image."' title=\"".escape($menu_brand_text)."\">";
+								echo "<span class='menu_brand_text'>".$menu_brand_text."</span>";
 								echo "</a>";
 							}
 							else if ($_SESSION['theme']['menu_brand_type']['text'] == 'text') {
-								echo "<a class='menu_brand_text' href=\"".$menu_brand_link."\">".$menu_brand_text."</a>\n";
+								echo "<a class='menu_brand_text' href=\"".$menu_brand_link."\">".$menu_brand_text."22</a>\n";
 							}
 						echo "</div>\n";
 					//main menu items
