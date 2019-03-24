@@ -816,7 +816,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
-		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_contact";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_contacts";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "contact_uuid";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "user_uuid";
