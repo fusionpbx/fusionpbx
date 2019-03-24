@@ -334,6 +334,8 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_voicemails";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "voicemail_uuid";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "created_epoch";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
