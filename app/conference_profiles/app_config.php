@@ -104,7 +104,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
-		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_conference_profile";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_conference_profiles";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "conference_profile_uuid";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "profile_param_name";
