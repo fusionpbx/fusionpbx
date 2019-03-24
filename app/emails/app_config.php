@@ -67,7 +67,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_xml_cdr";
-		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "xml_cdr_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
