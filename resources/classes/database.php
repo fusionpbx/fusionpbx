@@ -1102,8 +1102,12 @@ include "root.php";
 							$statement->bindParam(':app_name', $this->app_name);
 						}
 						$statement->bindParam(':remote_address', $_SERVER['REMOTE_ADDR']);
-						$statement->bindParam(':transaction_old', json_encode($old_array, JSON_PRETTY_PRINT));
-						$statement->bindParam(':transaction_new', json_encode($new_array, JSON_PRETTY_PRINT));
+						if (is_array($old_array)) {
+							$statement->bindParam(':transaction_old', json_encode($old_array, JSON_PRETTY_PRINT));
+						}
+						if (is_array($new_array)) {
+							$statement->bindParam(':transaction_new', json_encode($new_array, JSON_PRETTY_PRINT));
+						}
 						$statement->bindParam(':transaction_result', json_encode($this->message, JSON_PRETTY_PRINT));
 						$statement->execute();
 						unset($sql);
@@ -2022,8 +2026,12 @@ include "root.php";
 								$statement->bindParam(':app_name', $this->app_name);
 							}
 							$statement->bindParam(':remote_address', $_SERVER['REMOTE_ADDR']);
-							$statement->bindParam(':transaction_old', json_encode($old_array, JSON_PRETTY_PRINT));
-							$statement->bindParam(':transaction_new', json_encode($new_array, JSON_PRETTY_PRINT));
+							if (is_array($old_array)) {
+								$statement->bindParam(':transaction_old', json_encode($old_array, JSON_PRETTY_PRINT));
+							}
+							if (is_array($new_array)) {
+								$statement->bindParam(':transaction_new', json_encode($new_array, JSON_PRETTY_PRINT));
+							}
 							$statement->bindParam(':transaction_result', json_encode($this->message, JSON_PRETTY_PRINT));
 							$statement->execute();
 							unset($sql);
