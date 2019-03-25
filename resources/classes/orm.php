@@ -78,7 +78,7 @@
 				return $this->result;
 			}
 
-			public function find() {
+			public function find($array) {
 
 				//connect to the database if needed
 					if (!$this->db) {
