@@ -640,7 +640,7 @@
 						//main menu items
 							if (is_array($menu_array) && sizeof($menu_array) != 0) {
 								foreach ($menu_array as $menu_index_main => $menu_item_main) {
-									echo "<a class='menu_side_item_main' onclick=\"menu_side_expand(); $('#sub_".$menu_item_main['menu_item_uuid']."').slideToggle(180, function() { if (!$(this).is(':hidden')) { $('.menu_side_sub').not($(this)).slideUp(180); } });\">";
+									echo "<a class='menu_side_item_main' onclick=\"menu_side_expand(); $('#sub_".$menu_item_main['menu_item_uuid']."').slideToggle(180, function() { if (!$(this).is(':hidden')) { $('.menu_side_sub').not($(this)).slideUp(180); } });\" title=\"".$menu_item_main['menu_language_title']."\">";
 									if ($menu_item_main['menu_item_icon'] != '') {
 										echo "<i class='glyphicon ".$menu_item_main['menu_item_icon']."' style='z-index: 99800; padding-right: 8px;'></i>";
 									}
