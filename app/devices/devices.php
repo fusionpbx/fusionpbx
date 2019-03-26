@@ -46,7 +46,7 @@
 	$text = $language->get();
 
 //get the http values and set them as variables
-	$search = check_str($_GET["search"]);
+	$search = preg_replace('/[^a-z0-9]/', '', strtolower(check_str($_GET["search"])));
 	if (isset($_GET["order_by"])) {
 		$order_by = check_str($_GET["order_by"]);
 		$order = check_str($_GET["order"]);
