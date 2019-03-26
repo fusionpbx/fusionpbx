@@ -1573,5 +1573,12 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "225";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the expanded pixel width of the side menu.";
-
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ac2a4991-5aab-4eca-b26e-7608c098cd90";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "menu_side_brand_image";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/themes/default/images/logo_side.png";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the brand image path for the Side menu.";
 ?>

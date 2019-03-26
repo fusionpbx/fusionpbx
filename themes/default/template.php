@@ -618,16 +618,16 @@
 									$menu_brand_link = '/';
 								}
 							//show the menu brand image and/or text
-								$menu_brand_image = ($_SESSION['theme']['menu_brand_image']['text'] != '') ? escape($_SESSION['theme']['menu_brand_image']['text']) : PROJECT_PATH."/themes/default/images/logo.png";
+								$menu_brand_image =  $_SESSION['theme']['menu_side_brand_image']['text'] != '' ? $_SESSION['theme']['menu_side_brand_image']['text'] : PROJECT_PATH."/themes/default/images/logo_side.png";
 								$menu_brand_text = ($_SESSION['theme']['menu_brand_text']['text'] != '') ? escape($_SESSION['theme']['menu_brand_text']['text']) : "FusionPBX";
 								if ($_SESSION['theme']['menu_brand_type']['text'] == 'image' || $_SESSION['theme']['menu_brand_type']['text'] == '') {
 									echo "<a href='".$menu_brand_link."' style='text-decoration: none;'>";
-									echo "<img id='menu_brand_image' style='width: 20px; margin-left: -2px; margin-top: -5px;' src='".$menu_brand_image."' title=\"".escape($menu_brand_text)."\">";
+									echo "<img id='menu_brand_image' style='width: 20px; margin-left: -2px; margin-top: -5px;' src='".escape($menu_brand_image)."' title=\"".escape($menu_brand_text)."\">";
 									echo "</a>\n";
 								}
 								else if ($_SESSION['theme']['menu_brand_type']['text'] == 'image_text') {
 									echo "<a href='".$menu_brand_link."' style='text-decoration: none;'>";
-									echo "<img id='menu_brand_image' style='width: 20px; margin-left: -2px; margin-top: -5px;' src='".$menu_brand_image."' title=\"".escape($menu_brand_text)."\">";
+									echo "<img id='menu_brand_image' style='width: 20px; margin-left: -2px; margin-top: -5px;' src='".escape($menu_brand_image)."' title=\"".escape($menu_brand_text)."\">";
 									echo "<span class='menu_brand_text' style='display: none;'>".$menu_brand_text."</span>";
 									echo "</a>\n";
 								}
