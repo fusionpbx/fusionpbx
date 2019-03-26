@@ -387,6 +387,13 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		text-decoration: none;
 		}
 
+	a#header_domain_selector_domain:hover,
+	a#header_domain_selector_domain:focus,
+	a#header_domain_selector_domain:active {
+		text-decoration: none;
+		cursor: pointer;
+		}
+
 	/* logout icon */
 	a.logout_icon {
 		display: inline-block;
@@ -394,6 +401,15 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		font-size: 11pt;
 		padding: 16px 10px 13px 10px;
 		margin-left: 10px;
+		}
+
+	a#header_logout_icon {
+		display: inline-block;
+		font-size: 11pt;
+		padding-left: 5px;
+		padding-right: 5px;
+		margin-left: 5px;
+		margin-right: 5px;
 		}
 
 	a.logout_icon:hover,
@@ -433,7 +449,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		position: fixed;
 		top: 0;
 		left: 0;
-		width: 225px;
+		width: <?php echo is_numeric($_SESSION['theme']['menu_side_width_contracted']['text']) ? $_SESSION['theme']['menu_side_width_contracted']['text'] : '55'; ?>px;
 		height: 100%;
 		overflow: auto;
 		<?php if ($_SESSION['theme']['menu_main_background_image']['text'] != '') { ?>
@@ -490,7 +506,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		width: auto;
 		max-height: 30px;
 		max-width: 185px;
-		margin-right: 10px;
+		margin-right: 5px;
 		}
 
 	/* menu brand text */
@@ -502,6 +518,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 
 	.menu_brand_text:hover {
 		color: <?php echo ($_SESSION['theme']['menu_brand_text_color_hover']['text'] != '') ? $_SESSION['theme']['menu_brand_text_color_hover']['text'] : 'rgba(255,255,255,1.0)'; ?>;
+		text-decoration: none;
 		}
 
 	a.menu_side_item_main {
@@ -543,6 +560,10 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		text-decoration: none;
 		}
 
+	a.menu_side_toggle {
+		padding: 10px;
+		cursor: pointer;
+		}
 
 /* BUTTONS ********************************************************************/
 
@@ -881,6 +902,12 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 			padding: 8px;
 			}
 		}
+
+	div#content_header {
+		padding: 10px;
+		margin-top: 5px;
+		height: 40px;
+	}
 
 /* GENERAL ELEMENTS *****************************************************************/
 

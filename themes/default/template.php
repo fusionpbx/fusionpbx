@@ -89,6 +89,38 @@
 			}
 		}
 
+	//toggle side menu visibility (if enabled)
+		var menu_side_state = 'contracted';
+		function menu_side_contract() {
+			$('.menu_side_sub').slideUp(180);
+			<?php if ($_SESSION['theme']['menu_brand_type']['text'] != 'text') { ?>
+				$('.menu_brand_text').hide();
+			<?php } ?>
+			$('.menu_side_item_title').hide();
+			$('#menu_brand_image').animate({ width: '20px', 'margin-left': '-2px' }, 250);
+			$('#menu_side_container').animate({ width: '<?php echo is_numeric($_SESSION['theme']['menu_side_width_contracted']['text']) ? $_SESSION['theme']['menu_side_width_contracted']['text'] : '55'; ?>px' }, 250);
+			$('#content_container').animate({ width: $(window).width() - <?php echo is_numeric($_SESSION['theme']['menu_side_width_contracted']['text']) ? $_SESSION['theme']['menu_side_width_contracted']['text'] : '55'; ?> }, 250, function() {
+				menu_side_state = 'contracted';
+			});
+			$('.menu_side_contract').hide();
+			$('.menu_side_expand').show();
+		}
+
+		function menu_side_expand() {
+			$('#menu_brand_image').animate({ width: '30px', 'margin-left': '0' }, 250);
+			$('#menu_side_container').animate({ width: '<?php echo is_numeric($_SESSION['theme']['menu_side_width_expanded']['text']) ? $_SESSION['theme']['menu_side_width_expanded']['text'] : '225'; ?>px' }, 250);
+			$('#content_container').animate({ width: $(window).width() - <?php echo is_numeric($_SESSION['theme']['menu_side_width_expanded']['text']) ? $_SESSION['theme']['menu_side_width_expanded']['text'] : '225'; ?> }, 250, function() {
+				<?php if ($_SESSION['theme']['menu_brand_type']['text'] != 'text') { ?>
+					$('.menu_brand_text').fadeIn(180);
+				<?php } ?>
+				$('.menu_side_item_title').fadeIn(180);
+				menu_side_state = 'expanded';
+			});
+			$('.menu_side_expand').hide();
+			$('.menu_side_contract').show();
+		}
+
+
 	$(document).ready(function() {
 
 		<?php echo message::html(true, "		"); ?>
@@ -105,6 +137,7 @@
 
 			//domain selector controls
 				$(".domain_selector_domain").click(function() { show_domains(); });
+				$("#header_domain_selector_domain").click(function() { show_domains(); });
 				$("#domains_hide").click(function() { hide_domains(); });
 
 				function show_domains() {
@@ -219,6 +252,18 @@
 							$('#menu_brand_image').fadeIn('fast');
 						});
 					});
+				});
+		<?php } ?>
+
+		<?php if ($_SESSION['theme']['menu_style']['text'] == 'side') { ?>
+			//create resizeEnd event
+				$(window).resize(function() {
+					if (this.resizeTO) { clearTimeout(this.resizeTO); }
+					this.resizeTO = setTimeout(function() { $(this).trigger('resizeEnd'); }, 180);
+				});
+			//side menu: adjust content container width after window resize
+				$(window).on('resizeEnd', function() {
+					$('#content_container').animate({ width: $(window).width() - $('#menu_side_container').width() }, 200);
 				});
 		<?php } ?>
 
@@ -365,11 +410,11 @@
 
 
 	// qr code container for contacts
-	echo "<div id='qr_code_container' style='display: none;' onclick='$(this).fadeOut(400);'>";
-	echo "	<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'><tr><td align='center' valign='middle'>";
-	echo "		<span id='qr_code' onclick=\"$('#qr_code_container').fadeOut(400);\"></span>";
-	echo "	</td></tr></table>";
-	echo "</div>";
+	echo "<div id='qr_code_container' style='display: none;' onclick='$(this).fadeOut(400);'>\n";
+	echo "	<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'><tr><td align='center' valign='middle'>\n";
+	echo "		<span id='qr_code' onclick=\"$('#qr_code_container').fadeOut(400);\"></span>\n";
+	echo "	</td></tr></table>\n";
+	echo "</div>\n";
 
 
 	if (!$default_login) {
@@ -533,13 +578,12 @@
 
 			$menu_style = ($_SESSION['theme']['menu_style']['text'] != '') ? $_SESSION['theme']['menu_style']['text'] : 'fixed';
 			$menu_position = ($_SESSION['theme']['menu_position']['text']) ? $_SESSION['theme']['menu_position']['text'] : 'top';
-			$open_container = "<div class='container-fluid' style='padding: 0;' align='center'>";
 
 			switch ($menu_style) {
 				case 'inline':
 					$logo_align = ($_SESSION['theme']['logo_align']['text'] != '') ? $_SESSION['theme']['logo_align']['text'] : 'left';
 					$logo_style = ($_SESSION['theme']['logo_style']['text'] != '') ? $_SESSION['theme']['logo_style']['text'] : '';
-					echo str_replace("center", $logo_align, $open_container);
+					echo "<div class='container-fluid' style='padding: 0;' align='".$logo_align."'>\n";
 					if ($_SERVER['PHP_SELF'] != PROJECT_PATH."/core/install/install.php") {
 						$logo = ($_SESSION['theme']['logo']['text'] != '') ? $_SESSION['theme']['logo']['text'] : PROJECT_PATH."/themes/default/images/logo.png";
 						echo "<a href='".((PROJECT_PATH != '') ? PROJECT_PATH : '/')."'><img src='".$logo."' style='padding: 15px 20px;$logo_style'></a>";
@@ -548,74 +592,104 @@
 					show_menu($menu_array, $menu_style, $menu_position);
 					break;
 				case 'static':
-					echo $open_container;
+					echo "<div class='container-fluid' style='padding: 0;' align='center'>\n";
 					show_menu($menu_array, $menu_style, $menu_position);
 					break;
 				case 'fixed':
 					show_menu($menu_array, $menu_style, $menu_position);
-					echo $open_container;
+					echo "<div class='container-fluid' style='padding: 0;' align='center'>\n";
 					break;
 				case 'side':
-					echo "<div id='menu_side_container'>";
-					//menu brand image/text
-						echo "<div id='menu_side_brand_container'>\n";
-						//define the menu brand link
-							if (strlen(PROJECT_PATH) > 0) {
-								$menu_brand_link = PROJECT_PATH;
-							}
-							else if (!$default_login) {
-								$menu_brand_link = '/';
-							}
-						//show the menu brand
-							$menu_brand_image = ($_SESSION['theme']['menu_brand_image']['text'] != '') ? escape($_SESSION['theme']['menu_brand_image']['text']) : PROJECT_PATH."/themes/default/images/logo.png";
-							$menu_brand_text = ($_SESSION['theme']['menu_brand_text']['text'] != '') ? escape($_SESSION['theme']['menu_brand_text']['text']) : "FusionPBX";
-							if ($_SESSION['theme']['menu_brand_type']['text'] == 'image' || $_SESSION['theme']['menu_brand_type']['text'] == '') {
-								echo "<a href='".$menu_brand_link."' style='text-decoration: none;'>";
-								echo "<img id='menu_brand_image' src='".$menu_brand_image."' title=\"".escape($menu_brand_text)."\">";
-								echo "</a>";
-							}
-							else if ($_SESSION['theme']['menu_brand_type']['text'] == 'both') {
-								echo "<a href='".$menu_brand_link."' style='text-decoration: none;'>";
-								echo "<img id='menu_brand_image' src='".$menu_brand_image."' title=\"".escape($menu_brand_text)."\">";
-								echo "<span class='menu_brand_text'>".$menu_brand_text."</span>";
-								echo "</a>";
-							}
-							else if ($_SESSION['theme']['menu_brand_type']['text'] == 'text') {
-								echo "<a class='menu_brand_text' href=\"".$menu_brand_link."\">".$menu_brand_text."22</a>\n";
-							}
-						echo "</div>\n";
-					//main menu items
-						if (is_array($menu_array) && sizeof($menu_array) != 0) {
-							foreach ($menu_array as $menu_index_main => $menu_item_main) {
-								echo "<a class='menu_side_item_main' onclick=\"$('#sub_".$menu_item_main['menu_item_uuid']."').slideToggle(180, function() { if (!$(this).is(':hidden')) { $('.menu_side_sub').not($(this)).slideUp(180); } });\">";
-								if ($menu_item_main['menu_item_icon'] != '') {
-									echo "<i class='glyphicon ".$menu_item_main['menu_item_icon']."' style='z-index: 99800; padding-right: 8px;'></i>";
-								}
-								echo $menu_item_main['menu_language_title'];
-								echo "</a>\n";
-								//sub menu items
-									if (is_array($menu_item_main['menu_items']) && sizeof($menu_item_main['menu_items']) != 0) {
-										echo "<div id='sub_".$menu_item_main['menu_item_uuid']."' class='menu_side_sub' style='display: none;'>\n";
-										foreach ($menu_item_main['menu_items'] as $menu_index_sub => $menu_item_sub) {
-											echo "<a class='menu_side_item_sub' ".($menu_item_sub['menu_item_category'] == 'external' ? "target='_blank'" : null)." href='".$menu_item_sub['menu_item_link']."'>";
-											//if ($menu_item_main['menu_item_icon'] != '') {
-											//	echo "<i class='glyphicon ".$menu_item_main['menu_item_icon']."' style='padding-right: 8px;'></i>";
-											//}
-											echo $menu_item_sub['menu_language_title'];
-											echo "</a>\n";
-											/*
-											if ($menu_index_sub == sizeof($menu_item_main['menu_items'])) {
-												echo "<div style='height: 15px;'></div>\n";
-											}
-											*/
-										}
-										echo "</div>\n";
-									}
-							}
-							echo "<div style='height: 100px;'></div>\n";
+					echo "<div id='menu_side_container'>\n";
+					//menu brand image and/or text
+						if ($_SESSION['theme']['menu_brand_type']['text'] == 'none') {
+							echo "<div style='margin-bottom: 20px;'>\n";
+							echo "<a class='menu_side_item_main menu_side_contract' onclick='menu_side_contract();' style='display: none;'><i class='glyphicon glyphicon-menu-left' style='z-index: 99800; padding-right: 8px;'></i></a>";
+							echo "<a class='menu_side_item_main menu_side_expand' onclick='menu_side_expand();'><i class='glyphicon glyphicon-menu-right' style='z-index: 99800; padding-right: 8px;'></i></a>";
+							echo "</div>\n";
 						}
-					echo "</div>";
-					echo "<div style='padding: 0; width: calc(100% - 225px); float: right; padding-top: 30px; text-align: center;'>"; // $open_container (modified)
+						else {
+							echo "<div id='menu_side_brand_container'>\n";
+							//define the menu brand link
+								if (strlen(PROJECT_PATH) > 0) {
+									$menu_brand_link = PROJECT_PATH;
+								}
+								else if (!$default_login) {
+									$menu_brand_link = '/';
+								}
+							//show the menu brand image and/or text
+								$menu_brand_image = ($_SESSION['theme']['menu_brand_image']['text'] != '') ? escape($_SESSION['theme']['menu_brand_image']['text']) : PROJECT_PATH."/themes/default/images/logo.png";
+								$menu_brand_text = ($_SESSION['theme']['menu_brand_text']['text'] != '') ? escape($_SESSION['theme']['menu_brand_text']['text']) : "FusionPBX";
+								if ($_SESSION['theme']['menu_brand_type']['text'] == 'image' || $_SESSION['theme']['menu_brand_type']['text'] == '') {
+									echo "<a href='".$menu_brand_link."' style='text-decoration: none;'>";
+									echo "<img id='menu_brand_image' style='width: 20px; margin-left: -2px; margin-top: -5px;' src='".$menu_brand_image."' title=\"".escape($menu_brand_text)."\">";
+									echo "</a>\n";
+								}
+								else if ($_SESSION['theme']['menu_brand_type']['text'] == 'image_text') {
+									echo "<a href='".$menu_brand_link."' style='text-decoration: none;'>";
+									echo "<img id='menu_brand_image' style='width: 20px; margin-left: -2px; margin-top: -5px;' src='".$menu_brand_image."' title=\"".escape($menu_brand_text)."\">";
+									echo "<span class='menu_brand_text' style='display: none;'>".$menu_brand_text."</span>";
+									echo "</a>\n";
+								}
+								else if ($_SESSION['theme']['menu_brand_type']['text'] == 'text') {
+									echo "<a class='menu_brand_text' href=\"".$menu_brand_link."\">".$menu_brand_text."</a>\n";
+								}
+							echo "</div>\n";
+						}
+
+						//main menu items
+							if (is_array($menu_array) && sizeof($menu_array) != 0) {
+								foreach ($menu_array as $menu_index_main => $menu_item_main) {
+									echo "<a class='menu_side_item_main' onclick=\"menu_side_expand(); $('#sub_".$menu_item_main['menu_item_uuid']."').slideToggle(180, function() { if (!$(this).is(':hidden')) { $('.menu_side_sub').not($(this)).slideUp(180); } });\">";
+									if ($menu_item_main['menu_item_icon'] != '') {
+										echo "<i class='glyphicon ".$menu_item_main['menu_item_icon']."' style='z-index: 99800; padding-right: 8px;'></i>";
+									}
+									echo "<span class='menu_side_item_title' style='display: none;'>".$menu_item_main['menu_language_title']."</span>";
+									echo "</a>\n";
+									//sub menu items
+										if (is_array($menu_item_main['menu_items']) && sizeof($menu_item_main['menu_items']) != 0) {
+											echo "<div id='sub_".$menu_item_main['menu_item_uuid']."' class='menu_side_sub' style='display: none;'>\n";
+											foreach ($menu_item_main['menu_items'] as $menu_index_sub => $menu_item_sub) {
+												echo "<a class='menu_side_item_sub' ".($menu_item_sub['menu_item_category'] == 'external' ? "target='_blank'" : null)." href='".$menu_item_sub['menu_item_link']."'>";
+												echo "<span class='menu_side_item_title' style='display: none;'>".$menu_item_sub['menu_language_title']."</span>";
+												echo "</a>\n";
+											}
+											echo "</div>\n";
+										}
+								}
+								echo "<div style='height: 100px;'></div>\n";
+							}
+					echo "</div>\n";
+					echo "<div id='content_container' style='padding: 0; width: calc(100% - ".(is_numeric($_SESSION['theme']['menu_side_width_contracted']['text']) ? $_SESSION['theme']['menu_side_width_contracted']['text'] : '55')."px); float: right; padding-top: 0px; text-align: center;'>\n";
+					echo "	<div id='content_header'>\n";
+					//header: left
+						//menu toggle buttons
+							if ($_SESSION['theme']['menu_brand_type']['text'] != 'none') {
+								echo "<div style='float: left;'>\n";
+								echo "<a class='menu_side_toggle menu_side_contract' onclick='menu_side_contract();' style='display: none;'><i class='glyphicon glyphicon-menu-left'></i></a>";
+								echo "<a class='menu_side_toggle menu_side_expand' onclick='menu_side_expand();'><i class='glyphicon glyphicon-menu-right'></i></a>";
+								echo "</div>\n";
+							}
+					//header: right
+						echo "<span class='pull-right' style='white-space: nowrap;'>";
+						//current user
+							echo "<span style='display: inline-block; padding-right: 20px; font-size: 85%;'>\n";
+							echo "<strong>".$text['theme-label-user']."</strong>: ";
+							echo "<a href='".PROJECT_PATH."/core/users/user_edit.php?id=user'>".(count($_SESSION['domains']) > 1 && permission_exists('domain_select') ? $_SESSION['username'].'@'.$_SESSION["user_context"] : $_SESSION['username'])."</a>";
+							echo "</span>\n";
+						//domain name/selector (sm+)
+							if ($_SESSION["username"] != '' && permission_exists("domain_select") && count($_SESSION['domains']) > 1 && $_SESSION['theme']['domain_visible']['text'] == 'true') {
+								echo "<span style='display: inline-block; padding-right: 10px; font-size: 85%;'>\n";
+								echo "<strong>".$text['theme-label-domain']."</strong>: ";
+								echo "<a id='header_domain_selector_domain' title='".$text['theme-label-open_selector']."'>".escape($_SESSION['domain_name'])."</a>";
+								echo "</span>\n";
+							}
+						//logout icon
+							if ($_SESSION['username'] != '' && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
+								echo "<a id='header_logout_icon' href='".PROJECT_PATH."/logout.php' title=\"".$text['theme-label-logout']."\" onclick=\"return confirm('".$text['theme-confirm-logout']."')\"><span class='glyphicon glyphicon-log-out'></span></a>";
+							}
+						echo "</span>";
+					echo "	</div>\n";
 					break;
 			}
 			?>

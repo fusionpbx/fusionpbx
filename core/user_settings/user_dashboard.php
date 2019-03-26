@@ -72,7 +72,9 @@
 	echo "			<b>".$text['header-user_dashboard']."</b><br />";
 	echo "		</td>\n";
 	echo "		<td valign='top' style='text-align: right; white-space: nowrap;'>\n";
-	echo "			".$text['label-welcome']." <a href='".PROJECT_PATH."/core/users/user_edit.php?id=user'>".$_SESSION["username"]."</a>";
+	if ($_SESSION['theme']['menu_style']['text'] != 'side') {
+		echo "		".$text['label-welcome']." <a href='".PROJECT_PATH."/core/users/user_edit.php?id=user'>".$_SESSION["username"]."</a>";
+	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
