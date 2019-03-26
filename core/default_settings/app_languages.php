@@ -661,6 +661,26 @@ $text['label-messages']['ru-ru'] = "";
 $text['label-messages']['sv-se'] = "";
 $text['label-messages']['uk-ua'] = "";
 
+$text['label-image_text']['en-us'] = "Image & Text";
+$text['label-image_text']['ar-eg'] = "";
+$text['label-image_text']['de-at'] = "";
+$text['label-image_text']['de-ch'] = "";
+$text['label-image_text']['de-de'] = "";
+$text['label-image_text']['es-cl'] = "";
+$text['label-image_text']['es-mx'] = "";
+$text['label-image_text']['fr-ca'] = "";
+$text['label-image_text']['fr-fr'] = "";
+$text['label-image_text']['he-il'] = "";
+$text['label-image_text']['it-it'] = "";
+$text['label-image_text']['nl-nl'] = "";
+$text['label-image_text']['pl-pl'] = "";
+$text['label-image_text']['pt-br'] = "";
+$text['label-image_text']['pt-pt'] = "";
+$text['label-image_text']['ro-ro'] = "";
+$text['label-image_text']['ru-ru'] = "";
+$text['label-image_text']['sv-se'] = "";
+$text['label-image_text']['uk-ua'] = "";
+
 $text['header-default_settings']['en-us'] = "Default Settings";
 $text['header-default_settings']['ar-eg'] = "";
 $text['header-default_settings']['de-at'] = "Standard Einstellungen"; //copied from de-de
