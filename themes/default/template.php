@@ -604,8 +604,8 @@
 					//menu brand image and/or text
 						if ($_SESSION['theme']['menu_brand_type']['text'] == 'none') {
 							echo "<div style='margin-bottom: 20px;'>\n";
-							echo "<a class='menu_side_item_main menu_side_contract' onclick='menu_side_contract();' style='display: none;'><i class='glyphicon glyphicon-menu-left' style='z-index: 99800; padding-right: 8px;'></i></a>";
-							echo "<a class='menu_side_item_main menu_side_expand' onclick='menu_side_expand();'><i class='glyphicon glyphicon-menu-right' style='z-index: 99800; padding-right: 8px;'></i></a>";
+							echo "<a class='menu_side_item_main menu_side_contract' onclick='menu_side_contract();' style='display: none;'><i class='glyphicon glyphicon-menu-hamburger' style='z-index: 99800; padding-right: 8px;'></i></a>";
+							echo "<a class='menu_side_item_main menu_side_expand' onclick='menu_side_expand();'><i class='glyphicon glyphicon-menu-hamburger' style='z-index: 99800; padding-right: 8px;'></i></a>";
 							echo "</div>\n";
 						}
 						else {
@@ -666,8 +666,8 @@
 						//menu toggle buttons
 							if ($_SESSION['theme']['menu_brand_type']['text'] != 'none') {
 								echo "<div style='float: left;'>\n";
-								echo "<a class='menu_side_toggle menu_side_contract' onclick='menu_side_contract();' style='display: none;'><i class='glyphicon glyphicon-menu-left'></i></a>";
-								echo "<a class='menu_side_toggle menu_side_expand' onclick='menu_side_expand();'><i class='glyphicon glyphicon-menu-right'></i></a>";
+								echo "<a class='menu_side_toggle menu_side_contract' onclick='menu_side_contract();' style='display: none;'><i class='glyphicon glyphicon-menu-hamburger'></i></a>";
+								echo "<a class='menu_side_toggle menu_side_expand' onclick='menu_side_expand();'><i class='glyphicon glyphicon-menu-hamburger'></i></a>";
 								echo "</div>\n";
 							}
 					//header: right
@@ -675,7 +675,7 @@
 						//current user
 							echo "<span style='display: inline-block; padding-right: 20px; font-size: 85%;'>\n";
 							echo "<strong>".$text['theme-label-user']."</strong>: ";
-							echo "<a href='".PROJECT_PATH."/core/users/user_edit.php?id=user'>".(count($_SESSION['domains']) > 1 && permission_exists('domain_select') ? $_SESSION['username'].'@'.$_SESSION["user_context"] : $_SESSION['username'])."</a>";
+							echo "<a href='".PROJECT_PATH."/core/users/user_edit.php?id=user'>".$_SESSION['username']."</a>";
 							echo "</span>\n";
 						//domain name/selector (sm+)
 							if ($_SESSION["username"] != '' && permission_exists("domain_select") && count($_SESSION['domains']) > 1 && $_SESSION['theme']['domain_visible']['text'] == 'true') {
