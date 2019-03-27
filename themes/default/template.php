@@ -34,9 +34,15 @@ echo "<link rel='stylesheet' type='text/css' href='<!--{project_path}-->/resourc
 echo "<link rel='stylesheet' type='text/css' href='<!--{project_path}-->/resources/bootstrap/css/bootstrap-colorpicker.min.css'>\n";
 echo "<link rel='stylesheet' type='text/css' href='<!--{project_path}-->/themes/".escape($_SESSION['domain']['template']['name'])."/css.php".($default_login ? '?login=default' : null)."'>\n";
 
-//load custom css
+//link to custom css file
 	if ($_SESSION['theme']['custom_css']['text'] != '') {
 		echo "<link rel='stylesheet' type='text/css' href='".escape($_SESSION['theme']['custom_css']['text'])."'>\n\n";
+	}
+//output custom css
+	if ($_SESSION['theme']['custom_css_code']['text'] != '') {
+		echo "<style>\n";
+		echo escape($_SESSION['theme']['custom_css_code']['text']);
+		echo "</style>\n\n";
 	}
 
 //set fav icon

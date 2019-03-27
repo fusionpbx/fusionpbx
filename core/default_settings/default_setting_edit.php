@@ -559,6 +559,9 @@
 		echo "    	<option value='right' ".(($default_setting_value == "right") ? "selected='selected'" : null).">".$text['label-right']."</option>\n";
 		echo "    </select>\n";
 	}
+	elseif ($category == "theme" && $subcategory == "custom_css_code" && $name == "text" ) {
+		echo "	<textarea class='formfld' style='min-width: 100%; height: 300px; font-family: courier, monospace; overflow: auto; resize: vertical' id='default_setting_value' name='default_setting_value' wrap='off'>".$default_setting_value."</textarea>\n";
+	}
 	elseif ($category == "voicemail" && $subcategory == "voicemail_file" && $name == "text" ) {
 		echo "    <select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
 		echo "    	<option value='listen' ".(($default_setting_value == "listen") ? "selected='selected'" : null).">".$text['option-voicemail_file_listen']."</option>\n";
@@ -573,7 +576,7 @@
 		echo "	</select>\n";
 	}
 	elseif (is_json($default_setting_value)) {
-		echo "	<textarea class='formfld' style='width: 100%; height: 80px; font-family: courier; white-space: nowrap; overflow: auto;' id='default_setting_value' name='default_setting_value' wrap='off'>".$default_setting_value."</textarea>\n";
+		echo "	<textarea class='formfld' style='width: 100%; height: 80px; font-family: courier, monospace; overflow: auto;' id='default_setting_value' name='default_setting_value' wrap='off'>".$default_setting_value."</textarea>\n";
 	}
 	else {
 		echo "	<input class='formfld' type='text' id='default_setting_value' name='default_setting_value' value=\"".htmlspecialchars($default_setting_value)."\">\n";
@@ -671,9 +674,11 @@
 
 	echo "<script>\n";
 	//capture enter key to submit form
-		echo "	$(window).keypress(function(event){\n";
-		echo "		if (event.which == 13) { submit_form(); }\n";
-		echo "	});\n";
+		if (!($category == "theme" && $subcategory == "custom_css_code" && $name == "text" )) {
+			echo "	$(window).keypress(function(event){\n";
+			echo "		if (event.which == 13) { submit_form(); }\n";
+			echo "	});\n";
+		}
 	//hide/convert password fields then submit form
 		echo "	function submit_form() {\n";
 		echo "		$('input:password').css('visibility','hidden');\n";
