@@ -93,31 +93,48 @@
 		var menu_side_state = 'contracted';
 		function menu_side_contract() {
 			$('.menu_side_sub').slideUp(180);
-			<?php if ($_SESSION['theme']['menu_brand_type']['text'] != 'text') { ?>
-				$('.menu_brand_text').hide();
-			<?php } ?>
 			$('.menu_side_item_title').hide();
-			$('#menu_brand_image').animate({ width: '20px', 'margin-left': '-2px' }, 250);
+			<?php if ($_SESSION['theme']['menu_brand_type']['text'] == 'image' || $_SESSION['theme']['menu_brand_type']['text'] == '') { ?>
+				$('#menu_brand_image_expanded').fadeOut(180, function() {
+					$('#menu_brand_image_contracted').fadeIn(180);
+				});
+			<?php } else if ($_SESSION['theme']['menu_brand_type']['text'] == 'image_text') { ?>
+				$('.menu_brand_text').hide();
+				$('#menu_brand_image_contracted').animate({ width: '20px', 'margin-left': '-2px' }, 250);
+			<?php } else if ($_SESSION['theme']['menu_brand_type']['text'] == 'text') { ?>
+				$('.menu_brand_text').fadeOut(180);
+			<?php } ?>
 			$('#menu_side_container').animate({ width: '<?php echo is_numeric($_SESSION['theme']['menu_side_width_contracted']['text']) ? $_SESSION['theme']['menu_side_width_contracted']['text'] : '55'; ?>px' }, 250);
 			$('#content_container').animate({ width: $(window).width() - <?php echo is_numeric($_SESSION['theme']['menu_side_width_contracted']['text']) ? $_SESSION['theme']['menu_side_width_contracted']['text'] : '55'; ?> }, 250, function() {
 				menu_side_state = 'contracted';
 			});
+
 			$('.menu_side_contract').hide();
 			$('.menu_side_expand').show();
 		}
 
 		function menu_side_expand() {
-			$('#menu_brand_image').animate({ width: '30px', 'margin-left': '0' }, 250);
-			$('#menu_side_container').animate({ width: '<?php echo is_numeric($_SESSION['theme']['menu_side_width_expanded']['text']) ? $_SESSION['theme']['menu_side_width_expanded']['text'] : '225'; ?>px' }, 250);
+			<?php if ($_SESSION['theme']['menu_brand_type']['text'] == 'image_text') { ?>
+				$('#menu_brand_image_contracted').animate({ width: '30px', 'margin-left': '0' }, 250);
+			<?php } else if ($_SESSION['theme']['menu_brand_type']['text'] == 'image' || $_SESSION['theme']['menu_brand_type']['text'] == '') { ?>
+				$('#menu_brand_image_contracted').fadeOut(180);
+			<?php } ?>
+			$('#menu_side_container').animate({ width: '<?php echo  is_numeric($_SESSION['theme']['menu_side_width_expanded']['text']) ? $_SESSION['theme']['menu_side_width_expanded']['text'] : '225'; ?>px' }, 250);
 			$('#content_container').animate({ width: $(window).width() - <?php echo is_numeric($_SESSION['theme']['menu_side_width_expanded']['text']) ? $_SESSION['theme']['menu_side_width_expanded']['text'] : '225'; ?> }, 250, function() {
-				<?php if ($_SESSION['theme']['menu_brand_type']['text'] != 'text') { ?>
-					$('.menu_brand_text').fadeIn(180);
-				<?php } ?>
+				$('.menu_brand_text').fadeIn(180);
 				$('.menu_side_item_title').fadeIn(180);
+				<?php if ($_SESSION['theme']['menu_brand_type']['text'] != 'none') { ?>
+					$('.menu_side_contract').fadeIn(180);
+				<?php } ?>
+				<?php if ($_SESSION['theme']['menu_brand_type']['text'] == 'image' || $_SESSION['theme']['menu_brand_type']['text'] == '') { ?>
+					$('#menu_brand_image_expanded').fadeIn(180);
+				<?php } ?>
 				menu_side_state = 'expanded';
 			});
+			<?php if ($_SESSION['theme']['menu_brand_type']['text'] == 'none') { ?>
+				$('.menu_side_contract').show();
+			<?php } ?>
 			$('.menu_side_expand').hide();
-			$('.menu_side_contract').show();
 		}
 
 
@@ -603,13 +620,19 @@
 					echo "<div id='menu_side_container'>\n";
 					//menu brand image and/or text
 						if ($_SESSION['theme']['menu_brand_type']['text'] == 'none') {
-							echo "<div style='margin-bottom: 20px;'>\n";
+							echo "<div style='height: 75px; padding-top: 5px;'>\n";
 							echo "<a class='menu_side_item_main menu_side_contract' onclick='menu_side_contract();' style='display: none;'><i class='glyphicon glyphicon-menu-hamburger' style='z-index: 99800; padding-right: 8px;'></i></a>";
 							echo "<a class='menu_side_item_main menu_side_expand' onclick='menu_side_expand();'><i class='glyphicon glyphicon-menu-hamburger' style='z-index: 99800; padding-right: 8px;'></i></a>";
 							echo "</div>\n";
 						}
 						else {
 							echo "<div id='menu_side_brand_container'>\n";
+							//menu toggle buttons
+								if ($_SESSION['theme']['menu_brand_type']['text'] != 'none') {
+									echo "<div style='float: right; margin-right: -20px; margin-top: -20px;'>\n";
+									echo "<a class='menu_side_item_main menu_side_contract' onclick='menu_side_contract();' style='display: none;'><i class='glyphicon glyphicon-menu-hamburger'></i></a>";
+									echo "</div>\n";
+								}
 							//define the menu brand link
 								if (strlen(PROJECT_PATH) > 0) {
 									$menu_brand_link = PROJECT_PATH;
@@ -618,21 +641,23 @@
 									$menu_brand_link = '/';
 								}
 							//show the menu brand image and/or text
-								$menu_brand_image =  $_SESSION['theme']['menu_side_brand_image']['text'] != '' ? $_SESSION['theme']['menu_side_brand_image']['text'] : PROJECT_PATH."/themes/default/images/logo_side_white.png";
+								$menu_brand_image_contracted =  $_SESSION['theme']['menu_side_brand_image_contracted']['text'] != '' ? $_SESSION['theme']['menu_side_brand_image_contracted']['text'] : PROJECT_PATH."/themes/default/images/logo_side_contracted.png";
+								$menu_brand_image_expanded =  $_SESSION['theme']['menu_side_brand_image_expanded']['text'] != '' ? $_SESSION['theme']['menu_side_brand_image_expanded']['text'] : PROJECT_PATH."/themes/default/images/logo_side_expanded.png";
 								$menu_brand_text = ($_SESSION['theme']['menu_brand_text']['text'] != '') ? escape($_SESSION['theme']['menu_brand_text']['text']) : "FusionPBX";
 								if ($_SESSION['theme']['menu_brand_type']['text'] == 'image' || $_SESSION['theme']['menu_brand_type']['text'] == '') {
 									echo "<a href='".$menu_brand_link."' style='text-decoration: none;'>";
-									echo "<img id='menu_brand_image' style='width: 20px; margin-left: -2px; margin-top: -5px;' src='".escape($menu_brand_image)."' title=\"".escape($menu_brand_text)."\">";
+									echo "<img id='menu_brand_image_contracted' style='width: 20px; margin-left: -2px; margin-top: -5px;' src='".escape($menu_brand_image_contracted)."' title=\"".escape($menu_brand_text)."\">";
+									echo "<img id='menu_brand_image_expanded' style='display: none;' src='".escape($menu_brand_image_expanded)."' title=\"".escape($menu_brand_text)."\">";
 									echo "</a>\n";
 								}
 								else if ($_SESSION['theme']['menu_brand_type']['text'] == 'image_text') {
 									echo "<a href='".$menu_brand_link."' style='text-decoration: none;'>";
-									echo "<img id='menu_brand_image' style='width: 20px; margin-left: -2px; margin-top: -5px;' src='".escape($menu_brand_image)."' title=\"".escape($menu_brand_text)."\">";
+									echo "<img id='menu_brand_image_contracted' style='width: 20px; margin-left: -2px; margin-top: -5px;' src='".escape($menu_brand_image_contracted)."' title=\"".escape($menu_brand_text)."\">";
 									echo "<span class='menu_brand_text' style='display: none;'>".$menu_brand_text."</span>";
 									echo "</a>\n";
 								}
 								else if ($_SESSION['theme']['menu_brand_type']['text'] == 'text') {
-									echo "<a class='menu_brand_text' href=\"".$menu_brand_link."\">".$menu_brand_text."</a>\n";
+									echo "<a class='menu_brand_text' style='display: none;' href=\"".$menu_brand_link."\">".$menu_brand_text."</a>\n";
 								}
 							echo "</div>\n";
 						}
@@ -663,13 +688,8 @@
 					echo "<div id='content_container' style='padding: 0; width: calc(100% - ".(is_numeric($_SESSION['theme']['menu_side_width_contracted']['text']) ? $_SESSION['theme']['menu_side_width_contracted']['text'] : '55')."px); float: right; padding-top: 0px; text-align: center;'>\n";
 					echo "	<div id='content_header'>\n";
 					//header: left
-						//menu toggle buttons
-							if ($_SESSION['theme']['menu_brand_type']['text'] != 'none') {
-								echo "<div style='float: left;'>\n";
-								echo "<a class='menu_side_toggle menu_side_contract' onclick='menu_side_contract();' style='display: none;'><i class='glyphicon glyphicon-menu-hamburger'></i></a>";
-								echo "<a class='menu_side_toggle menu_side_expand' onclick='menu_side_expand();'><i class='glyphicon glyphicon-menu-hamburger'></i></a>";
-								echo "</div>\n";
-							}
+						echo "<div style='float: left;'>\n";
+						echo "</div>\n";
 					//header: right
 						echo "<span class='pull-right' style='white-space: nowrap;'>";
 						//current user

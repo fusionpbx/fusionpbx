@@ -1576,9 +1576,17 @@
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ac2a4991-5aab-4eca-b26e-7608c098cd90";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "menu_side_brand_image";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "menu_side_brand_image_contracted";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/themes/default/images/logo_side_white.png";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/themes/default/images/logo_side_contacted.png";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the brand image path for the Side menu.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the contracted brand image path for the Side menu.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a3d0fe4f-015a-4577-90f6-088a389c3997";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "menu_side_brand_image_expanded";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/themes/default/images/logo_side_expanded.png";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the expanded brand image path for the Side menu.";
 ?>

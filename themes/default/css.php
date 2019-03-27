@@ -480,7 +480,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		z-index: 99901;
 		top: 0;
 		padding: 20px;
-		margin-bottom: 10px;
+		min-height: 75px;
 		text-align: left;
 		<?php if ($_SESSION['theme']['menu_main_background_image']['text'] != '') { ?>
 			background-image: url("<?php echo $_SESSION['theme']['menu_main_background_image']['text']; ?>");
@@ -501,12 +501,21 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		}
 
 	/* menu side logo */
-	img#menu_brand_image {
+	img#menu_brand_image_contracted {
 		border: none;
 		width: auto;
 		max-height: 30px;
-		max-width: 185px;
+		max-width: 30px;
 		margin-right: 5px;
+		}
+
+	img#menu_brand_image_expanded {
+		border: none;
+		height: auto;
+		max-width: 145px;
+		max-height: 35px;
+		margin-top: -3px;
+		margin-left: -6px;
 		}
 
 	/* menu brand text */
