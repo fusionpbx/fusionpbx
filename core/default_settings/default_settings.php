@@ -431,6 +431,9 @@
 				) {
 				echo "		".$text['label-'.$row['default_setting_value']];
 			}
+			else if ($category == 'theme' && $subcategory == 'custom_css_code' && $name == 'text') {
+				echo "		[...]\n";
+			}
 			else if ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
 				echo "		".str_repeat('*', strlen($row['default_setting_value']));
 			}
@@ -469,7 +472,9 @@
 			$array_setting_uuids[] = $row['default_setting_uuid'];
 			$array_setting_subcategories[] = $row['default_setting_subcategory'];
 			$array_setting_types[] = $row['default_setting_name'];
-			$array_setting_values[] = str_replace('"','\"',$row['default_setting_value']);
+			if (!($category == "theme" && $subcategory == "custom_css_code" && $name == "text" )) {
+				$array_setting_values[] = str_replace('"','\"',$row['default_setting_value']);
+			}
 			$array_setting_descriptions[] = str_replace('"','\"',$row['default_setting_description']);
 
 			$previous_category = $row['default_setting_category'];
