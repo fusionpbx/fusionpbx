@@ -1578,7 +1578,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "menu_side_brand_image_contracted";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/themes/default/images/logo_side_contacted.png";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/themes/default/images/logo_side_contracted.png";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the contracted brand image path for the Side menu.";
 		$y++;
