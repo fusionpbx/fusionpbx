@@ -506,7 +506,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		width: auto;
 		max-height: 30px;
 		max-width: 30px;
-		margin-right: 5px;
+		margin-right: 10px;
 		}
 
 	img#menu_brand_image_expanded {
