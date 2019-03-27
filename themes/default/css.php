@@ -829,8 +829,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		}
 
 	#login_logo {
-		width: 250px;
-		height: auto;
+		text-decoration: none;
 		}
 
 	a.login_link {
