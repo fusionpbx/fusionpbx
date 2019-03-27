@@ -620,7 +620,7 @@
 					echo "<div id='menu_side_container'>\n";
 					//menu brand image and/or text
 						if ($_SESSION['theme']['menu_brand_type']['text'] == 'none') {
-							echo "<div style='height: 75px; padding-top: 5px;'>\n";
+							echo "<div style='height: 75px;'>\n";
 							echo "<a class='menu_side_item_main menu_side_contract' onclick='menu_side_contract();' style='display: none;'><i class='glyphicon glyphicon-menu-hamburger' style='z-index: 99800; padding-right: 8px;'></i></a>";
 							echo "<a class='menu_side_item_main menu_side_expand' onclick='menu_side_expand();'><i class='glyphicon glyphicon-menu-hamburger' style='z-index: 99800; padding-right: 8px;'></i></a>";
 							echo "</div>\n";
