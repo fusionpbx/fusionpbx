@@ -776,7 +776,7 @@
 
 	if ($action == "update") {
 		echo "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>";
-		echo "<td width='60%' class='' valign='top' align='center'>\n";
+		echo "<td width='60%' valign='top'>\n";
 		//echo "	<img src='contacts_vcard.php?id=$contact_uuid&type=image' width='90%'><br /><br />\n";
 		if (permission_exists('contact_phone_view')) { require "contact_phones.php"; }
 		if (permission_exists('contact_address_view')) { require "contact_addresses.php"; }
@@ -787,6 +787,7 @@
 		if (permission_exists('contact_note_view')) { require "contact_notes.php"; }
 		if (permission_exists('contact_time_view')) { require "contact_times.php"; }
 		if (permission_exists('contact_setting_view')) { require "contact_settings.php"; }
+		if (permission_exists('contact_attachment_view')) { require "contact_attachments.php"; }
 		echo "</td>\n";
 	}
 

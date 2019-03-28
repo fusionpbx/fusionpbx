@@ -211,6 +211,21 @@
 		$apps[$x]['permissions'][$y]['name'] = "contact_time_delete";
 		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "contact_attachment_view";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "contact_attachment_add";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "contact_attachment_edit";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "contact_attachment_delete";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 
 	//schema details
 		$y=0;
@@ -838,5 +853,76 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "time_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Description";
+
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_contact_attachments";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_contacts";
+		$z=0;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "contact_attachment_uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "primary";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_domains";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "domain_uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "contact_uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_contacts";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "contact_uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "attachment_primary";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Primary attachments are used as the Contact photo and sent with Messages.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "attachment_filename";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "The attachment filename.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "attachment_content";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "The attachment content.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "attachment_description";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'attachment_uploaded_date';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamp';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'date';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'timestamp';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'The date the attachment was uploaded.';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'attachment_uploaded_user_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = 'foreign';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = 'v_users';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = 'user_uuid';
+
+
+	//default settings
+		$y=0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "38a67445-577d-483d-a176-09549cfdaa69";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "contact";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "allowed_attachment_types";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '{"jpg":"image\/jpg","jpeg":"image\/jpg","gif":"image\/gif","png":"image\/png","pdf":"application\/pdf","doc":"application\/vnd.ms-word","docx":"application\/vnd.openxmlformats-officedocument.wordprocessingml.document","xls":"application\/vnd.ms-excel","xlsx":"application\/vnd.openxmlformats-officedocument.spreadsheetml.sheet","zip":"application\/zip","rar":"application\/x-rar-compressed","7z":"application\/x-7z-compressed","txt":"text\/plain","pcap":"application\/vnd.tcpdump.pcap"}';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Define the allowed file attachment extensions and their mime types in a JSON array.";
+		$y++;
 
 ?>
