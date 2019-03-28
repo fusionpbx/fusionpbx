@@ -72,7 +72,7 @@
 	unset ($prep_statement, $sql);
 
 //get media (if any)
-	$sql = "select message_uuid, message_media_uuid, message_media_type, length(message_media_content) as message_media_size from v_message_media ";
+	$sql = "select message_uuid, message_media_uuid, message_media_type, length(decode(message_media_content,'base64')) as message_media_size from v_message_media ";
 	$sql .= "where user_uuid = '".$_SESSION['user_uuid']."' ";
 	$sql .= "and (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
 	$sql .= "and message_uuid in ( ";
