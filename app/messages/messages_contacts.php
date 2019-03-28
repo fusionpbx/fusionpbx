@@ -140,7 +140,7 @@
 				$selected = true;
 			}
 			else {
-				echo "<tr><td valign='top' class='".$row_style[$c]."' onclick=\"load_thread('".urlencode($number)."');\">\n";
+				echo "<tr><td valign='top' class='".$row_style[$c]."' onclick=\"load_thread('".urlencode($number)."', '".$contact[$number]['contact_uuid']."');\">\n";
 				$selected = false;
 			}
 			if ($contact[$number]['contact_name_given'] != '' || $contact[$number]['contact_name_family'] != '') {

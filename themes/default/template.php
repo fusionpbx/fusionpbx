@@ -278,12 +278,13 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 				});
 		<?php } ?>
 
+		//generate resizeEnd event after window resize event finishes (used when side menu and on messages app)
+			$(window).resize(function() {
+				if (this.resizeTO) { clearTimeout(this.resizeTO); }
+				this.resizeTO = setTimeout(function() { $(this).trigger('resizeEnd'); }, 180);
+			});
+
 		<?php if ($_SESSION['theme']['menu_style']['text'] == 'side') { ?>
-			//create resizeEnd event
-				$(window).resize(function() {
-					if (this.resizeTO) { clearTimeout(this.resizeTO); }
-					this.resizeTO = setTimeout(function() { $(this).trigger('resizeEnd'); }, 180);
-				});
 			//side menu: adjust content container width after window resize
 				$(window).on('resizeEnd', function() {
 					$('#content_container').animate({ width: $(window).width() - $('#menu_side_container').width() }, 200);
@@ -311,7 +312,7 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 				$("[id*=recording_button]").not("[id*=recording_button_"+recording_id+"]").html("<?php echo $v_link_label_play; ?>");
 				$("[id*=recording_progress_bar]").not("[id*=recording_progress_bar_"+recording_id+"]").css('display', 'none');
 
-				$('audio').each(function(){
+				$('audio').each(function(){$('#menu_side_container').width()
 					if ($(this).get(0) != recording_audio) {
 						$(this).get(0).pause(); // Stop playing
 						$(this).get(0).currentTime = 0; // Reset time
