@@ -96,7 +96,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the message direction.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'message_date';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamp';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'date';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'timestamp';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the message date.';

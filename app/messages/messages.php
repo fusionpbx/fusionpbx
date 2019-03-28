@@ -56,8 +56,30 @@
 	}
 	unset ($prep_statement, $sql, $row, $record);
 
+//get self (primary contact attachment) image, if any
+	if (!is_array($_SESSION['tmp']['messages']['contact_me'])) {
+		$sql = "select attachment_filename as filename, attachment_content as image from v_contact_attachments ";
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and contact_uuid = :contact_uuid ";
+		$sql .= "and attachment_primary = 1 ";
+		$bind[':contact_uuid'] = $_SESSION['user']['contact_uuid'];
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute(is_array($bind) ? $bind : null);
+		$_SESSION['tmp']['messages']['contact_me'] = $prep_statement->fetch(PDO::FETCH_NAMED);
+		unset ($sql, $bind, $prep_statement);
+	}
+
 //additional includes
 	require_once "resources/header.php";
+
+//resize thread window on window resize
+	echo "<script language='JavaScript' type='text/javascript'>\n";
+	echo "	$(document).ready(function() {\n";
+	echo "		$(window).on('resizeEnd', function() {\n";
+	echo "			$('div#thread_messages').animate({ 'max-height': $(window).height() - 480 }, 200);\n";
+	echo "		});\n";
+	echo " 	});\n";
+	echo "</script>\n";
 
 //styles
 	echo "<style>\n";
@@ -189,7 +211,7 @@
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td id='contacts' valign='top'><center>&middot;&middot;&middot;</center></td>\n";
-	echo "		<td id='thread' colspan='2' valign='top' style='border-left: 1px solid #c5d1e5; padding: 15px;'><center>&middot;&middot;&middot;</center></td>\n";
+	echo "		<td id='thread' colspan='2' valign='top' style='border-left: 1px solid #c5d1e5; padding: 15px 0 15px 15px;'><center>&middot;&middot;&middot;</center></td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
 	echo "<input type='hidden' id='contact_current_number' value=''>\n";
@@ -211,19 +233,21 @@
 	echo "		});\n";
 	echo "	}\n";
 
-	echo "	function load_thread(number) {\n";
+	echo "	function load_thread(number, contact_uuid) {\n";
 	echo "		clearTimeout(timer_thread);\n";
-	echo "		$('#thread').load('messages_thread.php?number=' + encodeURIComponent(number), function(){\n";
-	echo "			$('#thread_messages').scrollTop(Number.MAX_SAFE_INTEGER);\n"; //chrome
-	echo "			$('span#thread_bottom')[0].scrollIntoView(true);\n"; //others
-					//note: the order of the above two lines matters!
+	echo "		$('#thread').load('messages_thread.php?number=' + encodeURIComponent(number) + '&contact_uuid=' + encodeURIComponent(contact_uuid), function(){\n";
+	echo "			$('div#thread_messages').animate({ 'max-height': $(window).height() - 450 }, 200, function() {\n";
+	echo "				$('#thread_messages').scrollTop(Number.MAX_SAFE_INTEGER);\n"; //chrome
+	echo "				$('span#thread_bottom')[0].scrollIntoView(true);\n"; //others
+						//note: the order of the above two lines matters!
 	if (!http_user_agent('mobile')) {
-		echo "		if ($('#message_new_layer').is(':hidden')) {\n";
-		echo "			$('#message_text').focus();\n";
-		echo "		}\n";
+		echo "			if ($('#message_new_layer').is(':hidden')) {\n";
+		echo "				$('#message_text').focus();\n";
+		echo "			}\n";
 	}
-	echo "			refresh_contacts();\n";
-	echo "			timer_thread = setTimeout(refresh_thread_start, thread_refresh, number);\n";
+	echo "				refresh_contacts();\n";
+	echo "				timer_thread = setTimeout(refresh_thread_start, thread_refresh, number, contact_uuid);\n";
+	echo "			});\n";
 	echo "		});\n";
 	echo "	}\n";
 
@@ -235,19 +259,21 @@
 	echo "		refresh_contacts();\n";
 	echo "	}\n";
 
-	echo "	function refresh_thread(number, onsent) {\n";
-	echo "		$('#thread_messages').load('messages_thread.php?refresh=true&number=' + encodeURIComponent(number), function(){\n";
-	echo "			$('#thread_messages').scrollTop(Number.MAX_SAFE_INTEGER);\n"; //chrome
-	echo "			$('span#thread_bottom')[0].scrollIntoView(true);\n"; //others
-					//note: the order of the above two lines matters!
+	echo "	function refresh_thread(number, contact_uuid, onsent) {\n";
+	echo "		$('#thread_messages').load('messages_thread.php?refresh=true&number=' + encodeURIComponent(number) + '&contact_uuid=' + encodeURIComponent(contact_uuid), function(){\n";
+	echo "			$('div#thread_messages').animate({ 'max-height': $(window).height() - 450 }, 200, function() {\n";
+	echo "				$('#thread_messages').scrollTop(Number.MAX_SAFE_INTEGER);\n"; //chrome
+	echo "				$('span#thread_bottom')[0].scrollIntoView(true);\n"; //others
+						//note: the order of the above two lines matters!
 	if (!http_user_agent('mobile')) {
-		echo "		if ($('#message_new_layer').is(':hidden')) {\n";
+		echo "				if ($('#message_new_layer').is(':hidden')) {\n";
 		echo "			$('#message_text').focus();\n";
-		echo "		}\n";
+		echo "			}\n";
 	}
-	echo "			if (onsent != 'true') {\n";
-	echo "				timer_thread = setTimeout(refresh_thread, thread_refresh, number);\n";
-	echo "			}\n";
+	echo "				if (onsent != 'true') {\n";
+	echo "					timer_thread = setTimeout(refresh_thread, thread_refresh, number, contact_uuid);\n";
+	echo "				}\n";
+	echo "			});\n";
 	echo "		});\n";
 	echo "	}\n";
 
@@ -264,15 +290,15 @@
 	echo "		}\n";
 	echo "	}\n";
 
-	echo "	function refresh_thread_stop(number) {\n";
+	echo "	function refresh_thread_stop(number, contact_uuid) {\n";
 	echo "		clearTimeout(timer_thread);\n";
-	echo "		document.getElementById('thread_refresh_state').innerHTML = \"<img src='resources/images/refresh_paused.png' style='width: 16px; height: 16px; border: none; margin-top: 1px; cursor: pointer;' onclick='refresh_thread_start(\" + number + \");' alt='".$text['label-refresh_enable']."' title='".$text['label-refresh_enable']."'>\";\n";
+	?>			document.getElementById('thread_refresh_state').innerHTML = "<img src='resources/images/refresh_paused.png' style='width: 16px; height: 16px; border: none; margin-top: 3px; cursor: pointer;' onclick=\"refresh_thread_start('" + number + "', '" + contact_uuid + "');\" alt=\"<?php echo $text['label-refresh_enable']; ?>\" title=\"<?php echo $text['label-refresh_enable']; ?>\">";<?php
 	echo "	}\n";
 
-	echo "	function refresh_thread_start(number) {\n";
+	echo "	function refresh_thread_start(number, contact_uuid) {\n";
 	echo "		if (document.getElementById('thread_refresh_state')) {\n";
-	echo "			document.getElementById('thread_refresh_state').innerHTML = \"<img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 3px; cursor: pointer;' onclick='refresh_thread_stop(\" + number + \");' alt='".$text['label-refresh_pause']."' title='".$text['label-refresh_pause']."'>\";\n";
-	echo "			refresh_thread(number);\n";
+	?>				document.getElementById('thread_refresh_state').innerHTML = "<img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 3px; cursor: pointer;' onclick=\"refresh_thread_stop('" + number + "', '" + contact_uuid + "');\" alt=\"<?php echo $text['label-refresh_pause']; ?>\" title=\"<?php echo $text['label-refresh_pause']; ?>\">";<?php
+	echo "			refresh_thread(number, contact_uuid);\n";
 	echo "		}\n";
 	echo "	}\n";
 
