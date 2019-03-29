@@ -153,12 +153,14 @@
 	echo "		width: 100px;\n";
 	echo "		height: auto;\n";
 	echo "		border-radius: 0 11px 11px 11px;\n";
+	echo "		border: 1px solid #cffec7;\n";
 	echo "		}\n";
 
 	echo "	img.message-bubble-image-me {\n";
 	echo "		width: 100px;\n";
 	echo "		height: auto;\n";
 	echo "		border-radius: 11px 11px 0 11px;\n";
+	echo "		border: 1px solid #cbf0ff;\n";
 	echo "		}\n";
 
 	echo "	div.message-bubble-image-em {\n";
