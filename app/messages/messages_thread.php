@@ -46,19 +46,6 @@
 //set refresh flag
 	$refresh = $_GET['refresh'] == 'true' ? true : false;
 
-//get contact (primary attachment) image, if any
-	if (is_uuid($contact_uuid) && (!is_array($_SESSION['tmp']['messages']['contact_em'][$contact_uuid]) || $_SESSION['tmp']['messages']['contact_em'][$contact_uuid] != $contact_uuid)) {
-		$sql = "select attachment_filename as filename, attachment_content as image from v_contact_attachments ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and contact_uuid = :contact_uuid ";
-		$sql .= "and attachment_primary = 1 ";
-		$bind[':contact_uuid'] = $contact_uuid;
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute(is_array($bind) ? $bind : null);
-		$_SESSION['tmp']['messages']['contact_em'][$contact_uuid] = $prep_statement->fetch(PDO::FETCH_NAMED);
-		unset ($sql, $bind, $prep_statement);
-	}
-
 //get messages
 	if (isset($_SESSION['message']['display_last']['text']) && $_SESSION['message']['display_last']['text'] != '') {
 		$array = explode(' ',$_SESSION['message']['display_last']['text']);
@@ -223,22 +210,24 @@
 
 				//message bubble
 					echo "<span class='message-bubble message-bubble-".($message['message_direction'] == 'inbound' ? 'em' : 'me')."'>";
-						//contact image
-							if ($message['message_direction'] == 'inbound') { //em
-								if (is_array($_SESSION['tmp']['messages']['contact_em'][$contact_uuid]) && sizeof($_SESSION['tmp']['messages']['contact_em'][$contact_uuid]) != 0) {
-									$attachment_type = strtolower(pathinfo($_SESSION['tmp']['messages']['contact_em'][$contact_uuid]['filename'], PATHINFO_EXTENSION));
-									echo "<div class='message-bubble-image-em'>\n";
-									echo "	<img class='message-bubble-image-em' src='data:image/".$attachment_type.";base64,".$_SESSION['tmp']['messages']['contact_em'][$contact_uuid]['image']."'><br />\n";
-									echo "</div>\n";
-								}
+						//contact image em
+							if (
+								$message['message_direction'] == 'inbound' &&
+								is_array($_SESSION['tmp']['messages']['contact_em'][$contact_uuid]) &&
+								sizeof($_SESSION['tmp']['messages']['contact_em'][$contact_uuid]) != 0
+								) {
+								echo "<div class='message-bubble-image-em'>\n";
+								echo "	<img class='message-bubble-image-em'><br />\n";
+								echo "</div>\n";
 							}
-							else { //me
-								if (is_array($_SESSION['tmp']['messages']['contact_me']) && sizeof($_SESSION['tmp']['messages']['contact_me']) != 0) {
-									$attachment_type = strtolower(pathinfo($_SESSION['tmp']['messages']['contact_me']['filename'], PATHINFO_EXTENSION));
-									echo "<div class='message-bubble-image-me'>\n";
-									echo "	<img class='message-bubble-image-me' src='data:image/".$attachment_type.";base64,".$_SESSION['tmp']['messages']['contact_me']['image']."'><br />\n";
-									echo "</div>\n";
-								}
+						//contact image me
+							else if (
+								is_array($_SESSION['tmp']['messages']['contact_me']) &&
+								sizeof($_SESSION['tmp']['messages']['contact_me']) != 0
+								) {
+								echo "<div class='message-bubble-image-me'>\n";
+								echo "	<img class='message-bubble-image-me'><br />\n";
+								echo "</div>\n";
 							}
 						echo "<div style='display: table;'>\n";
 						//message
@@ -257,7 +246,7 @@
 											echo "<a href='message_media.php?id=".$media['uuid']."&src=".$media_source."&action=download' class='message-media-link-".($message['message_direction'] == 'inbound' ? 'em' : 'me')."'>";
 										}
 										echo "<img src='resources/images/attachment.png' style='width: 16px; height: 16px; border: none; margin-right: 10px;'>";
-										echo "<span style='font-size: 85%;'>".strtoupper($media['type']).' &middot; '.strtoupper(byte_convert($media['size']))."</span>";
+										echo "<span style='font-size: 85%; white-space: nowrap;'>".strtoupper($media['type']).' &middot; '.strtoupper(byte_convert($media['size']))."</span>";
 										echo "</a>\n";
 									}
 								}
@@ -271,8 +260,13 @@
 			echo "<span id='thread_bottom'></span>\n";
 		}
 
-	//set current contact
-		echo "<script>$('#contact_current_number').val('".$number."');</script>\n";
+		echo "<script>\n";
+		//set current contact
+			echo "	$('#contact_current_number').val('".$number."');\n";
+		//set bubble contact images from src images
+			echo "	$('img.message-bubble-image-em').attr('src', $('img#src_message-bubble-image-em_".$contact_uuid."').attr('src'));\n";
+			echo "	$('img.message-bubble-image-me').attr('src', $('img#src_message-bubble-image-me').attr('src'));\n";
+		echo "</script>\n";
 
 	if (!$refresh) {
 		echo "</div>\n";
