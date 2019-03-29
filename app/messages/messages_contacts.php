@@ -178,8 +178,9 @@
 			//contact name/number
 				if ($contact[$number]['contact_name_given'] != '' || $contact[$number]['contact_name_family'] != '') {
 					echo "<div style='float: right; margin-top: 8px; margin-right: ".($selected ? '-1' : '4')."px;' title=\"".$text['label-view_contact']."\"><a href='/app/contacts/contact_edit.php?id=".$contact[$number]['contact_uuid']."' target='_blank'><i class='glyphicon glyphicon-user'></i></a></div>\n";
-					echo "<strong style='display: inline-block; margin: 8px 0 5px 0;'>".escape($contact[$number]['contact_name_given'].' '.$contact[$number]['contact_name_family']).'</strong><br>';
-					echo "<span style='font-size: 80%; white-space: nowrap;'><a href='callto:".escape($number)."'><i class='glyphicon glyphicon-phone' style='margin-right: 5px;'></i>".escape(format_phone($number)).'</a></span><br>';
+					echo "<div style='display: table;'>\n";
+					echo "	<strong style='display: inline-block; margin: 8px 0 5px 0; white-space: nowrap;'>".escape($contact[$number]['contact_name_given'].' '.$contact[$number]['contact_name_family']).'</strong><br>';
+					echo "	<span style='font-size: 80%; white-space: nowrap;'><a href='callto:".escape($number)."'><i class='glyphicon glyphicon-phone' style='margin-right: 5px;'></i>".escape(format_phone($number)).'</a></span><br>';
 					if (valid_email($contact[$number]['contact_email'])) {
 						echo "<span style='font-size: 80%; white-space: nowrap;'><a href='mailto:".escape($contact[$number]['contact_email'])."'><i class='glyphicon glyphicon-envelope' style='margin-right: 5px;'></i>".$text['label-send_email']."</a></span><br>";
 					}
@@ -188,6 +189,7 @@
 						$contact_html = (permission_exists('contact_view') ? "<a href='".PROJECT_PATH."/app/contacts/contact_edit.php?id=".$contact[$number]['contact_uuid']."' target='_blank'>".$contact_name."</a>" : $contact_name)." : <a href='callto:".escape($number)."'>".escape(format_phone($number))."</a>";
 						echo "<script>$('#contact_current_name').html(\"".$contact_html."\");</script>\n";
 					}
+					echo "</div>\n";
 				}
 				else {
 					echo escape(format_phone($number));
