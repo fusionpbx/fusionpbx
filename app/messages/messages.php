@@ -56,15 +56,14 @@
 	}
 	unset ($prep_statement, $sql, $row, $record);
 
-//get self (primary contact attachment) image, if any
+//get self (primary contact attachment) image
 	if (!is_array($_SESSION['tmp']['messages']['contact_me'])) {
 		$sql = "select attachment_filename as filename, attachment_content as image from v_contact_attachments ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and contact_uuid = :contact_uuid ";
+		$sql .= "and contact_uuid = '".$_SESSION['user']['contact_uuid']."' ";
 		$sql .= "and attachment_primary = 1 ";
-		$bind[':contact_uuid'] = $_SESSION['user']['contact_uuid'];
 		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute(is_array($bind) ? $bind : null);
+		$prep_statement->execute();
 		$_SESSION['tmp']['messages']['contact_me'] = $prep_statement->fetch(PDO::FETCH_NAMED);
 		unset ($sql, $bind, $prep_statement);
 	}
@@ -93,7 +92,7 @@
 	echo "		bottom: 0px;\n";
 	echo "		text-align: center;\n";
 	echo "		vertical-align: middle;\n";
-	echo "	}\n";
+	echo "		}\n";
 
 	echo "	#message_new_container {\n";
 	echo "		display: block;\n";
@@ -109,7 +108,7 @@
 	echo "		-webkit-box-shadow: 0px 1px 20px #888;\n";
 	echo "		-moz-box-shadow: 0px 1px 20px #888;\n";
 	echo "		box-shadow: 0px 1px 20px #888;\n";
-	echo "	}\n";
+	echo "		}\n";
 
 	echo "	#message_media_layer {\n";
 	echo "		z-index: 999999;\n";
@@ -120,13 +119,31 @@
 	echo "		bottom: 0px;\n";
 	echo "		text-align: center;\n";
 	echo "		vertical-align: middle;\n";
-	echo "	}\n";
+	echo "		}\n";
 
 	echo "	td.contact_selected {\n";
 	echo "		border-right: 5px solid ".($SESSION['theme']['table_row_border_color']['text'] != '' ? $SESSION['theme']['table_row_border_color']['text'] : '#c5d1e5').";\n";
-	echo "	}\n";
+	echo "		}\n";
+
+	echo "	.contact_list_image {\n";
+	echo "		float: left;\n";
+	echo "		width: 75px;\n";
+	echo "		height: 75px;\n";
+	echo "		margin: 3px 8px 3px 2px;\n";
+	echo "		border: 1px solid ".($SESSION['theme']['table_row_border_color']['text'] != '' ? $SESSION['theme']['table_row_border_color']['text'] : '#c5d1e5').";\n";
+	echo "		background-repeat: no-repeat;\n";
+	echo "		background-size: cover;\n";
+	echo "		background-position: center center;\n";
+	echo "		border-radius: 11px;\n";
+	echo "		}\n";
 
 	echo "</style>\n";
+
+//cache self (primary contact attachment) image
+	if (is_array($_SESSION['tmp']['messages']['contact_me']) && sizeof($_SESSION['tmp']['messages']['contact_me']) != 0) {
+		$attachment_type = strtolower(pathinfo($_SESSION['tmp']['messages']['contact_me']['filename'], PATHINFO_EXTENSION));
+		echo "<img id='src_message-bubble-image-me' style='display: none;' src='data:image/".$attachment_type.";base64,".$_SESSION['tmp']['messages']['contact_me']['image']."'>\n";
+	}
 
 //new message layer
 	if (permission_exists('message_add')) {
@@ -205,9 +222,9 @@
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
-	echo "		<th width='25%'>".$text['label-contacts']."</th>\n";
+	echo "		<th width='30%'>".$text['label-contacts']."</th>\n";
 	echo "		<th style='white-space: nowrap;'><nobr>".$text['label-messages']."<nobr></th>\n";
-	echo "		<th width='75%' style='text-align: right; font-weight: normal;' id='contact_current_name'></th>\n";
+	echo "		<th width='70%' style='text-align: right; font-weight: normal;' id='contact_current_name'></th>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td id='contacts' valign='top'><center>&middot;&middot;&middot;</center></td>\n";

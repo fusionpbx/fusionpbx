@@ -869,4 +869,44 @@
 		$text['button-close']['sv-se'] = '';
 		$text['button-close']['uk-ua'] = '';
 
+		$text['label-view_contact']['en-us'] = 'View Contact';
+		$text['label-view_contact']['ar-eg'] = '';
+		$text['label-view_contact']['de-at'] = '';
+		$text['label-view_contact']['de-ch'] = '';
+		$text['label-view_contact']['de-de'] = '';
+		$text['label-view_contact']['es-cl'] = '';
+		$text['label-view_contact']['es-mx'] = '';
+		$text['label-view_contact']['fr-ca'] = '';
+		$text['label-view_contact']['fr-fr'] = '';
+		$text['label-view_contact']['he-il'] = '';
+		$text['label-view_contact']['it-it'] = '';
+		$text['label-view_contact']['nl-nl'] = '';
+		$text['label-view_contact']['pl-pl'] = '';
+		$text['label-view_contact']['pt-br'] = '';
+		$text['label-view_contact']['pt-pt'] = '';
+		$text['label-view_contact']['ro-ro'] = '';
+		$text['label-view_contact']['ru-ru'] = '';
+		$text['label-view_contact']['sv-se'] = '';
+		$text['label-view_contact']['uk-ua'] = '';
+
+		$text['label-send_email']['en-us'] = 'Send Email';
+		$text['label-send_email']['ar-eg'] = '';
+		$text['label-send_email']['de-at'] = '';
+		$text['label-send_email']['de-ch'] = '';
+		$text['label-send_email']['de-de'] = '';
+		$text['label-send_email']['es-cl'] = '';
+		$text['label-send_email']['es-mx'] = '';
+		$text['label-send_email']['fr-ca'] = '';
+		$text['label-send_email']['fr-fr'] = '';
+		$text['label-send_email']['he-il'] = '';
+		$text['label-send_email']['it-it'] = '';
+		$text['label-send_email']['nl-nl'] = '';
+		$text['label-send_email']['pl-pl'] = '';
+		$text['label-send_email']['pt-br'] = '';
+		$text['label-send_email']['pt-pt'] = '';
+		$text['label-send_email']['ro-ro'] = '';
+		$text['label-send_email']['ru-ru'] = '';
+		$text['label-send_email']['sv-se'] = '';
+		$text['label-send_email']['uk-ua'] = '';
+
 ?>
