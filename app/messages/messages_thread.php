@@ -262,7 +262,7 @@
 								echo "<br />\n";
 							}
 						//message when
-							echo "<span class='message-bubble-when'>".(gmdate('m-d-Y') != format_when_local($message['message_date'],'d') ? format_when_local($message['message_date']) : format_when_local($message['message_date'],'t'))."</span>\n";
+							echo "<span class='message-bubble-when'>".(date('m-d-Y') != format_when_local($message['message_date'],'d') ? format_when_local($message['message_date']) : format_when_local($message['message_date'],'t'))."</span>\n";
 						echo "</div>\n";
 					echo "</span>\n";
 			}
