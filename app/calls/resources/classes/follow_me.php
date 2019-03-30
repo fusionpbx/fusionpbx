@@ -487,13 +487,12 @@ include "root.php";
 			//update the extension follow me and dial string details
 				$sql  = "update v_extensions set ";
 				$sql .= "dial_domain = '".$this->domain_name."', ";
-				$sql .= "dial_string = '".$dial_string."', ";
-				$sql .= "follow_me_destinations = '".$dial_string."', ";
-				$sql .= "follow_me_enabled = '".$this->follow_me_enabled."' ";
+				$sql .= "dial_string = '".$dial_string."' ";
 				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
 				$sql .= "and follow_me_uuid = '".$this->follow_me_uuid."' ";
 				if ($this->debug) {
 					echo $sql."<br />";
+					exit;
 				}
 				$db->exec($sql);
 				unset($sql);
