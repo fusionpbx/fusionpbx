@@ -1,10 +1,13 @@
 
 <context name="{v_context}">
 	<extension name="bind_digit_action" number="" continue="true" app_uuid="7e007a4d-886b-4cdf-81f4-da9eb4689f1c" enabled="false">
-		<condition field="${sip_authorized}" expression="true" break="never">
-			<action application="set" data="bind_target=both" inline="true"/>
+		<condition>
+			<action application="set" data="calling_user_exists=${user_exists id ${caller_id_number} ${domain_name}}" inline="true"/>
+		</condition>
+		<condition field="${calling_user_exists}" expression="^true$" break="never">
+			<action application="set" data="bind_target=self" inline="true"/>
 			<!-- set to peer to prevent manipulate of call by caller -->
-			<anti-action application="set" data="bind_target=peer" inline="true"/>
+			<anti-action application="set" data="bind_target=peer,peer" inline="true"/>
 		</condition>
 		<condition>
 			<!-- <action application="export" data="conf_xfer_number=xfer-${create_uuid foo}-${domain_name}"/>-->
