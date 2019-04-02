@@ -685,6 +685,8 @@ if (!class_exists('schema')) {
 																		//field type has not changed
 																	} elseif ($db_field_type = "timestamp without time zone" && strtolower($field_type) == "datetime") {
 																		//field type has not changed
+																	} elseif ($db_field_type = "timestamp with time zone" && strtolower($field_type) == "timestamptz") {
+																		//field type has not changed
 																	} elseif ($db_field_type = "integer" && strtolower($field_type) == "numeric") {
 																		//field type has not changed
 																	} elseif ($db_field_type = "character" && strtolower($field_type) == "char") {
