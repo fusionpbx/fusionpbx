@@ -900,7 +900,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'attachment_uploaded_date';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamp';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'date';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'timestamp';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'The date the attachment was uploaded.';
