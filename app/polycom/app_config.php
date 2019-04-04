@@ -55,6 +55,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call Waiting 1=enabled 0=disable";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ef6b4223-0361-4c69-ae02-98c1b6fb3ad6";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_calls_per_line_key";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "4";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Limit number of calls per line key.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "6f3d254d-8dde-438d-b2a5-eac75d1a7db5";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_feature_key_sync";
