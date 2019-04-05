@@ -17,22 +17,25 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists("backup_download")) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists("backup_download")) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -40,8 +43,9 @@ else {
 
 //download the backup
 	if ($_GET['a'] == "download" && permission_exists('backup_download')) {
-		$file_format = $_GET['file_format'];
-		$file_format = ($file_format != '') ? $file_format : 'tgz';
+		//get the file format
+			$file_format = $_GET['file_format'];
+			$file_format = ($file_format != '') ? $file_format : 'tgz';
 
 		//build the backup file
 			$backup_path = ($_SESSION['server']['backup']['path'] != '') ? $_SESSION['server']['backup']['path'] : '/tmp';
@@ -55,8 +59,12 @@ else {
 					default : $cmd = 'tar -zvcf ';
 				}
 				$cmd .= $backup_path.'/'.$backup_file.' ';
-				if (isset($_SESSION['backup']['path'])) foreach ($_SESSION['backup']['path'] as $value) {
-					$cmd .= $value.' ';
+				if (isset($_SESSION['backup']['path'])) {
+					foreach ($_SESSION['backup']['path'] as $value) {
+						if (file_exists($value)) {
+							$cmd .= $value.' ';
+						}
+					}
 				}
 				$cmd .= " 2>&1";
 				exec($cmd, $response, $restore_errlevel);
@@ -109,7 +117,7 @@ else {
 		$backup_path = ($_SESSION['server']['backup']['path'] != '') ? $_SESSION['server']['backup']['path'] : '/tmp';
 		$backup_file = $_FILES['backup_file']['name'];
 
-		if (is_uploaded_file($_FILES['backup_file']['tmp_name'])) {
+		if (is_uploaded_file($_FILES['backup_file']['tmp_name']) && file_exists($backup_path.'/'.$backup_file)) {
 			//move temp file to backup path
 			move_uploaded_file($_FILES['backup_file']['tmp_name'], $backup_path.'/'.$backup_file);
 			//determine file format and restore backup
