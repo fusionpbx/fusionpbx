@@ -447,6 +447,7 @@ else {
 }
 echo "<br><br>";
 
+/*
 if (if_group("superadmin") && isset($_GET['debug'])) {
 	echo '$activity<br>';
 	echo "<textarea style='width: 100%; height: 600px; overflow: scroll;' onfocus='refresh_stop();' onblur='refresh_start();'>";
@@ -459,5 +460,6 @@ if (if_group("superadmin") && isset($_GET['debug'])) {
 	print_r($_SESSION);
 	echo "</textarea>";
 }
+*/
 
 ?>
