@@ -367,7 +367,7 @@ if (is_array($activity)) foreach ($activity as $extension => $ext) {
 		}
 		$block .= "			</td></tr></table>";
 		if (permission_exists('operator_panel_call_details')) {
-			$block .= "			<span id='op_caller_details_".$extension."'><strong>".$call_name."</strong><br>".$call_number."</span>";
+			$block .= "			<span id='op_caller_details_".$extension."'><strong>".escape($call_name)."</strong><br>".escape($call_number)."</span>";
 		}
 		$block .= "		</span>";
 		//transfer
