@@ -2027,12 +2027,15 @@ include "root.php";
 							}
 							$statement->bindParam(':remote_address', $_SERVER['REMOTE_ADDR']);
 							if (is_array($old_array)) {
-								$statement->bindParam(':transaction_old', json_encode($old_array, JSON_PRETTY_PRINT));
+								$old_json = json_encode($old_array, JSON_PRETTY_PRINT);
+								$statement->bindParam(':transaction_old', $old_json);
 							}
 							if (is_array($new_array)) {
-								$statement->bindParam(':transaction_new', json_encode($new_array, JSON_PRETTY_PRINT));
+								$new_json = json_encode($new_array, JSON_PRETTY_PRINT);
+								$statement->bindParam(':transaction_new', $new_json);
 							}
-							$statement->bindParam(':transaction_result', json_encode($this->message, JSON_PRETTY_PRINT));
+							$message = json_encode($this->message, JSON_PRETTY_PRINT);
+							$statement->bindParam(':transaction_result', $message);
 							$statement->execute();
 							unset($sql);
 						}
