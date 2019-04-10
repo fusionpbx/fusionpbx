@@ -47,19 +47,20 @@
 --set the cache key
 	key = "app:dialplan:outbound:is_local:" .. destination_number .. "@" .. domain_name;
 
---set the outbound caller id
-	if (outbound_caller_id_name ~= nil) then
-		session:execute("set", "caller_id_name="..outbound_caller_id_name);
-		session:execute("set", "effective_caller_id_name="..outbound_caller_id_name);
-	end
-	if (outbound_caller_id_number ~= nil) then
-		session:execute("set", "caller_id_number="..outbound_caller_id_number);
-		session:execute("set", "effective_caller_id_number="..outbound_caller_id_number);
-	end
-
 --get the destination number
 	value, err = cache.get(key);
 	if (err == 'NOT FOUND') then
+
+		--set the outbound caller id
+		if (outbound_caller_id_name ~= nil) then
+			session:execute("set", "caller_id_name="..outbound_caller_id_name);
+			session:execute("set", "effective_caller_id_name="..outbound_caller_id_name);
+		end
+		if (outbound_caller_id_number ~= nil) then
+			session:execute("set", "caller_id_number="..outbound_caller_id_number);
+			session:execute("set", "effective_caller_id_number="..outbound_caller_id_number);
+		end
+
 		--connect to the database
 		local Database = require "resources.functions.database";
 		local dbh = Database.new('system');
