@@ -97,6 +97,13 @@
 			return;
 	}
 
+//retrieve password requirements
+	$required['length'] = $_SESSION['user']['password_length']['numeric'];
+	$required['number'] = ($_SESSION['user']['password_number']['boolean'] == 'true') ? true : false;
+	$required['lowercase'] = ($_SESSION['user']['password_lowercase']['boolean'] == 'true') ? true : false;
+	$required['uppercase'] = ($_SESSION['user']['password_uppercase']['boolean'] == 'true') ? true : false;
+	$required['special'] = ($_SESSION['user']['password_special']['boolean'] == 'true') ? true : false;
+
 //prepare the data
 	if (count($_POST) > 0) {
 
@@ -127,13 +134,6 @@
 			if (permission_exists('message_view')) {
 				$message_key = check_str($_POST["message_key"]);
 			}
-
-		//get the password requirements
-			$required['length'] = $_SESSION['user']['password_length']['numeric'];
-			$required['number'] = ($_SESSION['user']['password_number']['boolean'] == 'true') ? true : false;
-			$required['lowercase'] = ($_SESSION['user']['password_lowercase']['boolean'] == 'true') ? true : false;
-			$required['uppercase'] = ($_SESSION['user']['password_uppercase']['boolean'] == 'true') ? true : false;
-			$required['special'] = ($_SESSION['user']['password_special']['boolean'] == 'true') ? true : false;
 
 		//check required values
 			if ($username == '') {
@@ -202,7 +202,7 @@
 		//return if error
 			if (message::count() != 0) {
 				$_SESSION['tmp'][$_SERVER['PHP_SELF']]['user'] = $_POST;
-				header("Location: user_edit.php?id=".$user_uuid);
+				header("Location: user_edit.php".(permission_exists('user_edit') && $action != 'add' ? "?id=".$user_uuid : null));
 				exit;
 			}
 
@@ -511,82 +511,79 @@
 			exit;
 	}
 
-//pre-populate the form
-	if ($action == 'edit') {
+//populate the form with values from session variable
+	if (
+		is_array($_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']) &&
+		sizeof($_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']) != 0
+		) {
+		$domain_uuid = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']["domain_uuid"];
+		$username = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']["username"];
+		$password = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']["password"];
+		$password_confirm = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']["password_confirm"];
+		$api_key = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']["api_key"];
+		$user_enabled = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']["user_enabled"];
+		$contact_uuid = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']["contact_uuid"];
+		$user_status = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']["user_status"];
+		$password_confirm = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']['password_confirm'];
+		$user_settings['domain']['language']['code'] = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']['user_language'];
+		$user_settings['domain']['time_zone']['name'] = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']['user_time_zone'];
+		$user_email = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']['user_email'];
+		$contact_name_given = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']['contact_name_given'];
+		$contact_name_family = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']['contact_name_family'];
+		$contact_organization = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']['contact_organization'];
+		$user_settings["message"]["key"]["text"] = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']['message_key'];
 
-	//get values from session variable
-		if (
-			is_array($_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']) &&
-			sizeof($_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']) != 0)
-			{
-			$domain_uuid = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']["domain_uuid"];
-			$username = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']["username"];
-			$api_key = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']["api_key"];
-			$user_enabled = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']["user_enabled"];
-			$contact_uuid = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']["contact_uuid"];
-			$user_status = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']["user_status"];
-			$password_confirm = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']['password_confirm'];
-			$user_settings['domain']['language']['code'] = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']['user_language'];
-			$user_settings['domain']['time_zone']['name'] = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']['user_time_zone'];
-			$user_email = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']['user_email'];
-			$contact_name_given = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']['contact_name_given'];
-			$contact_name_family = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']['contact_name_family'];
-			$contact_organization = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']['contact_organization'];
-			$user_settings["message"]["key"]["text"] = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']['message_key'];
+		$unsaved = true;
+		unset($_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']);
+	}
 
-			$unsaved = true;
-			unset($_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']);
-		}
+//populate the form with values from db
+	else {
+		if ($action == 'edit') {
+			$sql = "select * from v_users where user_uuid = '".$user_uuid."' ";
+			if (!permission_exists('user_all')) {
+				$sql .= "and domain_uuid = '".$domain_uuid."' ";
+			}
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$row = $prep_statement->fetch(PDO::FETCH_NAMED);
+			if (is_array($row) && sizeof($row) > 0) {
+				$domain_uuid = $row["domain_uuid"];
+				$user_uuid = $row["user_uuid"];
+				$username = $row["username"];
+				$api_key = $row["api_key"];
+				$user_enabled = $row["user_enabled"];
+				$contact_uuid = $row["contact_uuid"];
+				$user_status = $row["user_status"];
+			}
+			else {
+				message::add($text['message-invalid_user'], 'negative', 7500);
+				header("Location: user_edit.php?id=".$_SESSION['user_uuid']);
+				exit;
+			}
+			unset($sql, $prep_statement, $row);
 
-	//get values from db
-		else {
-
-			//get user data
-				$sql = "select * from v_users where user_uuid = '".$user_uuid."' ";
-				if (!permission_exists('user_all')) {
-					$sql .= "and domain_uuid = '".$domain_uuid."' ";
-				}
-				$prep_statement = $db->prepare(check_sql($sql));
+		//get user settings
+			$sql = "select * from v_user_settings ";
+			$sql .= "where user_uuid = '".$user_uuid."' ";
+			$sql .= "and user_setting_enabled = 'true' ";
+			$prep_statement = $db->prepare($sql);
+			if ($prep_statement) {
 				$prep_statement->execute();
-				$row = $prep_statement->fetch(PDO::FETCH_NAMED);
-				if (is_array($row) && sizeof($row) > 0) {
-					$domain_uuid = $row["domain_uuid"];
-					$user_uuid = $row["user_uuid"];
-					$username = $row["username"];
-					$password = $row["password"];
-					$api_key = $row["api_key"];
-					$user_enabled = $row["user_enabled"];
-					$contact_uuid = $row["contact_uuid"];
-					$user_status = $row["user_status"];
-				}
-				else {
-					message::add($text['message-invalid_user'], 'negative', 7500);
-					header("Location: user_edit.php?id=".$_SESSION['user_uuid']);
-					exit;
-				}
-				unset($sql, $prep_statement, $row);
-
-			//get user settings
-				$sql = "select * from v_user_settings ";
-				$sql .= "where user_uuid = '".$user_uuid."' ";
-				$sql .= "and user_setting_enabled = 'true' ";
-				$prep_statement = $db->prepare($sql);
-				if ($prep_statement) {
-					$prep_statement->execute();
-					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-					foreach($result as $row) {
-						$name = $row['user_setting_name'];
-						$category = $row['user_setting_category'];
-						$subcategory = $row['user_setting_subcategory'];
-						if (strlen($subcategory) == 0) {
-							//$$category[$name] = $row['domain_setting_value'];
-							$user_settings[$category][$name] = $row['user_setting_value'];
-						}
-						else {
-							$user_settings[$category][$subcategory][$name] = $row['user_setting_value'];
-						}
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				foreach($result as $row) {
+					$name = $row['user_setting_name'];
+					$category = $row['user_setting_category'];
+					$subcategory = $row['user_setting_subcategory'];
+					if (strlen($subcategory) == 0) {
+						//$$category[$name] = $row['domain_setting_value'];
+						$user_settings[$category][$name] = $row['user_setting_value'];
+					}
+					else {
+						$user_settings[$category][$subcategory][$name] = $row['user_setting_value'];
 					}
 				}
+			}
 		}
 	}
 
@@ -648,6 +645,7 @@
 	echo "		<td width='70%' class='vtable'>";
 	if (permission_exists("user_edit")) {
 		echo "		<input type='text' class='formfld' name='username' id='username' autocomplete='new-password' value='".escape($username)."' required='required'>\n";
+		echo "		<input type='text' id='autofill_honeypot' style='display: none;'>\n";
 	}
 	else {
 		echo "		".escape($username)."\n";
@@ -660,14 +658,43 @@
 	echo "		<td class='vncell".(($action == 'add') ? 'req' : null)."' valign='top'>".$text['label-password']."</td>";
 	echo "		<td class='vtable'>";
 	echo "			<input style='display: none;' type='password'>";
-	echo "			<input type='password' autocomplete='new-password' class='formfld' name='password' id='password' value='' onkeypress='show_strength_meter();' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'>";
-	echo "			<div id='pwstrength_progress' class='pwstrength_progress'></div>";
+	echo "			<input type='password' autocomplete='new-password' class='formfld' name='password' id='password' value=\"".escape($password)."\" ".($action == 'add' ? "required='required'" : null)." onkeypress='show_strength_meter();' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'>";
+	echo "			<div id='pwstrength_progress' class='pwstrength_progress'></div><br />\n";
+	if ((is_numeric($required['length']) && $required['length'] != 0) || $required['number'] || $required['lowercase'] || $required['uppercase'] || $required['special']) {
+		echo $text['label-required'].': ';
+		if (is_numeric($required['length']) && $required['length'] != 0) {
+			echo $required['length']." ".$text['label-characters'];
+			if ($required['number'] || $required['lowercase'] || $required['uppercase'] || $required['special']) {
+				echo " (";
+			}
+		}
+		if ($required['number']) {
+			$required_temp[] = $text['label-number'];
+		}
+		if ($required['lowercase']) {
+			$required_temp[] = $text['label-lowercase'];
+		}
+		if ($required['uppercase']) {
+			$required_temp[] = $text['label-uppercase'];
+		}
+		if ($required['special']) {
+			$required_temp[] = $text['label-special'];
+		}
+		if (is_array($required_temp) && sizeof($required_temp) != 0) {
+			echo implode(', ',$required_temp);
+			if (is_numeric($required['length']) && $required['length'] != 0) {
+				echo ")";
+			}
+		}
+		unset($required_temp);
+	}
 	echo "		</td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncell".(($action == 'add') ? 'req' : null)."' valign='top'>".$text['label-confirm_password']."</td>";
 	echo "		<td class='vtable'>";
-	echo "			<input type='password' autocomplete='new-password' class='formfld' name='password_confirm' id='password_confirm' value='' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'>";
+	echo "			<input type='password' autocomplete='new-password' class='formfld' name='password_confirm' id='password_confirm' value=\"".escape($password_confirm)."\" ".($action == 'add' ? "required='required'" : null)." onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'><br />\n";
+	echo "			".$text['message-green_border_passwords_match']."\n";
 	echo "		</td>";
 	echo "	</tr>";
 
@@ -811,7 +838,7 @@
 	else if ($action == 'add' && permission_exists("user_add")) {
 		echo "	<tr>";
 		echo "		<td class='vncellreq'>".$text['label-email']."</td>";
-		echo "		<td class='vtable'><input type='text' class='formfld' name='user_email' value='".escape($user_email)."'></td>";
+		echo "		<td class='vtable'><input type='text' class='formfld' name='user_email' value='".escape($user_email)."' ".($action == 'add' ? "required='required'" : null)."></td>";
 		echo "	</tr>";
 		echo "	<tr>";
 		echo "		<td class='vncell'>".$text['label-first_name']."</td>";
@@ -885,7 +912,7 @@
 		$groups = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		if (is_array($groups)) {
 			if (isset($assigned_groups)) { echo "<br />\n"; }
-			echo "<select name='group_uuid_name' class='formfld' style='width: auto; margin-right: 3px;'>\n";
+			echo "<select name='group_uuid_name' class='formfld' style='width: auto; margin-right: 3px;' ".($action == 'add' ? "required='required'" : null).">\n";
 			echo "	<option value=''></option>\n";
 			foreach($groups as $field) {
 				if ($field['group_name'] == "superadmin" && !if_group("superadmin")) { continue; }	//only show the superadmin group to other superadmins
