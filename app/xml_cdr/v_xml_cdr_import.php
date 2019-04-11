@@ -415,7 +415,7 @@
 						$recordings['call_recordings'][$x]['call_recording_path'] = $record_path;
 						$recordings['call_recordings'][$x]['call_recording_length'] = $record_length;
 						$recordings['call_recordings'][$x]['call_recording_description'] = $record_description;
-						$recordings['call_recordings'][$x]['call_recording_date'] = urldecode($xml->variables->answer_stamp);
+						$recordings['call_recordings'][$x]['call_recording_date'] = urldecode($xml->variables->start_stamp);
 						$recordings['call_recordings'][$x]['call_direction'] = urldecode($xml->variables->call_direction);
 						//$recordings['call_recordings'][$x]['call_recording_description']= $row['zzz'];
 						//$recordings['call_recordings'][$x]['call_recording_base64']= $row['zzz'];
