@@ -123,10 +123,6 @@
 	if (strlen($caller_extension_uuid) > 0 && is_uuid($caller_extension_uuid)) {
 		$sql_where_ands[] = "e.extension_uuid = '".$caller_extension_uuid."'";
 	}
-	if (strlen($caller_id_number) > 0) {
-		$sql_where_ands[] = "(caller_id_number like '".str_replace("*", "%", $caller_id_number)."' or e.extension = '".$caller_id_number."')";
-	}
-
 	if (strlen($caller_destination) > 0) {
 		$mod_caller_destination = str_replace("*", "%", $caller_destination);
 		$sql_where_ands[] = "caller_destination like '".$mod_caller_destination."'";
@@ -219,10 +215,15 @@
 	//if not admin or superadmin, only show own calls
 	if (!permission_exists('xml_cdr_domain')) {
 		if (count($_SESSION['user']['extension']) > 0) { // extensions are assigned to this user
+			foreach ($_SESSION['user']['extension'] as $row) {
+				$sql_where_ors[] = "c.extension_uuid = '".$row['extension_uuid']."'";
+			}
+
 			// create simple user extension array
 			foreach ($_SESSION['user']['extension'] as $row) {
 				$user_extensions[] = $row['user'];
 			}
+
 			// if both a source and destination are submitted, but neither are an assigned extension, restrict results
 			if (
 				$caller_id_number != '' &&
@@ -230,25 +231,27 @@
 				array_search($caller_id_number, $user_extensions) === false &&
 				array_search($destination_number, $user_extensions) === false
 				) {
-				$sql_where_ors[] = "caller_id_number like '".$user_extension."'";
-				$sql_where_ors[] = "destination_number like '".$user_extension."'";
-				$sql_where_ors[] = "destination_number like '*99".$user_extension."'";
+				$sql_where_ors[] = "caller_id_number = '".$user_extension."'";
+				$sql_where_ors[] = "destination_number = '".$user_extension."'";
+				$sql_where_ors[] = "destination_number = '*99".$user_extension."'";
 			}
 			// if source submitted is blank, implement restriction for assigned extension(s)
 			if ($caller_id_number == '') { // if source criteria is blank, then restrict to assigned ext
 				foreach ($user_extensions as $user_extension) {
-					if (strlen($user_extension) > 0) {	$sql_where_ors[] = "caller_id_number like '".$user_extension."'"; }
+					if (strlen($user_extension) > 0) {	$sql_where_ors[] = "caller_id_number = '".$user_extension."'"; }
 				}
 			}
+
 			// if destination submitted is blank, implement restriction for assigned extension(s)
 			if ($destination_number == '') {
 				foreach ($user_extensions as $user_extension) {
 					if (strlen($user_extension) > 0) {
-						$sql_where_ors[] = "destination_number like '".$user_extension."'";
-						$sql_where_ors[] = "destination_number like '*99".$user_extension."'";
+						$sql_where_ors[] = "destination_number = '".$user_extension."'";
+						$sql_where_ors[] = "destination_number = '*99".$user_extension."'";
 					}
 				}
 			}
+
 			// concatenate the 'or's array, then add to the 'and's array
 			if (sizeof($sql_where_ors) > 0) {
 				$sql_where_ands[] = "( ".implode(" or ", $sql_where_ors)." )";
