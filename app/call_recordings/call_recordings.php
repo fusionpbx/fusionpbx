@@ -278,7 +278,6 @@
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
 	echo "		<td class='list_control_icons'>";
 	if (permission_exists('call_recording_add')) {
 		echo 		"<a href='call_recording_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
@@ -293,6 +292,12 @@
 	echo "</tr>\n";
 	echo "</table>";
 	echo "</form>\n";
+
+	if (strlen($paging_controls) > 0) {
+		echo "<br />";
+		echo $paging_controls."\n";
+	}
+
 	echo "<br /><br />";
 
 //include the footer
