@@ -1008,11 +1008,13 @@
 				if (permission_exists('device_line_auth_id')) {
 					echo "			<td align='left'>\n";
 					echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][auth_id]' maxlength='255' autocomplete=\"new-password\" value=\"".escape($row['auth_id'])."\"/>\n";
+					echo "				<input type='text' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
 					echo "			</td>\n";
 				}
 
 				if (permission_exists('device_line_password')) {
 					echo "			<td align='left'>\n";
+					echo "				<input type='password' style='display: none;' disabled='disabled'>"; //help defeat browser auto-fill
 					echo "				<input class='formfld' style='width:75px;' type='password' name='device_lines[".$x."][password]' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" autocomplete=\"off\" maxlength='255' value=\"".escape($row['password'])."\"/>\n";
 					echo "			</td>\n";
 				}

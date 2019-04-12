@@ -124,39 +124,22 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
 			if (strlen($gateway) == 0) { $msg .= $text['message-required']." ".$text['label-gateway']."<br>\n"; }
 			if ($register == "true") {
 				if (strlen($username) == 0) { $msg .= $text['message-required']." ".$text['label-username']."<br>\n"; }
 				if (strlen($password) == 0) { $msg .= $text['message-required']." ".$text['label-password']."<br>\n"; }
 			}
-			//if (strlen($distinct_to) == 0) { $msg .= $text['message-required']." ".$text['label-distinct_to']."<br>\n"; }
-			//if (strlen($auth_username) == 0) { $msg .= $text['message-required']." ".$text['label-auth_username']."<br>\n"; }
-			//if (strlen($realm) == 0) { $msg .= $text['message-required']." ".$text['label-realm']."<br>\n"; }
-			//if (strlen($from_user) == 0) { $msg .= $text['message-required']." ".$text['label-from_user']."<br>\n"; }
-			//if (strlen($from_domain) == 0) { $msg .= $text['message-required']." ".$text['label-from_domain']."<br>\n"; }
 			if (strlen($proxy) == 0) { $msg .= $text['message-required']." ".$text['label-proxy']."<br>\n"; }
-			//if (strlen($register_proxy) == 0) { $msg .= $text['message-required']." ".$text['label-register_proxy']."<br>\n"; }
-			//if (strlen($outbound_proxy) == 0) { $msg .= $text['message-required']." ".$text['label-outbound_proxy']."<br>\n"; }
 			if (strlen($expire_seconds) == 0) { $msg .= $text['message-required']." ".$text['label-expire_seconds']."<br>\n"; }
 			if (strlen($register) == 0) { $msg .= $text['message-required']." ".$text['label-register']."<br>\n"; }
-			//if (strlen($register_transport) == 0) { $msg .= $text['message-required']." ".$text['label-register_transport']."<br>\n"; }
 			if (strlen($retry_seconds) == 0) { $msg .= $text['message-required']." ".$text['label-retry_seconds']."<br>\n"; }
-			//if (strlen($extension) == 0) { $msg .= $text['message-required']." ".$text['label-extension']."<br>\n"; }
-			//if (strlen($ping) == 0) { $msg .= $text['message-required']." ".$text['label-ping']."<br>\n"; }
 			if (strlen($channels) == 0) {
 				//$msg .= $text['message-required']." ".$text['label-channels']."<br>\n";
 				$channels = 0;
 			}
-			//if (strlen($caller_id_in_from) == 0) { $msg .= $text['message-required']." ".$text['label-caller_id_in_from']."<br>\n"; }
-			//if (strlen($supress_cng) == 0) { $msg .= $text['message-required']." ".$text['label-supress_cng']."<br>\n"; }
-			//if (strlen($sip_cid_type) == 0) { $msg .= $text['message-required']." ".$text['label-sip_cid_type']."<br>\n"; }
-			//if (strlen($codec_prefs) == 0) { $msg .= $text['message-required']." ".$text['label-codec_prefs']."<br>\n"; }
-			//if (strlen($extension_in_contact) == 0) { $msg .= $text['message-required']." ".$text['label-extension_in_contact']."<br>\n"; }
 			if (strlen($context) == 0) { $msg .= $text['message-required']." ".$text['label-context']."<br>\n"; }
 			if (strlen($profile) == 0) { $msg .= $text['message-required']." ".$text['label-profile']."<br>\n"; }
 			if (strlen($enabled) == 0) { $msg .= $text['message-required']." ".$text['label-enabled']."<br>\n"; }
-			//if (strlen($description) == 0) { $msg .= $text['message-required']." ".$text['label-description']."<br>\n"; }
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
@@ -399,6 +382,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='username' maxlength='255' autocomplete='off' value=\"".escape($username)."\">\n";
+	echo "    <input type='text' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
 	echo "<br />\n";
 	echo $text['description-username']."\n";
 	echo "</td>\n";
@@ -409,7 +393,8 @@
 	echo "    ".$text['label-password']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='password' name='password' id='password' autocomplete='off' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"".escape($password)."\">\n";
+	echo "    <input type='password' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
+	echo "    <input class='formfld' type='password' name='password' id='password' autocomplete='new-password' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"".escape($password)."\">\n";
 	echo "    <br />\n";
 	echo "    ".$text['description-password']."\n";
 	echo "</td>\n";

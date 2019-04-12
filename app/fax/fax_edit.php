@@ -634,7 +634,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "		<td class='vncell' valign='top'>".$text['label-user-list']."</td>";
 				echo "		<td class='vtable'>";
 
-				$sql = "SELECT * FROM v_fax_users as e, v_users as u ";
+				$sql = "select * from v_fax_users as e, v_users as u ";
 				$sql .= "where e.user_uuid = u.user_uuid  ";
 				$sql .= "and e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 				$sql .= "and e.fax_uuid = '".$fax_uuid."' ";
@@ -656,7 +656,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					echo "		</table>\n";
 					echo "			<br />\n";
 				}
-				$sql = "SELECT * FROM v_users ";
+				$sql = "select * from v_users ";
 				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 				if (isset($assigned_user_id)) foreach($assigned_user_uuids as $assigned_user_uuid) {
 					$sql .= "and user_uuid <> '".$assigned_user_uuid."' ";
@@ -920,6 +920,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
 			echo "	<input class='formfld' type='text' name='fax_email_connection_username' maxlength='255' value=\"".escape($fax_email_connection_username)."\">\n";
+			echo "  <input type='text' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
 			echo "<br />\n";
 			echo "	".$text['description-email_connection_username']."\n";
 			echo "</td>\n";
@@ -930,6 +931,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	".$text['label-email_connection_password']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
+			echo "  <input type='password' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
 			echo "	<input class='formfld' type='password' name='fax_email_connection_password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" autocomplete='off' maxlength='50' value=\"".escape($fax_email_connection_password)."\">\n";
 			echo "<br />\n";
 			echo "	".$text['description-email_connection_password']."\n";

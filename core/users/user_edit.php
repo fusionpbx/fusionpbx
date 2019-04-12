@@ -645,7 +645,7 @@
 	echo "		<td width='70%' class='vtable'>";
 	if (permission_exists("user_edit")) {
 		echo "		<input type='text' class='formfld' name='username' id='username' autocomplete='new-password' value='".escape($username)."' required='required'>\n";
-		echo "		<input type='text' id='autofill_honeypot' style='display: none;'>\n";
+		echo "		<input type='text' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
 	}
 	else {
 		echo "		".escape($username)."\n";
@@ -657,7 +657,7 @@
 	echo "	<tr>";
 	echo "		<td class='vncell".(($action == 'add') ? 'req' : null)."' valign='top'>".$text['label-password']."</td>";
 	echo "		<td class='vtable'>";
-	echo "			<input style='display: none;' type='password'>";
+	echo "			<input type='password' style='display: none;' disabled='disabled'>"; //help defeat browser auto-fill
 	echo "			<input type='password' autocomplete='new-password' class='formfld' name='password' id='password' value=\"".escape($password)."\" ".($action == 'add' ? "required='required'" : null)." onkeypress='show_strength_meter();' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'>";
 	echo "			<div id='pwstrength_progress' class='pwstrength_progress'></div><br />\n";
 	if ((is_numeric($required['length']) && $required['length'] != 0) || $required['number'] || $required['lowercase'] || $required['uppercase'] || $required['special']) {
