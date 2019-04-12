@@ -1,8 +1,5 @@
 <context name="{v_context}">
 	<extension name="user_record" number="" continue="true" app_uuid="43539dd3-d555-4498-835a-3245a0b184ca" enabled="true">
-		<condition field="" expression="">
-			<action application="set" data="from_user_exists=${user_exists id ${sip_from_user} ${sip_from_host}}" inline="true"/>
-		</condition>
 		<condition field="${user_exists}" expression="^true$" break="never"/>
 		<condition field="${user_record}" expression="^all$" break="never">
 			<action application="set" data="record_session=true" inline="true"/>
