@@ -295,6 +295,11 @@
 						$save = true;
 					}
 
+				//set the device_enabled_date
+					if ($_POST["device_enabled"] == "true") {
+ 						$_POST["device_enabled_date"] = 'now()';
+					}
+
 				//prepare the array
 					$array['devices'][] = $_POST;
 
