@@ -149,7 +149,7 @@
 					if (strlen($this->queue_greeting) > 0) {
 						$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
 						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "pause";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "sleep";
 						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "1000";
 						$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "2";
 						$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
