@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -66,7 +66,7 @@
 	require_once "resources/header.php";
 	$document['title'] = $text['title-command'];
 
-//pdo voicemail database connection
+//pdo database connection
 	if (permission_exists('exec_sql')) {
 		require_once "sql_query_pdo.php";
 	}
@@ -245,7 +245,7 @@
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
 			$row = array_values($row);
-			echo "					<option value='".$row[0]."'>".$row[0]."</option>\n";
+			echo "					<option value='".escape($row[0])."'>".escape($row[0])."</option>\n";
 		}
 		echo "					</select>\n";
 		//echo "					<br /><br />\n";
@@ -277,7 +277,7 @@
 	echo "<br>";
 
 //html form
-	echo "<input type='hidden' name='id' value='".$_REQUEST['id']."'>\n"; //sql db id
+	echo "<input type='hidden' name='id' value='".escape($_REQUEST['id'])."'>\n"; //sql db id
 	echo "<textarea name='cmd' id='cmd' style='display: none;'></textarea>";
 	echo "<table cellpadding='0' cellspacing='0' border='0' style='width: 100%;'>\n";
 	echo "	<tr>";
@@ -323,7 +323,7 @@
 							$preview = "onmouseover=\"editor.getSession().setMode(".(($value == 'php') ? "{path:'ace/mode/php', inline:true}" : "'ace/mode/' + this.value").");\"";
 						}
 						$selected = ($value == $mode) ? 'selected' : null;
-						echo "<option value='".$value."' ".$selected." ".$preview.">".$label."</option>\n";
+						echo "<option value='".escape($value)."' ".escape($selected)." ".escape($preview).">".escape($label)."</option>\n";
 					}
 					?>
 				</select>
@@ -334,12 +334,12 @@
 					$sizes = explode(',','9px,10px,11px,12px,14px,16px,18px,20px');
 					$preview = ($setting_preview == 'true') ? "onmouseover=\"document.getElementById('editor').style.fontSize = this.value;\"" : null;
 					if (!in_array($setting_size, $sizes)) {
-						echo "<option value='".$setting_size."' ".$preview.">".$setting_size."</option>\n";
+						echo "<option value='".escape($setting_size)."' ".escape($preview).">".escape($setting_size)."</option>\n";
 						echo "<option value='' disabled='disabled'></option>\n";
 					}
 					foreach ($sizes as $size) {
 						$selected = ($size == $setting_size) ? 'selected' : null;
-						echo "<option value='".$size."' ".$selected." ".$preview.">".$size."</option>\n";
+						echo "<option value='".escape($size)."' ".$selected." ".escape($preview).">".escape($size)."</option>\n";
 					}
 					?>
 				</select>
@@ -386,7 +386,7 @@
 						echo "<optgroup label='".$optgroup."'>\n";
 						foreach ($theme as $value => $label) {
 							$selected = (strtolower($label) == strtolower($setting_theme)) ? 'selected' : null;
-							echo "<option value='".$value."' ".$selected." ".$preview.">".$label."</option>\n";
+							echo "<option value='".escape($value)."' ".$selected." ".escape($preview).">".escape($label)."</option>\n";
 						}
 						echo "</optgroup>\n";
 					}
@@ -395,7 +395,7 @@
 			</td>
 		</tr>
 	</table>
-	<div id='editor'><?php echo htmlentities($cmd); ?></div>
+	<div id='editor'><?php echo escape($cmd); ?></div>
 
 <?php
 	echo "		</td>";
@@ -427,7 +427,7 @@
 			<?php if ($mode == 'php') { ?>
 				editor.getSession().setMode({path:'ace/mode/php', inline:true});
 			<?php } ?>
-			document.getElementById('editor').style.fontSize='<?php echo $setting_size;?>';
+			document.getElementById('editor').style.fontSize='<?php echo escape($setting_size);?>';
 			focus_editor();
 
 		//keyboard shortcut to execute command
@@ -442,12 +442,13 @@
 <?php
 
 //show the result
-	if (count($_POST) > 0) {
+	if (is_array($_POST)) {
 		if ($cmd != '') {
+			$result = '';
 			switch ($handler) {
 				case 'shell':
 					if (permission_exists('exec_command')) {
-						$result = htmlentities(shell_exec($cmd . " 2>&1"));
+						$result = shell_exec($cmd . " 2>&1");
 					}
 					break;
 				case 'php':
@@ -461,9 +462,9 @@
 				case 'switch':
 					if (permission_exists('exec_switch')) {
 						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-						if ($fp) { 
+						if ($fp) {
 							$result = event_socket_request($fp, 'api '.$cmd);
-							$result = htmlspecialchars(utf8_encode($result), ENT_QUOTES);
+							$result = utf8_encode($result);
 						}
 					}
 					break;
@@ -472,7 +473,7 @@
 				echo "<span id='response'>";
 				echo "<b>".$text['label-response']."</b>\n";
 				echo "<br /><br />\n";
-				echo ($handler == 'switch') ? "<textarea style='width: 100%; height: 450px; font-family: monospace; padding: 15px;' wrap='off'>".$result."</textarea>\n" : "<pre>".$result."</pre>";
+				echo ($handler == 'switch') ? "<textarea style='width: 100%; height: 450px; font-family: monospace; padding: 15px;' wrap='off'>".escape($result)."</textarea>\n" : "<pre>".escape($result)."</pre>";
 				echo "</span>";
 			}
 		}
