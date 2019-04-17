@@ -107,16 +107,16 @@ require_once "resources/paging.php";
 	echo "<td class='list_control_icons' style='width: 25px;'>&nbsp;</td>\n";
 	echo "<tr>\n";
 
-	if ($result_count > 0) {
+	if (is_array($result)) {
 		foreach($result as $row) {
-			$tr_link = "href='exec.php?id=".$row['database_uuid']."'";
+			$tr_link = "href='exec.php?id=".escape($row['database_uuid'])."'";
 			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['database_type']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['database_host']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'><a href='exec.php?id=".$row['database_uuid']."'>".$row['database_name']."</a>&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".$row['database_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['database_type'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['database_host'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'><a href='exec.php?id=".escape($row['database_uuid'])."'>".escape($row['database_name'])."</a>&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($row['database_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons' style='width: 25px;'>";
-			echo "		<a href='exec.php?id=".$row['database_uuid']."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>\n";
+			echo "		<a href='exec.php?id=".escape($row['database_uuid'])."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 			$c = ($c == 0) ? 1 : 0;
