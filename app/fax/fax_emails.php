@@ -32,9 +32,11 @@ require_once "resources/functions/parse_message.php";
 require_once "resources/classes/text.php";
 
 //get accounts to monitor
-$sql = "select * from v_fax ";
-$sql .= "where fax_email_connection_host <> '' ";
-$sql .= "and fax_email_connection_host is not null ";
+$sql = "select f.* from v_fax f, v_domains d ";
+$sql .= "where f.fax_email_connection_host <> '' ";
+$sql .= "and f.fax_email_connection_host is not null ";
+$sql .= "and f.domain_uuid = d.domain_uuid ";
+$sql .= "and d.domain_enabled = 'true'";
 $prep_statement = $db->prepare(check_sql($sql));
 $prep_statement->execute();
 $result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
