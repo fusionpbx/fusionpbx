@@ -95,4 +95,4 @@ This install script is designed to be an fast, simple, and in a modular way to i
 Some installations require special considerations. Visit https://github.com/fusionpbx/fusionpbx-install.sh readme section for more details.
 
 ### ISSUES
-Get an account on www.fusionpbx.com to report an issue.
+If you find a bug sign up for an account on www.fusionpbx.com to report the issue.
