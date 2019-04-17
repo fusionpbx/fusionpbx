@@ -43,15 +43,15 @@ These options support the project and cover any kind of help you might need from
 Software Requirements
 --------------------------------------
 
-- FusionPBX will run on Debian 8, FreeBSD 10 & 11, CentOS, and more.
-- [FusionPBX Installer](http://fusionpbx.com/download.php)
+- FusionPBX will run on Debian 8 & 9, FreeBSD 10 & 11, CentOS, and more.
+- [FusionPBX Installer](https://fusionpbx.com/download.php)
 
 Community
 --------------------------------------
 We have a pretty thriving community. You can find us here:
 
-- [Twitter](http://twitter.com/fusionpbx)
-- [Website](http://fusionpbx.com)
+- [Twitter](https://twitter.com/fusionpbx)
+- [Website](https://fusionpbx.com)
 
 Contributing
 ---------------------------------------
