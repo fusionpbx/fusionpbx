@@ -1,9 +1,9 @@
-What is [FusionPBX](http://fusionpbx.com/)?
+What is [FusionPBX](https://www.fusionpbx.com/)?
 --------------------------------------
 
-[FusionPBX](http://fusionpbx.com/) can be used as a single or domain based multi-tenant PBX, carrier grade switch, call center server, fax server, VoIP server, voicemail server, conference server, voice application server, multi-tenant appliance framework and more. [FreeSWITCH™](http://freeswitch.org) is a highly scalable, multi-threaded, multi-platform communication platform. 
+[FusionPBX](http://fusionpbx.com/) can be used as a single or domain based multi-tenant PBX, carrier grade switch, call center server, fax server, VoIP server, voicemail server, conference server, voice application server, multi-tenant appliance framework and more. [FreeSWITCH™](https://freeswitch.com) is a highly scalable, multi-threaded, multi-platform communication platform. 
 
-It provides the functionality your business needs and brings carrier grade switching, and corporate-level phone system features to small, medium, and large businesses. Read more at [FusionPBX](http://fusionpbx.com/). [Please visit our youtube channel](https://www.youtube.com/FusionPBX)
+It provides the functionality your business needs and brings carrier grade switching, and corporate-level phone system features to small, medium, and large businesses. Read more at [FusionPBX](https://www.fusionpbx.com/). [Please visit our youtube channel](https://www.youtube.com/FusionPBX)
 
 In addition to providing all of the usual PBX functionality, FusionPBX allows you to configure:
 
@@ -20,25 +20,25 @@ In addition to providing all of the usual PBX functionality, FusionPBX allows yo
 - Hot desking
 - High Availability and Redundancy
 - Dialplan Programming that allow nearly endless possibilities
-- [Many other Features](http://docs.fusionpbx.com/en/latest/features/features.html)
+- [Many other Features](https://docs.fusionpbx.com/en/latest/features/features.html)
 
 Free Support
 --------------------------------------
 We provide several avenues for you to get your system up and running on your own and learn the basics of the system.
 
 1. [Youtube Channel](https://www.youtube.com/channel/UCN5j2ITmjua1MfjGR8jX9TA)
-2. [Documentation](http://docs.fusionpbx.com)
+2. [Documentation](https://docs.fusionpbx.com)
 3. [How to Contribute](https://github.com/Fusionpbx/opensource)
 
 Commercial Support
 --------------------------------------
 These options support the project and cover any kind of help you might need from architecture, installation, best practices, troubleshooting, custom feature programming, and training.
 
-1. [Commercial Paid Support](http://fusionpbx.com/support.php)
-2. [Custom Feature Development](http://fusionpbx.com/support.php)
-3. [Admin Training](http://fusionpbx.com)
-4. [Advanced Training](http://fusionpbx.com)
-5. [Developer Training](http://fusionpbx.com)
+1. [Commercial Paid Support](https://www.fusionpbx.com/support)
+2. [Custom Feature Development](https://www.fusionpbx.com/support)
+3. [Admin Training](https://www.fusionpbx.com)
+4. [Advanced Training](https://www.fusionpbx.com)
+5. [Developer Training](https://www.fusionpbx.com)
 
 Software Requirements
 --------------------------------------
@@ -95,4 +95,4 @@ This install script is designed to be an fast, simple, and in a modular way to i
 Some installations require special considerations. Visit https://github.com/fusionpbx/fusionpbx-install.sh readme section for more details.
 
 ### ISSUES
-If you find a bug sign up for an account on www.fusionpbx.com to report the issue.
+If you find a bug sign up for an account on [www.fusionpbx.com](https://www.fusionpbx.com) to report the issue.
