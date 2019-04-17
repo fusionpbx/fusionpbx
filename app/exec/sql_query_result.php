@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -129,7 +129,7 @@ if (count($_POST)>0) {
 
 			if (sizeof($sql_array) > 1 || $show_query) {
 				if ($sql_index > 0) { echo "<br /><br /><br />"; }
-				echo "<span style='display: block; padding: 8px; color: green; background-color: #eefff0;'>".$sql.";</span><br />";
+				echo "<span style='display: block; padding: 8px; color: green; background-color: #eefff0;'>".escape($sql).";</span><br />";
 			}
 
 			$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -152,7 +152,7 @@ if (count($_POST)>0) {
 			$x = 0;
 			if (is_array($result[0])) {
 				foreach ($result[0] as $key => $value) {
-					echo "<th>".$key."</th>";
+					echo "<th>".escape($key)."</th>";
 					$column_array[$x++] = $key;
 				}
 			}
@@ -163,7 +163,7 @@ if (count($_POST)>0) {
 					echo "<tr>\n";
 					if (is_array($column_array)) {
 						foreach ($column_array as $column_index => $column) {
-							echo "<td class='".$row_style[$c]."' ".(($column_index == 0) ? "style='border-left: none;'" : null).">".$row[$column]."&nbsp;</td>";
+							echo "<td class='".$row_style[$c]."' ".(($column_index == 0) ? "style='border-left: none;'" : null).">".escape($row[$column])."&nbsp;</td>";
 						}
 					}
 					echo "</tr>\n";
@@ -233,7 +233,7 @@ if (count($_POST)>0) {
 						}
 					}
 					if (is_array($values) && sizeof($values) > 0) {
-						echo implode(', ', $values);
+						echo implode(', ', escape($values));
 					}
 					echo ");<br />\n";
 					unset($columns, $values);
@@ -246,7 +246,7 @@ if (count($_POST)>0) {
 
 		//set the headers
 			header('Content-type: application/octet-binary');
-			header('Content-Disposition: attachment; filename='.$table_name.'.csv');
+			header('Content-Disposition: attachment; filename='.escape($table_name).'.csv');
 
 		//get the table data
 			$sql = trim($sql);
@@ -272,13 +272,13 @@ if (count($_POST)>0) {
 					}
 				}
 				//column names
-				echo '"'.implode('","', $column_array).'"'."\r\n";
+				echo '"'.implode('","', escape($column_array)).'"'."\r\n";
 				//column values
 				if (is_array($result)) {
 					foreach ($result as &$row) {
 						$x = 1;
 						foreach ($column_array as $column) {
-							echo '"'.check_str($row[$column]).'"'.(($x++ < count($column_array)) ? ',' : null);
+							echo '"'.escape($row[$column]).'"'.(($x++ < count($column_array)) ? ',' : null);
 						}
 						echo "\n";
 					}
