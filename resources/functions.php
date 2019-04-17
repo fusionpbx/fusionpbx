@@ -45,6 +45,12 @@
 		}
 	}
 
+	if (!function_exists('mb_strtoupper')) {
+		function mb_strtoupper($string) {
+			return strtoupper($string);
+		}
+	}
+
 	if (!function_exists('check_float')) {
 		function check_float($string) {
 			$string = str_replace(",",".",$string);
