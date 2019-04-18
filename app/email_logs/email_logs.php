@@ -123,6 +123,7 @@
 	}
 
 //prepare to page the results
+	require_once "resources/paging.php";
 	$sql = "select count(*) as num_rows from v_log_emails ";
 	if (permission_exists('email_log_all')) {
 		if ($_REQUEST['showall'] != 'true') {
@@ -170,7 +171,6 @@
 //additional includes
 	$document['title'] = $text['title-emails'];
 	require_once "resources/header.php";
-	require_once "resources/paging.php";
 
 //styles
 	echo "<style>\n";
