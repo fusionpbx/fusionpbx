@@ -346,13 +346,13 @@
 
 		$call_uuid = $headers["X-FusionPBX-Call-UUID"];
 		if ($resend == true) {
-			echo "Retained in v_emails \n";
+			echo "Retained in v_email_logs \n";
 		} else {
 			// log/store message in database for review
-			if (!isset($email_uuid)) {
-				$email_uuid = uuid();
-				$sql = "insert into v_emails ( ";
-				$sql .= "email_uuid, ";
+			if (!isset($email_log_uuid)) {
+				$email_log_uuid = uuid();
+				$sql = "insert into v_email_logs ( ";
+				$sql .= "email_log_uuid, ";
 				if ($call_uuid) {
 					$sql .= "call_uuid, ";
 				}
@@ -362,7 +362,7 @@
 				$sql .= "status, ";
 				$sql .= "email ";
 				$sql .= ") values ( ";
-				$sql .= "'".$email_uuid."', ";
+				$sql .= "'".$email_log_uuid."', ";
 				if ($call_uuid) {
 					$sql .= "'".$call_uuid."', ";
 				}
@@ -376,7 +376,7 @@
 				unset($sql);
 			}
 
-			echo "Retained in v_emails as email_uuid = ".$email_uuid."\n";
+			echo "Retained in v_email_logs as email_log_uuid = ".$email_log_uuid."\n";
 		}
 
 	}
@@ -400,7 +400,7 @@ $fp = fopen(sys_get_temp_dir()."/email.eml", "w");
 ob_end_clean();
 ob_start();
 
-$sql = "select email from v_emails where email_uuid = '".$email_uuid."'";
+$sql = "select email from v_email_logs where email_log_uuid = '".$email_log_uuid."'";
 $prep_statement = $db->prepare($sql);
 if ($prep_statement) {
 	$prep_statement->execute();
