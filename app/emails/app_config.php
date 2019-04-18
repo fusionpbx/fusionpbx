@@ -1,7 +1,7 @@
 <?php
 
 	//application details
-		$apps[$x]['name'] = "Emails";
+		$apps[$x]['name'] = "Email Logs";
 		$apps[$x]['uuid'] = "bd64f590-9a24-468d-951f-6639ac728694";
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
@@ -51,7 +51,8 @@
 
 	//schema details
 		$y=0;
-		$apps[$x]['db'][$y]['table']['name'] = "v_emails";
+		$apps[$x]['db'][$y]['table']['name']['text'] = "v_emails";
+		$apps[$x]['db'][$y]['table']['name']['deprecated'] = "v_email_logs";
 		$apps[$x]['db'][$y]['table']['parent'] = "";
 		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "email_uuid";
