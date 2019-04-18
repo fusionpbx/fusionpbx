@@ -48,7 +48,7 @@
 	if ($email_uuid != '') {
 		$sql = "delete from v_email_logs ";
 		$sql .= "where email_uuid = '".$email_log_uuid."' ";
-		if (permission_exists('emails_all') && $_REQUEST['showall'] == 'true') {
+		if (permission_exists('email_log_all') && $_REQUEST['showall'] == 'true') {
 			$sql .= "";
 		} else {
 			$sql .= "and domain_uuid = '".$domain_uuid."' ";
