@@ -520,7 +520,30 @@ if (!class_exists('xml_cdr')) {
 								$record_length = urldecode($xml->variables->duration);
 							}
 						}
-
+							
+					// Last check
+						 if (!isset($record_name) || is_null ($record_name) || (strlen($record_name) == 0)) {
+							$bridge_uuid = check_str(urldecode($xml->variables->bridge_uuid));
+							$path = $_SESSION['switch']['recordings']['dir'].'/'.$domain_name.'/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
+							if (file_exists($path.'/'.$bridge_uuid.'.wav')) {
+								$record_path = $path;
+								$record_name = $bridge_uuid.'.wav';
+								$record_length = urldecode($xml->variables->duration);
+							} elseif (file_exists($path.'/'.$bridge_uuid.'.mp3')) {
+								$record_path = $path;
+								$record_name = $bridge_uuid.'.mp3';
+								$record_length = urldecode($xml->variables->duration);
+							} elseif (file_exists($path.'/'.$bridge_uuid.'.wav')) {
+								$record_path = $path;
+								$record_name = $bridge_uuid.'.wav';
+								$record_length = urldecode($xml->variables->duration);
+							} elseif (file_exists($path.'/'.$bridge_uuid.'.mp3')) {
+								$record_path = $path;
+								$record_name = $bridge_uuid.'.mp3';
+								$record_length = urldecode($xml->variables->duration);
+							}
+						}
+					
 					//add the call recording
 						if (isset($record_path) && isset($record_name) && file_exists($record_path.'/'.$record_name) && $record_length > 0) {
 							//add to the xml cdr table
