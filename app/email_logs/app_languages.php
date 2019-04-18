@@ -21,7 +21,7 @@ $text['title-view_email']['ru-ru'] = "Просмотр Электронной П
 $text['title-view_email']['sv-se'] = "Visa E-post";
 $text['title-view_email']['uk-ua'] = "";
 
-$text['title-emails']['en-us'] = "Emails";
+$text['title-emails']['en-us'] = "Email Logs";
 $text['title-emails']['ar-eg'] = "";
 $text['title-emails']['de-at'] = "Emails"; //copied from de-de
 $text['title-emails']['de-ch'] = "Emails"; //copied from de-de
