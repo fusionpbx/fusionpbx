@@ -69,7 +69,7 @@
 	}
 
 //get cdr from the file system
-	if ($format != "xml" || $format != "json") {
+	if ($format != "xml" && $format != "json") {
 		$tmp_time = strtotime($start_stamp);
 		$tmp_year = date("Y", $tmp_time);
 		$tmp_month = date("M", $tmp_time);
@@ -89,6 +89,10 @@
 	try {
 		if ($format == 'json') {
 			$array = json_decode($json_string,true);
+			if (is_null($array)){
+				$j = stripslashes($json_string);
+				$array = json_decode($j,true);
+			}
 		}
 		if ($format == 'xml') {
 			$array = json_decode(json_encode((array)simplexml_load_string($xml_string)),true);
