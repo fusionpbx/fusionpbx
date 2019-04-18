@@ -43,11 +43,11 @@
 	$text = $language->get();
 
 //get posted values, if any
-	$email_uuid = $_REQUEST["id"];
+	$email_log_uuid = $_REQUEST["id"];
 
 	if ($email_uuid != '') {
-		$sql = "delete from v_emails ";
-		$sql .= "where email_uuid = '".$email_uuid."' ";
+		$sql = "delete from v_email_logs ";
+		$sql .= "where email_uuid = '".$email_log_uuid."' ";
 		if (permission_exists('emails_all') && $_REQUEST['showall'] == 'true') {
 			$sql .= "";
 		} else {
@@ -60,6 +60,6 @@
 	}
 
 //redirect user
-	header("Location: emails.php");
+	header("Location: email_logs.php");
 
 ?>
