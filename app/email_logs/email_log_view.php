@@ -23,37 +23,40 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('email_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('email_log_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
 //get email
-	$email_uuid = check_str($_REQUEST["id"]);
+	$email_log_uuid = check_str($_REQUEST["id"]);
 
 	$msg_found = false;
 
 	if ($email_uuid != '') {
-		$sql = "select * from v_emails ";
-		$sql .= "where email_uuid = '".$email_uuid."' ";
+		$sql = "select * from v_email_logs ";
+		$sql .= "where email_uuid = '".$email_log_uuid."' ";
 		$sql .= "and domain_uuid = '".$domain_uuid."' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
 		unset ($prep_statement, $sql);
 
-		if ($result_count > 0) {
+		if (is_array($result)) {
 			foreach($result as $row) {
 				$sent = $row['sent_date'];
 				$type = $row['type'];
@@ -67,7 +70,7 @@ else {
 
 	if (!$msg_found) {
 		message::add($text['message-invalid_email']);
-		header("Location: emails.php");
+		header("Location: email_logs.php");
 		exit;
 	}
 
@@ -122,7 +125,7 @@ else {
 	}
 	else {
 		message::add($text['message-decoding_error'].(($mime->error != '') ? ': '.htmlspecialchars($mime->error) : null));
-		header("Location: emails.php");
+		header("Location: email_logs.php");
 		exit;
 	}
 
@@ -204,4 +207,5 @@ else {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>
