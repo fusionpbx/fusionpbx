@@ -52,7 +52,7 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "emails_log_all";
+		$apps[$x]['permissions'][$y]['name'] = "email_log_all";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//schema details
