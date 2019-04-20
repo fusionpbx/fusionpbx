@@ -370,7 +370,7 @@
 					}
 				}
 			}
-			if (!isset($record_name)) {
+			if (!isset($record_name) || is_null ($record_name) || (strlen($record_name) == 0)) {
 				$bridge_uuid = urldecode($xml->variables->bridge_uuid);
 				$path = $_SESSION['switch']['recordings']['dir'].'/'.$domain_name.'/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
 				if (file_exists($path.'/'.$bridge_uuid.'.wav')) {
@@ -383,7 +383,7 @@
 					$record_length = urldecode($xml->variables->duration);
 				}
 			}
-			if (!isset($record_name)) {
+			if (!isset($record_name) || is_null ($record_name) || (strlen($record_name) == 0)) {
 				$path = $_SESSION['switch']['recordings']['dir'].'/'.$domain_name.'/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
 				if (file_exists($path.'/'.$uuid.'.wav')) {
 					$record_path = $path;
