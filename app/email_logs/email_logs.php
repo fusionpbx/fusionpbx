@@ -43,7 +43,7 @@
 
 		$msg_found = false;
 
-		if ($email_uuid != '') {
+		if ($email_log_uuid != '') {
 			$sql = "select call_uuid, email from v_email_logs ";
 			$sql .= "where email_log_uuid = '".$email_log_uuid."' ";
 			$sql .= "and domain_uuid = '".$domain_uuid."' ";
@@ -79,7 +79,7 @@
 
 		$msg_found = false;
 
-		if ($email_uuid != '') {
+		if ($email_log_uuid != '') {
 			$sql = "select email from v_email_logs ";
 			$sql .= "where email_log_uuid = '".$email_log_uuid."' ";
 			if (!permission_exists('email_log_all') || $_REQUEST['showall'] != 'true') {
@@ -104,9 +104,9 @@
 			if ($mailer_error == '') {
 				message::add($text['message-message_resent']);
 				if (permission_exists('email_log_all') && $_REQUEST['showall'] == 'true') {
-					header("Location: email_log_delete.php?id=".$email_uuid."&showall=true");
+					header("Location: email_log_delete.php?id=".$email_log_uuid."&showall=true");
 				} else {
-					header("Location: email_log_delete.php?id=".$email_uuid);
+					header("Location: email_log_delete.php?id=".$email_log_uuid);
 				}
 			}
 			else {
