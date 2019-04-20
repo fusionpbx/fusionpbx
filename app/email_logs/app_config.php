@@ -30,11 +30,17 @@
 
 	//permission details
 		$y=0;
-		$apps[$x]['permissions'][$y]['name'] = "email_log_view";
+		$apps[$x]['permissions'][$y]['name'] = "email_log_add";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "email_log_edit";
+		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "email_log_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "email_log_delete";
+		$apps[$x]['permissions'][$y]['name'] = "email_log_view";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
