@@ -47,7 +47,7 @@
 
 	$msg_found = false;
 
-	if ($email_uuid != '') {
+	if ($email_log_uuid != '') {
 		$sql = "select * from v_email_logs ";
 		$sql .= "where email_uuid = '".$email_log_uuid."' ";
 		$sql .= "and domain_uuid = '".$domain_uuid."' ";
@@ -142,10 +142,10 @@
 	echo "		<td valign='top' align='right' nowrap>";
 	echo "			<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"document.location.href='emails.php';\" value='".$text['button-back']."'>";
 	if (permission_exists('email_download')) {
-		echo "		<input type='button' class='btn' alt='".$text['button-download']."' onclick=\"document.location.href='emails.php?id=".$email_uuid."&a=download';\" value='".$text['button-download']."'>";
+		echo "		<input type='button' class='btn' alt='".$text['button-download']."' onclick=\"document.location.href='emails.php?id=".$email_log_uuid."&a=download';\" value='".$text['button-download']."'>";
 	}
 	if (permission_exists('email_resend')) {
-		echo "		<input type='button' class='btn' alt='".$text['button-resend']."' onclick=\"document.location.href='emails.php?id=".$email_uuid."&a=resend';\" value='".$text['button-resend']."'>";
+		echo "		<input type='button' class='btn' alt='".$text['button-resend']."' onclick=\"document.location.href='emails.php?id=".$email_log_uuid."&a=resend';\" value='".$text['button-resend']."'>";
 	}
 	echo "		</td>";
 	echo "	</tr>";
