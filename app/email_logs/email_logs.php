@@ -38,7 +38,7 @@
 	$order = ($_GET["order"] != '') ? $_GET["order"] : 'desc';
 
 //download email
-	if ($_REQUEST['a'] == 'download' && permission_exists('email_download')) {
+	if ($_REQUEST['a'] == 'download' && permission_exists('email_log_download')) {
 		$email_log_uuid = check_str($_REQUEST["id"]);
 
 		$msg_found = false;
