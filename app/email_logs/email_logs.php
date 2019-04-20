@@ -73,7 +73,7 @@
 	}
 
 //resend email
-	if ($_REQUEST['a'] == 'resend' && permission_exists('email_resend')) {
+	if ($_REQUEST['a'] == 'resend' && permission_exists('email_log_resend')) {
 		$email_log_uuid = check_str($_REQUEST["id"]);
 		$resend = true;
 
@@ -293,7 +293,7 @@
 				echo "	<a href='?id=".escape($row['email_log_uuid'])."&a=download'>".$text['label-download']."</a>&nbsp;&nbsp;";
 			}
 			if (permission_exists('email_log_resend')) {
-				echo "	<a href='?id=".$row['email_log_uid']."&a=resend";
+				echo "	<a href='?id=".$row['email_log_uuid']."&a=resend";
 				if ($_REQUEST['showall'] == true && permission_exists('email_log_all')) {
 					echo "&showall=true";
 				}
