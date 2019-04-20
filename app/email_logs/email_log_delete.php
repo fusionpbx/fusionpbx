@@ -45,13 +45,13 @@
 //get posted values, if any
 	$email_log_uuid = $_REQUEST["id"];
 
-	if ($email_log_uuid != '') {
+	if (is_uuid($email_log_uuid)) {
 		$sql = "delete from v_email_logs ";
 		$sql .= "where email_uuid = '".$email_log_uuid."' ";
 		if (permission_exists('email_log_all') && $_REQUEST['showall'] == 'true') {
-			$sql .= "";
+			$sql .= '';
 		} else {
-			$sql .= "and domain_uuid = '".$domain_uuid."' ";
+			$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		}
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
