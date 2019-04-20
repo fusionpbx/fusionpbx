@@ -45,7 +45,7 @@
 //get posted values, if any
 	$email_log_uuid = $_REQUEST["id"];
 
-	if ($email_uuid != '') {
+	if ($email_log_uuid != '') {
 		$sql = "delete from v_email_logs ";
 		$sql .= "where email_uuid = '".$email_log_uuid."' ";
 		if (permission_exists('email_log_all') && $_REQUEST['showall'] == 'true') {
