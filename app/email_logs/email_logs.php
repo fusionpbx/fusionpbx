@@ -233,7 +233,7 @@
 	echo "			</span>\n";
 	if (permission_exists('email_log_all')) {
 		if ($_REQUEST['showall'] != 'true') {
-			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='emails.php?showall=true';\">\n";
+			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='email_logs.php?showall=true';\">\n";
 		}
 	}
 	echo "			<input type='button' class='btn' alt=\"".$text['button-refresh']."\" onclick=\"document.location.reload();\" value='".$text['button-refresh']."'>\n";
@@ -247,7 +247,7 @@
 
 	echo "<tr>\n";
 	if ($_REQUEST['showall'] == true && permission_exists('email_log_all')) {
-		echo th_order_by('domain_name', $text['label-domain-name'], $order_by, $order, null, null, $param);
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
 	}
 	echo th_order_by('sent_date', $text['label-sent'], $order_by, $order, null, null, $param);
 	echo th_order_by('type', $text['label-type'], $order_by, $order, null, null, $param);
