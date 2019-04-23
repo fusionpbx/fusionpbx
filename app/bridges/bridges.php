@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018
+	Portions created by the Initial Developer are Copyright (C) 2018 - 2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,6 +28,7 @@
 	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
 
 //check permissions
 	if (permission_exists('bridge_view')) {
@@ -64,23 +65,35 @@
 		}
 	}
 
-//get variables used to control the order
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
+//get order and order by and sanatize the values
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
+	if (strlen($order_by) > 0) {
+		$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $order_by);
+	}
+	if (strlen($order) > 0) {
+		if ($order == 'asc' || $order == 'desc') {
+			//expected value
+		}
+		else {
+			$order = '';
+		}
+	}
+
+//add the parameters
+	$parameters['domain_uuid'] = $domain_uuid;
 
 //add the search term
 	$search = strtolower(check_str($_GET["search"]));
 	if (strlen($search) > 0) {
 		$sql_search = " (";
-		$sql_search .= "lower(bridge_name) like '%".$search."%' ";
-		$sql_search .= "or lower(bridge_destination) like '%".$search."%' ";
-		$sql_search .= "or lower(bridge_enabled) like '%".$search."%' ";
+		$sql_search .= "	lower(bridge_name) like :search ";
+		$sql_search .= "	or lower(bridge_destination) like :search ";
+		$sql_search .= "	or lower(bridge_enabled) like :search ";
 		$sql_search .= ") ";
-	}
 
-//additional includes
-	require_once "resources/header.php";
-	require_once "resources/paging.php";
+		$parameters['search'] = '%'.$search.'%';
+	}
 
 //prepare to page the results
 	$sql = "select count(bridge_uuid) as num_rows from v_bridges ";
@@ -88,23 +101,23 @@
 		if (isset($sql_search)) {
 			$sql .= "where ".$sql_search;
 		}
-	} else {
-		$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
+	}
+	else {
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		if (isset($sql_search)) {
 			$sql .= "and ".$sql_search;
 		}
 	}
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
+	if (strlen($order_by) > 0) {
+		$sql .= "order by $order_by $order ";
+	}
+	$database = new database;
+	$row = $database->execute($sql, $parameters);
+	if ($row[0]['num_rows'] > 0) {
+		$num_rows = $row[0]['num_rows'];
+	}
+	else {
+		$num_rows = '0';
 	}
 
 //prepare to page the results
@@ -124,23 +137,31 @@
 		if (isset($sql_search)) {
 			$sql .= "where ".$sql_search;
 		}
-	} else {
-		$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
+	}
+	else {
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		if (isset($sql_search)) {
 			$sql .= "and ".$sql_search;
 		}
 	}
-	if (strlen($order_by) > 0) { $sql .= "order by $order_by $order "; }
-	$sql .= "limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$bridges = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	if (strlen($order_by) > 0) {
+		$sql .= "order by $order_by $order ";
+	}
+	if (is_numeric($rows_per_page) && is_numeric($offset)) {
+		$sql .= "limit $rows_per_page offset $offset ";
+	}
+	$database = new database;
+	$bridges = $database->execute($sql, $parameters);
+	//$message = $database->message;
+	//print_r($message);
 
 //alternate the row style
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
+
+//include the header
+	require_once "resources/header.php";
 
 //define the checkbox_toggle function
 	echo "<script type=\"text/javascript\">\n";
