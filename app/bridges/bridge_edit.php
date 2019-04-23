@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018
+	Portions created by the Initial Developer are Copyright (C) 2018 - 2019
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -127,13 +127,15 @@
 //pre-populate the form
 	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
 		$bridge_uuid = check_str($_GET["id"]);
+		$parameters['bridge_uuid'] = $bridge_uuid;
 		$sql = "select * from v_bridges ";
-		$sql .= "where bridge_uuid = '$bridge_uuid' ";
-		//$sql .= "and domain_uuid = '$domain_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where bridge_uuid = :bridge_uuid ";
+		//$sql .= "and domain_uuid = :domain_uuid ";
+		$database = new database;
+		//$database = $database->app_name = 'bridges';
+		$result = $database->execute($sql, $parameters);
+		//$message = $database->message;
+		foreach ($result as $row) {
 			$bridge_name = $row["bridge_name"];
 			$bridge_destination = $row["bridge_destination"];
 			$bridge_enabled = $row["bridge_enabled"];
