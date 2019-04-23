@@ -450,20 +450,47 @@ include "root.php";
 			}
 
 			// Use this function to execute complex queries
-			public function execute() {
+			public function execute($sql, $parameters = null) {
 
 				//connect to the database if needed
 					if (!$this->db) {
 						$this->connect();
 					}
 
-				//get data from the database
-					$prep_statement = $this->db->prepare($this->sql);
-					if ($prep_statement) {
-						$prep_statement->execute();
+				//set the error mode
+					$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+				//execute the query, and return the results
+					try {
+						$prep_statement = $this->db->prepare($sql);
+						if (is_array($parameters)) {
+							$prep_statement->execute($parameters);
+						}
+						else {
+							$prep_statement->execute();
+						}
+						$message["message"] = "OK";
+						$message["code"] = "200";
+						$message["sql"] = $sql;
+						if (is_array($parameters)) {
+							$message["parameters"] = $parameters;
+						}
+						$this->message = $message;
+						//$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+						//unset($prep_statement);
 						return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 					}
-					else {
+					catch(PDOException $e) {
+						$message["message"] = "Bad Request";
+						$message["code"] = "400";
+						$message["error"]["message"] = $e->getMessage();
+						if ($this->debug["sql"]) {
+							$message["sql"] = $sql;
+						}
+						if (is_array($parameters)) {
+							$message["parameters"] = $parameters;
+						}
+						$this->message = $message;
 						return false;
 					}
 			}
@@ -1181,42 +1208,48 @@ include "root.php";
 
 			} //count
 
-			public function select($sql) {
+			public function select($sql, $parameters = null) {
+
 				//connect to the database if needed
 					if (!$this->db) {
 						$this->connect();
 					}
+
+				//set the error mode
+					$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
 				//execute the query, and return the results
 					try {
-						$prep_statement = $this->db->prepare(check_sql($sql));
-						$prep_statement->execute();
+						$prep_statement = $this->db->prepare($sql);
+						if (is_array($parameters)) {
+							$prep_statement->execute($parameters);
+						}
+						else {
+							$prep_statement->execute();
+						}
 						$message["message"] = "OK";
 						$message["code"] = "200";
-						$message["details"][$m]["name"] = $this->name;
-						$message["details"][$m]["message"] = "OK";
-						$message["details"][$m]["code"] = "200";
-						if ($this->debug["sql"]) {
-							$message["details"][$m]["sql"] = $sql;
+						$message["sql"] = $sql;
+						if (is_array($parameters)) {
+							$message["parameters"] = $parameters;
 						}
 						$this->message = $message;
-						$this->result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-						unset($prep_statement);
-						$m++;
-						return $this;
+						//$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+						//unset($prep_statement);
+						return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 					}
 					catch(PDOException $e) {
 						$message["message"] = "Bad Request";
 						$message["code"] = "400";
-						$message["details"][$m]["name"] = $this->name;
-						$message["details"][$m]["message"] = $e->getMessage();
-						$message["details"][$m]["code"] = "400";
+						$message["error"]["message"] = $e->getMessage();
 						if ($this->debug["sql"]) {
-							$message["details"][$m]["sql"] = $sql;
+							$message["sql"] = $sql;
+						}
+						if (is_array($parameters)) {
+							$message["parameters"] = $parameters;
 						}
 						$this->message = $message;
-						$this->result = '';
-						$m++;
-						return $this;
+						return false;
 					}
 			} //select
 
