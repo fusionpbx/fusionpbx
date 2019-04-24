@@ -439,13 +439,13 @@ include "root.php";
 						$variables[] = "originate_delay_start=".$row["follow_me_delay"];
 						$variables[] = "sleep=".($row["follow_me_delay"] * 1000);
 						$variables[] = "leg_timeout=".$row["follow_me_timeout"];
-						$variables[] = "is_follow_me_loopback=true";
 						if (is_numeric($row["follow_me_destination"])) {
 							if ($_SESSION['domain']['bridge']['text'] == "outbound" || $_SESSION['domain']['bridge']['text'] == "bridge") {
 								$bridge = outbound_route_to_bridge ($this->domain_uuid, $row["follow_me_destination"]);
 								$dial_string .= "[".implode(",", $variables)."]".$bridge[0];
 							}
 							elseif ($_SESSION['domain']['bridge']['text'] == "loopback") {
+								$variables[] = "is_follow_me_loopback=true";
 								//$dial_string .= "loopback/".$row["follow_me_destination"]."/".$this->domain_name;
 								$dial_string .= "loopback/export:".implode("\,export:", $variables)."\,transfer:".$row["follow_me_destination"]."/".$this->domain_name."/inline";
 							}
