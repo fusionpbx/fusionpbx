@@ -467,16 +467,24 @@ include "root.php";
 				$this->dial_string = "{ignore_early_media=true}".$dial_string;
 				unset($variables);
 
-			//update follow me
-				$sql  = "update v_follow_me set ";
-				$sql .= "dial_string = '".check_str($this->dial_string)."' ";
-				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
-				$sql .= "and follow_me_uuid = '".$this->follow_me_uuid."' ";
-				if ($this->debug) {
-					echo $sql."<br />";
-				}
-				$db->exec($sql);
-				unset($sql);
+			//get the extension_uuid
+				$parameters['follow_me_uuid'] = $this->follow_me_uuid;
+				$sql = "select extension_uuid from v_extensions ";
+				$sql .= "where follow_me_uuid = :follow_me_uuid ";
+				$database = new database;
+				$result = $database->execute($sql, $parameters);
+				$message = $database->message;
+				$extension_uuid = $result[0]['extension_uuid'];
+
+			//add the dialplan permission
+				$p = new permissions;
+				$p->add("follow_me_edit", 'temp');
+				$p->add("extension_edit", 'temp');
+
+			//add follow me to the array
+				$array['follow_me'][0]["follow_me_uuid"] = $this->follow_me_uuid;
+				$array['follow_me'][0]["domain_uuid"] = $this->domain_uuid;
+				$array['follow_me'][0]["dial_string"] = $this->dial_string;
 
 			//is follow me enabled
 				$dial_string = '';
@@ -484,20 +492,23 @@ include "root.php";
 					$dial_string = $this->dial_string;
 				}
 
-			//update the extension follow me and dial string details
-				$sql  = "update v_extensions set ";
-				$sql .= "dial_domain = '".$this->domain_name."', ";
-				$sql .= "dial_string = '".$dial_string."', ";
-				$sql .= "follow_me_destinations = '".$dial_string."', ";
-				$sql .= "follow_me_enabled = '".$this->follow_me_enabled."' ";
-				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
-				$sql .= "and follow_me_uuid = '".$this->follow_me_uuid."' ";
-				if ($this->debug) {
-					echo $sql."<br />";
-				}
-				$db->exec($sql);
-				unset($sql);
+			//add extensions to the array
+				$array['extensions'][0]["extension_uuid"] = $extension_uuid;
+				$array['extensions'][0]["dial_domain"] = $this->domain_uuid;
+				$array['extensions'][0]["dial_string"] = $dial_string;
+				$array['extensions'][0]["follow_me_destinations"] = $dial_string;
+				$array['extensions'][0]["follow_me_enabled"] = $this->follow_me_enabled;
 
+			//save the destination
+				$database = new database;
+				$database->app_name = 'follow_me';
+				$database->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
+				$database->save($array);
+				$dialplan_response = $database->message;
+
+			//remove the temporary permission
+				$p->delete("follow_me_edit", 'temp');
+				$p->delete("extension_edit", 'temp');
 		} //function
 	} //class
 
