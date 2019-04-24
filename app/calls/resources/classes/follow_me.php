@@ -360,7 +360,7 @@ include "root.php";
 						$variables[] = "originate_delay_start=".$row["follow_me_delay"];
 						$variables[] = "leg_timeout=".$row["follow_me_timeout"];
 
-						$dial_string .= "[".implode(",", $variables)."]\${sofia_contact(".$row["follow_me_destination"]."@".$this->domain_name.")}";
+						$dial_string .= "[".implode(",", $variables)."]\${sofia_contact(*/".$row["follow_me_destination"]."@".$this->domain_name.")}";
 						//$dial_string .= "[".implode(",", $variables)."]user/".$row["follow_me_destination"]."@".$this->domain_name;
 						//$dial_string .= "loopback/export:".implode("\,export:", $variables)."\,transfer:".$row["follow_me_destination"]."/".$this->domain_name."/inline";
 						unset($variables);
