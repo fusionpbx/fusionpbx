@@ -440,8 +440,7 @@
 			$database->password = $_SESSION['cdr']['archive_database_password']['text'];
 		}
 	}
-	$database->select($sql);
-	$result = $database->result;
+	$result = $database->select($sql);
 	$result_count = count($result);
 	unset($database);
 
