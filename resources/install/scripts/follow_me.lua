@@ -138,6 +138,11 @@
 
 --update the extension
 	sql = "update v_extensions set ";
+	if (enabled == "true") then
+		sql = sql .. "dial_string = null, ";
+	else
+		sql = sql .. "dial_string = :dial_string, ";
+	end
 	sql = sql .. "do_not_disturb = 'false', ";
 	sql = sql .. "forward_all_enabled= 'false' ";
 	sql = sql .. "where domain_uuid = :domain_uuid ";
