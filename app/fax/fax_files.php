@@ -199,8 +199,16 @@
 	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
+
+//get the domain time zone
+    $time_zone= array_values($_SESSION['time_zone'])[0];
+    if ($time_zone == "") $time_zone = 'UTC';
+
 //get the list
-	$sql = "select * from v_fax_files ";
+    //$sql = "select * from v_fax_files ";
+    $sql = "select *, fax_date AT TIME ZONE 'UTC' AT TIME ZONE '".$time_zone."' as fax_time ";
+    $sql .= "from v_fax_files ";
+
 	$sql .= "where fax_uuid = '$fax_uuid' ";
 	$sql .= "and domain_uuid = '$domain_uuid' ";
 	if ($_REQUEST['box'] == 'inbox') {
@@ -209,7 +217,7 @@
 	if ($_REQUEST['box'] == 'sent') {
 		$sql .= "and fax_mode = 'tx' ";
 	}
-	$sql .= "order by ".((strlen($order_by) > 0) ? $order_by.' '.$order : "fax_date desc")." ";
+	$sql .= "order by ".((strlen($order_by) > 0) ? $order_by.' '.$order : "fax_time desc")." ";
 	$sql .= "limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
@@ -248,7 +256,7 @@
 	}
 	echo "<th width=''>".$text['table-file']."</th>\n";
 	echo "<th width='10%'>".$text['table-view']."</th>\n";
-	echo th_order_by('fax_date', $text['label-fax_date'], $order_by, $order, "&id=".$_GET['id']."&box=".$_GET['box']."&page=".$_GET['page']);
+	echo th_order_by('fax_time', $text['label-fax_date'], $order_by, $order, "&id=".$_GET['id']."&box=".$_GET['box']."&page=".$_GET['page']);
 	echo "<td style='width: 25px;' class='list_control_icons'>&nbsp;</td>\n";
 	echo "</tr>\n";
 	if ($num_rows > 0) {
@@ -369,7 +377,7 @@
 				echo "&nbsp;\n";
 			}
 			echo "  </td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".date("F d Y H:i:s", strtotime(escape($row['fax_date'])))."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".date("F d Y H:i:s", strtotime(escape($row['fax_time'])))."&nbsp;</td>\n";
 			echo "	<td style='width: 25px;' class='list_control_icons'>";
 			if (permission_exists('fax_file_delete')) {
 				echo "<a href='fax_file_delete.php?id=".escape($row['fax_file_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
