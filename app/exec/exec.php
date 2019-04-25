@@ -53,7 +53,16 @@
 
 //get the html values and set them as variables
 	$handler = ($_REQUEST["handler"] != '') ? trim($_REQUEST["handler"]) : ((permission_exists('exec_switch')) ? 'switch' : null);
-	$cmd = trim($_POST["cmd"]);
+	$code = trim($_POST["code"]);
+	$command = trim($_POST["command"]);
+
+//check the captcha
+	$command_authorized = false;
+	if (strlen($code) > 0) {
+		if (strtolower($_SESSION['captcha']) == strtolower($code)) {
+			$command_authorized = true;
+		}
+	}
 
 //set editor moder
 	switch ($handler) {
@@ -75,13 +84,13 @@
 	?>
 	<script language="JavaScript" type="text/javascript">
 		function submit_check() {
-			document.getElementById('cmd').value = editor.getSession().getValue();
+			document.getElementById('command').value = editor.getSession().getValue();
 			if (document.getElementById('mode').value == 'sql') {
-				$('#frm').prop('target', 'iframe').prop('action', 'sql_query_result.php');
+				$('#frm').prop('target', 'iframe').prop('action', 'sql_query_result.php?code='+ document.getElementById('code').value);
 				$('#sql_response').show();
 			}
 			else {
-				if (document.getElementById('cmd').value == '') {
+				if (document.getElementById('command').value == '') {
 					focus_editor();
 					return false;
 				}
@@ -178,7 +187,7 @@
 
 		function reset_editor() {
 			editor.getSession().setValue('');
-			$('#cmd').val('');
+			$('#command').val('');
 			$('#response').hide();
 			<?php if (permission_exists('exec_sql')) { ?>
 				$('#iframe').prop('src','');
@@ -211,6 +220,12 @@
 
 <?php
 
+//gnerate the captcha image
+	$_SESSION['captcha'] = generate_password(7, 2);
+	$captcha = new captcha;
+	$captcha->code = $_SESSION['captcha'];
+	$image_base64 = $captcha->image_base64();
+
 //show the header
 	echo "<form method='post' name='frm' id='frm' action='exec.php' style='margin: 0;' onsubmit='return submit_check();'>\n";
 	echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>";
@@ -219,6 +234,10 @@
 	echo "			<b>".$text['label-execute']."</b>\n";
 	echo "		</td>";
 	echo "		<td valign='top' align='right' nowrap='nowrap'>";
+
+	//add the captcha
+	echo "				<img src=\"data:image/png;base64, ".$image_base64."\" /><input type='text' class='txt' style='width: 150px; margin-left: 15px;' name='code' id='code' value=''>\n";
+	echo "				&nbsp; &nbsp; &nbsp;\n";
 
 	if (permission_exists('exec_switch') || permission_exists('exec_php') || permission_exists('exec_command') || permission_exists('exec_sql')) {
 		echo "				<select name='handler' id='handler' class='formfld' style='width:100px;' onchange=\"handler=this.value;set_handler(this.value);\">\n";
@@ -245,7 +264,7 @@
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
 			$row = array_values($row);
-			echo "					<option value='".escape($row[0])."'>".escape($row[0])."</option>\n";
+			echo "					<option value='".$row[0]."'>".$row[0]."</option>\n";
 		}
 		echo "					</select>\n";
 		//echo "					<br /><br />\n";
@@ -277,8 +296,8 @@
 	echo "<br>";
 
 //html form
-	echo "<input type='hidden' name='id' value='".escape($_REQUEST['id'])."'>\n"; //sql db id
-	echo "<textarea name='cmd' id='cmd' style='display: none;'></textarea>";
+	echo "<input type='hidden' name='id' value='".$_REQUEST['id']."'>\n"; //sql db id
+	echo "<textarea name='command' id='command' style='display: none;'></textarea>";
 	echo "<table cellpadding='0' cellspacing='0' border='0' style='width: 100%;'>\n";
 	echo "	<tr>";
 	echo "		<td style='width: 210px;' valign='top' nowrap>";
@@ -323,7 +342,7 @@
 							$preview = "onmouseover=\"editor.getSession().setMode(".(($value == 'php') ? "{path:'ace/mode/php', inline:true}" : "'ace/mode/' + this.value").");\"";
 						}
 						$selected = ($value == $mode) ? 'selected' : null;
-						echo "<option value='".escape($value)."' ".escape($selected)." ".escape($preview).">".escape($label)."</option>\n";
+						echo "<option value='".$value."' ".$selected." ".$preview.">".$label."</option>\n";
 					}
 					?>
 				</select>
@@ -334,12 +353,12 @@
 					$sizes = explode(',','9px,10px,11px,12px,14px,16px,18px,20px');
 					$preview = ($setting_preview == 'true') ? "onmouseover=\"document.getElementById('editor').style.fontSize = this.value;\"" : null;
 					if (!in_array($setting_size, $sizes)) {
-						echo "<option value='".escape($setting_size)."' ".escape($preview).">".escape($setting_size)."</option>\n";
+						echo "<option value='".$setting_size."' ".$preview.">".$setting_size."</option>\n";
 						echo "<option value='' disabled='disabled'></option>\n";
 					}
 					foreach ($sizes as $size) {
 						$selected = ($size == $setting_size) ? 'selected' : null;
-						echo "<option value='".escape($size)."' ".$selected." ".escape($preview).">".escape($size)."</option>\n";
+						echo "<option value='".$size."' ".$selected." ".$preview.">".$size."</option>\n";
 					}
 					?>
 				</select>
@@ -386,7 +405,7 @@
 						echo "<optgroup label='".$optgroup."'>\n";
 						foreach ($theme as $value => $label) {
 							$selected = (strtolower($label) == strtolower($setting_theme)) ? 'selected' : null;
-							echo "<option value='".escape($value)."' ".$selected." ".escape($preview).">".escape($label)."</option>\n";
+							echo "<option value='".$value."' ".$selected." ".$preview.">".$label."</option>\n";
 						}
 						echo "</optgroup>\n";
 					}
@@ -395,7 +414,7 @@
 			</td>
 		</tr>
 	</table>
-	<div id='editor'><?php echo escape($cmd); ?></div>
+	<div id='editor'><?php echo htmlentities($command); ?></div>
 
 <?php
 	echo "		</td>";
@@ -427,7 +446,7 @@
 			<?php if ($mode == 'php') { ?>
 				editor.getSession().setMode({path:'ace/mode/php', inline:true});
 			<?php } ?>
-			document.getElementById('editor').style.fontSize='<?php echo escape($setting_size);?>';
+			document.getElementById('editor').style.fontSize='<?php echo $setting_size;?>';
 			focus_editor();
 
 		//keyboard shortcut to execute command
@@ -443,28 +462,28 @@
 
 //show the result
 	if (is_array($_POST)) {
-		if ($cmd != '') {
+		if ($command != '') {
 			$result = '';
 			switch ($handler) {
 				case 'shell':
-					if (permission_exists('exec_command')) {
-						$result = shell_exec($cmd . " 2>&1");
+					if (permission_exists('exec_command') && $command_authorized) {
+						$result = htmlentities(shell_exec($command . " 2>&1"));
 					}
 					break;
 				case 'php':
-					if (permission_exists('exec_php')) {
+					if (permission_exists('exec_php') && $command_authorized) {
 						ob_start();
-						eval($cmd);
+						eval($command);
 						$result = ob_get_contents();
 						ob_end_clean();
 					}
 					break;
 				case 'switch':
-					if (permission_exists('exec_switch')) {
+					if (permission_exists('exec_switch') && $command_authorized) {
 						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-						if ($fp) {
-							$result = event_socket_request($fp, 'api '.$cmd);
-							$result = utf8_encode($result);
+						if ($fp) { 
+							$result = event_socket_request($fp, 'api '.$command);
+							$result = htmlspecialchars(utf8_encode($result), ENT_QUOTES);
 						}
 					}
 					break;
@@ -473,7 +492,7 @@
 				echo "<span id='response'>";
 				echo "<b>".$text['label-response']."</b>\n";
 				echo "<br /><br />\n";
-				echo ($handler == 'switch') ? "<textarea style='width: 100%; height: 450px; font-family: monospace; padding: 15px;' wrap='off'>".escape($result)."</textarea>\n" : "<pre>".escape($result)."</pre>";
+				echo ($handler == 'switch') ? "<textarea style='width: 100%; height: 450px; font-family: monospace; padding: 15px;' wrap='off'>".$result."</textarea>\n" : "<pre>".$result."</pre>";
 				echo "</span>";
 			}
 		}
