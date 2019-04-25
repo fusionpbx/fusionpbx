@@ -47,7 +47,19 @@
 		require_once "sql_query_pdo.php";
 	}
 
-if (count($_POST)>0) {
+//set the variables
+	$code = trim($_REQUEST["code"]);
+//check the captcha
+	$command_authorized = false;
+	if (strtolower($_SESSION['captcha']) == strtolower($code)) {
+		$command_authorized = true;
+	}
+	if (!$command_authorized) {
+		//not authorized
+		exit;
+	}
+
+if (is_array($_POST)) {
 	$sql_type = trim($_POST["sql_type"]);
 	$sql_cmd = trim($_POST["cmd"]);
 	$table_name = trim($_POST["table_name"]);
