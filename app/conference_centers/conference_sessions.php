@@ -105,8 +105,7 @@
 		$sql .= "limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
-		$result = $prep_statement->fetchAll();
-		$result_count = count($result);
+		$conference_sessions = $prep_statement->fetchAll();
 		unset ($prep_statement, $sql);
 
 	$c = 0;
@@ -138,8 +137,8 @@
 	echo "<td class='list_control_icon'>&nbsp;</td>\n";
 	echo "</tr>\n";
 
-	if ($result_count > 0) {
-		foreach($result as $row) {
+	if (is_array($conference_sessions)) {
+		foreach($conference_sessions as $row) {
 			$tmp_year = date("Y", $row['start_epoch']);
 			$tmp_month = date("M", $row['start_epoch']);
 			$tmp_day = date("d", $row['start_epoch']);
