@@ -397,8 +397,8 @@
 	echo "<td colspan='8'>\n";
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap>".$paging_controls."</td>\n";
+	echo "		<td width='33.3%'>&nbsp;</td>\n";
+	echo "		<td width='33.3%'>&nbsp;</td>\n";
 	echo "		<td class='list_control_icons'>";
 	if ($app_uuid == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4" && permission_exists('inbound_route_add')) {
 		echo "<a href='".PROJECT_PATH."/app/dialplan_inbound/dialplan_inbound_add.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
@@ -423,10 +423,14 @@
 	echo "	</table>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-
 	echo "</table>";
-	echo "<br><br>";
 	echo "</form>";
+
+	if (strlen($paging_controls) > 0) {
+		echo "<br />";
+		echo $paging_controls."\n";
+	}
+	echo "<br><br>";
 
 	if (sizeof($dialplan_ids) > 0) {
 		echo "<script>\n";
