@@ -386,22 +386,18 @@ include "root.php";
 							}
 						}
 						else {
-							//if (strlen($caller_id_number) > 0) {
-								//set the caller id if it is set
-								//if (strlen($caller_id_name) > 0) { 
-								//	$variables[] = "origination_caller_id_name=".$this->cid_name_prefix.$caller_id_name; 
-								//	$variables[] = "effective_caller_id_name=".$this->cid_name_prefix.$caller_id_name;
-								//}
-								//$variables[] = "origination_caller_id_number=".$this->cid_number_prefix.$caller_id_number;
-								//$variables[] = "effective_caller_id_number=".$this->cid_number_prefix.$caller_id_number;
-							//}
-							//else {
+							if ($_SESSION['domain']['bridge']['text'] == "loopback") {
 								//set the outbound caller id number if the caller id number is a user
 								$variables[] = "origination_caller_id_number=\${cond(\${from_user_exists} == true ? ".$this->outbound_caller_id_number." : \${origination_caller_id_number})}";
 								$variables[] = "effective_caller_id_number=\${cond(\${from_user_exists} == true ? ".$this->outbound_caller_id_number." : \${effective_caller_id_number})}";
 								$variables[] = "origination_caller_id_name=\${cond(\${from_user_exists} == true ? ".$this->outbound_caller_id_name." : \${origination_caller_id_name})}";
 								$variables[] = "effective_caller_id_name=\${cond(\${from_user_exists} == true ? ".$this->outbound_caller_id_name." : \${effective_caller_id_name})}";
-							//}
+							} else {
+								$variables[] .="origination_caller_id_number=\${cond(\${from_user_exists} == true ? \${outbound_caller_id_number} : )}";
+								$variables[] .="effective_caller_id_number=\${cond(\${from_user_exists} == true ? \${outbound_caller_id_number} : )}";
+								$variables[] .="origination_caller_id_name=\${cond(\${from_user_exists} == true ? \${outbound_caller_id_name} : )}";
+								$variables[] .="effective_caller_id_name=\${cond(\${from_user_exists} == true ? \${outbound_caller_id_name} : )}";								
+							}
 						}
 
 						//accountcode
