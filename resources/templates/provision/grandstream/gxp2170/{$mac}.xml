@@ -76,11 +76,10 @@
     <!-- # DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
-
 {if isset($grandstream_dns_mode)}
-<P103>{$grandstream_dns_mode}</P103>
+    <P103>{$grandstream_dns_mode}</P103>
 {else}
-<P103>0</P103>
+    <P103>0</P103>
 {/if}
 
     <!-- # DNS SRV Fail-over Mode. 0 - Default, 1 - Saved one until DNS TTL, 2 - Saved one until no response. Default is 0 -->
@@ -103,11 +102,10 @@
     <!-- # NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0. -->
     <!-- # Number: 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-
 {if isset($grandstream_nat_traversal)}
-<P52>{$grandstream_nat_traversal}</P52>
+    <P52>{$grandstream_nat_traversal}</P52>
 {else}
-<P52>0</P52>
+    <P52>0</P52>
 {/if}
 
     <!-- # Proxy-Require (A SIP extension to enable firewall penetration). Max length is 64 characters -->
@@ -197,13 +195,12 @@
     <!-- # SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS/TCP. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-
 {$tp=0}
 {if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
 {if $account.1.sip_transport == 'tcp'}{$tp=1}{/if}
 {if $account.1.sip_transport == 'tls'}{$tp=2}{/if}
 {if $account.1.sip_transport == 'dns srv'}{$tp=1}{/if}
-<P130>{$tp}</P130>
+    <P130>{$tp}</P130>
 
 
     <!-- # SIP Listening Mode.  -->
@@ -236,9 +233,9 @@
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
 {if isset($subscribe_mwi)}
-<P99>1</P99>
+    <P99>1</P99>
 {else}
-<P99>0</P99>
+    <P99>0</P99>
 {/if}
 
 
@@ -567,11 +564,10 @@
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
 {if isset($grandstream_srtp)}
-<P183>{$grandstream_srtp}</P183>
+    <P183>{$grandstream_srtp}</P183>
 {else}
-<P183>0</P183>
+    <P183>0</P183>
 {/if}
-
 
     <!-- # SRTP Key Length. 0 - AES 128&256 bit, 1 - AES 128 bit, 2 - AES 256 bit. Default is 0 -->
     <!-- # Default is 0 -->
@@ -676,11 +672,10 @@
     <!-- # Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
     <!-- # String -->
     <!-- # Mandatory -->
-
 {if isset($grandstream_dial_plan) }
-<P290>{$grandstream_dial_plan}</P290>
+    <P290>{$grandstream_dial_plan}</P290>
 {else}
-<P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P290>
+    <P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P290>
 {/if}
 
     <!-- # Bypass Dial Plan -->
@@ -765,9 +760,8 @@
     <!-- # Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    
 {if isset($grandstream_account_ring_tone_1)}
-<P104>{$grandstream_account_ring_tone_1}</P104>
+    <P104>{$grandstream_account_ring_tone_1}</P104>
 {/if}
 
     <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
@@ -956,11 +950,10 @@
     <!-- # Account Active. 0 - No, 1 - Yes. Default is 1 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-
 {if isset($account.2.password)}
-<P401>1</P401>
+    <P401>1</P401>
 {else}
-<P401>0</P401>
+    <P401>0</P401>
 {/if}
 
     <!-- # Account Name -->
@@ -1019,9 +1012,9 @@
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
 {if isset($grandstream_dns_mode)}
-<P408>{$grandstream_dns_mode}</P408>
+    <P408>{$grandstream_dns_mode}</P408>
 {else}
-<P408>0</P408>
+    <P408>0</P408>
 {/if}
 
     <!-- # DNS SRV Fail-over Mode. 0 - Default, 1 - Saved one until DNS TTL, 2 - Saved one until no response. Default is 0 -->
@@ -1045,11 +1038,10 @@
     <!-- # Number: 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
 {if isset($grandstream_nat_traversal)}
-<P414>{$grandstream_nat_traversal}</P414>
+    <P414>{$grandstream_nat_traversal}</P414>
 {else}
-<P414>0</P414>
+    <P414>0</P414>
 {/if}
-
 
     <!-- # Proxy-Require (A SIP extension to enable firewall penetration). Max length is 64 characters -->
     <!-- # String -->
@@ -1143,8 +1135,7 @@
 {if $account.2.sip_transport == 'tcp'}{$tp=1}{/if}
 {if $account.2.sip_transport == 'tls'}{$tp=2}{/if}
 {if $account.2.sip_transport == 'dns srv'}{$tp=1}{/if}
-<P448>{$tp}</P448>
-
+    <P448>{$tp}</P448>
 
     <!-- # SIP Listening Mode.  -->
     <!-- # 0 - Transport Only, 1 - Dual, 2 - Dual (BLF Enforced), 3 - Dual (Secured). Default is 0 -->
@@ -1176,11 +1167,10 @@
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
 {if isset($subscribe_mwi)}
-<P415>1</P415>
+    <P415>1</P415>
 {else}
-<P415>0</P415>
+    <P415>0</P415>
 {/if}
-
 
     <!-- # SUBSCRIBE for Registration. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
@@ -1507,11 +1497,10 @@
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
 {if isset($grandstream_srtp)}
-<P443>{$grandstream_srtp}</P443>
+    <P443>{$grandstream_srtp}</P443>
 {else}
-<P443>0</P443>
+    <P443>0</P443>
 {/if}
-
 
     <!-- # SRTP Key Length. 0 - AES 128&256 bit, 1 - AES 128 bit, 2 - AES 256 bit. Default is 0 -->
     <!-- # Default is 0 -->
@@ -1616,11 +1605,10 @@
     <!-- # Dial Plan. Default is { x+ | \+x+ | *x+ | *xx*x+ } -->
     <!-- # String -->
     <!-- # Mandatory -->
-    
 {if isset($grandstream_dial_plan) }
-<P459>{$grandstream_dial_plan}</P459>
+    <P459>{$grandstream_dial_plan}</P459>
 {else}
-<P459>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P459>
+    <P459>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P459>
 {/if}
 
     <!-- # Bypass Dial Plan -->
@@ -1635,9 +1623,8 @@
     <!-- # Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory  -->
-    
 {if isset($grandstream_account_ring_tone_2)}
-<P423>{$grandstream_account_ring_tone_2}</P423>
+    <P423>{$grandstream_account_ring_tone_2}</P423>
 {/if}
 
     <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
@@ -1895,12 +1882,11 @@
     <!-- ############################################################### -->
     <!-- # Account Active. 0 - No, 1 - Yes. Default is 1 -->
     <!-- # Number: 0, 1 -->
-    
     <!-- # Mandatory -->
-    {if isset($account.3.password)}
-<P501>1</P501>
+{if isset($account.3.password)}
+    <P501>1</P501>
 {else}
-<P501>0</P501>
+    <P501>0</P501>
 {/if}
 
     <!-- # Account Name -->
@@ -1958,11 +1944,10 @@
     <!-- # DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0  -->
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_dns_mode)}
-<P508>{$grandstream_dns_mode}</P508>
+{if isset($grandstream_dns_mode)}
+    <P508>{$grandstream_dns_mode}</P508>
 {else}
-<P508>0</P508>
+    <P508>0</P508>
 {/if}
 
     <!-- # DNS SRV Fail-over Mode. 0 - Default, 1 - Saved one until DNS TTL, 2 - Saved one until no response. Default is 0 -->
@@ -1985,11 +1970,10 @@
     <!-- # NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_nat_traversal)}
-<P514>{$grandstream_nat_traversal}</P514>
+ {if isset($grandstream_nat_traversal)}
+    <P514>{$grandstream_nat_traversal}</P514>
 {else}
-<P514>0</P514>
+    <P514>0</P514>
 {/if}
 
     <!-- # Proxy-Require (A SIP extension to enable firewall penetration). Max length is 64 characters -->
@@ -2079,13 +2063,12 @@
     <!-- # SIP Transport. 0 - UDP, 1 - TCP. 2- TCP/TLS. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    
-    {$tp=0}
+{$tp=0}
 {if $account.3.sip_transport == 'udp'}{$tp=0}{/if}
 {if $account.3.sip_transport == 'tcp'}{$tp=1}{/if}
 {if $account.3.sip_transport == 'tls'}{$tp=2}{/if}
 {if $account.3.sip_transport == 'dns srv'}{$tp=1}{/if}
-<P548>{$tp}</P548>
+    <P548>{$tp}</P548>
 
     <!-- # SIP Listening Mode.  -->
     <!-- # 0 - Transport Only, 1 - Dual, 2 - Dual (BLF Enforced), 3 - Dual (Secured). Default is 0 -->
@@ -2116,11 +2099,10 @@
     <!-- # SUBSCRIBE for MWI (Whether or not send SUBSCRIBE for Message Waiting Indication). 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    
-    {if isset($subscribe_mwi)}
-<P515>1</P515>
+{if isset($subscribe_mwi)}
+    <P515>1</P515>
 {else}
-<P515>0</P515>
+    <P515>0</P515>
 {/if}
 
     <!-- # SUBSCRIBE for Registration. 0 - No, 1 - Yes. Default is 0 -->
@@ -2466,11 +2448,10 @@
     <!-- # 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced, 3 - Optional. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_srtp)}
-<P543>{$grandstream_srtp}</P543>
+{if isset($grandstream_srtp)}
+    <P543>{$grandstream_srtp}</P543>
 {else}
-<P543>0</P543>
+    <P543>0</P543>
 {/if}
 
     <!-- # SRTP Key Length. 0 - AES 128&256 bit, 1 - AES 128 bit, 2 - AES 256 bit. Default is 0 -->
@@ -2556,11 +2537,10 @@
     <!-- # Dial Plan. Default is { x+ | \+x+ | *x+ | *xx*x+ } -->
     <!-- # String -->
     <!-- # Mandatory -->
-
 {if isset($grandstream_dial_plan) }
-<P559>{$grandstream_dial_plan}</P559>
+    <P559>{$grandstream_dial_plan}</P559>
 {else}
-<P559>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P559>
+    <P559>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P559>
 {/if}
 
     <!-- # Bypass Dial Plan -->
@@ -2575,9 +2555,8 @@
     <!-- # Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_account_ring_tone_3)}
-<P523>{$grandstream_account_ring_tone_3}</P523>
+{if isset($grandstream_account_ring_tone_3)}
+    <P523>{$grandstream_account_ring_tone_3}</P523>
 {/if}
 
     <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
@@ -2837,11 +2816,10 @@
     <!-- # Account Active. 0 - No, 1 - Yes. Default is 1 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    
-    {if isset($account.4.password)}
-<P601>1</P601>
+{if isset($account.4.password)}
+    <P601>1</P601>
 {else}
-<P601>0</P601>
+    <P601>0</P601>
 {/if}
 
     <!-- # Account Name -->
@@ -2899,11 +2877,10 @@
     <!-- # DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_dns_mode)}
-<P608>{$grandstream_dns_mode}</P608>
+{if isset($grandstream_dns_mode)}
+    <P608>{$grandstream_dns_mode}</P608>
 {else}
-<P608>0</P608>
+    <P608>0</P608>
 {/if}
 
     <!-- # DNS SRV Fail-over Mode. 0 - Default, 1 - Saved one until DNS TTL, 2 - Saved one until no response. Default is 0 -->
@@ -2926,11 +2903,10 @@
     <!-- # NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_nat_traversal)}
-<P614>{$grandstream_nat_traversal}</P614>
+{if isset($grandstream_nat_traversal)}
+    <P614>{$grandstream_nat_traversal}</P614>
 {else}
-<P614>0</P614>
+    <P614>0</P614>
 {/if}
 
     <!-- # Proxy-Require (A SIP extension to enable firewall penetration). Max length is 64 characters -->
@@ -2963,7 +2939,6 @@
     <!-- # Register Expiration (in minutes). Default is 60. Max is 45 days -->
     <!-- # Number: 1 - 64800 -->
     <!-- # Mandatory -->
-    
     <P612>{$account.4.register_expires}</P612>
 
     <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
@@ -3022,12 +2997,12 @@
     <!-- # SIP Transport. 0 - UDP, 1 - TCP. 2 - TCP/TLS. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    {$tp=0}
+{$tp=0}
 {if $account.4.sip_transport == 'udp'}{$tp=0}{/if}
 {if $account.4.sip_transport == 'tcp'}{$tp=1}{/if}
 {if $account.4.sip_transport == 'tls'}{$tp=2}{/if}
 {if $account.4.sip_transport == 'dns srv'}{$tp=1}{/if}
-<P648>{$tp}</P648>
+    <P648>{$tp}</P648>
 
     <!-- # SIP Listening Mode.  -->
     <!-- # 0 - Transport Only, 1 - Dual, 2 - Dual (BLF Enforced), 3 - Dual (Secured). Default is 0 -->
@@ -3058,11 +3033,10 @@
     <!-- # SUBSCRIBE for MWI (Whether or not send SUBSCRIBE for Message Waiting Indication). 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    
-    {if isset($subscribe_mwi)}
-<P615>1</P615>
+{if isset($subscribe_mwi)}
+    <P615>1</P615>
 {else}
-<P615>0</P615>
+    <P615>0</P615>
 {/if}
 
     <!-- # SUBSCRIBE for Registration. 0 - No, 1 - Yes. Default is 0 -->
@@ -3409,11 +3383,10 @@
     <!-- # 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced, 3 - Optional. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_srtp)}
-<P643>{$grandstream_srtp}</P643>
+{if isset($grandstream_srtp)}
+    <P643>{$grandstream_srtp}</P643>
 {else}
-<P643>0</P643>
+    <P643>0</P643>
 {/if}
 
     <!-- # SRTP Key Length. 0 - AES 128&256 bit, 1 - AES 128 bit, 2 - AES 256 bit. Default is 0 -->
@@ -3500,11 +3473,10 @@
     <!-- # Dial Plan. Default is { x+ | \+x+ | *x+ | *xx*x+ } -->
     <!-- # String -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_dial_plan) }
-<P659>{$grandstream_dial_plan}</P659>
+{if isset($grandstream_dial_plan) }
+    <P659>{$grandstream_dial_plan}</P659>
 {else}
-<P659>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P659>
+    <P659>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P659>
 {/if}
 
     <!-- # Bypass Dial Plan -->
@@ -3519,9 +3491,8 @@
     <!-- # Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_account_ring_tone_4)}
-<P623>{$grandstream_account_ring_tone_4}</P623>
+{if isset($grandstream_account_ring_tone_4)}
+    <P623>{$grandstream_account_ring_tone_4}</P623>
 {/if}
 
     <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
@@ -3781,11 +3752,10 @@
     <!-- # Account Active. 0 - No, 1 - Yes. Default is 1 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    
-    {if isset($account.5.password)}
-<P1701>1</P1701>
+{if isset($account.5.password)}
+    <P1701>1</P1701>
 {else}
-<P1701>0</P1701>
+    <P1701>0</P1701>
 {/if}
 
     <!-- # Account Name -->
@@ -3843,11 +3813,10 @@
     <!-- # DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_dns_mode)}
-<P1708>{$grandstream_dns_mode}</P1708>
+{if isset($grandstream_dns_mode)}
+    <P1708>{$grandstream_dns_mode}</P1708>
 {else}
-<P1708>0</P1708>
+    <P1708>0</P1708>
 {/if}
 
     <!-- # DNS SRV Fail-over Mode. 0 - Default, 1 - Saved one until DNS TTL, 2 - Saved one until no response. Default is 0 -->
@@ -3870,11 +3839,10 @@
     <!-- # NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_nat_traversal)}
-<P1714>{$grandstream_nat_traversal}</P1714>
+{if isset($grandstream_nat_traversal)}
+    <P1714>{$grandstream_nat_traversal}</P1714>
 {else}
-<P1714>0</P1714>
+    <P1714>0</P1714>
 {/if}
 
     <!-- # Proxy-Require (A SIP extension to enable firewall penetration). Max length is 64 characters -->
@@ -3964,12 +3932,12 @@
     <!-- # SIP Transport. 0 - UDP, 1 - TCP. 2 - TCP/TLS. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    {$tp=0}
+{$tp=0}
 {if $account.5.sip_transport == 'udp'}{$tp=0}{/if}
 {if $account.5.sip_transport == 'tcp'}{$tp=1}{/if}
 {if $account.5.sip_transport == 'tls'}{$tp=2}{/if}
 {if $account.5.sip_transport == 'dns srv'}{$tp=1}{/if}
-<P1748>{$tp}</P1748>
+    <P1748>{$tp}</P1748>
 
     <!-- # SIP Listening Mode.  -->
     <!-- # 0 - Transport Only, 1 - Dual, 2 - Dual (BLF Enforced), 3 - Dual (Secured). Default is 0 -->
@@ -4000,11 +3968,10 @@
     <!-- # SUBSCRIBE for MWI (Whether or not send SUBSCRIBE for Message Waiting Indication). 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    
-    {if isset($subscribe_mwi)}
-<P1715>1</P1715>
+{if isset($subscribe_mwi)}
+    <P1715>1</P1715>
 {else}
-<P1715>0</P1715>
+    <P1715>0</P1715>
 {/if}
 
     <!-- # SUBSCRIBE for Registration. 0 - No, 1 - Yes. Default is 0 -->
@@ -4350,11 +4317,10 @@
     <!-- # 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced, 3 - Optional. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_srtp)}
-<P1743>{$grandstream_srtp}</P1743>
+{if isset($grandstream_srtp)}
+    <P1743>{$grandstream_srtp}</P1743>
 {else}
-<P1743>0</P1743>
+    <P1743>0</P1743>
 {/if}
 
     <!-- # SRTP Key Length. 0 - AES 128&256 bit, 1 - AES 128 bit, 2 - AES 256 bit. Default is 0 -->
@@ -4440,11 +4406,10 @@
     <!-- # Dial Plan. Default is { x+ | \+x+ | *x+ | *xx*x+ } -->
     <!-- # String -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_dial_plan) }
-<P1759>{$grandstream_dial_plan}</P1759>
+{if isset($grandstream_dial_plan) }
+    <P1759>{$grandstream_dial_plan}</P1759>
 {else}
-<P1759>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P1759>
+    <P1759>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P1759>
 {/if}
 
     <!-- # Bypass Dial Plan -->
@@ -4459,9 +4424,8 @@
     <!-- # Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_account_ring_tone_5)}
-<P1723>{$grandstream_account_ring_tone_5}</P1723>
+{if isset($grandstream_account_ring_tone_5)}
+    <P1723>{$grandstream_account_ring_tone_5}</P1723>
 {/if}
 
     <!-- # Matching Incoming Caller ID. Matching Rule 1. -->
@@ -4721,11 +4685,10 @@
     <!-- # Account Active. 0 - No, 1 - Yes. Default is 1 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    
-    {if isset($account.6.password)}
-<P1801>1</P1801>
+{if isset($account.6.password)}
+    <P1801>1</P1801>
 {else}
-<P1801>0</P1801>
+    <P1801>0</P1801>
 {/if}
 
     <!-- # Account Name -->
@@ -4766,7 +4729,7 @@
 
     <!-- # Display Name -->
     <!-- # String -->
-    <P1807>{$display_name_6}</P1807>
+    <P1807>{$account.6.display_name}</P1807>
 
     <!-- # Voice Mail UserID -->
     <!-- # String -->
@@ -4783,11 +4746,10 @@
     <!-- # DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_dns_mode)}
-<P1808>{$grandstream_dns_mode}</P1808>
+{if isset($grandstream_dns_mode)}
+    <P1808>{$grandstream_dns_mode}</P1808>
 {else}
-<P1808>0</P1808>
+    <P1808>0</P1808>
 {/if}
 
     <!-- # DNS SRV Fail-over Mode. 0 - Default, 1 - Saved one until DNS TTL, 2 - Saved one until no response. Default is 0 -->
@@ -4810,11 +4772,10 @@
     <!-- # NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_nat_traversal)}
+{if isset($grandstream_nat_traversal)}
 <P1814>{$grandstream_nat_traversal}</P1814>
 {else}
-<P1814>0</P1814>
+    <P1814>0</P1814>
 {/if}
 
     <!-- # Proxy-Require (A SIP extension to enable firewall penetration). Max length is 64 characters -->
@@ -4905,13 +4866,12 @@
     <!-- # SIP Transport. 0 - UDP, 1 - TCP, 2 - TCP/TLS. Default is 2 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    
-    {$tp=0}
+{$tp=0}
 {if $account.6.sip_transport == 'udp'}{$tp=0}{/if}
 {if $account.6.sip_transport == 'tcp'}{$tp=1}{/if}
 {if $account.6.sip_transport == 'tls'}{$tp=2}{/if}
 {if $account.6.sip_transport == 'dns srv'}{$tp=1}{/if}
-<P1848>{$tp}</P1848>
+    <P1848>{$tp}</P1848>
 
     <!-- # SIP Listening Mode.  -->
     <!-- # 0 - Transport Only, 1 - Dual, 2 - Dual (BLF Enforced), 3 - Dual (Secured). Default is 0 -->
@@ -4942,11 +4902,11 @@
     <!-- # SUBSCRIBE for MWI (Whether or not send SUBSCRIBE for Message Waiting Indication). 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    
-    {if isset($subscribe_mwi)}
-<P1815>1</P1815>
+
+{if isset($subscribe_mwi)}
+    <P1815>1</P1815>
 {else}
-<P1815>0</P1815>
+    <P1815>0</P1815>
 {/if}
 
     <!-- # SUBSCRIBE for Registration. 0 - No, 1 - Yes. Default is 0. Default is 0 -->
@@ -5294,11 +5254,10 @@
     <!-- # 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced, 3 - Optional. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_srtp)}
-<P1843>{$grandstream_srtp}</P1843>
+{if isset($grandstream_srtp)}
+    <P1843>{$grandstream_srtp}</P1843>
 {else}
-<P1843>0</P1843>
+    <P1843>0</P1843>
 {/if}
 
     <!-- # SRTP Key Length. 0 - AES 128&256 bit, 1 - AES 128 bit, 2 - AES 256 bit. Default is 0 -->
@@ -5384,11 +5343,10 @@
     <!-- # Dial Plan. Default is { x+ | \+x+ | *x+ | *xx*x+ } -->
     <!-- # String -->
     <!-- # Mandatory -->
-
 {if isset($grandstream_dial_plan) }
-<P1859>{$grandstream_dial_plan}</P1859>
+    <P1859>{$grandstream_dial_plan}</P1859>
 {else}
-<P1859>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P1859>
+    <P1859>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P1859>
 {/if}
 
     <!-- # Bypass Dial Plan -->
@@ -5403,9 +5361,8 @@
     <!-- # Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_account_ring_tone_6)}
-<P1823>{$grandstream_account_ring_tone_6}</P1823>
+{if isset($grandstream_account_ring_tone_6)}
+    <P1823>{$grandstream_account_ring_tone_6}</P1823>
 {/if}
 
     <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
@@ -5672,9 +5629,7 @@
     <!-- ########################################## -->
     <!-- # Host name, DHCP option 12. Max length allowed is 64 characters -->
     <!-- # String -->
-    
     <P146>phone-{$mac|replace:'-':''}</P146>
-
 
     <!-- # Vendor Class ID, DHCP option 60. Max length allowed is 64 characters -->
     <!-- # String -->
@@ -5880,10 +5835,10 @@
     <!-- # Layer 2 QoS. 802.1Q/VLAN Tag (VLAN classification for RTP). Default is 0 -->
     <!-- # Number: 0 - 4094 -->
     <!-- # Mandatory -->
-    {if isset($grandstream_lan_port_vlan) }
-<P51>{$grandstream_lan_port_vlan}</P51>
+{if isset($grandstream_lan_port_vlan) }
+    <P51>{$grandstream_lan_port_vlan}</P51>
 {else}
-<P51>0</P51>
+    <P51>0</P51>
 {/if}
 
     <!-- # Layer 2 QoS. 802.1p priority value (0 - 7). Default is 0 -->
@@ -5899,10 +5854,10 @@
     <!-- # PC Port VLAN Tag. Default is 0  -->
     <!-- # Number: 0 - 4094 -->
     <!-- #Mandatory -->
-    {if isset($grandstream_pc_port_vlan) }
-<P229>{$grandstream_pc_port_vlan}</P229>
+{if isset($grandstream_pc_port_vlan) }
+    <P229>{$grandstream_pc_port_vlan}</P229>
 {else}
-<P229>0</P229>
+    <P229>0</P229>
 {/if}
 
     <!-- # PC Port Priority Value. Default is 0  -->
@@ -5977,17 +5932,15 @@
     <!-- # 0 - Off, 1 - On, 2 - Off & Hide Menu From LCD -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_bluetooth_power)}
-<P2910>{$grandstream_bluetooth_power}</P2910>
+{if isset($grandstream_bluetooth_power)}
+    <P2910>{$grandstream_bluetooth_power}</P2910>
 {/if}
 
     <!-- # Handsfree Mode. Default is 0. -->
     <!-- # Number: 0, 1. 0 - Off, 1 - On -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_bluetooth_handsfree)}
-<P2911>{$grandstream_bluetooth_handsfree}</P2911>
+{if isset($grandstream_bluetooth_handsfree)}
+    <P2911>{$grandstream_bluetooth_handsfree}</P2911>
 {/if}
 
     <!-- # Bluetooth Name. -->
@@ -6152,14 +6105,12 @@
 
     <!-- # Admin password for web interface -->
     <!-- # String: a-z, A-Z, 0-9 -->
-   
-   
 {if $admin_password=="none"}
-<P2></P2>
+    <P2></P2>
 {elseif isset($admin_password)}
-<P2>{$admin_password}</P2>
+    <P2>{$admin_password}</P2>
 {else}
-<P2>adminadmin</P2>
+    <P2>adminadmin</P2>
 {/if}
 
     <!-- ############################################################################## -->
@@ -6251,23 +6202,20 @@
 
     <!-- # Config Server Path -->
     <!-- # String -->
-    
 {if $grandstream_config_server_path=="none"}
-<P237></P237>
+    <P237></P237>
 {elseif isset($grandstream_config_server_path)}
-<P237>{$grandstream_config_server_path}</P237>
+    <P237>{$grandstream_config_server_path}</P237>
 {else}
-<P237>{$domain_name}{$project_path}/app/provision</P237>
+    <P237>{$domain_name}{$project_path}/app/provision</P237>
 {/if}
 
 <!-- # Config HTTP/HTTPS User Name -->
 <!-- # String -->
-
 <P1360>{$http_auth_username}</P1360>
 
 <!-- # Config HTTP/HTTPS Password -->
 <!-- # String -->
-
 <P1361>{$http_auth_password}</P1361>
 
     <!-- # Config File Prefix -->
@@ -6305,15 +6253,13 @@
 
     <!-- # Firmware Server Path -->
     <!-- # String -->
-    
 {if isset($grandstream_firmware_path) && isset($firmware_version)}
-<P192>{$grandstream_firmware_path}/gxp2170/{$firmware_version}</P192>
+    <P192>{$grandstream_firmware_path}/gxp2170/{$firmware_version}</P192>
 {elseif isset($grandstream_firmware_path)}
-<P192>{$grandstream_firmware_path}/gxp2170</P192>
+    <P192>{$grandstream_firmware_path}/gxp2170</P192>
 {else}
-<P192>{$domain_name}{$project_path}/app/provision</P192>
+    <P192>{$domain_name}{$project_path}/app/provision</P192>
 {/if}
-
 
     <!-- # Firmware HTTP/HTTPS User Name -->
     <!-- # String -->
@@ -6341,17 +6287,15 @@
 
     <!-- # Syslog Server (name of the server, max length is 64 characters) -->
     <!-- # String -->
-    
     <P207>{$grandstream_syslog_server}</P207>
 
     <!-- # Syslog Level. 0 - NONE, 1 - DEBUG, 2 - INFO, 3 - WARNING, 4 - ERROR. Default is 0 -->
     <!-- # Number: 0, 1 , 2, 3, 4 -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_syslog_level)}
-<P208>{$grandstream_syslog_level}</P208>
+{if isset($grandstream_syslog_level)}
+    <P208>{$grandstream_syslog_level}</P208>
 {else}
-<P208>0</P208>
+    <P208>0</P208>
 {/if}
 
     <!-- # Syslog Keyword Filtering -->
@@ -6361,11 +6305,10 @@
     <!-- # Send SIP Log. 0 - Do not send SIP log in Syslog, 1 - Send SIP log in Syslog if configured and set to DEBUG level. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_send_sip_log)}
-<P1387>{$grandstream_send_sip_log}</P1387>
+{if isset($grandstream_send_sip_log)}
+    <P1387>{$grandstream_send_sip_log}</P1387>
 {else}
-<P1387>0</P1387>
+    <P1387>0</P1387>
 {/if}
 
     <!-- # Show Internet Down Message. 0 - No, 1 - Yes. Default is 0 -->
@@ -6595,9 +6538,9 @@
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
 {if isset($contact_grandstream)}
-<P330>1</P330>
+    <P330>1</P330>
 {else}
-<P330>0</P330>
+    <P330>0</P330>
 {/if}
 
 
@@ -6613,24 +6556,21 @@
     <!-- # This is a string of up to 256 characters that should contain a path to the XML file. It MUST be in the host/path format. -->
     <!-- # For example: directory.grandstream.com/engineering -->
     <!-- # String -->
-    
 {if isset($contact_grandstream)}
-<P331>{$grandstream_phonebook_xml_server_path}{$mac}/</P331>
+    <P331>{$grandstream_phonebook_xml_server_path}{$mac}/</P331>
 {elseif isset($grandstream_phonebook_xml_server_path)}
-<P331>{$grandstream_phonebook_xml_server_path}</P331>
+    <P331>{$grandstream_phonebook_xml_server_path}</P331>
 {else}
-<P331></P331>
+    <P331></P331>
 {/if}
-
 
     <!-- # Phonebook Download Interval (in minutes) -->
     <!-- # Valid value range is 5-720. Default is 0 for disabled -->
     <!-- # Number: 0, 5-720;  -->
-    
 {if isset($grandstream_phonebook_download_interval)}
-<P332>{$grandstream_phonebook_download_interval}</P332>
+    <P332>{$grandstream_phonebook_download_interval}</P332>
 {else}
-<P332>0</P332>
+    <P332>0</P332>
 {/if}
 
     <!-- # Remove Manually-edited entries on Download. 0 - No, 1 - Yes. Default is 1 -->
@@ -6652,9 +6592,9 @@
     <!-- # Number: 0, 1, 2, 3, 4. -->
     <!-- # Mandatory -->
 {if isset($contact_grandstream)}
-<P1526>2</P1526>
+    <P1526>2</P1526>
 {else}
-<P1526>0</P1526>
+    <P1526>0</P1526>
 {/if}
 
     <!-- # Default search mode. 0 - Quick match, 1 - Exact match. Default is 0 -->
@@ -6788,17 +6728,17 @@
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
 {if isset($public_mode) }
-	{if $public_mode|strtolower == 'true'}
-		<P1345>1</P1345>
-	{elseif $public_mode|strtolower == 'yes'}
-		<P1345>1</P1345>
-	{elseif $public_mode == '1'}
-		<P1345>1</P1345>
-	{else}
-		<P1345>0</P1345>
-	{/if}
+{if $public_mode|strtolower == 'true'}
+    <P1345>1</P1345>
+{elseif $public_mode|strtolower == 'yes'}
+    <P1345>1</P1345>
+{elseif $public_mode == '1'}
+    <P1345>1</P1345>
 {else}
-<P1345>0</P1345>
+    <P1345>0</P1345>
+{/if}
+{else}
+    <P1345>0</P1345>
 {/if}
 
 
@@ -7345,28 +7285,25 @@
     <!-- # Disable Call Waiting. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_call_waiting)}
-{if $grandstream_call_waiting == "1"}<P91>0</P91>{/if}
-{if $grandstream_call_waiting == "2"}<P91>1</P91>{/if}
+{if isset($grandstream_call_waiting)}
+{if $grandstream_call_waiting == "1"}    <P91>0</P91>{/if}
+{if $grandstream_call_waiting == "2"}    <P91>1</P91>{/if}
 {/if}
 
     <!-- # Disable Call Waiting Tone. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_call_waiting)}
-{if $grandstream_call_waiting == "1"}<P186>0</P186>{/if}
-{if $grandstream_call_waiting == "2"}<P186>1</P186>{/if}
+{if isset($grandstream_call_waiting)}
+{if $grandstream_call_waiting == "1"}    <P186>0</P186>{/if}
+{if $grandstream_call_waiting == "2"}    <P186>1</P186>{/if}
 {/if}
 
     <!-- # Ring for Call Waiting. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_call_waiting)}
-{if $grandstream_call_waiting == "1"}<P22102>0</P22102>{/if}
-{if $grandstream_call_waiting == "2"}<P22102>1</P22102>{/if}
+{if isset($grandstream_call_waiting)}
+{if $grandstream_call_waiting == "1"}    <P22102>0</P22102>{/if}
+{if $grandstream_call_waiting == "2"}    <P22102>1</P22102>{/if}
 {/if}
 
     <!-- # Disable Busy Tone on Remote Disconnect. 0 - No, 1 - Yes. Default is 0 -->
@@ -7441,11 +7378,10 @@
     <!-- # Attended Transfer Mode. 0 - Static, 1 - Dynamic. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    
 {if isset($grandstream_auto_attended_transfer)}
-<P1376>{$grandstream_auto_attended_transfer}</P1376>
+    <P1376>{$grandstream_auto_attended_transfer}</P1376>
 {else}
-<P1376>1</P1376>
+    <P1376>1</P1376>
 {/if}
 
     <!-- # Show On Hold Duration. 0 - No, 1 - Yes. Default is 0 -->
@@ -7913,19 +7849,18 @@
     <!-- ############################################################################## -->
     <!-- # NTP Server -->
     <!-- # String -->
-    
 {if isset($ntp_server_primary)}
-<P30>{$ntp_server_primary}</P30>
+    <P30>{$ntp_server_primary}</P30>
 {else}
-<P30>pool.ntp.org</P30>
+    <P30>pool.ntp.org</P30>
 {/if}
 
     <!-- # Secondary NTP Server -->
     <!-- # String -->
 {if isset($ntp_server_secondary)}
-<P8333>{$ntp_server_secondary}</P8333>
+    <P8333>{$ntp_server_secondary}</P8333>
 {else}
-<P8333>2.us.pool.ntp.org</P8333>
+    <P8333>2.us.pool.ntp.org</P8333>
 {/if}
 
     <!-- # NTP Update Interval -->
@@ -8005,11 +7940,11 @@
     <!-- # String -->
     <!-- # Mandatory -->
 {if isset($grandstream_timezone) }
-<P64>{$grandstream_timezone}</P64>
+    <P64>{$grandstream_timezone}</P64>
 {elseif isset($grandstream_gxp_time_zone) }
-<P64>{$grandstream_gxp_time_zone}</P64>
+    <P64>{$grandstream_gxp_time_zone}</P64>
 {else}
-<P64>auto</P64>
+    <P64>auto</P64>
 {/if}
 
     <!-- # Allow DHCP Option 2 to override Time Zone setting. 0 - No, 1 - Yes. Default is 1 -->
@@ -8076,11 +8011,11 @@
     <!-- # Wallpaper Server Path -->
     <!-- # String  -->
 {if isset($grandstream_wallpaper_url)}
-<P2916>1</P2916>
-<P2917>{$grandstream_wallpaper_url}</P2917>
+    <P2916>1</P2916>
+    <P2917>{$grandstream_wallpaper_url}</P2917>
 {else}
-<P2916>0</P2916>
-<P2917></P2917>
+    <P2916>0</P2916>
+    <P2917></P2917>
 {/if}
 
     <!-- # Color Background. Default is #000000. -->
@@ -8090,58 +8025,55 @@
     <!-- # Screensaver Settings -->
     <!-- # Screensaver. 0 - No, 1 - Yes, 2 - On if no VPK is active. Default is 1 -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_screensaver)}
-<P2918>{$grandstream_screensaver}</P2918>
+{if isset($grandstream_screensaver)}
+    <P2918>{$grandstream_screensaver}</P2918>
 {else}
-<P2918>1</P2918>
+    <P2918>1</P2918>
 {/if}
 
     <!-- # Screensaver Source.  0 - Default, 1 - USB, 2 - Download. Default is 0. --for GXP2140/2160/2170 only -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_screensaver_source)}
-<P6759>{$grandstream_screensaver_source}</P6759>
+{if isset($grandstream_screensaver_source)}
+    <P6759>{$grandstream_screensaver_source}</P6759>
 {else}
-<P6759>0</P6759>
+    <P6759>0</P6759>
 {/if}
 
     <!-- # Show Date and Time. 0 - No, 1 - Yes. Default is 1 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    
+
 {if isset($grandstream_screensaver_show_date_time)}
-<P8441>{$grandstream_screensaver_show_date_time}</P8441>
+    <P8441>{$grandstream_screensaver_show_date_time}</P8441>
 {else}
-<P8441>1</P8441>
+    <P8441>1</P8441>
 {/if}
 
     <!-- # Screensaver Timeout. Minutes. -->
     <!-- # Number: 3 - 60 -->
     <!-- # Mandatory -->
-    
 {if isset($grandstream_screensaver_timeout)}
-<P2919>{$grandstream_screensaver_timeout}</P2919>
+    <P2919>{$grandstream_screensaver_timeout}</P2919>
 {else}
-<P2919>3</P2919>
+    <P2919>3</P2919>
 {/if}
 
     <!-- # Screensaver Server Path. -->
     <!-- # String -->
 {if isset($grandstream_screensaver_server_path)}
-<P934>{$grandstream_screensaver_server_path}</P934>
+    <P934>{$grandstream_screensaver_server_path}</P934>
 {else}
-<P934></P934>
+    <P934></P934>
 {/if}
 
     <!-- Screensaver XML Download Interval -->
     <!-- # Number: 5 - 720. Default is 0 (disable auto downloading) -->
     <!-- # Mandatory -->
 {if isset($grandstream_screensaver_xml_download_interval)}
-<P935>{$grandstream_screensaver_xml_download_interval}</P935>
+    <P935>{$grandstream_screensaver_xml_download_interval}</P935>
 {else}
-<P935>0</P935>
+    <P935>0</P935>
 {/if}
 
     <!-- ############################################################################## -->
@@ -8229,9 +8161,8 @@
     <!-- # Default Ringtone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3, 4 -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_default_ringtone)}
-<P8398>{$grandstream_default_ringtone}</P8398>
+{if isset($grandstream_default_ringtone)}
+    <P8398>{$grandstream_default_ringtone}</P8398>
 {/if}
 
 
@@ -8254,15 +8185,15 @@
     <!-- # 0 - Self-Defined City Code, 1 - Automatic. Default is 1 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    
-    {if isset($grandstream_city_code)}
-<P1405>0</P1405>
+
+{if isset($grandstream_city_code)}
+    <P1405>0</P1405>
 {/if}
 
     <!-- # Self-Defined City Code -->
     <!-- # String -->
-    {if isset($grandstream_city_code)}
-<P1377>{$grandstream_city_code}</P1377>
+{if isset($grandstream_city_code)}
+    <P1377>{$grandstream_city_code}</P1377>
 {/if}
 
     <!-- # Update Interval (in minutes). Default is 15 -->
@@ -8274,7 +8205,7 @@
     <!-- # String: auto, f, c -->
     <!-- # Mandatory -->
 {if isset ($grandstream_temp_unit)}
-<P1379>{$grandstream_temp_unit}</P1379>
+    <P1379>{$grandstream_temp_unit}</P1379>
 {/if}
 
     <!-- ############################################################################## -->
@@ -12186,7 +12117,7 @@
     <!-- # User ID.  Max length allowed is 64 characters. -->
     <!-- # String -->
     <!-- <P303></P303> -->
-    
+
 {assign var=key_types value=["none"=>-1,"speed dial"=>0, "blf"=>1, "presence watcher"=>2, "eventlist blf"=>3,"speed dial active"=>4,"dial dtmf"=>5,"voicemail"=>6,"call return"=>7,"transfer"=>8,"call park"=>9,"intercom"=>10,"ldap search"=>11,"conference"=>12,"multicast paging"=>13,"record"=>14,"call log"=>15,"monitored call park"=>16,"menu"=>17]}
 {$start_id=323}
 {for $mem=1 to 7}
@@ -12251,7 +12182,7 @@
 <P{$start_id+$pid+3}></P{$start_id+$pid+3}>
 {/if}
 
-{/for}    
+{/for}
 
     <!-- ###################################################################################### -->
     <!-- # MPK 2- GXP2130/2160 only -->
@@ -12935,8 +12866,7 @@
     <!-- # 17 - CallReturn, 20 - Intercom, 21 - LDAP Search, 25 - Call Log, 27 - Menu, 29 - Information, 30 - Message -->
     <!-- # Number: 0,10,14,16,17,20,21,25,27,29,30 -->
     <!-- # Mandatory -->
-    
-    {assign var=key_types value=["speed dial"=>10, "speed dial active"=>14,"voicemail"=>16,"call return"=>17,"intercom"=>20,"ldap search"=>21,"menu"=>27]}
+{assign var=key_types value=["speed dial"=>10, "speed dial active"=>14,"voicemail"=>16,"call return"=>17,"intercom"=>20,"ldap search"=>21,"menu"=>27]}
 {$start_id=2987}
 {for $prog=1 to 3}
 {$pid=$prog*4-4}
@@ -12953,8 +12883,8 @@
 {/if}
 
 {/for}
-    
-    
+
+
     <!-- # <P2987>0</P2987>  -->
 
     <!-- # Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4 (GXP 2140/2160 only), 4 - Account 5 (GXP2160 only), 5 - Account 6 (GXP2160 only) -->
