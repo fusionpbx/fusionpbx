@@ -54,8 +54,7 @@
 		$command_authorized = true;
 	}
 	if (!$command_authorized) {
-		//not authorized
-		echo "not authorized";
+		//catpcha invalid
 		exit;
 	}
 
