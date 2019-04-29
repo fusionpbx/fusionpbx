@@ -892,7 +892,7 @@
 	echo "	".$text['label-destination_prefix']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='destination_prefix' maxlength='255' value=\"".escape($destination_prefix)."\" required='required'>\n";
+	echo "	<input class='formfld' type='text' name='destination_prefix' maxlength='32' value=\"".escape($destination_prefix)."\">\n";
 	echo "<br />\n";
 	echo $text['description-destination_prefix']."\n";
 	echo "</td>\n";
