@@ -15,7 +15,7 @@
 
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Portions created by the Initial Developer are Copyright (C) 2014
+--	Portions created by the Initial Developer are Copyright (C) 2014-2019
 --	the Initial Developer. All Rights Reserved.
 
 
@@ -56,11 +56,14 @@
 		local dbh = Database.new('system');
 
 		--select data from the database
-		local sql = "SELECT destination_number, destination_context "
-		sql = sql .. "FROM v_destinations "
-		sql = sql .. "WHERE destination_number = :destination_number "
-		sql = sql .. "AND destination_type = 'inbound' "
-		sql = sql .. "AND destination_enabled = 'true' "
+		local sql = "SELECT destination_number, destination_context ";
+		sql = sql .. "FROM v_destinations ";
+		sql = sql .. "WHERE ( ";
+		sql = sql .. "	destination_number = :destination_number ";
+		sql = sql .. "	OR destination_prefix || destination_number = :destination_number ";
+		sql = sql .. ") ";
+		sql = sql .. "AND destination_type = 'inbound' ";
+		sql = sql .. "AND destination_enabled = 'true' ";
 		local params = {destination_number = destination_number};
 		if (debug["sql"]) then
 			freeswitch.consoleLog("notice", "SQL:" .. sql .. "; params: " .. json.encode(params) .. "\n");
