@@ -156,6 +156,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the number.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "destination_prefix";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the prefix.";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_number_regex";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Regular Expression version of destination number";
