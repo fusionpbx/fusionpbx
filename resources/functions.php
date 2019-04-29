@@ -1757,10 +1757,14 @@ function number_pad($number,$n) {
 
 //converts a string to a regular expression
 	if (!function_exists('string_to_regex')) {
-		function string_to_regex($string) {
+		function string_to_regex($string, $prefix='') {
 			//escape the plus
 				if (substr($string, 0, 1) == "+") {
 					$string = "^\\+(".substr($string, 1).")$";
+				}
+			//add prefix
+				if (strlen($prefix) > 0) {
+					$prefix = $prefix.'?';
 				}
 			//convert N,X,Z syntax to regex
 				$string = str_ireplace("N", "[2-9]", $string);
@@ -1774,10 +1778,10 @@ function number_pad($number,$n) {
 				if (substr($string, -1) != "$") {
 					$string = $string."$";
 				}
-			//add the round brackgets ( and )
+			//add the round brackets ( and )
 				if (!strstr($string, '(')) {
 					if (strstr($string, '^')) {
-						$string = str_replace("^", "^(", $string);
+						$string = str_replace("^", "^".$prefix."(", $string);
 					}
 					else {
 						$string = '^('.$string;
