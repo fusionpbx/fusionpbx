@@ -941,7 +941,7 @@ $text['description-destination_number']['ru-ru'] = "Введите номер н
 $text['description-destination_number']['sv-se'] = "Ange destinationen.";
 $text['description-destination_number']['uk-ua'] = "Введіть номер";
 
-$text['description-destination_prefix']['en-us'] = "";
+$text['description-destination_prefix']['en-us'] = "Enter the destination prefix.";
 $text['description-destination_prefix']['ar-eg'] = "";
 $text['description-destination_prefix']['de-at'] = ""; //copied from de-de
 $text['description-destination_prefix']['de-ch'] = ""; //copied from de-de
