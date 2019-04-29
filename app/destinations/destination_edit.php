@@ -113,7 +113,7 @@
 			$destination_type_text = check_str($_POST["destination_type_text"]);
 			$destination_carrier = trim($_POST["destination_carrier"]);
 		//convert the number to a regular expression
-			$destination_number_regex = string_to_regex($destination_number);
+			$destination_number_regex = string_to_regex($destination_number, $destination_prefix);
 			$_POST["destination_number_regex"] = $destination_number_regex;
 		//get the destination app and data
 			$destination_array = explode(":", $_POST["destination_action"], 2);
