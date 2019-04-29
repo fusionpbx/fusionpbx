@@ -888,6 +888,17 @@
 	echo "</tr>\n";
 
 	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-destination_prefix']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='destination_prefix' maxlength='255' value=\"".escape($destination_prefix)."\" required='required'>\n";
+	echo "<br />\n";
+	echo $text['description-destination_prefix']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-destination_number']."\n";
 	echo "</td>\n";
@@ -895,17 +906,6 @@
 	echo "	<input class='formfld' type='text' name='destination_number' maxlength='255' value=\"".escape($destination_number)."\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-destination_number']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-destination_prefix']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='destination_prefix' maxlength='255' value=\"".escape($destination_prefix)."\" required='required'>\n";
-	echo "<br />\n";
-	echo $text['description-destination_prefix']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
