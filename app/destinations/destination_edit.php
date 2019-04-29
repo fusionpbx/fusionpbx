@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -88,12 +88,12 @@
 
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
-
 		//set the variables
 			$dialplan_uuid = trim($_POST["dialplan_uuid"]);
 			$domain_uuid = trim($_POST["domain_uuid"]);
 			$destination_type = trim($_POST["destination_type"]);
 			$destination_number = trim($_POST["destination_number"]);
+			$destination_prefix = trim($_POST["destination_prefix"]);
 			$db_destination_number = trim($_POST["db_destination_number"]);
 			$destination_caller_id_name = trim($_POST["destination_caller_id_name"]);
 			$destination_caller_id_number = trim($_POST["destination_caller_id_number"]);
@@ -586,6 +586,7 @@
 					$destination["destination_type"] = $destination_type;
 					$destination["destination_number"] = $destination_number;
 					$destination["destination_number_regex"] = $destination_number_regex;
+					$destination["destination_prefix"] = $destination_prefix;
 					$destination["destination_caller_id_name"] = $destination_caller_id_name;
 					$destination["destination_caller_id_number"] = $destination_caller_id_number;
 					$destination["destination_cid_name_prefix"] = $destination_cid_name_prefix;
@@ -654,6 +655,7 @@
 					$array['destinations'][0]["domain_uuid"] = $domain_uuid;
 					$array['destinations'][0]["destination_type"] = $destination_type;
 					$array['destinations'][0]["destination_number"] = $destination_number;
+					$array['destinations'][0]["destination_prefix"] = $destination_prefix;
 					$array['destinations'][0]["destination_context"] = $destination_context;
 					$array['destinations'][0]["destination_enabled"] = $destination_enabled;
 					$array['destinations'][0]["destination_description"] = $destination_description;
@@ -698,6 +700,7 @@
 				$dialplan_uuid = $row["dialplan_uuid"];
 				$destination_type = $row["destination_type"];
 				$destination_number = $row["destination_number"];
+				$destination_prefix = $row["destination_prefix"];
 				$destination_caller_id_name = $row["destination_caller_id_name"];
 				$destination_caller_id_number = $row["destination_caller_id_number"];
 				$destination_cid_name_prefix = $row["destination_cid_name_prefix"];
@@ -892,6 +895,17 @@
 	echo "	<input class='formfld' type='text' name='destination_number' maxlength='255' value=\"".escape($destination_number)."\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-destination_number']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-destination_prefix']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='destination_prefix' maxlength='255' value=\"".escape($destination_prefix)."\" required='required'>\n";
+	echo "<br />\n";
+	echo $text['description-destination_prefix']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
