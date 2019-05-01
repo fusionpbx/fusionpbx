@@ -72,10 +72,10 @@
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c998c762-6a43-4911-a465-a9653eeb793d";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "http_auth_disable";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "http_auth_enabled";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d376fe0f-fb89-4418-8fb4-590e4cac483f";
