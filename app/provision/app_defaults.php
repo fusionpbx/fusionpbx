@@ -53,7 +53,7 @@ if ($domains_processed == 1) {
 	}
 
 	//update http_auth_enabled set to true
-	$sql = "select * from v_devices ";
+	$sql = "select * from v_default_settings ";
 	$sql .= "where default_setting_subcategory = 'http_auth_disable' ";
 	$prep_statement = $db->prepare($sql);
 	$prep_statement->execute();
