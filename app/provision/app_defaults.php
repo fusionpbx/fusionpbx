@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -45,6 +45,36 @@ if ($domains_processed == 1) {
 				$sql = "update v_devices set ";
 				$sql .= "device_mac_address = '".$device_mac_address."' ";
 				$sql .= "where device_uuid = '".$device_uuid."' ";
+				$db->exec(check_sql($sql));
+				unset($sql);
+			}
+		}
+		unset($prep_statement, $result);
+	}
+
+	//update http_auth_enabled set to true
+	$sql = "select * from v_devices ";
+	$sql .= "where default_setting_subcategory = 'http_auth_disable' ";
+	$prep_statement = $db->prepare($sql);
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	if (is_array($result)) {
+		foreach($result as $row) {
+			if ($row["default_setting_value"] == 'false' && $row["default_setting_enabled"] == 'true') {
+				$sql = "update v_default_settings set ";
+				$sql .= "set default_setting_subcategory = 'http_auth_enabled', ";
+				$sql .= "default_setting_value = 'false',  ";
+				$sql .= "default_setting_enabled = 'true' ";
+				$sql .= "where default_setting_uuid = 'c998c762-6a43-4911-a465-a9653eeb793d'; ";
+				$db->exec(check_sql($sql));
+				unset($sql);
+			}
+			else {
+				$sql = "update v_default_settings set ";
+				$sql .= "set default_setting_subcategory = 'http_auth_enabled', ";
+				$sql .= "default_setting_value = 'true',  ";
+				$sql .= "default_setting_enabled = 'true' ";
+				$sql .= "where default_setting_uuid = 'c998c762-6a43-4911-a465-a9653eeb793d'; ";
 				$db->exec(check_sql($sql));
 				unset($sql);
 			}
