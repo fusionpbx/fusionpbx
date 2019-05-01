@@ -61,7 +61,7 @@ if ($domains_processed == 1) {
 	if (is_array($result)) {
 		foreach($result as $row) {
 			if ($row["default_setting_value"] == 'false' && $row["default_setting_enabled"] == 'true') {
-				$sql = "update v_default_settings set ";
+				$sql = "update v_default_settings ";
 				$sql .= "set default_setting_subcategory = 'http_auth_enabled', ";
 				$sql .= "default_setting_value = 'false',  ";
 				$sql .= "default_setting_enabled = 'true' ";
@@ -70,7 +70,7 @@ if ($domains_processed == 1) {
 				unset($sql);
 			}
 			else {
-				$sql = "update v_default_settings set ";
+				$sql = "update v_default_settings ";
 				$sql .= "set default_setting_subcategory = 'http_auth_enabled', ";
 				$sql .= "default_setting_value = 'true',  ";
 				$sql .= "default_setting_enabled = 'true' ";
