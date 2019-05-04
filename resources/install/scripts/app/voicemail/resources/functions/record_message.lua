@@ -155,7 +155,7 @@
                                                         return ''
                                                 end
 
-                                                cache.set(key, access_token_result, 4200);
+                                                cache.set(key, access_token_result, 120);
                                                 if (debug["info"]) then
                                                         freeswitch.consoleLog("notice", "[voicemail] Azure access_token saved into memcached: " .. access_token_result .. "\n");
                                                 end
