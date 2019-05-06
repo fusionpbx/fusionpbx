@@ -199,10 +199,14 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 
 		//link table rows (except the last - the list_control_icons cell) on a table with a class of 'tr_hover', according to the href attribute of the <tr> tag
 			$('.tr_hover tr').each(function(i,e) {
-			  $(e).children('td:not(.list_control_icon,.list_control_icons,.tr_link_void)').click(function() {
-				 var href = $(this).closest("tr").attr("href");
-				 if (href) { window.location = href; }
-			  });
+				$(e).children('td:not(.list_control_icon,.list_control_icons,.tr_link_void)').click(function() {
+					var href = $(this).closest("tr").attr("href");
+					var target = $(this).closest('tr').attr('target');
+					if (href) {
+						if (target) { window.open(href, target); }
+						else { window.location = href; }
+					}
+				});
 			});
 
 		//apply the auto-size jquery script to all text inputs
