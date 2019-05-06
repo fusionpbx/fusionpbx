@@ -663,60 +663,6 @@ include "root.php";
 						$this->connect();
 					}
 
-				//sanitize the table name
-					$this->table = preg_replace('#[^a-zA-Z0-9_\-]#', '', $this->table);
-
-				//delete from the database
-					if (isset($this->table) && isset($this->where)) {
-						$i = 0;
-						$sql = "delete from ".$this->table." ";
-						if (is_array($this->where)) {
-							foreach($this->where as $row) {
-								//sanitize the name
-								$row['name'] = preg_replace('#[^a-zA-Z0-9_\-]#', '', $row['name']);
-
-								//validate the operator
-								switch ($row['operator']) {
-									case "<": break;
-									case ">": break;
-									case "<=": break;
-									case ">=": break;
-									case "=": break;
-									case ">=": break;
-									case "<>": break;
-									case "!=": break;
-									default:
-										//invalid operator
-										return false;
-								}
-
-								//build the sql
-								if ($i == 0) {
-									//$sql .= $row['name']." ".$row['operator']." '".$row['value']."' ";
-									$sql .= "where ".$row['name']." ".$row['operator']." :".$row['name']." ";
-								}
-								else {
-									//$sql .= $row['name']." ".$row['operator']." '".$row['value']."' ";
-									$sql .= "and ".$row['name']." ".$row['operator']." :".$row['name']." ";
-								}
-
-								//add the name and value to the params array
-								$params[$row['name']] = $row['value'];
-
-								//increment $i
-								$i++;
-							}
-						}
-						//echo $sql."<br>\n";
-						$prep_statement = $this->db->prepare($sql);
-						$prep_statement->execute($params);
-						unset($sql, $this->where);
-						return;
-					}
-
-				//return the array
-					if (!is_array($array)) { echo "not an array"; return false; }
-
 				//set the message id
 					$m = 0;
 
@@ -724,11 +670,9 @@ include "root.php";
 					if (!isset($this->app_name)) {
 						$this->app_name = $this->name;
 					}
-
-				//normalize the array structure
-					//$new_array = $this->normalize_array($array, $this->name);
-					//unset($array);
-					$new_array = $array;
+				
+				//set the table prefix
+					$table_prefix = 'v_';
 
 				//debug sql
 					$this->debug["sql"] = true;
@@ -738,325 +682,79 @@ include "root.php";
 
 				//debug info
 					//echo "<pre>\n";
-					//print_r($new_array);
+					//print_r($array);
 					//echo "</pre>\n";
 					//exit;
 
-				//get the $apps array from the installed apps from the core and mod directories
-					//$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/$schema_name/app_config.php");
-					/*
-					$x = 0;
-					if (is_array($config_list)) {
-						foreach ($config_list as &$config_path) {
-							include($config_path);
-							$x++;
-						}
-					}
-					$tables = $apps[0]['db'];
-					if (is_array($tables)) {
-						foreach ($tables as &$row) {
-							//print_r($row);
-							$table = $row['table'];
-							echo $table."\n";
-							foreach ($row['fields'] as &$field) {
-								if (isset($field['key']['type'])) {
-									print_r($field);
-								}
+				//get the current data
+					foreach($array as $table_name => $rows) {
+						foreach($rows as $row) {
+							$i = 0;
+							$sql = "select * from ".$table_prefix.$table_name." ";
+							foreach($row as $field_name => $field_value) {
+								if ($i == 0) { $sql .= "where "; } else { $sql .= "and "; }
+								$sql .= $field_name." = :".$field_name." ";
+								$parameters[$field_name] = $field_value;
+								$i++;
 							}
+							$old_array[$table_name] = $this->execute($sql, $parameters);
+							unset($parameters);
 						}
 					}
-					*/
 
-				//loop through the array
-					if (is_array($new_array)) {
-						foreach ($new_array as $schema_name => $schema_array) {
-							$this->name = preg_replace('#[^a-zA-Z0-9_\-]#', '', $schema_name);
-							if (is_array($schema_array)) {
-								foreach ($schema_array as $schema_id => $array) {
+				//start the atomic transaction
+					$this->db->beginTransaction();
 
-									//set the variables
-										$table_name = "v_".$this->name;
-										$parent_key_name = $this->singular($this->name)."_uuid";
-
-									//if the uuid is set then set parent key exists and value 
-										//determine if the parent_key_exists
-										$parent_key_exists = false;
-										if (isset($array[$parent_key_name])) {
-											$parent_key_value = $array[$parent_key_name];
-											$parent_key_exists = true;
-										}
-										else {
-											if (isset($this->uuid)) {
-												$parent_key_exists = true;
-												$parent_key_value = $this->uuid;
-											}
-											else {
-												$parent_key_value = uuid();
-											}
-										}
-
-									//get the parent field names
-										$parent_field_names = array();
-										if (is_array($array)) {
-											foreach ($array as $key => $value) {
-												if (!is_array($value)) {
-													$parent_field_names[] = $key;
-												}
-											}
-										}
-
-									//get the data before the delete
-										if ($parent_key_exists) {
-											$sql = "SELECT * FROM ".$table_name." ";
-											$sql .= "WHERE ".$parent_key_name." = '".$parent_key_value."' ";
-											$prep_statement = $this->db->prepare($sql);
-											if ($prep_statement) {
-												//get the data
-													try {
-														$prep_statement->execute();
-														$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-													}
-													catch(PDOException $e) {
-														echo 'Caught exception: ',  $e->getMessage(), "<br/><br/>\n";
-														echo $sql;
-														exit;
-													}
-
-												//set the action
-													if (count($result) > 0) {
-														$action = "delete";
-														$old_array[$schema_name] = $result;
-													}
-													else {
-														$action = "";
-													}
-											}
-											unset($prep_statement);
-											unset($result);
-										}
-										else {
-											$action = "";
-										}
-
-									//delete a specific uuid
-										if ($action == "delete") {
-											if (permission_exists($this->singular($this->name).'_delete') && strlen($parent_key_value) > 0
-												&& ($parent_key_exists) &&  is_uuid($parent_key_value)) {
-												//set the table name
-													$table_name = 'v_'.$this->name;
-
-												//parent data
-													$sql = "DELETE FROM $table_name ";
-													$sql .= "WHERE $parent_key_name = '$parent_key_value' ;";
-													//echo $sql;
-													//$sql = "DELETE FROM :table_name ";
-													//$sql .= "WHERE :parent_key_name = ':parent_key_value'; ";
-													//$statement = $this->db->prepare($sql);
-													//$statement->bindParam(':table_name', $table_name);
-													//$statement->bindParam(':parent_key_name', $parent_key_name);
-													//$statement->bindParam(':parent_key_value', $parent_key_value);
-													$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-													try {
-														$this->db->query(check_sql($sql));
-														//$statement->execute();
-														$message["message"] = "OK";
-														$message["code"] = "200";
-														$message["uuid"] = $parent_key_value;
-														$message["details"][$m]["name"] = $this->name;
-														$message["details"][$m]["message"] = "OK";
-														$message["details"][$m]["code"] = "200";
-														$message["details"][$m]["uuid"] = $parent_key_value;
-														if ($this->debug["sql"]) {
-															$message["details"][$m]["sql"] = $sql;
-														}
-														$this->message = $message;
-														$m++;
-														unset($sql);
-														unset($statement);
-													}
-													catch(PDOException $e) {
-														$message["message"] = "Bad Request";
-														$message["code"] = "400";
-														$message["details"][$m]["name"] = $this->name;
-														$message["details"][$m]["message"] = $e->getMessage();
-														$message["details"][$m]["code"] = "400";
-														if ($this->debug["sql"]) {
-															$message["details"][$m]["sql"] = $sql;
-														}
-														$this->message = $message;
-														$m++;
-													}
-											}
-											else {
-												$message["name"] = $this->name;
-												$message["message"] = "Forbidden, does not have '".$this->singular($this->name)."_delete'";
-												$message["code"] = "403";
-												$message["line"] = __line__;
-												$this->message = $message;
-												$m++;
-											}
-										}
-
-									//unset the variables
-										unset($sql, $action);
-
-									//child data
-										if (is_array($array)) {
-											foreach ($array as $key => $value) {
-
-												if (is_array($value)) {
-														$table_name = "v_".$key;
-														foreach ($value as $id => $row) {
-															//prepare the variables
-																$child_name = $this->singular($key);
-																$child_key_name = $child_name."_uuid";
-
-															//determine if the parent key exists in the child array
-																$parent_key_exists = false;
-																if (!isset($array[$parent_key_name])) {
-																	$parent_key_exists = true;
-																}
-
-															//determine if the uuid exists
-																$uuid_exists = false;
-																if (is_array($row)) {
-																	foreach ($row as $k => $v) {
-																		if ($child_key_name == $k) {
-																			if (strlen($v) > 0) {
-																				$child_key_value = $v;
-																				$uuid_exists = true;
-																				break;
-																			}
-																		}
-																		else {
-																			$uuid_exists = false;
-																		}
-																	}
-																}
-
-															//get the child field names
-																$child_field_names = array();
-																if (is_array($row)) {
-																	foreach ($row as $k => $v) {
-																		if (!is_array($v)) {
-																			$child_field_names[] = $k;
-																		}
-																	}
-																}
-
-															//get the child data
-																if ($uuid_exists) {
-																	$sql = "SELECT * FROM ".$table_name." ";
-																	$sql .= "WHERE ".$child_key_name." = '".$child_key_value."' ";
-																	$prep_statement = $this->db->prepare($sql);
-																	if ($prep_statement) {
-																		//get the data
-																			$prep_statement->execute();
-																			$child_array = $prep_statement->fetch(PDO::FETCH_ASSOC);
-																		//set the action
-																			if (is_array($child_array)) {
-																				$action = "delete";
-																			}
-																			else {
-																				$action = "";
-																			}
-																		//add to the parent array
-																			if (is_array($child_array)) {
-																				$old_array[$schema_name][$schema_id][$key][] = $child_array;
-																			}
-																	}
-																	unset($prep_statement);
-																}
-																else {
-																	$action = "";
-																}
-
-															//delete the child data
-																if ($action == "delete") {
-																	if (permission_exists($child_name.'_delete')) {
-																		$sql = "DELETE FROM ".$table_name." ";
-																		$sql .= "WHERE ".$child_key_name." = '".$child_key_value."' ";
-																		if (strlen($parent_key_value) > 0) { $sql .= "AND ".$parent_key_name." = '".$parent_key_value."' "; }
-																		//$sql = "DELETE FROM :table_name ";
-																		//$sql .= "WHERE :child_key_name = ':child_key_value' ";
-																		//if (strlen($parent_key_value) > 0) { $sql .= "AND :parent_key_name = ':parent_key_value' }";
-																		//$statement = $this->db->prepare($sql);
-																		//$statement->bindParam(':table_name', $table_name);
-																		//$statement->bindParam(':parent_key_name', $parent_key_name);
-																		//$statement->bindParam(':parent_key_value', $parent_key_value);
-																		//$statement->bindParam(':child_key_name', $child_key_name);
-																		//$statement->bindParam(':child_key_value', $child_key_value);
-																		$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-																		try {
-																			$this->db->query(check_sql($sql));
-																			//$statement->execute();
-																			$message["details"][$m]["name"] = $key;
-																			$message["details"][$m]["message"] = "OK";
-																			$message["details"][$m]["code"] = "200";
-																			$message["details"][$m]["uuid"] = $child_key_value;
-																			if ($this->debug["sql"]) {
-																				$message["details"][$m]["sql"] = $sql;
-																			}
-																			$this->message = $message;
-																			$m++;
-																		}
-																		catch(PDOException $e) {
-																			if ($message["code"] = "200") {
-																				$message["message"] = "Bad Request";
-																				$message["code"] = "400";
-																			}
-																			$message["details"][$m]["name"] = $key;
-																			$message["details"][$m]["message"] = $e->getMessage();
-																			$message["details"][$m]["code"] = "400";
-																			if ($this->debug["sql"]) {
-																				$message["details"][$m]["sql"] = $sql;
-																			}
-																			$this->message = $message;
-																			$m++;
-																		}
-																	}
-																	else {
-																		$message["name"] = $child_name;
-																		$message["message"] = "Forbidden, does not have '${child_name}_delete'";
-																		$message["code"] = "403";
-																		$message["line"] = __line__;
-																		$this->message = $message;
-																		$m++;
-																	}
-																} //action update
-
-														//unset the variables
-															unset($sql, $action, $child_key_name, $child_key_value);
-													} // foreach value
-
-												} //is array
-											} //foreach array
-
-										} //is_array array
-								} // foreach schema_array
-
-							} //is_array $schema_array
-						}  // foreach main array
-					}
-
-				//return the before and after data
-					//log this in the future
-					//if (is_array($old_array)) {
-						//normalize the array structure
-							//$old_array = $this->normalize_array($old_array, $this->name);
-
-						//debug info
-							//echo "<pre>\n";
-							//print_r($old_array);
-							//echo "</pre>\n";
-							//exit;
-					//}
-					//$message["new"] = $new_array;
-					//$message["new"]["md5"] = md5(json_encode($new_array));
-					$this->message = $message;
+				//delete the current data
+					foreach($array as $table_name => $rows) {
+						//echo "table: ".$table_name."\n";
+						foreach($rows as $row) {
+							if (permission_exists($this->singular($table_name).'_delete')) {
+								$sql = "delete from ".$table_prefix.$table_name." ";
+								$i = 0;
+								foreach($row as $field_name => $field_value) {
+									//echo "field: ".$field_name." = ".$field_value."\n";
+									if ($i == 0) { $sql .= "where "; } else { $sql .= "and "; }
+									$sql .= $field_name." = :".$field_name." ";
+									$parameters[$field_name] = $field_value;
+									$i++;
+								}
+								try {
+									$this->execute($sql, $parameters);
+									$message["message"] = "OK";
+									$message["code"] = "200";
+									$message["uuid"] = $id;
+									$message["details"][$m]["name"] = $this->name;
+									$message["details"][$m]["message"] = "OK";
+									$message["details"][$m]["code"] = "200";
+									//$message["details"][$m]["uuid"] = $parent_key_value;
+									if ($this->debug["sql"]) {
+										$message["details"][$m]["sql"] = $sql;
+									}
+									$this->message = $message;
+									$m++;
+									unset($sql);
+									unset($statement);
+								}
+								catch(PDOException $e) {
+									$message["message"] = "Bad Request";
+									$message["code"] = "400";
+									$message["details"][$m]["name"] = $this->name;
+									$message["details"][$m]["message"] = $e->getMessage();
+									$message["details"][$m]["code"] = "400";
+									if ($this->debug["sql"]) {
+										$message["details"][$m]["sql"] = $sql;
+									}
+									$this->message = $message;
+									$m++;
+								}
+								unset($parameters);
+							} //if permission
+						} //foreach rows
+					} //foreach $array
 
 				//commit the atomic transaction
-					//$this->db->commit();
+					$this->db->commit();
 
 				//set the action if not set
 					$transaction_type = 'delete';
@@ -1098,7 +796,7 @@ include "root.php";
 							$sql .= ":app_uuid, ";
 						}
 						if (strlen($this->app_name) > 0) {
-							$sql .= "':app_name, ";
+							$sql .= ":app_name, ";
 						}
 						$sql .= "'".$message["code"]."', ";
 						$sql .= ":remote_address, ";
