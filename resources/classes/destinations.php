@@ -479,7 +479,7 @@ class destinations {
 	}
 
 	/**
-	 * delete destinations
+	 * delete destinations and related dialplan
 	 */
 	public function delete($destinations) {
 		if (permission_exists('destination_delete')) {
@@ -496,36 +496,46 @@ class destinations {
 
 				//delete the checked rows
 				if ($action == 'delete') {
+
+					//add the dialplan permission
+					$p = new permissions;
+					$p->add('dialplan_delete', 'temp');
+					$p->add('dialplan_detail_delete', 'temp');
+
+					//loop through selected destinations
 					foreach($destinations as $row) {
 						if ($row['action'] == 'delete' or $row['checked'] == 'true') {
-							//get the list destinations
-							$sql = "select * from v_destinations ";
-							$sql .= "where destination_uuid = '".$row['destination_uuid']."';";
-							$prep_statement = $this->db->prepare($sql);
-							$prep_statement->execute();
-							$destinations = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-							$row = $destinations[0];
 
-							//delete th dialplan
-							$sql = "delete from v_dialplan_details ";
-							$sql .= "where dialplan_uuid = '".$row['dialplan_uuid']."';";
-							$this->db->query($sql);
-							unset($sql);
+							//get the dialplan uuid and context
+								$sql = "select * from v_destinations ";
+								$sql .= "where destination_uuid = :destination_uuid ";
+								$database = new database;
+								$parameters['destination_uuid'] = $row['destination_uuid'];
+								$destinations = $database->select($sql,$parameters);
+								$row = $destinations[0];
 
-							//delete th dialplan
-							$sql = "delete from v_dialplans ";
-							$sql .= "where dialplan_uuid = '".$row['dialplan_uuid']."';";
-							$this->db->query($sql);
-							unset($sql);
+							//prepare and then delete the selected data
+								if (isset($row["dialplan_uuid"]) && is_uuid($row["dialplan_uuid"])) {
+									$array['dialplan_details'][]['dialplan_uuid'] = $row["dialplan_uuid"];
+									$array['dialplans'][]['dialplan_uuid'] = $row["dialplan_uuid"];
+								}
+								$array['destinations'][]['destination_uuid'] = $row['destination_uuid'];
+								$database->app_name = 'destinations';
+								$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
+								$database->delete($array);
+								//$message = $database->message;
 
-							//delete the destinations
-							$sql = "delete from v_destinations ";
-							$sql .= "where destination_uuid = '".$row['destination_uuid']."';";
-							$this->db->query($sql);
-							unset($sql);
+							//clear the cache
+								$cache = new cache;
+								$cache->delete("dialplan:".$row['destination_context']);
+
 						}
 					}
-					unset($destinations);
+					unset($destinations, $row);
+
+					//remove the temporary permission
+					$p->delete('dialplan_delete', 'temp');
+					$p->delete('dialplan_detail_delete', 'temp');
 				}
 			}
 		}
