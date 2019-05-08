@@ -43,59 +43,47 @@
 	$text = $language->get();
 
 //get the http value and set it as a php variable
-	if (count($_GET)>0) {
-		$id = check_str($_GET["id"]);
+	if (is_array($_GET)) {
+		$id = $_GET["id"];
 	}
 
 //delete the user data
-	if (strlen($id)>0) {
-		//get the dialplan
-			$sql = "select dialplan_uuid from v_ring_groups ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and ring_group_uuid = '".$id."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll();
-			foreach ($result as &$row) {
-				$dialplan_uuid = $row["dialplan_uuid"];
-				$ring_group_context = $row["ring_group_context"];
+	if (is_uuid($id)) {
+		
+		//get the dialplan_uuid
+			$sql = "select * from v_ring_groups ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and ring_group_uuid = :ring_group_uuid ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['ring_group_uuid'] = $id;
+			$database = new database;
+			$result = $database->select($sql, $parameters);
+			if (is_array($result)) {
+				foreach ($result as &$row) {
+					$dialplan_uuid = $row["dialplan_uuid"];
+					$ring_group_context = $row["ring_group_context"];
+				}
 			}
-			unset ($prep_statement);
+			unset($database, $sql, $parameters);
 
-		//delete the ring group
-			$sql = "delete from v_ring_groups ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and ring_group_uuid = '".$id."' ";
-			$db->exec(check_sql($sql));
-			unset($sql);
+		//add the dialplan permission
+			$p = new permissions;
+			$p->add('dialplan_delete', 'temp');
 
-		//delete the ring group destinations
-			$sql = "delete from v_ring_group_destinations ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and ring_group_uuid = '".$id."' ";
-			$db->exec(check_sql($sql));
-			unset($sql);
+		//delete the data
+			$array['dialplan_details'][]['dialplan_uuid'] = $dialplan_uuid;
+			$array['dialplans'][]['dialplan_uuid'] = $dialplan_uuid;
+			$array['ring_group_destinations'][]['ring_group_uuid'] = $id;
+			$array['ring_group_users'][]['ring_group_uuid'] = $id;
+			$array['ring_groups'][]['ring_group_uuid'] = $id;
+			$database = new database;
+			$database->app_name = 'ring_groups';
+			$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
+			$database->delete($array);
+			$message = $database->message;
 
-		//delete the ring group users
-			$sql = "delete from v_ring_group_users ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and ring_group_uuid = '".$id."' ";
-			$db->exec(check_sql($sql));
-			unset($sql);
-
-		//delete the dialplan details
-			$sql = "delete from v_dialplan_details ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
-			$db->exec(check_sql($sql));
-			unset($sql);
-
-		//delete the dialplan
-			$sql = "delete from v_dialplans ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
-			$db->exec(check_sql($sql));
-			unset($sql);
+		//remove the temporary permission
+			$p->delete('dialplan_delete', 'temp');
 
 		//save the xml
 			save_dialplan_xml();
