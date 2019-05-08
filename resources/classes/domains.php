@@ -222,6 +222,8 @@ if (!class_exists('domains')) {
 				$db_name = $config->db_name;
 				$db_username = $config->db_username;
 				$db_password = $config->db_password;
+				$db_secure = $config->db_secure;
+				$db_cert_authority = $config->db_cert_authority;
 				$db_host = $config->db_host;
 				$db_path = $config->db_path;
 				$db_port = $config->db_port;

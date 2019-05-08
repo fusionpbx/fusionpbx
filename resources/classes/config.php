@@ -19,6 +19,8 @@ class config {
 	public $db_host;
 	public $db_path;
 	public $db_port;
+	public $db_secure;
+	public $db_cert_authority;
 	public $config_path;
 
 	/**
@@ -47,6 +49,8 @@ class config {
 	 * @var string $db_host - hostname of the database server
 	 * @var string $db_path - path of the database file
 	 * @var string $db_port - network port to connect to the database
+	 * @var bool $db_secure - whether or not to connect with SSL
+	 * @var string $db_cert_authority - location of certificate authority
 	 */
 	public function get() {
 		$this->find();
@@ -56,6 +60,8 @@ class config {
 			$this->db_name = $db_name;
 			$this->db_username = $db_username;
 			$this->db_password = $db_password;
+			$this->db_secure = $db_secure;
+			$this->db_cert_authority = $db_cert_authority;
 			$this->db_host = $db_host;
 			$this->db_path = $db_path;
 			$this->db_port = $db_port;
