@@ -635,6 +635,11 @@ if (!class_exists('schema')) {
 																$sql_update .= "ALTER TABLE ".$table_name." ADD ".$field['name']." ".$field_type.";\n";
 															}
 														}
+														else {
+															if ($field['exists'] == "false") {
+																$sql_update .= "ALTER TABLE ".$table_name." ADD ".$field['name']["text"]." ".$field_type.";\n";
+															}
+														}
 													}
 												//rename fields where the name has changed
 													if (is_array($field['name'])) {
