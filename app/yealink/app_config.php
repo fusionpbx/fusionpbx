@@ -814,5 +814,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The priority of the specified codec.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f20eea5d-402c-4d40-bfee-a5b8abe7217a";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_transfer_semi_attended";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0-Disabled, 1-Enabled (default). Enable or disable the transferee to display the missed call prompt when receiving a semi_attended transfer call.";
+		$y++;
 
 ?>
