@@ -122,7 +122,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
-		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_sip_profile";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_sip_profiles";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "sip_profile_uuid";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "sip_profile_domain_name";
@@ -152,6 +152,8 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_sip_profiles";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "sip_profile_uuid";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "sip_profile_setting_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";

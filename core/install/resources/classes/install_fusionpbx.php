@@ -724,7 +724,7 @@ include "root.php";
 				unset($sql);
 			}
 			$this->write_progress("\tChecking if superuser is in the correct group");
-			$sql = "select count(*) as count from v_group_users ";
+			$sql = "select count(*) as count from v_user_groups ";
 			$sql .= "where domain_uuid = '".$this->global_settings->domain_uuid()."' ";
 			$sql .= "and user_uuid = '".$this->admin_uuid."' ";
 			$sql .= "and group_name = 'superadmin' ";
@@ -735,9 +735,9 @@ include "root.php";
 			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 			if ($row['count'] == 0) {
 				//add the user to the superadmin group
-				$sql = "insert into v_group_users ";
+				$sql = "insert into v_user_groups ";
 				$sql .= "(";
-				$sql .= "group_user_uuid, ";
+				$sql .= "user_group_uuid, ";
 				$sql .= "domain_uuid, ";
 				$sql .= "user_uuid, ";
 				$sql .= "group_name ";
@@ -770,7 +770,7 @@ include "root.php";
 				$_SESSION['event_socket_password'] = $this->global_settings->switch_event_password();
 
 			//get the groups assigned to the user and then set the groups in $_SESSION["groups"]
-				$sql = "SELECT * FROM v_group_users ";
+				$sql = "SELECT * FROM v_user_groups ";
 				$sql .= "where domain_uuid=:domain_uuid ";
 				$sql .= "and user_uuid=:user_uuid ";
 				$prep_statement = $this->dbh->prepare(check_sql($sql));

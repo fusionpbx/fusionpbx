@@ -95,11 +95,11 @@
 					// $info[2] is the driver specific error string
 				}
 
-				messages::add($text['message-add']);
+				message::add($text['message-add']);
 				header("Location: groups.php");
 			}
 			else {
-				messages::add($text['message-group_exists'], 'negative');
+				message::add($text['message-group_exists'], 'negative');
 				header("Location: groupadd.php");
 			}
 

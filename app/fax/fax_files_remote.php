@@ -24,18 +24,22 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-require_once "resources/functions/object_to_array.php";
-require_once "resources/functions/parse_message.php";
-if (permission_exists('fax_inbox_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+	require_once "resources/functions/object_to_array.php";
+	require_once "resources/functions/parse_message.php";
+
+//check permissions
+	if (permission_exists('fax_inbox_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -90,7 +94,7 @@ else {
 		$fax_email_connection .= "/".(($fax_email_connection_validate == 'false') ? "no" : null)."validate-cert";
 		$fax_email_connection .= "}".$fax_email_connection_mailbox;
 		if (!$connection = imap_open($fax_email_connection, $fax_email_connection_username, $fax_email_connection_password)) {
-			messages::add($text['message-cannot_connect']."(".imap_last_error().")", 'neative');
+			message::add($text['message-cannot_connect']."(".imap_last_error().")", 'neative');
 			header("Location: fax.php");
 			exit;
 		}
@@ -131,7 +135,7 @@ else {
 			}
 			else{
 				//redirect user
-				messages::add($text['message-download_failed'], 'negative');
+				message::add($text['message-download_failed'], 'negative');
 				header("Location: ?id=".$fax_uuid);
 				exit;
 			}
@@ -148,21 +152,21 @@ else {
 					$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
 					@unlink($fax_dir.'/'.$fax_extension.'/inbox/'.$attachment['name']);
 					//redirect user
-					messages::add($text['message-delete']);
+					message::add($text['message-delete']);
 					header("Location: ?id=".$fax_uuid);
 					exit;
 				}
 			}
 			else {
 				//redirect user
-				messages::add($text['message-delete_failed'], 'negative');
+				message::add($text['message-delete_failed'], 'negative');
 				header("Location: ?id=".$fax_uuid);
 				exit;
 			}
 		}
 		else {
 			//redirect user
-			messages::add($text['message-delete_failed'], 'negative');
+			message::add($text['message-delete_failed'], 'negative');
 			header("Location: ?id=".$fax_uuid);
 			exit;
 		}
@@ -175,6 +179,7 @@ else {
 //show the header
 	require_once "resources/header.php";
 
+//set the row styles
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
@@ -206,9 +211,7 @@ else {
 	echo "	</tr>";
 
 	if ($emails) {
-
 		rsort($emails); // most recent on top
-
 		foreach ($emails as $email_id) {
 			$metadata = object_to_array(imap_fetch_overview($connection, $email_id, FT_UID));
 			$message = parse_message($connection, $email_id, FT_UID);
@@ -240,10 +243,10 @@ else {
 	echo "</table>";
 	echo "<br><br>";
 
-/* close the connection */
-imap_close($connection);
-
+//close the connection
+	imap_close($connection);
 
 //show the footer
 	require_once "resources/footer.php";
+
 ?>

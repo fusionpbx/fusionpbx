@@ -128,12 +128,7 @@ include "root.php";
 					return true;
 				}
 				else {
-					//log the invalid mac address attempt to the syslog server
-						openlog("FusionPBX", LOG_PID | LOG_PERROR, LOG_LOCAL0);
-						syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] invalid mac address ".$mac);
-						closelog();
-					//invalid mac address return false
-						return false;
+					return false;
 				}
 		}
 
@@ -216,7 +211,7 @@ include "root.php";
 				$sql .= "and c.contact_uuid in ( ";
 				$sql .= "	select contact_uuid from v_contact_groups ";
 				$sql .= "	where group_uuid in ( ";
-				$sql .= "		select group_uuid from v_group_users ";
+				$sql .= "		select group_uuid from v_user_groups ";
 				$sql .= "		where user_uuid = '$device_user_uuid' ";
 				$sql .= "		and domain_uuid = '$domain_uuid' ";
 				$sql .= "	)) ";
@@ -285,10 +280,10 @@ include "root.php";
 			// Easier than assigning these common groups to every user.
 			// Check provision global_contact_groups and sanitize for sql.
 			$global_contact_groups['enabled']=false;
-			if ( preg_match('/[a-zA-Z0-9-_, ]/',$_SESSION['provision']['gs_global_contact_groups']['text'])){
+			if ( preg_match('/[a-zA-Z0-9-_, ]/',$_SESSION['provision']['grandstream_global_contact_groups']['text'])){
 				$global_contact_groups['enabled']=true;
 				$gp=array();
-				$groups=explode(',',$_SESSION['provision']['gs_global_contact_groups']['text']);
+				$groups=explode(',',$_SESSION['provision']['grandstream_global_contact_groups']['text']);
 				foreach ($groups as $group){
 					$gp[] = trim($group);
 				}
@@ -297,11 +292,11 @@ include "root.php";
 			// Get a list of groups the user has access to see.
 			$sql = "SELECT DISTINCT g.group_uuid, g.group_name, g.group_description ";
 			$sql .= "FROM v_groups g ";
-			$sql .= "	INNER JOIN v_group_users gu ";
-			$sql .= "	ON gu.group_uuid=g.group_uuid ";
+			$sql .= "	INNER JOIN v_user_groups ug ";
+			$sql .= "	ON ug.group_uuid = g.group_uuid ";
 			$sql .= "	INNER JOIN v_contact_groups cg ";
-			$sql .= "	ON cg.group_uuid=g.group_uuid ";
-			$sql .= "WHERE gu.user_uuid = '$device_user_uuid' ";
+			$sql .= "	ON cg.group_uuid = g.group_uuid ";
+			$sql .= "WHERE ug.user_uuid = '$device_user_uuid' ";
 			if ( $global_contact_groups['enabled'] ){
 				$sql .= "UNION ";
 				$sql .= "SELECT g.group_uuid, g.group_name, g.group_description ";
@@ -328,10 +323,10 @@ include "root.php";
 			$sql .= "	SELECT cg.contact_uuid";
 			$sql .= "	FROM v_contact_groups cg ";
 			$sql .= "	WHERE cg.group_uuid IN (";
-			$sql .= "		SELECT gu.group_uuid ";
-			$sql .= "		FROM v_group_users gu ";
-			$sql .= "		WHERE gu.user_uuid = '$device_user_uuid' ";
-			$sql .= "		AND gu.domain_uuid = '$domain_uuid' ";
+			$sql .= "		SELECT ug.group_uuid ";
+			$sql .= "		FROM v_user_groups ug ";
+			$sql .= "		WHERE ug.user_uuid = '$device_user_uuid' ";
+			$sql .= "		AND ug.domain_uuid = '$domain_uuid' ";
 			if ( $global_contact_groups['enabled'] ){
 				$sql .= "	UNION ";
 				$sql .= "	SELECT g.group_uuid ";
@@ -617,6 +612,9 @@ include "root.php";
 							$templates['snom370-SIP'] = 'snom/370';
 							$templates['snom820-SIP'] = 'snom/820';
 							$templates['snom-m3-SIP'] = 'snom/m3';
+							
+							$templates['Fanvil X6'] = 'fanvil/x6';
+							$templates['Fanvil i30'] = 'fanvil/i30';
 
 							$templates['yealink SIP-CP860'] = 'yealink/cp860';
 #							$templates['yealink SIP-CP860'] = 'yealink/cp920';							
@@ -706,31 +704,38 @@ include "root.php";
 
 						//mac address does not exist in the table so add it
 							if ($_SESSION['provision']['auto_insert_enabled']['boolean'] == "true" and strlen($domain_uuid) > 0) {
+
+								//get a new primary key
 								$device_uuid = uuid();
-								$sql = "INSERT INTO v_devices ";
-								$sql .= "(";
-								$sql .= "domain_uuid, ";
-								$sql .= "device_uuid, ";
-								$sql .= "device_mac_address, ";
-								$sql .= "device_vendor, ";
-								$sql .= "device_model, ";
-								$sql .= "device_enabled, ";
-								$sql .= "device_template, ";
-								$sql .= "device_description ";
-								$sql .= ") ";
-								$sql .= "VALUES ";
-								$sql .= "(";
-								$sql .= "'".$domain_uuid."', ";
-								$sql .= "'$device_uuid', ";
-								$sql .= "'$mac', ";
-								$sql .= "'$device_vendor', ";
-								$sql .= "'', ";
-								$sql .= "'true', ";
-								$sql .= "'$device_template', ";
-								$sql .= "'auto {$_SERVER['HTTP_USER_AGENT']}' ";
-								$sql .= ")";
-								$this->db->exec(check_sql($sql));
-								unset($sql);
+
+								//prepare the array
+								$x = 0;
+								$array['devices'][$x]['domain_uuid'] = $domain_uuid;
+								$array['devices'][$x]['device_uuid'] = $device_uuid;
+								$array['devices'][$x]['device_mac_address'] = $mac;
+								$array['devices'][$x]['device_vendor'] = $device_vendor;
+								$array['devices'][$x]['device_enabled'] = 'true';
+								$array['devices'][$x]['device_template'] = $device_template;
+								$array['devices'][$x]['device_description'] = $_SERVER['HTTP_USER_AGENT'];
+
+								//add the dialplan permission
+								$p = new permissions;
+								$p->add("device_add", "temp");
+								$p->add("device_edit", "temp");
+
+								//save to the data
+								$database = new database;
+								$database->app_name = 'devices';
+								$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+								if (strlen($device_uuid) > 0) {
+									$database->uuid($device_uuid);
+								}
+								$database->save($array);
+								$message = $database->message;
+
+								//remove the temporary permission
+								$p->delete("device_add", "temp");
+								$p->delete("device_edit", "temp");
 							}
 					}
 				}
@@ -856,8 +861,7 @@ include "root.php";
 							$prep_statement = $this->db->prepare(check_sql($sql));
 							$prep_statement->execute();
 							$device_lines = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-						//assign the keys array
-							$view->assign("lines", $device_lines);
+
 						//set the variables
 							if (is_array($device_lines)) {
 								foreach($device_lines as $row) {
@@ -880,17 +884,21 @@ include "root.php";
 										}
 
 									//set a lines array index is the line number
+										$lines[$line_number] = $row;
 										$lines[$line_number]['register_expires'] = $register_expires;
 										$lines[$line_number]['sip_transport'] = strtolower($sip_transport);
 										$lines[$line_number]['sip_port'] = $sip_port;
 										$lines[$line_number]['server_address'] = $row["server_address"];
 										$lines[$line_number]['outbound_proxy'] = $row["outbound_proxy_primary"];
+										$lines[$line_number]['server'][1]['address'] = $row["server_address_primary"];
+										$lines[$line_number]['server'][2]['address'] = $row["server_address_secondary"];
 										$lines[$line_number]['outbound_proxy_primary'] = $row["outbound_proxy_primary"];
 										$lines[$line_number]['outbound_proxy_secondary'] = $row["outbound_proxy_secondary"];
 										$lines[$line_number]['display_name'] = $row["display_name"];
 										$lines[$line_number]['auth_id'] = $row["auth_id"];
 										$lines[$line_number]['user_id'] = $row["user_id"];
 										$lines[$line_number]['password'] = $row["password"];
+										$lines[$line_number]['user_password'] = $row["password"];
 										$lines[$line_number]['shared_line'] = $row["shared_line"];
 
 									//assign the variables for line one - short name
@@ -927,6 +935,11 @@ include "root.php";
 							unset ($prep_statement);
 					}
 
+				//assign the arrays
+					$view->assign("lines", $lines);
+					$view->assign("account", $lines);
+					$view->assign("user", $lines);
+
 				//get the list of contact directly assigned to the user
 					if (strlen($device_user_uuid) > 0 and strlen($domain_uuid) > 0) {
 						//get the contacts assigned to the groups and add to the contacts array
@@ -939,7 +952,7 @@ include "root.php";
 								$this->contact_append($contacts, $line, $domain_uuid, $device_user_uuid, false);
 							}
 						// Grandstream get the contacts assigned to the user and groups and add to the contacts array
-							if ($_SESSION['provision']['contact_grandstream']['text'] == "true") {
+							if ($_SESSION['provision']['contact_grandstream']['boolean'] == "true") {
 								$this->contact_grandstream($contacts, $line, $domain_uuid, $device_user_uuid);
 							}
 					}
@@ -1097,6 +1110,7 @@ include "root.php";
 										$device_keys[$k]['device_key_value'] = str_replace("\${".$name."}", $value, $field['device_key_value']);
 										$device_keys[$k]['device_key_extension'] = str_replace("\${".$name."}", $value, $field['device_key_extension']);
 										$device_keys[$k]['device_key_label'] = str_replace("\${".$name."}", $value, $field['device_key_label']);
+										$device_keys[$k]['device_key_icon'] = str_replace("\${".$name."}", $value, $field['device_key_icon']);										
 								}
 								else {
 									if (is_array($field)) {
@@ -1104,6 +1118,7 @@ include "root.php";
 											$device_keys[$k][$key]['device_key_value'] = str_replace("\${".$name."}", $value, $row['device_key_value']);
 											$device_keys[$k][$key]['device_key_extension'] = str_replace("\${".$name."}", $value, $row['device_key_extension']);
 											$device_keys[$k][$key]['device_key_label'] = str_replace("\${".$name."}", $value, $row['device_key_label']);
+											$device_keys[$k][$key]['device_key_icon'] = str_replace("\${".$name."}", $value, $row['device_key_icon']);											
 										}
 									}
 								}
@@ -1127,11 +1142,13 @@ include "root.php";
 									$device_key_value = $row['device_key_value']; //1
 									$device_key_extension = $row['device_key_extension'];
 									$device_key_label = $row['device_key_label']; //label
+									$device_key_icon = $row['device_key_icon']; //icon
 
 								//add general variables
 									$device_key_value = str_replace("\${domain_name}", $domain_name, $device_key_value);
 									$device_key_extension = str_replace("\${domain_name}", $domain_name, $device_key_extension);
 									$device_key_label = str_replace("\${domain_name}", $domain_name, $device_key_label);
+									$device_key_icon = str_replace("\${domain_name}", $domain_name, $device_key_icon);
 
 								//grandstream modes are different based on the category
 									if ($device_vendor == "grandstream") {
@@ -1149,6 +1166,7 @@ include "root.php";
 												case "call return": $device_key_type  = "17"; break;
 												case "transfer": $device_key_type  = "18"; break;
 												case "call park": $device_key_type  = "19"; break;
+												case "monitored call park": $device_key_type  = "26"; break;
 												case "intercom": $device_key_type  = "20"; break;
 												case "ldap search": $device_key_type  = "21"; break;
 											}
@@ -1165,6 +1183,7 @@ include "root.php";
 												case "call return": $device_key_type  = "7"; break;
 												case "transfer": $device_key_type  = "8"; break;
 												case "call park": $device_key_type  = "9"; break;
+												case "monitored call park": $device_key_type  = "16"; break;
 												case "intercom": $device_key_type  = "10"; break;
 												case "ldap search": $device_key_type  = "11"; break;
 											}
@@ -1179,6 +1198,7 @@ include "root.php";
 										$view->assign("key_value_".$device_key_id, $device_key_value);
 										$view->assign("key_extension_".$device_key_id, $device_key_extension);
 										$view->assign("key_label_".$device_key_id, $device_key_label);
+										$view->assign("key_icon_".$device_key_id, $device_key_icon);
 									}
 									else {
 										$view->assign($device_key_category."_key_id_".$device_key_id, $device_key_id);
@@ -1187,6 +1207,7 @@ include "root.php";
 										$view->assign($device_key_category."_key_value_".$device_key_id, $device_key_value);
 										$view->assign($device_key_category."_key_extension_".$device_key_id, $device_key_extension);
 										$view->assign($device_key_category."_key_label_".$device_key_id, $device_key_label);
+										$view->assign($device_key_category."_key_icon_".$device_key_id, $device_key_icon);
 									}
 							}
 						}
@@ -1411,7 +1432,9 @@ include "root.php";
 												$file_contents = $this->render();
 
 											//write the file
-												mkdir($directory,0777,true);
+												if(!is_dir($directory)) {
+													mkdir($directory,0777,true);
+												}
 												$fh = fopen($dest_path,"w") or die("Unable to write to $directory for provisioning. Make sure the path exists and permissons are set correctly.");
 												fwrite($fh, $file_contents);
 												fclose($fh);

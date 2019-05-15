@@ -690,7 +690,7 @@
 <DTMF_Playback_Length group="Regional/Miscellaneous">.1</DTMF_Playback_Length>
 <Inband_DTMF_Boost group="Regional/Miscellaneous">12dB</Inband_DTMF_Boost>
 <Show_DTMF_Digits_When_Connected group="Regional/Miscellaneous">No</Show_DTMF_Digits_When_Connected>
-<Station_Name group="Phone/General"> $USER {$display_name_1}</Station_Name>
+<Station_Name group="Phone/General"> $USER {$account.1.display_name}</Station_Name>
 <Station_Display_Name group="Phone/General"/>
 <Voice_Mail_Number group="Phone/General">*97</Voice_Mail_Number>
 <Bluetooth_Mode group="Phone/BluePhone">Phone</Bluetooth_Mode>
@@ -884,7 +884,7 @@
 <Auth_Page_Realm_1_ group="Ext_1/Call_Feature_Settings"/>
 <Conference_Bridge_URL_1_ group="Ext_1/Call_Feature_Settings"/>
 <Auth_Page_Password_1_ group="Ext_1/Call_Feature_Settings"/>
-<Mailbox_ID_1_ group="Ext_1/Call_Feature_Settings">{$user_id_1}</Mailbox_ID_1_>
+<Mailbox_ID_1_ group="Ext_1/Call_Feature_Settings">{$account.1.user_id}</Mailbox_ID_1_>
 <Voice_Mail_Server_1_ group="Ext_1/Call_Feature_Settings"/>
 <Voice_Mail_Subscribe_Interval_1_ group="Ext_1/Call_Feature_Settings">86400</Voice_Mail_Subscribe_Interval_1_>
 <State_Agent_1_ group="Ext_1/Call_Feature_Settings"/>
@@ -897,7 +897,7 @@
 <Enable_Broadsoft_Hoteling_1_ group="Ext_1/Call_Feature_Settings">No</Enable_Broadsoft_Hoteling_1_>
 <Hoteling_Subscription_Expires_1_ group="Ext_1/Call_Feature_Settings">3600</Hoteling_Subscription_Expires_1_>
 <Proxy_1_ group="Ext_1/Proxy_and_Registration">{$domain_name}</Proxy_1_>
-<Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">{$outbound_proxy_1}</Outbound_Proxy_1_>
+<Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">{$account.1.outbound_proxy}</Outbound_Proxy_1_>
 <Alternate_Proxy_1_ group="Ext_1/Proxy_and_Registration"/>
 <Alternate_Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration"/>
 <Use_Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">Yes</Use_Outbound_Proxy_1_>
@@ -913,8 +913,8 @@
 <Dual_Registration_1_ group="Ext_1/Proxy_and_Registration">No</Dual_Registration_1_>
 <Auto_Register_When_Failover_1_ group="Ext_1/Proxy_and_Registration">No</Auto_Register_When_Failover_1_>
 <Display_Name_1_ group="Ext_1/Subscriber_Information">{$display_name_1}</Display_Name_1_>
-<User_ID_1_ group="Ext_1/Subscriber_Information">{$user_id_1}</User_ID_1_>
-<Password_1_ group="Ext_1/Subscriber_Information">{$user_password_1}</Password_1_>
+<User_ID_1_ group="Ext_1/Subscriber_Information">{$account.1.user_id}</User_ID_1_>
+<Password_1_ group="Ext_1/Subscriber_Information">{$account.1.password}</Password_1_>
 <Use_Auth_ID_1_ group="Ext_1/Subscriber_Information">No</Use_Auth_ID_1_>
 <Auth_ID_1_ group="Ext_1/Subscriber_Information"/>
 <Reversed_Auth_Realm_1_ group="Ext_1/Subscriber_Information"/>
@@ -1145,7 +1145,7 @@
 <Enable_IP_Dialing_3_ group="Ext_3/Dial_Plan">Yes</Enable_IP_Dialing_3_>
 <Emergency_Number_3_ group="Ext_3/Dial_Plan"/>
 <Line_Enable_4_ group="Ext_4/General">No</Line_Enable_4_>
-<Share_Ext_4_ group="Ext_4/Share_Line_Appearance">{if $shared_line_4 == "shared"}shared{else}private{/if}</Share_Ext_4_>
+<Share_Ext_4_ group="Ext_4/Share_Line_Appearance">{if $account.4.shared_line == "shared"}shared{else}private{/if}</Share_Ext_4_>
 <Shared_User_ID_4_ group="Ext_4/Share_Line_Appearance"/>
 <Subscription_Expires_4_ group="Ext_4/Share_Line_Appearance">3600</Subscription_Expires_4_>
 <Restrict_MWI_4_ group="Ext_4/Share_Line_Appearance">No</Restrict_MWI_4_>

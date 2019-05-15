@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -134,9 +134,10 @@ if ($domains_processed == 1) {
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 			//delete memcache var
-			foreach ($result as $row) {
-				$switch_cmd .= "memcache delete languages:".$row['phrase_language'];
-				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+			foreach ($result as $row) {				
+				//clear the cache
+				$cache = new cache;
+				$cache->delete("languages:".$row['phrase_language']);
 			}
 			unset($sql, $prep_statement, $result, $row);
 		}

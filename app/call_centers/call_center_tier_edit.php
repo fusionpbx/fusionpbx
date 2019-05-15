@@ -125,7 +125,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 		unset($prep_statement);
 
-		messages::add($text['message-update']);
+		message::add($text['message-update']);
 		header("Location: call_center_queue_edit.php?id=".$queue_uuid);
 		return;
 

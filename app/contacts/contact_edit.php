@@ -17,22 +17,26 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('contact_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('contact_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -150,7 +154,7 @@ else {
 						$db->exec(check_sql($sql));
 						unset($sql);
 
-						messages::add($text['message-add']);
+						message::add($text['message-add']);
 						$location = "contact_edit.php?id=".$contact_uuid;
 					} //if ($action == "add")
 
@@ -177,7 +181,7 @@ else {
 						$db->exec(check_sql($sql));
 						unset($sql);
 
-						messages::add($text['message-update']);
+						message::add($text['message-update']);
 						$location = "contact_edit.php?id=".escape($contact_uuid);
 					} //if ($action == "update")
 
@@ -281,6 +285,16 @@ else {
 	$users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset($prep_statement, $sql);
 
+//determine if contact assigned to a user
+	if (is_array($users) && sizeof($users) != 0) {
+		foreach($users as $user) {
+			if ($user['contact_uuid'] == $contact_uuid) {
+				$contact_user_uuid = $user['user_uuid'];
+				break;
+			}
+		}
+	}
+
 //get the users assigned to this contact
 	$sql = "SELECT u.username, u.user_uuid, a.contact_user_uuid FROM v_contacts as c, v_users as u, v_contact_users as a ";
 	$sql .= "where c.contact_uuid = '".$contact_uuid."' ";
@@ -303,8 +317,8 @@ else {
 	}
 
 //set the mode
-	if (isset($_SESSION['theme']['qr_image'])) {
-		if (strlen($_SESSION['theme']['qr_image']) > 0) {
+	if (isset($_SESSION['theme']['qr_image']['text'])) {
+		if (strlen($_SESSION['theme']['qr_image']['text']) == 0) {
 			$mode = '4';
 		}
 		else {
@@ -407,10 +421,13 @@ else {
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-vcard']."' onclick=\"window.location='contacts_vcard.php?id=".escape($contact_uuid)."&type=download'\" value='".$text['button-vcard']."'>\n";
 	}
 	if ($action == "update" && is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/invoices')) {
-		echo "	<input type='button' class='btn' name='' alt='".$text['button-invoices']."' onclick=\"window.location='".PROJECT_PATH."/app/invoices/invoices.php?id=escape($contact_uuid)'\" value='".$text['button-invoices']."'>\n";
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-invoices']."' onclick=\"window.location='".PROJECT_PATH."/app/invoices/invoices.php?id=".escape($contact_uuid)."'\" value='".$text['button-invoices']."'>\n";
 	}
 	if ($action == "update" && is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/certificates')) {
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-certificate']."' onclick=\"window.location='".PROJECT_PATH."/app/certificates/index.php?name=".urlencode(escape($contact_name_given)." ".escape($contact_name_family))."'\" value='".$text['button-certificate']."'>\n";
+	}
+	if ($action == "update" && permission_exists('user_edit') && is_uuid($contact_user_uuid)) {
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-user']."' onclick=\"window.location='".PROJECT_PATH."/core/users/user_edit.php?id=".$contact_user_uuid."'\" value='".$text['button-user']."'>\n";
 	}
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
@@ -656,12 +673,8 @@ else {
 			echo "		</td>";
 			echo "	</tr>";
 		}
-		echo "</table>";
 
 		if (permission_exists('contact_group_view')) {
-			$contact_shared = 'true';
-			echo "<div id='div_groups' ".(($contact_shared != 'true') ? "style='display: none;'" : null).">\n";
-			echo "<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
 			echo "<tr>";
 			echo "	<td width='30%' class='vncell' valign='top'>".$text['label-groups']."</td>";
 			echo "	<td width='70%' class='vtable'>";
@@ -735,11 +748,8 @@ else {
 
 			echo "	</td>";
 			echo "</tr>";
-			echo "</table>\n";
-			echo "</div>";
 		}
 
-		echo "<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
 		echo "<tr>\n";
 		echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-contact_note']."\n";
@@ -759,13 +769,14 @@ else {
 		echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 		echo "		</td>\n";
 		echo "	</tr>";
+
 		echo "</table>";
 
 	echo "</td>\n";
 
 	if ($action == "update") {
 		echo "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>";
-		echo "<td width='60%' class='' valign='top' align='center'>\n";
+		echo "<td width='60%' valign='top'>\n";
 		//echo "	<img src='contacts_vcard.php?id=$contact_uuid&type=image' width='90%'><br /><br />\n";
 		if (permission_exists('contact_phone_view')) { require "contact_phones.php"; }
 		if (permission_exists('contact_address_view')) { require "contact_addresses.php"; }
@@ -776,6 +787,7 @@ else {
 		if (permission_exists('contact_note_view')) { require "contact_notes.php"; }
 		if (permission_exists('contact_time_view')) { require "contact_times.php"; }
 		if (permission_exists('contact_setting_view')) { require "contact_settings.php"; }
+		if (permission_exists('contact_attachment_view')) { require "contact_attachments.php"; }
 		echo "</td>\n";
 	}
 

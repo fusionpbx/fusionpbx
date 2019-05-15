@@ -16,33 +16,33 @@
 
 <!-- Account Active. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
-{if isset($user_password_1)}
+{if isset($account.1.password)}
 <P271>1</P271>
 {else}
 <P271>0</P271>
 {/if}
 
 <!-- Account Name -->
-<P270>{$display_name_1}</P270>
+<P270>{$account.1.display_name}</P270>
 
 <!-- SIP Server -->
-<P47>{$server_address_1}</P47>
+<P47>{$account.1.server_address}</P47>
 
 <!-- SIP User ID -->
-<P35>{$user_id_1}</P35>
+<P35>{$account.1.user_id}</P35>
 
 <!-- SIP Authentication ID -->
-<P36>{$user_id_1}</P36>
+<P36>{$account.1.auth_id}</P36>
 
 <!-- SIP Authentication Password -->
-<P34>{$user_password_1}</P34>
+<P34>{$account.1.password}</P34>
 
 <!-- Voice Mail Access Number -->
 <!--<P33>*97</P33> -->
 <P33>*98</P33>
 
 <!-- Name (Display Name, e.g., John Doe) -->
-<P3>{$display_name_1}</P3>
+<P3>{$account.1.display_name}</P3>
 
 <!-- Show Account Name Only. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->

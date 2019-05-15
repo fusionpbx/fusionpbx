@@ -761,26 +761,6 @@ $text['label-reset_password']['ru-ru'] = "Сброс пароля";
 $text['label-reset_password']['sv-se'] = "Återställ Lösenord";
 $text['label-reset_password']['uk-ua'] = "Скинути пароль";
 
-$text['label-reset_link']['en-us'] = "Password Reset Link";
-$text['label-reset_link']['ar-eg'] = " رابط اعادة تعيين كلمة السر";
-$text['label-reset_link']['de-at'] = "Link zum Zurücksetzen des Passworts"; //copied from de-de
-$text['label-reset_link']['de-ch'] = "Link zum Zurücksetzen des Passworts"; //copied from de-de
-$text['label-reset_link']['de-de'] = "Link zum Zurücksetzen des Passworts";
-$text['label-reset_link']['es-cl'] = "Password Reset Enlace";
-$text['label-reset_link']['es-mx'] = "Password Reset Enlace"; //copied from es-cl
-$text['label-reset_link']['fr-ca'] = "Lien de réinitialisation du mot de passe"; //copied from fr-fr
-$text['label-reset_link']['fr-fr'] = "Lien de réinitialisation du mot de passe";
-$text['label-reset_link']['he-il'] = "קישור לאיפוס סיסמה";
-$text['label-reset_link']['it-it'] = "Link per il Reset della Password";
-$text['label-reset_link']['nl-nl'] = "";
-$text['label-reset_link']['pl-pl'] = "Link do resetowania hasla";
-$text['label-reset_link']['pt-br'] = "Link para redefinir senha";
-$text['label-reset_link']['pt-pt'] = "Password Reset Link";
-$text['label-reset_link']['ro-ro'] = "Link resetare parolă";
-$text['label-reset_link']['ru-ru'] = "Ссылка для сброса пароля";
-$text['label-reset_link']['sv-se'] = "Länk för Återställning av Lösenord";
-$text['label-reset_link']['uk-ua'] = "Посилання на скидання пароля";
-
 $text['label-repeat_password']['en-us'] = "Repeat Password";
 $text['label-repeat_password']['ar-eg'] = "تاكيد كلمة السر";
 $text['label-repeat_password']['de-at'] = "Passwort wiederholen"; //copied from de-de

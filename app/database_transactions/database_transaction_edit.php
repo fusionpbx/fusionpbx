@@ -124,7 +124,7 @@
 	echo "				".$text['label-user_uuid']."\n";
 	echo "			</th>\n";
 	echo "			<td class='vtable' align='left'>\n";
-	echo "  			".$username."\n";
+	echo "  			".escape($username)."\n";
 	echo "			</td>\n";
 	echo "		</tr>\n";
 	echo "	</table>\n";
@@ -137,7 +137,7 @@
 	echo "				".$text['label-transaction_code']."\n";
 	echo "			</th>\n";
 	echo "			<td class='vtable' align='left'>\n";
-	echo "				$transaction_code\n";
+	echo "				".escape($transaction_code)."\n";
 	echo "			</td>\n";
 	echo "		</tr>\n";
 	echo "		<tr>\n";
@@ -145,7 +145,7 @@
 	echo "				".$text['label-transaction_address']."\n";
 	echo "			</th>\n";
 	echo "			<td class='vtable' align='left'>\n";
-	echo "				$transaction_address\n";
+	echo "				".escape($transaction_address)."\n";
 	echo "			</td>\n";
 	echo "		</tr>\n";
 	echo "	</table>\n";
@@ -158,7 +158,7 @@
 	echo "				".$text['label-transaction_type']."\n";
 	echo "			</th>\n";
 	echo "			<td class='vtable' align='left'>\n";
-	echo "				$transaction_type\n";
+	echo "				".escape($transaction_type)."\n";
 	echo "			</td>\n";
 	echo "		</tr>\n";
 	echo "		<tr>\n";
@@ -166,7 +166,7 @@
 	echo "				".$text['label-domain']."\n";
 	echo "			</th>\n";
 	echo "			<td width='90%' aclass='vtable' align='left'>\n";
-	echo "				".$domain_name;
+	echo "				".escape($domain_name);
 	echo "			</td>\n";
 	echo "		</tr>\n";
 	echo "	</table>\n";
@@ -182,7 +182,7 @@
 		echo "	".$text['label-transaction_old']."\n";
 		echo "</th>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<textarea name='transaction_old' style='width: 265px; height: 80px;'>$transaction_old</textarea>\n";
+		echo "	<textarea name='transaction_old' style='width: 265px; height: 80px;'>".escape($transaction_old)."</textarea>\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	
@@ -191,7 +191,7 @@
 		echo "	".$text['label-transaction_new']."\n";
 		echo "</th>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<textarea name='transaction_new' style='width: 265px; height: 80px;'>$transaction_new</textarea>\n";
+		echo "	<textarea name='transaction_new' style='width: 265px; height: 80px;'>".escape($transaction_new)."</textarea>\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	
@@ -200,7 +200,7 @@
 		echo "	".$text['label-transaction_result']."\n";
 		echo "</th>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<textarea name='transaction_result' style='width: 265px; height: 80px;'>$transaction_result</textarea>\n";
+		echo "	<textarea name='transaction_result' style='width: 265px; height: 80px;'>".escape($transaction_result)."</textarea>\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 		echo "</table>";

@@ -271,7 +271,7 @@ require_once "resources/header.php";
 		}
 
 	if (strlen($group_name) > 0) {
-		$sql = " select * from v_users as u, v_group_users as m ";
+		$sql = " select * from v_users as u, v_user_groups as m ";
 		$sql .= "where u.user_uuid = m.user_uuid ";
 		$sql .= "and u.user_enabled = 'true' ";
 		$sql .= "and m.group_name = '".$group_name."' ";
@@ -287,7 +287,6 @@ require_once "resources/header.php";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
 	unset ($prep_statement, $sql);
 
 	$c = 0;
@@ -307,7 +306,7 @@ require_once "resources/header.php";
 	echo th_order_by('user_phone_2', 'phone_2', $order_by, $order);
 	echo "<tr>\n";
 
-	if ($result_count > 0) {
+	if (is_array($result)) {
 		foreach($result as $row) {
 			echo "<tr >\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[username]."&nbsp;</td>\n";

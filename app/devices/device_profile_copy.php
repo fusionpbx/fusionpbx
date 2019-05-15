@@ -54,8 +54,7 @@
 	$sql = "SELECT * FROM v_device_profiles ";
 	$sql .= "where device_profile_uuid = '".$device_profile_uuid."' ";
 	$database = new database;
-	$database->select($sql);
-	$device_profiles = $database->result;
+	$device_profiles = $database->select($sql);
 
 //get device keys
 	$sql = "SELECT * FROM v_device_keys ";
@@ -69,16 +68,14 @@
 	$sql .= "ELSE 100 END, ";
 	$sql .= "cast(device_key_id as numeric) asc ";
 	$database = new database;
-	$database->select($sql);
-	$device_keys = $database->result;
+	$device_keys = $database->select($sql);
 
 //get device settings
 	$sql = "SELECT * FROM v_device_settings ";
 	$sql .= "WHERE device_profile_uuid = '".$device_profile_uuid."' ";
 	$sql .= "ORDER by device_setting_subcategory asc ";
 	$database = new database;
-	$database->select($sql);
-	$device_settings = $database->result;
+	$device_settings = $database->select($sql);
 
 //prepare the devices array
 	unset($device_profiles[0]["device_profile_uuid"]);
@@ -115,7 +112,7 @@
 		$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 		$database->save($array);
 		$response = $database->message;
-		messages::add($text['message-copy']);
+		message::add($text['message-copy']);
 	}
 
 //redirect

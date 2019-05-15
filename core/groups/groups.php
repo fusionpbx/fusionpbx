@@ -62,7 +62,7 @@
 		$db->exec(check_sql($sql));
 		unset($sql);
 
-		messages::add($text['message-update']);
+		message::add($text['message-update']);
 	}
 
 //get the groups
@@ -81,7 +81,7 @@
 
 
 //get group counts
-	$sql = "select group_uuid, count(user_uuid) as group_count from v_group_users ";
+	$sql = "select group_uuid, count(user_uuid) as group_count from v_user_groups ";
 	if (!permission_exists('user_all')) {
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	}

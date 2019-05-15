@@ -157,9 +157,9 @@ class plugin_ldap {
 
 					//add the user to group user
 						$group_name = 'user';
-						$sql = "insert into v_group_users ";
+						$sql = "insert into v_user_groups ";
 						$sql .= "(";
-						$sql .= "group_user_uuid, ";
+						$sql .= "user_group_uuid, ";
 						$sql .= "domain_uuid, ";
 						$sql .= "group_name, ";
 						$sql .= "user_uuid ";

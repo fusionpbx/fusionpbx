@@ -47,6 +47,7 @@
 	$rdr = check_str($_GET['rdr']);
 	$profile = check_str($_GET['profile']);
 	$domain = check_str($_GET['domain']);
+	$host = check_str($_GET['host']);
 	$show = check_str($_GET['show']);
 	$user = check_str($_GET['user']);
 	$agent = check_str($_GET['agent']);
@@ -70,7 +71,7 @@
 			$response = event_socket_request($fp, "api ".$command);
 			$response = event_socket_request($fp, "api log notice ".$command);
 		//show the response
-			messages::add($text['label-event']." ".ucwords($cmd)."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$text['label-response'].htmlentities($response));
+			message::add($text['label-event']." ".ucwords($cmd)."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$text['label-response'].htmlentities($response));
 		//close the connection
 			fclose($fp);
 	}

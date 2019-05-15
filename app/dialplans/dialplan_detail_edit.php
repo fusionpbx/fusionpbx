@@ -136,14 +136,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				//synchronize the xml config
 				save_dialplan_xml();
 
-				//delete the dialplan context from memcache
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-				if ($fp) {
-					$switch_cmd = "memcache delete dialplan:".$_SESSION["context"];
-					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-				}
+				//clear the cache
+				$cache = new cache;
+				$cache->delete("dialplan:".$_SESSION["context"]);
 
-				messages::add($text['message-add']);
+				//set the message and redirect the user
+				message::add($text['message-add']);
 				header("Location: dialplan_edit.php?id=".$dialplan_uuid."&app_uuid=".$app_uuid);
 				return;
 			} //if ($action == "add")
@@ -178,7 +176,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 				}
 
-				messages::add($text['message-update']);
+				message::add($text['message-update']);
 				header("Location: dialplan_edit.php?id=".$dialplan_uuid."&app_uuid=".$app_uuid);
 				return;
 		   } //if ($action == "update")

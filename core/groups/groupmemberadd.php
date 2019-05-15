@@ -52,9 +52,9 @@
 
 //add the user to the group
 	if (is_uuid($user_uuid) && is_uuid($group_uuid) && strlen($group_name) > 0) {
-		$sql = "insert into v_group_users ";
+		$sql = "insert into v_user_groups ";
 		$sql .= "(";
-		$sql .= "group_user_uuid, ";
+		$sql .= "user_group_uuid, ";
 		$sql .= "domain_uuid, ";
 		$sql .= "group_uuid, ";
 		$sql .= "group_name, ";
@@ -81,7 +81,7 @@
 	}
 
 //redirect the user
-	messages::add($text['message-update']);
+	message::add($text['message-update']);
 	header("Location: groupmembers.php?group_uuid=".$group_uuid."&group_name=".$group_name);
 
 ?>

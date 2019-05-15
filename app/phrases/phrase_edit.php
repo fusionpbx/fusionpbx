@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -162,15 +162,12 @@
 					//save the xml to the file system if the phrase directory is set
 						//save_phrases_xml();
 
-					//delete the phrase from memcache
-						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-						if ($fp) {
-							$switch_cmd .= "memcache delete languages:".$phrase_language;
-							$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-						}
+					//clear the cache
+						$cache = new cache;
+						$cache->delete("languages:".$phrase_language);
 
 					//send a redirect
-						messages::add($text['message-add']);
+						message::add($text['message-add']);
 						header("Location: phrase_edit.php?id=".$phrase_uuid);
 						return;
 				} //if ($action == "add")
@@ -231,15 +228,12 @@
 					//save the xml to the file system if the phrase directory is set
 						save_phrases_xml();
 
-					//delete the phrase from memcache
-						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-						if ($fp) {
-							$switch_cmd .= "memcache delete languages:".$phrase_language;
-							$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-						}
+					//clear the cache
+						$cache = new cache;
+						$cache->delete("languages:".$phrase_language);
 
 					//send a redirect
-						messages::add($text['message-update']);
+						message::add($text['message-update']);
 						header("Location: phrase_edit.php?id=".$phrase_uuid);
 						return;
 

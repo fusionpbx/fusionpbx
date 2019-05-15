@@ -55,6 +55,7 @@
 	$prep_statement->execute();
 	$gateways = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach ($gateways as &$row) {
+		$domain_uuid = $row["domain_uuid"];
 		$gateway = $row["gateway"];
 		$username = $row["username"];
 		$password = $row["password"];
@@ -127,7 +128,7 @@
 	$sql .= ")";
 	$sql .= "values ";
 	$sql .= "(";
-	if (strlen($domain_uuid) == 0) {
+	if (strlen($domain_uuid) > 0) {
 		$sql .= "'$domain_uuid', ";
 	}
 	else {
@@ -170,8 +171,14 @@
 //synchronize the xml config
 	save_gateway_xml();
 
+//clear the cache
+	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	$hostname = trim(event_socket_request($fp, 'api switchname'));
+	$cache = new cache;
+	$cache->delete("configuration:sofia.conf:".$hostname);
+
 //redirect the user
-	messages::add($text['message-copy']);
+	message::add($text['message-copy']);
 	header("Location: gateways.php");
 	return;
 

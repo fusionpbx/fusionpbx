@@ -151,8 +151,7 @@
 		$sql .= "limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
-		$result = $prep_statement->fetchAll();
-		$result_count = count($result);
+		$conference_session_details = $prep_statement->fetchAll();
 		unset ($prep_statement, $sql);
 
 	$c = 0;
@@ -177,8 +176,8 @@
 	}
 	echo "</tr>\n";
 
-	if ($result_count > 0) {
-		foreach($result as $row) {
+	if (is_array($conference_session_details)) {
+		foreach($conference_session_details as $row) {
 			if (defined('TIME_24HR') && TIME_24HR == 1) {
 				$start_date = date("j M Y H:i:s", $row['start_epoch']);
 				$end_date = date("j M Y H:i:s", $row['end_epoch']);
@@ -191,7 +190,7 @@
 				$time_difference = $row['end_epoch'] - $row['start_epoch'];
 				$time_difference = gmdate("G:i:s", $time_difference);
 			}
-			$tr_link = (permission_exists('conference_session_details')) ? "href='/app/xml_cdr/xml_cdr_details.php?uuid=".escape($row['uuid'])."'" : null;
+			$tr_link = (permission_exists('conference_session_details')) ? "href='/app/xml_cdr/xml_cdr_details.php?id=".escape($row['uuid'])."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['meeting_uuid']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['conference_session_uuid']."&nbsp;</td>\n";
@@ -204,13 +203,13 @@
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$end_date."&nbsp;</td>\n";
 			if (permission_exists('conference_session_details')) {
 				echo "	<td class='list_control_icon'>";
-				echo "		<a href='/app/xml_cdr/xml_cdr_details.php?uuid=".escape($row['uuid'])."' alt='".$text['button-view']."'>$v_link_label_view</a>";
+				echo "		<a href='/app/xml_cdr/xml_cdr_details.php?id=".escape($row['uuid'])."' alt='".$text['button-view']."'>$v_link_label_view</a>";
 				echo "	</td>\n";
 			}
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($sql, $conference_session_details);
 	} //end if results
 
 	echo "<tr>\n";

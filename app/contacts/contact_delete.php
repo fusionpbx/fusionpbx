@@ -45,11 +45,11 @@ if (!$included) {
 	}
 }
 
-if (strlen($contact_uuid) > 0) {
+if (is_uuid($contact_uuid)) {
 	//delete addresses
 		$sql = "delete from v_contact_addresses ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and contact_uuid = '".$contact_uuid."' ";
+		$sql .= "and contact_uuid = :contact_uuid ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		unset($prep_statement, $sql);
@@ -106,6 +106,14 @@ if (strlen($contact_uuid) > 0) {
 		$prep_statement->execute();
 		unset($prep_statement, $sql);
 
+	//delete attachments
+		$sql = "delete from v_contact_attachments ";
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and contact_uuid = '".$contact_uuid."' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		unset($prep_statement, $sql);
+
 	//delete contact users
 		$sql = "delete from v_contact_users ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -132,7 +140,7 @@ if (strlen($contact_uuid) > 0) {
 }
 
 if (!$included) {
-	messages::add($text['message-delete']);
+	message::add($text['message-delete']);
 	header("Location: contacts.php");
 	return;
 }

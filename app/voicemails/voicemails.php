@@ -148,7 +148,11 @@
 	echo "		</td>\n";
 	echo "			<td width='30%' align='right' valign='top'>\n";
 	echo "				<form method='get' action=''>\n";
-	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".escape($search)."'>";
+	if (permission_exists('voicemail_import')) {
+		echo "				<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='voicemail_imports.php'\" value='".$text['button-import']."'>\n";
+	}
+
+	echo "				<input type='text' class='txt' style='width: 150px; margin-left: 15px;' name='search' id='search' value='".escape($search)."'>";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	echo "				</form>\n";
 	echo "			</td>\n";

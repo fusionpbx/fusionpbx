@@ -52,19 +52,20 @@
 	require_once "resources/header.php";
 
 //send the call
-	if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])) {
+	if (is_array($_GET) && isset($_GET['src']) && isset($_GET['dest'])) {
+
 		//retrieve submitted variables
-			$src = check_str($_REQUEST['src']);
-			$src_cid_name = check_str($_REQUEST['src_cid_name']);
-			$src_cid_number = check_str($_REQUEST['src_cid_number']);
+			$src = check_str($_GET['src']);
+			$src_cid_name = check_str($_GET['src_cid_name']);
+			$src_cid_number = check_str($_GET['src_cid_number']);
 
-			$dest = check_str($_REQUEST['dest']);
-			$dest_cid_name = check_str($_REQUEST['dest_cid_name']);
-			$dest_cid_number = check_str($_REQUEST['dest_cid_number']);
+			$dest = check_str($_GET['dest']);
+			$dest_cid_name = check_str($_GET['dest_cid_name']);
+			$dest_cid_number = check_str($_GET['dest_cid_number']);
 
-			$auto_answer = check_str($_REQUEST['auto_answer']); //true,false
-			$rec = check_str($_REQUEST['rec']); //true,false
-			$ringback = check_str($_REQUEST['ringback']);
+			$auto_answer = check_str($_GET['auto_answer']); //true,false
+			$rec = check_str($_GET['rec']); //true,false
+			$ringback = check_str($_GET['ringback']);
 			$context = $_SESSION['context'];
 
 		//clean up variable values
@@ -135,8 +136,7 @@
 
 		//define a leg - set source to display the defined caller id name and number
 			$source_common = "{";
-			$source_common .= "origination_uuid=".$origination_uuid;
-			$source_common .= ",click_to_call=true";
+			$source_common .= "click_to_call=true";
 			$source_common .= ",origination_caller_id_name='".$src_cid_name."'";
 			$source_common .= ",origination_caller_id_number=".$src_cid_number;
 			$source_common .= ",instant_ringback=true";
@@ -250,12 +250,12 @@
 
 	echo "	<br />";
 
-	echo "<form>\n";
+	echo "<form method=\"get\">\n";
 	echo "<table border='0' width='100%' cellpadding='0' cellspacing='0'\n";
 	echo "<tr>\n";
 	echo "	<td class='vncellreq' width='40%'>".$text['label-src-caller-id-nam']."</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
-	echo "		<input name=\"src_cid_name\" value='$src_cid_name' class='formfld'>\n";
+	echo "		<input name=\"src_cid_name\" value='".escape($src_cid_name)."' class='formfld'>\n";
 	echo "		<br />\n";
 	echo "		".$text['desc-src-caller-id-nam']."\n";
 	echo "	</td>\n";
@@ -264,7 +264,7 @@
 	echo "<tr>\n";
 	echo "	<td class='vncellreq'>".$text['label-src-caller-id-num']."</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
-	echo "		<input name=\"src_cid_number\" value='$src_cid_number' class='formfld'>\n";
+	echo "		<input name=\"src_cid_number\" value='".escape($src_cid_number)."' class='formfld'>\n";
 	echo "		<br />\n";
 	echo "		".$text['desc-src-caller-id-num']."\n";
 	echo "	</td>\n";
@@ -273,7 +273,7 @@
 	echo "<tr>\n";
 	echo "	<td class='vncell' width='40%'>".$text['label-dest-caller-id-nam']."</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
-	echo "		<input name=\"dest_cid_name\" value='$dest_cid_name' class='formfld'>\n";
+	echo "		<input name=\"dest_cid_name\" value='".escape($dest_cid_name)."' class='formfld'>\n";
 	echo "		<br />\n";
 	echo "		".$text['desc-dest-caller-id-nam']."\n";
 	echo "	</td>\n";
@@ -282,7 +282,7 @@
 	echo "<tr>\n";
 	echo "	<td class='vncell'>".$text['label-dest-caller-id-num']."</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
-	echo "		<input name=\"dest_cid_number\" value='$dest_cid_number' class='formfld'>\n";
+	echo "		<input name=\"dest_cid_number\" value='".escape($dest_cid_number)."' class='formfld'>\n";
 	echo "		<br />\n";
 	echo "		".$text['desc-dest-caller-id-num']."\n";
 	echo "	</td>\n";
@@ -404,6 +404,12 @@
 	}
 	else {
 		echo "    <option value='it-ring'>".$text['opt-itring']."</option>\n";
+	}
+	if ($ringback == "de-ring") {
+		echo "    <option value='de-ring' selected='selected'>".$text['opt-dering']."</option>\n";
+	}
+	else {
+		echo "    <option value='de-ring'>".$text['opt-dering']."</option>\n";
 	}
 	if ($ringback == "music") {
 		echo "    <option value='music' selected='selected'>".$text['opt-moh']."</option>\n";

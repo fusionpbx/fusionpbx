@@ -173,6 +173,7 @@
 								if (strlen($row["device_key_type"]) > 25) { $save = false; echo "type "; }
 								if (strlen($row["device_key_value"]) > 25) { $save = false; echo "value "; }
 								if (strlen($row["device_key_label"]) > 25) { $save = false; echo "label "; }
+								if (strlen($row["device_key_icon"]) > 25) { $save = false; echo "icon "; }
 
 							//escape characters in the string
 								$device_uuid = check_str($row["device_uuid"]);
@@ -182,6 +183,7 @@
 								$device_key_line = check_str($row["device_key_line"]);
 								$device_key_value = check_str($row["device_key_value"]);
 								$device_key_label = check_str($row["device_key_label"]);
+								$device_key_icon = check_str($row["device_key_icon"]);
 								$device_key_category = check_str($row["device_key_category"]);
 								$device_key_vendor = check_str($row["device_key_vendor"]);
 
@@ -197,7 +199,8 @@
 									//determine what to do with the profile key
 										if ($device_key_id == $database["device_key_id"]
 											&& $device_key_value == $database["device_key_value"]
-											&& $device_key_label == $database["device_key_label"]) {
+											&& $device_key_label == $database["device_key_label"]
+											&& $device_key_icon == $database["device_key_icon"]) {
 												//profile key unchanged don't save
 												$save = false;
 										}
@@ -236,6 +239,7 @@
 											$sql .= "device_key_line, ";
 											$sql .= "device_key_value, ";
 											$sql .= "device_key_label, ";
+											$sql .= "device_key_icon, ";
 											$sql .= "device_key_category, ";
 											$sql .= "device_key_vendor ";
 											$sql .= ") ";
@@ -248,6 +252,7 @@
 											$sql .= "'".$device_key_line."', ";
 											$sql .= "'".$device_key_value."', ";
 											$sql .= "'".$device_key_label."', ";
+											$sql .= "'".$device_key_icon."', ";
 											$sql .= "'".$device_key_category."', ";
 											$sql .= "'".$device_key_vendor."' ";
 											$sql .= ");";
@@ -267,7 +272,8 @@
 										}
 										$sql .= "device_key_type = '".$device_key_type."', ";
 										$sql .= "device_key_value = '".$device_key_value."', ";
-										$sql .= "device_key_label = '".$device_key_label."' ";
+										$sql .= "device_key_label = '".$device_key_label."', ";
+										$sql .= "device_key_icon = '".$device_key_icon."' ";
 										$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 										$sql .= "and device_key_uuid = '".$device_key_uuid."'; ";
 								}
@@ -289,7 +295,7 @@
 					}
 
 				//set the message
-					messages::add($text["message-$action"]);
+					message::add($text["message-$action"]);
 
 				//redirect the browser
 					header("Location: /core/user_settings/user_dashboard.php");
@@ -406,6 +412,7 @@
 		$device_keys[$x]['device_key_value'] = '';
 		$device_keys[$x]['device_key_extension'] = '';
 		$device_keys[$x]['device_key_label'] = '';
+		$device_keys[$x]['device_key_icon'] = '';
 	}
 
 //remove the keys the user is not allowed to edit based on the authorized vendor keys
@@ -481,6 +488,7 @@
 						echo "				<th>".$text['label-device_key_value']."</th>\n";
 						//echo "				<td class='row_style".$c."'>".$text['label-device_key_extension']."</td>\n";
 						echo "				<th>".$text['label-device_key_label']."</th>\n";
+						echo "				<th>".$text['label-device_key_icon']."</th>\n";
 						echo "			</tr>\n";
 					}
 				//determine whether to hide the element
@@ -633,6 +641,7 @@
 
 					echo "<td class='row_style".$c." row_style_slim'>\n";
 					echo "	<input class='formfld' style='min-width: 50px; max-width: 100px;' type='text' name='device_keys[".$x."][device_key_label]' maxlength='255' value=\"".$row['device_key_label']."\">\n";
+					echo "	<input class='formfld' style='min-width: 50px; max-width: 100px;' type='text' name='device_keys[".$x."][device_key_icon]' maxlength='255' value=\"".$row['device_key_icon']."\">\n";
 					echo "	<input type='hidden' name='device_keys[".$x."][device_profile_uuid]' value=\"".$row['device_profile_uuid']."\">\n";
 					echo "</td>\n";
 

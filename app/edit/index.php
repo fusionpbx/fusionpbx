@@ -17,23 +17,26 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('script_editor_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('script_editor_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -41,18 +44,32 @@ else {
 
 //set the directory title and mode
 	$_SESSION["app"]["edit"]["dir"] = $_GET["dir"];
-	$title = strtoupper($_GET["dir"]);
+	$title = escape($_GET["dir"]);
 	unset($mode);
 	switch ($_GET["dir"]) {
-		case 'xml': $mode = 'xml'; break;
-		case 'provision': $mode = 'xml'; break;
-		case 'php': $mode = 'php'; break;
-		case 'scripts': $mode = 'lua'; break;
-		case 'grammar': //use default
+		case 'xml':
+			$title = 'XML';
+			$mode = 'xml';
+			break;
+		case 'provision':
+			$title = 'Provision';
+			$mode = 'xml';
+			break;
+		case 'php':
+			$title = 'PHP';
+			$mode = 'php';
+			break;
+		case 'scripts':
+			$title = 'Scripts';
+			$mode = 'lua';
+			break;
+		case 'grammar':
+			$title = 'Grammar';
+			$mode = 'xml';
 		default: $mode = 'text';
 	}
 
-// load editor preferences/defaults
+//load editor preferences/defaults
 	$setting_size = ($_SESSION["editor"]["font_size"]["text"] != '') ? $_SESSION["editor"]["font_size"]["text"] : '12px';
 	$setting_theme = ($_SESSION["editor"]["theme"]["text"] != '') ? $_SESSION["editor"]["theme"]["text"] : 'cobalt';
 	$setting_invisibles = ($_SESSION["editor"]["invisibles"]["boolean"] != '') ? $_SESSION["editor"]["invisibles"]["boolean"] : 'false';
@@ -169,6 +186,13 @@ else {
 							$modes['text'] = 'Text';
 							$modes['xml'] = 'XML';
 							$modes['sql'] = 'SQL';
+							$modes['sh'] = 'SH';
+							$modes['smarty'] = 'Smarty';
+							$modes['svg'] = 'SVG';
+							$modes['makefile'] = 'Makefile';
+							$modes['c_cpp'] = 'C';
+							$modes['c_cpp'] = 'CPP';
+							$modes['pgsql'] = 'PGSQL';
 							$preview = ($setting_preview == 'true') ? "onmouseover=\"editor.getSession().setMode('ace/mode/' + this.value);\"" : null;
 							foreach ($modes as $value => $label) {
 								$selected = ($value == $mode) ? 'selected' : null;

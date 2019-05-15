@@ -367,7 +367,7 @@ if (is_array($activity)) foreach ($activity as $extension => $ext) {
 		}
 		$block .= "			</td></tr></table>";
 		if (permission_exists('operator_panel_call_details')) {
-			$block .= "			<span id='op_caller_details_".$extension."'><strong>".$call_name."</strong><br>".$call_number."</span>";
+			$block .= "			<span id='op_caller_details_".$extension."'><strong>".escape($call_name)."</strong><br>".escape($call_number)."</span>";
 		}
 		$block .= "		</span>";
 		//transfer
@@ -449,6 +449,7 @@ else {
 }
 echo "<br><br>";
 
+/*
 if (if_group("superadmin") && isset($_GET['debug'])) {
 	echo '$activity<br>';
 	echo "<textarea style='width: 100%; height: 600px; overflow: scroll;' onfocus='refresh_stop();' onblur='refresh_start();'>";
@@ -461,5 +462,6 @@ if (if_group("superadmin") && isset($_GET['debug'])) {
 	print_r($_SESSION);
 	echo "</textarea>";
 }
+*/
 
 ?>

@@ -36,20 +36,20 @@ class plugin_database {
 		//check the username and password if they don't match then redirect to the login
 			$sql = "select * from v_users ";
 			if (strlen($this->key) > 30) {
-				$sql .= "where api_key=:key ";
-				//$sql .= "where api_key='".$this->key."' ";
+				$sql .= "where api_key = :key ";
+				//$sql .= "where api_key = '".$this->key."' ";
 			}
 			else {
-				$sql .= "where username=:username ";
-				//$sql .= "where username='".$this->username."' ";
+				$sql .= "where lower(username) = lower(:username) ";
+				//$sql .= "where username = '".$this->username."' ";
 			}
 			if ($_SESSION["user"]["unique"]["text"] == "global") {
 				//unique username - global (example: email address)
 			}
 			else {
 				//unique username - per domain
-				$sql .= "and domain_uuid=:domain_uuid ";
-				//$sql .= "and domain_uuid='".$this->domain_uuid."' ";
+				$sql .= "and domain_uuid = :domain_uuid ";
+				//$sql .= "and domain_uuid = '".$this->domain_uuid."' ";
 			}
 			$sql .= "and (user_enabled = 'true' or user_enabled is null) ";
 			//echo $sql."<br />\n";
@@ -119,6 +119,7 @@ class plugin_database {
 			}
 			$result["user_uuid"] = $this->user_uuid;
 			$result["domain_uuid"] = $this->domain_uuid;
+			$result["contact_uuid"] = $this->contact_uuid;
 			$result["sql"] = $sql;
 			if ($user_authorized) {
 				$result["authorized"] = "true";

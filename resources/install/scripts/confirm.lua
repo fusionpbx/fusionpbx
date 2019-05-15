@@ -66,8 +66,8 @@
 
 		--if the screen file is found then set confirm to true
 			if (domain_name ~= nil) then
-				call_screen_file = temp_dir .. "/" .. domain_name .. "-" .. caller_id_number .. "." .. record_ext;
-				if (file_exists(call_screen_file)) then
+				if (file_exists(temp_dir .. "/" .. domain_name .. "-" .. caller_id_number .. "." .. record_ext)) then
+					call_screen_file = temp_dir .. "/" .. domain_name .. "-" .. caller_id_number .. "." .. record_ext;
 					confirm = "true";
 				end
 			end
@@ -81,7 +81,7 @@
 						min_digits = 1;
 						max_digits = 1;
 						digit = '';
-						if (file_exists(call_screen_file)) then
+						if (call_screen_file ~= nil) then
 							max_tries = "1";
 							digit = session:playAndGetDigits(min_digits, max_digits, max_tries, "500", "#", call_screen_file:gsub("\\","/"), "", "\\d+");
 						end

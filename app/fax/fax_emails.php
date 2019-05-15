@@ -225,7 +225,7 @@ if (sizeof($result) != 0) {
 
 					if ($fax_message != '') {
 						$fax_message = strip_tags($fax_message);
-						$fax_message = str_replace("&nbsp;", "\r\n", $fax_message);
+						$fax_message = html_entity_decode($fax_message);
 						$fax_message = str_replace("\r\n\r\n", "\r\n", $fax_message);
 					}
 

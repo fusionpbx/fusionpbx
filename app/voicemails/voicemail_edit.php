@@ -88,7 +88,7 @@
 					voicemail_uuid = '".$voicemail_uuid."'";
 			$db->exec(check_sql($sqld));
 		//redirect the browser
-			messages::add($text['message-delete']);
+			message::add($text['message-delete']);
 			header("Location: voicemail_edit.php?id=".$voicemail_uuid);
 			return;
 	}
@@ -116,7 +116,7 @@
 				)";
 			$db->exec(check_sql($sqli));
 		//redirect the browser
-			messages::add($text['message-add']);
+			message::add($text['message-add']);
 	}
 
 if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -184,7 +184,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-				messages::add($text['message-add']);
+				message::add($text['message-add']);
 			} //if ($action == "add")
 
 			if ($action == "update" && permission_exists('voicemail_edit')) {
@@ -208,7 +208,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-				messages::add($text['message-update']);
+				message::add($text['message-update']);
 			} //if ($action == "update")
 
 
@@ -392,6 +392,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='voicemail_id' maxlength='255' value='".escape($voicemail_id)."'>\n";
+	echo "	<input type='text' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
 	echo "<br />\n";
 	echo $text['description-voicemail_id']."\n";
 	echo "</td>\n";
@@ -402,7 +403,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-voicemail_password']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='voicemail_password' id='password' autocomplete='off' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" autocomplete='off' maxlength='50' value=\"".escape($voicemail_password)."\">\n";
+	echo "	<input type='password' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
+	echo "	<input class='formfld' type='password' name='voicemail_password' id='password' autocomplete='off' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" autocomplete='off' maxlength='50' value=\"".escape($voicemail_password)."\">\n";
 	echo "<br />\n";
 	echo $text['description-voicemail_password']."\n";
 	echo "</td>\n";

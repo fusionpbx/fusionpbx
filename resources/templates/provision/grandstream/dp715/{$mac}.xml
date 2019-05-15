@@ -29,12 +29,14 @@
 		<P212>1</P212>
 		<!-- Firmware Server Path -->
 	
-		{if isset($grandstream_firmware_path)}
-		<P192>{$grandstream_firmware_path}</P192>
+		{if isset($grandstream_firmware_path) && isset($firmware_version)}
+		<P192>{$grandstream_firmware_path}/dp715/{$firmware_version}</P192>
+		{elseif isset($grandstream_firmware_path)}
+		<P192>{$grandstream_firmware_path}/dp715</P192>
 		{else}
 		<P192>{$domain_name}{$project_path}/app/provision</P192>
 		{/if}
-	
+
 		<!-- Config Server Path -->
 		<P237>{$domain_name}{$project_path}/app/provision</P237>
 		<!-- XML Config File Password -->
@@ -136,7 +138,7 @@
 		<!-- Profile Active. 0 - No, 1 - Yes. -->
 		<P271>1</P271>
 		<!-- Primary SIP Server -->
-		<P47>{$server_address_1}</P47>
+		<P47>{$account.1.server_address}</P47>
 		<!-- Failover SIP Server -->
 		<P967></P967>
 		<!-- Prefer Primary SIP Server. 0 - No, 1 - Yes. -->
@@ -230,7 +232,13 @@
 		<!-- Use as Dial Key. 0 - No, 1 - Yes (if set to Yes, "#" will function as the "(Re-)Dial" key) -->
 		<P72>1</P72>
 		<!-- Dial Plan -->
+	
+		{if isset($grandstream_dial_plan) }
 		<P4200>{$grandstream_dial_plan}</P4200>
+		{else}
+		<P4200>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P4200>
+		{/if}
+		
 		<!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes -->
 		<P99>0</P99>
 		<!-- Send Anonymous. 0 - No, 1 - Yes  (caller ID will be blocked if set to Yes) -->
@@ -305,7 +313,7 @@
 		<!-- Profile Active. 0 - No, 1 - Yes. -->
 		<P401>1</P401>
 		<!-- Primary SIP Server -->
-		<P747>{$server_address_2}</P747>
+		<P747>{$account.2.server_address}</P747>
 		<!-- Failover SIP Server -->
 		<P987></P987>
 		<!-- Prefer Primary SIP Server. 0 - No, 1 - Yes. -->
@@ -477,13 +485,13 @@
 		<!-- Hunting Group (0 - None, 1 - Active, 2 - 2, 3 - 3, 4 -4, 5 -5) -->
 		<P4300>0</P4300>
 		<!--SIP User ID -->
-		<P4060>{$user_id_1}</P4060>
+		<P4060>{$account.1.user_id}</P4060>
 		<!--Authenticate ID -->
-		<P4090>{$user_id_1}</P4090>
+		<P4090>{$account.1.auth_id}</P4090>
 		<!--Authenticate Password -->
-		<P4120>{$user_password_1}</P4120>
+		<P4120>{$account.1.password}</P4120>
 		<!--Name -->
-		<P4180>{$display_name_1}</P4180>
+		<P4180>{$account.1.display_name}</P4180>
 		<!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
 		<P4150>0</P4150>
 	<!-- Handset 2 -->
@@ -492,13 +500,13 @@
 		<!-- Hunting Group (0 - None, 2 - Active, 1 - 1, 3 - 3, 4 -4, 5 -5) -->
 		<P4301>0</P4301>
 		<!--SIP User ID -->
-		<P4061>{$user_id_2}</P4061>
+		<P4061>{$account.2.user_id}</P4061>
 		<!--Authenticate ID -->
-		<P4091>{$user_id_2}</P4091>
+		<P4091>{$account.2.auth_id}</P4091>
 		<!--Authenticate Password -->
-		<P4121>{$user_password_2}</P4121>
+		<P4121>{$account.2.password}</P4121>
 		<!--Name -->
-		<P4181>{$display_name_2}</P4181>
+		<P4181>{$account.2.display_name}</P4181>
 		<!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
 		<P4151>0</P4151>
 	<!-- Handset 3 -->
@@ -507,13 +515,13 @@
 		<!-- Hunting Group (0 - None, 3 - Active, 1 - 1, 2 - 2, 4 -4, 5 -5) -->
 		<P4302>0</P4302>
 		<!--SIP User ID -->
-		<P4062>{$user_id_3}</P4062>
+		<P4062>{$account.3.user_id}</P4062>
 		<!--Authenticate ID -->
-		<P4092>{$user_id_3}</P4092>
+		<P4092>{$account.3.auth_id}</P4092>
 		<!--Authenticate Password -->
-		<P4122>{$user_password_3}</P4122>
+		<P4122>{$account.3.password}</P4122>
 		<!--Name -->
-		<P4182>{$display_name_3}</P4182>
+		<P4182>{$account.3.display_name}</P4182>
 		<!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
 		<P4152>0</P4152>
 	<!-- Handset 4 -->
@@ -522,13 +530,13 @@
 		<!-- Hunting Group (0 - None, 4 - Active, 1 -1, 2 -2, 3 -3, 5 -5) -->
 		<P4303>0</P4303>
 		<!--SIP User ID -->
-		<P4063>{$user_id_4}</P4063>
+		<P4063>{$account.4.user_id}</P4063>
 		<!--Authenticate ID -->
-		<P4093>{$user_id_4}</P4093>
+		<P4093>{$account.4.auth_id}</P4093>
 		<!--Authenticate Password -->
-		<P4123>{$user_password_4}</P4123>
+		<P4123>{$account.4.password}</P4123>
 		<!-- Name -->
-		<P4183>{$display_name_4}</P4183>
+		<P4183>{$account.4.display_name}</P4183>
 		<!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
 		<P4153>0</P4153>
 	<!-- Handset 5 -->
@@ -537,13 +545,13 @@
 		<!-- Hunting Group (0 - None, 5 - Active, 1 -1, 2 -2, 3 -3, 4 -4) -->
 		<P4304>0</P4304>
 		<!--SIP User ID -->
-		<P4064>{$user_id_5}</P4064>
+		<P4064>{$account.5.user_id}</P4064>
 		<!--Authenticate ID -->
-		<P4094>{$user_id_5}</P4094>
+		<P4094>{$account.5.auth_id}</P4094>
 		<!--Authenticate Password -->
-		<P4124>{$user_password_5}</P4124>
+		<P4124>{$account.5.password}</P4124>
 		<!--Name -->
-		<P4184>{$display_name_5}</P4184>
+		<P4184>{$account.5.display_name}</P4184>
 		<!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
 		<P4154>0</P4154>
 

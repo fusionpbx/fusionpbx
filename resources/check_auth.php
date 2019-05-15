@@ -100,13 +100,13 @@
 
 				//redirect the user to the login page
 					$target_path = ($_REQUEST["path"] != '') ? $_REQUEST["path"] : $_SERVER["PHP_SELF"];
-					messages::add($text['message-invalid_credentials'], 'negative');
+					message::add($text['message-invalid_credentials'], 'negative');
 					header("Location: ".PROJECT_PATH."/login.php?path=".urlencode($target_path));
 					exit;
 			}
 
 		//get the groups assigned to the user and then set the groups in $_SESSION["groups"]
-			$sql = "SELECT * FROM v_group_users ";
+			$sql = "SELECT * FROM v_user_groups ";
 			//$sql .= "where domain_uuid='".$domain_uuid."' ";
 			//$sql .= "and user_uuid='".$_SESSION["user_uuid"]."' ";
 			$sql .= "where domain_uuid=:domain_uuid ";

@@ -85,7 +85,7 @@
 				//group changed from global to domain-specific
 				if ($domain_uuid_previous == '' && $domain_uuid != '') {
 					//remove any users assigned to the group from the old domain
-						$sql = "delete from v_group_users where group_uuid = '".$group_uuid."' and domain_uuid <> '".$domain_uuid."' ";
+						$sql = "delete from v_user_groups where group_uuid = '".$group_uuid."' and domain_uuid <> '".$domain_uuid."' ";
 						if (!$db->exec(check_sql($sql))) {
 							$error = $db->errorInfo();
 							//echo "<pre>".print_r($error, true)."</pre>"; exit;
@@ -99,7 +99,7 @@
 					//change group name
 						if ($group_name != $group_name_previous && $group_name != '') {
 							//change group name in group users
-								$sql = "update v_group_users set group_name = '".$group_name."' where group_uuid = '".$group_uuid."' and group_name = '".$group_name_previous."' ";
+								$sql = "update v_user_groups set group_name = '".$group_name."' where group_uuid = '".$group_uuid."' and group_name = '".$group_name_previous."' ";
 								if (!$db->exec(check_sql($sql))) {
 									$error = $db->errorInfo();
 									//echo "<pre>".print_r($error, true)."</pre>"; exit;
@@ -116,7 +116,7 @@
 				//group changed from one domain to another
 				else if ($domain_uuid_previous != '' && $domain_uuid != '' && $domain_uuid_previous != $domain_uuid) {
 					//remove any users assigned to the group from the old domain
-						$sql = "delete from v_group_users where group_uuid = '".$group_uuid."' and domain_uuid = '".$domain_uuid_previous."' ";
+						$sql = "delete from v_user_groups where group_uuid = '".$group_uuid."' and domain_uuid = '".$domain_uuid_previous."' ";
 						if (!$db->exec(check_sql($sql))) {
 							$error = $db->errorInfo();
 							//echo "<pre>".print_r($error, true)."</pre>"; exit;
@@ -130,7 +130,7 @@
 					//change group name
 						if ($group_name != $group_name_previous && $group_name != '') {
 							//change group name in group users
-								$sql = "update v_group_users set group_name = '".$group_name."' where group_uuid = '".$group_uuid."' and group_name = '".$group_name_previous."' ";
+								$sql = "update v_user_groups set group_name = '".$group_name."' where group_uuid = '".$group_uuid."' and group_name = '".$group_name_previous."' ";
 								if (!$db->exec(check_sql($sql))) {
 									$error = $db->errorInfo();
 									//echo "<pre>".print_r($error, true)."</pre>"; exit;
@@ -149,7 +149,7 @@
 					//change group name
 						if ($group_name != $group_name_previous && $group_name != '') {
 							//change group name in group users
-								$sql = "update v_group_users set group_name = '".$group_name."' where group_uuid = '".$group_uuid."' and group_name = '".$group_name_previous."' ";
+								$sql = "update v_user_groups set group_name = '".$group_name."' where group_uuid = '".$group_uuid."' and group_name = '".$group_name_previous."' ";
 								if (!$db->exec(check_sql($sql))) {
 									$error = $db->errorInfo();
 									//echo "<pre>".print_r($error, true)."</pre>"; exit;
@@ -174,7 +174,7 @@
 					//change group name
 						if ($group_name != $group_name_previous && $group_name != '') {
 							//change group name in group users
-								$sql = "update v_group_users set group_name = '".$group_name."' where group_uuid = '".$group_uuid."' and group_name = '".$group_name_previous."' ";
+								$sql = "update v_user_groups set group_name = '".$group_name."' where group_uuid = '".$group_uuid."' and group_name = '".$group_name_previous."' ";
 								if (!$db->exec(check_sql($sql))) {
 									$error = $db->errorInfo();
 									//echo "<pre>".print_r($error, true)."</pre>"; exit;
@@ -188,11 +188,11 @@
 						}
 				}
 
-				messages::add($text['message-update']);
+				message::add($text['message-update']);
 				header("Location: groups.php");
 			}
 			else {
-				messages::add($text['message-group_exists'], 'negative');
+				message::add($text['message-group_exists'], 'negative');
 				header("Location: groupedit.php?id=".$group_uuid);
 			}
 
@@ -228,7 +228,7 @@
 	echo "		if (new_group_name != null) {\n";
 	echo "			new_group_desc = prompt('".$text['message-new_group_description']."');\n";
 	echo "			if (new_group_desc != null) {\n";
-	echo "				window.location = 'permissions_copy.php?group_name=".$group_name."&new_group_name=' + new_group_name + '&new_group_desc=' + new_group_desc;\n";
+	echo "				window.location = 'permissions_copy.php?group_name=".escape($group_name)."&new_group_name=' + new_group_name + '&new_group_desc=' + new_group_desc;\n";
 	echo "			}\n";
 	echo "		}\n";
 	echo "	}\n";
@@ -236,7 +236,7 @@
 
 //show the content
 	echo "<form name='login' method='post' action=''>\n";
-	echo "<input type='hidden' name='group_uuid' value='".$group_uuid."'>\n";
+	echo "<input type='hidden' name='group_uuid' value='".escape($group_uuid)."'>\n";
 
 	echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
@@ -260,8 +260,8 @@
 	echo 	$text['label-group_name']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' align='left' class='vtable'>\n";
-	echo "	<input type='hidden' name='group_name_previous' value=\"".$group_name."\">\n";
-	echo "  <input type='text' class='formfld' name='group_name' value=\"".$group_name."\">\n";
+	echo "	<input type='hidden' name='group_name_previous' value=\"".escape($group_name)."\">\n";
+	echo "  <input type='text' class='formfld' name='group_name' value=\"".escape($group_name)."\">\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -271,11 +271,11 @@
 		echo "	".$text['label-domain']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input type='hidden' name='domain_uuid_previous' value='".$domain_uuid."'>\n";
+		echo "	<input type='hidden' name='domain_uuid_previous' value='".escape($domain_uuid)."'>\n";
 		echo "	<select class='formfld' name='domain_uuid'>\n";
 		echo "	<option value='' ".((strlen($domain_uuid) == 0) ? "selected='selected'" : null).">".$text['option-global']."</option>\n";
 		foreach ($_SESSION['domains'] as $row) {
-			echo "<option value='".$row['domain_uuid']."' ".(($row['domain_uuid'] == $domain_uuid) ? "selected='selected'" : null).">".$row['domain_name']."</option>\n";
+			echo "<option value='".escape($row['domain_uuid'])."' ".(($row['domain_uuid'] == $domain_uuid) ? "selected='selected'" : null).">".escape($row['domain_name'])."</option>\n";
 		}
 		echo "	</select>\n";
 		echo "	<br />\n";
@@ -284,7 +284,7 @@
 		echo "</tr>\n";
 	}
 	else {
-		echo "<input type='hidden' name='domain_uuid' value='".$domain_uuid."'>";
+		echo "<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>";
 	}
 
 	echo "<tr>\n";
@@ -292,7 +292,7 @@
 	echo 	$text['label-group_description']."\n";
 	echo "</td>\n";
 	echo "<td align='left' class='vtable' valign='top'>\n";
-	echo "	<textarea name='group_description' class='formfld' style='width: 250px; height: 50px;'>".$group_description."</textarea>\n";
+	echo "	<textarea name='group_description' class='formfld' style='width: 250px; height: 50px;'>".escape($group_description)."</textarea>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

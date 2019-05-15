@@ -72,7 +72,7 @@ if (strlen($id)>0) {
 }
 
 //redirect the user
-	messages::add($text['message-delete']);
+	message::add($text['message-delete']);
 	header("Location: recordings.php");
 	return;
 ?>

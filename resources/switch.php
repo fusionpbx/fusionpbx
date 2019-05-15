@@ -93,11 +93,15 @@ function event_socket_request_cmd($cmd) {
 	return $response;
 }
 
-function byte_convert($bytes, $decimals = 2) {
-	if ($bytes <= 0) { return '0 Bytes'; }
-	$convention = 1024;
-	$formattedbytes = array_reduce( array(' B', ' KB', ' MB', ' GB', ' TB', ' PB', ' EB', 'ZB'), create_function( '$a,$b', 'return is_numeric($a)?($a>='.$convention.'?$a/'.$convention.':number_format($a,'.$decimals.').$b):$a;' ), $bytes );
-	return $formattedbytes;
+function byte_convert($bytes, $precision = 2) {
+	static $units = array('B','kB','MB','GB','TB','PB','EB','ZB','YB');
+	$step = 1024;
+	$i = 0;
+	while (($bytes / $step) > 0.9) {
+		$bytes = $bytes / $step;
+		$i++;
+	}
+	return round($bytes, $precision).' '.$units[$i];
 }
 
 function remove_config_from_cache($name) {
@@ -170,7 +174,9 @@ function save_setting_xml() {
 			$xml .= "    <param name=\"listen-ip\" value=\"" . $event_socket_ip_address . "\"/>\n";
 			$xml .= "    <param name=\"listen-port\" value=\"" . $row['event_socket_port'] . "\"/>\n";
 			$xml .= "    <param name=\"password\" value=\"" . $row['event_socket_password'] . "\"/>\n";
-			$xml .= "    <!--<param name=\"apply-inbound-acl\" value=\"lan\"/>-->\n";
+			if (strlen($row['event_socket_acl']) > 0) {
+				$xml .= "    <param name=\"apply-inbound-acl\" value=\"" . $row['event_socket_acl'] . "\"/>\n";
+			}
 			$xml .= "  </settings>\n";
 			$xml .= "</configuration>";
 			fwrite($fout, $xml);
@@ -567,13 +573,10 @@ function extension_presence_id($extension, $number_alias = false) {
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and (extension = '$extension' ";
 		$sql .= "or number_alias = '$extension') ";
-		$sql .= "and enabled = 'true' ";
-
 		$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 		if (count($result) == 0) {
 			return false;
 		}
-
 		foreach ($result as &$row) {
 			$extension = $row['extension'];
 			$number_alias = $row['number_alias'];
@@ -1303,7 +1306,6 @@ if (!function_exists('switch_conf_xml')) {
 			else {
 				if (file_exists(PHP_BINDIR.'/php')) { define("PHP_BIN", "php"); }
 				$v_mailer_app = PHP_BINDIR."/".PHP_BIN." ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/secure/v_mailto.php";
-				$v_mailer_app = sprintf('"%s"', $v_mailer_app);
 				$v_mailer_app_args = "-t";
 			}
 

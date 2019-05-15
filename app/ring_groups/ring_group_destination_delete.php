@@ -17,48 +17,53 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2013
+	Portions created by the Initial Developer are Copyright (C) 2013 - 2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('ring_group_delete')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('ring_group_delete')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
 //get the id
-	if (count($_GET)>0) {
-		$id = check_str($_GET["id"]);
-		$ring_group_uuid = check_str($_GET["ring_group_uuid"]);
+	if (is_array($_GET)) {
+		$id = $_GET["id"];
+		$ring_group_uuid = $_GET["ring_group_uuid"];
 	}
 
 //delete ring_group_destination
-	if (strlen($id)>0) {
-		$sql = "delete from v_ring_group_destinations ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and ring_group_destination_uuid = '$id' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($sql);
+	if (is_uuid($id)) {
+		$array['ring_group_destinations'][]['ring_group_destination_uuid'] = $id;
+		$database = new database;
+		$database->app_name = 'ring_groups';
+		$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
+		$database->delete($array);
+		//$message = $database->message;
 	}
 
 //save the message to a session variable
-	messages::add($text['message-delete']);
+	message::add($text['message-delete']);
 
 //redirect the browser
-	header("Location: ring_group_edit.php?id=$ring_group_uuid");
-	exit;
+	if (is_uuid($ring_group_uuid)) {
+		header("Location: ring_group_edit.php?id=".$ring_group_uuid);
+	}
 
 ?>

@@ -53,7 +53,7 @@
 				$obj = new number_translations;
 				$obj->delete($number_translations);
 			//delete message
-				messages::add($text['message-delete']);
+				message::add($text['message-delete']);
 		}
 	}
 

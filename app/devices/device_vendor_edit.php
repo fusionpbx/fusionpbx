@@ -104,7 +104,7 @@
 					$db->exec(check_sql($sql));
 					unset($sql);
 
-					messages::add($text['message-add']);
+					message::add($text['message-add']);
 					header("Location: device_vendors.php");
 					return;
 
@@ -119,7 +119,7 @@
 					$db->exec(check_sql($sql));
 					unset($sql);
 
-					messages::add($text['message-update']);
+					message::add($text['message-update']);
 					header("Location: device_vendors.php");
 					return;
 				} //if ($action == "update")

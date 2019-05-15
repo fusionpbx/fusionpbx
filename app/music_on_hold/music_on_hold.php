@@ -54,7 +54,7 @@
 		$sql .= "or domain_uuid is null ";
 	}
 	$sql .= ") ";
-	$sql .= "order by domain_uuid desc, music_on_hold_rate asc, music_on_hold_name asc";
+	$sql .= "order by domain_uuid desc, music_on_hold_name asc, music_on_hold_rate asc";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$streams = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -158,7 +158,7 @@
 
 		//process, if possible
 			if (!$valid_file_type) {
-				messages::add($text['message-unsupported_file_type']);
+				message::add($text['message-unsupported_file_type']);
 			}
 			else {
 
@@ -257,7 +257,7 @@
 					}
 
 				//set message
-					messages::add($text['message-upload_completed']);
+					message::add($text['message-upload_completed']);
 			}
 
 		//require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
@@ -302,7 +302,7 @@
 						array_map('unlink', glob(path_join($stream_path, '*.ogg')));
 					}
 				//set message
-					messages::add($text['message-delete']);
+					message::add($text['message-delete']);
 			}
 
 		//require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";

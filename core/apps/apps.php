@@ -97,13 +97,13 @@
 			$row['$description'] = $description;
 
 			/*
-			$tr_link = (permission_exists('app_edit')) ? "href='apps_edit.php?id=".$row['uuid']."'" : null;
+			$tr_link = (permission_exists('app_edit')) ? "href='apps_edit.php?id=".escape($row['uuid'])."'" : null;
 			*/
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' nowrap='nowrap'>";
 			/*
 			if (permission_exists('app_edit')) {
-				echo "	<a href='apps_edit.php?id=".$row['uuid']."'>".$row['name']."</a>";
+				echo "	<a href='apps_edit.php?id=".escape($row['uuid'])."'>".escape($row['name'])."</a>";
 			}
 			else {
 			*/
@@ -112,17 +112,17 @@
 			}
 			*/
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['category']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['subcategory']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['version']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg' width='35%'>".$row['$description']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['category'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['subcategory'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['version'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg' width='35%'>".escape($row['$description'])."</td>\n";
 			/*  // temporarily disabled
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('app_edit')) {
-				echo "	<a href='apps_edit.php?id=".$row['uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+				echo "	<a href='apps_edit.php?id=".escape($row['uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('app_delete')) {
-				echo "	<a href='apps_delete.php?id=".$row['uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+				echo "	<a href='apps_delete.php?id=".escape($row['uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			*/

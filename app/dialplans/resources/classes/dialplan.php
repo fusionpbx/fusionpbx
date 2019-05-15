@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010-2016
+	Copyright (C) 2010-2019
 	All Rights Reserved.
 
 	Contributor(s):
@@ -42,6 +42,8 @@ include "root.php";
 
 			//dialplans
 			public $dialplan_name;
+			public $dialplan_number;
+			public $dialplan_destination;
 			public $dialplan_continue;
 			public $dialplan_order;
 			public $dialplan_context;
@@ -89,6 +91,7 @@ include "root.php";
 				$sql .= "dialplan_uuid, ";
 				$sql .= "dialplan_name, ";
 				$sql .= "dialplan_number, ";
+				$sql .= "dialplan_destination, ";
 				$sql .= "dialplan_continue, ";
 				$sql .= "dialplan_order, ";
 				$sql .= "dialplan_context, ";
@@ -107,6 +110,7 @@ include "root.php";
 				$sql .= "'".check_str($this->dialplan_uuid)."', ";
 				$sql .= "'".check_str($this->dialplan_name)."', ";
 				$sql .= "'".check_str($this->dialplan_number)."', ";
+				$sql .= "'".check_str($this->dialplan_destination)."', ";
 				$sql .= "'".check_str($this->dialplan_continue)."', ";
 				$sql .= "'".check_str($this->dialplan_order)."', ";
 				$sql .= "'".check_str($this->dialplan_context)."', ";
@@ -332,6 +336,9 @@ include "root.php";
 								$this->dialplan_uuid = uuid();
 								$this->dialplan_name = $dialplan['extension']['@attributes']['name'];
 								$this->dialplan_number = $dialplan['extension']['@attributes']['number'];
+								if (strlen($dialplan['extension']['@attributes']['destination']) > 0) {
+									$this->dialplan_destination = $dialplan['extension']['@attributes']['destination'];
+								}
 								$this->dialplan_global = false;
 								if (strlen($dialplan['extension']['@attributes']['global']) > 0) {
 									if ($dialplan['extension']['@attributes']['global'] == "true") {
@@ -346,7 +353,7 @@ include "root.php";
 								}
 								else {
 									$this->dialplan_enabled = "true";
-								}
+								}								
 								$this->dialplan_description = '';
 								$this->dialplan_add();
 							//loop through the condition array
@@ -393,6 +400,9 @@ include "root.php";
 													if (strlen($row2['@attributes']['inline']) > 0) {
 														$this->dialplan_detail_inline = $row2['@attributes']['inline'];
 													}
+													else {
+														$this->dialplan_detail_inline = null;
+													}
 													$this->dialplan_detail_group = $group;
 													$this->dialplan_detail_order = $order;
 													$this->dialplan_detail_add();
@@ -404,6 +414,12 @@ include "root.php";
 													$this->dialplan_detail_tag = 'anti-action';
 													$this->dialplan_detail_type = $row2['@attributes']['application'];
 													$this->dialplan_detail_data = $row2['@attributes']['data'];
+													if (strlen($row2['@attributes']['inline']) > 0) {
+														$this->dialplan_detail_inline = $row2['@attributes']['inline'];
+													}
+													else {
+														$this->dialplan_detail_inline = null;
+													}
 													$this->dialplan_detail_group = $group;
 													$this->dialplan_detail_order = $order;
 													$this->dialplan_detail_add();
