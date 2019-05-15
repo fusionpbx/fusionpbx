@@ -30,7 +30,7 @@
 <P47>{$account.1.server_address}</P47>
 <!--  Secondary SIP Server -->
 <!--  String -->
-<P2312></P2312>
+<P2312>{$account.1.server_address_secondary}</P2312>
 <!--  Outbound Proxy -->
 <!--  String -->
 <P48>{$account.1.outbound_proxy}</P48>
@@ -615,7 +615,7 @@
 
 <!--  Secondary SIP Server -->
 <!--  String -->
-<P2412></P2412>
+<P2412>{$account.2.server_address_secondary}</P2412>
 
 <!--  Outbound Proxy -->
 <!--  String -->
@@ -1182,7 +1182,7 @@
 
 <!--  Secondary SIP Server -->
 <!--  String -->
-<P2512></P2512>
+<P2512>{$account.3.server_address_secondary}</P2512>
 <!--  Outbound Proxy -->
 <!--  String -->
 <P503>{$account.3.outbound_proxy}</P503>
