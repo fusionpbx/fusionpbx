@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -53,11 +53,6 @@
 		exit;
 	}
 
-//add the dialplan permission
-	$permission = "dialplan_delete";
-	$p = new permissions;
-	$p->add($permission, 'temp');
-
 //get the dialplan uuid and context
 	$sql = "select * from v_destinations ";
 	$sql .= "where destination_uuid = '$id' ";
@@ -73,36 +68,26 @@
 	}
 	unset ($prep_statement);
 
+//add the dialplan permission
+	$p = new permissions;
+	$p->add('dialplan_delete', 'temp');
+	$p->add('dialplan_detail_delete', 'temp');
+
+//delete the destination and related dialplan
+	if (isset($dialplan_uuid) && is_uuid($dialplan_uuid)) {
+		$array['dialplans'][]['dialplan_uuid'] = $dialplan_uuid;
+		$array['dialplan_details'][]['dialplan_uuid'] = $dialplan_uuid;
+	}
+	$array['destinations'][]['destination_uuid'] = $id;
+	$database = new database;
+	$database->app_name = 'destinations';
+	$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
+	$database->delete($array);
+	$message = $database->message;
+
 //remove the temporary permission
-	$p->delete($permission, 'temp');
-
-//start the atomic transaction
-	$db->beginTransaction();
-
-//delete the dialplan
-	if (isset($dialplan_uuid)) {
-		$sql = "delete from v_dialplan_details ";
-		$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
-		//echo $sql."<br />\n";
-		$db->exec(check_sql($sql));
-		unset($sql);
-
-		$sql = "delete from v_dialplans ";
-		$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
-		//echo $sql."<br />\n";
-		$db->exec(check_sql($sql));
-		unset($sql);
-	 }
-
-//delete the destination
-	$sql = "delete from v_destinations ";
-	$sql .= "where destination_uuid = '".$id."' ";
-	//echo $sql."<br />\n";
-	$db->exec(check_sql($sql));
-	unset($sql);
-
-//commit the atomic transaction
-	$db->commit();
+	$p->delete('dialplan_delete', 'temp');
+	$p->delete('dialplan_detail_delete', 'temp');
 
 //synchronize the xml config
 	save_dialplan_xml();
@@ -112,7 +97,7 @@
 	$cache->delete("dialplan:".$destination_context);
 
 //redirect the user
-	messages::add($text['message-delete']);
+	message::add($text['message-delete']);
 	header("Location: destinations.php");
 	return;
 

@@ -60,7 +60,7 @@
 	}
 	else {
 		// set message
-		messages::add($text['message-delete_failed'], 'negative');
+		message::add($text['message-delete_failed'], 'negative');
 	}
 
 	header("Location: user_edit.php?id=".check_str($_REQUEST["user_uuid"]));

@@ -45,6 +45,10 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_extension";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_domain";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -74,7 +78,6 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_b_leg";
-		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "hangup_cause";
@@ -87,7 +90,8 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_archive";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";		
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 
 	//default settings
 		$y=0;
@@ -210,7 +214,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fusionpbx";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Archive Database Name";
-		
+
 	//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_xml_cdr";
@@ -224,7 +228,8 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "xml_cdr_uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
@@ -272,17 +277,6 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "context";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "xml";
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "xml_cdr";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "json";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "jsonb";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "caller_id_name";
@@ -336,7 +330,9 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "end_stamp";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "timestamp";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "date";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "timestamp";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "duration";
@@ -424,6 +420,12 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "last_arg";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Save the last application data.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "missed_call";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "boolean";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "cc_side";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
@@ -532,5 +534,16 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "sip_hangup_disposition";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Save who hung up or cancelled the leg.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "xml";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "xml_cdr";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "json";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "jsonb";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 ?>

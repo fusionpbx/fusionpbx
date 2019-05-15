@@ -53,18 +53,18 @@
 
 //set http values as php variables
 	if (count($_POST) > 0) {
-		$var_category = check_str($_POST["var_category"]);
-		$var_name = check_str($_POST["var_name"]);
-		$var_value = check_str($_POST["var_value"]);
-		$var_command = check_str($_POST["var_command"]);
-		$var_hostname = check_str($_POST["var_hostname"]);
-		$var_enabled = check_str($_POST["var_enabled"]);
-		$var_order = check_str($_POST["var_order"]);
-		$var_description = $_POST["var_description"];
+		$var_category = check_str(trim($_POST["var_category"]));
+		$var_name = check_str(trim($_POST["var_name"]));
+		$var_value = check_str(trim($_POST["var_value"]));
+		$var_command = check_str(trim($_POST["var_command"]));
+		$var_hostname = check_str(trim($_POST["var_hostname"]));
+		$var_enabled = check_str(trim($_POST["var_enabled"]));
+		$var_order = check_str(trim($_POST["var_order"]));
+		$var_description = check_str(trim($_POST["var_description"]));
 		$var_description = str_replace("''", "'", $var_description);
 
 		if (strlen($_POST["var_category_other"]) > 0) {
-			$var_category = check_str($_POST["var_category_other"]);
+			$var_category = check_str(trim($_POST["var_category_other"]));
 		}
 	}
 
@@ -141,7 +141,7 @@
 						save_var_xml();
 
 					//set the message and redirect the user
-						messages::add($text['message-add']);
+						message::add($text['message-add']);
 						header("Location: vars.php");
 						return;
 				} //if ($action == "add")
@@ -173,7 +173,7 @@
 						save_var_xml();
 
 					//set the message and redirect the user
-						messages::add($text['message-update']);
+						message::add($text['message-update']);
 						header("Location: vars.php");
 						return;
 				} //if ($action == "update")
@@ -244,7 +244,7 @@
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='var_name' maxlength='255' value=\"$var_name\">\n";
+	echo "	<input class='formfld' type='text' name='var_name' maxlength='255' value=\"".escape($var_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-name']."\n";
 	echo "</td>\n";
@@ -255,7 +255,7 @@
 	echo "	".$text['label-value']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='var_value' maxlength='255' value=\"$var_value\">\n";
+	echo "	<input class='formfld' type='text' name='var_value' maxlength='255' value=\"".escape($var_value)."\">\n";
 	echo "<br />\n";
 	echo $text['description-value']."\n";
 	echo "</td>\n";
@@ -290,7 +290,7 @@
 	echo "	".$text['label-hostname']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='var_hostname' maxlength='255' value=\"$var_hostname\">\n";
+	echo "	<input class='formfld' type='text' name='var_hostname' maxlength='255' value=\"".escape($var_hostname)."\">\n";
 	echo "<br />\n";
 	echo $text['description-hostname']."\n";
 	echo "</td>\n";
@@ -351,7 +351,7 @@
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<textarea class='formfld' name='var_description' rows='17'>$var_description</textarea>\n";
+	echo "	<textarea class='formfld' name='var_description' rows='17'>".escape($var_description)."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
@@ -359,7 +359,7 @@
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='var_uuid' value='$var_uuid'>\n";
+		echo "		<input type='hidden' name='var_uuid' value='".escape($var_uuid)."'>\n";
 	}
 	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";

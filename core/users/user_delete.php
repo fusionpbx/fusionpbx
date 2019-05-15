@@ -83,7 +83,7 @@
 			}
 
 		//delete the groups the user is assigned to
-			$sql = "delete from v_group_users ";
+			$sql = "delete from v_user_groups ";
 			$sql .= "where user_uuid = '".$user_uuid."' ";
 			$sql .= "and domain_uuid = '".$domain_uuid."' ";
 			if (!$db->exec($sql)) {
@@ -102,7 +102,7 @@
 	}
 
 //redirect the user
-	messages::add($text['message-delete']);
+	message::add($text['message-delete']);
 	header("Location: users.php");
 
 ?>

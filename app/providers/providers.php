@@ -90,7 +90,8 @@
 	<div class="col-sm-4" style='padding-top: 0px;'>
 		<br /><br />
 		<a href='http://skye.tel/fusion-contact' target='_blank'>
-			<img src="/app/providers/resources/images/skyetel-logo.png" style="max-width: 159px;" class="center-block img-responsive"><br>
+			<img src="/app/providers/resources/images/skyetel-logo.png" style="width: 200px;" 
+class="center-block img-responsive"><br>
 		</a>
 	</div>
 	<div class="col-sm-8" style='padding-top: 0px;'>
@@ -125,7 +126,8 @@
 	<div class="col-sm-4" style='padding-top: 0px;'>
 		<br /><br /><br />
 		<a href='http://tiny.cc/voicetel' target='_blank'>
-			<img src="/app/providers/resources/images/logo_voicetel.png" style="max-width: 159px;" class="center-block img-responsive"><br>
+			<img src="/app/providers/resources/images/logo_voicetel.png" style="width: 200px;" 
+class="center-block img-responsive"><br>
 		</a>
 	</div>
 	<div class="col-sm-8" style='padding-top: 0px;'>

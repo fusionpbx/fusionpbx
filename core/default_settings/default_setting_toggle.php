@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('voicemail_message_view')) {
+if (permission_exists('default_setting_edit')) {
 	//access granted
 }
 else {

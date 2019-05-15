@@ -77,7 +77,7 @@
 				$obj = new call_recordings;
 				$obj->delete($call_recordings);
 			//delete message
-				messages::add($text['message-delete']);
+				message::add($text['message-delete']);
 		}
 	}
 
@@ -257,7 +257,7 @@
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_recording_base64'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('xml_cdr_details')) {
-				echo "		<a href='/app/xml_cdr/xml_cdr_details.php?uuid=".escape($row['call_recording_uuid'])."' title='".$text['button-view']."'>$v_link_label_view</a>";
+				echo "		<a href='/app/xml_cdr/xml_cdr_details.php?id=".escape($row['call_recording_uuid'])."' title='".$text['button-view']."'>$v_link_label_view</a>";
 			}
 			if (permission_exists('call_recording_edit')) {
 				echo "<button type='button' class='btn btn-default list_control_icon' name='' alt='".$text['button-edit']."' onclick=\"window.location='call_recording_edit.php?id=".escape($row['call_recording_uuid'])."'\" value='edit'><span class='glyphicon glyphicon-pencil'></span></input>\n";
@@ -278,7 +278,7 @@
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
+	echo "		<td width='33.3%' align='center' nowrap='nowrap'>&nbsp;</td>\n";
 	echo "		<td class='list_control_icons'>";
 	if (permission_exists('call_recording_add')) {
 		echo 		"<a href='call_recording_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
@@ -293,6 +293,12 @@
 	echo "</tr>\n";
 	echo "</table>";
 	echo "</form>\n";
+
+	if (strlen($paging_controls) > 0) {
+		echo "<br />";
+		echo $paging_controls."\n";
+	}
+
 	echo "<br /><br />";
 
 //include the footer

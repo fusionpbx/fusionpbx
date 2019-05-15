@@ -41,8 +41,8 @@ if not freeswitch then
 			log.warningf("Mailer Error: %s", err)
 
 			local email_uuid = uuid.new()
-			local sql = "insert into v_emails ( "
-			sql = sql .. "email_uuid, "
+			local sql = "insert into v_email_logs ( "
+			sql = sql .. "email_log_uuid, "
 			if call_uuid then sql = sql .. "call_uuid, " end
 			sql = sql .. "domain_uuid, "
 			sql = sql .. "sent_date, "
@@ -50,7 +50,7 @@ if not freeswitch then
 			sql = sql .. "status, "
 			sql = sql .. "email "
 			sql = sql .. ") values ( "
-			sql = sql .. ":email_uuid, "
+			sql = sql .. ":email_log_uuid, "
 			if call_uuid then sql = sql .. ":call_uuid, " end
 			sql = sql .. ":domain_uuid, "
 			sql = sql .. "now(),"
@@ -60,7 +60,7 @@ if not freeswitch then
 			sql = sql .. ") "
 
 			local params = {
-				email_uuid  = email_uuid;
+				email_log_uuid  = email_log_uuid;
 				call_uuid   = call_uuid;
 				domain_uuid = domain_uuid;
 				email_type  = email_type;
@@ -68,7 +68,7 @@ if not freeswitch then
 
 			db:query(sql, params)
 
-			log.infof("Retained in v_emails as email_uuid = %s", email_uuid)
+			log.infof("Retained in v_email_logs as email_log_uuid = %s", email_log_uuid)
 		else
 			log.infof("Mail to %s sent!", address)
 		end

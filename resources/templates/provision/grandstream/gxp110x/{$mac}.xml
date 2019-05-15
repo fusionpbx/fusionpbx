@@ -580,8 +580,13 @@
 <!-- Dial Plan. Default is { x+ | *x+ | *xx*x+ } -->
 <!-- String -->
 <!-- Mandatory -->
+    
+{if isset($grandstream_dial_plan) }
 <P290>{$grandstream_dial_plan}</P290>
-
+{else}
+<P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P290>
+{/if}
+    
 <!-- Delayed Call Forward Wait Time (in seconds). Default is 20 -->
 <!-- Number: 1 - 120 -->
 <!-- Mandatory -->
@@ -921,8 +926,10 @@
 
 <!-- Firmware Server Path -->
 <!-- String -->
-{if isset($grandstream_firmware_path)}
-<P192>{$grandstream_firmware_path}</P192>
+{if isset($grandstream_firmware_path) && isset($firmware_version)}
+<P192>{$grandstream_firmware_path}/gxp110x/{$firmware_version}</P192>
+{elseif isset($grandstream_firmware_path)}
+<P192>{$grandstream_firmware_path}/gxp110x</P192>
 {else}
 <P192>{$domain_name}{$project_path}/app/provision</P192>
 {/if}

@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010
+--	Copyright (C) 2010 - 2019
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -30,7 +30,7 @@
 	recordings_dir = "";
 	file_name = "";
 	recording_number = "";
-	recording_slots = "";
+	recording_id = "";
 	recording_prefix = "";
 
 --include config.lua
@@ -70,9 +70,8 @@
 		if (settings['recordings']['storage_path'] ~= nil) then
 			if (settings['recordings']['storage_path']['text'] ~= nil) then
 				storage_path = settings['recordings']['storage_path']['text'];
-				storage_path = storage_path:gsub("${domain_name}", domain_name);
-				storage_path = storage_path:gsub("${voicemail_id}", voicemail_id);
-				storage_path = storage_path:gsub("${voicemail_dir}", voicemail_dir);
+				storage_path = storage_path:gsub("${domain_name}",  session:getVariable("domain_name"));
+				storage_path = storage_path:gsub("${domain_uuid}", domain_uuid);
 			end
 		end
 	end
@@ -103,19 +102,23 @@
 			if (not default_language) then default_language = 'en'; end
 			if (not default_dialect) then default_dialect = 'us'; end
 			if (not default_voice) then default_voice = 'callie'; end
-			recording_slots = session:getVariable("recording_slots");
+			recording_id = session:getVariable("recording_id");
 			recording_prefix = session:getVariable("recording_prefix");
 			recording_name = session:getVariable("recording_name");
 			record_ext = session:getVariable("record_ext");
 			domain_name = session:getVariable("domain_name");
 
-		--select the recording number
-			if (recording_slots) then
+		--select the recording number and set the recording name
+			if (recording_id == nil) then
 				min_digits = 1;
 				max_digits = 20;
 				session:sleep(1000);
-				recording_number = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-id_number.wav", "", "\\d+");
-				recording_name = recording_prefix..recording_number.."."..record_ext;
+				recording_id = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-id_number.wav", "", "\\d+");
+				recording_name = recording_prefix..recording_id.."."..record_ext;
+			elseif (tonumber(recording_id) ~= nil) then
+				recording_name = recording_prefix..recording_id.."."..record_ext;
+			else
+				recording_name = recording_prefix.."."..record_ext;
 			end
 
 		--set the default recording name if one was not provided
@@ -130,13 +133,13 @@
 			session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-recording_started.wav");
 			session:execute("set", "playback_terminators=#");
 
+		--make the directory
+			mkdir(recordings_dir);
+
 		--begin recording
 			if (storage_type == "base64") then
 				--include the file io
 					local file = require "resources.functions.file"
-
-				--make the directory
-					mkdir(recordings_dir);
 
 				--record the file to the file system
 					-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs);
@@ -152,10 +155,19 @@
 				freeswitch.consoleLog("notice", "[recordings] ".. storage_type .. " ".. storage_path .."\n");
 				session:execute("record", storage_path .."/"..recording_name);
 			else
+				freeswitch.consoleLog("notice", "[recordings] ".. storage_type .. " ".. recordings_dir .."\n");
 				-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs);
 				session:execute("record", "'"..recordings_dir.."/"..recording_name.."' 10800 500 500");
 			end
 
+		--get the description of the previous recording
+			sql = "SELECT recording_description FROM v_recordings ";
+			sql = sql .. "where domain_uuid = :domain_uuid ";
+			sql = sql .. "and recording_filename = :recording_name ";
+			sql = sql .. "limit 1";
+			local params = {domain_uuid = domain_uuid, recording_name = recording_name};
+			local recording_description = dbh:first_value(sql, params) or ''
+			
 		--delete the previous recording
 			sql = "delete from v_recordings ";
 			sql = sql .. "where domain_uuid = :domain_uuid ";
@@ -172,6 +184,7 @@
 			table.insert(array, "recording_uuid, ");
 			table.insert(array, "domain_uuid, ");
 			table.insert(array, "recording_filename, ");
+			table.insert(array, "recording_description, ");			
 			if (storage_type == "base64") then
 				table.insert(array, "recording_base64, ");
 			end
@@ -182,6 +195,7 @@
 			table.insert(array, ":recording_uuid, ");
 			table.insert(array, ":domain_uuid, ");
 			table.insert(array, ":recording_name, ");
+			table.insert(array, ":recording_description, ");				
 			if (storage_type == "base64") then
 				table.insert(array, ":recording_base64, ");
 			end
@@ -193,6 +207,7 @@
 				recording_uuid = recording_uuid;
 				domain_uuid = domain_uuid;
 				recording_name = recording_name;
+				recording_description = recording_description;
 				recording_base64 = recording_base64;
 			};
 
@@ -270,6 +285,9 @@ if ( session:ready() ) then
 	--add the domain name to the recordings directory
 		recordings_dir = recordings_dir .. "/"..domain_name;
 
+	--if a recording directory is specified, use that instead
+		if (storage_path ~= nil and string.len(storage_path) > 0) then recordings_dir = storage_path; end
+	
 	--set the sounds path for the language, dialect and voice
 		default_language = session:getVariable("default_language");
 		default_dialect = session:getVariable("default_dialect");

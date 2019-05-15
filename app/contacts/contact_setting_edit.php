@@ -24,16 +24,20 @@
  Mark J Crane <markjcrane@fusionpbx.com>
  Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('contact_setting_edit') || permission_exists('contact_setting_add')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('contact_setting_edit') || permission_exists('contact_setting_add')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -162,12 +166,12 @@ else {
 
 				//redirect the browser
 					if ($action == "update") {
-						messages::add($text['message-update']);
+						message::add($text['message-update']);
 					}
 					if ($action == "add") {
-						messages::add($text['message-add']);
+						message::add($text['message-add']);
 					}
-					header("Location: contact_edit.php?id=".$contact_uuid);
+					header("Location: contact_edit.php?id=".escape($contact_uuid));
 					return;
 			} //if ($_POST["persistformvar"] != "true")
 	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
@@ -182,14 +186,13 @@ else {
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
-			$contact_setting_category = $row["contact_setting_category"];
-			$contact_setting_subcategory = $row["contact_setting_subcategory"];
-			$contact_setting_name = $row["contact_setting_name"];
-			$contact_setting_value = $row["contact_setting_value"];
-			$contact_setting_order = $row["contact_setting_order"];
-			$contact_setting_enabled = $row["contact_setting_enabled"];
-			$contact_setting_description = $row["contact_setting_description"];
-			break; //limit to 1 row
+			$contact_setting_category = escape($row["contact_setting_category"]);
+			$contact_setting_subcategory = escape($row["contact_setting_subcategory"]);
+			$contact_setting_name = escape($row["contact_setting_name"]);
+			$contact_setting_value = escape($row["contact_setting_value"]);
+			$contact_setting_order = escape($row["contact_setting_order"]);
+			$contact_setting_enabled = escape($row["contact_setting_enabled"]);
+			$contact_setting_description = escape($row["contact_setting_description"]);
 		}
 		unset ($prep_statement);
 	}
@@ -290,13 +293,13 @@ else {
 		while($i<=999) {
 			$selected = ($i == $contact_setting_order) ? "selected" : null;
 			if (strlen($i) == 1) {
-				echo "		<option value='00$i' ".escape($selected).">00$i</option>\n";
+				echo "		<option value='00$i' ".$selected.">00$i</option>\n";
 			}
 			if (strlen($i) == 2) {
-				echo "		<option value='0$i' ".escape($selected).">0$i</option>\n";
+				echo "		<option value='0$i' ".$selected.">0$i</option>\n";
 			}
 			if (strlen($i) == 3) {
-				echo "		<option value='$i' ".escape($selected).">$i</option>\n";
+				echo "		<option value='$i' ".$selected.">$i</option>\n";
 			}
 			$i++;
 		}
@@ -345,9 +348,9 @@ else {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	echo "			<br>";
-	echo "			<input type='hidden' name='contact_uuid' value='".escape($contact_uuid)."'>\n";
+	echo "			<input type='hidden' name='contact_uuid' value='".$contact_uuid."'>\n";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='contact_setting_uuid' value='".escape($contact_setting_uuid)."'>\n";
+		echo "		<input type='hidden' name='contact_setting_uuid' value='".$contact_setting_uuid."'>\n";
 	}
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
@@ -358,4 +361,5 @@ else {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

@@ -65,7 +65,7 @@
 //define the if group members function
 	function is_group_member($group_uuid, $user_uuid) {
 		global $db, $domain_uuid;
-		$sql = "select * from v_group_users ";
+		$sql = "select * from v_user_groups ";
 		$sql .= "where user_uuid = '".$user_uuid."' ";
 		$sql .= "and group_uuid = '".$group_uuid."' ";
 		$sql .= "and domain_uuid = '".(($domain_uuid != '') ? $domain_uuid : $_SESSION['domain_uuid'])."' ";
@@ -92,17 +92,17 @@
 	}
 
 //get the groups users
-	$sql = "select u.user_uuid, u.username, gu.group_user_uuid, gu.domain_uuid, gu.group_uuid ";
-	$sql .= "from v_group_users as gu, v_users as u, v_domains as d ";
-	$sql .= "where gu.user_uuid = u.user_uuid ";
-	$sql .= "and gu.domain_uuid = d.domain_uuid ";
+	$sql = "select u.user_uuid, u.username, ug.user_group_uuid, ug.domain_uuid, ug.group_uuid ";
+	$sql .= "from v_user_groups as ug, v_users as u, v_domains as d ";
+	$sql .= "where ug.user_uuid = u.user_uuid ";
+	$sql .= "and ug.domain_uuid = d.domain_uuid ";
 	if ($domain_uuid != '') {
-		$sql .= "and gu.domain_uuid = '".$domain_uuid."' ";
+		$sql .= "and ug.domain_uuid = '".$domain_uuid."' ";
 	}
 	if (!permission_exists('user_all')) {
 		$sql .= "and u.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	}
-	$sql .= "and gu.group_uuid = '".$group_uuid."' ";
+	$sql .= "and ug.group_uuid = '".$group_uuid."' ";
 	$sql .= "order by d.domain_name asc, u.username asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
@@ -159,16 +159,15 @@
 
 	$count = 0;
 	foreach ($result as &$row) {
-		$group_user_uuid = $row["group_user_uuid"];
 		$username = $row["username"];
 		$user_uuid = $row["user_uuid"];
 		$domain_uuid = $row["domain_uuid"];
 		$group_uuid = $row["group_uuid"];
 		$echo .= "<tr>";
 		if (permission_exists('user_all')) {
-			$echo .= "<td align='left' class='".$row_style[$c]."' nowrap>".$_SESSION['domains'][$domain_uuid]['domain_name']."</td>\n";
+			$echo .= "<td align='left' class='".$row_style[$c]."' nowrap='nowrap'>".$_SESSION['domains'][$domain_uuid]['domain_name']."</td>\n";
 		}
-		$echo .= "<td align='left' class='".$row_style[$c]."' nowrap>".$username."</td>\n";
+		$echo .= "<td align='left' class='".$row_style[$c]."' nowrap='nowrap'>".$username."</td>\n";
 		$echo .= "<td class='list_control_icons' style='width: 25px;'>";
 		if (permission_exists('group_member_delete')) {
 			$echo .= "<a href='groupmemberdelete.php?user_uuid=".$user_uuid."&group_name=".$group_name."&group_uuid=".$group_uuid."' onclick=\"return confirm('".$text['confirm-delete']."')\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
@@ -178,7 +177,7 @@
 
 		$c = ($c) ? 0 : 1;
 
-		$group_users[] = $row["user_uuid"];
+		$user_groups[] = $row["user_uuid"];
 		$count++;
 	}
 
@@ -188,4 +187,5 @@
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

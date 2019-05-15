@@ -178,7 +178,7 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*) as num_rows', '*', $sql);
+	$sql = str_replace('count(*) as num_rows', '*, (select a.contact_attachment_uuid from v_contact_attachments as a where a.contact_uuid = c.contact_uuid and a.attachment_primary = 1) as contact_attachment_uuid', $sql);
 	if (strlen($order_by) > 0) {
 		$sql .= "order by ".$order_by." ".$order." ";
 	}
@@ -194,11 +194,30 @@
 	$contacts = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
 
+//styles
+	echo "<style>\n";
+
+	echo "	#contact_attachment_layer {\n";
+	echo "		z-index: 999999;\n";
+	echo "		position: absolute;\n";
+	echo "		left: 0px;\n";
+	echo "		top: 0px;\n";
+	echo "		right: 0px;\n";
+	echo "		bottom: 0px;\n";
+	echo "		text-align: center;\n";
+	echo "		vertical-align: middle;\n";
+	echo "	}\n";
+
+	echo "</style>\n";
+
+//ticket attachment layer
+	echo "<div id='contact_attachment_layer' style='display: none;'></div>\n";
+
 //show the content
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' valign='top' width='50%'>\n";
-	echo "			<b>".$text['header-contacts']."</b>\n";
+	echo "			<b>".$text['header-contacts']." (".$num_rows.")</b>\n";
 	echo "			<br /><br />";
 	echo "		</td>\n";
 	echo "		<td align='right' valign='top' width='50%' nowrap='nowrap'>\n";
@@ -230,6 +249,7 @@
 	echo "<tr>\n";
 	echo th_order_by('contact_type', $text['label-contact_type'], $order_by, $order);
 	echo th_order_by('contact_organization', $text['label-contact_organization'], $order_by, $order);
+	echo "<th style='padding: 0px;'>&nbsp;</th>\n";
 	echo th_order_by('contact_name_given', $text['label-contact_name_given'], $order_by, $order);
 	echo th_order_by('contact_name_family', $text['label-contact_name_family'], $order_by, $order);
 	echo th_order_by('contact_nickname', $text['label-contact_nickname'], $order_by, $order);
@@ -247,6 +267,11 @@
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords(escape($row['contact_type']))."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' style='width: 35%; max-width: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><a href='contact_edit.php?id=".escape($row['contact_uuid'])."&query_string=".urlencode($_SERVER["QUERY_STRING"])."'>".escape($row['contact_organization'])."</a>&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='cursor: pointer; width: 35px; text-align: center;'>";
+			if (is_uuid($row['contact_attachment_uuid'])) {
+				echo "<i class='glyphicon glyphicon-picture' onclick=\"display_attachment('".escape($row['contact_attachment_uuid'])."');\"></i>";
+			}
+			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' style='white-space: nowrap;'><a href='contact_edit.php?id=".escape($row['contact_uuid'])."&query_string=".urlencode($_SERVER["QUERY_STRING"])."'>".escape($row['contact_name_given'])."</a>&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' style='white-space: nowrap;'><a href='contact_edit.php?id=".escape($row['contact_uuid'])."&query_string=".urlencode($_SERVER["QUERY_STRING"])."'>".escape($row['contact_name_family'])."</a>&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' style='white-space: nowrap;'>".escape($row['contact_nickname'])."&nbsp;</td>\n";
@@ -284,6 +309,17 @@
 	echo "<br /><br />";
 
 	echo "<script>document.getElementById('search_all').focus();</script>";
+
+//javascript
+	echo "<script>\n";
+
+	echo "	function display_attachment(id) {\n";
+	echo "		$('#contact_attachment_layer').load('contact_attachment.php?id=' + id + '&action=display', function(){\n";
+	echo "			$('#contact_attachment_layer').fadeIn(200);\n";
+	echo "		});\n";
+	echo "	}\n";
+
+	echo "</script>\n";
 
 //include the footer
 	require_once "resources/footer.php";

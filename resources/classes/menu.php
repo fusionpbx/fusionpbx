@@ -223,13 +223,6 @@ if (!class_exists('menu')) {
 				//get default global group_uuids
 					$sql = "select group_uuid, group_name from v_groups ";
 					$sql .= "where domain_uuid is null ";
-					$sql .= "and ( ";
-					$sql .= "	group_name = 'public' ";
-					$sql .= "	or group_name = 'user' ";
-					$sql .= "	or group_name = 'admin' ";
-					$sql .= "	or group_name = 'superadmin' ";
-					$sql .= "	or group_name = 'agent' ";
-					$sql .= ") ";
 					$prep_statement = $db->prepare(check_sql($sql));
 					$prep_statement->execute();
 					$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);

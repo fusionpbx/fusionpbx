@@ -159,6 +159,8 @@
 		//build the xml dialplan
 			$dialplan_xml = "<extension name=\"".$call_flow_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
 			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$destination_feature."$\" break=\"on-true\">\n";
+			$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
+			$dialplan_xml .= "		<action application=\"sleep\" data=\"200\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"feature_code=true\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"call_flow_uuid=".$call_flow_uuid."\"/>\n";
 			$dialplan_xml .= "		<action application=\"lua\" data=\"call_flow.lua\"/>\n";
@@ -242,10 +244,10 @@
 		//redirect the user
 			if (isset($action)) {
 				if ($action == "add") {
-					messages::add($text['message-add']);
+					message::add($text['message-add']);
 				}
 				if ($action == "update") {
-					messages::add($text['message-update']);
+					message::add($text['message-update']);
 				}
 				header("Location: call_flows.php");
 				return;
@@ -376,7 +378,7 @@
 					$recording_filename = $row["recording_filename"];
 					if ($var == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename && strlen($var) > 0) {
 						$tmp_selected = true;
-						echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename."' selected='selected'>".$recording_name."</option>\n";
+						echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
 					}
 					else if ($var == $recording_filename && strlen($var) > 0) {
 						$tmp_selected = true;
@@ -510,7 +512,7 @@
 	echo "	<option value=''></option>\n";
 	if ($call_flow_status == "true") {
 		if (strlen($call_flow_label) > 0) {
-			echo "	<option value='true' selected='selected'>$call_flow_label</option>\n";
+			echo "	<option value='true' selected='selected'>".escape($call_flow_label)."</option>\n";
 		}
 		else {
 			echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
@@ -518,7 +520,7 @@
 	}
 	else {
 		if (strlen($call_flow_label) > 0) {
-			echo "	<option value='true'>$call_flow_label</option>\n";
+			echo "	<option value='true'>".escape($call_flow_label)."</option>\n";
 		}
 		else {
 			echo "	<option value='true'>".$text['label-true']."</option>\n";
@@ -526,7 +528,7 @@
 	}
 	if ($call_flow_status == "false") {
 		if (strlen($call_flow_alternate_label) > 0) {
-			echo "	<option value='false' selected='selected'>$call_flow_alternate_label</option>\n";
+			echo "	<option value='false' selected='selected'>".escape($call_flow_alternate_label)."</option>\n";
 		}
 		else {
 			echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
@@ -534,7 +536,7 @@
 	}
 	else {
 		if (strlen($call_flow_alternate_label) > 0) {
-			echo "	<option value='false'>$call_flow_alternate_label</option>\n";
+			echo "	<option value='false'>".escape($call_flow_alternate_label)."</option>\n";
 		}
 		else {
 			echo "	<option value='false'>".$text['label-false']."</option>\n";

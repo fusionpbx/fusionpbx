@@ -17,22 +17,26 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2015
+	Portions created by the Initial Developer are Copyright (C) 2015 - 2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('fax_file_delete')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('fax_file_delete')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	require_once "app_languages.php";
@@ -46,7 +50,7 @@ else {
 	}
 
 //validate the id
-	if (strlen($fax_file_uuid) > 0) {
+	if (is_uuid($fax_file_uuid)) {
 		//get the fax file data
 			$sql = "select * from v_fax_files ";
 			$sql .= "where fax_file_uuid = '".$fax_file_uuid."' ";
@@ -94,7 +98,7 @@ else {
 			$prep_statement->execute();
 			unset($prep_statement);
 
-		messages::add($text['message-delete']);
+		message::add($text['message-delete']);
 	}
 
 //redirect the user

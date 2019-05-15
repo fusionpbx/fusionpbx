@@ -121,16 +121,16 @@
 				$tr_link = "href='conference_profile_param_edit.php?conference_profile_uuid=".$row['conference_profile_uuid']."&id=".$row['conference_profile_param_uuid']."'";
 			}
 			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['profile_param_name']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['profile_param_value']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['profile_param_enabled']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['profile_param_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['profile_param_name'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['profile_param_value'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['profile_param_enabled'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['profile_param_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('conference_profile_param_edit')) {
-				echo "<a href='conference_profile_param_edit.php?conference_profile_uuid=".$row['conference_profile_uuid']."&id=".$row['conference_profile_param_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='conference_profile_param_edit.php?conference_profile_uuid=".escape($row['conference_profile_uuid'])."&id=".escape($row['conference_profile_param_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('conference_profile_param_delete')) {
-				echo "<a href='conference_profile_param_delete.php?conference_profile_uuid=".$row['conference_profile_uuid']."&id=".$row['conference_profile_param_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='conference_profile_param_delete.php?conference_profile_uuid=".escape($row['conference_profile_uuid'])."&id=".escape($row['conference_profile_param_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";

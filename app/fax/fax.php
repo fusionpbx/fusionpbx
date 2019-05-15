@@ -175,7 +175,7 @@
 				if (permission_exists('fax_log_view')) {
 					echo "		<a href='fax_logs.php?id=".escape($row['fax_uuid'])."'>".$text['label-log']."</a>";
 				}
-				if (permission_exists('fax_active_view')) {
+				if (permission_exists('fax_active_view') && isset($_SESSION['fax']['send_mode']['text']) && $_SESSION['fax']['send_mode']['text'] == 'queue') {
 					echo "		<a href='fax_active.php?id=".escape($row['fax_uuid'])."'>".$text['label-active']."</a>";
 				}
 				echo "	</td>\n";

@@ -39,11 +39,14 @@
 	<!-- Firmware Upgrade -->
 		<!-- Firmware Upgrade and Privisioning. 0 - TFTP Upgrade, 1 - HTTP Upgrade, 2 - HTTPS Upgrade. -->
 		<P212>2</P212>
-		{if isset($grandstream_firmware_path)}
-		<P192>{$grandstream_firmware_path}</P192>
-		{else}
-		<P192>{$domain_name}{$project_path}/app/provision</P192>
-		{/if}
+		<!-- Firmware Server Path -->
+    {if isset($grandstream_firmware_path) && isset($firmware_version)}
+    <P192>{$grandstream_firmware_path}/ht502/{$firmware_version}</P192>
+    {elseif isset($grandstream_firmware_path)}
+    <P192>{$grandstream_firmware_path}/ht502</P192>
+    {else}
+    <P192>{$domain_name}{$project_path}/app/provision</P192>
+    {/if}
 		<!-- Config Server Path. Server address -->
 		<P237>{$domain_name}{$project_path}/app/provision</P237>
 		<!-- XML Config File Password. Max Length: 40 characters; between ascii values 33 and 126 -->
@@ -173,7 +176,7 @@
 		<!-- Account Active. 0 - No, 1 - Yes. -->
 		<P271>1</P271>
 		<!-- Primary SIP Server -->
-		<P47>{$server_address_1}</P47>
+		<P47>{$account.1.server_address}</P47>
 		<!-- Failover SIP Server -->
 		<P967></P967>
 		<!-- Prefer Primary SIP Server. 0 - No, 1 - Yes. -->
@@ -319,7 +322,13 @@
 		<!-- Use # as Dial Key. 0 - No, 1 - Yes (if set to Yes, "#" will function as the "(Re-)Dial" key) -->
 		<P72>1</P72>
 		<!-- Dial Plan -->
+		
+		{if isset($grandstream_dial_plan) }
 		<P4200>{$grandstream_dial_plan}</P4200>
+		{else}
+		<P4200>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P4200>
+		{/if}
+		
 		<!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes -->
 		<P99>0</P99>
 		<!-- Send Anonymous. 0 - No, 1 - Yes  (caller ID will be blocked if set to Yes) -->
@@ -514,7 +523,7 @@
 		<!-- Account Active. 0 - No, 1 - Yes. -->
 		<P401>1</P401>
 		<!-- Primary SIP Server -->
-		<P747>{$server_address_2}</P747>
+		<P747>{$account.2.server_address}</P747>
 		<!-- Failover SIP Server -->
 		<P987></P987>
 		<!-- Prefer Primary SIP Server. 0 - No, 1 - Yes. -->
@@ -526,13 +535,13 @@
 		<!-- NAT Traversal (STUN). 0 - No, 2 - No but send keep-alive, 1 - Yes -->
 		<P730>0</P730>
 		<!-- SIP User ID -->
-		<P735>{$user_id_2}</P735>
+		<P735>{$account.2.user_id}</P735>
 		<!-- Authentication ID -->
-		<P736>{$user_id_2}</P736>
+		<P736>{$account.2.user_id}</P736>
 		<!-- Authentication password -->
-		<P734>{$user_password_2}</P734>
+		<P734>{$account.2.password}</P734>
 		<!-- Display Name -->
-		<P703>{$display_name_2}</P703>
+		<P703>{$account.2.display_name}</P703>
 		<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP . -->
 		<P702>0</P702>
 		<!-- Primary IP -->

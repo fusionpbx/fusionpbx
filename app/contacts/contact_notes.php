@@ -46,23 +46,24 @@
 	echo "</tr>\n";
 	echo "</table>\n";
 
-	//get the contact list
-		$sql = "select * from v_contact_notes ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and contact_uuid = '$contact_uuid' ";
-		$sql .= "order by last_mod_date desc ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			$result_count = count($result);
-			unset ($prep_statement, $sql);
-		}
+//get the contact list
+	$sql = "select * from v_contact_notes ";
+	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "and contact_uuid = '$contact_uuid' ";
+	$sql .= "order by last_mod_date desc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	if ($prep_statement) {
+		$prep_statement->execute();
+		$contact_notes = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		unset ($prep_statement, $sql);
+	}
 
+//set the row style array
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
+//show the content
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
@@ -78,30 +79,31 @@
 
 	echo "<div id='contact_notes' style='width: 100%; overflow: auto; direction: rtl; text-align: right; margin-bottom: 23px;'>";
 	echo "<table class='tr_hover' style='width: 100%; direction: ltr; padding-left: 1px' border='0' cellpadding='0' cellspacing='0'>\n";
-	if ($result_count != 0) {
-		foreach($result as $row) {
-			$contact_note = escape($row['contact_note']);
+	if (is_array($contact_notes)) {
+		foreach($contact_notes as $row) {
+			$contact_note = $row['contact_note'];
+			$contact_note = escape($contact_note);
 			$contact_note = str_replace("\n","<br />",$contact_note);
 			if (permission_exists('contact_note_add')) {
-				$tr_link = "href='contact_note_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_note_uuid']."'";
+				$tr_link = "href='contact_note_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_note_uuid'])."'";
 			}
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' colspan='2'>";
-			echo "		<div style='display: inline-block; float: right; margin: -5px -7px 5px 5px; padding: 3px 4px; font-size: 10px; background-color: #f0f2f6;'><span style='color: #000; font-weight: bold;'>".$row['last_mod_user']."</span>: ".date("j M Y @ H:i:s", strtotime($row['last_mod_date']))."</div>";
-			echo 		$contact_note."&nbsp;";
+			echo "		<div style='display: inline-block; float: right; margin: -5px -7px 5px 5px; padding: 3px 4px; font-size: 10px; background-color: #f0f2f6;'><span style='color: #000; font-weight: bold;'>".escape($row['last_mod_user'])."</span>: ".date("j M Y @ H:i:s", strtotime($row['last_mod_date']))."</div>";
+			echo 			$contact_note."&nbsp;";
 			echo "	</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('contact_note_edit')) {
-				echo "<a href='contact_note_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_note_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='contact_note_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_note_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('contact_note_delete')) {
-				echo "<a href='contact_note_delete.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_note_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='contact_note_delete.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_note_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 			$c = ($c) ? 0 : 1;
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($sql, $contact_notes);
 	} //end if results
 	echo "</table>";
 	echo "</div>\n";

@@ -138,7 +138,7 @@ else {
 
 			if ($response['result'] == 'submitted') {
 				// set message
-				messages::add($text['message-demographics_submitted']);
+				message::add($text['message-demographics_submitted']);
 			}
 
 			header("Location: notification_edit.php");
@@ -196,7 +196,7 @@ else {
 				}
 			}
 			// redirect
-			messages::add($text['message-update']);
+			message::add($text['message-update']);
 			header("Location: notification_edit.php");
 			exit;
 		}
@@ -208,7 +208,7 @@ else {
 				($project_notification_method == 'email' && $project_notification_recipient == '')
 				) {
 					$_SESSION["postback"] = $_POST;
-					messages::add($text['message-invalid_recipient'], 'negative');
+					message::add($text['message-invalid_recipient'], 'negative');
 					header("Location: notification_edit.php");
 					exit;
 			}
@@ -259,10 +259,10 @@ else {
 				$project_events == 'false' &&
 				$project_news == 'false'
 				) {
-				messages::add($text['message-update']." - ".$text['message-no_channels'], 'alert');
+				message::add($text['message-update']." - ".$text['message-no_channels'], 'alert');
 			}
 			else {
-				messages::add($text['message-update']);
+				message::add($text['message-update']);
 			}
 			// redirect
 			header("Location: notification_edit.php");

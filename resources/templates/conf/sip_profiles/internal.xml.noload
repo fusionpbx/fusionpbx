@@ -237,7 +237,8 @@
 		<param name="NDLB-broken-auth-hash" value="true" enabled="false"/>
 		<!-- add a ;received="<ip>:<port>" to the contact when replying to register for nat handling -->
 		<param name="NDLB-received-in-nat-reg-contact" value="true" enabled="false"/>
-		<param name="auth-calls" value="$${internal_auth_calls}"/>
+		<param name="auth-calls" value="true"/>
+		<param name="auth-subscriptions" value="true"/>
 		<!-- Force the user and auth-user to match. -->
 		<param name="inbound-reg-force-matching-username" value="true"/>
 		<!-- on authed calls, authenticate *all* the packets not just invite -->
@@ -378,5 +379,7 @@
 		<param name="registration-thread-frequency" value="30"  enabled="false"/>
 		<param name="nat-options-ping" value="true" enabled="false"/>
 
+		<!-- Secure Web Sockets -->
+		<param name="wss-binding" value=":7443" enabled="false"/>
 	</settings>
 </profile>

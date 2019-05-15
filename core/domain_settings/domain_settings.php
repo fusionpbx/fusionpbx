@@ -55,8 +55,107 @@
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-				messages::add($text['message-update']);
+				message::add($text['message-update']);
 				header("Location: domain_edit.php?id=".$domain_uuid);
+				exit;
+			}
+
+		//copy domain settings
+			if ($action == 'copy' && permission_exists('domain_setting_add')) {
+				$target_domain_uuid = check_str($_POST["target_domain_uuid"]);
+
+				if ($target_domain_uuid != '' && sizeof($domain_setting_uuids) > 0) {
+					$settings_copied = 0;
+					foreach ($domain_setting_uuids as $domain_setting_uuid) {
+
+						// get default setting from db
+						$sql = "select * from v_domain_settings ";
+						$sql .= "where domain_setting_uuid = '".$domain_setting_uuid."' ";
+						$prep_statement = $db->prepare(check_sql($sql));
+						$prep_statement->execute();
+						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+						foreach ($result as &$row) {
+							$domain_setting_uuid = $row["default_setting_uuid"];
+							$domain_setting_category = $row["default_setting_category"];
+							$domain_setting_subcategory = $row["default_setting_subcategory"];
+							$domain_setting_name = $row["default_setting_name"];
+							$domain_setting_value = $row["default_setting_value"];
+							$domain_setting_order = $row["default_setting_order"];
+							$domain_setting_enabled = $row["default_setting_enabled"];
+							$domain_setting_description = $row["default_setting_description"];
+						}
+						unset ($prep_statement);
+
+						//set a random password for http_auth_password
+						if ($domain_setting_subcategory == "http_auth_password") {
+							$domain_setting_value = generate_password();
+						}
+
+						// check if exists
+						$sql = "select domain_setting_uuid from v_domain_settings ";
+						$sql .= "where domain_uuid = '".$target_domain_uuid."' ";
+						$sql .= "and domain_setting_category = '".$domain_setting_category."' ";
+						$sql .= "and domain_setting_subcategory = '".$domain_setting_subcategory."' ";
+						$sql .= "and domain_setting_name = '".$domain_setting_name."' ";
+						$sql .= "and domain_setting_name <> 'array' ";
+						$prep_statement = $db->prepare(check_sql($sql));
+						$prep_statement->execute();
+						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+						if (sizeof($result) > 0) {
+							foreach ($result as &$row) {
+								$target_domain_setting_uuid = $row["domain_setting_uuid"];
+								break;
+							}
+							$action = "update";
+						}
+						else {
+							$action = "add";
+							$target_domain_setting_uuid = uuid();
+						}
+						unset ($prep_statement);
+
+						// fix null
+						$domain_setting_order = ($domain_setting_order != '') ? $domain_setting_order : 'null';
+
+						//prepare the array
+						$array['domain_settings'][$x]['domain_uuid'] = $target_domain_uuid;
+						$array['domain_settings'][$x]['domain_setting_uuid'] = $target_domain_setting_uuid;
+						$array['domain_settings'][$x]['default_setting_category'] = $default_setting_category;
+						$array['domain_settings'][$x]['domain_setting_uuid'] = $default_setting_subcategory;
+						$array['domain_settings'][$x]['domain_setting_uuid'] = $default_setting_name;
+						$array['domain_settings'][$x]['domain_setting_uuid'] = $default_setting_value;
+						$array['domain_settings'][$x]['domain_setting_uuid'] = $default_setting_order;
+						$array['domain_settings'][$x]['domain_setting_uuid'] = $default_setting_enabled;
+						$array['domain_settings'][$x]['domain_setting_uuid'] = $default_setting_description;
+						$x++;
+
+					} // foreach
+
+					//save to the data
+					$database = new database;
+					$database->app_name = 'domain_settings';
+					$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
+					//if (strlen($stream_uuid) > 0) {
+					//	$database->uuid($stream_uuid);
+					//}
+					$database->save($array);
+					$message = $database->message;
+
+					//debug info
+					//echo "<pre>";
+					//print_r($message);
+					//echo "</pre>";
+					//exit;
+
+					// set message
+					$_SESSION["message"] = $text['message-copy'].": ".escape($settings_copied);
+				}
+				else {
+					// set message
+					message::add($text['message-copy_failed']);
+				}
+	
+				header("Location: default_settings.php".(($search != '') ? "?search=".escape($search) : null));
 				exit;
 			}
 
@@ -79,7 +178,7 @@
 				}
 				else {
 					// set message
-					messages::add($text['message-delete_failed'], 'negative');
+					message::add($text['message-delete_failed'], 'negative');
 				}
 
 				header("Location: domain_edit.php?id=".escape($_REQUEST["domain_uuid"]));

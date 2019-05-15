@@ -85,7 +85,7 @@ else {
 	}
 
 //redirect the user
-	messages::add($text['message-delete']);
+	message::add($text['message-delete']);
 	header("Location: menu.php");
 	return;
 

@@ -18,6 +18,8 @@
 		json = require "resources.functions.lunajson"
 	end
 
+	local presence_in = require "resources.functions.presence_in"
+	
 --set the api
 	api = freeswitch.API();
 
@@ -181,6 +183,15 @@
 				event:addHeader("answer-state", "confirmed");
 				event:fire();
 			end
+
+			if (action == "login") then 
+				blf_status = "false"
+			end
+			if string.find(agent_name, 'agent+', nil, true) ~= 1 then
+				presence_in.turn_lamp( blf_status,
+					'agent+'..agent_name.."@"..domain_name
+				);
+			end			
 	end
 
 --unauthorized

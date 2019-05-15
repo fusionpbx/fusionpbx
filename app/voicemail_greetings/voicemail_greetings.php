@@ -186,7 +186,7 @@
 								$prep_statement->execute();
 								unset($prep_statement);
 
-							messages::add($text['message-uploaded'].": ".$_FILES['file']['name']);
+							message::add($text['message-uploaded'].": ".$_FILES['file']['name']);
 							break;
 						}
 						else {
@@ -226,7 +226,7 @@
 			$prep_statement->execute();
 			unset($prep_statement);
 
-		messages::add($text['message-greeting_selected']);
+		message::add($text['message-greeting_selected']);
 		header("Location: voicemail_greetings.php?id=".$voicemail_id."&order_by=".$order_by."&order=".$order);
 		exit;
 	}

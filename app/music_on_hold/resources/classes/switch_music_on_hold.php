@@ -129,7 +129,7 @@ include "root.php";
 				$sql .= "from v_music_on_hold as m ";
 				$sql .= "left join v_domains as d ON d.domain_uuid = m.domain_uuid ";
 				$sql .= "where (m.domain_uuid = '".$this->domain_uuid."' or m.domain_uuid is null) ";
-				$sql .= "order by m.domain_uuid desc, music_on_hold_rate asc, music_on_hold_name asc";
+				$sql .= "order by m.domain_uuid desc, music_on_hold_name asc, music_on_hold_rate asc ";
 				$prep_statement = $this->db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				return $prep_statement->fetchAll(PDO::FETCH_NAMED);

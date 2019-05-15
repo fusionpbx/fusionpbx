@@ -1,0 +1,30 @@
+{strip}
+{* Phonebook has been setup for business use using the 'work' phone label in the Contacts app. --*}
+{* You can add additional contacts by adding new contact blocks and updating the 'contact_type' and 'phone_label'. --*}
+{/strip}
+<?xml version="1.0" encoding="utf-8"?>
+<AddressBook>
+<version>1</version>
+{foreach $contacts as $row}
+{if $row.contact_type == 'user' && $row.phone_label == 'work' && $row.phone_number != ''}
+        <Contact>
+{if $row.contact_name_family != ''}
+                <LastName>{$row.contact_name_family}</LastName>
+{/if}
+{if $row.contact_name_given != ''}
+                <FirstName>{$row.contact_name_given}</FirstName>
+{/if}
+{if $row.contact_category != ''}
+                <Department>{$row.contact_category}</Department>
+{/if}
+                <Phone type="Work">
+                        <phonenumber>{$row.phone_number}</phonenumber>
+                        <accountindex>0</accountindex>
+                </Phone>
+                <Groups>
+                        <groupid>2</groupid>
+                </Groups>
+        </Contact>
+{/if}
+{/foreach}
+</AddressBook>

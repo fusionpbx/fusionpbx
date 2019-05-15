@@ -57,7 +57,7 @@
 			$db->exec(check_sql($sql));
 			unset($sql);
 
-			messages::add($text['message-update']);
+			message::add($text['message-update']);
 			header("Location: default_settings.php".(($search != '') ? "?search=".escape($search) : null)."#anchor_".escape($category));
 			exit;
 		}
@@ -171,7 +171,7 @@
 			}
 			else {
 				// set message
-				messages::add($text['message-copy_failed']);
+				message::add($text['message-copy_failed']);
 			}
 
 			header("Location: default_settings.php".(($search != '') ? "?search=".escape($search) : null));
@@ -194,7 +194,7 @@
 			}
 			else {
 				// set message
-				messages::add($text['message-delete_failed'], 'negative');
+				message::add($text['message-delete_failed'], 'negative');
 			}
 
 			header("Location: default_settings.php".(($search != '') ? "?search=".escape($search) : null));
@@ -431,7 +431,10 @@
 				) {
 				echo "		".$text['label-'.$row['default_setting_value']];
 			}
-			else if ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
+			else if ($category == 'theme' && $subcategory == 'custom_css_code' && $name == 'text') {
+				echo "		[...]\n";
+			}
+			else if ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text" || substr_count($subcategory, '_secret') > 0) {
 				echo "		".str_repeat('*', strlen($row['default_setting_value']));
 			}
 			else {
@@ -469,7 +472,9 @@
 			$array_setting_uuids[] = $row['default_setting_uuid'];
 			$array_setting_subcategories[] = $row['default_setting_subcategory'];
 			$array_setting_types[] = $row['default_setting_name'];
-			$array_setting_values[] = str_replace('"','\"',$row['default_setting_value']);
+			if (!($category == "theme" && $subcategory == "custom_css_code" && $name == "text" )) {
+				$array_setting_values[] = str_replace('"','\"',$row['default_setting_value']);
+			}
 			$array_setting_descriptions[] = str_replace('"','\"',$row['default_setting_description']);
 
 			$previous_category = $row['default_setting_category'];

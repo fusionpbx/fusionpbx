@@ -218,7 +218,7 @@
 	echo "	".$text['label-template_body']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<textarea class='formfld' name='template_body' rows='8' style='width: 100%'>".escape($template_body)."</textarea>\n";
+	echo "	<textarea class='formfld' name='template_body' style='min-width: 100%; height: 350px; font-family: monospace;'>".escape($template_body)."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-template_body']."\n";
 	echo "</td>\n";

@@ -105,13 +105,26 @@
 		$sql .= "limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
-		$result = $prep_statement->fetchAll();
-		$result_count = count($result);
+		$conference_sessions = $prep_statement->fetchAll();
 		unset ($prep_statement, $sql);
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
+
+	echo "\n";
+	echo "<style>\n";
+	echo "audio {\n";
+	echo "	width:320px;\n";
+	echo "	height: 28px;\n";
+	echo "	-moz-border-radius:3px;\n";
+	echo "	-webkit-border-radius:3px;\n";
+	echo "	border-radius:3px;\n";
+	echo "	overflow:hidden;\n";
+	echo "	display: block;\n";
+	echo "}\n";
+	echo "</style>\n";
+	echo "\n";
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
@@ -124,8 +137,8 @@
 	echo "<td class='list_control_icon'>&nbsp;</td>\n";
 	echo "</tr>\n";
 
-	if ($result_count > 0) {
-		foreach($result as $row) {
+	if (is_array($conference_sessions)) {
+		foreach($conference_sessions as $row) {
 			$tmp_year = date("Y", $row['start_epoch']);
 			$tmp_month = date("M", $row['start_epoch']);
 			$tmp_day = date("d", $row['start_epoch']);
@@ -158,25 +171,43 @@
 				elseif (file_exists($tmp_dir.'/'.$row['conference_session_uuid'].'.wav')) {
 					$tmp_name = $row['conference_session_uuid'].".wav";
 				}
-				echo "	<td valign='top' class='".$row_style[$c]."'>\n";
+				echo "	<td class='".$row_style[$c]."'>\n";
 				if (strlen($tmp_name) > 0 && file_exists($tmp_dir.'/'.$tmp_name)) {
+					echo "<table border='0' cellpadding='0' cellspacing='0'>\n";
+					echo "</tr>\n";
 					if (permission_exists('conference_session_play')) {
-						echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('".PROJECT_PATH."/app/recordings/recording_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
-						echo "			".$text['label-play']."\n";
-						echo "		</a>\n";
-						echo "		&nbsp;\n";
+						echo "<td valign=\"bottom\">\n";
+						echo "		<audio controls=\"controls\">\n";
+  						echo "			<source src=\"download.php?id=".escape($row['conference_session_uuid'])."\" type=\"audio/x-wav\">\n";
+						echo "		</audio>\n";
+						//echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('".PROJECT_PATH."/app/recordings/recording_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
+						//echo "			".$text['label-play']."\n";
+						//echo "		</a>\n";
+						//echo "		&nbsp;\n";
+						echo "</td>\n";
 					}
-					echo "		<a href=\"../recordings/recordings.php?a=download&type=rec&t=bin&filename=".base64_encode("archive/".$tmp_year."/".$tmp_month."/".$tmp_day."/".$tmp_name)."\">\n";
-					echo "			".$text['label-download']."\n";
+					echo "<td>\n";
+					echo "	&nbsp;\n";
+					echo "</td>\n";
+					echo "<td>\n";
+					echo "		<a href=\"download.php?id=".escape($row['conference_session_uuid'])."\" valign='middle'>";
+					//echo "			".$text['label-download']."\n";
+					echo "			<input type='button' class='btn' name='' alt='".$text['label-download']."' value='".$text['label-download']."'>";
 					echo "		</a>\n";
-					echo "		&nbsp;\n";
+					echo "</td>\n";
+					echo "</tr>\n";
+					echo "</table>\n";
+					//echo "		&nbsp;\n";
 				}
 				else {
 					echo "&nbsp;";
 				}
 				echo "	</td>\n";
-				echo "	<td class='list_control_icon'>";
-				echo "		<a href='conference_session_details.php?uuid=".escape($row['conference_session_uuid'])."' alt='".$text['button-view']."'>$v_link_label_view</a>";
+				echo "	<td class='list_control_icon'>\n";
+				echo "		<a href='conference_session_details.php?uuid=".escape($row['conference_session_uuid'])."' alt='".$text['button-view']."'>\n";
+				//echo "			<input type='button' class='btn' name='' alt='".$text['label-view']."' value='".$text['label-view']."'>";
+				echo "			$v_link_label_view\n";
+				echo "		</a>\n";
 				echo "	</td>\n";
 				echo "</tr>\n";
 			}

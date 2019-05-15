@@ -82,7 +82,7 @@
 	}
 
 //set the message and redirect the user
-	messages::add($text['message-delete']);
+	message::add($text['message-delete']);
 	header("Location: devices.php");
 	return;
 

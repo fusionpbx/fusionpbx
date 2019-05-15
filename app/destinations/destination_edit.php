@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -45,7 +45,7 @@
 //action add or update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
-		$destination_uuid = check_str($_REQUEST["id"]);
+		$destination_uuid = trim($_REQUEST["id"]);
 	}
 	else {
 		$action = "add";
@@ -78,7 +78,7 @@
 				}
 				unset($prep_statement, $row);
 				if ($total_destinations >= $_SESSION['limit']['destinations']['numeric']) {
-					messages::add($text['message-maximum_destinations'].' '.$_SESSION['limit']['destinations']['numeric'], 'negative');
+					message::add($text['message-maximum_destinations'].' '.$_SESSION['limit']['destinations']['numeric'], 'negative');
 					header('Location: destinations.php');
 					return;
 				}
@@ -88,29 +88,32 @@
 
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
-
 		//set the variables
-			$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
-			$domain_uuid = check_str($_POST["domain_uuid"]);
-			$destination_type = check_str($_POST["destination_type"]);
-			$destination_number = check_str($_POST["destination_number"]);
-			$db_destination_number = check_str($_POST["db_destination_number"]);
-			$destination_caller_id_name = check_str($_POST["destination_caller_id_name"]);
-			$destination_caller_id_number = check_str($_POST["destination_caller_id_number"]);
-			$destination_cid_name_prefix = check_str($_POST["destination_cid_name_prefix"]);
-			$destination_context = check_str($_POST["destination_context"]);
-			$fax_uuid = check_str($_POST["fax_uuid"]);
-			$destination_enabled = check_str($_POST["destination_enabled"]);
-			$destination_description = check_str($_POST["destination_description"]);
+			$dialplan_uuid = trim($_POST["dialplan_uuid"]);
+			$domain_uuid = trim($_POST["domain_uuid"]);
+			$destination_type = trim($_POST["destination_type"]);
+			$destination_number = trim($_POST["destination_number"]);
+			$destination_prefix = trim($_POST["destination_prefix"]);
+			$db_destination_number = trim($_POST["db_destination_number"]);
+			$destination_caller_id_name = trim($_POST["destination_caller_id_name"]);
+			$destination_caller_id_number = trim($_POST["destination_caller_id_number"]);
+			$destination_cid_name_prefix = trim($_POST["destination_cid_name_prefix"]);
+			$destination_context = trim($_POST["destination_context"]);
+			$fax_uuid = trim($_POST["fax_uuid"]);
+			$destination_enabled = trim($_POST["destination_enabled"]);
+			$destination_description = trim($_POST["destination_description"]);
 			$destination_sell = check_float($_POST["destination_sell"]);
-			$currency = check_str($_POST["currency"]);
+			$currency = trim($_POST["currency"]);
 			$destination_buy = check_float($_POST["destination_buy"]);
-			$currency_buy = check_str($_POST["currency_buy"]);
-			$destination_record = check_str($_POST["destination_record"]);
-			$destination_accountcode = check_str($_POST["destination_accountcode"]);
-			$destination_carrier = check_str($_POST["destination_carrier"]);
+			$currency_buy = trim($_POST["currency_buy"]);
+			$destination_record = trim($_POST["destination_record"]);
+			$destination_accountcode = trim($_POST["destination_accountcode"]);
+			$destination_type_voice = check_str($_POST["destination_type_voice"]);
+			$destination_type_fax = check_str($_POST["destination_type_fax"]);
+			$destination_type_text = check_str($_POST["destination_type_text"]);
+			$destination_carrier = trim($_POST["destination_carrier"]);
 		//convert the number to a regular expression
-			$destination_number_regex = string_to_regex($destination_number);
+			$destination_number_regex = string_to_regex($destination_number, $destination_prefix);
 			$_POST["destination_number_regex"] = $destination_number_regex;
 		//get the destination app and data
 			$destination_array = explode(":", $_POST["destination_action"], 2);
@@ -131,12 +134,12 @@
 			unset($_POST["db_destination_number"]);
 	}
 
-//process the http post 
+//process the http post
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		//get the uuid
 			if ($action == "update" && isset($_POST["destination_uuid"])) {
-				$destination_uuid = check_str($_POST["destination_uuid"]);
+				$destination_uuid = trim($_POST["destination_uuid"]);
 			}
 			else {
 				$destination_uuid = uuid();
@@ -190,9 +193,6 @@
 			if ($destination_type == 'inbound' || $destination_type == 'local') {
 				//get the array
 					$dialplan_details = $_POST["dialplan_details"];
-
-				//remove the array from the HTTP POST
-					unset($_POST["dialplan_details"]);
 
 				//array cleanup
 					foreach ($dialplan_details as $index => $row) {
@@ -290,6 +290,7 @@
 							$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"tone_detect_hits=1\" inline=\"true\"/>\n";
 							$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"execute_on_tone_detect=transfer ".$fax_extension." XML \${domain_name}\" inline=\"true\"/>\n";
 							$dialplan["dialplan_xml"] .= "		<action application=\"tone_detect\" data=\"fax 1100 r +5000\"/>\n";
+							$dialplan["dialplan_xml"] .= "		<action application=\"answer\" data=\"\"/>\n";
 							$dialplan["dialplan_xml"] .= "		<action application=\"sleep\" data=\"3000\"/>\n";
 						}
 						$dialplan["dialplan_xml"] .= "		<action application=\"".$destination_app."\" data=\"".$destination_data."\"/>\n";
@@ -432,6 +433,17 @@
 								//increment the dialplan detail order
 									$dialplan_detail_order = $dialplan_detail_order + 10;
 
+								// answer
+									$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
+									$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+									$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "answer";
+									$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "";
+									$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+									$y++;
+
+								//increment the dialplan detail order
+									$dialplan_detail_order = $dialplan_detail_order + 10;
+
 								// execute on tone detect
 									$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 									$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
@@ -542,8 +554,8 @@
 									$dialplan_detail_order = $dialplan_detail_order + 10;
 
 									//set the destination app and data
-									$_POST["destination_app"] = $dialplan_detail_type;
-									$_POST["destination_data"] = $dialplan_detail_data;
+									$destination_app = $dialplan_detail_type;
+									$destination_data = $dialplan_detail_data;
 
 									//increment the array id
 									$y++;
@@ -564,19 +576,32 @@
 
 						//remove empty dialplan details from the POST array
 							unset($_POST["dialplan_details"]);
-
-						//make sure the dialplan_uuid is set
-							if(strlen($_POST["dialplan_uuid"]) == 0) {
-								$_POST["dialplan_uuid"] = $dialplan_uuid;
-							}
 					}
 
 				//build the destination array
-					$destination = $_POST;
+					$destination["domain_uuid"] = $domain_uuid;
 					$destination["destination_uuid"] = $destination_uuid;
-					if ($destination_type == 'inbound' || $destination_type == 'local') {
-						$destination["dialplan_uuid"] = $dialplan_uuid;
-					}
+					$destination["dialplan_uuid"] = $dialplan_uuid;
+					$destination["fax_uuid"] = $fax_uuid;
+					$destination["destination_type"] = $destination_type;
+					$destination["destination_number"] = $destination_number;
+					$destination["destination_number_regex"] = $destination_number_regex;
+					$destination["destination_prefix"] = $destination_prefix;
+					$destination["destination_caller_id_name"] = $destination_caller_id_name;
+					$destination["destination_caller_id_number"] = $destination_caller_id_number;
+					$destination["destination_cid_name_prefix"] = $destination_cid_name_prefix;
+					$destination["destination_context"] = $destination_context;
+					$destination["destination_record"] = $destination_record;
+					$destination["destination_accountcode"] = $destination_accountcode;
+					$destination["destination_type_voice"] = $destination_type_voice ? 1 : null;
+					$destination["destination_type_fax"] = $destination_type_fax ? 1 : null;
+					$destination["destination_type_text"] = $destination_type_text ? 1 : null;
+					$destination["destination_app"] = $destination_app;
+					$destination["destination_data"] = $destination_data;
+					$destination["destination_alternate_app"] = $destination_alternate_app;
+					$destination["destination_alternate_data"] = $destination_alternate_data;
+					$destination["destination_enabled"] = $destination_enabled;
+					$destination["destination_description"] = $destination_description;
 
 				//prepare the array
 					$array['destinations'][] = $destination;
@@ -627,12 +652,13 @@
 
 				//prepare the array
 					$array['destinations'][0]["destination_uuid"] = $destination_uuid;
-					$array['destinations'][0]["domain_uuid"] = $_POST["domain_uuid"];
-					$array['destinations'][0]["destination_type"] = $_POST["destination_type"];
-					$array['destinations'][0]["destination_number"] = $_POST["destination_number"];
-					$array['destinations'][0]["destination_context"] = $_POST["destination_context"];
-					$array['destinations'][0]["destination_enabled"] = $_POST["destination_enabled"];
-					$array['destinations'][0]["destination_description"] = $_POST["destination_description"];
+					$array['destinations'][0]["domain_uuid"] = $domain_uuid;
+					$array['destinations'][0]["destination_type"] = $destination_type;
+					$array['destinations'][0]["destination_number"] = $destination_number;
+					$array['destinations'][0]["destination_prefix"] = $destination_prefix;
+					$array['destinations'][0]["destination_context"] = $destination_context;
+					$array['destinations'][0]["destination_enabled"] = $destination_enabled;
+					$array['destinations'][0]["destination_description"] = $destination_description;
 
 				//save the destination
 					$database = new database;
@@ -644,10 +670,10 @@
 
 		//redirect the user
 			if ($action == "add") {
-				messages::add($text['message-add']);
+				message::add($text['message-add']);
 			}
 			if ($action == "update") {
-				messages::add($text['message-update']);
+				message::add($text['message-update']);
 			}
 			header("Location: destination_edit.php?id=".escape($destination_uuid)."&type=".$destination_type);
 			return;
@@ -674,11 +700,15 @@
 				$dialplan_uuid = $row["dialplan_uuid"];
 				$destination_type = $row["destination_type"];
 				$destination_number = $row["destination_number"];
+				$destination_prefix = $row["destination_prefix"];
 				$destination_caller_id_name = $row["destination_caller_id_name"];
 				$destination_caller_id_number = $row["destination_caller_id_number"];
 				$destination_cid_name_prefix = $row["destination_cid_name_prefix"];
 				$destination_record = $row["destination_record"];
 				$destination_accountcode = $row["destination_accountcode"];
+				$destination_type_voice = $row["destination_type_voice"];
+				$destination_type_fax = $row["destination_type_fax"];
+				$destination_type_text = $row["destination_type_text"];
 				$destination_context = $row["destination_context"];
 				$destination_app = $row["destination_app"];
 				$destination_data = $row["destination_data"];
@@ -726,6 +756,9 @@
 			unset($dialplan_details[$x]);
 		}
  		if ($row['dialplan_detail_type'] == "tone_detect") {
+			unset($dialplan_details[$x]);
+		}
+ 		if ($row['dialplan_detail_type'] == "answer") {
 			unset($dialplan_details[$x]);
 		}
  		if ($row['dialplan_detail_type'] == "sleep") {
@@ -855,6 +888,17 @@
 	echo "</tr>\n";
 
 	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-destination_prefix']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='destination_prefix' maxlength='32' value=\"".escape($destination_prefix)."\">\n";
+	echo "<br />\n";
+	echo $text['description-destination_prefix']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-destination_number']."\n";
 	echo "</td>\n";
@@ -865,7 +909,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (permission_exists('outbound_caller_id_select')) {
+	if (permission_exists('destination_caller_id_name')) {
 		echo "<tr id='tr_caller_id_name'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-destination_caller_id_name']."\n";
@@ -876,7 +920,9 @@
 		echo $text['description-destination_caller_id_name']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
+	}
 
+	if (permission_exists('destination_caller_id_number')) {
 		echo "<tr id='tr_caller_id_number'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-destination_caller_id_number']."\n";
@@ -1033,6 +1079,19 @@
 	echo "<br />\n";
 	echo $text['description-account_code']."\n";
 	echo "</td>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-usage']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<label><input type='checkbox' name='destination_type_voice' id='destination_type_voice' value='1' ".($destination_type_voice ? "checked='checked'" : null)."> ".$text['label-voice']."</label>&nbsp;\n";
+	echo "	<label><input type='checkbox' name='destination_type_fax' id='destination_type_fax' value='1' ".($destination_type_fax ? "checked='checked'" : null)."> ".$text['label-fax']."</label>&nbsp;\n";
+	echo "	<label><input type='checkbox' name='destination_type_text' id='destination_type_text' value='1' ".($destination_type_text ? "checked='checked'" : null)."> ".$text['label-text']."</label>\n";
+	echo "<br />\n";
+	echo $text['description-usage']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	if (permission_exists('destination_domain')) {
 		echo "<tr>\n";

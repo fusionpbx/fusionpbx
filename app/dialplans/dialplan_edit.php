@@ -150,6 +150,7 @@
 			$array['dialplans'][$x]['hostname'] = $hostname;
 			$array['dialplans'][$x]['dialplan_name'] = $dialplan_name;
 			$array['dialplans'][$x]['dialplan_number'] = $_POST["dialplan_number"];
+			$array['dialplans'][$x]['dialplan_destination'] = $_POST["dialplan_destination"];
 			$array['dialplans'][$x]['dialplan_context'] = $_POST["dialplan_context"];
 			$array['dialplans'][$x]['dialplan_continue'] = $_POST["dialplan_continue"];
 			$array['dialplans'][$x]['dialplan_order'] = $_POST["dialplan_order"];
@@ -201,10 +202,10 @@
 
 		//set the message
 			if ($action == "add") {
-				messages::add($text['message-add']);
+				message::add($text['message-add']);
 			}
 			else if ($action == "update") {
-				messages::add($text['message-update']);
+				message::add($text['message-update']);
 			}
 			header("Location: ?id=".escape($dialplan_uuid).(($app_uuid != '') ? "&app_uuid=".escape($app_uuid) : null));
 			exit;
@@ -223,6 +224,7 @@
 			$hostname = $row["hostname"];
 			$dialplan_name = $row["dialplan_name"];
 			$dialplan_number = $row["dialplan_number"];
+			$dialplan_destination = $row["dialplan_destination"];
 			$dialplan_order = $row["dialplan_order"];
 			$dialplan_continue = $row["dialplan_continue"];
 			$dialplan_context = $row["dialplan_context"];
@@ -239,6 +241,10 @@
 	if (strlen($dialplan_order) == 0) {
 		$dialplan_order = '200';
 	}
+	if (strlen($dialplan_destination) == 0) {
+		$dialplan_destination = 'false';
+	}
+
 
 //get the dialplan details in an array
 	$sql = "select * from v_dialplan_details ";
@@ -459,6 +465,7 @@
 	echo "<td width='50%' style='vertical-align: top;'>\n";
 
 	echo "	<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+
 	echo "	<tr>\n";
 	echo "	<td class='vncellreq' valign='top' align='left' nowrap='nowrap' width='30%'>\n";
 	echo "		".$text['label-order']."\n";
@@ -484,6 +491,29 @@
 	echo "	</td>\n";
 	echo "	</tr>\n";
 
+	echo "	<tr>\n";
+	echo "	<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "		".$text['label-destination']."\n";
+	echo "	</td>\n";
+	echo "	<td class='vtable' align='left'>\n";
+	echo "		<select class='formfld' name='dialplan_destination'>\n";
+	echo "			<option value=''></option>\n";
+	if ($dialplan_destination == "true") {
+		echo "			<option value='true' selected='selected'>".$text['option-true']."</option>\n";
+	}
+	else {
+		echo "			<option value='true'>".$text['option-true']."</option>\n";
+	}
+	if ($dialplan_destination == "false") {
+		echo "			<option value='false' selected='selected'>".$text['option-false']."</option>\n";
+	}
+	else {
+		echo "			<option value='false'>".$text['option-false']."</option>\n";
+	}
+	echo "		</select>\n";
+	echo "	</td>\n";
+	echo "	</tr>\n";
+
 	if (permission_exists('dialplan_domain')) {
 		echo "	<tr>\n";
 		echo "	<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -499,10 +529,10 @@
 		}
 		if (is_array($_SESSION['domains'])) foreach ($_SESSION['domains'] as $row) {
 			if ($row['domain_uuid'] == $domain_uuid) {
-				echo "		<option value='".$row['domain_uuid']."' selected='selected'>".escape($row['domain_name'])."</option>\n";
+				echo "		<option value='".escape($row['domain_uuid'])."' selected='selected'>".escape($row['domain_name'])."</option>\n";
 			}
 			else {
-				echo "		<option value='".$row['domain_uuid']."'>".escape($row['domain_name'])."</option>\n";
+				echo "		<option value='".escape($row['domain_uuid'])."'>".escape($row['domain_name'])."</option>\n";
 			}
 		}
 		echo "		</select>\n";
@@ -539,9 +569,11 @@
 	echo "		".$text['label-description']."\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' align='left' width='70%'>\n";
-	echo "		<textarea class='formfld' style='width: 250px; height: 68px;' name='dialplan_description'>".escape($dialplan_description)."</textarea>\n";
+	//echo "		<textarea class='formfld' style='width: 250px;' name='dialplan_description'>".escape($dialplan_description)."</textarea>\n";
+	echo "		<input class='formfld' type='text' name='dialplan_description' maxlength='255' value=\"".escape($dialplan_description)."\">\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
+
 	echo "	</table>\n";
 
 	echo "</td>";
@@ -698,19 +730,30 @@
 							if ($element['hidden']) {
 								$dialplan_detail_data_mod = $dialplan_detail_data;
 								if ($dialplan_detail_type == 'bridge') {
-									// parse out gateway uuid
-									$bridge_statement = explode('/', $dialplan_detail_data);
-									if ($bridge_statement[0] == 'sofia' && $bridge_statement[1] == 'gateway' && is_uuid($bridge_statement[2])) {
-										// retrieve gateway name from db
-										$sql = "select gateway from v_gateways where gateway_uuid = '".$bridge_statement[2]."' ";
-										$prep_statement = $db->prepare(check_sql($sql));
-										$prep_statement->execute();
-										$gateways = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-										if (is_array($gateways)) {
-											$gateway_name = $gateways[0]['gateway'];
-											$dialplan_detail_data_mod = str_replace($bridge_statement[2], $gateway_name, $dialplan_detail_data);
+									// split up failover bridges and get variables in statement
+									$failover_bridges = explode('|', $dialplan_detail_data);
+									preg_match('/^\{.*\}/', $failover_bridges[0], $bridge_vars);
+									$bridge_vars = $bridge_vars[0];
+									
+									// rename parse and rename each gateway
+									foreach ($failover_bridges as $bridge_statement_exploded) {
+										// parse out gateway uuid
+										$bridge_statement = str_replace($bridge_vars, '', explode('/', $bridge_statement_exploded));
+										array_unshift($bridge_statement, $bridge_vars);
+										
+										if ($bridge_statement[1] == 'sofia' && $bridge_statement[2] == 'gateway' && is_uuid($bridge_statement[3])) {
+											// retrieve gateway name from db
+											$sql = "select gateway from v_gateways where gateway_uuid = '".$bridge_statement[3]."' ";
+											$prep_statement = $db->prepare(check_sql($sql));
+											$prep_statement->execute();
+											$gateways = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+											if (is_array($gateways)) {
+												$gateway_name = $gateways[0]['gateway'];
+												$bridge_statement_exploded_mod = str_replace($bridge_statement[3], $gateway_name, $bridge_statement_exploded);
+											}
+									$dialplan_detail_data_mod = str_replace($bridge_statement_exploded, $bridge_statement_exploded_mod, $dialplan_detail_data_mod);
+									unset ($prep_statement, $sql, $bridge_statement, $gateways, $bridge_statement_exploded, $bridge_statement_exploded_mod);
 										}
-										unset ($prep_statement, $sql, $bridge_statement, $gateways);
 									}
 								}
 								echo "	<label id=\"label_dialplan_detail_data_".$x."\">".escape($dialplan_detail_data_mod)."</label>\n";

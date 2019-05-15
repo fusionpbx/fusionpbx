@@ -38,6 +38,24 @@
 		exit;
 	}
 
+//get the contact list
+	$sql = "select ct.*, u.username, u.domain_uuid as user_domain_uuid ";
+	$sql .= "from v_contact_times as ct, v_users as u ";
+	$sql .= "where ct.user_uuid = u.user_uuid ";
+	$sql .= "and ct.domain_uuid = '".$domain_uuid."' ";
+	$sql .= "and ct.contact_uuid = '".$contact_uuid."' ";
+	$sql .= "order by ct.time_start desc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$result_count = count($result);
+	unset ($prep_statement, $sql);
+
+//set the row style
+	$c = 0;
+	$row_style["0"] = "row_style0";
+	$row_style["1"] = "row_style1";
+
 //show the content
 	echo "<table width='100%' border='0'>\n";
 	echo "<tr>\n";
@@ -45,23 +63,6 @@
 	echo "<td width='50%' align='right'>&nbsp;</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
-
-	//get the contact list
-		$sql = "select ct.*, u.username, u.domain_uuid as user_domain_uuid ";
-		$sql .= "from v_contact_times as ct, v_users as u ";
-		$sql .= "where ct.user_uuid = u.user_uuid ";
-		$sql .= "and ct.domain_uuid = '".$domain_uuid."' ";
-		$sql .= "and ct.contact_uuid = '".$contact_uuid."' ";
-		$sql .= "order by ct.time_start desc ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
-		unset ($prep_statement, $sql);
-
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
@@ -103,7 +104,7 @@
 			echo "	<td class='list_control_icons' nowrap>";
 			if (permission_exists('contact_time_edit')) {
 				if ($row['user_uuid'] == $_SESSION["user"]["user_uuid"]) {
-					echo "<a href='contact_time_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_time_uuid']."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
+					echo "<a href='contact_time_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_time_uuid'])."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
 				}
 				else {
 					echo "<span onclick=\"alert('".$text['message-access_denied']."');\" alt='".$text['button-edit']."'>".str_replace("list_control_icon", "list_control_icon_disabled", $v_link_label_edit)."</span>";

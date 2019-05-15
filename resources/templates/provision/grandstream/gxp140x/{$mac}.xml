@@ -142,7 +142,7 @@
     <!--  P270 = -->
     <!--  SIP Server -->
     <!--  String -->
-    <P47>{$server_address_1}</P47>
+    <P47>{$account.1.server_address}</P47>
     <!--  Secondary SIP Server -->
     <!--  String -->
     <P2312></P2312>
@@ -151,16 +151,16 @@
     <P48></P48>
     <!--  SIP User ID -->
     <!--  String -->
-    <P35>{$user_id_1}</P35>
+    <P35>{$account.1.user_id}</P35>
     <!--  Authenticate ID -->
     <!--  String -->
-    <P36>{$user_id_1}</P36>
+    <P36>{$account.1.auth_id}</P36>
     <!--  Authenticate Password -->
     <!--  String -->
-    <P34>{$user_password_1}</P34>
+    <P34>{$account.1.password}</P34>
     <!--  Display Name -->
     <!--  String -->
-    <P3>{$display_name_1}</P3>
+    <P3>{$account.1.display_name}</P3>
     <!--  Voice Mail UserID -->
     <!--  String -->
     <P33>*97</P33>
@@ -477,7 +477,13 @@
     <!--  Dial Plan. Default is { x+ | *x+ | *xx*x+ } -->
     <!--  String -->
     <!--  Mandatory -->
+    
+    {if isset($grandstream_dial_plan) }
     <P290>{$grandstream_dial_plan}</P290>
+    {else}
+    <P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P290>
+    {/if}
+    
     <!--  Delayed Call Forward Wait Time (in seconds). Default is 20 -->
     <!--  Number: 1 - 120 -->
     <!--  Mandatory -->
@@ -571,7 +577,7 @@
     <!--  P417 =  -->
     <!--  SIP Server -->
     <!--  String -->
-    <P402>{$server_address_2}</P402>
+    <P402>{$account.2.server_address}</P402>
     <!--  Secondary SIP Server -->
     <!--  String -->
     <P2412></P2412>
@@ -580,16 +586,16 @@
     <P403></P403>
     <!--  SIP User ID -->
     <!--  String -->
-    <P404>{$user_id_2}</P404>
+    <P404>{$account.2.user_id}</P404>
     <!--  Authenticate ID -->
     <!--  String -->
-    <P405>{$user_id_2}</P405>
+    <P405>{$account.2.user_id}</P405>
     <!--  Authenticate password -->
     <!--  String -->
-    <P406>{$user_password_2}</P406>
+    <P406>{$account.2.password}</P406>
     <!--  Display Name -->
     <!--  String -->
-    <P407>{$display_name_2}</P407>
+    <P407>{$account.2.display_name}</P407>
     <!--  Voice Mail UserID -->
     <!--  String -->
     <P426>*97</P426>
@@ -1165,13 +1171,15 @@
     <P212>2</P212>
     <!--  Firmware Server Path -->
     <!--  String -->
-    
-    {if isset($grandstream_firmware_path)}
-    <P192>{$grandstream_firmware_path}</P192>
+
+    {if isset($grandstream_firmware_path) && isset($firmware_version)}
+    <P192>{$grandstream_firmware_path}/gxp140x/{$firmware_version}</P192>
+    {elseif isset($grandstream_firmware_path)}
+    <P192>{$grandstream_firmware_path}/gxp140x</P192>
     {else}
     <P192>{$domain_name}{$project_path}/app/provision</P192>
     {/if}
-    
+
     <!--  Config Server Path -->
     <!--  String -->
     <P237>{$domain_name}{$project_path}/app/provision</P237>
@@ -1313,7 +1321,7 @@
     <!--  This is a string of up to 256 characters that should contain a path to the XML file. It MUST be in the host/path format. -->
     <!--  For example: directory.grandstream.com/engineering -->
     <!--  String -->
-    
+
     {if isset($contact_grandstream)}
 <P331>{$grandstream_phonebook_xml_server_path}{$mac}/</P331>
 {elseif isset($grandstream_phonebook_xml_server_path)}
@@ -1321,7 +1329,7 @@
 {else}
 <P331></P331>
 {/if}
-    
+
     <!--  Phonebook Download Interval (in minutes) -->
     <!--  Valid value range is 5-720. Default is 0 for disabled -->
     <!--  Number: 0, 5-720;  -->
