@@ -354,7 +354,7 @@
 <!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
 <!-- Number: 1 to 64800 -->
 <!-- Mandatory -->
-<P32>3</P32>
+<P32>{math equation="x / y" x=$account.1.register_expires y=40}</P32>
 
 <!-- Reregister before Expiration (in seconds. Default 0 second) -->
 <!-- Number: 1 to 64800 -->
@@ -1031,7 +1031,7 @@
 <!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
 <!-- Number: 1 to 64800 -->
 <!-- Mandatory -->
-<P732>3</P732>
+<P732>{math equation="x / y" x=$account.2.register_expires y=40}</P732>
 
 <!-- Reregister before Expiration (in seconds. Default 0 second) -->
 <!-- Number: 1 to 64800 -->
