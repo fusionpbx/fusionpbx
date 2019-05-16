@@ -982,5 +982,14 @@
                 $apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
                 $apps[$x]['default_settings'][$y]['default_setting_description'] = "EGS Syslog Server Port";
                 $y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "108f26c5-568d-4cc0-af94-097ecb600b8f";
+                $apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+                $apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_provision_url";
+                $apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+                $apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+                $apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+                $apps[$x]['default_settings'][$y]['default_setting_description'] = "Provisioning URL for Fanvil";
+                $y++;
+
 
 ?>
