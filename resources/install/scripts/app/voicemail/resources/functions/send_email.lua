@@ -190,6 +190,12 @@
 					body = body:gsub("${domain_name}", domain_name);
 					body = body:gsub("${sip_to_user}", id);
 					body = body:gsub("${dialed_user}", id);
+		
+					if (send_quota == 'true') then
+						body = body:gsub("{$message_sum}", message_sum);
+						body = body:gsub("{$vm_disk_quota}", vm_disk_quota)
+					end
+		
 					if (voicemail_file == "attach") then
 						body = body:gsub("${message}", text['label-attached']);
 					elseif (voicemail_file == "link") then
