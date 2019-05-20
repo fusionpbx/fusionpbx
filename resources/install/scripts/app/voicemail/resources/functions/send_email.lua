@@ -124,8 +124,10 @@
 					sql = sql .. "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
 					sql = sql .. "AND template_language = :template_language ";
 					sql = sql .. "AND template_category = 'voicemail' "
-					if (transcription == nil) then
+					if (transcription == nil and send_quota == nil) then
 						sql = sql .. "AND template_subcategory = 'default' "
+					elseif (send_quota == 'true') then 
+						sql = sql .. "AND template_subcategory = 'voicemail_with_quota' "
 					else
 						sql = sql .. "AND template_subcategory = 'transcription' "
 					end
