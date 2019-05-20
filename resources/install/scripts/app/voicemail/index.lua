@@ -211,6 +211,10 @@
 						not_found_message = settings['voicemail']['not_found_message']['boolean'];
 					end
 				end
+					
+				if (settings['voicemail']['send_quota']) then
+					send_quota = settings['voicemail']['send_quota']['boolean']
+				end
 
 			end
 
