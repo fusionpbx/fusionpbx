@@ -1013,7 +1013,7 @@
 	echo "</form>";
 
 	if (permission_exists("user_edit") && permission_exists('user_setting_view') && $action == 'edit') {
-		require "user_settings.php";
+		require $_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/core/user_settings/user_settings.php";
 	}
 
 //include the footer
