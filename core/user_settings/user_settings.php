@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2015
+ Portions created by the Initial Developer are Copyright (C) 2008-2019
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -53,7 +53,7 @@
 			unset($sql);
 
 			message::add($text['message-update']);
-			header("Location: user_edit.php?id=".$user_uuid);
+			header("Location: /core/users/user_edit.php?id=".$user_uuid);
 			exit;
 		}
 	}
@@ -66,7 +66,7 @@
 	$order = check_str($_GET["order"]);
 
 //show the content
-	echo "<form name='frm_settings' id='frm_settings' method='get' action='user_setting_delete.php'>";
+	echo "<form name='frm_settings' id='frm_settings' method='get' action='/core/user_settings/user_setting_delete.php'>";
 	echo "<input type='hidden' name='user_uuid' value='".$user_uuid."'>";
 
 //prepare to page the results
@@ -157,7 +157,7 @@
 				echo "<th>".$text['label-description']."</th>";
 				echo "<td class='list_control_icons'>";
 				if (permission_exists('user_setting_add')) {
-					echo "<a href='user_setting_edit.php?user_setting_category=".urlencode($row['user_setting_category'])."&user_uuid=".check_str($_GET['id'])."' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
+					echo "<a href='/core/user_settings/user_setting_edit.php?user_setting_category=".urlencode($row['user_setting_category'])."&user_uuid=".check_str($_GET['id'])."' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 				}
 				if (permission_exists('user_setting_delete')) {
 					echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm_settings').submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
@@ -165,7 +165,7 @@
 				echo "</td>\n";
 				echo "</tr>\n";
 			}
-			$tr_link = (permission_exists('user_setting_edit')) ? " href='user_setting_edit.php?user_uuid=".$row['user_uuid']."&id=".$row['user_setting_uuid']."'" : null;
+			$tr_link = (permission_exists('user_setting_edit')) ? " href='/core/user_settings/user_setting_edit.php?user_uuid=".$row['user_uuid']."&id=".$row['user_setting_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			if (
 				(permission_exists("domain_select") && permission_exists("user_setting_add") && count($_SESSION['domains']) > 1) ||
@@ -176,7 +176,7 @@
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('user_setting_edit')) {
-				echo 	"<a href='user_setting_edit.php?user_uuid=".$row['user_uuid']."&id=".$row['user_setting_uuid']."'>".$row['user_setting_subcategory']."</a>";
+				echo 	"<a href='/core/user_settings/user_setting_edit.php?user_uuid=".$row['user_uuid']."&id=".$row['user_setting_uuid']."'>".$row['user_setting_subcategory']."</a>";
 			}
 			else {
 				echo $row['user_setting_subcategory'];
@@ -237,10 +237,10 @@
 			echo "	<td valign='top' class='row_stylebg'>".escape($row['user_setting_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('user_setting_edit')) {
-				echo "<a href='user_setting_edit.php?user_uuid=".escape($row['user_uuid'])."&id=".escape($row['user_setting_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='/core/user_settings/user_setting_edit.php?user_uuid=".escape($row['user_uuid'])."&id=".escape($row['user_setting_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('user_setting_delete')) {
-				echo "<a href='user_setting_delete.php?user_uuid=".escape($row['user_uuid'])."&id[]=".escape($row['user_setting_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='/core/user_settings/user_setting_delete.php?user_uuid=".escape($row['user_uuid'])."&id[]=".escape($row['user_setting_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -258,7 +258,7 @@
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td class='list_control_icons'>";
 	if (permission_exists('user_setting_add')) {
-		echo 		"<a href='user_setting_edit.php?user_uuid=".check_str($_GET['id'])."' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo 		"<a href='/core/user_settings/user_setting_edit.php?user_uuid=".check_str($_GET['id'])."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	if (permission_exists('user_setting_delete') && is_array($user_settings)) {
 		echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm_settings').submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
