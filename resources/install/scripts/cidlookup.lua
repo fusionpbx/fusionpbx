@@ -22,9 +22,10 @@
 --	Contributor(s):
 --	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 --	Riccardo Granchi <riccardo.granchi@nems.it>
+--	Adrian Fretwell <adrian.fretwell@topgreen.co.uk>
 --
 --	add this in Inbound Routes before transfer to use it:
---	action set caller_id_name=${luarun cidlookup.lua ${uuid}}
+--	action set caller_id_name=${luarun cidlookup.lua ${uuid} ${domain_uuid}}
 
 --define the trim function
 	require "resources.functions.trim"
@@ -35,6 +36,7 @@
 --create the api object
 	api = freeswitch.API();
 	uuid = argv[1];
+	domain_uuid = argv[2];
 	if not uuid or uuid == "" then return end;
 	caller = api:executeString("uuid_getvar " .. uuid .. " caller_id_number");
 	callee = api:executeString("uuid_getvar " .. uuid .. " destination_number");
@@ -86,8 +88,15 @@
 	end
 	sql = sql .. "INNER JOIN v_contact_phones ON v_contact_phones.contact_uuid = v_contacts.contact_uuid ";
 	sql = sql .. "INNER JOIN v_destinations ON v_destinations.domain_uuid = v_contacts.domain_uuid ";
-	sql = sql .. "WHERE  v_contact_phones.phone_number = :caller "
-	local params = {caller = caller}
+	
+	local params;
+	if ((not domain_uuid) or (domain_uuid == "")) then
+		sql = sql .. "WHERE  v_contact_phones.phone_number = :caller ";
+		params = {caller = caller};
+	else
+		sql = sql .. "WHERE  v_contacts.domain_uuid = :domain_uuid and v_contact_phones.phone_number = :caller ";
+		params = {caller = caller, domain_uuid = domain_uuid};
+	end
 
 	if (debug["sql"]) then
 		freeswitch.consoleLog("notice", "[cidlookup] SQL: "..sql.."; params:" .. json.encode(params) .. "\n");
