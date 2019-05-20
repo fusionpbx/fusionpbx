@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2012
+ Portions created by the Initial Developer are Copyright (C) 2008-2019
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -63,7 +63,7 @@
 		message::add($text['message-delete_failed'], 'negative');
 	}
 
-	header("Location: user_edit.php?id=".check_str($_REQUEST["user_uuid"]));
+	header("Location: /core/users/user_edit.php?id=".check_str($_REQUEST["user_uuid"]));
 	exit;
 
 ?>
