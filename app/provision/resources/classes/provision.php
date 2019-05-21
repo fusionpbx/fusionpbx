@@ -883,6 +883,11 @@ include "root.php";
 											}
 										}
 
+									//convert seconds to minutes for grandstream
+										if ($device_vendor == 'grandstream') {
+											$register_expires = round($register_expires / 60);
+										}
+
 									//set a lines array index is the line number
 										$lines[$line_number] = $row;
 										$lines[$line_number]['register_expires'] = $register_expires;
