@@ -194,8 +194,8 @@
 					body = body:gsub("${dialed_user}", id);
 		
 					if (send_quota == 'true') then
-						body = body:gsub("{$message_sum}", message_sum);
-						body = body:gsub("{$vm_disk_quota}", vm_disk_quota)
+						remained_space = format_seconds(vm_disk_quota - message_sum);
+						body = body:gsub("{$remained_space}", remained_space);
 					end
 		
 					if (voicemail_file == "attach") then
