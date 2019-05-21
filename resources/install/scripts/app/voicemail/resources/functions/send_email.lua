@@ -200,7 +200,7 @@
 					body = body:gsub("${dialed_user}", id);
 					
 					if (send_quota == 'true' or send_vmbox_info == 'true') then
-						remaining_space = format_seconds(vm_disk_quota - message_sum + message_length);
+						remaining_space = format_seconds(vm_disk_quota - message_sum - message_length);
 						body = body:gsub("${remaining_space}", remaining_space);
 					end
 					
