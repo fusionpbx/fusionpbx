@@ -3,7 +3,7 @@
 <gs_provision version="1">
 <mac>{$mac|replace:'-':''}</mac>
   <config version="1">
-    <!-- ﻿########################################################################################## -->
+    <!-- ########################################################################################## -->
     <!-- ## Configuration Template For GXP2130/2140/2160/2170/2135 Firmware Version 1.0.9.127    ## -->
     <!-- ########################################################################################## -->
 
@@ -2006,7 +2006,7 @@
     <!-- # Register Expiration (in minutes). Default is 60. Max is 45 days -->
     <!-- # Number: 1 - 64800 -->
     <!-- # Mandatory -->
-    <P512>60</P512>
+    <P512>{$account.3.register_expires}</P512>
 
     <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
     <!-- # Number: 1 - 64800 -->
