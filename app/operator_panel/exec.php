@@ -80,7 +80,7 @@ if (count($_GET)>0) {
 
 	//setup the event socket connection
 		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-
+/*
 	//get the status
 		if (stristr($action, 'user_status') == true) {
 			$user_status = $data;
@@ -119,32 +119,50 @@ if (count($_GET)>0) {
 				$user_status = "";
 			}
 		}
+*/
 
 	//allow specific commands
 		if (strlen($switch_cmd) > 0) {
-			if (stristr($switch_cmd, 'originate') == true) {}
-			elseif (stristr($switch_cmd, 'uuid_record') == true) {}
-			elseif (stristr($switch_cmd, 'uuid_transfer') == true) {}
-			elseif (stristr($switch_cmd, 'eavesdrop') == true) {}
-			elseif (stristr($switch_cmd, 'uuid_kill') == true) {}
-			else {
-				$switch_cmd = '';
-			}
-			if (stristr($switch_cmd, 'system') == true) {
-				$switch_cmd = '';
-			}
-		}
+			$api_cmd = '';
+			$uuid_pattern = '/[^-A-Fa-f0-9]/';
+			$num_pattern = '/[^-A-Za-z0-9()*#]/';
 
-	//switch cmd
-		if (strlen($switch_cmd) > 0) {
+			if ($switch_cmd == 'originate') {
+				$source = preg_replace($num_pattern,'',$_GET['source']);
+				$destination = preg_replace($num_pattern,'',$_GET['destination']);
+				$api_cmd = 'bgapi originate {sip_auto_answer=true,origination_caller_id_number=' . $source . ',sip_h_Call-Info=_undef_}user/' . $source . '@' . $_SESSION['domain_name'] . ' ' . $destination . ' XML ' . trim($_SESSION['user_context']);
+			} elseif ($switch_cmd == 'uuid_record') {
+				$uuid = preg_replace($uuid_pattern,'',$_GET['uuid']);
+				$api_cmd = 'uuid_record ' . $uuid . ' start ' . $_SESSION['switch']['recordings']['dir'] . '/' . $_SESSION['domain_name'] . '/archive/' . date('Y/M/d') . '/' . $uuid . '.wav';
+			} elseif ($switch_cmd == 'uuid_transfer') {
+				$uuid = preg_replace($uuid_pattern,'',$_GET['uuid']);
+				$destination = preg_replace($num_pattern,'',$_GET['destination']);
+				$api_cmd = 'uuid_transfer ' . $uuid . ' ' . $destination . ' XML ' . trim($_SESSION['user_context']);
+			} elseif ($switch_cmd == 'uuid_eavesdrop') {
+				$chan_uuid = preg_replace($uuid_pattern,'',$_GET['chan_uuid']);
+				$ext = preg_replace($num_pattern,'',$_GET['ext']);
+				$destination = preg_replace($num_pattern,'',$_GET['destination']);
 
+				$language = new text;
+				$text = $language->get();
+
+				$api_cmd = 'bgapi originate {origination_caller_id_name=' . $text['label-eavesdrop'] . ',origination_caller_id_number=' . $ext . '}user/' . $destination . '@' . $_SESSION['domain_name'] . ' &eavesdrop(' . $chan_uuid . ')';
+			} elseif ($switch_cmd == 'uuid_kill') {
+				$call_id = preg_replace($uuid_pattern,'',$_GET['call_id']);
+				$api_cmd = 'uuid_kill ' . $call_id;
+			} else {
+				echo 'access denied';
+				return;
+			}
+	
+
+			/*
 			//set the status so they are compatible with mod_callcenter
 			$switch_cmd = str_replace("Available_On_Demand", "'Available (On Demand)'", $switch_cmd);
 			$switch_cmd = str_replace("Logged_Out", "'Logged Out'", $switch_cmd);
 			$switch_cmd = str_replace("On_Break", "'On Break'", $switch_cmd);
 			$switch_cmd = str_replace("Do_Not_Disturb", "'Logged Out'", $switch_cmd);
 
-			/*
 			//if ($action == "energy") {
 				//conference 3001-example.org energy 103
 				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
@@ -176,8 +194,9 @@ if (count($_GET)>0) {
 			*/
 
 			//run the command
-			$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+			$switch_result = event_socket_request($fp, 'api '.$api_cmd);
 
+			/*
 			//record stop
 			if ($action == "record") {
 				if (trim($_GET["action2"]) == "stop") {
@@ -197,6 +216,7 @@ if (count($_GET)>0) {
 					}
 				}
 			}
+			*/
 		}
 }
 
