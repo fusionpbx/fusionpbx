@@ -124,17 +124,18 @@
 					sql = sql .. "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
 					sql = sql .. "AND template_language = :template_language ";
 					sql = sql .. "AND template_category = 'voicemail' "
-					if (transcription == nil and send_quota ~= 'true') then
-						sql = sql .. "AND template_subcategory = 'default' "
-					elseif (send_quota == 'true') then
+					if (send_quota == 'true') then
 						if (send_vmbox_info == 'true') then
 							--do nothing
+						else
+							sql = sql .. "AND template_subcategory = 'voicemail_with_quota' "
 						end
-						sql = sql .. "AND template_subcategory = 'voicemail_with_quota' "
 					elseif (send_vmbox_info == 'true') then
 						sql = sql .. "AND template_subcategory = 'voicemail_with_info' "
+					elseif (transcription ~= nil) then
+							sql = sql .. "AND template_subcategory = 'transcription' "
 					else
-						sql = sql .. "AND template_subcategory = 'transcription' "
+						sql = sql .. "AND template_subcategory = 'default' "
 					end
 					sql = sql .. "AND template_enabled = 'true' "
 					sql = sql .. "ORDER BY domain_uuid DESC "
