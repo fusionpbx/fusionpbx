@@ -215,6 +215,10 @@
 				if (settings['voicemail']['send_quota']) then
 					send_quota = settings['voicemail']['send_quota']['boolean']
 				end
+				
+				if (settings['voicemail']['send_vmbox_info']) then
+					send_vmbox_info = settings['voicemail']['send_vmbox_info']['boolean']
+				end
 
 			end
 
