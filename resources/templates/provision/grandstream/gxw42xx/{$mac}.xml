@@ -600,7 +600,7 @@
 <!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
 <!-- Number: 1 to 64800 -->
 <!-- Mandatory -->
-<P32>3</P32>
+<P32>{$account.1.register_expires}</P32>
 
 <!-- SIP Registration Failure Retry Wait Time (in seconds. Between 1-3600, default is 30) -->
 <!-- Number: 1 to 3600 -->
@@ -1277,7 +1277,7 @@
 <!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
 <!-- Number: 1 to 64800 -->
 <!-- Mandatory -->
-<P732>3</P732>
+<P732>{$account.2.register_expires}</P732>
 
 <!-- SIP Registration Failure Retry Wait Time (in seconds. Between 1-3600, default is 30) -->
 <!-- Number: 1 to 3600 -->
@@ -1950,7 +1950,7 @@
 <!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
 <!-- Number: 1 to 64800 -->
 <!-- Mandatory -->
-<P532>3</P532>
+<P532>{$account.3.register_expires}</P532>
 
 <!-- SIP Registration Failure Retry Wait Time (in seconds. Between 1-3600, default is 30) -->
 <!-- Number: 1 to 3600 -->
@@ -2622,7 +2622,7 @@
 <!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
 <!-- Number: 1 to 64800 -->
 <!-- Mandatory -->
-<P612>3</P612>
+<P612>{$account.4.register_expires}</P612>
 
 <!-- SIP Registration Failure Retry Wait Time (in seconds. Between 1-3600, default is 30) -->
 <!-- Number: 1 to 3600 -->
