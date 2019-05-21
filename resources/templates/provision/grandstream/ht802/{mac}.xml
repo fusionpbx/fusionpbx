@@ -34,7 +34,7 @@
     <P52>2</P52> <!-- NAT Traversal (STUN) 0 - No, 2 - No but send keep-alive, 1 - Yes, 3 - UPnP -->
     <P84>20</P84> <!-- Keep-alive interval (in seconds. default 20 seconds, number: 10 to 160) -->
     <P81>1</P81> <!-- Unregister On Reboot. 0 - No, 1 - Yes -->
-    <P32>3</P32> <!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
+    <P32>{$account.1.register_expires}</P32> <!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
     <P2330>90</P2330> <!-- Reregister before Expiration (in seconds. Default 0 second, number: 1 to 64800) -->
     <P228>1</P228> <!-- FAX Mode. 0 - T.38 (Auto Detect), 1 - Pass Through -->
     <P4367>0</P4367> <!-- Send Re-INVITE After Fax. 0 - No, 1 - Yes -->
@@ -58,7 +58,7 @@
     <P710>1</P710> <!-- FAX Mode. 0 - T.38 (Auto Detect), 1 - Pass Through -->
     <P4417>0</P4417> <!-- Re-INVITE After Fax Tone Detected. 0 - Disabled, 1 - Enabled. -->
     <P832>0</P832> <!-- Jitter buffer length. 0 - Low, 1 - Medium, 2 - High -->
-    <P732>3</P732> <!-- Register Expiration (in minutes. default 1 hour, max 45 days, number: 1 to 64800) -->
+    <P732>{$account.2.register_expires}</P732> <!-- Register Expiration (in minutes. default 1 hour, max 45 days, number: 1 to 64800) -->
     <P752>1</P752> <!-- Unregister On Reboot. 0 - No, 1 - Yes -->
     <P2430>0</P2430> <!-- Reregister before Expiration (in seconds. Default 0 second) -->
     <!-- SIP transport -->
