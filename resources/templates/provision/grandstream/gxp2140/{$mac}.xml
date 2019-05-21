@@ -3,7 +3,7 @@
 <gs_provision version="1">
 <mac>{$mac|replace:'-':''}</mac>
   <config version="1">
-    <!-- ﻿########################################################################################## -->
+    <!-- ########################################################################################## -->
     <!-- ## Configuration Template For GXP2130/2140/2160/2170/2135 Firmware Version 1.0.9.127    ## -->
     <!-- ########################################################################################## -->
 
@@ -138,7 +138,7 @@
     <!-- # Register Expiration (in minutes). Default is 60. Max about 45 days -->
     <!-- # Number: 1 - 64800 -->
     <!-- # Mandatory -->
-    <P32>{math equation="x / y" x=$account.1.register_expires y=40}</P32>
+    <P32>{$account.1.register_expires}</P32>
 
     <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
     <!-- # Number: 1 - 64800 -->
@@ -1073,7 +1073,7 @@
     <!-- # Register Expiration (in minutes). Default is 60. Max is 45 days -->
     <!-- # Number: 1 - 64800 -->
     <!-- # Mandatory -->
-    <P412>{math equation="x / y" x=$account.2.register_expires y=40}</P412>
+    <P412>{$account.2.register_expires}</P412>
 
     <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
     <!-- # Number: 1 - 64800 -->
@@ -2006,7 +2006,7 @@
     <!-- # Register Expiration (in minutes). Default is 60. Max is 45 days -->
     <!-- # Number: 1 - 64800 -->
     <!-- # Mandatory -->
-    <P512>{math equation="x / y" x=$account.3.register_expires y=40}</P512>
+    <P512>{$account.3.register_expires}</P512>
 
     <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
     <!-- # Number: 1 - 64800 -->
@@ -2939,7 +2939,7 @@
     <!-- # Register Expiration (in minutes). Default is 60. Max is 45 days -->
     <!-- # Number: 1 - 64800 -->
     <!-- # Mandatory -->
-    <P612>{math equation="x / y" x=$account.4.register_expires y=40}</P612>
+    <P612>{$account.4.register_expires}</P612>
 
     <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
     <!-- # Number: 1 - 64800 -->
@@ -3875,7 +3875,7 @@
     <!-- # Register Expiration (in minutes. default 1 hour, max 45 days) -->
     <!-- # Number: 1-64800 -->
     <!-- # Mandatory -->
-    <P1712>{math equation="x / y" x=$account.5.register_expires y=40}</P1712>
+    <P1712>{$account.5.register_expires}</P1712>
 
     <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
     <!-- # Number: 1 - 64800 -->
@@ -4809,7 +4809,7 @@
     <!-- # Register Expiration (in minutes). Default is 60. Max is 45 days -->
     <!-- # Number: 1 - 64800 -->
     <!-- # Mandatory -->
-    <P1812>{math equation="x / y" x=$account.6.register_expires y=40}</P1812>
+    <P1812>{$account.6.register_expires}</P1812>
 
     <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
     <!-- # Number: 1 - 64800 -->
