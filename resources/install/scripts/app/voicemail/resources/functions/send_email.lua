@@ -126,8 +126,13 @@
 					sql = sql .. "AND template_category = 'voicemail' "
 					if (transcription == nil and send_quota ~= 'true') then
 						sql = sql .. "AND template_subcategory = 'default' "
-					elseif (send_quota == 'true') then 
+					elseif (send_quota == 'true') then
+						if (send_vmbox_info == 'true') then
+							--do nothing
+						end
 						sql = sql .. "AND template_subcategory = 'voicemail_with_quota' "
+					elseif (send_vmbox_info == 'true') then
+						sql = sql .. "AND template_subcategory = 'voicemail_with_info' "
 					else
 						sql = sql .. "AND template_subcategory = 'transcription' "
 					end
@@ -192,12 +197,17 @@
 					body = body:gsub("${domain_name}", domain_name);
 					body = body:gsub("${sip_to_user}", id);
 					body = body:gsub("${dialed_user}", id);
-		
-					if (send_quota == 'true') then
+					
+					if (send_quota == 'true' or send_vmbox_info == 'true') then
 						remained_space = format_seconds(vm_disk_quota - message_sum);
-						body = body:gsub("{$remained_space}", remained_space);
+						body = body:gsub("${remained_space}", remained_space);
 					end
-		
+					
+					if (send_vmbox_info == 'true') then
+						body = body:gsub("${saved_messages}", saved_messages);
+						body = body:gsub("${new_messages}", new_messages);
+					end
+
 					if (voicemail_file == "attach") then
 						body = body:gsub("${message}", text['label-attached']);
 					elseif (voicemail_file == "link") then
