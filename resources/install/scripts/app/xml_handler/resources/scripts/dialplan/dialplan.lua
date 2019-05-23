@@ -92,7 +92,7 @@
 			if (context_name == 'public' and context_type == 'single') then
 				sql = "select d.domain_name, dialplan_xml from v_dialplans as p, v_domains as d ";
 				sql = sql .. "where ( ";
-				sql = sql .. "	p.dialplan_uuid in (select dialplan_uuid from v_destinations where destination_number = :destination_number) ";
+				sql = sql .. "	p.dialplan_uuid in (select dialplan_uuid from v_destinations where (destination_number = :destination_number or destination_prefix || destination_number = :destination_number)) ";
 				sql = sql .. "	or (p.dialplan_context like '%public%' and p.domain_uuid is null) ";
 				sql = sql .. ") ";
 				sql = sql .. "and p.domain_uuid = d.domain_uuid ";
