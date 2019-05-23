@@ -261,7 +261,7 @@
 <P109>1</P109>
 
 <!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
-<P32>1</P32>
+<P32>{$account.1.register_expires}</P32>
 
 <!-- SIP Registration Failure Retry Wait Time, in seconds. Between 1-3600, default is 20 -->
 <P138>20</P138>
@@ -518,7 +518,7 @@
 <P813>1</P813>
 
 <!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
-<P732>60</P732>
+<P732>{$account.2.register_expires}</P732>
 
 <!-- SIP Registration Failure Retry Wait Time, in seconds. Between 1-3600, default is 20 -->
 <P471>20 </P471>
