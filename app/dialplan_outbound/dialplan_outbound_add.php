@@ -622,7 +622,7 @@
 						}
 						
 						if (strlen($prefix_number) > 0) {
-							if ($_SESSION['cdr']['cut_prefix']['boolean'] == 'true') {
+							if ($_SESSION['cdr']['remove_prefix']['boolean'] == 'true') {
 								$y++;
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
 								$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
