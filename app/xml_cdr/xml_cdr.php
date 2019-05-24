@@ -464,7 +464,7 @@
 				$tmp_month = date("M", strtotime($row['start_stamp']));
 				$tmp_day = date("d", strtotime($row['start_stamp']));
 				$tmp_start_epoch = ($_SESSION['domain']['time_format']['text'] == '12h') ? date("j M Y g:i:sa", $row['start_epoch']) : date("j M Y H:i:s", $row['start_epoch']);
-				
+
 			//get the hangup cause
 				$hangup_cause = $row['hangup_cause'];
 				$hangup_cause = str_replace("_", " ", $hangup_cause);
