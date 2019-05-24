@@ -464,7 +464,7 @@
 				$tmp_month = date("M", strtotime($row['start_stamp']));
 				$tmp_day = date("d", strtotime($row['start_stamp']));
 				$tmp_start_epoch = ($_SESSION['domain']['time_format']['text'] == '12h') ? date("j M Y g:i:sa", $row['start_epoch']) : date("j M Y H:i:s", $row['start_epoch']);
-
+				
 			//get the hangup cause
 				$hangup_cause = $row['hangup_cause'];
 				$hangup_cause = str_replace("_", " ", $hangup_cause);
@@ -574,13 +574,37 @@
 					$content .= "	</td>\n";
 				}
 			//destination
+				if ($_SESSION['cdr']['cut_prefix']['boolean'] == 'true') {
+					//get outbound prefix variable from json table if exists
+					$json_string = trim($row["json"]);
+					$array = json_decode($json_string,true);
+					$cut_prefix = false;
+					if (is_array($array["app_log"]["application"])) foreach ($array["app_log"]["application"] as $application) {
+						$app_data = urldecode($application["@attributes"]["app_data"]);
+					 	if (substr($app_data,0,7) == "prefix=") {
+					 		$prefix = substr($app_data,7);
+					 		$cut_prefix = true; }
+					}
+				}
 				$content .= "	<td valign='top' class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>";
 				$content .= "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode(escape($row['destination_number']))."&src_cid_number=".urlencode(escape($row['destination_number']))."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode(escape($row['destination_number']))."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
+				
 				if (is_numeric($row['destination_number'])) {
-					$content .= format_phone(escape(substr($row['destination_number'], 0, 20)))."\n";
+					if ($prefix ) {
+						//confirms call was made with a prefix
+						$is_prefixed = substr(format_phone(escape(substr($row['destination_number'], 0, 20))),0,strlen($prefix));
+						if ($prefix == $is_prefixed) {
+							//cut the prefix
+							$content .= substr(format_phone(escape(substr($row['destination_number'], 0, 20))),strlen($prefix))."\n"; }
+					else {
+					$content .= format_phone(escape(substr($row['destination_number'], 0, 20)))."\n";}
 				}
 				else {
-					$content .= "		".escape(substr($row['destination_number'], 0, 20))."\n";
+						if ($cut_prefix == 'true') {
+								$content .= substr(format_phone(escape(substr($row['destination_number'], 0, 20))),strlen($prefix))."\n";
+						}
+						else {
+						$content .= format_phone(escape(substr($row['destination_number'], 0, 20)))."\n"; }}
 				}
 				$content .= "		</a>\n";
 				$content .= "	</td>\n";
