@@ -90,7 +90,7 @@
 
 <!-- Register Expiration (m). In minutes. Default value is 60 -->
 <!-- Number: 0 - 64800 -->
-<P32>3</P32>
+<P32>{$account.1.register_expires}</P32>
 
 <!-- Re-register before Expiration (s). Default Value is 0 -->
 <!-- Number : 0 -->
@@ -780,7 +780,7 @@
 
 <!-- Register Expiration (m). In minutes. Default value is 60 -->
 <!-- Number: 0 - 64800 -->
-<P412>60</P412>
+<P412>{$account.2.register_expires}</P412>
 
 <!-- Register before Expiration (s). Default value is 0 -->
 <!-- Number -->
@@ -1418,7 +1418,7 @@
 
 <!-- Register Expiration (m). In minutes. Default value is 60 -->
 <!-- Number: 0 - 64800 -->
-<P512>60</P512>
+<P512>{$account.3.register_expires}</P512>
 
 <!-- Register before Expiration (s). Default value is 0 -->
 <!-- Number -->
@@ -2056,7 +2056,7 @@
 
 <!-- Register Expiration (m). In minutes. Default value is 60 -->
 <!-- Number: 0 - 64800 -->
-<P612>60</P612>
+<P612>{$account.4.register_expires}</P612>
 
 <!-- Register before Expiration (s). Default value is 0 -->
 <!-- Number -->
@@ -2698,7 +2698,7 @@
 
 <!-- Register Expiration (m). In minutes. Default value is 60 -->
 <!-- Number: 0 - 64800 -->
-<P1712>60</P1712>
+<P1712>{$account.5.register_expires}</P1712>
 
 <!-- Register before Expiration (s). Default value is 0 -->
 <!-- Number -->
@@ -3338,7 +3338,7 @@
 
 <!-- Register Expiration (m). In minutes. Default value is 60 -->
 <!-- Number: 0 - 64800 -->
-<P1812>60</P1812>
+<P1812>{$account.6.register_expires}</P1812>
 
 <!-- Register before Expiration (s). Default value is 0 -->
 <!-- Number -->
