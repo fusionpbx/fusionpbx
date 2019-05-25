@@ -6173,11 +6173,11 @@
     <!-- # Mandatory -->
     <P8458>0</P8458>
 
-    <!-- # Hour of the Day--Start (0-23). Default is 1 -->
+    <!-- # Hour of the Day ~~ Start (0-23). Default is 1 -->
     <!-- # Number: 0 - 23 -->
     <P285>1</P285>
 
-    <!-- # Hour of the Day--End (-1, 0-23). Default is 0 -->
+    <!-- # Hour of the Day ~~ End (-1, 0-23). Default is 0 -->
     <!-- # Number: -1, 0 - 23 -->
     <P8459>0</P8459>
 
@@ -7443,7 +7443,7 @@
     <!-- # Mandatory -->
     <P6760>0</P6760>
 
-    <!-- # Saved Local Call Recording Location. 0 - Internal Storage 1 - USB. Default is 0. --for GXP2140/2160/2170 only -->
+    <!-- # Saved Local Call Recording Location. 0 - Internal Storage 1 - USB. Default is 0. ~~for GXP2140/2160/2170 only -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
     <P6761>0</P6761>
@@ -7473,8 +7473,8 @@
     <P8358></P8358>
 
     <!-- # Auto Provision List Starting Point. 0 - Extension Boards, 1 - VPK, 2 - MPK. -->
-    <!-- # For GXP2140/GXP2170--Number: 0, 1. Default is 0 -->
-    <!-- # For GXP2130/GXP2160--Number: 1, 2. Default is 1 -->
+    <!-- # For GXP2140/GXP2170~~Number: 0, 1. Default is 0 -->
+    <!-- # For GXP2130/GXP2160~~Number: 1, 2. Default is 1 -->
     <!-- # Mandatory -->
     <!-- #P8349 = 0 -->
     <!--   -->
@@ -8032,7 +8032,7 @@
     <P2918>1</P2918>
 {/if}
 
-    <!-- # Screensaver Source.  0 - Default, 1 - USB, 2 - Download. Default is 0. --for GXP2140/2160/2170 only -->
+    <!-- # Screensaver Source.  0 - Default, 1 - USB, 2 - Download. Default is 0. ~~for GXP2140/2160/2170 only -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
 {if isset($grandstream_screensaver_source)}
@@ -8289,10 +8289,10 @@
     <!-- ###################################################################################### -->
     <!-- ############################ For GXP2130       ########################################### -->
     <!-- ###################################################################################### -->
-    <!-- # VPK 1-- fixed VPK  -->
+    <!-- # VPK 1~~ fixed VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is 0. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -8385,10 +8385,10 @@
 
 
     <!-- ###################################################################################### -->
-    <!-- # VPK 2-- fixed VPK  -->
+    <!-- # VPK 2~~ fixed VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is 0. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -8417,10 +8417,10 @@
     <!-- # P23969 = 0 -->
 
     <!-- ###################################################################################### -->
-    <!-- # VPK 3 -- fixed VPK  -->
+    <!-- # VPK 3 ~~ fixed VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is 0. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -8449,10 +8449,10 @@
     <!-- # P23970 = 0 -->
 
     <!-- ###################################################################################### -->
-    <!-- # VPK 4 -- Dynamic VPK -->
+    <!-- # VPK 4 ~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -8476,10 +8476,10 @@
     <!-- # P1472 = -->
 
     <!-- ###################################################################################### -->
-    <!-- # VPK 5 --Dynamic VPK  -->
+    <!-- # VPK 5 ~~ Dynamic VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -8503,10 +8503,10 @@
     <!-- # P1474 = -->
 
     <!-- ###################################################################################### -->
-    <!-- # VPK 6 --Dynamic VPK  -->
+    <!-- # VPK 6 ~~ Dynamic VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.   -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -8530,10 +8530,10 @@
     <!-- # P1476 = -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 7--Dynamic VPK  -->
+    <!-- # VPK 7~~ Dynamic VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.   -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -8557,10 +8557,10 @@
     <!-- # P23803 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 8--Dynamic VPK  -->
+    <!-- # VPK 8~~ Dynamic VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.   -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -8584,10 +8584,10 @@
     <!-- # P23807 = -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 9--Dynamic VPK  -->
+    <!-- # VPK 9~~ Dynamic VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -8611,10 +8611,10 @@
     <!-- # P23811 = -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 10--Dynamic VPK  -->
+    <!-- # VPK 10~~ Dynamic VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.   -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -8638,10 +8638,10 @@
     <!-- # P23815 = -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 11--Dynamic VPK  -->
+    <!-- # VPK 11~~ Dynamic VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.   -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -8665,10 +8665,10 @@
     <!-- # P23819 = -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 12--Dynamic VPK  -->
+    <!-- # VPK 12~~ Dynamic VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  Default  is -1. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -8694,10 +8694,10 @@
     <!-- ###################################################################################### -->
     <!-- ############################ For GXP2140       ########################################### -->
     <!-- ###################################################################################### -->
-    <!-- # VPK 1-- fixed VPK  -->
+    <!-- # VPK 1~~ fixed VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is 0. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -8726,10 +8726,10 @@
     <!-- # P23968 = 0 -->
 
     <!-- ###################################################################################### -->
-    <!-- # VPK 2-- fixed VPK  -->
+    <!-- # VPK 2~~ fixed VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is 0. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -8758,10 +8758,10 @@
     <!-- # P23969 = 0 -->
 
     <!-- ###################################################################################### -->
-    <!-- # VPK 3 -- fixed VPK  -->
+    <!-- # VPK 3 ~~ fixed VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is 0. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -8790,10 +8790,10 @@
     <!-- # P23970 = 0 -->
 
     <!-- ###################################################################################### -->
-    <!-- # VPK 4 -- fixed VPK  -->
+    <!-- # VPK 4 ~~ fixed VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is 0. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -8822,10 +8822,10 @@
     <!-- # P23971 = 0 -->
 
     <!-- ###################################################################################### -->
-    <!-- # VPK 5 --Dynamic VPK -->
+    <!-- # VPK 5 ~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -8849,10 +8849,10 @@
     <!-- # P1474 = -->
 
     <!-- ###################################################################################### -->
-    <!-- # VPK 6 --Dynamic VPK -->
+    <!-- # VPK 6 ~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -8876,10 +8876,10 @@
     <!-- # P1476 = -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 7--Dynamic VPK -->
+    <!-- # VPK 7~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -8903,10 +8903,10 @@
     <!-- # P23803 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 8--Dynamic VPK -->
+    <!-- # VPK 8~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -8930,10 +8930,10 @@
     <!-- # P23807 = -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 9--Dynamic VPK -->
+    <!-- # VPK 9~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -8957,10 +8957,10 @@
     <!-- # P23811 = -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 10--Dynamic VPK -->
+    <!-- # VPK 10~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -8984,10 +8984,10 @@
     <!-- # P23815 = -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 11--Dynamic VPK -->
+    <!-- # VPK 11~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -9011,10 +9011,10 @@
     <!-- # P23819 = -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 12--Dynamic VPK -->
+    <!-- # VPK 12~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -9038,10 +9038,10 @@
     <!-- # P23823 = -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 13--Dynamic VPK -->
+    <!-- # VPK 13~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -9065,10 +9065,10 @@
     <!-- # P23827 = -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 14--Dynamic VPK -->
+    <!-- # VPK 14~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -9092,10 +9092,10 @@
     <!-- # P23831 = -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 15--Dynamic VPK -->
+    <!-- # VPK 15~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -9119,10 +9119,10 @@
     <!-- # P23835 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 16--Dynamic VPK -->
+    <!-- # VPK 16~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -9148,10 +9148,10 @@
     <!-- ###################################################################################### -->
     <!-- ############################ For GXP2160       ########################################### -->
     <!-- ###################################################################################### -->
-    <!-- # VPK 1-- fixed VPK  -->
+    <!-- # VPK 1~~ fixed VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is 0. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -9180,10 +9180,10 @@
     <!-- # P23968 = 0 -->
 
     <!-- ###################################################################################### -->
-    <!-- # VPK 2-- fixed VPK  -->
+    <!-- # VPK 2~~ fixed VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is 0. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -9212,10 +9212,10 @@
     <!-- # P23969 = 0 -->
 
     <!-- ###################################################################################### -->
-    <!-- # VPK 3 -- fixed VPK  -->
+    <!-- # VPK 3 ~~ fixed VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is 0. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -9244,10 +9244,10 @@
     <!-- # P23970 = 0 -->
 
     <!-- ###################################################################################### -->
-    <!-- # VPK 4 -- fixed VPK  -->
+    <!-- # VPK 4 ~~ fixed VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is 0. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -9276,10 +9276,10 @@
     <!-- # P23971 = 0 -->
 
     <!-- ###################################################################################### -->
-    <!-- # VPK 5 -- fixed VPK  -->
+    <!-- # VPK 5 ~~ fixed VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is 0. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -9308,10 +9308,10 @@
     <!-- # P23972 = 0 -->
 
     <!-- ###################################################################################### -->
-    <!-- # VPK 6 -- fixed VPK -->
+    <!-- # VPK 6 ~~ fixed VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is 0. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -9340,10 +9340,10 @@
     <!-- # P23973 = 0 -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 7--Dynamic VPK -->
+    <!-- # VPK 7~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -9367,10 +9367,10 @@
     <!-- # P23803 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 8--Dynamic VPK -->
+    <!-- # VPK 8~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -9394,10 +9394,10 @@
     <!-- # P23807 = -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 9--Dynamic VPK -->
+    <!-- # VPK 9~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -9421,10 +9421,10 @@
     <!-- # P23811 = -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 10--Dynamic VPK -->
+    <!-- # VPK 10~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -9448,10 +9448,10 @@
     <!-- # P23815 = -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 11--Dynamic VPK -->
+    <!-- # VPK 11~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -9475,10 +9475,10 @@
     <!-- # P23819 = -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 12--Dynamic VPK -->
+    <!-- # VPK 12~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -9502,10 +9502,10 @@
     <!-- # P23823 = -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 13--Dynamic VPK -->
+    <!-- # VPK 13~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -9529,10 +9529,10 @@
     <!-- # P23827 = -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 14--Dynamic VPK -->
+    <!-- # VPK 14~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -9556,10 +9556,10 @@
     <!-- # P23831 = -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 15--Dynamic VPK -->
+    <!-- # VPK 15~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -9583,10 +9583,10 @@
     <!-- # P23835 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 16--Dynamic VPK -->
+    <!-- # VPK 16~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -9610,10 +9610,10 @@
     <!-- # P23839 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 17--Dynamic VPK -->
+    <!-- # VPK 17~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -9637,10 +9637,10 @@
     <!-- # P23843 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 18--Dynamic VPK -->
+    <!-- # VPK 18~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -9664,10 +9664,10 @@
     <!-- # P23847 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 19--Dynamic VPK -->
+    <!-- # VPK 19~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -9691,10 +9691,10 @@
     <!-- # P23851 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 20--Dynamic VPK -->
+    <!-- # VPK 20~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -9718,10 +9718,10 @@
     <!-- # P23855 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 21--Dynamic VPK -->
+    <!-- # VPK 21~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -9745,10 +9745,10 @@
     <!-- # P23859 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 22--Dynamic VPK -->
+    <!-- # VPK 22~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -9772,10 +9772,10 @@
     <!-- # P23863 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 23--Dynamic VPK -->
+    <!-- # VPK 23~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -9799,10 +9799,10 @@
     <!-- # P23867 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 24--Dynamic VPK -->
+    <!-- # VPK 24~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -9828,10 +9828,10 @@
     <!-- ###################################################################################### -->
     <!-- ############################ For GXP2170       ########################################### -->
     <!-- ###################################################################################### -->
-    <!-- # VPK 1-- fixed VPK  -->
+    <!-- # VPK 1~~ fixed VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is 0. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -9860,10 +9860,10 @@
     <!-- # P23968 = 0 -->
 
     <!-- ###################################################################################### -->
-    <!-- # VPK 2-- fixed VPK  -->
+    <!-- # VPK 2~~ fixed VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is 0. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -9892,10 +9892,10 @@
     <!-- # P23969 = 0 -->
 
     <!-- ###################################################################################### -->
-    <!-- # VPK 3 -- fixed VPK  -->
+    <!-- # VPK 3 ~~ fixed VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is 0. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -9924,10 +9924,10 @@
     <!-- # P23970 = 0 -->
 
     <!-- ###################################################################################### -->
-    <!-- # VPK 4 -- fixed VPK  -->
+    <!-- # VPK 4 ~~ fixed VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is 0. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -9956,10 +9956,10 @@
     <!-- # P23971 = 0 -->
 
     <!-- ###################################################################################### -->
-    <!-- # VPK 5 -- fixed VPK  -->
+    <!-- # VPK 5 ~~ fixed VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is 0. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -9988,10 +9988,10 @@
     <!-- # P23972 = 0 -->
 
     <!-- ###################################################################################### -->
-    <!-- # VPK 6 -- fixed VPK -->
+    <!-- # VPK 6 ~~ fixed VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is 0. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -10020,10 +10020,10 @@
     <!-- # P23973= 0 -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 7--fixed VPK -->
+    <!-- # VPK 7 ~~ fixed VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is -1. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -10052,10 +10052,10 @@
     <!-- # P23974 = 0 -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 8--fixed VPK -->
+    <!-- # VPK 8 ~~ fixed VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is -1. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -10084,10 +10084,10 @@
     <!-- # P23975 = 0 -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 9--fixed VPK -->
+    <!-- # VPK 9 ~~ fixed VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is -1. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -10116,10 +10116,10 @@
     <!-- # P23976 = 0 -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 10--fixed VPK -->
+    <!-- # VPK 10 ~~ fixed VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is -1. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -10148,10 +10148,10 @@
     <!-- # P23977 = 0 -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 11--fixed VPK -->
+    <!-- # VPK 11 ~~ fixed VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is -1. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -10180,10 +10180,10 @@
     <!-- # P23978 = 0 -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 12--fixed VPK -->
+    <!-- # VPK 12 ~~ fixed VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is -1. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -10212,10 +10212,10 @@
     <!-- # P23979 = 0 -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 13--Dynamic VPK -->
+    <!-- # VPK 13~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10239,10 +10239,10 @@
     <!-- # P23827 = -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 14--Dynamic VPK -->
+    <!-- # VPK 14~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10266,10 +10266,10 @@
     <!-- # P23831 = -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 15--Dynamic VPK -->
+    <!-- # VPK 15~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10293,10 +10293,10 @@
     <!-- # P23835 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 16--Dynamic VPK -->
+    <!-- # VPK 16~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10320,10 +10320,10 @@
     <!-- # P23839 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 17--Dynamic VPK -->
+    <!-- # VPK 17~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10347,10 +10347,10 @@
     <!-- # P23843 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 18--Dynamic VPK -->
+    <!-- # VPK 18~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10374,10 +10374,10 @@
     <!-- # P23847 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 19--Dynamic VPK -->
+    <!-- # VPK 19~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10401,10 +10401,10 @@
     <!-- # P23851 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 20--Dynamic VPK -->
+    <!-- # VPK 20~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10428,10 +10428,10 @@
     <!-- # P23855 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 21--Dynamic VPK -->
+    <!-- # VPK 21~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10455,10 +10455,10 @@
     <!-- # P23859 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 22--Dynamic VPK -->
+    <!-- # VPK 22~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10482,10 +10482,10 @@
     <!-- # P23863 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 23--Dynamic VPK -->
+    <!-- # VPK 23~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10509,10 +10509,10 @@
     <!-- # P23867 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 24--Dynamic VPK -->
+    <!-- # VPK 24~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10536,10 +10536,10 @@
     <!-- # P23871 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 25--Dynamic VPK -->
+    <!-- # VPK 25~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10563,10 +10563,10 @@
     <!-- # P23875 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 26--Dynamic VPK -->
+    <!-- # VPK 26~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10590,10 +10590,10 @@
     <!-- # P23879 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 27--Dynamic VPK -->
+    <!-- # VPK 27~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10617,10 +10617,10 @@
     <!-- # P23883 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 28--Dynamic VPK -->
+    <!-- # VPK 28~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10644,10 +10644,10 @@
     <!-- # P23887 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 29--Dynamic VPK -->
+    <!-- # VPK 29~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10671,10 +10671,10 @@
     <!-- # P23891 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 30--Dynamic VPK -->
+    <!-- # VPK 30~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10698,10 +10698,10 @@
     <!-- # P23895 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 31--Dynamic VPK -->
+    <!-- # VPK 31~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10725,10 +10725,10 @@
     <!-- # P23899 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 32--Dynamic VPK -->
+    <!-- # VPK 32~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10753,10 +10753,10 @@
 
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 33--Dynamic VPK -->
+    <!-- # VPK 33~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10780,10 +10780,10 @@
     <!-- # P23907 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 34--Dynamic VPK -->
+    <!-- # VPK 34~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10807,10 +10807,10 @@
     <!-- # P23911 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 35--Dynamic VPK -->
+    <!-- # VPK 35~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10834,10 +10834,10 @@
     <!-- # P23915 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 36--Dynamic VPK -->
+    <!-- # VPK 36~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10861,10 +10861,10 @@
     <!-- # P23919 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 37--Dynamic VPK -->
+    <!-- # VPK 37~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10888,10 +10888,10 @@
     <!-- # P23923 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 38--Dynamic VPK -->
+    <!-- # VPK 38~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10915,10 +10915,10 @@
     <!-- # P23927 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 39--Dynamic VPK -->
+    <!-- # VPK 39~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10942,10 +10942,10 @@
     <!-- # P23931 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 40--Dynamic VPK -->
+    <!-- # VPK 40~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10969,10 +10969,10 @@
     <!-- # P23935 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 41--Dynamic VPK -->
+    <!-- # VPK 41~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -10996,10 +10996,10 @@
     <!-- # P23939 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 42--Dynamic VPK -->
+    <!-- # VPK 42~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -11023,10 +11023,10 @@
     <!-- # P23943 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 43--Dynamic VPK -->
+    <!-- # VPK 43~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -11050,10 +11050,10 @@
     <!-- # P23947 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 44--Dynamic VPK -->
+    <!-- # VPK 44~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -11077,10 +11077,10 @@
     <!-- # P23951 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 45--Dynamic VPK -->
+    <!-- # VPK 45~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -11104,10 +11104,10 @@
     <!-- # P23955 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 46--Dynamic VPK -->
+    <!-- # VPK 46~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -11131,10 +11131,10 @@
     <!-- # P23959 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 47--Dynamic VPK -->
+    <!-- # VPK 47~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -11158,10 +11158,10 @@
     <!-- # P23963 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 48--Dynamic VPK -->
+    <!-- # VPK 48~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -11187,10 +11187,10 @@
     <!-- ###################################################################################### -->
     <!-- ############################ For GXP2135       ########################################### -->
     <!-- ###################################################################################### -->
-    <!-- # VPK 1-- fixed VPK  -->
+    <!-- # VPK 1~~ fixed VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is 0. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -11219,10 +11219,10 @@
     <!-- # P23968 = 0 -->
 
     <!-- ###################################################################################### -->
-    <!-- # VPK 2-- fixed VPK  -->
+    <!-- # VPK 2~~ fixed VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is 0. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -11251,10 +11251,10 @@
     <!-- # P23969 = 0 -->
 
     <!-- ###################################################################################### -->
-    <!-- # VPK 3 -- fixed VPK  -->
+    <!-- # VPK 3 ~~ fixed VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is 0. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -11283,10 +11283,10 @@
     <!-- # P23970 = 0 -->
 
     <!-- ###################################################################################### -->
-    <!-- # VPK 4 -- fixed VPK  -->
+    <!-- # VPK 4 ~~ fixed VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is 0. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -11315,10 +11315,10 @@
     <!-- # P23971 = 0 -->
 
     <!-- ###################################################################################### -->
-    <!-- # VPK 5 -- fixed VPK  -->
+    <!-- # VPK 5 ~~ fixed VPK  -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is -1. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -11347,10 +11347,10 @@
     <!-- # P23972 = 0 -->
 
     <!-- ###################################################################################### -->
-    <!-- # VPK 6 -- fixed VPK -->
+    <!-- # VPK 6 ~~ fixed VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is -1. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -11379,10 +11379,10 @@
     <!-- # P23973 = 0 -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 7--fixed VPK -->
+    <!-- # VPK 7 ~~ fixed VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is -1. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -11411,10 +11411,10 @@
     <!-- # P23974 = 0 -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 8--fixed VPK -->
+    <!-- # VPK 8 ~~ fixed VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for line VPK. Default  is -1. -->
-    <!-- # Number: -1, 0, 1, 10 -- 36 -->
+    <!-- # Number: -1, 0, 1, 10 ~~ 36 -->
     <!-- # -1 - None, 0 - Default, 1 - shared line, 10 - Speed Dial, 11 - BLF, 12 - Presence Watcher -->
     <!-- # 13 - Eventlist BLF, 14 - Speed Dial via active account, 15 - DialDTMF -->
     <!-- # 16 - Voicemail, 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom -->
@@ -11443,10 +11443,10 @@
     <!-- # P23975 = 0 -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 9--Dynamic VPK -->
+    <!-- # VPK 9~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -11470,10 +11470,10 @@
     <!-- # P23811 = -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 10--Dynamic VPK -->
+    <!-- # VPK 10~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -11497,10 +11497,10 @@
     <!-- # P23815 = -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 11--Dynamic VPK -->
+    <!-- # VPK 11~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -11524,10 +11524,10 @@
     <!-- # P23819 = -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 12--Dynamic VPK -->
+    <!-- # VPK 12~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -11551,10 +11551,10 @@
     <!-- # P23823 = -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 13--Dynamic VPK -->
+    <!-- # VPK 13~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -11578,10 +11578,10 @@
     <!-- # P23827 = -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 14--Dynamic VPK -->
+    <!-- # VPK 14~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -11605,10 +11605,10 @@
     <!-- # P23831 = -->
 
     <!-- ######################################################################################  -->
-    <!-- # VPK 15--Dynamic VPK -->
+    <!-- # VPK 15~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -11632,10 +11632,10 @@
     <!-- # P23835 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 16--Dynamic VPK -->
+    <!-- # VPK 16~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -11659,10 +11659,10 @@
     <!-- # P23839 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 17--Dynamic VPK -->
+    <!-- # VPK 17~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -11686,10 +11686,10 @@
     <!-- # P23843 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 18--Dynamic VPK -->
+    <!-- # VPK 18~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -11713,10 +11713,10 @@
     <!-- # P23847 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 19--Dynamic VPK -->
+    <!-- # VPK 19~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -11740,10 +11740,10 @@
     <!-- # P23851 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 20--Dynamic VPK -->
+    <!-- # VPK 20~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -11767,10 +11767,10 @@
     <!-- # P23855 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 21--Dynamic VPK -->
+    <!-- # VPK 21~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -11794,10 +11794,10 @@
     <!-- # P23859 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 22--Dynamic VPK -->
+    <!-- # VPK 22~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -11821,10 +11821,10 @@
     <!-- # P23863 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 23--Dynamic VPK -->
+    <!-- # VPK 23~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -11848,10 +11848,10 @@
     <!-- # P23867 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 24--Dynamic VPK -->
+    <!-- # VPK 24~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -11875,10 +11875,10 @@
     <!-- # P23871 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 25--Dynamic VPK -->
+    <!-- # VPK 25~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -11902,10 +11902,10 @@
     <!-- # P23875 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 26--Dynamic VPK -->
+    <!-- # VPK 26~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK. -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -11929,10 +11929,10 @@
     <!-- # P23879 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 27--Dynamic VPK -->
+    <!-- # VPK 27~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -11956,10 +11956,10 @@
     <!-- # P23883 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 28--Dynamic VPK -->
+    <!-- # VPK 28~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -11983,10 +11983,10 @@
     <!-- # P23887 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 29--Dynamic VPK -->
+    <!-- # VPK 29~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -12010,10 +12010,10 @@
     <!-- # P23891 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 30--Dynamic VPK -->
+    <!-- # VPK 30~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -12037,10 +12037,10 @@
     <!-- # P23895 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 31--Dynamic VPK -->
+    <!-- # VPK 31~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -12064,10 +12064,10 @@
     <!-- # P23899 = -->
 
     <!-- #####################################################################################  -->
-    <!-- # VPK 32--Dynamic VPK -->
+    <!-- # VPK 32~~ Dynamic VPK -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode for Dynamic VPK.  -->
-    <!-- # Number: -1 -- 26 -->
+    <!-- # Number: -1 ~~ 26 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -12097,7 +12097,7 @@
     <!-- # MPK 1- GXP2130/2160 only -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -12189,7 +12189,7 @@
     <!-- # MPK 2- GXP2130/2160 only -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -12215,7 +12215,7 @@
     <!-- # MPK 3- GXP2130/2160 only -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -12241,7 +12241,7 @@
     <!-- # MPK 4- GXP2130/2160 only -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -12267,7 +12267,7 @@
     <!-- # MPK 5- GXP2130/2160 only -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -12293,7 +12293,7 @@
     <!-- # MPK 6- GXP2130/2160 only -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -12319,7 +12319,7 @@
     <!-- # MPK 7- GXP2130/2160 only -->
     <!-- ######################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -12345,7 +12345,7 @@
     <!-- # MPK 8- GXP2130/2160 only -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -12373,7 +12373,7 @@
     <!-- # MPK 9 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -12399,7 +12399,7 @@
     <!-- # MPK 10 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -12425,7 +12425,7 @@
     <!-- # MPK 11 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -12451,7 +12451,7 @@
     <!-- # MPK 12 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -12477,7 +12477,7 @@
     <!-- # MPK 13 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -12503,7 +12503,7 @@
     <!-- # MPK 14 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -12529,7 +12529,7 @@
     <!-- # MPK 15 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -12555,7 +12555,7 @@
     <!-- # MPK 16 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -12581,7 +12581,7 @@
     <!-- # MPK 17 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -12607,7 +12607,7 @@
     <!-- # MPK 18 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -12633,7 +12633,7 @@
     <!-- # MPK 19 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -12659,7 +12659,7 @@
     <!-- # MPK 20 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -12685,7 +12685,7 @@
     <!-- # MPK 21 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -12711,7 +12711,7 @@
     <!-- # MPK 22 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -12737,7 +12737,7 @@
     <!-- # MPK 23 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -12763,7 +12763,7 @@
     <!-- # MPK 24 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13025,7 +13025,7 @@
     <!-- # EXT 1 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13071,7 +13071,7 @@
     <!-- # EXT MPK 2 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13096,7 +13096,7 @@
     <!-- # EXT MPK 3 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13121,7 +13121,7 @@
     <!-- # EXT MPK 4 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13146,7 +13146,7 @@
     <!-- # EXT MPK 5 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13171,7 +13171,7 @@
     <!-- # EXT MPK 6 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13196,7 +13196,7 @@
     <!-- # EXT MPK 7 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13221,7 +13221,7 @@
     <!-- # EXT MPK 8 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13246,7 +13246,7 @@
     <!-- # EXT MPK 9 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13271,7 +13271,7 @@
     <!-- # EXT MPK 10 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13296,7 +13296,7 @@
     <!-- # EXT MPK 11 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13321,7 +13321,7 @@
     <!-- # EXT MPK 12 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13346,7 +13346,7 @@
     <!-- # EXT MPK 13 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13371,7 +13371,7 @@
     <!-- # EXT MPK 14 -->
     <!-- ####################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13396,7 +13396,7 @@
     <!-- # EXT MPK 15 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13421,7 +13421,7 @@
     <!-- # EXT MPK 16 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13446,7 +13446,7 @@
     <!-- # EXT MPK 17 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13471,7 +13471,7 @@
     <!-- # EXT MPK 18 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13496,7 +13496,7 @@
     <!-- # EXT MPK 19 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13521,7 +13521,7 @@
     <!-- # EXT MPK 20 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13546,7 +13546,7 @@
     <!-- # EXT MPK 21 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13571,7 +13571,7 @@
     <!-- # EXT MPK 22 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13596,7 +13596,7 @@
     <!-- # EXT MPK 23 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13621,7 +13621,7 @@
     <!-- # EXT MPK 24 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13646,7 +13646,7 @@
     <!-- # EXT MPK 25 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13671,7 +13671,7 @@
     <!-- # EXT MPK 26 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13696,7 +13696,7 @@
     <!-- # EXT MPK 27 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13721,7 +13721,7 @@
     <!-- # EXT MPK 28 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13746,7 +13746,7 @@
     <!-- # EXT MPK 29 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13771,7 +13771,7 @@
     <!-- # EXT MPK 30 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13796,7 +13796,7 @@
     <!-- # EXT MPK 31 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13821,7 +13821,7 @@
     <!-- # EXT MPK 32 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13846,7 +13846,7 @@
     <!-- # EXT MPK 33 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13871,7 +13871,7 @@
     <!-- # EXT MPK 34 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13896,7 +13896,7 @@
     <!-- # EXT MPK 35 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13921,7 +13921,7 @@
     <!-- # EXT MPK 36 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13946,7 +13946,7 @@
     <!-- # EXT MPK 37 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13971,7 +13971,7 @@
     <!-- # EXT MPK 38 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -13996,7 +13996,7 @@
     <!-- # EXT MPK 39 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14021,7 +14021,7 @@
     <!-- # EXT MPK 40 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14051,7 +14051,7 @@
     <!-- # EXT MPK 41 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14076,7 +14076,7 @@
     <!-- # EXT MPK 42 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14101,7 +14101,7 @@
     <!-- # EXT MPK 43 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14126,7 +14126,7 @@
     <!-- # EXT MPK 44 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14151,7 +14151,7 @@
     <!-- # EXT MPK 45 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14176,7 +14176,7 @@
     <!-- # EXT MPK 46 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14201,7 +14201,7 @@
     <!-- # EXT MPK 47 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14226,7 +14226,7 @@
     <!-- # EXT MPK 48 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14251,7 +14251,7 @@
     <!-- # EXT MPK 49 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14276,7 +14276,7 @@
     <!-- # EXT MPK 50 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14301,7 +14301,7 @@
     <!-- # EXT MPK 51 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14326,7 +14326,7 @@
     <!-- # EXT MPK 52 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14351,7 +14351,7 @@
     <!-- # EXT MPK 53 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14376,7 +14376,7 @@
     <!-- # EXT MPK 54 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14401,7 +14401,7 @@
     <!-- # EXT MPK 55 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14426,7 +14426,7 @@
     <!-- # EXT MPK 56 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14451,7 +14451,7 @@
     <!-- # EXT MPK 57 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14476,7 +14476,7 @@
     <!-- # EXT MPK 58 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14501,7 +14501,7 @@
     <!-- # EXT MPK 59 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14526,7 +14526,7 @@
     <!-- # EXT MPK 60 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14551,7 +14551,7 @@
     <!-- # EXT MPK 61 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14576,7 +14576,7 @@
     <!-- # EXT MPK 62 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14601,7 +14601,7 @@
     <!-- # EXT MPK 63 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14626,7 +14626,7 @@
     <!-- # EXT MPK 64 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14651,7 +14651,7 @@
     <!-- # EXT MPK 65 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14676,7 +14676,7 @@
     <!-- # EXT MPK 66 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14701,7 +14701,7 @@
     <!-- # EXT MPK 67 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14726,7 +14726,7 @@
     <!-- # EXT MPK 68 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14751,7 +14751,7 @@
     <!-- # EXT MPK 69 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14776,7 +14776,7 @@
     <!-- # EXT MPK 70 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14801,7 +14801,7 @@
     <!-- # EXT MPK 71 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14826,7 +14826,7 @@
     <!-- # EXT MPK 72 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14851,7 +14851,7 @@
     <!-- # EXT MPK 73 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14876,7 +14876,7 @@
     <!-- # EXT MPK 74 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14901,7 +14901,7 @@
     <!-- # EXT MPK 75 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14926,7 +14926,7 @@
     <!-- # EXT MPK 76 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14951,7 +14951,7 @@
     <!-- # EXT MPK 77 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -14976,7 +14976,7 @@
     <!-- # EXT MPK 78 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15001,7 +15001,7 @@
     <!-- # EXT MPK 79 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15026,7 +15026,7 @@
     <!-- # EXT MPK 80 -->
     <!-- ###################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15057,7 +15057,7 @@
     <!-- # EXT MPK 81 -->
     <!-- ####################################################################################### -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15082,7 +15082,7 @@
     <!-- # EXT MPK 82 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15107,7 +15107,7 @@
     <!-- # EXT MPK 83 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15132,7 +15132,7 @@
     <!-- # EXT MPK 84 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15157,7 +15157,7 @@
     <!-- # EXT MPK 85 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15182,7 +15182,7 @@
     <!-- # EXT MPK 86 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15207,7 +15207,7 @@
     <!-- # EXT MPK 87 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15232,7 +15232,7 @@
     <!-- # EXT MPK 88 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15257,7 +15257,7 @@
     <!-- # EXT MPK 89 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15282,7 +15282,7 @@
     <!-- # EXT MPK 90 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15307,7 +15307,7 @@
     <!-- # EXT MPK 91 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15332,7 +15332,7 @@
     <!-- # EXT MPK 92 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15357,7 +15357,7 @@
     <!-- # EXT MPK 93 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15382,7 +15382,7 @@
     <!-- # EXT MPK 94 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15407,7 +15407,7 @@
     <!-- # EXT MPK 95 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15432,7 +15432,7 @@
     <!-- # EXT MPK 96 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15457,7 +15457,7 @@
     <!-- # EXT MPK 97 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15482,7 +15482,7 @@
     <!-- # EXT MPK 98 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15507,7 +15507,7 @@
     <!-- # EXT MPK 99 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15532,7 +15532,7 @@
     <!-- # EXT MPK 100 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15557,7 +15557,7 @@
     <!-- # EXT MPK 101 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15582,7 +15582,7 @@
     <!-- # EXT MPK 102 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15607,7 +15607,7 @@
     <!-- # EXT MPK 103 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15632,7 +15632,7 @@
     <!-- # EXT MPK 104 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15657,7 +15657,7 @@
     <!-- # EXT MPK 105 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15682,7 +15682,7 @@
     <!-- # EXT MPK 106 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15707,7 +15707,7 @@
     <!-- # EXT MPK 107 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15732,7 +15732,7 @@
     <!-- # EXT MPK 108 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15757,7 +15757,7 @@
     <!-- # EXT MPK 109 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15782,7 +15782,7 @@
     <!-- # EXT MPK 110 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15807,7 +15807,7 @@
     <!-- # EXT MPK 111 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15832,7 +15832,7 @@
     <!-- # EXT MPK 112 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15857,7 +15857,7 @@
     <!-- # EXT MPK 113 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15882,7 +15882,7 @@
     <!-- # EXT MPK 114 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15907,7 +15907,7 @@
     <!-- # EXT MPK 115 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15932,7 +15932,7 @@
     <!-- # EXT MPK 116 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15957,7 +15957,7 @@
     <!-- # EXT MPK 117 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -15982,7 +15982,7 @@
     <!-- # EXT MPK 118 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16007,7 +16007,7 @@
     <!-- # EXT MPK 119 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16032,7 +16032,7 @@
     <!-- # EXT MPK 120 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16062,7 +16062,7 @@
     <!-- # EXT MPK 121 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16087,7 +16087,7 @@
     <!-- # EXT MPK 122 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16112,7 +16112,7 @@
     <!-- # EXT MPK 123 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16137,7 +16137,7 @@
     <!-- # EXT MPK 124 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16162,7 +16162,7 @@
     <!-- # EXT MPK 125 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16187,7 +16187,7 @@
     <!-- # EXT MPK 126 -->
     <!-- ##################################################################################################  -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16212,7 +16212,7 @@
     <!-- # EXT MPK 127 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16237,7 +16237,7 @@
     <!-- # EXT MPK 128 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16262,7 +16262,7 @@
     <!-- # EXT MPK 129 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16287,7 +16287,7 @@
     <!-- # EXT MPK 130 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16312,7 +16312,7 @@
     <!-- # EXT MPK 131 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16337,7 +16337,7 @@
     <!-- # EXT MPK 132 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16362,7 +16362,7 @@
     <!-- # EXT MPK 133 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16387,7 +16387,7 @@
     <!-- # EXT MPK 134 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16412,7 +16412,7 @@
     <!-- # EXT MPK 135 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16437,7 +16437,7 @@
     <!-- # EXT MPK 136 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16462,7 +16462,7 @@
     <!-- # EXT MPK 137 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16487,7 +16487,7 @@
     <!-- # EXT MPK 138 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16512,7 +16512,7 @@
     <!-- # EXT MPK 139 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16537,7 +16537,7 @@
     <!-- # EXT MPK 140 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16562,7 +16562,7 @@
     <!-- # EXT MPK 141 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16587,7 +16587,7 @@
     <!-- # EXT MPK 142 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16612,7 +16612,7 @@
     <!-- # EXT MPK 143 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16637,7 +16637,7 @@
     <!-- # EXT MPK 144 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16662,7 +16662,7 @@
     <!-- # EXT MPK 145 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16687,7 +16687,7 @@
     <!-- # EXT MPK 146 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16712,7 +16712,7 @@
     <!-- # EXT MPK 147 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16737,7 +16737,7 @@
     <!-- # EXT MPK 148 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16762,7 +16762,7 @@
     <!-- # EXT MPK 149 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16787,7 +16787,7 @@
     <!-- # EXT MPK 150 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16812,7 +16812,7 @@
     <!-- # EXT MPK 151 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16837,7 +16837,7 @@
     <!-- # EXT MPK 152 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16862,7 +16862,7 @@
     <!-- # EXT MPK 153 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16887,7 +16887,7 @@
     <!-- # EXT MPK 154 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16912,7 +16912,7 @@
     <!-- # EXT MPK 155 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16937,7 +16937,7 @@
     <!-- # EXT MPK 156 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16962,7 +16962,7 @@
     <!-- # EXT MPK 157 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -16987,7 +16987,7 @@
     <!-- # EXT MPK 158 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -17012,7 +17012,7 @@
     <!-- # EXT MPK 159 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
@@ -17037,7 +17037,7 @@
     <!-- # EXT MPK 160 -->
     <!-- ################################################################################################## -->
     <!-- # Key Mode. -->
-    <!-- # Number: -1 -- 20 -->
+    <!-- # Number: -1 ~~ 20 -->
     <!-- # -1 - None, 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher -->
     <!-- # 3 - Eventlist BLF, 4 - Speed Dial via active account, 5 - Dial DTMF -->
     <!-- # 6 - Voice Mail, 7 - Call Return, 8 - Transfer, 9 - Call Park, 10 - Intercom -->
