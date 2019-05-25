@@ -456,7 +456,7 @@
 <!--  Register Expiration (in minutes. default 1 hour, max 45 days) -->
 <!--  Number: 1 to 64800 -->
 <!--  Mandatory -->
-<P32>3</P32>
+<P32>{$account.1.register_expires}</P32>
 
 <!--  Reregister before Expiration -->
 <!--  Number -->
@@ -1123,7 +1123,7 @@
 <!--  Register Expiration (in minutes. default 1 hour, max 45 days) -->
 <!--  Number: 1 to 64800 -->
 <!--  Mandatory -->
-<P732>3</P732>
+<P732>{$account.2.register_expires}</P732>
 
 <!--  Reregister before Expiration -->
 <!--  Number -->
