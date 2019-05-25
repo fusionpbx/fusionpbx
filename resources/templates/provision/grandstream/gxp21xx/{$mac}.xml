@@ -46,7 +46,7 @@
     <!-- Unregister On Reboot. 0 - No, 1 - Yes. Default is 0 -->
     <P81>0</P81>
     <!-- Register Expiration (in minutes). Default is 60. Max about 45 days -->
-    <P32>3</P32>
+    <P32>{$account.1.register_expires}</P32>
     <!-- Reregister Before Expiration (in seconds). Default is 0 second -->
     <P2330>0</P2330>
     <!-- Local SIP Port. Default is 5060 -->
@@ -456,7 +456,7 @@
     <!-- Register Expiration (in minutes). Default is 60. Max is 45 days -->
     <!-- Number: 1 - 64800 -->
     <!-- Mandatory -->
-    <P412>3</P412>
+    <P412>{$account.2.register_expires}</P412>
     <!-- Reregister Before Expiration (in seconds). Default is 0 -->
     <!-- Number: 0 - 64800 -->
     <!-- Mandatory -->
@@ -887,7 +887,7 @@
     <!-- Register Expiration (in minutes). Default is 60. Max is 45 days -->
     <!-- Number: 1 - 64800 -->
     <!-- Mandatory -->
-    <P512>3</P512>
+    <P512>{$account.3.register_expires}</P512>
     <!-- Reregister before Expiration (in seconds). Default is 0 second -->
     <!-- Number: 0 - 64800 -->
     <!-- Mandatory -->
@@ -1317,7 +1317,7 @@
     <!-- Register Expiration (in minutes). Default is 60. Max is 45 days -->
     <!-- Number: 1 - 64800 -->
     <!-- Mandatory -->
-    <P612>3</P612>
+    <P612>{$account.4.register_expires}</P612>
     <!-- Reregister before Expiration (in seconds). Default is 0 -->
     <!-- Number: 0 - 64800 -->
     <!-- Mandatory -->
@@ -1742,7 +1742,7 @@
     <!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
     <!-- Number: 1-64800 -->
     <!-- Mandatory -->
-    <P1712>3</P1712>
+    <P1712>{$account.5.register_expires}</P1712>
     <!-- Reregister before Expiration (in seconds) Default is 0 -->
     <!-- Number: 0 - 64800 -->
     <!-- Mandatory -->
@@ -2172,7 +2172,7 @@
     <!-- Register Expiration (in minutes). Default is 60. Max is 45 days -->
     <!-- Number: 1 - 64800 -->
     <!-- Mandatory -->
-    <P1812>3</P1812>
+    <P1812>{$account.6.register_expires}</P1812>
     <!-- Reregister before Expiration (in seconds). Default is 0 -->
     <!-- Number: 1 - 64800 -->
     <!-- Mandatory -->
