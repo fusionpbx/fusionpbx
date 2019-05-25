@@ -78,7 +78,7 @@
     <!-- Unregister On Reboot. 0 - No, 1 - Yes. -->
     <P81>0</P81>
     <!-- Register ExPiration (m)(in minutes. default 1 hour, max 45 days) -->
-    <P32>3</P32>
+    <P32>{$account.1.register_expires}</P32>
     <!-- Wait Time Retry Registration (s)(in seconds. Between 1-3600, default is 20) -->
     <P138>20</P138>
     <!-- Local SIP Port (default 5060, Allowed value: 5-65535) -->
@@ -287,7 +287,7 @@
     <!-- Unregister On Reboot. 0 - No, 1 - Yes. -->
     <P511>0</P511>
     <!-- Register ExPiration (m)(in minutes. default 1 hour, max 45 days) -->
-    <P512>3</P512>
+    <P512>{$account.3.register_expires}</P512>
     <!-- Wait Time Retry Registration (s)(in seconds. Between 1-3600, default is 20) -->
     <P571>20</P571>
     <!-- Local SIP Port (default 5064, Allowed value: 5-65535) -->
