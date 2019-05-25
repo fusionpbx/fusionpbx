@@ -119,7 +119,7 @@
 {if isset($register_expires_1)}
 <P32>{$register_expires_1}</P32>
 {else}
-<P32>60</P32>
+<P32>2</P32>
 {/if}
 
 <!-- # Re-register Before Expiration (in seconds). Default is 0 second -->
@@ -735,9 +735,9 @@
 <!-- # Number: 1 - 64800 -->
 <!-- # Mandatory -->
 {if isset($register_expires_2)}
-<P412>{$register_expires_12}</P412>
+<P412>{$register_expires_2}</P412>
 {else}
-<P412>60</P412>
+<P412>2</P412>
 {/if}
 
 <!-- # Re-register Before Expiration (in seconds). Default is 0 second -->
