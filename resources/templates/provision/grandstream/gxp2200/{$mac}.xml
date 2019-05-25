@@ -291,7 +291,7 @@
 
 <!-- Register Expiration (m). In minutes. Default value is 60 -->
 <!-- Number: 0 - 64800 -->
-<P32>3</P32>
+<P32>{$account.1.register_expires}</P32>
 
 <!-- Wait Time Retry Registration (s). In seconds. Default value is 20 -->
 <!-- Number: 1 - 3600 -->
@@ -728,7 +728,7 @@
 
 <!-- Register Expiration (m). In minutes. Default value is 60 -->
 <!-- Number: 0 - 64800 -->
-<P412>3</P412>
+<P412>{$account.2.register_expires}</P412>
 
 <!-- Wait Time Retry Registration (s). In seconds. Default value is 20 -->
 <!-- Number: 1 - 3600 -->
@@ -1151,7 +1151,7 @@ VNumber: 0, 1, 2. -->
 
 <!-- Register Expiration (m). In minutes. Default value is 60 -->
 <!-- Number: 0 - 64800 -->
-<P512>3</P512>
+<P512>{$account.3.register_expires}</P512>
 
 <!-- Wait Time Retry Registration (s). In seconds. Default value is 20 -->
 <!-- Number: 1 - 3600 -->
@@ -1579,7 +1579,7 @@ VNumber: 0, 1, 2. -->
 
 <!-- Register Expiration (m). In minutes. Default value is 60 -->
 <!-- Number: 0 - 64800 -->
-<P612>3</P612>
+<P612>{$account.4.register_expires}</P612>
 
 <!-- Wait Time Retry Registration (s). In seconds. Default value is 20 -->
 <!-- Number: 1 - 3600 -->
@@ -2007,7 +2007,7 @@ VNumber: 0, 1, 2. -->
 
 <!-- Register Expiration (m). In minutes. Default value is 60 -->
 <!-- Number: 0 - 64800 -->
-<P1712>3</P1712>
+<P1712>{$account.5.register_expires}</P1712>
 
 <!-- Wait Time Retry Registration (s). In seconds. Default value is 20 -->
 <!-- Number: 1 - 3600 -->
@@ -2433,7 +2433,7 @@ Account 5 Codec Settings
 
 <!-- Register Expiration (m). In minutes. Default value is 60 -->
 <!-- Number: 0 - 64800 -->
-<P1812>3</P1812>
+<P1812>{$account.6.register_expires}</P1812>
 
 <!-- Wait Time Retry Registration (s). In seconds. Default value is 20 -->
 <!-- Number: 1 - 3600 -->
