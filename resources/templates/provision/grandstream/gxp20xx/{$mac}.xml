@@ -369,7 +369,7 @@
 <P288>0</P288>
 
 <!--  Register Expiration (in minutes. default 1 hour, max 45 days) -->
-<P32>3</P32>
+<P32>{$account.1.register_expires}</P32>
 
 <!--  Local SIP port (default 5060) -->
 <P40>5060</P40>
@@ -580,7 +580,7 @@
 <P489>0</P489>
 
 <!--  Register Expiration (in minutes. default 1 hour, max 45 days) -->
-<P412>3</P412>
+<P412>{$account.2.register_expires}</P412>
 
 <!--  Local SIP port (default 5062) -->
 <P413>5062</P413>
@@ -791,7 +791,7 @@
 <P589>0</P589>
 
 <!--  Register Expiration (in minutes. default 1 hour, max 45 days) -->
-<P512>3</P512>
+<P512>{$account.3.register_expires}</P512>
 
 <!--  Local SIP port (default 5064) -->
 <P513>5064</P513>
@@ -1003,7 +1003,7 @@
 <P689>0</P689>
 
 <!--  Register Expiration (in minutes. default 1 hour, max 45 days) -->
-<P612>3</P612>
+<P612>{$account.4.register_expires}</P612>
 
 <!--  Local SIP port (default 5066) -->
 <P613>5066</P613>
@@ -1214,7 +1214,7 @@
 <P1789>0</P1789>
 
 <!--  Register Expiration (in minutes. default 1 hour, max 45 days) -->
-<P1712>3</P1712>
+<P1712>{$account.5.register_expires}</P1712>
 
 <!--  Local SIP port (default 5066) -->
 <P1713>5068</P1713>
@@ -1423,7 +1423,7 @@
 <P1889>0</P1889>
 
 <!--  Register Expiration (in minutes. default 1 hour, max 45 days) -->
-<P1812>3</P1812>
+<P1812>{$account.6.register_expires}</P1812>
 
 <!--  Local SIP port (default 5066) -->
 <P1813>5070</P1813>
