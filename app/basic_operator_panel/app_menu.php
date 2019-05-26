@@ -22,7 +22,7 @@
 	$apps[$x]['menu'][$y]['uuid'] = "dd3d173a-5d51-4231-ab22-b18c5b712bb2";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
 	$apps[$x]['menu'][$y]['category'] = "internal";
-	$apps[$x]['menu'][$y]['path'] = "/app/operator_panel/index.php";
+	$apps[$x]['menu'][$y]['path'] = "/app/basic_operator_panel/index.php";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
 
