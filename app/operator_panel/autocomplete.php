@@ -17,21 +17,25 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('contact_view')) {
-	//access granted
-}
-else {
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('contact_view')) {
+		//access granted
+	}
+	else {
+		exit;
+	}
 
 //search term
 	$term = check_str($_GET['term']);
@@ -58,40 +62,42 @@ else {
 	//add user's uuid to group uuid list to include private (non-shared) contacts
 	$user_group_uuids[] = $_SESSION["user_uuid"];
 
+//create the database object
+	$database = new database;
+
 //get extensions list
-	$sql = "select ";
-	$sql .= "e.extension, ";
-	$sql .= "e.effective_caller_id_name, ";
-	$sql .= "concat(e.directory_first_name, ' ', e.directory_last_name) as directory_full_name ";
-	$sql .= "from ";
-	$sql .= "v_extensions e ";
-	$sql .= "where ";
+	$sql = "select \n";
+	$sql .= "e.extension, \n";
+	$sql .= "e.effective_caller_id_name, \n";
+	$sql .= "concat(e.directory_first_name, ' ', e.directory_last_name) as directory_full_name \n";
+	$sql .= "from \n";
+	$sql .= "v_extensions e \n";
+	$sql .= "where \n";
 	foreach ($terms as $index => $term) {
-		$sql .= "( ";
-		$sql .= "	lower(e.effective_caller_id_name) like lower('%".$term."%') or ";
-		$sql .= "	lower(e.outbound_caller_id_name) like lower('%".$term."%') or ";
-		$sql .= "	lower(concat(e.directory_first_name, ' ', e.directory_last_name)) like lower('%".$term."%') or ";
-		$sql .= "	lower(e.description) like lower('%".$term."%') or ";
-		$sql .= "	lower(e.call_group) like lower('%".$term."%') or ";
-		$sql .= "	e.extension like '%".$term."%' ";
-		$sql .= ") ";
+		$sql .= "( \n";
+		$sql .= "	lower(e.effective_caller_id_name) like lower('%".$term."%') or \n";
+		$sql .= "	lower(e.outbound_caller_id_name) like lower('%".$term."%') or \n";
+		$sql .= "	lower(concat(e.directory_first_name, ' ', e.directory_last_name)) like lower('%".$term."%') or \n";
+		$sql .= "	lower(e.description) like lower('%".$term."%') or \n";
+		$sql .= "	lower(e.call_group) like lower('%".$term."%') or \n";
+		$sql .= "	e.extension like '%".$term."%' \n";
+		$sql .= ") \n";
 		if ($index + 1 < sizeof($terms)) {
-			$sql .= " and ";
+			$sql .= " and \n";
 		}
 	}
-	$sql .= "and e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "and e.enabled = 'true' ";
-	$sql .= "order by ";
-	$sql .= "directory_full_name asc, ";
-	$sql .= "e.effective_caller_id_name asc ";
+	$sql .= "and e.domain_uuid = '".$_SESSION['domain_uuid']."' \n";
+	$sql .= "and e.enabled = 'true' \n";
+	$sql .= "order by \n";
+	$sql .= "directory_full_name asc, \n";
+	$sql .= "e.effective_caller_id_name asc \n";
 	if (isset($_GET['debug'])) { echo $sql."<br><br>"; }
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
 	unset ($prep_statement, $sql);
 
-	if ($result_count > 0) {
+	if (is_array($result)) {
 		if (isset($_GET['debug'])) { echo $result."<br><br>"; }
 		foreach($result as $row) {
 			if ($row['directory_full_name'] != '') { $values[] = $row['directory_full_name']; }
@@ -104,60 +110,59 @@ else {
 	}
 
 //get contacts list
-	$sql = "select ";
-	$sql .= "c.contact_organization, ";
-	$sql .= "c.contact_name_given, ";
-	$sql .= "c.contact_name_middle, ";
-	$sql .= "c.contact_name_family, ";
-	$sql .= "c.contact_nickname, ";
-	$sql .= "p.phone_number, ";
-	$sql .= "p.phone_label ";
-	$sql .= "from ";
-	$sql .= "v_contacts as c, ";
-	$sql .= "v_contact_phones as p ";
-	$sql .= "where ";
+	$sql = "select \n";
+	$sql .= "c.contact_organization, \n";
+	$sql .= "c.contact_name_given, \n";
+	$sql .= "c.contact_name_middle, \n";
+	$sql .= "c.contact_name_family, \n";
+	$sql .= "c.contact_nickname, \n";
+	$sql .= "p.phone_number, \n";
+	$sql .= "p.phone_label \n";
+	$sql .= "from \n";
+	$sql .= "v_contacts as c, \n";
+	$sql .= "v_contact_phones as p \n";
+	$sql .= "where \n";
 	foreach ($terms as $index => $term) {
-		$sql .= "( ";
-		$sql .= "	lower(c.contact_organization) like lower('%".$term."%') or ";
-		$sql .= "	lower(c.contact_name_given) like lower('%".$term."%') or ";
-		$sql .= "	lower(c.contact_name_middle) like lower('%".$term."%') or ";
-		$sql .= "	lower(c.contact_name_family) like lower('%".$term."%') or ";
-		$sql .= "	lower(c.contact_nickname) like lower('%".$term."%') or ";
-		$sql .= "	p.phone_number like '%".$term."%' ";
-		$sql .= ") ";
+		$sql .= "( \n";
+		$sql .= "	lower(c.contact_organization) like lower('%".$term."%') or \n";
+		$sql .= "	lower(c.contact_name_given) like lower('%".$term."%') or \n";
+		$sql .= "	lower(c.contact_name_middle) like lower('%".$term."%') or \n";
+		$sql .= "	lower(c.contact_name_family) like lower('%".$term."%') or \n";
+		$sql .= "	lower(c.contact_nickname) like lower('%".$term."%') or \n";
+		$sql .= "	p.phone_number like '%".$term."%' \n";
+		$sql .= ") \n";
 		if ($index + 1 < sizeof($terms)) {
-			$sql .= " and ";
+			$sql .= " and \n";
 		}
 	}
-	$sql .= "and c.contact_uuid = p.contact_uuid ";
-	$sql .= "and c.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "and c.contact_uuid = p.contact_uuid \n";
+	$sql .= "and c.domain_uuid = '".$_SESSION['domain_uuid']."' \n";
 	if (sizeof($user_group_uuids) > 0) {
 		$sql .= "and ( \n"; //only contacts assigned to current user's group(s) and those not assigned to any group
 		$sql .= "	c.contact_uuid in ( \n";
-		$sql .= "		select contact_uuid from v_contact_groups ";
-		$sql .= "		where group_uuid in ('".implode("','", $user_group_uuids)."') ";
-		$sql .= "		and domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "		select contact_uuid from v_contact_groups \n";
+		$sql .= "		where group_uuid in ('".implode("','", $user_group_uuids)."') \n";
+		$sql .= "		and domain_uuid = '".$_SESSION['domain_uuid']."' \n";
 		$sql .= "	) \n";
 		$sql .= "	or \n";
 		$sql .= "	c.contact_uuid not in ( \n";
-		$sql .= "		select contact_uuid from v_contact_groups ";
-		$sql .= "		where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "		select contact_uuid from v_contact_groups \n";
+		$sql .= "		where domain_uuid = '".$_SESSION['domain_uuid']."' \n";
 		$sql .= "	) \n";
 		$sql .= ") \n";
 	}
-	$sql .= "and p.phone_type_voice = 1 ";
-	$sql .= "order by ";
-	$sql .= "contact_organization desc, ";
-	$sql .= "contact_name_given asc, ";
-	$sql .= "contact_name_family asc ";
+	$sql .= "and p.phone_type_voice = 1 \n";
+	$sql .= "order by \n";
+	$sql .= "contact_organization desc, \n";
+	$sql .= "contact_name_given asc, \n";
+	$sql .= "contact_name_family asc \n";
 	if (isset($_GET['debug'])) { echo $sql."<br><br>"; }
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
 	unset($prep_statement, $sql);
 
-	if ($result_count > 0) {
+	if (is_array($result)) {
 		foreach($result as $row) {
 			if ($row['contact_organization'] != '') { $values[] = $row['contact_organization']; }
 
@@ -184,4 +189,5 @@ else {
 		echo $resp;
 		if (isset($_GET['debug'])) { echo "</pre>"; }
 	}
+
 ?>
