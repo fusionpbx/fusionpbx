@@ -126,7 +126,7 @@
 
 //ajax refresh
 	var refresh = 1500;
-	var source_url = 'index_inc.php?' <?php if (isset($_GET['debug'])) { echo " + '&debug'"; } ?>;
+	var source_url = 'resources/content.php?' <?php if (isset($_GET['debug'])) { echo " + '&debug'"; } ?>;
 	var interval_timer_id;
 
 	function loadXmlHttp(url, id) {
