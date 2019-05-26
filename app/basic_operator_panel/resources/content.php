@@ -40,7 +40,7 @@
 
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get();
+	$text = $language->get(null,'app/basic_operator_panel');
 
 //get the call activity
 	$operator_panel = new basic_operator_panel;
