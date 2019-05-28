@@ -41,12 +41,35 @@
 	$order_by = check_str($_GET["order_by"]);
 	$order = check_str($_GET["order"]);
 
+//validate the order
+	switch ($order) {
+		case 'asc':
+			break;
+		case 'desc':
+			break;
+		default:
+			$order = '';
+	}
+
+//validate the order by
+	switch ($order_by) {
+		case 'node_type':
+			break;
+		case 'node_cidr':
+			break;
+		case 'node_domain':
+			break;
+		case 'node_description':
+			break;
+		default:
+			$order_by = '';
+	}
+
 //additional includes
 	require_once "resources/header.php";
 	require_once "resources/paging.php";
 
 //show the content
-
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-access_control_nodes']."</b></td>\n";
@@ -56,19 +79,11 @@
 
 //prepare to page the results
 	$sql = "select count(*) as num_rows from v_access_control_nodes ";
-	$sql .= "where access_control_uuid = '".$access_control_uuid."' ";
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-	$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-	}
+	$sql .= "where access_control_uuid = :access_control_uuid ";
+	if (strlen($order_by) > 0) { $sql .= "order by $order_by $order "; }
+	$parameters['access_control_uuid'] = $access_control_uuid;
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -80,13 +95,14 @@
 
 //get the list
 	$sql = "select * from v_access_control_nodes ";
-	$sql .= "where access_control_uuid = '".$access_control_uuid."' ";
+	$sql .= "where access_control_uuid = :access_control_uuid ";
 	if (strlen($order_by) > 0) { $sql .= "order by $order_by $order "; }
-	$sql .= "limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$access_control_nodes = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$sql .= "limit :rows_per_page offset :offset ";
+	$database = new database;
+	$parameters['rows_per_page'] = $rows_per_page;
+	$parameters['offset'] = $offset;
+	$parameters['access_control_uuid'] = $access_control_uuid;
+	$access_control_nodes = $database->execute($sql, $parameters);
 
 //set the row styles
 	$c = 0;
