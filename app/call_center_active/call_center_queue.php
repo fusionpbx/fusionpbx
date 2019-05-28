@@ -63,7 +63,7 @@
 			break;
 		default:
 			$order = '';
-		}
+	}
 
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
@@ -80,13 +80,14 @@
 	echo "</tr></table>\n";
 
 	//get the call center queue count
-	$sql = "select * from v_call_center_queues ";
+	$sql = "select count(*) from v_call_center_queues ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 	$database = new database;
 	$parameters['domain_uuid'] = $domain_uuid;
-	$result = $database->select($sql, $parameters, 'all');
 	$num_rows = $database->select($sql, $parameters, 'column');
+	
+	//paging the records
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "";
 	$page = $_GET['page'];
