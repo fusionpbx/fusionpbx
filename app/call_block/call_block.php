@@ -50,6 +50,21 @@ require_once "resources/require.php";
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
+//validate order by
+	if (strlen($order_by) > 0) {
+		$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $order_by);
+	}
+
+//validate the order
+	switch ($order) {
+		case 'asc':
+			break;
+		case 'desc':
+			break;
+		default:
+			$order = '';
+	}
+
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
@@ -65,19 +80,11 @@ require_once "resources/require.php";
 
 //prepare to page the results
 	$sql = "select count(*) as num_rows from v_call_block ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-	$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-	}
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$parameters['domain_uuid'] = $domain_uuid;
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
+	//unset($parameters);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -89,18 +96,17 @@ require_once "resources/require.php";
 
 //get the  list
 	$sql = "select * from v_call_block ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	if (strlen($order_by)> 0) { 
+	$sql .= "where domain_uuid = :domain_uuid ";
+	if (strlen($order_by) > 0) { 
 		$sql .= "order by $order_by $order ";
 	} else {
 		$sql .= "order by call_block_number asc "; 
 	}
-	$sql .= " limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll();
-	$result_count = count($result);
-	unset ($prep_statement, $sql);
+	$sql .= "limit :rows_per_page offset :offset ";
+	$database = new database;
+	$parameters['rows_per_page'] = $rows_per_page;
+	$parameters['offset'] = $offset;
+	$result = $database->select($sql, $parameters, 'all');
 
 //table headers
 	$c = 0;
@@ -122,7 +128,7 @@ require_once "resources/require.php";
 	echo "</tr>\n";
 
 //show the results
-	if ($result_count > 0) {
+	if (is_array($result)) {
 		foreach($result as $row) {
 			$tr_link = (permission_exists('call_block_edit')) ? "href='call_block_edit.php?id=".$row['call_block_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
