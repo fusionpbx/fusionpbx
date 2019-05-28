@@ -40,7 +40,7 @@
 //search term
 	$term = check_str($_GET['term']);
 	if (isset($_GET['debug'])) {
-		echo "Search Term: ".$term."<br><br>";
+		echo "Search Term: ".escape($term)."<br><br>";
 	}
 
 //if term contains spaces, break into array
@@ -75,27 +75,28 @@
 	$sql .= "where \n";
 	foreach ($terms as $index => $term) {
 		$sql .= "( \n";
-		$sql .= "	lower(e.effective_caller_id_name) like lower('%".$term."%') or \n";
-		$sql .= "	lower(e.outbound_caller_id_name) like lower('%".$term."%') or \n";
-		$sql .= "	lower(concat(e.directory_first_name, ' ', e.directory_last_name)) like lower('%".$term."%') or \n";
-		$sql .= "	lower(e.description) like lower('%".$term."%') or \n";
-		$sql .= "	lower(e.call_group) like lower('%".$term."%') or \n";
-		$sql .= "	e.extension like '%".$term."%' \n";
+		$sql .= "	lower(e.effective_caller_id_name) like lower(:term) or \n";
+		$sql .= "	lower(e.outbound_caller_id_name) like lower(:term) or \n";
+		$sql .= "	lower(concat(e.directory_first_name, ' ', e.directory_last_name)) like lower(:term) or \n";
+		$sql .= "	lower(e.description) like lower(:term) or \n";
+		$sql .= "	lower(e.call_group) like lower(:term) or \n";
+		$sql .= "	e.extension like :term \n";
 		$sql .= ") \n";
 		if ($index + 1 < sizeof($terms)) {
 			$sql .= " and \n";
 		}
 	}
-	$sql .= "and e.domain_uuid = '".$_SESSION['domain_uuid']."' \n";
+	$sql .= "and e.domain_uuid = :domain_uuid \n";
 	$sql .= "and e.enabled = 'true' \n";
 	$sql .= "order by \n";
 	$sql .= "directory_full_name asc, \n";
 	$sql .= "e.effective_caller_id_name asc \n";
 	if (isset($_GET['debug'])) { echo $sql."<br><br>"; }
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$parameters['term'] = '%'.$term.'%';
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
+	unset ($parameters, $sql);
 
 	if (is_array($result)) {
 		if (isset($_GET['debug'])) { echo $result."<br><br>"; }
@@ -124,30 +125,30 @@
 	$sql .= "where \n";
 	foreach ($terms as $index => $term) {
 		$sql .= "( \n";
-		$sql .= "	lower(c.contact_organization) like lower('%".$term."%') or \n";
-		$sql .= "	lower(c.contact_name_given) like lower('%".$term."%') or \n";
-		$sql .= "	lower(c.contact_name_middle) like lower('%".$term."%') or \n";
-		$sql .= "	lower(c.contact_name_family) like lower('%".$term."%') or \n";
-		$sql .= "	lower(c.contact_nickname) like lower('%".$term."%') or \n";
-		$sql .= "	p.phone_number like '%".$term."%' \n";
+		$sql .= "	lower(c.contact_organization) like lower(:term) or \n";
+		$sql .= "	lower(c.contact_name_given) like lower(:term) or \n";
+		$sql .= "	lower(c.contact_name_middle) like lower(:term) or \n";
+		$sql .= "	lower(c.contact_name_family) like lower(:term) or \n";
+		$sql .= "	lower(c.contact_nickname) like lower(:term) or \n";
+		$sql .= "	p.phone_number like :term \n";
 		$sql .= ") \n";
 		if ($index + 1 < sizeof($terms)) {
 			$sql .= " and \n";
 		}
 	}
 	$sql .= "and c.contact_uuid = p.contact_uuid \n";
-	$sql .= "and c.domain_uuid = '".$_SESSION['domain_uuid']."' \n";
+	$sql .= "and c.domain_uuid = :domain_uuid \n";
 	if (sizeof($user_group_uuids) > 0) {
 		$sql .= "and ( \n"; //only contacts assigned to current user's group(s) and those not assigned to any group
 		$sql .= "	c.contact_uuid in ( \n";
 		$sql .= "		select contact_uuid from v_contact_groups \n";
 		$sql .= "		where group_uuid in ('".implode("','", $user_group_uuids)."') \n";
-		$sql .= "		and domain_uuid = '".$_SESSION['domain_uuid']."' \n";
+		$sql .= "		and domain_uuid = :domain_uuid \n";
 		$sql .= "	) \n";
 		$sql .= "	or \n";
 		$sql .= "	c.contact_uuid not in ( \n";
 		$sql .= "		select contact_uuid from v_contact_groups \n";
-		$sql .= "		where domain_uuid = '".$_SESSION['domain_uuid']."' \n";
+		$sql .= "		where domain_uuid = :domain_uuid \n";
 		$sql .= "	) \n";
 		$sql .= ") \n";
 	}
@@ -157,10 +158,11 @@
 	$sql .= "contact_name_given asc, \n";
 	$sql .= "contact_name_family asc \n";
 	if (isset($_GET['debug'])) { echo $sql."<br><br>"; }
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset($prep_statement, $sql);
+	$parameters['term'] = '%'.$term.'%';
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
+	unset ($parameters, $sql);
 
 	if (is_array($result)) {
 		foreach($result as $row) {
