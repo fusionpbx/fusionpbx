@@ -63,7 +63,7 @@ require_once "resources/require.php";
 			break;
 		default:
 			$order = '';
-		}
+	}
 
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
