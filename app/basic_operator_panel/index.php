@@ -65,12 +65,16 @@
 			}
 
 		//update the status
-			$sql  = "update v_users set ";
-			$sql .= "user_status = '".$user_status."' ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and user_uuid = '".$_SESSION['user']['user_uuid']."' ";
 			if (permission_exists("user_account_setting_edit")) {
-				$count = $db->exec(check_sql($sql));
+				$sql  = "update v_users set ";
+				$sql .= "user_status = :user_status ";
+				$sql .= "where domain_uuid = :domain_uuid ";
+				$sql .= "and user_uuid = :user_uuid ";
+				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+				$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
+				$parameters['user_status'] = $user_status;
+				$database->execute($sql, $parameters);
+				unset($parameters);
 			}
 
 		//if call center app is installed then update the user_status
@@ -81,7 +85,6 @@
 					$sql .= "and user_uuid = :user_uuid ";
 					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 					$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
-					
 					$result = $database->select($sql, $parameters);
 					if (is_array($result)) {
 						$call_center_agent_uuid = $result[0]['call_center_agent_uuid'];
