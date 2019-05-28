@@ -89,7 +89,7 @@ This method causes the script to get its manadatory arguments directly from the 
 -- get the configuration variables from the DB
 	local db = dbh or Database.new('system')
 	local settings = Settings.new(db, domain_name, domain_uuid)
-	local call_block_matching = settings:get('call block', 'call_block_matching', 'text');
+	local call_block_matching = settings:get('call_block', 'call_block_matching', 'text');
 
 --send to the log
 	logger("D", "NOTICE", "params are: " .. string.format("'%s', '%s', '%s', '%s'", params["cid_num"],
