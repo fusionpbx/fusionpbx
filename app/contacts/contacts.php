@@ -178,12 +178,15 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
+	$contact_default_sort_col = ($_SESSION['contacts']['default_sort_column']['text'] != '') ? $_SESSION['contacts']['default_sort_column']['text'] : "last_mod_date";
+	$contact_default_sort_ord = ($_SESSION['contacts']['default_sort_order']['text'] != '') ? $_SESSION['contacts']['default_sort_order']['text'] : "desc";
+
 	$sql = str_replace('count(*) as num_rows', '*, (select a.contact_attachment_uuid from v_contact_attachments as a where a.contact_uuid = c.contact_uuid and a.attachment_primary = 1) as contact_attachment_uuid', $sql);
 	if (strlen($order_by) > 0) {
-		$sql .= "order by ".$order_by." ".$order." ";
+		$sql .= "order by ".$order_by." ".$order.", contact_organization asc ";
 	}
 	else {
-		$sql .= "order by last_mod_date desc ";
+		$sql .= "order by ".$contact_default_sort_col." ".$contact_default_sort_ord." ";
 		if ($db_type == "pgsql") {
 			$sql .= "nulls last ";
 		}
