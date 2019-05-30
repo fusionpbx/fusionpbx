@@ -41,7 +41,7 @@ class plugin_ldap {
 			}
 			$host = $_SESSION["ldap"]["server_host"]["text"];
 			$port = $_SESSION["ldap"]["server_port"]["numeric"];
-			$connect = ldap_connect($host)
+			$connect = ldap_connect($host,$port)
 				or die("Could not connect to the LDAP server.");
 			//ldap_set_option($connect, LDAP_OPT_NETWORK_TIMEOUT, 10);
 			ldap_set_option($connect, LDAP_OPT_PROTOCOL_VERSION, 3);
