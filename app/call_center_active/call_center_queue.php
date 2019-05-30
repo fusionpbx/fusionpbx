@@ -84,7 +84,8 @@
 	$sql .= "where domain_uuid = :domain_uuid ";
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 	$database = new database;
-	$parameters['domain_uuid'] = $domain_uuid;
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$result = $database->select($sql, $parameters, 'all');
 	$num_rows = $database->select($sql, $parameters, 'column');
 	
 	//paging the records
@@ -101,7 +102,7 @@
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 	$sql .= " limit :rows_per_page offset :offset ";
 	$database = new database;
-	$parameters['domain_uuid'] = $domain_uuid;
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['rows_per_page'] = $rows_per_page;
 	$parameters['offset'] = $offset;
 	$call_center_queues = $database->select($sql, $parameters, 'all');
