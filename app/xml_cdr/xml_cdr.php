@@ -571,6 +571,7 @@
 						$json_string = trim($row["json"]);
 						$array = json_decode($json_string,true);
 						$remove_prefix = false;
+						$prefix = false;
 						if (is_array($array["app_log"]["application"])) {
 							foreach ($array["app_log"]["application"] as $application) {
 								$app_data = urldecode($application["@attributes"]["app_data"]);
