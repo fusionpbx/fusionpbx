@@ -89,6 +89,21 @@
 	$order_by = check_str($_REQUEST["order_by"]);
 	$order = check_str($_REQUEST["order"]);
 
+//validate order by
+	if (strlen($order_by) > 0) {
+		$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $order_by);
+	}
+
+//validate the order
+	switch ($order) {
+		case 'asc':
+			break;
+		case 'desc':
+			break;
+		default:
+			$order = '';
+	}
+
 //set the defaults
 	if (strlen($order_by) == 0) { 
 		$order_by = 'call_recording_date';
@@ -99,28 +114,23 @@
 	$search = strtolower(check_str($_REQUEST["search"]));
 	if (strlen($search) > 0) {
 		$sql_search = "and (";
-		$sql_search .= "lower(call_recording_name) like '%".$search."%' ";
-		$sql_search .= "or lower(call_recording_path) like '%".$search."%' ";
-		$sql_search .= "or lower(call_direction) like '%".$search."%' ";
-		$sql_search .= "or lower(call_recording_description) like '%".$search."%' ";
+		$sql_search .= "lower(call_recording_name) like :search ";
+		$sql_search .= "or lower(call_recording_path) like :search ";
+		$sql_search .= "or lower(call_direction) like :search ";
+		$sql_search .= "or lower(call_recording_description) like :search ";
 		$sql_search .= ") ";
 	}
 
 //prepare to page the results
 	$sql = "select count(call_recording_uuid) as num_rows from v_call_recordings ";
-	$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= $sql_search;
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	if (strlen($search) > 0) {
+		$parameters['search'] = '%'.$search.'%';
 	}
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -132,14 +142,14 @@
 
 //get the list
 	$sql = "select * from v_call_recordings ";
-	$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= $sql_search;
 	$sql .= "order by $order_by $order ";
-	$sql .= "limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$sql .= "limit :rows_per_page offset :offset ";
+	$database = new database;
+	$parameters['rows_per_page'] = $rows_per_page;
+	$parameters['offset'] = $offset;
+	$result = $database->select($sql, $parameters, 'all');
 
 //alternate the row style
 	$c = 0;
