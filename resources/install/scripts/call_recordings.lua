@@ -24,7 +24,7 @@
 --	POSSIBILITY OF SUCH DAMAGE.
 
 --  instructions: 
---  set channel variable name call_recording_disk_quota inline true with a value in KB
+--  set channel variable name call_recording_disk_quota inline true with a value in MB
 
 require "resources.functions.trim";
 
