@@ -6,7 +6,7 @@
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
 		$apps[$x]['version'] = "1.0";
-		$apps[$x]['license'] = "Mozilla Public License 1.1"; 
+		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Devices for provisioning.";
 		$apps[$x]['description']['ar-eg'] = "";
@@ -641,7 +641,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "device_key_icon";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "ICON Name.";
-		
+
 		$y++;
 		$apps[$x]['db'][$y]['table']['name'] = "v_device_profiles";
 		$apps[$x]['db'][$y]['table']['parent'] = "";
@@ -2929,6 +2929,20 @@
 		$vendors[$y]['uuid'] = "9ec868f0-8c18-42f1-8eb0-8e80b10891c2";
 		$vendors[$y]['name'] = "digium";
 		$z=0;
+		$vendors[$y]['functions'][$z]['uuid'] = "279141ad-473f-48d2-b1f2-331565411dc4";
+		$vendors[$y]['functions'][$z]['label'] = "label-speed_dial";
+		$vendors[$y]['functions'][$z]['name'] = "speed_dial";
+		$vendors[$y]['functions'][$z]['value'] = "speed_dial";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "8a76f8d9-8fa6-445c-8b92-4dcfae09b54d";
+		$vendors[$y]['functions'][$z]['label'] = "label-blf";
+		$vendors[$y]['functions'][$z]['name'] = "blf";
+		$vendors[$y]['functions'][$z]['value'] = "blf";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
 //panasonic
 		$y++;
 		$vendors[$y]['uuid'] = "86cd5298-3599-4254-9ce5-ce84a31a3596";

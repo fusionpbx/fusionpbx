@@ -85,6 +85,16 @@
 		end
 	end
 
+--digium
+	if (vendor == "digium") then
+		if (command == "reboot") then
+			event:addHeader('event-string', 'check-sync');
+		end
+		if (command == "check_sync") then
+			event:addHeader('event-string', 'check-sync');
+		end
+	end
+
 --fanvil
 	if (vendor == "fanvil") then
 		if (command == "reboot") then
