@@ -383,6 +383,7 @@
 	$sql .= "c.destination_number, \n";
 	$sql .= "c.leg, \n";
 	$sql .= "(c.xml IS NOT NULL OR c.json IS NOT NULL) AS raw_data_exists, \n";
+	$sql .= "c.json, \n";
 	if (is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
 			$array = explode(",", $field);

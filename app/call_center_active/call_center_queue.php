@@ -50,6 +50,21 @@
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
+//validate order by
+	if (strlen($order_by) > 0) {
+		$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $order_by);
+	}
+
+//validate the order
+	switch ($order) {
+		case 'asc':
+			break;
+		case 'desc':
+			break;
+		default:
+			$order = '';
+	}
+
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "<tr>\n";
@@ -65,14 +80,15 @@
 	echo "</tr></table>\n";
 
 	//get the call center queue count
-	$sql = "select * from v_call_center_queues ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql = "select count(*) from v_call_center_queues ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$num_rows = count($result);
-	unset ($prep_statement, $result, $sql);
+	$database = new database;
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$result = $database->select($sql, $parameters, 'all');
+	$num_rows = $database->select($sql, $parameters, 'column');
+	
+	//paging the records
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "";
 	$page = $_GET['page'];
@@ -82,14 +98,15 @@
 
 	//get the call center queues
 	$sql = "select * from v_call_center_queues ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$sql .= " limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$call_center_queues = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$num_rows = count($call_center_queues);
-	unset ($prep_statement, $sql);
+	$sql .= " limit :rows_per_page offset :offset ";
+	$database = new database;
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$parameters['rows_per_page'] = $rows_per_page;
+	$parameters['offset'] = $offset;
+	$call_center_queues = $database->select($sql, $parameters, 'all');
+	$num_rows = $database->select($sql, $parameters, 'column');
 
 	$c = 0;
 	$row_style["0"] = "row_style0";

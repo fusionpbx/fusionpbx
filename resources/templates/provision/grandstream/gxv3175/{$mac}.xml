@@ -73,7 +73,7 @@
 <P81>0</P81>
 
 <!-- Register Expiration (m)(in minutes. default 1 hour, max 45 days (64800 minutes)) -->
-<P32>3</P32>
+<P32>{$account.1.register_expires}</P32>
 
 <!-- Wait Time Retry Registration (s)(in seconds. Between 1-3600, default is 20) -->
 <P138>20</P138>
@@ -371,7 +371,7 @@
 <P411>0</P411>
 
 <!-- Register Expiration (m)(in minutes. default 1 hour, max 45 days) -->
-<P412>3</P412>
+<P412>{$account.2.register_expires}</P412>
 
 <!-- Wait Time Retry Registration (s)(in seconds. Between 1-3600, default is 20) -->
 <P471>20</P471>
@@ -671,7 +671,7 @@
 <P511>0</P511>
 
 <!-- Register Expiration (m)(in minutes. default 1 hour, max 45 days) -->
-<P512>3</P512>
+<P512>{$account.3.register_expires}</P512>
 
 <!-- Wait Time Retry Registration (s)(in seconds. Between 1-3600, default is 20) -->
 <P571>20</P571>

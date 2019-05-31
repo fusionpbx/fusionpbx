@@ -450,7 +450,7 @@ include "root.php";
 			}
 
 			// Use this function to execute complex queries
-			public function execute($sql, $parameters = null) {
+			public function execute($sql, $parameters = null, $return_type = 'all') {
 
 				//connect to the database if needed
 					if (!$this->db) {
@@ -476,9 +476,18 @@ include "root.php";
 							$message["parameters"] = $parameters;
 						}
 						$this->message = $message;
-						//$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-						//unset($prep_statement);
-						return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+
+						//return the results
+						switch($return_type) {
+						case 'all':
+							return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+						case 'row':
+							return $prep_statement->fetch(PDO::FETCH_ASSOC);
+						case 'column';
+							return $prep_statement->fetchColumn();
+						default:
+							return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+						}
 					}
 					catch(PDOException $e) {
 						$message["message"] = "Bad Request";
@@ -906,7 +915,7 @@ include "root.php";
 
 			} //count
 
-			public function select($sql, $parameters = null) {
+			public function select($sql, $parameters = '', $return_type = 'all') {
 
 				//connect to the database if needed
 					if (!$this->db) {
@@ -932,9 +941,18 @@ include "root.php";
 							$message["parameters"] = $parameters;
 						}
 						$this->message = $message;
-						//$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-						//unset($prep_statement);
-						return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+
+						//return the results
+						switch($return_type) {
+						case 'all':
+							return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+						case 'row':
+							return $prep_statement->fetch(PDO::FETCH_ASSOC);
+						case 'column';
+							return $prep_statement->fetchColumn();
+						default:
+							return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+						}
 					}
 					catch(PDOException $e) {
 						$message["message"] = "Bad Request";

@@ -502,7 +502,7 @@
 <P57>0</P57>
 
 <!-- SIP regexpiration -->
-<P32>3</P32>
+<P32>{$account.1.register_expires}</P32>
 
 <!-- SIP local port-->
 <P40></P40>

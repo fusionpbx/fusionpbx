@@ -68,16 +68,20 @@
 //get order and order by and sanatize the values
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
+
+//validate order by
 	if (strlen($order_by) > 0) {
 		$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $order_by);
 	}
-	if (strlen($order) > 0) {
-		if ($order == 'asc' || $order == 'desc') {
-			//expected value
-		}
-		else {
+
+//validate the order
+	switch ($order) {
+		case 'asc':
+			break;
+		case 'desc':
+			break;
+		default:
 			$order = '';
-		}
 	}
 
 //add the parameters
@@ -112,13 +116,7 @@
 		$sql .= "order by $order_by $order ";
 	}
 	$database = new database;
-	$row = $database->execute($sql, $parameters);
-	if ($row[0]['num_rows'] > 0) {
-		$num_rows = $row[0]['num_rows'];
-	}
-	else {
-		$num_rows = '0';
-	}
+	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -151,7 +149,7 @@
 		$sql .= "limit $rows_per_page offset $offset ";
 	}
 	$database = new database;
-	$bridges = $database->execute($sql, $parameters);
+	$bridges = $database->select($sql, $parameters, 'all');
 	//$message = $database->message;
 	//print_r($message);
 

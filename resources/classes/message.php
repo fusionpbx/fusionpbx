@@ -27,18 +27,18 @@
 
 if (!class_exists('message')) {
 	class message {
-		
+
 		static function add($message, $mood = NULL, $delay = NULL) {
 			$mood = $mood ?: 'positive';
 			$delay = $delay ?: (1000 * (float) $_SESSION['theme']['message_delay']['text']);
 			$_SESSION["messages"][$mood]['message'][] = $message;
 			$_SESSION["messages"][$mood]['delay'][] = $delay;
 		}
-		
+
 		static function count() {
 			return is_array($_SESSION["messages"]) ? sizeof($_SESSION["messages"]) : 0;
 		}
-		
+
 		static function html($clear_messages = true, $spacer = "") {
 			$html = "${spacer}//render the messages\n";
 			$spacer .="\t";

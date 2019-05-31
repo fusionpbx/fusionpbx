@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -45,29 +45,51 @@
 
 //set user status
 	if (isset($_REQUEST['status']) && $_REQUEST['status'] != '') {
+
+		//create the database object
+			$database = new database;
+
+		//validate the user status
+			$user_status = $_REQUEST['status'];
+			switch ($user_status) {
+				case "Available" :
+					break;
+				case "Available (On Demand)" :
+					break;
+				case "On Break" :
+					break;
+				case "Do Not Disturb" :
+					break;
+				default :
+					$user_status = '';
+			}
+
 		//update the status
-			$user_status = check_str($_REQUEST['status']);
-			$sql  = "update v_users set ";
-			$sql .= "user_status = '".$user_status."' ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and user_uuid = '".$_SESSION['user']['user_uuid']."' ";
 			if (permission_exists("user_account_setting_edit")) {
-				$count = $db->exec(check_sql($sql));
+				$sql  = "update v_users set ";
+				$sql .= "user_status = :user_status ";
+				$sql .= "where domain_uuid = :domain_uuid ";
+				$sql .= "and user_uuid = :user_uuid ";
+				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+				$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
+				$parameters['user_status'] = $user_status;
+				$database->execute($sql, $parameters);
+				unset($parameters);
 			}
 
 		//if call center app is installed then update the user_status
 			if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/call_centers')) {
 				//get the call center agent uuid
 					$sql = "select call_center_agent_uuid from v_call_center_agents ";
-					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-					$sql .= "and user_uuid = '".$_SESSION['user']['user_uuid']."' ";
-					$prep_statement = $db->prepare(check_sql($sql));
-					if ($prep_statement) {
-						$prep_statement->execute();
-						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-						$call_center_agent_uuid = $row['call_center_agent_uuid'];
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$sql .= "and user_uuid = :user_uuid ";
+					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+					$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
+					$result = $database->select($sql, $parameters);
+					if (is_array($result)) {
+						$call_center_agent_uuid = $result[0]['call_center_agent_uuid'];
 					}
-					unset($sql, $prep_statement, $result);
+
 				//update the user_status
 					if (isset($call_center_agent_uuid)) {
 						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
@@ -107,7 +129,7 @@
 
 //ajax refresh
 	var refresh = 1500;
-	var source_url = 'index_inc.php?' <?php if (isset($_GET['debug'])) { echo " + '&debug'"; } ?>;
+	var source_url = 'resources/content.php?' <?php if (isset($_GET['debug'])) { echo " + '&debug'"; } ?>;
 	var interval_timer_id;
 
 	function loadXmlHttp(url, id) {
