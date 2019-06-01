@@ -1305,7 +1305,7 @@
 <!-- # SIP Domain -->
 <!-- # Server Alias / Server List -->
 <!-- # String -->
-<!-- # The value should be json format string like this: {"alias":"aa","servers":["192.168.130.11","192.168.130.145"]};{"alias":"bb","servers":["192.168.130.123"]} -->
+<!-- # {literal}The value should be json format string like this: {"alias":"aa","servers":["192.168.130.11","192.168.130.145"]};{"alias":"bb","servers":["192.168.130.123"]} {/literal} -->
 <!-- # P22017 -->
 
 <!-- #################################################################### -->
