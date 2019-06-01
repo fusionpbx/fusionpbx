@@ -51,6 +51,21 @@
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
+//validate order by
+	if (strlen($order_by) > 0) {
+		$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $order_by);
+	}
+
+//validate the order
+	switch ($order) {
+		case 'asc':
+			break;
+		case 'desc':
+			break;
+		default:
+			$order = '';
+	}
+
 //setup the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 
@@ -107,21 +122,20 @@
 
 //get the call center queues from the database
 	$sql = "select * from v_call_center_queues ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by queue_name asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$call_center_queues = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$database = new database;
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$call_center_queues = $database->select($sql, $parameters, 'all');
 
 //get the agents from the database
 	$sql = "select * from v_call_center_agents ";
-	$sql .= "where user_uuid = '".$_SESSION['user_uuid']."' ";
-	$sql .= "and domain_uuid = '$domain_uuid' ";
+	$sql .= "where user_uuid = :user_uuid ";
+	$sql .= "and domain_uuid = :domain_uuid ";
 	//$sql .= "ORDER BY agent_name ASC ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$agent = $prep_statement->fetch(PDO::FETCH_NAMED);
+	$database = new database;
+	$parameters['user_uuid'] = $_SESSION['user_uuid'];
+	$agent = $database->select($sql, $parameters, 'all');
 	//echo "<pre>\n";
 	//print_r($agent);
 	//echo "</pre>\n";
@@ -175,7 +189,7 @@
 		foreach($call_center_queues as $row) {
 			echo "<tr>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
-			echo "		".$row['queue_name']."\n";
+			echo "		".escape($row['queue_name'])."\n";
 			echo "	</td>\n";
 
 			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
@@ -188,7 +202,7 @@
 			echo "	</td>\n";
 
 			echo "	<td valign='middle' class='".$row_style[$c]."' nowrap='nowrap'>";
-			echo "		<input type='hidden' name='agents[".$x."][queue_name]' id='agent_".$x."_name' value='".$row['queue_name']."'>\n";
+			echo "		<input type='hidden' name='agents[".$x."][queue_name]' id='agent_".$x."_name' value='".escape($row['queue_name'])."'>\n";
 			echo "		<input type='hidden' name='agents[".$x."][agent_name]' id='agent_".$x."_name' value='".$agent['agent_name']."'>\n";
 			echo "		<input type='hidden' name='agents[".$x."][id]' id='agent_".$x."_name' value='".$agent['call_center_agent_uuid']."'>\n";
 			//echo "		<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_no_change' value='' checked='checked'>&nbsp;<label for='agent_".$x."_status_no_change'>".$text['option-no_change']."</label>&nbsp;\n";
@@ -221,8 +235,11 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
+
 	echo "</table>";
 	echo "<br><br>";
 	echo "</form>\n";
 
+//include footer
+	require_once "resources/footer.php";
 ?>
