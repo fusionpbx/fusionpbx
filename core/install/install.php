@@ -402,8 +402,8 @@
 	if ($_REQUEST["step"] == "2") {
 		$content = $view->render('database.htm');
 	}
-	//$view->assign("content", $content);
-	//echo $view->render('template.htm');
+	$view->assign("content", $content);
+	echo $view->render('template.htm');
 
 //include the footer
 	require_once "resources/footer.php";
