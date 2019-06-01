@@ -230,17 +230,6 @@
 
 				//remove the temporary permission
 				$p->delete("domain_add", "temp");
-
-				/*
-				$sql = "insert into v_domains(";
-				$sql .= "domain_uuid, domain_name, domain_enabled) ";
-				$sql .= "values(:domain_uuid, :domain_name, 'true');";
-				$parameters['domain_uuid'] = $domain_uuid;
-				$parameters['domain_name'] = $domain_name;
-				$database = new database;
-				$database->execute($sql, $parameters);
-				unset($parameters);
-				*/
 			}
 
 			//set the session domain id and name
@@ -318,50 +307,6 @@
 			$p->delete("user_add", "temp");
 			$p->delete("user_edit", "temp");
 			$p->delete("user_group_add", "temp");
-
-			//add or update the user
-			/*
-			if ($user_exists) {
-				$sql = "update v_users set ";
-				$sql .= "username = :admin_username, ";
-				$sql .= "password_hash = :password_hash, ";
-				$sql .= "user_salt = :user_salt ";
-				$sql .= "where user_uuid = :user_uuid ";
-				$parameters['username'] = $admin_username;
-				$parameters['password_hash'] = $password_hash;
-				$parameters['user_salt'] = $user_salt;
-				$database = new database;
-				$database->execute($sql, $parameters);
-				unset($parameters);
-			}
-			else {
-				$sql = "insert into v_users ";
-				$sql .= "(user_uuid, domain_uuid, username, password, salt, user_enabled) ";
-				$sql .= "values(:user_uuid, :domain_uuid, :admin_username, :password_hash, :user_salt, 'true');";
-				$parameters['domain_uuid'] = $domain_uuid;
-				$parameters['username'] = $admin_username;
-				$parameters['password_hash'] = $password_hash;
-				$parameters['user_uuid'] = $user_uuid;
-				$parameters['user_salt'] = $user_salt;
-				$database = new database;
-				$database->execute($sql, $parameters);
-				unset($parameters);
-			}
-			*/
-
-			//add the user group permission
-			/*
-			$sql = "insert into v_user_groups (user_group_uuid, domain_uuid, group_name, group_uuid, user_uuid) \n";
-			$sql .= "values(:user_group_uuid, :domain_uuid, :group_name, :group_uuid, :user_uuid);";
-			$parameters['user_group_uuid'] = uuid();
-			$parameters['domain_uuid'] = $domain_uuid;
-			$parameters['group_name'] = $group_name;
-			$parameters['group_uuid'] = $group_uuid;
-			$parameters['user_uuid'] = $user_uuid;
-			$database = new database;
-			$database->execute($sql, $parameters);
-			unset($parameters);
-			*/
 
 			//copy the files and directories from resources/install
 			if (!$domain_exists) {
@@ -457,8 +402,8 @@
 	if ($_REQUEST["step"] == "2") {
 		$content = $view->render('database.htm');
 	}
-	$view->assign("content", $content);
-	echo $view->render('template.htm');
+	//$view->assign("content", $content);
+	//echo $view->render('template.htm');
 
 //include the footer
 	require_once "resources/footer.php";
