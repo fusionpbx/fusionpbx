@@ -143,6 +143,8 @@
 		dialplan = session:getVariable("dialplan");
 		caller_id_name = session:getVariable("caller_id_name");
 		caller_id_number = session:getVariable("caller_id_number");
+		effective_caller_id_name = session:getVariable("effective_caller_id_name");
+		effective_caller_id_number = session:getVariable("effective_caller_id_number");
 		network_addr = session:getVariable("network_addr");
 		ani = session:getVariable("ani");
 		aniii = session:getVariable("aniii");
@@ -154,6 +156,14 @@
 		call_direction = session:getVariable("call_direction");
 		accountcode = session:getVariable("accountcode");
 		local_ip_v4 = session:getVariable("local_ip_v4")
+	end
+
+--set caller id
+	if (effective_caller_id_name ~= nil) then
+		caller_id_name = effective_caller_id_name;
+	end
+	if (effective_caller_id_number ~= nil) then
+		caller_id_number = effective_caller_id_number;
 	end
 
 --default to local if nil
