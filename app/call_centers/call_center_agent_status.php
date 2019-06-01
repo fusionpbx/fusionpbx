@@ -49,17 +49,16 @@
 
 //get the agents from the database
 	$sql = "select * from v_call_center_tiers ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$tiers = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$database = new database;
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$tiers = $database->select($sql, $parameters, 'all');
 	if (count($tiers) == 0) {
 		$per_queue_login = true;
 	}
 	else {
 		$per_queue_login = false;
 	}
-	unset($prep_statement, $sql);
 
 //setup the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
@@ -79,11 +78,13 @@
 						//set the user_status
 							if (!isset($row['queue_name'])) {
 								$sql  = "update v_users set ";
-								$sql .= "user_status = '".$row['agent_status']."' ";
-								$sql .= "where domain_uuid = '".$domain_uuid."' ";
-								$sql .= "and user_uuid = '".$row['user_uuid']."' ";
-								$prep_statement = $db->prepare(check_sql($sql));
-								$prep_statement->execute();
+								$sql .= "user_status = :row['agent_status'] ";
+								$sql .= "where domain_uuid = :domain_uuid ";
+								$sql .= "and user_uuid = :row['user_uuid'] ";
+								$parameters['agent_uuid'] = $row['agent_uuid'];
+								$parameters['agent_status'] = $row['agent_status'];
+								$database = new database;
+								$database->select($sql, $parameters);
 							}
 
 						//set the call center status
@@ -124,11 +125,11 @@
 						//set the blf status
 						//get the agents from the database
 							$sql = "select agent_name from v_call_center_agents ";
-							$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-							$sql .= "and call_center_agent_uuid = '".$row['agent_uuid']."' ";
-							$prep_statement = $db->prepare(check_sql($sql));
-							$prep_statement->execute();
-							$agent_name = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+							$sql .= "where domain_uuid = :domain_uuid ";
+							$sql .= "and call_center_agent_uuid = :row['agent_uuid'] ";
+							$database = new database;
+							$parameters['agent_uuid'] = $row['agent_uuid'];
+							$agent_name = $database->select($sql, $parameters, 'all');
 
 							if ($row['agent_status'] == 'Available') {
 								$answer_state = 'confirmed';
@@ -151,11 +152,10 @@
 
 //get the agents from the database
 	$sql = "select * from v_call_center_agents ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by agent_name ASC ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$agents = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$database = new database;
+	$agents = $database->select($sql, $parameters, 'all');
 
 //get the agent list from event socket
 	$switch_cmd = 'callcenter_config agent list';
@@ -169,12 +169,10 @@
 
 //get the call center queues from the database
 	$sql = "select * from v_call_center_queues ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by queue_name asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$call_center_queues = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$database = new database;
+	$call_center_queues = $database->select($sql, $parameters, 'all');
 
 //add the status to the call_center_queues array
 	$x = 0;
