@@ -307,6 +307,7 @@
 			$p->delete("user_group_add", "temp");
 
 			//copy the files and directories from resources/install
+			/*
 			if (!$domain_exists) {
 				require_once "resources/classes/install.php";
 				$install = new install;
@@ -316,6 +317,7 @@
 				$install->copy_conf();
 				$install->copy();
 			}
+			*/
 
 			//update xml_cdr url, user and password in xml_cdr.conf.xml
 			if (!$domain_exists) {
