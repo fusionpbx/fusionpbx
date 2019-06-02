@@ -345,7 +345,7 @@
     <!-- # BLF Call-pickup. 0 - Auto, 1 - Force BLF Call-pickup by prefix, 2 - Disabled. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    <P6752>0</P6752>
+    <P6752>{$grandstream_blf_call_pickup}</P6752>
 
     <!-- # BLF Call-pickup Prefix. Default is ** -->
     <!-- # String -->
@@ -1279,7 +1279,7 @@
     <!-- # BLF Call-pickup. 0 - Auto, 1 - Force BLF Call-pickup by prefix, 2 - Disabled. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    <P6753>0</P6753>
+    <P6753>{$grandstream_blf_call_pickup}</P6753>
 
     <!-- # BLF Call-pickup Prefix. Default is ** -->
     <!-- # String -->
@@ -2212,7 +2212,7 @@
     <!-- # BLF Call-pickup. 0 - Auto, 1 - Force BLF Call-pickup by prefix, 2 - Disabled. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    <P6754>0</P6754>
+    <P6754>{$grandstream_blf_call_pickup}</P6754>
 
     <!-- # BLF Call-pickup Prefix. Default is ** -->
     <!-- # String -->
@@ -3146,7 +3146,7 @@
     <!-- # BLF Call-pickup. 0 - Auto, 1 - Force BLF Call-pickup by prefix, 2 - Disabled. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    <P6755>0</P6755>
+    <P6755>{$grandstream_blf_call_pickup}</P6755>
 
     <!-- # BLF Call-pickup Prefix. Default is ** -->
     <!-- # String -->
@@ -4081,7 +4081,7 @@
     <!-- # BLF Call-pickup. 0 - Auto, 1 - Force BLF Call-pickup by prefix, 2 - Disabled. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    <P6756>0</P6756>
+    <P6756>{$grandstream_blf_call_pickup}</P6756>
 
     <!-- # BLF Call-pickup Prefix. Default is ** -->
     <!-- # String -->
@@ -5016,7 +5016,7 @@
     <!-- # BLF Call-pickup. 0 - Auto, 1 - Force BLF Call-pickup by prefix, 2 - Disabled. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    <P6757>0</P6757>
+    <P6757>{$grandstream_blf_call_pickup}</P6757>
 
     <!-- # BLF Call-pickup Prefix. Default is ** -->
     <!-- # String -->
