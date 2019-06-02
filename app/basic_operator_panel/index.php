@@ -239,11 +239,11 @@
 		}
 		else {
 			if (from_ext != to_ext) { // prevent user from dragging extention onto self
-				cmd = get_originate_cmd(from_ext+'@<?php echo $_SESSION["domain_name"]?>', to_ext); //make a call
+				cmd = get_originate_cmd(from_ext, to_ext); //make a call
 			}
 		}
 
-		if (cmd != '') { send_cmd('exec.php?cmd='+escape(cmd)); }
+		if (cmd != '') { send_cmd(cmd) }
 
 		refresh_start();
 	}
@@ -280,13 +280,13 @@
 		if (destination != '') {
 			if (!isNaN(parseFloat(destination)) && isFinite(destination)) {
 				if (call_id == '') {
-					cmd = get_originate_cmd(from_ext+'@<?php echo $_SESSION["domain_name"]?>', destination); //make a call
+					cmd = get_originate_cmd(from_ext, destination); //make a call
 				}
 				else {
 					cmd = get_transfer_cmd(call_id, destination);
 				}
 				if (cmd != '') {
-					send_cmd('exec.php?cmd='+escape(cmd));
+					send_cmd(cmd);
 					$('#destination_'+from_ext+'_'+which).removeAttr('onblur');
 					toggle_destination(from_ext, which);
 				}
@@ -297,17 +297,16 @@
 //kill call
 	function kill_call(call_id) {
 		if (call_id != '') {
-			cmd = 'uuid_kill ' + call_id;
-			send_cmd('exec.php?cmd='+escape(cmd));
+			send_cmd('exec.php?cmd=uuid_kill&call_id=' + call_id)
 		}
 	}
 
 //eavesdrop call
 	function eavesdrop_call(ext, chan_uuid) {
 		if (ext != '' && chan_uuid != '') {
-			cmd = get_eavesdrop_cmd(ext, chan_uuid);
+			cmd = get_eavesdrop_cmd(ext, chan_uuid, document.getElementById('eavesdrop_dest').value);
 			if (cmd != '') {
-				send_cmd('exec.php?cmd='+escape(cmd));
+				send_cmd(cmd)
 			}
 		}
 	}
@@ -317,7 +316,7 @@
 		if (chan_uuid != '') {
 			cmd = get_record_cmd(chan_uuid);
 			if (cmd != '') {
-				send_cmd('exec.php?cmd='+escape(cmd));
+				send_cmd(cmd);
 			}
 		}
 	}
@@ -396,23 +395,23 @@
 	}
 
 	function get_transfer_cmd(uuid, destination) {
-		cmd = "uuid_transfer " + uuid + " " + destination + " XML <?php echo trim($_SESSION['user_context'])?>";
-		return cmd;
+		url = "exec.php?cmd=uuid_transfer&uuid=" + uuid + "&destination=" + destination
+		return url;
 	}
 
 	function get_originate_cmd(source, destination) {
-		cmd = "bgapi originate {sip_auto_answer=true,origination_caller_id_number=" + destination + ",sip_h_Call-Info=_undef_}user/" + source + " " + destination + " XML <?php echo trim($_SESSION['user_context'])?>";
-		return cmd;
+		url = "exec.php?cmd=originate&source=" + source + "&destination=" + destination
+		return url;
 	}
 
-	function get_eavesdrop_cmd(ext, chan_uuid) {
-		cmd = "bgapi originate {origination_caller_id_name=<?php echo $text['label-eavesdrop']?>,origination_caller_id_number=" + ext + "}user/"+(document.getElementById('eavesdrop_dest').value)+"@<?php echo $_SESSION['domain_name']?> &eavesdrop(" + chan_uuid + ")";
-		return cmd;
+	function get_eavesdrop_cmd(ext, chan_uuid, destination) {
+		url = "exec.php?cmd=uuid_eavesdrop&ext=" + ext + "&chan_uuid=" + chan_uuid + "&destination=" + destination;
+		return url;
 	}
 
 	function get_record_cmd(uuid) {
-		cmd = "uuid_record " + uuid + " start <?php echo $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']; ?>/archive/<?php echo date('Y')?>/<?php echo date('M')?>/<?php echo date('d')?>/" + uuid + ".wav";
-		return cmd;
+		url = "exec.php?cmd=uuid_record&uuid=" + uuid;
+		return url;
 	}
 
 //virtual functions
@@ -441,11 +440,11 @@
 						cmd = get_transfer_cmd(document.getElementById('vd_call_id').value, document.getElementById('vd_ext_to').value); //transfer a call
 					}
 					else {
-						cmd = get_originate_cmd(document.getElementById('vd_ext_from').value + '@<?php echo $_SESSION["domain_name"]?>', document.getElementById('vd_ext_to').value); //originate a call
+						cmd = get_originate_cmd(document.getElementById('vd_ext_from').value, document.getElementById('vd_ext_to').value); //originate a call
 					}
 					if (cmd != '') {
 						//alert(cmd);
-						send_cmd('exec.php?cmd='+escape(cmd));
+						send_cmd(cmd);
 					}
 				}
 				virtual_drag_reset();
