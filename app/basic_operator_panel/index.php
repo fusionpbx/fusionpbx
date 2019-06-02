@@ -60,6 +60,8 @@
 					break;
 				case "Do Not Disturb" :
 					break;
+				case "Logged Out" :
+					break;
 				default :
 					$user_status = '';
 			}
