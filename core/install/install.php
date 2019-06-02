@@ -181,11 +181,11 @@
 			unset($config);
 			fclose($fout);
 
-			//includes - this includes the config.php
-			require_once "resources/require.php";
-
 			//add the database schema
 			$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php /var/www/fusionpbx/core/upgrade/upgrade_schema.php');
+
+			//includes - this includes the config.php
+			require_once "resources/require.php";
 
 			//get the domain name
 			$domain_name = $_SESSION['install']['domain_name'];
