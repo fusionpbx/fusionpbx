@@ -185,8 +185,7 @@
 			require_once "resources/require.php";
 
 			//add the database schema
-			$included = true;
-			require_once "core/upgrade/upgrade_schema.php";
+			$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php /var/www/fusionpbx/core/upgrade/upgrade_schema.php');
 
 			//get the domain name
 			$domain_name = $_SESSION['install']['domain_name'];
@@ -237,8 +236,7 @@
 			$_SESSION['domain_name'] = $domain_name;
 
 			//app defaults
-			$included = true;
-			require_once "core/upgrade/upgrade_domains.php";
+			$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php /var/www/fusionpbx/core/upgrade/upgrade_domains.php');
 
 			//prepare the user settings
 			$admin_username = $_SESSION['install']['admin_username'];
@@ -334,7 +332,7 @@
 			}
 
 			#app defaults
-			require_once "core/upgrade/upgrade_domains.php";
+			$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php /var/www/fusionpbx/core/upgrade/upgrade_domains.php');
 
 			//install completed
 			//restart the server
