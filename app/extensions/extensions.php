@@ -197,7 +197,7 @@
 	//echo th_order_by('voicemail_mail_to', $text['label-voicemail_mail_to'], $order_by, $order);
 	echo th_order_by('user_context', $text['label-user_context'], $order_by, $order);
 	if (permission_exists('extension_registered')) {
- 		echo th_order_by('description', $text['label-is_registered'], $order_by, $order);
+		echo "<th>".$text['label-is_registered']."</th>\n";
  	}
 	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order);
 	echo th_order_by('description', $text['label-description'], $order_by, $order);
