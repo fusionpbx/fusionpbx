@@ -17,22 +17,26 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('call_active_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('call_active_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -46,9 +50,12 @@ else {
 	require_once "resources/header.php";
 
 //load gateways into a session variable
-	$sql = "select gateway_uuid, domain_uuid, gateway from v_gateways where enabled = 'true'";
+	$sql = "select gateway_uuid, domain_uuid, gateway from v_gateways where enabled = 'true' ";
 	$database = new database;
-	$result = $database->select($sql, $parameters, 'all');
+	$gateways = $database->select($sql, $parameters, 'all');
+	foreach ($gateways as $row) {
+		$_SESSION['gateways'][$row['gateway_uuid']] = $row['gateway'];
+	}
 
 //ajax for refresh
 	?>
