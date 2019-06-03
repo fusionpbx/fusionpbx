@@ -50,6 +50,21 @@
 	$order_by = check_str($_GET["order_by"]);
 	$order = check_str($_GET["order"]);
 
+//validate order by
+	if (strlen($order_by) > 0) {
+		$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $order_by);
+	}
+
+//validate the order
+	switch ($order) {
+		case 'asc':
+			break;
+		case 'desc':
+			break;
+		default:
+			$order = '';
+	}
+
 //add meeting_uuid to a session variable
 	if (strlen($meeting_uuid) > 0) {
 		$_SESSION['meeting']['uuid'] = $meeting_uuid;
@@ -70,19 +85,12 @@
 
 	//prepare to page the results
 		$sql = "select count(*) as num_rows from v_conference_sessions ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and meeting_uuid = '".$_SESSION['meeting']['uuid']."' ";
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-		$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] > 0) {
-				$num_rows = $row['num_rows'];
-			}
-			else {
-				$num_rows = '0';
-			}
-		}
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and meeting_uuid = :meeting_uuid ";
+		$database = new database;
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['meeting_uuid'] = $_SESSION['meeting']['uuid'];
+		$row = $database->select($sql, $parameters, 'all');
 
 	//prepare to page the results
 		$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -94,19 +102,19 @@
 
 	//get the list
 		$sql = "select * from v_conference_sessions ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and meeting_uuid = '".$_SESSION['meeting']['uuid']."' ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and meeting_uuid = :meeting_uuid ";
 		if (strlen($order_by) == 0) {
 			$sql .= "order by start_epoch desc ";
 		}
 		else {
 			$sql .= "order by $order_by $order ";
 		}
-		$sql .= "limit $rows_per_page offset $offset ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$conference_sessions = $prep_statement->fetchAll();
-		unset ($prep_statement, $sql);
+		$sql .= "limit :rows_per_page offset :offset ";
+		$database = new database;
+		$parameters['rows_per_page'] = $rows_per_page;
+		$parameters['offset'] = $offset;
+		$conference_sessions = $database->select($sql, $parameters, 'all');
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
