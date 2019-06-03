@@ -45,8 +45,8 @@
 	$search = check_str($_GET["search"]);
 	if (strlen($search) > 0) {
 		$sql_mod = "and ( ";
-		$sql_mod .= "extension like '%".$search."%' ";
-		$sql_mod .= "or description like '%".$search."%' ";
+		$sql_mod .= "extension like :search ";
+		$sql_mod .= "or description like :search ";
 		$sql_mod .= ") ";
 	}
 
@@ -60,7 +60,7 @@
 
 //define select count query
 	$sql = "select count(extension_uuid) as count from v_extensions ";
-	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and enabled = 'true' ";
 	if (!(if_group("admin") || if_group("superadmin"))) {
 		if (count($_SESSION['user']['extension']) > 0) {
@@ -79,11 +79,12 @@
 		}
 	}
 	$sql .= $sql_mod; //add search mod from above
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$row = $prep_statement->fetch(PDO::FETCH_NAMED);
-	$result_count = $row['count'];
-	unset ($prep_statement, $row);
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	if (strlen($search) > 0) {
+		$parameters['search'] = '%'.$search.'%';
+	}
+	$database = new database;
+	$row = $database->select($sql, $parameters, 'all');
 
 	if ($is_included) {
 		$rows_per_page = 10;
@@ -100,7 +101,7 @@
 
 //select the extensions
 	$sql = "select * from v_extensions ";
-	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and enabled = 'true' ";
 	if (!(if_group("admin") || if_group("superadmin"))) {
 		if (count($_SESSION['user']['extension']) > 0) {
@@ -120,11 +121,11 @@
 	}
 	$sql .= $sql_mod; //add search mod from above
 	$sql .= ' order by extension asc';
-	$sql .= " limit ".$rows_per_page." offset ".$offset." ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$extensions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$sql .= " limit :rows_per_page offset :offset ";
+	$database = new database;
+	$parameters['rows_per_page'] = $rows_per_page;
+	$parameters['offset'] = $offset;
+	$extensions = $database->select($sql, $parameters, 'all');
 
 //set the row style
 	$c = 0;
@@ -183,20 +184,18 @@
 			if (permission_exists('follow_me')) {
 				if ($row['follow_me_uuid'] != '') {
 					//check if follow me is enabled
-						$sql = "select follow_me_enabled from v_follow_me where follow_me_uuid = '".$row['follow_me_uuid']."' and domain_uuid = '".$domain_uuid."'";
-						$prep_statement = $db->prepare(check_sql($sql));
-						$prep_statement->execute();
-						$row_x = $prep_statement->fetch(PDO::FETCH_NAMED);
+						$sql = "select follow_me_enabled from v_follow_me where follow_me_uuid = :row['follow_me_uuid'] and domain_uuid = :domain_uuid";
+						$parameters['row'] = $row['follow_me_uuid'];
+						$database = new database;
+						$row_x = $database->select($sql, $parameters, 'all');
 						$follow_me_enabled = ($row_x['follow_me_enabled'] == 'true') ? true : false;
-						unset($sql, $prep_statement, $row_x);
 					//get destination count if enabled
 						if ($follow_me_enabled) {
-							$sql = "select count(follow_me_destination_uuid) as destination_count from v_follow_me_destinations where follow_me_uuid = '".$row['follow_me_uuid']."' and domain_uuid = '".$domain_uuid."'";
-							$prep_statement = $db->prepare(check_sql($sql));
-							$prep_statement->execute();
-							$row_x = $prep_statement->fetch(PDO::FETCH_NAMED);
+							$sql = "select count(follow_me_destination_uuid) as destination_count from v_follow_me_destinations where follow_me_uuid = :row['follow_me_uuid'] and domain_uuid = :domain_uuid";
+							$parameters['row'] = $row['follow_me_uuid'];
+							$database = new database;
+							$row_x = $database->select($sql, $parameters, 'all');
 							$follow_me_destination_count = $row_x['destination_count'];
-							unset($sql, $prep_statement, $row_x);
 						}
 				}
 				else {
