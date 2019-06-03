@@ -84,8 +84,7 @@
 		$parameters['search'] = '%'.$search.'%';
 	}
 	$database = new database;
-	$row = $database->select($sql, $parameters, 'all');
-
+	$result_count = $database->select($sql, $parameters, 'column');
 	if ($is_included) {
 		$rows_per_page = 10;
 	}
@@ -112,7 +111,7 @@
 				$sql .= "extension = '".$row['user']."' ";
 				$x++;
 			}
-			$sql .= ")";
+			$sql .= ") ";
 		}
 		else {
 			//used to hide any results when a user has not been assigned an extension
@@ -120,12 +119,13 @@
 		}
 	}
 	$sql .= $sql_mod; //add search mod from above
-	$sql .= ' order by extension asc';
-	$sql .= " limit :rows_per_page offset :offset ";
+	$sql .= "order by extension asc ";
+	$sql .= "limit :rows_per_page offset :offset ";
 	$database = new database;
 	$parameters['rows_per_page'] = $rows_per_page;
 	$parameters['offset'] = $offset;
 	$extensions = $database->select($sql, $parameters, 'all');
+	unset($parameters);
 
 //set the row style
 	$c = 0;
@@ -182,26 +182,37 @@
 				echo "	<td valign='top' class='".$row_style[$c]."'>".(($row['forward_all_enabled'] == 'true') ? escape(format_phone($row['forward_all_destination'])) : '&nbsp;')."</td>";
 			}
 			if (permission_exists('follow_me')) {
-				if ($row['follow_me_uuid'] != '') {
+				$follow_me_enabled = false;
+				if (is_uuid($row['follow_me_uuid'])) {
 					//check if follow me is enabled
-						$sql = "select follow_me_enabled from v_follow_me where follow_me_uuid = :row['follow_me_uuid'] and domain_uuid = :domain_uuid";
-						$parameters['row'] = $row['follow_me_uuid'];
+						$sql = "select follow_me_enabled from v_follow_me ";
+						$sql .= "where follow_me_uuid = :follow_me_uuid ";
+						$sql .= "and domain_uuid = :domain_uuid";
+						$parameters['follow_me_uuid'] = $row['follow_me_uuid'];
+						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 						$database = new database;
-						$row_x = $database->select($sql, $parameters, 'all');
-						$follow_me_enabled = ($row_x['follow_me_enabled'] == 'true') ? true : false;
+						$follow_me_enabled = $database->select($sql, $parameters, 'column');
+						
+						if ($follow_me_enabled == 'true') { $follow_me_enabled = true; }
 					//get destination count if enabled
 						if ($follow_me_enabled) {
-							$sql = "select count(follow_me_destination_uuid) as destination_count from v_follow_me_destinations where follow_me_uuid = :row['follow_me_uuid'] and domain_uuid = :domain_uuid";
-							$parameters['row'] = $row['follow_me_uuid'];
+							$sql = "select count(follow_me_destination_uuid) as destination_count from v_follow_me_destinations ";
+							$sql .= "where follow_me_uuid = :follow_me_uuid ";
+							$sql .= "and domain_uuid = :domain_uuid ";
+							$parameters['follow_me_uuid'] = $row['follow_me_uuid'];
+							$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 							$database = new database;
-							$row_x = $database->select($sql, $parameters, 'all');
-							$follow_me_destination_count = $row_x['destination_count'];
+							$follow_me_destination_count = $database->select($sql, $parameters, 'column');
 						}
 				}
-				else {
-					$follow_me_enabled = false;
+				echo "	<td valign='top' class='".$row_style[$c]."'>\n";
+				if ($follow_me_enabled && $follow_me_destination_count > 0) {
+					echo '		'.$text['label-enabled']." (".$follow_me_destination_count.")\n";
 				}
-				echo "	<td valign='top' class='".$row_style[$c]."'>".(($follow_me_enabled) ? $text['label-enabled']." (".$follow_me_destination_count.")" : '&nbsp;')."</td>";
+				else {
+					echo "		&nbsp;\n";
+				}
+				echo "</td>\n";
 			}
 			if (permission_exists('do_not_disturb')) {
 				echo "	<td valign='top' class='".$row_style[$c]."'>".(($row['do_not_disturb'] == 'true') ? $text['label-enabled'] : '&nbsp;')."</td>";
