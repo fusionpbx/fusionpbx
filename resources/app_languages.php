@@ -1424,6 +1424,27 @@ $text['description-import_enclosure']['sv-se'] = "Välj inkapsling av text (dubb
 $text['description-import_enclosure']['uk-ua'] = "";
 $text['description-import_enclosure']['tr-tr'] = "Metin sonlandırmasını seçin (çift tırnak ya da hiçbir şey).";
 
+$text['header-export']['en-us'] = "Export";
+$text['header-export']['ar-eg'] = "";
+$text['header-export']['de-at'] = "Exportieren"; //copied from de-de
+$text['header-export']['de-ch'] = "Exportieren"; //copied from de-de
+$text['header-export']['de-de'] = "Exportieren";
+$text['header-export']['es-cl'] = "Exportar";
+$text['header-export']['es-mx'] = "Exportar"; //copied from es-cl
+$text['header-export']['fr-ca'] = "Exporter"; //copied from fr-fr
+$text['header-export']['fr-fr'] = "Exporter";
+$text['header-export']['he-il'] = "";
+$text['header-export']['it-it'] = "Esporta";
+$text['header-export']['nl-nl'] = "";
+$text['header-export']['pl-pl'] = "Eksportuj";
+$text['header-export']['pt-br'] = "Exportação";
+$text['header-export']['pt-pt'] = "Exportar";
+$text['header-export']['ro-ro'] = "";
+$text['header-export']['ru-ru'] = "Экспорт";
+$text['header-export']['sv-se'] = "Export";
+$text['header-export']['uk-ua'] = "Експортувати";
+$text['header-export']['tr-tr'] = "Dışa Aktar";
+
 $text['option-last_hour']['en-us'] = "Last Hour";
 $text['option-last_hour']['ar-eg'] = "";
 $text['option-last_hour']['de-at'] = "Letzte Stunde"; //copied from de-de
