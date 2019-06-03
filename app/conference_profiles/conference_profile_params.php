@@ -22,14 +22,29 @@
 	$order_by = check_str($_GET["order_by"]);
 	$order = check_str($_GET["order"]);
 
+//validate order by
+	if (strlen($order_by) > 0) {
+		$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $order_by);
+	}
+
+//validate the order
+	switch ($order) {
+		case 'asc':
+			break;
+		case 'desc':
+			break;
+		default:
+			$order = '';
+	}
+
 //add the search term
 	$search = check_str($_GET["search"]);
 	if (strlen($search) > 0) {
 		$sql_search = "and (";
-		$sql_search .= "profile_param_name like '%".$search."%'";
-		$sql_search .= "or profile_param_value like '%".$search."%'";
-		$sql_search .= "or profile_param_enabled like '%".$search."%'";
-		$sql_search .= "or profile_param_description like '%".$search."%'";
+		$sql_search .= "profile_param_name like :search";
+		$sql_search .= "or profile_param_value like :search";
+		$sql_search .= "or profile_param_enabled like :search";
+		$sql_search .= "or profile_param_description like :search";
 		$sql_search .= ")";
 	}
 
@@ -39,22 +54,16 @@
 
 //prepare to page the results
 	$sql = "select count(*) as num_rows from v_conference_profile_params ";
-	$sql .= "where conference_profile_uuid = '$conference_profile_uuid' ";
-	//$sql .= "and domain_uuid = '$domain_uuid' ";
+	$sql .= "where conference_profile_uuid = :conference_profile_uuid ";
+	//$sql .= "and domain_uuid = :domain_uuid ";
 	//$sql .= $sql_search;
-	
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
+	//$parameters['domain_uuid'] = $domain_uuid;
+	if (strlen($search) > 0) {
+		$parameters['search'] = '%'.$search.'%';
 	}
+	$parameters['conference_profile_uuid'] = $conference_profile_uuid;
+	$database = new database;
+	$row = $database->select($sql, $parameters, 'all');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -66,15 +75,15 @@
 
 //get the list
 	$sql = "select * from v_conference_profile_params ";
-	$sql .= "where conference_profile_uuid = '$conference_profile_uuid' ";
+	$sql .= "where conference_profile_uuid = :conference_profile_uuid ";
 	//$sql .= "where domain_uuid = '$domain_uuid' ";
 	//$sql .= $sql_search;
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$sql .= "limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$sql .= "limit :rows_per_page offset :offset ";
+	$parameters['rows_per_page'] = $rows_per_page;
+	$parameters['offset'] = $offset;
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
 
 //alternate the row style
 	$c = 0;
