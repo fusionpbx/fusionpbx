@@ -108,9 +108,14 @@
 //begin the page content
 	require_once "resources/header.php";
 
-	echo "<form method='post' name='frm' action='' autocomplete='off'>\n";
+	echo "<form method='post' name='frm' action='device_download.php' autocomplete='off'>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
+	echo "	<td valign='top' align='left' nowrap='nowrap'><b>".$text['header-export']."</b><br /></td>\n";
+	echo "	<td valign='top' align='right' colspan='2'>\n";
+	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='devices.php'\" value='".$text['button-back']."'>\n";
+	echo "	</td>\n";
+	echo "	</tr>\n";
 	echo "	<th><input type=\"checkbox\" id=\"selectall\" onclick=\"checkbox_toggle();\"/></th>\n";
 	echo "	<th>Column Name</th>\n";
 	echo "	<th>Description</th>\n";
