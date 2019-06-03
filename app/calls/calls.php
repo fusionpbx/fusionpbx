@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -192,7 +192,7 @@
 						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 						$database = new database;
 						$follow_me_enabled = $database->select($sql, $parameters, 'column');
-						
+
 						if ($follow_me_enabled == 'true') { $follow_me_enabled = true; }
 					//get destination count if enabled
 						if ($follow_me_enabled) {
