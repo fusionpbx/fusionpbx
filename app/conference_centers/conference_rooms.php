@@ -51,14 +51,14 @@
 	$search = preg_replace('{\D}', '', $search);
 	if (strlen($search) > 0) {
 		$sql = "select * from v_meetings ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and (moderator_pin = '".$search."' or participant_pin = '".$search."') ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			$meeting_uuid = $row['meeting_uuid'];
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and (moderator_pin = :search or participant_pin = :search) ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		if (strlen($search) > 0) {
+			$parameters['search'] = '%'.$search.'%';
 		}
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'all');
 	}
 
 //if the $_GET array exists then process it
@@ -107,11 +107,14 @@
 			if (strlen($enabled) > 0) {
 				$sql .= "enabled = '$enabled' ";
 			}
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and conference_room_uuid = '$conference_room_uuid' ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and conference_room_uuid = :conference_room_uuid ";
 			//echo $sql; //exit;
-			$db->exec(check_sql($sql));
-			unset($sql);
+			//$db->exec(check_sql($sql));
+			//unset($sql);
+			$parameters['conference_room_uuid'] = $conference_room_uuid;
+			$database = new database;
+			$database->select($sql, $parameters);
 	}
 
 //get conference array
