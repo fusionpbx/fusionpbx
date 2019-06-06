@@ -642,6 +642,9 @@
 
 	}
 
+//set the defaults
+	if (strlen($dialplan_context) == 0) { $dialplan_context = $_SESSION['domain_name']; }
+
 //include the header
 	require_once "resources/header.php";
 
