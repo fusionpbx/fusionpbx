@@ -202,8 +202,8 @@
 						echo "<td valign='top' class='".$row_style[$c]."'>".$domain_name."&nbsp;</td>\n";
 					}
 					echo "<td valign='top' class='".$row_style[$c]."'>".$tmp_number."&nbsp;</td>\n";
-					echo "<td valign='top' class='".$row_style[$c]."'>".$cid_name."&nbsp;</td>\n";
-					echo "<td valign='top' class='".$row_style[$c]."'>".$cid_num."&nbsp;</td>\n";
+					echo "<td valign='top' class='".$row_style[$c]."'>".escape($cid_name)."&nbsp;</td>\n";
+					echo "<td valign='top' class='".$row_style[$c]."'>".escape($cid_num)."&nbsp;</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."'>".$dest."&nbsp;</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."'>".((strlen($application) > 0) ? $application.":".$application_data : null)."&nbsp;</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."'>".$read_codec.":".$read_rate." / ".$write_codec.":".$write_rate."&nbsp;</td>\n";
