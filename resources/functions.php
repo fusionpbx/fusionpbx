@@ -1397,7 +1397,7 @@ function number_pad($number,$n) {
 
 //function to send email
 	if (!function_exists('send_email')) {
-		function send_email($eml_recipients, $eml_subject, $eml_body, &$eml_error = '', $eml_from_address = '', $eml_from_name = '', $eml_priority = 3, $eml_debug_level = 0) {
+		function send_email($eml_recipients, $eml_subject, $eml_body, &$eml_error = '', $eml_from_address = '', $eml_from_name = '', $eml_priority = 3, $eml_debug_level = 0, $eml_attachments = '', $eml_read_confirmation = false) {
 			/*
 			RECIPIENTS NOTE:
 
@@ -1438,6 +1438,22 @@ function number_pad($number,$n) {
 							)
 					)
 
+			ATTACHMENTS NOTE:
+
+				Pass in as many files as necessary in an array in the following format...
+
+					Array (
+						[0] => Array (
+							[type] => file (or 'path')
+							[name] => filename.ext
+							[value] => /folder/filename.ext
+							)
+						[1] => Array (
+							[type] => string
+							[name] => filename.ext
+							[value] => (string of file contents - if base64, will be decoded automatically)
+							)
+					)
 
 			ERROR RESPONSE:
 
@@ -1490,6 +1506,11 @@ function number_pad($number,$n) {
 			$mail -> Subject = $eml_subject;
 			$mail -> MsgHTML($eml_body);
 			$mail -> Priority = $eml_priority;
+			if ($eml_read_confirmation) {
+				$mail -> AddCustomHeader('X-Confirm-Reading-To: '.$eml_from_address);
+				$mail -> AddCustomHeader('Return-Receipt-To: '.$eml_from_address);
+				$mail -> AddCustomHeader('Disposition-Notification-To: '.$eml_from_address);
+			}
 			if (is_numeric($eml_debug_level) && $eml_debug_level > 0) {
 				$mail -> SMTPDebug = $eml_debug_level;
 			}
@@ -1534,6 +1555,23 @@ function number_pad($number,$n) {
 				else {
 					$eml_error = "No valid e-mail address provided.";
 					return false;
+				}
+			}
+
+			if (is_array($eml_attachments) && sizeof($eml_attachments) > 0) {
+				foreach ($eml_attachments as $attachment) {
+					$attachment['name'] = $attachment['name'] != '' ? $attachment['name'] : basename($attachment['value']);
+					if ($attachment['type'] == 'file' || $attachment['type'] == 'path') {
+						$mail -> AddAttachment($attachment['value'], $attachment['name']);
+					}
+					else if ($attachment['type'] == 'string') {
+						if (base64_encode(base64_decode($attachment['value'], true)) === $attachment['value']) {
+							$mail -> AddStringAttachment(base64_decode($attachment['value']), $attachment['name']);
+						}
+						else {
+							$mail -> AddStringAttachment($attachment['value'], $attachment['name']);
+						}
+					}
 				}
 			}
 

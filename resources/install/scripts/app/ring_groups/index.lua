@@ -143,6 +143,8 @@
 		dialplan = session:getVariable("dialplan");
 		caller_id_name = session:getVariable("caller_id_name");
 		caller_id_number = session:getVariable("caller_id_number");
+		effective_caller_id_name = session:getVariable("effective_caller_id_name");
+		effective_caller_id_number = session:getVariable("effective_caller_id_number");
 		network_addr = session:getVariable("network_addr");
 		ani = session:getVariable("ani");
 		aniii = session:getVariable("aniii");
@@ -154,6 +156,14 @@
 		call_direction = session:getVariable("call_direction");
 		accountcode = session:getVariable("accountcode");
 		local_ip_v4 = session:getVariable("local_ip_v4")
+	end
+
+--set caller id
+	if (effective_caller_id_name ~= nil) then
+		caller_id_name = effective_caller_id_name;
+	end
+	if (effective_caller_id_number ~= nil) then
+		caller_id_number = effective_caller_id_number;
 	end
 
 --default to local if nil
@@ -227,15 +237,20 @@
 	record_path = recordings_dir .. "/" .. domain_name .. "/archive/" .. os.date("%Y/%b/%d");
 	record_path = record_path:gsub("\\", "/");
 
---set the recording file
-	record_name = uuid .. "." .. record_ext;
+--set the recording file name
+	if (session:ready()) then
+		record_name = session:getVariable("record_name");
+		if (not record_name) then
+			record_name = uuid .. "." .. record_ext;
+		end
+	end
 
 ---set the call_timeout to a higher value to prevent the early timeout of the ring group
 	if (session:ready()) then
 		if (ring_group_call_timeout and #ring_group_call_timeout == 0) then
 			ring_group_call_timeout = '300';
 		end
-		session:setVariable("call_timeout",ring_group_call_timeout);
+		session:setVariable("call_timeout", ring_group_call_timeout);
 	end
 
 --play the greeting
@@ -370,7 +385,7 @@
 --process the ring group
 	if (ring_group_forward_enabled == "true" and string.len(ring_group_forward_destination) > 0) then
 		--forward the ring group
-			session:setVariable("toll_allow",ring_group_forward_toll_allow);
+			session:setVariable("toll_allow", ring_group_forward_toll_allow);
 			session:execute("transfer", ring_group_forward_destination.." XML "..context);
 	else
 		--get the strategy of the ring group, if random, we use random() to order the destinations

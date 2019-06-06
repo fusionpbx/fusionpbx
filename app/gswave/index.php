@@ -156,7 +156,7 @@
 
 	echo "</table>";
 	echo "</form>";
-	//echo "<br />";
+	echo "<br />";
 
 //stream the file
 	if (is_uuid($_GET['id'])) {

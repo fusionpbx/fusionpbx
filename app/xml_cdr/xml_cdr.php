@@ -594,6 +594,9 @@
 							if ($prefix == $is_prefixed) {
 								$content .= substr(format_phone(escape(substr($row['destination_number'], 0, 20))),strlen($prefix))."\n";
 							}
+							else {
+								$content .= format_phone(escape(substr($row['destination_number'], 0, 20)))."\n";
+							}
 						}
 						else {
 							$content .= format_phone(escape(substr($row['destination_number'], 0, 20)))."\n";

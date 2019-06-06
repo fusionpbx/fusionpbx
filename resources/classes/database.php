@@ -35,6 +35,8 @@ include "root.php";
 			public $host;
 			public $port;
 			public $db_name;
+			public $db_secure;
+			public $db_cert_authority;
 			public $username;
 			public $password;
 			public $path;
@@ -107,6 +109,12 @@ include "root.php";
 						if (!isset($this->host) && isset($db_host)) { $this->host = $db_host; }
 						if (!isset($this->port) && isset($db_port)) { $this->port = $db_port; }
 						if (!isset($this->db_name) && isset($db_name)) { $this->db_name = $db_name; }
+						if (!isset($this->db_secure) && isset($db_secure)) {
+							$this->db_secure = $db_secure;
+						}
+						else {
+							$this->db_secure = false;
+						}
 						if (!isset($this->username) && isset($db_username)) { $this->username = $db_username; }
 						if (!isset($this->password) && isset($db_password)) { $this->password = $db_password; }
 						if (!isset($this->path) && isset($db_path)) { $this->path = $db_path; }
@@ -183,7 +191,12 @@ include "root.php";
 					try {
 						if (strlen($this->host) > 0) {
 							if (strlen($this->port) == 0) { $this->port = "5432"; }
-							$this->db = new PDO("pgsql:host=$this->host port=$this->port dbname=$this->db_name user=$this->username password=$this->password");
+							if ($this->db_secure == true) {
+								$this->db = new PDO("pgsql:host=$this->host port=$this->port dbname=$this->db_name user=$this->username password=$this->password sslmode=verify-ca sslrootcert=$this->db_cert_authority");
+							}
+							else {
+								$this->db = new PDO("pgsql:host=$this->host port=$this->port dbname=$this->db_name user=$this->username password=$this->password");
+							}
 						}
 						else {
 							$this->db = new PDO("pgsql:dbname=$this->db_name user=$this->username password=$this->password");

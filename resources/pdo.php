@@ -54,6 +54,12 @@
 	if (isset($dbfilename)) {
 		$db_name = $dbfilename;
 	}
+	if (isset($dbsecure)) {
+		$db_secure = $dbsecure;
+	}
+	if (isset($dbcertauthority)) {
+		$db_cert_authority = $dbcertauthority;
+	}
 
 if (!function_exists('get_db_field_names')) {
 	function get_db_field_names($db, $table, $db_name='fusionpbx') {
@@ -240,9 +246,20 @@ if ($db_type == "mysql") {
 if ($db_type == "pgsql") {
 	//database connection
 	try {
+		if (isset($db_secure)) {
+			$dbissecure = $db_secure;
+		}
+		else {
+			$dbissecure = false;
+		}
 		if (strlen($db_host) > 0) {
 			if (strlen($db_port) == 0) { $db_port = "5432"; }
-			$db = new PDO("pgsql:host=$db_host port=$db_port dbname=$db_name user=$db_username password=$db_password");
+			if ($dbissecure == true) {
+				$db = new PDO("pgsql:host=$db_host port=$db_port dbname=$db_name user=$db_username password=$db_password sslmode=verify-ca sslrootcert=$db_cert_authority");
+			}
+			else {
+				$db = new PDO("pgsql:host=$db_host port=$db_port dbname=$db_name user=$db_username password=$db_password");
+			}
 		}
 		else {
 			$db = new PDO("pgsql:dbname=$db_name user=$db_username password=$db_password");
