@@ -489,16 +489,16 @@
 				foreach($results as $row) {
 					echo "<tr>\n";
 					echo "	<td class='vncell' valign='top' align='left'>\n";
-					echo 		$row['FirstName'] ." ".$row['LastName'];
+					echo 		escape($row['FirstName'])." ".escape($row['LastName']);
 					echo "	</td>\n";
 					echo "	<td class='vncell' valign='top' align='left'>\n";
-					echo 	$row['Company']."&nbsp;\n";
+					echo 	escape($row['Company'])."&nbsp;\n";
 					echo "	</td>\n";
 					echo "	<td class='vncell' valign='top' align='left'>\n";
-					echo 		$row['EmailAddress']."&nbsp;\n";
+					echo 		escape($row['EmailAddress'])."&nbsp;\n";
 					echo "	</td>\n";
 					echo "	<td class='vncell' valign='top' align='left'>\n";
-					echo 		$row['Web Page']."&nbsp;\n";
+					echo 		escape($row['Web Page'])."&nbsp;\n";
 					echo "	</td>\n";
 					echo "</tr>\n";
 				}
@@ -591,12 +591,13 @@
 									//get the dialplan uuid
 										if (strlen($row['destination_number']) == 0 || strlen($row['dialplan_uuid']) == 0 ) {
 											$sql = "select * from v_destinations ";
-											$sql .= "where domain_uuid = '$domain_uuid' ";
-											$sql .= "and destination_number = '$destination_number'; ";
+											$sql .= "where domain_uuid = :domain_uuid ";
+											$sql .= "and destination_number = :destination_number; ";
 											//echo $sql."<br />\n";
-											$prep_statement = $db->prepare(check_sql($sql));
-											$prep_statement->execute();
-											$destinations = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+											$parameters['domain_uuid'] = $domain_uuid;
+											$parameters['destination_number'] = $destination_number;
+											$database = new database;
+											$destinations = $database->select($sql, $parameters, 'all');
 											$row = $destinations[0];
 
 										//add to the array
@@ -622,14 +623,16 @@
 									$sql = "delete from v_dialplan_details ";
 									$sql .= "where dialplan_uuid = '".$row['dialplan_uuid']."';";
 									//echo "$sql<br />\n";
-									$db->query($sql);
-									unset($sql);
+									$parameters['row'] = $row['dialplan_uuid'];
+									$database = new database;
+									$database->select($sql, $parameters);
 
 									$sql = "delete from v_dialplans ";
 									$sql .= "where dialplan_uuid = '".$row['dialplan_uuid']."';";
 									//echo "$sql<br />\n";
-									$db->query($sql);
-									unset($sql);
+									$parameters['row'] = $row['dialplan_uuid'];
+									$database = new database;
+									$database->select($sql, $parameters);
 								}
 
 								//delete the destinations
@@ -637,8 +640,9 @@
 									$sql = "delete from v_destinations ";
 									$sql .= "where destination_uuid = '".$row['destination_uuid']."';";
 									//echo "$sql<br />\n";
-									$db->query($sql);
-									unset($sql);
+									$parameters['row'] = $row['destination_uuid'];
+									$database = new database;
+									$database->select($sql, $parameters);
 								}
 							} //foreach
 
@@ -669,14 +673,16 @@
 								$sql = "delete from v_dialplan_details ";
 								$sql .= "where dialplan_uuid = '".$row['dialplan_uuid']."';";
 								//echo "$sql<br />\n";
-								$db->query($sql);
-								unset($sql);
+								$parameters['row'] = $row['dialplan_uuid'];
+								$database = new database;
+								$database->select($sql, $parameters);
 
 								$sql = "delete from v_dialplans ";
 								$sql .= "where dialplan_uuid = '".$row['dialplan_uuid']."';";
 								//echo "$sql<br />\n";
-								$db->query($sql);
-								unset($sql);
+								$parameters['row'] = $row['dialplan_uuid'];
+								$database = new database;
+								$database->select($sql, $parameters);
 							}
 
 							//delete the destinations
@@ -684,8 +690,9 @@
 								$sql = "delete from v_destinations ";
 								$sql .= "where destination_uuid = '".$row['destination_uuid']."';";
 								//echo "$sql<br />\n";
-								$db->query($sql);
-								unset($sql);
+								$parameters['row'] = $row['destination_uuid'];
+								$database = new database;
+								$database->select($sql, $parameters);
 							}
 						} //foreach
 					}
@@ -762,7 +769,7 @@
 							$selected = "selected='selected'";
 						}
 						if ($field !== 'domain_uuid') {
-							echo "    			<option value='".$row['table'].".".$field."' ".$selected.">".$field."</option>\n";
+							echo "    			<option value='".escape($row['table']).".".$field."' ".$selected.">".$field."</option>\n";
 						}
 					}
 					echo "			</optgroup>\n";
@@ -822,7 +829,7 @@
 				echo "	".$text['label-destination_context']."\n";
 				echo "</td>\n";
 				echo "<td class='vtable' align='left'>\n";
-				echo "	<input class='formfld' type='text' name='destination_context' id='destination_context' maxlength='255' value=\"$destination_context\">\n";
+				echo "	<input class='formfld' type='text' name='destination_context' id='destination_context' maxlength='255' value=\"".escape($destination_context)."\">\n";
 				echo "<br />\n";
 				echo $text['description-destination_context']."\n";
 				echo "</td>\n";
@@ -858,10 +865,10 @@
 				}
 				foreach ($_SESSION['domains'] as $row) {
 					if ($row['domain_uuid'] == $domain_uuid) {
-						echo "    <option value='".$row['domain_uuid']."' selected='selected'>".$row['domain_name']."</option>\n";
+						echo "    <option value='".escape($row['domain_uuid'])."' selected='selected'>".escape($row['domain_name'])."</option>\n";
 					}
 					else {
-						echo "    <option value='".$row['domain_uuid']."'>".$row['domain_name']."</option>\n";
+						echo "    <option value='".escape($row['domain_uuid'])."'>".escape($row['domain_name'])."</option>\n";
 					}
 				}
 				echo "    </select>\n";
@@ -871,7 +878,7 @@
 				echo "</tr>\n";
 			}
 			else {
-				echo "<input type='hidden' name='domain_uuid' value='".$domain_uuid."'>\n";
+				echo "<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>\n";
 			}
 
 			echo "<tr>\n";
