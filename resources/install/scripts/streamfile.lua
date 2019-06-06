@@ -98,8 +98,8 @@
 			or file_name
 	end
 
---stream file if exists
-	if (session:ready()) then
+--stream file if exists, If being called by luarun output filename to stream
+	if (session:ready() and stream == nil) then
 		session:answer();
 		local slept = session:getVariable("slept");
 		if (slept == nil or slept == "false") then
@@ -112,6 +112,8 @@
 		session:setInputCallback("on_dtmf", "");
 		session:streamFile(file_name);
 		session:unsetInputCallback();
+	else
+		stream:write(file_name);
 	end
 
 --if base64, remove temp file (increases responsiveness when files remain local)
