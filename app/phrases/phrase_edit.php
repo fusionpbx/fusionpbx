@@ -321,7 +321,7 @@
 			echo "opt_group.label = \"".$text['label-recordings']."\";\n";
 			foreach ($recordings as &$row) {
 				if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
-					echo "opt_group.appendChild(new Option(\"".escape($row["recording_name"])."\", \"lua(streamfile.lua ".escape($row["recording_filename"]).")\"));\n";
+					echo "opt_group.appendChild(new Option(\"".escape($row["recording_name"])."\", \"\${lua streamfile.lua ".escape($row["recording_filename"])."}\"));\n";
 				}
 				else {
 					echo "opt_group.appendChild(new Option(\"".escape($row["recording_name"])."\", \"".$_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.escape($row["recording_filename"])."\"));\n";
@@ -461,10 +461,10 @@
 	if (is_array($phrase_details)) {
 		foreach($phrase_details as $field) {
 			//clean up output for display
-			if ($field['phrase_detail_function'] == 'execute' && substr($field['phrase_detail_data'], 0, 19) == 'lua(streamfile.lua ') {
+			if ($field['phrase_detail_function'] == 'play-file' && substr($field['phrase_detail_data'], 0, 21) == '${lua streamfile.lua ') {
 				$phrase_detail_function = $text['label-play'];
-				$phrase_detail_data = str_replace('lua(streamfile.lua ', '', $field['phrase_detail_data']);
-				$phrase_detail_data = str_replace(')', '', $phrase_detail_data);
+				$phrase_detail_data = str_replace('${lua streamfile.lua ', '', $field['phrase_detail_data']);
+				$phrase_detail_data = str_replace('}', '', $phrase_detail_data);
 			}
 			elseif ($field['phrase_detail_function'] == 'execute' && substr($field['phrase_detail_data'], 0, 6) == 'sleep(') {
 				$phrase_detail_function = $text['label-pause'];
