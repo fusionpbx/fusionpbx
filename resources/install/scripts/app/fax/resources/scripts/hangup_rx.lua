@@ -57,6 +57,13 @@
 		return s
 	end
 
+-- escape shell arguments to prevent command injection
+
+        local function shell_esc(x)
+                return ("'"..x:gsub('\\', '\\\\')
+                       :gsub('\'', '\\\'').."'")
+        end
+
 -- set channel variables to lua variables
 	domain_uuid = env:getHeader("domain_uuid");
 	domain_name = env:getHeader("domain_name");
@@ -219,6 +226,8 @@
 	else
 		cmd = cmd .. "fax_prefix=false ";
 	end
+
+	cmd=shell_esc(cmd);
 	freeswitch.consoleLog("notice", "[fax] command: " .. cmd .. "\n");
 	result = api:execute("system", cmd);
 
