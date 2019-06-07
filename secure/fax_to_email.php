@@ -339,6 +339,7 @@ if (!function_exists('fax_split_dtmf')) {
 	$fax_path      = pathinfo($fax_file);
 	$fax_file_only = $fax_path['basename'];
 	$fax_file_name = $fax_path['filename'];
+	$fax_file_zip  = $fax_path['filename'].".zip";
 	$dir_fax       = $fax_path['dirname'];
 
 //get the domain_uuid from the database
@@ -426,6 +427,8 @@ if (!function_exists('fax_split_dtmf')) {
 			$fax_accountcode = $row["fax_accountcode"];
 			$fax_prefix = $row["fax_prefix"];
 			$fax_pin_number = $row["fax_pin_number"];
+			$fax_encrypt = $row["fax_encrypt"];
+			$fax_password = $row["fax_password"];
 			$fax_caller_id_name = $row["fax_caller_id_name"];
 			$fax_caller_id_number = $row["fax_caller_id_number"];
 			$fax_forward_number = $row["fax_forward_number"];
@@ -442,6 +445,8 @@ if (!function_exists('fax_split_dtmf')) {
 		}
 	}
 	$fax_file = path_join($dir_fax, $fax_file_only);
+	$fax_zip = path_join($dir_fax, $fax_file_zip);
+
 
 //used for debug
 	echo "fax_prefix: $fax_prefix\n";
@@ -644,10 +649,34 @@ if (!function_exists('fax_split_dtmf')) {
 		//add the attachments
 			if (strlen($fax_file_name) > 0) {
 				if ($pdf_file && file_exists($pdf_file)) {
-					$mail->AddAttachment($pdf_file); // pdf attachment
+					if ($fax_encrypt == "true") {
+						$cmd = "/usr/bin/zip -j -P ".escapeshellarg($fax_password)." ".$fax_zip." ".$pdf_file;
+						$ok = false;
+						$resp = exec_in_dir($dir_fax, $cmd, $ok);
+						echo "ZIP return code: ".$resp."\n";
+						if (file_exists($fax_zip)) {
+							$mail->AddAttachment($fax_zip); // zip attachment
+						} else {
+							$mail->AddAttachment($pdf_file); // pdf attachment
+						}
+					} else {
+						$mail->AddAttachment($pdf_file); // pdf attachment
+					}
 				}
 				else {
-					$mail->AddAttachment($fax_file); // tif attachment
+					if ($fax_encrypt == "true") {
+						$cmd = "/usr/bin/zip -j -P ".escapeshellarg($fax_password)." ".$fax_zip." ".$fax_file;
+						$ok = false;
+						$resp = exec_in_dir($dir_fax, $cmd, $ok);
+						echo "ZIP output: ".$resp."\n";
+						if (file_exists($fax_zip)) {
+							$mail->AddAttachment($fax_zip); // zip attachment
+						} else {
+							$mail->AddAttachment($fax_file); // tif attachment
+						}
+					} else {
+						$mail->AddAttachment($fax_file); // tif attachment
+					}
 				}
 				//$filename='fax.tif'; $encoding = "base64"; $type = "image/tif";
 				//$mail->AddStringAttachment(base64_decode($strfax),$filename,$encoding,$type);
@@ -661,6 +690,10 @@ if (!function_exists('fax_split_dtmf')) {
 			else {
 				echo "Message sent!";
 				$email_status="ok";
+			}
+		//cleanup zip file
+			if (file_exists($fax_zip)) {
+				unlink($fax_zip);
 			}
 	}
 

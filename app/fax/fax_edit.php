@@ -94,6 +94,8 @@
 		$fax_destination_number = check_str($_POST["fax_destination_number"]);
 		$fax_prefix = check_str($_POST["fax_prefix"]);
 		$fax_email = check_str(implode(',',array_filter($_POST["fax_email"])));
+		$fax_encrypt = check_str($_POST["fax_encrypt"]);
+		$fax_password = check_str($_POST["fax_password"]);
 		$fax_email_connection_type = check_str($_POST["fax_email_connection_type"]);
 		$fax_email_connection_host = check_str($_POST["fax_email_connection_host"]);
 		$fax_email_connection_port = check_str($_POST["fax_email_connection_port"]);
@@ -256,6 +258,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "fax_prefix, ";
 					$sql .= "fax_name, ";
 					$sql .= "fax_email, ";
+					$sql .= "fax_encrypt, ";
+					$sql .= "fax_password, ";
 					if (permission_exists('fax_extension_advanced') && function_exists("imap_open") && file_exists("fax_files_remote.php")) {
 						$sql .= "fax_email_connection_type, ";
 						$sql .= "fax_email_connection_host, ";
@@ -291,6 +295,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$fax_prefix', ";
 					$sql .= "'$fax_name', ";
 					$sql .= "'$fax_email', ";
+					$sql .= "'$fax_encrypt', ";
+					$sql .= "'$fax_password', ";
 					if (permission_exists('fax_extension_advanced') && function_exists("imap_open") && file_exists("fax_files_remote.php")) {
 						$sql .= "'$fax_email_connection_type', ";
 						$sql .= "'$fax_email_connection_host', ";
@@ -333,6 +339,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "fax_prefix = '$fax_prefix', ";
 					$sql .= "fax_name = '$fax_name', ";
 					$sql .= "fax_email = '$fax_email', ";
+					$sql .= "fax_encrypt = '$fax_encrypt', ";
+					$sql .= "fax_password = '$fax_password', ";
 					if (permission_exists('fax_extension_advanced') && function_exists("imap_open") && file_exists("fax_files_remote.php")) {
 						$sql .= "fax_email_connection_type = '$fax_email_connection_type', ";
 						$sql .= "fax_email_connection_host = '$fax_email_connection_host', ";
@@ -429,6 +437,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$fax_prefix = $row["fax_prefix"];
 			$fax_name = $row["fax_name"];
 			$fax_email = $row["fax_email"];
+			$fax_encrypt = $row["fax_encrypt"];
+			$fax_password = $row["fax_password"];
 			$fax_email_connection_type = $row["fax_email_connection_type"];
 			$fax_email_connection_host = $row["fax_email_connection_host"];
 			$fax_email_connection_port = $row["fax_email_connection_port"];
@@ -592,6 +602,56 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "<input type='button' class='btn' value='".$text['button-advanced']."' onclick=\"toggle_advanced('advanced_email_connection');\">\n";
 		}
 		echo "<br />\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<script>\n";
+		echo "function setPasswordReq(selectObj) {\n";
+		echo "  var value = selectObj.value;\n";
+		echo "  if (value == 'true') {\n";
+		echo "    document.getElementById('fax_password_cell').className = 'vncellreq';\n";
+		echo "    document.getElementById('fax_password_text').required = true;\n";
+		echo "  } else {\n";
+		echo "    document.getElementById('fax_password_cell').className = 'vncell';\n";
+		echo "    document.getElementById('fax_password_text').required = false;\n";
+		echo "  }\n";
+		echo "}\n";
+		echo "</script>\n";
+
+		echo "<tr>\n";
+		echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "  ".$text['label-fax_encrypt']."\n";
+		echo "</td>\n";
+		echo "<td width='70%' class='vtable' align='left'>\n";
+		echo "  <select name='fax_encrypt' class='formfld' onchange='setPasswordReq(this)'>\n";
+		echo "    <option>false</option>\n";
+		if ($fax_encrypt == "true") {
+			echo "    <option selected>true</option>\n";
+		} else {
+			echo "    <option>true</option>\n";
+		}
+		echo "  </select>\n";
+		echo "<br />\n";
+		echo "".$text['description-fax_encrypt']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		if ($fax_encrypt == "true") {
+			echo "<td width='30%' class='vncellreq' id='fax_password_cell' valign='top' align='left' nowrap='nowrap'>\n";
+		} else {
+			echo "<td width='30%' class='vncell' id='fax_password_cell' valign='top' align='left' nowrap='nowrap'>\n";
+		}
+		echo "  ".$text['label-fax_password']."\n";
+		echo "</td>\n";
+		echo "<td width='70%' class='vtable' align='left'>\n";
+		if ($fax_encrypt == "true") {
+			echo "  <input class='formfld' required='required' type='password' name='fax_password' id='fax_password_text' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='50' value=\"".escape($fax_password)."\">\n";
+		} else {
+			echo "  <input class='formfld' type='password' name='fax_password' id='fax_password_text' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='50' value=\"".escape($fax_password)."\">\n";
+		}
+		echo "<br />\n";
+		echo "".$text['description-fax_password']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
