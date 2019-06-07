@@ -777,7 +777,7 @@
 //set the defaults
 	if (strlen($destination_type) == 0) { $destination_type = 'inbound'; }
 	if (strlen($destination_context) == 0) { $destination_context = 'public'; }
-	if ($destination_type =="outbound") { $destination_context = $_SESSION['domain_name']; }
+	/*if ($destination_type =="outbound") { $destination_context = $_SESSION['domain_name']; }*/
 	if ($destination_type =="local") { $destination_context = $_SESSION['domain_name']; }
 
 //show the header
