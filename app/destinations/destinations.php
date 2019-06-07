@@ -135,7 +135,7 @@
 		$parameters['search'] = '%'.$search.'%';
 	}
 	$database = new database;
-	$row = $database->select($sql, $parameters, 'all');
+	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
