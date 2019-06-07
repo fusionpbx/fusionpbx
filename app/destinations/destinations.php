@@ -68,6 +68,21 @@
 	$order_by = check_str($_GET["order_by"]);
 	$order = check_str($_GET["order"]);
 
+//validate order by
+	if (strlen($order_by) > 0) {
+		$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $order_by);
+	}
+
+//validate the order
+	switch ($order) {
+		case 'asc':
+			break;
+		case 'desc':
+			break;
+		default:
+			$order = '';
+	}
+
 //set the type
 	if ($_GET['type'] == 'inbound') {
 		$destination_type = 'inbound';
@@ -86,16 +101,16 @@
 	$search = strtolower(check_str($_GET["search"]));
 	if (strlen($search) > 0) {
 		$sql_search = " (";
-		$sql_search .= "lower(destination_type) like '%".$search."%' ";
-		$sql_search .= "or lower(destination_number) like '%".$search."%' ";
-		$sql_search .= "or lower(destination_context) like '%".$search."%' ";
-		$sql_search .= "or lower(destination_accountcode) like '%".$search."%' ";
+		$sql_search .= "lower(destination_type) like :search ";
+		$sql_search .= "or lower(destination_number) like :search ";
+		$sql_search .= "or lower(destination_context) like :search ";
+		$sql_search .= "or lower(destination_accountcode) like :search ";
 		if (permission_exists('outbound_caller_id_select')) {
-			$sql_search .= "or lower(destination_caller_id_name) like '%".$search."%' ";
-			$sql_search .= "or destination_caller_id_number like '%".$search."%' ";
+			$sql_search .= "or lower(destination_caller_id_name) like :search ";
+			$sql_search .= "or destination_caller_id_number like :search ";
 		}
-		$sql_search .= "or lower(destination_enabled) like '%".$search."%' ";
-		$sql_search .= "or lower(destination_description) like '%".$search."%' ";
+		$sql_search .= "or lower(destination_enabled) like :search ";
+		$sql_search .= "or lower(destination_description) like :search ";
 		$sql_search .= ") ";
 	}
 
@@ -105,27 +120,22 @@
 
 //prepare to page the results
 	$sql = "select count(destination_uuid) as num_rows from v_destinations ";
-	$sql .= "where destination_type = '".$destination_type."' ";
+	$sql .= "where destination_type = :destination_type ";
 	if ($_GET['show'] == "all" && permission_exists('destination_all')) {
 		//show all
 	} else {
-		$sql .= "and (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 	}
 	if (isset($sql_search)) {
 			$sql .= "and ".$sql_search;
 	}
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
+	$parameters['destination_type'] = $destination_type;
+	$parameters['domain_uuid'] = $domain_uuid;
+	if (strlen($search) > 0) {
+		$parameters['search'] = '%'.$search.'%';
 	}
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -140,22 +150,22 @@
 
 //get the list
 	$sql = "select * from v_destinations ";
-	$sql .= "where destination_type = '".$destination_type."' ";
+	$sql .= "where destination_type = :destination_type ";
 	if ($_GET['show'] == "all" && permission_exists('destination_all')) {
 		//show all
 	} else {
-		$sql .= "and (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 	}
 	if (isset($sql_search)) {
 		$sql .= "and ".$sql_search;
 	}
-	$sql .= "and destination_type = '".$destination_type."' ";
+	$sql .= "and destination_type = :destination_type ";
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$sql .= "limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$destinations = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$sql .= "limit :rows_per_page offset :offset ";
+	$parameters['rows_per_page'] = $rows_per_page;
+	$parameters['offset'] = $offset;
+	$database = new database;
+	$destinations = $database->select($sql, $parameters, 'all');
 
 //get the destination select list
 	$destination = new destinations;
