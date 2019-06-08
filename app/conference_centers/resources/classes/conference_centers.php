@@ -217,11 +217,11 @@
 					}
 					if ($conference_session_uuid != '') {
 						$sql = "select recording from v_conference_sessions ";
-						$sql .= "where conference_session_uuid = '".$conference_session_uuid."' ";
+						$sql .= "where conference_session_uuid = :conference_session_uuid ";
 						//$sql .= "and domain_uuid = '".$domain_uuid."' \n";
-						$prep_statement = $this->db->prepare($sql);
-						$prep_statement->execute();
-						$conference_sessions = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+						$parameters['conference_session_uuid'] = $conference_session_uuid;
+						$database = new database;
+						$conference_sessions = $database->select($sql, $parameters, 'all');
 						if (is_array($conference_sessions)) {
 							foreach($conference_sessions as &$row) {
 								$recording = $row['recording'];
