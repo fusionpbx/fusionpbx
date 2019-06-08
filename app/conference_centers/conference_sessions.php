@@ -87,9 +87,9 @@
 	$sql = "select count(*) as num_rows from v_conference_sessions ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and meeting_uuid = :meeting_uuid ";
-	$database = new database;
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['meeting_uuid'] = $_SESSION['meeting']['uuid'];
+	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
@@ -111,9 +111,9 @@
 		$sql .= "order by $order_by $order ";
 	}
 	$sql .= "limit :rows_per_page offset :offset ";
-	$database = new database;
 	$parameters['rows_per_page'] = $rows_per_page;
 	$parameters['offset'] = $offset;
+	$database = new database;
 	$conference_sessions = $database->select($sql, $parameters, 'all');
 
 //set the row style
