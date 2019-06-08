@@ -50,7 +50,7 @@
 	$search = $_GET["search"];
 	$search = preg_replace('{\D}', '', $search);
 	if (strlen($search) > 0) {
-		$sql = "select * from v_meetings ";
+		$sql = "select meeting_uuid from v_meetings ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and (moderator_pin = :search or participant_pin = :search) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -58,7 +58,7 @@
 			$parameters['search'] = '%'.$search.'%';
 		}
 		$database = new database;
-		$row = $database->select($sql, $parameters, 'all');
+		$meeting_uuid = $database->select($sql, $parameters, 'column');
 	}
 
 //if the $_GET array exists then process it
