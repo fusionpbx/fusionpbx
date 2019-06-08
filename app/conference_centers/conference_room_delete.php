@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -43,25 +43,28 @@
 	$text = $language->get();
 
 //get the id
-	if (count($_GET) > 0) {
-		$id = check_str($_GET["id"]);
+	if (isset($_GET["id"]) &&  is_uuid($_GET["id"])) {
+		$id = $_GET["id"];
+	}
+
+//get the domain_uuid
+	$domain_uuid = null;
+	if (isset($_SESSION['domain_uuid']) &&  is_uuid($_SESSION['domain_uuid'])) {
+		$domain_uuid = $_SESSION['domain_uuid'];
 	}
 
 //delete the data
-	if (strlen($id) > 0) {
+	if (isset($id) && is_uuid($id)) {
 		//get the meeting_uuid
-			if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-				$conference_room_uuid = check_str($_GET["id"]);
+			if (["persistformvar"] != "true") {
 				$sql = "select * from v_conference_rooms ";
-				$sql .= "where domain_uuid = '$domain_uuid' ";
-				$sql .= "and conference_room_uuid = '$conference_room_uuid' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll();
-				foreach ($result as &$row) {
-					$meeting_uuid = $row["meeting_uuid"];
-				}
-				unset ($prep_statement);
+				$sql .= "where domain_uuid = :domain_uuid ";
+				$sql .= "and conference_room_uuid = :conference_room_uuid ";
+				$parameters['domain_uuid'] = $domain_uuid;
+				$parameters['conference_room_uuid'] = $id;
+				$database = new database;
+				$meeting_uuid = $database->select($sql, $parameters, 'column');
+				unset ($parameters);
 			}
 			//echo "meeting_uuid: ".$meeting_uuid."<br />\n";
 
