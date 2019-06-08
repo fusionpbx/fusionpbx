@@ -1,3 +1,141 @@
+<a href="url"><img src="https://raw.githubusercontent.com/Len-PGH/fusionpbx-docs/master/source/_static/images/fusionpbx_member_emblem_xl_blue.png" align="center" height="350" width="250" ></a>
+
+
+FusionPBX Members
+====================
+
+FusionPBX Memberships are for businesses that want to get the most out of FusionPBX. A FusionPBX Member actively receives news and updates, has access to past training videos, additional member documentation, and live monthly continuing education training.
+
+[How to sign up](https://www.fusionpbx.com/app/account/members.php)
+-----------------
+
+[Create](https://www.fusionpbx.com/account) an Account. Then [login](https://www.fusionpbx.com/login) and click on **Become a Member** and then **Join Now**. [From there follow the simple instructions](https://www.fusionpbx.com/app/account/members.php). After signing up as a FusionPBX member you will get **instant access** to your member benefits. 
+
+Receive News & Updates
+-----------------------
+
+FusionPBX Members receive regular updates on **new features** and **behavioral changes** in the project, as well as **advanced warning** of any security related issues. Be in the know as a Member. 
+
+Advanced Bug Reporting
+-----------------------
+
+Beyond submitting your own Bug Reports, FusionPBX Members also get to **view select bug reports from other users** saving you the valuable time spent communicating the details of an issue that's already known. Become a Member today and help make FusionPBX even better. 
+
+Continuing Education
+-----------------------
+
+Receive access to an exclusive live session each month with developers of FusionPBX. Attending will help you stay on top of recent advancements, bug fixes, interface changes, and other relevant updates. If you're serious about telephony, and rely on FusionPBX as a revenue stream, you won't want to miss these valuable meetings. 
+
+
+Official Training
+------------------
+
+Members receive access to past Admin Training Videos, Advanced Training Videos and exclusive, **Advanced Member Documentation**. This is valuable documentation that we are confident you will find it to be essential and important to your business. 
+
+
+Feature Videos
+---------------
+
+To speed up the learning process, FusionPBX Members are encouraged to peruse the growing **library of Feature Videos**, to get quickly up to speed on a specific feature of FusionPBX. More videos are added on a regular basis, with the intent to help Members **become expert FusionPBX system administrators** feeling confident in their ability to manage their telephony environment with ease.
+
+Membership Features
+=====================
+
+Gold members get access to FusionPBX's REST API. Purple members get access to Call Center Reporting and Wallboard (coming soon) Additional Member Applications will be added to all Member levels.
+
+
+
+
+Membership Levels
+===================
+
+
+Green Level
+-------------
+
+<a href="url"><img src="https://raw.githubusercontent.com/Len-PGH/fusionpbx-docs/29d150e291f3f76199402d4eaee39ca501ccf1fa/source/_static/images/fusionpbx_member_emblem_md_green.png" align="center" height="350" width="250" ></a>
+
+
+The **Green** level Membership allows one individual access to all the following benefits. Some benefits are described in detail in the Membership Benefits section below. FusionPBX is critical to your business, so becoming a Member is a crucial step in protecting your investment.
+
+* News & Updates
+* Official Training Videos
+* Member Documentation
+* Feature Videos
+* Advanced Bug Reporting
+* Monthly Continuing Education
+* Additional Member Applications *(Coming Soon)*
+
+
+**Price $100.00 USD Monthly** 
+
+---
+---
+
+Purple Level
+-------------
+
+<a href="url"><img src="https://raw.githubusercontent.com/Len-PGH/fusionpbx-docs/29d150e291f3f76199402d4eaee39ca501ccf1fa/source/_static/images/fusionpbx_member_emblem_md_purple.png" align="center" height="350" width="250" ></a>
+
+The **Purple** level Membership allows one individual access to the Green level benefits, plus includes up to THREE (3) HOURS of Official Support each month, and the use† of the advanced FusionPBX Call Center applications.
+
+* News & Updates
+* Official Training Videos
+* Member Documentation
+* Feature Videos
+* Advanced Bug Reporting
+* Monthly Continuing Education
+
+* Call Center Wallboard Application†
+* Call Center Summary (Reporting) Application†
+* Up to 3 Hours of Official Priority Support Each Month
+* Additional Member Applications (Coming Soon)
+
+
+**Price $500.00 USD Monthly**
+
+*† Up to three (3) company-owned servers (additional licensing available).*
+
+---
+---
+
+
+Gold Level
+-------------
+
+<a href="url"><img src="https://github.com/Len-PGH/fusionpbx-docs/blob/29d150e291f3f76199402d4eaee39ca501ccf1fa/source/_static/images/fusionpbx_member_emblem_md_gold.png" align="center" height="350" width="250" ></a>
+
+The **Gold** level Membership includes all the benefits of the Green and Purple membership levels, plus access for up to three (3) employees from your organization, up to SIX (6) HOURS of Official Support each month, and access to the FusionPBX REST API.
+
+* News & Updates
+* Official Training Videos
+* Member Documentation
+* Feature Videos
+* Advanced Bug Reporting
+* Monthly Continuing Education
+
+* Call Center Wallboard Application‡
+* Call Center Summary (Reporting) Application‡
+* 3 Hours of Official Priority Support Each Month
+
+* Up to Three (3) Users from Your Business
+* 3 MORE Hours of Official Priority Support
+* (Up to 6 Monthly)
+* FusionPBX REST API
+* Additional Member Applications (Coming Soon)
+
+
+**Price $1000.00 USD Monthly**
+
+*‡ Up to six (6) company-owned servers (additional licensing available).*
+
+---
+---
+
+**Becoming a FusionPBX Member requires a ONE (1) YEAR COMMITMENT (to be understood as 12 consecutive months) from the date you join. Failure to maintain a valid payment method during this period may result in your membership being permanently terminated, and all support options forfeited. Following the commitment term, your membership will continue automatically on a monthly basis, but you may cancel at any time. Note: If you have paid for, and participated in, an Official FusionPBX Training course, the standard 1-year commitment does not apply. **
+
+
+
 What is [FusionPBX](https://www.fusionpbx.com/)?
 --------------------------------------
 
