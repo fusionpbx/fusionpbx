@@ -22,6 +22,12 @@ In addition to providing all of the usual PBX functionality, FusionPBX allows yo
 - Dialplan Programming that allow nearly endless possibilities
 - [Many other Features](https://docs.fusionpbx.com/en/latest/features/features.html)
 
+Software Requirements
+--------------------------------------
+
+- FusionPBX will run on Debian 8 & 9, Ubuntu 18.04 LTS, FreeBSD 10 & 11, CentOS, and more.
+- [FusionPBX Installer](https://fusionpbx.com/download.php)
+
 How to Install FusionPBX
 ----------------------------
 * As root do the following:
@@ -212,11 +218,6 @@ These options support the project and cover any kind of help you might need from
 4. [Advanced Training](https://www.fusionpbx.com)
 5. [Developer Training](https://www.fusionpbx.com)
 
-Software Requirements
---------------------------------------
-
-- FusionPBX will run on Debian 8 & 9, FreeBSD 10 & 11, CentOS, and more.
-- [FusionPBX Installer](https://fusionpbx.com/download.php)
 
 Community
 --------------------------------------
