@@ -112,10 +112,10 @@
 
 				//remove the v_ table prefix
 				if (substr($table_name, 0, 2) == 'v_') {
-						$table_name = substr($table_name, 2);
+					$table_name = substr($table_name, 2);
 				}
 				if (substr($parent_name, 0, 2) == 'v_') {
-						$parent_name = substr($parent_name, 2);
+					$parent_name = substr($parent_name, 2);
 				}
 
 				//filter for specific tables and build the schema array
@@ -621,28 +621,28 @@
 								//delete the dialplan
 								if (strlen($row['dialplan_uuid']) > 0) {
 									$sql = "delete from v_dialplan_details ";
-									$sql .= "where dialplan_uuid = '".$row['dialplan_uuid']."';";
+									$sql .= "where dialplan_uuid = :dialplan_uuid ";
 									//echo "$sql<br />\n";
-									$parameters['row'] = $row['dialplan_uuid'];
+									$parameters['dialplan_uuid'] = $row['dialplan_uuid'];
 									$database = new database;
-									$database->select($sql, $parameters);
+									$database->execute($sql, $parameters);
 
 									$sql = "delete from v_dialplans ";
-									$sql .= "where dialplan_uuid = '".$row['dialplan_uuid']."';";
+									$sql .= "where dialplan_uuid = :dialplan_uuid ";
 									//echo "$sql<br />\n";
-									$parameters['row'] = $row['dialplan_uuid'];
-									$database = new database;
-									$database->select($sql, $parameters);
+									$parameters['dialplan_uuid'] = $row['dialplan_uuid'];
+									$database = dialplan_uuid database;
+									$database->execute($sql, $parameters);
 								}
 
 								//delete the destinations
 								if (strlen($row['destination_uuid']) > 0) {
 									$sql = "delete from v_destinations ";
-									$sql .= "where destination_uuid = '".$row['destination_uuid']."';";
+									$sql .= "where destination_uuid = :destination_uuid ";
 									//echo "$sql<br />\n";
-									$parameters['row'] = $row['destination_uuid'];
+									$parameters['destination_uuid'] = $row['destination_uuid'];
 									$database = new database;
-									$database->select($sql, $parameters);
+									$database->execute($sql, $parameters);
 								}
 							} //foreach
 
@@ -671,28 +671,28 @@
 							//delete the dialplan
 							if (strlen($row['dialplan_uuid']) > 0) {
 								$sql = "delete from v_dialplan_details ";
-								$sql .= "where dialplan_uuid = '".$row['dialplan_uuid']."';";
+								$sql .= "where dialplan_uuid = :dialplan_uuid ";
 								//echo "$sql<br />\n";
-								$parameters['row'] = $row['dialplan_uuid'];
+								$parameters['dialplan_uuid'] = $row['dialplan_uuid'];
 								$database = new database;
-								$database->select($sql, $parameters);
+								$database->execute($sql, $parameters);
 
 								$sql = "delete from v_dialplans ";
-								$sql .= "where dialplan_uuid = '".$row['dialplan_uuid']."';";
+								$sql .= "where dialplan_uuid = :dialplan_uuid ";
 								//echo "$sql<br />\n";
-								$parameters['row'] = $row['dialplan_uuid'];
+								$parameters['dialplan_uuid'] = $row['dialplan_uuid'];
 								$database = new database;
-								$database->select($sql, $parameters);
+								$database->execute($sql, $parameters);
 							}
 
 							//delete the destinations
 							if (strlen($row['destination_uuid']) > 0) {
 								$sql = "delete from v_destinations ";
-								$sql .= "where destination_uuid = '".$row['destination_uuid']."';";
+								$sql .= "where destination_uuid = :destination_uuid ";
 								//echo "$sql<br />\n";
-								$parameters['row'] = $row['destination_uuid'];
+								$parameters['destination_uuid'] = $row['destination_uuid'];
 								$database = new database;
-								$database->select($sql, $parameters);
+								$database->execute($sql, $parameters);
 							}
 						} //foreach
 					}
