@@ -64,7 +64,7 @@
 //add the search term
 	$search = strtolower(check_str($_GET["search"]));
 	if (strlen($search) > 0) {
-		$sql_search = "and (";
+		$sql_search = "and ( ";
 		$sql_search .= "lower(conference_center_name) like :search ";
 		$sql_search .= "or lower(conference_center_extension) like :search ";
 		$sql_search .= "or lower(conference_center_greeting) like :search ";
