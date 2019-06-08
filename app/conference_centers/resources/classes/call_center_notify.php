@@ -35,8 +35,7 @@ include "root.php";
 		public $answer_state;
 		public $agent_uuid;
 
-
-	//feature_event method		
+		//feature_event method
 		public function send_call_center_notify() {
 
 				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
@@ -54,10 +53,10 @@ include "root.php";
 						$event .= "answer-state: ".$this->answer_state."\n";
 						event_socket_request($fp, $event);
 						//echo $event."<br />";
-					fclose($fp);	
+					fclose($fp);
 				}
 		} //function
-	
+
 	} //class
 
 ?>
