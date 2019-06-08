@@ -1,3 +1,27 @@
+What is [FusionPBX](https://www.fusionpbx.com/)?
+--------------------------------------
+
+[FusionPBX](http://fusionpbx.com/) can be used as a single or domain based multi-tenant PBX, carrier grade switch, call center server, fax server, VoIP server, voicemail server, conference server, voice application server, multi-tenant appliance framework and more. [FreeSWITCH™](https://freeswitch.com) is a highly scalable, multi-threaded, multi-platform communication platform. 
+
+It provides the functionality your business needs and brings carrier grade switching, and corporate-level phone system features to small, medium, and large businesses. Read more at [FusionPBX](https://www.fusionpbx.com/). [Please visit our youtube channel](https://www.youtube.com/FusionPBX)
+
+In addition to providing all of the usual PBX functionality, FusionPBX allows you to configure:
+
+- Multi-Tenant
+- Unlimited Extensions
+- Voicemail-to-Email
+- Device Provisioning
+- Music on Hold
+- Call Parking
+- Automatic Call Distribution
+- Interactive Voice Response
+- Ring Groups
+- Find Me / Follow Me
+- Hot desking
+- High Availability and Redundancy
+- Dialplan Programming that allow nearly endless possibilities
+- [Many other Features](https://docs.fusionpbx.com/en/latest/features/features.html)
+
 <a href="url"><img src="https://raw.githubusercontent.com/Len-PGH/fusionpbx-docs/master/source/_static/images/fusionpbx_member_emblem_xl_blue.png" align="center" height="350" width="250" ></a>
 
 
@@ -136,29 +160,7 @@ The **Gold** level Membership includes all the benefits of the Green and Purple 
 
 
 
-What is [FusionPBX](https://www.fusionpbx.com/)?
---------------------------------------
 
-[FusionPBX](http://fusionpbx.com/) can be used as a single or domain based multi-tenant PBX, carrier grade switch, call center server, fax server, VoIP server, voicemail server, conference server, voice application server, multi-tenant appliance framework and more. [FreeSWITCH™](https://freeswitch.com) is a highly scalable, multi-threaded, multi-platform communication platform. 
-
-It provides the functionality your business needs and brings carrier grade switching, and corporate-level phone system features to small, medium, and large businesses. Read more at [FusionPBX](https://www.fusionpbx.com/). [Please visit our youtube channel](https://www.youtube.com/FusionPBX)
-
-In addition to providing all of the usual PBX functionality, FusionPBX allows you to configure:
-
-- Multi-Tenant
-- Unlimited Extensions
-- Voicemail-to-Email
-- Device Provisioning
-- Music on Hold
-- Call Parking
-- Automatic Call Distribution
-- Interactive Voice Response
-- Ring Groups
-- Find Me / Follow Me
-- Hot desking
-- High Availability and Redundancy
-- Dialplan Programming that allow nearly endless possibilities
-- [Many other Features](https://docs.fusionpbx.com/en/latest/features/features.html)
 
 Free Support
 --------------------------------------
