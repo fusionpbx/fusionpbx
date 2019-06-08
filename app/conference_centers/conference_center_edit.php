@@ -45,7 +45,7 @@
 //action add or update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
-		$conference_center_uuid = check_str($_REQUEST["id"]);
+		$conference_center_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
@@ -53,14 +53,14 @@
 
 //get http post variables and set them to php variables
 	if (is_array($_POST)) {
-		$conference_center_uuid = check_str($_POST["conference_center_uuid"]);
-		$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
-		$conference_center_name = check_str($_POST["conference_center_name"]);
-		$conference_center_extension = check_str($_POST["conference_center_extension"]);
-		$conference_center_greeting = check_str($_POST["conference_center_greeting"]);
-		$conference_center_pin_length = check_str($_POST["conference_center_pin_length"]);
-		$conference_center_enabled = check_str($_POST["conference_center_enabled"]);
-		$conference_center_description = check_str($_POST["conference_center_description"]);
+		$conference_center_uuid = $_POST["conference_center_uuid"];
+		$dialplan_uuid = $_POST["dialplan_uuid"];
+		$conference_center_name = $_POST["conference_center_name"];
+		$conference_center_extension = $_POST["conference_center_extension"];
+		$conference_center_greeting = $_POST["conference_center_greeting"];
+		$conference_center_pin_length = $_POST["conference_center_pin_length"];
+		$conference_center_enabled = $_POST["conference_center_enabled"];
+		$conference_center_description = $_POST["conference_center_description"];
 	}
 
 //process the user data and save it to the database
@@ -68,7 +68,7 @@
 
 		//get the uuid from the POST
 			if ($action == "update") {
-				$conference_center_uuid = check_str($_POST["conference_center_uuid"]);
+				$conference_center_uuid = $_POST["conference_center_uuid"];
 			}
 
 		//check for all required data
@@ -148,9 +148,6 @@
 			$database = new database;
 			$database->app_name = "conference_centers";
 			$database->app_uuid = "b81412e8-7253-91f4-e48e-42fc2c9a38d9";
-			if (strlen($conference_center_uuid) > 0) {
-				$database->uuid($conference_center_uuid);
-			}
 			$database->save($array);
 			$message = $database->message;
 
@@ -189,13 +186,14 @@
 
 //pre-populate the form
 	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
-		$conference_center_uuid = check_str($_GET["id"]);
+		$conference_center_uuid = $_GET["id"];
 		$sql = "select * from v_conference_centers ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and conference_center_uuid = '$conference_center_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and conference_center_uuid = :conference_center_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['conference_center_uuid'] = $conference_center_uuid;
+		$database = new database;
+		$result = $database->select($sql, $parameters, 'all');
 		foreach ($result as &$row) {
 			$conference_center_uuid = $row["conference_center_uuid"];
 			$dialplan_uuid = $row["dialplan_uuid"];
@@ -206,7 +204,7 @@
 			$conference_center_enabled = $row["conference_center_enabled"];
 			$conference_center_description = $row["conference_center_description"];
 		}
-		unset ($prep_statement);
+		unset ($parameters);
 	}
 
 //set defaults
@@ -215,27 +213,27 @@
 
 //get the recordings
 	$sql = "select recording_name, recording_filename from v_recordings ";
-	$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by recording_name asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$recordings = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$recordings = $database->select($sql, $parameters, 'all');
 
 //get the phrases
 	$sql = "select * from v_phrases ";
-	$sql .= "where (domain_uuid = '".$_SESSION["domain_uuid"]."' or domain_uuid is null) ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$phrases = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$phrases = $database->select($sql, $parameters, 'all');
 
 //get the streams
 	$sql = "select * from v_streams ";
 	$sql .= "where (domain_uuid = '".$_SESSION["domain_uuid"]."' or domain_uuid is null) ";
 	$sql .= "and stream_enabled = 'true' ";
 	$sql .= "order by stream_name asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$streams = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$streams = $database->select($sql, $parameters, 'all');
 
 //show the header
 	require_once "resources/header.php";
