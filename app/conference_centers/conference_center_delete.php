@@ -17,44 +17,52 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('conference_center_delete')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('conference_center_delete')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
 //get the id
-	if (count($_GET)>0) {
-		$id = check_str($_GET["id"]);
+	if (isset($_GET["id"]) &&  is_uuid($_GET["id"])) {
+		$id = $_GET["id"];
 	}
 
-//delete the records
-	if (strlen($id) > 0) {
+//get the domain_uuid
+	$domain_uuid = null;
+	if (isset($_SESSION['domain_uuid']) &&  is_uuid($_SESSION['domain_uuid'])) {
+		$domain_uuid = $_SESSION['domain_uuid'];
+	}
 
+//delete the data
+	if (isset($id) && is_uuid($id)) {
 		//get the dialplan uuid
-			$sql = "select * from v_conference_centers ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and conference_center_uuid = '$id' ";
-			$prep_statement = $db->prepare($sql);
-			$prep_statement->execute();
-			while($row = $prep_statement->fetch(PDO::FETCH_ASSOC)) {
-				$dialplan_uuid = $row['dialplan_uuid'];
-			}
+			$sql = "select dialplan_uuid from v_conference_centers ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and conference_center_uuid = :conference_center_uuid ";
+			$parameters['domain_uuid'] = $domain_uuid;
+			$parameters['conference_center_uuid'] = $id;
+			$database = new database;
+			$dialplan_uuid = $database->select($sql, $parameters, 'column');
+			unset ($parameters);
 
 		//delete the conference center
 			$sql = "delete from v_conference_centers ";
