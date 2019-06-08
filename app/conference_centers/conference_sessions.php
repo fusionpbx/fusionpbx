@@ -66,7 +66,7 @@
 	}
 
 //add meeting_uuid to a session variable
-	if (strlen($meeting_uuid) > 0) {
+	if (strlen($meeting_uuid) > 0 && is_uuid($meeting_uuid)) {
 		$_SESSION['meeting']['uuid'] = $meeting_uuid;
 	}
 
