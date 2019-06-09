@@ -47,10 +47,22 @@
 	require_once "resources/header.php";
 	$document['title'] = $text['title-user_manager'];
 
+//get variables used to control the order
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
+
+//validate the order
+	switch ($order) {
+		case 'asc':
+			break;
+		case 'desc':
+			break;
+		default:
+			$order = '';
+	}
+
 //set the variables
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
-	$search = check_str($_REQUEST["search"]);
+	$search = $_REQUEST["search"];
 	if (strlen($search) > 0) {
 		$search = strtolower($search);
 	}
@@ -61,27 +73,31 @@
 //get the user count from the database
 	$sql = "select count(*) as num_rows from view_users where 1 = 1 ";
 	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
-		$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and u.domain_uuid = :domain_uuid \n";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	if (strlen($search) > 0) {
-		$sql .= "and (lower(username) like '%".$search."%' \n";
-		$sql .= "or lower(groups) like '%".$search."%' \n";
-		$sql .= "or lower(contact_organization) like '%".$search."%' \n";
-		$sql .= "or lower(contact_name_given) like '%".$search."%' \n";
-		$sql .= "or lower(contact_name_family) like '%".$search."%') \n";
+		$sql .= "and (\n";
+		$sql .= "lower(username) like :search \n";
+		$sql .= "or lower(groups) like :search \n";
+		$sql .= "or lower(contact_organization) like :search \n";
+		$sql .= "or lower(contact_name_given) like :search \n";
+		$sql .= "or lower(contact_name_family) like :search \n";
+		$sql .= ")\n";
+		$parameters['search'] = '%'.$search.'%';
 	}
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
+	if (strlen($order_by)> 0) {
+		$sql .= "order by ".$order_by." ".$order." \n";
 	}
-	unset ($prep_statement, $result, $sql);
+	else {
+		$sql .= "order by u.username asc \n";
+	}
+	$sql .= "limit :rows_per_page offset :offset ";
+	$parameters['rows_per_page'] = $rows_per_page;
+	$parameters['offset'] = $offset;
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
+	unset ($parameters, $sql);
 
 //prepare for paging
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -99,14 +115,18 @@
 	$sql .= "from view_users as u \n";
 	$sql .= "where 1 = 1 \n";
 	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
-		$sql .= "and u.domain_uuid = '".$_SESSION['domain_uuid']."' \n";
+		$sql .= "and u.domain_uuid = :domain_uuid \n";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	if (strlen($search) > 0) {
-		$sql .= "and (lower(username) like '%".$search."%' \n";
-		$sql .= "or lower(groups) like '%".$search."%' \n";
-		$sql .= "or lower(contact_organization) like '%".$search."%' \n";
-		$sql .= "or lower(contact_name_given) like '%".$search."%' \n";
-		$sql .= "or lower(contact_name_family) like '%".$search."%') \n";
+		$sql .= "and (\n";
+		$sql .= "lower(username) like :search \n";
+		$sql .= "or lower(groups) like :search \n";
+		$sql .= "or lower(contact_organization) like :search \n";
+		$sql .= "or lower(contact_name_given) like :search \n";
+		$sql .= "or lower(contact_name_family) like :search \n";
+		$sql .= ")\n";
+		$parameters['search'] = '%'.$search.'%';
 	}
 	if (strlen($order_by)> 0) {
 		$sql .= "order by ".$order_by." ".$order." \n";
@@ -114,17 +134,12 @@
 	else {
 		$sql .= "order by u.username asc \n";
 	}
-	$sql .= "limit ".$rows_per_page." offset ".$offset." ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	//if (!$users) {
-	//	echo "<pre>\n";
-	//	print_r($prep_statement->errorInfo());
-	//	echo "</pre>\n";
-	//	exit;
-	//}
-	unset ($prep_statement, $sql);
+	$sql .= "limit :rows_per_page offset :offset ";
+	$parameters['rows_per_page'] = $rows_per_page;
+	$parameters['offset'] = $offset;
+	$database = new database;
+	$users = $database->select($sql, $parameters, 'all');
+	unset ($parameters, $sql);
 
 //page title and description
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
