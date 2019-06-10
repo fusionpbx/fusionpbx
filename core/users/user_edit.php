@@ -851,7 +851,7 @@
 		echo "		<td class='vtable'><input type='text' class='formfld' name='contact_name_family' value='".escape($contact_name_family)."'></td>";
 		echo "	</tr>";
 		echo "	<tr>";
-		echo "		<td class='vncell'>".$text['label-company_name']."</td>";
+		echo "		<td class='vncell'>".$text['label-organization']."</td>";
 		echo "		<td class='vtable'><input type='text' class='formfld' name='contact_organization' value='".escape($contact_organization)."'></td>";
 		echo "	</tr>";
 	}
