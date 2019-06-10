@@ -199,7 +199,7 @@ include "root.php";
 			}
 		}
 
-		private function contact_append(&$contacts, &$line, $domain_uuid, $device_user_uuid, $is_group){
+		private function contact_append(&$contacts, &$line, $domain_uuid, $device_user_uuid, $is_group) {
 			$sql = "select c.contact_uuid, c.contact_organization, c.contact_name_given, c.contact_name_family, ";
 			$sql .= "c.contact_type, c.contact_category, p.phone_label,";
 			$sql .= "p.phone_number, p.phone_extension, p.phone_primary ";
@@ -267,7 +267,7 @@ include "root.php";
 			}
 		}
 
-		private function contact_grandstream(&$contacts, &$line, $domain_uuid, $device_user_uuid){
+		private function contact_grandstream(&$contacts, &$line, $domain_uuid, $device_user_uuid) {
 			// Get username for this.
 			$sql = "SELECT username FROM v_users WHERE user_uuid = '${device_user_uuid}' AND domain_uuid = '${domain_uuid}' LIMIT 1";
 			$prep_statement = $this->db->prepare(check_sql($sql));
@@ -280,7 +280,7 @@ include "root.php";
 			// Easier than assigning these common groups to every user.
 			// Check provision global_contact_groups and sanitize for sql.
 			$global_contact_groups['enabled']=false;
-			if ( preg_match('/[a-zA-Z0-9-_, ]/',$_SESSION['provision']['grandstream_global_contact_groups']['text'])){
+			if ( preg_match('/[a-zA-Z0-9-_, ]/',$_SESSION['provision']['grandstream_global_contact_groups']['text'])) {
 				$global_contact_groups['enabled']=true;
 				$gp=array();
 				$groups=explode(',',$_SESSION['provision']['grandstream_global_contact_groups']['text']);
@@ -297,13 +297,14 @@ include "root.php";
 			$sql .= "	INNER JOIN v_contact_groups cg ";
 			$sql .= "	ON cg.group_uuid = g.group_uuid ";
 			$sql .= "WHERE ug.user_uuid = '$device_user_uuid' ";
-			if ( $global_contact_groups['enabled'] ){
+			if ($global_contact_groups['enabled']) {
 				$sql .= "UNION ";
 				$sql .= "SELECT g.group_uuid, g.group_name, g.group_description ";
 				$sql .= "FROM v_groups g ";
 				$sql .= "WHERE g.group_name IN( ".$global_contact_groups['sql'].") ";
 			}
 			$sql .= "ORDER BY group_description";
+//echo $sql."\n\n";
 			$prep_statement = $this->db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$user_groups = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -312,7 +313,7 @@ include "root.php";
 			foreach ($user_groups as &$row) {
 				$contacts[] = array("contact_type"=>"group", "group_name"=>$row['group_name'], "group_description"=>$row['group_description'], "id"=>++$key);
 				$groups[$row['group_uuid']] = $key;
-				$my_groups[] = '@'.$row['group_name']; // Used to show/hide  
+				$my_groups[] = '@'.$row['group_name']; // Used to show/hide
 			}
 			// Get a list of contacts that this user/phone has access based on assigned users and groups.
 			$sql  = "SELECT c.contact_uuid, c.contact_name_given, c.contact_name_family, c.contact_title, c.contact_category, c.contact_role, c.contact_organization, u.user_uuid ";
@@ -327,7 +328,7 @@ include "root.php";
 			$sql .= "		FROM v_user_groups ug ";
 			$sql .= "		WHERE ug.user_uuid = '$device_user_uuid' ";
 			$sql .= "		AND ug.domain_uuid = '$domain_uuid' ";
-			if ( $global_contact_groups['enabled'] ){
+			if ($global_contact_groups['enabled']) {
 				$sql .= "	UNION ";
 				$sql .= "	SELECT g.group_uuid ";
 				$sql .= "	FROM v_groups g ";
@@ -341,6 +342,8 @@ include "root.php";
 			$sql .= "	AND cu.domain_uuid = '$domain_uuid' ";
 			$sql .= ")";
 			$sql .= "ORDER BY contact_name_given, contact_name_family";
+//echo $sql."\n\n";
+//exit;
 			$prep_statement = $this->db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$user_contacts = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -427,7 +430,7 @@ include "root.php";
 								$show = true;
 								break 1;
 							}
-						} 		
+						} 
 					}
 					if ( $show && $phone['phone_label'] == "Home" ) {
 						$contact['contact_home'] = $phone['phone_number'];
@@ -617,7 +620,7 @@ include "root.php";
 							$templates['Fanvil i30'] = 'fanvil/i30';
 
 							$templates['yealink SIP-CP860'] = 'yealink/cp860';
-#							$templates['yealink SIP-CP860'] = 'yealink/cp920';							
+#							$templates['yealink SIP-CP860'] = 'yealink/cp920';
 #							$templates['yealink SIP-CP860'] = 'yealink/cp960';
 							$templates['yealink SIP-T19P'] = 'yealink/t19p';
 							$templates['yealink SIP-T20P'] = 'yealink/t20p';
@@ -691,7 +694,7 @@ include "root.php";
 							$templates['PolycomVVX-VVX_500-UA/5'] = 'polycom/5.x';
 							$templates['PolycomVVX-VVX_501-UA/5'] = 'polycom/5.x';
 							$templates['PolycomVVX-VVX_600-UA/5'] = 'polycom/5.x';
-							$templates['PolycomVVX-VVX_601-UA/5'] = 'polycom/5.x';					
+							$templates['PolycomVVX-VVX_601-UA/5'] = 'polycom/5.x';
 							$templates['Vesa VCS754'] = 'vtech/vcs754';
 							$templates['Wget/1.11.3'] = 'konftel/kt300ip';
 							foreach ($templates as $key=>$value){
@@ -956,7 +959,8 @@ include "root.php";
 							if ($_SESSION['provision']['contact_users']['boolean'] == "true") {
 								$this->contact_append($contacts, $line, $domain_uuid, $device_user_uuid, false);
 							}
-						// Grandstream get the contacts assigned to the user and groups and add to the contacts array
+
+						//get the contacts assigned to the user and groups and add to the contacts array
 							if ($_SESSION['provision']['contact_grandstream']['boolean'] == "true") {
 								$this->contact_grandstream($contacts, $line, $domain_uuid, $device_user_uuid);
 							}
@@ -1115,7 +1119,7 @@ include "root.php";
 										$device_keys[$k]['device_key_value'] = str_replace("\${".$name."}", $value, $field['device_key_value']);
 										$device_keys[$k]['device_key_extension'] = str_replace("\${".$name."}", $value, $field['device_key_extension']);
 										$device_keys[$k]['device_key_label'] = str_replace("\${".$name."}", $value, $field['device_key_label']);
-										$device_keys[$k]['device_key_icon'] = str_replace("\${".$name."}", $value, $field['device_key_icon']);										
+										$device_keys[$k]['device_key_icon'] = str_replace("\${".$name."}", $value, $field['device_key_icon']);
 								}
 								else {
 									if (is_array($field)) {
@@ -1123,7 +1127,7 @@ include "root.php";
 											$device_keys[$k][$key]['device_key_value'] = str_replace("\${".$name."}", $value, $row['device_key_value']);
 											$device_keys[$k][$key]['device_key_extension'] = str_replace("\${".$name."}", $value, $row['device_key_extension']);
 											$device_keys[$k][$key]['device_key_label'] = str_replace("\${".$name."}", $value, $row['device_key_label']);
-											$device_keys[$k][$key]['device_key_icon'] = str_replace("\${".$name."}", $value, $row['device_key_icon']);											
+											$device_keys[$k][$key]['device_key_icon'] = str_replace("\${".$name."}", $value, $row['device_key_icon']);
 										}
 									}
 								}
@@ -1242,11 +1246,11 @@ include "root.php";
 					$view->assign("user_id",$user_id);
 					$view->assign("password",$password);
 					$view->assign("template",$device_template);
-					$view->assign("microtime",microtime(true));		
+					$view->assign("microtime",microtime(true));
 
 				// personal ldap password
 					global $laddr_salt;
-					if (isset($device_user_uuid)){
+					if (isset($device_user_uuid)) {
 						$sql = "SELECT contact_uuid FROM v_users WHERE user_uuid='".$device_user_uuid."'";
 						$prep_statement = $this->db->prepare(check_sql($sql));
 						$prep_statement->execute();
@@ -1312,7 +1316,7 @@ include "root.php";
 						//make sure the file exists
 						if (!file_exists($template_dir."/".$device_template ."/".$file)) {
 							echo "file not found ".$template_dir."/".$device_template ."/".$file;
-							if ($_SESSION['provision']['debug']['boolean'] == 'true'){
+							if ($_SESSION['provision']['debug']['boolean'] == 'true') {
 								echo ":$template_dir/$device_template/$file<br/>";
 								echo "template_dir: $template_dir<br/>";
 								echo "device_template: $device_template<br/>";
@@ -1326,7 +1330,7 @@ include "root.php";
 					$file_contents = $view->render($file);
 
 				//log file for testing
-					if ($_SESSION['provision']['debug']['boolean'] == 'true'){
+					if ($_SESSION['provision']['debug']['boolean'] == 'true') {
 						$tmp_file = "/tmp/provisioning_log.txt";
 						$fh = fopen($tmp_file, 'w') or die("can't open file");
 						$tmp_string = $mac."\n";
@@ -1355,7 +1359,7 @@ include "root.php";
 				}
 
 			//check either we have destination path to write files
-				if(strlen($provision["path"]) == 0){
+				if(strlen($provision["path"]) == 0) {
 					return;
 				}
 
@@ -1432,7 +1436,7 @@ include "root.php";
 									//destinatino file path
 										$dest_path = path_join($directory, $file_name);
 
-										if ($device_enabled == 'true'){
+										if ($device_enabled == 'true') {
 											//output template to string for header processing
 												$file_contents = $this->render();
 
@@ -1444,7 +1448,7 @@ include "root.php";
 												fwrite($fh, $file_contents);
 												fclose($fh);
 										}
-										else{ // device disabled
+										else { // device disabled
 											//remove only files with `{$mac}` name
 												if(strpos($template_path, '{$mac}') !== false){
 													unlink($dest_path);
