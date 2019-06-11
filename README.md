@@ -1,7 +1,7 @@
 What is [FusionPBX](https://www.fusionpbx.com/)?
 --------------------------------------
 
-[FusionPBX](http://fusionpbx.com/) can be used as a single or domain based multi-tenant PBX, carrier grade switch, call center server, fax server, VoIP server, voicemail server, conference server, voice application server, multi-tenant appliance framework and more. [FreeSWITCH™](https://freeswitch.com) is a highly scalable, multi-threaded, multi-platform communication platform. 
+[FusionPBX](https://www.fusionpbx.com/) can be used as a single or domain based multi-tenant PBX, carrier grade switch, call center server, fax server, VoIP server, voicemail server, conference server, voice application server, multi-tenant appliance framework and more. [FreeSWITCH™](https://freeswitch.com) is a highly scalable, multi-threaded, multi-platform communication platform. 
 
 It provides the functionality your business needs and brings carrier grade switching, and corporate-level phone system features to small, medium, and large businesses. Read more at [FusionPBX](https://www.fusionpbx.com/). [Please visit our youtube channel](https://www.youtube.com/FusionPBX)
 
@@ -26,7 +26,7 @@ Software Requirements
 --------------------------------------
 
 - FusionPBX will run on Debian 9, Ubuntu 18.04 LTS, FreeBSD 10 & 11, CentOS, and more.
-- [FusionPBX Installer](https://fusionpbx.com/download.php)
+- [FusionPBX Installer](https://www.fusionpbx.com/download.php)
 
 How to Install FusionPBX
 ----------------------------
@@ -224,7 +224,7 @@ Community
 We have a pretty thriving community. You can find us here:
 
 - [Twitter](https://twitter.com/fusionpbx)
-- [Website](https://fusionpbx.com)
+- [Website](https://www.fusionpbx.com)
 
 Contributing
 ---------------------------------------
