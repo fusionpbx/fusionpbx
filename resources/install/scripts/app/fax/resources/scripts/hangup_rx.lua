@@ -226,7 +226,7 @@
 		cmd = cmd .. "fax_prefix=false ";
 	end
 
-	cmd=shell_esc(cmd);
+	--cmd=shell_esc(cmd);
 	freeswitch.consoleLog("notice", "[fax] command: " .. cmd .. "\n");
 	result = api:execute("system", cmd);
 
