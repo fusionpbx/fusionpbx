@@ -26,17 +26,20 @@
 	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 	POSSIBILITY OF SUCH DAMAGE.
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
 
-if (permission_exists('operator_panel_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('operator_panel_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //authorized referrer
 // 	if(stristr($_SERVER["HTTP_REFERER"], '/index.php') === false) {
@@ -55,28 +58,7 @@ else {
 		$username = $_SESSION['username'];
 	}
 
-//authorized commands
-// 	if (stristr($switch_cmd, '&uuid=') == true) {
-// 		//authorized;
-// 	} elseif (stristr($switch_cmd, 'uuid_kill') == true) {
-// 		//authorized;
-// 	} elseif (stristr($switch_cmd, 'uuid_transfer') == true) {
-// 		//authorized;
-// 	} elseif (stristr($switch_cmd, 'uuid_record') == true) {
-// 		//authorized;
-// 	} elseif (stristr($action, 'user_status') == true) {
-// 		//authorized;
-// 	} elseif (stristr($action, 'callcenter_config') == true) {
-// 		//authorized;
-// 	} elseif (stristr($action, 'originate') == true) {
-// 		//authorized;
-// 	} else {
-// 		//not found. this command is not authorized
-// 		echo "access denied";
-// 		exit;
-// 	}
-
-if (count($_GET)>0) {
+if (count($_GET) >0) {
 
 	//setup the event socket connection
 		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
