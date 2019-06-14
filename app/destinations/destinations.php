@@ -125,17 +125,18 @@
 		//show all
 	} else {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (isset($sql_search)) {
-			$sql .= "and ".$sql_search;
+		$sql .= "and ".$sql_search;
 	}
 	$parameters['destination_type'] = $destination_type;
-	$parameters['domain_uuid'] = $domain_uuid;
 	if (strlen($search) > 0) {
 		$parameters['search'] = '%'.$search.'%';
 	}
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($parameters);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -155,6 +156,7 @@
 		//show all
 	} else {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (isset($sql_search)) {
 		$sql .= "and ".$sql_search;
@@ -162,10 +164,12 @@
 	$sql .= "and destination_type = :destination_type ";
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 	$sql .= "limit :rows_per_page offset :offset ";
+	$parameters['destination_type'] = $destination_type;
 	$parameters['rows_per_page'] = $rows_per_page;
 	$parameters['offset'] = $offset;
 	$database = new database;
 	$destinations = $database->select($sql, $parameters, 'all');
+	unset($parameters);
 
 //get the destination select list
 	$destination = new destinations;
