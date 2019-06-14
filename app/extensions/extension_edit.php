@@ -1040,7 +1040,7 @@
 			echo "		<td class='vtable'>";
 			echo "			<select id='line_number' name='devices[0][line_number]' class='formfld' style='width: auto;' onchange=\"".escape($onchange)."\">\n";
 			echo "			<option value=''></option>\n";
-			for ($n = 1; $n <=48; $n++) {
+			for ($n = 1; $n <=99; $n++) {
 				echo "		<option value='".escape($n)."'>".escape($n)."</option>\n";
 			}
 			echo "			</select>\n";
