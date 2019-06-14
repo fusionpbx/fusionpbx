@@ -182,31 +182,21 @@
 				echo "	<td valign='top' class='".$row_style[$c]."'>".(($row['forward_all_enabled'] == 'true') ? escape(format_phone($row['forward_all_destination'])) : '&nbsp;')."</td>";
 			}
 			if (permission_exists('follow_me')) {
-				$follow_me_enabled = false;
 				if (is_uuid($row['follow_me_uuid'])) {
-					//check if follow me is enabled
-						$sql = "select follow_me_enabled from v_follow_me ";
+					//get destination count if enabled
+					$follow_me_destination_count = 0;
+					if ($row['follow_me_enabled'] == 'true') {
+						$sql = "select count(follow_me_destination_uuid) as destination_count from v_follow_me_destinations ";
 						$sql .= "where follow_me_uuid = :follow_me_uuid ";
-						$sql .= "and domain_uuid = :domain_uuid";
+						$sql .= "and domain_uuid = :domain_uuid ";
 						$parameters['follow_me_uuid'] = $row['follow_me_uuid'];
 						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 						$database = new database;
-						$follow_me_enabled = $database->select($sql, $parameters, 'column');
-
-						if ($follow_me_enabled == 'true') { $follow_me_enabled = true; }
-					//get destination count if enabled
-						if ($follow_me_enabled) {
-							$sql = "select count(follow_me_destination_uuid) as destination_count from v_follow_me_destinations ";
-							$sql .= "where follow_me_uuid = :follow_me_uuid ";
-							$sql .= "and domain_uuid = :domain_uuid ";
-							$parameters['follow_me_uuid'] = $row['follow_me_uuid'];
-							$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-							$database = new database;
-							$follow_me_destination_count = $database->select($sql, $parameters, 'column');
-						}
+						$follow_me_destination_count = $database->select($sql, $parameters, 'column');
+					}
 				}
 				echo "	<td valign='top' class='".$row_style[$c]."'>\n";
-				if ($follow_me_enabled && $follow_me_destination_count > 0) {
+				if ($row['follow_me_enabled'] == 'true' && $follow_me_destination_count > 0) {
 					echo '		'.$text['label-enabled']." (".$follow_me_destination_count.")\n";
 				}
 				else {
