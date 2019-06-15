@@ -918,7 +918,6 @@ include "root.php";
 											$view->assign("display_name", $row["display_name"]);
 											$view->assign("auth_id", $row["auth_id"]);
 											$view->assign("user_id", $row["user_id"]);
-											$view->assign("user_password", $row["password"]);
 											$view->assign("sip_transport", $sip_transport);
 											$view->assign("sip_port", $sip_port);
 											$view->assign("register_expires", $register_expires);
