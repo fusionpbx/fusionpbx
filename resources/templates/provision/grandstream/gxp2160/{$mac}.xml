@@ -6106,9 +6106,7 @@
 
     <!-- # Admin password for web interface -->
     <!-- # String: a-z, A-Z, 0-9 -->
-{if $admin_password=="none"}
-    <P2></P2>
-{elseif isset($admin_password)}
+{if isset($admin_password)}
     <P2>{$admin_password}</P2>
 {else}
     <P2>adminadmin</P2>
