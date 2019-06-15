@@ -478,5 +478,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Aastra date format";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2672dbbc-2834-4e95-9ea9-e9ff6dc07838";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "vendor_user_password";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Vendor user level password for vendor phone embeded web server.";
+		$y++;
 
 ?>
