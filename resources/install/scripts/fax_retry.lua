@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010 - 2015
+--	Copyright (C) 2010 - 2019
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -293,10 +293,11 @@
 --for email
 	email_address = env:getHeader("mailto_address");
 	--email_address = api:execute("system", "/bin/echo -n "..email_address.." | /bin/sed -e s/\,/\\\\,/g");
-	if (not email_address) then
+	if (email_address == nil) then
 		email_address = '';
+	else
+		email_address = email_address:gsub(",", "\\,");
 	end
-	email_address = email_address:gsub(",", "\\,");
 	from_address = env:getHeader("mailfrom_address");
 	if (from_address == nil) then
 		from_address = email_address;
