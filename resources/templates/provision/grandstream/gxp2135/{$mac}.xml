@@ -6102,7 +6102,7 @@
 
     <!-- # End User Password -->
     <!-- # String: a-z, A-Z, 0-9 -->
-    <P196>{$vendor_user_password}</P196>
+    <P196>{$user_password}</P196>
 
     <!-- # Admin password for web interface -->
     <!-- # String: a-z, A-Z, 0-9 -->
