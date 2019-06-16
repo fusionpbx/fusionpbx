@@ -128,7 +128,7 @@
 
 		if (permission_exists('conference_interactive_lock')) {
 			$action_locked = ($locked == "true") ? 'unlock' : 'lock';
-			echo "	<input type='button' class='btn' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=".$action_locked."');\" value='".$text['label-'.$action_locked]."'>\n";
+			echo "	<input type='button' class='btn' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".escape($conference_name)."&data=".$action_locked."');\" value='".$text['label-'.$action_locked]."'>\n";
 		}
 		if (permission_exists('conference_interactive_mute')) {
 			$action_mute_all = ($mute_all == "true") ? 'unmute' : 'mute';
