@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -87,7 +87,7 @@
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$result = $database->select($sql, $parameters, 'all');
 	$num_rows = $database->select($sql, $parameters, 'column');
-	
+
 	//paging the records
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "";
@@ -137,7 +137,7 @@
 
 	if (is_array($call_center_queues)) {
 		foreach($call_center_queues as $row) {
-			$tr_link = "href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".$row['call_center_queue_uuid']."&name=".urlencode($row['queue_name'])."'";
+			$tr_link = "href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".escape($row['call_center_queue_uuid'])."&name=".urlencode(escape($row['queue_name']))."'";
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'><a href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".escape($row['call_center_queue_uuid'])."&name=".urlencode(escape($row['queue_name']))."'>".escape($row['queue_name'])."</a></td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['queue_extension'])."</td>\n";
