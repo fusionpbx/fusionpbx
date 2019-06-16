@@ -120,11 +120,11 @@
 
 	if (is_array($call_center_queues)) {
 		foreach($call_center_queues as $row) {
-			$tr_link = "href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".$row['call_center_queue_uuid']."&name=".urlencode($row['queue_name'])."'";
+			$tr_link = "href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".escape($row['call_center_queue_uuid'])."&name=".urlencode(escape($row['queue_name']))."'";
 			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'><a href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".$row['call_center_queue_uuid']."&name=".urlencode($row['queue_name'])."'>".$row['queue_name']."</a></td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['queue_extension']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['queue_strategy']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'><a href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".escape($row['call_center_queue_uuid'])."&name=".urlencode(escape($row['queue_name']))."'>".escape($row['queue_name'])."</a></td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['queue_extension'])."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['queue_strategy'])."</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_moh_sound]."</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_record_template]."</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_time_base_score]."</td>\n";
@@ -136,9 +136,9 @@
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_discard_abandoned_after]."</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_abandoned_resume_allowed]."</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_tier_rule_wait_multiply_level]."</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".$row['queue_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($row['queue_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icon'>\n";
-			echo "		<a href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".$row['call_center_queue_uuid']."&name=".urlencode($row['queue_name'])."' alt='".$text['button-view']."'>$v_link_label_view</a>\n";
+			echo "		<a href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".escape($row['call_center_queue_uuid'])."&name=".urlencode(escape($row['queue_name']))."' alt='".$text['button-view']."'>$v_link_label_view</a>\n";
 			//echo "		<a href='call_center_queue_delete.php?id=".$row[call_center_queue_uuid]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 			//echo "		<input type='button' class='btn' name='' alt='edit' onclick=\"window.location='call_center_queue_edit.php?id=".$row[call_center_queue_uuid]."'\" value='e'>\n";
 			//echo "		<input type='button' class='btn' name='' alt='delete' onclick=\"if (confirm('Are you sure you want to delete this?')) { window.location='call_center_queue_delete.php?id=".$row[call_center_queue_uuid]."' }\" value='x'>\n";
