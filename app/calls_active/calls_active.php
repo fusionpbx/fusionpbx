@@ -97,7 +97,7 @@
 	//call controls
 		function hangup(uuid) {
 			if (confirm("<?php echo $text['confirm-hangup']?>")) {
-				send_cmd('calls_exec.php?cmd=uuid_kill%20'+uuid);
+				send_cmd('calls_exec.php?command=hangup&uuid='+uuid);
 			}
 		}
 
