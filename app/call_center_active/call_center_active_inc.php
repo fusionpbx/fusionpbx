@@ -234,16 +234,16 @@
 							$last_status_change_length = $last_status_change_length_hour.':'.$last_status_change_length_min.':'.$last_status_change_length_sec;
 
 							echo "<tr>\n";
-							echo "<td valign='top' class='".$row_style[$c]."'>".$agent_name."</td>\n";
-							echo "<td valign='top' class='".$row_style[$c]."'>".$agent_extension."</td>\n";
-							echo "<td valign='top' class='".$row_style[$c]."'>".$status."</td>\n";
-							echo "<td valign='top' class='".$row_style[$c]."'>".$state."</td>\n";
-							echo "<td valign='top' class='".$row_style[$c]."'>".$last_status_change_length."</td>\n";
-							echo "<td valign='top' class='".$row_style[$c]."'>".$no_answer_count."</td>\n";
-							echo "<td valign='top' class='".$row_style[$c]."'>".$calls_answered."</td>\n";
-							echo "<td valign='top' class='".$row_style[$c]."'>".$tier_state."</td>\n";
-							echo "<td valign='top' class='".$row_style[$c]."'>".$tier_level."</td>\n";
-							echo "<td valign='top' class='".$row_style[$c]."'>".$tier_position."</td>\n";
+							echo "<td valign='top' class='".$row_style[$c]."'>".escape($agent_name)."</td>\n";
+							echo "<td valign='top' class='".$row_style[$c]."'>".escape($agent_extension)."</td>\n";
+							echo "<td valign='top' class='".$row_style[$c]."'>".escape($status)."</td>\n";
+							echo "<td valign='top' class='".$row_style[$c]."'>".escape($state)."</td>\n";
+							echo "<td valign='top' class='".$row_style[$c]."'>".escape($last_status_change_length)."</td>\n";
+							echo "<td valign='top' class='".$row_style[$c]."'>".escape($no_answer_count)."</td>\n";
+							echo "<td valign='top' class='".$row_style[$c]."'>".escape($calls_answered)."</td>\n";
+							echo "<td valign='top' class='".$row_style[$c]."'>".escape($tier_state)."</td>\n";
+							echo "<td valign='top' class='".$row_style[$c]."'>".escape($tier_level)."</td>\n";
+							echo "<td valign='top' class='".$row_style[$c]."'>".escape($tier_position)."</td>\n";
 
 							if (permission_exists('call_center_active_options')) {
 
@@ -251,21 +251,20 @@
 
 								//need to check state to so only waiting gets call, and trying/answer gets eavesdrop
 								if ($tier_state == "Offering" || $tier_state == "Active Inbound") {
-									$orig_command="{origination_caller_id_name=eavesdrop,origination_caller_id_number=".$agent_extension."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26eavesdrop(".$agent_uuid.")";
+									$orig_command="{origination_caller_id_name=eavesdrop,origination_caller_id_number=".escape($agent_extension)."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26eavesdrop(".escape($agent_uuid).")";
 
 									//debug
 									//echo $orig_command;
 									//echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=log+".$orig_command.")');}\">log_cmd</a>&nbsp;\n";
 									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=originate+".$orig_command.")');}\">".$text['label-eavesdrop']."</a>&nbsp;\n";
 
-									$xfer_command = $agent_uuid." -bleg ".$_SESSION['user']['extension'][0]['user']." XML ".$_SESSION['domain_name'];
+									$xfer_command = escape($agent_uuid)." -bleg ".escape($_SESSION['user']['extension'][0]['user'])." XML ".escape($_SESSION['domain_name']);
 									//$xfer_command = $agent_uuid." ".$_SESSION['user']['extension'][0]['user']." XML default";
-									$xfer_command = urlencode($xfer_command);
-									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=uuid_transfer+".$xfer_command."');}\">".$text['label-transfer']."</a>&nbsp;\n";
+									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=uuid_transfer+".urlencode($xfer_command)."');}\">".$text['label-transfer']."</a>&nbsp;\n";
 								}
 								else {
-									$orig_call="{origination_caller_id_name=c2c-".urlencode($name).",origination_caller_id_number=".$agent_extension."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26bridge(user/".$agent_extension."@".$_SESSION['domain_name'].")";
-									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=originate+".$orig_call.")');}\">".$text['label-call']."</a>&nbsp;\n";
+									$orig_call="{origination_caller_id_name=c2c-".urlencode(escape($name)).",origination_caller_id_number=".escape($agent_extension)."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26bridge(user/".escape($agent_extension)."@".$_SESSION['domain_name'].")";
+									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=originate+".escape($orig_call).")');}\">".$text['label-call']."</a>&nbsp;\n";
 								}
 								echo "</td>";
 							}
@@ -298,7 +297,7 @@
 
 				echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 				echo "  <tr>\n";
-				echo "	<td align='left'><b>".$text['label-queue'].": ".ucfirst($queue_name)."</b><br />\n";
+				echo "	<td align='left'><b>".$text['label-queue'].": ".ucfirst(escape($queue_name))."</b><br />\n";
 				echo "		".$text['description-queue']."<br />\n";
 				echo "	</td>\n";
 				echo "	<td align='right' valign='top'>";
@@ -363,16 +362,16 @@
 				}
 
 				echo "<tr>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>".$joined_length."</td>\n";
-				//echo "<td valign='top' class='".$row_style[$c]."'>".$system_length."</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>".$caller_name."&nbsp;</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>".$caller_number."&nbsp;</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>".$state."</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".escape($joined_length)."</td>\n";
+				//echo "<td valign='top' class='".$row_style[$c]."'>".escape($system_length)."</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".escape($caller_name)."&nbsp;</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".escape($caller_number)."&nbsp;</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".escape($state)."</td>\n";
 				if (if_group("admin") || if_group("superadmin")) {
 					echo "<td valign='top' class='".$row_style[$c]."'>";
 					if ($state != "Abandoned") {
 						$q_caller_number = urlencode($caller_number);
-						$orig_command="{origination_caller_id_name=eavesdrop,origination_caller_id_number=".$q_caller_number."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26eavesdrop(".$session_uuid.")";
+						$orig_command="{origination_caller_id_name=eavesdrop,origination_caller_id_number=".escape($q_caller_number)."}user/".escape($_SESSION['user']['extension'][0]['user'])."@".escape($_SESSION['domain_name'])." %26eavesdrop(".escape($session_uuid).")";
 
 						//debug
 						//echo $orig_command;
@@ -385,7 +384,7 @@
 					}
 					echo "</td>";
 				}
-				echo "<td valign='top' class='".$row_style[$c]."'>".$serving_agent_name."&nbsp;</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".escape($serving_agent_name)."&nbsp;</td>\n";
 				echo "</tr>\n";
 				if ($c==0) { $c=1; } else { $c=0; }
 			}
