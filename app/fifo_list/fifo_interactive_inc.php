@@ -17,22 +17,26 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010
+	Copyright (C) 2010 - 2019
 	All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('active_queue_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('active_queue_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -175,15 +179,15 @@ else {
 				$fifo_duration_formatted = str_pad(intval(intval($fifo_duration/3600)),2,"0",STR_PAD_LEFT).":" . str_pad(intval(($fifo_duration / 60) % 60),2,"0",STR_PAD_LEFT).":" . str_pad(intval($fifo_duration % 60),2,"0",STR_PAD_LEFT) ;
 
 				echo "<tr>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>$username &nbsp;</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>$caller_id_name &nbsp;</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>$caller_id_number &nbsp;</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>$default_language &nbsp;</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>$destination_number &nbsp;</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>$fifo_position &nbsp;</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>$fifo_priority &nbsp;</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>$fifo_status &nbsp;</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>$fifo_duration_formatted &nbsp;</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".escape($username)." &nbsp;</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".escape($caller_id_name)." &nbsp;</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".escape($caller_id_number)." &nbsp;</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".escape($default_language)." &nbsp;</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".escape($destination_number)." &nbsp;</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".escape($fifo_position)." &nbsp;</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".escape($fifo_priority)." &nbsp;</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".escape($fifo_status)." &nbsp;</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".escape($fifo_duration_formatted)." &nbsp;</td>\n";
 				echo "</tr>\n";
 				if ($c==0) { $c=1; } else { $c=0; }
 			}
@@ -201,10 +205,8 @@ else {
 			echo "</div>\n";
 			echo "<br><br>Logged in agents<br><br>\n";
 
-
 		//show the content
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-
 
 			echo "<tr>\n";
 			echo "<th>".$text['label-username']."</th>\n";
@@ -212,10 +214,8 @@ else {
 			echo "<th>Logged on since</th>\n";
 			echo "</tr>\n";
 
-
 			//print_r($xml->fifo->outbound->member[0]);
 			//print_r($xml->fifo->outbound->member[1]);
-
 
 			foreach ($xml->fifo->outbound->member as $row) {
 
@@ -229,9 +229,9 @@ else {
 				$fifo_total_inbound_calls=$row["outbound-call-total-count"];
 
 				echo "<tr>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>$username &nbsp;</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>$fifo_total_inbound_calls &nbsp;</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>$fifo_duration_formatted &nbsp;</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".escape($username)." &nbsp;</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".escape($fifo_total_inbound_calls)." &nbsp;</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".escape($fifo_duration_formatted)." &nbsp;</td>\n";
 				echo "</tr>\n";
 				if ($c==0) { $c=1; } else { $c=0; }
 			}
