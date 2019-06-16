@@ -44,7 +44,6 @@
 	$text = $language->get();
 
 //show content
-	$switch_cmd = 'conference xml_list';
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 	if (!$fp) {
 		$msg = "<div align='center'>".$text['message-connection']."<br /></div>";
@@ -60,9 +59,9 @@
 		echo "</div>\n";
 	}
 	else {
-		$xml_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+		$xml_string = trim(event_socket_request($fp, 'api conference xml_list'));
 		try {
-			$xml = new SimpleXMLElement($xml_str);
+			$xml = new SimpleXMLElement($xml_string);
 		}
 		catch(Exception $e) {
 			//echo $e->getMessage();
@@ -79,17 +78,15 @@
 		echo "<th>".$text['label-member-count']."</th>\n";
 		echo "<th>&nbsp;</th>\n";
 		echo "</tr>\n";
-
 		foreach ($xml->conference as $row) {
 			//set the variables
 				$name = $row['name'];
 				$member_count = $row['member-count'];
 			//show the conferences that have a matching domain
-				$tmp_domain = substr($name, -strlen($_SESSION['domain_name']));
-				if ($tmp_domain == $_SESSION['domain_name']) {
-					$conference_name = substr($name, 0, strlen($name) - strlen('@'.$_SESSION['domain_name']));
+				$name_array = explode('@', $name);
+				if ($name_array[1] == $_SESSION['domain_name']) {
+					$conference_name = $name_array[0];
 					if (is_uuid($conference_name)) {
-						$meeting_uuid = $conference_name;
 						$sql = "select ";
 						$sql .= "cr.conference_room_name, ";
 						$sql .= "v.participant_pin ";
@@ -98,45 +95,40 @@
 						$sql .= "v_conference_rooms as cr ";
 						$sql .= "where ";
 						$sql .= "v.meeting_uuid = cr.meeting_uuid ";
-						$sql .= "and v.meeting_uuid = '".$conference_name."' ";
-						$prep_statement = $db->prepare(check_sql($sql));
-						$prep_statement->execute();
-						$result = $prep_statement->fetchAll();
-						foreach ($result as $row2) {
-							$conference_name = $row2['conference_room_name'];
-							$participant_pin = $row2['participant_pin'];
-						}
-						unset ($prep_statement, $row2);
+						$sql .= "and v.meeting_uuid = :meeting_uuid  ";
+						$parameters['meeting_uuid'] = $conference_name;
+						$database = new database;
+						$conference = $database->select($sql, $parameters, 'row');
+						$conference_name = $conference['conference_room_name'];
+						$participant_pin = $conference['participant_pin'];
+						unset ($parameters, $conference, $sql);
 					}
 					else {
-						$meeting_uuid = $conference_name;
 						$sql = "select ";
 						$sql .= "conference_pin_number ";
 						$sql .= "from ";
 						$sql .= "v_conferences ";
 						$sql .= "where ";
-						$sql .= "domain_uuid = '".$_SESSION['domain_uuid']."' ";
-						$sql .= "and conference_name = '".$conference_name."' ";
-						$prep_statement = $db->prepare(check_sql($sql));
-						$prep_statement->execute();
-						$result = $prep_statement->fetchAll();
-						foreach ($result as $row3) {
-							$participant_pin = $row3['conference_pin_number'];
-						}
-						unset ($prep_statement, $row3);
+						$sql .= "domain_uuid = :domain_uuid ";
+						$sql .= "and conference_name = :conference_name ";
+						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+						$parameters['conference_name'] = $conference_name;
+						$database = new database;
+						$participant_pin = $database->select($sql, $parameters, 'column');
+						unset ($parameters, $sql);
 					}
 
 					if (permission_exists('conference_interactive_view')) {
-						$td_onclick = "onclick=\"document.location.href='conference_interactive.php?c=".escape($meeting_uuid)."'\"";
+						$td_onclick = "onclick=\"document.location.href='conference_interactive.php?c=".escape($conference_name)."'\"";
 					}
 					echo "<tr>\n";
 					echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">";
-					echo (permission_exists('conference_interactive_view')) ? "<a href='conference_interactive.php?c=".escape($meeting_uuid)."'>".escape($conference_name)."</a>" : escape($conference_name);
+					echo (permission_exists('conference_interactive_view')) ? "<a href='conference_interactive.php?c=".escape($conference_name)."'>".escape($conference_name)."</a>" : escape($conference_name);
 					echo "</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">".escape($participant_pin)."</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">".escape($member_count)."</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">";
-					echo (permission_exists('conference_interactive_view')) ? "<a href='conference_interactive.php?c=".escape($meeting_uuid)."'>".$text['button-view']."</a>" : "&nbsp;";
+					echo (permission_exists('conference_interactive_view')) ? "<a href='conference_interactive.php?c=".escape($conference_name)."'>".$text['button-view']."</a>" : "&nbsp;";
 					echo "</td>\n";
 					echo "</tr>\n";
 
