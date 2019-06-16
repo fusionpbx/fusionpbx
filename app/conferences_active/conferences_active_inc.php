@@ -17,29 +17,33 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('conference_active_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('conference_active_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-
+//show content
 $switch_cmd = 'conference xml_list';
 $fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 if (!$fp) {
@@ -123,16 +127,16 @@ else {
 				}
 
 				if (permission_exists('conference_interactive_view')) {
-					$td_onclick = "onclick=\"document.location.href='conference_interactive.php?c=".$meeting_uuid."'\"";
+					$td_onclick = "onclick=\"document.location.href='conference_interactive.php?c=".escape($meeting_uuid)."'\"";
 				}
 				echo "<tr>\n";
 				echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">";
-				echo (permission_exists('conference_interactive_view')) ? "<a href='conference_interactive.php?c=".$meeting_uuid."'>".$conference_name."</a>" : $conference_name;
+				echo (permission_exists('conference_interactive_view')) ? "<a href='conference_interactive.php?c=".escape($meeting_uuid)."'>".escape($conference_name)."</a>" : escape($conference_name);
 				echo "</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">".$participant_pin."</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">".$member_count."</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">".escape($participant_pin)."</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">".escape($member_count)."</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">";
-				echo (permission_exists('conference_interactive_view')) ? "<a href='conference_interactive.php?c=".$meeting_uuid."'>".$text['button-view']."</a>" : "&nbsp;";
+				echo (permission_exists('conference_interactive_view')) ? "<a href='conference_interactive.php?c=".escape($meeting_uuid)."'>".$text['button-view']."</a>" : "&nbsp;";
 				echo "</td>\n";
 				echo "</tr>\n";
 
