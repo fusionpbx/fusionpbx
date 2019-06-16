@@ -197,7 +197,7 @@
 				//send the html
 					echo "<tr>\n";
 					echo "<td valign='top' class='".$row_style[$c]."'>".escape($sip_profile)."&nbsp;</td>\n";
-					echo "<td valign='top' class='".$row_style[$c]."'>".$escape(created)."&nbsp;</td>\n";
+					echo "<td valign='top' class='".$row_style[$c]."'>".escape($created)."&nbsp;</td>\n";
 					if ($show == 'all') {
 						echo "<td valign='top' class='".$row_style[$c]."'>".escape($domain_name)."&nbsp;</td>\n";
 					}
@@ -208,7 +208,7 @@
 					echo "<td valign='top' class='".$row_style[$c]."'>".((strlen($application) > 0) ? escape($application).":".escape($application_data) : null)."&nbsp;</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."'>".escape($read_codec).":".escape($read_rate)." / ".escape($write_codec).":".escape($write_rate)."&nbsp;</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."'>".escape($secure)."&nbsp;</td>\n";
-					echo "<td class='list_control_icons' style='width: 25px; text-align: left;'><a href='javascript:void(0);' alt='".$text['label-hangup']."' onclick=\"hangup(escape('".escape($uuid)."'));\">".$v_link_label_delete."</a></td>\n";
+					echo "<td class='list_control_icons' style='width: 25px; text-align: left;'><a href='javascript:void(0);' alt='".$text['label-hangup']."' onclick=\"hangup('".escape($uuid)."');\">".$v_link_label_delete."</a></td>\n";
 					echo "</tr>\n";
 
 				//alternate the row style
