@@ -87,10 +87,7 @@
 					$sql .= "and user_uuid = :user_uuid ";
 					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 					$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
-					$result = $database->select($sql, $parameters);
-					if (is_array($result)) {
-						$call_center_agent_uuid = $result[0]['call_center_agent_uuid'];
-					}
+					$call_center_agent_uuid = $database->select($sql, $parameters, 'column');
 
 				//update the user_status
 					if (isset($call_center_agent_uuid)) {
