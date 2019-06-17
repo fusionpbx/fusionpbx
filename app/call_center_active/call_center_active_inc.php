@@ -121,8 +121,8 @@
 
 			//send the event socket command and get the response
 				//callcenter_config queue list tiers [queue_name] |
-				$switch_cmd = 'callcenter_config queue list tiers '.$queue_uuid;
-				$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+				$switch_command = 'callcenter_config queue list tiers '.$queue_uuid;
+				$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_command));
 				$result = str_to_named_array($event_socket_str, '|');
 
 			//prepare the result for array_multisort
@@ -143,8 +143,8 @@
 
 			//send the event socket command and get the response
 				//callcenter_config queue list agents [queue_name] [status] |
-				$switch_cmd = 'callcenter_config queue list agents '.$queue_uuid;
-				$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+				$switch_command = 'callcenter_config queue list agents '.$queue_uuid;
+				$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_command));
 				$agent_result = str_to_named_array($event_socket_str, '|');
 
 			//get the agents from the database
@@ -252,19 +252,14 @@
 								//need to check state to so only waiting gets call, and trying/answer gets eavesdrop
 								if ($tier_state == "Offering" || $tier_state == "Active Inbound") {
 									$orig_command="{origination_caller_id_name=eavesdrop,origination_caller_id_number=".escape($agent_extension)."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26eavesdrop(".escape($agent_uuid).")";
-
-									//debug
-									//echo $orig_command;
-									//echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=log+".$orig_command.")');}\">log_cmd</a>&nbsp;\n";
-									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=originate+".$orig_command.")');}\">".$text['label-eavesdrop']."</a>&nbsp;\n";
+									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_command('call_center_exec.php?command=eavesdrop&uuid=".escape($agent_uuid)."&extension=".escape($agent_extension)."');}\">".$text['label-eavesdrop']."</a>&nbsp;\n";
 
 									$xfer_command = escape($agent_uuid)." -bleg ".escape($_SESSION['user']['extension'][0]['user'])." XML ".escape($_SESSION['domain_name']);
-									//$xfer_command = $agent_uuid." ".$_SESSION['user']['extension'][0]['user']." XML default";
-									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=uuid_transfer+".urlencode($xfer_command)."');}\">".$text['label-transfer']."</a>&nbsp;\n";
+									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_command('call_center_exec.php?command=uuid_transfer&uuid=".escape($agent_uuid)." -');}\">".$text['label-transfer']."</a>&nbsp;\n";
 								}
 								else {
 									$orig_call="{origination_caller_id_name=c2c-".urlencode(escape($name)).",origination_caller_id_number=".escape($agent_extension)."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26bridge(user/".escape($agent_extension)."@".$_SESSION['domain_name'].")";
-									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=originate+".escape($orig_call).")');}\">".$text['label-call']."</a>&nbsp;\n";
+									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_command('call_center_exec.php?command=bridge&extension=".escape($agent_extension)."&caller_id_name=".urlencode(escape($name))."');}\">".$text['label-call']."</a>&nbsp;\n";
 								}
 								echo "</td>";
 							}
@@ -285,10 +280,12 @@
 		//get the queue list
 			//send the event socket command and get the response
 				//callcenter_config queue list members [queue_name]
-				$switch_cmd = 'callcenter_config queue list members '.$queue_uuid;
-				$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
-				$result = str_to_named_array($event_socket_str, '|');
-				if (!is_array($result)) { unset($result); }
+				if (is_uuid($queue_uuid)) {
+					$switch_command = 'callcenter_config queue list members '.$queue_uuid;
+					$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_command));
+					$result = str_to_named_array($event_socket_str, '|');
+					if (!is_array($result)) { unset($result); }
+				}
 
 			//show the title
 				$q_waiting=0;
@@ -301,11 +298,13 @@
 				echo "		".$text['description-queue']."<br />\n";
 				echo "	</td>\n";
 				echo "	<td align='right' valign='top'>";
-				if (isset($result)) foreach ($result as $row) {
-					$state = $row['state'];
-					$q_trying += ($state == "Trying") ? 1 : 0;
-					$q_waiting += ($state == "Waiting") ? 1 : 0;
-					$q_answered += ($state == "Answered") ? 1 : 0;
+				if (isset($result)) {
+					foreach ($result as $row) {
+						$state = $row['state'];
+						$q_trying += ($state == "Trying") ? 1 : 0;
+						$q_waiting += ($state == "Waiting") ? 1 : 0;
+						$q_answered += ($state == "Answered") ? 1 : 0;
+					}
 				}
 				echo "		<strong>".$text['label-waiting'].":</strong> <b>".$q_waiting."</b>&nbsp;&nbsp;&nbsp;";
 				echo "		<strong>".$text['label-trying'].":</strong> <b>".$q_trying."</b>&nbsp;&nbsp;&nbsp; ";
@@ -328,65 +327,61 @@
 			echo "<th>".$text['label-agent']."</th>\n";
 			echo "</tr>\n";
 
-			if (isset($result)) foreach ($result as $row) {
-				$queue = $row['queue'];
-				$system = $row['system'];
-				$uuid = $row['uuid'];
-				$session_uuid = $row['session_uuid'];
-				$caller_number = $row['cid_number'];
-				$caller_name = $row['cid_name'];
-				$system_epoch = $row['system_epoch'];
-				$joined_epoch = $row['joined_epoch'];
-				$rejoined_epoch = $row['rejoined_epoch'];
-				$bridge_epoch = $row['bridge_epoch'];
-				$abandoned_epoch = $row['abandoned_epoch'];
-				$base_score = $row['base_score'];
-				$skill_score = $row['skill_score'];
-				$serving_agent = $row['serving_agent'];
-				$serving_system = $row['serving_system'];
-				$state = $row['state'];
-				$joined_seconds = time() - $joined_epoch;
-				$joined_length_hour = floor($joined_seconds/3600);
-				$joined_length_min = floor($joined_seconds/60 - ($joined_length_hour * 60));
-				$joined_length_sec = $joined_seconds - (($joined_length_hour * 3600) + ($joined_length_min * 60));
-				$joined_length_min = sprintf("%02d", $joined_length_min);
-				$joined_length_sec = sprintf("%02d", $joined_length_sec);
-				$joined_length = $joined_length_hour.':'.$joined_length_min.':'.$joined_length_sec;
+			if (is_array($result)) {
+				foreach ($result as $row) {
+					$queue = $row['queue'];
+					$system = $row['system'];
+					$uuid = $row['uuid'];
+					$session_uuid = $row['session_uuid'];
+					$caller_number = $row['cid_number'];
+					$caller_name = $row['cid_name'];
+					$system_epoch = $row['system_epoch'];
+					$joined_epoch = $row['joined_epoch'];
+					$rejoined_epoch = $row['rejoined_epoch'];
+					$bridge_epoch = $row['bridge_epoch'];
+					$abandoned_epoch = $row['abandoned_epoch'];
+					$base_score = $row['base_score'];
+					$skill_score = $row['skill_score'];
+					$serving_agent = $row['serving_agent'];
+					$serving_system = $row['serving_system'];
+					$state = $row['state'];
+					$joined_seconds = time() - $joined_epoch;
+					$joined_length_hour = floor($joined_seconds/3600);
+					$joined_length_min = floor($joined_seconds/60 - ($joined_length_hour * 60));
+					$joined_length_sec = $joined_seconds - (($joined_length_hour * 3600) + ($joined_length_min * 60));
+					$joined_length_min = sprintf("%02d", $joined_length_min);
+					$joined_length_sec = sprintf("%02d", $joined_length_sec);
+					$joined_length = $joined_length_hour.':'.$joined_length_min.':'.$joined_length_sec;
 
-				//get the serving agent name
-				$serving_agent_name = '';
-				if (is_array($_SESSION['agents'])) foreach ($_SESSION['agents'] as $agent) {
-					if ($agent['call_center_agent_uuid'] == $serving_agent) {
-						$serving_agent_name = $agent['agent_name'];
+					//get the serving agent name
+					$serving_agent_name = '';
+					if (is_array($_SESSION['agents'])) foreach ($_SESSION['agents'] as $agent) {
+						if ($agent['call_center_agent_uuid'] == $serving_agent) {
+							$serving_agent_name = $agent['agent_name'];
+						}
 					}
+
+					echo "<tr>\n";
+					echo "<td valign='top' class='".$row_style[$c]."'>".escape($joined_length)."</td>\n";
+					//echo "<td valign='top' class='".$row_style[$c]."'>".escape($system_length)."</td>\n";
+					echo "<td valign='top' class='".$row_style[$c]."'>".escape($caller_name)."&nbsp;</td>\n";
+					echo "<td valign='top' class='".$row_style[$c]."'>".escape($caller_number)."&nbsp;</td>\n";
+					echo "<td valign='top' class='".$row_style[$c]."'>".escape($state)."</td>\n";
+					if (if_group("admin") || if_group("superadmin")) {
+						echo "<td valign='top' class='".$row_style[$c]."'>";
+						if ($state != "Abandoned") {
+							$orig_command="{origination_caller_id_name=eavesdrop,origination_caller_id_number=".escape($q_caller_number)."}user/".escape($_SESSION['user']['extension'][0]['user'])."@".escape($_SESSION['domain_name'])." %26eavesdrop(".escape($session_uuid).")";
+							echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_command('call_center_exec.php?command=eavesdrop&caller_id_number=".escape(urlencode($caller_number))."&uuid=".escape($session_uuid)."');}\">".$text['label-eavesdrop']."</a>&nbsp;\n";
+						}
+						else {
+							echo "&nbsp;";
+						}
+						echo "</td>";
+					}
+					echo "<td valign='top' class='".$row_style[$c]."'>".escape($serving_agent_name)."&nbsp;</td>\n";
+					echo "</tr>\n";
+					if ($c==0) { $c=1; } else { $c=0; }
 				}
-
-				echo "<tr>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>".escape($joined_length)."</td>\n";
-				//echo "<td valign='top' class='".$row_style[$c]."'>".escape($system_length)."</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>".escape($caller_name)."&nbsp;</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>".escape($caller_number)."&nbsp;</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>".escape($state)."</td>\n";
-				if (if_group("admin") || if_group("superadmin")) {
-					echo "<td valign='top' class='".$row_style[$c]."'>";
-					if ($state != "Abandoned") {
-						$q_caller_number = urlencode($caller_number);
-						$orig_command="{origination_caller_id_name=eavesdrop,origination_caller_id_number=".escape($q_caller_number)."}user/".escape($_SESSION['user']['extension'][0]['user'])."@".escape($_SESSION['domain_name'])." %26eavesdrop(".escape($session_uuid).")";
-
-						//debug
-						//echo $orig_command;
-						//echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=log+".$orig_command.")');}\">log_cmd</a>&nbsp;\n";
-
-						echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=originate+".$orig_command.")');}\">".$text['label-eavesdrop']."</a>&nbsp;\n";
-					}
-					else {
-						echo "&nbsp;";
-					}
-					echo "</td>";
-				}
-				echo "<td valign='top' class='".$row_style[$c]."'>".escape($serving_agent_name)."&nbsp;</td>\n";
-				echo "</tr>\n";
-				if ($c==0) { $c=1; } else { $c=0; }
 			}
 			echo "</table>\n";
 
