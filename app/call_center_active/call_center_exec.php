@@ -50,6 +50,26 @@
 		$caller_id_number = trim($_GET["extension"]);
 	}
 
+//validate the extension
+	if (!is_numeric($extension)) {
+		$extension = null;
+	}
+	
+//validate the uuid
+	if (!is_uuid($uuid)) {
+		$uuid = null;
+	}
+
+//validate the caller_id_name
+	if (isset($caller_id_name) && strlen($caller_id_name)) {
+		$caller_id_name = substr($caller_id_name, 0, 10);
+	}
+
+//validate the caller_id_number
+	if (!is_numeric($caller_id_number)) {
+		$caller_id_number = null;
+	}
+
 //validate the command
 	switch ($command) {
 		case "eavesdrop":
