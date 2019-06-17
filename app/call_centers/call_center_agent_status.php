@@ -85,43 +85,70 @@
 								$parameters['agent_status'] = $row['agent_status'];
 								$database = new database;
 								$database->select($sql, $parameters);
+								unset($parameters);
+							}
+
+						//validate the agent status
+							$agent_status = $row['agent_status'];
+							switch ($agent_status) {
+								case "Available" :
+									break;
+								case "Available (On Demand)" :
+									break;
+								case "On Break" :
+									break;
+								case "Do Not Disturb" :
+									break;
+								case "Logged Out" :
+									break;
+								default :
+									$agent_status = null;
 							}
 
 						//set the call center status
+							$command = '';
 							if (!isset($row['queue_name'])) {
-								if ($row['agent_status'] == "Do Not Disturb") {
+								if ($agent_status == "Do Not Disturb") {
 									//set the default dnd action
 										$dnd_action = "add";
 									//set the call center status to Logged Out
-										$cmd = "api callcenter_config agent set status ".$row['agent_uuid']." 'Logged Out'";
+										if (is_uuid($row['agent_uuid'])) {
+											$command = "api callcenter_config agent set status ".$row['agent_uuid']." 'Logged Out' ";
+										}
 								}
 								else {
-									$cmd = "api callcenter_config agent set status ".$row['agent_uuid']." '".$row['agent_status']."'";
+									if (is_uuid($row['agent_uuid'])) {
+										$command = "api callcenter_config agent set status ".$row['agent_uuid']." '".$agent_status."'";
+									}
 								}
-								$response = event_socket_request($fp, $cmd);
+								$response = event_socket_request($fp, $command);
 							}
-							//echo $cmd."\n";
+							//echo $command."\n";
 
 						//set the agent status to available and assign the agent to the queue with the tier
 							if (isset($row['queue_uuid']) && $row['agent_status'] == 'Available') {
 								//set the call center status
-								//$cmd = "api callcenter_config agent set status ".$row['agent_name']."@".$_SESSION['domain_name']." '".$row['agent_status']."'";
-								//$response = event_socket_request($fp, $cmd);
+								//$command = "api callcenter_config agent set status ".$row['agent_name']."@".$_SESSION['domain_name']." '".$row['agent_status']."'";
+								//$response = event_socket_request($fp, $command);
 
 								//assign the agent to the queue
-								$cmd = "api callcenter_config tier add ".$row['queue_uuid']." ".$row['agent_uuid']." 1 1";
-								//echo $cmd."<br />\n";
-								$response = event_socket_request($fp, $cmd);
+								if (is_uuid($row['queue_uuid']) && is_uuid($row['agent_uuid'])) {
+									$command = "api callcenter_config tier add ".$row['queue_uuid']." ".$row['agent_uuid']." 1 1";
+									//echo $command."<br />\n";
+									$response = event_socket_request($fp, $command);
+								}
 							}
 
 						//un-assign the agent from the queue
 							if (isset($row['queue_uuid']) && $row['agent_status'] == 'Logged Out') {
-								$cmd = "api callcenter_config tier del ".$row['queue_uuid']." ".$row['agent_uuid'];
-								//echo $cmd."<br />\n";
-								$response = event_socket_request($fp, $cmd);
+								if (is_uuid($row['queue_uuid']) && is_uuid($row['agent_uuid'])) {
+									$command = "api callcenter_config tier del ".$row['queue_uuid']." ".$row['agent_uuid'];
+									//echo $command."<br />\n";
+									$response = event_socket_request($fp, $command);
+								}
 							}
 							usleep(200);
-					
+
 						//set the blf status
 						//get the agents from the database
 							$sql = "select agent_name from v_call_center_agents ";
@@ -130,6 +157,7 @@
 							$database = new database;
 							$parameters['agent_uuid'] = $row['agent_uuid'];
 							$agent_name = $database->select($sql, $parameters, 'all');
+							unset($parameters);
 
 							if ($row['agent_status'] == 'Available') {
 								$answer_state = 'confirmed';
@@ -137,7 +165,6 @@
 							else {
 								$answer_state = 'terminated';
 							}
-							
 							$call_center_notify = new call_center_notify;
 							$call_center_notify->domain_name = $_SESSION['domain_name'];
 							$call_center_notify->agent_name = $agent_name[0]['agent_name'];
@@ -145,15 +172,21 @@
 							$call_center_notify->agent_uuid = $row['agent_uuid'];
 							$call_center_notify->send_call_center_notify();
 							unset($call_center_notify);
-					}
-			}
-		}
-	}
+
+					} //end fp
+			} //strlen
+		} //foreach
+
+		//send a message
+		message::add($text['confirm-add']);
+		header("Location: call_center_agent_status.php");
+		return;
+	} //post
 
 //get the agents from the database
 	$sql = "select * from v_call_center_agents ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "order by agent_name ASC ";
+	$sql .= "order by agent_name asc ";
 	$database = new database;
 	$agents = $database->select($sql, $parameters, 'all');
 
