@@ -82,15 +82,14 @@
 	//get the call center queue count
 	$sql = "select count(*) from v_call_center_queues ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$database = new database;
+	if (strlen($order_by) > 0) { $sql .= "order by $order_by $order "; }
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$result = $database->select($sql, $parameters, 'all');
+	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
 	//paging the records
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "";
+	$param = '';
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
@@ -99,14 +98,13 @@
 	//get the call center queues
 	$sql = "select * from v_call_center_queues ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+	if (strlen($order_by) > 0) { $sql .= "order by $order_by $order "; }
 	$sql .= " limit :rows_per_page offset :offset ";
 	$database = new database;
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['rows_per_page'] = $rows_per_page;
 	$parameters['offset'] = $offset;
 	$call_center_queues = $database->select($sql, $parameters, 'all');
-	$num_rows = $database->select($sql, $parameters, 'column');
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
