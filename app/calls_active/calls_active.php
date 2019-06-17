@@ -50,12 +50,16 @@
 	require_once "resources/header.php";
 
 //load gateways into a session variable
-	$sql = "select gateway_uuid, domain_uuid, gateway from v_gateways where enabled = 'true' ";
-	$database = new database;
-	$gateways = $database->select($sql, $parameters, 'all');
-	foreach ($gateways as $row) {
-		$_SESSION['gateways'][$row['gateway_uuid']] = $row['gateway'];
+	$sql = "select gateway_uuid, domain_uuid, gateway from v_gateways where enabled = 'true'";
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($result as $row) {
+			$_SESSION['gateways'][$row['gateway_uuid']] = $row['gateway'];
+		}
 	}
+	unset($sql, $prep_statement, $result, $row);
 
 //ajax for refresh
 	?>
