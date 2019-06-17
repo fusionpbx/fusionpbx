@@ -40,7 +40,6 @@
 
 //set the variables
 	$cmd = check_str($_GET['cmd']);
-	$rdr = check_str($_GET['rdr']);
 
 //create the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
@@ -84,12 +83,7 @@
 	}
 
 //redirect the user
-	if ($rdr == "false") {
-		//redirect false
-		echo $response;
-	}
-	else {
-		header("Location: sip_status.php");
-	}
+	header("Location: sip_status.php");
+
 
 ?>
