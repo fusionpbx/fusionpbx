@@ -53,7 +53,7 @@
 //validate the command
 	switch ($command) {
 		case "eavesdrop":
-			$switch_command = "originate {origination_caller_id_name=eavesdrop,origination_caller_id_number=".$extension."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26eavesdrop(".$uuid.")";
+			$switch_command = "originate {origination_caller_id_name=eavesdrop,origination_caller_id_number=".$extension."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." eavesdrop(".$uuid.")";
 			break;
 		case "uuid_transfer":
 			$switch_command = "uuid_transfer ".$uuid." -bleg ".$_SESSION['user']['extension'][0]['user']." XML ".$_SESSION['domain_name'];
@@ -69,7 +69,7 @@
 //run the command
 	if (isset($switch_command)) {
 		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-		$response = event_socket_request($fp, $switch_command);
+		$response = event_socket_request($fp, 'api '.$switch_command);
 	}
 
 /*
