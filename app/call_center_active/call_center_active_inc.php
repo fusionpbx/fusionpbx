@@ -251,14 +251,14 @@
 
 								//need to check state to so only waiting gets call, and trying/answer gets eavesdrop
 								if ($tier_state == "Offering" || $tier_state == "Active Inbound") {
-									$orig_command="{origination_caller_id_name=eavesdrop,origination_caller_id_number=".escape($agent_extension)."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26eavesdrop(".escape($agent_uuid).")";
+									//$orig_command="{origination_caller_id_name=eavesdrop,origination_caller_id_number=".escape($agent_extension)."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26eavesdrop(".escape($agent_uuid).")";
 									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_command('call_center_exec.php?command=eavesdrop&uuid=".escape($agent_uuid)."&extension=".escape($agent_extension)."');}\">".$text['label-eavesdrop']."</a>&nbsp;\n";
 
-									$xfer_command = escape($agent_uuid)." -bleg ".escape($_SESSION['user']['extension'][0]['user'])." XML ".escape($_SESSION['domain_name']);
-									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_command('call_center_exec.php?command=uuid_transfer&uuid=".escape($agent_uuid)." -');}\">".$text['label-transfer']."</a>&nbsp;\n";
+									//$xfer_command = escape($agent_uuid)." -bleg ".escape($_SESSION['user']['extension'][0]['user'])." XML ".escape($_SESSION['domain_name']);
+									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_command('call_center_exec.php?command=uuid_transfer&uuid=".escape($agent_uuid)."');}\">".$text['label-transfer']."</a>&nbsp;\n";
 								}
 								else {
-									$orig_call="{origination_caller_id_name=c2c-".urlencode(escape($name)).",origination_caller_id_number=".escape($agent_extension)."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26bridge(user/".escape($agent_extension)."@".$_SESSION['domain_name'].")";
+									//$orig_call="{origination_caller_id_name=c2c-".urlencode(escape($name)).",origination_caller_id_number=".escape($agent_extension)."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26bridge(user/".escape($agent_extension)."@".$_SESSION['domain_name'].")";
 									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_command('call_center_exec.php?command=bridge&extension=".escape($agent_extension)."&caller_id_name=".urlencode(escape($name))."');}\">".$text['label-call']."</a>&nbsp;\n";
 								}
 								echo "</td>";
