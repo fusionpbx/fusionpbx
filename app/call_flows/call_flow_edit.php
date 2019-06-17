@@ -261,12 +261,14 @@
 	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
 		$call_flow_uuid = check_str($_GET["id"]);
 		$sql = "select * from v_call_flows ";
-		$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
-		$sql .= "and call_flow_uuid = '$call_flow_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and call_flow_uuid = :call_flow_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['call_flow_uuid'] = $call_flow_uuid;
+		$database = new database;
+		$result = $database->select($sql, $parameters, 'all');
+		unset($parameters, $sql);
+		foreach ($result as $row) {
 			//set the php variables
 				$call_flow_uuid = $row["call_flow_uuid"];
 				$dialplan_uuid = $row["dialplan_uuid"];
@@ -312,11 +314,12 @@
 
 //get the recordings
 	$sql = "select recording_name, recording_filename from v_recordings ";
-	$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by recording_name asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$recordings = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$recordings = $database->select($sql, $parameters, 'all');
+	unset($parameters, $sql);
 
 	if (if_group("superadmin")) {
 		require_once "resources/header.php";
@@ -391,11 +394,12 @@
 				echo "</optgroup>\n";
 			}
 		//phrases
-			$sql = "select * from v_phrases where domain_uuid = '".$domain_uuid."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			if (count($result) > 0) {
+			$sql = "select * from v_phrases where domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$database = new database;
+			$result = $database->select($sql, $parameters, 'all');
+			unset($parameters, $sql);
+			if (is_array($result) {
 				echo "<optgroup label='Phrases'>\n";
 				foreach ($result as &$row) {
 					if ($var == "phrase:".$row["phrase_uuid"]) {
