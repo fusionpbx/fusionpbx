@@ -73,7 +73,7 @@
 //validate the command
 	switch ($command) {
 		case "eavesdrop":
-			$switch_command = "originate {origination_caller_id_name=eavesdrop,origination_caller_id_number=".$extension."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." eavesdrop(".$uuid.")";
+			$switch_command = "originate {origination_caller_id_name=eavesdrop,origination_caller_id_number=".$extension."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." &eavesdrop(".$uuid.")";
 			break;
 		case "uuid_transfer":
 			$switch_command = "uuid_transfer ".$uuid." -bleg ".$_SESSION['user']['extension'][0]['user']." XML ".$_SESSION['domain_name'];
