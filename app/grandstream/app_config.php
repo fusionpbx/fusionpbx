@@ -81,7 +81,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_firmware_path";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "mydomain.com/app/provision";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server.yourdomain.com/app/grandstream/resources/firmware";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Grandstream firmware and provision.";
 		$y++;
