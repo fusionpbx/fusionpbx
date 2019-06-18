@@ -111,6 +111,7 @@
 		}
 		$sql_search .= "or lower(destination_enabled) like :search ";
 		$sql_search .= "or lower(destination_description) like :search ";
+		$sql_search .= "or lower(destination_data) like :search ";
 		$sql_search .= ") ";
 	}
 
