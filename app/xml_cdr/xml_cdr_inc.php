@@ -284,7 +284,7 @@
 	}
 	
 	if (!permission_exists('xml_cdr_domain')) { //only show the user their calls
-		echo "and (extension_uuid = '".implode("' or extension_uuid = '", $extension_uuids)."') ";
+		$sql .= "and (c.extension_uuid = '".implode("' or c.extension_uuid = '", $extension_uuids)."') ";
 	}
 	if ($missed == true) {
 		$sql .= "and missed_call = 1 \n";
