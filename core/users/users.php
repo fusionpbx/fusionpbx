@@ -51,6 +51,11 @@
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
+//validate order by
+	if (strlen($order_by) > 0) {
+		$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $order_by);
+	}
+
 //validate the order
 	switch ($order) {
 		case 'asc':
@@ -71,7 +76,7 @@
 	$superadmins = superadmin_list($db);
 
 //get the user count from the database
-	$sql = "select count(*) as num_rows from view_users where 1 = 1 ";
+	$sql = "select count(*) from view_users as u where 1 = 1 ";
 	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
 		$sql .= "and u.domain_uuid = :domain_uuid \n";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -86,15 +91,6 @@
 		$sql .= ")\n";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	if (strlen($order_by)> 0) {
-		$sql .= "order by ".$order_by." ".$order." \n";
-	}
-	else {
-		$sql .= "order by u.username asc \n";
-	}
-	$sql .= "limit :rows_per_page offset :offset ";
-	$parameters['rows_per_page'] = $rows_per_page;
-	$parameters['offset'] = $offset;
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 	unset ($parameters, $sql);
