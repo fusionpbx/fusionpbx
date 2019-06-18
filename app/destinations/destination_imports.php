@@ -631,7 +631,7 @@
 									$sql .= "where dialplan_uuid = :dialplan_uuid ";
 									//echo "$sql<br />\n";
 									$parameters['dialplan_uuid'] = $row['dialplan_uuid'];
-									$database = dialplan_uuid database;
+									$database = new database;
 									$database->execute($sql, $parameters);
 								}
 
