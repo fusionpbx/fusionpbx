@@ -259,7 +259,7 @@
 
 //pre-populate the form
 	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
-		$call_flow_uuid = check_str($_GET["id"]);
+		$call_flow_uuid = $_GET["id"];
 		$sql = "select * from v_call_flows ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and call_flow_uuid = :call_flow_uuid ";
@@ -399,7 +399,7 @@
 			$database = new database;
 			$result = $database->select($sql, $parameters, 'all');
 			unset($parameters, $sql);
-			if (is_array($result) {
+			if (is_array($result)) {
 				echo "<optgroup label='Phrases'>\n";
 				foreach ($result as &$row) {
 					if ($var == "phrase:".$row["phrase_uuid"]) {
