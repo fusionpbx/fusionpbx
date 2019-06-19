@@ -6253,11 +6253,11 @@
     <!-- # Firmware Server Path -->
     <!-- # String -->
 {if isset($grandstream_firmware_path) && isset($firmware_version)}
-    <P192>{$grandstream_firmware_path}/gxp2170/{$firmware_version}</P192>
+    <P192>{$grandstream_firmware_path}/{$firmware_version}</P192>
 {elseif isset($grandstream_firmware_path)}
-    <P192>{$grandstream_firmware_path}/gxp2170</P192>
+    <P192>{$grandstream_firmware_path}</P192>
 {else}
-    <P192>{$domain_name}{$project_path}/app/provision</P192>
+    <P192>{$domain_name}{$project_path}/app/provision/resources/firmware/</P192>
 {/if}
 
     <!-- # Firmware HTTP/HTTPS User Name -->
