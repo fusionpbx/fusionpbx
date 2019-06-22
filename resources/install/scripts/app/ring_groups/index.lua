@@ -608,7 +608,7 @@
 				--leg delay settings
 					if (ring_group_strategy == "enterprise") then
 						delay_name = "originate_delay_start";
-						destination_delay = destination_delay * 1000;
+						destination_delay = destination_delay * 500;
 					else
 						delay_name = "leg_delay_start";
 					end
