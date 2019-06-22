@@ -9,8 +9,8 @@
 <Session_Idle_Timeout ua="na">3600</Session_Idle_Timeout>
 <Web_Server_Port ua="na">80</Web_Server_Port>
 <Enable_Web_Admin_Access ua="na">Yes</Enable_Web_Admin_Access>
-<!-- <Admin_Password ua="na"/> -->
-<!-- <User_Password ua="rw"/> -->
+<Admin_Password ua="na">{$admin_password}</Admin_Password>
+<User_Password ua="rw">{$user_password}</User_Password>
 <Phone-UI-readonly ua="na">No</Phone-UI-readonly>
 <Phone-UI-User-Mode ua="na">No</Phone-UI-User-Mode>
 <!-- Power Settings -->
@@ -35,8 +35,9 @@
 <PC_PORT_Enable ua="na">Yes</PC_PORT_Enable>
 <Syslog_Server ua="na"/>
 <Debug_Level ua="na">NOTICE</Debug_Level>
-<Primary_NTP_Server ua="rw"/>
-<Secondary_NTP_Server ua="rw"/>
+
+<Primary_NTP_Server ua="rw">{$ntp_server_primary}</Primary_NTP_Server>
+<Secondary_NTP_Server ua="rw">{$ntp_server_secondary}</Secondary_NTP_Server>
 <Enable_SSLv3 ua="na">No</Enable_SSLv3>
 <!-- VLAN Settings -->
 <Enable_VLAN ua="rw">No</Enable_VLAN>
@@ -124,9 +125,9 @@
 <AVT_Codec_Name ua="na">telephone-event</AVT_Codec_Name>
 <!-- NAT Support Parameters -->
 <Handle_VIA_received ua="na">No</Handle_VIA_received>
-<Handle_VIA_rport ua="na">No</Handle_VIA_rport>
+<Handle_VIA_rport ua="na">{$spa_handle_via_rport}</Handle_VIA_rport>
 <Insert_VIA_received ua="na">No</Insert_VIA_received>
-<Insert_VIA_rport ua="na">No</Insert_VIA_rport>
+<Insert_VIA_rport ua="na">{$spa_insert_via_rport}</Insert_VIA_rport>
 <Substitute_VIA_Addr ua="na">No</Substitute_VIA_Addr>
 <Send_Resp_To_Src_Port ua="na">No</Send_Resp_To_Src_Port>
 <STUN_Enable ua="na">No</STUN_Enable>
@@ -150,10 +151,16 @@
 <Resync_Trigger_1 ua="na"/>
 <Resync_Trigger_2 ua="na"/>
 <Resync_Fails_On_FNF ua="na">Yes</Resync_Fails_On_FNF>
-<Profile_Rule ua="na">/$PSN.xml</Profile_Rule>
-<Profile_Rule_B ua="na"/>
-<Profile_Rule_C ua="na"/>
-<Profile_Rule_D ua="na"/>
+
+{if isset ($http_auth_username)}
+<Profile_Rule ua="na">[--uid {$http_auth_username} --pwd {$http_auth_password}]http://{$domain_name}{$project_path}/app/provision/?mac=$MA</Profile_Rule>
+{else}
+<Profile_Rule ua="na">http://{$domain_name}{$project_path}/app/provision/?mac=$MA</Profile_Rule>
+{/if}
+<Profile_Rule_B ua="na"></Profile_Rule_B>
+<Profile_Rule_C ua="na"></Profile_Rule_C>
+<Profile_Rule_D ua="na"></Profile_Rule_D>
+
 <DHCP_Option_To_Use ua="na">66,160,159,150,60,43,125</DHCP_Option_To_Use>
 <Log_Request_Msg ua="na">$PN $MAC -- Requesting resync $SCHEME://$SERVIP:$PORT$PATH</Log_Request_Msg>
 <Log_Success_Msg ua="na">$PN $MAC -- Successful resync $SCHEME://$SERVIP:$PORT$PATH</Log_Success_Msg>
@@ -278,72 +285,36 @@
 <!-- Time -->
 <Set_Local_Date__mm_dd_yyyy_ ua="na"/>
 <Set_Local_Time__HH_mm_ ua="na"/>
-<Time_Zone ua="na">GMT-08:00</Time_Zone>
+<Time_Zone ua="na">{$spa_time_zone}</Time_Zone>
 <Time_Offset__HH_mm_ ua="na"/>
 <Ignore_DHCP_Time_Offset ua="na">Yes</Ignore_DHCP_Time_Offset>
-<Daylight_Saving_Time_Rule ua="na">start=3/-1/7/2;end=10/-1/7/2;save=1</Daylight_Saving_Time_Rule>
+<Daylight_Saving_Time_Rule ua="na">start={$daylight_savings_start_month}/{$daylight_savings_start_day}/{$daylight_savings_start_weekday}/{$daylight_savings_start_time}:0:0;end={$daylight_savings_stop_month}/{$daylight_savings_stop_day}/{$daylight_savings_stop_weekday}/{$daylight_savings_stop_time}:0:0;save=1</Daylight_Saving_Time_Rule>
 <Daylight_Saving_Time_Enable ua="na">Yes</Daylight_Saving_Time_Enable>
 <!-- Language -->
 <Dictionary_Server_Script ua="na"/>
 <Language_Selection ua="na">English-US</Language_Selection>
 <Locale ua="na">en-US</Locale>
 <!-- General -->
-<Station_Name ua="na"/>
-<Station_Display_Name ua="na"/>
-<Voice_Mail_Number ua="na"/>
+<Station_Name ua="na">{$device_label}</Station_Name>
+<Station_Display_Name ua="na">{$display_name_1}</Station_Display_Name>
+<Voice_Mail_Number ua="na">*97</Voice_Mail_Number>
 <!-- Handsfree -->
 <Bluetooth_Mode ua="na">Phone</Bluetooth_Mode>
 <Line ua="na">5</Line>
 <!-- Line Key 1 -->
-<Extension_1_ ua="na">1</Extension_1_>
-<Short_Name_1_ ua="na">$USER</Short_Name_1_>
-<Share_Call_Appearance_1_ ua="na">private</Share_Call_Appearance_1_>
-<Extended_Function_1_ ua="na"/>
-<!-- Line Key 2 -->
-<Extension_2_ ua="na">2</Extension_2_>
-<Short_Name_2_ ua="na">$USER</Short_Name_2_>
-<Share_Call_Appearance_2_ ua="na">private</Share_Call_Appearance_2_>
-<Extended_Function_2_ ua="na"/>
-<!-- Line Key 3 -->
-<Extension_3_ ua="na">3</Extension_3_>
-<Short_Name_3_ ua="na">$USER</Short_Name_3_>
-<Share_Call_Appearance_3_ ua="na">private</Share_Call_Appearance_3_>
-<Extended_Function_3_ ua="na"/>
-<!-- Line Key 4 -->
-<Extension_4_ ua="na">4</Extension_4_>
-<Short_Name_4_ ua="na">$USER</Short_Name_4_>
-<Share_Call_Appearance_4_ ua="na">private</Share_Call_Appearance_4_>
-<Extended_Function_4_ ua="na"/>
-<!-- Line Key 5 -->
-<Extension_5_ ua="na">5</Extension_5_>
-<Short_Name_5_ ua="na">$USER</Short_Name_5_>
-<Share_Call_Appearance_5_ ua="na">private</Share_Call_Appearance_5_>
-<Extended_Function_5_ ua="na"/>
-<!-- Line Key 6 -->
-<Extension_6_ ua="na">6</Extension_6_>
-<Short_Name_6_ ua="na">$USER</Short_Name_6_>
-<Share_Call_Appearance_6_ ua="na">private</Share_Call_Appearance_6_>
-<Extended_Function_6_ ua="na"/>
-<!-- Line Key 7 -->
-<Extension_7_ ua="na">7</Extension_7_>
-<Short_Name_7_ ua="na">$USER</Short_Name_7_>
-<Share_Call_Appearance_7_ ua="na">private</Share_Call_Appearance_7_>
-<Extended_Function_7_ ua="na"/>
-<!-- Line Key 8 -->
-<Extension_8_ ua="na">8</Extension_8_>
-<Short_Name_8_ ua="na">$USER</Short_Name_8_>
-<Share_Call_Appearance_8_ ua="na">private</Share_Call_Appearance_8_>
-<Extended_Function_8_ ua="na"/>
-<!-- Line Key 9 -->
-<Extension_9_ ua="na">9</Extension_9_>
-<Short_Name_9_ ua="na">$USER</Short_Name_9_>
-<Share_Call_Appearance_9_ ua="na">private</Share_Call_Appearance_9_>
-<Extended_Function_9_ ua="na"/>
-<!-- Line Key 10 -->
-<Extension_10_ ua="na">10</Extension_10_>
-<Short_Name_10_ ua="na">$USER</Short_Name_10_>
-<Share_Call_Appearance_10_ ua="na">private</Share_Call_Appearance_10_>
-<Extended_Function_10_ ua="na"/>
+
+{foreach $keys["line"] as $row}
+{if $row.device_key_category == "line"}
+<!-- Phone/Line_Key_{$row.device_key_id} -->
+<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_line}</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
+<Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
+<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{if $row.device_key_type == "shared"}shared{else}private{/if}</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
+<Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extended_Function_{$row.device_key_id}_>
+
+{/if}
+{/foreach}
+
+
 <!-- Miscellaneous Line Key Settings -->
 <Line_ID_Mapping ua="na">Horizontal First</Line_ID_Mapping>
 <SCA_Barge-In-Enable ua="na">No</SCA_Barge-In-Enable>
@@ -455,9 +426,9 @@
 <!-- General -->
 <Line_Enable_1_ ua="na">Yes</Line_Enable_1_>
 <!-- Share Line Appearance -->
-<Share_Ext_1_ ua="na">No</Share_Ext_1_>
+<Share_Ext_1_ ua="na">{if $shared_line_1 == "shared"}shared{else}private{/if}</Share_Ext_1_>
 <Shared_User_ID_1_ ua="na"/>
-<Subscription_Expires_1_ ua="na">3600</Subscription_Expires_1_>
+<Subscription_Expires_1_ ua="na">600</Subscription_Expires_1_>
 <Restrict_MWI_1_ ua="na">No</Restrict_MWI_1_>
 <!-- NAT Settings -->
 <NAT_Mapping_Enable_1_ ua="na">No</NAT_Mapping_Enable_1_>
@@ -468,8 +439,8 @@
 <SIP_TOS_DiffServ_Value_1_ ua="na">0x68</SIP_TOS_DiffServ_Value_1_>
 <RTP_TOS_DiffServ_Value_1_ ua="na">0xb8</RTP_TOS_DiffServ_Value_1_>
 <!-- SIP Settings -->
-<SIP_Transport_1_ ua="na">UDP</SIP_Transport_1_>
-<SIP_Port_1_ ua="na">5060</SIP_Port_1_>
+<SIP_Transport_1_ ua="na">{$account.1.sip_transport|upper}</SIP_Transport_1_>
+<SIP_Port_1_ ua="na">{$account.1.sip_port}</SIP_Port_1_>
 <SIP_100REL_Enable_1_ ua="na">No</SIP_100REL_Enable_1_>
 <EXT_SIP_Port_1_ ua="na">0</EXT_SIP_Port_1_>
 <Auth_Resync-Reboot_1_ ua="na">Yes</Auth_Resync-Reboot_1_>
@@ -498,30 +469,31 @@
 <Voice_Mail_Subscribe_Interval_1_ ua="na">86400</Voice_Mail_Subscribe_Interval_1_>
 <Broadsoft_ACD_1_ ua="na">No</Broadsoft_ACD_1_>
 <Auto_Ans_Page_On_Active_Call_1_ ua="na">Yes</Auto_Ans_Page_On_Active_Call_1_>
-<Feature_Key_Sync_1_ ua="na">No</Feature_Key_Sync_1_>
+<Feature_Key_Sync_1_ ua="na">{$spa_feature_key_sync}</Feature_Key_Sync_1_>
 <Call_Park_Monitor_Enable_1_ ua="na">No</Call_Park_Monitor_Enable_1_>
 <Enable_Broadsoft_Hoteling_1_ ua="na">No</Enable_Broadsoft_Hoteling_1_>
 <Hoteling_Subscription_Expires_1_ ua="na">3600</Hoteling_Subscription_Expires_1_>
 <!-- Proxy and Registration -->
-<Proxy_1_ ua="na"/>
-<Outbound_Proxy_1_ ua="na"/>
+<Proxy_1_ ua="na">{$domain_name}</Proxy_1_>
+<Outbound_Proxy_1_ ua="na">{$account.1.outbound_proxy_primary}</Outbound_Proxy_1_>
 <Alternate_Proxy_1_ ua="na"/>
 <Alternate_Outbound_Proxy_1_ ua="na"/>
 <Use_OB_Proxy_In_Dialog_1_ ua="na">Yes</Use_OB_Proxy_In_Dialog_1_>
 <Register_1_ ua="na">Yes</Register_1_>
 <Make_Call_Without_Reg_1_ ua="na">No</Make_Call_Without_Reg_1_>
-<Register_Expires_1_ ua="na">3600</Register_Expires_1_>
+<Register_Expires_1_ ua="na">{$account.1.register_expires}</Register_Expires_1_>
 <Ans_Call_Without_Reg_1_ ua="na">No</Ans_Call_Without_Reg_1_>
-<Use_DNS_SRV_1_ ua="na">No</Use_DNS_SRV_1_>
-<DNS_SRV_Auto_Prefix_1_ ua="na">Yes</DNS_SRV_Auto_Prefix_1_>
-<Proxy_Fallback_Intvl_1_ ua="na">3600</Proxy_Fallback_Intvl_1_>
+{if $account.1.sip_transport == 'dns srv'}<Use_DNS_SRV_1_ ua="na">Yes</Use_DNS_SRV_1_>{/if}
+{if $account.1.sip_transport != 'dns srv'}<Use_DNS_SRV_1_ ua="na">No</Use_DNS_SRV_1_>{/if}
+<DNS_SRV_Auto_Prefix_1_ ua="na">No</DNS_SRV_Auto_Prefix_1_>
+<Proxy_Fallback_Intvl_1_ ua="na">600</Proxy_Fallback_Intvl_1_>
 <Proxy_Redundancy_Method_1_ ua="na">Normal</Proxy_Redundancy_Method_1_>
 <Dual_Registration_1_ ua="na">No</Dual_Registration_1_>
 <Auto_Register_When_Failover_1_ ua="na">No</Auto_Register_When_Failover_1_>
 <!-- Subscriber Information -->
-<Display_Name_1_ ua="na"/>
-<User_ID_1_ ua="na"/>
-<!-- <Password_1_ ua="na"/> -->
+<Display_Name_1_ ua="na">{$account.1.display_name}</Display_Name_1_>
+<User_ID_1_ ua="na">{$account.1.user_id}</User_ID_1_>
+<Password_1_ ua="na">{$account.1.password}</Password_1_>
 <Auth_ID_1_ ua="na"/>
 <Reversed_Auth_Realm_1_ ua="na"/>
 <SIP_URI_1_ ua="na"/>
@@ -541,15 +513,15 @@
 <Codec_Negotiation_1_ ua="na">Default</Codec_Negotiation_1_>
 <Encryption_Method_1_ ua="na">AES 128</Encryption_Method_1_>
 <!-- Dial Plan -->
-<Dial_Plan_1_ ua="na">(*xx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_1_>
+<Dial_Plan_1_ ua="na">{$spa_dial_plan}</Dial_Plan_1_>
 <Caller_ID_Map_1_ ua="na"/>
 <Enable_URI_Dialing_1_ ua="na">No</Enable_URI_Dialing_1_>
 <Emergency_Number_1_ ua="na"/>
 <!-- General -->
 <Line_Enable_2_ ua="na">Yes</Line_Enable_2_>
 <!-- Share Line Appearance -->
-<Share_Ext_2_ ua="na">No</Share_Ext_2_>
-<Shared_User_ID_2_ ua="na"/>
+<Share_Ext_2_ ua="na">{if $account.2.shared_line == "shared"}shared{else}private{/if}</Share_Ext_2_>
+<Shared_User_ID_2_ ua="na"></Shared_User_ID_2_>
 <Subscription_Expires_2_ ua="na">3600</Subscription_Expires_2_>
 <Restrict_MWI_2_ ua="na">No</Restrict_MWI_2_>
 <!-- NAT Settings -->
@@ -561,8 +533,8 @@
 <SIP_TOS_DiffServ_Value_2_ ua="na">0x68</SIP_TOS_DiffServ_Value_2_>
 <RTP_TOS_DiffServ_Value_2_ ua="na">0xb8</RTP_TOS_DiffServ_Value_2_>
 <!-- SIP Settings -->
-<SIP_Transport_2_ ua="na">UDP</SIP_Transport_2_>
-<SIP_Port_2_ ua="na">5061</SIP_Port_2_>
+<SIP_Transport_2_ ua="na">{$account.2.sip_transport|upper}</SIP_Transport_2_>
+<SIP_Port_2_ ua="na">{$account.2.sip_port}</SIP_Port_2_>
 <SIP_100REL_Enable_2_ ua="na">No</SIP_100REL_Enable_2_>
 <EXT_SIP_Port_2_ ua="na">0</EXT_SIP_Port_2_>
 <Auth_Resync-Reboot_2_ ua="na">Yes</Auth_Resync-Reboot_2_>
@@ -596,25 +568,26 @@
 <Enable_Broadsoft_Hoteling_2_ ua="na">No</Enable_Broadsoft_Hoteling_2_>
 <Hoteling_Subscription_Expires_2_ ua="na">3600</Hoteling_Subscription_Expires_2_>
 <!-- Proxy and Registration -->
-<Proxy_2_ ua="na"/>
-<Outbound_Proxy_2_ ua="na"/>
+<Proxy_2_ ua="na">{$domain_name}</Proxy_2_>
+<Outbound_Proxy_2_ ua="na">{$account.2.outbound_proxy_primary}</Outbound_Proxy_2_>
 <Alternate_Proxy_2_ ua="na"/>
 <Alternate_Outbound_Proxy_2_ ua="na"/>
 <Use_OB_Proxy_In_Dialog_2_ ua="na">Yes</Use_OB_Proxy_In_Dialog_2_>
 <Register_2_ ua="na">Yes</Register_2_>
 <Make_Call_Without_Reg_2_ ua="na">No</Make_Call_Without_Reg_2_>
-<Register_Expires_2_ ua="na">3600</Register_Expires_2_>
+<Register_Expires_2_ ua="na">{$account.2.register_expires}</Register_Expires_2_>
 <Ans_Call_Without_Reg_2_ ua="na">No</Ans_Call_Without_Reg_2_>
-<Use_DNS_SRV_2_ ua="na">No</Use_DNS_SRV_2_>
-<DNS_SRV_Auto_Prefix_2_ ua="na">Yes</DNS_SRV_Auto_Prefix_2_>
-<Proxy_Fallback_Intvl_2_ ua="na">3600</Proxy_Fallback_Intvl_2_>
+{if $account.2.sip_transport == 'dns srv'}<Use_DNS_SRV_2_ ua="na">Yes</Use_DNS_SRV_2_>{/if}
+{if $account.2.sip_transport != 'dns srv'}<Use_DNS_SRV_2_ ua="na">No</Use_DNS_SRV_2_>{/if}
+<DNS_SRV_Auto_Prefix_2_ ua="na">No</DNS_SRV_Auto_Prefix_2_>
+<Proxy_Fallback_Intvl_2_ ua="na">600</Proxy_Fallback_Intvl_2_>
 <Proxy_Redundancy_Method_2_ ua="na">Normal</Proxy_Redundancy_Method_2_>
 <Dual_Registration_2_ ua="na">No</Dual_Registration_2_>
 <Auto_Register_When_Failover_2_ ua="na">No</Auto_Register_When_Failover_2_>
 <!-- Subscriber Information -->
-<Display_Name_2_ ua="na"/>
-<User_ID_2_ ua="na"/>
-<!-- <Password_2_ ua="na"/> -->
+<Display_Name_2_ ua="na">{$account.2.display_name}</Display_Name_2_>
+<User_ID_2_ ua="na">{$account.2.user_id}</User_ID_2_>
+<Password_2_ ua="na">{$account.2.password}</Password_2_>
 <Auth_ID_2_ ua="na"/>
 <Reversed_Auth_Realm_2_ ua="na"/>
 <SIP_URI_2_ ua="na"/>
@@ -634,16 +607,16 @@
 <Codec_Negotiation_2_ ua="na">Default</Codec_Negotiation_2_>
 <Encryption_Method_2_ ua="na">AES 128</Encryption_Method_2_>
 <!-- Dial Plan -->
-<Dial_Plan_2_ ua="na">(*xx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_2_>
+<Dial_Plan_2_ ua="na">{$spa_dial_plan}</Dial_Plan_2_>
 <Caller_ID_Map_2_ ua="na"/>
 <Enable_URI_Dialing_2_ ua="na">No</Enable_URI_Dialing_2_>
 <Emergency_Number_2_ ua="na"/>
 <!-- General -->
 <Line_Enable_3_ ua="na">Yes</Line_Enable_3_>
 <!-- Share Line Appearance -->
-<Share_Ext_3_ ua="na">No</Share_Ext_3_>
+<Share_Ext_3_ ua="na">{if $account.3.shared_line == "shared"}shared{else}private{/if}</Share_Ext_3_>
 <Shared_User_ID_3_ ua="na"/>
-<Subscription_Expires_3_ ua="na">3600</Subscription_Expires_3_>
+<Subscription_Expires_3_ ua="na">600</Subscription_Expires_3_>
 <Restrict_MWI_3_ ua="na">No</Restrict_MWI_3_>
 <!-- NAT Settings -->
 <NAT_Mapping_Enable_3_ ua="na">No</NAT_Mapping_Enable_3_>
@@ -654,8 +627,8 @@
 <SIP_TOS_DiffServ_Value_3_ ua="na">0x68</SIP_TOS_DiffServ_Value_3_>
 <RTP_TOS_DiffServ_Value_3_ ua="na">0xb8</RTP_TOS_DiffServ_Value_3_>
 <!-- SIP Settings -->
-<SIP_Transport_3_ ua="na">UDP</SIP_Transport_3_>
-<SIP_Port_3_ ua="na">5062</SIP_Port_3_>
+<SIP_Transport_3_ ua="na">{$account.3.sip_transport|upper}</SIP_Transport_3_>
+<SIP_Port_3_ ua="na">{$account.3.sip_port}</SIP_Port_3_>
 <SIP_100REL_Enable_3_ ua="na">No</SIP_100REL_Enable_3_>
 <EXT_SIP_Port_3_ ua="na">0</EXT_SIP_Port_3_>
 <Auth_Resync-Reboot_3_ ua="na">Yes</Auth_Resync-Reboot_3_>
@@ -684,30 +657,31 @@
 <Voice_Mail_Subscribe_Interval_3_ ua="na">86400</Voice_Mail_Subscribe_Interval_3_>
 <Broadsoft_ACD_3_ ua="na">No</Broadsoft_ACD_3_>
 <Auto_Ans_Page_On_Active_Call_3_ ua="na">Yes</Auto_Ans_Page_On_Active_Call_3_>
-<Feature_Key_Sync_3_ ua="na">No</Feature_Key_Sync_3_>
+<Feature_Key_Sync_3_ ua="na">{$spa_feature_key_sync}</Feature_Key_Sync_3_>
 <Call_Park_Monitor_Enable_3_ ua="na">No</Call_Park_Monitor_Enable_3_>
 <Enable_Broadsoft_Hoteling_3_ ua="na">No</Enable_Broadsoft_Hoteling_3_>
 <Hoteling_Subscription_Expires_3_ ua="na">3600</Hoteling_Subscription_Expires_3_>
 <!-- Proxy and Registration -->
-<Proxy_3_ ua="na"/>
-<Outbound_Proxy_3_ ua="na"/>
+<Proxy_3_ ua="na">{$domain_name}</Proxy_3_>
+<Outbound_Proxy_3_ ua="na">{$account.3.outbound_proxy_primary}</Outbound_Proxy_3_>
 <Alternate_Proxy_3_ ua="na"/>
 <Alternate_Outbound_Proxy_3_ ua="na"/>
 <Use_OB_Proxy_In_Dialog_3_ ua="na">Yes</Use_OB_Proxy_In_Dialog_3_>
 <Register_3_ ua="na">Yes</Register_3_>
 <Make_Call_Without_Reg_3_ ua="na">No</Make_Call_Without_Reg_3_>
-<Register_Expires_3_ ua="na">3600</Register_Expires_3_>
+<Register_Expires_3_ ua="na">{$account.3.register_expires}</Register_Expires_3_>
 <Ans_Call_Without_Reg_3_ ua="na">No</Ans_Call_Without_Reg_3_>
-<Use_DNS_SRV_3_ ua="na">No</Use_DNS_SRV_3_>
-<DNS_SRV_Auto_Prefix_3_ ua="na">Yes</DNS_SRV_Auto_Prefix_3_>
-<Proxy_Fallback_Intvl_3_ ua="na">3600</Proxy_Fallback_Intvl_3_>
+{if $account.3.sip_transport == 'dns srv'}<Use_DNS_SRV_3_ ua="na">Yes</Use_DNS_SRV_3_>{/if}
+{if $account.3.sip_transport != 'dns srv'}<Use_DNS_SRV_3_ ua="na">No</Use_DNS_SRV_3_>{/if}
+<DNS_SRV_Auto_Prefix_3_ ua="na">No</DNS_SRV_Auto_Prefix_3_>
+<Proxy_Fallback_Intvl_3_ ua="na">600</Proxy_Fallback_Intvl_3_>
 <Proxy_Redundancy_Method_3_ ua="na">Normal</Proxy_Redundancy_Method_3_>
 <Dual_Registration_3_ ua="na">No</Dual_Registration_3_>
 <Auto_Register_When_Failover_3_ ua="na">No</Auto_Register_When_Failover_3_>
 <!-- Subscriber Information -->
-<Display_Name_3_ ua="na"/>
-<User_ID_3_ ua="na"/>
-<!-- <Password_3_ ua="na"/> -->
+<Display_Name_3_ ua="na">{$account.3.display_name}</Display_Name_3_>
+<User_ID_3_ ua="na">{$account.3.user_id}</User_ID_3_>
+<Password_3_ ua="na">{$account.3.password}</Password_3_>
 <Auth_ID_3_ ua="na"/>
 <Reversed_Auth_Realm_3_ ua="na"/>
 <SIP_URI_3_ ua="na"/>
@@ -727,16 +701,16 @@
 <Codec_Negotiation_3_ ua="na">Default</Codec_Negotiation_3_>
 <Encryption_Method_3_ ua="na">AES 128</Encryption_Method_3_>
 <!-- Dial Plan -->
-<Dial_Plan_3_ ua="na">(*xx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_3_>
+<Dial_Plan_3_ ua="na">{$spa_dial_plan}</Dial_Plan_3_>
 <Caller_ID_Map_3_ ua="na"/>
 <Enable_URI_Dialing_3_ ua="na">No</Enable_URI_Dialing_3_>
 <Emergency_Number_3_ ua="na"/>
 <!-- General -->
 <Line_Enable_4_ ua="na">Yes</Line_Enable_4_>
 <!-- Share Line Appearance -->
-<Share_Ext_4_ ua="na">No</Share_Ext_4_>
+<Share_Ext_4_ ua="na">{if $account.4.shared_line == "shared"}shared{else}private{/if}</Share_Ext_4_>
 <Shared_User_ID_4_ ua="na"/>
-<Subscription_Expires_4_ ua="na">3600</Subscription_Expires_4_>
+<Subscription_Expires_4_ ua="na">600</Subscription_Expires_4_>
 <Restrict_MWI_4_ ua="na">No</Restrict_MWI_4_>
 <!-- NAT Settings -->
 <NAT_Mapping_Enable_4_ ua="na">No</NAT_Mapping_Enable_4_>
@@ -747,8 +721,8 @@
 <SIP_TOS_DiffServ_Value_4_ ua="na">0x68</SIP_TOS_DiffServ_Value_4_>
 <RTP_TOS_DiffServ_Value_4_ ua="na">0xb8</RTP_TOS_DiffServ_Value_4_>
 <!-- SIP Settings -->
-<SIP_Transport_4_ ua="na">UDP</SIP_Transport_4_>
-<SIP_Port_4_ ua="na">5063</SIP_Port_4_>
+<SIP_Transport_4_ ua="na">{$account.4.sip_transport|upper}</SIP_Transport_4_>
+<SIP_Port_4_ ua="na">{$account.4.sip_port}</SIP_Port_4_>
 <SIP_100REL_Enable_4_ ua="na">No</SIP_100REL_Enable_4_>
 <EXT_SIP_Port_4_ ua="na">0</EXT_SIP_Port_4_>
 <Auth_Resync-Reboot_4_ ua="na">Yes</Auth_Resync-Reboot_4_>
@@ -777,30 +751,32 @@
 <Voice_Mail_Subscribe_Interval_4_ ua="na">86400</Voice_Mail_Subscribe_Interval_4_>
 <Broadsoft_ACD_4_ ua="na">No</Broadsoft_ACD_4_>
 <Auto_Ans_Page_On_Active_Call_4_ ua="na">Yes</Auto_Ans_Page_On_Active_Call_4_>
-<Feature_Key_Sync_4_ ua="na">No</Feature_Key_Sync_4_>
+<Feature_Key_Sync_4_ ua="na">{$spa_feature_key_sync}</Feature_Key_Sync_4_>
 <Call_Park_Monitor_Enable_4_ ua="na">No</Call_Park_Monitor_Enable_4_>
 <Enable_Broadsoft_Hoteling_4_ ua="na">No</Enable_Broadsoft_Hoteling_4_>
 <Hoteling_Subscription_Expires_4_ ua="na">3600</Hoteling_Subscription_Expires_4_>
 <!-- Proxy and Registration -->
-<Proxy_4_ ua="na"/>
-<Outbound_Proxy_4_ ua="na"/>
+<Proxy_4_ ua="na">{$domain_name}</Proxy_4_>
+<Outbound_Proxy_4_ ua="na">{$account.4.outbound_proxy_primary}</Outbound_Proxy_4_>
 <Alternate_Proxy_4_ ua="na"/>
 <Alternate_Outbound_Proxy_4_ ua="na"/>
 <Use_OB_Proxy_In_Dialog_4_ ua="na">Yes</Use_OB_Proxy_In_Dialog_4_>
 <Register_4_ ua="na">Yes</Register_4_>
 <Make_Call_Without_Reg_4_ ua="na">No</Make_Call_Without_Reg_4_>
-<Register_Expires_4_ ua="na">3600</Register_Expires_4_>
+<Register_Expires_4_ ua="na">{$account.4.register_expires}</Register_Expires_4_>
 <Ans_Call_Without_Reg_4_ ua="na">No</Ans_Call_Without_Reg_4_>
-<Use_DNS_SRV_4_ ua="na">No</Use_DNS_SRV_4_>
+{if $account.4.sip_transport == 'dns srv'}<Use_DNS_SRV_4_ ua="na">Yes</Use_DNS_SRV_4_>{/if}
+{if $account.4.sip_transport != 'dns srv'}<Use_DNS_SRV_4_ ua="na">No</Use_DNS_SRV_4_>{/if}
 <DNS_SRV_Auto_Prefix_4_ ua="na">Yes</DNS_SRV_Auto_Prefix_4_>
-<Proxy_Fallback_Intvl_4_ ua="na">3600</Proxy_Fallback_Intvl_4_>
+<Proxy_Fallback_Intvl_4_ ua="na">600</Proxy_Fallback_Intvl_4_>
 <Proxy_Redundancy_Method_4_ ua="na">Normal</Proxy_Redundancy_Method_4_>
 <Dual_Registration_4_ ua="na">No</Dual_Registration_4_>
 <Auto_Register_When_Failover_4_ ua="na">No</Auto_Register_When_Failover_4_>
 <!-- Subscriber Information -->
-<Display_Name_4_ ua="na"/>
-<User_ID_4_ ua="na"/>
-<!-- <Password_4_ ua="na"/> -->
+<Display_Name_4_ ua="na">{$account.4.display_name}</Display_Name_4_>
+<User_ID_4_ ua="na">{$account.4.user_id}</User_ID_4_>
+<Password_4_ ua="na">{$account.4.password}</Password_4_>
+
 <Auth_ID_4_ ua="na"/>
 <Reversed_Auth_Realm_4_ ua="na"/>
 <SIP_URI_4_ ua="na"/>
@@ -820,16 +796,16 @@
 <Codec_Negotiation_4_ ua="na">Default</Codec_Negotiation_4_>
 <Encryption_Method_4_ ua="na">AES 128</Encryption_Method_4_>
 <!-- Dial Plan -->
-<Dial_Plan_4_ ua="na">(*xx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_4_>
+<Dial_Plan_4_ ua="na">{$spa_dial_plan}</Dial_Plan_4_>
 <Caller_ID_Map_4_ ua="na"/>
 <Enable_URI_Dialing_4_ ua="na">No</Enable_URI_Dialing_4_>
 <Emergency_Number_4_ ua="na"/>
 <!-- General -->
 <Line_Enable_5_ ua="na">Yes</Line_Enable_5_>
 <!-- Share Line Appearance -->
-<Share_Ext_5_ ua="na">No</Share_Ext_5_>
+<Share_Ext_5_ ua="na">{if $account.5.shared_line == "shared"}shared{else}private{/if}</Share_Ext_5_>
 <Shared_User_ID_5_ ua="na"/>
-<Subscription_Expires_5_ ua="na">3600</Subscription_Expires_5_>
+<Subscription_Expires_5_ ua="na">600</Subscription_Expires_5_>
 <Restrict_MWI_5_ ua="na">No</Restrict_MWI_5_>
 <!-- NAT Settings -->
 <NAT_Mapping_Enable_5_ ua="na">No</NAT_Mapping_Enable_5_>
@@ -840,8 +816,8 @@
 <SIP_TOS_DiffServ_Value_5_ ua="na">0x68</SIP_TOS_DiffServ_Value_5_>
 <RTP_TOS_DiffServ_Value_5_ ua="na">0xb8</RTP_TOS_DiffServ_Value_5_>
 <!-- SIP Settings -->
-<SIP_Transport_5_ ua="na">UDP</SIP_Transport_5_>
-<SIP_Port_5_ ua="na">5064</SIP_Port_5_>
+<SIP_Transport_5_ ua="na">{$account.5.sip_transport|upper}</SIP_Transport_5_>
+<SIP_Port_5_ ua="na">{$account.5.sip_port}</SIP_Port_5_>
 <SIP_100REL_Enable_5_ ua="na">No</SIP_100REL_Enable_5_>
 <EXT_SIP_Port_5_ ua="na">0</EXT_SIP_Port_5_>
 <Auth_Resync-Reboot_5_ ua="na">Yes</Auth_Resync-Reboot_5_>
@@ -870,30 +846,31 @@
 <Voice_Mail_Subscribe_Interval_5_ ua="na">86400</Voice_Mail_Subscribe_Interval_5_>
 <Broadsoft_ACD_5_ ua="na">No</Broadsoft_ACD_5_>
 <Auto_Ans_Page_On_Active_Call_5_ ua="na">Yes</Auto_Ans_Page_On_Active_Call_5_>
-<Feature_Key_Sync_5_ ua="na">No</Feature_Key_Sync_5_>
+<Feature_Key_Sync_5_ ua="na">{$spa_feature_key_sync}</Feature_Key_Sync_5_>
 <Call_Park_Monitor_Enable_5_ ua="na">No</Call_Park_Monitor_Enable_5_>
 <Enable_Broadsoft_Hoteling_5_ ua="na">No</Enable_Broadsoft_Hoteling_5_>
 <Hoteling_Subscription_Expires_5_ ua="na">3600</Hoteling_Subscription_Expires_5_>
 <!-- Proxy and Registration -->
-<Proxy_5_ ua="na"/>
-<Outbound_Proxy_5_ ua="na"/>
+<Proxy_5_ ua="na">{$domain_name}</Proxy_5_>
+<Outbound_Proxy_5_ ua="na">{$account.5.outbound_proxy_primary}</Outbound_Proxy_5_>
 <Alternate_Proxy_5_ ua="na"/>
 <Alternate_Outbound_Proxy_5_ ua="na"/>
 <Use_OB_Proxy_In_Dialog_5_ ua="na">Yes</Use_OB_Proxy_In_Dialog_5_>
 <Register_5_ ua="na">Yes</Register_5_>
 <Make_Call_Without_Reg_5_ ua="na">No</Make_Call_Without_Reg_5_>
-<Register_Expires_5_ ua="na">3600</Register_Expires_5_>
+<Register_Expires_5_ ua="na">{$account.5.register_expires}</Register_Expires_5_>
 <Ans_Call_Without_Reg_5_ ua="na">No</Ans_Call_Without_Reg_5_>
-<Use_DNS_SRV_5_ ua="na">No</Use_DNS_SRV_5_>
+{if $account.5.sip_transport == 'dns srv'}<Use_DNS_SRV_5_ ua="na">Yes</Use_DNS_SRV_5_>{/if}
+{if $account.5.sip_transport != 'dns srv'}<Use_DNS_SRV_5_ ua="na">No</Use_DNS_SRV_5_>{/if}
 <DNS_SRV_Auto_Prefix_5_ ua="na">Yes</DNS_SRV_Auto_Prefix_5_>
-<Proxy_Fallback_Intvl_5_ ua="na">3600</Proxy_Fallback_Intvl_5_>
+<Proxy_Fallback_Intvl_5_ ua="na">600</Proxy_Fallback_Intvl_5_>
 <Proxy_Redundancy_Method_5_ ua="na">Normal</Proxy_Redundancy_Method_5_>
 <Dual_Registration_5_ ua="na">No</Dual_Registration_5_>
-<Auto_Register_When_Failover_5_ ua="na">No</Auto_Register_When_Failover_5_>
+<Auto_Register_When_Failover_5_ ua="na">Yes</Auto_Register_When_Failover_5_>
 <!-- Subscriber Information -->
-<Display_Name_5_ ua="na"/>
-<User_ID_5_ ua="na"/>
-<!-- <Password_5_ ua="na"/> -->
+<Display_Name_5_ ua="na">{$account.5.display_name}</Display_Name_5_>
+<User_ID_5_ ua="na">{$account.5.user_id}</User_ID_5_>
+<Password_5_ ua="na">{$account.5.user_password}</Password_5_>
 <Auth_ID_5_ ua="na"/>
 <Reversed_Auth_Realm_5_ ua="na"/>
 <SIP_URI_5_ ua="na"/>
@@ -913,7 +890,7 @@
 <Codec_Negotiation_5_ ua="na">Default</Codec_Negotiation_5_>
 <Encryption_Method_5_ ua="na">AES 128</Encryption_Method_5_>
 <!-- Dial Plan -->
-<Dial_Plan_5_ ua="na">(*xx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_5_>
+<Dial_Plan_5_ ua="na">{$spa_dial_plan}</Dial_Plan_5_>
 <Caller_ID_Map_5_ ua="na"/>
 <Enable_URI_Dialing_5_ ua="na">No</Enable_URI_Dialing_5_>
 <Emergency_Number_5_ ua="na"/>
@@ -1468,116 +1445,20 @@
 <BXfer_On_Speed_Dial_Enable ua="na">No</BXfer_On_Speed_Dial_Enable>
 <BLF_Label_Display_Mode ua="na">Name</BLF_Label_Display_Mode>
 <!-- Unit 1 -->
-<Unit_1_Key_1_ ua="na"/>
-<Unit_1_Key_2_ ua="na"/>
-<Unit_1_Key_3_ ua="na"/>
-<Unit_1_Key_4_ ua="na"/>
-<Unit_1_Key_5_ ua="na"/>
-<Unit_1_Key_6_ ua="na"/>
-<Unit_1_Key_7_ ua="na"/>
-<Unit_1_Key_8_ ua="na"/>
-<Unit_1_Key_9_ ua="na"/>
-<Unit_1_Key_10_ ua="na"/>
-<Unit_1_Key_11_ ua="na"/>
-<Unit_1_Key_12_ ua="na"/>
-<Unit_1_Key_13_ ua="na"/>
-<Unit_1_Key_14_ ua="na"/>
-<Unit_1_Key_15_ ua="na"/>
-<Unit_1_Key_16_ ua="na"/>
-<Unit_1_Key_17_ ua="na"/>
-<Unit_1_Key_18_ ua="na"/>
-<Unit_1_Key_19_ ua="na"/>
-<Unit_1_Key_20_ ua="na"/>
-<Unit_1_Key_21_ ua="na"/>
-<Unit_1_Key_22_ ua="na"/>
-<Unit_1_Key_23_ ua="na"/>
-<Unit_1_Key_24_ ua="na"/>
-<Unit_1_Key_25_ ua="na"/>
-<Unit_1_Key_26_ ua="na"/>
-<Unit_1_Key_27_ ua="na"/>
-<Unit_1_Key_28_ ua="na"/>
-<Unit_1_Key_29_ ua="na"/>
-<Unit_1_Key_30_ ua="na"/>
-<Unit_1_Key_31_ ua="na"/>
-<Unit_1_Key_32_ ua="na"/>
-<Unit_1_Key_33_ ua="na"/>
-<Unit_1_Key_34_ ua="na"/>
-<Unit_1_Key_35_ ua="na"/>
-<Unit_1_Key_36_ ua="na"/>
+{foreach $keys["expansion"] as $row}
+<Unit_1_Key_{$row.device_key_id} group="Attendant_Console/Unit_1">{$row.device_key_value}</Unit_1_Key_{$row.device_key_id}>
+{/foreach}
+{foreach $keys["expansion-1"] as $row}
+<Unit_1_Key_{$row.device_key_id} group="Attendant_Console/Unit_1">{$row.device_key_value}</Unit_1_Key_{$row.device_key_id}>
+{/foreach}
+{foreach $keys["expansion-2"] as $row}
+<Unit_2_Key_{$row.device_key_id} group="Attendant_Console/Unit_2">{$row.device_key_value}</Unit_2_Key_{$row.device_key_id}>
+{/foreach}
+
 <!-- Unit 2 -->
-<Unit_2_Key_1_ ua="na"/>
-<Unit_2_Key_2_ ua="na"/>
-<Unit_2_Key_3_ ua="na"/>
-<Unit_2_Key_4_ ua="na"/>
-<Unit_2_Key_5_ ua="na"/>
-<Unit_2_Key_6_ ua="na"/>
-<Unit_2_Key_7_ ua="na"/>
-<Unit_2_Key_8_ ua="na"/>
-<Unit_2_Key_9_ ua="na"/>
-<Unit_2_Key_10_ ua="na"/>
-<Unit_2_Key_11_ ua="na"/>
-<Unit_2_Key_12_ ua="na"/>
-<Unit_2_Key_13_ ua="na"/>
-<Unit_2_Key_14_ ua="na"/>
-<Unit_2_Key_15_ ua="na"/>
-<Unit_2_Key_16_ ua="na"/>
-<Unit_2_Key_17_ ua="na"/>
-<Unit_2_Key_18_ ua="na"/>
-<Unit_2_Key_19_ ua="na"/>
-<Unit_2_Key_20_ ua="na"/>
-<Unit_2_Key_21_ ua="na"/>
-<Unit_2_Key_22_ ua="na"/>
-<Unit_2_Key_23_ ua="na"/>
-<Unit_2_Key_24_ ua="na"/>
-<Unit_2_Key_25_ ua="na"/>
-<Unit_2_Key_26_ ua="na"/>
-<Unit_2_Key_27_ ua="na"/>
-<Unit_2_Key_28_ ua="na"/>
-<Unit_2_Key_29_ ua="na"/>
-<Unit_2_Key_30_ ua="na"/>
-<Unit_2_Key_31_ ua="na"/>
-<Unit_2_Key_32_ ua="na"/>
-<Unit_2_Key_33_ ua="na"/>
-<Unit_2_Key_34_ ua="na"/>
-<Unit_2_Key_35_ ua="na"/>
-<Unit_2_Key_36_ ua="na"/>
+
 <!-- Unit 3 -->
-<Unit_3_Key_1_ ua="na"/>
-<Unit_3_Key_2_ ua="na"/>
-<Unit_3_Key_3_ ua="na"/>
-<Unit_3_Key_4_ ua="na"/>
-<Unit_3_Key_5_ ua="na"/>
-<Unit_3_Key_6_ ua="na"/>
-<Unit_3_Key_7_ ua="na"/>
-<Unit_3_Key_8_ ua="na"/>
-<Unit_3_Key_9_ ua="na"/>
-<Unit_3_Key_10_ ua="na"/>
-<Unit_3_Key_11_ ua="na"/>
-<Unit_3_Key_12_ ua="na"/>
-<Unit_3_Key_13_ ua="na"/>
-<Unit_3_Key_14_ ua="na"/>
-<Unit_3_Key_15_ ua="na"/>
-<Unit_3_Key_16_ ua="na"/>
-<Unit_3_Key_17_ ua="na"/>
-<Unit_3_Key_18_ ua="na"/>
-<Unit_3_Key_19_ ua="na"/>
-<Unit_3_Key_20_ ua="na"/>
-<Unit_3_Key_21_ ua="na"/>
-<Unit_3_Key_22_ ua="na"/>
-<Unit_3_Key_23_ ua="na"/>
-<Unit_3_Key_24_ ua="na"/>
-<Unit_3_Key_25_ ua="na"/>
-<Unit_3_Key_26_ ua="na"/>
-<Unit_3_Key_27_ ua="na"/>
-<Unit_3_Key_28_ ua="na"/>
-<Unit_3_Key_29_ ua="na"/>
-<Unit_3_Key_30_ ua="na"/>
-<Unit_3_Key_31_ ua="na"/>
-<Unit_3_Key_32_ ua="na"/>
-<Unit_3_Key_33_ ua="na"/>
-<Unit_3_Key_34_ ua="na"/>
-<Unit_3_Key_35_ ua="na"/>
-<Unit_3_Key_36_ ua="na"/>
+
 <!-- TR-069 -->
 <Enable_TR-069 ua="na">No</Enable_TR-069>
 <ACS_URL ua="na"/>
