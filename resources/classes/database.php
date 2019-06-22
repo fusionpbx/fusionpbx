@@ -53,6 +53,7 @@ include "root.php";
 			public $app_name;
 			public $app_uuid;
 			public $domain_uuid;
+			public $permission;
 
 			/**
 			 * Called when the object is created
@@ -731,7 +732,7 @@ include "root.php";
 					foreach($array as $table_name => $rows) {
 						//echo "table: ".$table_name."\n";
 						foreach($rows as $row) {
-							if (permission_exists($this->singular($table_name).'_delete')) {
+							if ((isset($this->permission) && permission_exists($this->permission)) || permission_exists($this->singular($table_name).'_delete')) {
 								$sql = "delete from ".$table_prefix.$table_name." ";
 								$i = 0;
 								foreach($row as $field_name => $field_value) {
@@ -1234,7 +1235,7 @@ include "root.php";
 							//add a record
 								if ($action == "add") {
 
-									if (permission_exists($this->singular($this->name).'_add')) {
+									if ((isset($this->permission) && permission_exists($this->permission)) || permission_exists($this->singular($this->name).'_add')) {
 
 											$params = array();
 											$sql = "INSERT INTO v_".$this->name." ";
@@ -1320,7 +1321,7 @@ include "root.php";
 									}
 									else {
 										$message["name"] = $this->name;
-										$message["message"] = "Forbidden, does not have '".$this->singular($this->name)."_add'";
+										$message["message"] = "Forbidden, does not have '".(isset($this->permission) ? $this->permission : $this->singular($this->name)."_add")."'";
 										$message["code"] = "403";
 										$message["line"] = __line__;
 										$this->message[] = $message;
@@ -1330,7 +1331,7 @@ include "root.php";
 
 							//edit a specific uuid
 								if ($action == "update") {
-									if (permission_exists($this->singular($this->name).'_edit')) {
+									if ((isset($this->permission) && permission_exists($this->permission)) || permission_exists($this->singular($this->name).'_edit')) {
 
 										//parent data
 											$params = array();
@@ -1397,7 +1398,7 @@ include "root.php";
 									}
 									else {
 										$message["name"] = $this->name;
-										$message["message"] = "Forbidden, does not have '".$this->singular($this->name)."_edit'";
+										$message["message"] = "Forbidden, does not have '".(isset($this->permission) ? $this->permission : $this->singular($this->name)."_edit")."'";
 										$message["code"] = "403";
 										$message["line"] = __line__;
 										$this->message = $message;
@@ -1481,7 +1482,7 @@ include "root.php";
 
 												//update the data
 													if ($action == "update") {
-														if (permission_exists($child_name.'_edit')) {
+														if ((isset($this->permission) && permission_exists($this->permission)) || permission_exists($child_name.'_edit')) {
 															$sql = "UPDATE ".$table_name." SET ";
 															if (is_array($row)) {
 																foreach ($row as $k => $v) {
@@ -1548,7 +1549,7 @@ include "root.php";
 														}
 														else {
 															$message["name"] = $child_name;
-															$message["message"] = "Forbidden, does not have '${child_name}_edit'";
+															$message["message"] = "Forbidden, does not have '".(isset($this->permission) ? $this->permission : $child_name."_edit")."'";
 															$message["code"] = "403";
 															$message["line"] = __line__;
 															$this->message = $message;
@@ -1558,7 +1559,7 @@ include "root.php";
 
 											//add the data
 												if ($action == "add") {
-													if (permission_exists($child_name.'_add')) {
+													if ((isset($this->permission) && permission_exists($this->permission)) || permission_exists($child_name.'_add')) {
 														//determine if child or parent key exists
 														$child_key_name = $child_name.'_uuid';
 														$parent_key_exists = false;
@@ -1664,7 +1665,7 @@ include "root.php";
 													}
 													else {
 														$message["name"] = $child_name;
-														$message["message"] = "Forbidden, does not have '${child_name}_add'";
+														$message["message"] = "Forbidden, does not have '".(isset($this->permission) ? $this->permission : $child_name."_add")."'";
 														$message["code"] = "403";
 														$message["line"] = __line__;
 														$this->message = $message;
