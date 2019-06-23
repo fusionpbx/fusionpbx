@@ -117,8 +117,9 @@
 
 //get the list
 	$sql = "select sip_profile_name as name from v_sip_profiles ";
-	$database = new database;
-	$sip_profiles = $database->select($sql, null, 'all');
+	$prep_statement = $db->prepare($sql);
+	$prep_statement->execute();
+	$sip_profiles = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
 //create the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
