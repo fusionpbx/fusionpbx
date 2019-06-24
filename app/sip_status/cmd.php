@@ -48,7 +48,7 @@
 			if ($command == "api reloadxml") {
 				//reloadxml
 					if ($command == "api reloadxml") {
-						message::add(rtrim(event_socket_request($fp, $command)), 'alert');
+						messages::add(rtrim(event_socket_request($fp, $command)), 'alert');
 						unset($command);
 					}
 
@@ -57,7 +57,7 @@
 
 				//rescan the external profile to look for new or stopped gateways
 					$command = 'api sofia profile external rescan';
-					message::add(rtrim(event_socket_request($fp, $command)), 'alert');
+					messages::add(rtrim(event_socket_request($fp, $command)), 'alert');
 					unset($command);
 			}
 
