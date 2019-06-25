@@ -897,9 +897,9 @@
 <!-- General -->
 <Line_Enable_6_ ua="na">Yes</Line_Enable_6_>
 <!-- Share Line Appearance -->
-<Share_Ext_6_ ua="na">No</Share_Ext_6_>
+<Share_Ext_6_ ua="na">{if $account.6.shared_line == "shared"}shared{else}private{/if}</Share_Ext_6_>
 <Shared_User_ID_6_ ua="na"/>
-<Subscription_Expires_6_ ua="na">3600</Subscription_Expires_6_>
+<Subscription_Expires_6_ ua="na">600</Subscription_Expires_6_>
 <Restrict_MWI_6_ ua="na">No</Restrict_MWI_6_>
 <!-- NAT Settings -->
 <NAT_Mapping_Enable_6_ ua="na">No</NAT_Mapping_Enable_6_>
@@ -910,8 +910,8 @@
 <SIP_TOS_DiffServ_Value_6_ ua="na">0x68</SIP_TOS_DiffServ_Value_6_>
 <RTP_TOS_DiffServ_Value_6_ ua="na">0xb8</RTP_TOS_DiffServ_Value_6_>
 <!-- SIP Settings -->
-<SIP_Transport_6_ ua="na">UDP</SIP_Transport_6_>
-<SIP_Port_6_ ua="na">5065</SIP_Port_6_>
+<SIP_Transport_6_ ua="na">{$account.6.sip_transport|upper}</SIP_Transport_6_>
+<SIP_Port_6_ ua="na">{$account.6.sip_port}</SIP_Port_6_>
 <SIP_100REL_Enable_6_ ua="na">No</SIP_100REL_Enable_6_>
 <EXT_SIP_Port_6_ ua="na">0</EXT_SIP_Port_6_>
 <Auth_Resync-Reboot_6_ ua="na">Yes</Auth_Resync-Reboot_6_>
@@ -940,30 +940,31 @@
 <Voice_Mail_Subscribe_Interval_6_ ua="na">86400</Voice_Mail_Subscribe_Interval_6_>
 <Broadsoft_ACD_6_ ua="na">No</Broadsoft_ACD_6_>
 <Auto_Ans_Page_On_Active_Call_6_ ua="na">Yes</Auto_Ans_Page_On_Active_Call_6_>
-<Feature_Key_Sync_6_ ua="na">No</Feature_Key_Sync_6_>
+<Feature_Key_Sync_6_ ua="na">{$spa_feature_key_sync}</Feature_Key_Sync_6_>
 <Call_Park_Monitor_Enable_6_ ua="na">No</Call_Park_Monitor_Enable_6_>
 <Enable_Broadsoft_Hoteling_6_ ua="na">No</Enable_Broadsoft_Hoteling_6_>
 <Hoteling_Subscription_Expires_6_ ua="na">3600</Hoteling_Subscription_Expires_6_>
 <!-- Proxy and Registration -->
-<Proxy_6_ ua="na"/>
-<Outbound_Proxy_6_ ua="na"/>
+<Proxy_6_ ua="na">{$domain_name}</Proxy_6_>
+<Outbound_Proxy_6_ ua="na">{$account.6.outbound_proxy_primary}</Outbound_Proxy_6_>
 <Alternate_Proxy_6_ ua="na"/>
 <Alternate_Outbound_Proxy_6_ ua="na"/>
 <Use_OB_Proxy_In_Dialog_6_ ua="na">Yes</Use_OB_Proxy_In_Dialog_6_>
 <Register_6_ ua="na">Yes</Register_6_>
 <Make_Call_Without_Reg_6_ ua="na">No</Make_Call_Without_Reg_6_>
-<Register_Expires_6_ ua="na">3600</Register_Expires_6_>
+<Register_Expires_6_ ua="na">{$account.6.register_expires}</Register_Expires_6_>
 <Ans_Call_Without_Reg_6_ ua="na">No</Ans_Call_Without_Reg_6_>
-<Use_DNS_SRV_6_ ua="na">No</Use_DNS_SRV_6_>
+{if $account.6.sip_transport == 'dns srv'}<Use_DNS_SRV_6_ ua="na">Yes</Use_DNS_SRV_6_>{/if}
+{if $account.6.sip_transport != 'dns srv'}<Use_DNS_SRV_6_ ua="na">No</Use_DNS_SRV_6_>{/if}
 <DNS_SRV_Auto_Prefix_6_ ua="na">Yes</DNS_SRV_Auto_Prefix_6_>
-<Proxy_Fallback_Intvl_6_ ua="na">3600</Proxy_Fallback_Intvl_6_>
+<Proxy_Fallback_Intvl_6_ ua="na">600</Proxy_Fallback_Intvl_6_>
 <Proxy_Redundancy_Method_6_ ua="na">Normal</Proxy_Redundancy_Method_6_>
 <Dual_Registration_6_ ua="na">No</Dual_Registration_6_>
 <Auto_Register_When_Failover_6_ ua="na">No</Auto_Register_When_Failover_6_>
 <!-- Subscriber Information -->
-<Display_Name_6_ ua="na"/>
-<User_ID_6_ ua="na"/>
-<!-- <Password_6_ ua="na"/> -->
+<Display_Name_6_ ua="na">{$account.6.display_name}</Display_Name_6_>
+<User_ID_6_ ua="na">{$account.6.user_id}</User_ID_6_>
+<Password_6_ ua="na">{$account.6.password}</Password_6_>
 <Auth_ID_6_ ua="na"/>
 <Reversed_Auth_Realm_6_ ua="na"/>
 <SIP_URI_6_ ua="na"/>
@@ -983,16 +984,16 @@
 <Codec_Negotiation_6_ ua="na">Default</Codec_Negotiation_6_>
 <Encryption_Method_6_ ua="na">AES 128</Encryption_Method_6_>
 <!-- Dial Plan -->
-<Dial_Plan_6_ ua="na">(*xx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_6_>
+<Dial_Plan_6_ ua="na">{$spa_dial_plan}</Dial_Plan_6_>
 <Caller_ID_Map_6_ ua="na"/>
 <Enable_URI_Dialing_6_ ua="na">No</Enable_URI_Dialing_6_>
 <Emergency_Number_6_ ua="na"/>
 <!-- General -->
 <Line_Enable_7_ ua="na">Yes</Line_Enable_7_>
 <!-- Share Line Appearance -->
-<Share_Ext_7_ ua="na">No</Share_Ext_7_>
+<Share_Ext_7_ ua="na">{if $account.7.shared_line == "shared"}shared{else}private{/if}</Share_Ext_7_>
 <Shared_User_ID_7_ ua="na"/>
-<Subscription_Expires_7_ ua="na">3600</Subscription_Expires_7_>
+<Subscription_Expires_7_ ua="na">600</Subscription_Expires_7_>
 <Restrict_MWI_7_ ua="na">No</Restrict_MWI_7_>
 <!-- NAT Settings -->
 <NAT_Mapping_Enable_7_ ua="na">No</NAT_Mapping_Enable_7_>
@@ -1003,8 +1004,8 @@
 <SIP_TOS_DiffServ_Value_7_ ua="na">0x68</SIP_TOS_DiffServ_Value_7_>
 <RTP_TOS_DiffServ_Value_7_ ua="na">0xb8</RTP_TOS_DiffServ_Value_7_>
 <!-- SIP Settings -->
-<SIP_Transport_7_ ua="na">UDP</SIP_Transport_7_>
-<SIP_Port_7_ ua="na">5066</SIP_Port_7_>
+<SIP_Transport_7_ ua="na">{$account.7.sip_transport|upper}</SIP_Transport_7_>
+<SIP_Port_7_ ua="na">{$account.7.sip_port}</SIP_Port_7_>
 <SIP_100REL_Enable_7_ ua="na">No</SIP_100REL_Enable_7_>
 <EXT_SIP_Port_7_ ua="na">0</EXT_SIP_Port_7_>
 <Auth_Resync-Reboot_7_ ua="na">Yes</Auth_Resync-Reboot_7_>
@@ -1033,19 +1034,19 @@
 <Voice_Mail_Subscribe_Interval_7_ ua="na">86400</Voice_Mail_Subscribe_Interval_7_>
 <Broadsoft_ACD_7_ ua="na">No</Broadsoft_ACD_7_>
 <Auto_Ans_Page_On_Active_Call_7_ ua="na">Yes</Auto_Ans_Page_On_Active_Call_7_>
-<Feature_Key_Sync_7_ ua="na">No</Feature_Key_Sync_7_>
+<Feature_Key_Sync_7_ ua="na">{$spa_feature_key_sync}</Feature_Key_Sync_7_>
 <Call_Park_Monitor_Enable_7_ ua="na">No</Call_Park_Monitor_Enable_7_>
 <Enable_Broadsoft_Hoteling_7_ ua="na">No</Enable_Broadsoft_Hoteling_7_>
 <Hoteling_Subscription_Expires_7_ ua="na">3600</Hoteling_Subscription_Expires_7_>
 <!-- Proxy and Registration -->
-<Proxy_7_ ua="na"/>
-<Outbound_Proxy_7_ ua="na"/>
+<Proxy_7_ ua="na">{$domain_name}</Proxy_7_>
+<Outbound_Proxy_7_ ua="na">{$account.7.outbound_proxy_primary}</Outbound_Proxy_7_>
 <Alternate_Proxy_7_ ua="na"/>
 <Alternate_Outbound_Proxy_7_ ua="na"/>
 <Use_OB_Proxy_In_Dialog_7_ ua="na">Yes</Use_OB_Proxy_In_Dialog_7_>
 <Register_7_ ua="na">Yes</Register_7_>
 <Make_Call_Without_Reg_7_ ua="na">No</Make_Call_Without_Reg_7_>
-<Register_Expires_7_ ua="na">3600</Register_Expires_7_>
+<Register_Expires_7_ ua="na">{$account.7.register_expires}</Register_Expires_7_>
 <Ans_Call_Without_Reg_7_ ua="na">No</Ans_Call_Without_Reg_7_>
 <Use_DNS_SRV_7_ ua="na">No</Use_DNS_SRV_7_>
 <DNS_SRV_Auto_Prefix_7_ ua="na">Yes</DNS_SRV_Auto_Prefix_7_>
@@ -1054,9 +1055,9 @@
 <Dual_Registration_7_ ua="na">No</Dual_Registration_7_>
 <Auto_Register_When_Failover_7_ ua="na">No</Auto_Register_When_Failover_7_>
 <!-- Subscriber Information -->
-<Display_Name_7_ ua="na"/>
-<User_ID_7_ ua="na"/>
-<!-- <Password_7_ ua="na"/> -->
+<Display_Name_7_ ua="na">{$account.7.display_name}</Display_Name_7_>
+<User_ID_7_ ua="na">{$account.7.user_id}</User_ID_7_>
+<Password_7_ ua="na">{$account.7.password}</Password_7_>
 <Auth_ID_7_ ua="na"/>
 <Reversed_Auth_Realm_7_ ua="na"/>
 <SIP_URI_7_ ua="na"/>
@@ -1076,16 +1077,16 @@
 <Codec_Negotiation_7_ ua="na">Default</Codec_Negotiation_7_>
 <Encryption_Method_7_ ua="na">AES 128</Encryption_Method_7_>
 <!-- Dial Plan -->
-<Dial_Plan_7_ ua="na">(*xx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_7_>
+<Dial_Plan_7_ ua="na">{$spa_dial_plan}</Dial_Plan_7_>
 <Caller_ID_Map_7_ ua="na"/>
 <Enable_URI_Dialing_7_ ua="na">No</Enable_URI_Dialing_7_>
 <Emergency_Number_7_ ua="na"/>
 <!-- General -->
 <Line_Enable_8_ ua="na">Yes</Line_Enable_8_>
 <!-- Share Line Appearance -->
-<Share_Ext_8_ ua="na">No</Share_Ext_8_>
+<Share_Ext_8_ ua="na">{if $account.8.shared_line == "shared"}shared{else}private{/if}</Share_Ext_8_>
 <Shared_User_ID_8_ ua="na"/>
-<Subscription_Expires_8_ ua="na">3600</Subscription_Expires_8_>
+<Subscription_Expires_8_ ua="na">600</Subscription_Expires_8_>
 <Restrict_MWI_8_ ua="na">No</Restrict_MWI_8_>
 <!-- NAT Settings -->
 <NAT_Mapping_Enable_8_ ua="na">No</NAT_Mapping_Enable_8_>
@@ -1096,8 +1097,8 @@
 <SIP_TOS_DiffServ_Value_8_ ua="na">0x68</SIP_TOS_DiffServ_Value_8_>
 <RTP_TOS_DiffServ_Value_8_ ua="na">0xb8</RTP_TOS_DiffServ_Value_8_>
 <!-- SIP Settings -->
-<SIP_Transport_8_ ua="na">UDP</SIP_Transport_8_>
-<SIP_Port_8_ ua="na">5067</SIP_Port_8_>
+<SIP_Transport_8_ ua="na">{$account.8.sip_transport|upper}</SIP_Transport_8_>
+<SIP_Port_8_ ua="na">{$account.8.sip_port}</SIP_Port_8_>
 <SIP_100REL_Enable_8_ ua="na">No</SIP_100REL_Enable_8_>
 <EXT_SIP_Port_8_ ua="na">0</EXT_SIP_Port_8_>
 <Auth_Resync-Reboot_8_ ua="na">Yes</Auth_Resync-Reboot_8_>
@@ -1126,30 +1127,31 @@
 <Voice_Mail_Subscribe_Interval_8_ ua="na">86400</Voice_Mail_Subscribe_Interval_8_>
 <Broadsoft_ACD_8_ ua="na">No</Broadsoft_ACD_8_>
 <Auto_Ans_Page_On_Active_Call_8_ ua="na">Yes</Auto_Ans_Page_On_Active_Call_8_>
-<Feature_Key_Sync_8_ ua="na">No</Feature_Key_Sync_8_>
+<Feature_Key_Sync_8_ ua="na">{$spa_feature_key_sync}</Feature_Key_Sync_8_>
 <Call_Park_Monitor_Enable_8_ ua="na">No</Call_Park_Monitor_Enable_8_>
 <Enable_Broadsoft_Hoteling_8_ ua="na">No</Enable_Broadsoft_Hoteling_8_>
 <Hoteling_Subscription_Expires_8_ ua="na">3600</Hoteling_Subscription_Expires_8_>
 <!-- Proxy and Registration -->
-<Proxy_8_ ua="na"/>
-<Outbound_Proxy_8_ ua="na"/>
+<Proxy_8_ ua="na">{$domain_name}</Proxy_8_>
+<Outbound_Proxy_8_ ua="na">{$account.8.outbound_proxy_primary}</Outbound_Proxy_8_>
 <Alternate_Proxy_8_ ua="na"/>
 <Alternate_Outbound_Proxy_8_ ua="na"/>
 <Use_OB_Proxy_In_Dialog_8_ ua="na">Yes</Use_OB_Proxy_In_Dialog_8_>
 <Register_8_ ua="na">Yes</Register_8_>
 <Make_Call_Without_Reg_8_ ua="na">No</Make_Call_Without_Reg_8_>
-<Register_Expires_8_ ua="na">3600</Register_Expires_8_>
+<Register_Expires_8_ ua="na">{$account.8.register_expires}</Register_Expires_8_>
 <Ans_Call_Without_Reg_8_ ua="na">No</Ans_Call_Without_Reg_8_>
-<Use_DNS_SRV_8_ ua="na">No</Use_DNS_SRV_8_>
+{if $account.8.sip_transport == 'dns srv'}<Use_DNS_SRV_8_ ua="na">Yes</Use_DNS_SRV_8_>{/if}
+{if $account.8.sip_transport != 'dns srv'}<Use_DNS_SRV_8_ ua="na">No</Use_DNS_SRV_8_>{/if}
 <DNS_SRV_Auto_Prefix_8_ ua="na">Yes</DNS_SRV_Auto_Prefix_8_>
-<Proxy_Fallback_Intvl_8_ ua="na">3600</Proxy_Fallback_Intvl_8_>
+<Proxy_Fallback_Intvl_8_ ua="na">600</Proxy_Fallback_Intvl_8_>
 <Proxy_Redundancy_Method_8_ ua="na">Normal</Proxy_Redundancy_Method_8_>
 <Dual_Registration_8_ ua="na">No</Dual_Registration_8_>
 <Auto_Register_When_Failover_8_ ua="na">No</Auto_Register_When_Failover_8_>
 <!-- Subscriber Information -->
-<Display_Name_8_ ua="na"/>
-<User_ID_8_ ua="na"/>
-<!-- <Password_8_ ua="na"/> -->
+<Display_Name_8_ ua="na">{$account.8.display_name}</Display_Name_8_>
+<User_ID_8_ ua="na">{$account.8.user_id}</User_ID_8_>
+<Password_8_ ua="na">{$account.8.password}</Password_8_>
 <Auth_ID_8_ ua="na"/>
 <Reversed_Auth_Realm_8_ ua="na"/>
 <SIP_URI_8_ ua="na"/>
@@ -1169,7 +1171,7 @@
 <Codec_Negotiation_8_ ua="na">Default</Codec_Negotiation_8_>
 <Encryption_Method_8_ ua="na">AES 128</Encryption_Method_8_>
 <!-- Dial Plan -->
-<Dial_Plan_8_ ua="na">(*xx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_8_>
+<Dial_Plan_8_ ua="na">{$spa_dial_plan}</Dial_Plan_8_>
 <Caller_ID_Map_8_ ua="na"/>
 <Enable_URI_Dialing_8_ ua="na">No</Enable_URI_Dialing_8_>
 <Emergency_Number_8_ ua="na"/>
@@ -1178,7 +1180,7 @@
 <!-- Share Line Appearance -->
 <Share_Ext_9_ ua="na">No</Share_Ext_9_>
 <Shared_User_ID_9_ ua="na"/>
-<Subscription_Expires_9_ ua="na">3600</Subscription_Expires_9_>
+<Subscription_Expires_9_ ua="na">600</Subscription_Expires_9_>
 <Restrict_MWI_9_ ua="na">No</Restrict_MWI_9_>
 <!-- NAT Settings -->
 <NAT_Mapping_Enable_9_ ua="na">No</NAT_Mapping_Enable_9_>
@@ -1189,8 +1191,8 @@
 <SIP_TOS_DiffServ_Value_9_ ua="na">0x68</SIP_TOS_DiffServ_Value_9_>
 <RTP_TOS_DiffServ_Value_9_ ua="na">0xb8</RTP_TOS_DiffServ_Value_9_>
 <!-- SIP Settings -->
-<SIP_Transport_9_ ua="na">UDP</SIP_Transport_9_>
-<SIP_Port_9_ ua="na">5068</SIP_Port_9_>
+<SIP_Transport_9_ ua="na">{$account.9.sip_transport|upper}</SIP_Transport_9_>
+<SIP_Port_9_ ua="na">{$account.9.sip_port}</SIP_Port_9_>
 <SIP_100REL_Enable_9_ ua="na">No</SIP_100REL_Enable_9_>
 <EXT_SIP_Port_9_ ua="na">0</EXT_SIP_Port_9_>
 <Auth_Resync-Reboot_9_ ua="na">Yes</Auth_Resync-Reboot_9_>
@@ -1219,30 +1221,31 @@
 <Voice_Mail_Subscribe_Interval_9_ ua="na">86400</Voice_Mail_Subscribe_Interval_9_>
 <Broadsoft_ACD_9_ ua="na">No</Broadsoft_ACD_9_>
 <Auto_Ans_Page_On_Active_Call_9_ ua="na">Yes</Auto_Ans_Page_On_Active_Call_9_>
-<Feature_Key_Sync_9_ ua="na">No</Feature_Key_Sync_9_>
+<Feature_Key_Sync_9_ ua="na">{$spa_feature_key_sync}</Feature_Key_Sync_9_>
 <Call_Park_Monitor_Enable_9_ ua="na">No</Call_Park_Monitor_Enable_9_>
 <Enable_Broadsoft_Hoteling_9_ ua="na">No</Enable_Broadsoft_Hoteling_9_>
 <Hoteling_Subscription_Expires_9_ ua="na">3600</Hoteling_Subscription_Expires_9_>
 <!-- Proxy and Registration -->
-<Proxy_9_ ua="na"/>
-<Outbound_Proxy_9_ ua="na"/>
+<Proxy_9_ ua="na">{$domain_name}</Proxy_9_>
+<Outbound_Proxy_9_ ua="na">{$account.9.outbound_proxy_primary}</Outbound_Proxy_9_>
 <Alternate_Proxy_9_ ua="na"/>
 <Alternate_Outbound_Proxy_9_ ua="na"/>
 <Use_OB_Proxy_In_Dialog_9_ ua="na">Yes</Use_OB_Proxy_In_Dialog_9_>
 <Register_9_ ua="na">Yes</Register_9_>
 <Make_Call_Without_Reg_9_ ua="na">No</Make_Call_Without_Reg_9_>
-<Register_Expires_9_ ua="na">3600</Register_Expires_9_>
+<Register_Expires_9_ ua="na">{$account.9.register_expires}</Register_Expires_9_>
 <Ans_Call_Without_Reg_9_ ua="na">No</Ans_Call_Without_Reg_9_>
-<Use_DNS_SRV_9_ ua="na">No</Use_DNS_SRV_9_>
+{if $account.9.sip_transport == 'dns srv'}<Use_DNS_SRV_9_ ua="na">Yes</Use_DNS_SRV_9_>{/if}
+{if $account.9.sip_transport != 'dns srv'}<Use_DNS_SRV_9_ ua="na">No</Use_DNS_SRV_9_>{/if}
 <DNS_SRV_Auto_Prefix_9_ ua="na">Yes</DNS_SRV_Auto_Prefix_9_>
-<Proxy_Fallback_Intvl_9_ ua="na">3600</Proxy_Fallback_Intvl_9_>
+<Proxy_Fallback_Intvl_9_ ua="na">600</Proxy_Fallback_Intvl_9_>
 <Proxy_Redundancy_Method_9_ ua="na">Normal</Proxy_Redundancy_Method_9_>
 <Dual_Registration_9_ ua="na">No</Dual_Registration_9_>
 <Auto_Register_When_Failover_9_ ua="na">No</Auto_Register_When_Failover_9_>
 <!-- Subscriber Information -->
-<Display_Name_9_ ua="na"/>
-<User_ID_9_ ua="na"/>
-<!-- <Password_9_ ua="na"/> -->
+<Display_Name_9_ ua="na">{$account.9.display_name}</Display_Name_9_>
+<User_ID_9_ ua="na">{$account.9.user_id}</User_ID_9_>
+<Password_9_ ua="na">{$account.9.password}</Password_9_>
 <Auth_ID_9_ ua="na"/>
 <Reversed_Auth_Realm_9_ ua="na"/>
 <SIP_URI_9_ ua="na"/>
@@ -1262,16 +1265,16 @@
 <Codec_Negotiation_9_ ua="na">Default</Codec_Negotiation_9_>
 <Encryption_Method_9_ ua="na">AES 128</Encryption_Method_9_>
 <!-- Dial Plan -->
-<Dial_Plan_9_ ua="na">(*xx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_9_>
+<Dial_Plan_9_ ua="na">{$spa_dial_plan}</Dial_Plan_9_>
 <Caller_ID_Map_9_ ua="na"/>
 <Enable_URI_Dialing_9_ ua="na">No</Enable_URI_Dialing_9_>
 <Emergency_Number_9_ ua="na"/>
 <!-- General -->
 <Line_Enable_10_ ua="na">Yes</Line_Enable_10_>
 <!-- Share Line Appearance -->
-<Share_Ext_10_ ua="na">No</Share_Ext_10_>
+<Share_Ext_10_ ua="na">{if $account.10.shared_line == "shared"}shared{else}private{/if}</Share_Ext_10_>
 <Shared_User_ID_10_ ua="na"/>
-<Subscription_Expires_10_ ua="na">3600</Subscription_Expires_10_>
+<Subscription_Expires_10_ ua="na">600</Subscription_Expires_10_>
 <Restrict_MWI_10_ ua="na">No</Restrict_MWI_10_>
 <!-- NAT Settings -->
 <NAT_Mapping_Enable_10_ ua="na">No</NAT_Mapping_Enable_10_>
@@ -1282,8 +1285,8 @@
 <SIP_TOS_DiffServ_Value_10_ ua="na">0x68</SIP_TOS_DiffServ_Value_10_>
 <RTP_TOS_DiffServ_Value_10_ ua="na">0xb8</RTP_TOS_DiffServ_Value_10_>
 <!-- SIP Settings -->
-<SIP_Transport_10_ ua="na">UDP</SIP_Transport_10_>
-<SIP_Port_10_ ua="na">5069</SIP_Port_10_>
+<SIP_Transport_10_ ua="na">{$account.10.sip_transport|upper}</SIP_Transport_10_>
+<SIP_Port_10_ ua="na">{$account.10.sip_port}</SIP_Port_10_>
 <SIP_100REL_Enable_10_ ua="na">No</SIP_100REL_Enable_10_>
 <EXT_SIP_Port_10_ ua="na">0</EXT_SIP_Port_10_>
 <Auth_Resync-Reboot_10_ ua="na">Yes</Auth_Resync-Reboot_10_>
@@ -1312,30 +1315,31 @@
 <Voice_Mail_Subscribe_Interval_10_ ua="na">86400</Voice_Mail_Subscribe_Interval_10_>
 <Broadsoft_ACD_10_ ua="na">No</Broadsoft_ACD_10_>
 <Auto_Ans_Page_On_Active_Call_10_ ua="na">Yes</Auto_Ans_Page_On_Active_Call_10_>
-<Feature_Key_Sync_10_ ua="na">No</Feature_Key_Sync_10_>
+<Feature_Key_Sync_10_ ua="na">{$spa_feature_key_sync}</Feature_Key_Sync_10_>
 <Call_Park_Monitor_Enable_10_ ua="na">No</Call_Park_Monitor_Enable_10_>
 <Enable_Broadsoft_Hoteling_10_ ua="na">No</Enable_Broadsoft_Hoteling_10_>
 <Hoteling_Subscription_Expires_10_ ua="na">3600</Hoteling_Subscription_Expires_10_>
 <!-- Proxy and Registration -->
-<Proxy_10_ ua="na"/>
-<Outbound_Proxy_10_ ua="na"/>
+<Proxy_10_ ua="na">{$domain_name}</Proxy_10_>
+<Outbound_Proxy_10_ ua="na">{$account.10.outbound_proxy_primary}</Outbound_Proxy_10_>
 <Alternate_Proxy_10_ ua="na"/>
 <Alternate_Outbound_Proxy_10_ ua="na"/>
 <Use_OB_Proxy_In_Dialog_10_ ua="na">Yes</Use_OB_Proxy_In_Dialog_10_>
 <Register_10_ ua="na">Yes</Register_10_>
 <Make_Call_Without_Reg_10_ ua="na">No</Make_Call_Without_Reg_10_>
-<Register_Expires_10_ ua="na">3600</Register_Expires_10_>
+<Register_Expires_10_ ua="na">{$account.10.register_expires}</Register_Expires_10_>
 <Ans_Call_Without_Reg_10_ ua="na">No</Ans_Call_Without_Reg_10_>
-<Use_DNS_SRV_10_ ua="na">No</Use_DNS_SRV_10_>
+{if $account.10.sip_transport == 'dns srv'}<Use_DNS_SRV_10_ ua="na">Yes</Use_DNS_SRV_10_>{/if}
+{if $account.10.sip_transport != 'dns srv'}<Use_DNS_SRV_10_ ua="na">No</Use_DNS_SRV_10_>{/if}
 <DNS_SRV_Auto_Prefix_10_ ua="na">Yes</DNS_SRV_Auto_Prefix_10_>
-<Proxy_Fallback_Intvl_10_ ua="na">3600</Proxy_Fallback_Intvl_10_>
+<Proxy_Fallback_Intvl_10_ ua="na">600</Proxy_Fallback_Intvl_10_>
 <Proxy_Redundancy_Method_10_ ua="na">Normal</Proxy_Redundancy_Method_10_>
 <Dual_Registration_10_ ua="na">No</Dual_Registration_10_>
 <Auto_Register_When_Failover_10_ ua="na">No</Auto_Register_When_Failover_10_>
 <!-- Subscriber Information -->
-<Display_Name_10_ ua="na"/>
-<User_ID_10_ ua="na"/>
-<!-- <Password_10_ ua="na"/> -->
+<Display_Name_10_ ua="na">{$account.10.display_name}</Display_Name_10_>
+<User_ID_10_ ua="na">{$account.10.user_id}</User_ID_10_>
+<Password_10_ ua="na">{$account.10.password}</Password_10_>
 <Auth_ID_10_ ua="na"/>
 <Reversed_Auth_Realm_10_ ua="na"/>
 <SIP_URI_10_ ua="na"/>
@@ -1355,7 +1359,7 @@
 <Codec_Negotiation_10_ ua="na">Default</Codec_Negotiation_10_>
 <Encryption_Method_10_ ua="na">AES 128</Encryption_Method_10_>
 <!-- Dial Plan -->
-<Dial_Plan_10_ ua="na">(*xx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_10_>
+<Dial_Plan_10_ ua="na">{$spa_dial_plan}</Dial_Plan_10_>
 <Caller_ID_Map_10_ ua="na"/>
 <Enable_URI_Dialing_10_ ua="na">No</Enable_URI_Dialing_10_>
 <Emergency_Number_10_ ua="na"/>
@@ -1386,7 +1390,7 @@
 <Speed_Dial_9_Name ua="rw"/>
 <Speed_Dial_9_Number ua="rw"/>
 <!-- Supplementary Services -->
-<CW_Setting ua="rw">Yes</CW_Setting>
+<CW_Setting ua="rw">{$spa_call_waiting}</CW_Setting>
 <Block_CID_Setting ua="rw">No</Block_CID_Setting>
 <Block_ANC_Setting ua="rw">No</Block_ANC_Setting>
 <DND_Setting ua="rw">No</DND_Setting>
@@ -1394,8 +1398,8 @@
 <Dial_Assistance ua="na">Yes</Dial_Assistance>
 <Auto_Answer_Page ua="na">Yes</Auto_Answer_Page>
 <Preferred_Audio_Device ua="na">None</Preferred_Audio_Device>
-<Time_Format ua="na">12hr</Time_Format>
-<Date_Format ua="na">month/day</Date_Format>
+<Time_Format ua="na">{$spa_time_format}</Time_Format>
+<Date_Format ua="na">{$spa_date_format}</Date_Format>
 <Miss_Call_Shortcut ua="na">No</Miss_Call_Shortcut>
 <Alert_Tone_Off ua="rw">No</Alert_Tone_Off>
 <Log_Missed_Calls_for_EXT_1 ua="na">Yes</Log_Missed_Calls_for_EXT_1>
