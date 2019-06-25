@@ -69,13 +69,13 @@
 
 		//reloadacl
 			if ($command == "api reloadacl") {
-				message::add(rtrim(event_socket_request($fp, $command)), 'alert');
+				messages::add(rtrim(event_socket_request($fp, $command)), 'alert');
 				unset($command);
 			}
 
 		//sofia profile
 			if (substr($command, 0, 17) == "api sofia profile") {
-				message::add(rtrim(event_socket_request($fp, $command)), 'alert');
+				messages::add(rtrim(event_socket_request($fp, $command)), 'alert');
 			}
 
 		//close the connection
