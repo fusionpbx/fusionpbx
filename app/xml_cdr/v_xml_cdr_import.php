@@ -290,19 +290,24 @@
 					$fields = explode(",", $field);
 					$field_name = end($fields);
 					if (count($fields) == 1) {
-						$database->fields[$field_name] = urldecode($array['variables'][$fields[0]]);
+						if (is_null($database->fields[$field_name]))
+							$database->fields[$field_name] = urldecode($array['variables'][$fields[0]]);
 					}
 					if (count($fields) == 2) {
-						$database->fields[$field_name] = urldecode($array[$fields[0]][$fields[1]]);
+						if (is_null($database->fields[$field_name]))
+							$database->fields[$field_name] = urldecode($array[$fields[0]][$fields[1]]);
 					}
 					if (count($fields) == 3) {
-						$database->fields[$field_name] = urldecode($array[$fields[0]][0][$fields[1]][$fields[2]]);
+						if (is_null($database->fields[$field_name]))
+							$database->fields[$field_name] = urldecode($array[$fields[0]][0][$fields[1]][$fields[2]]);
 					}
 					if (count($fields) == 4) {
-						$database->fields[$field_name] = urldecode($array[$fields[0]][$fields[1]][$fields[2]][$fields[3]]);
+						if (is_null($database->fields[$field_name]))
+							$database->fields[$field_name] = urldecode($array[$fields[0]][$fields[1]][$fields[2]][$fields[3]]);
 					}
 					if (count($fields) == 5) {
-						$database->fields[$field_name] = urldecode($array[$fields[0]][$fields[1]][$fields[2]][$fields[3]][$fields[4]]);
+						if (is_null($database->fields[$field_name]))
+							$database->fields[$field_name] = urldecode($array[$fields[0]][$fields[1]][$fields[2]][$fields[3]][$fields[4]]);
 					}
 				}
 			}
