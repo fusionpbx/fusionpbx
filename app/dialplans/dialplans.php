@@ -101,7 +101,12 @@
 
 //get the number of rows in the dialplan
 	$sql = "select count(*) as num_rows from v_dialplans ";
-	$sql .= "where (domain_uuid = '$domain_uuid' or domain_uuid is null) ";
+	if ($_GET['show'] == "all" && permission_exists('dialplan_all')) {
+		$sql .= "where 1 = 1 ";
+	}
+	else {
+		$sql .= "where (domain_uuid = '$domain_uuid' or domain_uuid is null) ";
+	}
 	if (strlen($app_uuid) == 0) {
 		//hide inbound routes
 			$sql .= "and app_uuid <> 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4' ";
@@ -139,7 +144,10 @@
 	unset($prep_statement, $result);
 
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "";
+	$param = "&search=".escape($search);
+	if ($_GET['show'] == "all" && permission_exists('destination_all')) {
+		$param .= "&show=all";
+	}
 	if (strlen($app_uuid) > 0 && is_uuid($app_uuid)) { $param = "&app_uuid=".$app_uuid; }
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
@@ -148,7 +156,12 @@
 
 //get the list of dialplans
 	$sql = "select * from v_dialplans ";
-	$sql .= "where (domain_uuid = '$domain_uuid' or domain_uuid is null) ";
+	if ($_GET['show'] == "all" && permission_exists('dialplan_all')) {
+		$sql .= "where 1 = 1 ";
+	}
+	else {
+		$sql .= "where (domain_uuid = '$domain_uuid' or domain_uuid is null) ";
+	}
 	if (strlen($app_uuid) == 0) {
 		//hide inbound routes
 			$sql .= "and app_uuid <> 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4' ";
@@ -231,14 +244,22 @@
 	echo "		<br><br>\n";
 	echo "	</td>\n";
 	echo "	<td align='right' valign='top' nowrap='nowrap' style='padding-left: 50px;'>\n";
+	if (permission_exists('dialplan_all')) {
+		if ($_GET['show'] == 'all') {
+			echo "		<input type='hidden' name='show' value='all'>";
+		}
+		else {
+			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='dialplans.php?show=all&search=".escape($search)."&app_uuid=".escape($app_uuid)."';\">\n";
+		}
+	}
 	echo "		<form name='frm_search' method='get' action=''>\n";
 	echo "		<input type='text' class='txt' style='width: 150px' name='search' value='".escape($search)."'>";
 	if (strlen($app_uuid) > 0) {
-		echo "		<input type='hidden' class='txt' name='app_uuid' value='".$app_uuid."'>";
+		echo "		<input type='hidden' class='txt' name='app_uuid' value='".escape($app_uuid)."'>";
 	}
 	if (strlen($order_by) > 0) {
-		echo "		<input type='hidden' class='txt' name='order_by' value='".$order_by."'>";
-		echo "		<input type='hidden' class='txt' name='order' value='".$order."'>";
+		echo "		<input type='hidden' class='txt' name='order_by' value='".escape($order_by)."'>";
+		echo "		<input type='hidden' class='txt' name='order' value='".escape($order)."'>";
 	}
 	echo "		<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	echo "		</form>\n";
@@ -275,7 +296,7 @@
 	echo "<br />";
 
 	echo "<form name='frm_delete' method='post' action='dialplan_delete.php'>\n";
-	echo "<input type='hidden' name='app_uuid' value='".$app_uuid."'>\n";
+	echo "<input type='hidden' name='app_uuid' value='".escape($app_uuid)."'>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	if (permission_exists('dialplan_delete') && $dialplan_count > 0) {
@@ -444,12 +465,5 @@
 
 //include the footer
 	require_once "resources/footer.php";
-
-//unset the variables
-	unset ($dialplan_count);
-	unset ($result);
-	unset ($key);
-	unset ($val);
-	unset ($c);
 
 ?>
