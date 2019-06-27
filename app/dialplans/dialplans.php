@@ -244,6 +244,7 @@
 	echo "		<br><br>\n";
 	echo "	</td>\n";
 	echo "	<td align='right' valign='top' nowrap='nowrap' style='padding-left: 50px;'>\n";
+	echo "		<form name='frm_search' method='get' action=''>\n";
 	if (permission_exists('dialplan_all')) {
 		if ($_GET['show'] == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>";
@@ -252,7 +253,6 @@
 			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='dialplans.php?show=all&search=".escape($search)."&app_uuid=".escape($app_uuid)."';\">\n";
 		}
 	}
-	echo "		<form name='frm_search' method='get' action=''>\n";
 	echo "		<input type='text' class='txt' style='width: 150px' name='search' value='".escape($search)."'>";
 	if (strlen($app_uuid) > 0) {
 		echo "		<input type='hidden' class='txt' name='app_uuid' value='".escape($app_uuid)."'>";
@@ -301,6 +301,9 @@
 	echo "<tr>\n";
 	if (permission_exists('dialplan_delete') && $dialplan_count > 0) {
 		echo "<th style='width: 30px; text-align: center; padding: 3px 0px 0px 0px;' width='1'><input type='checkbox' style='margin: 0px 0px 0px 2px;' onchange=\"(this.checked) ? check('all') : check('none');\"></th>";
+	}
+	if ($_GET['show'] == "all" && permission_exists('destination_all')) {
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param);
 	}
 	echo th_order_by('dialplan_name', $text['label-name'], $order_by, $order, $app_uuid, null, (($search != '') ? "search=".escape($search) : null));
 	echo th_order_by('dialplan_number', $text['label-number'], $order_by, $order, $app_uuid, null, (($search != '') ? "search=".escape($search) : null));
@@ -363,6 +366,15 @@
 				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' name='id[]' id='checkbox_".escape($row['dialplan_uuid'])."' value='".escape($row['dialplan_uuid'])."'></td>\n";
 				$dialplan_ids[] = 'checkbox_'.escape($row['dialplan_uuid']);
 			}
+			if ($_GET['show'] == "all" && permission_exists('dialplan_all')) {
+				if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
+					$domain = escape($_SESSION['domains'][$row['domain_uuid']]['domain_name']);
+				}
+				else {
+					$domain = $text['label-global'];
+				}
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($domain)."</td>\n";
+			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if ($app_uuid == "4b821450-926b-175a-af93-a03c441818b1" && permission_exists('time_condition_edit')) {
 				echo "<a href='".PROJECT_PATH."/app/time_conditions/time_condition_edit.php?id=".escape($row['dialplan_uuid']).(($app_uuid != '') ? "&app_uuid=".$app_uuid : null)."'>".escape($row['dialplan_name'])."</a>";
@@ -415,7 +427,7 @@
 	} //end if results
 
 	echo "<tr>\n";
-	echo "<td colspan='8'>\n";
+	echo "<td colspan='9'>\n";
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%'>&nbsp;</td>\n";
