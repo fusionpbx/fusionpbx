@@ -304,7 +304,7 @@
 	}
 	if (strlen($caller_id_name) > 0) {
 		$mod_caller_id_name = str_replace("*", "%", $caller_id_name);
-		$sql .= "and caller_id_name like :mod_caller_id_name \n";
+		$sql .= "and caller_id_name like :caller_id_name \n";
 		$parameters['caller_id_name'] = '%'.$mod_caller_id_name.'%';
 	}
 	if (strlen($caller_id_number) > 0) {
