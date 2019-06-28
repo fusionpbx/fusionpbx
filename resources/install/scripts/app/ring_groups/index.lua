@@ -512,30 +512,23 @@
 				destination_prompt = row.destination_prompt;
 				toll_allow = row.toll_allow;
 
-				--determine if the user is registered if not registered then lookup 
-				cmd = "sofia_contact */".. destination_number .."@" ..domain_name;
-				if (api:executeString(cmd) == "error/user_not_registered") then
-					freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
-					cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_user_not_registered_enabled";
-					freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
-					if (api:executeString(cmd) == "true") then
-						--get the new destination number
-						cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_user_not_registered_destination";
+				--determine if the user is registered if not registered then lookup
+				if (user_exists == "true") then
+					cmd = "sofia_contact */".. destination_number .."@" ..domain_name;
+					if (api:executeString(cmd) == "error/user_not_registered") then
 						freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
-						not_registered_destination_number = api:executeString(cmd);
-						freeswitch.consoleLog("NOTICE", "[ring_group] "..not_registered_destination_number.."\n");
-						if (not_registered_destination_number ~= nil) then
-							destination_number = not_registered_destination_number;
-							destinations[key]['destination_number'] = destination_number;
-						end
-
-						--check the new destination number for user_exists
-						cmd = "user_exists id ".. destination_number .." "..domain_name;
-						user_exists = api:executeString(cmd);
-						if (user_exists == "true") then
-							destinations[key]['user_exists'] = "true";
-						else
-							destinations[key]['user_exists'] = "false";
+						cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_user_not_registered_enabled";
+						freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
+						if (api:executeString(cmd) == "true") then
+							--get the new destination number
+							cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_user_not_registered_destination";
+							freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
+							not_registered_destination_number = api:executeString(cmd);
+							freeswitch.consoleLog("NOTICE", "[ring_group] "..not_registered_destination_number.."\n");
+							if (not_registered_destination_number ~= nil) then
+								destination_number = not_registered_destination_number;
+								destinations[key]['destination_number'] = destination_number;
+							end
 						end
 					end
 				end
@@ -551,7 +544,6 @@
 			x = 1;
 			for key, row in pairs(destinations) do
 				--set the values from the database as variables
-					user_exists = row.user_exists;
 					ring_group_strategy = row.ring_group_strategy;
 					ring_group_timeout_app = row.ring_group_timeout_app;
 					ring_group_timeout_data = row.ring_group_timeout_data;
