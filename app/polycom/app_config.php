@@ -111,5 +111,20 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0=FTP, 1=TFTP, 2=HTTP,3=HTTPS, 4=FTPS, 5=Invalid";
 		$y++;
-
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "48ce4fef-e6bd-4be6-9c76-1590e8498408";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_provision_polling_enabled";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Re-provision phone on a regular interval 0=disabled, 1=enabled";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "86510e7b-5db4-4048-9260-137aa31bc728";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_power_saving_enable";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Power saving 1=enabled 0=disable";
+		$y++;
 ?>
