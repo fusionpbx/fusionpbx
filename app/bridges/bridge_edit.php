@@ -24,15 +24,11 @@
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
-	if (permission_exists('bridge_add') || permission_exists('bridge_edit')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
+	if (!permission_exists('bridge_add') && !permission_exists('bridge_edit')) {
+		echo "access denied"; exit;
 	}
 
 //add multi-lingual support
@@ -40,10 +36,10 @@
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$bridge_uuid = check_str($_REQUEST["id"]);
-		$id = check_str($_REQUEST["id"]);
+		$bridge_uuid = $_REQUEST["id"];
+		$id = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
@@ -51,10 +47,10 @@
 
 //get http post variables and set them to php variables
 	if (is_array($_POST)) {
-		$bridge_uuid = check_str($_POST["bridge_uuid"]);
-		$bridge_name = check_str($_POST["bridge_name"]);
-		$bridge_destination = check_str($_POST["bridge_destination"]);
-		$bridge_enabled = check_str($_POST["bridge_enabled"]);
+		$bridge_uuid = $_POST["bridge_uuid"];
+		$bridge_name = $_POST["bridge_name"];
+		$bridge_destination = $_POST["bridge_destination"];
+		$bridge_enabled = $_POST["bridge_enabled"];
 	}
 
 //process the user data and save it to the database
@@ -62,7 +58,7 @@
 
 		//get the uuid from the POST
 			if ($action == "update") {
-				$bridge_uuid = check_str($_POST["bridge_uuid"]);
+				$bridge_uuid = $_POST["bridge_uuid"];
 			}
 
 		//check for all required data
@@ -98,18 +94,9 @@
 		//save to the data
 			$database = new database;
 			$database->app_name = 'bridges';
-			$database->app_uuid = null;
-			if (strlen($bridge_uuid) > 0) {
-				$database->uuid($bridge_uuid);
-			}
+			$database->app_uuid = 'a6a7c4c5-340a-43ce-bcbc-2ed9bab8659d';
 			$database->save($array);
 			$message = $database->message;
-
-		//debug info
-			//echo "<pre>";
-			//print_r($message);
-			//echo "</pre>";
-			//exit;
 
 		//redirect the user
 			if (isset($action)) {
@@ -126,21 +113,18 @@
 
 //pre-populate the form
 	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
-		$bridge_uuid = check_str($_GET["id"]);
-		$parameters['bridge_uuid'] = $bridge_uuid;
+		$bridge_uuid = $_GET["id"];
 		$sql = "select * from v_bridges ";
 		$sql .= "where bridge_uuid = :bridge_uuid ";
-		//$sql .= "and domain_uuid = :domain_uuid ";
+		$parameters['bridge_uuid'] = $bridge_uuid;
 		$database = new database;
-		//$database = $database->app_name = 'bridges';
-		$result = $database->execute($sql, $parameters);
-		//$message = $database->message;
-		foreach ($result as $row) {
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && sizeof($row) != 0) {
 			$bridge_name = $row["bridge_name"];
 			$bridge_destination = $row["bridge_destination"];
 			$bridge_enabled = $row["bridge_enabled"];
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //show the header

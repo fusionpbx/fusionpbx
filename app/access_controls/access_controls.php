@@ -27,15 +27,11 @@
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
-	if (permission_exists('access_control_view')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
+	if (!permission_exists('access_control_view')) {
+		echo "access denied"; exit;
 	}
 
 //add multi-lingual support
@@ -46,38 +42,14 @@
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
-//validate the order
-	switch ($order) {
-		case 'asc':
-			break;
-		case 'desc':
-			break;
-		default:
-			$order = '';
-	}
-
-//validate the order by
-	switch ($order_by) {
-		case 'access_control_name':
-			break;
-		case 'access_control_default':
-			break;
-		case 'access_control_description':
-			break;
-		default:
-			$order_by = '';
-	}
-
 //additional includes
 	require_once "resources/header.php";
 	require_once "resources/paging.php";
 
 //prepare to page the results
-	$sql = "select count(*) as num_rows from v_access_controls ";
-	if (strlen($order_by) > 0) { $sql .= "order by $order_by $order "; }
-	$parameters = null;
+	$sql = "select count(*) from v_access_controls ";
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, null, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -89,12 +61,10 @@
 
 //get the list
 	$sql = "select * from v_access_controls ";
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$sql .= "limit :rows_per_page offset :offset ";
-	$parameters['rows_per_page'] = $rows_per_page;
-	$parameters['offset'] = $offset;
+	$sql .= order_by($order_by, $order);
+	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$access_controls = $database->select($sql, $parameters, 'all');
+	$access_controls = $database->select($sql, null, 'all');
 
 //alternate the row style
 	$c = 0;
@@ -102,17 +72,10 @@
 	$row_style["1"] = "row_style1";
 
 //show the content
-	echo "<table width='100%' border='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-access_controls']."</b></td>\n";
-	echo "		<td width='50%' align='right'>&nbsp;</td>\n";
-	echo "	</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' colspan='2'>\n";
-	echo "			".$text['description-access_control']."<br /><br />\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "</table>\n";
+	echo "<b>".$text['title-access_controls']."</b>\n";
+	echo "<br /><br />\n";
+	echo $text['description-access_control']."\n";
+	echo "<br /><br />\n";
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
@@ -135,7 +98,7 @@
 				$tr_link = "href='access_control_edit.php?id=".escape($row['access_control_uuid'])."'";
 			}
 			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['access_control_name'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'><a ".$tr_link.">".escape($row['access_control_name'])."</a></td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['access_control_default'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['access_control_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
@@ -147,31 +110,20 @@
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
-			if ($c==0) { $c=1; } else { $c=0; }
+			$c = $c == 1 ? 0 : 1;
 		} //end foreach
 		unset($sql, $access_controls);
 	} //end if results
 
 	echo "<tr>\n";
-	echo "<td colspan='4' align='left'>\n";
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
-	echo "		<td class='list_control_icons'>";
+	echo "</table>\n";
 	if (permission_exists('access_control_add')) {
-		echo 		"<a href='access_control_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo "<div style='float: right;'>\n";
+		echo "	<a href='access_control_edit.php' alt=\"".$text['button-add']."\">".$v_link_label_add."</a>";
+		echo "</div>\n";
 	}
-	else {
-		echo 		"&nbsp;";
-	}
-	echo "		</td>\n";
-	echo "	</tr>\n";
- 	echo "	</table>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>";
-	echo "<br /><br />";
+	echo "<br />\n";
+	echo "<div align='center'>".$paging_controls."</div>\n";
 
 //include the footer
 	require_once "resources/footer.php";
