@@ -961,7 +961,7 @@ include "root.php";
 							return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 						case 'row':
 							return $prep_statement->fetch(PDO::FETCH_ASSOC);
-						case 'column';
+						case 'column':
 							return $prep_statement->fetchColumn();
 						default:
 							return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
