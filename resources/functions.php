@@ -2122,5 +2122,29 @@ function number_pad($number,$n) {
 		}
 	}
 
+//validate and format order by clause of select statement
+	if (!function_exists('order_by')) {
+		function order_by($col, $dir) {
+			$col = preg_replace('#[^a-zA-Z0-9-]#', '', $col);
+			$dir = strtolower($dir) == 'desc' ? 'desc' : 'asc';
+			if ($col != '') { return ' order by '.$col.' '.$dir.' '; }
+		}
+	}
+
+//validate and format limit and offset clause of select statement
+	if (!function_exists('limit_offset')) {
+		function limit_offset($limit, $offset) {
+			$regex = '#[^0-9]#';
+			$limit = preg_replace($regex, '', $limit);
+			$offset = preg_replace($regex, '', $offset);
+			if (is_numeric($limit) && $limit > 0) {
+				$clause .= ' limit '.$limit;
+				if (is_numeric($offset)) {
+					$clause .= ' offset '.$offset;
+				}
+			}
+			return $clause.' ';
+		}
+	}
 
 ?>

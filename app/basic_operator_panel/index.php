@@ -46,9 +46,6 @@
 //set user status
 	if (isset($_REQUEST['status']) && $_REQUEST['status'] != '') {
 
-		//create the database object
-			$database = new database;
-
 		//validate the user status
 			$user_status = $_REQUEST['status'];
 			switch ($user_status) {
@@ -68,15 +65,14 @@
 
 		//update the status
 			if (permission_exists("user_account_setting_edit")) {
-				$sql  = "update v_users set ";
-				$sql .= "user_status = :user_status ";
-				$sql .= "where domain_uuid = :domain_uuid ";
-				$sql .= "and user_uuid = :user_uuid ";
-				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-				$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
-				$parameters['user_status'] = $user_status;
-				$database->execute($sql, $parameters);
-				unset($parameters);
+				$array['users'][0]['user_uuid'] = $_SESSION['user']['user_uuid'];
+				$array['users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+				$array['users'][0]['user_status'] = $user_status;
+				$database = new database;
+				$database->app_name = 'operator_panel';
+				$database->app_uuid = 'dd3d173a-5d51-4231-ab22-b18c5b712bb2';
+				$database->save($array);
+				unset($array);
 			}
 
 		//if call center app is installed then update the user_status
@@ -87,7 +83,9 @@
 					$sql .= "and user_uuid = :user_uuid ";
 					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 					$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
+					$database = new database;
 					$call_center_agent_uuid = $database->select($sql, $parameters, 'column');
+					unset($sql, $parameters);
 
 				//update the user_status
 					if (isset($call_center_agent_uuid)) {
