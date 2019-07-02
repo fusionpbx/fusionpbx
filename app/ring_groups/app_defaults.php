@@ -44,7 +44,7 @@ if ($domains_processed == 1) {
 					$sql .= "where ring_group_uuid = :ring_group_uuid \n";
 					$parameters['domain_name'] = $domain['domain_name'];
 					$parameters['ring_group_uuid'] = $row['ring_group_uuid'];
-					$message = $database->execute($sql, null);
+					$database->execute($sql, $parameters);
 					unset($parameters);
 				}
 			 }
