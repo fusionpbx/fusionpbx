@@ -127,4 +127,12 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Power saving 1=enabled 0=disable";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "cb6e9966-a365-498d-929f-234f69cd7e2d";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_provision_polling_time";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "03:00";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Adjust the time for reprovisioning a Polycom on a regular interval. Default is 03:00";
+		$y++;
 ?>
