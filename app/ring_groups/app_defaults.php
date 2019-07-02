@@ -29,11 +29,11 @@ if ($domains_processed == 1) {
 
 	//select ring groups with an empty context
 	$sql = "select * from v_ring_groups where ring_group_context is null ";
+	$database = new database;
 	$ring_groups = $database->select($sql, null, 'all');
 	if (is_array($ring_groups)) {
 		//get the domain list
 		$sql = "select * from v_domains ";
-		$database = new database;
 		$domains = $database->select($sql, null, 'all');
 
 		//update the ring group context
