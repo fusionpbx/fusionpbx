@@ -970,7 +970,7 @@ include "root.php";
 						//get contacts from the database
 							$sql = "select extension_uuid as contact_uuid, directory_first_name, directory_last_name, ";
 							$sql .= "effective_caller_id_name, effective_caller_id_number, ";
-							$sql .= "number_alias, extension ";
+							$sql .= "number_alias, extension, call_group ";
 							$sql .= "from v_extensions ";
 							$sql .= "where domain_uuid = '".$domain_uuid."' ";
 							$sql .= "and enabled = 'true' ";
@@ -1008,6 +1008,7 @@ include "root.php";
 											$contacts[$uuid]['contact_name_given'] = $contact_name_given;
 											$contacts[$uuid]['contact_name_family'] = $contact_name_family;
 											$contacts[$uuid]['phone_extension'] = $phone_extension;
+											$contacts[$uuid]['call_group'] = $row['call_group'];
 										//unset the variables
 											unset($name_array, $contact_name_given, $contact_name_family, $phone_extension);
 									}
