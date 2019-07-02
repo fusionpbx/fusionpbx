@@ -26,28 +26,31 @@
 
 //process this only one time
 if ($domains_processed == 1) {
-		//add the access control list to the database
+
+	//select ivr menus with an empty context
+	$sql = "select * from v_ivr_menus where ivr_menu_context is null ";
+	$ivr_menus = $database->select($sql, null, 'all');
+	if (is_array($ivr_menus)) {
+		//get the domain list
 		$sql = "select * from v_domains ";
 		$database = new database;
 		$domains = $database->select($sql, null, 'all');
 
-		//add the access control list to the database
-		$sql = "select * from v_ivr_menus where ivr_menu_context is null ";
-		$ivr_menus = $database->select($sql, null, 'all');
-		if (is_array($ivr_menus)) {
-			foreach ($ivr_menus as $row) {
-				foreach ($domains as $domain) {
-				 	if ($row['domain_uuid'] == $domain['domain_uuid']) {
-				 		$sql = "update v_ivr_menus set ivr_menu_context = :domain_name \n";
-				 		$sql .= "where ivr_menu_uuid = :ivr_menu_uuid \n";
-				 		$parameters['domain_name'] = $domain['domain_name'];
-				 		$parameters['ivr_menu_uuid'] = $row['ivr_menu_uuid'];
-				 		$message = $database->execute($sql, null);
-				 		unset($parameters);
-				 	}
-				 }
-			}
+		//update the ivr menu context
+		foreach ($ivr_menus as $row) {
+			foreach ($domains as $domain) {
+				if ($row['domain_uuid'] == $domain['domain_uuid']) {
+					$sql = "update v_ivr_menus set ivr_menu_context = :domain_name \n";
+					$sql .= "where ivr_menu_uuid = :ivr_menu_uuid \n";
+					$parameters['domain_name'] = $domain['domain_name'];
+					$parameters['ivr_menu_uuid'] = $row['ivr_menu_uuid'];
+					$message = $database->execute($sql, null);
+					unset($parameters);
+				}
+			 }
 		}
+	}
+
 }
 
 ?>
