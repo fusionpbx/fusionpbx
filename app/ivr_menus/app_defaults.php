@@ -32,6 +32,7 @@ if ($domains_processed == 1) {
 	$database = new database;
 	$ivr_menus = $database->select($sql, null, 'all');
 	if (is_array($ivr_menus)) {
+
 		//get the domain list
 		$sql = "select * from v_domains ";
 		$domains = $database->select($sql, null, 'all');
@@ -44,7 +45,7 @@ if ($domains_processed == 1) {
 					$sql .= "where ivr_menu_uuid = :ivr_menu_uuid \n";
 					$parameters['domain_name'] = $domain['domain_name'];
 					$parameters['ivr_menu_uuid'] = $row['ivr_menu_uuid'];
-					$message = $database->execute($sql, null);
+					$database->execute($sql, $parameters);
 					unset($parameters);
 				}
 			 }
