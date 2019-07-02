@@ -41,8 +41,8 @@ else {
 //delete the call broadcast entry
 	if (is_uuid($_GET["id"])) {
 		$call_broadcast_uuid = $_GET['id'];
+		$array['call_broadcasts'][0]['call_broadcast_uuid'] = $call_broadcast_uuid;
 		$array['call_broadcasts'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
-		$array['call_broadcasts'][0][''] = $call_broadcast_uuid;
 
 		$database = new database;
 		$database->app_name = 'call_broadcasts';
