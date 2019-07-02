@@ -48,23 +48,8 @@
 	require_once "resources/paging.php";
 
 //get http values and set them to php variables
-	$order_by = $_GET["order_by"];
+	$order_by = $_GET["order_by"] != '' ? $_GET["order_by"] : 'agent_name';
 	$order = $_GET["order"];
-
-//validate order by
-	if (strlen($order_by) > 0) {
-		$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $order_by);
-	}
-
-//validate the order
-	switch ($order) {
-		case 'asc':
-			break;
-		case 'desc':
-			break;
-		default:
-			$order = '';
-	}
 
 //show content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
@@ -82,20 +67,12 @@
 	echo "</tr>\n";
 	echo "</tr></table>\n";
 
-	$sql = "select * from v_call_center_agents ";
+	$sql = "select count(*) from v_call_center_agents ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	if (strlen($order_by) == 0) {
-		$order_by = 'agent_name';
-		$order = 'asc';
-	}
-	else {
-		$sql .= "order by $order_by $order ";
-	}
-	$database = new database;
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$parameters['rows_per_page'] = $rows_per_page;
-	$parameters['offset'] = $offset;
-	$result = $database->select($sql, $parameters, 'all');
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($sql, $parameters);
 
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "";
@@ -106,18 +83,12 @@
 
 	$sql = "select * from v_call_center_agents ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	if (strlen($order_by) == 0) {
-		$order_by = 'agent_name';
-		$order = 'asc';
-	}
-	else {
-		$sql .= "order by $order_by $order ";
-	}
-	$sql .= " limit :rows_per_page offset :offset ";
+	$sql .= order_by($order_by, $order);
+	$sql .= limit_offset($rows_per_page, $offset);
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
-	$parameters['rows_per_page'] = $rows_per_page;
-	$parameters['offset'] = $offset;
 	$result = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
@@ -164,15 +135,16 @@
 			$bridge_statement = explode('/', $row['agent_contact']);
 			if ($bridge_statement[0] == 'sofia' && $bridge_statement[1] == 'gateway' && is_uuid($bridge_statement[2])) {
 				// retrieve gateway name from db
-				$sql = "select gateway from v_gateways where gateway_uuid = '".$bridge_statement[2]."' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				$sql = "select gateway from v_gateways ";
+				$sql .= "where gateway_uuid = :gateway_uuid ";
+				$parameters['gateway_uuid'] = $bridge_statement[2];
+				$database = new database;
+				$result = $database->select($sql, $parameters, 'all');
 				if (count($result) > 0) {
 					$gateway_name = $result[0]['gateway'];
 					$agent_contact = str_replace($bridge_statement[2], $gateway_name, $agent_contact);
 				}
-				unset ($prep_statement, $sql, $bridge_statement);
+				unset($sql, $parameters, $bridge_statement);
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$agent_contact."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['agent_max_no_answer'])."&nbsp;</td>\n";
@@ -193,7 +165,7 @@
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($result);
 	} //end if results
 
 	echo "<tr>\n";

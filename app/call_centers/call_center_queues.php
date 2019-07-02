@@ -48,23 +48,8 @@
 	require_once "resources/paging.php";
 
 //get http variables and set as php variables
-	$order_by = $_GET["order_by"];
+	$order_by = $_GET["order_by"] != '' ? $_GET["order_by"] : 'queue_name';
 	$order = $_GET["order"];
-
-//validate order by
-	if (strlen($order_by) > 0) {
-		$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $order_by);
-	}
-
-//validate the order
-	switch ($order) {
-		case 'asc':
-			break;
-		case 'desc':
-			break;
-		default:
-			$order = '';
-	}
 
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
@@ -85,24 +70,15 @@
 	echo "</tr></table>\n";
 
 	//get total call center queues count from the database
-		$sql = "select count(*) as num_rows from v_call_center_queues where domain_uuid = :domain_uuid ";
-		$database = new database;
+		$sql = "select count(*) from v_call_center_queues ";
+		$sql .= "where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$row = $database->select($sql, $parameters, 'all');
-		$total_call_center_queues = $row['num_rows'];
-
-	//prepare to page the results (reuse $sql from above)
-		if (strlen($order_by) == 0) {
-			$order_by = 'queue_name';
-			$order = 'asc';
-		}
-		else {
-			$sql .= "order by $order_by $order ";
-		}
 		$database = new database;
-		$result = $database->select($sql, $parameters, 'all');
-		$num_rows = $database->select($sql, $parameters, 'column');
-		
+		$total_call_center_queues = $database->select($sql, $parameters, 'column');
+		unset($sql, $parameters);
+
+	//prepare to page the results
+		$num_rows = $total_call_center_queues;
 		$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 		$param = "";
 		$page = $_GET['page'];
@@ -112,18 +88,12 @@
 
 		$sql = "select * from v_call_center_queues ";
 		$sql .= "where domain_uuid = :domain_uuid ";
-		if (strlen($order_by) == 0) {
-			$order_by = 'queue_name';
-			$order = 'asc';
-		}
-		else {
-			$sql .= "order by $order_by $order ";
-		}
-		$sql .= " limit :rows_per_page offset :offset ";
+		$sql .= order_by($order_by, $order);
+		$sql .= limit_offset($rows_per_page, $offset);
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$database = new database;
-		$parameters['rows_per_page'] = $rows_per_page;
-		$parameters['offset'] = $offset;
 		$result = $database->select($sql, $parameters, 'all');
+		unset($sql, $parameters);
 		
 	$c = 0;
 	$row_style["0"] = "row_style0";

@@ -49,11 +49,11 @@
 //get the queues from the database
 	if (!is_array($_SESSION['queues'])) {
 		$sql = "select * from v_call_center_queues ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "order by queue_name ASC ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$_SESSION['queues'] = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "order by queue_name asc ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$database = new database;
+		$_SESSION['queues'] = $database->select($sql, $parameters, 'all');
 	}
 
 //get the queue name
@@ -150,11 +150,11 @@
 			//get the agents from the database
 				if (!is_array($_SESSION['agents'])) {
 					$sql = "select * from v_call_center_agents ";
-					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-					$sql .= "order by agent_name ASC ";
-					$prep_statement = $db->prepare(check_sql($sql));
-					$prep_statement->execute();
-					$_SESSION['agents'] = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$sql .= "order by agent_name asc ";
+					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+					$database = new database;
+					$_SESSION['agents'] = $database->select($sql, $parameters, 'all');
 				}
 
 			//list the agents
