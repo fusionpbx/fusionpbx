@@ -69,11 +69,13 @@ function cmd_async($cmd) {
 
 //get the call broadcast details from the database
 	$sql = "select * from v_call_broadcasts ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and call_broadcast_uuid = '$call_broadcast_uuid' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	while($row = $prep_statement->fetch()) {
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and call_broadcast_uuid = :call_broadcast_uuid ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$parameters['call_broadcast_uuid'] = $call_broadcast_uuid;
+	$database = new database;
+	$row = $database->select($sql, $parameters, 'row');
+	if (is_array($row) && sizeof($row) != 0) {
 		$broadcast_name = $row["broadcast_name"];
 		$broadcast_description = $row["broadcast_description"];
 		$broadcast_timeout = $row["broadcast_timeout"];
@@ -95,9 +97,8 @@ function cmd_async($cmd) {
 		//	$broadcast_destination_application = $broadcast_destination_array[0];
 		//	$broadcast_destination_data = $broadcast_destination_array[1];
 		//}
-		break; //limit to 1 row
 	}
-	unset ($prep_statement);
+	unset($sql, $parameters, $row);
 
 	if (strlen($broadcast_caller_id_name) == 0) {
 		$broadcast_caller_id_name = "anonymous";

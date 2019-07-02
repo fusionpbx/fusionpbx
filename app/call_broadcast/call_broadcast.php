@@ -30,10 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('call_broadcast_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('call_broadcast_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -46,29 +43,13 @@
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
-//validate order by
-	if (strlen($order_by) > 0) {
-		$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $order_by);
-	}
-
-//validate the order
-	switch ($order) {
-		case 'asc':
-			break;
-		case 'desc':
-			break;
-		default:
-			$order = '';
-	}
-
 //get the count
 	$sql = "select count(*) from v_call_broadcasts ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 	$database = new database;
-	$parameters['domain_uuid'] = $domain_uuid;
-	$result = $database->select($sql, $parameters, 'all');
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($sql, $parameters);
 
 //prepare the paging
 	require_once "resources/paging.php";
@@ -82,10 +63,10 @@
 //get the call call broadcasts
 	$sql = "select * from v_call_broadcasts ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$sql .= " limit $rows_per_page offset $offset ";
+	$sql .= order_by($order_by, $order);
+	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$parameters['domain_uuid'] = $domain_uuid;
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$result = $database->select($sql, $parameters, 'all');
 
 //set the row style
