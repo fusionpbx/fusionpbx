@@ -44,16 +44,16 @@
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
-		$access_control_name = check_str($_POST["access_control_name"]);
-		$access_control_default = check_str($_POST["access_control_default"]);
-		$access_control_description = check_str($_POST["access_control_description"]);
+		$access_control_name = $_POST["access_control_name"];
+		$access_control_default = $_POST["access_control_default"];
+		$access_control_description = $_POST["access_control_description"];
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//get the primary key
 		if ($action == "update") {
-			$access_control_uuid = check_str($_POST["access_control_uuid"]);
+			$access_control_uuid = $_POST["access_control_uuid"];
 		}
 
 	//check for all required data
