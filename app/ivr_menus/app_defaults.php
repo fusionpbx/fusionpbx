@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -26,7 +26,28 @@
 
 //process this only one time
 if ($domains_processed == 1) {
+		//add the access control list to the database
+		$sql = "select * from v_domains ";
+		$database = new database;
+		$domains = $database->select($sql, null, 'all');
 
+		//add the access control list to the database
+		$sql = "select * from v_ivr_menus where ivr_menu_context is null ";
+		$ivr_menus = $database->select($sql, null, 'all');
+		if (is_array($ivr_menus)) {
+			foreach ($ivr_menus as $row) {
+				foreach ($domains as $domain) {
+				 	if ($row['domain_uuid'] == $domain['domain_uuid']) {
+				 		$sql = "update v_ivr_menus set ivr_menu_context = :domain_name \n";
+				 		$sql .= "where ivr_menu_uuid = :ivr_menu_uuid \n";
+				 		$parameters['domain_name'] = $domain['domain_name'];
+				 		$parameters['ivr_menu_uuid'] = $row['ivr_menu_uuid'];
+				 		$message = $database->execute($sql, null);
+				 		unset($parameters);
+				 	}
+				 }
+			}
+		}
 }
 
 ?>
