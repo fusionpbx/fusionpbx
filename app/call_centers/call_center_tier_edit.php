@@ -39,20 +39,20 @@ else {
 	$text = $language->get();
 
 //set tier uuid
-	$call_center_tier_uuid = check_str($_REQUEST["id"]);
+	$call_center_tier_uuid = $_REQUEST["id"];
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
-		$agent_name = check_str($_POST["agent_name"]);
-		$queue_name = check_str($_POST["queue_name"]);
-		$tier_level = check_str($_POST["tier_level"]);
-		$tier_position = check_str($_POST["tier_position"]);
+		$agent_name = $_POST["agent_name"];
+		$queue_name = $_POST["queue_name"];
+		$tier_level = $_POST["tier_level"];
+		$tier_position = $_POST["tier_position"];
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
-	$call_center_tier_uuid = check_str($_POST["call_center_tier_uuid"]);
+	$call_center_tier_uuid = $_POST["call_center_tier_uuid"];
 
 	//check for all required data
 		//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']."domain_uuid<br>\n"; }
@@ -100,30 +100,35 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 
 	//update the database
-		$sql = "update v_call_center_tiers set ";
-		$sql .= "domain_uuid = '$domain_uuid', ";
-		$sql .= "agent_name = '$agent_name', ";
-		$sql .= "queue_name = '$queue_name', ";
-		$sql .= "tier_level = '$tier_level', ";
-		$sql .= "tier_position = '$tier_position' ";
-		$sql .= "where call_center_tier_uuid = '$call_center_tier_uuid'";
-		$db->exec(check_sql($sql));
-		unset($sql);
+		$array['call_center_tiers'][0]['call_center_tier_uuid'] = $call_center_tier_uuid;
+		$array['call_center_tiers'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+		$array['call_center_tiers'][0]['agent_name'] = $agent_name;
+		$array['call_center_tiers'][0]['queue_name'] = $queue_name;
+		$array['call_center_tiers'][0]['tier_level'] = $tier_level;
+		$array['call_center_tiers'][0]['tier_position'] = $tier_position;
+		$database = new database;
+		$database->app_name = 'call_centers';
+		$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
+		$database->save($array);
+		unset($array);
 
 		//syncrhonize configuration
 			save_call_center_xml();
 			remove_config_from_cache('configuration:callcenter.conf');
 
 		//look up queue uuid by queue name (ugh)
-		$sql = "select call_center_queue_uuid from v_call_center_queues where queue_name = '".$queue_name."'";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
-			$queue_uuid = $row["call_center_queue_uuid"];
-			break;
+		$sql = "select call_center_queue_uuid from v_call_center_queues ";
+		$sql .= "where queue_name = :queue_name ";
+		$parameters['queue_name'] = $queue_name;
+		$database = new database;
+		$result = $database->select($sql, $parameters, 'all');
+		if (is_array($result) && sizeof($result) != 0) {
+			foreach ($result as &$row) {
+				$queue_uuid = $row["call_center_queue_uuid"];
+				break;
+			}
 		}
-		unset($prep_statement);
+		unset($sql, $parameters, $result, $row);
 
 		message::add($text['message-update']);
 		header("Location: call_center_queue_edit.php?id=".$queue_uuid);
@@ -134,19 +139,22 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$sql = "select * from v_call_center_tiers ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and call_center_tier_uuid = '$call_center_tier_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
-			$agent_name = $row["agent_name"];
-			$queue_name = $row["queue_name"];
-			$tier_level = $row["tier_level"];
-			$tier_position = $row["tier_position"];
-			break; //limit to 1 row
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and call_center_tier_uuid = :call_center_tier_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['call_center_tier_uuid'] = $call_center_tier_uuid;
+		$database = new database;
+		$result = $database->select($sql, $parameters, 'all');
+		if (is_array($result) && sizeof($result) != 0) {
+			foreach ($result as &$row) {
+				$agent_name = $row["agent_name"];
+				$queue_name = $row["queue_name"];
+				$tier_level = $row["tier_level"];
+				$tier_position = $row["tier_position"];
+				break; //limit to 1 row
+			}
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $result, $row);
 	}
 
 
@@ -177,16 +185,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 
 	//---- Begin Select List --------------------
-	$sql = "SELECT * FROM v_users ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql = "select * from v_users ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and user_enabled = 'true' ";
 	$sql .= "order by username asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 	echo "<select id=\"agent_name\" name=\"agent_name\" class='formfld'>\n";
 	echo "<option value=\"\"></option>\n";
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	//$catcount = count($result);
 	foreach($result as $field) {
 		if ($field[username] == $agent_name) {
@@ -212,15 +221,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 
 	//---- Begin Select List --------------------
-	$sql = "SELECT * FROM v_call_center_queues ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql = "select * from v_call_center_queues ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by queue_name asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 	echo "<select id=\"queue_name\" name=\"queue_name\" class='formfld'>\n";
 	echo "<option value=\"\"></option>\n";
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	//$catcount = count($result);
 	foreach($result as $field) {
 		if ($field[queue_name] == $queue_name) {

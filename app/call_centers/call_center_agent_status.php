@@ -50,8 +50,8 @@
 //get the agents from the database
 	$sql = "select * from v_call_center_tiers ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	$database = new database;
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
 	$tiers = $database->select($sql, $parameters, 'all');
 	if (count($tiers) == 0) {
 		$per_queue_login = true;
@@ -59,6 +59,7 @@
 	else {
 		$per_queue_login = false;
 	}
+	unset($sql, $parameters);
 
 //setup the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
@@ -77,15 +78,21 @@
 					if ($fp) {
 						//set the user_status
 							if (!isset($row['queue_name'])) {
-								$sql  = "update v_users set ";
-								$sql .= "user_status = :row['agent_status'] ";
-								$sql .= "where domain_uuid = :domain_uuid ";
-								$sql .= "and user_uuid = :row['user_uuid'] ";
-								$parameters['agent_uuid'] = $row['agent_uuid'];
-								$parameters['agent_status'] = $row['agent_status'];
+								$array['users'][0]['user_uuid'] = $row['user_uuid'];
+								$array['users'][0]['user_status'] = $row['agent_status'];
+								$array['users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+
+								$p = new permissions;
+								$p->add('user_edit', 'temp');
+
 								$database = new database;
-								$database->select($sql, $parameters);
-								unset($parameters);
+								$database->app_name = 'call_centers';
+								$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
+								$database->save($array);
+								$response = $database->message;
+								unset($array);
+
+								$p->delete('user_edit', 'temp');
 							}
 
 						//validate the agent status
@@ -153,11 +160,12 @@
 						//get the agents from the database
 							$sql = "select agent_name from v_call_center_agents ";
 							$sql .= "where domain_uuid = :domain_uuid ";
-							$sql .= "and call_center_agent_uuid = :row['agent_uuid'] ";
+							$sql .= "and call_center_agent_uuid = :call_center_agent_uuid ";
+							$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+							$parameters['call_center_agent_uuid'] = $row['agent_uuid'];
 							$database = new database;
-							$parameters['agent_uuid'] = $row['agent_uuid'];
 							$agent_name = $database->select($sql, $parameters, 'all');
-							unset($parameters);
+							unset($sql, $parameters);
 
 							if ($row['agent_status'] == 'Available') {
 								$answer_state = 'confirmed';
@@ -187,8 +195,10 @@
 	$sql = "select * from v_call_center_agents ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by agent_name asc ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$agents = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //get the agent list from event socket
 	$switch_cmd = 'callcenter_config agent list';
@@ -204,8 +214,10 @@
 	$sql = "select * from v_call_center_queues ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by queue_name asc ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$call_center_queues = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //add the status to the call_center_queues array
 	$x = 0;

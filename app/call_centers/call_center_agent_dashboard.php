@@ -51,21 +51,6 @@
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
-//validate order by
-	if (strlen($order_by) > 0) {
-		$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $order_by);
-	}
-
-//validate the order
-	switch ($order) {
-		case 'asc':
-			break;
-		case 'desc':
-			break;
-		default:
-			$order = '';
-	}
-
 //setup the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 
@@ -81,12 +66,15 @@
 					if ($fp) {
 						//set the user_status
 							$sql  = "update v_users set ";
-							$sql .= "user_status = '".$row['agent_status']."' ";
-							$sql .= "where domain_uuid = '".$domain_uuid."' ";
-							$sql .= "and username = '".$row['agent_name']."' ";
-							//echo $sql."\n";
-							//$prep_statement = $db->prepare(check_sql($sql));
-							//$prep_statement->execute();
+							$sql .= "user_status = :user_status ";
+							$sql .= "where domain_uuid = :domain_uuid ";
+							$sql .= "and username = :username ";
+							$parameters['user_status'] = $row['agent_status'];
+							$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+							$parameters['username'] = $row['agent_name'];
+							//$database = new database;
+							//$database->execute($sql, $parameters);
+							//unset($sql, $parameters);
 
 						//set the agent status to available and assign the agent to the queue with the tier
 							if ($row['agent_status'] == 'Available') {
@@ -124,18 +112,21 @@
 	$sql = "select * from v_call_center_queues ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by queue_name asc ";
-	$database = new database;
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
 	$call_center_queues = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //get the agents from the database
 	$sql = "select * from v_call_center_agents ";
 	$sql .= "where user_uuid = :user_uuid ";
 	$sql .= "and domain_uuid = :domain_uuid ";
 	//$sql .= "ORDER BY agent_name ASC ";
-	$database = new database;
 	$parameters['user_uuid'] = $_SESSION['user_uuid'];
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
 	$agent = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 	//echo "<pre>\n";
 	//print_r($agent);
 	//echo "</pre>\n";
