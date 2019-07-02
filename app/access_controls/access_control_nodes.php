@@ -119,7 +119,6 @@
 		unset($sql, $result, $row_count);
 	} //end if results
 
-	echo "<tr>\n";
 	echo "</table>\n";
 	if (permission_exists('access_control_node_add')) {
 		echo "<div style='float: right;'>\n";

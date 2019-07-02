@@ -32,12 +32,8 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('call_block_edit') || permission_exists('call_block_add')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
+	if (!permission_exists('call_block_edit') && !permission_exists('call_block_add')) {
+		echo "access denied"; exit;
 	}
 
 //add multi-lingual support
@@ -46,33 +42,34 @@
 
 //define the call_block_get_extensions function
 	function call_block_get_extensions($select_extension) {
-		global $db, $text;
+		global $text;
 
 		//list voicemail
 		$sql = "select extension, user_context, description from v_extensions ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and enabled = 'true' ";
 		$sql .= "order by extension asc ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$database = new database;
+		$result = $database->select($sql, $parameters);
 
-		echo "<optgroup label='".$text['label-voicemail']."'>\n";
-		foreach ($result as &$row) {
-			$extension = $row["extension"];
-			$context = $row["user_context"];
-			$description = $row["description"];
-			if ($extension == $select_extension) $selected = "selected='selected'";
-			echo "		<option value='Voicemail $context $extension' $selected>".$extension." ".$description."</option>\n";
-			$selected = "";
+		if (is_array($result) && sizeof($result) != 0) {
+			echo "<optgroup label='".$text['label-voicemail']."'>\n";
+			foreach ($result as &$row) {
+				$extension = $row["extension"];
+				$context = $row["user_context"];
+				$description = $row["description"];
+				$selected = $extension == $select_extension ? "selected='selected'" : null;
+				echo "<option value='Voicemail ".$context." ".$extension."' ".$selected.">".$extension." ".$description."</option>\n";
+			}
+			echo "</optgroup>\n";
 		}
-		echo "</optgroup>\n";
 	}
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$call_block_uuid = check_str($_REQUEST["id"]);
+		$call_block_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
@@ -80,10 +77,10 @@
 
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
-		$call_block_name = check_str($_POST["call_block_name"]);
-		$call_block_number = check_str($_POST["call_block_number"]);
-		$call_block_action = check_str($_POST["call_block_action"]);
-		$call_block_enabled = check_str($_POST["call_block_enabled"]);
+		$call_block_name = $_POST["call_block_name"];
+		$call_block_number = $_POST["call_block_number"];
+		$call_block_action = $_POST["call_block_action"];
+		$call_block_enabled = $_POST["call_block_enabled"];
 	}
 
 //handle the http post
@@ -114,62 +111,68 @@
 			}
 	
 		//add or update the database
-			if (($_POST["persistformvar"] != "true")>0) {
+			if (is_array($_POST) && sizeof($_POST) != 0 && $_POST["persistformvar"] != "true") {
 	
-				if ($action == "add" || $action == "update") {
-					//ensure call block is enabled in the dialplan
-					$sql = "update v_dialplans set ";
-					$sql .= "dialplan_enabled = 'true' ";
-					$sql .= "where ";
-					$sql .= "app_uuid = 'b1b31930-d0ee-4395-a891-04df94599f1f' and ";
-					$sql .= "domain_uuid = '".$domain_uuid."' and ";
-					$sql .= "dialplan_enabled <> 'true' ";
-					$db->exec(check_sql($sql));
-					unset($sql);
-				}
+				//ensure call block is enabled in the dialplan
+					if ($action == "add" || $action == "update") {
+						$sql = "select dialplan_uuid from v_dialplans where true ";
+						$sql .= "and domain_uuid = :domain_uuid ";
+						$sql .= "and app_uuid = 'b1b31930-d0ee-4395-a891-04df94599f1f' ";
+						$sql .= "and dialplan_enabled <> 'true' ";
+						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+						$database = new database;
+						$rows = $database->select($sql, $parameters);
+
+						if (is_array($rows) && sizeof($rows) != 0) {
+							foreach ($rows as $index => $row) {
+								$array['dialplans'][$index]['dialplan_uuid'] = $row['dialplan_uuid'];
+								$array['dialplans'][$index]['dialplan_enabled'] = 'true';
+							}
+
+							$p = new permissions;
+							$p->add('dialplan_edit', 'temp');
+
+							$database = new database;
+							$database->save($array);
+							unset($array);
+
+							$p->delete('dialplan_edit', 'temp');
+						}
+					}
 	
 				if ($action == "add") {
-					$sql = "insert into v_call_block ";
-					$sql .= "(";
-					$sql .= "domain_uuid, ";
-					$sql .= "call_block_uuid, ";
-					$sql .= "call_block_name, ";
-					$sql .= "call_block_number, ";
-					$sql .= "call_block_count, ";
-					$sql .= "call_block_action, ";
-					$sql .= "call_block_enabled, ";
-					$sql .= "date_added ";
-					$sql .= ") ";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'".$_SESSION['domain_uuid']."', ";
-					$sql .= "'".uuid()."', ";
-					$sql .= "'$call_block_name', ";
-					$sql .= "'$call_block_number', ";
-					$sql .= "0, ";
-					$sql .= "'$call_block_action', ";
-					$sql .= "'$call_block_enabled', ";
-					$sql .= "'".time()."' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
+					$array['call_block'][0]['call_block_uuid'] = uuid();
+					$array['call_block'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+					$array['call_block'][0]['call_block_name'] = $call_block_name;
+					$array['call_block'][0]['call_block_number'] = $call_block_number;
+					$array['call_block'][0]['call_block_count'] = 0;
+					$array['call_block'][0]['call_block_action'] = $call_block_action;
+					$array['call_block'][0]['call_block_enabled'] = $call_block_enabled;
+					$array['call_block'][0]['date_added'] = time();
+
+					$database = new database;
+					$database->app_name = 'call_block';
+					$database->app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
+					$database->save($array);
+					$response = $database->message;
+					unset($array);
 	
 					message::add($text['label-add-complete']);
 					header("Location: call_block.php");
 					return;
-				} //if ($action == "add")
+				}
 	
 				if ($action == "update") {
-					$sql = " select c.call_block_number, d.domain_name from v_call_block as c ";
-					$sql  .= "JOIN v_domains as d ON c.domain_uuid=d.domain_uuid ";
-					$sql .= "where c.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-					$sql .= "and c.call_block_uuid = '$call_block_uuid'";
-	
-					$prep_statement = $db->prepare(check_sql($sql));
-					$prep_statement->execute();
-					$result = $prep_statement->fetchAll();
-					$result_count = count($result);
-					if ($result_count > 0) {
+					$sql = "select c.call_block_number, d.domain_name ";
+					$sql .= "from v_call_block as c ";
+					$sql .= "join v_domains as d on c.domain_uuid = d.domain_uuid ";
+					$sql .= "where c.domain_uuid = :domain_uuid ";
+					$sql .= "and c.call_block_uuid = :call_block_uuid ";
+					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+					$parameters['call_block_uuid'] = $call_block_uuid;
+					$database = new database;
+					$result = $database->select($sql, $parameters);
+					if (is_array($result) && sizeof($result) != 0) {
 						//set the domain_name
 						$domain_name = $result[0]["domain_name"];
 	
@@ -177,40 +180,50 @@
 						$cache = new cache;
 						$cache->delete("app:call_block:".$domain_name.":".$call_block_number);
 					}
-					unset ($prep_statement, $sql);
+					unset($sql, $parameters);
 	
-					$sql = "update v_call_block set ";
-					$sql .= "call_block_name = '$call_block_name', ";
-					$sql .= "call_block_number = '$call_block_number', ";
-					$sql .= "call_block_action = '$call_block_action', ";
-					$sql .= "call_block_enabled = '$call_block_enabled' ";
-					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-					$sql .= "and call_block_uuid = '$call_block_uuid'";
-					$db->exec(check_sql($sql));
-					unset($sql);
+					$array['call_block'][0]['call_block_uuid'] = $call_block_uuid;
+					$array['call_block'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+					$array['call_block'][0]['call_block_name'] = $call_block_name;
+					$array['call_block'][0]['call_block_number'] = $call_block_number;
+					$array['call_block'][0]['call_block_action'] = $call_block_action;
+					$array['call_block'][0]['call_block_enabled'] = $call_block_enabled;
+					$array['call_block'][0]['date_added'] = time();
+
+					$database = new database;
+					$database->app_name = 'call_block';
+					$database->app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
+					$database->save($array);
+					$response = $database->message;
+					unset($array);
 	
 					message::add($text['label-update-complete']);
 					header("Location: call_block.php");
 					return;
-				} //if ($action == "update")
-			} //if ($_POST["persistformvar"] != "true")
-	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+				}
+
+			}
+
+	}
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$call_block_uuid = $_GET["id"];
 		$sql = "select * from v_call_block ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and call_block_uuid = '$call_block_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$row = $prep_statement->fetch();
-		$call_block_name = $row["call_block_name"];
-		$call_block_number = $row["call_block_number"];
-		$call_block_action = $row["call_block_action"];
-		$blocked_call_destination = $row["blocked_call_destination"];
-		$call_block_enabled = $row["call_block_enabled"];
-		unset ($prep_statement, $sql);
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and call_block_uuid = :call_block_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['call_block_uuid'] = $call_block_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && sizeof($row) != 0) {
+			$call_block_name = $row["call_block_name"];
+			$call_block_number = $row["call_block_number"];
+			$call_block_action = $row["call_block_action"];
+			$blocked_call_destination = $row["blocked_call_destination"];
+			$call_block_enabled = $row["call_block_enabled"];
+		}
+		unset($sql, $parameters, $row);
 	}
 
 //show the header
@@ -342,16 +355,18 @@
 
 
 //get recent calls from the db (if not editing an existing call block record)
-	if (!isset($_REQUEST["id"])) {
-		$sql = "select caller_id_number, caller_id_name, start_epoch, direction, hangup_cause, duration, billsec, xml_cdr_uuid from v_xml_cdr ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	if (!is_uuid($_REQUEST["id"])) {
+		$sql = "select caller_id_number, caller_id_name, start_epoch, direction, hangup_cause, duration, billsec, xml_cdr_uuid ";
+		$sql .= "from v_xml_cdr where true ";
+		$sql .= "and domain_uuid = :domain_uuid ";
 		$sql .= "and direction != 'outbound' ";
-		$sql .= "order by start_stamp DESC ";
-		$sql .= "limit '".$_SESSION['call_block']['recent_call_limit']['text']."'";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll();
-		unset ($prep_statement);
+		$sql .= "order by start_stamp desc ";
+		$sql .= limit_offset($_SESSION['call_block']['recent_call_limit']['text']);
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$database = new database;
+		$database = new database;
+		$result = $database->select($sql, $parameters);
+		unset($sql, $parameters);
 
 		echo "<b>".$text['label-edit-add-recent']."</b>";
 		echo "<br><br>";
@@ -367,7 +382,7 @@
 		$row_style["0"] = "row_style0";
 		$row_style["1"] = "row_style1";
 
-		if (is_array($result)) {
+		if (is_array($result) && sizeof($result) != 0) {
 			foreach($result as $row) {
 				$tr_onclick = " onclick=\"call_block_recent('".escape($row['xml_cdr_uuid'])."','".urlencode(escape($row['caller_id_name']))."');\" ";
 				if (strlen($row['caller_id_number']) >= 7) {
@@ -424,23 +439,17 @@
 					echo 		"<a href='javascript:void(0);' onclick=\"call_block_recent('".escape($row['xml_cdr_uuid'])."','".urlencode(escape($row['caller_id_name']))."');\" alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 					echo "  </td>";
 					echo "</tr>\n";
-					if ($c==0) { $c=1; } else { $c=0; }
+					$c = $c == 1 ? 0 : 1;
 				}
-			} //end foreach
-			unset($sql, $result, $row_count);
+			}
+			unset($result);
 
-			echo "</table>";
-			echo "<br><br>";
-
-		} //end if results
-		else {
-			echo "</table>";
-			echo "<br><br>";
-			echo "<br><br>";
 		}
 
+		echo "</table>";
+		echo "<br>";
+
 	}
-	// end of Display Last 5-10 Calls
 
 //include the footer
 	require_once "resources/footer.php";
