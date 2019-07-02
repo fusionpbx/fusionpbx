@@ -115,7 +115,6 @@
 		unset($sql, $access_controls);
 	} //end if results
 
-	echo "<tr>\n";
 	echo "</table>\n";
 	if (permission_exists('access_control_add')) {
 		echo "<div style='float: right;'>\n";

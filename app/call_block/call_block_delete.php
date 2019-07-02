@@ -31,55 +31,56 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('call_block_delete')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
+	if (!permission_exists('call_block_delete')) {
+		echo "access denied"; exit;
 	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-//set the variable
-	if (count($_GET)>0) {
-		$id = $_GET["id"];
-	}
-
 //delete the extension
-	if (strlen($id)>0) {
+	if (is_uuid($_GET["id"])) {
+		$call_block_uuid = $_GET["id"];
+
 		//read the call_block_number
-			$sql = " select c.call_block_number, d.domain_name from v_call_block as c ";
-			$sql .= "JOIN v_domains as d ON c.domain_uuid=d.domain_uuid ";
-			$sql .= "where c.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and c.call_block_uuid = '$id' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll();
-			$result_count = count($result);
-			if ($result_count > 0) {
-				$call_block_number = $result[0]["call_block_number"];
-				$domain_name = $result[0]["domain_name"];
+			$sql = "select c.call_block_number, d.domain_name ";
+			$sql .= "from v_call_block as c ";
+			$sql .= "join v_domains as d on c.domain_uuid = d.domain_uuid ";
+			$sql .= "where c.domain_uuid = :domain_uuid ";
+			$sql .= "and c.call_block_uuid = :call_block_uuid ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['call_block_uuid'] = $call_block_uuid;
+			$database = new database;
+			$result = $database->select($sql, $parameters, 'row');
+
+			if (is_array($result) && sizeof($result) != 0) {
+				$call_block_number = $result["call_block_number"];
+				$domain_name = $result["domain_name"];
 
 				//clear the cache
 				$cache = new cache;
 				$cache->delete("app:call_block:".$domain_name.":".$call_block_number);
 			}
-			unset ($prep_statement, $sql);
+
+			unset($sql, $parameters, $result);
 
 		//delete the call block
-			$sql = "delete from v_call_block ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and call_block_uuid = '$id' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($prep_statement, $sql);
+			$array['call_block'][0]['call_block_uuid'] = $call_block_uuid;
+			$array['call_block'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+
+			$database = new database;
+			$database->app_name = 'call_block';
+			$database->app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
+			$database->delete($array);
+			$response = $database->message;
+			unset($array);
+
+		//message
+			message::add($text['label-delete-complete']);
 	}
 
 	//redirect the browser
-		message::add($text['label-delete-complete']);
 		header("Location: call_block.php");
 		return;
 

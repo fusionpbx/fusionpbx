@@ -32,12 +32,8 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('call_block_edit') || permission_exists('call_block_add')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
+	if (!permission_exists('call_block_edit') && !permission_exists('call_block_add')) {
+		echo "access denied"; exit;
 	}
 
 //add multi-lingual support
@@ -45,68 +41,68 @@
 	$text = $language->get();
 
 //action add from cdr
-	if (isset($_REQUEST["cdr_id"])) {
+	if (is_uuid($_REQUEST["cdr_id"])) {
 
 		$action = "cdr_add";
-		$xml_cdr_uuid = check_str($_REQUEST["cdr_id"]);
-		$call_block_name = check_str($_REQUEST["name"]);
+		$xml_cdr_uuid = $_REQUEST["cdr_id"];
+		$call_block_name = $_REQUEST["name"];
 
-		// get the caller id info from cdr that user chose
-		$sql = "select ";
-		if ($call_block_name == '') {
-			$sql .= "caller_id_name, ";
-		}
-		$sql .= "caller_id_number ";
-		$sql .= "from v_xml_cdr ";
-		$sql .= "where xml_cdr_uuid = '".$xml_cdr_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetch();
-		unset ($prep_statement);
+		// get the caller id info from cdr the user chose
+			$sql = "select caller_id_name, caller_id_number ";
+			$sql .= "from v_xml_cdr ";
+			$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
+			$parameters['xml_cdr_uuid'] = $xml_cdr_uuid;
+			$database = new database;
+			$result = $database->select($sql, $parameters, 'row');
+			unset ($sql, $parameters);
 
-		$call_block_name = ($call_block_name == '') ? $result["caller_id_name"] : $call_block_name;
-		$call_block_number = $result["caller_id_number"];
-		$call_block_enabled = "true";
-		$block_call_action = "Reject";
+		//create data array
+			$array['call_block'][0]['call_block_uuid'] = uuid();
+			$array['call_block'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+			$array['call_block'][0]['call_block_name'] = $call_block_name == '' ? $result["caller_id_name"] : $call_block_name;
+			$array['call_block'][0]['call_block_number'] = $result["caller_id_number"];
+			$array['call_block'][0]['call_block_count'] = 0;
+			$array['call_block'][0]['call_block_action'] = 'Reject';
+			$array['call_block'][0]['call_block_enabled'] = 'true';
+			$array['call_block'][0]['date_added'] = time();
 
 		//ensure call block is enabled in the dialplan
-		$sql = "update v_dialplans set ";
-		$sql .= "dialplan_enabled = 'true' ";
-		$sql .= "where ";
-		$sql .= "app_uuid = 'b1b31930-d0ee-4395-a891-04df94599f1f' and ";
-		$sql .= "domain_uuid = '".$domain_uuid."' and ";
-		$sql .= "dialplan_enabled <> 'true' ";
-		$db->exec(check_sql($sql));
-		unset($sql);
+			if ($action == "add" || $action == "update") {
+				$sql = "select dialplan_uuid from v_dialplans where true ";
+				$sql .= "and domain_uuid = :domain_uuid ";
+				$sql .= "and app_uuid = 'b1b31930-d0ee-4395-a891-04df94599f1f' ";
+				$sql .= "and dialplan_enabled <> 'true' ";
+				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+				$database = new database;
+				$rows = $database->select($sql, $parameters);
+
+				if (is_array($rows) && sizeof($rows) != 0) {
+					foreach ($rows as $index => $row) {
+						$array['dialplans'][$index]['dialplan_uuid'] = $row['dialplan_uuid'];
+						$array['dialplans'][$index]['dialplan_enabled'] = 'true';
+					}
+
+					$p = new permissions;
+					$p->add('dialplan_edit', 'temp');
+
+					$database = new database;
+					$database->save($array);
+					unset($array);
+
+					$p->delete('dialplan_edit', 'temp');
+				}
+			}
 
 		//insert call block record
-		$sql = "insert into v_call_block ";
-		$sql .= "(";
-		$sql .= "domain_uuid, ";
-		$sql .= "call_block_uuid, ";
-		$sql .= "call_block_name, ";
-		$sql .= "call_block_number, ";
-		$sql .= "call_block_count, ";
-		$sql .= "call_block_action, ";
-		$sql .= "call_block_enabled, ";
-		$sql .= "date_added ";
-		$sql .= ") ";
-		$sql .= "values ";
-		$sql .= "(";
-		$sql .= "'".$_SESSION['domain_uuid']."', ";
-		$sql .= "'".uuid()."', ";
-		$sql .= "'".$call_block_name."', ";
-		$sql .= "'".$call_block_number."', ";
-		$sql .= "0, ";
-		$sql .= "'".$block_call_action."', ";
-		$sql .= "'".$call_block_enabled."', ";
-		$sql .= "'".time()."' ";
-		$sql .= ")";
-		$db->exec(check_sql($sql));
-		unset($sql);
+			$database = new database;
+			$database->app_name = 'call_block';
+			$database->app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
+			$database->save($array);
+			$response = $database->message;
+			unset($array);
 
 		//add a message
-		message::add($text['label-add-complete']);
+			message::add($text['label-add-complete']);
 	}
 
 //redirect the browser
