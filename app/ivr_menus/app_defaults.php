@@ -29,11 +29,11 @@ if ($domains_processed == 1) {
 
 	//select ivr menus with an empty context
 	$sql = "select * from v_ivr_menus where ivr_menu_context is null ";
+	$database = new database;
 	$ivr_menus = $database->select($sql, null, 'all');
 	if (is_array($ivr_menus)) {
 		//get the domain list
 		$sql = "select * from v_domains ";
-		$database = new database;
 		$domains = $database->select($sql, null, 'all');
 
 		//update the ivr menu context
