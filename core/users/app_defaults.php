@@ -91,9 +91,8 @@ if ($domains_processed == 1) {
 			$sql = "select count(*) as num_rows from v_email_templates ";
 			$sql .= "where email_template_uuid = '05b529c4-fba7-4071-bab3-143b076392e7' ";
 			$database = new database;
-			$num_rows = $database->select($sql, $parameters, 'column');
-			if ($row['num_rows'] == 0) {
-
+			$num_rows = $database->select($sql, null, 'column');
+			if ($num_rows == 0) {
 				//build the array
 				$x = 0;
 				$array['email_templates'][$x]['email_template_uuid'] = '05b529c4-fba7-4071-bab3-143b076392e7';
