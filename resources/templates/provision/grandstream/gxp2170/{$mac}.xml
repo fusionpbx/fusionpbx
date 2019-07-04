@@ -6536,12 +6536,8 @@
     <!-- # Enable Phonebook XML Download. # 0 - Disabled, 1 - Enabled, use HTTP, 2 - Enabled, use TFTP, 3 - Enabled, use HTTPS. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
-{if isset($contact_grandstream)}
-    <P330>1</P330>
-{else}
-    <P330>0</P330>
-{/if}
 
+    <P330>{$grandstream_phonebook_download}</P330>
 
     <!-- # HTTP/HTTPS User Name -->
     <!-- # String -->
@@ -6555,7 +6551,7 @@
     <!-- # This is a string of up to 256 characters that should contain a path to the XML file. It MUST be in the host/path format. -->
     <!-- # For example: directory.grandstream.com/engineering -->
     <!-- # String -->
-{if isset($contact_grandstream)}
+{if isset($grandstream_phonebook_download)}
     <P331>{$grandstream_phonebook_xml_server_path}{$mac}/</P331>
 {elseif isset($grandstream_phonebook_xml_server_path)}
     <P331>{$grandstream_phonebook_xml_server_path}</P331>
@@ -6575,7 +6571,7 @@
     <!-- # Remove Manually-edited entries on Download. 0 - No, 1 - Yes. Default is 1 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P333>1</P333>
+    <P333>0</P333>
 
     <!-- # Import Group Method. 0 - Replace, 1 - Append. Default is 0 -->
     <!-- # Number: 0, 1 -->
