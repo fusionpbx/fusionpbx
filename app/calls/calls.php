@@ -42,7 +42,7 @@
 	$domain_uuid = $_SESSION['domain_uuid'];
 
 //handle search term
-	$search = check_str($_GET["search"]);
+	$search = $_GET["search"];
 	if (strlen($search) > 0) {
 		$sql_mod = "and ( ";
 		$sql_mod .= "extension like :search ";
@@ -120,10 +120,8 @@
 	}
 	$sql .= $sql_mod; //add search mod from above
 	$sql .= "order by extension asc ";
-	$sql .= "limit :rows_per_page offset :offset ";
+	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$parameters['rows_per_page'] = $rows_per_page;
-	$parameters['offset'] = $offset;
 	$extensions = $database->select($sql, $parameters, 'all');
 	unset($parameters);
 
@@ -186,7 +184,8 @@
 					//get destination count if enabled
 					$follow_me_destination_count = 0;
 					if ($row['follow_me_enabled'] == 'true') {
-						$sql = "select count(follow_me_destination_uuid) as destination_count from v_follow_me_destinations ";
+						$sql = "select count(follow_me_destination_uuid) as destination_count ";
+						$sql .= "from v_follow_me_destinations ";
 						$sql .= "where follow_me_uuid = :follow_me_uuid ";
 						$sql .= "and domain_uuid = :domain_uuid ";
 						$parameters['follow_me_uuid'] = $row['follow_me_uuid'];
