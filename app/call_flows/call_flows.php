@@ -46,26 +46,11 @@
 	$document['title'] = $text['title-call_flows'];
 
 //get variables used to control the order
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
-
-//validate order by
-	if (strlen($order_by) > 0) {
-		$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $order_by);
-	}
-
-//validate the order
-	switch ($order) {
-		case 'asc':
-			break;
-		case 'desc':
-			break;
-		default:
-			$order = '';
-	}
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
 //add the search term
-	$search = strtolower(check_str($_GET["search"]));
+	$search = strtolower($_GET["search"]);
 	if (strlen($search) > 0) {
 		$sql_search = "and (";
 		$sql_search .= "lower(call_flow_name) like :search ";
@@ -84,6 +69,7 @@
 		//$sql_search .= "or lower(call_flow_alternate_data) like :search ";
 		$sql_search .= "or lower(call_flow_description) like :search ";
 		$sql_search .= ") ";
+		$parameters['search'] = '%'.$search.'%';
 	}
 
 //additional includes
@@ -91,15 +77,13 @@
 	require_once "resources/paging.php";
 
 //prepare to page the results
-	$sql = "select count(call_flow_uuid) as num_rows from v_call_flows ";
+	$sql = "select count(call_flow_uuid) from v_call_flows ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= $sql_search;
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	if (strlen($search) > 0) {
-		$parameters['search'] = '%'.$search.'%';
-	}
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($sql);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -113,12 +97,11 @@
 	$sql = "select * from v_call_flows ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= $sql_search;
-	if (strlen($order_by) > 0) { $sql .= "order by $order_by $order "; }
-	$sql .= "limit :rows_per_page offset :offset ";
+	$sql .= order_by($order_by, $order);
+	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$parameters['rows_per_page'] = $rows_per_page;
-	$parameters['offset'] = $offset;
 	$call_flows = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //alternate the row style
 	$c = 0;
@@ -215,7 +198,7 @@
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $call_flows, $row_count);
+		unset($call_flows);
 	} //end if results
 
 	echo "<tr>\n";

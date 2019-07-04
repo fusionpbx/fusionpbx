@@ -44,9 +44,9 @@
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$call_flow_uuid = check_str($_REQUEST["id"]);
+		$call_flow_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
@@ -56,21 +56,21 @@
 	if (is_array($_POST)) {
 
 		//set the variables from the http values
-			$call_flow_uuid = check_str($_POST["call_flow_uuid"]);
-			$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
-			$call_flow_name = check_str($_POST["call_flow_name"]);
-			$call_flow_extension = check_str($_POST["call_flow_extension"]);
-			$call_flow_feature_code = check_str($_POST["call_flow_feature_code"]);
-			$call_flow_status = check_str($_POST["call_flow_status"]);
-			$call_flow_pin_number = check_str($_POST["call_flow_pin_number"]);
-			$call_flow_label = check_str($_POST["call_flow_label"]);
-			$call_flow_sound = check_str($_POST["call_flow_sound"]);
-			$call_flow_destination = check_str($_POST["call_flow_destination"]);
-			$call_flow_alternate_label = check_str($_POST["call_flow_alternate_label"]);
-			$call_flow_alternate_sound = check_str($_POST["call_flow_alternate_sound"]);
-			$call_flow_alternate_destination = check_str($_POST["call_flow_alternate_destination"]);
-			$call_flow_context = check_str($_POST["call_flow_context"]);
-			$call_flow_description = check_str($_POST["call_flow_description"]);
+			$call_flow_uuid = $_POST["call_flow_uuid"];
+			$dialplan_uuid = $_POST["dialplan_uuid"];
+			$call_flow_name = $_POST["call_flow_name"];
+			$call_flow_extension = $_POST["call_flow_extension"];
+			$call_flow_feature_code = $_POST["call_flow_feature_code"];
+			$call_flow_status = $_POST["call_flow_status"];
+			$call_flow_pin_number = $_POST["call_flow_pin_number"];
+			$call_flow_label = $_POST["call_flow_label"];
+			$call_flow_sound = $_POST["call_flow_sound"];
+			$call_flow_destination = $_POST["call_flow_destination"];
+			$call_flow_alternate_label = $_POST["call_flow_alternate_label"];
+			$call_flow_alternate_sound = $_POST["call_flow_alternate_sound"];
+			$call_flow_alternate_destination = $_POST["call_flow_alternate_destination"];
+			$call_flow_context = $_POST["call_flow_context"];
+			$call_flow_description = $_POST["call_flow_description"];
 
 		//seperate the action and the param
 			$destination_array = explode(":", $call_flow_destination);
@@ -88,7 +88,7 @@
 
 		//get the uuid from the POST
 			if ($action == "update") {
-				$call_flow_uuid = check_str($_POST["call_flow_uuid"]);
+				$call_flow_uuid = $_POST["call_flow_uuid"];
 			}
 
 		//check for all required data
@@ -125,12 +125,12 @@
 			}
 
 		//add the call_flow_uuid
-			if (strlen($call_flow_uuid) == 0) {
+			if (!is_uuid($call_flow_uuid)) {
 				$call_flow_uuid = uuid();
 			}
 
 		//add the dialplan_uuid
-			if (strlen($dialplan_uuid) == 0) {
+			if (!is_uuid($dialplan_uuid)) {
 				$dialplan_uuid = uuid();
 			}
 
@@ -267,7 +267,6 @@
 		$parameters['call_flow_uuid'] = $call_flow_uuid;
 		$database = new database;
 		$result = $database->select($sql, $parameters, 'all');
-		unset($parameters, $sql);
 		foreach ($result as $row) {
 			//set the php variables
 				$call_flow_uuid = $row["call_flow_uuid"];
@@ -304,7 +303,7 @@
 					$alternate_destination_label = $call_flow_alternate_data;
 				}
 		}
-		unset ($prep_statement);
+		unset ($sql, $parameters, $result, $row);
 	}
 
 //set the context for users that are not in the superadmin group
@@ -410,7 +409,6 @@
 						echo "	<option value='phrase:".escape($row["phrase_uuid"])."'>".escape($row["phrase_name"])."</option>\n";
 					}
 				}
-				unset ($prep_statement);
 				echo "</optgroup>\n";
 			}
 		//sounds
