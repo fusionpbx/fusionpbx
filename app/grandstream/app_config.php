@@ -37,14 +37,6 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call Waiting 0=enabled 1=disable";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5f97afa2-b8ae-45fc-a47c-4131b6b4e1fd";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "contact_grandstream";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable Address Book for Grandstream based on users and groups assigned to contact.";
-		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3a8841f3-e1c0-4eb1-abd3-068a3e3701a5";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_gxp_time_zone";
