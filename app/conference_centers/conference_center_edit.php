@@ -43,7 +43,7 @@
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$conference_center_uuid = $_REQUEST["id"];
 	}
@@ -51,25 +51,18 @@
 		$action = "add";
 	}
 
-//get http post variables and set them to php variables
-	if (is_array($_POST)) {
-		$conference_center_uuid = $_POST["conference_center_uuid"];
-		$dialplan_uuid = $_POST["dialplan_uuid"];
-		$conference_center_name = $_POST["conference_center_name"];
-		$conference_center_extension = $_POST["conference_center_extension"];
-		$conference_center_greeting = $_POST["conference_center_greeting"];
-		$conference_center_pin_length = $_POST["conference_center_pin_length"];
-		$conference_center_enabled = $_POST["conference_center_enabled"];
-		$conference_center_description = $_POST["conference_center_description"];
-	}
-
 //process the user data and save it to the database
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
-		//get the uuid from the POST
-			if ($action == "update") {
-				$conference_center_uuid = $_POST["conference_center_uuid"];
-			}
+		//get http post variables and set them to php variables
+			$conference_center_uuid = $_POST["conference_center_uuid"];
+			$dialplan_uuid = $_POST["dialplan_uuid"];
+			$conference_center_name = $_POST["conference_center_name"];
+			$conference_center_extension = $_POST["conference_center_extension"];
+			$conference_center_greeting = $_POST["conference_center_greeting"];
+			$conference_center_pin_length = $_POST["conference_center_pin_length"];
+			$conference_center_enabled = $_POST["conference_center_enabled"];
+			$conference_center_description = $_POST["conference_center_description"];
 
 		//check for all required data
 			$msg = '';
@@ -97,13 +90,13 @@
 			$_POST["domain_uuid"] = $_SESSION["domain_uuid"];
 
 		//add the conference_center_uuid
-			if (!isset($_POST["conference_center_uuid"])) {
+			if (!is_uuid($_POST["conference_center_uuid"])) {
 				$conference_center_uuid = uuid();
 				$_POST["conference_center_uuid"] = $conference_center_uuid;
 			}
 
 		//add the dialplan_uuid
-			if (!isset($_POST["dialplan_uuid"])) {
+			if (!is_uuid($_POST["dialplan_uuid"])) {
 				$dialplan_uuid = uuid();
 				$_POST["dialplan_uuid"] = $dialplan_uuid;
 			}
@@ -150,6 +143,7 @@
 			$database->app_uuid = "b81412e8-7253-91f4-e48e-42fc2c9a38d9";
 			$database->save($array);
 			$message = $database->message;
+			unset($array);
 
 		//remove the temporary permission
 			$p->delete("dialplan_add", "temp");
@@ -193,8 +187,8 @@
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['conference_center_uuid'] = $conference_center_uuid;
 		$database = new database;
-		$result = $database->select($sql, $parameters, 'all');
-		foreach ($result as &$row) {
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && sizeof($row) != 0) {
 			$conference_center_uuid = $row["conference_center_uuid"];
 			$dialplan_uuid = $row["dialplan_uuid"];
 			$conference_center_name = $row["conference_center_name"];
@@ -204,7 +198,7 @@
 			$conference_center_enabled = $row["conference_center_enabled"];
 			$conference_center_description = $row["conference_center_description"];
 		}
-		unset ($parameters);
+		unset($sql, $parameters, $row);
 	}
 
 //set defaults
@@ -218,6 +212,7 @@
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$recordings = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //get the phrases
 	$sql = "select * from v_phrases ";
@@ -225,15 +220,17 @@
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$phrases = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //get the streams
 	$sql = "select * from v_streams ";
-	$sql .= "where (domain_uuid = '".$_SESSION["domain_uuid"]."' or domain_uuid is null) ";
+	$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 	$sql .= "and stream_enabled = 'true' ";
 	$sql .= "order by stream_name asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$streams = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //show the header
 	require_once "resources/header.php";

@@ -47,16 +47,17 @@
 	require_once "resources/paging.php";
 
 //get the meeting_uuid using the pin number
-	$search = $_GET["search"];
-	$search = preg_replace('{\D}', '', $search);
+	$search = preg_replace('{\D}', '', $_GET["search"]);
 	if (strlen($search) > 0) {
-		$sql = "select meeting_uuid from v_meetings ";
+		$sql = "select meeting_uuid ";
+		$sql .= "from v_meetings ";
 		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and (moderator_pin = :search or participant_pin = :search) ";
+		$sql .= "and ( ";
+		$sql .= "moderator_pin = :search ";
+		$sql .= "or participant_pin = :search ";
+		$sql .= ") ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		if (strlen($search) > 0) {
-			$parameters['search'] = '%'.$search.'%';
-		}
+		$parameters['search'] = '%'.$search.'%';
 		$database = new database;
 		$meeting_uuid = $database->select($sql, $parameters, 'column');
 	}
@@ -114,6 +115,7 @@
 			$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
 			$database->save($array);
 			$message = $database->message;
+			unset($array);
 	}
 
 //get conference array

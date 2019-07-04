@@ -44,9 +44,9 @@
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$conference_room_uuid = check_str($_REQUEST["id"]);
+		$conference_room_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
@@ -54,25 +54,25 @@
 
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
-		$conference_center_uuid = check_str($_POST["conference_center_uuid"]);
-		$meeting_uuid = check_str($_POST["meeting_uuid"]);
-		$conference_room_name = check_str($_POST['conference_room_name']);
-		$moderator_pin = check_str($_POST["moderator_pin"]);
-		$participant_pin = check_str($_POST["participant_pin"]);
-		$profile = check_str($_POST["profile"]);
-		$record = check_str($_POST["record"]);
-		$user_uuid = check_str($_POST["user_uuid"]);
-		$max_members = check_str($_POST["max_members"]);
-		$start_datetime = check_str($_POST["start_datetime"]);
-		$stop_datetime = check_str($_POST["stop_datetime"]);
-		$wait_mod = check_str($_POST["wait_mod"]);
-		$announce = check_str($_POST["announce"]);
-		$sounds = check_str($_POST["sounds"]);
-		$mute = check_str($_POST["mute"]);
-		$created = check_str($_POST["created"]);
-		$created_by = check_str($_POST["created_by"]);
-		$enabled = check_str($_POST["enabled"]);
-		$description = check_str($_POST["description"]);
+		$conference_center_uuid = $_POST["conference_center_uuid"];
+		$meeting_uuid = $_POST["meeting_uuid"];
+		$conference_room_name = $_POST['conference_room_name'];
+		$moderator_pin = $_POST["moderator_pin"];
+		$participant_pin = $_POST["participant_pin"];
+		$profile = $_POST["profile"];
+		$record = $_POST["record"];
+		$user_uuid = $_POST["user_uuid"];
+		$max_members = $_POST["max_members"];
+		$start_datetime = $_POST["start_datetime"];
+		$stop_datetime = $_POST["stop_datetime"];
+		$wait_mod = $_POST["wait_mod"];
+		$announce = $_POST["announce"];
+		$sounds = $_POST["sounds"];
+		$mute = $_POST["mute"];
+		$created = $_POST["created"];
+		$created_by = $_POST["created_by"];
+		$enabled = $_POST["enabled"];
+		$description = $_POST["description"];
 
 		//remove any pin number formatting
 		$moderator_pin = preg_replace('{\D}', '', $moderator_pin);
@@ -81,47 +81,47 @@
 
 //get the conference centers array and set a default conference center
 	$sql = "select * from v_conference_centers ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by conference_center_name asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$conference_centers = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-	if (strlen($conference_center_uuid) == 0) {
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$conference_centers = $database->select($sql, $parameters, 'all');
+	if (!is_uuid($conference_center_uuid)) {
 		$conference_center_uuid = $conference_centers[0]["conference_center_uuid"];
 	}
+	unset($sql, $parameters);
 
 //get the conference profiles
 	$sql = "select * ";
 	$sql .= "from v_conference_profiles ";
 	$sql .= "where profile_enabled = 'true' ";
 	$sql .= "and profile_name <> 'sla' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$conference_profiles = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$database = new database;
+	$conference_profiles = $database->select($sql, null, 'all');
+	unset ($sql);
 
 //set the default
 	if ($profile === "") { $profile = "default"; }
 
 //define fucntion get_meeting_pin - used to find a unique pin number
 	function get_meeting_pin($length, $meeting_uuid) {
-		global $db;
 		$pin = generate_password($length,1);
-		$sql = "select count(*) as num_rows from v_meetings ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		//$sql .= "and meeting_uuid <> '".$meeting_uuid."' ";
-		$sql .= "and (moderator_pin = '".$pin."' or participant_pin = '".$pin."') ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] == 0) {
-				return $pin;
-			}
-			else {
-				get_meeting_pin($length, $uuid);
-			}
+		$sql = "select count(*) from v_meetings ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		//$sql .= "and meeting_uuid <> :meeting_uuid ";
+		$sql .= "and (moderator_pin = :pin or participant_pin = :pin) ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		//$parameters['meeting_uuid'] = $meeting_uuid;
+		$parameters['pin'] = $pin;
+		$database = new database;
+		$num_rows = $database->select($sql, $parameters, 'column');
+		if ($num_rows == 0) {
+			return $pin;
 		}
+		else {
+			get_meeting_pin($length, $uuid);
+		}
+		unset($sql, $parameters);
 	}
 
 //record announcment
@@ -139,17 +139,20 @@
 	}
 
 //generate the pins
-	$sql = "select conference_center_pin_length from v_conference_centers ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	if (strlen($conference_center_uuid) > 0) {
-		$sql .= "and conference_center_uuid = '".$conference_center_uuid."' ";
+	$sql = "select conference_center_pin_length ";
+	$sql .= "from v_conference_centers ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	if (is_uuid($conference_center_uuid)) {
+		$sql .= "and conference_center_uuid = :conference_center_uuid ";
+		$parameters['conference_center_uuid'] = $conference_center_uuid;
 	}
-	$prep_statement = $db->prepare(check_sql($sql));
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$row = $database->select($sql, $parameters, 'row');
+	if (is_array($row) && sizeof($row) != 0) {
 		$pin_length = $row['conference_center_pin_length'];
 	}
+	unset($sql, $parameters);
 	if (strlen($moderator_pin) == 0) {
 		$moderator_pin = get_meeting_pin($pin_length, $meeting_uuid);
 	}
@@ -161,14 +164,16 @@
 	if ($_GET["a"] == "delete" && permission_exists('conference_room_delete')) {
 		if (strlen($_REQUEST["meeting_user_uuid"]) > 0) {
 			//set the variables
-				$meeting_user_uuid = check_str($_REQUEST["meeting_user_uuid"]);
-				$conference_room_uuid = check_str($_REQUEST["conference_room_uuid"]);
+				$meeting_user_uuid = $_REQUEST["meeting_user_uuid"];
+				$conference_room_uuid = $_REQUEST["conference_room_uuid"];
 			//delete the extension from the ring_group
-				$sql = "delete from v_meeting_users ";
-				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-				$sql .= "and meeting_user_uuid = '$meeting_user_uuid' ";
-				$db->exec(check_sql($sql));
-				unset($sql);
+				$array['meeting_users'][0]['meeting_user_uuid'] = $meeting_user_uuid;
+				$array['meeting_users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+				$database = new database;
+				$database->app_name = 'conference_centers';
+				$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
+				$database->delete($array);
+				unset($array);
 		}
 
 		message::add($text['message-delete']);
@@ -181,42 +186,49 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
-		$conference_room_uuid = check_str($_POST["conference_room_uuid"]);
+		$conference_room_uuid = $_POST["conference_room_uuid"];
 	}
 
 	//check for a unique pin number and length
 		if (strlen($moderator_pin) > 0 || strlen($participant_pin) > 0) {
 			//make sure the moderator pin number is unique
-				$sql = "select count(*) as num_rows from v_meetings ";
-				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-				if (strlen($meeting_uuid) > 0) {
-					$sql .= "and meeting_uuid <> '".$meeting_uuid."' ";
+				$sql = "select count(*) from v_meetings ";
+				$sql .= "where domain_uuid = :domain_uuid ";
+				if (is_uuid($meeting_uuid)) {
+					$sql .= "and meeting_uuid <> :meeting_uuid ";
+					$parameters['meeting_uuid'] = $meeting_uuid;
 				}
-				$sql .= "and (moderator_pin = '".$moderator_pin."' or participant_pin = '".$moderator_pin."') ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				if ($prep_statement) {
-					$prep_statement->execute();
-					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-					if ($row['num_rows'] > 0) {
-						$msg .= $text['message-unique_moderator_pin']."<br />\n";
-					}
+				$sql .= "and (";
+				$sql .= "moderator_pin = :moderator_pin ";
+				$sql .= "or participant_pin = :moderator_pin ";
+				$sql .= ") ";
+				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+				$parameters['moderator_pin'] = $moderator_pin;
+				$database = new database;
+				$num_rows = $database->select($sql, $parameters, 'column');
+				if ($num_rows > 0) {
+					$msg .= $text['message-unique_moderator_pin']."<br />\n";
 				}
+				unset($sql, $parameters);
 
 			//make sure the participant pin number is unique
-				$sql = "select count(*) as num_rows from v_meetings ";
-				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-				if (strlen($meeting_uuid) > 0) {
-					$sql .= "and meeting_uuid <> '".$meeting_uuid."' ";
+				$sql = "select count(*) from v_meetings ";
+				$sql .= "where domain_uuid = :domain_uuid ";
+				if (is_uuid($meeting_uuid)) {
+					$sql .= "and meeting_uuid <> :meeting_uuid ";
+					$parameters['meeting_uuid'] = $meeting_uuid;
 				}
-				$sql .= "and (moderator_pin = '".$participant_pin."' or participant_pin = '".$participant_pin."') ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				if ($prep_statement) {
-					$prep_statement->execute();
-					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-					if ($row['num_rows'] > 0) {
-						$msg .= $text['message-unique_participant_pin']."<br />\n";
-					}
+				$sql .= "and (";
+				$sql .= "moderator_pin = :participant_pin ";
+				$sql .= "or participant_pin = :participant_pin ";
+				$sql .= ") ";
+				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+				$parameters['participant_pin'] = $participant_pin;
+				$num_rows = $database->select($sql, $parameters, 'column');
+				if ($num_rows > 0) {
+					$msg .= $text['message-unique_participant_pin']."<br />\n";
 				}
+				unset($sql, $parameters);
 
 			//additional checks
 				if ($moderator_pin == $participant_pin) {
@@ -271,206 +283,193 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 				//add a meeting
 					$meeting_uuid = uuid();
-					$sql = "insert into v_meetings ";
-					$sql .= "(";
-					$sql .= "domain_uuid, ";
-					$sql .= "meeting_uuid, ";
-					$sql .= "moderator_pin, ";
-					$sql .= "participant_pin, ";
-					$sql .= "enabled, ";
-					$sql .= "description ";
-					$sql .= ") ";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'$domain_uuid', ";
-					$sql .= "'$meeting_uuid', ";
-					$sql .= "'$moderator_pin', ";
-					$sql .= "'$participant_pin', ";
-					$sql .= "'$enabled', ";
-					$sql .= "'$description' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
+					$array['meetings'][0]['meeting_uuid'] = $meeting_uuid;
+					$array['meetings'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+					$array['meetings'][0]['moderator_pin'] = $moderator_pin;
+					$array['meetings'][0]['participant_pin'] = $participant_pin;
+					$array['meetings'][0]['enabled'] = $enabled;
+					$array['meetings'][0]['description'] = $description;
+
+					$p = new permissions;
+					$p->add('meeting_add', 'temp');
+
+					$database = new database;
+					$database->app_name = 'conference_centers';
+					$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
+					$database->save($array);
+					unset($array);
+
+					$p->delete('meeting_add', 'temp');
 
 				//add a conference room
 					$conference_room_uuid = uuid();
-					$sql = "insert into v_conference_rooms ";
-					$sql .= "(";
-					$sql .= "domain_uuid, ";
-					$sql .= "conference_room_uuid, ";
-					$sql .= "conference_center_uuid, ";
-					$sql .= "meeting_uuid, ";
-					$sql .= "conference_room_name, ";
-					$sql .= "profile, ";
-					$sql .= "record, ";
-					$sql .= "max_members, ";
-					$sql .= "start_datetime, ";
-					$sql .= "stop_datetime, ";
-					$sql .= "wait_mod, ";
-					$sql .= "announce, ";
-					$sql .= "sounds, ";
-					$sql .= "mute, ";
-					$sql .= "created, ";
-					$sql .= "created_by, ";
-					$sql .= "enabled, ";
-					$sql .= "description ";
-					$sql .= ") ";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'$domain_uuid', ";
-					$sql .= "'$conference_room_uuid', ";
-					$sql .= "'$conference_center_uuid', ";
-					$sql .= "'$meeting_uuid', ";
-					$sql .= "'$conference_room_name', ";
-					$sql .= "'$profile', ";
-					$sql .= "'$record', ";
-					$sql .= "'$max_members', ";
-					$sql .= "'$start_datetime', ";
-					$sql .= "'$stop_datetime', ";
-					$sql .= "'$wait_mod', ";
-					$sql .= "'$announce', ";
-					$sql .= "'$sounds', ";
-					$sql .= "'$mute', ";
-					$sql .= "now(), ";
-					$sql .= "'".$_SESSION['user_uuid']."', ";
-					$sql .= "'$enabled', ";
-					$sql .= "'$description' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
+					$array['conference_rooms'][0]['conference_room_uuid'] = $conference_room_uuid;
+					$array['conference_rooms'][0]['conference_center_uuid'] = $conference_center_uuid;
+					$array['conference_rooms'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+					$array['conference_rooms'][0]['meeting_uuid'] = $meeting_uuid;
+					$array['conference_rooms'][0]['conference_room_name'] = $conference_room_name;
+					$array['conference_rooms'][0]['profile'] = $profile;
+					$array['conference_rooms'][0]['record'] = $record;
+					$array['conference_rooms'][0]['max_members'] = $max_members;
+					$array['conference_rooms'][0]['start_datetime'] = $start_datetime;
+					$array['conference_rooms'][0]['stop_datetime'] = $stop_datetime;
+					$array['conference_rooms'][0]['wait_mod'] = $wait_mod;
+					$array['conference_rooms'][0]['announce'] = $announce;
+					$array['conference_rooms'][0]['sounds'] = $sounds;
+					$array['conference_rooms'][0]['mute'] = $mute;
+					$array['conference_rooms'][0]['created'] = 'now()';
+					$array['conference_rooms'][0]['created_by'] = $_SESSION['user_uuid'];
+					$array['conference_rooms'][0]['enabled'] = $enabled;
+					$array['conference_rooms'][0]['description'] = $description;
+
+					$database = new database;
+					$database->app_name = 'conference_centers';
+					$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
+					$database->save($array);
+					unset($array);
 
 				//assign the logged in user to the meeting
-					if (strlen($_SESSION["user_uuid"]) > 0) {
+					if (is_uuid($_SESSION["user_uuid"])) {
 						$meeting_user_uuid = uuid();
-						$sql = "insert into v_meeting_users ";
-						$sql .= "(";
-						$sql .= "domain_uuid, ";
-						$sql .= "meeting_user_uuid, ";
-						$sql .= "meeting_uuid, ";
-						$sql .= "user_uuid ";
-						$sql .= ") ";
-						$sql .= "values ";
-						$sql .= "(";
-						$sql .= "'$domain_uuid', ";
-						$sql .= "'$meeting_user_uuid', ";
-						$sql .= "'$meeting_uuid', ";
-						$sql .= "'".$_SESSION["user_uuid"]."' ";
-						$sql .= ")";
-						$db->exec(check_sql($sql));
-						unset($sql);
+						$array['meeting_users'][0]['meeting_user_uuid'] = $meeting_user_uuid;
+						$array['meeting_users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+						$array['meeting_users'][0]['meeting_uuid'] = $meeting_uuid;
+						$array['meeting_users'][0]['user_uuid'] = $_SESSION["user_uuid"];
+
+						$p = new permissions;
+						$p->add('meeting_user_add', 'temp');
+
+						$database = new database;
+						$database->app_name = 'conference_centers';
+						$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
+						$database->save($array);
+						unset($array);
+
+						$p->delete('meeting_user_add', 'temp');
 					}
 
 				message::add($text['message-add']);
-			} //if ($action == "add")
+			}
 
 			if ($action == "update" && permission_exists('conference_room_edit')) {
 				//get the meeting_uuid
 					if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-						$conference_room_uuid = check_str($_GET["id"]);
+						$conference_room_uuid = $_GET["id"];
 						$sql = "select * from v_conference_rooms ";
-						$sql .= "where domain_uuid = '$domain_uuid' ";
-						$sql .= "and conference_room_uuid = '$conference_room_uuid' ";
-						$prep_statement = $db->prepare(check_sql($sql));
-						$prep_statement->execute();
-						$result = $prep_statement->fetchAll();
-						foreach ($result as &$row) {
+						$sql .= "where domain_uuid = :domain_uuid ";
+						$sql .= "and conference_room_uuid = :conference_room_uuid ";
+						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+						$parameters['conference_room_uuid'] = $conference_room_uuid;
+						$database = new database;
+						$row = $database->select($sql, $parameters, 'row');
+						if (is_array($row) && sizeof($row) != 0) {
 							$meeting_uuid = $row["meeting_uuid"];
 						}
-						unset ($prep_statement);
+						unset($sql, $parameters, $row);
 					}
 
 				//update conference meetings
-					$sql = "update v_meetings set ";
-					$sql .= "moderator_pin = '$moderator_pin', ";
-					$sql .= "participant_pin = '$participant_pin', ";
-					$sql .= "enabled = '$enabled', ";
-					$sql .= "description = '$description' ";
-					$sql .= "where domain_uuid = '$domain_uuid' ";
-					$sql .= "and meeting_uuid = '$meeting_uuid' ";
-					$db->exec(check_sql($sql));
-					unset($sql);
+					$array['meetings'][0]['meeting_uuid'] = $meeting_uuid;
+					$array['meetings'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+					$array['meetings'][0]['moderator_pin'] = $moderator_pin;
+					$array['meetings'][0]['participant_pin'] = $participant_pin;
+					$array['meetings'][0]['enabled'] = $enabled;
+					$array['meetings'][0]['description'] = $description;
+
+					$p = new permissions;
+					$p->add('meeting_edit', 'temp');
+
+					$database = new database;
+					$database->app_name = 'conference_centers';
+					$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
+					$database->save($array);
+					unset($array);
+
+					$p->delete('meeting_edit', 'temp');
 
 				//update the conference room
-					$sql = "update v_conference_rooms set ";
-					$sql .= "conference_center_uuid = '$conference_center_uuid', ";
-					//$sql .= "meeting_uuid = '$meeting_uuid', ";
-					$sql .= "conference_room_name = '$conference_room_name', ";
+					$array['conference_rooms'][0]['conference_room_uuid'] = $conference_room_uuid;
+					$array['conference_rooms'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+					$array['conference_rooms'][0]['conference_center_uuid'] = $conference_center_uuid;
+					$array['conference_rooms'][0]['conference_room_name'] = $conference_room_name;
 					if (strlen($profile) > 0) {
-						$sql .= "profile = '$profile', ";
+						$array['conference_rooms'][0]['profile'] = $profile;
 					}
 					if (strlen($record) > 0) {
-						$sql .= "record = '$record', ";
+						$array['conference_rooms'][0]['record'] = $record;
 					}
 					if (strlen($max_members) > 0) {
-						$sql .= "max_members = '$max_members', ";
+						$array['conference_rooms'][0]['max_members'] = $max_members;
 					}
-					$sql .= "start_datetime = '".$start_datetime."', ";
-					$sql .= "stop_datetime = '".$stop_datetime."', ";
+					$array['conference_rooms'][0]['start_datetime'] = $start_datetime;
+					$array['conference_rooms'][0]['stop_datetime'] = $stop_datetime;
 					if (strlen($wait_mod) > 0) {
-						$sql .= "wait_mod = '$wait_mod', ";
+						$array['conference_rooms'][0]['wait_mod'] = $wait_mod;
 					}
 					if (strlen($announce) > 0) {
-						$sql .= "announce = '$announce', ";
+						$array['conference_rooms'][0]['announce'] = $announce;
 					}
-					//$sql .= "enter_sound = '$enter_sound', ";
 					if (strlen($mute) > 0) {
-						$sql .= "mute = '$mute', ";
+						$array['conference_rooms'][0]['mute'] = $mute;
 					}
-					$sql .= "sounds = '$sounds', ";
+					$array['conference_rooms'][0]['sounds'] = $sounds;
 					if (strlen($enabled) > 0) {
-						$sql .= "enabled = '$enabled', ";
+						$array['conference_rooms'][0]['enabled'] = $enabled;
 					}
-					$sql .= "description = '$description' ";
-					$sql .= "where domain_uuid = '$domain_uuid' ";
-					$sql .= "and conference_room_uuid = '$conference_room_uuid' ";
-					$db->exec(check_sql($sql));
-					unset($sql);
+					$array['conference_rooms'][0]['description'] = $description;
 
-				message::add($text['message-update']);
-			} //if ($action == "update")
+					$database = new database;
+					$database->app_name = 'conference_centers';
+					$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
+					$database->save($array);
+					unset($array);
+
+				//set message
+					message::add($text['message-update']);
+			}
 
 			//assign the user to the meeting
-				if (strlen($user_uuid) > 0 && $_SESSION["user_uuid"] != $user_uuid) {
+				if (is_uuid($user_uuid) && $_SESSION["user_uuid"] != $user_uuid) {
 					$meeting_user_uuid = uuid();
-					$sql = "insert into v_meeting_users ";
-					$sql .= "(";
-					$sql .= "domain_uuid, ";
-					$sql .= "meeting_user_uuid, ";
-					$sql .= "meeting_uuid, ";
-					$sql .= "user_uuid ";
-					$sql .= ")";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'$domain_uuid', ";
-					$sql .= "'$meeting_user_uuid', ";
-					$sql .= "'$meeting_uuid', ";
-					$sql .= "'$user_uuid' ";
-					$sql .= ")";
-					//echo $sql; //exit;
-					$db->exec(check_sql($sql));
-					unset($sql);
+					$array['meeting_users'][0]['meeting_user_uuid'] = $meeting_user_uuid;
+					$array['meeting_users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+					$array['meeting_users'][0]['meeting_uuid'] = $meeting_uuid;
+					$array['meeting_users'][0]['user_uuid'] = $user_uuid;
+
+					$p = new permissions;
+					$p->add('meeting_user_add', 'temp');
+
+					$database = new database;
+					$database->app_name = 'conference_centers';
+					$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
+					$database->save($array);
+					unset($array);
+
+					$p->delete('meeting_user_add', 'temp');
 
 					message::add($text['message-add']);
 				}
 
-			header("Location: conference_room_edit.php?id=".escape($conference_room_uuid));
-			return;
+			//redirect
+				header("Location: conference_room_edit.php?id=".escape($conference_room_uuid));
+				exit;
 
-		} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+		}
+}
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		//get the conference room details
-			$conference_room_uuid = check_str($_REQUEST["id"]);
+			$conference_room_uuid = $_REQUEST["id"];
 			$sql = "select * from v_conference_rooms as r, v_meetings as m ";
-			$sql .= "where r.domain_uuid = '$domain_uuid' ";
+			$sql .= "where r.domain_uuid = :domain_uuid ";
 			$sql .= "and r.meeting_uuid = m.meeting_uuid ";
-			$sql .= "and r.conference_room_uuid = '$conference_room_uuid' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll();
-			foreach ($result as &$row) {
+			$sql .= "and r.conference_room_uuid = :conference_room_uuid ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['conference_room_uuid'] = $conference_room_uuid;
+			$database = new database;
+			$row = $database->select($sql, $parameters, 'row');
+			if (is_array($row) && sizeof($row) != 0) {
 				$conference_center_uuid = $row["conference_center_uuid"];
 				$meeting_uuid = $row["meeting_uuid"];
 				$moderator_pin = $row["moderator_pin"];
@@ -490,28 +489,29 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$enabled = $row["enabled"];
 				$description = $row["description"];
 			}
-			unset ($prep_statement, $sql);
+			unset($sql, $parameters, $row);
 	}
 
 //get the users array
-	$sql = "SELECT * FROM v_users ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql = "select * from v_users ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by username asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset($prep_statement, $sql);
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$users = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //get the users assigned to this meeting
-	$sql = "SELECT * FROM v_users as u, v_meeting_users as m ";
+	$sql = "select * from v_users as u, v_meeting_users as m ";
 	$sql .= "where u.user_uuid = m.user_uuid  ";
-	$sql .= "and m.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "and m.meeting_uuid = '$meeting_uuid' ";
+	$sql .= "and m.domain_uuid = :domain_uuid ";
+	$sql .= "and m.meeting_uuid = :meeting_uuid ";
 	$sql .= "order by u.username asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$meeting_users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset($prep_statement, $sql);
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$parameters['meeting_uuid'] = $meeting_uuid;
+	$database = new database;
+	$meeting_users = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //set default profile
 	if (strlen($profile) == 0) { $profile = 'default'; }

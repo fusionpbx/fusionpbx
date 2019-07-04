@@ -47,26 +47,11 @@
 
 //set variables from the http values
 	$meeting_uuid = $_GET["id"];
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
-
-//validate order by
-	if (strlen($order_by) > 0) {
-		$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $order_by);
-	}
-
-//validate the order
-	switch ($order) {
-		case 'asc':
-			break;
-		case 'desc':
-			break;
-		default:
-			$order = '';
-	}
+	$order_by = $_GET["order_by"] != '' ? $_GET["order_by"] : 'start_epoch';
+	$order = $_GET["order"] != '' ? $_GET["order"] : 'desc';
 
 //add meeting_uuid to a session variable
-	if (strlen($meeting_uuid) > 0 && is_uuid($meeting_uuid)) {
+	if (is_uuid($meeting_uuid)) {
 		$_SESSION['meeting']['uuid'] = $meeting_uuid;
 	}
 
@@ -84,13 +69,14 @@
 	echo "</table>\n";
 
 //prepare to page the results
-	$sql = "select count(*) as num_rows from v_conference_sessions ";
+	$sql = "select count(*) from v_conference_sessions ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and meeting_uuid = :meeting_uuid ";
-	$parameters['domain_uuid'] = $domain_uuid;
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['meeting_uuid'] = $_SESSION['meeting']['uuid'];
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($sql, $parameters);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -104,17 +90,13 @@
 	$sql = "select * from v_conference_sessions ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and meeting_uuid = :meeting_uuid ";
-	if (strlen($order_by) == 0) {
-		$sql .= "order by start_epoch desc ";
-	}
-	else {
-		$sql .= "order by $order_by $order ";
-	}
-	$sql .= "limit :rows_per_page offset :offset ";
-	$parameters['rows_per_page'] = $rows_per_page;
-	$parameters['offset'] = $offset;
+	$sql .= order_by($order_by, $order);
+	$sql .= limit_offset($rows_per_page, $offset);
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$parameters['meeting_uuid'] = $_SESSION['meeting']['uuid'];
 	$database = new database;
 	$conference_sessions = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //set the row style
 	$c = 0;
@@ -147,7 +129,7 @@
 	echo "<td class='list_control_icon'>&nbsp;</td>\n";
 	echo "</tr>\n";
 
-	if (is_array($conference_sessions)) {
+	if (is_array($conference_sessions) && sizeof($conference_sessions) != 0) {
 		foreach($conference_sessions as $row) {
 			$tmp_year = date("Y", $row['start_epoch']);
 			$tmp_month = date("M", $row['start_epoch']);
