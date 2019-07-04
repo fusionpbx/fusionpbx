@@ -141,7 +141,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "INVITE";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Request Validation Request - INVITE, ACK , BYE, REGISTER, CANCEL, OPTIONS, INFO, MESSAGE, SUBSCRIBE, NOTIFY, REFER, PRACK, UPDATE";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "60ab694c-5335-44c4-aec1-499be63f0318";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -149,6 +149,6 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "source";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Request Validation Method source, digest";
 		$y++;
 ?>
