@@ -42,59 +42,50 @@
 	$language = new text;
 	$text = $language->get();
 
-//get the id
-	if (isset($_GET["id"]) &&  is_uuid($_GET["id"])) {
-		$id = $_GET["id"];
-	}
-
-//get the domain_uuid
-	$domain_uuid = null;
-	if (isset($_SESSION['domain_uuid']) &&  is_uuid($_SESSION['domain_uuid'])) {
-		$domain_uuid = $_SESSION['domain_uuid'];
-	}
-
 //delete the data
-	if (isset($id) && is_uuid($id)) {
+	if (is_uuid($_GET["id"])) {
+
+		$conference_room_uuid = $_GET["id"];
+
 		//get the meeting_uuid
-			if (["persistformvar"] != "true") {
-				$sql = "select * from v_conference_rooms ";
-				$sql .= "where domain_uuid = :domain_uuid ";
-				$sql .= "and conference_room_uuid = :conference_room_uuid ";
-				$parameters['domain_uuid'] = $domain_uuid;
-				$parameters['conference_room_uuid'] = $id;
-				$database = new database;
-				$meeting_uuid = $database->select($sql, $parameters, 'column');
-				unset ($parameters);
-			}
-			//echo "meeting_uuid: ".$meeting_uuid."<br />\n";
+			$sql = "select meeting_uuid from v_conference_rooms ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and conference_room_uuid = :conference_room_uuid ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['conference_room_uuid'] = $conference_room_uuid;
+			$database = new database;
+			$meeting_uuid = $database->select($sql, $parameters, 'column');
+			unset($sql, $parameters);
 
-		//delete the conference session
-			$sql = "delete from v_conference_rooms ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and conference_room_uuid = '$id'; ";
-			//echo $sql."<br />\n";
-			$db->exec(check_sql($sql));
-			unset($sql);
+		//delete conference session
+			$array['conference_rooms'][0]['conference_room_uuid'] = $conference_room_uuid;
+			$array['conference_rooms'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+		//delete meeting users
+			$array['meeting_users'][0]['meeting_uuid'] = $meeting_uuid;
+			$array['meeting_users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+		//delete meeting
+			$array['meetings'][0]['meeting_uuid'] = $meeting_uuid;
+			$array['meetings'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 
-		//delete the meeting users
-			$sql = "delete from v_meeting_users ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and meeting_uuid = '$meeting_uuid'; ";
-			//echo $sql."<br />\n";
-			$db->exec(check_sql($sql));
-			unset($sql);
+			$p = new permissions;
+			$p->add('meeting_user_delete', 'temp');
+			$p->add('meeting_delete', 'temp');
 
-		//delete the meetings
-			$sql = "delete from v_meetings ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and meeting_uuid = '$meeting_uuid'; ";
-			//echo $sql."<br />\n";
-			$db->exec(check_sql($sql));
-			unset($sql);
+			$database = new database;
+			$database->app_name = 'conference_centers';
+			$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
+			$database->delete($array);
+			unset($array);
+
+			$p->delete('meeting_user_delete', 'temp');
+			$p->delete('meeting_delete', 'temp');
+
+		//set message
+			message::add($text['message-delete']);
+
 	}
 
 //redirect the user
-	message::add($text['message-delete']);
 	header("Location: conference_rooms.php");
 	return;
 

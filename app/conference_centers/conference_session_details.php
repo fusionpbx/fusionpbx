@@ -46,27 +46,12 @@
 	require_once "resources/paging.php";
 
 //set variables from the http values
-	$order_by = $_GET["order_by"];
-	$order = $_GET['order'];
+	$order_by = $_GET["order_by"] != '' ? $_GET["order_by"] : 'start_epoch';
+	$order = $_GET['order'] != '' ? $_GET['order'] : 'asc';
 	$conference_session_uuid = $_GET["uuid"];
 
-//validate order by
-	if (strlen($order_by) > 0) {
-		$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $order_by);
-	}
-
-//validate the order
-	switch ($order) {
-		case 'asc':
-			break;
-		case 'desc':
-			break;
-		default:
-			$order = '';
-	}
-
 //add meeting_uuid to a session variable
-	if (strlen($conference_session_uuid) > 0 && is_uuid($conference_session_uuid)) {
+	if (is_uuid($conference_session_uuid)) {
 		$_SESSION['meeting']['session_uuid'] = $conference_session_uuid;
 	}
 
@@ -77,15 +62,15 @@
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['conference_session_uuid'] = $_SESSION['meeting']['session_uuid'];
 	$database = new database;
-	$conference_sessions = $database->select($sql, $parameters, 'all');
-	foreach ($conference_sessions as $row) {
+	$row = $database->select($sql, $parameters, 'row');
+	if (is_array($row) && sizeof($row) != 0) {
 		$meeting_uuid = $row["meeting_uuid"];
 		$recording = $row["recording"];
 		$start_epoch = $row["start_epoch"];
 		$end_epoch = $row["end_epoch"];
 		$profile = $row["profile"];
 	}
-	unset ($conference_sessions, $parameters);
+	unset($sql, $parameters, $row);
 
 //set the year, month and day based on the session start epoch
 	$tmp_year = date("Y", $start_epoch);
@@ -131,13 +116,13 @@
 	echo "</table>\n";
 
 //prepare to page the results
-	$sql = "select count(*) as num_rows from v_conference_session_details ";
+	$sql = "select count(*) from v_conference_session_details ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and conference_session_uuid = :conference_session_uuid ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['conference_session_uuid'] = $_SESSION['meeting']['session_uuid'];
 	$num_rows = $database->select($sql, $parameters, 'column');
-	unset($parameters);
+	unset($sql, $parameters);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -151,19 +136,12 @@
 	$sql = "select * from v_conference_session_details ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and conference_session_uuid = :conference_session_uuid ";
-	if (strlen($order_by) == 0) {
-		$sql .= "order by start_epoch asc ";
-	}
-	else {
-		$sql .= "order by $order_by $order ";
-	}
-	$sql .= "limit :rows_per_page offset :offset ";
+	$sql .= order_by($order_by, $order);
+	$sql .= limit_offset($rows_per_page, $offset);
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['conference_session_uuid'] = $_SESSION['meeting']['session_uuid'];
-	$parameters['rows_per_page'] = $rows_per_page;
-	$parameters['offset'] = $offset;
 	$conference_session_details = $database->select($sql, $parameters, 'all');
-	unset ($parameters);
+	unset($sql, $parameters);
 
 //show the styles
 	$c = 0;
@@ -189,7 +167,7 @@
 	}
 	echo "</tr>\n";
 
-	if (is_array($conference_session_details)) {
+	if (is_array($conference_session_details) && sizeof($conference_session_details) != 0) {
 		foreach($conference_session_details as $row) {
 			if (defined('TIME_24HR') && TIME_24HR == 1) {
 				$start_date = date("j M Y H:i:s", $row['start_epoch']);
@@ -222,7 +200,7 @@
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $conference_session_details);
+		unset($conference_session_details);
 	} //end if results
 
 	echo "<tr>\n";
