@@ -41,46 +41,61 @@
 	$language = new text;
 	$text = $language->get();
 
-//get the http value and set it as a php variable
-	if (count($_GET)>0) {
-		$id = check_str($_GET["id"]);
-	}
-
 //delete the user data
-	if (is_uuid($id)) {
+	if (is_uuid($_GET["id"])) {
+
+		$call_flow_uuid = $_GET["id"];
 
 		//get the dialplan uuid
 			$sql = "select * from v_call_flows ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and call_flow_uuid = '$id' ";
-			$prep_statement = $db->prepare($sql);
-			$prep_statement->execute();
-			while($row = $prep_statement->fetch(PDO::FETCH_ASSOC)) {
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and call_flow_uuid = :call_flow_uuid ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['call_flow_uuid'] = $call_flow_uuid;
+			$database = new database;
+			$row = $database->select($sql, $parameters, 'row');
+			if (is_array($row) && sizeof($row) != 0) {
 				$dialplan_uuid = $row['dialplan_uuid'];
 				$call_flow_context = $row['call_flow_context'];
 			}
+			unset($sql, $parameters, $row);
 
 		//delete call_flow
-			$sql = "delete from v_call_flows ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and call_flow_uuid = '$id' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($sql);
+			$array['call_flows'][0]['call_flow_uuid'] = $call_flow_uuid;
+			$array['call_flows'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+			$database = new database;
+			$database->app_name = 'call_flows';
+			$database->app_uuid = 'b1b70f85-6b42-429b-8c5a-60c8b02b7d14';
+			$database->delete($array);
+			unset($array);
 
 		//delete the dialplan entry
-			$sql = "delete from v_dialplans ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-			$db->query($sql);
-			unset($sql);
+			$p = new permissions;
+			$p->add('dialplan_delete', 'temp');
+
+			$array['dialplans'][0]['dialplan_uuid'] = $dialplan_uuid;
+			$array['dialplans'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+			$database = new database;
+			$database->app_name = 'call_flows';
+			$database->app_uuid = 'b1b70f85-6b42-429b-8c5a-60c8b02b7d14';
+			$database->delete($array);
+			unset($array);
+
+			$p->delete('dialplan_delete', 'temp');
 
 		//delete the dialplan details
-			$sql = "delete from v_dialplan_details ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-			$db->query($sql);
-			unset($sql);
+			$p = new permissions;
+			$p->add('dialplan_detail_delete', 'temp');
+
+			$array['dialplans'][0]['dialplan_uuid'] = $dialplan_uuid;
+			$array['dialplans'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+			$database = new database;
+			$database->app_name = 'call_flows';
+			$database->app_uuid = 'b1b70f85-6b42-429b-8c5a-60c8b02b7d14';
+			$database->delete($array);
+			unset($array);
+
+			$p->delete('dialplan_detail_delete', 'temp');
 
 		//syncrhonize configuration
 			save_dialplan_xml();
@@ -92,10 +107,11 @@
 			$cache = new cache;
 			$cache->delete("dialplan:".$call_flow_context);
 
+		//set message
+			message::add($text['message-delete']);
 	}
 
-//send a message an redirect the browser
-	message::add($text['message-delete']);
+//redirect the browser
 	header("Location: call_flows.php");
 	return;
 
