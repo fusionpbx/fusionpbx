@@ -6537,7 +6537,7 @@
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
 {if isset($contact_grandstream)}
-    <P330>1</P330>
+    <P330>3</P330>
 {else}
     <P330>0</P330>
 {/if}
@@ -6575,7 +6575,7 @@
     <!-- # Remove Manually-edited entries on Download. 0 - No, 1 - Yes. Default is 1 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P333>1</P333>
+    <P333>0</P333>
 
     <!-- # Import Group Method. 0 - Replace, 1 - Append. Default is 0 -->
     <!-- # Number: 0, 1 -->
