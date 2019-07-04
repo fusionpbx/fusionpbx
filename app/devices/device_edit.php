@@ -583,7 +583,7 @@
 
 		echo "	function download(d) {\n";
 		echo "		if (d == '".$text['label-download']."') return;\n";
-		if ($_SESSION['provision']['http_domain_filter']['text'] == "false") {
+		if ($_SESSION['provision']['http_domain_filter']['boolean'] == "false") {
 			$domain_name = $_SERVER["HTTP_HOST"];
 		}
 		else {
