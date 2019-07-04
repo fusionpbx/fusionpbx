@@ -266,7 +266,7 @@
 				$database->app_name = 'call_routing';
 				$database->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
 				$database->delete($array);
-				$unset($array);
+				unset($array);
 			}
 
 		//call forward config
