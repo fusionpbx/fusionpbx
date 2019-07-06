@@ -19,47 +19,30 @@
 	$text = $language->get();
 
 //get variables used to control the order
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
-
-//validate order by
-	if (strlen($order_by) > 0) {
-		$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $order_by);
-	}
-
-//validate the order
-	switch ($order) {
-		case 'asc':
-			break;
-		case 'desc':
-			break;
-		default:
-			$order = '';
-	}
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
 //add the search term
-	$search = check_str($_GET["search"]);
+	$search = $_GET["search"];
 	if (strlen($search) > 0) {
 		$sql_search = "where (";
 		$sql_search .= "profile_name like :search";
 		$sql_search .= "or profile_enabled like :search";
 		$sql_search .= "or profile_description like :search";
 		$sql_search .= ")";
+		$parameters['search'] = '%'.$search.'%';
 	}
 //additional includes
 	require_once "resources/header.php";
 	require_once "resources/paging.php";
 
 //prepare to page the results
-	$sql = "select count(*) as num_rows from v_conference_profiles ";
+	$sql = "select count(*) from v_conference_profiles ";
 	//$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= $sql_search;
 	//$parameters['domain_uuid'] = $domain_uuid;
-	if (strlen($search) > 0) {
-		$parameters['search'] = '%'.$search.'%';
-	}
 	$database = new database;
-	$row = $database->select($sql, $parameters, 'all');
+	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -71,12 +54,11 @@
 
 //get the list
 	$sql = "select * from v_conference_profiles ";
-	//$sql .= "where domain_uuid = '$domain_uuid' ";
+	//$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= $sql_search;
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$sql .= "limit :rows_per_page offset :offset ";
-	$parameters['rows_per_page'] = $rows_per_page;
-	$parameters['offset'] = $offset;
+	$sql .= order_by($order_by, $order);
+	$sql .= limit_offset($rows_per_page, $offset);
+	//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$result = $database->select($sql, $parameters, 'all');
 
@@ -118,7 +100,7 @@
 	echo "</td>\n";
 	echo "<tr>\n";
 
-	if (is_array($result)) {
+	if (is_array($result) && sizeof($result) != 0) {
 		foreach($result as $row) {
 			if (permission_exists('conference_profile_edit')) {
 				$tr_link = "href='conference_profile_edit.php?id=".$row['conference_profile_uuid']."'";
