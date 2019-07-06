@@ -28,7 +28,7 @@
 	}
 
 //set the parent uuid
-	if (strlen($_GET["conference_control_uuid"]) > 0) {
+	if (is_uuid($_GET["conference_control_uuid"])) {
 		$conference_control_uuid = $_GET["conference_control_uuid"];
 	}
 

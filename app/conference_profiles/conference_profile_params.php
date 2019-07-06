@@ -19,51 +19,20 @@
 	$text = $language->get();
 
 //get variables used to control the order
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
-
-//validate order by
-	if (strlen($order_by) > 0) {
-		$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $order_by);
-	}
-
-//validate the order
-	switch ($order) {
-		case 'asc':
-			break;
-		case 'desc':
-			break;
-		default:
-			$order = '';
-	}
-
-//add the search term
-	$search = check_str($_GET["search"]);
-	if (strlen($search) > 0) {
-		$sql_search = "and (";
-		$sql_search .= "profile_param_name like :search";
-		$sql_search .= "or profile_param_value like :search";
-		$sql_search .= "or profile_param_enabled like :search";
-		$sql_search .= "or profile_param_description like :search";
-		$sql_search .= ")";
-	}
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
 //additional includes
 	require_once "resources/header.php";
 	require_once "resources/paging.php";
 
 //prepare to page the results
-	$sql = "select count(*) as num_rows from v_conference_profile_params ";
+	$sql = "select count(*) from v_conference_profile_params ";
 	$sql .= "where conference_profile_uuid = :conference_profile_uuid ";
-	//$sql .= "and domain_uuid = :domain_uuid ";
-	//$sql .= $sql_search;
-	//$parameters['domain_uuid'] = $domain_uuid;
-	if (strlen($search) > 0) {
-		$parameters['search'] = '%'.$search.'%';
-	}
 	$parameters['conference_profile_uuid'] = $conference_profile_uuid;
 	$database = new database;
-	$row = $database->select($sql, $parameters, 'all');
+	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($sql);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -76,14 +45,11 @@
 //get the list
 	$sql = "select * from v_conference_profile_params ";
 	$sql .= "where conference_profile_uuid = :conference_profile_uuid ";
-	//$sql .= "where domain_uuid = '$domain_uuid' ";
-	//$sql .= $sql_search;
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$sql .= "limit :rows_per_page offset :offset ";
-	$parameters['rows_per_page'] = $rows_per_page;
-	$parameters['offset'] = $offset;
+	$sql .= order_by($order_by, $order);
+	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$result = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //alternate the row style
 	$c = 0;
@@ -92,15 +58,6 @@
 
 //show the content
 	echo "<table width='100%' border='0'>\n";
-	//echo "	<tr>\n";
-	//echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-conference_profile_params']."</b></td>\n";
-	//echo "		<form method='get' action=''>\n";
-	//echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
-	//echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>\n";
-	//echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
-	//echo "			</td>\n";
-	//echo "		</form>\n";
-	//echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
 	echo "			".$text['title_description-conference_profile_param']."<br /><br />\n";
@@ -124,7 +81,7 @@
 	echo "</td>\n";
 	echo "<tr>\n";
 
-	if (is_array($result)) {
+	if (is_array($result) && sizeof($result) != 0) {
 		foreach($result as $row) {
 			if (permission_exists('conference_profile_param_edit')) {
 				$tr_link = "href='conference_profile_param_edit.php?conference_profile_uuid=".$row['conference_profile_uuid']."&id=".$row['conference_profile_param_uuid']."'";
@@ -145,7 +102,7 @@
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($result);
 	} //end if results
 
 	echo "<tr>\n";
