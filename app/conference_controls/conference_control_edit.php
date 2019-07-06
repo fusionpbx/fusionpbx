@@ -19,9 +19,9 @@
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$conference_control_uuid = check_str($_REQUEST["id"]);
+		$conference_control_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
@@ -29,9 +29,9 @@
 
 //get http post variables and set them to php variables
 	if (is_array($_POST)) {
-		$control_name = check_str($_POST["control_name"]);
-		$control_enabled = check_str($_POST["control_enabled"]);
-		$control_description = check_str($_POST["control_description"]);
+		$control_name = $_POST["control_name"];
+		$control_enabled = $_POST["control_enabled"];
+		$control_description = $_POST["control_description"];
 	}
 
 //process the user data and save it to the database
@@ -39,7 +39,7 @@
 
 		//get the uuid from the POST
 			if ($action == "update") {
-				$conference_control_uuid = check_str($_POST["conference_control_uuid"]);
+				$conference_control_uuid = $_POST["conference_control_uuid"];
 			}
 
 		//check for all required data
@@ -61,7 +61,7 @@
 			}
 
 		//add the conference_control_uuid
-			if (strlen($_POST["conference_control_uuid"]) == 0) {
+			if (!is_uuid($_POST["conference_control_uuid"])) {
 				$conference_control_uuid = uuid();
 				$_POST["conference_control_uuid"] = $conference_control_uuid;
 			}
@@ -72,7 +72,7 @@
 		//save to the data
 			$database = new database;
 			$database->app_name = 'conference_controls';
-			$database->app_uuid = null;
+			$database->app_uuid = 'e1ad84a2-79e1-450c-a5b1-7507a043e048';
 			if (strlen($conference_control_uuid) > 0) {
 				$database->uuid($conference_control_uuid);
 			}
@@ -94,19 +94,19 @@
 
 //pre-populate the form
 	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
-		$conference_control_uuid = check_str($_GET["id"]);
+		$conference_control_uuid = $_GET["id"];
 		$sql = "select * from v_conference_controls ";
 		//$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "where conference_control_uuid = '$conference_control_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where conference_control_uuid = :conference_control_uuid ";
+		$parameters['conference_control_uuid'] = $conference_control_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && sizeof($row) != 0) {
 			$control_name = $row["control_name"];
 			$control_enabled = $row["control_enabled"];
 			$control_description = $row["control_description"];
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //show the header
