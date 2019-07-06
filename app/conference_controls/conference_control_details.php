@@ -19,26 +19,11 @@
 	$text = $language->get();
 
 //get variables used to control the order
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
-
-//validate order by
-	if (strlen($order_by) > 0) {
-		$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $order_by);
-	}
-
-//validate the order
-	switch ($order) {
-		case 'asc':
-			break;
-		case 'desc':
-			break;
-		default:
-			$order = '';
-	}
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
 //add the search term
-	$search = check_str($_GET["search"]);
+	$search = $_GET["search"];
 	if (strlen($search) > 0) {
 		$sql_search = "and (";
 		$sql_search .= "control_digits like :search";
@@ -46,24 +31,22 @@
 		$sql_search .= "or control_data like :search";
 		$sql_search .= "or control_enabled like :search";
 		$sql_search .= ")";
+		$parameters['search'] = '%'.$search.'%';
 	}
 //additional includes
 	require_once "resources/header.php";
 	require_once "resources/paging.php";
 
 //prepare to page the results
-	$sql = "select count(*) as num_rows ";
+	$sql = "select count(*) ";
 	$sql .= "from v_conference_control_details ";
 	$sql .= "where conference_control_uuid = :conference_control_uuid ";
 	//$sql .= "and domain_uuid = :domain_uuid ";
 	$sql .= $sql_search;
 	$parameters['conference_control_uuid'] = $conference_control_uuid;
 	//$parameters['domain_uuid'] = $domain_uuid;
-	if (strlen($search) > 0) {
-		$parameters['search'] = '%'.$search.'%';
-	}
 	$database = new database;
-	$row = $database->select($sql, $parameters, 'all');
+	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -78,11 +61,9 @@
 	$sql .= "where conference_control_uuid = :conference_control_uuid ";
 	//$sql .= "and domain_uuid = :domain_uuid ";
 	$sql .= $sql_search;
-	if (strlen($order_by) > 0) { $sql .= "order by $order_by $order "; }
-	$sql .= "limit :rows_per_page offset :offset ";
+	$sql .= order_by($order_by, $order);
+	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$parameters['rows_per_page'] = $rows_per_page;
-	$parameters['offset'] = $offset;
 	$result = $database->select($sql, $parameters, 'all');
 
 //alternate the row style
@@ -119,7 +100,7 @@
 	echo "</td>\n";
 	echo "<tr>\n";
 
-	if (is_array($result)) {
+	if (is_array($result) && sizeof($result) != 0) {
 		foreach($result as $row) {
 			if (permission_exists('conference_control_detail_edit')) {
 				$tr_link = "href='conference_control_detail_edit.php?conference_control_uuid=".escape($row['conference_control_uuid'])."&id=".escape($row['conference_control_detail_uuid'])."'";
@@ -140,7 +121,7 @@
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($result);
 	} //end if results
 
 	echo "<tr>\n";
