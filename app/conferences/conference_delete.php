@@ -38,45 +38,45 @@ else {
 	$language = new text;
 	$text = $language->get();
 
-//get the id
-	if (count($_GET) > 0) {
-		$id = check_str($_GET["id"]);
-	}
+	//require the id
+	if (is_uuid($_GET["id"])) {
 
-//require the id
-	if (strlen($id) > 0) {
+		$conference_uuid = $_GET["id"];
 
 		//get the dialplan uuid
-			$sql = "select * from v_conferences ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and conference_uuid = '$id' ";
-			$prep_statement = $db->prepare($sql);
-			$prep_statement->execute();
-			while($row = $prep_statement->fetch(PDO::FETCH_ASSOC)) {
-				$dialplan_uuid = $row['dialplan_uuid'];
-			}
+			$sql = "select dialplan_uuid from v_conferences ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and conference_uuid = :conference_uuid ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['conference_uuid'] = $conference_uuid;
+			$database = new database;
+			$dialplan_uuid = $database->select($sql, $parameters, 'column');
+			unset($sql, $parameters);
 
 		//delete conference
-			$sql = "delete from v_conferences ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and conference_uuid = '$id' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($sql);
-
-		//delete the dialplan entry
-			$sql = "delete from v_dialplans ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-			$db->query($sql);
-			unset($sql);
-
+			$array['conferences'][0]['conference_uuid'] = $conference_uuid;
+			$array['conferences'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 		//delete the dialplan details
-			$sql = "delete from v_dialplan_details ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-			$db->query($sql);
-			unset($sql);
+			$array['dialplan_details'][0]['dialplan_uuid'] = $dialplan_uuid;
+			$array['dialplan_details'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+		//delete the dialplan entry
+			$array['dialplans'][0]['dialplan_uuid'] = $dialplan_uuid;
+			$array['dialplans'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+
+		//execute
+			$p = new permissions;
+			$p->add('dialplan_detail_delete', 'temp');
+			$p->add('dialplan_delete', 'temp');
+
+			$database = new database;
+			$database->app_name = 'conferences';
+			$database->app_uuid = 'b81412e8-7253-91f4-e48e-42fc2c9a38d9';
+			$database->delete($array);
+			$response = $database->message;
+			unset($array);
+
+			$p->delete('dialplan_detail_delete', 'temp');
+			$p->delete('dialplan_delete', 'temp');
 
 		//syncrhonize configuration
 			save_dialplan_xml();
@@ -88,11 +88,12 @@ else {
 			$cache = new cache;
 			$cache->delete("dialplan:".$_SESSION["context"]);
 
+		//set message
+			message::add($text['confirm-delete']);
 	}
 
 //redirect the browser
-	message::add($text['confirm-delete']);
 	header("Location: conferences.php");
-	return;
+	exit;
 
 ?>
