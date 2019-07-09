@@ -30,7 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (if_group("admin") || if_group("superadmin")) {
+	if (permission_exists('exec_sql')) {
 		//access granted
 	}
 	else {
