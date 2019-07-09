@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -82,8 +82,13 @@
 		$favicon = $_SESSION['theme']['favicon']['text'];
 	}
 	else {
-		$favicon = '<!--{project_path}-->/themes/default/favicon.ico';
+		$favicon = $project_path .'/themes/default/favicon.ico';
 	}
+
+//create a token
+	$key_name = '/app/edit/'.$mode;
+	$_SESSION['keys'][$key_name] = bin2hex(random_bytes(32));
+	$_SESSION['token'] = hash_hmac('sha256', $key_name, $_SESSION['keys'][$key_name]);
 
 ?>
 
@@ -132,6 +137,34 @@
 		function focus_editor() {
 			editor.focus();
 		}
+
+		function http_request(url, form_data) {
+			var http = new XMLHttpRequest();
+			http.open('POST', url, true);
+			//http.onload = function(e) { ... };
+			http.onload = function(e) {
+				if (this.status == 200) {
+					//data sent successfully
+					alert(this.responseText);
+				}
+				else {
+					alert('<?php echo $text['message-problem']; ?>');
+				}
+			};
+			http.send(form_data);
+		}
+
+		function save() {
+			var form_data = new FormData();
+			form_data.append('filepath', document.getElementById('filepath').value);
+			form_data.append('content', editor.getSession().getValue());
+			form_data.append('token',document.getElementById('token').value);
+			form_data.append('mode',"<?php echo $mode; ?>");
+			
+
+			http_request('filesave.php', form_data);
+		}
+
 	</script>
 	<style>
 		img.control {
@@ -159,12 +192,13 @@
 			<iframe id='clip_list' src='cliplist.php' style='border: none; border-top: 1px solid #ccc; height: calc(35% - 1px); width: 100%;'></iframe>
 		</td>
 		<td align='right' valign='top' style='height: 100%;'>
-			<form style='margin: 0;' name='frm_edit' id='frm_edit' method='post' target='proc' action='filesave.php' onsubmit="return submit_check();">
+			<form style='margin: 0;' name='frm_edit' id='frm_edit' method='post' action='filesave.php' onsubmit="return submit_check();">
 			<textarea name='content' id='editor_source' style='display: none;'></textarea>
 			<input type='hidden' name='filepath' id='filepath' value=''>
+			<input type='hidden' name='token' id='token' value='<?php echo $_SESSION['token']; ?>'>
 			<table cellpadding='0' cellspacing='0' border='0' style='width: 100%;'>
 				<tr>
-					<td valign='middle'><img src='resources/images/icon_save.png' title='Save Changes [Ctrl+S]' class='control' onclick="$('form#frm_edit').submit();";></td>
+					<td valign='middle'><img src='resources/images/icon_save.png' title='Save Changes [Ctrl+S]' class='control' onclick="save();";></td>
 					<td align='left' valign='middle' width='100%' style='padding: 0 4px 0 6px;'><input id='current_file' type='text' style='height: 23px; width: 100%;'></td>
 					<td style='padding: 0;'><img src='resources/images/blank.gif' style='width: 1px; height: 30px; border: none;'></td>
 					<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_sidebar.png' title='Toggle Side Bar [Ctrl+Q]' class='control' onclick="toggle_sidebar();"></td>
@@ -270,7 +304,6 @@
 			</table>
 			</form>
 			<div id='editor' style="text-align: left; width: 100%; height: calc(100% - 30px); font-size: 12px;"></div>
-			<iframe id='proc' name='proc' src='#' style='display: none;'></iframe>
 		</td>
 	</tr>
 </table>
@@ -301,7 +334,7 @@
 		<?php key_press('enter', 'down', '#current_file', null, null, 'return false;', false); ?>
 
 	//save file
-		<?php key_press('ctrl+s', 'down', 'window', null, null, "$('form#frm_edit').submit(); return false;", false); ?>
+		<?php key_press('ctrl+s', 'down', 'window', null, null, "save(); return false;", false); ?>
 
 	//open file manager/clip library pane
 		<?php key_press('ctrl+q', 'down', 'window', null, null, 'toggle_sidebar(); focus_editor(); return false;', false); ?>
@@ -309,7 +342,6 @@
 	//remove certain keyboard shortcuts
 		editor.commands.bindKey("Ctrl-T", null); //new browser tab
 </script>
-
 
 </body>
 </html>
