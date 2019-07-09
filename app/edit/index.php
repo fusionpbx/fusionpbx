@@ -17,23 +17,26 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('script_editor_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('script_editor_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -41,18 +44,32 @@ else {
 
 //set the directory title and mode
 	$_SESSION["app"]["edit"]["dir"] = $_GET["dir"];
-	$title = strtoupper($_GET["dir"]);
+	$title = escape($_GET["dir"]);
 	unset($mode);
 	switch ($_GET["dir"]) {
-		case 'xml': $mode = 'xml'; break;
-		case 'provision': $mode = 'xml'; break;
-		case 'php': $mode = 'php'; break;
-		case 'scripts': $mode = 'lua'; break;
-		case 'grammar': //use default
+		case 'xml':
+			$title = 'XML';
+			$mode = 'xml';
+			break;
+		case 'provision':
+			$title = 'Provision';
+			$mode = 'xml';
+			break;
+		case 'php':
+			$title = 'PHP';
+			$mode = 'php';
+			break;
+		case 'scripts':
+			$title = 'Scripts';
+			$mode = 'lua';
+			break;
+		case 'grammar':
+			$title = 'Grammar';
+			$mode = 'xml';
 		default: $mode = 'text';
 	}
 
-// load editor preferences/defaults
+//load editor preferences/defaults
 	$setting_size = ($_SESSION["editor"]["font_size"]["text"] != '') ? $_SESSION["editor"]["font_size"]["text"] : '12px';
 	$setting_theme = ($_SESSION["editor"]["theme"]["text"] != '') ? $_SESSION["editor"]["theme"]["text"] : 'cobalt';
 	$setting_invisibles = ($_SESSION["editor"]["invisibles"]["boolean"] != '') ? $_SESSION["editor"]["invisibles"]["boolean"] : 'false';
@@ -65,8 +82,13 @@ else {
 		$favicon = $_SESSION['theme']['favicon']['text'];
 	}
 	else {
-		$favicon = '<!--{project_path}-->/themes/default/favicon.ico';
+		$favicon = $project_path .'/themes/default/favicon.ico';
 	}
+
+//create a token
+	$key_name = '/app/edit/'.$mode;
+	$_SESSION['keys'][$key_name] = bin2hex(random_bytes(32));
+	$_SESSION['token'] = hash_hmac('sha256', $key_name, $_SESSION['keys'][$key_name]);
 
 ?>
 
@@ -115,6 +137,34 @@ else {
 		function focus_editor() {
 			editor.focus();
 		}
+
+		function http_request(url, form_data) {
+			var http = new XMLHttpRequest();
+			http.open('POST', url, true);
+			//http.onload = function(e) { ... };
+			http.onload = function(e) {
+				if (this.status == 200) {
+					//data sent successfully
+					alert(this.responseText);
+				}
+				else {
+					alert('<?php echo $text['message-problem']; ?>');
+				}
+			};
+			http.send(form_data);
+		}
+
+		function save() {
+			var form_data = new FormData();
+			form_data.append('filepath', document.getElementById('filepath').value);
+			form_data.append('content', editor.getSession().getValue());
+			form_data.append('token',document.getElementById('token').value);
+			form_data.append('mode',"<?php echo $mode; ?>");
+			
+
+			http_request('filesave.php', form_data);
+		}
+
 	</script>
 	<style>
 		img.control {
@@ -142,12 +192,13 @@ else {
 			<iframe id='clip_list' src='cliplist.php' style='border: none; border-top: 1px solid #ccc; height: calc(35% - 1px); width: 100%;'></iframe>
 		</td>
 		<td align='right' valign='top' style='height: 100%;'>
-			<form style='margin: 0;' name='frm_edit' id='frm_edit' method='post' target='proc' action='filesave.php' onsubmit="return submit_check();">
+			<form style='margin: 0;' name='frm_edit' id='frm_edit' method='post' action='filesave.php' onsubmit="return submit_check();">
 			<textarea name='content' id='editor_source' style='display: none;'></textarea>
 			<input type='hidden' name='filepath' id='filepath' value=''>
+			<input type='hidden' name='token' id='token' value='<?php echo $_SESSION['token']; ?>'>
 			<table cellpadding='0' cellspacing='0' border='0' style='width: 100%;'>
 				<tr>
-					<td valign='middle'><img src='resources/images/icon_save.png' title='Save Changes [Ctrl+S]' class='control' onclick="$('form#frm_edit').submit();";></td>
+					<td valign='middle'><img src='resources/images/icon_save.png' title='Save Changes [Ctrl+S]' class='control' onclick="save();";></td>
 					<td align='left' valign='middle' width='100%' style='padding: 0 4px 0 6px;'><input id='current_file' type='text' style='height: 23px; width: 100%;'></td>
 					<td style='padding: 0;'><img src='resources/images/blank.gif' style='width: 1px; height: 30px; border: none;'></td>
 					<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_sidebar.png' title='Toggle Side Bar [Ctrl+Q]' class='control' onclick="toggle_sidebar();"></td>
@@ -169,6 +220,13 @@ else {
 							$modes['text'] = 'Text';
 							$modes['xml'] = 'XML';
 							$modes['sql'] = 'SQL';
+							$modes['sh'] = 'SH';
+							$modes['smarty'] = 'Smarty';
+							$modes['svg'] = 'SVG';
+							$modes['makefile'] = 'Makefile';
+							$modes['c_cpp'] = 'C';
+							$modes['c_cpp'] = 'CPP';
+							$modes['pgsql'] = 'PGSQL';
 							$preview = ($setting_preview == 'true') ? "onmouseover=\"editor.getSession().setMode('ace/mode/' + this.value);\"" : null;
 							foreach ($modes as $value => $label) {
 								$selected = ($value == $mode) ? 'selected' : null;
@@ -246,7 +304,6 @@ else {
 			</table>
 			</form>
 			<div id='editor' style="text-align: left; width: 100%; height: calc(100% - 30px); font-size: 12px;"></div>
-			<iframe id='proc' name='proc' src='#' style='display: none;'></iframe>
 		</td>
 	</tr>
 </table>
@@ -277,7 +334,7 @@ else {
 		<?php key_press('enter', 'down', '#current_file', null, null, 'return false;', false); ?>
 
 	//save file
-		<?php key_press('ctrl+s', 'down', 'window', null, null, "$('form#frm_edit').submit(); return false;", false); ?>
+		<?php key_press('ctrl+s', 'down', 'window', null, null, "save(); return false;", false); ?>
 
 	//open file manager/clip library pane
 		<?php key_press('ctrl+q', 'down', 'window', null, null, 'toggle_sidebar(); focus_editor(); return false;', false); ?>
@@ -285,7 +342,6 @@ else {
 	//remove certain keyboard shortcuts
 		editor.commands.bindKey("Ctrl-T", null); //new browser tab
 </script>
-
 
 </body>
 </html>
