@@ -17,72 +17,96 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('script_editor_save')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+	//check permissions
+	if (permission_exists('script_editor_save')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-$folder = $_GET["folder"];
-$folder = str_replace ("\\", "/", $folder);
-$foldername = $_GET["foldername"];
+//preparing the directory
+	$folder = $_REQUEST["folder"];
+	$folder = str_replace ("\\", "/", $folder);
+	$foldername = $_REQUEST["foldername"];
 
-if (strlen($folder) > 0 && strlen($foldername) > 0) {
-	//create new folder
-	mkdir($folder.'/'.$foldername); //, 0700
-	header("Location: fileoptions.php");
-}
-else { //display form
-	require_once "header.php";
-	echo "<br>";
-	echo "<div align='left'>";
-	echo "<form method='get' action=''>";
-	echo "<table>";
-	echo "	<tr>";
-	echo "		<td>".$text['label-path']."</td>";
-	echo "	</tr>";
-	echo "	<tr>";
-	echo "		<td>".$folder."</td>";
-	echo "	</tr>";
-	echo "</table>";
+//create the directory or show the html form
+	if (strlen($folder) > 0 && strlen($foldername) > 0) {
 
-	echo "<br />";
+		//compare the tokens
+		$key_name = '/app/edit/folder_new';
+		$hash = hash_hmac('sha256', $key_name, $_SESSION['keys'][$key_name]);
+		if (!hash_equals($hash, $_POST['token'])) {
+			echo "access denied";
+			exit;
+		}
 
-	echo "<table>";
-	echo "	<tr>";
-	echo "	  <td>".$text['label-folder-name']."</td>";
-	echo "	</tr>";
+		//create new folder
+		mkdir($folder.'/'.$foldername); //, 0700
+		header("Location: fileoptions.php");
+	}
+	else {
 
-	echo "	<tr>";
-	echo "		<td><input type='text' name='foldername' value=''></td>";
-	echo "	</tr>";
+		//create a token
+		$key_name = '/app/edit/folder_new';
+		$_SESSION['keys'][$key_name] = bin2hex(random_bytes(32));
+		$_SESSION['token'] = hash_hmac('sha256', $key_name, $_SESSION['keys'][$key_name]);
 
-	echo "	<tr>";
-	echo "		<td colspan='1' align='right'>";
-	echo "      <input type='hidden' name='folder' value='$folder'>";
-	echo "		  <input type='button' value='".$text['button-back']."' onclick='history.back()'><input type='submit' value='".$text['button-new-folder']."'>";
-	echo "    </td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "</form>";
-	echo "</div>";
+		//display the html form
+		require_once "header.php";
+		echo "<br>";
+		echo "<div align='left'>";
+		echo "<form method='POST' action=''>";
+		echo "<table>";
+		echo "	<tr>";
+		echo "		<td>".$text['label-path']."</td>";
+		echo "	</tr>";
+		echo "	<tr>";
+		echo "		<td>".$folder."</td>";
+		echo "	</tr>";
+		echo "</table>";
 
-	require_once "footer.php";
-}
+		echo "<br />";
+
+		echo "<table>";
+		echo "	<tr>";
+		echo "		<td>".$text['label-folder-name']."</td>";
+		echo "	</tr>";
+
+		echo "	<tr>";
+		echo "		<td><input type='text' name='foldername' value=''></td>";
+		echo "	</tr>";
+
+		echo "	<tr>";
+		echo "		<td colspan='1' align='right'>";
+		echo "			<input type='hidden' name='folder' value='$folder'>";
+		echo "			<input type='hidden' name='token' id='token' value='". $_SESSION['token']. "'>";
+		echo "			<input type='button' value='".$text['button-back']."' onclick='history.back()'><input type='submit' value='".$text['button-new-folder']."'>";
+		echo "		</td>";
+		echo "	</tr>";
+		echo "</table>";
+		echo "</form>";
+		echo "</div>";
+
+		require_once "footer.php";
+	}
+
 ?>
