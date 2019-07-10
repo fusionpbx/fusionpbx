@@ -38,23 +38,20 @@ else {
 	$language = new text;
 	$text = $language->get();
 
-//get the id
-	if (count($_GET) > 0) {
-		$id = check_str($_GET["id"]);
-	}
-
 //delete the records
-	if (strlen($id) > 0) {
-		$sql = "";
-		$sql .= "delete from v_databases ";
-		$sql .= "where database_uuid = '$id' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($sql);
+	if (is_uuid($_GET["id"])) {
+		$database_uuid = $_GET["id"];
+		$array['databases'][0]['database_uuid'] = $database_uuid;
+		$database = new database;
+		$database->app_name = 'databases';
+		$database->app_uuid = '8d229b6d-1383-fcec-74c6-4ce1682479e2';
+		$database->delete($array);
+		unset($array);
+
+		message::add($text['message-delete']);
 	}
 
 //redirect the browser
-	message::add($text['message-delete']);
 	header("Location: databases.php");
 	return;
 
