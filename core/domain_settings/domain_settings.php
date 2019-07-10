@@ -40,20 +40,26 @@
 //toggle enabled
 	if (sizeof($_REQUEST) > 1) {
 		//get the variables
-			$action = check_str($_REQUEST["action"]);
-			$domain_uuid = check_str($_REQUEST["domain_id"]);
+			$action = $_REQUEST["action"];
+			$domain_uuid = $_REQUEST["domain_id"];
 			$domain_setting_uuids = $_REQUEST["id"];
-			$enabled = check_str($_REQUEST['enabled']);
+			$enabled = $_REQUEST['enabled'];
 
 		//change enabled value
-			if ($domain_uuid != '' && sizeof($domain_setting_uuids) == 1 && $enabled != '') {
-				$sql = "update v_domain_settings set ";
-				$sql .= "domain_setting_enabled = '".$enabled."' ";
-				$sql .= "where domain_uuid = '".$domain_uuid."' ";
-				$sql .= "and domain_setting_uuid = '".$domain_setting_uuids[0]."' ";
-				//echo $sql."<br><br>";
-				$db->exec(check_sql($sql));
-				unset($sql);
+			if (
+				permission_exists('domain_setting_edit') &&
+				is_uuid($domain_uuid) &&
+				is_array($domain_setting_uuids) &&
+				sizeof($domain_setting_uuids) == 1 &&
+				($enabled == 'true' || $enabled == 'false')
+				) {
+				$array['domain_settings'][0]['domain_setting_uuid'] = $domain_setting_uuids[0];
+				$array['domain_settings'][0]['domain_setting_enabled'] = $enabled;
+				$database = new database;
+				$database->app_name = 'domains';
+				$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
+				$database->save($array);
+				unset($array);
 
 				message::add($text['message-update']);
 				header("Location: domain_edit.php?id=".$domain_uuid);
@@ -62,100 +68,96 @@
 
 		//copy domain settings
 			if ($action == 'copy' && permission_exists('domain_setting_add')) {
-				$target_domain_uuid = check_str($_POST["target_domain_uuid"]);
+				$target_domain_uuid = $_POST["target_domain_uuid"];
 
-				if ($target_domain_uuid != '' && sizeof($domain_setting_uuids) > 0) {
-					$settings_copied = 0;
-					foreach ($domain_setting_uuids as $domain_setting_uuid) {
+				if (is_uuid($target_domain_uuid) && is_array($domain_setting_uuids) && sizeof($domain_setting_uuids) != 0) {
+					foreach ($domain_setting_uuids as $index => $domain_setting_uuid) {
 
-						// get default setting from db
-						$sql = "select * from v_domain_settings ";
-						$sql .= "where domain_setting_uuid = '".$domain_setting_uuid."' ";
-						$prep_statement = $db->prepare(check_sql($sql));
-						$prep_statement->execute();
-						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-						foreach ($result as &$row) {
-							$domain_setting_uuid = $row["default_setting_uuid"];
-							$domain_setting_category = $row["default_setting_category"];
-							$domain_setting_subcategory = $row["default_setting_subcategory"];
-							$domain_setting_name = $row["default_setting_name"];
-							$domain_setting_value = $row["default_setting_value"];
-							$domain_setting_order = $row["default_setting_order"];
-							$domain_setting_enabled = $row["default_setting_enabled"];
-							$domain_setting_description = $row["default_setting_description"];
-						}
-						unset ($prep_statement);
+						if (is_uuid($domain_setting_uuid)) {
 
-						//set a random password for http_auth_password
-						if ($domain_setting_subcategory == "http_auth_password") {
-							$domain_setting_value = generate_password();
-						}
-
-						// check if exists
-						$sql = "select domain_setting_uuid from v_domain_settings ";
-						$sql .= "where domain_uuid = '".$target_domain_uuid."' ";
-						$sql .= "and domain_setting_category = '".$domain_setting_category."' ";
-						$sql .= "and domain_setting_subcategory = '".$domain_setting_subcategory."' ";
-						$sql .= "and domain_setting_name = '".$domain_setting_name."' ";
-						$sql .= "and domain_setting_name <> 'array' ";
-						$prep_statement = $db->prepare(check_sql($sql));
-						$prep_statement->execute();
-						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-						if (sizeof($result) > 0) {
-							foreach ($result as &$row) {
-								$target_domain_setting_uuid = $row["domain_setting_uuid"];
-								break;
+							// get default setting from db
+							$sql = "select * from v_domain_settings ";
+							$sql .= "where domain_setting_uuid = :domain_setting_uuid ";
+							$parameters['domain_setting_uuid'] = $domain_setting_uuid;
+							$database = new database;
+							$row = $database->select($sql, $parameters, 'row');
+							if (is_array($row) && sizeof($row) != 0) {
+								$domain_setting_uuid = $row["default_setting_uuid"];
+								$domain_setting_category = $row["default_setting_category"];
+								$domain_setting_subcategory = $row["default_setting_subcategory"];
+								$domain_setting_name = $row["default_setting_name"];
+								$domain_setting_value = $row["default_setting_value"];
+								$domain_setting_order = $row["default_setting_order"];
+								$domain_setting_enabled = $row["default_setting_enabled"];
+								$domain_setting_description = $row["default_setting_description"];
 							}
-							$action = "update";
-						}
-						else {
-							$action = "add";
-							$target_domain_setting_uuid = uuid();
-						}
-						unset ($prep_statement);
+							unset($sql, $parameters, $row);
 
-						// fix null
-						$domain_setting_order = ($domain_setting_order != '') ? $domain_setting_order : 'null';
+							//set a random password for http_auth_password
+							if ($domain_setting_subcategory == "http_auth_password") {
+								$domain_setting_value = generate_password();
+							}
 
-						//prepare the array
-						$array['domain_settings'][$x]['domain_uuid'] = $target_domain_uuid;
-						$array['domain_settings'][$x]['domain_setting_uuid'] = $target_domain_setting_uuid;
-						$array['domain_settings'][$x]['default_setting_category'] = $default_setting_category;
-						$array['domain_settings'][$x]['domain_setting_uuid'] = $default_setting_subcategory;
-						$array['domain_settings'][$x]['domain_setting_uuid'] = $default_setting_name;
-						$array['domain_settings'][$x]['domain_setting_uuid'] = $default_setting_value;
-						$array['domain_settings'][$x]['domain_setting_uuid'] = $default_setting_order;
-						$array['domain_settings'][$x]['domain_setting_uuid'] = $default_setting_enabled;
-						$array['domain_settings'][$x]['domain_setting_uuid'] = $default_setting_description;
-						$x++;
+							// check if exists
+							$sql = "select domain_setting_uuid from v_domain_settings ";
+							$sql .= "where domain_uuid = :domain_uuid ";
+							$sql .= "and domain_setting_category = :domain_setting_category ";
+							$sql .= "and domain_setting_subcategory = :domain_setting_subcategory ";
+							$sql .= "and domain_setting_name = :domain_setting_name ";
+							$sql .= "and domain_setting_name <> 'array' ";
+							$parameters['domain_uuid'] = $target_domain_uuid;
+							$parameters['domain_setting_category'] = $domain_setting_category;
+							$parameters['domain_setting_subcategory'] = $domain_setting_subcategory;
+							$parameters['domain_setting_name'] = $domain_setting_name;
+							$database = new database;
+							$target_domain_setting_uuid = $database->select($sql, $parameters, 'column');
+							if (is_uuid($target_domain_setting_uuid)) {
+								$action = "update";
+							}
+							else {
+								$action = "add";
+								$target_domain_setting_uuid = uuid();
+							}
+							unset($sql, $parameters);
+
+							// fix null
+							$domain_setting_order = $domain_setting_order != '' ? $domain_setting_order : 'null';
+
+							//prepare the array
+							$array['domain_settings'][$index]['domain_uuid'] = $target_domain_uuid;
+							$array['domain_settings'][$index]['domain_setting_uuid'] = $target_domain_setting_uuid;
+							$array['domain_settings'][$index]['default_setting_category'] = $default_setting_category;
+							$array['domain_settings'][$index]['domain_setting_uuid'] = $default_setting_subcategory;
+							$array['domain_settings'][$index]['domain_setting_uuid'] = $default_setting_name;
+							$array['domain_settings'][$index]['domain_setting_uuid'] = $default_setting_value;
+							$array['domain_settings'][$index]['domain_setting_uuid'] = $default_setting_order;
+							$array['domain_settings'][$index]['domain_setting_uuid'] = $default_setting_enabled;
+							$array['domain_settings'][$index]['domain_setting_uuid'] = $default_setting_description;
+
+						}
 
 					} // foreach
 
-					//save to the data
-					$database = new database;
-					$database->app_name = 'domain_settings';
-					$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
-					//if (strlen($stream_uuid) > 0) {
-					//	$database->uuid($stream_uuid);
-					//}
-					$database->save($array);
-					$message = $database->message;
+					//save the data
+					if (is_array($array) && sizeof($array) != 0) {
+						$database = new database;
+						$database->app_name = 'domain_settings';
+						$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
+						$database->save($array);
+						$message = $database->message;
 
-					//debug info
-					//echo "<pre>";
-					//print_r($message);
-					//echo "</pre>";
-					//exit;
+						// set message
+						$_SESSION["message"] = $text['message-copy'].": ".sizeof($array);
 
-					// set message
-					$_SESSION["message"] = $text['message-copy'].": ".escape($settings_copied);
+						unset($array);
+					}
 				}
 				else {
 					// set message
 					message::add($text['message-copy_failed']);
 				}
 	
-				header("Location: default_settings.php".(($search != '') ? "?search=".escape($search) : null));
+				header("Location: default_settings.php".($search != '' ? "?search=".escape($search) : null));
 				exit;
 			}
 
@@ -165,16 +167,24 @@
 					$language = new text;
 					$text = $language->get();
 
-				if (sizeof($domain_setting_uuids) > 0) {
-					foreach ($domain_setting_uuids as $domain_setting_uuid) {
-						$sql = "delete from v_domain_settings ";
-						$sql .= "where domain_setting_uuid = '".$domain_setting_uuid."' ";
-						$prep_statement = $db->prepare(check_sql($sql));
-						$prep_statement->execute();
-						unset ($prep_statement, $sql);
+				if (is_array($domain_setting_uuids) && sizeof($domain_setting_uuids) != 0) {
+					foreach ($domain_setting_uuids as $index => $domain_setting_uuid) {
+						if (is_uuid($domain_setting_uuid)) {
+							$array['domain_settings'][$index]['domain_setting_uuid'] = $domain_setting_uuid;
+						}
 					}
-					// set message
-					$_SESSION["message"] = $text['message-delete'].": ".sizeof($domain_setting_uuids);
+					if (is_array($array) && sizeof($array) != 0) {
+						$database = new database;
+						$database->app_name = 'domain_settings';
+						$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
+						$database->delete($array);
+						$message = $database->message;
+
+						// set message
+						$_SESSION["message"] = $text['message-delete'].": ".sizeof($array);
+
+						unset($array);
+					}
 				}
 				else {
 					// set message
@@ -190,8 +200,8 @@
 	require_once "resources/paging.php";
 
 //get the variables
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
 //show the content
 	echo "<form name='domain_frm' id='domain_frm' method='GET' action='domain_settings.php'>";
@@ -199,20 +209,12 @@
 	echo "<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>";
 
 //prepare to page the results
-	$sql = "select count(*) as num_rows from v_domain_settings ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-		unset ($prep_statement, $sql);
-	}
+	$sql = "select count(*) from v_domain_settings ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$parameters['domain_uuid'] = $domain_uuid;
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($sql);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 1000;
@@ -224,19 +226,18 @@
 
 //get the list
 	$sql = "select * from v_domain_settings ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	if (strlen($order_by) == 0) {
+	$sql .= "where domain_uuid = :domain_uuid ";
+	if ($order_by == '') {
 		$sql .= "order by domain_setting_category, domain_setting_subcategory, domain_setting_order asc, domain_setting_name, domain_setting_value ";
 	}
 	else {
-		$sql .= "order by $order_by $order ";
+		$sql .= order_by($order_by, $order);
 	}
-	$sql .= "limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
-	unset ($prep_statement, $sql);
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
+	$result_count = sizeof($result);
+	unset($sql, $parameters);
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
@@ -245,7 +246,7 @@
 //show the content
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
-	if ($result_count > 0) {
+	if (is_array($result) && sizeof($result) != 0) {
 		$previous_category = '';
 		foreach($result as $row) {
 			if ($previous_category != $row['domain_setting_category']) {
@@ -314,14 +315,16 @@
 			$name = $row['domain_setting_name'];
 			if ($category == "domain" && $subcategory == "menu" && $name == "uuid" ) {
 				$sql = "select * from v_menus ";
-				$sql .= "where menu_uuid = '".$row['domain_setting_value']."' ";
-				$sub_prep_statement = $db->prepare(check_sql($sql));
-				$sub_prep_statement->execute();
-				$sub_result = $sub_prep_statement->fetchAll(PDO::FETCH_NAMED);
-				unset ($prep_statement, $sql);
-				foreach ($sub_result as &$sub_row) {
-					echo escape($sub_row["menu_language"])." - ".escape($sub_row["menu_name"])."\n";
+				$sql .= "where menu_uuid = :menu_uuid ";
+				$parameters['menu_uuid'] = $row['domain_setting_value'];
+				$database = new database;
+				$sub_result = $database->select($sql, $parameters, 'all');
+				if (is_array($sub_result) && sizeof($sub_result) != 0) {
+					foreach ($sub_result as &$sub_row) {
+						echo escape($sub_row["menu_language"])." - ".escape($sub_row["menu_name"])."\n";
+					}
 				}
+				unset($sql, $parameters, $sub_result, $sub_row);
 			}
 			else if ($category == "domain" && $subcategory == "template" && $name == "name" ) {
 				echo "		".ucwords($row['domain_setting_value']);

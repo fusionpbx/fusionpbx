@@ -42,54 +42,53 @@
 	$language = new text;
 	$text = $language->get();
 
-//get the id
-	if (is_array($_GET)) {
-		$id = check_str($_GET["id"]);
-	}
 
 //delete domain data and files
-	if (is_uuid($id)) {
+	if (is_uuid($_GET["id"])) {
+		$id = $_GET["id"];
+
 		//get the domain using the id
-			$sql = "select * from v_domains ";
-			$sql .= "where domain_uuid = '$id' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			if (isset($result)) {
-				foreach ($result as &$row) {
-					$domain_name = $row["domain_name"];
-				}
-			}
-			unset ($prep_statement);
+			$sql = "select domain_name from v_domains ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $id;
+			$database = new database;
+			$domain_name = $database->select($sql, $parameters, 'column');
+			unset($sql, $parameters);
 
 		//get the domain settings
 			$sql = "select * from v_domain_settings ";
-			$sql .= "where domain_uuid = '".$id."' ";
+			$sql .= "where domain_uuid = :domain_uuid ";
 			$sql .= "and domain_setting_enabled = 'true' ";
-			$prep_statement = $db->prepare($sql);
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			if (isset($result)) foreach($result as $row) {
-				$name = $row['domain_setting_name'];
-				$category = $row['domain_setting_category'];
-				$subcategory = $row['domain_setting_subcategory'];
-				if (strlen($subcategory) == 0) {
-					if ($name == "array") {
-						$_SESSION[$category][] = $row['default_setting_value'];
+			$parameters['domain_uuid'] = $id;
+			$database = new database;
+			$result = $database->select($sql, $parameters, 'all');
+			unset($sql, $parameters);
+
+			if (is_array($result) && sizeof($result) != 0) {
+				foreach ($result as $row) {
+					$name = $row['domain_setting_name'];
+					$category = $row['domain_setting_category'];
+					$subcategory = $row['domain_setting_subcategory'];
+					if ($subcategory != '') {
+						if ($name == "array") {
+							$_SESSION[$category][] = $row['default_setting_value'];
+						}
+						else {
+							$_SESSION[$category][$name] = $row['default_setting_value'];
+						}
 					}
 					else {
-						$_SESSION[$category][$name] = $row['default_setting_value'];
-					}
-				} else {
-					if ($name == "array") {
-						$_SESSION[$category][$subcategory][] = $row['default_setting_value'];
-					}
-					else {
-						$_SESSION[$category][$subcategory]['uuid'] = $row['default_setting_uuid'];
-						$_SESSION[$category][$subcategory][$name] = $row['default_setting_value'];
+						if ($name == "array") {
+							$_SESSION[$category][$subcategory][] = $row['default_setting_value'];
+						}
+						else {
+							$_SESSION[$category][$subcategory]['uuid'] = $row['default_setting_uuid'];
+							$_SESSION[$category][$subcategory][$name] = $row['default_setting_value'];
+						}
 					}
 				}
 			}
+			unset($result, $row);
 
 		//get the $apps array from the installed apps from the core and mod directories
 			$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
@@ -115,9 +114,13 @@
 					if ($table_name !== "v" && isset($row['fields'])) {
 						foreach ($row['fields'] as $field) {
 							if ($field['name'] == "domain_uuid") {
-								$sql = "delete from $table_name where domain_uuid = '$id'; ";
-								//echo $sql."<br />\n";
-								$db->query($sql);
+								$sql = "delete from ".$table_name." where domain_uuid = :domain_uuid ";
+								$parameters['domain_uuid'] = $id;
+								$database = new database;
+								$database->app_name = 'domain_settings';
+								$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
+								$database->execute($sql, $parameters);
+								unset($sql, $parameters);
 							}
 						}
 					}
