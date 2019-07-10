@@ -45,128 +45,176 @@
 //process update
 	if (count($_POST) > 0) {
 		//set the variables
-			$group_uuid = check_str($_POST['group_uuid']);
-			$group_name = check_str($_POST['group_name']);
-			$group_name_previous = check_str($_POST['group_name_previous']);
-			$domain_uuid = check_str($_POST["domain_uuid"]);
-			$domain_uuid_previous = check_str($_POST["domain_uuid_previous"]);
-			$group_description = check_str($_POST["group_description"]);
+			$group_uuid = $_POST['group_uuid'];
+			$group_name = $_POST['group_name'];
+			$group_name_previous = $_POST['group_name_previous'];
+			$domain_uuid = $_POST["domain_uuid"];
+			$domain_uuid_previous = $_POST["domain_uuid_previous"];
+			$group_description = $_POST["group_description"];
 
 		//check for global/domain duplicates
-			$sql = "select count(*) as num_rows from v_groups where ";
-			$sql .= "group_name = '".$group_name."' ";
-			$sql .= "and group_uuid <> '".$group_uuid."' ";
-			$sql .= "and domain_uuid ".(($domain_uuid != '') ? " = '".$domain_uuid."' " : " is null ");
-			$prep_statement = $db->prepare($sql);
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-				$group_exists = ($row['num_rows'] > 0) ? true : false;
+			$sql = "select count(*) from v_groups where ";
+			$sql .= "group_name = :group_name ";
+			$sql .= "and group_uuid <> :group_uuid ";
+			if (is_uuid($domain_uuid)) {
+				$sql .= "and domain_uuid = :domain_uuid ";
+				$parameters['domain_uuid'] = $domain_uuid;
 			}
 			else {
-				$group_exists = false;
+				$sql .= "and domain_uuid is null ";
 			}
-			unset($sql, $prep_statement, $row);
+			$parameters['group_name'] = $group_name;
+			$parameters['group_uuid'] = $group_uuid;
+			$database = new database;
+			$num_rows = $database->select($sql, $parameters, 'column');
+			$group_exists = ($num_rows > 0) ? true : false;
+			unset($sql, $parameters, $num_rows);
 
 		//update group
 			if (!$group_exists) {
-				$sql = "update v_groups ";
-				$sql .= "set ";
-				$sql .= "group_name = '".$group_name."', ";
-				$sql .= "domain_uuid = ".(($domain_uuid != '') ? "'".$domain_uuid."'" : "null").", ";
-				$sql .= "group_description = '".$group_description."' ";
-				$sql .= "where group_uuid = '".$group_uuid."' ";
-				if (!$db->exec(check_sql($sql))) {
-					$error = $db->errorInfo();
-					echo "<pre>".print_r($error, true)."</pre>";
-					exit;
-				}
+				$array['groups'][0]['group_uuid'] = $group_uuid;
+				$array['groups'][0]['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : null;
+				$array['groups'][0]['group_name'] = $group_name;
+				$array['groups'][0]['group_description'] = $group_description;
+				$database = new database;
+				$database->app_name = 'groups';
+				$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+				$database->save($array);
+				unset($array);
 
 				//group changed from global to domain-specific
-				if ($domain_uuid_previous == '' && $domain_uuid != '') {
+				if (!is_uuid($domain_uuid_previous) && is_uuid($domain_uuid)) {
 					//remove any users assigned to the group from the old domain
-						$sql = "delete from v_user_groups where group_uuid = '".$group_uuid."' and domain_uuid <> '".$domain_uuid."' ";
-						if (!$db->exec(check_sql($sql))) {
-							$error = $db->errorInfo();
-							//echo "<pre>".print_r($error, true)."</pre>"; exit;
-						}
+						$sql = "delete from v_user_groups where group_uuid = :group_uuid and domain_uuid <> :domain_uuid ";
+						$parameters['group_uuid'] = $group_uuid;
+						$parameters['domain_uuid'] = $domain_uuid;
+						$database = new database;
+						$database->app_name = 'groups';
+						$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+						$database->execute($sql, $parameters);
+						unset($sql, $parameters);
+
 					//update permissions to use new domain uuid
-						$sql = "update v_group_permissions set domain_uuid = '".$domain_uuid."' where group_name = '".$group_name_previous."' and domain_uuid is null ";
-						if (!$db->exec(check_sql($sql))) {
-							$error = $db->errorInfo();
-							//echo "<pre>".print_r($error, true)."</pre>"; exit;
-						}
+						$sql = "update v_group_permissions set domain_uuid = :domain_uuid where group_name = :group_name and domain_uuid is null ";
+						$parameters['domain_uuid'] = $domain_uuid;
+						$parameters['group_name'] = $group_name_previous;
+						$database = new database;
+						$database->app_name = 'groups';
+						$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+						$database->execute($sql, $parameters);
+						unset($sql, $parameters);
+
 					//change group name
 						if ($group_name != $group_name_previous && $group_name != '') {
 							//change group name in group users
-								$sql = "update v_user_groups set group_name = '".$group_name."' where group_uuid = '".$group_uuid."' and group_name = '".$group_name_previous."' ";
-								if (!$db->exec(check_sql($sql))) {
-									$error = $db->errorInfo();
-									//echo "<pre>".print_r($error, true)."</pre>"; exit;
-								}
+								$sql = "update v_user_groups set group_name = :group_name_new where group_uuid = :group_uuid and group_name = :group_name_old ";
+								$parameters['group_name_new'] = $group_name;
+								$parameters['group_uuid'] = $group_uuid;
+								$parameters['group_name_old'] = $group_name_previous;
+								$database = new database;
+								$database->app_name = 'groups';
+								$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+								$database->execute($sql, $parameters);
+								unset($sql, $parameters);
+
 							//change group name in permissions
-								$sql = "update v_group_permissions set group_name = '".$group_name."' where domain_uuid = '".$domain_uuid."' and group_name = '".$group_name_previous."' ";
-								if (!$db->exec(check_sql($sql))) {
-									$error = $db->errorInfo();
-									//echo "<pre>".print_r($error, true)."</pre>"; exit;
-								}
+								$sql = "update v_group_permissions set group_name = :group_name_new where domain_uuid = :domain_uuid and group_name = :group_name_old ";
+								$parameters['group_name_new'] = $group_name;
+								$parameters['domain_uuid'] = $domain_uuid;
+								$parameters['group_name_old'] = $group_name_previous;
+								$database = new database;
+								$database->app_name = 'groups';
+								$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+								$database->execute($sql, $parameters);
+								unset($sql, $parameters);
 						}
 				}
 
 				//group changed from one domain to another
-				else if ($domain_uuid_previous != '' && $domain_uuid != '' && $domain_uuid_previous != $domain_uuid) {
+				else if (is_uuid($domain_uuid_previous) && is_uuid($domain_uuid) && $domain_uuid_previous != $domain_uuid) {
 					//remove any users assigned to the group from the old domain
-						$sql = "delete from v_user_groups where group_uuid = '".$group_uuid."' and domain_uuid = '".$domain_uuid_previous."' ";
-						if (!$db->exec(check_sql($sql))) {
-							$error = $db->errorInfo();
-							//echo "<pre>".print_r($error, true)."</pre>"; exit;
-						}
+						$array['user_groups'][0]['group_uuid'] = $group_uuid;
+						$array['user_groups'][0]['domain_uuid'] = $domain_uuid_previous;
+
+						$p = new permissions;
+						$p->add('user_group_delete', 'temp');
+
+						$database = new database;
+						$database->app_name = 'groups';
+						$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+						$database->delete($array);
+						unset($array);
+
+						$p->delete('user_group_delete', 'temp');
 					//update permissions to use new domain uuid
-						$sql = "update v_group_permissions set domain_uuid = '".$domain_uuid."' where group_name = '".$group_name_previous."' and domain_uuid = '".$domain_uuid_previous."' ";
-						if (!$db->exec(check_sql($sql))) {
-							$error = $db->errorInfo();
-							//echo "<pre>".print_r($error, true)."</pre>"; exit;
-						}
+						$sql = "update v_group_permissions set domain_uuid = :domain_uuid_new where group_name = :group_name and domain_uuid = :domain_uuid_old ";
+						$parameters['domain_uuid_new'] = $domain_uuid;
+						$parameters['group_name'] = $group_name_previous;
+						$parameters['domain_uuid_old'] = $domain_uuid_previous;
+						$database = new database;
+						$database->app_name = 'groups';
+						$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+						$database->execute($sql, $parameters);
+						unset($sql, $parameters);
 					//change group name
 						if ($group_name != $group_name_previous && $group_name != '') {
 							//change group name in group users
-								$sql = "update v_user_groups set group_name = '".$group_name."' where group_uuid = '".$group_uuid."' and group_name = '".$group_name_previous."' ";
-								if (!$db->exec(check_sql($sql))) {
-									$error = $db->errorInfo();
-									//echo "<pre>".print_r($error, true)."</pre>"; exit;
-								}
+								$sql = "update v_user_groups set group_name = :group_name_new where group_uuid = :group_uuid and group_name = :group_name_old ";
+								$parameters['group_name_new'] = $group_name;
+								$parameters['group_uuid'] = $group_uuid;
+								$parameters['group_name_old'] = $group_name_previous;
+								$database = new database;
+								$database->app_name = 'groups';
+								$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+								$database->execute($sql, $parameters);
+								unset($sql, $parameters);
 							//change group name in permissions
-								$sql = "update v_group_permissions set group_name = '".$group_name."' where domain_uuid = '".$domain_uuid."' and group_name = '".$group_name_previous."' ";
-								if (!$db->exec(check_sql($sql))) {
-									$error = $db->errorInfo();
-									//echo "<pre>".print_r($error, true)."</pre>"; exit;
-								}
+								$sql = "update v_group_permissions set group_name = :group_name_new where domain_uuid = :domain_uuid and group_name = :group_name_old ";
+								$parameters['group_name_new'] = $group_name;
+								$parameters['domain_uuid'] = $domain_uuid;
+								$parameters['group_name_old'] = $group_name_previous;
+								$database = new database;
+								$database->app_name = 'groups';
+								$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+								$database->execute($sql, $parameters);
+								unset($sql, $parameters);
 						}
 				}
 
 				//group changed from domain-specific to global
-				else if ($domain_uuid_previous != '' && $domain_uuid == '') {
+				else if (is_uuid($domain_uuid_previous) && !is_uuid($domain_uuid)) {
 					//change group name
 						if ($group_name != $group_name_previous && $group_name != '') {
 							//change group name in group users
-								$sql = "update v_user_groups set group_name = '".$group_name."' where group_uuid = '".$group_uuid."' and group_name = '".$group_name_previous."' ";
-								if (!$db->exec(check_sql($sql))) {
-									$error = $db->errorInfo();
-									//echo "<pre>".print_r($error, true)."</pre>"; exit;
-								}
+								$sql = "update v_user_groups set group_name = :group_name_new where group_uuid = :group_uuid and group_name = :group_name_old ";
+								$parameters['group_name_new'] = $group_name;
+								$parameters['group_uuid'] = $group_uuid;
+								$parameters['group_name_old'] = $group_name_previous;
+								$database = new database;
+								$database->app_name = 'groups';
+								$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+								$database->execute($sql, $parameters);
+								unset($sql, $parameters);
 							//change group name in permissions
-								$sql = "update v_group_permissions set group_name = '".$group_name."' where domain_uuid = '".$domain_uuid_previous."' and group_name = '".$group_name_previous."' ";
-								if (!$db->exec(check_sql($sql))) {
-									$error = $db->errorInfo();
-									//echo "<pre>".print_r($error, true)."</pre>"; exit;
-								}
+								$sql = "update v_group_permissions set group_name = :group_name_new where domain_uuid = :domain_uuid and group_name = :group_name_old ";
+								$parameters['group_name_new'] = $group_name;
+								$parameters['domain_uuid'] = $domain_uuid_previous;
+								$parameters['group_name_old'] = $group_name_previous;
+								$database = new database;
+								$database->app_name = 'groups';
+								$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+								$database->execute($sql, $parameters);
+								unset($sql, $parameters);
 						}
 					//update permissions to not use a domain uuid
-						$sql = "update v_group_permissions set domain_uuid = null where group_name = '".$group_name."' and domain_uuid = '".$domain_uuid_previous."' ";
-						if (!$db->exec(check_sql($sql))) {
-							$error = $db->errorInfo();
-							//echo "<pre>".print_r($error, true)."</pre>"; exit;
-						}
+						$sql = "update v_group_permissions set domain_uuid = null where group_name = :group_name and domain_uuid = :domain_uuid ";
+						$parameters['group_name'] = $group_name;
+						$parameters['domain_uuid'] = $domain_uuid_previous;
+						$database = new database;
+						$database->app_name = 'groups';
+						$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+						$database->execute($sql, $parameters);
+						unset($sql, $parameters);
 				}
 
 				//domain didn't change, but name may still
@@ -174,17 +222,32 @@
 					//change group name
 						if ($group_name != $group_name_previous && $group_name != '') {
 							//change group name in group users
-								$sql = "update v_user_groups set group_name = '".$group_name."' where group_uuid = '".$group_uuid."' and group_name = '".$group_name_previous."' ";
-								if (!$db->exec(check_sql($sql))) {
-									$error = $db->errorInfo();
-									//echo "<pre>".print_r($error, true)."</pre>"; exit;
-								}
+								$sql = "update v_user_groups set group_name = :group_name_new where group_uuid = :group_uuid and group_name = :group_name_old ";
+								$parameters['group_name_new'] = $group_name;
+								$parameters['group_uuid'] = $group_uuid;
+								$parameters['group_name_old'] = $group_name_previous;
+								$database = new database;
+								$database->app_name = 'groups';
+								$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+								$database->execute($sql, $parameters);
+								unset($sql, $parameters);
 							//change group name in permissions
-								$sql = "update v_group_permissions set group_name = '".$group_name."' where domain_uuid ".(($domain_uuid != '') ? " = '".$domain_uuid."' " : " is null ")." and group_name = '".$group_name_previous."' ";
-								if (!$db->exec(check_sql($sql))) {
-									$error = $db->errorInfo();
-									//echo "<pre>".print_r($error, true)."</pre>"; exit;
+								$sql = "update v_group_permissions set group_name = :group_name_new ";
+								if (is_uuid($domain_uuid)) {
+									$sql .= "where domain_uuid = :domain_uuid ";
+									$parameters['domain_uuid'] = $domain_uuid;
 								}
+								else {
+									$sql .= "where domain_uuid is null ";
+								}
+								$sql .= "and group_name = :group_name_old ";
+								$parameters['group_name_new'] = $group_name;
+								$parameters['group_name_old'] = $group_name_previous;
+								$database = new database;
+								$database->app_name = 'groups';
+								$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+								$database->execute($sql, $parameters);
+								unset($sql, $parameters);
 						}
 				}
 
@@ -201,18 +264,19 @@
 	}
 
 //pre-populate the form
-	$group_uuid = check_str($_REQUEST['id']);
-	if ($group_uuid != '') {
+	$group_uuid = $_REQUEST['id'];
+	if (is_uuid($group_uuid)) {
 		$sql = "select * from v_groups where ";
-		$sql .= "group_uuid = '".$group_uuid."' ";
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+		$sql .= "group_uuid = :group_uuid ";
+		$parameters['group_uuid'] = $group_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && sizeof($row) != 0) {
 			$group_name = $row['group_name'];
 			$domain_uuid = $row['domain_uuid'];
 			$group_description = $row['group_description'];
 		}
+		unset($sql, $parameters, $row);
 	}
 
 //include the header
