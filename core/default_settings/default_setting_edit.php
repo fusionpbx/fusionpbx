@@ -297,21 +297,17 @@
 	}
 	elseif ($category == "domain" && $subcategory == "menu" && $name == "uuid" ) {
 		echo "		<select class='formfld' id='default_setting_value' name='default_setting_value' style=''>\n";
-		$sql .= "select * from v_menus ";
+		$sql = "select * from v_menus ";
 		$sql .= "order by menu_language, menu_name asc ";
 		$database = new database;
 		$sub_result = $database->select($sql, null, 'all');
 		if (is_array($sub_result) && sizeof($sub_result) != 0) {
 			foreach ($sub_result as $sub_row) {
-				if (strtolower($default_setting_value) == strtolower($sub_row["menu_uuid"])) {
-					echo "		<option value='".strtolower($sub_row["menu_uuid"])."' selected='selected'>".$sub_row["menu_language"]." - ".$sub_row["menu_name"]."\n";
-				}
-				else {
-					echo "		<option value='".strtolower($sub_row["menu_uuid"])."'>".$sub_row["menu_language"]." - ".$sub_row["menu_name"]."</option>\n";
-				}
+				$selected = strtolower($default_setting_value) == strtolower($sub_row["menu_uuid"]) ? "selected='selected'" : null;
+				echo "		<option value='".strtolower(escape($sub_row["menu_uuid"]))."' ".$selected.">".escape($sub_row["menu_language"])." - ".escape($sub_row["menu_name"])."</option>\n";
 			}
 		}
-		unset($sql, $sub_result, $sub_row);
+		unset($sql, $sub_result, $sub_row, $selected);
 		echo "		</select>\n";
 	}
 	elseif ($category == "domain" && $subcategory == "template" && $name == "name" ) {
