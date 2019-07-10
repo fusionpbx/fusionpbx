@@ -38,25 +38,27 @@ else {
 	$language = new text;
 	$text = $language->get();
 
-//get the variables
-	if (count($_GET)>0) {
-		$id = check_str($_GET["id"]);
-		$domain_uuid = check_str($_GET["domain_uuid"]);
-	}
-
 //delete the record
-	if (strlen($id) > 0) {
+	if (is_uuid($_GET["id"]) && is_uuid($_GET["domain_uuid"])) {
+
+		$domain_setting_uuid = $_GET["id"];
+		$domain_uuid = $_GET["domain_uuid"];
+
 		//delete domain_setting
-			$sql = "delete from v_domain_settings ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and domain_setting_uuid = '$id' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($sql);
+			$array['domain_settings'][0]['domain_setting_uuid'] = $domain_setting_uuid;
+			$array['domain_settings'][0]['domain_uuid'] = $domain_uuid;
+
+			$database = new database;
+			$database->app_name = 'domain_settings';
+			$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
+			$database->delete($array);
+			unset($array);
+
+		//set message
+			message::add($text['message-delete']);
 	}
 
 //redirect the user
-	message::add($text['message-delete']);
 	header("Location: domain_edit.php?id=".$domain_uuid);
 	return;
 
