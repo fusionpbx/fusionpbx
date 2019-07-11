@@ -307,8 +307,8 @@
 								echo "	<td class='".$row_style[$c]."'>".escape($row['user'])."&nbsp;</td>\n";
 								echo "	<td class='".$row_style[$c]."'>".escape($row['agent'])."&nbsp;</td>\n";
 								echo "	<td class='".$row_style[$c]."'>".escape(explode('"',$row['contact'])[1])."</td>\n";
-								echo "	<td class='".$row_style[$c]."'><a href='http://".escape($row['lan-ip'])."' target='_blank'>".escape($row['lan-ip'])."</a></td>\n";
-								echo "	<td class='".$row_style[$c]."'><a href='http://".escape($row['network-ip'])."' target='_blank'>".escape($row['network-ip'])."</a></td>\n";
+								echo "	<td class='".$row_style[$c]."'><a href='https://".escape($row['lan-ip'])."' target='_blank'>".escape($row['lan-ip'])."</a></td>\n";
+								echo "	<td class='".$row_style[$c]."'><a href='https://".escape($row['network-ip'])."' target='_blank'>".escape($row['network-ip'])."</a></td>\n";
 								echo "	<td class='".$row_style[$c]."'>".escape($row['network-port'])."</td>\n";
 								echo "	<td class='".$row_style[$c]."'>".escape($row['host'])."</td>\n";
 								echo "	<td class='".$row_style[$c]."'>".escape($row['status'])."</td>\n";
