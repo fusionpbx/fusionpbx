@@ -255,14 +255,23 @@
 		}
 	
 		if ($sql_type == "csv") {
-	
+
 			//set the headers
 				header('Content-type: application/octet-binary');
-				header('Content-Disposition: attachment; filename='.escape($table_name).'.csv');
-	
+				if (strlen($sql_cmd) > 0) {
+					header('Content-Disposition: attachment; filename=data.csv');
+				}
+				else {
+					header('Content-Disposition: attachment; filename='.escape($table_name).'.csv');
+				}
+
 			//get the table data
-				$sql = trim($sql);
-				$sql = "select * from ".$table_name;
+				if (strlen($sql_cmd) > 0) {
+					$sql = $sql_cmd;
+				}
+				else {
+					$sql = "select * from ".$table_name;
+				}
 				if (strlen($sql) > 0) {
 					$prep_statement = $db->prepare(check_sql($sql));
 					if ($prep_statement) {
@@ -276,15 +285,19 @@
 						echo "<br /><br />\n";
 						exit;
 					}
-	
+
+					//build the column array
 					$x = 0;
 					if (is_array($result[0])) {
 						foreach ($result[0] as $key => $value) {
-							$column_array[$x++] = $key;
+							$column_array[$x] = $key;
+							$x++;
 						}
 					}
+
 					//column names
-					echo '"'.implode('","', escape($column_array)).'"'."\r\n";
+					echo '"'.implode('","', $column_array).'"'."\r\n";
+
 					//column values
 					if (is_array($result)) {
 						foreach ($result as &$row) {
