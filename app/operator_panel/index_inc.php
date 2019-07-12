@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,7 +28,6 @@
 	include "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
-	require_once "./resources/functions/get_call_activity.php";
 
 //check permissions
 	if (permission_exists('operator_panel_view')) {
@@ -41,20 +40,23 @@
 
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get();
+	$text = $language->get(null,'app/operator_panel');
 
 //get the call activity
-	$activity = get_call_activity();
-	if (is_array($activity)) foreach ($activity as $extension => $fields) {
-		if (substr_count($fields['call_group'], ',')) {
-			$tmp = explode(',', $fields['call_group']);
-			if (is_array($tmp)) foreach ($tmp as $tmp_index => $tmp_value) {
-				if (trim($tmp_value) == '') { unset($tmp[$tmp_index]); }
-				else { $groups[] = $tmp_value; }
+	$operator_panel = new operator_panel;
+	$activity = $operator_panel->call_activity();
+	if (is_array($activity)) {
+		foreach ($activity as $extension => $fields) {
+			if (substr_count($fields['call_group'], ',')) {
+				$tmp = explode(',', $fields['call_group']);
+				if (is_array($tmp)) foreach ($tmp as $tmp_index => $tmp_value) {
+					if (trim($tmp_value) == '') { unset($tmp[$tmp_index]); }
+					else { $groups[] = $tmp_value; }
+				}
 			}
-		}
-		else if ($fields['call_group'] != '') {
-			$groups[] = $fields['call_group'];
+			else if ($fields['call_group'] != '') {
+				$groups[] = $fields['call_group'];
+			}
 		}
 	}
 	if (is_array($groups)) {
@@ -366,7 +368,9 @@ if (is_array($activity)) foreach ($activity as $extension => $ext) {
 			$block .= 			"<img id='destination_control_".$extension."_transfer' class='destination_control' src='resources/images/keypad_transfer.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' onclick=\"toggle_destination('".$extension."', 'transfer');\" ".$onhover_pause_refresh.">";
 		}
 		$block .= "			</td></tr></table>";
-		$block .= "			<span id='op_caller_details_".$extension."'><strong>".escape($call_name)."</strong><br>".escape($call_number)."</span>";
+		if (permission_exists('operator_panel_call_details')) {
+			$block .= "			<span id='op_caller_details_".$extension."'><strong>".escape($call_name)."</strong><br>".escape($call_number)."</span>";
+		}
 		$block .= "		</span>";
 		//transfer
 		if (in_array($extension, $_SESSION['user']['extensions']) && $ext_state == 'active') {
