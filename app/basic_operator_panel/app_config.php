@@ -42,7 +42,7 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "operator_panel_kill";
+		$apps[$x]['permissions'][$y]['name'] = "operator_panel_hangup";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
