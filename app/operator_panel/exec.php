@@ -50,7 +50,7 @@
 // 	}
 
 //http get variables set to php variables
-	if (count($_GET)>0) {
+	if (count($_GET) > 0) {
 		$switch_cmd = trim($_GET["cmd"]);
 		$action = trim($_GET["action"]);
 		$data = trim($_GET["data"]);
@@ -136,7 +136,6 @@ if (count($_GET) > 0) {
 				echo 'access denied';
 				return;
 			}
-	
 
 			/*
 			//set the status so they are compatible with mod_callcenter
