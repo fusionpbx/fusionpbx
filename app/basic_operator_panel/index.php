@@ -291,8 +291,8 @@
 		}
 	}
 
-//kill call
-	function kill_call(call_id) {
+//hangup call
+	function hangup_call(call_id) {
 		if (call_id != '') {
 			send_cmd('exec.php?cmd=uuid_kill&call_id=' + call_id)
 		}
