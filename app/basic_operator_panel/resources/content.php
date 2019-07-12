@@ -349,18 +349,18 @@ if (is_array($activity)) foreach ($activity as $extension => $ext) {
 		if (permission_exists('operator_panel_eavesdrop') && $ext_state == 'active' && sizeof($_SESSION['user']['extensions']) > 0 && !in_array($extension, $_SESSION['user']['extensions'])) {
 			$block .= 			"<img src='resources/images/eavesdrop.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title='".$text['label-eavesdrop']."' onclick=\"eavesdrop_call('".$ext['destination']."','".$call_identifier."');\" ".$onhover_pause_refresh.">";
 		}
-		//kill
-		if (permission_exists('operator_panel_kill') || in_array($extension, $_SESSION['user']['extensions'])) {
+		//hangup
+		if (permission_exists('operator_panel_hangup') || in_array($extension, $_SESSION['user']['extensions'])) {
 			if ($ext['variable_bridge_uuid'] == '' && $ext_state == 'ringing') {
-				$call_identifier_kill = $ext['uuid'];
+				$call_identifier_hangup_uuid = $ext['uuid'];
 			}
 			else if ($dir_icon == 'outbound') {
-				$call_identifier_kill = $ext['uuid'];
+				$call_identifier_hangup_uuid = $ext['uuid'];
 			}
 			else {
-				$call_identifier_kill = $call_identifier;
+				$call_identifier_hangup_uuid = $call_identifier;
 			}
-			$block .= 			"<img src='resources/images/kill.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title='".$text['label-kill']."' onclick=\"kill_call('".$call_identifier_kill."');\" ".$onhover_pause_refresh.">";
+			$block .= 			"<img src='resources/images/kill.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title='".$text['label-hangup']."' onclick=\"hangup_call('".$call_identifier_hangup_uuid."');\" ".$onhover_pause_refresh.">";
 		}
 		$block .=				"</span>";
 		//transfer
