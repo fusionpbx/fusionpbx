@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -45,29 +45,48 @@
 
 //set user status
 	if (isset($_REQUEST['status']) && $_REQUEST['status'] != '') {
+
+		//validate the user status
+			$user_status = $_REQUEST['status'];
+			switch ($user_status) {
+				case "Available" :
+					break;
+				case "Available (On Demand)" :
+					break;
+				case "On Break" :
+					break;
+				case "Do Not Disturb" :
+					break;
+				case "Logged Out" :
+					break;
+				default :
+					$user_status = '';
+			}
+
 		//update the status
-			$user_status = check_str($_REQUEST['status']);
-			$sql  = "update v_users set ";
-			$sql .= "user_status = '".$user_status."' ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and user_uuid = '".$_SESSION['user']['user_uuid']."' ";
 			if (permission_exists("user_account_setting_edit")) {
-				$count = $db->exec(check_sql($sql));
+				$array['users'][0]['user_uuid'] = $_SESSION['user']['user_uuid'];
+				$array['users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+				$array['users'][0]['user_status'] = $user_status;
+				$database = new database;
+				$database->app_name = 'operator_panel';
+				$database->app_uuid = 'dd3d173a-5d51-4231-ab22-b18c5b712bb2';
+				$database->save($array);
+				unset($array);
 			}
 
 		//if call center app is installed then update the user_status
 			if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/call_centers')) {
 				//get the call center agent uuid
 					$sql = "select call_center_agent_uuid from v_call_center_agents ";
-					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-					$sql .= "and user_uuid = '".$_SESSION['user']['user_uuid']."' ";
-					$prep_statement = $db->prepare(check_sql($sql));
-					if ($prep_statement) {
-						$prep_statement->execute();
-						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-						$call_center_agent_uuid = $row['call_center_agent_uuid'];
-					}
-					unset($sql, $prep_statement, $result);
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$sql .= "and user_uuid = :user_uuid ";
+					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+					$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
+					$database = new database;
+					$call_center_agent_uuid = $database->select($sql, $parameters, 'column');
+					unset($sql, $parameters);
+
 				//update the user_status
 					if (isset($call_center_agent_uuid)) {
 						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
@@ -107,7 +126,7 @@
 
 //ajax refresh
 	var refresh = 1500;
-	var source_url = 'index_inc.php?' <?php if (isset($_GET['debug'])) { echo " + '&debug'"; } ?>;
+	var source_url = 'resources/content.php?' <?php if (isset($_GET['debug'])) { echo " + '&debug'"; } ?>;
 	var interval_timer_id;
 
 	function loadXmlHttp(url, id) {
@@ -217,11 +236,11 @@
 		}
 		else {
 			if (from_ext != to_ext) { // prevent user from dragging extention onto self
-				cmd = get_originate_cmd(from_ext+'@<?php echo $_SESSION["domain_name"]?>', to_ext); //make a call
+				cmd = get_originate_cmd(from_ext, to_ext); //make a call
 			}
 		}
 
-		if (cmd != '') { send_cmd('exec.php?cmd='+escape(cmd)); }
+		if (cmd != '') { send_cmd(cmd) }
 
 		refresh_start();
 	}
@@ -258,13 +277,13 @@
 		if (destination != '') {
 			if (!isNaN(parseFloat(destination)) && isFinite(destination)) {
 				if (call_id == '') {
-					cmd = get_originate_cmd(from_ext+'@<?php echo $_SESSION["domain_name"]?>', destination); //make a call
+					cmd = get_originate_cmd(from_ext, destination); //make a call
 				}
 				else {
 					cmd = get_transfer_cmd(call_id, destination);
 				}
 				if (cmd != '') {
-					send_cmd('exec.php?cmd='+escape(cmd));
+					send_cmd(cmd);
 					$('#destination_'+from_ext+'_'+which).removeAttr('onblur');
 					toggle_destination(from_ext, which);
 				}
@@ -275,17 +294,16 @@
 //kill call
 	function kill_call(call_id) {
 		if (call_id != '') {
-			cmd = 'uuid_kill ' + call_id;
-			send_cmd('exec.php?cmd='+escape(cmd));
+			send_cmd('exec.php?cmd=uuid_kill&call_id=' + call_id)
 		}
 	}
 
 //eavesdrop call
 	function eavesdrop_call(ext, chan_uuid) {
 		if (ext != '' && chan_uuid != '') {
-			cmd = get_eavesdrop_cmd(ext, chan_uuid);
+			cmd = get_eavesdrop_cmd(ext, chan_uuid, document.getElementById('eavesdrop_dest').value);
 			if (cmd != '') {
-				send_cmd('exec.php?cmd='+escape(cmd));
+				send_cmd(cmd)
 			}
 		}
 	}
@@ -295,7 +313,7 @@
 		if (chan_uuid != '') {
 			cmd = get_record_cmd(chan_uuid);
 			if (cmd != '') {
-				send_cmd('exec.php?cmd='+escape(cmd));
+				send_cmd(cmd);
 			}
 		}
 	}
@@ -374,23 +392,23 @@
 	}
 
 	function get_transfer_cmd(uuid, destination) {
-		cmd = "uuid_transfer " + uuid + " " + destination + " XML <?php echo trim($_SESSION['user_context'])?>";
-		return cmd;
+		url = "exec.php?cmd=uuid_transfer&uuid=" + uuid + "&destination=" + destination
+		return url;
 	}
 
 	function get_originate_cmd(source, destination) {
-		cmd = "bgapi originate {sip_auto_answer=true,origination_caller_id_number=" + destination + ",sip_h_Call-Info=_undef_}user/" + source + " " + destination + " XML <?php echo trim($_SESSION['user_context'])?>";
-		return cmd;
+		url = "exec.php?cmd=originate&source=" + source + "&destination=" + destination
+		return url;
 	}
 
-	function get_eavesdrop_cmd(ext, chan_uuid) {
-		cmd = "bgapi originate {origination_caller_id_name=<?php echo $text['label-eavesdrop']?>,origination_caller_id_number=" + ext + "}user/"+(document.getElementById('eavesdrop_dest').value)+"@<?php echo $_SESSION['domain_name']?> &eavesdrop(" + chan_uuid + ")";
-		return cmd;
+	function get_eavesdrop_cmd(ext, chan_uuid, destination) {
+		url = "exec.php?cmd=uuid_eavesdrop&ext=" + ext + "&chan_uuid=" + chan_uuid + "&destination=" + destination;
+		return url;
 	}
 
 	function get_record_cmd(uuid) {
-		cmd = "uuid_record " + uuid + " start <?php echo $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']; ?>/archive/<?php echo date('Y')?>/<?php echo date('M')?>/<?php echo date('d')?>/" + uuid + ".wav";
-		return cmd;
+		url = "exec.php?cmd=uuid_record&uuid=" + uuid;
+		return url;
 	}
 
 //virtual functions
@@ -419,11 +437,11 @@
 						cmd = get_transfer_cmd(document.getElementById('vd_call_id').value, document.getElementById('vd_ext_to').value); //transfer a call
 					}
 					else {
-						cmd = get_originate_cmd(document.getElementById('vd_ext_from').value + '@<?php echo $_SESSION["domain_name"]?>', document.getElementById('vd_ext_to').value); //originate a call
+						cmd = get_originate_cmd(document.getElementById('vd_ext_from').value, document.getElementById('vd_ext_to').value); //originate a call
 					}
 					if (cmd != '') {
 						//alert(cmd);
-						send_cmd('exec.php?cmd='+escape(cmd));
+						send_cmd(cmd);
 					}
 				}
 				virtual_drag_reset();
