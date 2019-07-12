@@ -281,7 +281,7 @@ $text['label-no_extensions_found']['ru-ru'] = "Внутренних номеро
 $text['label-no_extensions_found']['sv-se'] = "Ingen anknytning funnen.";
 $text['label-no_extensions_found']['uk-ua'] = "ÐÐµ Ð·Ð½Ð°Ð¹Ð´ÐµÐ½Ð¾ Ñ€Ð¾Ð·ÑˆÐ¸Ñ€ÐµÐ½ÑŒ";
 
-$text['label-kill']['en-us'] = "Kill";
+$text['label-kill']['en-us'] = "Hangup";
 $text['label-kill']['ar-eg'] = "";
 $text['label-kill']['de-at'] = "Abwürgen"; //copied from de-de
 $text['label-kill']['de-ch'] = "Abwürgen"; //copied from de-de
