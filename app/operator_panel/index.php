@@ -81,11 +81,11 @@
 					$sql = "select call_center_agent_uuid from v_call_center_agents ";
 					$sql .= "where domain_uuid = :domain_uuid ";
 					$sql .= "and user_uuid = :user_uuid ";
-					$prep_statement->bindParam(':domain_uuid', $_SESSION["domain_uuid"]);
-					$prep_statement->bindParam(':user_uuid', $_SESSION['user']['user_uuid']);
-					$prep_statement->execute();
-					$call_center_agent_uuid = $prep_statement->fetchColumn);
-					unset ($prep_statement, $sql);
+					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+					$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
+					$database = new database;
+					$call_center_agent_uuid = $database->select($sql, $parameters, 'column');
+					unset($sql, $parameters);
 
 				//update the user_status
 					if (isset($call_center_agent_uuid)) {
