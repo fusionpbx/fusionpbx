@@ -84,7 +84,7 @@
 					$prep_statement->bindParam(':domain_uuid', $_SESSION["domain_uuid"]);
 					$prep_statement->bindParam(':user_uuid', $_SESSION['user']['user_uuid']);
 					$prep_statement->execute();
-					$call_center_agent_uuid = $prep_statement->fetchColumn);
+					$call_center_agent_uuid = $prep_statement->fetchColumn();
 					unset ($prep_statement, $sql);
 
 				//update the user_status
