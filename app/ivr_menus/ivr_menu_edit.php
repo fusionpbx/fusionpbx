@@ -58,6 +58,7 @@
 	}
 	else {
 		$action = "add";
+		$ivr_menu_uuid = uuid();
 	}
 
 //get total ivr menu count from the database, check limit, if defined
@@ -233,8 +234,7 @@
 					}
 
 				//add a uuid to ivr_menu_uuid if it is empty
-					if (strlen($ivr_menu_uuid) == 0) {
-						$ivr_menu_uuid = uuid();
+					if ($action = 'add') {
 						$_POST["ivr_menu_uuid"] = $ivr_menu_uuid;
 					}
 
