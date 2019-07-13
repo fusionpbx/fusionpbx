@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2010-2018
+	Portions created by the Initial Developer are Copyright (C) 2010-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -70,6 +70,7 @@
 	}
 	else {
 		$action = "add";
+		$ring_group_uuid = uuid();
 	}
 
 //get total ring group count from the database, check limit, if defined
@@ -97,7 +98,6 @@
 			$ring_group_name = check_str($_POST["ring_group_name"]);
 			$ring_group_extension = check_str($_POST["ring_group_extension"]);
 			$ring_group_greeting = check_str($_POST["ring_group_greeting"]);
-
 			$ring_group_strategy = check_str($_POST["ring_group_strategy"]);
 			$ring_group_timeout_action = check_str($_POST["ring_group_timeout_action"]);
 			$ring_group_call_timeout = check_str($_POST["ring_group_call_timeout"]);
@@ -126,7 +126,7 @@
 			$destination_prompt = check_str($_POST["destination_prompt"]);
 
 		//set the context for users that are not in the superadmin group
-			if (!permission_exists("ring_group_context")) {
+			if (!permission_exists("ring_group_context") && $action == 'add') {
 				$ring_group_context = $_SESSION['domain_name'];
 			}
 	}
@@ -163,8 +163,7 @@
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		//get the ring group uuid
-			if (!isset($ring_group_uuid)) {
-				$ring_group_uuid = uuid();
+			if ($action = 'add') {
 				$_POST["ring_group_uuid"] = $ring_group_uuid;
 			}
 
@@ -359,7 +358,6 @@
 	$destination = new destinations;
 
 //pre-populate the form
-	if (strlen($ring_group_uuid) == 0) { $ring_group_uuid = check_str($_GET["id"]); }
 	if (strlen($ring_group_uuid) > 0) {
 		$sql = "select * from v_ring_groups ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
