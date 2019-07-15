@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2018 All Rights Reserved.
+	Copyright (C) 2008-2019 All Rights Reserved.
 
 */
 
@@ -429,6 +429,10 @@
 	$sql .= "WHEN 'expansion' THEN 4 ";
 	$sql .= "WHEN 'expansion-1' THEN 5 ";
 	$sql .= "WHEN 'expansion-2' THEN 6 ";
+	$sql .= "WHEN 'expansion-3' THEN 7 ";
+	$sql .= "WHEN 'expansion-4' THEN 8 ";
+	$sql .= "WHEN 'expansion-5' THEN 9 ";
+	$sql .= "WHEN 'expansion-6' THEN 10 ";
 	$sql .= "ELSE 100 END, ";
 	if ($db_type == "mysql") {
 		$sql .= "device_key_id asc ";
@@ -1185,6 +1189,30 @@
 							}
 							else {
 								echo "	<option value='expansion-2'>".$text['label-expansion']." 2</option>\n";
+							}
+							if ($row['device_key_category'] == "expansion-3") {
+								echo "	<option value='expansion-3' selected='selected'>".$text['label-expansion']." 3</option>\n";
+							}
+							else {
+								echo "	<option value='expansion-3'>".$text['label-expansion']." 3</option>\n";
+							}
+							if ($row['device_key_category'] == "expansion-4") {
+								echo "	<option value='expansion-4' selected='selected'>".$text['label-expansion']." 4</option>\n";
+							}
+							else {
+								echo "	<option value='expansion-4'>".$text['label-expansion']." 4</option>\n";
+							}
+							if ($row['device_key_category'] == "expansion-5") {
+								echo "	<option value='expansion-5' selected='selected'>".$text['label-expansion']." 5</option>\n";
+							}
+							else {
+								echo "	<option value='expansion-5'>".$text['label-expansion']." 5</option>\n";
+							}
+							if ($row['device_key_category'] == "expansion-6") {
+								echo "	<option value='expansion-6' selected='selected'>".$text['label-expansion']." 6</option>\n";
+							}
+							else {
+								echo "	<option value='expansion-6'>".$text['label-expansion']." 6</option>\n";
 							}
 						}
 						else {
