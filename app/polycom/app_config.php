@@ -151,4 +151,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Request Validation Method source, digest";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "09084b0b-40e5-4983-a760-7e7d191ea134";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_offhook_line_view_enabled";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Line keys are visible when you try to transfer. 1=enabled 0=disabled";
+		$y++;
+
 ?>
