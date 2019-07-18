@@ -37,14 +37,6 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call Waiting 0=enabled 1=disable";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5f97afa2-b8ae-45fc-a47c-4131b6b4e1fd";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "contact_grandstream";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable Address Book for Grandstream based on users and groups assigned to contact.";
-		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3a8841f3-e1c0-4eb1-abd3-068a3e3701a5";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_gxp_time_zone";
@@ -65,9 +57,9 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_config_server_path";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "none";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server.yourdomain.com/app/grandstream/resources/firmware";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "mydomain.com/app/provision to Fusionpbx provisioning. Phones will use firmware url if this is set to: none";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Base URL for Grandstream firmware. Grandstream phones will use this firmware url if enabled";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "87895c98-10a1-44db-a6cc-db7ae0eb70d1";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -81,7 +73,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_firmware_path";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "mydomain.com/app/provision";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server.yourdomain.com/app/grandstream/resources/firmware";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Grandstream firmware and provision.";
 		$y++;
@@ -212,6 +204,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8f4cea83-f4fd-4f21-948a-9f434b46b286";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_phonebook_download";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0 - Disabled, 1 - Enabled, use HTTP, 2 - Enabled, use TFTP, 3 - Enabled, use HTTPS. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f7bf7fb8-5d2a-46a8-b218-32826c29fd53";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -388,6 +388,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone, 4 - silent. Default is 0";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3714f5c5-4eef-41a6-8f21-2e9ca9e60128";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_blf_call_pickup";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "BLF Call-pickup. 0 - Auto, 1 - Force BLF Call-pickup by prefix, 2 - Disabled. Default is 0";
 		$y++;
 
 ?>

@@ -164,6 +164,7 @@
 			if ($destination_type == 'inbound' && $destination_number != $db_destination_number) {
 				$sql = "select count(*) as num_rows from v_destinations ";
 				$sql .= "where destination_number = '".$destination_number."' ";
+				$sql .= "and destination_type = 'inbound' ";
 				$prep_statement = $db->prepare($sql);
 				if ($prep_statement) {
 					$prep_statement->execute();

@@ -31,12 +31,8 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('bridge_view')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
+	if (!permission_exists('bridge_view')) {
+		echo "access denied"; exit;
 	}
 
 //add multi-lingual support
@@ -68,23 +64,27 @@
 //get order and order by and sanatize the values
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
+
+//validate order by
 	if (strlen($order_by) > 0) {
 		$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $order_by);
 	}
-	if (strlen($order) > 0) {
-		if ($order == 'asc' || $order == 'desc') {
-			//expected value
-		}
-		else {
+
+//validate the order
+	switch ($order) {
+		case 'asc':
+			break;
+		case 'desc':
+			break;
+		default:
 			$order = '';
-		}
 	}
 
 //add the parameters
 	$parameters['domain_uuid'] = $domain_uuid;
 
 //add the search term
-	$search = strtolower(check_str($_GET["search"]));
+	$search = strtolower($_GET["search"]);
 	if (strlen($search) > 0) {
 		$sql_search = " (";
 		$sql_search .= "	lower(bridge_name) like :search ";
@@ -96,7 +96,7 @@
 	}
 
 //prepare to page the results
-	$sql = "select count(bridge_uuid) as num_rows from v_bridges ";
+	$sql = "select count(bridge_uuid) from v_bridges ";
 	if ($_GET['show'] == "all" && permission_exists('bridge_all')) {
 		if (isset($sql_search)) {
 			$sql .= "where ".$sql_search;
@@ -108,17 +108,8 @@
 			$sql .= "and ".$sql_search;
 		}
 	}
-	if (strlen($order_by) > 0) {
-		$sql .= "order by $order_by $order ";
-	}
 	$database = new database;
-	$row = $database->execute($sql, $parameters);
-	if ($row[0]['num_rows'] > 0) {
-		$num_rows = $row[0]['num_rows'];
-	}
-	else {
-		$num_rows = '0';
-	}
+	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -144,14 +135,10 @@
 			$sql .= "and ".$sql_search;
 		}
 	}
-	if (strlen($order_by) > 0) {
-		$sql .= "order by $order_by $order ";
-	}
-	if (is_numeric($rows_per_page) && is_numeric($offset)) {
-		$sql .= "limit $rows_per_page offset $offset ";
-	}
+	$sql .= order_by($order_by, $order);
+	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$bridges = $database->execute($sql, $parameters);
+	$bridges = $database->select($sql, $parameters, 'all');
 	//$message = $database->message;
 	//print_r($message);
 
@@ -251,32 +238,22 @@
 			echo "	</td>\n";
 			echo "</tr>\n";
 			$x++;
-			if ($c==0) { $c=1; } else { $c=0; }
+			$c = $c == 1 ? 0 : 1;
 		} //end foreach
 		unset($sql, $bridges);
 	} //end if results
 
 	echo "<tr>\n";
-	echo "<td colspan='5' align='left'>\n";
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
-	echo "		<td class='list_control_icons'>";
+	echo "</table>\n";
 	if (permission_exists('bridge_add')) {
-		echo 		"<a href='bridge_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo "<div style='float: right;'>\n";
+		echo "	<a href='bridge_edit.php' alt=\"".$text['button-add']."\">".$v_link_label_add."</a>";
+		echo "</div>\n";
 	}
-	else {
-		echo 		"&nbsp;";
-	}
-	echo "		</td>\n";
-	echo "	</tr>\n";
- 	echo "	</table>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>";
+	echo "<br />\n";
+	echo "<div align='center'>".$paging_controls."</div>\n";
+
 	echo "</form>\n";
-	echo "<br /><br />";
 
 //include the footer
 	require_once "resources/footer.php";

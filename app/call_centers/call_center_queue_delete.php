@@ -42,52 +42,58 @@
 	$language = new text;
 	$text = $language->get();
 
-//get the id
-	if (count($_GET) > 0) {
-		$id = check_str($_GET["id"]);
-	}
-
 //delete the data
-	if (strlen($id) > 0) {
+	if (is_uuid($_GET["id"])) {
+		$call_center_queue_uuid = $_GET["id"];
 
 		//get the dialplan uuid
 			$sql = "select * from v_call_center_queues ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and call_center_queue_uuid = '$id' ";
-			$prep_statement = $db->prepare($sql);
-			$prep_statement->execute();
-			while($row = $prep_statement->fetch(PDO::FETCH_ASSOC)) {
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and call_center_queue_uuid = :call_center_queue_uuid ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['call_center_queue_uuid'] = $call_center_queue_uuid;
+			$database = new database;
+			$row = $database->select($sql, $parameters, 'row');
+			if (is_array($row) && sizeof($row) != 0) {
 				$queue_name = $row['queue_name'];
 				$dialplan_uuid = $row['dialplan_uuid'];
 			}
+			unset($sql, $parameters, $row);
 
 		//delete the tier from the database
-			$sql = "delete from v_call_center_tiers ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and (call_center_queue_uuid = '$id' or queue_name = '".$queue_name."@".$_SESSION['domain_name']."') ";
-			$db->query($sql);
-			unset($sql);
+			$array['call_center_tiers'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+			$array['call_center_tiers'][0]['call_center_queue_uuid'] = $call_center_queue_uuid;
+			$array['call_center_tiers'][1]['domain_uuid'] = $_SESSION['domain_uuid'];
+			$array['call_center_tiers'][1]['queue_name'] = $queue_name."@".$_SESSION['domain_name'];
 
 		//delete the call center queue
-			$sql = "delete from v_call_center_queues ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and call_center_queue_uuid = '$id' ";
-			$db->query($sql);
-			unset($sql);
+			$array['call_center_queues'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+			$array['call_center_queues'][0]['call_center_queue_uuid'] = $call_center_queue_uuid;
 
 		//delete the dialplan entry
-			$sql = "delete from v_dialplans ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-			$db->query($sql);
-			unset($sql);
+			$array['dialplans'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+			$array['dialplans'][0]['dialplan_uuid'] = $dialplan_uuid;
 
 		//delete the dialplan details
-			$sql = "delete from v_dialplan_details ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-			$db->query($sql);
-			unset($sql);
+			$array['dialplan_details'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+			$array['dialplan_details'][0]['dialplan_uuid'] = $dialplan_uuid;
+
+		//execute
+			$p = new permissions;
+			$p->add('call_center_tier_delete', 'temp');
+			$p->add('dialplan_delete', 'temp');
+			$p->add('dialplan_detail_delete', 'temp');
+
+			$database = new database;
+			$database->app_name = 'call_centers';
+			$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
+			$database->delete($array);
+			$response = $database->message;
+			unset($array);
+
+			$p->delete('call_center_tier_delete', 'temp');
+			$p->delete('dialplan_delete', 'temp');
+			$p->delete('dialplan_detail_delete', 'temp');
 
 		//clear the cache
 			$cache = new cache;
@@ -100,10 +106,12 @@
 
 		//apply settings reminder
 			$_SESSION["reload_xml"] = true;
+
+		//set message
+			message::add($text['message-delete']);
 	}
 
 //redirect the browser
-	message::add($text['message-delete']);
 	header("Location: call_center_queues.php");
 	return;
 

@@ -58,65 +58,64 @@
 	}
 
 //if there are no permissions listed in v_group_permissions then set the default permissions
-	$sql = "select count(*) as count from v_group_permissions ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($result as &$row) {
-		$group_permission_count = $row["count"];
-		break; //limit to 1 row
-	}
-	unset ($prep_statement);
+	$sql = "select count(*) from v_group_permissions ";
+	$database = new database;
+	$group_permission_count = $database->select($sql, null, 'column');
+	unset($sql);
+
 	if ($group_permission_count == 0) {
 		//no permissions found add the defaults
 		foreach($apps as $app) {
 			foreach ($app['permissions'] as $row) {
-				foreach ($row['groups'] as $group) {
+				foreach ($row['groups'] as $index => $group) {
 					//add the record
-					$sql = "insert into v_group_permissions ";
-					$sql .= "(";
-					$sql .= "group_permission_uuid, ";
-					$sql .= "permission_name, ";
-					$sql .= "group_name ";
-					$sql .= ")";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'".uuid()."', ";
-					$sql .= "'".$row['name']."', ";
-					$sql .= "'".$group."' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
+					$array['group_permissions'][$index]['group_permission_uuid'] = uuid();
+					$array['group_permissions'][$index]['permission_name'] = $row['name'];
+					$array['group_permissions'][$index]['group_name'] = $group;
+				}
+				if (is_array($array) && sizeof($array) != 0) {
+					$database = new database;
+					$database->app_name = 'groups';
+					$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+					$database->save($array);
+					unset($array);
 				}
 			}
 		}
 	}
 
 //get the group uuid, lookup domain uuid (if any) and name
-	$group_uuid = check_str($_REQUEST['group_uuid']);
+	$group_uuid = $_REQUEST['group_uuid'];
 	$sql = "select domain_uuid, group_name from v_groups ";
-	$sql .= "where group_uuid = '".$group_uuid."' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($result as &$row) {
+	$sql .= "where group_uuid = :group_uuid ";
+	$parameters['group_uuid'] = $group_uuid;
+	$database = new database;
+	$row = $database->select($sql, $parameters, 'row');
+	if (is_array($row) && sizeof($row) != 0) {
 		$domain_uuid = $row["domain_uuid"];
 		$group_name = $row["group_name"];
-		break; //limit to 1 row
 	}
-	unset ($prep_statement);
+	unset($sql, $parameters, $row);
 
 //get the permissions assigned to this group
-	$sql = " select * from v_group_permissions ";
-	$sql .= "where group_name = '$group_name' ";
-	$sql .= "and domain_uuid ".(($domain_uuid != '') ? " = '".$domain_uuid."' " : " is null ");
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($result as &$row) {
-		$permission_name = $row["permission_name"];
-		$permissions_db[$permission_name] = "true";
+	$sql = "select * from v_group_permissions ";
+	$sql .= "where group_name = :group_name ";
+	if (is_uuid($domain_uuid)) {
+		$sql .= "and domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
 	}
+	else {
+		$sql .= "and domain_uuid is null ";
+	}
+	$parameters['group_name'] = $group_name;
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
+	if (is_array($result) && sizeof($result) != 0) {
+		foreach ($result as &$row) {
+			$permissions_db[$row["permission_name"]] = "true";
+		}
+	}
+	unset($sql, $parameters, $result, $row);
 
 //show the db checklist
 	//echo "<pre>";
@@ -175,52 +174,68 @@
 					}
 					if ($permissions_db_checklist[$permission] == "true" && $permissions_form_checklist[$permission] == "false") {
 						//delete the record
-							$sql = "delete from v_group_permissions ";
-							$sql .= "where group_name = '$group_name' ";
-							$sql .= "and permission_name = '$permission' ";
-							$db->exec(check_sql($sql));
-							unset($sql);
+							$array['group_permissions'][0]['group_name'] = $group_name;
+							$array['group_permissions'][0]['permission_name'] = $permission;
+							$database = new database;
+							$database->app_name = 'groups';
+							$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+							$database->delete($array);
+							unset($array);
 
 						foreach($apps as $app) {
 							foreach ($app['permissions'] as $row) {
 								if ($row['name'] == $permission) {
 
-									$sql = "delete from v_menu_item_groups ";
-									$sql .= "where menu_item_uuid = '".$row['menu']['uuid']."' ";
-									$sql .= "and group_name = '$group_name' ";
-									$sql .= "and menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286' ";
-									$db->exec(check_sql($sql));
-									unset($sql);
+									$array['menu_item_groups'][0]['menu_item_uuid'] = $row['menu']['uuid'];
+									$array['menu_item_groups'][0]['group_name'] = $group_name;
+									$array['menu_item_groups'][0]['menu_uuid'] = 'b4750c3f-2a86-b00d-b7d0-345c14eca286';
 
-									$sql = " select menu_item_parent_uuid from v_menu_items ";
-									$sql .= "where menu_item_uuid = '".$row['menu']['uuid']."' ";
-									$sql .= "and menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286' ";
-									$prep_statement = $db->prepare(check_sql($sql));
-									$prep_statement->execute();
-									$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-									foreach ($result as &$row) {
-										$menu_item_parent_uuid = $row["menu_item_parent_uuid"];
-									}
-									unset ($prep_statement);
+									$p = new permissions;
+									$p->add('menu_item_group_delete', 'temp');
 
-									$sql = " select * from v_menu_items as i, v_menu_item_groups as g  ";
+									$database = new database;
+									$database->app_name = 'groups';
+									$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+									$database->delete($array);
+									unset($array);
+
+									$p->delete('menu_item_group_delete', 'temp');
+
+									$sql = "select menu_item_parent_uuid from v_menu_items ";
+									$sql .= "where menu_item_uuid = :menu_item_uuid ";
+									$sql .= "and menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286' ";
+									$parameters['menu_item_uuid'] = $row['menu']['uuid'];
+									$database = new database;
+									$menu_item_parent_uuid = $database->select($sql, $parameters, 'column');
+									unset($sql, $parameters);
+
+									$sql = "select count(*) from v_menu_items as i, v_menu_item_groups as g  ";
 									$sql .= "where i.menu_item_uuid = g.menu_item_uuid ";
 									$sql .= "and i.menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286' ";
-									$sql .= "and i.menu_item_parent_uuid = '$menu_item_parent_uuid' ";
-									$sql .= "and g.group_name = '$group_name' ";
-									$prep_statement = $db->prepare(check_sql($sql));
-									$prep_statement->execute();
-									$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-									$result_count = count($result);
+									$sql .= "and i.menu_item_parent_uuid = :menu_item_parent_uuid ";
+									$sql .= "and g.group_name = :group_name ";
+									$parameters['menu_item_parent_uuid'] = $menu_item_parent_uuid;
+									$parameters['group_name'] = $group_name;
+									$database = new database;
+									$result_count = $database->select($sql, $parameters, 'column');
+
 									if ($result_count == 0) {
-										$sql = "delete from v_menu_item_groups ";
-										$sql .= "where menu_item_uuid = '$menu_item_parent_uuid' ";
-										$sql .= "and group_name = '$group_name' ";
-										$sql .= "and menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286' ";
-										$db->exec(check_sql($sql));
-										unset($sql);
+										$array['menu_item_groups'][0]['menu_item_uuid'] = $menu_item_parent_uuid;
+										$array['menu_item_groups'][0]['group_name'] = $group_name;
+										$array['menu_item_groups'][0]['menu_uuid'] = 'b4750c3f-2a86-b00d-b7d0-345c14eca286';
+
+										$p = new permissions;
+										$p->add('menu_item_group_delete', 'temp');
+
+										$database = new database;
+										$database->app_name = 'groups';
+										$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+										$database->delete($array);
+										unset($array);
+
+										$p->delete('menu_item_group_delete', 'temp');
 									}
-									unset ($prep_statement);
+									unset($sql, $parameters, $result_count);
 								}
 							}
 						}
@@ -229,82 +244,72 @@
 					}
 					if ($permissions_db_checklist[$permission] == "false" && $permissions_form_checklist[$permission] == "true") {
 						//add the record
-							$sql = "insert into v_group_permissions ";
-							$sql .= "(";
-							$sql .= "group_permission_uuid, ";
-							if ($domain_uuid != '') {
-								$sql .= "domain_uuid, ";
+							$array['group_permissions'][0]['group_permission_uuid'] = uuid();
+							if (is_uuid($domain_uuid)) {
+								$array['group_permissions'][0]['domain_uuid'] = $domain_uuid;
 							}
-							$sql .= "permission_name, ";
-							$sql .= "group_name ";
-							$sql .= ")";
-							$sql .= "values ";
-							$sql .= "(";
-							$sql .= "'".uuid()."', ";
-							if ($domain_uuid != '') {
-								$sql .= "'".$domain_uuid."', ";
-							}
-							$sql .= "'$permission', ";
-							$sql .= "'$group_name' ";
-							$sql .= ")";
-							$db->exec(check_sql($sql));
-							unset($sql);
+							$array['group_permissions'][0]['permission_name'] = $permission;
+							$array['group_permissions'][0]['group_name'] = $group_name;
+							$database = new database;
+							$database->app_name = 'groups';
+							$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+							$database->save($array);
+							unset($array);
 
 						foreach($apps as $app) {
 							foreach ($app['permissions'] as $row) {
 								if ($row['name'] == $permission) {
 
-									$sql = "insert into v_menu_item_groups ";
-									$sql .= "(";
-									$sql .= "menu_uuid, ";
-									$sql .= "menu_item_uuid, ";
-									$sql .= "group_name ";
-									$sql .= ")";
-									$sql .= "values ";
-									$sql .= "(";
-									$sql .= "'b4750c3f-2a86-b00d-b7d0-345c14eca286', ";
-									$sql .= "'".$row['menu']['uuid']."', ";
-									$sql .= "'$group_name' ";
-									$sql .= ")";
-									$db->exec(check_sql($sql));
-									unset($sql);
+									$array['menu_item_groups'][0]['menu_uuid'] = 'b4750c3f-2a86-b00d-b7d0-345c14eca286';
+									$array['menu_item_groups'][0]['menu_item_uuid'] = $row['menu']['uuid'];
+									$array['menu_item_groups'][0]['group_name'] = $group_name;
 
-									$sql = " select menu_item_parent_uuid from v_menu_items ";
-									$sql .= "where menu_item_uuid = '".$row['menu']['uuid']."' ";
-									$sql .= "and menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286' ";
-									$prep_statement = $db->prepare(check_sql($sql));
-									$prep_statement->execute();
-									$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-									foreach ($result as &$row) {
-										$menu_item_parent_uuid = $row["menu_item_parent_uuid"];
-									}
-									unset ($prep_statement);
+									$p = new permissions;
+									$p->add('menu_item_group_add', 'temp');
 
-									$sql = " select * from v_menu_item_groups ";
-									$sql .= "where menu_item_uuid = '$menu_item_parent_uuid' ";
-									$sql .= "and group_name = '$group_name' ";
+									$database = new database;
+									$database->app_name = 'groups';
+									$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+									$database->save($array);
+									unset($array);
+
+									$p->delete('menu_item_group_add', 'temp');
+
+									$sql = "select menu_item_parent_uuid from v_menu_items ";
+									$sql .= "where menu_item_uuid = :menu_item_uuid ";
 									$sql .= "and menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286' ";
-									$prep_statement = $db->prepare(check_sql($sql));
-									$prep_statement->execute();
-									$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-									$result_count = count($result);
+									$parameters['menu_item_uuid'] = $row['menu']['uuid'];
+									$database = new database;
+									$menu_item_parent_uuid = $database->select($sql, $parameters, 'column');
+									unset($sql, $parameters);
+
+									$sql = "select count(*) from v_menu_item_groups ";
+									$sql .= "where menu_item_uuid = :menu_item_uuid ";
+									$sql .= "and group_name = :group_name ";
+									$sql .= "and menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286' ";
+									$parameters['menu_item_uuid'] = $menu_item_parent_uuid;
+									$parameters['group_name'] = $group_name;
+									$database = new database;
+									$result_count = $database->select($sql, $parameters, 'column');
+
 									if ($result_count == 0) {
-										$sql = "insert into v_menu_item_groups ";
-										$sql .= "(";
-										$sql .= "menu_uuid, ";
-										$sql .= "menu_item_uuid, ";
-										$sql .= "group_name ";
-										$sql .= ")";
-										$sql .= "values ";
-										$sql .= "(";
-										$sql .= "'b4750c3f-2a86-b00d-b7d0-345c14eca286', ";
-										$sql .= "'$menu_item_parent_uuid', ";
-										$sql .= "'$group_name' ";
-										$sql .= ")";
-										$db->exec(check_sql($sql));
-										unset($sql);
+										$array['menu_item_groups'][0]['menu_uuid'] = 'b4750c3f-2a86-b00d-b7d0-345c14eca286';
+										$array['menu_item_groups'][0]['menu_item_uuid'] = $menu_item_parent_uuid;
+										$array['menu_item_groups'][0]['group_name'] = $group_name;
+
+										$p = new permissions;
+										$p->add('menu_item_group_add', 'temp');
+
+										$database = new database;
+										$database->app_name = 'groups';
+										$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+										$database->save($array);
+										unset($array);
+
+										$p->delete('menu_item_group_add', 'temp');
 									}
-									unset ($prep_statement);
+
+									unset($sql, $parameters, $result_count);
 								}
 							}
 						}
@@ -328,7 +333,7 @@
 	echo "		if (new_group_name != null) {\n";
 	echo "			new_group_desc = prompt('".$text['message-new_group_description']."');\n";
 	echo "			if (new_group_desc != null) {\n";
-	echo "				window.location = 'permissions_copy.php?group_name=".escape($group_name)."&new_group_name=' + new_group_name + '&new_group_desc=' + new_group_desc;\n";
+	echo "				window.location = 'permissions_copy.php?id=".escape($group_uuid)."&new_group_name=' + new_group_name + '&new_group_desc=' + new_group_desc;\n";
 	echo "			}\n";
 	echo "		}\n";
 	echo "	}\n";
@@ -427,7 +432,6 @@
 
 		} //end foreach
 		echo "<br>";
-		unset($sql, $result, $row_count);
 
 	echo "</form>\n";
 

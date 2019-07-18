@@ -17,30 +17,79 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('script_editor_save')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
 
-$folder = $_GET["folder"];
-$folder = str_replace ("\\", "/", $folder);
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
-if (strlen($folder) > 0) {
-    //delete the folder
-    rmdir($folder); //, 0700
-    header("Location: fileoptions.php");
-}
+//check the permissions
+	if (permission_exists('script_editor_save')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
+
+//set the variables
+	$folder = $_GET["folder"];
+	$folder = str_replace ("\\", "/", $folder);
+
+//delete the directory
+	if (strlen($folder) > 0 && isset($_POST['token'])) {
+		//compare the tokens
+		$key_name = '/app/edit/folder_delete';
+		$hash = hash_hmac('sha256', $key_name, $_SESSION['keys'][$key_name]);
+		if (!hash_equals($hash, $_POST['token'])) {
+			echo "access denied";
+			exit;
+		}
+
+		//delete the folder
+		rmdir($folder); //, 0700
+		header("Location: fileoptions.php");
+	}
+	else {
+		//create the token
+		$key_name = '/app/edit/folder_delete';
+		$_SESSION['keys'][$key_name] = bin2hex(random_bytes(32));
+		$_SESSION['token'] = hash_hmac('sha256', $key_name, $_SESSION['keys'][$key_name]);
+
+		//display form
+		require_once "header.php";
+		echo "<br>";
+		echo "<div align='left'>";
+		echo "	<form method='POST' action=''>";
+		echo "		<table>";
+		echo "			<tr>";
+		echo "				<td>".$text['label-path']."</td>";
+		echo "			</tr>";
+		echo "			<tr>";
+		echo "				<td>".$folder."</td>";
+		echo "			</tr>";
+		echo "		</table>";
+		echo "		<br />";
+		echo "		<table>";
+		echo "			<tr>";
+		echo "				<td colspan='1' align='right'>";
+		echo "					<input type='hidden' name='folder' value='$folder'>";
+		echo "					<input type='hidden' name='token' id='token' value='". $_SESSION['token']. "'>";
+		echo "					<input type='submit' value='".$text['button-del-dir']."'>";
+		echo "				</td>";
+		echo "			</tr>";
+		echo "		</table>";
+		echo "	</form>";
+		echo "</div>";
+
+		//include the footer
+		require_once "footer.php";
+	}
 
 ?>

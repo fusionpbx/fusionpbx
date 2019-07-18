@@ -66,12 +66,15 @@
 					if ($fp) {
 						//set the user_status
 							$sql  = "update v_users set ";
-							$sql .= "user_status = '".$row['agent_status']."' ";
-							$sql .= "where domain_uuid = '".$domain_uuid."' ";
-							$sql .= "and username = '".$row['agent_name']."' ";
-							//echo $sql."\n";
-							//$prep_statement = $db->prepare(check_sql($sql));
-							//$prep_statement->execute();
+							$sql .= "user_status = :user_status ";
+							$sql .= "where domain_uuid = :domain_uuid ";
+							$sql .= "and username = :username ";
+							$parameters['user_status'] = $row['agent_status'];
+							$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+							$parameters['username'] = $row['agent_name'];
+							//$database = new database;
+							//$database->execute($sql, $parameters);
+							//unset($sql, $parameters);
 
 						//set the agent status to available and assign the agent to the queue with the tier
 							if ($row['agent_status'] == 'Available') {
@@ -107,21 +110,23 @@
 
 //get the call center queues from the database
 	$sql = "select * from v_call_center_queues ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by queue_name asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$call_center_queues = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$call_center_queues = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //get the agents from the database
 	$sql = "select * from v_call_center_agents ";
-	$sql .= "where user_uuid = '".$_SESSION['user_uuid']."' ";
-	$sql .= "and domain_uuid = '$domain_uuid' ";
+	$sql .= "where user_uuid = :user_uuid ";
+	$sql .= "and domain_uuid = :domain_uuid ";
 	//$sql .= "ORDER BY agent_name ASC ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$agent = $prep_statement->fetch(PDO::FETCH_NAMED);
+	$parameters['user_uuid'] = $_SESSION['user_uuid'];
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$agent = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 	//echo "<pre>\n";
 	//print_r($agent);
 	//echo "</pre>\n";
@@ -175,7 +180,7 @@
 		foreach($call_center_queues as $row) {
 			echo "<tr>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
-			echo "		".$row['queue_name']."\n";
+			echo "		".escape($row['queue_name'])."\n";
 			echo "	</td>\n";
 
 			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
@@ -188,7 +193,7 @@
 			echo "	</td>\n";
 
 			echo "	<td valign='middle' class='".$row_style[$c]."' nowrap='nowrap'>";
-			echo "		<input type='hidden' name='agents[".$x."][queue_name]' id='agent_".$x."_name' value='".$row['queue_name']."'>\n";
+			echo "		<input type='hidden' name='agents[".$x."][queue_name]' id='agent_".$x."_name' value='".escape($row['queue_name'])."'>\n";
 			echo "		<input type='hidden' name='agents[".$x."][agent_name]' id='agent_".$x."_name' value='".$agent['agent_name']."'>\n";
 			echo "		<input type='hidden' name='agents[".$x."][id]' id='agent_".$x."_name' value='".$agent['call_center_agent_uuid']."'>\n";
 			//echo "		<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_no_change' value='' checked='checked'>&nbsp;<label for='agent_".$x."_status_no_change'>".$text['option-no_change']."</label>&nbsp;\n";
@@ -221,8 +226,11 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
+
 	echo "</table>";
 	echo "<br><br>";
 	echo "</form>\n";
 
+//include footer
+	require_once "resources/footer.php";
 ?>

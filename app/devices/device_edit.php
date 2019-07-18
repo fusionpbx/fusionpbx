@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2018 All Rights Reserved.
+	Copyright (C) 2008-2019 All Rights Reserved.
 
 */
 
@@ -429,6 +429,10 @@
 	$sql .= "WHEN 'expansion' THEN 4 ";
 	$sql .= "WHEN 'expansion-1' THEN 5 ";
 	$sql .= "WHEN 'expansion-2' THEN 6 ";
+	$sql .= "WHEN 'expansion-3' THEN 7 ";
+	$sql .= "WHEN 'expansion-4' THEN 8 ";
+	$sql .= "WHEN 'expansion-5' THEN 9 ";
+	$sql .= "WHEN 'expansion-6' THEN 10 ";
 	$sql .= "ELSE 100 END, ";
 	if ($db_type == "mysql") {
 		$sql .= "device_key_id asc ";
@@ -583,7 +587,7 @@
 
 		echo "	function download(d) {\n";
 		echo "		if (d == '".$text['label-download']."') return;\n";
-		if ($_SESSION['provision']['http_domain_filter']['text'] == "false") {
+		if ($_SESSION['provision']['http_domain_filter']['boolean'] == "false") {
 			$domain_name = $_SERVER["HTTP_HOST"];
 		}
 		else {
@@ -915,54 +919,9 @@
 				$selected = "selected=\"selected\" ";
 				echo "				<select class='formfld' style='width: 45px;' name='device_lines[".$x."][line_number]'>\n";
 				echo "				<option value=''></option>\n";
-				echo "				<option value='1' ".($row['line_number'] == "1" ? $selected:"").">1</option>\n";
-				echo "				<option value='2' ".($row['line_number'] == "2" ? $selected:"").">2</option>\n";
-				echo "				<option value='3' ".($row['line_number'] == "3" ? $selected:"").">3</option>\n";
-				echo "				<option value='4' ".($row['line_number'] == "4" ? $selected:"").">4</option>\n";
-				echo "				<option value='5' ".($row['line_number'] == "5" ? $selected:"").">5</option>\n";
-				echo "				<option value='6' ".($row['line_number'] == "6" ? $selected:"").">6</option>\n";
-				echo "				<option value='7' ".($row['line_number'] == "7" ? $selected:"").">7</option>\n";
-				echo "				<option value='8' ".($row['line_number'] == "8" ? $selected:"").">8</option>\n";
-				echo "				<option value='9' ".($row['line_number'] == "9" ? $selected:"").">9</option>\n";
-				echo "				<option value='10' ".($row['line_number'] == "10" ? $selected:"").">10</option>\n";
-				echo "				<option value='11' ".($row['line_number'] == "11" ? $selected:"").">11</option>\n";
-				echo "				<option value='12' ".($row['line_number'] == "12" ? $selected:"").">12</option>\n";
-				echo "				<option value='13' ".($row['line_number'] == "13" ? $selected:"").">13</option>\n";
-				echo "				<option value='14' ".($row['line_number'] == "14" ? $selected:"").">14</option>\n";
-				echo "				<option value='15' ".($row['line_number'] == "15" ? $selected:"").">15</option>\n";
-				echo "				<option value='16' ".($row['line_number'] == "16" ? $selected:"").">16</option>\n";
-				echo "				<option value='17' ".($row['line_number'] == "17" ? $selected:"").">17</option>\n";
-				echo "				<option value='18' ".($row['line_number'] == "18" ? $selected:"").">18</option>\n";
-				echo "				<option value='19' ".($row['line_number'] == "19" ? $selected:"").">19</option>\n";
-				echo "				<option value='20' ".($row['line_number'] == "20" ? $selected:"").">20</option>\n";
-				echo "				<option value='21' ".($row['line_number'] == "21" ? $selected:"").">21</option>\n";
-				echo "				<option value='22' ".($row['line_number'] == "22" ? $selected:"").">22</option>\n";
-				echo "				<option value='23' ".($row['line_number'] == "23" ? $selected:"").">23</option>\n";
-				echo "				<option value='24' ".($row['line_number'] == "24" ? $selected:"").">24</option>\n";
-				echo "				<option value='25' ".($row['line_number'] == "25" ? $selected:"").">25</option>\n";
-				echo "				<option value='26' ".($row['line_number'] == "26" ? $selected:"").">26</option>\n";
-				echo "				<option value='27' ".($row['line_number'] == "27" ? $selected:"").">27</option>\n";
-				echo "				<option value='28' ".($row['line_number'] == "28" ? $selected:"").">28</option>\n";
-				echo "				<option value='29' ".($row['line_number'] == "29" ? $selected:"").">29</option>\n";
-				echo "				<option value='30' ".($row['line_number'] == "30" ? $selected:"").">30</option>\n";
-				echo "				<option value='31' ".($row['line_number'] == "31" ? $selected:"").">31</option>\n";
-				echo "				<option value='32' ".($row['line_number'] == "32" ? $selected:"").">32</option>\n";
-				echo "				<option value='33' ".($row['line_number'] == "33" ? $selected:"").">33</option>\n";
-				echo "				<option value='34' ".($row['line_number'] == "34" ? $selected:"").">34</option>\n";
-				echo "				<option value='35' ".($row['line_number'] == "35" ? $selected:"").">35</option>\n";
-				echo "				<option value='36' ".($row['line_number'] == "36" ? $selected:"").">36</option>\n";
-				echo "				<option value='37' ".($row['line_number'] == "37" ? $selected:"").">37</option>\n";
-				echo "				<option value='38' ".($row['line_number'] == "38" ? $selected:"").">38</option>\n";
-				echo "				<option value='39' ".($row['line_number'] == "39" ? $selected:"").">39</option>\n";
-				echo "				<option value='40' ".($row['line_number'] == "40" ? $selected:"").">40</option>\n";
-				echo "				<option value='41' ".($row['line_number'] == "41" ? $selected:"").">41</option>\n";
-				echo "				<option value='42' ".($row['line_number'] == "42" ? $selected:"").">42</option>\n";
-				echo "				<option value='43' ".($row['line_number'] == "43" ? $selected:"").">43</option>\n";
-				echo "				<option value='44' ".($row['line_number'] == "44" ? $selected:"").">44</option>\n";
-				echo "				<option value='45' ".($row['line_number'] == "45" ? $selected:"").">45</option>\n";
-				echo "				<option value='46' ".($row['line_number'] == "46" ? $selected:"").">46</option>\n";
-				echo "				<option value='47' ".($row['line_number'] == "47" ? $selected:"").">47</option>\n";
-				echo "				<option value='48' ".($row['line_number'] == "48" ? $selected:"").">48</option>\n";
+			        for ($n = 1; $n <=99; $n++) {
+                                        echo "                          <option value='$n' ".($row['line_number'] == "$n" ? $selected:"").">$n</option>\n";
+                                }
 				echo "				</select>\n";
 				echo "			</td>\n";
 
@@ -1230,6 +1189,30 @@
 							}
 							else {
 								echo "	<option value='expansion-2'>".$text['label-expansion']." 2</option>\n";
+							}
+							if ($row['device_key_category'] == "expansion-3") {
+								echo "	<option value='expansion-3' selected='selected'>".$text['label-expansion']." 3</option>\n";
+							}
+							else {
+								echo "	<option value='expansion-3'>".$text['label-expansion']." 3</option>\n";
+							}
+							if ($row['device_key_category'] == "expansion-4") {
+								echo "	<option value='expansion-4' selected='selected'>".$text['label-expansion']." 4</option>\n";
+							}
+							else {
+								echo "	<option value='expansion-4'>".$text['label-expansion']." 4</option>\n";
+							}
+							if ($row['device_key_category'] == "expansion-5") {
+								echo "	<option value='expansion-5' selected='selected'>".$text['label-expansion']." 5</option>\n";
+							}
+							else {
+								echo "	<option value='expansion-5'>".$text['label-expansion']." 5</option>\n";
+							}
+							if ($row['device_key_category'] == "expansion-6") {
+								echo "	<option value='expansion-6' selected='selected'>".$text['label-expansion']." 6</option>\n";
+							}
+							else {
+								echo "	<option value='expansion-6'>".$text['label-expansion']." 6</option>\n";
 							}
 						}
 						else {

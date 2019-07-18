@@ -47,30 +47,31 @@
 	$text = $language->get();
 
 //change the domain
-	if (strlen(check_str($_GET["domain_uuid"])) > 0 && check_str($_GET["domain_change"]) == "true") {
+	if (is_uuid($_GET["domain_uuid"]) && $_GET["domain_change"] == "true") {
 		if (permission_exists('domain_select')) {
 			//get the domain_uuid
 				$sql = "select * from v_domains ";
 				$sql .= "order by domain_name asc ";
-				$prep_statement = $db->prepare($sql);
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				foreach($result as $row) {
-					if (count($result) == 0) {
-						$_SESSION["domain_uuid"] = $row["domain_uuid"];
-						$_SESSION["domain_name"] = $row['domain_name'];
-					}
-					else {
-						if ($row['domain_name'] == $domain_array[0] || $row['domain_name'] == 'www.'.$domain_array[0]) {
+				$database = new database;
+				$result = $database->select($sql, null, 'all');
+				if (is_array($result) && sizeof($result) != 0) {
+					foreach($result as $row) {
+						if (count($result) == 0) {
 							$_SESSION["domain_uuid"] = $row["domain_uuid"];
 							$_SESSION["domain_name"] = $row['domain_name'];
 						}
+						else {
+							if ($row['domain_name'] == $domain_array[0] || $row['domain_name'] == 'www.'.$domain_array[0]) {
+								$_SESSION["domain_uuid"] = $row["domain_uuid"];
+								$_SESSION["domain_name"] = $row['domain_name'];
+							}
+						}
 					}
 				}
-				unset($result, $prep_statement);
+				unset($sql, $result);
 
 			//update the domain session variables
-				$domain_uuid = check_str($_GET["domain_uuid"]);
+				$domain_uuid = $_GET["domain_uuid"];
 				$_SESSION['domain_uuid'] = $domain_uuid;
 				$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
 				$_SESSION['domain']['template']['name'] = $_SESSION['domains'][$domain_uuid]['template_name'];
@@ -91,7 +92,7 @@
 				else {
 					header("Location: ".PROJECT_PATH."/core/user_settings/user_dashboard.php");
 				}
-				return;
+				exit;
 		}
 	}
 
@@ -106,31 +107,26 @@
 	require_once "resources/paging.php";
 
 //get the http values and set them as variables
-	$search = check_str($_GET["search"]);
-	if (isset($_GET["order_by"])) {
-		$order_by = check_str($_GET["order_by"]);
-		$order = check_str($_GET["order"]);
+	$search = $_GET["search"];
+	$order_by = $_GET["order_by"] != '' ? $_GET["order_by"] : 'domain_name';
+	$order = $_GET["order"];
+
+//prepare search
+	if ($search != '') {
+		$sql_where = "where (";
+		$sql_where .= " 	lower(domain_name) like :domain_name ";
+		$sql_where .= " 	or domain_description like :domain_description ";
+		$sql_where .= ") ";
+		$parameters['domain_name'] = '%'.strtolower($search).'%';
+		$parameters['domain_description'] = '%'.strtolower($search).'%';
 	}
 
 //prepare to page the results
-	$sql = "select count(*) as num_rows from v_domains ";
-	if (strlen($search) > 0) {
-		$sql .= "where (";
-		$sql .= " 	domain_name like '%".$search."%' ";
-		$sql .= " 	or domain_description like '%".$search."%' ";
-		$sql .= ") ";
-	}
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-	$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-	}
+	$sql = "select count(*) from v_domains ";
+	$sql .= $sql_where;
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($sql);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -142,31 +138,20 @@
 
 //get the domains
 	$sql = "select * from v_domains ";
-	if (strlen($search) > 0) {
-		$search = strtolower($search);
-		$sql .= "where (";
-		$sql .= "	lower(domain_name) like '%".$search."%' ";
-		$sql .= "	or lower(domain_description) like '%".$search."%' ";
-		$sql .= ") ";
+	$sql .= $sql_where;
+	$sql .= order_by($order_by, $order);
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
+	if (is_array($result) && sizeof($result) != 0) {
+		foreach ($result as $domain) {
+			$domains[$domain['domain_uuid']]['name'] = $domain['domain_name'];
+			$domains[$domain['domain_uuid']]['parent_uuid'] = $domain['domain_parent_uuid'];
+			$domains[$domain['domain_uuid']]['enabled'] = $domain['domain_enabled'];
+			$domains[$domain['domain_uuid']]['description'] = $domain['domain_description'];
+		}
 	}
-	if (strlen($order_by) == 0) {
-		$sql .= "order by domain_name asc ";
-	}
-	else {
-		$sql .= "order by ".$order_by." ".$order." ";
-	}
-	$sql .= " limit ".$rows_per_page." offset ".$offset." ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
-
-	foreach ($result as $domain) {
-		$domains[$domain['domain_uuid']]['name'] = $domain['domain_name'];
-		$domains[$domain['domain_uuid']]['parent_uuid'] = $domain['domain_parent_uuid'];
-		$domains[$domain['domain_uuid']]['enabled'] = $domain['domain_enabled'];
-		$domains[$domain['domain_uuid']]['description'] = $domain['domain_description'];
-	}
+	unset($sql, $sql_where, $parameters, $result, $domain);
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
@@ -202,7 +187,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (count($domains) > 0) {
+	if (is_array($domains) && sizeof($domains) != 0) {
 		foreach ($domains as $domain_uuid => $domain) {
 			$tr_link = (permission_exists('domain_edit')) ? "href='domain_edit.php?id=".escape($domain_uuid)."'" : null;
 			echo "<tr ".$tr_link.">\n";

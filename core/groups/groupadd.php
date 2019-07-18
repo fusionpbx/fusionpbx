@@ -45,55 +45,42 @@
 //get the http values and set them as variables
 	if (count($_POST) > 0) {
 		//set the variables
-			$group_name = check_str($_POST["group_name"]);
+			$group_name = $_POST["group_name"];
 			if (permission_exists('group_domain')) {
-				$domain_uuid = check_str($_POST["domain_uuid"]);
+				$domain_uuid = $_POST["domain_uuid"];
 			}
 			else {
 				$domain_uuid = $_SESSION['domain_uuid'];
 			}
-			$group_description = check_str($_POST["group_description"]);
+			$group_description = $_POST["group_description"];
 
 		//check for global/domain duplicates
-			$sql = "select count(*) as num_rows from v_groups where ";
-			$sql .= "group_name = '".$group_name."' ";
-			$sql .= "and domain_uuid ".(($domain_uuid != '') ? " = '".$domain_uuid."' " : " is null ");
-			$prep_statement = $db->prepare($sql);
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-				$group_exists = ($row['num_rows'] > 0) ? true : false;
+			$sql = "select count(*) from v_groups where ";
+			$sql .= "group_name = :group_name ";
+			if (is_uuid($domain_uuid)) {
+				$sql .= "and domain_uuid = :domain_uuid ";
+				$parameters['domain_uuid'] = $domain_uuid;
 			}
 			else {
-				$group_exists = false;
+				$sql .= "and domain_uuid is null ";
 			}
-			unset($sql, $prep_statement, $row);
+			$parameters['group_name'] = $group_name;
+			$database = new database;
+			$num_rows = $database->select($sql, $parameters, 'column');
+			$group_exists = ($num_rows > 0) ? true : false;
+			unset($sql, $parameters, $num_rows);
 
 		//insert group
 			if (!$group_exists) {
-				$sql = "insert into v_groups ";
-				$sql .= "(";
-				$sql .= "group_uuid, ";
-				$sql .= "domain_uuid, ";
-				$sql .= "group_name, ";
-				$sql .= "group_description ";
-				$sql .= ")";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'".uuid()."', ";
-				$sql .= (($domain_uuid != '') ? "'".$domain_uuid."'" : "null").", ";
-				$sql .= "'".$group_name."', ";
-				$sql .= "'".$group_description."' ";
-				$sql .= ")";
-				if (!$db->exec($sql)) {
-					//echo $db->errorCode() . "<br>";
-					$info = $db->errorInfo();
-					echo "<pre>".print_r($info, true)."</pre>";
-					exit;
-					// $info[0] == $db->errorCode() unified error code
-					// $info[1] is the driver specific error code
-					// $info[2] is the driver specific error string
-				}
+				$array['groups'][0]['group_uuid'] = uuid();
+				$array['groups'][0]['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : null;
+				$array['groups'][0]['group_name'] = $group_name;
+				$array['groups'][0]['group_description'] = $group_description;
+				$database = new database;
+				$database->app_name = 'groups';
+				$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+				$database->save($array);
+				unset($array);
 
 				message::add($text['message-add']);
 				header("Location: groups.php");

@@ -16,14 +16,14 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2015-2016
+--	Copyright (C) 2015-2019
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
 --		Mark J. Crane
 
 --set the debug options
-	debug["sql"] = false;
+	debug["sql"] = true;
 
 --create the api object
 	api = freeswitch.API();
@@ -56,6 +56,12 @@
 		end
 		return s
 	end
+
+-- escape shell arguments to prevent command injection
+        local function shell_esc(x)
+                return (x:gsub('\\', '\\\\')
+                       :gsub('\'', '\\\''))
+        end
 
 -- set channel variables to lua variables
 	domain_uuid = env:getHeader("domain_uuid");
@@ -199,16 +205,15 @@
 	end
 
 --fax to email
-
 	-- cmd = "lua" .. " " .. quote(scripts_dir .. "/fax_to_email.lua") .. " ";
-	cmd = quote(php_dir.."/"..php_bin).." "..quote(document_root.."/secure/fax_to_email.php").." ";
-	cmd = cmd .. "email="..quote(fax_email).." ";
-	cmd = cmd .. "extension="..quote(fax_extension).." ";
-	cmd = cmd .. "name="..quote(fax_file).." ";
-	cmd = cmd .. "messages=" .. quote("result:"..fax_result_text.." sender:"..fax_remote_station_id.." pages:"..fax_document_total_pages).." ";
-	cmd = cmd .. "domain="..quote(domain_name).." ";
-	cmd = cmd .. "caller_id_name=" .. quote(caller_id_name or '') .. " ";
-	cmd = cmd .. "caller_id_number=" .. quote(caller_id_number or '') .. " ";
+	cmd = quote(shell_esc(php_dir).."/"..shell_esc(php_bin)).." "..quote(shell_esc(document_root).."/secure/fax_to_email.php").." ";
+	cmd = cmd .. "email="..quote(shell_esc(fax_email)).." ";
+	cmd = cmd .. "extension="..quote(shell_esc(fax_extension)).." ";
+	cmd = cmd .. "name="..quote(shell_esc(fax_file)).." ";
+	cmd = cmd .. "messages=" .. quote("result:"..shell_esc(fax_result_text).." sender:"..shell_esc(fax_remote_station_id).." pages:"..shell_esc(fax_document_total_pages)).." ";
+	cmd = cmd .. "domain="..quote(shell_esc(domain_name)).." ";
+	cmd = cmd .. "caller_id_name=" .. quote(shell_esc(caller_id_name) or '') .. " ";
+	cmd = cmd .. "caller_id_number=" .. quote(shell_esc(caller_id_number) or '') .. " ";
 	if #fax_forward_number > 0 then
 		cmd = cmd .. "fax_relay=true ";
 	else

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -42,11 +42,11 @@
 	$domain_uuid = $_SESSION['domain_uuid'];
 
 //handle search term
-	$search = check_str($_GET["search"]);
+	$search = $_GET["search"];
 	if (strlen($search) > 0) {
 		$sql_mod = "and ( ";
-		$sql_mod .= "extension like '%".$search."%' ";
-		$sql_mod .= "or description like '%".$search."%' ";
+		$sql_mod .= "extension like :search ";
+		$sql_mod .= "or description like :search ";
 		$sql_mod .= ") ";
 	}
 
@@ -60,7 +60,7 @@
 
 //define select count query
 	$sql = "select count(extension_uuid) as count from v_extensions ";
-	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and enabled = 'true' ";
 	if (!(if_group("admin") || if_group("superadmin"))) {
 		if (count($_SESSION['user']['extension']) > 0) {
@@ -79,12 +79,12 @@
 		}
 	}
 	$sql .= $sql_mod; //add search mod from above
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$row = $prep_statement->fetch(PDO::FETCH_NAMED);
-	$result_count = $row['count'];
-	unset ($prep_statement, $row);
-
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	if (strlen($search) > 0) {
+		$parameters['search'] = '%'.$search.'%';
+	}
+	$database = new database;
+	$result_count = $database->select($sql, $parameters, 'column');
 	if ($is_included) {
 		$rows_per_page = 10;
 	}
@@ -100,7 +100,7 @@
 
 //select the extensions
 	$sql = "select * from v_extensions ";
-	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and enabled = 'true' ";
 	if (!(if_group("admin") || if_group("superadmin"))) {
 		if (count($_SESSION['user']['extension']) > 0) {
@@ -111,7 +111,7 @@
 				$sql .= "extension = '".$row['user']."' ";
 				$x++;
 			}
-			$sql .= ")";
+			$sql .= ") ";
 		}
 		else {
 			//used to hide any results when a user has not been assigned an extension
@@ -119,12 +119,11 @@
 		}
 	}
 	$sql .= $sql_mod; //add search mod from above
-	$sql .= ' order by extension asc';
-	$sql .= " limit ".$rows_per_page." offset ".$offset." ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$extensions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$sql .= "order by extension asc ";
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$extensions = $database->select($sql, $parameters, 'all');
+	unset($parameters);
 
 //set the row style
 	$c = 0;
@@ -181,28 +180,28 @@
 				echo "	<td valign='top' class='".$row_style[$c]."'>".(($row['forward_all_enabled'] == 'true') ? escape(format_phone($row['forward_all_destination'])) : '&nbsp;')."</td>";
 			}
 			if (permission_exists('follow_me')) {
-				if ($row['follow_me_uuid'] != '') {
-					//check if follow me is enabled
-						$sql = "select follow_me_enabled from v_follow_me where follow_me_uuid = '".$row['follow_me_uuid']."' and domain_uuid = '".$domain_uuid."'";
-						$prep_statement = $db->prepare(check_sql($sql));
-						$prep_statement->execute();
-						$row_x = $prep_statement->fetch(PDO::FETCH_NAMED);
-						$follow_me_enabled = ($row_x['follow_me_enabled'] == 'true') ? true : false;
-						unset($sql, $prep_statement, $row_x);
+				if (is_uuid($row['follow_me_uuid'])) {
 					//get destination count if enabled
-						if ($follow_me_enabled) {
-							$sql = "select count(follow_me_destination_uuid) as destination_count from v_follow_me_destinations where follow_me_uuid = '".$row['follow_me_uuid']."' and domain_uuid = '".$domain_uuid."'";
-							$prep_statement = $db->prepare(check_sql($sql));
-							$prep_statement->execute();
-							$row_x = $prep_statement->fetch(PDO::FETCH_NAMED);
-							$follow_me_destination_count = $row_x['destination_count'];
-							unset($sql, $prep_statement, $row_x);
-						}
+					$follow_me_destination_count = 0;
+					if ($row['follow_me_enabled'] == 'true') {
+						$sql = "select count(follow_me_destination_uuid) as destination_count ";
+						$sql .= "from v_follow_me_destinations ";
+						$sql .= "where follow_me_uuid = :follow_me_uuid ";
+						$sql .= "and domain_uuid = :domain_uuid ";
+						$parameters['follow_me_uuid'] = $row['follow_me_uuid'];
+						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+						$database = new database;
+						$follow_me_destination_count = $database->select($sql, $parameters, 'column');
+					}
+				}
+				echo "	<td valign='top' class='".$row_style[$c]."'>\n";
+				if ($row['follow_me_enabled'] == 'true' && $follow_me_destination_count > 0) {
+					echo '		'.$text['label-enabled']." (".$follow_me_destination_count.")\n";
 				}
 				else {
-					$follow_me_enabled = false;
+					echo "		&nbsp;\n";
 				}
-				echo "	<td valign='top' class='".$row_style[$c]."'>".(($follow_me_enabled) ? $text['label-enabled']." (".$follow_me_destination_count.")" : '&nbsp;')."</td>";
+				echo "</td>\n";
 			}
 			if (permission_exists('do_not_disturb')) {
 				echo "	<td valign='top' class='".$row_style[$c]."'>".(($row['do_not_disturb'] == 'true') ? $text['label-enabled'] : '&nbsp;')."</td>";

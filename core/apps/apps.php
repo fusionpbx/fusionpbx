@@ -50,8 +50,8 @@
 	$document['title'] = $text['title-apps'];
 
 //get variables used to control the order
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
 //get the list of installed apps from the core and mod directories
 	$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");

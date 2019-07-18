@@ -30,38 +30,26 @@
 
 //check permissions
 	require_once "resources/check_auth.php";
-	if (permission_exists('access_control_delete')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
+	if (!permission_exists('access_control_delete')) {
+		echo "access denied"; exit;
 	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-//get the id
-	if (count($_GET)>0) {
-		$id = check_str($_GET["id"]);
-	}
-
 //delete the data
-	if (strlen($id)>0) {
-		//delete access_control
-			$sql = "delete from v_access_controls ";
-			$sql .= "where access_control_uuid = '$id' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($sql);
+	if (is_uuid($_GET["id"])) {
+		$access_control_uuid = $_GET["id"];
 
-		//delete access_control_node
-			$sql = "delete from v_access_control_nodes ";
-			$sql .= "where access_control_uuid = '$id' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($sql);
+		$array['access_controls'][]['access_control_uuid'] = $access_control_uuid;
+		$array['access_control_nodes'][]['access_control_uuid'] = $access_control_uuid;
+
+		$database = new database;
+		$database->app_name = 'access_control';
+		$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
+		$database->delete($array);
+		unset($array);
 
 		//clear the cache
 			$cache = new cache;
@@ -70,11 +58,11 @@
 		//create the event socket connection
 			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 			if ($fp) { event_socket_request($fp, "api reloadacl"); }
+
+		message::add($text['message-delete']);
 	}
 
 //redirect the user
-	message::add($text['message-delete']);
 	header('Location: access_controls.php');
-
 
 ?>

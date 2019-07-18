@@ -81,6 +81,9 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "dialplan_domain";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "dialplan_all";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//schema details
 		$y=0;

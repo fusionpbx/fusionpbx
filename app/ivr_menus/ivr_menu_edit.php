@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -58,6 +58,7 @@
 	}
 	else {
 		$action = "add";
+		$ivr_menu_uuid = uuid();
 	}
 
 //get total ivr menu count from the database, check limit, if defined
@@ -111,10 +112,8 @@
 			if (permission_exists('ivr_menu_context')) {
 				$ivr_menu_context = check_str($_POST["ivr_menu_context"]);
 			}
-			else {
-				if ($action == 'add') {
-					$ivr_menu_context = $_SESSION['domain_name'];
-				}
+			elseif ($action == 'add') {
+				$ivr_menu_context = $_SESSION['domain_name'];
 			}
 
 		//process the values
@@ -235,8 +234,7 @@
 					}
 
 				//add a uuid to ivr_menu_uuid if it is empty
-					if (strlen($ivr_menu_uuid) == 0) {
-						$ivr_menu_uuid = uuid();
+					if ($action = 'add') {
 						$_POST["ivr_menu_uuid"] = $ivr_menu_uuid;
 					}
 
@@ -387,10 +385,10 @@
 				$ivr_menu_context = $row["ivr_menu_context"];
 				$ivr_menu_enabled = $row["ivr_menu_enabled"];
 				$ivr_menu_description = $row["ivr_menu_description"];
-	
+
 				//replace the dash with a space
 				$ivr_menu_name = str_replace("-", " ", $ivr_menu_name);
-	
+
 				if (strlen($ivr_menu_exit_app) > 0) {
 					$ivr_menu_exit_action = $ivr_menu_exit_app.":".$ivr_menu_exit_data;
 				}

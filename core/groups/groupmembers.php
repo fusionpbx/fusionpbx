@@ -49,46 +49,44 @@
 	$text = $language->get();
 
 //get the group uuid, lookup domain uuid (if any) and name
-	$group_uuid = check_str($_REQUEST['group_uuid']);
+	$group_uuid = $_REQUEST['group_uuid'];
 	$sql = "select domain_uuid, group_name from v_groups ";
-	$sql .= "where group_uuid = '".$group_uuid."' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($result as &$row) {
+	$sql .= "where group_uuid = :group_uuid ";
+	$parameters['group_uuid'] = $group_uuid;
+	$database = new database;
+	$row = $database->select($sql, $parameters, 'row');
+	if (is_array($row) && sizeof($row) != 0) {
 		$domain_uuid = $row["domain_uuid"];
 		$group_name = $row["group_name"];
-		break; //limit to 1 row
 	}
-	unset ($prep_statement);
+	unset($sql, $parameters, $row);
 
 //define the if group members function
 	function is_group_member($group_uuid, $user_uuid) {
-		global $db, $domain_uuid;
-		$sql = "select * from v_user_groups ";
-		$sql .= "where user_uuid = '".$user_uuid."' ";
-		$sql .= "and group_uuid = '".$group_uuid."' ";
-		$sql .= "and domain_uuid = '".(($domain_uuid != '') ? $domain_uuid : $_SESSION['domain_uuid'])."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		if (count($prep_statement->fetchAll(PDO::FETCH_NAMED)) == 0) { return true; } else { return false; }
-		unset ($sql, $prep_statement);
+		global $domain_uuid;
+		$sql = "select count(*) from v_user_groups ";
+		$sql .= "where user_uuid = :user_uuid ";
+		$sql .= "and group_uuid = :group_uuid ";
+		$sql .= "and domain_uuid = :domain_uuid ";
+		$parameters['user_uuid'] = $user_uuid;
+		$parameters['group_uuid'] = $group_uuid;
+		$parameters['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : $_SESSION['domain_uuid'];
+		$database = new database;
+		$num_rows = $database->select($sql, $parameters, 'column');
+		return $num_rows == 0 ? true : false;
+		unset($sql, $parameters, $num_rows);
 	}
 	//$exampledatareturned = example("apples", 1);
 
 //get the the users array
 	if (permission_exists('group_member_add')) {
 		$sql = "select * from v_users where ";
-		if ($domain_uuid != '') {
-			$sql .= "domain_uuid = '".$domain_uuid."' ";
-		}
-		else {
-			$sql .= "domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		}
+		$sql .= "domain_uuid = :domain_uuid ";
 		$sql .= "order by username ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		$parameters['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : $_SESSION['domain_uuid'];
+		$database = new database;
+		$users = $database->select($sql, $parameters, 'all');
+		unset($sql, $parameters);
 	}
 
 //get the groups users
@@ -96,17 +94,20 @@
 	$sql .= "from v_user_groups as ug, v_users as u, v_domains as d ";
 	$sql .= "where ug.user_uuid = u.user_uuid ";
 	$sql .= "and ug.domain_uuid = d.domain_uuid ";
-	if ($domain_uuid != '') {
-		$sql .= "and ug.domain_uuid = '".$domain_uuid."' ";
+	if (is_uuid($domain_uuid)) {
+		$sql .= "and ug.domain_uuid = :domain_uuid_ug ";
+		$parameters['domain_uuid_ug'] = $domain_uuid;
 	}
 	if (!permission_exists('user_all')) {
-		$sql .= "and u.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and u.domain_uuid = :domain_uuid_u ";
+		$parameters['domain_uuid_u'] = $_SESSION['domain_uuid'];
 	}
-	$sql .= "and ug.group_uuid = '".$group_uuid."' ";
+	$sql .= "and ug.group_uuid = :group_uuid ";
 	$sql .= "order by d.domain_name asc, u.username asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$parameters['group_uuid'] = $group_uuid;
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //include the header
 	require_once "resources/header.php";
@@ -158,27 +159,29 @@
 	$echo .= "</tr>\n";
 
 	$count = 0;
-	foreach ($result as &$row) {
-		$username = $row["username"];
-		$user_uuid = $row["user_uuid"];
-		$domain_uuid = $row["domain_uuid"];
-		$group_uuid = $row["group_uuid"];
-		$echo .= "<tr>";
-		if (permission_exists('user_all')) {
-			$echo .= "<td align='left' class='".$row_style[$c]."' nowrap='nowrap'>".$_SESSION['domains'][$domain_uuid]['domain_name']."</td>\n";
-		}
-		$echo .= "<td align='left' class='".$row_style[$c]."' nowrap='nowrap'>".$username."</td>\n";
-		$echo .= "<td class='list_control_icons' style='width: 25px;'>";
-		if (permission_exists('group_member_delete')) {
-			$echo .= "<a href='groupmemberdelete.php?user_uuid=".$user_uuid."&group_name=".$group_name."&group_uuid=".$group_uuid."' onclick=\"return confirm('".$text['confirm-delete']."')\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
-		}
-		$echo .= "</td>\n";
-		$echo .= "</tr>\n";
+	if (is_array($result) && sizeof($result) != 0) {
+		foreach ($result as &$row) {
+			$username = $row["username"];
+			$user_uuid = $row["user_uuid"];
+			$domain_uuid = $row["domain_uuid"];
+			$group_uuid = $row["group_uuid"];
+			$echo .= "<tr>";
+			if (permission_exists('user_all')) {
+				$echo .= "<td align='left' class='".$row_style[$c]."' nowrap='nowrap'>".$_SESSION['domains'][$domain_uuid]['domain_name']."</td>\n";
+			}
+			$echo .= "<td align='left' class='".$row_style[$c]."' nowrap='nowrap'>".$username."</td>\n";
+			$echo .= "<td class='list_control_icons' style='width: 25px;'>";
+			if (permission_exists('group_member_delete')) {
+				$echo .= "<a href='groupmemberdelete.php?user_uuid=".$user_uuid."&group_name=".$group_name."&group_uuid=".$group_uuid."' onclick=\"return confirm('".$text['confirm-delete']."')\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
+			}
+			$echo .= "</td>\n";
+			$echo .= "</tr>\n";
 
-		$c = ($c) ? 0 : 1;
+			$c = ($c) ? 0 : 1;
 
-		$user_groups[] = $row["user_uuid"];
-		$count++;
+			$user_groups[] = $row["user_uuid"];
+			$count++;
+		}
 	}
 
 	$echo .= "</table>\n";

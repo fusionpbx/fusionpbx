@@ -19,25 +19,25 @@
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$conference_profile_param_uuid = check_str($_REQUEST["id"]);
+		$conference_profile_param_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
 	}
 
 //set the parent uuid
-	if (strlen($_GET["conference_profile_uuid"]) > 0) {
-		$conference_profile_uuid = check_str($_GET["conference_profile_uuid"]);
+	if (is_uuid($_GET["conference_profile_uuid"])) {
+		$conference_profile_uuid = $_GET["conference_profile_uuid"];
 	}
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
-		$profile_param_name = check_str($_POST["profile_param_name"]);
-		$profile_param_value = check_str($_POST["profile_param_value"]);
-		$profile_param_enabled = check_str($_POST["profile_param_enabled"]);
-		$profile_param_description = check_str($_POST["profile_param_description"]);
+		$profile_param_name = $_POST["profile_param_name"];
+		$profile_param_value = $_POST["profile_param_value"];
+		$profile_param_enabled = $_POST["profile_param_enabled"];
+		$profile_param_description = $_POST["profile_param_description"];
 	}
 
 //process the http post if it exists
@@ -45,7 +45,7 @@
 	
 		//get the uuid
 			if ($action == "update") {
-				$conference_profile_param_uuid = check_str($_POST["conference_profile_param_uuid"]);
+				$conference_profile_param_uuid = $_POST["conference_profile_param_uuid"];
 			}
 	
 		//check for all required data
@@ -69,72 +69,54 @@
 	
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
+
+				$array['conference_profile_params'][0]['conference_profile_uuid'] = $conference_profile_uuid;
+				$array['conference_profile_params'][0]['profile_param_name'] = $profile_param_name;
+				$array['conference_profile_params'][0]['profile_param_value'] = $profile_param_value;
+				$array['conference_profile_params'][0]['profile_param_enabled'] = $profile_param_enabled;
+				$array['conference_profile_params'][0]['profile_param_description'] = $profile_param_description;
+
 				if ($action == "add" && permission_exists('conference_profile_param_add')) {
-					$sql = "insert into v_conference_profile_params ";
-					$sql .= "(";
-					//$sql .= "domain_uuid, ";
-					$sql .= "conference_profile_param_uuid, ";
-					$sql .= "conference_profile_uuid, ";
-					$sql .= "profile_param_name, ";
-					$sql .= "profile_param_value, ";
-					$sql .= "profile_param_enabled, ";
-					$sql .= "profile_param_description ";
-					$sql .= ")";
-					$sql .= "values ";
-					$sql .= "(";
-					//$sql .= "'$domain_uuid', ";
-					$sql .= "'".uuid()."', ";
-					$sql .= "'$conference_profile_uuid', ";
-					$sql .= "'$profile_param_name', ";
-					$sql .= "'$profile_param_value', ";
-					$sql .= "'$profile_param_enabled', ";
-					$sql .= "'$profile_param_description' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
-	
+					$array['conference_profile_params'][0]['conference_profile_param_uuid'] = uuid();
 					message::add($text['message-add']);
-					header('Location: conference_profile_edit.php?id='.$conference_profile_uuid);
-					return;
-	
-				} //if ($action == "add")
+				}
 	
 				if ($action == "update" && permission_exists('conference_profile_param_edit')) {
-					$sql = "update v_conference_profile_params set ";
-					$sql .= "conference_profile_uuid = '$conference_profile_uuid', ";
-					$sql .= "profile_param_name = '$profile_param_name', ";
-					$sql .= "profile_param_value = '$profile_param_value', ";
-					$sql .= "profile_param_enabled = '$profile_param_enabled', ";
-					$sql .= "profile_param_description = '$profile_param_description' ";
-					$sql .= "where conference_profile_param_uuid = '$conference_profile_param_uuid'";
-					//$sql .= "and domain_uuid = '$domain_uuid' ";
-					$db->exec(check_sql($sql));
-					unset($sql);
-	
+					$array['conference_profile_params'][0]['conference_profile_param_uuid'] = $conference_profile_param_uuid;
 					message::add($text['message-update']);
-					header('Location: conference_profile_edit.php?id='.$conference_profile_uuid);
-					return;
-	
-				} //if ($action == "update")
-			} //if ($_POST["persistformvar"] != "true")
-	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+				}
+
+				if (is_uuid($array['conference_profile_params'][0]['conference_profile_param_uuid'])) {
+					$database = new database;
+					$database->app_name = 'conference_profiles';
+					$database->app_uuid = 'c33e2c2a-847f-44c1-8c0d-310df5d65ba9';
+					$database->save($array);
+					unset($array);
+				}
+
+				header('Location: conference_profile_edit.php?id='.$conference_profile_uuid);
+				exit;
+
+			}
+	}
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-		$conference_profile_param_uuid = check_str($_GET["id"]);
+		$conference_profile_param_uuid = $_GET["id"];
 		$sql = "select * from v_conference_profile_params ";
-		$sql .= "where conference_profile_param_uuid = '$conference_profile_param_uuid' ";
-		//$sql .= "and domain_uuid = '$domain_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where conference_profile_param_uuid = :conference_profile_param_uuid ";
+		//$sql .= "and domain_uuid = :domain_uuid ";
+		$parameters['conference_profile_param_uuid'] = $conference_profile_param_uuid;
+		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && sizeof($row)) {
 			$profile_param_name = $row["profile_param_name"];
 			$profile_param_value = $row["profile_param_value"];
 			$profile_param_enabled = $row["profile_param_enabled"];
 			$profile_param_description = $row["profile_param_description"];
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters);
 	}
 
 //show the header

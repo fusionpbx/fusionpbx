@@ -39,9 +39,9 @@ else {
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$database_uuid = check_str($_REQUEST["id"]);
+		$database_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
@@ -60,22 +60,22 @@ else {
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
-		$database_driver = check_str($_POST["database_driver"]);
-		$database_type = check_str($_POST["database_type"]);
-		$database_host = check_str($_POST["database_host"]);
-		$database_port = check_str($_POST["database_port"]);
-		$database_name = check_str($_POST["database_name"]);
-		$database_username = check_str($_POST["database_username"]);
-		$database_password = check_str($_POST["database_password"]);
-		$database_path = check_str($_POST["database_path"]);
-		$database_description = check_str($_POST["database_description"]);
+		$database_driver = $_POST["database_driver"];
+		$database_type = $_POST["database_type"];
+		$database_host = $_POST["database_host"];
+		$database_port = $_POST["database_port"];
+		$database_name = $_POST["database_name"];
+		$database_username = $_POST["database_username"];
+		$database_password = $_POST["database_password"];
+		$database_path = $_POST["database_path"];
+		$database_description = $_POST["database_description"];
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
-		$database_uuid = check_str($_POST["database_uuid"]);
+		$database_uuid = $_POST["database_uuid"];
 	}
 
 	//check for all required data
@@ -103,39 +103,27 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 	if ($_POST["persistformvar"] != "true") {
+
+		//begin array
+			$array['databases'][0]['database_driver'] = $database_driver;
+			$array['databases'][0]['database_type'] = $database_type;
+			$array['databases'][0]['database_host'] = $database_host;
+			$array['databases'][0]['database_port'] = $database_port;
+			$array['databases'][0]['database_name'] = $database_name;
+			$array['databases'][0]['database_username'] = $database_username;
+			$array['databases'][0]['database_password'] = $database_password;
+			$array['databases'][0]['database_path'] = $database_path;
+			$array['databases'][0]['database_description'] = $database_description;
+
 		if ($action == "add") {
-			//add the data
-				$database_uuid = uuid();
-				$sql = "insert into v_databases ";
-				$sql .= "(";
-				//$sql .= "domain_uuid, ";
-				$sql .= "database_uuid, ";
-				$sql .= "database_driver, ";
-				$sql .= "database_type, ";
-				$sql .= "database_host, ";
-				$sql .= "database_port, ";
-				$sql .= "database_name, ";
-				$sql .= "database_username, ";
-				$sql .= "database_password, ";
-				$sql .= "database_path, ";
-				$sql .= "database_description ";
-				$sql .= ")";
-				$sql .= "values ";
-				$sql .= "(";
-				//$sql .= "'$domain_uuid', ";
-				$sql .= "'$database_uuid', ";
-				$sql .= "'$database_driver', ";
-				$sql .= "'$database_type', ";
-				$sql .= "'$database_host', ";
-				$sql .= "'$database_port', ";
-				$sql .= "'$database_name', ";
-				$sql .= "'$database_username', ";
-				$sql .= "'$database_password', ";
-				$sql .= "'$database_path', ";
-				$sql .= "'$database_description' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
+			//add new uuid
+				$array['databases'][0]['database_uuid'] = uuid();
+
+				$database = new database;
+				$database->app_name = 'databases';
+				$database->app_uuid = '8d229b6d-1383-fcec-74c6-4ce1682479e2';
+				$database->save($array);
+				unset($array);
 
 			//set the defaults
 				require_once "app_defaults.php";
@@ -143,24 +131,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			//redirect the browser
 				message::add($text['message-add']);
 				header("Location: databases.php");
-				return;
-		} //if ($action == "add")
+				exit;
+		}
 
 		if ($action == "update") {
-			//udpate the database
-				$sql = "update v_databases set ";
-				$sql .= "database_type = '$database_type', ";
-				$sql .= "database_driver = '$database_driver', ";
-				$sql .= "database_host = '$database_host', ";
-				$sql .= "database_port = '$database_port', ";
-				$sql .= "database_name = '$database_name', ";
-				$sql .= "database_username = '$database_username', ";
-				$sql .= "database_password = '$database_password', ";
-				$sql .= "database_path = '$database_path', ";
-				$sql .= "database_description = '$database_description' ";
-				$sql .= "where database_uuid = '$database_uuid' ";
-				$db->exec(check_sql($sql));
-				unset($sql);
+			//add uuid to update
+				$array['databases'][0]['database_uuid'] = $database_uuid;
+
+				$database = new database;
+				$database->app_name = 'databases';
+				$database->app_uuid = '8d229b6d-1383-fcec-74c6-4ce1682479e2';
+				$database->save($array);
+				unset($array);
 
 			//set the defaults
 				$domains_processed = 1;
@@ -169,20 +151,20 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			//redirect the browser
 				message::add($text['message-update']);
 				header("Location: databases.php");
-				return;
-		} //if ($action == "update")
-	} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+				exit;
+		}
+	}
+}
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$database_uuid = $_GET["id"];
 		$sql = "select * from v_databases ";
-		$sql .= "where database_uuid = '$database_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where database_uuid = :database_uuid ";
+		$parameters['database_uuid'] = $database_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && sizeof($row) != 0) {
 			$database_driver = $row["database_driver"];
 			$database_type = $row["database_type"];
 			$database_host = $row["database_host"];
@@ -192,9 +174,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$database_password = $row["database_password"];
 			$database_path = $row["database_path"];
 			$database_description = $row["database_description"];
-			break; //limit to 1 row
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //show the header

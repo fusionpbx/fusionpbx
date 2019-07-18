@@ -107,15 +107,19 @@
 //begin the page content
         require_once "resources/header.php";
 
-        echo "<form method='post' name='frm' action='' autocomplete='off'>\n";
-        echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-        echo "<tr>\n";
-        echo "<tr>\n";
-        echo "	<th><input type=\"checkbox\" id=\"selecctall\"/></th>";
-	echo "	<th>Column Name</th>";
-        echo "	<th>Description</th>";
-        echo "</tr>";
-        echo "</tr>";
+	echo "<form method='post' name='frm' action='pin_download.php' autocomplete='off'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<tr>\n";
+	echo "	<td valign='top' align='left' nowrap='nowrap'><b>".$text['header-export']."</b><br /></td>\n";
+	echo "	<td valign='top' align='right' colspan='2'>\n";
+	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='pin_numbers.php'\" value='".$text['button-back']."'>\n";
+	echo "	</td>\n";
+	echo "	</tr>\n";
+	echo "	<th><input type=\"checkbox\" id=\"selectall\" onclick=\"checkbox_toggle();\"/></th>\n";
+	echo "	<th>Column Name</th>\n";
+	echo "	<th>Description</th>\n";
+	echo "</tr>\n";
+
         foreach ($columns as $value) {
                 echo "<tr>\n";
                 echo "  <td width = '20px' valign='top' class='".$row_style[$c]."'>\n";
@@ -139,6 +143,23 @@
         echo "</table>";
         echo "<br><br>";
         echo "</form>";
+
+	//define the checkbox_toggle function
+	echo "<script type=\"text/javascript\">\n";
+	echo "	function checkbox_toggle(item) {\n";
+	echo "		var inputs = document.getElementsByTagName(\"input\");\n";
+	echo "		for (var i = 0, max = inputs.length; i < max; i++) {\n";
+	echo "			if (inputs[i].type === 'checkbox') {\n";
+	echo "				if (document.getElementById('selectall').checked == true) {\n";
+	echo "				inputs[i].checked = true;\n";
+	echo "			}\n";
+	echo "				else {\n";
+	echo "					inputs[i].checked = false;\n";
+	echo "				}\n";
+	echo "			}\n";
+	echo "		}\n";
+	echo "	}\n";
+	echo "</script>\n";
 
 //include the footer
         require_once "resources/footer.php";

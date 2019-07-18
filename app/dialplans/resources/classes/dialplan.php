@@ -354,7 +354,7 @@ include "root.php";
 								else {
 									$this->dialplan_enabled = "true";
 								}								
-								$this->dialplan_description = '';
+								$this->dialplan_description = $dialplan['extension']['@attributes']['description'];
 								$this->dialplan_add();
 							//loop through the condition array
 								$x = 0;

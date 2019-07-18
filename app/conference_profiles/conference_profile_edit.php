@@ -19,9 +19,9 @@
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$conference_profile_uuid = check_str($_REQUEST["id"]);
+		$conference_profile_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
@@ -29,16 +29,16 @@
 
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
-		$profile_name = check_str($_POST["profile_name"]);
-		$profile_enabled = check_str($_POST["profile_enabled"]);
-		$profile_description = check_str($_POST["profile_description"]);
+		$profile_name = $_POST["profile_name"];
+		$profile_enabled = $_POST["profile_enabled"];
+		$profile_description = $_POST["profile_description"];
 	}
 //check to see if the http post exists
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	
 		//get the uuid
 			if ($action == "update") {
-				$conference_profile_uuid = check_str($_POST["conference_profile_uuid"]);
+				$conference_profile_uuid = $_POST["conference_profile_uuid"];
 			}
 	
 		//check for all required data
@@ -61,66 +61,51 @@
 	
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
+
+				$array['conference_profiles'][0]['profile_name'] = $profile_name;
+				$array['conference_profiles'][0]['profile_enabled'] = $profile_enabled;
+				$array['conference_profiles'][0]['profile_description'] = $profile_description;
+
 				if ($action == "add" && permission_exists('conference_profile_add')) {
-					$sql = "insert into v_conference_profiles ";
-					$sql .= "(";
-					//$sql .= "domain_uuid, ";
-					$sql .= "conference_profile_uuid, ";
-					$sql .= "profile_name, ";
-					$sql .= "profile_enabled, ";
-					$sql .= "profile_description ";
-					$sql .= ")";
-					$sql .= "values ";
-					$sql .= "(";
-					//$sql .= "'$domain_uuid', ";
-					$sql .= "'".uuid()."', ";
-					$sql .= "'$profile_name', ";
-					$sql .= "'$profile_enabled', ";
-					$sql .= "'$profile_description' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
-	
+					$array['conference_profiles'][0]['conference_profile_uuid'] = uuid();
 					message::add($text['message-add']);
-					header("Location: conference_profiles.php");
-					return;
-	
-				} //if ($action == "add")
+				}
 	
 				if ($action == "update" && permission_exists('conference_profile_edit')) {
-					$sql = "update v_conference_profiles set ";
-					$sql .= "profile_name = '$profile_name', ";
-					$sql .= "profile_enabled = '$profile_enabled', ";
-					$sql .= "profile_description = '$profile_description' ";
-					$sql .= "where conference_profile_uuid = '$conference_profile_uuid'";
-					//$sql .= "and domain_uuid = '$domain_uuid' ";
-					$db->exec(check_sql($sql));
-					unset($sql);
-	
+					$array['conference_profiles'][0]['conference_profile_uuid'] = $conference_profile_uuid;
 					message::add($text['message-update']);
-					header("Location: conference_profiles.php");
-					return;
-	
-				} //if ($action == "update")
-			} //if ($_POST["persistformvar"] != "true")
-	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+				}
+
+				if (is_uuid($array['conference_profiles'][0]['conference_profile_uuid'])) {
+					$database = new database;
+					$database->app_name = 'conference_profiles';
+					$database->app_uuid = 'c33e2c2a-847f-44c1-8c0d-310df5d65ba9';
+					$database->save($array);
+					unset($array);
+				}
+
+				header("Location: conference_profiles.php");
+				exit;
+
+			}
+	}
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-		$conference_profile_uuid = check_str($_GET["id"]);
+		$conference_profile_uuid = $_GET["id"];
 		$sql = "select * from v_conference_profiles ";
-		$sql .= "where conference_profile_uuid = '$conference_profile_uuid' ";
-		//$sql .= "and domain_uuid = '$domain_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-
-		foreach ($result as &$row) {
+		$sql .= "where conference_profile_uuid = :conference_profile_uuid ";
+		//$sql .= "and domain_uuid = :domain_uuid ";
+		$parameters['conference_profile_uuid'] = $conference_profile_uuid;
+		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && sizeof($row) != 0) {
 			$profile_name = $row["profile_name"];
 			$profile_enabled = $row["profile_enabled"];
 			$profile_description = $row["profile_description"];
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters);
 	}
 
 //show the header

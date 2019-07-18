@@ -2,7 +2,7 @@
 /* $Id$ */
 /*
 	v_exec.php
-	Copyright (C) 2008 Mark J Crane
+	Copyright (C) 2008 - 2019 Mark J Crane
 	All rights reserved.
 
 	Redistribution and use in source and binary forms, with or without
@@ -26,42 +26,73 @@
 	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 	POSSIBILITY OF SUCH DAMAGE.
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('call_center_active_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
 
-//http get variables set to php variables
-	if (count($_GET)>0) {
-		$switch_cmd = trim($_GET["cmd"]);
-		$action = trim(check_str($_GET["action"]));
-		$data = trim(check_str($_GET["data"]));
-		$username = trim(check_str($_GET["username"]));
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('call_center_active_view')) {
+		//access granted
 	}
-
-//authorized commands
-	if (stristr($switch_cmd, 'user_status') == true) {
-		//authorized;
-	} elseif (stristr($switch_cmd, 'callcenter_config') == true) {
-		//authorized;
-	} elseif (stristr($switch_cmd, 'eavesdrop') == true) {
-		//authorized;
-	} elseif (stristr($switch_cmd, 'bridge') == true) {
-		//authorized;
-	} elseif (stristr($switch_cmd, 'uuid_transfer') == true) {
-		//authorized;
-	} else {
-		//not found. this command is not authorized
+	else {
 		echo "access denied";
 		exit;
 	}
 
+//http get variables set to php variables
+	if (count($_GET) > 0) {
+		$command = trim($_GET["command"]);
+		$uuid = trim($_GET["uuid"]);
+		$extension = trim($_GET["extension"]);
+		$caller_id_name = trim($_GET["extension"]);
+		$caller_id_number = trim($_GET["extension"]);
+	}
+
+//validate the extension
+	if (!is_numeric($extension)) {
+		$extension = null;
+	}
+	
+//validate the uuid
+	if (!is_uuid($uuid)) {
+		$uuid = null;
+	}
+
+//validate the caller_id_name
+	if (isset($caller_id_name) && strlen($caller_id_name)) {
+		$caller_id_name = substr($caller_id_name, 0, 10);
+	}
+
+//validate the caller_id_number
+	if (!is_numeric($caller_id_number)) {
+		$caller_id_number = null;
+	}
+
+//validate the command
+	switch ($command) {
+		case "eavesdrop":
+			$switch_command = "originate {origination_caller_id_name=eavesdrop,origination_caller_id_number=".$extension."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." &eavesdrop(".$uuid.")";
+			break;
+		case "uuid_transfer":
+			$switch_command = "uuid_transfer ".$uuid." -bleg ".$_SESSION['user']['extension'][0]['user']." XML ".$_SESSION['domain_name'];
+			break;
+		case "bridge":
+			$switch_command = "originate {origination_caller_id_name=".$caller_id_name.",origination_caller_id_number=".$caller_id_number."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." bridge(user/".$extension."@".$_SESSION['domain_name'].")";
+			break;
+		default:
+			echo "access denied";
+			exit;
+	}
+
+//run the command
+	if (isset($switch_command)) {
+		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+		$response = event_socket_request($fp, 'api '.$switch_command);
+	}
+
+/*
 //set the username
 	if (if_group("admin") || if_group("superadmin")) {
 		//use the username that was provided
@@ -71,8 +102,26 @@ else {
 	}
 
 //get to php variables
-	if (count($_GET)>0) {
-		if ($action == "user_status") {
+	if (count($_GET) > 0) {
+		if ($_GET['action'] == "user_status") {
+
+		//validate the user status
+			$user_status = $_GET['data'];
+			switch ($user_status) {
+				case "Available" :
+					break;
+				case "Available (On Demand)" :
+					break;
+				case "On Break" :
+					break;
+				case "Do Not Disturb" :
+					break;
+				case "Logged Out" :
+					break;
+				default :
+					$user_status = null;
+			}
+
 			$user_status = $data;
 			$sql  = "update v_users set ";
 			$sql .= "user_status = '".trim($user_status, "'")."' ";
@@ -96,5 +145,6 @@ else {
 				}
 		}
 	}
+*/
 
 ?>

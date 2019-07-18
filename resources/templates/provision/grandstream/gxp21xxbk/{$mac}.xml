@@ -35,9 +35,9 @@
 <!-- Firmware Server Path -->
 <!-- String -->
 {if isset($grandstream_firmware_path) && isset($firmware_version)}
-<P192>{$grandstream_firmware_path}/gxp21xx/{$firmware_version}</P192>
+<P192>{$grandstream_firmware_path}/{$firmware_version}</P192>
 {elseif isset($grandstream_firmware_path)}
-<P192>{$grandstream_firmware_path}/gxp21xx</P192>
+<P192>{$grandstream_firmware_path}/</P192>
 {else}
 <P192>{$domain_name}{$project_path}/app/provision</P192>
 {/if}
@@ -111,10 +111,10 @@
 <P47>{$account.1.server_address}</P47>
 
 <!-- Secondary SIP Server -->
-<P2312></P2312>
+<P2312>{$account.1.server_address_secondary}</P2312>
 
 <!-- Outbound Proxy -->
-<P48></P48>
+<P48>{$account.1.outbound_proxy_primary}</P48>
 
 <!-- SIP User ID -->
 <P35>{$account.1.user_id}</P35>
@@ -163,7 +163,7 @@
 <P81>0</P81>
 
 <!-- Register Expiration (in minutes). Default is 60. Max about 45 days -->
-<P32>3</P32>
+<P32>{$account.1.register_expires}</P32>
 
 <!-- Reregister Before Expiration (in seconds). Default is 0 second -->
 <P2330>0</P2330>
@@ -183,7 +183,13 @@
 <P250>400</P250>
 
 <!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS/TCP. Default is 0 -->
-<P130>0</P130>
+
+{$tp=0}
+{if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.1.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.1.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.1.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P130>{$tp}</P130>
 
 <!-- SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1 -->
 <P2329>1</P2329>
@@ -620,11 +626,11 @@
 
 <!-- Secondary SIP Server -->
 <!-- String -->
-<P2412></P2412>
+<P2412>{$account.2.server_address_secondary}</P2412>
 
 <!-- Outbound Proxy -->
 <!-- String -->
-<P403></P403>
+<P403>{$account.2.outbound_proxy}</P403>
 
 <!-- SIP User ID -->
 <!-- String -->
@@ -695,7 +701,7 @@
 <!-- Register Expiration (in minutes). Default is 60. Max is 45 days -->
 <!-- Number: 1 - 64800 -->
 <!-- Mandatory -->
-<P412>3</P412>
+<P412>{$account.2.register_expires}</P412>
 
 <!-- Reregister Before Expiration (in seconds). Default is 0 -->
 <!-- Number: 0 - 64800 -->
@@ -727,7 +733,12 @@
 <!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TCP/TLS. Default is 0 -->
 <!-- Number: 0, 1, 2 -->
 <!-- Mandatory -->
-<P448>0</P448>
+{$tp=0}
+{if $account.2.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.2.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.2.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.2.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P448>{$tp}</P448>
 
 <!-- SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1 -->
 <!-- Number: 0, 1 -->
@@ -1046,7 +1057,12 @@
 <!-- Dial Plan. Default is { x+ | *x+ | *xx*x+ } -->
 <!-- String -->
 <!-- Mandatory -->
-<P459>{ x+ | *x+ | *xx*x+ }</P459>
+
+{if isset($grandstream_dial_plan) }
+<P459>{$grandstream_dial_plan}</P459>
+{else}
+<P459>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P459>
+{/if}  
 
 <!-- Delayed Call Forward Wait Time (in seconds). Default 20 -->
 <!-- Number: 1 - 120 -->
@@ -1171,11 +1187,11 @@
 
 <!-- Secondary SIP Server -->
 <!-- String -->
-<P2512></P2512>
+<P2512>{$account.3.server_address_secondary}</P2512>
 
 <!-- Outbound Proxy -->
 <!-- String -->
-<P503></P503>
+<P503>{$account.3.outbound_proxy}</P503>
 
 <!-- SIP User ID -->
 <!-- String -->
@@ -1246,7 +1262,7 @@
 <!-- Register Expiration (in minutes). Default is 60. Max is 45 days -->
 <!-- Number: 1 - 64800 -->
 <!-- Mandatory -->
-<P512>3</P512>
+<P512>{$account.3.register_expires}</P512>
 
 <!-- Reregister before Expiration (in seconds). Default is 0 second -->
 <!-- Number: 0 - 64800 -->
@@ -1278,7 +1294,13 @@
 <!-- SIP Transport. 0 - UDP, 1 - TCP. 2- TCP/TLS. Default is 0 -->
 <!-- Number: 0, 1, 2 -->
 <!-- Mandatory -->
-<P548>0</P548>
+
+{$tp=0}
+{if $account.3.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.3.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.3.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.3.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P548>{$tp}</P548> 
 
 <!-- SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1 -->
 <!-- Number: 0, 1 -->
@@ -1720,11 +1742,11 @@
 
 <!-- Secondary SIP Server -->
 <!-- String -->
-<P2612></P2612>
+<P2612>{$account.4.server_address_secondary}</P2612>
 
 <!-- Outbound Proxy -->
 <!-- String -->
-<P603></P603>
+<P603>{$account.4.outbound_proxy_primary}</P603>
 
 <!-- SIP User ID -->
 <!-- String -->
@@ -1796,7 +1818,7 @@
 <!-- Register Expiration (in minutes). Default is 60. Max is 45 days -->
 <!-- Number: 1 - 64800 -->
 <!-- Mandatory -->
-<P612>3</P612>
+<P612>{$account.4.register_expires}</P612>
 
 <!-- Reregister before Expiration (in seconds). Default is 0 -->
 <!-- Number: 0 - 64800 -->
@@ -1828,7 +1850,13 @@
 <!-- SIP Transport. 0 - UDP, 1 - TCP. 2 - TCP/TLS. Default is 0 -->
 <!-- Number: 0, 1, 2 -->
 <!-- Mandatory -->
-<P648>0</P648>
+
+{$tp=0}
+{if $account.4.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.4.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.4.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.4.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P648>{$tp}</P648>  
 
 <!-- SIP URI Scheme When Using TLS. 0 - sip, 1 - sips. Default is 1 -->
 <!-- Number: 0, 1 -->
@@ -2266,11 +2294,11 @@
 
 <!-- Secondary SIP Server -->
 <!-- String -->
-<P2712></P2712>
+<P2712>{$account.5.server_address_secondary}</P2712>
 
 <!-- Outbound Proxy -->
 <!-- String -->
-<P1703></P1703>
+<P1703>{$account.5.outbound_proxy_primary}</P1703>
 
 <!-- SIP User ID -->
 <!-- String -->
@@ -2342,7 +2370,7 @@
 <!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
 <!-- Number: 1-64800 -->
 <!-- Mandatory -->
-<P1712>3</P1712>
+<P1712>{$account.5.register_expires}</P1712>
 
 <!-- Reregister before Expiration (in seconds) Default is 0 -->
 <!-- Number: 0 - 64800 -->
@@ -2374,7 +2402,13 @@
 <!-- SIP Transport. 0 - UDP, 1 - TCP. 2 - TCP/TLS. Default is 0 -->
 <!-- Number: 0, 1, 2 -->
 <!-- Mandatory -->
-<P1748>0</P1748>
+
+{$tp=0}
+{if $account.5.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.5.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.5.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.5.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P1748>{$tp}</P1748>  
 
 <!-- SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1 -->
 <!-- Number: 0, 1 -->
@@ -2814,11 +2848,11 @@
 
 <!-- Secondary SIP Server -->
 <!-- String -->
-<P2812></P2812>
+<P2812>{$account.6.server_address_secondary}</P2812>
 
 <!-- Outbound Proxy -->
 <!-- String -->
-<P1803></P1803>
+<P1803>{$account.6.outbound_proxy_primary}</P1803>
 
 <!-- SIP User ID -->
 <!-- String -->
@@ -2891,7 +2925,7 @@
 <!-- Register Expiration (in minutes). Default is 60. Max is 45 days -->
 <!-- Number: 1 - 64800 -->
 <!-- Mandatory -->
-<P1812>3</P1812>
+<P1812>{$account.6.register_expires}</P1812>
 
 <!-- Reregister before Expiration (in seconds). Default is 0 -->
 <!-- Number: 1 - 64800 -->
@@ -2923,7 +2957,13 @@
 <!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TCP/TLS. Default is 2 -->
 <!-- Number: 0, 1, 2 -->
 <!-- Mandatory -->
-<P1848>0</P1848>
+
+{$tp=0}
+{if $account.6.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.6.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.6.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.6.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P1848>{$tp}</P1848>  
 
 <!-- SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1 -->
 <!-- Number: 0, 1 -->

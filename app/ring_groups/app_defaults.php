@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -26,6 +26,30 @@
 
 //process this only one time
 if ($domains_processed == 1) {
+
+	//select ring groups with an empty context
+	$sql = "select * from v_ring_groups where ring_group_context is null ";
+	$database = new database;
+	$ring_groups = $database->select($sql, null, 'all');
+	if (is_array($ring_groups)) {
+		//get the domain list
+		$sql = "select * from v_domains ";
+		$domains = $database->select($sql, null, 'all');
+
+		//update the ring group context
+		foreach ($ring_groups as $row) {
+			foreach ($domains as $domain) {
+				if ($row['domain_uuid'] == $domain['domain_uuid']) {
+					$sql = "update v_ring_groups set ring_group_context = :domain_name \n";
+					$sql .= "where ring_group_uuid = :ring_group_uuid \n";
+					$parameters['domain_name'] = $domain['domain_name'];
+					$parameters['ring_group_uuid'] = $row['ring_group_uuid'];
+					$database->execute($sql, $parameters);
+					unset($parameters);
+				}
+			 }
+		}
+	}
 
 }
 

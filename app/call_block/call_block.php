@@ -30,12 +30,8 @@ require_once "resources/require.php";
 
 //check permissions
 	require_once "resources/check_auth.php";
-	if (permission_exists('call_block_view')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
+	if (!permission_exists('call_block_view')) {
+		echo "access denied"; exit;
 	}
 
 //add multi-lingual support
@@ -47,37 +43,22 @@ require_once "resources/require.php";
 	require_once "resources/paging.php";
 
 //get variables used to control the order
-	$order_by = $_GET["order_by"];
+	$order_by = $_GET["order_by"] != '' ? $_GET["order_by"] : 'call_block_number';
 	$order = $_GET["order"];
 
 //show the content
-	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-call-block']."</b></td>\n";
-	echo "		<td width='50%' align='right'>&nbsp;</td>\n";
-	echo "	</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' colspan='2'>\n";
-	echo "			".$text['description-call-block']."<br /><br />\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "</table>\n";
+	echo "<b>".$text['title-call-block']."</b>\n";
+	echo "<br /><br />\n";
+	echo $text['description-call-block']."\n";
+	echo "<br /><br />\n";
 
 //prepare to page the results
-	$sql = "select count(*) as num_rows from v_call_block ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-	$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-	}
+	$sql = "select count(*) from v_call_block ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($parameters);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -89,18 +70,13 @@ require_once "resources/require.php";
 
 //get the  list
 	$sql = "select * from v_call_block ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	if (strlen($order_by)> 0) { 
-		$sql .= "order by $order_by $order ";
-	} else {
-		$sql .= "order by call_block_number asc "; 
-	}
-	$sql .= " limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll();
-	$result_count = count($result);
-	unset ($prep_statement, $sql);
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= order_by($order_by, $order);
+	$sql .= limit_offset($rows_per_page, $offset);
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
+	unset($parameters);
 
 //table headers
 	$c = 0;
@@ -122,13 +98,13 @@ require_once "resources/require.php";
 	echo "</tr>\n";
 
 //show the results
-	if ($result_count > 0) {
+	if (is_array($result)) {
 		foreach($result as $row) {
-			$tr_link = (permission_exists('call_block_edit')) ? "href='call_block_edit.php?id=".$row['call_block_uuid']."'" : null;
+			$tr_link = (permission_exists('call_block_edit')) ? "href='call_block_edit.php?id=".escape($row['call_block_uuid'])."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('call_block_edit')) {
-				echo "<a href='call_block_edit.php?id=".escape($row['call_block_uuid'])."'>".escape($row['call_block_number'])."</a>";
+				echo "<a ".$tr_link."'>".escape($row['call_block_number'])."</a>";
 			}
 			else {
 				echo escape($row['call_block_number']);
@@ -153,30 +129,20 @@ require_once "resources/require.php";
 			};
 			echo "  </td>";
 			echo "</tr>\n";
-			if ($c==0) { $c=1; } else { $c=0; }
+			$c = $c == 1 ? 0 : 1;
 		} //end foreach
 		unset($sql, $result, $row_count);
 	} //end if results
 
 //complete the content
-	echo "<tr>\n";
-	echo "<td colspan='11' align='left'>\n";
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td class='list_control_icons'>";
+	echo "</table>\n";
 	if (permission_exists('call_block_add')) {
-		echo "<a href='call_block_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo "<div style='float: right;'>\n";
+		echo "	<a href='call_block_edit.php' alt=\"".$text['button-add']."\">".$v_link_label_add."</a>";
+		echo "</div>\n";
 	}
-	echo "		</td>\n";
-	echo "	</tr>\n";
- 	echo "	</table>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "</table>";
-	echo "<br /><br />";
+	echo "<br />\n";
+	echo "<div align='center'>".$paging_controls."</div>\n";
 
 //include the footer
 	require_once "resources/footer.php";

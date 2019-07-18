@@ -56,19 +56,20 @@
 	}
 
 //get the extension_uuid
-	$extension_uuid = check_str($_REQUEST["id"]);
+	$extension_uuid = $_REQUEST["id"];
 
 //get the extension number
 	$sql = "select * from v_extensions ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and extension_uuid = '$extension_uuid' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and extension_uuid = :extension_uuid ";
 	if (!(permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb'))) {
 		if (count($_SESSION['user']['extension']) > 0) {
 			$sql .= "and (";
 			$x = 0;
-			foreach($_SESSION['user']['extension'] as $row) {
+			foreach($_SESSION['user']['extension'] as $index => $row) {
 				if ($x > 0) { $sql .= "or "; }
-				$sql .= "extension = '".$row['user']."' ";
+				$sql .= "extension = :extension_".$index." ";
+				$parameters['extension_'.$index] = $row['user'];
 				$x++;
 			}
 			$sql .= ")";
@@ -78,70 +79,65 @@
 			$sql .= "and extension = 'disabled' ";
 		}
 	}
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	if (count($result)== 0) {
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$parameters['extension_uuid'] = $extension_uuid;
+	$database = new database;
+	$row = $database->select($sql, $parameters, 'row');
+	if (is_array($row) && sizeof($row) != 0) {
+		$extension = $row["extension"];
+		$accountcode = $row["accountcode"];
+		$effective_caller_id_name = $row["effective_caller_id_name"];
+		$effective_caller_id_number = $row["effective_caller_id_number"];
+		$outbound_caller_id_name = $row["outbound_caller_id_name"];
+		$outbound_caller_id_number = $row["outbound_caller_id_number"];
+		$do_not_disturb = $row["do_not_disturb"] != '' ? $row["do_not_disturb"] : 'false';
+		$forward_all_destination = $row["forward_all_destination"];
+		$forward_all_enabled = $row["forward_all_enabled"];
+		$forward_busy_destination = $row["forward_busy_destination"];
+		$forward_busy_enabled = $row["forward_busy_enabled"];
+		$forward_no_answer_destination = $row["forward_no_answer_destination"];
+		$forward_no_answer_enabled = $row["forward_no_answer_enabled"];
+		$forward_user_not_registered_destination = $row["forward_user_not_registered_destination"];
+		$forward_user_not_registered_enabled = $row["forward_user_not_registered_enabled"];
+		$follow_me_uuid = $row["follow_me_uuid"];
+		$forward_caller_id_uuid = $row["forward_caller_id_uuid"];
+	}
+	else {
 		echo "access denied";
 		exit;
 	}
-	else {
-		foreach ($result as &$row) {
-			$extension = $row["extension"];
-			$accountcode = $row["accountcode"];
-			$effective_caller_id_name = $row["effective_caller_id_name"];
-			$effective_caller_id_number = $row["effective_caller_id_number"];
-			$outbound_caller_id_name = $row["outbound_caller_id_name"];
-			$outbound_caller_id_number = $row["outbound_caller_id_number"];
-			$do_not_disturb = $row["do_not_disturb"];
-			$forward_all_destination = $row["forward_all_destination"];
-			$forward_all_enabled = $row["forward_all_enabled"];
-			$forward_busy_destination = $row["forward_busy_destination"];
-			$forward_busy_enabled = $row["forward_busy_enabled"];
-			$forward_no_answer_destination = $row["forward_no_answer_destination"];
-			$forward_no_answer_enabled = $row["forward_no_answer_enabled"];
-			$forward_user_not_registered_destination = $row["forward_user_not_registered_destination"];
-			$forward_user_not_registered_enabled = $row["forward_user_not_registered_enabled"];
-			$follow_me_uuid = $row["follow_me_uuid"];
-			$forward_caller_id_uuid = $row["forward_caller_id_uuid"];
-			break; //limit to 1 row
-		}
-		if (strlen($do_not_disturb) == 0) {
-			$do_not_disturb = "false";
-		}
-	}
-	unset ($prep_statement);
+	unset($sql, $parameters, $row);
 
 //process post vars
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		//get http post variables and set them to php variables
 			if (count($_POST) > 0) {
-				$forward_all_enabled = check_str($_POST["forward_all_enabled"]);
-				$forward_all_destination = check_str($_POST["forward_all_destination"]);
-				$forward_busy_enabled = check_str($_POST["forward_busy_enabled"]);
-				$forward_busy_destination = check_str($_POST["forward_busy_destination"]);
-				$forward_no_answer_enabled = check_str($_POST["forward_no_answer_enabled"]);
-				$forward_no_answer_destination = check_str($_POST["forward_no_answer_destination"]);
-				$forward_user_not_registered_enabled = check_str($_POST["forward_user_not_registered_enabled"]);
-				$forward_user_not_registered_destination = check_str($_POST["forward_user_not_registered_destination"]);
+				$forward_all_enabled = $_POST["forward_all_enabled"];
+				$forward_all_destination = $_POST["forward_all_destination"];
+				$forward_busy_enabled = $_POST["forward_busy_enabled"];
+				$forward_busy_destination = $_POST["forward_busy_destination"];
+				$forward_no_answer_enabled = $_POST["forward_no_answer_enabled"];
+				$forward_no_answer_destination = $_POST["forward_no_answer_destination"];
+				$forward_user_not_registered_enabled = $_POST["forward_user_not_registered_enabled"];
+				$forward_user_not_registered_destination = $_POST["forward_user_not_registered_destination"];
 
-				$forward_caller_id_uuid = check_str($_POST["forward_caller_id_uuid"]);
-				$cid_name_prefix = check_str($_POST["cid_name_prefix"]);
-				$cid_number_prefix = check_str($_POST["cid_number_prefix"]);
-				$follow_me_enabled = check_str($_POST["follow_me_enabled"]);
-				$follow_me_caller_id_uuid = check_str($_POST["follow_me_caller_id_uuid"]);
-				$follow_me_ignore_busy = check_str($_POST["follow_me_ignore_busy"]);
+				$forward_caller_id_uuid = $_POST["forward_caller_id_uuid"];
+				$cid_name_prefix = $_POST["cid_name_prefix"];
+				$cid_number_prefix = $_POST["cid_number_prefix"];
+				$follow_me_enabled = $_POST["follow_me_enabled"];
+				$follow_me_caller_id_uuid = $_POST["follow_me_caller_id_uuid"];
+				$follow_me_ignore_busy = $_POST["follow_me_ignore_busy"];
 				$n = 0;
 				foreach ($_POST["destinations"] as $field) {
-					$destinations[$n]['uuid'] = check_str($field['uuid']);
-					$destinations[$n]['destination'] = check_str($field['destination']);
-					$destinations[$n]['delay'] = check_str($field['delay']);
-					$destinations[$n]['prompt'] = check_str($field['prompt']);
-					$destinations[$n]['timeout'] = check_str($field['timeout']);
+					$destinations[$n]['uuid'] = $field['uuid'];
+					$destinations[$n]['destination'] = $field['destination'];
+					$destinations[$n]['delay'] = $field['delay'];
+					$destinations[$n]['prompt'] = $field['prompt'];
+					$destinations[$n]['timeout'] = $field['timeout'];
 					$n++;
 				}
-				$dnd_enabled = check_str($_POST["dnd_enabled"]);
+				$dnd_enabled = $_POST["dnd_enabled"];
 			}
 
 			//check for all required data
@@ -255,6 +251,7 @@
 			$database->app_name = 'call_routing';
 			$database->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
 			$database->save($array);
+			unset($array);
 			//$message = $database->message;
 
 		//remove the temporary permission
@@ -262,8 +259,14 @@
 
 		//delete empty destination records
 			if (is_array($follow_me_delete_uuids) && sizeof($follow_me_delete_uuids) > 0) {
-				$sql = "delete from v_follow_me_destinations where follow_me_destination_uuid in ('".implode("','", $follow_me_delete_uuids)."') ";
-				$db->exec(check_sql($sql));
+				foreach ($follow_me_delete_uuids as $follow_me_delete_uuid) {
+					$array['follow_me_destinations'][]['follow_me_destination_uuid'] = $follow_me_delete_uuid;
+				}
+				$database = new database;
+				$database->app_name = 'call_routing';
+				$database->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
+				$database->delete($array);
+				unset($array);
 			}
 
 		//call forward config
@@ -390,36 +393,39 @@
 	require_once "resources/header.php";
 
 //pre-populate the form
-	if ($follow_me_uuid != '') {
+	if (is_uuid($follow_me_uuid)) {
 		$sql = "select * from v_follow_me ";
-		$sql .= "where domain_uuid = '".$domain_uuid."' ";
-		$sql .= "and follow_me_uuid = '".$follow_me_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and follow_me_uuid = :follow_me_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['follow_me_uuid'] = $follow_me_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		unset($sql, $parameters);
+
+		if (is_array($row) && sizeof($row) != 0) {
 			$cid_name_prefix = $row["cid_name_prefix"];
 			$cid_number_prefix = $row["cid_number_prefix"];
 			$follow_me_enabled = $row["follow_me_enabled"];
 			$follow_me_caller_id_uuid = $row["follow_me_caller_id_uuid"];
 			$follow_me_ignore_busy = $row["follow_me_ignore_busy"];
+			unset($row);
 
 			$sql = "select * from v_follow_me_destinations ";
-			$sql .= "where follow_me_uuid = '".$follow_me_uuid."' ";
+			$sql .= "where follow_me_uuid = :follow_me_uuid ";
 			$sql .= "order by follow_me_order asc ";
-			$prep_statement_2 = $db->prepare(check_sql($sql));
-			$prep_statement_2->execute();
-			$result2 = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
-			foreach ($result2 as $x => &$row2) {
-				$destinations[$x]['uuid'] = $row2["follow_me_destination_uuid"];
-				$destinations[$x]['destination'] = $row2["follow_me_destination"];
-				$destinations[$x]['delay'] = $row2["follow_me_delay"];
-				$destinations[$x]['prompt'] = $row2["follow_me_prompt"];
-				$destinations[$x]['timeout'] = $row2["follow_me_timeout"];
+			$parameters['follow_me_uuid'] = $follow_me_uuid;
+			$database = new database;
+			$result = $database->select($sql, $parameters, 'all');
+			foreach ($result as $x => &$row) {
+				$destinations[$x]['uuid'] = $row["follow_me_destination_uuid"];
+				$destinations[$x]['destination'] = $row["follow_me_destination"];
+				$destinations[$x]['delay'] = $row["follow_me_delay"];
+				$destinations[$x]['prompt'] = $row["follow_me_prompt"];
+				$destinations[$x]['timeout'] = $row["follow_me_timeout"];
 			}
-			unset ($prep_statement_2);
+			unset($sql, $parameters, $result, $row);
 		}
-		unset ($prep_statement);
 	}
 
 //set the default
@@ -436,11 +442,11 @@
 	echo "	var extensions = [\n";
 
 	$sql = "select * from v_extensions ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by extension, number_alias asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
 	foreach ($result as &$row) {
 		if (strlen($number_alias) == 0) {
 			echo "		\"".escape($row["extension"])."\",\n";
@@ -455,6 +461,7 @@
 		echo "		source: extensions\n";
 		echo "	});\n";
 	}
+	unset($sql, $parameters, $result, $row);
 	echo "});\n";
 	echo "</script>\n";
 
@@ -543,11 +550,15 @@
 	echo "</tr>\n";
 
 	if (permission_exists('call_forward_caller_id')) {
-		$sql_forward = "select destination_uuid, destination_number, destination_description, destination_caller_id_number, destination_caller_id_name from v_destinations where domain_uuid = '".escape($domain_uuid)."' and destination_type = 'inbound' order by destination_number asc ";
-		$prep_statement_forward = $db->prepare(check_sql($sql_forward));
-		$prep_statement_forward->execute();
-		$result_forward = $prep_statement_forward->fetchAll(PDO::FETCH_ASSOC);
-		if (count($result_forward) > 0) {
+		$sql = "select destination_uuid, destination_number, destination_description, destination_caller_id_number, destination_caller_id_name ";
+		$sql .= "from v_destinations ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and destination_type = 'inbound' ";
+		$sql .= "order by destination_number asc ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$database = new database;
+		$result = $database->select($sql, $parameters, 'all');
+		if (is_array($result) && sizeof($result) != 0) {
 			echo "<tr>\n";
 			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>";
 			echo 	$text['label-cid-number'];
@@ -555,24 +566,24 @@
 			echo "<td class='vtable' align='left'>\n";
 			echo "	<select name='forward_caller_id_uuid' id='forward_caller_id_uuid' class='formfld' >\n";
 			echo "		<option value=''></option>\n";
-			foreach ($result_forward as &$row_forward) {
-				$selected = $row_forward["destination_uuid"] == $forward_caller_id_uuid ? "selected='selected' " : '';
-				$caller_id_number = $row_forward['destination_caller_id_number'];
+			foreach ($result as &$row) {
+				$selected = $row["destination_uuid"] == $forward_caller_id_uuid ? "selected='selected' " : '';
+				$caller_id_number = $row['destination_caller_id_number'];
 				if(strlen($caller_id_number) == 0){
-					$caller_id_number = $row_forward['destination_number'];
+					$caller_id_number = $row['destination_number'];
 				}
-				$caller_id_name = $row_forward['destination_caller_id_name'];
+				$caller_id_name = $row['destination_caller_id_name'];
 				if(strlen($caller_id_name) == 0){
-					$caller_id_name = $row_forward['destination_description'];
+					$caller_id_name = $row['destination_description'];
 				}
-				echo "		<option value='".escape($row_forward["destination_uuid"])."' ".escape($selected).">".escape(format_phone($caller_id_number))." : ".$caller_id_name."</option>\n";
+				echo "		<option value='".escape($row["destination_uuid"])."' ".escape($selected).">".escape(format_phone($caller_id_number))." : ".escape($caller_id_name)."</option>\n";
 			}
 			echo "	</select><br />\n";
 			echo $text['description-cid-number']."\n";
 			echo "</td>\n";
 			echo "</tr>\n";
 		}
-		unset ($sql_forward, $prep_statement_forward, $result_forward, $row_forward);
+		unset($sql, $parameters, $result, $row);
 	}
 
 	echo "<tr><td colspan='2'><br /></td></tr>\n";
@@ -656,11 +667,15 @@
 	}
 
 	if (permission_exists('follow_me_caller_id')) {
-		$sql_follow_me = "select destination_uuid, destination_number, destination_description, destination_caller_id_number, destination_caller_id_name from v_destinations where domain_uuid = '".escape($domain_uuid)."' and destination_type = 'inbound' order by destination_number asc ";
-		$prep_statement_follow_me = $db->prepare(check_sql($sql_follow_me));
-		$prep_statement_follow_me->execute();
-		$result_follow_me = $prep_statement_follow_me->fetchAll(PDO::FETCH_ASSOC);
-		if (count($result_follow_me) > 0) {
+		$sql = "select destination_uuid, destination_number, destination_description, destination_caller_id_number, destination_caller_id_name ";
+		$sql .= "from v_destinations ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and destination_type = 'inbound' ";
+		$sql .= "order by destination_number asc ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$database = new database;
+		$result = $database->select($sql, $parameters, 'all');
+		if (is_array($result) && sizeof($result) != 0) {
 			echo "<tr>\n";
 			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>";
 			echo 	$text['label-cid-number'];
@@ -668,26 +683,26 @@
 			echo "<td class='vtable' align='left'>\n";
 			echo "	<select name='follow_me_caller_id_uuid' id='follow_me_caller_id_uuid' class='formfld' >\n";
 			echo "		<option value=''></option>\n";
-			foreach ($result_follow_me as &$row_follow_me) {
-				$selected = $row_follow_me["destination_uuid"] == $follow_me_caller_id_uuid ? "selected='selected'" : '';
+			foreach ($result as &$row) {
+				$selected = $row["destination_uuid"] == $follow_me_caller_id_uuid ? "selected='selected'" : null;
 
-				$caller_id_number = $row_follow_me['destination_caller_id_number'];
+				$caller_id_number = $row['destination_caller_id_number'];
 				if(strlen($caller_id_number) == 0){
-					$caller_id_number = $row_follow_me['destination_number'];
+					$caller_id_number = $row['destination_number'];
 				}
-				$caller_id_name = $row_follow_me['destination_caller_id_name'];
+				$caller_id_name = $row['destination_caller_id_name'];
 				if(strlen($caller_id_name) == 0){
-					$caller_id_name = $row_follow_me['destination_description'];
+					$caller_id_name = $row['destination_description'];
 				}
 
-				echo "		<option value='".escape($row_follow_me["destination_uuid"])."' ".escape($selected).">".format_phone(escape($caller_id_number))." : ".escape($caller_id_name)."</option>\n";
+				echo "		<option value='".escape($row["destination_uuid"])."' ".$selected.">".format_phone(escape($caller_id_number))." : ".escape($caller_id_name)."</option>\n";
 			}
 			echo "	</select><br />\n";
 			echo $text['description-cid-number']."\n";
 			echo "</td>\n";
 			echo "</tr>\n";
 		}
-		unset ($sql_follow_me, $prep_statement_follow_me, $result_follow_me, $row_follow_me);
+		unset($sql, $parameters, $result, $row);
 	}
 
 	if (permission_exists('follow_me_cid_name_prefix')) {

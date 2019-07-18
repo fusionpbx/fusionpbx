@@ -176,16 +176,16 @@
 				//local extension (source) > external number (destination)
 				if (strlen($src) < 7 && strlen($dest_cid_number) == 0) {
 					//retrieve outbound caller id from the (source) extension
-					$sql = "select outbound_caller_id_name, outbound_caller_id_number from v_extensions where domain_uuid = '".$_SESSION['domain_uuid']."' and extension = '".$src."' ";
-					$prep_statement = $db->prepare(check_sql($sql));
-					$prep_statement->execute();
-					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					$sql = "select outbound_caller_id_name, outbound_caller_id_number from v_extensions where domain_uuid = :domain_uuid and extension = :src ";
+					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+					$parameters['src'] = $src;
+					$database = new database;
+					$result = $database->select($sql, $parameters, 'all');
 					foreach ($result as &$row) {
 						$dest_cid_name = $row["outbound_caller_id_name"];
 						$dest_cid_number = $row["outbound_caller_id_number"];
 						break; //limit to 1 row
 					}
-					unset ($prep_statement);
 				}
 				if (permission_exists('click_to_call_call')) {
 					if (strpbrk($dest, '@') != FALSE) { //sip-uri

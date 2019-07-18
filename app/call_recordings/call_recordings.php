@@ -86,41 +86,29 @@
 	require_once "resources/paging.php";
 
 //get variables used to control the order
-	$order_by = check_str($_REQUEST["order_by"]);
-	$order = check_str($_REQUEST["order"]);
+	$order_by = $_REQUEST["order_by"] != '' ? $_REQUEST["order_by"] : 'call_recording_date';
+	$order = $_REQUEST["order"] != '' ? $_REQUEST["order"] : 'desc';
 
-//set the defaults
-	if (strlen($order_by) == 0) { 
-		$order_by = 'call_recording_date';
-		$order = 'desc';
-	}
-
-//add the search term
-	$search = strtolower(check_str($_REQUEST["search"]));
+	//add the search term
+	$search = strtolower($_REQUEST["search"]);
 	if (strlen($search) > 0) {
 		$sql_search = "and (";
-		$sql_search .= "lower(call_recording_name) like '%".$search."%' ";
-		$sql_search .= "or lower(call_recording_path) like '%".$search."%' ";
-		$sql_search .= "or lower(call_direction) like '%".$search."%' ";
-		$sql_search .= "or lower(call_recording_description) like '%".$search."%' ";
+		$sql_search .= "lower(call_recording_name) like :search ";
+		$sql_search .= "or lower(call_recording_path) like :search ";
+		$sql_search .= "or lower(call_direction) like :search ";
+		$sql_search .= "or lower(call_recording_description) like :search ";
 		$sql_search .= ") ";
+		$parameters['search'] = '%'.$search.'%';
 	}
 
 //prepare to page the results
-	$sql = "select count(call_recording_uuid) as num_rows from v_call_recordings ";
-	$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
+	$sql = "select count(call_recording_uuid) from v_call_recordings ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= $sql_search;
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-	}
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($sql);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -132,14 +120,13 @@
 
 //get the list
 	$sql = "select * from v_call_recordings ";
-	$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= $sql_search;
-	$sql .= "order by $order_by $order ";
-	$sql .= "limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$sql .= order_by($order_by, $order);
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //alternate the row style
 	$c = 0;
@@ -270,7 +257,7 @@
 			$x++;
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($result);
 	} //end if results
 
 	echo "<tr>\n";

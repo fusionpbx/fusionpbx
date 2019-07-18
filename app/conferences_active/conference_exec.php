@@ -30,7 +30,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -38,25 +38,29 @@
 	James Rose <james.o.rose@gmail.com>
 
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('conference_active_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('conference_active_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //get the http values and set them as php variables
-	if (count($_GET)>0) {
-		$cmd = trim(check_str($_GET["cmd"]));
-		$name = trim(check_str($_GET["name"]));
-		$uuid = trim(check_str($_GET["uuid"]));
-		$data = trim(check_str($_GET["data"]));
-		$id = trim(check_str($_GET["id"]));
-		$direction = trim(check_str($_GET["direction"]));
+	if (count($_GET) > 0) {
+		$cmd = trim($_GET["cmd"]);
+		$name = trim($_GET["name"]);
+		$uuid = trim($_GET["uuid"]);
+		$data = trim($_GET["data"]);
+		$id = trim($_GET["id"]);
+		$direction = trim($_GET["direction"]);
 	}
 
 //authorized commands
@@ -68,10 +72,82 @@ else {
 		exit;
 	}
 
-//check if the domain is in the switch_cmd
-	if(stristr($name, $_SESSION['domain_name']) === FALSE) {
-		echo "access denied";
-		exit;
+//get the conference name
+	if (isset($name) && strlen($name) > 0) {
+		$name_array = explode('@', $name);
+		$name = $name_array[0];
+	}
+
+//validate the name
+	if (!is_uuid($name)) {
+		$sql = "select conference_name ";
+		$sql .= "from v_conferences ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and conference_name = :conference_name ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['conference_name'] = $name;
+		$database = new database;
+		$name = $database->select($sql, $parameters, 'column');
+		unset ($parameters, $sql);
+	}
+
+//append the domain name to the conference name
+	$name = $name .'@'.$_SESSION['domain_name'];
+
+//validate the uuid
+	if (!is_uuid($uuid)) {
+		$uuid = null;
+	}
+
+//validate direction
+	switch ($direction) {
+		case "up":
+			break;
+		case "down":
+			break;
+		default:
+			$direction = null;
+	}
+
+//validate the data
+	switch ($data) {
+		case "energy":
+			break;
+		case "volume_in":
+			break;
+		case "volume_out":
+			break;
+		case "record":
+			break;
+		case "norecord":
+			break;
+		case "kick":
+			break;
+		case "kick all":
+			break;
+		case "mute":
+			break;
+		case "unmute":
+			break;
+		case "mute non_moderator":
+			break;
+		case "unmute non_moderator":
+			break;
+		case "deaf":
+			break;
+		case "undeaf":
+			break;
+		case "lock":
+			break;
+		case "unlock":
+			break;
+		default:
+			$data = null;
+	}
+
+//validate the numeric id
+	if (!is_numeric($id)) {
+		$direction = null;
 	}
 
 //define an alternative kick all
@@ -87,7 +163,9 @@ else {
 		$session_uuid = $xml->conference['uuid'];
 		$x = 0;
 		foreach ($xml->conference->members->member as $row) {
-			$switch_result = event_socket_request($fp, 'api uuid_kill '.$row->uuid);
+			if (is_uuid($row->uuid)) {
+				$switch_result = event_socket_request($fp, 'api uuid_kill '.$row->uuid);
+			}
 			if ($x < 1) {
 				usleep(500000); //500000 = 0.5 seconds
 			}
@@ -105,7 +183,7 @@ else {
 				$switch_cmd = $cmd . " ";
 				$switch_cmd .= $name . " ";
 				$switch_cmd .= $data . " ";
-				if (strlen($id) > 0) {
+				if ($id && strlen($id) > 0) {
 					$switch_cmd .= " ".$id;
 				}
 

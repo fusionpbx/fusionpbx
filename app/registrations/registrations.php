@@ -44,11 +44,11 @@
 	$text = $language->get();
 
 //get the http values and set them as variables
-	$search = check_str($_GET["search"]);
+	$search = $_REQUEST["search"];
 
 //set the format
 	$template = true;
-	if ($_GET["template"] == "false" && permission_exists('registration_reload')) {
+	if ($_REQUEST["template"] == "false" && permission_exists('registration_reload')) {
 		$template = false;
 	}
 
@@ -71,11 +71,18 @@
 	$language = new text;
 	$text = $language->get();
 
+//debug
+	//echo "<pre>\n";
+	//print_r($_REQUEST);
+	//echo "</pre>\n";
+
 //get the HTTP values and set as variables
 	$profile = trim($_REQUEST["profile"]);
 	$search = trim($_REQUEST["search"]);
 	$show = trim($_REQUEST["show"]);
-	if ($show == "all") { $profile = 'all'; }
+	if ($show == "all") {
+		$profile = 'all';
+	}
 
 //set the registrations variable
 	$registrations = $_REQUEST["registrations"];
@@ -108,6 +115,11 @@
 		}
 	}
 
+//get the list
+	$sql = "select sip_profile_name as name from v_sip_profiles ";
+	$database = new database;
+	$sip_profiles = $database->select($sql, null, 'all');
+
 //create the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 
@@ -115,30 +127,45 @@
 	if (isset($action)) {
 		if (is_array($registrations)) {
 			foreach ($registrations as $row) {
-					if ($fp) {
-						//get the vendor
-							$vendor = device::get_vendor_by_agent($row['agent']);
-						//prepare the command
+				if ($fp) {
+					//validate the profile
+						foreach($sip_profiles as $field) {
+							if ($field['name'] == $row['profile']) {
+								$profile = $row['profile'];
+							}
+						}
+					//validate the user
+						if (strlen($row['user']) > 0) {
+							$user = preg_replace('#[^a-zA-Z0-9_\-\.\@]#', '', $row['user']);
+						}
+					//validate the host
+						if (strlen($row['host']) > 0) {
+							$host = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $row['host']);
+						}
+					//get the vendor
+						$vendor = device::get_vendor_by_agent($row['agent']);
+					//prepare and send the command
+						if (strlen($vendor) > 0 && strlen($profile) > 0 && strlen($user) > 0) {
 							if ($action == "unregister") {
-								$command = "sofia profile ".$row['profile']." flush_inbound_reg ".$row['user']." reboot";
+								$command = "sofia profile ".$profile." flush_inbound_reg ".$user." reboot";
 							}
-							if ($action == "provision") {
-								$command = "lua app.lua event_notify ".$row['profile']." check_sync ".$row['user']." ".$vendor." ".$row['host'];
+							if ($action == "provision" && strlen($host) > 0) {
+								$command = "lua app.lua event_notify ".$profile." check_sync ".$user." ".$vendor." ".$host;
 							}
-							if ($action == "reboot") {
-								$command = "lua app.lua event_notify ".$row['profile']." reboot ".$row['user']." ".$vendor." ".$row['host'];
+							if ($action == "reboot" && strlen($host) > 0) {
+								$command = "lua app.lua event_notify ".$profile." reboot ".$user." ".$vendor." ".$host;
 							}
-						//send the command
 							$response = event_socket_request($fp, "api ".$command);
 							$response = event_socket_request($fp, "api log notice ".$command);
-					}
+						}
+				}
 			}
 		}
 	}
 
 //show the response
 	if (isset($response)) {
-		message::add($text['label-event']." ".ucwords($cmd)."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$text['label-response'].htmlentities($response));
+		message::add($text['label-event']." ".escape(ucwords($cmd))."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$text['label-response'].escape($response));
 	}
 
 //define variables
@@ -198,13 +225,13 @@
 			echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
 			echo "<tr>\n";
 			echo "<td width='100%'>\n";
-			echo "	<b>".$text['header-registrations']." (".$registration_count.")</b>\n";
+			echo "	<b>".$text['header-registrations']." (".escape($registration_count).")</b>\n";
 			echo "</td>\n";
 			echo "<td nowrap='nowrap' style='padding-right: 15px;'>";
 			if ($template) {
-				echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>";
-				echo "				<input type='hidden' name='show' value='".$show."'>";
-				echo "				<input type='hidden' name='profile' value='".$sip_profile_name."'>";
+				echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".escape($search)."'>";
+				echo "				<input type='hidden' name='show' value='".escape($show)."'>";
+				echo "				<input type='hidden' name='profile' value='".escape($sip_profile_name)."'>";
 				echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 			}
 			echo "</td>";
@@ -217,14 +244,14 @@
 					$location = 'registration_reload.php';
 				}
 				if ($show == "all") {
-					echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='$location?profile=$sip_profile_name'\" value='".$text['button-back']."'>\n";
+					echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='".escape($location)."?profile=".escape($sip_profile_name)."'\" value='".$text['button-back']."'>\n";
 				}
 				else {
-					echo "	<input type='button' class='btn' name='' alt='".$text['button-show_all']."' onclick=\"window.location='$location?profile=$sip_profile_name&show=all'\" value='".$text['button-show_all']."'>\n";
+					echo "	<input type='button' class='btn' name='' alt='".$text['button-show_all']."' onclick=\"window.location='".escape($location)."?profile=".escape($sip_profile_name)."&show=all'\" value='".$text['button-show_all']."'>\n";
 				}
 			}
 			if ($template) {
-				echo "	<input type='button' class='btn' name='' alt='".$text['button-refresh']."' onclick=\"window.location='$location?search=$search&show=$show'\" value='".$text['button-refresh']."'>\n";
+				echo "	<input type='button' class='btn' name='' alt='".$text['button-refresh']."' onclick=\"window.location='".escape($location)."?search=".escape($search)."&show=".escape($show)."'\" value='".$text['button-refresh']."'>\n";
 			}
 			echo "</td>\n";
 			echo "</tr>\n";
@@ -270,7 +297,7 @@
 							//show the registrations
 								echo "<tr>\n";
 								echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='vertical-align:middle; display: table-cell; align: center;'>\n";
-								echo "		<input type='checkbox' name=\"registrations[$x][checked]\" id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$row['user']."').checked = false; }\">\n";
+								echo "		<input type='checkbox' name=\"registrations[$x][checked]\" id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('chk_all_".escape($row['user'])."').checked = false; }\">\n";
 								echo "		<input type='hidden' name=\"registrations[$x][user]\" value='".escape($row['user'])."' />\n";
 								echo "		<input type='hidden' name=\"registrations[$x][profile]\" value='".escape($row['sip_profile_name'])."' />\n";
 								echo "		<input type='hidden' name=\"registrations[$x][agent]\" value='".escape($row['agent'])."' />\n";
@@ -280,8 +307,8 @@
 								echo "	<td class='".$row_style[$c]."'>".escape($row['user'])."&nbsp;</td>\n";
 								echo "	<td class='".$row_style[$c]."'>".escape($row['agent'])."&nbsp;</td>\n";
 								echo "	<td class='".$row_style[$c]."'>".escape(explode('"',$row['contact'])[1])."</td>\n";
-								echo "	<td class='".$row_style[$c]."'><a href='http://".escape($row['lan-ip'])."' target='_blank'>".escape($row['lan-ip'])."</a></td>\n";
-								echo "	<td class='".$row_style[$c]."'><a href='http://".escape($row['network-ip'])."' target='_blank'>".escape($row['network-ip'])."</a></td>\n";
+								echo "	<td class='".$row_style[$c]."'><a href='https://".escape($row['lan-ip'])."' target='_blank'>".escape($row['lan-ip'])."</a></td>\n";
+								echo "	<td class='".$row_style[$c]."'><a href='https://".escape($row['network-ip'])."' target='_blank'>".escape($row['network-ip'])."</a></td>\n";
 								echo "	<td class='".$row_style[$c]."'>".escape($row['network-port'])."</td>\n";
 								echo "	<td class='".$row_style[$c]."'>".escape($row['host'])."</td>\n";
 								echo "	<td class='".$row_style[$c]."'>".escape($row['status'])."</td>\n";
@@ -299,7 +326,7 @@
 				}
 			}
 			echo "</table>\n";
-			echo "<input type='hidden' name=\"show\" value='".$show."' />\n";
+			echo "<input type='hidden' name=\"show\" value='".escape($show)."' />\n";
 			echo "</form>\n";
 
 		//close the connection and unset the variable

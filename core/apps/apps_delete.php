@@ -39,14 +39,10 @@ else {
 	$text = $language->get();
 
 //get the id
-	if (count($_GET) > 0) {
-		$id = check_str($_GET["id"]);
-	}
+	if (is_uuid($_GET["id"]) {
 
-if (strlen($id) > 0) {
-
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$app_uuid = $_GET["id"];
+
 		//get the list of installed apps from the core and mod directories
 			$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
 			$x=0;
@@ -60,36 +56,45 @@ if (strlen($id) > 0) {
 					$name = $row['name'];
 					if ($row["uuid"] == $app_uuid && $row['category'] != "Core") {
 						//delete the app from the menu
-							foreach ($row['menu'] as &$menu) {
+							foreach ($row['menu'] as $index => &$menu) {
 								//delete menu groups and permissions from the database
-									$sql = "delete from v_menu_item_groups ";
-									$sql .= "where menu_item_uuid = '".$menu['uuid']."' ";
-									$db->query($sql);
-
-									$sql = "delete from v_menu_items ";
-									$sql .= "where menu_item_uuid = '".$menu['uuid']."' ";
-									$db->query($sql);
-
+									$array['menu_item_groups'][$index]['menu_item_uuid'] = $menu['uuid'];
+									$array['menu_items'][$index['menu_item_uuid'] = $menu['uuid'];
 								//delete the app from the file system
 									if (strlen($menu['path']) > 0) {
 										system('rm -rf '.dirname($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.$menu['path']));
 									}
 							}
+							if (is_array($array) && sizeof($array) != 0) {
+								$database = new database;
+								$database->app_name = 'apps';
+								$database->app_uuid = 'd8704214-75a0-e52f-1336-f0780e29fef8';
+								$database->delete($array);
+								unset($array);
+							}
 
 						//delete the group permissions for the app
-							foreach ($row['permissions'] as &$permission) {
-								$sql = "delete from v_group_permissions ";
-								$sql .= "where permission_name = '".$permission['name']."' ";
-								$db->query($sql);
+							foreach ($row['permissions'] as $index => &$permission) {
+								$array['group_permissions'][$index]['permission_name'] = $permission['name'];
+							}
+							if (is_array($array) && sizeof($array) != 0) {
+								$database = new database;
+								$database->app_name = 'apps';
+								$database->app_uuid = 'd8704214-75a0-e52f-1336-f0780e29fef8';
+								$database->delete($array);
+								unset($array);
 							}
 					}
 				}
 			}
+
+		//set message
+			message::add($text['message-delete']);
+
 	}
-}
+
 
 //redirect the browser
-	message::add($text['message-delete']);
 	header("Location: apps.php");
 	return;
 

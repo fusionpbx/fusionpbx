@@ -43,24 +43,24 @@
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$default_setting_uuid = check_str($_REQUEST["id"]);
+		$default_setting_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
 	}
-	$search = check_str($_REQUEST['search']);
+	$search = $_REQUEST['search'];
 
 //get http post variables and set them to php variables
 	if (count($_REQUEST) > 0) {
-		$default_setting_category = strtolower(check_str($_REQUEST["default_setting_category"]));
-		$default_setting_subcategory = strtolower(check_str($_POST["default_setting_subcategory"]));
-		$default_setting_name = strtolower(check_str($_POST["default_setting_name"]));
-		$default_setting_value = check_str($_POST["default_setting_value"]);
-		$default_setting_order = check_str($_POST["default_setting_order"]);
-		$default_setting_enabled = check_str($_POST["default_setting_enabled"]);
-		$default_setting_description = check_str($_POST["default_setting_description"]);
+		$default_setting_category = strtolower($_REQUEST["default_setting_category"]);
+		$default_setting_subcategory = strtolower($_POST["default_setting_subcategory"]);
+		$default_setting_name = strtolower($_POST["default_setting_name"]);
+		$default_setting_value = $_POST["default_setting_value"];
+		$default_setting_order = $_POST["default_setting_order"];
+		$default_setting_enabled = $_POST["default_setting_enabled"];
+		$default_setting_description = $_POST["default_setting_description"];
 	}
 
 //process the http post
@@ -68,7 +68,7 @@
 
 		//set the default_setting_uuid
 			if ($action == "update") {
-				$default_setting_uuid = check_str($_POST["default_setting_uuid"]);
+				$default_setting_uuid = $_POST["default_setting_uuid"];
 			}
 			else {
 				$default_setting_uuid = uuid();
@@ -104,30 +104,31 @@
 				//update switch timezone variables
 				if ($default_setting_category == "domain" && $default_setting_subcategory == "time_zone" && $default_setting_name == "name" ) {
 					//get the action
-						$sql = "select * from v_vars ";
+						$sql = "select count(*) from v_vars ";
 						$sql .= "where var_name = 'timezone' ";
-						$prep_statement = $db->prepare(check_sql($sql));
-						$prep_statement->execute();
-						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-						$var_action = "add";
-						foreach ($result as $row) {
-							$var_action = "update";
-						}
-						unset ($prep_statement);
-
-					//update the timezone
-						if ($var_action == "update") {
+						$database = new database;
+						$num_rows = $database->select($sql, null, 'column');
+						unset($sql);
+					//update
+						if ($num_rows != 0) {
 							$sql = "update v_vars ";
-							$sql .= "set var_value = '".$default_setting_value."' ";
+							$sql .= "set var_value = :default_setting_value ";
 							$sql .= "where var_name = 'timezone' ";
+							$parameters['default_setting_value'] = $default_setting_value;
 						}
+					//insert
 						else {
 							$sql = "insert into v_vars ";
 							$sql .= "(var_uuid, var_name, var_value, var_category, var_command, var_enabled) ";
-							$sql .= "values ('".uuid()."', 'timezone', '$default_setting_value', 'Defaults', 'set', 'true'); ";
+							$sql .= "values ('".uuid()."', 'timezone', :default_setting_value, 'Defaults', 'set', 'true'); ";
+							$parameters['default_setting_value'] = $default_setting_value;
 						}
-						$db->query($sql);
-						unset($sql);
+					//execute
+						$database = new database;
+						$database->app_name = 'default_settings';
+						$database->app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
+						$database->execute($sql, $parameters);
+						unset($sql, $parameters);
 
 					//synchronize the configuration
 						save_var_xml();
@@ -167,13 +168,13 @@
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-		$default_setting_uuid = check_str($_GET["id"]);
+		$default_setting_uuid = $_GET["id"];
 		$sql = "select * from v_default_settings ";
-		$sql .= "where default_setting_uuid = '$default_setting_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($default_settings as &$row) {
+		$sql .= "where default_setting_uuid = :default_setting_uuid ";
+		$parameters['default_setting_uuid'] = $default_setting_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && sizeof($row) != 0) {
 			$default_setting_category = $row["default_setting_category"];
 			$default_setting_subcategory = $row["default_setting_subcategory"];
 			$default_setting_name = $row["default_setting_name"];
@@ -181,9 +182,8 @@
 			$default_setting_order = $row["default_setting_order"];
 			$default_setting_enabled = $row["default_setting_enabled"];
 			$default_setting_description = $row["default_setting_description"];
-			break; //limit to 1 row
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters);
 	}
 
 //show the header
@@ -297,21 +297,17 @@
 	}
 	elseif ($category == "domain" && $subcategory == "menu" && $name == "uuid" ) {
 		echo "		<select class='formfld' id='default_setting_value' name='default_setting_value' style=''>\n";
-		$sql = "";
-		$sql .= "select * from v_menus ";
+		$sql = "select * from v_menus ";
 		$sql .= "order by menu_language, menu_name asc ";
-		$sub_prep_statement = $db->prepare(check_sql($sql));
-		$sub_prep_statement->execute();
-		$sub_result = $sub_prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($sub_result as $sub_row) {
-			if (strtolower($default_setting_value) == strtolower($sub_row["menu_uuid"])) {
-				echo "		<option value='".strtolower($sub_row["menu_uuid"])."' selected='selected'>".$sub_row["menu_language"]." - ".$sub_row["menu_name"]."\n";
-			}
-			else {
-				echo "		<option value='".strtolower($sub_row["menu_uuid"])."'>".$sub_row["menu_language"]." - ".$sub_row["menu_name"]."</option>\n";
+		$database = new database;
+		$sub_result = $database->select($sql, null, 'all');
+		if (is_array($sub_result) && sizeof($sub_result) != 0) {
+			foreach ($sub_result as $sub_row) {
+				$selected = strtolower($default_setting_value) == strtolower($sub_row["menu_uuid"]) ? "selected='selected'" : null;
+				echo "		<option value='".strtolower(escape($sub_row["menu_uuid"]))."' ".$selected.">".escape($sub_row["menu_language"])." - ".escape($sub_row["menu_name"])."</option>\n";
 			}
 		}
-		unset ($sub_prep_statement);
+		unset($sql, $sub_result, $sub_row, $selected);
 		echo "		</select>\n";
 	}
 	elseif ($category == "domain" && $subcategory == "template" && $name == "name" ) {

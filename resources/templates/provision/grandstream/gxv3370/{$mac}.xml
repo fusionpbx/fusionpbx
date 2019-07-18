@@ -4,7 +4,7 @@
 		<!-- Configuration Template for GXV3370 Firmware Version 1.0.1.33 -->
 		<!-- Instruction -->
 		<!-- The new type of config template gives better understanding than P-value numbers to match the setting name from web UI or device, by using names that are similar from web UI. -->
-		<!-- 1. This config template includes settings for account 1 only. To update item name to "account.{i}...", where {i} is the account index. For example, to update Account 12 SIP server address, include the following in config template: -->
+		<!-- 1. This config template includes settings for account 1 only. To update item name to "account.i...", where i is the account index. For example, to update Account 12 SIP server address, include the following in config template: -->
 		<!-- GXV3370 can support up to 16 SIP accounts and 160 MPKs -->
 		<!-- Example, <item name="account.12.sip.server.1.address">sipserver.net</item> -->
 		<!-- 2. The template uses alias name to represent drop-down options. For example, Tel URI uses "Disabled, UserIsPhone, Enabled". To update this setting to "User=Phone", include the following in config template: -->
@@ -15,7 +15,7 @@
 		<!-- Update since 1.0.1.33 -->
 		<!-- Fixed some default values to match factory reset -->
 		<!-- Update since 1.0.1.12 -->
-		<!-- 1. Update account.{x}.network.proxyRquire to account.{x}.network.proxyRequire -->
+		<!-- 1. Update account.x.network.proxyRquire to account.x.network.proxyRequire -->
 		<!-- 2. Supported Phone Settings -> Call settings -> Offhook/Onhook Timeout (s) -->
 		<!-- 3. Caller ID Display: Hide PAI Header because it is temporarily not supported; Header results in Auto -->
 		<!-- 4. Packetization mode: Hide Prefer Non-Interleaved Mode because it is temporarily not supported -->

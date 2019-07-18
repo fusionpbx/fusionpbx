@@ -401,6 +401,12 @@ function save_var_xml() {
 
 		//get the hostname
 		$hostname = trim(event_socket_request_cmd('api switchname'));
+		if (strlen($hostname) == 0){
+			$hostname = trim(gethostname());
+		}
+		if (strlen($hostname) == 0){
+			return;
+		}
 
 		//build the xml
 		$sql = "select * from v_vars ";

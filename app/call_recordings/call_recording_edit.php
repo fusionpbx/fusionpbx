@@ -43,9 +43,9 @@
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$call_recording_uuid = check_str($_REQUEST["id"]);
+		$call_recording_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
@@ -53,13 +53,13 @@
 
 //get http post variables and set them to php variables
 	if (is_array($_POST)) {
-		$call_recording_name = check_str($_POST["call_recording_name"]);
-		$call_recording_path = check_str($_POST["call_recording_path"]);
-		$call_recording_length = check_str($_POST["call_recording_length"]);
-		$call_recording_date = check_str($_POST["call_recording_date"]);
-		$call_direction = check_str($_POST["call_direction"]);
-		$call_recording_description = check_str($_POST["call_recording_description"]);
-		$call_recording_base64 = check_str($_POST["call_recording_base64"]);
+		$call_recording_name = $_POST["call_recording_name"];
+		$call_recording_path = $_POST["call_recording_path"];
+		$call_recording_length = $_POST["call_recording_length"];
+		$call_recording_date = $_POST["call_recording_date"];
+		$call_direction = $_POST["call_direction"];
+		$call_recording_description = $_POST["call_recording_description"];
+		$call_recording_base64 = $_POST["call_recording_base64"];
 	}
 
 //process the user data and save it to the database
@@ -67,7 +67,7 @@
 
 		//get the uuid from the POST
 			if ($action == "update") {
-				$call_recording_uuid = check_str($_POST["call_recording_uuid"]);
+				$call_recording_uuid = $_POST["call_recording_uuid"];
 			}
 
 		//check for all required data
@@ -96,7 +96,7 @@
 				$_POST["domain_uuid"] = $_SESSION["domain_uuid"];
 
 		//add the call_recording_uuid
-			if (strlen($_POST["call_recording_uuid"]) == 0) {
+			if (!is_uuid($_POST["call_recording_uuid"])) {
 				$call_recording_uuid = uuid();
 				$_POST["call_recording_uuid"] = $call_recording_uuid;
 			}
@@ -134,15 +134,16 @@
 	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
-		$call_recording_uuid = check_str($_GET["id"]);
+	if (is_array($_GET) && $_POST["persistformvar"] != "true" && is_uuid($_GET["id"])) {
+		$call_recording_uuid = $_GET["id"];
 		$sql = "select * from v_call_recordings ";
-		$sql .= "where call_recording_uuid = '$call_recording_uuid' ";
-		//$sql .= "and domain_uuid = '$domain_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where call_recording_uuid = :call_recording_uuid ";
+		//$sql .= "and domain_uuid = :domain_uuid ";
+		$parameters['call_recording_uuid'] = $call_recording_uuid;
+		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && sizeof($row) != 0) {
 			$call_recording_name = $row["call_recording_name"];
 			$call_recording_path = $row["call_recording_path"];
 			$call_recording_length = $row["call_recording_length"];
@@ -151,7 +152,7 @@
 			$call_recording_description = $row["call_recording_description"];
 			$call_recording_base64 = $row["call_recording_base64"];
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //show the header

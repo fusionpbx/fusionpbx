@@ -137,7 +137,7 @@
 	}
 
 //get the domain_name and domain_uuid
-	if ((!isset($_SESSION['provision']['http_domain_filter'])) or $_SESSION['provision']['http_domain_filter']['text'] == "false") {
+	if ($_SESSION['provision']['http_domain_filter']['boolean'] == "false") {
 		//get the domain_uuid
 			$sql = "SELECT domain_uuid FROM v_devices ";
 			$sql .= "WHERE device_mac_address = :mac ";

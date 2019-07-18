@@ -47,20 +47,24 @@
 	$document['title'] = $text['title-group_manager'];
 	if (isset($_REQUEST["change"])) {
 		//get the values from the HTTP POST and save them as PHP variables
-		$change = check_str($_REQUEST["change"]);
-		$group_uuid = check_str($_REQUEST["group_uuid"]);
-		$group_name = check_str($_REQUEST["group_name"]);
+		$change = $_REQUEST["change"];
+		$group_uuid = $_REQUEST["group_uuid"];
+		$group_name = $_REQUEST["group_name"];
 
-		$sql = "update v_groups set group_protected = '".$change."' ";
-		$sql .= "where group_uuid = '".$group_uuid."' ";
+		$sql = "update v_groups set group_protected = :group_protected ";
+		$sql .= "where group_uuid = :group_uuid ";
 		if (!permission_exists('group_domain')) {
 			$sql .= "and (";
-			$sql .= "	domain_uuid = '".$domain_uuid."' ";
+			$sql .= "	domain_uuid = :domain_uuid ";
 			$sql .= "	or domain_uuid is null ";
 			$sql .= ") ";
+			$parameters['domain_uuid'] = $domain_uuid;
 		}
-		$db->exec(check_sql($sql));
-		unset($sql);
+		$parameters['group_protected'] = $change;
+		$parameters['group_uuid'] = $group_uuid;
+		$database = new database;
+		$database->execute($sql, $parameters);
+		unset($sql, $parameters);
 
 		message::add($text['message-update']);
 	}
@@ -68,14 +72,14 @@
 //get the groups
 	$sql = "select * from v_groups ";
 	if (!(permission_exists('group_all') && $_GET['show'] == 'all')) {
-		$sql .= "where domain_uuid = '".$domain_uuid."' ";
+		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "or domain_uuid is null ";
+		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	$sql .= "order by domain_uuid desc, group_name asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$groups = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset($sql, $prep_statement);
+	$database = new database;
+	$groups = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 	//$system_groups = array('superadmin','admin','user','public','agent');
 	$system_groups = array();
 
@@ -83,16 +87,18 @@
 //get group counts
 	$sql = "select group_uuid, count(user_uuid) as group_count from v_user_groups ";
 	if (!permission_exists('user_all')) {
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	$sql .= "group by group_uuid ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($result as $row) {
-		$group_counts[$row['group_uuid']] = $row['group_count'];
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
+	if (is_array($result) && sizeof($result) != 0) {
+		foreach ($result as $row) {
+			$group_counts[$row['group_uuid']] = $row['group_count'];
+		}
 	}
-	unset($sql, $prep_statement, $result, $row);
+	unset($sql, $parameters, $result, $row);
 
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>";

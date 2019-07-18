@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -65,16 +65,15 @@
 	echo "</tr></table>\n";
 
 	//get the call center queue count
-	$sql = "select * from v_call_center_queues ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$num_rows = count($result);
-	unset ($prep_statement, $result, $sql);
+	$sql = "select count(*) from v_call_center_queues ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
+
+	//paging the records
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "";
+	$param = '';
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
@@ -82,14 +81,12 @@
 
 	//get the call center queues
 	$sql = "select * from v_call_center_queues ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$sql .= " limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$call_center_queues = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$num_rows = count($call_center_queues);
-	unset ($prep_statement, $sql);
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= order_by($order_by, $order);
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$call_center_queues = $database->select($sql, $parameters, 'all');
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
@@ -120,7 +117,7 @@
 
 	if (is_array($call_center_queues)) {
 		foreach($call_center_queues as $row) {
-			$tr_link = "href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".$row['call_center_queue_uuid']."&name=".urlencode($row['queue_name'])."'";
+			$tr_link = "href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".escape($row['call_center_queue_uuid'])."&name=".urlencode(escape($row['queue_name']))."'";
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'><a href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".escape($row['call_center_queue_uuid'])."&name=".urlencode(escape($row['queue_name']))."'>".escape($row['queue_name'])."</a></td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['queue_extension'])."</td>\n";
