@@ -161,7 +161,7 @@
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_provision_url";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server.yourdomain.com/app/polycom/resources/firmware/5.9.3/";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
