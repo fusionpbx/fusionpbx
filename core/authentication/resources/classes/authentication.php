@@ -44,18 +44,28 @@ class authentication {
 	public function validate() {
 
 		//set the default authentication method to the database
-			if (!is_array($_SESSION['authentication']['methods'])) {
+			if (!is_array($_SESSION['authentication']['methods']) || !isset($_SESSION['authentication']['methods'])) {
 				$_SESSION['authentication']['methods'][]  = 'database';	
+			}
+			else {
+				// This protects against $_SESSION['authentication']['methods']['text'] and any simillar which is wrong set.
+				// It must be an array.
+				$do_fix = false;
+				foreach ($_SESSION['authentication']['methods'] as $i){
+					if (is_array($i)){
+						$do_fix = true;
+						break;
+					}
+				}
+				if ($do_fix){
+					unset($_SESSION['authentication']['methods']);
+					$_SESSION['authentication']['methods'][]  = 'database';	
+				}
 			}
 
 		//get the domain_name and domain_uuid
 			if (!isset($this->domain_name) || !isset($this->domain_uuid)) {
 				$this->get_domain();
-			}
-
-		//set the database as the default plugin
-			if (!isset($_SESSION['authentication']['methods'])) {
-				$_SESSION['authentication']['methods'][] = 'database';
 			}
 
 		//use the authentication plugins
