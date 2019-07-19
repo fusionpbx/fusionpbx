@@ -62,35 +62,35 @@
 	}
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$user_setting_uuid = check_str($_REQUEST["id"]);
+		$user_setting_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
 	}
 
 //set the user_uuid
-	if (strlen($_GET["user_uuid"]) > 0) {
-		$user_uuid = check_str($_GET["user_uuid"]);
+	if (is_uuid($_GET["user_uuid"])) {
+		$user_uuid = $_GET["user_uuid"];
 	}
 
 //get http post variables and set them to php variables
 	if (count($_REQUEST) > 0) {
-		$user_setting_category = strtolower(check_str($_REQUEST["user_setting_category"]));
-		$user_setting_subcategory = strtolower(check_str($_POST["user_setting_subcategory"]));
-		$user_setting_name = strtolower(check_str($_POST["user_setting_name"]));
-		$user_setting_value = check_str($_POST["user_setting_value"]);
-		$user_setting_order = check_str($_POST["user_setting_order"]);
-		$user_setting_enabled = strtolower(check_str($_POST["user_setting_enabled"]));
-		$user_setting_description = check_str($_POST["user_setting_description"]);
+		$user_setting_category = strtolower($_REQUEST["user_setting_category"]);
+		$user_setting_subcategory = strtolower($_POST["user_setting_subcategory"]);
+		$user_setting_name = strtolower($_POST["user_setting_name"]);
+		$user_setting_value = $_POST["user_setting_value"];
+		$user_setting_order = $_POST["user_setting_order"];
+		$user_setting_enabled = strtolower($_POST["user_setting_enabled"]);
+		$user_setting_description = $_POST["user_setting_description"];
 	}
 
 if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
-		$user_setting_uuid = check_str($_POST["user_setting_uuid"]);
+		$user_setting_uuid = $_POST["user_setting_uuid"];
 	}
 
 	//check for all required/authorized data
@@ -122,198 +122,177 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			//update switch timezone variables
 				if ($user_setting_category == "domain" && $user_setting_subcategory == "time_zone" && $user_setting_name == "name" ) {
 					//get the dialplan_uuid
-						$sql = "select * from v_dialplans ";
-						$sql .= "where domain_uuid = '".$domain_uuid."' ";
+						$sql = "select dialplan_uuid from v_dialplans ";
+						$sql .= "where domain_uuid = :domain_uuid ";
 						$sql .= "and app_uuid = '9f356fe7-8cf8-4c14-8fe2-6daf89304458' ";
-						$prep_statement = $db->prepare(check_sql($sql));
-						$prep_statement->execute();
-						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-						foreach ($result as $row) {
-							$dialplan_uuid = $row["dialplan_uuid"];
-						}
-						unset ($prep_statement);
+						$parameters['domain_uuid'] = $domain_uuid;
+						$database = new database;
+						$dialplan_uuid = $database->select($sql, $parameters, 'column');
+						unset($sql, $parameters);
 
 					//get the action
-						$sql = "select * from v_dialplan_details ";
-						$sql .= "where domain_uuid = '".$domain_uuid."' ";
-						$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
+						$sql = "select dialplan_detail_uuid from v_dialplan_details ";
+						$sql .= "where domain_uuid = :domain_uuid ";
+						$sql .= "and dialplan_uuid = :dialplan_uuid ";
 						$sql .= "and dialplan_detail_tag = 'action' ";
 						$sql .= "and dialplan_detail_type = 'set' ";
 						$sql .= "and dialplan_detail_data like 'timezone=%' ";
-						$prep_statement = $db->prepare(check_sql($sql));
-						$prep_statement->execute();
-						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-						$detail_action = "add";
-						foreach ($result as $row) {
-							$dialplan_detail_uuid = $row["dialplan_detail_uuid"];
+						$parameters['domain_uuid'] = $domain_uuid;
+						$parameters['dialplan_uuid'] = $dialplan_uuid;
+						$database = new database;
+						$dialplan_detail_uuid = $database->select($sql, $parameters, 'column');
+						if (is_uuid($dialplan_detail_uuid)) {
 							$detail_action = "update";
 						}
-						unset ($prep_statement);
+						unset($sql, $parameters);
 
 					//update the timezone
 						if ($detail_action == "update") {
-							$sql = "update v_dialplan_details ";
-							$sql .= "set dialplan_detail_data = 'timezone=".$user_setting_value."' ";
-							$sql .= "where dialplan_detail_uuid = '".$dialplan_detail_uuid."' ";
+							$p = new permissions;
+							$p->add('dialplan_detail_edit', 'temp');
+
+							$array['dialplan_details'][0]['dialplan_detail_uuid'] = $dialplan_detail_uuid;
+							$array['dialplan_details'][0]['dialplan_detail_data'] = 'timezone='.$user_setting_value;
 						}
 						else {
-							$dialplan_detail_uuid = uuid();
-							$dialplan_detail_group = 0;
-							$sql = "insert into v_dialplan_details ";
-							$sql .= "(";
-							$sql .= "domain_uuid, ";
-							$sql .= "dialplan_detail_uuid, ";
-							$sql .= "dialplan_uuid, ";
-							$sql .= "dialplan_detail_tag, ";
-							$sql .= "dialplan_detail_type, ";
-							$sql .= "dialplan_detail_data, ";
-							$sql .= "dialplan_detail_inline, ";
-							$sql .= "dialplan_detail_group ";
-							$sql .= ") ";
-							$sql .= "values ";
-							$sql .= "(";
-							$sql .= "'".$domain_uuid."', ";
-							$sql .= "'".$dialplan_detail_uuid."', ";
-							$sql .= "'".$dialplan_uuid."', ";
-							$sql .= "'action', ";
-							$sql .= "'set', ";
-							$sql .= "'timezone=".$user_setting_value."', ";
-							$sql .= "'true', ";
-							$sql .= "'".$dialplan_detail_group."' ";
-							$sql .= "); ";
+							$p = new permissions;
+							$p->add('dialplan_detail_add', 'temp');
+
+							$array['dialplan_details'][0]['domain_uuid'] = $domain_uuid;
+							$array['dialplan_details'][0]['dialplan_detail_uuid'] = uuid();
+							$array['dialplan_details'][0]['dialplan_uuid'] = $dialplan_uuid;
+							$array['dialplan_details'][0]['dialplan_detail_tag'] = 'action';
+							$array['dialplan_details'][0]['dialplan_detail_type'] = 'set';
+							$array['dialplan_details'][0]['dialplan_detail_data'] = 'timezone='.$user_setting_value;
+							$array['dialplan_details'][0]['dialplan_detail_inline'] = 'true';
+							$array['dialplan_details'][0]['dialplan_detail_group'] = 0;
 						}
-						$db->query($sql);
-						unset($sql);
+						if (is_array($array) && sizeof($array) != 0) {
+							$database = new database;
+							$database->app_name = 'user_settings';
+							$database->app_uuid = '3a3337f7-78d1-23e3-0cfd-f14499b8ed97';
+							$database->save($array);
+							unset($array);
+
+							$p->delete('dialplan_detail_edit', 'temp');
+							$p->delete('dialplan_detail_add', 'temp');
+						}
 				}
 
 			//add the user setting
 				if ($action == "add" && permission_exists('user_setting_add')) {
-					$sql = "insert into v_user_settings ";
-					$sql .= "(";
-					$sql .= "user_uuid, ";
-					$sql .= "domain_uuid, ";
-					$sql .= "user_setting_uuid, ";
-					$sql .= "user_setting_category, ";
-					$sql .= "user_setting_subcategory, ";
-					$sql .= "user_setting_name, ";
-					$sql .= "user_setting_value, ";
-					$sql .= "user_setting_order, ";
-					$sql .= "user_setting_enabled, ";
-					$sql .= "user_setting_description ";
-					$sql .= ")";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'$user_uuid', ";
-					$sql .= "'$domain_uuid', ";
-					$sql .= "'".uuid()."', ";
-					$sql .= "'$user_setting_category', ";
-					$sql .= "'$user_setting_subcategory', ";
-					$sql .= "'$user_setting_name', ";
-					$sql .= "'$user_setting_value', ";
-					$sql .= "$user_setting_order, ";
-					$sql .= "'$user_setting_enabled', ";
-					$sql .= "'$user_setting_description' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
-				} //if ($action == "add")
+					$array['user_settings'][0]['user_setting_uuid'] = uuid();
+				}
 
 			//update the user setting
 				if ($action == "update" && permission_exists('user_setting_edit')) {
-					$sql = "update v_user_settings set ";
-					$sql .= "user_setting_category = '$user_setting_category', ";
-					$sql .= "user_setting_subcategory = '$user_setting_subcategory', ";
-					$sql .= "user_setting_name = '$user_setting_name', ";
-					$sql .= "user_setting_value = '$user_setting_value', ";
-					$sql .= "user_setting_order = $user_setting_order, ";
-					$sql .= "user_setting_enabled = '$user_setting_enabled', ";
-					$sql .= "user_setting_description = '$user_setting_description' ";
-					$sql .= "where user_uuid = '$user_uuid' ";
-					$sql .= "and user_setting_uuid = '$user_setting_uuid'";
-					$db->exec(check_sql($sql));
-					unset($sql);
-				} //if ($action == "update")
+					$array['user_settings'][0]['user_setting_uuid'] = $user_setting_uuid;
+				}
+
+			//execute add or update
+				if (is_array($array) && sizeof($array) != 0) {
+					$array['user_settings'][0]['user_uuid'] = $user_uuid;
+					$array['user_settings'][0]['domain_uuid'] = $domain_uuid;
+					$array['user_settings'][0]['user_setting_category'] = $user_setting_category;
+					$array['user_settings'][0]['user_setting_subcategory'] = $user_setting_subcategory;
+					$array['user_settings'][0]['user_setting_name'] = $user_setting_name;
+					$array['user_settings'][0]['user_setting_value'] = $user_setting_value;
+					$array['user_settings'][0]['user_setting_order'] = $user_setting_order;
+					$array['user_settings'][0]['user_setting_enabled'] = $user_setting_enabled;
+					$array['user_settings'][0]['user_setting_description'] = $user_setting_description;
+
+					$database = new database;
+					$database->app_name = 'user_settings';
+					$database->app_uuid = '3a3337f7-78d1-23e3-0cfd-f14499b8ed97';
+					$database->save($array);
+					unset($array);
+				}
 
 			//update time zone
 				if ($user_setting_category == "domain" && $user_setting_subcategory == "time_zone" && $user_setting_name == "name" && strlen($user_setting_value) > 0 ) {
 					$sql = "select * from v_dialplans ";
 					$sql .= "where app_uuid = '34dd307b-fffe-4ead-990c-3d070e288126' ";
-					$sql .= "and domain_uuid = '".$_SESSION["domain_uuid"]."' ";
-					$prep_statement = $db->prepare(check_sql($sql));
-					$prep_statement->execute();
-					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-					$time_zone_found = false;
-					foreach ($result as &$row) {
-						//get the dialplan_uuid
-							$dialplan_uuid = $row["dialplan_uuid"];
+					$sql .= "and domain_uuid = :domain_uuid ";
+					$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
+					$database = new database;
+					$result = $database->select($sql, $parameters, 'all');
+					unset($sql, $parameters);
 
-						//get the dialplan details
-							$sql = "select * from v_dialplan_details ";
-							$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
-							$sql .= "and domain_uuid = '".$_SESSION["domain_uuid"]."' ";
-							$sub_prep_statement = $db->prepare(check_sql($sql));
-							$sub_prep_statement->execute();
-							$sub_result = $sub_prep_statement->fetchAll(PDO::FETCH_NAMED);
-							foreach ($sub_result as $field) {
-								$dialplan_detail_uuid = $field["dialplan_detail_uuid"];
-								$dialplan_detail_tag = $field["dialplan_detail_tag"]; //action //condition
-								$dialplan_detail_type = $field["dialplan_detail_type"]; //set
-								$dialplan_detail_data = $field["dialplan_detail_data"];
-								$dialplan_detail_group = $field["dialplan_detail_group"];
-								if ($dialplan_detail_tag == "action" && $dialplan_detail_type == "set") {
-									$data_array = explode("=", $dialplan_detail_data);
-									if ($data_array[0] == "timezone") {
-										$time_zone_found = true;
-										break;
+					$time_zone_found = false;
+					if (is_array($result) && sizeof($result) != 0) {
+						foreach ($result as &$row) {
+							//get the dialplan_uuid
+								$dialplan_uuid = $row["dialplan_uuid"];
+
+							//get the dialplan details
+								$sql = "select * from v_dialplan_details ";
+								$sql .= "where dialplan_uuid = :dialplan_uuid ";
+								$sql .= "and domain_uuid = :domain_uuid ";
+								$parameters['dialplan_uuid'] = $dialplan_uuid;
+								$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
+								$database = new database;
+								$sub_result = $database->select($sql, $parameters, 'all');
+								if (is_array($sub_result) && sizeof($sub_result) != 0) {
+									foreach ($sub_result as $sub_row) {
+										$dialplan_detail_uuid = $sub_row["dialplan_detail_uuid"];
+										$dialplan_detail_tag = $sub_row["dialplan_detail_tag"]; //action //condition
+										$dialplan_detail_type = $sub_row["dialplan_detail_type"]; //set
+										$dialplan_detail_data = $sub_row["dialplan_detail_data"];
+										$dialplan_detail_group = $sub_row["dialplan_detail_group"];
+										if ($dialplan_detail_tag == "action" && $dialplan_detail_type == "set") {
+											$data_array = explode("=", $dialplan_detail_data);
+											if ($data_array[0] == "timezone") {
+												$time_zone_found = true;
+												break;
+											}
+										}
 									}
 								}
-							}
+								unset($sql, $parameters, $sub_result, $sub_row);
 
-						//add the time zone
-							if (!$time_zone_found) {
-								//$dialplan_detail_uuid = uuid();
-								$dialplan_detail_uuid = "eb3b3a4e-88ea-4306-b2a8-9f52d3c95f2f";
-								$sql = "insert into v_dialplan_details ";
-								$sql .= "(";
-								$sql .= "domain_uuid, ";
-								$sql .= "dialplan_uuid, ";
-								$sql .= "dialplan_detail_uuid, ";
-								$sql .= "dialplan_detail_tag, ";
-								$sql .= "dialplan_detail_type, ";
-								$sql .= "dialplan_detail_data, ";
-								$sql .= "dialplan_detail_group, ";
-								$sql .= "dialplan_detail_order ";
-								$sql .= ") ";
-								$sql .= "values ";
-								$sql .= "(";
-								$sql .= "'".$_SESSION["domain_uuid"]."', "; //8cfd9525-6ccf-4c2c-813a-bca5809067cd
-								$sql .= "'$dialplan_uuid', "; //807b4aa6-4478-4663-a661-779397c1d542
-								$sql .= "'$dialplan_detail_uuid', ";
-								$sql .= "'action', ";
-								$sql .= "'set', ";
-								$sql .= "'timezone=$user_setting_value', ";
-								if (strlen($dialplan_detail_group) > 0) {
-									$sql .= "'$dialplan_detail_group', ";
-								}
-								else {
-									$sql .= "null, ";
-								}
-								$sql .= "'15' ";
-								$sql .= ")";
-								$db->exec(check_sql($sql));
-								unset($sql);
-							}
+							//add the time zone
+								if (!$time_zone_found) {
+									$dialplan_detail_uuid = "eb3b3a4e-88ea-4306-b2a8-9f52d3c95f2f";
+									$array['dialplan_details'][0]['domain_uuid'] = $_SESSION["domain_uuid"];
+									$array['dialplan_details'][0]['dialplan_uuid'] = $dialplan_uuid;
+									$array['dialplan_details'][0]['dialplan_detail_uuid'] = $dialplan_detail_uuid;
+									$array['dialplan_details'][0]['dialplan_detail_tag'] = 'action';
+									$array['dialplan_details'][0]['dialplan_detail_type'] = 'set';
+									$array['dialplan_details'][0]['dialplan_detail_data'] = 'timezone='.$user_setting_value;
+									$array['dialplan_details'][0]['dialplan_detail_group'] = strlen($dialplan_detail_group) > 0 ? $dialplan_detail_group : 'null';
+									$array['dialplan_details'][0]['dialplan_detail_order'] = '15';
 
-						//update the time zone
-							if ($time_zone_found) {
-								$sql = "update v_dialplan_details set ";
-								$sql .= "dialplan_detail_data = 'timezone=".$user_setting_value."' ";
-								$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
-								$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-								$sql .= "and dialplan_detail_uuid = '$dialplan_detail_uuid' ";
-								$db->exec(check_sql($sql));
-								unset($sql);
-							}
+									$p = new permissions;
+									$p->add('dialplan_detail_add', 'temp');
+
+									$database = new database;
+									$database->app_name = 'user_settings';
+									$database->app_uuid = '3a3337f7-78d1-23e3-0cfd-f14499b8ed97';
+									$database->save($array);
+									unset($array);
+
+									$p->delete('dialplan_detail_add', 'temp');
+								}
+
+							//update the time zone
+								if ($time_zone_found) {
+									$array['dialplan_details'][0]['dialplan_detail_uuid'] = $dialplan_detail_uuid;
+									$array['dialplan_details'][0]['dialplan_detail_data'] = 'timezone='.$user_setting_value;
+									$array['dialplan_details'][0]['domain_uuid'] = $_SESSION["domain_uuid"];
+									$array['dialplan_details'][0]['dialplan_uuid'] = $dialplan_uuid;
+
+									$p = new permissions;
+									$p->add('dialplan_detail_edit', 'temp');
+
+									$database = new database;
+									$database->app_name = 'user_settings';
+									$database->app_uuid = '3a3337f7-78d1-23e3-0cfd-f14499b8ed97';
+									$database->save($array);
+									unset($array);
+
+									$p->delete('dialplan_detail_edit', 'temp');
+								}
+						}
 					}
 				}
 
@@ -326,19 +305,20 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 				header("Location: /core/users/user_edit.php?id=".$user_uuid);
 				return;
-		} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+		}
+}
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
-		$user_setting_uuid = check_str($_GET["id"]);
+	if (is_uuid($_GET["id"]) && count($_GET)>0 && $_POST["persistformvar"] != "true") {
+		$user_setting_uuid = $_GET["id"];
 		$sql = "select * from v_user_settings ";
-		$sql .= "where user_uuid = '$user_uuid' ";
-		$sql .= "and user_setting_uuid = '$user_setting_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where user_uuid = :user_uuid ";
+		$sql .= "and user_setting_uuid = :user_setting_uuid ";
+		$parameters['user_uuid'] = $user_uuid;
+		$parameters['user_setting_uuid'] = $user_setting_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && sizeof($row) != 0) {
 			$user_setting_category = $row["user_setting_category"];
 			$user_setting_subcategory = $row["user_setting_subcategory"];
 			$user_setting_name = $row["user_setting_name"];
@@ -346,9 +326,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$user_setting_order = $row["user_setting_order"];
 			$user_setting_enabled = $row["user_setting_enabled"];
 			$user_setting_description = $row["user_setting_description"];
-			break; //limit to 1 row
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //show the header
@@ -449,18 +428,19 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql = "";
 		$sql .= "select * from v_menus ";
 		$sql .= "order by menu_language, menu_name asc ";
-		$sub_prep_statement = $db->prepare(check_sql($sql));
-		$sub_prep_statement->execute();
-		$sub_result = $sub_prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($sub_result as $sub_row) {
-			if (strtolower($row['user_setting_value']) == strtolower($sub_row["menu_uuid"])) {
-				echo "		<option value='".strtolower($sub_row["menu_uuid"])."' selected='selected'>".escape($sub_row["menu_language"])." - ".escape($sub_row["menu_name"])."\n";
-			}
-			else {
-				echo "		<option value='".strtolower($sub_row["menu_uuid"])."'>".escape($sub_row["menu_language"])." - ".escape($sub_row["menu_name"])."</option>\n";
+		$database = new database;
+		$result = $database->select($sql, null, 'all');
+		if (is_array($result) && sizeof($result) != 0) {
+			foreach ($result as $row) {
+				if (strtolower($row['user_setting_value']) == strtolower($row["menu_uuid"])) {
+					echo "		<option value='".strtolower($row["menu_uuid"])."' selected='selected'>".escape($row["menu_language"])." - ".escape($row["menu_name"])."\n";
+				}
+				else {
+					echo "		<option value='".strtolower($row["menu_uuid"])."'>".escape($row["menu_language"])." - ".escape($row["menu_name"])."</option>\n";
+				}
 			}
 		}
-		unset ($sub_prep_statement);
+		unset($sql, $result, $row);
 		echo "		</select>\n";
 	}
 	elseif ($category == "domain" && $subcategory == "template" && $name == "name" ) {

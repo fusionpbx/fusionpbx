@@ -42,7 +42,7 @@
 	$language = new text;
 	$text = $language->get();
 
-//built in str_getcsv requires PHP 5.3 or higher, this function can be used to reproduct the functionality but requirs PHP 5.1.0 or higher
+//built in str_getcsv requires PHP 5.3 or higher, this function can be used to reproduce the functionality but requires PHP 5.1.0 or higher
 	if(!function_exists('str_getcsv')) {
 		function str_getcsv($input, $delimiter = ",", $enclosure = '"', $escape = "\\") {
 			$fp = fopen("php://memory", 'r+');
@@ -60,8 +60,6 @@
 //get the http get values and set them as php variables
 	$action = check_str($_POST["action"]);
 	$from_row = check_str($_POST["from_row"]);
-	$order_by = check_str($_POST["order_by"]);
-	$order = check_str($_POST["order"]);
 	$delimiter = check_str($_POST["data_delimiter"]);
 	$enclosure = check_str($_POST["data_enclosure"]);
 
@@ -74,7 +72,7 @@
 
 //copy the csv file
 	//$_POST['submit'] == "Upload" &&
-	if ( is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('user_imports')) {
+	if (is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('user_imports')) {
 		if (check_str($_POST['type']) == 'csv') {
 			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name']);
 			$save_msg = "Uploaded file to ".$_SESSION['server']['temp']['dir']."/". htmlentities($_FILES['ulfile']['name']);
@@ -131,10 +129,7 @@
 			$schema[$i]['fields'][] = 'group_name';
 
 		//debug info
-			//echo "<pre>\n";
-			//print_r($schema);
-			//echo "</pre>\n";
-			//exit;
+			//view_array($schema);
 	}
 
 //match the column names to the field names
@@ -252,9 +247,9 @@
 
 		//get the groups
 			$sql = "select * from v_groups where domain_uuid is null ";
-			$prep_statement = $db->prepare($sql);
-			$prep_statement->execute();
-			$groups = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+			$database = new database;
+			$groups = $database->select($sql, null, 'all');
+			unset($sql);
 
 		//get the contents of the csv file and convert them into an array
 			$handle = @fopen($_SESSION['file'], "r");
@@ -384,6 +379,7 @@
 						$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 						$database->save($array);
 						//$message = $database->message;
+						unset($array);
 					}
 
 				//send the redirect header

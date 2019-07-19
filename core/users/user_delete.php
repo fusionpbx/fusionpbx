@@ -43,21 +43,18 @@
 	$text = $language->get();
 
 //get the id
-	$user_uuid = check_str($_GET["id"]);
+	$user_uuid = $_GET["id"];
 
 //validate the uuid
 	if (is_uuid($user_uuid)) {
 		//get the user's domain from v_users
 			if (permission_exists('user_domain')) {
 				$sql = "select domain_uuid from v_users ";
-				$sql .= "where user_uuid = '".$user_uuid."' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				foreach ($result as &$row) {
-					$domain_uuid = $row["domain_uuid"];
-				}
-				unset ($prep_statement);
+				$sql .= "where user_uuid = :user_uuid ";
+				$parameters['user_uuid'] = $user_uuid;
+				$database = new database;
+				$domain_uuid = $database->select($sql, $parameters, 'column');
+				unset($sql, $parameters);
 			}
 			else {
 				$domain_uuid = $_SESSION['domain_uuid'];
@@ -74,35 +71,37 @@
 			}
 
 		//delete the user settings
-			$sql = "delete from v_user_settings ";
-			$sql .= "where user_uuid = '".$user_uuid."' ";
-			$sql .= "and domain_uuid = '".$domain_uuid."' ";
-			if (!$db->exec($sql)) {
-				$info = $db->errorInfo();
-				print_r($info);
-			}
+			$array['user_settings'][0]['user_uuid'] = $user_uuid;
+			$array['user_settings'][0]['domain_uuid'] = $domain_uuid;
 
 		//delete the groups the user is assigned to
-			$sql = "delete from v_user_groups ";
-			$sql .= "where user_uuid = '".$user_uuid."' ";
-			$sql .= "and domain_uuid = '".$domain_uuid."' ";
-			if (!$db->exec($sql)) {
-				$info = $db->errorInfo();
-				print_r($info);
-			}
+			$array['user_groups'][0]['user_uuid'] = $user_uuid;
+			$array['user_groups'][0]['domain_uuid'] = $domain_uuid;
 
 		//delete the user
-			$sql = "delete from v_users ";
-			$sql .= "where user_uuid = '".$user_uuid."' ";
-			$sql .= "and domain_uuid = '".$domain_uuid."' ";
-			if (!$db->exec($sql)) {
-				$info = $db->errorInfo();
-				print_r($info);
-			}
+			$array['users'][0]['user_uuid'] = $user_uuid;
+			$array['users'][0]['domain_uuid'] = $domain_uuid;
+
+		//execute
+			$p = new permissions;
+			$p->add('user_setting_delete', 'temp');
+			$p->add('user_group_delete', 'temp');
+
+			$database = new database;
+			$database->app_name = 'users';
+			$database->app_uuid = '112124b3-95c2-5352-7e9d-d14c0b88f207';
+			$database->delete($array);
+			unset($array);
+
+			$p->delete('user_setting_delete', 'temp');
+			$p->delete('user_group_delete', 'temp');
+
+		//set message
+			message::add($text['message-delete']);
 	}
 
 //redirect the user
-	message::add($text['message-delete']);
 	header("Location: users.php");
+	exit;
 
 ?>
