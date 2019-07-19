@@ -42,17 +42,19 @@ function build_db_child_menu_list ($db, $menu_item_level, $menu_item_uuid, $c) {
 	//check for sub menus
 		$menu_item_level = $menu_item_level+1;
 		$sql = "select * from v_menu_items ";
-		$sql .= "where menu_uuid = '".$menu_uuid."' ";
-		$sql .= "and menu_item_parent_uuid = '".$menu_item_uuid."' ";
+		$sql .= "where menu_uuid = :menu_uuid ";
+		$sql .= "and menu_item_parent_uuid = :menu_item_parent_uuid ";
 		$sql .= "order by menu_item_title, menu_item_order asc ";
-		$prep_statement_2 = $db->prepare($sql);
-		$prep_statement_2->execute();
-		$result2 = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
+		$parameters['menu_uuid'] = $menu_uuid;
+		$parameters['menu_item_parent_uuid'] = $menu_item_uuid;
+		$database = new database;
+		$result2 = $database->select($sql, $parameters, 'all');
+		unset($sql, $parameters);
 
 		$row_style["0"] = "row_style1";
 		$row_style["1"] = "row_style1";
 
-		if (count($result2) > 0) {
+		if (is_array($result2) && sizeof($result2) != 0) {
 			if ($c == 0) { $c2 = 1; } else { $c2 = 0; }
 			foreach($result2 as $row2) {
 				//set the db values as php variables
@@ -62,8 +64,8 @@ function build_db_child_menu_list ($db, $menu_item_level, $menu_item_uuid, $c) {
 					$menu_item_parent_uuid = $row2['menu_item_parent_uuid'];
 					$menu_item_order = $row2['menu_item_order'];
 					$menu_item_language = $row2['menu_item_language'];
-					$menu_item_title = $row2[menu_item_title];
-					$menu_item_link = $row2[menu_item_link];
+					$menu_item_title = $row2['menu_item_title'];
+					$menu_item_link = $row2['menu_item_link'];
 				//get the groups that have been assigned to the menu
 					$sql = "select ";
 					$sql .= "	g.group_name, g.domain_uuid as group_domain_uuid ";
@@ -72,20 +74,24 @@ function build_db_child_menu_list ($db, $menu_item_level, $menu_item_uuid, $c) {
 					$sql .= "	v_groups as g ";
 					$sql .= "where ";
 					$sql .= "	mig.group_uuid = g.group_uuid ";
-					$sql .= "	and mig.menu_uuid = '".$menu_uuid."' ";
-					$sql .= "	and mig.menu_item_uuid = '".$menu_item_uuid."' ";
+					$sql .= "	and mig.menu_uuid = :menu_uuid ";
+					$sql .= "	and mig.menu_item_uuid = :menu_item_uuid ";
 					$sql .= "order by ";
 					$sql .= "	g.domain_uuid desc, ";
 					$sql .= "	g.group_name asc ";
-					$sub_prep_statement = $db->prepare(check_sql($sql));
-					$sub_prep_statement->execute();
-					$sub_result = $sub_prep_statement->fetchAll(PDO::FETCH_NAMED);
-					unset($group_list);
-					foreach ($sub_result as &$sub_row) {
-						$group_list[] = $sub_row["group_name"].(($sub_row['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$sub_row['group_domain_uuid']]['domain_name'] : null);
+					$parameters['menu_uuid'] = $menu_uuid;
+					$parameters['menu_item_uuid'] = $menu_item_uuid;
+					$database = new database;
+					$sub_result = $database->select($sql, $parameters, 'all');
+					unset($sql, $parameters, $group_list);
+
+					if (is_array($sub_result) && sizeof($sub_result) != 0) {
+						foreach ($sub_result as &$sub_row) {
+							$group_list[] = $sub_row["group_name"].(($sub_row['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$sub_row['group_domain_uuid']]['domain_name'] : null);
+						}
+						$group_list = isset($group_list) ? implode(', ', $group_list) : '';
 					}
-					$group_list = isset($group_list) ? implode(', ', $group_list) : '';
-					unset ($sub_prep_statement);
+					unset($sql, $sub_result, $sub_row);
 				//display the main body of the list
 					switch ($menu_item_category) {
 						case "internal":
@@ -103,7 +109,7 @@ function build_db_child_menu_list ($db, $menu_item_level, $menu_item_uuid, $c) {
 					}
 
 				//display the content of the list
-					$tr_link = (permission_exists('menu_edit')) ? "href='menu_item_edit.php?id=".$menu_uuid."&menu_item_uuid=".$row2['menu_item_uuid']."&menu_item_parent_uuid=".$row2['menu_item_parent_uuid']."'" : null;
+					$tr_link = permission_exists('menu_edit') ? "href='menu_item_edit.php?id=".$menu_uuid."&menu_item_uuid=".$row2['menu_item_uuid']."&menu_item_parent_uuid=".$row2['menu_item_parent_uuid']."'" : null;
 					echo "<tr ".$tr_link.">\n";
 					echo "<td valign='top' class='".$row_style[$c]." ".(($menu_item_category != 'internal') ? "tr_link_void" : null)."' style='padding-left: ".($menu_item_level * 25)."px;' nowrap>".$menu_item_title."&nbsp;</td>";
 					echo "<td valign='top' class='".$row_style[$c]."'>".$group_list."&nbsp;</td>";
@@ -138,12 +144,15 @@ function build_db_child_menu_list ($db, $menu_item_level, $menu_item_uuid, $c) {
 
 				//update the menu order
 					if ($row2[menu_item_order] != $tmp_menu_item_order) {
-						$sql  = "update v_menu_items set ";
-						$sql .= "menu_item_title = '".$row2[menu_item_title]."', ";
-						$sql .= "menu_item_order = '".$tmp_menu_item_order."' ";
-						$sql .= "where menu_uuid = '".$menu_uuid."' ";
-						$sql .= "and menu_item_uuid = '".$row2[menu_item_uuid]."' ";
-						$count = $db->exec(check_sql($sql));
+						$array['menu_items'][0]['menu_item_uuid'] = $row2['menu_item_uuid'];
+						$array['menu_items'][0]['menu_uuid'] = $menu_uuid;
+						$array['menu_items'][0]['menu_item_title'] = $row2['menu_item_title'];
+						$array['menu_items'][0]['menu_item_order'] = $tmp_menu_item_order;
+						$database = new database;
+						$database->app_name = 'menu';
+						$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
+						$database->save($array);
+						unset($array);
 					}
 					$tmp_menu_item_order++;
 
@@ -154,54 +163,44 @@ function build_db_child_menu_list ($db, $menu_item_level, $menu_item_uuid, $c) {
 
 				if ($c==0) { $c=1; } else { $c=0; }
 			} //end foreach
-			unset($sql, $result2, $row2);
+			unset($result2, $row2);
 		}
 		return $c;
 	//end check for children
 }
 
 require_once "resources/header.php";
-$order_by = $_GET["order_by"];
+
+$order_by = $_GET["order_by"] != '' ? $_GET["order_by"] : 'menu_item_order';
 $order = $_GET["order"];
 
 $sql = "select * from v_menu_items ";
-$sql .= "where menu_uuid = '".$menu_uuid."' ";
+$sql .= "where menu_uuid = :menu_uuid ";
 $sql .= "and menu_item_parent_uuid is null ";
-if (strlen($order_by)> 0) {
-	$sql .= "order by $order_by $order ";
-}
-else {
-	$sql .= "order by menu_item_order asc ";
-}
-$prep_statement = $db->prepare(check_sql($sql));
-$prep_statement->execute();
-$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-$result_count = count($result);
+$sql .= order_by($order_by, $order);
+$parameters['menu_uuid'] = $menu_uuid;
+$database = new database;
+$result = $database->select($sql, $parameters, 'all');
+unset($sql, $parameters);
 
 $c = 0;
 $row_style["0"] = "row_style0";
 $row_style["1"] = "row_style0";
 
 echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-
-if ($result_count == 0) {
-	//no results
-	echo "<tr><td>&nbsp;</td></tr>";
+echo "	<tr>";
+echo "		<th align='left' nowrap>".$text['label-title']."</th>";
+echo "		<th align='left' nowrap>".$text['label-groups']."</th>";
+echo "		<th align='left'nowrap>".$text['label-category']."</th>";
+echo "		<th nowrap style='text-align: center;'>".$text['label-protected']."</th>";
+echo "		<th nowrap width='70' style='text-align: center;'>".$text['label-menu_order']."</th>";
+echo "		<td class='list_control_icons'>";
+if (permission_exists('menu_add')) {
+	echo "		<a href='menu_item_edit.php?id=".$menu_uuid."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 }
-else {
-	echo "<tr>";
-	echo "<th align='left' nowrap>".$text['label-title']."</th>";
-	echo "<th align='left' nowrap>".$text['label-groups']."</th>";
-	echo "<th align='left'nowrap>".$text['label-category']."</th>";
-	echo "<th nowrap style='text-align: center;'>".$text['label-protected']."</th>";
-	echo "<th nowrap width='70' style='text-align: center;'>".$text['label-menu_order']."</th>";
-	echo "<td class='list_control_icons'>";
-	if (permission_exists('menu_add')) {
-		echo "<a href='menu_item_edit.php?id=".$menu_uuid."' alt='".$text['button-add']."'>$v_link_label_add</a>";
-	}
-	echo "</td>\n";
-	echo "</tr>";
-
+echo "		</td>\n";
+echo "	</tr>";
+if (is_array($result) && sizeof($result) != 0) {
 	foreach($result as $row) {
 		//set the db values as php variables
 			$menu_item_uuid = $row['menu_item_uuid'];
@@ -218,20 +217,24 @@ else {
 			$sql .= "	v_groups as g ";
 			$sql .= "where ";
 			$sql .= "	mig.group_uuid = g.group_uuid ";
-			$sql .= "	and mig.menu_uuid = '".$menu_uuid."' ";
-			$sql .= "	and mig.menu_item_uuid = '".$menu_item_uuid."' ";
+			$sql .= "	and mig.menu_uuid = :menu_uuid ";
+			$sql .= "	and mig.menu_item_uuid = :menu_item_uuid ";
 			$sql .= "order by ";
 			$sql .= "	g.domain_uuid desc, ";
 			$sql .= "	g.group_name asc ";
-			$sub_prep_statement = $db->prepare(check_sql($sql));
-			$sub_prep_statement->execute();
-			$sub_result = $sub_prep_statement->fetchAll(PDO::FETCH_NAMED);
-			unset($group_list);
-			foreach ($sub_result as &$sub_row) {
-				$group_list[] = $sub_row["group_name"].(($sub_row['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$sub_row['group_domain_uuid']]['domain_name'] : null);
+			$parameters['menu_uuid'] = $menu_uuid;
+			$parameters['menu_item_uuid'] = $menu_item_uuid;
+			$database = new database;
+			$sub_result = $database->select($sql, $parameters, 'all');
+			unset($sql, $group_list);
+
+			if (is_array($sub_result) && sizeof($sub_result) != 0) {
+				foreach ($sub_result as &$sub_row) {
+					$group_list[] = $sub_row["group_name"].(($sub_row['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$sub_row['group_domain_uuid']]['domain_name'] : null);
+				}
+				$group_list = implode(', ', $group_list);
 			}
-			$group_list = implode(', ', $group_list);
-			unset ($sub_prep_statement);
+			unset($sub_result, $sub_row);
 
 		//add the type link based on the typd of the menu
 			switch ($menu_item_category) {
@@ -290,12 +293,15 @@ else {
 
 		//update the menu order
 			if ($row[menu_item_order] != $tmp_menu_item_order) {
-				$sql  = "update v_menu_items set ";
-				$sql .= "menu_item_title = '".$row['menu_item_title']."', ";
-				$sql .= "menu_item_order = '".$tmp_menu_item_order."' ";
-				$sql .= "where menu_uuid = '".$menu_uuid."' ";
-				$sql .= "and menu_item_uuid = '".$row[menu_item_uuid]."' ";
-				//$db->exec(check_sql($sql));
+				$array['menu_items'][0]['menu_item_uuid'] = $row['menu_item_uuid'];
+				$array['menu_items'][0]['menu_uuid'] = $menu_uuid;
+				$array['menu_items'][0]['menu_item_title'] = $row['menu_item_title'];
+				$array['menu_items'][0]['menu_item_order'] = $tmp_menu_item_order;
+				//$database = new database;
+				//$database->app_name = 'menu';
+				//$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
+				//$database->save($array);
+				unset($array);
 			}
 			$tmp_menu_item_order++;
 
@@ -307,7 +313,7 @@ else {
 
 		if ($c==0) { $c=1; } else { $c=0; }
 	} //end foreach
-	unset($sql, $result, $row_count);
+	unset($result);
 
 } //end if results
 
