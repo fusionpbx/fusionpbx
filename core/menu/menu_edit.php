@@ -39,9 +39,9 @@ else {
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$menu_uuid = check_str($_REQUEST["id"]);
+		$menu_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
@@ -49,17 +49,17 @@ else {
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
-		$menu_uuid = check_str($_POST["menu_uuid"]);
-		$menu_name = check_str($_POST["menu_name"]);
-		$menu_language = check_str($_POST["menu_language"]);
-		$menu_description = check_str($_POST["menu_description"]);
+		$menu_uuid = $_POST["menu_uuid"];
+		$menu_name = $_POST["menu_name"];
+		$menu_language = $_POST["menu_language"];
+		$menu_description = $_POST["menu_description"];
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
-		$menu_uuid = check_str($_POST["menu_uuid"]);
+		$menu_uuid = $_POST["menu_uuid"];
 	}
 
 	//check for all required data
@@ -86,22 +86,15 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$menu_uuid = uuid();
 
 			//start a new menu
-				$sql = "insert into v_menus ";
-				$sql .= "(";
-				$sql .= "menu_uuid, ";
-				$sql .= "menu_name, ";
-				$sql .= "menu_language, ";
-				$sql .= "menu_description ";
-				$sql .= ")";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'".$menu_uuid."', ";
-				$sql .= "'".$menu_name."', ";
-				$sql .= "'".$menu_language."', ";
-				$sql .= "'".$menu_description."' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
+				$array['menus'][0]['menu_uuid'] = $menu_uuid;
+				$array['menus'][0]['menu_name'] = $menu_name;
+				$array['menus'][0]['menu_language'] = $menu_language;
+				$array['menus'][0]['menu_description'] = $menu_description;
+				$database = new database;
+				$database->app_name = 'menu';
+				$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
+				$database->save($array);
+				unset($array);
 
 			//add the default items in the menu
 				require_once "resources/classes/menu.php";
@@ -119,38 +112,39 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		if ($action == "update") {
 			//update the menu
-				$sql = "update v_menus set ";
-				$sql .= "menu_name = '".$menu_name."', ";
-				$sql .= "menu_language = '".$menu_language."', ";
-				$sql .= "menu_description = '".$menu_description."' ";
-				$sql .= "where menu_uuid = '".$menu_uuid."'";
-				$db->exec(check_sql($sql));
-				unset($sql);
+				$array['menus'][0]['menu_uuid'] = $menu_uuid;
+				$array['menus'][0]['menu_name'] = $menu_name;
+				$array['menus'][0]['menu_language'] = $menu_language;
+				$array['menus'][0]['menu_description'] = $menu_description;
+				$database = new database;
+				$database->app_name = 'menu';
+				$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
+				$database->save($array);
+				unset($array);
 
 			//redirect the user back to the main menu
 				message::add($text['message-update']);
 				header("Location: menu.php");
 				return;
-		} //if ($action == "update")
-	} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+		}
+	}
+}
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$menu_uuid = $_GET["id"];
 		$sql = "select * from v_menus ";
-		$sql .= "where menu_uuid = '$menu_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where menu_uuid = :menu_uuid ";
+		$parameters['menu_uuid'] = $menu_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && sizeof($row) != 0) {
 			$menu_uuid = $row["menu_uuid"];
 			$menu_name = $row["menu_name"];
 			$menu_language = $row["menu_language"];
 			$menu_description = $row["menu_description"];
-			break; //limit to 1 row
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //show the header
@@ -238,7 +232,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</form>";
 
 //show the menu items
-	require_once "core/menu/menu_item_list.php";
+	if ($action == "update") {
+		require_once "core/menu/menu_item_list.php";
+	}
 
 //include the footer
 	require_once "resources/footer.php";

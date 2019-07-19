@@ -44,8 +44,8 @@
 
 //get the http value and set as a php variable
 	if (!$included) {
-		$menu_uuid = check_str($_REQUEST["menu_uuid"]);
-		$menu_language = check_str($_REQUEST["menu_language"]);
+		$menu_uuid = $_REQUEST["menu_uuid"];
+		$menu_language = $_REQUEST["menu_language"];
 	}
 
 //menu restore default
