@@ -54,7 +54,8 @@
 		$sql .= "default_setting_category = 'login' ";
 		$sql .= "and default_setting_subcategory = 'message' ";
 		$sql .= "and default_setting_name = 'text' ";
-		$db->exec(check_sql($sql));
+		$database = new database;
+		$database->execute($sql);
 		unset($sql);
 	}
 
@@ -127,18 +128,19 @@
 				$stats['domain']['devices']['total'] = 0;
 				$stats['domain']['devices']['disabled'] = 0;
 				$sql = "select domain_uuid, device_enabled from v_devices";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				$stats['system']['devices']['total'] = count($result);
-				foreach ($result as $row) {
-					$stats['system']['devices']['disabled'] += ($row['device_enabled'] != 'true') ? 1 : 0;
-					if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
-						$stats['domain']['devices']['total']++;
-						$stats['domain']['devices']['disabled'] += ($row['device_enabled'] != 'true') ? 1 : 0;
+				$database = new database;
+				$result = $database->select($sql, null, 'all');
+				if (is_array($result) && sizeof($result) != 0) {
+					$stats['system']['devices']['total'] = sizeof($result);
+					foreach ($result as $row) {
+						$stats['system']['devices']['disabled'] += ($row['device_enabled'] != 'true') ? 1 : 0;
+						if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
+							$stats['domain']['devices']['total']++;
+							$stats['domain']['devices']['disabled'] += ($row['device_enabled'] != 'true') ? 1 : 0;
+						}
 					}
 				}
-				unset ($sql, $prep_statement, $result);
+				unset($sql, $result);
 			}
 
 		//extensions
@@ -148,18 +150,19 @@
 				$stats['domain']['extensions']['total'] = 0;
 				$stats['domain']['extensions']['disabled'] = 0;
 				$sql = "select domain_uuid, enabled from v_extensions";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				$stats['system']['extensions']['total'] = count($result);
-				foreach ($result as $row) {
-					$stats['system']['extensions']['disabled'] += ($row['enabled'] != 'true') ? 1 : 0;
-					if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
-						$stats['domain']['extensions']['total']++;
-						$stats['domain']['extensions']['disabled'] += ($row['enabled'] != 'true') ? 1 : 0;
+				$database = new database;
+				$result = $database->select($sql, null, 'all');
+				if (is_array($result) && sizeof($result) != 0) {
+					$stats['system']['extensions']['total'] = sizeof($result);
+					foreach ($result as $row) {
+						$stats['system']['extensions']['disabled'] += ($row['enabled'] != 'true') ? 1 : 0;
+						if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
+							$stats['domain']['extensions']['total']++;
+							$stats['domain']['extensions']['disabled'] += ($row['enabled'] != 'true') ? 1 : 0;
+						}
 					}
 				}
-				unset ($sql, $prep_statement, $result);
+				unset($sql, $result);
 			}
 
 		//gateways
@@ -169,18 +172,19 @@
 				$stats['domain']['gateways']['total'] = 0;
 				$stats['domain']['gateways']['disabled'] = 0;
 				$sql = "select domain_uuid, enabled from v_gateways";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				$stats['system']['gateways']['total'] = count($result);
-				foreach ($result as $row) {
-					$stats['system']['gateways']['disabled'] += ($row['enabled'] != 'true') ? 1 : 0;
-					if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
-						$stats['domain']['gateways']['total']++;
-						$stats['domain']['gateways']['disabled'] += ($row['enabled'] != 'true') ? 1 : 0;
+				$database = new database;
+				$result = $database->select($sql, null, 'all');
+				if (is_array($result) && sizeof($result) != 0) {
+					$stats['system']['gateways']['total'] = sizeof($result);
+					foreach ($result as $row) {
+						$stats['system']['gateways']['disabled'] += ($row['enabled'] != 'true') ? 1 : 0;
+						if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
+							$stats['domain']['gateways']['total']++;
+							$stats['domain']['gateways']['disabled'] += ($row['enabled'] != 'true') ? 1 : 0;
+						}
 					}
 				}
-				unset ($sql, $prep_statement, $result);
+				unset($sql, $result);
 			}
 
 		//users
@@ -190,18 +194,19 @@
 				$stats['domain']['users']['total'] = 0;
 				$stats['domain']['users']['disabled'] = 0;
 				$sql = "select domain_uuid, user_enabled from v_users";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				$stats['system']['users']['total'] = count($result);
-				foreach ($result as $row) {
-					$stats['system']['users']['disabled'] += ($row['user_enabled'] != 'true') ? 1 : 0;
-					if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
-						$stats['domain']['users']['total']++;
-						$stats['domain']['users']['disabled'] += ($row['user_enabled'] != 'true') ? 1 : 0;
+				$database = new database;
+				$result = $database->select($sql, null, 'all');
+				if (is_array($result) && sizeof($result) != 0) {
+					$stats['system']['users']['total'] = sizeof($result);
+					foreach ($result as $row) {
+						$stats['system']['users']['disabled'] += ($row['user_enabled'] != 'true') ? 1 : 0;
+						if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
+							$stats['domain']['users']['total']++;
+							$stats['domain']['users']['disabled'] += ($row['user_enabled'] != 'true') ? 1 : 0;
+						}
 					}
 				}
-				unset ($sql, $prep_statement, $result);
+				unset($sql, $result);
 			}
 
 		//destinations
@@ -211,18 +216,19 @@
 				$stats['domain']['destinations']['total'] = 0;
 				$stats['domain']['destinations']['disabled'] = 0;
 				$sql = "select domain_uuid, destination_enabled from v_destinations";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				$stats['system']['destinations']['total'] = count($result);
-				foreach ($result as $row) {
-					$stats['system']['destinations']['disabled'] += ($row['destination_enabled'] != 'true') ? 1 : 0;
-					if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
-						$stats['domain']['destinations']['total']++;
-						$stats['domain']['destinations']['disabled'] += ($row['destination_enabled'] != 'true') ? 1 : 0;
+				$database = new database;
+				$result = $database->select($sql, null, 'all');
+				if (is_array($result) && sizeof($result) != 0) {
+					$stats['system']['destinations']['total'] = sizeof($result);
+					foreach ($result as $row) {
+						$stats['system']['destinations']['disabled'] += ($row['destination_enabled'] != 'true') ? 1 : 0;
+						if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
+							$stats['domain']['destinations']['total']++;
+							$stats['domain']['destinations']['disabled'] += ($row['destination_enabled'] != 'true') ? 1 : 0;
+						}
 					}
 				}
-				unset ($sql, $prep_statement, $result);
+				unset($sql, $result);
 			}
 
 		//call center queues
@@ -232,18 +238,19 @@
 				$stats['domain']['call_center_queues']['total'] = 0;
 				$stats['domain']['call_center_queues']['disabled'] = 0;
 				$sql = "select domain_uuid from v_call_center_queues";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				$stats['system']['call_center_queues']['total'] = count($result);
-				foreach ($result as $row) {
-					//$stats['system']['call_center_queues']['disabled'] += ($row['queue_enabled'] != 'true') ? 1 : 0;
-					if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
-						$stats['domain']['call_center_queues']['total']++;
-						//$stats['domain']['call_center_queues']['disabled'] += ($row['queue_enabled'] != 'true') ? 1 : 0;
+				$database = new database;
+				$result = $database->select($sql, null, 'all');
+				if (is_array($result) && sizeof($result) != 0) {
+					$stats['system']['call_center_queues']['total'] = sizeof($result);
+					foreach ($result as $row) {
+						//$stats['system']['call_center_queues']['disabled'] += ($row['queue_enabled'] != 'true') ? 1 : 0;
+						if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
+							$stats['domain']['call_center_queues']['total']++;
+							//$stats['domain']['call_center_queues']['disabled'] += ($row['queue_enabled'] != 'true') ? 1 : 0;
+						}
 					}
 				}
-				unset ($sql, $prep_statement, $result);
+				unset($sql, $result);
 			}
 
 		//ivr menus
@@ -253,18 +260,19 @@
 				$stats['domain']['ivr_menus']['total'] = 0;
 				$stats['domain']['ivr_menus']['disabled'] = 0;
 				$sql = "select domain_uuid, ivr_menu_enabled from v_ivr_menus";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				$stats['system']['ivr_menus']['total'] = count($result);
-				foreach ($result as $row) {
-					$stats['system']['ivr_menus']['disabled'] += ($row['ivr_menu_enabled'] != 'true') ? 1 : 0;
-					if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
-						$stats['domain']['ivr_menus']['total']++;
-						$stats['domain']['ivr_menus']['disabled'] += ($row['ivr_menu_enabled'] != 'true') ? 1 : 0;
+				$database = new database;
+				$result = $database->select($sql, null, 'all');
+				if (is_array($result) && sizeof($result) != 0) {
+					$stats['system']['ivr_menus']['total'] = sizeof($result);
+					foreach ($result as $row) {
+						$stats['system']['ivr_menus']['disabled'] += ($row['ivr_menu_enabled'] != 'true') ? 1 : 0;
+						if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
+							$stats['domain']['ivr_menus']['total']++;
+							$stats['domain']['ivr_menus']['disabled'] += ($row['ivr_menu_enabled'] != 'true') ? 1 : 0;
+						}
 					}
 				}
-				unset ($sql, $prep_statement, $result);
+				unset($sql, $result);
 			}
 
 		//ring groups
@@ -274,18 +282,19 @@
 				$stats['domain']['ring_groups']['total'] = 0;
 				$stats['domain']['ring_groups']['disabled'] = 0;
 				$sql = "select domain_uuid, ring_group_enabled from v_ring_groups";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				$stats['system']['ring_groups']['total'] = count($result);
-				foreach ($result as $row) {
-					$stats['system']['ring_groups']['disabled'] += ($row['ring_group_enabled'] != 'true') ? 1 : 0;
-					if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
-						$stats['domain']['ring_groups']['total']++;
-						$stats['domain']['ring_groups']['disabled'] += ($row['ring_group_enabled'] != 'true') ? 1 : 0;
+				$database = new database;
+				$result = $database->select($sql, null, 'all');
+				if (is_array($result) && sizeof($result) != 0) {
+					$stats['system']['ring_groups']['total'] = sizeof($result);
+					foreach ($result as $row) {
+						$stats['system']['ring_groups']['disabled'] += ($row['ring_group_enabled'] != 'true') ? 1 : 0;
+						if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
+							$stats['domain']['ring_groups']['total']++;
+							$stats['domain']['ring_groups']['disabled'] += ($row['ring_group_enabled'] != 'true') ? 1 : 0;
+						}
 					}
 				}
-				unset ($sql, $prep_statement, $result);
+				unset($sql, $result);
 			}
 
 		//voicemails
@@ -295,18 +304,19 @@
 				$stats['domain']['voicemails']['total'] = 0;
 				$stats['domain']['voicemails']['disabled'] = 0;
 				$sql = "select domain_uuid, voicemail_enabled from v_voicemails";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				$stats['system']['voicemails']['total'] = count($result);
-				foreach ($result as $row) {
-					$stats['system']['voicemails']['disabled'] += ($row['voicemail_enabled'] != 'true') ? 1 : 0;
-					if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
-						$stats['domain']['voicemails']['total']++;
-						$stats['domain']['voicemails']['disabled'] += ($row['voicemail_enabled'] != 'true') ? 1 : 0;
+				$database = new database;
+				$result = $database->select($sql, null, 'all');
+				if (is_array($result) && sizeof($result) != 0) {
+					$stats['system']['voicemails']['total'] = sizeof($result);
+					foreach ($result as $row) {
+						$stats['system']['voicemails']['disabled'] += ($row['voicemail_enabled'] != 'true') ? 1 : 0;
+						if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
+							$stats['domain']['voicemails']['total']++;
+							$stats['domain']['voicemails']['disabled'] += ($row['voicemail_enabled'] != 'true') ? 1 : 0;
+						}
 					}
 				}
-				unset ($sql, $prep_statement, $result);
+				unset($sql, $result);
 			}
 
 		//voicemail messages
@@ -316,18 +326,19 @@
 				$stats['domain']['messages']['total'] = 0;
 				$stats['domain']['messages']['new'] = 0;
 				$sql = "select domain_uuid, message_status from v_voicemail_messages";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				$stats['system']['messages']['total'] = count($result);
-				foreach ($result as $row) {
-					$stats['system']['messages']['new'] += ($row['message_status'] != 'saved') ? 1 : 0;
-					if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
-						$stats['domain']['messages']['total']++;
-						$stats['domain']['messages']['new'] += ($row['message_status'] != 'saved') ? 1 : 0;
+				$database = new database;
+				$result = $database->select($sql, null, 'all');
+				if (is_array($result) && sizeof($result) != 0) {
+					$stats['system']['messages']['total'] = sizeof($result);
+					foreach ($result as $row) {
+						$stats['system']['messages']['new'] += ($row['message_status'] != 'saved') ? 1 : 0;
+						if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
+							$stats['domain']['messages']['total']++;
+							$stats['domain']['messages']['new'] += ($row['message_status'] != 'saved') ? 1 : 0;
+						}
 					}
 				}
-				unset ($sql, $prep_statement, $result);
+				unset($sql, $result);
 			}
 	}
 
@@ -410,6 +421,7 @@
 			foreach ($_SESSION['user']['extension'] as $assigned_extension) {
 				$assigned_extensions[$assigned_extension['extension_uuid']] = $assigned_extension['user'];
 			}
+			unset($assigned_extension);
 
 			//if also viewing system status, show more recent calls (more room avaialble)
 			$missed_limit = (is_array($selected_blocks) && in_array('counts', $selected_blocks)) ? 10 : 5;
@@ -425,30 +437,34 @@
 				from
 					v_xml_cdr
 				where
-					domain_uuid = '".$_SESSION['domain_uuid']."'
+					domain_uuid = :domain_uuid
 					and (
 						direction = 'inbound'
 						or direction = 'local'
 					)
-					and (missed_call = true or bridge_uuid is null)
-					and destination_number in ('".implode("','",$assigned_extensions)."')
-					and (";
-					$x = 0;
-					foreach ($assigned_extensions as $assigned_extension_uuid => $assigned_extension) {
-						$sql .= "extension_uuid = '".$assigned_extension_uuid."' ";
-						$sql .= "or destination_number = '".$assigned_extension."' ";
-						if (++$x < sizeof($assigned_extensions)) { $sql .= "or "; }
+					and (missed_call = true or bridge_uuid is null) ";
+					if (is_array($assigned_extensions) && sizeof($assigned_extensions) != 0) {
+						$x = 0;
+						foreach ($assigned_extensions as $assigned_extension_uuid => $assigned_extension) {
+							$sql_where_array[] = "extension_uuid = :assigned_extension_uuid_".$x;
+							$sql_where_array[] = "destination_number = :destination_number_".$x;
+							$parameters['assigned_extension_uuid_'.$x] = $assigned_extension_uuid;
+							$parameters['destination_number_'.$x] = $assigned_extension;
+							$x++;
+						}
+						if (is_array($sql_where_array) && sizeof($sql_where_array) != 0) {
+							$sql .= "and (".implode(' or ', $sql_where_array).") ";
+						}
+						unset($sql_where_array);
 					}
 					$sql .= "
-					)
 					and start_epoch > ".(time() - 86400)."
 				order by
 					start_epoch desc";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-			$result_count = count($result);
-			unset ($prep_statement, $sql);
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$database = new database;
+			$result = $database->select($sql, $parameters, 'all');
+			$num_rows = is_array($result) ? sizeof($result) : 0;
 
 			$c = 0;
 			$row_style["0"] = "row_style0";
@@ -456,20 +472,20 @@
 
 			$hud[$n]['html'] .= "<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?call_result=missed'\">".$text['label-missed_calls']."</span>";
 
-			$hud[$n]['html'] .= "<span class='hud_stat' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$result_count."</span>";
+			$hud[$n]['html'] .= "<span class='hud_stat' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$num_rows."</span>";
 			$hud[$n]['html'] .= "<span class='hud_stat_title' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$text['label-last_24_hours']."</span>\n";
 
 			$hud[$n]['html'] .= "<div class='hud_details' id='hud_".$n."_details'>";
 			$hud[$n]['html'] .= "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 			$hud[$n]['html'] .= "<tr>\n";
-			if ($result_count > 0) {
+			if ($num_rows > 0) {
 				$hud[$n]['html'] .= "<th class='hud_heading'>&nbsp;</th>\n";
 			}
 			$hud[$n]['html'] .= "<th class='hud_heading' width='100%'>".$text['label-cid_number']."</th>\n";
 			$hud[$n]['html'] .= "<th class='hud_heading'>".$text['label-missed']."</th>\n";
 			$hud[$n]['html'] .= "</tr>\n";
 
-			if ($result_count > 0) {
+			if ($num_rows > 0) {
 				$theme_cdr_images_exist = (
 					file_exists($theme_image_path."icon_cdr_inbound_voicemail.png") &&
 					file_exists($theme_image_path."icon_cdr_inbound_cancelled.png") &&
@@ -512,8 +528,8 @@
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
-				unset($sql, $result, $row_count);
 			}
+			unset($sql, $parameters, $result, $num_rows, $index, $row);
 
 			$hud[$n]['html'] .= "</table>\n";
 			$hud[$n]['html'] .= "<span style='display: block; margin: 6px 0 7px 0;'><a href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?call_result=missed'>".$text['label-view_all']."</a></span>\n";
@@ -544,26 +560,33 @@
 				from
 					v_xml_cdr
 				where
-					domain_uuid = '".$_SESSION['domain_uuid']."'
-					and (";
-					$x = 0;
-					foreach ($assigned_extensions as $assigned_extension_uuid => $assigned_extension) {
-						$sql .= "extension_uuid = '".$assigned_extension_uuid."' ";
-						$sql .= "or caller_id_number = '".$assigned_extension."' ";
-						$sql .= "or destination_number = '".$assigned_extension."' ";
-						$sql .= "or destination_number = '*99".$assigned_extension."' ";
-						if (++$x < sizeof($assigned_extensions)) { $sql .= "or "; }
+					domain_uuid = :domain_uuid ";
+					if (is_array($assigned_extensions) && sizeof($assigned_extensions) != 0) {
+						$x = 0;
+						foreach ($assigned_extensions as $assigned_extension_uuid => $assigned_extension) {
+							$sql_where_array[] = "extension_uuid = extension_uuid_".$x;
+							$sql_where_array[] = "caller_id_number = caller_id_number_".$x;
+							$sql_where_array[] = "destination_number = destination_number_1_".$x;
+							$sql_where_array[] = "destination_number = destination_number_2_".$x;
+							$parameters['extension_uuid_'.$x] = $assigned_extension_uuid;
+							$parameters['caller_id_number_'.$x] = $assigned_extension;
+							$parameters['destination_number_1_'.$x] = $assigned_extension;
+							$parameters['destination_number_2_'.$x] = '*99'.$assigned_extension;
+							$x++;
+						}
+						if (is_array($sql_where_array) && sizeof($sql_where_array) != 0) {
+							$sql .= "and (".implode(' or ', $sql_where_array).") ";
+						}
+						unset($sql_where_array);
 					}
 					$sql .= "
-					)
 					and start_epoch > ".(time() - 86400)."
 				order by
 					start_epoch desc";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-			$result_count = count($result);
-			unset ($prep_statement, $sql);
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$database = new database;
+			$result = $database->select($sql, $parameters, 'all');
+			$num_rows = is_array($result) ? sizeof($result) : 0;
 
 			$c = 0;
 			$row_style["0"] = "row_style0";
@@ -571,20 +594,20 @@
 
 			$hud[$n]['html'] .= "<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php';\">".$text['label-recent_calls']."</span>";
 
-			$hud[$n]['html'] .= "<span class='hud_stat' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$result_count."</span>";
+			$hud[$n]['html'] .= "<span class='hud_stat' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$num_rows."</span>";
 			$hud[$n]['html'] .= "<span class='hud_stat_title' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$text['label-last_24_hours']."</span>\n";
 
 			$hud[$n]['html'] .= "<div class='hud_details' id='hud_".$n."_details'>";
 			$hud[$n]['html'] .= "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 			$hud[$n]['html'] .= "<tr>\n";
-			if ($result_count > 0) {
+			if ($num_rows > 0) {
 				$hud[$n]['html'] .= "<th class='hud_heading'>&nbsp;</th>\n";
 			}
 			$hud[$n]['html'] .= "<th class='hud_heading' width='100%'>".$text['label-cid_number']."</th>\n";
 			$hud[$n]['html'] .= "<th class='hud_heading'>".$text['label-date_time']."</th>\n";
 			$hud[$n]['html'] .= "</tr>\n";
 
-			if ($result_count > 0) {
+			if ($num_rows > 0) {
 				$theme_cdr_images_exist = (
 					file_exists($theme_image_path."icon_cdr_inbound_answered.png") &&
 					file_exists($theme_image_path."icon_cdr_inbound_voicemail.png") &&
@@ -659,8 +682,8 @@
 					unset($cdr_name, $cdr_number);
 					$c = ($c) ? 0 : 1;
 				}
-				unset($sql, $result, $row_count);
 			}
+			unset($sql, $parameters, $result, $num_rows, $index, $row);
 
 			$hud[$n]['html'] .= "</table>\n";
 			$hud[$n]['html'] .= "<span style='display: block; margin: 6px 0 7px 0;'><a href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php'>".$text['label-view_all']."</a></span>\n";
@@ -1076,7 +1099,7 @@
 			//db connections
 				switch ($db_type) {
 					case 'pgsql':
-						$sql = "select count(*) as connections from pg_stat_activity";
+						$sql = "select count(*) from pg_stat_activity";
 						break;
 					case 'mysql':
 						$sql = "show status where `variable_name` = 'Threads_connected'";
@@ -1090,11 +1113,9 @@
 						}
 				}
 				if ($sql != '') {
-					$prep_statement = $db->prepare(check_sql($sql));
-					$prep_statement->execute();
-					$result = $prep_statement->fetch(PDO::FETCH_NAMED);
-					$connections = $result['connections'];
-					unset ($sql, $prep_statement, $result);
+					$database = new database;
+					$connections = $database->select($sql, null, 'column');
+					unset($sql);
 				}
 				if ($connections != '') {
 					$hud[$n]['html'] .= "<tr class='tr_link_void'>\n";

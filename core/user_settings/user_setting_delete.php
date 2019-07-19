@@ -44,26 +44,32 @@
 
 //delete user settings
 	$user_setting_uuids = $_REQUEST["id"];
-	$user_uuid = check_str($_REQUEST["user_uuid"]);
+	$user_uuid = $_REQUEST["user_uuid"];
 
-	if (sizeof($user_setting_uuids) > 0) {
-		foreach ($user_setting_uuids as $user_setting_uuid) {
-			$sql = "delete from v_user_settings ";
-			$sql .= "where user_uuid = '".$user_uuid."' ";
-			$sql .= "and user_setting_uuid = '".$user_setting_uuid."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset ($prep_statement, $sql);
+	if (is_uuid($user_uuid) && is_array($user_setting_uuids) && sizeof($user_setting_uuids) != 0) {
+		foreach ($user_setting_uuids as $index => $user_setting_uuid) {
+			if (is_uuid($user_setting_uuid)) {
+				$array['user_settings'][$index]['user_setting_uuid'] = $user_setting_uuid;
+				$array['user_settings'][$index]['user_uuid'] = $user_uuid;
+			}
+		}
+		if (is_array($array) && sizeof($array) != 0) {
+			$database = new database;
+			$database->app_name = 'user_settings';
+			$database->app_uuid = '3a3337f7-78d1-23e3-0cfd-f14499b8ed97';
+			$database->delete($array);
+			$user_settings_deleted = sizeof($array['user_settings']);
+			unset($array);
 		}
 		// set message
-		$_SESSION["message"] = $text['message-delete'].": ".sizeof($user_setting_uuids);
+		message::add($text['message-delete'].": ".$user_settings_deleted);
 	}
 	else {
 		// set message
 		message::add($text['message-delete_failed'], 'negative');
 	}
 
-	header("Location: /core/users/user_edit.php?id=".check_str($_REQUEST["user_uuid"]));
+	header("Location: /core/users/user_edit.php?id=".$user_uuid);
 	exit;
 
 ?>

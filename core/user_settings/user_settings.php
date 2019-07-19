@@ -39,51 +39,58 @@
 	}
 
 //toggle setting enabled
-	if (sizeof($_REQUEST) > 1) {
-		$user_uuid = check_str($_REQUEST["user_id"]);
-		$user_setting_uuids = $_REQUEST["id"];
-		$enabled = check_str($_REQUEST['enabled']);
+	if (
+		is_uuid($_REQUEST["user_id"]) &&
+		is_array($_REQUEST["id"]) &&
+		sizeof($_REQUEST["id"]) == 1 &&
+		($_REQUEST['enabled'] === 'true' || $_REQUEST['enabled'] === 'false')
+		) {
 
-		if ($user_uuid != '' && sizeof($user_setting_uuids) == 1 && $enabled != '') {
-			$sql = "update v_user_settings set ";
-			$sql .= "user_setting_enabled = '".$enabled."' ";
-			$sql .= "where user_uuid = '".$user_uuid."' ";
-			$sql .= "and user_setting_uuid = '".$user_setting_uuids[0]."' ";
-			$db->exec(check_sql($sql));
-			unset($sql);
+		//get input
+			$user_setting_uuids = $_REQUEST["id"];
+			$enabled = $_REQUEST['enabled'];
 
+		//update setting
+			$array['user_settings'][0]['user_setting_uuid'] = $user_setting_uuids[0];
+			$array['user_settings'][0]['user_setting_enabled'] = $enabled;
+			$database = new database;
+			$database->app_name = 'user_settings';
+			$database->app_uuid = '3a3337f7-78d1-23e3-0cfd-f14499b8ed97';
+			$database->save($array);
+			unset($array);
+
+		//redirect
 			message::add($text['message-update']);
-			header("Location: /core/users/user_edit.php?id=".$user_uuid);
+			header("Location: /core/users/user_edit.php?id=".$_REQUEST["user_id"]);
 			exit;
-		}
 	}
 
 //include the paging
 	require_once "resources/paging.php";
 
 //get the variables
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
 //show the content
 	echo "<form name='frm_settings' id='frm_settings' method='get' action='/core/user_settings/user_setting_delete.php'>";
 	echo "<input type='hidden' name='user_uuid' value='".$user_uuid."'>";
 
+//common sql where
+	$sql_where = "where user_uuid = :user_uuid ";
+	$sql_where .= "and not ( ";
+	$sql_where .= "(user_setting_category = 'domain' and user_setting_subcategory = 'language') ";
+	$sql_where .= "or (user_setting_category = 'domain' and user_setting_subcategory = 'time_zone') ";
+	$sql_where .= "or (user_setting_category = 'message' and user_setting_subcategory = 'key') ";
+	$sql_where .= ") ";
+	$parameters['user_uuid'] = $user_uuid;
+
 //prepare to page the results
-	$sql = "select count(*) as num_rows from v_user_settings ";
-	$sql .= "where user_uuid = '$user_uuid' ";
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-		unset ($prep_statement, $sql);
-	}
+	$sql = "select count(*) from v_user_settings ";
+	$sql .= $sql_where;
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($sql);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 100;
@@ -95,23 +102,17 @@
 
 //get the list
 	$sql = "select * from v_user_settings ";
-	$sql .= "where user_uuid = '$user_uuid' ";
-	$sql .= "and not ( ";
-	$sql .= "(user_setting_category = 'domain' and user_setting_subcategory = 'language') ";
-	$sql .= "or (user_setting_category = 'domain' and user_setting_subcategory = 'time_zone') ";
-	$sql .= "or (user_setting_category = 'message' and user_setting_subcategory = 'key') ";
-	$sql .= ") ";
-	if (strlen($order_by) == 0) {
+	$sql .= $sql_where;
+	if ($order_by != '') {
 		$sql .= "order by user_setting_category, user_setting_subcategory, user_setting_order asc ";
 	}
 	else {
-		$sql .= "order by $order_by $order ";
+		$sql .= order_by($order_by, $order);
 	}
-	$sql .= "limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$user_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$user_settings = $database->select($sql, $parameters, 'all');
+	unset($sql, $sql_where, $parameters);
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
@@ -120,7 +121,7 @@
 //show the content
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
-	if (is_array($user_settings)) {
+	if (is_array($user_settings) && sizeof($user_settings) != 0) {
 		$previous_category = '';
 		foreach($user_settings as $row) {
 			if ($previous_category != $row['user_setting_category']) {
@@ -190,14 +191,16 @@
 			$name = $row['user_setting_name'];
 			if ($category == "domain" && $subcategory == "menu" && $name == "uuid" ) {
 				$sql = "select * from v_menus ";
-				$sql .= "where menu_uuid = '".$row['user_setting_value']."' ";
-				$sub_prep_statement = $db->prepare(check_sql($sql));
-				$sub_prep_statement->execute();
-				$sub_result = $sub_prep_statement->fetchAll(PDO::FETCH_NAMED);
-				unset ($prep_statement, $sql);
-				foreach ($sub_result as &$sub_row) {
-					echo $sub_row["menu_language"]." - ".$sub_row["menu_name"]."\n";
+				$sql .= "where menu_uuid = :menu_uuid ";
+				$parameters['menu_uuid'] = $row['user_setting_value'];
+				$database = new database;
+				$sub_result = $database->select($sql, $parameters, 'all');
+				if (is_array($sub_result) && sizeof($sub_result) != 0) {
+					foreach ($sub_result as &$sub_row) {
+						echo $sub_row["menu_language"]." - ".$sub_row["menu_name"]."\n";
+					}
 				}
+				unset($sql, $parameters, $sub_result, $sub_row);
 			}
 			elseif ($category == "domain" && $subcategory == "template" && $name == "name" ) {
 				echo "		".ucwords($row['user_setting_value']);
@@ -232,7 +235,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center;'>\n";
-			echo "		<a href='?user_id=".$row['user_uuid']."&id[]=".$row['user_setting_uuid']."&enabled=".(($row['user_setting_enabled'] == 'true') ? 'false' : 'true')."'>".$text['label-'.$row['user_setting_enabled']]."</a>\n";
+			echo "		<a href='../user_settings/user_settings.php?user_id=".$row['user_uuid']."&id[]=".$row['user_setting_uuid']."&enabled=".(($row['user_setting_enabled'] == 'true') ? 'false' : 'true')."'>".$text['label-'.$row['user_setting_enabled']]."</a>\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".escape($row['user_setting_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
