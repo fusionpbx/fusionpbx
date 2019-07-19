@@ -419,7 +419,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "100";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Backlight Brightnes. Default is 100.. Value 10-100.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Backlight Brightness. Default is 100.. Value 10-100.";
 		$y++;
 
 ?>
