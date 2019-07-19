@@ -397,5 +397,29 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "BLF Call-pickup. 0 - Auto, 1 - Force BLF Call-pickup by prefix, 2 - Disabled. Default is 0";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "09ed1352-2594-4eb8-b3f8-93cdaabe6302";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_active_backlight_timeout";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Active Backlight Timeout. Default is 1. Value 1-90.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "66aa21c7-abc9-4265-85ef-5de630d7987c";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_lcd_brightness_idle";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "60";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Active Backlight Idle Time. Default is 60.. Value 0-100.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "14154480-e12d-473f-9967-2381eea88c76";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_lcd_brightness";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "100";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Backlight Brightness. Default is 100.. Value 10-100.";
+		$y++;
 
 ?>
