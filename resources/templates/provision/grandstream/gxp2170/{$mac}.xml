@@ -7980,17 +7980,17 @@
     <!-- # Active. Default is 100. -->
     <!-- # Number: 10 - 100 -->
     <!-- # Mandatory -->
-    <P334>100</P334>
+    <P334>{$grandstream_lcd_brightness}</P334>
 
     <!-- # Idle. Default is 60. -->
     <!-- # Number: 0 - 100 -->
     <!-- # Mandatory -->
-    <P335>60</P335>
+    <P335>{$grandstream_lcd_brightness_idle}</P335>
 
     <!-- # Active Backlight Timeout. Default is 1 -->
     <!-- # Number: 1 - 90 -->
     <!-- # Mandatory -->
-    <P8356>1</P8356>
+    <P8356>{$grandstream_active_backlight_timeout}</P8356>
 
     <!-- # Disable Missed Call Backlight. 0 - No, 1 - Yes, 2 - Yes, but flash MWI LED. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
