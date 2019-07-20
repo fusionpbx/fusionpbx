@@ -44,8 +44,6 @@
 		$action = 'add';
 	}
 	else {
-		echo 'here';
-		exit;
 		// load users own account
 		header("Location: user_edit.php?id=".$_SESSION['user_uuid']);
 		exit;
