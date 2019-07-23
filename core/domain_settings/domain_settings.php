@@ -359,7 +359,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center;'>\n";
-			echo "		<a href='?domain_id=".escape($row['domain_uuid'])."&id[]=".escape($row['domain_setting_uuid'])."&enabled=".(($row['domain_setting_enabled'] == 'true') ? 'false' : 'true')."'>".$text['label-'.escape($row['domain_setting_enabled'])]."</a>\n";
+			echo "		<a href='domain_settings.php?domain_id=".escape($row['domain_uuid'])."&id[]=".escape($row['domain_setting_uuid'])."&enabled=".(($row['domain_setting_enabled'] == 'true') ? 'false' : 'true')."'>".$text['label-'.escape($row['domain_setting_enabled'])]."</a>\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".escape($row['domain_setting_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
