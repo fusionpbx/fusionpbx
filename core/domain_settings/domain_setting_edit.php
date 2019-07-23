@@ -332,7 +332,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$domain_setting_enabled = $row["domain_setting_enabled"];
 			$domain_setting_description = $row["domain_setting_description"];
 		}
-		unset($sql, $parameters, $row);
+		unset($sql, $parameters);
 	}
 
 //show the header
