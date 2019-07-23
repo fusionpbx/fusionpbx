@@ -337,11 +337,13 @@ else {
 
 //get the groups
 	$sql = "select * from v_groups ";
+	$sql .= "where (domain_uuid is null or domain_uuid = :domain_uuid) ";
 	if (is_array($assigned_groups) && sizeof($assigned_groups) != 0) {
-		$sql .= "where group_uuid not in ('".implode("','",$assigned_groups)."') ";
+		$sql .= "and group_uuid not in ('".implode("','",$assigned_groups)."') ";
 	}
 	$sql .= "order by domain_uuid desc, group_name asc ";
 	$database = new database;
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$groups = $database->select($sql, $parameters, 'all');
 	unset($sql, $sql_where, $parameters);
 
