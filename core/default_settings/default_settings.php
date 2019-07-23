@@ -68,7 +68,7 @@
 		if ($action == 'copy' && permission_exists('domain_setting_add')) {
 			$target_domain_uuid = $_POST["target_domain_uuid"];
 
-			if (is_uuid($target_domain_uuid) && sizeof($default_setting_uuids) > 0) {
+			if (is_uuid($target_domain_uuid) && is_array($default_setting_uuids) && sizeof($default_setting_uuids) > 0) {
 				$settings_copied = 0;
 				foreach ($default_setting_uuids as $default_setting_uuid) {
 
@@ -107,11 +107,13 @@
 					$parameters['domain_setting_name'] = $default_setting_name;
 					$database = new database;
 					$target_domain_setting_uuid = $database->select($sql, $parameters, 'column');
+					$message = $database->message;
+
 					$action = is_uuid($target_domain_setting_uuid) ? 'update' : 'add';
 					unset($sql, $parameters);
 
 					// fix null
-					$default_setting_order = $default_setting_order != '' ? $default_setting_order : 'null';
+					$default_setting_order = $default_setting_order != '' ? $default_setting_order : null;
 
 					//begin array
 					$array['domain_settings'][0]['domain_uuid'] = $target_domain_uuid;
@@ -147,7 +149,7 @@
 				} // foreach
 
 				// set message
-				$_SESSION["message"] = $text['message-copy'].": ".escape($settings_copied);
+				message::add($text['message-copy'].": ".escape($settings_copied));
 			}
 			else {
 				// set message
