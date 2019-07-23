@@ -121,7 +121,7 @@
 							unset($sql, $parameters);
 
 							// fix null
-							$domain_setting_order = $domain_setting_order != '' ? $domain_setting_order : 'null';
+							$domain_setting_order = $domain_setting_order != '' ? $domain_setting_order : null;
 
 							//prepare the array
 							$array['domain_settings'][$index]['domain_uuid'] = $target_domain_uuid;
@@ -147,7 +147,7 @@
 						$message = $database->message;
 
 						// set message
-						$_SESSION["message"] = $text['message-copy'].": ".sizeof($array);
+						message::add($text['message-copy'].": ".sizeof($array));
 
 						unset($array);
 					}
