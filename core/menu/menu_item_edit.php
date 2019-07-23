@@ -325,9 +325,12 @@ else {
 
 //set the assigned_groups array
 	if (is_array($menu_item_groups) && sizeof($menu_item_groups) != 0) {
+		$assigned_groups = array();
 		foreach ($menu_item_groups as $field) {
 			if (strlen($field['group_name']) > 0) {
-				$assigned_groups[] = $field['group_uuid'];
+				if (is_uuid($field['group_uuid'])) {
+					$assigned_groups[] = $field['group_uuid'];
+				}
 			}
 		}
 	}
@@ -335,12 +338,7 @@ else {
 //get the groups
 	$sql = "select * from v_groups ";
 	if (is_array($assigned_groups) && sizeof($assigned_groups) != 0) {
-		$sql .= "where ";
-		foreach ($assigned_groups as $index => $assigned_group) {
-			$sql_where[] = "group_uuid <> :group_uuid_".$index;
-			$parameters['group_uuid_'.$index] = $assigned_group;
-		}
-		$sql .= implode(' and ', $sql_where);
+		$sql .= "where group_uuid not in ('".implode("','",$assigned_groups)."') ";
 	}
 	$sql .= "order by domain_uuid desc, group_name asc ";
 	$database = new database;
@@ -483,11 +481,11 @@ else {
 		echo "<br />\n";
 		echo "<select name='group_uuid_name' class='formfld' style='width: auto; margin-right: 3px;'>\n";
 		echo "	<option value=''></option>\n";
-		foreach($groups as $field) {
-			if ($field['group_name'] == "superadmin" && !if_group("superadmin")) { continue; }	//only show the superadmin group to other superadmins
-			if ($field['group_name'] == "admin" && (!if_group("superadmin") && !if_group("admin") )) { continue; }	//only show the admin group to other admins
-			if (!in_array($field["group_uuid"], $assigned_groups)) {
-				echo "	<option value='".$field['group_uuid']."|".$field['group_name']."'>".$field['group_name'].(($field['domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['domain_uuid']]['domain_name'] : null)."</option>\n";
+		foreach($groups as $row) {
+			if ($row['group_name'] == "superadmin" && !if_group("superadmin")) { continue; }	//only show the superadmin group to other superadmins
+			if ($row['group_name'] == "admin" && (!if_group("superadmin") && !if_group("admin") )) { continue; }	//only show the admin group to other admins
+			if (!in_array($row["group_uuid"], $assigned_groups)) {
+				echo "	<option value='".$row['group_uuid']."|".$row['group_name']."'>".$row['group_name'].(($row['domain_uuid'] != '') ? "@".$_SESSION['domains'][$row['domain_uuid']]['domain_name'] : null)."</option>\n";
 			}
 		}
 		echo "</select>";
