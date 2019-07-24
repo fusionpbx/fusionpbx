@@ -384,13 +384,12 @@ echo "	<div id='message_container'></div>\n";
 		echo "			<input id='domains_hide' type='button' class='btn' style='float: right' value=\"".$text['theme-button-close']."\">\n";
 
 		if (file_exists($_SERVER["DOCUMENT_ROOT"]."/app/domains/domains.php")) {
-			$href = '/app/domains/domains.php';
+			$domain_path = '".PROJECT_PATH."/app/domains/domains.php';
 		}
 		else {
-			$href = '/core/domain_settings/domains.php';
+			$domain_path = '".PROJECT_PATH."/core/domains/domains.php';
 		}
-		echo "<a href=\"".$href."\"><b style=\"color: #000;\">".$text['theme-title-domains']."</b></a> (".sizeof($_SESSION['domains']).")";
-
+		echo "			<a href=\"".$domain_path."\"><b style=\"color: #000;\">".$text['theme-title-domains']."</b></a> (".sizeof($_SESSION['domains']).")";
 		echo "			<br><br>\n";
 		echo "			<input type='text' id='domain_filter' class='formfld' style='margin-left: 0; min-width: 100%; width: 100%;' placeholder=\"".$text['theme-label-search']."\" onkeyup='domain_search(this.value)'>\n";
 		echo "		</div>\n";
@@ -401,8 +400,8 @@ echo "	<div id='message_container'></div>\n";
 		foreach($_SESSION['domains'] as $domain) {
 			$bgcolor = ($bgcolor == $bgcolor1) ? $bgcolor2 : $bgcolor1;
 			$bgcolor = ($domain['domain_uuid'] == $_SESSION['domain_uuid']) ? "#eeffee" : $bgcolor;
-			echo "<div id=\"".escape($domain['domain_name'])."\" class='domains_list_item' style='background-color: ".$bgcolor."' onclick=\"document.location.href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true';\">";
-			echo "<a href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true' ".(($domain['domain_uuid'] == $_SESSION['domain_uuid']) ? "style='font-weight: bold;'" : null).">".escape($domain['domain_name'])."</a>\n";
+			echo "<div id=\"".escape($domain['domain_name'])."\" class='domains_list_item' style='background-color: ".$bgcolor."' onclick=\"document.location.href='".$domain_path."?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true';\">";
+			echo "<a href='".$domain_path."?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true' ".(($domain['domain_uuid'] == $_SESSION['domain_uuid']) ? "style='font-weight: bold;'" : null).">".escape($domain['domain_name'])."</a>\n";
 			if ($domain['domain_description'] != '') {
 				echo "<span class=\"domain_list_item_description\"> - ".escape($domain['domain_description'])."</span>\n";
 			}
