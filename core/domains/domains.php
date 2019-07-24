@@ -199,7 +199,7 @@
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('domain_edit')) {
-				echo "<a href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".escape($domain_uuid)."&domain_change=true'>".$text['label-manage']."</a>";
+				echo "<a href='".PROJECT_PATH."/core/domains/domains.php?domain_uuid=".escape($domain_uuid)."&domain_change=true'>".$text['label-manage']."</a>";
 			}
 			echo "	</td>";
 			echo "	<td valign='top' class='row_stylebg'>".escape($domain['description'])."&nbsp;</td>\n";
