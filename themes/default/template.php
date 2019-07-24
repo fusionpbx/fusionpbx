@@ -384,10 +384,10 @@ echo "	<div id='message_container'></div>\n";
 		echo "			<input id='domains_hide' type='button' class='btn' style='float: right' value=\"".$text['theme-button-close']."\">\n";
 
 		if (file_exists($_SERVER["DOCUMENT_ROOT"]."/app/domains/domains.php")) {
-			$domain_path = '".PROJECT_PATH."/app/domains/domains.php';
+			$domain_path = PROJECT_PATH.'/app/domains/domains.php';
 		}
 		else {
-			$domain_path = '".PROJECT_PATH."/core/domains/domains.php';
+			$domain_path = PROJECT_PATH.'/core/domains/domains.php';
 		}
 		echo "			<a href=\"".$domain_path."\"><b style=\"color: #000;\">".$text['theme-title-domains']."</b></a> (".sizeof($_SESSION['domains']).")";
 		echo "			<br><br>\n";
