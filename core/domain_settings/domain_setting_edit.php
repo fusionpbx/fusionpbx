@@ -308,7 +308,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				if ($action == "add") {
 					message::add($text['message-add']);
 				}
-				header("Location: ".PROJECT_PATH."core/domains/domain_edit.php?id=".$domain_uuid);
+				header("Location: ".PROJECT_PATH."/core/domains/domain_edit.php?id=".$domain_uuid);
 				exit;
 		}
 }
@@ -357,7 +357,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "</b></td>\n";
 	echo "<td width='70%' align='right' valign='top'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='".PROJECT_PATH."core/domains/domain_edit.php?id=".escape($domain_uuid)."'\" value='".$text['button-back']."'>";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='".PROJECT_PATH."/core/domains/domain_edit.php?id=".escape($domain_uuid)."'\" value='".$text['button-back']."'>";
 	echo "	<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
