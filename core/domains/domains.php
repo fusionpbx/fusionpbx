@@ -34,7 +34,7 @@
 	}
 
 //check permission
-	if (permission_exists('domain_view')) {
+	if (permission_exists('domain_all') && permission_exists('domain_view')) {
 		//access granted
 	}
 	else {
