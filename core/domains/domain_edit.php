@@ -105,8 +105,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$array['domains'][0]['domain_enabled'] = $domain_enabled;
 					$array['domains'][0]['domain_description'] = $domain_description;
 					$database = new database;
-					$database->app_name = 'domain_settings';
-					$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
+					$database->app_name = 'domains';
+					$database->app_uuid = '8b91605b-f6d2-42e6-a56d-5d1ded01bb44';
 					$database->save($array);
 					unset($array);
 				}
@@ -128,8 +128,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$array['domains'][0]['domain_enabled'] = $domain_enabled;
 				$array['domains'][0]['domain_description'] = $domain_description;
 				$database = new database;
-				$database->app_name = 'domain_settings';
-				$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
+				$database->app_name = 'domains';
+				$database->app_uuid = '8b91605b-f6d2-42e6-a56d-5d1ded01bb44';
 				$database->save($array);
 				unset($array);
 
@@ -429,8 +429,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= "where var_name = 'domain' ";
 							$parameters['var_value'] = $domain_name;
 							$database = new database;
-							$database->app_name = 'domain_settings';
-							$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
+							$database->app_name = 'domains';
+							$database->app_uuid = '8b91605b-f6d2-42e6-a56d-5d1ded01bb44';
 							$database->execute($sql, $parameters);
 							unset($sql, $parameters);
 						}
@@ -557,7 +557,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	//		echo "		<option value='".escape($domain["domain_uuid"])."'>".escape($domain["domain_name"])."</option>\n";
 	//	}
 	//	echo "		</select>\n";
-	//	echo "		<input type='button' class='btn' id='button_paste' style='display: none;' alt='".$text['button-paste']."' value='".$text['button-paste']."' onclick=\"$('#frm').attr('action', 'domain_settings.php?search='+$('#domain_setting_search').val()).submit();\">";
+	//	echo "		<input type='button' class='btn' id='button_paste' style='display: none;' alt='".$text['button-paste']."' value='".$text['button-paste']."' onclick=\"$('#frm').attr('action', PROJECT_PATH.'/core/domain_settings/domain_settings.php?search='+$('#domain_setting_search').val()).submit();\">";
 	//}
 	if (permission_exists('domain_export')) {
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-export']."' onclick=\"window.location='".PROJECT_PATH."/app/domain_export/index.php?id=".escape($domain_uuid)."'\" value='".$text['button-export']."'>\n";
@@ -628,7 +628,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</form>";
 
 	if ($action == "update" && permission_exists('domain_setting_view')) {
-		require "domain_settings.php";
+		require PROJECT_PATH."/app/domain_settings/domain_settings.php";
 	}
 
 //include the footer
