@@ -43,6 +43,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "domain_delete";
 		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'domain_all';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "domain_select";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
