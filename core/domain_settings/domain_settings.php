@@ -62,7 +62,7 @@
 				unset($array);
 
 				message::add($text['message-update']);
-				header("Location: domain_edit.php?id=".$domain_uuid);
+				header("Location: ".PROJECT_PATH."core/domains/domain_edit.php?id=".$domain_uuid);
 				exit;
 			}
 
@@ -157,7 +157,7 @@
 					message::add($text['message-copy_failed']);
 				}
 	
-				header("Location: default_settings.php".($search != '' ? "?search=".escape($search) : null));
+				header("Location: ".PROJECT_PATH."core/domains/domains.php".($search != '' ? "?search=".escape($search) : null));
 				exit;
 			}
 
@@ -191,7 +191,7 @@
 					message::add($text['message-delete_failed'], 'negative');
 				}
 
-				header("Location: domain_edit.php?id=".escape($_REQUEST["domain_uuid"]));
+				header("Location: ".PROJECT_PATH."core/domains/domain_edit.php?id=".escape($_REQUEST["domain_uuid"]));
 				exit;
 			}
 	}
@@ -204,7 +204,7 @@
 	$order = $_GET["order"];
 
 //show the content
-	echo "<form name='domain_frm' id='domain_frm' method='GET' action='domain_settings.php'>";
+	echo "<form name='domain_frm' id='domain_frm' method='GET' action=".PROJECT_PATH."core/domain_settings/domain_settings.php'>";
 	echo "<input type='hidden' name='action' id='action' value=''>";
 	echo "<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>";
 
@@ -283,7 +283,7 @@
 				echo "<th>".$text['label-description']."</th>";
 				echo "<td class='list_control_icons'>";
 				if (permission_exists('domain_setting_add')) {
-					echo "<a href='domain_setting_edit.php?domain_setting_category=".escape($row['domain_setting_category'])."&domain_uuid=".escape($_GET['id'])."' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
+					echo "<a href='".PROJECT_PATH."core/domain_settings/domain_setting_edit.php?domain_setting_category=".escape($row['domain_setting_category'])."&domain_uuid=".escape($_GET['id'])."' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 				}
 				if (permission_exists('domain_setting_delete')) {
 					echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('action').value = 'delete'; document.forms.domain_frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
@@ -291,7 +291,7 @@
 				echo "</td>\n";
 				echo "</tr>\n";
 			}
-			$tr_link = (permission_exists('domain_setting_edit')) ? " href='domain_setting_edit.php?domain_uuid=".escape($row['domain_uuid'])."&id=".escape($row['domain_setting_uuid'])."'" : null;
+			$tr_link = (permission_exists('domain_setting_edit')) ? " href='".PROJECT_PATH."core/domain_settings/domain_setting_edit.php?domain_uuid=".escape($row['domain_uuid'])."&id=".escape($row['domain_setting_uuid'])."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			if ((permission_exists("domain_select") && permission_exists("domain_setting_add") 
 				&& count($_SESSION['domains']) > 1) ||
@@ -301,7 +301,7 @@
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('domain_setting_edit')) {
-				echo 	"<a href='domain_setting_edit.php?domain_uuid=".escape($row['domain_uuid'])."&id=".escape($row['domain_setting_uuid'])."'>".escape($row['domain_setting_subcategory'])."</a>";
+				echo 	"<a href='".PROJECT_PATH."core/domain_settings/domain_setting_edit.php?domain_uuid=".escape($row['domain_uuid'])."&id=".escape($row['domain_setting_uuid'])."'>".escape($row['domain_setting_subcategory'])."</a>";
 			}
 			else {
 				echo $row['domain_setting_subcategory'];
@@ -359,15 +359,15 @@
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center;'>\n";
-			echo "		<a href='domain_settings.php?domain_id=".escape($row['domain_uuid'])."&id[]=".escape($row['domain_setting_uuid'])."&enabled=".(($row['domain_setting_enabled'] == 'true') ? 'false' : 'true')."'>".$text['label-'.escape($row['domain_setting_enabled'])]."</a>\n";
+			echo "		<a href='".PROJECT_PATH."core/domain_settings/domain_settings.php?domain_id=".escape($row['domain_uuid'])."&id[]=".escape($row['domain_setting_uuid'])."&enabled=".(($row['domain_setting_enabled'] == 'true') ? 'false' : 'true')."'>".$text['label-'.escape($row['domain_setting_enabled'])]."</a>\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".escape($row['domain_setting_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('domain_setting_edit')) {
-				echo "<a href='domain_setting_edit.php?domain_uuid=".escape($row['domain_uuid'])."&id=".escape($row['domain_setting_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='".PROJECT_PATH."core/domain_settings/domain_setting_edit.php?domain_uuid=".escape($row['domain_uuid'])."&id=".escape($row['domain_setting_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('domain_setting_delete')) {
-				echo "<a href='domain_settings.php?domain_uuid=".escape($row['domain_uuid'])."&id[]=".escape($row['domain_setting_uuid'])."&action=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='".PROJECT_PATH."core/domain_settings/domain_settings.php?domain_uuid=".escape($row['domain_uuid'])."&id[]=".escape($row['domain_setting_uuid'])."&action=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -385,7 +385,7 @@
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td class='list_control_icons'>";
 	if (permission_exists('domain_setting_add')) {
-		echo 		"<a href='domain_setting_edit.php?domain_uuid=".escape($_GET['id'])."' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo 		"<a href='".PROJECT_PATH."core/domain_settings/domain_setting_edit.php?domain_uuid=".escape($_GET['id'])."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	if (permission_exists('domain_setting_delete') && $result_count > 0) {
 		echo 		"<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('action').value = 'delete'; document.getElementById('domain_frm').submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
