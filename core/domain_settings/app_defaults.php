@@ -34,11 +34,6 @@
 			$db->exec(check_sql($sql));
 			unset($sql);
 
-		//set domains with enabled status of empty or null to true
-			$sql = "update v_domains set domain_enabled = 'true' where domain_enabled = '' or domain_enabled is null";
-			$db->exec(check_sql($sql));
-			unset($sql);
-
 		//update any domains set to legacy languages
 			$language = new text;
 			foreach ($language->legacy_map as $language_code => $legacy_code) {
@@ -68,4 +63,5 @@
 			}
 			unset($prep_statement, $sql);
 	}
+
 ?>
