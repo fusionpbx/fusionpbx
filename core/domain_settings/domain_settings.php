@@ -204,7 +204,7 @@
 	$order = $_GET["order"];
 
 //show the content
-	echo "<form name='domain_frm' id='domain_frm' method='GET' action=".PROJECT_PATH."/core/domain_settings/domain_settings.php'>";
+	echo "<form name='domain_frm' id='domain_frm' method='GET' action='".PROJECT_PATH."/core/domain_settings/domain_settings.php'>";
 	echo "<input type='hidden' name='action' id='action' value=''>";
 	echo "<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>";
 
