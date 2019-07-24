@@ -789,7 +789,7 @@
 
 			$show_stat = true;
 			if (permission_exists('domain_view')) {
-				$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/core/domain_settings/domains.php'\"";
+				$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/core/domains/domains.php'\"";
 				$hud_stat = $stats[$scope]['domains']['total'] - $stats[$scope]['domains']['disabled'];
 				$hud_stat_title = $text['label-active_domains'];
 			}
@@ -824,7 +824,7 @@
 
 			//domains
 				if (permission_exists('domain_view')) {
-					$tr_link = "href='".PROJECT_PATH."/core/domain_settings/domains.php'";
+					$tr_link = "href='".PROJECT_PATH."/core/domains/domains.php'";
 					$hud[$n]['html'] .= "<tr ".$tr_link.">\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-domains']."</a></td>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['domains']['disabled']."</td>\n";
