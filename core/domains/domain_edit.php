@@ -628,7 +628,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</form>";
 
 	if ($action == "update" && permission_exists('domain_setting_view')) {
-		require PROJECT_PATH."/app/domain_settings/domain_settings.php";
+		require PROJECT_PATH."core/domain_settings/domain_settings.php";
 	}
 
 //include the footer
