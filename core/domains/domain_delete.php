@@ -30,7 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('domain_delete')) {
+	if (permission_exists('domain_all') && permission_exists('domain_delete')) {
 		//access granted
 	}
 	else {
