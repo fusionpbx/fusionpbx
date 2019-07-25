@@ -134,9 +134,9 @@
 		$html .= "	<th nowrap='nowrap'>".$text['label-domain']."</th>\n";
 	}
 	$html .= "	<th nowrap='nowrap'>".$text['label-group_name']."</th>\n";
-	$html .= "	<th nowrap='nowrap'>".$text['label-order']."</th>\n";
 	$html .= "	<th nowrap='nowrap'>".$text['label-group_tools']."</th>\n";
 	$html .= "	<th style='text-align: center;' nowrap='nowrap'>".$text['label-group_protected']."</th>\n";
+	$html .= "	<th nowrap='nowrap'>".$text['label-order']."</th>\n";
 	$html .= "	<th nowrap='nowrap'>".$text['label-group_description']."</th>\n";
 	$html .= "	<td class='list_control_icons' style='width: 25px;'>";
 	if (permission_exists('group_add')) {
@@ -187,10 +187,6 @@
 			}
 			$html .= "</td>\n";
 
-			$html .= "<td class='".$row_style[$c]."' nowrap='nowrap'>";
-			$html .= "	".$group_order;
-			$html .= "</td>\n";
-
 			$html .= "<td class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>\n";
 			if (permission_exists('group_add') || if_group("superadmin")) {
 				$html .= "<a class='' href='group_permissions.php?group_uuid=".$group_uuid."' title='".$text['label-group_permissions']."'>".$text['label-group_permissions']."</a>&nbsp;&nbsp;&nbsp;";
@@ -202,9 +198,15 @@
 				}
 			}
 			$html .= "</td>\n";
+
 			$html .= "<td class='".$row_style[$c]." tr_link_void' style='padding: 0px; text-align: center;' align='center' nowrap='nowrap'>\n";
 			$html .= "	<input type='checkbox' name='group_protected' ".(($group_protected == "true") ? "checked='checked'" : null)." value='".(($group_protected == "true") ? 'false' : 'true')."' onchange=\"window.location='".PROJECT_PATH."/core/groups/groups.php?change=".(($group_protected == "true") ? 'false' : 'true')."&group_uuid=".$group_uuid."&group_name=".$group_name.(($_GET['show'] == 'all') ? "&show=all" : null)."';\">\n";
 			$html .= "</td>\n";
+
+			$html .= "<td class='".$row_style[$c]."' nowrap='nowrap'>";
+			$html .= "	".$group_order;
+			$html .= "</td>\n";
+
 			$html .= "<td class='row_stylebg' nowrap='nowrap'>".$group_description."</td>\n";
 			$html .= "<td class='list_control_icons' style='width: 25px;'>";
 			if (permission_exists('group_edit')) {
