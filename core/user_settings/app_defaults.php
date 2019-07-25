@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,29 +29,36 @@
 		//update any users set to legacy languages
 			$language = new text;
 			foreach ($language->legacy_map as $language_code => $legacy_code) {
-				if(strlen($legacy_code) == 5)
+				if (strlen($legacy_code) == 5) {
 					continue;
-				$sql = "update v_user_settings set user_setting_value = '$language_code' where user_setting_value = '$legacy_code' and user_setting_name = 'code' and user_setting_subcategory = 'language' and user_setting_category = 'domain'";
-				$db->exec(check_sql($sql));
-				unset($sql);
+				}
+				$sql = "update v_user_settings set user_setting_value = :language_code ";
+				$sql .= "where user_setting_value = :legacy_code ";
+				$sql .= "and user_setting_name = 'code' ";
+				$sql .= "and user_setting_subcategory = 'language' ";
+				$sql .= "and user_setting_category = 'domain'";
+				$parameters['language_code'] = $language_code;
+				$parameters['legacy_code'] = $legacy_code;
+				$database = new database;
+				$database->execute($sql, $parameters);
+				unset($sql, $parameters);
 			}
 		//migrate old user_settings
 			$sql = "update v_user_settings ";
 			$sql .= "set user_setting_value = '#fafafa' ";
 			$sql .= "where user_setting_subcategory = 'message_default_color' ";
 			$sql .= "and user_setting_value = '#ccffcc' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			if ($prep_statement) {
-				$prep_statement->execute();
-			}
+			$database = new database;
+			$database->execute($sql, null);
+			unset($sql);
+
 			$sql = "update v_user_settings ";
 			$sql .= "set user_setting_value = '#666' ";
 			$sql .= "where user_setting_subcategory = 'message_default_background_color' ";
 			$sql .= "and user_setting_value = '#004200' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			if ($prep_statement) {
-				$prep_statement->execute();
-			}
-			unset($prep_statement, $sql);
+			$database = new database;
+			$database->execute($sql, null);
+			unset($sql);
 	}
+
 ?>
