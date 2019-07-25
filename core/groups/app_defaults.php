@@ -1,4 +1,4 @@
-<?php
+]<?php
 /*
 	FusionPBX
 	Version: MPL 1.1
@@ -43,7 +43,7 @@ if ($domains_processed == 1) {
 						$sql .= "where group_name = :group_name ";
 						$parameters['group_name'] = $row['group_name'];
 						$database = new database;
-						$group_uuid = $database->select($sql, null, 'column');
+						$group_uuid = $database->select($sql, $parameters, 'column');
 						unset($sql, $parameters);
 
 					//set the group_uuid
