@@ -27,7 +27,7 @@
 
 	if (!function_exists('software_version')) {
 		function software_version() {
-			return '4.5.7';
+			return '4.5.8';
 		}
 	}
 
