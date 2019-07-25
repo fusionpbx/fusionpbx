@@ -167,5 +167,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "db41288d-c75a-4005-b103-76e795885375";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_log_upload_enabled";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom log upload. 0=Disabled - 1=Enabled.";
+		$y++;
 
 ?>
