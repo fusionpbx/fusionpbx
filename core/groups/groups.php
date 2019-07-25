@@ -128,27 +128,29 @@
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	$echo = "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	$echo .= "<tr>\n";
+	$html = "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	$html .= "<tr>\n";
 	if (permission_exists('group_all') && $_GET['show'] == 'all') {
-		$echo .= "	<th nowrap='nowrap'>".$text['label-domain']."</th>\n";
+		$html .= "	<th nowrap='nowrap'>".$text['label-domain']."</th>\n";
 	}
-	$echo .= "	<th nowrap='nowrap'>".$text['label-group_name']."</th>\n";
-	$echo .= "	<th nowrap='nowrap'>".$text['label-group_tools']."</th>\n";
-	$echo .= "	<th style='text-align: center;' nowrap='nowrap'>".$text['label-group_protected']."</th>\n";
-	$echo .= "	<th nowrap='nowrap'>".$text['label-group_description']."</th>\n";
-	$echo .= "	<td class='list_control_icons' style='width: 25px;'>";
+	$html .= "	<th nowrap='nowrap'>".$text['label-group_name']."</th>\n";
+	$html .= "	<th nowrap='nowrap'>".$text['label-order']."</th>\n";
+	$html .= "	<th nowrap='nowrap'>".$text['label-group_tools']."</th>\n";
+	$html .= "	<th style='text-align: center;' nowrap='nowrap'>".$text['label-group_protected']."</th>\n";
+	$html .= "	<th nowrap='nowrap'>".$text['label-group_description']."</th>\n";
+	$html .= "	<td class='list_control_icons' style='width: 25px;'>";
 	if (permission_exists('group_add')) {
-		$echo .= "<a href='groupadd.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
+		$html .= "<a href='groupadd.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 	}
-	$echo .= "	</td>\n";
-	$echo .= "</tr>\n";
+	$html .= "	</td>\n";
+	$html .= "</tr>\n";
 
 	$count = 0;
 	foreach ($groups as &$row) {
 		$domain_uuid = $row['domain_uuid'];
 		$group_uuid = $row["group_uuid"];
 		$group_name = $row["group_name"];
+		$group_order = $row["group_order"];
 		$group_protected = $row["group_protected"];
 		$group_description = $row["group_description"];
 		if (strlen($group_name) == 0) { $group_name = "&nbsp;"; }
@@ -165,78 +167,83 @@
 			else {
 				unset($tr_link);
 			}
-			$echo .= "<tr ".$tr_link.">\n";
+			$html .= "<tr ".$tr_link.">\n";
 			if (permission_exists('group_all') && $_GET['show'] == 'all') {
-				$echo .= "";
+				$html .= "";
 				if (strlen($_SESSION['domains'][$domain_uuid]['domain_name']) > 0) {
 					$domain = $_SESSION['domains'][$domain_uuid]['domain_name'];
 				}
 				else {
 					$domain = $text['label-global'];
 				}
-				$echo .= "<td class='".$row_style[$c]."' nowrap='nowrap'>$domain</td>\n";
+				$html .= "<td class='".$row_style[$c]."' nowrap='nowrap'>$domain</td>\n";
 			}
-			$echo .= "<td class='".$row_style[$c]."' nowrap='nowrap'>";
+			$html .= "<td class='".$row_style[$c]."' nowrap='nowrap'>";
 			if (permission_exists('group_edit') && !($domain_uuid == '' && in_array($group_name, $system_groups))) {
-				$echo .= "<a href='groupedit.php?id=".$group_uuid."'>".(($domain_uuid == '' && $_GET['show'] != 'all') ? "<i>".$group_name."</i>" : $group_name)."</a>";
+				$html .= "<a href='groupedit.php?id=".$group_uuid."'>".(($domain_uuid == '' && $_GET['show'] != 'all') ? "<i>".$group_name."</i>" : $group_name)."</a>";
 			}
 			else {
-				$echo .= ($domain_uuid == '' && $_GET['show'] != 'all') ? "<i>".$group_name."</i>" : $group_name;
+				$html .= ($domain_uuid == '' && $_GET['show'] != 'all') ? "<i>".$group_name."</i>" : $group_name;
 			}
-			$echo .= "</td>\n";
-			$echo .= "<td class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>\n";
+			$html .= "</td>\n";
+
+			$html .= "<td class='".$row_style[$c]."' nowrap='nowrap'>";
+			$html .= "	".$group_order;
+			$html .= "</td>\n";
+
+			$html .= "<td class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>\n";
 			if (permission_exists('group_add') || if_group("superadmin")) {
-				$echo .= "<a class='' href='group_permissions.php?group_uuid=".$group_uuid."' title='".$text['label-group_permissions']."'>".$text['label-group_permissions']."</a>&nbsp;&nbsp;&nbsp;";
+				$html .= "<a class='' href='group_permissions.php?group_uuid=".$group_uuid."' title='".$text['label-group_permissions']."'>".$text['label-group_permissions']."</a>&nbsp;&nbsp;&nbsp;";
 			}
 			if (permission_exists('group_member_view') || if_group("superadmin")) {
-				$echo .= "<a class='' href='groupmembers.php?group_uuid=".$group_uuid."&group_name=".$group_name."' title='".$text['label-group_members']."'>".$text['label-group_members']."</a>";
+				$html .= "<a class='' href='groupmembers.php?group_uuid=".$group_uuid."&group_name=".$group_name."' title='".$text['label-group_members']."'>".$text['label-group_members']."</a>";
 				if (sizeof($group_counts) > 0 && $group_counts[$group_uuid] > 0) {
-					$echo .= " <span style='font-size: 80%;'>(".$group_counts[$group_uuid].")</span>";
+					$html .= " <span style='font-size: 80%;'>(".$group_counts[$group_uuid].")</span>";
 				}
 			}
-			$echo .= "</td>\n";
-			$echo .= "<td class='".$row_style[$c]." tr_link_void' style='padding: 0px; text-align: center;' align='center' nowrap='nowrap'>\n";
-			$echo .= "	<input type='checkbox' name='group_protected' ".(($group_protected == "true") ? "checked='checked'" : null)." value='".(($group_protected == "true") ? 'false' : 'true')."' onchange=\"window.location='".PROJECT_PATH."/core/groups/groups.php?change=".(($group_protected == "true") ? 'false' : 'true')."&group_uuid=".$group_uuid."&group_name=".$group_name.(($_GET['show'] == 'all') ? "&show=all" : null)."';\">\n";
-			$echo .= "</td>\n";
-			$echo .= "<td class='row_stylebg' nowrap='nowrap'>".$group_description."</td>\n";
-			$echo .= "<td class='list_control_icons' style='width: 25px;'>";
+			$html .= "</td>\n";
+			$html .= "<td class='".$row_style[$c]." tr_link_void' style='padding: 0px; text-align: center;' align='center' nowrap='nowrap'>\n";
+			$html .= "	<input type='checkbox' name='group_protected' ".(($group_protected == "true") ? "checked='checked'" : null)." value='".(($group_protected == "true") ? 'false' : 'true')."' onchange=\"window.location='".PROJECT_PATH."/core/groups/groups.php?change=".(($group_protected == "true") ? 'false' : 'true')."&group_uuid=".$group_uuid."&group_name=".$group_name.(($_GET['show'] == 'all') ? "&show=all" : null)."';\">\n";
+			$html .= "</td>\n";
+			$html .= "<td class='row_stylebg' nowrap='nowrap'>".$group_description."</td>\n";
+			$html .= "<td class='list_control_icons' style='width: 25px;'>";
 			if (permission_exists('group_edit')) {
 				if (!($domain_uuid == '' && in_array($group_name, $system_groups))) {
-					$echo .= "<a href='groupedit.php?id=".$group_uuid."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
+					$html .= "<a href='groupedit.php?id=".$group_uuid."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
 				}
 				else {
-					$echo .= "<span onclick=\"alert('".$text['message-default_system_group']."');\" alt='".$text['button-edit']."'>".str_replace("list_control_icon", "list_control_icon_disabled", $v_link_label_edit)."</span>";
+					$html .= "<span onclick=\"alert('".$text['message-default_system_group']."');\" alt='".$text['button-edit']."'>".str_replace("list_control_icon", "list_control_icon_disabled", $v_link_label_edit)."</span>";
 				}
 			}
 			if (permission_exists('group_delete')) {
 				if (!($domain_uuid == '' && in_array($group_name, $system_groups))) {
-					$echo .= "<a href='groupdelete.php?id=".$group_uuid."' onclick=\"return confirm('".$text['confirm-delete']."')\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
+					$html .= "<a href='groupdelete.php?id=".$group_uuid."' onclick=\"return confirm('".$text['confirm-delete']."')\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
 				}
 				else {
-					$echo .= "<span onclick=\"alert('".$text['message-default_system_group']."');\" alt='".$text['button-delete']."'>".str_replace("list_control_icon", "list_control_icon_disabled", $v_link_label_delete)."</span>";
+					$html .= "<span onclick=\"alert('".$text['message-default_system_group']."');\" alt='".$text['button-delete']."'>".str_replace("list_control_icon", "list_control_icon_disabled", $v_link_label_delete)."</span>";
 				}
 			}
-			$echo .= "</td>\n";
-			$echo .= "</tr>\n";
+			$html .= "</td>\n";
+			$html .= "</tr>\n";
 		}
 		$c = ($c) ? 0 : 1;
 		$count++;
 	}
 
-	$echo .= "<tr>\n";
-	$echo .= "<td colspan='".((permission_exists('group_all') && $_GET['show'] == 'all') ? 5 : 4)."'>&nbsp;</td>";
-	$echo .= "<td class='list_control_icons' style='width: 25px;'>";
+	$html .= "<tr>\n";
+	$html .= "<td colspan='".((permission_exists('group_all') && $_GET['show'] == 'all') ? 5 : 4)."'>&nbsp;</td>";
+	$html .= "<td class='list_control_icons' style='width: 25px;'>";
 	if (permission_exists('group_add')) {
-		$echo .= "<a href='groupadd.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
+		$html .= "<a href='groupadd.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 	}
-	$echo .= "</td>\n";
-	$echo .= "</tr>\n";
+	$html .= "</td>\n";
+	$html .= "</tr>\n";
 
-	$echo .= "</table>\n";
-	$echo .= "<br>";
+	$html .= "</table>\n";
+	$html .= "<br>";
 
 	if ($count > 0) {
-		echo $echo;
+		echo $html;
 	}
 
 //show the footer
