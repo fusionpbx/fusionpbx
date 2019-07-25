@@ -46,7 +46,7 @@
 		//populate the languages table, if necessary
 			$sql = "select count(*) from v_languages";
 			$database = new database;
-			$num_rows = $database->execute($sql, null, 'column');
+			$num_rows = $database->select($sql, null, 'column');
 			if ($row['num_rows'] == 0) {
 				$sql = "insert into v_languages (language_uuid, language, code) values ";
 				$sql .= "('".uuid()."', 'Afrikaans', 'af'), ";
@@ -212,7 +212,7 @@
 		//populate the countries table, if necessary
 			$sql = "select count(*) as num_rows from v_countries";
 			$database = new database;
-			$num_rows = $database->execute($sql, null, 'column');
+			$num_rows = $database->select($sql, null, 'column');
 			if ($row['num_rows'] == 0) {
 				$sql = "insert into v_countries (country_uuid, country, iso_a2, iso_a3, num, calling_code) values ";
 				$sql .= "('".uuid()."', 'Afghanistan', 'AF', 'AFG', 4, '93'), ";
