@@ -30,7 +30,7 @@ if ($domains_processed == 1) {
 	//update the software table
 		$sql = "select count(*) from v_software ";
 		$database = new database;
-		$num_rows = $database->execute($sql, null, 'column');
+		$num_rows = $database->select($sql, null, 'column');
 		if ($row['num_rows'] == 0) {
 			$sql = "insert into v_software ";
 			$sql .= "(";
@@ -67,7 +67,7 @@ if ($domains_processed == 1) {
 		$sql .= "and default_setting_subcategory = 'message' ";
 		$sql .= "and default_setting_name = 'text' ";
 		$database = new database;
-		$num_rows = $database->execute($sql, null, 'column');
+		$num_rows = $database->select($sql, null, 'column');
 		if ($num_rows == 0) {
 
 			// insert message
@@ -106,7 +106,7 @@ if ($domains_processed == 1) {
 			$sql .= "and default_setting_subcategory = 'message' ";
 			$sql .= "and default_setting_name = 'text' ";
 			$database = new database;
-			$result = $database->execute($sql, null, 'all');
+			$result = $database->select($sql, null, 'all');
 			if (is_array($result) && count($result) > 0) {
 					foreach($result as $row) {
 						$current_default_setting_uuid = $row["default_setting_uuid"];
