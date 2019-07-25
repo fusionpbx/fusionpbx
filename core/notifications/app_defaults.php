@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,29 +30,26 @@ if ($domains_processed == 1) {
 	//update the notifications table
 	if (is_array($_SESSION['switch']['scripts'])) {
 		$sql = "select count(*) as num_rows from v_notifications ";
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] == 0) {
-				$sql = "insert into v_notifications ";
-				$sql .= "(";
-				$sql .= "notification_uuid, ";
-				$sql .= "project_notifications ";
-				$sql .= ")";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'".uuid()."', ";
-				$sql .= "'false' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
-			}
-			unset($prep_statement, $row);
+		$database = new database;
+		$num_rows = $database->select($sql, null, 'column');
+		if ($row['num_rows'] == 0) {
+			$sql = "insert into v_notifications ";
+			$sql .= "(";
+			$sql .= "notification_uuid, ";
+			$sql .= "project_notifications ";
+			$sql .= ")";
+			$sql .= "values ";
+			$sql .= "(";
+			$sql .= "'".uuid()."', ";
+			$sql .= "'false' ";
+			$sql .= ")";
+			$database = new database;
+			$database->execute($sql, null);
+			unset($sql);
 		}
+		unset($prep_statement, $row);
 	}
 
 }
-
 
 ?>
