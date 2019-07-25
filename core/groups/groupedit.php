@@ -359,8 +359,8 @@
 	echo "</td>\n";
 	echo "<td align='left' class='vtable' valign='top'>\n";
 	echo "		<select name='group_order' class='formfld'>\n";
-	$i=0;
-	while($i<=999) {
+	$i = 100;
+	while ($i <= 900) {
 		$selected = ($i == $group_order) ? "selected" : null;
 		if (strlen($i) == 1) {
 			echo "			<option value='00$i' ".$selected.">00$i</option>\n";
@@ -371,7 +371,7 @@
 		if (strlen($i) == 3) {
 			echo "			<option value='$i' ".$selected.">$i</option>\n";
 		}
-		$i++;
+		$i = $i + 100;
 	}
 	echo "		</select>\n";
 	echo "		<br />\n";
