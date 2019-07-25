@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -50,11 +50,12 @@
 			$group_name_previous = $_POST['group_name_previous'];
 			$domain_uuid = $_POST["domain_uuid"];
 			$domain_uuid_previous = $_POST["domain_uuid_previous"];
+			$group_order = $_POST["group_order"];
 			$group_description = $_POST["group_description"];
 
 		//check for global/domain duplicates
-			$sql = "select count(*) from v_groups where ";
-			$sql .= "group_name = :group_name ";
+			$sql = "select count(*) from v_groups ";
+			$sql .= "where group_name = :group_name ";
 			$sql .= "and group_uuid <> :group_uuid ";
 			if (is_uuid($domain_uuid)) {
 				$sql .= "and domain_uuid = :domain_uuid ";
@@ -75,6 +76,7 @@
 				$array['groups'][0]['group_uuid'] = $group_uuid;
 				$array['groups'][0]['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : null;
 				$array['groups'][0]['group_name'] = $group_name;
+				$array['groups'][0]['group_order'] = $group_order;
 				$array['groups'][0]['group_description'] = $group_description;
 				$database = new database;
 				$database->app_name = 'groups';
@@ -129,7 +131,6 @@
 								unset($sql, $parameters);
 						}
 				}
-
 				//group changed from one domain to another
 				else if (is_uuid($domain_uuid_previous) && is_uuid($domain_uuid) && $domain_uuid_previous != $domain_uuid) {
 					//remove any users assigned to the group from the old domain
@@ -274,6 +275,7 @@
 		if (is_array($row) && sizeof($row) != 0) {
 			$group_name = $row['group_name'];
 			$domain_uuid = $row['domain_uuid'];
+			$group_order = $row['group_order'];
 			$group_description = $row['group_description'];
 		}
 		unset($sql, $parameters, $row);
@@ -350,6 +352,31 @@
 	else {
 		echo "<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>";
 	}
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top'>\n";
+	echo "		".$text['label-order']."\n";
+	echo "</td>\n";
+	echo "<td align='left' class='vtable' valign='top'>\n";
+	echo "		<select name='group_order' class='formfld'>\n";
+	$i=0;
+	while($i<=999) {
+		$selected = ($i == $group_order) ? "selected" : null;
+		if (strlen($i) == 1) {
+			echo "			<option value='00$i' ".$selected.">00$i</option>\n";
+		}
+		if (strlen($i) == 2) {
+			echo "			<option value='0$i' ".$selected.">0$i</option>\n";
+		}
+		if (strlen($i) == 3) {
+			echo "			<option value='$i' ".$selected.">$i</option>\n";
+		}
+		$i++;
+	}
+	echo "		</select>\n";
+	echo "		<br />\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top'>\n";
