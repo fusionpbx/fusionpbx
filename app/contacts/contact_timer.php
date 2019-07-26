@@ -33,54 +33,41 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 	$text = $language->get();
 
 //get contact uuid
-	$domain_uuid = check_str($_REQUEST['domain_uuid']);
-	$contact_uuid = check_str($_REQUEST['contact_uuid']);
+	$domain_uuid = $_REQUEST['domain_uuid'];
+	$contact_uuid = $_REQUEST['contact_uuid'];
 
 //get posted variables & set time status
-	if (sizeof($_POST) > 0) {
-		$contact_time_uuid = check_str($_POST['contact_time_uuid']);
-		$contact_uuid = check_str($_POST['contact_uuid']);
-		$time_action = check_str($_POST['time_action']);
-		$time_description = check_str($_POST['time_description']);
+	if (is_array($_POST) && @sizeof($_POST) != 0) {
+		$contact_time_uuid = $_POST['contact_time_uuid'];
+		$contact_uuid = $_POST['contact_uuid'];
+		$time_action = $_POST['time_action'];
+		$time_description = $_POST['time_description'];
 
 		if ($time_description == 'Description...') { unset($time_description); }
 
 		if ($time_action == 'start') {
 			$contact_time_uuid = uuid();
-			$sql = "insert into v_contact_times ";
-			$sql .= "( ";
-			$sql .= "domain_uuid, ";
-			$sql .= "contact_time_uuid, ";
-			$sql .= "contact_uuid, ";
-			$sql .= "user_uuid, ";
-			$sql .= "time_start, ";
-			$sql .= "time_description ";
-			$sql .= ") ";
-			$sql .= "values ";
-			$sql .= "( ";
-			$sql .= "'".$domain_uuid."', ";
-			$sql .= "'".$contact_time_uuid."', ";
-			$sql .= "'".$contact_uuid."', ";
-			$sql .= "'".$_SESSION["user"]["user_uuid"]."', ";
-			$sql .= "'".date("Y-m-d H:i:s")."', ";
-			$sql .= "'".$time_description."' ";
-			$sql .= ")";
-			$db->exec(check_sql($sql));
-			unset($sql);
+			$array['contact_times'][0]['domain_uuid'] = $domain_uuid;
+			$array['contact_times'][0]['contact_time_uuid'] = $contact_time_uuid;
+			$array['contact_times'][0]['contact_uuid'] = $contact_uuid;
+			$array['contact_times'][0]['user_uuid'] = $_SESSION["user"]["user_uuid"];
+			$array['contact_times'][0]['time_start'] = date("Y-m-d H:i:s");
+			$array['contact_times'][0]['time_description'] = $time_description;
 		}
 		if ($time_action == 'stop') {
-			$sql = "update v_contact_times ";
-			$sql .= "set ";
-			$sql .= "time_stop = '".date("Y-m-d H:i:s")."', ";
-			$sql .= "time_description = '".$time_description."' ";
-			$sql .= "where ";
-			$sql .= "contact_time_uuid = '".$contact_time_uuid."' ";
-			$sql .= "and domain_uuid = '".$domain_uuid."' ";
-			$sql .= "and contact_uuid = '".$contact_uuid."' ";
-			$sql .= "and user_uuid = '".$_SESSION["user"]["user_uuid"]."' ";
-			$db->exec(check_sql($sql));
-			unset($sql);
+			$array['contact_times'][0]['contact_time_uuid'] = $contact_time_uuid;
+			$array['contact_times'][0]['time_stop'] = date("Y-m-d H:i:s");
+			$array['contact_times'][0]['time_description'] = $time_description;
 		}
+
+		if (is_array($array) && @sizeof($array) != 0) {
+			$database = new database;
+			$database->app_name = 'contacts';
+			$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
+			$database->save($array);
+			unset($array);
+		}
+
 		header("Location: contact_timer.php?domain_uuid=".$domain_uuid."&contact_uuid=".$contact_uuid);
 	}
 
@@ -91,43 +78,46 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 	$sql .= "contact_name_family, ";
 	$sql .= "contact_nickname ";
 	$sql .= "from v_contacts ";
-	$sql .= "where domain_uuid = '".$domain_uuid."' ";
-	$sql .= "and contact_uuid = '".$contact_uuid."' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetch(PDO::FETCH_NAMED);
-	if (sizeof($result) > 0) {
-		$contact_organization = $result["contact_organization"];
-		$contact_name_given = $result["contact_name_given"];
-		$contact_name_family = $result["contact_name_family"];
-		$contact_nickname = $result["contact_nickname"];
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and contact_uuid = :contact_uuid ";
+	$parameters['domain_uuid'] = $domain_uuid;
+	$parameters['contact_uuid'] = $contact_uuid;
+	$database = new database;
+	$row = $database->select($sql, $parameters, 'row');
+	if (is_array($row) && @sizeof($row) != 0) {
+		$contact_organization = $row["contact_organization"];
+		$contact_name_given = $row["contact_name_given"];
+		$contact_name_family = $row["contact_name_family"];
+		$contact_nickname = $row["contact_nickname"];
 	}
 	else {
 		exit;
 	}
-	unset ($sql, $prep_statement, $result);
+	unset($sql, $parameters, $row);
 
 //determine timer state and action
 	$sql = "select ";
 	$sql .= "contact_time_uuid, ";
 	$sql .= "time_description ";
 	$sql .= "from v_contact_times ";
-	$sql .= "where domain_uuid = '".$domain_uuid."' ";
-	$sql .= "and user_uuid = '".$_SESSION['user']['user_uuid']."' ";
-	$sql .= "and contact_uuid = '".$contact_uuid."' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and user_uuid = :user_uuid ";
+	$sql .= "and contact_uuid = :contact_uuid ";
 	$sql .= "and time_start is not null ";
 	$sql .= "and time_stop is null ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetch(PDO::FETCH_NAMED);
-	if (sizeof($result) > 0) {
-		$contact_time_uuid = $result["contact_time_uuid"];
-		$time_description = $result["time_description"];
+	$parameters['domain_uuid'] = $domain_uuid;
+	$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
+	$parameters['contact_uuid'] = $contact_uuid;
+	$database = new database;
+	$row = $database->select($sql, $parameters, 'row');
+	if (is_array($row) && @sizeof($row) != 0) {
+		$contact_time_uuid = $row["contact_time_uuid"];
+		$time_description = $row["time_description"];
 	}
-	unset ($sql, $prep_statement, $result);
+	unset($sql, $parameters, $row);
 
-	$timer_state = ($contact_time_uuid != '') ? 'running' : 'stopped';
-	$timer_action = ($timer_state == 'running') ? 'stop' : 'start';
+	$timer_state = is_uuid($contact_time_uuid) ? 'running' : 'stopped';
+	$timer_action = $timer_state == 'running' ? 'stop' : 'start';
 
 //determine contact name to display
 	if ($contact_nickname != '') {

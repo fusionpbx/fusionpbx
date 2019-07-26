@@ -150,6 +150,7 @@ else {
 
 				header("Location: contact_edit.php?id=".$contact_uuid);
 				exit;
+
 			}
 	}
 
