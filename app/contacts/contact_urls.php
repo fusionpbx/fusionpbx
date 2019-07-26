@@ -48,14 +48,14 @@
 
 	//get the contact list
 		$sql = "select * from v_contact_urls ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and contact_uuid = '$contact_uuid' ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and contact_uuid = :contact_uuid ";
 		$sql .= "order by url_primary desc, url_label asc ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
-		unset ($prep_statement, $sql);
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['contact_uuid'] = $contact_uuid;
+		$database = new database;
+		$result = $database->select($sql, $parameters, 'all');
+		unset($sql, $parameters);
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
@@ -74,12 +74,12 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($result_count > 0) {
+	if (is_array($result) && @sizeof($result) != 0) {
 		foreach($result as $row) {
 			if (permission_exists('contact_url_edit')) {
 				$tr_link = "href='contact_url_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_url_uuid'])."'";
 			}
-			echo "<tr ".$tr_link." ".((escape($row['url_primary'])) ? "style='font-weight: bold;'" : null).">\n";
+			echo "<tr ".$tr_link." ".(escape($row['url_primary']) ? "style='font-weight: bold;'" : null).">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['url_label'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='width: 40%; max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><a href='".escape($row['url_address'])."' target='_blank'>".str_replace("http://", "", str_replace("https://", "", escape($row['url_address'])))."</a>&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".escape($row['url_description'])."&nbsp;</td>\n";
@@ -92,10 +92,10 @@
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
-			$c = ($c) ? 0 : 1;
-		} //end foreach
-		unset($sql, $result, $row_count);
-	} //end if results
+			$c = $c ? 0 : 1;
+		}
+	}
+	unset($result, $row);
 
 	echo "</table>\n";
 

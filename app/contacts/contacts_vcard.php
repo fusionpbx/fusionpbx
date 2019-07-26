@@ -34,7 +34,7 @@ else {
 	exit;
 }
 
-if (count($_GET)>0) {
+if (is_array($_GET) && @sizeof($_GET) != 0) {
 
 	//add multi-lingual support
 		$language = new text;
@@ -49,12 +49,13 @@ if (count($_GET)>0) {
 
 	//get the contact's information
 		$sql = "select * from v_contacts ";
-		$sql .= "where domain_uuid = '".$domain_uuid."' ";
-		$sql .= "and contact_uuid = '".$contact_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and contact_uuid = :contact_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['contact_uuid'] = $contact_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$contact_type = $row["contact_type"];
 			$contact_organization = escape($row["contact_organization"]);
 			$contact_name_given = escape($row["contact_name_given"]);
@@ -64,9 +65,8 @@ if (count($_GET)>0) {
 			$contact_role = escape($row["contact_role"]);
 			$contact_time_zone = escape($row["contact_time_zone"]);
 			$contact_note = $row["contact_note"];
-			break; //limit to 1 row
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 
 		$vcard->data['company'] = $contact_organization;
 		$vcard->data['first_name'] = $contact_name_given;
@@ -74,32 +74,33 @@ if (count($_GET)>0) {
 
 	//get the contact's primary (and a secondary, if available) email
 		$sql = "select email_address from v_contact_emails ";
-		$sql .= "where domain_uuid = '".$domain_uuid."' ";
-		$sql .= "and contact_uuid = '".$contact_uuid."' ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and contact_uuid = :contact_uuid ";
 		$sql .= "order by email_primary desc ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$e = 0;
-		foreach ($result as &$row) {
-			$vcard->data['email'.$e] = escape($row["email_address"]);
-			if (++$e == 2) { break; } //limit to 2 rows
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['contact_uuid'] = $contact_uuid;
+		$database = new database;
+		$result = $database->select($sql, $parameters, 'all');
+		if (is_array($result) && @sizeof($result) != 0) {
+			$e = 0;
+			foreach ($result as &$row) {
+				$vcard->data['email'.$e] = escape($row["email_address"]);
+				if (++$e == 2) { break; } //limit to 2 rows
+			}
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $result, $row);
 
 	//get the contact's primary url
 		$sql = "select url_address from v_contact_urls ";
-		$sql .= "where domain_uuid = '".$domain_uuid."' ";
-		$sql .= "and contact_uuid = '".$contact_uuid."' ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and contact_uuid = :contact_uuid ";
 		$sql .= "and url_primary = 1 ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
-			$vcard->data['url'] = escape($row["url_address"]);
-			break;	//limit to 1 row
-		}
-		unset ($prep_statement);
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['contact_uuid'] = $contact_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'column');
+		$vcard->data['url'] = escape($row["url_address"]);
+		unset($sql, $parameters, $row);
 
 
 		if ($_GET['type'] == "image" || $_GET['type'] == "html") {
@@ -116,25 +117,28 @@ if (count($_GET)>0) {
 
 	//get the contact's telephone numbers
 		$sql = "select * from v_contact_phones ";
-		$sql .= "where domain_uuid = '".$domain_uuid."' ";
-		$sql .= "and contact_uuid = '".$contact_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
-			$phone_label = $row["phone_label"];
-			$phone_number = $row["phone_number"];
-			if ($phone_label == $text['option-work']) { $vcard_phone_type = 'work'; }
-			else if ($phone_label == $text['option-home']) { $vcard_phone_type = 'home'; }
-			else if ($phone_label == $text['option-mobile']) { $vcard_phone_type = 'cell'; }
-			else if ($phone_label == $text['option-fax']) { $vcard_phone_type = 'fax'; }
-			else if ($phone_label == $text['option-pager']) { $vcard_phone_type = 'pager'; }
-			else { $vcard_phone_type = 'voice'; }
-			if ($vcard_phone_type != '') {
-				$vcard->data[$vcard_phone_type.'_tel'] = $phone_number;
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and contact_uuid = :contact_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['contact_uuid'] = $contact_uuid;
+		$database = new database;
+		$result = $database->select($sql, $parameters, 'all');
+		if (is_array($result) && @sizeof($result) != 0) {
+			foreach ($result as &$row) {
+				$phone_label = $row["phone_label"];
+				$phone_number = $row["phone_number"];
+				if ($phone_label == $text['option-work']) { $vcard_phone_type = 'work'; }
+				else if ($phone_label == $text['option-home']) { $vcard_phone_type = 'home'; }
+				else if ($phone_label == $text['option-mobile']) { $vcard_phone_type = 'cell'; }
+				else if ($phone_label == $text['option-fax']) { $vcard_phone_type = 'fax'; }
+				else if ($phone_label == $text['option-pager']) { $vcard_phone_type = 'pager'; }
+				else { $vcard_phone_type = 'voice'; }
+				if ($vcard_phone_type != '') {
+					$vcard->data[$vcard_phone_type.'_tel'] = $phone_number;
+				}
 			}
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $result, $row);
 
 	//get the contact's addresses
 		if ($_GET['type'] == "image" || $_GET['type'] == "html") {
@@ -142,31 +146,34 @@ if (count($_GET)>0) {
 		}
 		else {
 			$sql = "select * from v_contact_addresses ";
-			$sql .= "where domain_uuid = '".$domain_uuid."' ";
-			$sql .= "and contact_uuid = '".$contact_uuid."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			foreach ($result as &$row) {
-				$address_type = escape($row["address_type"]);
-				$address_street = escape($row["address_street"]);
-				$address_extended = escape($row["address_extended"]);
-				$address_locality = escape($row["address_locality"]);
-				$address_region = escape($row["address_region"]);
-				$address_postal_code = escape($row["address_postal_code"]);
-				$address_country = escape($row["address_country"]);
-				$address_latitude = $row["address_latitude"];
-				$address_longitude = $row["address_longitude"];
-				$address_type = strtolower(trim($address_type));
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and contact_uuid = :contact_uuid ";
+			$parameters['domain_uuid'] = $domain_uuid;
+			$parameters['contact_uuid'] = $contact_uuid;
+			$database = new database;
+			$result = $database->select($sql, $parameters, 'all');
+			if (is_array($result) && @sizeof($result) != 0) {
+				foreach ($result as &$row) {
+					$address_type = escape($row["address_type"]);
+					$address_street = escape($row["address_street"]);
+					$address_extended = escape($row["address_extended"]);
+					$address_locality = escape($row["address_locality"]);
+					$address_region = escape($row["address_region"]);
+					$address_postal_code = escape($row["address_postal_code"]);
+					$address_country = escape($row["address_country"]);
+					$address_latitude = $row["address_latitude"];
+					$address_longitude = $row["address_longitude"];
+					$address_type = strtolower(trim($address_type));
 
-				$vcard->data[$address_type.'_address'] = $address_street;
-				$vcard->data[$address_type.'_extended_address'] = $address_extended;
-				$vcard->data[$address_type.'_city'] = $address_locality;
-				$vcard->data[$address_type.'_state'] = $address_region;
-				$vcard->data[$address_type.'_postal_code'] = $address_postal_code;
-				$vcard->data[$address_type.'_country'] = $address_country;
+					$vcard->data[$address_type.'_address'] = $address_street;
+					$vcard->data[$address_type.'_extended_address'] = $address_extended;
+					$vcard->data[$address_type.'_city'] = $address_locality;
+					$vcard->data[$address_type.'_state'] = $address_region;
+					$vcard->data[$address_type.'_postal_code'] = $address_postal_code;
+					$vcard->data[$address_type.'_country'] = $address_country;
+				}
 			}
-			unset ($prep_statement);
+			unset($sql, $parameters, $result, $row);
 		}
 
 	//download the vcard

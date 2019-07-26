@@ -48,12 +48,12 @@
 	require_once "resources/header.php";
 
 //get the search criteria
-	$search_all = strtolower(check_str($_GET["search_all"]));
-	$phone_number = check_str($_GET["phone_number"]);
+	$search_all = strtolower($_GET["search_all"]);
+	$phone_number = $_GET["phone_number"];
 
 //get variables used to control the order
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
 //retrieve current user's assigned groups (uuids)
 	foreach ($_SESSION['groups'] as $group_data) {
@@ -70,103 +70,123 @@
 	$sql .= "from ";
 	$sql .= "v_contact_settings ";
 	$sql .= "where ";
-	$sql .= "domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "domain_uuid = :domain_uuid ";
 	$sql .= "and contact_setting_category = 'sync' ";
 	$sql .= "and contact_setting_subcategory = 'source' ";
 	$sql .= "and contact_setting_name = 'array' ";
 	$sql .= "and contact_setting_value <> '' ";
 	$sql .= "and contact_setting_value is not null ";
 	if (!(if_group("superadmin") || if_group("admin"))) {
-		$sql .= "and ( \n"; //only contacts assigned to current user's group(s) and those not assigned to any group
-		$sql .= "	contact_uuid in ( \n";
+		$sql .= "and ( "; //only contacts assigned to current user's group(s) and those not assigned to any group
+		$sql .= "	contact_uuid in ( ";
 		$sql .= "		select contact_uuid from v_contact_groups ";
-		$sql .= "		where group_uuid in ('".implode("','", array_filter($user_group_uuids))."') ";
-		$sql .= "		and domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "	) \n";
-		$sql .= "	or \n";
-		$sql .= "	contact_uuid not in ( \n";
+		$sql .= "		where ";
+		if (is_array($user_group_uuids) && @sizeof($user_group_uuids) != 0) {
+			foreach ($user_group_uuids as $index => $user_group_uuid) {
+				if (is_uuid($user_group_uuid)) {
+					$sql_where_or[] = "group_uuid = :group_uuid_".$index;
+					$parameters['group_uuid_'.$index] = $user_group_uuid;
+				}
+			}
+			if (is_array($sql_where_or) && @sizeof($sql_where_or) != 0) {
+				$sql .= " ( ".implode(' or ', $sql_where_or)." ) ";
+			}
+			unset($sql_where_or, $index, $user_group_uuid);
+		}
+		$sql .= "		and domain_uuid = :domain_uuid ";
+		$sql .= "	) ";
+		$sql .= "	or ";
+		$sql .= "	contact_uuid not in ( ";
 		$sql .= "		select contact_uuid from v_contact_groups ";
-		$sql .= "		where group_uuid = '".$_SESSION['group_uuid']."' ";
-		$sql .= "		and domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "	) \n";
-		$sql .= ") \n";
+		$sql .= "		where group_uuid = :group_uuid ";
+		$sql .= "		and domain_uuid = :domain_uuid ";
+		$sql .= "	) ";
+		$sql .= ") ";
 	}
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	if (count($result) > 0) {
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$parameters['group_uuid'] = $_SESSION['group_uuid'];
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
+	if (is_array($result) && @sizeof($result) != 0) {
 		foreach($result as $row) {
 			$contact_sync_sources[$row['contact_uuid']][] = $row['contact_setting_value'];
 		}
 	}
-	unset ($sql, $prep_statement, $result);
+	unset($sql, $parameters, $result);
 
 //build query for paging and list
-	$sql = "select count(*) as num_rows ";
+	$sql = "select count(*) ";
 	$sql .= "from v_contacts as c ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	if (!(if_group("superadmin") || if_group("admin"))) {
-		$sql .= "and ( \n"; //only contacts assigned to current user's group(s) and those not assigned to any group
-		$sql .= "	contact_uuid in ( \n";
+		$sql .= "and ( "; //only contacts assigned to current user's group(s) and those not assigned to any group
+		$sql .= "	contact_uuid in ( ";
 		$sql .= "		select contact_uuid from v_contact_groups ";
-		$sql .= "		where group_uuid in ('".implode("','", array_filter($user_group_uuids))."') ";
-		$sql .= "		and domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "	) \n";
-		$sql .= "	or contact_uuid in ( \n";
+		$sql .= "		where ";
+		if (is_array($user_group_uuids) && @sizeof($user_group_uuids) != 0) {
+			foreach ($user_group_uuids as $index => $user_group_uuid) {
+				if (is_uuid($user_group_uuid)) {
+					$sql_where_or[] = "group_uuid = :group_uuid_".$index;
+					$parameters['group_uuid_'.$index] = $user_group_uuid;
+				}
+			}
+			if (is_array($sql_where_or) && @sizeof($sql_where_or) != 0) {
+				$sql .= " ( ".implode(' or ', $sql_where_or)." ) ";
+			}
+			unset($sql_where_or, $index, $user_group_uuid);
+		}
+		$sql .= "		and domain_uuid = :domain_uuid ";
+		$sql .= "	) ";
+		$sql .= "	or contact_uuid in ( ";
 		$sql .= "		select contact_uuid from v_contact_users ";
-		$sql .= "		where user_uuid = '".$_SESSION['user_uuid']."' ";
-		$sql .= "		and domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "		where user_uuid = :user_uuid ";
+		$sql .= "		and domain_uuid = :domain_uuid ";
 		$sql .= "";
-		$sql .= "	) \n";
-		$sql .= ") \n";
+		$sql .= "	) ";
+		$sql .= ") ";
+		$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	}
 	if (strlen($phone_number) > 0) {
 		$phone_number = preg_replace('{\D}', '', $phone_number);
 		$sql .= "and contact_uuid in ( ";
 		$sql .= "	select contact_uuid from v_contact_phones ";
-		$sql .= "	where phone_number like '%".$phone_number."%' ";
-		$sql .= ") \n";
+		$sql .= "	where phone_number like :phone_number ";
+		$sql .= ") ";
+		$parameters['phone_number'] = '%'.$phone_number.'%';
 	}
 	else {
 		if (strlen($search_all) > 0) {
 			if (is_numeric($search_all)) {
-				$sql .= "and contact_uuid in ( \n";
+				$sql .= "and contact_uuid in ( ";
 				$sql .= "	select contact_uuid from v_contact_phones ";
-				$sql .= "	where phone_number like '%".$search_all."%' ";
-				$sql .= ") \n";
+				$sql .= "	where phone_number like :search_all ";
+				$sql .= ") ";
 			}
 			else {
-				$sql .= "and contact_uuid in ( \n";
+				$sql .= "and contact_uuid in ( ";
 				$sql .= "	select contact_uuid from v_contacts ";
-				$sql .= "	where domain_uuid = '".$_SESSION['domain_uuid']."' \n";
-				$sql .= "	and ( \n";
-				$sql .= "		lower(contact_organization) like '%".$search_all."%' or \n";
-				$sql .= "		lower(contact_name_given) like '%".$search_all."%' or \n";
-				$sql .= "		lower(contact_name_family) like '%".$search_all."%' or \n";
-				$sql .= "		lower(contact_nickname) like '%".$search_all."%' or \n";
-				$sql .= "		lower(contact_title) like '%".$search_all."%' or \n";
-				$sql .= "		lower(contact_category) like '%".$search_all."%' or \n";
-				$sql .= "		lower(contact_role) like '%".$search_all."%' or \n";
-				$sql .= "		lower(contact_url) like '%".$search_all."%' or \n";
-				$sql .= "		lower(contact_time_zone) like '%".$search_all."%' or \n";
-				$sql .= "		lower(contact_note) like '%".$search_all."%' or \n";
-				$sql .= "		lower(contact_type) like '%".$search_all."%' \n";
-				$sql .= "	) \n";
-				$sql .= ") \n";
+				$sql .= "	where domain_uuid = :domain_uuid ";
+				$sql .= "	and ( ";
+				$sql .= "		lower(contact_organization) like :search_all or ";
+				$sql .= "		lower(contact_name_given) like :search_all or ";
+				$sql .= "		lower(contact_name_family) like :search_all or ";
+				$sql .= "		lower(contact_nickname) like :search_all or ";
+				$sql .= "		lower(contact_title) like :search_all or ";
+				$sql .= "		lower(contact_category) like :search_all or ";
+				$sql .= "		lower(contact_role) like :search_all or ";
+				$sql .= "		lower(contact_url) like :search_all or ";
+				$sql .= "		lower(contact_time_zone) like :search_all or ";
+				$sql .= "		lower(contact_note) like :search_all or ";
+				$sql .= "		lower(contact_type) like :search_all ";
+				$sql .= "	) ";
+				$sql .= ") ";
 			}
+			$parameters['search_all'] = '%'.$search_all.'%';
 		}
 	}
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-	$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-	}
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -178,24 +198,24 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$contact_default_sort_column = ($_SESSION['contacts']['default_sort_column']['text'] != '') ? $_SESSION['contacts']['default_sort_column']['text'] : "last_mod_date";
-	$contact_default_sort_order = ($_SESSION['contacts']['default_sort_order']['text'] != '') ? $_SESSION['contacts']['default_sort_order']['text'] : "desc";
-
-	$sql = str_replace('count(*) as num_rows', '*, (select a.contact_attachment_uuid from v_contact_attachments as a where a.contact_uuid = c.contact_uuid and a.attachment_primary = 1) as contact_attachment_uuid', $sql);
-	if (strlen($order_by) > 0) {
-		$sql .= "order by ".$order_by." ".$order.", contact_organization asc ";
+	$sql = str_replace('count(*)', '*, (select a.contact_attachment_uuid from v_contact_attachments as a where a.contact_uuid = c.contact_uuid and a.attachment_primary = 1) as contact_attachment_uuid', $sql);
+	if ($order_by != '') {
+		$sql .= order_by($order_by, $order);
+		$sql .= ", contact_organization asc ";
 	}
 	else {
-		$sql .= "order by ".$contact_default_sort_column." ".$contact_default_sort_order." ";
+		$contact_default_sort_column = $_SESSION['contacts']['default_sort_column']['text'] != '' ? $_SESSION['contacts']['default_sort_column']['text'] : "last_mod_date";
+		$contact_default_sort_order = $_SESSION['contacts']['default_sort_order']['text'] != '' ? $_SESSION['contacts']['default_sort_order']['text'] : "desc";
+
+		$sql .= order_by($contact_default_sort_column, $contact_default_sort_order);
 		if ($db_type == "pgsql") {
-			$sql .= "nulls last ";
+			$sql .= " nulls last ";
 		}
 	}
-	$sql .= "limit ".$rows_per_page." offset ".$offset." ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$contacts = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$contacts = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //styles
 	echo "<style>\n";
@@ -264,7 +284,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (is_array($contacts)) {
+	if (is_array($contacts) && @sizeof($contacts) != 0) {
 		foreach($contacts as $row) {
 			$tr_link = "href='contact_edit.php?id=".escape($row['contact_uuid'])."&query_string=".urlencode($_SERVER["QUERY_STRING"])."'";
 			echo "<tr ".$tr_link.">\n";
@@ -297,7 +317,7 @@
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $contacts);
+		unset($contacts, $row);
 	} //end if results
 
 	echo "<tr>\n";
