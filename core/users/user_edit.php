@@ -491,7 +491,8 @@
 			$p->add("user_setting_add", "temp");
 			$p->add("user_setting_edit", "temp");
 			$p->add("user_edit", "temp");
-
+			$p->add('user_group_add', 'temp');
+	
 		//save the data
 			$database = new database;
 			$database->app_name = 'users';
@@ -503,6 +504,7 @@
 			$p->delete("user_setting_add", "temp");
 			$p->delete("user_setting_edit", "temp");
 			$p->delete("user_edit", "temp");
+			$p->delete('user_group_add', 'temp');
 
 		//if call center installed
 			if ($action == 'edit' && permission_exists('user_edit') && file_exists($_SERVER["PROJECT_ROOT"]."/app/call_centers/app_config.php")) {
