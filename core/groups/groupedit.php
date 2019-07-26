@@ -355,7 +355,7 @@
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top'>\n";
-	echo "		".$text['label-order']."\n";
+	echo "		".$text['label-level']."\n";
 	echo "</td>\n";
 	echo "<td align='left' class='vtable' valign='top'>\n";
 	echo "		<select name='group_level' class='formfld'>\n";
