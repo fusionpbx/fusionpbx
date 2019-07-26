@@ -375,18 +375,24 @@
 				$group_data = explode('|', $group_uuid_name);
 				$group_uuid = $group_data[0];
 				$group_name = $group_data[1];
-				//only a superadmin can add other superadmins or admins, admins can only add other admins
-				switch ($group_name) {
-					case "superadmin": if (!if_group("superadmin")) { break; }
-					case "admin": if (!if_group("superadmin") && !if_group("admin")) { break; }
-					default: //add group user to array for insert
-						$array['user_groups'][$n]['user_group_uuid'] = uuid();
-						$array['user_groups'][$n]['domain_uuid'] = $domain_uuid;
-						$array['user_groups'][$n]['group_name'] = $group_name;
-						$array['user_groups'][$n]['group_uuid'] = $group_uuid;
-						$array['user_groups'][$n]['user_uuid'] = $user_uuid;
-						$n++;
+
+				//compare the group level to only add groups at the same level or lower than the user
+				$sql = "select * from v_groups ";
+				$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+				$sql .= "and group_uuid = :group_uuid ";
+				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+				$parameters['group_uuid'] = $group_uuid;
+				$database = new database;
+				$row = $database->select($sql, $parameters, 'row');
+				if ($row['group_level'] <= $_SESSION['user']['group_level']) {
+					$array['user_groups'][$n]['user_group_uuid'] = uuid();
+					$array['user_groups'][$n]['domain_uuid'] = $domain_uuid;
+					$array['user_groups'][$n]['group_name'] = $group_name;
+					$array['user_groups'][$n]['group_uuid'] = $group_uuid;
+					$array['user_groups'][$n]['user_uuid'] = $user_uuid;
+					$n++;
 				}
+				unset($parameters);
 			}
 
 		//update domain, if changed
@@ -943,11 +949,11 @@
 			echo "<select name='group_uuid_name' class='formfld' style='width: auto; margin-right: 3px;' ".($action == 'add' ? "required='required'" : null).">\n";
 			echo "	<option value=''></option>\n";
 			foreach($groups as $field) {
-				if ($field['group_name'] == "superadmin" && !if_group("superadmin")) { continue; }	//only show the superadmin group to other superadmins
-				if ($field['group_name'] == "admin" && (!if_group("superadmin") && !if_group("admin") )) { continue; }	//only show the admin group to other admins
-				if ( !isset($assigned_groups) || (isset($assigned_groups) && !in_array($field["group_uuid"], $assigned_groups)) ) {
-					if ($group_uuid_name == $field['group_uuid']."|".$field['group_name']) { $selected = "selected='selected'"; } else { $selected = ''; }
-					echo "	<option value='".$field['group_uuid']."|".$field['group_name']."' $selected>".$field['group_name'].(($field['domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['domain_uuid']]['domain_name'] : null)."</option>\n";
+				if ($field['group_level'] <= $_SESSION['user']['group_level']) {
+					if (!isset($assigned_groups) || (isset($assigned_groups) && !in_array($field["group_uuid"], $assigned_groups))) {
+						if ($group_uuid_name == $field['group_uuid']."|".$field['group_name']) { $selected = "selected='selected'"; } else { $selected = ''; }
+						echo "	<option value='".$field['group_uuid']."|".$field['group_name']."' $selected>".$field['group_name'].(($field['domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['domain_uuid']]['domain_name'] : null)."</option>\n";
+					}
 				}
 			}
 			echo "</select>";
