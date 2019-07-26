@@ -141,7 +141,7 @@
 	}
 	$html .= "	<th nowrap='nowrap'>".$text['label-group_name']."</th>\n";
 	$html .= "	<th nowrap='nowrap'>".$text['label-group_tools']."</th>\n";
-	$html .= "	<th nowrap='nowrap'>".$text['label-order']."</th>\n";
+	$html .= "	<th nowrap='nowrap'>".$text['label-level']."</th>\n";
 	$html .= "	<th style='text-align: center;' nowrap='nowrap'>".$text['label-group_protected']."</th>\n";
 	$html .= "	<th nowrap='nowrap'>".$text['label-group_description']."</th>\n";
 	$html .= "	<td class='list_control_icons' style='width: 25px;'>";
