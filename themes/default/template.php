@@ -405,7 +405,12 @@ echo "	<div id='message_container'></div>\n";
 		$bgcolor2 = "#fff";
 		foreach($_SESSION['domains'] as $domain) {
 			$bgcolor = ($bgcolor == $bgcolor1) ? $bgcolor2 : $bgcolor1;
-			$bgcolor = ($domain['domain_uuid'] == $_SESSION['domain_uuid']) ? "#eeffee" : $bgcolor;
+			if ($_SESSION['theme']['domain_active_background_color']['text'] != '') {
+				$bgcolor = ($domain['domain_uuid'] == $_SESSION['domain_uuid']) ? escape($_SESSION['theme']['domain_active_background_color']['text']) : $bgcolor;
+			}
+			else {
+				$bgcolor = ($domain['domain_uuid'] == $_SESSION['domain_uuid']) ? "#eeffee" : $bgcolor;
+			}
 			echo "<div id=\"".escape($domain['domain_name'])."\" class='domains_list_item' style='background-color: ".$bgcolor."' onclick=\"document.location.href='".$domain_path."?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true';\">";
 			echo "<a href='".$domain_path."?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true' ".(($domain['domain_uuid'] == $_SESSION['domain_uuid']) ? "style='font-weight: bold;'" : null).">".escape($domain['domain_name'])."</a>\n";
 			if ($domain['domain_description'] != '') {
