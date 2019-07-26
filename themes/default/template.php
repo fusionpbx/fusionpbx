@@ -210,12 +210,18 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			});
 
 		//apply the auto-size jquery script to all text inputs
-			$("input[type=text].txt,input[type=number].txt,input[type=password].txt,input[type=text].formfld,input[type=number].formfld,input[type=password].formfld").not('.datetimepicker,.datepicker').autosizeInput();
+			$("input[type=text].txt,input[type=number].txt,input[type=password].txt,input[type=text].formfld,input[type=number].formfld,input[type=password].formfld").not('.datetimepicker,.datetimesecondspicker,.datepicker').autosizeInput();
 
 		//apply bootstrap-datetime plugin
 			$(function() {
 				$('.datetimepicker').datetimepicker({
 					format: 'YYYY-MM-DD HH:mm',
+					showTodayButton: true,
+					showClear: true,
+					showClose: true,
+				});
+				$('.datetimesecondspicker').datetimepicker({
+					format: 'YYYY-MM-DD HH:mm:ss',
 					showTodayButton: true,
 					showClear: true,
 					showClose: true,

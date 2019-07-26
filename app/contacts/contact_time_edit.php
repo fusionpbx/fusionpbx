@@ -194,7 +194,7 @@ else {
 	echo "	".$text['label-time_start']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld datetimepicker' type='text' name='time_start' id='time_start' style='min-width: 135px; width: 135px;' value='".escape($time_start)."'>\n";
+	echo "	<input class='formfld datetimesecondspicker' type='text' name='time_start' id='time_start' style='min-width: 135px; width: 135px;' value='".escape($time_start)."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -203,7 +203,7 @@ else {
 	echo "	".$text['label-time_stop']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld datetimepicker' type='text' name='time_stop' id='time_stop' style='min-width: 135px; width: 135px;' value='".escape($time_stop)."'>\n";
+	echo "	<input class='formfld datetimesecondspicker' type='text' name='time_stop' id='time_stop' style='min-width: 135px; width: 135px;' value='".escape($time_stop)."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
