@@ -88,6 +88,7 @@ if ($domains_processed == 1) {
 					default:
 						$array['groups'][$x]['group_level'] = 10;
 				}
+				$x++;
 			}
 			$database = new database;
 			$database->app_name = 'groups';
