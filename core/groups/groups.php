@@ -29,8 +29,8 @@
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
-//check the permissions
-	if (if_group("admin") || if_group("superadmin")) {
+//check permissions
+	if (permission_exists('group_all')) {
 		//access allowed
 	}
 	else {
@@ -82,7 +82,6 @@
 	unset($sql, $parameters);
 	//$system_groups = array('superadmin','admin','user','public','agent');
 	$system_groups = array();
-
 
 //get group counts
 	$sql = "select group_uuid, count(user_uuid) as group_count from v_user_groups ";
