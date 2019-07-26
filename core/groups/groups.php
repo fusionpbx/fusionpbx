@@ -124,19 +124,25 @@
 	echo "</table>";
 	echo "<br>";
 
+//set the row styles
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
+//set the columns
+	$column_count = 5;
+
+//build the html
 	$html = "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	$html .= "<tr>\n";
 	if (permission_exists('group_all') && $_GET['show'] == 'all') {
+		$column_count++;
 		$html .= "	<th nowrap='nowrap'>".$text['label-domain']."</th>\n";
 	}
 	$html .= "	<th nowrap='nowrap'>".$text['label-group_name']."</th>\n";
 	$html .= "	<th nowrap='nowrap'>".$text['label-group_tools']."</th>\n";
-	$html .= "	<th style='text-align: center;' nowrap='nowrap'>".$text['label-group_protected']."</th>\n";
 	$html .= "	<th nowrap='nowrap'>".$text['label-order']."</th>\n";
+	$html .= "	<th style='text-align: center;' nowrap='nowrap'>".$text['label-group_protected']."</th>\n";
 	$html .= "	<th nowrap='nowrap'>".$text['label-group_description']."</th>\n";
 	$html .= "	<td class='list_control_icons' style='width: 25px;'>";
 	if (permission_exists('group_add')) {
@@ -150,7 +156,7 @@
 		$domain_uuid = $row['domain_uuid'];
 		$group_uuid = $row["group_uuid"];
 		$group_name = $row["group_name"];
-		$group_order = $row["group_order"];
+		$group_level = $row["group_level"];
 		$group_protected = $row["group_protected"];
 		$group_description = $row["group_description"];
 		if (strlen($group_name) == 0) { $group_name = "&nbsp;"; }
@@ -199,12 +205,12 @@
 			}
 			$html .= "</td>\n";
 
-			$html .= "<td class='".$row_style[$c]." tr_link_void' style='padding: 0px; text-align: center;' align='center' nowrap='nowrap'>\n";
-			$html .= "	<input type='checkbox' name='group_protected' ".(($group_protected == "true") ? "checked='checked'" : null)." value='".(($group_protected == "true") ? 'false' : 'true')."' onchange=\"window.location='".PROJECT_PATH."/core/groups/groups.php?change=".(($group_protected == "true") ? 'false' : 'true')."&group_uuid=".$group_uuid."&group_name=".$group_name.(($_GET['show'] == 'all') ? "&show=all" : null)."';\">\n";
+			$html .= "<td class='".$row_style[$c]."' nowrap='nowrap'>";
+			$html .= "	".$group_level;
 			$html .= "</td>\n";
 
-			$html .= "<td class='".$row_style[$c]."' nowrap='nowrap'>";
-			$html .= "	".$group_order;
+			$html .= "<td class='".$row_style[$c]." tr_link_void' style='padding: 0px; text-align: center;' align='center' nowrap='nowrap'>\n";
+			$html .= "	<input type='checkbox' name='group_protected' ".(($group_protected == "true") ? "checked='checked'" : null)." value='".(($group_protected == "true") ? 'false' : 'true')."' onchange=\"window.location='".PROJECT_PATH."/core/groups/groups.php?change=".(($group_protected == "true") ? 'false' : 'true')."&group_uuid=".$group_uuid."&group_name=".$group_name.(($_GET['show'] == 'all') ? "&show=all" : null)."';\">\n";
 			$html .= "</td>\n";
 
 			$html .= "<td class='row_stylebg' nowrap='nowrap'>".$group_description."</td>\n";
@@ -231,9 +237,9 @@
 		$c = ($c) ? 0 : 1;
 		$count++;
 	}
-
+	
 	$html .= "<tr>\n";
-	$html .= "<td colspan='".((permission_exists('group_all') && $_GET['show'] == 'all') ? 5 : 4)."'>&nbsp;</td>";
+	$html .= "<td colspan='".$column_count."'>&nbsp;</td>";
 	$html .= "<td class='list_control_icons' style='width: 25px;'>";
 	if (permission_exists('group_add')) {
 		$html .= "<a href='groupadd.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
