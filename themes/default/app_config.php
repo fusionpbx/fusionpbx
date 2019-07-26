@@ -78,6 +78,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the text hover color (and opacity) for domain name.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "6ee771c4-6455-4275-bf64-4c5a6ccc3cc3";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "domain_active_background_color";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#eeffee";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "background color of the active domain in the side menu Domain selector";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1affbed5-383e-4562-8c17-d9b534328649";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "logout_icon_color";
