@@ -50,7 +50,7 @@
 			$group_name_previous = $_POST['group_name_previous'];
 			$domain_uuid = $_POST["domain_uuid"];
 			$domain_uuid_previous = $_POST["domain_uuid_previous"];
-			$group_order = $_POST["group_order"];
+			$group_level = $_POST["group_level"];
 			$group_description = $_POST["group_description"];
 
 		//check for global/domain duplicates
@@ -76,7 +76,7 @@
 				$array['groups'][0]['group_uuid'] = $group_uuid;
 				$array['groups'][0]['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : null;
 				$array['groups'][0]['group_name'] = $group_name;
-				$array['groups'][0]['group_order'] = $group_order;
+				$array['groups'][0]['group_level'] = $group_level;
 				$array['groups'][0]['group_description'] = $group_description;
 				$database = new database;
 				$database->app_name = 'groups';
@@ -275,7 +275,7 @@
 		if (is_array($row) && sizeof($row) != 0) {
 			$group_name = $row['group_name'];
 			$domain_uuid = $row['domain_uuid'];
-			$group_order = $row['group_order'];
+			$group_level = $row['group_level'];
 			$group_description = $row['group_description'];
 		}
 		unset($sql, $parameters, $row);
@@ -358,10 +358,10 @@
 	echo "		".$text['label-order']."\n";
 	echo "</td>\n";
 	echo "<td align='left' class='vtable' valign='top'>\n";
-	echo "		<select name='group_order' class='formfld'>\n";
-	$i = 100;
-	while ($i <= 900) {
-		$selected = ($i == $group_order) ? "selected" : null;
+	echo "		<select name='group_level' class='formfld'>\n";
+	$i = 10;
+	while ($i <= 90) {
+		$selected = ($i == $group_level) ? "selected" : null;
 		if (strlen($i) == 1) {
 			echo "			<option value='00$i' ".$selected.">00$i</option>\n";
 		}
@@ -371,7 +371,7 @@
 		if (strlen($i) == 3) {
 			echo "			<option value='$i' ".$selected.">$i</option>\n";
 		}
-		$i = $i + 100;
+		$i = $i + 10;
 	}
 	echo "		</select>\n";
 	echo "		<br />\n";
