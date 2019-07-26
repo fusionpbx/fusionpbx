@@ -143,6 +143,7 @@
 				if (is_array($result)) {
 					foreach ($result as $row) {
 						$_SESSION['permissions'][$row["permission_name"]] = true;
+						$_SESSION["user"]["permissions"][$row["permission_name"]] = true;
 					}
 				}
 				unset($sql, $prep_statement_sub);
