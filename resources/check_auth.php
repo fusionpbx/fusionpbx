@@ -121,6 +121,14 @@
 			$_SESSION["user"]["groups"] = $result;
 			unset($sql, $row_count, $prep_statement);
 
+		//get the users group level
+			$_SESSION["user"]["group_level"] = 0;
+			foreach ($_SESSION['users']['groups'] as $row) {
+				if ($_SESSION["user"]["group_level"] < $row['group_level']) {
+					$_SESSION["user"]["group_level"] = $row['group_level'];
+				}
+			}
+
 		//get the permissions assigned to the groups that the user is a member of set the permissions in $_SESSION['permissions']
 			if (count($_SESSION["groups"]) > 0) {
 				$x = 0;
