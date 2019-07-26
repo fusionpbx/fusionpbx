@@ -123,7 +123,7 @@
 
 		//get the users group level
 			$_SESSION["user"]["group_level"] = 0;
-			foreach ($_SESSION['users']['groups'] as $row) {
+			foreach ($_SESSION['user']['groups'] as $row) {
 				if ($_SESSION["user"]["group_level"] < $row['group_level']) {
 					$_SESSION["user"]["group_level"] = $row['group_level'];
 				}
