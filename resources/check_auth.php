@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -75,13 +75,14 @@
 			$auth->debug = false;
 			$result = $auth->validate();
 			if ($result["authorized"] == "true") {
-				// set the session variables
+				//set the session variables
 					$_SESSION["domain_uuid"] = $result["domain_uuid"];
 					$_SESSION["user_uuid"] = $result["user_uuid"];
 
-				// user session array
-					$_SESSION["user"]["username"] = $result["username"];
+				//user session array
+					$_SESSION["user"]["domain_uuid"] = $result["domain_uuid"];
 					$_SESSION["user"]["user_uuid"] = $result["user_uuid"];
+					$_SESSION["user"]["username"] = $result["username"];
 					$_SESSION["user"]["contact_uuid"] = $result["contact_uuid"];
 			}
 			else {
@@ -106,17 +107,18 @@
 			}
 
 		//get the groups assigned to the user and then set the groups in $_SESSION["groups"]
-			$sql = "SELECT * FROM v_user_groups ";
-			//$sql .= "where domain_uuid='".$domain_uuid."' ";
-			//$sql .= "and user_uuid='".$_SESSION["user_uuid"]."' ";
-			$sql .= "where domain_uuid=:domain_uuid ";
-			$sql .= "and user_uuid=:user_uuid ";
-			$prep_statement = $db->prepare(check_sql($sql));
+			$sql = "select u.user_group_uuid, u.domain_uuid, u.user_uuid, u.group_uuid, g.group_name, g.group_level ";
+			$sql .= "from v_user_groups as u, v_groups as g  ";
+			$sql .= "where u.domain_uuid = :domain_uuid ";
+			$sql .= "and u.user_uuid = :user_uuid ";
+			$sql .= "and u.group_uuid = g.group_uuid ";
+			$prep_statement = $db->prepare($sql);
 			$prep_statement->bindParam(':domain_uuid', $_SESSION["domain_uuid"] );
 			$prep_statement->bindParam(':user_uuid', $_SESSION["user_uuid"]);
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			$_SESSION["groups"] = $result;
+			$_SESSION["user"]["groups"] = $result;
 			unset($sql, $row_count, $prep_statement);
 
 		//get the permissions assigned to the groups that the user is a member of set the permissions in $_SESSION['permissions']
@@ -214,7 +216,7 @@
 								if (strlen($row['number_alias']) > 0) {
 									$destination = $row['number_alias'];
 								}
-								
+
 								//build the uers array
 								$_SESSION['user']['extension'][$x]['user'] = $row['extension'];
 								$_SESSION['user']['extension'][$x]['number_alias'] = $row['number_alias'];
