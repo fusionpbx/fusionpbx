@@ -93,28 +93,34 @@ if (!class_exists('groups')) {
 						$x = 0;
 						//$groups[$x]['group_uuid'] = '';
 						$groups[$x]['group_name'] = 'superadmin';
+						$groups[$x]['group_level'] = '80';
 						$groups[$x]['group_description'] = 'Super Administrator Group';
 						$groups[$x]['group_protected'] = 'false';
 						$x++;
 						//$groups[$x]['group_uuid'] = '';
 						$groups[$x]['group_name'] = 'admin';
+						$groups[$x]['group_level'] = '50';
 						$groups[$x]['group_description'] = 'Administrator Group';
 						$groups[$x]['group_protected'] = 'false';
 						$x++;
 						//$groups[$x]['group_uuid'] = '';
 						$groups[$x]['group_name'] = 'user';
+						$groups[$x]['group_level'] = '30';
 						$groups[$x]['group_description'] = 'User Group';
 						$groups[$x]['group_protected'] = 'false';
 						$x++;
 						//$groups[$x]['group_uuid'] = '';
-						$groups[$x]['group_name'] = 'public';
-						$groups[$x]['group_description'] = 'Public Group';
+						$groups[$x]['group_name'] = 'agent';
+						$groups[$x]['group_level'] = '20';
+						$groups[$x]['group_description'] = 'Call Center Agent Group';
 						$groups[$x]['group_protected'] = 'false';
 						$x++;
 						//$groups[$x]['group_uuid'] = '';
-						$groups[$x]['group_name'] = 'agent';
-						$groups[$x]['group_description'] = 'Call Center Agent Group';
+						$groups[$x]['group_name'] = 'public';
+						$groups[$x]['group_level'] = '10';
+						$groups[$x]['group_description'] = 'Public Group';
 						$groups[$x]['group_protected'] = 'false';
+						//$x++;
 						$this->db->beginTransaction();
 						foreach($groups as $row) {
 							if (strlen($row['group_name']) > 0) {
