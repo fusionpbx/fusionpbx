@@ -227,8 +227,9 @@
 								$_SESSION['user']['extension'][$x]['outbound_caller_id_number'] = $row['outbound_caller_id_number'];
 								$_SESSION['user']['extension'][$x]['user_context'] = $row['user_context'];
 								$_SESSION['user']['extension'][$x]['description'] = $row['description'];
-								
+
 								//set the user context
+								$_SESSION['user']['user_context'] = $row["user_context"];
 								$_SESSION['user_context'] = $row["user_context"];
 								$x++;
 							}
