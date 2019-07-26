@@ -60,6 +60,42 @@ if ($domains_processed == 1) {
 			unset ($result);
 		}
 
+	//set the default group levels
+		$sql = "select * from v_groups ";
+		$sql .= "where group_level is null; ";
+		$database = new database;
+		$result = $database->select($sql, null, 'all');
+		if (is_array($result) && count($result) > 0) {
+			$x = 0;
+			foreach($result as $row) {
+				$array['groups'][$x]['group_uuid'] = $row['group_uuid'];
+				switch ($row['group_name']) {
+					case 'superadmin':
+						$array['groups'][$x]['group_level'] = 80;
+						break;
+					case 'admin':
+						$array['groups'][$x]['group_level'] = 50;
+						break;
+					case 'user':
+						$array['groups'][$x]['group_level'] = 30;
+						break;
+					case 'agent':
+						$array['groups'][$x]['group_level'] = 20;
+						break;
+					case 'public':
+						$array['groups'][$x]['group_level'] = 10;
+						break;
+					default:
+						$array['groups'][$x]['group_level'] = 10;
+				}
+			}
+			$database = new database;
+			$database->app_name = 'groups';
+			$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+			$database->save($array);
+			unset($array);
+		}
+
 }
 
 ?>
