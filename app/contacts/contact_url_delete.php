@@ -38,24 +38,24 @@ else {
 	$language = new text;
 	$text = $language->get();
 
-if (count($_GET)>0) {
-	$id = check_str($_GET["id"]);
-	$contact_uuid = check_str($_GET["contact_uuid"]);
+$contact_url_uuid = $_GET["id"];
+$contact_uuid = $_GET["contact_uuid"];
+
+if (is_uuid($contact_url_uuid) && is_uuid($contact_uuid)) {
+
+	$array['contact_urls'][0]['contact_url_uuid'] = $contact_url_uuid;
+	$array['contact_urls'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+
+	$database = new database;
+	$database->app_name = 'contacts';
+	$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
+	$database->delete($array);
+	unset($array);
+
+	message::add($text['message-delete']);
 }
 
-if (strlen($id)>0) {
-	$sql = "";
-	$sql .= "delete from v_contact_urls ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "and contact_url_uuid = '".$id."' ";
-
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	unset($sql);
-}
-
-message::add($text['message-delete']);
 header("Location: contact_edit.php?id=".$contact_uuid);
-return;
+exit;
 
 ?>
