@@ -404,6 +404,7 @@ echo "	<div id='message_container'></div>\n";
 		$bgcolor1 = "#eaedf2";
 		$bgcolor2 = "#fff";
 		foreach($_SESSION['domains'] as $domain) {
+			//active domain color
 			$bgcolor = ($bgcolor == $bgcolor1) ? $bgcolor2 : $bgcolor1;
 			if ($_SESSION['theme']['domain_active_background_color']['text'] != '') {
 				$bgcolor = ($domain['domain_uuid'] == $_SESSION['domain_uuid']) ? escape($_SESSION['theme']['domain_active_background_color']['text']) : $bgcolor;
@@ -411,7 +412,13 @@ echo "	<div id='message_container'></div>\n";
 			else {
 				$bgcolor = ($domain['domain_uuid'] == $_SESSION['domain_uuid']) ? "#eeffee" : $bgcolor;
 			}
-			echo "<div id=\"".escape($domain['domain_name'])."\" class='domains_list_item' style='background-color: ".$bgcolor."' onclick=\"document.location.href='".$domain_path."?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true';\">";
+			//active domain's text hover color
+			if ($_SESSION['theme']['domain_active_text_color_hover']['text'] != '' && $domain['domain_uuid'] == $_SESSION['domain_uuid']) {
+				echo "<div id=\"".escape($domain['domain_name'])."\" class='domains_list_item_active' style='background-color: ".$bgcolor."' onclick=\"document.location.href='".$domain_path."?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true';\">";
+			}
+			else {
+				echo "<div id=\"".escape($domain['domain_name'])."\" class='domains_list_item' style='background-color: ".$bgcolor."' onclick=\"document.location.href='".$domain_path."?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true';\">";
+			}
 			echo "<a href='".$domain_path."?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true' ".(($domain['domain_uuid'] == $_SESSION['domain_uuid']) ? "style='font-weight: bold;'" : null).">".escape($domain['domain_name'])."</a>\n";
 			if ($domain['domain_description'] != '') {
 				echo "<span class=\"domain_list_item_description\"> - ".escape($domain['domain_description'])."</span>\n";
