@@ -40,26 +40,28 @@ else {
 		$language = new text;
 		$text = $language->get();
 
-		if (count($_REQUEST) > 0) {
-			$contact_uuid = check_str($_REQUEST["contact_uuid"]);
-			$contact_group_uuid = $_REQUEST["id"];
-		}
+		$contact_uuid = $_REQUEST["contact_uuid"];
+		$contact_group_uuid = $_REQUEST["id"];
 	}
 
 //delete the group
 	if (is_uuid($contact_uuid) && is_uuid($contact_group_uuid)) {
-		$sql = "delete from v_contact_groups ";
-		$sql .= "where contact_uuid = '".$contact_uuid."' ";
-		$sql .= "and contact_group_uuid = '".$contact_group_uuid."' ";
-		$db->exec(check_sql($sql));
-		unset($sql);
+		$array['contact_groups'][0]['contact_uuid'] = $contact_uuid;
+		$array['contact_groups'][0]['contact_group_uuid'] = $contact_group_uuid;
+
+		$database = new database;
+		$database->app_name = 'contacts';
+		$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
+		$database->delete($array);
+		unset($array);
+
+		message::add($text['message-delete']);
 	}
 
-//redirect the browser
+//redirect
 	if (!$included) {
-		message::add($text['message-delete']);
 		header("Location: contact_edit.php?id=".$contact_uuid);
-		return;
+		exit;
 	}
 
 ?>
