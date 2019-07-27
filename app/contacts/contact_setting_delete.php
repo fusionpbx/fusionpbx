@@ -40,24 +40,25 @@ else {
 	$text = $language->get();
 
 //set the variables
-	if (count($_GET) > 0) {
-		$id = check_str($_GET["id"]);
-		$contact_uuid = check_str($_GET["contact_uuid"]);
-	}
+	$contact_setting_uuid = $_GET["id"];
+	$contact_uuid = $_GET["contact_uuid"];
 
 //delete domain_setting
-	if (strlen($id) > 0) {
-		$sql = "delete from v_contact_settings ";
-		$sql .= "where contact_uuid = '$contact_uuid' ";
-		$sql .= "and contact_setting_uuid = '$id' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($sql);
+	if (is_uuid($contact_setting_uuid) && is_uuid($contact_uuid)) {
+		$array['contact_settings'][0]['contact_setting_uuid'] = $contact_setting_uuid;
+		$array['contact_settings'][0]['contact_uuid'] = $contact_uuid;
+
+		$database = new database;
+		$database->app_name = 'contacts';
+		$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
+		$database->delete($array);
+		unset($array);
+
+		message::add($text['message-delete']);
 	}
 
 //redirect the user
-	message::add($text['message-delete']);
 	header("Location: contact_edit.php?id=".$contact_uuid);
-	return;
+	exit;
 
 ?>
