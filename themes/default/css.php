@@ -803,7 +803,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	
 	div.domains_list_item_active:hover a,
 	div.domains_list_item_active:hover span {
-	color: <?php echo ($_SESSION['theme']['domain_active_text_color_hover']['text']); ?>;
+		color: <?php echo ($_SESSION['theme']['domain_active_text_color_hover']['text']); ?>;
 	}
 
 /* DOMAIN SELECTOR: END ********************************************************/
