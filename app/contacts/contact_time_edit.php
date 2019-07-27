@@ -102,14 +102,14 @@ else {
 
 				$p->delete('contact_edit', 'temp');
 
-				if ($action == "add") {
+				if ($action == "add" && permission_exists('contact_time_add')) {
 					$contact_time_uuid = uuid();
 					$array['contact_times'][0]['contact_time_uuid'] = $contact_time_uuid;
 
 					message::add($text['message-add']);
 				}
 
-				if ($action == "update") {
+				if ($action == "update" && permission_exists('contact_time_edit')) {
 					$array['contact_times'][0]['contact_time_uuid'] = $contact_time_uuid;
 
 					message::add($text['message-update']);

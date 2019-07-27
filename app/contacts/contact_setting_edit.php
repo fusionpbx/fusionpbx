@@ -107,7 +107,7 @@
 				//set the order
 					$contact_setting_order = $contact_setting_order != '' ? $contact_setting_order : null;
 
-					//update last modified
+				//update last modified
 					$array['contacts'][0]['contact_uuid'] = $contact_uuid;
 					$array['contacts'][0]['domain_uuid'] = $domain_uuid;
 					$array['contacts'][0]['last_mod_date'] = 'now()';
@@ -125,7 +125,7 @@
 					$p->delete('contact_edit', 'temp');
 
 				//add the setting
-					if ($action == "add" && permission_exists('domain_setting_add')) {
+					if ($action == "add" && permission_exists('contact_setting_add')) {
 						$contact_setting_uuid = uuid();
 						$array['contact_settings'][0]['contact_setting_uuid'] = $contact_setting_uuid;
 
@@ -133,7 +133,7 @@
 					}
 
 				//update the setting
-					if ($action == "update") {
+					if ($action == "update" && permission_exists('contact_setting_edit')) {
 						$array['contact_settings'][0]['contact_setting_uuid'] = $contact_setting_uuid;
 
 						message::add($text['message-update']);

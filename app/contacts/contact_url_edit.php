@@ -120,14 +120,14 @@ else {
 					unset($sql, $parameters);
 				}
 
-				if ($action == "add") {
+				if ($action == "add" && permission_exists('contact_url_add')) {
 					$contact_url_uuid = uuid();
 					$array['contact_urls'][0]['contact_url_uuid'] = $contact_url_uuid;
 
 					message::add($text['message-add']);
 				}
 
-				if ($action == "update") {
+				if ($action == "update" && permission_exists('contact_url_edit')) {
 					$array['contact_urls'][0]['contact_url_uuid'] = $contact_url_uuid;
 
 					message::add($text['message-update']);
