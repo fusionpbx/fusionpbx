@@ -39,24 +39,24 @@ else {
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$contact_note_uuid = check_str($_REQUEST["id"]);
+		$contact_note_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
 	}
 
 //get the primary id for the contact
-	if (strlen($_GET["contact_uuid"]) > 0) {
-		$contact_uuid = check_str($_GET["contact_uuid"]);
+	if (is_uuid($_GET["contact_uuid"])) {
+		$contact_uuid = $_GET["contact_uuid"];
 	}
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
-		$contact_note = check_str($_POST["contact_note"]);
-		$last_mod_date = check_str($_POST["last_mod_date"]);
-		$last_mod_user = check_str($_POST["last_mod_user"]);
+		$contact_note = $_POST["contact_note"];
+		$last_mod_date = $_POST["last_mod_date"];
+		$last_mod_user = $_POST["last_mod_user"];
 	}
 
 //process the form data
@@ -64,7 +64,7 @@ else {
 
 		//get the primary id for the contact note
 			if ($action == "update") {
-				$contact_note_uuid = check_str($_POST["contact_note_uuid"]);
+				$contact_note_uuid = $_POST["contact_note_uuid"];
 			}
 
 		//check for all required data
@@ -84,80 +84,77 @@ else {
 
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
+
 				//update last modified
-					$sql = "update v_contacts set ";
-					$sql .= "last_mod_date = now(), ";
-					$sql .= "last_mod_user = '".$_SESSION['username']."' ";
-					$sql .= "where domain_uuid = '".$domain_uuid."' ";
-					$sql .= "and contact_uuid = '".$contact_uuid."' ";
-					$db->exec(check_sql($sql));
-					unset($sql);
+					$array['contacts'][0]['contact_uuid'] = $contact_uuid;
+					$array['contacts'][0]['domain_uuid'] = $domain_uuid;
+					$array['contacts'][0]['last_mod_date'] = 'now()';
+					$array['contacts'][0]['last_mod_user'] = $_SESSION['username'];
+
+					$p = new permissions;
+					$p->add('contact_edit', 'temp');
+
+					$database = new database;
+					$database->app_name = 'contacts';
+					$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
+					$database->save($array);
+					unset($array);
+
+					$p->delete('contact_edit', 'temp');
 
 				//add the note
-					if ($action == "add") {
+					if ($action == "add" && permission_exists('contact_note_add')) {
 						$contact_note_uuid = uuid();
-						$sql = "insert into v_contact_notes ";
-						$sql .= "(";
-						$sql .= "contact_note_uuid, ";
-						$sql .= "contact_uuid, ";
-						$sql .= "contact_note, ";
-						$sql .= "domain_uuid, ";
-						$sql .= "last_mod_date, ";
-						$sql .= "last_mod_user ";
-						$sql .= ")";
-						$sql .= "values ";
-						$sql .= "(";
-						$sql .= "'$contact_note_uuid', ";
-						$sql .= "'$contact_uuid', ";
-						$sql .= "'$contact_note', ";
-						$sql .= "'$domain_uuid', ";
-						$sql .= "now(), ";
-						$sql .= "'".$_SESSION['username']."' ";
-						$sql .= ")";
-						$db->exec(check_sql($sql));
-						unset($sql);
+						$array['contact_notes'][0]['contact_note_uuid'] = $contact_note_uuid;
 
 						message::add($text['message-add']);
-						header("Location: contact_edit.php?id=".$contact_uuid);
-						return;
-					} //if ($action == "add")
+					}
 
 				//update the note
-					if ($action == "update") {
-						$sql = "update v_contact_notes set ";
-						$sql .= "contact_uuid = '$contact_uuid', ";
-						$sql .= "contact_note = '$contact_note', ";
-						$sql .= "last_mod_date = now(), ";
-						$sql .= "last_mod_user = '".$_SESSION['username']."' ";
-						$sql .= "where domain_uuid = '$domain_uuid' ";
-						$sql .= "and contact_note_uuid = '$contact_note_uuid'";
-						$db->exec(check_sql($sql));
-						unset($sql);
+					if ($action == "update" && permission_exists('contact_note_edit')) {
+						$array['contact_notes'][0]['contact_note_uuid'] = $contact_note_uuid;
 
 						message::add($text['message-update']);
-						header("Location: contact_edit.php?id=".$contact_uuid);
-						return;
-					} //if ($action == "update")
-			} //if ($_POST["persistformvar"] != "true")
-	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+					}
+
+				//execute
+					if (is_array($array) && @sizeof($array) != 0) {
+						$array['contact_notes'][0]['contact_uuid'] = $contact_uuid;
+						$array['contact_notes'][0]['domain_uuid'] = $domain_uuid;
+						$array['contact_notes'][0]['contact_note'] = $contact_note;
+						$array['contact_notes'][0]['last_mod_date'] = 'now()';
+						$array['contact_notes'][0]['last_mod_user'] = $_SESSION['username'];
+
+						$database = new database;
+						$database->app_name = 'contacts';
+						$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
+						$database->save($array);
+						unset($array);
+					}
+
+				//redirect
+					header("Location: contact_edit.php?id=".escape($contact_uuid));
+					exit;
+
+			}
+	}
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$contact_note_uuid = $_GET["id"];
-		$sql = "";
-		$sql .= "select * from v_contact_notes ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and contact_note_uuid = '$contact_note_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql = "select * from v_contact_notes ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and contact_note_uuid = :contact_note_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['contact_note_uuid'] = $contact_note_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$contact_note = $row["contact_note"];
 			$last_mod_date = $row["last_mod_date"];
 			$last_mod_user = $row["last_mod_user"];
-			break; //limit to 1 row
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //show the header

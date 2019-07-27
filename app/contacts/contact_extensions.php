@@ -63,17 +63,17 @@
 
 	//get the extension list
 		$sql = "select e.extension_uuid, e.extension, e.enabled, e.description ";
-		$sql .= " from v_extensions e, v_extension_users eu, v_users u ";
-		$sql .= " where e.extension_uuid = eu.extension_uuid ";
-		$sql .= " and u.user_uuid = eu.user_uuid ";
-		$sql .= " and e.domain_uuid = '$domain_uuid' ";
-		$sql .= " and u.contact_uuid = '$contact_uuid' ";
+		$sql .= "from v_extensions e, v_extension_users eu, v_users u ";
+		$sql .= "where e.extension_uuid = eu.extension_uuid ";
+		$sql .= "and u.user_uuid = eu.user_uuid ";
+		$sql .= "and e.domain_uuid = :domain_uuid ";
+		$sql .= "and u.contact_uuid = :contact_uuid ";
 		$sql .= "order by e.extension asc ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
-		unset ($prep_statement, $sql);
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['contact_uuid'] = $contact_uuid;
+		$database = new database;
+		$result = $database->select($sql, $parameters, 'all');
+		unset($sql, $parameters);
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
@@ -90,7 +90,7 @@
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
-	if ($result_count > 0) {
+	if (is_array($result) && @sizeof($result) != 0) {
 		foreach($result as $row) {
 			$tr_link = (permission_exists('extension_edit')) ? "href='/app/extensions/extension_edit.php?id=".escape($row['extension_uuid'])."'" : null;
 			echo "<tr ".$tr_link.">\n";
@@ -114,9 +114,9 @@
 			echo "	</td>\n";
 			echo "</tr>\n";
 			$c = ($c) ? 0 : 1;
-		} //end foreach
-		unset($sql, $result, $row_count);
-	} //end if results
+		}
+	}
+	unset($result, $row);
 
 	echo "</table>";
 
