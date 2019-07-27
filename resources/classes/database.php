@@ -1813,16 +1813,19 @@ include "root.php";
 			private function singular($word) {
 				//"-es" is used for words that end in "-x", "-s", "-z", "-sh", "-ch" in which case you add
 				if (substr($word, -2) == "es") {
-					if (substr($word, -3) == "ses") {
-						return rtrim($word, "s");
-					}
-					if (substr($word, -3) == "ies") {
-						return substr($word,0,-3)."y";
-					}
-					if (substr($word, -3, 1) == "x") {
+					if (substr($word, -4) == "sses") { // eg. 'addresses' to 'address'
 						return substr($word,0,-2);
 					}
-					if (substr($word, -3, 1) == "s") {
+					elseif (substr($word, -3) == "ses") { // eg. 'databases' to 'database' (necessary!)
+						return substr($word,0,-1);
+					}
+					elseif (substr($word, -3) == "ies") { // eg. 'countries' to 'country'
+						return substr($word,0,-3)."y";
+					}
+					elseif (substr($word, -3, 1) == "x") {
+						return substr($word,0,-2);
+					}
+					elseif (substr($word, -3, 1) == "s") {
 						return substr($word,0,-2);
 					}
 					elseif (substr($word, -3, 1) == "z") {
