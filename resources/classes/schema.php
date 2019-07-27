@@ -639,15 +639,8 @@ if (!class_exists('schema')) {
 														$field_name = $field['name'];
 													}
 												//find missing fields and add them
-													if ($field['deprecated'] == "true") {
-														//skip this row
-													}
-													else {
-														if (!is_array($field['name'])) {
-															if ($field['exists'] == "false") {
-																$sql_update .= "ALTER TABLE ".$table_name." ADD ".$field['name']." ".$field_type.";\n";
-															}
-														}
+													if ($field['exists'] == "false") {
+														$sql_update .= "ALTER TABLE ".$table_name." ADD ".$field_name." ".$field_type.";\n";
 													}
 												//rename fields where the name has changed
 													if (is_array($field['name'])) {
