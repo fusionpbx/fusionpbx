@@ -40,13 +40,14 @@
 
 //get the contact list
 	$sql = "select * from v_contact_phones ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and contact_uuid = '$contact_uuid' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and contact_uuid = :contact_uuid ";
 	$sql .= "order by phone_primary desc, phone_label asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$contact_phones = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$parameters['domain_uuid'] = $domain_uuid;
+	$parameters['contact_uuid'] = $contact_uuid;
+	$database = new database;
+	$contact_phones = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //set the row style
 	$c = 0;
@@ -89,7 +90,8 @@
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
-	if (is_array($contact_phones)) {
+
+	if (is_array($contact_phones) && @sizeof($contact_phones) != 0) {
 		foreach($contact_phones as $row) {
 			if (permission_exists('contact_phone_edit')) {
 				$tr_link = "href='contact_phone_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_phone_uuid'])."'";
@@ -129,7 +131,7 @@
 			echo "</tr>\n";
 			$c = ($c) ? 0 : 1;
 		} //end foreach
-		unset($sql, $contact_phones);
+		unset($contact_phones, $row);
 	} //end if results
 
 	echo "</table>";
