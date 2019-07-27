@@ -564,7 +564,7 @@ if (!class_exists('schema')) {
 											else {
 												$field_name = $field['name'];
 											}
-											if (strlen(field_name) > 0) {
+											if (strlen($field_name) > 0) {
 												if ($this->db_column_exists ($db_type, $db_name, $table_name, $field_name)) {
 													//found
 													$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'true';
