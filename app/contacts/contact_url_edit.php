@@ -108,7 +108,7 @@ else {
 
 				$p->delete('contact_edit', 'temp');
 
-				//if primary, unmark other primary numbers
+				//if primary, unmark other primary urls
 				if ($url_primary) {
 					$sql = "update v_contact_urls set url_primary = 0 ";
 					$sql .= "where domain_uuid = :domain_uuid ";

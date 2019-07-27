@@ -110,7 +110,7 @@ else {
 
 					$p->delete('contact_edit', 'temp');
 
-				//add the setting
+				//add the relation
 					if ($action == "add" && permission_exists('contact_relation_add')) {
 						$contact_relation_uuid = uuid();
 						$array['contact_relations'][0]['contact_relation_uuid'] = $contact_relation_uuid;
@@ -127,7 +127,7 @@ else {
 						message::add($text['message-add']);
 					}
 
-				//update the setting
+				//update the relation
 					if ($action == "update" && permission_exists('contact_relation_edit')) {
 						$array['contact_relations'][0]['contact_relation_uuid'] = $contact_relation_uuid;
 
@@ -148,7 +148,7 @@ else {
 						unset($array);
 					}
 
-				//redirect the browser
+				//redirect
 					header("Location: contact_edit.php?id=".escape($contact_uuid));
 					exit;
 
