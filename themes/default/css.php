@@ -782,7 +782,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		border: 1px solid #a4aebf;
 		}
 
-	div.domains_list_item {
+	div.domains_list_item, div.domains_list_item_active {
 		text-align: left;
 		border-bottom: 1px solid #c5d1e5;
 		padding: 5px 8px 8px 8px;
@@ -791,7 +791,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		cursor: pointer;
 		}
 
-	div.domains_list_item span.domain_list_item_description {
+	div.domains_list_item span.domain_list_item_description, div.domains_list_item_active span.domain_list_item_description {
 		color: #999;
 		font-size: 11px;
 		}
@@ -800,6 +800,11 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	div.domains_list_item:hover span {
 		color: #5082ca;
 		}
+	
+	div.domains_list_item_active:hover a,
+	div.domains_list_item_active:hover span {
+	color: <?php echo ($_SESSION['theme']['domain_active_text_color_hover']['text']); ?>;
+	}
 
 /* DOMAIN SELECTOR: END ********************************************************/
 
