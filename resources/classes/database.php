@@ -1810,7 +1810,7 @@ include "root.php";
 			} //save method
 
 			//define singular function to convert a word in english to singular
-			private function singular($word) {
+			public function singular($word) {
 				//"-es" is used for words that end in "-x", "-s", "-z", "-sh", "-ch" in which case you add
 				if (substr($word, -2) == "es") {
 					if (substr($word, -4) == "sses") { // eg. 'addresses' to 'address'
