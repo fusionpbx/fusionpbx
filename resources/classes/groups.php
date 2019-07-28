@@ -88,8 +88,8 @@ if (!class_exists('groups')) {
 				$result = $database->select($sql, null, 'all');
 				if (count($result) == 0) {
 					$x = 0;
-					$array['groups']['group_uuid'] = uuid();
-					$array['groups']['domain_uuid'] = null;
+					$array['groups'][$x]['group_uuid'] = uuid();
+					$array['groups'][$x]['domain_uuid'] = null;
 					$array['groups'][$x]['group_name'] = 'superadmin';
 					$array['groups'][$x]['group_level'] = '80';
 					$array['groups'][$x]['group_description'] = 'Super Administrator Group';
