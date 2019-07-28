@@ -110,6 +110,7 @@ if ($_SESSION['contact_auth']['source'] == 'google') {
 
 }
 else {
+
 	message::add($text['message-access_denied'], 'negative');
 	header("Location: ".$_SESSION['contact_auth']['referer']);
 	unset($_SESSION['contact_auth']);
