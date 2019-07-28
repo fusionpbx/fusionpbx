@@ -47,42 +47,6 @@
 
 	//schema details
 		$y=0;
-		$apps[$x]['db'][$y]['table']['name'] = "v_domains";
-		$apps[$x]['db'][$y]['table']['parent'] = "";
-		$z=0;	
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "id";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "integer";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "INT NOT NULL AUTO_INCREMENT";
-		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
-		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "primary";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_parent_uuid";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
-		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
-		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_domains";
-		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "domain_uuid";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_name";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the domain name.";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_enabled";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Set the status of the domain.";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_description";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
-
-		$y++;
 		$apps[$x]['db'][$y]['table']['name'] = "v_domain_settings";
 		$apps[$x]['db'][$y]['table']['parent'] = "v_domains";
 		$z=0;
