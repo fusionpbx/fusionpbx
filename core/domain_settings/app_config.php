@@ -1,14 +1,14 @@
 <?php
 	
 	//application details
-		$apps[$x]['name'] = "Domains";
+		$apps[$x]['name'] = "Domain Settings";
 		$apps[$x]['guid'] = "b31e723a-bf70-670c-a49b-470d2a232f71";
 		$apps[$x]['category'] = "Core";
 		$apps[$x]['subcategory'] = "";
 		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
-		$apps[$x]['description']['en-us'] = "Manage a single domain or multiple domains for multi-tenant.";
+		$apps[$x]['description']['en-us'] = "Settings assigned to a particular domain.";
 		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Verwalte eine einzelne Domäne oder mehrere Domänen für Multi-Mandanten.";
 		$apps[$x]['description']['de-ch'] = "";
@@ -30,22 +30,6 @@
 
 	//permission details
 		$y=0;
-		$apps[$x]['permissions'][$y]['name'] = "domain_view";
-		$apps[$x]['permissions'][$y]['menu']['uuid'] = "4fa7e90b-6d6c-12d4-712f-62857402b801";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "domain_add";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "domain_edit";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "domain_delete";
-		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "domain_select";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "domain_setting_view";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
