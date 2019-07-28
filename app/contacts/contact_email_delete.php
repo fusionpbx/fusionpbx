@@ -42,7 +42,6 @@ $contact_email_uuid = $_GET["id"];
 $contact_uuid = $_GET["contact_uuid"];
 
 if (is_uuid($contact_email_uuid) && is_uuid($contact_uuid)) {
-
 	$array['contact_emails'][0]['contact_email_uuid'] = $contact_email_uuid;
 	$array['contact_emails'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 

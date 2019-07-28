@@ -57,8 +57,8 @@
 	if (is_array($_POST) && sizeof($_POST) != 0) {
 
 		$attachment = $_FILES['attachment'];
-		$attachment_primary = check_str($_POST['attachment_primary']);
-		$attachment_description = check_str($_POST['attachment_description']);
+		$attachment_primary = $_POST['attachment_primary'];
+		$attachment_description = $_POST['attachment_description'];
 
 		if (!is_array($attachment) || sizeof($attachment) == 0) {
 			$attachment_type = strtolower(pathinfo($_POST['attachment_filename'], PATHINFO_EXTENSION));
@@ -68,12 +68,18 @@
 		}
 
 		//unflag others as primary
+			$allowed_primary_attachment = false;
 			if ($attachment_primary && ($attachment_type == 'jpg' || $attachment_type == 'jpeg' || $attachment_type == 'gif' || $attachment_type == 'png')) {
 				$sql = "update v_contact_attachments set attachment_primary = 0 ";
-				$sql .= "where domain_uuid = '".$domain_uuid."' ";
-				$sql .= "and contact_uuid = '".$contact_uuid."' ";
-				$db->exec(check_sql($sql));
-				unset($sql);
+				$sql .= "where domain_uuid = :domain_uuid ";
+				$sql .= "and contact_uuid = :contact_uuid ";
+				$parameters['domain_uuid'] = $domain_uuid;
+				$parameters['contact_uuid'] = $contact_uuid;
+				$database = new database;
+				$database->execute($sql, $parameters);
+				unset($sql, $parameters);
+
+				$allowed_primary_attachment = true;
 			}
 
 		//format array
@@ -81,7 +87,7 @@
 			$array['contact_attachments'][$index]['contact_attachment_uuid'] = $action == 'update' ? $contact_attachment_uuid : uuid();
 			$array['contact_attachments'][$index]['domain_uuid'] = $_SESSION['domain_uuid'];
 			$array['contact_attachments'][$index]['contact_uuid'] = $contact_uuid;
-			$array['contact_attachments'][$index]['attachment_primary'] = $attachment_primary == '1' && ($attachment_type == 'jpg' || $attachment_type == 'jpeg' || $attachment_type == 'gif' || $attachment_type == 'png') ? 1 : 0;
+			$array['contact_attachments'][$index]['attachment_primary'] = $allowed_primary_attachment ? 1 : 0;
 			if ($attachment['error'] == '0' && in_array(strtolower(pathinfo($attachment['name'], PATHINFO_EXTENSION)), $allowed_extensions)) {
 				$array['contact_attachments'][$index]['attachment_filename'] = $attachment['name'];
 				$array['contact_attachments'][$index]['attachment_content'] = base64_encode(file_get_contents($attachment['tmp_name']));
@@ -96,8 +102,8 @@
 			$database = new database;
 			$database->app_name = 'contacts';
 			$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
-			$database->uuid($contact_attachment_uuid);
 			$database->save($array);
+			unset($array);
 
 		//redirect
 			message::add($text['message-message_'.($action == 'update' ? 'updated' : 'added')]);
@@ -109,17 +115,19 @@
 //get form data
 	if (is_array($_GET) && sizeof($_GET) != 0) {
 		$sql = "select * from v_contact_attachments ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and contact_attachment_uuid = :contact_attachment_uuid ";
-		$bind[':contact_attachment_uuid'] = $contact_attachment_uuid;
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute(is_array($bind) ? $bind : null);
-		$row = $prep_statement->fetch(PDO::FETCH_NAMED);
-		$attachment_primary = $row["attachment_primary"];
-		$attachment_filename = $row["attachment_filename"];
-		$attachment_content = $row["attachment_content"];
-		$attachment_description = $row["attachment_description"];
-		unset($sql, $bind, $prep_statement, $row);
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['contact_attachment_uuid'] = $contact_attachment_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
+			$attachment_primary = $row["attachment_primary"];
+			$attachment_filename = $row["attachment_filename"];
+			$attachment_content = $row["attachment_content"];
+			$attachment_description = $row["attachment_description"];
+		}
+		unset($sql, $parameters, $row);
 	}
 
 //show the header

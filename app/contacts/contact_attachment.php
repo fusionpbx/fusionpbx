@@ -40,12 +40,13 @@
 	if (is_uuid($contact_attachment_uuid)) {
 
 		$sql = "select attachment_filename, attachment_content from v_contact_attachments ";
-		$sql .= "where contact_attachment_uuid = '".$contact_attachment_uuid."' ";
-		$sql .= "and (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$attachment = $prep_statement->fetch(PDO::FETCH_NAMED);
-		unset ($prep_statement, $sql);
+		$sql .= "where contact_attachment_uuid = :contact_attachment_uuid ";
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['contact_attachment_uuid'] = $contact_attachment_uuid;
+		$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$attachment = $database->select($sql, $parameters, 'row');
+		unset($sql, $parameters);
 
 		$attachment_type = strtolower(pathinfo($attachment['attachment_filename'], PATHINFO_EXTENSION));
 

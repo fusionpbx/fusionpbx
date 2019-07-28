@@ -48,14 +48,14 @@
 
 	//get the contact list
 		$sql = "select * from v_contact_addresses ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and contact_uuid = '$contact_uuid' ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and contact_uuid = :contact_uuid ";
 		$sql .= "order by address_primary desc, address_label asc ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
-		unset ($prep_statement, $sql);
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['contact_uuid'] = $contact_uuid;
+		$database = new database;
+		$result = $database->select($sql, $parameters, 'all');
+		unset($sql, $parameters);
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
@@ -77,7 +77,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($result_count > 0) {
+	if (is_array($result) && @sizeof($result) != 0) {
 		foreach($result as $row) {
 			$map_query = escape($row['address_street'])." ".escape($row['address_extended']).", ".escape($row['address_locality']).", ".escape($row['address_region']).", ".escape($row['address_region']).", ".escape($row['address_postal_code']);
 			if (permission_exists('contact_address_edit')) {
@@ -102,9 +102,9 @@
 			echo "	</td>\n";
 			echo "</tr>\n";
 			$c = ($c) ? 0 : 1;
-		} //end foreach
-		unset($sql, $result, $row_count);
-	} //end if results
+		}
+		unset($result, $row);
+	}
 
 	echo "</table>";
 
