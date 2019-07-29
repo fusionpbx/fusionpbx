@@ -43,26 +43,11 @@
 	$text = $language->get();
 
 //get variables used to control the order
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
-
-//validate order by
-	if (strlen($order_by) > 0) {
-		$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $order_by);
-	}
-
-//validate the order
-	switch ($order) {
-		case 'asc':
-			break;
-		case 'desc':
-			break;
-		default:
-			$order = '';
-	}
+	$order_by = $_GET["order_by"] != '' ? $_GET['order_by'] : 'transaction_date';
+	$order = $_GET["order"] != '' ? $_GET['order'] : 'desc';
 
 //add the search term
-	$search = strtolower(check_str($_GET["search"]));
+	$search = strtolower($_GET["search"]);
 	if (strlen($search) > 0) {
 		$sql_search = "and (";
 		$sql_search .= "	lower(transaction_code) like :search ";
@@ -77,7 +62,7 @@
 	require_once "resources/paging.php";
 
 //prepare to page the results
-	$sql = "select count(database_transaction_uuid) as num_rows from v_database_transactions ";
+	$sql = "select count(database_transaction_uuid) from v_database_transactions ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= $sql_search;
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -100,19 +85,12 @@
 	$sql .= "t.database_transaction_uuid, d.domain_name, u.username, t.user_uuid, t.app_name, t.app_uuid, ";
 	$sql .= "t.transaction_code, t.transaction_address, t.transaction_type, t.transaction_date ";
 	$sql .= "from v_database_transactions as t ";
-	$sql .= "LEFT OUTER JOIN v_domains as d USING (domain_uuid) ";
-	$sql .= "LEFT OUTER JOIN v_users as u USING (user_uuid) ";
+	$sql .= "left outer join v_domains as d using (domain_uuid) ";
+	$sql .= "left outer join v_users as u using (user_uuid) ";
 	$sql .= "where t.domain_uuid = :domain_uuid ";
 	$sql .= $sql_search;
-	if (strlen($order_by) == 0) {
-		$sql .= "order by transaction_date desc ";
-	}
-	else {
-		$sql .= "order by $order_by $order ";
-	}
-	$sql .= "limit :rows_per_page offset :offset ";
-	$parameters['rows_per_page'] = $rows_per_page;
-	$parameters['offset'] = $offset;
+	$sql .= order_by($order_by, $order);
+	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$result = $database->select($sql, $parameters, 'all');
 
