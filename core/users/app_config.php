@@ -84,7 +84,7 @@
 	//default settings
 		$y=0;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "38cf53d2-5fae-43ed-be93-33b0a5cc1c38";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "user";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "users";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "unique";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "global";
@@ -92,7 +92,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e3f5f4cd-0f17-428a-b788-2f2db91b6dc7";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "user";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "users";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "password_length";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10";
@@ -100,7 +100,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The default length of characters in a user password.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "51c106d9-9aba-436b-b9b1-ff4937cef706";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "user";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "users";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "password_number";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
@@ -108,7 +108,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set whether to require at least one number in user passwords.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f0e601b9-b619-4247-9624-c33605e96fd8";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "user";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "users";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "password_lowercase";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
@@ -116,7 +116,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set whether to require at least one lowecase letter in user passwords.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "973b6773-dac0-4041-844e-71c48fc9542c";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "user";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "users";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "password_uppercase";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
@@ -124,7 +124,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set whether to require at least one uppercase letter in user passwords.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a6b6d9cc-fb25-4bc3-ad85-fa530d9b334d";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "user";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "users";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "password_special";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
