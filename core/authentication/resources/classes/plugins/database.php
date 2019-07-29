@@ -43,7 +43,7 @@ class plugin_database {
 				$sql .= "where lower(username) = lower(:username) ";
 				//$sql .= "where username = '".$this->username."' ";
 			}
-			if ($_SESSION["user"]["unique"]["text"] == "global") {
+			if ($_SESSION["users"]["unique"]["text"] == "global") {
 				//unique username - global (example: email address)
 			}
 			else {
@@ -55,7 +55,7 @@ class plugin_database {
 			//echo $sql."<br />\n";
 			//echo "domain name: ".$this->domain_name;
 			$prep_statement = $db->prepare(check_sql($sql));
-			if ($_SESSION["user"]["unique"]["text"] != "global") {
+			if ($_SESSION["users"]["unique"]["text"] != "global") {
 				$prep_statement->bindParam(':domain_uuid', $this->domain_uuid);
 			}
 			if (strlen($this->key) > 30) {
@@ -71,7 +71,7 @@ class plugin_database {
 				foreach ($result as &$row) {
 
 					//get the domain uuid when users are unique globally
-						if ($_SESSION["user"]["unique"]["text"] == "global" && $row["domain_uuid"] != $this->domain_uuid) {
+						if ($_SESSION["users"]["unique"]["text"] == "global" && $row["domain_uuid"] != $this->domain_uuid) {
 							//set the domain_uuid
 								$this->domain_uuid = $row["domain_uuid"];
 								$this->domain_name = $_SESSION['domains'][$this->domain_uuid]['domain_name'];
