@@ -27,96 +27,88 @@
 	if ($domains_processed == 1) {
 
 		//add the music_on_hold list to the database
-		$sql = "select count(*) as num_rows from v_conference_profiles; ";
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] == 0) {
+		$sql = "select count(*) from v_conference_profiles; ";
+		$database = new database;
+		$num_rows = $database->select($sql, null, 'column');
+		if ($num_rows == 0) {
 
-				//set the directory
-					$xml_dir = $_SESSION["switch"]["conf"]["dir"].'/autoload_configs';
-					$xml_file = $xml_dir."/conference.conf";
-					$xml_file_alt = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH.'/resources/templates/conf/autoload_configs/conference.conf';
+			//set the directory
+				$xml_dir = $_SESSION["switch"]["conf"]["dir"].'/autoload_configs';
+				$xml_file = $xml_dir."/conference.conf";
+				$xml_file_alt = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH.'/resources/templates/conf/autoload_configs/conference.conf';
 
-				//rename the file
-					if (file_exists($xml_dir.'/conference.conf.xml.noload')) {
-						rename($xml_dir.'/conference.conf.xml.noload', $xml_dir.'/conference.conf');
-					}
+			//rename the file
+				if (file_exists($xml_dir.'/conference.conf.xml.noload')) {
+					rename($xml_dir.'/conference.conf.xml.noload', $xml_dir.'/conference.conf');
+				}
 
-				//load the xml and save it into an array
-					if (file_exists($xml_file)) {
-						$xml_string = file_get_contents($xml_file);
-					}
-					elseif (file_exists($xml_file_alt)) {
-						$xml_string = file_get_contents($xml_file_alt);
-					}
-					$xml_object = simplexml_load_string($xml_string);
-					$json = json_encode($xml_object);
-					$conf_array = json_decode($json, true);
+			//load the xml and save it into an array
+				if (file_exists($xml_file)) {
+					$xml_string = file_get_contents($xml_file);
+				}
+				elseif (file_exists($xml_file_alt)) {
+					$xml_string = file_get_contents($xml_file_alt);
+				}
+				$xml_object = simplexml_load_string($xml_string);
+				$json = json_encode($xml_object);
+				$conf_array = json_decode($json, true);
 
-				//process the array
-					foreach ($conf_array['profiles']['profile'] as $row) {
+			//process the array
+				foreach ($conf_array['profiles']['profile'] as $row) {
 
-						//get the data from the array
-							$profile_name = $row['@attributes']['name'];
-							//echo $profile_name."<br />\n";
+					//get the data from the array
+						$profile_name = $row['@attributes']['name'];
+						//echo $profile_name."<br />\n";
 
-						//insert the data into the database
-							$conference_profile_uuid = uuid();
-							$sql = "insert into v_conference_profiles ";
-							$sql .= "(";
-							//$sql .= "domain_uuid, ";
-							$sql .= "conference_profile_uuid, ";
-							$sql .= "profile_name, ";
-							$sql .= "profile_enabled ";
-							$sql .= ") ";
-							$sql .= "values ";
-							$sql .= "( ";
-							//$sql .= "'".$domain_uuid."', ";
-							$sql .= "'".$conference_profile_uuid."', ";
-							$sql .= "'".check_str($profile_name)."', ";
-							$sql .= "'true' ";
-							$sql .= ");";
-							//echo $sql."\n";
-							$db->exec(check_sql($sql));
-							unset($sql);
+					//insert the data into the database
+						$conference_profile_uuid = uuid();
+						$array['conference_profiles'][0]['conference_profile_uuid'] = $conference_profile_uuid;
+						$array['conference_profiles'][0]['profile_name'] = $profile_name;
+						$array['conference_profiles'][0]['profile_enabled'] = 'true';
 
-						//insert the profile params
-							foreach ($row['param'] as $p) {
-								//get the name
-									//print_r($p);
-									$profile_param_name = $p['@attributes']['name'];
-									$profile_param_value = $p['@attributes']['value'];
-									$profile_param_enabled = 'true';
+						$p = new permissions;
+						$p->add('conference_profile_add', 'temp');
 
-								//add the coference profile params
-									$conference_profile_param_uuid = uuid();
-									$sql = "insert into v_conference_profile_params ";
-									$sql .= "(";
-									$sql .= "conference_profile_uuid, ";
-									$sql .= "conference_profile_param_uuid, ";
-									$sql .= "profile_param_name, ";
-									$sql .= "profile_param_value, ";
-									$sql .= "profile_param_enabled ";
-									$sql .= ") ";
-									$sql .= "values ";
-									$sql .= "( ";
-									$sql .= "'".$conference_profile_uuid."', ";
-									$sql .= "'".$conference_profile_param_uuid."', ";
-									$sql .= "'".$profile_param_name."', ";
-									$sql .= "'".$profile_param_value."', ";
-									$sql .= "'".$profile_param_enabled."' ";
-									$sql .= ");";
-									//echo $sql."\n";
-									$db->exec(check_sql($sql));
-									unset($sql);
-							}
+						$database = new database;
+						$database->app_name = 'conference_profiles';
+						$database->app_uuid = 'c33e2c2a-847f-44c1-8c0d-310df5d65ba9';
+						$database->save($array);
+						unset($array);
 
-					}
+						$p->delete('conference_profile_add', 'temp');
 
-			} //if num_rows
-		} //if prep_statement
+					//insert the profile params
+						foreach ($row['param'] as $p) {
+							//get the name
+								//print_r($p);
+								$profile_param_name = $p['@attributes']['name'];
+								$profile_param_value = $p['@attributes']['value'];
+								$profile_param_enabled = 'true';
+
+							//add the coference profile params
+								$conference_profile_param_uuid = uuid();
+								$array['conference_profile_params'][0]['conference_profile_uuid'] = $conference_profile_uuid;
+								$array['conference_profile_params'][0]['conference_profile_param_uuid'] = $conference_profile_param_uuid;
+								$array['conference_profile_params'][0]['profile_param_name'] = $profile_param_name;
+								$array['conference_profile_params'][0]['profile_param_value'] = $profile_param_value;
+								$array['conference_profile_params'][0]['profile_param_enabled'] = $profile_param_enabled;
+
+								$p = new permissions;
+								$p->add('conference_profile_param_add', 'temp');
+
+								$database = new database;
+								$database->app_name = 'conference_profiles';
+								$database->app_uuid = 'c33e2c2a-847f-44c1-8c0d-310df5d65ba9';
+								$database->save($array);
+								unset($array);
+
+								$p->delete('conference_profile_param_add', 'temp');
+						}
+
+				}
+
+		}
+		unset($sql, $num_rows);
 
 	}
 
