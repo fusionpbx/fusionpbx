@@ -103,11 +103,11 @@
 	}
 
 //retrieve password requirements
-	$required['length'] = $_SESSION['user']['password_length']['numeric'];
-	$required['number'] = ($_SESSION['user']['password_number']['boolean'] == 'true') ? true : false;
-	$required['lowercase'] = ($_SESSION['user']['password_lowercase']['boolean'] == 'true') ? true : false;
-	$required['uppercase'] = ($_SESSION['user']['password_uppercase']['boolean'] == 'true') ? true : false;
-	$required['special'] = ($_SESSION['user']['password_special']['boolean'] == 'true') ? true : false;
+	$required['length'] = $_SESSION['users']['password_length']['numeric'];
+	$required['number'] = ($_SESSION['users']['password_number']['boolean'] == 'true') ? true : false;
+	$required['lowercase'] = ($_SESSION['users']['password_lowercase']['boolean'] == 'true') ? true : false;
+	$required['uppercase'] = ($_SESSION['users']['password_uppercase']['boolean'] == 'true') ? true : false;
+	$required['special'] = ($_SESSION['users']['password_special']['boolean'] == 'true') ? true : false;
 
 //prepare the data
 	if (count($_POST) > 0) {
