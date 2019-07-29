@@ -58,16 +58,16 @@
 	ini_set(max_execution_time,7200);
 
 //get the http get values and set them as php variables
-	$action = check_str($_POST["action"]);
-	$order_by = check_str($_POST["order_by"]);
-	$order = check_str($_POST["order"]);
-	$from_row = check_str($_POST["from_row"]);
-	$delimiter = check_str($_POST["data_delimiter"]);
-	$enclosure = check_str($_POST["data_enclosure"]);
-	$destination_type = check_str($_POST["destination_type"]);
-	$destination_action = check_str($_POST["destination_action"]);
-	$destination_context = check_str($_POST["destination_context"]);
-	$destination_record = check_str($_POST["destination_record"]);
+	$action = $_POST["action"];
+	$order_by = $_POST["order_by"];
+	$order = $_POST["order"];
+	$from_row = $_POST["from_row"];
+	$delimiter = $_POST["data_delimiter"];
+	$enclosure = $_POST["data_enclosure"];
+	$destination_type = $_POST["destination_type"];
+	$destination_action = $_POST["destination_action"];
+	$destination_context = $_POST["destination_context"];
+	$destination_record = $_POST["destination_record"];
 
 //set the defaults
 	if (strlen($destination_type) == 0) { $destination_type = 'inbound'; }
@@ -85,7 +85,7 @@
 //copy the csv file
 	//$_POST['submit'] == "Upload" &&
 	if ( is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('destination_upload')) {
-		if (check_str($_POST['type']) == 'csv') {
+		if ($_POST['type'] == 'csv') {
 			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name']);
 			$save_msg = "Uploaded file to ".$_SESSION['server']['temp']['dir']."/". htmlentities($_FILES['ulfile']['name']);
 			//system('chmod -R 744 '.$_SESSION['server']['temp']['dir'].'*');
