@@ -320,11 +320,11 @@
 		echo "		}\n";
 		echo "	}\n";
 
-		$req['length'] = $_SESSION['security']['password_length']['numeric'];
-		$req['number'] = ($_SESSION['security']['password_number']['boolean'] == 'true') ? true : false;
-		$req['lowercase'] = ($_SESSION['security']['password_lowercase']['boolean'] == 'true') ? true : false;
-		$req['uppercase'] = ($_SESSION['security']['password_uppercase']['boolean'] == 'true') ? true : false;
-		$req['special'] = ($_SESSION['security']['password_special']['boolean'] == 'true') ? true : false;
+		$req['length'] = $_SESSION['users']['password_length']['numeric'];
+		$req['number'] = ($_SESSION['users']['password_number']['boolean'] == 'true') ? true : false;
+		$req['lowercase'] = ($_SESSION['users']['password_lowercase']['boolean'] == 'true') ? true : false;
+		$req['uppercase'] = ($_SESSION['users']['password_uppercase']['boolean'] == 'true') ? true : false;
+		$req['special'] = ($_SESSION['users']['password_special']['boolean'] == 'true') ? true : false;
 
 		echo "	function check_password_strength(pwd) {\n";
 		echo "		if ($('#password').val() != '' || $('#password_confirm').val() != '') {\n";
