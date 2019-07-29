@@ -27,104 +27,94 @@
 	if ($domains_processed == 1) {
 
 		//add the conference controls list to the database
-		$sql = "select count(*) as num_rows from v_conference_controls; ";
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] == 0) {
+		$sql = "select count(*) from v_conference_controls; ";
+		$database = new database;
+		$num_rows = $database->select($sql, null, 'column');
+		if ($num_rows == 0) {
 
-				//set the directory
-					$xml_dir = $_SESSION["switch"]["conf"]["dir"].'/autoload_configs';
-					$xml_file = $xml_dir."/conference.conf";
-					$xml_file_alt = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH.'/resources/templates/conf/autoload_configs/conference.conf';
+			//set the directory
+				$xml_dir = $_SESSION["switch"]["conf"]["dir"].'/autoload_configs';
+				$xml_file = $xml_dir."/conference.conf";
+				$xml_file_alt = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH.'/resources/templates/conf/autoload_configs/conference.conf';
 
-				//rename the file
-					if (file_exists($xml_dir.'/conference.conf.xml.noload')) {
-						rename($xml_dir.'/conference.conf.xml.noload', $xml_dir.'/conference.conf');
-					}
+			//rename the file
+				if (file_exists($xml_dir.'/conference.conf.xml.noload')) {
+					rename($xml_dir.'/conference.conf.xml.noload', $xml_dir.'/conference.conf');
+				}
 
-				//load the xml and save it into an array
-					if (file_exists($xml_file)) {
-						$xml_string = file_get_contents($xml_file);
-					}
-					elseif (file_exists($xml_file_alt)) {
-						$xml_string = file_get_contents($xml_file_alt);
-					}
-					$xml_object = simplexml_load_string($xml_string);
-					$json = json_encode($xml_object);
-					$conf_array = json_decode($json, true);
+			//load the xml and save it into an array
+				if (file_exists($xml_file)) {
+					$xml_string = file_get_contents($xml_file);
+				}
+				elseif (file_exists($xml_file_alt)) {
+					$xml_string = file_get_contents($xml_file_alt);
+				}
+				$xml_object = simplexml_load_string($xml_string);
+				$json = json_encode($xml_object);
+				$conf_array = json_decode($json, true);
 
-				//process the array
-					foreach ($conf_array['caller-controls']['group'] as $row) {
+			//process the array
+				foreach ($conf_array['caller-controls']['group'] as $row) {
 
-						//get the data from the array
-							$control_name = $row['@attributes']['name'];
-							//echo $profile_name."<br />\n";
+					//get the data from the array
+						$control_name = $row['@attributes']['name'];
+						//echo $profile_name."<br />\n";
 
-						//insert the data into the database
-							$conference_control_uuid = uuid();
-							$sql = "insert into v_conference_controls ";
-							$sql .= "(";
-							//$sql .= "domain_uuid, ";
-							$sql .= "conference_control_uuid, ";
-							$sql .= "control_name, ";
-							$sql .= "control_enabled ";
-							$sql .= ") ";
-							$sql .= "values ";
-							$sql .= "( ";
-							//$sql .= "'".$domain_uuid."', ";
-							$sql .= "'".$conference_control_uuid."', ";
-							$sql .= "'".check_str($control_name)."', ";
-							$sql .= "'true' ";
-							$sql .= ");";
-							//echo $sql."\n";
-							$db->exec(check_sql($sql));
-							unset($sql);
+					//insert the data into the database
+						$conference_control_uuid = uuid();
+						$array['conference_controls'][0]['conference_control_uuid'] = $conference_control_uuid;
+						$array['conference_controls'][0]['control_name'] = $control_name;
+						$array['conference_controls'][0]['control_enabled'] = 'true';
 
-						//insert the profile params
-							foreach ($row['control'] as $p) {
+						$p = new permissions;
+						$p->add('conference_control_add', 'temp');
 
-								//get the name
-									//print_r($p);
-									$control_action = $p['@attributes']['action'];
-									$control_digits = $p['@attributes']['digits'];
-									$control_data = $p['@attributes']['data'];
-									$control_enabled = 'true';
+						$database = new database;
+						$database->app_name = 'conference_controls';
+						$database->app_uuid = 'e1ad84a2-79e1-450c-a5b1-7507a043e048';
+						$database->save($array);
+						unset($array);
 
-								//add the coference profile params
-									$conference_control_detail_uuid = uuid();
-									$sql = "insert into v_conference_control_details ";
-									$sql .= "(";
-									$sql .= "conference_control_uuid, ";
-									$sql .= "conference_control_detail_uuid, ";
-									$sql .= "control_digits, ";
-									$sql .= "control_action, ";
-									if (strlen($control_data) > 0) {
-										$sql .= "control_data, ";
-									}
-									$sql .= "control_enabled ";
-									$sql .= ") ";
-									$sql .= "values ";
-									$sql .= "( ";
-									$sql .= "'".$conference_control_uuid."', ";
-									$sql .= "'".$conference_control_detail_uuid."', ";
-									$sql .= "'".$control_digits."', ";
-									$sql .= "'".$control_action."', ";
-									if (strlen($control_data) > 0) {
-										$sql .= "'".$control_data."', ";
-									}
-									$sql .= "'".$control_enabled."' ";
-									$sql .= ");";
-									//echo $sql."\n";
-									$db->exec(check_sql($sql));
-									unset($sql);
-							}
+						$p->delete('conference_control_add', 'temp');
 
-					}
+					//insert the profile params
+						foreach ($row['control'] as $p) {
 
-			} //if num_rows
-		} //if prep_statement
+							//get the name
+								//print_r($p);
+								$control_action = $p['@attributes']['action'];
+								$control_digits = $p['@attributes']['digits'];
+								$control_data = $p['@attributes']['data'];
+								$control_enabled = 'true';
+
+							//add the coference profile params
+								$conference_control_detail_uuid = uuid();
+								$array['conference_contro_details'][0]['conference_control_uuid'] = $conference_control_uuid;
+								$array['conference_contro_details'][0]['conference_control_detail_uuid'] = $conference_control_detail_uuid;
+								$array['conference_contro_details'][0]['control_digits'] = $control_digits;
+								$array['conference_contro_details'][0]['control_action'] = $control_action;
+								if (strlen($control_data) > 0) {
+									$array['conference_contro_details'][0]['control_data'] = $control_data;
+								}
+								$array['conference_contro_details'][0]['control_enabled'] = $control_enabled;
+
+								$p = new permissions;
+								$p->add('conference_contro_detail_add', 'temp');
+
+								$database = new database;
+								$database->app_name = 'conference_controls';
+								$database->app_uuid = 'e1ad84a2-79e1-450c-a5b1-7507a043e048';
+								$database->save($array);
+								unset($array);
+
+								$p->delete('conference_contro_detail_add', 'temp');
+
+						}
+
+				}
+
+		}
+		unset($sql, $num_rows);
 
 	}
 
