@@ -56,7 +56,7 @@
 		$y++;
 
 	//cache details
-		$apps[$x]['cache']['key'] = "configuration:acl.conf";
+		$apps[$x]['cache']['key'] = "configuration.acl.conf";
 
 	//schema details
 		$y=0;
