@@ -70,6 +70,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "phrase_domain";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
+	//cache details
+		$apps[$x]['cache']['key'] = "languages.\${phrase_language}";
+
 	//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_phrases";
