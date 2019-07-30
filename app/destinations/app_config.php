@@ -109,6 +109,9 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 
+	//cache details
+		$apps[$x]['cache']['key'] = "dialplan.\${destination_context}";
+
 	//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_destinations";
