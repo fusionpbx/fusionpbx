@@ -264,7 +264,6 @@
 		$y++;
 
 	//cache details
-		$y=0;
 		$apps[$x]['cache']['key'] = "directory.\${extension}@\${user_context}";
 
 	//schema details
