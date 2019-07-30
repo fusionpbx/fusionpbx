@@ -127,7 +127,6 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 
 	//cache details
-		$y=0;
 		$apps[$x]['cache']['key'] = "dialplan.\${ivr_menu_context}";
 
 	//schema details
