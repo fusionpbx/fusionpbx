@@ -85,6 +85,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "dialplan_all";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
+	//cache details
+		$apps[$x]['cache']['key'] = "dialplan.\${dialplan_context}";
+
 	//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_dialplans";
