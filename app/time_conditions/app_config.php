@@ -301,4 +301,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Canada Holiday';
 
+	//cache details
+		$apps[$x]['cache']['key'] = "dialplan.\${dialplan_context}";
+
 ?>
