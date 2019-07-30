@@ -83,6 +83,9 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 
+	//cache details
+		$apps[$x]['cache']['key'] = "dialplan.\${domain_name}";
+
 	//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_conferences";
