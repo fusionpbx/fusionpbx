@@ -79,6 +79,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "sip_profile_domain_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
+	//cache details
+		$apps[$x]['cache']['key'] = "configuration.sofia.conf.\${sip_profile_name}";
+
 	//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_sip_profiles";
