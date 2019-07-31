@@ -87,6 +87,7 @@
 				if ($name_array[1] == $_SESSION['domain_name']) {
 					$conference_name = $name_array[0];
 					if (is_uuid($conference_name)) {
+						$meeting_uuid = $conference_name;
 						$sql = "select ";
 						$sql .= "cr.conference_room_name, ";
 						$sql .= "v.participant_pin ";
@@ -103,7 +104,9 @@
 						$participant_pin = $conference['participant_pin'];
 						unset ($parameters, $conference, $sql);
 					}
+					
 					else {
+						$meeting_uuid = $conference_name;
 						$sql = "select ";
 						$sql .= "conference_pin_number ";
 						$sql .= "from ";
@@ -116,19 +119,20 @@
 						$database = new database;
 						$participant_pin = $database->select($sql, $parameters, 'column');
 						unset ($parameters, $sql);
+						
 					}
 
 					if (permission_exists('conference_interactive_view')) {
-						$td_onclick = "onclick=\"document.location.href='conference_interactive.php?c=".escape($conference_name)."'\"";
+						$td_onclick = "onclick=\"document.location.href='conference_interactive.php?c=".escape($meeting_uuid)."'\"";
 					}
 					echo "<tr>\n";
 					echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">";
-					echo (permission_exists('conference_interactive_view')) ? "<a href='conference_interactive.php?c=".escape($conference_name)."'>".escape($conference_name)."</a>" : escape($conference_name);
+					echo (permission_exists('conference_interactive_view')) ? "<a href='conference_interactive.php?c=".escape($meeting_uuid)."'>".escape($conference_name)."</a>" : escape($conference_name);
 					echo "</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">".escape($participant_pin)."</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">".escape($member_count)."</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">";
-					echo (permission_exists('conference_interactive_view')) ? "<a href='conference_interactive.php?c=".escape($conference_name)."'>".$text['button-view']."</a>" : "&nbsp;";
+					echo (permission_exists('conference_interactive_view')) ? "<a href='conference_interactive.php?c=".escape($meeting_uuid)."'>".$text['button-view']."</a>" : "&nbsp;";
 					echo "</td>\n";
 					echo "</tr>\n";
 
