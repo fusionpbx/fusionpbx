@@ -1,0 +1,23 @@
+<extension name="bind_digit_action" number="" continue="true" app_uuid="7e007a4d-886b-4cdf-81f4-da9eb4689f1c" enabled="false">
+	<!-- sets outbound calls to aleg and forwarded and follow me calls to peer -->
+	<condition field="${from_user_exists}" expression="true" break="never">
+		<action application="set" data="bind_target=aleg" inline="true"/>
+		<anti-action application="set" data="bind_target=peer" inline="true"/>
+	</condition>
+	<!-- sets local calls to both -->
+	<condition field="${from_user_exists}" expression="true" break="never"/>
+	<condition field="${user_exists}" expression="true" break="never">
+		<action application="set" data="bind_target=both" inline="true"/>
+	</condition>
+	<!-- sets inbound calls to peer -->
+	<condition field="${source_context}" expression="public" break="never">
+		<action application="set" data="bind_target=peer" inline="true"/>
+	</condition>
+	<condition field="" expression="">
+		<action application="bind_digit_action" data="local,*1,exec:execute_extension,dx XML ${context},${bind_target}"/>
+		<action application="bind_digit_action" data="local,*2,exec:record_session,${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}/${uuid}.${record_ext},${bind_target}"/>
+		<action application="bind_digit_action" data="local,*3,exec:execute_extension,cf XML ${context},${bind_target}"/>
+		<action application="bind_digit_action" data="local,*4,exec:execute_extension,att_xfer XML ${context},${bind_target}"/>
+		<action application="digit_action_set_realm" data="local"/>
+	</condition>
+</extension>
