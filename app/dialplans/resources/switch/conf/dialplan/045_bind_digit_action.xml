@@ -8,7 +8,7 @@
 		<action application="set" data="bind_target=both" inline="true"/>
 	</condition>
 	<!-- sets inbound calls to peer -->
-	<condition field="${source_context}" expression="public" break="never">
+	<condition field="${from_user_exists}" expression="false" break="never">
 		<action application="set" data="bind_target=peer" inline="true"/>
 	</condition>
 	<condition field="" expression="">
