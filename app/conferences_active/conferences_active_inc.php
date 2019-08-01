@@ -102,6 +102,7 @@
 						$conference_name = $conference['conference_room_name'];
 						$participant_pin = $conference['participant_pin'];
 						unset ($parameters, $conference, $sql);
+						$conference_id = $name_array[0];
 					}
 					else {
 						$sql = "select ";
@@ -116,6 +117,7 @@
 						$database = new database;
 						$participant_pin = $database->select($sql, $parameters, 'column');
 						unset ($parameters, $sql);
+						$conference_id = $conference_name;
 					}
 
 					if (permission_exists('conference_interactive_view')) {
@@ -123,12 +125,12 @@
 					}
 					echo "<tr>\n";
 					echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">";
-					echo (permission_exists('conference_interactive_view')) ? "<a href='conference_interactive.php?c=".escape($conference_name)."'>".escape($conference_name)."</a>" : escape($conference_name);
+					echo (permission_exists('conference_interactive_view')) ? "<a href='conference_interactive.php?c=".escape($conference_id)."'>".escape($conference_name)."</a>" : escape($conference_name);
 					echo "</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">".escape($participant_pin)."</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">".escape($member_count)."</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">";
-					echo (permission_exists('conference_interactive_view')) ? "<a href='conference_interactive.php?c=".escape($conference_name)."'>".$text['button-view']."</a>" : "&nbsp;";
+					echo (permission_exists('conference_interactive_view')) ? "<a href='conference_interactive.php?c=".escape($conference_id)."'>".$text['button-view']."</a>" : "&nbsp;";
 					echo "</td>\n";
 					echo "</tr>\n";
 
