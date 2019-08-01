@@ -214,5 +214,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Video / Audio Toggle (VVX 500-600). 0=Disabled - 1=Enabled.";
-		$y++;		
+		$y++;	
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "09dad6aa-69b0-46d4-9b5f-5930d0af631b";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_headset_mode";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom headset memory mode 0=Disabled - 1=Enabled ";
+		$y++;
 ?>
