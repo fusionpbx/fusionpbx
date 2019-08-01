@@ -2,10 +2,8 @@
 	<!-- sets outbound calls to aleg and forwarded and follow me calls to peer -->
 	<condition field="${from_user_exists}" expression="true" break="never">
 		<action application="set" data="bind_target=aleg" inline="true"/>
-		<anti-action application="set" data="bind_target=peer" inline="true"/>
 	</condition>
 	<!-- sets local calls to both -->
-	<condition field="${from_user_exists}" expression="true" break="never"/>
 	<condition field="${user_exists}" expression="true" break="never">
 		<action application="set" data="bind_target=both" inline="true"/>
 	</condition>
