@@ -223,4 +223,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom headset memory mode 0=Disabled - 1=Enabled ";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "947aa9ea-5769-4ef6-8c55-4144962359c5";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_one_touch_voicemail";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "One touch voicemail 0=Disabled - 1=Enabled ";
+		$y++;
+
 ?>
