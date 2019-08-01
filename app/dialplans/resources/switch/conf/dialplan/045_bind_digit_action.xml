@@ -1,5 +1,5 @@
 <extension name="bind_digit_action" number="" continue="true" app_uuid="7e007a4d-886b-4cdf-81f4-da9eb4689f1c" enabled="false">
-	<!-- sets outbound calls to aleg and forwarded and follow me calls to peer -->
+	<!-- sets outbound calls to aleg -->
 	<condition field="${from_user_exists}" expression="true" break="never">
 		<action application="set" data="bind_target=aleg" inline="true"/>
 	</condition>
