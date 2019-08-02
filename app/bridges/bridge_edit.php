@@ -28,7 +28,8 @@
 
 //check permissions
 	if (!permission_exists('bridge_add') && !permission_exists('bridge_edit')) {
-		echo "access denied"; exit;
+		echo "access denied";
+		exit;
 	}
 
 //add multi-lingual support
@@ -79,17 +80,17 @@
 				return;
 			}
 
-		//set the domain_uuid
-				$_POST["domain_uuid"] = $_SESSION["domain_uuid"];
-
 		//add the bridge_uuid
-			if (strlen($_POST["bridge_uuid"]) == 0) {
+			if (strlen($bridge_uuid) == 0) {
 				$bridge_uuid = uuid();
-				$_POST["bridge_uuid"] = $bridge_uuid;
 			}
 
 		//prepare the array
-			$array['bridges'][0] = $_POST;
+			$array['bridges'][0]['bridge_uuid'] = $bridge_uuid;
+			$array['bridges'][0]['domain_uuid'] = $_SESSION["domain_uuid"];
+			$array['bridges'][0]['bridge_name'] = $bridge_name;
+			$array['bridges'][0]['bridge_destination'] = $bridge_destination;
+			$array['bridges'][0]['bridge_enabled'] = $bridge_enabled;
 
 		//save to the data
 			$database = new database;
