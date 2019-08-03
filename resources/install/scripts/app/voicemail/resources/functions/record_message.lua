@@ -138,9 +138,14 @@
 			        end
 			        if (api_key1 ~= '') then
 			                -- search in memcache first, azure documentation claims that the access token is valid for 10 minutes
-			                local cache = require "resources.functions.cache";
+			                local transcription_use_cache = settings:get('voicemail', 'transcription_use_cache', 'text') or '';
+			                
+			                if (transcription_use_cache == 'true') then
+			                	local cache = require "resources.functions.cache";
+			                	local access_token_result = cache.get(key)
+			                end
+			                
 			                local key = "app:voicemail:azure:access_token";
-			                local access_token_result = cache.get(key)
 
 			                if access_token_result then
 			                        if (debug["info"]) then
@@ -170,11 +175,13 @@
 			                                end
 			                                return ''
 			                        end
-
-			                        cache.set(key, access_token_result, 120);
-			                        if (debug["info"]) then
-			                                freeswitch.consoleLog("notice", "[voicemail] Azure access_token saved into memcached: " .. access_token_result .. "\n");
-			                        end
+									
+									if (transcription_use_cache == 'true') then
+				                        cache.set(key, access_token_result, 120);
+				                        if (debug["info"]) then
+				                                freeswitch.consoleLog("notice", "[voicemail] Azure access_token saved into memcached: " .. access_token_result .. "\n");
+				                        end
+				                 	end
 			                end
 
 			                transcribe_cmd = "curl -X POST \"https://"..api_server_region.."stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=".. transcribe_language .."&format=detailed\" -H 'Authorization: Bearer " .. access_token_result .. "' -H 'Content-type: audio/wav; codec=\"audio/pcm\"; samplerate=8000; trustsourcerate=false' --data-binary @"..file_path
