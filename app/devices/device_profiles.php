@@ -42,32 +42,31 @@
 	$text = $language->get();
 
 //get the http values and set them as variables
-	$search = check_str($_GET["search"]);
-	if (isset($_GET["order_by"])) {
-		$order_by = check_str($_GET["order_by"]);
-		$order = check_str($_GET["order"]);
-	}
+	$search = $_GET["search"];
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
 //additional includes
 	require_once "resources/header.php";
 	$document['title'] = $text['title-profiles'];
 	require_once "resources/paging.php";
 
+//common sql
+	$sql_where = "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+	if ($search != '') {
+		$sql_where .= "and (";
+		$sql_where .= " 	device_profile_name like :search ";
+		$sql_where .= " 	or device_profile_description like :search ";
+		$sql_where .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
+	$parameters['domain_uuid'] = $domain_uuid;
+
 //prepare to page the results
-	$sql = "select count(*) as num_rows from v_device_profiles ";
-	$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
-	if (strlen($search) > 0) {
-		$sql .= "and (";
-		$sql .= " 	device_profile_name like '%".$search."%' ";
-		$sql .= " 	or device_profile_description like '%".$search."%' ";
-		$sql .= ") ";
-	}
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-	$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		$num_rows = ($row['num_rows'] > 0) ? $row['num_rows'] : 0;
-	}
+	$sql = "select count(*) from v_device_profiles ";
+	$sql .= $sql_where;
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -78,25 +77,12 @@
 	$offset = $rows_per_page * $page;
 
 //get the device profiles
-	$sql = "select * from v_device_profiles ";
-	$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
-	if (strlen($search) > 0) {
-		$sql .= "and (";
-		$sql .= " 	device_profile_name like '%".$search."%' ";
-		$sql .= " 	or device_profile_description like '%".$search."%' ";
-		$sql .= ") ";
-	}
-	if (strlen($order_by) == 0) {
-		$sql .= "order by device_profile_name asc ";
-	}
-	else {
-		$sql .= "order by ".$order_by." ".$order." ";
-	}
-	$sql .= "limit ".$rows_per_page." offset ".$offset." ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$device_profiles = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$sql = str_replace('count(*)', '*', $sql);
+	$sql .= order_by($order_by, $order, 'device_profile_name');
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$device_profiles = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //set row styles
 	$c = 0;
@@ -134,13 +120,13 @@
 	echo "</td>\n";
 	echo "<tr>\n";
 
-	if (is_array($device_profiles)) {
+	if (is_array($device_profiles) && @sizeof($device_profiles) != 0) {
 		foreach($device_profiles as $row) {
 			$tr_link = (permission_exists('device_profile_edit')) ? "href='device_profile_edit.php?id=".escape($row['device_profile_uuid'])."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			echo (permission_exists('device_profile_edit')) ? "<a href='device_profile_edit.php?id=".escape($row['device_profile_uuid'])."'>".escape($row['device_profile_name'])."</a>" : escape($row['device_profile_name']);
-			echo ($row['domain_uuid'] == '') ? "&nbsp;&nbsp;&nbsp;&nbsp;<span style='color: #888; font-size: 80%'>".$text['select-global']."</span>" : null;
+			echo !is_uuid($row['domain_uuid']) ? "&nbsp;&nbsp;&nbsp;&nbsp;<span style='color: #888; font-size: 80%'>".$text['select-global']."</span>" : null;
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.escape($row['device_profile_enabled'])]."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".escape($row['device_profile_description'])."&nbsp;</td>\n";
@@ -154,9 +140,9 @@
 			echo "	</td>\n";
 			echo "</tr>\n";
 			$c = ($c == 0) ? 1 : 0;
-		} //end foreach
-		unset($sql, $device_profiles, $row_count);
-	} //end if results
+		}
+	}
+	unset($device_profiles);
 
 	echo "<tr>\n";
 	echo "<td colspan='4'>\n";

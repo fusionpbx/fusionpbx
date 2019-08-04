@@ -30,7 +30,8 @@ if ($domains_processed == 1) {
 		$sql .= "enabled = 'true' ";
 		$sql .= "where enabled is null ";
 		$sql .= "or enabled = '' ";
-		$db->exec(check_sql($sql));
+		$database = new database;
+		$database->execute($sql);
 		unset($sql);
 
 	//set the device key vendor
@@ -38,117 +39,108 @@ if ($domains_processed == 1) {
 		$sql .= "where d.device_uuid = k.device_uuid  ";
 		$sql .= "and k.device_uuid is not null ";
 		$sql .= "and k.device_key_vendor is null ";
-		$s = $db->prepare($sql);
-		$s->execute();
-		$device_keys = $s->fetchAll(PDO::FETCH_ASSOC);
-		foreach ($device_keys as &$row) {
-			$sql = "update v_device_keys ";
-			$sql .= "set device_key_vendor = '".$row["device_vendor"]."' ";
-			$sql .= "where device_key_uuid = '".$row["device_key_uuid"]."';\n ";
-			$db->exec(check_sql($sql));
+		$database = new database;
+		$device_keys = $database->select($sql, null, 'all');
+		if (is_array($device_keys) && @sizeof($device_keys)) {
+			foreach ($device_keys as $index => &$row) {
+				$array['device_keys'][$index]['device_key_uuid'] = $row["device_key_uuid"];
+				$array['device_keys'][$index]['device_key_vendor'] = $row["device_vendor"];
+			}
+			if (is_array($array) && @sizeof($array)) {
+				$p = new permissions;
+				$p->add('device_key_edit', 'temp');
+
+				$database = new database;
+				$database->app_name = 'devices';
+				$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+				$database->save($array);
+				$response = $database->message;
+				unset($array);
+
+				$p->delete('device_key_edit', 'temp');
+			}
 		}
-		unset($device_keys, $sql);
+		unset($sql, $device_keys);
 
 	//add device vendor functions to the database
-		$sql = "select count(*) as num_rows from v_device_vendors; ";
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] == 0) {
+		$sql = "select count(*) from v_device_vendors; ";
+		$database = new database;
+		$num_rows = $database->select($sql, null, 'column');
+		unset($sql);
 
-				//get the vendor array
-					require_once $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH.'/app/devices/app_config.php';
+		if ($num_rows == 0) {
 
-				//get the groups and create an array to use the name to get the uuid
-					$sql = "select * from v_groups; ";
-					$prep_statement = $db->prepare($sql);
-					$prep_statement->execute();
-					$groups = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-					unset($prep_statement);
-					foreach ($groups as $row) {
-						if ($row['domain_uuid'] == '') {
-							$group_uuids[$row['group_name']] = $row['group_uuid'];
-						}
+			//get the vendor array
+				require_once $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH.'/app/devices/app_config.php';
+
+			//get the groups and create an array to use the name to get the uuid
+				$sql = "select * from v_groups ";
+				$database = new database;
+				$groups = $database->select($sql, null, 'all');
+				foreach ($groups as $row) {
+					if ($row['domain_uuid'] == '') {
+						$group_uuids[$row['group_name']] = $row['group_uuid'];
 					}
+				}
+				unset($sql, $groups, $row);
 
-				//process the array
-					foreach ($vendors as $vendor) {
+			//build the array
+				if (is_array($vendors) && @sizeof($vendors) != 0) {
+					foreach ($vendors as $index_1 => $vendor) {
 						//insert the data into the database
 							$device_vendor_uuid = uuid();
-							$sql = "insert into v_device_vendors ";
-							$sql .= "(";
-							$sql .= "device_vendor_uuid, ";
-							$sql .= "name, ";
-							$sql .= "enabled ";
-							$sql .= ") ";
-							$sql .= "values ";
-							$sql .= "( ";
-							$sql .= "'".$device_vendor_uuid."', ";
-							$sql .= "'".$vendor['name']."', ";
-							$sql .= "'true' ";
-							$sql .= ");";
-							//echo $sql."\n";
-							$db->exec(check_sql($sql));
-							unset($sql);
+							$array['device_vendors'][$index_1]['device_vendor_uuid'] = $device_vendor_uuid;
+							$array['device_vendors'][$index_1]['name'] = $vendor['name'];
+							$array['device_vendors'][$index_1]['enabled'] = 'true';
 
 						//add the vendor functions
-							foreach ($vendor['functions'] as $function) {
-								//get the id
-									$device_vendor_function_uuid = uuid();
-								//add the device vendor function
-									$sql = "insert into v_device_vendor_functions ";
-									$sql .= "(";
-									$sql .= "device_vendor_uuid, ";
-									$sql .= "device_vendor_function_uuid, ";
-									//$sql .= "label, ";
-									$sql .= "name, ";
-									$sql .= "value, ";
-									$sql .= "enabled, ";
-									$sql .= "description ";
-									$sql .= ") ";
-									$sql .= "values ";
-									$sql .= "( ";
-									$sql .= "'".$device_vendor_uuid."', ";
-									$sql .= "'".$device_vendor_function_uuid."', ";
-									//$sql .= "'".$function['label']."', ";
-									$sql .= "'".$function['name']."', ";
-									$sql .= "'".$function['value']."', ";
-									$sql .= "'true', ";
-									$sql .= "'".$function['description']."' ";
-									$sql .= ");";
-									//echo $sql."\n";
-									$db->exec(check_sql($sql));
-									unset($sql);
+							if (is_array($vendor['functions']) && @sizeof($vendor['functions']) != 0) {
+								foreach ($vendor['functions'] as $index_2 => $function) {
+									//add the device vendor function
+										$device_vendor_function_uuid = uuid();
+										$array['device_vendor_functions'][$index_2]['device_vendor_uuid'] = $device_vendor_uuid;
+										$array['device_vendor_functions'][$index_2]['device_vendor_function_uuid'] = $device_vendor_function_uuid;
+										$array['device_vendor_functions'][$index_2]['name'] = $function['name'];
+										$array['device_vendor_functions'][$index_2]['value'] = $function['value'];
+										$array['device_vendor_functions'][$index_2]['enabled'] = 'true';
+										$array['device_vendor_functions'][$index_2]['description'] = $function['description'];
 
-								//add the device vendor function groups
-									if (is_array($function['groups'])) {
-										$sql = "insert into v_device_vendor_function_groups ";
-										$sql .= "(";
-										$sql .= "device_vendor_function_group_uuid, ";
-										$sql .= "device_vendor_function_uuid, ";
-										$sql .= "device_vendor_uuid, ";
-										$sql .= "group_name, ";
-										$sql .= "group_uuid ";
-										$sql .= ") ";
-										$sql .= "values ";
-										$i = 0;
-										foreach ($function['groups'] as $group_name) {
-											if ($i == 0) { $sql .= "("; } else { $sql .= ",("; }
-											$sql .= "'".uuid()."', ";
-											$sql .= "'".$device_vendor_function_uuid."', ";
-											$sql .= "'".$device_vendor_uuid."', ";
-											$sql .= "'$group_name', ";
-											$sql .= "'".$group_uuids[$group_name]."' ";
-											$sql .= ")";
-											$i++;
+									//add the device vendor function groups
+										if (is_array($function['groups']) && @sizeof($function['groups']) != 0) {
+											foreach ($function['groups'] as $index_3 => $group_name) {
+												$device_vendor_function_group_uuid = uuid();
+												$array['device_vendor_function_groups'][$index_3]['device_vendor_function_group_uuid'] = $device_vendor_function_group_uuid;
+												$array['device_vendor_function_groups'][$index_3]['device_vendor_function_uuid'] = $device_vendor_function_uuid;
+												$array['device_vendor_function_groups'][$index_3]['device_vendor_uuid'] = $device_vendor_uuid;
+												$array['device_vendor_function_groups'][$index_3]['group_name'] = $group_name;
+												$array['device_vendor_function_groups'][$index_3]['group_uuid'] = $group_uuids[$group_name];
+											}
 										}
-										$db->exec($sql);
-									}
+								}
 							}
 					}
+				}
 
-			} //if num_rows
-		} // if prep_statement
+			//execute
+				if (is_array($array) && @sizeof($array) != 0) {
+					$p = new permissions;
+					$p->add('device_vendor_add', 'temp');
+					$p->add('device_vendor_function_add', 'temp');
+					$p->add('device_vendor_function_group_add', 'temp');
+
+					$database = new database;
+					$database->app_name = 'devices';
+					$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+					$database->save($array);
+					unset($array);
+
+					$p->delete('device_vendor_add', 'temp');
+					$p->delete('device_vendor_function_add', 'temp');
+					$p->delete('device_vendor_function_group_add', 'temp');
+				}
+
+		}
+		unset($num_rows);
+
 }
 ?>

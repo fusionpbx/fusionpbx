@@ -38,28 +38,29 @@ else {
 	$text = $language->get();
 
 //get the id
-	if (isset($_GET["id"])) {
-		$id = $_GET["id"];
-		$device_uuid = check_str($_GET["device_uuid"]);
-		$device_profile_uuid = check_str($_GET["device_profile_uuid"]);
-	}
+	$device_key_uuid = $_GET["id"];
+	$device_uuid = $_GET["device_uuid"];
+	$device_profile_uuid = $_GET["device_profile_uuid"];
 
 //delete device keys
-	if (is_uuid($id)) {
-		$sql = "delete from v_device_keys ";
-		$sql .= "where (domain_uuid = '".$_SESSION["domain_uuid"]."' or domain_uuid is null) ";
-		$sql .= "and device_key_uuid = '".$id."' ";
-		$db->exec($sql);
-		unset($sql);
+	if (is_uuid($device_key_uuid)) {
+		$array['device_keys'][0]['device_key_uuid'] = $device_key_uuid;
+
+		$database = new database;
+		$database->app_name = 'devices';
+		$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+		$database->delete($array);
+		unset($array);
+
+		message::add($text['message-delete']);
 	}
 
 //send a redirect
-	message::add($text['message-delete']);
-	if ($device_uuid != '') {
+	if (is_uuid($device_uuid)) {
 		header("Location: device_edit.php?id=".$device_uuid);
 	}
-	else if ($device_profile_uuid != '') {
+	else if (is_uuid($device_profile_uuid)) {
 		header("Location: device_profile_edit.php?id=".$device_profile_uuid);
 	}
-	return;
+	exit;
 ?>

@@ -43,9 +43,9 @@
 	$text = $language->get();
 
 //set the http get/post variable(s) to a php variable
-	if (isset($_REQUEST["id"]) && isset($_REQUEST["mac"])) {
-		$device_uuid = check_str($_REQUEST["id"]);
-		$mac_address_new = check_str($_REQUEST["mac"]);
+	if (is_array($_REQUEST["id"]) && isset($_REQUEST["mac"])) {
+		$device_uuid = $_REQUEST["id"];
+		$mac_address_new = $_REQUEST["mac"];
 		$mac_address_new = preg_replace('#[^a-fA-F0-9./]#', '', $mac_address_new);
 	}
 
@@ -57,60 +57,62 @@
 		//allow duplicates to be used as templaes
 	}
 	else {
-		$sql = "SELECT count(*) AS num_rows FROM v_devices ";
-		$sql .= "WHERE device_mac_address = '".$mac_address_new."' ";
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] == "0") {
-				$save = true;
-			}
-			else {
-				$save = false;
-				message::add($text['message-duplicate']);
-			}
+		$sql = "select count(*) from v_devices ";
+		$sql .= "where device_mac_address = :device_mac_address ";
+		$parameters['device_mac_address'] = $mac_address_new;
+		$database = new database;
+		$num_rows = $database->select($sql, $parameters, 'column');
+		if ($num_rows == 0) {
+			$save = true;
 		}
-		unset($prep_statement);
+		else {
+			$save = false;
+			message::add($text['message-duplicate']);
+		}
+		unset($sql, $parameters, $num_rows);
 	}
 
 //get the device
-	$sql = "SELECT * FROM v_devices ";
-	$sql .= "where device_uuid = '".$device_uuid."' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$devices = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$sql = "select * from v_devices ";
+	$sql .= "where device_uuid = :device_uuid ";
+	$parameters['device_uuid'] = $device_uuid;
+	$database = new database;
+	$devices = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //get device lines
-	$sql = "SELECT * FROM v_device_lines ";
-	$sql .= "where device_uuid = '".$device_uuid."' ";
+	$sql = "select * from v_device_lines ";
+	$sql .= "where device_uuid = :device_uuid ";
 	$sql .= "order by line_number asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$device_lines = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$parameters['device_uuid'] = $device_uuid;
+	$database = new database;
+	$device_lines = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //get device keys
-	$sql = "SELECT * FROM v_device_keys ";
-	$sql .= "WHERE device_uuid = '".$device_uuid."' ";
-	$sql .= "ORDER by ";
-	$sql .= "CASE device_key_category ";
-	$sql .= "WHEN 'line' THEN 1 ";
-	$sql .= "WHEN 'memort' THEN 2 ";
-	$sql .= "WHEN 'programmable' THEN 3 ";
-	$sql .= "WHEN 'expansion' THEN 4 ";
-	$sql .= "ELSE 100 END, ";
+	$sql = "select * from v_device_keys ";
+	$sql .= "where device_uuid = :device_uuid ";
+	$sql .= "order by ";
+	$sql .= "case device_key_category ";
+	$sql .= "when 'line' then 1 ";
+	$sql .= "when 'memort' then 2 ";
+	$sql .= "when 'programmable' then 3 ";
+	$sql .= "when 'expansion' then 4 ";
+	$sql .= "else 100 END, ";
 	$sql .= "cast(device_key_id as numeric) asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$device_keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$parameters['device_uuid'] = $device_uuid;
+	$database = new database;
+	$device_keys = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //get device settings
-	$sql = "SELECT * FROM v_device_settings ";
-	$sql .= "WHERE device_uuid = '".$device_uuid."' ";
-	$sql .= "ORDER by device_setting_subcategory asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$device_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$sql = "select * from v_device_settings ";
+	$sql .= "where device_uuid = :device_uuid ";
+	$sql .= "order by device_setting_subcategory asc ";
+	$parameters['device_uuid'] = $device_uuid;
+	$database = new database;
+	$device_settings = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //prepare the devices array
 	unset($devices[0]["device_uuid"]);

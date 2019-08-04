@@ -39,42 +39,45 @@ else {
 	$text = $language->get();
 
 //get the id
-	if (isset($_GET["id"])) {
-		$id = $_GET["id"];
-		$device_uuid = $_GET["device_uuid"];
-		$device_profile_uuid = $_GET["device_profile_uuid"];
-	}
+	$device_setting_uuid = $_GET["id"];
+	$device_uuid = $_GET["device_uuid"];
+	$device_profile_uuid = $_GET["device_profile_uuid"];
 
-//delete device settings
-	if (is_uuid($id)) {
-		$sql = "delete from v_device_settings ";
-		$sql .= "where device_uuid = '$device_uuid' ";
-		$sql .= "and device_setting_uuid = '$id' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($sql);
-	}
-	
-//delete profile device settings
-	if (is_uuid($id) and is_uuid($device_profile_uuid)) {
-		$sql = "delete from v_device_settings ";
-		$sql .= "where device_profile_uuid = '$device_profile_uuid' ";
-		$sql .= "and device_setting_uuid = '$id' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($sql);
-	}	
+//default location
+	$location = 'devices.php';
 
-//redirect to device profile
-	if (is_uuid($device_profile_uuid)) {
+if (is_uuid($device_setting_uuid)) {
+
+	//delete device settings
+		if (is_uuid($device_uuid)) {
+			$array['device_settings'][0]['device_setting_uuid'] = $device_setting_uuid;
+			$array['device_settings'][0]['device_uuid'] = $device_uuid;
+
+			$location = "device_edit.php?id=".$device_uuid;
+		}
+
+	//delete profile device settings
+		if (is_uuid($device_profile_uuid)) {
+			$array['device_settings'][1]['device_setting_uuid'] = $device_setting_uuid;
+			$array['device_settings'][1]['device_profile_uuid'] = $device_profile_uuid;
+
+			$location = "device_profile_edit.php?id=".$device_profile_uuid;
+		}
+
+	//execute
+		$database = new database;
+		$database->app_name = 'devices';
+		$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+		$database->delete($array);
+		unset($array);
+
+	//set message
 		message::add($text['message-delete']);
-		header("Location: device_profile_edit.php?id=".$device_profile_uuid);
-		return;
-	}
-	
-//send a redirect
-	message::add($text['message-delete']);
-	header("Location: device_edit.php?id=".$device_uuid);
-	return;
+
+}
+
+//redirect
+	header("Location: ".$location);
+	exit;
 
 ?>

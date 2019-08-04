@@ -43,9 +43,9 @@
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$device_vendor_uuid = check_str($_REQUEST["id"]);
+		$device_vendor_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
@@ -53,9 +53,9 @@
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
-		$name = check_str($_POST["name"]);
-		$enabled = check_str($_POST["enabled"]);
-		$description = check_str($_POST["description"]);
+		$name = $_POST["name"];
+		$enabled = $_POST["enabled"];
+		$description = $_POST["description"];
 	}
 
 //process the data
@@ -63,7 +63,7 @@
 
 		//get the uuid
 			if ($action == "update") {
-				$device_vendor_uuid = check_str($_POST["device_vendor_uuid"]);
+				$device_vendor_uuid = $_POST["device_vendor_uuid"];
 			}
 
 		//check for all required data
@@ -87,59 +87,46 @@
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
 				if ($action == "add" && permission_exists('device_vendor_add')) {
-					$sql = "insert into v_device_vendors ";
-					$sql .= "(";
-					$sql .= "device_vendor_uuid, ";
-					$sql .= "name, ";
-					$sql .= "enabled, ";
-					$sql .= "description ";
-					$sql .= ")";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'".uuid()."', ";
-					$sql .= "'$name', ";
-					$sql .= "'$enabled', ";
-					$sql .= "'$description' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
-
+					$array['device_vendors'][0]['device_vendor_uuid'] = uuid();
 					message::add($text['message-add']);
-					header("Location: device_vendors.php");
-					return;
-
-				} //if ($action == "add")
+				}
 
 				if ($action == "update" && permission_exists('device_vendor_edit')) {
-					$sql = "update v_device_vendors set ";
-					$sql .= "name = '$name', ";
-					$sql .= "enabled = '$enabled', ";
-					$sql .= "description = '$description' ";
-					$sql .= "where device_vendor_uuid = '$device_vendor_uuid'";
-					$db->exec(check_sql($sql));
-					unset($sql);
-
+					$array['device_vendors'][0]['device_vendor_uuid'] = $device_vendor_uuid;
 					message::add($text['message-update']);
+				}
+
+				if (is_array($array) && @sizeof($array) != 0) {
+					$array['device_vendors'][0]['name'] = $name;
+					$array['device_vendors'][0]['enabled'] = $enabled;
+					$array['device_vendors'][0]['description'] = $description;
+
+					$database = new database;
+					$database->app_name = 'devices';
+					$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+					$database->save($array);
+					unset($array);
+
 					header("Location: device_vendors.php");
-					return;
-				} //if ($action == "update")
-			} //if ($_POST["persistformvar"] != "true")
-	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+					exit;
+				}
+			}
+	}
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-		$device_vendor_uuid = check_str($_GET["id"]);
+		$device_vendor_uuid = $_GET["id"];
 		$sql = "select * from v_device_vendors ";
-		$sql .= "where device_vendor_uuid = '".$device_vendor_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where device_vendor_uuid = :device_vendor_uuid ";
+		$parameters['device_vendor_uuid'] = $device_vendor_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$name = $row["name"];
 			$enabled = $row["enabled"];
 			$description = $row["description"];
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //show the header

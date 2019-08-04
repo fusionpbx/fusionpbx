@@ -43,39 +43,42 @@
 	$text = $language->get();
 
 //set the http get/post variable(s) to a php variable
-	if (isset($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$device_profile_uuid = $_REQUEST["id"];
 	}
 
-//set the default
-	$save = true;
-
 //get the device
-	$sql = "SELECT * FROM v_device_profiles ";
-	$sql .= "where device_profile_uuid = '".$device_profile_uuid."' ";
+	$sql = "select * from v_device_profiles ";
+	$sql .= "where device_profile_uuid = :device_profile_uuid ";
+	$parameters['device_profile_uuid'] = $device_profile_uuid;
 	$database = new database;
-	$device_profiles = $database->select($sql);
+	$device_profiles = $database->select($sql, $parameters);
+	unset($sql, $parameters);
 
 //get device keys
-	$sql = "SELECT * FROM v_device_keys ";
-	$sql .= "WHERE device_profile_uuid = '".$device_profile_uuid."' ";
-	$sql .= "ORDER by ";
-	$sql .= "CASE device_key_category ";
-	$sql .= "WHEN 'line' THEN 1 ";
-	$sql .= "WHEN 'memort' THEN 2 ";
-	$sql .= "WHEN 'programmable' THEN 3 ";
-	$sql .= "WHEN 'expansion' THEN 4 ";
-	$sql .= "ELSE 100 END, ";
+	$sql = "select * from v_device_keys ";
+	$sql .= "where device_profile_uuid = :device_profile_uuid ";
+	$sql .= "order by ";
+	$sql .= "case device_key_category ";
+	$sql .= "when 'line' then 1 ";
+	$sql .= "when 'memort' then 2 ";
+	$sql .= "when 'programmable' then 3 ";
+	$sql .= "when 'expansion' then 4 ";
+	$sql .= "else 100 end, ";
 	$sql .= "cast(device_key_id as numeric) asc ";
+	$parameters['device_profile_uuid'] = $device_profile_uuid;
 	$database = new database;
-	$device_keys = $database->select($sql);
+	$device_keys = $database->select($sql, $parameters);
+	unset($sql, $parameters);
 
 //get device settings
-	$sql = "SELECT * FROM v_device_settings ";
-	$sql .= "WHERE device_profile_uuid = '".$device_profile_uuid."' ";
-	$sql .= "ORDER by device_setting_subcategory asc ";
+	$sql = "select * from v_device_settings ";
+	$sql .= "where device_profile_uuid = :device_profile_uuid ";
+	$sql .= "order by device_setting_subcategory asc ";
+	$parameters['device_profile_uuid'] = $device_profile_uuid;
 	$database = new database;
-	$device_settings = $database->select($sql);
+	$device_settings = $database->select($sql, $parameters);
+	unset($sql, $parameters);
 
 //prepare the devices array
 	unset($device_profiles[0]["device_profile_uuid"]);
@@ -106,14 +109,13 @@
 	$array["device_profiles"][0]["device_settings"] = $device_settings;
 
 //copy the device
-	if ($save) {
-		$database = new database;
-		$database->app_name = 'devices';
-		$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
-		$database->save($array);
-		$response = $database->message;
-		message::add($text['message-copy']);
-	}
+	$database = new database;
+	$database->app_name = 'devices';
+	$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+	$database->save($array);
+	unset($array);
+
+	message::add($text['message-copy']);
 
 //redirect
 	header("Location: device_profiles.php");
