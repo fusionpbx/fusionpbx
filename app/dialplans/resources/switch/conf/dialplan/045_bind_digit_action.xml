@@ -9,6 +9,7 @@
 	</condition>
 	<!-- sets inbound calls to peer -->
 	<condition field="${from_user_exists}" expression="false" break="never">
+                <action application="unset" data="bind_target" inline="true"/>
 		<action application="set" data="bind_target=peer" inline="true"/>
 	</condition>
 	<condition field="" expression="">
