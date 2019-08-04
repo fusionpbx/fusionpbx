@@ -38,38 +38,38 @@ else {
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$device_line_uuid = check_str($_REQUEST["id"]);
+		$device_line_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
 	}
 
 //set the parent uuid
-	if (strlen($_GET["device_uuid"]) > 0) {
-		$device_uuid = check_str($_GET["device_uuid"]);
+	if (is_uuid($_GET["device_uuid"])) {
+		$device_uuid = $_GET["device_uuid"];
 	}
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
-		$line_number = check_str($_POST["line_number"]);
-		$server_address = check_str($_POST["server_address"]);
-		$outbound_proxy = check_str($_POST["outbound_proxy"]);
-		$sip_port = check_str($_POST["sip_port"]);
-		$sip_transport = check_str($_POST["sip_transport"]);
-		$register_expires = check_str($_POST["register_expires"]);
-		$display_name = check_str($_POST["display_name"]);
-		$user_id = check_str($_POST["user_id"]);
-		$auth_id = check_str($_POST["auth_id"]);
-		$password = check_str($_POST["password"]);
+		$line_number = $_POST["line_number"];
+		$server_address = $_POST["server_address"];
+		$outbound_proxy = $_POST["outbound_proxy"];
+		$sip_port = $_POST["sip_port"];
+		$sip_transport = $_POST["sip_transport"];
+		$register_expires = $_POST["register_expires"];
+		$display_name = $_POST["display_name"];
+		$user_id = $_POST["user_id"];
+		$auth_id = $_POST["auth_id"];
+		$password = $_POST["password"];
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
-		$device_line_uuid = check_str($_POST["device_line_uuid"]);
+		$device_line_uuid = $_POST["device_line_uuid"];
 	}
 
 	//check for all required data
@@ -97,94 +97,58 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if ($_POST["persistformvar"] != "true") {
 			//add the line
 				if ($action == "add" && permission_exists('device_add')) {
-					$sql = "insert into v_device_lines ";
-					$sql .= "(";
-					$sql .= "domain_uuid, ";
-					$sql .= "device_line_uuid, ";
-					$sql .= "device_uuid, ";
-					$sql .= "line_number, ";
-					$sql .= "server_address, ";
-					$sql .= "outbound_proxy, ";
-					$sql .= "sip_port, ";
-					$sql .= "sip_transport, ";
-					$sql .= "register_expires, ";
-					$sql .= "display_name, ";
-					$sql .= "user_id, ";
-					$sql .= "auth_id, ";
-					$sql .= "password ";
-					$sql .= ")";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'$domain_uuid', ";
-					$sql .= "'".uuid()."', ";
-					$sql .= "'$device_uuid', ";
-					$sql .= "'$line_number', ";
-					$sql .= "'$server_address', ";
-					$sql .= "'$outbound_proxy', ";
-					$sql .= "'$sip_port', ";
-					$sql .= "'$sip_transport', ";
-					$sql .= "'$register_expires', ";
-					$sql .= "'$display_name', ";
-					$sql .= "'$user_id', ";
-					$sql .= "'$auth_id', ";
-					$sql .= "'$password' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
-				} //if ($action == "add")
+					$array['device_lines'][0]['device_line_uuid'] = uuid();
+					$array['device_lines'][0]['sip_port'] = $sip_port;
+					$array['device_lines'][0]['register_expires'] = $register_expires;
+
+					message::add($text['message-add']);
+				}
 
 			//update the line
 				if ($action == "update" && permission_exists('device_edit')) {
-					$sql = "update v_device_lines set ";
-					$sql .= "device_uuid = '$device_uuid', ";
-					$sql .= "line_number = '$line_number', ";
-					$sql .= "server_address = '$server_address', ";
-					$sql .= "outbound_proxy = '$outbound_proxy', ";
-					if (strlen($sip_port) > 0) {
-						$sql .= "sip_port = '$sip_port', ";
-					}
-					else {
-						$sql .= "sip_port = null, ";
-					}
-					$sql .= "sip_transport = '$sip_transport', ";
-					if (strlen($register_expires) > 0) {
-						$sql .= "register_expires = '$register_expires', ";
-					}
-					else {
-						$sql .= "register_expires = null, ";
-					}
-					$sql .= "display_name = '$display_name', ";
-					$sql .= "user_id = '$user_id', ";
-					$sql .= "auth_id = '$auth_id', ";
-					$sql .= "password = '$password' ";
-					$sql .= "where domain_uuid = '$domain_uuid' ";
-					$sql .= "and device_line_uuid = '$device_line_uuid' ";
-					$db->exec(check_sql($sql));
-					unset($sql);
-				} //if ($action == "update")
+					$array['device_lines'][0]['device_line_uuid'] = $device_line_uuid;
+					$array['device_lines'][0]['sip_port'] = $sip_port != '' ? $sip_port : null;
+					$array['device_lines'][0]['register_expires'] = $register_expires != '' ? $register_expires : null;
 
+					message::add($text['message-update']);
+				}
 
-			if ($action == "add") {
-				message::add($text['message-add']);
-			}
-			if ($action == "update") {
-				message::add($text['message-update']);
-			}
+			//execute
+				if (is_array($array) && @sizeof($array) != 0) {
+					$array['device_lines'][0]['domain_uuid'] = $domain_uuid;
+					$array['device_lines'][0]['device_uuid'] = $device_uuid;
+					$array['device_lines'][0]['line_number'] = $line_number;
+					$array['device_lines'][0]['server_address'] = $server_address;
+					$array['device_lines'][0]['outbound_proxy'] = $outbound_proxy;
+					$array['device_lines'][0]['sip_transport'] = $sip_transport;
+					$array['device_lines'][0]['display_name'] = $display_name;
+					$array['device_lines'][0]['user_id'] = $user_id;
+					$array['device_lines'][0]['auth_id'] = $auth_id;
+					$array['device_lines'][0]['password'] = $password;
+
+					$database = new database;
+					$database->app_name = 'devices';
+					$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+					$database->save($array);
+					unset($array);
+				}
+
 			header("Location: device_edit.php?id=".$device_uuid);
-			return;
-		} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+			exit;
+		}
+}
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-		$device_line_uuid = check_str($_GET["id"]);
+		$device_line_uuid = $_GET["id"];
 		$sql = "select * from v_device_lines ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and device_line_uuid = '$device_line_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and device_line_uuid = :device_line_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['device_line_uuid'] = $device_line_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$line_number = $row["line_number"];
 			$server_address = $row["server_address"];
 			$outbound_proxy = $row["outbound_proxy"];
@@ -196,7 +160,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$auth_id = $row["auth_id"];
 			$password = $row["password"];
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //show the header
@@ -215,42 +179,15 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-line_number']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "				<select class='formfld' style='width: 45px;' name='line_number'>\n";
-	echo "				<option value='".escape($line_number)."' SELECTED='SELECTED'>".escape($line_number)."</option>\n";
-	echo "				<option value=''></option>\n";
-	echo "				<option value='1'>1</option>\n";
-	echo "				<option value='2'>2</option>\n";
-	echo "				<option value='3'>3</option>\n";
-	echo "				<option value='4'>4</option>\n";
-	echo "				<option value='5'>5</option>\n";
-	echo "				<option value='6'>6</option>\n";
-	echo "				<option value='7'>7</option>\n";
-	echo "				<option value='8'>8</option>\n";
-	echo "				<option value='9'>9</option>\n";
-	echo "				<option value='10'>10</option>\n";
-	echo "				<option value='11'>11</option>\n";
-	echo "				<option value='12'>12</option>\n";
-	echo "				<option value='13'>13</option>\n";
-	echo "				<option value='14'>14</option>\n";
-	echo "				<option value='15'>15</option>\n";
-	echo "				<option value='16'>16</option>\n";
-	echo "				<option value='17'>17</option>\n";
-	echo "				<option value='18'>18</option>\n";
-	echo "				<option value='19'>19</option>\n";
-	echo "				<option value='20'>20</option>\n";
-	echo "				<option value='21'>21</option>\n";
-	echo "				<option value='22'>22</option>\n";
-	echo "				<option value='23'>23</option>\n";
-	echo "				<option value='24'>24</option>\n";
-	echo "				<option value='25'>25</option>\n";
-	echo "				<option value='26'>26</option>\n";
-	echo "				<option value='27'>27</option>\n";
-	echo "				<option value='28'>28</option>\n";
-	echo "				<option value='29'>29</option>\n";
-	echo "				<option value='30'>30</option>\n";
-	echo "				<option value='31'>31</option>\n";
-	echo "				<option value='32'>32</option>\n";
-	echo "				</select>\n";
+	echo "	<select class='formfld' style='width: 45px;' name='line_number'>\n";
+	if (is_numeric($line_number)) {
+		echo "	<option value='".escape($line_number)."' selected='selected'>".escape($line_number)."</option>\n";
+	}
+	echo "		<option value=''></option>\n";
+	for ($n = 1; $n <= 32; $n++) {
+		echo "	<option value='".$n."'>".$n."</option>\n";
+	}
+	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-line_number']."\n";
 	echo "</td>\n";

@@ -46,42 +46,36 @@
 	$text = $language->get();
 
 //get the http values and set them as variables
-	$search = check_str($_GET["search"]);
-	if (isset($_GET["order_by"])) {
-		$order_by = check_str($_GET["order_by"]);
-		$order = check_str($_GET["order"]);
-	}
+	$search = $_GET["search"];
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
 //get total devices count from the database
-	$sql = "select count(*) as num_rows from v_devices ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		$total_devices = $row['num_rows'];
-	}
-	unset($sql, $prep_statement, $row);
+	$sql = "select count(*) from v_devices ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$total_devices = $database->select($sql, $parameters, 'column');
+	unset($sql, $parameters);
 
 //get the devices profiles
 	$sql = "select * from v_device_profiles ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$device_profiles = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-	}
-	unset($sql, $prep_statement, $row);
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$device_profiles = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //prepare to page the results
-	$sql = "select count(*) as num_rows from v_devices as d ";
+	$sql = "select count(*) from v_devices as d ";
 	if ($_GET['show'] == "all" && permission_exists('device_all')) {
 		if (strlen($search) > 0) {
 			$sql .= "where ";
 		}
-	} else {
+	}
+	else {
 		$sql .= "where (";
-		$sql .= "	d.domain_uuid = '$domain_uuid' ";
+		$sql .= "	d.domain_uuid = :domain_uuid ";
 		if (permission_exists('device_all')) {
 			$sql .= "	or d.domain_uuid is null ";
 		}
@@ -89,30 +83,24 @@
 		if (strlen($search) > 0) {
 			$sql .= "and ";
 		}
+		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (strlen($search) > 0) {
 		$sql .= "(";
-		$sql .= "	lower(d.device_mac_address) like '%".strtolower($search)."%' ";
-		$sql .= "	or d.device_label like '%".$search."%' ";
-		$sql .= "	or d.device_vendor like '%".$search."%' ";
-		$sql .= "	or d.device_enabled like '%".$search."%' ";
-		$sql .= "	or d.device_template like '%".$search."%' ";
-		$sql .= "	or d.device_description like '%".$search."%' ";
-		$sql .= "	or d.device_provisioned_method like '%".$search."%' ";
-		$sql .= "	or d.device_provisioned_ip like '%".$search."%' ";
+		$sql .= "	lower(d.device_mac_address) like :search ";
+		$sql .= "	or lower(d.device_label) like :search ";
+		$sql .= "	or lower(d.device_vendor) like :search ";
+		$sql .= "	or lower(d.device_enabled) like :search ";
+		$sql .= "	or lower(d.device_template) like :search ";
+		$sql .= "	or lower(d.device_description) like :search ";
+		$sql .= "	or lower(d.device_provisioned_method) like :search ";
+		$sql .= "	or lower(d.device_provisioned_ip) like :search ";
 		$sql .= ") ";
+		$parameters['search'] = '%'.strtolower($search).'%';
 	}
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-	}
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($sql, $parameters);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -135,25 +123,28 @@
 	$sql .= ") ";
 	if ($_GET['show'] == "all" && permission_exists('device_all')) {
 		//echo __line__."<br \>\n";
-	} else {
+	}
+	else {
 		$sql .= "and (";
-		$sql .= "	d.domain_uuid = '$domain_uuid' ";
+		$sql .= "	d.domain_uuid = :domain_uuid ";
 		if (permission_exists('device_all')) {
 			$sql .= "	or d.domain_uuid is null ";
 		}
 		$sql .= ") ";
+		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (strlen($search) > 0) {
 		$sql .= "and (";
-		$sql .= "	lower(d.device_mac_address) like '%".strtolower($search)."%' ";
-		$sql .= "	or d.device_label like '%".$search."%' ";
-		$sql .= "	or d.device_vendor like '%".$search."%' ";
-		$sql .= "	or d.device_enabled like '%".$search."%' ";
-		$sql .= "	or d.device_template like '%".$search."%' ";
-		$sql .= "	or d.device_description like '%".$search."%' ";
-		$sql .= "	or d.device_provisioned_method like '%".$search."%' ";
-		$sql .= "	or d.device_provisioned_ip like '%".$search."%' ";
+		$sql .= "	lower(d.device_mac_address) like :search ";
+		$sql .= "	or lower(d.device_label) like :search ";
+		$sql .= "	or lower(d.device_vendor) like :search ";
+		$sql .= "	or lower(d.device_enabled) like :search ";
+		$sql .= "	or lower(d.device_template) like :search ";
+		$sql .= "	or lower(d.device_description) like :search ";
+		$sql .= "	or lower(d.device_provisioned_method) like :search ";
+		$sql .= "	or lower(d.device_provisioned_ip) like :search ";
 		$sql .= ") ";
+		$parameters['search'] = '%'.strtolower($search).'%';
 	}
 	if (strlen($order_by) == 0) {
 		$sql .= "order by d.device_label, d.device_description asc ";
@@ -161,16 +152,15 @@
 	else {
 		$sql .= "order by $order_by $order ";
 	}
-	$sql .= "limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$devices = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$devices = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //alternate_found
 	$device_alternate = false;
 	foreach($devices as $row) {
-		if (strlen($row['device_uuid_alternate']) > 0) {
+		if (is_uuid($row['device_uuid_alternate'])) {
 			$device_alternate = true;
 			break;
 		}
@@ -249,7 +239,7 @@
 	echo "</td>\n";
 	echo "<tr>\n";
 
-	if (is_array($devices)) {
+	if (is_array($devices) && @sizeof($devices) != 0) {
 		foreach($devices as $row) {
 
 			$device_profile_name = '';
@@ -291,9 +281,9 @@
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $devices, $row_count);
-	} //end if results
+		}
+	}
+	unset($devices, $row);
 
 	echo "<tr>\n";
 	echo "</table>\n";

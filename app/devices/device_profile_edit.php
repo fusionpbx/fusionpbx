@@ -42,9 +42,9 @@
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$device_profile_uuid = check_str($_REQUEST["id"]);
+		$device_profile_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
@@ -53,28 +53,28 @@
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
 		//echo "<textarea>"; print_r($_POST); echo "</textarea>"; exit;
-		$device_profile_name = check_str($_POST["device_profile_name"]);
-		$device_profile_enabled = check_str($_POST["device_profile_enabled"]);
-		$device_profile_description = check_str($_POST["device_profile_description"]);
-		$device_key_category = check_str($_POST["device_key_category"]);
-		$device_key_id = check_str($_POST["device_key_id"]);
-		$device_key_type = check_str($_POST["device_key_type"]);
-		$device_key_line = check_str($_POST["device_key_line"]);
-		$device_key_value = check_str($_POST["device_key_value"]);
-		$device_key_extension = check_str($_POST["device_key_extension"]);
-		$device_key_label = check_str($_POST["device_key_label"]);
-                $device_key_icon = check_str($_POST["device_key_icon"]);
+		$device_profile_name = $_POST["device_profile_name"];
+		$device_profile_enabled = $_POST["device_profile_enabled"];
+		$device_profile_description = $_POST["device_profile_description"];
+		$device_key_category = $_POST["device_key_category"];
+		$device_key_id = $_POST["device_key_id"];
+		$device_key_type = $_POST["device_key_type"];
+		$device_key_line = $_POST["device_key_line"];
+		$device_key_value = $_POST["device_key_value"];
+		$device_key_extension = $_POST["device_key_extension"];
+		$device_key_label = $_POST["device_key_label"];
+                $device_key_icon = $_POST["device_key_icon"];
 		
-		//$device_setting_category = check_str($_POST["device_setting_category"]);
-		$device_setting_subcategory = check_str($_POST["device_setting_subcategory"]);
-		//$device_setting_name = check_str($_POST["device_setting_name"]);
-		$device_setting_value = check_str($_POST["device_setting_value"]);
-		$device_setting_enabled = check_str($_POST["device_setting_enabled"]);
-		$device_setting_description = check_str($_POST["device_setting_description"]);
+		//$device_setting_category = $_POST["device_setting_category"];
+		$device_setting_subcategory = $_POST["device_setting_subcategory"];
+		//$device_setting_name = $_POST["device_setting_name"];
+		$device_setting_value = $_POST["device_setting_value"];
+		$device_setting_enabled = $_POST["device_setting_enabled"];
+		$device_setting_description = $_POST["device_setting_description"];
 		
 		//allow the domain_uuid to be changed only with the device_profile_domain permission
 		if (permission_exists('device_profile_domain')) {
-			$domain_uuid = check_str($_POST["domain_uuid"]);
+			$domain_uuid = $_POST["domain_uuid"];
 		}
 		else {
 			$_POST["domain_uuid"] = $_SESSION['domain_uuid'];
@@ -163,6 +163,7 @@
 						if (strlen($response['uuid']) > 0) {
 							$device_profile_uuid = $response['uuid'];
 						}
+						unset($array);
 					}
 
 				//write the provision files
@@ -196,44 +197,41 @@
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$sql = "select * from v_device_profiles ";
-		$sql .= "where device_profile_uuid = '$device_profile_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where device_profile_uuid = :device_profile_uuid ";
+		$parameters['device_profile_uuid'] = $device_profile_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$device_profile_name = $row["device_profile_name"];
 			$device_profile_domain_uuid = $row["domain_uuid"];
 			$device_profile_enabled = $row["device_profile_enabled"];
 			$device_profile_description = $row["device_profile_description"];
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //set the sub array index
 	$x = "999";
 
 //get device keys
-	$sql = "SELECT * FROM v_device_keys ";
-	$sql .= "WHERE device_profile_uuid = '".$device_profile_uuid."' ";
-	$sql .= "ORDER by ";
+	$sql = "select * from v_device_keys ";
+	$sql .= "where device_profile_uuid = :device_profile_uuid ";
+	$sql .= "order by ";
 	$sql .= "device_key_vendor asc, ";
-	$sql .= "CASE device_key_category ";
-	$sql .= "WHEN 'line' THEN 1 ";
-	$sql .= "WHEN 'memory' THEN 2 ";
-	$sql .= "WHEN 'programmable' THEN 3 ";
-	$sql .= "WHEN 'expansion' THEN 4 ";
-	$sql .= "WHEN 'expansion-1' THEN 5 ";
-	$sql .= "WHEN 'expansion-2' THEN 6 ";
-	$sql .= "ELSE 100 END, ";
-	if ($db_type == "mysql") {
-		$sql .= "device_key_id asc ";
-	}
-	else {
-		$sql .= "cast(device_key_id as numeric) asc ";
-	}
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$device_keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$sql .= "case device_key_category ";
+	$sql .= "when 'line' then 1 ";
+	$sql .= "when 'memory' then 2 ";
+	$sql .= "when 'programmable' then 3 ";
+	$sql .= "when 'expansion' then 4 ";
+	$sql .= "when 'expansion-1' then 5 ";
+	$sql .= "when 'expansion-2' then 6 ";
+	$sql .= "else 100 end, ";
+	$sql .= $db_type == "mysql" ? "device_key_id asc " : "cast(device_key_id as numeric) asc ";
+	$parameters['device_profile_uuid'] = $device_profile_uuid;
+	$database = new database;
+	$device_keys = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
+
 	$device_keys[$x]['device_key_category'] = '';
 	$device_keys[$x]['device_key_id'] = '';
 	$device_keys[$x]['device_key_type'] = '';
@@ -242,27 +240,27 @@
 	$device_keys[$x]['device_key_extension'] = '';
 	$device_keys[$x]['device_key_protected'] = '';
 	$device_keys[$x]['device_key_label'] = '';
-        $device_keys[$x]['device_key_icon'] = '';
+	$device_keys[$x]['device_key_icon'] = '';
 
 //get the vendors
-	$sql = "SELECT * ";
-	$sql .= "FROM v_device_vendors as v ";
+	$sql = "select * ";
+	$sql .= "from v_device_vendors as v ";
 	$sql .= "where enabled = 'true' ";
 	$sql .= "order by name asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$vendors = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$database = new database;
+	$vendors = $database->select($sql, null, 'all');
+	unset($sql);
 
 //get the vendor functions
-	$sql = "SELECT v.name as vendor_name, f.name, f.value ";
-	$sql .= "FROM v_device_vendors as v, v_device_vendor_functions as f ";
+	$sql = "select v.name as vendor_name, f.name, f.value ";
+	$sql .= "from v_device_vendors as v, v_device_vendor_functions as f ";
 	$sql .= "where v.device_vendor_uuid = f.device_vendor_uuid ";
 	$sql .= "and v.enabled = 'true' ";
 	$sql .= "and f.enabled = 'true' ";
 	$sql .= "order by v.name asc, f.name asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$vendor_functions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$database = new database;
+	$vendor_functions = $database->select($sql, null, 'all');
+	unset($sql);
 
 //get the vendor count
 	$vendor_count = 0;
@@ -274,12 +272,14 @@
 	}
 
 //get device settings
-	$sql = "SELECT * FROM v_device_settings ";
-	$sql .= "WHERE device_profile_uuid = '".$device_profile_uuid."' ";
-	$sql .= "ORDER by device_setting_subcategory asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$device_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$sql = "select * from v_device_settings ";
+	$sql .= "where device_profile_uuid = :device_profile_uuid ";
+	$sql .= "order by device_setting_subcategory asc ";
+	$parameters['device_profile_uuid'] = $device_profile_uuid;
+	$database = new database;
+	$device_settings = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
+
 	$device_settings[$x]['device_setting_name'] = '';
 	$device_settings[$x]['device_setting_value'] = '';
 	$device_settings[$x]['enabled'] = '';
@@ -408,7 +408,7 @@
 				echo "			</tr>\n";
 			}
 		//determine whether to hide the element
-			if (strlen($device_key_uuid) == 0) {
+			if (!is_uuid($device_key_uuid)) {
 				$element['hidden'] = false;
 				$element['visibility'] = "visibility:visible;";
 			}
@@ -417,7 +417,7 @@
 				$element['visibility'] = "visibility:hidden;";
 			}
 		//add the primary key uuid
-			if (strlen($row['device_key_uuid']) > 0) {
+			if (is_uuid($row['device_key_uuid'])) {
 				echo "	<input name='device_keys[".$x."][device_key_uuid]' type='hidden' value=\"".escape($row['device_key_uuid'])."\">\n";
 			}
 			else {
@@ -584,7 +584,7 @@
 			echo "</td>\n";
 
 			echo "<td nowrap='nowrap'>\n";
-			if (strlen($row['device_key_uuid']) > 0) {
+			if (is_uuid($row['device_key_uuid'])) {
 				if (permission_exists('device_key_delete')) {
 					echo "					<a href='device_key_delete.php?device_profile_uuid=".escape($row['device_profile_uuid'])."&id=".escape($row['device_key_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 				}
@@ -619,7 +619,7 @@
 	$x = 0;
 	foreach($device_settings as $row) {
 		//determine whether to hide the element
-			if (strlen($device_setting_uuid) == 0) {
+			if (!is_uuid($device_setting_uuid)) {
 				$element['hidden'] = false;
 				$element['visibility'] = "visibility:visible;";
 			}
@@ -628,7 +628,7 @@
 				$element['visibility'] = "visibility:hidden;";
 			}
 		//add the primary key uuid
-			if (strlen($row['device_setting_uuid']) > 0) {
+			if (is_uuid($row['device_setting_uuid'])) {
 				echo "	<input name='device_settings[".$x."][device_setting_uuid]' type='hidden' value=\"".escape($row['device_setting_uuid'])."\"/>\n";
 			}
 
@@ -670,7 +670,7 @@
 			echo "		</td>";
 
 			echo "				<td>\n";
-			if (strlen($row['device_setting_uuid']) > 0) {
+			if (is_uuid($row['device_setting_uuid'])) {
 				echo "					<a href='device_setting_delete.php?device_profile_uuid=".escape($row['device_profile_uuid'])."&id=".escape($row['device_setting_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			}
 			echo "				</td>\n";
@@ -693,7 +693,7 @@
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select class='formfld' name='domain_uuid'>\n";
 		if ($action == "update") {
-			echo "	<option value='' ".(($device_profile_domain_uuid == '') ? "selected='selected'" : null).">".$text['select-global']."</option>\n";
+			echo "	<option value='' ".(!is_uuid($device_profile_domain_uuid) ? "selected='selected'" : null).">".$text['select-global']."</option>\n";
 			foreach ($_SESSION['domains'] as $dom) {
 				echo "<option value='".escape($dom['domain_uuid'])."' ".(($device_profile_domain_uuid == $dom['domain_uuid']) ? "selected='selected'" : null).">".escape($dom['domain_name'])."</option>\n";
 			}

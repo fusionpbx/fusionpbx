@@ -43,37 +43,29 @@
 	$text = $language->get();
 
 //get variables used to control the order
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
 //add the search term
-	$search = check_str($_GET["search"]);
-	if (strlen($search) > 0) {
-		$sql_search = "where (";
-		$sql_search .= "name like '%".$search."%'";
-		$sql_search .= "or enabled like '%".$search."%'";
-		$sql_search .= "or description like '%".$search."%'";
-		$sql_search .= ")";
+	$search = $_GET["search"];
+	if ($search != '') {
+		$sql_where = "where (";
+		$sql_where .= "name like :search ";
+		$sql_where .= "or enabled like :search ";
+		$sql_where .= "or description like :search ";
+		$sql_where .= ")";
+		$parameters['search'] = '%'.$search.'%';
 	}
+
 //additional includes
 	require_once "resources/header.php";
 	require_once "resources/paging.php";
 
 //prepare to page the results
-	$sql = "select count(*) as num_rows from v_device_vendors ";
-	$sql .= $sql_search;
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-				$num_rows = $row['num_rows'];
-		}
-		else {
-				$num_rows = '0';
-		}
-	}
+	$sql = "select count(*) from v_device_vendors ";
+	$sql .= $sql_where;
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -84,14 +76,12 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select * from v_device_vendors ";
-	$sql .= $sql_search;
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$sql .= "limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$sql = str_replace('count(*)', '*', $sql);
+	$sql .= order_by($order_by, $order);
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //alternate the row style
 	$c = 0;
@@ -135,7 +125,7 @@
 	echo "</td>\n";
 	echo "<tr>\n";
 
-	if (is_array($result)) {
+	if (is_array($result) && @sizeof($result) != 0) {
 		foreach($result as $row) {
 			if (permission_exists('device_vendor_edit')) {
 				$tr_link = "href='device_vendor_edit.php?id=".escape($row['device_vendor_uuid'])."'";
@@ -154,9 +144,9 @@
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $result, $row_count);
-	} //end if results
+		}
+	}
+	unset($result, $row);
 
 	echo "<tr>\n";
 	echo "<td colspan='4' align='left'>\n";

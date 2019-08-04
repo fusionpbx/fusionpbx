@@ -42,48 +42,45 @@
 	$text = $language->get();
 
 //get the id
-	if (isset($_GET["id"])) {
-		$id = $_GET["id"];
-	}
+	$device_uuid = $_GET["id"];
 
 //delete the data and sub-data
-	if (is_uuid($id)) {
+	if (is_uuid($device_uuid)) {
 
 		//delete device_lines
-			$sql = "delete from v_device_lines ";
-			$sql .= "where device_uuid = '$id' ";
-			$db->exec($sql);
-			unset($sql);
+			$array['device_lines'][0]['device_uuid'] = $device_uuid;
 
 		//delete device_keys
-			$sql = "delete from v_device_keys ";
-			$sql .= "where device_uuid = '$id' ";
-			$db->exec($sql);
-			unset($sql);
+			$array['device_keys'][0]['device_uuid'] = $device_uuid;
 
 		//delete device_settings
-			$sql = "delete from v_device_settings ";
-			$sql .= "where device_uuid = '$id' ";
-			$db->exec($sql);
-			unset($sql);
+			$array['device_settings'][0]['device_uuid'] = $device_uuid;
 
 		//delete the device
-			$sql = "delete from v_devices ";
-			$sql .= "where device_uuid = '$id' ";
-			$db->exec($sql);
-			unset($sql);
+			$array['devices'][0]['device_uuid'] = $device_uuid;
+
+		//execute
+			$database = new database;
+			$database->app_name = 'devices';
+			$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+			$database->delete($array);
+			$response = $database->message;
+			unset($array);
+
+		//write the provision files
+			if (strlen($_SESSION['provision']['path']['text']) > 0) {
+				$prov = new provision;
+				$prov->domain_uuid = $domain_uuid;
+				$response = $prov->write();
+			}
+
+		//set message
+			message::add($text['message-delete']);
+
 	}
 
-//write the provision files
-	if (strlen($_SESSION['provision']['path']['text']) > 0) {
-		$prov = new provision;
-		$prov->domain_uuid = $domain_uuid;
-		$response = $prov->write();
-	}
-
-//set the message and redirect the user
-	message::add($text['message-delete']);
+//redirect the user
 	header("Location: devices.php");
-	return;
+	exit;
 
 ?>

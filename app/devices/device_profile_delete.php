@@ -42,42 +42,53 @@
 	$text = $language->get();
 
 //get the id
-	if (isset($_GET["id"])) {
-		$id = $_GET["id"];
-	}
+	$device_profile_uuid = $_GET["id"];
 
 //delete the data and subdata
-	if (is_uuid($id)) {
+	if (is_uuid($device_profile_uuid)) {
 
-		//delete device profile keys
-			$sql = "delete from v_device_keys ";
-			$sql .= "where device_profile_uuid = '".$id."' ";
-			$db->exec($sql);
-			unset($sql);
+		//add temp permissions
+			$p = new permissions;
+			$p->add('device_key_delete', 'temp');
+			$p->add('device_edit', 'temp');
 
-		//delete device profile
-			$sql = "delete from v_device_profiles ";
-			$sql .= "where device_profile_uuid = '".$id."' ";
-			$db->exec($sql);
-			unset($sql);
+		//create array
+			$array['device_keys'][0]['device_profile_uuid'] = $device_profile_uuid;
+			$array['device_profiles'][0]['device_profile_uuid'] = $device_profile_uuid;
+
+		//delete
+			$database = new database;
+			$database->app_name = 'devices';
+			$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+			$database->delete($array);
+			unset($array);
 
 		//remove device profile uuid from any assigned devices
 			$sql = "update v_devices set ";
 			$sql .= "device_profile_uuid = null ";
-			$sql .= "where device_profile_uuid = '".$id."' ";
-			$db->exec($sql);
-			unset($sql);
+			$sql .= "where device_profile_uuid = :device_profile_uuid ";
+			$parameters['device_profile_uuid'] = $device_profile_uuid;
+			$database = new database;
+			$database->execute($sql);
+			unset($sql, $parameters);
+
+		//remove temp permissions
+			$p->delete('device_key_delete', 'temp');
+			$p->delete('device_edit', 'temp');
+
+		//write the provision files
+			if ($_SESSION['provision']['path']['text'] != '') {
+				$prov = new provision;
+				$prov->domain_uuid = $domain_uuid;
+				$response = $prov->write();
+			}
+
+		//set message
+			message::add($text['message-delete']);
+
 	}
 
-//write the provision files
-	if (strlen($_SESSION['provision']['path']['text']) > 0) {
-		$prov = new provision;
-		$prov->domain_uuid = $domain_uuid;
-		$response = $prov->write();
-	}
-
-//set the message and redirect the user
-	message::add($text['message-delete']);
+//redirect the user
 	header("Location: device_profiles.php");
 	return;
 
