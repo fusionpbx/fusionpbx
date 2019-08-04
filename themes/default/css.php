@@ -201,7 +201,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		background-size:cover;
 		}
 
-        pre {
+	pre {
 		white-space: pre-wrap;
 		}
 
