@@ -253,7 +253,7 @@
 								$log_line = str_replace($v1["pattern".$i], "<span style='color: ".$v1["color".$i].";'>".$v1["pattern".$i]."</span>", $log_line);
 							}
 						}
-						$array_output[] = "<span style='color: ".$v1['color']."; font-family: ".$v1['font'].";'>".$log_line."</span><br>";
+						$array_output[] = "<span style='color: ".$v1['color']."; font-family: ".$v1['font'].";'>".escape($log_line)."</span><br>";
 						$noprint = true;
 					}
 				}
@@ -278,7 +278,7 @@
 				if ($_POST['line_number']) {
 					$line_num = "<span style='font-family: courier; color: #aaa; font-size: 10px;'>".($index + $adj_index)."&nbsp;&nbsp;&nbsp;</span>";
 				}
-				echo $line_num." ".$line;
+				echo escape($line_num)." ".$line;
 			}
 		}
 		fclose($file);
