@@ -1061,6 +1061,26 @@ $text['label-memory_usage']['ru-ru'] = "Использование памяти"
 $text['label-memory_usage']['sv-se'] = "Minnesanvändning";
 $text['label-memory_usage']['uk-ua'] = "Використання пам'яті";
 
+$text['label-memory_free']['en-us'] = "Free Memory";
+$text['label-memory_free']['ar-eg'] = "Free Memory";
+$text['label-memory_free']['de-at'] = "Free Memory";
+$text['label-memory_free']['de-ch'] = "Free Memory";
+$text['label-memory_free']['de-de'] = "Free Memory";
+$text['label-memory_free']['es-cl'] = "Free Memory";
+$text['label-memory_free']['es-mx'] = "Free Memory";
+$text['label-memory_free']['fr-ca'] = "Free Memory";
+$text['label-memory_free']['fr-fr'] = "Free Memory";
+$text['label-memory_free']['he-il'] = "Free Memory";
+$text['label-memory_free']['it-it'] = "Free Memory";
+$text['label-memory_free']['nl-nl'] = "Free Memory";
+$text['label-memory_free']['pl-pl'] = "Free Memory";
+$text['label-memory_free']['pt-br'] = "Free Memory";
+$text['label-memory_free']['pt-pt'] = "Free Memory";
+$text['label-memory_free']['ro-ro'] = "Free Memory";
+$text['label-memory_free']['ru-ru'] = "Free Memory";
+$text['label-memory_free']['sv-se'] = "Free Memory";
+$text['label-memory_free']['uk-ua'] = "Free Memory";
+
 $text['label-lowercase_letters']['en-us'] = "Lowercase Letters";
 $text['label-lowercase_letters']['ar-eg'] = "أحرف صغيرة";
 $text['label-lowercase_letters']['de-at'] = "Kleinbuchstaben"; //copied from de-de
