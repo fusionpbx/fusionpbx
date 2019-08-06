@@ -39,55 +39,64 @@ else {
 	$text = $language->get();
 
 if (count($_POST)>0) {
-	$clip_uuid = check_str($_POST["id"]);
-	$clip_name = check_str($_POST["clip_name"]);
-	$clip_folder = check_str($_POST["clip_folder"]);
-	$clip_text_start = check_str($_POST["clip_text_start"], false);
-	$clip_text_end = check_str($_POST["clip_text_end"], false);
-	$clip_desc = check_str($_POST["clip_desc"]);
-	$clip_order = check_str($_POST["clip_order"]);
+	$clip_uuid = $_POST["id"];
+	$clip_name = $_POST["clip_name"];
+	$clip_folder = $_POST["clip_folder"];
+	$clip_text_start = $_POST["clip_text_start"];
+	$clip_text_end = $_POST["clip_text_end"];
+	$clip_desc = $_POST["clip_desc"];
+	$clip_order = $_POST["clip_order"];
 
 	//no slashes
 	$clip_name = str_replace('/', '|', $clip_name);
 	$clip_name = str_replace('\\', '|', $clip_name);
 
 	//sql update
-	$sql  = "update v_clips set ";
-	$sql .= "clip_name = '$clip_name', ";
-	$sql .= "clip_folder = '$clip_folder', ";
-	$sql .= "clip_text_start = '$clip_text_start', ";
-	$sql .= "clip_text_end = '$clip_text_end', ";
-	$sql .= "clip_desc = '$clip_desc', ";
-	$sql .= "clip_order = '$clip_order' ";
-	$sql .= "where clip_uuid = '$clip_uuid' ";
-	$count = $db->exec(check_sql($sql));
+	$array['clips'][0]['clip_uuid'] = $clip_uuid;
+	$array['clips'][0]['clip_name'] = $clip_name;
+	$array['clips'][0]['clip_folder'] = $clip_folder;
+	$array['clips'][0]['clip_text_start'] = $clip_text_start;
+	$array['clips'][0]['clip_text_end'] = $clip_text_end;
+	$array['clips'][0]['clip_desc'] = $clip_desc;
+	$array['clips'][0]['clip_order'] = $clip_order;
+
+	$p = new permissions;
+	$p->add('clip_edit', 'temp');
+
+	$database = new database;
+	$database->app_name = 'edit';
+	$database->app_uuid = '17e628ee-ccfa-49c0-29ca-9894a0384b9b';
+	$database->save($array);
+	unset($array);
+
+	$p->add('clip_edit', 'temp');
 
 	//redirect the browser
 	require_once "header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"1;url=clipoptions.php\">\n";
 	echo $text['message-update'];
 	require_once "footer.php";
-	return;
+	exit;
 }
 else {
 	//get the uuid from http values
-		$clip_uuid = check_str($_GET["id"]);
+		$clip_uuid = $_GET["id"];
 
 	//get the clip
 		$sql = "select * from v_clips ";
-		$sql .= "where clip_uuid = '$clip_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where clip_uuid = :clip_uuid ";
+		$parameters['clip_uuid'] = $clip_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$clip_name = $row["clip_name"];
 			$clip_folder = $row["clip_folder"];
 			$clip_text_start = $row["clip_text_start"];
 			$clip_text_end = $row["clip_text_end"];
 			$clip_desc = $row["clip_desc"];
 			$clip_order = $row["clip_order"];
-			break; //limit to 1 row
 		}
+		unset($sql, $parameters, $row);
 }
 
 //show the content
@@ -110,19 +119,19 @@ else {
 
 	echo "	<tr>";
 	echo "		<td colspan='2'>Before Selection<br>";
-	echo "		  <textarea  class='txt' name='clip_text_start'>$clip_text_start</textarea>";
+	echo "		  <textarea class='txt' style='resize: vertical;' name='clip_text_start'>$clip_text_start</textarea>";
 	echo "		</td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
 	echo "		<td colspan='2'>After Selection<br>";
-	echo "		  <textarea  class='txt' name='clip_text_end'>$clip_text_end</textarea>";
+	echo "		  <textarea class='txt' style='resize: vertical;' name='clip_text_end'>$clip_text_end</textarea>";
 	echo "		</td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
 	echo "		<td colspan='2'>Notes<br>";
-	echo "		  <textarea  class='txt' name='clip_desc'>$clip_desc</textarea>";
+	echo "		  <textarea class='txt' style='resize: vertical;' name='clip_desc'>$clip_desc</textarea>";
 	echo "		</td>";
 	echo "	</tr>";
 

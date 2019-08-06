@@ -40,12 +40,12 @@ else {
 	$text = $language->get();
 
 if (count($_POST)>0) {
-	$clip_name = check_str($_POST["clip_name"]);
-	$clip_folder = check_str($_POST["clip_folder"]);
-	$clip_text_start = check_str($_POST["clip_text_start"]);
-	$clip_text_end = check_str($_POST["clip_text_end"]);
-	$clip_desc = check_str($_POST["clip_desc"]);
-	$clip_order = check_str($_POST["clip_order"]);
+	$clip_name = $_POST["clip_name"];
+	$clip_folder = $_POST["clip_folder"];
+	$clip_text_start = $_POST["clip_text_start"];
+	$clip_text_end = $_POST["clip_text_end"];
+	$clip_desc = $_POST["clip_desc"];
+	$clip_order = $_POST["clip_order"];
 	if (strlen($clip_order) == 0) { $clip_order = 0; }
 
 	//no slashes
@@ -53,34 +53,30 @@ if (count($_POST)>0) {
 	$clip_name = str_replace('\\', '|', $clip_name);
 
 	//sql insert
-	$sql = "insert into v_clips ";
-	$sql .= "(";
-	$sql .= "clip_uuid, ";
-	$sql .= "clip_name, ";
-	$sql .= "clip_folder, ";
-	$sql .= "clip_text_start, ";
-	$sql .= "clip_text_end, ";
-	$sql .= "clip_desc, ";
-	$sql .= "clip_order ";
-	$sql .= ")";
-	$sql .= "values ";
-	$sql .= "(";
-	$sql .= "'".uuid()."', ";
-	$sql .= "'$clip_name', ";
-	$sql .= "'$clip_folder', ";
-	$sql .= "'$clip_text_start', ";
-	$sql .= "'$clip_text_end', ";
-	$sql .= "'$clip_desc', ";
-	$sql .= "'$clip_order' ";
-	$sql .= ")";
-	$db->exec(check_sql($sql));
-	unset($sql,$db);
+	$array['clips'][0]['clip_uuid'] = uuid();
+	$array['clips'][0]['clip_name'] = $clip_name;
+	$array['clips'][0]['clip_folder'] = $clip_folder;
+	$array['clips'][0]['clip_text_start'] = $clip_text_start;
+	$array['clips'][0]['clip_text_end'] = $clip_text_end;
+	$array['clips'][0]['clip_desc'] = $clip_desc;
+	$array['clips'][0]['clip_order'] = $clip_order;
+
+	$p = new permissions;
+	$p->add('clip_add', 'temp');
+
+	$database = new database;
+	$database->app_name = 'edit';
+	$database->app_uuid = '17e628ee-ccfa-49c0-29ca-9894a0384b9b';
+	$database->save($array);
+	unset($array);
+
+	$p->add('clip_add', 'temp');
 
 	require_once "header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"1;url=clipoptions.php\">\n";
 	echo $text['message-add'];
 	require_once "footer.php";
-	return;
+	exit;
 }
 
 //show the content
@@ -103,19 +99,19 @@ if (count($_POST)>0) {
 
 	echo "	<tr>";
 	echo "		<td colspan='2'>".$text['label-before-selection']."<br>";
-	echo "		  <textarea name='clip_text_start' class='txt'></textarea>";
+	echo "		  <textarea name='clip_text_start' class='txt' style='resize: vertical;'></textarea>";
 	echo "		</td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
 	echo "		<td colspan='2'>".$text['label-after-selection']."<br>";
-	echo "		  <textarea name='clip_text_end' class='txt'></textarea>";
+	echo "		  <textarea name='clip_text_end' class='txt' style='resize: vertical;'></textarea>";
 	echo "		</td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
 	echo "		<td colspan='2'>".$text['label-notes']."<br>";
-	echo "		  <textarea name='clip_desc' class='txt'></textarea>";
+	echo "		  <textarea name='clip_desc' class='txt' style='resize: vertical;'></textarea>";
 	echo "		</td>";
 	echo "	</tr>";
 
