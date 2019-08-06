@@ -48,10 +48,10 @@
 
 //set the dialplan uuid
 	$dialplan_uuids = $_REQUEST["id"];
-	$app_uuid = check_str($_REQUEST['app_uuid']);
+	$app_uuid = $_REQUEST['app_uuid'];
 
 //delete the dialplans
-	if (sizeof($dialplan_uuids) > 0) {
+	if (is_array($dialplan_uuids) && @sizeof($dialplan_uuids) != 0) {
 
 		//get dialplan contexts
 			foreach ($dialplan_uuids as $dialplan_uuid) {
@@ -60,41 +60,43 @@
 
 				//get the dialplan data
 					$sql = "select * from v_dialplans ";
-					$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
-					$prep_statement = $db->prepare(check_sql($sql));
-					$prep_statement->execute();
-					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-					foreach ($result as &$row) {
-						$database_dialplan_uuid = $row["dialplan_uuid"];
-						$dialplan_contexts[] = $row["dialplan_context"];
+					$sql .= "where dialplan_uuid = :dialplan_uuid ";
+					$parameters['dialplan_uuid'] = $dialplan_uuid;
+					$database = new database;
+					$result = $database->select($sql, $parameters, 'all');
+					if (is_array($result) && @sizeof($result) != 0) {
+						foreach ($result as &$row) {
+							$database_dialplan_uuid = $row["dialplan_uuid"];
+							$dialplan_contexts[] = $row["dialplan_context"];
+						}
 					}
-					unset($prep_statement);
+					unset($sql, $parameters, $result, $row);
 			}
-
-		//start the atomic transaction
-			$db->beginTransaction();
 
 		//delete dialplan and details
 			$dialplans_deleted = 0;
-			foreach ($dialplan_uuids as $dialplan_uuid) {
-
-				//delete child data
-					$sql = "delete from v_dialplan_details ";
-					$sql .= "where dialplan_uuid = '".$dialplan_uuid."'; ";
-					$db->query($sql);
-					unset($sql);
-
-				//delete parent data
-					$sql = "delete from v_dialplans ";
-					$sql .= "where dialplan_uuid = '".$dialplan_uuid."'; ";
-					$db->query($sql);
-					unset($sql);
-
-				$dialplans_deleted++;
+			foreach ($dialplan_uuids as $index => $dialplan_uuid) {
+				//child data
+					$array['dialplan_details'][$index]['dialplan_uuid'] = $dialplan_uuid;
+				//parent data
+					$array['dialplans'][$index]['dialplan_uuid'] = $dialplan_uuid;
+				//increment counter
+					$dialplans_deleted++;
 			}
+			if (is_array($array) && @sizeof($array) != 0) {
+				$p = new permissions;
+				$p->add('dialplan_delete', 'temp');
+				$p->add('dialplan_detail_delete', 'temp');
 
-		//commit the atomic transaction
-			$db->commit();
+				$database = new database;
+				$database->app_name = 'dialplans';
+				$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
+				$database->delete($array);
+				unset($array);
+
+				$p->delete('dialplan_delete', 'temp');
+				$p->delete('dialplan_detail_delete', 'temp');
+			}
 
 		//synchronize the xml config
 			save_dialplan_xml();
