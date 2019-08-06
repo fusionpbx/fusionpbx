@@ -124,23 +124,19 @@
 
 //prepare to page the results
 	require_once "resources/paging.php";
-	$sql = "select count(*) as num_rows from v_log_emails ";
-	if (permission_exists('email_log_all')) {
-		if ($_REQUEST['showall'] != 'true') {
-			$sql .= "where domain_uuid = '".$domain_uuid."' ";
-		}
+	$sql = "select count(*) from v_email_logs ";
+	if (permission_exists('email_log_all') && $_REQUEST['showall'] != 'true') {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
 	}
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-	$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		$num_rows = ($row['num_rows'] > 0) ? $row['num_rows'] : 0;
-	}
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($sql, $parameters);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	if (permission_exists('email_log_all') && $_REQUEST['showall'] == 'true') {
-			$param .= "&showall=true";
+		$param .= "&showall=true";
 	} else {
 		$param = "";
 	}
@@ -152,16 +148,17 @@
 //get the list
 	$sql = "select * from v_email_logs ";
 	if (permission_exists('email_log_all') && $_REQUEST['showall'] == 'true') {
-			$sql .= " join v_domains on v_email_logs.domain_uuid = v_domains.domain_uuid ";
-	} else {
-			$sql .= "where domain_uuid = '".$domain_uuid."' ";
+		$sql .= "join v_domains on v_email_logs.domain_uuid = v_domains.domain_uuid ";
 	}
-	if (strlen($order_by)> 0) { $sql .= "order by ".$order_by." ".$order." "; }
-	$sql .= "limit ".$rows_per_page." offset ".$offset." ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	else {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
+	$sql .= order_by($order_by, $order, 'sent_date', 'desc');
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //set the row style
 	$c = 0;
@@ -257,23 +254,26 @@
 	echo "<td class='list_control_icons'>&nbsp;</td>\n";
 	echo "</tr>\n";
 
-	if (is_array($result)) {
+	if (is_array($result) && @sizeof($result) != 0) {
 		foreach($result as $row) {
 
 			//get call details
-			$sql = "select caller_id_name, caller_id_number, destination_number from v_xml_cdr ";
-			$sql .= "where domain_uuid = '".$domain_uuid."' ";
-			$sql .= "and uuid = '".$row['call_uuid']."' ";
-			//echo "<tr><td colspan='40'>".$sql."</td></tr>";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result2 = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			foreach($result2 as $row2) {
-				$caller_id_name = ($row2['caller_id_name'] != '') ? $row2['caller_id_name'] : null;
-				$caller_id_number = ($row2['caller_id_number'] != '') ? $row2['caller_id_number'] : null;
-				$destination_number = ($row2['destination_number'] != '') ? $row2['destination_number'] : null;
+			$sql = "select caller_id_name, caller_id_number, destination_number ";
+			$sql .= "from v_xml_cdr ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and uuid = :uuid ";
+			$parameters['domain_uuid'] = $domain_uuid;
+			$parameters['uuid'] = $row['call_uuid'];
+			$database = new database;
+			$result2 = $database->select($sql, $parameters, 'all');
+			if (is_array($result2) && @sizeof($result2) != 0) {
+				foreach($result2 as $row2) {
+					$caller_id_name = ($row2['caller_id_name'] != '') ? $row2['caller_id_name'] : null;
+					$caller_id_number = ($row2['caller_id_number'] != '') ? $row2['caller_id_number'] : null;
+					$destination_number = ($row2['destination_number'] != '') ? $row2['destination_number'] : null;
+				}
 			}
-			unset($prep_statement, $sql);
+			unset($sql, $parameters, $result2, $row2);
 
 			$tr_link = "href='email_log_view.php?id=".$row['email_log_uuid']."'";
 			echo "<tr ".$tr_link.">\n";
@@ -308,14 +308,15 @@
 			echo "	<td class='list_control_icons'>";
 			echo 		"<a href='email_log_view.php?id=".escape($row['email_log_uuid'])."' alt='".$text['label-message_view']."'>$v_link_label_view</a>";
 			if (permission_exists('email_log_delete')) {
-				echo 	"<a href='email_log_delete.php?id=".escape($row['email_log_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo 	"<a href='email_log_delete.php?id=".escape($row['email_log_uuid']).($_REQUEST['showall'] == true ? '&showall=true' : null)."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $result, $row_count);
-	} //end if results
+
+		}
+		unset($result, $row);
+	}
 
 	echo "<tr>\n";
 	echo "<td colspan='21' align='left'>\n";
