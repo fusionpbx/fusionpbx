@@ -294,7 +294,7 @@
 	echo "		if (new_group_name != null) {\n";
 	echo "			new_group_desc = prompt('".$text['message-new_group_description']."');\n";
 	echo "			if (new_group_desc != null) {\n";
-	echo "				window.location = 'permissions_copy.php?group_name=".escape($group_name)."&new_group_name=' + new_group_name + '&new_group_desc=' + new_group_desc;\n";
+	echo "				window.location = 'permissions_copy.php?id=".escape($group_uuid)."&new_group_name=' + new_group_name + '&new_group_desc=' + new_group_desc;\n";
 	echo "			}\n";
 	echo "		}\n";
 	echo "	}\n";
