@@ -48,33 +48,33 @@ else {
 	$text = $language->get();
 
 //set the action as an add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$dialplan_detail_uuid = check_str($_REQUEST["id"]);
+		$dialplan_detail_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
 	}
-	$dialplan_uuid = check_str($_REQUEST["dialplan_uuid"]);
+	$dialplan_uuid = $_REQUEST["dialplan_uuid"];
 
 //get the http values and set them as php variables
-	$app_uuid = check_str($_REQUEST["app_uuid"]);
+	$app_uuid = $_REQUEST["app_uuid"];
 	if (count($_POST)>0) {
-		$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
-		$dialplan_detail_tag = check_str($_POST["dialplan_detail_tag"]);
-		$dialplan_detail_order = check_str($_POST["dialplan_detail_order"]);
-		$dialplan_detail_type = check_str($_POST["dialplan_detail_type"]);
-		$dialplan_detail_data = check_str($_POST["dialplan_detail_data"]);
-		$dialplan_detail_break = check_str($_POST["dialplan_detail_break"]);
-		$dialplan_detail_inline = check_str($_POST["dialplan_detail_inline"]);
-		$dialplan_detail_group = check_str($_POST["dialplan_detail_group"]);
+		$dialplan_uuid = $_POST["dialplan_uuid"];
+		$dialplan_detail_tag = $_POST["dialplan_detail_tag"];
+		$dialplan_detail_order = $_POST["dialplan_detail_order"];
+		$dialplan_detail_type = $_POST["dialplan_detail_type"];
+		$dialplan_detail_data = $_POST["dialplan_detail_data"];
+		$dialplan_detail_break = $_POST["dialplan_detail_break"];
+		$dialplan_detail_inline = $_POST["dialplan_detail_inline"];
+		$dialplan_detail_group = $_POST["dialplan_detail_group"];
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
-		$dialplan_detail_uuid = check_str($_POST["dialplan_detail_uuid"]);
+		$dialplan_detail_uuid = $_POST["dialplan_detail_uuid"];
 	}
 
 	//check for all required data
@@ -99,39 +99,27 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if ($_POST["persistformvar"] != "true") {
 			if ($action == "add" && permission_exists('dialplan_add')) {
 				$dialplan_detail_uuid = uuid();
-				$sql = "insert into v_dialplan_details ";
-				$sql .= "(";
-				$sql .= "dialplan_uuid, ";
-				$sql .= "dialplan_detail_uuid, ";
-				$sql .= "dialplan_detail_tag, ";
-				$sql .= "dialplan_detail_order, ";
-				$sql .= "dialplan_detail_type, ";
-				$sql .= "dialplan_detail_data, ";
-				$sql .= "dialplan_detail_break, ";
-				$sql .= "dialplan_detail_inline, ";
-				$sql .= "dialplan_detail_group, ";
-				$sql .= "domain_uuid ";
-				$sql .= ")";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'$dialplan_uuid', ";
-				$sql .= "'$dialplan_detail_uuid', ";
-				$sql .= "'$dialplan_detail_tag', ";
-				$sql .= "'$dialplan_detail_order', ";
-				$sql .= "'$dialplan_detail_type', ";
-				$sql .= "'$dialplan_detail_data', ";
-				$sql .= "'$dialplan_detail_break', ";
-				$sql .= "'$dialplan_detail_inline', ";
-				if (strlen($dialplan_detail_group) == 0) {
-					$sql .= "null, ";
-				}
-				else {
-					$sql .= "'$dialplan_detail_group', ";
-				}
-				$sql .= "'".$_SESSION['domain_uuid']."' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
+				$array['dialplan_details'][0]['dialplan_uuid'] = $dialplan_uuid;
+				$array['dialplan_details'][0]['dialplan_detail_uuid'] = $dialplan_detail_uuid;
+				$array['dialplan_details'][0]['dialplan_detail_tag'] = $dialplan_detail_tag;
+				$array['dialplan_details'][0]['dialplan_detail_order'] = $dialplan_detail_order;
+				$array['dialplan_details'][0]['dialplan_detail_type'] = $dialplan_detail_type;
+				$array['dialplan_details'][0]['dialplan_detail_data'] = $dialplan_detail_data;
+				$array['dialplan_details'][0]['dialplan_detail_break'] = $dialplan_detail_break;
+				$array['dialplan_details'][0]['dialplan_detail_inline'] = $dialplan_detail_inline;
+				$array['dialplan_details'][0]['dialplan_detail_group'] = $dialplan_detail_group != '' ? $dialplan_detail_group : null;
+				$array['dialplan_details'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+
+				$p = new permissions;
+				$p->add('dialplan_detail_add', 'temp');
+
+				$database = new database;
+				$database->app_name = 'dialplans';
+				$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
+				$database->save($array);
+				unset($array);
+
+				$p->delete('dialplan_detail_add', 'temp');
 
 				//synchronize the xml config
 				save_dialplan_xml();
@@ -144,27 +132,33 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				message::add($text['message-add']);
 				header("Location: dialplan_edit.php?id=".$dialplan_uuid."&app_uuid=".$app_uuid);
 				return;
-			} //if ($action == "add")
+			}
 
 			if ($action == "update" && permission_exists('dialplan_edit')) {
 				$sql = "update v_dialplan_details set ";
-				$sql .= "dialplan_uuid = '$dialplan_uuid', ";
-				$sql .= "dialplan_detail_tag = '$dialplan_detail_tag', ";
-				$sql .= "dialplan_detail_order = '$dialplan_detail_order', ";
-				$sql .= "dialplan_detail_type = '$dialplan_detail_type', ";
-				$sql .= "dialplan_detail_data = '$dialplan_detail_data', ";
-				$sql .= "dialplan_detail_break = '$dialplan_detail_break', ";
-				$sql .= "dialplan_detail_inline = '$dialplan_detail_inline', ";
-				if (strlen($dialplan_detail_group) == 0) {
-					$sql .= "dialplan_detail_group = null ";
-				}
-				else {
-					$sql .= "dialplan_detail_group = '$dialplan_detail_group' ";
-				}
-				$sql .= "where (domain_uuid = '".$_SESSION['domain_uuid']."' or  domain_uuid is null) ";
-				$sql .= "and dialplan_detail_uuid = '$dialplan_detail_uuid'";
-				$db->exec(check_sql($sql));
-				unset($sql);
+				$sql .= "dialplan_uuid = :dialplan_uuid ";
+				$sql .= "dialplan_detail_tag = :dialplan_detail_tag, ";
+				$sql .= "dialplan_detail_order = :dialplan_detail_order, ";
+				$sql .= "dialplan_detail_type = :dialplan_detail_type, ";
+				$sql .= "dialplan_detail_data = :dialplan_detail_data, ";
+				$sql .= "dialplan_detail_break = :dialplan_detail_break, ";
+				$sql .= "dialplan_detail_inline = :dialplan_detail_inline, ";
+				$sql .= "dialplan_detail_group = :dialplan_detail_group ";
+				$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+				$sql .= "and dialplan_detail_uuid = :dialplan_detail_uuid ";
+				$parameters['dialplan_uuid'] = $dialplan_uuid;
+				$parameters['dialplan_detail_tag'] = $dialplan_detail_tag;
+				$parameters['dialplan_detail_order'] = $dialplan_detail_order;
+				$parameters['dialplan_detail_type'] = $dialplan_detail_type;
+				$parameters['dialplan_detail_data'] = $dialplan_detail_data;
+				$parameters['dialplan_detail_break'] = $dialplan_detail_break;
+				$parameters['dialplan_detail_inline'] = $dialplan_detail_inline;
+				$parameters['dialplan_detail_group'] = $dialplan_detail_group != '' ? $dialplan_detail_group : null;
+				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+				$parameters['dialplan_detail_uuid'] = $dialplan_detail_uuid;
+				$database = new database;
+				$database->execute($sql, $parameters);
+				unset($sql, $parameters);
 
 				//synchronize the xml config
 				save_dialplan_xml();
@@ -187,12 +181,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$dialplan_detail_uuid = $_GET["id"];
 		$sql = "select * from v_dialplan_details ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and dialplan_detail_uuid = '$dialplan_detail_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and dialplan_detail_uuid = :dialplan_detail_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['dialplan_detail_uuid'] = $dialplan_detail_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$dialplan_uuid = $row["dialplan_uuid"];
 			$dialplan_detail_tag = $row["dialplan_detail_tag"];
 			$dialplan_detail_order = $row["dialplan_detail_order"];
@@ -202,7 +197,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$dialplan_detail_inline = $row["dialplan_detail_inline"];
 			$dialplan_detail_group = $row["dialplan_detail_group"];
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //show the header
