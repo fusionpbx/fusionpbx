@@ -65,6 +65,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "dialplan_xml";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "dialplan_context";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "dialplan_detail_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "b94e8bd9-9eb5-e427-9c26-ff7a6c21552a";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
