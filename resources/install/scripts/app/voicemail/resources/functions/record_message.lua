@@ -210,6 +210,74 @@
 			        end
 			end
 
+		--Watson
+                        if (transcribe_provider == "watson") then
+                                local api_key = settings:get('voicemail', 'watson_key', 'text') or '';
+                                local transcription_server = settings:get('voicemail', 'watson_url', 'text') or '';
+                                if (api_key ~= '') then
+                                        transcribe_cmd = [[ curl -X POST -u "apikey:]]..api_key..[[" --header "Content-type: audio/wav" --data-binary @]]..file_path..[[ "]]..transcription_server..[[" ]]
+                                        local handle = io.popen(transcribe_cmd);
+                                        local transcribe_result = handle:read("*a");
+                                        handle:close();
+                                        if (debug["info"]) then
+                                                freeswitch.consoleLog("notice", "[voicemail] CMD: " .. transcribe_cmd .. "\n");
+                                                freeswitch.consoleLog("notice", "[voicemail] RESULT: " .. transcribe_result .. "\n");
+                                        end
+
+									--Trancribe request can fail
+										if (transcribe_result == '') then
+											freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: (null) \n");
+											return ''
+										else
+                                        	status, transcribe_json = pcall(JSON.decode, transcribe_result);
+
+   											if not status then
+												if (debug["info"]) then
+													freeswitch.consoleLog("notice", "[voicemail] error decoding watson json\n");
+												end
+												return '';
+											end 
+										end
+
+
+									if (transcribe_json["results"] ~= nil) then
+										--Transcription	
+											if (transcribe_json["results"][1]["alternatives"][1]["transcript"] ~= nil) then
+												transcription = '';
+												for key, row in pairs(transcribe_json["results"]) do 
+													transcription = transcription .. row["alternatives"][1]["transcript"];
+												end
+												if (debug["info"]) then
+													freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: " .. transcription .. "\n");
+												end
+											else
+												if (debug["info"]) then
+													freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: (null) \n");
+												end
+												return '';
+											end
+										--Confidence
+											if (transcribe_json["results"][1]["alternatives"][1]["confidence"]) then
+												if (debug["info"]) then
+													freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: " .. transcribe_json["results"][1]["alternatives"][1]["confidence"] .. "\n");
+												end											
+												confidence = transcribe_json["results"][1]["alternatives"][1]["confidence"];
+											else
+												if (debug["info"]) then
+													freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: (null) \n");
+												end
+											end
+
+	                                        return transcription;
+									else
+										if (debug["info"]) then
+											freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: json error \n");
+										end
+										return '';	
+									end
+                                end
+                        end
+
 			if (transcribe_provider == "custom") then
 				local transcription_server = settings:get('voicemail', 'transcription_server', 'text') or '';
 				local api_key = settings:get('voicemail', 'api_key', 'text') or '';
