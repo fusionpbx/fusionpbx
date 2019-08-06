@@ -40,15 +40,22 @@ else {
 	$text = $language->get();
 
 //get the uuid from http values
-	$clip_uuid = check_str($_GET["id"]);
+	$clip_uuid = $_GET["id"];
 
 //delete the clip
-	if (strlen($_GET["id"])>0) {
-		$sql = "delete from v_clips ";
-		$sql .= "where clip_uuid = '".$clip_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($sql,$db);
+	if (is_uuid($clip_uuid)) {
+		$array['clips'][0]['clip_uuid'] = $clip_uuid;
+
+		$p = new permissions;
+		$p->add('clip_delete', 'temp');
+
+		$database = new database;
+		$database->app_name = 'edit';
+		$database->app_uuid = '17e628ee-ccfa-49c0-29ca-9894a0384b9b';
+		$database->delete($array);
+		unset($array);
+
+		$p->delete('clip_delete', 'temp');
 	}
 
 //redirect the browser

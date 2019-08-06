@@ -44,7 +44,7 @@ require_once "header.php";
 
 
 function isfile($filename) {
-	if (@filesize($filename) > 0) { return true; } else { return false; }
+	return @filesize($filename) > 0 ? true : false;
 }
 
 function space($count) {
@@ -157,12 +157,11 @@ echo "<div style='text-align: left; padding-top: 3px;'>\n";
 echo "<div style='padding-bottom: 3px;'><a href='javascript:void(0);' onclick=\"window.open('clipoptions.php?id=".$row[id]."','clipwin','left=20,top=20,width=310,height=350,toolbar=0,resizable=0');\" style='text-decoration:none; cursor: pointer;' title=\"".$text['label-clip-library']."\"><img src='".PROJECT_PATH."resources/images/icon_gear.png' border='0' align='absmiddle' style='margin: 0px 2px 4px -1px;'>".$text['label-clip-library']."</a></div>\n";
 
 $sql = "select * from v_clips order by clip_folder asc, clip_name asc";
-$prep_statement = $db->prepare(check_sql($sql));
-$prep_statement->execute();
-$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-$result_count = count($result);
+$database = new database;
+$result = $database->select($sql, null, 'all');
+unset($sql);
 
-if ($result_count > 0) {
+if (is_array($result) && @sizeof($result) != 0) {
 	$master_array = array();
 	foreach ($result as $row) {
 		$clip_folder = rtrim($row['clip_folder'], '/');
@@ -185,6 +184,7 @@ if ($result_count > 0) {
 
 		$master_array = array_merge_recursive($master_array, $folders);
 	}
+	unset($result, $row);
 
 	function parse_array($arr) {
 		if (is_array($arr)) {
@@ -215,8 +215,6 @@ if ($result_count > 0) {
 }
 
 echo "</div>\n";
-
-//echo "<pre>".print_r($master_array, true)."</pre>";
 
 require_once "footer.php";
 ?>

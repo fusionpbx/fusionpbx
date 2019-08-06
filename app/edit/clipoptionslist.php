@@ -119,12 +119,11 @@ echo "<body style='margin: 0; padding: 5px;' onfocus='blur();'>\n";
 echo "<div style='text-align: left;'>\n";
 
 $sql = "select * from v_clips order by clip_folder asc, clip_name asc";
-$prep_statement = $db->prepare(check_sql($sql));
-$prep_statement->execute();
-$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-$result_count = count($result);
+$database = new database;
+$result = $database->select($sql, null, 'all');
+unset($sql);
 
-if ($result_count > 0) {
+if (is_array($result) && @sizeof($result) != 0) {
 	$master_array = array();
 	foreach ($result as $row) {
 		$clip_folder = rtrim($row['clip_folder'], '/');
@@ -175,6 +174,7 @@ if ($result_count > 0) {
 	}
 	parse_array($master_array);
 }
+unset($result, $row);
 
 echo "</div>\n";
 
