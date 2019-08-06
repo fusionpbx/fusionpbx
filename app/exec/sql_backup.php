@@ -90,8 +90,8 @@
 
 //get the list of tables
 	if ($db_type == "sqlite") {
-		$sql = "SELECT name FROM sqlite_master ";
-		$sql .= "WHERE type='table' ";
+		$sql = "select name from sqlite_master ";
+		$sql .= "where type='table' ";
 		$sql .= "order by name;";
 	}
 	if ($db_type == "pgsql") {
@@ -104,78 +104,50 @@
 	if ($db_type == "mysql") {
 		$sql = "show tables";
 	}
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($result as &$row) {
-		$row = array_values($row);
-		$table_name = $row[0];
+	$database = new database;
+	$result_1 = $database->select($sql, null, 'all');
+	unset($sql);
 
-		//get the table data
-			$sql = "select * from $table_name";
-			if (strlen($sql) > 0) {
-				$prep_statement_2 = $db->prepare(check_sql($sql));
-				if ($prep_statement_2) {
-					$prep_statement_2->execute();
-					$result2 = $prep_statement_2->fetchAll(PDO::FETCH_ASSOC);
-				}
-				else {
-					echo "<b>".$text['label-error'].":</b>\n";
-					echo "<pre>\n";
-					print_r($db->errorInfo());
-					echo "</pre>\n";
-				}
+	if (is_array($result_1) && @sizeof($result_1) != 0) {
+		foreach ($result_1 as &$row_1) {
+			$row_1 = array_values($row_1);
+			$table_name = $row_1[0];
 
-				$x = 0;
-				foreach ($result2[0] as $key => $value) {
-					if ($row[$column] != "db") {
+			//get the table data
+				$sql = "select * from ".$table_name;
+				$database = new database;
+				$result_2 = $database->select($sql, null, 'all');
+				unset($sql);
+
+				foreach ($result_2[0] as $key => $value) {
+					if ($row_1[$column] != "db") {
 						if (field_exists($apps, $table_name, $key)) {
-							$column_array[$x] = $key;
+							$column_array[] = $key;
 						}
-						$x++;
 					}
 				}
 
 				$column_array_count = count($column_array);
 
-				foreach ($result2 as &$row) {
-					$sql = "INSERT INTO $table_name (";
-					$x = 1;
+				foreach ($result_2 as &$row_2) {
 					foreach ($column_array as $column) {
-						if ($x < $column_array_count) {
-							if (strlen($row[$column]) > 0) {
-								$sql .= ''.$column.',';
-							}
-						}
-						else {
-							if (strlen($row[$column]) > 0) {
-								$sql .= ''.$column.'';
-							}
-						}
-						$x++;
+						$columns[] = $column;
+						$values[] = $row_2[$column] != '' ? "'".check_str($row_2[$column])."'" : 'null';
 					}
-					$sql .= ") ";
-					$sql .= "VALUES( ";
-					$x = 1;
-					foreach ($column_array as $column) {
-						if ($x < $column_array_count) {
-							if (strlen($row[$column])> 0) {
-								$sql .= "'".check_str($row[$column])."',";
-							}
-						}
-						else {
-							if (strlen($row[$column])> 0) {
-								$sql .= "'".check_str($row[$column])."'";
-							}
-						}
-						$x++;
-					}
-					$sql .= ");\n";
-					echo str_replace(",)", ")", $sql);
-				}
-			}
+					$sql = "insert into ".$table_name." (";
+					$sql .= implode(', ', $columns);
+					$sql .= ") values ( ";
+					$sql .= implode(', ', $values);
+					$sql .= ");";
+					echo $sql."\n";
 
-		unset($column_array);
+					unset($columns, $values);
+				}
+				unset($result_2, $row_2);
+
+			unset($column_array);
+		}
 	}
+	unset($result_1, $row_1);
 
 ?>
