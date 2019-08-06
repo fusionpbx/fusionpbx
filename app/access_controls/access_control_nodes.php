@@ -142,7 +142,7 @@
 	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
 	echo "		<td class='list_control_icons'>";
 	if (permission_exists('access_control_node_add')) {
-		echo 		"<a href='access_control_node_edit.php?access_control_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo 		"<a href='access_control_node_edit.php?access_control_uuid=".escape($_GET['id'])."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	else {
 		echo 		"&nbsp;";
