@@ -97,7 +97,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (is_array($result)) {
+	if (is_array($result) && @sizeof($result) != 0) {
 		foreach($result as $row) {
 			$tr_link = (permission_exists('call_broadcast_edit')) ? "href='call_broadcast_edit.php?id=".$row['call_broadcast_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
@@ -122,9 +122,9 @@
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $result, $row_count);
-	} //end if results
+		}
+	}
+	unset($sql, $result);
 
 	echo "<tr>\n";
 	echo "<td colspan='5' align='left'>\n";

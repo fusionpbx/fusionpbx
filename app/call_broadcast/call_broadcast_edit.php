@@ -44,16 +44,16 @@
 	$text = $language->get();
 
 //set the action with add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$call_broadcast_uuid = check_str($_REQUEST["id"]);
+		$call_broadcast_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
 	}
 
 //function to Upload CSV/TXT file
-	function upload_file($sql,$broadcast_phone_numbers) {
+	function upload_file($sql, $broadcast_phone_numbers) {
 		$upload_csv = $sql = '';
 		if (isset($_FILES['broadcast_phone_numbers_file']) && !empty($_FILES['broadcast_phone_numbers_file']) && $_FILES['broadcast_phone_numbers_file']['size'] > 0) {
 			$filename=$_FILES["broadcast_phone_numbers_file"]["tmp_name"];
@@ -94,33 +94,32 @@
 
 //get the http post variables and set them to php variables
 	if (count($_POST)>0) {
-		$broadcast_name = check_str($_POST["broadcast_name"]);
-		$broadcast_description = check_str($_POST["broadcast_description"]);
-		$broadcast_timeout = check_str($_POST["broadcast_timeout"]);
-		$broadcast_concurrent_limit = check_str($_POST["broadcast_concurrent_limit"]);
-		//$recording_uuid = check_str($_POST["recording_uuid"]);
-		$broadcast_caller_id_name = check_str($_POST["broadcast_caller_id_name"]);
-		$broadcast_caller_id_number = check_str($_POST["broadcast_caller_id_number"]);
-		$broadcast_destination_type = check_str($_POST["broadcast_destination_type"]);
-		$broadcast_phone_numbers = check_str($_POST["broadcast_phone_numbers"]);
-		$broadcast_avmd = check_str($_POST["broadcast_avmd"]);
-		$broadcast_destination_data = check_str($_POST["broadcast_destination_data"]);
+		$broadcast_name = $_POST["broadcast_name"];
+		$broadcast_description = $_POST["broadcast_description"];
+		$broadcast_timeout = $_POST["broadcast_timeout"];
+		$broadcast_concurrent_limit = $_POST["broadcast_concurrent_limit"];
+		//$recording_uuid = $_POST["recording_uuid"];
+		$broadcast_caller_id_name = $_POST["broadcast_caller_id_name"];
+		$broadcast_caller_id_number = $_POST["broadcast_caller_id_number"];
+		$broadcast_destination_type = $_POST["broadcast_destination_type"];
+		$broadcast_phone_numbers = $_POST["broadcast_phone_numbers"];
+		$broadcast_avmd = $_POST["broadcast_avmd"];
+		$broadcast_destination_data = $_POST["broadcast_destination_data"];
 
 		if (if_group("superadmin")){
-			$broadcast_accountcode = check_str($_POST["broadcast_accountcode"]);
+			$broadcast_accountcode = $_POST["broadcast_accountcode"])
 		}
-		elseif (if_group("admin") && file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
-			$sql_accountcode = "SELECT COUNT(*) as count FROM v_billings WHERE domain_uuid = '".$_SESSION['domain_uuid']."' AND type_value='".$_POST["accountcode"]."'";
-			$prep_statement_accountcode = $db->prepare(check_sql($sql_accountcode));
-			$prep_statement_accountcode->execute();
-			$row_accountcode = $prep_statement_accountcode->fetch(PDO::FETCH_ASSOC);
-			if ($row_accountcode['count'] > 0) {
-				$broadcast_accountcode = check_str($_POST["broadcast_accountcode"]);
-			}
-			else {
-				$broadcast_accountcode = $_SESSION['domain_name'];
-			}
-			unset($sql_accountcode, $prep_statement_accountcode, $row_accountcode);
+		else if (if_group("admin") && file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
+			$sql = "select count(*) ";
+			$sql .= "from v_billings ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and type_value = :type_value ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['type_value'] = $_POST['accountcode'];
+			$database = new database;
+			$num_rows = $database->select($sql, $parameters, 'column');
+			$broadcast_accountcode = $num_rows > 0 ? $_POST["broadcast_accountcode"] : $_SESSION['domain_name'];
+			unset($sql, $parameters, $num_rows);
 		}
 		else{
 			$broadcast_accountcode = $_SESSION['domain_name'];
@@ -131,7 +130,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
-		$call_broadcast_uuid = check_str($_POST["call_broadcast_uuid"]);
+		$call_broadcast_uuid = $_POST["call_broadcast_uuid"];
 	}
 
 	//check for all required data
@@ -161,131 +160,87 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 	if ($_POST["persistformvar"] != "true") {
-		if ($action == "add" && permission_exists('call_broadcast_add')) {
-			$call_broadcast_uuid = uuid();
-			$sql = "insert into v_call_broadcasts ";
-			$sql .= "(";
-			$sql .= "domain_uuid, ";
-			$sql .= "call_broadcast_uuid, ";
-			$sql .= "broadcast_name, ";
-			$sql .= "broadcast_description, ";
-			$sql .= "broadcast_timeout, ";
-			$sql .= "broadcast_concurrent_limit, ";
-			//$sql .= "recording_uuid, ";
-			$sql .= "broadcast_caller_id_name, ";
-			$sql .= "broadcast_caller_id_number, ";
-			$sql .= "broadcast_destination_type, ";
-			$sql .= "broadcast_phone_numbers, ";
-			$sql .= "broadcast_avmd, ";
-			$sql .= "broadcast_destination_data, ";
-			$sql .= "broadcast_accountcode ";
-			$sql .= ")";
-			$sql .= "values ";
-			$sql .= "(";
-			$sql .= "'$domain_uuid', ";
-			$sql .= "'$call_broadcast_uuid', ";
-			$sql .= "'$broadcast_name', ";
-			$sql .= "'$broadcast_description', ";
-			if (strlen($broadcast_timeout) == 0) {
-				$sql .= "null, ";
-			}
-			else {
-				$sql .= "'$broadcast_timeout', ";
-			}
-			if (strlen($broadcast_concurrent_limit) == 0) {
-				$sql .= "null, ";
-			}
-			else {
-				$sql .= "'$broadcast_concurrent_limit', ";
-			}
-			//$sql .= "'$recording_uuid', ";
-			$sql .= "'$broadcast_caller_id_name', ";
-			$sql .= "'$broadcast_caller_id_number', ";
-			$sql .= "'$broadcast_destination_type', ";
 
-			//Add File selection and download sample 
- 		        $file_res = upload_file($sql,$broadcast_phone_numbers);
-			if ($file_res['code'] == true) {
-				$sql .= $file_res['sql'];
-			}
-			else {
-				$_SESSION["message_mood"] = "negative";
-				$_SESSION["message"] = $text['file-error'];
-				header("Location: call_broadcast_edit.php");
-				return false;
-			}
-			
-			$sql .= "'$broadcast_avmd', ";
-			$sql .= "'$broadcast_destination_data', ";
-			$sql .= "'$broadcast_accountcode' ";
-			$sql .= ")";
-			$db->exec(check_sql($sql));
-			unset($sql);
+		//prep insert
+			if ($action == "add" && permission_exists('call_broadcast_add')) {
+				//begin insert array
+					$call_broadcast_uuid = uuid();
+					$array['call_broadcasts'][0]['call_broadcast_uuid'] = $call_broadcast_uuid;
 
-			message::add($text['confirm-add']);
-			header("Location: call_broadcast.php");
-			return;
-		} //if ($action == "add")
+				//set message
+					message::add($text['confirm-add']);
 
-		if ($action == "update" && permission_exists('call_broadcast_edit')) {
-			$sql = "update v_call_broadcasts set ";
-			$sql .= "broadcast_name = '$broadcast_name', ";
-			$sql .= "broadcast_description = '$broadcast_description', ";
-			if (strlen($broadcast_timeout) == 0) {
-				$sql .= "broadcast_timeout = null, ";
+				//set return url on error
+					$error_return_url = "call_broadcast_edit.php";
 			}
-			else {
-				$sql .= "broadcast_timeout = '$broadcast_timeout', ";
-			}
-			if (strlen($broadcast_concurrent_limit) == 0) {
-				$sql .= "broadcast_concurrent_limit = null, ";
-			}
-			else {
-				$sql .= "broadcast_concurrent_limit = '$broadcast_concurrent_limit', ";
-			}
-			//$sql .= "recording_uuid = '$recording_uuid', ";
-			$sql .= "broadcast_caller_id_name = '$broadcast_caller_id_name', ";
-			$sql .= "broadcast_caller_id_number = '$broadcast_caller_id_number', ";
-			$sql .= "broadcast_destination_type = '$broadcast_destination_type', ";
 
-			//Update File selection and download sample 
-			$sql .= "broadcast_phone_numbers = "; 
-			$file_res = upload_file($sql,$broadcast_phone_numbers);
-			if ($file_res['code'] == true) {
-				$sql .= $file_res['sql'];
-			}
-			else {
-				$_SESSION["message_mood"] = "negative";
-				$_SESSION["message"] = $text['file-error'];
-				header("Location: call_broadcast_edit.php?id=".$_GET['id']);
-				return false;
-			}
-			
-			$sql .= "broadcast_avmd = '$broadcast_avmd', ";
-			$sql .= "broadcast_destination_data = '$broadcast_destination_data', ";
-			$sql .= "broadcast_accountcode = '$broadcast_accountcode' ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and call_broadcast_uuid = '$call_broadcast_uuid'";
-			echo $sql."<br><br>";
-			$db->exec(check_sql($sql));
-			unset($sql);
+		//prep update
+			if ($action == "update" && permission_exists('call_broadcast_edit')) {
+				//begin update array
+					$array['call_broadcasts'][0]['call_broadcast_uuid'] = $call_broadcast_uuid;
 
-			message::add($text['confirm-update']);
-			header("Location: call_broadcast.php");
-			return;
-		} //if ($action == "update")
-	} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+				//set message
+					message::add($text['confirm-update']);
+
+				//set return url on error
+					$error_return_url = "call_broadcast_edit.php?id=".$_GET['id'];
+			}
+
+		//execute
+			if (is_array($array) && @sizeof($array) != 0) {
+
+				//add file selection and download sample
+					$file_res = upload_file($sql, $broadcast_phone_numbers);
+					if ($file_res['code'] != true) {
+						$_SESSION["message_mood"] = "negative";
+						$_SESSION["message"] = $text['file-error'];
+						header("Location: ".$error_return_url);
+						exit;
+					}
+					$broadcast_phone_numbers = $file_res['sql'];
+
+				//common array items
+					$array['call_broadcasts'][0]['domain_uuid'] = $domain_uuid;
+					$array['call_broadcasts'][0]['broadcast_name'] = $broadcast_name;
+					$array['call_broadcasts'][0]['broadcast_description'] = $broadcast_description;
+					$array['call_broadcasts'][0]['broadcast_timeout'] = strlen($broadcast_timeout) != 0 ? $broadcast_timeout : null;
+					$array['call_broadcasts'][0]['broadcast_concurrent_limit'] = strlen($broadcast_concurrent_limit) != 0 ? $broadcast_concurrent_limit : null;
+					//$array['call_broadcasts'][0]['recording_uuid'] = $recording_uuid;
+					$array['call_broadcasts'][0]['broadcast_caller_id_name'] = $broadcast_caller_id_name;
+					$array['call_broadcasts'][0]['broadcast_caller_id_number'] = $broadcast_caller_id_number;
+					$array['call_broadcasts'][0]['broadcast_destination_type'] = $broadcast_destination_type;
+					$array['call_broadcasts'][0]['broadcast_phone_numbers'] = $broadcast_phone_numbers;
+					$array['call_broadcasts'][0]['broadcast_avmd'] = $broadcast_avmd;
+					$array['call_broadcasts'][0]['broadcast_destination_data'] = $broadcast_destination_data;
+					$array['call_broadcasts'][0]['broadcast_accountcode'] = $broadcast_accountcode;
+
+				//execute
+					$database = new database;
+					$database->app_name = 'call_broadcast';
+					$database->app_uuid = 'efc11f6b-ed73-9955-4d4d-3a1bed75a056';
+					$database->save($array);
+					unset($array);
+
+				//redirect
+					header("Location: call_broadcast.php");
+					exit;
+
+			}
+
+	}
+}
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$call_broadcast_uuid = $_GET["id"];
 		$sql = "select * from v_call_broadcasts ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and call_broadcast_uuid = '$call_broadcast_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		while($row = $prep_statement->fetch()) {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and call_broadcast_uuid = :call_broadcast_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['call_broadcast_uuid'] = $call_broadcast_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$broadcast_name = $row["broadcast_name"];
 			$broadcast_description = $row["broadcast_description"];
 			$broadcast_timeout = $row["broadcast_timeout"];
@@ -298,9 +253,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$broadcast_avmd = $row["broadcast_avmd"];
 			$broadcast_destination_data = $row["broadcast_destination_data"];
 			$broadcast_accountcode = $row["broadcast_accountcode"];
-			break; //limit to 1 row
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //begin header
@@ -346,30 +300,33 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo $text['description-accountcode']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
-	}elseif (if_group("admin") &&  file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
-		$sql_accountcode = "SELECT type_value FROM v_billings WHERE domain_uuid = '".$_SESSION['domain_uuid']."'";
-
+	}
+	else if (if_group("admin") &&  file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "    ".$text['label-accountcode']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "  <select name='broadcast_accountcode' id='broadcast_accountcode' class='formfld'>\n";
-		$prep_statement_accountcode = $db->prepare(check_sql($sql_accountcode));
-		$prep_statement_accountcode->execute();
-		$result_accountcode = $prep_statement_accountcode->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result_accountcode as &$row_accountcode) {
-			$selected = '';
-			if (($action == "add") && ($row_accountcode['type_value'] == $_SESSION['domain_name'])){
-				$selected='selected="selected"';
+		$sql = "select type_value ";
+		$sql .= "from v_billings ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$database = new database;
+		$result = $database->select($sql, $parameters, 'all');
+		if (is_array($result) && @sizeof($result) != 0) {
+			foreach ($result as &$row) {
+				$selected = '';
+				if (($action == "add") && ($row['type_value'] == $_SESSION['domain_name'])){
+					$selected='selected="selected"';
+				}
+				elseif ($row['type_value'] == $accountcode){
+					$selected='selected="selected"';
+				}
+				echo "    <option value=\"".$row['type_value']."\" $selected>".$row['type_value']."</option>\n";
 			}
-			elseif ($row_accountcode['type_value'] == $accountcode){
-				$selected='selected="selected"';
-			}
-			echo "    <option value=\"".$row_accountcode['type_value']."\" $selected>".$row_accountcode['type_value']."</option>\n";
 		}
-
-		unset($sql_accountcode, $prep_statement_accountcode, $result_accountcode);
+		unset($sql, $parameters, $result, $row);
 		echo "</select>";
 		echo "<br />\n";
 		echo $text['description-accountcode']."\n";
