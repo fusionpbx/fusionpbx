@@ -56,28 +56,31 @@
 			//download
 				$obj = new email_templates;
 				$obj->delete($email_templates);
-			//delete message
+			//redirect
 				message::add($text['message-delete']);
+				header('Location: '.$_SERVER['PHP_SELF']);
+				exit;
 		}
 	}
 
 //get variables used to control the order
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
 //add the search term
-	$search = strtolower(check_str($_GET["search"]));
+	$search = strtolower($_GET["search"]);
 	if (strlen($search) > 0) {
 		$sql_search = " (";
-		$sql_search .= " lower(template_language) like '%".$search."%' ";
-		$sql_search .= " or template_category like '%".$search."%' ";
-		$sql_search .= " or template_subcategory like '%".$search."%' ";
-		//$sql_search .= " or template_subject like '%".$search."%' ";
-		//$sql_search .= " or template_body like '%".$search."%' ";
-		$sql_search .= " or template_type like '%".$search."%' ";
-		$sql_search .= " or template_enabled like '%".$search."%' ";
-		$sql_search .= " or lower(template_description) like '%".$search."%' ";
+		$sql_search .= " lower(template_language) like :search ";
+		$sql_search .= " or lower(template_category) like :search ";
+		$sql_search .= " or lower(template_subcategory) like :search ";
+		//$sql_search .= " or lower(template_subject) like :search ";
+		//$sql_search .= " or lower(template_body) like :search ";
+		$sql_search .= " or lower(template_type) like :search ";
+		$sql_search .= " or lower(template_enabled) like :search ";
+		$sql_search .= " or lower(template_description) like :search ";
 		$sql_search .= ") ";
+		$parameters['search'] = '%'.$search.'%';
 	}
 
 //additional includes
@@ -85,28 +88,21 @@
 	require_once "resources/paging.php";
 
 //prepare to page the results
-	$sql = "select count(email_template_uuid) as num_rows from v_email_templates ";
+	$sql = "select count(*) from v_email_templates ";
 	if ($_GET['show'] == "all" && permission_exists('email_template_all')) {
-		if (isset($sql_search)) {
+		if ($sql_search != '') {
 			$sql .= "where ".$sql_search;
 		}
-	} else {
-		$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
-		if (isset($sql_search)) {
+	}
+	else {
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		if ($sql_search != '') {
 			$sql .= "and ".$sql_search;
 		}
+		$parameters['domain_uuid'] = $domain_uuid;
 	}
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-	}
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -117,28 +113,12 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select * from v_email_templates ";
-	if ($_GET['show'] == "all" && permission_exists('email_template_all')) {
-		if (isset($sql_search)) {
-			$sql .= "where ".$sql_search;
-		}
-	} else {
-		$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
-		if (isset($sql_search)) {
-			$sql .= "and ".$sql_search;
-		}
-	}
-	if (strlen($order_by) == 0) {
-		$sql .= "order by template_language asc ";
-	}
-	else {
-		$sql .= "order by $order_by $order ";
-	}
-	$sql .= "limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$sql = str_replace('count(*)', '*', $sql);
+	$sql .= order_by($order_by, $order, 'template_language', 'asc');
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //alternate the row style
 	$c = 0;
@@ -209,7 +189,7 @@
 	echo "	</td>\n";
 	echo "<tr>\n";
 
-	if (is_array($result)) {
+	if (is_array($result) && @sizeof($result) != 0) {
 		$x = 0;
 		foreach($result as $row) {
 			if (permission_exists('email_template_edit')) {
@@ -249,9 +229,9 @@
 			echo "</tr>\n";
 			$x++;
 			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $result, $row_count);
-	} //end if results
+		}
+	}
+	unset($result, $row);
 
 	echo "<tr>\n";
 	echo "<td colspan='8' align='left'>\n";

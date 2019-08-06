@@ -308,28 +308,33 @@
 			}
 		}
 
-		//implode the array into a string
-		$string = "'".implode("','", $uuids)."'";
-
 		//add the email templates to the database
-		$sql = "select * from v_email_templates ";
-		$sql .= "where email_template_uuid in (".$string.") ";
-		$database = new database;
-		$email_templates = $database->select($sql, null, 'all');
+		if (is_array($uuids) && @sizeof($uuids) != 0) {
+			$sql = "select * from v_email_templates where ";
+			foreach ($uuids as $index => $uuid) {
+				$sql_where[] = "email_template_uuid = :email_template_uuid_".$index;
+				$parameters['email_template_uuid_'.$index] = $uuid;
+			}
+			$sql .= implode(' or ', $sql_where);
+			$database = new database;
+			$email_templates = $database->select($sql, $parameters, 'all');
+			unset($sql, $sql_where, $parameters);
 
-		//remove templates that already exist from the array
-		$x = 0;
-		foreach ($array['email_templates'] as $row) {
-			foreach($email_templates as $email_template) {
-				if ($row['email_template_uuid'] == $email_template['email_template_uuid']) {
-					unset($array['email_templates'][$x]);
+			//remove templates that already exist from the array
+			foreach ($array['email_templates'] as $index => $row) {
+				if (is_array($email_templates) && @sizeof($email_templates) != 0) {
+					foreach($email_templates as $email_template) {
+						if ($row['email_template_uuid'] == $email_template['email_template_uuid']) {
+							unset($array['email_templates'][$index]);
+						}
+					}
 				}
 			}
-			$x++;
+			unset($email_templates, $index);
 		}
 
 		//add the missing email templates
-		if (is_array($array['email_templates'])) {
+		if (is_array($array['email_templates']) && @sizeof($array['email_templates']) != 0) {
 			//add the temporary permission
 			$p = new permissions;
 			$p->add("email_template_add", 'temp');
@@ -350,6 +355,6 @@
 		//remove the array
 		unset($array);
 
-	} //if ($domains_processed == 1)
+	}
 
 ?>
