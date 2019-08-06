@@ -5,6 +5,7 @@
 <Resync_On_Reset>Yes</Resync_On_Reset>
 <Resync_Random_Delay>2</Resync_Random_Delay>
 <Resync_Periodic>0</Resync_Periodic>
+<Resync_At_Random_Delay>0</Resync_At_Random_Delay>
 <Resync_Error_Retry_Delay>300</Resync_Error_Retry_Delay>
 <Forced_Resync_Delay>30</Forced_Resync_Delay>
 <Resync_From_SIP>Yes</Resync_From_SIP>
