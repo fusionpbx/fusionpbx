@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -227,7 +227,7 @@
 		//start processing
 		$byte_count = 0;
 		while(!feof($file)) {
-			$log_line = fgets($file);
+			$log_line = escape(fgets($file));
 			$byte_count++;
 			$noprint = false;
 
@@ -253,13 +253,13 @@
 								$log_line = str_replace($v1["pattern".$i], "<span style='color: ".$v1["color".$i].";'>".$v1["pattern".$i]."</span>", $log_line);
 							}
 						}
-						$array_output[] = "<span style='color: ".$v1['color']."; font-family: ".$v1['font'].";'>".escape($log_line)."</span><br>";
+						$array_output[] = "<span style='color: ".$v1['color']."; font-family: ".$v1['font'].";'>".$log_line."</span><br>";
 						$noprint = true;
 					}
 				}
 
 				if ($noprint !== true){
-					$array_output[] = "<span style='color: ".$default_color."; font-family: ".$default_font.";'>".escape($log_line)."</span><br>";
+					$array_output[] = "<span style='color: ".$default_color."; font-family: ".$default_font.";'>".$log_line."</span><br>";
 				}
 			}
 		}
@@ -278,7 +278,7 @@
 				if ($_POST['line_number']) {
 					$line_num = "<span style='font-family: courier; color: #aaa; font-size: 10px;'>".($index + $adj_index)."&nbsp;&nbsp;&nbsp;</span>";
 				}
-				echo escape($line_num)." ".$line;
+				echo $line_num." ".$line;
 			}
 		}
 		fclose($file);
