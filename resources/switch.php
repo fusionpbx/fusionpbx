@@ -488,10 +488,14 @@ function outbound_route_to_bridge ($domain_uuid, $destination_number) {
 			$dialplan_continue = $row['dialplan_continue'];
 
 		//get the extension number using the dialplan_uuid
-			$sql = "select * ";
-			$sql .= "from v_dialplan_details ";
-			$sql .= "where dialplan_uuid = '$dialplan_uuid' ";
-			$sql .= "order by dialplan_detail_order asc ";
+			$sql = "select vdp1.dialplan_detail_tag, vdp1.dialplan_detail_type, vdp1.dialplan_detail_data, vdp1.dialplan_detail_group, vdp1.dialplan_detail_order ";
+                        $sql .= "from v_dialplan_details as vdp1, v_dialplan_details as vdp2 ";
+                        $sql .= "where vdp1.dialplan_uuid = '$dialplan_uuid' ";
+                        $sql .= "and (vdp1.dialplan_detail_type = 'destination_number' or vdp1.dialplan_detail_type = 'bridge') ";
+                        $sql .= "and vdp2.dialplan_uuid = '$dialplan_uuid' ";
+                        $sql .= "and vdp2.dialplan_detail_type = 'bridge' ";
+                        $sql .= "and vdp1.dialplan_detail_group = vdp2.dialplan_detail_group ";
+                        $sql .= "order by dialplan_detail_group, dialplan_detail_order";
 			$sub_result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 			$regex_match = false;
 			foreach ($sub_result as &$sub_row) {
@@ -502,6 +506,7 @@ function outbound_route_to_bridge ($domain_uuid, $destination_number) {
 							preg_match($pattern, $destination_number, $matches, PREG_OFFSET_CAPTURE);
 							if (count($matches) == 0) {
 								$regex_match = false;
+								break;
 							}
 							else {
 								$regex_match = true;
@@ -510,6 +515,7 @@ function outbound_route_to_bridge ($domain_uuid, $destination_number) {
 								$regex_match_3 = $matches[3][0];
 								$regex_match_4 = $matches[4][0];
 								$regex_match_5 = $matches[5][0];
+								$dialplan_detail_group = $sub_row['dialplan_detail_group'];
 							}
 					}
 				}
