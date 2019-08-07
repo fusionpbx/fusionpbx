@@ -44,7 +44,7 @@
 	$text = $language->get();
 
 //set the http get/post variable(s) to a php variable
-	if (isset($_REQUEST["id"]) && isset($_REQUEST["ext"])) {
+	if (is_uuid($_REQUEST["id"]) && $_REQUEST["ext"] != '') {
 		$extension_uuid = $_REQUEST["id"];
 		$extension_new = $_REQUEST["ext"];
 		if (!is_numeric($extension_new)) {
@@ -57,19 +57,18 @@
 	if ($extension->exists($_SESSION['domain_uuid'], $extension_new)) {
 		message::add($text['message-duplicate'], 'negative');
 		header("Location: extensions.php");
-		return;
+		exit;
 	}
 
-//get the v_extensions data
+//get the extension data
 	$sql = "select * from v_extensions ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and extension_uuid = :extension_uuid ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['extension_uuid'] = $extension_uuid;
 	$database = new database;
-	$result = $database->select($sql, $parameters, 'all');
-	unset ($parameters, $sql);
-	foreach ($result as &$row) {
+	$row = $database->select($sql, $parameters, 'row');
+	if (is_array($row) && @sizeof($row) != 0) {
 		$extension = $row["extension"];
 		$number_alias = $row["number_alias"];
 		$accountcode = $row["accountcode"];
@@ -100,9 +99,9 @@
 		$sip_bypass_media = $row["sip_bypass_media"];
 		$dial_string = $row["dial_string"];
 		$enabled = $row["enabled"];
-		$description = $text['button-copy'].': '.$row["description"];
+		$description = $row["description"].' ('.$text['button-copy'].')';
 	}
-	unset ($prep_statement);
+	unset($sql, $parameters, $row);
 
 //copy the extension
 	$array['extensions'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -142,6 +141,7 @@
 	$database = new database;
 	$database->save($array);
 	$message = $database->message;
+	unset($array);
 
 //get the source extension voicemail data
 	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/voicemails')) {
@@ -149,24 +149,18 @@
 		//get the voicemails
 			$sql = "select * from v_voicemails ";
 			$sql .= "where domain_uuid = :domain_uuid ";
-			if (is_numeric($number_alias)) {
-				$sql .= "and voicemail_id = :voicemail_id ";
-				$parameters['voicemail_id'] = $number_alias;
-			}
-			else {
-				$sql .= "and voicemail_id = :voicemail_id ";
-				$parameters['voicemail_id'] = $extension;
-			}
+			$sql .= "and voicemail_id = :voicemail_id ";
+			$parameters['voicemail_id'] = is_numeric($number_alias) ? $number_alias : $extension;
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 			$database = new database;
-			$result = $database->select($sql, $parameters, 'all');
-			foreach ($result as $row) {
+			$row = $database->select($sql, $parameters, 'row');
+			if (is_array($row) && @sizeof($row) != 0) {
 				$voicemail_mailto = $row["voicemail_mail_to"];
 				$voicemail_file = $row["voicemail_file"];
 				$voicemail_local_after_email = $row["voicemail_local_after_email"];
 				$voicemail_enabled = $row["voicemail_enabled"];
 			}
-			unset ($prep_statement);
+			unset($sql, $parameters, $row);
 
 		//set the new voicemail password
 			if (strlen($voicemail_password) == 0) {
@@ -201,6 +195,6 @@
 //redirect the user
 	message::add($text['message-copy']);
 	header("Location: extensions.php");
-	return;
+	exit;
 
 ?>

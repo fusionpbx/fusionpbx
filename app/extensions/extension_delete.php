@@ -55,21 +55,22 @@
 					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 					$parameters['extension_uuid'] = $extension_uuid;
 					$database = new database;
-					$extensions = $database->execute($sql, $parameters);
-					if (is_array($extensions)) { 
-						foreach ($extensions as &$row) {
-							$extension = $row["extension"];
-							$number_alias = $row["number_alias"];
-							$user_context = $row["user_context"];
-							$follow_me_uuid = $row["follow_me_uuid"];
-						}
-						
+					$row = $database->execute($sql, $parameters, 'row');
+					if (is_array($row) && @sizeof($row) != 0) {
+						$extension = $row["extension"];
+						$number_alias = $row["number_alias"];
+						$user_context = $row["user_context"];
+						$follow_me_uuid = $row["follow_me_uuid"];
 					}
-					unset ($parameters);
+					unset($sql, $parameters, $row);
 
 				//delete the data
+					$p = new permissions;
+					$p->add('extension_user_delete', 'temp');
+					$p->add('follow_me_destination_delete', 'temp');
+					$p->add('follow_me_delete', 'temp');
+
 					$array['extension_users'][]['extension_uuid'] = $extension_uuid;
-					$array['extension_uuid'][]['extension_uuid'] = $extension_uuid;
 					$array['follow_me_destinations'][]['follow_me_uuid'] = $follow_me_uuid;
 					$array['follow_me'][]['follow_me_uuid'] = $follow_me_uuid;
 					$array['extensions'][]['extension_uuid'] = $extension_uuid;
@@ -77,7 +78,11 @@
 					$database->app_name = 'extensions';
 					$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 					$database->delete($array);
-					//$message = $database->message;
+					unset($array);
+
+					$p->delete('extension_user_delete', 'temp');
+					$p->delete('follow_me_destination_delete', 'temp');
+					$p->delete('follow_me_delete', 'temp');
 
 				//delete the ring group destinations
 					if (file_exists($_SERVER["PROJECT_ROOT"]."/app/ring_groups/app_config.php")) {
@@ -91,7 +96,6 @@
 						$database->execute($sql, $parameters);
 						unset($sql, $parameters);
 					}
-
 			}
 		}
 
@@ -109,6 +113,6 @@
 //redirect the browser
 	message::add($text['message-delete']);
 	header("Location: extensions.php");
-	return;
+	exit;
 
 ?>

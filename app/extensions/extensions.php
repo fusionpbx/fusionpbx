@@ -49,21 +49,22 @@
 	$text = $language->get();
 
 //get the http values and set them as variables
-	$search = check_str($_GET["search"]);
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
+	$search = $_GET["search"];
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
 //handle search term
-	$search = check_str($_GET["search"]);
+	$search = $_GET["search"];
 	if (strlen($search) > 0) {
 		$search = strtolower($search);
 		$sql_search = "and ( ";
-		$sql_search .= "lower(extension) like '%".$search."%' ";
-		$sql_search .= "or lower(call_group) like '%".$search."%' ";
-		$sql_search .= "or lower(user_context) like '%".$search."%' ";
-		$sql_search .= "or lower(enabled) like '%".$search."%' ";
-		$sql_search .= "or lower(description) like '%".$search."%' ";
+		$sql_search .= "lower(extension) like :search ";
+		$sql_search .= "or lower(call_group) like :search ";
+		$sql_search .= "or lower(user_context) like :search ";
+		$sql_search .= "or lower(enabled) like :search ";
+		$sql_search .= "or lower(description) like :search ";
 		$sql_search .= ") ";
+		$parameters['search'] = '%'.$search.'%';
 	}
 
 //additional includes
@@ -71,36 +72,23 @@
 	$document['title'] = $text['title-extensions'];
 	require_once "resources/paging.php";
 
-//get total extension count from the database
-	$sql = "select ";
-	$sql .= "(select count(*) from v_extensions ";
-	$sql .= "where 1 = 1 ";
-	if ($_GET['show'] == "all" && permission_exists('extension_all')) {
-		//show all extensions
-	} else {
-		$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
+//get total extension count
+	$sql_1 = "select count(*) from v_extensions ";
+	if (!($_GET['show'] == "all" && permission_exists('extension_all'))) {
+		$sql_1 .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	$sql .= " ".$sql_search.") as num_rows ";
-	if ($db_type == "pgsql") {
-		$sql .= ", (select count(*) as count from v_extensions ";
-		$sql .= "where 1 = 1 ";
-		if ($_GET['show'] == "all" && permission_exists('extension_all')) {
-			//show all extensions
-		} else {
-			$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		}
-		$sql .= "and extension ~ '^[0-9]+$') as numeric_extensions ";
+	$sql_1 .= $sql_search;
+	$database = new database;
+	$total_extensions = $database->select($sql_1, $parameters, 'column');
+
+//get total numeric extension count
+	if ($db_type == "pgsql" || $db_type == "mysql") {
+		$sql_2 = $sql_1." and extension ~ '^[0-9]+$' ";
+		$database = new database;
+		$numeric_extensions = $database->select($sql_2, $parameters, 'column');
 	}
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		$total_extensions = $row['num_rows'];
-		if (($db_type == "pgsql") or ($db_type == "mysql")) {
-			$numeric_extensions = $row['numeric_extensions'];
-		}
-	}
-	unset($prep_statement, $row);
+	unset($sql_2);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -112,33 +100,15 @@
 	$offset = $rows_per_page * $_GET['page'];
 
 //to cast or not to cast
-	if ($db_type == "pgsql") {
-		$order_text = ($total_extensions == $numeric_extensions) ? "cast(extension as bigint)" : "extension";
-	}
-	else {
-		$order_text = "extension";
-	}
+	$order_text = $db_type == "pgsql" && $total_extensions == $numeric_extensions ? 'cast(extension as bigint)' : 'extension';
 
 //get the extensions
-	$sql = "select * from v_extensions ";
-	$sql .= "where 1 = 1 ";
-	if ($_GET['show'] == "all" && permission_exists('extension_all')) {
-		//show all gateways
-	} else {
-		$sql .= "and domain_uuid = '$domain_uuid' ";
-	}
-	$sql .= $sql_search; //add search mod from above
-	if (strlen($order_by) > 0) {
-		$sql .= ($order_by == 'extension') ? "order by $order_text ".$order." " : "order by ".$order_by." ".$order." ";
-	}
-	else {
-		$sql .= "order by $order_text $order";
-	}
-	$sql .= "limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$extensions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$sql_3 = str_replace('count(*)', '*', $sql_1);
+	$sql_3 .= $order_by == '' || $order_by == 'extension' ? ' order by '.$order_text.' '.$order.' ' : order_by($order_by, $order);
+	$sql_3 .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$extensions = $database->select($sql_3, $parameters, 'all');
+	unset($sql_1, $sql_3, $parameters);
 
 //set the alternating styles
 	$c = 0;
@@ -215,7 +185,6 @@
 	echo "</tr>\n";
 
 	if (is_array($extensions)) {
-
 		foreach($extensions as $row) {
 			$tr_link = (permission_exists('extension_edit')) ? " href='extension_edit.php?id=".escape($row['extension_uuid'])."'" : null;
 			echo "<tr ".$tr_link.">\n";
@@ -281,8 +250,8 @@
 			echo "</tr>\n";
 			$c = ($c) ? 0 : 1;
 		}
-		unset($extensions, $row);
 	}
+	unset($extensions, $row);
 
 	if (is_array($extensions)) {
 		echo "<tr>\n";

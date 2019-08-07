@@ -58,12 +58,12 @@
 	ini_set(max_execution_time,7200);
 
 //get the http get values and set them as php variables
-	$action = check_str($_POST["action"]);
-	$from_row = check_str($_POST["from_row"]);
-	$order_by = check_str($_POST["order_by"]);
-	$order = check_str($_POST["order"]);
-	$delimiter = check_str($_POST["data_delimiter"]);
-	$enclosure = check_str($_POST["data_enclosure"]);
+	$action = $_POST["action"];
+	$from_row = $_POST["from_row"];
+	$order_by = $_POST["order_by"];
+	$order = $_POST["order"];
+	$delimiter = $_POST["data_delimiter"];
+	$enclosure = $_POST["data_enclosure"];
 
 //save the data to the csv file
 	if (isset($_POST['data'])) {
@@ -75,7 +75,7 @@
 //copy the csv file
 	//$_POST['submit'] == "Upload" &&
 	if ( is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('extension_imports')) {
-		if (check_str($_POST['type']) == 'csv') {
+		if ($_POST['type'] == 'csv') {
 			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name']);
 			$save_msg = "Uploaded file to ".$_SESSION['server']['temp']['dir']."/". htmlentities($_FILES['ulfile']['name']);
 			//system('chmod -R 744 '.$_SESSION['server']['temp']['dir'].'*');
@@ -102,10 +102,10 @@
 
 				//remove the v_ table prefix
 				if (substr($table_name, 0, 2) == 'v_') {
-						$table_name = substr($table_name, 2);
+					$table_name = substr($table_name, 2);
 				}
 				if (substr($parent_name, 0, 2) == 'v_') {
-						$parent_name = substr($parent_name, 2);
+					$parent_name = substr($parent_name, 2);
 				}
 
 				//filter for specific tables and build the schema array
@@ -142,7 +142,7 @@
 			echo "<form action='extension_imports.php' method='POST' enctype='multipart/form-data' name='frmUpload' onSubmit=''>\n";
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
-			echo "	<tr>\n";
+			echo "<tr>\n";
 			echo "	<td valign='top' align='left' nowrap='nowrap'>\n";
 			echo "		<b>".$text['header-import']."</b><br />\n";
 			echo "	</td>\n";
@@ -150,12 +150,12 @@
 			echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='../extensions/extensions.php'\" value='".$text['button-back']."'>\n";
 			echo "		<input name='submit' type='submit' class='btn' id='import' value=\"".$text['button-import']."\">\n";
 			echo "	</td>\n";
-			echo "	</tr>\n";
-			echo "	<tr>\n";
+			echo "</tr>\n";
+			echo "<tr>\n";
 			echo "	<td colspan='2' align='left'>\n";
 			echo "		".$text['description-import']."\n";
 			echo "	</td>\n";
-			echo "	</tr>\n";
+			echo "</tr>\n";
 
 			//echo "<tr>\n";
 			//echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-import']."</b></td>\n";
@@ -169,13 +169,13 @@
 			foreach ($line_fields as $line_field) {
 				$line_field = trim(trim($line_field), $enclosure);
 				echo "<tr>\n";
-				echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+				echo "	<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 				//echo "    ".$text['label-zzz']."\n";
 				echo $line_field;
-				echo "</td>\n";
-				echo "<td class='vtable' align='left'>\n";
-				echo "    			<select class='formfld' style='' name='fields[$x]'>\n";
-				echo "    			<option value=''></option>\n";
+				echo "	</td>\n";
+				echo "	<td class='vtable' align='left'>\n";
+				echo "		<select class='formfld' style='' name='fields[$x]'>\n";
+				echo "			<option value=''></option>\n";
 				foreach($schema as $row) {
 					echo "			<optgroup label='".$row['table']."'>\n";
 					foreach($row['fields'] as $field) {
@@ -184,30 +184,30 @@
 							$selected = "selected='selected'";
 						}
 						if ($field !== 'domain_uuid') {
-							echo "    			<option value='".$row['table'].".".$field."' ".$selected.">".$field."</option>\n";
+							echo "				<option value='".$row['table'].".".$field."' ".$selected.">".$field."</option>\n";
 						}
 					}
 					echo "			</optgroup>\n";
 				}
-				echo "    			</select>\n";
+				echo "		</select>\n";
 				//echo "<br />\n";
 				//echo $text['description-zzz']."\n";
-				echo "			</td>\n";
-				echo "		</tr>\n";
+				echo "	</td>\n";
+				echo "</tr>\n";
 				$x++;
 			}
 
-			echo "		<tr>\n";
-			echo "			<td colspan='2' valign='top' align='right' nowrap='nowrap'>\n";
-			echo "				<input name='action' type='hidden' value='import'>\n";
-			echo "				<input name='from_row' type='hidden' value='$from_row'>\n";
-			echo "				<input name='data_delimiter' type='hidden' value='$delimiter'>\n";
-			echo "				<input name='data_enclosure' type='hidden' value='$enclosure'>\n";
-			echo "				<input type='submit' class='btn' id='import' value=\"".$text['button-import']."\">\n";
-			echo "			</td>\n";
-			echo "		</tr>\n";
+			echo "<tr>\n";
+			echo "	<td colspan='2' valign='top' align='right' nowrap='nowrap'>\n";
+			echo "		<input name='action' type='hidden' value='import'>\n";
+			echo "		<input name='from_row' type='hidden' value='$from_row'>\n";
+			echo "		<input name='data_delimiter' type='hidden' value='$delimiter'>\n";
+			echo "		<input name='data_enclosure' type='hidden' value='$enclosure'>\n";
+			echo "		<input type='submit' class='btn' id='import' value=\"".$text['button-import']."\">\n";
+			echo "	</td>\n";
+			echo "</tr>\n";
 
-			echo "	</table>\n";
+			echo "</table>\n";
 			echo "</form>\n";
 			require_once "resources/footer.php";
 
@@ -246,10 +246,11 @@
 			$domain_uuid = $_SESSION['domain_uuid'];
 
 		//get the users
-			$sql = "select * from v_users where domain_uuid = '".$domain_uuid."' ";
-			$prep_statement = $db->prepare($sql);
-			$prep_statement->execute();
-			$users = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+			$sql = "select * from v_users where domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $domain_uuid;
+			$database = new database;
+			$users = $database->select($sql, $parameters, 'all');
+			unset($sql, $parameters);
 
 		//get the contents of the csv file and convert them into an array
 			$handle = @fopen($_SESSION['file'], "r");
@@ -297,14 +298,14 @@
 										}
 
 										if ($field_name == "username") {
-												foreach ($users as $field) {
-													if ($field['username'] == $result[$key]) {
-														//$array[$parent][$row_id]['extension_users'][$y]['cextension_user_uuid'] = uuid();
-														$array[$parent][$row_id]['extension_users'][$y]['domain_uuid'] = $domain_uuid;
-														//$array[$parent][$row_id]['extension_users'] = $row['extension_uuid'];
-														$array[$parent][$row_id]['extension_users'][$y]['user_uuid'] = $field['user_uuid'];
-													}
+											foreach ($users as $field) {
+												if ($field['username'] == $result[$key]) {
+													//$array[$parent][$row_id]['extension_users'][$y]['cextension_user_uuid'] = uuid();
+													$array[$parent][$row_id]['extension_users'][$y]['domain_uuid'] = $domain_uuid;
+													//$array[$parent][$row_id]['extension_users'] = $row['extension_uuid'];
+													$array[$parent][$row_id]['extension_users'][$y]['user_uuid'] = $field['user_uuid'];
 												}
+											}
 										}
 									}
 								}
@@ -317,7 +318,6 @@
 										$database->app_name = 'extensions';
 										$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 										$database->save($array);
-										//$message = $database->message;
 
 									//clear the array
 										unset($array);
@@ -332,24 +332,18 @@
 					} //end while
 					fclose($handle);
 
-				//debug info
-					//echo "<pre>\n";
-					//print_r($array);
-					//echo "</pre>\n";
-					//exit;
-
 				//save to the data
 					if (is_array($array)) {
 						$database = new database;
 						$database->app_name = 'extensions';
 						$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 						$database->save($array);
-						//$message = $database->message;
+						unset($array);
 					}
 
 				//send the redirect header
 					header("Location: extensions.php");
-					return;
+					exit;
 			}
 	}
 

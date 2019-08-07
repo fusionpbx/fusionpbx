@@ -34,31 +34,49 @@
 
 		//update the directory first and last names
 			$sql = "select * from v_extensions ";
-			$sql .= "where directory_first_name <> '' and directory_last_name is null ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$extensions = $prep_statement->fetchall(PDO::FETCH_ASSOC);
-				foreach($extensions as $row) {
+			$sql .= "where directory_first_name <> '' ";
+			$sql .= "and directory_last_name is null ";
+			$database = new database;
+			$extensions = $database->select($sql, null, 'all');
+			unset($sql);
+			if (is_array($extensions) && @sizeof($extensions) != 0) {
+				foreach($extensions as $index => $row) {
 					$name = explode(' ', $row['directory_first_name']);
 					if (strlen($name[1]) > 0) {
-						$sql = "UPDATE v_extensions ";
-						$sql .= "SET directory_first_name = '".$name[0]."', ";
-						$sql .= "directory_last_name = '".$name[1]."' ";
-						$sql .= "WHERE extension_uuid = '". $row['extension_uuid'] ."' ";
-						$db->exec(check_sql($sql));
-						unset($sql);
+						$array['extensions'][$index]['extension_uuid'] = $row['extension_uuid'];
+						$array['extensions'][$index]['directory_first_name'] = $name[0];
+						$array['extensions'][$index]['directory_last_name'] = $name[1];
 					}
 				}
+				if (is_array($array) && @sizeof($array) != 0) {
+					$p = new permissions;
+					$p->add('extension_edit', 'temp');
+
+					$database = new database;
+					$database->app_name = 'extensions';
+					$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
+					$database->save($array);
+					unset($array);
+
+					$p->delete('extension_edit', 'temp');
+				}
 			}
+			unset($extensions, $row);
 
 		//change category security to extension
-			$sql = "UPDATE v_default_settings ";
-			$sql .= "SET default_setting_category = 'extension' ";
-			$sql .= "WHERE default_setting_category = 'security' ";
-			$sql .= "AND default_setting_subcategory like 'password_%' ";
-			$db->exec(check_sql($sql));
+			$sql = "update v_default_settings ";
+			$sql .= "set default_setting_category = 'extension' ";
+			$sql .= "where default_setting_category = 'security' ";
+			$sql .= "and default_setting_subcategory like 'password_%' ";
+
+			$p = new permissions;
+			$p->add('default_setting_edit', 'temp');
+
+			$database = new database;
+			$database->execute($sql);
 			unset($sql);
+
+			$p->delete('default_setting_edit', 'temp');
 
 	}
 
