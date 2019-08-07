@@ -1481,6 +1481,26 @@ $text['label-is_registered']['ru-ru'] = "Зарегистрировано";
 $text['label-is_registered']['sv-se'] = "Registrerad";
 $text['label-is_registered']['uk-ua'] = "";
 
+$text['label-column_name']['en-us'] = "Column Name";
+$text['label-column_name']['ar-eg'] = "";
+$text['label-column_name']['de-at'] = "";
+$text['label-column_name']['de-ch'] = "";
+$text['label-column_name']['de-de'] = "";
+$text['label-column_name']['es-cl'] = "";
+$text['label-column_name']['es-mx'] = "";
+$text['label-column_name']['fr-ca'] = "";
+$text['label-column_name']['fr-fr'] = "";
+$text['label-column_name']['he-il'] = "";
+$text['label-column_name']['it-it'] = "";
+$text['label-column_name']['nl-nl'] = "";
+$text['label-column_name']['pl-pl'] = "";
+$text['label-column_name']['pt-br'] = "";
+$text['label-column_name']['pt-pt'] = "";
+$text['label-column_name']['ro-ro'] = "";
+$text['label-column_name']['ru-ru'] = "";
+$text['label-column_name']['sv-se'] = "";
+$text['label-column_name']['uk-ua'] = "";
+
 $text['header-extensions']['en-us'] = "Extensions";
 $text['header-extensions']['ar-eg'] = "الأرقام الداخلية";
 $text['header-extensions']['de-at'] = "Nebenstellen"; //copied from de-de
