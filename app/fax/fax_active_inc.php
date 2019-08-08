@@ -34,91 +34,65 @@ else {
 	exit;
 }
 
-if ((!permission_exists('fax_active_all')) && ($show == 'all')) {
+if (!permission_exists('fax_active_all') && $show == 'all') {
 	echo "access denied";
 	exit;
-}
-
-$fax_uuid = false;
-if(isset($_REQUEST['id'])) {
-	$fax_uuid = check_str($_REQUEST["id"]);
 }
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-//get the HTTP values and set as variables
-	$show = trim($_REQUEST["show"]);
-	if ($show != "all") { $show = ''; }
+//get submitted values
+	$fax_uuid = $_REQUEST["id"];
+	$show = $_REQUEST["show"];
 
 //include theme config for button images
 	include_once("themes/".$_SESSION['domain']['template']['name']."/config.php");
 
-$where = 'where (1 = 1)';
-
-if($show !== 'all'){
-	$where .= 'and (t3.domain_name = \'' . check_str($_SESSION['domain_name']) . '\')';
-}
-else if($fax_uuid){
-	if(!permission_exists('fax_active_all')){
-		$where .= 'and (t3.domain_name = \'' . check_str($_SESSION['domain_name']) . '\')';
+//construct query
+	$sql = "select ";
+	$sql .= "t1.fax_task_uuid as uuid, ";
+	$sql .= "t1.fax_uuid as fax_uuid, ";
+	$sql .= "t3.domain_name, ";
+	$sql .= "t3.domain_uuid, ";
+	$sql .= "t1.task_next_time as next_time, ";
+	$sql .= "t1.task_interrupted as interrupted, ";
+	$sql .= "t1.task_status as status, ";
+	$sql .= "t1.task_uri as uri, ";
+	$sql .= "t1.task_dial_string as dial_string, ";
+	$sql .= "t1.task_dtmf as dtmf, ";
+	$sql .= "t1.task_fax_file as fax_file, ";
+	$sql .= "t1.task_wav_file as wav_file, ";
+	$sql .= "t1.task_reply_address as reply_address, ";
+	$sql .= "t1.task_no_answer_counter as no_answer_counter, ";
+	$sql .= "t1.task_no_answer_retry_counter as no_answer_retry_counter, ";
+	$sql .= "t1.task_retry_counter as retry_counter, ";
+	$sql .= "t2.fax_send_greeting as greeting, ";
+	$sql .= "t2.fax_name as fax_server_name ";
+	$sql .= "from v_fax_tasks t1 ";
+	$sql .= "inner join v_fax t2 on t2.fax_uuid = t1.fax_uuid ";
+	$sql .= "inner join v_domains t3 on t2.domain_uuid = t3.domain_uuid ";
+	$sql .= "where true ";
+	if ($show !== 'all'){
+		$sql .= "and t3.domain_name = :domain_name ";
+		$parameters['domain_name'] = $_SESSION['domain_name'];
 	}
-	$where .= 'and (t1.fax_uuid =\'' . check_str($fax_uuid) . '\')';
-}
-
-	$sql = <<<HERE
-select
-  t1.fax_task_uuid as uuid,
-  t1.fax_uuid as fax_uuid,
-  t3.domain_name,
-  t3.domain_uuid,
-  t1.task_next_time as next_time,
-  t1.task_interrupted as interrupted,
-  t1.task_status as status,
-  t1.task_uri as uri,
-  t1.task_dial_string as dial_string,
-  t1.task_dtmf as dtmf,
-  t1.task_fax_file as fax_file,
-  t1.task_wav_file as wav_file,
-  t1.task_reply_address as reply_address,
-  t1.task_no_answer_counter as no_answer_counter,
-  t1.task_no_answer_retry_counter as no_answer_retry_counter,
-  t1.task_retry_counter as retry_counter,
-  t2.fax_send_greeting as greeting,
-  t2.fax_name as fax_server_name
-from v_fax_tasks t1
-  inner join v_fax t2 on t2.fax_uuid = t1.fax_uuid
-  inner join v_domains t3 on t2.domain_uuid = t3.domain_uuid
-$where
-order by domain_name, fax_server_name, next_time
-HERE;
-
-	$result = false;
-	$prep_statement = $db->prepare(check_sql($sql));
-	if ($prep_statement) {
-		if($prep_statement->execute()) {
-			$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+	else if (is_uuid($fax_uuid)) {
+		if (!permission_exists('fax_active_all')) {
+			$sql .= "and t3.domain_name = :domain_name ";
+			$parameters['domain_name'] = $_SESSION['domain_name'];
 		}
+		$sql .= "and t1.fax_uuid = :fax_uuid ";
+		$parameters['fax_uuid'] = $fax_uuid;
 	}
-	unset($prep_statement, $sql, $where);
+	$sql .= "order by domain_name, fax_server_name, next_time ";
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
+	$message = $database->message;
+	unset($sql, $parameters);
 
-//if the connnection is available then run it and return the results
-	if ($result === false) {
-		var_dump($db->errorInfo());
-		$msg = "<div align='center'>".$text['message-fail']."<br /></div>";
-		echo "<div align='center'>\n";
-		echo "<table width='40%'>\n";
-		echo "<tr>\n";
-		echo "<th align='left'>".$text['label-message']."</th>\n";
-		echo "</tr>\n";
-		echo "<tr>\n";
-		echo "<td class='row_style1'><strong>$msg</strong></td>\n";
-		echo "</tr>\n";
-		echo "</table>\n";
-		echo "</div>\n";
-	}
-	else {
+	if (is_array($result) && @sizeof($result) != 0) {
 		//define js function call var
 			$onhover_pause_refresh = " onmouseover='refresh_stop();' onmouseout='refresh_start();'";
 
@@ -158,12 +132,12 @@ HERE;
 		//show headers
 			echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 			echo "<tr>\n";
-			echo "<th>" . $text['fax-active_title_fax_server'] . "</th>\n";
-			echo "<th>" . $text['fax-active_title_enabled']    . "</th>\n";
-			echo "<th>" . $text['fax-active_title_status']     . "</th>\n";
-			echo "<th>" . $text['fax-active_title_next_time']  . "</th>\n";
-			echo "<th>" . $text['fax-active_title_files']      . "</th>\n";
-			echo "<th>" . $text['fax-active_title_uri']        . "</th>\n";
+			echo "<th>".$text['fax-active_title_fax_server']."</th>\n";
+			echo "<th>".$text['fax-active_title_enabled']."</th>\n";
+			echo "<th>".$text['fax-active_title_status']."</th>\n";
+			echo "<th>".$text['fax-active_title_next_time']."</th>\n";
+			echo "<th>".$text['fax-active_title_files']."</th>\n";
+			echo "<th>".$text['fax-active_title_uri']."</th>\n";
 
 			echo "<td class='list_control_icon'></td>\n";
 			echo "</tr>\n";
@@ -175,8 +149,8 @@ HERE;
 				$task_status  = $text['fax-active_status_wait'];
 				$task_next_time  = $row['next_time'];
 
-				if($row['status'] > 0){
-					if($row['status'] <= 3){
+				if ($row['status'] > 0) {
+					if ($row['status'] <= 3) {
 						$task_status = $text['fax-active_status_execute'];
 					}
 					else if($row['status'] == 10){
@@ -189,17 +163,18 @@ HERE;
 
 				$fax_server = $row['fax_server_name'];
 				if ($show == 'all') {
-					$fax_server .= '@' . $domain_name;
+					$fax_server .= '@'.$domain_name;
 				}
 
 				$task_files = '';
-				if(!empty($row['fax_file'])){
-					$task_files .= '&nbsp;' . basename($row['fax_file']);
+				if (!empty($row['fax_file'])) {
+					$task_files .= '&nbsp;'.basename($row['fax_file']);
 				}
-				if(!empty($row['wav_file'])){
-					$task_files .= '<br/>&nbsp;' . basename($row['wav_file']);
-				} else if(!empty($row['greeting'])){
-					$task_files .= '<br/>&nbsp;' . basename($row['greeting']);
+				if (!empty($row['wav_file'])) {
+					$task_files .= '<br/>&nbsp;'.basename($row['wav_file']);
+				}
+				else if (!empty($row['greeting'])) {
+					$task_files .= '<br/>&nbsp;'.basename($row['greeting']);
 				}
 
 				//replace gateway uuid with name
@@ -210,12 +185,12 @@ HERE;
 					}
 
 				echo "<tr>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>" . $fax_server     . "&nbsp;</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>" . $task_enabled   . "&nbsp;</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>" . $task_status    . "&nbsp;</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>" . $task_next_time . "&nbsp;</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>" . $task_files     . "&nbsp;</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>" . $fax_uri        . "&nbsp;</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".$fax_server."&nbsp;</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".$task_enabled."&nbsp;</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".$task_status."&nbsp;</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".$task_next_time."&nbsp;</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".$task_files."&nbsp;</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".$fax_uri."&nbsp;</td>\n";
 
 				echo "<td class='list_control_icons' style='width: 25px; text-align: left;'><a href='javascript:void(0);' alt='".$text['label-hangup']."' onclick=\"hangup(escape('".$row['uuid']."'));\">".$v_link_label_delete."</a></td>\n";
 				echo "</tr>\n";

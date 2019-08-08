@@ -42,18 +42,20 @@
 	$language = new text;
 	$text = $language->get();
 
-//pre-populate the form
-	if (isset($_REQUEST["id"]) && isset($_REQUEST["fax_uuid"])) {
-		$fax_log_uuid = check_str($_REQUEST["id"]);
-		$fax_uuid = check_str($_REQUEST["fax_uuid"]);
+//get ids
+	$fax_log_uuid = $_REQUEST["id"];
+	$fax_uuid = $_REQUEST["fax_uuid"];
 
+//pre-populate the form
+	if (is_uuid($fax_log_uuid) && is_uuid($fax_uuid)) {
 		$sql = "select * from v_fax_logs ";
-		$sql .= "where domain_uuid = '".$domain_uuid."' ";
-		$sql .= "and fax_log_uuid = '".$fax_log_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and fax_log_uuid = :fax_log_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['fax_log_uuid'] = $fax_log_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$fax_log_uuid = $row["fax_log_uuid"];
 			$fax_success = $row["fax_success"];
 			$fax_result_code = $row["fax_result_code"];
@@ -73,9 +75,8 @@
 			$fax_uri = $row["fax_uri"];
 			$fax_date = $row["fax_date"];
 			$fax_epoch = $row["fax_epoch"];
-			break; //limit to 1 row
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //show the header

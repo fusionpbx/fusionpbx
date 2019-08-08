@@ -1941,6 +1941,26 @@ $text['label-fax_send_channels']['ru-ru'] = "Количество каналов
 $text['label-fax_send_channels']['sv-se'] = "";
 $text['label-fax_send_channels']['uk-ua'] = "";
 
+$text['label-copy']['en-us'] = "Copy";
+$text['label-copy']['ar-eg'] = "Copy";
+$text['label-copy']['de-at'] = "Copy";
+$text['label-copy']['de-ch'] = "Copy";
+$text['label-copy']['de-de'] = "Copy";
+$text['label-copy']['es-cl'] = "Copy";
+$text['label-copy']['es-mx'] = "Copy";
+$text['label-copy']['fr-ca'] = "Copy";
+$text['label-copy']['fr-fr'] = "Copy";
+$text['label-copy']['he-il'] = "Copy";
+$text['label-copy']['it-it'] = "Copy";
+$text['label-copy']['nl-nl'] = "Copy";
+$text['label-copy']['pl-pl'] = "Copy";
+$text['label-copy']['pt-br'] = "Copy";
+$text['label-copy']['pt-pt'] = "Copy";
+$text['label-copy']['ro-ro'] = "Copy";
+$text['label-copy']['ru-ru'] = "Copy";
+$text['label-copy']['sv-se'] = "Copy";
+$text['label-copy']['uk-ua'] = "Copy";
+
 $text['header-sent']['en-us'] = "Sent Faxes";
 $text['header-sent']['ar-eg'] = "";
 $text['header-sent']['de-at'] = "Gesendete Faxe"; //copied from de-de

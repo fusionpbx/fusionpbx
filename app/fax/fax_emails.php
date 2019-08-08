@@ -35,10 +35,9 @@ require_once "resources/classes/text.php";
 $sql = "select * from v_fax ";
 $sql .= "where fax_email_connection_host <> '' ";
 $sql .= "and fax_email_connection_host is not null ";
-$prep_statement = $db->prepare(check_sql($sql));
-$prep_statement->execute();
-$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-unset($sql, $prep_statement);
+$database = new database;
+$result = $database->select($sql, null, 'all');
+unset($sql);
 
 function arr_to_map(&$arr){
 	if(is_array($arr)){
@@ -51,20 +50,19 @@ function arr_to_map(&$arr){
 	return false;
 }
 
-if (sizeof($result) != 0) {
+if (is_array($array) && @sizeof($array) != 0) {
 
 	//load default settings
 	$default_settings = load_default_settings();
 
 	//get event socket connection parameters
 	$sql = "select event_socket_ip_address, event_socket_port, event_socket_password from v_settings";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$record = $prep_statement->fetch(PDO::FETCH_NAMED);
-	$event_socket['ip_address'] = $record['event_socket_ip_address'];
-	$event_socket['port'] = $record['event_socket_port'];
-	$event_socket['password'] = $record['event_socket_password'];
-	unset($sql, $prep_statement, $record);
+	$database = new database;
+	$row = $database->select($sql, null, 'row');
+	$event_socket['ip_address'] = $row['event_socket_ip_address'];
+	$event_socket['port'] = $row['event_socket_port'];
+	$event_socket['password'] = $row['event_socket_password'];
+	unset($sql, $row);
 
 	$fax_send_mode_default = $_SESSION['fax']['send_mode']['text'];
 	if(strlen($fax_send_mode_default) == 0){
@@ -74,7 +72,7 @@ if (sizeof($result) != 0) {
 
 	$fax_allowed_extension_default = arr_to_map($_SESSION['fax']['allowed_extension']);
 	if($fax_allowed_extension_default == false){
-		$tmp = Array('.pdf', '.tiff', '.tif');
+		$tmp = array('.pdf', '.tiff', '.tif');
 		$fax_allowed_extension_default = arr_to_map($tmp);
 	}
 
@@ -126,14 +124,14 @@ if (sizeof($result) != 0) {
 		$_SESSION['event_socket_password'] = $event_socket['password'];
 
 		//get domain name, set local and session variables
-		$sql = "select domain_name from v_domains where domain_uuid = '".$domain_uuid."'";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$record = $prep_statement->fetch(PDO::FETCH_NAMED);
-		$domain_name = $record['domain_name'];
-		$_SESSION['domain_name'] = $record['domain_name'];
+		$sql = "select domain_name from v_domains where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		$domain_name = $row['domain_name'];
+		$_SESSION['domain_name'] = $row['domain_name'];
 		$_SESSION['domain_uuid'] = $domain_uuid;
-		unset($sql, $prep_statement, $record);
+		unset($sql, $parameters, $row);
 
 		//set needed variables
 		$fax_page_size = $_SESSION['fax']['page_size']['text'];
@@ -296,91 +294,82 @@ if (sizeof($result) != 0) {
 
 //functions used above
 function load_default_settings() {
-	global $db;
-
 	$sql = "select * from v_default_settings ";
 	$sql .= "where default_setting_enabled = 'true' ";
-	try {
-		$prep_statement = $db->prepare($sql . " order by default_setting_order asc ");
-		$prep_statement->execute();
-	}
-	catch(PDOException $e) {
-		$prep_statement = $db->prepare($sql);
-		$prep_statement->execute();
-	}
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$database = new database;
+	$result = $database->select($sql, null, 'all');
 	//load the settings into an array
-	foreach ($result as $row) {
-		$name = $row['default_setting_name'];
-		$category = $row['default_setting_category'];
-		$subcategory = $row['default_setting_subcategory'];
-		if (strlen($subcategory) == 0) {
-			if ($name == "array") {
-				$settings[$category][] = $row['default_setting_value'];
+	if (is_array($result) && @sizeof($result) != 0) {
+		foreach ($result as $row) {
+			$name = $row['default_setting_name'];
+			$category = $row['default_setting_category'];
+			$subcategory = $row['default_setting_subcategory'];
+			if (strlen($subcategory) == 0) {
+				if ($name == "array") {
+					$settings[$category][] = $row['default_setting_value'];
+				}
+				else {
+					$settings[$category][$name] = $row['default_setting_value'];
+				}
 			}
 			else {
-				$settings[$category][$name] = $row['default_setting_value'];
-			}
-		} else {
-			if ($name == "array") {
-				$settings[$category][$subcategory][] = $row['default_setting_value'];
-			}
-			else {
-				$settings[$category][$subcategory][$name] = $row['default_setting_value'];
-				$settings[$category][$subcategory][$name] = $row['default_setting_value'];
+				if ($name == "array") {
+					$settings[$category][$subcategory][] = $row['default_setting_value'];
+				}
+				else {
+					$settings[$category][$subcategory][$name] = $row['default_setting_value'];
+					$settings[$category][$subcategory][$name] = $row['default_setting_value'];
+				}
 			}
 		}
 	}
+	unset($sql, $parameters, $result, $row);
 	return $settings;
 }
 
 function load_domain_settings($domain_uuid) {
-	global $db;
-
-	if ($domain_uuid) {
+	if (is_uuid($domain_uuid)) {
 		$sql = "select * from v_domain_settings ";
-		$sql .= "where domain_uuid = '" . $domain_uuid . "' ";
+		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and domain_setting_enabled = 'true' ";
-		try {
-			$prep_statement = $db->prepare($sql . " order by domain_setting_order asc ");
-			$prep_statement->execute();
-		}
-		catch(PDOException $e) {
-			$prep_statement = $db->prepare($sql);
-			$prep_statement->execute();
-		}
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		//unset the arrays that domains are overriding
-		foreach ($result as $row) {
-			$name = $row['domain_setting_name'];
-			$category = $row['domain_setting_category'];
-			$subcategory = $row['domain_setting_subcategory'];
-			if ($name == "array") {
-				unset($_SESSION[$category][$subcategory]);
-			}
-		}
-		//set the settings as a session
-		foreach ($result as $row) {
-			$name = $row['domain_setting_name'];
-			$category = $row['domain_setting_category'];
-			$subcategory = $row['domain_setting_subcategory'];
-			if (strlen($subcategory) == 0) {
-				//$$category[$name] = $row['domain_setting_value'];
-				if ($name == "array") {
-					$_SESSION[$category][] = $row['domain_setting_value'];
+		$sql .= "order by domain_setting_order asc "
+		$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$result = $database->select($sql, $parameters, 'all');
+		if (is_array($result) && @sizeof($result) != 0) {
+			//unset the arrays that domains are overriding
+				foreach ($result as $row) {
+					$name = $row['domain_setting_name'];
+					$category = $row['domain_setting_category'];
+					$subcategory = $row['domain_setting_subcategory'];
+					if ($name == "array") {
+						unset($_SESSION[$category][$subcategory]);
+					}
 				}
-				else {
-					$_SESSION[$category][$name] = $row['domain_setting_value'];
+			//set the settings as a session
+				foreach ($result as $row) {
+					$name = $row['domain_setting_name'];
+					$category = $row['domain_setting_category'];
+					$subcategory = $row['domain_setting_subcategory'];
+					if (strlen($subcategory) == 0) {
+						//$$category[$name] = $row['domain_setting_value'];
+						if ($name == "array") {
+							$_SESSION[$category][] = $row['domain_setting_value'];
+						}
+						else {
+							$_SESSION[$category][$name] = $row['domain_setting_value'];
+						}
+					}
+					else {
+						//$$category[$subcategory][$name] = $row['domain_setting_value'];
+						if ($name == "array") {
+							$_SESSION[$category][$subcategory][] = $row['domain_setting_value'];
+						}
+						else {
+							$_SESSION[$category][$subcategory][$name] = $row['domain_setting_value'];
+						}
+					}
 				}
-			} else {
-				//$$category[$subcategory][$name] = $row['domain_setting_value'];
-				if ($name == "array") {
-					$_SESSION[$category][$subcategory][] = $row['domain_setting_value'];
-				}
-				else {
-					$_SESSION[$category][$subcategory][$name] = $row['domain_setting_value'];
-				}
-			}
 		}
 	}
 }

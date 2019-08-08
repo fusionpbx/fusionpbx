@@ -43,24 +43,32 @@
 	$text = $language->get();
 
 //get the id
-	if (count($_GET) > 0) {
-		$id = check_str($_GET["id"]);
-		$fax_uuid = check_str($_GET["fax_uuid"]);
-	}
+	$fax_log_uuid = $_GET["id"];
+	$fax_uuid = $_GET["fax_uuid"];
 
 //delete the fax log
-	if (strlen($id)>0) {
-		//delete fax_log
-			$sql = "delete from v_fax_logs ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and fax_log_uuid = '$id' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($sql);
+	if (is_uuid($fax_log_uuid) && is_uuid($fax_uuid)) {
+		//build array
+			$array['fax_logs'][0]['domain_uuid'] = $domain_uuid;
+			$array['fax_logs'][0]['fax_log_uuid'] = $fax_log_uuid;
+
+		//execute
+			$database = new database;
+			$database->app_name = 'fax';
+			$database->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
+			$database->delete($array);
+			unset($array);
+
+		//set message
+			message::add($text['message-delete']);
+
+		//redirect
+			header('Location: fax_logs.php?id='.$fax_uuid);
+			exit;
 	}
 
 //redirect the user
-	message::add($text['message-delete']);
-	header('Location: fax_logs.php?id='.$fax_uuid);
+	header('Location: fax.php');
+	exit;
 
 ?>
