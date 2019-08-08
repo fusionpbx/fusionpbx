@@ -47,35 +47,29 @@
 	$text = $language->get();
 
 //get the http get values and set them as php variables
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
-//get the fax extensions
+//get record counts
 	if (if_group("superadmin") || if_group("admin")) {
 		//show all fax extensions
-		$sql = "select count(*) as num_rows from v_fax ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql = "select count(*) from v_fax as f ";
+		$sql .= "where f.domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	else {
 		//show only assigned fax extensions
-		$sql = "select count(*) as num_rows from v_fax as f, v_fax_users as u ";
+		$sql = "select count(*) from v_fax as f, v_fax_users as u ";
 		$sql .= "where f.fax_uuid = u.fax_uuid ";
-		$sql .= "and f.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and u.user_uuid = '".$_SESSION['user_uuid']."' ";
+		$sql .= "and f.domain_uuid = :domain_uuid ";
+		$sql .= "and u.user_uuid = :user_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	}
-	$prep_statement = $db->prepare(check_sql($sql));
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-	}
-	unset($prep_statement, $result);
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
 
+//prepare paging
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "";
 	$page = check_str($_GET['page']);
@@ -83,28 +77,13 @@
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
-	if (if_group("superadmin") || if_group("admin")) {
-		//show all fax extensions
-		$sql = "select * from v_fax ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		if (strlen($order_by) == 0) { $sql .= "order by fax_name asc "; }
-	}
-	else {
-		//show only assigned fax extensions
-		$sql = "select * from v_fax as f, v_fax_users as u ";
-		$sql .= "where f.fax_uuid = u.fax_uuid ";
-		$sql .= "and f.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and u.user_uuid = '".$_SESSION['user_uuid']."' ";
-		if (strlen($order_by) == 0) { $sql .= "order by f.fax_name asc "; }
-	}
-	if (strlen($order_by) > 0) {
-		$sql .= "order by $order_by $order ";
-	}
-	$sql .= "limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-	unset ($prep_statement, $sql);
+//get records
+	$sql = str_replace('count(*)', '*', $sql);
+	$sql .= order_by($order_by, $order, 'f.fax_name', 'asc');
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //show the content
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
@@ -136,7 +115,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($num_rows > 0) {
+	if (is_array($result) && @sizeof($result) != 0) {
 		foreach($result as $row) {
 			//remove the backslash
 				$fax_email = str_replace("\\", "", $row['fax_email']);
@@ -191,9 +170,9 @@
 				echo "</tr>\n";
 			//alternate the CSS class
 				if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $result);
-	} //end if results
+		}
+	}
+	unset($result, $row);
 
 	echo "<tr>\n";
 	echo "<td colspan='6'>\n";
