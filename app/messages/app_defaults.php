@@ -33,7 +33,8 @@ if ($domains_processed == 1) {
 	$sql .= "where default_setting_category = 'message' ";
 	$sql .= "and default_setting_subcategory = 'http_auth_password' ";
 	$sql .= "and default_setting_name = 'array' ";
-	$db->exec($sql);
+	$database = new database;
+	$database->execute($sql);
 	unset($sql);
 
 	//update domain settings
@@ -42,7 +43,8 @@ if ($domains_processed == 1) {
 	$sql .= "where domain_setting_category = 'message' ";
 	$sql .= "and domain_setting_subcategory = 'http_auth_password' ";
 	$sql .= "and domain_setting_name = 'array' ";
-	$db->exec($sql);
+	$database = new database;
+	$database->execute($sql);
 	unset($sql);
 
 }

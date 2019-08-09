@@ -41,31 +41,33 @@
 
 //get (from) destinations
 	$sql = "select destination_number from v_destinations ";
-	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and destination_type_text = 1 ";
 	$sql .= "and destination_enabled = 'true' ";
 	$sql .= "order by destination_number asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$rows = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	//view_array($rows);
-	if (is_array($rows) && sizeof($rows)) {
+	$parameters['domain_uuid'] = $domain_uuid;
+	$database = new database;
+	$rows = $database->select($sql, $parameters, 'all');
+	if (is_array($rows) && @sizeof($rows)) {
 		foreach ($rows as $row) {
 			$destinations[] = $row['destination_number'];
 		}
 	}
-	unset ($prep_statement, $sql, $row, $record);
+	unset($sql, $parameters, $rows, $row);
 
 //get self (primary contact attachment) image
 	if (!is_array($_SESSION['tmp']['messages']['contact_me'])) {
-		$sql = "select attachment_filename as filename, attachment_content as image from v_contact_attachments ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and contact_uuid = '".$_SESSION['user']['contact_uuid']."' ";
+		$sql = "select attachment_filename as filename, attachment_content as image ";
+		$sql .= "from v_contact_attachments ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and contact_uuid = :contact_uuid ";
 		$sql .= "and attachment_primary = 1 ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$_SESSION['tmp']['messages']['contact_me'] = $prep_statement->fetch(PDO::FETCH_NAMED);
-		unset ($sql, $bind, $prep_statement);
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['contact_uuid'] = $_SESSION['user']['contact_uuid'];
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		$_SESSION['tmp']['messages']['contact_me'] = $row;
+		unset($sql, $parameters, $row);
 	}
 
 //additional includes
