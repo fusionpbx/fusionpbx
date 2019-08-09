@@ -43,9 +43,9 @@
 	$text = $language->get();
 
 //determin the action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$module_uuid = check_str($_REQUEST["id"]);
+		$module_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
@@ -53,13 +53,13 @@
 
 //set the http post variables to php variables
 	if (count($_POST)>0) {
-		$module_label = check_str($_POST["module_label"]);
-		$module_name = check_str($_POST["module_name"]);
-		$module_description = check_str($_POST["module_description"]);
-		$module_category = check_str($_POST["module_category"]);
-		$module_order = check_str($_POST["module_order"]);
-		$module_enabled = check_str($_POST["module_enabled"]);
-		$module_default_enabled = check_str($_POST["module_default_enabled"]);
+		$module_label = $_POST["module_label"];
+		$module_name = $_POST["module_name"];
+		$module_description = $_POST["module_description"];
+		$module_category = $_POST["module_category"];
+		$module_order = $_POST["module_order"];
+		$module_enabled = $_POST["module_enabled"];
+		$module_default_enabled = $_POST["module_default_enabled"];
 	}
 
 //process the data
@@ -67,7 +67,7 @@
 
 		//get the uuid
 			if ($action == "update") {
-				$module_uuid = check_str($_POST["module_uuid"]);
+				$module_uuid = $_POST["module_uuid"];
 			}
 
 		//check for all required data
@@ -95,71 +95,52 @@
 			if ($_POST["persistformvar"] != "true") {
 				if ($action == "add" && permission_exists('module_add')) {
 					$module_uuid = uuid();
-					$sql = "insert into v_modules ";
-					$sql .= "(";
-					$sql .= "module_uuid, ";
-					$sql .= "module_label, ";
-					$sql .= "module_name, ";
-					$sql .= "module_description, ";
-					$sql .= "module_category, ";
-					$sql .= "module_order, ";
-					$sql .= "module_enabled, ";
-					$sql .= "module_default_enabled ";
-					$sql .= ")";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'$module_uuid', ";
-					$sql .= "'$module_label', ";
-					$sql .= "'$module_name', ";
-					$sql .= "'$module_description', ";
-					$sql .= "'$module_category', ";
-					$sql .= "'$module_order', ";
-					$sql .= "'$module_enabled', ";
-					$sql .= "'$module_default_enabled' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
-
-					$module = new modules;;
-					$module->xml();
+					$array['modules'][0]['module_uuid'] = $module_uuid;
 
 					message::add($text['message-add']);
-					header("Location: modules.php");
-					return;
-				} //if ($action == "add")
+				}
 
 				if ($action == "update" && permission_exists('module_edit')) {
-					$sql = "update v_modules set ";
-					$sql .= "module_label = '$module_label', ";
-					$sql .= "module_name = '$module_name', ";
-					$sql .= "module_description = '$module_description', ";
-					$sql .= "module_category = '$module_category', ";
-					$sql .= "module_order = '$module_order', ";
-					$sql .= "module_enabled = '$module_enabled', ";
-					$sql .= "module_default_enabled = '$module_default_enabled' ";
-					$sql .= "where module_uuid = '$module_uuid' ";
-					$db->exec(check_sql($sql));
-					unset($sql);
-
-					$module = new modules;;
-					$module->xml();
+					$array['modules'][0]['module_uuid'] = $module_uuid;
 
 					message::add($text['message-update']);
+				}
+
+				//add common array elements and execute
+				if (is_array($array) && @sizeof($array) != 0) {
+					$array['modules'][0]['module_label'] = $module_label;
+					$array['modules'][0]['module_name'] = $module_name;
+					$array['modules'][0]['module_description'] = $module_description;
+					$array['modules'][0]['module_category'] = $module_category;
+					$array['modules'][0]['module_order'] = $module_order;
+					$array['modules'][0]['module_enabled'] = $module_enabled;
+					$array['modules'][0]['module_default_enabled'] = $module_default_enabled;
+
+					$database = new database;
+					$database->app_name = 'modules';
+					$database->app_uuid = '5eb9cba1-8cb6-5d21-e36a-775475f16b5e';
+					$database->save($array);
+					unset($array);
+
+					$module = new modules;
+					$module->xml();
+
 					header("Location: modules.php");
-					return;
-				} //if ($action == "update")
-			} //if ($_POST["persistformvar"] != "true")
-	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+					exit;
+				}
+			}
+
+	}
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$module_uuid = $_GET["id"];
 		$sql = "select * from v_modules ";
-		$sql .= "where module_uuid = '$module_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where module_uuid = :module_uuid ";
+		$parameters['module_uuid'] = $module_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$module_label = $row["module_label"];
 			$module_name = $row["module_name"];
 			$module_description = $row["module_description"];
@@ -168,7 +149,7 @@
 			$module_enabled = $row["module_enabled"];
 			$module_default_enabled = $row["module_default_enabled"];
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //show the header
