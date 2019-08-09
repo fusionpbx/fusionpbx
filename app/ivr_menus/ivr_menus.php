@@ -43,37 +43,38 @@
 	$text = $language->get();
 
 //get variables used to control the order
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
 //add the search term
-	$search = strtolower(check_str($_GET["search"]));
+	$search = strtolower($_GET["search"]);
 	if (strlen($search) > 0) {
 		$sql_search = "and (";
-		$sql_search .= "lower(ivr_menu_name) like '%".$search."%' ";
-		$sql_search .= "or lower(ivr_menu_extension) like '%".$search."%' ";
-		//$sql_search .= "or lower(ivr_menu_greet_long) like '%".$search."%' ";
-		//$sql_search .= "or lower(ivr_menu_greet_short) like '%".$search."%' ";
-		//$sql_search .= "or lower(ivr_menu_invalid_sound) like '%".$search."%' ";
-		//$sql_search .= "or lower(ivr_menu_exit_sound) like '%".$search."%' ";
-		//$sql_search .= "or lower(ivr_menu_confirm_macro) like '%".$search."%' ";
-		//$sql_search .= "or lower(ivr_menu_confirm_key) like '%".$search."%' ";
-		//$sql_search .= "or lower(ivr_menu_tts_engine) like '%".$search."%' ";
-		//$sql_search .= "or lower(ivr_menu_tts_voice) like '%".$search."%' ";
+		$sql_search .= "lower(ivr_menu_name) like :search ";
+		$sql_search .= "or lower(ivr_menu_extension) like :search ";
+		//$sql_search .= "or lower(ivr_menu_greet_long) like :search ";
+		//$sql_search .= "or lower(ivr_menu_greet_short) like :search ";
+		//$sql_search .= "or lower(ivr_menu_invalid_sound) like :search ";
+		//$sql_search .= "or lower(ivr_menu_exit_sound) like :search ";
+		//$sql_search .= "or lower(ivr_menu_confirm_macro) like :search ";
+		//$sql_search .= "or lower(ivr_menu_confirm_key) like :search ";
+		//$sql_search .= "or lower(ivr_menu_tts_engine) like :search ";
+		//$sql_search .= "or lower(ivr_menu_tts_voice) like :search ";
 		//$sql_search .= "or lower(ivr_menu_confirm_attempts) like '%".$search."%'" ;
-		//$sql_search .= "or lower(ivr_menu_timeout) like '%".$search."%' ";
-		//$sql_search .= "or lower(ivr_menu_exit_app) like '%".$search."%' ";
-		//$sql_search .= "or lower(ivr_menu_exit_data) like '%".$search."%' ";
-		//$sql_search .= "or lower(ivr_menu_inter_digit_timeout) like '%".$search."%' ";
-		//$sql_search .= "or lower(ivr_menu_max_failures) like '%".$search."%' ";
-		//$sql_search .= "or lower(ivr_menu_max_timeouts) like '%".$search."%' ";
-		//$sql_search .= "or lower(ivr_menu_digit_len) like '%".$search."%' ";
-		//$sql_search .= "or lower(ivr_menu_direct_dial) like '%".$search."%' ";
-		//$sql_search .= "or lower(ivr_menu_ringback) like '%".$search."%' ";
-		//$sql_search .= "or lower(ivr_menu_cid_prefix) like '%".$search."%' ";
-		$sql_search .= "or lower(ivr_menu_enabled) like '%".$search."%' ";
-		$sql_search .= "or lower(ivr_menu_description) like '%".$search."%' ";
+		//$sql_search .= "or lower(ivr_menu_timeout) like :search ";
+		//$sql_search .= "or lower(ivr_menu_exit_app) like :search ";
+		//$sql_search .= "or lower(ivr_menu_exit_data) like :search ";
+		//$sql_search .= "or lower(ivr_menu_inter_digit_timeout) like :search ";
+		//$sql_search .= "or lower(ivr_menu_max_failures) like :search ";
+		//$sql_search .= "or lower(ivr_menu_max_timeouts) like :search ";
+		//$sql_search .= "or lower(ivr_menu_digit_len) like :search ";
+		//$sql_search .= "or lower(ivr_menu_direct_dial) like :search ";
+		//$sql_search .= "or lower(ivr_menu_ringback) like :search ";
+		//$sql_search .= "or lower(ivr_menu_cid_prefix) like :search ";
+		$sql_search .= "or lower(ivr_menu_enabled) like :search ";
+		$sql_search .= "or lower(ivr_menu_description) like :search ";
 		$sql_search .= ")";
+		$parameters['search'] = '%'.$search.'%';
 	}
 
 //additional includes
@@ -81,21 +82,12 @@
 	require_once "resources/paging.php";
 
 //prepare to page the results
-	$sql = "select count(ivr_menu_uuid) as num_rows from v_ivr_menus ";
-	$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
+	$sql = "select count(*) from v_ivr_menus ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= $sql_search;
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-				$num_rows = $row['num_rows'];
-		}
-		else {
-				$num_rows = '0';
-		}
-	}
+	$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -106,15 +98,12 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select * from v_ivr_menus ";
-	$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
-	$sql .= $sql_search;
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$sql .= "limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$sql = str_replace('count(*)', '*', $sql);
+	$sql .= order_by($order_by, $order);
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //alternate the row style
 	$c = 0;
@@ -219,9 +208,9 @@
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $result, $row_count);
-	} //end if results
+		}
+	}
+	unset($result, $row);
 
 	echo "<tr>\n";
 	echo "<td colspan='27' align='left'>\n";
