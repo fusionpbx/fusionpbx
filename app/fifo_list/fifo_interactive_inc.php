@@ -233,7 +233,7 @@
 				echo "<td valign='top' class='".$row_style[$c]."'>".escape($fifo_total_inbound_calls)." &nbsp;</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>".escape($fifo_duration_formatted)." &nbsp;</td>\n";
 				echo "</tr>\n";
-				if ($c==0) { $c=1; } else { $c=0; }
+				$c  = $c ? 0 : 1;
 			}
 			echo "</table>\n";
 		}
