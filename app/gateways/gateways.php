@@ -47,19 +47,19 @@
 	require_once "resources/paging.php";
 
 //get variables used to control the order
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
 //connect to event socket
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 	if ($fp) {
-		if (strlen($_GET["a"]) > 0) {
-			$profile = check_str($_GET["profile"]);
+		if (strlen($_GET["a"]) > 0 && is_uuid($_GET["gateway"])) {
+			$profile = $_GET["profile"];
 			if (strlen($profile) == 0) {
 				$profile = 'external';
 			}
 			if ($_GET["a"] == "stop") {
-				$gateway_uuid = check_str($_GET["gateway"]);
+				$gateway_uuid = $_GET["gateway"];
 				$cmd = 'api sofia profile '.$profile.' killgw '.$gateway_uuid;
 				$response = trim(event_socket_request($fp, $cmd));
 				$msg = '<strong>Stop Gateway:</strong><pre>'.$response.'</pre>';
@@ -113,19 +113,13 @@
 	echo "<br />\n";
 
 //get total gateway count from the database
-	$sql = "select count(*) as num_rows from v_gateways ";
-	$sql .= "where ( domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	if (permission_exists('gateway_domain')) {
-		$sql .= "or domain_uuid is null ";
+	$sql = "select count(*) from v_gateways ";
+	if (!($_GET['show'] == "all" && permission_exists('gateway_all'))) {
+		$sql .= "where (domain_uuid = :domain_uuid ".(permission_exists('gateway_domain') ? " or domain_uuid is null " : null).") ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	$sql .= ");";
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		$total_gateways = $row['num_rows'];
-	}
-	unset($sql, $prep_statement, $row);
+	$database = new database;
+	$total_gateways = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -136,28 +130,12 @@
 	$offset = $rows_per_page * $_GET['page'];
 
 //get the list
-	$sql = "select * from v_gateways ";
-	if ($_GET['show'] == "all" && permission_exists('gateway_all')) {
-		//show all gateways
-	} else {
-		$sql .= "where (\n";
-		$sql .= " domain_uuid = '".$_SESSION['domain_uuid']."'\n";
-		if (permission_exists('gateway_domain')) {
-			$sql .= " or domain_uuid is null\n";
-		}
-		$sql .= ") ";
-	}
-	if (strlen($order_by) == 0) {
-		$sql .= "order by gateway asc\n";
-	}
-	else {
-		$sql .= "order by $order_by $order\n";
-	}
-	$sql .= "limit $rows_per_page offset $offset\n";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$gateways = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$sql = str_replace('count(*)', '*', $sql);
+	$sql .= order_by($order_by, $order, 'gateway', 'asc');
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$gateways = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
@@ -255,10 +233,10 @@
 				echo "	</td>\n";
 				echo "</tr>\n";
 			}
-			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $gateways, $row_count);
-	} //end if results
+			$c = $c ? 0 : 1;
+		}
+	}
+	unset($gateways, $row);
 
 	echo "<tr>\n";
 	echo "</table>\n";
