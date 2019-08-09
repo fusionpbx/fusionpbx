@@ -527,7 +527,10 @@
 							$parameters['device_mac_address'] = $device_mac_address;
 							$parameters['domain_uuid'] = $domain_uuid;
 							$database = new database;
-							$device_uuid = $database->select($sql, $parameters, 'column');
+							$row = $database->select($sql, $parameters, 'row');
+							if (is_uuid($row['device_uuid'])) {
+								$device_uuid = $row['device_uuid'];
+							}
 							unset($sql, $parameters);
 
 						//set a default line number
