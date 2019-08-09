@@ -44,20 +44,20 @@
 //delete the gateway
 	if (is_uuid($_GET["id"])) {
 		//set the variable
-			$id = check_str($_GET["id"]);
+			$id = $_GET["id"];
 
 		//get the gateway name
 			$sql = "select * from v_gateways ";
-			$sql .= "where gateway_uuid = '$id' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			foreach ($result as &$row) {
+			$sql .= "where gateway_uuid = :gateway_uuid ";
+			$parameters['gateway_uuid'] = $id;
+			$database = new database;
+			$row = $database->select($sql, $parameters, 'row');
+			if (is_array($row) && @sizeof($row) != 0) {
 				$gateway_uuid = $row["gateway_uuid"];
 				$gateway = $row["gateway"];
 				$profile = $row["profile"];
 			}
-			unset ($prep_statement);
+			unset($sql, $parameters, $row);
 
 		//remove gateway from session variable
 			unset($_SESSION['gateways'][$gateway_uuid]);
@@ -81,10 +81,13 @@
 			unset($cmd);
 
 		//delete the gateway
-			$sql = "delete from v_gateways ";
-			$sql .= "where gateway_uuid = '$id' ";
-			$db->query($sql);
-			unset($sql);
+			$array['gateways'][0]['gateway_uuid'] = $id;
+
+			$database = new database;
+			$database->app_name = 'gateways';
+			$database->app_uuid = '297ab33e-2c2f-8196-552c-f3567d2caaf8';
+			$database->delete($array);
+			unset($array);
 
 		//syncrhonize configuration
 			save_gateway_xml();
@@ -114,11 +117,13 @@
 
 		//clear the apply settings reminder
 			$_SESSION["reload_xml"] = false;
+
+		//set message
+			message::add($text['message-delete']);
 	}
 
 //redirect the users
-	message::add($text['message-delete']);
 	header("Location: gateways.php");
-	return;
+	exit;
 
 ?>
