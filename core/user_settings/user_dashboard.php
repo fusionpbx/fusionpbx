@@ -1064,12 +1064,12 @@
 					}
 				}
 
-			//memory free
+			//memory available
 				if (stristr(PHP_OS, 'Linux')) {
-					$result = trim(shell_exec('free -h | grep \'Mem:\' | cut -d\' \' -f25-30'));
+					$result = trim(shell_exec('free -hw | grep \'Mem:\' | cut -d\' \' -f 58-64'));
 					if ($result != '') {
 						$hud[$n]['html'] .= "<tr class='tr_link_void'>\n";
-						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-memory_free']."</td>\n";
+						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-memory_available']."</td>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$result."</td>\n";
 						$hud[$n]['html'] .= "</tr>\n";
 						$c = ($c) ? 0 : 1;
