@@ -117,27 +117,26 @@
 		$header .= "</style>";
 		$header .= "</head>\n";
 		$header .= "<body style='margin: 0; padding: 8;'>\n";
-	
+
 		$footer = "<body>\n";
 		$footer .= "<html>\n";
-	
-	
+
 		if ($sql_type == '') {
-	
+
 			echo $header;
-	
+
 			$c = 0;
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
-	
+
 			//determine queries to run and show
 			if ($sql_cmd != '') { $sql_array = array_filter(explode(";", $sql_cmd)); }
 			if ($table_name != '') { $sql_array[] = "select * from ".$table_name; }
 			$show_query = (sizeof($sql_array) > 1) ? true : false;
-	
+
 			if (is_array($sql_array)) foreach($sql_array as $sql_index => $sql) {
 				$sql = trim($sql);
-	
+
 				if (sizeof($sql_array) > 1 || $show_query) {
 					if ($sql_index > 0) { echo "<br /><br /><br />"; }
 					echo "<span style='display: block; font-family: monospace; padding: 8px; color: green; background-color: #eefff0;'>".escape($sql).";</span><br />";
@@ -193,20 +192,20 @@
 				}
 				echo "</table>\n";
 				echo "<br>\n";
-	
+
 				unset($result, $column_array);
 			}
 			echo $footer;
 		}
-	
+
 		if ($sql_type == "inserts") {
 			echo $header;
-	
+
 			$sql = trim($sql);
-	
+
 			//get the table data
 				$sql = (strlen($sql_cmd) == 0) ? "select * from ".$table_name : $sql_cmd;
-	
+
 				if (strlen($sql) > 0) {
 					$database = new database;
 					$result = $database->execute($sql);
@@ -230,7 +229,7 @@
 							$column_array[$x++] = $key;
 						}
 					}
-	
+
 					$column_array_count = count($column_array);
 					if (is_array($result)) foreach ($result as $index => &$row) {
 
@@ -250,7 +249,7 @@
 						if (is_array($column_array)) {
 							foreach ($column_array as $column) {
 								if ($column != "menuid" && $column != "menuparentid") {
-									$values[] = $row[$column] != '' ? "'".escape($row[$column])."'" : 'null';
+									$values[] = $row[$column] != '' ? "'".escape(check_str($row[$column]))."'" : 'null';
 								}
 							}
 						}
@@ -265,7 +264,7 @@
 				}
 			echo $footer;
 		}
-	
+
 		if ($sql_type == "csv") {
 
 			//set the headers
