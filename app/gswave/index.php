@@ -49,29 +49,30 @@
 
 //get the extensions
 	$sql = "select * from v_extensions ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and enabled = 'true' ";
 	$sql .= "order by extension asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$extensions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$extensions = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //get the extension
 	if (is_uuid($_GET['id'])) {
 		$sql = "select * from v_extensions ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and extension_uuid = '".$extension_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$extension = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and extension_uuid = :extension_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['extension_uuid'] = $extension_uuid;
+		$database = new database;
+		$extension = $database->select($sql, $parameters, 'all');
 		$field = $extension[0];
-		unset ($prep_statement, $sql);
+		unset($sql, $parameters);
 	}
 
 //get the username
 	$username = $field['extension'];
-	if (isset($row['number_alias']) && strlen($row['number_alias']) > 0) {
+	if (isset($field['number_alias']) && strlen($field['number_alias']) > 0) {
 		$username = $field['number_alias'];
 	}
 
