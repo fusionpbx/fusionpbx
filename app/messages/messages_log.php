@@ -65,21 +65,22 @@
 	}
 
 //get variables used to control the order
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
 //add the search term
-	$search = strtolower(check_str($_GET["search"]));
+	$search = strtolower($_GET["search"]);
 	if (strlen($search) > 0) {
 		$sql_search = " (";
-		$sql_search .= "lower(message_type) like '%".$search."%' ";
-		$sql_search .= "or lower(message_direction) like '%".$search."%' ";
-		$sql_search .= "or lower(message_date) like '%".$search."%' ";
-		$sql_search .= "or lower(message_from) like '%".$search."%' ";
-		$sql_search .= "or lower(message_to) like '%".$search."%' ";
-		$sql_search .= "or lower(message_text) like '%".$search."%' ";
-		$sql_search .= "or lower(message_media_type) like '%".$search."%' ";
+		$sql_search .= "lower(message_type) like :search ";
+		$sql_search .= "or lower(message_direction) like :search ";
+		$sql_search .= "or lower(message_date) like :search ";
+		$sql_search .= "or lower(message_from) like :search ";
+		$sql_search .= "or lower(message_to) like :search ";
+		$sql_search .= "or lower(message_text) like :search ";
+		$sql_search .= "or lower(message_media_type) like :search ";
 		$sql_search .= ") ";
+		$parameters['search'] = '%'.$search.'%';
 	}
 
 //additional includes
@@ -87,29 +88,23 @@
 	require_once "resources/paging.php";
 
 //prepare to page the results
-	$sql = "select count(message_uuid) as num_rows from v_messages ";
+	$sql = "select count(*) from v_messages ";
 	if ($_GET['show'] == "all" && permission_exists('message_all')) {
 		if (isset($sql_search)) {
 			$sql .= "where ".$sql_search;
 		}
-	} else {
-		$sql .= "where user_uuid = '".$_SESSION['user_uuid']."' ";
-		$sql .= "and (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
+	}
+	else {
+		$sql .= "where user_uuid = :user_uuid ";
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		if (isset($sql_search)) {
 			$sql .= "and ".$sql_search;
 		}
+		$parameters['user_uuid'] = $_SESSION['user_uuid'];
+		$parameters['domain_uuid'] = $domain_uuid;
 	}
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-	}
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -123,24 +118,12 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select * from v_messages ";
-	if ($_GET['show'] == "all" && permission_exists('message_all')) {
-		if (isset($sql_search)) {
-			$sql .= "where ".$sql_search;
-		}
-	} else {
-		$sql .= "where user_uuid = '".$_SESSION['user_uuid']."' ";
-		$sql .= "and (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
-		if (isset($sql_search)) {
-				$sql .= "and ".$sql_search;
-		}
-	}
+	$sql = str_replace('count(*)', '*', $sql);
 	$sql .= "order by message_date desc ";
-	$sql .= "limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$messages = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$messages = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //alternate the row style
 	$c = 0;
@@ -174,11 +157,14 @@
 
 	if (permission_exists('message_all')) {
 		if ($_GET['show'] == 'all') {
-			echo "				<input type='hidden' name='show' value='all'>";
+			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
-			echo "				<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='messages_log.php?show=all';\">\n";
+			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='messages_log.php?show=all';\">\n";
 		}
+	}
+	if (permission_exists('message_delete')) {
+		echo "			<input type='button' class='btn' value='".$text['button-delete']."' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('form_message_log').action = 'message_delete.php'; document.getElementById('form_message_log').submit(); }\">\n";
 	}
 
 	echo "				<input type='text' class='txt' style='width: 150px; margin-left: 15px;' name='search' id='search' value='".escape($search)."'>\n";
@@ -188,9 +174,9 @@
 	echo "	</tr>\n";
 	echo "</table>\n";
 
-	echo "<form method='post' action=''>\n";
+	echo "<form id='form_message_log' method='post' action=''>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	if (is_array($messages)) {
+	if (is_array($messages) && @sizeof($messages) != 0) {
 		$x = 0;
 		foreach($messages as $row) {
 
@@ -215,9 +201,8 @@
 			}
 			echo "<tr ".$tr_link.">\n";
 			//echo "	<td valign='top' class=''>".escape($row['user_uuid'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='align: center; padding: 3px 3px 0px 8px;'>\n";
-			echo "		<input type='checkbox' name=\"messages[$x][checked]\" id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$x."').checked = false; }\">\n";
-			echo "		<input type='hidden' name=\"messages[$x][message_uuid]\" value='".escape($row['message_uuid'])."' />\n";
+			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='align: center; padding: 3px 3px 0px 7px;'>\n";
+			echo "		<input type='checkbox' name=\"messages[]\" id='checkbox_".$x."' value='".escape($row['message_uuid'])."' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$x."').checked = false; }\">\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			switch ($row['message_type']) {
@@ -241,15 +226,15 @@
 				echo "<a href='message_edit.php?id=".escape($row['message_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('message_delete')) {
-				echo "<a href='message_delete.php?id=".escape($row['message_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='message_delete.php?messages[]=".escape($row['message_uuid'])."' alt='".$text['button-delete']."' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('form_message_log').submit(); } else { return false; }\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 			$x++;
-			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $messages);
-	} //end if results
+			$c = $c ? 0 : 1;
+		}
+	}
+	unset($messages, $row);
 
 	echo "<tr>\n";
 	echo "<td colspan='8' align='left'>\n";

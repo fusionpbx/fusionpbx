@@ -29,43 +29,40 @@
 	require_once "resources/require.php";
 
 //default authorized to false
-	$authorized = 'false';
+	$authorized = false;
 
 //get the user settings
 	$sql = "select user_uuid, domain_uuid from v_user_settings ";
 	$sql .= "where user_setting_category = 'message' ";
 	$sql .= "and user_setting_subcategory = 'key' ";
-	$sql .= "and user_setting_value = :key ";
+	$sql .= "and user_setting_value = :user_setting_value ";
 	$sql .= "and user_setting_enabled = 'true' ";
-	$prep_statement = $db->prepare($sql);
-	$prep_statement->bindParam(':key', $_GET['key']);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_NAMED);
-		if (is_uuid($row['user_uuid'])) {
-			$domain_uuid = $row['domain_uuid'];
-			$user_uuid = $row['user_uuid'];
-			$authorized = 'true';
-		}
+	$parameters['user_setting_value'] = $_GET['key'];
+	$database = new database;
+	$row = $database->select($sql, $parameters, 'row');
+	if (is_array($row) && @sizeof($row) != 0 && is_uuid($row['user_uuid'])) {
+		$domain_uuid = $row['domain_uuid'];
+		$user_uuid = $row['user_uuid'];
+		$authorized = true;
 	}
 
 //authorization failed
-	if ($authorized == 'false') {
+	if (!$authorized) {
 		//log the failed auth attempt to the system, to be available for fail2ban.
-		openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
-		syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] authentication failed for ".$_GET['key']);
-		closelog();
+			openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
+			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] authentication failed for ".$_GET['key']);
+			closelog();
 
 		//send http 404
-		header("HTTP/1.0 404 Not Found");
-		echo "<html>\n";
-		echo "<head><title>404 Not Found</title></head>\n";
-		echo "<body bgcolor=\"white\">\n";
-		echo "<center><h1>404 Not Found</h1></center>\n";
-		echo "<hr><center>nginx/1.12.1</center>\n";
-		echo "</body>\n";
-		echo "</html>\n";
-		exit();
+			header("HTTP/1.0 404 Not Found");
+			echo "<html>\n";
+			echo "<head><title>404 Not Found</title></head>\n";
+			echo "<body bgcolor=\"white\">\n";
+			echo "<center><h1>404 Not Found</h1></center>\n";
+			echo "<hr><center>nginx/1.12.1</center>\n";
+			echo "</body>\n";
+			echo "</html>\n";
+			exit();
 	}
 
 //get the raw input data
@@ -81,18 +78,13 @@
 	$sql = "select c.contact_uuid ";
 	$sql .= "from v_contacts as c, v_contact_phones as p ";
 	$sql .= "where p.contact_uuid = c.contact_uuid ";
-	//$sql .= "and p.phone_number = :phone_number ";
-	$sql .= "and p.phone_number = '".$phone_number."' ";
-	$sql .= "and c.domain_uuid = '".$domain_uuid."' ";
-	$prep_statement = $db->prepare($sql);
-	//$prep_statement->bindParam(':phone_number', $phone_number);
-	$prep_statement->execute();
-	$row = $prep_statement->fetch(PDO::FETCH_NAMED);
-	$contact_uuid = $row['contact_uuid'];
-	//$contact_name_given = $row['contact_name_given'];
-	//$contact_name_family = $row['contact_name_family'];
-	//$contact_organization = $row['contact_organization'];
-
+	$sql .= "and p.phone_number = :phone_number ";
+	$sql .= "and c.domain_uuid = :domain_uuid ";
+	$parameters['phone_number'] = $phone_number;
+	$parameters['domain_uuid'] = $domain_uuid;
+	$database = new database;
+	$contact_uuid = $database->select($sql, $parameters, 'column');
+	unset($sql, $parameters);
 
 //build message array
 	$message_uuid = uuid();
@@ -109,6 +101,10 @@
 	$array['messages'][0]['message_text'] = $message['text'];
 	$array['messages'][0]['message_json'] = $json;
 
+//add the required permission
+	$p = new permissions;
+	$p->add("message_add", "temp");
+
 //build message media array (if necessary)
 	if (is_array($message['media'])) {
 		foreach($message['media'] as $index => $media_url) {
@@ -123,18 +119,14 @@
 				$array['message_media'][$index]['message_media_content'] = base64_encode(file_get_contents($media_url));
 			}
 		}
-	}
 
-//add the required permission
-	$p = new permissions;
-	$p->add("message_add", "temp");
-	$p->add("message_media_add", "temp");
+		$p->add("message_media_add", "temp");
+	}
 
 //save message to the database
 	$database = new database;
 	$database->app_name = 'messages';
 	$database->app_uuid = '4a20815d-042c-47c8-85df-085333e79b87';
-	$database->uuid($message_uuid);
 	$database->save($array);
 	$result = $database->message;
 
@@ -147,14 +139,17 @@
 
 //get the list of extensions using the user_uuid
 	$sql = "select * from v_domains as d, v_extensions as e ";
-	$sql .= "where extension_uuid in (select extension_uuid from v_extension_users where user_uuid = '".$user_uuid."') ";
+	$sql .= "where extension_uuid in ( ";
+	$sql .= "	select extension_uuid ";
+	$sql .= "	from v_extension_users ";
+	$sql .= "	where user_uuid = :user_uuid ";
+	$sql .= ") ";
 	$sql .= "and e.domain_uuid = d.domain_uuid ";
 	$sql .= "and e.enabled = 'true' ";
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$extensions = $prep_statement->fetchall(PDO::FETCH_NAMED);
-	}
+	$parameters['user_uuid'] = $user_uuid;
+	$database = new database;
+	$extensions = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //create the event socket connection
 	if (is_array($extensions)) {
@@ -162,7 +157,7 @@
 	}
 
 //send the sip message
-	if (is_array($extensions)) {
+	if (is_array($extensions) && @sizeof($extensions) != 0) {
 		foreach ($extensions as $row) {
 			$domain_name = $row['domain_name'];
 			$extension = $row['extension'];
@@ -176,6 +171,7 @@
 			$response = event_socket_request($fp, "api log notice ".$command);
 		}
 	}
+	unset($extensions, $row);
 
 //set the file
 	//$file = '/tmp/sms.txt';

@@ -51,14 +51,15 @@
 		$array = explode(' ',$_SESSION['message']['display_last']['text']);
 		if (is_array($array) && is_numeric($array[0]) && $array[0] > 0) {
 			if ($array[1] == 'messages') {
-				$limit = "limit ".$array[0]." offset 0 ";
+				$limit = limit_offset($array[0], 0);
 			}
 			else {
-				$since = "and message_date >= '".date("Y-m-d H:i:s", strtotime('-'.$_SESSION['message']['display_last']['text']))."' ";
+				$since = "and message_date >= :message_date ";
+				$parameters['message_date'] = date("Y-m-d H:i:s", strtotime('-'.$_SESSION['message']['display_last']['text']));
 			}
 		}
 	}
-	if ($limit == '' && $since == '') { $limit = "limit 25 offset 0"; } //default (message count)
+	if ($limit == '' && $since == '') { $limit = limit_offset(25, 0); } //default (message count)
 	$sql = "select ";
 	$sql .= "message_uuid, ";
 	$sql .= "domain_uuid, ";
@@ -66,47 +67,55 @@
 	$sql .= "contact_uuid, ";
 	$sql .= "message_type, ";
 	$sql .= "message_direction, ";
-	$sql .= "message_date at time zone '".$_SESSION['domain']['time_zone']['name']."' as message_date, ";
+	$sql .= "message_date at time zone :time_zone as message_date, ";
 	$sql .= "message_from, ";
 	$sql .= "message_to, ";
 	$sql .= "message_text ";
 	$sql .= "from v_messages ";
-	$sql .= "where user_uuid = '".$_SESSION['user_uuid']."' ";
-	$sql .= "and (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
+	$sql .= "where user_uuid = :user_uuid ";
+	$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 	$sql .= $since;
-	$sql .= "and (message_from like '%".$number."' or message_to like '%".$number."') ";
+	$sql .= "and (message_from like :message_number or message_to like :message_number) ";
 	$sql .= "order by message_date desc ";
 	$sql .= $limit;
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$messages = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$parameters['time_zone'] = $_SESSION['domain']['time_zone']['name'];
+	$parameters['user_uuid'] = $_SESSION['user_uuid'];
+	$parameters['domain_uuid'] = $domain_uuid;
+	$parameters['message_number'] = '%'.$number;
+	$database = new database;
+	$messages = $database->select($sql, $parameters, 'all');
 	$messages = array_reverse($messages);
-	unset ($prep_statement, $sql);
+	unset($sql, $parameters);
 
 //get media (if any)
-	$sql = "select message_uuid, message_media_uuid, message_media_type, length(decode(message_media_content,'base64')) as message_media_size from v_message_media ";
-	$sql .= "where user_uuid = '".$_SESSION['user_uuid']."' ";
-	$sql .= "and (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
-	$sql .= "and message_uuid in ( ";
-	foreach ($messages as $message) {
-		$message_uuids[] = "'".$message['message_uuid']."'";
+	$sql = "select ";
+	$sql .= "message_uuid, ";
+	$sql .= "message_media_uuid, ";
+	$sql .= "message_media_type, ";
+	$sql .= "length(decode(message_media_content,'base64')) as message_media_size ";
+	$sql .= "from v_message_media ";
+	$sql .= "where user_uuid = :user_uuid ";
+	$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+	$sql .= "and ( ";
+	foreach ($messages as $index => $message) {
+		$message_uuids[] = "message_uuid = :message_uuid_".$index;
+		$parameters['message_uuid_'.$index] = $message['message_uuid'];
 	}
-	$sql .= implode(',', $message_uuids);
+	$sql .= implode(' or ', $message_uuids);
 	$sql .= ") ";
 	$sql .= "and message_media_type <> 'txt' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$rows = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$parameters['user_uuid'] = $_SESSION['user_uuid'];
+	$parameters['domain_uuid'] = $domain_uuid;
+	$database = new database;
+	$rows = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters, $index);
 
 //prep media array
-	if (is_array($rows) && sizeof($rows) != 0) {
-		$x = 0;
-		foreach ($rows as $row) {
-			$message_media[$row['message_uuid']][$x]['uuid'] = $row['message_media_uuid'];
-			$message_media[$row['message_uuid']][$x]['type'] = $row['message_media_type'];
-			$message_media[$row['message_uuid']][$x]['size'] = $row['message_media_size'];
-			$x++;
+	if (is_array($rows) && @sizeof($rows) != 0) {
+		foreach ($rows as $index => $row) {
+			$message_media[$row['message_uuid']][$index]['uuid'] = $row['message_media_uuid'];
+			$message_media[$row['message_uuid']][$index]['type'] = $row['message_media_type'];
+			$message_media[$row['message_uuid']][$index]['size'] = $row['message_media_size'];
 		}
 	}
 
@@ -197,7 +206,7 @@
 	}
 
 	//output messages
-		if (is_array($messages) && sizeof($messages) != 0) {
+		if (is_array($messages) && @sizeof($messages) != 0) {
 			foreach ($messages as $message) {
 				//parse from message
 				if ($message['message_direction'] == 'inbound') {
@@ -214,7 +223,7 @@
 							if (
 								$message['message_direction'] == 'inbound' &&
 								is_array($_SESSION['tmp']['messages']['contact_em'][$contact_uuid]) &&
-								sizeof($_SESSION['tmp']['messages']['contact_em'][$contact_uuid]) != 0
+								@sizeof($_SESSION['tmp']['messages']['contact_em'][$contact_uuid]) != 0
 								) {
 								echo "<div class='message-bubble-image-em'>\n";
 								echo "	<img class='message-bubble-image-em'><br />\n";
@@ -223,7 +232,7 @@
 						//contact image me
 							else if (
 								is_array($_SESSION['tmp']['messages']['contact_me']) &&
-								sizeof($_SESSION['tmp']['messages']['contact_me']) != 0
+								@sizeof($_SESSION['tmp']['messages']['contact_me']) != 0
 								) {
 								echo "<div class='message-bubble-image-me'>\n";
 								echo "	<img class='message-bubble-image-me'><br />\n";
@@ -235,7 +244,7 @@
 								echo "<div class='message-text'>".str_replace("\n",'<br />',escape($message['message_text']))."</div>\n";
 							}
 						//attachments
-							if (is_array($message_media[$message['message_uuid']]) && sizeof($message_media[$message['message_uuid']]) != 0) {
+							if (is_array($message_media[$message['message_uuid']]) && @sizeof($message_media[$message['message_uuid']]) != 0) {
 
 								foreach ($message_media[$message['message_uuid']] as $media) {
 									if ($media['type'] != 'txt') {

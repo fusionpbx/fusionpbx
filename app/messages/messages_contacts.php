@@ -47,27 +47,30 @@
 		$array = explode(' ',$_SESSION['message']['display_last']['text']);
 		if (is_array($array) && is_numeric($array[0]) && $array[0] > 0) {
 			if ($array[1] == 'messages') {
-				$limit = "limit ".$array[0]." offset 0 ";
+				$limit = limit_offset($array[0], 0);
 			}
 			else {
-				$since = "and message_date >= '".date("Y-m-d H:i:s", strtotime('-'.$_SESSION['message']['display_last']['text']))."' ";
+				$since = "and message_date >= :message_date ";
+				$parameters['message_date'] = date("Y-m-d H:i:s", strtotime('-'.$_SESSION['message']['display_last']['text']));
 			}
 		}
 	}
-	if ($limit == '' && $since == '') { $limit = "limit 25 offset 0"; } //default (message count)
-	$sql = "select message_direction, message_from, message_to, contact_uuid from v_messages ";
-	$sql .= "where user_uuid = '".$_SESSION['user_uuid']."' ";
-	$sql .= "and (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
+	if ($limit == '' && $since == '') { $limit = limit_offset(25, 0); } //default (message count)
+	$sql = "select message_direction, message_from, message_to, contact_uuid ";
+	$sql .= "from v_messages ";
+	$sql .= "where user_uuid = :user_uuid ";
+	$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 	$sql .= $since;
 	$sql .= "order by message_date desc ";
 	$sql .= $limit;
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$messages = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$parameters['user_uuid'] = $_SESSION['user_uuid'];
+	$parameters['domain_uuid'] = $domain_uuid;
+	$database = new database;
+	$messages = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //parse out numbers
-	if (is_array($messages) && sizeof($messages) != 0) {
+	if (is_array($messages) && @sizeof($messages) != 0) {
 		$numbers = [];
 		foreach($messages as $message) {
 			$number_from = preg_replace('{[\D]}', '', $message['message_from']);
@@ -85,6 +88,7 @@
 			unset($number_from, $number_to);
 		}
 	}
+	unset($messages, $message);
 
 //get contact details, if uuid available
 	if (is_array($contact) && sizeof($contact) != 0) {
@@ -93,18 +97,19 @@
 				$sql = "select c.contact_name_given, c.contact_name_family, ";
 				$sql .= "(select ce.email_address from v_contact_emails as ce where ce.contact_uuid = c.contact_uuid and ce.email_primary = 1) as contact_email ";
 				$sql .= "from v_contacts as c ";
-				$sql .= "where c.contact_uuid = '".$field['contact_uuid']."' ";
-				$sql .= "and (c.domain_uuid = '".$domain_uuid."' or c.domain_uuid is null) ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$row = $prep_statement->fetch(PDO::FETCH_NAMED);
-				if (is_array($row) && sizeof($row) != 0) {
+				$sql .= "where c.contact_uuid = :contact_uuid ";
+				$sql .= "and (c.domain_uuid = :domain_uuid or c.domain_uuid is null) ";
+				$parameters['contact_uuid'] = $field['contact_uuid'];
+				$parameters['domain_uuid'] = $domain_uuid;
+				$database = new database;
+				$row = $database->select($sql, $parameters, 'row');
+				if (is_array($row) && @sizeof($row) != 0) {
 					$contact[$number]['contact_uuid'] = $field['contact_uuid'];
 					$contact[$number]['contact_name_given'] = $row['contact_name_given'];
 					$contact[$number]['contact_name_family'] = $row['contact_name_family'];
 					$contact[$number]['contact_email'] = $row['contact_email'];
 				}
-				unset($prep_statement, $sql);
+				unset($sql, $parameters, $row);
 			}
 			else {
 				unset($contact[$number]);
@@ -114,51 +119,52 @@
 
 //get destinations and remove from numbers array
 	$sql = "select destination_number from v_destinations ";
-	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and destination_enabled = 'true' ";
 	$sql .= "order by destination_number asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$rows = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	if (is_array($rows) && sizeof($rows)) {
+	$parameters['domain_uuid'] = $domain_uuid;
+	$database = new database;
+	$rows = $database->select($sql, $parameters, 'all');
+	if (is_array($rows) && @sizeof($rows)) {
 		foreach ($rows as $row) {
 			$destinations[] = $row['destination_number'];
 		}
 	}
-	unset ($prep_statement, $sql, $row, $record);
+	unset($sql, $parameters, $rows, $row);
 	$numbers = array_diff($numbers, $destinations);
 
 //get contact (primary attachment) images and cache them
-	if (is_array($numbers) && sizeof($numbers) != 0) {
+	if (is_array($numbers) && @sizeof($numbers) != 0) {
 		foreach ($numbers as $number) {
 			$contact_uuids[] = $contact[$number]['contact_uuid'];
 		}
-		if (is_array($contact_uuids) && sizeof($contact_uuids) != 0) {
-			$sql = "select contact_uuid as uuid, attachment_filename as filename, attachment_content as image from v_contact_attachments ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and ( 0 = 1 ";
-			foreach ($contact_uuids as $contact_uuid) {
-				$sql .= "or contact_uuid = '".$contact_uuid."' ";
+		if (is_array($contact_uuids) && @sizeof($contact_uuids) != 0) {
+			$sql = "select contact_uuid as uuid, attachment_filename as filename, attachment_content as image ";
+			$sql .= "from v_contact_attachments ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and (";
+			foreach ($contact_uuids as $index => $contact_uuid) {
+				$sql_where[] = "contact_uuid = :contact_uuid_".$index;
+				$parameters['contact_uuid_'.$index] = $contact_uuid;
 			}
+			$sql .= implode(' or ', $sql_where);
 			$sql .= ") ";
 			$sql .= "and attachment_primary = 1 ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$contact_ems = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-
-			if (is_array($contact_ems) && sizeof($contact_ems) != 0) {
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$database = new database;
+			$contact_ems = $database->select($sql, $parameters, 'all');
+			if (is_array($contact_ems) && @sizeof($contact_ems) != 0) {
 				foreach ($contact_ems as $contact_em) {
 					$_SESSION['tmp']['messages']['contact_em'][$contact_em['uuid']]['filename'] = $contact_em['filename'];
 					$_SESSION['tmp']['messages']['contact_em'][$contact_em['uuid']]['image'] = $contact_em['image'];
 				}
 			}
-
 		}
-		unset($sql, $prep_statement, $contact_uuids, $contact_ems, $contact_em);
+		unset($sql, $sql_where, $parameters, $contact_uuids, $contact_ems, $contact_em);
 	}
 
 //contacts list
-	if (is_array($numbers) && sizeof($numbers) != 0) {
+	if (is_array($numbers) && @sizeof($numbers) != 0) {
 		echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		foreach($numbers as $number) {
 			if ($current_contact != '' && $number == $current_contact) {
@@ -206,7 +212,7 @@
 
 		echo "<script>\n";
 		foreach ($numbers as $number) {
-			if (is_array($_SESSION['tmp']['messages']['contact_em'][$contact[$number]['contact_uuid']]) && sizeof($_SESSION['tmp']['messages']['contact_em'][$contact[$number]['contact_uuid']]) != 0) {
+			if (is_array($_SESSION['tmp']['messages']['contact_em'][$contact[$number]['contact_uuid']]) && @sizeof($_SESSION['tmp']['messages']['contact_em'][$contact[$number]['contact_uuid']]) != 0) {
 				echo "$('img#contact_image_".$contact[$number]['contact_uuid']."').css('backgroundImage', 'url(' + $('img#src_message-bubble-image-em_".$contact[$number]['contact_uuid']."').attr('src') + ')');\n";
 			}
 		}
