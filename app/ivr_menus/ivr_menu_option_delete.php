@@ -43,13 +43,11 @@
 	$text = $language->get();
 
 //set the http values as variables
-	if (count($_GET) > 0) {
-		$id = check_str($_GET["id"]);
-		$ivr_menu_uuid = check_str($_GET["ivr_menu_uuid"]);
-	}
+	$ivr_menu_option_uuid = $_GET["id"];
+	$ivr_menu_uuid = $_GET["ivr_menu_uuid"];
 
 //delete the ivr menu option
-	if (is_uuid($id)) {
+	if (is_uuid($ivr_menu_option_uuid) && is_uuid($ivr_menu_uuid)) {
 		//get the dialplan_uuid
 			$sql = "select * from v_ivr_menus ";
 			$sql .= "where domain_uuid = :domain_uuid ";
@@ -64,25 +62,30 @@
 					$ivr_menu_context = $row["ivr_menu_context"];
 				}
 			}
-			unset($sql, $parameters);
+			unset($sql, $parameters, $result, $row);
 
 		//delete the data
-			$array['ivr_menu_options'][]['ivr_menu_option_uuid'] = $id;
+			$array['ivr_menu_options'][]['ivr_menu_option_uuid'] = $ivr_menu_option_uuid;
 			$database = new database;
 			$database->app_name = 'ivr_menus';
 			$database->app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
 			$database->delete($array);
 			//$message = $database->message;
+
+		//clear the cache
+			$cache = new cache;
+			$cache->delete("dialplan:".$ivr_menu_context);
+
+		//set message
+			message::add($text['message-delete']);
+
+		//redirect the user
+			header('Location: ivr_menu_edit.php?id='.$ivr_menu_uuid);
+			exit;
 	}
 
-//clear the cache
-	$cache = new cache;
-	$cache->delete("dialplan:".$ivr_menu_context);
-
-//redirect the user
-	message::add($text['message-delete']);
-	if (is_uuid($ivr_menu_uuid)) {
-		header('Location: ivr_menu_edit.php?id='.$ivr_menu_uuid);
-	}
+//default redirect
+	header('Location: ivr_menus.php');
+	exit;
 
 ?>
