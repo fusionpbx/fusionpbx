@@ -44,7 +44,9 @@
 	$text = $language->get();
 
 //get the http get or post and set it as php variables
-	$conference_uuid = check_str($_REQUEST["c"]);
+	if (is_uuid($_REQUEST["c"])) {
+		$conference_uuid = $_REQUEST["c"];
+	}
 
 //replace the space with underscore
 	$conference_name = $conference_uuid.'@'.$_SESSION['domain_name'];
