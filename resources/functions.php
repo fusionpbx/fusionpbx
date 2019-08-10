@@ -2018,8 +2018,8 @@ function number_pad($number,$n) {
 
 //escape user data
 	function escape($string) {
-		return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
-		//return htmlentities($string, ENT_QUOTES, 'UTF-8');
+		return htmlentities($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+		//return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
 	}
 
 //output pre-formatted array keys and values
