@@ -27,13 +27,23 @@
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('bridge_delete')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
 //delete the data
-	if (is_uuid($_GET["id"]) && permission_exists('bridge_delete')) {
+	if (is_uuid($_GET["id"])) {
 
 		//get the id
 			$bridge_uuid = $_GET["id"];
