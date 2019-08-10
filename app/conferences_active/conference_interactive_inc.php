@@ -179,7 +179,7 @@
 				if (strlen($record_path) == 0) {
 					if (permission_exists('conference_interactive_mute')) {
 						$action_mute = ($flag_can_speak == "true") ? 'mute' : 'unmute';
-						$td_onclick = "onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=".$action_mute."&id=".$id."');\"";
+						$td_onclick = "onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".escape($conference_name)."&data=".$action_mute."&id=".escape($id)."');\"";
 						$td_title = "title=\"".$text['message-click_to_'.$action_mute]."\"";
 					}
 					echo "<tr>\n";
