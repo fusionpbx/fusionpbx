@@ -81,7 +81,7 @@
 		echo "				<td>".$text['label-path']."</td>";
 		echo "			</tr>";
 		echo "			<tr>";
-		echo "				<td>".$folder."</td>";
+		echo "				<td>".escape($folder)."</td>";
 		echo "			</tr>";
 		echo "		</table>";
 		echo "		<br />";
@@ -90,11 +90,11 @@
 		echo "				<td>".$text['label-file-name']."</td>";
 		echo "			</tr>";
 		echo "			<tr>";
-		echo "				<td><input type='text' name='file' value='".$file."'></td>";
+		echo "				<td><input type='text' name='file' value='".escape($file)."'></td>";
 		echo "			</tr>";
 		echo "			<tr>";
 		echo "				<td colspan='1' align='right'>";
-		echo "					<input type='hidden' name='folder' value='$folder'>";
+		echo "					<input type='hidden' name='folder' value='".escape($folder)."'>";
 		echo "					<input type='hidden' name='token' id='token' value='". $_SESSION['token']. "'>";
 		echo "					<input type='submit' value='".$text['button-del-file']."'>";
 		echo "				</td>";
@@ -106,5 +106,4 @@
 		//include the footer
 		require_once "footer.php";
 	}
-
 ?>
