@@ -402,7 +402,7 @@
 
 			local params = {ring_group_uuid = ring_group_uuid, domain_uuid = domain_uuid};
 
-			assert(dbh:query(sql, params, function(row)
+			dbh:query(sql, params, function(row)
 				if (row.ring_group_strategy == "random") then
 					if (database["type"] == "mysql") then
 						sql_order = 'rand()'
@@ -412,7 +412,7 @@
 				else
 					sql_order='d.destination_delay, d.destination_number asc'
 				end
-			end));
+			end);
 
 		--get the ring group destinations
 			sql = [[
@@ -438,7 +438,7 @@
 			destinations = {};
 			destination_count = 0;
 			x = 1;
-			assert(dbh:query(sql, params, function(row)
+			dbh:query(sql, params, function(row)
 				if (row.destination_prompt == "1" or row.destination_prompt == "2") then
 					prompt = "true";
 				end
@@ -482,7 +482,7 @@
 				row['domain_name'] = leg_domain_name;
 				destination_count = destination_count + 1;
 				x = x + 1;
-			end));
+			end);
 			--freeswitch.consoleLog("NOTICE", "[ring_group] external "..external.."\n");
 
 		--get the dialplan data and save it to a table
