@@ -2,31 +2,24 @@
 /*
 	FusionPBX
 	Version: MPL 1.1
-
 	The contents of this file are subject to the Mozilla Public License Version
 	1.1 (the "License"); you may not use this file except in compliance with
 	the License. You may obtain a copy of the License at
 	http://www.mozilla.org/MPL/
-
 	Software distributed under the License is distributed on an "AS IS" basis,
 	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 	for the specific language governing rights and limitations under the
 	License.
-
 	The Original Code is FusionPBX
-
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
-
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-
 //include the root directory
 	include "root.php";
-
 //if config.php file does not exist then redirect to the install page
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/resources/config.php")) {
 		//do nothing
@@ -40,14 +33,11 @@
 		header("Location: ".PROJECT_PATH."/core/install/install.php");
 		exit;
 	}
-
 //additional includes
 	require_once "resources/check_auth.php";
-
 //disable login message
 	if ($_GET['msg'] == 'dismiss') {
 		unset($_SESSION['login']['message']['text']);
-
 		$sql = "update v_default_settings ";
 		$sql .= "set default_setting_enabled = 'false' ";
 		$sql .= "where ";
@@ -58,31 +48,11 @@
 		$database->execute($sql);
 		unset($sql);
 	}
-
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
-
 //load the header
 	require_once "resources/header.php";
-
-	
-//get user uuid
-	if (is_uuid($_REQUEST["id"]) && (permission_exists('user_edit') || $_REQUEST["id"] == $_SESSION['user_uuid'])) {
-		$user_uuid = $_REQUEST["id"];
-		$action = 'edit';
-	}
-	else if (permission_exists('user_add') && !is_uuid($_REQUEST["id"])) {
-		$user_uuid = uuid();
-		$action = 'add';
-	}
-	else {
-		// load users own account
-		header("Location: user_edit.php?id=".$_SESSION['user_uuid']);
-		exit;
-	}
-
-
 //start the content
 	echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
 	echo "	<tr>\n";
@@ -102,12 +72,10 @@
 	echo "	</tr>\n";
 	echo "</table>\n";
 	echo "<br />";
-
 //display login message
 	if (if_group("superadmin") && $_SESSION['login']['message']['text'] != '') {
 		echo "<div class='login_message' width='100%'><b>".$text['login-message_attention']."</b>&nbsp;&nbsp;".$_SESSION['login']['message']['text']."&nbsp;&nbsp;(<a href='?msg=dismiss'>".$text['login-message_dismiss']."</a>)</div>";
 	}
-
 //determine hud blocks
 	if (is_array($_SESSION['dashboard']) && sizeof($_SESSION['dashboard']) > 0) {
 		foreach ($_SESSION['groups'] as $index => $group) {
@@ -124,11 +92,8 @@
 		sort($selected_blocks, SORT_NATURAL);
 	}
 	unset($group, $group_name, $index, $hud_block, $hud_blocks);
-
-
 //collect stats for counts and limits
 	if ((is_array($selected_blocks) && in_array('counts', $selected_blocks)) || (is_array($selected_blocks) && in_array('limits', $selected_blocks))) {
-
 		//domains
 			if (permission_exists('domain_view')) {
 				$stats['system']['domains']['total'] = sizeof($_SESSION['domains']);
@@ -137,7 +102,6 @@
 					$stats['system']['domains']['disabled'] += ($domain['domain_enabled'] != 'true') ? 1 : 0;
 				}
 			}
-
 		//devices
 			if (permission_exists('device_view')) {
 				$stats['system']['devices']['total'] = 0;
@@ -159,7 +123,6 @@
 				}
 				unset($sql, $result);
 			}
-
 		//extensions
 			if (permission_exists('extension_view')) {
 				$stats['system']['extensions']['total'] = 0;
@@ -181,7 +144,6 @@
 				}
 				unset($sql, $result);
 			}
-
 		//gateways
 			if (permission_exists('gateway_view')) {
 				$stats['system']['gateways']['total'] = 0;
@@ -203,7 +165,6 @@
 				}
 				unset($sql, $result);
 			}
-
 		//users
 			if (permission_exists('user_view') || if_group("superadmin")) {
 				$stats['system']['users']['total'] = 0;
@@ -225,7 +186,6 @@
 				}
 				unset($sql, $result);
 			}
-
 		//destinations
 			if (permission_exists('destination_view')) {
 				$stats['system']['destinations']['total'] = 0;
@@ -247,7 +207,6 @@
 				}
 				unset($sql, $result);
 			}
-
 		//call center queues
 			if (permission_exists('call_center_active_view')) {
 				$stats['system']['call_center_queues']['total'] = 0;
@@ -269,7 +228,6 @@
 				}
 				unset($sql, $result);
 			}
-
 		//ivr menus
 			if (permission_exists('ivr_menu_view')) {
 				$stats['system']['ivr_menus']['total'] = 0;
@@ -291,7 +249,6 @@
 				}
 				unset($sql, $result);
 			}
-
 		//ring groups
 			if (permission_exists('ring_group_view')) {
 				$stats['system']['ring_groups']['total'] = 0;
@@ -313,7 +270,6 @@
 				}
 				unset($sql, $result);
 			}
-
 		//voicemails
 			if (permission_exists('voicemail_view')) {
 				$stats['system']['voicemails']['total'] = 0;
@@ -335,7 +291,6 @@
 				}
 				unset($sql, $result);
 			}
-
 		//voicemail messages
 			if (permission_exists('voicemail_message_view')) {
 				$stats['system']['messages']['total'] = 0;
@@ -358,12 +313,9 @@
 				unset($sql, $result);
 			}
 	}
-
-
 //build hud block html
 	$n = 0;
 	$theme_image_path = $_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/"; // used for missed and recent calls
-
 	//voicemail
 		if (is_array($selected_blocks) && in_array('voicemail', $selected_blocks) && permission_exists('voicemail_message_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/voicemails/")) {
 			//required class
@@ -393,12 +345,9 @@
 						}
 					}
 				}
-
 				$hud[$n]['html'] .= "<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php';\">".$text['label-voicemail']."</span>";
-
 				$hud[$n]['html'] .= "<span class='hud_stat' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$messages['new']."</span>";
 				$hud[$n]['html'] .= "<span class='hud_stat_title' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$text['label-new_messages']."</span>\n";
-
 				$hud[$n]['html'] .= "<div class='hud_details' id='hud_".$n."_details'>";
 				if (sizeof($voicemails) > 0) {
 					$hud[$n]['html'] .= "<table class='tr_hover' cellpadding='2' cellspacing='0' border='0' width='100%'>";
@@ -407,11 +356,9 @@
 					$hud[$n]['html'] .= "	<th class='hud_heading' style='text-align: center;' width='50%'>".$text['label-new']."</th>";
 					$hud[$n]['html'] .= "	<th class='hud_heading' style='text-align: center;'>".$text['label-total']."</th>";
 					$hud[$n]['html'] .= "</tr>";
-
 					$c = 0;
 					$row_style["0"] = "row_style0";
 					$row_style["1"] = "row_style1";
-
 					foreach ($messages as $voicemail_uuid => $row) {
 						if (is_uuid($voicemail_uuid)) {
 							$tr_link = "href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php?voicemail_uuid=".$voicemail_uuid."'";
@@ -423,7 +370,6 @@
 							$c = ($c) ? 0 : 1;
 						}
 					}
-
 					$hud[$n]['html'] .= "</table>";
 				}
 				else {
@@ -432,17 +378,14 @@
 				$hud[$n]['html'] .= "</div>";
 				$n++;
 		}
-
 	//missed calls
 		if (is_array($selected_blocks) && in_array('missed', $selected_blocks) && permission_exists('xml_cdr_view') && is_array($_SESSION['user']['extension']) && sizeof($_SESSION['user']['extension']) > 0) {
 			foreach ($_SESSION['user']['extension'] as $assigned_extension) {
 				$assigned_extensions[$assigned_extension['extension_uuid']] = $assigned_extension['user'];
 			}
 			unset($assigned_extension);
-
 			//if also viewing system status, show more recent calls (more room avaialble)
 			$missed_limit = (is_array($selected_blocks) && in_array('counts', $selected_blocks)) ? 10 : 5;
-
 			$sql = "
 				select
 					direction,
@@ -482,16 +425,12 @@
 			$database = new database;
 			$result = $database->select($sql, $parameters, 'all');
 			$num_rows = is_array($result) ? sizeof($result) : 0;
-
 			$c = 0;
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
-
 			$hud[$n]['html'] .= "<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?call_result=missed'\">".$text['label-missed_calls']."</span>";
-
 			$hud[$n]['html'] .= "<span class='hud_stat' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$num_rows."</span>";
 			$hud[$n]['html'] .= "<span class='hud_stat_title' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$text['label-last_24_hours']."</span>\n";
-
 			$hud[$n]['html'] .= "<div class='hud_details' id='hud_".$n."_details'>";
 			$hud[$n]['html'] .= "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 			$hud[$n]['html'] .= "<tr>\n";
@@ -501,7 +440,6 @@
 			$hud[$n]['html'] .= "<th class='hud_heading' width='100%'>".$text['label-cid_number']."</th>\n";
 			$hud[$n]['html'] .= "<th class='hud_heading'>".$text['label-missed']."</th>\n";
 			$hud[$n]['html'] .= "</tr>\n";
-
 			if ($num_rows > 0) {
 				$theme_cdr_images_exist = (
 					file_exists($theme_image_path."icon_cdr_inbound_voicemail.png") &&
@@ -509,7 +447,6 @@
 					file_exists($theme_image_path."icon_cdr_local_voicemail.png") &&
 					file_exists($theme_image_path."icon_cdr_local_cancelled.png")
 					) ? true : false;
-
 				foreach($result as $index => $row) {
 					if ($index + 1 > $missed_limit) { break; } //only show limit
 					$tmp_year = date("Y", strtotime($row['start_stamp']));
@@ -547,22 +484,18 @@
 				}
 			}
 			unset($sql, $parameters, $result, $num_rows, $index, $row);
-
 			$hud[$n]['html'] .= "</table>\n";
 			$hud[$n]['html'] .= "<span style='display: block; margin: 6px 0 7px 0;'><a href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?call_result=missed'>".$text['label-view_all']."</a></span>\n";
 			$hud[$n]['html'] .= "</div>";
 			$n++;
 		}
-
 	//recent calls
 		if (is_array($selected_blocks) && in_array('recent', $selected_blocks) && permission_exists('xml_cdr_view') && is_array($_SESSION['user']['extension']) && sizeof($_SESSION['user']['extension']) > 0) {
 			foreach ($_SESSION['user']['extension'] as $assigned_extension) {
 				$assigned_extensions[$assigned_extension['extension_uuid']] = $assigned_extension['user'];
 			}
-
 			//if also viewing system status, show more recent calls (more room avaialble)
 			$recent_limit = (is_array($selected_blocks) && in_array('counts', $selected_blocks)) ? 10 : 5;
-
 			$sql = "
 				select
 					direction,
@@ -604,16 +537,12 @@
 			$database = new database;
 			$result = $database->select($sql, $parameters, 'all');
 			$num_rows = is_array($result) ? sizeof($result) : 0;
-
 			$c = 0;
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
-
 			$hud[$n]['html'] .= "<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php';\">".$text['label-recent_calls']."</span>";
-
 			$hud[$n]['html'] .= "<span class='hud_stat' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$num_rows."</span>";
 			$hud[$n]['html'] .= "<span class='hud_stat_title' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$text['label-last_24_hours']."</span>\n";
-
 			$hud[$n]['html'] .= "<div class='hud_details' id='hud_".$n."_details'>";
 			$hud[$n]['html'] .= "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 			$hud[$n]['html'] .= "<tr>\n";
@@ -623,7 +552,6 @@
 			$hud[$n]['html'] .= "<th class='hud_heading' width='100%'>".$text['label-cid_number']."</th>\n";
 			$hud[$n]['html'] .= "<th class='hud_heading'>".$text['label-date_time']."</th>\n";
 			$hud[$n]['html'] .= "</tr>\n";
-
 			if ($num_rows > 0) {
 				$theme_cdr_images_exist = (
 					file_exists($theme_image_path."icon_cdr_inbound_answered.png") &&
@@ -638,14 +566,12 @@
 					file_exists($theme_image_path."icon_cdr_local_cancelled.png") &&
 					file_exists($theme_image_path."icon_cdr_local_failed.png")
 					) ? true : false;
-
 				foreach($result as $index => $row) {
 					if ($index + 1 > $recent_limit) { break; } //only show limit
 					$tmp_year = date("Y", strtotime($row['start_stamp']));
 					$tmp_month = date("M", strtotime($row['start_stamp']));
 					$tmp_day = date("d", strtotime($row['start_stamp']));
 					$tmp_start_epoch = ($_SESSION['domain']['time_format']['text'] == '12h') ? date("n/j g:ia", $row['start_epoch']) : date("n/j H:i", $row['start_epoch']);
-
 					//determine name
 						$cdr_name = ($row['direction'] == 'inbound' || ($row['direction'] == 'local' && is_array($assigned_extensions) && in_array($row['destination_number'], $assigned_extensions))) ? $row['caller_id_name'] : $row['destination_number'];
 					//determine number to display
@@ -695,26 +621,21 @@
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'><a href='javascript:void(0);' ".(($cdr_name != '') ? "title=\"".$cdr_name."\"" : null).">".$cdr_number."</a></td>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'>".$tmp_start_epoch."</td>\n";
 					$hud[$n]['html'] .= "</tr>\n";
-
 					unset($cdr_name, $cdr_number);
 					$c = ($c) ? 0 : 1;
 				}
 			}
 			unset($sql, $parameters, $result, $num_rows, $index, $row);
-
 			$hud[$n]['html'] .= "</table>\n";
 			$hud[$n]['html'] .= "<span style='display: block; margin: 6px 0 7px 0;'><a href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php'>".$text['label-view_all']."</a></span>\n";
 			$hud[$n]['html'] .= "</div>";
 			$n++;
 		}
-
-
 	//domain limits
 		if (is_array($selected_blocks) && in_array('limits', $selected_blocks) && is_array($_SESSION['limit']) && sizeof($_SESSION['limit']) > 0) {
 			$c = 0;
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
-
 			$show_stat = true;
 			if (permission_exists('extension_view')) {
 				$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/app/extensions/extensions.php'\"";
@@ -729,14 +650,11 @@
 			else {
 				$show_stat = false;
 			}
-
 			$hud[$n]['html'] .= "<span class='hud_title' ".$onclick.">".$text['label-domain_limits']."</span>";
-
 			if ($show_stat) {
 				$hud[$n]['html'] .= "<span class='hud_stat' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$hud_stat."</span>";
 				$hud[$n]['html'] .= "<span class='hud_stat_title' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$hud_stat_title."</span>\n";
 			}
-
 			$hud[$n]['html'] .= "<div class='hud_details' id='hud_".$n."_details'>";
 			$hud[$n]['html'] .= "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 			$hud[$n]['html'] .= "<tr>\n";
@@ -744,7 +662,6 @@
 			$hud[$n]['html'] .= "<th class='hud_heading' width='50%' style='text-align: center;'>".$text['label-used']."</th>\n";
 			$hud[$n]['html'] .= "<th class='hud_heading' style='text-align: center;'>".$text['label-total']."</th>\n";
 			$hud[$n]['html'] .= "</tr>\n";
-
 			foreach ($_SESSION['limit'] as $category => $value) {
 				$limit = $value['numeric'];
 				switch ($category) {
@@ -789,21 +706,16 @@
 				$hud[$n]['html'] .= "</tr>\n";
 				$c = ($c) ? 0 : 1;
 			}
-
 			$hud[$n]['html'] .= "</table>\n";
 			$hud[$n]['html'] .= "</div>";
 			$n++;
 		}
-
-
 	//system/domain counts
 		if (is_array($selected_blocks) && in_array('counts', $selected_blocks)) {
 			$c = 0;
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
-
 			$scope = (permission_exists('dialplan_add')) ? 'system' : 'domain';
-
 			$show_stat = true;
 			if (permission_exists('domain_view')) {
 				$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/core/domains/domains.php'\"";
@@ -823,14 +735,11 @@
 			else {
 				$show_stat = false;
 			}
-
 			$hud[$n]['html'] .= "<span class='hud_title' ".$onclick.">".$text['label-system_counts']."</span>";
-
 			if ($show_stat) {
 				$hud[$n]['html'] .= "<span class='hud_stat' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$hud_stat."</span>";
 				$hud[$n]['html'] .= "<span class='hud_stat_title' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$hud_stat_title."</span>\n";
 			}
-
 			$hud[$n]['html'] .= "<div class='hud_details' id='hud_".$n."_details'>";
 			$hud[$n]['html'] .= "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 			$hud[$n]['html'] .= "<tr>\n";
@@ -838,7 +747,6 @@
 			$hud[$n]['html'] .= "<th class='hud_heading' width='50%' style='text-align: center; padding-left: 0; padding-right: 0;'>".$text['label-disabled']."</th>\n";
 			$hud[$n]['html'] .= "<th class='hud_heading' style='text-align: center;'>".$text['label-total']."</th>\n";
 			$hud[$n]['html'] .= "</tr>\n";
-
 			//domains
 				if (permission_exists('domain_view')) {
 					$tr_link = "href='".PROJECT_PATH."/core/domains/domains.php'";
@@ -849,7 +757,6 @@
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
-
 			//devices
 				if (permission_exists('device_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/devices/")) {
 					$tr_link = "href='".PROJECT_PATH."/app/devices/devices.php'";
@@ -860,7 +767,6 @@
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
-
 			//extensions
 				if (permission_exists('extension_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/extensions/")) {
 					$tr_link = "href='".PROJECT_PATH."/app/extensions/extensions.php'";
@@ -871,7 +777,6 @@
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
-
 			//gateways
 				if (permission_exists('gateway_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/gateways/")) {
 					$tr_link = "href='".PROJECT_PATH."/app/gateways/gateways.php'";
@@ -882,7 +787,6 @@
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
-
 			//users
 				if ((permission_exists('user_view') || if_group("superadmin")) && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/core/users/")) {
 					$tr_link = "href='".PROJECT_PATH."/core/users/users.php'";
@@ -893,7 +797,6 @@
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
-
 			//destinations
 				if (permission_exists('destination_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/destinations/")) {
 					$tr_link = "href='".PROJECT_PATH."/app/destinations/destinations.php'";
@@ -904,7 +807,6 @@
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
-
 			//call center queues
 				if (permission_exists('call_center_active_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/call_centers/")) {
 					$tr_link = "href='".PROJECT_PATH."/app/call_centers/call_center_queues.php'";
@@ -915,7 +817,6 @@
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
-
 			//ivr menus
 				if (permission_exists('ivr_menu_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/ivr_menus/")) {
 					$tr_link = "href='".PROJECT_PATH."/app/ivr_menus/ivr_menus.php'";
@@ -926,7 +827,6 @@
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
-
 			//ring groups
 				if (permission_exists('ring_group_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/ring_groups/")) {
 					$tr_link = "href='".PROJECT_PATH."/app/ring_groups/ring_groups.php'";
@@ -937,7 +837,6 @@
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
-
 			//voicemails
 				if (permission_exists('voicemail_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/voicemails/")) {
 					$tr_link = "href='".PROJECT_PATH."/app/voicemails/voicemails.php'";
@@ -948,7 +847,6 @@
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
-
 			//messages
 				if (permission_exists('voicemail_message_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/voicemails/")) {
 					$hud[$n]['html'] .= "<tr>\n";
@@ -956,7 +854,6 @@
 					$hud[$n]['html'] .= "<th class='hud_heading' width='50%' style='text-align: center; padding-left: 0; padding-right: 0;'>".$text['label-new']."</th>\n";
 					$hud[$n]['html'] .= "<th class='hud_heading' style='text-align: center;'>".$text['label-total']."</th>\n";
 					$hud[$n]['html'] .= "</tr>\n";
-
 					$tr_link = "href='".PROJECT_PATH."/app/voicemails/voicemails.php'";
 					$hud[$n]['html'] .= "<tr ".$tr_link.">\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-messages']."</a></td>\n";
@@ -965,20 +862,16 @@
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
-
 			$hud[$n]['html'] .= "</table>\n";
 			$hud[$n]['html'] .= "</div>";
 			$n++;
 		}
-
 	//system status
 		if (is_array($selected_blocks) && in_array('system', $selected_blocks)) {
 			$c = 0;
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
-
 			$hud[$n]['html'] .= "<span class='hud_title' style='cursor: default;'>".$text['label-system_status']."</span>";
-
 			//disk usage
 			if (PHP_OS == 'FreeBSD' || PHP_OS == 'Linux') {
 				$tmp = shell_exec("df /home 2>&1");
@@ -988,27 +881,23 @@
 				foreach ($tmp as $stat) {
 					if (substr_count($stat, '%') > 0) { $percent_disk_usage = rtrim($stat,'%'); break; }
 				}
-
 				if ($percent_disk_usage != '') {
 					$hud[$n]['html'] .= "<span class='hud_stat' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$percent_disk_usage."</span>";
 					$hud[$n]['html'] .= "<span class='hud_stat_title' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\" style='cursor: default;'>".$text['label-disk_usage']." (%)</span>\n";
 				}
 			}
-
 			$hud[$n]['html'] .= "<div class='hud_details' id='hud_".$n."_details'>";
 			$hud[$n]['html'] .= "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 			$hud[$n]['html'] .= "<tr>\n";
 			$hud[$n]['html'] .= "<th class='hud_heading' width='50%'>".$text['label-item']."</th>\n";
 			$hud[$n]['html'] .= "<th class='hud_heading' style='text-align: right;'>".$text['label-value']."</th>\n";
 			$hud[$n]['html'] .= "</tr>\n";
-
 			//pbx version
 				$hud[$n]['html'] .= "<tr class='tr_link_void'>\n";
 				$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".(isset($_SESSION['theme']['title']['text'])?$_SESSION['theme']['title']['text']:'FusionPBX')."</td>\n";
 				$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".software_version()."</td>\n";
 				$hud[$n]['html'] .= "</tr>\n";
 				$c = ($c) ? 0 : 1;
-
 			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 			if ($fp) {
 				//switch version
@@ -1023,7 +912,6 @@
 						$hud[$n]['html'] .= "</tr>\n";
 						$c = ($c) ? 0 : 1;
 					}
-
 				//switch uptime
 					$tmp = event_socket_request($fp, 'api status');
 					$tmp = explode("\n", $tmp);
@@ -1042,7 +930,6 @@
 						$c = ($c) ? 0 : 1;
 					}
 			}
-
 			//os uptime
 				if (stristr(PHP_OS, 'Linux')) {
 					unset($tmp);
@@ -1066,7 +953,6 @@
 						$c = ($c) ? 0 : 1;
 					}
 				}
-
 			//memory usage (for available memory, use "free | awk 'FNR == 3 {print $4/($3+$4)*100}'" instead)
 				if (stristr(PHP_OS, 'Linux')) {
 					$free = shell_exec("/usr/bin/which free");
@@ -1080,7 +966,6 @@
 						$c = ($c) ? 0 : 1;
 					}
 				}
-
 			//memory available
 				if (stristr(PHP_OS, 'Linux')) {
 					$result = trim(shell_exec('free -hw | grep \'Mem:\' | cut -d\' \' -f 58-64'));
@@ -1092,7 +977,6 @@
 						$c = ($c) ? 0 : 1;
 					}
 				}
-
 			//disk usage
 				if (stristr(PHP_OS, 'Linux')) {
 					//calculated above
@@ -1104,7 +988,6 @@
 						$c = ($c) ? 0 : 1;
 					}
 				}
-
 			//cpu usage
 				if (stristr(PHP_OS, 'Linux')) {
 					$result = shell_exec('ps -A -o pcpu');
@@ -1124,7 +1007,6 @@
 						$c = ($c) ? 0 : 1;
 					}
 				}
-
 			//db connections
 				switch ($db_type) {
 					case 'pgsql':
@@ -1153,7 +1035,6 @@
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
-
 			//channel count
 				if ($fp) {
 					$tmp = event_socket_request($fp, 'api status');
@@ -1167,7 +1048,6 @@
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
-
 			//registration count
 				if ($fp && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/registrations/")) {
 					$registration = new registrations;
@@ -1179,15 +1059,12 @@
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
-
 			$hud[$n]['html'] .= "</table>\n";
 			$hud[$n]['html'] .= "</div>";
 			$n++;
 		}
-
 //output hud blocks
 	if (is_array($hud) && sizeof($hud) > 0) {
-
 		//javascript function: send_cmd
 		if (((is_array($selected_blocks) && in_array('missed', $selected_blocks)) || (is_array($selected_blocks) && in_array('recent', $selected_blocks))) && permission_exists('xml_cdr_view')) {
 			echo "<script type=\"text/javascript\">\n";
@@ -1205,7 +1082,6 @@
 			echo "	}\n";
 			echo "</script>\n";
 		}
-
 		//define grid columns widths and when to use a clear fix
 		//-- $col_str[box_total][/usr/bin/which_box]
 		//-- $clear_fix[box_total][after_box]
@@ -1217,13 +1093,11 @@
 		$col_str[5][4] = "col-xs-12 col-sm-6 col-md-6 col-lg-3";
 		$col_str[5][5] = "col-xs-12 col-sm-6 col-md-6 col-lg-3";
 		for ($n = 1; $n <= 6; $n++) { $col_str[6][$n] = "col-xs-12 col-sm-6 col-md-4 col-lg-2"; }
-
 		$clear_fix[4][2] = "visible-sm";
 		$clear_fix[5][3] = "visible-sm visible-md";
 		$clear_fix[6][2] = "visible-sm";
 		$clear_fix[6][3] = "visible-md";
 		$clear_fix[6][4] = "visible-sm";
-
 		echo "<div class='row' style='padding: 0 10px;'>";
 		foreach ($hud as $index => $block) {
 			echo "<div class='".$col_str[sizeof($hud)][$index+1]."'>";
@@ -1239,13 +1113,10 @@
 			}
 		}
 		echo "</div>";
-
 	}
-
 //additional items for the dashbaord
 	if (!is_array($selected_blocks) || in_array('call_routing', $selected_blocks) || in_array('ring_groups', $selected_blocks)) {
 		echo "<div class='row' style='margin-top: 30px;'>\n";
-
 		if (!is_array($selected_blocks) || in_array('caller_id', $selected_blocks)) {
 			//caller id management
 				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/extensions/extension_dashboard.php")) {
@@ -1257,7 +1128,6 @@
 						}
 				}
 		}
-
 		if (!is_array($selected_blocks) || in_array('call_routing', $selected_blocks)) {
 			//call routing
 				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/calls/calls.php")) {
@@ -1269,7 +1139,6 @@
 					}
 				}
 		}
-
 		if (!is_array($selected_blocks) || in_array('ring_groups', $selected_blocks)) {
 			//ring group forward
 				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/ring_groups/ring_group_forward.php")) {
@@ -1281,7 +1150,6 @@
 					}
 				}
 		}
-
 		if (!is_array($selected_blocks) || in_array('call_center_agents', $selected_blocks)) {
 			//call center agent
 				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/call_centers/call_center_agent_dashboard.php")) {
@@ -1293,7 +1161,6 @@
 					}
 				}
 		}
-
 		if (!is_array($selected_blocks) || in_array('device_keys', $selected_blocks)) {
 			//device key management
 				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/devices/device_dashboard.php")) {
@@ -1307,15 +1174,11 @@
 		}
 		echo "</div>\n";
 	}
-
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
-
 //set the title
 	$document['title'] = $text['title-user_dashboard'];
-
 //show the footer
 	require_once "resources/footer.php";
-
 ?>
