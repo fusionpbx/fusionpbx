@@ -117,7 +117,7 @@
 			}
 		}
 		$dialplan_enabled = $_POST["dialplan_enabled"];
-		$dialplan_description = $_POST["dialplan_description"])
+		$dialplan_description = $_POST["dialplan_description"];
 		if (strlen($dialplan_enabled) == 0) { $dialplan_enabled = "true"; } //set default to enabled
 	}
 
