@@ -231,5 +231,20 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "One touch voicemail 0=Disabled - 1=Enabled ";
 		$y++;
-
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9009c13d-0bc4-4f58-b6c1-871ef0be0765";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_intercom_enable";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Intercom  0=Disabled - 1=Enabled ";
+		$y++;
+ 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2981531f-85bb-482b-9522-d9ea94565576";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_page_enable";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Paging  0=Disabled - 1=Enabled ";
+		$y++;
 ?>
