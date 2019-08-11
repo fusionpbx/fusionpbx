@@ -58,17 +58,18 @@
 	}
 
 //get variables used to control the order
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
 //add the search term
-	$search = strtolower(check_str($_GET["search"]));
+	$search = strtolower($_GET["search"]);
 	if (strlen($search) > 0) {
 		$sql_search = " (";
-		$sql_search .= "   lower(number_translation_name) like '%".$search."%' ";
-		$sql_search .= "   or lower(number_translation_enabled) like '%".$search."%' ";
-		$sql_search .= "   or lower(number_translation_description) like '%".$search."%' ";
+		$sql_search .= "   lower(number_translation_name) like :search ";
+		$sql_search .= "   or lower(number_translation_enabled) like :search ";
+		$sql_search .= "   or lower(number_translation_description) like :search ";
 		$sql_search .= " ) ";
+		$parameters['search'] = '%'.$search.'%';
 	}
 
 //additional includes
@@ -76,22 +77,12 @@
 	require_once "resources/paging.php";
 
 //prepare to page the results
-	$sql = "select count(number_translation_uuid) as num_rows from v_number_translations ";
+	$sql = "select count(*) from v_number_translations ";
 	if (isset($sql_search)) {
 		$sql .= "where ".$sql_search;
 	}
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-	}
+	$database = new database;
+	$num_rows = $database->select($sql, (is_array($parameters) ? $parameters : null), 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -102,16 +93,12 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select * from v_number_translations ";
-	if (isset($sql_search)) {
-		$sql .= "where ".$sql_search;
-	}
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$sql .= "limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$sql = str_replace('count(*)', '*', $sql);
+	$sql .= order_by($order_by, $order);
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$result = $database->select($sql, (is_array($parameters) ? $parameters : null), 'all');
+	unset($sql, $parameters);
 
 //alternate the row style
 	$c = 0;
@@ -139,12 +126,15 @@
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-number_translations']."</b></td>\n";
-	echo "		<form method='get' action=''>\n";
-	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
+	echo "		<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
+	echo "			<form method='get' action=''>\n";
+	if (permission_exists('number_translation_delete')) {
+		echo "			<input type='button' class='btn' value='".$text['button-delete']."' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm').action = 'number_translation_delete.php'; document.getElementById('frm').submit(); }\">\n";
+	}
 	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".escape($search)."'>\n";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
-	echo "			</td>\n";
-	echo "		</form>\n";
+	echo "			</form>\n";
+	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
@@ -153,7 +143,7 @@
 	echo "	</tr>\n";
 	echo "</table>\n";
 
-	echo "<form method='post' action=''>\n";
+	echo "<form method='post' id='frm' action='number_translation_delete.php'>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<th style='width:30px;'>\n";
@@ -172,7 +162,7 @@
 	echo "	</td>\n";
 	echo "<tr>\n";
 
-	if (is_array($result)) {
+	if (is_array($result) && @sizeof($result) != 0) {
 		$x = 0;
 		foreach($result as $row) {
 			if (permission_exists('number_translation_edit')) {
@@ -180,8 +170,7 @@
 			}
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='align: center; padding: 3px 3px 0px 8px;'>\n";
-			echo "		<input type='checkbox' name=\"number_translations[$x][checked]\" id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$x."').checked = false; }\">\n";
-			echo "		<input type='hidden' name=\"number_translations[$x][number_translation_uuid]\" value='".escape($row['number_translation_uuid'])."' />\n";
+			echo "		<input type='checkbox' name='number_translations[]' id='checkbox_".$x."' value='".escape($row['number_translation_uuid'])."' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$x."').checked = false; }\">\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['number_translation_name'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['number_translation_enabled'])."&nbsp;</td>\n";
@@ -191,15 +180,15 @@
 				echo "<a href='number_translation_edit.php?id=".escape($row['number_translation_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('number_translation_delete')) {
-				echo "<button type='submit' class='btn btn-default list_control_icon' name=\"number_translations[$x][action]\" alt='".$text['button-delete']."' value='delete'><span class='glyphicon glyphicon-remove'></span></button>";
+				echo "<a href='number_translation_delete.php?number_translations[]=".escape($row['number_translation_uuid'])."' alt='".$text['button-delete']."' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm').submit(); } else { return false; }\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 			$x++;
 			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $result, $row_count);
-	} //end if results
+		}
+	}
+	unset($result, $row);
 
 	echo "<tr>\n";
 	echo "<td colspan='5' align='left'>\n";
