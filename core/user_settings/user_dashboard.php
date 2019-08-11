@@ -66,6 +66,23 @@
 //load the header
 	require_once "resources/header.php";
 
+	
+//get user uuid
+	if (is_uuid($_REQUEST["id"]) && (permission_exists('user_edit') || $_REQUEST["id"] == $_SESSION['user_uuid'])) {
+		$user_uuid = $_REQUEST["id"];
+		$action = 'edit';
+	}
+	else if (permission_exists('user_add') && !is_uuid($_REQUEST["id"])) {
+		$user_uuid = uuid();
+		$action = 'add';
+	}
+	else {
+		// load users own account
+		header("Location: user_edit.php?id=".$_SESSION['user_uuid']);
+		exit;
+	}
+
+
 //start the content
 	echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
 	echo "	<tr>\n";
@@ -74,7 +91,7 @@
 	echo "		</td>\n";
 	echo "		<td valign='top' style='text-align: right; white-space: nowrap;'>\n";
 	if ($_SESSION['theme']['menu_style']['text'] != 'side') {
-		echo "		".$text['label-welcome']." <a href='".PROJECT_PATH."/core/users/user_edit.php?id=user'>".$_SESSION["username"]."</a>";
+		echo "		".$text['label-welcome']." <a href='".PROJECT_PATH."/core/users/user_edit.php?id=".$_SESSION['user_uuid']."'>".$_SESSION["username"]."</a>";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
