@@ -88,10 +88,10 @@ else
 	end
 	dialplans = {};
 	x = 1;
-	assert(dbh:query(sql, params, function(row)
+	dbh:query(sql, params, function(row)
 		dialplans[x] = row;
 		x = x + 1;
-	end));
+	end);
 
 	y = 0;
 	previous_dialplan_uuid = '';
