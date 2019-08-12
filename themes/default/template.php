@@ -211,6 +211,7 @@
 					});
 				});
 		<?php } ?>
+		
 
 	});
 
@@ -326,8 +327,8 @@
 							echo "<span class=\"domain_list_item_description\"> - ".escape($domain['domain_description'])."</span>\n";
 						}
 						echo "</div>\n";
-						$ary_domain_names[] = escape($domain['domain_name']);
-						$ary_domain_descs[] = str_replace('"','\"',escape($domain['domain_description']));
+						$ary_domain_names[] = $domain['domain_name'];
+						$ary_domain_descs[] = str_replace('"','\"',$domain['domain_description']);
 					}
 					?>
 				</div>
