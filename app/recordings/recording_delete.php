@@ -39,40 +39,41 @@ else {
 	$text = $language->get();
 
 //get the id
-	if (count($_GET) > 0) {
-		$id = $_GET["id"];
-	}
+	$recording_uuid = $_GET["id"];
 
-if (strlen($id)>0) {
+if (is_uuid($recording_uuid)) {
 	//get filename
-		$sql = "select * from v_recordings ";
-		$sql .= "where recording_uuid = '$id' ";
-		$sql .= "and domain_uuid = '$domain_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
-			$filename = $row["recording_filename"];
-			break; //limit to 1 row
-		}
-		unset ($prep_statement);
+		$sql = "select recording_filename from v_recordings ";
+		$sql .= "where recording_uuid = :recording_uuid ";
+		$sql .= "and domain_uuid = :domain_uuid ";
+		$parameters['recording_uuid'] = $recording_uuid;
+		$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$filename = $database->select($sql, $parameters, 'column');
+		unset($prep_statement);
+
+	//build array
+		$array['recordings'][0]['recording_uuid'] = $recording_uuid;
+		$array['recordings'][0]['domain_uuid'] = $domain_uuid;
 
 	//delete recording from the database
-		$sql = "delete from v_recordings ";
-		$sql .= "where recording_uuid = '$id' ";
-		$sql .= "and domain_uuid = '$domain_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($sql);
+		$database = new database;
+		$database->app_name = 'recordings';
+		$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
+		$database->delete($array);
+		unset($array);
 
 	//delete the recording
 		if (file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$filename)) {
 			@unlink($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$filename);
 		}
+
+	//set message
+		message::add($text['message-delete']);
 }
 
 //redirect the user
-	message::add($text['message-delete']);
 	header("Location: recordings.php");
-	return;
+	exit;
+
 ?>

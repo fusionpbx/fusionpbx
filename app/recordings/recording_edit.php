@@ -40,16 +40,16 @@ else {
 	$text = $language->get();
 
 //get recording id
-	if (isset($_REQUEST["id"])) {
-		$recording_uuid = check_str($_REQUEST["id"]);
+	if (is_uuid($_REQUEST["id"])) {
+		$recording_uuid = $_REQUEST["id"];
 	}
 
 //get the form value and set to php variables
 	if (count($_POST) > 0) {
-		$recording_filename = check_str($_POST["recording_filename"]);
-		$recording_filename_original = check_str($_POST["recording_filename_original"]);
-		$recording_name = check_str($_POST["recording_name"]);
-		$recording_description = check_str($_POST["recording_description"]);
+		$recording_filename = $_POST["recording_filename"];
+		$recording_filename_original = $_POST["recording_filename_original"];
+		$recording_name = $_POST["recording_name"];
+		$recording_description = $_POST["recording_description"];
 
 		//clean the recording filename and name
 		$recording_filename = str_replace(" ", "_", $recording_filename);
@@ -59,7 +59,7 @@ else {
 
 if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	//get recording uuid to edit
-		$recording_uuid = check_str($_POST["recording_uuid"]);
+		$recording_uuid = $_POST["recording_uuid"];
 
 	//check for all required data
 		$msg = '';
@@ -86,40 +86,46 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					rename($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$recording_filename_original, $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$recording_filename);
 				}
 
-			//update the database with the new data
-				$sql = "update v_recordings set ";
-				$sql .= "domain_uuid = '".$domain_uuid."', ";
-				$sql .= "recording_filename = '".$recording_filename."', ";
-				$sql .= "recording_name = '".$recording_name."', ";
-				$sql .= "recording_description = '".$recording_description."' ";
-				$sql .= "where domain_uuid = '".$domain_uuid."'";
-				$sql .= "and recording_uuid = '".$recording_uuid."'";
-				$db->exec(check_sql($sql));
-				unset($sql);
+			//build array
+				$array['recordings'][0]['domain_uuid'] = $domain_uuid;
+				$array['recordings'][0]['recording_filename'] = $recording_filename;
+				$array['recordings'][0]['recording_name'] = $recording_name;
+				$array['recordings'][0]['recording_description'] = $recording_description;
+				$array['recordings'][0]['domain_uuid'] = $domain_uuid;
+				$array['recordings'][0]['recording_uuid'] = $recording_uuid;
 
-			message::add($text['message-update']);
-			header("Location: recordings.php");
-			return;
-		} //if (permission_exists('recording_edit')) {
-	} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+			//execute update
+				$database = new database;
+				$database->app_name = 'recordings';
+				$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
+				$database->save($array);
+				unset($array);
+			// set message
+				message::add($text['message-update']);
+
+			//redirect
+				header("Location: recordings.php");
+				exit;
+		}
+	}
+}
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$recording_uuid = $_GET["id"];
 		$sql = "select * from v_recordings ";
-		$sql .= "where domain_uuid = '".$domain_uuid."' ";
-		$sql .= "and recording_uuid = '".$recording_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and recording_uuid = :recording_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['recording_uuid'] = $recording_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$recording_filename = $row["recording_filename"];
 			$recording_name = $row["recording_name"];
 			$recording_description = $row["recording_description"];
-			break; //limit to 1 row
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //show the header
