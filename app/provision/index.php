@@ -144,8 +144,8 @@
 			$parameters['mac'] = $mac;
 			$database = new database;
 			$domain_uuid = $database->select($sql, $parameters, 'column');
-			unset($sql, $parameters);
 			$_SESSION['domain_uuid'] = $domain_uuid;
+			unset($sql, $parameters);
 
 		//get the domain name
 			$domain_name = $_SESSION['domains'][$domain_uuid]['domain_name'];
@@ -244,7 +244,7 @@
 		//get the domain_uuid
 			$sql = "select domain_uuid from v_domains ";
 			$sql .= "where domain_name = :domain_name ";
-			$parameters['domain_uuid'] = $domain_uuid;
+			$parameters['domain_name'] = $domain_name;
 			$database = new database;
 			$domain_uuid = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
@@ -419,7 +419,7 @@
 			return;
 		}
 	}
-	
+
 //output template to string for header processing
 	$prov = new provision;
 	$prov->domain_uuid = $domain_uuid;
