@@ -44,14 +44,14 @@
 
 //get the provider
 	if (isset($_REQUEST["provider"])) {
-		$provider = check_str($_REQUEST["provider"]);
+		$provider = $_REQUEST["provider"];
 		switch ($provider) {
 			case 'voicetel':
 				break;
 			case 'skyetel': 
 				break;
 			default: 
-				$provider = '';
+				unset($provider);
 		}
 		echo $provider;
 		exit;
@@ -59,9 +59,8 @@
 
 //skyetel installed
 	$sql = "select gateway_uuid from v_gateways ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$gateways = $prep_statement->fetchAll();
+	$database = new database;
+	$gateways = $database->select($sql, null, 'all');
 	$skyetel_installed = false;
 	$voicetel_installed = false;
 	foreach ($gateways as $row) {
@@ -72,6 +71,7 @@
 			$voicetel_installed = true;
 		}
 	}
+	unset($sql, $gateways);
 
 ?>
 
