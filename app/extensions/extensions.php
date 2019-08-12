@@ -236,7 +236,7 @@
 				echo "&nbsp;</td>\n";
 			}
 
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape(ucwords($row['enabled']))."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".($row['enabled'] == 'true' ? $text['label-true'] : $text['label-false'])."</td>\n";
 			echo "	<td valign='top' class='row_stylebg' width='30%'>".escape($row['description'])."&nbsp;</td>\n";
 
 			echo "	<td class='list_control_icons'>";

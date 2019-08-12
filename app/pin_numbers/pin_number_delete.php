@@ -43,23 +43,25 @@
 	$text = $language->get();
 
 //get the id
-	if (count($_GET)>0) {
-		$id = check_str($_GET["id"]);
-	}
+	$pin_number_uuid = $_GET["id"];
 
 //delete the data
-	if (strlen($id)>0) {
+	if (is_uuid($pin_number_uuid)) {
+		//build array
+			$array['pin_numbers'][0]['pin_number_uuid'] = $pin_number_uuid;
+			$array['pin_numbers'][0]['domain_uuid'] = $domain_uuid;
 		//delete pin_number
-			$sql = "delete from v_pin_numbers ";
-			$sql .= "where pin_number_uuid = '$id' ";
-			$sql .= "and domain_uuid = '$domain_uuid' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($sql);
+			$database = new database;
+			$database->app_name = 'pin_numbers';
+			$database->app_uuid = '4b88ccfb-cb98-40e1-a5e5-33389e14a388';
+			$database->delete($array);
+			unset($array);
+		//set message
+			message::add($text['message-delete']);
 	}
 
 //redirect the user
-	message::add($text['message-delete']);
 	header('Location: pin_numbers.php');
+	exit;
 
 ?>
