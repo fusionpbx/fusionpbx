@@ -414,18 +414,18 @@ echo "	<div id='message_container'></div>\n";
 			}
 			//active domain's text hover color
 			if ($_SESSION['theme']['domain_active_text_color_hover']['text'] != '' && $domain['domain_uuid'] == $_SESSION['domain_uuid']) {
-				echo "<div id=\"".escape($domain['domain_name'])."\" class='domains_list_item_active' style='background-color: ".$bgcolor."' onclick=\"document.location.href='".$domain_path."?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true';\">";
+				echo "<div id=\"".$domain['domain_name']."\" class='domains_list_item_active' style='background-color: ".$bgcolor."' onclick=\"document.location.href='".escape($domain_path)."?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true';\">";
 			}
 			else {
-				echo "<div id=\"".escape($domain['domain_name'])."\" class='domains_list_item' style='background-color: ".$bgcolor."' onclick=\"document.location.href='".$domain_path."?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true';\">";
+				echo "<div id=\"".$domain['domain_name']."\" class='domains_list_item' style='background-color: ".$bgcolor."' onclick=\"document.location.href='".escape($domain_path)."?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true';\">";
 			}
-			echo "<a href='".$domain_path."?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true' ".(($domain['domain_uuid'] == $_SESSION['domain_uuid']) ? "style='font-weight: bold;'" : null).">".escape($domain['domain_name'])."</a>\n";
+			echo "<a href='".escape($domain_path)."?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true' ".(($domain['domain_uuid'] == $_SESSION['domain_uuid']) ? "style='font-weight: bold;'" : null).">".escape($domain['domain_name'])."</a>\n";
 			if ($domain['domain_description'] != '') {
 				echo "<span class=\"domain_list_item_description\"> - ".escape($domain['domain_description'])."</span>\n";
 			}
 			echo "</div>\n";
-			$ary_domain_names[] = escape($domain['domain_name']);
-			$ary_domain_descs[] = str_replace('"','\"',escape($domain['domain_description']));
+			$ary_domain_names[] = $domain['domain_name'];
+			$ary_domain_descs[] = str_replace('"','\"',$domain['domain_description']);
 		}
 
 		echo "		</div>\n";
@@ -772,4 +772,5 @@ else {
 
 echo "</body>\n";
 echo "</html>\n";
+
 ?>
