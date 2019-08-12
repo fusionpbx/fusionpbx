@@ -514,22 +514,20 @@ include "root.php";
 			//check to see if the mac_address exists in devices
 				if (strlen($_REQUEST['user_id']) == 0 || strlen($_REQUEST['userid']) == 0) {
 					if ($this->mac_exists($mac)) {
+
 						//get the device_template
 							if (strlen($device_template) == 0) {
 								$sql = "SELECT * FROM v_devices ";
-								$sql .= "WHERE device_mac_address=:mac ";
-								if($provision['http_domain_filter'] == "true") {
+								$sql .= "WHERE device_mac_address = :mac_address ";
+								if ($provision['http_domain_filter'] == "true") {
 									$sql  .= "AND domain_uuid=:domain_uuid ";
+									$parameters['domain_uuid'] = $domain_uuid;
 								}
-								$prep_statement_2 = $this->db->prepare(check_sql($sql));
-								if ($prep_statement_2) {
-									//use the prepared statement
-										$prep_statement_2->bindParam(':mac', $mac);
-										if($provision['http_domain_filter'] == "true") {
-											$prep_statement_2->bindParam(':domain_uuid', $domain_uuid);
-										}
-										$prep_statement_2->execute();
-										$row = $prep_statement_2->fetch();
+								$parameters['mac_address'] = $mac;
+								$database = new database;
+								$row = $database->select($sql, $parameters, 'row');
+								if (is_array($row) && sizeof($row) != 0) {
+
 									//checks either device enabled
 										if($row['device_enabled'] != 'true'){
 											if ($_SESSION['provision']['debug']['boolean'] == 'true'){
@@ -577,7 +575,7 @@ include "root.php";
 								$sql .= "WHERE domain_uuid=:domain_uuid ";
 								$sql .= "AND device_enabled='true' ";
 								$sql .= "limit 1 ";
-								$prep_statement_3 = $this->db->prepare(check_sql($sql));
+								$prep_statement_3 = $this->db->prepare($sql);
 								if ($prep_statement_3) {
 									$prep_statement_3->bindParam(':domain_uuid', $domain_uuid);
 									$prep_statement_3->execute();
@@ -744,7 +742,7 @@ include "root.php";
 				}
 
 			//alternate device_uuid
-				if (strlen($device_uuid) > 0) {
+				if (strlen($device_uuid) > 0 && is_uuid($device_uuid)) {
 					$sql = "SELECT * FROM v_devices ";
 					$sql .= "WHERE device_uuid = '".$device_uuid."' ";
 					$sql .= "AND device_enabled = 'true' ";
