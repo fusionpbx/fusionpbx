@@ -38,6 +38,11 @@
 		exit;
 	}
 
+//set the uuid
+	if (is_uuid($_GET['id'])) {
+		$contact_uuid = $_GET['id'];
+	}
+
 //show the content
 	echo "<table width='100%' border='0'>\n";
 	echo "<tr>\n";
@@ -72,7 +77,7 @@
 	echo "<th>".$text['label-address_description']."</th>\n";
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('contact_address_add')) {
-		echo "<a href='contact_address_edit.php?contact_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo "<a href='contact_address_edit.php?contact_uuid=".urlencode($contact_uuid)."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
