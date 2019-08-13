@@ -56,7 +56,7 @@
 
 //set a default file size
 	if (!isset($_POST['size']) || strlen($_POST['size']) == 0) { $_POST['size'] = "32"; }
-	
+
 //set a default filter
 	if (!isset($_POST['filter'])) { $_POST['filter'] = ""; }	
 
@@ -162,14 +162,14 @@
 		echo "			<tr>";
 		$user_file_size = '32768';
 		if (isset($_POST['submit'])) {
-			if (!is_numeric($_POST['size'])){
+			if (!is_numeric($_POST['size'])) {
 				//should generate log warning here...
-				$user_file_size=1024 * 32;
+				$user_file_size = 1024 * 32;
 			}
 			else {
 				$user_file_size = $_POST['size'] * 1024;
 			}
-			if (strlen($_REQUEST['filter']) > 0){
+			if (strlen($_REQUEST['filter']) > 0) {
 				$uuid_filter = $_REQUEST['filter'];
 				echo "		<td style='text-align: left; color: #FFFFFF;'>".$text['description-filter']." ".escape($uuid_filter)."</td>";
 			}
@@ -185,17 +185,17 @@
 
 		//set pointer in file
 		if ($user_file_size >= '0') {
-			if ($user_file_size == '0'){
+			if ($user_file_size == '0') {
 				$user_file_size = $default_file_size;
 			}
-			if ( $file_size >= $user_file_size ){
+			if ($file_size >= $user_file_size) {
 				//set an offset on fopen
 				$byte_count=$file_size-$user_file_size;
 				fseek($file, $byte_count);
 				//echo "opening at " . $byte_count . " bytes<br>";
 			}
 			else {
-				if ( $file_size >= $default_file_size ){
+				if ($file_size >= $default_file_size) {
 					//set an offset on fopen
 					$byte_count=$file_size-$default_file_size;
 					fseek($file, $byte_count);
@@ -210,7 +210,7 @@
 			}
 		}
 		else {
-			if ( $file_size >= $default_file_size ){
+			if ( $file_size >= $default_file_size ) {
 				//set an offset on fopen
 				$byte_count = $file_size - $default_file_size;
 				fseek($file, $byte_count);
@@ -244,11 +244,11 @@
 
 			if ($skip_line === false) {
 				foreach ($array_filter as $v1) {
-					$pos = strpos($log_line, $v1['pattern']);
+					$pos = strpos($log_line, escape($v1['pattern']));
 					//echo "</br> POS is: '$pos'</br>";
-					if ($pos !== false){
+					if ($pos !== false) {
 						//color adjustments on words in log line
-						for ($i=2; $i<=$MAXEL; $i++){
+						for ($i=2; $i<=$MAXEL; $i++) {
 							if (isset ($v1["pattern".$i])) {
 								$log_line = str_replace($v1["pattern".$i], "<span style='color: ".$v1["color".$i].";'>".$v1["pattern".$i]."</span>", $log_line);
 							}
@@ -258,7 +258,7 @@
 					}
 				}
 
-				if ($noprint !== true){
+				if ($noprint !== true) {
 					$array_output[] = "<span style='color: ".$default_color."; font-family: ".$default_font.";'>".$log_line."</span><br>";
 				}
 			}
