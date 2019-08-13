@@ -259,7 +259,7 @@
 				}
 
 				if ($noprint !== true){
-					$array_output[] = "<span style='color: ".$default_color."; font-family: ".$default_font.";'>".escape($log_line)."</span><br>";
+					$array_output[] = "<span style='color: ".$default_color."; font-family: ".$default_font.";'>".$log_line."</span><br>";
 				}
 			}
 		}
