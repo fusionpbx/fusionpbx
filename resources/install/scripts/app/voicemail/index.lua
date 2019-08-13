@@ -429,7 +429,7 @@
 
 							if file_exists(full_path) then
 								--read file content as base64 string
-									message_base64 = assert(file.read_base64(full_path));
+									message_base64 = file.read_base64(full_path);
 									--freeswitch.consoleLog("notice", "[voicemail] ".. message_base64 .. "\n");
 
 								--delete the file
@@ -446,10 +446,10 @@
 					x = 1;
 					table.insert(destinations, {domain_uuid=domain_uuid,voicemail_destination_uuid=voicemail_uuid,voicemail_uuid=voicemail_uuid,voicemail_uuid_copy=voicemail_uuid});
 					x = x + 1;
-					assert(dbh:query(sql, params, function(row)
+					dbh:query(sql, params, function(row)
 						destinations[x] = row;
 						x = x + 1;
-					end));
+					end);
 
 				--show the storage type
 					freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. "\n");
