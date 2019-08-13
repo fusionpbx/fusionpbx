@@ -17,34 +17,43 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2012
+ Portions created by the Initial Developer are Copyright (C) 2008-2019
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('device_setting_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('device_setting_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-require_once "resources/header.php";
-require_once "resources/paging.php";
+//additional includes
+	require_once "resources/header.php";
+	require_once "resources/paging.php";
 
 //get variables used to control the order
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
-	$device_uuid = check_str($_GET["id"]);
+
+//get the uuid
+	if (is_uuid($_GET['id'])) {
+		$device_uuid = $_GET['id'];
+	}
 
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
@@ -116,7 +125,7 @@ require_once "resources/paging.php";
 				echo th_order_by('device_setting_description', $text['label-description'], $order_by, $order);
 				echo "<td align='right' width='42'>\n";
 				if (permission_exists('device_setting_add')) {
-					echo "	<a href='device_setting_edit.php?device_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+					echo "	<a href='device_setting_edit.php?device_uuid=".urlencode($device_uuid)."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 				}
 				else {
 					echo "	&nbsp;\n";
