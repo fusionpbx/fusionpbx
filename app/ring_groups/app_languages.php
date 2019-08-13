@@ -1041,7 +1041,7 @@ $text['header-description']['ru-ru'] = "Описание";
 $text['header-description']['sv-se'] = "Beskrivning";
 $text['header-description']['uk-ua'] = "Опис";
 
-$text['description-user_list']['en-us'] = "Assign the users that are assigned to this ring group.";
+$text['description-user_list']['en-us'] = "Define users assigned to this ring group.";
 $text['description-user_list']['ar-eg'] = "";
 $text['description-user_list']['de-at'] = "Weisen Sie diese Rufgruppe Benutzern zu."; //copied from de-de
 $text['description-user_list']['de-ch'] = "Weisen Sie diese Rufgruppe Benutzern zu."; //copied from de-de
