@@ -42,35 +42,40 @@
 	$language = new text;
 	$text = $language->get();
 
-//delete the data
-	if (is_uuid($_GET["id"])) {
+//get the id
+	$sip_profile_domain_uuid = $_GET["id"];
 
-		//get the id
-			$id = $_GET["id"];
+//delete the data
+	if (is_uuid($sip_profile_domain_uuid)) {
 
 		//get the details of the sip profile
-			$sql = "select * from v_sip_profile_domains ";
-			$sql .= "where sip_profile_domain_uuid = '$id' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll();
-			if (is_array($result)) {
-				foreach ($result as &$row) {
-					$sip_profile_uuid = $row["sip_profile_uuid"];
-				}
-			}
-			unset ($prep_statement);
+			$sql = "select sip_profile_uuid ";
+			$sql .= "from v_sip_profile_domains ";
+			$sql .= "where sip_profile_domain_uuid = :sip_profile_domain_uuid ";
+			$parameters['sip_profile_domain_uuid'] = $sip_profile_domain_uuid;
+			$database = new database;
+			$sip_profile_uuid = $database->select($sql, $parameters, 'column');
 
-		//delete sip_profile_domain
-			$sql = "delete from v_sip_profile_domains ";
-			$sql .= "where sip_profile_domain_uuid = '$id' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($sql);
+		//build array
+			$array['sip_profile_domains'][0]['sip_profile_domain_uuid'] = $sip_profile_domain_uuid;
+
+		//execute delete
+			$database = new database;
+			$database->app_name = 'sip_profiles';
+			$database->app_uuid = '159a8da8-0e8c-a26b-6d5b-19c532b6d470';
+			$database->delete($array);
+			unset($array);
+
+		//set message
+			message::add($text['message-delete']);
+
+		//redirect the user
+			header('Location: sip_profile_edit.php?id='.$sip_profile_uuid);
+			exit;
 	}
 
-//redirect the user
-	message::add($text['message-delete']);
-	header('Location: sip_profile_edit.php?id='.$sip_profile_uuid);
+//default redirect
+	header('Location: sip_profiles.php');
+	exit;
 
 ?>

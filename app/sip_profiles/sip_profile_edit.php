@@ -43,9 +43,9 @@
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$sip_profile_uuid = check_str($_REQUEST["id"]);
+		$sip_profile_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
@@ -53,11 +53,11 @@
 
 //get http post variables and set them to php variables
 	if (is_array($_POST)) {
-		$sip_profile_uuid = check_str($_POST["sip_profile_uuid"]);
-		$sip_profile_name = check_str($_POST["sip_profile_name"]);
-		$sip_profile_hostname = check_str($_POST["sip_profile_hostname"]);
-		$sip_profile_enabled = check_str($_POST["sip_profile_enabled"]);
-		$sip_profile_description = check_str($_POST["sip_profile_description"]);
+		$sip_profile_uuid = $_POST["sip_profile_uuid"];
+		$sip_profile_name = $_POST["sip_profile_name"];
+		$sip_profile_hostname = $_POST["sip_profile_hostname"];
+		$sip_profile_enabled = $_POST["sip_profile_enabled"];
+		$sip_profile_description = $_POST["sip_profile_description"];
 	}
 
 //process the user data and save it to the database
@@ -65,12 +65,12 @@
 
 		//get the uuid from the POST
 			if ($action == "update") {
-				$sip_profile_uuid = check_str($_POST["sip_profile_uuid"]);
+				$sip_profile_uuid = $_POST["sip_profile_uuid"];
 			}
 
 		//check for all required data
 			$msg = '';
-			if (strlen($sip_profile_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-sip_profile_uuid']."<br>\n"; }
+			//if (strlen($sip_profile_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-sip_profile_uuid']."<br>\n"; }
 			if (strlen($sip_profile_name) == 0) { $msg .= $text['message-required']." ".$text['label-sip_profile_name']."<br>\n"; }
 			//if (strlen($sip_profile_hostname) == 0) { $msg .= $text['message-required']." ".$text['label-sip_profile_hostname']."<br>\n"; }
 			if (strlen($sip_profile_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-sip_profile_enabled']."<br>\n"; }
@@ -88,71 +88,73 @@
 				return;
 			}
 
-		//cleanup the array
-			$x = 0;
-			foreach ($_POST["sip_profile_domains"] as $row) {
-				//unset the empty row
-					if (strlen($_POST["sip_profile_domains"][$x]["sip_profile_domain_name"]) == 0) {
-						unset($_POST["sip_profile_domains"][$x]);
-					}
-					if (strlen($_POST["sip_profile_domains"][$x]["sip_profile_domain_alias"]) == 0) {
-						unset($_POST["sip_profile_domains"][$x]);
-					}
-					if (strlen($_POST["sip_profile_domains"][$x]["sip_profile_domain_parse"]) == 0) {
-						unset($_POST["sip_profile_domains"][$x]);
-					}
-				//increment the row
-					$x++;
-			}
-
-		//cleanup the array
-			$x = 0;
-			foreach ($_POST["sip_profile_settings"] as $row) {
-				//unset the empty row
-					if (strlen($_POST["sip_profile_settings"][$x]["sip_profile_setting_name"]) == 0) {
-						unset($_POST["sip_profile_settings"][$x]);
-					}
-					//if (strlen($_POST["sip_profile_settings"][$x]["sip_profile_setting_value"]) == 0) {
-					//	unset($_POST["sip_profile_settings"][$x]);
-					//}
-					if (strlen($_POST["sip_profile_settings"][$x]["sip_profile_setting_enabled"]) == 0) {
-						unset($_POST["sip_profile_settings"][$x]);
-					}
-				//increment the row
-					$x++;
-			}
-
 		//add the sip_profile_uuid
-			if (strlen($_POST["sip_profile_uuid"]) == 0) {
+			if (!is_uuid($_POST["sip_profile_uuid"])) {
 				$sip_profile_uuid = uuid();
 				$_POST["sip_profile_uuid"] = $sip_profile_uuid;
+			}
+
+		//cleanup the array
+			foreach ($_POST["sip_profile_domains"] as $index => $row) {
+				//populate sip profile uuid
+					if (!is_uuid($row['sip_profile_uuid'])) {
+						$_POST["sip_profile_domains"][$index]['sip_profile_uuid'] = $sip_profile_uuid;
+					}
+				//unset the empty row
+					if (strlen($row["sip_profile_domain_name"]) == 0) {
+						unset($_POST["sip_profile_domains"][$index]);
+					}
+					if (strlen($row["sip_profile_domain_alias"]) == 0) {
+						unset($_POST["sip_profile_domains"][$index]);
+					}
+					if (strlen($row["sip_profile_domain_parse"]) == 0) {
+						unset($_POST["sip_profile_domains"][$index]);
+					}
+			}
+
+		//cleanup the array
+			foreach ($_POST["sip_profile_settings"] as $index => $row) {
+				//populate sip profile uuid
+					if (!is_uuid($row['sip_profile_uuid'])) {
+						$_POST["sip_profile_settings"][$index]['sip_profile_uuid'] = $sip_profile_uuid;
+					}
+				//unset the empty row
+					if (strlen($row["sip_profile_setting_name"]) == 0) {
+						unset($_POST["sip_profile_settings"][$index]);
+					}
+					//if (strlen($row["sip_profile_setting_value"]) == 0) {
+					//	unset($_POST["sip_profile_settings"][$index]);
+					//}
+					if (strlen($row["sip_profile_setting_enabled"]) == 0) {
+						unset($_POST["sip_profile_settings"][$index]);
+					}
 			}
 
 		//prepare the array
 			$array['sip_profiles'][] = $_POST;
 
+		//grant temporary permissions
+			$p = new permissions;
+			$p->add('sip_profile_domain_add', 'temp');
+			$p->add('sip_profile_setting_add', 'temp');
+
 		//save to the data
 			$database = new database;
 			$database->app_name = 'sip_profiles';
-			$database->app_uuid = null;
-			if (strlen($sip_profile_uuid) > 0) {
-				$database->uuid($sip_profile_uuid);
-			}
+			$database->app_uuid = '159a8da8-0e8c-a26b-6d5b-19c532b6d470';
 			$database->save($array);
 			$message = $database->message;
 
-		//debug info
-			//echo "<pre>";
-			//print_r($message);
-			//echo "</pre>";
-			//exit;
-
-		//get the hostname
+			//get the hostname
 			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 			if ($fp) {
 				$switch_cmd = "switchname";
 				$sip_profile_hostname = event_socket_request($fp, 'api '.$switch_cmd);
 			}
+
+		//revoke temporary permissions
+			$p->delete('sip_profile_domain_add', 'temp');
+			$p->delete('sip_profile_setting_add', 'temp');
 
 		//clear the cache
 			$cache = new cache;
@@ -165,44 +167,41 @@
 			$_SESSION["reload_xml"] = true;
 
 		//redirect the user
-			if (isset($action)) {
-				if ($action == "add") {
-					message::add($text['message-add']);
-				}
-				if ($action == "update") {
-					message::add($text['message-update']);
-				}
-				header('Location: sip_profile_edit.php?id='.escape($sip_profile_uuid));
-				return;
+			if ($action == "add") {
+				message::add($text['message-add']);
 			}
-	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
+			if ($action == "update") {
+				message::add($text['message-update']);
+			}
+			header('Location: sip_profile_edit.php?id='.escape($sip_profile_uuid));
+			exit;
+	}
 
 //pre-populate the form
 	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
-		$sip_profile_uuid = check_str($_GET["id"]);
+		$sip_profile_uuid = $_GET["id"];
 		$sql = "select * from v_sip_profiles ";
-		$sql .= "where sip_profile_uuid = '$sip_profile_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$sip_profiles = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($sip_profiles as $key => $row) { $sip_profiles[$key] = array_map("escape", $row); }
-		foreach ($sip_profiles as $row) {
+		$sql .= "where sip_profile_uuid = :sip_profile_uuid ";
+		$parameters['sip_profile_uuid'] = $sip_profile_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$sip_profile_name = $row["sip_profile_name"];
 			$sip_profile_hostname = $row["sip_profile_hostname"];
 			$sip_profile_enabled = $row["sip_profile_enabled"];
 			$sip_profile_description = $row["sip_profile_description"];
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //get the child data
 	$sql = "select * from v_sip_profile_settings ";
-	$sql .= "where sip_profile_uuid = '".$sip_profile_uuid."' ";
+	$sql .= "where sip_profile_uuid = :sip_profile_uuid ";
 	$sql .= "order by sip_profile_setting_name ";
-	$prep_statement = $db->prepare($sql);
-	$prep_statement->execute();
-	$sip_profile_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($sip_profile_settings as $key => $row) { $sip_profile_settings[$key] = array_map("escape", $row); }
+	$parameters['sip_profile_uuid'] = $sip_profile_uuid;
+	$database = new database;
+	$sip_profile_settings = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //add an empty row
 	$x = count($sip_profile_settings);
@@ -215,11 +214,11 @@
 
 //get the child data
 	$sql = "select * from v_sip_profile_domains ";
-	$sql .= "where sip_profile_uuid = '".$sip_profile_uuid."' ";
-	$prep_statement = $db->prepare($sql);
-	$prep_statement->execute();
-	$sip_profile_domains = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($sip_profile_domains as $key => $row) { $sip_profile_domains[$key] = array_map("escape", $row); }
+	$sql .= "where sip_profile_uuid = :sip_profile_uuid ";
+	$parameters['sip_profile_uuid'] = $sip_profile_uuid;
+	$database = new database;
+	$sip_profile_domains = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //add an empty row
 	$x = count($sip_profile_domains);
@@ -251,7 +250,12 @@
 	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-sip_profile']."</b><br><br></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='sip_profiles.php'\" value='".$text['button-back']."'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"var name = prompt('".$text['confirm-copy']."'); if (name != null) { window.location='sip_profile_copy.php?id=".$sip_profile_uuid."&name=' + name; }\" value='".$text['button-copy']."'>\n";
+	if (permission_exists('dialplan_add')
+		|| permission_exists('inbound_route_add')
+		|| permission_exists('outbound_route_add')
+		|| permission_exists('time_condition_add')) {
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"var name = prompt('".$text['label-new_sip_profile_name']."'); if (name != null) { window.location='sip_profile_copy.php?id=".$sip_profile_uuid."&name=' + name; }\" value='".$text['button-copy']."'>\n";
+	}
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -261,7 +265,7 @@
 	echo "	".$text['label-sip_profile_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='sip_profile_name' maxlength='255' value=\"$sip_profile_name\">\n";
+	echo "	<input class='formfld' type='text' name='sip_profile_name' maxlength='255' value=\"".escape($sip_profile_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-sip_profile_name']."\n";
 	echo "</td>\n";
@@ -279,16 +283,16 @@
 	echo "					<th class='vtable' style='width:70px; text-align: left;'>".$text['label-sip_profile_domain_parse']."</th>\n";
 	echo "				</tr>\n";
 	$x = 0;
-	foreach($sip_profile_domains as $row) {
+	foreach ($sip_profile_domains as $row) {
 		echo "			<tr>\n";
-		if (strlen($row["sip_profile_domain_uuid"]) > 0) {
+		if (is_uuid($row["sip_profile_domain_uuid"])) {
 			$sip_profile_domain_uuid = $row["sip_profile_domain_uuid"];
 		}
-		if (strlen($row["sip_profile_uuid"]) > 0) {
+		if (is_uuid($row["sip_profile_uuid"])) {
 			$sip_profile_uuid = $row["sip_profile_uuid"];
 		}
 		echo "				<input type='hidden' name='sip_profile_domains[$x][sip_profile_domain_uuid]' value=\"".$sip_profile_domain_uuid."\">\n";
-		echo "				<input type='hidden' name='sip_profile_domains[$x][sip_profile_uuid]' maxlength='255' value=\"".$sip_profile_uuid."\">\n";
+		echo "				<input type='hidden' name='sip_profile_domains[$x][sip_profile_uuid]' value=\"".$sip_profile_uuid."\">\n";
 		echo "				<td class=\"vtablerow\" style=\"\" onclick=\"label_to_form('label_sip_profile_domain_name_$x','sip_profile_domain_name_$x');\" nowrap=\"nowrap\">\n";
 		echo "					&nbsp; <label id='label_sip_profile_domain_name_$x'>".escape($row["sip_profile_domain_name"])."</label>\n";
 		echo "					<input id='sip_profile_domain_name_$x' class='formfld' style='display: none;' type='text' name='sip_profile_domains[$x][sip_profile_domain_name]' maxlength='255' value=\"".escape($row["sip_profile_domain_name"])."\">\n";
@@ -332,10 +336,18 @@
 		echo "				</td>\n";
 		echo "				<td class='list_control_icons' style='width: 25px;'>\n";
 		if (strlen($row["sip_profile_domain_name"]) > 0) {
-			echo "				<a href=\"sip_profile_domain_delete.php?id=".escape($row["sip_profile_domain_uuid"])."&amp;sip_profile_domain_uuid=".$row["sip_profile_domain_uuid"]."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\"><button type='button' class='btn btn-default list_control_icon'><span class='glyphicon glyphicon-remove'></span></button></a>\n";
+			echo "				<a href=\"sip_profile_domain_delete.php?id=".escape($row["sip_profile_domain_uuid"])."&amp;sip_profile_domain_uuid=".escape($row["sip_profile_domain_uuid"])."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\"><button type='button' class='btn btn-default list_control_icon'><span class='glyphicon glyphicon-remove'></span></button></a>\n";
 		}
 		echo "				</td>\n";
 		echo "			</tr>\n";
+		//convert last empty labels to form elements
+		if ($row["sip_profile_domain_name"] == '' && $row["sip_profile_domain_alias"] == '' && $row["sip_profile_domain_parse"] == '') {
+			echo "<script>\n";
+			echo "	label_to_form('label_sip_profile_domain_name_$x','sip_profile_domain_name_$x');\n";
+			echo "	label_to_form('label_sip_profile_domain_alias_$x','sip_profile_domain_alias_$x');\n";
+			echo "	label_to_form('label_sip_profile_domain_parse_$x','sip_profile_domain_parse_$x');\n";
+			echo "</script>\n";
+		}
 		$x++;
 	}
 	echo "			</table>\n";
@@ -355,18 +367,17 @@
 	echo "					<th class='vtable' style='text-align: left;'>".$text['label-sip_profile_setting_description']."</th>\n";
 	echo "				</tr>\n";
 	$x = 0;
-	foreach($sip_profile_settings as $row) {
+	foreach ($sip_profile_settings as $row) {
 		echo "			<tr>\n";
 		echo "				<input type='hidden' name='sip_profile_settings[$x][sip_profile_setting_uuid]' value=\"".escape($row["sip_profile_setting_uuid"])."\">\n";
-		echo "				<input type='hidden' name='sip_profile_settings[$x][sip_profile_setting_uuid]' maxlength='255' value=\"".escape($row["sip_profile_setting_uuid"])."\">\n";
-		echo "				<input type='hidden' name='sip_profile_settings[$x][sip_profile_uuid]' maxlength='255' value=\"".escape($row["sip_profile_uuid"])."\">\n";
+		echo "				<input type='hidden' name='sip_profile_settings[$x][sip_profile_uuid]' value=\"".escape($row["sip_profile_uuid"])."\">\n";
 		echo "				<td class=\"vtablerow\" style=\"\" onclick=\"label_to_form('label_sip_profile_setting_name_$x','sip_profile_setting_name_$x');\" nowrap=\"nowrap\">\n";
 		echo "					&nbsp; <label id='label_sip_profile_setting_name_$x'>".escape($row["sip_profile_setting_name"])."</label>\n";
-		echo "					<input id='sip_profile_setting_name_$x' class='formfld' style='display: none;' type='text' name='sip_profile_settings[$x][sip_profile_setting_name]' maxlength='255' value=\"".$row["sip_profile_setting_name"]."\">\n";
+		echo "					<input id='sip_profile_setting_name_$x' class='formfld' style='display: none;' type='text' name='sip_profile_settings[$x][sip_profile_setting_name]' maxlength='255' value=\"".escape($row["sip_profile_setting_name"])."\">\n";
 		echo "				</td>\n";
 		echo "				<td class=\"vtablerow\" style=\"\" onclick=\"label_to_form('label_sip_profile_setting_value_$x','sip_profile_setting_value_$x');\" nowrap=\"nowrap\">\n";
-		echo "					<label id='label_sip_profile_setting_value_$x'>".substr($row["sip_profile_setting_value"],0,22)." &nbsp;</label>\n";
-		echo "					<input id='sip_profile_setting_value_$x' class='formfld' style='display: none;' type='text' name='sip_profile_settings[$x][sip_profile_setting_value]' maxlength='255' value=\"".$row["sip_profile_setting_value"]."\">\n";
+		echo "					<label id='label_sip_profile_setting_value_$x'>".escape(substr($row["sip_profile_setting_value"],0,22))." &nbsp;</label>\n";
+		echo "					<input id='sip_profile_setting_value_$x' class='formfld' style='display: none;' type='text' name='sip_profile_settings[$x][sip_profile_setting_value]' maxlength='255' value=\"".escape($row["sip_profile_setting_value"])."\">\n";
 		echo "				</td>\n";
 		echo "				<td class=\"vtablerow\" style=\"\" onclick=\"label_to_form('label_sip_profile_setting_enabled_$x','sip_profile_setting_enabled_$x');\" nowrap=\"nowrap\">\n";
 		echo "					<label id='label_sip_profile_setting_enabled_$x'>".escape($row["sip_profile_setting_enabled"])."</label>\n";
@@ -396,6 +407,16 @@
 		}
 		echo "				</td>\n";
 		echo "			</tr>\n";
+		//convert last empty labels to form elements
+		if ($row["sip_profile_setting_name"] == '' && $row["sip_profile_setting_value"] == '' && $row["sip_profile_setting_enabled"] == '' && $row["sip_profile_setting_description"] == '') {
+			echo "<script>\n";
+			echo "	label_to_form('label_sip_profile_setting_name_$x','sip_profile_setting_name_$x');\n";
+			echo "	label_to_form('label_sip_profile_setting_value_$x','sip_profile_setting_value_$x');\n";
+			echo "	label_to_form('label_sip_profile_setting_enabled_$x','sip_profile_setting_enabled_$x');\n";
+			echo "	label_to_form('label_sip_profile_setting_description_$x','sip_profile_setting_description_$x');\n";
+			echo "</script>\n";
+		}
+		$x++;
 		$x++;
 	}
 	echo "			</table>\n";
@@ -419,7 +440,6 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='sip_profile_enabled'>\n";
-	echo "		<option value=''></option>\n";
 	if ($sip_profile_enabled == "true") {
 		echo "		<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
@@ -454,6 +474,7 @@
 	if ($action == "update") {
 		echo "				<input type='hidden' name='sip_profile_uuid' value='".escape($sip_profile_uuid)."'>\n";
 	}
+	echo "				<br>\n";
 	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";

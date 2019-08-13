@@ -361,6 +361,26 @@ $text['label-sip_profile_settings']['ru-ru'] = "Настройки";
 $text['label-sip_profile_settings']['sv-se'] = "Inställningar";
 $text['label-sip_profile_settings']['uk-ua'] = "Параметри";
 
+$text['label-new_sip_profile_name']['en-us'] = "Enter new SIP Profile Name";
+$text['label-new_sip_profile_name']['ar-eg'] = "Enter new SIP Profile Name";
+$text['label-new_sip_profile_name']['de-at'] = "Enter new SIP Profile Name";
+$text['label-new_sip_profile_name']['de-ch'] = "Enter new SIP Profile Name";
+$text['label-new_sip_profile_name']['de-de'] = "Enter new SIP Profile Name";
+$text['label-new_sip_profile_name']['es-cl'] = "Enter new SIP Profile Name";
+$text['label-new_sip_profile_name']['es-mx'] = "Enter new SIP Profile Name";
+$text['label-new_sip_profile_name']['fr-ca'] = "Enter new SIP Profile Name";
+$text['label-new_sip_profile_name']['fr-fr'] = "Enter new SIP Profile Name";
+$text['label-new_sip_profile_name']['he-il'] = "Enter new SIP Profile Name";
+$text['label-new_sip_profile_name']['it-it'] = "Enter new SIP Profile Name";
+$text['label-new_sip_profile_name']['nl-nl'] = "Enter new SIP Profile Name";
+$text['label-new_sip_profile_name']['pl-pl'] = "Enter new SIP Profile Name";
+$text['label-new_sip_profile_name']['pt-br'] = "Enter new SIP Profile Name";
+$text['label-new_sip_profile_name']['pt-pt'] = "Enter new SIP Profile Name";
+$text['label-new_sip_profile_name']['ro-ro'] = "Enter new SIP Profile Name";
+$text['label-new_sip_profile_name']['ru-ru'] = "Enter new SIP Profile Name";
+$text['label-new_sip_profile_name']['sv-se'] = "Enter new SIP Profile Name";
+$text['label-new_sip_profile_name']['uk-ua'] = "Enter new SIP Profile Name";
+
 $text['header-sip_profiles']['en-us'] = "SIP Profiles";
 $text['header-sip_profiles']['ar-eg'] = "";
 $text['header-sip_profiles']['de-at'] = "SIP Profile"; //copied from de-de
