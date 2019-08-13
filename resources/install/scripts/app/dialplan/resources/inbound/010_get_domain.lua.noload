@@ -47,7 +47,7 @@
 		sql = sql .. "AND n.destination_type = 'inbound' "
 		sql = sql .. "AND n.domain_uuid = d.domain_uuid "
 		--freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
-		assert(dbh:query(sql, function(row)
+		dbh:query(sql, function(row)
 			--set the local variables
 				domain_uuid = row.domain_uuid;
 				domain_name = row.domain_name;
@@ -60,7 +60,7 @@
 
 			--set the source
 				source = "database";
-			end));
+			end);
 
 	else
 		--add the function
