@@ -45,19 +45,15 @@
 //get posted values, if any
 	if (sizeof($_REQUEST) > 0) {
 		$xml_cdr_uuids = $_REQUEST["id"];
-		$recording_file_path = $_REQUEST["rec"];
-
 		if (sizeof($xml_cdr_uuids) > 0) {
-			foreach ($xml_cdr_uuids as $index => $xml_cdr_uuid) {
+			foreach ($xml_cdr_uuids as $index => $xml_cdr_uuid) {	
 				// delete record
-				$sql = "delete from v_xml_cdr ";
-				$sql .= "where xml_cdr_uuid = '".$xml_cdr_uuid."' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				unset($sql, $prep_statement);
-				//delete recording, if any
-				if ($recording_file_path[$index] != '' && file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].base64_decode($recording_file_path[$index]))) {
-					@unlink($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].base64_decode($recording_file_path[$index]));
+				if (is_uuid($xml_cdr_uuid) {
+					$sql = "delete from v_xml_cdr ";
+					$sql .= "where xml_cdr_uuid = '".$xml_cdr_uuid."' ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					unset($sql, $prep_statement);
 				}
 			}
 		}
@@ -65,6 +61,6 @@
 
 //set message and redirect the user
 	$_SESSION["message"] = $text['message-delete'].": ".sizeof($xml_cdr_uuids);
-	header("Location: xml_cdr.php".(($_SESSION['xml_cdr']['last_query'] != '') ? "?".$_SESSION['xml_cdr']['last_query'] : null));
+	header("Location: xml_cdr.php");
 
 ?>
