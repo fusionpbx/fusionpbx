@@ -102,69 +102,54 @@
 
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
-				//add domain_uuid to the array
-					foreach ($_POST as $key => $value) {
-						if (is_array($value)) {
-							$y = 0;
-							foreach ($value as $k => $v) {
-								if (!isset($v["domain_uuid"])) {
-									$_POST[$key][$y]["domain_uuid"] = $_POST["domain_uuid"];
-								}
-								$y++;
-							}
-						}
-					}
 
-				//array cleanup
-					$x = 0;
-					foreach ($_POST["device_keys"] as $row) {
-						//unset the empty row
-							if (strlen($row["device_key_category"]) == 0) {
-								unset($_POST["device_keys"][$x]);
-							}
-						//unset device_detail_uuid if the field has no value
-							if (strlen($row["device_key_uuid"]) == 0) {
-								unset($_POST["device_keys"][$x]["device_key_uuid"]);
-							}
-						//increment the row
-							$x++;
-					}
-
-					$x = 0;
-					foreach ($_POST["device_settings"] as $row) {
-						//unset the empty row
-							if (strlen($row["device_setting_subcategory"]) == 0) {
-								unset($_POST["device_settings"][$x]);
-							}
-						//unset device_detail_uuid if the field has no value
-							if (strlen($row["device_setting_uuid"]) == 0) {
-								unset($_POST["device_settings"][$x]["device_setting_uuid"]);
-							}
-						//increment the row
-							$x++;
+				//add the device_profile_uuid
+					if (strlen($_POST["device_profile_uuid"]) == 0) {
+						$device_profile_uuid = uuid();
 					}
 
 				//prepare the array
-					$array['device_profiles'][] = $_POST;
-
-				//set the default
-					$save = true;
+					$array['device_profiles'][0]["device_profile_uuid"] = $device_profile_uuid;
+					$array['device_profiles'][0]["device_profile_name"] = $device_profile_name;
+					$array['device_profiles'][0]["domain_uuid"] = $domain_uuid;
+					$array['device_profiles'][0]["device_profile_enabled"] = $device_profile_enabled;
+					$array['device_profiles'][0]["device_profile_description"] = $device_profile_description;
+					$y = 0;
+					foreach ($device_profile_keys as $row) {
+						if (strlen($row['profile_key_category']) > 0) {
+							$array['device_profiles'][0]['device_profile_keys'][$y]["device_profile_key_uuid"] = $row["device_profile_key_uuid"];
+							$array['device_profiles'][0]['device_profile_keys'][$y]["profile_key_category"] = $row["profile_key_category"];
+							$array['device_profiles'][0]['device_profile_keys'][$y]["profile_key_id"] = $row["profile_key_id"];
+							$array['device_profiles'][0]['device_profile_keys'][$y]["profile_key_vendor"] = $row["profile_key_vendor"];
+							$array['device_profiles'][0]['device_profile_keys'][$y]["profile_key_type"] = $row["profile_key_type"];
+							$array['device_profiles'][0]['device_profile_keys'][$y]["profile_key_line"] = $row["profile_key_line"];
+							$array['device_profiles'][0]['device_profile_keys'][$y]["profile_key_value"] = $row["profile_key_value"];
+							$array['device_profiles'][0]['device_profile_keys'][$y]["profile_key_extension"] = $row["profile_key_extension"];
+							$array['device_profiles'][0]['device_profile_keys'][$y]["profile_key_protected"] = $row["profile_key_protected"];
+							$array['device_profiles'][0]['device_profile_keys'][$y]["profile_key_label"] = $row["profile_key_label"];
+							$array['device_profiles'][0]['device_profile_keys'][$y]["profile_key_icon"] = $row["profile_key_icon"];
+							$y++;
+						}
+					}
+					$y = 0;
+					foreach ($device_profile_settings as $row) {
+						if (strlen($row['profile_setting_name']) > 0) {
+							$array['device_profiles'][0]['device_profile_settings'][$y]["device_profile_setting_uuid"] = $row["device_profile_setting_uuid"];
+							$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_name"] = $row["profile_setting_name"];
+							$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_value"] = $row["profile_setting_value"];
+							$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_enabled"] = $row["profile_setting_enabled"];
+							$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_description"] = $row["profile_setting_description"];
+							$y++;
+						}
+					}
 
 				//save the profile
-					if ($save) {
-						$database = new database;
-						$database->app_name = 'devices';
-						$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
-						if (strlen($device_profile_uuid) > 0) {
-							$database->uuid($device_profile_uuid);
-						}
-						$database->save($array);
-						$response = $database->message;
-						if (strlen($response['uuid']) > 0) {
-							$device_profile_uuid = $response['uuid'];
-						}
-						unset($array);
-					}
+					$database = new database;
+					$database->app_name = 'devices';
+					$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+					$database->save($array);
+					$response = $database->message;
+					unset($array);
 
 				//write the provision files
 					if (strlen($_SESSION['provision']['path']['text']) > 0) {
