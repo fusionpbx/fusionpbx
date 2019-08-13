@@ -385,7 +385,7 @@
 	}
 	echo "</b></td>\n";
 	echo "<td valign='top' width='70%' align='right'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contacts.php?".$_GET["query_string"]."'\" value='".$text['button-back']."'>\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contacts.php'\" value='".$text['button-back']."'>\n";
 	if ($action == "update") {
 		if (permission_exists('contact_time_add')) {
 			//detect timer state (and start time)
