@@ -90,8 +90,12 @@ class authentication {
 					if (count($_SESSION['authentication']['methods']) > 1) {
 						$result['results'][] = $array;
 					}
+
 					if ($result["authorized"] == "true") {
+						//add the username to the session
 						$_SESSION['username'] = $result["username"];
+
+						//end the loop
 						break;
 					}
 				}
