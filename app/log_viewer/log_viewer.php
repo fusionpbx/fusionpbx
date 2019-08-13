@@ -249,8 +249,8 @@
 					if ($pos !== false) {
 						//color adjustments on words in log line
 						for ($i=2; $i<=$MAXEL; $i++) {
-							if (isset ($v1["pattern".$i])) {
-								$log_line = str_replace($v1["pattern".$i], "<span style='color: ".$v1["color".$i].";'>".$v1["pattern".$i]."</span>", $log_line);
+							if (isset($v1["pattern".$i])) {
+								$log_line = str_replace(escape($v1["pattern".$i]), "<span style='color: ".$v1["color".$i].";'>".$v1["pattern".$i]."</span>", $log_line);
 							}
 						}
 						$array_output[] = "<span style='color: ".$v1['color']."; font-family: ".$v1['font'].";'>".$log_line."</span><br>";
