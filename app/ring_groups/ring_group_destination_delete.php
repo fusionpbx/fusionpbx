@@ -43,27 +43,27 @@
 	$text = $language->get();
 
 //get the id
-	if (is_array($_GET)) {
-		$id = $_GET["id"];
-		$ring_group_uuid = $_GET["ring_group_uuid"];
-	}
+	$ring_group_destination_uuid = $_GET["id"];
+	$ring_group_uuid = $_GET["ring_group_uuid"];
 
 //delete ring_group_destination
-	if (is_uuid($id)) {
-		$array['ring_group_destinations'][]['ring_group_destination_uuid'] = $id;
-		$database = new database;
-		$database->app_name = 'ring_groups';
-		$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
-		$database->delete($array);
-		//$message = $database->message;
+	if (is_uuid($ring_group_destination_uuid) && is_uuid($ring_group_uuid)) {
+		//build array
+			$array['ring_group_destinations'][0]['ring_group_destination_uuid'] = $ring_group_destination_uuid;
+		//execute delete
+			$database = new database;
+			$database->app_name = 'ring_groups';
+			$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
+			$database->delete($array);
+		//set message
+			message::add($text['message-delete']);
+		//redirect
+			header("Location: ring_group_edit.php?id=".$ring_group_uuid);
+			exit;
 	}
 
-//save the message to a session variable
-	message::add($text['message-delete']);
-
-//redirect the browser
-	if (is_uuid($ring_group_uuid)) {
-		header("Location: ring_group_edit.php?id=".$ring_group_uuid);
-	}
+//default redirect
+	header("Location: ring_groups.php");
+	exit;
 
 ?>

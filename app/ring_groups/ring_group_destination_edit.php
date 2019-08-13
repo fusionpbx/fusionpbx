@@ -39,26 +39,26 @@ else {
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$ring_group_destination_uuid = check_str($_REQUEST["id"]);
+		$ring_group_destination_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
 	}
 
 //set the parent uuid
-	if (strlen($_GET["ring_group_uuid"]) > 0) {
-		$ring_group_uuid = check_str($_GET["ring_group_uuid"]);
+	if (is_uuid($_GET["ring_group_uuid"])) {
+		$ring_group_uuid = $_GET["ring_group_uuid"];
 	}
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
-		$ring_group_uuid = check_str($_POST["ring_group_uuid"]);
-		$destination_number = check_str($_POST["destination_number"]);
-		$destination_delay = check_str($_POST["destination_delay"]);
-		$destination_timeout = check_str($_POST["destination_timeout"]);
-		$destination_prompt = check_str($_POST["destination_prompt"]);
+		$ring_group_uuid = $_POST["ring_group_uuid"];
+		$destination_number = $_POST["destination_number"];
+		$destination_delay = $_POST["destination_delay"];
+		$destination_timeout = $_POST["destination_timeout"];
+		$destination_prompt = $_POST["destination_prompt"];
 	}
 
 //define the destination_select function
@@ -67,7 +67,7 @@ else {
 		echo "	<select class='formfld' name='$select_name'>\n";
 		echo "	<option value=''></option>\n";
 		$i = 0;
-		while($i <= 100) {
+		while ($i <= 100) {
 			if ($select_value == $i) {
 				echo "	<option value='$i' selected='selected'>$i</option>\n";
 			}
@@ -83,7 +83,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
-		$ring_group_destination_uuid = check_str($_POST["ring_group_destination_uuid"]);
+		$ring_group_destination_uuid = $_POST["ring_group_destination_uuid"];
 	}
 
 	//check for all required data
@@ -109,74 +109,69 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
 			if ($action == "add" && permission_exists('ring_group_add')) {
-				$sql = "insert into v_ring_group_destinations ";
-				$sql .= "(";
-				$sql .= "domain_uuid, ";
-				$sql .= "ring_group_destination_uuid, ";
-				$sql .= "ring_group_uuid, ";
-				$sql .= "destination_number, ";
-				$sql .= "destination_delay, ";
-				$sql .= "destination_timeout, ";
-				$sql .= "destination_prompt ";
-				$sql .= ") ";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'$domain_uuid', ";
-				$sql .= "'".uuid()."', ";
-				$sql .= "'$ring_group_uuid', ";
-				$sql .= "'$destination_number', ";
-				$sql .= "'$destination_delay', ";
-				$sql .= "'$destination_timeout', ";
-				$sql .= "'$destination_prompt' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
-
-				message::add($text['message-add']);
-				header("Location: ring_group_edit.php?id=".$ring_group_uuid);
-				return;
-			} //if ($action == "add")
+				//begin array
+					$ring_group_destination_uuid = uuid();
+					$array['ring_group_destinations'][0]['ring_group_destination_uuid'] = $ring_group_destination_uuid;
+				//grant temporary permissions
+					$p = new permissions;
+					$p->add('ring_group_destination_add', 'temp');
+				//set message
+					message::add($text['message-add']);
+			}
 
 			if ($action == "update" && permission_exists('ring_group_edit')) {
-				$sql = "update v_ring_group_destinations set ";
-				$sql .= "destination_number = '$destination_number', ";
-				$sql .= "destination_delay = '$destination_delay', ";
-				$sql .= "destination_timeout = '$destination_timeout', ";
-				if (strlen($destination_prompt) == 0) {
-					$sql .= "destination_prompt = null ";
-				}
-				else {
-					$sql .= "destination_prompt = '$destination_prompt' ";
-				}
-				$sql .= "where domain_uuid = '$domain_uuid' ";
-				$sql .= "and ring_group_destination_uuid = '$ring_group_destination_uuid' ";
-				$db->exec(check_sql($sql));
-				unset($sql);
+				//begin array
+					$array['ring_group_destinations'][0]['ring_group_destination_uuid'] = $ring_group_destination_uuid;
+				//grant temporary permissions
+					$p = new permissions;
+					$p->add('ring_group_destination_edit', 'temp');
+				//set message
+					message::add($text['message-update']);
+			}
 
-				message::add($text['message-update']);
-				header("Location: ring_group_edit.php?id=".$ring_group_uuid);
-				return;
-			} //if ($action == "update")
-		} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+			if (is_array($array) && @sizeof($array) != 0) {
+				//add common array elements
+					$array['ring_group_destinations'][0]['domain_uuid'] = $domain_uuid;
+					$array['ring_group_destinations'][0]['ring_group_uuid'] = $ring_group_uuid;
+					$array['ring_group_destinations'][0]['destination_number'] = $destination_number;
+					$array['ring_group_destinations'][0]['destination_delay'] = $destination_delay;
+					$array['ring_group_destinations'][0]['destination_timeout'] = $destination_timeout;
+					$array['ring_group_destinations'][0]['destination_prompt'] = strlen($destination_prompt) != 0 ? $destination_prompt : null;
+				//execute insert/update
+					$database = new database;
+					$database->app_name = 'ring_groups';
+					$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
+					$database->save($array);
+					unset($array);
+				//revoke temporary permissions
+					$p->delete('ring_group_destination_add', 'temp');
+					$p->delete('ring_group_destination_edit', 'temp');
+				//redirect
+					header("Location: ring_group_edit.php?id=".$ring_group_uuid);
+					exit;
+			}
+		}
+
+}
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
-		$ring_group_destination_uuid = check_str($_GET["id"]);
+		$ring_group_destination_uuid = $_GET["id"];
 		$sql = "select * from v_ring_group_destinations ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and ring_group_destination_uuid = '$ring_group_destination_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and ring_group_destination_uuid = :ring_group_destination_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['ring_group_destination_uuid'] = $ring_group_destination_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$ring_group_uuid = $row["ring_group_uuid"];
 			$destination_number = $row["destination_number"];
 			$destination_delay = $row["destination_delay"];
 			$destination_timeout = $row["destination_timeout"];
 			$destination_prompt = $row["destination_prompt"];
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //show the header
@@ -270,4 +265,5 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>
