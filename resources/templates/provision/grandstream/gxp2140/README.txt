@@ -22,7 +22,7 @@ phonebook.xml
 This provisions the phonebook button and the phone's display for incoming/outgoing calls.
 
  - requires nginx rewrite rules
-	rewrite "^.*/provision/pb([A-Fa-f0-9-]{12,17})/phonebook\.xml$" /app/provision/?mac=$1&file=phonebook.xml;
+	{* rewrite "^.*/provision/pb([A-Fa-f0-9-]{12,17})/phonebook\.xml$" /app/provision/?mac=$1&file=phonebook.xml; *}
 
  - requires Default Settings:
 	provision enabled text true
