@@ -274,7 +274,7 @@
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['destination_type'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape(format_phone($row['destination_number']))."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($action_name)."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$action_name."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_number_regex']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['destination_context'])."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['fax_uuid'])."&nbsp;</td>\n";
