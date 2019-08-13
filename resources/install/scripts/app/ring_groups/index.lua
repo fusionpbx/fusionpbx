@@ -392,7 +392,7 @@
 
 			local params = {ring_group_uuid = ring_group_uuid, domain_uuid = domain_uuid};
 
-			assert(dbh:query(sql, params, function(row)
+			dbh:query(sql, params, function(row)
 				if (row.ring_group_strategy == "random") then
 					if (database["type"] == "mysql") then
 						sql_order = 'rand()'
@@ -402,7 +402,7 @@
 				else
 					sql_order='d.destination_delay, d.destination_number asc'
 				end
-			end));
+			end);
 
 		--get the ring group destinations
 			sql = [[
