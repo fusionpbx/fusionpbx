@@ -65,18 +65,18 @@ class authentication {
 				$plugin = $base."/".$name.".php";
 				if (file_exists($plugin)) {
 					include_once $plugin;
-					$obj = new $class_name();
-					$obj->debug = $this->debug;
-					$obj->domain_name = $this->domain_name;
-					$obj->domain_uuid = $this->domain_uuid;
+					$object = new $class_name();
+					$object->debug = $this->debug;
+					$object->domain_name = $this->domain_name;
+					$object->domain_uuid = $this->domain_uuid;
 					if (strlen($this->key) > 0) {
-						$obj->key = $this->key;
+						$object->key = $this->key;
 					}
 					if (strlen($this->username) > 0) {
-						$obj->username = $this->username;
-						$obj->password = $this->password;
+						$object->username = $this->username;
+						$object->password = $this->password;
 					}
-					$array = $obj->$name();
+					$array = $object->$name();
 					$result['plugin'] = $array["plugin"];
 					$result['domain_name'] = $array["domain_name"];
 					$result['username'] = $array["username"];
