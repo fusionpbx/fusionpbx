@@ -38,6 +38,11 @@
 		exit;
 	}
 
+//set the uuid
+	if (is_uuid($_GET['id'])) {
+		$contact_uuid = $_GET['id'];
+	}
+
 //get the contact list
 	$sql = "select ct.*, u.username, u.domain_uuid as user_domain_uuid ";
 	$sql .= "from v_contact_times as ct, v_users as u ";
@@ -74,7 +79,7 @@
 	echo "<td class='list_control_icons' nowrap>";
 	echo 	img_spacer('25px', '1px');
 	if (permission_exists('contact_time_add')) {
-		echo "<a href='contact_time_edit.php?contact_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo "<a href='contact_time_edit.php?contact_uuid=".urlencode($contact_uuid)."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	else {
 		echo img_spacer('25px', '1px');
