@@ -148,6 +148,11 @@
 		$array_filter[5]['color'] = 'gold';
 		$array_filter[5]['type'] = 'bold';
 		$array_filter[5]['font'] = 'monospace';
+		
+		$array_filter[6]['pattern'] = '[CRIT]';
+		$array_filter[6]['color'] = 'red';
+		$array_filter[6]['type'] = 'bold';
+		$array_filter[6]['font'] = 'monospace';
 
 		$file_size = filesize($log_file);
 
