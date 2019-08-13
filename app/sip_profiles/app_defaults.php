@@ -91,6 +91,7 @@
 									$array['sip_profiles'][$x]['sip_profile_description'] = $sip_profile_description;
 
 								//add the sip profile domains name, alias and parse
+									$sip_profile_domain_uuid = uuid();
 									$array['sip_profiles'][$x]['sip_profile_domains'][$x]['sip_profile_domain_uuid'] = $sip_profile_domain_uuid;
 									$array['sip_profiles'][$x]['sip_profile_domains'][$x]['sip_profile_uuid'] = $sip_profile_uuid;
 									$array['sip_profiles'][$x]['sip_profile_domains'][$x]['sip_profile_domain_name'] = $sip_profile['domains']['domain']['@attributes']['name'];
