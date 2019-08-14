@@ -40,10 +40,10 @@
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$stream_uuid = check_str($_REQUEST["id"]);
-		$id = check_str($_REQUEST["id"]);
+		$stream_uuid = $_REQUEST["id"];
+		$id = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
@@ -51,11 +51,11 @@
 
 //get http post variables and set them to php variables
 	if (is_array($_POST)) {
-		$stream_uuid = check_str($_POST["stream_uuid"]);
-		$stream_name = check_str($_POST["stream_name"]);
-		$stream_location = check_str($_POST["stream_location"]);
-		$stream_enabled = check_str($_POST["stream_enabled"]);
-		$stream_description = check_str($_POST["stream_description"]);
+		$stream_uuid = $_POST["stream_uuid"];
+		$stream_name = $_POST["stream_name"];
+		$stream_location = $_POST["stream_location"];
+		$stream_enabled = $_POST["stream_enabled"];
+		$stream_description = $_POST["stream_description"];
 	}
 
 //process the user data and save it to the database
@@ -63,7 +63,7 @@
 
 		//get the uuid from the POST
 			if ($action == "update") {
-				$stream_uuid = check_str($_POST["stream_uuid"]);
+				$stream_uuid = $_POST["stream_uuid"];
 			}
 
 		//check for all required data
@@ -103,18 +103,9 @@
 		//save to the data
 			$database = new database;
 			$database->app_name = 'streams';
-			$database->app_uuid = null;
-			if (strlen($stream_uuid) > 0) {
-				$database->uuid($stream_uuid);
-			}
+			$database->app_uuid = 'ffde6287-aa18-41fc-9a38-076d292e0a38';
 			$database->save($array);
 			$message = $database->message;
-
-		//debug info
-			//echo "<pre>";
-			//print_r($message);
-			//echo "</pre>";
-			//exit;
 
 		//redirect the user
 			if (isset($action)) {
@@ -127,24 +118,24 @@
 				header('Location: stream_edit.php?id='.$stream_uuid);
 				return;
 			}
-	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
+	}
 
 //pre-populate the form
 	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
-		$stream_uuid = check_str($_GET["id"]);
+		$stream_uuid = $_GET["id"];
 		$sql = "select * from v_streams ";
-		$sql .= "where stream_uuid = '".$stream_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where stream_uuid = :stream_uuid ";
+		$parameters['stream_uuid'] = $stream_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$domain_uuid = $row["domain_uuid"];
 			$stream_name = $row["stream_name"];
 			$stream_location = $row["stream_location"];
 			$stream_enabled = $row["stream_enabled"];
 			$stream_description = $row["stream_description"];
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //show the header
@@ -190,7 +181,6 @@
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select class='formfld' name='stream_enabled'>\n";
-	echo "		<option value=''></option>\n";
 	if ($stream_enabled == "true") {
 		echo "		<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
