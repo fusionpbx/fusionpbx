@@ -327,7 +327,9 @@
 					$array["dialplans"][0]["dialplan_uuid"] = $dialplan_uuid;
 					$array["dialplans"][0]["dialplan_name"] = $ring_group_name;
 					$array["dialplans"][0]["dialplan_number"] = $ring_group_extension;
-					$array["dialplans"][0]["dialplan_context"] = $ring_group_context;
+					if (isset($ring_group_context)) {
+						$array["dialplans"][0]["dialplan_context"] = $ring_group_context;
+					}
 					$array["dialplans"][0]["dialplan_continue"] = "false";
 					$array["dialplans"][0]["dialplan_xml"] = $dialplan_xml;
 					$array["dialplans"][0]["dialplan_order"] = "101";
