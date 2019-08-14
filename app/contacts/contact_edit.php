@@ -114,7 +114,7 @@
 						$array['contacts'][0]['contact_uuid'] = $contact_uuid;
 
 						message::add($text['message-add']);
-						$location = "contact_edit.php?id=".$contact_uuid;
+						$location = "contact_edit.php?id=".urlencode($contact_uuid);
 					}
 
 				//update the contact
@@ -122,7 +122,7 @@
 						$array['contacts'][0]['contact_uuid'] = $contact_uuid;
 
 						message::add($text['message-update']);
-						$location = "contact_edit.php?id=".escape($contact_uuid);
+						$location = "contact_edit.php?id=".urlencode($contact_uuid);
 					}
 
 				//create array
@@ -188,7 +188,7 @@
 
 				//handle redirect
 					if ($_POST['submit'] == $text['button-add']) {
-						$location = "contact_edit.php?id=".escape($contact_uuid);
+						$location = "contact_edit.php?id=".urlencode($contact_uuid);
 					}
 
 				//redirect the browser
