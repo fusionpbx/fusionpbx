@@ -791,17 +791,17 @@ include "root.php";
 
 			//get the device settings table in the provision category from the profile and update the provision array
 				if ((strlen($device_uuid) > 0) and (strlen($device_profile_uuid) > 0)) {
-					$sql = "SELECT * FROM v_device_settings ";
+					$sql = "SELECT * FROM v_device_profile_settings ";
 					$sql .= "WHERE device_profile_uuid = '".$device_profile_uuid."' ";
-					$sql .= "AND device_setting_enabled = 'true' ";
+					$sql .= "AND profile_setting_enabled = 'true' ";
 					$prep_statement = $this->db->prepare(check_sql($sql));
 					$prep_statement->execute();
 					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 					$result_count = count($result);
 					if (is_array($result)) {
 						foreach($result as $row) {
-							$key = $row['device_setting_subcategory'];
-							$value = $row['device_setting_value'];
+							$key = $row['profile_setting_name'];
+							$value = $row['profile_setting_value'];
 							$provision[$key] = $value;
 						}
 					}
@@ -1023,14 +1023,61 @@ include "root.php";
 				//get the provisioning information from device keys
 					if (isset($device_uuid)) {
 
-						//get the device keys array
-							$sql = "SELECT * FROM v_device_keys ";
-							$sql .= "WHERE (";
-							$sql .= "device_uuid = '".$device_uuid."' ";
-							if (strlen($device_profile_uuid) > 0) {
-								$sql .= "or device_profile_uuid = '".$device_profile_uuid."' ";
+						//get the device profile keys
+							$sql = "SELECT ";
+							$sql .= "profile_key_id as device_key_id, ";
+							$sql .= "profile_key_category as device_key_category, ";
+							$sql .= "profile_key_vendor as device_key_vendor, ";
+							$sql .= "profile_key_type as device_key_type, ";
+							$sql .= "profile_key_line as device_key_line, ";
+							$sql .= "profile_key_value as device_key_value, ";
+							$sql .= "profile_key_extension as device_key_extension, ";
+							$sql .= "profile_key_protected as device_key_protected, ";
+							$sql .= "profile_key_label as device_key_label, ";
+							$sql .= "profile_key_icon as device_key_icon ";
+							$sql .= "FROM v_device_profile_keys ";
+							$sql .= "WHERE device_profile_uuid = '".$device_profile_uuid."' ";
+							if (strtolower($device_vendor) == 'escene'){
+								$sql .= "AND (lower(profile_key_vendor) = 'escene' or lower(profile_key_vendor) = 'escene programmable' or profile_key_vendor is null) ";
 							}
-							$sql .= ") ";
+							else {
+								$sql .= "AND (lower(profile_key_vendor) = '".$device_vendor."' or profile_key_vendor is null) ";
+							}
+							$sql .= "ORDER BY ";
+							$sql .= "profile_key_vendor ASC, ";
+							$sql .= "CASE profile_key_category ";
+							$sql .= "WHEN 'line' THEN 1 ";
+							$sql .= "WHEN 'memory' THEN 2 ";
+							$sql .= "WHEN 'programmable' THEN 3 ";
+							$sql .= "WHEN 'expansion' THEN 4 ";
+							$sql .= "ELSE 100 END, ";
+							if ($GLOBALS['db_type'] == "mysql") {
+								$sql .= "profile_key_id ASC ";
+							}
+							else {
+								$sql .= "CAST(profile_key_id as numeric) ASC ";
+							}
+							$prep_statement = $this->db->prepare(check_sql($sql));
+							$prep_statement->execute();
+							$keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+
+						//add the profile keys to the device keys array
+							if (is_array($keys)) {
+								foreach($keys as $row) {
+									//set the variables
+									$id = $row['device_key_id'];
+									$category = $row['device_key_category'];
+
+									//build the device keys array
+									$device_keys[$category][$id] = $row;
+									$device_keys[$category][$id]['device_key_owner'] = "profile";
+								}
+							}
+							unset($keys);
+
+						//get the device keys
+							$sql = "SELECT * FROM v_device_keys ";
+							$sql .= "WHERE device_uuid = '".$device_uuid."' ";
 							if (strtolower($device_vendor) == 'escene'){
 								$sql .= "AND (lower(device_key_vendor) = 'escene' or lower(device_key_vendor) = 'escene programmable' or device_key_vendor is null) ";
 							}
@@ -1046,17 +1093,16 @@ include "root.php";
 							$sql .= "WHEN 'expansion' THEN 4 ";
 							$sql .= "ELSE 100 END, ";
 							if ($GLOBALS['db_type'] == "mysql") {
-								$sql .= "device_key_id ASC, ";
+								$sql .= "device_key_id ASC ";
 							}
 							else {
-								$sql .= "CAST(device_key_id as numeric) ASC, ";
+								$sql .= "CAST(device_key_id as numeric) ASC ";
 							}
-							$sql .= "CASE WHEN device_uuid IS NULL THEN 0 ELSE 1 END ASC ";
 							$prep_statement = $this->db->prepare(check_sql($sql));
 							$prep_statement->execute();
 							$keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
-						//override profile keys with device keys
+						//override profile keys with the device keys
 							if (is_array($keys)) {
 								foreach($keys as $row) {
 									//set the variables
@@ -1065,21 +1111,7 @@ include "root.php";
 
 									//build the device keys array
 									$device_keys[$category][$id] = $row;
-									if (is_uuid($row['device_profile_uuid'])) {
-										$device_keys[$category][$id]['device_key_owner'] = "profile";
-									}
-									else {
-										$device_keys[$category][$id]['device_key_owner'] = "device";
-									}
-
-									//kept temporarily for backwards comptability to allow custom templates to be updated
-									$device_keys[$id] = $row;
-									if (is_uuid($row['device_profile_uuid'])) {
-										$device_keys[$id]['device_key_owner'] = "profile";
-									}
-									else {
-										$device_keys[$id]['device_key_owner'] = "device";
-									}
+									$device_keys[$category][$id]['device_key_owner'] = "device";
 								}
 							}
 							unset($keys);
