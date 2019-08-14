@@ -38,46 +38,48 @@ else {
 	$language = new text;
 	$text = $language->get();
 
-if (count($_GET) > 0) {
-	$voicemail_greeting_uuid = check_str($_GET["id"]);
-	$voicemail_id = check_str($_GET["voicemail_id"]);
-}
+//get ids
+	$voicemail_greeting_uuid = $_GET["id"];
+	$voicemail_id = $_GET["voicemail_id"];
 
-if (strlen($voicemail_greeting_uuid) > 0) {
+if (is_uuid($voicemail_greeting_uuid) && $voicemail_id != '') {
 	//get the greeting filename
-		$sql = "select greeting_filename from v_voicemail_greetings ";
-		$sql .= "where voicemail_greeting_uuid = '".$voicemail_greeting_uuid."' ";
-		$sql .= "and domain_uuid = '".$domain_uuid."' ";
-		$sql .= "and voicemail_id = '".$voicemail_id."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
-			$greeting_filename = $row["greeting_filename"];
-			break; //limit to 1 row
-		}
-		unset ($prep_statement);
+		$sql = "select greeting_filename ";
+		$sql .= "from v_voicemail_greetings ";
+		$sql .= "where voicemail_greeting_uuid = :voicemail_greeting_uuid ";
+		$sql .= "and domain_uuid = :domain_uuid ";
+		$sql .= "and voicemail_id = :voicemail_id ";
+		$parameters['voicemail_greeting_uuid'] = $voicemail_greeting_uuid;
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['voicemail_id'] = $voicemail_id;
+		$database = new database;
+		$greeting_filename = $database->select($sql, $parameters, 'column');
+		unset($prep_statement);
 
-	//delete recording from the database
-		$sql = "delete from v_voicemail_greetings ";
-		$sql .= "where voicemail_greeting_uuid = '".$voicemail_greeting_uuid."' ";
-		$sql .= "and domain_uuid = '".$domain_uuid."' ";
-		$sql .= "and voicemail_id = '".$voicemail_id."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($sql);
+	//build delete array
+		$array['voicemail_greetings'][0]['voicemail_greeting_uuid'] = $voicemail_greeting_uuid;
+		$array['voicemail_greetings'][0]['domain_uuid'] = $domain_uuid;
+		$array['voicemail_greetings'][0]['voicemail_id'] = $voicemail_id;
+
+	//execute delete
+		$database = new database;
+		$database->app_name = 'voicemail_greetings';
+		$database->app_uuid = 'e4b4fbee-9e4d-8e46-3810-91ba663db0c2';
+		$database->delete($array);
+		unset($array);
 
 	//set the greeting directory
 		$v_greeting_dir = $_SESSION['switch']['storage']['dir'].'/voicemail/default/'.$_SESSION['domains'][$domain_uuid]['domain_name'].'/'.$voicemail_id;
 
 	//delete the recording file
-		if (file_exists($v_greeting_dir."/".$greeting_filename)) {
-			@unlink($v_greeting_dir."/".$greeting_filename);
-		}
+		@unlink($v_greeting_dir."/".$greeting_filename);
+
+	//set message
+		message::add($text['message-delete']);
 }
 
-//redirect the user
-	message::add($text['message-delete']);
+//redirect
 	header("Location: voicemail_greetings.php?id=".$voicemail_id);
-	return;
+	exit;
+
 ?>
