@@ -40,55 +40,53 @@ else {
 
 //set the dialplan uuid
 	$dialplan_uuids = $_REQUEST["id"];
-	$app_uuid = check_str($_REQUEST['app_uuid']);
 
 //delete the dialplans
-	if (sizeof($dialplan_uuids) > 0) {
+	if (is_array($dialplan_uuids) && @sizeof($dialplan_uuids) != 0) {
 
-		//get dialplan contexts
+		//get dialplan contexts for each
 			foreach ($dialplan_uuids as $dialplan_uuid) {
-				//check each
-					$dialplan_uuid = check_str($dialplan_uuid);
-
-				//get the dialplan data
+				if (is_uuid($dialplan_uuid)) {
 					$sql = "select dialplan_context from v_dialplans ";
-					$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
-					$prep_statement = $db->prepare(check_sql($sql));
-					$prep_statement->execute();
-					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-					foreach ($result as &$row) {
-						$dialplan_contexts[] = $row["dialplan_context"];
-					}
-					unset($prep_statement);
+					$sql .= "where dialplan_uuid = :dialplan_uuid ";
+					$parameters['dialplan_uuid'] = $dialplan_uuid;
+					$database = new database;
+					$dialplan_contexts[] = $database->select($sql, $parameters, 'column');
+					unset($sql, $parameters);
+				}
 			}
-
-		//start the atomic transaction
-			$db->beginTransaction();
 
 		//delete dialplan and details
 			$dialplans_deleted = 0;
-			foreach ($dialplan_uuids as $dialplan_uuid) {
-				//delete child data
-					$sql = "delete from v_dialplan_details ";
-					$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
-					$sql .= "and domain_uuid = '".$domain_uuid."'; ";
-					$db->query($sql);
-					unset($sql);
+			foreach ($dialplan_uuids as $x => $dialplan_uuid) {
+				//build delete array of child data
+					$array['dialplan_details'][$x]['dialplan_uuid'] = $dialplan_uuid;
+					$array['dialplan_details'][$x]['domain_uuid'] = $domain_uuid;
 
-				//delete parent data
-					$sql = "delete from v_dialplans ";
-					$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
-					$sql .= "and domain_uuid = '".$domain_uuid."' ";
-					$sql .= "and app_uuid = '4b821450-926b-175a-af93-a03c441818b1'; ";
-					$db->query($sql);
-					unset($sql);
+				//build delete array of parent data
+					$array['dialplans'][$x]['dialplan_uuid'] = $dialplan_uuid;
+					$array['dialplans'][$x]['domain_uuid'] = $domain_uuid;
+					$array['dialplans'][$x]['app_uuid'] = '4b821450-926b-175a-af93-a03c441818b1';
+
+				//grant temporary permissions
+					$p = new permissions;
+					$p->add('dialplan_detail_delete', 'temp');
+					$p->add('dialplan_delete', 'temp');
+
+				//execute delete
+					$database = new database;
+					$database->app_name = 'time_conditions';
+					$database->app_uuid = '4b821450-926b-175a-af93-a03c441818b1';
+					$database->delete($array);
+					unset($array);
+
+				//revoke temporary permissions
+					$p->delete('dialplan_detail_delete', 'temp');
+					$p->delete('dialplan_delete', 'temp');
 
 				//count the time conditions that were deleted
 					$dialplans_deleted++;
 			}
-
-		//commit the atomic transaction
-			$db->commit();
 
 		//synchronize the xml config
 			save_dialplan_xml();
@@ -103,10 +101,13 @@ else {
 					$cache->delete("dialplan:".$dialplan_context);
 				}
 			}
+
+		//set message
+			message::add($text['message-delete'].($dialplans_deleted > 1 ? ": ".$dialplans_deleted : null));
+
 	}
 
 //redirect the browser
-	$_SESSION["message"] = $text['message-delete'].(($dialplans_deleted > 1) ? ": ".$dialplans_deleted : null);
-	header("Location: ".PROJECT_PATH."/app/time_conditions/time_conditions.php");
+	header("Location: time_conditions.php");
 
 ?>
