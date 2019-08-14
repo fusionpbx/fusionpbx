@@ -2147,4 +2147,19 @@ function number_pad($number,$n) {
 		}
 	}
 
+//add a random_bytes function when it doesn't exist for older versions of PHP
+	if (!function_exists('random_bytes')) {
+		function random_bytes($length) {
+			$charset .= "0123456789";
+			$charset .= "abcdefghijkmnopqrstuvwxyz";
+			$charset .= "ABCDEFGHIJKLMNPQRSTUVWXYZ";
+			srand((double)microtime() * rand(1000000, 9999999));
+			while ($length > 0) {
+				$string .= $charset[rand(0, strlen($charset)-1)];
+				$length--;
+			}
+			return $string.' ';
+		}
+	}
+
 ?>
