@@ -100,7 +100,7 @@
 	}
 	else {
 		//show only assigned ring groups
-		$sql = "select count(*) as num_rows from v_ring_groups as r, v_ring_group_users as u ";
+		$sql = "select count(*) from v_ring_groups as r, v_ring_group_users as u ";
 		$sql .= "where r.ring_group_uuid = u.ring_group_uuid ";
 		$sql .= "and r.domain_uuid = :domain_uuid ";
 		$sql .= "and u.user_uuid = :user_uuid ";
@@ -109,6 +109,7 @@
 	}
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($parameters);
 
 //prepare to page the results
 	$rows_per_page = $is_included ? 10 : (is_numeric($_SESSION['domain']['paging']['numeric']) ? $_SESSION['domain']['paging']['numeric'] : 50);
@@ -121,11 +122,17 @@
 //get the list
 	if (permission_exists('ring_group_add') || permission_exists('ring_group_edit')) {
 		//show all ring groups
-		$sql .= str_replace('count(*)', '*', $sql);
+		$sql = "select * from v_ring_groups ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	else {
 		//show only assigned ring groups
-		$sql .= str_replace('count(*)', 'r.ring_group_name, r.ring_group_uuid, r.ring_group_extension, r.ring_group_forward_destination, r.ring_group_forward_enabled, r.ring_group_description', $sql);
+		$sql = "select r.ring_group_name, r.ring_group_uuid, r.ring_group_extension, r.ring_group_forward_destination, r.ring_group_forward_enabled, r.ring_group_description from v_ring_groups as r, v_ring_group_users as u ";
+		$sql .= "where r.ring_group_uuid = u.ring_group_uuid ";
+		$sql .= "and r.domain_uuid = :domain_uuid ";
+		$sql .= "and u.user_uuid = :user_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	$sql .= order_by($order_by, $order, 'ring_group_extension', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
@@ -196,4 +203,5 @@
 	if (!$is_included) {
 		require_once "resources/footer.php";
 	}
+
 ?>
