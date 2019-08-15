@@ -1071,6 +1071,10 @@ include "root.php";
 									//build the device keys array
 									$device_keys[$category][$id] = $row;
 									$device_keys[$category][$id]['device_key_owner'] = "profile";
+
+									//kept temporarily for backwards comptability to allow custom templates to be updated
+									$device_keys[$id] = $row;
+									$device_keys[$id]['device_key_owner'] = "profile";
 								}
 							}
 							unset($keys);
@@ -1112,6 +1116,10 @@ include "root.php";
 									//build the device keys array
 									$device_keys[$category][$id] = $row;
 									$device_keys[$category][$id]['device_key_owner'] = "device";
+
+									//kept temporarily for backwards comptability to allow custom templates to be updated
+									$device_keys[$id] = $row;
+									$device_keys[$id]['device_key_owner'] = "device";
 								}
 							}
 							unset($keys);
