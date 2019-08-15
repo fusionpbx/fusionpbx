@@ -42,7 +42,7 @@
 	$text = $language->get();
 
 //toggle enabled state
-	if (is_uuid($_REQUEST['id']) && (strtolower($_REQUEST['enabled']) == 'true' || strtolower($_REQUEST['enabled']) == 'false') {
+	if (is_uuid($_REQUEST['id']) && (strtolower($_REQUEST['enabled']) == 'true' || strtolower($_REQUEST['enabled']) == 'false')) {
 		//build array
 			$array['vars'][0]['var_uuid'] = $_REQUEST['id'];
 			$array['vars'][0]['var_enabled'] = strtolower($_REQUEST['enabled']);
