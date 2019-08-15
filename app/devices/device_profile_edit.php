@@ -265,6 +265,11 @@
 	$device_profile_settings[$x]['profile_setting_enabled'] = '';
 	$device_profile_settings[$x]['profile_setting_description'] = '';
 
+//filter the uuid
+	if (!is_uuid($device_profile_uuid)) {
+		$device_profile_uuid = null;
+	}
+
 //show the header
 	require_once "resources/header.php";
 
@@ -276,7 +281,7 @@
 	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-device_profile']."</b><br><br></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='device_profiles.php'\" value='".$text['button-back']."'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"window.location='device_profile_copy.php'\" value='".$text['button-copy']."'>";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"window.location='device_profile_copy.php?id=".urlencode($device_profile_uuid)."'\" value='".$text['button-copy']."'>";
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
 	echo "</td>\n";
 	echo "</tr>\n";
