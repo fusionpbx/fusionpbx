@@ -23,7 +23,6 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
