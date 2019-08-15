@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -448,9 +448,13 @@ if (!function_exists('fax_split_dtmf')) {
 
 			//logo
 			$display_logo = false;
-			if (!isset($_SESSION['fax']['cover_logo']['text'])) {
+			if (!isset($_SESSION['fax']['cover_logo']['text']) && $_SESSION['fax']['cover_logo']['text'] == '') {
 				$logo = PROJECT_PATH."/app/fax/resources/images/logo.jpg";
 				$display_logo = true;
+			}
+			if (!isset($_SESSION['fax']['cover_logo']['text']) && $_SESSION['fax']['cover_logo']['text'] != '') {
+				$logo = '';
+				$display_logo = false;
 			}
 			else if (isset($_SESSION['fax']['cover_logo']['text']) && $_SESSION['fax']['cover_logo']['text'] != '') {
 				$logo = $_SESSION['fax']['cover_logo']['text'];
