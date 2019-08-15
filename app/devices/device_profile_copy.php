@@ -81,7 +81,8 @@
 	unset($sql, $parameters);
 
 //prepare the devices array
-	unset($device_profiles[0]["device_profile_uuid"]);
+	$device_profile_uuid = uuid();
+	$device_profiles[0]["device_profile_uuid"] = $device_profile_uuid;
 
 //add copy to the device description
 	//$device_profiles[0]["device_profile_name"] = $device_profiles[0]["device_profile_name"]."-".strtolower($text['button-copy']);
@@ -89,24 +90,32 @@
 
 //prepare the device_keys array
 	$x = 0;
-	foreach ($device_profile_keys as $row) {
-		unset($device_profile_keys[$x]["device_profile_uuid"]);
-		unset($device_profile_keys[$x]["device_profile_key_uuid"]);
-		$x++;
+	if (is_array($device_profile_keys) && count($device_profile_keys) > 0) {
+		foreach ($device_profile_keys as $row) {
+			$device_profile_keys[$x]["device_profile_uuid"] = $device_profile_uuid;
+			$device_profile_keys[$x]["device_profile_key_uuid"] = uuid();
+			$x++;
+		}
 	}
 
 //prepare the device_settings array
 	$x = 0;
-	foreach ($device_profile_settings as $row) {
-		unset($device_profile_settings[$x]["device_profile_uuid"]);
-		unset($device_profile_settings[$x]["device_profile_setting_uuid"]);
-		$x++;
+	if (is_array($device_profile_settings) && count($device_profile_settings) > 0) {
+		foreach ($device_profile_settings as $row) {
+			$device_profile_settings[$x]["device_profile_uuid"] = $device_profile_uuid;
+			$device_profile_settings[$x]["device_profile_setting_uuid"] = uuid();
+			$x++;
+		}
 	}
 
 //create the device array
 	$array["device_profiles"] = $device_profiles;
-	$array["device_profiles"][0]["device_profile_keys"] = $device_profile_keys;
-	$array["device_profiles"][0]["device_profile_settings"] = $device_profile_settings;
+	if (is_array($device_profile_keys) && count($device_profile_keys) > 0) {
+		$array["device_profiles"][0]["device_profile_keys"] = $device_profile_keys;
+	}
+	if (is_array($device_profile_settings) && count($device_profile_settings) > 0) {
+		$array["device_profiles"][0]["device_profile_settings"] = $device_profile_settings;
+	}
 
 //copy the device
 	$database = new database;
@@ -115,6 +124,7 @@
 	$database->save($array);
 	unset($array);
 
+//set the message
 	message::add($text['message-copy']);
 
 //redirect
