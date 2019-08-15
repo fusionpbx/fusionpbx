@@ -166,10 +166,10 @@
 				//assign the contact to the group
 					if (is_uuid($group_uuid) && permission_exists('contact_group_add')) {
 						$contact_group_uuid = uuid();
-						$array['contact_group'][0]['contact_group_uuid'] = $contact_group_uuid;
-						$array['contact_group'][0]['domain_uuid'] = $domain_uuid;
-						$array['contact_group'][0]['contact_uuid'] = $contact_uuid;
-						$array['contact_group'][0]['group_uuid'] = $group_uuid;
+						$array['contact_groups'][0]['contact_group_uuid'] = $contact_group_uuid;
+						$array['contact_groups'][0]['domain_uuid'] = $domain_uuid;
+						$array['contact_groups'][0]['contact_uuid'] = $contact_uuid;
+						$array['contact_groups'][0]['group_uuid'] = $group_uuid;
 
 						$p->add('contact_group_add', 'temp');
 					}
