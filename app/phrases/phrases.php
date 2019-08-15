@@ -24,9 +24,16 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check the permission
+	if (!permission_exists('phrase_view')) {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -35,12 +42,6 @@ require_once "resources/check_auth.php";
 //get the http get values and set them as php variables
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
-
-//check the permission
-	if (!permission_exists('phrase_view')) {
-		echo "access denied";
-		exit;
-	}
 
 //add paging
 	require_once "resources/paging.php";
