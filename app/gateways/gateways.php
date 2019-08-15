@@ -171,7 +171,7 @@
 			echo "<tr ".$tr_link.">\n";
 			if ($_GET['show'] == "all" && permission_exists('gateway_all')) {
 				if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
-					$domain = escape($_SESSION['domains'][$row['domain_uuid']]['domain_name']);
+					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 				}
 				else {
 					$domain = $text['label-global'];
