@@ -94,7 +94,7 @@
 		$sql_search .= "	lower(device_profile_name) like :search ";
 		$sql_search .= "	or lower(device_profile_description) like :search ";
 		$sql_search .= ") ";
-		$parameters['search'] = $search;
+		$parameters['search'] = '%'.$search.'%';
 	}
 
 //additional includes
