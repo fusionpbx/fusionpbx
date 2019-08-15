@@ -134,8 +134,10 @@
 			//delete the agent over event socket
 			if ($fp) {
 				//callcenter_config tier del [queue_name] [agent_name]
-				$cmd = "api callcenter_config tier del ".$call_center_queue_uuid." ".$call_center_agent_uuid;
-				$response = event_socket_request($fp, $cmd);
+				if (is_uuid($call_center_queue_uuid) && is_uuid($call_center_agent_uuid)) {
+					$cmd = "api callcenter_config tier del ".$call_center_queue_uuid." ".$call_center_agent_uuid;
+					$response = event_socket_request($fp, $cmd);
+				}
 			}
 		//delete the tier from the database
 			if (strlen($call_center_tier_uuid) > 0) {
