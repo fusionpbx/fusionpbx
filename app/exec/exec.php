@@ -469,7 +469,7 @@
 			switch ($handler) {
 				case 'shell':
 					if (permission_exists('exec_command') && $command_authorized) {
-						$result = escape(shell_exec($command . " 2>&1"));
+						$result = shell_exec($command . " 2>&1");
 					}
 					break;
 				case 'php':
