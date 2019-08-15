@@ -475,10 +475,10 @@
 				$selected = "selected='selected'";
 			}
 			if (strlen($row['profile_key_vendor']) == 0) {
-				echo "					<option value='".escape($function['value'])."' vendor='".escape($function['vendor_name'])."' $selected >".$text['label-'.escape($function['name'])]."</option>\n";
+				echo "					<option value='".escape($function['value'])."' vendor='".escape($function['vendor_name'])."' $selected >".$text['label-'.$function['name']]."</option>\n";
 			}
 			if (strlen($row['profile_key_vendor']) > 0 && $row['profile_key_vendor'] == $function['vendor_name']) {
-				echo "					<option value='".escape($function['value'])."' vendor='".escape($function['vendor_name'])."' $selected >".$text['label-'.escape($function['name'])]."</option>\n";
+				echo "					<option value='".escape($function['value'])."' vendor='".escape($function['vendor_name'])."' $selected >".$text['label-'.$function['name']]."</option>\n";
 			}
 			$previous_vendor = $function['vendor_name'];
 			$i++;
