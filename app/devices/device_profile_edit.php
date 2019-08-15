@@ -2518,7 +2518,7 @@
 	echo "		<tr>\n";
 	echo "			<th class='vtablereq'>".$text['label-device_setting_name']."</th>\n";
 	echo "			<td class='vtable'>".$text['label-device_setting_value']."</td>\n";
-	echo "			<th class='vtablereq'>".$text['label-device_setting_enabled']."</th>\n";
+	echo "			<th class='vtablereq'>".$text['label-enabled']."</th>\n";
 	echo "			<td class='vtable'>".$text['label-device_setting_description']."</td>\n";
 	echo "			<td class='vtable'></td>\n";
 	echo "		</tr>\n";
