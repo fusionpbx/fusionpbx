@@ -86,7 +86,7 @@ if ($domains_processed == 1) {
 				$array['device_profile_keys'][$index]['profile_key_value'] = $row["device_key_value"];
 				$array['device_profile_keys'][$index]['profile_key_extension'] = $row["device_key_extension"];
 				$array['device_profile_keys'][$index]['profile_key_protected'] = $row["device_key_protected"];
-				$array['device_profile_keys'][$index]['profile_key_label'] = $row["	device_key_label"];
+				$array['device_profile_keys'][$index]['profile_key_label'] = $row["device_key_label"];
 				$array['device_profile_keys'][$index]['profile_key_icon'] = $row["device_key_icon"];
 			}
 
