@@ -211,9 +211,9 @@
 	echo "<form method='post' action=''>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "	<th style='width:30px;'>\n";
-	echo "		<input type='checkbox' name='checkbox_all' id='checkbox_all' value='' onclick=\"checkbox_toggle();\">\n";
-	echo "	</th>\n";
+	//echo "	<th style='width:30px;'>\n";
+	//echo "		<input type='checkbox' name='checkbox_all' id='checkbox_all' value='' onclick=\"checkbox_toggle();\">\n";
+	//echo "	</th>\n";
 	echo th_order_by('device_profile_name', $text['label-device_profile_name'], $order_by, $order);
 	echo th_order_by('device_profile_enabled', $text['label-device_profile_enabled'], $order_by, $order);
 	echo th_order_by('device_profile_description', $text['label-device_profile_description'], $order_by, $order);
@@ -234,10 +234,10 @@
 				$tr_link = "href='device_profile_edit.php?id=".escape($row['device_profile_uuid'])."'";
 			}
 			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='align: center; padding: 3px 3px 0px 8px;'>\n";
-			echo "		<input type='checkbox' name=\"device_profiles[$x][checked]\" id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$x."').checked = false; }\">\n";
-			echo "		<input type='hidden' name=\"device_profiles[$x][device_profile_uuid]\" value='".escape($row['device_profile_uuid'])."' />\n";
-			echo "	</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='align: center; padding: 3px 3px 0px 8px;'>\n";
+			//echo "		<input type='checkbox' name=\"device_profiles[$x][checked]\" id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$x."').checked = false; }\">\n";
+			//echo "		<input type='hidden' name=\"device_profiles[$x][device_profile_uuid]\" value='".escape($row['device_profile_uuid'])."' />\n";
+			//echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' style=''>".escape($row['device_profile_name'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' style=''>".escape($row['device_profile_enabled'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg' style=''>".escape($row['device_profile_description'])."&nbsp;</td>\n";
@@ -246,7 +246,8 @@
 				echo "<a href='device_profile_edit.php?id=".escape($row['device_profile_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('device_profile_delete')) {
-				echo "<button type='submit' class='btn btn-default list_control_icon' name=\"device_profiles[$x][action]\" alt='".$text['button-delete']."' value='delete'><span class='glyphicon glyphicon-remove'></span></button>";
+				echo "				<a href=\"device_profile_delete.php?id=".escape($row['device_profile_uuid'])."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\"><button type='button' class='btn btn-default list_control_icon'><span class='glyphicon glyphicon-remove'></span></button></a>\n";
+				//echo "<button type='submit' class='btn btn-default list_control_icon' name=\"device_profiles[$x][action]\" alt='".$text['button-delete']."' value='delete'><span class='glyphicon glyphicon-remove'></span></button>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
