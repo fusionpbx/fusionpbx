@@ -2301,6 +2301,26 @@ $text['label-device_vendor']['ru-ru'] = "Производитель";
 $text['label-device_vendor']['sv-se'] = "Tillverkare";
 $text['label-device_vendor']['uk-ua'] = "";
 
+$text['label-device_key_vendor']['en-us'] = "Vendor";
+$text['label-device_key_vendor']['ar-eg'] = "";
+$text['label-device_key_vendor']['de-at'] = "Hersteller"; //copied from de-de
+$text['label-device_key_vendor']['de-ch'] = "Hersteller"; //copied from de-de
+$text['label-device_key_vendor']['de-de'] = "Hersteller";
+$text['label-device_key_vendor']['es-cl'] = "Proveedor";
+$text['label-device_key_vendor']['es-mx'] = "Proveedor"; //copied from es-cl
+$text['label-device_key_vendor']['fr-ca'] = "Fabriquant"; //copied from fr-fr
+$text['label-device_key_vendor']['fr-fr'] = "Fabriquant";
+$text['label-device_key_vendor']['he-il'] = "";
+$text['label-device_key_vendor']['it-it'] = "Produttore";
+$text['label-device_key_vendor']['nl-nl'] = "";
+$text['label-device_key_vendor']['pl-pl'] = "Producent";
+$text['label-device_key_vendor']['pt-br'] = "Fabricante"; //copied from pt-pt
+$text['label-device_key_vendor']['pt-pt'] = "Fabricante";
+$text['label-device_key_vendor']['ro-ro'] = "";
+$text['label-device_key_vendor']['ru-ru'] = "Производитель";
+$text['label-device_key_vendor']['sv-se'] = "Tillverkare";
+$text['label-device_key_vendor']['uk-ua'] = "";
+
 $text['label-device_uuid_alternate']['en-us'] = "Alternate";
 $text['label-device_uuid_alternate']['ar-eg'] = "";
 $text['label-device_uuid_alternate']['de-at'] = "Alternativ"; //copied from de-de
