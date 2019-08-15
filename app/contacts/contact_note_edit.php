@@ -23,16 +23,19 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('contact_note_edit') || permission_exists('contact_note_add')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('contact_note_edit') || permission_exists('contact_note_add')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -189,7 +192,7 @@ else {
 	echo "	".$text['label-contact_note']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <textarea class='formfld' type='text' rows=\"20\" style='width: 100%' name='contact_note'>".escape($contact_note)."</textarea>\n";
+	echo "  <textarea class='formfld' type='text' rows=\"20\" style='width: 100%' name='contact_note'>".$contact_note."</textarea>\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
@@ -210,4 +213,5 @@ else {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>
