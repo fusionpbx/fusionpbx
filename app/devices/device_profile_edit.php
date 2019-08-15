@@ -51,19 +51,17 @@
 		$action = "add";
 	}
 
-//get http post variables and set them to php variables
-	if (is_array($_POST)) {
-		$device_profile_uuid = $_POST["device_profile_uuid"];
-		$device_profile_name = $_POST["device_profile_name"];
-		$device_profile_keys = $_POST["device_profile_keys"];
-		$device_profile_settings = $_POST["device_profile_settings"];
-		$device_profile_enabled = $_POST["device_profile_enabled"];
-		$device_profile_description = $_POST["device_profile_description"];
-	}
-
 //process the user data and save it to the database
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
+		//get http post variables and set them to php variables
+			$domain_uuid = $_POST["domain_uuid"];
+			$device_profile_uuid = $_POST["device_profile_uuid"];
+			$device_profile_name = $_POST["device_profile_name"];
+			$device_profile_keys = $_POST["device_profile_keys"];
+			$device_profile_settings = $_POST["device_profile_settings"];
+			$device_profile_enabled = $_POST["device_profile_enabled"];
+			$device_profile_description = $_POST["device_profile_description"];
 
 		//check for all required data
 			$msg = '';
@@ -86,9 +84,6 @@
 				return;
 			}
 
-		//set the domain_uuid
-			$_POST["domain_uuid"] = $_SESSION["domain_uuid"];
-
 		//add the device_profile_uuid
 			if (strlen($_POST["device_profile_uuid"]) == 0) {
 				$device_profile_uuid = uuid();
@@ -102,7 +97,8 @@
 			$array['device_profiles'][0]["device_profile_description"] = $device_profile_description;
 			$y = 0;
 			foreach ($device_profile_keys as $row) {
-				if (strlen($row['profile_key_category']) > 0) {
+				if (strlen($row['profile_key_vendor']) > 0 && strlen($row['profile_key_id']) > 0) {
+					$array['device_profiles'][0]['device_profile_keys'][$y]["domain_uuid"] = $domain_uuid;
 					$array['device_profiles'][0]['device_profile_keys'][$y]["device_profile_key_uuid"] = $row["device_profile_key_uuid"];
 					$array['device_profiles'][0]['device_profile_keys'][$y]["profile_key_category"] = $row["profile_key_category"];
 					$array['device_profiles'][0]['device_profile_keys'][$y]["profile_key_id"] = $row["profile_key_id"];
@@ -119,7 +115,8 @@
 			}
 			$y = 0;
 			foreach ($device_profile_settings as $row) {
-				if (strlen($row['profile_setting_name']) > 0) {
+				if (strlen($row['profile_setting_name']) > 0 && strlen($row['profile_setting_enabled']) > 0) {
+					$array['device_profiles'][0]['device_profile_settings'][$y]["domain_uuid"] = $domain_uuid;
 					$array['device_profiles'][0]['device_profile_settings'][$y]["device_profile_setting_uuid"] = $row["device_profile_setting_uuid"];
 					$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_name"] = $row["profile_setting_name"];
 					$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_value"] = $row["profile_setting_value"];
@@ -172,10 +169,9 @@
 	if (strlen($device_profile_uuid) > 0) {
 		$sql = "select * from v_device_profile_keys ";
 		$sql .= "where device_profile_uuid = :device_profile_uuid ";
-		//$sql .= "and domain_uuid = '".$domain_uuid."' ";
-		$sql .= "order by ";
-		$sql .= "profile_key_vendor asc, ";
-		$sql .= "case profile_key_vendor ";
+		//$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "order by profile_key_vendor asc, ";
+		$sql .= "case profile_key_category ";
 		$sql .= "when 'line' then 1 ";
 		$sql .= "when 'memory' then 2 ";
 		$sql .= "when 'programmable' then 3 ";
@@ -183,12 +179,7 @@
 		$sql .= "when 'expansion-1' then 5 ";
 		$sql .= "when 'expansion-2' then 6 ";
 		$sql .= "else 100 end, ";
-		if ($db_type == "mysql") {
-			$sql .=  "profile_key_id asc ";
-		}
-		else {
-			$sql .= "cast(profile_key_id as numeric) asc ";
-		}
+		$sql .= "profile_key_id asc ";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['device_profile_uuid'] = $device_profile_uuid;
 		$database = new database;
