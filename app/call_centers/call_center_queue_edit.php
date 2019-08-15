@@ -656,7 +656,7 @@
 		echo "				<td></td>\n";
 		echo "			</tr>\n";
 		$x = 0;
-		if (is_array($tiers) {
+		if (is_array($tiers)) {
 			foreach($tiers as $field) {
 				echo "	<tr>\n";
 				echo "		<td class=''>";
