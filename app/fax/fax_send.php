@@ -446,7 +446,7 @@ if (!function_exists('fax_split_dtmf')) {
 			$x = 0;
 			$y = 0;
 
-//logo
+			//logo
 			$display_logo = false;
 			if (!isset($_SESSION['fax']['cover_logo']['text']) && $_SESSION['fax']['cover_logo']['text'] == '') {
 				$logo = PROJECT_PATH."/app/fax/resources/images/logo.jpg";
