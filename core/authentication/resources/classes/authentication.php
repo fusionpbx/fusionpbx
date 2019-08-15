@@ -114,8 +114,8 @@ class authentication {
 			$this->domain_name = $_SERVER["HTTP_HOST"];
 
 		//get the domain name from the username
-			if ($_SESSION["user"]["unique"]["text"] != "global") {
-				$username_array = explode("@", check_str($_REQUEST["username"]));
+			if ($_SESSION["users"]["unique"]["text"] != "global") {
+				$username_array = explode("@", $_REQUEST["username"]);
 				if (count($username_array) > 1) {
 					//get the domain name
 						$domain_name =  $username_array[count($username_array) -1];
@@ -131,7 +131,7 @@ class authentication {
 					//if the domain exists then set domain_name and update the username
 						if ($domain_exists) {
 							$this->domain_name = $domain_name;
-							$this->username = substr(check_str($_REQUEST["username"]), 0, -(strlen($domain_name)+1));
+							$this->username = substr($_REQUEST["username"], 0, -(strlen($domain_name)+1));
 							$_SESSION['domain_uuid'] = $this->domain_uuid;
 						}
 					//unset the domain name variable
@@ -140,8 +140,8 @@ class authentication {
 			}
 
 		//get the domain name from the http value
-			if (strlen(check_str($_REQUEST["domain_name"])) > 0) {
-				$this->domain_name = check_str($_REQUEST["domain_name"]);
+			if (strlen($_REQUEST["domain_name"]) > 0) {
+				$this->domain_name = $_REQUEST["domain_name"];
 			}
 
 		//remote port number from the domain name
