@@ -173,7 +173,22 @@
 		$sql = "select * from v_device_profile_keys ";
 		$sql .= "where device_profile_uuid = :device_profile_uuid ";
 		//$sql .= "and domain_uuid = '".$domain_uuid."' ";
-		$sql .= "order by profile_key_id asc";
+		$sql .= "order by ";
+		$sql .= "profile_key_vendor asc, ";
+		$sql .= "case profile_key_vendor ";
+		$sql .= "when 'line' then 1 ";
+		$sql .= "when 'memory' then 2 ";
+		$sql .= "when 'programmable' then 3 ";
+		$sql .= "when 'expansion' then 4 ";
+		$sql .= "when 'expansion-1' then 5 ";
+		$sql .= "when 'expansion-2' then 6 ";
+		$sql .= "else 100 end, ";
+		if ($db_type == "mysql") {
+			$sql .=  "profile_key_id asc ";
+		}
+		else {
+			$sql .= "cast(profile_key_id as numeric) asc ";
+		}
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['device_profile_uuid'] = $device_profile_uuid;
 		$database = new database;
@@ -281,6 +296,7 @@
 	echo "			<td class='vtable'>".$text['label-device_key_icon']."</td>\n";
 	echo "			<td class='vtable'></td>\n";
 	echo "		</tr>\n";
+//view_array($device_profile_keys);
 	$x = 0;
 	foreach($device_profile_keys as $row) {
 		echo "		<tr>\n";
@@ -289,18 +305,19 @@
 		echo "			<input type='hidden' name='device_profile_keys[$x][device_profile_key_uuid]' value=\"".escape($row["device_profile_key_uuid"])."\">\n";
 		echo "			<td>\n";
 		echo "				<select class='formfld' name='device_profile_keys[$x][profile_key_category]'>\n";
-		echo "					<option value=''></option>\n";
 		if ($row['profile_key_category'] == "line") {
 			echo "					<option value='line' selected='selected'>".$text['label-line']."</option>\n";
 		}
 		else {
 			echo "					<option value='line'>".$text['label-line']."</option>\n";
 		}
-		if ($row['profile_key_category'] == "memory") {
-			echo "					<option value='memory' selected='selected'>".$text['label-memory']."</option>\n";
-		}
-		else {
-			echo "					<option value='memory'>".$text['label-memory']."</option>\n";
+		if ($row['device_key_vendor'] !== "polycom") { 
+			if ($row['profile_key_category'] == "memory") {
+				echo "					<option value='memory' selected='selected'>".$text['label-memory']."</option>\n";
+			}
+			else {
+				echo "					<option value='memory'>".$text['label-memory']."</option>\n";
+			}
 		}
 		if ($row['profile_key_category'] == "programmable") {
 			echo "					<option value='programmable' selected='selected'>".$text['label-programmable']."</option>\n";
@@ -308,17 +325,45 @@
 		else {
 			echo "					<option value='programmable'>".$text['label-programmable']."</option>\n";
 		}
-		if ($row['profile_key_category'] == "expansion-1") {
-			echo "					<option value='expansion-1' selected='selected'>".$text['label-expansion-1']."</option>\n";
-		}
-		else {
-			echo "					<option value='expansion-1'>".$text['label-expansion-1']."</option>\n";
-		}
-		if ($row['profile_key_category'] == "expansion-2") {
-			echo "					<option value='expansion-2' selected='selected'>".$text['label-expansion-2']."</option>\n";
-		}
-		else {
-			echo "					<option value='expansion-2'>".$text['label-expansion-2']."</option>\n";
+		if ($row['device_key_vendor'] !== "polycom") { 
+			if (strlen($row['device_key_vendor']) == 0) {
+				if ($row['profile_key_category'] == "expansion") {
+					echo "					<option value='expansion' selected='selected'>".$text['label-expansion']." 1</option>\n";
+				}
+				else {
+					echo "					<option value='expansion'>".$text['label-expansion']." 1</option>\n";
+				}
+				if ($row['profile_key_category'] == "expansion-2") {
+					echo "					<option value='expansion-2' selected='selected'>".$text['label-expansion']." 2</option>\n";
+				}
+				else {
+					echo "					<option value='expansion-2'>".$text['label-expansion']." 2</option>\n";
+				}
+			}
+			else {
+				if (strtolower($row['device_key_vendor']) == "cisco" or strtolower($row['device_key_vendor']) == "yealink") {
+					if ($row['profile_key_category'] == "expansion-1" || $row['device_key_category'] == "expansion") {
+						echo "					<option value='expansion-1' selected='selected'>".$text['label-expansion']." 1</option>\n";
+					}
+					else {
+						echo "					<option value='expansion-1'>".$text['label-expansion']." 1</option>\n";
+					}
+					if ($row['profile_key_category'] == "expansion-2") {
+						echo "					<option value='expansion-2' selected='selected'>".$text['label-expansion']." 2</option>\n";
+					}
+					else {
+						echo "					<option value='expansion-2'>".$text['label-expansion']." 2</option>\n";
+					}
+				}
+				else {
+					if ($row['profile_key_category'] == "expansion") {
+						echo "					<option value='expansion' selected='selected'>".$text['label-expansion']."</option>\n";
+					}
+					else {
+						echo "					<option value='expansion'>".$text['label-expansion']."</option>\n";
+					}
+				}
+			}
 		}
 		echo "				</select>\n";
 		echo "			</td>\n";
