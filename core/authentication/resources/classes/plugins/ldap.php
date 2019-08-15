@@ -91,7 +91,7 @@ class plugin_ldap {
 					//unique username - per domain
 					$sql .= "and domain_uuid=:domain_uuid ";
 				}
-				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement = $db->prepare($sql);
 				if ($_SESSION["users"]["unique"]["text"] != "global") {
 					$prep_statement->bindParam(':domain_uuid', $this->domain_uuid);
 				}
