@@ -196,6 +196,35 @@
 		unset ($sql, $parameters);
 	}
 
+//get the vendor count
+	$vendor_count = 0;
+	foreach($device_profile_keys as $row) {
+		if ($previous_vendor != $row['profile_key_vendor']) {
+			$previous_vendor = $row['profile_key_vendor'];
+			$vendor_count++;
+		}
+	}
+
+//get the vendors
+	$sql = "select * ";
+	$sql .= "from v_device_vendors as v ";
+	$sql .= "where enabled = 'true' ";
+	$sql .= "order by name asc ";
+	$database = new database;
+	$vendors = $database->select($sql, null, 'all');
+	unset($sql);
+
+//get the vendor functions
+	$sql = "select v.name as vendor_name, f.name, f.value ";
+	$sql .= "from v_device_vendors as v, v_device_vendor_functions as f ";
+	$sql .= "where v.device_vendor_uuid = f.device_vendor_uuid ";
+	$sql .= "and v.enabled = 'true' ";
+	$sql .= "and f.enabled = 'true' ";
+	$sql .= "order by v.name asc, f.name asc ";
+	$database = new database;
+	$vendor_functions = $database->select($sql, null, 'all');
+	unset($sql);
+
 //add the $device_profile_key_uuid
 	if (strlen($device_profile_key_uuid) == 0) {
 		$device_profile_key_uuid = uuid();
@@ -245,35 +274,6 @@
 	$device_profile_settings[$x]['profile_setting_enabled'] = '';
 	$device_profile_settings[$x]['profile_setting_description'] = '';
 
-//get the vendors
-	$sql = "select * ";
-	$sql .= "from v_device_vendors as v ";
-	$sql .= "where enabled = 'true' ";
-	$sql .= "order by name asc ";
-	$database = new database;
-	$vendors = $database->select($sql, null, 'all');
-	unset($sql);
-
-//get the vendor functions
-	$sql = "select v.name as vendor_name, f.name, f.value ";
-	$sql .= "from v_device_vendors as v, v_device_vendor_functions as f ";
-	$sql .= "where v.device_vendor_uuid = f.device_vendor_uuid ";
-	$sql .= "and v.enabled = 'true' ";
-	$sql .= "and f.enabled = 'true' ";
-	$sql .= "order by v.name asc, f.name asc ";
-	$database = new database;
-	$vendor_functions = $database->select($sql, null, 'all');
-	unset($sql);
-
-//get the vendor count
-	$vendor_count = 0;
-	foreach($device_keys as $row) {
-		if ($previous_vendor != $row['device_key_vendor']) {
-			$previous_vendor = $row['device_key_vendor'];
-			$vendor_count++;
-		}
-	}
-
 //show the header
 	require_once "resources/header.php";
 
@@ -312,22 +312,61 @@
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<table>\n";
-	echo "		<tr>\n";
-	echo "			<th class='vtablereq'>".$text['label-device_key_category']."</th>\n";
-	echo "			<th class='vtablereq'>".$text['label-device_key_id']."</th>\n";
-	echo "			<th class='vtablereq'>".$text['label-device_key_vendor']."</th>\n";
-	echo "			<th class='vtablereq'>".$text['label-device_key_type']."</th>\n";
-	echo "			<th class='vtablereq'>".$text['label-device_key_line']."</th>\n";
-	echo "			<td class='vtable'>".$text['label-device_key_value']."</td>\n";
-	echo "			<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
-	echo "			<td class='vtable'>".$text['label-device_key_protected']."</td>\n";
-	echo "			<td class='vtable'>".$text['label-device_key_label']."</td>\n";
-	echo "			<td class='vtable'>".$text['label-device_key_icon']."</td>\n";
-	echo "			<td class='vtable'></td>\n";
-	echo "		</tr>\n";
+	if ($vendor_count == 0) {
+		echo "		<tr>\n";
+		echo "			<th class='vtablereq'>".$text['label-device_key_category']."</th>\n";
+		echo "			<th class='vtablereq'>".$text['label-device_key_id']."</th>\n";
+		echo "			<th class='vtablereq'>".$text['label-device_key_vendor']."</th>\n";
+		echo "			<th class='vtablereq'>".$text['label-device_key_type']."</th>\n";
+		echo "			<th class='vtablereq'>".$text['label-device_key_line']."</th>\n";
+		echo "			<td class='vtable'>".$text['label-device_key_value']."</td>\n";
+		if (permission_exists('device_key_extension')) {
+			echo "			<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
+		}
+		if (permission_exists('device_key_protected')) {
+			echo "			<td class='vtable'>".$text['label-device_key_protected']."</td>\n";
+		}
+		echo "			<td class='vtable'>".$text['label-device_key_label']."</td>\n";
+		echo "			<td class='vtable'>".$text['label-device_key_icon']."</td>\n";
+		echo "			<td class='vtable'></td>\n";
+		echo "		</tr>\n";
+	}
 
 	$x = 0;
 	foreach($device_profile_keys as $row) {
+
+		//set the device vendor
+		$device_vendor = $row['device_key_vendor'];
+
+		//get the profile key vendor from the key type
+		foreach ($vendor_functions as $function) {
+			if ($row['profile_key_vendor'] == $function['vendor_name'] && $row['profile_key_type'] == $function['value']) {
+				$profile_key_vendor = $function['vendor_name'];
+			}
+		}
+
+		//set the column names
+		if ($previous_profile_key_vendor != $row['profile_key_vendor']) {
+			echo "			<tr>\n";
+			echo "				<td class='vtablereq'>".$text['label-device_key_category']."</td>\n";
+			echo "				<td class='vtablereq'>".$text['label-device_key_id']."</td>\n";
+			echo "				<td class='vtablereq'>".$text['label-device_vendor']."</td>\n";
+			echo "				<td class='vtablereq'>".$text['label-device_key_type']."</td>\n";
+			echo "				<td class='vtablereq'>".$text['label-device_key_line']."</td>\n";
+			echo "				<td class='vtable'>".$text['label-device_key_value']."</td>\n";
+			if (permission_exists('device_key_extension')) {
+				echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
+			}
+			if (permission_exists('device_key_protected')) {
+				echo "				<td class='vtable'>".$text['label-device_key_protected']."</td>\n";
+			}
+			echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
+			echo "				<td class='vtable'>".$text['label-device_key_icon']."</td>\n";
+			echo "				<td>&nbsp;</td>\n";
+			echo "			</tr>\n";
+		}
+
+		//show all the rows in the array
 		echo "		<tr>\n";
 		echo "			<input type='hidden' name='device_profile_keys[$x][domain_uuid]' value=\"".escape($row["domain_uuid"])."\">\n";
 		echo "			<input type='hidden' name='device_profile_keys[$x][device_profile_uuid]' value=\"".escape($row["device_profile_uuid"])."\">\n";
@@ -461,26 +500,30 @@
 		echo "			<td>\n";
 		echo "				<input class='formfld' type='text' name='device_profile_keys[$x][profile_key_value]' maxlength='255' value=\"".escape($row["profile_key_value"])."\">\n";
 		echo "			</td>\n";
-		echo "			<td>\n";
-		echo "				<input class='formfld' type='text' name='device_profile_keys[$x][profile_key_extension]' maxlength='255' value=\"".escape($row["profile_key_extension"])."\">\n";
-		echo "			</td>\n";
-		echo "			<td>\n";
-		echo "				<select class='formfld' name='device_profile_keys[$x][profile_key_protected]'>\n";
-		echo "					<option value=''></option>\n";
-		if ($row['profile_key_protected'] == "true") {
-			echo "					<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		if (permission_exists('device_key_extension')) {
+			echo "			<td>\n";
+			echo "				<input class='formfld' type='text' name='device_profile_keys[$x][profile_key_extension]' maxlength='255' value=\"".escape($row["profile_key_extension"])."\">\n";
+			echo "			</td>\n";
 		}
-		else {
-			echo "					<option value='true'>".$text['label-true']."</option>\n";
+		if (permission_exists('device_key_protected')) {
+			echo "			<td>\n";
+			echo "				<select class='formfld' name='device_profile_keys[$x][profile_key_protected]'>\n";
+			echo "					<option value=''></option>\n";
+			if ($row['profile_key_protected'] == "true") {
+				echo "					<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+			}
+			else {
+				echo "					<option value='true'>".$text['label-true']."</option>\n";
+			}
+			if ($row['profile_key_protected'] == "false") {
+				echo "					<option value='false' selected='selected'>".$text['label-false']."</option>\n";
+			}
+			else {
+				echo "					<option value='false'>".$text['label-false']."</option>\n";
+			}
+			echo "				</select>\n";
+			echo "			</td>\n";
 		}
-		if ($row['profile_key_protected'] == "false") {
-			echo "					<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-		}
-		else {
-			echo "					<option value='false'>".$text['label-false']."</option>\n";
-		}
-		echo "				</select>\n";
-		echo "			</td>\n";
 		echo "			<td>\n";
 		echo "				<input class='formfld' type='text' name='device_profile_keys[$x][profile_key_label]' maxlength='255' value=\"".escape($row["profile_key_label"])."\">\n";
 		echo "			</td>\n";
@@ -491,6 +534,11 @@
 		echo "				<a href=\"device_profile_delete.php?device_profile_key_uuid=".escape($row['device_profile_key_uuid'])."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\"><button type='button' class='btn btn-default list_control_icon'><span class='glyphicon glyphicon-remove'></span></button></a>\n";
 		echo "			</td>\n";
 		echo "		</tr>\n";
+
+		//set the previous vendor
+		$previous_profile_key_vendor = $row['profile_key_vendor'];
+
+		//increment the array key
 		$x++;
 	}
 	echo "	</table>\n";
