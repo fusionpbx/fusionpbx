@@ -108,11 +108,11 @@
 	}
 	else {
 		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (isset($sql_search)) {
 		$sql .= $sql_search;
 	}
-	$parameters['domain_uuid'] = $domain_uuid;
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
@@ -135,13 +135,14 @@
 	}
 	else {
 		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (isset($sql_search)) {
 		$sql .= $sql_search;
 	}
 	if (strlen($order_by) > 0) { $sql .= "order by $order_by $order "; }
 	$sql .= "limit :rows_per_page offset :offset ";
-	$parameters['domain_uuid'] = $domain_uuid;
+
 	$parameters['rows_per_page'] = $rows_per_page;
 	$parameters['offset'] = $offset;
 	$database = new database;
@@ -187,7 +188,6 @@
 			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='device_profiles.php?show=all';\">\n";
 		}
 	}
-
 
 	//add buttons
 	if (!isset($id)) {
