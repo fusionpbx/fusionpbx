@@ -52,9 +52,7 @@ class plugin_database {
 				//$sql .= "and domain_uuid = '".$this->domain_uuid."' ";
 			}
 			$sql .= "and (user_enabled = 'true' or user_enabled is null) ";
-			//echo $sql."<br />\n";
-			//echo "domain name: ".$this->domain_name;
-			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement = $db->prepare($sql);
 			if ($_SESSION["users"]["unique"]["text"] != "global") {
 				$prep_statement->bindParam(':domain_uuid', $this->domain_uuid);
 			}
