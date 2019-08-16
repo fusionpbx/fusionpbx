@@ -474,6 +474,7 @@
 				$array['users'][$x]['password'] = md5($salt.$password);
 				$array['users'][$x]['salt'] = $salt;
 			}
+			$array['users'][$x]['user_email'] = $user_email;
 			$array['users'][$x]['user_status'] = $user_status;
 			if (permission_exists('user_add') || permission_exists('user_edit')) {
 				$array['users'][$x]['api_key'] = ($api_key != '') ? $api_key : null;
@@ -731,6 +732,11 @@
 	echo "		</td>";
 	echo "	</tr>";
 
+	echo "	<tr>";
+	echo "		<td class='vncellreq'>".$text['label-email']."</td>";
+	echo "		<td class='vtable'><input type='text' class='formfld' name='user_email' value='".escape($user_email)."' required='required'></td>";
+	echo "	</tr>";
+
 	echo "	<tr>\n";
 	echo "	<td width='20%' class=\"vncell\" valign='top'>\n";
 	echo "		".$text['label-user_language']."\n";
@@ -874,10 +880,6 @@
 		echo "	</tr>";
 	}
 	else if ($action == 'add' && permission_exists("user_add")) {
-		echo "	<tr>";
-		echo "		<td class='vncellreq'>".$text['label-email']."</td>";
-		echo "		<td class='vtable'><input type='text' class='formfld' name='user_email' value='".escape($user_email)."' ".($action == 'add' ? "required='required'" : null)."></td>";
-		echo "	</tr>";
 		echo "	<tr>";
 		echo "		<td class='vncell'>".$text['label-first_name']."</td>";
 		echo "		<td class='vtable'><input type='text' class='formfld' name='contact_name_given' value='".escape($contact_name_given)."'></td>";
