@@ -213,6 +213,9 @@
 	//echo "	<th style='width:30px;'>\n";
 	//echo "		<input type='checkbox' name='checkbox_all' id='checkbox_all' value='' onclick=\"checkbox_toggle();\">\n";
 	//echo "	</th>\n";
+	if ($_GET['show'] == "all" && permission_exists('device_profile_all')) {
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param);
+	}
 	echo th_order_by('device_profile_name', $text['label-device_profile_name'], $order_by, $order);
 	echo th_order_by('device_profile_enabled', $text['label-device_profile_enabled'], $order_by, $order);
 	echo th_order_by('device_profile_description', $text['label-device_profile_description'], $order_by, $order);
@@ -237,6 +240,15 @@
 			//echo "		<input type='checkbox' name=\"device_profiles[$x][checked]\" id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$x."').checked = false; }\">\n";
 			//echo "		<input type='hidden' name=\"device_profiles[$x][device_profile_uuid]\" value='".escape($row['device_profile_uuid'])."' />\n";
 			//echo "	</td>\n";
+			if ($_GET['show'] == "all" && permission_exists('device_profile_all')) {
+				if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
+					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
+				}
+				else {
+					$domain = $text['label-global'];
+				}
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($domain)."</td>\n";
+			}
 			echo "	<td valign='top' class='".$row_style[$c]."' style=''>".escape($row['device_profile_name'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' style=''>".escape($row['device_profile_enabled'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg' style=''>".escape($row['device_profile_description'])."&nbsp;</td>\n";
