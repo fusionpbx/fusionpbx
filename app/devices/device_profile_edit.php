@@ -63,6 +63,14 @@
 			$device_profile_enabled = $_POST["device_profile_enabled"];
 			$device_profile_description = $_POST["device_profile_description"];
 
+		//set the domain_uuid for users that do not have the permission
+			if (permission_exists('device_profile_domain')) {
+				$domain_uuid = $_POST["domain_uuid"];
+			}
+			else if ($action == 'add') {
+				$domain_uuid = $_SESSION['domain_uuid'];
+			}
+
 		//check for all required data
 			$msg = '';
 			if (strlen($device_profile_name) == 0) { $msg .= $text['message-required']." ".$text['label-device_profile_name']."<br>\n"; }
