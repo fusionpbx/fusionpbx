@@ -165,7 +165,9 @@
 	echo th_order_by('extension', $text['label-extension'], $order_by, $order);
 	echo th_order_by('call_group', $text['label-call_group'], $order_by, $order);
 	//echo th_order_by('voicemail_mail_to', $text['label-voicemail_mail_to'], $order_by, $order);
-	echo th_order_by('user_context', $text['label-user_context'], $order_by, $order);
+	if (permission_exists("extension_user_context")) {
+		echo th_order_by('user_context', $text['label-user_context'], $order_by, $order);
+	}
 	if (permission_exists('extension_registered')) {
 		echo "<th>".$text['label-is_registered']."</th>\n";
  	}
@@ -207,8 +209,9 @@
 			echo "</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_group'])."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['voicemail_mail_to']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['user_context'])."</td>\n";
-
+			if (permission_exists("extension_user_context")) {
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['user_context'])."</td>\n";
+			}
 			if (permission_exists('extension_registered')) {
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
 				$extension_number = $row['extension'].'@'.$_SESSION['domain_name'];
