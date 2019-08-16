@@ -35,11 +35,11 @@
 	$text = $language->get();
 
 //get user uuid
-	if (is_uuid($_REQUEST["id"]) && (permission_exists('user_edit') || $_REQUEST["id"] == $_SESSION['user_uuid'])) {
+	if ((is_uuid($_REQUEST["id"]) && permission_exists('user_edit')) || (is_uuid($_REQUEST["id"]) && $_REQUEST["id"] == $_SESSION['user_uuid']))  {
 		$user_uuid = $_REQUEST["id"];
 		$action = 'edit';
 	}
-	else if (permission_exists('user_add') && !is_uuid($_REQUEST["id"])) {
+	elseif (permission_exists('user_add') && !isset($_REQUEST["id"])) {
 		$user_uuid = uuid();
 		$action = 'add';
 	}
