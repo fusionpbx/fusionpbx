@@ -74,7 +74,7 @@
 	echo "		</td>\n";
 	echo "		<td valign='top' style='text-align: right; white-space: nowrap;'>\n";
 	if ($_SESSION['theme']['menu_style']['text'] != 'side') {
-		echo "		".$text['label-welcome']." <a href='".PROJECT_PATH."/core/users/user_edit.php?id=".$_SESSION['user_uuid']."'>".$_SESSION["username"]."</a>";
+		echo "		".$text['label-welcome']." <a href='".PROJECT_PATH."/core/users/user_edit.php?id=user'>".$_SESSION["username"]."</a>";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
