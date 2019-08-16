@@ -121,6 +121,7 @@
 			$username = $_POST["username"];
 			$password = $_POST["password"];
 			$password_confirm = $_POST["password_confirm"];
+			$user_email = $_POST["user_email"];
 			$user_status = $_POST["user_status"];
 			$user_language = $_POST["user_language"];
 			$user_time_zone = $_POST["user_time_zone"];
@@ -128,7 +129,6 @@
 				$contact_uuid = $_POST["contact_uuid"];
 			}
 			else if (permission_exists('user_add') && $action == 'add') {
-				$user_email = $_POST["user_email"];
 				$contact_organization = $_POST["contact_organization"];
 				$contact_name_given = $_POST["contact_name_given"];
 				$contact_name_family = $_POST["contact_name_family"];
@@ -581,6 +581,7 @@
 				$domain_uuid = $row["domain_uuid"];
 				$user_uuid = $row["user_uuid"];
 				$username = $row["username"];
+				$user_email = $row["user_email"];
 				$api_key = $row["api_key"];
 				$user_enabled = $row["user_enabled"];
 				$contact_uuid = $row["contact_uuid"];
