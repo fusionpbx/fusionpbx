@@ -106,8 +106,8 @@
 		$broadcast_avmd = $_POST["broadcast_avmd"];
 		$broadcast_destination_data = $_POST["broadcast_destination_data"];
 
-		if (if_group("superadmin")){
-			$broadcast_accountcode = $_POST["broadcast_accountcode"])
+		if (if_group("superadmin")) {
+			$broadcast_accountcode = $_POST["broadcast_accountcode"];
 		}
 		else if (if_group("admin") && file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
 			$sql = "select count(*) ";
