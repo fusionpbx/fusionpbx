@@ -36,9 +36,16 @@
 --include config.lua
 	require "resources.functions.config";
 
---connect to the database
+--add functions
+	require "resources.functions.mkdir";
+	require "resources.functions.explode";
+
+--load libraries
 	local Database = require "resources.functions.database";
-	dbh = Database.new('system');
+	local Settings = require "resources.functions.lazy_settings";
+
+--setup the database connection
+	local db = dbh or Database.new('system');
 
 --include json library
 	local json
@@ -49,41 +56,34 @@
 --get the domain_uuid
 	domain_uuid = session:getVariable("domain_uuid");
 
---add functions
-	require "resources.functions.mkdir";
-	require "resources.functions.explode";
-
 --initialize the recordings
 	api = freeswitch.API();
 
---settings
-	require "resources.functions.settings";
-	settings = settings(domain_uuid);
-	storage_type = "";
-	storage_path = "";
-	if (settings['recordings'] ~= nil) then
-		if (settings['recordings']['storage_type'] ~= nil) then
-			if (settings['recordings']['storage_type']['text'] ~= nil) then
-				storage_type = settings['recordings']['storage_type']['text'];
-			end
-		end
-		if (settings['recordings']['storage_path'] ~= nil) then
-			if (settings['recordings']['storage_path']['text'] ~= nil) then
-				storage_path = settings['recordings']['storage_path']['text'];
-				storage_path = storage_path:gsub("${domain_name}",  session:getVariable("domain_name"));
-				storage_path = storage_path:gsub("${domain_uuid}", domain_uuid);
-			end
-		end
+--load libraries
+	local Database = require "resources.functions.database";
+	local Settings = require "resources.functions.lazy_settings";
+
+--setup the database connection
+	local db = dbh or Database.new('system');
+
+--get the recordings settings
+	local settings = Settings.new(db, domain_name, domain_uuid);
+
+--set the storage type and path
+	storage_type = settings:get('recordings', 'storage_type', 'text') or '';
+	storage_path = settings:get('recordings', 'storage_path', 'text') or '';
+	if (storage_path ~= '') then
+		storage_path = storage_path:gsub("${domain_name}",  session:getVariable("domain_name"));
+		storage_path = storage_path:gsub("${domain_uuid}", domain_uuid);
 	end
-	if (not temp_dir) or (#temp_dir == 0) then
-		if (settings['server'] ~= nil) then
-			if (settings['server']['temp'] ~= nil) then
-				if (settings['server']['temp']['dir'] ~= nil) then
-					temp_dir = settings['server']['temp']['dir'];
-				end
-			end
-		end
-	end
+
+--set the recordings variables
+	local recording_max_length = settings:get('recordings', 'recording_max_length', 'numeric') or 90;
+	local recording_silence_threshold = settings:get('recordings', 'recording_silence_threshold', 'numeric') or 200;
+	local recording_silence_seconds = settings:get('recordings', 'recording_silence_seconds', 'numeric') or 3;
+
+--set the temp directory
+	temp_dir = settings:get('server', 'temp', 'dir') or nil;
 
 --dtmf call back function detects the "#" and ends the call
 	function onInput(s, type, obj)
