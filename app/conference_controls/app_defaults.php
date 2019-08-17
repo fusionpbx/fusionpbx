@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016
+	Portions created by the Initial Developer are Copyright (C) 2016-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -89,17 +89,17 @@
 
 							//add the coference profile params
 								$conference_control_detail_uuid = uuid();
-								$array['conference_contro_details'][0]['conference_control_uuid'] = $conference_control_uuid;
-								$array['conference_contro_details'][0]['conference_control_detail_uuid'] = $conference_control_detail_uuid;
-								$array['conference_contro_details'][0]['control_digits'] = $control_digits;
-								$array['conference_contro_details'][0]['control_action'] = $control_action;
+								$array['conference_control_details'][0]['conference_control_uuid'] = $conference_control_uuid;
+								$array['conference_control_details'][0]['conference_control_detail_uuid'] = $conference_control_detail_uuid;
+								$array['conference_control_details'][0]['control_digits'] = $control_digits;
+								$array['conference_control_details'][0]['control_action'] = $control_action;
 								if (strlen($control_data) > 0) {
-									$array['conference_contro_details'][0]['control_data'] = $control_data;
+									$array['conference_control_details'][0]['control_data'] = $control_data;
 								}
-								$array['conference_contro_details'][0]['control_enabled'] = $control_enabled;
+								$array['conference_control_details'][0]['control_enabled'] = $control_enabled;
 
 								$p = new permissions;
-								$p->add('conference_contro_detail_add', 'temp');
+								$p->add('conference_control_detail_add', 'temp');
 
 								$database = new database;
 								$database->app_name = 'conference_controls';
@@ -107,7 +107,7 @@
 								$database->save($array);
 								unset($array);
 
-								$p->delete('conference_contro_detail_add', 'temp');
+								$p->delete('conference_control_detail_add', 'temp');
 
 						}
 
