@@ -36,7 +36,7 @@
 		--get the voicemail settings
 			local settings = Settings.new(db, domain_name, domain_uuid)
 
-		--set the maximum greeeting length
+		--set the maximum greeting length
 			local greeting_max_length = settings:get('voicemail', 'greeting_max_length', 'numeric') or 90;
 			local greeting_silence_threshold = settings:get('voicemail', 'greeting_silence_threshold', 'numeric') or 200;
 			local greeting_silence_seconds = settings:get('voicemail', 'greeting_silence_seconds', 'numeric') or 3;
