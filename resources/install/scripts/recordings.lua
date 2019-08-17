@@ -111,8 +111,8 @@
 			silence_thresh = session:getVariable("silence_thresh");
 			silence_hits = session:getVariable("silence_hits");
 			if (not time_limit_secs) then time_limit_secs = '10800'; end
-			if (not default_dialect) then default_dialect = '200'; end
-			if (not default_voice) then default_voice = '10'; end
+			if (not silence_thresh) then silence_thresh = '200'; end
+			if (not silence_hits) then silence_hits = '10'; end
 
 		--select the recording number and set the recording name
 			if (recording_id == nil) then
