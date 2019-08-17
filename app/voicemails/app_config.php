@@ -170,7 +170,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "300";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Seconds of silence to end the recording for the voicemail message (in seconds).";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Seconds of silence to end the recording for the voicemail message.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "bfe802b1-fcad-41a3-9da2-6b0efdb0c05f";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "voicemail";
@@ -202,7 +202,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Seconds of silence to end the recording for the voicemail greeting (in seconds).";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Seconds of silence to end the recording for the voicemail greeting.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "dd09f9d8-6662-4270-9dac-b87191b77012";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "voicemail";
