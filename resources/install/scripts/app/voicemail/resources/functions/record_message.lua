@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2019 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -63,7 +63,6 @@
 			if (debug["info"]) then
 				freeswitch.consoleLog("notice", "[voicemail] transcribe_provider: " .. transcribe_provider .. "\n");
 				freeswitch.consoleLog("notice", "[voicemail] transcribe_language: " .. transcribe_language .. "\n");
-
 			end
 
 			if (transcribe_provider == "microsoft") then
@@ -255,16 +254,20 @@
 
 --save the recording
 	function record_message()
-		local db = dbh or Database.new('system')
-		local settings = Settings.new(db, domain_name, domain_uuid)
+		
+		--set the variables
+			local db = dbh or Database.new('system')
+			local settings = Settings.new(db, domain_name, domain_uuid)
+			local message_max_length = settings:get('voicemail', 'message_max_length', 'numeric') or 300;
+			local message_silence_threshold = settings:get('voicemail', 'message_silence_threshold', 'numeric') or 200;
+			local message_silence_seconds = settings:get('voicemail', 'message_silence_seconds', 'numeric') or 3;
+			transcribe_enabled = settings:get('voicemail', 'transcribe_enabled', 'boolean') or "false";
 
-		local max_len_seconds = settings:get('voicemail', 'message_max_length', 'numeric') or 300;
-		transcribe_enabled = settings:get('voicemail', 'transcribe_enabled', 'boolean') or "false";
-
-		if (debug["info"]) then
-			freeswitch.consoleLog("notice", "[voicemail] transcribe_enabled: " .. transcribe_enabled .. "\n");
-			freeswitch.consoleLog("notice", "[voicemail] voicemail_transcription_enabled: " .. voicemail_transcription_enabled .. "\n");
-		end
+		--debug information
+			if (debug["info"]) then
+				freeswitch.consoleLog("notice", "[voicemail] transcribe_enabled: " .. transcribe_enabled .. "\n");
+				freeswitch.consoleLog("notice", "[voicemail] voicemail_transcription_enabled: " .. voicemail_transcription_enabled .. "\n");
+			end
 
 		--record your message at the tone press any key or stop talking to end the recording
 			if (skip_instructions == "true") then
@@ -389,9 +392,8 @@
 
 		--save the recording
 			-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs)
-			silence_seconds = 5;
 			if (storage_path == "http_cache") then
-				result = session:recordFile(storage_path.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, max_len_seconds, record_silence_threshold, silence_seconds);
+				result = session:recordFile(storage_path.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, message_max_length, message_silence_threshold, message_silence_seconds);
 			else
 				mkdir(voicemail_dir.."/"..voicemail_id);
 				if (vm_message_ext == "mp3") then
@@ -399,10 +401,10 @@
 					if (shout_exists == "true" and transcribe_enabled == "false") or (shout_exists == "true" and transcribe_enabled == "true" and voicemail_transcription_enabled == "false") then
 						freeswitch.consoleLog("notice", "using mod_shout for mp3 encoding\n");
 						--record in mp3 directly
-							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3", max_len_seconds, record_silence_threshold, silence_seconds);
+							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3", message_max_length, message_silence_threshold, message_silence_seconds);
 					else
 						--create initial wav recording
-							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", max_len_seconds, record_silence_threshold, silence_seconds);
+							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", message_max_length, message_silence_threshold, message_silence_seconds);
 							if (transcribe_enabled == "true" and voicemail_transcription_enabled == "true") then
 								transcription = transcribe(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav",settings,start_epoch);
 							end
@@ -424,7 +426,7 @@
 							end
 					end
 				else
-					result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, max_len_seconds, record_silence_threshold, silence_seconds);
+					result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, message_max_length, message_silence_threshold, message_silence_seconds);
 					if (transcribe_enabled == "true" and voicemail_transcription_enabled == "true") then
 						transcription = transcribe(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext,settings,start_epoch);
 					end
