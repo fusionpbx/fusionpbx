@@ -43,27 +43,26 @@
 	$text = $language->get();
 
 //set the variables
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
-	$search = check_str($_GET["search"]);
-
-//sterilize the user data
-	$order_by = preg_replace('/\s+/', '', $order_by);
-	if (!(strtolower($order) == "asc" or strtolower($order) == "desc")) { $order = ''; }
-	if (strlen($search) > 15) {	$search = substr($search, 0, 15); }
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
+	$search = $_GET["search"];
 
 //set the voicemail id and voicemail uuid arrays
-	if (isset($_SESSION['user']['extension'])) foreach ($_SESSION['user']['extension'] as $index => $row) {
-		if (strlen($row['number_alias']) > 0) {
-			$voicemail_ids[$index]['voicemail_id'] = $row['number_alias'];
-		}
-		else {
-			$voicemail_ids[$index]['voicemail_id'] = $row['user'];
+	if (isset($_SESSION['user']['extension'])) {
+		foreach ($_SESSION['user']['extension'] as $index => $row) {
+			if (strlen($row['number_alias']) > 0) {
+				$voicemail_ids[$index]['voicemail_id'] = $row['number_alias'];
+			}
+			else {
+				$voicemail_ids[$index]['voicemail_id'] = $row['user'];
+			}
 		}
 	}
-	if (isset($_SESSION['user']['voicemail'])) foreach ($_SESSION['user']['voicemail'] as $row) {
-		if (strlen($row['voicemail_uuid']) > 0) {
-			$voicemail_uuids[]['voicemail_uuid'] = $row['voicemail_uuid'];
+	if (isset($_SESSION['user']['voicemail'])) {
+		foreach ($_SESSION['user']['voicemail'] as $row) {
+			if (strlen($row['voicemail_uuid']) > 0) {
+				$voicemail_uuids[]['voicemail_uuid'] = $row['voicemail_uuid'];
+			}
 		}
 	}
 
@@ -72,47 +71,37 @@
 	require_once "resources/paging.php";
 
 //prepare to page the results
-	$sql = "SELECT count(*) AS num_rows FROM v_voicemails ";
-	$sql .= "WHERE domain_uuid = '$domain_uuid' ";
+	$sql = "select count(*) from v_voicemails ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	if (strlen($search) > 0) {
 		$sql .= "and (";
-		$sql .= "	CAST(voicemail_id AS TEXT) LIKE '%".$search."%' ";
-		$sql .= " 	OR voicemail_mail_to LIKE '%".$search."%' ";
-		$sql .= " 	OR voicemail_local_after_email LIKE '%".$search."%' ";
-		$sql .= " 	OR voicemail_enabled LIKE '%".$search."%' ";
-		$sql .= " 	OR voicemail_description LIKE '%".$search."%' ";
+		$sql .= "	lower(cast(voicemail_id as text)) like :search ";
+		$sql .= " 	or lower(voicemail_mail_to) like :search ";
+		$sql .= " 	or lower(voicemail_local_after_email) like :search ";
+		$sql .= " 	or lower(voicemail_enabled like) :search ";
+		$sql .= " 	or lower(voicemail_description) like :search ";
 		$sql .= ") ";
+		$parameters['search'] = '%'.strtolower($search).'%';
 	}
 	if (!permission_exists('voicemail_delete')) {
-		$x = 0;
-		if (count($voicemail_uuids) > 0) {
+		if (is_array($voicemail_uuids) && @sizeof($voicemail_uuids) != 0) {
 			$sql .= "and (";
-			foreach($voicemail_uuids as $row) {
-				if ($x == 0) {
-					$sql .= "voicemail_uuid = '".$row['voicemail_uuid']."' ";
-				}
-				else {
-					$sql .= " OR voicemail_uuid = '".$row['voicemail_uuid']."'";
-				}
-				$x++;
+			foreach ($voicemail_uuids as $x => $row) {
+				$sql_where_or[] = 'voicemail_uuid = :voicemail_uuid_'.$x;
+				$parameters['voicemail_uuid_'.$x] = $row['voicemail_uuid'];
+			}
+			if (is_array($sql_where_or) && @sizeof($sql_where_or) != 0) {
+				$sql .= implode(' or ', $sql_where_or);
 			}
 			$sql .= ")";
 		}
 		else {
-			$sql .= "AND voicemail_uuid IS NULL ";
+			$sql .= "and voicemail_uuid is null ";
 		}
 	}
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-	$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-	}
+	$parameters['domain_uuid'] = $domain_uuid;
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -124,18 +113,12 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*) AS num_rows', '*', $sql);
-	if (strlen($order_by) > 0) {
-		$sql .= ($order_by == 'voicemail_id') ? "ORDER BY voicemail_id ".$order." " : "ORDER BY ".$order_by." ".$order." ";
-	}
-	else {
-		$sql .= "ORDER BY voicemail_id ASC ";
-	}
-	$sql .= "LIMIT ".$rows_per_page." OFFSET ".$offset." ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$voicemails = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$sql = str_replace('count(*)', '*', $sql);
+	$sql .= order_by($order_by, $order, 'voicemail_id', 'asc');
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$voicemails = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
@@ -187,9 +170,8 @@
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	if ($num_rows > 0) {
-
-		foreach($voicemails as $row) {
+	if (is_array($voicemails) && @sizeof($voicemails) != 0) {
+		foreach ($voicemails as $row) {
 			$tr_link = (permission_exists('voicemail_edit')) ? "href='voicemail_edit.php?id=".escape($row['voicemail_uuid'])."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			if (permission_exists('voicemail_delete')) {
@@ -232,11 +214,10 @@
 			echo "</tr>\n";
 			$c = ($c) ? 0 : 1;
 		}
-		unset($voicemails, $row);
-
 	}
+	unset($voicemails, $row);
 
-	if ($num_rows > 0) {
+	if (is_array($voicemails) && @sizeof($voicemails) != 0) {
 		echo "<tr>\n";
 		echo "	<td colspan='20' class='list_control_icons'>\n";
 		if (permission_exists('voicemail_add')) {
