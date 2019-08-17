@@ -95,7 +95,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "300";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Maximum length of a recording (in seconds).";
-		$y=0;
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a1e837c6-e5bf-460f-aa7e-9b35d53d015a";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "recordings";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "recording_silence_threshold";
@@ -103,7 +103,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "200";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Energy level below this number is considered silence.";
-		$y=0;
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4db91322-83c1-4c6a-8966-f8db0b84cdcd";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "recordings";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "recording_silence_seconds";
