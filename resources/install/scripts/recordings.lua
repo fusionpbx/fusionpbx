@@ -163,7 +163,7 @@
 			else
 				freeswitch.consoleLog("notice", "[recordings] ".. storage_type .. " ".. recordings_dir .."\n");
 				-- record,Record File,<path> [<time_limit_secs>] [<silence_thresh>] [<silence_hits>]
-				session:execute("record", "'"..recordings_dir.."/"..recording_name.."' "..time_limit_secs.." "..silence_thresh.." "..silence_hits.."");
+				session:execute("record", "'"..recordings_dir.."/"..recording_name.."' "..time_limit_secs.." "..silence_thresh.." "..silence_hits);
 			end
 
 		--get the description of the previous recording
