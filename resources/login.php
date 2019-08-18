@@ -30,7 +30,7 @@
 
 //get action, if any
 	if (isset($_REQUEST['action'])) {
-		$action = check_str($_REQUEST['action']);
+		$action = $_REQUEST['action'];
 	}
 
 //retrieve parse reset key
@@ -42,7 +42,7 @@
 		$password_submitted = $key_part[2];
 		//get current salt, see if same as submitted salt
 		$sql = "select password from v_users where domain_uuid = :domain_uuid and username = :username ";
-		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement = $db->prepare($sql);
 		$prep_statement->bindParam(':domain_uuid', $domain_uuid);
 		$prep_statement->bindParam(':username', $username);
 		$prep_statement->execute();
@@ -64,7 +64,7 @@
 //send password reset link
 	if ($action == 'request') {
 		if (valid_email($_REQUEST['email'])) {
-			$email = check_str($_REQUEST['email']);
+			$email = $_REQUEST['email'];
 			//see if email exists
 			$sql = "select ";
 			$sql .= "u.username, ";
@@ -76,8 +76,9 @@
 			$sql .= "e.domain_uuid = u.domain_uuid ";
 			$sql .= "and e.contact_uuid = u.contact_uuid ";
 			$sql .= "and e.email_address = :email ";
-			$sql .= "and e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
+			$sql .= "and e.domain_uuid = :domain_uuid ";
+			$prep_statement = $db->prepare($sql);
+			$prep_statement->bindParam(':domain_uuid', $_SESSION['domain_uuid']);
 			$prep_statement->bindParam(':email', $email);
 			$prep_statement->execute();
 			$result = $prep_statement->fetch(PDO::FETCH_NAMED);
@@ -99,7 +100,7 @@
 				$sql .= "and template_subcategory = 'default' ";
 				$sql .= "and template_type = 'html' ";
 				$sql .= "and template_enabled = 'true' ";
-				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement = $db->prepare($sql);
 				$prep_statement->execute();
 				$row = $prep_statement->fetch(PDO::FETCH_NAMED);
 				$eml_subject = $row['template_subject'];
@@ -134,10 +135,10 @@
 
 //reset password
 	if ($action == 'reset') {
-		$authorized_username = check_str($_REQUEST['au']);
-		$username = check_str($_REQUEST['username']);
-		$password_new = check_str($_REQUEST['password_new']);
-		$password_repeat = check_str($_REQUEST['password_repeat']);
+		$authorized_username = $_REQUEST['au'];
+		$username = $_REQUEST['username'];
+		$password_new = $_REQUEST['password_new'];
+		$password_repeat = $_REQUEST['password_repeat'];
 
 		if ($username != '' &&
 			$authorized_username == hash('sha256',$_SESSION['login']['password_reset_key']['text'].$username) &&
@@ -154,9 +155,10 @@
 				$sql  = "update v_users set ";
 				$sql .= "password = :password, ";
 				$sql .= "salt = :salt ";
-				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				$sql .= "where domain_uuid = :domain_uuid ";
 				$sql .= "and username = :username ";
-				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement = $db->prepare($sql);
+				$prep_statement->bindParam(':domain_uuid', $_SESSION['domain_uuid']);
 				$prep_statement->bindParam(':password', md5($salt.$password_new));
 				$prep_statement->bindParam(':salt', $salt);
 				$prep_statement->bindParam(':username', $username);
@@ -176,7 +178,7 @@
 	}
 
 //get the http values and set as variables
-	$msg = isset($_GET["msg"]) ? check_str($_GET["msg"]) : null;
+	$msg = isset($_GET["msg"]) ? $_GET["msg"] : null;
 
 //set variable if not set
 	if (!isset($_SESSION['login']['domain_name_visible']['boolean'])) { $_SESSION['login']['domain_name_visible']['boolean'] = null; }
