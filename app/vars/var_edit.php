@@ -151,7 +151,7 @@
 		$var_uuid = $_GET["id"];
 		$sql = "select * from v_vars ";
 		$sql .= "where var_uuid = :var_uuid ";
-		$parameters['something'] = $var_uuid;
+		$parameters['var_uuid'] = $var_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
