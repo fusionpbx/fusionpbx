@@ -76,6 +76,8 @@
 		$sql_where .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
+	$sql_where .= "and group_level <= :group_level ";
+	$parameters['group_level'] = $_SESSION['user']['group_level'];
 
 //get the user count from the database
 	$sql = "select count(*) from view_users as u ";
@@ -96,7 +98,8 @@
 	$offset = $rows_per_page * $page;
 
 //get the users from the database
-	$sql = "select u.domain_uuid, u.user_uuid, u.contact_uuid, u.domain_name, u.username, u.user_enabled, u.contact_organization, u.contact_name_given, u.contact_name_family, u.groups ";
+	$sql = "select u.domain_uuid, u.user_uuid, u.contact_uuid, u.domain_name, u.username, u.user_enabled, ";
+	$sql .= "u.contact_organization, u.contact_name_given, u.contact_name_family, u.groups, u.group_level ";
 	$sql .= "from view_users as u ";
 	$sql .= $sql_where;
 	$sql .= order_by($order_by, $order);
