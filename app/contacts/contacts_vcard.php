@@ -57,13 +57,13 @@ if (is_array($_GET) && @sizeof($_GET) != 0) {
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$contact_type = $row["contact_type"];
-			$contact_organization = escape($row["contact_organization"]);
-			$contact_name_given = escape($row["contact_name_given"]);
-			$contact_name_family = escape($row["contact_name_family"]);
-			$contact_nickname = escape($row["contact_nickname"]);
-			$contact_title = escape($row["contact_title"]);
-			$contact_role = escape($row["contact_role"]);
-			$contact_time_zone = escape($row["contact_time_zone"]);
+			$contact_organization = $row["contact_organization"];
+			$contact_name_given = $row["contact_name_given"];
+			$contact_name_family = $row["contact_name_family"];
+			$contact_nickname = $row["contact_nickname"];
+			$contact_title = $row["contact_title"];
+			$contact_role = $row["contact_role"];
+			$contact_time_zone = $row["contact_time_zone"];
 			$contact_note = $row["contact_note"];
 		}
 		unset($sql, $parameters, $row);
@@ -84,7 +84,7 @@ if (is_array($_GET) && @sizeof($_GET) != 0) {
 		if (is_array($result) && @sizeof($result) != 0) {
 			$e = 0;
 			foreach ($result as &$row) {
-				$vcard->data['email'.$e] = escape($row["email_address"]);
+				$vcard->data['email'.$e] = $row["email_address"];
 				if (++$e == 2) { break; } //limit to 2 rows
 			}
 		}
@@ -99,7 +99,7 @@ if (is_array($_GET) && @sizeof($_GET) != 0) {
 		$parameters['contact_uuid'] = $contact_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'column');
-		$vcard->data['url'] = escape($row["url_address"]);
+		$vcard->data['url'] = $row["url_address"];
 		unset($sql, $parameters, $row);
 
 
@@ -154,13 +154,13 @@ if (is_array($_GET) && @sizeof($_GET) != 0) {
 			$result = $database->select($sql, $parameters, 'all');
 			if (is_array($result) && @sizeof($result) != 0) {
 				foreach ($result as &$row) {
-					$address_type = escape($row["address_type"]);
-					$address_street = escape($row["address_street"]);
-					$address_extended = escape($row["address_extended"]);
-					$address_locality = escape($row["address_locality"]);
-					$address_region = escape($row["address_region"]);
-					$address_postal_code = escape($row["address_postal_code"]);
-					$address_country = escape($row["address_country"]);
+					$address_type = $row["address_type"];
+					$address_street = $row["address_street"];
+					$address_extended = $row["address_extended"];
+					$address_locality = $row["address_locality"];
+					$address_region = $row["address_region"];
+					$address_postal_code = $row["address_postal_code"];
+					$address_country = $row["address_country"];
 					$address_latitude = $row["address_latitude"];
 					$address_longitude = $row["address_longitude"];
 					$address_type = strtolower(trim($address_type));
