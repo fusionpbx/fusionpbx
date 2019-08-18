@@ -75,9 +75,7 @@
 	}
 	$sql_where .= "and ( ";
 	$sql_where .= "	group_level <= :group_level ";
-	if (permission_exists('user_all')) {
-		$sql_where .= "	or group_level is null ";
-	}
+	$sql_where .= "	or group_level is null ";
 	$sql_where .= ") ";
 	$parameters['group_level'] = $_SESSION['user']['group_level'];
 
