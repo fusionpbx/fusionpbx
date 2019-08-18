@@ -57,9 +57,6 @@
 		$search = strtolower($search);
 	}
 
-//get the list of superadmins
-	$superadmins = superadmin_list($db);
-
 //common where clause
 	$sql_where = "where true ";
 	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
@@ -174,58 +171,54 @@
 
 	if (is_array($users) && sizeof($users) != 0) {
 		foreach($users as $row) {
-			if (if_superadmin($superadmins, $row['user_uuid']) && !if_group("superadmin")) {
-				//hide
-			} else {
-				$tr_link = (permission_exists('user_edit')) ? "href='user_edit.php?id=".escape($row['user_uuid'])."'" : null;
-				echo "<tr ".$tr_link.">\n";
-				if (permission_exists('user_all') && $_GET['show'] == 'all') {
-					echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['domain_name'])."</td>\n";
-				}
-				echo "	<td valign='top' class='".$row_style[$c]."'>";
-				if (permission_exists('user_edit')) {
-					echo "<a href='user_edit.php?id=".escape($row['user_uuid'])."'>".escape($row['username'])."</a>";
-				}
-				else {
-					echo escape($row['username']);
-				}
-				echo "	</td>\n";
-				echo "	<td valign='top' class='".$row_style[$c]."'>\n";
-				echo "		".$row['groups']."&nbsp;\n";
-				echo "	</td>\n";
-
-				echo "	<td class='".$row_style[$c]."'><a href='/app/contacts/contact_edit.php?id=".$row['contact_uuid']."'>".$row['contact_organization']."</a> &nbsp;</td>\n";
-				echo "	<td class='".$row_style[$c]."'><a href='/app/contacts/contact_edit.php?id=".$row['contact_uuid']."'>".$row['contact_name_given']." ".$row['contact_name_family']."</a> &nbsp;</td>\n";
-
-				echo "	<td class='".$row_style[$c]."'>\n";
-				if (permission_exists('ticket_edit')) {
-					echo "		<a href='/app/tickets/tickets.php?user_uuid=".$row['user_uuid']."'><span class='glyphicon glyphicon-tags' title='".$text['label-tickets']."'></span></a>\n";
-				}
-				echo "	</td>\n";
-				echo "	<td valign='top' class='".$row_style[$c]."'>";
-				if ($row['user_enabled'] == 'true') {
-					echo $text['option-true'];
-				}
-				else {
-					echo $text['option-false'];
-				}
-				echo "&nbsp;</td>\n";
-				echo "	<td valign='top' align='right' class='tr_link_void'>";
-				if (permission_exists('user_edit')) {
-					echo "<a href='user_edit.php?id=".$row['user_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
-				}
-				if (permission_exists('user_delete')) {
-					if ($_SESSION["user"]["user_uuid"] != $row['user_uuid']) {
-						echo "<a href='user_delete.php?id=".$row['user_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
-					}
-					else {
-						echo "<span onclick=\"alert('".$text['message-cannot_delete_own_account']."');\">".str_replace("list_control_icon", "list_control_icon_disabled", $v_link_label_delete)."</span>";
-					}
-				}
-				echo "	</td>\n";
-				echo "</tr>\n";
-				$c = $c == 0 ? 1 : 0;
+			$tr_link = (permission_exists('user_edit')) ? "href='user_edit.php?id=".escape($row['user_uuid'])."'" : null;
+			echo "<tr ".$tr_link.">\n";
+			if (permission_exists('user_all') && $_GET['show'] == 'all') {
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['domain_name'])."</td>\n";
 			}
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			if (permission_exists('user_edit')) {
+				echo "<a href='user_edit.php?id=".escape($row['user_uuid'])."'>".escape($row['username'])."</a>";
+			}
+			else {
+				echo escape($row['username']);
+			}
+			echo "	</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
+			echo "		".$row['groups']."&nbsp;\n";
+			echo "	</td>\n";
+
+			echo "	<td class='".$row_style[$c]."'><a href='/app/contacts/contact_edit.php?id=".$row['contact_uuid']."'>".$row['contact_organization']."</a> &nbsp;</td>\n";
+			echo "	<td class='".$row_style[$c]."'><a href='/app/contacts/contact_edit.php?id=".$row['contact_uuid']."'>".$row['contact_name_given']." ".$row['contact_name_family']."</a> &nbsp;</td>\n";
+
+			echo "	<td class='".$row_style[$c]."'>\n";
+			if (permission_exists('ticket_edit')) {
+				echo "		<a href='/app/tickets/tickets.php?user_uuid=".$row['user_uuid']."'><span class='glyphicon glyphicon-tags' title='".$text['label-tickets']."'></span></a>\n";
+			}
+			echo "	</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			if ($row['user_enabled'] == 'true') {
+				echo $text['option-true'];
+			}
+			else {
+				echo $text['option-false'];
+			}
+			echo "&nbsp;</td>\n";
+			echo "	<td valign='top' align='right' class='tr_link_void'>";
+			if (permission_exists('user_edit')) {
+				echo "<a href='user_edit.php?id=".$row['user_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+			}
+			if (permission_exists('user_delete')) {
+				if ($_SESSION["user"]["user_uuid"] != $row['user_uuid']) {
+					echo "<a href='user_delete.php?id=".$row['user_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+				}
+				else {
+					echo "<span onclick=\"alert('".$text['message-cannot_delete_own_account']."');\">".str_replace("list_control_icon", "list_control_icon_disabled", $v_link_label_delete)."</span>";
+				}
+			}
+			echo "	</td>\n";
+			echo "</tr>\n";
+			$c = $c == 0 ? 1 : 0;
 		}
 		unset($users, $row);
 	}
