@@ -73,7 +73,12 @@
 		$sql_where .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$sql_where .= "and group_level <= :group_level ";
+	$sql_where .= "and ( ";
+	$sql_where .= "	group_level <= :group_level ";
+	if (permission_exists('user_all')) {
+		$sql_where .= "	or group_level is null ";
+	}
+	$sql_where .= ") ";
 	$parameters['group_level'] = $_SESSION['user']['group_level'];
 
 //get the user count from the database
