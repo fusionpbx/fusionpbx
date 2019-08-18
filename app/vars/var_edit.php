@@ -43,7 +43,7 @@
 	$text = $language->get();
 
 //set the action as an add or an update
-	if (is_uuid($_REQUEST["id"]) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$var_uuid = $_REQUEST["id"];
 	}
