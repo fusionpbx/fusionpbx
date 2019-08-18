@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -73,10 +73,9 @@
 			$sql .= "from ";
 			$sql .= "v_users as u, ";
 			$sql .= "v_contact_emails as e ";
-			$sql .= "where ";
-			$sql .= "e.domain_uuid = u.domain_uuid ";
+			$sql .= "where e.domain_uuid = u.domain_uuid ";
 			$sql .= "and e.contact_uuid = u.contact_uuid ";
-			$sql .= "and e.email_address = :email ";
+			$sql .= "and u.email_address = :email ";
 			$sql .= "and e.domain_uuid = :domain_uuid ";
 			$prep_statement = $db->prepare($sql);
 			$prep_statement->bindParam(':domain_uuid', $_SESSION['domain_uuid']);
@@ -106,19 +105,19 @@
 				$prep_statement = $db->prepare($sql);
 				$prep_statement->execute();
 				$row = $prep_statement->fetch(PDO::FETCH_NAMED);
-				$eml_subject = $row['template_subject'];
-				$eml_body = $row['template_body'];
+				$email_subject = $row['template_subject'];
+				$email_body = $row['template_body'];
 				unset($prep_statement, $row);
 
 				//replace variables in email body
-				$eml_body = str_replace('${reset_link}', $reset_link, $eml_body);
-				$eml_body = str_replace('${reset_button}', $reset_button, $eml_body);
-				$eml_body = str_replace('${logo_full}', $logo_full, $eml_body);
-				$eml_body = str_replace('${logo_shield}', $logo_shield, $eml_body);
-				$eml_body = str_replace('${domain}', $domain, $eml_body);
+				$email_body = str_replace('${reset_link}', $reset_link, $email_body);
+				$email_body = str_replace('${reset_button}', $reset_button, $email_body);
+				$email_body = str_replace('${logo_full}', $logo_full, $email_body);
+				$email_body = str_replace('${logo_shield}', $logo_shield, $email_body);
+				$email_body = str_replace('${domain}', $domain, $email_body);
 
 				//send reset link
-				if (send_email($email, $eml_subject, $eml_body)) {
+				if (send_email($email, $email_subject, $email_body)) {
 					//email sent
 					message::add($text['message-reset_link_sent'], 'positive', 2500);
 				}
