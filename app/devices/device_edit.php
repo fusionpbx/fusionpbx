@@ -690,10 +690,10 @@
 		echo "		box-shadow: 0px 1px 20px #888;";
 		echo "	}";
 		echo "</style>";
-		echo "<script src='".PROJECT_PATH."/resources/jquery/jquery.qrcode-0.8.0.min.js'></script>";
+		echo "<script src='".PROJECT_PATH."/resources/jquery/jquery-qrcode.min.js'></script>";
 		echo "<script language='JavaScript' type='text/javascript'>";
 		echo "	$(document).ready(function() {";
-		echo "		$(window).load(function() {";
+		echo "		$(window).on('load', function() {";
 		echo "			$('#qr_code').qrcode({ ";
 		echo "				render: 'canvas', ";
 		echo "				minVersion: 6, ";
@@ -1594,7 +1594,7 @@
 	echo "</form>";
 
 	echo "<script>\n";
-	echo "	$(window).load(function(event){\n";
+	echo "	$(window).on('load', function(event){\n";
 	// triger initial onchage to set button state
 	echo "      $('#device_profile_uuid').trigger('change')";
 	echo "	});\n";

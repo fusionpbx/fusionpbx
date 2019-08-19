@@ -287,7 +287,7 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 
 	</style>
 
-	<script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-1.11.1.js"></script>
+	<script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-1.12.4.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
 			//ajax for refresh

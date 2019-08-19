@@ -97,7 +97,7 @@
 	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
 	<title><?php echo $title; ?></title>
 	<link rel="icon" type="image/x-icon" href="<?php echo $favicon; ?>">
-	<script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-1.11.1.js"></script>
+	<script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-1.12.4.js"></script>
 	<script language="JavaScript" type="text/javascript">
 		function submit_check() {
 			if (document.getElementById('filepath').value != '') {

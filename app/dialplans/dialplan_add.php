@@ -216,6 +216,7 @@
 				document.getElementById("desc_condition_expression_2").innerHTML = "";
 			}
 		}
+	}
 	-->
 	</script>
 
@@ -322,7 +323,7 @@
 	echo "	<tr>\n";
 	//echo "	<td nowrap='nowrap'>".$text['label-field']."</td>\n";
 	echo "	<td nowrap='nowrap'>\n";
-	echo "    <select class='formfld' name='condition_field_1' id='condition_field_1' onchange='changeToInput_condition_field_1(this);this.style.visibility = \"hidden\";' style='width:85%'>\n";
+	echo "    <select class='formfld' name='condition_field_1' id='condition_field_1' onchange='changeToInput_condition_field_1(this);this.style.visibility = \"hidden\";'>\n";
 	echo "    <option value=''></option>\n";
 	if (strlen($condition_field_1) > 0) {
 		echo "    <option value='".escape($condition_field_1)."' selected='selected'>".escape($condition_field_1)."</option>\n";
@@ -354,9 +355,9 @@
 	echo "		<option value='wday'>".$text['option-day_of_week']."</option>\n";
 	echo "		<option value='week'>".$text['option-week']."</option>\n";
 	echo "	</optgroup>\n";
-	echo "    </select>\n";
-	echo "    <input type='button' id='btn_select_to_input_condition_field_1' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_condition_field_1(document.getElementById(\"condition_field_1\"));this.style.visibility = \"hidden\";' value='&#9665;'>\n";
-	echo "    <br />\n";
+	echo "	</select>\n";
+	echo "	<input type='button' id='btn_select_to_input_condition_field_1' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_condition_field_1(document.getElementById(\"condition_field_1\"));this.style.visibility = \"hidden\";' value='&#9665;'>\n";
+	echo "	<br />\n";
 	echo "	</td>\n";
 	//echo "	<td>&nbsp;&nbsp;&nbsp;".$text['label-expression']."</td>\n";
 	echo "	<td>\n";

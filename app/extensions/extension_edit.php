@@ -1036,9 +1036,6 @@
 			echo "				</td>\n";
 
 			echo "				<td>\n";
-			//if (permission_exists('device_edit')) {
-			//	echo "					<a href='device_line_edit.php?device_uuid=".escape($row['device_uuid'])."&id=".escape($row['device_line_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
-			//}
 			//if (permission_exists('device_delete')) {
 			//	echo "					<a href='device_line_delete.php?device_uuid=".escape($row['device_uuid'])."&id=".escape($row['device_line_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			//}
