@@ -43,18 +43,6 @@ License: LGPL
 
 //-----------------------------------------------------------------------------------
 
-TinyMCE
-http://tinymce.moxiecode.com/license.php
-License: LGPL
-
-//-----------------------------------------------------------------------------------
-
-phpsvnclient
-http://code.google.com/p/phpsvnclient/
-License: New BSD License
-
-//-----------------------------------------------------------------------------------
-
 POP3Class
 http://www.phpclasses.org/package/2-PHP-Access-to-e-mail-mailboxes-using-the-POP3-protocol.html
 
@@ -88,14 +76,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 //-----------------------------------------------------------------------------------
 
-EmailAddressValidator Class
-http://code.google.com/p/php-email-address-validation/
-
-Released under New BSD license
-http://www.opensource.org/licenses/bsd-license.php
-
-//-----------------------------------------------------------------------------------
-
 Copyright (c) 2011 John Resig, http://jquery.com/
 
 Permission is hereby granted, free of charge, to any person obtaining
@@ -120,4 +100,5 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //-----------------------------------------------------------------------------------
 
 */
+
 ?>
