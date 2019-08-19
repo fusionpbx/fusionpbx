@@ -86,6 +86,9 @@
 			$stream_file = base64_decode($_GET['file']);
 			$stream_full_path = path_join($stream_path, $stream_file);
 
+		//sanitize path
+			$stream_full_path = str_replace('../', '', $stream_full_path);
+
 		//dowload the file
 			session_cache_limiter('public');
 			if (file_exists($stream_full_path)) {
@@ -284,13 +287,21 @@
 				}
 			}
 
+		//replace the sounds_dir variable in the path
+			$stream_path = str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $stream_path);
+
 		//check permissions
 			if (($stream_domain_uuid == '' && permission_exists('music_on_hold_domain')) ||
 				($stream_domain_uuid != '' && permission_exists('music_on_hold_delete'))) {
 
 				//remove specified file
 					if ($stream_file != '') {
-						@unlink(path_join($stream_path, $stream_file));
+						//define path
+							$stream_full_path = path_join($stream_path, $stream_file);
+						//sanitize path
+							$stream_full_path = str_replace('../', '', $stream_full_path);
+						//delete file
+							@unlink($stream_full_path);
 					}
 				//remove all audio files
 					else {
