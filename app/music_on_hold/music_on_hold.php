@@ -89,7 +89,7 @@
 		//sanitize path
 			$stream_full_path = str_replace('../', '', $stream_full_path);
 
-		//dowload the file
+		//download the file
 			session_cache_limiter('public');
 			if (file_exists($stream_full_path)) {
 				$fd = fopen($stream_full_path, "rb");
