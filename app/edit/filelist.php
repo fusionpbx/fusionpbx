@@ -237,7 +237,7 @@ echo "}\n";
 echo "</SCRIPT>";
 
 // keyboard shortcut bindings
-echo "<script language='JavaScript' type='text/javascript' src='".PROJECT_PATH."/resources/jquery/jquery-1.11.1.js'></script>\n";
+echo "<script language='JavaScript' type='text/javascript' src='".PROJECT_PATH."/resources/jquery/jquery-1.12.4.js'></script>\n";
 
 //save file
 key_press('ctrl+s', 'down', 'window', null, null, "parent.$('form#frm_edit').submit(); return false;", true);
