@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2018
+ Portions created by the Initial Developer are Copyright (C) 2008-2019
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -623,6 +623,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    	<option value='fixed' ".(($row['domain_setting_value'] == "fixed") ? "selected='selected'" : null).">".$text['label-fixed']."</option>\n";
 		echo "    	<option value='static' ".(($row['domain_setting_value'] == "static") ? "selected='selected'" : null).">".$text['label-static']."</option>\n";
 		echo "    	<option value='inline' ".(($row['domain_setting_value'] == "inline") ? "selected='selected'" : null).">".$text['label-inline']."</option>\n";
+		echo "    	<option value='side' ".(($row['domain_setting_value'] == "side") ? "selected='selected'" : null).">".$text['label-side']."</option>\n";
 		echo "    </select>\n";
 	}
 	elseif ($category == "theme" && $subcategory == "menu_position" && $name == "text" ) {
