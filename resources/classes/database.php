@@ -1734,13 +1734,13 @@ include "root.php";
 							$sql .= "(";
 							$sql .= "database_transaction_uuid, ";
 							$sql .= "domain_uuid, ";
-							if (strlen($user_uuid) > 0) {
+							if (isset($user_uuid) && is_uuid($user_uuid)) {
 								$sql .= "user_uuid, ";
 							}
-							if (strlen($this->app_uuid) > 0) {
+							if (isset($this->app_uuid) && is_uuid($this->app_uuid)) {
 								$sql .= "app_uuid, ";
 							}
-							if (strlen($this->app_name) > 0) {
+							if (isset($this->app_name) && strlen($this->app_name) > 0) {
 								$sql .= "app_name, ";
 							}
 							$sql .= "transaction_code, ";
@@ -1760,13 +1760,13 @@ include "root.php";
 							else {
 								$sql .= "'".$this->domain_uuid."', ";
 							}
-							if (strlen($user_uuid) > 0) {
+							if (isset($user_uuid) && is_uuid($user_uuid)) {
 								$sql .= ":user_uuid, ";
 							}
-							if (strlen($this->app_uuid) > 0) {
+							if (isset($this->app_uuid) && is_uuid($this->app_uuid)) {
 								$sql .= ":app_uuid, ";
 							}
-							if (strlen($this->app_name) > 0) {
+							if (isset($this->app_name) && strlen($this->app_name) > 0) {
 								$sql .= ":app_name, ";
 							}
 							$sql .= "'".$message["code"]."', ";
@@ -1788,13 +1788,13 @@ include "root.php";
 							$sql .= ":transaction_result ";
 							$sql .= ")";
 							$statement = $this->db->prepare($sql);
-							if (strlen($user_uuid) > 0) {
+							if (isset($user_uuid) && is_uuid($user_uuid)) {
 								$statement->bindParam(':user_uuid', $user_uuid);
 							}
-							if (strlen($this->app_uuid) > 0) {
+							if (isset($this->app_uuid) && is_uuid($this->app_uuid)) {
 								$statement->bindParam(':app_uuid', $this->app_uuid);
 							}
-							if (strlen($this->app_name) > 0) {
+							if (isset($this->app_name) && strlen($this->app_name) > 0) {
 								$statement->bindParam(':app_name', $this->app_name);
 							}
 							$statement->bindParam(':remote_address', $_SERVER['REMOTE_ADDR']);
