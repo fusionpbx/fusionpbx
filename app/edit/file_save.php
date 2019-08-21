@@ -51,34 +51,98 @@
 		exit;
 	}
 
-//run the code if file path exists
-	$file_path = $_POST["filepath"];
-	if ($file_path != '') {
-		try {
-			//save file content
-				$file_path = realpath($file_path);
-				$file_path = str_replace ('//', '/', $file_path);
-				$file_path = str_replace ("\\", "/", $file_path);
-				if (file_exists($file_path)) {
-					$handle = fopen($file_path, 'wb');
-					if (!$handle) {
-						throw new Exception('Write Failed - Check File Owner & Permissions');
+//get the directory
+	if (!isset($_SESSION)) { session_start(); }
+	switch ($_SESSION["app"]["edit"]["dir"]) {
+		case 'scripts':
+			$edit_directory = $_SESSION['switch']['scripts']['dir'];
+			break;
+		case 'php':
+			$edit_directory = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH;
+			break;
+		case 'grammer':
+			$edit_directory = $_SESSION['switch']['grammar']['dir'];
+			break;
+		case 'provision':
+			switch (PHP_OS) {
+				case "Linux":
+					if (file_exists('/etc/fusionpbx/resources/templates/provision')) {
+						$edit_directory = '/etc/fusionpbx/resources/templates/provision';
 					}
-					fwrite($handle, $_POST["content"]);
-					fclose($handle);
-				}
-
-			//set the reload_xml value to true
-				$_SESSION["reload_xml"] = true;
-
-			//alert user of success
-				echo "Changes Saved";
+					else {
+						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					}
+					break;
+				case "FreeBSD":
+					if (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
+						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					}
+					else {
+						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					}
+					break;
+				case "NetBSD":
+					$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					break;
+				case "OpenBSD":
+					$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					break;
+				default:
+					$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+			}
+			break;
+		case 'xml':
+			$edit_directory = $_SESSION['switch']['conf']['dir'];
+			break;
+	}
+	if (!isset($edit_directory)) {
+		foreach ($_SESSION['editor']['path'] as $path) {
+			if ($_SESSION["app"]["edit"]["dir"] == $path) {
+				$edit_directory = $path;
+				break;
+			}
 		}
-		catch(Exception $e) {
-			//alert error
-			echo $e->getMessage();
-		}
+	}
 
+//set the file variable
+	$file_path = $_POST["filepath"];
+
+//remove attempts to change the directory
+	$file_path = str_replace('..', '', $file_path);
+	$file_path = str_replace ("\\", "/", $file_path);
+
+//break the path into an array
+	$path_array = pathinfo($file_path);
+	$path_prefix = substr($path_array['dirname'], 0, strlen($edit_directory));
+
+//validate the path
+	if ($path_prefix == $edit_directory) {
+		if ($file_path != '') {
+			try {
+				//save file content
+					$file_path = realpath($file_path);
+					$file_path = str_replace ('//', '/', $file_path);
+					$file_path = str_replace ("\\", "/", $file_path);
+					if (file_exists($file_path)) {
+						$handle = fopen($file_path, 'wb');
+						if (!$handle) {
+							throw new Exception('Write Failed - Check File Owner & Permissions');
+						}
+						fwrite($handle, $_POST["content"]);
+						fclose($handle);
+					}
+
+				//set the reload_xml value to true
+					$_SESSION["reload_xml"] = true;
+
+				//alert user of success
+					echo "Changes Saved";
+			}
+			catch(Exception $e) {
+				//alert error
+				echo $e->getMessage();
+			}
+		}
 	}
 
 ?>
