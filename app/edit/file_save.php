@@ -31,7 +31,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('script_editor_save')) {
+	if (permission_exists('edit_save')) {
 		//access granted
 	}
 	else {
@@ -54,7 +54,6 @@
 //run the code if file path exists
 	$file_path = $_POST["filepath"];
 	if ($file_path != '') {
-
 		try {
 			//save file content
 				$file_path = realpath($file_path);
