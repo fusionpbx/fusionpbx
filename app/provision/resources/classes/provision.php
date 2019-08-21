@@ -309,11 +309,11 @@ include "root.php";
 				}
 
 			//check to see if the mac_address exists in devices
-				if (strlen($_REQUEST['user_id']) == 0 || strlen($_REQUEST['userid']) == 0) {
+				//if (strlen($_REQUEST['user_id']) == 0 || strlen($_REQUEST['userid']) == 0) {
 					if ($this->mac_exists($mac)) {
 
 						//get the device_template
-							if (strlen($device_template) == 0) {
+							//if (strlen($device_template) == 0) {
 								$sql = "SELECT * FROM v_devices ";
 								$sql .= "WHERE device_mac_address = :mac_address ";
 								if ($provision['http_domain_filter'] == "true") {
@@ -323,6 +323,7 @@ include "root.php";
 								$parameters['mac_address'] = $mac;
 								$database = new database;
 								$row = $database->select($sql, $parameters, 'row');
+								unset($parameters);
 
 								if (is_array($row) && sizeof($row) != 0) {
 
@@ -336,15 +337,16 @@ include "root.php";
 											}
 											exit;
 										}
+
 									//register that we have seen the device
 										$sql = "UPDATE v_devices ";
-										$sql .= "SET device_provisioned_date=:date, device_provisioned_method=:method, device_provisioned_ip=:ip ";
-										$sql .= "WHERE domain_uuid=:domain_uuid AND device_mac_address=:mac ";
+										$sql .= "SET device_provisioned_date = :device_provisioned_date, device_provisioned_method = :device_provisioned_method, device_provisioned_ip = :device_provisioned_ip ";
+										$sql .= "WHERE domain_uuid = :domain_uuid AND device_mac_address = :device_mac_address ";
 										$parameters['domain_uuid'] = $domain_uuid;
-										$parameters['mac'] = strtolower($mac);
-										$parameters['date'] = date("Y-m-d H:i:s");
-										$parameters['method'] = (isset($_SERVER["HTTPS"]) ? 'https' : 'http');
-										$parameters['ip'] = $_SERVER['REMOTE_ADDR'];
+										$parameters['device_mac_address'] = strtolower($mac);
+										$parameters['device_provisioned_date'] = date("Y-m-d H:i:s");
+										$parameters['device_provisioned_method'] = (isset($_SERVER["HTTPS"]) ? 'https' : 'http');
+										$parameters['device_provisioned_ip'] = $_SERVER['REMOTE_ADDR'];
 										$database = new database;
 										$database->execute($sql, $parameters);
 
@@ -363,7 +365,7 @@ include "root.php";
 										$device_description = $row["device_description"];
 								}
 								unset($row, $parameters);
-							}
+							//}
 
 						//find a template that was defined on another phone and use that as the default.
 							if (strlen($device_template) == 0) {
@@ -535,7 +537,7 @@ include "root.php";
 								$p->delete("device_edit", "temp");
 							}
 					}
-				}
+				//}
 
 			//alternate device_uuid
 				if (strlen($device_uuid) > 0 && is_uuid($device_uuid)) {
