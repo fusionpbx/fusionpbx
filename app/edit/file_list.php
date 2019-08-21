@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -31,7 +31,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('script_editor_view')) {
+	if (permission_exists('edit_view')) {
 		//access granted
 	}
 	else {
@@ -252,7 +252,7 @@ key_press('backspace', 'down', 'window', null, null, 'return false;', true);
 echo "</head>\n";
 echo "<body style='margin: 0px; padding: 5px;'>\n";
 
-echo "<div style='text-align: left; padding-top: 3px; padding-bottom: 3px;'><a href='javascript:void(0);' onclick=\"window.open('fileoptions.php','filewin','left=20,top=20,width=310,height=350,toolbar=0,resizable=0');\" style='text-decoration:none;' title='".$text['label-files']."'><img src='resources/images/icon_gear.png' border='0' align='absmiddle' style='margin: 0px 2px 4px -1px;'>".$text['label-files']."</a></div>\n";
+echo "<div style='text-align: left; padding-top: 3px; padding-bottom: 3px;'><a href='javascript:void(0);' onclick=\"window.open('file_options.php','filewin','left=20,top=20,width=310,height=350,toolbar=0,resizable=0');\" style='text-decoration:none;' title='".$text['label-files']."'><img src='resources/images/icon_gear.png' border='0' align='absmiddle' style='margin: 0px 2px 4px -1px;'>".$text['label-files']."</a></div>\n";
 echo "<div style='text-align: left; margin-left: -16px;'>\n";
 if (file_exists($edit_directory)) {
 	echo recur_dir($edit_directory);
