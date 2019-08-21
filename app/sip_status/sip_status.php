@@ -49,30 +49,6 @@
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-if ($_GET['a'] == "download") {
-	if ($_GET['t'] == "cdrcsv") {
-		$tmp = $_SESSION['switch']['log']['dir'].'/cdr-csv/';
-		$filename = 'Master.csv';
-	}
-	if ($_GET['t'] == "backup") {
-		$tmp = $backup_dir.'/';
-		$filename = 'backup.tgz';
-		if (!is_dir($backup_dir.'/')) {
-			exec("mkdir ".$backup_dir."/");
-		}
-		$parent_dir = realpath($_SESSION['switch']['base']['dir']."/..");
-		chdir($parent_dir);
-		shell_exec('tar cvzf freeswitch '.$backup_dir.'/backup.tgz');
-	}
-	session_cache_limiter('public');
-	$fd = fopen($tmp.$filename, "rb");
-	header("Content-Type: binary/octet-stream");
-	header("Content-Length: " . filesize($tmp.$filename));
-	header('Content-Disposition: attachment; filename="'.$filename.'"');
-	fpassthru($fd);
-	exit;
-}
-
 //show the content
 	require_once "resources/header.php";
 	$document['title'] = $text['title-sip-status'];
