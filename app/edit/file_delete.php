@@ -66,7 +66,7 @@
 		unlink($folder.'/'.$file);
 
 		//redirect the browser
-		header("Location: fileoptions.php");
+		header("Location: file_options.php");
 	}
 	else {
 		//create the token
