@@ -25,6 +25,9 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
+//disable this feature
+	exit;
+
 //includes
 	include "root.php";
 	require_once "resources/require.php";
@@ -64,10 +67,9 @@
 		$content = "<?php\n\n?>";
 		fwrite($handle, $content);
 		fclose($handle);
-		header("Location: fileoptions.php");
+		header("Location: file_options.php");
 	}
 	else {
-
 		//create a token
 		$key_name = '/app/edit/file_new';
 		$_SESSION['keys'][$key_name] = bin2hex(random_bytes(32));
