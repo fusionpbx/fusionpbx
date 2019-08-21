@@ -17,33 +17,39 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('script_editor_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
 
-$filename = $_POST["file"];
-$filename = str_replace ("\\", "/", $filename);
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
-$handle = fopen($filename, "r");
-if ($handle) {
-	while (!feof($handle)) {
-		$buffer = fgets($handle, 4096);
-		echo $buffer;
+//check permissions
+	if (permission_exists('edit_view')) {
+		//access granted
 	}
-	fclose($handle);
-}
+	else {
+		echo "access denied";
+		exit;
+	}
+
+//get the file name
+	$file_name = $_POST["file"];
+	$file_name = str_replace ("\\", "/", $filename);
+
+//get the contents of the file
+	$handle = fopen($file_name, "r");
+	if ($handle) {
+		while (!feof($handle)) {
+			$buffer = fgets($handle, 4096);
+			echo $buffer;
+		}
+		fclose($handle);
+	}
 
 ?>
