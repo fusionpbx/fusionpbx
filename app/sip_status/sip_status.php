@@ -89,7 +89,7 @@ if ($_GET['a'] == "download") {
 		echo "<th align='left'>".$text['label-message']."</th>\n";
 		echo "</tr>\n";
 		echo "<tr>\n";
-		echo "<td class='row_style1'><strong>$msg</strong></td>\n";
+		echo "<td class='row_style1'><strong>".escape($msg)."</strong></td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
 		echo "</div>\n";
