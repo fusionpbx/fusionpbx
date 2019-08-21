@@ -90,7 +90,7 @@
 				$newpath = str_replace ('//', '/', $newpath);
 				$newpath = str_replace ("\\", "/", $newpath);
 				$htmlfilelist .= "<div style='white-space: nowrap; padding-left: 16px;'>\n";
-				$htmlfilelist .= "<a href='javascript:void(0);' onclick=\"parent.document.getElementById('filepath').value='".$newpath."'; parent.document.getElementById('current_file').value = '".$newpath."'; makeRequest('fileread.php','file=".urlencode($newpath)."');\" title='".$newpath." &#10; ".$filesize." KB'>";
+				$htmlfilelist .= "<a href='javascript:void(0);' onclick=\"parent.document.getElementById('filepath').value='".$newpath."'; parent.document.getElementById('current_file').value = '".$newpath."'; makeRequest('file_read.php','file=".urlencode($newpath)."');\" title='".$newpath." &#10; ".$filesize." KB'>";
 				$htmlfilelist .= "<img src='resources/images/icon_file.png' border='0' align='absmiddle' style='margin: 1px 2px 3px -1px;'>".$filename."</a>\n";
 				$htmlfilelist .= "</div>\n";
 			}
