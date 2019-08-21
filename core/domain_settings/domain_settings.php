@@ -408,7 +408,7 @@
 		foreach ($subcat_ids as $domain_setting_category => $checkbox_ids) {
 			echo "if (category == '".$domain_setting_category."') {\n";
 			foreach ($checkbox_ids as $index => $checkbox_id) {
-				echo "document.getElementById('".escape($checkbox_id)."').checked = (what == 'all') ? true : false;\n";
+				echo "document.getElementById('".$checkbox_id."').checked = (what == 'all') ? true : false;\n";
 			}
 			echo "}\n";
 		}
