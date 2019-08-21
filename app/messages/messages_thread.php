@@ -41,7 +41,7 @@
 
 //get number of messages to load
 	$number = preg_replace('{[\D]}', '', $_GET['number']);
-	$contact_uuid = $_GET['contact_uuid'];
+	$contact_uuid = (is_uuid($_GET['contact_uuid'])) ? $_GET['contact_uuid'] : null;
 
 //set refresh flag
 	$refresh = $_GET['refresh'] == 'true' ? true : false;
