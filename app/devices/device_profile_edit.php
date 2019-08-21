@@ -535,7 +535,7 @@
 		echo "				<input class='formfld' type='text' name='device_profile_keys[$x][profile_key_icon]' maxlength='255' value=\"".escape($row["profile_key_icon"])."\">\n";
 		echo "			</td>\n";
 		echo "			<td class='list_control_icons' style='width: 25px;'>\n";
-		echo "				<a href=\"device_profile_delete.php?device_profile_key_uuid=".escape($row['device_profile_key_uuid'])."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\"><button type='button' class='btn btn-default list_control_icon'><span class='glyphicon glyphicon-remove'></span></button></a>\n";
+		echo "				<a href=\"device_profile_delete.php?device_profile_key_uuid=".escape($row['device_profile_key_uuid'])."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">".$v_link_label_delete."</a>\n";
 		echo "			</td>\n";
 		echo "		</tr>\n";
 
@@ -597,7 +597,7 @@
 		echo "				<input class='formfld' type='text' name='device_profile_settings[$x][profile_setting_description]' maxlength='255' value=\"".escape($row["profile_setting_description"])."\">\n";
 		echo "			</td>\n";
 		echo "			<td class='list_control_icons' style='width: 25px;'>\n";
-		echo "				<a href=\"device_profile_delete.php?device_profile_setting_uuid=".escape($row['device_profile_setting_uuid'])."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\"><button type='button' class='btn btn-default list_control_icon'><span class='glyphicon glyphicon-remove'></span></button></a>\n";
+		echo "				<a href=\"device_profile_delete.php?device_profile_setting_uuid=".escape($row['device_profile_setting_uuid'])."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">".$v_link_label_delete."</a>\n";
 		echo "			</td>\n";
 		echo "		</tr>\n";
 		$x++;

@@ -257,8 +257,7 @@
 				echo "<a href='device_profile_edit.php?id=".escape($row['device_profile_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('device_profile_delete')) {
-				echo "				<a href=\"device_profile_delete.php?id=".escape($row['device_profile_uuid'])."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\"><button type='button' class='btn btn-default list_control_icon'><span class='glyphicon glyphicon-remove'></span></button></a>\n";
-				//echo "<button type='submit' class='btn btn-default list_control_icon' name=\"device_profiles[$x][action]\" alt='".$text['button-delete']."' value='delete'><span class='glyphicon glyphicon-remove'></span></button>";
+				echo "				<a href=\"device_profile_delete.php?id=".escape($row['device_profile_uuid'])."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">".$v_link_label_delete."</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";

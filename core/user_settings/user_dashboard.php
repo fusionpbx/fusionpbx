@@ -1213,7 +1213,7 @@
 			echo "	<div class='row' style='padding: 6px;'>";
 			echo "		<div class='col-md-12 hud_box' style='padding: 0;'>";
 			echo 			$block['html'];
-			echo "			<span class='hud_expander' onclick=\"$('#hud_'+".$index."+'_details').slideToggle('fast');\"><span class='glyphicon glyphicon-option-horizontal'></span></span>";
+			echo "			<span class='hud_expander' onclick=\"$('#hud_'+".$index."+'_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>";
 			echo "		</div>";
 			echo "	</div>";
 			echo "</div>";

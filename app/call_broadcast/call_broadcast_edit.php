@@ -456,7 +456,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<br>";
 	echo " <span class='' style='margin-left: 37px;'>OR </span> ";
 	echo "<br>";
-	echo " <input type='file' name='broadcast_phone_numbers_file' accept='.csv,.txt' style=\"display:inline-block;\"><a href='sample.csv' download>Sample File <i class='glyphicon glyphicon-download-alt'></i></a>";
+	echo " <input type='file' name='broadcast_phone_numbers_file' accept='.csv,.txt' style=\"display:inline-block;\"><a href='sample.csv' download>Sample File <i class='fas fa-cloud-download-alt'></i></a>";
 	echo "<br>";
 	echo " (Upload TXT- Plain Text, CSV- Comma Separated Values file format only.)";
 	echo "<br>";

@@ -646,7 +646,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		border-radius: 3px;
 		text-align: center;
 		text-transform: uppercase;
-		text-shadow: 0px 0px 1px rgba(0,0,0,0.9);
+		/* text-shadow: 0px 0px 1px rgba(0,0,0,0.9); */
 		opacity: 0.9;
 		-moz-opacity: 0.9;
 		}

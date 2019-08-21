@@ -238,7 +238,7 @@
 				echo "<a href='stream_edit.php?id=".$row['stream_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('stream_delete')) {
-				echo "<button type='submit' class='btn btn-default list_control_icon' name=\"streams[$x][action]\" alt='".$text['button-delete']."' value='delete'><span class='glyphicon glyphicon-remove'></span></button>";
+				echo "<button type='submit' class='btn btn-default list_control_icon' name=\"streams[$x][action]\" alt='".$text['button-delete']."' value='delete'><span class='fas fa-minus'></span></button>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
