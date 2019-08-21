@@ -33,7 +33,7 @@
 	require_once "resources/check_auth.php";
 
 //check the permissions
-	if (permission_exists('script_editor_save')) {
+	if (permission_exists('edit_save')) {
 		//access granted
 	}
 	else {
