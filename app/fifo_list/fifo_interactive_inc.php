@@ -44,6 +44,7 @@
 
 //set variables
 	$fifo_name = trim($_REQUEST["c"]);
+	$fifo_name = preg_replace('#[^a-zA-Z0-9\-./]#', '', $fifo_name);
 
 //if not the user is not a member of the superadmin then restrict to viewing their own domain
 	if (!if_group("superadmin")) {
@@ -54,7 +55,9 @@
 	}
 
 //prepare and send the api command over event socket
+
 	$switch_cmd = 'fifo list_verbose '.$fifo_name.'';
+	
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 	if (!$fp) {
 		$msg = "<div align='center'>Connection to Event Socket failed.<br /></div>";
@@ -64,7 +67,7 @@
 		echo "<th align='left'>Message</th>\n";
 		echo "</tr>\n";
 		echo "<tr>\n";
-		echo "<td class='row_style1'><strong>$msg</strong></td>\n";
+		echo "<td class='row_style1'><strong>".escape($msg)."</strong></td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
 		echo "</div>\n";
@@ -193,7 +196,6 @@
 			}
 			echo "</table>\n";
 
-
 			//Current logged members
 			//set the alternating row styles
 			$c = 0;
@@ -207,20 +209,14 @@
 
 		//show the content
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-
 			echo "<tr>\n";
 			echo "<th>".$text['label-username']."</th>\n";
 			echo "<th>Total inbound calls</th>\n";
 			echo "<th>Logged on since</th>\n";
 			echo "</tr>\n";
-
 			//print_r($xml->fifo->outbound->member[0]);
 			//print_r($xml->fifo->outbound->member[1]);
-
 			foreach ($xml->fifo->outbound->member as $row) {
-
-
-
 				$username=explode("@",$row);
 				$username=explode("/",$username[0]);
 				$username=$username[1];
@@ -233,8 +229,9 @@
 				echo "<td valign='top' class='".$row_style[$c]."'>".escape($fifo_total_inbound_calls)." &nbsp;</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>".escape($fifo_duration_formatted)." &nbsp;</td>\n";
 				echo "</tr>\n";
-				if ($c==0) { $c=1; } else { $c=0; }
+				$c  = $c ? 0 : 1;
 			}
 			echo "</table>\n";
 		}
+
 ?>
