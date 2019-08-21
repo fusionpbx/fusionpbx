@@ -25,12 +25,15 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
+//disable this feature
+	exit;
+
 //includes
 	include "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
-	//check permissions
+//check permissions
 	if (permission_exists('script_editor_save')) {
 		//access granted
 	}
@@ -61,7 +64,7 @@
 
 		//create new folder
 		mkdir($folder.'/'.$foldername); //, 0700
-		header("Location: fileoptions.php");
+		header("Location: file_options.php");
 	}
 	else {
 
