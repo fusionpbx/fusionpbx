@@ -17,26 +17,29 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-require_once "resources/check_auth.php";
-if (permission_exists('script_editor_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
-require_once "header.php";
+//check permissions
+	if (permission_exists('script_editor_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
+
+//include the header
+	require_once "header.php";
 
 //add multi-lingual support
 	$language = new text;
@@ -155,7 +158,7 @@ echo "</head>\n";
 echo "<body style='margin: 0; padding: 5px;' onfocus='blur();'>\n";
 
 echo "<div style='text-align: left; padding-top: 3px;'>\n";
-echo "<div style='padding-bottom: 3px;'><a href='javascript:void(0);' onclick=\"window.open('clipoptions.php?id=".$row[id]."','clipwin','left=20,top=20,width=310,height=350,toolbar=0,resizable=0');\" style='text-decoration:none; cursor: pointer;' title=\"".$text['label-clip-library']."\"><img src='".PROJECT_PATH."resources/images/icon_gear.png' border='0' align='absmiddle' style='margin: 0px 2px 4px -1px;'>".$text['label-clip-library']."</a></div>\n";
+echo "<div style='padding-bottom: 3px;'><a href='javascript:void(0);' onclick=\"window.open('clip_options.php?id=".$row[id]."','clipwin','left=20,top=20,width=310,height=350,toolbar=0,resizable=0');\" style='text-decoration:none; cursor: pointer;' title=\"".$text['label-clip-library']."\"><img src='".PROJECT_PATH."resources/images/icon_gear.png' border='0' align='absmiddle' style='margin: 0px 2px 4px -1px;'>".$text['label-clip-library']."</a></div>\n";
 
 $sql = "select * from v_clips order by clip_folder asc, clip_name asc";
 $database = new database;
@@ -217,5 +220,7 @@ if (is_array($result) && @sizeof($result) != 0) {
 
 echo "</div>\n";
 
+//inclue the footer
 require_once "footer.php";
+
 ?>
