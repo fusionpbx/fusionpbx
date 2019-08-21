@@ -163,7 +163,7 @@
 			form_data.append('mode',"<?php echo $mode; ?>");
 			
 
-			http_request('filesave.php', form_data);
+			http_request('file_save.php', form_data);
 		}
 
 	</script>
@@ -189,11 +189,11 @@
 <table id='frame' cellpadding='0' cellspacing='0' border='0' style="height: 100%; width: 100%;">
 	<tr>
 		<td id='sidebar' valign='top' style="width: 300px; height: 100%;">
-			<iframe id='file_list' src='filelist.php' style='border: none; height: 65%; width: 100%;'></iframe><br>
-			<iframe id='clip_list' src='cliplist.php' style='border: none; border-top: 1px solid #ccc; height: calc(35% - 1px); width: 100%;'></iframe>
+			<iframe id='file_list' src='file_list.php' style='border: none; height: 65%; width: 100%;'></iframe><br>
+			<iframe id='clip_list' src='clip_list.php' style='border: none; border-top: 1px solid #ccc; height: calc(35% - 1px); width: 100%;'></iframe>
 		</td>
 		<td align='right' valign='top' style='height: 100%;'>
-			<form style='margin: 0;' name='frm_edit' id='frm_edit' method='post' action='filesave.php' onsubmit="return submit_check();">
+			<form style='margin: 0;' name='frm_edit' id='frm_edit' method='post' action='file_save.php' onsubmit="return submit_check();">
 			<textarea name='content' id='editor_source' style='display: none;'></textarea>
 			<input type='hidden' name='filepath' id='filepath' value=''>
 			<input type='hidden' name='token' id='token' value='<?php echo $_SESSION['token']; ?>'>
