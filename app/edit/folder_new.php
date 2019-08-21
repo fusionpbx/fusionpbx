@@ -34,7 +34,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('script_editor_save')) {
+	if (permission_exists('edit_save')) {
 		//access granted
 	}
 	else {
@@ -73,8 +73,10 @@
 		$_SESSION['keys'][$key_name] = bin2hex(random_bytes(32));
 		$_SESSION['token'] = hash_hmac('sha256', $key_name, $_SESSION['keys'][$key_name]);
 
-		//display the html form
+		//show the footer
 		require_once "header.php";
+		
+		//show the content
 		echo "<br>";
 		echo "<div align='left'>";
 		echo "<form method='POST' action=''>";
@@ -109,6 +111,7 @@
 		echo "</form>";
 		echo "</div>";
 
+		//show the footer
 		require_once "footer.php";
 	}
 
