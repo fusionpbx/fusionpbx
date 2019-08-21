@@ -160,6 +160,7 @@
 	if (strlen($app_uuid) > 0 && is_uuid($app_uuid)) { $param = "&app_uuid=".$app_uuid; }
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls_mini, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page, true);
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
@@ -235,6 +236,9 @@
 		echo "		<input type='hidden' class='txt' name='order' value='".escape($order)."'>";
 	}
 	echo "		<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
+	if ($paging_controls_mini != '') {
+		echo "		<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
+	}
 	echo "		</form>\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
