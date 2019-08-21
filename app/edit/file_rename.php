@@ -50,8 +50,8 @@
 	$folder = $_REQUEST["folder"];
 	//$folder = str_replace ("\\", "/", $folder);
 	//if (substr($folder, -1) != "/") { $folder = $folder.'/'; }
-	$newfilename = $_REQUEST["newfilename"];
-	$filename = $_REQUEST["filename"];
+	$new_file_name = $_REQUEST["new_file_name"];
+	$fil_ename = $_REQUEST["filename"];
 
 //rename the file or show the html form
 	if (strlen($folder) > 0 && strlen($newfilename) > 0) {
@@ -66,8 +66,8 @@
 		//rename the file
 		//echo "new file: ".$newfilename."<br>";
 		//echo "folder: ".$folder."<br>";
-		//echo "orig filename: ".$filename."<br>";;
-		rename($folder.$filename, $folder.$newfilename);
+		//echo "orig filename: ".$file_name."<br>";;
+		rename($folder.$file_name, $folder.$new_file_name);
 		header("Location: file_options.php");
 	}
 	else {
@@ -86,7 +86,7 @@
 		echo "		<td>".$text['label-path']."</td>";
 		echo "	</tr>";
 		echo "	<tr>";
-		echo "		<td>".$folder.$filename."</td>";
+		echo "		<td>".escape($folder.$file_name)."</td>";
 		echo "	</tr>";
 		echo "	<tr>";
 		echo "		<td><br></td>";
@@ -95,7 +95,7 @@
 		echo "		<td>".$text['label-file-name-orig']."</td>";
 		echo "	</tr>";
 		echo "	<tr>";
-		echo "		<td>".$filename."</td>";
+		echo "		<td>".escape($file_name)."</td>";
 		echo "	</tr>";
 		echo "</table>";
 
@@ -112,8 +112,8 @@
 
 		echo "	<tr>";
 		echo "		<td colspan='1' align='right'>";
-		echo "			<input type='hidden' name='folder' value='$folder'>";
-		echo "			<input type='hidden' name='filename' value='$filename'>";
+		echo "			<input type='hidden' name='folder' value='".escape($folder)."'>";
+		echo "			<input type='hidden' name='filename' value='".escape($file_name)."'>";
 		echo "			<input type='hidden' name='token' id='token' value='". $_SESSION['token']. "'>";
 		echo "			<input type='button' value='".$text['button-back']."' onclick='history.back()'><input type='submit' value='".$text['button-rename-file']."'>";
 		echo "		</td>";
