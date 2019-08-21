@@ -95,7 +95,7 @@
 	$path_prefix = substr($path_array['dirname'], 0, strlen($edit_directory));
 
 //validate the path
-	if ($path_prefix == $edit_directory) {
+	if (realpath($path_prefix) == realpath($edit_directory)) {
 
 		//get the contents of the file
 		$handle = fopen($file_name, "r");
