@@ -223,7 +223,7 @@
 	echo "			".$text['description-emails'];
 	echo "		</td>\n";
 	echo "		<td width='50%' align='right' valign='top'>\n";
-	echo "			<input type='button' class='btn' id='test_button' alt=\"".$text['button-test']."\" onclick=\"$(this).fadeOut(400, function(){ $('span#test_form').fadeIn(400); $('#to').focus(); });\" value='".$text['button-test']."'>\n";
+	echo "			<input type='button' class='btn' id='test_button' alt=\"".$text['button-test']."\" onclick=\"$(this).fadeOut(400, function(){ $('span#test_form').fadeIn(400); $('#to').trigger('focus'); });\" value='".$text['button-test']."'>\n";
 	echo "			<span id='test_form' style='display: none;'>\n";
 	echo "				<input type='text' class='formfld' style='min-width: 150px; width:150px; max-width: 150px;' name='to' id='to' placeholder='recipient@domain.com'>\n";
 	echo "				<input type='submit' class='btn' id='send_button' alt=\"".$text['button-send']."\" value='".$text['button-send']."'>\n";

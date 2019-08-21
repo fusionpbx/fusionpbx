@@ -860,7 +860,7 @@ if (!$included) {
 		echo "			document.getElementById('fax_recipient_select').selectedIndex = 0;";
 		echo "			$('#fax_recipient_select').toggle();";
 		echo "			$('#fax_recipient').toggle();";
-		echo "			if ($('#fax_recipient').is(':visible')) { $('#fax_recipient').focus(); } else { $('#fax_recipient_select').focus(); }";
+		echo "			if ($('#fax_recipient').is(':visible')) { $('#fax_recipient').trigger('focus'); } else { $('#fax_recipient_select').trigger('focus'); }";
 		echo "		}";
 		echo "	}";
 

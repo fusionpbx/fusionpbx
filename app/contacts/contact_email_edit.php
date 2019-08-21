@@ -188,7 +188,7 @@ if (is_uuid($_GET["contact_uuid"])) {
 	echo "		document.getElementById(field).selectedIndex = 0;";
 	echo "		document.getElementById(field+'_custom').value = '';";
 	echo "		$('#'+field+'_custom').toggle();";
-	echo "		if ($('#'+field+'_custom').is(':visible')) { $('#'+field+'_custom').focus(); } else { $('#'+field).focus(); }";
+	echo "		if ($('#'+field+'_custom').is(':visible')) { $('#'+field+'_custom').trigger('focus'); } else { $('#'+field).trigger('focus'); }";
 	echo "	}";
 	echo "</script>";
 

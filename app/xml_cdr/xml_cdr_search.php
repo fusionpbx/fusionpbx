@@ -53,7 +53,7 @@
 	echo "			document.getElementById('caller_id_number').value = '';";
 	echo "			$('#caller_extension_uuid').toggle();";
 	echo "			$('#caller_id_number').toggle();";
-	echo "			if ($('#caller_id_number').is(':visible')) { $('#caller_id_number').focus(); } else { $('#caller_extension_uuid').focus(); }";
+	echo "			if ($('#caller_id_number').is(':visible')) { $('#caller_id_number').trigger('focus'); } else { $('#caller_extension_uuid').trigger('focus'); }";
 	echo "		}";
 	echo "	}";
 	echo "</script>";

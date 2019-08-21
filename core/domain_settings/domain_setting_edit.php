@@ -382,7 +382,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	<input type='text' class='formfld' name='domain_setting_category' id='domain_setting_category' maxlength='255' value=\"".escape($domain_setting_category)."\">\n";
 	}
 	else {
-		echo "	<select class='formfld' name='domain_setting_category' id='domain_setting_category' onchange=\"$('#domain_setting_subcategory').focus();\">\n";
+		echo "	<select class='formfld' name='domain_setting_category' id='domain_setting_category' onchange=\"$('#domain_setting_subcategory').trigger('focus');\">\n";
 		echo "		<option value=''></option>\n";
 		if (is_array($allowed_categories) && sizeof($allowed_categories) > 0) {
 			foreach ($allowed_categories as $category) {
@@ -534,7 +534,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	elseif ($category == "theme" && substr_count($subcategory, "_font") > 0 && $name == "text") {
 		$row['domain_setting_value'] = str_replace('"', "'", $row['domain_setting_value']);
 		if ($fonts = get_available_fonts('alpha')) {
-			echo "	<select class='formfld' id='sel_domain_setting_value' onchange=\"if (this.selectedIndex == $('select#sel_domain_setting_value option').length - 1) { $('#txt_domain_setting_value').val('').fadeIn('fast'); $('#txt_domain_setting_value').focus(); } else { $('#txt_domain_setting_value').fadeOut('fast', function(){ $('#txt_domain_setting_value').val($('#sel_domain_setting_value').val()) }); } \">\n";
+			echo "	<select class='formfld' id='sel_domain_setting_value' onchange=\"if (this.selectedIndex == $('select#sel_domain_setting_value option').length - 1) { $('#txt_domain_setting_value').val('').fadeIn('fast'); $('#txt_domain_setting_value').trigger('focus'); } else { $('#txt_domain_setting_value').fadeOut('fast', function(){ $('#txt_domain_setting_value').val($('#sel_domain_setting_value').val()) }); } \">\n";
 			echo "		<option value=''></option>\n";
 			echo "		<optgroup label='".$text['label-web_fonts']."'>\n";
 			$option_found = false;
@@ -623,6 +623,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    	<option value='fixed' ".(($row['domain_setting_value'] == "fixed") ? "selected='selected'" : null).">".$text['label-fixed']."</option>\n";
 		echo "    	<option value='static' ".(($row['domain_setting_value'] == "static") ? "selected='selected'" : null).">".$text['label-static']."</option>\n";
 		echo "    	<option value='inline' ".(($row['domain_setting_value'] == "inline") ? "selected='selected'" : null).">".$text['label-inline']."</option>\n";
+		echo "    	<option value='side' ".(($row['domain_setting_value'] == "side") ? "selected='selected'" : null).">".$text['label-side']."</option>\n";
 		echo "    </select>\n";
 	}
 	elseif ($category == "theme" && $subcategory == "menu_position" && $name == "text" ) {
@@ -732,7 +733,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<script>\n";
 	//capture enter key to submit form
-	echo "	$(window).keypress(function(event){\n";
+	echo "	$(window).on('keypress',function(event){\n";
 	echo "		if (event.which == 13) { submit_form(); }\n";
 	echo "	});\n";
 	//hide/convert password fields then submit form
@@ -742,9 +743,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		$('form#frm').submit();\n";
 	echo "	}\n";
 	//define lowercase class
-	echo "	$('.lowercase').blur(function(){ this.value = this.value.toLowerCase(); });";
+	echo "	$('.lowercase').on('blur',function(){ this.value = this.value.toLowerCase(); });";
 	//show order if array
-	echo "	$('#domain_setting_name').keyup(function(){ \n";
+	echo "	$('#domain_setting_name').on('keyup',function(){ \n";
 	echo "		(this.value.toLowerCase() == 'array') ? $('#tr_order').slideDown('fast') : $('#tr_order').slideUp('fast');\n";
 	echo "	});\n";
 	echo "</script>\n";

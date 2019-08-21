@@ -245,7 +245,7 @@
 	echo "		$('#'+hide_id).slideToggle(speed, function() {";
 	echo "			$('#'+show_id).slideToggle(speed, function() {";
 	echo "				if (focus_id != '') {";
-	echo "					$('#'+focus_id).focus();";
+	echo "					$('#'+focus_id).trigger('focus');";
 	echo "				}";
 	echo "			});";
 	echo "		});";
@@ -285,7 +285,7 @@
 			echo "<br><br><a class='login_link' onclick=\"toggle_password_reset('login_form','request_form','email');\">".$text['label-reset_password']."</a>";
 		}
 		echo "</form>";
-		echo "<script>document.getElementById('username').focus();</script>";
+		echo "<script>$('#username').trigger('focus');</script>";
 		echo "</div>";
 
 		echo "<div id='request_form' style='display: none;'>\n";
@@ -387,7 +387,7 @@
 		echo "</form>";
 
 		echo "<script>\n";
-		echo "	document.getElementById('username').focus();\n";
+		echo "	$('#username').trigger('focus');\n";
 		// convert password fields to text
 			echo "	function submit_form() {\n";
 			echo "		$('input:password').css('visibility','hidden');\n";

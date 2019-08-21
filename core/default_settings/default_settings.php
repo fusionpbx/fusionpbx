@@ -219,7 +219,7 @@
 		echo "	}\n";
 		echo "\n";
 		echo "	$( document ).ready(function() {\n";
-		echo "		$('#default_setting_search').focus();\n";
+		echo "		$('#default_setting_search').trigger('focus').trigger('select');\n";
 		if ($search == '') {
 			echo "		// scroll to previous category\n";
 			echo "		var category_span_id;\n";
@@ -240,7 +240,7 @@
 //prevent enter key submit on search field
 	echo "<script language='javascript' type='text/javascript'>\n";
 	echo "	$(document).ready(function() {\n";
-	echo "		$('#default_setting_search').keydown(function(event){\n";
+	echo "		$('#default_setting_search').on('keydown',function(event){\n";
 	echo "			if (event.keyCode == 13) {\n";
 	echo "				event.preventDefault();\n";
 	echo "				return false;\n";
@@ -533,7 +533,6 @@
 	//auto run, if search term passed back
 		if ($search != '') {
 			echo "	setting_search();";
-			echo "	$('#default_setting_search').select();\n";
 		}
 		echo "</script>\n";
 

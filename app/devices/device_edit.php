@@ -604,7 +604,7 @@
 
 		echo "\n";
 		echo "	$( document ).ready(function() {\n";
-		echo "		$('#default_setting_search').focus();\n";
+		echo "		$('#default_setting_search').trigger('focus');\n";
 		if ($search == '') {
 			echo "		// scroll to previous category\n";
 			echo "		var category_span_id;\n";
@@ -1603,7 +1603,7 @@
 	echo "		if (event.which == 13) { submit_form(); }\n";
 	echo "	});\n";
 	// capture device selection events
-	echo "  $('#device_profile_uuid').change(function(event){ \n";
+	echo "  $('#device_profile_uuid').on('change',function(event){ \n";
 	echo "      if (this.value == '') {\$('#device_profile_edit').hide()} else {\$('#device_profile_edit').show()} \n";
 	echo "	}); \n";
 	// convert password fields to

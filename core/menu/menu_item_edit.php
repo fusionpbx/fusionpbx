@@ -400,36 +400,36 @@ else {
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-icon']."</td>";
 	echo "		<td class='vtable' style='vertical-align: bottom;'>";
-	if (file_exists($_SERVER["PROJECT_ROOT"].'/resources/bootstrap/glyphicons.json')) {
-		$tmp_array = json_decode(file_get_contents($_SERVER["PROJECT_ROOT"].'/resources/bootstrap/glyphicons.json'), true);
-		if (is_array($tmp_array['icons']) && sizeof($tmp_array['icons']) > 0) {
+	if (file_exists($_SERVER["PROJECT_ROOT"].'/resources/fontawesome/fas_icons.php')) {
+		include 'resources/fontawesome/fas_icons.php';
+		if (is_array($font_awesome_solid_icons) && @sizeof($font_awesome_solid_icons) != 0) {
 			// rebuild and sort array
-			foreach ($tmp_array['icons'] as $i => $glyphicon) {
-				$tmp_string = str_replace('glyphicon-', '', $glyphicon['id']);
-				$tmp_string = str_replace('-', ' ', $tmp_string);
-				$tmp_string = ucwords($tmp_string);
-				$glyphicons[$glyphicon['id']] = $tmp_string;
+			foreach ($font_awesome_solid_icons as $i => $icon_class) {
+				$icon_label = str_replace('fa-', '', $icon_class);
+				$icon_label = str_replace('-', ' ', $icon_label);
+				$icon_label = ucwords($icon_label);
+				$icons[$icon_class] = $icon_label;
 			}
-			asort($glyphicons, SORT_STRING);
+			asort($icons, SORT_STRING);
 			echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
 			echo "	<tr>\n";
 			echo "		<td>\n";
-			echo "			<select class='formfld' name='menu_item_icon' id='menu_item_icon' onchange=\"$('#glyphicons').slideUp(); $('#grid_icon').fadeIn();\">\n";
+			echo "			<select class='formfld' name='menu_item_icon' id='menu_item_icon' onchange=\"$('#icons').slideUp(); $('#grid_icon').fadeIn();\">\n";
 			echo "				<option value=''></option>\n";
-			foreach ($glyphicons as $glyphicon_class => $glyphicon_name) {
-				$selected = ($menu_item_icon == $glyphicon_class) ? "selected" : null;
-				echo "			<option value='".escape($glyphicon_class)."' ".$selected.">".escape($glyphicon_name)."</option>\n";
+			foreach ($icons as $icon_class => $icon_label) {
+				$selected = ($menu_item_icon == $icon_class) ? "selected" : null;
+				echo "			<option value='".escape($icon_class)."' ".$selected.">".escape($icon_label)."</option>\n";
 			}
 			echo "			</select>\n";
 			echo "		</td>\n";
 			echo "		<td style='padding: 0 0 0 5px;'>\n";
-			echo "			<button id='grid_icon' type='button' class='btn btn-default list_control_icon' style='font-size: 15px; padding-top: 1px; padding-left: 3px;' onclick=\"$('#glyphicons').slideToggle(); $(this).fadeOut();\"><span class='glyphicon glyphicon-th'></span></button>";
+			echo "			<button id='grid_icon' type='button' class='btn btn-default list_control_icon' style='font-size: 15px; padding-top: 1px; padding-left: 3px;' onclick=\"$('#icons').fadeIn(); $(this).fadeOut();\"><span class='fas fa-th'></span></button>";
 			echo "		</td>\n";
 			echo "	</tr>\n";
 			echo "</table>\n";
-			echo "<div id='glyphicons' style='clear: both; display: none; padding-top: 10px; color: #000;'>";
-			foreach ($glyphicons as $glyphicon_class => $glyphicon_name) {
-				echo "<span class='glyphicon ".escape($glyphicon_class)."' style='font-size: 24px; float: left; margin: 0 8px 8px 0; cursor: pointer; opacity: 0.3;' title='".escape(glyphicon_name)."' onclick=\"$('#menu_item_icon').val('".escape($glyphicon_class)."'); $('#glyphicons').slideUp(); $('#grid_icon').fadeIn();\" onmouseover=\"this.style.opacity='1';\" onmouseout=\"this.style.opacity='0.3';\"></span>\n";
+			echo "<div id='icons' style='clear: both; display: none; margin-top: 8px; padding-top: 10px; color: #000; max-height: 400px; overflow: auto;'>\n";
+			foreach ($icons as $icon_class => $icon_label) {
+				echo "<span class='fas ".escape($icon_class)." fa-fw' style='font-size: 24px; float: left; margin: 0 8px 8px 0; cursor: pointer; opacity: 0.3;' title='".escape($icon_label)."' onclick=\"$('#menu_item_icon').val('".escape($icon_class)."'); $('#icons').slideUp(); $('#grid_icon').fadeIn();\" onmouseover=\"this.style.opacity='1';\" onmouseout=\"this.style.opacity='0.3';\"></span>\n";
 			}
 			echo "</div>";
 		}

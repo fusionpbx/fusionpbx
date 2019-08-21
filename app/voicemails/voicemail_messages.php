@@ -246,7 +246,7 @@
 <script language="JavaScript" type="text/javascript">
 	$(document).ready(function() {
 		$('.tr_hover tr').each(function(i,e) {
-		  $(e).children('td:not(.list_control_icon,.list_control_icons,.tr_checkbox)').click(function() {
+		  $(e).children('td:not(.list_control_icon,.list_control_icons,.tr_checkbox)').on('click',function() {
 			 $(this).closest('tr').children('td').css('font-weight','normal');
 		  });
 		});
