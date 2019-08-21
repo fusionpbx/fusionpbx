@@ -17,23 +17,27 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('script_editor_save')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('script_editor_save')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -73,7 +77,7 @@ if (count($_POST)>0) {
 	$p->add('clip_add', 'temp');
 
 	require_once "header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"1;url=clipoptions.php\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"1;url=clip_options.php\">\n";
 	echo $text['message-add'];
 	require_once "footer.php";
 	exit;
@@ -128,5 +132,7 @@ if (count($_POST)>0) {
 
 	echo "<script>document.getElementById('clip_name').focus();</script>";
 
+//include the footer
 	require_once "footer.php";
+
 ?>
