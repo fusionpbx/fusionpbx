@@ -758,7 +758,7 @@
 	if (is_array($_SESSION['app']['languages']) && sizeof($_SESSION['app']['languages']) != 0) {
 		foreach ($_SESSION['app']['languages'] as $code) {
 			$selected = ($code == $user_settings['domain']['language']['code']) ? "selected='selected'" : null;
-			echo "	<option value='".escape($code)."' ".escape($selected).">".escape($language_codes[$code])." [".escape($code)."]</option>\n";
+			echo "	<option value='".$code."' ".$selected.">".escape($language_codes[$code])." [".escape($code)."]</option>\n";
 		}
 	}
 	echo "		</select>\n";
