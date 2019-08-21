@@ -336,7 +336,7 @@
 		echo "				</td>\n";
 		echo "				<td class='list_control_icons' style='width: 25px;'>\n";
 		if (strlen($row["sip_profile_domain_name"]) > 0) {
-			echo "				<a href=\"sip_profile_domain_delete.php?id=".escape($row["sip_profile_domain_uuid"])."&amp;sip_profile_domain_uuid=".escape($row["sip_profile_domain_uuid"])."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\"><button type='button' class='btn btn-default list_control_icon'><span class='glyphicon glyphicon-remove'></span></button></a>\n";
+			echo "				<a href=\"sip_profile_domain_delete.php?id=".escape($row["sip_profile_domain_uuid"])."&amp;sip_profile_domain_uuid=".escape($row["sip_profile_domain_uuid"])."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">".$v_link_label_delete."</a>\n";
 		}
 		echo "				</td>\n";
 		echo "			</tr>\n";
@@ -403,7 +403,7 @@
 		echo "				</td>\n";
 		echo "				<td class='list_control_icons' style='width: 25px;'>\n";
 		if (strlen($row["sip_profile_setting_name"]) > 0) {
-			echo "					<a href=\"sip_profile_setting_delete.php?id=".escape($row["sip_profile_setting_uuid"])."&amp;sip_profile_uuid=".escape($sip_profile_uuid)."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\"><button type='button' class='btn btn-default list_control_icon'><span class='glyphicon glyphicon-remove'></span></button></a>\n";
+			echo "					<a href=\"sip_profile_setting_delete.php?id=".escape($row["sip_profile_setting_uuid"])."&amp;sip_profile_uuid=".escape($sip_profile_uuid)."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">".$v_link_label_delete."</a>\n";
 		}
 		echo "				</td>\n";
 		echo "			</tr>\n";

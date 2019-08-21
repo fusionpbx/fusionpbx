@@ -223,7 +223,7 @@
 				echo "<a href='email_template_edit.php?id=".escape($row['email_template_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('email_template_delete')) {
-				echo "<button type='submit' class='btn btn-default list_control_icon' name=\"email_templates[$x][action]\" alt='".$text['button-delete']."' value='delete'><span class='glyphicon glyphicon-remove'></span></button>";
+				echo "<button type='submit' class='btn btn-default list_control_icon' name=\"email_templates[$x][action]\" alt='".$text['button-delete']."' value='delete'><span class='fas fa-minus'></span></button>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";

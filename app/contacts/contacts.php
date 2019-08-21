@@ -292,7 +292,7 @@
 			echo "	<td valign='top' class='".$row_style[$c]."' style='width: 35%; max-width: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><a href='contact_edit.php?id=".escape($row['contact_uuid'])."&query_string=".urlencode($_SERVER["QUERY_STRING"])."'>".escape($row['contact_organization'])."</a>&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='cursor: pointer; width: 35px; text-align: center;'>";
 			if (is_uuid($row['contact_attachment_uuid'])) {
-				echo "<i class='glyphicon glyphicon-picture' onclick=\"display_attachment('".escape($row['contact_attachment_uuid'])."');\"></i>";
+				echo "<i class='fas fa-portrait' onclick=\"display_attachment('".escape($row['contact_attachment_uuid'])."');\"></i>";
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' style='white-space: nowrap;'><a href='contact_edit.php?id=".escape($row['contact_uuid'])."&query_string=".urlencode($_SERVER["QUERY_STRING"])."'>".escape($row['contact_name_given'])."</a>&nbsp;</td>\n";

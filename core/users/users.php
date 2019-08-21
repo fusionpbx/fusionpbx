@@ -196,7 +196,7 @@
 
 			echo "	<td class='".$row_style[$c]."'>\n";
 			if (permission_exists('ticket_edit')) {
-				echo "		<a href='/app/tickets/tickets.php?user_uuid=".$row['user_uuid']."'><span class='glyphicon glyphicon-tags' title='".$text['label-tickets']."'></span></a>\n";
+				echo "		<a href='/app/tickets/tickets.php?user_uuid=".$row['user_uuid']."'><span class='fas fa-tags' title='".$text['label-tickets']."'></span></a>\n";
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";

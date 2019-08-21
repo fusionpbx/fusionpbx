@@ -660,7 +660,7 @@
 
 	echo "<div style='float:right; white-space: nowrap;'>\n";
 	if ($unsaved) {
-		echo "<span style='color: #b00;'>".$text['message-unsaved_changes']." <i class='glyphicon glyphicon-warning-sign' style='margin-right: 15px;'></i></span>";
+		echo "<span style='color: #b00;'>".$text['message-unsaved_changes']." <i class='fas fa-exclamation-triangle' style='margin-right: 15px;'></i></span>";
 	}
 	if (permission_exists('user_add') || permission_exists('user_edit')) {
 		echo "	<input type='button' class='btn' style='margin-right: 10px;' onclick=\"window.location='users.php'\" value='".$text['button-back']."'>";
@@ -1045,7 +1045,7 @@
 	}
 	echo "			<br>";
 	if ($unsaved) {
-		echo "		<span style='color: #b00;'>".$text['message-unsaved_changes']." <i class='glyphicon glyphicon-warning-sign' style='margin-right: 15px;'></i></span>";
+		echo "		<span style='color: #b00;'>".$text['message-unsaved_changes']." <i class='fas fa-exclamation-triangle' style='margin-right: 15px;'></i></span>";
 	}
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>";
 	echo "		</td>";

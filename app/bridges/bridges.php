@@ -233,7 +233,7 @@
 				echo "<a href='bridge_edit.php?id=".escape($row['bridge_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('bridge_delete')) {
-				echo "<button type='submit' class='btn btn-default list_control_icon' name=\"bridges[$x][action]\" alt='".$text['button-delete']."' value='delete'><span class='glyphicon glyphicon-remove'></span></button>";
+				echo "<button type='submit' class='btn btn-default list_control_icon' name=\"bridges[$x][action]\" alt='".$text['button-delete']."' value='delete'><span class='fas fa-minus'></span></button>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
