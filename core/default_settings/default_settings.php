@@ -362,7 +362,7 @@
 				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; padding: 3px 3px 0px 8px;'>\n";
 				echo "		<input type='checkbox' name='id[]' id='checkbox_".escape($row['default_setting_uuid'])."' value='".escape($row['default_setting_uuid'])."' onclick=\"if (!this.checked) { document.getElementById('chk_all_".escape($row['default_setting_category'])."').checked = false; }\">\n";
 				echo "	</td>\n";
-				$subcat_ids[strtolower($row['default_setting_category'])][] = 'checkbox_'.$row['default_setting_uuid'];
+				$subcat_ids[strtolower($row['default_setting_category'])][] = 'checkbox_'.escape($row['default_setting_uuid']);
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('default_setting_edit')) {
@@ -479,7 +479,7 @@
 			foreach ($subcat_ids as $default_setting_category => $checkbox_ids) {
 				echo "if (category == '".escape($default_setting_category)."') {\n";
 				foreach ($checkbox_ids as $index => $checkbox_id) {
-					echo "document.getElementById('".escape($checkbox_id)."').checked = (what == 'all') ? true : false;\n";
+					echo "document.getElementById('".$checkbox_id."').checked = (what == 'all') ? true : false;\n";
 				}
 				echo "}\n";
 			}
