@@ -83,8 +83,8 @@
 			$queries[] = "update v_menu_items set menu_item_icon = 'fa-sign-out-alt' where menu_item_icon = 'glyphicon-log-out' ";
 			$queries[] = "update v_menu_items set menu_item_icon = 'fa-sign-in-alt' where menu_item_icon = 'glyphicon-log-in' ";
 			$queries[] = "update v_menu_items set menu_item_icon = 'fa-external-link-alt' where menu_item_icon = 'glyphicon-new-window' ";
-			$database = new database;
 			foreach ($queries as $sql) {
+				$database = new database;
 				$database->execute($sql);
 			}
 			unset($queries, $sql);
