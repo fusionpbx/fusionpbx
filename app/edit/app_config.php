@@ -30,11 +30,11 @@
 
 	//permission details
 		$y=0;
-		$apps[$x]['permissions'][$y]['name'] = "script_editor_view";
+		$apps[$x]['permissions'][$y]['name'] = "edit_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "f1905fec-0577-daef-6045-59d09b7d3f94";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "script_editor_save";
+		$apps[$x]['permissions'][$y]['name'] = "edit_save";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "provision_editor_view";
