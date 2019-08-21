@@ -24,6 +24,9 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
+//disable this feature
+	exit;
+
 //includes
 	include "root.php";
 	require_once "resources/require.php";
@@ -54,7 +57,7 @@
 
 		//delete the folder
 		rmdir($folder); //, 0700
-		header("Location: fileoptions.php");
+		header("Location: file_options.php");
 	}
 	else {
 		//create the token
