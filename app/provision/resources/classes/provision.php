@@ -349,6 +349,7 @@ include "root.php";
 										$parameters['device_provisioned_ip'] = $_SERVER['REMOTE_ADDR'];
 										$database = new database;
 										$database->execute($sql, $parameters);
+										unset($parameters);
 
 									//set the variables from values in the database
 										$device_uuid = $row["device_uuid"];
@@ -364,7 +365,7 @@ include "root.php";
 										$device_profile_uuid = $row["device_profile_uuid"];
 										$device_description = $row["device_description"];
 								}
-								unset($row, $parameters);
+								unset($row);
 							//}
 
 						//find a template that was defined on another phone and use that as the default.
