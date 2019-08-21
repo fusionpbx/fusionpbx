@@ -411,9 +411,9 @@
 
 		echo "				</select>";
 
-		echo "				<button type='button' id='btn_new' class='btn btn-default list_control_icon' style='margin-left: 3px;' onclick=\"name_mode('new');\"><span class='glyphicon glyphicon-plus'></span></button>";
+		echo "				<button type='button' id='btn_new' class='btn btn-default list_control_icon' style='margin-left: 3px;' onclick=\"name_mode('new');\"><span class='fas fa-plus'></span></button>";
 		echo "				<input class='formfld' style='width: 100px; display: none;' type='text' name='name_new' id='name_new' maxlength='255' value=''>";
-		echo "				<button type='button' id='btn_select' class='btn btn-default list_control_icon' style='display: none; margin-left: 3px;' onclick=\"name_mode('select');\"><span class='glyphicon glyphicon-list-alt'></span></button>";
+		echo "				<button type='button' id='btn_select' class='btn btn-default list_control_icon' style='display: none; margin-left: 3px;' onclick=\"name_mode('select');\"><span class='fas fa-list'></span></button>";
 		echo "			</td>\n";
 		echo "		</tr>\n";
 		echo "	</table>\n";
@@ -511,29 +511,29 @@
 					$stream_icons = array();
 					$i = 0;
 					if (permission_exists('music_on_hold_path')) {
-						$stream_icons[$i]['glyphicon'] = 'glyphicon-folder-open';
+						$stream_icons[$i]['icon'] = 'fa-folder-open';
 						$stream_icons[$i]['title'] = $row['music_on_hold_name'];
 						$i++;
 					}
 					if ($row['music_on_hold_shuffle'] == 'true') {
-						$stream_icons[$i]['glyphicon'] = 'glyphicon-random';
+						$stream_icons[$i]['icon'] = 'fa-random';
 						$stream_icons[$i]['title'] = $text['label-shuffle'];
 						$i++;
 					}
 					if ($row['music_on_hold_chime_list'] != '') {
-						$stream_icons[$i]['glyphicon'] = 'glyphicon-bell';
+						$stream_icons[$i]['icon'] = 'fa-bell';
 						$stream_icons[$i]['title'] = $text['label-chime_list'].': '.$row['music_on_hold_chime_list'];
 						$i++;
 					}
 					if ($row['music_on_hold_channels'] == '2') {
-						$stream_icons[$i]['glyphicon'] = 'glyphicon-headphones';
+						$stream_icons[$i]['icon'] = 'fa-headphones';
 						$stream_icons[$i]['title'] = $text['label-stereo'];
 						$stream_icons[$i]['margin'] = 6;
 						$i++;
 					}
 					if (is_array($stream_icons) && sizeof($stream_icons) > 0) {
 						foreach ($stream_icons as $stream_icon) {
-							$icons .= "<span class='glyphicon ".$stream_icon['glyphicon']." icon_glyphicon_body' title='".escape($stream_icon['title'])."' style='width: 12px; height: 12px; margin-left: ".(($stream_icon['margin'] != '') ? $stream_icon['margin'] : 8)."px; vertical-align: text-top; cursor: help;'></span>";
+							$icons .= "<span class='fas ".$stream_icon['icon']." icon_body' title='".escape($stream_icon['title'])."' style='width: 12px; height: 12px; margin-left: ".(($stream_icon['margin'] != '') ? $stream_icon['margin'] : 8)."px; vertical-align: text-top; cursor: help;'></span>";
 						}
 					}
 

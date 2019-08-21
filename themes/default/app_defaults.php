@@ -72,6 +72,23 @@
 				$prep_statement->execute();
 			}
 			unset($prep_statement, $sql);
+
+		//replace glyphicon icon with fontawesome icon for default main menu items
+			$queries[] = "update v_menu_items set menu_item_icon = 'fa-home' where menu_item_icon = 'glyphicon-home' ";
+			$queries[] = "update v_menu_items set menu_item_icon = 'fa-user' where menu_item_icon = 'glyphicon-user' ";
+			$queries[] = "update v_menu_items set menu_item_icon = 'fa-exchange-alt' where menu_item_icon = 'glyphicon-transfer' ";
+			$queries[] = "update v_menu_items set menu_item_icon = 'fa-paper-plane' where menu_item_icon = 'glyphicon-send' ";
+			$queries[] = "update v_menu_items set menu_item_icon = 'fa-chart-bar' where menu_item_icon = 'glyphicon-equalizer' ";
+			$queries[] = "update v_menu_items set menu_item_icon = 'fa-cog' where menu_item_icon = 'glyphicon-cog' ";
+			$queries[] = "update v_menu_items set menu_item_icon = 'fa-sign-out-alt' where menu_item_icon = 'glyphicon-log-out' ";
+			$queries[] = "update v_menu_items set menu_item_icon = 'fa-sign-in-alt' where menu_item_icon = 'glyphicon-log-in' ";
+			$queries[] = "update v_menu_items set menu_item_icon = 'fa-external-link-alt' where menu_item_icon = 'glyphicon-new-window' ";
+			$database = new database;
+			foreach ($queries as $sql) {
+				$database->execute($sql);
+			}
+			unset($queries, $sql);
+
 	}
 
 ?>

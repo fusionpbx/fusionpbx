@@ -514,8 +514,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "		});\n";
 		echo "	}\n";
 		echo "\n";
-		echo "	$( document ).ready(function() {\n";
-		echo "		$('#domain_setting_search').focus();\n";
+		echo "	$(document).ready(function() {\n";
+		echo "		$('#domain_setting_search').trigger('focus');\n";
 		if ($search == '') {
 			echo "		// scroll to previous category\n";
 			echo "		var category_span_id;\n";

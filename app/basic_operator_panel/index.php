@@ -346,7 +346,7 @@
 			}
 			else {
 				$('#destination_'+ext+'_call').show(0, function() {
-					$('#destination_'+ext+'_call').focus();
+					$('#destination_'+ext+'_call').trigger('focus');
 					$('#destination_'+ext+'_call').autocomplete({
 						source: "autocomplete.php",
 						minLength: 3,
@@ -374,7 +374,7 @@
 			else {
 				$('#op_caller_details_'+ext).hide(0, function() {
 					$('#destination_'+ext+'_transfer').show(0, function() {
-						$('#destination_'+ext+'_transfer').focus();
+						$('#destination_'+ext+'_transfer').trigger('focus');
 						$('#destination_'+ext+'_transfer').autocomplete({
 							source: "autocomplete.php",
 							minLength: 3,

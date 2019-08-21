@@ -294,7 +294,7 @@
 			echo "</table>\n";
 			echo "<table cellpadding='0' cellspacing='0' border='0' width='100%' style='margin-top: 15px;'>\n";
 			echo "	<tr>\n";
-			echo "		<td align='left' width='50%'><input type='reset' class='btn' value='".$text['button-clear']."' onclick=\"$('#message_text').focus();\"></td>\n";
+			echo "		<td align='left' width='50%'><input type='reset' class='btn' value='".$text['button-clear']."' onclick=\"$('#message_text').trigger('focus');\"></td>\n";
 			echo "		<td align='center'><span id='thread_refresh_state'><img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; cursor: pointer;' onclick=\"refresh_thread_stop('".$number."','".$contact_uuid."');\" alt=\"".$text['label-refresh_pause']."\" title=\"".$text['label-refresh_pause']."\"></span></td>\n";
 			echo "		<td align='right' width='50%'><input type='submit' class='btn' value='".$text['button-send']."' title=\"".$text['label-ctrl_enter']."\"></td>\n";
 			echo "	</td>\n";
@@ -317,7 +317,7 @@
 			echo "					document.getElementById('message_compose').reset();\n";
 			if (!http_user_agent('mobile')) {
 				echo "				if ($('#message_new_layer').is(':hidden')) {\n";
-				echo "					$('#message_text').focus();\n";
+				echo "					$('#message_text').trigger('focus');\n";
 				echo "				}\n";
 			}
 			echo "					refresh_thread('".$number."', '".$contact_uuid."', 'true');\n";

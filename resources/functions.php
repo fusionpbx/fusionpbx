@@ -1708,6 +1708,12 @@ function number_pad($number,$n) {
 					default:
 						return;
 				}
+			//filter direction
+				switch ($direction) {
+					case 'down': $direction = 'keydown'; break;
+					case 'press': $direction = 'keypress'; break;
+					case 'up': $direction = 'keyup'; break;
+				}
 			//check for element exceptions
 				if (sizeof($exceptions) > 0) {
 					$exceptions = "!$(e.target).is('".implode(',', $exceptions)."') && ";
@@ -1719,7 +1725,7 @@ function number_pad($number,$n) {
 				if ($script_wrapper) {
 					echo "<script language='JavaScript' type='text/javascript'>\n";
 				}
-				echo "	$(".$subject.").key".$direction."(function(e) {\n";
+				echo "	$(".$subject.").on('".$direction."', function(e) {\n";
 				echo "		if (".$exceptions.$key_code.") {\n";
 				if ($prompt != '') {
 					$action = ($action != '') ? $action : "alert('".$key."');";

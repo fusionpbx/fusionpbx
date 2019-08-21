@@ -136,7 +136,8 @@ echo "}\n";
 echo "</script>";
 
 // keyboard shortcut bindings
-echo "<script language='JavaScript' type='text/javascript' src='".PROJECT_PATH."/resources/jquery/jquery-1.12.4.js'></script>\n";
+echo "<script language='JavaScript' type='text/javascript' src='".PROJECT_PATH."/resources/jquery/jquery-3.4.1.min.js'></script>\n";
+echo "<script src='https://code.jquery.com/jquery-migrate-3.1.0.js'></script>\n";
 
 //save file
 key_press('ctrl+s', 'down', 'window', null, null, "if (parent.document.getElementById('frm_edit')) { parent.$('form#frm_edit').submit(); return false; }", true);

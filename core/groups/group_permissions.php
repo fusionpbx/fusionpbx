@@ -339,7 +339,7 @@
 	echo "	}\n";
 	echo "\n";
 	echo "	$( document ).ready(function() {\n";
-	echo "		$('#group_permission_search').focus();\n";
+	echo "		$('#group_permission_search').trigger('focus');\n";
 	echo "	});\n";
 	echo "</script>\n";
 

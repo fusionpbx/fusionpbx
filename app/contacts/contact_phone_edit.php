@@ -218,7 +218,7 @@
 	echo "		document.getElementById(field).selectedIndex = 0;\n";
 	echo "		document.getElementById(field+'_custom').value = '';\n";
 	echo "		$('#'+field+'_custom').toggle();\n";
-	echo "		if ($('#'+field+'_custom').is(':visible')) { $('#'+field+'_custom').focus(); } else { $('#'+field).focus(); }\n";
+	echo "		if ($('#'+field+'_custom').is(':visible')) { $('#'+field+'_custom').trigger('focus'); } else { $('#'+field).trigger('focus'); }\n";
 	echo "	}";
 	echo "</script>";
 

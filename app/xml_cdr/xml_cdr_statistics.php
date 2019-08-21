@@ -227,7 +227,7 @@
 								   '<label for="id' + key + '">'
 									+ val.label + '</label>');
 		});
-		choiceContainer.find("input").click(plotAccordingToChoices);
+		choiceContainer.find("input").on('click', plotAccordingToChoices);
 
 		function plotAccordingToChoices() {
 			var data = [];
