@@ -31,7 +31,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('php_editor_view')) {
+	if (permission_exists('clip_edit')) {
 		//access granted
 	}
 	else {
