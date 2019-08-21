@@ -23,81 +23,86 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('script_editor_save')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('script_editor_save')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-if (count($_POST)>0) {
-	$clip_uuid = $_POST["id"];
-	$clip_name = $_POST["clip_name"];
-	$clip_folder = $_POST["clip_folder"];
-	$clip_text_start = $_POST["clip_text_start"];
-	$clip_text_end = $_POST["clip_text_end"];
-	$clip_desc = $_POST["clip_desc"];
-	$clip_order = $_POST["clip_order"];
+//process the HTTP POST
+	if (count($_POST) > 0) {
+		$clip_uuid = $_POST["id"];
+		$clip_name = $_POST["clip_name"];
+		$clip_folder = $_POST["clip_folder"];
+		$clip_text_start = $_POST["clip_text_start"];
+		$clip_text_end = $_POST["clip_text_end"];
+		$clip_desc = $_POST["clip_desc"];
+		$clip_order = $_POST["clip_order"];
 
-	//no slashes
-	$clip_name = str_replace('/', '|', $clip_name);
-	$clip_name = str_replace('\\', '|', $clip_name);
+		//no slashes
+		$clip_name = str_replace('/', '|', $clip_name);
+		$clip_name = str_replace('\\', '|', $clip_name);
 
-	//sql update
-	$array['clips'][0]['clip_uuid'] = $clip_uuid;
-	$array['clips'][0]['clip_name'] = $clip_name;
-	$array['clips'][0]['clip_folder'] = $clip_folder;
-	$array['clips'][0]['clip_text_start'] = $clip_text_start;
-	$array['clips'][0]['clip_text_end'] = $clip_text_end;
-	$array['clips'][0]['clip_desc'] = $clip_desc;
-	$array['clips'][0]['clip_order'] = $clip_order;
+		//sql update
+		$array['clips'][0]['clip_uuid'] = $clip_uuid;
+		$array['clips'][0]['clip_name'] = $clip_name;
+		$array['clips'][0]['clip_folder'] = $clip_folder;
+		$array['clips'][0]['clip_text_start'] = $clip_text_start;
+		$array['clips'][0]['clip_text_end'] = $clip_text_end;
+		$array['clips'][0]['clip_desc'] = $clip_desc;
+		$array['clips'][0]['clip_order'] = $clip_order;
 
-	$p = new permissions;
-	$p->add('clip_edit', 'temp');
+		$p = new permissions;
+		$p->add('clip_edit', 'temp');
 
-	$database = new database;
-	$database->app_name = 'edit';
-	$database->app_uuid = '17e628ee-ccfa-49c0-29ca-9894a0384b9b';
-	$database->save($array);
-	unset($array);
-
-	$p->add('clip_edit', 'temp');
-
-	//redirect the browser
-	require_once "header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"1;url=clipoptions.php\">\n";
-	echo $text['message-update'];
-	require_once "footer.php";
-	exit;
-}
-else {
-	//get the uuid from http values
-		$clip_uuid = $_GET["id"];
-
-	//get the clip
-		$sql = "select * from v_clips ";
-		$sql .= "where clip_uuid = :clip_uuid ";
-		$parameters['clip_uuid'] = $clip_uuid;
 		$database = new database;
-		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
-			$clip_name = $row["clip_name"];
-			$clip_folder = $row["clip_folder"];
-			$clip_text_start = $row["clip_text_start"];
-			$clip_text_end = $row["clip_text_end"];
-			$clip_desc = $row["clip_desc"];
-			$clip_order = $row["clip_order"];
-		}
-		unset($sql, $parameters, $row);
-}
+		$database->app_name = 'edit';
+		$database->app_uuid = '17e628ee-ccfa-49c0-29ca-9894a0384b9b';
+		$database->save($array);
+		unset($array);
+
+		$p->add('clip_edit', 'temp');
+
+		//redirect the browser
+		require_once "header.php";
+		echo "<meta http-equiv=\"refresh\" content=\"1;url=clip_options.php\">\n";
+		echo $text['message-update'];
+		require_once "footer.php";
+		exit;
+	}
+	else {
+		//get the uuid from http values
+			$clip_uuid = $_GET["id"];
+
+		//get the clip
+			$sql = "select * from v_clips ";
+			$sql .= "where clip_uuid = :clip_uuid ";
+			$parameters['clip_uuid'] = $clip_uuid;
+			$database = new database;
+			$row = $database->select($sql, $parameters, 'row');
+			if (is_array($row) && @sizeof($row) != 0) {
+				$clip_name = $row["clip_name"];
+				$clip_folder = $row["clip_folder"];
+				$clip_text_start = $row["clip_text_start"];
+				$clip_text_end = $row["clip_text_end"];
+				$clip_desc = $row["clip_desc"];
+				$clip_order = $row["clip_order"];
+			}
+			unset($sql, $parameters, $row);
+	}
 
 //show the content
 	require_once "header.php";
@@ -149,5 +154,7 @@ else {
 	echo "	</tr>";
 	echo "</table>";
 
+//include the footer
 	require_once "footer.php";
+
 ?>
