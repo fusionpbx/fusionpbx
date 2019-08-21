@@ -17,33 +17,96 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('script_editor_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
 
-$filename = $_POST["file"];
-$filename = str_replace ("\\", "/", $filename);
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
-$handle = fopen($filename, "r");
-if ($handle) {
-	while (!feof($handle)) {
-		$buffer = fgets($handle, 4096);
-		echo $buffer;
+//check permissions
+	if (permission_exists('edit_view')) {
+		//access granted
 	}
-	fclose($handle);
-}
+	else {
+		echo "access denied";
+		exit;
+	}
+
+//get the directory
+	if (!isset($_SESSION)) { session_start(); }
+	switch ($_SESSION["app"]["edit"]["dir"]) {
+		case 'scripts':
+			$edit_directory = $_SESSION['switch']['scripts']['dir'];
+			break;
+		case 'php':
+			$edit_directory = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH;
+			break;
+		case 'grammer':
+			$edit_directory = $_SESSION['switch']['grammar']['dir'];
+			break;
+		case 'provision':
+			switch (PHP_OS) {
+				case "Linux":
+					if (file_exists('/etc/fusionpbx/resources/templates/provision')) {
+						$edit_directory = '/etc/fusionpbx/resources/templates/provision';
+					}
+					else {
+						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					}
+					break;
+				case "FreeBSD":
+					if (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
+						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					}
+					else {
+						$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					}
+					break;
+				case "NetBSD":
+					$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					break;
+				case "OpenBSD":
+					$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+					break;
+				default:
+					$edit_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/";
+			}
+			break;
+		case 'xml':
+			$edit_directory = $_SESSION['switch']['conf']['dir'];
+			break;
+	}
+
+//set the file variable
+	$file_name = $_POST["file"];
+
+//remove attempts to change the directory
+	$file_name = str_replace('..', '', $file_name);
+	$file_name = str_replace ("\\", "/", $file_name);
+
+//break the path into an array
+	$path_array = pathinfo($file_name);
+	$path_prefix = substr($path_array['dirname'], 0, strlen($edit_directory));
+
+//validate the path
+	if ($path_prefix == $edit_directory) {
+
+		//get the contents of the file
+		$handle = fopen($file_name, "r");
+		if ($handle) {
+			while (!feof($handle)) {
+				$buffer = fgets($handle, 4096);
+				echo $buffer;
+			}
+			fclose($handle);
+		}
+
+	}
 
 ?>
