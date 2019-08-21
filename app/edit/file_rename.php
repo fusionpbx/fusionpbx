@@ -25,6 +25,9 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
+//disable this feature
+	exit;
+
 //includes
 	include "root.php";
 	require_once "resources/require.php";
@@ -65,7 +68,7 @@
 		//echo "folder: ".$folder."<br>";
 		//echo "orig filename: ".$filename."<br>";;
 		rename($folder.$filename, $folder.$newfilename);
-		header("Location: fileoptions.php");
+		header("Location: file_options.php");
 	}
 	else {
 		//create the token
