@@ -421,6 +421,26 @@ $text['label-fixed']['ru-ru'] = "Фиксированный";
 $text['label-fixed']['sv-se'] = "Fast";
 $text['label-fixed']['uk-ua'] = "фіксований";
 
+$text['label-side']['en-us'] = "Side";
+$text['label-side']['ar-eg'] = "Side";
+$text['label-side']['de-at'] = "Side";
+$text['label-side']['de-ch'] = "Side";
+$text['label-side']['de-de'] = "Side";
+$text['label-side']['es-cl'] = "Side";
+$text['label-side']['es-mx'] = "Side";
+$text['label-side']['fr-ca'] = "Side";
+$text['label-side']['fr-fr'] = "Side";
+$text['label-side']['he-il'] = "Side";
+$text['label-side']['it-it'] = "Side";
+$text['label-side']['nl-nl'] = "Side";
+$text['label-side']['pl-pl'] = "Side";
+$text['label-side']['pt-br'] = "Side";
+$text['label-side']['pt-pt'] = "Side";
+$text['label-side']['ro-ro'] = "Side";
+$text['label-side']['ru-ru'] = "Side";
+$text['label-side']['sv-se'] = "Side";
+$text['label-side']['uk-ua'] = "Side";
+
 $text['label-domain']['en-us'] = "Domain";
 $text['label-domain']['ar-eg'] = "";
 $text['label-domain']['de-at'] = "Domain"; //copied from de-de
