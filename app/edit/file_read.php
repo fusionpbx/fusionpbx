@@ -40,7 +40,7 @@
 
 //get the file name
 	$file_name = $_POST["file"];
-	$file_name = str_replace ("\\", "/", $filename);
+	$file_name = str_replace ("\\", "/", $file_name);
 
 //get the contents of the file
 	$handle = fopen($file_name, "r");
