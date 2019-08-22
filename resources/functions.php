@@ -1623,6 +1623,19 @@ function number_pad($number,$n) {
 		}
 	}
 
+//detect if php is running as command line interface
+	if (!function_exists('is_cli')) {
+		function is_cli() {
+			if (defined('STDIN')) {
+				return true;
+			}
+			if (php_sapi_name() == 'cli' && !isset($_SERVER['HTTP_USER_AGENT']) && is_numeric($_SERVER['argc']) {
+				return true;
+			}
+			return false;
+		}
+	}
+
 //format mac address
 	if (!function_exists('format_mac')) {
 		function format_mac($str, $delim = '-', $case = 'lower') {
