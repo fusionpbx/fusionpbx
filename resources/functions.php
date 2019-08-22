@@ -1629,7 +1629,7 @@ function number_pad($number,$n) {
 			if (defined('STDIN')) {
 				return true;
 			}
-			if (php_sapi_name() == 'cli' && !isset($_SERVER['HTTP_USER_AGENT']) && is_numeric($_SERVER['argc']) {
+			if (php_sapi_name() == 'cli' && !isset($_SERVER['HTTP_USER_AGENT']) && is_numeric($_SERVER['argc'])) {
 				return true;
 			}
 			return false;
