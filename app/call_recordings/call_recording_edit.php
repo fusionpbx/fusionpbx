@@ -158,17 +158,6 @@
 //show the header
 	require_once "resources/header.php";
 
-//add the calendar
-	echo "<script language='JavaScript' type='text/javascript'>\n";
-	echo "	$(document).ready(function() {\n";
-	echo "		apply_datetimepicker();\n";
-	echo "	});\n";
-	echo "	function apply_datetimepicker() {\n";
-	echo "		$('.datetimepicker').datetimepicker({ format: 'YYYY-MM-DD HH:mm', showTodayButton: true, showClear: true, showClose: true });\n";
-	echo "		$('.datepicker').datetimepicker({ format: 'YYYY-MM-DD', showClear: true, showClose: true });\n";
-	echo "	}\n";
-	echo "</script>\n";
-
 //show the content
 	echo "<form name='frm' id='frm' method='post' action=''>\n";
 	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
@@ -219,7 +208,7 @@
 	echo "	".$text['label-call_recording_date']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "			<input class='formfld datetimepicker' type='text' name='call_recording_date' maxlength='16' value=\"".escape($call_recording_date)."\">\n";
+	echo "	<input class='formfld datetimesecpicker' data-toggle='datetimepicker' data-target='#call_recording_date' onblur=\"$(this).datetimepicker('hide');\" type='text' name='call_recording_date' id='call_recording_date' maxlength='16' value=\"".escape($call_recording_date)."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_recording_date']."\n";
 	echo "</td>\n";

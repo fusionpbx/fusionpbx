@@ -703,8 +703,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' nowrap='nowrap' width='30%'>".$text['label-schedule']."</td>\n";
 	echo "<td class='vtable' width='70%' align='left' style='position: relative; min-width: 275px;'>\n";
-	echo "		<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px; max-width: 115px;' name='start_datetime' id='start_datetime' placeholder='".$text['label-from']."' value='".escape($start_datetime)."'>\n";
-	echo "		<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px; max-width: 115px;' name='stop_datetime' id='stop_datetime' placeholder='".$text['label-to']."' value='".escape($stop_datetime)."'>\n";
+	echo "		<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_datetime' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px; max-width: 115px;' name='start_datetime' id='start_datetime' placeholder='".$text['label-from']."' value='".escape($start_datetime)."'>\n";
+	echo "		<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#stop_datetime' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px; max-width: 115px;' name='stop_datetime' id='stop_datetime' placeholder='".$text['label-to']."' value='".escape($stop_datetime)."'>\n";
 	echo "	<br>".$text['description-schedule'];
 	echo "</td>\n";
 	echo "</tr>\n";

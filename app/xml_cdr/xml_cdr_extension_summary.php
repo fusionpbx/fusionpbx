@@ -159,7 +159,7 @@
 		echo "						".$text['label-start_date_time']."\n";
 		echo "					</td>\n";
 		echo "					<td class='vtable' width='70%' align='left' style='position: relative; min-width: 135px;'>\n";
-		echo "						<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='$start_stamp_begin'>\n";
+		echo "						<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin)."'>\n";
 		echo "					</td>\n";
 		echo "				</tr>\n";
 		echo "			</table>\n";
@@ -172,7 +172,7 @@
 		echo "						".$text['label-end_date_time']."\n";
 		echo "					</td>\n";
 		echo "					<td class='vtable' width='70%' align='left' style='position: relative; min-width: 135px;'>\n";
-		echo "						<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='$start_stamp_end'>\n";
+		echo "						<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end)."'>\n";
 		echo "					</td>\n";
 		echo "				</tr>\n";
 		echo "			</table>\n";
