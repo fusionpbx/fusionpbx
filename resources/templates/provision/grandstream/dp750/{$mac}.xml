@@ -2251,16 +2251,16 @@
 <!-- Number: 1 - 5; 101 - 104. 1 - HS1, 2 - HS2, 3 - HS3, 4 - HS4, 5 - HS5; 101 - Circular, 102 - Linear, 103 - Parallel, 104 - Shared. Default is 101. -->
 <!-- Mandatory -->
 {if isset($grandstream_hanging_group_mode) }
-<P27080>{$grandstream_hanging_group_mode}</P27080>
-<P27081>{$grandstream_hanging_group_mode}</P27081>
-<P27082>{$grandstream_hanging_group_mode}</P27082>
-<P27083>{$grandstream_hanging_group_mode}</P27083>
-<P27084>{$grandstream_hanging_group_mode}</P27084>
-<P27085>{$grandstream_hanging_group_mode}</P27085>
-<P27086>{$grandstream_hanging_group_mode}</P27086>
-<P27087>{$grandstream_hanging_group_mode}</P27087>
-<P27088>{$grandstream_hanging_group_mode}</P27088>
-<P27089>{$grandstream_hanging_group_mode}</P27089>
+<P27080>{$grandstream_hanging_group_mode1}</P27080>
+<P27081>{$grandstream_hanging_group_mode2}</P27081>
+<P27082>{$grandstream_hanging_group_mode3}</P27082>
+<P27083>{$grandstream_hanging_group_mode4}</P27083>
+<P27084>{$grandstream_hanging_group_mode5}</P27084>
+<P27085>{$grandstream_hanging_group_mode6}</P27085>
+<P27086>{$grandstream_hanging_group_mode7}</P27086>
+<P27087>{$grandstream_hanging_group_mode8}</P27087>
+<P27088>{$grandstream_hanging_group_mode9}</P27088>
+<P27089>{$grandstream_hanging_group_mode10}</P27089>
 {else}
 <P27080>101</P27080>
 <P27081>101</P27081>
