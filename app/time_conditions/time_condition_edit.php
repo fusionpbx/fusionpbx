@@ -773,10 +773,13 @@
 		tb_id = obj.id;
 		tb.className = 'formfld datetimepicker';
 		tb.setAttribute('style', 'position: relative; width: 120px; min-width: 120px; max-width: 120px; text-align: center;');
+		tb.setAttribute('data-toggle', 'datetimepicker');
+		tb.setAttribute('data-target', '#' + tb.id);
+		tb.setAttribute('onblur', "$(this).datetimepicker('hide');");
 		obj.parentNode.insertBefore(tb, obj);
 		obj.parentNode.removeChild(obj);
 		$('#'+tb_id).wrap("<div style='position: relative; display: inline;'></div>"); //add parent div
-		$('#'+tb_id).datetimepicker({ format: 'YYYY-MM-DD HH:mm', showTodayButton: true, showClear: true, showClose: true, });
+		$('#'+tb_id).datetimepicker({ format: 'YYYY-MM-DD HH:mm', });
 	}
 
 	function change_to_select(obj) {

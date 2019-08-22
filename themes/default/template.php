@@ -30,7 +30,7 @@ echo "<meta http-equiv='X-UA-Compatible' content='IE=edge'>\n";
 echo "<meta name='viewport' content='width=device-width, initial-scale=1'>\n";
 
 echo "<link rel='stylesheet' type='text/css' href='<!--{project_path}-->/resources/bootstrap/css/bootstrap.min.css'>\n";
-echo "<link rel='stylesheet' type='text/css' href='<!--{project_path}-->/resources/bootstrap/css/bootstrap-datetimepicker.min.css'>\n";
+echo "<link rel='stylesheet' type='text/css' href='<!--{project_path}-->/resources/bootstrap/css/bootstrap-tempusdominus.css'>\n";
 echo "<link rel='stylesheet' type='text/css' href='<!--{project_path}-->/resources/bootstrap/css/bootstrap-colorpicker.min.css'>\n";
 echo "<link rel='stylesheet' type='text/css' href='<!--{project_path}-->/themes/".escape($_SESSION['domain']['template']['name'])."/css.php".($default_login ? '?login=default' : null)."'>\n";
 echo "<link rel='stylesheet' type='text/css' href='<!--{project_path}-->/resources/fontawesome/css/all.css'>\n";
@@ -55,9 +55,9 @@ echo "<title><!--{title}--></title>\n";
 echo "<script language='JavaScript' type='text/javascript' src='<!--{project_path}-->/resources/jquery/jquery-3.4.1.min.js'></script>\n";
 //echo "<script src='https://code.jquery.com/jquery-migrate-3.1.0.js'></script>\n";
 echo "<script language='JavaScript' type='text/javascript' src='<!--{project_path}-->/resources/jquery/jquery.autosize.input.js'></script>\n";
-echo "<script language='JavaScript' type='text/javascript' src='<!--{project_path}-->/resources/momentjs/moment.min.js'></script>\n";
+echo "<script language='JavaScript' type='text/javascript' src='<!--{project_path}-->/resources/momentjs/moment-with-locales.min.js'></script>\n";
 echo "<script language='JavaScript' type='text/javascript' src='<!--{project_path}-->/resources/bootstrap/js/bootstrap.min.js'></script>\n";
-echo "<script language='JavaScript' type='text/javascript' src='<!--{project_path}-->/resources/bootstrap/js/bootstrap-datetimepicker.min.js'></script>\n";
+echo "<script language='JavaScript' type='text/javascript' src='<!--{project_path}-->/resources/bootstrap/js/bootstrap-tempusdominus.min.js'></script>\n";
 echo "<script language='JavaScript' type='text/javascript' src='<!--{project_path}-->/resources/bootstrap/js/bootstrap-colorpicker.js'></script>\n";
 echo "<script language='JavaScript' type='text/javascript' src='<!--{project_path}-->/resources/bootstrap/js/bootstrap-pwstrength.min.js'></script>\n";
 
@@ -216,32 +216,38 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 				});
 			});
 
-		//apply the auto-size jquery script to all text inputs
-			$("input[type=text].txt,input[type=number].txt,input[type=password].txt,input[type=text].formfld,input[type=number].formfld,input[type=password].formfld").not('.datetimepicker,.datetimesecondspicker,.datepicker').autosizeInput();
+		//autosize jquery autosize plugin on applicable input fields
+			$("input[type=text].txt,input[type=number].txt,input[type=password].txt,input[type=text].formfld,input[type=number].formfld,input[type=password].formfld").not('.datepicker,.datetimepicker,.datetimesecpicker').autosizeInput();
 
-		//apply bootstrap-datetime plugin
+		//initialize bootstrap tempusdominus (calendar/datetime picker) plugin
 			$(function() {
-				$('.datetimepicker').datetimepicker({
-					format: 'YYYY-MM-DD HH:mm',
-					showTodayButton: true,
-					showClear: true,
-					showClose: true,
-				});
-				$('.datetimesecondspicker').datetimepicker({
-					format: 'YYYY-MM-DD HH:mm:ss',
-					showTodayButton: true,
-					showClear: true,
-					showClose: true,
-				});
-				$('.datepicker').datetimepicker({
-					format: 'YYYY-MM-DD',
-					showTodayButton: true,
-					showClear: true,
-					showClose: true,
-				});
+				//set defaults
+					$.fn.datetimepicker.Constructor.Default = $.extend({}, $.fn.datetimepicker.Constructor.Default, {
+						buttons: {
+							showToday: true,
+							showClear: true,
+							showClose: true,
+						},
+						icons: {
+							time: 'fas fa-clock',
+							date: 'fas fa-calendar-alt',
+							up: 'fas fa-arrow-up',
+							down: 'fas fa-arrow-down',
+							previous: 'fas fa-chevron-left',
+							next: 'fas fa-chevron-right',
+							today: 'fas fa-calendar-check',
+							clear: 'fas fa-trash',
+							close: 'fas fa-times',
+						}
+					});
+
+				//define formatting of individual classes
+					$('.datepicker').datetimepicker({ 			format: 'YYYY-MM-DD', });
+					$('.datetimepicker').datetimepicker({ 		format: 'YYYY-MM-DD HH:mm', });
+					$('.datetimesecpicker').datetimepicker({ 	format: 'YYYY-MM-DD HH:mm:ss', });
 			});
 
-		//apply bootstrap-colorpicker plugin
+		//apply bootstrap colorpicker plugin
 			$(function(){
 				$('.colorpicker').colorpicker({
 					align: 'left',
@@ -261,7 +267,7 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 				});
 			});
 
-		//apply password strength plugin
+		//apply bootstrap password strength plugin
 			$('#password').pwstrength({
 				common: {
 					minChar: 8,
@@ -608,7 +614,8 @@ if (!$default_login) {
 
 			echo "			</ul>\n";
 
-			echo "			<ul class='navbar-nav ml-auto'>\n";
+			echo "			<ul class='navbar-nav ml-auto'>
+\n";
 			//domain name/selector
 				if ($_SESSION["username"] != '' && permission_exists("domain_select") && count($_SESSION['domains']) > 1 && $_SESSION['theme']['domain_visible']['text'] == 'true') {
 					echo "		<li class='nav-item'>\n";
