@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -236,10 +236,7 @@
 	}
 	echo th_order_by('destination_type', $text['label-destination_type'], $order_by, $order, $param);
 	echo th_order_by('destination_number', $text['label-destination_number'], $order_by, $order, $param);
-	if ($_GET['show'] == "all" && permission_exists('destination_all')) {
-		//do not show action on show all
-	}
-	else {
+	if (!$_GET['show'] == "all") {
 		echo  "<th>". $text['label-detail_action']."</th>";
 	}
 	if (permission_exists("destination_context")) {
@@ -285,10 +282,7 @@
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['destination_type'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape(format_phone($row['destination_number']))."&nbsp;</td>\n";
-			if ($_GET['show'] == "all" && permission_exists('destination_all')) {
-				//do not show action on show all
-			}
-			else {
+			if (!$_GET['show'] == "all") {
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$action_name."&nbsp;</td>\n";
 			}
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_number_regex']."&nbsp;</td>\n";
