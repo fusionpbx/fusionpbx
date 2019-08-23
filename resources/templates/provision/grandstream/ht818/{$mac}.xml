@@ -1745,7 +1745,7 @@
     <!-- # if the device is using private IP address, it will be enabled. -->
     <!-- # Number: 0,1,2  -->
     <!-- # Mandatory  -->
-    <P190>$wan_side_webssh_access</P190>
+    <P190>{$wan_side_webssh_access}</P190>
 
     <!-- # White List for WAN Side. Only the IP address in white list can access Web and SSH. -->
     <!-- # String ipaddress -->
@@ -2025,7 +2025,7 @@
     <!-- # Number: 0,1  -->
     <!-- # Mandatory  -->
     <!-- # Reboot required  -->
-    <P231>$device_mode</P231>
+    <P231>{$device_mode}</P231>
 
     <!-- # NAT maximum ports. range: 0 - 4096, default is 1024 -->
     <!-- # Number: 0 to 4096  -->
@@ -2087,7 +2087,7 @@
     <!-- # Reply to ICMP on WAN port. 0 - No, 1 - Yes. Unit will not respond to PING from WAN side if set to No. -->
     <!-- # Number: 0,1  -->
     <!-- # Mandatory  -->
-    <P189>$reply_to_icmp_on_wan_port</P189>
+    <P189>{$reply_to_icmp_on_wan_port}</P189>
 
     <!-- # Enable LAN DHCP. 0 - No, 1 - Yes -->
     <!-- # Number: 0,1  -->
