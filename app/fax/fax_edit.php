@@ -604,7 +604,7 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		if (permission_exists('fax_users')) {
+		if (permission_exists('fax_user_view')) {
 			if ($action == "update") {
 				echo "	<tr>";
 				echo "		<td class='vncell' valign='top'>".$text['label-user-list']."</td>";
