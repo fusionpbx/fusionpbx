@@ -604,7 +604,7 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		if (if_group("admin") || if_group("superadmin")) {
+		if (permission_exists('fax_users')) {
 			if ($action == "update") {
 				echo "	<tr>";
 				echo "		<td class='vncell' valign='top'>".$text['label-user-list']."</td>";
@@ -616,7 +616,7 @@
 						echo "		<tr>\n";
 						echo "			<td class='vtable'>".escape($field['username'])."</td>\n";
 						echo "			<td>\n";
-						echo "				<a href='fax_edit.php?id=".escape($fax_uuid)."&domain_uuid=".urlencode($_SESSION['domain_uuid'])."&user_uuid=".urlencode($field['user_uuid'])."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+						echo "				<a href='fax_edit.php?id=".urlencode($fax_uuid)."&domain_uuid=".urlencode($_SESSION['domain_uuid'])."&user_uuid=".urlencode($field['user_uuid'])."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 						echo "			</td>\n";
 						echo "		</tr>\n";
 					}
