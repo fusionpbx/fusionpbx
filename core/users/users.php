@@ -191,12 +191,12 @@
 			echo "		".$row['groups']."&nbsp;\n";
 			echo "	</td>\n";
 
-			echo "	<td class='".$row_style[$c]."'><a href='/app/contacts/contact_edit.php?id=".$row['contact_uuid']."'>".$row['contact_organization']."</a> &nbsp;</td>\n";
-			echo "	<td class='".$row_style[$c]."'><a href='/app/contacts/contact_edit.php?id=".$row['contact_uuid']."'>".$row['contact_name_given']." ".$row['contact_name_family']."</a> &nbsp;</td>\n";
+			echo "	<td class='".$row_style[$c]."'><a href='/app/contacts/contact_edit.php?id=".urlencode($row['contact_uuid'])."'>".escape($row['contact_organization'])."</a> &nbsp;</td>\n";
+			echo "	<td class='".$row_style[$c]."'><a href='/app/contacts/contact_edit.php?id=".urlencode($row['contact_uuid'])."'>".escape($row['contact_name_given'])." ".escape($row['contact_name_family'])."</a> &nbsp;</td>\n";
 
 			echo "	<td class='".$row_style[$c]."'>\n";
 			if (permission_exists('ticket_edit')) {
-				echo "		<a href='/app/tickets/tickets.php?user_uuid=".$row['user_uuid']."'><span class='fas fa-tags' title='".$text['label-tickets']."'></span></a>\n";
+				echo "		<a href='/app/tickets/tickets.php?user_uuid=".urlencode($row['user_uuid'])."'><span class='fas fa-tags' title='".$text['label-tickets']."'></span></a>\n";
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
@@ -209,11 +209,11 @@
 			echo "&nbsp;</td>\n";
 			echo "	<td valign='top' align='right' class='tr_link_void'>";
 			if (permission_exists('user_edit')) {
-				echo "<a href='user_edit.php?id=".$row['user_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='user_edit.php?id=".urlencode($row['user_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('user_delete')) {
 				if ($_SESSION["user"]["user_uuid"] != $row['user_uuid']) {
-					echo "<a href='user_delete.php?id=".$row['user_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+					echo "<a href='user_delete.php?id=".urlencode($row['user_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 				}
 				else {
 					echo "<span onclick=\"alert('".$text['message-cannot_delete_own_account']."');\">".str_replace("list_control_icon", "list_control_icon_disabled", $v_link_label_delete)."</span>";
