@@ -45,7 +45,7 @@
 	}
 	else {
 		// load users own account
-		header("Location: user_edit.php?id=".$_SESSION['user_uuid']);
+		header("Location: user_edit.php?id=".urlencode($_SESSION['user_uuid']));
 		exit;
 	}
 
@@ -206,7 +206,7 @@
 		//return if error
 			if (message::count() != 0) {
 				$_SESSION['tmp'][$_SERVER['PHP_SELF']]['user'] = $_POST;
-				header("Location: user_edit.php".(permission_exists('user_edit') && $action != 'add' ? "?id=".$user_uuid : null));
+				header("Location: user_edit.php".(permission_exists('user_edit') && $action != 'add' ? "?id=".urlencode($user_uuid) : null));
 				exit;
 			}
 
@@ -666,7 +666,7 @@
 		echo "	<input type='button' class='btn' style='margin-right: 10px;' onclick=\"window.location='users.php'\" value='".$text['button-back']."'>";
 	}
 	if (permission_exists('ticket_add') || permission_exists('ticket_edit')) {
-		echo "	<input type='button' class='btn' style='margin-right: 3px;' onclick=\"window.location='/app/tickets/tickets.php?user_uuid=".escape($user_uuid)."'\" value='".$text['button-tickets']."'>";
+		echo "	<input type='button' class='btn' style='margin-right: 3px;' onclick=\"window.location='/app/tickets/tickets.php?user_uuid=".urlencode($user_uuid)."'\" value='".$text['button-tickets']."'>";
 	}
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
 	echo "</div>\n";
@@ -875,7 +875,7 @@
 		echo "<br />\n";
 		echo $text['description-contact']."\n";
 		if (strlen($contact_uuid) > 0) {
-			echo "			<a href=\"".PROJECT_PATH."/app/contacts/contact_edit.php?id=".escape($contact_uuid)."\">".$text['description-contact_view']."</a>\n";
+			echo "			<a href=\"".PROJECT_PATH."/app/contacts/contact_edit.php?id=".urlencode($contact_uuid)."\">".$text['description-contact_view']."</a>\n";
 		}
 		echo "		</td>";
 		echo "	</tr>";
@@ -930,7 +930,7 @@
 					echo "	</td>\n";
 					if (permission_exists('group_member_delete') || if_group("superadmin")) {
 						echo "	<td class='list_control_icons' style='width: 25px;'>\n";
-						echo "		<a href='user_edit.php?id=".escape($user_uuid)."&domain_uuid=".escape($domain_uuid)."&group_uuid=".escape($field['group_uuid'])."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>\n";
+						echo "		<a href='user_edit.php?id=".urlencode($user_uuid)."&domain_uuid=".urlencode($domain_uuid)."&group_uuid=".urlencode($field['group_uuid'])."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>\n";
 						echo "	</td>\n";
 					}
 					echo "</tr>\n";
