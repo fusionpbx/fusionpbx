@@ -166,7 +166,7 @@
 	}
 
 //redirect
-	header("Location: devices.php?id=".$device_uuid);
+	header("Location: device_edit.php?id=".$device_uuid);
 	return;
 
 ?>
