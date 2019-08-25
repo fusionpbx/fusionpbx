@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -43,7 +43,7 @@
 	$text = $language->get();
 
 //set the http get/post variable(s) to a php variable
-	if (is_array($_REQUEST["id"]) && isset($_REQUEST["mac"])) {
+	if (is_uuid($_REQUEST["id"]) && isset($_REQUEST["mac"])) {
 		$device_uuid = $_REQUEST["id"];
 		$mac_address_new = $_REQUEST["mac"];
 		$mac_address_new = preg_replace('#[^a-fA-F0-9./]#', '', $mac_address_new);
@@ -114,33 +114,34 @@
 	$device_settings = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-//prepare the devices array
-	unset($devices[0]["device_uuid"]);
+//set the device primary key
+	$device_uuid = uuid();
 
-//add copy to the device description
+//prepare the device array
+	$devices[0]["device_uuid"] = $device_uuid;
 	$devices[0]["device_description"] = $text['button-copy']." ".$devices[0]["device_description"];
 
 //prepare the device_lines array
 	$x = 0;
 	foreach ($device_lines as $row) {
-		unset($device_lines[$x]["device_uuid"]);
-		unset($device_lines[$x]["device_line_uuid"]);
+		$device_lines[$x]["device_uuid"] = $device_uuid;
+		$device_lines[$x]["device_line_uuid"] = uuid();
 		$x++;
 	}
 
 //prepare the device_keys array
 	$x = 0;
 	foreach ($device_keys as $row) {
-		unset($device_keys[$x]["device_uuid"]);
-		unset($device_keys[$x]["device_key_uuid"]);
+		$device_keys[$x]["device_uuid"] = $device_uuid;
+		$device_keys[$x]["device_key_uuid"] = uuid();
 		$x++;
 	}
 
 //prepare the device_settings array
 	$x = 0;
 	foreach ($device_settings as $row) {
-		unset($device_settings[$x]["device_uuid"]);
-		unset($device_settings[$x]["device_setting_uuid"]);
+		$device_settings[$x]["device_uuid"] = $device_uuid;
+		$device_settings[$x]["device_setting_uuid"] = uuid();
 		$x++;
 	}
 
@@ -165,7 +166,7 @@
 	}
 
 //redirect
-	header("Location: devices.php");
+	header("Location: devices.php?id=".$device_uuid);
 	return;
 
 ?>
