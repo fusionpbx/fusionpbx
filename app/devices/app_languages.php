@@ -5142,6 +5142,26 @@ $text['title-device_vendors']['ru-ru'] = "Производители";
 $text['title-device_vendors']['sv-se'] = "Tillverkare";
 $text['title-device_vendors']['uk-ua'] = "";
 
+$text['description-device_vendors']['en-us'] = "Defines the list of vendors used with provisioning devices.";
+$text['description-device_vendors']['ar-eg'] = "";
+$text['description-device_vendors']['de-at'] = "Definiert die Liste der Hersteller welche für die Bereitstellung der Geräte verwendet wird."; //copied from de-de
+$text['description-device_vendors']['de-ch'] = "Definiert die Liste der Hersteller welche für die Bereitstellung der Geräte verwendet wird."; //copied from de-de
+$text['description-device_vendors']['de-de'] = "Definiert die Liste der Hersteller welche für die Bereitstellung der Geräte verwendet wird.";
+$text['description-device_vendors']['es-cl'] = "";
+$text['description-device_vendors']['es-mx'] = "";
+$text['description-device_vendors']['fr-ca'] = "";
+$text['description-device_vendors']['fr-fr'] = "";
+$text['description-device_vendors']['he-il'] = "";
+$text['description-device_vendors']['it-it'] = "Definisce la lista dei produttori di telefoni auto configurabili.";
+$text['description-device_vendors']['nl-nl'] = "";
+$text['description-device_vendors']['pl-pl'] = "";
+$text['description-device_vendors']['pt-br'] = "";
+$text['description-device_vendors']['pt-pt'] = "";
+$text['description-device_vendors']['ro-ro'] = "";
+$text['description-device_vendors']['ru-ru'] = "Определяет список поставщиков оборудования.";
+$text['description-device_vendors']['sv-se'] = "Definierar listan över leverantörer som används med provisioning-enheter.";
+$text['description-device_vendors']['uk-ua'] = "";
+
 $text['title-device_vendor']['en-us'] = "Vendor";
 $text['title-device_vendor']['ar-eg'] = "";
 $text['title-device_vendor']['de-at'] = "Hersteller"; //copied from de-de
