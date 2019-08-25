@@ -105,7 +105,7 @@
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
-	echo "			".$text['title_description-device_vendor']."<br /><br />\n";
+	echo "			".$text['description-device_vendor']."<br /><br />\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
