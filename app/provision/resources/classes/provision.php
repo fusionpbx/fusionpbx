@@ -591,13 +591,15 @@ include "root.php";
 					$sql .= "AND profile_setting_enabled = 'true' ";
 					$parameters['device_profile_uuid'] = $device_profile_uuid;
 					$database = new database;
-					$row = $database->select($sql, $parameters, 'row');
-					if (is_array($row) && sizeof($row) != 0) {
-						$key = $row['profile_setting_name'];
-						$value = $row['profile_setting_value'];
-						$provision[$key] = $value;
+					$device_profile_settings = $database->select($sql, $parameters, 'all');
+					if (is_array($device_profile_settings) && sizeof($device_profile_settings) != 0) {
+						foreach($device_profile_settings as $row) {
+							$key = $row['profile_setting_name'];
+							$value = $row['profile_setting_value'];
+							$provision[$key] = $value;
+						}
 					}
-					unset ($parameters, $row);
+					unset ($parameters, $device_profile_settings, $sql);
 				}
 
 			//get the device settings table in the provision category and update the provision array
@@ -607,14 +609,17 @@ include "root.php";
 					$sql .= "AND device_setting_enabled = 'true' ";
 					$parameters['device_uuid'] = $device_uuid;
 					$database = new database;
-					$row = $database->select($sql, $parameters, 'row');
-					if (is_array($row) && sizeof($row) != 0) {
-						$key = $row['device_setting_subcategory'];
-						$value = $row['device_setting_value'];
-						$provision[$key] = $value;
+					$device_settings = $database->select($sql, $parameters, 'row');
+					if (is_array($device_settings) && sizeof($device_settings) != 0) {
+						foreach($device_settings as $row) {
+							$key = $row['device_setting_subcategory'];
+							$value = $row['device_setting_value'];
+							$provision[$key] = $value;
+						}
 					}
-					unset ($parameters, $row);
+					unset ($parameters, $device_settings, $sql);
 				}
+
 			//set the template directory
 				if (strlen($provision["template_dir"]) > 0) {
 					$template_dir = $provision["template_dir"];
