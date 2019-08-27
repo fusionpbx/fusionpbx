@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -352,7 +352,7 @@
 				else {
 					$domain = $text['label-global'];
 				}
-				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($domain)."</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$domain."</td>\n";
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if ($app_uuid == "4b821450-926b-175a-af93-a03c441818b1" && permission_exists('time_condition_edit')) {
