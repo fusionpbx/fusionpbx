@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -347,7 +347,7 @@
 			}
 			if ($_GET['show'] == "all" && permission_exists('dialplan_all')) {
 				if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
-					$domain = escape($_SESSION['domains'][$row['domain_uuid']]['domain_name']);
+					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 				}
 				else {
 					$domain = $text['label-global'];
