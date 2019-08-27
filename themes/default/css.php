@@ -1199,10 +1199,6 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		display: inline;
 		}
 
-	textarea {
-		min-height: 75px;
-		}
-
 	label {
 		font-weight: normal;
 		vertical-align: middle;
