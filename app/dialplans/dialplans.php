@@ -347,12 +347,12 @@
 			}
 			if ($_GET['show'] == "all" && permission_exists('dialplan_all')) {
 				if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
-					$domain = escape($_SESSION['domains'][$row['domain_uuid']]['domain_name']);
+					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 				}
 				else {
 					$domain = $text['label-global'];
 				}
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$domain."</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($domain)."</td>\n";
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if ($app_uuid == "4b821450-926b-175a-af93-a03c441818b1" && permission_exists('time_condition_edit')) {
