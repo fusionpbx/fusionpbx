@@ -1791,6 +1791,21 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		background: <?php echo ($_SESSION['theme']['dashboard_number_background_color']['text'] != '') ? $_SESSION['theme']['dashboard_number_background_color']['text'] : '#a4aebf'; ?>;
 		border-top: 1px solid <?php echo ($_SESSION['theme']['dashboard_number_background_color']['text'] != '') ? color_adjust($_SESSION['theme']['dashboard_number_background_color']['text'], 0.2) : '#c5d1e5'; ?>;
 		overflow: hidden;
+		<?php
+		//calculate font padding
+		if ($_SESSION['theme']['dashboard_heading_text_size']['text'] != '') {
+			$font_size = strtolower($_SESSION['theme']['dashboard_heading_text_size']['text']);
+			$tmp = str_replace(' ', '', $font_size);
+			$tmp = str_replace('pt', '', $tmp);
+			$tmp = str_replace('px', '', $tmp);
+			$tmp = str_replace('em', '', $tmp);
+			$tmp = str_replace('%', '', $tmp);
+			$font_size_number = $tmp;
+			$padding_top_bottom = (int) floor((100-$tmp) * 0.25);
+		}
+		?>
+		padding-top: <?php echo $padding_top_bottom.'px' ?>;
+		padding-bottom: <?php echo $padding_top_bottom.'px' ?>;
 		}
 
 	span.hud_stat:hover {
