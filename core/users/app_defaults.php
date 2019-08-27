@@ -94,6 +94,27 @@ if ($domains_processed == 1) {
 		}
 		unset($result);
 
+	//update users email if they are all null
+		$sql = "select count(*) from v_users ";
+		$sql .= "where user_email is not null; ";
+		$database = new database;
+		$num_rows = $database->select($sql, null, 'column');
+		if ($num_rows == 0) {
+			$sql = "with users AS ( ";
+			$sql .= "	select u.domain_uuid, u.user_uuid, u.username, u.contact_uuid, e.email_address ";
+			$sql .= "	from v_users as u, v_contact_emails as e ";
+			$sql .= "	where u.contact_uuid is not null ";
+			$sql .= "	and u.contact_uuid = e.contact_uuid ";
+			$sql .= "	and e.email_primary = 1 ";
+			$sql .= ") ";
+			$sql .= "update v_users ";
+			$sql .= "set user_email = users.email_address ";
+			$sql .= "from users ";
+			$sql .= "where v_users.user_uuid = users.user_uuid;";
+			$database = new database;
+			$database->execute($sql, null);
+		}
+
 	//find rows that have a null group_uuid and set the correct group_uuid
 		$sql = "select count(*) from v_default_settings ";
 		$sql .= "where default_setting_category = 'user'; ";
