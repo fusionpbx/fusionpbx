@@ -827,183 +827,256 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "e.extension, \n";
 				$sql .= "e.number_alias, \n";
 
-				$sql .= "COUNT(*) \n";
-				$sql .= "FILTER( \n";
-				$sql .= " WHERE c.domain_uuid = e.domain_uuid \n";
-				$sql .= " AND ((\n";
-				$sql .= "   c.caller_id_number = e.extension \n";
-				$sql .= "   OR \n";
-				$sql .= "   c.destination_number = e.extension) \n";
-				$sql .= "  OR ( \n";
-				$sql .= "   e.number_alias IS NOT NULL and ( \n";
-				$sql .= "    c.caller_id_number = e.number_alias \n";
-				$sql .= "    OR \n";
-				$sql .= "    c.destination_number = e.number_alias))) \n";
-				$sql .= " AND (\n";
-				$sql .= "  c.answer_stamp IS NOT NULL \n";
-				$sql .= "  and \n";
-				$sql .= "  c.bridge_uuid IS NOT NULL) \n";
+				if ($db_type == 'pgsql'){
+                                       $sql .= "COUNT(*) \n";
+                                       $sql .= "FILTER( \n";
+                                       $sql .= " WHERE ";
+                               	}
+                               	else{
+                                       $sql .= "SUM(CASE WHEN ";
+                               	}
+                               	$sql .= " c.domain_uuid = e.domain_uuid \n";
 
-				if ($this->include_internal) {
-					$sql .= " AND (direction = 'inbound' OR direction = 'local')) \n";
-				}
-				else {
-					$sql .= "AND direction = 'inbound') \n";
-				}
-				$sql .= "AS answered, \n";
+                                $sql .= " AND ((\n";
+                                $sql .= "   c.caller_id_number = e.extension \n";
+                                $sql .= "   OR \n";
+                                $sql .= "   c.destination_number = e.extension) \n";
+                                $sql .= "  OR ( \n";
+                                $sql .= "   e.number_alias IS NOT NULL and ( \n";
+                                $sql .= "    c.caller_id_number = e.number_alias \n";
+                                $sql .= "    OR \n";
+                                $sql .= "    c.destination_number = e.number_alias))) \n";
+                                $sql .= " AND (\n";
+                                $sql .= "  c.answer_stamp IS NOT NULL \n";
+                                $sql .= "  and \n";
+                                $sql .= "  c.bridge_uuid IS NOT NULL) \n";
 
-				$sql .= "COUNT(*) \n";
-				$sql .= "FILTER( \n";
-				$sql .= " WHERE (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
-				$sql .= "   OR \n";
-				$sql .= "   c.destination_number = e.extension) \n";
-				$sql .= "  OR (\n";
-				$sql .= "   e.number_alias IS NOT NULL \n";
-				$sql .= "   AND ( \n";
-				$sql .= "    c.caller_id_number = e.number_alias \n";
-				$sql .= "    OR \n";
-				$sql .= "    c.destination_number = e.number_alias))) \n";
-				$sql .= " AND ( \n";
-				$sql .= "  c.answer_stamp IS NULL \n";
-				$sql .= "  AND \n";
-				$sql .= "  c.bridge_uuid IS NULL) \n";
-				if ($this->include_internal) {
-							$sql .= " AND (direction = 'inbound' OR direction = 'outbound'))";
-				} else {
-							$sql .= " AND direction = 'inbound')";
-				}
-				$sql .= "AS missed, \n";
+                               	if ($db_type != 'pgsql'){
+                                       $sql_then = 'THEN 1 ELSE 0 END '; 
+                               	}
+                               	else {
+                                       $sql_then = '';
+                               	}
 
-				$sql .= "COUNT(*) \n";
-				$sql .= "FILTER( \n";
-				$sql .= " WHERE (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
-				$sql .= "   OR \n";
-				$sql .= "   c.destination_number = e.extension) \n";
-				$sql .= "  OR ( \n";
-				$sql .= "   e.number_alias IS NOT NULL \n";
-				$sql .= "   AND ( \n";
-				$sql .= "    c.caller_id_number = e.number_alias \n";
-				$sql .= "    OR \n";
-				$sql .= "    c.destination_number = e.number_alias))) \n";
-				$sql .= " AND c.hangup_cause = 'NO_ANSWER' \n";
- 				if ($this->include_internal) {
-					$sql .= " AND (direction = 'inbound' OR direction = 'local') \n";
-				}
-				else { 
-					$sql .= "AND direction = 'inbound' \n";
-				}
-				$sql .= ") AS no_answer, \n";
+                                if ($this->include_internal) {
+                                        $sql .= " AND (direction = 'inbound' OR direction = 'local') $sql_then) \n";
+                                }
+                                else {
+                                        $sql .= "AND direction = 'inbound' $sql_then) \n";
+                                }
+                                $sql .= "AS answered, \n";
 
-				$sql .= "COUNT(*) \n";
-				$sql .= "FILTER( \n";
-				$sql .= " WHERE (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
-				$sql .= "   OR \n";
-				$sql .= "   c.destination_number = e.extension) \n";
-				$sql .= "  OR ( \n";
-				$sql .= "   e.number_alias IS NOT NULL \n";
-				$sql .= "   AND ( \n";
-				$sql .= "    c.caller_id_number = e.number_alias \n";
-				$sql .= "    OR \n";
-				$sql .= "    c.destination_number = e.number_alias))) \n";
-				$sql .= " AND \n";
-				$sql .= " c.hangup_cause = 'USER_BUSY' \n";
-				if ($this->include_internal) {
-						$sql .= " AND (direction = 'inbound' OR direction = 'local')) \n";
-				}
-				else {
-						$sql .= " AND direction = 'inbound') \n";
-				}
-				$sql .= "AS busy, \n";
+				if ($db_type == 'pgsql'){
+                                       $sql .= "COUNT(*) \n";
+                                       $sql .= "FILTER( \n";
+                                       $sql .= " WHERE \n";
+                               	}
+                               	else {
+                                       $sql .= "  SUM(CASE WHEN \n";
+                               	}
+                               	$sql .= "   ((c.caller_id_number = e.extension \n";
 
-				$sql .= "SUM(c.billsec) \n";
-				$sql .= "FILTER ( \n";
-				$sql .= " WHERE (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
-				$sql .= "   OR \n";
-				$sql .= "   c.destination_number = e.extension) \n";
-				$sql .= "  OR ( \n";
-				$sql .= "   e.number_alias IS NOT NULL \n";
-				$sql .= "   AND ( \n";
-				$sql .= "    c.caller_id_number = e.number_alias \n";
-				$sql .= "    OR \n";
-				$sql .= "    c.destination_number = e.number_alias))) \n";
-				if ($this->include_internal) {
-						$sql .= " AND (direction = 'inbound' OR direction = 'outbound') \n";
-				}
-				$sql .= " ) / \n";
-				$sql .= "COUNT(*) \n";
-				$sql .= "FILTER ( \n";
-				$sql .= " WHERE (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
-				$sql .= "   OR \n";
-				$sql .= "   c.destination_number = e.extension) \n";
-				$sql .= "  OR ( \n";
-				$sql .= "   e.number_alias IS NOT NULL \n";
-				$sql .= "   AND ( \n";
-				$sql .= "    c.caller_id_number = e.number_alias \n";
-				$sql .= "    OR \n";
-				$sql .= "    c.destination_number = e.number_alias))) \n";
-				if ($this->include_internal) {
-						$sql .= " AND (direction = 'inbound' OR direction = 'outbound') \n";
-				}
-				$sql .= " ) AS aloc, \n";
+                                $sql .= "   OR \n";
+                                $sql .= "   c.destination_number = e.extension) \n";
+                                $sql .= "  OR (\n";
+                                $sql .= "   e.number_alias IS NOT NULL \n";
+                                $sql .= "   AND ( \n";
+                                $sql .= "    c.caller_id_number = e.number_alias \n";
+                                $sql .= "    OR \n";
+                                $sql .= "    c.destination_number = e.number_alias))) \n";
+                                $sql .= " AND ( \n";
+                                $sql .= "  c.answer_stamp IS NULL \n";
+                                $sql .= "  AND \n";
+                                $sql .= "  c.bridge_uuid IS NULL) \n";
+                                if ($this->include_internal) {
+                                                        $sql .= " AND (direction = 'inbound' OR direction = 'outbound') $sql_then )";
+                                } else {
+                                                        $sql .= " AND direction = 'inbound' $sql_then )";
+                                }
+                                $sql .= "AS missed, \n";
 
-				$sql .= "COUNT(*) \n";
-				$sql .= "FILTER ( \n";
-				$sql .= " WHERE (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
-				$sql .= "   OR \n";
-				$sql .= "   c.destination_number = e.extension) \n";
-				$sql .= "  OR ( \n";
-				$sql .= "   e.number_alias IS NOT NULL \n";
-				$sql .= "   AND ( \n";
-				$sql .= "    c.caller_id_number = e.number_alias \n";
-				$sql .= "    OR \n";
-				$sql .= "    c.destination_number = e.number_alias))) \n";
-				if ($this->include_internal) {
-						$sql .= " AND (direction = 'inbound' OR direction = 'local')) \n";
-				}
-				else {
-						$sql .= " AND direction = 'inbound') \n";
-				}
-				$sql .= "AS inbound_calls, \n";
+				if ($db_type == 'pgsql'){
+                                       $sql .= "COUNT(*) \n";
+                                       $sql .= "FILTER( \n";
+                                       $sql .= " WHERE  \n";
+                               	}
+                               	else {
+                                       $sql .= "SUM(CASE WHEN ";
+                               	}
+                               	$sql .= " ((   c.caller_id_number = e.extension \n";
 
-				$sql .= "SUM(c.billsec) \n";
-				$sql .= "FILTER ( \n";
-				$sql .= " WHERE (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
-				$sql .= "   OR \n";
-				$sql .= "   c.destination_number = e.extension) \n";
-				$sql .= "  OR ( \n";
-				$sql .= "   e.number_alias IS NOT NULL \n";
-				$sql .= "   AND ( \n";
-				$sql .= "    c.caller_id_number = e.number_alias \n";
-				$sql .= "    OR \n";
-				$sql .= "    c.destination_number = e.number_alias))) \n";
-				if ($this->include_internal) {
-						$sql .= " AND (direction = 'inbound' OR direction = 'local')) \n";
-				}
-				else {
-						$sql .= " AND direction = 'inbound') \n";
-				}
-				$sql .= "AS inbound_duration, \n";
+                                $sql .= "   OR \n";
+                                $sql .= "   c.destination_number = e.extension) \n";
+                                $sql .= "  OR ( \n";
+                                $sql .= "   e.number_alias IS NOT NULL \n";
+                                $sql .= "   AND ( \n";
+                                $sql .= "    c.caller_id_number = e.number_alias \n";
+                                $sql .= "    OR \n";
+                                $sql .= "    c.destination_number = e.number_alias))) \n";
+                                $sql .= " AND c.hangup_cause = 'NO_ANSWER' \n";
+                                if ($this->include_internal) {
+                                        $sql .= " AND (direction = 'inbound' OR direction = 'local') $sql_then \n";
+                                }
+                                else { 
+                                        $sql .= "AND direction = 'inbound' $sql_then \n";
+                                }
+                                $sql .= ") AS no_answer, \n";
 
-				$sql .= "COUNT(*) \n";
-				$sql .= "FILTER ( \n";
-				$sql .= " WHERE c.extension_uuid = e.extension_uuid \n";
-				$sql .= " AND c.direction = 'outbound' \n";
-				$sql .= ") \n";
-				$sql .= "AS outbound_calls, \n";
+				if ($db_type == 'pgsql'){
+                                       $sql .= "COUNT(*) \n";
+                                       $sql .= "FILTER( \n";
+                                       $sql .= " WHERE  \n";
+                               	}
+                               	else{
+                                       $sql .= "SUM(CASE WHEN ";
+                               	}
+                               	$sql .= " ((  c.caller_id_number = e.extension \n";
 
-				$sql .= "SUM(c.billsec) \n";
-				$sql .= "FILTER ( \n";
-				$sql .= " WHERE c.extension_uuid = e.extension_uuid \n";
-				$sql .= " AND c.direction = 'outbound' \n";
-				$sql .= ") \n";
-				$sql .= "AS outbound_duration, \n";
+                                $sql .= "   OR \n";
+                                $sql .= "   c.destination_number = e.extension) \n";
+                                $sql .= "  OR ( \n";
+                                $sql .= "   e.number_alias IS NOT NULL \n";
+                                $sql .= "   AND ( \n";
+                                $sql .= "    c.caller_id_number = e.number_alias \n";
+                                $sql .= "    OR \n";
+                                $sql .= "    c.destination_number = e.number_alias))) \n";
+                                $sql .= " AND \n";
+                                $sql .= " c.hangup_cause = 'USER_BUSY' \n";
+                                if ($this->include_internal) {
+                                                $sql .= " AND (direction = 'inbound' OR direction = 'local') $sql_then) \n";
+                                }
+                                else {
+                                                $sql .= " AND direction = 'inbound' $sql_then) \n";
+                                }
+                                $sql .= "AS busy, \n";
+
+				if ($db_type == 'pgsql'){
+                                       $sql .= "SUM(c.billsec) \n";
+                                       $sql .= "FILTER ( \n";
+                                       $sql .= " WHERE  \n";
+                               	}
+                               	else{
+                                       $sql .= "SUM(CASE WHEN ";
+                               	}
+                               	$sql .= " ((  c.caller_id_number = e.extension \n";
+
+                                $sql .= "   OR \n";
+                                $sql .= "   c.destination_number = e.extension) \n";
+                                $sql .= "  OR ( \n";
+                                $sql .= "   e.number_alias IS NOT NULL \n";
+                                $sql .= "   AND ( \n";
+                                $sql .= "    c.caller_id_number = e.number_alias \n";
+                                $sql .= "    OR \n";
+                                $sql .= "    c.destination_number = e.number_alias))) \n";
+                                if ($this->include_internal) {
+                                	$sql .= " AND (direction = 'inbound' OR direction = 'outbound') \n";
+                                }
+                               	$sql .= " $sql_then ) / \n";
+                               	if ($db_type == 'pgsql'){
+                                       $sql .= "COUNT(*) \n";
+                                       $sql .= "FILTER ( \n";
+                                       $sql .= " WHERE  \n";
+                               	}
+                               	else{
+                                       $sql .= "SUM(CASE WHEN ";
+                               	}
+                               	$sql .= " ((  c.caller_id_number = e.extension \n";
+                                $sql .= "   OR \n";
+                                $sql .= "   c.destination_number = e.extension) \n";
+                                $sql .= "  OR ( \n";
+                                $sql .= "   e.number_alias IS NOT NULL \n";
+                                $sql .= "   AND ( \n";
+                                $sql .= "    c.caller_id_number = e.number_alias \n";
+                                $sql .= "    OR \n";
+                                $sql .= "    c.destination_number = e.number_alias))) \n";
+                                if ($this->include_internal) {
+                                                $sql .= " AND (direction = 'inbound' OR direction = 'outbound') \n";
+                                }
+                                $sql .= " $sql_then ) AS aloc, \n";
+
+				if ($db_type == 'pgsql'){
+                                       $sql .= "COUNT(*) \n";
+                                       $sql .= "FILTER ( \n";
+                                       $sql .= " WHERE   \n";
+                               	}
+                               	else{
+                                       $sql .= "SUM(CASE WHEN ";
+                               	}
+                               	$sql .= " ((  c.caller_id_number = e.extension \n";
+                                $sql .= "   OR \n";
+                                $sql .= "   c.destination_number = e.extension) \n";
+                                $sql .= "  OR ( \n";
+                                $sql .= "   e.number_alias IS NOT NULL \n";
+                                $sql .= "   AND ( \n";
+                                $sql .= "    c.caller_id_number = e.number_alias \n";
+                                $sql .= "    OR \n";
+                                $sql .= "    c.destination_number = e.number_alias))) \n";
+                                if ($this->include_internal) {
+                                                $sql .= " AND (direction = 'inbound' OR direction = 'local') $sql_then ) \n";
+                                }
+                                else {
+                                                $sql .= " AND direction = 'inbound' $sql_then ) \n";
+                                }
+                                $sql .= "AS inbound_calls, \n";
+
+				if ($db_type == 'pgsql'){
+                                       $sql .= "SUM(c.billsec) \n";
+                                       $sql .= "FILTER ( \n";
+                                       $sql .= " WHERE  \n";
+                               	}
+                               	else{
+                                       $sql .= "SUM(CASE WHEN ";
+                               	}
+                               	$sql .= " (  c.caller_id_number = e.extension \n";
+                                $sql .= "   OR \n";
+                                $sql .= "   c.destination_number = e.extension) \n";
+                                $sql .= "  OR ( \n";
+                                $sql .= "   e.number_alias IS NOT NULL \n";
+                                $sql .= "   AND ( \n";
+                                $sql .= "    c.caller_id_number = e.number_alias \n";
+                                $sql .= "    OR \n";
+                                $sql .= "    c.destination_number = e.number_alias)) \n";
+
+                               	if ($db_type != 'pgsql'){
+                                       $sql_then_billsec = 'THEN c.billsec ELSE 0 END '; 
+                               	}
+                               else {
+                                       $sql_then_billsec = '';
+                               	}
+
+                                if ($this->include_internal) {
+                                                $sql .= " AND (direction = 'inbound' OR direction = 'local') $sql_then_billsec ) \n";
+                                }
+                                else {
+                                                $sql .= " AND direction = 'inbound' $sql_then_billsec ) \n";
+                                }
+                                $sql .= "AS inbound_duration, \n";
+
+				if ($db_type == 'pgsql'){
+                                       $sql .= "COUNT(*) \n";
+                                       $sql .= "FILTER ( \n";
+                                       $sql .= " WHERE  \n";
+                               	}
+                               	else{
+                                       $sql .= "SUM(CASE WHEN ";
+                               	}
+                               	$sql .= "   c.caller_id_number = e.extension \n";
+                                $sql .= " AND c.direction = 'outbound' $sql_then \n";
+                                $sql .= ") \n";
+                                $sql .= "AS outbound_calls, \n";
+
+				if ($db_type == 'pgsql'){
+                                       $sql .= "SUM(c.billsec) \n";
+                                       $sql .= "FILTER ( \n";
+                                       $sql .= " WHERE  \n";
+                               	}
+                               	else{
+                                       $sql .= "SUM(CASE WHEN ";
+                               	}
+                               	$sql .= "   c.extension_uuid = e.extension_uuid \n";
+                                $sql .= " AND c.direction = 'outbound' $sql_then_billsec \n";
+                                $sql .= ") \n";
+                                $sql .= "AS outbound_duration, \n";
 
 				$sql .= "e.description \n";
 
