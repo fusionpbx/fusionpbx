@@ -1930,4 +1930,31 @@ function number_pad($number,$n) {
 		//return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
 	}
 
+//add a random_bytes function when it doesn't exist for old versions of PHP
+	if (!function_exists('random_bytes')) {
+		function random_bytes($length) {
+			$charset .= "0123456789";
+			$charset .= "abcdefghijkmnopqrstuvwxyz";
+			$charset .= "ABCDEFGHIJKLMNPQRSTUVWXYZ";
+			srand((double)microtime() * rand(1000000, 9999999));
+			while ($length > 0) {
+				$string .= $charset[rand(0, strlen($charset)-1)];
+				$length--;
+			}
+			return $string.' ';
+		}
+	}
+
+//add a hash_equals function when it doesn't exist for old versions of PHP
+	if (!function_exists('hash_equals')) {
+		function hash_equals($var1, $var2) {
+			if ($var1 == $var2) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+	}
+
 ?>
