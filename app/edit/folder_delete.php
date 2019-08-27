@@ -31,6 +31,7 @@
 	include "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/random_compat/random.php";
 
 //check the permissions
 	if (permission_exists('edit_save')) {
