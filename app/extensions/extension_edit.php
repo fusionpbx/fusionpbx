@@ -1923,7 +1923,7 @@
 	echo "    ".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <textarea class='formfld' name='description' rows='4'>".escape($description)."</textarea>\n";
+	echo "    <textarea class='formfld' name='description' rows='4'>".$description."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
