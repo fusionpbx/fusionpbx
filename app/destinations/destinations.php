@@ -199,7 +199,7 @@
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
-			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='destinations.php?show=all&type=$destination_type';\">\n";
+			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='destinations.php?show=all&type=".urlencode($destination_type)."';\">\n";
 		}
 	}
 
@@ -247,7 +247,7 @@
 		$x = 0;
 		foreach($destinations as $row) {
 			if (permission_exists('destination_edit')) {
-				$tr_link = "href='destination_edit.php?id=".$row['destination_uuid']."'";
+				$tr_link = "href='destination_edit.php?id=".urlencode($row['destination_uuid'])."'";
 			}
 			echo "<tr ".$tr_link.">\n";
 			//echo "	<td valign='top' class=''>".$row['destination_uuid']."&nbsp;</td>\n";
@@ -258,7 +258,7 @@
 			echo "	</td>\n";
 			if ($_GET['show'] == "all" && permission_exists('destination_all')) {
 				if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
-					$domain = escape($_SESSION['domains'][$row['domain_uuid']]['domain_name']);
+					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 				}
 				else {
 					$domain = $text['label-global'];
