@@ -425,7 +425,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-phone']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<textarea class='formfld' type='text' name='broadcast_phone_numbers' rows='10'>".escape($broadcast_phone_numbers)."</textarea>\n";
+	echo "	<textarea class='formfld' type='text' name='broadcast_phone_numbers' rows='10'>".$broadcast_phone_numbers."</textarea>\n";
 	echo "<br />\n";
 	echo "".$text['description-phone']." <br /><br />\n";
 	echo "</td>\n";
