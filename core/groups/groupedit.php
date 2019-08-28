@@ -383,7 +383,7 @@
 	echo 	$text['label-group_description']."\n";
 	echo "</td>\n";
 	echo "<td align='left' class='vtable' valign='top'>\n";
-	echo "	<textarea name='group_description' class='formfld' style='width: 250px; height: 50px;'>".escape($group_description)."</textarea>\n";
+	echo "	<textarea name='group_description' class='formfld' style='width: 250px; height: 50px;'>".$group_description."</textarea>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
