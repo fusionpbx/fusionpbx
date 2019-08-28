@@ -212,7 +212,7 @@ else {
 	echo "	".$text['label-time_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <textarea class='formfld' type='text' name='time_description' id='time_description' style='width: 400px; height: 100px;'>".escape($time_description)."</textarea>\n";
+	echo "  <textarea class='formfld' type='text' name='time_description' id='time_description' style='width: 400px; height: 100px;'>".$time_description."</textarea>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
