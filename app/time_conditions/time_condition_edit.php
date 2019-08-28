@@ -962,7 +962,7 @@ function add_custom_condition($destination, $group_id, $dialplan_action = '') {
 	echo "					<tr>\n";
 	echo "						<td>\n";
 	//$destination = new destinations;
-	echo $destination->select('dialplan', 'dialplan_action['.escape($group_id).']', escape($dialplan_action));
+	echo $destination->select('dialplan', 'dialplan_action['.escape($group_id).']', $dialplan_action);
 	echo "						</td>\n";
 	echo "						<td width='100%'><input class='formfld' style='margin-left: 5px;' type='text' name='group_".escape($group_id)."' id='group_".escape($group_id)."' maxlength='255' value=\"".escape($group_id)."\"></td>\n";
 	echo "					</tr>";
