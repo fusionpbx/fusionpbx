@@ -173,7 +173,7 @@
 			if ($action == "update") {
 				message::add($text['message-update']);
 			}
-			header('Location: sip_profile_edit.php?id='.escape($sip_profile_uuid));
+			header('Location: sip_profile_edit.php?id='.urlencode($sip_profile_uuid));
 			exit;
 	}
 
@@ -254,7 +254,7 @@
 		|| permission_exists('inbound_route_add')
 		|| permission_exists('outbound_route_add')
 		|| permission_exists('time_condition_add')) {
-		echo "	<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"var name = prompt('".$text['label-new_sip_profile_name']."'); if (name != null) { window.location='sip_profile_copy.php?id=".$sip_profile_uuid."&name=' + name; }\" value='".$text['button-copy']."'>\n";
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"var name = prompt('".$text['label-new_sip_profile_name']."'); if (name != null) { window.location='sip_profile_copy.php?id=".urlencode($sip_profile_uuid)."&name=' + name; }\" value='".$text['button-copy']."'>\n";
 	}
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
 	echo "</td>\n";
@@ -291,8 +291,8 @@
 		if (is_uuid($row["sip_profile_uuid"])) {
 			$sip_profile_uuid = $row["sip_profile_uuid"];
 		}
-		echo "				<input type='hidden' name='sip_profile_domains[$x][sip_profile_domain_uuid]' value=\"".$sip_profile_domain_uuid."\">\n";
-		echo "				<input type='hidden' name='sip_profile_domains[$x][sip_profile_uuid]' value=\"".$sip_profile_uuid."\">\n";
+		echo "				<input type='hidden' name='sip_profile_domains[$x][sip_profile_domain_uuid]' value=\"".escape($sip_profile_domain_uuid)."\">\n";
+		echo "				<input type='hidden' name='sip_profile_domains[$x][sip_profile_uuid]' value=\"".escape($sip_profile_uuid)."\">\n";
 		echo "				<td class=\"vtablerow\" style=\"\" onclick=\"label_to_form('label_sip_profile_domain_name_$x','sip_profile_domain_name_$x');\" nowrap=\"nowrap\">\n";
 		echo "					&nbsp; <label id='label_sip_profile_domain_name_$x'>".escape($row["sip_profile_domain_name"])."</label>\n";
 		echo "					<input id='sip_profile_domain_name_$x' class='formfld' style='display: none;' type='text' name='sip_profile_domains[$x][sip_profile_domain_name]' maxlength='255' value=\"".escape($row["sip_profile_domain_name"])."\">\n";
@@ -336,7 +336,7 @@
 		echo "				</td>\n";
 		echo "				<td class='list_control_icons' style='width: 25px;'>\n";
 		if (strlen($row["sip_profile_domain_name"]) > 0) {
-			echo "				<a href=\"sip_profile_domain_delete.php?id=".escape($row["sip_profile_domain_uuid"])."&amp;sip_profile_domain_uuid=".escape($row["sip_profile_domain_uuid"])."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">".$v_link_label_delete."</a>\n";
+			echo "				<a href=\"sip_profile_domain_delete.php?id=".urlencode($row["sip_profile_domain_uuid"])."&amp;sip_profile_domain_uuid=".urlencode($row["sip_profile_domain_uuid"])."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">".$v_link_label_delete."</a>\n";
 		}
 		echo "				</td>\n";
 		echo "			</tr>\n";
@@ -403,7 +403,7 @@
 		echo "				</td>\n";
 		echo "				<td class='list_control_icons' style='width: 25px;'>\n";
 		if (strlen($row["sip_profile_setting_name"]) > 0) {
-			echo "					<a href=\"sip_profile_setting_delete.php?id=".escape($row["sip_profile_setting_uuid"])."&amp;sip_profile_uuid=".escape($sip_profile_uuid)."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">".$v_link_label_delete."</a>\n";
+			echo "					<a href=\"sip_profile_setting_delete.php?id=".escape($row["sip_profile_setting_uuid"])."&amp;sip_profile_uuid=".urlencode($sip_profile_uuid)."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">".$v_link_label_delete."</a>\n";
 		}
 		echo "				</td>\n";
 		echo "			</tr>\n";
@@ -463,7 +463,7 @@
 	echo "	".$text['label-sip_profile_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <textarea class='formfld' type='text' name='sip_profile_description'>".$sip_profile_description."</textarea>\n";
+	echo "  <textarea class='formfld' type='text' name='sip_profile_description'>".escape($sip_profile_description)."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-sip_profile_description']."\n";
 	echo "</td>\n";
