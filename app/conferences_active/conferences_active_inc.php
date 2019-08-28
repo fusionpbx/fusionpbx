@@ -85,8 +85,9 @@
 			//show the conferences that have a matching domain
 				$name_array = explode('@', $name);
 				if ($name_array[1] == $_SESSION['domain_name']) {
-					$conference_name = $name_array[0];
-					if (is_uuid($conference_name)) {
+					$conference_uuid = $name_array[0];
+					if (is_uuid($conference_uuid)) {
+						//check for the conference center room
 						$sql = "select ";
 						$sql .= "cr.conference_room_name, ";
 						$sql .= "v.participant_pin ";
@@ -96,41 +97,45 @@
 						$sql .= "where ";
 						$sql .= "v.meeting_uuid = cr.meeting_uuid ";
 						$sql .= "and v.meeting_uuid = :meeting_uuid  ";
-						$parameters['meeting_uuid'] = $conference_name;
+						$parameters['meeting_uuid'] = $conference_uuid;
 						$database = new database;
 						$conference = $database->select($sql, $parameters, 'row');
 						$conference_name = $conference['conference_room_name'];
 						$participant_pin = $conference['participant_pin'];
 						unset ($parameters, $conference, $sql);
-						$conference_id = $name_array[0];
-					}
-					else {
-						$sql = "select ";
-						$sql .= "conference_pin_number ";
-						$sql .= "from ";
-						$sql .= "v_conferences ";
-						$sql .= "where ";
-						$sql .= "domain_uuid = :domain_uuid ";
-						$sql .= "and conference_name = :conference_name ";
-						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-						$parameters['conference_name'] = $conference_name;
-						$database = new database;
-						$participant_pin = $database->select($sql, $parameters, 'column');
-						unset ($parameters, $sql);
-						$conference_id = $conference_name;
+						$conference_uuid = $name_array[0];
+
+						//check the conference table
+						if (strlen($conference_name) == 0) {
+							$sql = "select ";
+							$sql .= "conference_name, ";
+							$sql .= "conference_pin_number ";
+							$sql .= "from ";
+							$sql .= "v_conferences ";
+							$sql .= "where ";
+							$sql .= "domain_uuid = :domain_uuid ";
+							$sql .= "and conference_uuid = :conference_uuid ";
+							$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+							$parameters['conference_uuid'] = $conference_uuid;
+							$database = new database;
+							$conference = $database->select($sql, $parameters, 'row');
+							$conference_name = $conference['conference_name'];
+							$participant_pin = $conference['conference_pin_number'];
+							unset ($parameters, $sql);
+						}
 					}
 
 					if (permission_exists('conference_interactive_view')) {
-						$td_onclick = "onclick=\"document.location.href='conference_interactive.php?c=".escape($conference_name)."'\"";
+						$td_onclick = "onclick=\"document.location.href='conference_interactive.php?c=".urlencode($conference_name)."'\"";
 					}
 					echo "<tr>\n";
 					echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">";
-					echo (permission_exists('conference_interactive_view')) ? "<a href='conference_interactive.php?c=".escape($conference_id)."'>".escape($conference_name)."</a>" : escape($conference_name);
+					echo (permission_exists('conference_interactive_view')) ? "<a href='conference_interactive.php?c=".urlencode($conference_uuid)."'>".escape($conference_name)."</a>" : escape($conference_name);
 					echo "</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">".escape($participant_pin)."</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">".escape($member_count)."</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">";
-					echo (permission_exists('conference_interactive_view')) ? "<a href='conference_interactive.php?c=".escape($conference_id)."'>".$text['button-view']."</a>" : "&nbsp;";
+					echo (permission_exists('conference_interactive_view')) ? "<a href='conference_interactive.php?c=".urlencode($conference_uuid)."'>".$text['button-view']."</a>" : "&nbsp;";
 					echo "</td>\n";
 					echo "</tr>\n";
 
