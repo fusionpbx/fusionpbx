@@ -94,6 +94,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "text hover color of the active domain in the side menu Domain selector";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f4c341a2-7cec-42b0-b110-6e27036e5592 ";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "domain_inactive_text_color_hover";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#5082ca";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "text hover color of the inactive domains in the side menu Domain selector";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1affbed5-383e-4562-8c17-d9b534328649";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "logout_icon_color";
