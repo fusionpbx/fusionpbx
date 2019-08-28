@@ -68,7 +68,7 @@
 
 //required to be a superadmin to update an account that is a member of the superadmin group
 	if (permission_exists('user_edit') && $action == 'edit') {
-		$superadmins = superadmin_list($db);
+		$superadmins = superadmin_list();
 		if (if_superadmin($superadmins, $user_uuid)) {
 			if (!if_group("superadmin")) {
 				echo "access denied";

@@ -41,14 +41,14 @@
 		$domain_uuid = $key_part[1];
 		$password_submitted = $key_part[2];
 		//get current salt, see if same as submitted salt
-		$sql = "select password from v_users where domain_uuid = :domain_uuid and username = :username ";
-		$prep_statement = $db->prepare($sql);
-		$prep_statement->bindParam(':domain_uuid', $domain_uuid);
-		$prep_statement->bindParam(':username', $username);
-		$prep_statement->execute();
-		$result = $prep_statement->fetch(PDO::FETCH_NAMED);
-		$password_current = $result['password'];
-		unset($prep_statement, $result);
+		$sql = "select password from v_users ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and username = :username ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['username'] = $username;
+		$database = new database;
+		$password_current = $database->select($sql, $parameters, 'column');
+		unset($sql, $parameters);
 
 		//set flag
 		if ($username != '' && $domain_uuid == $_SESSION['domain_uuid'] && $password_submitted == $password_current) {
@@ -77,12 +77,11 @@
 			$sql .= "and e.contact_uuid = u.contact_uuid ";
 			$sql .= "and u.email_address = :email ";
 			$sql .= "and e.domain_uuid = :domain_uuid ";
-			$prep_statement = $db->prepare($sql);
-			$prep_statement->bindParam(':domain_uuid', $_SESSION['domain_uuid']);
-			$prep_statement->bindParam(':email', $email);
-			$prep_statement->execute();
-			$result = $prep_statement->fetch(PDO::FETCH_NAMED);
-			unset($prep_statement);
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['email'] = $email;
+			$database = new database;
+			$result = $database->select($sql, $parameters, 'row');
+			unset($sql, $parameters);
 
 			if ($result['username'] != '') {
 
@@ -96,18 +95,19 @@
 
 				//get email template from db
 				$sql = "select template_subject, template_body from v_email_templates ";
-				$sql .= "where template_language = '".$_SESSION['domain']['language']['code']."' ";
-				$sql .= "and (domain_uuid = '".$_SESSION['domain_uuid']."' or domain_uuid is null) ";
+				$sql .= "where template_language = :template_language ";
+				$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 				$sql .= "and template_category = 'password_reset' ";
 				$sql .= "and template_subcategory = 'default' ";
 				$sql .= "and template_type = 'html' ";
 				$sql .= "and template_enabled = 'true' ";
-				$prep_statement = $db->prepare($sql);
-				$prep_statement->execute();
-				$row = $prep_statement->fetch(PDO::FETCH_NAMED);
+				$parameters['template_language'] = $_SESSION['domain']['language']['code'];
+				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+				$database = new database;
+				$row = $database->select($sql, $parameters, 'row');
 				$email_subject = $row['template_subject'];
 				$email_body = $row['template_body'];
-				unset($prep_statement, $row);
+				unset($sql, $parameters, $row);
 
 				//replace variables in email body
 				$email_body = str_replace('${reset_link}', $reset_link, $email_body);
@@ -161,13 +161,13 @@
 				$sql .= "salt = :salt ";
 				$sql .= "where domain_uuid = :domain_uuid ";
 				$sql .= "and username = :username ";
-				$prep_statement = $db->prepare($sql);
-				$prep_statement->bindParam(':domain_uuid', $_SESSION['domain_uuid']);
-				$prep_statement->bindParam(':password', md5($salt.$password_new));
-				$prep_statement->bindParam(':salt', $salt);
-				$prep_statement->bindParam(':username', $username);
-				$prep_statement->execute();
-				unset($prep_statement);
+				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+				$parameters['password'] = md5($salt.$password_new);
+				$parameters['salt'] = $salt;
+				$parameters['username'] = $username;
+				$database = new database;
+				$database->execute($sql, $parameters);
+				unset($sql, $parameters);
 
 				message::add($text['message-password_reset'], 'positive', 2500);
 				unset($_SESSION['valid_username']);

@@ -261,26 +261,6 @@
 		}
 	}
 
-	if (!function_exists('group_members')) {
-		function group_members($db, $user_uuid) {
-			global $domain_uuid;
-			$sql = "select * from v_user_groups ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and user_uuid = '".$user_uuid."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			$result_count = count($result);
-			$group_members = "||";
-			foreach($result as $field) {
-				//get the list of groups
-				$group_members .= $field['group_name']."||";
-			}
-			unset($sql, $result, $row_count);
-			return $group_members;
-		}
-	}
-
 	if (!function_exists('if_group_member')) {
 		function if_group_member($group_members, $group) {
 			if (stripos($group_members, "||".$group."||") === false) {
@@ -293,24 +273,23 @@
 	}
 
 	if (!function_exists('superadmin_list')) {
-		function superadmin_list($db) {
+		function superadmin_list() {
 			global $domain_uuid;
 			$sql = "select * from v_user_groups ";
 			$sql .= "where group_name = 'superadmin' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			$result_count = count($result);
+			$database = new database;
+			$result = $database->select($sql, null, 'all');
 			$superadmin_list = "||";
-			foreach($result as $field) {
-				//get the list of superadmins
-				$superadmin_list .= $field['user_uuid']."||";
+			if (is_array($result) && @sizeof($result) != 0) {
+				foreach ($result as $field) {
+					//get the list of superadmins
+					$superadmin_list .= $field['user_uuid']."||";
+				}
 			}
-			unset($sql, $result, $row_count);
+			unset($sql, $result, $field);
 			return $superadmin_list;
 		}
 	}
-	//superadmin_list($db);
 
 	if (!function_exists('if_superadmin')) {
 		function if_superadmin($superadmin_list, $user_uuid) {
@@ -324,36 +303,29 @@
 	}
 
 	if (!function_exists('html_select_other')) {
-		function html_select_other($db, $table_name, $field_name, $sql_where_optional, $field_current_value) {
-			//html select other : build a select box from distinct items in db with option for other
+		function html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value) {
+			//html select other: build a select box from distinct items in db with option for other
 			global $domain_uuid;
 
-			$html  = "<table border='0' cellpadding='1' cellspacing='0'>\n";
+			$html = "<table border='0' cellpadding='1' cellspacing='0'>\n";
 			$html .= "<tr>\n";
 			$html .= "<td id=\"cell".$field_name."1\">\n";
 			$html .= "\n";
 			$html .= "<select id=\"".$field_name."\" name=\"".$field_name."\" class='formfld' onchange=\"if (document.getElementById('".$field_name."').value == 'Other') { /*enabled*/ document.getElementById('".$field_name."_other').style.display=''; document.getElementById('".$field_name."_other').className='formfld'; document.getElementById('".$field_name."_other').focus(); } else { /*disabled*/ document.getElementById('".$field_name."_other').value = ''; document.getElementById('".$field_name."_other').style.display='none'; } \">\n";
 			$html .= "<option value=''></option>\n";
 
-			$sql = "SELECT distinct($field_name) as $field_name FROM $table_name $sql_where_optional ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			$result_count = count($result);
-			if ($result_count > 0) { //if user account exists then show login
-				//print_r($result);
+			$sql = "select distinct(".$field_name.") as ".$field_name." ";
+			$sql .= "from ".$table_name." ".$sql_where_optional." ";
+			$database = new database;
+			$result = $database->select($sql, null, 'all');
+			if (is_array($result) && @sizeof($result) != 0) {
 				foreach($result as $field) {
 					if (strlen($field[$field_name]) > 0) {
-						if ($field_current_value == $field[$field_name]) {
-							$html .= "<option value=\"".$field[$field_name]."\" selected>".$field[$field_name]."</option>\n";
-						}
-						else {
-							$html .= "<option value=\"".$field[$field_name]."\">".$field[$field_name]."</option>\n";
-						}
+						$html .= "<option value=\"".$field[$field_name]."\" ".($field_current_value == $field[$field_name] ? "selected='selected'" : null).">".$field[$field_name]."</option>\n";
 					}
 				}
 			}
-			unset($sql, $result, $result_count);
+			unset($sql, $result, $field);
 
 			$html .= "<option value='Other'>Other</option>\n";
 			$html .= "</select>\n";
@@ -364,103 +336,41 @@
 			$html .= "</tr>\n";
 			$html .= "</table>";
 
-		return $html;
+			return $html;
 		}
 	}
 
 	if (!function_exists('html_select')) {
-		function html_select($db, $table_name, $field_name, $sql_where_optional, $field_current_value, $field_value = '', $style = '') {
-			//html select other : build a select box from distinct items in db with option for other
+		function html_select($table_name, $field_name, $sql_where_optional, $field_current_value, $field_value = '', $style = '', $onchange = '') {
+			//html select: build a select box from distinct items in db
 			global $domain_uuid;
 
 			if (strlen($field_value) > 0) {
-			$html .= "<select id=\"".$field_value."\" name=\"".$field_value."\" class='formfld' style='".$style."'>\n";
-			$html .= "<option value=\"\"></option>\n";
-				$sql = "SELECT distinct($field_name) as $field_name, $field_value FROM $table_name $sql_where_optional order by $field_name asc ";
+				$html .= "<select id=\"".$field_value."\" name=\"".$field_value."\" class='formfld' style='".$style."' ".($onchange != '' ? "onchange=\"".$onchange."\"" : null).">\n";
+				$html .= "	<option value=\"\"></option>\n";
+				$sql = "select distinct(".$field_name.") as ".$field_name.", ".$field_value." from ".$table_name." ".$sql_where_optional." order by ".$field_name." asc ";
 			}
 			else {
-				$html .= "<select id=\"".$field_name."\" name=\"".$field_name."\" class='formfld' style='".$style."'>\n";
-				$html .= "<option value=\"\"></option>\n";
-				$sql = "SELECT distinct($field_name) as $field_name FROM $table_name $sql_where_optional ";
+				$html .= "<select id=\"".$field_name."\" name=\"".$field_name."\" class='formfld' style='".$style."' ".($onchange != '' ? "onchange=\"".$onchange."\"" : null).">\n";
+				$html .= "	<option value=\"\"></option>\n";
+				$sql = "select distinct(".$field_name.") as ".$field_name." from ".$table_name." ".$sql_where_optional." ";
 			}
 
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			$result_count = count($result);
-			if ($result_count > 0) { //if user account exists then show login
+			$database = new database;
+			$result = $database->select($sql, null, 'all');
+			if (is_array($result) && @sizeof($result) != 0) {
 				foreach($result as $field) {
 					if (strlen($field[$field_name]) > 0) {
-						if ($field_current_value == $field[$field_name]) {
-							if (strlen($field_value) > 0) {
-								$html .= "<option value=\"".$field[$field_value]."\" selected>".$field[$field_name]."</option>\n";
-							}
-							else {
-								$html .= "<option value=\"".$field[$field_name]."\" selected>".$field[$field_name]."</option>\n";
-							}
-						}
-						else {
-							if (strlen($field_value) > 0) {
-								$html .= "<option value=\"".$field[$field_value]."\">".$field[$field_name]."</option>\n";
-							}
-							else {
-								$html .= "<option value=\"".$field[$field_name]."\">".$field[$field_name]."</option>\n";
-							}
-						}
+						$selected = $field_current_value == $field[$field_name] ? "selected='selected'" : null;
+						$array_key = strlen($field_value) > 0 ? $field_value : $field_name;
+						$html .= "<option value=\"".$field[$array_key]."\" ".$selected.">".$field[$field_name]."</option>\n";
 					}
 				}
 			}
-			unset($sql, $result, $result_count);
+			unset($sql, $result, $field);
 			$html .= "</select>\n";
 
-		return $html;
-		}
-	}
-	//$table_name = 'v_templates'; $field_name = 'templatename'; $sql_where_optional = "where domain_uuid = '$domain_uuid' "; $field_current_value = '';
-	//echo html_select($db, $table_name, $field_name, $sql_where_optional, $field_current_value);
-
-	if (!function_exists('html_select_on_change')) {
-		function html_select_on_change($db, $table_name, $field_name, $sql_where_optional, $field_current_value, $onchange, $field_value = '') {
-			//html select other : build a select box from distinct items in db with option for other
-			global $domain_uuid;
-
-			$html .= "<select id=\"".$field_name."\" name=\"".$field_name."\" class='formfld' onchange=\"".$onchange."\">\n";
-			$html .= "<option value=''></option>\n";
-
-			$sql = "SELECT distinct($field_name) as $field_name FROM $table_name $sql_where_optional order by $field_name asc ";
-			//echo $sql;
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			$result_count = count($result);
-			//echo $result_count;
-			if ($result_count > 0) { //if user account exists then show login
-				//print_r($result);
-				foreach($result as $field) {
-					if (strlen($field[$field_name]) > 0) {
-						if ($field_current_value == $field[$field_name]) {
-								if (strlen($field_value) > 0) {
-									$html .= "<option value=\"".$field[$field_value]."\" selected>".$field[$field_name]."</option>\n";
-								}
-								else {
-									$html .= "<option value=\"".$field[$field_name]."\" selected>".$field[$field_name]."</option>\n";
-								}
-						}
-						else {
-								if (strlen($field_value) > 0) {
-									$html .= "<option value=\"".$field[$field_value]."\">".$field[$field_name]."</option>\n";
-								}
-								else {
-									$html .= "<option value=\"".$field[$field_name]."\">".$field[$field_name]."</option>\n";
-								}
-						}
-					}
-				}
-			}
-			unset($sql, $result, $result_count);
-			$html .= "</select>\n";
-
-		return $html;
+			return $html;
 		}
 	}
 
@@ -485,43 +395,6 @@
 			return $html;
 		}
 	}
-	////example usage
-		//$table_name = 'tblcontacts'; $field_name = 'contactcategory'; $sql_where_optional = "", $field_current_value ='';
-		//echo html_select_other($db, $table_name, $field_name, $sql_where_optional, $field_current_value);
-	////  On the page that recieves the POST
-		//if (check_str($_POST["contactcategory"]) == "Other") { //echo "found: ".$contactcategory;
-		//  $contactcategory = check_str($_POST["contactcategoryother"]);
-		//}
-
-	if (!function_exists('log_add')) {
-		function log_add($db, $log_type, $log_status, $log_desc, $log_add_user, $log_add_user_ip) {
-			return; //this disables the function
-			global $domain_uuid;
-
-			$sql = "insert into logs ";
-			$sql .= "(";
-			$sql .= "log_type, ";
-			$sql .= "log_status, ";
-			$sql .= "log_desc, ";
-			$sql .= "log_add_user, ";
-			$sql .= "log_add_user_ip, ";
-			$sql .= "log_add_date ";
-			$sql .= ")";
-			$sql .= "values ";
-			$sql .= "(";
-			$sql .= "'$log_type', ";
-			$sql .= "'$log_status', ";
-			$sql .= "'$log_desc', ";
-			$sql .= "'$log_add_user', ";
-			$sql .= "'$log_add_user_ip', ";
-			$sql .= "now() ";
-			$sql .= ")";
-			$db->exec(check_sql($sql));
-			unset($sql);
-		}
-	}
-	//$log_type = ''; $log_status=''; $log_add_user=''; $log_desc='';
-	//log_add($db, $log_type, $log_status, $log_desc, $log_add_user, $_SERVER["REMOTE_ADDR"]);
 
 	if (!function_exists('get_ext')) {
 		function get_ext($filename) {
@@ -546,108 +419,94 @@
 	}
 
 	if (!function_exists('file_upload')) {
-			function file_upload($field = '', $file_type = '', $dest_dir = '') {
+		function file_upload($field = '', $file_type = '', $dest_dir = '') {
 
-					$uploadtempdir = $_ENV["TEMP"]."\\";
-					ini_set('upload_tmp_dir', $uploadtempdir);
+			$uploadtempdir = $_ENV["TEMP"]."\\";
+			ini_set('upload_tmp_dir', $uploadtempdir);
 
-					$tmp_name = $_FILES[$field]["tmp_name"];
-					$file_name = $_FILES[$field]["name"];
-					$file_type = $_FILES[$field]["type"];
-					$file_size = $_FILES[$field]["size"];
-					$file_ext = get_ext($file_name);
-					$file_name_orig = $file_name;
-					$file_name_base = substr($file_name, 0, (strlen($file_name) - (strlen($file_ext)+1)));
-					//$dest_dir = '/tmp';
+			$tmp_name = $_FILES[$field]["tmp_name"];
+			$file_name = $_FILES[$field]["name"];
+			$file_type = $_FILES[$field]["type"];
+			$file_size = $_FILES[$field]["size"];
+			$file_ext = get_ext($file_name);
+			$file_name_orig = $file_name;
+			$file_name_base = substr($file_name, 0, (strlen($file_name) - (strlen($file_ext)+1)));
+			//$dest_dir = '/tmp';
 
-					if ($file_size ==  0){
-						return;
+			if ($file_size == 0) {
+				return;
+			}
+
+			if (!is_dir($dest_dir)) {
+				echo "dest_dir not found<br />\n";
+				return;
+			}
+
+			//check if allowed file type
+			if ($file_type == "img") {
+				switch (strtolower($file_ext)) {
+					case "jpg":
+					case "png":
+					case "gif":
+					case "bmp":
+					case "psd":
+					case "tif": break;
+					default: return false;
+				}
+			}
+			if ($file_type == "file") {
+				switch (strtolower($file_ext)) {
+					case "doc":
+					case "pdf":
+					case "ppt":
+					case "xls":
+					case "zip":
+					case "exe": break;
+					default: return false;
+				}
+			}
+
+			//find unique filename: check if file exists if it does then increment the filename
+				$i = 1;
+				while( file_exists($dest_dir.'/'.$file_name)) {
+					if (strlen($file_ext)> 0) {
+						$file_name = $file_name_base . $i .'.'. $file_ext;
 					}
-
-					if (!is_dir($dest_dir)) {
-						echo "dest_dir not found<br />\n";
-						return;
+					else {
+						$file_name = $file_name_orig . $i;
 					}
+					$i++;
+				}
 
-					//check if allowed file type
-					if ($file_type == "img") {
-							switch (strtolower($file_ext)) {
-								case "jpg":
-									break;
-								case "png":
-									break;
-								case "gif":
-									break;
-								case "bmp":
-									break;
-								case "psd":
-									break;
-								case "tif":
-									break;
-								default:
-									return false;
-							}
-					}
-					if ($file_type == "file") {
-						switch (strtolower($file_ext)) {
-							case "doc":
-								break;
-							case "pdf":
-								break;
-							case "ppt":
-								break;
-							case "xls":
-								break;
-							case "zip":
-								break;
-							case "exe":
-								break;
-							default:
-								return false;
-							}
-					}
+			//echo "file_type: ".$file_type."<br />\n";
+			//echo "tmp_name: ".$tmp_name."<br />\n";
+			//echo "file_name: ".$file_name."<br />\n";
+			//echo "file_ext: ".$file_ext."<br />\n";
+			//echo "file_name_orig: ".$file_name_orig."<br />\n";
+			//echo "file_name_base: ".$file_name_base."<br />\n";
+			//echo "dest_dir: ".$dest_dir."<br />\n";
 
-					//find unique filename: check if file exists if it does then increment the filename
-						$i = 1;
-						while( file_exists($dest_dir.'/'.$file_name)) {
-							if (strlen($file_ext)> 0) {
-								$file_name = $file_name_base . $i .'.'. $file_ext;
-							}
-							else {
-								$file_name = $file_name_orig . $i;
-							}
-							$i++;
-						}
+			//move the file to upload directory
+			//bool move_uploaded_file  ( string $filename, string $destination  )
 
-					//echo "file_type: ".$file_type."<br />\n";
-					//echo "tmp_name: ".$tmp_name."<br />\n";
-					//echo "file_name: ".$file_name."<br />\n";
-					//echo "file_ext: ".$file_ext."<br />\n";
-					//echo "file_name_orig: ".$file_name_orig."<br />\n";
-					//echo "file_name_base: ".$file_name_base."<br />\n";
-					//echo "dest_dir: ".$dest_dir."<br />\n";
+				if (move_uploaded_file($tmp_name, $dest_dir.'/'.$file_name)) {
+						return $file_name;
+				}
+				else {
+					echo "File upload failed!  Here's some debugging info:\n";
+					return false;
+				}
+				exit;
 
-					//move the file to upload directory
-					//bool move_uploaded_file  ( string $filename, string $destination  )
-
-						if (move_uploaded_file($tmp_name, $dest_dir.'/'.$file_name)){
-							 return $file_name;
-						}
-						else {
-							echo "File upload failed!  Here's some debugging info:\n";
-							return false;
-						}
-						exit;
-
-			} //end function
+		}
 	}
 
-	if ( !function_exists('sys_get_temp_dir')) {
+	if (!function_exists('sys_get_temp_dir')) {
 		function sys_get_temp_dir() {
-			if( $temp=getenv('TMP') )        return $temp;
-			if( $temp=getenv('TEMP') )        return $temp;
-			if( $temp=getenv('TMPDIR') )    return $temp;
-			$temp=tempnam(__FILE__,'');
+			if ($temp = getenv('TMP')) { return $temp; }
+			if ($temp = getenv('TEMP')) { return $temp; }
+			if ($temp = getenv('TMPDIR')) { return $temp; }
+			$temp = tempnam(__FILE__,'');
 			if (file_exists($temp)) {
 				unlink($temp);
 				return dirname($temp);
@@ -657,14 +516,14 @@
 	}
 	//echo realpath(sys_get_temp_dir());
 
-	if ( !function_exists('normalize_path')) {
+	if (!function_exists('normalize_path')) {
 		//don't use DIRECTORY_SEPARATOR as it will change on a per platform basis and we need consistency
 		function normalize_path($path) {
 			return str_replace(array('/','\\'), '/', $path);
 		}
 	}
 
-	if ( !function_exists('normalize_path_to_os')) {
+	if (!function_exists('normalize_path_to_os')) {
 		function normalize_path_to_os($path) {
 			return str_replace(array('/','\\'), DIRECTORY_SEPARATOR, $path);
 		}
@@ -672,125 +531,109 @@
 
 	if (!function_exists('username_exists')) {
 		function username_exists($username) {
-			global $db, $domain_uuid;
-			$sql = "select * from v_users ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and username = '".$username."' ";
-			//$sql .= "and user_enabled = 'true' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			$result_count = count($result);
-			if ($result_count > 0) {
-				return true;
-			}
-			else {
-				return false;
-			}
+			global $domain_uuid;
+			$sql = "select count(*) from v_users ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and username = :username ";
+			$parameters['domain_uuid'] = $domain_uuid;
+			$parameters['username'] = $username;
+			$database = new database;
+			$num_rows = $database->select($sql, $parameters, 'column');
+			return $num_rows > 0 ? true : false;
 		}
 	}
 
 	if (!function_exists('add_extension_user')) {
 		function add_extension_user($extension_uuid, $username) {
-			global $db, $domain_uuid;
+			global $domain_uuid;
 			//get the user_uuid by using the username
-				$sql = "select * from v_users ";
-				$sql .= "where domain_uuid = '$domain_uuid' ";
-				$sql .= "and username = '$username' ";
-				//$sql .= "and user_enabled = 'true' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				unset($prep_statement);
-				foreach ($result as &$row) {
+				$sql = "select user_uuid from v_users ";
+				$sql .= "where domain_uuid = :domain_uuid ";
+				$sql .= "and username = :username ";
+				$parameters['domain_uuid'] = $domain_uuid;
+				$parameters['username'] = $username;
+				$database = new database;
+				$user_uuid = $database->select($sql, $parameters, 'column');
+				unset($sql, $parameters);
+
+				if (is_uuid($user_uuid)) {
 					//check if the user_uuid exists in v_extension_users
-						$sql = "select * from v_extension_users ";
-						$sql .= "where domain_uuid = '$domain_uuid' ";
-						$sql .= "and user_uuid = '".$row["user_uuid"]."' ";
-						$prep_statement = $db->prepare(check_sql($sql));
-						$prep_statement->execute();
-						$extension_users_result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-						unset($prep_statement);
+						$sql = "select count(*) from v_extension_users ";
+						$sql .= "where domain_uuid = :domain_uuid ";
+						$sql .= "and user_uuid = :user_uuid ";
+						$parameters['domain_uuid'] = $domain_uuid;
+						$parameters['user_uuid'] = $user_uuid;
+						$database = new database;
+						$num_rows = $database->select($sql, $parameters, 'column');
+						unset($sql, $parameters);
+
 					//assign the extension to the user
-						if (count($extension_users_result) == 0) {
-							$sql = "insert into v_extension_users ";
-							$sql .= "(";
-							$sql .= "domain_uuid, ";
-							$sql .= "extension_uuid, ";
-							$sql .= "user_uuid ";
-							$sql .= ") ";
-							$sql .= "values ";
-							$sql .= "(";
-							$sql .= "'$domain_uuid', ";
-							$sql .= "'$extension_uuid', ";
-							$sql .= "'".$row["user_uuid"]."' ";
-							$sql .= ")";
-							$db->exec(check_sql($sql));
-							unset($sql);
+						if ($num_rows == 0) {
+							//build insert array
+								$extension_user_uuid = uuid();
+								$array['extension_users'][$x]['extension_user_uuid'] = $extension_user_uuid;
+								$array['extension_users'][$x]['domain_uuid'] = $domain_uuid;
+								$array['extension_users'][$x]['extension_uuid'] = $extension_uuid;
+								$array['extension_users'][$x]['user_uuid'] = $row["user_uuid"];
+							//grant temporary permissions
+								$p = new permissions;
+								$p->add('extension_user_add', 'temp');
+							//execute insert
+								$database = new database;
+								$database->app_name = 'function-add_extension_user';
+								$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
+								$database->save($array);
+								unset($array);
+							//revoke temporary permissions
+								$p->delete('extension_user_add', 'temp');
 						}
 				}
-				unset ($result);
 		}
 	}
 
 	if (!function_exists('user_add')) {
-		function user_add($username, $password, $user_email='') {
-			global $db, $domain_uuid, $v_salt;
-			$user_uuid = uuid();
+		function user_add($username, $password, $user_email = '') {
+			global $domain_uuid;
 			if (strlen($username) == 0) { return false; }
 			if (strlen($password) == 0) { return false; }
 			if (!username_exists($username)) {
-				//salt used with the password to create a one way hash
+				//build user insert array
+					$user_uuid = uuid();
 					$salt = generate_password('20', '4');
-				//add the user account
-					$user_type = 'Individual';
-					$user_category = 'user';
-					$sql = "insert into v_users ";
-					$sql .= "(";
-					$sql .= "domain_uuid, ";
-					$sql .= "user_uuid, ";
-					$sql .= "username, ";
-					$sql .= "password, ";
-					$sql .= "salt, ";
-					if (strlen($user_email) > 0) { $sql .= "user_email, "; }
-					$sql .= "add_date, ";
-					$sql .= "add_user ";
-					$sql .= ")";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'$domain_uuid', ";
-					$sql .= "'$user_uuid', ";
-					$sql .= "'$username', ";
-					$sql .= "'".md5($salt.$password)."', ";
-					$sql .= "'$salt', ";
-					if (strlen($user_email) > 0) { $sql .= "'$user_email', "; }
-					$sql .= "now(), ";
-					$sql .= "'".$_SESSION["username"]."' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
+					$array['users'][0]['user_uuid'] = $user_uuid;
+					$array['users'][0]['domain_uuid'] = $domain_uuid;
+					$array['users'][0]['username'] = $username;
+					$array['users'][0]['password'] = md5($salt.$password);
+					$array['users'][0]['salt'] = $salt;
+					if (valid_email($user_email)) {
+						$array['users'][0]['user_email'] = $user_email;
+					}
+					$array['users'][0]['add_date'] = now();
+					$array['users'][0]['add_user'] = $_SESSION["username"];
 
-				//add the user to the member group
-					$group_name = 'user';
-					$sql = "insert into v_user_groups ";
-					$sql .= "(";
-					$sql .= "user_group_uuid, ";
-					$sql .= "domain_uuid, ";
-					$sql .= "group_name, ";
-					$sql .= "user_uuid ";
-					$sql .= ")";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'".uuid()."', ";
-					$sql .= "'$domain_uuid', ";
-					$sql .= "'$group_name', ";
-					$sql .= "'$user_uuid' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
-			} //end if !username_exists
-		} //end function definition
-	} //end function_exists
+				//build user group insert array
+					$user_group_uuid = uuid();
+					$array['user_groups'][0]['user_group_uuid'] = $user_group_uuid;
+					$array['user_groups'][0]['domain_uuid'] = $domain_uuid;
+					$array['user_groups'][0]['group_name'] = 'user';
+					$array['user_groups'][0]['user_uuid'] = $user_uuid;
+
+				//grant temporary permissions
+					$p = new permissions;
+					$p->add('user_add', 'temp');
+					$p->add('user_group_add', 'temp');
+				//execute insert
+					$database = new database;
+					$database->app_name = 'function-user_add';
+					$database->app_uuid = '15a8d74b-ac7e-4468-add4-3e6ebdcb8e22';
+					$database->save($array);
+					unset($array);
+				//revoke temporary permissions
+					$p->delete('user_add', 'temp');
+					$p->delete('user_group_add', 'temp');
+			}
+		}
+	}
 
 function switch_module_is_running($fp, $mod) {
 	if (!$fp) {
@@ -2002,14 +1845,13 @@ function number_pad($number,$n) {
 
 //retrieve array of countries
 	if (!function_exists('get_countries')) {
-		function get_countries($db) {
+		function get_countries() {
 			$sql = "select * from v_countries order by country asc";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			$result_count = count($result);
-			return ($result_count > 0) ? $result : false;
-			unset ($prep_statement, $sql);
+			$database = new database;
+			$result = $database->select($sql, null, 'all');
+			unset($sql);
+
+			return is_array($result) && @sizeof($result) != 0 ? $result : false;
 		}
 	}
 
