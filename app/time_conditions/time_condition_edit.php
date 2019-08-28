@@ -106,7 +106,6 @@
 			}
 
 		//remove the invalid characters from the dialplan name
-			$dialplan_name = str_replace(' ', '_', $dialplan_name);
 			$dialplan_name = str_replace('/', '', $dialplan_name);
 
 		//set the context for users that do not have the permission
@@ -513,6 +512,9 @@
 				$dialplan_description = $row["dialplan_description"];
 			}
 			unset($sql, $parameters, $row);
+
+		//remove the underscore in the time condition name
+			$dialplan_name = str_replace('_', ' ', $dialplan_name);
 
 		//get dialplan detail conditions
 			$sql = "select dialplan_detail_group, dialplan_detail_tag, dialplan_detail_type, dialplan_detail_data ";
