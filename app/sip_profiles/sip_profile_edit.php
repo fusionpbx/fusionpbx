@@ -463,7 +463,7 @@
 	echo "	".$text['label-sip_profile_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <textarea class='formfld' type='text' name='sip_profile_description'>".escape($sip_profile_description)."</textarea>\n";
+	echo "  <textarea class='formfld' type='text' name='sip_profile_description'>".$sip_profile_description."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-sip_profile_description']."\n";
 	echo "</td>\n";
