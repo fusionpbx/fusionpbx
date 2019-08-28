@@ -315,7 +315,7 @@ else {
 	echo "	".$text['label-address_address']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<textarea class='formfld' name='address_street' style='margin-bottom: 3px;'>".escape($address_street)."</textarea><br>\n";
+	echo "	<textarea class='formfld' name='address_street' style='margin-bottom: 3px;'>".$address_street."</textarea><br>\n";
 	echo "	<input class='formfld' type='text' name='address_extended' maxlength='255' value=\"".escape($address_extended)."\">\n";
 	echo "<br />\n";
 	echo $text['description-address_address']."\n";
@@ -440,4 +440,5 @@ else {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>
