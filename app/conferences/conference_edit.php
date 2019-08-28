@@ -281,7 +281,7 @@
 					//update dialplan detail action
 						$pin_number = strlen($conference_pin_number) > 0 ? '+'.$conference_pin_number : null;
 						$flags = strlen($conference_flags) > 0 ? '+flags{'.$conference_flags.'}' : null;
-						$dialplan_detail_data = $conference_name.'@'.$_SESSION['domain_name']."@".$conference_profile.$pin_number.$flags;
+						$dialplan_detail_data = $conference_uuid.'@'.$_SESSION['domain_name']."@".$conference_profile.$pin_number.$flags;
 						$sql = "update v_dialplan_details set ";
 						$sql .= "dialplan_detail_data = :dialplan_detail_data ";
 						$sql .= "where domain_uuid = :domain_uuid ";
