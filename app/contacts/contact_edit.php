@@ -742,7 +742,7 @@
 		echo "	".$text['label-contact_note']."\n";
 		echo "</td>\n";
 		echo "<td width='70%' class='vtable' align='left'>\n";
-		echo "  <textarea class='formfld' style='width: 100%; height: 80px;' name='contact_note'>".escape($contact_note)."</textarea>\n";
+		echo "  <textarea class='formfld' style='width: 100%; height: 80px;' name='contact_note'>".$contact_note."</textarea>\n";
 // 		echo "<br />\n";
 // 		echo $text['description-contact_note']."\n";
 		echo "</td>\n";
