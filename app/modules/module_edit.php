@@ -216,8 +216,11 @@
 	echo "    ".$text['label-module_category']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	$table_name = 'v_modules'; $field_name = 'module_category'; $sql_where_optional = ''; $field_current_value = $module_category;
-	echo html_select_other($db, $table_name, $field_name, $sql_where_optional, $field_current_value);
+	$table_name = 'v_modules';
+	$field_name = 'module_category';
+	$sql_where_optional = '';
+	$field_current_value = $module_category;
+	echo html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value);
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";

@@ -198,9 +198,11 @@
 	echo "	".$text['label-category']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	$table_name = 'v_vars';$field_name = 'var_category';$sql_where_optional = "";$field_current_value = $var_category;
-	echo html_select_other($db, $table_name, $field_name, $sql_where_optional, $field_current_value);
-	//echo "<br />\n";
+	$table_name = 'v_vars';
+	$field_name = 'var_category';
+	$sql_where_optional = "";
+	$field_current_value = $var_category;
+	echo html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value);
 	echo $text['description-category']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";

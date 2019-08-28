@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -59,19 +59,17 @@
 			$sql .= "set default_setting_value = '#fafafa' ";
 			$sql .= "where default_setting_subcategory = 'message_default_color' ";
 			$sql .= "and default_setting_value = '#ccffcc' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			if ($prep_statement) {
-				$prep_statement->execute();
-			}
+			$database = new database;
+			$database->execute($sql);
+			unset($sql);
+
 			$sql = "update v_default_settings ";
 			$sql .= "set default_setting_value = '#666' ";
 			$sql .= "where default_setting_subcategory = 'message_default_background_color' ";
 			$sql .= "and default_setting_value = '#004200' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			if ($prep_statement) {
-				$prep_statement->execute();
-			}
-			unset($prep_statement, $sql);
+			$database = new database;
+			$database->execute($sql);
+			unset($sql);
 
 		//replace glyphicon icon with fontawesome icon for default main menu items
 			$queries[] = "update v_menu_items set menu_item_icon = 'fa-home' where menu_item_icon = 'glyphicon-home' ";
