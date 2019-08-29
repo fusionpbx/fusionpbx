@@ -429,6 +429,9 @@ echo "	<div id='message_container'></div>\n";
 			if ($_SESSION['theme']['domain_active_text_color_hover']['text'] != '' && $domain['domain_uuid'] == $_SESSION['domain_uuid']) {
 				echo "<div id=\"".$domain['domain_name']."\" class='domains_list_item_active' style='background-color: ".$bgcolor."' onclick=\"document.location.href='".escape($domain_path)."?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true';\">";
 			}
+			else if ($_SESSION['theme']['domain_inactive_text_color_hover']['text'] != '' && $domain['domain_uuid'] != $_SESSION['domain_uuid']) {
+				echo "<div id=\"".$domain['domain_name']."\" class='domains_list_item_inactive' style='background-color: ".$bgcolor."' onclick=\"document.location.href='".escape($domain_path)."?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true';\">";
+			}
 			else {
 				echo "<div id=\"".$domain['domain_name']."\" class='domains_list_item' style='background-color: ".$bgcolor."' onclick=\"document.location.href='".escape($domain_path)."?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true';\">";
 			}
