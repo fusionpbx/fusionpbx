@@ -91,7 +91,7 @@
 			unset($result, $row);
 
 		//get the $apps array from the installed apps from the core and mod directories
-			$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
+			$config_list = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
 			$x=0;
 			if (isset($config_list)) foreach ($config_list as &$config_path) {
 				include($config_path);
@@ -99,7 +99,6 @@
 			}
 
 		//delete the domain data from all tables in the database
-			$db->beginTransaction();
 			if (isset($apps)) foreach ($apps as &$app) {
 				if (isset($app['db'])) foreach ($app['db'] as $row) {
 					if (is_array($row['table']['name'])) {
@@ -114,6 +113,7 @@
 					if ($table_name !== "v" && isset($row['fields'])) {
 						foreach ($row['fields'] as $field) {
 							if ($field['name'] == "domain_uuid") {
+
 								$sql = "delete from ".$table_name." where domain_uuid = :domain_uuid ";
 								$parameters['domain_uuid'] = $id;
 								$database = new database;
@@ -126,7 +126,6 @@
 					}
 				}
 			}
-			$db->commit();
 
 		//delete the directories
 			if (strlen($domain_name) > 0) {

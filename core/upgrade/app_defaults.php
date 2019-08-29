@@ -108,27 +108,27 @@ if ($domains_processed == 1) {
 			$database = new database;
 			$result = $database->select($sql, null, 'all');
 			if (is_array($result) && count($result) > 0) {
-					foreach($result as $row) {
-						$current_default_setting_uuid = $row["default_setting_uuid"];
-						$current_default_setting_value = $row["default_setting_value"];
-						break;
-					}
-
-					// compare to message in language file, update and enable if different
-					$new_default_setting_value = str_replace("''", "'", $text['login-message_text']);
-					if ($current_default_setting_value != $new_default_setting_value) {
-						$sql = "update v_default_settings set ";
-						$sql .= "default_setting_value = :default_setting_value, ";
-						$sql .= "default_setting_enabled = 'true' ";
-						$sql .= "where default_setting_uuid = :default_setting_uuid ";
-						$parameters['default_setting_value'] = $text['login-message_text'];
-						$parameters['default_setting_uuid'] = $current_default_setting_uuid;
-						$database = new database;
-						$database->execute($sql, $parameters);
-						unset($sql, $parameters);
-					}
+				foreach($result as $row) {
+					$current_default_setting_uuid = $row["default_setting_uuid"];
+					$current_default_setting_value = $row["default_setting_value"];
+					break;
 				}
-				unset($prep_statement, $result);
+
+				// compare to message in language file, update and enable if different
+				$new_default_setting_value = str_replace("''", "'", $text['login-message_text']);
+				if ($current_default_setting_value != $new_default_setting_value) {
+					$sql = "update v_default_settings set ";
+					$sql .= "default_setting_value = :default_setting_value, ";
+					$sql .= "default_setting_enabled = 'true' ";
+					$sql .= "where default_setting_uuid = :default_setting_uuid ";
+					$parameters['default_setting_value'] = $text['login-message_text'];
+					$parameters['default_setting_uuid'] = $current_default_setting_uuid;
+					$database = new database;
+					$database->execute($sql, $parameters);
+					unset($sql, $parameters);
+				}
+			}
+			unset($sql, $result, $row);
 		}
 
 }

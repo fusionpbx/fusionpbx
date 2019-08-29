@@ -39,26 +39,27 @@
 
 //download email
 	if ($_REQUEST['a'] == 'download' && permission_exists('email_log_download')) {
-		$email_log_uuid = check_str($_REQUEST["id"]);
+		$email_log_uuid = $_REQUEST["id"];
 
 		$msg_found = false;
 
-		if ($email_log_uuid != '') {
-			$sql = "select call_uuid, email from v_email_logs ";
-			$sql .= "where email_log_uuid = '".$email_log_uuid."' ";
-			$sql .= "and domain_uuid = '".$domain_uuid."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			if (is_array($result)) {
-				foreach($result as $row) {
-					$call_uuid = $row['call_uuid'];
-					$email = $row['email'];
-					$msg_found = true;
-					break;
-				}
+		if (is_uuid($email_log_uuid)) {
+			$sql = "select ";
+			$sql .= "call_uuid, ";
+			$sql .= "email ";
+			$sql .= "from v_email_logs ";
+			$sql .= "where email_log_uuid = :email_log_uuid ";
+			$sql .= "and domain_uuid = :domain_uuid ";
+			$parameters['email_log_uuid'] = $email_log_uuid;
+			$parameters['domain_uuid'] = $domain_uuid;
+			$database = new database;
+			$row = $database->select($sql, $parameters, 'row');
+			if (is_array($row) && @sizeof($row) != 0) {
+				$call_uuid = $row['call_uuid'];
+				$email = $row['email'];
+				$msg_found = true;
 			}
-			unset ($prep_statement, $sql, $result);
+			unset($sql, $parameters, $row);
 		}
 
 		if ($msg_found) {
@@ -74,28 +75,26 @@
 
 //resend email
 	if ($_REQUEST['a'] == 'resend' && permission_exists('email_log_resend')) {
-		$email_log_uuid = check_str($_REQUEST["id"]);
+		$email_log_uuid = $_REQUEST["id"];
 		$resend = true;
 
 		$msg_found = false;
 
-		if ($email_log_uuid != '') {
+		if (is_uuid($email_log_uuid)) {
 			$sql = "select email from v_email_logs ";
-			$sql .= "where email_log_uuid = '".$email_log_uuid."' ";
+			$sql .= "where email_log_uuid = :email_log_uuid ";
 			if (!permission_exists('email_log_all') || $_REQUEST['showall'] != 'true') {
-				$sql .= "and domain_uuid = '".$domain_uuid."' ";
+				$sql .= "and domain_uuid = :domain_uuid ";
+				$parameters['domain_uuid'] = $domain_uuid;
 			}
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			if (is_array($result)) {
-				foreach($result as $row) {
-					$email = $row['email'];
-					$msg_found = true;
-					break;
-				}
+			$parameters['email_log_uuid'] = $email_log_uuid;
+			$database = new database;
+			$row = $database->select($sql, $parameters, 'row');
+			if (is_array($row) && @sizeof($row) != 0) {
+				$email = $row['email'];
+				$msg_found = true;
 			}
-			unset ($prep_statement, $sql, $result);
+			unset($sql, $parameters, $row);
 		}
 
 		if ($msg_found) {
@@ -103,19 +102,11 @@
 			require_once "secure/v_mailto.php";
 			if ($mailer_error == '') {
 				message::add($text['message-message_resent']);
-				if (permission_exists('email_log_all') && $_REQUEST['showall'] == 'true') {
-					header("Location: email_log_delete.php?id=".$email_log_uuid."&showall=true");
-				} else {
-					header("Location: email_log_delete.php?id=".$email_log_uuid);
-				}
+				header("Location: email_log_delete.php?id=".$email_log_uuid.(permission_exists('email_log_all') && $_REQUEST['showall'] == 'true' ? "&showall=true" : null));
 			}
 			else {
 				message::add($text['message-resend_failed'].": ".$mailer_error, 'negative', 4000);
-				if (permission_exists('email_log_all') && $_REQUEST['showall'] == 'true') {
-					header("Location: email_logs.php?showall=true");
-				} else {
-					header("Location: email_logs.php");
-				}
+				header("Location: email_logs.php".(permission_exists('email_log_all') && $_REQUEST['showall'] == 'true' ? "?showall=true" : null));
 			}
 		}
 
@@ -137,7 +128,8 @@
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	if (permission_exists('email_log_all') && $_REQUEST['showall'] == 'true') {
 		$param .= "&showall=true";
-	} else {
+	}
+	else {
 		$param = "";
 	}
 	$page = $_GET['page'];

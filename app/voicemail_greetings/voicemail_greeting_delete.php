@@ -54,7 +54,7 @@ if (is_uuid($voicemail_greeting_uuid) && $voicemail_id != '') {
 		$parameters['voicemail_id'] = $voicemail_id;
 		$database = new database;
 		$greeting_filename = $database->select($sql, $parameters, 'column');
-		unset($prep_statement);
+		unset($sql, $parameters);
 
 	//build delete array
 		$array['voicemail_greetings'][0]['voicemail_greeting_uuid'] = $voicemail_greeting_uuid;

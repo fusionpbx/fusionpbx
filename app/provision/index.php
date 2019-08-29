@@ -150,9 +150,6 @@
 		//get the domain name
 			$domain_name = $_SESSION['domains'][$domain_uuid]['domain_name'];
 
-		//set the PDO error mode
-			$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
 		//get the default settings
 			$sql = "select * from v_default_settings ";
 			$sql .= "where default_setting_enabled = 'true' ";

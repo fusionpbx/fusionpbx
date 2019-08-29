@@ -574,7 +574,7 @@ function curl_file_get_contents($url) {
 	$curl = curl_init();
 	$userAgent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; .NET CLR 1.1.4322)';
 
-	curl_setopt($curl, CURLOPT_URL, $url);	//The URL to fetch. This can also be set when initializing a session with curl_init().
+	curl_setopt($curl, CURLOPT_URL, $url);	//The URL to retrieve. This can also be set when initializing a session with curl_init().
 	curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);	//TRUE to return the transfer as a string of the return value of curl_exec() instead of outputting it out directly.
 	curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);	//The number of seconds to wait while trying to connect.
 	curl_setopt($curl, CURLOPT_USERAGENT, $userAgent);	//The contents of the "User-Agent: " header to be used in a HTTP request.

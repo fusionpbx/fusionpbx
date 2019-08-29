@@ -552,7 +552,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td align='left' valign='top' width='30%' nowrap='nowrap'><b>".$text['title-conference_rooms']."</b></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='conference_rooms.php'\" value='".$text['button-back']."'>\n";
-	if (strlen($meeting_uuid) > 0) {
+	if (is_uuid($meeting_uuid)) {
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-sessions']."' onclick=\"window.location='conference_sessions.php?id=".escape($meeting_uuid)."'\" value='".$text['button-sessions']."'>\n";
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-view']."' onclick=\"window.location='".PROJECT_PATH."/app/conferences_active/conference_interactive.php?c=".escape($meeting_uuid)."'\" value='".$text['button-view']."'>\n";
 	}
@@ -574,7 +574,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "		<option value='".escape($row["conference_center_uuid"])."'>".escape($row["conference_center_name"])."</option>\n";
 		}
 	}
-	unset ($prep_statement);
 	echo "	</select>\n";
 	echo "	<br />\n";
 	echo "\n";
