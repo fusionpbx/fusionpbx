@@ -86,7 +86,7 @@ function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count 
 	$text = $language->get();
 
 	//print the link to access each page
-	$self =  escape($_SERVER['PHP_SELF']);
+	$self =  htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8');
 	$nav = '';
 	for($page = 1; $page <= $max_page; $page++){
 		if ($page == $page_number) {
