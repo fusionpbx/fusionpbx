@@ -43,16 +43,17 @@ if (!class_exists('bridges')) {
 						//delete the checked rows
 							if ($action == 'delete') {
 								$database = new database;
-								foreach($bridges as $row) {
+								foreach($bridges as $x => $row) {
 									if ($row['action'] == 'delete' or $row['checked'] == 'true') {
-										$array['bridges'][0]['bridge_uuid'] = $row['bridge_uuid'];
-										$array['bridges'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
-
-										$database->app_name = 'bridges';
-										$database->app_uuid = 'a6a7c4c5-340a-43ce-bcbc-2ed9bab8659d';
-										$database->delete($array);
-										unset($array);
+										$array['bridges'][$x]['bridge_uuid'] = $row['bridge_uuid'];
+										$array['bridges'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 									}
+								}
+								if (is_array($array) && @sizeof($array) != 0) {
+									$database->app_name = 'bridges';
+									$database->app_uuid = 'a6a7c4c5-340a-43ce-bcbc-2ed9bab8659d';
+									$database->delete($array);
+									unset($array);
 								}
 								unset($bridges);
 							}
