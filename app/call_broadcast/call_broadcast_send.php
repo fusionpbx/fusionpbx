@@ -275,20 +275,20 @@ require_once "resources/header.php";
 		$sql = " select * from v_users as u, v_user_groups as m ";
 		$sql .= "where u.user_uuid = m.user_uuid ";
 		$sql .= "and u.user_enabled = 'true' ";
-		$sql .= "and m.group_name = '".$group_name."' ";
-		$sql .= "and u.user_category = '".$user_category."' ";
-		//echo $sql."<br />";
+		$sql .= "and m.group_name = :group_name ";
+		$sql .= "and u.user_category = :user_category ";
+		$parameters['group_name'] = $group_name;
+		$parameters['user_category'] = $user_category;
 	}
 	else {
 		$sql = "select * from v_users as u ";
-		$sql .= "where u.user_category = '".$user_category."' ";
+		$sql .= "where u.user_category = :user_category ";
 		$sql .= "and u.user_enabled = 'true' ";
-		//echo $sql."<br />";
+		$parameters['user_category'] = $user_category;
 	}
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
@@ -307,8 +307,8 @@ require_once "resources/header.php";
 	echo th_order_by('user_phone_2', 'phone_2', $order_by, $order);
 	echo "<tr>\n";
 
-	if (is_array($result)) {
-		foreach($result as $row) {
+	if (is_array($result) && @sizeof($result) != 0) {
+		foreach ($result as $row) {
 			echo "<tr >\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[username]."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[user_type]."&nbsp;</td>\n";
@@ -355,9 +355,9 @@ require_once "resources/header.php";
 				}
 
 			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $result, $row_count);
-	} //end if results
+		}
+	}
+	unset($result, $row);
 
 	echo "</table>";
 	echo "</div>";
@@ -378,4 +378,5 @@ unset ($key);
 unset ($val);
 unset ($c);
 */
+
 ?>

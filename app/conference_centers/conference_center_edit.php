@@ -332,7 +332,6 @@
 				echo "	<option value='phrase:".escape($row["phrase_uuid"])."' ".(($selected) ? "selected='selected'" : null).">".escape($row["phrase_name"])."</option>\n";
 				if ($selected) { $tmp_selected = true; }
 			}
-			unset ($prep_statement);
 			echo "</optgroup>\n";
 		}
 	//sounds

@@ -212,16 +212,16 @@
 
 		//get the users array
 			$sql = "select * from v_users ";
-			$sql .= "where domain_uuid = :domain_uuid'".$_SESSION['domain_uuid']."' ";
+			$sql .= "where domain_uuid = :domain_uuid ";
 			$sql .= "order by username asc ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			unset($prep_statement, $sql);
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$database = new database;
+			$users = $database->select($sql, $parameters, 'all');
+			unset($sql, $parameters);
 
 		//prepare the array
 			$array['call_center_agents'][] = $_POST;
-			if (isset($user_uuid) && strlen($user_uuid) > 0) {
+			if (is_uuid($user_uuid)) {
 				$array['users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 				$array['users'][0]['user_uuid'] = $user_uuid;
 				$array['users'][0]['user_status'] = $agent_status;
@@ -231,7 +231,7 @@
 			$database = new database;
 			$database->app_name = 'call_center';
 			$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
-			if (strlen($call_center_agent_uuid) > 0) {
+			if (is_uuid($call_center_agent_uuid)) {
 				$database->uuid($call_center_agent_uuid);
 			}
 			$database->save($array);
@@ -269,7 +269,7 @@
 		$parameters['call_center_agent_uuid'] = $call_center_agent_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && sizeof($row) != 0) {
+		if (is_array($row) && @sizeof($row) != 0) {
 			$call_center_agent_uuid = $row["call_center_agent_uuid"];
 			$user_uuid = $row["user_uuid"];
 			$agent_name = $row["agent_name"];
@@ -286,7 +286,7 @@
 			$agent_busy_delay_time = $row["agent_busy_delay_time"];
 			//$agent_logout = $row["agent_logout"];
 		}
-		unset($sql, $parameters);
+		unset($sql, $parameters, $row);
 	}
 
 //set default values

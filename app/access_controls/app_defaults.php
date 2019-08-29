@@ -120,7 +120,6 @@
 							$p->delete('access_control_node_add', 'temp');
 					}
 				}
-				unset($prep_statement);
 
 			//rename the file
 				if (file_exists($xml_dir.'/acl.conf.xml')) {

@@ -366,18 +366,21 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	//echo "		<option></option>\n";
 	//$sql = "";
 	//$sql .= "select * from v_recordings ";
-	//$sql .= "where domain_uuid = '$domain_uuid' ";
-	//$prep_statement = $db->prepare(check_sql($sql));
-	//$prep_statement->execute();
-	//while($row = $prep_statement->fetch()) {
-	//	if ($recording_uuid == $row['recording_uuid']) {
-	//		echo "		<option value='".$row['recording_uuid']."' selected='yes'>".escape($row['recordingname'])."</option>\n";
-	//	}
-	//	else {
-	//		echo "		<option value='".$row['recording_uuid']."'>".escape($row['recordingname'])."</option>\n";
+	//$sql .= "where domain_uuid = :domain_uuid ";
+	//$parameters['domain_uuid'] = $domain_uuid;
+	//$database = new database;
+	//$rows = $database->select($sql, $parameters, 'all');
+	//if (is_array($rows) && @sizeof($rows) != 0) {
+	//	foreach ($rows as $row) {
+	//		if ($recording_uuid == $row['recording_uuid']) {
+	//			echo "		<option value='".$row['recording_uuid']."' selected='yes'>".escape($row['recordingname'])."</option>\n";
+	//		}
+	//		else {
+	//			echo "		<option value='".$row['recording_uuid']."'>".escape($row['recordingname'])."</option>\n";
+	//		}
 	//	}
 	//}
-	//unset ($prep_statement);
+	//unset($sql, $parameters, $rows, $row);
 	//echo "		</select>\n";
 	//echo "<br />\n";
 	//echo "Recording to play when the call is answered.<br />\n";
@@ -525,22 +528,24 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "		<select name='user_category' class='formfld'>\n";
 		echo "		<option></option>\n";
 		$sql = "";
-		$sql .= "select distinct(user_category) as user_category from v_users ";
-		//$sql .= "where domain_uuid = '$domain_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		while($row = $prep_statement->fetch()) {
-			if ($user_category   == $row['user_category']) {
-				echo "		<option value='".escape($row['user_category'])."' selected='yes'>".escape($row['user_category'])."</option>\n";
-			}
-			else {
-				echo "		<option value='".escape($row['user_category'])."'>".escape($row['user_category'])."</option>\n";
+		$sql .= "select distinct user_category as user_category from v_users ";
+		//$sql .= "where domain_uuid = :domain_uuid ";
+		//$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$rows = $database->select($sql, null, 'all');
+		if (is_array($rows) && @sizeof($rows) != 0) {
+			foreach ($rows as $row) {
+				if ($user_category   == $row['user_category']) {
+					echo "		<option value='".escape($row['user_category'])."' selected='yes'>".escape($row['user_category'])."</option>\n";
+				}
+				else {
+					echo "		<option value='".escape($row['user_category'])."'>".escape($row['user_category'])."</option>\n";
+				}
 			}
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $rows, $row);
 		echo "		</select>\n";
 		echo "<br />\n";
-		//echo "zzz.<br />\n";
 		echo "\n";
 		echo "</td>\n";
 		echo "</tr>\n";
@@ -554,21 +559,23 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "		<option></option>\n";
 		$sql = "";
 		$sql .= "select * from v_groups ";
-		//$sql .= "where domain_uuid = '$domain_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		while($row = $prep_statement->fetch()) {
-			if ($recording_uuid == $row['group_name']) {
-				echo "		<option value='".escape($row['group_name'])."' selected='yes'>".escape($row['group_name'])."</option>\n";
-			}
-			else {
-				echo "		<option value='".escape($row['group_name'])."'>".escape($row['group_name'])."</option>\n";
+		//$sql .= "where domain_uuid = :domain_uuid ";
+		//$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$rows = $database->select($sql, null, 'all');
+		if (is_array($rows) && @sizeof($rows) != 0) {
+			foreach ($rows as $row) {
+				if ($recording_uuid == $row['group_name']) {
+					echo "		<option value='".escape($row['group_name'])."' selected='yes'>".escape($row['group_name'])."</option>\n";
+				}
+				else {
+					echo "		<option value='".escape($row['group_name'])."'>".escape($row['group_name'])."</option>\n";
+				}
 			}
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $rows, $row);
 		echo "		</select>\n";
 		echo "<br />\n";
-		//echo "zzz.<br />\n";
 		echo "\n";
 		echo "</td>\n";
 		echo "</tr>\n";
@@ -583,18 +590,21 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "		<option></option>\n";
 		$sql = "";
 		$sql .= "select * from v_gateways ";
-		//$sql .= "where domain_uuid = '$domain_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		while($row = $prep_statement->fetch()) {
-			if ($gateway == $row['gateway']) {
-				echo "		<option value='".escape($row['gateway'])."' selected='yes'>".escape($row['gateway'])."</option>\n";
-			}
-			else {
-				echo "		<option value='".escape($row['gateway'])."'>".escape($row['gateway'])."</option>\n";
+		//$sql .= "where domain_uuid = :domain_uuid ";
+		//$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$rows = $database->select($sql, null, 'all');
+		if (is_array($rows) && @sizeof($rows) != 0) {
+			foreach ($rows as $row) {
+				if ($gateway == $row['gateway']) {
+					echo "		<option value='".escape($row['gateway'])."' selected='yes'>".escape($row['gateway'])."</option>\n";
+				}
+				else {
+					echo "		<option value='".escape($row['gateway'])."'>".escape($row['gateway'])."</option>\n";
+				}
 			}
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $rows, $row);
 		echo "		<option value='loopback'>loopback</option>\n";
 		echo "		</select>\n";
 		echo "<br />\n";
@@ -617,7 +627,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		//echo "		<option value='zzz'>cell</option>\n";
 		echo "		</select>\n";
 		echo "<br />\n";
-		//echo "zzz.<br />\n";
 		echo "\n";
 		echo "</td>\n";
 		echo "</tr>\n";
@@ -636,7 +645,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		//echo "		<option value='zzz'>cell</option>\n";
 		echo "		</select>\n";
 		echo "<br />\n";
-		//echo "zzz.<br />\n";
 		echo "\n";
 		echo "</td>\n";
 		echo "</tr>\n";

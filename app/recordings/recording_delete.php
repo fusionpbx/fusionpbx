@@ -50,7 +50,7 @@ if (is_uuid($recording_uuid)) {
 		$parameters['domain_uuid'] = $domain_uuid;
 		$database = new database;
 		$filename = $database->select($sql, $parameters, 'column');
-		unset($prep_statement);
+		unset($sql, $parameters);
 
 	//build array
 		$array['recordings'][0]['recording_uuid'] = $recording_uuid;

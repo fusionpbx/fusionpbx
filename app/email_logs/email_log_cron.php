@@ -27,33 +27,34 @@
 
 //process the emails
 	if (is_array($emails) && @sizeof($emails) != 0) {
-		foreach($emails as $index => $row) {
+		foreach($emails as $x => $row) {
 			$email_log_uuid = $row['email_log_uuid'];
 			$msg = $row['email'];
 
 			require_once "secure/v_mailto.php";
 			if ($mailer_error == '') {
-				//get the message
-				message::add($text['message-message_resent']);
+				//set the message
+					message::add($text['message-message_resent']);
 
-				//add to array
-				$array['email_logs'][$index]['email_log_uuid'] = $email_log_uuid;
+				//build delete array
+					$array['email_logs'][$x]['email_log_uuid'] = $email_log_uuid;
 			}
 			unset($mailer_error);
 		}
 		if (is_array($array) && @sizeof($array) != 0) {
-			$p = new permissions;
-			$p->add('email_log_delete', 'temp');
-
-			$database = new database;
-			$database->app_name = 'email_logs';
-			$database->app_uuid = 'bd64f590-9a24-468d-951f-6639ac728694';
-			$database->delete($array);
-			unset($array);
-
-			$p->delete('email_log_delete', 'temp');
+			//grant temporary permissions
+				$p = new permissions;
+				$p->add('email_log_delete', 'temp');
+			//execute delete
+				$database = new database;
+				$database->app_name = 'email_logs';
+				$database->app_uuid = 'bd64f590-9a24-468d-951f-6639ac728694';
+				$database->delete($array);
+				unset($array);
+			//revoke temporary permissions
+				$p->delete('email_log_delete', 'temp');
 		}
 	}
-	unset ($prep_statement, $sql, $emails);
+	unset($sql, $emails, $x, $row);
 
 ?>

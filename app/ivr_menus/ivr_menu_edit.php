@@ -1113,7 +1113,6 @@
 						echo "	<option value='phrase:".escape($row["phrase_uuid"])."'>".escape($row["phrase_name"])."</option>\n";
 					}
 				}
-				unset ($prep_statement);
 				echo "</optgroup>\n";
 			}
 		//sounds
@@ -1203,7 +1202,6 @@
 						echo "	<option value='phrase:".escape($row["phrase_uuid"])."'>".escape($row["phrase_name"])."</option>\n";
 					}
 				}
-				unset ($prep_statement);
 				echo "</optgroup>\n";
 			}
 		//sounds
