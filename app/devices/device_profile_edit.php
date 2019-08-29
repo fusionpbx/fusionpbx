@@ -55,7 +55,6 @@
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		//get http post variables and set them to php variables
-			$domain_uuid = $_POST["domain_uuid"];
 			$device_profile_uuid = $_POST["device_profile_uuid"];
 			$device_profile_name = $_POST["device_profile_name"];
 			$device_profile_keys = $_POST["device_profile_keys"];
@@ -65,10 +64,22 @@
 
 		//set the domain_uuid for users that do not have the permission
 			if (permission_exists('device_profile_domain')) {
+				//allowed to updat the domain_uuid
 				$domain_uuid = $_POST["domain_uuid"];
 			}
-			else if ($action == 'add') {
-				$domain_uuid = $_SESSION['domain_uuid'];
+			else {
+				if ($action == 'add') {
+					//use the current domain
+					$domain_uuid = $_SESSION['domain_uuid'];
+				}
+				else {
+					//keep the current domain_uuid
+					$sql = "select domain_uuid from v_device_profiles ";
+					$sql .= "where device_profile_uuid = :device_profile_uuid ";
+					$parameters['device_profile_uuid'] = $device_profile_uuid;
+					$database = new database;
+					$domain_uuid = $database->execute($sql, $parameters, 'column');
+				}
 			}
 
 		//check for all required data
@@ -164,6 +175,7 @@
 		$database = new database;
 		$result = $database->execute($sql, $parameters, 'all');
 		foreach ($result as &$row) {
+			$domain_uuid = $row["domain_uuid"];
 			$device_profile_name = $row["device_profile_name"];
 			$device_profile_keys = $row["device_profile_keys"];
 			$device_profile_settings = $row["device_profile_settings"];
@@ -231,7 +243,7 @@
 
 //add an empty row
 	$x = count($device_profile_keys);
-	$device_profile_keys[$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+	$device_profile_keys[$x]['domain_uuid'] = $domain_uuid;
 	$device_profile_keys[$x]['device_profile_uuid'] = $device_profile_uuid;
 	$device_profile_keys[$x]['device_profile_key_uuid'] = uuid();
 	$device_profile_keys[$x]['profile_key_category'] = '';
@@ -265,7 +277,7 @@
 
 //add an empty row
 	$x = count($device_profile_settings);
-	$device_profile_settings[$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+	$device_profile_settings[$x]['domain_uuid'] = $domain_uuid;
 	$device_profile_settings[$x]['device_profile_uuid'] = $device_profile_uuid;
 	$device_profile_settings[$x]['device_profile_setting_uuid'] = uuid();
 	$device_profile_settings[$x]['profile_setting_name'] = '';
@@ -626,7 +638,7 @@
 				echo "		<option value='".$row['domain_uuid']."' selected='selected'>".escape($row['domain_name'])."</option>\n";
 			}
 			else {
-				echo "		<option value='".$row['domain_uuid']."'>".$row['domain_name']."</option>\n";
+				echo "		<option value='".$row['domain_uuid']."'>".escape($row['domain_name'])."</option>\n";
 			}
 		}
 		echo "	</select>\n";
