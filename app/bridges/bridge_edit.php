@@ -107,7 +107,7 @@
 				if ($action == "update") {
 					$_SESSION["message"] = $text['message-update'];
 				}
-				header('Location: bridge_edit.php?id='.$bridge_uuid);
+				header('Location: bridges.php');
 				return;
 			}
 	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
@@ -171,7 +171,6 @@
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select class='formfld' name='bridge_enabled'>\n";
-	echo "		<option value=''></option>\n";
 	if ($bridge_enabled == "true") {
 		echo "		<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
