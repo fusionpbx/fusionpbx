@@ -36,9 +36,16 @@
 --include config.lua
 	require "resources.functions.config";
 
---connect to the database
+--add functions
+	require "resources.functions.mkdir";
+	require "resources.functions.explode";
+
+--load libraries
 	local Database = require "resources.functions.database";
-	dbh = Database.new('system');
+	local Settings = require "resources.functions.lazy_settings";
+
+--setup the database connection
+	local db = dbh or Database.new('system');
 
 --include json library
 	local json
@@ -49,41 +56,34 @@
 --get the domain_uuid
 	domain_uuid = session:getVariable("domain_uuid");
 
---add functions
-	require "resources.functions.mkdir";
-	require "resources.functions.explode";
-
 --initialize the recordings
 	api = freeswitch.API();
 
---settings
-	require "resources.functions.settings";
-	settings = settings(domain_uuid);
-	storage_type = "";
-	storage_path = "";
-	if (settings['recordings'] ~= nil) then
-		if (settings['recordings']['storage_type'] ~= nil) then
-			if (settings['recordings']['storage_type']['text'] ~= nil) then
-				storage_type = settings['recordings']['storage_type']['text'];
-			end
-		end
-		if (settings['recordings']['storage_path'] ~= nil) then
-			if (settings['recordings']['storage_path']['text'] ~= nil) then
-				storage_path = settings['recordings']['storage_path']['text'];
-				storage_path = storage_path:gsub("${domain_name}",  session:getVariable("domain_name"));
-				storage_path = storage_path:gsub("${domain_uuid}", domain_uuid);
-			end
-		end
+--load libraries
+	local Database = require "resources.functions.database";
+	local Settings = require "resources.functions.lazy_settings";
+
+--setup the database connection
+	local db = dbh or Database.new('system');
+
+--get the recordings settings
+	local settings = Settings.new(db, domain_name, domain_uuid);
+
+--set the storage type and path
+	storage_type = settings:get('recordings', 'storage_type', 'text') or '';
+	storage_path = settings:get('recordings', 'storage_path', 'text') or '';
+	if (storage_path ~= '') then
+		storage_path = storage_path:gsub("${domain_name}",  session:getVariable("domain_name"));
+		storage_path = storage_path:gsub("${domain_uuid}", domain_uuid);
 	end
-	if (not temp_dir) or (#temp_dir == 0) then
-		if (settings['server'] ~= nil) then
-			if (settings['server']['temp'] ~= nil) then
-				if (settings['server']['temp']['dir'] ~= nil) then
-					temp_dir = settings['server']['temp']['dir'];
-				end
-			end
-		end
-	end
+
+--set the recordings variables
+	local recording_max_length = settings:get('recordings', 'recording_max_length', 'numeric') or 90;
+	local recording_silence_threshold = settings:get('recordings', 'recording_silence_threshold', 'numeric') or 200;
+	local recording_silence_seconds = settings:get('recordings', 'recording_silence_seconds', 'numeric') or 3;
+
+--set the temp directory
+	temp_dir = settings:get('server', 'temp', 'dir') or nil;
 
 --dtmf call back function detects the "#" and ends the call
 	function onInput(s, type, obj)
@@ -107,6 +107,12 @@
 			recording_name = session:getVariable("recording_name");
 			record_ext = session:getVariable("record_ext");
 			domain_name = session:getVariable("domain_name");
+			time_limit_secs = session:getVariable("time_limit_secs");
+			silence_thresh = session:getVariable("silence_thresh");
+			silence_hits = session:getVariable("silence_hits");
+			if (not time_limit_secs) then time_limit_secs = '10800'; end
+			if (not silence_thresh) then silence_thresh = '200'; end
+			if (not silence_hits) then silence_hits = '10'; end
 
 		--select the recording number and set the recording name
 			if (recording_id == nil) then
@@ -156,8 +162,8 @@
 				session:execute("record", storage_path .."/"..recording_name);
 			else
 				freeswitch.consoleLog("notice", "[recordings] ".. storage_type .. " ".. recordings_dir .."\n");
-				-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs);
-				session:execute("record", "'"..recordings_dir.."/"..recording_name.."' 10800 500 500");
+				-- record,Record File,<path> [<time_limit_secs>] [<silence_thresh>] [<silence_hits>]
+				session:execute("record", "'"..recordings_dir.."/"..recording_name.."' "..time_limit_secs.." "..silence_thresh.." "..silence_hits);
 			end
 
 		--get the description of the previous recording
@@ -167,7 +173,7 @@
 			sql = sql .. "limit 1";
 			local params = {domain_uuid = domain_uuid, recording_name = recording_name};
 			local recording_description = dbh:first_value(sql, params) or ''
-			
+
 		--delete the previous recording
 			sql = "delete from v_recordings ";
 			sql = sql .. "where domain_uuid = :domain_uuid ";
@@ -184,7 +190,7 @@
 			table.insert(array, "recording_uuid, ");
 			table.insert(array, "domain_uuid, ");
 			table.insert(array, "recording_filename, ");
-			table.insert(array, "recording_description, ");			
+			table.insert(array, "recording_description, ");
 			if (storage_type == "base64") then
 				table.insert(array, "recording_base64, ");
 			end
@@ -195,7 +201,7 @@
 			table.insert(array, ":recording_uuid, ");
 			table.insert(array, ":domain_uuid, ");
 			table.insert(array, ":recording_name, ");
-			table.insert(array, ":recording_description, ");				
+			table.insert(array, ":recording_description, ");
 			if (storage_type == "base64") then
 				table.insert(array, ":recording_base64, ");
 			end
@@ -287,7 +293,7 @@ if ( session:ready() ) then
 
 	--if a recording directory is specified, use that instead
 		if (storage_path ~= nil and string.len(storage_path) > 0) then recordings_dir = storage_path; end
-	
+
 	--set the sounds path for the language, dialect and voice
 		default_language = session:getVariable("default_language");
 		default_dialect = session:getVariable("default_dialect");

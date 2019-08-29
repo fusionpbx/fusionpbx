@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -26,6 +26,39 @@
 
 //process this only one time
 if ($domains_processed == 1) {
+
+	//select ivr menus with an empty context
+	$sql = "select * from v_ivr_menus where ivr_menu_context is null ";
+	$database = new database;
+	$ivr_menus = $database->select($sql, null, 'all');
+	unset($sql);
+
+	if (is_array($ivr_menus)) {
+
+		//get the domain list
+		$sql = "select * from v_domains ";
+		$domains = $database->select($sql, null, 'all');
+		unset($sql);
+
+		//update the ivr menu context
+		$x = 0;
+		foreach ($ivr_menus as $row) {
+			foreach ($domains as $domain) {
+				if ($row['domain_uuid'] == $domain['domain_uuid']) {
+					$array['ivr_menus'][$x]['ivr_menu_uuid'] = $row['ivr_menu_uuid'];
+					$array['ivr_menus'][$x]['ivr_menu_context'] = $domain['domain_name'];
+					$x++;
+				}
+			}
+		}
+		if (is_array($array) && @sizeof($array) != 0) {
+			$database = new database;
+			$database->app_name = 'ivr_menus';
+			$database->app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
+			$database->save($array);
+			unset($array);
+		}
+	}
 
 }
 

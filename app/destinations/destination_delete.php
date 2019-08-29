@@ -42,63 +42,61 @@
 	$language = new text;
 	$text = $language->get();
 
-//get the ID
-	if (is_array($_GET)) {
-		$id = check_str($_GET["id"]);
+//get the id
+	$destination_uuid = $_GET["id"];
+
+//if valid id
+	if (is_uuid($destination_uuid)) {
+
+		//get the dialplan uuid and context
+			$sql = "select * from v_destinations ";
+			$sql .= "where destination_uuid = :destination_uuid ";
+			$parameters['destination_uuid'] = $destination_uuid;
+			$database = new database;
+			$row = $database->select($sql, $parameters, 'row');
+			if (is_array($row) && @sizeof($row) != 0) {
+				if (permission_exists('destination_domain')) {
+					$domain_uuid = $row["domain_uuid"];
+				}
+				$dialplan_uuid = $row["dialplan_uuid"];
+				$destination_context = $row["destination_context"];
+			}
+			unset($sql, $parameters, $row);
+
+		//add the dialplan permission
+			$p = new permissions;
+			$p->add('dialplan_delete', 'temp');
+			$p->add('dialplan_detail_delete', 'temp');
+
+		//delete the destination and related dialplan
+			if (is_uuid($dialplan_uuid)) {
+				$array['dialplans'][]['dialplan_uuid'] = $dialplan_uuid;
+				$array['dialplan_details'][]['dialplan_uuid'] = $dialplan_uuid;
+			}
+			$array['destinations'][]['destination_uuid'] = $destination_uuid;
+			$database = new database;
+			$database->app_name = 'destinations';
+			$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
+			$database->delete($array);
+			$message = $database->message;
+
+		//remove the temporary permission
+			$p->delete('dialplan_delete', 'temp');
+			$p->delete('dialplan_detail_delete', 'temp');
+
+		//synchronize the xml config
+			save_dialplan_xml();
+
+		//clear the cache
+			$cache = new cache;
+			$cache->delete("dialplan:".$destination_context);
+
+		//set message
+			message::add($text['message-delete']);
 	}
 
-//if the ID is not set then exit
-	if (!is_uuid($id)) {
-		echo "ID is required.";
-		exit;
-	}
-
-//get the dialplan uuid and context
-	$sql = "select * from v_destinations ";
-	$sql .= "where destination_uuid = '$id' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($result as &$row) {
-		if (permission_exists('destination_domain')) {
-			$domain_uuid = $row["domain_uuid"];
-		}
-		$dialplan_uuid = $row["dialplan_uuid"];
-		$destination_context = $row["destination_context"];
-	}
-	unset ($prep_statement);
-
-//add the dialplan permission
-	$p = new permissions;
-	$p->add('dialplan_delete', 'temp');
-	$p->add('dialplan_detail_delete', 'temp');
-
-//delete the destination and related dialplan
-	if (isset($dialplan_uuid) && is_uuid($dialplan_uuid)) {
-		$array['dialplans'][]['dialplan_uuid'] = $dialplan_uuid;
-		$array['dialplan_details'][]['dialplan_uuid'] = $dialplan_uuid;
-	}
-	$array['destinations'][]['destination_uuid'] = $id;
-	$database = new database;
-	$database->app_name = 'destinations';
-	$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
-	$database->delete($array);
-	$message = $database->message;
-
-//remove the temporary permission
-	$p->delete('dialplan_delete', 'temp');
-	$p->delete('dialplan_detail_delete', 'temp');
-
-//synchronize the xml config
-	save_dialplan_xml();
-
-//clear the cache
-	$cache = new cache;
-	$cache->delete("dialplan:".$destination_context);
-
-//redirect the user
-	message::add($text['message-delete']);
+//redirect
 	header("Location: destinations.php");
-	return;
+	exit;
 
 ?>

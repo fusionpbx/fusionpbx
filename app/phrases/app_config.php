@@ -2,7 +2,6 @@
 
 	//application details
 		$apps[$x]['name'] = "Phrases";
-		//5c6f597c-9b78-11e4-89d3-123b93f75cba
 		$apps[$x]['uuid'] = "5c6f597c-9b78-11e4-89d3-123b93f75cba";
 		$apps[$x]['category'] = "Switch";;
 		$apps[$x]['subcategory'] = "";
@@ -69,6 +68,9 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "phrase_domain";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+
+	//cache details
+		$apps[$x]['cache']['key'] = "languages.\${phrase_language}";
 
 	//schema details
 		$y=0;

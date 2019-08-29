@@ -38,23 +38,21 @@ else {
 	$language = new text;
 	$text = $language->get();
 
-//get the id
-	if (count($_GET)>0) {
-		$id = $_GET["id"];
-	}
-
 //delete the call broadcast entry
-	if (strlen($id)>0) {
-		$sql = "delete from v_call_broadcasts ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and call_broadcast_uuid = '$id' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($sql);
+	if (is_uuid($_GET["id"])) {
+		$call_broadcast_uuid = $_GET['id'];
+		$array['call_broadcasts'][0]['call_broadcast_uuid'] = $call_broadcast_uuid;
+		$array['call_broadcasts'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+
+		$database = new database;
+		$database->app_name = 'call_broadcasts';
+		$database->app_uuid = 'efc11f6b-ed73-9955-4d4d-3a1bed75a056';
+		$database->delete($array);
+		unset($array);
+
+		message::add($text['message-delete']);
 	}
 
-
-message::add($text['confirm-delete']);
 header("Location: call_broadcast.php");
 return;
 

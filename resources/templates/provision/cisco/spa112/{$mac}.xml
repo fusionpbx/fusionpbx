@@ -1,25 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <flat-profile>
-<!--<Restricted_Access_Domains/>-->
-<!--<Enable_Web_Admin_Access>Yes</Enable_Web_Admin_Access>-->
-<!--<IVR_Admin_Passwd></IVR_Admin_Passwd>-->
+<Enable_Web_Admin_Access>Yes</Enable_Web_Admin_Access>
 <Provision_Enable>Yes</Provision_Enable>
 <Resync_On_Reset>Yes</Resync_On_Reset>
 <Resync_Random_Delay>2</Resync_Random_Delay>
 <Resync_Periodic>0</Resync_Periodic>
+<Resync_At_Random_Delay>0</Resync_At_Random_Delay>
 <Resync_Error_Retry_Delay>300</Resync_Error_Retry_Delay>
 <Forced_Resync_Delay>30</Forced_Resync_Delay>
 <Resync_From_SIP>Yes</Resync_From_SIP>
 <Resync_After_Upgrade_Attempt>Yes</Resync_After_Upgrade_Attempt>
+<Resync_At__HHmm_>0300</Resync_At__HHmm_>
 {if isset ($http_auth_username)}
-<Profile_Rule>[--uid {$http_auth_username} --pwd {$http_auth_password}]http://{$domain_name}{$project_path}/app/provision/?mac=$MA</Profile_Rule>
+<Profile_Rule>[--uid {$http_auth_username} --pwd {$http_auth_password}]http://{$domain_name}/app/provision/?mac=$MA</Profile_Rule>
 {else}
-<Profile_Rule>http://{$domain_name}{$project_path}/app/provision/?mac=$MA</Profile_Rule>
+<Profile_Rule>http://{$domain_name}/app/provision/?mac=$MA</Profile_Rule>
 {/if}
 <Upgrade_Enable>Yes</Upgrade_Enable>
+<Upgrade_Rule>[--uid {$http_auth_username} --pwd {$http_auth_password}]http://{$domain_name}/app/cisco/resources/firmware/spa112-1.4.1.bin</Upgrade_Rule>
 <RTP_Packet_Size>0.020</RTP_Packet_Size>
 <Line_Enable_1_>Yes</Line_Enable_1_>
-<Mailbox_ID_1_>*97</Mailbox_ID_1_>
+<Mailbox_ID_1_>{$voicemail_number}</Mailbox_ID_1_>
 <Proxy_1_>{$server_address_1}</Proxy_1_>
 <Outbound_Proxy_1_>{$account.1.outbound_proxy_primary}</Outbound_Proxy_1_>
 <Use_Outbound_Proxy_1_>{if isset ($account.1.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_1_>
@@ -34,9 +35,8 @@
 <Auth_ID_1_></Auth_ID_1_>
 <Call_Waiting_Serv_1_>{$spa_call_waiting}</Call_Waiting_Serv_1_>  
 <Dial_Plan_1_>{$spa_dial_plan}</Dial_Plan_1_>
-<!--<Dial_Plan_1_>(&lt;:31516&gt;xxxxxxx|&lt;:3&gt;xxxxxxxxxx|&lt;:3&gt;xxxxxxxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_1_>-->
 <Line_Enable_2_>Yes</Line_Enable_2_>
-<Mailbox_ID_2_>*97</Mailbox_ID_2_>
+<Mailbox_ID_2_>{$voicemail_number}</Mailbox_ID_2_>
 <Proxy_2_>{$account.2.server_address}</Proxy_2_>
 <Outbound_Proxy_2_>{$account.2.outbound_proxy_primary}</Outbound_Proxy_2_>
 <Use_Outbound_Proxy_2_>{if isset ($account.2.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_2_>
@@ -49,28 +49,25 @@
 <Password_2_>{$account.2.password}</Password_2_>
 <Use_Auth_ID_2_>No</Use_Auth_ID_2_>
 <Auth_ID_2_></Auth_ID_2_>
+<Call_Waiting_Serv_2_>{$spa_call_waiting}</Call_Waiting_Serv_2_>  
 <Dial_Plan_2_>{$spa_dial_plan}</Dial_Plan_2_>
-<!--<Dial_Plan_1_>(&lt;:31516&gt;xxxxxxx|&lt;:3&gt;xxxxxxxxxx|&lt;:3&gt;xxxxxxxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_1_>-->
 <Handle_VIA_rport>{$spa_handle_via_rport}</Handle_VIA_rport>
 <Insert_VIA_received>No</Insert_VIA_received>
 <Insert_VIA_rport>{$spa_insert_via_rport}</Insert_VIA_rport>
-<Time_Zone>{$spa_time_zone}</Time_Zone>
-<Primary_NTP_Server>{$ntp_server_primary}</Primary_NTP_Server>
-<Secondary_NTP_Server>{$ntp_server_secondary}</Secondary_NTP_Server>  
-<!--
-<Reset_Button_Enable>0</Reset_Button_Enable>
-<Web_Management>
+<router-configuration>
+<Reset_Button_Enable>1</Reset_Button_Enable>
 <Web_Utility_Access_HTTP>1</Web_Utility_Access_HTTP>
-<Web_Utility_Access_HTTPS>1</Web_Utility_Access_HTTPS>
-<Web_Remote_Management>1</Web_Remote_Management>
-<Remote_Web_Utility_Access>1</Remote_Web_Utility_Access>
-<Web_Remote_Upgrade>1</Web_Remote_Upgrade>
-<Allowed_Remote_IP_Type>1</Allowed_Remote_IP_Type>
-<Remote_Management_Port>80</Remote_Management_Port>
-</Web_Management>
--->
+<Web_Utility_Access_HTTPS>0</Web_Utility_Access_HTTPS>
+<Time_Setup>
+<Time_Zone>{$spa_time_zone}</Time_Zone>
+<Time_Server>{$ntp_server_primary}</Time_Server>
+<Time_Server_Mode>manual</Time_Server_Mode>
+<Resync_Timer>60</Resync_Timer>
+<Auto_Recovery_System_Time>1</Auto_Recovery_System_Time>
+<Time_Mode>1</Time_Mode>
+</Time_Setup>
 {if isset ($admin_name)}<Web_Login_Admin_Name>{$admin_name}</Web_Login_Admin_Name>{/if}
 {if isset ($admin_password)}<Web_Login_Admin_Password>{$admin_password}</Web_Login_Admin_Password>{/if}
-{if isset ($admin_name)}<Web_Login_Guest_Name>{$admin_name}</Web_Login_Guest_Name>{/if}
-{if isset ($admin_password)}<Web_Login_Guest_Password>{$admin_password}</Web_Login_Guest_Password>{/if}
+</router-configuration>
+
 </flat-profile>

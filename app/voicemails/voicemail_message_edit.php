@@ -39,36 +39,36 @@ else {
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$voicemail_message_uuid = check_str($_REQUEST["id"]);
+		$voicemail_message_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
 	}
 
 //set the parent uuid
-	if (strlen($_GET["voicemail_uuid"]) > 0) {
-		$voicemail_uuid = check_str($_GET["voicemail_uuid"]);
+	if (is_uuid($_GET["voicemail_uuid"])) {
+		$voicemail_uuid = $_GET["voicemail_uuid"];
 	}
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
-		$voicemail_uuid = check_str($_POST["voicemail_uuid"]);
-		$created_epoch = check_str($_POST["created_epoch"]);
-		$read_epoch = check_str($_POST["read_epoch"]);
-		$caller_id_name = check_str($_POST["caller_id_name"]);
-		$caller_id_number = check_str($_POST["caller_id_number"]);
-		$message_length = check_str($_POST["message_length"]);
-		$message_status = check_str($_POST["message_status"]);
-		$message_priority = check_str($_POST["message_priority"]);
+		$voicemail_uuid = $_POST["voicemail_uuid"];
+		$created_epoch = $_POST["created_epoch"];
+		$read_epoch = $_POST["read_epoch"];
+		$caller_id_name = $_POST["caller_id_name"];
+		$caller_id_number = $_POST["caller_id_number"];
+		$message_length = $_POST["message_length"];
+		$message_status = $_POST["message_status"];
+		$message_priority = $_POST["message_priority"];
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
-		$voicemail_message_uuid = check_str($_POST["voicemail_message_uuid"]);
+		$voicemail_message_uuid = $_POST["voicemail_message_uuid"];
 	}
 
 	//check for all required data
@@ -96,73 +96,55 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
 			if ($action == "add" && permission_exists('voicemail_message_add')) {
-				$sql = "insert into v_voicemail_messages ";
-				$sql .= "(";
-				$sql .= "domain_uuid, ";
-				$sql .= "voicemail_message_uuid, ";
-				$sql .= "voicemail_uuid, ";
-				$sql .= "created_epoch, ";
-				$sql .= "read_epoch, ";
-				$sql .= "caller_id_name, ";
-				$sql .= "caller_id_number, ";
-				$sql .= "message_length, ";
-				$sql .= "message_status, ";
-				$sql .= "message_priority ";
-				$sql .= ")";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'$domain_uuid', ";
-				$sql .= "'".uuid()."', ";
-				$sql .= "'$voicemail_uuid', ";
-				$sql .= "'$created_epoch', ";
-				$sql .= "'$read_epoch', ";
-				$sql .= "'$caller_id_name', ";
-				$sql .= "'$caller_id_number', ";
-				$sql .= "'$message_length', ";
-				$sql .= "'$message_status', ";
-				$sql .= "'$message_priority' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
-
-				message::add($text['message-add']);
-				header("Location: voicemail_edit.php?id=".$voicemail_uuid);
-				return;
-			} //if ($action == "add")
+				//begin insert array
+					$array['voicemail_messages'][0]['voicemail_message_uuid'] = uuid();
+				//message
+					message::add($text['message-add']);
+			}
 
 			if ($action == "update" && permission_exists('voicemail_message_edit')) {
-				$sql = "update v_voicemail_messages set ";
-				$sql .= "voicemail_uuid = '$voicemail_uuid', ";
-				$sql .= "voicemail_uuid = '$voicemail_uuid', ";
-				$sql .= "created_epoch = '$created_epoch', ";
-				$sql .= "read_epoch = '$read_epoch', ";
-				$sql .= "caller_id_name = '$caller_id_name', ";
-				$sql .= "caller_id_number = '$caller_id_number', ";
-				$sql .= "message_length = '$message_length', ";
-				$sql .= "message_status = '$message_status', ";
-				$sql .= "message_priority = '$message_priority' ";
-				$sql .= "where domain_uuid = '$domain_uuid' ";
-				$sql .= "and voicemail_message_uuid = '$voicemail_message_uuid'";
-				$db->exec(check_sql($sql));
-				unset($sql);
+				//begin update array
+					$array['voicemail_messages'][0]['voicemail_message_uuid'] = $voicemail_message_uuid;
+				//set message
+					message::add($text['message-update']);
+			}
 
-				message::add($text['message-update']);
-				header("Location: voicemail_edit.php?id=".$voicemail_uuid);
-				return;
-			} //if ($action == "update")
-		} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+			if (is_array($array) && @sizeof($array) != 0) {
+				//add common array fields
+					$array['voicemail_messages'][0]['domain_uuid'] = $domain_uuid;
+					$array['voicemail_messages'][0]['voicemail_uuid'] = $voicemail_uuid;
+					$array['voicemail_messages'][0]['created_epoch'] = $created_epoch;
+					$array['voicemail_messages'][0]['read_epoch'] = $read_epoch;
+					$array['voicemail_messages'][0]['caller_id_name'] = $caller_id_name;
+					$array['voicemail_messages'][0]['caller_id_number'] = $caller_id_number;
+					$array['voicemail_messages'][0]['message_length'] = $message_length;
+					$array['voicemail_messages'][0]['message_status'] = $message_status;
+					$array['voicemail_messages'][0]['message_priority'] = $message_priority;
+				//execute insert/update
+					$database = new database;
+					$database->app_name = 'voicemails';
+					$database->app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';
+					$database->save($array);
+					unset($array);
+				//redirect
+					header("Location: voicemail_edit.php?id=".$voicemail_uuid);
+					exit;
+			}
+		}
+
+}
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
-		$voicemail_message_uuid = check_str($_GET["id"]);
+	if (count($_GET)>0 && is_uuid($_GET["id"]) && $_POST["persistformvar"] != "true") {
+		$voicemail_message_uuid = $_GET["id"];
 		$sql = "select * from v_voicemail_messages ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and voicemail_message_uuid = '$voicemail_message_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll();
-		foreach ($result as &$row) {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and voicemail_message_uuid = :voicemail_message_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['voicemail_message_uuid'] = $voicemail_message_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$voicemail_uuid = $row["voicemail_uuid"];
 			$created_epoch = $row["created_epoch"];
 			$read_epoch = $row["read_epoch"];
@@ -171,9 +153,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$message_length = $row["message_length"];
 			$message_status = $row["message_status"];
 			$message_priority = $row["message_priority"];
-			break; //limit to 1 row
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //show the header
@@ -279,4 +260,5 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

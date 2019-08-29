@@ -44,30 +44,31 @@
 	$text = $language->get();
 
 //set the http get/post variable(s) to a php variable
-	if (isset($_REQUEST["id"]) && isset($_REQUEST["ext"])) {
-		$extension_uuid = check_str($_REQUEST["id"]);
-		$extension_new = check_str($_REQUEST["ext"]);
+	if (is_uuid($_REQUEST["id"]) && $_REQUEST["ext"] != '') {
+		$extension_uuid = $_REQUEST["id"];
+		$extension_new = $_REQUEST["ext"];
 		if (!is_numeric($extension_new)) {
-			$number_alias_new = check_str($_REQUEST["alias"]);
+			$number_alias_new = $_REQUEST["alias"];
 		}
 	}
-	
+
 // skip the copy if the domain extension already exists
 	$extension = new extension;
 	if ($extension->exists($_SESSION['domain_uuid'], $extension_new)) {
 		message::add($text['message-duplicate'], 'negative');
 		header("Location: extensions.php");
-		return;
+		exit;
 	}
-	
-//get the v_extensions data
+
+//get the extension data
 	$sql = "select * from v_extensions ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and extension_uuid = '$extension_uuid' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($result as &$row) {
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and extension_uuid = :extension_uuid ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$parameters['extension_uuid'] = $extension_uuid;
+	$database = new database;
+	$row = $database->select($sql, $parameters, 'row');
+	if (is_array($row) && @sizeof($row) != 0) {
 		$extension = $row["extension"];
 		$number_alias = $row["number_alias"];
 		$accountcode = $row["accountcode"];
@@ -98,112 +99,68 @@
 		$sip_bypass_media = $row["sip_bypass_media"];
 		$dial_string = $row["dial_string"];
 		$enabled = $row["enabled"];
-		$description = $text['button-copy'].': '.$row["description"];
+		$description = $row["description"].' ('.$text['button-copy'].')';
 	}
-	unset ($prep_statement);
+	unset($sql, $parameters, $row);
 
 //copy the extension
-	$extension_uuid = uuid();
-	$password = generate_password();
-	$sql = "insert into v_extensions ";
-	$sql .= "(";
-	$sql .= "domain_uuid, ";
-	$sql .= "extension_uuid, ";
-	$sql .= "extension, ";
-	$sql .= "number_alias, ";
-	$sql .= "password, ";
-	$sql .= "accountcode, ";
-	$sql .= "effective_caller_id_name, ";
-	$sql .= "effective_caller_id_number, ";
-	$sql .= "outbound_caller_id_name, ";
-	$sql .= "outbound_caller_id_number, ";
-	$sql .= "emergency_caller_id_name, ";
-	$sql .= "emergency_caller_id_number, ";
-	$sql .= "directory_visible, ";
-	$sql .= "directory_exten_visible, ";
-	$sql .= "limit_max, ";
-	$sql .= "limit_destination, ";
-	$sql .= "user_context, ";
-	$sql .= "missed_call_app, ";
-	$sql .= "missed_call_data, ";
-	$sql .= "toll_allow, ";
-	$sql .= "call_timeout, ";
-	$sql .= "call_group, ";
-	$sql .= "user_record, ";
-	$sql .= "hold_music, ";
-	$sql .= "auth_acl, ";
-	$sql .= "cidr, ";
-	$sql .= "sip_force_contact, ";
-	$sql .= "nibble_account, ";
-	$sql .= "sip_force_expires, ";
-	$sql .= "mwi_account, ";
-	$sql .= "sip_bypass_media, ";
-	$sql .= "dial_string, ";
-	$sql .= "enabled, ";
-	$sql .= "description ";
-	$sql .= ")";
-	$sql .= "values ";
-	$sql .= "(";
-	$sql .= "'$domain_uuid', ";
-	$sql .= "'$extension_uuid', ";
-	$sql .= "'$extension_new', ";
-	$sql .= "'$number_alias_new', ";
-	$sql .= "'$password', ";
-	$sql .= "'$accountcode', ";
-	$sql .= "'$effective_caller_id_name', ";
-	$sql .= "'$effective_caller_id_number', ";
-	$sql .= "'$outbound_caller_id_name', ";
-	$sql .= "'$outbound_caller_id_number', ";
-	$sql .= "'$emergency_caller_id_name', ";
-	$sql .= "'$emergency_caller_id_number', ";
-	$sql .= "'$directory_visible', ";
-	$sql .= "'$directory_exten_visible', ";
-	if (strlen($limit_max) > 0) { $sql .= "'$limit_max', "; } else { $sql .= "null, "; }
-	$sql .= "'$limit_destination', ";
-	$sql .= "'$user_context', ";
-	$sql .= "'$missed_call_app', ";
-	$sql .= "'$missed_call_data', ";
-	$sql .= "'$toll_allow', ";
-	if (strlen($call_timeout) > 0) { $sql .= "'$call_timeout', "; } else { $sql .= "null, "; }
-	$sql .= "'$call_group', ";
-	$sql .= "'$user_record', ";
-	$sql .= "'$hold_music', ";
-	$sql .= "'$auth_acl', ";
-	$sql .= "'$cidr', ";
-	$sql .= "'$sip_force_contact', ";
-	if (strlen($nibble_account) > 0) { $sql .= "'$nibble_account', "; } else { $sql .= "null, "; }
-	if (strlen($sip_force_expires) > 0) { $sql .= "'$sip_force_expires', "; } else { $sql .= "null, "; }
-	$sql .= "'$mwi_account', ";
-	$sql .= "'$sip_bypass_media', ";
-	$sql .= "'$dial_string', ";
-	$sql .= "'$enabled', ";
-	$sql .= "'$description' ";
-	$sql .= ")";
-	$db->exec(check_sql($sql));
-	unset($sql);
+	$array['extensions'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+	$array['extensions'][0]['extension_uuid'] = uuid();
+	$array['extensions'][0]['extension'] = $extension_new;
+	$array['extensions'][0]['number_alias'] = $number_alias;
+	$array['extensions'][0]['password'] = generate_password();
+	$array['extensions'][0]['accountcode'] = $password;
+	$array['extensions'][0]['effective_caller_id_name'] = $effective_caller_id_name;
+	$array['extensions'][0]['effective_caller_id_number'] = $effective_caller_id_number;
+	$array['extensions'][0]['outbound_caller_id_name'] = $outbound_caller_id_name;
+	$array['extensions'][0]['outbound_caller_id_number'] = $outbound_caller_id_number;
+	$array['extensions'][0]['emergency_caller_id_name'] = $emergency_caller_id_name;
+	$array['extensions'][0]['emergency_caller_id_number'] = $emergency_caller_id_number;
+	$array['extensions'][0]['directory_visible'] = $directory_visible;
+	$array['extensions'][0]['directory_exten_visible'] = $directory_exten_visible;
+	$array['extensions'][0]['limit_max'] = $limit_max;
+	$array['extensions'][0]['limit_destination'] = $limit_destination;
+	$array['extensions'][0]['user_context'] = $user_context;
+	$array['extensions'][0]['missed_call_app'] = $missed_call_app;
+	$array['extensions'][0]['missed_call_data'] = $missed_call_data;
+	$array['extensions'][0]['toll_allow'] = $toll_allow;
+	$array['extensions'][0]['call_timeout'] = $call_timeout;
+	$array['extensions'][0]['call_group'] = $call_group;
+	$array['extensions'][0]['user_record'] = $user_record;
+	$array['extensions'][0]['hold_music'] = $hold_music;
+	$array['extensions'][0]['auth_acl'] = $auth_acl;
+	$array['extensions'][0]['cidr'] = $cidr;
+	$array['extensions'][0]['sip_force_contact'] = $sip_force_contact;
+	$array['extensions'][0]['nibble_account'] = $nibble_account;
+	$array['extensions'][0]['sip_force_expires'] = $sip_force_expires;
+	$array['extensions'][0]['mwi_account'] = $mwi_account;
+	$array['extensions'][0]['sip_bypass_media'] = $sip_bypass_media;
+	$array['extensions'][0]['dial_string'] = $dial_string;
+	$array['extensions'][0]['enabled'] = $enabled;
+	$array['extensions'][0]['description'] = $description;
+	$database = new database;
+	$database->save($array);
+	$message = $database->message;
+	unset($array);
 
 //get the source extension voicemail data
 	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/voicemails')) {
 
 		//get the voicemails
 			$sql = "select * from v_voicemails ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			if (is_numeric($number_alias)) {
-				$sql .= "and voicemail_id = '$number_alias' ";
-			}
-			else {
-				$sql .= "and voicemail_id = '$extension' ";
-			}
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			foreach ($result as &$row) {
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and voicemail_id = :voicemail_id ";
+			$parameters['voicemail_id'] = is_numeric($number_alias) ? $number_alias : $extension;
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$database = new database;
+			$row = $database->select($sql, $parameters, 'row');
+			if (is_array($row) && @sizeof($row) != 0) {
 				$voicemail_mailto = $row["voicemail_mail_to"];
 				$voicemail_file = $row["voicemail_file"];
 				$voicemail_local_after_email = $row["voicemail_local_after_email"];
 				$voicemail_enabled = $row["voicemail_enabled"];
 			}
-			unset ($prep_statement);
+			unset($sql, $parameters, $row);
 
 		//set the new voicemail password
 			if (strlen($voicemail_password) == 0) {
@@ -238,6 +195,6 @@
 //redirect the user
 	message::add($text['message-copy']);
 	header("Location: extensions.php");
-	return;
+	exit;
 
 ?>

@@ -65,16 +65,16 @@
 		if ($file_ext == "wav") {
 			//HTML5 method
 			if ($browser_name == "Google Chrome" || $browser_name == "Mozilla Firefox") {
-				echo "<audio src=\"recordings.php?a=download&type=".$type."&filename=".base64_encode($filename)."\" autoplay=\"true\" ></audio>";
+				echo "<audio src=\"recordings.php?a=download&type=".escape($type)."&filename=".base64_encode($filename)."\" autoplay=\"true\" ></audio>";
 			}
 			else {
-				echo "<audio src=\"http://localhost:8000/mod/recordings/recordings.php?a=download&type=".$type."&filename=".base64_encode($filename)."\" autoplay=\"autoplay\"></audio>";
-				echo "<embed src=\"recordings.php?a=download&type=".$type."&filename=".base64_encode($filename)."\" autostart=\"true\" width=\"300\" height=\"90\" name=\"sound_".$filename."\" enablejavascript=\"true\">\n";
+				echo "<audio src=\"http://localhost:8000/mod/recordings/recordings.php?a=download&type=".escape($type)."&filename=".base64_encode($filename)."\" autoplay=\"autoplay\"></audio>";
+				echo "<embed src=\"recordings.php?a=download&type=".escape($type)."&filename=".base64_encode($filename)."\" autostart=\"true\" width=\"300\" height=\"90\" name=\"sound_".$filename."\" enablejavascript=\"true\">\n";
 			}
 		}
 		if ($file_ext == "mp3") {
-			echo "<object type=\"application/x-shockwave-flash\" width=\"400\" height=\"17\" data=\"slim.swf?autoplay=true&song_title=".urlencode($filename)."&song_url=recordings.php?a=download&type=".$type."&filename=".base64_encode($filename)."\">\n";
-			echo "<param name=\"movie\" value=\"slim.swf?autoplay=true&song_url=recordings.php?a=download&type=".$type."&filename=".base64_encode($filename)."\" />\n";
+			echo "<object type=\"application/x-shockwave-flash\" width=\"400\" height=\"17\" data=\"slim.swf?autoplay=true&song_title=".urlencode($filename)."&song_url=recordings.php?a=download&type=".escape($type)."&filename=".base64_encode($filename)."\">\n";
+			echo "<param name=\"movie\" value=\"slim.swf?autoplay=true&song_url=recordings.php?a=download&type=".escape($type)."&filename=".base64_encode($filename)."\" />\n";
 			echo "<param name=\"quality\" value=\"high\"/>\n";
 			echo "<param name=\"bgcolor\" value=\"#E6E6E6\"/>\n";
 			echo "</object>\n";

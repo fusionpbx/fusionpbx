@@ -47,20 +47,26 @@
 	$text = $language->get();
 
 //set the variables
-	if (count($_GET) > 0) {
-		$dialplan_detail_uuid = check_str($_GET["id"]);
-		$dialplan_uuid = check_str($_REQUEST["dialplan_uuid"]);
-		$app_uuid = check_str($_REQUEST["app_uuid"]);
-	}
+	$dialplan_detail_uuid = $_GET["id"];
+	$dialplan_uuid = $_REQUEST["dialplan_uuid"];
+	$app_uuid = $_REQUEST["app_uuid"];
 
 //delete the dialplan detail
 	if (is_uuid($dialplan_detail_uuid)) {
 		//delete child data
-			$sql = "delete from v_dialplan_details ";
-			//$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "where dialplan_detail_uuid = '$dialplan_detail_uuid' ";
-			$db->query($sql);
-			unset($sql);
+			$array['dialplan_details'][0]['dialplan_detail_uuid'] = $dialplan_detail_uuid;
+			//$array['dialplan_details'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+
+			$p = new permissions;
+			$p->add('dialplan_detail_delete', 'temp');
+
+			$database = new database;
+			$database->app_name = 'dialplans';
+			$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
+			$database->delete($array);
+			unset($array);
+
+			$p->delete('dialplan_detail_delete', 'temp');
 
 		//synchronize the xml config
 			save_dialplan_xml();
@@ -75,10 +81,10 @@
 			$dialplans->destination = "database";
 			$dialplans->uuid = $dialplan_uuid;
 			$dialplans->xml();
-	}
 
-//save the message to a session variable
-	message::add($text['message-delete']);
+		//set message
+			message::add($text['message-delete']);
+	}
 
 //redirect the browser
 	header("Location: dialplan_edit.php?id=".$dialplan_uuid.(($app_uuid != '') ? "&app_uuid=".$app_uuid : null));

@@ -5,223 +5,6 @@
 
 <!-- Configuration Template for GXP2200 Firmware Version 1.0.3.24 -->
 
-
-<!-- Change Log -->
-
-<!-- P values Modified in 1.0.3.24 since 1.0.3.16 -->
-
-<!-- GXP2200EXT1/2/3/4 P values range is modified from 10000-10799 to 23000-23799 -->
-
-<!-- Removed P values P1524 - Disable PC Port, P229 - PC Port VLAN Tag, P230 - PC Port Priority Value -->
-
-<!-- Default value change from 1 to 0 for P78 - Use Random Port -->
-
-<!-- Web GUI option name change for P81/P411/P511/P611/P1711/P1811 -->
-<!-- Previous name: Unregister on Reboot -->
-<!-- Current name: Unregister Before New Registration -->
-
-<!-- P values Added in 1.0.3.16 since 1.0.3.6 -->
-
-<!-- Disable PC Port. P1524 -->
-
-<!-- PC Port VLAN Tag. P229 -->
-
-<!-- PC Port Priority Value. P230 -->
-
-<!-- Enable Local MOH. For account 1 to account 6. -->
-<!-- P2357, P2457, P2557, P2657, P2757, P2857 -->
-
-<!-- Send SIP Log. P1387 = 0 -->
-
-<!-- P values Added in 1.0.3.6 since 1.0.3.3 -->
-
-<!-- Disable DialPlan. P1687 -->
-
-<!-- Disable Missed Call Indicator. P1691 -->
-
-<!-- Disable MWI Indicator. P1692 -->
-
-<!-- Disable New Message Indicator. P1693 -->
-
-<!-- Disable Contact or Message Full Indicator. P1694 -->
-
-<!-- Disable Indicator When LCD is OFF. P1695 -->
-
-<!-- Contact Max Storage. P1688 -->
-
-<!-- Call History Max Storage. P1689 -->
-
-<!-- Message Max Storage. P1690 -->
-
-<!-- P values Added in 1.0.3.3 since 1.0.1.40 -->
-
-<!-- Use Privacy Header. For account 1 to account 6 -->
-<!-- P2338, P2438, P2538, P2628, P2738, P2838 -->
-
-<!-- Use P-Preferred-Identity Header. For account 1 to account 6 -->
-<!-- P2339, P2439, P2539, P2639, P2739, P2839 -->
-
-<!-- Enable SCA (Shared Call Appearance). For account 1 to account 6 -->
-<!-- P1363, P1365, P1367, P1369, P1371, P1373 -->
-
-<!-- Enable BargeIn. For account 1 to account 6 -->
-<!-- P2337, P2437, P2537, P2637, P2737, P2837 -->
-
-<!-- Auto-filling Pickup Feature code. For account 1 to account 6 -->
-<!-- P2335, P2435, P2535, P2635, P2735, P2835 -->
-
-<!-- Pickup Feature Code. For account 1 to account 6 -->
-<!-- P2336, P2436, P2536, P2636, P2736, P2836 -->
-
-<!-- Line-seize Timeout (in seconds). For account 1 to account 6 -->
-<!-- P2313, P2413, P2513, P2613, P2713, P2813 -->
-
-<!-- Enable RFC5168 support. For account 1 to account 6 -->
-<!-- P1331, P478, P578, P678, P1778, P1878 -->
-
-<!-- Video Bit Rate. For account 1 to account 6 -->
-<!-- P2315, P2415, P2515, P2615, P2715, P2815 -->
-
-<!-- H.264 Payload Type. For account 1 to account 6 -->
-<!-- P293, P462, P562, P662, P1762, P1862 -->
-
-<!-- Start Video Automatically. For account 1 to account 6 -->
-<!-- P2314, P2414, P2514, P2614, P2714, P2814 -->
-
-<!-- Remote Video Request. For account 1 to account 6 -->
-<!-- P2326, P2426, P2526, P2626, P2726, P2826 -->
-
-<!-- Dial Plan Prefix. For account 1 to account 6 -->
-<!-- P66, P419, P519, P619, P1719, P1819 -->
-
-<!-- Enable Call Features. For account 1 to account 6 -->
-<!-- P191, P420, P520, P620, P1720, P1820 -->
-
-<!-- Transfer on 3 way conference Hangup. For account 1 to account 6 -->
-<!-- P2304, P2404, P2504, P2604, P2704, P2804 -->
-
-<!-- Conference-URI. For account 1 to account 6 -->
-<!-- P2318, P2418, P2518, P2618, P2718, P2818 -->
-
-<!-- Broadsoft Call Center. For account 1 to account 6 -->
-<!-- P2341, P2441, P2541, P2641, P2741, P2841 -->
-
-<!-- Hoteling Event. For account 1 to account 6 -->
-<!-- P2342, P2442, P2542, P2642, P2742, P2842 -->
-
-<!-- Call Center Status. For account 1 to account 6 -->
-<!-- P2343, P2443, P2543, P2643, P2743, P2843 -->
-
-<!-- Matching Incoming Caller ID. Matching Rule 1. For account 1 to account 6 -->
-<!-- P1488, P1494, P1500, P1506, P1512, P1518, -->
-
-<!-- Matching Rule 1 Distinctive Ringtone. For account 1 to account 6 -->
-<!-- P1489, P1495, P1501, P1507, P1513, P1519, -->
-
-<!-- Matching Incoming Caller ID. Matching Rule 2. For account 1 to account 6 -->
-<!-- P1490, P1496, P1502, P1508, P1514, P1520, -->
-
-<!-- Matching Rule 2 Distinctive Ringtone. For account 1 to account 6 -->
-<!-- P1491, P1497, P1503, P1509, P1515, P1521 -->
-
-<!-- Matching Incoming Caller ID. Matching Rule 3. For account 1 to account 6 -->
-<!-- P1492, P1498, P1504, P1510, P1516, P1522, -->
-
-<!-- Matching Rule 3 Distinctive Ringtone. For account 1 to account 6 -->
-<!-- P1493, P1499, P1505, P1511, P1517, P1523 -->
-
-<!-- Auto Conference. P1682 -->
-
-<!-- Default Transfer Mode. P1685 -->
-
-<!-- Offhook Timeout (in seconds). P1485 -->
-
-<!-- Video Frame Rate. P904 -->
-
-<!-- BLF Call-Pickup Prefix. For account 1 to account 5 -->
-<!-- P1347, P481, P581, P681, P1781, P1881 -->
-
-<!-- Eventlist URI. For account 1 to account 5 -->
-<!-- P134, P444, P544, P644, P1744, P1844 -->
-
-<!-- mDNS Override Server. P1407 -->
-
-<!-- Clear The Old List. P1435 -->
-
-<!-- Replace Duplicate Items. P1436 -->
-
-<!-- Phonebook XML Download Mode. P330 -->
-
-<!-- Phonebook XML Server Path. P331 -->
-
-<!-- Phonebook XML File Encoding. P1681 -->
-
-<!-- Phonebook Download Interval (in minutes). P332 -->
-
-<!-- LDAP Directory/Server Port/Base/User Name/Password -->
-<!-- P8020/P8021/P8022/P8023/P8024 -->
-
-<!-- LDAP Name Attributes. P8028 -->
-
-<!-- LDAP Number Attributes. P8029 -->
-
-<!-- LDAP Mail Attributes. P8038 -->
-
-<!-- LDAP Name Filter. P8025 -->
-
-<!-- LDAP Number Filter. P8026 -->
-
-<!-- LDAP Mail Filter. P8039 -->
-
-<!-- LDAP Display Name. P8030 -->
-
-<!-- Max Hits. P8031 -->
-
-<!-- Search Timeout (in seconds). P8032 -->
-
-<!-- LDAP Lookup Dial For Outgoing Calls. P8034 -->
-
-<!-- LDAP Lookup For Incoming calls. P8035 -->
-
-<!-- MPK LCD Settings P values. In total (130 MPKs) x 4 = 520 P values added -->
-<!-- P301 - P321, P323 - P329, P353 - P396, P6001 - P6112, P6201 - P6312, P6401 - P6512, P6601 - P6712 -->
-
-<!-- MPK on GXP2200EXT P values. In total (160 MPKs) x 4 = 640 P values added -->
-<!-- P10000-P10003, P10005-P10008, ..., P10795-P10798 -->
-
-<!-- P values Options updated in 1.0.3.3 since 1.0.1.40 -->
-
-<!-- Ring Tone options updated. P104, P423, P523, P623, P1723, P1823 -->
-<!-- Time Zone options updated. P64 -->
-
-<!-- P values Options updated in 1.0.1.40 -->
-
-<!-- Time Display Format. 0 - 12 Hour, 1 - 24 Hour. Default value is 1 -->
-<!-- P122 = 1 -->
-
-<!-- Date Display Format. 0: YY-MM-DD, 1: MM-DD-YY, 2: DD-MM-YY, 3: Normal (M-D-YY). Default value is 1 -->
-<!-- P102 = 1 -->
-
-
-<!-- P values Options updated since 1.0.1.30 -->
-
-<!-- Account Ring Tone P value options updated for account 1 to account 6: -->
-<!-- 1. More ring tones are added -->
-<!-- 2. The value for each ring tone is changed -->
-<!-- P104, P423, P523, P623, P1723, P1823 -->
-
-
-<!-- P values added since 1.0.1.27 -->
-<!-- Always Ring Speaker. P1439 -->
-
-<!-- P values added since 1.0.1.22 -->
-<!-- Authenticate Incoming INVITE. For account 1 to account 6 -->
-<!-- P2346, P2446, P2546, P2646, P2746, P2846 -->
-
-<!-- Change Log End -->
-
-
-
 <!-- Account 1 Settings -->
 
 
@@ -233,7 +16,7 @@
 <P271>1</P271>
 
 <!-- Account Name -->
-<P270></P270>
+<P270>{$account.1.display_name}</P270>
 
 <!-- SIP Server -->
 <P47>{$account.1.server_address}</P47>
@@ -262,10 +45,10 @@
 <!-- Account 1 Network Settings -->
 
 <!-- Outbound Proxy -->
-<P48></P48>
+<P48>{$account.1.outbound_proxy_primary}</P48>
 
 <!-- Secondary Outbound Proxy -->
-<P2333></P2333>
+<P2333>{$account.1.outbound_proxy_secondary}</P2333>
 
 <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default value is 0 -->
 <!-- Number: 0, 1, 2 -->
@@ -291,7 +74,7 @@
 
 <!-- Register Expiration (m). In minutes. Default value is 60 -->
 <!-- Number: 0 - 64800 -->
-<P32>3</P32>
+<P32>{$account.1.register_expires}</P32>
 
 <!-- Wait Time Retry Registration (s). In seconds. Default value is 20 -->
 <!-- Number: 1 - 3600 -->
@@ -359,7 +142,13 @@
 <!-- SIP Transport -->
 <!-- 0 - UDP , 1 - TCP, 2 - TLS. Default value is 0 -->
 <!-- Number: 0, 1, 2 -->
-<P130>0</P130>
+
+{$tp=0}
+{if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.1.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.1.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.1.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P130>{$tp}</P130>
 
 <!-- Symmetric RTP. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -699,10 +488,10 @@
 
 
 <!-- Outbound Proxy -->
-<P403></P403>
+<P403>{$account.2.outbound_proxy_primary}</P403>
 
 <!-- Secondary Outbound Proxy -->
-<P2433></P2433>
+<P2433>{$account.2.outbound_proxy_secondary}</P2433>
 
 <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default value is 0 -->
 <!-- Number: 0, 1, 2 -->
@@ -728,7 +517,7 @@
 
 <!-- Register Expiration (m). In minutes. Default value is 60 -->
 <!-- Number: 0 - 64800 -->
-<P412>3</P412>
+<P412>{$account.2.register_expires}</P412>
 
 <!-- Wait Time Retry Registration (s). In seconds. Default value is 20 -->
 <!-- Number: 1 - 3600 -->
@@ -1151,7 +940,7 @@ VNumber: 0, 1, 2. -->
 
 <!-- Register Expiration (m). In minutes. Default value is 60 -->
 <!-- Number: 0 - 64800 -->
-<P512>3</P512>
+<P512>{$account.3.register_expires}</P512>
 
 <!-- Wait Time Retry Registration (s). In seconds. Default value is 20 -->
 <!-- Number: 1 - 3600 -->
@@ -1579,7 +1368,7 @@ VNumber: 0, 1, 2. -->
 
 <!-- Register Expiration (m). In minutes. Default value is 60 -->
 <!-- Number: 0 - 64800 -->
-<P612>3</P612>
+<P612>{$account.4.register_expires}</P612>
 
 <!-- Wait Time Retry Registration (s). In seconds. Default value is 20 -->
 <!-- Number: 1 - 3600 -->
@@ -2007,7 +1796,7 @@ VNumber: 0, 1, 2. -->
 
 <!-- Register Expiration (m). In minutes. Default value is 60 -->
 <!-- Number: 0 - 64800 -->
-<P1712>3</P1712>
+<P1712>{$account.5.register_expires}</P1712>
 
 <!-- Wait Time Retry Registration (s). In seconds. Default value is 20 -->
 <!-- Number: 1 - 3600 -->
@@ -2433,7 +2222,7 @@ Account 5 Codec Settings
 
 <!-- Register Expiration (m). In minutes. Default value is 60 -->
 <!-- Number: 0 - 64800 -->
-<P1812>3</P1812>
+<P1812>{$account.6.register_expires}</P1812>
 
 <!-- Wait Time Retry Registration (s). In seconds. Default value is 20 -->
 <!-- Number: 1 - 3600 -->
@@ -3215,9 +3004,9 @@ Account 5 Codec Settings
 <!-- Firmware Server Path -->
 
 {if isset($grandstream_firmware_path) && isset($firmware_version)}
-<P192>{$grandstream_firmware_path}/gxp2200/{$firmware_version}</P192>
+<P192>{$grandstream_firmware_path}/{$firmware_version}</P192>
 {elseif isset($grandstream_firmware_path)}
-<P192>{$grandstream_firmware_path}/gxp2200</P192>
+<P192>{$grandstream_firmware_path}/</P192>
 {else}
 <P192>{$domain_name}{$project_path}/app/provision</P192>
 {/if}

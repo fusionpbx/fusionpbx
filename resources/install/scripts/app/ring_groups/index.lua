@@ -143,6 +143,8 @@
 		dialplan = session:getVariable("dialplan");
 		caller_id_name = session:getVariable("caller_id_name");
 		caller_id_number = session:getVariable("caller_id_number");
+		effective_caller_id_name = session:getVariable("effective_caller_id_name");
+		effective_caller_id_number = session:getVariable("effective_caller_id_number");
 		network_addr = session:getVariable("network_addr");
 		ani = session:getVariable("ani");
 		aniii = session:getVariable("aniii");
@@ -154,6 +156,14 @@
 		call_direction = session:getVariable("call_direction");
 		accountcode = session:getVariable("accountcode");
 		local_ip_v4 = session:getVariable("local_ip_v4")
+	end
+
+--set caller id
+	if (effective_caller_id_name ~= nil) then
+		caller_id_name = effective_caller_id_name;
+	end
+	if (effective_caller_id_number ~= nil) then
+		caller_id_number = effective_caller_id_number;
 	end
 
 --default to local if nil
@@ -227,15 +237,20 @@
 	record_path = recordings_dir .. "/" .. domain_name .. "/archive/" .. os.date("%Y/%b/%d");
 	record_path = record_path:gsub("\\", "/");
 
---set the recording file
-	record_name = uuid .. "." .. record_ext;
+--set the recording file name
+	if (session:ready()) then
+		record_name = session:getVariable("record_name");
+		if (not record_name) then
+			record_name = uuid .. "." .. record_ext;
+		end
+	end
 
 ---set the call_timeout to a higher value to prevent the early timeout of the ring group
 	if (session:ready()) then
 		if (ring_group_call_timeout and #ring_group_call_timeout == 0) then
 			ring_group_call_timeout = '300';
 		end
-		session:setVariable("call_timeout",ring_group_call_timeout);
+		session:setVariable("call_timeout", ring_group_call_timeout);
 	end
 
 --play the greeting
@@ -370,7 +385,7 @@
 --process the ring group
 	if (ring_group_forward_enabled == "true" and string.len(ring_group_forward_destination) > 0) then
 		--forward the ring group
-			session:setVariable("toll_allow",ring_group_forward_toll_allow);
+			session:setVariable("toll_allow", ring_group_forward_toll_allow);
 			session:execute("transfer", ring_group_forward_destination.." XML "..context);
 	else
 		--get the strategy of the ring group, if random, we use random() to order the destinations
@@ -387,7 +402,7 @@
 
 			local params = {ring_group_uuid = ring_group_uuid, domain_uuid = domain_uuid};
 
-			assert(dbh:query(sql, params, function(row)
+			dbh:query(sql, params, function(row)
 				if (row.ring_group_strategy == "random") then
 					if (database["type"] == "mysql") then
 						sql_order = 'rand()'
@@ -397,7 +412,7 @@
 				else
 					sql_order='d.destination_delay, d.destination_number asc'
 				end
-			end));
+			end);
 
 		--get the ring group destinations
 			sql = [[
@@ -423,7 +438,7 @@
 			destinations = {};
 			destination_count = 0;
 			x = 1;
-			assert(dbh:query(sql, params, function(row)
+			dbh:query(sql, params, function(row)
 				if (row.destination_prompt == "1" or row.destination_prompt == "2") then
 					prompt = "true";
 				end
@@ -467,7 +482,7 @@
 				row['domain_name'] = leg_domain_name;
 				destination_count = destination_count + 1;
 				x = x + 1;
-			end));
+			end);
 			--freeswitch.consoleLog("NOTICE", "[ring_group] external "..external.."\n");
 
 		--get the dialplan data and save it to a table
@@ -497,30 +512,23 @@
 				destination_prompt = row.destination_prompt;
 				toll_allow = row.toll_allow;
 
-				--determine if the user is registered if not registered then lookup 
-				cmd = "sofia_contact */".. destination_number .."@" ..domain_name;
-				if (api:executeString(cmd) == "error/user_not_registered") then
-					freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
-					cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_user_not_registered_enabled";
-					freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
-					if (api:executeString(cmd) == "true") then
-						--get the new destination number
-						cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_user_not_registered_destination";
+				--determine if the user is registered if not registered then lookup
+				if (user_exists == "true") then
+					cmd = "sofia_contact */".. destination_number .."@" ..domain_name;
+					if (api:executeString(cmd) == "error/user_not_registered") then
 						freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
-						not_registered_destination_number = api:executeString(cmd);
-						freeswitch.consoleLog("NOTICE", "[ring_group] "..not_registered_destination_number.."\n");
-						if (not_registered_destination_number ~= nil) then
-							destination_number = not_registered_destination_number;
-							destinations[key]['destination_number'] = destination_number;
-						end
-
-						--check the new destination number for user_exists
-						cmd = "user_exists id ".. destination_number .." "..domain_name;
-						user_exists = api:executeString(cmd);
-						if (user_exists == "true") then
-							destinations[key]['user_exists'] = "true";
-						else
-							destinations[key]['user_exists'] = "false";
+						cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_user_not_registered_enabled";
+						freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
+						if (api:executeString(cmd) == "true") then
+							--get the new destination number
+							cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_user_not_registered_destination";
+							freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
+							not_registered_destination_number = api:executeString(cmd);
+							freeswitch.consoleLog("NOTICE", "[ring_group] "..not_registered_destination_number.."\n");
+							if (not_registered_destination_number ~= nil) then
+								destination_number = not_registered_destination_number;
+								destinations[key]['destination_number'] = destination_number;
+							end
 						end
 					end
 				end
@@ -536,7 +544,6 @@
 			x = 1;
 			for key, row in pairs(destinations) do
 				--set the values from the database as variables
-					user_exists = row.user_exists;
 					ring_group_strategy = row.ring_group_strategy;
 					ring_group_timeout_app = row.ring_group_timeout_app;
 					ring_group_timeout_data = row.ring_group_timeout_data;
@@ -593,7 +600,7 @@
 				--leg delay settings
 					if (ring_group_strategy == "enterprise") then
 						delay_name = "originate_delay_start";
-						destination_delay = destination_delay * 1000;
+						destination_delay = destination_delay * 500;
 					else
 						delay_name = "leg_delay_start";
 					end

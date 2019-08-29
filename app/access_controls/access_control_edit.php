@@ -22,15 +22,11 @@
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
-	if (permission_exists('access_control_add') || permission_exists('access_control_edit')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
+	if (!permission_exists('access_control_add') && !permission_exists('access_control_edit')) {
+		echo "access denied"; exit;
 	}
 
 //add multi-lingual support
@@ -38,9 +34,9 @@
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$access_control_uuid = check_str($_REQUEST["id"]);
+		$access_control_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
@@ -48,16 +44,16 @@
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
-		$access_control_name = check_str($_POST["access_control_name"]);
-		$access_control_default = check_str($_POST["access_control_default"]);
-		$access_control_description = check_str($_POST["access_control_description"]);
+		$access_control_name = $_POST["access_control_name"];
+		$access_control_default = $_POST["access_control_default"];
+		$access_control_description = $_POST["access_control_description"];
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//get the primary key
 		if ($action == "update") {
-			$access_control_uuid = check_str($_POST["access_control_uuid"]);
+			$access_control_uuid = $_POST["access_control_uuid"];
 		}
 
 	//check for all required data
@@ -80,51 +76,34 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
+			$execute = false;
+
 			if ($action == "add" && permission_exists('access_control_add')) {
-				//update the database
-				$sql = "insert into v_access_controls ";
-				$sql .= "(";
-				$sql .= "access_control_uuid, ";
-				$sql .= "access_control_name, ";
-				$sql .= "access_control_default, ";
-				$sql .= "access_control_description ";
-				$sql .= ")";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'".uuid()."', ";
-				$sql .= "'$access_control_name', ";
-				$sql .= "'$access_control_default', ";
-				$sql .= "'$access_control_description' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
-
-				//clear the cache
-				$cache = new cache;
-				$cache->delete("configuration:acl.conf");
-
-				//create the event socket connection
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-				if ($fp) { event_socket_request($fp, "api reloadacl"); }
+				$execute = true;
+				$access_control_uuid = uuid();
 
 				//add the message
 				message::add($text['message-add']);
-				
-				//redirect the user
-				header("Location: access_controls.php");
-				return;
-
-			} //if ($action == "add")
+			}
 
 			if ($action == "update" && permission_exists('access_control_edit')) {
-				//update the database
-				$sql = "update v_access_controls set ";
-				$sql .= "access_control_name = '$access_control_name', ";
-				$sql .= "access_control_default = '$access_control_default', ";
-				$sql .= "access_control_description = '$access_control_description' ";
-				$sql .= "where access_control_uuid = '$access_control_uuid'";
-				$db->exec(check_sql($sql));
-				unset($sql);
+				$execute = true;
+				//$access_control_uuid //already set
+
+				//add the message
+				message::add($text['message-update']);
+			}
+
+			if ($execute) {
+				$array['access_controls'][0]['access_control_uuid'] = $access_control_uuid;
+				$array['access_controls'][0]['access_control_name'] = $access_control_name;
+				$array['access_controls'][0]['access_control_default'] = $access_control_default;
+				$array['access_controls'][0]['access_control_description'] = $access_control_description;
+				$database = new database;
+				$database->app_name = 'access_control';
+				$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
+				$database->save($array);
+				unset($array);
 
 				//clear the cache
 				$cache = new cache;
@@ -133,33 +112,29 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				//create the event socket connection
 				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 				if ($fp) { event_socket_request($fp, "api reloadacl"); }
+			}
 
-				//add the message
-				message::add($text['message-update']);
+			//redirect the user
+			header("Location: access_controls.php");
+			return;
 
-				//redirect the user
-				header("Location: access_controls.php");
-				return;
-
-			} //if ($action == "update")
 		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-		$access_control_uuid = check_str($_GET["id"]);
+	if (count($_GET) > 0 && $_POST["persistformvar"] != "true" && is_uuid($_GET["id"])) {
+		$access_control_uuid = $_GET["id"];
 		$sql = "select * from v_access_controls ";
-		$sql .= "where access_control_uuid = '$access_control_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where access_control_uuid = :access_control_uuid ";
+		$parameters['access_control_uuid'] = $access_control_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && sizeof($row)) {
 			$access_control_name = $row["access_control_name"];
 			$access_control_default = $row["access_control_default"];
 			$access_control_description = $row["access_control_description"];
-			break; //limit to 1 row
 		}
-		unset ($prep_statement);
+		unset ($sql, $parameters, $row);
 	}
 
 //show the header

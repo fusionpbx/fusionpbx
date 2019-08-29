@@ -263,6 +263,9 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Whether to regenerate the session ID.";
 		$y++;
 
+	//cache details
+		$apps[$x]['cache']['key'] = "directory.\${extension}@\${user_context}";
+
 	//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_extensions";

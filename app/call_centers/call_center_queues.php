@@ -48,7 +48,7 @@
 	require_once "resources/paging.php";
 
 //get http variables and set as php variables
-	$order_by = $_GET["order_by"];
+	$order_by = $_GET["order_by"] != '' ? $_GET["order_by"] : 'queue_name';
 	$order = $_GET["order"];
 
 //show the content
@@ -70,29 +70,15 @@
 	echo "</tr></table>\n";
 
 	//get total call center queues count from the database
-		$sql = "select count(*) as num_rows from v_call_center_queues where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			$total_call_center_queues = $row['num_rows'];
-		}
-		unset($prep_statement, $row);
+		$sql = "select count(*) from v_call_center_queues ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$database = new database;
+		$total_call_center_queues = $database->select($sql, $parameters, 'column');
+		unset($sql, $parameters);
 
-	//prepare to page the results (reuse $sql from above)
-		if (strlen($order_by) == 0) {
-			$order_by = 'queue_name';
-			$order = 'asc';
-		}
-		else {
-			$sql .= "order by $order_by $order ";
-		}
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$num_rows = count($result);
-		unset ($prep_statement, $result, $sql);
-
+	//prepare to page the results
+		$num_rows = $total_call_center_queues;
 		$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 		$param = "";
 		$page = $_GET['page'];
@@ -101,21 +87,14 @@
 		$offset = $rows_per_page * $page;
 
 		$sql = "select * from v_call_center_queues ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		if (strlen($order_by) == 0) {
-			$order_by = 'queue_name';
-			$order = 'asc';
-		}
-		else {
-			$sql .= "order by $order_by $order ";
-		}
-		$sql .= " limit $rows_per_page offset $offset ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
-		unset ($prep_statement, $sql);
-
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= order_by($order_by, $order);
+		$sql .= limit_offset($rows_per_page, $offset);
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$database = new database;
+		$result = $database->select($sql, $parameters, 'all');
+		unset($sql, $parameters);
+		
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
@@ -146,7 +125,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($result_count > 0) {
+	if (is_array($result)) {
 		foreach($result as $row) {
 			$tr_link = (permission_exists('call_center_queue_edit')) ? "href='call_center_queue_edit.php?id=".escape($row[call_center_queue_uuid])."'" : null;
 			echo "<tr ".$tr_link.">\n";

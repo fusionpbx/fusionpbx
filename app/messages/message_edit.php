@@ -43,10 +43,9 @@
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$message_uuid = check_str($_REQUEST["id"]);
-		$id = check_str($_REQUEST["id"]);
+		$message_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
@@ -54,18 +53,18 @@
 
 //get http post variables and set them to php variables
 	if (is_array($_POST)) {
-		$message_uuid = check_str($_POST["message_uuid"]);
-		//$user_uuid = check_str($_POST["user_uuid"]);
-		$message_type = check_str($_POST["message_type"]);
-		$message_direction = check_str($_POST["message_direction"]);
-		$message_date = check_str($_POST["message_date"]);
-		$message_from = check_str($_POST["message_from"]);
-		$message_to = check_str($_POST["message_to"]);
-		$message_text = check_str($_POST["message_text"]);
-		$message_media_type = check_str($_POST["message_media_type"]);
-		$message_media_url = check_str($_POST["message_media_url"]);
-		$message_media_content = check_str($_POST["message_media_content"]);
-		$message_json = check_str($_POST["message_json"]);
+		$message_uuid = $_POST["message_uuid"];
+		//$user_uuid = $_POST["user_uuid"];
+		$message_type = $_POST["message_type"];
+		$message_direction = $_POST["message_direction"];
+		$message_date = $_POST["message_date"];
+		$message_from = $_POST["message_from"];
+		$message_to = $_POST["message_to"];
+		$message_text = $_POST["message_text"];
+		$message_media_type = $_POST["message_media_type"];
+		$message_media_url = $_POST["message_media_url"];
+		$message_media_content = $_POST["message_media_content"];
+		$message_json = $_POST["message_json"];
 	}
 
 //process the user data and save it to the database
@@ -73,7 +72,7 @@
 
 		//get the uuid from the POST
 			if ($action == "update") {
-				$message_uuid = check_str($_POST["message_uuid"]);
+				$message_uuid = $_POST["message_uuid"];
 			}
 
 		//check for all required data
@@ -106,7 +105,7 @@
 				$_POST["domain_uuid"] = $_SESSION["domain_uuid"];
 
 		//add the message_uuid
-			if (strlen($_POST["message_uuid"]) == 0) {
+			if (!is_uuid($_POST["message_uuid"])) {
 				$message_uuid = uuid();
 				$_POST["message_uuid"] = $message_uuid;
 			}
@@ -117,18 +116,8 @@
 		//save to the data
 			$database = new database;
 			$database->app_name = 'messages';
-			$database->app_uuid = null;
-			if (strlen($message_uuid) > 0) {
-				$database->uuid($message_uuid);
-			}
+			$database->app_uuid = '4a20815d-042c-47c8-85df-085333e79b87';
 			$database->save($array);
-			$message = $database->message;
-
-		//debug info
-			//echo "<pre>";
-			//print_r($message);
-			//echo "</pre>";
-			//exit;
 
 		//redirect the user
 			if (isset($action)) {
@@ -139,20 +128,19 @@
 					message::add($text['message-update']);
 				}
 				header('Location: message_edit.php?id='.$message_uuid);
-				return;
+				exit;
 			}
-	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
+	}
 
 //pre-populate the form
 	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
-		$message_uuid = check_str($_GET["id"]);
+		$message_uuid = $_GET["id"];
 		$sql = "select * from v_messages ";
-		$sql .= "where message_uuid = '$message_uuid' ";
-		//$sql .= "and domain_uuid = '$domain_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where message_uuid = :message_uuid ";
+		$parameters['message_uuid'] = $message_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$user_uuid = $row["user_uuid"];
 			$message_type = $row["message_type"];
 			$message_direction = $row["message_direction"];
@@ -165,28 +153,21 @@
 			$message_media_content = $row["message_media_content"];
 			$message_json = $row["message_json"];
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters);
 	}
 
 //show the header
 	require_once "resources/header.php";
 
-//get the extensions
-	$sql = "select * from v_users ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "and user_enabled = 'true' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
-
 //get the users
-	$sql = "SELECT user_uuid, username FROM v_users ";
-	$sql .= "WHERE domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "ORDER by username asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$sql = "select user_uuid, username from v_users ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and user_enabled = 'true' ";
+	$sql .= "order by username asc ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$users = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //show the content
 	echo "<form name='frm' id='frm' method='post' action=''>\n";

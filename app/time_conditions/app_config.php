@@ -22,7 +22,7 @@
 		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
-        	$apps[$x]['description']['pt-pt'] = "Chamada directa com base na hora do dia.";
+		$apps[$x]['description']['pt-pt'] = "Chamada directa com base na hora do dia.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "Прямые вызовы на основании времени суток.";
 		$apps[$x]['description']['sv-se'] = "";
@@ -36,7 +36,7 @@
 		$apps[$x]['destinations'][$y]['sql'] = "select dialplan_name as name, dialplan_number as destination, dialplan_context as context, dialplan_description as description from v_dialplans ";
 		$apps[$x]['destinations'][$y]['where'] = "where (domain_uuid = '\${domain_uuid}' or domain_uuid is null) and app_uuid = '4b821450-926b-175a-af93-a03c441818b1' and dialplan_enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "dialplan_number asc";
-		$apps[$x]['destinations'][$y]['field']['context'] = "dialplan_context";
+		$apps[$x]['destinations'][$y]['field']['context'] = "context";
 		$apps[$x]['destinations'][$y]['field']['name'] = "dialplan_name";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "dialplan_number";
 		$apps[$x]['destinations'][$y]['field']['description'] = "dialplan_description";
@@ -300,5 +300,8 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = '{"labour_day":{"wday":"2","mon":"9","mday":"1-7"}}';
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Canada Holiday';
+
+	//cache details
+		$apps[$x]['cache']['key'] = "dialplan.\${dialplan_context}";
 
 ?>

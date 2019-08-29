@@ -212,7 +212,7 @@
 		<!-- Outgoing call without Registration. 0 - No, 1 - Yes -->
 		<P109>1</P109>
 		<!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
-		<P32>3</P32>
+		<P32>{$account.1.register_expires}</P32>
 		<!-- Reregister before Expiration -->
 		<P2330>0</P2330>
 		<!-- Registration Retry Wait Time, in seconds. Between 1-3600, default is 30 -->
@@ -559,7 +559,7 @@
 		<!-- Outgoing call without Registration. 0 - No, 1 - Yes -->
 		<P813>1</P813>
 		<!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
-		<P732>3</P732>
+		<P732>{$account.2.register_expires}</P732>
 		<!-- Reregister before Expiration -->
 		<P2430>0</P2430>
 		<!-- Registration Retry Wait Time, in seconds. Between 1-3600, default is 30 -->

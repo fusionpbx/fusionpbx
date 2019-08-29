@@ -88,10 +88,10 @@ else
 	end
 	dialplans = {};
 	x = 1;
-	assert(dbh:query(sql, params, function(row)
+	dbh:query(sql, params, function(row)
 		dialplans[x] = row;
 		x = x + 1;
-	end));
+	end);
 
 	y = 0;
 	previous_dialplan_uuid = '';
@@ -202,10 +202,10 @@ if session1:ready() and session1:answered() then
 		end
 		dialplans = {};
 		x = 1;
-		assert(dbh:query(sql, params, function(row)
+		dbh:query(sql, params, function(row)
 			dialplans[x] = row;
 			x = x + 1;
-			end));
+			end);
 		y = 0;
 		previous_dialplan_uuid = '';
 		for k, r in pairs(dialplans) do

@@ -30,11 +30,11 @@
 
 <!--# Outbound Proxy-->
 <!--# String-->
-    <P48></P48>
+    <P48>{$account.1.outbound_proxy_primary}</P48>
 
 <!--# Backup Outbound Proxy-->
 <!--# String-->
-    <P2333></P2333>
+    <P2333>{$account.1.outbound_proxy_secondary}</P2333>
 
 <!--# SIP User ID-->
 <!--# String-->
@@ -111,7 +111,7 @@
 <!--# Register Expiration (in minutes). Default is 60. Max about 45 days-->
 <!--# Number: 1 - 64800-->
 <!--# Mandatory-->
-    <P32>60</P32>
+    <P32>{$account.1.register_expires}</P32>
 
 <!--# Reregister Before Expiration (in seconds). Default is 0 second-->
 <!--# Number: 0 - 64800-->
@@ -658,11 +658,11 @@
 
 <!--# Outbound Proxy-->
 <!--# String-->
-    <P403></P403>
+    <P403>{$account.2.outbound_proxy_primary}</P403>
 
 <!--# Backup Outbound Proxy-->
 <!--# String-->
-    <P2433></P2433>
+    <P2433>{$account.2.outbound_proxy_secondary}</P2433>
 
 <!--# SIP User ID-->
 <!--# String-->
@@ -739,7 +739,7 @@
 <!--# Register Expiration (in minutes). Default is 60. Max is 45 days-->
 <!--# Number: 1 - 64800-->
 <!--# Mandatory-->
-    <P412>60</P412>
+    <P412>{$account.2.register_expires}</P412>
 
 <!--# Reregister Before Expiration (in seconds). Default is 0-->
 <!--# Number: 0 - 64800-->
@@ -1288,11 +1288,11 @@
 
 <!--# Outbound Proxy-->
 <!--# String-->
-    <P503></P503>
+    <P503>{$account.3.outbound_proxy_primary}</P503>
 
 <!--# Backup Outbound Proxy-->
 <!--# String-->
-    <P2533></P2533>
+    <P2533>{$account.3.outbound_proxy_secondary}</P2533>
 
 <!--# SIP User ID-->
 <!--# String-->
@@ -1369,7 +1369,7 @@
 <!--# Register Expiration (in minutes). Default is 60. Max is 45 days-->
 <!--# Number: 1 - 64800-->
 <!--# Mandatory-->
-    <P512>60</P512>
+    <P512>{$account.3.register_expires}</P512>
 
 <!--# Reregister before Expiration (in seconds). Default is 0 second-->
 <!--# Number: 0 - 64800-->
@@ -1914,11 +1914,11 @@
 
 <!--# Outbound Proxy-->
 <!--# String-->
-    <P603></P603>
+    <P603>{$account.4.outbound_proxy_primary}</P603>
 
 <!--# Backup Outbound Proxy-->
 <!--# String-->
-    <P2633></P2633>
+    <P2633>{$account.4.outbound_proxy_secondary}</P2633>
 
 <!--# SIP User ID-->
 <!--# String-->
@@ -1995,7 +1995,7 @@
 <!--# Register Expiration (in minutes). Default is 60. Max is 45 days-->
 <!--# Number: 1 - 64800-->
 <!--# Mandatory-->
-    <P612>60</P612>
+    <P612>{$account.4.register_expires}</P612>
 
 <!--# Reregister before Expiration (in seconds). Default is 0-->
 <!--# Number: 0 - 64800-->
@@ -2747,11 +2747,16 @@
 
 <!--# End User Password-->
 <!--# String: a-z, A-Z, 0-9-->
-    <P196></P196>
+    <P196>{$user_password}</P196>
 
 <!--# Admin password for web interface-->
 <!--# String: a-z, A-Z, 0-9-->
-    <P2>admin</P2>
+    
+{if isset($admin_password)}
+    <P2>{$admin_password}</P2>
+{else}
+    <P2>{$mac|replace:'-':''}</P2>
+{/if}
 
 
 <!--##############################################################################-->
@@ -2772,11 +2777,11 @@
 
 <!--# HTTP/HTTPS User Name-->
 <!--# String-->
-    <P1360></P1360>
+    <P1360>{$http_auth_username}</P1360>
 
 <!--# HTTP/HTTPS Password-->
 <!--# String-->
-    <P1361></P1361>
+    <P1361>{$http_auth_password}</P1361>
 
 <!--# Always Authenticate Before Challenge. 0 - No,  1 - Yes. Default is 0-->
 <!--# Number: 0, 1-->
@@ -3018,7 +3023,7 @@
 
 <!--# Disable SSH. 0 - No, 1 - Yes. Default is 0-->
 <!--# Number: 0, 1-->
-    <P276>0</P276>
+    <P276>1</P276>
 
 <!--##############################################################################-->
 <!--##  Phonebook/Phonebook Management-->
@@ -3492,12 +3497,12 @@
 <!--# Active-->
 <!--# Number: 0 - 8-->
 <!--# Mandatory-->
-    <P334>6</P334>
+    <P334>{$grandstream_lcd_brightness}</P334>
 
 <!--# Idle-->
 <!--# Number: 0 - 8-->
 <!--# Mandatory-->
-    <P335>2</P335>
+    <P335>{$grandstream_lcd_brightness_idle}</P335>
 
 <!--# LCD Contrast. Default is 10-->
 <!--# Number: 0 - 20-->

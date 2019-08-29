@@ -25,12 +25,8 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('access_control_node_view')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
+	if (!permission_exists('access_control_node_view')) {
+		echo "access denied"; exit;
 	}
 
 //add multi-lingual support
@@ -38,15 +34,14 @@
 	$text = $language->get();
 
 //get variables used to control the order
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
 //additional includes
 	require_once "resources/header.php";
 	require_once "resources/paging.php";
 
 //show the content
-
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-access_control_nodes']."</b></td>\n";
@@ -55,20 +50,11 @@
 	echo "</table>\n";
 
 //prepare to page the results
-	$sql = "select count(*) as num_rows from v_access_control_nodes ";
-	$sql .= "where access_control_uuid = '".$access_control_uuid."' ";
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-	$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-	}
+	$sql = "select count(*) from v_access_control_nodes ";
+	$sql .= "where access_control_uuid = :access_control_uuid ";
+	$parameters['access_control_uuid'] = $access_control_uuid;
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -80,13 +66,12 @@
 
 //get the list
 	$sql = "select * from v_access_control_nodes ";
-	$sql .= "where access_control_uuid = '".$access_control_uuid."' ";
-	if (strlen($order_by) > 0) { $sql .= "order by $order_by $order "; }
-	$sql .= "limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$access_control_nodes = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$sql .= "where access_control_uuid = :access_control_uuid ";
+	$sql .= order_by($order_by, $order);
+	$sql .= limit_offset($rows_per_page, $offset);
+	$parameters['access_control_uuid'] = $access_control_uuid;
+	$database = new database;
+	$access_control_nodes = $database->select($sql, $parameters);
 
 //set the row styles
 	$c = 0;
@@ -117,7 +102,7 @@
 			}
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['node_type'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['node_cidr'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'><a ".$tr_link.">".escape($row['node_cidr'])."</a></td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['node_domain'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['node_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
@@ -129,32 +114,19 @@
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
-			if ($c==0) { $c=1; } else { $c=0; }
+			$c = $c == 1 ? 0 : 1;
 		} //end foreach
 		unset($sql, $result, $row_count);
 	} //end if results
 
-	echo "<tr>\n";
-	echo "<td colspan='5' align='left'>\n";
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
-	echo "		<td class='list_control_icons'>";
+	echo "</table>\n";
 	if (permission_exists('access_control_node_add')) {
-		echo 		"<a href='access_control_node_edit.php?access_control_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo "<div style='float: right;'>\n";
+		echo "	<a href='access_control_node_edit.php?access_control_uuid=".escape($_GET['id'])."' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo "</div>\n";
 	}
-	else {
-		echo 		"&nbsp;";
-	}
-	echo "		</td>\n";
-	echo "	</tr>\n";
- 	echo "	</table>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "</table>";
-	echo "<br /><br />";
+	echo "<br />\n";
+	echo "<div align='center'>".$paging_controls."</div>\n";
 
 //include the footer
 	require_once "resources/footer.php";

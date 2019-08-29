@@ -39,24 +39,24 @@ else {
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$voicemail_option_uuid = check_str($_REQUEST["id"]);
+		$voicemail_option_uuid = $_REQUEST["id"];
 	}
 
 //get the menu id
-	if (strlen($_GET["voicemail_uuid"]) > 0) {
-		$voicemail_uuid = check_str($_GET["voicemail_uuid"]);
+	if (is_uuid($_GET["voicemail_uuid"])) {
+		$voicemail_uuid = $_GET["voicemail_uuid"];
 	}
 
 //get the http post variables and set them to php variables
 	if (count($_POST)>0) {
-		$voicemail_uuid = check_str($_POST["voicemail_uuid"]);
-		$voicemail_option_digits = check_str($_POST["voicemail_option_digits"]);
-		$voicemail_option_action = check_str($_POST["voicemail_option_action"]);
-		$voicemail_option_param = check_str($_POST["voicemail_option_param"]);
-		$voicemail_option_order = check_str($_POST["voicemail_option_order"]);
-		$voicemail_option_description = check_str($_POST["voicemail_option_description"]);
+		$voicemail_uuid = $_POST["voicemail_uuid"];
+		$voicemail_option_digits = $_POST["voicemail_option_digits"];
+		$voicemail_option_action = $_POST["voicemail_option_action"];
+		$voicemail_option_param = $_POST["voicemail_option_param"];
+		$voicemail_option_order = $_POST["voicemail_option_order"];
+		$voicemail_option_description = $_POST["voicemail_option_description"];
 
 		//set the default voicemail_option_action
 			if (strlen($voicemail_option_action) == 0) {
@@ -72,7 +72,7 @@ else {
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
-	$voicemail_option_uuid = check_str($_POST["voicemail_option_uuid"]);
+	$voicemail_option_uuid = $_POST["voicemail_option_uuid"];
 
 	//check for all required data
 		if (strlen($voicemail_option_digits) == 0) { $msg .= $text['message-required'].$text['label-option']."<br>\n"; }
@@ -91,26 +91,33 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 	//update the database
-		if ($_POST["persistformvar"] != "true") {
-			if (permission_exists('voicemail_edit')) {
-				$sql = "update v_voicemail_options set ";
-				$sql .= "voicemail_option_digits = '".$voicemail_option_digits."', ";
-				$sql .= "voicemail_option_action = '".$voicemail_option_action."', ";
-				$sql .= "voicemail_option_param = '".$voicemail_option_param."', ";
-				$sql .= "voicemail_option_order = ".$voicemail_option_order.", ";
-				$sql .= "voicemail_option_description = '".$voicemail_option_description."' ";
-				$sql .= "where domain_uuid = '".$domain_uuid."' ";
-				$sql .= "and voicemail_option_uuid = '".$voicemail_option_uuid."' ";
-				$db->exec(check_sql($sql));
-				unset($sql);
-
-				//redirect the user
-					message::add($text['message-update']);
-					header('Location: voicemail_edit.php?id='.$voicemail_uuid);
-					return;
-			}
-		} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+		if ($_POST["persistformvar"] != "true" && permission_exists('voicemail_edit')) {
+			//build update array
+				$array['voicemail_options'][0]['voicemail_option_uuid'] = $voicemail_option_uuid;
+				$array['voicemail_options'][0]['domain_uuid'] = $domain_uuid;
+				$array['voicemail_options'][0]['voicemail_option_digits'] = $voicemail_option_digits;
+				$array['voicemail_options'][0]['voicemail_option_action'] = $voicemail_option_action;
+				$array['voicemail_options'][0]['voicemail_option_param'] = $voicemail_option_param;
+				$array['voicemail_options'][0]['voicemail_option_order'] = $voicemail_option_order;
+				$array['voicemail_options'][0]['voicemail_option_description'] = $voicemail_option_description;
+			//grant temporary permissions
+				$p = new permissions;
+				$p->add('voicemail_option_edit', 'temp');
+			//execute update
+				$database = new database;
+				$database->app_name = 'voicemails';
+				$database->app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';
+				$database->save($array);
+				unset($array);
+			//revoke temporary permissions
+				$p->delete('voicemail_option_edit', 'temp');
+			//set message
+				message::add($text['message-update']);
+			//redirect the user
+				header('Location: voicemail_edit.php?id='.$voicemail_uuid);
+				exit;
+		}
+}
 
 //initialize the destinations object
 	$destination = new destinations;
@@ -119,33 +126,30 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$voicemail_option_uuid = $_GET["id"];
 		$sql = "select * from v_voicemail_options ";
-		$sql .= "where voicemail_option_uuid = '".$voicemail_option_uuid."' ";
-		$sql .= "and domain_uuid = '".$domain_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where voicemail_option_uuid = :voicemail_option_uuid ";
+		$sql .= "and domain_uuid = :domain_uuid ";
+		$parameters['voicemail_option_uuid'] = $voicemail_option_uuid;
+		$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$domain_uuid = $row["domain_uuid"];
 			$voicemail_uuid = $row["voicemail_uuid"];
 			$voicemail_option_digits = trim($row["voicemail_option_digits"]);
 			$voicemail_option_action = $row["voicemail_option_action"];
 			$voicemail_option_param = $row["voicemail_option_param"];
-
 			//if admin show only the param
 				if (if_group("admin")) {
 					$voicemail_options_label = $voicemail_option_param;
 				}
-
 			//if superadmin show both the action and param
 				if (if_group("superadmin")) {
 					$voicemail_options_label = $voicemail_option_action.':'.$voicemail_option_param;
 				}
-
 			$voicemail_option_order = $row["voicemail_option_order"];
 			$voicemail_option_description = $row["voicemail_option_description"];
-			break; //limit to 1 row
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //send the content to the browser
@@ -201,8 +205,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select name='voicemail_option_order' class='formfld'>\n";
-	$i=0;
-	while($i<=999) {
+	$i = 0;
+	while ($i <= 999) {
 		$selected = ($voicemail_option_order == $i) ? "selected" : null;
 		if (strlen($i) == 1) {
 			echo "	<option value='00$i' ".$selected.">00$i</option>\n";

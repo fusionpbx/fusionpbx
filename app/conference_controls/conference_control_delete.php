@@ -6,7 +6,7 @@
 
 //check permissions
 	require_once "resources/check_auth.php";
-	if (permission_exists('conference_control_delete')) {
+	if (permission_exists('conference_control_delete') && permission_exists('conference_control_detail_delete')) {
 		//access granted
 	}
 	else {
@@ -18,32 +18,27 @@
 	$language = new text;
 	$text = $language->get();
 
-//get the id
-	if (count($_GET) > 0) {
-		$id = check_str($_GET["id"]);
-	}
-
 //delete the data
-	if (strlen($id) > 0) {
-		//delete conference_control_detail
-			$sql = "delete from v_conference_control_details ";
-			$sql .= "where conference_control_uuid = '$id' ";
-			//$sql .= "and domain_uuid = '$domain_uuid' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($sql);
+	if (is_uuid($_GET["id"])) {
 
-		//delete conference_control
-			$sql = "delete from v_conference_controls ";
-			$sql .= "where conference_control_uuid = '$id' ";
-			//$sql .= "and domain_uuid = '$domain_uuid' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($sql);
+		$conference_control_uuid = $_GET["id"];
+
+		//delete conference control detail
+			$array['conference_control_details'][0]['conference_control_uuid'] = $conference_control_uuid;
+		//delete conference control
+			$array['conference_controls'][0]['conference_control_uuid'] = $conference_control_uuid;
+
+			$database = new database;
+			$database->app_name = 'conference_controls';
+			$database->app_uuid = 'e1ad84a2-79e1-450c-a5b1-7507a043e048';
+			$database->delete($array);
+			unset($array);
+
+		//set message
+			message::add($text['message-delete']);
 	}
 
 //redirect the user
-	message::add($text['message-delete']);
 	header('Location: conference_controls.php');
 
 ?>

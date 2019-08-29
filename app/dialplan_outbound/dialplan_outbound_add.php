@@ -54,19 +54,19 @@
 //get the http post values and set theme as php variables
 	if (is_array($_POST) > 0) {
 		//set the variables
-			$dialplan_name = check_str($_POST["dialplan_name"]);
-			$dialplan_order = check_str($_POST["dialplan_order"]);
-			$dialplan_expression = check_str($_POST["dialplan_expression"]);
-			$prefix_number = check_str($_POST["prefix_number"]);
-			$condition_field_1 = check_str($_POST["condition_field_1"]);
-			$condition_expression_1 = check_str($_POST["condition_expression_1"]);
-			$condition_field_2 = check_str($_POST["condition_field_2"]);
-			$condition_expression_2 = check_str($_POST["condition_expression_2"]);
-			$gateway = check_str($_POST["gateway"]);
-			$limit = check_str($_POST["limit"]);
-			$accountcode = check_str($_POST["accountcode"]);
-			$toll_allow = check_str($_POST["toll_allow"]);
-			$pin_numbers_enable = check_str($_POST["pin_numbers_enabled"]);
+			$dialplan_name = $_POST["dialplan_name"];
+			$dialplan_order = $_POST["dialplan_order"];
+			$dialplan_expression = $_POST["dialplan_expression"];
+			$prefix_number = $_POST["prefix_number"];
+			$condition_field_1 = $_POST["condition_field_1"];
+			$condition_expression_1 = $_POST["condition_expression_1"];
+			$condition_field_2 = $_POST["condition_field_2"];
+			$condition_expression_2 = $_POST["condition_expression_2"];
+			$gateway = $_POST["gateway"];
+			$limit = $_POST["limit"];
+			$accountcode = $_POST["accountcode"];
+			$toll_allow = $_POST["toll_allow"];
+			$pin_numbers_enable = $_POST["pin_numbers_enabled"];
 			if (strlen($pin_numbers_enable) == 0) { $pin_numbers_enable = "false"; }
 		//set the default type
 			$gateway_type = 'gateway';
@@ -104,7 +104,7 @@
 			}
 
 		//set the gateway_2 variable
-			$gateway_2 = check_str($_POST["gateway_2"]);
+			$gateway_2 = $_POST["gateway_2"];
 		//set the type to bridge
 			if (strtolower(substr($gateway_2, 0, 6)) == "bridge") {
 				$gateway_2_type = 'bridge';
@@ -137,7 +137,7 @@
 			}
 
 		//set the gateway_3 variable
-			$gateway_3 = check_str($_POST["gateway_3"]);
+			$gateway_3 = $_POST["gateway_3"];
 		//set the type to bridge
 			if (strtolower(substr($gateway_3, 0, 6)) == "bridge") {
 				$gateway_3_type = 'bridge';
@@ -169,8 +169,8 @@
 				$gateway_3_name = '';
 			}
 		//set additional variables
-			$dialplan_enabled = check_str($_POST["dialplan_enabled"]);
-			$dialplan_description = check_str($_POST["dialplan_description"]);
+			$dialplan_enabled = $_POST["dialplan_enabled"];
+			$dialplan_description = $_POST["dialplan_description"];
 		//set default to enabled
 			if (strlen($dialplan_enabled) == 0) { $dialplan_enabled = "true"; }
 	}
@@ -620,6 +620,20 @@
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 						}
+						
+						if (strlen($prefix_number) > 0) {
+							if ($_SESSION['cdr']['remove_prefix']['boolean'] == 'true') {
+								$y++;
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+								$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'prefix='.$prefix_number;
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
+							}
+						}
 
 						$y++;
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
@@ -684,6 +698,7 @@
 			$database->app_uuid = $app_uuid;
 			$database->save($array);
 			$message = $database->message;
+			unset($array);
 
 		//update the dialplan xml
 			$dialplans = new dialplan;
@@ -703,15 +718,14 @@
 			message::add($text['message-update']);
 			header("Location: ".PROJECT_PATH."/app/dialplans/dialplans.php?app_uuid=8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3");
 			return;
-	} //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+	}
 
 //get the domains
 	$sql = "select * from v_domains ";
 	$sql .= "where domain_enabled = 'true' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$domains = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$database = new database;
+	$domains = $database->select($sql, null, 'all');
+	unset($sql);
 
 //get the gateways
 	$sql = "select * from v_gateways ";
@@ -720,22 +734,22 @@
 		$sql .= "order by domain_uuid ";
 	}
 	else {
-		$sql .= "and domain_uuid = '$domain_uuid' ";
+		$sql .= "and domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
 	}
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$gateways = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$database = new database;
+	$gateways = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //get the bridges
 	if (permission_exists('bridge_view')) {
 		$sql = "select * from v_bridges ";
 		$sql .= "where bridge_enabled = 'true' ";
-		$sql .= "and domain_uuid = '$domain_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$bridges = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		unset ($prep_statement, $sql);
+		$sql .= "and domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$bridges = $database->select($sql, $parameters, 'all');
+		unset($sql, $parameters);
 	}
 
 ?>

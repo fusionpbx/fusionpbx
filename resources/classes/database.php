@@ -35,6 +35,8 @@ include "root.php";
 			public $host;
 			public $port;
 			public $db_name;
+			public $db_secure;
+			public $db_cert_authority;
 			public $username;
 			public $password;
 			public $path;
@@ -107,6 +109,12 @@ include "root.php";
 						if (!isset($this->host) && isset($db_host)) { $this->host = $db_host; }
 						if (!isset($this->port) && isset($db_port)) { $this->port = $db_port; }
 						if (!isset($this->db_name) && isset($db_name)) { $this->db_name = $db_name; }
+						if (!isset($this->db_secure) && isset($db_secure)) {
+							$this->db_secure = $db_secure;
+						}
+						else {
+							$this->db_secure = false;
+						}
 						if (!isset($this->username) && isset($db_username)) { $this->username = $db_username; }
 						if (!isset($this->password) && isset($db_password)) { $this->password = $db_password; }
 						if (!isset($this->path) && isset($db_path)) { $this->path = $db_path; }
@@ -183,7 +191,12 @@ include "root.php";
 					try {
 						if (strlen($this->host) > 0) {
 							if (strlen($this->port) == 0) { $this->port = "5432"; }
-							$this->db = new PDO("pgsql:host=$this->host port=$this->port dbname=$this->db_name user=$this->username password=$this->password");
+							if ($this->db_secure == true) {
+								$this->db = new PDO("pgsql:host=$this->host port=$this->port dbname=$this->db_name user=$this->username password=$this->password sslmode=verify-ca sslrootcert=$this->db_cert_authority");
+							}
+							else {
+								$this->db = new PDO("pgsql:host=$this->host port=$this->port dbname=$this->db_name user=$this->username password=$this->password");
+							}
 						}
 						else {
 							$this->db = new PDO("pgsql:dbname=$this->db_name user=$this->username password=$this->password");
@@ -450,7 +463,7 @@ include "root.php";
 			}
 
 			// Use this function to execute complex queries
-			public function execute($sql, $parameters = null) {
+			public function execute($sql, $parameters = null, $return_type = 'all') {
 
 				//connect to the database if needed
 					if (!$this->db) {
@@ -476,9 +489,18 @@ include "root.php";
 							$message["parameters"] = $parameters;
 						}
 						$this->message = $message;
-						//$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-						//unset($prep_statement);
-						return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+
+						//return the results
+						switch($return_type) {
+						case 'all':
+							return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+						case 'row':
+							return $prep_statement->fetch(PDO::FETCH_ASSOC);
+						case 'column';
+							return $prep_statement->fetchColumn();
+						default:
+							return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+						}
 					}
 					catch(PDOException $e) {
 						$message["message"] = "Bad Request";
@@ -768,13 +790,13 @@ include "root.php";
 						$sql .= "(";
 						$sql .= "database_transaction_uuid, ";
 						$sql .= "domain_uuid, ";
-						if (strlen($user_uuid) > 0) {
+						if (isset($user_uuid) && is_uuid($user_uuid)) {
 							$sql .= "user_uuid, ";
 						}
-						if (strlen($this->app_uuid) > 0) {
+						if (isset($this->app_uuid) && is_uuid($this->app_uuid)) {
 							$sql .= "app_uuid, ";
 						}
-						if (strlen($this->app_name) > 0) {
+						if (isset($this->app_name) && strlen($this->app_name) > 0) {
 							$sql .= "app_name, ";
 						}
 						$sql .= "transaction_code, ";
@@ -789,13 +811,13 @@ include "root.php";
 						$sql .= "(";
 						$sql .= "'".uuid()."', ";
 						$sql .= "'".$this->domain_uuid."', ";
-						if (strlen($user_uuid) > 0) {
+						if (isset($user_uuid) && is_uuid($user_uuid)) {
 							$sql .= ":user_uuid, ";
 						}
-						if (strlen($this->app_uuid) > 0) {
+						if (isset($this->app_uuid) && is_uuid($this->app_uuid)) {
 							$sql .= ":app_uuid, ";
 						}
-						if (strlen($this->app_name) > 0) {
+						if (isset($this->app_name) && strlen($this->app_name) > 0) {
 							$sql .= ":app_name, ";
 						}
 						$sql .= "'".$message["code"]."', ";
@@ -817,13 +839,13 @@ include "root.php";
 						$sql .= ":transaction_result ";
 						$sql .= ")";
 						$statement = $this->db->prepare($sql);
-						if (strlen($user_uuid) > 0) {
+						if (isset($user_uuid) && is_uuid($user_uuid)) {
 							$statement->bindParam(':user_uuid', $user_uuid);
 						}
-						if (strlen($this->app_uuid) > 0) {
+						if (isset($this->app_uuid) && is_uuid($this->app_uuid)) {
 							$statement->bindParam(':app_uuid', $this->app_uuid);
 						}
-						if (strlen($this->app_name) > 0) {
+						if (isset($this->app_name) && strlen($this->app_name) > 0) {
 							$statement->bindParam(':app_name', $this->app_name);
 						}
 						$statement->bindParam(':remote_address', $_SERVER['REMOTE_ADDR']);
@@ -906,7 +928,7 @@ include "root.php";
 
 			} //count
 
-			public function select($sql, $parameters = null) {
+			public function select($sql, $parameters = '', $return_type = 'all') {
 
 				//connect to the database if needed
 					if (!$this->db) {
@@ -932,9 +954,18 @@ include "root.php";
 							$message["parameters"] = $parameters;
 						}
 						$this->message = $message;
-						//$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-						//unset($prep_statement);
-						return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+
+						//return the results
+						switch($return_type) {
+						case 'all':
+							return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+						case 'row':
+							return $prep_statement->fetch(PDO::FETCH_ASSOC);
+						case 'column':
+							return $prep_statement->fetchColumn();
+						default:
+							return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+						}
 					}
 					catch(PDOException $e) {
 						$message["message"] = "Bad Request";
@@ -1161,9 +1192,11 @@ include "root.php";
 
 							//get the parent field names
 								$parent_field_names = array();
-								if (is_array($array)) foreach ($array as $key => $value) {
-									if (!is_array($value)) {
-										$parent_field_names[] = preg_replace('#[^a-zA-Z0-9_\-]#', '', $key);
+								if (is_array($array)) {
+									foreach ($array as $key => $value) {
+										if (!is_array($value)) {
+											$parent_field_names[] = preg_replace('#[^a-zA-Z0-9_\-]#', '', $key);
+										}
 									}
 								}
 
@@ -1214,10 +1247,12 @@ include "root.php";
 											//foreach ($parent_field_names as $field_name) {
 											//		$sql .= check_str($field_name).", ";
 											//}
-											if (is_array($array)) foreach ($array as $array_key => $array_value) {
-												if (!is_array($array_value)) {
-													$array_key = preg_replace('#[^a-zA-Z0-9_\-]#', '', $array_key);
-													$sql .= $array_key.", ";
+											if (is_array($array)) {
+												foreach ($array as $array_key => $array_value) {
+													if (!is_array($array_value)) {
+														$array_key = preg_replace('#[^a-zA-Z0-9_\-]#', '', $array_key);
+														$sql .= $array_key.", ";
+													}
 												}
 											}
 											$sql .= ") ";
@@ -1226,18 +1261,20 @@ include "root.php";
 											if (!$parent_key_exists) {
 												$sql .= "'".$parent_key_value."', ";
 											}
-											if (is_array($array)) foreach ($array as $array_key => $array_value) {
-												if (!is_array($array_value)) {
-													if (strlen($array_value) == 0) {
-														$sql .= "null, ";
-													}
-													elseif ($array_value === "now()") {
-														$sql .= "now(), ";
-													}
-													else {
-														//$sql .= "'".check_str($array_value)."', ";
-														$sql .= ':'.$array_key.", ";
-														$params[$array_key] = $array_value;
+											if (is_array($array)) {
+												foreach ($array as $array_key => $array_value) {
+													if (!is_array($array_value)) {
+														if (strlen($array_value) == 0) {
+															$sql .= "null, ";
+														}
+														elseif ($array_value === "now()") {
+															$sql .= "now(), ";
+														}
+														else {
+															//$sql .= "'".check_str($array_value)."', ";
+															$sql .= ':'.$array_key.", ";
+															$params[$array_key] = $array_value;
+														}
 													}
 												}
 											}
@@ -1378,105 +1415,224 @@ include "root.php";
 								unset($sql, $action);
 
 							//child data
-								if (is_array($array)) foreach ($array as $key => $value) {
+								if (is_array($array)) {
+									foreach ($array as $key => $value) {
 
-									if (is_array($value)) {
-											$table_name = "v_".$key;
-											$table_name = preg_replace('#[^a-zA-Z0-9_\-]#', '', $table_name);
-											foreach ($value as $id => $row) {
-												//prepare the variables
-													$child_name = $this->singular($key);
-													$child_name = preg_replace('#[^a-zA-Z0-9_\-]#', '', $child_name);
-													$child_key_name = $child_name."_uuid";
+										if (is_array($value)) {
+												$table_name = "v_".$key;
+												$table_name = preg_replace('#[^a-zA-Z0-9_\-]#', '', $table_name);
+												foreach ($value as $id => $row) {
+													//prepare the variables
+														$child_name = $this->singular($key);
+														$child_name = preg_replace('#[^a-zA-Z0-9_\-]#', '', $child_name);
+														$child_key_name = $child_name."_uuid";
 
-												//determine if the parent key exists in the child array
-													$parent_key_exists = false;
-													if (!isset($array[$parent_key_name])) {
-														$parent_key_exists = true;
-													}
+													//determine if the parent key exists in the child array
+														$parent_key_exists = false;
+														if (!isset($array[$parent_key_name])) {
+															$parent_key_exists = true;
+														}
 
-												//determine if the uuid exists
-													$uuid_exists = false;
-													if (is_array($row)) foreach ($row as $k => $v) {
-														if ($child_key_name == $k) {
-															if (strlen($v) > 0) {
-																$child_key_value = $v;
-																$uuid_exists = true;
-																break;
+													//determine if the uuid exists
+														$uuid_exists = false;
+														if (is_array($row)) foreach ($row as $k => $v) {
+															if ($child_key_name == $k) {
+																if (strlen($v) > 0) {
+																	$child_key_value = $v;
+																	$uuid_exists = true;
+																	break;
+																}
+															}
+															else {
+																$uuid_exists = false;
 															}
 														}
+
+													//allow characters found in the uuid only.
+														$child_key_value = preg_replace('#[^a-zA-Z0-9_\-]#', '', $child_key_value);
+
+													//get the child field names
+														$child_field_names = array();
+														if (is_array($row)) {
+															foreach ($row as $k => $v) {
+																if (!is_array($v)) {
+																	$child_field_names[] = preg_replace('#[^a-zA-Z0-9_\-]#', '', $k);
+																}
+															}
+														}
+
+													//determine sql update or delete and get the original data
+														if ($uuid_exists) {
+															$sql = "SELECT ". implode(", ", $child_field_names)." FROM ".$table_name." ";
+															$sql .= "WHERE ".$child_key_name." = '".$child_key_value."' ";
+															$prep_statement = $this->db->prepare($sql);
+															if ($prep_statement) {
+																//get the data
+																	$prep_statement->execute();
+																	$child_array = $prep_statement->fetch(PDO::FETCH_ASSOC);
+																//set the action
+																	if (is_array($child_array)) {
+																		$action = "update";
+																	}
+																	else {
+																		$action = "add";
+																	}
+																//add to the parent array
+																	if (is_array($child_array)) {
+																		$old_array[$schema_name][$schema_id][$key][] = $child_array;
+																	}
+															}
+															unset($prep_statement);
+														}
 														else {
-															$uuid_exists = false;
+															$action = "add";
 														}
-													}
 
-												//allow characters found in the uuid only.
-													$child_key_value = preg_replace('#[^a-zA-Z0-9_\-]#', '', $child_key_value);
-
-												//get the child field names
-													$child_field_names = array();
-													if (is_array($row)) foreach ($row as $k => $v) {
-														if (!is_array($v)) {
-															$child_field_names[] = preg_replace('#[^a-zA-Z0-9_\-]#', '', $k);
-														}
-													}
-
-												//determine sql update or delete and get the original data
-													if ($uuid_exists) {
-														$sql = "SELECT ". implode(", ", $child_field_names)." FROM ".$table_name." ";
-														$sql .= "WHERE ".$child_key_name." = '".$child_key_value."' ";
-														$prep_statement = $this->db->prepare($sql);
-														if ($prep_statement) {
-															//get the data
-																$prep_statement->execute();
-																$child_array = $prep_statement->fetch(PDO::FETCH_ASSOC);
-															//set the action
-																if (is_array($child_array)) {
-																	$action = "update";
+													//update the child data
+														if ($action == "update") {
+															if (permission_exists($child_name.'_edit')) {
+																$sql = "UPDATE ".$table_name." SET ";
+																if (is_array($row)) {
+																	foreach ($row as $k => $v) {
+																		if (!is_array($v) && ($k != $parent_key_name || $k != $child_key_name)) {
+																			$k = preg_replace('#[^a-zA-Z0-9_\-]#', '', $k);
+																			if (strlen($v) == 0) {
+																				$sql .= $k." = null, ";
+																			}
+																			elseif ($v === "now()") {
+																				$sql .= $k." = now(), ";
+																			}
+																			else {
+																				//$sql .= "$k = '".check_str($v)."', ";
+																				$sql .= $k." = :".$k.", ";
+																				$params[$k] = $v;
+																			}
+																		}
+																	}
 																}
-																else {
-																	$action = "add";
-																}
-															//add to the parent array
-																if (is_array($child_array)) {
-																	$old_array[$schema_name][$schema_id][$key][] = $child_array;
-																}
-														}
-														unset($prep_statement);
-													}
-													else {
-														$action = "add";
-													}
+																$sql .= "WHERE ".$parent_key_name." = '".$parent_key_value."' ";
+																$sql .= "AND ".$child_key_name." = '".$child_key_value."' ";
+																$sql = str_replace(", WHERE", " WHERE", $sql);
+																$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-												//update the data
-													if ($action == "update") {
-														if (permission_exists($child_name.'_edit')) {
-															$sql = "UPDATE ".$table_name." SET ";
+																//$prep_statement->bindParam(':domain_uuid', $this->domain_uuid );
+
+																try {
+																	//$this->db->query(check_sql($sql));
+																	$prep_statement = $this->db->prepare($sql);
+																	$prep_statement->execute($params);
+																	unset($prep_statement);
+																	$message["details"][$m]["name"] = $key;
+																	$message["details"][$m]["message"] = "OK";
+																	$message["details"][$m]["code"] = "200";
+																	$message["details"][$m]["uuid"] = $child_key_value;
+																	if ($this->debug["sql"]) {
+																		$message["details"][$m]["sql"] = $sql;
+																		if (is_array($params)) {
+																			$message["details"][$m]["params"] = $params;
+																			unset($params);
+																		}
+																	}
+																	$this->message = $message;
+																	$m++;
+																}
+																catch(PDOException $e) {
+																	if ($message["code"] = "200") {
+																		$message["message"] = "Bad Request";
+																		$message["code"] = "400";
+																	}
+																	$message["details"][$m]["name"] = $key;
+																	$message["details"][$m]["message"] = $e->getMessage();
+																	$message["details"][$m]["code"] = "400";
+																	if ($this->debug["sql"]) {
+																		$message["details"][$m]["sql"] = $sql;
+																		if (is_array($params)) {
+																			$message["details"][$m]["params"] = $params;
+																			unset($params);
+																		}
+																	}
+																	$this->message = $message;
+																	$m++;
+																}
+															}
+															else {
+																$message["name"] = $child_name;
+																$message["message"] = "Forbidden, does not have '${child_name}_edit'";
+																$message["code"] = "403";
+																$message["line"] = __line__;
+																$this->message = $message;
+																$m++;
+															}
+														} //action update
+
+												//add the child data
+													if ($action == "add") {
+														if (permission_exists($child_name.'_add')) {
+															//determine if child or parent key exists
+															$child_key_name = $child_name.'_uuid';
+															$parent_key_exists = false;
+															$child_key_exists = false;
 															if (is_array($row)) {
 																foreach ($row as $k => $v) {
-																	if (!is_array($v) && ($k != $parent_key_name || $k != $child_key_name)) {
+																	if ($k == $parent_key_name) {
+																		$parent_key_exists = true; 
+																	}
+																	if ($k == $child_key_name) {
+																		$child_key_exists = true;
+																		$child_key_value = $v;
+																	}
+																}
+															}
+															if (!$child_key_value) {
+																$child_key_value = uuid();
+															}
+															//build the insert
+															$sql = "INSERT INTO ".$table_name." ";
+															$sql .= "(";
+															if (!$parent_key_exists) {
+																$sql .= $this->singular($parent_key_name).", ";
+															}
+															if (!$child_key_exists) {
+																$sql .= $this->singular($child_key_name).", ";
+															}
+															if (is_array($row)) {
+																foreach ($row as $k => $v) {
+																	if (!is_array($v)) {
 																		$k = preg_replace('#[^a-zA-Z0-9_\-]#', '', $k);
+																		$sql .= $k.", ";
+																	}
+																}
+															}
+															$sql .= ") ";
+															$sql .= "VALUES ";
+															$sql .= "(";
+															if (!$parent_key_exists) {
+																$sql .= "'".$parent_key_value."', ";
+															}
+															if (!$child_key_exists) {
+																$sql .= "'".$child_key_value."', ";
+															}
+															if (is_array($row)) {
+																foreach ($row as $k => $v) {
+																	if (!is_array($v)) {
 																		if (strlen($v) == 0) {
-																			$sql .= $k." = null, ";
+																			$sql .= "null, ";
 																		}
 																		elseif ($v === "now()") {
-																			$sql .= $k." = now(), ";
+																			$sql .= "now(), ";
 																		}
 																		else {
-																			//$sql .= "$k = '".check_str($v)."', ";
-																			$sql .= $k." = :".$k.", ";
+																			$k = preg_replace('#[^a-zA-Z0-9_\-]#', '', $k);
+																			//$sql .= "'".check_str($v)."', ";
+																			$sql .= ':'.$k.", ";
 																			$params[$k] = $v;
 																		}
 																	}
 																}
 															}
-															$sql .= "WHERE ".$parent_key_name." = '".$parent_key_value."' ";
-															$sql .= "AND ".$child_key_name." = '".$child_key_value."' ";
-															$sql = str_replace(", WHERE", " WHERE", $sql);
+															$sql .= ");";
+															$sql = str_replace(", )", ")", $sql);
 															$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-															//$prep_statement->bindParam(':domain_uuid', $this->domain_uuid );
-
 															try {
 																//$this->db->query(check_sql($sql));
 																$prep_statement = $this->db->prepare($sql);
@@ -1517,136 +1673,21 @@ include "root.php";
 														}
 														else {
 															$message["name"] = $child_name;
-															$message["message"] = "Forbidden, does not have '${child_name}_edit'";
+															$message["message"] = "Forbidden, does not have '${child_name}_add'";
 															$message["code"] = "403";
 															$message["line"] = __line__;
 															$this->message = $message;
 															$m++;
 														}
-													} //action update
+													} //action add
 
-											//add the data
-												if ($action == "add") {
-													if (permission_exists($child_name.'_add')) {
-														//determine if child or parent key exists
-														$child_key_name = $child_name.'_uuid';
-														$parent_key_exists = false;
-														$child_key_exists = false;
-														if (is_array($row)) {
-															foreach ($row as $k => $v) {
-																if ($k == $parent_key_name) {
-																	$parent_key_exists = true; 
-																}
-																if ($k == $child_key_name) {
-																	$child_key_exists = true;
-																	$child_key_value = $v;
-																}
-															}
-														}
-														if (!$child_key_value) {
-															$child_key_value = uuid();
-														}
-														//build the insert
-														$sql = "INSERT INTO ".$table_name." ";
-														$sql .= "(";
-														if (!$parent_key_exists) {
-															$sql .= $this->singular($parent_key_name).", ";
-														}
-														if (!$child_key_exists) {
-															$sql .= $this->singular($child_key_name).", ";
-														}
-														if (is_array($row)) {
-															foreach ($row as $k => $v) {
-																if (!is_array($v)) {
-																	$k = preg_replace('#[^a-zA-Z0-9_\-]#', '', $k);
-																	$sql .= $k.", ";
-																}
-															}
-														}
-														$sql .= ") ";
-														$sql .= "VALUES ";
-														$sql .= "(";
-														if (!$parent_key_exists) {
-															$sql .= "'".$parent_key_value."', ";
-														}
-														if (!$child_key_exists) {
-															$sql .= "'".$child_key_value."', ";
-														}
-														if (is_array($row)) {
-															foreach ($row as $k => $v) {
-																if (!is_array($v)) {
-																	if (strlen($v) == 0) {
-																		$sql .= "null, ";
-																	}
-																	elseif ($v === "now()") {
-																		$sql .= "now(), ";
-																	}
-																	else {
-																		$k = preg_replace('#[^a-zA-Z0-9_\-]#', '', $k);
-																		//$sql .= "'".check_str($v)."', ";
-																		$sql .= ':'.$k.", ";
-																		$params[$k] = $v;
-																	}
-																}
-															}
-														}
-														$sql .= ");";
-														$sql = str_replace(", )", ")", $sql);
-														$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-														try {
-															//$this->db->query(check_sql($sql));
-															$prep_statement = $this->db->prepare($sql);
-															$prep_statement->execute($params);
-															unset($prep_statement);
-															$message["details"][$m]["name"] = $key;
-															$message["details"][$m]["message"] = "OK";
-															$message["details"][$m]["code"] = "200";
-															$message["details"][$m]["uuid"] = $child_key_value;
-															if ($this->debug["sql"]) {
-																$message["details"][$m]["sql"] = $sql;
-																if (is_array($params)) {
-																	$message["details"][$m]["params"] = $params;
-																	unset($params);
-																}
-															}
-															$this->message = $message;
-															$m++;
-														}
-														catch(PDOException $e) {
-															if ($message["code"] = "200") {
-																$message["message"] = "Bad Request";
-																$message["code"] = "400";
-															}
-															$message["details"][$m]["name"] = $key;
-															$message["details"][$m]["message"] = $e->getMessage();
-															$message["details"][$m]["code"] = "400";
-															if ($this->debug["sql"]) {
-																$message["details"][$m]["sql"] = $sql;
-																if (is_array($params)) {
-																	$message["details"][$m]["params"] = $params;
-																	unset($params);
-																}
-															}
-															$this->message = $message;
-															$m++;
-														}
-													}
-													else {
-														$message["name"] = $child_name;
-														$message["message"] = "Forbidden, does not have '${child_name}_add'";
-														$message["code"] = "403";
-														$message["line"] = __line__;
-														$this->message = $message;
-														$m++;
-													}
-												} //action add
+												//unset the variables
+													unset($sql, $action, $child_key_name, $child_key_value);
+											} // foreach value
 
-											//unset the variables
-												unset($sql, $action, $child_key_name, $child_key_value);
-										} // foreach value
-
-									} //is array
-								} //foreach array
+										} //is array
+									} //foreach array
+								}
 
 						} // foreach schema_array
 					}  // foreach main array
@@ -1693,13 +1734,13 @@ include "root.php";
 							$sql .= "(";
 							$sql .= "database_transaction_uuid, ";
 							$sql .= "domain_uuid, ";
-							if (strlen($user_uuid) > 0) {
+							if (isset($user_uuid) && is_uuid($user_uuid)) {
 								$sql .= "user_uuid, ";
 							}
-							if (strlen($this->app_uuid) > 0) {
+							if (isset($this->app_uuid) && is_uuid($this->app_uuid)) {
 								$sql .= "app_uuid, ";
 							}
-							if (strlen($this->app_name) > 0) {
+							if (isset($this->app_name) && strlen($this->app_name) > 0) {
 								$sql .= "app_name, ";
 							}
 							$sql .= "transaction_code, ";
@@ -1719,13 +1760,13 @@ include "root.php";
 							else {
 								$sql .= "'".$this->domain_uuid."', ";
 							}
-							if (strlen($user_uuid) > 0) {
+							if (isset($user_uuid) && is_uuid($user_uuid)) {
 								$sql .= ":user_uuid, ";
 							}
-							if (strlen($this->app_uuid) > 0) {
+							if (isset($this->app_uuid) && is_uuid($this->app_uuid)) {
 								$sql .= ":app_uuid, ";
 							}
-							if (strlen($this->app_name) > 0) {
+							if (isset($this->app_name) && strlen($this->app_name) > 0) {
 								$sql .= ":app_name, ";
 							}
 							$sql .= "'".$message["code"]."', ";
@@ -1747,13 +1788,13 @@ include "root.php";
 							$sql .= ":transaction_result ";
 							$sql .= ")";
 							$statement = $this->db->prepare($sql);
-							if (strlen($user_uuid) > 0) {
+							if (isset($user_uuid) && is_uuid($user_uuid)) {
 								$statement->bindParam(':user_uuid', $user_uuid);
 							}
-							if (strlen($this->app_uuid) > 0) {
+							if (isset($this->app_uuid) && is_uuid($this->app_uuid)) {
 								$statement->bindParam(':app_uuid', $this->app_uuid);
 							}
-							if (strlen($this->app_name) > 0) {
+							if (isset($this->app_name) && strlen($this->app_name) > 0) {
 								$statement->bindParam(':app_name', $this->app_name);
 							}
 							$statement->bindParam(':remote_address', $_SERVER['REMOTE_ADDR']);
@@ -1779,13 +1820,22 @@ include "root.php";
 			} //save method
 
 			//define singular function to convert a word in english to singular
-			private function singular($word) {
+			public function singular($word) {
 				//"-es" is used for words that end in "-x", "-s", "-z", "-sh", "-ch" in which case you add
 				if (substr($word, -2) == "es") {
-					if (substr($word, -3, 1) == "x") {
+					if (substr($word, -4) == "sses") { // eg. 'addresses' to 'address'
 						return substr($word,0,-2);
 					}
-					if (substr($word, -3, 1) == "s") {
+					elseif (substr($word, -3) == "ses") { // eg. 'databases' to 'database' (necessary!)
+						return substr($word,0,-1);
+					}
+					elseif (substr($word, -3) == "ies") { // eg. 'countries' to 'country'
+						return substr($word,0,-3)."y";
+					}
+					elseif (substr($word, -3, 1) == "x") {
+						return substr($word,0,-2);
+					}
+					elseif (substr($word, -3, 1) == "s") {
 						return substr($word,0,-2);
 					}
 					elseif (substr($word, -3, 1) == "z") {

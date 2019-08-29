@@ -40,109 +40,61 @@ if (!$included) {
 	$language = new text;
 	$text = $language->get();
 
-	if (count($_GET)>0) {
-		$contact_uuid = check_str($_GET["id"]);
-	}
+	$contact_uuid = $_GET["id"];
 }
 
 if (is_uuid($contact_uuid)) {
-	//delete addresses
-		$sql = "delete from v_contact_addresses ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and contact_uuid = :contact_uuid ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($prep_statement, $sql);
 
-	//delete phones
-		$sql = "delete from v_contact_phones ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and contact_uuid = '".$contact_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($prep_statement, $sql);
+	//specify tables
+		$tables[] = 'contact_addresses';
+		$tables[] = 'contact_attachments';
+		$tables[] = 'contact_emails';
+		$tables[] = 'contact_groups';
+		$tables[] = 'contact_notes';
+		$tables[] = 'contact_phones';
+		$tables[] = 'contact_relations';
+		$tables[] = 'contact_settings';
+		$tables[] = 'contact_times';
+		$tables[] = 'contact_urls';
+		$tables[] = 'contact_users';
+		$tables[] = 'contacts';
 
-	//delete emails
-		$sql = "delete from v_contact_emails ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and contact_uuid = '".$contact_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($prep_statement, $sql);
+	//create array from tables
+		foreach ($tables as $table) {
+			$array[$table][0]['contact_uuid'] = $contact_uuid;
+			$array[$table][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+		}
 
-	//delete urls
-		$sql = "delete from v_contact_urls ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and contact_uuid = '".$contact_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($prep_statement, $sql);
+	//include reciprocal relationships
+		$array['contact_relations'][1]['relation_contact_uuid'] = $contact_uuid;
+		$array['contact_relations'][1]['domain_uuid'] = $_SESSION['domain_uuid'];
 
-	//delete notes
-		$sql = "delete from v_contact_notes ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and contact_uuid = '".$contact_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($prep_statement, $sql);
+	//grant temp permissions
+		$p = new permissions;
+		$database = new database;
+		foreach ($tables as $table) {
+			$p->add($database->singular($table).'_delete', 'temp');
+		}
 
-	//delete relations
-		$sql = "delete from v_contact_relations ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and ";
-		$sql .= "( ";
-		$sql .= "	contact_uuid = '".$contact_uuid."' ";
-		$sql .= "	or relation_contact_uuid = '".$contact_uuid."' ";
-		$sql .= ") ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($prep_statement, $sql);
+	//execute
+		$database = new database;
+		$database->app_name = 'contacts';
+		$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
+		$database->delete($array);
+		unset($array);
 
-	//delete settings
-		$sql = "delete from v_contact_settings ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and contact_uuid = '".$contact_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($prep_statement, $sql);
+	//revoke temp permissions
+		foreach ($tables as $table) {
+			$p->delete($database->singular($table).'_delete', 'temp');
+		}
 
-	//delete attachments
-		$sql = "delete from v_contact_attachments ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and contact_uuid = '".$contact_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($prep_statement, $sql);
-
-	//delete contact users
-		$sql = "delete from v_contact_users ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and contact_uuid = '".$contact_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($prep_statement, $sql);
-
-	//delete contact groups
-		$sql = "delete from v_contact_groups ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and contact_uuid = '".$contact_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($prep_statement, $sql);
-
-	//delete a contact
-		$sql = "delete from v_contacts ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and contact_uuid = '".$contact_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($prep_statement, $sql);
+	//set message
+		message::add($text['message-delete']);
 }
 
 if (!$included) {
-	message::add($text['message-delete']);
 	header("Location: contacts.php");
-	return;
+	exit;
 }
 
 ?>

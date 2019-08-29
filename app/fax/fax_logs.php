@@ -47,9 +47,7 @@
 	$order = $_GET["order"];
 
 //get the fax_uuid
-	if (count($_GET) > 0) {
-		$fax_uuid = check_str($_GET["id"]);
-	}
+	$fax_uuid = $_GET["id"];
 
 //additional includes
 	require_once "resources/header.php";
@@ -73,20 +71,13 @@
 	echo "</table>\n";
 
 //prepare to page the results
-	$sql = "select count(*) as num_rows from v_fax_logs ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and fax_uuid = '$fax_uuid' ";
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-	$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-	}
+	$sql = "select count(*) from v_fax_logs ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and fax_uuid = :fax_uuid ";
+	$parameters['domain_uuid'] = $domain_uuid;
+	$parameters['fax_uuid'] = $fax_uuid;
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -97,16 +88,12 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select * from v_fax_logs ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and fax_uuid = '$fax_uuid' ";
-	$sql .= (strlen($order_by) > 0) ? "order by ".$order_by." ".$order." " : "order by fax_epoch desc ";
-	$sql .= "limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$fax_logs = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
-	unset ($prep_statement, $sql);
+	$sql = str_replace('count(*)', '*', $sql);
+	$sql .= order_by($order_by, $order, 'fax_epoch', 'desc');
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$fax_logs = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters, $num_rows);
 
 //set the row style
 	$c = 0;
@@ -139,7 +126,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (is_array($fax_logs)) {
+	if (is_array($fax_logs) && @sizeof($fax_logs) != 0) {
 		foreach($fax_logs as $row) {
 			//$fax_date = date("j M Y", $row['fax_date'].' 00:00:00');
 			$fax_date = ($_SESSION['domain']['time_format']['text'] == '12h') ? date("j M Y g:i:sa", $row['fax_epoch']) : date("j M Y H:i:s", $row['fax_epoch']);
@@ -172,9 +159,9 @@
 			echo 	"</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $fax_logs);
-	} //end if results
+		}
+	}
+	unset($fax_logs, $row);
 
 	echo "</table>";
 	echo "<br /><br />";

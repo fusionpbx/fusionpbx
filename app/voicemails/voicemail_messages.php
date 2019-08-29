@@ -29,7 +29,7 @@
 	require_once "resources/require.php";
 
 //check permissions
-	if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]) == "email")) {
+	if (!($_REQUEST["action"] == "download" && $_REQUEST["src"] == "email")) {
 		require_once "resources/check_auth.php";
 		if (permission_exists('voicemail_message_view')) {
 			//access granted
@@ -45,19 +45,19 @@
 	$text = $language->get();
 
 //set the voicemail_uuid
-	if (strlen($_REQUEST["id"]) > 0) {
-		$voicemail_uuid = check_str($_REQUEST["id"]);
+	if (is_uuid($_REQUEST["id"])) {
+		$voicemail_uuid = $_REQUEST["id"];
 	}
 
 //required class
 	require_once "app/voicemails/resources/classes/voicemail.php";
 
 //download the message
-	if (check_str($_REQUEST["action"]) == "download") {
-		$voicemail_message_uuid = check_str($_REQUEST["uuid"]);
-		$voicemail_id = check_str($_REQUEST["id"]);
-		$voicemail_uuid = check_str($_REQUEST["voicemail_uuid"]);
-		if ($voicemail_message_uuid != '' && $voicemail_id != '' && $voicemail_uuid != '') {
+	if ($_REQUEST["action"] == "download") {
+		$voicemail_message_uuid = $_REQUEST["uuid"];
+		$voicemail_id = $_REQUEST["id"];
+		$voicemail_uuid = $_REQUEST["voicemail_uuid"];
+		if (is_uuid($voicemail_message_uuid) && $voicemail_id != '' && is_uuid($voicemail_uuid)) {
 			$voicemail = new voicemail;
 			$voicemail->db = $db;
 			$voicemail->domain_uuid = $_SESSION['domain_uuid'];
@@ -71,8 +71,8 @@
 	}
 
 //get the html values and set them as variables
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
 //get the voicemail
 	$vm = new voicemail;
@@ -100,7 +100,7 @@
 	$row_style["1"] = "row_style1";
 
 //loop through the voicemail messages
-	if (is_array($voicemails)) {
+	if (is_array($voicemails) && @sizeof($voicemails) != 0) {
 
 		echo "<form name='frm' id='frm' method='post' action=''>\n";
 
@@ -108,7 +108,7 @@
 		echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 		$previous_voicemail_id = '';
-		foreach($voicemails as $field) {
+		foreach ($voicemails as $field) {
 			if ($previous_voicemail_id != $field['voicemail_id']) {
 				if ($previous_voicemail_id != '') {
 					echo "<tr><td colspan='20'><br /><br /><br /></td></tr>\n";
@@ -155,7 +155,7 @@
 			}
 
 			if (count($field['messages']) > 0) {
-				foreach($field['messages'] as &$row) {
+				foreach ($field['messages'] as &$row) {
 					$style = ($row['message_status'] == '' && $_REQUEST["uuid"] != $row['voicemail_message_uuid']) ? "font-weight: bold;" : null;
 
 					//playback progress bar
@@ -204,11 +204,10 @@
 			}
 			else {
 				echo "<tr><td colspan='20'>".$text['message-messages_not_found']."<br /></td></tr>";
-			}//end foreach
+			}
 			unset($row);
 
 			$previous_voicemail_id = $field['voicemail_id'];
-			unset($sql, $result, $result_count);
 		}
 		echo "</table>";
 		echo "<br /><br />";
@@ -222,8 +221,8 @@
 	echo "<br />";
 
 //autoplay message
-	if (check_str($_REQUEST["action"]) == "autoplay" && check_str($_REQUEST["uuid"]) != '') {
-		echo "<script>recording_play('".check_str($_REQUEST["uuid"])."');</script>";
+	if ($_REQUEST["action"] == "autoplay" && is_uuid($_REQUEST["uuid"])) {
+		echo "<script>recording_play('".$_REQUEST["uuid"]."');</script>";
 	}
 
 //check or uncheck all voicemail checkboxes
@@ -247,7 +246,7 @@
 <script language="JavaScript" type="text/javascript">
 	$(document).ready(function() {
 		$('.tr_hover tr').each(function(i,e) {
-		  $(e).children('td:not(.list_control_icon,.list_control_icons,.tr_checkbox)').click(function() {
+		  $(e).children('td:not(.list_control_icon,.list_control_icons,.tr_checkbox)').on('click',function() {
 			 $(this).closest('tr').children('td').css('font-weight','normal');
 		  });
 		});

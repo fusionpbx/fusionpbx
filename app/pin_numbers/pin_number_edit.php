@@ -43,9 +43,9 @@
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$pin_number_uuid = check_str($_REQUEST["id"]);
+		$pin_number_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
@@ -53,17 +53,17 @@
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
-		$pin_number = check_str($_POST["pin_number"]);
-		$accountcode = check_str($_POST["accountcode"]);
-		$enabled = check_str($_POST["enabled"]);
-		$description = check_str($_POST["description"]);
+		$pin_number = $_POST["pin_number"];
+		$accountcode = $_POST["accountcode"];
+		$enabled = $_POST["enabled"];
+		$description = $_POST["description"];
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
-		$pin_number_uuid = check_str($_POST["pin_number_uuid"]);
+		$pin_number_uuid = $_POST["pin_number_uuid"];
 	}
 
 	//check for all required data
@@ -87,68 +87,58 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
 			if ($action == "add" && permission_exists('pin_number_add')) {
-				$sql = "insert into v_pin_numbers ";
-				$sql .= "(";
-				$sql .= "domain_uuid, ";
-				$sql .= "pin_number_uuid, ";
-				$sql .= "pin_number, ";
-				$sql .= "accountcode, ";
-				$sql .= "enabled, ";
-				$sql .= "description ";
-				$sql .= ")";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'$domain_uuid', ";
-				$sql .= "'".uuid()."', ";
-				$sql .= "'$pin_number', ";
-				$sql .= "'$accountcode', ";
-				$sql .= "'$enabled', ";
-				$sql .= "'$description' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
-
-				message::add($text['message-add']);
-				header("Location: pin_numbers.php");
-				return;
-
-			} //if ($action == "add")
+				//begin array
+					$pin_number_uuid = uuid();
+					$array['pin_numbers'][0]['pin_number_uuid'] = $pin_number_uuid;
+				//set message
+					message::add($text['message-add']);
+			}
 
 			if ($action == "update" && permission_exists('pin_number_edit')) {
-				$sql = "update v_pin_numbers set ";
-				$sql .= "pin_number = '$pin_number', ";
-				$sql .= "accountcode = '$accountcode', ";
-				$sql .= "enabled = '$enabled', ";
-				$sql .= "description = '$description' ";
-				$sql .= "where pin_number_uuid = '$pin_number_uuid'";
-				$sql .= "and domain_uuid = '$domain_uuid' ";
-				$db->exec(check_sql($sql));
-				unset($sql);
+				//begin array
+					$array['pin_numbers'][0]['pin_number_uuid'] = $pin_number_uuid;
+				//set message
+					message::add($text['message-update']);
+			}
 
-				message::add($text['message-update']);
-				header("Location: pin_numbers.php");
-				return;
+			if (is_array($array) && @sizeof($array) != 0) {
+				//add common array items
+					$array['pin_numbers'][0]['domain_uuid'] = $domain_uuid;
+					$array['pin_numbers'][0]['pin_number'] = $pin_number;
+					$array['pin_numbers'][0]['accountcode'] = $accountcode;
+					$array['pin_numbers'][0]['enabled'] = $enabled;
+					$array['pin_numbers'][0]['description'] = $description;
+				//save data
+					$database = new database;
+					$database->app_name = 'pin_numbers';
+					$database->app_uuid = '4b88ccfb-cb98-40e1-a5e5-33389e14a388';
+					$database->save($array);
+					unset($array);
+				//redirect
+					header("Location: pin_numbers.php");
+					exit;
+			}
+		}
 
-			} //if ($action == "update")
-		} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+}
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-		$pin_number_uuid = check_str($_GET["id"]);
+		$pin_number_uuid = $_GET["id"];
 		$sql = "select * from v_pin_numbers ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and pin_number_uuid = '$pin_number_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and pin_number_uuid = :pin_number_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['pin_number_uuid'] = $pin_number_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$pin_number = $row["pin_number"];
 			$accountcode = $row["accountcode"];
 			$enabled = $row["enabled"];
 			$description = $row["description"];
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //show the header
@@ -193,7 +183,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='enabled'>\n";
-	echo "	<option value=''></option>\n";
 	if ($enabled == "true") {
 		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}

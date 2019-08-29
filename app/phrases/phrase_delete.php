@@ -48,32 +48,38 @@
 //delete the data
 	if (is_uuid($phrase_uuid)) {
 		//delete phrase details
-			$sql = "delete from v_phrase_details ";
-			$sql .= "where phrase_uuid = '".$phrase_uuid."' ";
-			$sql .= "and domain_uuid = '".$domain_uuid."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($sql);
+			$array['phrase_details'][0]['phrase_uuid'] = $phrase_uuid;
+			$array['phrase_details'][0]['domain_uuid'] = $domain_uuid;
 
 		//delete phrase
-			$sql = "delete from v_phrases ";
-			$sql .= "where phrase_uuid = '".$phrase_uuid."' ";
-			$sql .= "and domain_uuid = '".$domain_uuid."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			unset ($prep_statement);
+			$array['phrases'][0]['phrase_uuid'] = $phrase_uuid;
+			$array['phrases'][0]['domain_uuid'] = $domain_uuid;
+
+		//execute
+			$p = new permissions;
+			$p->add('phrase_detail_delete', 'temp');
+
+			$database = new database;
+			$database->app_name = 'phrases';
+			$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
+			$database->delete($array);
+			unset($array);
+
+			$p->delete('phrase_detail_delete', 'temp');
+
+		//save the xml
+			save_phrases_xml();
+
+		//clear the cache
+			$cache = new cache;
+			$cache->delete("languages:".$phrase_language);
+
+		//set message
+			message::add($text['message-delete']);
 	}
 
-//save the xml
-	save_phrases_xml();
-
-//clear the cache
-	$cache = new cache;
-	$cache->delete("languages:".$phrase_language);
-
 //redirect the user
-	message::add($text['message-delete']);
 	header("Location: phrases.php");
+	exit;
 
 ?>

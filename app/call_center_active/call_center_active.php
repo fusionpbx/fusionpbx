@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -91,7 +91,7 @@
 	}
 
 	var requestTime = function() {
-		var url = 'call_center_active_inc.php?queue_name=<?php echo $queue_name; ?>&name=<?php echo urlencode($name); ?>';
+		var url = 'call_center_active_inc.php?queue_name=<?php echo escape($queue_name); ?>&name=<?php echo urlencode(escape($name)); ?>';
 		new loadXmlHttp(url, 'ajax_response');
 		<?php
 		if (strlen($_SESSION["ajax_refresh_rate"]) == 0) { $_SESSION["ajax_refresh_rate"] = "1777"; }
@@ -106,14 +106,14 @@
 		window.attachEvent('onload', requestTime);
 	}
 
-	function send_cmd(url) {
+	function send_command(url) {
 		if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
 			xmlhttp=new XMLHttpRequest();
 		}
 		else {// code for IE6, IE5
 			xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
 		}
-		xmlhttp.open("GET",url,false);
+		xmlhttp.open("GET", url, false);
 		xmlhttp.send(null);
 		//document.getElementById('cmd_response').innerHTML=xmlhttp.responseText;
 	}

@@ -43,35 +43,34 @@
 	$text = $language->get();
 
 //get email
-	$email_log_uuid = check_str($_REQUEST["id"]);
-
-	$msg_found = false;
+	$email_log_uuid = $_REQUEST["id"];
 
 	if (is_uuid($email_log_uuid)) {
 		$sql = "select * from v_email_logs ";
-		$sql .= "where email_log_uuid = '".$email_log_uuid."' ";
-		$sql .= "and domain_uuid = '".$domain_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$email_logs = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		unset ($prep_statement, $sql);
-
-		if (is_array($email_logs)) {
-			foreach($email_logs as $row) {
-				$sent = $row['sent_date'];
-				$type = $row['type'];
-				$status = $row['status'];
-				$email = $row['email'];
-				$msg_found = true;
-			}
+		$sql .= "where email_log_uuid = :email_log_uuid ";
+		$sql .= "and domain_uuid = :domain_uuid ";
+		$parameters['email_log_uuid'] = $email_log_uuid;
+		$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
+			$sent = $row['sent_date'];
+			$type = $row['type'];
+			$status = $row['status'];
+			$email = $row['email'];
 		}
+		else {
+			message::add($text['message-invalid_email']);
+			header("Location: email_logs.php");
+			exit;
+		}
+		unset($sql, $parameters, $row);
 	}
-
-	if (!$msg_found) {
-		message::add($text['message-invalid_email']);
+	else {
 		header("Location: email_logs.php");
 		exit;
 	}
+
 
 //includes
 	require('resources/pop3/mime_parser.php');

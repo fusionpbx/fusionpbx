@@ -33,24 +33,36 @@ if ($domains_processed == 1) {
 		$sql .= "from v_call_center_tiers as t, v_domains as d ";
 		$sql .= "where t.domain_uuid = d.domain_uuid ";
 		$sql .= "and (t.call_center_queue_uuid is null or t.call_center_agent_uuid is null) ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$tiers = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($tiers as &$row) {
-			if ($row['call_center_queue_uuid'] == null && $row['queue_uuid'] != null) {
-				$sql = "update v_call_center_tiers set call_center_queue_uuid = '".$row['queue_uuid']."' ";
-				$sql .= "where call_center_tier_uuid = '".$row['call_center_tier_uuid']."' ";
-				$db->exec(check_sql($sql));
-				unset($sql);
+		$database = new database;
+		$tiers = $database->select($sql, null, 'all');
+		if (is_array($tiers) && @sizeof($tiers) != 0) {
+			foreach ($tiers as $index => &$row) {
+				if ($row['call_center_queue_uuid'] == null && $row['queue_uuid'] != null) {
+					$array['call_center_tiers'][$index]['call_center_queue_uuid'] = $row['queue_uuid'];
+				}
+				if ($row['call_center_agent_uuid'] == null && $row['agent_uuid'] != null) {
+					$array['call_center_tiers'][$index]['call_center_agent_uuid'] = $row['agent_uuid'];
+				}
+				if (is_array($array['call_center_tiers'][$index]) && @sizeof($array['call_center_tiers'][$index]) != 0) {
+					$array['call_center_tiers'][$index]['call_center_tier_uuid'] = $row['call_center_tier_uuid'];
+				}
 			}
 
-			if ($row['call_center_agent_uuid'] == null && $row['agent_uuid'] != null) {
-				$sql = "update v_call_center_tiers set call_center_agent_uuid = '".$row['agent_uuid']."' ";
-				$sql .= "where call_center_tier_uuid = '".$row['call_center_tier_uuid']."' ";
-				$db->exec(check_sql($sql));
-				unset($sql);
+			if (is_array($array) && @sizeof($array) != 0) {
+				$p = new permissions;
+				$p->add('call_center_tier_edit', 'temp');
+
+				$database = new database;
+				$database->app_name = 'call_centers';
+				$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
+				$database->save($array);
+				$response = $database->message;
+				unset($array);
+
+				$p->delete('call_center_tier_edit', 'temp');
 			}
 		}
+		unset($sql);
 
 }
 

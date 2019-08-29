@@ -214,13 +214,14 @@
 		echo 			"<input type='checkbox' name='do[menu]' id='do_menu' value='1' onchange=\"$('#sel_menu').fadeToggle('fast');\">";
 		echo 			"<select name='sel_menu' id='sel_menu' class='formfld' style='display: none; vertical-align: middle; margin-left: 5px;'>";
 		$sql = "select * from v_menus ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
-			echo "<option value='".$row["menu_uuid"]."|".$row["menu_language"]."'>".$row["menu_name"]."</option>";
+		$database = new database;
+		$result = $database->select($sql, null, 'all');
+		if (is_array($result) && sizeof($result) != 0) {
+			foreach ($result as &$row) {
+				echo "<option value='".$row["menu_uuid"]."|".$row["menu_language"]."'>".$row["menu_name"]."</option>";
+			}
 		}
-		unset ($sql, $result, $prep_statement);
+		unset ($sql, $result);
 		echo 			"</select>";
 		echo 			" &nbsp;".$text['description-upgrade_menu'];
 		echo "	</td>\n";

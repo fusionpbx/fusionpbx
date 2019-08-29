@@ -39,26 +39,19 @@ else {
 	$text = $language->get();
 
 //get the HTTP values and set as variables
-	$show = trim($_REQUEST["show"]);
-	if ($show != "all") { $show = ''; }
-
-//
-	$fax_uuid = false;
-	if(isset($_REQUEST['id'])) {
-		$fax_uuid = check_str($_REQUEST["id"]);
-	}
+	$show = $_REQUEST["show"];
+	$fax_uuid = $_REQUEST["id"];
 
 //load gateways into a session variable
 	$sql = "select gateway_uuid, domain_uuid, gateway from v_gateways where enabled = 'true'";
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$database = new database;
+	$result = $database->select($sql, null, 'all');
+	if (is_array($result) && @sizeof($result) != 0) {
 		foreach ($result as $row) {
 			$_SESSION['gateways'][$row['gateway_uuid']] = $row['gateway'];
 		}
 	}
-	unset($sql, $prep_statement, $result, $row);
+	unset($sql, $result, $row);
 
 //show the header
 	$document['title'] = $text['title'];
@@ -75,8 +68,8 @@ else {
 		if ($show == 'all') {
 			echo "source_url = source_url + '&show=all';";
 		}
-		if ($fax_uuid) {
-			echo "source_url = source_url + '&id=" . $fax_uuid . "';";
+		if (is_uuid($fax_uuid)) {
+			echo "source_url = source_url + '&id=".$fax_uuid."';";
 		}
 		if (isset($_REQUEST["debug"])) {
 			echo "source_url = source_url + '&debug';";

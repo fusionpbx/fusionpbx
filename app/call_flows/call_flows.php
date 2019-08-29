@@ -46,29 +46,30 @@
 	$document['title'] = $text['title-call_flows'];
 
 //get variables used to control the order
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
 //add the search term
-	$search = strtolower(check_str($_GET["search"]));
+	$search = strtolower($_GET["search"]);
 	if (strlen($search) > 0) {
 		$sql_search = "and (";
-		$sql_search .= "lower(call_flow_name) like '%".$search."%' ";
-		$sql_search .= "or lower(call_flow_extension) like '%".$search."%' ";
-		$sql_search .= "or lower(call_flow_feature_code) like '%".$search."%' ";
-		$sql_search .= "or lower(call_flow_context) like '%".$search."%' ";
-		//$sql_search .= "or lower(call_flow_status) like '%".$search."%' ";
-		$sql_search .= "or lower(call_flow_pin_number) like '%".$search."%' ";
-		$sql_search .= "or lower(call_flow_label) like '%".$search."%' ";
-		//$sql_search .= "or lower(call_flow_sound) like '%".$search."%' ";
-		//$sql_search .= "or lower(call_flow_app) like '%".$search."%' ";
-		//$sql_search .= "or lower(call_flow_data) like '%".$search."%' ";
-		$sql_search .= "or lower(call_flow_alternate_label) like '%".$search."%' ";
-		//$sql_search .= "or lower(call_flow_alternate_sound) like '%".$search."%' ";
-		//$sql_search .= "or lower(call_flow_alternate_app) like '%".$search."%' ";
-		//$sql_search .= "or lower(call_flow_alternate_data) like '%".$search."%' ";
-		$sql_search .= "or lower(call_flow_description) like '%".$search."%' ";
+		$sql_search .= "lower(call_flow_name) like :search ";
+		$sql_search .= "or lower(call_flow_extension) like :search ";
+		$sql_search .= "or lower(call_flow_feature_code) like :search ";
+		$sql_search .= "or lower(call_flow_context) like :search ";
+		//$sql_search .= "or lower(call_flow_status) like :search ";
+		$sql_search .= "or lower(call_flow_pin_number) like :search ";
+		$sql_search .= "or lower(call_flow_label) like :search ";
+		//$sql_search .= "or lower(call_flow_sound) like :search ";
+		//$sql_search .= "or lower(call_flow_app) like :search ";
+		//$sql_search .= "or lower(call_flow_data) like :search ";
+		$sql_search .= "or lower(call_flow_alternate_label) like :search ";
+		//$sql_search .= "or lower(call_flow_alternate_sound) like :search ";
+		//$sql_search .= "or lower(call_flow_alternate_app) like :search ";
+		//$sql_search .= "or lower(call_flow_alternate_data) like :search ";
+		$sql_search .= "or lower(call_flow_description) like :search ";
 		$sql_search .= ") ";
+		$parameters['search'] = '%'.$search.'%';
 	}
 
 //additional includes
@@ -76,21 +77,13 @@
 	require_once "resources/paging.php";
 
 //prepare to page the results
-	$sql = "select count(call_flow_uuid) as num_rows from v_call_flows ";
-	$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
+	$sql = "select count(call_flow_uuid) from v_call_flows ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= $sql_search;
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-	}
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($sql);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -102,14 +95,13 @@
 
 //get the list
 	$sql = "select * from v_call_flows ";
-	$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= $sql_search;
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$sql .= "limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$call_flows = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$sql .= order_by($order_by, $order);
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$call_flows = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //alternate the row style
 	$c = 0;
@@ -206,7 +198,7 @@
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $call_flows, $row_count);
+		unset($call_flows);
 	} //end if results
 
 	echo "<tr>\n";

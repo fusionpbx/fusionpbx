@@ -48,18 +48,18 @@
 	}
 
 //set the default app_uuid
-	if (strlen($app_uuid) == 0) {
+	if (!is_uuid($app_uuid)) {
 		$app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
 	}
 
 //get the dialplan xml
 	if (is_uuid($dialplan_uuid)) {
 		$sql = "select * from v_dialplans ";
-		$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where dialplan_uuid = :dialplan_uuid ";
+		$parameters['dialplan_uuid'] = $dialplan_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$domain_uuid = $row["domain_uuid"];
 			//$app_uuid = $row["app_uuid"];
 			$dialplan_name = $row["dialplan_name"];
@@ -71,7 +71,7 @@
 			$dialplan_enabled = $row["dialplan_enabled"];
 			$dialplan_description = $row["dialplan_description"];
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //process the HTTP POST
@@ -87,19 +87,10 @@
 			$database = new database;
 			$database->app_name = 'dialplans';
 			$database->app_uuid = $app_uuid;
-			//if (strlen($dialplan_uuid) > 0) {
-			//	$database->uuid($dialplan_uuid);
-			//}
 			$database->save($array);
-			$message = $database->message;
+			unset($array);
 
-		//debug info
-			//echo "<pre>\n";
-			//print_r($message);
-			//echo "</pre>\n";
-			//exit;
-
-		//clear the cache
+			//clear the cache
 			$cache = new cache;
 			$cache->delete("dialplan:".$dialplan_context);
 
@@ -126,7 +117,7 @@
 	echo "	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"1\">\n";
 	echo "		<tr>\n";
 	echo "			<td align='left' width='30%'>\n";
-	echo"				<span class=\"title\">".$text['title-dialplan_edit']."</span><br />\n";
+	echo "				<span class=\"title\">".$text['title-dialplan_edit']."</span><br />\n";
 	echo "			</td>\n";
 	echo "			<td width='70%' align='right'>\n";
 	echo "				<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplan_edit.php?id=".$dialplan_uuid."&".((strlen($app_uuid) > 0) ? "app_uuid=".$app_uuid : null)."';\" value='".$text['button-back']."'>\n";

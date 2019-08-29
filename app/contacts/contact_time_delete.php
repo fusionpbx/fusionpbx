@@ -39,25 +39,26 @@ else {
 	$text = $language->get();
 
 //get the http values and set as variables
-	if (count($_GET) > 0) {
-		$contact_time_uuid = check_str($_GET["id"]);
-		$contact_uuid = check_str($_GET["contact_uuid"]);
-	}
+	$contact_time_uuid = $_GET["id"];
+	$contact_uuid = $_GET["contact_uuid"];
 
 //delete the record
-	if (strlen($contact_time_uuid) > 0) {
-		$sql = "delete from v_contact_times ";
-		$sql .= "where domain_uuid = '".$domain_uuid."' ";
-		$sql .= "and contact_uuid = '".$contact_uuid."' ";
-		$sql .= "and contact_time_uuid = '".$contact_time_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($sql);
+	if (is_uuid($contact_time_uuid) && is_uuid($contact_uuid)) {
+		$array['contact_times'][0]['domain_uuid'] = $domain_uuid;
+		$array['contact_times'][0]['contact_uuid'] = $contact_uuid;
+		$array['contact_times'][0]['contact_time_uuid'] = $contact_time_uuid;
+
+		$database = new database;
+		$database->app_name = 'contacts';
+		$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
+		$database->delete($array);
+		unset($array);
+
+		message::add($text['message-delete']);
 	}
 
 //redirect the browser
-	message::add($text['message-delete']);
 	header("Location: contact_edit.php?id=".$contact_uuid);
-	return;
+	exit;
 
 ?>

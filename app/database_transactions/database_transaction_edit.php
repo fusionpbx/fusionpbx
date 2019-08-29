@@ -43,32 +43,28 @@
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
-		$database_transaction_uuid = check_str($_REQUEST["id"]);
+	if (is_uuid($_REQUEST["id"])) {
+		$database_transaction_uuid = $_REQUEST["id"];
 	}
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-		$database_transaction_uuid = check_str($_GET["id"]);
+		$database_transaction_uuid = $_GET["id"];
 
 		$sql = "select ";
 		$sql .= "t.database_transaction_uuid, d.domain_name, u.username, t.user_uuid, t.app_name, t.app_uuid, ";
 		$sql .= "t.transaction_code, t.transaction_address, t.transaction_type, t.transaction_date, ";
 		$sql .= "t.transaction_old, t.transaction_new, t.transaction_result ";
 		$sql .= "from v_database_transactions as t, v_domains as d, v_users as u ";
-		$sql .= "where t.domain_uuid = '$domain_uuid' ";
-		$sql .= "and t.database_transaction_uuid = '$database_transaction_uuid' ";
+		$sql .= "where t.domain_uuid = :domain_uuid ";
+		$sql .= "and t.database_transaction_uuid = :database_transaction_uuid ";
 		$sql .= "and t.user_uuid = u.user_uuid ";
 		$sql .= "and t.domain_uuid = d.domain_uuid ";
-
-		//$sql = "select *, u.username from v_database_transactions as t, v_users as u ";
-		//$sql .= "where domain_uuid = '$domain_uuid' ";
-		//$sql .= "t.user_uuid = u.user_uuid ";
-		//$sql .= "and database_transaction_uuid = '$database_transaction_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['database_transaction_uuid'] = $database_transaction_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$user_uuid = $row["user_uuid"];
 			$app_name = $row["app_name"];
 			$app_uuid = $row["app_uuid"];
@@ -82,7 +78,7 @@
 			$transaction_new = $row["transaction_new"];
 			$transaction_result = $row["transaction_result"];
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //get the type if not provided

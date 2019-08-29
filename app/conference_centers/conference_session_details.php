@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2012 All Rights Reserved.
+	Copyright (C) 2008-2019 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -46,30 +46,31 @@
 	require_once "resources/paging.php";
 
 //set variables from the http values
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
-	$conference_session_uuid = check_str($_GET["uuid"]);
+	$order_by = $_GET["order_by"] != '' ? $_GET["order_by"] : 'start_epoch';
+	$order = $_GET['order'] != '' ? $_GET['order'] : 'asc';
+	$conference_session_uuid = $_GET["uuid"];
 
 //add meeting_uuid to a session variable
-	if (strlen($conference_session_uuid) > 0) {
+	if (is_uuid($conference_session_uuid)) {
 		$_SESSION['meeting']['session_uuid'] = $conference_session_uuid;
 	}
 
 //get the list
 	$sql = "select * from v_conference_sessions ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and conference_session_uuid = '".$_SESSION['meeting']['session_uuid']."' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll();
-	foreach ($result as &$row) {
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and conference_session_uuid = :conference_session_uuid ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$parameters['conference_session_uuid'] = $_SESSION['meeting']['session_uuid'];
+	$database = new database;
+	$row = $database->select($sql, $parameters, 'row');
+	if (is_array($row) && sizeof($row) != 0) {
 		$meeting_uuid = $row["meeting_uuid"];
 		$recording = $row["recording"];
 		$start_epoch = $row["start_epoch"];
 		$end_epoch = $row["end_epoch"];
 		$profile = $row["profile"];
 	}
-	unset ($prep_statement);
+	unset($sql, $parameters, $row);
 
 //set the year, month and day based on the session start epoch
 	$tmp_year = date("Y", $start_epoch);
@@ -114,50 +115,40 @@
 	echo "	</tr>\n";
 	echo "</table>\n";
 
-	//prepare to page the results
-		$sql = "select count(*) as num_rows from v_conference_session_details ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and conference_session_uuid = '".$_SESSION['meeting']['session_uuid']."' ";
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-		$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] > 0) {
-				$num_rows = $row['num_rows'];
-			}
-			else {
-				$num_rows = '0';
-			}
-		}
+//prepare to page the results
+	$sql = "select count(*) from v_conference_session_details ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and conference_session_uuid = :conference_session_uuid ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$parameters['conference_session_uuid'] = $_SESSION['meeting']['session_uuid'];
+	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($sql, $parameters);
 
-	//prepare to page the results
-		$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-		$param = "";
-		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
-		$offset = $rows_per_page * $page;
+//prepare to page the results
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$param = '';
+	$page = $_GET['page'];
+	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+	$offset = $rows_per_page * $page;
 
-	//get the list
-		$sql = "select * from v_conference_session_details ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and conference_session_uuid = '".$_SESSION['meeting']['session_uuid']."' ";
-		if (strlen($order_by) == 0) {
-			$sql .= "order by start_epoch asc ";
-		}
-		else {
-			$sql .= "order by $order_by $order ";
-		}
-		$sql .= "limit $rows_per_page offset $offset ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$conference_session_details = $prep_statement->fetchAll();
-		unset ($prep_statement, $sql);
+//get the list
+	$sql = "select * from v_conference_session_details ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and conference_session_uuid = :conference_session_uuid ";
+	$sql .= order_by($order_by, $order);
+	$sql .= limit_offset($rows_per_page, $offset);
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$parameters['conference_session_uuid'] = $_SESSION['meeting']['session_uuid'];
+	$conference_session_details = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
+//show the styles
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
+//show the conent
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	//echo th_order_by('meeting_uuid', 'Meeting UUID', $order_by, $order);
@@ -176,7 +167,7 @@
 	}
 	echo "</tr>\n";
 
-	if (is_array($conference_session_details)) {
+	if (is_array($conference_session_details) && sizeof($conference_session_details) != 0) {
 		foreach($conference_session_details as $row) {
 			if (defined('TIME_24HR') && TIME_24HR == 1) {
 				$start_date = date("j M Y H:i:s", $row['start_epoch']);
@@ -209,7 +200,7 @@
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $conference_session_details);
+		unset($conference_session_details);
 	} //end if results
 
 	echo "<tr>\n";

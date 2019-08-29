@@ -1061,6 +1061,26 @@ $text['label-memory_usage']['ru-ru'] = "Использование памяти"
 $text['label-memory_usage']['sv-se'] = "Minnesanvändning";
 $text['label-memory_usage']['uk-ua'] = "Використання пам'яті";
 
+$text['label-memory_available']['en-us'] = "Available Memory";
+$text['label-memory_available']['ar-eg'] = "Available Memory";
+$text['label-memory_available']['de-at'] = "Available Memory";
+$text['label-memory_available']['de-ch'] = "Available Memory";
+$text['label-memory_available']['de-de'] = "Available Memory";
+$text['label-memory_available']['es-cl'] = "Available Memory";
+$text['label-memory_available']['es-mx'] = "Available Memory";
+$text['label-memory_available']['fr-ca'] = "Available Memory";
+$text['label-memory_available']['fr-fr'] = "Available Memory";
+$text['label-memory_available']['he-il'] = "Available Memory";
+$text['label-memory_available']['it-it'] = "Available Memory";
+$text['label-memory_available']['nl-nl'] = "Available Memory";
+$text['label-memory_available']['pl-pl'] = "Available Memory";
+$text['label-memory_available']['pt-br'] = "Available Memory";
+$text['label-memory_available']['pt-pt'] = "Available Memory";
+$text['label-memory_available']['ro-ro'] = "Available Memory";
+$text['label-memory_available']['ru-ru'] = "Available Memory";
+$text['label-memory_available']['sv-se'] = "Available Memory";
+$text['label-memory_available']['uk-ua'] = "Available Memory";
+
 $text['label-lowercase_letters']['en-us'] = "Lowercase Letters";
 $text['label-lowercase_letters']['ar-eg'] = "أحرف صغيرة";
 $text['label-lowercase_letters']['de-at'] = "Kleinbuchstaben"; //copied from de-de

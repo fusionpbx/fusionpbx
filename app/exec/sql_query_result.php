@@ -114,177 +114,203 @@
 		$header .= "	text-align: left;\n";
 		$header .= "	vertical-align: top;\n";
 		$header .= "}\n";
-		$header .= "\n";
 		$header .= "</style>";
 		$header .= "</head>\n";
 		$header .= "<body style='margin: 0; padding: 8;'>\n";
-	
+
 		$footer = "<body>\n";
 		$footer .= "<html>\n";
-	
-	
+
 		if ($sql_type == '') {
-	
+
 			echo $header;
-	
+
 			$c = 0;
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
-	
+
 			//determine queries to run and show
 			if ($sql_cmd != '') { $sql_array = array_filter(explode(";", $sql_cmd)); }
 			if ($table_name != '') { $sql_array[] = "select * from ".$table_name; }
 			$show_query = (sizeof($sql_array) > 1) ? true : false;
-	
+
 			if (is_array($sql_array)) foreach($sql_array as $sql_index => $sql) {
 				$sql = trim($sql);
-	
+
 				if (sizeof($sql_array) > 1 || $show_query) {
 					if ($sql_index > 0) { echo "<br /><br /><br />"; }
-					echo "<span style='display: block; padding: 8px; color: green; background-color: #eefff0;'>".escape($sql).";</span><br />";
+					echo "<span style='display: block; font-family: monospace; padding: 8px; color: green; background-color: #eefff0;'>".escape($sql).";</span><br />";
 				}
-	
-				$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-				try {
-					$prep_statement = $db->prepare(check_sql($sql));
-					$prep_statement->execute();
-					$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+
+				$database = new database;
+				$result = $database->execute($sql, null, 'all');
+				$message = $database->message;
+
+				if ($message['message'] == 'OK' && $message['code'] == 200) {
 					echo "<b>".$text['label-records'].": ".count($result)."</b>";
 					echo "<br /><br />\n";
 				}
-				catch(PDOException $e) {
+				else {
 					echo "<b>".$text['label-error']."</b>";
 					echo "<br /><br />\n";
-					echo $e->getMessage();
-					echo "<br /><br />\n";
-					exit;
+					echo $message['message'].' ['.$message['code']."]<br />\n";
+					if (is_array($message['error']) && @sizeof($message['error']) != 0) {
+						foreach ($message['error'] as $error) {
+							echo "<pre>".$error."</pre><br /><br />\n";
+						}
+					}
 				}
-	
+
 				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 				$x = 0;
 				if (is_array($result[0])) {
+					echo "<thead>\n";
+					echo "	<tr>\n";
 					foreach ($result[0] as $key => $value) {
-						echo "<th>".escape($key)."</th>";
+						echo "<th>".escape($key)."</th>\n";
 						$column_array[$x++] = $key;
 					}
+					echo "	</tr>\n";
+					echo "</thead>\n";
 				}
 				$x = 1;
 				if (is_array($result)) {
+					echo "<tbody>\n";
 					foreach ($result as &$row) {
 						if ($x++ > 1000) { break; }
 						echo "<tr>\n";
 						if (is_array($column_array)) {
 							foreach ($column_array as $column_index => $column) {
-								echo "<td class='".$row_style[$c]."' ".(($column_index == 0) ? "style='border-left: none;'" : null).">".escape($row[$column])."&nbsp;</td>";
+								echo "<td class='".$row_style[$c]."' ".(($column_index == 0) ? "style='border-left: none;'" : null).">".escape($row[$column])."&nbsp;</td>\n";
 							}
 						}
 						echo "</tr>\n";
 						$c = ($c == 0) ? 1 : 0;
 					}
+					echo "</tbody>\n";
 				}
 				echo "</table>\n";
 				echo "<br>\n";
-	
+
 				unset($result, $column_array);
 			}
 			echo $footer;
 		}
-	
+
 		if ($sql_type == "inserts") {
 			echo $header;
-	
+
 			$sql = trim($sql);
-	
+
 			//get the table data
 				$sql = (strlen($sql_cmd) == 0) ? "select * from ".$table_name : $sql_cmd;
-	
+
 				if (strlen($sql) > 0) {
-					$prep_statement = $db->prepare(check_sql($sql));
-					if ($prep_statement) {
-						$prep_statement->execute();
-						$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-					}
-					else {
-						echo "<b>".$text['label-error']."</b>\n";
+					$database = new database;
+					$result = $database->execute($sql);
+					$message = $database->message;
+
+					if ($message['message'] != 'OK' || $message['code'] != 200) {
+						echo "<b>".$text['label-error']."</b>";
 						echo "<br /><br />\n";
-						echo "<pre>".print_r($db->errorInfo(), true)."</pre>\n";
-						echo "<br /><br />\n";
+						echo $message['message'].' ['.$message['code']."]<br />\n";
+						if (is_array($message['error']) && @sizeof($message['error']) != 0) {
+							foreach ($message['error'] as $error) {
+								echo "<pre>".$error."</pre><br /><br />\n";
+							}
+						}
 						exit;
 					}
-	
+
 					$x = 0;
 					if (is_array($result[0])) {
 						foreach ($result[0] as $key => $value) {
 							$column_array[$x++] = $key;
 						}
 					}
-	
+
 					$column_array_count = count($column_array);
-					if (is_array($result)) foreach ($result as &$row) {
+					if (is_array($result)) foreach ($result as $index => &$row) {
+
+						echo "<div style='font-family: monospace; border-bottom: 1px solid #ccc; padding-bottom: 8px; ".($index != 0 ? 'padding-top: 8px;' : null)."'>\n";
 						echo "insert into ".$table_name." (";
-						$x = 1;
 						if (is_array($column_array)) {
 							foreach ($column_array as $column) {
 								if ($column != "menuid" && $column != "menuparentid") {
 									$columns[] = $column;
 								}
-								$x++;
 							}
 						}
 						if (is_array($columns) && sizeof($columns) > 0) {
 							echo implode(', ', $columns);
 						}
 						echo ") values (";
-						$x = 1;
 						if (is_array($column_array)) {
 							foreach ($column_array as $column) {
 								if ($column != "menuid" && $column != "menuparentid") {
-									$values[] = ($row[$column] != '') ? "'".check_str($row[$column])."'" : 'null';
+									$values[] = $row[$column] != '' ? "'".escape(check_str($row[$column]))."'" : 'null';
 								}
-								$x++;
 							}
 						}
 						if (is_array($values) && sizeof($values) > 0) {
-							echo implode(', ', escape($values));
+							echo implode(', ', $values);
 						}
-						echo ");<br />\n";
+						echo ");\n";
+						echo "</div>\n";
 						unset($columns, $values);
 					}
+
 				}
 			echo $footer;
 		}
-	
+
 		if ($sql_type == "csv") {
-	
+
 			//set the headers
 				header('Content-type: application/octet-binary');
-				header('Content-Disposition: attachment; filename='.escape($table_name).'.csv');
-	
+				if (strlen($sql_cmd) > 0) {
+					header('Content-Disposition: attachment; filename=data.csv');
+				}
+				else {
+					header('Content-Disposition: attachment; filename='.escape($table_name).'.csv');
+				}
+
 			//get the table data
-				$sql = trim($sql);
-				$sql = "select * from ".$table_name;
+				if (strlen($sql_cmd) > 0) {
+					$sql = $sql_cmd;
+				}
+				else {
+					$sql = "select * from ".$table_name;
+				}
 				if (strlen($sql) > 0) {
-					$prep_statement = $db->prepare(check_sql($sql));
-					if ($prep_statement) {
-						$prep_statement->execute();
-						$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-					}
-					else {
-						echo "<b>".$text['label-error']."</b>\n";
+					$database = new database;
+					$result = $database->execute($sql);
+					$message = $database->message;
+
+					if ($message['message'] != 'OK' || $message['code'] != 200) {
+						echo "<b>".$text['label-error']."</b>";
 						echo "<br /><br />\n";
-						echo "<pre>".print_r($db->errorInfo(), true)."</pre>\n";
-						echo "<br /><br />\n";
+						echo $message['message'].' ['.$message['code']."]<br />\n";
+						if (is_array($message['error']) && @sizeof($message['error']) != 0) {
+							foreach ($message['error'] as $error) {
+								echo "<pre>".$error."</pre><br /><br />\n";
+							}
+						}
 						exit;
 					}
-	
+
+					//build the column array
 					$x = 0;
 					if (is_array($result[0])) {
 						foreach ($result[0] as $key => $value) {
-							$column_array[$x++] = $key;
+							$column_array[$x] = $key;
+							$x++;
 						}
 					}
+
 					//column names
-					echo '"'.implode('","', escape($column_array)).'"'."\r\n";
+					echo '"'.implode('","', $column_array).'"'."\r\n";
+
 					//column values
 					if (is_array($result)) {
 						foreach ($result as &$row) {

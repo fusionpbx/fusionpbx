@@ -388,14 +388,14 @@ include "root.php";
 						else {
 							if ($_SESSION['domain']['bridge']['text'] == "loopback") {
 								//set the outbound caller id number if the caller id number is a user
-								$variables[] = "origination_caller_id_number=\${cond(\${from_user_exists} == true ? ".$this->outbound_caller_id_number." : \${origination_caller_id_number})}";
+								//$variables[] = "origination_caller_id_number=\${cond(\${from_user_exists} == true ? ".$this->outbound_caller_id_number." : \${origination_caller_id_number})}";
 								$variables[] = "effective_caller_id_number=\${cond(\${from_user_exists} == true ? ".$this->outbound_caller_id_number." : \${effective_caller_id_number})}";
-								$variables[] = "origination_caller_id_name=\${cond(\${from_user_exists} == true ? ".$this->outbound_caller_id_name." : \${origination_caller_id_name})}";
+								//$variables[] = "origination_caller_id_name=\${cond(\${from_user_exists} == true ? ".$this->outbound_caller_id_name." : \${origination_caller_id_name})}";
 								$variables[] = "effective_caller_id_name=\${cond(\${from_user_exists} == true ? ".$this->outbound_caller_id_name." : \${effective_caller_id_name})}";
 							} else {
-								$variables[] .="origination_caller_id_number=\${cond(\${from_user_exists} == true ? \${outbound_caller_id_number} : )}";
+								//$variables[] .="origination_caller_id_number=\${cond(\${from_user_exists} == true ? \${outbound_caller_id_number} : )}";
 								$variables[] .="effective_caller_id_number=\${cond(\${from_user_exists} == true ? \${outbound_caller_id_number} : )}";
-								$variables[] .="origination_caller_id_name=\${cond(\${from_user_exists} == true ? \${outbound_caller_id_name} : )}";
+								//$variables[] .="origination_caller_id_name=\${cond(\${from_user_exists} == true ? \${outbound_caller_id_name} : )}";
 								$variables[] .="effective_caller_id_name=\${cond(\${from_user_exists} == true ? \${outbound_caller_id_name} : )}";								
 							}
 						}
@@ -442,15 +442,17 @@ include "root.php";
 							}
 							elseif ($_SESSION['domain']['bridge']['text'] == "loopback") {
 								$variables[] = "is_follow_me_loopback=true";
+								$sleep_time = "sleep:".($row["follow_me_delay"] * 1000);
 								//$dial_string .= "loopback/".$row["follow_me_destination"]."/".$this->domain_name;
-								$dial_string .= "loopback/export:".implode("\,export:", $variables)."\,transfer:".$row["follow_me_destination"]."/".$this->domain_name."/inline";
+								$dial_string .= "loopback/".$sleep_time."\,export:".implode("\,export:", $variables)."\,transfer:".$row["follow_me_destination"]."/".$this->domain_name."/inline";
 							}
 							elseif ($_SESSION['domain']['bridge']['text'] == "lcr") {
 								$dial_string .= "[".implode(",", $variables)."]lcr/".$_SESSION['lcr']['profile']['text']."/".$this->domain_name."/".$row["follow_me_destination"];
 							}
 							else {
 								//$dial_string .= "loopback/".$row["follow_me_destination"]."/".$this->domain_name;
-								$dial_string .= "loopback/export:".implode("\,export:", $variables)."\,transfer:".$row["follow_me_destination"]."/".$this->domain_name."/inline";
+								$sleep_time = "sleep:".($row["follow_me_delay"] * 1000);
+								$dial_string .= "loopback/".$sleep_time."\,export:".implode("\,export:", $variables)."\,transfer:".$row["follow_me_destination"]."/".$this->domain_name."/inline";
 							}
 						}
 						else {
@@ -490,7 +492,7 @@ include "root.php";
 
 			//add extensions to the array
 				$array['extensions'][0]["extension_uuid"] = $extension_uuid;
-				$array['extensions'][0]["dial_domain"] = $this->domain_uuid;
+				$array['extensions'][0]["dial_domain"] = $this->domain_name;
 				$array['extensions'][0]["dial_string"] = $dial_string;
 				$array['extensions'][0]["follow_me_destinations"] = $dial_string;
 				$array['extensions'][0]["follow_me_enabled"] = $this->follow_me_enabled;

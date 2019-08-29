@@ -266,7 +266,7 @@ if (!class_exists('xml_cdr')) {
 				}
 
 			//process data if the call detail record is not a duplicate
-				if ($duplicate_uuid == false) {
+				if ($duplicate_uuid == false && $uuid != null) {
 					//get the destination number
 						if ($xml->variables->current_application == "bridge") {
 							$current_application_data = urldecode($xml->variables->current_application_data);

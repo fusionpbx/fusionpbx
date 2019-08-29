@@ -30,7 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (if_group("admin") || if_group("superadmin")) {
+	if (permission_exists('exec_sql')) {
 		//access granted
 	}
 	else {
@@ -45,13 +45,13 @@
 	}
 
 //get the db connection information
-	if (strlen($_REQUEST['id']) > 0) {
+	if (is_uuid($_REQUEST['id'])) {
 		$sql = "select * from v_databases ";
-		$sql .= "where database_uuid = '".$_REQUEST['id']."' ";
-		$prep_statement = $db->prepare($sql);
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where database_uuid = :database_uuid ";
+		$parameters['database_uuid'] = $_REQUEST['id'];
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$db_type = $row["database_type"];
 			$db_host = $row["database_host"];
 			$db_port = $row["database_port"];
@@ -59,8 +59,8 @@
 			$db_username = $row["database_username"];
 			$db_password = $row["database_password"];
 			$db_path = $row["database_path"];
-			break;
 		}
+		unset($sql, $parameters, $row);
 	}
 
 //unset the database connection

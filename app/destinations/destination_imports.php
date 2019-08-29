@@ -58,16 +58,16 @@
 	ini_set(max_execution_time,7200);
 
 //get the http get values and set them as php variables
-	$action = check_str($_POST["action"]);
-	$order_by = check_str($_POST["order_by"]);
-	$order = check_str($_POST["order"]);
-	$from_row = check_str($_POST["from_row"]);
-	$delimiter = check_str($_POST["data_delimiter"]);
-	$enclosure = check_str($_POST["data_enclosure"]);
-	$destination_type = check_str($_POST["destination_type"]);
-	$destination_action = check_str($_POST["destination_action"]);
-	$destination_context = check_str($_POST["destination_context"]);
-	$destination_record = check_str($_POST["destination_record"]);
+	$action = $_POST["action"];
+	$order_by = $_POST["order_by"];
+	$order = $_POST["order"];
+	$from_row = $_POST["from_row"];
+	$delimiter = $_POST["data_delimiter"];
+	$enclosure = $_POST["data_enclosure"];
+	$destination_type = $_POST["destination_type"];
+	$destination_action = $_POST["destination_action"];
+	$destination_context = $_POST["destination_context"];
+	$destination_record = $_POST["destination_record"];
 
 //set the defaults
 	if (strlen($destination_type) == 0) { $destination_type = 'inbound'; }
@@ -85,7 +85,7 @@
 //copy the csv file
 	//$_POST['submit'] == "Upload" &&
 	if ( is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('destination_upload')) {
-		if (check_str($_POST['type']) == 'csv') {
+		if ($_POST['type'] == 'csv') {
 			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name']);
 			$save_msg = "Uploaded file to ".$_SESSION['server']['temp']['dir']."/". htmlentities($_FILES['ulfile']['name']);
 			//system('chmod -R 744 '.$_SESSION['server']['temp']['dir'].'*');
@@ -112,10 +112,10 @@
 
 				//remove the v_ table prefix
 				if (substr($table_name, 0, 2) == 'v_') {
-						$table_name = substr($table_name, 2);
+					$table_name = substr($table_name, 2);
 				}
 				if (substr($parent_name, 0, 2) == 'v_') {
-						$parent_name = substr($parent_name, 2);
+					$parent_name = substr($parent_name, 2);
 				}
 
 				//filter for specific tables and build the schema array
@@ -467,7 +467,7 @@
 			echo "<tr>\n";
 			echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-destinations_import']."</b></td>\n";
 			echo "<td width='70%' align='right'>\n";
-			echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='/app/destinations/destinations.php?".$_GET["query_string"]."'\" value='".$text['button-back']."'>\n";
+			echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='/app/destinations/destinations.php'\" value='".$text['button-back']."'>\n";
 			echo "</td>\n";
 			echo "</tr>\n";
 			echo "<tr>\n";
@@ -489,16 +489,16 @@
 				foreach($results as $row) {
 					echo "<tr>\n";
 					echo "	<td class='vncell' valign='top' align='left'>\n";
-					echo 		$row['FirstName'] ." ".$row['LastName'];
+					echo 		escape($row['FirstName'])." ".escape($row['LastName']);
 					echo "	</td>\n";
 					echo "	<td class='vncell' valign='top' align='left'>\n";
-					echo 	$row['Company']."&nbsp;\n";
+					echo 	escape($row['Company'])."&nbsp;\n";
 					echo "	</td>\n";
 					echo "	<td class='vncell' valign='top' align='left'>\n";
-					echo 		$row['EmailAddress']."&nbsp;\n";
+					echo 		escape($row['EmailAddress'])."&nbsp;\n";
 					echo "	</td>\n";
 					echo "	<td class='vncell' valign='top' align='left'>\n";
-					echo 		$row['Web Page']."&nbsp;\n";
+					echo 		escape($row['Web Page'])."&nbsp;\n";
 					echo "	</td>\n";
 					echo "</tr>\n";
 				}
@@ -591,12 +591,13 @@
 									//get the dialplan uuid
 										if (strlen($row['destination_number']) == 0 || strlen($row['dialplan_uuid']) == 0 ) {
 											$sql = "select * from v_destinations ";
-											$sql .= "where domain_uuid = '$domain_uuid' ";
-											$sql .= "and destination_number = '$destination_number'; ";
+											$sql .= "where domain_uuid = :domain_uuid ";
+											$sql .= "and destination_number = :destination_number; ";
 											//echo $sql."<br />\n";
-											$prep_statement = $db->prepare(check_sql($sql));
-											$prep_statement->execute();
-											$destinations = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+											$parameters['domain_uuid'] = $domain_uuid;
+											$parameters['destination_number'] = $destination_number;
+											$database = new database;
+											$destinations = $database->select($sql, $parameters, 'all');
 											$row = $destinations[0];
 
 										//add to the array
@@ -620,25 +621,28 @@
 								//delete the dialplan
 								if (strlen($row['dialplan_uuid']) > 0) {
 									$sql = "delete from v_dialplan_details ";
-									$sql .= "where dialplan_uuid = '".$row['dialplan_uuid']."';";
+									$sql .= "where dialplan_uuid = :dialplan_uuid ";
 									//echo "$sql<br />\n";
-									$db->query($sql);
-									unset($sql);
+									$parameters['dialplan_uuid'] = $row['dialplan_uuid'];
+									$database = new database;
+									$database->execute($sql, $parameters);
 
 									$sql = "delete from v_dialplans ";
-									$sql .= "where dialplan_uuid = '".$row['dialplan_uuid']."';";
+									$sql .= "where dialplan_uuid = :dialplan_uuid ";
 									//echo "$sql<br />\n";
-									$db->query($sql);
-									unset($sql);
+									$parameters['dialplan_uuid'] = $row['dialplan_uuid'];
+									$database = new database;
+									$database->execute($sql, $parameters);
 								}
 
 								//delete the destinations
 								if (strlen($row['destination_uuid']) > 0) {
 									$sql = "delete from v_destinations ";
-									$sql .= "where destination_uuid = '".$row['destination_uuid']."';";
+									$sql .= "where destination_uuid = :destination_uuid ";
 									//echo "$sql<br />\n";
-									$db->query($sql);
-									unset($sql);
+									$parameters['destination_uuid'] = $row['destination_uuid'];
+									$database = new database;
+									$database->execute($sql, $parameters);
 								}
 							} //foreach
 
@@ -667,25 +671,28 @@
 							//delete the dialplan
 							if (strlen($row['dialplan_uuid']) > 0) {
 								$sql = "delete from v_dialplan_details ";
-								$sql .= "where dialplan_uuid = '".$row['dialplan_uuid']."';";
+								$sql .= "where dialplan_uuid = :dialplan_uuid ";
 								//echo "$sql<br />\n";
-								$db->query($sql);
-								unset($sql);
+								$parameters['dialplan_uuid'] = $row['dialplan_uuid'];
+								$database = new database;
+								$database->execute($sql, $parameters);
 
 								$sql = "delete from v_dialplans ";
-								$sql .= "where dialplan_uuid = '".$row['dialplan_uuid']."';";
+								$sql .= "where dialplan_uuid = :dialplan_uuid ";
 								//echo "$sql<br />\n";
-								$db->query($sql);
-								unset($sql);
+								$parameters['dialplan_uuid'] = $row['dialplan_uuid'];
+								$database = new database;
+								$database->execute($sql, $parameters);
 							}
 
 							//delete the destinations
 							if (strlen($row['destination_uuid']) > 0) {
 								$sql = "delete from v_destinations ";
-								$sql .= "where destination_uuid = '".$row['destination_uuid']."';";
+								$sql .= "where destination_uuid = :destination_uuid ";
 								//echo "$sql<br />\n";
-								$db->query($sql);
-								unset($sql);
+								$parameters['destination_uuid'] = $row['destination_uuid'];
+								$database = new database;
+								$database->execute($sql, $parameters);
 							}
 						} //foreach
 					}
@@ -762,7 +769,7 @@
 							$selected = "selected='selected'";
 						}
 						if ($field !== 'domain_uuid') {
-							echo "    			<option value='".$row['table'].".".$field."' ".$selected.">".$field."</option>\n";
+							echo "    			<option value='".escape($row['table']).".".$field."' ".$selected.">".$field."</option>\n";
 						}
 					}
 					echo "			</optgroup>\n";
@@ -822,7 +829,7 @@
 				echo "	".$text['label-destination_context']."\n";
 				echo "</td>\n";
 				echo "<td class='vtable' align='left'>\n";
-				echo "	<input class='formfld' type='text' name='destination_context' id='destination_context' maxlength='255' value=\"$destination_context\">\n";
+				echo "	<input class='formfld' type='text' name='destination_context' id='destination_context' maxlength='255' value=\"".escape($destination_context)."\">\n";
 				echo "<br />\n";
 				echo $text['description-destination_context']."\n";
 				echo "</td>\n";
@@ -858,10 +865,10 @@
 				}
 				foreach ($_SESSION['domains'] as $row) {
 					if ($row['domain_uuid'] == $domain_uuid) {
-						echo "    <option value='".$row['domain_uuid']."' selected='selected'>".$row['domain_name']."</option>\n";
+						echo "    <option value='".escape($row['domain_uuid'])."' selected='selected'>".escape($row['domain_name'])."</option>\n";
 					}
 					else {
-						echo "    <option value='".$row['domain_uuid']."'>".$row['domain_name']."</option>\n";
+						echo "    <option value='".escape($row['domain_uuid'])."'>".escape($row['domain_name'])."</option>\n";
 					}
 				}
 				echo "    </select>\n";
@@ -871,7 +878,7 @@
 				echo "</tr>\n";
 			}
 			else {
-				echo "<input type='hidden' name='domain_uuid' value='".$domain_uuid."'>\n";
+				echo "<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>\n";
 			}
 
 			echo "<tr>\n";
@@ -930,7 +937,7 @@
 	echo "		".$text['description-destination_import']."\n";
 	echo "	</td>\n";
 	echo "	<td valign='top' width='70%' align='right'>\n";
-	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='/app/destinations/destinations.php?".$_GET["query_string"]."'\" value='".$text['button-back']."'>\n";
+	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='/app/destinations/destinations.php'\" value='".$text['button-back']."'>\n";
 	//echo "		<input name='submit' type='submit' class='btn' id='import' value=\"".$text['button-import']."\">\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";

@@ -45,9 +45,9 @@
 	ini_set(max_execution_time,7200);
 
 //get the http get values and set them as php variables
-	$voicemail_id = check_str($_REQUEST["id"]);
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
+	$voicemail_id = $_REQUEST["id"];
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
 //set the back button url
 	$_SESSION['back'][$_SERVER['PHP_SELF']] = ($_GET['back'] != '') ? urldecode($_GET['back']) : $_SESSION['back'][$_SERVER['PHP_SELF']];
@@ -71,15 +71,13 @@
 
 //get currently selected greeting
 	$sql = "select greeting_id from v_voicemails ";
-	$sql .= "where domain_uuid = '".$domain_uuid."' ";
-	$sql .= "and voicemail_id = '".$voicemail_id."' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		$selected_greeting_id = $row['greeting_id'];
-	}
-	unset($prep_statement, $row);
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and voicemail_id = :voicemail_id ";
+	$parameters['domain_uuid'] = $domain_uuid;
+	$parameters['voicemail_id'] = $voicemail_id;
+	$database = new database;
+	$selected_greeting_id = $database->select($sql, $parameters, 'column');
+	unset($sql, $parameters);
 
 //define greeting directory
 	$v_greeting_dir = $_SESSION['switch']['storage']['dir'].'/voicemail/default/'.$_SESSION['domains'][$domain_uuid]['domain_name'].'/'.$voicemail_id;
@@ -87,28 +85,26 @@
 //download the greeting
 	if ($_GET['a'] == "download" && (permission_exists('voicemail_greeting_play') || permission_exists('voicemail_greeting_download'))) {
 		session_cache_limiter('public');
-		if ($_GET['type'] = "rec") {
-			$voicemail_greeting_uuid = check_str($_GET['uuid']);
+		if ($_GET['type'] == "rec") {
+			$voicemail_greeting_uuid = $_GET['uuid'];
 			//get voicemail greeting details from db
-			$sql = "select greeting_filename, greeting_base64, greeting_id from v_voicemail_greetings ";
-			$sql .= "where domain_uuid = '".$domain_uuid."' ";
-			$sql .= "and voicemail_greeting_uuid = '".$voicemail_greeting_uuid."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-			if (count($result) > 0) {
-				foreach($result as &$row) {
-					$greeting_filename = $row['greeting_filename'];
-					$greeting_id = $row['greeting_id'];
-					if ($_SESSION['voicemail']['storage_type']['text'] == 'base64' && $row['greeting_base64'] != '') {
-						$greeting_decoded = base64_decode($row['greeting_base64']);
-						file_put_contents($v_greeting_dir.'/'.$greeting_filename, $greeting_decoded);
-					}
-					break;
+			$sql = "select greeting_filename, greeting_base64, greeting_id ";
+			$sql .= "from v_voicemail_greetings ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and voicemail_greeting_uuid = :voicemail_greeting_uuid ";
+			$parameters['domain_uuid'] = $domain_uuid;
+			$parameters['voicemail_greeting_uuid'] = $voicemail_greeting_uuid;
+			$database = new database;
+			$row = $database->select($sql, $parameters, 'row');
+			if (is_array($row) && @sizeof($row) != 0) {
+				$greeting_filename = $row['greeting_filename'];
+				$greeting_id = $row['greeting_id'];
+				if ($_SESSION['voicemail']['storage_type']['text'] == 'base64' && $row['greeting_base64'] != '') {
+					$greeting_decoded = base64_decode($row['greeting_base64']);
+					file_put_contents($v_greeting_dir.'/'.$greeting_filename, $greeting_decoded);
 				}
 			}
-			unset ($sql, $prep_statement, $result, $greeting_decoded);
-
+			unset($sql, $row, $greeting_decoded);
 			if (file_exists($v_greeting_dir.'/'.$greeting_filename)) {
 				$fd = fopen($v_greeting_dir.'/'.$greeting_filename, "rb");
 				if ($_GET['t'] == "bin") {
@@ -129,7 +125,7 @@
 				header('Content-Disposition: attachment; filename="'.$greeting_filename.'"');
 				header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 				header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-				header("Content-Length: " . filesize($v_greeting_dir.'/'.$greeting_filename));
+				header("Content-Length: ".filesize($v_greeting_dir.'/'.$greeting_filename));
 				ob_clean();
 				fpassthru($fd);
 			}
@@ -151,50 +147,58 @@
 			//get the file extension
 				$file_ext = substr($_FILES['file']['name'], -4);
 
-			//find the next available
-				for ($i = 1; $i < 10; $i++) {
-					
-					//exit the loop if the file extension is invalid
-					if ($file_ext != '.wav' && $file_ext != '.mp3') {
-						break;
-					}
+			//check file extension
+			if ($file_ext == '.wav' || $file_ext != '.mp3') {
 
-					//set the file name
-					$file_name = 'greeting_'.$i.$file_ext;
+				//find the next available
+					for ($i = 1; $i < 10; $i++) {
 
-					//check the database
-					if (is_uuid($domain_uuid) && is_numeric($voicemail_id) ) {
-						$sql = "select voicemail_greeting_uuid from v_voicemail_greetings ";
-						$sql .= "where domain_uuid = '".check_str($domain_uuid)."' ";
-						$sql .= "and voicemail_id = '".($voicemail_id)."' ";
-						$sql .= "and greeting_filename = '".check_str($file_name)."' ";
-						$prep_statement = $db->prepare(check_sql($sql));
-						$prep_statement->execute();
-						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-						if (count($result) == 0 && !file_exists($v_greeting_dir.'/'.$file_name)) {
-							//move the uploaded greeting
-								event_socket_mkdir($v_greeting_dir);
-								if ($file_ext == '.wav' || $file_ext == '.mp3') {
-									move_uploaded_file($_FILES['file']['tmp_name'], $v_greeting_dir.'/'.$file_name);
-								}
-							//set newly uploaded greeting as active greeting for voicemail box
-								$sql = "update v_voicemails ";
-								$sql .= "set greeting_id = '".$i."' ";
-								$sql .= "where domain_uuid = '".$domain_uuid."' ";
-								$sql .= "and voicemail_id = '".$voicemail_id."' ";
-								$prep_statement = $db->prepare(check_sql($sql));
-								$prep_statement->execute();
-								unset($prep_statement);
+						//set the file name
+						$file_name = 'greeting_'.$i.$file_ext;
 
-							message::add($text['message-uploaded'].": ".$_FILES['file']['name']);
-							break;
+						//check the database
+						if (is_uuid($domain_uuid) && is_numeric($voicemail_id) ) {
+							$sql = "select count(*) from v_voicemail_greetings ";
+							$sql .= "where domain_uuid = :domain_uuid ";
+							$sql .= "and voicemail_id = :voicemail_id ";
+							$sql .= "and greeting_filename = :greeting_filename ";
+							$parameters['domain_uuid'] = $domain_uuid;
+							$parameters['voicemail_id'] = $voicemail_id;
+							$parameters['greeting_filename'] = $file_name;
+							$database = new database;
+							$num_rows = $database->select($sql, $parameters, 'column');
+							unset($sql, $parameters);
+
+							if ($num_rows == 0 && !file_exists($v_greeting_dir.'/'.$file_name)) {
+								//move the uploaded greeting
+									event_socket_mkdir($v_greeting_dir);
+									if ($file_ext == '.wav' || $file_ext == '.mp3') {
+										move_uploaded_file($_FILES['file']['tmp_name'], $v_greeting_dir.'/'.$file_name);
+									}
+								//set newly uploaded greeting as active greeting for voicemail box
+									$sql = "update v_voicemails ";
+									$sql .= "set greeting_id = :greeting_id ";
+									$sql .= "where domain_uuid = :domain_uuid ";
+									$sql .= "and voicemail_id = :voicemail_id ";
+									$parameters['greeting_id'] = $i;
+									$parameters['domain_uuid'] = $domain_uuid;
+									$parameters['voicemail_id'] = $voicemail_id;
+									$database = new database;
+									$database->execute($sql, $parameters);
+									unset($sql, $parameters);
+								//set message
+									message::add($text['message-uploaded'].": ".$_FILES['file']['name']);
+								//found available id, exit;
+									break;
+							}
+							else {
+								continue;
+							}
+							unset($num_rows);
 						}
-						else {
-							continue;
-						}
-						unset ($prep_statement);
+
 					}
-				}
+			}
 
 			//set the file name to be inserted as the greeting description
 				$greeting_description = base64_encode($_FILES['file']['name']);
@@ -215,103 +219,111 @@
 //set the greeting
 	if ($_REQUEST['action'] == "set") {
 		//save the greeting_id to a variable
-			$greeting_id = check_str($_REQUEST['greeting_id']);
+			$greeting_id = $_REQUEST['greeting_id'];
 
 		//set the greeting_id
 			$sql = "update v_voicemails ";
-			$sql .= "set greeting_id = '".$greeting_id."' ";
-			$sql .= "where domain_uuid = '".$domain_uuid."' ";
-			$sql .= "and voicemail_id = '".$voicemail_id."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($prep_statement);
-
-		message::add($text['message-greeting_selected']);
-		header("Location: voicemail_greetings.php?id=".$voicemail_id."&order_by=".$order_by."&order=".$order);
-		exit;
+			$sql .= "set greeting_id = :greeting_id ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and voicemail_id = :voicemail_id ";
+			$parameters['greeting_id'] = $greeting_id;
+			$parameters['domain_uuid'] = $domain_uuid;
+			$parameters['voicemail_id'] = $voicemail_id;
+			$database = new database;
+			$database->execute($sql, $parameters);
+			unset($sql, $parameters);
+		//set message
+			message::add($text['message-greeting_selected']);
+		//redirect
+			header("Location: voicemail_greetings.php?id=".$voicemail_id."&order_by=".$order_by."&order=".$order);
+			exit;
 	}
 
 //get existing greetings
-	$sql = "select voicemail_greeting_uuid, greeting_filename, greeting_base64 from v_voicemail_greetings ";
-	$sql .= "where domain_uuid = '".$domain_uuid."' and voicemail_id = '".$voicemail_id."' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($result as &$row) {
-		$array_greetings[$row['voicemail_greeting_uuid']] = $row['greeting_filename'];
-		$array_base64_exists[$row['voicemail_greeting_uuid']] = ($row['greeting_base64'] != '') ? true : false;
-		//if not base64, convert back to local files and remove base64 from db
-		if ($_SESSION['voicemail']['storage_type']['text'] != 'base64' && $row['greeting_base64'] != '') {
-			if (file_exists($v_greeting_dir.'/'.$row['greeting_filename'])) {
-				@unlink($v_greeting_dir.'/'.$row['greeting_filename']);
+	$sql = "select voicemail_greeting_uuid, greeting_filename, greeting_base64 ";
+	$sql .= "from v_voicemail_greetings ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and voicemail_id = :voicemail_id ";
+	$parameters['domain_uuid'] = $domain_uuid;
+	$parameters['voicemail_id'] = $voicemail_id;
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
+
+	if (is_array($result) && @sizeof($result) != 0) {
+		foreach ($result as $x => &$row) {
+			$array_greetings[$row['voicemail_greeting_uuid']] = $row['greeting_filename'];
+			$array_base64_exists[$row['voicemail_greeting_uuid']] = ($row['greeting_base64'] != '') ? true : false;
+			//if not base64, convert back to local files and remove base64 from db
+			if ($_SESSION['voicemail']['storage_type']['text'] != 'base64' && $row['greeting_base64'] != '') {
+				if (file_exists($v_greeting_dir.'/'.$row['greeting_filename'])) {
+					@unlink($v_greeting_dir.'/'.$row['greeting_filename']);
+				}
+				$greeting_decoded = base64_decode($row['greeting_base64']);
+				file_put_contents($v_greeting_dir.'/'.$row['greeting_filename'], $greeting_decoded);
+				//build array
+				$array['voicemail_greetings'][$x]['voicemail_greeting_uuid'] = $row['voicemail_greeting_uuid'];
+				$array['voicemail_greetings'][$x]['greeting_base64'] = null;
 			}
-			$greeting_decoded = base64_decode($row['greeting_base64']);
-			file_put_contents($v_greeting_dir.'/'.$row['greeting_filename'], $greeting_decoded);
-			$sql = "update v_voicemail_greetings ";
-			$sql .= "set greeting_base64 = null ";
-			$sql .= "where domain_uuid = '".$domain_uuid."' ";
-			$sql .= "and voicemail_greeting_uuid = '".$row['voicemail_greeting_uuid']."' ";
-			$db->exec(check_sql($sql));
-			unset($sql);
+		}
+		if (is_array($array) && @sizeof($array) != 0) {
+			//grant temporary permissions
+				$p = new permissions;
+				$p->add('voicemail_greeting_edit', 'temp');
+			//execute update
+				$database = new database;
+				$database->app_name = 'voicemail_greetings';
+				$database->app_uuid = 'e4b4fbee-9e4d-8e46-3810-91ba663db0c2';
+				$database->save($array);
+				unset($array);
+			//revoke temporary permissions
+				$p->delete('voicemail_greeting_edit', 'temp');
 		}
 	}
-	unset ($prep_statement);
+	unset($result, $row);
 
 //add greetings to the database
 	if (is_dir($v_greeting_dir.'/')) {
 		if ($dh = opendir($v_greeting_dir.'/')) {
+			$x = 0;
+			//prepare for temporary permissions
+			$p = new permissions;
 			while (($file = readdir($dh)) !== false) {
 				if (filetype($v_greeting_dir."/".$file) == "file" && substr($file, 0, 8) == "greeting" && substr($file, 10, 4) != ".tmp") {
 					$greeting_number = preg_replace('{\D}', '', $file);
 					if (!in_array($file, $array_greetings)) {
 						//file not found, add to database
-						$greeting_name = $text['label-greeting'].' '.$greeting_number;
-						$greeting_description = base64_decode($_GET['gd']);
-						$voicemail_greeting_uuid = uuid();
-						$sql = "insert into v_voicemail_greetings ";
-						$sql .= "( ";
-						$sql .= "voicemail_greeting_uuid, ";
-						$sql .= "domain_uuid, ";
-						$sql .= "voicemail_id, ";
-						$sql .= "greeting_name, ";
-						$sql .= "greeting_filename, ";
-						$sql .= "greeting_description, ";
-						if ($_SESSION['voicemail']['storage_type']['text'] == 'base64') {
-							$sql .= "greeting_base64, ";
-						}
-						$sql .= "greeting_id ";
-						$sql .= ") ";
-						$sql .= "values ";
-						$sql .= "(";
-						$sql .= "'".$voicemail_greeting_uuid."', ";
-						$sql .= "'".$domain_uuid."', ";
-						$sql .= "'".$voicemail_id."', ";
-						$sql .= "'".$greeting_name."', ";
-						$sql .= "'".$file."', ";
-						$sql .= "'".$greeting_description."', ";
-						if ($_SESSION['voicemail']['storage_type']['text'] == 'base64') {
-							$greeting_base64 = base64_encode(file_get_contents($v_greeting_dir.'/'.$file));
-							$sql .= "'".$greeting_base64."', ";
-						}
-						$sql .= $greeting_number." ";
-						$sql .= ")";
-						$db->exec(check_sql($sql));
-						unset($sql);
+							$greeting_name = $text['label-greeting'].' '.$greeting_number;
+							$greeting_description = base64_decode($_GET['gd']);
+							$voicemail_greeting_uuid = uuid();
+						//build insert array
+							$array['voicemail_greetings'][$x]['voicemail_greeting_uuid'] = $voicemail_greeting_uuid;
+							$array['voicemail_greetings'][$x]['domain_uuid'] = $domain_uuid;
+							$array['voicemail_greetings'][$x]['voicemail_id'] = $voicemail_id;
+							$array['voicemail_greetings'][$x]['greeting_name'] = $greeting_name;
+							$array['voicemail_greetings'][$x]['greeting_filename'] = $file;
+							$array['voicemail_greetings'][$x]['greeting_description'] = $greeting_description;
+							if ($_SESSION['voicemail']['storage_type']['text'] == 'base64') {
+								$array['voicemail_greetings'][$x]['greeting_base64'] = base64_encode(file_get_contents($v_greeting_dir.'/'.$file));
+							}
+							$array['voicemail_greetings'][$x]['greeting_id'] = $greeting_number;
+							$x++;
+						//grant temporary permissions
+							$p->add('voicemail_greeting_add', 'temp');
 					}
 					else {
 						//file found, check if base64 present
-						if ($_SESSION['voicemail']['storage_type']['text'] == 'base64') {
-							$found_greeting_uuid = array_search($file, $array_greetings);
-							if (!$array_base64_exists[$found_greeting_uuid]) {
-								$greeting_base64 = base64_encode(file_get_contents($v_greeting_dir.'/'.$file));
-								$sql = "update v_voicemail_greetings set ";
-								$sql .= "greeting_base64 = '".$greeting_base64."' ";
-								$sql .= "where domain_uuid = '".$domain_uuid."' ";
-								$sql .= "and voicemail_greeting_uuid = '".$found_greeting_uuid."' ";
-								$db->exec(check_sql($sql));
-								unset($sql);
+							if ($_SESSION['voicemail']['storage_type']['text'] == 'base64') {
+								$found_greeting_uuid = array_search($file, $array_greetings);
+								if (!$array_base64_exists[$found_greeting_uuid]) {
+									//build update array
+										$array['voicemail_greetings'][$x]['voicemail_greeting_uuid'] = $found_greeting_uuid;
+										$array['voicemail_greetings'][$x]['greeting_base64'] = base64_encode(file_get_contents($v_greeting_dir.'/'.$file));
+										$x++;
+									//grant temporary permissions
+										$p->add('voicemail_greeting_edit', 'temp');
+								}
 							}
-						}
 					}
 
 					//if base64, remove local file (unless currently selected greeting)
@@ -321,21 +333,33 @@
 						}
 					}
 				}
-			} //while
+			}
+			if (is_array($array) && @sizeof($array) != 0) {
+				//execute inserts/updates
+					$database = new database;
+					$database->app_name = 'voicemail_greetings';
+					$database->app_uuid = 'e4b4fbee-9e4d-8e46-3810-91ba663db0c2';
+					$database->save($array);
+					unset($array);
+				//revoke temporary permissions
+					$p->delete('voicemail_greeting_add', 'temp');
+					$p->delete('voicemail_greeting_edit', 'temp');
+			}
+
 			closedir($dh);
-		} //if
-	} //if
+		}
+	}
 
 //get the greetings list
 	$sql = "select * from v_voicemail_greetings ";
-	$sql .= "where domain_uuid = '".$domain_uuid."' ";
-	$sql .= "and voicemail_id = '".$voicemail_id."' ";
-	$sql .= "order by ".$order_by." ".$order." ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$greetings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$greeting_count = count($result);
-	unset ($prep_statement, $sql);
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and voicemail_id = :voicemail_id ";
+	$sql .= order_by($order_by, $order);
+	$parameters['domain_uuid'] = $domain_uuid;
+	$parameters['voicemail_id'] = $voicemail_id;
+	$database = new database;
+	$greetings = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //set the row styles
 	$c = 0;
@@ -405,7 +429,7 @@
 	if ($_SESSION['voicemail']['storage_type']['text'] == 'base64') { $colspan = $colspan - 2; }
 	if (!(permission_exists('voicemail_greeting_edit') || permission_exists('voicemail_greeting_delete'))) { $colspan = $colspan - 1; }
 
-	if (is_array($greetings)) {
+	if (is_array($greetings) && @sizeof($greetings) != 0) {
 		foreach($greetings as $row) {
 			//playback progress bar
 			if (permission_exists('voicemail_greeting_play')) {
@@ -456,9 +480,9 @@
 			echo "</tr>\n";
 
 			$c = ($c) ? 0 : 1;
-		} //end foreach
-		unset($sql, $result, $row_count);
-	} //end if results
+		}
+	}
+	unset($result, $row);
 	echo "</table>\n";
 	echo "<br /><br /><br />\n";
 

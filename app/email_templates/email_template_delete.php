@@ -40,23 +40,23 @@
 	$text = $language->get();
 
 //get the id
-	if (count($_GET)>0) {
-		$id = check_str($_GET["id"]);
-	}
+	$email_template_uuid = $_GET["id"];
 
 //delete the data
-	if (strlen($id)>0) {
-		//delete email_template
-			$sql = "delete from v_email_templates ";
-			$sql .= "where email_template_uuid = '$id' ";
-			$sql .= "and domain_uuid = '$domain_uuid' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($sql);
-	}
+	if (is_uuid($email_template_uuid)) {
+		//create array
+			$array['email_templates'][0]['email_template_uuid'] = $email_template_uuid;
 
-//delete the message
-	message::add($text['message-delete']);
+		//execute
+			$database = new database;
+			$database->app_name = 'email_templates';
+			$database->app_uuid = '8173e738-2523-46d5-8943-13883befd2fd';
+			$database->delete($array);
+			unset($array);
+
+		//set message
+			message::add($text['message-delete']);
+	}
 
 //redirect the user
 	header('Location: email_templates.php');

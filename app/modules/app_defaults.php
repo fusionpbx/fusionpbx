@@ -39,21 +39,25 @@
 		//add the access control list to the database
 			$sql = "select * from v_modules ";
 			$sql .= "where module_order is null ";
-			$prep_statement = $db->prepare($sql);
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$modules = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-				foreach ($modules as &$row) {
+			$database = new database;
+			$modules = $database->select($sql, null, 'all');
+			if (is_array($modules) && @sizeof($modules) != 0) {
+				foreach ($modules as $index => &$row) {
 					//get the module details
 						$mod = $module->info($row['module_name']);
 					//update the module order
-						$sql = "update v_modules set ";
-						$sql .= "module_order = '".$mod['module_order']."' ";
-						$sql .= "where module_uuid = '".$row['module_uuid']."' ";
-						$db->exec(check_sql($sql));
-						unset($sql);
+						$array['modules'][$index]['module_uuid'] = $row['module_uuid'];
+						$array['modules'][$index]['module_order'] = $mod['module_order'];
+				}
+				if (is_array($array) && @sizeof($array) != 0) {
+					$database = new database;
+					$database->app_name = 'modules';
+					$database->app_uuid = '5eb9cba1-8cb6-5d21-e36a-775475f16b5e';
+					$database->save($array);
+					unset($array);
 				}
 			}
+			unset($sql, $modules, $index, $row);
 
 		//use the module class to get the list of modules from the db and add any missing modules
 			if (isset($_SESSION['switch']['mod']['dir'])) {

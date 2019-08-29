@@ -179,7 +179,7 @@
 								--freeswitch.consoleLog("NOTICE", "cmd_string "..cmd_string.."\n");
 							else
  								--look inside the reply to check for the correct domain_name
-								if string.find(reply, domain_name) then
+								if string.find(reply, domain_name, nil, true) then
 									--found: user is busy
 								else
  									--not found

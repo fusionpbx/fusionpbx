@@ -65,7 +65,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ed380d7d-b3b8-40b4-8528-f10d521ddef0";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "http_auth_password";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
@@ -454,29 +454,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "spa secure call No or Yes";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c471163a-12fa-11e8-b642-0ed5f89f718b";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2672dbbc-2834-4e95-9ea9-e9ff6dc07838";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "aastra_gmt_offset";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Aastra timezone offset in minutes (e.g. 300 = GMT-5 = Eastern Standard Time)";
-		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c47117a2-12fa-11e8-b642-0ed5f89f718b";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "aastra_time_format";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Aastra clock format";
-		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c47119aa-12fa-11e8-b642-0ed5f89f718b";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "aastra_date_format";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Aastra date format";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "user_password";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "User level password for phone embeded web server.";
 		$y++;
 
 ?>

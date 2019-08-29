@@ -46,48 +46,48 @@
 
 //get post or get variables from http
 	if (count($_REQUEST) > 0) {
-		$cdr_id = check_str($_REQUEST["cdr_id"]);
-		$missed = check_str($_REQUEST["missed"]);
-		$direction = check_str($_REQUEST["direction"]);
-		$caller_id_name = check_str($_REQUEST["caller_id_name"]);
-		$caller_id_number = check_str($_REQUEST["caller_id_number"]);
-		$caller_destination = check_str($_REQUEST["caller_destination"]);
-		$caller_extension_uuid = check_str($_REQUEST["caller_extension_uuid"]);
-		$destination_number = check_str($_REQUEST["destination_number"]);
-		$context = check_str($_REQUEST["context"]);
-		$start_stamp_begin = check_str($_REQUEST["start_stamp_begin"]);
-		$start_stamp_end = check_str($_REQUEST["start_stamp_end"]);
-		$answer_stamp_begin = check_str($_REQUEST["answer_stamp_begin"]);
-		$answer_stamp_end = check_str($_REQUEST["answer_stamp_end"]);
-		$end_stamp_begin = check_str($_REQUEST["end_stamp_begin"]);
-		$end_stamp_end = check_str($_REQUEST["end_stamp_end"]);
-		$start_epoch = check_str($_REQUEST["start_epoch"]);
-		$stop_epoch = check_str($_REQUEST["stop_epoch"]);
-		$duration = check_str($_REQUEST["duration"]);
-		$billsec = check_str($_REQUEST["billsec"]);
-		$hangup_cause = check_str($_REQUEST["hangup_cause"]);
-		$call_result = check_str($_REQUEST["call_result"]);
-		$xml_cdr_uuid = check_str($_REQUEST["xml_cdr_uuid"]);
-		$bleg_uuid = check_str($_REQUEST["bleg_uuid"]);
-		$accountcode = check_str($_REQUEST["accountcode"]);
-		$read_codec = check_str($_REQUEST["read_codec"]);
-		$write_codec = check_str($_REQUEST["write_codec"]);
-		$remote_media_ip = check_str($_REQUEST["remote_media_ip"]);
-		$network_addr = check_str($_REQUEST["network_addr"]);
-		$bridge_uuid = check_str($_REQUEST["network_addr"]);
-		$order_by = check_str($_REQUEST["order_by"]);
-		$order = check_str($_REQUEST["order"]);
+		$cdr_id = $_REQUEST["cdr_id"];
+		$missed = $_REQUEST["missed"];
+		$direction = $_REQUEST["direction"];
+		$caller_id_name = $_REQUEST["caller_id_name"];
+		$caller_id_number = $_REQUEST["caller_id_number"];
+		$caller_destination = $_REQUEST["caller_destination"];
+		$caller_extension_uuid = $_REQUEST["caller_extension_uuid"];
+		$destination_number = $_REQUEST["destination_number"];
+		$context = $_REQUEST["context"];
+		$start_stamp_begin = $_REQUEST["start_stamp_begin"];
+		$start_stamp_end = $_REQUEST["start_stamp_end"];
+		$answer_stamp_begin = $_REQUEST["answer_stamp_begin"];
+		$answer_stamp_end = $_REQUEST["answer_stamp_end"];
+		$end_stamp_begin = $_REQUEST["end_stamp_begin"];
+		$end_stamp_end = $_REQUEST["end_stamp_end"];
+		$start_epoch = $_REQUEST["start_epoch"];
+		$stop_epoch = $_REQUEST["stop_epoch"];
+		$duration = $_REQUEST["duration"];
+		$billsec = $_REQUEST["billsec"];
+		$hangup_cause = $_REQUEST["hangup_cause"];
+		$call_result = $_REQUEST["call_result"];
+		$xml_cdr_uuid = $_REQUEST["xml_cdr_uuid"];
+		$bleg_uuid = $_REQUEST["bleg_uuid"];
+		$accountcode = $_REQUEST["accountcode"];
+		$read_codec = $_REQUEST["read_codec"];
+		$write_codec = $_REQUEST["write_codec"];
+		$remote_media_ip = $_REQUEST["remote_media_ip"];
+		$network_addr = $_REQUEST["network_addr"];
+		$bridge_uuid = $_REQUEST["network_addr"];
+		$order_by = $_REQUEST["order_by"];
+		$order = $_REQUEST["order"];
 		if (is_array($_SESSION['cdr']['field'])) {
 			foreach ($_SESSION['cdr']['field'] as $field) {
 				$array = explode(",", $field);
 				$field_name = end($array);
 				if (isset($_REQUEST[$field_name])) {
-					$$field_name = check_str($_REQUEST[$field_name]);
+					$$field_name = $_REQUEST[$field_name];
 				}
 			}
 		}
-		if (strlen(check_str($_REQUEST["mos_comparison"])) > 0) {
-			switch(check_str($_REQUEST["mos_comparison"])) {
+		if (strlen($_REQUEST["mos_comparison"]) > 0) {
+			switch($_REQUEST["mos_comparison"]) {
 				case 'less': $mos_comparison = "<"; break;
 				case 'greater': $mos_comparison = ">"; break;
 				case 'lessorequal': $mos_comparison = "<="; break;
@@ -98,173 +98,37 @@
 		} else {
 			$mos_comparison = '';
 		}
-		//$mos_comparison = check_str($_REQUEST["mos_comparison"]);
-		$mos_score = check_str($_REQUEST["mos_score"]);
-		$leg = check_str($_REQUEST["leg"]);
+		//$mos_comparison = $_REQUEST["mos_comparison"];
+		$mos_score = $_REQUEST["mos_score"];
+		$leg = $_REQUEST["leg"];
 	}
 
+//check to see if permission does not exist
 	if(!permission_exists(xml_cdr_b_leg)){
 		$leg = 'a';
 	}
 
-//build the sql where string
-	if ($missed == true) {
-		$sql_where_ands[] = "billsec = '0'";
-	}
-	if (strlen($start_epoch) > 0 && strlen($stop_epoch) > 0) {
-		$sql_where_ands[] = "start_epoch BETWEEN ".$start_epoch." AND ".$stop_epoch." ";
-	}
-	if (strlen($cdr_id) > 0) { $sql_where_ands[] = "cdr_id like '%".$cdr_id."%'"; }
-	if (strlen($direction) > 0) { $sql_where_ands[] = "direction = '".$direction."'"; }
-	if (strlen($caller_id_name) > 0) {
-		$mod_caller_id_name = str_replace("*", "%", $caller_id_name);
-		$sql_where_ands[] = "caller_id_name like '".$mod_caller_id_name."'";
-	}
-	if (strlen($caller_extension_uuid) > 0 && is_uuid($caller_extension_uuid)) {
-		$sql_where_ands[] = "e.extension_uuid = '".$caller_extension_uuid."'";
-	}
-	if (strlen($caller_destination) > 0) {
-		$mod_caller_destination = str_replace("*", "%", $caller_destination);
-		$sql_where_ands[] = "caller_destination like '".$mod_caller_destination."'";
-	}
-	if (strlen($destination_number) > 0) {
-		$mod_destination_number = str_replace("*", "%", $destination_number);
-		$sql_where_ands[] = "destination_number like '".$mod_destination_number."'";
-	}
-	if (strlen($context) > 0) { $sql_where_ands[] = "context like '%".$context."%'"; }
+//get variables used to control the order
+	$order_by = $_REQUEST["order_by"];
+	$order = $_REQUEST["order"];
 
-	if (is_array($_SESSION['cdr']['field'])) {
-		foreach ($_SESSION['cdr']['field'] as $field) {
-			$array = explode(",", $field);
-			$field_name = end($array);
-			if (isset($$field_name)) {
-				$$field_name = check_str($_REQUEST[$field_name]);
-				if (strlen($$field_name) > 0) {
-					$sql_where_ands[] = "$field_name like '%".$$field_name."%'";
-				}
-			}
-		}
+//validate the order
+	switch ($order) {
+		case 'asc':
+			break;
+		case 'desc':
+			break;
+		default:
+			$order = '';
 	}
 
-	if (strlen($start_stamp_begin) > 0 && strlen($start_stamp_end) > 0) { $sql_where_ands[] = "start_stamp BETWEEN '".$start_stamp_begin.":00.000' AND '".$start_stamp_end.":59.999'"; }
-	else {
-		if (strlen($start_stamp_begin) > 0) { $sql_where_ands[] = "start_stamp >= '".$start_stamp_begin.":00.000'"; }
-		if (strlen($start_stamp_end) > 0) { $sql_where_ands[] = "start_stamp <= '".$start_stamp_end.":59.999'"; }
-	}
-	if (strlen($answer_stamp_begin) > 0 && strlen($answer_stamp_end) > 0) { $sql_where_ands[] = "answer_stamp BETWEEN '".$answer_stamp_begin.":00.000' AND '".$answer_stamp_end.":59.999'"; }
-	else {
-		if (strlen($answer_stamp_begin) > 0) { $sql_where_ands[] = "answer_stamp >= '".$answer_stamp_begin.":00.000'"; }
-		if (strlen($answer_stamp_end) > 0) { $sql_where_ands[] = "answer_stamp <= '".$answer_stamp_end.":59.999'"; }
-	}
-	if (strlen($end_stamp_begin) > 0 && strlen($end_stamp_end) > 0) { $sql_where_ands[] = "end_stamp BETWEEN '".$end_stamp_begin.":00.000' AND '".$end_stamp_end.":59.999'"; }
-	else {
-		if (strlen($end_stamp_begin) > 0) { $sql_where_ands[] = "end_stamp >= '".$end_stamp_begin.":00.000'"; }
-		if (strlen($end_stamp_end) > 0) { $sql_where_ands[] = "end_stamp <= '".$end_stamp_end.":59.999'"; }
-	}
-	if (strlen($duration) > 0) { $sql_where_ands[] = "duration like '%".$duration."%'"; }
-	if (strlen($billsec) > 0) { $sql_where_ands[] = "billsec like '%".$billsec."%'"; }
-	if (strlen($hangup_cause) > 0) { $sql_where_ands[] = "hangup_cause like '%".$hangup_cause."%'"; }
-	if (strlen($call_result) > 0) {
-		switch ($call_result) {
-			case 'answered':
-				$sql_where_ands[] = "(answer_stamp is not null and bridge_uuid is not null)";
-				break;
-			case 'voicemail':
-				$sql_where_ands[] = "(answer_stamp is not null and bridge_uuid is null)";
-				break;
-			case 'missed':
-				$sql_missed_1 = "( (answer_stamp is not null and bridge_uuid is null) or (";
-				$sql_missed_2 = ") )";
-			case 'cancelled':
-				if ($direction == 'inbound' || $direction == 'local' || $call_result == 'missed') {
-					$sql_where_ands_cancelled = "(answer_stamp is null and bridge_uuid is null and sip_hangup_disposition <> 'send_refuse')";
-				}
-				else if ($direction == 'outbound') {
-					$sql_where_ands_cancelled = "(answer_stamp is null and bridge_uuid is not null)";
-				}
-				else {
-					$sql_where_ands_cancelled = "
-						((
-							(direction = 'inbound' or direction = 'local')
-							and answer_stamp is null
-							and bridge_uuid is null
-							and sip_hangup_disposition <> 'send_refuse'
-						)
-						or (
-							direction = 'outbound'
-							and answer_stamp is null
-							and bridge_uuid is not null
-						))";
-				}
-				$sql_where_ands[] = ($call_result == 'missed') ? $sql_missed_1.' '.$sql_where_ands_cancelled.' '.$sql_missed_2 : $sql_where_ands_cancelled;
-				break;
-			default: //failed
-				$sql_where_ands[] = "(answer_stamp is null and bridge_uuid is null and billsec = 0 and sip_hangup_disposition = 'send_refuse')";
-		}
-	}
-	if (strlen($xml_cdr_uuid) > 0) { $sql_where_ands[] = "xml_cdr_uuid = '".$xml_cdr_uuid."'"; }
-	if (strlen($bleg_uuid) > 0) { $sql_where_ands[] = "bleg_uuid = '".$bleg_uuid."'"; }
-	if (strlen($accountcode) > 0) { $sql_where_ands[] = "accountcode = '".$accountcode."'"; }
-	if (strlen($read_codec) > 0) { $sql_where_ands[] = "read_codec like '%".$read_codec."%'"; }
-	if (strlen($write_codec) > 0) { $sql_where_ands[] = "write_codec like '%".$write_codec."%'"; }
-	if (strlen($remote_media_ip) > 0) { $sql_where_ands[] = "remote_media_ip like '%".$remote_media_ip."%'"; }
-	if (strlen($network_addr) > 0) { $sql_where_ands[] = "network_addr like '%".$network_addr."%'"; }
-	if (strlen($mos_comparison) > 0 && strlen($mos_score) > 0 ) { $sql_where_ands[] = "rtp_audio_in_mos " . $mos_comparison . " ".$mos_score.""; }
-	if (strlen($leg) > 0) { $sql_where_ands[] = "leg='$leg'"; }
-
-	//if not admin or superadmin, only show own calls
+//set the assigned extensions
 	if (!permission_exists('xml_cdr_domain')) {
-		if (count($_SESSION['user']['extension']) > 0) { // extensions are assigned to this user
-			foreach ($_SESSION['user']['extension'] as $row) {
-				$sql_where_ors[] = "c.extension_uuid = '".$row['extension_uuid']."'";
-			}
-
-			// create simple user extension array
-			foreach ($_SESSION['user']['extension'] as $row) {
-				$user_extensions[] = $row['user'];
-			}
-
-			// if both a source and destination are submitted, but neither are an assigned extension, restrict results
-			if (
-				$caller_id_number != '' &&
-				$destination_number != '' &&
-				array_search($caller_id_number, $user_extensions) === false &&
-				array_search($destination_number, $user_extensions) === false
-				) {
-				$sql_where_ors[] = "caller_id_number = '".$user_extension."'";
-				$sql_where_ors[] = "destination_number = '".$user_extension."'";
-				$sql_where_ors[] = "destination_number = '*99".$user_extension."'";
-			}
-			// if source submitted is blank, implement restriction for assigned extension(s)
-			if ($caller_id_number == '') { // if source criteria is blank, then restrict to assigned ext
-				foreach ($user_extensions as $user_extension) {
-					if (strlen($user_extension) > 0) {	$sql_where_ors[] = "caller_id_number = '".$user_extension."'"; }
-				}
-			}
-
-			// if destination submitted is blank, implement restriction for assigned extension(s)
-			if ($destination_number == '') {
-				foreach ($user_extensions as $user_extension) {
-					if (strlen($user_extension) > 0) {
-						$sql_where_ors[] = "destination_number = '".$user_extension."'";
-						$sql_where_ors[] = "destination_number = '*99".$user_extension."'";
-					}
-				}
-			}
-
-			// concatenate the 'or's array, then add to the 'and's array
-			if (sizeof($sql_where_ors) > 0) {
-				$sql_where_ands[] = "( ".implode(" or ", $sql_where_ors)." )";
+		foreach ($_SESSION['user']['extension'] as $row) {
+			if (is_uuid($row['extension_uuid'])) {
+				$extension_uuids[] = $row['extension_uuid'];
 			}
 		}
-		else {
-			$sql_where_ands[] = "1 <> 1"; //disable viewing of cdr records by users with no assigned extensions
-		}
-	}
-
-	// concatenate the 'ands's array, add to where clause
-	if (sizeof($sql_where_ands) > 0) {
-		$sql_where = " and ".implode(" and ", $sql_where_ands);
 	}
 
 //set the param variable which is used with paging
@@ -383,6 +247,7 @@
 	$sql .= "c.destination_number, \n";
 	$sql .= "c.leg, \n";
 	$sql .= "(c.xml IS NOT NULL OR c.json IS NOT NULL) AS raw_data_exists, \n";
+	$sql .= "c.json, \n";
 	if (is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
 			$array = explode(",", $field);
@@ -409,25 +274,234 @@
 		$sql .= ", c.domain_name \n";
 	}
 	$sql .= "from v_xml_cdr as c \n";
-	$sql .= "left join v_extensions as e on e.extension_uuid = c.extension_uuid ";
-	$sql .= "inner join v_domains as d on d.domain_uuid = c.domain_uuid ";
+	$sql .= "left join v_extensions as e on e.extension_uuid = c.extension_uuid \n";
+	$sql .= "inner join v_domains as d on d.domain_uuid = c.domain_uuid \n";
 	if ($_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
-		if ($sql_where) { $sql .= "where "; }
+		$sql .= "where 1 = 1 ";
 	} else {
-		$sql .= "where c.domain_uuid = '".$domain_uuid."' \n";
+		$sql .= "where c.domain_uuid = :domain_uuid \n";
+		$parameters['domain_uuid'] = $domain_uuid;
 	}
-	$sql .= $sql_where;
-	if (strlen($order_by)> 0) { $sql .= " order by ".$order_by." ".$order." "; }
+	
+	if (!permission_exists('xml_cdr_domain')) { //only show the user their calls
+		$sql .= "and (c.extension_uuid = '".implode("' or c.extension_uuid = '", $extension_uuids)."') ";
+	}
+	if ($missed == true) {
+		$sql .= "and missed_call = 1 \n";
+	}
+	if (strlen($start_epoch) > 0 && strlen($stop_epoch) > 0) {
+		$sql .= "and start_epoch BETWEEN :start_epoch AND :stop_epoch \n";
+		$parameters['start_epoch'] = $start_epoch;
+		$parameters['stop_epoch'] = $stop_epoch;
+	}
+	if (strlen($cdr_id) > 0) { 
+		$sql .= "and cdr_id like :cdr_id \n";
+		$parameters['cdr_id'] = '%'.$cdr_id.'%';
+	}
+	if (strlen($direction) > 0) {
+		$sql .= "and direction = :direction \n";
+		$parameters['direction'] = $direction;
+	}
+	if (strlen($caller_id_name) > 0) {
+		$mod_caller_id_name = str_replace("*", "%", $caller_id_name);
+		$sql .= "and caller_id_name like :caller_id_name \n";
+		$parameters['caller_id_name'] = '%'.$mod_caller_id_name.'%';
+	}
+	if (strlen($caller_id_number) > 0) {
+		$mod_caller_id_number = preg_replace("#[^0-9./]#", "", $caller_id_number);
+		if (strlen($mod_caller_id_number) == 0) {
+			$mod_caller_id_number = trim($caller_id_number);
+		}
+		$sql .= "and caller_id_number like :caller_id_number \n";
+		$parameters['caller_id_number'] = '%'.$mod_caller_id_number.'%';
+	}
+
+	if (strlen($caller_extension_uuid) > 0 && is_uuid($caller_extension_uuid)) {
+		$sql .= "and e.extension_uuid = :extension_uuid \n";
+		$parameters['extension_uuid'] = $caller_extension_uuid;
+	}
+	if (strlen($caller_destination) > 0) {
+		$mod_caller_destination = preg_replace("#[^0-9./]#", "", $caller_destination);
+		if (strlen($mod_caller_destination) == 0) {
+			$mod_caller_destination = trim($caller_destination);
+		}
+		$sql .= "and caller_destination like :caller_destination \n";
+		$parameters['caller_destination'] = '%'.$mod_caller_destination.'%';
+	}
+	if (strlen($destination_number) > 0) {
+		$mod_destination_number = preg_replace("#[^0-9./]#", "", $destination_number);
+		if (strlen($mod_destination_number) == 0) {
+			$mod_destination_number = trim($destination_number);
+		}
+		$sql .= "and destination_number like :destination_number \n";
+		$parameters['destination_number'] = '%'.$mod_destination_number.'%';
+	}
+	if (strlen($context) > 0) {
+		$sql .= "and context like :context \n";
+		$parameters['context'] = '%'.$context.'%';
+	}
+	if (is_array($_SESSION['cdr']['field'])) {
+		foreach ($_SESSION['cdr']['field'] as $field) {
+			$array = explode(",", $field);
+			$field_name = end($array);
+			if (isset($$field_name)) {
+				$$field_name = $_REQUEST[$field_name];
+				if (strlen($$field_name) > 0) {
+					$sql .= "and $field_name like :".$field_name." \n";
+					$parameters[$field_name] = '%'.$$field_name.'%';
+				}
+			}
+		}
+	}
+
+	if (strlen($start_stamp_begin) > 0 && strlen($start_stamp_end) > 0) {
+		$sql .= "and start_stamp BETWEEN :start_stamp_begin AND :start_stamp_end ";
+		$parameters['start_stamp_begin'] = $start_stamp_begin.':00.000';
+		$parameters['start_stamp_end'] = $start_stamp_end.':59.999';
+	}
+	else {
+		if (strlen($start_stamp_begin) > 0) {
+			$sql .= "and start_stamp >= :start_stamp_begin ";
+			$parameters['start_stamp_begin'] = $start_stamp_begin.':00.000';
+		}
+		if (strlen($start_stamp_end) > 0) {
+			$sql .= "and start_stamp <= :start_stamp_end ";
+			$parameters['start_stamp_end'] = $start_stamp_end.':59.999';
+		}
+	}
+	if (strlen($answer_stamp_begin) > 0 && strlen($answer_stamp_end) > 0) {
+		$sql .= "and answer_stamp BETWEEN :answer_stamp_begin AND :answer_stamp_end ";
+		$parameters['answer_stamp_begin'] = $answer_stamp_begin.':00.000';
+		$parameters['answer_stamp_end'] = $answer_stamp_end.':59.999';
+	}
+	else {
+		if (strlen($answer_stamp_begin) > 0) {
+			$sql .= "and answer_stamp >= :answer_stamp_begin ";
+			$parameters['answer_stamp_begin'] = $answer_stamp_begin.':00.000';
+		}
+		if (strlen($answer_stamp_end) > 0) {
+			$sql .= "and answer_stamp <= :answer_stamp_end "; 
+			$parameters['answer_stamp_end'] = $answer_stamp_end.':59.999';
+		}
+	}
+	if (strlen($end_stamp_begin) > 0 && strlen($end_stamp_end) > 0) {
+		$sql .= "and end_stamp BETWEEN :end_stamp_begin AND :end_stamp_end ";
+		$parameters['end_stamp_begin'] = $end_stamp_begin.':00.000';
+		$parameters['end_stamp_end'] = $end_stamp_end.':59.999';
+	}
+	else {
+		if (strlen($end_stamp_begin) > 0) {
+			$sql .= "and end_stamp >= :end_stamp_begin ";
+			$parameters['end_stamp_begin'] = $end_stamp_begin.':00.000';
+		}
+		if (strlen($end_stamp_end) > 0) {
+			$sql .= "and end_stamp <= :end_stamp_end ";
+			$parameters['end_stamp'] = $end_stamp_end.':59.999';
+		}
+	}
+	if (strlen($duration) > 0) {
+		$sql .= "and duration like :duration ";
+		$parameters['duration'] = '%'.$duration.'%';
+	}
+	if (strlen($billsec) > 0) {
+		$sql .= "and billsec like :billsec ";
+		$parameters['billsec'] = '%'.$billsec.'%';
+	}
+	if (strlen($hangup_cause) > 0) {
+		$sql .= "and hangup_cause like :hangup_cause ";
+		$parameters['hangup_cause'] = '%'.$hangup_cause.'%';
+	}
+	if (strlen($call_result) > 0) {
+		switch ($call_result) {
+			case 'answered':
+				$sql .= "and (answer_stamp is not null and bridge_uuid is not null) ";
+				break;
+			case 'voicemail':
+				$sql .= "and (answer_stamp is not null and bridge_uuid is null) ";
+				break;
+			case 'missed':
+				$sql .= "and missed_call = '1' ";
+				break;
+			case 'cancelled':
+				if ($direction == 'inbound' || $direction == 'local' || $call_result == 'missed') {
+					$sql = "and (answer_stamp is null and bridge_uuid is null and sip_hangup_disposition <> 'send_refuse') ";
+				}
+				else if ($direction == 'outbound') {
+					$sql = "and (answer_stamp is null and bridge_uuid is not null) ";
+				}
+				else {
+					$sql .= "
+						and ((
+							(direction = 'inbound' or direction = 'local')
+							and answer_stamp is null
+							and bridge_uuid is null
+							and sip_hangup_disposition <> 'send_refuse'
+						)
+						or (
+							direction = 'outbound'
+							and answer_stamp is null
+							and bridge_uuid is not null
+						))";
+				}
+				break;
+			default: //failed
+				//$sql .= "and (answer_stamp is null and bridge_uuid is null and billsec = 0 and sip_hangup_disposition = 'send_refuse') ";
+		}
+	}
+	if (strlen($xml_cdr_uuid) > 0) {
+		$sql .= "and xml_cdr_uuid = :xml_cdr_uuid ";
+		$parameters['xml_cdr_uuid'] = $xml_cdr_uuid;
+	}
+	if (strlen($bleg_uuid) > 0) {
+		$sql .= "and bleg_uuid = :bleg_uuid ";
+		$parameters['bleg_uuid'] = $bleg_uuid;
+	}
+	if (strlen($accountcode) > 0) {
+		$sql .= "and accountcode = :accountcode ";
+		$parameters['accountcode'] = $accountcode;
+	}
+	if (strlen($read_codec) > 0) {
+		$sql .= "and read_codec like :read_codec ";
+		$parameters['read_codec'] = '%'.$read_codec.'%';
+	}
+	if (strlen($write_codec) > 0) {
+		$sql .= "and write_codec like :write_codec ";
+		$parameters['write_codec'] = '%'.$write_codec.'%';
+	}
+	if (strlen($remote_media_ip) > 0) {
+		$sql .= "and remote_media_ip like :remote_media_ip ";
+		$parameters['remote_media_ip'] = $remote_media_ip;
+	}
+	if (strlen($network_addr) > 0) {
+		$sql .= "and network_addr like :network_addr ";
+		$parameters['network_addr'] = '%'.$network_addr.'%';
+	}
+	//if (strlen($mos_comparison) > 0 && strlen($mos_score) > 0 ) {
+	//	$sql .= "and rtp_audio_in_mos = :mos_comparison :mos_score ";
+	//	$parameters['mos_comparison'] = $mos_comparison;
+	//	$parameters['mos_score'] = $mos_score;
+	//}
+	if (strlen($leg) > 0) {
+		$sql .= "and leg = :leg ";
+		$parameters['leg'] = $leg;
+	}
+	//end where
+	if (strlen($order_by) > 0) {
+		$sql .= " order by $order_by $order ";
+	}
 	if ($_REQUEST['export_format'] != "csv" && $_REQUEST['export_format'] != "pdf") {
 		if ($rows_per_page == 0) {
-			$sql .= " limit ".$_SESSION['cdr']['limit']['numeric']." offset 0 \n";
+			$sql .= " limit :limit offset 0 \n";
+			$parameters['limit'] = $_SESSION['cdr']['limit']['numeric'];
 		}
 		else {
-			$sql .= " limit ".$rows_per_page." offset ".$offset." \n";
+			$sql .= " limit :limit offset :offset \n";
+			$parameters['limit'] = $rows_per_page;
+			$parameters['offset'] = $offset;
 		}
 	}
-	$sql= str_replace("  ", " ", $sql);
-	$sql= str_replace("where and", "where", $sql);
+	$sql = str_replace("  ", " ", $sql);
+	//$sql= str_replace("where and", "where", $sql);
 	$database = new database;
 	if ($archive_request == 'true') {
 		if ($_SESSION['cdr']['archive_database']['boolean'] == 'true') {
@@ -440,9 +514,9 @@
 			$database->password = $_SESSION['cdr']['archive_database_password']['text'];
 		}
 	}
-	$result = $database->select($sql);
+	$result = $database->select($sql, $parameters, 'all');
 	$result_count = count($result);
-	unset($database);
+	unset($database, $sql);
 
 //return the paging
 	list($paging_controls_mini, $rows_per_page, $offset) = paging($num_rows, $param, $rows_per_page, true, $result_count); //top

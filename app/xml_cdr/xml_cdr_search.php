@@ -53,7 +53,7 @@
 	echo "			document.getElementById('caller_id_number').value = '';";
 	echo "			$('#caller_extension_uuid').toggle();";
 	echo "			$('#caller_id_number').toggle();";
-	echo "			if ($('#caller_id_number').is(':visible')) { $('#caller_id_number').focus(); } else { $('#caller_extension_uuid').focus(); }";
+	echo "			if ($('#caller_id_number').is(':visible')) { $('#caller_id_number').trigger('focus'); } else { $('#caller_extension_uuid').trigger('focus'); }";
 	echo "		}";
 	echo "	}";
 	echo "</script>";
@@ -159,8 +159,8 @@
 	echo "		<td class='vtable'>";
 	echo "			<div class='row'>\n";
 	echo "				<div class='col-sm-12'>";
-	echo "					<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px;' name='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin)."'>";
-	echo "					<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px;' name='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end)."'>";
+	echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin)."'>";
+	echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end)."'>";
 	echo "				</div>\n";
 	echo "			</div>\n";
 	echo "		</td>";
@@ -170,8 +170,8 @@
 	echo "		<td class='vtable'>";
 	echo "			<div class='row'>\n";
 	echo "				<div class='col-sm-12'>";
-	echo "					<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px;' name='answer_stamp_begin' placeholder='".$text['label-from']."' value='".escape($answer_stamp_begin)."'>";
-	echo "					<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px;' name='answer_stamp_end' placeholder='".$text['label-to']."' value='".escape($answer_stamp_end)."'>";
+	echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#answer_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='answer_stamp_begin' id='answer_stamp_begin' placeholder='".$text['label-from']."' value='".escape($answer_stamp_begin)."'>";
+	echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#answer_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='answer_stamp_end' id='answer_stamp_end' placeholder='".$text['label-to']."' value='".escape($answer_stamp_end)."'>";
 	echo "				</div>\n";
 	echo "			</div>\n";
 	echo "		</td>";
@@ -181,8 +181,8 @@
 	echo "		<td class='vtable'>";
 	echo "			<div class='row'>\n";
 	echo "				<div class='col-sm-12'>";
-	echo "					<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px;' name='end_stamp_begin' placeholder='".$text['label-from']."' value='".escape($end_stamp_begin)."'>";
-	echo "					<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px;' name='end_stamp_end' placeholder='".$text['label-to']."' value='".escape($end_stamp_end)."'>";
+	echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#end_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='end_stamp_begin' id='end_stamp_begin' placeholder='".$text['label-from']."' value='".escape($end_stamp_begin)."'>";
+	echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#end_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='end_stamp_end' id='end_stamp_end' placeholder='".$text['label-to']."' value='".escape($end_stamp_end)."'>";
 	echo "				</div>\n";
 	echo "			</div>\n";
 	echo "		</td>";

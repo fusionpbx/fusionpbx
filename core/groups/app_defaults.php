@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -33,31 +33,68 @@ if ($domains_processed == 1) {
 	//find rows that have a null group_uuid and set the correct group_uuid
 		$sql = "select * from v_user_groups ";
 		$sql .= "where group_uuid is null; ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			$db->beginTransaction();
+		$database = new database;
+		$result = $database->select($sql, null, 'all');
+		if (is_array($result)) {
 			foreach($result as $row) {
 				if (strlen($row['group_name']) > 0) {
 					//get the group_uuid
 						$sql = "select group_uuid from v_groups ";
-						$sql .= "where group_name = '".$row['group_name']."' ";
-						$prep_statement_sub = $db->prepare($sql);
-						$prep_statement_sub->execute();
-						$sub_result = $prep_statement_sub->fetch(PDO::FETCH_ASSOC);
-						unset ($prep_statement_sub);
-						$group_uuid = $sub_result['group_uuid'];
+						$sql .= "where group_name = :group_name ";
+						$parameters['group_name'] = $row['group_name'];
+						$database = new database;
+						$group_uuid = $database->select($sql, $parameters, 'column');
+						unset($sql, $parameters);
+
 					//set the group_uuid
 						$sql = "update v_user_groups set ";
-						$sql .= "group_uuid = '".$group_uuid."' ";
-						$sql .= "where user_group_uuid = '".$row['user_group_uuid']."'; ";
-						$db->exec($sql);
-						unset($sql);
+						$sql .= "group_uuid = :group_uuid ";
+						$sql .= "where user_group_uuid = :user_group_uuid; ";
+						$parameters['group_uuid'] = $group_uuid;
+						$parameters['user_group_uuid'] = $row['user_group_uuid'];
+						$database = new database;
+						$database->execute($sql, $parameters);
+						unset($sql, $parameters);
 				}
 			}
-			$db->commit();
-			unset ($prep_statement);
+			unset ($result);
+		}
+
+	//set the default group levels
+		$sql = "select * from v_groups ";
+		$sql .= "where group_level is null; ";
+		$database = new database;
+		$result = $database->select($sql, null, 'all');
+		if (is_array($result) && count($result) > 0) {
+			$x = 0;
+			foreach($result as $row) {
+				$array['groups'][$x]['group_uuid'] = $row['group_uuid'];
+				switch ($row['group_name']) {
+					case 'superadmin':
+						$array['groups'][$x]['group_level'] = 80;
+						break;
+					case 'admin':
+						$array['groups'][$x]['group_level'] = 50;
+						break;
+					case 'user':
+						$array['groups'][$x]['group_level'] = 30;
+						break;
+					case 'agent':
+						$array['groups'][$x]['group_level'] = 20;
+						break;
+					case 'public':
+						$array['groups'][$x]['group_level'] = 10;
+						break;
+					default:
+						$array['groups'][$x]['group_level'] = 10;
+				}
+				$x++;
+			}
+			$database = new database;
+			$database->app_name = 'groups';
+			$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+			$database->save($array);
+			unset($array);
 		}
 
 }

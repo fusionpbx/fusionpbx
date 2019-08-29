@@ -49,30 +49,6 @@
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-if ($_GET['a'] == "download") {
-	if ($_GET['t'] == "cdrcsv") {
-		$tmp = $_SESSION['switch']['log']['dir'].'/cdr-csv/';
-		$filename = 'Master.csv';
-	}
-	if ($_GET['t'] == "backup") {
-		$tmp = $backup_dir.'/';
-		$filename = 'backup.tgz';
-		if (!is_dir($backup_dir.'/')) {
-			exec("mkdir ".$backup_dir."/");
-		}
-		$parent_dir = realpath($_SESSION['switch']['base']['dir']."/..");
-		chdir($parent_dir);
-		shell_exec('tar cvzf freeswitch '.$backup_dir.'/backup.tgz');
-	}
-	session_cache_limiter('public');
-	$fd = fopen($tmp.$filename, "rb");
-	header("Content-Type: binary/octet-stream");
-	header("Content-Length: " . filesize($tmp.$filename));
-	header('Content-Disposition: attachment; filename="'.$filename.'"');
-	fpassthru($fd);
-	exit;
-}
-
 //show the content
 	require_once "resources/header.php";
 	$document['title'] = $text['title-sip-status'];
@@ -94,7 +70,7 @@ if ($_GET['a'] == "download") {
 		echo "<th align='left'>".$text['label-message']."</th>\n";
 		echo "</tr>\n";
 		echo "<tr>\n";
-		echo "<td class='row_style1'><strong>$msg</strong></td>\n";
+		echo "<td class='row_style1'><strong>".escape($msg)."</strong></td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
 		echo "</div>\n";
@@ -102,11 +78,11 @@ if ($_GET['a'] == "download") {
 
 //get the gateways
 	$sql = "select g.domain_uuid, g.gateway, g.gateway_uuid, d.domain_name ";
-	$sql .= "from v_gateways as g left outer join v_domains as d on d.domain_uuid = g.domain_uuid";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$gateways = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$sql .= "from v_gateways as g left ";
+	$sql .= "outer join v_domains as d on d.domain_uuid = g.domain_uuid";
+	$database = new database;
+	$gateways = $database->select($sql, null, 'all');
+	unset($sql);
 
 	if ($fp) {
 		$hostname = trim(event_socket_request($fp, 'api switchname'));
@@ -116,15 +92,15 @@ if ($_GET['a'] == "download") {
 	$sql = "select sip_profile_name from v_sip_profiles ";
 	$sql .= "where sip_profile_enabled = 'true' ";
 	if ($hostname) {
-		$sql .= "and (sip_profile_hostname = '" . check_str($hostname) . "' ";
+		$sql .= "and (sip_profile_hostname = :sip_profile_hostname ";
 		$sql .= "or sip_profile_hostname = '' ";
-		$sql .= "or sip_profile_hostname is null ) ";
+		$sql .= "or sip_profile_hostname is null) ";
+		$parameters['sip_profile_hostname'] = $hostname;
 	}
 	$sql .= "order by sip_profile_name asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$sip_profiles = $prep_statement->fetchAll();
-	unset ($prep_statement, $sql);
+	$database = new database;
+	$sip_profiles = $database->select($sql, (is_array($parameters) && @sizeof($parameters) != 0 ? $parameters : null), 'all');
+	unset($sql, $parameters);
 
 //sofia status
 	if ($fp && permission_exists('system_status_sofia_status')) {
@@ -199,9 +175,10 @@ if ($_GET['a'] == "download") {
 			if ($_SESSION["domain_name"] == $gateway_domain_name) {
 				echo "<a href='".PROJECT_PATH."/app/gateways/gateway_edit.php?id=".strtolower(escape($row->name))."'>".escape($gateway_name)."@".escape($gateway_domain_name)."</a>";
 			}
-			elseif ($gateway_domain_name == '') {
+			else if ($gateway_domain_name == '') {
 				echo $gateway_name ? $gateway_name : $row->name;
-			} else {
+			}
+			else {
 				echo $gateway_name."@".$gateway_domain_name;
 			}
 			echo "	</td>\n";

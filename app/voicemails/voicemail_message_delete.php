@@ -34,34 +34,31 @@ else {
 	exit;
 }
 
-/*
-echo "<pre>".print_r($_REQUEST, true)."</pre>";
-exit;
-*/
-
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
 //get submitted variables
-	if (count($_REQUEST)>0) {
-		$voicemail_messages = $_REQUEST["voicemail_messages"];
-	}
+	$voicemail_messages = $_REQUEST["voicemail_messages"];
 
 //delete the voicemail message
 	$deleted = 0;
-	if (is_array($voicemail_messages) && sizeof($voicemail_messages) > 0) {
+	if (is_array($voicemail_messages) && @sizeof($voicemail_messages) > 0) {
 		require_once "resources/classes/voicemail.php";
 		foreach ($voicemail_messages as $voicemail_uuid => $voicemail_message_uuids) {
-			foreach ($voicemail_message_uuids as $voicemail_message_uuid) {
-				$voicemail = new voicemail;
-				$voicemail->db = $db;
-				$voicemail->domain_uuid = $_SESSION['domain_uuid'];
-				$voicemail->voicemail_uuid = check_str($voicemail_uuid);
-				$voicemail->voicemail_message_uuid = check_str($voicemail_message_uuid);
-				$result = $voicemail->message_delete();
-				unset($voicemail);
-				$deleted++;
+			if (is_array($voicemail_message_uuids) && @sizeof($voicemail_message_uuids) != 0) {
+				foreach ($voicemail_message_uuids as $voicemail_message_uuid) {
+					if (is_uuid($voicemail_uuid) && is_uuid($voicemail_message_uuid)) {
+						$voicemail = new voicemail;
+						$voicemail->db = $db;
+						$voicemail->domain_uuid = $_SESSION['domain_uuid'];
+						$voicemail->voicemail_uuid = $voicemail_uuid;
+						$voicemail->voicemail_message_uuid = $voicemail_message_uuid;
+						$result = $voicemail->message_delete();
+						unset($voicemail);
+						$deleted++;
+					}
+				}
 			}
 		}
 	}
@@ -73,7 +70,7 @@ exit;
 
 //redirect the user
 	if ($deleted > 0) {
-		$_SESSION["message"] = $text['message-delete'].': '.$deleted;
+		message::add($text['message-delete'].': '.$deleted);
 	}
 	if ($referer_path == PROJECT_PATH."/app/voicemails/voicemail_messages.php") {
 		header("Location: voicemail_messages.php?".$referer_query);

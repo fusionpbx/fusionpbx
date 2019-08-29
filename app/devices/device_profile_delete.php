@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2016 All Rights Reserved.
+	Copyright (C) 2019 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -28,57 +28,73 @@
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
-//check permissions
-	if (permission_exists('device_profile_delete')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
-	}
-
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-//get the id
-	if (isset($_GET["id"])) {
-		$id = $_GET["id"];
-	}
-
-//delete the data and subdata
-	if (is_uuid($id)) {
-
-		//delete device profile keys
-			$sql = "delete from v_device_keys ";
-			$sql .= "where device_profile_uuid = '".$id."' ";
-			$db->exec($sql);
-			unset($sql);
-
-		//delete device profile
-			$sql = "delete from v_device_profiles ";
-			$sql .= "where device_profile_uuid = '".$id."' ";
-			$db->exec($sql);
-			unset($sql);
-
-		//remove device profile uuid from any assigned devices
-			$sql = "update v_devices set ";
-			$sql .= "device_profile_uuid = null ";
-			$sql .= "where device_profile_uuid = '".$id."' ";
-			$db->exec($sql);
-			unset($sql);
-	}
-
-//write the provision files
-	if (strlen($_SESSION['provision']['path']['text']) > 0) {
-		$prov = new provision;
-		$prov->domain_uuid = $domain_uuid;
-		$response = $prov->write();
-	}
-
-//set the message and redirect the user
+//delete the message
 	message::add($text['message-delete']);
-	header("Location: device_profiles.php");
-	return;
+
+//delete the data
+	if (isset($_GET["id"]) && is_uuid($_GET["id"]) && permission_exists('device_profile_delete')) {
+
+		//get the id
+			$id = $_GET["id"];
+
+		//delete the data
+			$array['device_profile_keys'][]['device_profile_uuid'] = $id;
+			$array['device_profile_settings'][]['device_profile_uuid'] = $id;
+			$array['device_profiles'][]['device_profile_uuid'] = $id;
+			$database = new database;
+			$database->app_name = 'devices';
+			$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+			$database->delete($array);
+			unset($array);
+
+		//redirect the user
+			header('Location: device_profiles.php');
+	}
+
+//delete the child data
+	if (isset($_REQUEST["device_profile_key_uuid"]) && is_uuid($_REQUEST["device_profile_key_uuid"]) && permission_exists('device_profile_key_delete')) {
+		//select from v_device_profile_keys
+			$sql = "select device_profile_uuid from v_device_profile_keys ";
+			$sql .= "where device_profile_key_uuid = :device_profile_key_uuid ";
+			$parameters['device_profile_key_uuid'] = $_REQUEST["device_profile_key_uuid"];
+			$database = new database;
+			$device_profile_uuid = $database->select($sql, $parameters, 'column');
+			unset($sql, $parameters);
+
+		//delete the row
+			$array['device_profile_keys'][]['device_profile_key_uuid'] = $_REQUEST["device_profile_key_uuid"];
+			$database = new database;
+			$database->app_name = 'devices';
+			$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+			$database->delete($array);
+
+		//redirect the user
+			header('Location: device_profile_edit.php?id='.urlencode($device_profile_uuid));
+	}
+
+//delete the child data
+	if (isset($_REQUEST["device_profile_setting_uuid"]) && is_uuid($_REQUEST["device_profile_setting_uuid"]) && permission_exists('device_profile_setting_delete')) {
+		//select from v_device_profile_settings
+			$sql = "select device_profile_uuid from v_device_profile_settings ";
+			$sql .= "where device_profile_setting_uuid = :device_profile_setting_uuid ";
+			$parameters['device_profile_setting_uuid'] = $_REQUEST["device_profile_setting_uuid"];
+			$database = new database;
+			$device_profile_uuid = $database->select($sql, $parameters, 'column');
+			unset($sql, $parameters);
+
+		//delete the row
+			$array['device_profile_settings'][]['device_profile_setting_uuid'] = $_REQUEST["device_profile_setting_uuid"];
+			$database = new database;
+			$database->app_name = 'devices';
+			$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+			$database->delete($array);
+
+		//redirect the user
+			header('Location: device_profile_edit.php?id='.urlencode($device_profile_uuid));
+	}
 
 ?>

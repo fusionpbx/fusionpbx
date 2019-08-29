@@ -43,7 +43,7 @@
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$destination_uuid = trim($_REQUEST["id"]);
 	}
@@ -52,35 +52,27 @@
 	}
 
 //set the type
-	if ($_GET['type'] == 'inbound') {
-		$destination_type = 'inbound';
-	}
-	elseif ($_GET['type'] == 'outbound') {
-		$destination_type = 'outbound';
-	}
-	elseif ($_GET['type'] == 'local') {
-		$destination_type = 'local';
-	}
-	else {
-		$destination_type = 'inbound';
+	switch ($_GET['type']) {
+		case 'inbound': $destination_type = 'inbound'; break;
+		case 'outbound': $destination_type = 'outbound'; break;
+		case 'local': $destination_type = 'local'; break;
+		default: $destination_type = 'inbound';
 	}
 
 //get total destination count from the database, check limit, if defined
 	if (!permission_exists('destination_domain')) {
 		if ($action == 'add') {
 			if ($_SESSION['limit']['destinations']['numeric'] != '') {
-				$sql = "select count(*) as num_rows from v_destinations where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-				$prep_statement = $db->prepare($sql);
-				if ($prep_statement) {
-					$prep_statement->execute();
-					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-					$total_destinations = $row['num_rows'];
-				}
-				unset($prep_statement, $row);
+				$sql = "select count(*) from v_destinations where domain_uuid = :domain_uuid ";
+				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+				$database = new database;
+				$total_destinations = $database->select($sql, $parameters, 'column');
+				unset($sql, $parameters);
+
 				if ($total_destinations >= $_SESSION['limit']['destinations']['numeric']) {
 					message::add($text['message-maximum_destinations'].' '.$_SESSION['limit']['destinations']['numeric'], 'negative');
 					header('Location: destinations.php');
-					return;
+					exit;
 				}
 			}
 		}
@@ -108,9 +100,9 @@
 			$currency_buy = trim($_POST["currency_buy"]);
 			$destination_record = trim($_POST["destination_record"]);
 			$destination_accountcode = trim($_POST["destination_accountcode"]);
-			$destination_type_voice = check_str($_POST["destination_type_voice"]);
-			$destination_type_fax = check_str($_POST["destination_type_fax"]);
-			$destination_type_text = check_str($_POST["destination_type_text"]);
+			$destination_type_voice = $_POST["destination_type_voice"];
+			$destination_type_fax = $_POST["destination_type_fax"];
+			$destination_type_text = $_POST["destination_type_text"];
 			$destination_carrier = trim($_POST["destination_carrier"]);
 		//convert the number to a regular expression
 			$destination_number_regex = string_to_regex($destination_number, $destination_prefix);
@@ -138,7 +130,7 @@
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		//get the uuid
-			if ($action == "update" && isset($_POST["destination_uuid"])) {
+			if ($action == "update" && is_uuid($_POST["destination_uuid"])) {
 				$destination_uuid = trim($_POST["destination_uuid"]);
 			}
 			else {
@@ -162,17 +154,16 @@
 
 		//check for duplicates
 			if ($destination_type == 'inbound' && $destination_number != $db_destination_number) {
-				$sql = "select count(*) as num_rows from v_destinations ";
-				$sql .= "where destination_number = '".$destination_number."' ";
-				$prep_statement = $db->prepare($sql);
-				if ($prep_statement) {
-					$prep_statement->execute();
-					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-					if ($row['num_rows'] > 0) {
-						$msg .= $text['message-duplicate']."<br>\n";
-					}
-					unset($prep_statement);
+				$sql = "select count(*) from v_destinations ";
+				$sql .= "where destination_number = :destination_number ";
+				$sql .= "and destination_type = 'inbound' ";
+				$parameters['destination_number'] = $destination_number;
+				$database = new database;
+				$num_rows = $database->select($sql, $parameters, 'column');
+				if ($num_rows > 0) {
+					$msg .= $text['message-duplicate']."<br>\n";
 				}
+				unset($sql, $parameters, $num_rows);
 			}
 
 		//show the message
@@ -205,14 +196,15 @@
 				//get the fax information
 					if (strlen($fax_uuid) > 0) {
 						$sql = "select * from v_fax ";
-						$sql .= "where fax_uuid = '".$fax_uuid."' ";
+						$sql .= "where fax_uuid = :fax_uuid ";
 						if (!permission_exists('destination_domain')) {
-							$sql .= "and domain_uuid = '".$domain_uuid."' ";
+							$sql .= "and domain_uuid = :domain_uuid ";
 						}
-						$prep_statement = $db->prepare(check_sql($sql));
-						$prep_statement->execute();
-						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-						foreach ($result as &$row) {
+						$parameters['fax_uuid'] = $fax_uuid;
+						$parameters['domain_uuid'] = $domain_uuid;
+						$database = new database;
+						$row = $database->select($sql, $parameters, 'row');
+						if (is_array($row) && @sizeof($row) != 0) {
 							$fax_extension = $row["fax_extension"];
 							$fax_destination_number = $row["fax_destination_number"];
 							$fax_name = $row["fax_name"];
@@ -223,11 +215,11 @@
 							$fax_forward_number = $row["fax_forward_number"];
 							$fax_description = $row["fax_description"];
 						}
-						unset ($prep_statement);
+						unset($sql, $parameters, $row);
 					}
 
 				//if empty then get new uuid
-					if (strlen($dialplan_uuid) == 0) {
+					if (!is_uuid($dialplan_uuid)) {
 						$dialplan_uuid = uuid();
 					}
 
@@ -306,16 +298,19 @@
 
 						//delete previous dialplan details
 							$sql = "delete from v_dialplan_details ";
-							$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
-							$sql .= "and (dialplan_uuid = '".$dialplan_uuid."' or dialplan_uuid is null) ";
+							$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+							$sql .= "and (dialplan_uuid = :dialplan_uuid or dialplan_uuid is null) ";
 							$sql .= "and (";
 							$sql .= "	dialplan_detail_data like '%tone_detect%' ";
 							$sql .= "	or dialplan_detail_type = 'tone_detect' ";
 							$sql .= "	or dialplan_detail_type = 'record_session' ";
 							$sql .= "	or (dialplan_detail_type = 'sleep' and  dialplan_detail_data = '3000') ";
 							$sql .= ")";
-							$db->exec($sql);
-							unset($sql);
+							$parameters['domain_uuid'] = $domain_uuid;
+							$parameters['dialplan_uuid'] = $dialplan_uuid;
+							$database = new database;
+							$database->execute($sql, $parameters);
+							unset($sql, $parameters);
 
 						//increment the dialplan detail order
 							$dialplan_detail_order = $dialplan_detail_order + 10;
@@ -565,13 +560,15 @@
 						//delete the previous details
 							if ($action == "update") {
 								$sql = "delete from v_dialplan_details ";
-								$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
+								$sql .= "where dialplan_uuid = :dialplan_uuid ";
 								if (!permission_exists('destination_domain')) {
-									$sql .= "and (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
+									$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+									$parameters['domain_uuid'] = $domain_uuid;
 								}
-								//echo $sql."<br><br>";
-								$db->exec(check_sql($sql));
-								unset($sql);
+								$parameters['dialplan_uuid'] = $dialplan_uuid;
+								$database = new database;
+								$database->execute($sql, $parameters);
+								unset($sql, $parameters);
 							}
 
 						//remove empty dialplan details from the POST array
@@ -688,14 +685,13 @@
 	 	if (is_uuid($_GET["id"])) {
 	 		$destination_uuid = $_GET["id"];
 			$sql = "select * from v_destinations ";
-			$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
-			$sql .= "and destination_uuid = '".$destination_uuid."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$destinations = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		}
-		if (is_array($destinations)) {
-			foreach ($destinations as &$row) {
+			$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+			$sql .= "and destination_uuid = :destination_uuid ";
+			$parameters['domain_uuid'] = $domain_uuid;
+			$parameters['destination_uuid'] = $destination_uuid;
+			$database = new database;
+			$row = $database->select($sql, $parameters, 'row');
+			if (is_array($row) && @sizeof($row) != 0) {
 				$domain_uuid = $row["domain_uuid"];
 				$dialplan_uuid = $row["dialplan_uuid"];
 				$destination_type = $row["destination_type"];
@@ -723,18 +719,20 @@
 				$currency_buy = $row["currency_buy"];
 				$destination_carrier = $row["destination_carrier"];
 			}
+			unset($sql, $parameters, $row);
 		}
 	}
 
 //get the dialplan details in an array
 	$sql = "select * from v_dialplan_details ";
-	$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
-	$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
+	$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+	$sql .= "and dialplan_uuid = :dialplan_uuid ";
 	$sql .= "order by dialplan_detail_group asc, dialplan_detail_order asc";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$dialplan_details = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$parameters['domain_uuid'] = $domain_uuid;
+	$parameters['dialplan_uuid'] = $dialplan_uuid;
+	$database = new database;
+	$dialplan_details = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //add an empty row to the array
 	$x = count($dialplan_details);
@@ -972,32 +970,35 @@
 		echo "			<table width='52%' border='0' cellpadding='2' cellspacing='0'>\n";
 		$x = 0;
 		$order = 10;
-		foreach($dialplan_details as $row) {
-			if ($row["dialplan_detail_tag"] != "condition") {
-				if ($row["dialplan_detail_tag"] == "action" && $row["dialplan_detail_type"] == "set" && strpos($row["dialplan_detail_data"], "accountcode") == 0) { continue; } //exclude set:accountcode actions
-				echo "				<tr>\n";
-				echo "					<td style='padding-top: 5px; padding-right: 3px; white-space: nowrap;'>\n";
-				if (strlen($row['dialplan_detail_uuid']) > 0) {
-					echo "	<input name='dialplan_details[".$x."][dialplan_detail_uuid]' type='hidden' value=\"".escape($row['dialplan_detail_uuid'])."\">\n";
+		if (is_array($dialplan_details) && @sizeof($dialplan_details) != 0) {
+			foreach($dialplan_details as $row) {
+				if ($row["dialplan_detail_tag"] != "condition") {
+					if ($row["dialplan_detail_tag"] == "action" && $row["dialplan_detail_type"] == "set" && strpos($row["dialplan_detail_data"], "accountcode") == 0) { continue; } //exclude set:accountcode actions
+					echo "				<tr>\n";
+					echo "					<td style='padding-top: 5px; padding-right: 3px; white-space: nowrap;'>\n";
+					if (strlen($row['dialplan_detail_uuid']) > 0) {
+						echo "	<input name='dialplan_details[".$x."][dialplan_detail_uuid]' type='hidden' value=\"".escape($row['dialplan_detail_uuid'])."\">\n";
+					}
+					echo "	<input name='dialplan_details[".$x."][dialplan_detail_type]' type='hidden' value=\"".escape($row['dialplan_detail_type'])."\">\n";
+					echo "	<input name='dialplan_details[".$x."][dialplan_detail_order]' type='hidden' value=\"".$order."\">\n";
+					$data = $row['dialplan_detail_data'];
+					$label = explode("XML", $data);
+					$divider = ($row['dialplan_detail_type'] != '') ? ":" : null;
+					$detail_action = $row['dialplan_detail_type'].$divider.$row['dialplan_detail_data'];
+					echo $destination->select('dialplan', 'dialplan_details['.$x.'][dialplan_detail_data]', $detail_action);
+					echo "					</td>\n";
+					echo "					<td class='list_control_icons' style='width: 25px;'>";
+					if (strlen($row['destination_uuid']) > 0) {
+						echo "				<a href='destination_delete.php?id=".escape($row['destination_uuid'])."&destination_uuid=".escape($row['destination_uuid'])."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>\n";
+					}
+					echo "					</td>\n";
+					echo "				</tr>\n";
 				}
-				echo "	<input name='dialplan_details[".$x."][dialplan_detail_type]' type='hidden' value=\"".escape($row['dialplan_detail_type'])."\">\n";
-				echo "	<input name='dialplan_details[".$x."][dialplan_detail_order]' type='hidden' value=\"".$order."\">\n";
-				$data = $row['dialplan_detail_data'];
-				$label = explode("XML", $data);
-				$divider = ($row['dialplan_detail_type'] != '') ? ":" : null;
-				$detail_action = $row['dialplan_detail_type'].$divider.$row['dialplan_detail_data'];
-				echo $destination->select('dialplan', 'dialplan_details['.$x.'][dialplan_detail_data]', $detail_action);
-				echo "					</td>\n";
-				echo "					<td class='list_control_icons' style='width: 25px;'>";
-				if (strlen($row['destination_uuid']) > 0) {
-					echo "				<a href='destination_delete.php?id=".escape($row['destination_uuid'])."&destination_uuid=".escape($row['destination_uuid'])."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>\n";
-				}
-				echo "					</td>\n";
-				echo "				</tr>\n";
+				$order = $order + 10;
+				$x++;
 			}
-			$order = $order + 10;
-			$x++;
 		}
+		unset($dialplan_details, $row);
 		echo "			</table>\n";
 		echo "</td>\n";
 		echo "</tr>\n";
@@ -1005,13 +1006,12 @@
 
 	if (permission_exists('destination_fax')) {
 		$sql = "select * from v_fax ";
-		$sql .= "where domain_uuid = '".$domain_uuid."' ";
+		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "order by fax_name asc ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-		unset ($prep_statement, $extension);
-		if (is_array($result) && sizeof($result) > 0) {
+		$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$result = $database->select($sql, $parameters, 'all');
+		if (is_array($result) && @sizeof($result) != 0) {
 			echo "<tr id='tr_fax_detection'>\n";
 			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 			echo "	".$text['label-fax_uuid']."\n";
@@ -1033,6 +1033,7 @@
 			echo "</td>\n";
 			echo "</tr>\n";
 		}
+		unset($sql, $parameters, $result, $row);
 	}
 
 	echo "<tr id='tr_cid_name_prefix'>\n";

@@ -37,7 +37,7 @@
 		<!-- SIP Registration. 0 - no, 1 - yes -->
 		<P31>1</P31>
 		<!-- Register Expiration (in minutes. default 1 hour, max 45 days), Number: 1 to 64800 -->
-		<P32>3</P32>
+		<P32>{$account.1.register_expires}</P32>
 
 	<!--FXS Ports -->
 		<!-- FXS Port 1,SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->

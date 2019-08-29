@@ -30,10 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('call_broadcast_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('call_broadcast_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -42,15 +39,17 @@
 	$language = new text;
 	$text = $language->get();
 
+//get the http get variables and set them to php variables
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
+
 //get the count
-	$sql = "select * from v_call_broadcasts ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$num_rows = count($result);
-	unset ($prep_statement, $result, $sql);
+	$sql = "select count(*) from v_call_broadcasts ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$database = new database;
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($sql, $parameters);
 
 //prepare the paging
 	require_once "resources/paging.php";
@@ -63,14 +62,12 @@
 
 //get the call call broadcasts
 	$sql = "select * from v_call_broadcasts ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$sql .= " limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
-	unset ($prep_statement, $sql);
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= order_by($order_by, $order);
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$result = $database->select($sql, $parameters, 'all');
 
 //set the row style
 	$c = 0;
@@ -79,10 +76,6 @@
 
 //add the header
 	require_once "resources/header.php";
-
-//get the http get variables and set them to php variables
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
 
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'><tr>\n";
@@ -104,7 +97,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($result_count > 0) {
+	if (is_array($result) && @sizeof($result) != 0) {
 		foreach($result as $row) {
 			$tr_link = (permission_exists('call_broadcast_edit')) ? "href='call_broadcast_edit.php?id=".$row['call_broadcast_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
@@ -129,9 +122,9 @@
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $result, $row_count);
-	} //end if results
+		}
+	}
+	unset($sql, $result);
 
 	echo "<tr>\n";
 	echo "<td colspan='5' align='left'>\n";

@@ -45,23 +45,23 @@
 	}
 
 //get the http values and set them as variables
-	$group_name = check_str($_GET["group_name"]);
-	$user_uuid = check_str($_GET["user_uuid"]);
-	$group_uuid = check_str($_GET["group_uuid"]);
+	$group_name = $_GET["group_name"];
+	$user_uuid = $_GET["user_uuid"];
+	$group_uuid = $_GET["group_uuid"];
 
 //delete the group membership
-	$sql_delete = "delete from v_user_groups ";
-	$sql_delete .= "where user_uuid = '".$user_uuid."' ";
-	$sql_delete .= "and group_uuid = '".$group_uuid."' ";
-	if (!$db->exec($sql_delete)) {
-		$info = $db->errorInfo();
-		echo "<pre>".print_r($info, true)."</pre>";
-		exit;
-	}
-	else {
-		//$log_type = 'group'; $log_status='remove'; $log_add_user=$_SESSION["username"]; $log_desc= "username: ".$username." removed from group: ".$group_name;
-		//log_add($db, $log_type, $log_status, $log_desc, $log_add_user, $_SERVER["REMOTE_ADDR"]);
-	}
+	$p = new permissions;
+	$p->add('user_group_delete', 'temp');
+
+	$array['user_groups'][0]['user_uuid'] = $user_uuid;
+	$array['user_groups'][0]['group_uuid'] = $group_uuid;
+	$database = new database;
+	$database->app_name = 'groups';
+	$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+	$database->delete($array);
+	unset($array);
+
+	$p->delete('user_group_delete', 'temp');
 
 //redirect the user
 	message::add($text['message-delete']);

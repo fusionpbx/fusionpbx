@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('contact_group_delete')) {
+if (permission_exists('contact_user_delete')) {
 	//access granted
 }
 else {
@@ -40,19 +40,23 @@ else {
 		$language = new text;
 		$text = $language->get();
 
-		if (count($_REQUEST) > 0) {
-			$contact_user_uuid = check_str($_REQUEST["id"]);
-			$contact_uuid = check_str($_REQUEST["contact_uuid"]);
+		if (is_array($_REQUEST) && @sizeof($_REQUEST) != 0) {
+			$contact_user_uuid = $_REQUEST["id"];
+			$contact_uuid = $_REQUEST["contact_uuid"];
 		}
 	}
 
 //delete the user
 	if (is_uuid($contact_uuid) && is_uuid($contact_user_uuid)) {
-		$sql = "delete from v_contact_users ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and contact_user_uuid = '$contact_user_uuid' ";
-		$db->exec(check_sql($sql));
-		unset($sql);
+		$array['contact_users'][0]['contact_user_uuid'] = $contact_user_uuid;
+		$array['contact_users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+
+		$database = new database;
+		$database->app_name = 'contacts';
+		$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
+		$database->delete($array);
+		$response = $database->message;
+		unset($array);
 	}
 
 //redirect the browser

@@ -42,26 +42,26 @@
 	$text = $language->get();
 
 //get the id
-	if (count($_GET) > 0) {
-		$id = $_GET["id"];
-	}
+	$var_uuid = $_GET["id"];
 
 //delete the data
-	if (strlen($id) > 0 && is_uuid($id)) {
-		//delete the variable
-		$sql = "delete from v_vars ";
-		$sql .= "where var_uuid = '$id' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($sql);
-
+	if (is_uuid($var_uuid)) {
+		//build array
+			$array['vars'][0]['var_uuid'] = $var_uuid;
+		//execute delete
+			$database = new database;
+			$database->app_name = 'vars';
+			$database->app_uuid = '54e08402-c1b8-0a9d-a30a-f569fc174dd8';
+			$database->delete($array);
+			unset($array);
 		//rewrite the xml
-		save_var_xml();
+			save_var_xml();
+		//set message
+			message::add($text['message-delete']);
 	}
 
-//redirect the browser
-	message::add($text['message-delete']);
+//redirect
 	header("Location: vars.php");
-	return;
+	exit;
 
 ?>

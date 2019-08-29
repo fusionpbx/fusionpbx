@@ -43,29 +43,34 @@
 	$text = $language->get();
 
 //get the id
-	if (count($_GET) > 0) {
-		$id = check_str($_GET["id"]);
-	}
+	$music_on_hold_uuid = $_GET["id"];
 
-//delete the data
-	if (strlen($id) > 0) {
-		$sql = "delete from v_music_on_hold ";
-		$sql .= "where music_on_hold_uuid = '$id' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($sql);
-	}
 
-//clear the cache
-	$cache = new cache;
-	$cache->delete("configuration:local_stream.conf");
+if (is_uuid($music_on_hold_uuid)) {
 
-//reload mod local stream
-	$music = new switch_music_on_hold;
-	$music->reload();
+	//delete the data
+		$array['music_on_hold'][0]['music_on_hold_uuid'] = $music_on_hold_uuid;
+
+		$database = new database;
+		$database->app_name = 'music_on_hold';
+		$database->app_uuid = '1dafe0f8-c08a-289b-0312-15baf4f20f81';
+		$database->delete($array);
+		unset($array);
+
+	//clear the cache
+		$cache = new cache;
+		$cache->delete("configuration:local_stream.conf");
+
+	//reload mod local stream
+		$music = new switch_music_on_hold;
+		$music->reload();
+
+	//set messsage
+		message::add($text['message-delete']);
+}
 
 //redirect the user
-	message::add($text['message-delete']);
 	header('Location: music_on_hold.php');
+	exit;
 
 ?>

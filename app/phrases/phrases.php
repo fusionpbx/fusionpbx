@@ -24,9 +24,16 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check the permission
+	if (!permission_exists('phrase_view')) {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -35,12 +42,6 @@ require_once "resources/check_auth.php";
 //get the http get values and set them as php variables
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
-
-//check the permission
-	if (!permission_exists('phrase_view')) {
-		echo "access denied";
-		exit;
-	}
 
 //add paging
 	require_once "resources/paging.php";
@@ -61,16 +62,12 @@ require_once "resources/check_auth.php";
 	echo "</table>";
 	echo "<br />\n";
 
-	$sql = "select count(*) as num_rows from v_phrases ";
-	$sql .= "where ( ";
-	$sql .= " domain_uuid = '".$domain_uuid."'  ";
-	$sql .= " or domain_uuid is null ";
-	$sql .= ") ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$num_rows = count($result);
-	unset ($prep_statement, $result, $sql);
+	$sql = "select count(*) from v_phrases ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "or domain_uuid is null ";
+	$parameters['domain_uuid'] = $domain_uuid;
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
 
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "";
@@ -79,18 +76,12 @@ require_once "resources/check_auth.php";
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
-	$sql = "select * from v_phrases ";
-	$sql .= "where ( ";
-	$sql .= " domain_uuid = '".$domain_uuid."'  ";
-	$sql .= " or domain_uuid is null ";
-	$sql .= ") ";
-	$sql .= "order by ".((strlen($order_by) > 0) ? $order_by." ".$order." " : "phrase_name asc ");
-	$sql .= "limit ".$rows_per_page." offset ".$offset." ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
-	unset ($prep_statement, $sql);
+	$sql = str_replace('count(*)', '*', $sql);
+	$sql .= order_by($order_by, $order, 'phrase_name', 'asc');
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
@@ -109,7 +100,7 @@ require_once "resources/check_auth.php";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($result_count > 0) {
+	if (is_array($result) && @sizeof($result) != 0) {
 		foreach($result as $row) {
 			$tr_link = (permission_exists('phrase_edit')) ? "href='phrase_edit.php?id=".$row['phrase_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
@@ -127,10 +118,10 @@ require_once "resources/check_auth.php";
 			echo "	</td>\n";
 			echo "</tr>\n";
 
-			$c = ($c==0) ? 1 : 0;
-		} //end foreach
-		unset($sql, $result, $row_count);
-	} //end if results
+			$c = $c ? 0 : 1;
+		}
+	}
+	unset($result, $row);
 
 	echo "<tr>\n";
 	echo "<td colspan='4'>&nbsp;</td>\n";

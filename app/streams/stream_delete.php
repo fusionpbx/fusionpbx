@@ -24,30 +24,45 @@
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('stream_delete')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-//delete the message
-	message::add($text['message-delete']);
+//get id
+	$stream_uuid = $_GET["id"];
 
 //delete the data
-	if (isset($_GET["id"]) && is_uuid($_GET["id"]) && permission_exists('stream_delete')) {
+	if (is_uuid($stream_uuid)) {
 
-		//get the id
-			$id = check_str($_GET["id"]);
+		//build array
+			$array['streams'][0]['stream_uuid'] = $stream_uuid;
+			$array['streams'][0]['domain_uuid'] = $domain_uuid;
 
-		//delete stream
-			$sql = "delete from v_streams ";
-			$sql .= "where stream_uuid = '$id' ";
-			$sql .= "and domain_uuid = '$domain_uuid' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($sql);
+		//execute delete
+			$database = new database;
+			$database->app_name = 'streams';
+			$database->app_uuid = 'ffde6287-aa18-41fc-9a38-076d292e0a38';
+			$database->delete($array);
+			unset($array);
 
-		//redirect the user
-			header('Location: streams.php');
+		//set message
+			message::add($text['message-delete']);
+
 	}
+
+//redirect
+	header('Location: streams.php');
+	exit;
 
 ?>

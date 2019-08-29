@@ -27,31 +27,43 @@
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('bridge_delete')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-//delete the message
-	message::add($text['message-delete']);
-
 //delete the data
-	if (isset($_GET["id"]) && is_uuid($_GET["id"]) && permission_exists('bridge_delete')) {
+	if (is_uuid($_GET["id"])) {
 
 		//get the id
-			$id = check_str($_GET["id"]);
+			$bridge_uuid = $_GET["id"];
 
-		//delete bridge
-			$sql = "delete from v_bridges ";
-			$sql .= "where bridge_uuid = '$id' ";
-			$sql .= "and domain_uuid = '$domain_uuid' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($sql);
+			$array['bridges'][0]['bridge_uuid'] = $bridge_uuid;
+			$array['bridges'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 
-		//redirect the user
-			header('Location: bridges.php');
+			$database = new database;
+			$database->app_name = 'bridges';
+			$database->app_uuid = 'a6a7c4c5-340a-43ce-bcbc-2ed9bab8659d';
+			$database->delete($array);
+			unset($array);
+
+		//add the message
+			message::add($text['message-delete']);
+
 	}
+
+//redirect the user
+	header('Location: bridges.php');
 
 
 ?>
