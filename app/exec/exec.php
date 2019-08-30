@@ -494,7 +494,7 @@
 				echo "<span id='response'>";
 				echo "<b>".$text['label-response']."</b>\n";
 				echo "<br /><br />\n";
-				echo ($handler == 'switch') ? "<textarea style='width: 100%; height: 450px; font-family: monospace; padding: 15px;' wrap='off'>".escape($result)."</textarea>\n" : "<pre>".escape($result)."</pre>";
+				echo ($handler == 'switch') ? "<textarea style='width: 100%; height: 450px; font-family: monospace; padding: 15px;' wrap='off'>".$result."</textarea>\n" : "<pre>".escape($result)."</pre>";
 				echo "</span>";
 			}
 		}
