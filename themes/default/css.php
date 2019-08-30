@@ -315,9 +315,9 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		padding: 15px 10px 14px 10px; !important;
 		}
 
-	.navbar .navbar-nav > li:hover > a,
-	.navbar .navbar-nav > li:focus > a,
-	.navbar .navbar-nav > li:active > a {
+	ul.navbar-nav > li.nav-item:hover > a.nav-link,
+	ul.navbar-nav > li.nav-item:focus > a.nav-link,
+	ul.navbar-nav > li.nav-item:active > a.nav-link {
 		color: <?php echo ($_SESSION['theme']['menu_main_text_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_text_color_hover']['text'] : '#fd9c03'; ?>;
 		background: <?php echo ($_SESSION['theme']['menu_main_background_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_background_color_hover']['text'] : 'rgba(0,0,0,1.0)'; ?>
 		}
