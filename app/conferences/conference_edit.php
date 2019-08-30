@@ -65,6 +65,7 @@
 
 		//sanitize the conference name
 		$conference_name = preg_replace("/[^A-Za-z0-9\- ]/", "", $conference_name);
+		//$conference_name = str_replace(" ", "-", $conference_name);
 	}
 
 //delete the user from the v_conference_users
@@ -99,6 +100,7 @@
 		//set the variables
 			$user_uuid = $_REQUEST["user_uuid"];
 			$conference_uuid = $_REQUEST["id"];
+
 		//assign the user to the extension
 			$array['conference_users'][0]['conference_user_uuid'] = uuid();
 			$array['conference_users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -127,6 +129,10 @@
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		//get the conference id
+			if ($action == "add") {
+				$conference_uuid = uuid();
+				$dialplan_uuid = uuid();
+			}
 			if ($action == "update") {
 				$conference_uuid = $_POST["conference_uuid"];
 			}
@@ -159,7 +165,7 @@
 			if ($_POST["persistformvar"] != "true") {
 
 				//update the conference extension
-					$array['conferences'][0]['domain_uuid'] = $domain_uuid;
+					$array['conferences'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 					$array['conferences'][0]['conference_uuid'] = $conference_uuid;
 					$array['conferences'][0]['dialplan_uuid'] = $dialplan_uuid;
 					$array['conferences'][0]['conference_name'] = $conference_name;
@@ -184,10 +190,9 @@
 					$array['dialplans'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 					$array['dialplans'][0]['dialplan_name'] = $conference_name;
 					$array['dialplans'][0]['dialplan_number'] = $conference_extension;
+					$array['dialplans'][0]['app_uuid'] = 'b81412e8-7253-91f4-e48e-42fc2c9a38d9';
 					$array['dialplans'][0]['dialplan_xml'] = $dialplan_xml;
-					if (strlen($dialplan_order) > 0) {
-						$array['dialplans'][0]['dialplan_order'] = '333';
-					}
+					$array['dialplans'][0]['dialplan_order'] = '333';
 					$array['dialplans'][0]['dialplan_context'] = $_SESSION['context'];
 					$array['dialplans'][0]['dialplan_enabled'] = 'true';
 					$array['dialplans'][0]['dialplan_description'] = $conference_description;
@@ -229,7 +234,7 @@
 					exit;
 
 			} //if ($_POST["persistformvar"] != "true")
-	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+	} //(count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
