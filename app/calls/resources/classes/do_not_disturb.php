@@ -37,9 +37,6 @@ include "root.php";
 
 		//update the user_status
 		public function user_status() {
-			//set the global variable
-				global $db;
-
 			//update the status
 				if ($this->enabled == "true") {
 					//update the call center status
@@ -53,36 +50,39 @@ include "root.php";
 					//update the database user_status
 						$user_status = "Do Not Disturb";
 						$sql  = "update v_users set ";
-						$sql .= "user_status = '$user_status' ";
-						$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
-						$sql .= "and username = '".$_SESSION['username']."' ";
-						$prep_statement = $db->prepare(check_sql($sql));
-						$prep_statement->execute();
+						$sql .= "user_status = :user_status ";
+						$sql .= "where domain_uuid = :domain_uuid ";
+						$sql .= "and username = :username ";
+						$parameters['user_status'] = "Do Not Disturb";
+						$parameters['domain_uuid'] = $this->domain_uuid;
+						$parameters['username'] = $_SESSION['username'];
+						$database = new database;
+						$database->execute($sql);
 				}
 		}
 
 		public function set() {
-			//set the global variable
-				global $db;
-
 			//determine whether to update the dial string
-				$sql = "select extension_uuid, extension, number_alias from v_extensions ";
-				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
-				if (strlen($this->extension_uuid) > 0) {
-					$sql .= "and extension_uuid = '".$this->extension_uuid."' ";
+				$sql = "select extension_uuid, extension, number_alias ";
+				$sql .= "from v_extensions ";
+				$sql .= "where domain_uuid = :domain_uuid ";
+				if (is_uuid($this->extension_uuid)) {
+					$sql .= "and extension_uuid = :extension_uuid ";
+					$parameters['extension_uuid'] = $this->extension_uuid;
 				}
 				else {
-					$sql .= "and extension = '".$this->extension."' ";
+					$sql .= "and extension = :extension ";
+					$parameters['extension'] = $this->extension;
 				}
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				if (is_array($result)) foreach ($result as &$row) {
-					if (strlen($this->extension_uuid) == 0) {
+				$parameters['domain_uuid'] = $this->domain_uuid;
+				$database = new database;
+				$row = $database->select($sql, $parameters, 'row');
+				if (is_array($row) && @sizeof($row) != 0) {
+					if (is_uuid($this->extension_uuid)) {
 						$this->extension_uuid = $row["extension_uuid"];
 					}
 					if (strlen($this->extension) == 0) {
-						if(strlen($row["number_alias"]) == 0) {
+						if (strlen($row["number_alias"]) == 0) {
 							$this->extension = $row["extension"];
 						}
 						else {
@@ -90,31 +90,30 @@ include "root.php";
 						}
 					}
 				}
-				unset ($prep_statement);
+				unset($sql, $parameters, $row);
 
 			//set the dial string
-				if ($this->enabled == "true") {
-					$this->dial_string = "error/user_busy";
-				}
-				else {
-					$this->dial_string = '';
-				}
+				$this->dial_string = $this->enabled == "true" ? "error/user_busy" : '';
 
-			//update the extension
-				$sql  = "update v_extensions set ";
-				$sql .= "dial_string = '".$this->dial_string."', ";
-				//$sql .= "dial_domain = '".$this->domain_name."', ";
-				$sql .= "do_not_disturb = '".$this->enabled."' ";
-				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
-				$sql .= "and extension_uuid = '".$this->extension_uuid."' ";
-				if ($this->debug) {
-					echo $sql."<br />";
-				}
+			//build extension update array
+				$array['extensions'][0]['extension_uuid'] = $this->extension_uuid;
+				$array['extensions'][0]['dial_string'] = $this->dial_string;
+				$array['extensions'][0]['do_not_disturb'] = $this->enabled;
 
-				$db->exec(check_sql($sql));
-				unset($sql);
+			//grant temporary permissions
+				$p = new permissions;
+				$p->add('extension_edit', 'temp');
 
-		} //function
-	} //class
+			//execute update
+				$database = new database;
+				$database->app_name = 'calls';
+				$database->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
+				$database->save($array);
+				unset($array);
+
+			//revoke temporary permissions
+				$p->delete('extension_edit', 'temp');
+		}
+	}
 
 ?>
