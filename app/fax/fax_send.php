@@ -204,7 +204,7 @@ if (!function_exists('fax_split_dtmf')) {
 	function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 		$tmp = array();
 		$fax_dtmf = '';
-		if(preg_match('/^\s*(.*?)\s*\((.*)\)\s*$/', $fax_number, $tmp)){
+		if (preg_match('/^\s*(.*?)\s*\((.*)\)\s*$/', $fax_number, $tmp)){
 			$fax_number = $tmp[1];
 			$fax_dtmf = $tmp[2];
 		}
@@ -272,7 +272,7 @@ if (!function_exists('fax_split_dtmf')) {
 		$continue = true;
 	}
 
-// cleanup numbers
+//cleanup numbers
 	if (isset($fax_numbers)) {
 		foreach ($fax_numbers as $index => $fax_number) {
 			fax_split_dtmf($fax_number, $fax_dtmf);
@@ -323,7 +323,7 @@ if (!function_exists('fax_split_dtmf')) {
 				break;
 		}
 
-		// process uploaded or emailed files (if any)
+		//process uploaded or emailed files (if any)
 		$fax_page_count = 0;
 		$_files = (!$included) ? $_FILES['fax_files'] : $emailed_files;
 		unset($tif_files);
@@ -766,7 +766,6 @@ if (!function_exists('fax_split_dtmf')) {
 		$dial_string .= "fax_ident='"                    . $fax_caller_id_number    . "',";
 		$dial_string .= "fax_header='"                   . $fax_caller_id_name      . "',";
 		$dial_string .= "fax_file='"                     . $fax_file                . "',";
-
 		foreach ($fax_numbers as $fax_number) {
 
 			$fax_number = trim($fax_number);
@@ -774,7 +773,6 @@ if (!function_exists('fax_split_dtmf')) {
 
 			//prepare the fax command
 			$route_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $fax_prefix . $fax_number);
-
 			if (count($route_array) == 0) {
 				//send the internal call to the registered extension
 				$fax_uri = "user/".$fax_number."@".$_SESSION['domain_name'];
@@ -805,7 +803,7 @@ if (!function_exists('fax_split_dtmf')) {
 				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 				if ($fp) {
 					$cmd = "api originate " . $dial_string;
-					// echo($cmd . "<br/>\n");
+
 					//send the command to event socket
 					$response = event_socket_request($fp, $cmd);
 					$response = str_replace("\n", "", $response);
@@ -831,7 +829,7 @@ if (!function_exists('fax_split_dtmf')) {
 			copy($dir_fax_temp.'/'.$fax_instance_uuid.".pdf ", $dir_fax_sent.'/'.$fax_instance_uuid.".pdf");
 		}
 
-		if (!$included) {
+		if (!$included && is_uuid($fax_uuid)) {
 			//redirect the browser
 			message::add($response, 'default');
 			if (isset($_SESSION['fax']['send_mode']['text']) && $_SESSION['fax']['send_mode']['text'] == 'queue') {
@@ -1175,4 +1173,5 @@ function showgrid($pdf) {
 	}
 }
 */
+
 ?>
