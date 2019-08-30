@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2010-2016
+	Portions created by the Initial Developer are Copyright (C) 2010-2019
 	All Rights Reserved.
 
 	Contributor(s):
@@ -89,7 +89,7 @@ include "root.php";
 					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 					$sql .= "and stream_enabled = 'true' ";
 					$sql .= "order by stream_name asc ";
-					$parameters['domain_uuid'] = $_SESSION['domain_uuid']
+					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 					$database = new database;
 					$streams = $database->select($sql, $parameters, 'all');
 					if (is_array($streams) && @sizeof($streams) != 0) {
@@ -125,7 +125,7 @@ include "root.php";
 				$sql .= "left join v_domains as d on d.domain_uuid = m.domain_uuid ";
 				$sql .= "where (m.domain_uuid = :domain_uuid or m.domain_uuid is null) ";
 				$sql .= "order by m.domain_uuid desc, music_on_hold_name asc, music_on_hold_rate asc ";
-				$parameters['domain_uuid'] = $_SESSION['domain_uuid']
+				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 				$database = new database;
 				return $database->select($sql, $parameters, 'all');
 				unset($sql, $parameters);
