@@ -416,7 +416,7 @@
 			</td>
 		</tr>
 	</table>
-	<div id='editor'><?php echo escape($command); ?></div>
+	<div id='editor'><?php echo $command; ?></div>
 
 	<?php
 	echo "		</td>";
@@ -485,7 +485,6 @@
 						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 						if ($fp) { 
 							$result = event_socket_request($fp, 'api '.$command);
-							$result = htmlspecialchars(utf8_encode($result), ENT_QUOTES);
 						}
 					}
 					break;
