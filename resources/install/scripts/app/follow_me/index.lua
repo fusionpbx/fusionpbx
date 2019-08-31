@@ -19,9 +19,9 @@
 --	the Initial Developer. All Rights Reserved.
 
 --includes
-  local Database = require "resources.functions.database";
-  local route_to_bridge = require "resources.functions.route_to_bridge"
-  require "resources.functions.trim";
+	local Database = require "resources.functions.database";
+	local route_to_bridge = require "resources.functions.route_to_bridge"
+	require "resources.functions.trim";
 
 --get the variables
 	if (session:ready()) then
@@ -32,19 +32,86 @@
 		caller_id_number = session:getVariable("caller_id_number");
 		outbound_caller_id_name = session:getVariable("outbound_caller_id_name");
 		outbound_caller_id_number = session:getVariable("outbound_caller_id_number");
+		call_direction = session:getVariable("call_direction");
 	end
 
+--set caller id
+	if (effective_caller_id_name ~= nil) then
+		caller_id_name = effective_caller_id_name;
+	end
+	if (effective_caller_id_number ~= nil) then
+		caller_id_number = effective_caller_id_number;
+	end
+
+--default to local if nil
+	if (call_direction == nil) then
+		call_direction = "local";
+	end
+
+--set the strategy
+	follow_me_strategy = 'simultaneous'; --simultaneous, enterprise
+
 --include json library
+	debug["sql"] = false;
 	local json
 	if (debug["sql"]) then
-		json = require "resources.functions.lunajson"
+		json = require "resources.functions.lunajson";
 	end
 
 --prepare the api object
 	api = freeswitch.API();
 
+--get the destination and follow the forward
+	function get_forward_all(count, destination_number, domain_name)
+		cmd = "user_exists id ".. destination_number .." "..domain_name;
+		--freeswitch.consoleLog("notice", "[follow me][call forward all] " .. cmd .. "\n");
+		user_exists = api:executeString(cmd);
+		if (user_exists == "true") then
+			---check to see if the new destination is forwarded
+				cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_all_enabled";
+				if (api:executeString(cmd) == "true") then
+					--get the toll_allow var	
+						cmd = "user_data ".. destination_number .."@" ..domain_name.." var toll_allow";
+						toll_allow = api:executeString(cmd);
+						--freeswitch.consoleLog("notice", "[follow me][call forward all] " .. destination_number .. " toll_allow is ".. toll_allow .."\n");
+
+					--get the new destination 
+						cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_all_destination";
+						destination_number = api:executeString(cmd);
+						--freeswitch.consoleLog("notice", "[follow me][call forward all] " .. count .. " " .. cmd .. " ".. destination_number .."\n");
+						count = count + 1;
+						if (count < 5) then
+							count, destination_number = get_forward_all(count, destination_number, domain_name);
+						end
+				end
+		end
+		return count, destination_number, toll_allow;
+	end
+
 --connect to the database
 	local dbh = Database.new('system');
+
+--get the forward no answer
+	cmd = "user_data ".. destination_number .."@"..domain_name.." var forward_no_answer_enabled";
+	forward_no_answer_enabled = trim(api:executeString(cmd));
+	
+	cmd = "user_data ".. destination_number .."@"..domain_name.." var forward_no_answer_destination";
+	forward_no_answer_destination = trim(api:executeString(cmd));
+
+--set the follow me timeout app and data
+	if (forward_no_answer_enabled ~= nil and forward_no_answer_enabled == 'true') then
+		follow_me_timeout_app = 'transfer';
+		follow_me_timeout_data = forward_no_answer_destination .. ' XML '..domain_name;
+	else
+		follow_me_timeout_app = 'transfer';
+		follow_me_timeout_data = '*99' .. destination_number .. ' XML '..domain_name;
+	end
+
+--get the forward busy
+	--cmd = "user_data ".. destination_number .."@"..domain_name.." var forward_busy_enabled=";
+	--forward_busy_enabled = trim(api:executeString(cmd));
+	--cmd = "user_data ".. destination_number .."@"..domain_name.." var forward_busy_destination=";
+	--forward_busy_destination = trim(api:executeString(cmd));
 
 --select data from the database
 	local sql = "select follow_me_uuid ";
@@ -58,27 +125,232 @@
 	if (debug["sql"]) then
 		freeswitch.consoleLog("notice", "SQL:" .. sql .. "; params: " .. json.encode(params) .. "\n");
 	end
-	dbh:query(sql, params, function(row)
+	status = dbh:query(sql, params, function(row)
+		follow_me_uuid = row["follow_me_uuid"];
+	end);
+	--dbh:query(sql, params, function(row);
 
 --get the follow me destinations
-	sql = "select domain_uuid, follow_me_destination, follow_me_delay, follow_me_timeout, follow_me_prompt ";
-	sql = sql .. "from v_follow_me_destinations ";
-	sql = sql .. "where follow_me_uuid = :follow_me_uuid ";
-	sql = sql .. "order by follow_me_order; ";
+	sql = "select d.domain_uuid, d.domain_name, f.follow_me_destination as destination_number, ";
+	sql = sql .. "f.follow_me_delay as destination_delay, f.follow_me_timeout as destination_timeout, ";
+	sql = sql .. "f.follow_me_prompt as destination_prompt ";
+	sql = sql .. "from v_follow_me_destinations as f, v_domains as d ";
+	sql = sql .. "where f.follow_me_uuid = :follow_me_uuid ";
+	sql = sql .. "and f.domain_uuid = d.domain_uuid ";
+	sql = sql .. "order by f.follow_me_order; ";
 	local params = {follow_me_uuid = follow_me_uuid};
-	status = dbh:query(sql, params, function(row)
+	destinations = {};
+	destination_count = 0;
+	x = 1;
+	dbh:query(sql, params, function(row)
 		domain_uuid = row["domain_uuid"];
-		follow_me_destination = row["follow_me_destination"];
-		follow_me_delay = row["follow_me_delay"];
-		follow_me_timeout = row["follow_me_timeout"];
-		follow_me_prompt = row["ring_group_extension"];
-		
+		domain_name = row["domain_name"];
 
+		if (row.destination_prompt == "1" or row.destination_prompt == "2") then
+			prompt = "true";
+		end
+
+		--follow the forwards
+		count, destination_number, toll_allow = get_forward_all(0, row.destination_number, domain_name);
+
+		--update values
+		row['destination_number'] = destination_number
+		--row['toll_allow'] = toll_allow;
+
+		--check if the user exists
+		cmd = "user_exists id ".. destination_number .." "..domain_name;
+		user_exists = api:executeString(cmd);
+
+		--cmd = "user_exists id ".. destination_number .." "..domain_name;
+		if (user_exists == "true") then
+			--add user_exists true or false to the row array
+				row['user_exists'] = "true";
+			--handle do_not_disturb
+				cmd = "user_data ".. destination_number .."@" ..domain_name.." var do_not_disturb";
+				if (api:executeString(cmd) ~= "true") then
+					--add the row to the destinations array
+					destinations[x] = row;
+				end
+		else
+			--set the values
+				external = "true";
+				row['user_exists'] = "false";
+			--add the row to the destinations array
+				destinations[x] = row;
+		end
+		row['domain_name'] = domain_name;
+		destination_count = destination_count + 1;
+		x = x + 1;
 	end);
 
---execute the time out action
-	if ring_group_timeout_app and #ring_group_timeout_app > 0 then
-		session:execute(ring_group_timeout_app, ring_group_timeout_data);
+--get the dialplan data and save it to a table
+	if (external == "true") then
+		dialplans = route_to_bridge.preload_dialplan(
+			dbh, domain_uuid, {hostname = hostname, context = context}
+		)
+	end
+
+--prepare the array of destinations
+	x = 1;
+	for key, row in pairs(destinations) do
+		--set the values from the database as variables
+		destination_number = row.destination_number;
+
+		--determine if the user is registered if not registered then lookup
+		if (user_exists == "true") then
+			cmd = "sofia_contact */".. destination_number .."@" ..domain_name;
+			if (api:executeString(cmd) == "error/user_not_registered") then
+				freeswitch.consoleLog("NOTICE", "[follow_me] "..cmd.."\n");
+				cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_user_not_registered_enabled";
+				freeswitch.consoleLog("NOTICE", "[follow_me] "..cmd.."\n");
+				if (api:executeString(cmd) == "true") then
+					--get the new destination number
+					cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_user_not_registered_destination";
+					freeswitch.consoleLog("NOTICE", "[follow_me] "..cmd.."\n");
+					not_registered_destination_number = api:executeString(cmd);
+					freeswitch.consoleLog("NOTICE", "[follow_me] "..not_registered_destination_number.."\n");
+					if (not_registered_destination_number ~= nil) then
+						destination_number = not_registered_destination_number;
+						destinations[key]['destination_number'] = destination_number;
+					end
+				end
+			end
+		end
+	end
+
+--process the destinations
+	x = 1;
+	for key, row in pairs(destinations) do
+		freeswitch.consoleLog("NOTICE", "[follow me] destination_number: "..row.destination_number.."\n");
+	end
+
+--process the destinations
+	x = 1;
+	for key, row in pairs(destinations) do
+		--set the values from the database as variables
+			domain_uuid = row.domain_uuid;
+			destination_number = row.destination_number;
+			destination_delay = row.destination_delay;
+			destination_timeout = row.destination_timeout;
+			destination_prompt = row.destination_prompt;
+			group_confirm_key = row.group_confirm_key;
+			group_confirm_file = row.group_confirm_file;
+			toll_allow = row.toll_allow;
+			user_exists = row.user_exists;
+
+		--follow the forwards
+			count, destination_number = get_forward_all(0, destination_number, domain_name);
+
+		--check if the user exists
+			cmd = "user_exists id ".. destination_number .." "..domain_name;
+			user_exists = api:executeString(cmd);
+
+		--set ringback
+			--follow_me_ringback = format_ringback(follow_me_ringback);
+			--session:setVariable("ringback", follow_me_ringback);
+			--session:setVariable("transfer_ringback", follow_me_ringback);
+
+		--set the timeout if there is only one destination
+			if (destination_count == 1) then
+				session:execute("set", "call_timeout="..row.destination_timeout);
+			end
+
+		--setup the delimiter
+			delimiter = ",";
+			if (follow_me_strategy == "simultaneous") then
+				delimiter = ",";
+			end
+			if (follow_me_strategy == "enterprise") then
+				delimiter = ":_:";
+			end
+
+		--leg delay settings
+			if (follow_me_strategy == "enterprise") then
+				delay_name = "originate_delay_start";
+				destination_delay = destination_delay * 500;
+			else
+				delay_name = "leg_delay_start";
+			end
+
+		--set confirm
+			if (follow_me_strategy == "simultaneous") then
+					session:execute("set", "group_confirm_key=exec");
+					session:execute("set", "group_confirm_file=lua ".. scripts_dir:gsub('\\','/') .."/confirm.lua");
+			end
+
+		--determine confirm prompt
+			if (destination_prompt == nil) then
+				group_confirm = "confirm=false,";
+			elseif (destination_prompt == "1") then
+				group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir:gsub('\\','/') .."/confirm.lua,confirm=true,";
+			elseif (destination_prompt == "2") then
+				group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir:gsub('\\','/') .."/confirm.lua,confirm=true,";
+			else
+				group_confirm = "confirm=false,";
+			end
+
+if (user_exists == 'true') then
+	freeswitch.consoleLog("notice", "[app:follow_me] user_exists true\n");
+else
+	freeswitch.consoleLog("notice", "[app:follow_me] user_exists false\n");
+end
+		--process according to user_exists, sip_uri, external number
+			if (user_exists == "true") then
+				--get the extension_uuid
+				cmd = "user_data ".. destination_number .."@"..domain_name.." var extension_uuid";
+				extension_uuid = trim(api:executeString(cmd));
+				--send to user
+				local dial_string_to_user = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid .. "]user/" .. row.destination_number .. "@" .. domain_name;
+				dial_string = dial_string_to_user;
+			elseif (tonumber(destination_number) == nil) then
+				--sip uri
+				dial_string = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
+			else
+				--external number
+					route_bridge = 'loopback/'..destination_number;
+
+				--set the toll allow to an empty string
+					if (toll_allow == nil) then
+						toll_allow = '';
+					end
+
+				--set the caller id
+					caller_id = '';
+					if (caller_id_name ~= nil) then
+						caller_id = "origination_caller_id_name='"..caller_id_name.."'"
+					end
+					if (caller_id_number ~= nil) then
+						caller_id = caller_id .. ",origination_caller_id_number="..caller_id_number..",";
+					end
+
+				--set the destination dial string
+					dial_string = "[ignore_early_media=true,toll_allow=".. toll_allow ..",".. caller_id .."sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]"..route_bridge
+			end
+
+		--add a delimiter between destinations
+			if (dial_string ~= nil) then
+				--freeswitch.consoleLog("notice", "[follow me] dial_string: " .. dial_string .. "\n");
+				if (x == 1) then
+					if (follow_me_strategy == "enterprise") then
+						app_data = dial_string;
+					else
+						app_data = "{ignore_early_media=true}"..dial_string;
+					end
+				else
+					if (app_data == nil) then
+						if (follow_me_strategy == "enterprise") then
+							app_data = dial_string;
+						else
+							app_data = "{ignore_early_media=true}"..dial_string;
+						end
+					else
+						app_data = app_data .. delimiter .. dial_string;
+					end
+				end
+			end
+
+		--increment the value of x
+			x = x + 1;
 	end
 
 --set ring ready
@@ -87,15 +359,55 @@
 	end
 
 --set the outbound caller id
-    session:execute("set", "caller_id_name="..outbound_caller_id_name);
-    session:execute("set", "effective_caller_id_name="..outbound_caller_id_name);
+	session:execute("set", "caller_id_name="..outbound_caller_id_name);
+	session:execute("set", "effective_caller_id_name="..outbound_caller_id_name);
 
 --send to the console
-  --freeswitch.consoleLog("notice", "[app:follow_me] " .. value .. "\n");
+	freeswitch.consoleLog("notice", "[app:follow_me] " .. destination_number .. "\n");
 
---execute the time out action
-	timeout_app = 'transfer';
-	timeout_data = '*99' .. destination_number .. ' XML '..domain_name;
-	if timeout_data and #timeout_data > 0 then
-		session:execute(timeout_app, timeout_data);
+--session execute
+	if (session:ready()) then
+		--set the variables
+			session:execute("set", "hangup_after_bridge=true");
+			session:execute("set", "continue_on_fail=true");
+
+		--execute the bridge
+			if (app_data ~= nil) then
+				if (follow_me_strategy == "enterprise") then
+					app_data = app_data:gsub("%[", "{");
+					app_data = app_data:gsub("%]", "}");
+				end
+				freeswitch.consoleLog("NOTICE", "[follow me] app_data: "..app_data.."\n");
+				session:execute("bridge", app_data);
+			end
+
+		--timeout destination
+			if (app_data ~= nil) then
+				if session:ready() and (
+					session:getVariable("originate_disposition")  == "ALLOTTED_TIMEOUT"
+					or session:getVariable("originate_disposition") == "NO_ANSWER"
+					or session:getVariable("originate_disposition") == "NO_USER_RESPONSE"
+					or session:getVariable("originate_disposition") == "USER_NOT_REGISTERED"
+					or session:getVariable("originate_disposition") == "NORMAL_TEMPORARY_FAILURE"
+					or session:getVariable("originate_disposition") == "NO_ROUTE_DESTINATION"
+					or session:getVariable("originate_disposition") == "USER_BUSY"
+					or session:getVariable("originate_disposition") == "RECOVERY_ON_TIMER_EXPIRE"
+					or session:getVariable("originate_disposition") == "failure"
+				) then
+					--execute the time out action
+						if follow_me_timeout_app and #follow_me_timeout_app > 0 then
+							session:execute(follow_me_timeout_app, follow_me_timeout_data);
+						end
+					--check and report missed call
+						missed();
+				end
+			else
+				if (follow_me_timeout_app ~= nil) then
+					--execute the time out action
+						if follow_me_timeout_app and #follow_me_timeout_app > 0 then
+							session:execute(follow_me_timeout_app, follow_me_timeout_data);
+						end
+				end
+			end
 	end
+
