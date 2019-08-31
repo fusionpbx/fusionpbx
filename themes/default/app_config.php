@@ -110,7 +110,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "text hover color of the active domain in the side menu Domain selector";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f4c341a2-7cec-42b0-b110-6e27036e5592 ";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f4c341a2-7cec-42b0-b110-6e27036e5592";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "domain_inactive_text_color_hover";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
