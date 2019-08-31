@@ -534,7 +534,7 @@
 				end
 
 				---get destination that are using follow me
-				if (ring_group_strategy == "enterprise") then
+				if (ring_group_strategy == "enterprise.disabled") then
 					cmd = "user_data ".. destination_number .."@" ..domain_name.." var follow_me_enabled";
 					if (api:executeString(cmd) == "true") then
 						--get the follow me destinations
