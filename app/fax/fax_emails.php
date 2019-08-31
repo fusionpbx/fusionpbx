@@ -332,7 +332,7 @@ function load_domain_settings($domain_uuid) {
 		$sql = "select * from v_domain_settings ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and domain_setting_enabled = 'true' ";
-		$sql .= "order by domain_setting_order asc "
+		$sql .= "order by domain_setting_order asc ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$database = new database;
 		$result = $database->select($sql, $parameters, 'all');
