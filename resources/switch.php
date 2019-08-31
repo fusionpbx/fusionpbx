@@ -614,7 +614,6 @@ function dialplan_add($domain_uuid, $dialplan_uuid, $dialplan_name, $dialplan_or
 		$database->save($array);
 		unset($array);
 	//revoke temporary permissions
-		$p = new permissions;
 		$p->delete('dialplan_add', 'temp');
 }
 
@@ -641,7 +640,6 @@ function dialplan_detail_add($domain_uuid, $dialplan_uuid, $dialplan_detail_tag,
 		$database->save($array);
 		unset($array);
 	//revoke temporary permissions
-		$p = new permissions;
 		$p->delete('dialplan_detail_add', 'temp');
 }
 

@@ -64,7 +64,6 @@ else {
 			unset($array);
 
 		//revoke temporary permissions
-			$p = new permissions;
 			$p->delete('menu_delete', 'temp');
 			$p->delete('menu_item_delete', 'temp');
 			$p->delete('menu_item_group_delete', 'temp');

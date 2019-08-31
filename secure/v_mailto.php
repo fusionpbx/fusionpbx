@@ -376,7 +376,6 @@
 					$database->save($array);
 					unset($array);
 				//revoke temporary permissions
-					$p = new permissions;
 					$p->delete('email_log_add', 'temp');
 			}
 
