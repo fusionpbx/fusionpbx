@@ -39,7 +39,7 @@ else {
 	$text = $language->get();
 
 //get the id
-	if (is_uuid($_GET["id"]) {
+	if (is_uuid($_GET["id"])) {
 
 		$app_uuid = $_GET["id"];
 
