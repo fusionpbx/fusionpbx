@@ -91,22 +91,6 @@
 --connect to the database
 	local dbh = Database.new('system');
 
---get the forward no answer
-	cmd = "user_data ".. destination_number .."@"..domain_name.." var forward_no_answer_enabled";
-	forward_no_answer_enabled = trim(api:executeString(cmd));
-	
-	cmd = "user_data ".. destination_number .."@"..domain_name.." var forward_no_answer_destination";
-	forward_no_answer_destination = trim(api:executeString(cmd));
-
---set the follow me timeout app and data
-	if (forward_no_answer_enabled ~= nil and forward_no_answer_enabled == 'true') then
-		follow_me_timeout_app = 'transfer';
-		follow_me_timeout_data = forward_no_answer_destination .. ' XML '..domain_name;
-	else
-		follow_me_timeout_app = 'transfer';
-		follow_me_timeout_data = '*99' .. destination_number .. ' XML '..domain_name;
-	end
-
 --get the forward busy
 	--cmd = "user_data ".. destination_number .."@"..domain_name.." var forward_busy_enabled=";
 	--forward_busy_enabled = trim(api:executeString(cmd));
@@ -251,7 +235,7 @@
 			--session:setVariable("transfer_ringback", follow_me_ringback);
 
 		--set the timeout if there is only one destination
-			if (destination_count == 1) then
+			if (session:ready() and destination_count == 1) then
 				session:execute("set", "call_timeout="..row.destination_timeout);
 			end
 
@@ -273,7 +257,7 @@
 			end
 
 		--set confirm
-			if (follow_me_strategy == "simultaneous") then
+			if (session:ready() and follow_me_strategy == "simultaneous") then
 					session:execute("set", "group_confirm_key=exec");
 					session:execute("set", "group_confirm_file=lua ".. scripts_dir:gsub('\\','/') .."/confirm.lua");
 			end
@@ -289,11 +273,6 @@
 				group_confirm = "confirm=false,";
 			end
 
-if (user_exists == 'true') then
-	freeswitch.consoleLog("notice", "[app:follow_me] user_exists true\n");
-else
-	freeswitch.consoleLog("notice", "[app:follow_me] user_exists false\n");
-end
 		--process according to user_exists, sip_uri, external number
 			if (user_exists == "true") then
 				--get the extension_uuid
@@ -312,6 +291,16 @@ end
 				--set the toll allow to an empty string
 					if (toll_allow == nil) then
 						toll_allow = '';
+					end
+
+				--check if the user exists
+					cmd = "user_exists id ".. destination_number .." "..domain_name;
+					caller_is_local = api:executeString(cmd);
+
+				--set the outbound caller id
+					if (session:ready() and caller_is_local) then
+						caller_id_name = outbound_caller_id_name;
+						caller_id_number = outbound_caller_id_number;
 					end
 
 				--set the caller id
@@ -358,10 +347,6 @@ end
 		session:execute("ring_ready", "");
 	end
 
---set the outbound caller id
-	session:execute("set", "caller_id_name="..outbound_caller_id_name);
-	session:execute("set", "effective_caller_id_name="..outbound_caller_id_name);
-
 --send to the console
 	freeswitch.consoleLog("notice", "[app:follow_me] " .. destination_number .. "\n");
 
@@ -394,19 +379,25 @@ end
 					or session:getVariable("originate_disposition") == "RECOVERY_ON_TIMER_EXPIRE"
 					or session:getVariable("originate_disposition") == "failure"
 				) then
+					--get the forward no answer
+						cmd = "user_data ".. destination_number .."@"..domain_name.." var forward_no_answer_enabled";
+						forward_no_answer_enabled = trim(api:executeString(cmd));
+
+						cmd = "user_data ".. destination_number .."@"..domain_name.." var forward_no_answer_destination";
+						forward_no_answer_destination = trim(api:executeString(cmd));
+
+						cmd = "user_data ".. destination_number .."@"..domain_name.." var user_context";
+						user_context = trim(api:executeString(cmd));
+
 					--execute the time out action
-						if follow_me_timeout_app and #follow_me_timeout_app > 0 then
-							session:execute(follow_me_timeout_app, follow_me_timeout_data);
+						if (forward_no_answer_enabled == 'true') then
+							session:transfer(forward_no_answer_destination, 'XML', user_context);
+						else
+							session:transfer('*99' .. destination_number, 'XML', user_context);
 						end
+
 					--check and report missed call
-						missed();
-				end
-			else
-				if (follow_me_timeout_app ~= nil) then
-					--execute the time out action
-						if follow_me_timeout_app and #follow_me_timeout_app > 0 then
-							session:execute(follow_me_timeout_app, follow_me_timeout_data);
-						end
+						--missed();
 				end
 			end
 	end
