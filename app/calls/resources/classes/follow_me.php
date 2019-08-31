@@ -494,7 +494,7 @@ include "root.php";
 			//add extensions to the array
 				$array['extensions'][0]["extension_uuid"] = $extension_uuid;
 				$array['extensions'][0]["dial_domain"] = $this->domain_name;
-				$array['extensions'][0]["dial_string"] = $dial_string;
+				$array['extensions'][0]["dial_string"] = '';
 				$array['extensions'][0]["follow_me_destinations"] = $dial_string;
 				$array['extensions'][0]["follow_me_enabled"] = $this->follow_me_enabled;
 
