@@ -117,7 +117,6 @@
 			$database->save($array);
 			unset($array);
 		//revoke temporary permissions
-			$p = new permissions;
 			$p->delete('voicemail_destination_add', 'temp');
 		//set message
 			message::add($text['message-add']);
