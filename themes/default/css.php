@@ -527,20 +527,20 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		text-decoration: none;
 		}
 
-	a.menu_side_item_main {
+	div#menu_side_container > a.menu_side_item_main {
 		display: block;
 		width: 100%;
 		padding: 10px 20px;
 		text-align: left;
 		font-family: <?php echo ($_SESSION['theme']['menu_main_text_font']['text'] != '') ? $_SESSION['theme']['menu_main_text_font']['text'] : 'arial'; ?>;
 		font-size: <?php echo ($_SESSION['theme']['menu_main_text_size']['text'] != '') ? $_SESSION['theme']['menu_main_text_size']['text'] : '10.25pt'; ?>;
-		color: <?php echo ($_SESSION['theme']['menu_main_text_color']['text'] != '') ? $_SESSION['theme']['menu_main_text_color']['text'] : '#fff'; ?> !important;
+		color: <?php echo ($_SESSION['theme']['menu_main_text_color']['text'] != '') ? $_SESSION['theme']['menu_main_text_color']['text'] : '#fff'; ?>;
 		cursor: pointer;
 		}
 
-	a.menu_side_item_main:hover,
-	a.menu_side_item_main:focus,
-	a.menu_side_item_main:active {
+	div#menu_side_container > a.menu_side_item_main:hover,
+	div#menu_side_container a.menu_side_item_main:focus,
+	div#menu_side_container a.menu_side_item_main:active {
 		color: <?php echo ($_SESSION['theme']['menu_main_text_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_text_color_hover']['text'] : '#fd9c03'; ?>;
 		background: <?php echo ($_SESSION['theme']['menu_main_background_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_background_color_hover']['text'] : 'rgba(0,0,0,1.0)'; ?>;
 		text-decoration: none;
