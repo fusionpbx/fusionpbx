@@ -294,8 +294,10 @@
 					end
 
 				--check if the user exists
-					cmd = "user_exists id ".. destination_number .." "..domain_name;
-					caller_is_local = api:executeString(cmd);
+					if tonumber(caller_id_number) ~= nil then
+						cmd = "user_exists id ".. caller_id_number .." "..domain_name;
+						caller_is_local = api:executeString(cmd);
+					end
 
 				--set the outbound caller id
 					if (session:ready() and caller_is_local) then
