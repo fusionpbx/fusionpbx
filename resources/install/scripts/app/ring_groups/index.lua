@@ -34,6 +34,7 @@
 	dbh = Database.new('system');
 
 --include json library
+	--debug["sql"] = true;
 	local json
 	if (debug["sql"]) then
 		json = require "resources.functions.lunajson"
@@ -143,6 +144,8 @@
 		dialplan = session:getVariable("dialplan");
 		caller_id_name = session:getVariable("caller_id_name");
 		caller_id_number = session:getVariable("caller_id_number");
+		outbound_caller_id_name = session:getVariable("outbound_caller_id_name");
+		outbound_caller_id_number = session:getVariable("outbound_caller_id_number");
 		effective_caller_id_name = session:getVariable("effective_caller_id_name");
 		effective_caller_id_number = session:getVariable("effective_caller_id_number");
 		network_addr = session:getVariable("network_addr");
@@ -436,7 +439,6 @@
 				freeswitch.consoleLog("notice", "[ring group] SQL:" .. sql .. "; params:" .. json.encode(params) .. "\n");
 			end
 			destinations = {};
-			destination_count = 0;
 			x = 1;
 			dbh:query(sql, params, function(row)
 				if (row.destination_prompt == "1" or row.destination_prompt == "2") then
@@ -480,7 +482,6 @@
 						destinations[x] = row;
 				end
 				row['domain_name'] = leg_domain_name;
-				destination_count = destination_count + 1;
 				x = x + 1;
 			end);
 			--freeswitch.consoleLog("NOTICE", "[ring_group] external "..external.."\n");
@@ -492,36 +493,101 @@
 				)
 			end
 
-		--prepare the array of destinations
-			x = 1;
+		---add follow me destinations
 			for key, row in pairs(destinations) do
-				--set the values from the database as variables
-				user_exists = row.user_exists;
-				ring_group_strategy = row.ring_group_strategy;
-				ring_group_timeout_app = row.ring_group_timeout_app;
-				ring_group_timeout_data = row.ring_group_timeout_data;
-				ring_group_caller_id_name = row.ring_group_caller_id_name;
-				ring_group_caller_id_number = row.ring_group_caller_id_number;
-				ring_group_cid_name_prefix = row.ring_group_cid_name_prefix;
-				ring_group_cid_number_prefix = row.ring_group_cid_number_prefix;
-				ring_group_distinctive_ring = row.ring_group_distinctive_ring;
-				ring_group_ringback = row.ring_group_ringback;
-				destination_number = row.destination_number;
-				destination_delay = row.destination_delay;
-				destination_timeout = row.destination_timeout;
-				destination_prompt = row.destination_prompt;
-				toll_allow = row.toll_allow;
 
+				if (row.ring_group_strategy == "enterprise") then
+					cmd = "user_data ".. row.destination_number .."@" ..row.domain_name.." var follow_me_enabled";
+					if (api:executeString(cmd) == "true") then
+
+						--set the default value to null
+						follow_me_uuid = nil;
+
+						--select data from the database
+						local sql = "select follow_me_uuid ";
+						sql = sql .. "from v_extensions ";
+						sql = sql .. "where domain_uuid = :domain_uuid ";
+						sql = sql .. "and ( ";
+						sql = sql .. "	extension = :destination_number ";
+						sql = sql .. "	OR number_alias = :destination_number ";
+						sql = sql .. ") ";
+						local params = {domain_uuid = domain_uuid, destination_number = row.destination_number};
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "SQL:" .. sql .. "; params: " .. json.encode(params) .. "\n");
+						end
+						status = dbh:query(sql, params, function(field)
+							follow_me_uuid = field["follow_me_uuid"];
+						end);
+						--dbh:query(sql, params, function(row);
+
+						--get the follow me destinations
+						if (follow_me_uuid ~= nil) then
+							sql = "select d.domain_uuid, d.domain_name, f.follow_me_destination as destination_number, ";
+							sql = sql .. "f.follow_me_delay as destination_delay, f.follow_me_timeout as destination_timeout, ";
+							sql = sql .. "f.follow_me_prompt as destination_prompt ";
+							sql = sql .. "from v_follow_me_destinations as f, v_domains as d ";
+							sql = sql .. "where f.follow_me_uuid = :follow_me_uuid ";
+							sql = sql .. "and f.domain_uuid = d.domain_uuid ";
+							sql = sql .. "order by f.follow_me_order; ";
+							local params = {follow_me_uuid = follow_me_uuid};
+							if (debug["sql"]) then
+								freeswitch.consoleLog("notice", "SQL:" .. sql .. "; params: " .. json.encode(params) .. "\n");
+							end
+							x = 1;
+							dbh:query(sql, params, function(field)
+								--check if the user exists
+								cmd = "user_exists id ".. field.destination_number .." "..row.domain_name;
+								user_exists = api:executeString(cmd);
+
+								--prepare the key
+								if (x == 1) then
+									new_key = key;
+								else
+									new_key = #destinations + 1;
+								end
+
+								--add to the destinations array
+								destinations[new_key] = {}
+								destinations[new_key]['ring_group_strategy'] = row.ring_group_strategy;
+								destinations[new_key]['ring_group_timeout_app'] = row.ring_group_timeout_app;
+								destinations[new_key]['ring_group_timeout_data'] = row.ring_group_timeout_data;
+								destinations[new_key]['ring_group_caller_id_name'] = row.ring_group_caller_id_name;
+								destinations[new_key]['ring_group_caller_id_number'] = row.ring_group_caller_id_number;
+								destinations[new_key]['ring_group_cid_name_prefix'] = row.ring_group_cid_name_prefix;
+								destinations[new_key]['ring_group_cid_number_prefix'] = row.ring_group_cid_number_prefix;
+								destinations[new_key]['ring_group_distinctive_ring'] = row.ring_group_distinctive_ring;
+								destinations[new_key]['ring_group_ringback'] = row.ring_group_ringback;
+								destinations[new_key]['domain_name'] = field.domain_name;
+								destinations[new_key]['destination_number'] = field.destination_number;
+								destinations[new_key]['destination_delay'] = field.destination_delay;
+								destinations[new_key]['destination_timeout'] = field.destination_timeout;
+								destinations[new_key]['destination_prompt'] = field.destination_prompt;
+								destinations[new_key]['group_confirm_key'] = row.group_confirm_key;
+								destinations[new_key]['group_confirm_file'] = row.group_confirm_file;
+								destinations[new_key]['toll_allow'] = row.toll_allow;
+								destinations[new_key]['user_exists'] = user_exists;
+
+								--increment x
+								x = x + 1;
+							end);
+						end
+
+					end
+				end
+			end
+
+		--prepare the array of destinations
+			for key, row in pairs(destinations) do
 				--determine if the user is registered if not registered then lookup
-				if (user_exists == "true") then
-					cmd = "sofia_contact */".. destination_number .."@" ..domain_name;
+				if (row.user_exists == "true") then
+					cmd = "sofia_contact */".. row.destination_number .."@" ..domain_name;
 					if (api:executeString(cmd) == "error/user_not_registered") then
 						freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
-						cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_user_not_registered_enabled";
+						cmd = "user_data ".. row.destination_number .."@" ..domain_name.." var forward_user_not_registered_enabled";
 						freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
 						if (api:executeString(cmd) == "true") then
 							--get the new destination number
-							cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_user_not_registered_destination";
+							cmd = "user_data ".. row.destination_number .."@" ..domain_name.." var forward_user_not_registered_destination";
 							freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
 							not_registered_destination_number = api:executeString(cmd);
 							freeswitch.consoleLog("NOTICE", "[ring_group] "..not_registered_destination_number.."\n");
@@ -532,63 +598,16 @@
 						end
 					end
 				end
-
-				---get destination that are using follow me
-				if (ring_group_strategy == "enterprise.disabled") then
-					cmd = "user_data ".. destination_number .."@" ..domain_name.." var follow_me_enabled";
-					if (api:executeString(cmd) == "true") then
-						--get the follow me destinations
-						cmd = "user_data ".. destination_number .."@" ..domain_name.." var follow_me_destinations";
-						result_follow_me_destinations = api:executeString(cmd);
-						freeswitch.consoleLog("notice", "[ring groups][follow_me] key " .. key .. " " .. cmd .. " ".. result_follow_me_destinations .."\n");
-
-						follow_me_destinations = explode(",[", result_follow_me_destinations);
-						x = 0;
-						for k, v in pairs(follow_me_destinations) do
-							--increment the ordinal value
-							x = x + 1;
-
-							--seperate the variables from the destination
-							destination = explode("]", v);
-
-							--set the variables and clean the variables string
-							variables = destination[1];
-							variables = variables:gsub("%[", "");
-
-							--send details to the console
-							freeswitch.consoleLog("notice", "[ring groups][follow_me] variables ".. variables .."\n");
-							freeswitch.consoleLog("notice", "[ring groups][follow_me] destination ".. destination[2] .."\n");
-
-							--add to the destinations array
-							--if destinations[x] == nil then destinations[x] = {} end
-							destinations[key]['destination_number'] = destination[2];
-							destinations[key]['domain_name'] = domain_name;
-							destinations[key]['destination_delay'] = '0';
-							destinations[key]['destination_timeout'] = '30';
-
-							--add the variables to the destinations array
-							variable_array = explode(",", variables);
-							for k2, v2 in pairs(variable_array) do
-								array = explode("=", v2);
-								if (array[2] ~= nil) then
-									destinations[key][array[1]] = array[2];
-								end
-							end
-
-							--if confirm is true true then set it to prompt
-							if (destinations[key]['confirm']  ~= nil and destinations[key]['confirm']  == 'true') then
-								destinations[key]['destination_prompt'] = '1';
-							end
-						end
-					end
-				end
 			end
 
-		--process the destinations
-			--x = 1;
-			--for key, row in pairs(destinations) do
-			--	freeswitch.consoleLog("NOTICE", "[ring group] destination_number: "..row.destination_number.."\n");
-			--end
+		--add the array to the logs
+			for key, row in pairs(destinations) do
+				freeswitch.consoleLog("NOTICE", "[ring group] domain_name: "..row.domain_name.."\n");
+				freeswitch.consoleLog("NOTICE", "[ring group] destination_number: "..row.destination_number.."\n");
+				freeswitch.consoleLog("NOTICE", "[ring group] destination_delay: "..row.destination_delay.."\n");
+				freeswitch.consoleLog("NOTICE", "[ring group] destination_timeout: "..row.destination_timeout.."\n");
+				freeswitch.consoleLog("NOTICE", "[ring group] destination_prompt: "..row.destination_prompt.."\n");
+			end
 
 		--process the destinations
 			x = 1;
@@ -625,7 +644,7 @@
 					session:setVariable("transfer_ringback", ring_group_ringback);
 
 				--set the timeout if there is only one destination
-					if (destination_count == 1) then
+					if (#destinations == 1) then
 						session:execute("set", "call_timeout="..row.destination_timeout);
 					end
 
@@ -740,12 +759,24 @@
 								toll_allow = '';
 							end
 
+						--check if the user exists
+							if tonumber(caller_id_number) ~= nil then
+								cmd = "user_exists id ".. caller_id_number .." "..domain_name;
+								caller_is_local = api:executeString(cmd);
+							end
+
 						--set the caller id
 							caller_id = '';
-							if (ring_group_caller_id_name ~= nil) then
-								caller_id = "origination_caller_id_name='"..ring_group_caller_id_name.."'"
+
+						--set the outbound caller id
+							if (session:ready() and caller_is_local) then
+								caller_id = ",origination_caller_id_name='"..outbound_caller_id_name.."'";
+								caller_id = caller_id .. ",origination_caller_id_number='"..outbound_caller_id_number.."'";
 							end
-							if (ring_group_caller_id_number ~= nil) then
+							if (ring_group_caller_id_name ~= nil and ring_group_caller_id_name ~= '') then
+								caller_id = ",origination_caller_id_name='"..ring_group_caller_id_name.."'";
+							end
+							if (ring_group_caller_id_number ~= nil and ring_group_caller_id_number ~= '') then
 								caller_id = caller_id .. ",origination_caller_id_number="..ring_group_caller_id_number..",";
 							end
 
