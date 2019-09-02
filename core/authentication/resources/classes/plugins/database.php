@@ -26,85 +26,62 @@ class plugin_database {
 	 */
 	function database() {
 
-		//save the database connection to a local variable
-			include "root.php";
-			require_once "resources/classes/database.php";
-			$database = new database;
-			$database->connect();
-			$db = $database->db;
+		//set the default status
+			$user_authorized = false;
 
 		//check the username and password if they don't match then redirect to the login
-			$sql = "select * from v_users ";
+			$sql = "select * from v_users where ";
 			if (strlen($this->key) > 30) {
-				$sql .= "where api_key = :key ";
-				//$sql .= "where api_key = '".$this->key."' ";
+				$sql .= "api_key = :key ";
+				$parameters['api_key'] = $this->key;
 			}
 			else {
-				$sql .= "where lower(username) = lower(:username) ";
-				//$sql .= "where username = '".$this->username."' ";
+				$sql .= "lower(username) = lower(:username) ";
+				$parameters['username'] = $this->username;
 			}
-			if ($_SESSION["users"]["unique"]["text"] == "global") {
-				//unique username - global (example: email address)
-			}
-			else {
-				//unique username - per domain
+			if ($_SESSION["users"]["unique"]["text"] != "global") {
+				//unique username per domain (not globally unique across system - example: email address)
 				$sql .= "and domain_uuid = :domain_uuid ";
-				//$sql .= "and domain_uuid = '".$this->domain_uuid."' ";
+				$parameters['domain_uuid'] = $this->domain_uuid;
 			}
 			$sql .= "and (user_enabled = 'true' or user_enabled is null) ";
-			$prep_statement = $db->prepare($sql);
-			if ($_SESSION["users"]["unique"]["text"] != "global") {
-				$prep_statement->bindParam(':domain_uuid', $this->domain_uuid);
-			}
-			if (strlen($this->key) > 30) {
-				$prep_statement->bindParam(':key', $this->key);
-			}
-			if (strlen($this->username) > 0) {
-				$prep_statement->bindParam(':username', $this->username);
-			}
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			$user_authorized = false;
-			if (is_array($result)) {
-				foreach ($result as &$row) {
+			$database = new database;
+			$row = $database->select($sql, $parameters, 'row');
+			if (is_array($row) && @sizeof($row) != 0) {
 
-					//get the domain uuid when users are unique globally
-						if ($_SESSION["users"]["unique"]["text"] == "global" && $row["domain_uuid"] != $this->domain_uuid) {
-							//set the domain_uuid
-								$this->domain_uuid = $row["domain_uuid"];
-								$this->domain_name = $_SESSION['domains'][$this->domain_uuid]['domain_name'];
+				//get the domain uuid when users are unique globally
+					if ($_SESSION["users"]["unique"]["text"] == "global" && $row["domain_uuid"] != $this->domain_uuid) {
+						//set the domain_uuid
+							$this->domain_uuid = $row["domain_uuid"];
+							$this->domain_name = $_SESSION['domains'][$this->domain_uuid]['domain_name'];
 
-							//set the domain session variables
-								$_SESSION["domain_uuid"] = $this->domain_uuid;
-								$_SESSION["domain_name"] = $this->domain_name;
+						//set the domain session variables
+							$_SESSION["domain_uuid"] = $this->domain_uuid;
+							$_SESSION["domain_name"] = $this->domain_name;
 
-							//set the setting arrays
-								$domain = new domains();
-								$domain->db = $db;
-								$domain->set();
-						}
+						//set the setting arrays
+							$domain = new domains();
+							$domain->db = $db;
+							$domain->set();
+					}
 
-					//set the user_uuid
-						$this->user_uuid = $row['user_uuid'];
-						$this->contact_uuid = $row['contact_uuid'];
+				//set the user_uuid
+					$this->user_uuid = $row['user_uuid'];
+					$this->contact_uuid = $row['contact_uuid'];
 
-					//if salt is not defined then use the default salt for backwards compatibility
-						if (strlen($row["salt"]) == 0) {
-							$row["salt"] = 'e3.7d.12';
-						}
+				//if salt is not defined then use the default salt for backwards compatibility
+					if (strlen($row["salt"]) == 0) {
+						$row["salt"] = 'e3.7d.12';
+					}
 
-					//compare the password provided by the user with the one in the database
-						if (md5($row["salt"].$this->password) == $row["password"]) {
-							$user_authorized = true;
-						} elseif (strlen($this->key) >  30 && $this->key == $row["api_key"]) {
-							$user_authorized = true;
-						} else {
-							$user_authorized = false;
-						}
+				//compare the password provided by the user with the one in the database
+					if (md5($row["salt"].$this->password) == $row["password"]) {
+						$user_authorized = true;
+					}
+					else if (strlen($this->key) > 30 && $this->key == $row["api_key"]) {
+						$user_authorized = true;
+					}
 
-					//end the loop
-						break;
-				}
 			}
 			unset($result);
 
@@ -119,12 +96,8 @@ class plugin_database {
 			$result["domain_uuid"] = $this->domain_uuid;
 			$result["contact_uuid"] = $this->contact_uuid;
 			$result["sql"] = $sql;
-			if ($user_authorized) {
-				$result["authorized"] = "true";
-			}
-			else {
-				$result["authorized"] = "false";
-			}
+			$result["authorized"] = $user_authorized ? 'true' : 'false';
+
 			return $result;
 	}
 }

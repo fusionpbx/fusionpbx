@@ -29,105 +29,113 @@
 
 		//delete the permissions
 			function delete() {
-				//set the variables
-					$db = $this->db;
 				//get unprotected groups and their domain uuids (if any)
-					$sql = "select group_name, domain_uuid from v_groups where group_protected <> 'true' ";
-					$prep_statement = $db->prepare(check_sql($sql));
-					$prep_statement->execute();
-					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-					$result_count = count($result);
-					if ($result_count > 0) {
+					$sql = "select group_name, domain_uuid ";
+					$sql .= "from v_groups ";
+					$sql .= "where group_protected <> 'true' ";
+					$database = new database;
+					$result = $database->select($sql, null, 'all');
+					if (is_array($result) && @sizeof($result) != 0) {
 						foreach($result as $row) {
 							$unprotected_groups[$row['group_name']] = $row['domain_uuid'];
 						}
 					}
-					unset ($prep_statement, $sql, $result, $result_count);
+					unset($sql, $result, $row);
 				//delete unprotected group permissions
 					if (is_array($unprotected_groups) && sizeof($unprotected_groups) > 0) {
+						$x = 0;
 						foreach ($unprotected_groups as $unprotected_group_name => $unprotected_domain_uuid) {
-							$sql = "delete from v_group_permissions where ";
-							$sql .= "group_name = '".$unprotected_group_name."' ";
-							$sql .= "and domain_uuid ".(($unprotected_domain_uuid != '') ? " = '".$unprotected_domain_uuid."' " : " is null ");
-							if (false === $db->exec($sql)) {
-								//echo $db->errorCode() . "<br>";
-								$info = $db->errorInfo();
-								print_r($info);
-								// $info[0] == $db->errorCode() unified error code
-								// $info[1] is the driver specific error code
-								// $info[2] is the driver specific error string
-							}
+							//build delete array
+								$array['group_permissions'][$x]['group_name'] = $unprotected_group_name;
+								$array['group_permissions'][$x]['domain_uuid'] = $unprotected_domain_uuid != '' ? $unprotected_domain_uuid : null;
+							$x++;
+						}
+						if (is_array($array) && @sizeof($array) != 0) {
+							//grant temporary permissions
+								$p = new permissions;
+								$p->add('group_permission_delete', 'temp');
+							//execute delete
+								$database = new database;
+								$database->app_name = 'groups';
+								$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+								$database->delete($array);
+								unset($array);
+							//revoke temporary permissions
+								$p->delete('group_permission_delete', 'temp');
 						}
 					}
 			}
 
 		//restore the permissions
 			function restore() {
-				//set the variables
-					$db = $this->db;
-
 				//delete the group permisisons
 					$this->delete();
 
 				//get the $apps array from the installed apps from the core and mod directories
 					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
-					$x=0;
+					$x = 0;
 					foreach ($config_list as &$config_path) {
 						include($config_path);
 						$x++;
 					}
 
 				//restore default permissions
-					foreach($apps as $row) {
+					$x = 0;
+					foreach ($apps as $row) {
 						foreach ($row['permissions'] as $permission) {
 							//set the variables
 							if ($permission['groups']) {
 								foreach ($permission['groups'] as $group) {
 									//check group protection
-									$sql = "select * from v_groups ";
-									$sql .= "where group_name = '".$group."' ";
+									$sql = "select count(*) from v_groups ";
+									$sql .= "where group_name = :group_name ";
 									$sql .= "and group_protected = 'true'";
-									$prep_statement = $db->prepare(check_sql($sql));
-									if ($prep_statement) {
-										$prep_statement->execute();
-										$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-										unset ($prep_statement);
-										if (count($result) == 0) {
-											//if the item uuid is not currently in the db then add it
-											$sql = "select * from v_group_permissions ";
-											$sql .= "where permission_name = '".$permission['name']."' ";
-											$sql .= "and group_name = '$group' ";
-											$prep_statement = $db->prepare(check_sql($sql));
-											if ($prep_statement) {
-												$prep_statement->execute();
-												$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-												unset ($prep_statement);
-												if (count($result) == 0) {
-													//insert the default permissions into the database
-													$sql = "insert into v_group_permissions ";
-													$sql .= "(";
-													$sql .= "group_permission_uuid, ";
-													$sql .= "permission_name, ";
-													$sql .= "group_name ";
-													$sql .= ") ";
-													$sql .= "values ";
-													$sql .= "(";
-													$sql .= "'".uuid()."', ";
-													$sql .= "'".$permission['name']."', ";
-													$sql .= "'".$group."' ";
-													$sql .= ");";
-													$db->exec(check_sql($sql));
-													unset($sql);
-												} // if count
-											} // if prepared statement
-										} // if count
-									} // if prepared statement
-								} // foreach group permission
-							} // if permission
-						} // foreach permission
-					} // foreach app
+									$parameters['group_name'] = $group;
+									$database = new database;
+									$num_rows = $database->select($sql, $parameters, 'column');
+									unset($sql, $parameters);
 
-			} // function
-	} // class
+									if ($num_rows == 0) {
+										//if the item uuid is not currently in the db then add it
+										$sql = "select count(*) from v_group_permissions ";
+										$sql .= "where permission_name = :permission_name ";
+										$sql .= "and group_name = :group_name ";
+										$parameters['permission_name'] = $permission['name'];
+										$parameters['group_name'] = $group;
+										$database = new database;
+										$num_rows = $database->select($sql, $parameters, 'column');
+										unset($sql, $parameters);
+
+										if ($num_rows == 0) {
+											//build default permissions insert array
+												$array['group_permissions'][$x]['group_permission_uuid'] = uuid();
+												$array['group_permissions'][$x]['permission_name'] = $permission['name'];
+												$array['group_permissions'][$x]['group_name'] = $group;
+											$x++;
+										}
+									}
+								}
+							}
+						}
+					}
+					if (is_array($array) && @sizeof($array)) {
+						//grant temporary permissions
+							$p = new permissions;
+							$p->add('group_permission_add', 'temp');
+
+						//execute insert
+							$database = new database;
+							$database->app_name = 'groups';
+							$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+							$database->save($array);
+							unset($array);
+
+						//revoke temporary permissions
+							$p->delete('group_permission_add', 'temp');
+					}
+
+			}
+
+	}
 
 ?>

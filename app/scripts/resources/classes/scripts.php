@@ -53,8 +53,7 @@ if (!class_exists('scripts')) {
 		 * Called when the object is created
 		 */
 		public function __construct() {
-			//connect to the database if not connected
-			require_once "resources/classes/database.php";
+			//get database properties
 			$database = new database;
 			$database->connect();
 			$this->db = $database->db;
@@ -137,35 +136,16 @@ if (!class_exists('scripts')) {
 					$this->db_path = str_replace("\\", "/", $this->db_path);
 
 				//get the odbc information
-					$sql = "select count(*) as num_rows from v_databases ";
+					$sql = "select * from v_databases ";
 					$sql .= "where database_driver = 'odbc' ";
-					$prep_statement = $this->db->prepare($sql);
-					if ($prep_statement) {
-						$prep_statement->execute();
-						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-						unset($prep_statement);
-						if ($row['num_rows'] > 0) {
-							$odbc_num_rows = $row['num_rows'];
-
-							$sql = "select * from v_databases ";
-							$sql .= "where database_driver = 'odbc' ";
-							$prep_statement = $this->db->prepare(check_sql($sql));
-							$prep_statement->execute();
-							$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-							if (is_array($result)) {
-								foreach ($result as &$row) {
-									$this->dsn_name = $row["database_name"];
-									$this->dsn_username = $row["database_username"];
-									$this->dsn_password = $row["database_password"];
-									break; //limit to 1 row
-								}
-								unset ($prep_statement);
-							}
-						}
-						else {
-							$odbc_num_rows = '0';
-						}
+					$database = new database;
+					$row = $database->select($sql, null, 'row');
+					if (is_array($row) && @sizeof($row) != 0) {
+						$this->dsn_name = $row["database_name"];
+						$this->dsn_username = $row["database_username"];
+						$this->dsn_password = $row["database_password"];
 					}
+					unset($sql, $row);
 
 				//get the recordings directory
 					if (is_array($_SESSION['switch']['recordings'])) {
@@ -183,7 +163,8 @@ if (!class_exists('scripts')) {
 				//find the location to write the config.lua
 					if (is_dir("/etc/fusionpbx")){
 						$config = "/etc/fusionpbx/config.lua";
-					} elseif (is_dir("/usr/local/etc/fusionpbx")){
+					}
+					else if (is_dir("/usr/local/etc/fusionpbx")){
 						$config = "/usr/local/etc/fusionpbx/config.lua";
 					}
 					else {
@@ -346,9 +327,11 @@ if (!class_exists('scripts')) {
 					unset($tmp);
 					fclose($fout);
 			}
-		} //end config_lua
-	} //end scripts class
+		}
+
+	}
 }
+
 /*
 //example use
 
@@ -356,4 +339,5 @@ if (!class_exists('scripts')) {
 	$obj = new scripts;
 	$obj->write_config();
 */
+
 ?>
