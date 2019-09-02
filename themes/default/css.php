@@ -248,7 +248,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 /* MENU: BEGIN ******************************************************************/
 
 	/* help bootstrap v4 menu be scrollable on mobile */
-	@media screen and (max-width: 1000px) {
+	@media screen and (max-width: 575px) {
 		.navbar-collapse {
 			max-height: calc(100vh - 60px);
 			overflow-y: auto;
