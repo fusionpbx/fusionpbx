@@ -769,8 +769,10 @@
 							caller_id = '';
 
 						--set the outbound caller id
-							if (session:ready() and caller_is_local) then
+							if (caller_is_local == 'true' and outbound_caller_id_name ~= nil) then
 								caller_id = ",origination_caller_id_name='"..outbound_caller_id_name.."'";
+							end
+							if (caller_is_local == 'true' and outbound_caller_id_number ~= nil) then
 								caller_id = caller_id .. ",origination_caller_id_number='"..outbound_caller_id_number.."'";
 							end
 							if (ring_group_caller_id_name ~= nil and ring_group_caller_id_name ~= '') then
