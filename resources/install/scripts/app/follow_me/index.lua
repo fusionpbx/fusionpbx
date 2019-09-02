@@ -301,8 +301,12 @@
 
 				--set the outbound caller id
 					if (session:ready() and caller_is_local) then
-						caller_id_name = outbound_caller_id_name;
-						caller_id_number = outbound_caller_id_number;
+						if (outbound_caller_id_name ~= nil) then
+							caller_id_name = outbound_caller_id_name;
+						end
+						if (outbound_caller_id_number ~= nil) then
+							caller_id_number = outbound_caller_id_number;
+						end
 					end
 
 				--set the caller id
@@ -403,4 +407,3 @@
 				end
 			end
 	end
-
