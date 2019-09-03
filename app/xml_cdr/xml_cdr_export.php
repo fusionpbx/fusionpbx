@@ -47,10 +47,10 @@
 	require_once "xml_cdr_inc.php";
 
 //get the format
-	$export_format = check_str($_REQUEST['export_format']);
+	$export_format = $_REQUEST['export_format'];
 
 //get the format
-	$showall = check_str($_REQUEST['showall']);
+	$showall = $_REQUEST['showall'];
 
 //exprot the csv
 	if ($export_format == 'csv') {
@@ -69,7 +69,7 @@
 
 		//set the csv headers
 			$z = 0;
-			foreach($result[0] as $key => $val) {
+			foreach ($result[0] as $key => $val) {
 				if ($key != "xml" && $key != "json") {
 					if ($z == 0) {
 						echo '"'.$key.'"';
@@ -84,9 +84,9 @@
 
 		//show the csv data
 			$x=0;
-			while(true) {
+			while (true) {
 				$z = 0;
-				foreach($result[0] as $key => $val) {
+				foreach ($result[0] as $key => $val) {
 					if ($key != "xml" && $key != "json") {
 						if ($z == 0) {
 							echo '"'.$result[$x][$key].'"';
@@ -109,8 +109,8 @@
 	if ($export_format == 'pdf') {
 
 		//load pdf libraries
-		require_once("resources/tcpdf/tcpdf.php");
-		require_once("resources/fpdi/fpdi.php");
+		require_once "resources/tcpdf/tcpdf.php";
+		require_once "resources/fpdi/fpdi.php";
 
 		//determine page size
 		switch ($_SESSION['fax']['page_size']['text']) {

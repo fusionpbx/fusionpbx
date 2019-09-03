@@ -152,15 +152,13 @@
 		echo "			<input type='button' class='btn' value='".$text['button-archive']."' onclick=\"window.location='xml_cdr_archive.php?".escape($query_string)."';\">\n";
 	}
 	echo "				<input type='button' class='btn' value='".$text['button-export']."' onclick=\"toggle_select('export_format');\">\n";
-	echo "				<input type='button' class='btn' value='".$text['button-refresh']."' onclick=\"document.location.href='xml_cdr.php';\" />\n";
-	echo "			</td>";
-	echo "			<td style='vertical-align: top;'>";
 	echo "				<select class='formfld' style='display: none; width: auto; margin-left: 3px;' name='export_format' id='export_format' onchange=\"display_message('".$text['message-preparing_download']."'); toggle_select('export_format'); document.getElementById('frm_export').submit();\">\n";
 	echo "					<option value=''>...</option>\n";
 	echo "					<option value='csv'>CSV</option>\n";
 	echo "					<option value='pdf'>PDF</option>\n";
 	echo "				</select>\n";
-	echo "			</td>\n";
+	echo "				<input type='button' class='btn' value='".$text['button-refresh']."' onclick=\"document.location.href='xml_cdr.php';\" />\n";
+	echo "			</td>";
 	echo "			<td style='vertical-align: top; padding-left: 15px;'>".$paging_controls_mini."</td>\n";
 	echo "		</tr>\n";
 	echo "	</table>\n";
@@ -449,8 +447,8 @@
 				file_exists($theme_image_path."icon_cdr_local_failed.png")
 				) ? true : false;
 
-		// loop through the results
-			foreach($result as $index => $row) {
+		//loop through the results
+			foreach ($result as $index => $row) {
 				//get the date and time
 					$tmp_year = date("Y", strtotime($row['start_stamp']));
 					$tmp_month = date("M", strtotime($row['start_stamp']));
@@ -464,7 +462,7 @@
 					$hangup_cause = ucwords($hangup_cause);
 
 				//if call cancelled, show the ring time, not the bill time.
-					$seconds = ($row['hangup_cause']=="ORIGINATOR_CANCEL") ? $row['duration'] : round(($row['billmsec'] / 1000), 0, PHP_ROUND_HALF_UP);
+					$seconds = $row['hangup_cause'] == "ORIGINATOR_CANCEL" ? $row['duration'] : round(($row['billmsec'] / 1000), 0, PHP_ROUND_HALF_UP);
 
 				//determine recording properties
 					if (permission_exists('recording_play') || permission_exists('recording_download')) {
@@ -685,16 +683,16 @@
 					if ($row['leg'] == 'a') {
 						echo $content;
 					}
-					elseif ($row['leg'] == 'b' && permission_exists('xml_cdr_b_leg')) {
+					else if ($row['leg'] == 'b' && permission_exists('xml_cdr_b_leg')) {
 						echo $content;
 					}
 					unset($content);
 
 				//toggle the color
-					$c = ($c) ? 0 : 1;
-			} //end foreach
-			unset($sql, $result, $row_count);
-	} //end foreach
+					$c = $c ? 0 : 1;
+			} //foreach
+	} //if
+	unset($sql, $result, $row_count);
 
 //paging controls
 	echo "<tr>\n";

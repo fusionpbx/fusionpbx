@@ -131,6 +131,7 @@
 	echo "	<table cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "		<tr>\n";
 	echo "			<td style='vertical-align: top;'>\n";
+	echo "				<input type='button' class='btn' name='' alt='back' onclick=\"window.location='xml_cdr.php'\" value=\"".$text['button-back']."\">";
 	if (permission_exists('xml_cdr_all')) {
 		if ($_REQUEST['show'] != 'alll') {
 			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='xml_cdr_archive.php?show=all';\">\n";
@@ -148,15 +149,12 @@
 	}
 //	echo "				<input type='button' class='btn' value='".$text['button-statistics']."' onclick=\"document.location.href='xml_cdr_statistics.php';\">\n";
 	echo "				<input type='button' class='btn' value='".$text['button-export']."' onclick=\"toggle_select('export_format');\">\n";
-	echo "				<input type='button' class='btn' name='' alt='back' onclick=\"window.location='xml_cdr.php'\" value='Back'>";	
-	echo "			</td>";
-	echo "			<td style='vertical-align: top;'>";
 	echo "				<select class='formfld' style='display: none; width: auto; margin-left: 3px;' name='export_format' id='export_format' onchange=\"display_message('".$text['message-preparing_download']."'); toggle_select('export_format'); document.getElementById('frm_export').submit();\">\n";
 	echo "					<option value=''>...</option>\n";
 	echo "					<option value='csv'>CSV</option>\n";
 	echo "					<option value='pdf'>PDF</option>\n";
 	echo "				</select>\n";
-	echo "			</td>\n";
+	echo "			</td>";
 	echo "			<td style='vertical-align: top; padding-left: 15px;'>".$paging_controls_mini."</td>\n";
 	echo "		</tr>\n";
 	echo "	</table>\n";
