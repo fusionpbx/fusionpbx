@@ -601,8 +601,8 @@ include "root.php";
 						$mod['module_label'] = 'Translate';
 						$mod['module_category'] = 'Applications';
 						$mod['module_description'] = 'format numbers into a specified format.';
-						$mod['module_enabled'] = 'true';
-						$mod['module_default_enabled'] = 'true';
+						$mod['module_enabled'] = 'false';
+						$mod['module_default_enabled'] = 'false';
 						break;
 					case "mod_xml_cdr":
 						$mod['module_label'] = 'XML CDR';
