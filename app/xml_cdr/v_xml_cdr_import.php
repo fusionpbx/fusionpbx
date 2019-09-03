@@ -111,7 +111,7 @@
 			}
 
 		//convert the xml object to json
-			$json = check_str(json_encode($xml));
+			$json = json_encode($xml);
 			
 		//convert json to an array
 			$array = json_decode($json, true);
@@ -127,62 +127,63 @@
 			require_once "resources/classes/database.php";
 			$database = new database;
 			$database->table = "v_xml_cdr";
+
 		//caller info
-			$database->fields['caller_destination'] = check_str(urldecode($xml->variables->caller_destination));
+			$database->fields['caller_destination'] = urldecode($xml->variables->caller_destination);
 		//misc
-			$uuid = check_str(urldecode($xml->variables->uuid));
+			$uuid = urldecode($xml->variables->uuid);
 			$database->fields['xml_cdr_uuid'] = $uuid;
-			$database->fields['accountcode'] = check_str(urldecode($xml->variables->accountcode));
-			$database->fields['default_language'] = check_str(urldecode($xml->variables->default_language));
-			$database->fields['bridge_uuid'] = check_str(urldecode($xml->variables->bridge_uuid));
-			//$database->fields['digits_dialed'] = check_str(urldecode($xml->variables->digits_dialed));
-			$database->fields['sip_hangup_disposition'] = check_str(urldecode($xml->variables->sip_hangup_disposition));
-			$database->fields['pin_number'] = check_str(urldecode($xml->variables->pin_number));
+			$database->fields['accountcode'] = urldecode($xml->variables->accountcode);
+			$database->fields['default_language'] = urldecode($xml->variables->default_language);
+			$database->fields['bridge_uuid'] = urldecode($xml->variables->bridge_uuid);
+			//$database->fields['digits_dialed'] = urldecode($xml->variables->digits_dialed);
+			$database->fields['sip_hangup_disposition'] = urldecode($xml->variables->sip_hangup_disposition);
+			$database->fields['pin_number'] = urldecode($xml->variables->pin_number);
 		//time
-			$database->fields['start_epoch'] = check_str(urldecode($xml->variables->start_epoch));
-			$start_stamp = check_str(urldecode($xml->variables->start_stamp));
+			$database->fields['start_epoch'] = urldecode($xml->variables->start_epoch);
+			$start_stamp = urldecode($xml->variables->start_stamp);
 			$database->fields['start_stamp'] = $start_stamp;
-			$database->fields['answer_stamp'] = check_str(urldecode($xml->variables->answer_stamp));
-			$database->fields['answer_epoch'] = check_str(urldecode($xml->variables->answer_epoch));
-			$database->fields['end_epoch'] = check_str(urldecode($xml->variables->end_epoch));
-			$database->fields['end_stamp'] = check_str(urldecode($xml->variables->end_stamp));
-			$database->fields['duration'] = check_str(urldecode($xml->variables->duration));
-			$database->fields['mduration'] = check_str(urldecode($xml->variables->mduration));
-			$database->fields['billsec'] = check_str(urldecode($xml->variables->billsec));
-			$database->fields['billmsec'] = check_str(urldecode($xml->variables->billmsec));
+			$database->fields['answer_stamp'] = urldecode($xml->variables->answer_stamp);
+			$database->fields['answer_epoch'] = urldecode($xml->variables->answer_epoch);
+			$database->fields['end_epoch'] = urldecode($xml->variables->end_epoch);
+			$database->fields['end_stamp'] = urldecode($xml->variables->end_stamp);
+			$database->fields['duration'] = urldecode($xml->variables->duration);
+			$database->fields['mduration'] = urldecode($xml->variables->mduration);
+			$database->fields['billsec'] = urldecode($xml->variables->billsec);
+			$database->fields['billmsec'] = urldecode($xml->variables->billmsec);
 		//codecs
-			$database->fields['read_codec'] = check_str(urldecode($xml->variables->read_codec));
-			$database->fields['read_rate'] = check_str(urldecode($xml->variables->read_rate));
-			$database->fields['write_codec'] = check_str(urldecode($xml->variables->write_codec));
-			$database->fields['write_rate'] = check_str(urldecode($xml->variables->write_rate));
-			$database->fields['remote_media_ip'] = check_str(urldecode($xml->variables->remote_media_ip));
-			$database->fields['hangup_cause'] = check_str(urldecode($xml->variables->hangup_cause));
-			$database->fields['hangup_cause_q850'] = check_str(urldecode($xml->variables->hangup_cause_q850));
+			$database->fields['read_codec'] = urldecode($xml->variables->read_codec);
+			$database->fields['read_rate'] = urldecode($xml->variables->read_rate);
+			$database->fields['write_codec'] = urldecode($xml->variables->write_codec);
+			$database->fields['write_rate'] = urldecode($xml->variables->write_rate);
+			$database->fields['remote_media_ip'] = urldecode($xml->variables->remote_media_ip);
+			$database->fields['hangup_cause'] = urldecode($xml->variables->hangup_cause);
+			$database->fields['hangup_cause_q850'] = urldecode($xml->variables->hangup_cause_q850);
 		//call center
-			$database->fields['cc_side'] = check_str(urldecode($xml->variables->cc_side));
-			$database->fields['cc_member_uuid'] = check_str(urldecode($xml->variables->cc_member_uuid));
-			$database->fields['cc_queue_joined_epoch'] = check_str(urldecode($xml->variables->cc_queue_joined_epoch));
-			$database->fields['cc_queue'] = check_str(urldecode($xml->variables->cc_queue));
-			$database->fields['cc_member_session_uuid'] = check_str(urldecode($xml->variables->cc_member_session_uuid));
-			$database->fields['cc_agent_uuid'] = check_str(urldecode($xml->variables->cc_agent_uuid));
-			$database->fields['cc_agent'] = check_str(urldecode($xml->variables->cc_agent));
-			$database->fields['cc_agent_type'] = check_str(urldecode($xml->variables->cc_agent_type));
-			$database->fields['cc_agent_bridged'] = check_str(urldecode($xml->variables->cc_agent_bridged));
-			$database->fields['cc_queue_answered_epoch'] = check_str(urldecode($xml->variables->cc_queue_answered_epoch));
-			$database->fields['cc_queue_terminated_epoch'] = check_str(urldecode($xml->variables->cc_queue_terminated_epoch));
-			$database->fields['cc_queue_canceled_epoch'] = check_str(urldecode($xml->variables->cc_queue_canceled_epoch));
-			$database->fields['cc_cancel_reason'] = check_str(urldecode($xml->variables->cc_cancel_reason));
-			$database->fields['cc_cause'] = check_str(urldecode($xml->variables->cc_cause));
-			$database->fields['waitsec'] = check_str(urldecode($xml->variables->waitsec));
+			$database->fields['cc_side'] = urldecode($xml->variables->cc_side);
+			$database->fields['cc_member_uuid'] = urldecode($xml->variables->cc_member_uuid);
+			$database->fields['cc_queue_joined_epoch'] = urldecode($xml->variables->cc_queue_joined_epoch);
+			$database->fields['cc_queue'] = urldecode($xml->variables->cc_queue);
+			$database->fields['cc_member_session_uuid'] = urldecode($xml->variables->cc_member_session_uuid);
+			$database->fields['cc_agent_uuid'] = urldecode($xml->variables->cc_agent_uuid);
+			$database->fields['cc_agent'] = urldecode($xml->variables->cc_agent);
+			$database->fields['cc_agent_type'] = urldecode($xml->variables->cc_agent_type);
+			$database->fields['cc_agent_bridged'] = urldecode($xml->variables->cc_agent_bridged);
+			$database->fields['cc_queue_answered_epoch'] = urldecode($xml->variables->cc_queue_answered_epoch);
+			$database->fields['cc_queue_terminated_epoch'] = urldecode($xml->variables->cc_queue_terminated_epoch);
+			$database->fields['cc_queue_canceled_epoch'] = urldecode($xml->variables->cc_queue_canceled_epoch);
+			$database->fields['cc_cancel_reason'] = urldecode($xml->variables->cc_cancel_reason);
+			$database->fields['cc_cause'] = urldecode($xml->variables->cc_cause);
+			$database->fields['waitsec'] = urldecode($xml->variables->waitsec);
 		//app info
-			$database->fields['last_app'] = check_str(urldecode($xml->variables->last_app));
-			$database->fields['last_arg'] = check_str(urldecode($xml->variables->last_arg));
+			$database->fields['last_app'] = urldecode($xml->variables->last_app);
+			$database->fields['last_arg'] = urldecode($xml->variables->last_arg);
 		//conference
-			$database->fields['conference_name'] = check_str(urldecode($xml->variables->conference_name));
-			$database->fields['conference_uuid'] = check_str(urldecode($xml->variables->conference_uuid));
-			$database->fields['conference_member_id'] = check_str(urldecode($xml->variables->conference_member_id));
+			$database->fields['conference_name'] = urldecode($xml->variables->conference_name);
+			$database->fields['conference_uuid'] = urldecode($xml->variables->conference_uuid);
+			$database->fields['conference_member_id'] = urldecode($xml->variables->conference_member_id);
 		//call quality
-			$rtp_audio_in_mos = check_str(urldecode($xml->variables->rtp_audio_in_mos));
+			$rtp_audio_in_mos = urldecode($xml->variables->rtp_audio_in_mos);
 			if (strlen($rtp_audio_in_mos) > 0) {
 				$database->fields['rtp_audio_in_mos'] = $rtp_audio_in_mos;
 			}
@@ -203,23 +204,23 @@
 			$database->fields['caller_id_number'] = urldecode($xml->variables->effective_caller_id_number);
 
 		//get the values from the callflow.
-			$x = 0;
+			$i = 0;
 			foreach ($xml->callflow as $row) {
-				if ($x == 0) {
-					$context = check_str(urldecode($row->caller_profile->context));
-					$database->fields['destination_number'] = check_str(urldecode($row->caller_profile->destination_number));
+				if ($i == 0) {
+					$context = urldecode($row->caller_profile->context);
+					$database->fields['destination_number'] = urldecode($row->caller_profile->destination_number);
 					$database->fields['context'] = $context;
-					$database->fields['network_addr'] = check_str(urldecode($row->caller_profile->network_addr));
+					$database->fields['network_addr'] = urldecode($row->caller_profile->network_addr);
 				}
 				if (strlen($database->fields['caller_id_name']) == 0) {
-					$database->fields['caller_id_name'] = check_str(urldecode($row->caller_profile->caller_id_name));
+					$database->fields['caller_id_name'] = urldecode($row->caller_profile->caller_id_name);
 				}
 				if (strlen($database->fields['caller_id_number']) == 0) {
-					$database->fields['caller_id_number'] = check_str(urldecode($row->caller_profile->caller_id_number));
+					$database->fields['caller_id_number'] = urldecode($row->caller_profile->caller_id_number);
 				}
-				$x++;
+				$i++;
 			}
-			unset($x);
+			unset($i);
 
 		//if last_sent_callee_id_number is set use it for the destination_number
 			if (($leg == 'a') && (strlen($xml->variables->last_sent_callee_id_number) > 0)) {
@@ -230,10 +231,10 @@
 			$database->fields['leg'] = $leg;
 
 		//store the call direction
-			$database->fields['direction'] = check_str(urldecode($xml->variables->call_direction));
+			$database->fields['direction'] = urldecode($xml->variables->call_direction);
 
 		//store post dial delay, in milliseconds
-			$database->fields['pdd_ms'] = check_str(urldecode($xml->variables->progress_mediamsec) + urldecode($xml->variables->progressmsec));
+			$database->fields['pdd_ms'] = urldecode($xml->variables->progress_mediamsec) + urldecode($xml->variables->progressmsec);
 
 		//get break down the date to year, month and day
 			$start_time = strtotime($start_stamp);
@@ -242,12 +243,12 @@
 			$start_day = date("d", $start_time);
 
 		//get the domain values from the xml
-			$domain_name = check_str(urldecode($xml->variables->domain_name));
-			$domain_uuid = check_str(urldecode($xml->variables->domain_uuid));
+			$domain_name = urldecode($xml->variables->domain_name);
+			$domain_uuid = urldecode($xml->variables->domain_uuid);
 
 		//get the domain name from sip_req_host
 			if (strlen($domain_name) == 0) {
-				$domain_name = check_str(urldecode($xml->variables->sip_req_host));
+				$domain_name = urldecode($xml->variables->sip_req_host);
 			}
 
 		//send the domain name to the cdr log
@@ -257,13 +258,16 @@
 			if (strlen($domain_uuid) == 0) {
 				$sql = "select domain_uuid from v_domains ";
 				if (strlen($domain_name) == 0 && $context != 'public' && $context != 'default') {
-					$sql .= "where domain_name = '".$context."' ";
+					$sql .= "where domain_name = :context ";
+					$parameters['context'] = $context;
 				}
 				else {
-					$sql .= "where domain_name = '".$domain_name."' ";
+					$sql .= "where domain_name = :domain_name ";
+					$parameters['domain_name'] = $domain_name;
 				}
-				$row = $db->query($sql)->fetch();
-				$domain_uuid = $row['domain_uuid'];
+				$database = new database;
+				$domain_uuid = $database->select($sql, $parameters, 'column');
+				unset($parameters);
 			}
 
 		//set values in the database
@@ -305,12 +309,12 @@
 
 		//save to the database in xml format
 			if ($_SESSION['cdr']['format']['text'] == "xml" && $_SESSION['cdr']['storage']['text'] == "db") {
-				$database->fields['xml'] = check_str($xml_string);
+				$database->fields['xml'] = $xml_string;
 			}
 
-		//insert the check_str($extension_uuid)
+		//insert the $extension_uuid
 			if (strlen($xml->variables->extension_uuid) > 0) {
-				$database->fields['extension_uuid'] = check_str(urldecode($xml->variables->extension_uuid));
+				$database->fields['extension_uuid'] = urldecode($xml->variables->extension_uuid);
 			}
 
 		//get the recording details
@@ -404,17 +408,17 @@
 				//add to the call recordings table
 					if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_recordings/app_config.php")) {
 						//build the array
-						$x = 0;
-						$recordings['call_recordings'][$x]['call_recording_uuid'] = $uuid;
-						$recordings['call_recordings'][$x]['domain_uuid'] = $domain_uuid;
-						$recordings['call_recordings'][$x]['call_recording_name'] = $record_name;
-						$recordings['call_recordings'][$x]['call_recording_path'] = $record_path;
-						$recordings['call_recordings'][$x]['call_recording_length'] = $record_length;
-						$recordings['call_recordings'][$x]['call_recording_description'] = $record_description;
-						$recordings['call_recordings'][$x]['call_recording_date'] = urldecode($xml->variables->start_stamp);
-						$recordings['call_recordings'][$x]['call_direction'] = urldecode($xml->variables->call_direction);
-						//$recordings['call_recordings'][$x]['call_recording_description']= $row['zzz'];
-						//$recordings['call_recordings'][$x]['call_recording_base64']= $row['zzz'];
+						$i = 0;
+						$recordings['call_recordings'][$i]['call_recording_uuid'] = $uuid;
+						$recordings['call_recordings'][$i]['domain_uuid'] = $domain_uuid;
+						$recordings['call_recordings'][$i]['call_recording_name'] = $record_name;
+						$recordings['call_recordings'][$i]['call_recording_path'] = $record_path;
+						$recordings['call_recordings'][$i]['call_recording_length'] = $record_length;
+						$recordings['call_recordings'][$i]['call_recording_description'] = $record_description;
+						$recordings['call_recordings'][$i]['call_recording_date'] = urldecode($xml->variables->start_stamp);
+						$recordings['call_recordings'][$i]['call_direction'] = urldecode($xml->variables->call_direction);
+						//$recordings['call_recordings'][$i]['call_recording_description']= $row['zzz'];
+						//$recordings['call_recordings'][$i]['call_recording_base64']= $row['zzz'];
 
 						//add the temporary permission
 						$p = new permissions;
@@ -426,9 +430,9 @@
 						$recording_database->app_uuid = '56165644-598d-4ed8-be01-d960bcb8ffed';
 						$recording_database->domain_uuid = $domain_uuid;
 						$recording_database->save($recordings);
-						$message = $recording_database->message;
-						unset($recordings);
-	
+						//$message = $recording_database->message;
+						unset($recordings, $i);
+
 						//remove the temporary permission
 						$p->delete("call_recording_add", "temp");
 						$p->delete("call_recording_edit", "temp");
@@ -451,7 +455,7 @@
 				}
 				try {
 					$error = "false";
-					//$db->exec(check_sql($sql));
+					//$db->exec($sql);
 				}
 				catch(PDOException $e) {
 					$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/failed/';
