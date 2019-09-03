@@ -603,7 +603,7 @@ include "root.php";
 
 						//loop through the results to get the xml from the dialplan_xml field or from dialplan details table
 							$x = 0;
-							if (is_array($result) && @sizeof($result) != 0) {
+							if (is_array($results) && @sizeof($results) != 0) {
 								foreach ($results as $row) {
 									//clear flag pass
 										$pass = false;
@@ -833,7 +833,7 @@ include "root.php";
 										$pass = true;
 								}
 							}
-							unset($results, $row);
+							unset($row);
 
 						// prevent partial dialplan (pass=nil may be error in sql or empty resultset)
 							if ($pass == false) {
