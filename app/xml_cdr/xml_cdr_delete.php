@@ -42,21 +42,13 @@
 	$language = new text;
 	$text = $language->get();
 
-//get posted values, if any
-	if (sizeof($_REQUEST) > 0) {
-		$xml_cdr_uuids = $_REQUEST["id"];
-		if (sizeof($xml_cdr_uuids) > 0) {
-			foreach ($xml_cdr_uuids as $index => $xml_cdr_uuid) {
-				if (is_uuid($xml_cdr_uuid)) {
-					// delete record from v_xml_cdr
-					$sql = "delete from v_xml_cdr ";
-					$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
-					$parameters['xml_cdr_uuid'] = $xml_cdr_uuid;
-					$database = new database;
-					$database->execute($sql, $parameters);
-					unset($sql, $parameters);
-
-					//get the call recordings
+//get posted values
+	$xml_cdr_uuids = $_REQUEST["id"];
+	if (is_array($xml_cdr_uuids) && @sizeof($xml_cdr_uuids) != 0) {
+		$records_deleted = 0;
+		foreach ($xml_cdr_uuids as $x => $xml_cdr_uuid) {
+			if (is_uuid($xml_cdr_uuid)) {
+				//get the call recordings
 					$sql = "select * from v_call_recordings ";
 					$sql .= "where call_recording_uuid = :xml_cdr_uuid ";
 					$parameters['xml_cdr_uuid'] = $xml_cdr_uuid;
@@ -64,28 +56,41 @@
 					$row = $database->select($sql, $parameters, 'row');
 					unset($sql, $parameters);
 
-					//delete the call recording
+				//delete the call recording
 					$call_recording_path = realpath($row['call_recording_path']);
 					$call_recording_name = $row['call_recording_name'];
 					if (file_exists($call_recording_path.'/'.$call_recording_name)) {
 						@unlink($call_recording_path.'/'.$call_recording_name);
 					}
 
-					//delete the call recording meta data
-					$sql = "delete from v_call_recordings ";
-					$sql .= "where call_recording_uuid = :xml_cdr_uuid ";
-					$parameters['xml_cdr_uuid'] = $xml_cdr_uuid;
-					$database = new database;
-					$database->execute($sql, $parameters);
-					unset($sql, $parameters);
-
-				}
+				//build cdr delete array
+					$array['xml_cdr'][$x]['xml_cdr_uuid'] = $xml_cdr_uuid;
+				//build call recording delete array
+					$array['call_recordings'][$x]['call_recording_uuid'] = $xml_cdr_uuid;
+				//increment counter
+					$records_deleted++;
 			}
+		}
+		if (is_array($array) && @sizeof($array) != 0) {
+			//grant temporary permissions
+				$p = new permissions;
+				$p->add('xml_cdr_delete', 'temp');
+				$p->add('call_recording_delete', 'temp');
+			//execute delete
+				$database = new database;
+				$database->app_name = 'xml_cdr';
+				$database->app_uuid = '4a085c51-7635-ff03-f67b-86e834422848';
+				$database->delete($array);
+				unset($array);
+			//revoke temporary permissions
+				$p->delete('xml_cdr_delete', 'temp');
+				$p->delete('call_recording_delete', 'temp');
+			//set message
+				$_SESSION["message"] = $text['message-delete'].": ".$records_deleted;
 		}
 	}
 
-//set message and redirect the user
-	$_SESSION["message"] = $text['message-delete'].": ".sizeof($xml_cdr_uuids);
+//redirect
 	header("Location: xml_cdr.php");
 
 ?>

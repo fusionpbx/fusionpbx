@@ -95,7 +95,8 @@
 				case 'equal': $mos_comparison = "<"; break;
 				case 'notequal': $mos_comparison = "<>"; break;
 			}
-		} else {
+		}
+		else {
 			$mos_comparison = '';
 		}
 		//$mos_comparison = $_REQUEST["mos_comparison"];
@@ -193,20 +194,13 @@
 //count the records in the database
 	/*
 	if ($_SESSION['cdr']['limit']['numeric'] == 0) {
-		$sql = "select count(xml_cdr_uuid) as num_rows from v_xml_cdr ";
-		$sql .= "where domain_uuid = '".$domain_uuid."' ".$sql_where;
-		$prep_statement = $db->prepare(check_sql($sql));
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] > 0) {
-				$num_rows = $row['num_rows'];
-			}
-			else {
-				$num_rows = '0';
-			}
-		}
-		unset($prep_statement, $result);
+		$sql = "select count(*) from v_xml_cdr ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= ".$sql_where;
+		$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$num_rows = $database->select($sql, $parameters, 'column');
+		unset($sql, $parameters);
 	}
 	*/
 
@@ -246,7 +240,7 @@
 	$sql .= "c.source_number, \n";
 	$sql .= "c.destination_number, \n";
 	$sql .= "c.leg, \n";
-	$sql .= "(c.xml IS NOT NULL OR c.json IS NOT NULL) AS raw_data_exists, \n";
+	$sql .= "(c.xml is not null or c.json is not null) as raw_data_exists, \n";
 	$sql .= "c.json, \n";
 	if (is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
@@ -277,8 +271,9 @@
 	$sql .= "left join v_extensions as e on e.extension_uuid = c.extension_uuid \n";
 	$sql .= "inner join v_domains as d on d.domain_uuid = c.domain_uuid \n";
 	if ($_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
-		$sql .= "where 1 = 1 ";
-	} else {
+		$sql .= "where true ";
+	}
+	else {
 		$sql .= "where c.domain_uuid = :domain_uuid \n";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
@@ -290,7 +285,7 @@
 		$sql .= "and missed_call = 1 \n";
 	}
 	if (strlen($start_epoch) > 0 && strlen($stop_epoch) > 0) {
-		$sql .= "and start_epoch BETWEEN :start_epoch AND :stop_epoch \n";
+		$sql .= "and start_epoch between :start_epoch and :stop_epoch \n";
 		$parameters['start_epoch'] = $start_epoch;
 		$parameters['stop_epoch'] = $stop_epoch;
 	}
@@ -355,7 +350,7 @@
 	}
 
 	if (strlen($start_stamp_begin) > 0 && strlen($start_stamp_end) > 0) {
-		$sql .= "and start_stamp BETWEEN :start_stamp_begin AND :start_stamp_end ";
+		$sql .= "and start_stamp between :start_stamp_begin and :start_stamp_end ";
 		$parameters['start_stamp_begin'] = $start_stamp_begin.':00.000';
 		$parameters['start_stamp_end'] = $start_stamp_end.':59.999';
 	}
@@ -370,7 +365,7 @@
 		}
 	}
 	if (strlen($answer_stamp_begin) > 0 && strlen($answer_stamp_end) > 0) {
-		$sql .= "and answer_stamp BETWEEN :answer_stamp_begin AND :answer_stamp_end ";
+		$sql .= "and answer_stamp between :answer_stamp_begin and :answer_stamp_end ";
 		$parameters['answer_stamp_begin'] = $answer_stamp_begin.':00.000';
 		$parameters['answer_stamp_end'] = $answer_stamp_end.':59.999';
 	}
@@ -385,7 +380,7 @@
 		}
 	}
 	if (strlen($end_stamp_begin) > 0 && strlen($end_stamp_end) > 0) {
-		$sql .= "and end_stamp BETWEEN :end_stamp_begin AND :end_stamp_end ";
+		$sql .= "and end_stamp between :end_stamp_begin and :end_stamp_end ";
 		$parameters['end_stamp_begin'] = $end_stamp_begin.':00.000';
 		$parameters['end_stamp_end'] = $end_stamp_end.':59.999';
 	}
@@ -501,7 +496,6 @@
 		}
 	}
 	$sql = str_replace("  ", " ", $sql);
-	//$sql= str_replace("where and", "where", $sql);
 	$database = new database;
 	if ($archive_request == 'true') {
 		if ($_SESSION['cdr']['archive_database']['boolean'] == 'true') {

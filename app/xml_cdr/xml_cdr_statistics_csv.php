@@ -43,7 +43,7 @@ else {
 
 //show the column names on the first line
 	$z = 0;
-	foreach($stats[1] as $key => $val) {
+	foreach ($stats[1] as $key => $val) {
 		if ($z == 0) {
 			echo '"'.$key.'"';
 		}
@@ -56,9 +56,9 @@ else {
 
 //add the values to the csv
 	$x = 0;
-	foreach($stats as $row) {
+	foreach ($stats as $row) {
 		$z = 0;
-		foreach($row as $key => $val) {
+		foreach ($row as $key => $val) {
 			if ($z == 0) {
 				echo '"'.$stats[$x][$key].'"';
 			}
