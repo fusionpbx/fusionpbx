@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -120,7 +120,7 @@
 	echo "				<span class=\"title\">".$text['title-dialplan_edit']."</span><br />\n";
 	echo "			</td>\n";
 	echo "			<td width='70%' align='right'>\n";
-	echo "				<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplan_edit.php?id=".$dialplan_uuid."&".((strlen($app_uuid) > 0) ? "app_uuid=".$app_uuid : null)."';\" value='".$text['button-back']."'>\n";
+	echo "				<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplan_edit.php?id=".$dialplan_uuid."';\" value='".$text['button-back']."'>\n";
 	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "			</td>\n";
 	echo "		</tr>\n";
