@@ -84,7 +84,7 @@ include "root.php";
 					$array['dialplans'][0]['dialplan_destination'] = $this->dialplan_destination;
 					$array['dialplans'][0]['dialplan_continue'] = $this->dialplan_continue;
 					$array['dialplans'][0]['dialplan_order'] = $this->dialplan_order;
-					$array['dialplans'][0]['dialplan_context'] = $this->dialplan_order;
+					$array['dialplans'][0]['dialplan_context'] = $this->dialplan_context;
 					$array['dialplans'][0]['dialplan_enabled'] = $this->dialplan_enabled;
 					$array['dialplans'][0]['dialplan_description'] = $this->dialplan_description;
 				//grant temporary permissions
