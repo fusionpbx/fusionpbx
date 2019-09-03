@@ -609,7 +609,7 @@ include "root.php";
 					$sql .= "AND device_setting_enabled = 'true' ";
 					$parameters['device_uuid'] = $device_uuid;
 					$database = new database;
-					$device_settings = $database->select($sql, $parameters, 'row');
+					$device_settings = $database->select($sql, $parameters, 'all');
 					if (is_array($device_settings) && sizeof($device_settings) != 0) {
 						foreach($device_settings as $row) {
 							$key = $row['device_setting_subcategory'];
