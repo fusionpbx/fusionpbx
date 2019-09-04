@@ -435,13 +435,16 @@ if (!class_exists('xml_cdr')) {
 						if (strlen($domain_uuid) == 0) {
 							$sql = "select domain_uuid from v_domains ";
 							if (strlen($domain_name) == 0 && $context != 'public' && $context != 'default') {
-								$sql .= "where domain_name = '".$context."' ";
+								$sql .= "where domain_name = :context ";
+								$parameters['context'] = $context;
 							}
 							else {
-								$sql .= "where domain_name = '".$domain_name."' ";
+								$sql .= "where domain_name = :domain_name ";
+								$parameters['domain_name'] = $domain_name;
 							}
-							$row = $this->db->query($sql)->fetch();
-							$domain_uuid = $row['domain_uuid'];
+							$database = new database;
+							$domain_uuid = $database->select($sql, $parameters, 'column');
+							unset($parameters);
 						}
 
 					//set values in the database
@@ -1151,4 +1154,5 @@ if (!class_exists('xml_cdr')) {
 	$cdr = new xml_cdr;
 	$cdr->read_files();
 */
+
 ?>
