@@ -88,12 +88,23 @@
 						$this->dialplan_uuid = uuid();
 					}
 					else {
-						//delete the previous details
-						$sql = "delete from v_dialplan_details ";
-						$sql .= "where dialplan_uuid = '".$this->dialplan_uuid."' ";
-						$sql .= "and domain_uuid = '".$this->domain_uuid."' ";
-						$this->db->exec($sql);
-						unset($sql);
+						//build previous details delete array
+							$array['dialplan_details'][0]['dialplan_uuid'] = $this->dialplan_uuid;
+							$array['dialplan_details'][0]['domain_uuid'] = $this->domain_uuid;
+
+						//grant temporary permissions
+							$p = new permissions;
+							$p->add('dialplan_detail_delete', 'temp');
+
+						//execute delete
+							$database = new database;
+							$database->app_name = 'fax';
+							$database->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
+							$database->delete($array);
+							unset($array);
+
+						//revoke temporary permissions
+							$p->delete('dialplan_detail_delete', 'temp');
 					}
 
 				//set the fax name
