@@ -98,7 +98,7 @@
 	--forward_busy_destination = trim(api:executeString(cmd));
 
 --select data from the database
-	local sql = "select follow_me_uuid ";
+	local sql = "select follow_me_uuid, toll_allow ";
 	sql = sql .. "from v_extensions ";
 	sql = sql .. "where domain_uuid = :domain_uuid ";
 	sql = sql .. "and ( ";
@@ -111,6 +111,7 @@
 	end
 	status = dbh:query(sql, params, function(row)
 		follow_me_uuid = row["follow_me_uuid"];
+		extension_toll_allow = row["toll_allow"];
 	end);
 	--dbh:query(sql, params, function(row);
 
@@ -219,7 +220,7 @@
 			destination_prompt = row.destination_prompt;
 			group_confirm_key = row.group_confirm_key;
 			group_confirm_file = row.group_confirm_file;
-			toll_allow = row.toll_allow;
+			toll_allow = row.toll_allow:gsub(",", ":");
 			user_exists = row.user_exists;
 
 		--follow the forwards
@@ -287,6 +288,7 @@
 			else
 				--external number
 					route_bridge = 'loopback/'..destination_number;
+					toll_allow = extension_toll_allow:gsub(",", ":");
 
 				--set the toll allow to an empty string
 					if (toll_allow == nil) then
