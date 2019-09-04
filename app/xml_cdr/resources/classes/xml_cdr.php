@@ -257,21 +257,23 @@ if (!class_exists('xml_cdr')) {
 				$uuid = urldecode($xml->variables->uuid);
 				if($uuid != null && is_uuid($uuid)) {
 					//Check in the database
+						$sql = "select count(xml_cdr_uuid) ";
+						$sql .= "from v_xml_cdr ";
+						$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
+						$parameters['xml_cdr_uuid'] = $uuid;
 						$database = new database;
-						$database->table = "v_xml_cdr";
-						$where[1]["name"] = "xml_cdr_uuid";
-						$where[1]["operator"] = "=";
-						$where[1]["value"] = $uuid;
-						$database->where = $where;
-						$result = $database->count();
-						if ($result > 0) {
+						$count = $database->select($sql, $parameters, 'column');
+						unset($parameters);
+						if ($count > 0) {
 							$duplicate_uuid = true;
 						}
-						unset($where,$result,$database);
+						unset($database);
 					//Check in the array
-						if (isset($this->array)) foreach ($this->array as $row) {
-							if (in_array($uuid,$row,true))
-								$duplicate_uuid = true;
+						if (isset($this->array)) {
+							foreach ($this->array as $row) {
+								if (in_array($uuid,$row,true))
+									$duplicate_uuid = true;
+							}
 						}
 				}
 
