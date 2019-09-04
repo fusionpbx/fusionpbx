@@ -28,7 +28,6 @@
 //define the conference center class
 	class conference_centers {
 
-		public $db;
 		public $domain_uuid;
 		public $meeting_uuid;
 		public $order_by;
@@ -44,13 +43,7 @@
 		 * Called when the object is created
 		 */
 		public function __construct() {
-			//connect to the database if not connected
-			if (!$this->db) {
-				require_once "resources/classes/database.php";
-				$database = new database;
-				$database->connect();
-				$this->db = $database->db;
-			}
+
 		}
 
 		/**
@@ -72,7 +65,7 @@
 				if (permission_exists("conference_room_view_all")) {
 					$not_admin = 0;
 				}
-				$sql = "select count(*) as num_rows from v_conference_rooms as r, v_meetings as p ";
+				$sql = "select count(*) from v_conference_rooms as r, v_meetings as p ";
 				if ($not_admin) {
 					$sql .= "v_meeting_users as u, ";
 				}
@@ -101,7 +94,6 @@
 		 * get the list of conference rooms
 		 */
 		public function rooms() {
-
 			//get variables used to control the order
 				$order_by = $this->order_by;
 				$order = $this->order;
@@ -114,7 +106,6 @@
 			//validate the order
 				switch ($order) {
 					case 'asc':
-						break;
 					case 'desc':
 						break;
 					default:
@@ -157,7 +148,8 @@
 				}
 				if (strlen($this->order_by) == 0) {
 					$sql .= "order by r.description, r.meeting_uuid asc ";
-				} else {
+				}
+				else {
 					$sql .= "order by $order_by $order ";
 				}
 				$sql .= "limit :rows_per_page offset :offset ";
@@ -196,9 +188,8 @@
 						//set the previous uuid
 							$previous = $row["conference_room_uuid"];
 					}
-					unset($conference_rooms);
 				}
-				unset ($parameters, $sql);
+				unset($sql, $parameters, $conference_rooms);
 				return $result;
 		}
 
@@ -213,22 +204,21 @@
 
 				//get call recording from database
 					if (is_uuid($_GET['id'])) {
-						$conference_session_uuid = check_str($_GET['id']);
-					}
-					if ($conference_session_uuid != '') {
+						$conference_session_uuid = $_GET['id'];
 						$sql = "select recording from v_conference_sessions ";
 						$sql .= "where conference_session_uuid = :conference_session_uuid ";
-						//$sql .= "and domain_uuid = '".$domain_uuid."' \n";
+						//$sql .= "and domain_uuid = :domain_uuid ";
 						$parameters['conference_session_uuid'] = $conference_session_uuid;
+						//$parameters['domain_uuid'] = $domain_uuid;
 						$database = new database;
 						$conference_sessions = $database->select($sql, $parameters, 'all');
 						if (is_array($conference_sessions)) {
-							foreach($conference_sessions as &$row) {
+							foreach ($conference_sessions as &$row) {
 								$recording = $row['recording'];
 								break;
 							}
 						}
-						unset ($sql, $prep_statement, $conference_sessions);
+						unset($sql, $parameters, $conference_sessions);
 					}
 
 				//set the path for the directory
@@ -239,23 +229,23 @@
 					$record_name = basename($recording);
 
 				//download the file
-					if (file_exists($record_path . '/' . $record_name . '.wav')) {
-						$record_name = $record_name . '.wav';
+					if (file_exists($record_path.'/'.$record_name.'.wav')) {
+						$record_name = $record_name.'.wav';
 					}
 					else {
-						if (file_exists($record_path . '/' . $record_name . '.mp3')) {
-							$record_name = $record_name . '.mp3';
+						if (file_exists($record_path.'/'.$record_name.'.mp3')) {
+							$record_name = $record_name.'.mp3';
 						}
 					}
 
 				//download the file
-					if (file_exists($record_path . '/' . $record_name)) {
+					if (file_exists($record_path.'/'.$record_name)) {
 						//content-range
 						//if (isset($_SERVER['HTTP_RANGE']))  {
 						//	range_download($full_recording_path);
 						//}
 						ob_clean();
-						$fd = fopen($record_path . '/' . $record_name, "rb");
+						$fd = fopen($record_path.'/'.$record_name, "rb");
 						if ($_GET['t'] == "bin") {
 							header("Content-Type: application/force-download");
 							header("Content-Type: application/octet-stream");
@@ -274,14 +264,14 @@
 						header('Content-Disposition: attachment; filename="'.$record_name.'"');
 						header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 						header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-						// header("Content-Length: " . filesize($full_recording_path));
+						// header("Content-Length: ".filesize($full_recording_path));
 						ob_clean();
 						fpassthru($fd);
 					}
 
 				//if base64, remove temp recording file
 					//if ($_SESSION['conference']['storage_type']['text'] == 'base64' && $row['conference_recording_base64'] != '') {
-					//	@unlink($record_path . '/' . $record_name);
+					//	@unlink($record_path.'/'.$record_name);
 					//}
 			}
 		} //end download method
