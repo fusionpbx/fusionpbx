@@ -67,7 +67,7 @@ if (!class_exists('streams')) {
 								foreach($streams as $row) {
 									if ($row['action'] == 'delete' or $row['checked'] == 'true') {
 										//build delete array
-											$array['streams'][$x++]['stream_uuid'] = $row['stream_uuid'];
+											$array['streams'][$x]['stream_uuid'] = $row['stream_uuid'];
 											$x++;
 									}
 								}
