@@ -147,10 +147,10 @@
 	else
 		sql = sql .. "follow_me_enabled = 'true' ";
 	end
-	sql = sql .. "forward_all_enabled= 'false' ";
+	sql = sql .. "forward_all_enabled = 'false' ";
 	sql = sql .. "where domain_uuid = :domain_uuid ";
 	sql = sql .. "and extension_uuid = :extension_uuid ";
-	local params = {domain_uuid=domain_uuid, extension_uuid=extension_uuid, dial_string = dial_string};
+	local params = {domain_uuid=domain_uuid, extension_uuid=extension_uuid};
 	if (debug["sql"]) then
 		log.notice("SQL: %s; params: %s", sql, json.encode(params));
 	end
