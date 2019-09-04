@@ -75,9 +75,8 @@ require_once "resources/require.php";
 	$parameters['menu_uuid'] = $_SESSION['domain']['menu']['uuid'];
 	$parameters['menu_item_link'] = $_SERVER["SCRIPT_NAME"];
 	$database = new database;
-	$menu_item_parent_uuid = $database->select($sql, $parameters, 'column');
-	$_SESSION["menu_item_parent_uuid"] = $menu_item_parent_uuid;
-	unset($sql, $parameters, $menu_item_parent_uuid);
+	$_SESSION["menu_item_parent_uuid"] = $database->select($sql, $parameters, 'column');
+	unset($sql, $parameters);
 
 //get the content
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/content/app_config.php")) {
