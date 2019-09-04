@@ -504,7 +504,7 @@
 						follow_me_uuid = nil;
 
 						--select data from the database
-						local sql = "select follow_me_uuid ";
+						local sql = "select follow_me_uuid, toll_allow ";
 						sql = sql .. "from v_extensions ";
 						sql = sql .. "where domain_uuid = :domain_uuid ";
 						sql = sql .. "and ( ";
@@ -517,6 +517,7 @@
 						end
 						status = dbh:query(sql, params, function(field)
 							follow_me_uuid = field["follow_me_uuid"];
+							toll_allow = field["toll_allow"];
 						end);
 						--dbh:query(sql, params, function(row);
 
@@ -564,7 +565,7 @@
 								destinations[new_key]['destination_prompt'] = field.destination_prompt;
 								destinations[new_key]['group_confirm_key'] = row.group_confirm_key;
 								destinations[new_key]['group_confirm_file'] = row.group_confirm_file;
-								destinations[new_key]['toll_allow'] = row.toll_allow;
+								destinations[new_key]['toll_allow'] = toll_allow;
 								destinations[new_key]['user_exists'] = user_exists;
 
 								--increment x
@@ -753,7 +754,10 @@
 					else
 						--external number
 							route_bridge = 'loopback/'..destination_number;
-
+							if (extension_toll_allow ~= nil) then
+								toll_allow = extension_toll_allow:gsub(",", ":");
+							end
+			
 						--set the toll allow to an empty string
 							if (toll_allow == nil) then
 								toll_allow = '';
