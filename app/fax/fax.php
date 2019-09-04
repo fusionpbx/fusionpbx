@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -121,11 +121,11 @@
 				$fax_email = str_replace("\\", "", $row['fax_email']);
 				$fax_email = substr($fax_email, 0, 50);
 			//show the fax extensions
-				$tr_link = (permission_exists('fax_extension_edit')) ? "href='fax_edit.php?id=".escape($row['fax_uuid'])."'" : null;
+				$tr_link = (permission_exists('fax_extension_edit')) ? "href='fax_edit.php?id=".urlencode($row['fax_uuid'])."'" : null;
 				echo "<tr ".$tr_link.">\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
 				if (permission_exists('fax_extension_edit')) {
-					echo "<a href='fax_edit.php?id=".escape($row['fax_uuid'])."'>".escape($row['fax_name'])."</a>";
+					echo "<a href='fax_edit.php?id=".urlencode($row['fax_uuid'])."'>".escape($row['fax_name'])."</a>";
 				}
 				else {
 					echo escape($row['fax_name']);
@@ -135,7 +135,7 @@
 				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($fax_email)."&nbsp;</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void'>";
 				if (permission_exists('fax_send')) {
-					echo "		<a href='fax_send.php?id=".escape($row['fax_uuid'])."'>".$text['label-new']."</a>&nbsp;&nbsp;";
+					echo "		<a href='fax_send.php?id=".urlencode($row['fax_uuid'])."'>".$text['label-new']."</a>&nbsp;&nbsp;";
 				}
 				if (permission_exists('fax_inbox_view')) {
 					if ($row['fax_email_inbound_subject_tag'] != '') {
@@ -146,25 +146,26 @@
 						$file = "fax_files.php";
 						$box = 'inbox';
 					}
-					echo "		<a href='".$file."?id=".escape($row['fax_uuid'])."&box=".$box."'>".$text['label-inbox']."</a>&nbsp;&nbsp;";
+					echo "		<a href='".$file."?order_by=fax_date&order=desc&id=".urlencode($row['fax_uuid'])."&box=".$box."'>".$text['label-inbox']."</a>&nbsp;&nbsp;";
 				}
 				if (permission_exists('fax_sent_view')) {
-					echo "		<a href='fax_files.php?id=".escape($row['fax_uuid'])."&box=sent'>".$text['label-sent']."</a>&nbsp;&nbsp;";
+					echo "		<a href='fax_files.php?order_by=fax_date&order=desc&id=".urlencode($row['fax_uuid'])."&box=sent'>".$text['label-sent']."</a>&nbsp;&nbsp;";
 				}
 				if (permission_exists('fax_log_view')) {
-					echo "		<a href='fax_logs.php?id=".escape($row['fax_uuid'])."'>".$text['label-log']."</a>";
+					//echo "		<a href='fax_logs.php?"."order_by=fax_epoch&order=asc&id=".escape($row['fax_uuid'])."'>".$text['label-log']."</a>";
+					echo "		<a href='fax_logs.php?order_by=fax_epoch&order=desc&id=".urlencode($row['fax_uuid'])."'>".$text['label-log']."</a>";
 				}
 				if (permission_exists('fax_active_view') && isset($_SESSION['fax']['send_mode']['text']) && $_SESSION['fax']['send_mode']['text'] == 'queue') {
-					echo "		<a href='fax_active.php?id=".escape($row['fax_uuid'])."'>".$text['label-active']."</a>";
+					echo "		<a href='fax_active.php?id=".urlencode($row['fax_uuid'])."'>".$text['label-active']."</a>";
 				}
 				echo "	</td>\n";
-				echo "	<td valign='top' class='row_stylebg' width='35%'>".escape($row['fax_description'])."&nbsp;</td>\n";
+				echo "	<td valign='top' class='row_stylebg' width='35%'>".urlencode($row['fax_description'])."&nbsp;</td>\n";
 				echo "	<td class='list_control_icons'>";
 				if (permission_exists('fax_extension_edit')) {
-					echo "<a href='fax_edit.php?id=".escape($row['fax_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+					echo "<a href='fax_edit.php?id=".urlencode($row['fax_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 				}
 				if (permission_exists('fax_extension_delete')) {
-					echo "<a href='fax_delete.php?id=".escape($row['fax_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+					echo "<a href='fax_delete.php?id=".urlencode($row['fax_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 				}
 				echo "	</td>\n";
 				echo "</tr>\n";
