@@ -39,9 +39,9 @@ include "root.php";
 		public $effective_caller_id_number;
 		public $outbound_caller_id_name;
 		public $outbound_caller_id_number;
-		public $limit_max=5;
+		public $limit_max = 5;
 		public $limit_destination;
-		public $vm_enabled=1;
+		public $vm_enabled = 1;
 		public $vm_mailto;
 		public $vm_attach_file;
 		public $vm_keep_local_after_email;
@@ -98,7 +98,6 @@ include "root.php";
 			}
 
 		public function add() {
-			global $db;
 			$domain_uuid = $this->domain_uuid;
 			$domain_name = $this->domain_name;
 			$extension = $this->extension;
@@ -132,113 +131,74 @@ include "root.php";
 			$enabled = $this->enabled;
 			$description = $this->description;
 
-			$db->beginTransaction();
-			for ($i=1; $i<=$range; $i++) {
+			for ($i = 1; $i <= $range; $i++) {
 				if (extension_exists($extension)) {
 					//extension exists
 				}
 				else {
-					//extension does not exist add it
-					$password = generate_password();
-					$sql = "insert into v_extensions ";
-					$sql .= "(";
-					$sql .= "domain_uuid, ";
-					$sql .= "extension_uuid, ";
-					$sql .= "extension, ";
-					$sql .= "number_alias, ";
-					$sql .= "password, ";
-					$sql .= "provisioning_list, ";
-					$sql .= "vm_password, ";
-					$sql .= "accountcode, ";
-					$sql .= "effective_caller_id_name, ";
-					$sql .= "effective_caller_id_number, ";
-					$sql .= "outbound_caller_id_name, ";
-					$sql .= "outbound_caller_id_number, ";
-					$sql .= "limit_max, ";
-					$sql .= "limit_destination, ";
-					$sql .= "vm_enabled, ";
-					$sql .= "vm_mailto, ";
-					$sql .= "vm_attach_file, ";
-					$sql .= "vm_keep_local_after_email, ";
-					$sql .= "user_context, ";
-					$sql .= "toll_allow, ";
-					$sql .= "call_group, ";
-					$sql .= "hold_music, ";
-					$sql .= "auth_acl, ";
-					$sql .= "cidr, ";
-					$sql .= "sip_force_contact, ";
-					if (strlen($sip_force_expires) > 0) {
-						$sql .= "sip_force_expires, ";
-					}
-					if (strlen($nibble_account) > 0) {
-						$sql .= "nibble_account, ";
-					}
-					if (strlen($mwi_account) > 0) {
-						$sql .= "mwi_account, ";
-					}
-					$sql .= "sip_bypass_media, ";
-					$sql .= "enabled, ";
-					$sql .= "description ";
-					$sql .= ")";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'$domain_uuid', ";
-					$sql .= "'$extension_uuid', ";
-					$sql .= "'$extension', ";
-					$sql .= "'$number_alias', ";
-					$sql .= "'$password', ";
-					$sql .= "'$provisioning_list', ";
-					$sql .= "'user-choose', ";
-					$sql .= "'$accountcode', ";
-					$sql .= "'$effective_caller_id_name', ";
-					$sql .= "'$effective_caller_id_number', ";
-					$sql .= "'$outbound_caller_id_name', ";
-					$sql .= "'$outbound_caller_id_number', ";
-					$sql .= "'$limit_max', ";
-					$sql .= "'$limit_destination', ";
-					$sql .= "'$vm_enabled', ";
-					$sql .= "'$vm_mailto', ";
-					$sql .= "'$vm_attach_file', ";
-					$sql .= "'$vm_keep_local_after_email', ";
-					$sql .= "'$user_context', ";
-					$sql .= "'$toll_allow', ";
-					$sql .= "'$call_group', ";
-					$sql .= "'$hold_music', ";
-					$sql .= "'$auth_acl', ";
-					$sql .= "'$cidr', ";
-					$sql .= "'$sip_force_contact', ";
-					if (strlen($sip_force_expires) > 0) {
-						$sql .= "'$sip_force_expires', ";
-					}
-					if (strlen($nibble_account) > 0) {
-						$sql .= "'$nibble_account', ";
-					}
-					if (strlen($mwi_account) > 0) {
-						if (strpos($mwi_account, '@') === false) {
-							if (count($_SESSION["domains"]) > 1) {
-								$mwi_account .= "@".$domain_name;
-							}
-							else {
-								$mwi_account .= "@\$\${domain}";
-							}
+					//extension does not exist, build insert array
+						$password = generate_password();
+						$array['extensions'][0]['domain_uuid'] = $domain_uuid;
+						$array['extensions'][0]['extension_uuid'] = $extension_uuid;
+						$array['extensions'][0]['extension'] = $extension;
+						$array['extensions'][0]['number_alias'] = $number_alias;
+						$array['extensions'][0]['password'] = $password;
+						$array['extensions'][0]['provisioning_list'] = $provisioning_list;
+						$array['extensions'][0]['vm_password'] = 'user-choose';
+						$array['extensions'][0]['accountcode'] = $accountcode;
+						$array['extensions'][0]['effective_caller_id_name'] = $effective_caller_id_name;
+						$array['extensions'][0]['effective_caller_id_number'] = $effective_caller_id_number;
+						$array['extensions'][0]['outbound_caller_id_name'] = $outbound_caller_id_name;
+						$array['extensions'][0]['outbound_caller_id_number'] = $outbound_caller_id_number;
+						$array['extensions'][0]['limit_max'] = $limit_max;
+						$array['extensions'][0]['limit_destination'] = $limit_destination;
+						$array['extensions'][0]['vm_enabled'] = $vm_enabled;
+						$array['extensions'][0]['vm_mailto'] = $vm_mailto;
+						$array['extensions'][0]['vm_attach_file'] = $vm_attach_file;
+						$array['extensions'][0]['vm_keep_local_after_email'] = $vm_keep_local_after_email;
+						$array['extensions'][0]['user_context'] = $user_context;
+						$array['extensions'][0]['toll_allow'] = $toll_allow;
+						$array['extensions'][0]['call_group'] = $call_group;
+						$array['extensions'][0]['hold_music'] = $hold_music;
+						$array['extensions'][0]['auth_acl'] = $auth_acl;
+						$array['extensions'][0]['cidr'] = $cidr;
+						$array['extensions'][0]['sip_force_contact'] = $sip_force_contact;
+						if (strlen($sip_force_expires) > 0) {
+							$array['extensions'][0]['sip_force_expires'] = $sip_force_expires;
 						}
-						$sql .= "'$mwi_account', ";
-					}
-					$sql .= "'$sip_bypass_media', ";
-					$sql .= "'$enabled', ";
-					$sql .= "'$description' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
+						if (strlen($nibble_account) > 0) {
+							$array['extensions'][0]['nibble_account'] = $nibble_account;
+						}
+						if (strlen($mwi_account) > 0) {
+							if (strpos($mwi_account, '@') === false) {
+								$mwi_account .= count($_SESSION["domains"]) > 1 ? "@".$domain_name : "@\$\${domain}";
+							}
+							$array['extensions'][0]['mwi_account'] = $mwi_account;
+						}
+						$array['extensions'][0]['sip_bypass_media'] = $sip_bypass_media;
+						$array['extensions'][0]['enabled'] = $enabled;
+						$array['extensions'][0]['description'] = $description;
+
+					//grant temporary permissions
+						$p = new permissions;
+						$p->add('extension_add', 'temp');
+
+					//execute insert
+						$database = new database;
+						$database->app_name = 'switch_directory';
+						$database->app_uuid = 'efc9cdbf-8616-435d-9d21-ae8d4e6b5225';
+						$database->save($array);
+						unset($array);
+
+					//revoke temporary permissions
+						$p->delete('extension_add', 'temp');
+
 				}
 				$extension++;
 			}
-			$db->commit();
 		}
 
 		public function update() {
-			global $db;
-
 			$domain_uuid = $this->domain_uuid;
 			$domain_name = $this->domain_name;
 			$extension = $this->extension;
@@ -285,109 +245,107 @@ include "root.php";
 				$password = generate_password();
 			}
 
-			$sql = "update v_extensions set ";
-			$sql .= "extension = '$extension', ";
-			$sql .= "number_alias = '$number_alias', ";
-			$sql .= "password = '$password', ";
-			$sql .= "provisioning_list = '$provisioning_list', ";
-			if (strlen($vm_password) > 0) {
-				$sql .= "vm_password = '$vm_password', ";
-			}
-			else {
-				$sql .= "vm_password = 'user-choose', ";
-			}
-			$sql .= "accountcode = '$accountcode', ";
-			$sql .= "effective_caller_id_name = '$effective_caller_id_name', ";
-			$sql .= "effective_caller_id_number = '$effective_caller_id_number', ";
-			$sql .= "outbound_caller_id_name = '$outbound_caller_id_name', ";
-			$sql .= "outbound_caller_id_number = '$outbound_caller_id_number', ";
-			$sql .= "limit_max = '$limit_max', ";
-			$sql .= "limit_destination = '$limit_destination', ";
-			$sql .= "vm_enabled = '$vm_enabled', ";
-			$sql .= "vm_mailto = '$vm_mailto', ";
-			$sql .= "vm_attach_file = '$vm_attach_file', ";
-			$sql .= "vm_keep_local_after_email = '$vm_keep_local_after_email', ";
-			$sql .= "user_context = '$user_context', ";
-			$sql .= "toll_allow = '$toll_allow', ";
-			$sql .= "call_group = '$call_group', ";
-			$sql .= "hold_music = '$hold_music', ";
-			$sql .= "auth_acl = '$auth_acl', ";
-			$sql .= "cidr = '$cidr', ";
-			$sql .= "sip_force_contact = '$sip_force_contact', ";
-			if (strlen($sip_force_expires) == 0) {
-				$sql .= "sip_force_expires = null, ";
-			}
-			else {
-				$sql .= "sip_force_expires = '$sip_force_expires', ";
-			}
-			if (strlen($nibble_account) == 0) {
-				$sql .= "nibble_account = null, ";
-			}
-			else {
-				$sql .= "nibble_account = '$nibble_account', ";
-			}
-			if (strlen($mwi_account) > 0) {
-				if (strpos($mwi_account, '@') === false) {
-					if (count($_SESSION["domains"]) > 1) {
-						$mwi_account .= "@".$domain_name;
+			//build update array
+				$array['extensions'][0]['extension_uuid'] = $extension_uuid;
+				$array['extensions'][0]['extension'] = $extension;
+				$array['extensions'][0]['number_alias'] = $number_alias;
+				$array['extensions'][0]['password'] = $password;
+				$array['extensions'][0]['provisioning_list'] = $provisioning_list;
+				$array['extensions'][0]['vm_password'] = strlen($vm_password) > 0 ? $vm_password : 'user-choose';
+				$array['extensions'][0]['accountcode'] = $accountcode;
+				$array['extensions'][0]['effective_caller_id_name'] = $effective_caller_id_name;
+				$array['extensions'][0]['effective_caller_id_number'] = $effective_caller_id_number;
+				$array['extensions'][0]['outbound_caller_id_name'] = $outbound_caller_id_name;
+				$array['extensions'][0]['outbound_caller_id_number'] = $outbound_caller_id_number;
+				$array['extensions'][0]['limit_max'] = $limit_max;
+				$array['extensions'][0]['limit_destination'] = $limit_destination;
+				$array['extensions'][0]['vm_enabled'] = $vm_enabled;
+				$array['extensions'][0]['vm_mailto'] = $vm_mailto;
+				$array['extensions'][0]['vm_attach_file'] = $vm_attach_file;
+				$array['extensions'][0]['vm_keep_local_after_email'] = $vm_keep_local_after_email;
+				$array['extensions'][0]['user_context'] = $user_context;
+				$array['extensions'][0]['toll_allow'] = $toll_allow;
+				$array['extensions'][0]['call_group'] = $call_group;
+				$array['extensions'][0]['hold_music'] = $hold_music;
+				$array['extensions'][0]['auth_acl'] = $auth_acl;
+				$array['extensions'][0]['cidr'] = $cidr;
+				$array['extensions'][0]['sip_force_contact'] = $sip_force_contact;
+				$array['extensions'][0]['sip_force_expires'] = strlen($sip_force_expires) > 0 ? $sip_force_expires : null;
+				$array['extensions'][0]['nibble_account'] = strlen($nibble_account) > 0 ? $nibble_account : null;
+				if (strlen($mwi_account) > 0) {
+					if (strpos($mwi_account, '@') === false) {
+						$mwi_account .= count($_SESSION["domains"]) > 1 ? "@".$domain_name : "@\$\${domain}";
 					}
-					else {
-						$mwi_account .= "@\$\${domain}";
-					}
+					$array['extensions'][0]['mwi_account'] = $mwi_account;
 				}
-			}
-			$sql .= "mwi_account = '$mwi_account', ";
-			$sql .= "sip_bypass_media = '$sip_bypass_media', ";
-			$sql .= "enabled = '$enabled', ";
-			$sql .= "description = '$description' ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and extension_uuid = '$extension_uuid'";
-			$db->exec(check_sql($sql));
-			unset($sql);
+				$array['extensions'][0]['sip_bypass_media'] = $sip_bypass_media;
+				$array['extensions'][0]['enabled'] = $enabled;
+				$array['extensions'][0]['description'] = $description;
+
+			//grant temporary permissions
+				$p = new permissions;
+				$p->add('extension_edit', 'temp');
+
+			//execute insert
+				$database = new database;
+				$database->app_name = 'switch_directory';
+				$database->app_uuid = 'efc9cdbf-8616-435d-9d21-ae8d4e6b5225';
+				$database->save($array);
+				unset($array);
+
+			//revoke temporary permissions
+				$p->delete('extension_edit', 'temp');
 		}
 
 		function delete() {
-			global $db;
 			$domain_uuid = $this->domain_uuid;
 			$extension_uuid = $this->extension_uuid;
-			if (strlen($extension_uuid)>0) {
-				$sql = "delete from v_extensions ";
-				$sql .= "where domain_uuid = '$domain_uuid' ";
-				$sql .= "and extension_uuid = '$extension_uuid' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				unset($sql);
+			if (is_uuid($extension_uuid)) {
+				//build delete array
+					$array['extensions'][0]['extension_uuid'] = $extension_uuid;
+					$array['extensions'][0]['domain_uuid'] = $domain_uuid;
+				//grant temporary permissions
+					$p = new permissions;
+					$p->add('extension_delete', 'temp');
+				//execute delete
+					$database = new database;
+					$database->app_name = 'switch_directory';
+					$database->app_uuid = 'efc9cdbf-8616-435d-9d21-ae8d4e6b5225';
+					$database->delete($array);
+					unset($array);
+				//revoke temporary permissions
+					$p->delete('extension_delete', 'temp');
 			}
 		}
 
-		function import_sql($data){
-			$count=count($data);
-			$keys=$values=SplFixedArray($count);
-			$keys=array_keys($data);
-			$values=array_values($data);
-			for($i=0;$i<$count;$i++){
-				$keys[$i]= str_replace("-", "_", $keys[$i]);
-				$this->{$keys[$i]}=$values[$i];
+		function import_sql($data) {
+			$count = count($data);
+			$keys = $values = SplFixedArray($count);
+			$keys = array_keys($data);
+			$values = array_values($data);
+			for ($i = 0; $i < $count; $i++) {
+				$keys[$i] = str_replace("-", "_", $keys[$i]);
+				$this->{$keys[$i]} = $values[$i];
 			}
 		}
 
-		function set_bool(&$var,$default=null){
-			$var=strtolower($var);
-			if		($var==="true")  return;
-			elseif	($var==="false") return;
-			elseif	($var==true)  $var="true";
-			elseif	($var==false) $var="false";
-			elseif(!is_null($default)) {
-				$var=$default;
+		function set_bool(&$var, $default = null){
+			$var = strtolower($var);
+			if ($var === "true") return;
+			else if ($var === "false") return;
+			else if ($var == true) $var = "true";
+			else if ($var == false) $var = "false";
+			else if (!is_null($default)) {
+				$var = $default;
 				$this->set_bool($var);
-				}
+			}
 		}
 
-		function generate_xml($single=1){
-			//switch_account_code!! How should we be passing this??
+		function generate_xml($single = 1) {
+			//switch_account_code!!
 
 			if ($this->enabled== "false" || !$this->enabled) {
-				return false;//This the best way??
+				return false;
 			}
 
 			$this->vm_password = str_replace("#", "", $this->vm_password); //preserves leading zeros//**Generic Validation!
@@ -415,100 +373,99 @@ include "root.php";
 				$xml .= "<include>\n";
 			}*/
 			if (strlen($this->cidr)) {
-				$this->cidr = " cidr=\"" . $this->cidr . "\"";
+				$this->cidr = " cidr=\"".$this->cidr."\"";
 			}
 			if (strlen($this->number_alias)) {
 				$this->number_alias = " number-alias=\"".$this->number_alias."\"";
 			}
-			if($single)	$xml  = "<include>\n";
-			else		$xml  = "";
+			$xml = $single ? "<include>\n" : "";
 			$xml .= "  <user id=\"".$this->extension."\"".$this->cidr."".$this->number_alias.">\n";
 			$xml .= "    <params>\n";
-			$xml .= "      <param name=\"password\" value=\"" . $this->password . "\"/>\n";
+			$xml .= "      <param name=\"password\" value=\"".$this->password."\"/>\n";
 			$xml .= "      <param name=\"vm-enabled\" value=\"".$this->vm_enabled."\"/>\n";
 
 			if ($this->vm_enabled=="true"){
-				$xml .= "      <param name=\"vm-password\" value=\"" . $this->vm_password . "\"/>\n";
+				$xml .= "      <param name=\"vm-password\" value=\"".$this->vm_password."\"/>\n";
 				if(strlen($this->vm_mailto)) {
 					$xml .= "      <param name=\"vm-email-all-messages\" value=\"true\"/>\n";
 					$xml .= "      <param name=\"vm-attach-file\" value=\"".$this->vm_attach_file."\"/>\n";
 					$xml .= "      <param name=\"vm-keep-local-after-email\" value=\"".$this->vm_keep_local_after_email."\"/>\n";
-					$xml .= "      <param name=\"vm-mailto\" value=\"" . $this->vm_mailto . "\"/>\n";
+					$xml .= "      <param name=\"vm-mailto\" value=\"".$this->vm_mailto."\"/>\n";
 				}
 			}
 			if (strlen($this->mwi_account)) {
-				$xml .= "      <param name=\"MWI-Account\" value=\"" . $this->mwi_account . "\"/>\n";
+				$xml .= "      <param name=\"MWI-Account\" value=\"".$this->mwi_account."\"/>\n";
 			}
 			if (strlen($this->auth_acl)) {
-				$xml .= "      <param name=\"auth-acl\" value=\"" . $this->auth_acl . "\"/>\n";
+				$xml .= "      <param name=\"auth-acl\" value=\"".$this->auth_acl."\"/>\n";
 			}
 			$xml .= "    </params>\n";
 
 			$xml .= "    <variables>\n";
 			if (strlen($this->hold_music)) {
-				$xml .= "      <variable name=\"hold_music\" value=\"" . $this->hold_music . "\"/>\n";
+				$xml .= "      <variable name=\"hold_music\" value=\"".$this->hold_music."\"/>\n";
 			}
 			if (strlen($this->toll_allow)){
-				$xml .= "      <variable name=\"toll_allow\" value=\"" . $this->toll_allow . "\"/>\n";
+				$xml .= "      <variable name=\"toll_allow\" value=\"".$this->toll_allow."\"/>\n";
 			}
 			if (strlen($this->accountcode)){
-				$xml .= "      <variable name=\"accountcode\" value=\"" . $this->accountcode . "\"/>\n";
+				$xml .= "      <variable name=\"accountcode\" value=\"".$this->accountcode."\"/>\n";
 			}
-			$xml .= "      <variable name=\"user_context\" value=\"" . $this->user_context . "\"/>\n";
+			$xml .= "      <variable name=\"user_context\" value=\"".$this->user_context."\"/>\n";
 			if (strlen($this->effective_caller_id_name)) {
-				$xml .= "      <variable name=\"effective_caller_id_name\" value=\"" . $this->effective_caller_id_name . "\"/>\n";
+				$xml .= "      <variable name=\"effective_caller_id_name\" value=\"".$this->effective_caller_id_name."\"/>\n";
 			}
 			if (strlen($this->outbound_caller_id_number)) {
-				$xml .= "      <variable name=\"effective_caller_id_number\" value=\"" . $this->effective_caller_id_number . "\"/>\n";
+				$xml .= "      <variable name=\"effective_caller_id_number\" value=\"".$this->effective_caller_id_number."\"/>\n";
 			}
 			if (strlen($this->outbound_caller_id_name)) {
-				$xml .= "      <variable name=\"outbound_caller_id_name\" value=\"" . $this->outbound_caller_id_name . "\"/>\n";
+				$xml .= "      <variable name=\"outbound_caller_id_name\" value=\"".$this->outbound_caller_id_name."\"/>\n";
 			}
 			if (strlen($this->outbound_caller_id_number)) {
-				$xml .= "      <variable name=\"outbound_caller_id_number\" value=\"" . $this->outbound_caller_id_number . "\"/>\n";
+				$xml .= "      <variable name=\"outbound_caller_id_number\" value=\"".$this->outbound_caller_id_number."\"/>\n";
 			}
 			if (!strlen($this->limit_max)) {//**validation
 				$this->limit_max=5;
 			}
-			$xml .= "      <variable name=\"limit_max\" value=\"" . $this->limit_max . "\"/>\n";
+			$xml .= "      <variable name=\"limit_max\" value=\"".$this->limit_max."\"/>\n";
 			if (strlen($this->limit_destination)) {
-				$xml .= "      <variable name=\"limit_destination\" value=\"" . $this->limit_destination . "\"/>\n";
+				$xml .= "      <variable name=\"limit_destination\" value=\"".$this->limit_destination."\"/>\n";
 			}
 			if (strlen($this->sip_force_contact)) {
-				$xml .= "      <variable name=\"sip-force-contact\" value=\"" . $this->sip_force_contact . "\"/>\n";
+				$xml .= "      <variable name=\"sip-force-contact\" value=\"".$this->sip_force_contact."\"/>\n";
 			}
 			if (strlen($this->sip_force_expires)) {
-				$xml .= "      <variable name=\"sip-force-expires\" value=\"" . $this->sip_force_expires . "\"/>\n";
+				$xml .= "      <variable name=\"sip-force-expires\" value=\"".$this->sip_force_expires."\"/>\n";
 			}
 			if (strlen($this->nibble_account)) {
-				$xml .= "      <variable name=\"nibble_account\" value=\"" . $this->nibble_account . "\"/>\n";
+				$xml .= "      <variable name=\"nibble_account\" value=\"".$this->nibble_account."\"/>\n";
 			}
 			switch ($this->sip_bypass_media) {
 				case "bypass-media":
-						$xml .= "      <variable name=\"bypass_media\" value=\"true\"/>\n";
-						break;
+					$xml .= "      <variable name=\"bypass_media\" value=\"true\"/>\n";
+					break;
 				case "bypass-media-after-bridge":
-						$xml .= "      <variable name=\"bypass_media_after_bridge\" value=\"true\"/>\n";
-						break;
+					$xml .= "      <variable name=\"bypass_media_after_bridge\" value=\"true\"/>\n";
+					break;
 				case "proxy-media":
-						$xml .= "      <variable name=\"proxy_media\" value=\"true\"/>\n";
-						break;
+					$xml .= "      <variable name=\"proxy_media\" value=\"true\"/>\n";
+					break;
 			}
 			$xml .= "    </variables>\n";
 			$xml .= "  </user>\n";
-			if($single) { $xml .= "</include>\n"; }
+			if ($single) { $xml .= "</include>\n"; }
 
 			return $xml;
 		}
 
 		function xml_save_all() {
-			global $db, $config;
+			global $config;
 			$domain_uuid = $this->domain_uuid;
 			$domain_name = $this->domain_name;
 
 			//get the system settings paths and set them as variables
 				$settings_array = v_settings();
-				foreach($settings_array as $name => $value) {
+				foreach ($settings_array as $name => $value) {
 					$$name = $value;
 				}
 
@@ -516,13 +473,14 @@ include "root.php";
 				$extension_parent_dir = realpath($_SESSION['switch']['extensions']['dir']."/..");
 
 			// delete all old extensions to prepare for new ones
-				if($dh = opendir($_SESSION['switch']['extensions']['dir'])) {
-					$files = Array();
-					while($file = readdir($dh)) {
-						if($file != "." && $file != ".." && $file[0] != '.') {
-							if(is_dir($dir . "/" . $file)) {
+				if ($dh = opendir($_SESSION['switch']['extensions']['dir'])) {
+					$files = array();
+					while ($file = readdir($dh)) {
+						if ($file != "." && $file != ".." && $file[0] != '.') {
+							if (is_dir($dir."/".$file)) {
 								//this is a directory do nothing
-							} else {
+							}
+							else {
 								//check if file is an extension; verify the file numeric and the extension is xml
 								if (substr($file,0,2) == 'v_' && substr($file,-4) == '.xml') {
 									unlink($_SESSION['switch']['extensions']['dir']."/".$file);
@@ -534,51 +492,56 @@ include "root.php";
 				}
 
 			$sql = "select * from v_extensions ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
+			$sql .= "where domain_uuid = :domain_uuid ";
 			$sql .= "order by call_group asc ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
+			$parameters['domain_uuid'] = $domain_uuid;
+			$database = new database;
+			$rows = $database->select($sql, $parameters, 'all');
 			$i = 0;
 			$extension_xml_condensed = false;
 			if ($extension_xml_condensed) {
 				$fout = fopen($_SESSION['switch']['extensions']['dir']."/v_extensions.xml","w");
 				$xml = "<include>\n";
 			}
-			while($row = $prep_statement->fetch(PDO::FETCH_ASSOC)) {
-				$call_group = $row['call_group'];
-				$call_group = str_replace(";", ",", $call_group);
-				$tmp_array = explode(",", $call_group);
-				foreach ($tmp_array as &$tmp_call_group) {
-					if (strlen($tmp_call_group) > 0) {
-						if (strlen($call_group_array[$tmp_call_group]) == 0) {
-							$call_group_array[$tmp_call_group] = $row['extension'];
+			if (is_array($rows) && @sizeof($rows) != 0) {
+				foreach ($rows as $row) {
+					$call_group = $row['call_group'];
+					$call_group = str_replace(";", ",", $call_group);
+					$tmp_array = explode(",", $call_group);
+					foreach ($tmp_array as &$tmp_call_group) {
+						if (strlen($tmp_call_group) > 0) {
+							if (strlen($call_group_array[$tmp_call_group]) == 0) {
+								$call_group_array[$tmp_call_group] = $row['extension'];
+							}
+							else {
+								$call_group_array[$tmp_call_group] = $call_group_array[$tmp_call_group].','.$row['extension'];
+							}
 						}
-						else {
-							$call_group_array[$tmp_call_group] = $call_group_array[$tmp_call_group].','.$row['extension'];
-						}
+						$i++;
 					}
-					$i++;
-				}
 
-				if ($row['enabled'] != "false") {
-					//$this->import_sql($row);//Do I need to be worried about ghost values? Maybe I should make a new object?
-					//if (strlen($switch_account_code)) $this->accountcode=$switch_account_code;
-					//$xml.=$this->generate_xml(1);
+					if ($row['enabled'] != "false") {
+						//$this->import_sql($row);
+						//if (strlen($switch_account_code)) $this->accountcode=$switch_account_code;
+						//$xml.=$this->generate_xml(1);
 
-					$one_row=new fs_directory;
-					$one_row->import_sql($row);//make a new object to flush ghost rows. And we can call this as static.
-					if (strlen($switch_account_code)) $one_row->accountcode=$switch_account_code;
-					$xml.=$one_row->generate_xml(false);
+						$one_row = new fs_directory;
+						$one_row->import_sql($row);
+						if (strlen($switch_account_code)) {
+							$one_row->accountcode = $switch_account_code;
+						}
+						$xml .= $one_row->generate_xml(false);
 
-					if (!$extension_xml_condensed) {
-						$xml .= "</include>\n";
-						fwrite($fout, $xml);
-						unset($xml);
-						fclose($fout);
+						if (!$extension_xml_condensed) {
+							$xml .= "</include>\n";
+							fwrite($fout, $xml);
+							unset($xml);
+							fclose($fout);
+						}
 					}
 				}
 			}
-			unset ($prep_statement);
+			unset($sql, $parameters, $rows, $row);
 			if ($extension_xml_condensed) {
 				$xml .= "</include>\n";
 				fwrite($fout, $xml);
@@ -684,7 +647,8 @@ include "root.php";
 				//event_socket_request_cmd($cmd);
 				//unset($cmd);
 
-		}  //end function
-	} //class
+		}
+
+	}
 
 ?>
