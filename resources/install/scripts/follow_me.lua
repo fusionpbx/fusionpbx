@@ -123,7 +123,7 @@
 	end
 
 --enable or disable follow me
-	sql = "update v_follow_me set ";
+	sql = "update v_extensions set ";
 	sql = sql .. "dial_string = null, ";
 	if (follow_me_enabled == "true") then
 		sql = sql .. "follow_me_enabled = 'false' ";
@@ -139,7 +139,7 @@
 	dbh:query(sql, params);
 
 --update the extension
-	sql = "update v_extensions set ";
+	sql = "update v_follow_me set ";
 	sql = sql .. "dial_string = null, ";
 	sql = sql .. "do_not_disturb = 'false', ";
 	if (follow_me_enabled == "true") then
