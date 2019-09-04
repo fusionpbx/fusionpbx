@@ -117,6 +117,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the maximum number of records displayed per page. (Default: 50)";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "113c90a3-5778-4b4a-8f71-44c790601eca";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "domain";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "time_format";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "24h";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Toggle between 24 hour and 12 hour time formats. Default is 24hr when disabled.";		
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "97a2410b-cfc8-4194-9172-dd5b0acfa9f3";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "email";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "smtp_auth";
