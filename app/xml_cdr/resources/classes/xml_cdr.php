@@ -842,11 +842,15 @@ if (!class_exists('xml_cdr')) {
 				if (strlen($this->start_stamp_begin) > 0 || strlen($this->start_stamp_end) > 0) {
 					unset($this->quick_select);
 					if (strlen($this->start_stamp_begin) > 0 && strlen($this->start_stamp_end) > 0) {
-						$sql_date_range .= " and start_stamp between '".$this->start_stamp_begin.":00.000' and '".$this->start_stamp_end.":59.999' \n";
+						$sql_date_range .= " and start_stamp between :start_stamp_begin:00.000' and :start_stamp_end:59.999' \n";
+						$parameters['start_stamp_begin'] = $this->start_stamp_begin;
+						$parameters['start_stamp_end'] = $this->start_stamp_end;
 					}
 					else {
-						if (strlen($this->start_stamp_begin) > 0) { $sql_date_range .= "AND start_stamp >= '".$this->start_stamp_begin.":00.000' \n"; }
-						if (strlen($this->start_stamp_end) > 0) { $sql_date_range .= "AND start_stamp <= '".$this->start_stamp_end.":59.999' \n"; }
+						if (strlen($this->start_stamp_begin) > 0) { $sql_date_range .= "AND start_stamp >= :start_stamp_begin:00.000' \n"; }
+						if (strlen($this->start_stamp_end) > 0) { $sql_date_range .= "AND start_stamp <= :start_stamp_end:59.999' \n"; }
+						$parameters['start_stamp_begin'] = $this->start_stamp_begin;
+						$parameters['start_stamp_end'] = $this->start_stamp_end;
 					}
 				}
 				else {
@@ -1061,20 +1065,22 @@ if (!class_exists('xml_cdr')) {
 				$sql .= " hangup_cause, \n";
 				$sql .= " billsec \n";
 				$sql .= " FROM v_xml_cdr \n";
-				$sql .= " WHERE domain_uuid = '".$this->domain_uuid."' \n";
+				$sql .= " WHERE domain_uuid = :domain_uuid \n";
 				$sql .= $sql_date_range;
 				$sql .= ") AS c \n";
 
 				$sql .= "WHERE \n";
 				$sql .= "d.domain_uuid = e.domain_uuid \n";
 				if (!($_GET['showall'] && permission_exists('xml_cdr_all'))) {
-						$sql .= "AND e.domain_uuid = '".$this->domain_uuid."' \n";
+					$sql .= "AND e.domain_uuid = :domain_uuid \n";
 				}
 				$sql .= "GROUP BY e.extension, e.domain_uuid, d.domain_uuid, e.number_alias, e.description \n";
 				$sql .= "ORDER BY extension ASC \n";
-				$prep_statement = $this->db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$summary = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+
+				$parameters['domain_uuid'] = $this->domain_uuid;
+				$database = new database;
+				$summary = $database->select($sql, $parameters, 'all');
+				unset($parameters);
 
 			//return the array
 				return $summary;
