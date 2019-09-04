@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -146,13 +146,14 @@
 						$file = "fax_files.php";
 						$box = 'inbox';
 					}
-					echo "		<a href='".$file."?id=".escape($row['fax_uuid'])."&box=".$box."'>".$text['label-inbox']."</a>&nbsp;&nbsp;";
+					echo "		<a href='".$file."?order_by=fax_date&order=desc&?id=".escape($row['fax_uuid'])."&box=".$box."'>".$text['label-inbox']."</a>&nbsp;&nbsp;";
 				}
 				if (permission_exists('fax_sent_view')) {
-					echo "		<a href='fax_files.php?id=".escape($row['fax_uuid'])."&box=sent'>".$text['label-sent']."</a>&nbsp;&nbsp;";
+					echo "		<a href='fax_files.php??order_by=fax_date&order=desc&id=".escape($row['fax_uuid'])."&box=sent'>".$text['label-sent']."</a>&nbsp;&nbsp;";
 				}
 				if (permission_exists('fax_log_view')) {
-					echo "		<a href='fax_logs.php?id=".escape($row['fax_uuid'])."'>".$text['label-log']."</a>";
+					//echo "		<a href='fax_logs.php?"."order_by=fax_epoch&order=asc&id=".escape($row['fax_uuid'])."'>".$text['label-log']."</a>";
+					echo "		<a href='fax_logs.php?order_by=fax_epoch&order=desc&id=".escape($row['fax_uuid'])."'>".$text['label-log']."</a>";
 				}
 				if (permission_exists('fax_active_view') && isset($_SESSION['fax']['send_mode']['text']) && $_SESSION['fax']['send_mode']['text'] == 'queue') {
 					echo "		<a href='fax_active.php?id=".escape($row['fax_uuid'])."'>".$text['label-active']."</a>";
