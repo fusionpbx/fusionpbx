@@ -143,9 +143,9 @@
 	sql = sql .. "dial_string = null, ";
 	sql = sql .. "do_not_disturb = 'false', ";
 	if (follow_me_enabled == "true") then
-		sql = sql .. "follow_me_enabled = 'false' ";
+		sql = sql .. "follow_me_enabled = 'false', ";
 	else
-		sql = sql .. "follow_me_enabled = 'true' ";
+		sql = sql .. "follow_me_enabled = 'true', ";
 	end
 	sql = sql .. "forward_all_enabled = 'false' ";
 	sql = sql .. "where domain_uuid = :domain_uuid ";
