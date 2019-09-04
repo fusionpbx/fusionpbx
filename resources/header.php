@@ -23,8 +23,10 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
 
 //if reloadxml then run the command
 	if (isset($_SESSION["reload_xml"])) {
