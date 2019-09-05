@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -58,68 +58,64 @@
 	if (strlen($search) > 0) {
 		$search = strtolower($search);
 		$sql_search = "and ( ";
-		$sql_search .= "lower(extension) like :search ";
-		$sql_search .= "or lower(call_group) like :search ";
-		$sql_search .= "or lower(user_context) like :search ";
-		$sql_search .= "or lower(enabled) like :search ";
-		$sql_search .= "or lower(description) like :search ";
+		$sql_search .= "	lower(extension) like :search ";
+		$sql_search .= "	or lower(call_group) like :search ";
+		$sql_search .= "	or lower(user_context) like :search ";
+		$sql_search .= "	or lower(enabled) like :search ";
+		$sql_search .= "	or lower(description) like :search ";
 		$sql_search .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
 
+//get total extension count
+	$sql = "select count(extension_uuid) from v_extensions ";
+	if (!($_GET['show'] == "all" && permission_exists('extension_all'))) {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
+	$sql .= $sql_search;
+	$database = new database;
+	$extension_count = $database->select($sql, $parameters, 'column');
+
 //additional includes
-	require_once "resources/header.php";
 	$document['title'] = $text['title-extensions'];
 	require_once "resources/paging.php";
 
-//get total extension count
-	$sql_1 = "select count(*) from v_extensions ";
-	if (!($_GET['show'] == "all" && permission_exists('extension_all'))) {
-		$sql_1 .= "where domain_uuid = :domain_uuid ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	}
-	$sql_1 .= $sql_search;
-	$database = new database;
-	$total_extensions = $database->select($sql_1, $parameters, 'column');
-
-//get total numeric extension count
-	if ($db_type == "pgsql" || $db_type == "mysql") {
-		$sql_2 = $sql_1." and extension ~ '^[0-9]+$' ";
-		$database = new database;
-		$numeric_extensions = $database->select($sql_2, $parameters, 'column');
-	}
-	unset($sql_2);
-
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "&search=".escape($search);
+	$param = "&search=".urlencode($search);
 	if (!isset($_GET['page'])) { $_GET['page'] = 0; }
-	$_GET['page'] = check_str($_GET['page']);
+	$_GET['page'] = $_GET['page'];
 	list($paging_controls_mini, $rows_per_page, $var_3) = paging($total_extensions, $param, $rows_per_page, true); //top
 	list($paging_controls, $rows_per_page, $var_3) = paging($total_extensions, $param, $rows_per_page); //bottom
 	$offset = $rows_per_page * $_GET['page'];
 
-//to cast or not to cast
-	$order_text = $db_type == "pgsql" && $total_extensions == $numeric_extensions ? 'cast(extension as bigint)' : 'extension';
-
 //get the extensions
-	$sql_3 = str_replace('count(*)', '*', $sql_1);
-	$sql_3 .= $order_by == '' || $order_by == 'extension' ? ' order by '.$order_text.' '.$order.' ' : order_by($order_by, $order);
-	$sql_3 .= limit_offset($rows_per_page, $offset);
+	$sql = "select * from v_extensions ";
+	if (!($_GET['show'] == "all" && permission_exists('extension_all'))) {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
+	$sql .= $sql_search;
+	$sql .= order_by($order_by, $order);
+	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$extensions = $database->select($sql_3, $parameters, 'all');
-	unset($sql_1, $sql_3, $parameters);
+	$extensions = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //set the alternating styles
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
+//include the header
+	require_once "resources/header.php";
+
 //show the content
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "  <tr>\n";
 	echo "	<td align='left' width='100%'>\n";
-	echo "		<b>".$text['header-extensions']." (".$total_extensions.")</b><br>\n";
+	echo "		<b>".$text['header-extensions']." (".$extension_count.")</b><br>\n";
 	echo "	</td>\n";
 	echo "		<form method='get' action=''>\n";
 	echo "			<td style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
