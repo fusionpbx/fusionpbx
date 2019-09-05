@@ -82,7 +82,7 @@
 	local settings = Settings.new(dbh, domain_name, domain_uuid);
 
 --include json library
-	debug["sql"] = true;
+	--debug["sql"] = true;
 	local json
 	if (debug["sql"]) then
 		json = require "resources.functions.lunajson"
@@ -163,9 +163,9 @@
 		sql = sql .. "where domain_uuid = :domain_uuid ";
 		sql = sql .. "and follow_me_uuid = :follow_me_uuid ";
 		local params = {domain_uuid = domain_uuid, follow_me_uuid = follow_me_uuid};
---		if (debug["sql"]) then
+		if (debug["sql"]) then
 			freeswitch.consoleLog("notice", "[do_not_disturb] "..sql.."; params:" .. json.encode(params) .. "\n");
---		end
+		end
 		dbh:query(sql, params);
 	end
 
@@ -173,16 +173,16 @@
 	sql = "update v_extensions set ";
 	if (enabled == "true") then
 		sql = sql .. "follow_me_enabled = 'false', ";
-		sql = sql .. "dial_string = null, ";
+		sql = sql .. "dial_string = :dial_string, ";
 		sql = sql .. "do_not_disturb = 'true', ";
 		sql = sql .. "forward_all_enabled = 'false' ";
 	else
-		sql = sql .. "dial_string = null, ";
+		sql = sql .. "dial_string = :dial_string, ";
 		sql = sql .. "do_not_disturb = 'false' ";
 	end
 	sql = sql .. "where domain_uuid = :domain_uuid ";
 	sql = sql .. "and extension_uuid = :extension_uuid ";
-	local params = {dial_string = dial_string, domain_uuid = domain_uuid, extension_uuid = extension_uuid};
+	local params = {dial_string = dial_string, domain_uuid = domain_uuid, extension_uuid = extension_uuid, dial_string = dial_string};
 	if (debug["sql"]) then
 		freeswitch.consoleLog("notice", "[do_not_disturb] "..sql.."; params:" .. json.encode(params) .. "\n");
 	end
