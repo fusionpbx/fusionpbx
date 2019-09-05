@@ -27,7 +27,7 @@
 <P270>{$account.1.display_name}</P270>
 <!--  SIP Server -->
 <!--  String -->
-<P47>{$account.1.server_address}</P47>
+<P47>{$account.1.server_address}:{$account.1.sip_port}</P47>
 <!--  Secondary SIP Server -->
 <!--  String -->
 <P2312>{$account.1.server_address_secondary}</P2312>
@@ -611,7 +611,7 @@
 <P417>{$account.2.display_name}</P417>
 <!--  SIP Server -->
 <!--  String -->
-<P402>{$account.2.server_address}</P402>
+<P402>{$account.2.server_address}:{$account.2.sip_port}</P402>
 
 <!--  Secondary SIP Server -->
 <!--  String -->
@@ -1178,7 +1178,7 @@
 
 <!--  SIP Server -->
 <!--  String -->
-<P502>{$account.3.server_address}</P502>
+<P502>{$account.3.server_address}:{$account.3.sip_port}</P502>
 
 <!--  Secondary SIP Server -->
 <!--  String -->
