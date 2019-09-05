@@ -2829,7 +2829,7 @@
 
     <!-- # SIP Server -->
     <!-- # String -->
-    <P602>{$account.4.server_address}::{$account.4.sip_port}</P602>
+    <P602>{$account.4.server_address}:{$account.4.sip_port}</P602>
 
     <!-- # Secondary SIP Server -->
     <!-- # String -->
@@ -4698,7 +4698,7 @@
 
     <!-- # SIP Server -->
     <!-- # String -->
-    <P1802>{$account.6.server_address}::{$account.6.sip_port}</P1802>
+    <P1802>{$account.6.server_address}:{$account.6.sip_port}</P1802>
 
     <!-- # Secondary SIP Server -->
     <!-- # String -->
