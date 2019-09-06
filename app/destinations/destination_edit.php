@@ -213,6 +213,25 @@
 						unset ($prep_statement);
 					}
 
+				//if the user doesn't have the correct permission then 
+				//override destination_number and destination_context values
+					if ($action == 'update' && is_uuid($destination_uuid)) {
+						$sql = "select * from v_destinations ";
+						$sql .= "where destination_uuid = '".$destination_uuid."' ";
+						$prep_statement = $db->prepare(check_sql($sql));
+						$prep_statement->execute();
+						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+						foreach ($result as &$row) {
+							if (!permission_exists('destination_number')) {
+								$destination_number = $row["destination_number"];
+							}
+							if (!permission_exists('destination_context')) {
+								$destination_context = $row["destination_context"];
+							}
+						}
+						unset ($prep_statement);
+					}
+
 				//if empty then get new uuid
 					if (strlen($dialplan_uuid) == 0) {
 						$dialplan_uuid = uuid();
@@ -843,9 +862,14 @@
 	echo "	".$text['label-destination_number']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='destination_number' maxlength='255' value=\"".escape($destination_number)."\" required='required'>\n";
-	echo "<br />\n";
-	echo $text['description-destination_number']."\n";
+	if (permission_exists('destination_number')) {
+		echo "	<input class='formfld' type='text' name='destination_number' maxlength='255' value=\"".escape($destination_number)."\" required='required'>\n";
+		echo "<br />\n";
+		echo $text['description-destination_number']."\n";
+	}
+	else {
+		echo escape($destination_number);
+	}
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -875,16 +899,18 @@
 		echo "</tr>\n";
 	}
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-destination_context']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='destination_context' id='destination_context' maxlength='255' value=\"".escape($destination_context)."\">\n";
-	echo "<br />\n";
-	echo $text['description-destination_context']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists('destination_context')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-destination_context']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='destination_context' id='destination_context' maxlength='255' value=\"".escape($destination_context)."\">\n";
+		echo "<br />\n";
+		echo $text['description-destination_context']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	if ($_SESSION['destinations']['dialplan_details']['boolean'] == "false") {
 		echo "<tr id='tr_actions'>\n";
