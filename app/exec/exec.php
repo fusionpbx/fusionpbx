@@ -281,14 +281,14 @@
 	echo "					<input type='button' class='btn' style='margin-top: 0px;' title=\"".$text['button-execute']." [Ctrl+Enter]\" value=\"    ".$text['button-execute']."    \" onclick=\"$('form#frm').submit();\">";
 	echo "					<input type='button' class='btn' style='margin-top: 0px;' title=\"\" value=\"    ".$text['button-reset']."    \" onclick=\"reset_editor();\">";
 
-	if (permission_exists('exec_sql')) {
-		echo "			<span class='sql_controls' ".(($handler != 'sql') ? "style='display: none;'" : null).">";
-		//echo "				<input type='button' class='btn' alt='".$text['button-select_database']."' onclick=\"document.location.href='sql_query_db.php'\" value='".$text['button-select_database']."'>\n";
-		if (permission_exists('exec_sql_backup')) {
-			echo "			<input type='button' class='btn' alt='".$text['button-backup']."' onclick=\"document.location.href='sql_backup.php".((strlen($_REQUEST['id']) > 0) ? "?id=".$_REQUEST['id'] : null)."'\" value='".$text['button-backup']."'>\n";
-		}
-		echo "			</span>";
-	}
+	//if (permission_exists('exec_sql')) {
+	//	echo "			<span class='sql_controls' ".(($handler != 'sql') ? "style='display: none;'" : null).">";
+	//	//echo "				<input type='button' class='btn' alt='".$text['button-select_database']."' onclick=\"document.location.href='sql_query_db.php'\" value='".$text['button-select_database']."'>\n";
+	//	if (permission_exists('exec_sql_backup')) {
+	//		echo "			<input type='button' class='btn' alt='".$text['button-backup']."' onclick=\"document.location.href='sql_backup.php".((strlen($_REQUEST['id']) > 0) ? "?id=".$_REQUEST['id'] : null)."'\" value='".$text['button-backup']."'>\n";
+	//	}
+	//	echo "			</span>";
+	//}
 	echo "		</td>";
 	echo "	</tr>";
 	echo "	<tr><td colspan='2'>\n";
