@@ -218,15 +218,21 @@
 						unset($sql, $parameters, $row);
 					}
 
-				//get the destination_number
-					if ($action == 'update' && !permission_exists('destination_number') && is_uuid($destination_uuid)) {
+				//if the user doesn't have the correct permission then 
+				//override destination_number and destination_context values
+					if ($action == 'update' && is_uuid($destination_uuid)) {
 						$sql = "select * from v_destinations ";
 						$sql .= "where destination_uuid = :destination_uuid ";
 						$parameters['destination_uuid'] = $destination_uuid;
 						$database = new database;
 						$row = $database->select($sql, $parameters, 'row');
 						if (is_array($row) && @sizeof($row) != 0) {
-							$destination_number = $row["destination_number"];
+							if (!permission_exists('destination_number')) {
+								$destination_number = $row["destination_number"];
+							}
+							if (!permission_exists('destination_context')) {
+								$destination_context = $row["destination_context"];
+							}
 						}
 						unset($sql, $parameters, $row);
 					}
