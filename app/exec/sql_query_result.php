@@ -58,6 +58,21 @@
 		exit;
 	}
 
+//get allowed table names
+	switch ($db_type) {
+		case 'sqlite': $sql = "select name from sqlite_master where type='table' order by name;"; break;
+		case 'pgsql': $sql = "select table_name as name from information_schema.tables where table_schema='public' and table_type='BASE TABLE' order by table_name"; break;
+		case 'mysql': $sql = "show tables"; break;
+	}
+	$database = new database;
+	$rows = $database->select($sql, null, 'all');
+	if (is_array($rows) && @sizeof($rows) != 0) {
+		foreach ($rows as $row) {
+			$tables[] = $row['name'];
+		}
+	}
+	unset($sql, $rows, $row);
+
 //show the content
 	if (is_array($_POST)) {
 		$sql_type = trim($_POST["sql_type"]);
@@ -131,7 +146,7 @@
 
 			//determine queries to run and show
 			if ($sql_cmd != '') { $sql_array = array_filter(explode(";", $sql_cmd)); }
-			if ($table_name != '') { $sql_array[] = "select * from ".$table_name; }
+			if ($table_name != '' && in_array($table_name, $tables)) { $sql_array[] = "select * from ".$table_name; }
 			$show_query = (sizeof($sql_array) > 1) ? true : false;
 
 			if (is_array($sql_array)) foreach($sql_array as $sql_index => $sql) {
@@ -203,7 +218,7 @@
 			$sql = trim($sql);
 
 			//get the table data
-				$sql = (strlen($sql_cmd) == 0) ? "select * from ".$table_name : $sql_cmd;
+				$sql = (strlen($sql_cmd) == 0 && in_array($table_name, $tables)) ? "select * from ".$table_name : $sql_cmd;
 
 				if (strlen($sql) > 0) {
 					$database = new database;
@@ -230,34 +245,36 @@
 					}
 
 					$column_array_count = count($column_array);
-					if (is_array($result)) foreach ($result as $index => &$row) {
+					if (is_array($result)) {
+						foreach ($result as $index => &$row) {
 
-						echo "<div style='font-family: monospace; border-bottom: 1px solid #ccc; padding-bottom: 8px; ".($index != 0 ? 'padding-top: 8px;' : null)."'>\n";
-						echo "insert into ".$table_name." (";
-						if (is_array($column_array)) {
-							foreach ($column_array as $column) {
-								if ($column != "menuid" && $column != "menuparentid") {
-									$columns[] = $column;
+							echo "<div style='font-family: monospace; border-bottom: 1px solid #ccc; padding-bottom: 8px; ".($index != 0 ? 'padding-top: 8px;' : null)."'>\n";
+							echo "insert into ".$table_name." (";
+							if (is_array($column_array)) {
+								foreach ($column_array as $column) {
+									if ($column != "menuid" && $column != "menuparentid") {
+										$columns[] = $column;
+									}
 								}
 							}
-						}
-						if (is_array($columns) && sizeof($columns) > 0) {
-							echo implode(', ', $columns);
-						}
-						echo ") values (";
-						if (is_array($column_array)) {
-							foreach ($column_array as $column) {
-								if ($column != "menuid" && $column != "menuparentid") {
-									$values[] = $row[$column] != '' ? "'".escape(check_str($row[$column]))."'" : 'null';
+							if (is_array($columns) && sizeof($columns) > 0) {
+								echo implode(', ', $columns);
+							}
+							echo ") values (";
+							if (is_array($column_array)) {
+								foreach ($column_array as $column) {
+									if ($column != "menuid" && $column != "menuparentid") {
+										$values[] = $row[$column] != '' ? "'".escape($row[$column])."'" : 'null';
+									}
 								}
 							}
+							if (is_array($values) && sizeof($values) > 0) {
+								echo implode(', ', $values);
+							}
+							echo ");\n";
+							echo "</div>\n";
+							unset($columns, $values);
 						}
-						if (is_array($values) && sizeof($values) > 0) {
-							echo implode(', ', $values);
-						}
-						echo ");\n";
-						echo "</div>\n";
-						unset($columns, $values);
 					}
 
 				}
@@ -271,15 +288,15 @@
 				if (strlen($sql_cmd) > 0) {
 					header('Content-Disposition: attachment; filename=data.csv');
 				}
-				else {
-					header('Content-Disposition: attachment; filename='.escape($table_name).'.csv');
+				else if (in_array($table_name, $tables)) {
+					header('Content-Disposition: attachment; filename='.$table_name.'.csv');
 				}
 
 			//get the table data
 				if (strlen($sql_cmd) > 0) {
 					$sql = $sql_cmd;
 				}
-				else {
+				else if (in_array($table_name, $tables)) {
 					$sql = "select * from ".$table_name;
 				}
 				if (strlen($sql) > 0) {
@@ -316,7 +333,7 @@
 						foreach ($result as &$row) {
 							$x = 1;
 							foreach ($column_array as $column) {
-								echo '"'.escape($row[$column]).'"'.(($x++ < count($column_array)) ? ',' : null);
+								echo '"'.$row[$column].'"'.($x++ < count($column_array) ? ',' : null);
 							}
 							echo "\n";
 						}
