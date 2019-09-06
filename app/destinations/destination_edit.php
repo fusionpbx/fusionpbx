@@ -148,7 +148,7 @@
 		//check for all required data
 			$msg = '';
 			if (strlen($destination_type) == 0) { $msg .= $text['message-required']." ".$text['label-destination_type']."<br>\n"; }
-			if (strlen($destination_number) == 0) { $msg .= $text['message-required']." ".$text['label-destination_number']."<br>\n"; }
+			//if (strlen($destination_number) == 0) { $msg .= $text['message-required']." ".$text['label-destination_number']."<br>\n"; }
 			if (strlen($destination_context) == 0) { $msg .= $text['message-required']." ".$text['label-destination_context']."<br>\n"; }
 			if (strlen($destination_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-destination_enabled']."<br>\n"; }
 
@@ -194,14 +194,14 @@
 					}
 
 				//get the fax information
-					if (strlen($fax_uuid) > 0) {
+					if (is_uuid($fax_uuid)) {
 						$sql = "select * from v_fax ";
 						$sql .= "where fax_uuid = :fax_uuid ";
-						if (!permission_exists('destination_domain')) {
-							$sql .= "and domain_uuid = :domain_uuid ";
-						}
+						//if (!permission_exists('destination_domain')) {
+						//	$sql .= "and domain_uuid = :domain_uuid ";
+						//}
 						$parameters['fax_uuid'] = $fax_uuid;
-						$parameters['domain_uuid'] = $domain_uuid;
+						//$parameters['domain_uuid'] = $domain_uuid;
 						$database = new database;
 						$row = $database->select($sql, $parameters, 'row');
 						if (is_array($row) && @sizeof($row) != 0) {
@@ -214,6 +214,19 @@
 							$fax_caller_id_number = $row["fax_caller_id_number"];
 							$fax_forward_number = $row["fax_forward_number"];
 							$fax_description = $row["fax_description"];
+						}
+						unset($sql, $parameters, $row);
+					}
+
+				//get the destination_number
+					if ($action == 'update' && !permission_exists('destination_number') && is_uuid($destination_uuid)) {
+						$sql = "select * from v_destinations ";
+						$sql .= "where destination_uuid = :destination_uuid ";
+						$parameters['destination_uuid'] = $destination_uuid;
+						$database = new database;
+						$row = $database->select($sql, $parameters, 'row');
+						if (is_array($row) && @sizeof($row) != 0) {
+							$destination_number = $row["destination_number"];
 						}
 						unset($sql, $parameters, $row);
 					}
@@ -901,9 +914,14 @@
 	echo "	".$text['label-destination_number']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='destination_number' maxlength='255' value=\"".escape($destination_number)."\" required='required'>\n";
-	echo "<br />\n";
-	echo $text['description-destination_number']."\n";
+	if (permission_exists('destination_number')) {
+		echo "	<input class='formfld' type='text' name='destination_number' maxlength='255' value=\"".escape($destination_number)."\" required='required'>\n";
+		echo "<br />\n";
+		echo $text['description-destination_number']."\n";
+	}
+	else {
+		echo escape($destination_number)."\n";
+	}
 	echo "</td>\n";
 	echo "</tr>\n";
 
