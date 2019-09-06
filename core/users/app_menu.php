@@ -47,7 +47,7 @@
 	$apps[$x]['menu'][$y]['uuid'] = "4d532f0b-c206-c39d-ff33-fc67d668fb69";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "02194288-6d56-6d3e-0b1a-d53a2bc10788";
 	$apps[$x]['menu'][$y]['category'] = "internal";
-	$apps[$x]['menu'][$y]['path'] = "/core/users/user_edit.php";
+	$apps[$x]['menu'][$y]['path'] = "/core/users/user_edit.php?id=user";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$apps[$x]['menu'][$y]['groups'][] = "user";
