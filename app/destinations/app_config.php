@@ -71,6 +71,12 @@
 		$apps[$x]['permissions'][$y]['name'] = "destination_record";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "destination_number";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "destination_context";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_caller_id_name";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
