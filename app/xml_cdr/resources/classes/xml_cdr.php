@@ -1091,23 +1091,21 @@ if (!class_exists('xml_cdr')) {
 		/**
 		 * download the recordings
 		 */
-		public function download() {
+		public function download($uuid) {
 			if (permission_exists('xml_cdr_view')) {
 
 				//cache limiter
 					session_cache_limiter('public');
 
 				//get call recording from database
-					$uuid = $_GET['id'];
-					if ($uuid != '') {
+					if (is_uuid($uuid)) {
 						$sql = "select record_name, record_path from v_xml_cdr ";
 						$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
 						//$sql .= "and domain_uuid = '".$domain_uuid."' \n";
-						$parameters['xml_cdr_uuid'] = $xml_cdr_uuid;
+						$parameters['xml_cdr_uuid'] = $uuid;
 						//$parameters['domain_uuid'] = $domain_uuid;
 						$database = new database;
 						$row = $database->select($sql, $parameters, 'row');
-						unset($parameters);
 						if (is_array($row)) {
 							$record_name = $row['record_name'];
 							$record_path = $row['record_path'];
@@ -1144,11 +1142,11 @@ if (!class_exists('xml_cdr')) {
 								header("Content-Type: audio/ogg");
 							}
 						}
-						$record_name = preg_replace('#[^a-zA-Z0-9_\-]#', '', $record_name);
+						$record_name = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $record_name);
 						header('Content-Disposition: attachment; filename="'.$record_name.'"');
 						header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 						header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-						// header("Content-Length: " . filesize($record_file));
+						header("Content-Length: " . filesize($record_file));
 						ob_clean();
 						fpassthru($fd);
 					}
