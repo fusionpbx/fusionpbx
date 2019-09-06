@@ -115,58 +115,81 @@
 	end);
 	--dbh:query(sql, params, function(row);
 
+--get the follow me data
+	if (follow_me_uuid ~= nil) then
+		local sql = "select cid_name_prefix, cid_number_prefix, ";
+		sql = sql .. "follow_me_enabled, follow_me_caller_id_uuid, follow_me_ignore_busy ";
+		sql = sql .. "from v_extensions ";
+		sql = sql .. "where domain_uuid = :domain_uuid ";
+		sql = sql .. "follow_me_uuid = :follow_me_uuid; ";
+		local params = {domain_uuid = domain_uuid,destination_number = destination_number};
+		if (debug["sql"]) then
+			freeswitch.consoleLog("notice", "SQL:" .. sql .. "; params: " .. json.encode(params) .. "\n");
+		end
+		status = dbh:query(sql, params, function(row)
+			caller_id_name_prefix = row["cid_name_prefix"];
+			caller_id_number_prefix = row["cid_number_prefix"];
+			follow_me_enabled = row["follow_me_enabled"];
+			follow_me_caller_id_uuid = row["follow_me_caller_id_uuid"];
+			follow_me_ignore_busy = row["follow_me_ignore_busy"];
+		end);
+		--dbh:query(sql, params, function(row);
+	end
+
 --get the follow me destinations
-	sql = "select d.domain_uuid, d.domain_name, f.follow_me_destination as destination_number, ";
-	sql = sql .. "f.follow_me_delay as destination_delay, f.follow_me_timeout as destination_timeout, ";
-	sql = sql .. "f.follow_me_prompt as destination_prompt ";
-	sql = sql .. "from v_follow_me_destinations as f, v_domains as d ";
-	sql = sql .. "where f.follow_me_uuid = :follow_me_uuid ";
-	sql = sql .. "and f.domain_uuid = d.domain_uuid ";
-	sql = sql .. "order by f.follow_me_order; ";
-	local params = {follow_me_uuid = follow_me_uuid};
-	destinations = {};
-	destination_count = 0;
-	x = 1;
-	dbh:query(sql, params, function(row)
-		domain_uuid = row["domain_uuid"];
-		domain_name = row["domain_name"];
+	if (follow_me_uuid ~= nil) then
+		sql = "select d.domain_uuid, d.domain_name, f.follow_me_destination as destination_number, ";
+		sql = sql .. "f.follow_me_delay as destination_delay, f.follow_me_timeout as destination_timeout, ";
+		sql = sql .. "f.follow_me_prompt as destination_prompt ";
+		sql = sql .. "from v_follow_me_destinations as f, v_domains as d ";
+		sql = sql .. "where f.follow_me_uuid = :follow_me_uuid ";
+		sql = sql .. "and f.domain_uuid = d.domain_uuid ";
+		sql = sql .. "order by f.follow_me_order; ";
+		local params = {follow_me_uuid = follow_me_uuid};
+		destinations = {};
+		destination_count = 0;
+		x = 1;
+		dbh:query(sql, params, function(row)
+			domain_uuid = row["domain_uuid"];
+			domain_name = row["domain_name"];
 
-		if (row.destination_prompt == "1" or row.destination_prompt == "2") then
-			prompt = "true";
-		end
+			if (row.destination_prompt == "1" or row.destination_prompt == "2") then
+				prompt = "true";
+			end
 
-		--follow the forwards
-		count, destination_number, toll_allow = get_forward_all(0, row.destination_number, domain_name);
+			--follow the forwards
+			count, destination_number, toll_allow = get_forward_all(0, row.destination_number, domain_name);
 
-		--update values
-		row['destination_number'] = destination_number
-		--row['toll_allow'] = toll_allow;
+			--update values
+			row['destination_number'] = destination_number
+			--row['toll_allow'] = toll_allow;
 
-		--check if the user exists
-		cmd = "user_exists id ".. destination_number .." "..domain_name;
-		user_exists = api:executeString(cmd);
+			--check if the user exists
+			cmd = "user_exists id ".. destination_number .." "..domain_name;
+			user_exists = api:executeString(cmd);
 
-		--cmd = "user_exists id ".. destination_number .." "..domain_name;
-		if (user_exists == "true") then
-			--add user_exists true or false to the row array
-				row['user_exists'] = "true";
-			--handle do_not_disturb
-				cmd = "user_data ".. destination_number .."@" ..domain_name.." var do_not_disturb";
-				if (api:executeString(cmd) ~= "true") then
-					--add the row to the destinations array
+			--cmd = "user_exists id ".. destination_number .." "..domain_name;
+			if (user_exists == "true") then
+				--add user_exists true or false to the row array
+					row['user_exists'] = "true";
+				--handle do_not_disturb
+					cmd = "user_data ".. destination_number .."@" ..domain_name.." var do_not_disturb";
+					if (api:executeString(cmd) ~= "true") then
+						--add the row to the destinations array
+						destinations[x] = row;
+					end
+			else
+				--set the values
+					external = "true";
+					row['user_exists'] = "false";
+				--add the row to the destinations array
 					destinations[x] = row;
-				end
-		else
-			--set the values
-				external = "true";
-				row['user_exists'] = "false";
-			--add the row to the destinations array
-				destinations[x] = row;
-		end
-		row['domain_name'] = domain_name;
-		destination_count = destination_count + 1;
-		x = x + 1;
-	end);
+			end
+			row['domain_name'] = domain_name;
+			destination_count = destination_count + 1;
+			x = x + 1;
+		end);
+	end
 
 --get the dialplan data and save it to a table
 	if (external == "true") then
@@ -251,9 +274,11 @@
 
 		--leg delay settings
 			if (follow_me_strategy == "enterprise") then
+				timeout_name = "originate_timeout";
 				delay_name = "originate_delay_start";
 				destination_delay = destination_delay * 500;
 			else
+				timeout_name = "leg_timeout";
 				delay_name = "leg_delay_start";
 			end
 
@@ -267,11 +292,11 @@
 			if (destination_prompt == nil) then
 				group_confirm = "confirm=false,";
 			elseif (destination_prompt == "1") then
-				group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir:gsub('\\','/') .."/confirm.lua,confirm=true,";
+				group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir:gsub('\\','/') .."/confirm.lua,confirm=true";
 			elseif (destination_prompt == "2") then
-				group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir:gsub('\\','/') .."/confirm.lua,confirm=true,";
+				group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir:gsub('\\','/') .."/confirm.lua,confirm=true";
 			else
-				group_confirm = "confirm=false,";
+				group_confirm = "confirm=false";
 			end
 
 		--process according to user_exists, sip_uri, external number
@@ -280,11 +305,11 @@
 				cmd = "user_data ".. destination_number .."@"..domain_name.." var extension_uuid";
 				extension_uuid = trim(api:executeString(cmd));
 				--send to user
-				local dial_string_to_user = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid .. "]user/" .. row.destination_number .. "@" .. domain_name;
+				local dial_string_to_user = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm..","..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid .. "]user/" .. row.destination_number .. "@" .. domain_name;
 				dial_string = dial_string_to_user;
 			elseif (tonumber(destination_number) == nil) then
 				--sip uri
-				dial_string = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
+				dial_string = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm..","..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
 			else
 				--external number
 					route_bridge = 'loopback/'..destination_number;
@@ -313,17 +338,34 @@
 						end
 					end
 
+				--get the destination caller id name and number
+					if (follow_me_caller_id_uuid ~= nil) then
+						local sql = "select destination_uuid, destination_number, destination_description, destination_caller_id_name, destination_caller_id_number ";
+						sql = sql .. "from v_destinations ";
+						sql = sql .. "where domain_uuid = :domain_uuid ";
+						sql = sql .. "and destination_uuid = 'destination_uuid' ";
+						sql = sql .. "order by destination_number asc ";
+						local params = {domain_uuid = domain_uuid, destination_uuid = follow_me_caller_id_uuid};
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "SQL:" .. sql .. "; params: " .. json.encode(params) .. "\n");
+						end
+						status = dbh:query(sql, params, function(field)
+							caller_id_name = field["destination_caller_id_name"];
+							caller_id_number = field["destination_caller_id_number"];
+						end);
+					end
+
 				--set the caller id
 					caller_id = '';
 					if (caller_id_name ~= nil) then
 						caller_id = "origination_caller_id_name='"..caller_id_name.."'"
 					end
 					if (caller_id_number ~= nil) then
-						caller_id = caller_id .. ",origination_caller_id_number="..caller_id_number..",";
+						caller_id = caller_id .. ",origination_caller_id_number="..caller_id_number;
 					end
 
 				--set the destination dial string
-					dial_string = "[ignore_early_media=true,toll_allow=".. toll_allow ..",".. caller_id .."sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]"..route_bridge
+					dial_string = "[ignore_early_media=true,toll_allow=".. toll_allow ..",".. caller_id ..",sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm..","..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay.."]"..route_bridge
 			end
 
 		--add a delimiter between destinations
