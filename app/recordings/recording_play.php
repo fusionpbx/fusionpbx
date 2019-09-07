@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -37,7 +37,8 @@
 		echo "access denied";
 		exit;
 	}
-	
+
+//get the variables
 	$filename = $_GET['filename'];
 	$type = $_GET['type']; //moh //rec
 
@@ -51,7 +52,7 @@
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
 	<tr>
 		<td align='center'>
-			<b>file: <?php echo $filename ?></b>
+			<b><?php echo escape($filename) ?></b>
 		</td>
 	</tr>
 	<tr>
@@ -69,7 +70,7 @@
 			}
 			else {
 				echo "<audio src=\"http://localhost:8000/mod/recordings/recordings.php?a=download&type=".urlencode($type)."&filename=".urlencode($filename)."\" autoplay=\"autoplay\"></audio>";
-				echo "<embed src=\"recordings.php?a=download&type=".urlencode($type)."&filename=".urlencode($filename)."\" autostart=\"true\" width=\"300\" height=\"90\" name=\"sound_".$filename."\" enablejavascript=\"true\">\n";
+				echo "<embed src=\"recordings.php?a=download&type=".urlencode($type)."&filename=".urlencode($filename)."\" autostart=\"true\" width=\"300\" height=\"90\" name=\"sound_".escape($filename)."\" enablejavascript=\"true\">\n";
 			}
 		}
 		if ($file_ext == "mp3") {
