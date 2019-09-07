@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -92,7 +92,13 @@
 			}
 			echo "<tr ".$tr_link." ".((escape($row['address_primary'])) ? "style='font-weight: bold;'" : null).">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['address_label'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style='width: 25%; max-width: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>".escape($row['address_street'])."&nbsp;</td>\n";
+			
+			if ($row['address_extended'] != '') {
+				echo "	<td valign='top' class='".$row_style[$c]."' style='width: 25%; max-width: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>".escape($row['address_street'])." ".escape($row['address_extended'])."&nbsp;</td>\n";	
+			}
+			else {
+				echo "	<td valign='top' class='".$row_style[$c]."' style='width: 25%; max-width: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>".escape($row['address_street'])."&nbsp;</td>\n";	
+			}
 			echo "	<td valign='top' class='".$row_style[$c]."' style='white-space: nowrap;'>".escape($row['address_locality']).(($row['address_locality'] != '' && $row['address_region'] != '') ? ", " : null).escape($row['address_region'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>".escape($row['address_country'])."&nbsp;</td>\n";
 			echo "	<td valign='middle' class='".$row_style[$c]." tr_link_void' style='padding: 0px;'>\n";
