@@ -133,43 +133,43 @@
 	}
 
 //set the param variable which is used with paging
-	$param = "&cdr_id=".escape($cdr_id);
-	$param .= "&missed=".escape($missed);
-	$param .= "&direction=".escape($direction);
-	$param .= "&caller_id_name=".escape($caller_id_name);
-	$param .= "&caller_id_number=".escape($caller_id_number);
-	$param .= "&caller_destination=".escape($caller_destination);
-	$param .= "&caller_extension_uuid=".escape($caller_extension_uuid);
-	$param .= "&destination_number=".escape($destination_number);
-	$param .= "&context=".escape($context);
-	$param .= "&start_stamp_begin=".escape($start_stamp_begin);
-	$param .= "&start_stamp_end=".escape($start_stamp_end);
-	$param .= "&answer_stamp_begin=".escape($answer_stamp_begin);
-	$param .= "&answer_stamp_end=".escape($answer_stamp_end);
-	$param .= "&end_stamp_begin=".escape($end_stamp_begin);
-	$param .= "&end_stamp_end=".escape($end_stamp_end);
-	$param .= "&start_epoch=".escape($start_epoch);
-	$param .= "&stop_epoch=".escape($stop_epoch);
-	$param .= "&duration=".escape($duration);
-	$param .= "&billsec=".escape($billsec);
-	$param .= "&hangup_cause=".escape($hangup_cause);
-	$param .= "&call_result=".escape($call_result);
-	$param .= "&xml_cdr_uuid=".escape($xml_cdr_uuid);
-	$param .= "&bleg_uuid=".escape($bleg_uuid);
-	$param .= "&accountcode=".escape($accountcode);
-	$param .= "&read_codec=".escape($read_codec);
-	$param .= "&write_codec=".escape($write_codec);
-	$param .= "&remote_media_ip=".escape($remote_media_ip);
-	$param .= "&network_addr=".escape($network_addr);
-	$param .= "&bridge_uuid=".escape($bridge_uuid);
-	$param .= "&mos_comparison=".escape($mos_comparison);
-	$param .= "&mos_score=".escape($mos_score);
+	$param = "&cdr_id=".urlencode($cdr_id);
+	$param .= "&missed=".urlencode($missed);
+	$param .= "&direction=".urlencode($direction);
+	$param .= "&caller_id_name=".urlencode($caller_id_name);
+	$param .= "&caller_id_number=".urlencode($caller_id_number);
+	$param .= "&caller_destination=".urlencode($caller_destination);
+	$param .= "&caller_extension_uuid=".urlencode($caller_extension_uuid);
+	$param .= "&destination_number=".urlencode($destination_number);
+	$param .= "&context=".urlencode($context);
+	$param .= "&start_stamp_begin=".urlencode($start_stamp_begin);
+	$param .= "&start_stamp_end=".urlencode($start_stamp_end);
+	$param .= "&answer_stamp_begin=".urlencode($answer_stamp_begin);
+	$param .= "&answer_stamp_end=".urlencode($answer_stamp_end);
+	$param .= "&end_stamp_begin=".urlencode($end_stamp_begin);
+	$param .= "&end_stamp_end=".urlencode($end_stamp_end);
+	$param .= "&start_epoch=".urlencode($start_epoch);
+	$param .= "&stop_epoch=".urlencode($stop_epoch);
+	$param .= "&duration=".urlencode($duration);
+	$param .= "&billsec=".urlencode($billsec);
+	$param .= "&hangup_cause=".urlencode($hangup_cause);
+	$param .= "&call_result=".urlencode($call_result);
+	$param .= "&xml_cdr_uuid=".urlencode($xml_cdr_uuid);
+	$param .= "&bleg_uuid=".urlencode($bleg_uuid);
+	$param .= "&accountcode=".urlencode($accountcode);
+	$param .= "&read_codec=".urlencode($read_codec);
+	$param .= "&write_codec=".urlencode($write_codec);
+	$param .= "&remote_media_ip=".urlencode($remote_media_ip);
+	$param .= "&network_addr=".urlencode($network_addr);
+	$param .= "&bridge_uuid=".urlencode($bridge_uuid);
+	$param .= "&mos_comparison=".urlencode($mos_comparison);
+	$param .= "&mos_score=".urlencode($mos_score);
 	if (is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
 			$array = explode(",", $field);
 			$field_name = end($array);
 			if (isset($$field_name)) {
-				$param .= "&".$field_name."=".escape($$field_name);
+				$param .= "&".$field_name."=".urlencode($$field_name);
 			}
 		}
 	}
@@ -177,12 +177,12 @@
 		$param .= "&show=all";
 	}
 	if (isset($order_by)) {
-		$param .= "&order_by=".escape($order_by)."&order=".escape($order);
+		$param .= "&order_by=".urlencode($order_by)."&order=".urlencode($order);
 	}
 
 //create the sql query to get the xml cdr records
-	if (strlen($order_by) == 0)  { $order_by  = "start_epoch"; }
-	if (strlen($order) == 0)  { $order  = "desc"; }
+	if (strlen($order_by) == 0) { $order_by  = "start_epoch"; }
+	if (strlen($order) == 0) { $order  = "desc"; }
 
 //set a default number of rows to show
 	$num_rows = '0';
@@ -277,7 +277,6 @@
 		$sql .= "where c.domain_uuid = :domain_uuid \n";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
-	
 	if (!permission_exists('xml_cdr_domain')) { //only show the user their calls
 		$sql .= "and (c.extension_uuid = '".implode("' or c.extension_uuid = '", $extension_uuids)."') ";
 	}
@@ -482,7 +481,8 @@
 	}
 	//end where
 	if (strlen($order_by) > 0) {
-		$sql .= " order by $order_by $order ";
+		$sql .= order_by($order_by, $order);
+		//$sql .= " order by $order_by $order ";
 	}
 	if ($_REQUEST['export_format'] != "csv" && $_REQUEST['export_format'] != "pdf") {
 		if ($rows_per_page == 0) {
