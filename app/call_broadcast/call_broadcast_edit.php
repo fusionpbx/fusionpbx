@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -58,27 +58,27 @@
 		if (isset($_FILES['broadcast_phone_numbers_file']) && !empty($_FILES['broadcast_phone_numbers_file']) && $_FILES['broadcast_phone_numbers_file']['size'] > 0) {
 			$filename=$_FILES["broadcast_phone_numbers_file"]["tmp_name"];
 			$file_extension = array('application/octet-stream','application/vnd.ms-excel','text/plain','text/csv','text/tsv');
-			if (in_array($_FILES['broadcast_phone_numbers_file']['type'],$file_extension)) {											
+			if (in_array($_FILES['broadcast_phone_numbers_file']['type'],$file_extension)) {
 					$file = fopen($filename, "r");
 					$count = 0;
 					while (($getData = fgetcsv($file, 0, "\n")) !== FALSE)
 					{
 						$count++;
 						if ($count == 1) { continue; }
-						$getData = preg_split('/[ ,|]/', $getData[0], null, PREG_SPLIT_NO_EMPTY);						
+						$getData = preg_split('/[ ,|]/', $getData[0], null, PREG_SPLIT_NO_EMPTY);
 						$separator = $getData[0];
 						$separator .= (isset($getData[1]) && $getData[1] != '')? '|'.$getData[1] : '';
 						$separator .= (isset($getData[2]) && $getData[2] != '')? ','.$getData[2] : '';
 						$separator .= '\n';
 						$upload_csv .= $separator;
 					}
-				 fclose($file);  		
+				 fclose($file);
 			}
-			else {					  
+			else {
 				return array('code'=>false,'sql'=>'');
-			}	
-		}				
-		if (!empty($broadcast_phone_numbers) && !empty($upload_csv)) { 					
+			}
+		}
+		if (!empty($broadcast_phone_numbers) && !empty($upload_csv)) {
 			$sql .= "E'"; 
 			$sql .= $broadcast_phone_numbers.'\n'.$upload_csv;
 			$sql .= "',";
@@ -183,7 +183,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					message::add($text['confirm-update']);
 
 				//set return url on error
-					$error_return_url = "call_broadcast_edit.php?id=".$_GET['id'];
+					$error_return_url = "call_broadcast_edit.php?id=".urlencode($_GET['id']);
 			}
 
 		//execute
@@ -231,7 +231,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 }
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$call_broadcast_uuid = $_GET["id"];
 		$sql = "select * from v_call_broadcasts ";
 		$sql .= "where domain_uuid = :domain_uuid ";
