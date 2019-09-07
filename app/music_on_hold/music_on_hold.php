@@ -60,12 +60,11 @@
 	$streams = $database->select($sql, $parameters, 'all');
 
 //download music on hold file
-	if (
-		$_GET['action'] == "download"
+	if ($_GET['action'] == "download"
 		&& is_uuid($_GET['id'])
 		&& is_array($streams)
-		&& @sizeof($streams) != 0
-		) {
+		&& @sizeof($streams) != 0) {
+
 		//get the uuid
 			$stream_uuid = $_GET['id'];
 
@@ -78,12 +77,12 @@
 					break;
 				}
 			}
-		
+
 		//replace the sounds_dir variable in the path
 			$stream_path = str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $stream_path);
 
 		//get the file
-			$stream_file = base64_decode($_GET['file']);
+			$stream_file = $_GET['file'];
 			$stream_full_path = path_join($stream_path, $stream_file);
 
 		//sanitize path
@@ -117,13 +116,11 @@
 	}
 
 //upload music on hold file
-	if (
-		$_POST['action'] == 'upload'
+	if ($_POST['action'] == 'upload'
 		&& is_array($_FILES)
 		&& is_uploaded_file($_FILES['file']['tmp_name'])
 		&& is_array($streams)
-		&& @sizeof($streams) != 0
-		) {
+		&& @sizeof($streams) != 0) {
 
 		//determine name
 			if ($_POST['name_new'] != '') {
@@ -265,12 +262,10 @@
 	}
 
 //delete the music on hold file
-	if (
-		$_GET['action'] == "delete"
+	if ($_GET['action'] == "delete"
 		&& is_uuid($_GET['id'])
 		&& is_array($streams)
-		&& @sizeof($streams) != 0
-		) {
+		&& @sizeof($streams) != 0) {
 
 		//get submitted values
 			$stream_uuid = $_GET['id'];
@@ -544,7 +539,7 @@
 					else {
 						$stream_details = ($music_on_hold_rate/1000).' kHz / '.$icons;
 					}
-			
+
 				//show the table header
 					echo "	<tr>\n";
 					echo "		<th class='listhdr'>".$stream_details."</th>\n";
@@ -591,16 +586,16 @@
 								echo "<tr ".$tr_link.">\n";
 								echo "	<td class='".$row_style[$c]."'>".escape($stream_file)."</td>\n";
 								echo "	<td valign='top' class='".$row_style[$c]." row_style_slim tr_link_void'>";
-								echo 		"<audio id='recording_audio_".$row_uuid."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row_uuid."')\" onended=\"recording_reset('".$row_uuid."');\" src='?action=download&id=".escape($row['music_on_hold_uuid'])."&file=".base64_encode($stream_file)."' type='".escape($stream_file_type)."'></audio>";
+								echo 		"<audio id='recording_audio_".$row_uuid."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row_uuid."')\" onended=\"recording_reset('".$row_uuid."');\" src='?action=download&id=".escape($row['music_on_hold_uuid'])."&file=".urlencode($stream_file)."' type='".escape($stream_file_type)."'></audio>";
 								echo 		"<span id='recording_button_".$row_uuid."' onclick=\"recording_play('".$row_uuid."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
 								echo 		"<span onclick=\"recording_stop('".$row_uuid."')\" title='".$text['label-stop']."'>".$v_link_label_stop."</span>";
 								echo "	</td>\n";
 								echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right; white-space: nowrap;'>".escape($stream_file_size)."</td>\n";
 								echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right; white-space: nowrap;'>".escape($stream_file_date)."</td>\n";
 								echo "	<td valign='top' class='".((!permission_exists('music_on_hold_domain')) ? 'list_control_icon' : 'list_control_icons')."'>\n";
-								echo 		"<a href='?action=download&id=".escape($row['music_on_hold_uuid'])."&file=".base64_encode($stream_file)."' title='".$text['label-download']."'>".$v_link_label_download."</a>";
+								echo 		"<a href='?action=download&id=".escape($row['music_on_hold_uuid'])."&file=".urlencode($stream_file)."' title='".$text['label-download']."'>".$v_link_label_download."</a>";
 								if ( (!is_uuid($domain_uuid) && permission_exists('music_on_hold_domain')) || (is_uuid($domain_uuid) && permission_exists('music_on_hold_delete')) ) {
-									echo 	"<a href='?action=delete&id=".escape($row['music_on_hold_uuid'])."&file=".base64_encode($stream_file)."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+									echo 	"<a href='?action=delete&id=".escape($row['music_on_hold_uuid'])."&file=".urlencode($stream_file)."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 								}
 								echo "	</td>\n";
 								echo "</tr>\n";
