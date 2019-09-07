@@ -220,7 +220,7 @@
 
 <?php
 
-//gnerate the captcha image
+//generate the captcha image
 	$_SESSION['captcha'] = generate_password(7, 2);
 	$captcha = new captcha;
 	$captcha->code = $_SESSION['captcha'];
