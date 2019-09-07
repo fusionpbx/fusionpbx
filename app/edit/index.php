@@ -90,6 +90,12 @@
 	$_SESSION['keys'][$key_name] = bin2hex(random_bytes(32));
 	$_SESSION['token'] = hash_hmac('sha256', $key_name, $_SESSION['keys'][$key_name]);
 
+//generate the captcha image
+	$_SESSION['captcha'] = generate_password(7, 2);
+	$captcha = new captcha;
+	$captcha->code = $_SESSION['captcha'];
+	$image_base64 = $captcha->image_base64();
+
 ?>
 
 <html>
@@ -200,8 +206,12 @@
 			<table cellpadding='0' cellspacing='0' border='0' style='width: 100%;'>
 				<tr>
 					<td valign='middle'><img src='resources/images/icon_save.png' title='Save Changes [Ctrl+S]' class='control' onclick="save();";></td>
-					<td align='left' valign='middle' width='100%' style='padding: 0 4px 0 6px;'><input id='current_file' type='text' style='height: 23px; width: 100%;'></td>
-					<td style='padding: 0;'><img src='resources/images/blank.gif' style='width: 1px; height: 30px; border: none;'></td>
+					<td align='left' valign='middle' width='100%' style='padding: 0 15px 0 6px;'><input id='current_file' type='text' style='height: 23px; width: 100%;'></td>
+					<!--
+					<td style='padding: 0;'><img src="data:image/png;base64, <?php echo $image_base64; ?>" /></td>
+					<td align='left' valign='middle' width='80' style='padding: 0 6px 0 0;'><input type='text' class='txt' style='width: 80px; text-align: center;' name='code' id='code' value='' placeholder='CAPTCHA'></td>
+					-->
+					<td style='padding: 0;'><img src='resources/images/blank.gif' style='width: 1px; height: 40px; border: none;'></td>
 					<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_sidebar.png' title='Toggle Side Bar [Ctrl+Q]' class='control' onclick="toggle_sidebar();"></td>
 					<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_numbering.png' title='Toggle Line Numbers' class='control' onclick="toggle_option('numbering');"></td>
 					<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_invisibles.png' title='Toggle Invisibles' class='control' onclick="toggle_option('invisibles');"></td>
@@ -209,7 +219,7 @@
 					<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_replace.png' title='Show Find/Replace [Ctrl+H]' class='control' onclick="editor.execCommand('replace');"></td>
 					<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_goto.png' title='Show Go To Line' class='control' onclick="editor.execCommand('gotoline');"></td>
 					<td valign='middle' style='padding-left: 10px;'>
-						<select id='mode' style='height: 23px;' onchange="editor.getSession().setMode('ace/mode/' + this.options[this.selectedIndex].value); focus_editor();">
+						<select id='mode' style='height: 23px; max-width: 70px;' onchange="editor.getSession().setMode('ace/mode/' + this.options[this.selectedIndex].value); focus_editor();">
 							<?php
 							$modes['php'] = 'PHP';
 							$modes['css'] = 'CSS';
@@ -253,7 +263,7 @@
 						</select>
 					</td>
 					<td valign='middle' style='padding-left: 4px; padding-right: 4px;'>
-						<select id='theme' style='height: 23px;' onchange="editor.setTheme('ace/theme/' + this.options[this.selectedIndex].value); focus_editor();">
+						<select id='theme' style='height: 23px; max-width: 100px;' onchange="editor.setTheme('ace/theme/' + this.options[this.selectedIndex].value); focus_editor();">
 							<?php
 							$themes['Bright']['chrome']= 'Chrome';
 							$themes['Bright']['clouds']= 'Clouds';
