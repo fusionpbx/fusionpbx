@@ -405,7 +405,4 @@
 	$view->assign("content", $content);
 	echo $view->render('template.htm');
 
-//include the footer
-	require_once "resources/footer.php";
-
 ?>
