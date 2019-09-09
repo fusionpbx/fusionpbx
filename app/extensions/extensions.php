@@ -97,7 +97,17 @@
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	$sql .= $sql_search;
-	$sql .= order_by($order_by, $order);
+	if ($order_by == '' || $order_by == 'extension') {
+		if ($db_type == 'pgsql') {
+			$sql .= 'order by natural_sort(extension) '.$order; //function in app_defaults.php
+		}
+		else {
+			$sql .= 'order by extension '.$order;
+		}
+	}
+	else {
+		$sql .= order_by($order_by, $order);
+	}
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$extensions = $database->select($sql, $parameters, 'all');
