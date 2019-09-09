@@ -121,27 +121,6 @@ $text['message-delete_failed']['ru-ru'] = "Не выбрана настройк�
 $text['message-delete_failed']['sv-se'] = "Ingen Inställning Markerad";
 $text['message-delete_failed']['uk-ua'] = "Налаштування не вказано";
 
-$text['message-invalid_characters']['en-us'] = "Invalid Character(s) Detected";
-$text['message-invalid_characters']['ar-eg'] = "Invalid Character(s) Detected";
-$text['message-invalid_characters']['de-at'] = "Invalid Character(s) Detected";
-$text['message-invalid_characters']['de-ch'] = "Invalid Character(s) Detected";
-$text['message-invalid_characters']['de-de'] = "Invalid Character(s) Detected";
-$text['message-invalid_characters']['es-cl'] = "Invalid Character(s) Detected";
-$text['message-invalid_characters']['es-mx'] = "Invalid Character(s) Detected";
-$text['message-invalid_characters']['fr-ca'] = "Invalid Character(s) Detected";
-$text['message-invalid_characters']['fr-fr'] = "Invalid Character(s) Detected";
-$text['message-invalid_characters']['he-il'] = "Invalid Character(s) Detected";
-$text['message-invalid_characters']['it-it'] = "Invalid Character(s) Detected";
-$text['message-invalid_characters']['nl-nl'] = "Invalid Character(s) Detected";
-$text['message-invalid_characters']['pl-pl'] = "Invalid Character(s) Detected";
-$text['message-invalid_characters']['pt-br'] = "Invalid Character(s) Detected";
-$text['message-invalid_characters']['pt-pt'] = "Invalid Character(s) Detected";
-$text['message-invalid_characters']['ro-ro'] = "Invalid Character(s) Detected";
-$text['message-invalid_characters']['ru-ru'] = "Invalid Character(s) Detected";
-$text['message-invalid_characters']['sv-se'] = "Invalid Character(s) Detected";
-$text['message-invalid_characters']['uk-ua'] = "Invalid Character(s) Detected";
-
-
 $text['label-web_fonts']['en-us'] = "Web Fonts";
 $text['label-web_fonts']['ar-eg'] = "الخطوط على شبكة الإنترنت";
 $text['label-web_fonts']['de-at'] = "Web Fonts"; //copied from de-de
