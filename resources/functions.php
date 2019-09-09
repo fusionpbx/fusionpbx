@@ -608,7 +608,7 @@
 					if (valid_email($user_email)) {
 						$array['users'][0]['user_email'] = $user_email;
 					}
-					$array['users'][0]['add_date'] = now();
+					$array['users'][0]['add_date'] = 'now()';
 					$array['users'][0]['add_user'] = $_SESSION["username"];
 
 				//build user group insert array
