@@ -82,7 +82,7 @@
 			if ($db_type == 'pgsql') {
 				$sql = "create or replace function natural_sort(text)\n";
 				$sql .= "	returns bytea language sql immutable strict as \$f\$\n";
-				$sql .= "	select string_agg(convert_to(coalesce(r[2], length(length(r[1])::text) || length(r[1])::text || r[1]), 'SQL_ASCII'),'\\x00')\n";
+				$sql .= "	select string_agg(convert_to(coalesce(r[2], length(length(r[1])::text) || length(r[1])::text || r[1]), 'UTF8'),'\\x00')\n";
 				$sql .= "	from regexp_matches(\$1, '0*([0-9]+)|([^0-9]+)', 'g') r;\n";
 				$sql .= "\$f\$;";
 				$database = new database;
