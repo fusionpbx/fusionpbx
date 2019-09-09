@@ -177,7 +177,7 @@
 	echo "</style>\n";
 
 //show the content
-	echo "<form method='post' name='frm' id='frm' onsubmit='return submit_check();'>\n";
+	echo "<form method='post' name='frm' id='frm'>\n";
 	echo "	<input type='hidden' name='app_uuid' value='".$app_uuid."'>\n";
 	echo "	<input type='hidden' name='dialplan_uuid' value='".$dialplan_uuid."'>\n";
 	echo "	<textarea name='dialplan_xml' id='dialplan_xml' style='display: none;'>".$dialplan_xml."</textarea>";
