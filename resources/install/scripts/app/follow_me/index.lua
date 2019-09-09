@@ -33,6 +33,7 @@
 		outbound_caller_id_name = session:getVariable("outbound_caller_id_name");
 		outbound_caller_id_number = session:getVariable("outbound_caller_id_number");
 		call_direction = session:getVariable("call_direction");
+		original_destination_number = session:getVariable("destination_number");
 	end
 
 --set caller id
@@ -432,20 +433,20 @@
 					or session:getVariable("originate_disposition") == "failure"
 				) then
 					--get the forward no answer
-						cmd = "user_data ".. destination_number .."@"..domain_name.." var forward_no_answer_enabled";
+						cmd = "user_data ".. original_destination_number .."@"..domain_name.." var forward_no_answer_enabled";
 						forward_no_answer_enabled = trim(api:executeString(cmd));
 
-						cmd = "user_data ".. destination_number .."@"..domain_name.." var forward_no_answer_destination";
+						cmd = "user_data ".. original_destination_number .."@"..domain_name.." var forward_no_answer_destination";
 						forward_no_answer_destination = trim(api:executeString(cmd));
 
-						cmd = "user_data ".. destination_number .."@"..domain_name.." var user_context";
+						cmd = "user_data ".. original_destination_number .."@"..domain_name.." var user_context";
 						user_context = trim(api:executeString(cmd));
 
 					--execute the time out action
 						if (forward_no_answer_enabled == 'true') then
 							session:transfer(forward_no_answer_destination, 'XML', user_context);
 						else
-							session:transfer('*99' .. destination_number, 'XML', user_context);
+							session:transfer('*99' .. original_destination_number, 'XML', user_context);
 						end
 
 					--check and report missed call
