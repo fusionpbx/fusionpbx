@@ -113,14 +113,6 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the default visibility of line numbers for Editor.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "62cfc1ac-6566-45ba-8c7d-f4234ab1b31e";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "editor";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "live_previews";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable or disable live previewing of syntax, text size and theme changes.";
-		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7b403afd-e4d6-4e96-8c8f-2cf5d6187191";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "editor";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "theme";
