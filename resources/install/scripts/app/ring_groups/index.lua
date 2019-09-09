@@ -753,6 +753,9 @@
 						dial_string = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
 					else
 						--external number
+							-- have to double destination_delay here due a FS bug requiring a 50% delay value for internal externsions, but not external calls. 
+							destination_delay = destination_delay * 2;
+							
 							route_bridge = 'loopback/'..destination_number;
 							if (extension_toll_allow ~= nil) then
 								toll_allow = extension_toll_allow:gsub(",", ":");
