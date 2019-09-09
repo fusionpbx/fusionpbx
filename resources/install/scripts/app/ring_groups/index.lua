@@ -561,7 +561,11 @@
 								destinations[new_key]['domain_name'] = field.domain_name;
 								destinations[new_key]['destination_number'] = field.destination_number;
 								destinations[new_key]['destination_delay'] = field.destination_delay + row.destination_delay;
-								destinations[new_key]['destination_timeout'] = field.destination_timeout;
+								if (tonumber(field.destination_timeout) < (tonumber(row.destination_timeout) - tonumber(field.destination_delay))) then
+									destinations[new_key]['destination_timeout'] = field.destination_timeout;
+								else
+									destinations[new_key]['destination_timeout'] = row.destination_timeout - field.destination_delay;
+								end
 								destinations[new_key]['destination_prompt'] = field.destination_prompt;
 								destinations[new_key]['group_confirm_key'] = row.group_confirm_key;
 								destinations[new_key]['group_confirm_file'] = row.group_confirm_file;
@@ -613,210 +617,212 @@
 		--process the destinations
 			x = 1;
 			for key, row in pairs(destinations) do
-				--set the values from the database as variables
-					ring_group_strategy = row.ring_group_strategy;
-					ring_group_timeout_app = row.ring_group_timeout_app;
-					ring_group_timeout_data = row.ring_group_timeout_data;
-					ring_group_caller_id_name = row.ring_group_caller_id_name;
-					ring_group_caller_id_number = row.ring_group_caller_id_number;
-					ring_group_cid_name_prefix = row.ring_group_cid_name_prefix;
-					ring_group_cid_number_prefix = row.ring_group_cid_number_prefix;
-					ring_group_distinctive_ring = row.ring_group_distinctive_ring;
-					ring_group_ringback = row.ring_group_ringback;
-					destination_number = row.destination_number;
-					destination_delay = row.destination_delay;
-					destination_timeout = row.destination_timeout;
-					destination_prompt = row.destination_prompt;
-					group_confirm_key = row.group_confirm_key;
-					group_confirm_file = row.group_confirm_file;
-					toll_allow = row.toll_allow;
-					user_exists = row.user_exists;
+				if (tonumber(row.destination_timeout) > 0) then
+					--set the values from the database as variables
+						ring_group_strategy = row.ring_group_strategy;
+						ring_group_timeout_app = row.ring_group_timeout_app;
+						ring_group_timeout_data = row.ring_group_timeout_data;
+						ring_group_caller_id_name = row.ring_group_caller_id_name;
+						ring_group_caller_id_number = row.ring_group_caller_id_number;
+						ring_group_cid_name_prefix = row.ring_group_cid_name_prefix;
+						ring_group_cid_number_prefix = row.ring_group_cid_number_prefix;
+						ring_group_distinctive_ring = row.ring_group_distinctive_ring;
+						ring_group_ringback = row.ring_group_ringback;
+						destination_number = row.destination_number;
+						destination_delay = row.destination_delay;
+						destination_timeout = row.destination_timeout;
+						destination_prompt = row.destination_prompt;
+						group_confirm_key = row.group_confirm_key;
+						group_confirm_file = row.group_confirm_file;
+						toll_allow = row.toll_allow;
+						user_exists = row.user_exists;
 
-				--follow the forwards
-					count, destination_number = get_forward_all(0, destination_number, leg_domain_name);
+					--follow the forwards
+						count, destination_number = get_forward_all(0, destination_number, leg_domain_name);
 
-				--check if the user exists
-					cmd = "user_exists id ".. destination_number .." "..domain_name;
-					user_exists = api:executeString(cmd);
+					--check if the user exists
+						cmd = "user_exists id ".. destination_number .." "..domain_name;
+						user_exists = api:executeString(cmd);
 
-				--set ringback
-					ring_group_ringback = format_ringback(ring_group_ringback);
-					session:setVariable("ringback", ring_group_ringback);
-					session:setVariable("transfer_ringback", ring_group_ringback);
+					--set ringback
+						ring_group_ringback = format_ringback(ring_group_ringback);
+						session:setVariable("ringback", ring_group_ringback);
+						session:setVariable("transfer_ringback", ring_group_ringback);
 
-				--set the timeout if there is only one destination
-					if (#destinations == 1) then
-						session:execute("set", "call_timeout="..row.destination_timeout);
-					end
+					--set the timeout if there is only one destination
+						if (#destinations == 1) then
+							session:execute("set", "call_timeout="..row.destination_timeout);
+						end
 
-				--setup the delimiter
-					delimiter = ",";
-					if (ring_group_strategy == "rollover") then
-						delimiter = "|";
-					end
-					if (ring_group_strategy == "sequence") then
-						delimiter = "|";
-					end
-					if (ring_group_strategy == "random") then
-						delimiter = "|";
-					end
-					if (ring_group_strategy == "simultaneous") then
+					--setup the delimiter
 						delimiter = ",";
-					end
-					if (ring_group_strategy == "enterprise") then
-						delimiter = ":_:";
-					end
-
-				--leg delay settings
-					if (ring_group_strategy == "enterprise") then
-						delay_name = "originate_delay_start";
-						destination_delay = destination_delay * 500;
-					else
-						delay_name = "leg_delay_start";
-					end
-
-				--create a new uuid and add it to the uuid list
-					new_uuid = api:executeString("create_uuid");
-					if (string.len(uuids) == 0) then
-						uuids = new_uuid;
-					else
-						uuids = uuids ..",".. new_uuid;
-					end
-					session:execute("set", "uuids="..uuids);
-
-				--export the ringback
-					if (ring_group_distinctive_ring ~= nil) then
-						if (local_ip_v4 ~= nil) then
-							ring_group_distinctive_ring = ring_group_distinctive_ring:gsub("${local_ip_v4}", local_ip_v4);
+						if (ring_group_strategy == "rollover") then
+							delimiter = "|";
 						end
-						if (domain_name ~= nil) then
-							ring_group_distinctive_ring = ring_group_distinctive_ring:gsub("${domain_name}", domain_name);
+						if (ring_group_strategy == "sequence") then
+							delimiter = "|";
 						end
-						session:execute("export", "sip_h_Alert-Info="..ring_group_distinctive_ring);
-					end
+						if (ring_group_strategy == "random") then
+							delimiter = "|";
+						end
+						if (ring_group_strategy == "simultaneous") then
+							delimiter = ",";
+						end
+						if (ring_group_strategy == "enterprise") then
+							delimiter = ":_:";
+						end
 
-				--set confirm
-					if (ring_group_strategy == "simultaneous"
-						or ring_group_strategy == "sequence"
-						or ring_group_strategy == "rollover") then
-							session:execute("set", "group_confirm_key=exec");
-							session:execute("set", "group_confirm_file=lua ".. scripts_dir:gsub('\\','/') .."/confirm.lua");
-					end
-
-				--determine confirm prompt
-					if (destination_prompt == nil) then
-						group_confirm = "confirm=false,";
-					elseif (destination_prompt == "1") then
-						group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir:gsub('\\','/') .."/confirm.lua,confirm=true,";
-					elseif (destination_prompt == "2") then
-						group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir:gsub('\\','/') .."/confirm.lua,confirm=true,";
-					else
-						group_confirm = "confirm=false,";
-					end
-
-				--get user_record value and determine whether to record the session
-					cmd = "user_data ".. destination_number .."@"..domain_name.." var user_record";
-					user_record = trim(api:executeString(cmd));
-					--set the record_session variable
-					record_session = false;
-					if (user_record == "all") then
-						record_session = true;
-					end
-					if (user_record == "inbound" and call_direction == "inbound") then
-						record_session = true;
-					end
-					if (user_record == "outbound" and call_direction == "outbound") then
-						record_session = true;
-					end
-					if (user_record == "local" and call_direction == "local") then
-						record_session = true;
-					end
-
-				--record the session
-					if (record_session) then
-						record_session = ",api_on_answer='uuid_record "..uuid.." start ".. record_path .. "/" .. record_name .. "',record_path='".. record_path .."',record_name="..record_name;
-					else
-						record_session = ""
-					end
-					row.record_session = record_session
-
-				--process according to user_exists, sip_uri, external number
-					if (user_exists == "true") then
-						--get the extension_uuid
-						cmd = "user_data ".. destination_number .."@"..domain_name.." var extension_uuid";
-						extension_uuid = trim(api:executeString(cmd));
-						--send to user
-						local dial_string_to_user = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid .. row.record_session .. "]user/" .. row.destination_number .. "@" .. domain_name;
-						dial_string = dial_string_to_user;
-					elseif (tonumber(destination_number) == nil) then
-						--sip uri
-						dial_string = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
-					else
-						--external number
-							-- have to double destination_delay here due a FS bug requiring a 50% delay value for internal externsions, but not external calls. 
-							destination_delay = destination_delay * 2;
-							
-							route_bridge = 'loopback/'..destination_number;
-							if (extension_toll_allow ~= nil) then
-								toll_allow = extension_toll_allow:gsub(",", ":");
-							end
-			
-						--set the toll allow to an empty string
-							if (toll_allow == nil) then
-								toll_allow = '';
-							end
-
-						--check if the user exists
-							if tonumber(caller_id_number) ~= nil then
-								cmd = "user_exists id ".. caller_id_number .." "..domain_name;
-								caller_is_local = api:executeString(cmd);
-							end
-
-						--set the caller id
-							caller_id = '';
-
-						--set the outbound caller id
-							if (caller_is_local == 'true' and outbound_caller_id_name ~= nil) then
-								caller_id = ",origination_caller_id_name='"..outbound_caller_id_name.."'";
-							end
-							if (caller_is_local == 'true' and outbound_caller_id_number ~= nil) then
-								caller_id = caller_id .. ",origination_caller_id_number='"..outbound_caller_id_number.."'";
-							end
-							if (ring_group_caller_id_name ~= nil and ring_group_caller_id_name ~= '') then
-								caller_id = ",origination_caller_id_name='"..ring_group_caller_id_name.."'";
-							end
-							if (ring_group_caller_id_number ~= nil and ring_group_caller_id_number ~= '') then
-								caller_id = caller_id .. ",origination_caller_id_number="..ring_group_caller_id_number..",";
-							end
-
-						--set the destination dial string
-							dial_string = "[ignore_early_media=true,toll_allow=".. toll_allow ..",".. caller_id .."sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]"..route_bridge
-					end
-
-				--add a delimiter between destinations
-					if (dial_string ~= nil) then
-						--freeswitch.consoleLog("notice", "[ring group] dial_string: " .. dial_string .. "\n");
-						if (x == 1) then
-							if (ring_group_strategy == "enterprise") then
-								app_data = dial_string;
-							else
-								app_data = "{ignore_early_media=true}"..dial_string;
-							end
+					--leg delay settings
+						if (ring_group_strategy == "enterprise") then
+							delay_name = "originate_delay_start";
+							destination_delay = destination_delay * 500;
 						else
-							if (app_data == nil) then
+							delay_name = "leg_delay_start";
+						end
+
+					--create a new uuid and add it to the uuid list
+						new_uuid = api:executeString("create_uuid");
+						if (string.len(uuids) == 0) then
+							uuids = new_uuid;
+						else
+							uuids = uuids ..",".. new_uuid;
+						end
+						session:execute("set", "uuids="..uuids);
+
+					--export the ringback
+						if (ring_group_distinctive_ring ~= nil) then
+							if (local_ip_v4 ~= nil) then
+								ring_group_distinctive_ring = ring_group_distinctive_ring:gsub("${local_ip_v4}", local_ip_v4);
+							end
+							if (domain_name ~= nil) then
+								ring_group_distinctive_ring = ring_group_distinctive_ring:gsub("${domain_name}", domain_name);
+							end
+							session:execute("export", "sip_h_Alert-Info="..ring_group_distinctive_ring);
+						end
+
+					--set confirm
+						if (ring_group_strategy == "simultaneous"
+							or ring_group_strategy == "sequence"
+							or ring_group_strategy == "rollover") then
+								session:execute("set", "group_confirm_key=exec");
+								session:execute("set", "group_confirm_file=lua ".. scripts_dir:gsub('\\','/') .."/confirm.lua");
+						end
+
+					--determine confirm prompt
+						if (destination_prompt == nil) then
+							group_confirm = "confirm=false,";
+						elseif (destination_prompt == "1") then
+							group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir:gsub('\\','/') .."/confirm.lua,confirm=true,";
+						elseif (destination_prompt == "2") then
+							group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir:gsub('\\','/') .."/confirm.lua,confirm=true,";
+						else
+							group_confirm = "confirm=false,";
+						end
+
+					--get user_record value and determine whether to record the session
+						cmd = "user_data ".. destination_number .."@"..domain_name.." var user_record";
+						user_record = trim(api:executeString(cmd));
+						--set the record_session variable
+						record_session = false;
+						if (user_record == "all") then
+							record_session = true;
+						end
+						if (user_record == "inbound" and call_direction == "inbound") then
+							record_session = true;
+						end
+						if (user_record == "outbound" and call_direction == "outbound") then
+							record_session = true;
+						end
+						if (user_record == "local" and call_direction == "local") then
+							record_session = true;
+						end
+
+					--record the session
+						if (record_session) then
+							record_session = ",api_on_answer='uuid_record "..uuid.." start ".. record_path .. "/" .. record_name .. "',record_path='".. record_path .."',record_name="..record_name;
+						else
+							record_session = ""
+						end
+						row.record_session = record_session
+
+					--process according to user_exists, sip_uri, external number
+						if (user_exists == "true") then
+							--get the extension_uuid
+							cmd = "user_data ".. destination_number .."@"..domain_name.." var extension_uuid";
+							extension_uuid = trim(api:executeString(cmd));
+							--send to user
+							local dial_string_to_user = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid .. row.record_session .. "]user/" .. row.destination_number .. "@" .. domain_name;
+							dial_string = dial_string_to_user;
+						elseif (tonumber(destination_number) == nil) then
+							--sip uri
+							dial_string = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
+						else
+							--external number
+								-- have to double destination_delay here due a FS bug requiring a 50% delay value for internal externsions, but not external calls. 
+								destination_delay = destination_delay * 2;
+
+								route_bridge = 'loopback/'..destination_number;
+								if (extension_toll_allow ~= nil) then
+									toll_allow = extension_toll_allow:gsub(",", ":");
+								end
+
+							--set the toll allow to an empty string
+								if (toll_allow == nil) then
+									toll_allow = '';
+								end
+
+							--check if the user exists
+								if tonumber(caller_id_number) ~= nil then
+									cmd = "user_exists id ".. caller_id_number .." "..domain_name;
+									caller_is_local = api:executeString(cmd);
+								end
+
+							--set the caller id
+								caller_id = '';
+
+							--set the outbound caller id
+								if (caller_is_local == 'true' and outbound_caller_id_name ~= nil) then
+									caller_id = ",origination_caller_id_name='"..outbound_caller_id_name.."'";
+								end
+								if (caller_is_local == 'true' and outbound_caller_id_number ~= nil) then
+									caller_id = caller_id .. ",origination_caller_id_number='"..outbound_caller_id_number.."'";
+								end
+								if (ring_group_caller_id_name ~= nil and ring_group_caller_id_name ~= '') then
+									caller_id = ",origination_caller_id_name='"..ring_group_caller_id_name.."'";
+								end
+								if (ring_group_caller_id_number ~= nil and ring_group_caller_id_number ~= '') then
+									caller_id = caller_id .. ",origination_caller_id_number="..ring_group_caller_id_number..",";
+								end
+
+							--set the destination dial string
+								dial_string = "[ignore_early_media=true,toll_allow=".. toll_allow ..",".. caller_id .."sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]"..route_bridge
+						end
+
+					--add a delimiter between destinations
+						if (dial_string ~= nil) then
+							--freeswitch.consoleLog("notice", "[ring group] dial_string: " .. dial_string .. "\n");
+							if (x == 1) then
 								if (ring_group_strategy == "enterprise") then
 									app_data = dial_string;
 								else
 									app_data = "{ignore_early_media=true}"..dial_string;
 								end
 							else
-								app_data = app_data .. delimiter .. dial_string;
+								if (app_data == nil) then
+									if (ring_group_strategy == "enterprise") then
+										app_data = dial_string;
+									else
+										app_data = "{ignore_early_media=true}"..dial_string;
+									end
+								else
+									app_data = app_data .. delimiter .. dial_string;
+								end
 							end
 						end
-					end
 
-				--increment the value of x
-					x = x + 1;
+					--increment the value of x
+						x = x + 1;
+				end
 			end
 
 		--session execute
