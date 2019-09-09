@@ -382,17 +382,17 @@
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<input type='hidden' name='app_uuid' value='".escape($app_uuid)."'>\n";
 
-	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"1\">\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='1'>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' width='30%'>\n";
-	echo"			<span class=\"title\">".$text['title-dialplan_edit']."</span><br />\n";
+	echo "			<span class='title'>".$text['title-dialplan_edit']."</span><br />\n";
 	echo "		</td>\n";
 	echo "		<td width='70%' align='right'>\n";
+	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplans.php".(is_uuid($app_uuid) ? "?app_uuid=".escape($app_uuid) : null)."';\" value='".$text['button-back']."'>\n";
 	if (permission_exists('dialplan_xml')) {
-		echo "			<input type='button' class='btn' name='' alt='".$text['button-xml']."' onclick=\"window.location='dialplan_xml.php?id=".escape($dialplan_uuid)."&".((strlen($app_uuid) > 0) ? "app_uuid=".escape($app_uuid) : null)."';\" value='".$text['button-xml']."'>\n";
+		echo "			<input type='button' class='btn' name='' alt='".$text['button-xml']."' onclick=\"window.location='dialplan_xml.php?id=".escape($dialplan_uuid).(is_uuid($app_uuid) ? "&app_uuid=".escape($app_uuid) : null)."';\" value='".$text['button-xml']."'>\n";
 	}
-	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplans.php".((strlen($app_uuid) > 0) ? "?app_uuid=".escape($app_uuid) : null)."';\" value='".$text['button-back']."'>\n";
-	echo "			<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"if (confirm('".$text['confirm-copy']."')){window.location='dialplan_copy.php?id=".escape($dialplan_uuid)."';}\" value='".$text['button-copy']."'>\n";
+	echo "			<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"if (confirm('".$text['confirm-copy']."')){ window.location='dialplan_copy.php?id=".escape($dialplan_uuid)."'; }\" value='".$text['button-copy']."'>\n";
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";

@@ -47,11 +47,6 @@
 		$app_uuid = $_REQUEST['app_uuid'];
 	}
 
-//set the default app_uuid
-	if (!is_uuid($app_uuid)) {
-		$app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
-	}
-
 //get the dialplan xml
 	if (is_uuid($dialplan_uuid)) {
 		$sql = "select * from v_dialplans ";
@@ -61,7 +56,6 @@
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$domain_uuid = $row["domain_uuid"];
-			//$app_uuid = $row["app_uuid"];
 			$dialplan_name = $row["dialplan_name"];
 			$dialplan_number = $row["dialplan_number"];
 			$dialplan_order = $row["dialplan_order"];
@@ -86,7 +80,7 @@
 		//save to the data
 			$database = new database;
 			$database->app_name = 'dialplans';
-			$database->app_uuid = $app_uuid;
+			$database->app_uuid = is_uuid($app_uuid) ? $app_uuid : '742714e5-8cdf-32fd-462c-cbe7e3d655db';
 			$database->save($array);
 			unset($array);
 
@@ -98,7 +92,7 @@
 			message::add($text['message-update']);
 
 		//redirect the user
-			header("Location: dialplan_edit.php?id=".$dialplan_uuid."&".((strlen($app_uuid) > 0) ? "app_uuid=".$app_uuid : null));
+			header("Location: dialplan_edit.php?id=".$dialplan_uuid.(is_uuid($app_uuid) ? "&app_uuid=".$app_uuid : null));
 			exit;
 
 	}
@@ -114,13 +108,13 @@
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "	<input type='hidden' name='app_uuid' value='".$app_uuid."'>\n";
 	echo "	<input type='hidden' name='dialplan_uuid' value='".$dialplan_uuid."'>\n";
-	echo "	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"1\">\n";
+	echo "	<table width='100%' border='0' cellpadding='0' cellspacing='1'>\n";
 	echo "		<tr>\n";
 	echo "			<td align='left' width='30%'>\n";
-	echo "				<span class=\"title\">".$text['title-dialplan_edit']."</span><br />\n";
+	echo "				<span class='title'>".$text['title-dialplan_edit']."</span><br />\n";
 	echo "			</td>\n";
 	echo "			<td width='70%' align='right'>\n";
-	echo "				<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplan_edit.php?id=".$dialplan_uuid."&".((strlen($app_uuid) > 0) ? "app_uuid=".$app_uuid : null)."';\" value='".$text['button-back']."'>\n";
+	echo "				<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplan_edit.php?id=".$dialplan_uuid.(is_uuid($app_uuid) ? "&app_uuid=".$app_uuid : null)."';\" value='".$text['button-back']."'>\n";
 	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "			</td>\n";
 	echo "		</tr>\n";
@@ -131,7 +125,7 @@
 	echo "		</tr>\n";
 	echo "	</table>";
 	echo "	<br />\n";
-	echo "	<textarea name=\"dialplan_xml\" class=\"formfld\" style=\"width: 100%; max-width: 100%; height: 450px; padding:20px;\">$dialplan_xml</textarea>\n";
+	echo "	<textarea name='dialplan_xml' class='formfld' style='width: 100%; max-width: 100%; height: 450px; padding: 2px 0;'>".$dialplan_xml."</textarea>\n";
 	echo "</form>\n";
 
 //show the footer
