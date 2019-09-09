@@ -75,6 +75,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//check for all required data
 		if (strlen($domain_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
+		if (substr_count($domain_name, '-') != 0) { $msg .= $text['message-invalid_characters']."<br>\n"; }
 		//if (strlen($domain_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "resources/header.php";
@@ -533,6 +534,35 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</script>";
 	}
 
+//filter domain characters
+	echo "<script language='javascript' type='text/javascript'>\n";
+	echo "	function character_filter(e) {\n";
+	echo "		var keyevent;\n";
+	echo "		var keychar;\n";
+	echo "		if (window.event) {\n";
+	echo "			keyevent = e.keyCode;\n";
+	echo "		}\n";
+	echo "		else if (e.which) {\n";
+	echo "			keyevent = e.which;\n";
+	echo "		}\n";
+	echo "		keychar = keyevent;\n";
+	echo "		if (\n";
+	echo "			(keychar >= 0 && keychar <= 7) ||\n";
+	echo "			(keychar >= 9 && keychar <= 26) ||\n";
+	echo "			(keychar >= 28 && keychar <= 45) ||\n";
+	echo "			(keychar >= 58 && keychar <= 64) ||\n";
+	echo "			(keychar >= 91 && keychar <= 96) ||\n";
+	echo "			(keychar >= 123 && keychar <= 126)\n";
+	echo "			) {\n";
+	echo "			return false;\n";
+	echo "		}\n";
+	echo "		else {\n";
+	echo "			keychar;\n";
+	echo "			return true;\n";
+	echo "		}\n";
+	echo "	}\n";
+	echo "</script>";
+
 //show the content
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
@@ -583,7 +613,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='domain_name' maxlength='255' value=\"".escape($domain_name)."\">\n";
+	echo "	<input class='formfld' type='text' name='domain_name' maxlength='255' value=\"".escape($domain_name)."\" onkeypress='return character_filter(event);'>\n";
 	echo "<br />\n";
 	echo $text['description-name']."\n";
 	echo "</td>\n";
