@@ -546,7 +546,10 @@
 								else
 									new_key = #destinations + 1;
 								end
-
+								
+								--Calculate the destination_timeout for follow-me destinations.
+								--The call should honor ring group timeouts with rg delays, follow-me timeouts and follow-me delays factored in.
+								--Destinations with a timeout of 0 or negative numbers should be ignored. 
 								if (tonumber(field.destination_timeout) < (tonumber(row.destination_timeout) - tonumber(field.destination_delay))) then
 									new_destination_timeout = field.destination_timeout;
 								else
