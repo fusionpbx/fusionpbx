@@ -560,7 +560,7 @@
 								destinations[new_key]['ring_group_ringback'] = row.ring_group_ringback;
 								destinations[new_key]['domain_name'] = field.domain_name;
 								destinations[new_key]['destination_number'] = field.destination_number;
-								destinations[new_key]['destination_delay'] = field.destination_delay;
+								destinations[new_key]['destination_delay'] = field.destination_delay + row.destination_delay;
 								destinations[new_key]['destination_timeout'] = field.destination_timeout;
 								destinations[new_key]['destination_prompt'] = field.destination_prompt;
 								destinations[new_key]['group_confirm_key'] = row.group_confirm_key;
