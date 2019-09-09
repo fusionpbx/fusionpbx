@@ -49,7 +49,6 @@
 	$setting_invisibles = ($_SESSION["editor"]["invisibles"]["boolean"] != '') ? $_SESSION["editor"]["invisibles"]["boolean"] : 'false';
 	$setting_indenting = ($_SESSION["editor"]["indent_guides"]["boolean"] != '') ? $_SESSION["editor"]["indent_guides"]["boolean"] : 'false';
 	$setting_numbering = ($_SESSION["editor"]["line_numbers"]["boolean"] != '') ? $_SESSION["editor"]["line_numbers"]["boolean"] : 'true';
-	$setting_preview = ($_SESSION["editor"]["live_preview"]["boolean"] != '') ? $_SESSION["editor"]["live_preview"]["boolean"] : 'true';
 
 //get the html values and set them as variables
 	$handler = ($_REQUEST["handler"] != '') ? trim($_REQUEST["handler"]) : ((permission_exists('exec_switch')) ? 'switch' : null);
@@ -340,11 +339,8 @@
 					$modes['xml'] = 'XML';
 					$modes['sql'] = 'SQL';
 					foreach ($modes as $value => $label) {
-						if ($setting_preview == 'true') {
-							$preview = "onmouseover=\"editor.getSession().setMode(".(($value == 'php') ? "{path:'ace/mode/php', inline:true}" : "'ace/mode/' + this.value").");\"";
-						}
-						$selected = ($value == $mode) ? 'selected' : null;
-						echo "<option value='".escape($value)."' ".escape($selected)." ".escape($preview).">".escape($label)."</option>\n";
+						$selected = $value == $mode ? 'selected' : null;
+						echo "<option value='".$value."' ".$selected.">".escape($label)."</option>\n";
 					}
 					?>
 				</select>
@@ -353,14 +349,13 @@
 				<select id='size' style='height: 23px;' onchange="document.getElementById('editor').style.fontSize = this.options[this.selectedIndex].value; focus_editor();">
 					<?php
 					$sizes = explode(',','9px,10px,11px,12px,14px,16px,18px,20px');
-					$preview = ($setting_preview == 'true') ? "onmouseover=\"document.getElementById('editor').style.fontSize = this.value;\"" : null;
 					if (!in_array($setting_size, $sizes)) {
-						echo "<option value='".escape($setting_size)."' ".escape($preview).">".escape($setting_size)."</option>\n";
+						echo "<option value='".$setting_size."'>".escape($setting_size)."</option>\n";
 						echo "<option value='' disabled='disabled'></option>\n";
 					}
 					foreach ($sizes as $size) {
 						$selected = ($size == $setting_size) ? 'selected' : null;
-						echo "<option value='".escape($size)."' ".$selected." ".escape($preview).">".escape($size)."</option>\n";
+						echo "<option value='".$size."' ".$selected.">".escape($size)."</option>\n";
 					}
 					?>
 				</select>
@@ -402,12 +397,11 @@
 					$themes['Dark']['tomorrow_night_eighties']= 'Tomorrow Night 80s';
 					$themes['Dark']['twilight']= 'Twilight';
 					$themes['Dark']['vibrant_ink']= 'Vibrant Ink';
-					$preview = ($setting_preview == 'true') ? "onmouseover=\"editor.setTheme('ace/theme/' + this.value);\"" : null;
 					foreach ($themes as $optgroup => $theme) {
 						echo "<optgroup label='".$optgroup."'>\n";
 						foreach ($theme as $value => $label) {
-							$selected = (strtolower($label) == strtolower($setting_theme)) ? 'selected' : null;
-							echo "<option value='".escape($value)."' ".$selected." ".escape($preview).">".escape($label)."</option>\n";
+							$selected = strtolower($label) == strtolower($setting_theme) ? 'selected' : null;
+							echo "<option value='".$value."' ".$selected.">".escape($label)."</option>\n";
 						}
 						echo "</optgroup>\n";
 					}
