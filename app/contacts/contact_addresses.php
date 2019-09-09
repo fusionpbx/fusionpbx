@@ -88,7 +88,7 @@
 		foreach($result as $row) {
 			$map_query = escape($row['address_street'])." ".escape($row['address_extended']).", ".escape($row['address_locality']).", ".escape($row['address_region']).", ".escape($row['address_region']).", ".escape($row['address_postal_code']);
 			if (permission_exists('contact_address_edit')) {
-				$tr_link = "href='contact_address_edit.php?contact_uuid=".urlencode($row['contact_uuid'])."&id=".escape($row['contact_address_uuid'])."'";
+				$tr_link = "href='contact_address_edit.php?contact_uuid=".urlencode($row['contact_uuid'])."&id=".urlencode($row['contact_address_uuid'])."'";
 			}
 			echo "<tr ".$tr_link." ".((escape($row['address_primary'])) ? "style='font-weight: bold;'" : null).">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['address_label'])."&nbsp;</td>\n";
