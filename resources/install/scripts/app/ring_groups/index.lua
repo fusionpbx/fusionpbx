@@ -547,6 +547,12 @@
 									new_key = #destinations + 1;
 								end
 
+								if (tonumber(field.destination_timeout) < (tonumber(row.destination_timeout) - tonumber(field.destination_delay))) then
+									new_destination_timeout = field.destination_timeout;
+								else
+									new_destination_timeout = row.destination_timeout - field.destination_delay;
+								end
+
 								--add to the destinations array
 								destinations[new_key] = {}
 								destinations[new_key]['ring_group_strategy'] = row.ring_group_strategy;
@@ -561,11 +567,7 @@
 								destinations[new_key]['domain_name'] = field.domain_name;
 								destinations[new_key]['destination_number'] = field.destination_number;
 								destinations[new_key]['destination_delay'] = field.destination_delay + row.destination_delay;
-								if (tonumber(field.destination_timeout) < (tonumber(row.destination_timeout) - tonumber(field.destination_delay))) then
-									destinations[new_key]['destination_timeout'] = field.destination_timeout;
-								else
-									destinations[new_key]['destination_timeout'] = row.destination_timeout - field.destination_delay;
-								end
+								destinations[new_key]['destination_timeout'] = new_destination_timeout;
 								destinations[new_key]['destination_prompt'] = field.destination_prompt;
 								destinations[new_key]['group_confirm_key'] = row.group_confirm_key;
 								destinations[new_key]['group_confirm_file'] = row.group_confirm_file;
