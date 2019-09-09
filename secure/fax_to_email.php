@@ -405,10 +405,10 @@ if (!function_exists('fax_split_dtmf')) {
 	$smtp['from'] = $_SESSION['email']['smtp_from']['text'];
 	$smtp['from_name'] = $_SESSION['email']['smtp_from_name']['text'];
 
-	if (isset($_SESSION['fax']['smtp_from']) && strlen($_SESSION['fax']['smtp_from']['text']) > 0) {
+	if (isset($_SESSION['fax']['smtp_from']['text']) && strlen($_SESSION['fax']['smtp_from']['text']) > 0) {
 		$smtp['from'] = $_SESSION['fax']['smtp_from']['text'];
 	}
-	if (isset($_SESSION['fax']['smtp_from_name']) && strlen($_SESSION['fax']['smtp_from_name']['text']) > 0) {
+	if (isset($_SESSION['fax']['smtp_from_name']['text']) && strlen($_SESSION['fax']['smtp_from_name']['text']) > 0) {
 		$smtp['from_name'] = $_SESSION['fax']['smtp_from_name']['text'];
 	}
 
