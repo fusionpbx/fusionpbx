@@ -307,17 +307,19 @@ class destinations {
 			}
 			$i = 0;
 			foreach ($apps as $x => &$app) {
-				if (isset($app['destinations'])) foreach ($app['destinations'] as &$row) {
-					$this->destinations[] = $row;
+				if (isset($app['destinations'])) {
+					foreach ($app['destinations'] as &$row) {
+						$this->destinations[] = $row;
+					}
 				}
 			}
-	
+
 			//put the array in order
 			foreach ($this->destinations as $row) {
 				$option_groups[] = $row['label'];
 			}
 			array_multisort($option_groups, SORT_ASC, $this->destinations);
-	
+
 			//add the sql and data to the array
 			$x = 0;
 			foreach ($this->destinations as $row) {
@@ -433,7 +435,6 @@ class destinations {
 										}
 									}
 								}
-
 							}
 							else {
 								$select_value = str_replace("\${".$key."}", $data[$key], $select_value);
