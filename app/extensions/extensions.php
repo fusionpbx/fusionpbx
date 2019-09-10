@@ -75,7 +75,7 @@
 	}
 	$sql .= $sql_search;
 	$database = new database;
-	$extension_count = $database->select($sql, $parameters, 'column');
+	$total_extensions = $database->select($sql, $parameters, 'column');
 
 //additional includes
 	$document['title'] = $text['title-extensions'];
@@ -125,7 +125,7 @@
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "  <tr>\n";
 	echo "	<td align='left' width='100%'>\n";
-	echo "		<b>".$text['header-extensions']." (".$extension_count.")</b><br>\n";
+	echo "		<b>".$text['header-extensions']." (".$total_extensions.")</b><br>\n";
 	echo "	</td>\n";
 	echo "		<form method='get' action=''>\n";
 	echo "			<td style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
