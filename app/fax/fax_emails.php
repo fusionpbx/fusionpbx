@@ -50,7 +50,7 @@ function arr_to_map(&$arr){
 	return false;
 }
 
-if (is_array($array) && @sizeof($array) != 0) {
+if (is_array($result) && @sizeof($result) != 0) {
 
 	//load default settings
 	$default_settings = load_default_settings();
