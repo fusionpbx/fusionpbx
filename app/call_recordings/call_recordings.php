@@ -237,7 +237,7 @@
 			//echo "	<td valign='top' class='".$row_style[$c]."' style=\"\">\n";
 			//echo "		<a href=\"download.php?id=".escape($row['call_recording_uuid'])."&t=bin\">".$text['label-download']." ".$v_link_label_download."</a>\n";
 			//echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_recording_length'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".($row['call_recording_length'] <= 59 ? '0:' : null).escape($row['call_recording_length'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_recording_date'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_direction'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".escape($row['call_recording_description'])."&nbsp;</td>\n";
