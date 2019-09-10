@@ -28,6 +28,7 @@ include "root.php";
 
 //define the provision class
 	class provision {
+
 		public $domain_uuid;
 		public $domain_name;
 		public $template_dir;
@@ -110,7 +111,12 @@ include "root.php";
 				$parameters['mac'] = $mac;
 				$database = new database;
 				$num_rows = $database->select($sql, $parameters, 'column');
-				return $num_rows > 0 ? true : false;
+				if ($num_rows > 0) {
+					return true;
+				}
+				else {
+					return false;
+				}
 				unset($sql, $parameters, $num_rows);
 		}
 
@@ -172,7 +178,12 @@ include "root.php";
 
 		//define a function to check if a contact exists in the contacts array
 		private function contact_exists($contacts, $uuid) {
-			return is_array($contacts[$uuid]) ? true : false;
+			if (is_array($contacts[$uuid])) {
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
 
 		private function contact_append(&$contacts, &$line, $domain_uuid, $device_user_uuid, $is_group) {
