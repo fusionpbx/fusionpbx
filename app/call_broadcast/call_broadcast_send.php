@@ -153,55 +153,57 @@ function cmd_async($cmd) {
 					//remove the number formatting
 						$phone_1 = preg_replace('{\D}', '', $tmp_value_array[0]);
 
-					//get the dialplan variables and bridge statement
-						$dialplan = new dialplan;
-						$dialplan->domain_uuid = $_SESSION['domain_uuid'];
-						$dialplan->outbound_routes($phone_1);
-						$dialplan_variables = $dialplan->variables;
-						$bridge_array[0] = $dialplan->bridges;
-						//echo "var: ".$variables."\n";
-						//echo "bridges: ".$bridges."\n";
+					if (is_numeric($phone_1)) {
+						//get the dialplan variables and bridge statement
+							$dialplan = new dialplan;
+							$dialplan->domain_uuid = $_SESSION['domain_uuid'];
+							$dialplan->outbound_routes($phone_1);
+							$dialplan_variables = $dialplan->variables;
+							$bridge_array[0] = $dialplan->bridges;
+							//echo "var: ".$variables."\n";
+							//echo "bridges: ".$bridges."\n";
 
-					//prepare the string
-						$channel_variables = $dialplan_variables."ignore_early_media=true";
-						$channel_variables .= ",origination_number=$phone_1";
-						$channel_variables .= ",origination_caller_id_name='$broadcast_caller_id_name'";
-						$channel_variables .= ",origination_caller_id_number=$broadcast_caller_id_number";
-						$channel_variables .= ",domain_uuid=".$_SESSION['domain_uuid'];
-						$channel_variables .= ",domain=".$_SESSION['domain_name'];
-						$channel_variables .= ",domain_name=".$_SESSION['domain_name'];
-						$channel_variables .= ",accountcode='$broadcast_accountcode'";
-						if ($broadcast_avmd == "true") {
-							$channel_variables .= ",execute_on_answer='avmd start'";
-						}
-						$origination_url = "{".$channel_variables."}".$bridge_array[0];
-
-					//get the context
-						$context =  $_SESSION['domain_name'];
-
-					//set the command
-						$cmd = "bgapi sched_api +".$sched_seconds." ".$call_broadcast_uuid." bgapi originate ".$origination_url." ".$broadcast_destination_data." XML $context";
-
-					//if the event socket connection is lost then re-connect
-						if (!$fp) {
-							$fp = eventsocket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-						}
-
-					//method 1
-						$response = trim(event_socket_request($fp, 'api '.$cmd));
-
-					//method 2
-						//cmd_async($_SESSION['switch']['bin']['dir']."/fs_cli -x \"".$cmd."\";");
-
-					//spread the calls out so that they are scheduled with different times
-						if (strlen($broadcast_concurrent_limit) > 0 && strlen($broadcast_timeout) > 0) {
-							if ($broadcast_concurrent_limit == $count) {
-								$sched_seconds = $sched_seconds + $broadcast_timeout;
-								$count=0;
+						//prepare the string
+							$channel_variables = $dialplan_variables."ignore_early_media=true";
+							$channel_variables .= ",origination_number=$phone_1";
+							$channel_variables .= ",origination_caller_id_name='$broadcast_caller_id_name'";
+							$channel_variables .= ",origination_caller_id_number=$broadcast_caller_id_number";
+							$channel_variables .= ",domain_uuid=".$_SESSION['domain_uuid'];
+							$channel_variables .= ",domain=".$_SESSION['domain_name'];
+							$channel_variables .= ",domain_name=".$_SESSION['domain_name'];
+							$channel_variables .= ",accountcode='$broadcast_accountcode'";
+							if ($broadcast_avmd == "true") {
+								$channel_variables .= ",execute_on_answer='avmd start'";
 							}
-						}
+							$origination_url = "{".$channel_variables."}".$bridge_array[0];
 
-					$count++;
+						//get the context
+							$context =  $_SESSION['domain_name'];
+
+						//set the command
+							$cmd = "bgapi sched_api +".$sched_seconds." ".$call_broadcast_uuid." bgapi originate ".$origination_url." ".$broadcast_destination_data." XML $context";
+
+						//if the event socket connection is lost then re-connect
+							if (!$fp) {
+								$fp = eventsocket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+							}
+
+						//method 1
+							$response = trim(event_socket_request($fp, 'api '.$cmd));
+
+						//method 2
+							//cmd_async($_SESSION['switch']['bin']['dir']."/fs_cli -x \"".$cmd."\";");
+
+						//spread the calls out so that they are scheduled with different times
+							if (strlen($broadcast_concurrent_limit) > 0 && strlen($broadcast_timeout) > 0) {
+								if ($broadcast_concurrent_limit == $count) {
+									$sched_seconds = $sched_seconds + $broadcast_timeout;
+									$count=0;
+								}
+							}
+
+						$count++;
+					}
 				}
 				fclose($fp);
 
