@@ -285,7 +285,13 @@
 	$offset = $rows_per_page * $page;
 
 //get the recordings from the database
-	$sql = str_replace('count(*)', 'recording_uuid, domain_uuid, recording_filename, recording_name, recording_description', $sql);
+	if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
+		switch ($db_type) {
+			case 'pgsql': $sql_file_size = "length(decode(recording_base64,'base64')) as recording_size, "; break;
+			case 'mysql': $sql_file_size = "length(from_base64(recording_base64)) as recording_size, "; break;
+		}
+	}
+	$sql = str_replace('count(*)', 'recording_uuid, domain_uuid, recording_filename, '.$sql_file_size.' recording_name, recording_description', $sql);
 	$sql .= order_by($order_by, $order);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
@@ -298,7 +304,7 @@
 	$row_style["1"] = "row_style1";
 
 //include the header
-	$document['title'] = $text['title'];
+	$document['title'] = $text['title-recordings'];
 	require_once "resources/header.php";
 
 //begin the content
@@ -323,12 +329,14 @@
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('recording_name', $text['label-recording_name'], $order_by, $order);
+	if (permission_exists('recording_play') || permission_exists('recording_download')) {
+		echo "<th class='listhdr' nowrap style='text-align: center; padding: 0 30px 0 20px;'>".$text['label-tools']."</th>\n";
+	}
 	if ($_SESSION['recordings']['storage_type']['text'] != 'base64') {
 		echo th_order_by('recording_filename', $text['label-file_name'], $order_by, $order);
 	}
-	echo "<th class='listhdr' nowrap>".$text['label-tools']."</th>\n";
+	echo "<th class='listhdr' style='text-align: center;' nowrap>".($_SESSION['recordings']['storage_type']['text'] == 'base64' ? $text['label-size'] : $text['label-file_size'])."</th>\n";
 	if ($_SESSION['recordings']['storage_type']['text'] != 'base64') {
-		echo "<th class='listhdr' style='text-align: center;' nowrap>".$text['label-file-size']."</th>\n";
 		echo "<th class='listhdr' style='text-align: center;'>".$text['label-uploaded']."</th>\n";
 	}
 	echo th_order_by('recording_description', $text['label-description'], $order_by, $order);
@@ -336,9 +344,8 @@
 	echo "</tr>\n";
 
 	//calculate colspan for progress bar
-	$colspan = 6; //max
-	if ($_SESSION['recordings']['storage_type']['text'] == 'base64') { $colspan = $colspan - 2; }
-	if (!(permission_exists('recording_edit') || permission_exists('recording_delete'))) { $colspan = $colspan - 1; }
+	$colspan = 4; //min
+	if ($_SESSION['recordings']['storage_type']['text'] != 'base64') { $colspan += 2; }
 
 	if (is_array($recordings) && @sizeof($recordings) != 0) {
 		foreach($recordings as $row) {
@@ -349,11 +356,8 @@
 			$tr_link = (permission_exists('recording_edit')) ? "href='recording_edit.php?id=".escape($row['recording_uuid'])."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['recording_name'])."</td>\n";
-			if ($_SESSION['recordings']['storage_type']['text'] != 'base64') {
-				echo "	<td valign='top' class='".$row_style[$c]."'>".str_replace('_', '_&#8203;', escape($row['recording_filename']))."</td>\n";
-			}
 			if (permission_exists('recording_play') || permission_exists('recording_download')) {
-				echo "	<td valign='top' class='".$row_style[$c]." row_style_slim tr_link_void' style='width: 55px;'>";
+				echo "	<td valign='top' class='".$row_style[$c]." row_style_slim tr_link_void'  style='text-align: center; padding: 2px 30px 0 20px;'>";
 				if (permission_exists('recording_play')) {
 					$recording_file_path = $row['recording_filename'];
 					$recording_file_name = strtolower(pathinfo($recording_file_path, PATHINFO_BASENAME));
@@ -372,6 +376,13 @@
 				echo "	</td>\n";
 			}
 			if ($_SESSION['recordings']['storage_type']['text'] != 'base64') {
+				echo "	<td valign='top' class='".$row_style[$c]."'>".str_replace('_', '_&#8203;', escape($row['recording_filename']))."</td>\n";
+			}
+			if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
+				$file_size = byte_convert($row['recording_size']);
+				echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center; white-space: nowrap;'>".$file_size."</td>\n";
+			}
+			else {
 				$file_name = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$row['recording_filename'];
 				if (file_exists($file_name)) {
 					$file_size = filesize($file_name);
@@ -379,11 +390,9 @@
 					$file_date = date("M d, Y H:i:s", filemtime($file_name));
 				}
 				else {
-					$file_size = '';
-					$file_date = '';
+					unset($file_size, $file_date);
 				}
 				echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center; white-space: nowrap;'>".$file_size."</td>\n";
-				
 				echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>".$file_date."</td>\n";
 			}
 			echo "	<td valign='top' class='row_stylebg' width='30%'>".escape($row['recording_description'])."&nbsp;</td>\n";
