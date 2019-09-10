@@ -267,17 +267,23 @@
 		$document['title'] = $text['title-contact-add'];
 	}
 
-//set the mode
-	if (isset($_SESSION['theme']['qr_image']['text'])) {
-		if (strlen($_SESSION['theme']['qr_image']['text']) == 0) {
-			$mode = '4';
-		}
-		else {
-			$mode = '0';
-		}
+//determine qr branding
+	if ($_SESSION['theme']['qr_brand_type']['text'] == 'image' && $_SESSION['theme']['qr_brand_image']['text'] != '') {
+		echo "<img id='img-buffer' style='display: none;' src='".$_SESSION["theme"]["qr_brand_image"]["text"]."'>";
+		$qr_option = "image: $('#img-buffer')[0],";
+		$qr_mode = '4';
+		$qr_size = '0.2';
+	}
+	else if ($_SESSION['theme']['qr_brand_type']['text'] == 'text' && $_SESSION['theme']['qr_brand_text']['text'] != '') {
+		$qr_option = 'label: "'.$_SESSION['theme']['qr_brand_text']['text'].'"';
+		$qr_mode = '2';
+		$qr_size = '0.05';
 	}
 	else {
-		$mode = '4';
+		echo "<img id='img-buffer' style='display: none;' src='".PROJECT_PATH."/themes/".$_SESSION["domain"]["template"]["name"]."/images/qr_code.png'>";
+		$qr_option = "image: $('#img-buffer')[0],";
+		$qr_mode = '4';
+		$qr_size = '0.2';
 	}
 
 //qr code generation
@@ -289,10 +295,10 @@
 	echo "	#qr_code_container {";
 	echo "		z-index: 999999; ";
 	echo "		position: absolute; ";
-	echo "		left: 0px; ";
-	echo "		top: 0px; ";
-	echo "		right: 0px; ";
-	echo "		bottom: 0px; ";
+	echo "		left: 0; ";
+	echo "		top: 0; ";
+	echo "		right: 0; ";
+	echo "		bottom: 0; ";
 	echo "		text-align: center; ";
 	echo "		vertical-align: middle;";
 	echo "	}";
@@ -308,32 +314,24 @@
 	echo "<script src='".PROJECT_PATH."/resources/jquery/jquery-qrcode.min.js'></script>";
 	echo "<script language='JavaScript' type='text/javascript'>";
 	echo "	$(document).ready(function() {";
-	echo "		$(window).on('load', function() {";
-	echo "			$('#qr_code').qrcode({ ";
-	echo "				render: 'canvas', ";
-	echo "				minVersion: 6, ";
-	echo "				maxVersion: 40, ";
-	echo "				ecLevel: 'H', ";
-	echo "				size: 650, ";
-	echo "				radius: 0.2, ";
-	echo "				quiet: 6, ";
-	echo "				background: '#fff', ";
-	echo "				mode: ".$mode.", ";
-	echo "				mSize: 0.2, ";
-	echo "				mPosX: 0.5, ";
-	echo "				mPosY: 0.5, ";
-	echo "				image: $('#img-buffer')[0], ";
-	echo "				text: document.getElementById('qr_vcard').value ";
-	echo "			});";
+	echo "		$('#qr_code').qrcode({ ";
+	echo "			render: 'canvas', ";
+	echo "			minVersion: 6, ";
+	echo "			maxVersion: 40, ";
+	echo "			ecLevel: 'H', ";
+	echo "			size: 650, ";
+	echo "			radius: 0.2, ";
+	echo "			quiet: 6, ";
+	echo "			background: '#fff', ";
+	echo "			mode: ".$qr_mode.", ";
+	echo "			mSize: ".$qr_size.", ";
+	echo "			mPosX: 0.5, ";
+	echo "			mPosY: 0.5, ";
+	echo "			text: document.getElementById('qr_vcard').value, ";
+	echo "			".$qr_option;
 	echo "		});";
 	echo "	});";
 	echo "</script>";
-	if (isset($_SESSION['theme']['qr_image'])) {
-		echo "<img id='img-buffer' src='".$_SESSION["theme"]["qr_image"]["text"]."' style='display: none;'>";
-	}
-	else {
-		echo "<img id='img-buffer' src='".PROJECT_PATH."/themes/".$_SESSION["domain"]["template"]["name"]."/images/qr_code.png' style='display: none;'>";
-	}
 
 //show the content
 	echo "<form method='post' name='frm' action=''>\n";
