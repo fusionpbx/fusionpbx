@@ -288,10 +288,10 @@
 			echo "opt_group.label = \"".$text['label-recordings']."\";\n";
 			foreach ($recordings as &$row) {
 				if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
-					echo "opt_group.appendChild(new Option(\"".escape($row["recording_name"])."\", \"\${lua streamfile.lua ".escape($row["recording_filename"])."}\"));\n";
+					echo "opt_group.appendChild(new Option(\"".$row["recording_name"]."\", \"\${lua streamfile.lua ".$row["recording_filename"]."}\"));\n";
 				}
 				else {
-					echo "opt_group.appendChild(new Option(\"".escape($row["recording_name"])."\", \"".$_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.escape($row["recording_filename"])."\"));\n";
+					echo "opt_group.appendChild(new Option(\"".$row["recording_name"]."\", \"".$_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$row["recording_filename"]."\"));\n";
 				}
 			}
 			echo "obj_action.appendChild(opt_group);\n";
@@ -419,7 +419,7 @@
 	echo "<tr>";
 	echo "<td class='vncell' valign='top'>".$text['label-structure']."</td>";
 	echo "<td class='vtable' align='left'>";
-	echo "	<table width='59%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "	<table border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "		<tr>\n";
 	echo "			<td class='vtable'>".$text['label-function']."</td>\n";
 	echo "			<td class='vtable'>".$text['label-action']."</td>\n";
