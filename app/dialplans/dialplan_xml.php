@@ -178,8 +178,8 @@
 
 //show the content
 	echo "<form method='post' name='frm' id='frm'>\n";
-	echo "	<input type='hidden' name='app_uuid' value='".$app_uuid."'>\n";
-	echo "	<input type='hidden' name='dialplan_uuid' value='".$dialplan_uuid."'>\n";
+	echo "	<input type='hidden' name='app_uuid' value='".escape($app_uuid)."'>\n";
+	echo "	<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	echo "	<textarea name='dialplan_xml' id='dialplan_xml' style='display: none;'>".$dialplan_xml."</textarea>";
 	echo "	<table width='100%' border='0' cellpadding='0' cellspacing='1'>\n";
 	echo "		<tr>\n";
@@ -187,7 +187,7 @@
 	echo "				<span class='title'>".$text['title-dialplan_edit']." XML</span><br />\n";
 	echo "			</td>\n";
 	echo "			<td width='70%' align='right'>\n";
-	echo "				<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplan_edit.php?id=".$dialplan_uuid.(is_uuid($app_uuid) ? "&app_uuid=".$app_uuid : null)."';\" value='".$text['button-back']."'>\n";
+	echo "				<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplan_edit.php?id=".urlencode($dialplan_uuid).(is_uuid($app_uuid) ? "&app_uuid=".urlencode($app_uuid) : null)."';\" value='".$text['button-back']."'>\n";
 	echo "				<input type='button' class='btn' value='".$text['button-save']."' onclick=\"set_value(); $('#frm').submit();\">\n";
 	echo "			</td>\n";
 	echo "		</tr>\n";
@@ -197,7 +197,7 @@
 	echo "			</td>\n";
 	echo "		</tr>\n";
 	echo "	</table>";
-	echo "	<br />\n";
+	//echo "	<br />\n";
 	echo "	<table cellpadding='0' cellspacing='0' border='0' style='width: 100%;'>\n";
 	echo "		<tr>\n";
 	echo "			<td valign='middle' style='padding: 0 6px;' width='100%'><span id='description'></span></td>\n";
