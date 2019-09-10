@@ -33,7 +33,7 @@
 					return 'Adminer';
 				}
 
-				function permanentLogin() {
+				function permanentLogin($i = false) {
 					// key used for permanent login
 					if ($_SESSION['adminer']['auto_login']['boolean'] == 'true') {
 						return "7bebc76d8680196752c6b961ef13c360";
@@ -43,7 +43,7 @@
 				function credentials() {
 					// server, username and password for connecting to database
 					if ($_SESSION['adminer']['auto_login']['boolean'] == 'true') {
-						global $db_host, $db_username, $db_password;
+						global $db_host, $db_port, $db_username, $db_password;
 						return array($db_host.':'.$db_port, $db_username, $db_password);
 					}
 				}
