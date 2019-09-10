@@ -183,7 +183,7 @@ if (!class_exists('registrations')) {
 								exit;
 							}
 							$array = json_decode(json_encode($xml), true);
-							$count = $count + count($array['registrations']['registration']);
+							$count = $count + @sizeof($array['registrations']);
 						}
 
 					}
