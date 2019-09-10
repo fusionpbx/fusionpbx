@@ -65,24 +65,6 @@
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
-//validate order by
-	if (strlen($order_by) > 0) {
-		$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $order_by);
-	}
-
-//validate the order
-	switch ($order) {
-		case 'asc':
-			break;
-		case 'desc':
-			break;
-		default:
-			$order = '';
-	}
-
-//add the parameters
-	$parameters['domain_uuid'] = $domain_uuid;
-
 //add the search term
 	$search = strtolower($_GET["search"]);
 	if (strlen($search) > 0) {
@@ -96,7 +78,7 @@
 	}
 
 //prepare to page the results
-	$sql = "select count(bridge_uuid) from v_bridges ";
+	$sql = "select count(*) from v_bridges ";
 	if ($_GET['show'] == "all" && permission_exists('bridge_all')) {
 		if (isset($sql_search)) {
 			$sql .= "where ".$sql_search;
@@ -107,6 +89,7 @@
 		if (isset($sql_search)) {
 			$sql .= "and ".$sql_search;
 		}
+		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
@@ -123,24 +106,11 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select * from v_bridges ";
-	if ($_GET['show'] == "all" && permission_exists('bridge_all')) {
-		if (isset($sql_search)) {
-			$sql .= "where ".$sql_search;
-		}
-	}
-	else {
-		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-		if (isset($sql_search)) {
-			$sql .= "and ".$sql_search;
-		}
-	}
+	$sql = str_replace('count(*)', '*', $sql);
 	$sql .= order_by($order_by, $order);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$bridges = $database->select($sql, $parameters, 'all');
-	//$message = $database->message;
-	//print_r($message);
 
 //alternate the row style
 	$c = 0;
@@ -201,6 +171,9 @@
 	echo "	<th style='width:30px;'>\n";
 	echo "		<input type='checkbox' name='checkbox_all' id='checkbox_all' value='' onclick=\"checkbox_toggle();\">\n";
 	echo "	</th>\n";
+	if ($_GET['show'] == "all" && permission_exists('bridge_all')) {
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
+	}
 	echo th_order_by('bridge_name', $text['label-bridge_name'], $order_by, $order);
 	echo th_order_by('bridge_destination', $text['label-bridge_destination'], $order_by, $order);
 	echo th_order_by('bridge_enabled', $text['label-bridge_enabled'], $order_by, $order);
@@ -225,9 +198,12 @@
 			echo "		<input type='checkbox' name=\"bridges[$x][checked]\" id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$x."').checked = false; }\">\n";
 			echo "		<input type='hidden' name=\"bridges[$x][bridge_uuid]\" value='".escape($row['bridge_uuid'])."' />\n";
 			echo "	</td>\n";
+			if ($_GET['show'] == "all" && permission_exists('bridge_all')) {
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."&nbsp;</td>\n";
+			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['bridge_name'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['bridge_destination'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['bridge_enabled'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['bridge_enabled']]."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('bridge_edit')) {
 				echo "<a href='bridge_edit.php?id=".escape($row['bridge_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
