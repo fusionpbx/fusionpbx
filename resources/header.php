@@ -95,7 +95,6 @@
 		$parameters['content'] = strlen($content) == 0 ? $_SERVER["PHP_SELF"] : $content;
 		$database = new database;
 		$content_result = $database->select($sql, $parameters, 'all');
-		$page['title'] = '';
 		if (is_array($content_result) && @sizeof($content_result) != 0) {
 			foreach($content_result as $content_row) {
 				$template_rss_sub_category = $content_row['rss_sub_category'];
