@@ -98,7 +98,9 @@
 			end
 
 		--define the conference name
-			local conference_name = "page-"..destination_number.."@"..domain_name.."@page"
+			local conference_profile = "page";
+			local conference_name = "page-"..destination_number.."@"..domain_name;
+			local conference_bridge = conference_name.."@"..conference_profile;
 
 		--set the caller id
 			if (caller_id_name) then
@@ -172,7 +174,7 @@
 									--this destination is the caller that initated the page
 								else
 									--originate the call
-										cmd_string = "bgapi originate {sip_auto_answer=true,sip_h_Alert-Info='Ring Answer',hangup_after_bridge=false,rtp_secure_media="..rtp_secure_media..",origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:"..conference_name.."+"..flags.." inline";
+										cmd_string = "bgapi originate {sip_auto_answer=true,sip_h_Alert-Info='Ring Answer',hangup_after_bridge=false,rtp_secure_media="..rtp_secure_media..",origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:"..conference_bridge.."+"..flags.." inline";
 									api:executeString(cmd_string);
 									destination_count = destination_count + 1;
 								end
@@ -187,7 +189,7 @@
 										--this destination is the caller that initated the page
 									else
 										--originate the call
-										cmd_string = "bgapi originate {sip_auto_answer=true,hangup_after_bridge=false,rtp_secure_media="..rtp_secure_media..",origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:"..conference_name.."+"..flags.." inline";
+										cmd_string = "bgapi originate {sip_auto_answer=true,hangup_after_bridge=false,rtp_secure_media="..rtp_secure_media..",origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:"..conference_bridge.."+"..flags.." inline";
 										api:executeString(cmd_string);
 										destination_count = destination_count + 1;
 									end
@@ -205,7 +207,7 @@
 				else
 					moderator_flag = "";
 				end
-				session:execute("conference", conference_name.."+flags{endconf"..moderator_flag.."}");
+				session:execute("conference", conference_bridge.."+flags{endconf"..moderator_flag.."}");
 			else
 				session:execute("playback", "tone_stream://%(500,500,480,620);loops=3");
 			end
