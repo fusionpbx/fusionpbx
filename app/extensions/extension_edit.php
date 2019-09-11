@@ -263,7 +263,7 @@
 
 				//add the user to the database
 					$user_email = '';
-					if ($_SESSION["user"]["unique"]["text"] != "global") {
+					if ($_SESSION["users"]["unique"]["text"] != "global") {
 						if ($autogen_users == "true") {
 							$auto_user = $extension;
 							for ($i=1; $i<=$range; $i++) {

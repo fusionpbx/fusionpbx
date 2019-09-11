@@ -63,7 +63,9 @@ if (!class_exists('domains')) {
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				//unset all settings
 				foreach ($result as $row) {
-					unset($_SESSION[$row['default_setting_category']]);
+					if ($row['default_setting_category'] != 'user') { //skip off-limit categories
+						unset($_SESSION[$row['default_setting_category']]);
+					}
 				}
 				//set the enabled settings as a session
 				foreach ($result as $row) {

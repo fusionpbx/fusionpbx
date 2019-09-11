@@ -144,21 +144,22 @@
 			if ($username == '') {
 				message::add($text['message-required'].$text['label-username'], 'negative', 7500);
 			}
-			if (permission_exists('user_edit') && $action == 'edit') {
-				if ($username != $username_old && $username != '') {
-					$sql = "select count(*) from v_users where username = :username ";
-					if ($_SESSION["user"]["unique"]["text"] != "global") {
-						$sql .= "and domain_uuid = :domain_uuid ";
-						$parameters['domain_uuid'] = $domain_uuid;
-					}
-					$parameters['username'] = $username;
-					$database = new database;
-					$num_rows = $database->select($sql, $parameters, 'column');
-					if ($num_rows > 0) {
-						message::add($text['message-username_exists'], 'negative', 7500);
-					}
-					unset($sql);
+			if (
+				(permission_exists('user_edit') && $action == 'edit' && $username != $username_old && $username != '') ||
+				(permission_exists('user_add') && $action == 'add' && $username != '')
+				) {
+				$sql = "select count(*) from v_users where username = :username ";
+				if ($_SESSION["users"]["unique"]["text"] != "global") {
+					$sql .= "and domain_uuid = :domain_uuid ";
+					$parameters['domain_uuid'] = $domain_uuid;
 				}
+				$parameters['username'] = $username;
+				$database = new database;
+				$num_rows = $database->select($sql, $parameters, 'column');
+				if ($num_rows > 0) {
+					message::add($text['message-username_exists'], 'negative', 7500);
+				}
+				unset($sql);
 			}
 			if ($password != '' && $password != $password_confirm) {
 				message::add($text['message-password_mismatch'], 'negative', 7500);
@@ -561,6 +562,7 @@
 		$contact_name_given = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']['contact_name_given'];
 		$contact_name_family = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']['contact_name_family'];
 		$contact_organization = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']['contact_organization'];
+		$group_uuid_name = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']['group_uuid_name'];
 		$user_settings["message"]["key"]["text"] = $_SESSION['tmp'][$_SERVER['PHP_SELF']]['user']['message_key'];
 
 		$unsaved = true;
@@ -1055,7 +1057,7 @@
 	echo "</form>";
 
 	if (permission_exists("user_edit") && permission_exists('user_setting_view') && $action == 'edit') {
-		require $_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/core/user_settings/user_settings.php";
+		require $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/core/user_settings/user_settings.php";
 	}
 
 //include the footer
