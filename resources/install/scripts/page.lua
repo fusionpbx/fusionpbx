@@ -98,9 +98,9 @@
 			end
 
 		--define the conference name
-			local profile = "page";
+			local conference_profile = "page";
 			local conference_name = "page-"..destination_number.."@"..domain_name;
-			local conference_bridge = conference_name.."@"..profile;
+			local conference_bridge = conference_name.."@"..conference_profile;
 
 		--set the caller id
 			if (caller_id_name) then
