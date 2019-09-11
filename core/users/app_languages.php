@@ -1,46 +1,6 @@
 <?php
 #This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
-$text['title-user_setting-edit']['en-us'] = "User Setting";
-$text['title-user_setting-edit']['ar-eg'] = "";
-$text['title-user_setting-edit']['de-at'] = "Benutzereinstellung"; //copied from de-de
-$text['title-user_setting-edit']['de-ch'] = "Benutzereinstellung"; //copied from de-de
-$text['title-user_setting-edit']['de-de'] = "Benutzereinstellung";
-$text['title-user_setting-edit']['es-cl'] = "Configuración de Usuario";
-$text['title-user_setting-edit']['es-mx'] = "Configuración de Usuario"; //copied from es-cl
-$text['title-user_setting-edit']['fr-ca'] = "Cadre de l'utilisateur"; //copied from fr-fr
-$text['title-user_setting-edit']['fr-fr'] = "Cadre de l'utilisateur";
-$text['title-user_setting-edit']['he-il'] = "";
-$text['title-user_setting-edit']['it-it'] = "Parametri Utente";
-$text['title-user_setting-edit']['nl-nl'] = "";
-$text['title-user_setting-edit']['pl-pl'] = "";
-$text['title-user_setting-edit']['pt-br'] = "Definição do Utilizador"; //copied from pt-pt
-$text['title-user_setting-edit']['pt-pt'] = "Definição do Utilizador";
-$text['title-user_setting-edit']['ro-ro'] = "";
-$text['title-user_setting-edit']['ru-ru'] = "Параметры пользователя";
-$text['title-user_setting-edit']['sv-se'] = "Användarinställning";
-$text['title-user_setting-edit']['uk-ua'] = "";
-
-$text['title-user_setting-add']['en-us'] = "User Setting Add";
-$text['title-user_setting-add']['ar-eg'] = "";
-$text['title-user_setting-add']['de-at'] = "Benutzereinstellung hinzufügen"; //copied from de-de
-$text['title-user_setting-add']['de-ch'] = "Benutzereinstellung hinzufügen"; //copied from de-de
-$text['title-user_setting-add']['de-de'] = "Benutzereinstellung hinzufügen";
-$text['title-user_setting-add']['es-cl'] = "Ajuste del usuario Agregar";
-$text['title-user_setting-add']['es-mx'] = "Ajuste del usuario Agregar"; //copied from es-cl
-$text['title-user_setting-add']['fr-ca'] = "Cadre utilisateur Ajouter"; //copied from fr-fr
-$text['title-user_setting-add']['fr-fr'] = "Cadre utilisateur Ajouter";
-$text['title-user_setting-add']['he-il'] = "";
-$text['title-user_setting-add']['it-it'] = "Inserimento Parametri Utente";
-$text['title-user_setting-add']['nl-nl'] = "";
-$text['title-user_setting-add']['pl-pl'] = "";
-$text['title-user_setting-add']['pt-br'] = "Usuário setting Adicionar"; //copied from pt-pt
-$text['title-user_setting-add']['pt-pt'] = "Usuário setting Adicionar";
-$text['title-user_setting-add']['ro-ro'] = "";
-$text['title-user_setting-add']['ru-ru'] = "Добавить параметры пользователя";
-$text['title-user_setting-add']['sv-se'] = "Lägg Till Användarinställning";
-$text['title-user_setting-add']['uk-ua'] = "";
-
 $text['title-user_manager']['en-us'] = "User Manager";
 $text['title-user_manager']['ar-eg'] = "";
 $text['title-user_manager']['de-at'] = "Benutzerverwaltung"; //copied from de-de
@@ -1420,46 +1380,6 @@ $text['label-12-hour']['ro-ro'] = "12 de ore";
 $text['label-12-hour']['ru-ru'] = "12-часовой";
 $text['label-12-hour']['sv-se'] = "12-Timmars";
 $text['label-12-hour']['uk-ua'] = "12-годинний";
-
-$text['header-user_setting-edit']['en-us'] = "User Setting";
-$text['header-user_setting-edit']['ar-eg'] = "";
-$text['header-user_setting-edit']['de-at'] = "Benutzereinstellung"; //copied from de-de
-$text['header-user_setting-edit']['de-ch'] = "Benutzereinstellung"; //copied from de-de
-$text['header-user_setting-edit']['de-de'] = "Benutzereinstellung";
-$text['header-user_setting-edit']['es-cl'] = "Configuración de Usuario";
-$text['header-user_setting-edit']['es-mx'] = "Configuración de Usuario"; //copied from es-cl
-$text['header-user_setting-edit']['fr-ca'] = "Cadre de l'utilisateur"; //copied from fr-fr
-$text['header-user_setting-edit']['fr-fr'] = "Cadre de l'utilisateur";
-$text['header-user_setting-edit']['he-il'] = "";
-$text['header-user_setting-edit']['it-it'] = "Parametru Utente";
-$text['header-user_setting-edit']['nl-nl'] = "";
-$text['header-user_setting-edit']['pl-pl'] = "";
-$text['header-user_setting-edit']['pt-br'] = "Definição do Utilizador"; //copied from pt-pt
-$text['header-user_setting-edit']['pt-pt'] = "Definição do Utilizador";
-$text['header-user_setting-edit']['ro-ro'] = "";
-$text['header-user_setting-edit']['ru-ru'] = "Параметры пользователя";
-$text['header-user_setting-edit']['sv-se'] = "Användarinställning";
-$text['header-user_setting-edit']['uk-ua'] = "";
-
-$text['header-user_setting-add']['en-us'] = "User Setting Add";
-$text['header-user_setting-add']['ar-eg'] = "";
-$text['header-user_setting-add']['de-at'] = "Benutzereinstellung hinzufügen"; //copied from de-de
-$text['header-user_setting-add']['de-ch'] = "Benutzereinstellung hinzufügen"; //copied from de-de
-$text['header-user_setting-add']['de-de'] = "Benutzereinstellung hinzufügen";
-$text['header-user_setting-add']['es-cl'] = "Ajuste del usuario Agregar";
-$text['header-user_setting-add']['es-mx'] = "Ajuste del usuario Agregar"; //copied from es-cl
-$text['header-user_setting-add']['fr-ca'] = "Cadre utilisateur Ajouter"; //copied from fr-fr
-$text['header-user_setting-add']['fr-fr'] = "Cadre utilisateur Ajouter";
-$text['header-user_setting-add']['he-il'] = "";
-$text['header-user_setting-add']['it-it'] = "Inserire Parametro Utente";
-$text['header-user_setting-add']['nl-nl'] = "";
-$text['header-user_setting-add']['pl-pl'] = "";
-$text['header-user_setting-add']['pt-br'] = "Usuário setting Adicionar"; //copied from pt-pt
-$text['header-user_setting-add']['pt-pt'] = "Usuário setting Adicionar";
-$text['header-user_setting-add']['ro-ro'] = "";
-$text['header-user_setting-add']['ru-ru'] = "Добавить параметр пользователя";
-$text['header-user_setting-add']['sv-se'] = "Lägg Till Användarinställning";
-$text['header-user_setting-add']['uk-ua'] = "";
 
 $text['header-user_manager']['en-us'] = "Users";
 $text['header-user_manager']['ar-eg'] = "";
