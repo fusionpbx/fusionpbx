@@ -46,6 +46,7 @@
 	if (is_array($_REQUEST) && sizeof($_REQUEST) > 0) {
 
 		$extension_uuids = $_REQUEST["id"];
+		$page = $_REQUEST['page'];
 		foreach($extension_uuids as $extension_uuid) {
 			if ($extension_uuid != '') {
 				//get the extensions array
@@ -112,7 +113,7 @@
 
 //redirect the browser
 	message::add($text['message-delete']);
-	header("Location: extensions.php");
+	header("Location: extensions.php".(is_numeric($page) ? '?page='.$page : null));
 	exit;
 
 ?>

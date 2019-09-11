@@ -84,11 +84,10 @@
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&search=".urlencode($search);
-	if (!isset($_GET['page'])) { $_GET['page'] = 0; }
-	$_GET['page'] = $_GET['page'];
+	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls_mini, $rows_per_page, $var_3) = paging($total_extensions, $param, $rows_per_page, true); //top
 	list($paging_controls, $rows_per_page, $var_3) = paging($total_extensions, $param, $rows_per_page); //bottom
-	$offset = $rows_per_page * $_GET['page'];
+	$offset = $rows_per_page * $page;
 
 //get the extensions
 	$sql = "select * from v_extensions ";
@@ -194,7 +193,9 @@
 
 	if (is_array($extensions)) {
 		foreach($extensions as $row) {
-			$tr_link = (permission_exists('extension_edit')) ? " href='extension_edit.php?id=".escape($row['extension_uuid'])."'" : null;
+			if (permission_exists('extension_edit')) {
+				$tr_link = "href='extension_edit.php?id=".urlencode($row['extension_uuid']).(is_numeric($page) ? '&page='.$page : null)."'";
+			}
 			echo "<tr ".$tr_link.">\n";
 			if (permission_exists('extension_delete')) {
 				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; vertical-align: middle; padding: 0px;'>";
@@ -207,7 +208,7 @@
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('extension_edit')) {
-				echo "<a href='extension_edit.php?id=".escape($row['extension_uuid'])."'>".escape($row['extension'])."</a>";
+				echo "<a ".$tr_link.">".escape($row['extension'])."</a>";
 			}
 			else {
 				echo escape($row['extension']);
@@ -250,17 +251,16 @@
 
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('extension_edit')) {
-				echo "<a href='extension_edit.php?id=".escape($row['extension_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a ".$tr_link." alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('extension_delete')) {
-				echo "<a href='extension_delete.php?id[]=".escape($row['extension_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='extension_delete.php?id[]=".escape($row['extension_uuid']).(is_numeric($page) ? '&page='.$page : null)."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "</td>\n";
 			echo "</tr>\n";
 			$c = ($c) ? 0 : 1;
 		}
 	}
-	unset($extensions, $row);
 
 	if (is_array($extensions)) {
 		echo "<tr>\n";
@@ -276,6 +276,8 @@
 		echo "	</td>\n";
 		echo "</tr>\n";
 	}
+
+	unset($extensions, $row);
 
 	echo "</table>";
 	echo "</form>";

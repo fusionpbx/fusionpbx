@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -50,13 +50,14 @@
 		if (!is_numeric($extension_new)) {
 			$number_alias_new = $_REQUEST["alias"];
 		}
+		$page = $_REQUEST['page'];
 	}
 
 // skip the copy if the domain extension already exists
 	$extension = new extension;
 	if ($extension->exists($_SESSION['domain_uuid'], $extension_new)) {
 		message::add($text['message-duplicate'], 'negative');
-		header("Location: extensions.php");
+		header("Location: extensions.php".(is_numeric($page) ? '?page='.$page : null));
 		exit;
 	}
 
@@ -194,7 +195,7 @@
 
 //redirect the user
 	message::add($text['message-copy']);
-	header("Location: extensions.php");
+	header("Location: extensions.php".(is_numeric($page) ? '?page='.$page : null));
 	exit;
 
 ?>
