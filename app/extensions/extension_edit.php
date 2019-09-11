@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2018 All Rights Reserved.
+	Copyright (C) 2008-2019 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -46,6 +46,7 @@
 	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$extension_uuid = $_REQUEST["id"];
+		$page = $_REQUEST['page'];
 	}
 	else {
 		$action = "add";
@@ -64,7 +65,7 @@
 
 			if ($total_extensions >= $_SESSION['limit']['extensions']['numeric']) {
 				message::add($text['message-maximum_extensions'].' '.$_SESSION['limit']['extensions']['numeric'], 'negative');
-				header('Location: extensions.php');
+				header('Location: extensions.php'.(is_numeric($page) ? '?page='.$page : null));
 				exit;
 			}
 		}
@@ -638,7 +639,7 @@
 					}
 					if ($action == "update") {
 						message::add($text['message-update']);
-						header("Location: extension_edit.php?id=".$extension_uuid);
+						header("Location: extension_edit.php?id=".$extension_uuid.(is_numeric($page) ? '&page='.$page : null));
 						return;
 					}
 			}
@@ -837,13 +838,13 @@
 	echo "	var new_ext = prompt('".$text['message-extension']."');\n";
 	echo "	if (new_ext != null) {\n";
 	echo "		if (!isNaN(new_ext)) {\n";
-	echo "			document.location.href='extension_copy.php?id=".escape($extension_uuid)."&ext=' + new_ext;\n";
+	echo "			document.location.href='extension_copy.php?id=".escape($extension_uuid)."&ext=' + new_ext".(is_numeric($page) ? " + '&page=".$page."'" : null).";\n";
 	echo "		}\n";
 	echo "		else {\n";
 	echo "			var new_number_alias = prompt('".$text['message-number_alias']."');\n";
 	echo "			if (new_number_alias != null) {\n";
 	echo "				if (!isNaN(new_number_alias)) {\n";
-	echo "					document.location.href='extension_copy.php?id=".escape($extension_uuid)."&ext=' + new_ext + '&alias=' + new_number_alias;\n";
+	echo "					document.location.href='extension_copy.php?id=".escape($extension_uuid)."&ext=' + new_ext + '&alias=' + new_number_alias".(is_numeric($page) ? " + '&page=".$page."'" : null).";\n";
 	echo "				}\n";
 	echo "			}\n";
 	echo "		}\n";
@@ -852,6 +853,9 @@
 	echo "</script>";
 
 	echo "<form method='post' name='frm' id='frm' action=''>\n";
+	if (is_numeric($page)) {
+		echo "<input type='hidden' name='page' value='".$page."'>\n";
+	}
 	echo "<table width='100%' border='0' cellpdding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	if ($action == "add") {
@@ -861,7 +865,7 @@
 		echo "<td width='30%' nowrap='nowrap' align='left' valign='top'><b>".$text['header-extension-edit']."</b></td>\n";
 	}
 	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"window.location='extensions.php'\" value='".$text['button-back']."'>\n";
+	echo "	<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"window.location='extensions.php".(is_numeric($page) ? '?page='.$page : null)."'\" value='".$text['button-back']."'>\n";
 	if ($action == 'update' && (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb'))) {
 		echo "	<input type='button' class='btn' alt='".$text['button-call_routing']."' onclick=\"window.location='../calls/call_edit.php?id=".escape($extension_uuid)."';\" value='".$text['button-call_routing']."'>\n";
 	}
