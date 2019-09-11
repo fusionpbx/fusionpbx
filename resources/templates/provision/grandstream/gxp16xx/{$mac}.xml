@@ -30,13 +30,31 @@
 <P47>{$account.1.server_address}:{$account.1.sip_port}</P47>
 <!--  Secondary SIP Server -->
 <!--  String -->
+
+{if isset($account.1.server_address_secondary)}
+<P2312>{$account.1.server_address_secondary}:{$account.1.sip_port}</P2312>
+{else}
 <P2312>{$account.1.server_address_secondary}</P2312>
+{/if}
+  
 <!--  Outbound Proxy -->
 <!--  String -->
-<P48>{$account.1.outbound_proxy}</P48>
+
+{if isset($account.1.outbound_proxy_primary)}
+<P48>{$account.1.outbound_proxy_primary}:{$account.1.sip_port}</P48>
+{else}
+<P48>{$account.1.outbound_proxy_primary}</P48>
+{/if}	 
+  
 <!--  Backup Outbound Proxy -->
 <!--  String -->
-<P2333></P2333>
+  
+{if isset($account.1.outbound_proxy_secondary)}
+<P2333>{$account.1.outbound_proxy_secondary}:{$account.1.sip_port}</P2333>
+{else}
+<P2333>{$account.1.outbound_proxy_secondary}</P2333>
+{/if}	
+  
 <!--  SIP User ID -->
 <!--  String -->
 <P35>{$account.1.user_id}</P35>
@@ -615,15 +633,31 @@
 
 <!--  Secondary SIP Server -->
 <!--  String -->
+
+{if isset($account.2.server_address_secondary)}
+<P2412>{$account.2.server_address_secondary}:{$account.2.sip_port}</P2412>
+{else}
 <P2412>{$account.2.server_address_secondary}</P2412>
+{/if}  
 
 <!--  Outbound Proxy -->
 <!--  String -->
-<P403>{$account.2.outbound_proxy}</P403>
+
+{if isset($account.2.outbound_proxy_primary)}
+<P403>{$account.2.outbound_proxy_primary}:{$account.2.sip_port}</P403>
+{else}
+<P403>{$account.2.outbound_proxy_primary}</P403>
+{/if}  
 
 <!--  Backup Outbound Proxy -->
 <!--  String -->
-<P2433></P2433>
+
+{if isset($account.2.outbound_proxy_secondary)}
+<P2433>{$account.2.outbound_proxy_secondary}:{$account.2.sip_port}</P2433>
+{else}
+<P2433>{$account.2.outbound_proxy_secondary}</P2433>
+{/if}
+  
 <!--  SIP User ID -->
 <!--  String -->
 <P404>{$account.2.user_id}</P404>
@@ -1182,14 +1216,31 @@
 
 <!--  Secondary SIP Server -->
 <!--  String -->
+
+{if isset($account.3.server_address_secondary)}
+<P2512>{$account.3.server_address_secondary}:{$account.3.sip_port}</P2512>
+{else}
 <P2512>{$account.3.server_address_secondary}</P2512>
+{/if}  
+  
 <!--  Outbound Proxy -->
 <!--  String -->
-<P503>{$account.3.outbound_proxy}</P503>
+
+{if isset($account.3.outbound_proxy_primary)}
+<P503>{$account.3.outbound_proxy_primary}:{$account.3.sip_port}</P503>
+{else}
+<P503>{$account.3.outbound_proxy_primary}</P503>
+{/if}  
 
 <!--  Backup Outbound Proxy -->
 <!--  String  -->
-<P2533></P2533>
+
+{if isset($account.3.outbound_proxy_secondary)}
+<P2533>{$account.3.outbound_proxy_secondary}:{$account.3.sip_port}</P2533>
+{else}
+<P2533>{$account.3.outbound_proxy_secondary}</P2533>
+{/if}
+  
 <!--  SIP User ID -->
 <!--  String -->
 <P504>{$account.3.user_id}</P504>
