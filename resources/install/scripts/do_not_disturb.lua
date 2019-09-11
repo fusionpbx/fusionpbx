@@ -177,7 +177,7 @@
 		sql = sql .. "do_not_disturb = 'true', ";
 		sql = sql .. "forward_all_enabled = 'false' ";
 	else
-		sql = sql .. "dial_string = :dial_string, ";
+		sql = sql .. "dial_string = null, ";
 		sql = sql .. "do_not_disturb = 'false' ";
 	end
 	sql = sql .. "where domain_uuid = :domain_uuid ";
