@@ -120,10 +120,10 @@
 	if (follow_me_uuid ~= nil) then
 		local sql = "select cid_name_prefix, cid_number_prefix, ";
 		sql = sql .. "follow_me_enabled, follow_me_caller_id_uuid, follow_me_ignore_busy ";
-		sql = sql .. "from v_extensions ";
+		sql = sql .. "from v_follow_me ";
 		sql = sql .. "where domain_uuid = :domain_uuid ";
 		sql = sql .. "follow_me_uuid = :follow_me_uuid; ";
-		local params = {domain_uuid = domain_uuid,destination_number = destination_number};
+		local params = {domain_uuid = domain_uuid,follow_me_uuid = follow_me_uuid};
 		if (debug["sql"]) then
 			freeswitch.consoleLog("notice", "SQL:" .. sql .. "; params: " .. json.encode(params) .. "\n");
 		end
@@ -344,7 +344,7 @@
 						local sql = "select destination_uuid, destination_number, destination_description, destination_caller_id_name, destination_caller_id_number ";
 						sql = sql .. "from v_destinations ";
 						sql = sql .. "where domain_uuid = :domain_uuid ";
-						sql = sql .. "and destination_uuid = 'destination_uuid' ";
+						sql = sql .. "and destination_uuid = :destination_uuid ";
 						sql = sql .. "order by destination_number asc ";
 						local params = {domain_uuid = domain_uuid, destination_uuid = follow_me_caller_id_uuid};
 						if (debug["sql"]) then
