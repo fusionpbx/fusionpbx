@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -1066,7 +1066,7 @@
 
 			//memory available
 				if (stristr(PHP_OS, 'Linux')) {
-					$result = trim(shell_exec('free -hw | grep \'Mem:\' | cut -d\' \' -f 58-64'));
+					$result = trim(shell_exec('free -hw | grep \'Mem:\' | cut -d\' \' -f 55-64'));
 					if ($result != '') {
 						$hud[$n]['html'] .= "<tr class='tr_link_void'>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-memory_available']."</td>\n";
