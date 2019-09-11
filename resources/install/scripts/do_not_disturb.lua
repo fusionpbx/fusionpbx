@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010-2016
+--	Copyright (C) 2010-2019
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -133,7 +133,6 @@
 --set the dial string
 	if (enabled == "true") then
 		local user = (number_alias and #number_alias > 0) and number_alias or extension;
-		dial_string = "error/user_busy";
 	end
 
 --set do not disturb
@@ -173,16 +172,16 @@
 	sql = "update v_extensions set ";
 	if (enabled == "true") then
 		sql = sql .. "follow_me_enabled = 'false', ";
-		sql = sql .. "dial_string = :dial_string, ";
+		sql = sql .. "dial_string = 'error/user_busy', ";
 		sql = sql .. "do_not_disturb = 'true', ";
 		sql = sql .. "forward_all_enabled = 'false' ";
 	else
-		sql = sql .. "dial_string = :dial_string, ";
+		sql = sql .. "dial_string = null, ";
 		sql = sql .. "do_not_disturb = 'false' ";
 	end
 	sql = sql .. "where domain_uuid = :domain_uuid ";
 	sql = sql .. "and extension_uuid = :extension_uuid ";
-	local params = {dial_string = dial_string, domain_uuid = domain_uuid, extension_uuid = extension_uuid, dial_string = dial_string};
+	local params = {domain_uuid = domain_uuid, extension_uuid = extension_uuid};
 	if (debug["sql"]) then
 		freeswitch.consoleLog("notice", "[do_not_disturb] "..sql.."; params:" .. json.encode(params) .. "\n");
 	end
