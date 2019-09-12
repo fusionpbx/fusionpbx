@@ -788,9 +788,22 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		cursor: pointer;
 		}
 
-	div.domains_list_item span.domain_list_item_description, div.domains_list_item_active span.domain_list_item_description, div.domains_list_item_inactive span.domain_list_item_description {
-		color: #999;
+	div.domains_list_item span.domain_list_item_description, 
+	div.domains_list_item_active span.domain_list_item_description, 
+	div.domains_list_item_inactive span.domain_list_item_description {
 		font-size: 11px;
+		}
+
+	div.domains_list_item span.domain_list_item_description {
+		color: #999;
+		}
+
+	div.domains_list_item_active span.domain_list_item_description {
+		color: <?php echo ($_SESSION['theme']['domain_active_desc_text_color']['text'] != '') ? $_SESSION['theme']['domain_active_desc_text_color']['text'] : '#999'; ?>;
+		}
+
+	div.domains_list_item_inactive span.domain_list_item_description {
+		color: <?php echo ($_SESSION['theme']['domain_inactive_desc_text_color']['text'] != '') ? $_SESSION['theme']['domain_inactive_desc_text_color']['text'] : '#999'; ?>;
 		}
 
 	div.domains_list_item:hover a,
