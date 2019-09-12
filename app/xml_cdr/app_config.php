@@ -137,7 +137,7 @@
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "53c56ddb-bd20-4fbd-b646-1ca9f8d2af11";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cdr";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "cut_prefix";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "remove_prefix";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
