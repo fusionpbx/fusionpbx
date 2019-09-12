@@ -448,7 +448,16 @@ echo "	<div id='message_container'></div>\n";
 				echo "<div id=\"".$domain['domain_name']."\" class='domains_list_item' style='background-color: ".$bgcolor."' onclick=\"document.location.href='".escape($domain_path)."?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true';\">";
 			}
 			echo "<a href='".escape($domain_path)."?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true' ".(($domain['domain_uuid'] == $_SESSION['domain_uuid']) ? "style='font-weight: bold;'" : null).">".escape($domain['domain_name'])."</a>\n";
-			if ($domain['domain_description'] != '') {
+			//active domain description text color
+			if ($_SESSION['theme']['domain_active_desc_text_color']['text'] != '' && $domain['domain_description'] != '' && $domain['domain_uuid'] == $_SESSION['domain_uuid']) {
+				echo "<span class=\"domain_active_list_item_description\"> - ".escape($domain['domain_description'])."</span>\n";
+			}
+			//inactive domains description text color
+			else if ($_SESSION['theme']['domain_inactive_desc_text_color']['text'] != '' && $domain['domain_description'] != '' && $domain['domain_uuid'] != $_SESSION['domain_uuid']) {
+				echo "<span class=\"domain_inactive_list_item_description\"> - ".escape($domain['domain_description'])."</span>\n";
+			}
+			//default domain description text color
+			else {
 				echo "<span class=\"domain_list_item_description\"> - ".escape($domain['domain_description'])."</span>\n";
 			}
 			echo "</div>\n";
