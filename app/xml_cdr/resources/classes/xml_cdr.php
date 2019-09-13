@@ -193,13 +193,13 @@ if (!class_exists('xml_cdr')) {
 					$f = 1;
 					if (isset($this->fields)) {
 						foreach ($this->fields as $field) {
-							$field = preg_replace('#[^a-zA-Z0-9_\-]#', '', $field);
+							//$field = preg_replace('#[^a-zA-Z0-9_\-]#', '', $field);
 							if (isset($row[$field]) && strlen($row[$field]) > 0) {
 								$sql .= ":".$field." \n";
 								$parameters[$field] = $row[$field];
 							}
 							else {
-								$sql .= "null";
+								$sql .= "null\n";
 							}
 							if ($field_count != $f) {
 								$sql .= ",";
@@ -256,29 +256,21 @@ if (!class_exists('xml_cdr')) {
 				$duplicate_uuid = false;
 				$uuid = urldecode($xml->variables->uuid);
 				if($uuid != null && is_uuid($uuid)) {
-					//Check in the database
-						$sql = "select count(xml_cdr_uuid) ";
-						$sql .= "from v_xml_cdr ";
-						$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
-						$parameters['xml_cdr_uuid'] = $uuid;
-						$database = new database;
-						$count = $database->select($sql, $parameters, 'column');
-						unset($parameters);
-						if ($count > 0) {
-							$duplicate_uuid = true;
-						}
-						unset($database);
-					//Check in the array
-						if (isset($this->array)) {
-							foreach ($this->array as $row) {
-								if (in_array($uuid,$row,true))
-									$duplicate_uuid = true;
-							}
-						}
+					$sql = "select count(xml_cdr_uuid) ";
+					$sql .= "from v_xml_cdr ";
+					$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
+					$parameters['xml_cdr_uuid'] = $uuid;
+					$database = new database;
+					$count = $database->select($sql, $parameters, 'column');
+					if ($count > 0) {
+						$duplicate_uuid = true;
+					}
+					unset($sql, $parameters);
 				}
 
 			//process data if the call detail record is not a duplicate
-				if ($duplicate_uuid == false && $uuid != null) {
+				if ($duplicate_uuid == false && is_uuid($uuid)) {
+
 					//get the destination number
 						if ($xml->variables->current_application == "bridge") {
 							$current_application_data = urldecode($xml->variables->current_application_data);
@@ -541,7 +533,7 @@ if (!class_exists('xml_cdr')) {
 								$record_length = urldecode($xml->variables->duration);
 							}
 						}
-							
+
 					// Last check
 						 if (!isset($record_name) || is_null ($record_name) || (strlen($record_name) == 0)) {
 							$bridge_uuid = urldecode($xml->variables->bridge_uuid);
@@ -564,7 +556,7 @@ if (!class_exists('xml_cdr')) {
 								$record_length = urldecode($xml->variables->duration);
 							}
 						}
-					
+
 					//add the call recording
 						if (isset($record_path) && isset($record_name) && file_exists($record_path.'/'.$record_name) && $record_length > 0) {
 							//add to the xml cdr table
@@ -619,17 +611,43 @@ if (!class_exists('xml_cdr')) {
 						}
 
 					//insert the values
-						if (strlen($uuid) > 0) {
+						if ($this->debug) {
+							//$time5_insert = microtime(true);
+							//echo $sql."<br />\n";
+						}
+						try {
+							$error = "false";
+							//$this->db->exec($sql);
+						}
+						catch(PDOException $e) {
+							$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/failed/';
+							if(!file_exists($tmp_dir)) {
+								event_socket_mkdir($tmp_dir);
+							}
+							if ($_SESSION['cdr']['format']['text'] == "xml") {
+								$tmp_file = $uuid.'.xml';
+								$fh = fopen($tmp_dir.'/'.$tmp_file, 'w');
+								fwrite($fh, $xml_string);
+							}
+							else {
+								$tmp_file = $uuid.'.json';
+								$fh = fopen($tmp_dir.'/'.$tmp_file, 'w');
+								fwrite($fh, json_encode($xml));
+							}
+							fclose($fh);
 							if ($this->debug) {
-								//$time5_insert = microtime(true);
-								//echo $sql."<br />\n";
+								echo $e->getMessage();
 							}
-							try {
-								$error = "false";
-								//$this->db->exec(check_sql($sql));
-							}
-							catch(PDOException $e) {
-								$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/failed/';
+							$error = "true";
+						}
+
+						if ($_SESSION['cdr']['storage']['text'] == "dir" && $error != "true") {
+							if (strlen($uuid) > 0) {
+								$tmp_time = strtotime($start_stamp);
+								$tmp_year = date("Y", $tmp_time);
+								$tmp_month = date("M", $tmp_time);
+								$tmp_day = date("d", $tmp_time);
+								$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
 								if(!file_exists($tmp_dir)) {
 									event_socket_mkdir($tmp_dir);
 								}
@@ -644,44 +662,16 @@ if (!class_exists('xml_cdr')) {
 									fwrite($fh, json_encode($xml));
 								}
 								fclose($fh);
-								if ($this->debug) {
-									echo $e->getMessage();
-								}
-								$error = "true";
 							}
-
-							if ($_SESSION['cdr']['storage']['text'] == "dir" && $error != "true") {
-								if (strlen($uuid) > 0) {
-									$tmp_time = strtotime($start_stamp);
-									$tmp_year = date("Y", $tmp_time);
-									$tmp_month = date("M", $tmp_time);
-									$tmp_day = date("d", $tmp_time);
-									$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
-									if(!file_exists($tmp_dir)) {
-										event_socket_mkdir($tmp_dir);
-									}
-									if ($_SESSION['cdr']['format']['text'] == "xml") {
-										$tmp_file = $uuid.'.xml';
-										$fh = fopen($tmp_dir.'/'.$tmp_file, 'w');
-										fwrite($fh, $xml_string);
-									}
-									else {
-										$tmp_file = $uuid.'.json';
-										$fh = fopen($tmp_dir.'/'.$tmp_file, 'w');
-										fwrite($fh, json_encode($xml));
-									}
-									fclose($fh);
-								}
-							}
-							unset($error);
-
-							//if ($this->debug) {
-								//GLOBAL $insert_time,$insert_count;
-								//$insert_time+=microtime(true)-$time5_insert; //add this current query.
-								//$insert_count++;
-							//}
 						}
-						unset($sql);
+						unset($error);
+
+						//if ($this->debug) {
+							//GLOBAL $insert_time,$insert_count;
+							//$insert_time+=microtime(true)-$time5_insert; //add this current query.
+							//$insert_count++;
+						//}
+
 				} //if ($duplicate_uuid == false)
 		} //function xml_array
 
