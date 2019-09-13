@@ -24,7 +24,6 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-
 /**
  * xml_cdr class provides methods for adding cdr records to the database
  *
@@ -167,33 +166,32 @@ if (!class_exists('xml_cdr')) {
 
 			$this->fields();
 			$field_count = sizeof($this->fields);
-
-			$sql = "insert into v_xml_cdr (";
-			$f = 1;
-			if (isset($this->fields)) {
-				foreach ($this->fields as $field) {
-					$field = preg_replace('#[^a-zA-Z0-9_\-]#', '', $field);
-					if ($field_count == $f) {
-						$sql .= "$field ";
-					}
-					else {
-						$sql .= "$field, ";
-					}
-					$f++;
-				}
-			}
-			$sql .= ")\n";
-			$sql .= "values \n";
 			$row_count = sizeof($this->array);
 			//$field_count = sizeof($this->fields);
 			$i = 0;
 			if (isset($this->array)) {
 				foreach ($this->array as $row) {
+					$sql = "insert into v_xml_cdr (";
+					$f = 1;
+					if (isset($this->fields)) {
+						foreach ($this->fields as $field) {
+							$field = preg_replace('#[^a-zA-Z0-9_\-]#', '', $field);
+							if ($field_count == $f) {
+								$sql .= "$field ";
+							}
+							else {
+								$sql .= "$field, ";
+							}
+							$f++;
+						}
+					}
+					$sql .= ")\n";
+					$sql .= "values \n";
 					$sql .= "(";
 					$f = 1;
 					if (isset($this->fields)) {
 						foreach ($this->fields as $field) {
-							//$field = preg_replace('#[^a-zA-Z0-9_\-]#', '', $field);
+							$field = preg_replace('#[^a-zA-Z0-9_\-]#', '', $field);
 							if (isset($row[$field]) && strlen($row[$field]) > 0) {
 								$sql .= ":".$field." \n";
 								$parameters[$field] = $row[$field];
@@ -208,18 +206,13 @@ if (!class_exists('xml_cdr')) {
 						}
 					}
 					$sql .= ")";
-					if ($row_count != $i) {
-						$sql .= ",\n";
-					}
+					$database = new database;
+					$database->execute($sql, $parameters);
+					unset($sql, $parameters);
 					$i++;
 				}
 			}
-			if (substr($sql,-2) == ",\n") {
-				$sql = substr($sql,0,-2);
-			}
-			$database = new database;
-			$database->execute($sql, $parameters);
-			unset($sql, $parameters);
+
 		}
 
 		/**
