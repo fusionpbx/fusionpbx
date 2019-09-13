@@ -402,6 +402,12 @@ if (!class_exists('xml_cdr')) {
 
 					//get the domain name
 						if (strlen($domain_name) == 0) {
+							$domain_name = urldecode($xml->variables->dialed_domain);
+						}
+						if (strlen($domain_name) == 0) {
+							$domain_name = urldecode($xml->variables->sip_invite_domain);
+						}
+						if (strlen($domain_name) == 0) {
 							$domain_name = urldecode($xml->variables->sip_req_host);
 						}
 						if (strlen($domain_name) == 0) {
