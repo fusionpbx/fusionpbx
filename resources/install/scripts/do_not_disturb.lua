@@ -167,12 +167,7 @@
 		sql = sql .. "where domain_uuid = :domain_uuid ";
 		sql = sql .. "and extension_uuid = :extension_uuid ";
 		local params = {domain_uuid = domain_uuid, extension_uuid = extension_uuid};
-		if (debug["sql"]) then
-			freeswitch.consoleLog("notice", "[do_not_disturb] "..sql.."; params:" .. json.encode(params) .. "\n");
-		end
-		dbh:query(sql, params);
-	end
-if (follow_me_uuid ~= nil and enabled == 'false') then
+	elseif (follow_me_uuid ~= nil and enabled == 'false') then
 		local sql = "update v_follow_me ";
 		sql = sql .. "set follow_me_enabled = 'true' ";
 		sql = sql .. "where domain_uuid = :domain_uuid ";
