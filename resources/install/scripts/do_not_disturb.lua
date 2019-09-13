@@ -162,11 +162,7 @@
 		sql = sql .. "where domain_uuid = :domain_uuid ";
 		sql = sql .. "and follow_me_uuid = :follow_me_uuid ";
 		local params = {domain_uuid = domain_uuid, follow_me_uuid = follow_me_uuid};
-		if (debug["sql"]) then
-			freeswitch.consoleLog("notice", "[do_not_disturb] "..sql.."; params:" .. json.encode(params) .. "\n");
-		end
-		dbh:query(sql, params);
-	local sql = "update v_extensions ";
+		local sql = "update v_extensions ";
 		sql = sql .. "set follow_me_enabled = 'false' ";
 		sql = sql .. "where domain_uuid = :domain_uuid ";
 		sql = sql .. "and extension_uuid = :extension_uuid ";
@@ -182,10 +178,6 @@ if (follow_me_uuid ~= nil and enabled == 'false') then
 		sql = sql .. "where domain_uuid = :domain_uuid ";
 		sql = sql .. "and follow_me_uuid = :follow_me_uuid ";
 		local params = {domain_uuid = domain_uuid, follow_me_uuid = follow_me_uuid};
-		if (debug["sql"]) then
-			freeswitch.consoleLog("notice", "[do_not_disturb] "..sql.."; params:" .. json.encode(params) .. "\n");
-		end
-		dbh:query(sql, params);
 		local sql = "update v_extensions ";
 		sql = sql .. "set follow_me_enabled = 'true' ";
 		sql = sql .. "where domain_uuid = :domain_uuid ";
@@ -194,7 +186,7 @@ if (follow_me_uuid ~= nil and enabled == 'false') then
 		if (debug["sql"]) then
 			freeswitch.consoleLog("notice", "[do_not_disturb] "..sql.."; params:" .. json.encode(params) .. "\n");
 		end
-		dbh:query(sql, params)
+		dbh:query(sql, params);
 	end
 
 --update the extension
