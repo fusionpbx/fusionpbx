@@ -3037,7 +3037,7 @@
 		$vendors[$y]['functions'][$z]['uuid'] = "b047d0d7-27a8-4a82-ba7f-44efb5bf1734";
 		$vendors[$y]['functions'][$z]['label'] = "label-blf_new";
 		$vendors[$y]['functions'][$z]['name'] = "blf_new";
-		$vendors[$y]['functions'][$z]['value'] = "11";
+		$vendors[$y]['functions'][$z]['value'] = "bc";
                 $vendors[$y]['functions'][$z]['description'] = "BLF - New Call";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
@@ -3066,6 +3066,23 @@
                 $vendors[$y]['functions'][$z]['groups'][] = "superadmin";
                 $vendors[$y]['functions'][$z]['groups'][] = "admin";
                 $z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "9066d58e-7395-4cd0-8a52-e7fa3c24ad54";
+                $vendors[$y]['functions'][$z]['label'] = "label-blf_conference";
+                $vendors[$y]['functions'][$z]['name'] = "blf_conference";
+                $vendors[$y]['functions'][$z]['value'] = "bf";
+                $vendors[$y]['functions'][$z]['description'] = "BLF - Conference";
+                $vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+                $vendors[$y]['functions'][$z]['groups'][] = "admin";
+                $z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "ae238960-aa4c-4d92-b560-848814ed8df8";
+                $vendors[$y]['functions'][$z]['label'] = "label-mwi";
+                $vendors[$y]['functions'][$z]['name'] = "mwi";
+                $vendors[$y]['functions'][$z]['value'] = "m";
+                $vendors[$y]['functions'][$z]['description'] = "MWI - *97 Voicemail";
+                $vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+                $vendors[$y]['functions'][$z]['groups'][] = "admin";
+                $z++;
+
 //algo
 		$y++;
 		$vendors[$y]['uuid'] = "dc5ffcb9-5195-4fb8-8b23-f4216ed7f0f6";

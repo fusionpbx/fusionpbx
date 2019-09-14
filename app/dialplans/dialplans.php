@@ -446,17 +446,18 @@
 	}
 	echo "<br><br>";
 
-	if (sizeof($dialplan_ids) > 0) {
-		echo "<script>\n";
-		echo "	function check(what) {\n";
-		echo "		document.getElementById('chk_all').checked = (what == 'all') ? true : false;\n";
-		foreach ($dialplan_ids as $checkbox_id) {
-			echo "document.getElementById('$checkbox_id').checked = (what == 'all') ? true : false;\n";
+	if (is_array($dialplans)) {
+		if (sizeof($dialplan_ids) > 0) {
+			echo "<script>\n";
+			echo "	function check(what) {\n";
+			echo "		document.getElementById('chk_all').checked = (what == 'all') ? true : false;\n";
+			foreach ($dialplan_ids as $checkbox_id) {
+				echo "document.getElementById('$checkbox_id').checked = (what == 'all') ? true : false;\n";
+			}
+			echo "	}\n";
+			echo "</script>\n";
 		}
-		echo "	}\n";
-		echo "</script>\n";
 	}
-
 //include the footer
 	require_once "resources/footer.php";
 
