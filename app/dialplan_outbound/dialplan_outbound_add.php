@@ -210,6 +210,20 @@
 					$dialplan_expression = trim($dialplan_expression);
 					if (strlen($dialplan_expression) > 0) {
 						switch ($dialplan_expression) {
+// *** For South African Networks
+			                        case "^(?:\+27|27|0)([1-9]\d*)$":
+							$label = $text['label-sa-national'];
+							$abbrv = "SA-National";
+							break;
+                      				case "^(?:\+|00)(\d*)$":
+							$label = $text['label-sa-inter'];
+							$abbrv = "SA-International";
+							break;
+						case "^(10[12]\d{2,3})$":
+							$label = $text['label-sa-telkom'];
+							$abbrv = "TelkomSpecial";
+							break;
+// ***
 						case "^(\d{7})$":
 							$label = $text['label-7d'];
 							$abbrv = "7d";
@@ -548,7 +562,7 @@
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
-							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'callee_id_number=$1';
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'callee_id_number='.$prefix_number.'$1';
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 
@@ -1055,6 +1069,11 @@ function type_onchange(dialplan_detail_type) {
 
 	echo "	<select name='dialplan_expression_select' id='dialplan_expression_select' onchange=\"update_dialplan_expression()\" class='formfld'>\n";
 	echo "	<option></option>\n";
+// *** For South African Networks
+	echo "  <option value='^(?:\\+27|27|0)([1-9]\\d*)\$'>".$text['label-sa-national']."</option>\n";
+	echo "  <option value='^(?:\\+|00)(\\d*)\$'>".$text['label-sa-inter']."</option>\n";
+	echo "  <option value='^(10[12]\\d{2,3})\$'>".$text['label-sa-telkom']."</option>\n";
+// ***
 	echo "	<option value='^(\\d{2})\$'>".$text['label-2d']."</option>\n";
 	echo "	<option value='^(\\d{3})\$'>".$text['label-3d']."</option>\n";
 	echo "	<option value='^(\\d{4})\$'>".$text['label-4d']."</option>\n";
