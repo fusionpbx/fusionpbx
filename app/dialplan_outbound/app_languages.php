@@ -1181,4 +1181,8 @@ $text['description-accountcode']['ru-ru'] = "Введите Код Аккаун�
 $text['description-accountcode']['sv-se'] = "Ange accountcode.";
 $text['description-accountcode']['uk-ua'] = "Введіть код облікового запису";
 
+$text['label-sa-national']['en-us'] = "SA Local & National - Add a prefix of 0";
+$text['label-sa-inter']['en-us'] = "SA International - Add a prefix of 00";
+$text['label-sa-telkom']['en-us'] = "Telkom Special Services";
+
 ?>
