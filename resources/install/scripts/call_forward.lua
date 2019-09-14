@@ -252,13 +252,26 @@
 			session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-call_forwarding_has_been_cancelled.wav");
 	end
 
---disable the follow me
-	if enabled == "true" and not empty(follow_me_uuid) then
+--toggle the follow me
+	if not empty(follow_me_uuid) then
 		local sql = "update v_follow_me set ";
+		if (enabled == "true") then
 		sql = sql .. "follow_me_enabled = 'false' ";
+	elseif (enabled == "false") then
+		sql = sql .. "follow_me_enabled = 'true' ";
+		end
 		sql = sql .. "where domain_uuid = :domain_uuid ";
 		sql = sql .. "and follow_me_uuid = :follow_me_uuid ";
 		local params = {domain_uuid = domain_uuid, follow_me_uuid = follow_me_uuid};
+		local sql = "update v_extensions ";
+		if (enabled == "true") then
+		sql = sql .. "set follow_me_enabled = 'false' ";
+	elseif (enabled == "false") then
+		sql = sql .. "set follow_me_enabled = 'true' ";
+		end
+		sql = sql .. "where domain_uuid = :domain_uuid ";
+		sql = sql .. "and extension_uuid = :extension_uuid ";
+		local params = {domain_uuid = domain_uuid, extension_uuid = extension_uuid};
 		if (debug["sql"]) then
 			log.noticef("SQL: %s; params: %s", sql, json.encode(params));
 		end
