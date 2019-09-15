@@ -156,25 +156,12 @@
 	end
 
 --update follow me
-	if (follow_me_uuid ~= nil) then
+	if (follow_me_uuid ~= nil and enabled == 'true') then
 		local sql = "update v_follow_me ";
-		if (enabled == 'true') then
 		sql = sql .. "set follow_me_enabled = 'false' ";
-		elseif (enabled == 'false') then
-		sql = sql .. "set follow_me_enabled = 'true' ";
-		end
 		sql = sql .. "where domain_uuid = :domain_uuid ";
 		sql = sql .. "and follow_me_uuid = :follow_me_uuid ";
 		local params = {domain_uuid = domain_uuid, follow_me_uuid = follow_me_uuid};
-		local sql = "update v_extensions ";
-		if (enabled == 'true') then
-		sql = sql .. "set follow_me_enabled = 'false' ";
-		elseif (enabled == 'false') then
-		sql = sql .. "set follow_me_enabled = 'true' ";
-		end
-		sql = sql .. "where domain_uuid = :domain_uuid ";
-		sql = sql .. "and extension_uuid = :extension_uuid ";
-		local params = {domain_uuid = domain_uuid, extension_uuid = extension_uuid};
 		if (debug["sql"]) then
 			freeswitch.consoleLog("notice", "[do_not_disturb] "..sql.."; params:" .. json.encode(params) .. "\n");
 		end
@@ -184,6 +171,7 @@
 --update the extension
 	sql = "update v_extensions set ";
 	if (enabled == "true") then
+		sql = sql .. "follow_me_enabled = 'false', ";
 		sql = sql .. "dial_string = 'error/user_busy', ";
 		sql = sql .. "do_not_disturb = 'true', ";
 		sql = sql .. "forward_all_enabled = 'false' ";
