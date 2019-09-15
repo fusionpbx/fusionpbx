@@ -2314,7 +2314,7 @@
     <!-- Disable Missed Call Backlight. 0 - No, 1 - Yes. Default is 0 -->
     <!-- Number: 0, 1 -->
     <!-- Mandatory -->
-    <P351>0</P351>
+    <P351>1</P351>
     <!--  Settings/Date and Time -->
     <!-- NTP Server -->
     <!-- String -->
