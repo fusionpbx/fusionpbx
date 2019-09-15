@@ -107,11 +107,23 @@
 		context = row.user_context;
 	end);
 
+--get follow me default state
+	local sql = "select * from v_follow_me ";
+	sql = sql .. "where follow_me_uuid = :follow_me_uuid ";
+	local params = {follow_me_uuid = follow_me_uuid};
+	if (debug["sql"]) then
+		freeswitch.consoleLog("notice", "[do_not_disturb] " .. sql .. "; params:" .. json.encode(params) .. "\n");
+	end
+	dbh:query(sql, params, function(row)
+		follow_me_default_enabled = row.follow_me_default_enabled;
+	end);
+
 --send information to the console
 	if (session:ready()) then
 		freeswitch.consoleLog("NOTICE", "[do_not_disturb] do_not_disturb "..do_not_disturb.."\n");
 		freeswitch.consoleLog("NOTICE", "[do_not_disturb] extension "..extension.."\n");
 		freeswitch.consoleLog("NOTICE", "[do_not_disturb] follow_me_uuid "..follow_me_uuid.."\n");
+		freeswitch.consoleLog("NOTICE", "[do_not_disturb] follow_me_default_enabled "..follow_me_default_enabled.."\n");
 		freeswitch.consoleLog("NOTICE", "[do_not_disturb] accountcode "..accountcode.."\n");
 		--freeswitch.consoleLog("NOTICE", "[do_not_disturb] enabled before "..enabled.."\n");
 	end
@@ -155,10 +167,22 @@
 			end
 	end
 
---update follow me
+--disable follow me
 	if (follow_me_uuid ~= nil and enabled == 'true') then
 		local sql = "update v_follow_me ";
 		sql = sql .. "set follow_me_enabled = 'false' ";
+		sql = sql .. "where domain_uuid = :domain_uuid ";
+		sql = sql .. "and follow_me_uuid = :follow_me_uuid ";
+		local params = {domain_uuid = domain_uuid, follow_me_uuid = follow_me_uuid};
+		if (debug["sql"]) then
+			freeswitch.consoleLog("notice", "[do_not_disturb] "..sql.."; params:" .. json.encode(params) .. "\n");
+		end
+		dbh:query(sql, params);
+	end
+--enable follow me
+	if (follow_me_uuid ~= nil and enabled == 'false' and follow_me_default_enabled == 'true') then
+		local sql = "update v_follow_me ";
+		sql = sql .. "set follow_me_enabled = 'true' ";
 		sql = sql .. "where domain_uuid = :domain_uuid ";
 		sql = sql .. "and follow_me_uuid = :follow_me_uuid ";
 		local params = {domain_uuid = domain_uuid, follow_me_uuid = follow_me_uuid};
@@ -178,6 +202,9 @@
 	else
 		sql = sql .. "dial_string = null, ";
 		sql = sql .. "do_not_disturb = 'false' ";
+	end
+	if (enabled == 'false' and follow_me_default_enabled == 'true') then
+		sql = sql .. ", follow_me_enabled = 'true' ";
 	end
 	sql = sql .. "where domain_uuid = :domain_uuid ";
 	sql = sql .. "and extension_uuid = :extension_uuid ";
