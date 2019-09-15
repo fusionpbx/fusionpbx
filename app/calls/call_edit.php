@@ -126,6 +126,7 @@
 				$cid_name_prefix = $_POST["cid_name_prefix"];
 				$cid_number_prefix = $_POST["cid_number_prefix"];
 				$follow_me_enabled = $_POST["follow_me_enabled"];
+				$follow_me_default_enabled = $_POST["follow_me_default_enabled"];
 				$follow_me_caller_id_uuid = $_POST["follow_me_caller_id_uuid"];
 				$follow_me_ignore_busy = $_POST["follow_me_ignore_busy"];
 				$n = 0;
@@ -232,6 +233,7 @@
 					}
 
 					$follow_me['follow_me_enabled'] = ($destination_found) ? $follow_me_enabled : 'false';
+					$follow_me['follow_me_default_enabled'] = ($destination_found) ? $follow_me_default_enabled : 'false';
 			}
 
 		//prepare the array
@@ -310,6 +312,7 @@
 				$follow_me->follow_me_ignore_busy = $follow_me_ignore_busy;
 				$follow_me->follow_me_caller_id_uuid = $follow_me_caller_id_uuid;
 				$follow_me->follow_me_enabled = $follow_me_enabled;
+				$follow_me->follow_me_default_enabled = $follow_me_default_enabled;
 				$follow_me->set();
 				unset($follow_me);
 			}
@@ -407,6 +410,7 @@
 			$cid_name_prefix = $row["cid_name_prefix"];
 			$cid_number_prefix = $row["cid_number_prefix"];
 			$follow_me_enabled = $row["follow_me_enabled"];
+			$follow_me_default_enabled = $row["follow_me_default_enabled"];
 			$follow_me_caller_id_uuid = $row["follow_me_caller_id_uuid"];
 			$follow_me_ignore_busy = $row["follow_me_ignore_busy"];
 			unset($row);
@@ -598,8 +602,9 @@
 	if (permission_exists('follow_me_caller_id')) {
 		$on_click .= "document.getElementById('follow_me_caller_id_uuid').focus(); ";
 	}
-	echo "	<label for='follow_me_disabled'><input type='radio' name='follow_me_enabled' id='follow_me_disabled' onclick=\"$('#tr_follow_me_settings').slideUp('fast');\" value='false' ".(($follow_me_enabled == "false" || $follow_me_enabled == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
-	echo "	<label for='follow_me_enabled'><input type='radio' name='follow_me_enabled' id='follow_me_enabled' onclick=\"$('#tr_follow_me_settings').slideDown('fast'); $on_click\" value='true' ".(($follow_me_enabled == "true") ? "checked='checked'" : null)."/> ".$text['label-enabled']."</label> \n";
+	echo "	<label for='follow_me_disabled'><input type='radio' name='follow_me_enabled' id='follow_me_disabled' onclick=\"$('#tr_follow_me_settings').slideUp('fast'); $('#follow_me_default_enabled').val('false');\" value='false' ".(($follow_me_enabled == "false" || $follow_me_enabled == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
+	echo "	<label for='follow_me_enabled'><input type='radio' name='follow_me_enabled' id='follow_me_enabled' onclick=\"$('#tr_follow_me_settings').slideDown('fast'); $('#follow_me_default_enabled').val('true'); $on_click\" value='true' ".(($follow_me_enabled == "true") ? "checked='checked'" : null)."/> ".$text['label-enabled']."</label> \n";
+	echo "	<input type='hidden' name='follow_me_default_enabled' id='follow_me_default_enabled' value='".escape($follow_me_default_enabled)."'/>\n";	
 	unset($on_click);
 	echo "</td>\n";
 	echo "</tr>\n";
