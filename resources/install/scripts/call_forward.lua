@@ -252,10 +252,34 @@
 			session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-call_forwarding_has_been_cancelled.wav");
 	end
 
+--get follow me default state
+	local sql = "select * from v_follow_me ";
+	sql = sql .. "where follow_me_uuid = :follow_me_uuid ";
+	local params = {follow_me_uuid = follow_me_uuid};
+	if (debug["sql"]) then
+		log.noticef("SQL: %s; params: %s", sql, json.encode(params));
+	end
+	local row = dbh:first_row(sql, params)
+	if not row then return end
+	
+	local follow_me_default_enabled = row.follow_me_default_enabled;
+
 --disable the follow me
 	if enabled == "true" and not empty(follow_me_uuid) then
 		local sql = "update v_follow_me set ";
 		sql = sql .. "follow_me_enabled = 'false' ";
+		sql = sql .. "where domain_uuid = :domain_uuid ";
+		sql = sql .. "and follow_me_uuid = :follow_me_uuid ";
+		local params = {domain_uuid = domain_uuid, follow_me_uuid = follow_me_uuid};
+		if (debug["sql"]) then
+			log.noticef("SQL: %s; params: %s", sql, json.encode(params));
+		end
+		dbh:query(sql, params);
+	end
+--enable the follow me
+	if enabled == "false" and follow_me_default_enabled == "true" and not empty(follow_me_uuid) then
+		local sql = "update v_follow_me set ";
+		sql = sql .. "follow_me_enabled = 'true' ";
 		sql = sql .. "where domain_uuid = :domain_uuid ";
 		sql = sql .. "and follow_me_uuid = :follow_me_uuid ";
 		local params = {domain_uuid = domain_uuid, follow_me_uuid = follow_me_uuid};
@@ -277,8 +301,12 @@
 		if (enabled == "true") then
 			sql = sql .. "forward_all_destination = :forward_all_destination, ";
 			sql = sql .. "do_not_disturb = 'false', ";
+			sql = sql .. "follow_me_enabled = 'false', ";
 		else
 			sql = sql .. "forward_all_destination = null, ";
+		end
+		if  (enabled == "false" and follow_me_default_enabled == "true") then
+			sql = sql .. "follow_me_enabled = 'true', ";
 		end
 		sql = sql .. "forward_all_enabled = :forward_all_enabled ";
 		sql = sql .. "where domain_uuid = :domain_uuid ";
