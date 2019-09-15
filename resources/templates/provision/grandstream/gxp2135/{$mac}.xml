@@ -6800,7 +6800,7 @@
     <!-- # Use Random Port. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P78>0</P78>
+    <P78>1</P78>
 
     <!-- # Keep-Alive Interval (in seconds). Default is 20 -->
     <!-- # Number: 10 - 160 -->
@@ -8091,7 +8091,7 @@
     <!-- # Disable Missed Call Backlight. 0 - No, 1 - Yes, 2 - Yes, but flash MWI LED. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    <P351>0</P351>
+    <P351>1</P351>
 
     <!-- # Wallpaper Settings -->
     <!-- # Wallpaper Source. 0 - Default, 1 - Download, 2-USB(for GXP2140/2160/2170 only), 3 - Uploaded, 4 - Color Background -->
