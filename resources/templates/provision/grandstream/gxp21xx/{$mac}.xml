@@ -2942,7 +2942,7 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
     <!-- Use Random Port. 0 - No, 1 - Yes. Default is 0 -->
     <!-- Number: 0, 1 -->
     <!-- Mandatory -->
-    <P78>0</P78>
+    <P78>1</P78>
     <!-- Keep-alive Interval (in seconds). Default is 20 -->
     <!-- Number: 10 - 160 -->
     <!-- Mandatory -->
@@ -3091,7 +3091,7 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
     <!-- Disable Missed Call Backlight. 0 - No, 1 - Yes. Default is 0 -->
     <!-- Number: 0, 1 -->
     <!-- Mandatory -->
-    <P351>0</P351>
+    <P351>1</P351>
     <!-- Settings/Date and Time -->
     <!-- NTP Server -->
     <!-- String -->
