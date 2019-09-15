@@ -83,7 +83,7 @@
 	local follow_me_enabled = row.follow_me_enabled;
 
 --determine whether to update the dial string
-	sql = "select follow_me_enabled, cid_name_prefix, cid_number_prefix, dial_string "
+	sql = "select follow_me_enabled, follow_me_default_enabled, cid_name_prefix, cid_number_prefix, dial_string "
 	sql = sql .. "from v_follow_me ";
 	sql = sql .. "where domain_uuid = :domain_uuid ";
 	sql = sql .. "and follow_me_uuid = :follow_me_uuid ";
@@ -126,9 +126,11 @@
 	sql = "update v_follow_me set ";
 	sql = sql .. "dial_string = null, ";
 	if (follow_me_enabled == "true") then
-		sql = sql .. "follow_me_enabled = 'false' ";
+		sql = sql .. "follow_me_enabled = 'false', ";
+		sql = sql .. "follow_me_default_enabled = 'false' ";
 	else
-		sql = sql .. "follow_me_enabled = 'true' ";
+		sql = sql .. "follow_me_enabled = 'true', ";
+		sql = sql .. "follow_me_default_enabled = 'true' ";
 	end
 	sql = sql .. "where domain_uuid = :domain_uuid ";
 	sql = sql .. "and follow_me_uuid = :follow_me_uuid ";
