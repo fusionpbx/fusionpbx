@@ -8,7 +8,7 @@
 	the License. You may obtain a copy of the License at
 	http://www.mozilla.org/MPL/
 
-	Software distributed under the License is distributed on an "AS IS" basis,
+	Software distributed under the License is distributed on an "as IS" basis,
 	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 	for the specific language governing rights and limitations under the
 	License.
@@ -886,7 +886,7 @@ if (!class_exists('xml_cdr')) {
 				else {
 					$sql .= "and direction = 'inbound') \n";
 				}
-				$sql .= "AS answered, \n";
+				$sql .= "as answered, \n";
 
 				$sql .= "count(*) \n";
 				$sql .= "filter( \n";
@@ -901,9 +901,9 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "    or \n";
 				$sql .= "    c.destination_number = e.number_alias))) \n";
 				$sql .= " and ( \n";
-				$sql .= "  c.answer_stamp IS NULL \n";
+				$sql .= "  c.answer_stamp is null \n";
 				$sql .= "  and \n";
-				$sql .= "  c.bridge_uuid IS NULL) \n";
+				$sql .= "  c.bridge_uuid is null) \n";
 				if ($this->include_internal) {
 							$sql .= " and (direction = 'inbound' or direction = 'outbound'))";
 				} else {
@@ -1044,7 +1044,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "e.description \n";
 
 				$sql .= "from v_extensions as e, v_domains as d, \n";
-				$sql .= "( SELECT \n";
+				$sql .= "( select \n";
 				$sql .= " domain_uuid, \n";
 				$sql .= " extension_uuid, \n";
 				$sql .= " caller_id_number, \n";
