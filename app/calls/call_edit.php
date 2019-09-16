@@ -576,7 +576,7 @@
 				if(strlen($caller_id_name) == 0){
 					$caller_id_name = $row['destination_description'];
 				}
-				echo "		<option value='".escape($row["destination_uuid"])."' ".escape($selected).">".escape(format_phone($caller_id_number))." : ".escape($caller_id_name)."</option>\n";
+				echo "		<option value='".escape($row["destination_uuid"])."' ".$selected.">".format_phone(escape($caller_id_number))." : ".escape($caller_id_name)."</option>\n";
 			}
 			echo "	</select><br />\n";
 			echo $text['description-cid-number']."\n";
