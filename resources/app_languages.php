@@ -211,6 +211,27 @@ $text['message-invalid_credentials']['sv-se'] = "";
 $text['message-invalid_credentials']['uk-ua'] = "";
 $text['message-invalid_credentials']['tr-tr'] = "Geçersiz Kullanıcı Adı ve/veya Parola";
 
+$text['message-invalid_token']['en-us'] = "Invalid Token";
+$text['message-invalid_token']['ar-eg'] = "Invalid Token";
+$text['message-invalid_token']['de-at'] = "Invalid Token";
+$text['message-invalid_token']['de-ch'] = "Invalid Token";
+$text['message-invalid_token']['de-de'] = "Invalid Token";
+$text['message-invalid_token']['es-cl'] = "Invalid Token";
+$text['message-invalid_token']['es-mx'] = "Invalid Token";
+$text['message-invalid_token']['fr-ca'] = "Invalid Token";
+$text['message-invalid_token']['fr-fr'] = "Invalid Token";
+$text['message-invalid_token']['he-il'] = "Invalid Token";
+$text['message-invalid_token']['it-it'] = "Invalid Token";
+$text['message-invalid_token']['nl-nl'] = "Invalid Token";
+$text['message-invalid_token']['pl-pl'] = "Invalid Token";
+$text['message-invalid_token']['pt-br'] = "Invalid Token";
+$text['message-invalid_token']['pt-pt'] = "Invalid Token";
+$text['message-invalid_token']['ro-ro'] = "Invalid Token";
+$text['message-invalid_token']['ru-ru'] = "Invalid Token";
+$text['message-invalid_token']['sv-se'] = "Invalid Token";
+$text['message-invalid_token']['uk-ua'] = "Invalid Token";
+$text['message-invalid_token']['tr-tr'] = "Invalid Token";
+
 $text['message-message']['en-us'] = "Message";
 $text['message-message']['ar-eg'] = "";
 $text['message-message']['de-at'] = "Nachricht"; //copied from de-de
