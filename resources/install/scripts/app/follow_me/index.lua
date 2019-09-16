@@ -323,22 +323,6 @@
 						toll_allow = '';
 					end
 
-				--check if the user exists
-					if tonumber(caller_id_number) ~= nil then
-						cmd = "user_exists id ".. caller_id_number .." "..domain_name;
-						caller_is_local = api:executeString(cmd);
-					end
-
-				--set the outbound caller id
-					if (session:ready() and caller_is_local) then
-						if (outbound_caller_id_name ~= nil) then
-							caller_id_name = outbound_caller_id_name;
-						end
-						if (outbound_caller_id_number ~= nil) then
-							caller_id_number = outbound_caller_id_number;
-						end
-					end
-
 				--get the destination caller id name and number
 					if (follow_me_caller_id_uuid ~= nil) then
 						local sql = "select destination_uuid, destination_number, destination_description, destination_caller_id_name, destination_caller_id_number ";
@@ -355,6 +339,23 @@
 							caller_id_number = field["destination_caller_id_number"];
 						end);
 					end
+
+				--check if the user exists
+					if tonumber(caller_id_number) ~= nil then
+						cmd = "user_exists id ".. caller_id_number .." "..domain_name;
+						caller_is_local = api:executeString(cmd);
+					end
+
+				--set the outbound caller id
+					if (session:ready() and caller_is_local) then
+						if (outbound_caller_id_name ~= nil) then
+							caller_id_name = outbound_caller_id_name;
+						end
+						if (outbound_caller_id_number ~= nil) then
+							caller_id_number = outbound_caller_id_number;
+						end
+					end
+
 
 				--set the caller id
 					caller_id = '';
