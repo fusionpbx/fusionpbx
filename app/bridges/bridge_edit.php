@@ -62,6 +62,14 @@
 				$bridge_uuid = $_POST["bridge_uuid"];
 			}
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate('/app/bridges/bridge_edit.php', $_POST['token'])) {
+				$_SESSION["message"] = $text['message-invalid_token'];
+				header('Location: bridges.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			if (strlen($bridge_name) == 0) { $msg .= $text['message-required']." ".$text['label-bridge_name']."<br>\n"; }
@@ -128,6 +136,10 @@
 		unset($sql, $parameters, $row);
 	}
 
+//create token
+	$token = new token;
+	$token_hash = $token->create('/app/bridges/bridge_edit.php');
+
 //show the header
 	require_once "resources/header.php";
 
@@ -192,6 +204,7 @@
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	echo "			<br />\n";
+	echo "			<input type='hidden' name='token' value='".$token_hash."'>";
 	echo "			<input type='hidden' name='bridge_uuid' value='".escape($bridge_uuid)."'>\n";
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
