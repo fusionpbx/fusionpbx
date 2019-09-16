@@ -122,7 +122,7 @@
 		sql = sql .. "follow_me_enabled, follow_me_caller_id_uuid, follow_me_ignore_busy ";
 		sql = sql .. "from v_follow_me ";
 		sql = sql .. "where domain_uuid = :domain_uuid ";
-		sql = sql .. "follow_me_uuid = :follow_me_uuid; ";
+		sql = sql .. "and follow_me_uuid = :follow_me_uuid; ";
 		local params = {domain_uuid = domain_uuid,follow_me_uuid = follow_me_uuid};
 		if (debug["sql"]) then
 			freeswitch.consoleLog("notice", "SQL:" .. sql .. "; params: " .. json.encode(params) .. "\n");
