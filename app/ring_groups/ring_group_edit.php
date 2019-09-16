@@ -268,6 +268,12 @@
 					$array["ring_groups"][0]["ring_group_call_timeout"] = $ring_group_call_timeout;
 					$array["ring_groups"][0]["ring_group_caller_id_name"] = $ring_group_caller_id_name;
 					$array["ring_groups"][0]["ring_group_caller_id_number"] = $ring_group_caller_id_number;
+					if (permission_exists('ring_group_cid_name_prefix')) {
+						$array["ring_groups"][0]["ring_group_cid_name_prefix"] = $ring_group_cid_name_prefix;
+					}
+					if (permission_exists('ring_group_cid_number_prefix')) {
+						$array["ring_groups"][0]["ring_group_cid_number_prefix"] = $ring_group_cid_number_prefix;
+					}
 					$array["ring_groups"][0]["ring_group_distinctive_ring"] = $ring_group_distinctive_ring;
 					$array["ring_groups"][0]["ring_group_ringback"] = $ring_group_ringback;
 					if (permission_exists('ring_group_missed_call')) {
