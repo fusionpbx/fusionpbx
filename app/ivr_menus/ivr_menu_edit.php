@@ -65,7 +65,7 @@
 	if ($action == 'add') {
 		if ($_SESSION['limit']['ivr_menus']['numeric'] != '') {
 			$sql = "select count(*) as num_rows from v_ivr_menus where domain_uuid = :domain_uuid ";
-			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['domain_uuid'] = $domain_uuid;
 			$database = new database;
 			$total_ivr_menus = $database->select($sql, $parameters, 'column');
 			if ($total_ivr_menus >= $_SESSION['limit']['ivr_menus']['numeric']) {
@@ -85,7 +85,7 @@
 			$ivr_menu_extension = $_POST["ivr_menu_extension"];
 			$ivr_menu_greet_long = $_POST["ivr_menu_greet_long"];
 			$ivr_menu_greet_short = $_POST["ivr_menu_greet_short"];
-			$ivr_menu_options = $_POST["ivr_menu_options"];
+			$ivr_menu_language = $_POST["ivr_menu_language"];
 			$ivr_menu_invalid_sound = $_POST["ivr_menu_invalid_sound"];
 			$ivr_menu_exit_sound = $_POST["ivr_menu_exit_sound"];
 			$ivr_menu_confirm_macro = $_POST["ivr_menu_confirm_macro"];
@@ -138,6 +138,25 @@
 				$domain_uuid = $_SESSION['domain_uuid'];
 			}
 
+		//if the user doesn't have the correct permission then 
+		//override domain_uuid and ivr_menu_context values
+			if ($action == 'update' && is_uuid($ivr_menu_uuid)) {
+				$sql = "select * from v_ivr_menus ";
+				$sql .= "where ivr_menu_uuid = :ivr_menu_uuid ";
+				$parameters['ivr_menu_uuid'] = $ivr_menu_uuid;
+				$database = new database;
+				$row = $database->select($sql, $parameters, 'row');
+				if (is_array($row) && @sizeof($row) != 0) {
+					if (!permission_exists('ivr_menu_domain')) {
+						$domain_uuid = $row["domain_uuid"];
+					}
+					if (!permission_exists('ivr_menu_context')) {
+						$ivr_menu_context = $row["ivr_menu_context"];
+					}
+				}
+				unset($sql, $parameters, $row);
+			}
+
 		//check for all required data
 			$msg = '';
 			if (strlen($ivr_menu_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
@@ -174,50 +193,6 @@
 				return;
 			}
 
-		//array cleanup
-			//remove the save
-				unset($_POST["submit"]);
-
-			//add the domain_uuid
-				if (!is_uuid($_POST["domain_uuid"])) {
-					$_POST["domain_uuid"] = $_SESSION['domain_uuid'];
-				}
-
-			//seperate the action and the param
-				$exit_array = explode(":", $_POST["ivr_menu_exit_action"]);
-				$_POST["ivr_menu_exit_app"] = array_shift($exit_array);
-				$_POST["ivr_menu_exit_data"] = join(':', $exit_array);
-				unset($_POST["ivr_menu_exit_action"]);
-
-			//unset empty options, and seperate the option action from the param
-				$x = 0;
-				foreach ($_POST["ivr_menu_options"] as $row) {
-					if (strlen($row["ivr_menu_option_param"]) == 0) {
-						//remove the empty row
-						unset($_POST["ivr_menu_options"][$x]);
-					}
-					else {
-						//check if the option param is numeric
-						if (is_numeric($row["ivr_menu_option_param"])) {
-							//add the ivr menu syntax
-							$_POST["ivr_menu_options"][$x]["ivr_menu_option_action"] = "menu-exec-app";
-							$_POST["ivr_menu_options"][$x]["ivr_menu_option_param"] = "transfer ".$row["ivr_menu_option_param"]." XML ".$_SESSION['domain_name'];
-						}
-						else {
-							//seperate the action and the param
-							$options_array = explode(":", $row["ivr_menu_option_param"]);
-							$_POST["ivr_menu_options"][$x]["ivr_menu_option_action"] = array_shift($options_array);
-							$_POST["ivr_menu_options"][$x]["ivr_menu_option_param"] = join(':', $options_array);
-						}
-
-						//add the domain_uuid
-						if (strlen($row["domain_uuid"]) == 0) {
-							$_POST["ivr_menu_options"][$x]["domain_uuid"] = $_POST["domain_uuid"];
-						}
-					}
-					$x++;
-				}
-
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
 
@@ -241,9 +216,59 @@
 						$_POST["dialplan_uuid"] = $dialplan_uuid;
 					}
 
+				//prepare the array
+					$array['ivr_menus'][0]["ivr_menu_uuid"] = $ivr_menu_uuid;
+					$array['ivr_menus'][0]["domain_uuid"] = $domain_uuid;
+					$array['ivr_menus'][0]["dialplan_uuid"] = $dialplan_uuid;
+					$array['ivr_menus'][0]["ivr_menu_name"] = $ivr_menu_name;
+					$array['ivr_menus'][0]["ivr_menu_extension"] = $ivr_menu_extension;
+					$array['ivr_menus'][0]["ivr_menu_language"] = $ivr_menu_language;
+					$array['ivr_menus'][0]["ivr_menu_greet_long"] = $ivr_menu_greet_long;
+					$array['ivr_menus'][0]["ivr_menu_greet_short"] = $ivr_menu_greet_short;
+					$array['ivr_menus'][0]["ivr_menu_invalid_sound"] = $ivr_menu_invalid_sound;
+					$array['ivr_menus'][0]["ivr_menu_exit_sound"] = $ivr_menu_exit_sound;
+					$array['ivr_menus'][0]["ivr_menu_confirm_macro"] = $ivr_menu_confirm_macro;
+					$array['ivr_menus'][0]["ivr_menu_confirm_key"] = $ivr_menu_confirm_key;
+					$array['ivr_menus'][0]["ivr_menu_tts_engine"] = $ivr_menu_tts_engine;
+					$array['ivr_menus'][0]["ivr_menu_tts_voice"] = $ivr_menu_tts_voice;
+					$array['ivr_menus'][0]["ivr_menu_confirm_attempts"] = $ivr_menu_confirm_attempts;
+					$array['ivr_menus'][0]["ivr_menu_timeout"] = $ivr_menu_timeout;
+					$array['ivr_menus'][0]["ivr_menu_exit_app"] = $ivr_menu_exit_app;
+					$array['ivr_menus'][0]["ivr_menu_exit_data"] = $ivr_menu_exit_data;
+					$array['ivr_menus'][0]["ivr_menu_inter_digit_timeout"] = $ivr_menu_inter_digit_timeout;
+					$array['ivr_menus'][0]["ivr_menu_max_failures"] = $ivr_menu_max_failures;
+					$array['ivr_menus'][0]["ivr_menu_max_timeouts"] = $ivr_menu_max_timeouts;
+					$array['ivr_menus'][0]["ivr_menu_digit_len"] = $ivr_menu_digit_len;
+					$array['ivr_menus'][0]["ivr_menu_direct_dial"] = $ivr_menu_direct_dial;
+					$array['ivr_menus'][0]["ivr_menu_ringback"] = $ivr_menu_ringback;
+					$array['ivr_menus'][0]["ivr_menu_cid_prefix"] = $ivr_menu_cid_prefix;
+					$array['ivr_menus'][0]["ivr_menu_context"] = $ivr_menu_context;
+					$array['ivr_menus'][0]["ivr_menu_enabled"] = $ivr_menu_enabled;
+					$array['ivr_menus'][0]["ivr_menu_description"] = $ivr_menu_description;
+					$y = 0;
+					foreach ($ivr_menu_options as $row) {
+						if (strlen($row['ivr_menu_option_digits']) > 0) {
+							if (is_uuid($row['ivr_menu_option_uuid'])) {
+								$ivr_menu_option_uuid = $row['ivr_menu_option_uuid'];
+							}
+							else {
+								$ivr_menu_option_uuid = uuid();
+							}
+							$array['ivr_menus'][0]['ivr_menu_options'][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
+							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_uuid"] = $ivr_menu_uuid;
+							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_uuid"] = $ivr_menu_option_uuid;
+							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_digits"] = $row["ivr_menu_option_digits"];
+							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_action"] = $row["ivr_menu_option_action"];
+							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_param"] = $row["ivr_menu_option_param"];
+							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_order"] = $row["ivr_menu_option_order"];
+							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_description"] = $row["ivr_menu_option_description"];
+							$y++;
+						}
+					}
+
 				//build the xml dialplan
 					$ivr_menu_language = explode("/",$_POST["ivr_menu_language"]);
-					
+
 					$dialplan_xml = "<extension name=\"".$ivr_menu_name."\" continue=\"false\" uuid=\"".$dialplan_uuid."\">\n";
 					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$ivr_menu_extension."\$\">\n";
 					$dialplan_xml .= "		<action application=\"ring_ready\" data=\"\"/>\n";
@@ -272,24 +297,20 @@
 					$dialplan_xml .= "</extension>\n";
 
 				//build the dialplan array
-					$dialplan["domain_uuid"] = $_SESSION['domain_uuid'];
-					$dialplan["dialplan_uuid"] = $dialplan_uuid;
-					$dialplan["dialplan_name"] = $ivr_menu_name;
-					$dialplan["dialplan_number"] = $ivr_menu_extension;
+					$array['dialplans'][0]["domain_uuid"] = $_SESSION['domain_uuid'];
+					$array['dialplans'][0]["dialplan_uuid"] = $dialplan_uuid;
+					$array['dialplans'][0]["dialplan_name"] = $ivr_menu_name;
+					$array['dialplans'][0]["dialplan_number"] = $ivr_menu_extension;
 					if (isset($ivr_menu_context)) {
-						$dialplan["dialplan_context"] = $ivr_menu_context;
+						$array['dialplans'][0]["dialplan_context"] = $ivr_menu_context;
 					}
-					$dialplan["dialplan_continue"] = "false";
-					$dialplan["dialplan_xml"] = $dialplan_xml;
-					$dialplan["dialplan_order"] = "101";
-					$dialplan["dialplan_enabled"] = "true";
-					$dialplan["dialplan_description"] = $ivr_menu_description;
-					$dialplan["app_uuid"] = "a5788e9b-58bc-bd1b-df59-fff5d51253ab";
-
-				//prepare the array
-					$array['ivr_menus'][] = $_POST;
-					$array['dialplans'][] = $dialplan;
-
+					$array['dialplans'][0]["dialplan_continue"] = "false";
+					$array['dialplans'][0]["dialplan_xml"] = $dialplan_xml;
+					$array['dialplans'][0]["dialplan_order"] = "101";
+					$array['dialplans'][0]["dialplan_enabled"] = "true";
+					$array['dialplans'][0]["dialplan_description"] = $ivr_menu_description;
+					$array['dialplans'][0]["app_uuid"] = "a5788e9b-58bc-bd1b-df59-fff5d51253ab";
+//view_array($array);
 				//add the dialplan permission
 					$p = new permissions;
 					if ($action == "add") {
@@ -303,26 +324,12 @@
 					$database = new database;
 					$database->app_name = 'ivr_menus';
 					$database->app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
-					if (is_uuid($ivr_menu_uuid)) {
-						$database->uuid($ivr_menu_uuid);
-					}
 					$database->save($array);
 					//$message = $database->message;
 
 				//remove the temporary permission
 					$p->delete("dialplan_add", "temp");
 					$p->delete("dialplan_edit", "temp");
-
-				//save the ivr menu
-					//$ivr = new ivr_menu;
-					//$ivr->domain_uuid = $_SESSION["domain_uuid"];
-					//if (strlen($ivr_menu_uuid ) > 0) {
-					//	$ivr->ivr_menu_uuid = $ivr_menu_uuid;
-					//}
-					//$response = $ivr->save($_POST);
-					//if (strlen($response['uuid']) > 0) {
-					//	$ivr_menu_uuid = $response['uuid'];
-					//}
 
 				//clear the cache
 					$cache = new cache;
