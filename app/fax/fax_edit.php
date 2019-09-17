@@ -246,7 +246,7 @@
 						foreach ($fax_email_outbound_authorized_senders as $sender_num => $sender) {
 							if ($sender == '' || !valid_email($sender)) { unset($fax_email_outbound_authorized_senders[$sender_num]); }
 						}
-						$fax_email_outbound_authorized_senders = implode(',', $fax_email_outbound_authorized_senders);
+						$fax_email_outbound_authorized_senders = strtolower(implode(',', $fax_email_outbound_authorized_senders));
 					}
 
 				if ($action == "add" && permission_exists('fax_extension_add')) {
