@@ -94,7 +94,7 @@ if (is_array($result) && @sizeof($result) != 0) {
 		$fax_email_connection_password = $row["fax_email_connection_password"];
 		$fax_email_connection_mailbox = $row["fax_email_connection_mailbox"];
 		$fax_email_outbound_subject_tag = $row["fax_email_outbound_subject_tag"];
-		$fax_email_outbound_authorized_senders = $row["fax_email_outbound_authorized_senders"];
+		$fax_email_outbound_authorized_senders = strtolower($row["fax_email_outbound_authorized_senders"]);
 		$fax_send_greeting = $row["fax_send_greeting"];
 		$fax_accountcode = $row["accountcode"];
 
@@ -167,7 +167,7 @@ if (is_array($result) && @sizeof($result) != 0) {
 
 				//format from address
 				$tmp = object_to_array(imap_rfc822_parse_adrlist($metadata[0]['from'], null));
-				$metadata[0]['from'] = $tmp[0]['mailbox']."@".$tmp[0]['host'];
+				$metadata[0]['from'] = strtolower($tmp[0]['mailbox']."@".$tmp[0]['host']);
 
 				//check sender
 				$sender_authorized = false;
