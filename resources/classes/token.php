@@ -59,19 +59,38 @@ class token {
 	 */
 	public function create($key) {
 
+		//allow only specific characters
+		$key = preg_replace('[^a-zA-Z0-9\-_@.\/]', '', $key);
+
 		//create a token and save in the token session array
 		$_SESSION['tokens'][$key]['name'] = hash_hmac('sha256', $key, bin2hex(random_bytes(32)));
 		$_SESSION['tokens'][$key]['hash'] = hash_hmac('sha256', $key, bin2hex(random_bytes(32)));
 
 		//send the hash
-		return $_SESSION['tokens'][$key]['hash'];
+		return $_SESSION['tokens'][$key];
+
 	}
 
 	/**
 	 * validate the token
 	 * @var string $key
 	 */
-	public function validate($key, $value) {
+	public function validate($key, $value = null) {
+
+		//allow only specific characters
+		$key = preg_replace('[^a-zA-Z0-9]', '', $key);
+
+		//get the token name
+		$token_name = $_SESSION['tokens'][$key]['name'];
+		if (isset($_REQUEST[$token_name])) {
+			$value = $_REQUEST[$token_name];
+		}
+		else {
+			$value;
+		}
+
+		//limit the value to specific characters
+		$value = preg_replace('[^a-zA-Z0-9]', '', $value);
 
 		//compare the hashed tokens
 		if (hash_equals($_SESSION['tokens'][$key]['hash'], $value)) {
@@ -88,20 +107,20 @@ class token {
 /*
 
 //create token
-$token = new token;
-$token_hash = $token->create('/app/users/user_edit.php');
+	$object = new token;
+	$token = $object->create('/app/bridges/bridge_edit.php');
 
-echo "<input type='hidden' name='token' value='".$token_hash."'>";
+echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 //------------------------
 
 //validate the token
-$token = new token;
-$token_valid = $token->validate('/app/users/user_edit.php', $_POST['token']);
-if (!$token_valid) {
-	echo "access denied";
-	exit;
-}
+	$token = new token;
+	if (!$token->validate('/app/bridges/bridge_edit.php')) {
+		$_SESSION["message"] = $text['message-invalid_token'];
+		header('Location: bridges.php');
+		exit;
+	}
 
 */
 
