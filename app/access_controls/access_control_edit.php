@@ -56,6 +56,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$access_control_uuid = $_POST["access_control_uuid"];
 		}
 
+	//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: access_controls.php');
+			exit;
+		}
+
 	//check for all required data
 		$msg = '';
 		if (strlen($access_control_name) == 0) { $msg .= $text['message-required']." ".$text['label-access_control_name']."<br>\n"; }
@@ -137,6 +145,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		unset ($sql, $parameters, $row);
 	}
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
 	require_once "resources/header.php";
 
@@ -200,9 +212,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='access_control_uuid' value='".escape($access_control_uuid)."'>\n";
+		echo "			<input type='hidden' name='access_control_uuid' value='".escape($access_control_uuid)."'>\n";
 	}
-	echo "				<br><input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "			<br><input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
