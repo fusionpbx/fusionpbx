@@ -189,6 +189,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$conference_room_uuid = $_POST["conference_room_uuid"];
 	}
 
+	//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: conference_rooms.php');
+			exit;
+		}
+
 	//check for a unique pin number and length
 		if (strlen($moderator_pin) > 0 || strlen($participant_pin) > 0) {
 			//make sure the moderator pin number is unique
@@ -541,6 +549,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen($sounds) == 0) { $sounds = 'false'; }
 	if (strlen($enabled) == 0) { $enabled = 'true'; }
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
 	require_once "resources/header.php";
 
@@ -859,6 +871,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	<input type='hidden' name='meeting_uuid' value='".escape($meeting_uuid)."'>\n";
 		echo "	<input type='hidden' name='conference_room_uuid' value='".escape($conference_room_uuid)."'>\n";
 	}
+	echo "		<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "	</td>\n";
 	echo "</tr>";
