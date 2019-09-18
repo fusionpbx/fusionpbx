@@ -139,7 +139,7 @@
 					$y++;
 				}
 			}
-//view_array($array);
+
 		//grant temporary permissions
 			$p = new permissions;
 			$p->add('sip_profile_domain_add', 'temp');
