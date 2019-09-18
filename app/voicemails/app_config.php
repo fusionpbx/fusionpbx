@@ -88,8 +88,6 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$apps[$x]['permissions'][$y]['groups'][] = "agent";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "voicemail_sms_edit";
-		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "voicemail_transcription_edit";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
