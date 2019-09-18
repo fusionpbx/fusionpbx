@@ -58,6 +58,8 @@
 		$sip_profile_hostname = $_POST["sip_profile_hostname"];
 		$sip_profile_enabled = $_POST["sip_profile_enabled"];
 		$sip_profile_description = $_POST["sip_profile_description"];
+		$sip_profile_domains = $_POST["sip_profile_domains"];
+		$sip_profile_settings = $_POST["sip_profile_settings"];
 	}
 
 //process the user data and save it to the database
@@ -91,48 +93,53 @@
 		//add the sip_profile_uuid
 			if (!is_uuid($_POST["sip_profile_uuid"])) {
 				$sip_profile_uuid = uuid();
-				$_POST["sip_profile_uuid"] = $sip_profile_uuid;
-			}
-
-		//cleanup the array
-			foreach ($_POST["sip_profile_domains"] as $index => $row) {
-				//populate sip profile uuid
-					if (!is_uuid($row['sip_profile_uuid'])) {
-						$_POST["sip_profile_domains"][$index]['sip_profile_uuid'] = $sip_profile_uuid;
-					}
-				//unset the empty row
-					if (strlen($row["sip_profile_domain_name"]) == 0) {
-						unset($_POST["sip_profile_domains"][$index]);
-					}
-					if (strlen($row["sip_profile_domain_alias"]) == 0) {
-						unset($_POST["sip_profile_domains"][$index]);
-					}
-					if (strlen($row["sip_profile_domain_parse"]) == 0) {
-						unset($_POST["sip_profile_domains"][$index]);
-					}
-			}
-
-		//cleanup the array
-			foreach ($_POST["sip_profile_settings"] as $index => $row) {
-				//populate sip profile uuid
-					if (!is_uuid($row['sip_profile_uuid'])) {
-						$_POST["sip_profile_settings"][$index]['sip_profile_uuid'] = $sip_profile_uuid;
-					}
-				//unset the empty row
-					if (strlen($row["sip_profile_setting_name"]) == 0) {
-						unset($_POST["sip_profile_settings"][$index]);
-					}
-					//if (strlen($row["sip_profile_setting_value"]) == 0) {
-					//	unset($_POST["sip_profile_settings"][$index]);
-					//}
-					if (strlen($row["sip_profile_setting_enabled"]) == 0) {
-						unset($_POST["sip_profile_settings"][$index]);
-					}
 			}
 
 		//prepare the array
-			$array['sip_profiles'][] = $_POST;
-
+			$array['sip_profiles'][0]['sip_profile_uuid'] = $sip_profile_uuid;
+			$array['sip_profiles'][0]['sip_profile_name'] = $sip_profile_name;
+			$array['sip_profiles'][0]['sip_profile_hostname'] = $sip_profile_hostname;
+			$array['sip_profiles'][0]['sip_profile_enabled'] = $sip_profile_enabled;
+			$array['sip_profiles'][0]['sip_profile_description'] = $sip_profile_description;
+			$y = 0;
+			foreach ($sip_profile_domains as $row) {
+				if (strlen($row['sip_profile_domain_uuid']) > 0) {
+					if (is_uuid($row['sip_profile_domain_uuid'])) {
+						$sip_profile_domain_uuid = $row['sip_profile_domain_uuid'];
+					}
+					else {
+						$sip_profile_domain_uuid = uuid();
+					}
+					if (strlen($row["sip_profile_domain_alias"]) > 0) {
+						$array['sip_profiles'][0]['sip_profile_domains'][$y]["sip_profile_uuid"] = $sip_profile_uuid;
+						$array['sip_profiles'][0]['sip_profile_domains'][$y]["sip_profile_domain_uuid"] = $sip_profile_domain_uuid;
+						$array['sip_profiles'][0]['sip_profile_domains'][$y]["sip_profile_domain_name"] = $row["sip_profile_domain_name"];
+						$array['sip_profiles'][0]['sip_profile_domains'][$y]["sip_profile_domain_alias"] = $row["sip_profile_domain_alias"];
+						$array['sip_profiles'][0]['sip_profile_domains'][$y]["sip_profile_domain_parse"] = $row["sip_profile_domain_parse"];
+					}
+					$y++;
+				}
+			}
+			$y = 0;
+			foreach ($sip_profile_settings as $row) {
+				if (strlen($row['sip_profile_setting_uuid']) > 0) {
+					if (is_uuid($row['sip_profile_setting_uuid'])) {
+						$sip_profile_setting_uuid = $row['sip_profile_setting_uuid'];
+					}
+					else {
+						$sip_profile_setting_uuid = uuid();
+					}
+					if (strlen($row["sip_profile_setting_name"]) > 0) {
+						$array['sip_profiles'][0]['sip_profile_settings'][$y]["sip_profile_uuid"] = $sip_profile_uuid;
+						$array['sip_profiles'][0]['sip_profile_settings'][$y]["sip_profile_setting_uuid"] = $sip_profile_setting_uuid;
+						$array['sip_profiles'][0]['sip_profile_settings'][$y]["sip_profile_setting_name"] = $row["sip_profile_setting_name"];
+						$array['sip_profiles'][0]['sip_profile_settings'][$y]["sip_profile_setting_enabled"] = $row["sip_profile_setting_enabled"];
+						$array['sip_profiles'][0]['sip_profile_settings'][$y]["sip_profile_setting_description"] = $row["sip_profile_setting_description"];
+					}
+					$y++;
+				}
+			}
+//view_array($array);
 		//grant temporary permissions
 			$p = new permissions;
 			$p->add('sip_profile_domain_add', 'temp');
