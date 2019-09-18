@@ -104,6 +104,14 @@
 				$call_center_agent_uuid = $_POST["call_center_agent_uuid"];
 			}
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: call_center_agents.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			//if (strlen($call_center_agent_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-call_center_agent_uuid']."<br>\n"; }
@@ -297,6 +305,10 @@
 	if (strlen($agent_no_answer_delay_time) == 0) { $agent_no_answer_delay_time = "30"; }
 	if (strlen($agent_reject_delay_time) == 0) { $agent_reject_delay_time = "90"; }
 	if (strlen($agent_busy_delay_time) == 0) { $agent_busy_delay_time = "90"; }
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
@@ -574,6 +586,7 @@
 	if ($action == "update") {
 		echo "		<input type='hidden' name='call_center_agent_uuid' value='".escape($call_center_agent_uuid)."'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br />";
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
