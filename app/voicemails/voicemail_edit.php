@@ -530,7 +530,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo $text['description-voicemail_mail_to']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	if(permission_exists('voicemail_sms_edit')) {
+	if(permission_exists('sms_edit')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-voicemail_sms_to']."\n";
