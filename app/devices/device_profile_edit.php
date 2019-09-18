@@ -82,6 +82,14 @@
 				}
 			}
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: devices.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			if (strlen($device_profile_name) == 0) { $msg .= $text['message-required']." ".$text['label-device_profile_name']."<br>\n"; }
@@ -289,6 +297,10 @@
 	if (!is_uuid($device_profile_uuid)) {
 		$device_profile_uuid = null;
 	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
@@ -686,8 +698,9 @@
 
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
-	echo "				<input type='hidden' name='device_profile_uuid' value='".escape($device_profile_uuid)."'>\n";
-	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<input type='hidden' name='device_profile_uuid' value='".escape($device_profile_uuid)."'>\n";
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
