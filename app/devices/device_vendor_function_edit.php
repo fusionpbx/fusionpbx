@@ -100,6 +100,14 @@
 				$device_vendor_function_uuid = $_POST["device_vendor_function_uuid"];
 			}
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: devices.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			//if (strlen($label) == 0) { $msg .= $text['message-required']." ".$text['label-label']."<br>\n"; }
@@ -250,6 +258,10 @@
 	$groups = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters, $sql_where, $index);
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
 	require_once "resources/header.php";
 
@@ -372,11 +384,12 @@
 	echo "</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
-	echo "				<input type='hidden' name='device_vendor_uuid' value='".escape($device_vendor_uuid)."'>\n";
+	echo "			<input type='hidden' name='device_vendor_uuid' value='".escape($device_vendor_uuid)."'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='device_vendor_function_uuid' value='".escape($device_vendor_function_uuid)."'>\n";
+		echo "			<input type='hidden' name='device_vendor_function_uuid' value='".escape($device_vendor_function_uuid)."'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

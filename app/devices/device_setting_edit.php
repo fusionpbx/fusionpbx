@@ -67,6 +67,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update" && permission_exists('device_setting_edit')) {
 		$device_setting_uuid = $_POST["device_setting_uuid"];
 	}
+
+	//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: devices.php');
+			exit;
+		}
+
+	//check for all required data
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
@@ -136,6 +146,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
@@ -258,6 +272,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "		<input type='hidden' name='device_setting_uuid' value='$device_setting_uuid'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
