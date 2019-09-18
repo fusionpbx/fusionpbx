@@ -104,11 +104,19 @@
 		//add the email_template_uuid
 			if (!is_uuid($_POST["email_template_uuid"])) {
 				$email_template_uuid = uuid();
-				$_POST["email_template_uuid"] = $email_template_uuid;
 			}
 
 		//prepare the array
-			$array['email_templates'][0] = $_POST;
+			$array['email_templates'][0]['domain_uuid'] = $domain_uuid;
+			$array['email_templates'][0]['email_template_uuid'] = $email_template_uuid;
+			$array['email_templates'][0]['template_language'] = $template_language;
+			$array['email_templates'][0]['template_category'] = $template_category;
+			$array['email_templates'][0]['template_subcategory'] = $template_subcategory;
+			$array['email_templates'][0]['template_subject'] = $template_subject;
+			$array['email_templates'][0]['template_body'] = $template_body;
+			$array['email_templates'][0]['template_type'] = $template_type;
+			$array['email_templates'][0]['template_enabled'] = $template_enabled;
+			$array['email_templates'][0]['template_description'] = $template_description;
 
 		//save to the data
 			$database = new database;
