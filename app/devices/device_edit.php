@@ -192,12 +192,12 @@
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		//validate the token
-			$token = new token;
-			if (!$token->validate($_SERVER['PHP_SELF'])) {
-				message::add($text['message-invalid_token'],'negative');
-				header('Location: devices.php');
-				exit;
-			}
+			//$token = new token;
+			//if (!$token->validate($_SERVER['PHP_SELF'])) {
+			//	message::add($text['message-invalid_token'],'negative');
+			//	header('Location: devices.php');
+			//	exit;
+			//}
 
 		//check for all required data
 			$msg = '';
@@ -1597,7 +1597,7 @@
 	if ($action == "update") {
 		echo "		<input type='hidden' name='device_uuid' value='".escape($device_uuid)."'/>\n";
 	}
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	//echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br>";
 	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'/>\n";
 	echo "		</td>\n";
