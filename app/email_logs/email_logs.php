@@ -157,6 +157,10 @@
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
+//create token
+	$object = new token;
+	$token = $object->create('/app/email_logs/email_logs.php');
+
 //additional includes
 	$document['title'] = $text['title-emails'];
 	require_once "resources/header.php";
@@ -229,6 +233,7 @@
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";
 	echo "<br />\n";
 

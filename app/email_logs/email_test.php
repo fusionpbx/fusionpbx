@@ -37,6 +37,19 @@
 //send email
 	if (valid_email($_POST['to'])) {
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate('/app/email_logs/email_logs.php')) {
+				//message::add($text['message-invalid_token'],'negative');
+				echo "<script>display_message('".$text['message-invalid_token']."', 'negative');</script>";
+				echo "<center>\n";
+				echo 	$text['message-invalid_token'];
+				echo "	<br><br>\n";
+				echo "	<input type='button' class='btn' style='margin-top: 15px;' value='".$text['button-close']."' onclick=\"$('#test_result_layer').fadeOut(200);\">\n";
+				echo "</center>\n";
+				exit;
+			}
+
 		$recipient = check_str($_POST['to']);
 
 		echo "<b>".$text['header-settings']."</b>\n";
