@@ -102,6 +102,14 @@
 				$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
 			}
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: dialplans.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			if (strlen($dialplan_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
@@ -340,6 +348,10 @@
 		if (is_array($details)) {
 			ksort($details);
 		}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
@@ -872,6 +884,7 @@
 	if ($action == "update") {
 		echo "	<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	}
+	echo "	<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</div>\n";
 	echo "<br><br>\n";
