@@ -88,17 +88,21 @@
 
 		//set the domain_uuid
 			if (!permission_exists('stream_all')) {
-				$_POST["domain_uuid"] = $_SESSION["domain_uuid"];
+				$domain_uuid = $_SESSION["domain_uuid"];
 			}
 
 		//add the stream_uuid
 			if (strlen($_POST["stream_uuid"]) == 0) {
 				$stream_uuid = uuid();
-				$_POST["stream_uuid"] = $stream_uuid;
 			}
 
 		//prepare the array
-			$array['streams'][0] = $_POST;
+			$array['streams'][0]['stream_uuid'] = $stream_uuid;
+			$array['streams'][0]['domain_uuid'] = $domain_uuid;
+			$array['streams'][0]['stream_name'] = $stream_name;
+			$array['streams'][0]['stream_location'] = $stream_location;
+			$array['streams'][0]['stream_enabled'] = $stream_enabled;
+			$array['streams'][0]['stream_description'] = $stream_description;
 
 		//save to the data
 			$database = new database;
