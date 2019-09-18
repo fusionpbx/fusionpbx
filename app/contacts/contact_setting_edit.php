@@ -79,6 +79,14 @@
 				$contact_setting_uuid = $_POST["contact_setting_uuid"];
 			}
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: contacts.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			//if (strlen($domain_setting_category) == 0) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
@@ -185,6 +193,10 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
@@ -338,6 +350,7 @@
 	if ($action == "update") {
 		echo "		<input type='hidden' name='contact_setting_uuid' value='".$contact_setting_uuid."'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
