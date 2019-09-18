@@ -64,8 +64,8 @@
 
 		//validate the token
 			$token = new token;
-			if (!$token->validate('/app/bridges/bridge_edit.php')) {
-				$_SESSION["message"] = $text['message-invalid_token'];
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
 				header('Location: bridges.php');
 				exit;
 			}
@@ -138,7 +138,7 @@
 
 //create token
 	$object = new token;
-	$token = $object->create('/app/bridges/bridge_edit.php');
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
