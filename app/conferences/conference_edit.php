@@ -137,6 +137,14 @@
 				$conference_uuid = $_POST["conference_uuid"];
 			}
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: conferences.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			//if (strlen($dialplan_uuid) == 0) { $msg .= "Please provide: Dialplan UUID<br>\n"; }
@@ -296,6 +304,10 @@
 
 //set defaults
 	if (strlen($conference_enabled) == 0) { $conference_enabled = "true"; }
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
@@ -487,6 +499,7 @@
 		echo "	<input type='hidden' name='dialplan_uuid' value=\"".escape($dialplan_uuid)."\">\n";
 		echo "	<input type='hidden' name='conference_uuid' value='".escape($conference_uuid)."'>\n";
 	}
+	echo "		<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "		<br>";
 	echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "	</td>\n";
