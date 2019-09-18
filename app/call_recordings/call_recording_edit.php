@@ -70,6 +70,14 @@
 				$call_recording_uuid = $_POST["call_recording_uuid"];
 			}
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: call_recordings.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			if (strlen($call_recording_name) == 0) { $msg .= $text['message-required']." ".$text['label-call_recording_name']."<br>\n"; }
@@ -155,6 +163,10 @@
 		unset($sql, $parameters, $row);
 	}
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
 	require_once "resources/header.php";
 
@@ -239,9 +251,10 @@
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='call_recording_uuid' value='".escape($call_recording_uuid)."'>\n";
+		echo "			<input type='hidden' name='call_recording_uuid' value='".escape($call_recording_uuid)."'>\n";
 	}
-	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
