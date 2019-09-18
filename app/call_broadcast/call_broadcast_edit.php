@@ -131,6 +131,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$call_broadcast_uuid = $_POST["call_broadcast_uuid"];
 	}
 
+	//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: call_broadcast.php');
+			exit;
+		}
+
 	//check for all required data
 		if (strlen($broadcast_name) == 0) { $msg .= "".$text['confirm-name']."<br>\n"; }
 		//if (strlen($broadcast_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
@@ -254,6 +262,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //begin header
 	require_once "resources/header.php";
@@ -491,6 +503,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	echo "			<br>";
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
