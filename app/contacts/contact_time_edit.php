@@ -67,6 +67,14 @@ else {
 				$contact_time_uuid = $_POST["contact_time_uuid"];
 			}
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: contacts.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -158,6 +166,10 @@ else {
 		unset($sql, $parameters, $row);
 	}
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
 	require_once "resources/header.php";
 	if ($action == "update") {
@@ -223,6 +235,7 @@ else {
 	if ($action == "update") {
 		echo "		<input type='hidden' name='contact_time_uuid' value='".escape($contact_time_uuid)."'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
