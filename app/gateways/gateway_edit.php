@@ -115,6 +115,14 @@
 //process the HTTP POST
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: gateways.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			if (strlen($gateway) == 0) { $msg .= $text['message-required']." ".$text['label-gateway']."<br>\n"; }
@@ -298,6 +306,10 @@
 	if (strlen($enabled) == 0) { $enabled = "true"; }
 	if (strlen($register) == 0) { $register = "true"; }
 	if (strlen($retry_seconds) == 0) { $retry_seconds = "30"; }
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
@@ -831,6 +843,7 @@
 	if ($action == "update") {
 		echo "		<input type='hidden' name='gateway_uuid' value='".escape($gateway_uuid)."'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br>";
 	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
 	echo "		</td>\n";
