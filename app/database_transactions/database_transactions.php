@@ -27,6 +27,7 @@
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
+	require_once "resources/paging.php";
 
 //check permissions
 	require_once "resources/check_auth.php";
@@ -48,27 +49,22 @@
 
 //add the search term
 	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
+	if ($search != '') {
 		$sql_search = "and (";
-		$sql_search .= "	lower(transaction_code) like :search ";
+		$sql_search .= "	lower(app_name) like :search ";
+		$sql_search .= "	or lower(transaction_code) like :search ";
 		$sql_search .= "	or lower(transaction_address) like :search ";
 		$sql_search .= "	or lower(transaction_type) like :search ";
-		$sql_search .= "	or lower(app_name) like :search ";
+		$sql_search .= "	or cast(transaction_date as text) like :search ";
 		$sql_search .= ") ";
+		$parameters['search'] = '%'.$search.'%';
 	}
-
-//additional includes
-	require_once "resources/header.php";
-	require_once "resources/paging.php";
 
 //prepare to page the results
 	$sql = "select count(database_transaction_uuid) from v_database_transactions ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= $sql_search;
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	if (strlen($search) > 0) {
-		$parameters['search'] = '%'.$search.'%';
-	}
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
@@ -98,6 +94,9 @@
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
+
+//additional includes
+	require_once "resources/header.php";
 
 //show the content
 	echo "<table width='100%' border='0'>\n";
