@@ -70,7 +70,7 @@
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "";
+	$param = "search=".$search;
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
@@ -123,7 +123,7 @@
 	//echo th_order_by('transaction_old', $text['label-transaction_old'], $order_by, $order);
 	//echo th_order_by('transaction_new', $text['label-transaction_new'], $order_by, $order);
 	//echo th_order_by('transaction_result', $text['label-transaction_result'], $order_by, $order);
-	echo "<td class='list_control_icons'>";
+	echo "<td class='list_control_icon'>";
 	echo "	&nbsp;\n";
 	echo "</td>\n";
 	echo "<tr>\n";
@@ -131,7 +131,7 @@
 	if (is_array($result)) {
 		foreach($result as $row) {
 			if (permission_exists('database_transaction_edit')) {
-				$tr_link = "href='database_transaction_edit.php?id=".escape($row['database_transaction_uuid'])."'";
+				$tr_link = "href='database_transaction_edit.php?id=".urlencode($row['database_transaction_uuid']).($page != '' ? "&page=".urlencode($page) : null).($search != '' ? "&search=".urlencode($search) : null)."'";
 			}
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['domain_name'])."&nbsp;</td>\n";
@@ -144,9 +144,9 @@
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['transaction_old']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['transaction_new']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['transaction_result']."&nbsp;</td>\n";
-			echo "	<td class='list_control_icons'>";
+			echo "	<td class='list_control_icon'>";
 			if (permission_exists('database_transaction_edit')) {
-				echo "<a href='database_transaction_edit.php?id=".escape($row['database_transaction_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='database_transaction_edit.php?id=".urlencode($row['database_transaction_uuid']).($page != '' ? "&page=".urlencode($page) : null).($search != '' ? "&search=".urlencode($search) : null)."' alt='".$text['button-view']."'>$v_link_label_view</a>";
 			}
 			//if (permission_exists('database_transaction_delete')) {
 			//	echo "<a href='database_transaction_delete.php?id=".escape($row['database_transaction_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";

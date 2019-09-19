@@ -45,6 +45,8 @@
 //action add or update
 	if (is_uuid($_REQUEST["id"])) {
 		$database_transaction_uuid = $_REQUEST["id"];
+		$search = $_GET['search'];
+		$page = $_GET['page'];
 	}
 
 //pre-populate the form
@@ -99,7 +101,7 @@
 	echo "	<tr>\n";
 	echo "		<td align='left' width='20%' nowrap='nowrap' valign='top'><b>".$text['title-database_transaction']."</b><br><br></td>\n";
 	echo "		<td width='80%' align='right' valign='top'>\n";
-	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='database_transactions.php'\" value='".$text['button-back']."'>";
+	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='database_transactions.php?".($search != '' ? "&search=".$search : null).($page != '' ? "&page=".urlencode($page) : null)."'\" value='".$text['button-back']."'>";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
