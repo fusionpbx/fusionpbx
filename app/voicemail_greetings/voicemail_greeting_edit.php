@@ -61,6 +61,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	//get greeting uuid to edit
 		$voicemail_greeting_uuid = $_POST["voicemail_greeting_uuid"];
 
+	//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: ../voicemails/voicemails.php');
+			exit;
+		}
+
 	//check for all required data
 		$msg = '';
 		if (strlen($greeting_name) == 0) { $msg .= "".$text['confirm-name']."<br>\n"; }
@@ -114,6 +122,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		unset($sql, $parameters, $row);
 	}
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
 	$document['title'] = $text['label-edit'];
 	require_once "resources/header.php";
@@ -159,6 +171,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		<td colspan='2' align='right'>\n";
 	echo "			<input type='hidden' name='voicemail_greeting_uuid' value='".$voicemail_greeting_uuid."'>\n";
 	echo "			<input type='hidden' name='voicemail_id' value='".$voicemail_id."'>\n";
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
