@@ -225,17 +225,19 @@
 
 		//update the call centier tiers array
 			$x = 0;
-			foreach ($_POST["call_center_tiers"] as $row) {
-				//add the domain_uuid
-					if (strlen($row["domain_uuid"]) == 0) {
-						$_POST["call_center_tiers"][$x]["domain_uuid"] = $_SESSION['domain_uuid'];
-					}
-				//unset ring_group_destination_uuid if the field has no value
-					if (strlen($row["call_center_agent_uuid"]) == 0) {
-						unset($_POST["call_center_tiers"][$x]);
-					}
-				//increment the row
-					$x++;
+			if (is_array($_POST["call_center_tiers"]) && @sizeof($_POST["call_center_tiers"]) != 0) {
+				foreach ($_POST["call_center_tiers"] as $row) {
+					//add the domain_uuid
+						if (strlen($row["domain_uuid"]) == 0) {
+							$_POST["call_center_tiers"][$x]["domain_uuid"] = $_SESSION['domain_uuid'];
+						}
+					//unset ring_group_destination_uuid if the field has no value
+						if (strlen($row["call_center_agent_uuid"]) == 0) {
+							unset($_POST["call_center_tiers"][$x]);
+						}
+					//increment the row
+						$x++;
+				}
 			}
 
 		//get the application and data
@@ -280,21 +282,23 @@
 			$array['call_center_queues'][0]['domain_uuid'] = $domain_uuid;
 			
 			$y = 0;
-			foreach ($_POST["call_center_tiers"] as $row) {
-				if (is_uuid($row['call_center_tier_uuid'])) {
-					$call_center_tier_uuid = $row['call_center_tier_uuid'];
+			if (is_array($_POST["call_center_tiers"]) && @sizeof($_POST["call_center_tiers"]) != 0) {
+				foreach ($_POST["call_center_tiers"] as $row) {
+					if (is_uuid($row['call_center_tier_uuid'])) {
+						$call_center_tier_uuid = $row['call_center_tier_uuid'];
+					}
+					else {
+						$call_center_tier_uuid = uuid();
+					}
+					if (strlen($row['call_center_agent_uuid']) > 0) {
+						$array["call_center_queues"][0]["call_center_tiers"][$y]["call_center_tier_uuid"] = $call_center_tier_uuid;
+						$array['call_center_queues'][0]["call_center_tiers"][$y]["call_center_agent_uuid"] = $row['call_center_agent_uuid'];
+						$array['call_center_queues'][0]["call_center_tiers"][$y]["tier_level"] = $row['tier_level'];
+						$array['call_center_queues'][0]["call_center_tiers"][$y]["tier_position"] = $row['tier_position'];
+						$array['call_center_queues'][0]["call_center_tiers"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
+					}
+					$y++;
 				}
-				else {
-					$call_center_tier_uuid = uuid();
-				}
-				if (strlen($row['call_center_agent_uuid']) > 0) {
-					$array["call_center_queues"][0]["call_center_tiers"][$y]["call_center_tier_uuid"] = $call_center_tier_uuid;
-					$array['call_center_queues'][0]["call_center_tiers"][$y]["call_center_agent_uuid"] = $row['call_center_agent_uuid'];
-					$array['call_center_queues'][0]["call_center_tiers"][$y]["tier_level"] = $row['tier_level'];
-					$array['call_center_queues'][0]["call_center_tiers"][$y]["tier_position"] = $row['tier_position'];
-					$array['call_center_queues'][0]["call_center_tiers"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
-				}
-				$y++;
 			}
 
 		//build the xml dialplan
