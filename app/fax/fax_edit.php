@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -197,10 +197,10 @@
 	clearstatcache();
 
 //process the data
-	if (count($_POST) > 0 && is_uuid($_POST["fax_uuid"]) && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		$msg = '';
-		if ($action == "update" && permission_exists('fax_extension_edit')) {
+		if ($action == "update" && is_uuid($_POST["fax_uuid"]) && permission_exists('fax_extension_edit')) {
 			$fax_uuid = $_POST["fax_uuid"];
 		}
 
@@ -977,6 +977,7 @@
 				echo "	<table cellpadding='0' cellspacing='0' border='0'>";
 				echo "		<tr>";
 				echo "			<td id='authorized_senders'>";
+
 				if (substr_count($fax_email_outbound_authorized_senders, ',') > 0) {
 					$senders = explode(',', $fax_email_outbound_authorized_senders);
 				}
