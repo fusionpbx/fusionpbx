@@ -61,6 +61,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	//get recording uuid to edit
 		$recording_uuid = $_POST["recording_uuid"];
 
+	//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: recordings.php');
+			exit;
+		}
+
 	//check for all required data
 		$msg = '';
 		if (strlen($recording_filename) == 0) { $msg .= $text['label-edit-file']."<br>\n"; }
@@ -128,6 +136,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		unset($sql, $parameters, $row);
 	}
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
 	$document['title'] = $text['title-edit'];
 	require_once "resources/header.php";
@@ -185,6 +197,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	echo "			<input type='hidden' name='recording_uuid' value='".escape($recording_uuid)."'>\n";
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
