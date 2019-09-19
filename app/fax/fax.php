@@ -159,7 +159,7 @@
 					echo "		<a href='fax_active.php?id=".urlencode($row['fax_uuid'])."'>".$text['label-active']."</a>";
 				}
 				echo "	</td>\n";
-				echo "	<td valign='top' class='row_stylebg' width='35%'>".urlencode($row['fax_description'])."&nbsp;</td>\n";
+				echo "	<td valign='top' class='row_stylebg' width='35%'>".escape($row['fax_description'])."&nbsp;</td>\n";
 				echo "	<td class='list_control_icons'>";
 				if (permission_exists('fax_extension_edit')) {
 					echo "<a href='fax_edit.php?id=".urlencode($row['fax_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
