@@ -141,6 +141,7 @@
 						$array['sip_profiles'][0]['sip_profile_settings'][$y]["sip_profile_uuid"] = $sip_profile_uuid;
 						$array['sip_profiles'][0]['sip_profile_settings'][$y]["sip_profile_setting_uuid"] = $sip_profile_setting_uuid;
 						$array['sip_profiles'][0]['sip_profile_settings'][$y]["sip_profile_setting_name"] = $row["sip_profile_setting_name"];
+						$array['sip_profiles'][0]['sip_profile_settings'][$y]["sip_profile_setting_value"] = $row["sip_profile_setting_value"];
 						$array['sip_profiles'][0]['sip_profile_settings'][$y]["sip_profile_setting_enabled"] = $row["sip_profile_setting_enabled"];
 						$array['sip_profiles'][0]['sip_profile_settings'][$y]["sip_profile_setting_description"] = $row["sip_profile_setting_description"];
 					}
