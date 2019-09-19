@@ -71,11 +71,13 @@
 		//add the conference_control_uuid
 			if (!is_uuid($_POST["conference_control_uuid"])) {
 				$conference_control_uuid = uuid();
-				$_POST["conference_control_uuid"] = $conference_control_uuid;
 			}
 
 		//prepare the array
-			$array['conference_controls'][] = $_POST;
+			$array['conference_controls'][0]['conference_control_uuid'] = $conference_control_uuid;
+			$array['conference_controls'][0]['control_name'] = $control_name;
+			$array['conference_controls'][0]['control_enabled'] = $control_enabled;
+			$array['conference_controls'][0]['control_description'] = $control_description;
 
 		//save to the data
 			$database = new database;
