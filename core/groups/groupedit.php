@@ -400,9 +400,7 @@
 
 	echo "<tr>\n";
 	echo "<td colspan='2' align='right'>\n";
-	if (is_uuid($group_uuid)) {
-		echo "	<input type='hidden' name='group_uuid' value='".escape($group_uuid)."'>\n";
-	}
+	echo "	<input type='hidden' name='group_uuid' value='".escape($group_uuid)."'>\n";
 	echo "	<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "	<br />";
 	echo "	<input type='submit' class='btn' value=\"".$text['button-save']."\">\n";
