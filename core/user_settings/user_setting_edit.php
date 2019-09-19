@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2015
+ Portions created by the Initial Developer are Copyright (C) 2008-2019
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -92,6 +92,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		$user_setting_uuid = $_POST["user_setting_uuid"];
 	}
+
+	//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: ../users/user_edit.php?id='.$user_uuid);
+			exit;
+		}
 
 	//check for all required/authorized data
 		if (strlen($user_setting_category) == 0 || (is_array($allowed_categories) && sizeof($allowed_categories) > 0 && !in_array(strtolower($user_setting_category), $allowed_categories))) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
@@ -329,6 +337,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
@@ -700,6 +712,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "		<input type='hidden' name='user_setting_uuid' value='".escape($user_setting_uuid)."'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br />";
 	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
 	echo "		</td>\n";
