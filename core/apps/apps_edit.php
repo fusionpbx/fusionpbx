@@ -59,6 +59,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$app_uuid = $_POST["app_uuid"];
 	}
 
+	//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: apps.php');
+			exit;
+		}
+
 	//check for all required data
 		//if (strlen($app_enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -99,15 +107,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 }
 
-//show the header
-	require_once "resources/header.php";
-	if ($action == "update") {
-		$document['title'] = $text['title-app-edit'];
-	}
-	if ($action == "add") {
-		$document['title'] = $text['title-app-add'];
-	}
-
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$app_uuid = $_GET["id"];
@@ -127,6 +126,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$description = $row['description']['en-us'];
 			}
 		}
+	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
+//show the header
+	require_once "resources/header.php";
+	if ($action == "update") {
+		$document['title'] = $text['title-app-edit'];
+	}
+	if ($action == "add") {
+		$document['title'] = $text['title-app-add'];
 	}
 
 //show the content
@@ -195,6 +207,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "		<input type='hidden' name='app_uuid' value='$app_uuid'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
