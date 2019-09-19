@@ -106,11 +106,18 @@
 		//add the call_recording_uuid
 			if (!is_uuid($_POST["call_recording_uuid"])) {
 				$call_recording_uuid = uuid();
-				$_POST["call_recording_uuid"] = $call_recording_uuid;
 			}
-
-		//prepare the array
-			$array['call_recordings'][0] = $_POST;
+		
+		//build array
+			$array['call_recordings'][0]['domain_uuid'] = $domain_uuid;
+			$array['call_recordings'][0]['call_recording_name'] = $call_recording_uuid;
+			$array['call_recordings'][0]['call_recording_name'] = $call_recording_name;
+			$array['call_recordings'][0]['call_recording_path'] = $call_recording_path;
+			$array['call_recordings'][0]['call_recording_length'] = $call_recording_length;
+			$array['call_recordings'][0]['call_recording_date'] = $call_recording_date;
+			$array['call_recordings'][0]['call_direction'] = $call_direction;
+			$array['call_recordings'][0]['call_recording_description'] = $call_recording_description;
+			$array['call_recordings'][0]['call_recording_base64'] = $call_recording_base64;
 
 		//save to the data
 			$database = new database;
