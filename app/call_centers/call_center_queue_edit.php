@@ -142,8 +142,8 @@
 			}
 		//delete the tier from the database
 			if (strlen($call_center_tier_uuid) > 0) {
-$array['call_center_tiers'][0]['call_center_tier_uuid'] = $call_center_tier_uuid;
-$array['call_center_tiers'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+				$array['call_center_tiers'][0]['call_center_tier_uuid'] = $call_center_tier_uuid;
+				$array['call_center_tiers'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 
 				$p = new permissions;
 				$p->add('call_center_tier_delete', 'temp');
