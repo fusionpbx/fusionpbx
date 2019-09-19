@@ -112,6 +112,10 @@
 	$database = new database;
 	$bridges = $database->select($sql, $parameters, 'all');
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //alternate the row style
 	$c = 0;
 	$row_style["0"] = "row_style0";
@@ -229,6 +233,7 @@
 	echo "<br />\n";
 	echo "<div align='center'>".$paging_controls."</div>\n";
 
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";
 
 //include the footer
