@@ -76,6 +76,14 @@
 				$var_uuid = $_POST["var_uuid"];
 			}
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: vars.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			//if (strlen($var_category) == 0) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
@@ -166,6 +174,10 @@
 		}
 		unset($sql, $parameters);
 	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //include header
 	require_once "resources/header.php";
@@ -329,6 +341,7 @@
 	if ($action == "update") {
 		echo "		<input type='hidden' name='var_uuid' value='".escape($var_uuid)."'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
