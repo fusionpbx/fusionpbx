@@ -65,6 +65,14 @@
 				$number_translation_uuid = $_POST["number_translation_uuid"];
 			}
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: number_translations.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			if (strlen($number_translation_name) == 0) { $msg .= $text['message-required']." ".$text['label-number_translation_name']."<br>\n"; }
@@ -178,6 +186,10 @@
 	$number_translation_details[$x]['number_translation_detail_replace'] = '';
 	$number_translation_details[$x]['number_translation_detail_order'] = '';
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
 	require_once "resources/header.php";
 
@@ -282,6 +294,7 @@
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	echo "			<input type='hidden' name='number_translation_uuid' value='".escape($number_translation_uuid)."'>\n";
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
