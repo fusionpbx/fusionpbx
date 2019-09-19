@@ -43,7 +43,7 @@
 	$text = $language->get();
 
 //get the fax_extension and save it as a variable
-	if (strlen($_REQUEST["fax_extension"]) > 0) {
+	if (isset($_REQUEST["fax_extension"])) {
 		$fax_extension = $_REQUEST["fax_extension"];
 	}
 
@@ -138,7 +138,7 @@
 	}
 
 //delete the user from the fax users
-	if ($_GET["a"] == "delete" && permission_exists("fax_extension_delete")) {
+	if (is_uuid($_REQUEST["user_uuid"]) && is_uuid($_REQUEST["id"]) && $_GET["a"] == "delete" && permission_exists("fax_extension_delete")) {
 		//set the variables
 			$user_uuid = $_REQUEST["user_uuid"];
 			$fax_uuid = $_REQUEST["id"];
@@ -197,7 +197,7 @@
 	clearstatcache();
 
 //process the data
-	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && is_uuid($_POST["fax_uuid"]) && strlen($_POST["persistformvar"]) == 0) {
 
 		$msg = '';
 		if ($action == "update" && permission_exists('fax_extension_edit')) {
