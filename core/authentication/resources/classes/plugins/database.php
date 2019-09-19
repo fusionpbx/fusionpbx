@@ -32,7 +32,7 @@ class plugin_database {
 		//check the username and password if they don't match then redirect to the login
 			$sql = "select * from v_users ";
 			if (strlen($this->key) > 30) {
-				$sql .= "where api_key = :key ";
+				$sql .= "where api_key = :api_key ";
 				$parameters['api_key'] = $this->key;
 			}
 			else {
