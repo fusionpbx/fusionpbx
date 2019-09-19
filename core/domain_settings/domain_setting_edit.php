@@ -93,6 +93,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$domain_setting_uuid = $_POST["domain_setting_uuid"];
 	}
 
+	//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: ../domains/domain_edit.php?id='.$domain_uuid);
+			exit;
+		}
+
 	//check for all required/authorized data
 		if (strlen($domain_setting_category) == 0 || (is_array($allowed_categories) && sizeof($allowed_categories) > 0 && !in_array(strtolower($domain_setting_category), $allowed_categories))) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
 		if (strlen($domain_setting_subcategory) == 0) { $msg .= $text['message-required'].$text['label-subcategory']."<br>\n"; }
@@ -334,6 +342,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 		unset($sql, $parameters);
 	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
@@ -723,6 +735,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "		<input type='hidden' name='domain_setting_uuid' value='".escape($domain_setting_uuid)."'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br />";
 	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
 	echo "		</td>\n";
