@@ -247,7 +247,6 @@ if (!function_exists('fax_split_dtmf')) {
 
 //send the fax
 	$continue = false;
-
 	if (!$included) {
 		if (($_POST['action'] == "send")) {
 			$fax_numbers = $_POST['fax_numbers'];
@@ -262,6 +261,14 @@ if (!function_exists('fax_split_dtmf')) {
 			$fax_resolution = $_POST['fax_resolution'];
 			$fax_page_size = $_POST['fax_page_size'];
 			$fax_footer = $_POST['fax_footer'];
+
+			//validate the token
+				$token = new token;
+				if (!$token->validate($_SERVER['PHP_SELF'])) {
+					message::add($text['message-invalid_token'],'negative');
+					header('Location: fax_send.php');
+					exit;
+				}
 
 			$continue = true;
 		}
@@ -846,6 +853,10 @@ if (!function_exists('fax_split_dtmf')) {
 
 if (!$included) {
 
+	//create token
+		$object = new token;
+		$token = $object->create($_SERVER['PHP_SELF']);
+
 	//show the header
 		require_once "resources/header.php";
 
@@ -1138,6 +1149,7 @@ if (!$included) {
 		echo "			<input type='hidden' name='fax_extension' value='".escape($fax_extension)."'>\n";
 		echo "			<input type='hidden' name='id' value='".escape($fax_uuid)."'>\n";
 		echo "			<input type='hidden' name='action' value='send'>\n";
+		echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 		echo "			<input type='submit' name='submit' class='btn' id='preview' value='".$text['button-preview']."'>\n";
 		echo "			<input type='submit' name='submit' class='btn' id='upload' value='".$text['button-send']."'>\n";
 		echo "		</td>\n";
