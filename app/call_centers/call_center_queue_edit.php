@@ -417,8 +417,9 @@
 		//syncrhonize configuration
 			save_call_center_xml();
 
-		//remove the cache
-			remove_config_from_cache('configuration:callcenter.conf');
+		//clear the cache
+			$cache = new cache;
+			$cache->delete('configuration:callcenter.conf');
 
 		//redirect the user
 			if (is_uuid($call_center_queue_uuid)) {
