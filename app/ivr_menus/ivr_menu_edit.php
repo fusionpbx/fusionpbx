@@ -158,6 +158,14 @@
 				unset($sql, $parameters, $row);
 			}
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: ivr_menus.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			if (strlen($ivr_menu_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
@@ -500,6 +508,10 @@
 //get the sound files
 	$file = new file;
 	$sound_files = $file->sounds();
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //content
 	require_once "resources/header.php";
@@ -1442,6 +1454,7 @@
 		echo "		<input type='hidden' name='ivr_menu_uuid' value='".escape($ivr_menu_uuid)."'>\n";
 		echo "		<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br>";
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
