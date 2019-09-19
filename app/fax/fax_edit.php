@@ -204,6 +204,14 @@
 			$fax_uuid = $_POST["fax_uuid"];
 		}
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: fax.php');
+				exit;
+			}
+
 		//check for all required data
 			if (strlen($fax_extension) == 0) { $msg .= "".$text['confirm-ext']."<br>\n"; }
 			if (strlen($fax_name) == 0) { $msg .= "".$text['confirm-fax']."<br>\n"; }
@@ -437,6 +445,10 @@
 	if (!is_uuid($dialplan_uuid)) {
 		$dialplan_uuid = uuid();
 	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
@@ -796,6 +808,7 @@
 		echo "		<input type='hidden' name='fax_uuid' value='".escape($fax_uuid)."'>\n";
 		echo "		<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
