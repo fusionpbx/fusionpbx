@@ -269,7 +269,7 @@
 
 		//get submitted values
 			$stream_uuid = $_GET['id'];
-			$stream_file = base64_decode($_GET['file']);
+			$stream_file = $_GET['file'];
 
 		//get the record
 			foreach($streams as $row) {
@@ -595,7 +595,7 @@
 								echo "	<td valign='top' class='".((!permission_exists('music_on_hold_domain')) ? 'list_control_icon' : 'list_control_icons')."'>\n";
 								echo 		"<a href='?action=download&id=".escape($row['music_on_hold_uuid'])."&file=".urlencode($stream_file)."' title='".$text['label-download']."'>".$v_link_label_download."</a>";
 								if ( (!is_uuid($domain_uuid) && permission_exists('music_on_hold_domain')) || (is_uuid($domain_uuid) && permission_exists('music_on_hold_delete')) ) {
-									echo 	"<a href='?action=delete&id=".escape($row['music_on_hold_uuid'])."&file=".urlencode($stream_file)."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+									echo 	"<a href='?action=delete&id=".urlencode($row['music_on_hold_uuid'])."&file=".urlencode($stream_file)."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 								}
 								echo "	</td>\n";
 								echo "</tr>\n";
