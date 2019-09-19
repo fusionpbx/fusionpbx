@@ -140,6 +140,14 @@
 				$message_key = $_POST["message_key"];
 			}
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: users.php');
+				exit;
+			}
+
 		//check required values
 			if ($username == '') {
 				message::add($text['message-required'].$text['label-username'], 'negative', 7500);
@@ -593,6 +601,10 @@
 		unset($sql, $parameters, $result, $row);
 	}
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //include the header
 	require_once "resources/header.php";
 	$document['title'] = $text['title-user_edit'];
@@ -1014,9 +1026,10 @@
 	if ($action == 'edit') {
 		echo "		<input type='hidden' name='id' value=\"".escape($user_uuid)."\">";
 		if (permission_exists("user_edit")) {
-			echo "			<input type='hidden' name='username_old' value=\"".escape($username)."\">";
+			echo "		<input type='hidden' name='username_old' value=\"".escape($username)."\">";
 		}
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br>";
 	if ($unsaved) {
 		echo "		<span style='color: #b00;'>".$text['message-unsaved_changes']." <i class='fas fa-exclamation-triangle' style='margin-right: 15px;'></i></span>";
