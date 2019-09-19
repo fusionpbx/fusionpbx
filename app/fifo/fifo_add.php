@@ -62,6 +62,15 @@ else {
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+
+	//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: dialplans.php');
+			exit;
+		}
+
 	//check for all required data
 		if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']."domain_uuid<br>\n"; }
 		if (strlen($extension_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
@@ -280,6 +289,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 }
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the content
 	echo "<form method='post' name='frm' action=''>\n";
 	echo " 	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
@@ -418,6 +431,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "	<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
 	}
+	echo "		<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "		<br>";
 	echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "	</td>\n";
