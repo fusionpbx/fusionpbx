@@ -1,5 +1,4 @@
 <?php
-#This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['title-call_recordings']['en-us'] = "Call Recordings";
 $text['title-call_recordings']['ar-eg'] = "";
@@ -340,5 +339,65 @@ $text['description-call_recording_base64']['ro-ro'] = "";
 $text['description-call_recording_base64']['ru-ru'] = "";
 $text['description-call_recording_base64']['sv-se'] = "";
 $text['description-call_recording_base64']['uk-ua'] = "";
+
+$text['label-inbound']['en-us'] = "Inbound";
+$text['label-inbound']['ar-eg'] = "Inbound";
+$text['label-inbound']['de-at'] = "Inbound";
+$text['label-inbound']['de-ch'] = "Inbound";
+$text['label-inbound']['de-de'] = "Inbound";
+$text['label-inbound']['es-cl'] = "Inbound";
+$text['label-inbound']['es-mx'] = "Inbound";
+$text['label-inbound']['fr-ca'] = "Inbound";
+$text['label-inbound']['fr-fr'] = "Inbound";
+$text['label-inbound']['he-il'] = "Inbound";
+$text['label-inbound']['it-it'] = "Inbound";
+$text['label-inbound']['nl-nl'] = "Inbound";
+$text['label-inbound']['pl-pl'] = "Inbound";
+$text['label-inbound']['pt-br'] = "Inbound";
+$text['label-inbound']['pt-pt'] = "Inbound";
+$text['label-inbound']['ro-ro'] = "Inbound";
+$text['label-inbound']['ru-ru'] = "Inbound";
+$text['label-inbound']['sv-se'] = "Inbound";
+$text['label-inbound']['uk-ua'] = "Inbound";
+
+$text['label-outbound']['en-us'] = "Outbound";
+$text['label-outbound']['ar-eg'] = "Outbound";
+$text['label-outbound']['de-at'] = "Outbound";
+$text['label-outbound']['de-ch'] = "Outbound";
+$text['label-outbound']['de-de'] = "Outbound";
+$text['label-outbound']['es-cl'] = "Outbound";
+$text['label-outbound']['es-mx'] = "Outbound";
+$text['label-outbound']['fr-ca'] = "Outbound";
+$text['label-outbound']['fr-fr'] = "Outbound";
+$text['label-outbound']['he-il'] = "Outbound";
+$text['label-outbound']['it-it'] = "Outbound";
+$text['label-outbound']['nl-nl'] = "Outbound";
+$text['label-outbound']['pl-pl'] = "Outbound";
+$text['label-outbound']['pt-br'] = "Outbound";
+$text['label-outbound']['pt-pt'] = "Outbound";
+$text['label-outbound']['ro-ro'] = "Outbound";
+$text['label-outbound']['ru-ru'] = "Outbound";
+$text['label-outbound']['sv-se'] = "Outbound";
+$text['label-outbound']['uk-ua'] = "Outbound";
+
+$text['label-local']['en-us'] = "Local";
+$text['label-local']['ar-eg'] = "Local";
+$text['label-local']['de-at'] = "Local";
+$text['label-local']['de-ch'] = "Local";
+$text['label-local']['de-de'] = "Local";
+$text['label-local']['es-cl'] = "Local";
+$text['label-local']['es-mx'] = "Local";
+$text['label-local']['fr-ca'] = "Local";
+$text['label-local']['fr-fr'] = "Local";
+$text['label-local']['he-il'] = "Local";
+$text['label-local']['it-it'] = "Local";
+$text['label-local']['nl-nl'] = "Local";
+$text['label-local']['pl-pl'] = "Local";
+$text['label-local']['pt-br'] = "Local";
+$text['label-local']['pt-pt'] = "Local";
+$text['label-local']['ro-ro'] = "Local";
+$text['label-local']['ru-ru'] = "Local";
+$text['label-local']['sv-se'] = "Local";
+$text['label-local']['uk-ua'] = "Local";
 
 ?>
