@@ -149,8 +149,11 @@
 
 	if (!function_exists('is_uuid')) {
 		function is_uuid($uuid) {
-			$regex = '/^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i';
-			return preg_match($regex, $uuid);
+			if (gettype($uuid) == 'string') {
+				$regex = '/^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i';
+				return preg_match($regex, $uuid);
+			}
+			return false;
 		}
 	}
 
