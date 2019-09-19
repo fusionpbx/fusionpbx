@@ -185,6 +185,14 @@
 		//set the domain_uuid
 			$domain_uuid = permission_exists('extension_domain') ? $_POST["domain_uuid"] : $_SESSION['domain_uuid'];
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: extensions.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			if (strlen($extension) == 0) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
@@ -810,6 +818,10 @@
 	if (strlen($limit_destination) == 0) { $limit_destination = 'error/user_busy'; }
 	if (strlen($call_timeout) == 0) { $call_timeout = '30'; }
 	if (strlen($call_screen_enabled) == 0) { $call_screen_enabled = 'false'; }
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //begin the page content
 	require_once "resources/header.php";
@@ -1943,6 +1955,7 @@
 		echo "		<input type='hidden' name='delete_type' id='delete_type' value=''>";
 		echo "		<input type='hidden' name='delete_uuid' id='delete_uuid' value=''>";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br>";
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."' onclick=''>\n";
 	echo "		</td>\n";
