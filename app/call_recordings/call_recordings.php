@@ -98,6 +98,7 @@
 		$sql_search = "and (";
 		$sql_search .= "lower(call_recording_name) like :search ";
 		$sql_search .= "or lower(call_recording_path) like :search ";
+		$sql_search .= "or cast(call_recording_date as text) like :search ";
 		$sql_search .= "or lower(call_direction) like :search ";
 		$sql_search .= "or lower(call_recording_description) like :search ";
 		$sql_search .= ") ";
