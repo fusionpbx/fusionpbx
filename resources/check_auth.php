@@ -36,8 +36,12 @@
 	}
 
 //start the session
-	ini_set("session.use_only_cookies", True);
-	ini_set("session.cookie_httponly", True);
+	if (!ini_get("session.use_only_cookies")) {
+		ini_set("session.use_only_cookies", True);	
+	}
+	if (!ini_get("session.cookie_httponly")) {
+		ini_set("session.cookie_httponly", True);	
+	}
 	if ($_SERVER["HTTPS"] == "on") { ini_set("session.cookie_secure", True); }
 	if (!isset($_SESSION)) { session_start(); }
 
