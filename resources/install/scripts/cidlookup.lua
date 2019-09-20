@@ -113,7 +113,7 @@
 
 --set the caller id name
 	if ((name ~= nil) and (string.len(name) > 0)) then
-		api:executeString("uuid_setvar " .. uuid .. " ignore_display_updates true");
+		api:executeString("uuid_setvar " .. uuid .. " ignore_display_updates false");
 	
 		freeswitch.consoleLog("NOTICE", "[cidlookup] uuid_setvar " .. uuid .. " caller_id_name " .. name);
 		api:executeString("uuid_setvar " .. uuid .. " caller_id_name " .. name);
