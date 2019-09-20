@@ -32,19 +32,11 @@
 if (!class_exists('number_translations')) {
 	class number_translations {
 
-		public $db;
-
 		/**
 		 * Called when the object is created
 		 */
 		public function __construct() {
-			//connect to the database if not connected
-			if (!$this->db) {
-				require_once "resources/classes/database.php";
-				$database = new database;
-				$database->connect();
-				$this->db = $database->db;
-			}
+
 		}
 
 		/**
@@ -61,20 +53,12 @@ if (!class_exists('number_translations')) {
 		 * Check to see if the number translation already exists
 		 */
 		public function number_translation_exists($name) {
-			$sql = "select number_translation_uuid from v_number_translations ";
-			$sql .= "where number_translation_name = '$name' ";
-			$prep_statement = $this->db->prepare(check_sql($sql));
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-				if (count($result)) {
-					return true;
-				}
-				else {
-					return false;
-				}
-			}
-			unset($sql, $prep_statement, $result);
+			$sql = "select count(*) from v_number_translations ";
+			$sql .= "where number_translation_name = :number_translation_name ";
+			$parameters['number_translation_name'] = $name;
+			$database = new database;
+			return $database->select($sql, $parameters, 'column') != 0 ? true : false;
+			unset($sql, $parameters);
 		}
 
 		/**
@@ -90,7 +74,7 @@ if (!class_exists('number_translations')) {
 					//convert to an array
 						$number_translation = json_decode($json, true);
 				}
-				elseif (strlen($this->json) > 0) {
+				else if (strlen($this->json) > 0) {
 					//convert to an array
 						$number_translation = json_decode($this->json, true);
 				}
@@ -99,33 +83,37 @@ if (!class_exists('number_translations')) {
 				}
 			//check if the number_translation exists
 				if (!$this->number_translation_exists($number_translation['@attributes']['name'])) {
-						$permissions = new permissions;
-						$permissions->add('number_translation_add', 'temp');
-						$permissions->add('number_translation_detail_add', 'temp');
-						$x=0;
+					//begin insert array
+						$x = 0;
 						$array['number_translations'][$x]['number_translation_name'] = $number_translation['@attributes']['name'];
 						$array['number_translations'][$x]['number_translation_enabled'] = "true";
 						if (strlen($number_translation['@attributes']['enabled']) > 0) {
 							$array['number_translations'][$x]['number_translation_enabled'] = $number_translation['@attributes']['enabled'];
 						}
 						$array['number_translations'][$x]['number_translation_description'] = $number_translation['@attributes']['description'];
-
 					//loop through the condition array
 						$order = 5;
 						if (isset($number_translation['rule'])) {
 							foreach ($number_translation['rule'] as &$row) {
-								if(array_key_exists('@attributes', $row))
+								if (array_key_exists('@attributes', $row)) {
 									$row = $row['@attributes'];
+								}
 								$array['number_translations'][$x]['number_translation_details'][$order]['number_translation_detail_regex'] = $row['regex'];
 								$array['number_translations'][$x]['number_translation_details'][$order]['number_translation_detail_replace'] = $row['replace'];
 								$array['number_translations'][$x]['number_translation_details'][$order]['number_translation_detail_order'] = $order;
 								$order = $order + 5;
 							}
 						}
+					//grant temporary permissions
+						$p = new permissions;
+						$p->add('number_translation_add', 'temp');
+						$p->add('number_translation_detail_add', 'temp');
+					//execute insert
 						$database = new database;
 						$database->app_name = 'number_translations';
 						$database->app_uuid = '6ad54de6-4909-11e7-a919-92ebcb67fe33';
 						$database->save($array);
+						unset($array);
 						if ($this->display_type == "text") {
 							if ($database->message['code'] != '200') { 
 								echo "number_translation:".$number_translation['@attributes']['name'].":	failed: ".$database->message['message']."\n";
@@ -134,8 +122,9 @@ if (!class_exists('number_translations')) {
 								echo "number_translation:".$number_translation['@attributes']['name'].":	added with ".(($order/5)-1)." entries\n";
 							}
 						}
-						$permissions->delete('number_translation_add', 'temp');
-						$permissions->delete('number_translation_detail_add', 'temp');
+					//revoke temporary permissions
+						$p->delete('number_translation_add', 'temp');
+						$p->delete('number_translation_detail_add', 'temp');
 				}
 				unset ($this->xml, $this->json);
 		}
@@ -149,7 +138,7 @@ if (!class_exists('number_translations')) {
 				//delete multiple number_translations
 					if (is_array($number_translations)) {
 						//get the action
-							foreach($number_translations as $row) {
+							foreach ($number_translations as $row) {
 								if ($row['action'] == 'delete') {
 									$action = 'delete';
 									break;
@@ -157,12 +146,23 @@ if (!class_exists('number_translations')) {
 							}
 						//delete the checked rows
 							if ($action == 'delete') {
-								foreach($number_translations as $row) {
+								foreach ($number_translations as $row) {
 									if ($row['action'] == 'delete' or $row['checked'] == 'true') {
-										$sql = "delete from v_number_translations ";
-										$sql .= "where number_translation_uuid = '".$row['number_translation_uuid']."'; ";
-										$this->db->query($sql);
-										unset($sql);
+										//build delete array
+											$array['number_translations'][]['number_translation_uuid'] = $row['number_translation_uuid'];
+									}
+									if (is_array($array) && @sizeof($array) != 0) {
+										//grant temporary permissions
+											$p = new permissions;
+											$p->add('number_translation_delete', 'temp');
+										//execute delete
+											$database = new database;
+											$database->app_name = 'number_translations';
+											$database->app_uuid = '6ad54de6-4909-11e7-a919-92ebcb67fe33';
+											$database->delete($array);
+											unset($array);
+										//revoke temporary permissions
+											$p->delete('number_translation_delete', 'temp');
 									}
 								}
 								unset($number_translations);

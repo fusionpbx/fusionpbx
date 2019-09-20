@@ -27,6 +27,7 @@
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
+	require_once "resources/paging.php";
 
 //check permissions
 	require_once "resources/check_auth.php";
@@ -48,33 +49,28 @@
 
 //add the search term
 	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
+	if ($search != '') {
 		$sql_search = "and (";
-		$sql_search .= "	lower(transaction_code) like :search ";
+		$sql_search .= "	lower(app_name) like :search ";
+		$sql_search .= "	or lower(transaction_code) like :search ";
 		$sql_search .= "	or lower(transaction_address) like :search ";
 		$sql_search .= "	or lower(transaction_type) like :search ";
-		$sql_search .= "	or lower(app_name) like :search ";
+		$sql_search .= "	or cast(transaction_date as text) like :search ";
 		$sql_search .= ") ";
+		$parameters['search'] = '%'.$search.'%';
 	}
-
-//additional includes
-	require_once "resources/header.php";
-	require_once "resources/paging.php";
 
 //prepare to page the results
 	$sql = "select count(database_transaction_uuid) from v_database_transactions ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= $sql_search;
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	if (strlen($search) > 0) {
-		$parameters['search'] = '%'.$search.'%';
-	}
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "";
+	$param = "search=".$search;
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
@@ -98,6 +94,9 @@
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
+
+//additional includes
+	require_once "resources/header.php";
 
 //show the content
 	echo "<table width='100%' border='0'>\n";
@@ -124,7 +123,7 @@
 	//echo th_order_by('transaction_old', $text['label-transaction_old'], $order_by, $order);
 	//echo th_order_by('transaction_new', $text['label-transaction_new'], $order_by, $order);
 	//echo th_order_by('transaction_result', $text['label-transaction_result'], $order_by, $order);
-	echo "<td class='list_control_icons'>";
+	echo "<td class='list_control_icon'>";
 	echo "	&nbsp;\n";
 	echo "</td>\n";
 	echo "<tr>\n";
@@ -132,7 +131,7 @@
 	if (is_array($result)) {
 		foreach($result as $row) {
 			if (permission_exists('database_transaction_edit')) {
-				$tr_link = "href='database_transaction_edit.php?id=".escape($row['database_transaction_uuid'])."'";
+				$tr_link = "href='database_transaction_edit.php?id=".urlencode($row['database_transaction_uuid']).($page != '' ? "&page=".urlencode($page) : null).($search != '' ? "&search=".urlencode($search) : null)."'";
 			}
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['domain_name'])."&nbsp;</td>\n";
@@ -145,9 +144,9 @@
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['transaction_old']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['transaction_new']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['transaction_result']."&nbsp;</td>\n";
-			echo "	<td class='list_control_icons'>";
+			echo "	<td class='list_control_icon'>";
 			if (permission_exists('database_transaction_edit')) {
-				echo "<a href='database_transaction_edit.php?id=".escape($row['database_transaction_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='database_transaction_edit.php?id=".urlencode($row['database_transaction_uuid']).($page != '' ? "&page=".urlencode($page) : null).($search != '' ? "&search=".urlencode($search) : null)."' alt='".$text['button-view']."'>$v_link_label_view</a>";
 			}
 			//if (permission_exists('database_transaction_delete')) {
 			//	echo "<a href='database_transaction_delete.php?id=".escape($row['database_transaction_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";

@@ -69,6 +69,14 @@
 				$email_template_uuid = $_POST["email_template_uuid"];
 			}
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: email_templates.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			if (strlen($template_language) == 0) { $msg .= $text['message-required']." ".$text['label-template_language']."<br>\n"; }
@@ -96,11 +104,19 @@
 		//add the email_template_uuid
 			if (!is_uuid($_POST["email_template_uuid"])) {
 				$email_template_uuid = uuid();
-				$_POST["email_template_uuid"] = $email_template_uuid;
 			}
 
 		//prepare the array
-			$array['email_templates'][0] = $_POST;
+			$array['email_templates'][0]['domain_uuid'] = $domain_uuid;
+			$array['email_templates'][0]['email_template_uuid'] = $email_template_uuid;
+			$array['email_templates'][0]['template_language'] = $template_language;
+			$array['email_templates'][0]['template_category'] = $template_category;
+			$array['email_templates'][0]['template_subcategory'] = $template_subcategory;
+			$array['email_templates'][0]['template_subject'] = $template_subject;
+			$array['email_templates'][0]['template_body'] = $template_body;
+			$array['email_templates'][0]['template_type'] = $template_type;
+			$array['email_templates'][0]['template_enabled'] = $template_enabled;
+			$array['email_templates'][0]['template_description'] = $template_description;
 
 		//save to the data
 			$database = new database;
@@ -148,6 +164,10 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
@@ -294,9 +314,10 @@
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='email_template_uuid' value='".escape($email_template_uuid)."'>\n";
+		echo "			<input type='hidden' name='email_template_uuid' value='".escape($email_template_uuid)."'>\n";
 	}
-	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

@@ -79,6 +79,7 @@
 			$queue_extension = $_POST["queue_extension"];
 			$queue_greeting = $_POST["queue_greeting"];
 			$queue_strategy = $_POST["queue_strategy"];
+			$call_center_tiers = $_POST["call_center_tiers"];
 			$queue_moh_sound = $_POST["queue_moh_sound"];
 			$queue_record_template = $_POST["queue_record_template"];
 			$queue_time_base_score = $_POST["queue_time_base_score"];
@@ -107,7 +108,7 @@
 	}
 
 //delete the tier (agent from the queue)
-	if ($_REQUEST["a"] == "delete" && strlen($_REQUEST["id"]) > 0 && permission_exists("call_center_tier_delete")) {
+	if ($_REQUEST["a"] == "delete" && is_uuid($_REQUEST["id"]) && permission_exists("call_center_tier_delete")) {
 		//set the variables
 			$call_center_queue_uuid = $_REQUEST["id"];
 			$call_center_tier_uuid = $_REQUEST["call_center_tier_uuid"];
@@ -165,6 +166,14 @@
 				$call_center_queue_uuid = $_POST["call_center_queue_uuid"];
 			}
 	
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: call_center_queues.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']."domain_uuid<br>\n"; }
@@ -216,17 +225,19 @@
 
 		//update the call centier tiers array
 			$x = 0;
-			foreach ($_POST["call_center_tiers"] as $row) {
-				//add the domain_uuid
-					if (strlen($row["domain_uuid"]) == 0) {
-						$_POST["call_center_tiers"][$x]["domain_uuid"] = $_SESSION['domain_uuid'];
-					}
-				//unset ring_group_destination_uuid if the field has no value
-					if (strlen($row["call_center_agent_uuid"]) == 0) {
-						unset($_POST["call_center_tiers"][$x]);
-					}
-				//increment the row
-					$x++;
+			if (is_array($_POST["call_center_tiers"]) && @sizeof($_POST["call_center_tiers"]) != 0) {
+				foreach ($_POST["call_center_tiers"] as $row) {
+					//add the domain_uuid
+						if (strlen($row["domain_uuid"]) == 0) {
+							$_POST["call_center_tiers"][$x]["domain_uuid"] = $_SESSION['domain_uuid'];
+						}
+					//unset ring_group_destination_uuid if the field has no value
+						if (strlen($row["call_center_agent_uuid"]) == 0) {
+							unset($_POST["call_center_tiers"][$x]);
+						}
+					//increment the row
+						$x++;
+				}
 			}
 
 		//get the application and data
@@ -241,6 +252,53 @@
 			}
 			else {
 				$queue_greeting_path = $queue_greeting;
+			}
+
+		//prepare the array
+			$array['call_center_queues'][0]['queue_name'] = $queue_name;
+			$array['call_center_queues'][0]['queue_extension'] = $queue_extension;
+			$array['call_center_queues'][0]['queue_greeting'] = $queue_greeting;
+			$array['call_center_queues'][0]['queue_strategy'] = $queue_strategy;
+			$array['call_center_queues'][0]['queue_moh_sound'] = $queue_moh_sound;
+			$array['call_center_queues'][0]['queue_record_template'] = $queue_record_template;
+			$array['call_center_queues'][0]['queue_time_base_score'] = $queue_time_base_score;
+			$array['call_center_queues'][0]['queue_max_wait_time'] = $queue_max_wait_time;
+			$array['call_center_queues'][0]['queue_max_wait_time_with_no_agent'] = $queue_max_wait_time_with_no_agent;
+			$array['call_center_queues'][0]['queue_max_wait_time_with_no_agent_time_reached'] = $queue_max_wait_time_with_no_agent_time_reached;
+			$array['call_center_queues'][0]['queue_timeout_action'] = $queue_timeout_action;
+			$array['call_center_queues'][0]['queue_tier_rules_apply'] = $queue_tier_rules_apply;
+			$array['call_center_queues'][0]['queue_tier_rule_wait_second'] = $queue_tier_rule_wait_second;
+			$array['call_center_queues'][0]['queue_tier_rule_wait_multiply_level'] = $queue_tier_rule_wait_multiply_level;
+			$array['call_center_queues'][0]['queue_tier_rule_no_agent_no_wait'] = $queue_tier_rule_no_agent_no_wait;
+			$array['call_center_queues'][0]['queue_discard_abandoned_after'] = $queue_discard_abandoned_after;
+			$array['call_center_queues'][0]['queue_abandoned_resume_allowed'] = $queue_abandoned_resume_allowed;
+			$array['call_center_queues'][0]['queue_cid_prefix'] = $queue_cid_prefix;
+			$array['call_center_queues'][0]['queue_announce_sound'] = $queue_announce_sound;
+			$array['call_center_queues'][0]['queue_announce_frequency'] = $queue_announce_frequency;
+			$array['call_center_queues'][0]['queue_cc_exit_keys'] = $queue_cc_exit_keys;
+			$array['call_center_queues'][0]['queue_description'] = $queue_description;
+			$array['call_center_queues'][0]['call_center_queue_uuid'] = $call_center_queue_uuid;
+			$array['call_center_queues'][0]['dialplan_uuid'] = $dialplan_uuid;
+			$array['call_center_queues'][0]['domain_uuid'] = $domain_uuid;
+			
+			$y = 0;
+			if (is_array($_POST["call_center_tiers"]) && @sizeof($_POST["call_center_tiers"]) != 0) {
+				foreach ($_POST["call_center_tiers"] as $row) {
+					if (is_uuid($row['call_center_tier_uuid'])) {
+						$call_center_tier_uuid = $row['call_center_tier_uuid'];
+					}
+					else {
+						$call_center_tier_uuid = uuid();
+					}
+					if (strlen($row['call_center_agent_uuid']) > 0) {
+						$array["call_center_queues"][0]["call_center_tiers"][$y]["call_center_tier_uuid"] = $call_center_tier_uuid;
+						$array['call_center_queues'][0]["call_center_tiers"][$y]["call_center_agent_uuid"] = $row['call_center_agent_uuid'];
+						$array['call_center_queues'][0]["call_center_tiers"][$y]["tier_level"] = $row['tier_level'];
+						$array['call_center_queues'][0]["call_center_tiers"][$y]["tier_position"] = $row['tier_position'];
+						$array['call_center_queues'][0]["call_center_tiers"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
+					}
+					$y++;
+				}
 			}
 
 		//build the xml dialplan
@@ -264,21 +322,17 @@
 			$dialplan_xml .= "</extension>\n";
 
 		//build the dialplan array
-			$dialplan["domain_uuid"] = $_SESSION['domain_uuid'];
-			$dialplan["dialplan_uuid"] = $dialplan_uuid;
-			$dialplan["dialplan_name"] = $queue_name;
-			$dialplan["dialplan_number"] = $queue_extension;
-			$dialplan["dialplan_context"] = $_SESSION['context'];
-			$dialplan["dialplan_continue"] = "false";
-			$dialplan["dialplan_xml"] = $dialplan_xml;
-			$dialplan["dialplan_order"] = "230";
-			$dialplan["dialplan_enabled"] = "true";
-			$dialplan["dialplan_description"] = $queue_description;
-			$dialplan["app_uuid"] = "95788e50-9500-079e-2807-fd530b0ea370";
-
-		//prepare the array
-			$array['call_center_queues'][] = $_POST;
-			$array['dialplans'][] = $dialplan;
+			$array['dialplans'][0]["domain_uuid"] = $_SESSION['domain_uuid'];
+			$array['dialplans'][0]["dialplan_uuid"] = $dialplan_uuid;
+			$array['dialplans'][0]["dialplan_name"] = $queue_name;
+			$array['dialplans'][0]["dialplan_number"] = $queue_extension;
+			$array['dialplans'][0]["dialplan_context"] = $_SESSION['context'];
+			$array['dialplans'][0]["dialplan_continue"] = "false";
+			$array['dialplans'][0]["dialplan_xml"] = $dialplan_xml;
+			$array['dialplans'][0]["dialplan_order"] = "230";
+			$array['dialplans'][0]["dialplan_enabled"] = "true";
+			$array['dialplans'][0]["dialplan_description"] = $queue_description;
+			$array['dialplans'][0]["app_uuid"] = "95788e50-9500-079e-2807-fd530b0ea370";
 
 		//add the dialplan permission
 			$p = new permissions;
@@ -363,8 +417,9 @@
 		//syncrhonize configuration
 			save_call_center_xml();
 
-		//remove the cache
-			remove_config_from_cache('configuration:callcenter.conf');
+		//clear the cache
+			$cache = new cache;
+			$cache->delete('configuration:callcenter.conf');
 
 		//redirect the user
 			if (is_uuid($call_center_queue_uuid)) {
@@ -477,6 +532,10 @@
 	if (strlen($queue_tier_rule_no_agent_no_wait) == 0) { $queue_tier_rule_no_agent_no_wait = "true"; }
 	if (strlen($queue_discard_abandoned_after) == 0) { $queue_discard_abandoned_after = "900"; }
 	if (strlen($queue_abandoned_resume_allowed) == 0) { $queue_abandoned_resume_allowed = "false"; }
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
@@ -815,7 +874,7 @@
 	echo "    ".$text['label-timeout_action']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo $destination->select('dialplan', 'queue_timeout_action', escape($queue_timeout_action));
+	echo $destination->select('dialplan', 'queue_timeout_action', $queue_timeout_action);
 	echo "<br />\n";
 	echo $text['description-timeout_action']."\n";
 	echo "</td>\n";
@@ -1000,6 +1059,7 @@
 		echo "		<input type='hidden' name='call_center_queue_uuid' value='".escape($call_center_queue_uuid)."'>\n";
 		echo "		<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br />";
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";

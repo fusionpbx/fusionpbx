@@ -277,7 +277,7 @@
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	if (permission_exists('dialplan_delete') && @sizeof($dialplans) != 0) {
-		echo "<th style='width: 30px; text-align: center; padding: 3px 0px 0px 0px;' width='1'><input type='checkbox' style='margin: 0px 0px 0px 2px;' onchange=\"(this.checked) ? check('all') : check('none');\"></th>";
+		echo "<th style='width: 30px; text-align: center; padding: 3px 0px 0px 0px;' width='1'><input type='checkbox' id='chk_all' style='margin: 0px 0px 0px 2px;' onchange=\"(this.checked) ? check('all') : check('none');\"></th>";
 	}
 	if ($_GET['show'] == "all" && permission_exists('destination_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param);
@@ -446,16 +446,18 @@
 	}
 	echo "<br><br>";
 
-	if (sizeof($dialplan_ids) > 0) {
-		echo "<script>\n";
-		echo "	function check(what) {\n";
-		foreach ($dialplan_ids as $checkbox_id) {
-			echo "document.getElementById('".escape($checkbox_id)."').checked = (what == 'all') ? true : false;\n";
+	if (is_array($dialplans)) {
+		if (sizeof($dialplan_ids) > 0) {
+			echo "<script>\n";
+			echo "	function check(what) {\n";
+			echo "		document.getElementById('chk_all').checked = (what == 'all') ? true : false;\n";
+			foreach ($dialplan_ids as $checkbox_id) {
+				echo "document.getElementById('$checkbox_id').checked = (what == 'all') ? true : false;\n";
+			}
+			echo "	}\n";
+			echo "</script>\n";
 		}
-		echo "	}\n";
-		echo "</script>\n";
 	}
-
 //include the footer
 	require_once "resources/footer.php";
 

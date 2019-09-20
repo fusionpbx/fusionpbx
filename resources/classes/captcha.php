@@ -34,8 +34,6 @@ class captcha {
 	/**
 	* Called when the object is created
 	*/
-	//public $db;
-	//public $domain_uuid;
 	public $code;
 
 	/**

@@ -91,7 +91,6 @@
 							$database->save($array);
 							unset($array);
 						//revoke temporary permissions
-							$p = new permissions;
 							$p->delete('user_setting_add', 'temp');
 					}
 			}

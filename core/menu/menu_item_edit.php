@@ -17,22 +17,26 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('menu_add') || permission_exists('menu_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	return;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('menu_add') || permission_exists('menu_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		return;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -93,6 +97,14 @@ else {
 		if ($action == "update") {
 			$menu_item_uuid = $_POST["menu_item_uuid"];
 		}
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: menu.php');
+				exit;
+			}
 
 		//check for all required data
 			$msg = '';
@@ -347,6 +359,10 @@ else {
 	$groups = $database->select($sql, $parameters, 'all');
 	unset($sql, $sql_where, $parameters);
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //include the header
 	require_once "resources/header.php";
 	if ($action == "update") {
@@ -547,6 +563,7 @@ else {
 		}
 		echo "				<input type='hidden' name='menu_uuid' value='".escape($menu_uuid)."'>";
 		echo "				<input type='hidden' name='menu_item_uuid' value='".escape($menu_item_uuid)."'>";
+		echo "				<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 		echo "				<br>";
 		echo "				<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
 		echo "			</td>";

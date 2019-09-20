@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -43,7 +43,7 @@
 	$text = $language->get();
 
 //get the fax_extension and save it as a variable
-	if (strlen($_REQUEST["fax_extension"]) > 0) {
+	if (isset($_REQUEST["fax_extension"])) {
 		$fax_extension = $_REQUEST["fax_extension"];
 	}
 
@@ -138,7 +138,7 @@
 	}
 
 //delete the user from the fax users
-	if ($_GET["a"] == "delete" && permission_exists("fax_extension_delete")) {
+	if (is_uuid($_REQUEST["user_uuid"]) && is_uuid($_REQUEST["id"]) && $_GET["a"] == "delete" && permission_exists("fax_extension_delete")) {
 		//set the variables
 			$user_uuid = $_REQUEST["user_uuid"];
 			$fax_uuid = $_REQUEST["id"];
@@ -197,12 +197,20 @@
 	clearstatcache();
 
 //process the data
-	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		$msg = '';
-		if ($action == "update" && permission_exists('fax_extension_edit')) {
+		if ($action == "update" && is_uuid($_POST["fax_uuid"]) && permission_exists('fax_extension_edit')) {
 			$fax_uuid = $_POST["fax_uuid"];
 		}
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: fax.php');
+				exit;
+			}
 
 		//check for all required data
 			if (strlen($fax_extension) == 0) { $msg .= "".$text['confirm-ext']."<br>\n"; }
@@ -246,7 +254,7 @@
 						foreach ($fax_email_outbound_authorized_senders as $sender_num => $sender) {
 							if ($sender == '' || !valid_email($sender)) { unset($fax_email_outbound_authorized_senders[$sender_num]); }
 						}
-						$fax_email_outbound_authorized_senders = implode(',', $fax_email_outbound_authorized_senders);
+						$fax_email_outbound_authorized_senders = strtolower(implode(',', $fax_email_outbound_authorized_senders));
 					}
 
 				if ($action == "add" && permission_exists('fax_extension_add')) {
@@ -437,6 +445,10 @@
 	if (!is_uuid($dialplan_uuid)) {
 		$dialplan_uuid = uuid();
 	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
@@ -796,6 +808,7 @@
 		echo "		<input type='hidden' name='fax_uuid' value='".escape($fax_uuid)."'>\n";
 		echo "		<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
@@ -964,6 +977,7 @@
 				echo "	<table cellpadding='0' cellspacing='0' border='0'>";
 				echo "		<tr>";
 				echo "			<td id='authorized_senders'>";
+
 				if (substr_count($fax_email_outbound_authorized_senders, ',') > 0) {
 					$senders = explode(',', $fax_email_outbound_authorized_senders);
 				}

@@ -99,9 +99,12 @@
 //process the user data and save it to the database
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
-		//get the uuid from the POST
-			if ($action == "update") {
-				$call_center_agent_uuid = $_POST["call_center_agent_uuid"];
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: call_center_agents.php');
+				exit;
 			}
 
 		//check for all required data
@@ -134,6 +137,56 @@
 				require_once "resources/footer.php";
 				return;
 			}
+
+		//add the call_center_agent_uuid
+			if (strlen($call_center_agent_uuid) == 0) {
+				$call_center_agent_uuid = uuid();
+			}
+
+		//get the users array
+			$sql = "select * from v_users ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "order by username asc ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$database = new database;
+			$users = $database->select($sql, $parameters, 'all');
+			unset($sql, $parameters);
+
+		//prepare the array
+			$array['call_center_agents'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+			$array['call_center_agents'][0]['call_center_agent_uuid'] = $call_center_agent_uuid;
+			$array['call_center_agents'][0]['agent_name'] = $agent_name;
+			$array['call_center_agents'][0]['agent_type'] = $agent_type;
+			$array['call_center_agents'][0]['agent_call_timeout'] = $agent_call_timeout;
+			$array['call_center_agents'][0]['user_uuid'] = $user_uuid;
+			$array['call_center_agents'][0]['agent_id'] = $agent_id;
+			$array['call_center_agents'][0]['agent_password'] = $agent_password;
+			$array['call_center_agents'][0]['agent_contact'] = $agent_contact;
+			$array['call_center_agents'][0]['agent_status'] = $agent_status;
+			$array['call_center_agents'][0]['agent_no_answer_delay_time'] = $agent_no_answer_delay_time;
+			$array['call_center_agents'][0]['agent_max_no_answer'] = $agent_max_no_answer;
+			$array['call_center_agents'][0]['agent_wrap_up_time'] = $agent_wrap_up_time;
+			$array['call_center_agents'][0]['agent_reject_delay_time'] = $agent_reject_delay_time;
+			$array['call_center_agents'][0]['agent_busy_delay_time'] = $agent_busy_delay_time;
+			if (is_uuid($user_uuid)) {
+				$array['users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+				$array['users'][0]['user_uuid'] = $user_uuid;
+				$array['users'][0]['user_status'] = $agent_status;
+			}
+
+		//save to the data
+			$database = new database;
+			$database->app_name = 'call_center';
+			$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
+			$database->save($array);
+			//$message = $database->message;
+
+		//syncrhonize configuration
+			save_call_center_xml();
+
+		//clear the cache
+			$cache = new cache;
+			$cache->delete('configuration:callcenter.conf');
 
 	//get and then set the complete agent_contact with the call_timeout and when necessary confirm
 		//if you change this variable, also change resources/switch.php
@@ -201,48 +254,6 @@
 					$response = event_socket_request($fp, $cmd);
 			}
 
-		//set the domain_uuid
-			$_POST["domain_uuid"] = $_SESSION["domain_uuid"];
-
-		//add the call_center_agent_uuid
-			if (strlen($_POST["call_center_agent_uuid"]) == 0) {
-				$call_center_agent_uuid = uuid();
-				$_POST["call_center_agent_uuid"] = $call_center_agent_uuid;
-			}
-
-		//get the users array
-			$sql = "select * from v_users ";
-			$sql .= "where domain_uuid = :domain_uuid ";
-			$sql .= "order by username asc ";
-			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-			$database = new database;
-			$users = $database->select($sql, $parameters, 'all');
-			unset($sql, $parameters);
-
-		//prepare the array
-			$array['call_center_agents'][] = $_POST;
-			if (is_uuid($user_uuid)) {
-				$array['users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
-				$array['users'][0]['user_uuid'] = $user_uuid;
-				$array['users'][0]['user_status'] = $agent_status;
-			}
-
-		//save to the data
-			$database = new database;
-			$database->app_name = 'call_center';
-			$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
-			if (is_uuid($call_center_agent_uuid)) {
-				$database->uuid($call_center_agent_uuid);
-			}
-			$database->save($array);
-			$message = $database->message;
-
-		//syncrhonize configuration
-			save_call_center_xml();
-
-		//clear the cache
-			remove_config_from_cache('configuration:callcenter.conf');
-
 		//redirect the user
 			if (isset($action)) {
 				if ($action == "add") {
@@ -260,7 +271,7 @@
 	$destination = new destinations;
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (is_uuid($_GET["id"]) && $_POST["persistformvar"] != "true") {
 		$call_center_agent_uuid = $_GET["id"];
 		$sql = "select * from v_call_center_agents ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -297,6 +308,10 @@
 	if (strlen($agent_no_answer_delay_time) == 0) { $agent_no_answer_delay_time = "30"; }
 	if (strlen($agent_reject_delay_time) == 0) { $agent_reject_delay_time = "90"; }
 	if (strlen($agent_busy_delay_time) == 0) { $agent_busy_delay_time = "90"; }
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
@@ -574,6 +589,7 @@
 	if ($action == "update") {
 		echo "		<input type='hidden' name='call_center_agent_uuid' value='".escape($call_center_agent_uuid)."'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br />";
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";

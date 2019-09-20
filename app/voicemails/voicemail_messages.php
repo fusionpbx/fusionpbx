@@ -59,7 +59,6 @@
 		$voicemail_uuid = $_REQUEST["voicemail_uuid"];
 		if (is_uuid($voicemail_message_uuid) && $voicemail_id != '' && is_uuid($voicemail_uuid)) {
 			$voicemail = new voicemail;
-			$voicemail->db = $db;
 			$voicemail->domain_uuid = $_SESSION['domain_uuid'];
 			$voicemail->voicemail_id = $voicemail_id;
 			$voicemail->voicemail_uuid = $voicemail_uuid;
@@ -76,7 +75,6 @@
 
 //get the voicemail
 	$vm = new voicemail;
-	$vm->db = $db;
 	$vm->domain_uuid = $_SESSION['domain_uuid'];
 	$vm->voicemail_uuid = $voicemail_uuid;
 	$vm->order_by = $order_by;

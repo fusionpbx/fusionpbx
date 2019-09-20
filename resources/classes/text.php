@@ -265,7 +265,7 @@ class text {
 			$text = array();
 			$languages = array();
 
-		//fetch all the languages
+		//retrieve all the languages
 			$files = glob($_SERVER["PROJECT_ROOT"] . "/*/*/app_languages.php");
 			foreach($files as $file) {
 				include $file;
@@ -309,7 +309,7 @@ class text {
 				$language_totals[$language_code] = 0;
 			}
 
-		//fetch all the languages
+		//retrieve all the languages
 			$text = array();
 			$files = glob($_SERVER["PROJECT_ROOT"] . "/*/*/app_languages.php");
 			foreach($files as $file) {
@@ -327,7 +327,7 @@ class text {
 			}
 			unset($text);
 
-		//fetch all the menus
+		//retrieve all the menus
 			$x = 0;
 			$files = glob($_SERVER["PROJECT_ROOT"] . "/*/*");
 			foreach($files as $file) {

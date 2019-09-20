@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010-2018
+--	Copyright (C) 2010-2019
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -64,7 +64,7 @@
 	local dbh = Database.new('system');
 
 --determine whether to update the dial string
-	local sql = "select extension, number_alias, accountcode, follow_me_uuid ";
+	local sql = "select extension, number_alias, accountcode, follow_me_uuid, follow_me_enabled ";
 	sql = sql .. "from v_extensions ";
 	sql = sql .. "where domain_uuid = :domain_uuid ";
 	sql = sql .. "and extension_uuid = :extension_uuid ";
@@ -80,6 +80,7 @@
 	local number_alias = row.number_alias or '';
 	local accountcode = row.accountcode;
 	local follow_me_uuid = row.follow_me_uuid;
+	local follow_me_enabled = row.follow_me_enabled;
 
 --determine whether to update the dial string
 	sql = "select follow_me_enabled, cid_name_prefix, cid_number_prefix, dial_string "
@@ -94,13 +95,13 @@
 	row = dbh:first_row(sql, params)
 	if not row then return end
 
-	local enabled = row.follow_me_enabled;
+	--local follow_me_enabled = row.follow_me_enabled;
 	local cid_name_prefix = row.cid_name_prefix;
 	local cid_number_prefix = row.cid_number_prefix;
 	local dial_string = row.dial_string;
 
 --set follow me
-	if (enabled == "false") then
+	if (follow_me_enabled == "false") then
 		--play a tone
 			channel_display(session:get_uuid(), "Activated")
 
@@ -111,7 +112,7 @@
 	end
 
 --unset follow me
-	if (enabled == "true") then
+	if (follow_me_enabled == "true") then
 		--play a tone
 			channel_display(session:get_uuid(), "Cancelled")
 
@@ -123,7 +124,8 @@
 
 --enable or disable follow me
 	sql = "update v_follow_me set ";
-	if (enabled == "true") then
+	sql = sql .. "dial_string = null, ";
+	if (follow_me_enabled == "true") then
 		sql = sql .. "follow_me_enabled = 'false' ";
 	else
 		sql = sql .. "follow_me_enabled = 'true' ";
@@ -138,16 +140,17 @@
 
 --update the extension
 	sql = "update v_extensions set ";
-	if (enabled == "true") then
-		sql = sql .. "dial_string = null, ";
-	else
-		sql = sql .. "dial_string = :dial_string, ";
-	end
+	sql = sql .. "dial_string = null, ";
 	sql = sql .. "do_not_disturb = 'false', ";
-	sql = sql .. "forward_all_enabled= 'false' ";
+	if (follow_me_enabled == "true") then
+		sql = sql .. "follow_me_enabled = 'false', ";
+	else
+		sql = sql .. "follow_me_enabled = 'true', ";
+	end
+	sql = sql .. "forward_all_enabled = 'false' ";
 	sql = sql .. "where domain_uuid = :domain_uuid ";
 	sql = sql .. "and extension_uuid = :extension_uuid ";
-	local params = {domain_uuid=domain_uuid, extension_uuid=extension_uuid, dial_string = dial_string};
+	local params = {domain_uuid=domain_uuid, extension_uuid=extension_uuid};
 	if (debug["sql"]) then
 		log.notice("SQL: %s; params: %s", sql, json.encode(params));
 	end

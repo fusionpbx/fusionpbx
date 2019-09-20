@@ -104,26 +104,16 @@
 			$destination_type_fax = $_POST["destination_type_fax"];
 			$destination_type_text = $_POST["destination_type_text"];
 			$destination_carrier = trim($_POST["destination_carrier"]);
-		//convert the number to a regular expression
-			$destination_number_regex = string_to_regex($destination_number, $destination_prefix);
-			$_POST["destination_number_regex"] = $destination_number_regex;
+
 		//get the destination app and data
 			$destination_array = explode(":", $_POST["destination_action"], 2);
 			$destination_app = $destination_array[0];
 			$destination_data = $destination_array[1];
-			unset($_POST["destination_action"]);
+
 		//get the alternate destination app and data
 			$destination_alternate_array = explode(":", $_POST["destination_alternate_action"], 2);
 			$destination_alternate_app = $destination_alternate_array[0];
 			$destination_alternate_data = $destination_alternate_array[1];
-			unset($_POST["destination_alternate_action"]);
-		//set the application and data
-			$_POST["destination_app"] = $destination_app;
-			$_POST["destination_data"] = $destination_data;
-			$_POST["destination_alternate_app"] = $destination_alternate_app;
-			$_POST["destination_alternate_data"] = $destination_alternate_data;
-		//unset the db_destination_number
-			unset($_POST["db_destination_number"]);
 	}
 
 //process the http post
@@ -145,10 +135,18 @@
 				$destination_context = $_SESSION['domain_name'];
 			}
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: destinations.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			if (strlen($destination_type) == 0) { $msg .= $text['message-required']." ".$text['label-destination_type']."<br>\n"; }
-			if (strlen($destination_number) == 0) { $msg .= $text['message-required']." ".$text['label-destination_number']."<br>\n"; }
+			//if (strlen($destination_number) == 0) { $msg .= $text['message-required']." ".$text['label-destination_number']."<br>\n"; }
 			if (strlen($destination_context) == 0) { $msg .= $text['message-required']." ".$text['label-destination_context']."<br>\n"; }
 			if (strlen($destination_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-destination_enabled']."<br>\n"; }
 
@@ -194,14 +192,14 @@
 					}
 
 				//get the fax information
-					if (strlen($fax_uuid) > 0) {
+					if (is_uuid($fax_uuid)) {
 						$sql = "select * from v_fax ";
 						$sql .= "where fax_uuid = :fax_uuid ";
-						if (!permission_exists('destination_domain')) {
-							$sql .= "and domain_uuid = :domain_uuid ";
-						}
+						//if (!permission_exists('destination_domain')) {
+						//	$sql .= "and domain_uuid = :domain_uuid ";
+						//}
 						$parameters['fax_uuid'] = $fax_uuid;
-						$parameters['domain_uuid'] = $domain_uuid;
+						//$parameters['domain_uuid'] = $domain_uuid;
 						$database = new database;
 						$row = $database->select($sql, $parameters, 'row');
 						if (is_array($row) && @sizeof($row) != 0) {
@@ -217,6 +215,29 @@
 						}
 						unset($sql, $parameters, $row);
 					}
+
+				//if the user doesn't have the correct permission then 
+				//override destination_number and destination_context values
+					if ($action == 'update' && is_uuid($destination_uuid)) {
+						$sql = "select * from v_destinations ";
+						$sql .= "where destination_uuid = :destination_uuid ";
+						$parameters['destination_uuid'] = $destination_uuid;
+						$database = new database;
+						$row = $database->select($sql, $parameters, 'row');
+						if (is_array($row) && @sizeof($row) != 0) {
+							if (!permission_exists('destination_number')) {
+								$destination_number = $row["destination_number"];
+								$destination_prefix = $row["destination_prefix"];
+							}
+							if (!permission_exists('destination_context')) {
+								$destination_context = $row["destination_context"];
+							}
+						}
+						unset($sql, $parameters, $row);
+					}
+
+				//convert the number to a regular expression
+					$destination_number_regex = string_to_regex($destination_number, $destination_prefix);
 
 				//if empty then get new uuid
 					if (!is_uuid($dialplan_uuid)) {
@@ -393,7 +414,7 @@
 							}
 
 						//add fax detection
-							if (strlen($fax_uuid) > 0) {
+							if (is_uuid($fax_uuid)) {
 
 								//add set tone detect_hits=1
 									$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
@@ -570,9 +591,6 @@
 								$database->execute($sql, $parameters);
 								unset($sql, $parameters);
 							}
-
-						//remove empty dialplan details from the POST array
-							unset($_POST["dialplan_details"]);
 					}
 
 				//build the destination array
@@ -581,9 +599,11 @@
 					$destination["dialplan_uuid"] = $dialplan_uuid;
 					$destination["fax_uuid"] = $fax_uuid;
 					$destination["destination_type"] = $destination_type;
-					$destination["destination_number"] = $destination_number;
-					$destination["destination_number_regex"] = $destination_number_regex;
-					$destination["destination_prefix"] = $destination_prefix;
+					if (permission_exists('destination_number')) {
+						$destination["destination_number"] = $destination_number;
+						$destination["destination_number_regex"] = $destination_number_regex;
+						$destination["destination_prefix"] = $destination_prefix;
+					}
 					$destination["destination_caller_id_name"] = $destination_caller_id_name;
 					$destination["destination_caller_id_number"] = $destination_caller_id_number;
 					$destination["destination_cid_name_prefix"] = $destination_cid_name_prefix;
@@ -778,6 +798,10 @@
 	if ($destination_type =="outbound") { $destination_context = $_SESSION['domain_name']; }
 	if ($destination_type =="local") { $destination_context = $_SESSION['domain_name']; }
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
 	require_once "resources/header.php";
 	if ($action == "update") {
@@ -885,25 +909,32 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-destination_prefix']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='destination_prefix' maxlength='32' value=\"".escape($destination_prefix)."\">\n";
-	echo "<br />\n";
-	echo $text['description-destination_prefix']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists('destination_number')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-destination_prefix']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='destination_prefix' maxlength='32' value=\"".escape($destination_prefix)."\">\n";
+		echo "<br />\n";
+		echo $text['description-destination_prefix']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-destination_number']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='destination_number' maxlength='255' value=\"".escape($destination_number)."\" required='required'>\n";
-	echo "<br />\n";
-	echo $text['description-destination_number']."\n";
+	if (permission_exists('destination_number')) {
+		echo "	<input class='formfld' type='text' name='destination_number' maxlength='255' value=\"".escape($destination_number)."\" required='required'>\n";
+		echo "<br />\n";
+		echo $text['description-destination_number']."\n";
+	}
+	else {
+		echo escape($destination_number)."\n";
+	}
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -1161,6 +1192,7 @@
 		echo "		<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 		echo "		<input type='hidden' name='destination_uuid' value='".escape($destination_uuid)."'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br>";
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";

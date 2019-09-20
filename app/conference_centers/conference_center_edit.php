@@ -64,6 +64,14 @@
 			$conference_center_enabled = $_POST["conference_center_enabled"];
 			$conference_center_description = $_POST["conference_center_description"];
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: conference_centers.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			//if (strlen($dialplan_uuid) == 0) { $msg .= "Please provide: Dialplan UUID<br>\n"; }
@@ -86,20 +94,26 @@
 				return;
 			}
 
-		//set the domain_uuid
-			$_POST["domain_uuid"] = $_SESSION["domain_uuid"];
-
 		//add the conference_center_uuid
 			if (!is_uuid($_POST["conference_center_uuid"])) {
 				$conference_center_uuid = uuid();
-				$_POST["conference_center_uuid"] = $conference_center_uuid;
 			}
 
 		//add the dialplan_uuid
 			if (!is_uuid($_POST["dialplan_uuid"])) {
 				$dialplan_uuid = uuid();
-				$_POST["dialplan_uuid"] = $dialplan_uuid;
 			}
+
+		//prepare the array
+		    $array['conference_centers'][0]['domain_uuid'] = $_SESSION['domain_uuid'];;
+		    $array['conference_centers'][0]['conference_center_uuid'] = $conference_center_uuid;
+		    $array['conference_centers'][0]['dialplan_uuid'] = $dialplan_uuid;
+		    $array['conference_centers'][0]['conference_center_name'] = $conference_center_name;
+		    $array['conference_centers'][0]['conference_center_extension'] = $conference_center_extension;
+		    $array['conference_centers'][0]['conference_center_greeting'] = $conference_center_greeting;
+		    $array['conference_centers'][0]['conference_center_pin_length'] = $conference_center_pin_length;
+		    $array['conference_centers'][0]['conference_center_enabled'] = $conference_center_enabled;
+		    $array['conference_centers'][0]['conference_center_description'] = $conference_center_description;
 
 		//build the xml dialplan
 			$dialplan_xml = "<extension name=\"".$conference_center_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
@@ -116,21 +130,17 @@
 			$dialplan_xml .= "</extension>\n";
 
 		//build the dialplan array
-			$dialplan["domain_uuid"] = $_SESSION['domain_uuid'];
-			$dialplan["dialplan_uuid"] = $dialplan_uuid;
-			$dialplan["dialplan_name"] = $conference_center_name;
-			$dialplan["dialplan_number"] = $conference_center_extension;
-			$dialplan["dialplan_context"] = $_SESSION['context'];
-			$dialplan["dialplan_continue"] = "false";
-			$dialplan["dialplan_xml"] = $dialplan_xml;
-			$dialplan["dialplan_order"] = "333";
-			$dialplan["dialplan_enabled"] = $conference_center_enabled;
-			$dialplan["dialplan_description"] = $conference_center_description;
-			$dialplan["app_uuid"] = "b81412e8-7253-91f4-e48e-42fc2c9a38d9";
-
-		//prepare the array
-			$array['conference_centers'][] = $_POST;
-			$array['dialplans'][] = $dialplan;
+			$array['dialplans'][0]["domain_uuid"] = $_SESSION['domain_uuid'];
+			$array['dialplans'][0]["dialplan_uuid"] = $dialplan_uuid;
+			$array['dialplans'][0]["dialplan_name"] = $conference_center_name;
+			$array['dialplans'][0]["dialplan_number"] = $conference_center_extension;
+			$array['dialplans'][0]["dialplan_context"] = $_SESSION['context'];
+			$array['dialplans'][0]["dialplan_continue"] = "false";
+			$array['dialplans'][0]["dialplan_xml"] = $dialplan_xml;
+			$array['dialplans'][0]["dialplan_order"] = "333";
+			$array['dialplans'][0]["dialplan_enabled"] = $conference_center_enabled;
+			$array['dialplans'][0]["dialplan_description"] = $conference_center_description;
+			$array['dialplans'][0]["app_uuid"] = "b81412e8-7253-91f4-e48e-42fc2c9a38d9";
 
 		//add the dialplan permission
 			$p = new permissions;
@@ -231,6 +241,10 @@
 	$database = new database;
 	$streams = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
@@ -428,6 +442,7 @@
 		echo "			<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 		echo "			<input type='hidden' name='conference_center_uuid' value='".escape($conference_center_uuid)."'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";

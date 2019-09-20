@@ -451,7 +451,6 @@ function outbound_route_to_bridge($domain_uuid, $destination_number) {
 	$database = new database;
 	$result = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
-
 	if (is_array($result) && @sizeof($result) != 0) {
 		$x = 0;
 		foreach ($result as &$row) {
@@ -476,8 +475,7 @@ function outbound_route_to_bridge($domain_uuid, $destination_number) {
 					foreach ($sub_result as &$sub_row) {
 						if ($sub_row['dialplan_detail_tag'] == "condition") {
 							if ($sub_row['dialplan_detail_type'] == "destination_number") {
-									$dialplan_detail_data = $sub_row['dialplan_detail_data'];
-									$pattern = '/'.$dialplan_detail_data.'/';
+									$pattern = '/'.$sub_row['dialplan_detail_data'].'/';
 									preg_match($pattern, $destination_number, $matches, PREG_OFFSET_CAPTURE);
 									if (count($matches) == 0) {
 										$regex_match = false;
@@ -494,13 +492,13 @@ function outbound_route_to_bridge($domain_uuid, $destination_number) {
 						}
 					}
 				}
-				unset($sub_result, $sub_result);
 
 				if ($regex_match) {
+					$x = 0;
 					foreach ($sub_result as &$sub_row) {
 						$dialplan_detail_data = $sub_row['dialplan_detail_data'];
 						if ($sub_row['dialplan_detail_tag'] == "action" && $sub_row['dialplan_detail_type'] == "bridge" && $dialplan_detail_data != "\${enum_auto_route}") {
-						$dialplan_detail_data = str_replace("\$1", $regex_match_1, $dialplan_detail_data);
+							$dialplan_detail_data = str_replace("\$1", $regex_match_1, $dialplan_detail_data);
 							$dialplan_detail_data = str_replace("\$2", $regex_match_2, $dialplan_detail_data);
 							$dialplan_detail_data = str_replace("\$3", $regex_match_3, $dialplan_detail_data);
 							$dialplan_detail_data = str_replace("\$4", $regex_match_4, $dialplan_detail_data);
@@ -616,7 +614,6 @@ function dialplan_add($domain_uuid, $dialplan_uuid, $dialplan_name, $dialplan_or
 		$database->save($array);
 		unset($array);
 	//revoke temporary permissions
-		$p = new permissions;
 		$p->delete('dialplan_add', 'temp');
 }
 
@@ -643,7 +640,6 @@ function dialplan_detail_add($domain_uuid, $dialplan_uuid, $dialplan_detail_tag,
 		$database->save($array);
 		unset($array);
 	//revoke temporary permissions
-		$p = new permissions;
 		$p->delete('dialplan_detail_add', 'temp');
 }
 

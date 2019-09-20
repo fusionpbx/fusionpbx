@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -209,7 +209,7 @@ if (!isset($_SESSION)) { session_start(); }
 		case 'php':
 			$edit_directory = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH;
 			break;
-		case 'grammer':
+		case 'grammar':
 			$edit_directory = $_SESSION['switch']['grammar']['dir'];
 			break;
 		case 'provision':

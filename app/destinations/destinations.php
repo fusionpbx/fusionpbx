@@ -193,9 +193,9 @@
 	echo "		<form method='get' action=''>\n";
 	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
 
-	echo "				<input type='button' class='btn' value='".$text['button-inbound']."' onclick=\"window.location='destinations.php?type=inbound';\">\n";
-	echo "				<input type='button' class='btn' value='".$text['button-outbound']."' onclick=\"window.location='destinations.php?type=outbound';\">\n";
-	echo "				<input type='button' class='btn' value='".$text['button-local']."' onclick=\"window.location='destinations.php?type=local';\">\n";
+	echo "				<input type='button' class='btn' value='".$text['button-inbound']."' onclick=\"window.location='destinations.php?type=inbound".($_GET['show'] == 'all' ? '&show=all' : null).($search != '' ? "&search=".urlencode($search) : null)."';\">\n";
+	echo "				<input type='button' class='btn' value='".$text['button-outbound']."' onclick=\"window.location='destinations.php?type=outbound".($_GET['show'] == 'all' ? '&show=all' : null).($search != '' ? "&search=".urlencode($search) : null)."';\">\n";
+	echo "				<input type='button' class='btn' value='".$text['button-local']."' onclick=\"window.location='destinations.php?type=local".($_GET['show'] == 'all' ? '&show=all' : null).($search != '' ? "&search=".urlencode($search) : null)."';\">\n";
 	echo "				&nbsp;\n";
 	if (permission_exists('destination_import')) {
 		echo "				<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='destination_imports.php'\" value='".$text['button-import']."'>\n";
@@ -206,12 +206,12 @@
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
-			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='destinations.php?show=all&type=$destination_type';\">\n";
+			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='destinations.php?type=".urlencode($destination_type)."&show=all".($search != '' ? "&search=".urlencode($search) : null)."';\">\n";
 		}
 	}
 
 	echo "				<input type='text' class='txt' style='width: 150px; margin-left: 15px;' name='search' id='search' value='".escape($search)."'>\n";
-	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
+	echo "				<input type='submit' class='btn' value='".$text['button-search']."'>\n";
 	if ($paging_controls_mini != '') {
 		echo "			<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}

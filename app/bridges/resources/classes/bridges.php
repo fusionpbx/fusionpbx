@@ -31,6 +31,18 @@ if (!class_exists('bridges')) {
 		public function delete($bridges) {
 			if (permission_exists('bridge_delete')) {
 
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: bridges.php');
+						exit;
+					}
+
 				//delete multiple bridges
 					if (is_array($bridges)) {
 						//get the action

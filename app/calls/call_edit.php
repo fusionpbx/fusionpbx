@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -140,19 +140,27 @@
 				$dnd_enabled = $_POST["dnd_enabled"];
 			}
 
-			//check for all required data
-				if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-					require_once "resources/header.php";
-					require_once "resources/persist_form_var.php";
-					echo "<div align='center'>\n";
-					echo "<table><tr><td>\n";
-					echo $msg."<br />";
-					echo "</td></tr></table>\n";
-					persistformvar($_POST);
-					echo "</div>\n";
-					require_once "resources/footer.php";
-					return;
-				}
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: calls.php');
+				exit;
+			}
+
+		//check for all required data
+			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+				require_once "resources/header.php";
+				require_once "resources/persist_form_var.php";
+				echo "<div align='center'>\n";
+				echo "<table><tr><td>\n";
+				echo $msg."<br />";
+				echo "</td></tr></table>\n";
+				persistformvar($_POST);
+				echo "</div>\n";
+				require_once "resources/footer.php";
+				return;
+			}
 
 		//include the classes
 			include "resources/classes/call_forward.php";
@@ -465,6 +473,10 @@
 	echo "});\n";
 	echo "</script>\n";
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the content
 	echo "<form method='post' name='frm' action=''>\n";
 
@@ -474,7 +486,7 @@
 	echo "	<b>".$text['title']."</b>\n";
 	echo "</td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='/'\" value='".$text['button-back']."'>\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='calls.php'\" value='".$text['button-back']."'>\n";
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -755,6 +767,7 @@
 	if ($action == "update") {
 		echo "		<input type='hidden' name='id' value='".escape($extension_uuid)."'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br />";
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";

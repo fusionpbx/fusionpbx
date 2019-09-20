@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018
+	Portions created by the Initial Developer are Copyright (C) 2018 - 2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -101,17 +101,22 @@
 				return;
 			}
 
-		//set the domain_uuid
-				$_POST["domain_uuid"] = $_SESSION["domain_uuid"];
-
 		//add the message_uuid
 			if (!is_uuid($_POST["message_uuid"])) {
 				$message_uuid = uuid();
-				$_POST["message_uuid"] = $message_uuid;
 			}
 
 		//prepare the array
-			$array['messages'][0] = $_POST;
+			$array['messages'][0]['domain_uuid'] = $_SESSION["domain_uuid"];;
+			$array['messages'][0]['user_uuid'] = $user_uuid;
+			$array['messages'][0]['message_uuid'] = $message_uuid;
+			$array['messages'][0]['message_type'] = $message_type;
+			$array['messages'][0]['message_direction'] = $message_direction;
+			$array['messages'][0]['message_date'] = $message_date;
+			$array['messages'][0]['message_from'] = $message_from;
+			$array['messages'][0]['message_to'] = $message_to;
+			$array['messages'][0]['message_text'] = $message_text;
+			$array['messages'][0]['message_uuid'] = $message_uuid;
 
 		//save to the data
 			$database = new database;

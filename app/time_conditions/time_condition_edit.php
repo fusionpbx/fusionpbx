@@ -87,6 +87,14 @@
 
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: time_conditions.php');
+				exit;
+			}
+
 		//check for all required data
 			//if (strlen($domain_uuid) == 0) { $msg .= $text['label-required-domain_uuid']."<br>\n"; }
 	 		if (strlen($dialplan_name) == 0) { $msg .= $text['label-required-dialplan_name']."<br>\n"; }
@@ -585,6 +593,10 @@
 
 //set the defaults
 	if (strlen($dialplan_context) == 0) { $dialplan_context = $_SESSION['domain_name']; }
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //include the header
 	require_once "resources/header.php";
@@ -1208,6 +1220,7 @@ if ($action == 'update') {
 	if ($action == "update") {
 		echo "	<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	}
+	echo "	<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</div>";
 

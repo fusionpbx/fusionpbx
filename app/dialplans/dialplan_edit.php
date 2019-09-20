@@ -102,6 +102,14 @@
 				$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
 			}
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: dialplans.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			if (strlen($dialplan_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
@@ -341,6 +349,10 @@
 			ksort($details);
 		}
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
 	require_once "resources/header.php";
 	$document['title'] = $text['title-dialplan_edit'];
@@ -382,17 +394,17 @@
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<input type='hidden' name='app_uuid' value='".escape($app_uuid)."'>\n";
 
-	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"1\">\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='1'>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' width='30%'>\n";
-	echo"			<span class=\"title\">".$text['title-dialplan_edit']."</span><br />\n";
+	echo "			<span class='title'>".$text['title-dialplan_edit']."</span><br />\n";
 	echo "		</td>\n";
 	echo "		<td width='70%' align='right'>\n";
+	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplans.php".(is_uuid($app_uuid) ? "?app_uuid=".escape($app_uuid) : null)."';\" value='".$text['button-back']."'>\n";
 	if (permission_exists('dialplan_xml')) {
-		echo "			<input type='button' class='btn' name='' alt='".$text['button-xml']."' onclick=\"window.location='dialplan_xml.php?id=".escape($dialplan_uuid)."&".((strlen($app_uuid) > 0) ? "app_uuid=".escape($app_uuid) : null)."';\" value='".$text['button-xml']."'>\n";
+		echo "			<input type='button' class='btn' name='' alt='".$text['button-xml']."' onclick=\"window.location='dialplan_xml.php?id=".escape($dialplan_uuid).(is_uuid($app_uuid) ? "&app_uuid=".escape($app_uuid) : null)."';\" value='".$text['button-xml']."'>\n";
 	}
-	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplans.php".((strlen($app_uuid) > 0) ? "?app_uuid=".escape($app_uuid) : null)."';\" value='".$text['button-back']."'>\n";
-	echo "			<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"if (confirm('".$text['confirm-copy']."')){window.location='dialplan_copy.php?id=".escape($dialplan_uuid)."';}\" value='".$text['button-copy']."'>\n";
+	echo "			<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"if (confirm('".$text['confirm-copy']."')){ window.location='dialplan_copy.php?id=".escape($dialplan_uuid)."'; }\" value='".$text['button-copy']."'>\n";
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
@@ -872,6 +884,7 @@
 	if ($action == "update") {
 		echo "	<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	}
+	echo "	<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</div>\n";
 	echo "<br><br>\n";

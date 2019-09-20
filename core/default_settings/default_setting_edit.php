@@ -74,6 +74,14 @@
 				$default_setting_uuid = uuid();
 			}
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: default_settings.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			if (strlen($default_setting_category) == 0) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
@@ -185,6 +193,10 @@
 		}
 		unset($sql, $parameters);
 	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
@@ -656,6 +668,7 @@
 		echo "		<input type='hidden' name='default_setting_uuid' value='".$default_setting_uuid."'>\n";
 		echo "		<input type='hidden' name='search' value='".$search."'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br>";
 	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
 	echo "		</td>\n";

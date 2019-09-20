@@ -47,7 +47,7 @@
 		case 'php':
 			$edit_directory = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH;
 			break;
-		case 'grammer':
+		case 'grammar':
 			$edit_directory = $_SESSION['switch']['grammar']['dir'];
 			break;
 		case 'provision':

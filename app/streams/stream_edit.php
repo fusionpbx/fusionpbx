@@ -66,6 +66,14 @@
 				$stream_uuid = $_POST["stream_uuid"];
 			}
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: streams.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			if (strlen($stream_name) == 0) { $msg .= $text['message-required']." ".$text['label-stream_name']."<br>\n"; }
@@ -88,17 +96,21 @@
 
 		//set the domain_uuid
 			if (!permission_exists('stream_all')) {
-				$_POST["domain_uuid"] = $_SESSION["domain_uuid"];
+				$domain_uuid = $_SESSION["domain_uuid"];
 			}
 
 		//add the stream_uuid
 			if (strlen($_POST["stream_uuid"]) == 0) {
 				$stream_uuid = uuid();
-				$_POST["stream_uuid"] = $stream_uuid;
 			}
 
 		//prepare the array
-			$array['streams'][0] = $_POST;
+			$array['streams'][0]['stream_uuid'] = $stream_uuid;
+			$array['streams'][0]['domain_uuid'] = $domain_uuid;
+			$array['streams'][0]['stream_name'] = $stream_name;
+			$array['streams'][0]['stream_location'] = $stream_location;
+			$array['streams'][0]['stream_enabled'] = $stream_enabled;
+			$array['streams'][0]['stream_description'] = $stream_description;
 
 		//save to the data
 			$database = new database;
@@ -137,6 +149,10 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
@@ -238,8 +254,9 @@
 
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
-	echo "				<input type='hidden' name='stream_uuid' value='".escape($stream_uuid)."'>\n";
-	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<input type='hidden' name='stream_uuid' value='".escape($stream_uuid)."'>\n";
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

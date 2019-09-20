@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2010-2016
+	Portions created by the Initial Developer are Copyright (C) 2010-2019
 	All Rights Reserved.
 
 	Contributor(s):
@@ -32,15 +32,8 @@ include "root.php";
 
 		public $domain_uuid;
 		private $xml;
-		private $db;
 
 		public function __construct() {
-			if (!$this->db) {
-				require_once "resources/classes/database.php";
-				$database = new database;
-				$database->connect();
-				$this->db = $database->db;
-			}
 			$this->domain_uuid = $_SESSION['domain_uuid'];
 		}
 
@@ -93,19 +86,20 @@ include "root.php";
 			//streams
 				if (is_dir($_SERVER["PROJECT_ROOT"].'/app/streams')) {
 					$sql = "select * from v_streams ";
-					$sql .= "where (domain_uuid = '".$this->domain_uuid."' or domain_uuid is null) ";
+					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 					$sql .= "and stream_enabled = 'true' ";
 					$sql .= "order by stream_name asc ";
-					$prep_statement = $this->db->prepare(check_sql($sql));
-					$prep_statement->execute();
-					$streams = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-					if (sizeof($streams) > 0) {
+					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+					$database = new database;
+					$streams = $database->select($sql, $parameters, 'all');
+					if (is_array($streams) && @sizeof($streams) != 0) {
 						$select .= "	<optgroup label='".$text['label-streams']."'>";
 						foreach($streams as $row){
 							$select .= "		<option value='".$row['stream_location']."' ".(($selected == $row['stream_location']) ? 'selected="selected"' : null).">".$row['stream_name']."</option>\n";
 						}
 						$select .= "	</optgroup>\n";
 					}
+					unset($sql, $parameters, $streams, $row);
 				}
 			//add additional options
 				if (sizeof($options) > 0) {
@@ -125,14 +119,16 @@ include "root.php";
 
 			//get moh records, build array
 				$sql = "select ";
-				$sql .= "d.domain_name, m.* ";
+				$sql .= "d.domain_name, ";
+				$sql .= "m.* ";
 				$sql .= "from v_music_on_hold as m ";
-				$sql .= "left join v_domains as d ON d.domain_uuid = m.domain_uuid ";
-				$sql .= "where (m.domain_uuid = '".$this->domain_uuid."' or m.domain_uuid is null) ";
+				$sql .= "left join v_domains as d on d.domain_uuid = m.domain_uuid ";
+				$sql .= "where (m.domain_uuid = :domain_uuid or m.domain_uuid is null) ";
 				$sql .= "order by m.domain_uuid desc, music_on_hold_name asc, music_on_hold_rate asc ";
-				$prep_statement = $this->db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				return $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+				$database = new database;
+				return $database->select($sql, $parameters, 'all');
+				unset($sql, $parameters);
 		}
 
 		public function reload() {

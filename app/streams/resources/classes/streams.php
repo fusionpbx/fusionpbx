@@ -29,19 +29,11 @@
 if (!class_exists('streams')) {
 	class streams {
 
-		public $db;
-
 		/**
 		 * Called when the object is created
 		 */
 		public function __construct() {
-			//connect to the database if not connected
-			if (!$this->db) {
-				require_once "resources/classes/database.php";
-				$database = new database;
-				$database->connect();
-				$this->db = $database->db;
-			}
+
 		}
 
 		/**
@@ -71,21 +63,36 @@ if (!class_exists('streams')) {
 							}
 						//delete the checked rows
 							if ($action == 'delete') {
+								$x = 0;
 								foreach($streams as $row) {
 									if ($row['action'] == 'delete' or $row['checked'] == 'true') {
-										$sql = "delete from v_streams ";
-										$sql .= "where stream_uuid = '".$row['stream_uuid']."'; ";
-										$this->db->query($sql);
-										unset($sql);
+										//build delete array
+											$array['streams'][$x]['stream_uuid'] = $row['stream_uuid'];
+											$x++;
 									}
+								}
+								if (is_array($array) && @sizeof($array) != 0) {
+									//grant temporary permissions
+										$p = new permissions;
+										$p->add('stream_delete', 'temp');
+
+									//execute delete
+										$database = new database;
+										$database->app_name = 'streams';
+										$database->app_uuid = 'ffde6287-aa18-41fc-9a38-076d292e0a38';
+										$database->delete($array);
+										unset($array);
+
+									//revoke temporary permissions
+										$p->delete('stream_delete', 'temp');
 								}
 								unset($streams);
 							}
 					}
 			}
-		} //end the delete function
+		}
 
-	}  //end the class
+	}
 }
 
 /*

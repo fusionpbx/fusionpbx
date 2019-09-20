@@ -77,9 +77,12 @@
 	}
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"]) || is_uuid($_REQUEST["ring_group_uuid"])) {
 		$action = "update";
 		$ring_group_uuid = $_REQUEST["id"];
+		if (is_uuid($_REQUEST["ring_group_uuid"])) {
+			$ring_group_uuid = $_REQUEST["ring_group_uuid"];
+		}
 	}
 	else {
 		$action = "add";
@@ -146,12 +149,7 @@
 	}
 
 //assign the user to the ring group
-	if (
-		is_uuid($_REQUEST["user_uuid"])
-		&& is_uuid($_REQUEST["id"])
-		&& $_GET["a"] != "delete"
-		&& permission_exists("ring_group_edit")
-		) {
+	if (is_uuid($_REQUEST["user_uuid"]) && is_uuid($_REQUEST["id"]) && $_GET["a"] != "delete" && permission_exists("ring_group_edit")) {
 		//set the variables
 			$user_uuid = $_REQUEST["user_uuid"];
 			$extension_uuid = $_REQUEST["id"];
@@ -181,9 +179,12 @@
 //process the HTTP POST
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
-		//get the ring group uuid
-			if ($action = 'add') {
-				$_POST["ring_group_uuid"] = $ring_group_uuid;
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: ring_groups.php');
+				exit;
 			}
 
 		//check for all required data
@@ -275,6 +276,12 @@
 					$array["ring_groups"][0]["ring_group_call_timeout"] = $ring_group_call_timeout;
 					$array["ring_groups"][0]["ring_group_caller_id_name"] = $ring_group_caller_id_name;
 					$array["ring_groups"][0]["ring_group_caller_id_number"] = $ring_group_caller_id_number;
+					if (permission_exists('ring_group_cid_name_prefix')) {
+						$array["ring_groups"][0]["ring_group_cid_name_prefix"] = $ring_group_cid_name_prefix;
+					}
+					if (permission_exists('ring_group_cid_number_prefix')) {
+						$array["ring_groups"][0]["ring_group_cid_number_prefix"] = $ring_group_cid_number_prefix;
+					}
 					$array["ring_groups"][0]["ring_group_distinctive_ring"] = $ring_group_distinctive_ring;
 					$array["ring_groups"][0]["ring_group_ringback"] = $ring_group_ringback;
 					if (permission_exists('ring_group_missed_call')) {
@@ -369,7 +376,7 @@
 				//save the message to a session variable
 					message::add($text['message-add']);
 				//redirect the browser
-					header("Location: ring_group_edit.php?id=$ring_group_uuid");
+					header("Location: ring_group_edit.php?id=".urlencode($ring_group_uuid));
 					exit;
 			}
 			if ($action == "update") {
@@ -501,6 +508,10 @@
 //get the sounds
 	$sounds = new sounds;
 	$sounds = $sounds->get();
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
@@ -939,6 +950,7 @@
 	if (is_uuid($ring_group_uuid)) {
 		echo "		<input type='hidden' name='ring_group_uuid' value='".escape($ring_group_uuid)."'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br>";
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";

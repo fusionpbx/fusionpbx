@@ -769,7 +769,7 @@
 							$selected = "selected='selected'";
 						}
 						if ($field !== 'domain_uuid') {
-							echo "    			<option value='".escape($row['table']).".".$field."' ".$selected.">".$field."</option>\n";
+							echo "				<option value='".escape($row['table']).".".$field."' ".$selected.">".escape($field)."</option>\n";
 						}
 					}
 					echo "			</optgroup>\n";
@@ -902,9 +902,9 @@
 
 			echo "		<tr>\n";
 			echo "			<td colspan='2' valign='top' align='right' nowrap='nowrap'>\n";
-			echo "				<input name='from_row' type='hidden' value='$from_row'>\n";
-			echo "				<input name='data_delimiter' type='hidden' value='$delimiter'>\n";
-			echo "				<input name='data_enclosure' type='hidden' value='$enclosure'>\n";
+			echo "				<input name='from_row' type='hidden' value='".$from_row."'>\n";
+			echo "				<input name='data_delimiter' type='hidden' value='".$delimiter."'>\n";
+			echo "				<input name='data_enclosure' type='hidden' value='".$enclosure."'>\n";
 			echo "				<input type='submit' class='btn' id='import' value=\"".$text['button-import']."\">\n";
 			echo "			</td>\n";
 			echo "		</tr>\n";

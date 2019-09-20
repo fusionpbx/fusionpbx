@@ -75,6 +75,14 @@
 				$phrase_uuid = $_POST["phrase_uuid"];
 			}
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: phrases.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			if (strlen($phrase_name) == 0) { $msg .= $text['message-required']." ".$text['label-name']."<br>\n"; }
@@ -253,6 +261,10 @@
 	$recordings = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
 	require_once "resources/header.php";
 	if ($action == 'add') { $document['title'] = $text['title-add_phrase']; }
@@ -288,10 +300,10 @@
 			echo "opt_group.label = \"".$text['label-recordings']."\";\n";
 			foreach ($recordings as &$row) {
 				if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
-					echo "opt_group.appendChild(new Option(\"".escape($row["recording_name"])."\", \"\${lua streamfile.lua ".escape($row["recording_filename"])."}\"));\n";
+					echo "opt_group.appendChild(new Option(\"".$row["recording_name"]."\", \"\${lua streamfile.lua ".$row["recording_filename"]."}\"));\n";
 				}
 				else {
-					echo "opt_group.appendChild(new Option(\"".escape($row["recording_name"])."\", \"".$_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.escape($row["recording_filename"])."\"));\n";
+					echo "opt_group.appendChild(new Option(\"".$row["recording_name"]."\", \"".$_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$row["recording_filename"]."\"));\n";
 				}
 			}
 			echo "obj_action.appendChild(opt_group);\n";
@@ -419,7 +431,7 @@
 	echo "<tr>";
 	echo "<td class='vncell' valign='top'>".$text['label-structure']."</td>";
 	echo "<td class='vtable' align='left'>";
-	echo "	<table width='59%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "	<table border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "		<tr>\n";
 	echo "			<td class='vtable'>".$text['label-function']."</td>\n";
 	echo "			<td class='vtable'>".$text['label-action']."</td>\n";
@@ -550,8 +562,9 @@
 	if ($action == "update") {
 		echo "	<input type='hidden' name='phrase_uuid' value='".escape($phrase_uuid)."'>\n";
 	}
-	echo "		<br />";
-	echo "		<input type='submit' name='submit' class='btn' alt=\"".$text['button-save']."\" value='".$text['button-save']."'>\n";
+	echo "	<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "	<br />";
+	echo "	<input type='submit' name='submit' class='btn' alt=\"".$text['button-save']."\" value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>";
 

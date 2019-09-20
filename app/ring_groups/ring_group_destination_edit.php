@@ -86,6 +86,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$ring_group_destination_uuid = $_POST["ring_group_destination_uuid"];
 	}
 
+	//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: ring_groups.php');
+			exit;
+		}
+
 	//check for all required data
 		//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
 		//if (strlen($ring_group_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-ring_group_uuid']."<br>\n"; }
@@ -174,6 +182,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		unset($sql, $parameters, $row);
 	}
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
 	require_once "resources/header.php";
 
@@ -255,6 +267,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "		<input type='hidden' name='ring_group_destination_uuid' value='".escape($ring_group_destination_uuid)."'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";

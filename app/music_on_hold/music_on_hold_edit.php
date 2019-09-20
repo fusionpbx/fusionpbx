@@ -76,6 +76,14 @@
 				$music_on_hold_uuid = $_POST["music_on_hold_uuid"];
 			}
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: music_on_hold.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			if (strlen($music_on_hold_name) == 0) { $msg .= $text['message-required']." ".$text['label-name']."<br>\n"; }
@@ -190,6 +198,10 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
@@ -484,9 +496,10 @@
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='music_on_hold_uuid' value='".escape($music_on_hold_uuid)."'>\n";
+		echo "			<input type='hidden' name='music_on_hold_uuid' value='".escape($music_on_hold_uuid)."'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

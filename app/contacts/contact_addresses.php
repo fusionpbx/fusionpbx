@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -88,11 +88,18 @@
 		foreach($result as $row) {
 			$map_query = escape($row['address_street'])." ".escape($row['address_extended']).", ".escape($row['address_locality']).", ".escape($row['address_region']).", ".escape($row['address_region']).", ".escape($row['address_postal_code']);
 			if (permission_exists('contact_address_edit')) {
-				$tr_link = "href='contact_address_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_address_uuid'])."'";
+				$tr_link = "href='contact_address_edit.php?contact_uuid=".urlencode($row['contact_uuid'])."&id=".urlencode($row['contact_address_uuid'])."'";
 			}
 			echo "<tr ".$tr_link." ".((escape($row['address_primary'])) ? "style='font-weight: bold;'" : null).">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['address_label'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style='width: 25%; max-width: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>".escape($row['address_street'])."&nbsp;</td>\n";
+			$address='';
+			if ($row['address_extended'] != '') {
+				$address= escape($row['address_street'])." ".escape($row['address_extended']);
+			}
+			else {
+				$address= escape($row['address_street']);
+			}
+			echo "	<td valign='top' class='".$row_style[$c]."' style='width: 25%; max-width: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>".$address."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' style='white-space: nowrap;'>".escape($row['address_locality']).(($row['address_locality'] != '' && $row['address_region'] != '') ? ", " : null).escape($row['address_region'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>".escape($row['address_country'])."&nbsp;</td>\n";
 			echo "	<td valign='middle' class='".$row_style[$c]." tr_link_void' style='padding: 0px;'>\n";
@@ -101,10 +108,10 @@
 			echo "	<td valign='top' class='row_stylebg'>".escape($row['address_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('contact_address_edit')) {
-				echo "<a href='contact_address_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_address_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='contact_address_edit.php?contact_uuid=".urlencode($row['contact_uuid'])."&id=".escape($row['contact_address_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('contact_address_delete')) {
-				echo "<a href='contact_address_delete.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_address_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='contact_address_delete.php?contact_uuid=".urlencode($row['contact_uuid'])."&id=".escape($row['contact_address_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";

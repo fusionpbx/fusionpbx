@@ -53,6 +53,14 @@
 			$group_level = $_POST["group_level"];
 			$group_description = $_POST["group_description"];
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: groups.php');
+				exit;
+			}
+
 		//check for global/domain duplicates
 			$sql = "select count(*) from v_groups ";
 			$sql .= "where group_name = :group_name ";
@@ -281,6 +289,10 @@
 		unset($sql, $parameters, $row);
 	}
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //include the header
 	include "resources/header.php";
 	$document['title'] = $text['title-group_edit'];
@@ -302,7 +314,6 @@
 
 //show the content
 	echo "<form name='login' method='post' action=''>\n";
-	echo "<input type='hidden' name='group_uuid' value='".escape($group_uuid)."'>\n";
 
 	echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
@@ -389,6 +400,8 @@
 
 	echo "<tr>\n";
 	echo "<td colspan='2' align='right'>\n";
+	echo "	<input type='hidden' name='group_uuid' value='".escape($group_uuid)."'>\n";
+	echo "	<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "	<br />";
 	echo "	<input type='submit' class='btn' value=\"".$text['button-save']."\">\n";
 	echo "</td>\n";

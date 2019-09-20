@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -58,36 +58,34 @@
 		if (isset($_FILES['broadcast_phone_numbers_file']) && !empty($_FILES['broadcast_phone_numbers_file']) && $_FILES['broadcast_phone_numbers_file']['size'] > 0) {
 			$filename=$_FILES["broadcast_phone_numbers_file"]["tmp_name"];
 			$file_extension = array('application/octet-stream','application/vnd.ms-excel','text/plain','text/csv','text/tsv');
-			if (in_array($_FILES['broadcast_phone_numbers_file']['type'],$file_extension)) {											
-					$file = fopen($filename, "r");
-					$count = 0;
-					while (($getData = fgetcsv($file, 0, "\n")) !== FALSE)
-					{
-						$count++;
-						if ($count == 1) { continue; }
-						$getData = preg_split('/[ ,|]/', $getData[0], null, PREG_SPLIT_NO_EMPTY);						
-						$separator = $getData[0];
-						$separator .= (isset($getData[1]) && $getData[1] != '')? '|'.$getData[1] : '';
-						$separator .= (isset($getData[2]) && $getData[2] != '')? ','.$getData[2] : '';
-						$separator .= '\n';
-						$upload_csv .= $separator;
-					}
-				 fclose($file);  		
+			if (in_array($_FILES['broadcast_phone_numbers_file']['type'],$file_extension)) {
+				$file = fopen($filename, "r");
+				$count = 0;
+				while (($getData = fgetcsv($file, 0, "\n")) !== FALSE)
+				{
+					$count++;
+					if ($count == 1) { continue; }
+					$getData = preg_split('/[ ,|]/', $getData[0], null, PREG_SPLIT_NO_EMPTY);
+					$separator = $getData[0];
+					$separator .= (isset($getData[1]) && $getData[1] != '')? '|'.$getData[1] : '';
+					$separator .= (isset($getData[2]) && $getData[2] != '')? ','.$getData[2] : '';
+					$separator .= '\n';
+					$upload_csv .= $separator;
+				}
+				 fclose($file);
 			}
-			else {					  
+			else {
 				return array('code'=>false,'sql'=>'');
-			}	
-		}				
-		if (!empty($broadcast_phone_numbers) && !empty($upload_csv)) { 					
-			$sql .= "E'"; 
+			}
+		}
+		if (!empty($broadcast_phone_numbers) && !empty($upload_csv)) {
 			$sql .= $broadcast_phone_numbers.'\n'.$upload_csv;
-			$sql .= "',";
 		}
 		elseif (empty($broadcast_phone_numbers) && !empty($upload_csv)) {
-			$sql .= "E'$upload_csv', ";
+			$sql .= $upload_csv;
 		}
 		else {
-			$sql .= "E'$broadcast_phone_numbers', ";
+			$sql .= $broadcast_phone_numbers;
 		}
 		return array('code'=>true,'sql'=> $sql);
 	}
@@ -132,6 +130,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		$call_broadcast_uuid = $_POST["call_broadcast_uuid"];
 	}
+
+	//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: call_broadcast.php');
+			exit;
+		}
 
 	//check for all required data
 		if (strlen($broadcast_name) == 0) { $msg .= "".$text['confirm-name']."<br>\n"; }
@@ -183,7 +189,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					message::add($text['confirm-update']);
 
 				//set return url on error
-					$error_return_url = "call_broadcast_edit.php?id=".$_GET['id'];
+					$error_return_url = "call_broadcast_edit.php?id=".urlencode($_GET['id']);
 			}
 
 		//execute
@@ -231,7 +237,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 }
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$call_broadcast_uuid = $_GET["id"];
 		$sql = "select * from v_call_broadcasts ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -257,6 +263,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		unset($sql, $parameters, $row);
 	}
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //begin header
 	require_once "resources/header.php";
 
@@ -270,8 +280,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<input type='button' class='btn' name='back' alt='".$text['button-back']."' onclick=\"window.location='call_broadcast.php'\" value='".$text['button-back']."'>\n";
 	if ($action == "update") {
 		echo "<input type='hidden' name='call_broadcast_uuid' value='".escape($call_broadcast_uuid)."'>\n";
-		echo "<input type='button' class='btn' name='' alt='".$text['button-send']."' onclick=\"window.location='call_broadcast_send.php?id=".escape($call_broadcast_uuid)."'\" value='".$text['button-send']."'>\n";
-		echo "<input type='button' class='btn' name='' alt='".$text['button-stop']."' onclick=\"window.location='call_broadcast_stop.php?id=".escape($call_broadcast_uuid)."'\" value='".$text['button-stop']."'>\n";
+		echo "<input type='button' class='btn' name='' alt='".$text['button-send']."' onclick=\"window.location='call_broadcast_send.php?id=".urlencode($call_broadcast_uuid)."'\" value='".$text['button-send']."'>\n";
+		echo "<input type='button' class='btn' name='' alt='".$text['button-stop']."' onclick=\"window.location='call_broadcast_stop.php?id=".urlencode($call_broadcast_uuid)."'\" value='".$text['button-stop']."'>\n";
 	}
 	echo "	<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
@@ -455,16 +465,11 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 
-	echo "	<textarea class='formfld' type='text' name='broadcast_phone_numbers' rows='10'>".$broadcast_phone_numbers."</textarea>";
-	echo "<br>";
-	echo " <span class='' style='margin-left: 37px;'>OR </span> ";
-	echo "<br>";
-	echo " <input type='file' name='broadcast_phone_numbers_file' accept='.csv,.txt' style=\"display:inline-block;\"><a href='sample.csv' download>Sample File <i class='fas fa-cloud-download-alt'></i></a>";
-	echo "<br>";
-	echo " (Upload TXT- Plain Text, CSV- Comma Separated Values file format only.)";
-	echo "<br>";
+	echo "	<textarea class='formfld' style='width: 300px; height: 200px;' type='text' name='broadcast_phone_numbers' placeholder=\"".$text['label-list_example']."\">".str_replace('\n', "\n", $broadcast_phone_numbers)."</textarea>";
+	echo "<br><br>";
+	echo " <input type='file' name='broadcast_phone_numbers_file' accept='.csv,.txt' style=\"display:inline-block;\"><a href='sample.csv' download><i class='fas fa-cloud-download-alt' style='margin-right: 5px;'></i>".$text['label-sample_file']."</a>";
+	echo "<br /><br />";
 
-	echo "<br />\n";
 	echo "".$text['description-phone']." <br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -498,6 +503,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	echo "			<br>";
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";

@@ -75,7 +75,6 @@
 	$setting_invisibles = ($_SESSION["editor"]["invisibles"]["boolean"] != '') ? $_SESSION["editor"]["invisibles"]["boolean"] : 'false';
 	$setting_indenting = ($_SESSION["editor"]["indent_guides"]["boolean"] != '') ? $_SESSION["editor"]["indent_guides"]["boolean"] : 'false';
 	$setting_numbering = ($_SESSION["editor"]["line_numbers"]["boolean"] != '') ? $_SESSION["editor"]["line_numbers"]["boolean"] : 'true';
-	$setting_preview = ($_SESSION["editor"]["live_preview"]["boolean"] != '') ? $_SESSION["editor"]["live_preview"]["boolean"] : 'true';
 
 //get and then set the favicon
 	if (isset($_SESSION['theme']['favicon']['text'])){
@@ -89,6 +88,12 @@
 	$key_name = '/app/edit/'.$mode;
 	$_SESSION['keys'][$key_name] = bin2hex(random_bytes(32));
 	$_SESSION['token'] = hash_hmac('sha256', $key_name, $_SESSION['keys'][$key_name]);
+
+//generate the captcha image
+	$_SESSION['captcha'] = generate_password(7, 2);
+	$captcha = new captcha;
+	$captcha->code = $_SESSION['captcha'];
+	$image_base64 = $captcha->image_base64();
 
 ?>
 
@@ -200,8 +205,12 @@
 			<table cellpadding='0' cellspacing='0' border='0' style='width: 100%;'>
 				<tr>
 					<td valign='middle'><img src='resources/images/icon_save.png' title='Save Changes [Ctrl+S]' class='control' onclick="save();";></td>
-					<td align='left' valign='middle' width='100%' style='padding: 0 4px 0 6px;'><input id='current_file' type='text' style='height: 23px; width: 100%;'></td>
-					<td style='padding: 0;'><img src='resources/images/blank.gif' style='width: 1px; height: 30px; border: none;'></td>
+					<td align='left' valign='middle' width='100%' style='padding: 0 15px 0 6px;'><input id='current_file' type='text' style='height: 23px; width: 100%;'></td>
+					<!--
+					<td style='padding: 0;'><img src="data:image/png;base64, <?php echo $image_base64; ?>" /></td>
+					<td align='left' valign='middle' width='80' style='padding: 0 6px 0 0;'><input type='text' class='txt' style='width: 80px; text-align: center;' name='code' id='code' value='' placeholder='CAPTCHA'></td>
+					-->
+					<td style='padding: 0;'><img src='resources/images/blank.gif' style='width: 1px; height: 40px; border: none;'></td>
 					<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_sidebar.png' title='Toggle Side Bar [Ctrl+Q]' class='control' onclick="toggle_sidebar();"></td>
 					<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_numbering.png' title='Toggle Line Numbers' class='control' onclick="toggle_option('numbering');"></td>
 					<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_invisibles.png' title='Toggle Invisibles' class='control' onclick="toggle_option('invisibles');"></td>
@@ -209,7 +218,7 @@
 					<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_replace.png' title='Show Find/Replace [Ctrl+H]' class='control' onclick="editor.execCommand('replace');"></td>
 					<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_goto.png' title='Show Go To Line' class='control' onclick="editor.execCommand('gotoline');"></td>
 					<td valign='middle' style='padding-left: 10px;'>
-						<select id='mode' style='height: 23px;' onchange="editor.getSession().setMode('ace/mode/' + this.options[this.selectedIndex].value); focus_editor();">
+						<select id='mode' style='height: 23px; max-width: 70px;' onchange="editor.getSession().setMode('ace/mode/' + this.options[this.selectedIndex].value); focus_editor();">
 							<?php
 							$modes['php'] = 'PHP';
 							$modes['css'] = 'CSS';
@@ -228,10 +237,9 @@
 							$modes['c_cpp'] = 'C';
 							$modes['c_cpp'] = 'CPP';
 							$modes['pgsql'] = 'PGSQL';
-							$preview = ($setting_preview == 'true') ? "onmouseover=\"editor.getSession().setMode('ace/mode/' + this.value);\"" : null;
 							foreach ($modes as $value => $label) {
 								$selected = ($value == $mode) ? 'selected' : null;
-								echo "<option value='".$value."' ".$selected." ".$preview.">".$label."</option>\n";
+								echo "<option value='".$value."' ".$selected.">".$label."</option>\n";
 							}
 							?>
 						</select>
@@ -240,20 +248,19 @@
 						<select id='size' style='height: 23px;' onchange="document.getElementById('editor').style.fontSize = this.options[this.selectedIndex].value; focus_editor();">
 							<?php
 							$sizes = explode(',','9px,10px,11px,12px,14px,16px,18px,20px');
-							$preview = ($setting_preview == 'true') ? "onmouseover=\"document.getElementById('editor').style.fontSize = this.value;\"" : null;
 							if (!in_array($setting_size, $sizes)) {
-								echo "<option value='".$setting_size."' ".$preview.">".$setting_size."</option>\n";
+								echo "<option value='".$setting_size."'>".$setting_size."</option>\n";
 								echo "<option value='' disabled='disabled'></option>\n";
 							}
 							foreach ($sizes as $size) {
 								$selected = ($size == $setting_size) ? 'selected' : null;
-								echo "<option value='".$size."' ".$selected." ".$preview.">".$size."</option>\n";
+								echo "<option value='".$size."' ".$selected.">".$size."</option>\n";
 							}
 							?>
 						</select>
 					</td>
 					<td valign='middle' style='padding-left: 4px; padding-right: 4px;'>
-						<select id='theme' style='height: 23px;' onchange="editor.setTheme('ace/theme/' + this.options[this.selectedIndex].value); focus_editor();">
+						<select id='theme' style='height: 23px; max-width: 100px;' onchange="editor.setTheme('ace/theme/' + this.options[this.selectedIndex].value); focus_editor();">
 							<?php
 							$themes['Bright']['chrome']= 'Chrome';
 							$themes['Bright']['clouds']= 'Clouds';
@@ -289,12 +296,11 @@
 							$themes['Dark']['tomorrow_night_eighties']= 'Tomorrow Night 80s';
 							$themes['Dark']['twilight']= 'Twilight';
 							$themes['Dark']['vibrant_ink']= 'Vibrant Ink';
-							$preview = ($setting_preview == 'true') ? "onmouseover=\"editor.setTheme('ace/theme/' + this.value);\"" : null;
 							foreach ($themes as $optgroup => $theme) {
 								echo "<optgroup label='".$optgroup."'>\n";
 								foreach ($theme as $value => $label) {
 									$selected = (strtolower($label) == strtolower($setting_theme)) ? 'selected' : null;
-									echo "<option value='".$value."' ".$selected." ".$preview.">".$label."</option>\n";
+									echo "<option value='".$value."' ".$selected.">".$label."</option>\n";
 								}
 								echo "</optgroup>\n";
 							}

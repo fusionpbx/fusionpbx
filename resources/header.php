@@ -23,8 +23,10 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
 
 //if reloadxml then run the command
 	if (isset($_SESSION["reload_xml"])) {
@@ -75,9 +77,8 @@ require_once "resources/require.php";
 	$parameters['menu_uuid'] = $_SESSION['domain']['menu']['uuid'];
 	$parameters['menu_item_link'] = $_SERVER["SCRIPT_NAME"];
 	$database = new database;
-	$menu_item_parent_uuid = $database->select($sql, $parameters, 'column');
-	$_SESSION["menu_item_parent_uuid"] = $menu_item_parent_uuid;
-	unset($sql, $parameters, $menu_item_parent_uuid);
+	$_SESSION["menu_item_parent_uuid"] = $database->select($sql, $parameters, 'column');
+	unset($sql, $parameters);
 
 //get the content
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/content/app_config.php")) {
@@ -94,7 +95,6 @@ require_once "resources/require.php";
 		$parameters['content'] = strlen($content) == 0 ? $_SERVER["PHP_SELF"] : $content;
 		$database = new database;
 		$content_result = $database->select($sql, $parameters, 'all');
-		$page['title'] = '';
 		if (is_array($content_result) && @sizeof($content_result) != 0) {
 			foreach($content_result as $content_row) {
 				$template_rss_sub_category = $content_row['rss_sub_category'];

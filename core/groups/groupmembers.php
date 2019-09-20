@@ -109,6 +109,10 @@
 	$result = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
+//create token
+	$object = new token;
+	$token = $object->create('/core/groups/groupmembers.php');
+
 //include the header
 	require_once "resources/header.php";
 	$document['title'] = $text['title-group_members'];
@@ -141,6 +145,7 @@
 		echo "			<input type='hidden' name='domain_uuid' value='".(($domain_uuid != '') ? $domain_uuid : $_SESSION['domain_uuid'])."'>";
 		echo "			<input type='hidden' name='group_uuid' value='".$group_uuid."'>";
 		echo "			<input type='hidden' name='group_name' value='".$group_name."'>";
+		echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 		echo "			<input type='submit' class='btn' value='".$text['button-add_member']."'>";
 		echo "			</form>";
 		echo "		</td>\n";
