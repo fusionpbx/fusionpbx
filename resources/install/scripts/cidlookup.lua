@@ -80,14 +80,14 @@
 	local Database = require "resources.functions.database";
 	dbh = Database.new('system');
 	if (database["type"] == "mysql") then
-		sql = "SELECT CONCAT(v_contacts.contact_name_given, ' ', v_contacts.contact_name_family,' (',v_contact_phones.phone_type,')') AS name FROM v_contacts ";
+		sql = "SELECT CONCAT(v_contacts.contact_name_given, ' ', v_contacts.contact_name_family) AS name FROM v_contacts ";
 	elseif (database["type"] == "pgsql") then
-		sql = "SELECT CASE WHEN contact_name_given = '' THEN v_contacts.contact_organization ELSE v_contacts.contact_name_given || ' ' || v_contacts.contact_name_family || ' (' || v_contact_phones.phone_label || ')' END AS name FROM v_contacts ";
+		sql = "SELECT CASE WHEN contact_name_given = '' THEN v_contacts.contact_organization ELSE v_contacts.contact_name_given || ' ' || v_contacts.contact_name_family END AS name FROM v_contacts ";
 	else
-		sql = "SELECT v_contacts.contact_name_given || ' ' || v_contacts.contact_name_family || ' (' || v_contact_phones.phone_type || ')' AS name FROM v_contacts ";
+		sql = "SELECT v_contacts.contact_name_given || ' ' || v_contacts.contact_name_family AS name FROM v_contacts ";
 	end
 	sql = sql .. "INNER JOIN v_contact_phones ON v_contact_phones.contact_uuid = v_contacts.contact_uuid ";
-	sql = sql .. "INNER JOIN v_destinations ON v_destinations.domain_uuid = v_contacts.domain_uuid ";
+	sql = sql .. "INNER JOIN v_destinations ON v_destinations.domain_uuid = v_contacts.domain_uuid AND v_destinations.destination_number = :caller";
 	
 	local params;
 	if ((not domain_uuid) or (domain_uuid == "")) then
@@ -114,7 +114,7 @@
 
 --check if there is a record, if it not then use cidlookup
 	if ((name == nil) or (string.len(name) == 0)) then
-		cidlookup_exists = api:executeString("module_exists cidlookup");
+		cidlookup_exists = api:executeString("module_exists mod_cidlookup");
 		if (cidlookup_exists == "true") then
 		    name = api:executeString("cidlookup " .. caller);
 		end
@@ -122,6 +122,8 @@
 
 --set the caller id name
 	if ((name ~= nil) and (string.len(name) > 0)) then
+		api:executeString("uuid_setvar " .. uuid .. " ignore_display_updates false");
+	
 		freeswitch.consoleLog("NOTICE", "[cidlookup] uuid_setvar " .. uuid .. " caller_id_name " .. name);
 		api:executeString("uuid_setvar " .. uuid .. " caller_id_name " .. name);
 
