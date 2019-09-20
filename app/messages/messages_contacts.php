@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2018
+	Portions created by the Initial Developer are Copyright (C) 2016-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -131,7 +131,10 @@
 		}
 	}
 	unset($sql, $parameters, $rows, $row);
-	$numbers = array_diff($numbers, $destinations);
+	
+	if (!is_null(array_diff($numbers, $destinations))) {
+		$numbers = array_diff($numbers, $destinations);	
+	}
 
 //get contact (primary attachment) images and cache them
 	if (is_array($numbers) && @sizeof($numbers) != 0) {
