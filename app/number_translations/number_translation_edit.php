@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2017-2018
+	Portions created by the Initial Developer are Copyright (C) 2017-2019
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -140,14 +140,14 @@
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['number_translation_uuid'] = $number_translation_uuid;
 		$database = new database;
-		$result = $database->execute($sql, $parameters, 'all');
-		foreach ($result as &$row) {
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$number_translation_name = $row["number_translation_name"];
 			$number_translation_details = $row["number_translation_details"];
 			$number_translation_enabled = $row["number_translation_enabled"];
 			$number_translation_description = $row["number_translation_description"];
 		}
-		unset ($sql, $parameters);
+		unset ($sql, $parameters, $row);
 	}
 
 //get the child data
@@ -158,7 +158,7 @@
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['number_translation_uuid'] = $number_translation_uuid;
 		$database = new database;
-		$number_translation_details = $database->execute($sql, $parameters, 'all');
+		$number_translation_details = $database->select($sql, $parameters, 'all');
 		unset ($sql, $parameters);
 	}
 
@@ -330,9 +330,9 @@
 
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
-	echo "				<input type='hidden' name='number_translation_uuid' value='".escape($number_translation_uuid)."'>\n";
-	echo "				<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<input type='hidden' name='number_translation_uuid' value='".escape($number_translation_uuid)."'>\n";
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
