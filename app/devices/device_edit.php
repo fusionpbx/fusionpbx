@@ -129,7 +129,6 @@
 			if (permission_exists('device_mac_address')) {
 				$device_mac_address = $_POST["device_mac_address"];
 				$device_mac_address = strtolower(preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address));
-				$_POST["device_mac_address"] = $device_mac_address;
 			}
 			else {
 				$sql = "select * from v_devices ";
@@ -139,48 +138,60 @@
 				$row = $database->select($sql, $parameters, 'row');
 				if (is_array($row) && @sizeof($row) != 0) {
 					$device_mac_address = $row["device_mac_address"];
-					$_POST["device_mac_address"] = $device_mac_address;
 				}
 				unset($sql, $parameters, $row);
 			}
 		//get assigned user
 			$device_user_uuid = $_POST["device_user_uuid"];
 		//devices
+			$domain_uuid = $_POST["domain_uuid"];
+			$device_uuid = $_POST["device_uuid"];
+			$device_provisioned_ip = $_POST["device_provisioned_ip"];
+			$domain_uuid = $_POST["domain_uuid"];
 			$device_label = $_POST["device_label"];
+			$device_mac_address = $_POST["device_mac_address"];
+			$device_label = $_POST["device_label"];
+			$device_user_uuid = $_POST["device_user_uuid"];
+			$device_username = $_POST["device_username"];
+			$device_username = $_POST["device_username"];
 			$device_vendor = $_POST["device_vendor"];
 			$device_uuid_alternate = $_POST["device_uuid_alternate"];
 			$device_model = $_POST["device_model"];
 			$device_firmware_version = $_POST["device_firmware_version"];
 			$device_enabled = $_POST["device_enabled"];
 			$device_template = $_POST["device_template"];
+			$device_profile_uuid = $_POST["device_profile_uuid"];
 			$device_description = $_POST["device_description"];
 		//lines
-			$line_number = $_POST["line_number"];
-			$server_address = $_POST["server_address"];
-			$outbound_proxy_primary = $_POST["outbound_proxy_primary"];
-			$outbound_proxy_secondary = $_POST["outbound_proxy_secondary"];
-			$display_name = $_POST["display_name"];
-			$user_id = $_POST["user_id"];
-			$auth_id = $_POST["auth_id"];
-			$password = $_POST["password"];
+			$device_lines = $_POST["device_lines"];
+			//$line_number = $_POST["line_number"];
+			//$server_address = $_POST["server_address"];
+			//$outbound_proxy_primary = $_POST["outbound_proxy_primary"];
+			//$outbound_proxy_secondary = $_POST["outbound_proxy_secondary"];
+			//$display_name = $_POST["display_name"];
+			//$user_id = $_POST["user_id"];
+			//$auth_id = $_POST["auth_id"];
+			//$password = $_POST["password"];
 		//profile
 			$device_profile_uuid = $_POST["device_profile_uuid"];
 		//keys
-			$device_key_category = $_POST["device_key_category"];
-			$device_key_id = $_POST["device_key_id"];
-			$device_key_type = $_POST["device_key_type"];
-			$device_key_line = $_POST["device_key_line"];
-			$device_key_value = $_POST["device_key_value"];
-			$device_key_extension = $_POST["device_key_extension"];
-			$device_key_label = $_POST["device_key_label"];
-			$device_key_icon = $_POST["device_key_icon"];
+			$device_keys = $_POST["device_keys"];
+			//$device_key_category = $_POST["device_key_category"];
+			//$device_key_id = $_POST["device_key_id"];
+			//$device_key_type = $_POST["device_key_type"];
+			//$device_key_line = $_POST["device_key_line"];
+			//$device_key_value = $_POST["device_key_value"];
+			//$device_key_extension = $_POST["device_key_extension"];
+			//$device_key_label = $_POST["device_key_label"];
+			//$device_key_icon = $_POST["device_key_icon"];
 		//settings
+			$device_settings = $_POST["device_settings"];
 			//$device_setting_category = $_POST["device_setting_category"]);
-			$device_setting_subcategory = $_POST["device_setting_subcategory"];
+			//$device_setting_subcategory = $_POST["device_setting_subcategory"];
 			//$device_setting_name = $_POST["device_setting_name"];
-			$device_setting_value = $_POST["device_setting_value"];
-			$device_setting_enabled = $_POST["device_setting_enabled"];
-			$device_setting_description = $_POST["device_setting_description"];
+			//$device_setting_value = $_POST["device_setting_value"];
+			//$device_setting_enabled = $_POST["device_setting_enabled"];
+			//$device_setting_description = $_POST["device_setting_description"];
 	}
 
 //use the mac address to get the vendor
@@ -226,62 +237,6 @@
 
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
-				//add domain_uuid to the array
-					foreach ($_POST as $key => $value) {
-						if (is_array($value)) {
-							$y = 0;
-							foreach ($value as $k => $v) {
-								if (!isset($v["domain_uuid"])) {
-									$_POST[$key][$y]["domain_uuid"] = $_POST["domain_uuid"];
-								}
-								$y++;
-							}
-						}
-					}
-
-				//array cleanup
-					$x = 0;
-					unset($_POST["target_file"]);
-					unset($_POST["file_action"]);
-
-					foreach ($_POST["device_lines"] as $row) {
-						//unset the empty row
-							if (strlen($row["line_number"]) == 0) {
-								unset($_POST["device_lines"][$x]);
-							}
-						//unset device_detail_uuid if the field has no value
-							if (strlen($row["device_line_uuid"]) == 0) {
-								unset($_POST["device_lines"][$x]["device_line_uuid"]);
-							}
-						//increment the row
-							$x++;
-					}
-					$x = 0;
-					foreach ($_POST["device_keys"] as $row) {
-						//unset the empty row
-							if (strlen($row["device_key_category"]) == 0) {
-								unset($_POST["device_keys"][$x]);
-							}
-						//unset device_detail_uuid if the field has no value
-							if (!is_uuid($row["device_key_uuid"])) {
-								unset($_POST["device_keys"][$x]["device_key_uuid"]);
-							}
-						//increment the row
-							$x++;
-					}
-					$x = 0;
-					foreach ($_POST["device_settings"] as $row) {
-						//unset the empty row
-							if (strlen($row["device_setting_subcategory"]) == 0) {
-								unset($_POST["device_settings"][$x]);
-							}
-						//unset device_detail_uuid if the field has no value
-							if (!is_uuid($row["device_setting_uuid"])) {
-								unset($_POST["device_settings"][$x]["device_setting_uuid"]);
-							}
-						//increment the row
-							$x++;
-					}
 
 				//set the default
 					$save = true;
@@ -299,22 +254,114 @@
 						$save = true;
 					}
 
-				//set the device_enabled_date
+				//prepare the array
+					$array['devices'][0]['domain_uuid'] = $domain_uuid;
+					$array['devices'][0]['device_uuid'] = $device_uuid;
+					$array['devices'][0]['device_mac_address'] = $device_mac_address;
+					$array['devices'][0]['device_provisioned_ip'] = $device_provisioned_ip;
+					$array['devices'][0]['domain_uuid'] = $domain_uuid;
+					$array['devices'][0]['device_label'] = $device_label;
+					$array['devices'][0]['device_mac_address'] = $device_mac_address;
+					$array['devices'][0]['device_label'] = $device_label;
+					$array['devices'][0]['device_user_uuid'] = $device_user_uuid;
+					$array['devices'][0]['device_username'] = $device_username;
+					$array['devices'][0]['device_username'] = $device_username;
+					$array['devices'][0]['device_vendor'] = $device_vendor;
+					$array['devices'][0]['device_uuid_alternate'] = $device_uuid_alternate;
+					$array['devices'][0]['device_model'] = $device_model;
+					$array['devices'][0]['device_firmware_version'] = $device_firmware_version;
 					if ($_POST["device_enabled"] == "true") {
- 						$_POST["device_enabled_date"] = 'now()';
+						$array['devices'][0]['device_enabled'] = $device_enabled;
+					}
+					$array['devices'][0]['device_enabled_date'] = 'now()';
+					$array['devices'][0]['device_template'] = $device_template;
+					$array['devices'][0]['device_profile_uuid'] = $device_profile_uuid;
+					$array['devices'][0]['device_description'] = $device_description;
+
+					$y = 0;
+					foreach ($device_lines as $row) {
+						if (strlen($row['line_number']) > 0) {
+							if (is_uuid($row["device_line_uuid"])) {
+								$device_line_uuid = $row["device_line_uuid"];
+							}
+							else {
+								$device_line_uuid = uuid();
+							}
+							$array['devices'][0]['device_lines'][$y]['domain_uuid'] = $domain_uuid;
+							$array['devices'][0]['device_lines'][$y]['device_uuid'] = $device_uuid;
+							$array['devices'][0]['device_lines'][$y]['device_line_uuid'] = $device_line_uuid;
+							$array['devices'][0]['device_lines'][$y]['line_number'] = $row["line_number"];
+							$array['devices'][0]['device_lines'][$y]['server_address'] = $row["server_address"];
+							$array['devices'][0]['device_lines'][$y]['outbound_proxy_primary'] = $row["outbound_proxy_primary"];
+							$array['devices'][0]['device_lines'][$y]['outbound_proxy_secondary'] = $row["outbound_proxy_secondary"];
+							$array['devices'][0]['device_lines'][$y]['server_address_primary'] = $row["server_address_primary"];
+							$array['devices'][0]['device_lines'][$y]['server_address_secondary'] = $row["server_address_secondary"];
+							$array['devices'][0]['device_lines'][$y]['display_name'] = $row["display_name"];
+							$array['devices'][0]['device_lines'][$y]['user_id'] = $row["user_id"];
+							$array['devices'][0]['device_lines'][$y]['auth_id'] = $row["auth_id"];
+							$array['devices'][0]['device_lines'][$y]['password'] = $row["password"];
+							$array['devices'][0]['device_lines'][$y]['shared_line'] = $row["shared_line"];
+							$array['devices'][0]['device_lines'][$y]['enabled'] = $row["enabled"];
+							$array['devices'][0]['device_lines'][$y]['sip_port'] = $row["sip_port"];
+							$array['devices'][0]['device_lines'][$y]['sip_transport'] = $row["sip_transport"];
+							$array['devices'][0]['device_lines'][$y]['register_expires'] = $row["register_expires"];
+							$y++;
+						}
 					}
 
-				//prepare the array
-					$array['devices'][] = $_POST;
+					$y = 0;
+					foreach ($device_keys as $row) {
+						if (strlen($row['device_key_category']) > 0) {
+							if (is_uuid($row["device_key_uuid"])) {
+								$device_key_uuid = $row["device_key_uuid"];
+							}
+							else {
+								$device_key_uuid = uuid();
+							}
+							$array['devices'][0]['device_keys'][$y]['domain_uuid'] = $domain_uuid;
+							$array['devices'][0]['device_keys'][$y]['device_uuid'] = $device_uuid;
+							$array['devices'][0]['device_keys'][$y]['device_key_uuid'] = $device_key_uuid;
+							$array['devices'][0]['device_keys'][$y]['device_key_category'] = $row["device_key_category"];
+							$array['devices'][0]['device_keys'][$y]['device_key_vendor'] = $row["device_key_vendor"];
+							$array['devices'][0]['device_keys'][$y]['device_key_id'] = $row["device_key_id"];
+							$array['devices'][0]['device_keys'][$y]['device_key_type'] = $row["device_key_type"];
+							$array['devices'][0]['device_keys'][$y]['device_key_line'] = $row["device_key_line"];
+							$array['devices'][0]['device_keys'][$y]['device_key_value'] = $row["device_key_value"];
+							$array['devices'][0]['device_keys'][$y]['device_key_extension'] = $row["device_key_extension"];
+							//$array['devices'][0]['device_keys'][$y]['device_key_protected'] = $row["device_key_protected"];
+							$array['devices'][0]['device_keys'][$y]['device_key_label'] = $row["device_key_label"];
+							$array['devices'][0]['device_keys'][$y]['device_key_icon'] = $row["device_key_icon"];
+							$y++;
+						}
+					}
+
+					$y = 0;
+					foreach ($device_settings as $row) {
+						if (strlen($row['device_setting_subcategory']) > 0) {
+							if (is_uuid($row["device_setting_uuid"])) {
+								$device_setting_uuid = $row["device_setting_uuid"];
+							}
+							else {
+								$device_setting_uuid = uuid();
+							}
+							$array['devices'][0]['device_settings'][$y]['domain_uuid'] = $domain_uuid;
+							$array['devices'][0]['device_settings'][$y]['device_uuid'] = $device_uuid;
+							$array['devices'][0]['device_settings'][$y]['device_setting_uuid'] = $device_setting_uuid;
+							$array['devices'][0]['device_settings'][$y]['device_setting_category'] = $row["device_setting_category"];
+							$array['devices'][0]['device_settings'][$y]['device_setting_subcategory'] = $row["device_setting_subcategory"];
+							$array['devices'][0]['device_settings'][$y]['device_setting_name'] = $row["device_setting_name"];
+							$array['devices'][0]['device_settings'][$y]['device_setting_value'] = $row["device_setting_value"];
+							$array['devices'][0]['device_settings'][$y]['device_setting_enabled'] = $row["device_setting_enabled"];
+							$array['devices'][0]['device_settings'][$y]['device_setting_description'] = $row["device_setting_description"];
+							$y++;
+						}
+					}
 
 				//save the device
 					if ($save) {
 						$database = new database;
 						$database->app_name = 'devices';
 						$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
-						if (is_uuid($device_uuid)) {
-							$database->uuid($device_uuid);
-						}
 						$database->save($array);
 						$response = $database->message;
 						if (is_uuid($response['uuid'])) {
@@ -662,7 +709,7 @@
 		$outbound_proxy_secondary = $row['outbound_proxy_secondary'];
 
 		//build the xml
-		$xml =  "<?xml version='1.0' encoding='utf-8'?>";
+		$xml = "<?xml version='1.0' encoding='utf-8'?>";
 		$xml .= "<AccountConfig version='1'>";
 		$xml .= "<Account>";
 		$xml .= "<RegisterServer>".$row['server_address']."</RegisterServer>";
@@ -930,9 +977,9 @@
 				$selected = "selected=\"selected\" ";
 				echo "				<select class='formfld' style='width: 45px;' name='device_lines[".$x."][line_number]'>\n";
 				echo "				<option value=''></option>\n";
-			        for ($n = 1; $n <=99; $n++) {
-                                        echo "                          <option value='$n' ".($row['line_number'] == "$n" ? $selected:"").">$n</option>\n";
-                                }
+			    for ($n = 1; $n <=99; $n++) {
+                    echo "             <option value='$n' ".($row['line_number'] == "$n" ? $selected:"").">$n</option>\n";
+                }
 				echo "				</select>\n";
 				echo "			</td>\n";
 
@@ -1309,7 +1356,7 @@
 				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_label]' style='width: 75px;' maxlength='255' value=\"".escape($row['device_key_label'])."\"/>\n";
 				echo "</td>\n";
 				
-                                echo "<td align='left'>\n";
+                echo "<td align='left'>\n";
 				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_icon]' style='width: 75px;' maxlength='255' value=\"".escape($row['device_key_icon'])."\"/>\n";
 				echo "</td>\n";
 
@@ -1378,21 +1425,21 @@
 				echo "</td>\n";
 
 				echo "<td align='left'>\n";
-				echo "    <select class='formfld' name='device_settings[".$x."][device_setting_enabled]' style='width: 90px;'>\n";
-				echo "    <option value=''></option>\n";
+				echo "  <select class='formfld' name='device_settings[".$x."][device_setting_enabled]' style='width: 90px;'>\n";
+				echo "  <option value=''></option>\n";
 				if ($row['device_setting_enabled'] == "true") {
-					echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+					echo "  <option value='true' selected='selected'>".$text['label-true']."</option>\n";
 				}
 				else {
-					echo "    <option value='true'>".$text['label-true']."</option>\n";
+					echo "  <option value='true'>".$text['label-true']."</option>\n";
 				}
 				if ($row['device_setting_enabled'] == "false") {
-					echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
+					echo "  <option value='false' selected='selected'>".$text['label-false']."</option>\n";
 				}
 				else {
-					echo "    <option value='false'>".$text['label-false']."</option>\n";
+					echo "  <option value='false'>".$text['label-false']."</option>\n";
 				}
-				echo "    </select>\n";
+				echo "  </select>\n";
 				echo "</td>\n";
 
 				echo "<td align='left'>\n";
@@ -1471,7 +1518,7 @@
 		echo "	<table>\n";
 		echo "	<tr>\n";
 		echo "		<td><a href='?id=".escape($device_uuid_alternate)."' id='device_uuid_alternate_link'>".escape($label)."</a><input class='formfld' type='hidden' name='device_uuid_alternate' id='device_uuid_alternate' maxlength='255' value=\"".escape($device_uuid_alternate)."\" />&nbsp;</td>";
-		echo "		<td><a href='#' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('device_uuid_alternate').value = '';  document.getElementById('device_uuid_alternate_link').hidden = 'true'; submit_form(); }\" alt='".$text['button-delete']."'>$v_link_label_delete</a></td>\n";
+		echo "		<td><a href='#' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('device_uuid_alternate').value = ''; document.getElementById('device_uuid_alternate_link').hidden = 'true'; submit_form(); }\" alt='".$text['button-delete']."'>$v_link_label_delete</a></td>\n";
 		echo "	</tr>\n";
 		echo "	</table>\n";
 		unset($label);
@@ -1525,22 +1572,22 @@
 		echo "	".$text['label-domain']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='domain_uuid' id='domain_uuid'>\n";
+		echo "  <select class='formfld' name='domain_uuid' id='domain_uuid'>\n";
 		if (!is_uuid($domain_uuid)) {
-			echo "    <option value='' selected='selected'>".$text['select-global']."</option>\n";
+			echo "  <option value='' selected='selected'>".$text['select-global']."</option>\n";
 		}
 		else {
-			echo "    <option value=''>".$text['select-global']."</option>\n";
+			echo "  <option value=''>".$text['select-global']."</option>\n";
 		}
 		foreach ($_SESSION['domains'] as $row) {
 			if ($row['domain_uuid'] == $domain_uuid) {
-				echo "    <option value='".escape($row['domain_uuid'])."' selected='selected'>".escape($row['domain_name'])."</option>\n";
+				echo "  <option value='".escape($row['domain_uuid'])."' selected='selected'>".escape($row['domain_name'])."</option>\n";
 			}
 			else {
-				echo "    <option value='".escape($row['domain_uuid'])."'>".escape($row['domain_name'])."</option>\n";
+				echo "  <option value='".escape($row['domain_uuid'])."'>".escape($row['domain_name'])."</option>\n";
 			}
 		}
-		echo "    </select>\n";
+		echo "  </select>\n";
 		echo "<br />\n";
 		echo $text['description-domain_name']."\n";
 		echo "</td>\n";
@@ -1556,20 +1603,20 @@
 		echo "	".$text['label-device_enabled']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='device_enabled'>\n";
+		echo "  <select class='formfld' name='device_enabled'>\n";
 		if ($device_enabled == "true" || strlen($device_enabled) == 0) {
-			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+			echo "  <option value='true' selected='selected'>".$text['label-true']."</option>\n";
 		}
 		else {
-			echo "    <option value='true'>".$text['label-true']."</option>\n";
+			echo "  <option value='true'>".$text['label-true']."</option>\n";
 		}
 		if ($device_enabled == "false") {
-			echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
+			echo "  <option value='false' selected='selected'>".$text['label-false']."</option>\n";
 		}
 		else {
-			echo "    <option value='false'>".$text['label-false']."</option>\n";
+			echo "  <option value='false'>".$text['label-false']."</option>\n";
 		}
-		echo "    </select>\n";
+		echo "  </select>\n";
 		echo "<br />\n";
 		echo $text['description-device_enabled']."\n";
 		echo "</td>\n";
@@ -1609,15 +1656,15 @@
 	echo "<script>\n";
 	echo "	$(window).on('load', function(event){\n";
 	// triger initial onchage to set button state
-	echo "      $('#device_profile_uuid').trigger('change')";
+	echo "   $('#device_profile_uuid').trigger('change')";
 	echo "	});\n";
 	//capture enter key to submit form
 	echo "	$(window).keypress(function(event){\n";
 	echo "		if (event.which == 13) { submit_form(); }\n";
 	echo "	});\n";
 	// capture device selection events
-	echo "  $('#device_profile_uuid').on('change',function(event){ \n";
-	echo "      if (this.value == '') {\$('#device_profile_edit').hide()} else {\$('#device_profile_edit').show()} \n";
+	echo " $('#device_profile_uuid').on('change',function(event){ \n";
+	echo "   if (this.value == '') {\$('#device_profile_edit').hide()} else {\$('#device_profile_edit').show()} \n";
 	echo "	}); \n";
 	// convert password fields to
 	echo "	function submit_form() {\n";
