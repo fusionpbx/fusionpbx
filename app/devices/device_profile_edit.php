@@ -217,10 +217,12 @@
 
 //get the vendor count
 	$vendor_count = 0;
-	foreach($device_profile_keys as $row) {
-		if ($previous_vendor != $row['profile_key_vendor']) {
-			$previous_vendor = $row['profile_key_vendor'];
-			$vendor_count++;
+	if (is_array($device_profile_keys) && @sizeof($device_profile_keys) != 0) {
+		foreach($device_profile_keys as $row) {
+			if ($previous_vendor != $row['profile_key_vendor']) {
+				$previous_vendor = $row['profile_key_vendor'];
+				$vendor_count++;
+			}
 		}
 	}
 
