@@ -217,13 +217,14 @@
 
 //get the vendor count
 	$vendor_count = 0;
-	foreach($device_profile_keys as $row) {
-		if ($previous_vendor != $row['profile_key_vendor']) {
-			$previous_vendor = $row['profile_key_vendor'];
-			$vendor_count++;
+	if (is_array($device_profile_keys)) {
+		foreach($device_profile_keys as $row) {
+			if ($previous_vendor != $row['profile_key_vendor']) {
+				$previous_vendor = $row['profile_key_vendor'];
+				$vendor_count++;
+			}
 		}
 	}
-
 //get the vendors
 	$sql = "select * ";
 	$sql .= "from v_device_vendors as v ";
@@ -250,20 +251,25 @@
 	}
 
 //add an empty row
-	$x = count($device_profile_keys);
-	$device_profile_keys[$x]['domain_uuid'] = $domain_uuid;
-	$device_profile_keys[$x]['device_profile_uuid'] = $device_profile_uuid;
-	$device_profile_keys[$x]['device_profile_key_uuid'] = uuid();
-	$device_profile_keys[$x]['profile_key_category'] = '';
-	$device_profile_keys[$x]['profile_key_id'] = '';
-	$device_profile_keys[$x]['profile_key_vendor'] = '';
-	$device_profile_keys[$x]['profile_key_type'] = '';
-	$device_profile_keys[$x]['profile_key_line'] = '';
-	$device_profile_keys[$x]['profile_key_value'] = '';
-	$device_profile_keys[$x]['profile_key_extension'] = '';
-	$device_profile_keys[$x]['profile_key_protected'] = '';
-	$device_profile_keys[$x]['profile_key_label'] = '';
-	$device_profile_keys[$x]['profile_key_icon'] = '';
+	if (is_array($device_profile_keys)) {
+		$x = count($device_profile_keys);
+	}
+	else {
+		$x=0;
+	}
+		$device_profile_keys[$x]['domain_uuid'] = $domain_uuid;
+		$device_profile_keys[$x]['device_profile_uuid'] = $device_profile_uuid;
+		$device_profile_keys[$x]['device_profile_key_uuid'] = uuid();
+		$device_profile_keys[$x]['profile_key_category'] = '';
+		$device_profile_keys[$x]['profile_key_id'] = '';
+		$device_profile_keys[$x]['profile_key_vendor'] = '';
+		$device_profile_keys[$x]['profile_key_type'] = '';
+		$device_profile_keys[$x]['profile_key_line'] = '';
+		$device_profile_keys[$x]['profile_key_value'] = '';
+		$device_profile_keys[$x]['profile_key_extension'] = '';
+		$device_profile_keys[$x]['profile_key_protected'] = '';
+		$device_profile_keys[$x]['profile_key_label'] = '';
+		$device_profile_keys[$x]['profile_key_icon'] = '';
 
 //get the child data
 	if (strlen($device_profile_uuid) > 0) {
@@ -284,7 +290,12 @@
 	}
 
 //add an empty row
-	$x = count($device_profile_settings);
+	if (is_array($device_profile_settings)) {
+		$x = count($device_profile_settings);
+	}
+	else {
+		$x=0;
+	}
 	$device_profile_settings[$x]['domain_uuid'] = $domain_uuid;
 	$device_profile_settings[$x]['device_profile_uuid'] = $device_profile_uuid;
 	$device_profile_settings[$x]['device_profile_setting_uuid'] = uuid();
