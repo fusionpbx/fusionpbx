@@ -84,39 +84,42 @@
 	$parameters['message_number'] = '%'.$number;
 	$database = new database;
 	$messages = $database->select($sql, $parameters, 'all');
-	$messages = array_reverse($messages);
 	unset($sql, $parameters);
 
-//get media (if any)
-	$sql = "select ";
-	$sql .= "message_uuid, ";
-	$sql .= "message_media_uuid, ";
-	$sql .= "message_media_type, ";
-	$sql .= "length(decode(message_media_content,'base64')) as message_media_size ";
-	$sql .= "from v_message_media ";
-	$sql .= "where user_uuid = :user_uuid ";
-	$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
-	$sql .= "and ( ";
-	foreach ($messages as $index => $message) {
-		$message_uuids[] = "message_uuid = :message_uuid_".$index;
-		$parameters['message_uuid_'.$index] = $message['message_uuid'];
-	}
-	$sql .= implode(' or ', $message_uuids);
-	$sql .= ") ";
-	$sql .= "and message_media_type <> 'txt' ";
-	$parameters['user_uuid'] = $_SESSION['user_uuid'];
-	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
-	$rows = $database->select($sql, $parameters, 'all');
-	unset($sql, $parameters, $index);
+	if (is_array($messages) && @sizeof($messages) != 0) {
+		$messages = array_reverse($messages);
 
-//prep media array
-	if (is_array($rows) && @sizeof($rows) != 0) {
-		foreach ($rows as $index => $row) {
-			$message_media[$row['message_uuid']][$index]['uuid'] = $row['message_media_uuid'];
-			$message_media[$row['message_uuid']][$index]['type'] = $row['message_media_type'];
-			$message_media[$row['message_uuid']][$index]['size'] = $row['message_media_size'];
-		}
+		//get media (if any)
+			$sql = "select ";
+			$sql .= "message_uuid, ";
+			$sql .= "message_media_uuid, ";
+			$sql .= "message_media_type, ";
+			$sql .= "length(decode(message_media_content,'base64')) as message_media_size ";
+			$sql .= "from v_message_media ";
+			$sql .= "where user_uuid = :user_uuid ";
+			$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+			$sql .= "and ( ";
+			foreach ($messages as $index => $message) {
+				$message_uuids[] = "message_uuid = :message_uuid_".$index;
+				$parameters['message_uuid_'.$index] = $message['message_uuid'];
+			}
+			$sql .= implode(' or ', $message_uuids);
+			$sql .= ") ";
+			$sql .= "and message_media_type <> 'txt' ";
+			$parameters['user_uuid'] = $_SESSION['user_uuid'];
+			$parameters['domain_uuid'] = $domain_uuid;
+			$database = new database;
+			$rows = $database->select($sql, $parameters, 'all');
+			unset($sql, $parameters, $index);
+
+		//prep media array
+			if (is_array($rows) && @sizeof($rows) != 0) {
+				foreach ($rows as $index => $row) {
+					$message_media[$row['message_uuid']][$index]['uuid'] = $row['message_media_uuid'];
+					$message_media[$row['message_uuid']][$index]['type'] = $row['message_media_type'];
+					$message_media[$row['message_uuid']][$index]['size'] = $row['message_media_size'];
+				}
+			}
 	}
 
 //css styles
