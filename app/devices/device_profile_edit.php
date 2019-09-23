@@ -252,7 +252,7 @@
 	}
 
 //add an empty row
-	$x = count($device_profile_keys);
+	$x = is_array($device_profile_keys) ? count($device_profile_keys) : 0;
 	$device_profile_keys[$x]['domain_uuid'] = $domain_uuid;
 	$device_profile_keys[$x]['device_profile_uuid'] = $device_profile_uuid;
 	$device_profile_keys[$x]['device_profile_key_uuid'] = uuid();
@@ -286,7 +286,7 @@
 	}
 
 //add an empty row
-	$x = count($device_profile_settings);
+	$x = is_array($device_profile_settings) ? count($device_profile_settings) : 0;
 	$device_profile_settings[$x]['domain_uuid'] = $domain_uuid;
 	$device_profile_settings[$x]['device_profile_uuid'] = $device_profile_uuid;
 	$device_profile_settings[$x]['device_profile_setting_uuid'] = uuid();
