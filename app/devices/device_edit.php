@@ -203,12 +203,12 @@
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		//validate the token
-			//$token = new token;
-			//if (!$token->validate($_SERVER['PHP_SELF'])) {
-			//	message::add($text['message-invalid_token'],'negative');
-			//	header('Location: devices.php');
-			//	exit;
-			//}
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: devices.php');
+				exit;
+			}
 
 		//check for all required data
 			$msg = '';
@@ -977,9 +977,9 @@
 				$selected = "selected=\"selected\" ";
 				echo "				<select class='formfld' style='width: 45px;' name='device_lines[".$x."][line_number]'>\n";
 				echo "				<option value=''></option>\n";
-			    for ($n = 1; $n <=99; $n++) {
-                    echo "             <option value='$n' ".($row['line_number'] == "$n" ? $selected:"").">$n</option>\n";
-                }
+				for ($n = 1; $n <=99; $n++) {
+        		            echo "					<option value='$n' ".($row['line_number'] == "$n" ? $selected:"").">$n</option>\n";
+				}
 				echo "				</select>\n";
 				echo "			</td>\n";
 
@@ -1356,7 +1356,7 @@
 				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_label]' style='width: 75px;' maxlength='255' value=\"".escape($row['device_key_label'])."\"/>\n";
 				echo "</td>\n";
 				
-                echo "<td align='left'>\n";
+				echo "<td align='left'>\n";
 				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_icon]' style='width: 75px;' maxlength='255' value=\"".escape($row['device_key_icon'])."\"/>\n";
 				echo "</td>\n";
 
@@ -1644,7 +1644,7 @@
 	if ($action == "update") {
 		echo "		<input type='hidden' name='device_uuid' value='".escape($device_uuid)."'/>\n";
 	}
-	//echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br>";
 	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'/>\n";
 	echo "		</td>\n";
