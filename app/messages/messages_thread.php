@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2018
+	Portions created by the Initial Developer are Copyright (C) 2016-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -220,23 +220,20 @@
 				//message bubble
 					echo "<span class='message-bubble message-bubble-".($message['message_direction'] == 'inbound' ? 'em' : 'me')."'>";
 						//contact image em
-							if (
-								$message['message_direction'] == 'inbound' &&
-								is_array($_SESSION['tmp']['messages']['contact_em'][$contact_uuid]) &&
-								@sizeof($_SESSION['tmp']['messages']['contact_em'][$contact_uuid]) != 0
-								) {
-								echo "<div class='message-bubble-image-em'>\n";
-								echo "	<img class='message-bubble-image-em'><br />\n";
-								echo "</div>\n";
+							if ($message['message_direction'] == 'inbound') {
+								if (is_array($_SESSION['tmp']['messages']['contact_em'][$contact_uuid]) && @sizeof($_SESSION['tmp']['messages']['contact_em'][$contact_uuid]) != 0) {
+									echo "<div class='message-bubble-image-em'>\n";
+									echo "	<img class='message-bubble-image-em'><br />\n";
+									echo "</div>\n";
+								}
 							}
 						//contact image me
-							else if (
-								is_array($_SESSION['tmp']['messages']['contact_me']) &&
-								@sizeof($_SESSION['tmp']['messages']['contact_me']) != 0
-								) {
-								echo "<div class='message-bubble-image-me'>\n";
-								echo "	<img class='message-bubble-image-me'><br />\n";
-								echo "</div>\n";
+							else {
+								if (is_array($_SESSION['tmp']['messages']['contact_me']) && @sizeof($_SESSION['tmp']['messages']['contact_me']) != 0) {
+									echo "<div class='message-bubble-image-me'>\n";
+									echo "	<img class='message-bubble-image-me'><br />\n";
+									echo "</div>\n";
+								}
 							}
 						echo "<div style='display: table;'>\n";
 						//message

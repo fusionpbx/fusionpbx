@@ -133,7 +133,7 @@
 	unset($sql, $parameters, $rows, $row);
 	
 	if (!is_null(array_diff($numbers, $destinations))) {
-		$numbers = array_diff($numbers, $destinations);	
+		$numbers = array_diff($numbers, $destinations);
 	}
 
 //get contact (primary attachment) images and cache them

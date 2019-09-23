@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2018
+	Portions created by the Initial Developer are Copyright (C) 2016-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -88,10 +88,10 @@
 	echo "	#message_new_layer {\n";
 	echo "		z-index: 999999;\n";
 	echo "		position: absolute;\n";
-	echo "		left: 0px;\n";
-	echo "		top: 0px;\n";
-	echo "		right: 0px;\n";
-	echo "		bottom: 0px;\n";
+	echo "		left: 0;\n";
+	echo "		top: 0;\n";
+	echo "		right: 0;\n";
+	echo "		bottom: 0;\n";
 	echo "		text-align: center;\n";
 	echo "		vertical-align: middle;\n";
 	echo "		}\n";
@@ -115,10 +115,10 @@
 	echo "	#message_media_layer {\n";
 	echo "		z-index: 999999;\n";
 	echo "		position: absolute;\n";
-	echo "		left: 0px;\n";
-	echo "		top: 0px;\n";
-	echo "		right: 0px;\n";
-	echo "		bottom: 0px;\n";
+	echo "		left: 0;\n";
+	echo "		top: 0;\n";
+	echo "		right: 0;\n";
+	echo "		bottom: 0;\n";
 	echo "		text-align: center;\n";
 	echo "		vertical-align: middle;\n";
 	echo "		}\n";
@@ -255,7 +255,7 @@
 	echo "	function load_thread(number, contact_uuid) {\n";
 	echo "		clearTimeout(timer_thread);\n";
 	echo "		$('#thread').load('messages_thread.php?number=' + encodeURIComponent(number) + '&contact_uuid=' + encodeURIComponent(contact_uuid), function(){\n";
-	echo "			$('div#thread_messages').animate({ 'max-height': $(window).height() - 450 }, 200, function() {\n";
+	echo "			$('div#thread_messages').animate({ 'max-height': $(window).height() - 470 }, 200, function() {\n";
 	echo "				$('#thread_messages').scrollTop(Number.MAX_SAFE_INTEGER);\n"; //chrome
 	echo "				$('span#thread_bottom')[0].scrollIntoView(true);\n"; //others
 						//note: the order of the above two lines matters!
@@ -280,7 +280,7 @@
 
 	echo "	function refresh_thread(number, contact_uuid, onsent) {\n";
 	echo "		$('#thread_messages').load('messages_thread.php?refresh=true&number=' + encodeURIComponent(number) + '&contact_uuid=' + encodeURIComponent(contact_uuid), function(){\n";
-	echo "			$('div#thread_messages').animate({ 'max-height': $(window).height() - 450 }, 200, function() {\n";
+	echo "			$('div#thread_messages').animate({ 'max-height': $(window).height() - 470 }, 200, function() {\n";
 	echo "				$('#thread_messages').scrollTop(Number.MAX_SAFE_INTEGER);\n"; //chrome
 	echo "				$('span#thread_bottom')[0].scrollIntoView(true);\n"; //others
 						//note: the order of the above two lines matters!
