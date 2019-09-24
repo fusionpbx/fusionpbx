@@ -280,7 +280,7 @@
 	unset($user_settings);
 
 	// check or uncheck all category checkboxes
-	if (sizeof($subcat_ids) > 0) {
+	if (is_array($subcat_ids) && sizeof($subcat_ids) > 0) {
 		echo "<script>\n";
 		echo "	function check(what, category) {\n";
 		foreach ($subcat_ids as $user_setting_category => $checkbox_ids) {
