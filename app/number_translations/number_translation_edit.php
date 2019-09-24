@@ -215,7 +215,7 @@
 	echo "			<th class='vtablereq'>".$text['label-number_translation_detail_regex']."</th>\n";
 	echo "			<th class='vtablereq'>".$text['label-number_translation_detail_replace']."</th>\n";
 	echo "			<th class='vtablereq'>".$text['label-number_translation_detail_order']."</th>\n";
-	echo "			<td class='vtable'></td>\n";
+	echo "			<td></td>\n";
 	echo "		</tr>\n";
 	$x = 0;
 	foreach($number_translation_details as $row) {
@@ -247,7 +247,9 @@
 		echo "				</select>\n";
 		echo "			</td>\n";
 		echo "			<td class='list_control_icons' style='width: 25px;'>\n";
-		echo "				<a href=\"number_translation_delete.php?number_translation_detail_uuid=".escape($row['number_translation_detail_uuid'])."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\"><button type='button' class='btn btn-default list_control_icon'><span class='glyphicon glyphicon-remove'></span></button></a>\n";
+		if ($x < sizeof($number_translation_details) - 1) {
+			echo "				<a href='number_translation_delete.php?number_translation_detail_uuid=".escape($row['number_translation_detail_uuid'])."&a=delete' alt=\"".$text['button-delete']."\" onclick=\"return confirm('".$text['confirm-delete']."');\">".$v_link_label_delete."</a>\n";
+		}
 		echo "			</td>\n";
 		echo "		</tr>\n";
 		$x++;
@@ -264,7 +266,6 @@
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select class='formfld' name='number_translation_enabled'>\n";
-	echo "		<option value=''></option>\n";
 	if ($number_translation_enabled == "true") {
 		echo "		<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
@@ -298,6 +299,7 @@
 	echo "		<td colspan='2' align='right'>\n";
 	echo "			<input type='hidden' name='number_translation_uuid' value='".escape($number_translation_uuid)."'>\n";
 	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "			<br />\n";
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
