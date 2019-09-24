@@ -105,7 +105,7 @@
 	}
 
 //check to see if permission does not exist
-	if(!permission_exists(xml_cdr_b_leg)){
+	if(!permission_exists('xml_cdr_b_leg')){
 		$leg = 'a';
 	}
 
