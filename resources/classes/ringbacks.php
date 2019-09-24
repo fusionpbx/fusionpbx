@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2018
+	Portions created by the Initial Developer are Copyright (C) 2016-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -126,7 +126,7 @@ if (!class_exists('ringbacks')) {
 				}
 
 			//recordings
-				if (sizeof($this->recordings_list) > 0) {
+				if (is_array($this->recordings_list) && sizeof($this->recordings_list) > 0) {
 					$select .= "	<optgroup label='".$text['label-recordings']."'>";
 					foreach ($this->recordings_list as $recording_value => $recording_name) {
 						$select .= "		<option value='".$recording_value."' ".(($selected == $recording_value) ? 'selected="selected"' : null).">".$recording_name."</option>\n";
