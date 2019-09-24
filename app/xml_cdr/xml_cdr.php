@@ -703,7 +703,7 @@
 	echo "<br><br>";
 
 // check or uncheck all checkboxes
-	if (sizeof($xml_ids) > 0) {
+	if (is_array($xml_ids) && sizeof($xml_ids) > 0) {
 		echo "<script>\n";
 		echo "	function check(what) {\n";
 		foreach ($xml_ids as $xml_id) {
