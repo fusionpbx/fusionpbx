@@ -247,7 +247,7 @@
 	echo "</form>\n";
 
 	echo "<br /><br />";
-	if (is_array($_SESSION["response"])) {
+	if (!empty($_SESSION["response"]) && is_array($_SESSION["response"])) {
 		foreach($_SESSION["response"] as $part => $response){
 			echo "<b>". $text["label-results"]." - ".$text["label-${part}"]."</b>";
 			echo "<br /><br />";
