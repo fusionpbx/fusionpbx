@@ -74,7 +74,6 @@
 			$msg = '';
 			if (strlen($number_translation_name) == 0) { $msg .= $text['message-required']." ".$text['label-number_translation_name']."<br>\n"; }
 			//if (strlen($number_translation_details) == 0) { $msg .= $text['message-required']." ".$text['label-number_translation_details']."<br>\n"; }
-			//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
 			if (strlen($number_translation_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-number_translation_enabled']."<br>\n"; }
 			//if (strlen($number_translation_description) == 0) { $msg .= $text['message-required']." ".$text['label-number_translation_description']."<br>\n"; }
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -135,8 +134,6 @@
 		$number_translation_uuid = $_GET["id"];
 		$sql = "select * from v_number_translations ";
 		$sql .= "where number_translation_uuid = :number_translation_uuid ";
-		//$sql .= "and domain_uuid = :domain_uuid ";
-		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['number_translation_uuid'] = $number_translation_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
@@ -153,8 +150,6 @@
 	if (is_uuid($number_translation_uuid)) {
 		$sql = "select * from v_number_translation_details ";
 		$sql .= "where number_translation_uuid = :number_translation_uuid ";
-		//$sql .= "and domain_uuid = '".$domain_uuid."' ";
-		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['number_translation_uuid'] = $number_translation_uuid;
 		$database = new database;
 		$number_translation_details = $database->select($sql, $parameters, 'all');
@@ -168,7 +163,6 @@
 
 //add an empty row
 	$x = count($number_translation_details);
-	$number_translation_details[$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 	$number_translation_details[$x]['number_translation_uuid'] = $number_translation_uuid;
 	$number_translation_details[$x]['number_translation_detail_uuid'] = uuid();
 	$number_translation_details[$x]['number_translation_detail_regex'] = '';
@@ -190,7 +184,7 @@
 	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-number_translation']."</b><br><br></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='number_translations.php'\" value='".$text['button-back']."'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"window.location='number_translation_copy.php'\" value='".$text['button-copy']."'>";
+	//echo "	<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"window.location='number_translation_copy.php'\" value='".$text['button-copy']."'>";
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -226,7 +220,6 @@
 	$x = 0;
 	foreach($number_translation_details as $row) {
 		echo "		<tr>\n";
-		echo "			<input type='hidden' name='number_translation_details[$x][domain_uuid]' value=\"".escape($row["domain_uuid"])."\">\n";
 		echo "			<input type='hidden' name='number_translation_details[$x][number_translation_uuid]' value=\"".escape($row["number_translation_uuid"])."\">\n";
 		echo "			<input type='hidden' name='number_translation_details[$x][number_translation_detail_uuid]' value=\"".escape($row["number_translation_detail_uuid"])."\">\n";
 		echo "			<td>\n";
@@ -262,32 +255,6 @@
 	echo "	</table>\n";
 	echo "<br />\n";
 	echo $text['description-number_translation_detail_order']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-domain_uuid']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<select class='formfld' name='domain_uuid'>\n";
-	if (strlen($domain_uuid) == 0) {
-		echo "		<option value='' selected='selected'>".$text['select-global']."</option>\n";
-	}
-	else {
-		echo "		<option value=''>".$text['label-global']."</option>\n";
-	}
-	foreach ($_SESSION['domains'] as $row) {
-		if ($row['domain_uuid'] == $domain_uuid) {
-			echo "		<option value='".$row['domain_uuid']."' selected='selected'>".escape($row['domain_name'])."</option>\n";
-		}
-		else {
-			echo "		<option value='".$row['domain_uuid']."'>".$row['domain_name']."</option>\n";
-		}
-	}
-	echo "	</select>\n";
-	echo "<br />\n";
-	echo $text['description-domain_uuid']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
