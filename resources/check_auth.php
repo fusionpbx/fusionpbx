@@ -36,9 +36,6 @@
 	}
 
 //start the session
-	ini_set("session.use_only_cookies", True);
-	ini_set("session.cookie_httponly", True);
-	if ($_SERVER["HTTPS"] == "on") { ini_set("session.cookie_secure", True); }
 	if (!isset($_SESSION)) { session_start(); }
 
 //define variables
@@ -204,7 +201,7 @@
 					isset($_SESSION["user"]) &&
 					is_uuid($_SESSION["user_uuid"]) &&
 					is_uuid($_SESSION["domain_uuid"]) &&
-					count($_SESSION['user']['extension']) == 0
+					!isset($_SESSION['user']['extension'])
 					) {
 					//get the user extension list
 						$_SESSION['user']['extension'] = null;
