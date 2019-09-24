@@ -98,7 +98,6 @@
 		//prepare the array
 			$array['number_translations'][0]["number_translation_uuid"] = $number_translation_uuid;
 			$array['number_translations'][0]["number_translation_name"] = $number_translation_name;
-			$array['number_translations'][0]["domain_uuid"] = $domain_uuid;
 			$array['number_translations'][0]["number_translation_enabled"] = $number_translation_enabled;
 			$array['number_translations'][0]["number_translation_description"] = $number_translation_description;
 			$y = 0;
