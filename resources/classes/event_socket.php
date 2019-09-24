@@ -108,7 +108,7 @@ class event_socket {
 		if ($port == '') { $port = '8021'; }
 		if ($password == '') { $password = 'ClueCon'; }
 
-		$fp = fsockopen($host, $port, $errno, $errdesc, 3);
+		$fp = @socket_connect($host, $port, $errno, $errdesc, 3);
 
 		if (!$fp) {
 			return false;
