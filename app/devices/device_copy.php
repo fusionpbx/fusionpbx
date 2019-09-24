@@ -67,7 +67,7 @@
 		}
 		else {
 			$save = false;
-			message::add($text['message-duplicate']);
+			message::add($text['message-duplicate'],'negative');
 		}
 		unset($sql, $parameters, $num_rows);
 	}
