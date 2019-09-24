@@ -75,7 +75,7 @@ include "root.php";
 					require_once "app/recordings/resources/classes/switch_recordings.php";
 					$recordings_c = new switch_recordings;
 					$recordings = $recordings_c->list_recordings();
-					if (sizeof($recordings) > 0) {
+					if (is_array($recordings) && sizeof($recordings) > 0) {
 						$select .= "	<optgroup label='".$text['label-recordings']."'>";
 						foreach($recordings as $recording_value => $recording_name){
 							$select .= "		<option value='".$recording_value."' ".(($selected == $recording_value) ? 'selected="selected"' : null).">".$recording_name."</option>\n";
@@ -102,7 +102,7 @@ include "root.php";
 					unset($sql, $parameters, $streams, $row);
 				}
 			//add additional options
-				if (sizeof($options) > 0) {
+				if (is_array($options) && sizeof($options) > 0) {
 					$select .= "	<optgroup label='".$text['label-others']."'>";
 					$select .= $options;
 					$select .= "	</optgroup>\n";
