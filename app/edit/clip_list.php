@@ -162,7 +162,7 @@
 	echo "<body style='margin: 0; padding: 5px;' onfocus='blur();'>\n";
 
 	echo "<div style='text-align: left; padding-top: 3px;'>\n";
-	echo "<div style='padding-bottom: 3px;'><a href='javascript:void(0);' onclick=\"window.open('clip_options.php?id=".$row[id]."','clipwin','left=20,top=20,width=310,height=350,toolbar=0,resizable=0');\" style='text-decoration:none; cursor: pointer;' title=\"".$text['label-clip-library']."\"><img src='resources/images/icon_gear.png' border='0' align='absmiddle' style='margin: 0px 2px 4px -1px;'>".$text['label-clip-library']."</a></div>\n";
+	echo "<div style='padding-bottom: 3px;'><a href='javascript:void(0);' onclick=\"window.open('clip_options.php?id=".urlencode($row['id'])."','clipwin','left=20,top=20,width=310,height=350,toolbar=0,resizable=0');\" style='text-decoration:none; cursor: pointer;' title=\"".$text['label-clip-library']."\"><img src='resources/images/icon_gear.png' border='0' align='absmiddle' style='margin: 0px 2px 4px -1px;'>".$text['label-clip-library']."</a></div>\n";
 
 	$sql = "select * from v_clips order by clip_folder asc, clip_name asc";
 	$database = new database;
