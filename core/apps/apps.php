@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -93,7 +93,7 @@
 
 			$description = $row['description'][$_SESSION['domain']['language']['code']];
 			if (strlen($description) == 0) { $description = $row['description']['en-us']; }
-			if (strlen($description) == 0) { $description = '&nbsp;'; }
+			if (strlen($description) == 0) { $description = ''; }
 			$row['$description'] = $description;
 
 			/*
