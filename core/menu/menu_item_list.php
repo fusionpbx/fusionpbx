@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -143,7 +143,7 @@ function build_db_child_menu_list ($db, $menu_item_level, $menu_item_uuid, $c) {
 					echo "</tr>";
 
 				//update the menu order
-					if ($row2[menu_item_order] != $tmp_menu_item_order) {
+					if ($row2['menu_item_order'] != $tmp_menu_item_order) {
 						$array['menu_items'][0]['menu_item_uuid'] = $row2['menu_item_uuid'];
 						$array['menu_items'][0]['menu_uuid'] = $menu_uuid;
 						$array['menu_items'][0]['menu_item_title'] = $row2['menu_item_title'];
@@ -271,7 +271,7 @@ if (is_array($result) && sizeof($result) != 0) {
 			}
 
 			echo "<td valign='top' nowrap class='".$row_style[$c]."' style='text-align: center;'>";
-			echo "  ".$row[menu_item_order]."&nbsp;";
+			echo "  ".$row['menu_item_order']."&nbsp;";
 			echo "</td>";
 
 			//echo "<td valign='top' align='center' nowrap class='".$row_style[$c]."'>";
@@ -292,7 +292,7 @@ if (is_array($result) && sizeof($result) != 0) {
 			echo "</tr>";
 
 		//update the menu order
-			if ($row[menu_item_order] != $tmp_menu_item_order) {
+			if ($row['menu_item_order'] != $tmp_menu_item_order) {
 				$array['menu_items'][0]['menu_item_uuid'] = $row['menu_item_uuid'];
 				$array['menu_items'][0]['menu_uuid'] = $menu_uuid;
 				$array['menu_items'][0]['menu_item_title'] = $row['menu_item_title'];
