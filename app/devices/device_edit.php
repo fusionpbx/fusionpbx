@@ -39,62 +39,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//check for duplicates
-	if ($_GET["check"] == 'duplicate') {
-		//mac address
-			if ($_GET["mac"] != '' && $_GET["mac"] != "000000000000") {
-				$sql = "select ";
-				$sql .= "d2.domain_name ";
-				$sql .= "from ";
-				$sql .= "v_devices as d1, ";
-				$sql .= "v_domains as d2 ";
-				$sql .= "where ";
-				$sql .= "d1.domain_uuid = d2.domain_uuid and ";
-				$sql .= "d1.device_mac_address = :device_mac_address ";
-				if (is_uuid($_GET["device_uuid"])) {
-					$sql .= " and d1.device_uuid <> :device_uuid ";
-				}
-				$parameters['device_mac_address'] = $_GET["mac"];
-				$parameters['device_uuid'] = $_GET["device_uuid"];
-				$database = new database;
-				$domain_name = $database->select($sql, $parameters, 'column');
-				if ($domain_name != '') {
-					echo $text['message-duplicate'].(if_group("superadmin") && $_SESSION["domain_name"] != $domain_name ? ": ".$domain_name : null);
-				}
-				unset($sql, $parameters, $domain_name);
-			}
-
-		//username
-			if ($_GET['username'] != '') {
-				$sql = "select ";
-				$sql .= "d2.domain_name, ";
-				$sql .= "d1.device_mac_address ";
-				$sql .= "from ";
-				$sql .= "v_devices as d1, ";
-				$sql .= "v_domains as d2 ";
-				$sql .= "where ";
-				$sql .= "d1.domain_uuid = d2.domain_uuid and ";
-				$sql .= "d1.device_username = :device_username ";
-				if (is_uuid($_GET['domain_uuid'])) {
-					$sql .= "and d2.domain_uuid = :domain_uuid ";
-				}
-				if (is_uuid($_GET['device_uuid'])) {
-					$sql .= "and d1.device_uuid <> :device_uuid ";
-				}
-				$parameters['device_username'] = $_GET["username"];
-				$parameters['domain_uuid'] = $_GET["domain_uuid"];
-				$parameters['device_uuid'] = $_GET["device_uuid"];
-				$database = new database;
-				$row = $database->select($sql, $parameters, 'row');
-				if (is_array($row) && @sizeof($row) != 0 && $row['domain_name'] != '') {
-					echo $text['message-duplicate_username'].(if_group("superadmin") ? ": ".format_mac($row['device_mac_address']).($_SESSION["domain_name"] != $row["domain_name"] ? " (".$row["domain_name"].")" : null) : null);
-				}
-				unset($sql, $parameters, $row);
-			}
-
-		exit;
-	}
-
 //include the device class
 	require_once "app/devices/resources/classes/device.php";
 
@@ -212,7 +156,7 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($device_mac_address) == 0) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
+			if (strlen($device_mac_address) == 0) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
 			//if (strlen($device_label) == 0) { $msg .= "Please provide: Label<br>\n"; }
 			//if (strlen($device_vendor) == 0) { $msg .= "Please provide: Vendor<br>\n"; }
 			//if (strlen($device_model) == 0) { $msg .= "Please provide: Model<br>\n"; }
@@ -235,23 +179,37 @@
 				return;
 			}
 
+		//check for duplicates
+			if ($action == 'add' && $device_mac_address != "000000000000") {
+				$sql = "select ";
+				$sql .= "d2.domain_name ";
+				$sql .= "from ";
+				$sql .= "v_devices as d1, ";
+				$sql .= "v_domains as d2 ";
+				$sql .= "where ";
+				$sql .= "d1.domain_uuid = d2.domain_uuid and ";
+				$sql .= "d1.device_mac_address = :device_mac_address ";
+				if (is_uuid($_GET["device_uuid"])) {
+					$sql .= " and d1.device_uuid <> :device_uuid ";
+				}
+				$parameters['device_mac_address'] = $device_mac_address;
+				$database = new database;
+				$domain_name = $database->select($sql, $parameters, 'column');
+				if ($domain_name != '') {
+					$message = $text['message-duplicate'].(if_group("superadmin") && $_SESSION["domain_name"] != $domain_name ? ": ".$domain_name : null);
+					message::add($message,'negative');
+					header('Location: devices.php');
+					exit;
+				}
+				unset($sql, $parameters, $domain_name);
+			}
+
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
 
-				//set the default
-					$save = true;
-
-				//check to see if the mac address exists
-					if ($action == "add") {
-						if ($device_mac_address == "" || $device_mac_address == "000000000000") {
-							//allow duplicates to be used as templaes
-						}
-						else {
-							$save = true;
-						}
-					}
-					else {
-						$save = true;
+				//set the device uuid
+					if (!is_uuid($device_uuid)) {
+						$device_uuid = uuid();
 					}
 
 				//prepare the array
@@ -261,10 +219,7 @@
 					$array['devices'][0]['device_provisioned_ip'] = $device_provisioned_ip;
 					$array['devices'][0]['domain_uuid'] = $domain_uuid;
 					$array['devices'][0]['device_label'] = $device_label;
-					$array['devices'][0]['device_mac_address'] = $device_mac_address;
-					$array['devices'][0]['device_label'] = $device_label;
 					$array['devices'][0]['device_user_uuid'] = $device_user_uuid;
-					$array['devices'][0]['device_username'] = $device_username;
 					$array['devices'][0]['device_username'] = $device_username;
 					$array['devices'][0]['device_vendor'] = $device_vendor;
 					$array['devices'][0]['device_uuid_alternate'] = $device_uuid_alternate;
@@ -358,16 +313,10 @@
 					}
 
 				//save the device
-					if ($save) {
-						$database = new database;
-						$database->app_name = 'devices';
-						$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
-						$database->save($array);
-						$response = $database->message;
-						if (is_uuid($response['uuid'])) {
-							$device_uuid = $response['uuid'];
-						}
-					}
+					$database = new database;
+					$database->app_name = 'devices';
+					$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+					$database->save($array);
 
 				//write the provision files
 					if (strlen($_SESSION['provision']['path']['text']) > 0) {
@@ -377,20 +326,18 @@
 					}
 
 				//set the message
-					if (!isset($_SESSION['message'])) {
-						if ($save) {
-							if ($action == "add") {
-								//save the message to a session variable
-									message::add($text['message-add']);
-							}
-							if ($action == "update") {
-								//save the message to a session variable
-									message::add($text['message-update']);
-							}
-							//redirect the browser
-								header("Location: device_edit.php?id=$device_uuid");
-								exit;
+					if (isset($action)) {
+						if ($action == "add") {
+							//save the message to a session variable
+							message::add($text['message-add']);
 						}
+						if ($action == "update") {
+							//save the message to a session variable
+							message::add($text['message-update']);
+						}
+						//redirect the browser
+						header("Location: device_edit.php?id=".urlencode($device_uuid));
+						exit;
 					}
 
 			} //if ($_POST["persistformvar"] != "true")
