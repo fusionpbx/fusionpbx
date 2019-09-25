@@ -59,7 +59,7 @@
 
 //common where clause
 	$sql_where = "where true ";
-	if (!(permission_exists('user_all') && $_GET['show'] == 'all')) {
+	if (!(isset($_GET['show']) && permission_exists('user_all') && $_GET['show'] == 'all')) {
 		$sql_where .= "and u.domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
@@ -89,7 +89,7 @@
 //prepare for paging
 	$rows_per_page = is_numeric($_SESSION['domain']['paging']['numeric']) ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "search=".escape($search);
-	if (permission_exists('user_all') && $_GET['show'] == 'all') {
+	if (isset($_GET['show']) && permission_exists('user_all') && $_GET['show'] == 'all') {
 		$param .= "&show=all";
 	}
 	$page = $_GET['page'];
@@ -115,7 +115,7 @@
 	echo "<td align='left' width='90%' nowrap='nowrap' valign='top'><b>".$text['header-user_manager']." (".$num_rows.")</b></td>\n";
 	echo "<td align='right' nowrap='nowrap'>";
 	if (permission_exists('user_all')) {
-		if ($_GET['show'] == 'all') {
+		if (isset($_GET['show']) && $_GET['show'] == 'all') {
 			echo "<input type='button' class='btn' value='".$text['button-back']."' onclick=\"window.location='users.php';\">\n";
 			echo "<input type='hidden' name='show' value='all'>";
 		}
@@ -149,7 +149,7 @@
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	if (permission_exists('user_all') && $_GET['show'] == 'all') {
+	if (isset($_GET['show']) && permission_exists('user_all') && $_GET['show'] == 'all') {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, '', '', $param);
 	}
 	echo th_order_by('username', $text['label-username'], $order_by, $order);
@@ -165,7 +165,7 @@
 	echo th_order_by('user_enabled', $text['label-enabled'], $order_by, $order, '', '', $param);
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('user_add')) {
-		if ($_SESSION['limit']['users']['numeric'] == '' || ($_SESSION['limit']['users']['numeric'] != '' && $total_users < $_SESSION['limit']['users']['numeric'])) {
+		if (isset($_SESSION['limit']['users']['numeric']) && ($_SESSION['limit']['users']['numeric'] == '' || ($_SESSION['limit']['users']['numeric'] != '') && $total_users < $_SESSION['limit']['users']['numeric'])) {
 			echo "<a href='user_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 		}
 	}
@@ -176,7 +176,7 @@
 		foreach($users as $row) {
 			$tr_link = (permission_exists('user_edit')) ? "href='user_edit.php?id=".escape($row['user_uuid'])."'" : null;
 			echo "<tr ".$tr_link.">\n";
-			if (permission_exists('user_all') && $_GET['show'] == 'all') {
+			if (isset($_GET['show']) && permission_exists('user_all') && $_GET['show'] == 'all') {
 				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['domain_name'])."</td>\n";
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
