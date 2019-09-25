@@ -40,11 +40,8 @@
 	require "resources.functions.mkdir";
 	require "resources.functions.explode";
 
---load libraries
-	local Database = require "resources.functions.database";
-	local Settings = require "resources.functions.lazy_settings";
-
 --setup the database connection
+	local Database = require "resources.functions.database";
 	local db = dbh or Database.new('system');
 
 --include json library
@@ -54,17 +51,15 @@
 	end
 
 --get the domain_uuid
-	domain_uuid = session:getVariable("domain_uuid");
+	if (session:ready()) then
+		domain_uuid = session:getVariable("domain_uuid");
+	end
 
 --initialize the recordings
 	api = freeswitch.API();
 
---load libraries
-	local Database = require "resources.functions.database";
+--load lazy settings library
 	local Settings = require "resources.functions.lazy_settings";
-
---setup the database connection
-	local db = dbh or Database.new('system');
 
 --get the recordings settings
 	local settings = Settings.new(db, domain_name, domain_uuid);
@@ -166,19 +161,23 @@
 				session:execute("record", "'"..recordings_dir.."/"..recording_name.."' "..time_limit_secs.." "..silence_thresh.." "..silence_hits);
 			end
 
+		--setup the database connection
+			local Database = require "resources.functions.database";
+			local db = dbh or Database.new('system');
+
 		--get the description of the previous recording
 			sql = "SELECT recording_description FROM v_recordings ";
 			sql = sql .. "where domain_uuid = :domain_uuid ";
 			sql = sql .. "and recording_filename = :recording_name ";
 			sql = sql .. "limit 1";
 			local params = {domain_uuid = domain_uuid, recording_name = recording_name};
-			local recording_description = dbh:first_value(sql, params) or ''
+			local recording_description = db:first_value(sql, params) or ''
 
 		--delete the previous recording
 			sql = "delete from v_recordings ";
 			sql = sql .. "where domain_uuid = :domain_uuid ";
 			sql = sql .. "and recording_filename = :recording_name";
-			dbh:query(sql, {domain_uuid = domain_uuid, recording_name = recording_name});
+			db:query(sql, {domain_uuid = domain_uuid, recording_name = recording_name});
 
 		--get a new uuid
 			recording_uuid = api:execute("create_uuid");
@@ -227,7 +226,10 @@
 				dbh:query(sql, params);
 				dbh:release();
 			else
-				dbh:query(sql, params);
+				--setup the database connection
+				local Database = require "resources.functions.database";
+				local db = dbh or Database.new('system');
+				db:query(sql, params);
 			end
 
 		--preview the recording
@@ -279,7 +281,7 @@
 			end
 	end
 
-if ( session:ready() ) then
+if (session:ready()) then
 	session:answer();
 
 	--get the dialplan variables and set them as local variables
