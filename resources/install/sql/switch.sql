@@ -248,6 +248,7 @@ CREATE TABLE members (
    skill_score integer DEFAULT 0 NOT NULL,
    serving_agent character varying(255),
    serving_system character varying(255),
+   instance_id varying(255),
    state character varying(255),
    member_uuid uuid PRIMARY KEY default gen_random_uuid()
 );
