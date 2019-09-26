@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2018
+ Portions created by the Initial Developer are Copyright (C) 2008-2019
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -402,7 +402,7 @@
 	echo "<br /><br />";
 
 	// check or uncheck all category checkboxes
-	if (sizeof($subcat_ids) > 0) {
+	if (isset($subcat_ids) && sizeof($subcat_ids) > 0) {
 		echo "<script>\n";
 		echo "	function check(what, category) {\n";
 		foreach ($subcat_ids as $domain_setting_category => $checkbox_ids) {
