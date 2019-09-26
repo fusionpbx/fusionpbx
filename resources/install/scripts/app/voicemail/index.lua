@@ -452,21 +452,25 @@
 					--freeswitch.consoleLog("notice", "[voicemail][destinations] SQL:" .. sql .. "; params:" .. json.encode(params) .. "\n");
 					destinations = {};
 					x = 1;
-					table.insert(destinations, {domain_uuid=domain_uuid,voicemail_destination_uuid=voicemail_uuid,voicemail_uuid=voicemail_uuid,voicemail_uuid_copy=voicemail_uuid});
-					x = x + 1;
+					
 					dbh:query(sql, params, function(row)
 						destinations[x] = row;
 						x = x + 1;
 					end);
-
+					table.insert(destinations, {domain_uuid=domain_uuid,voicemail_destination_uuid=voicemail_uuid,voicemail_uuid=voicemail_uuid,voicemail_uuid_copy=voicemail_uuid});
 				--show the storage type
 					freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. "\n");
-
+					
+					count = 0
+					for k,v in pairs(destinations) do
+						count = count + 1
+					end
+					
 				--loop through the voicemail destinations
 					y = 1;
 					for key,row in pairs(destinations) do
 						--determine uuid
-							if (y == 1) then
+							if (y == count) then
 								voicemail_message_uuid = uuid;
 							else
 								voicemail_message_uuid = api:execute("create_uuid");
