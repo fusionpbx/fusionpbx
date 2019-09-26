@@ -159,47 +159,50 @@
 
 	if (!function_exists('recursive_copy')) {
 		if (file_exists('/bin/cp')) {
-			function recursive_copy($src, $dst, $options = '') {
+			function recursive_copy($source, $destination, $options = '') {
 				if (strtoupper(substr(PHP_OS, 0, 3)) === 'SUN') {
 					//copy -R recursive, preserve attributes for SUN
-					$cmd = 'cp -Rp '.$src.'/* '.$dst;
+					$cmd = 'cp -Rp '.$source.'/* '.$destination;
 				} else {
 					//copy -R recursive, -L follow symbolic links, -p preserve attributes for other Posix systemss
-					$cmd = 'cp -RLp '.$options.' '.$src.'/* '.$dst;
+					$cmd = 'cp -RLp '.$options.' '.$source.'/* '.$destination;
 				}
-				//$this->write_debug($cmd);
 				exec ($cmd);
 			}
-		} elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-			function recursive_copy($src, $dst, $options = '') {
-				$src = normalize_path_to_os($src);
-				$dst = normalize_path_to_os($dst);
-				exec("xcopy /E /Y \"$src\" \"$dst\"");
+		}
+		elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+			function recursive_copy($source, $destination, $options = '') {
+				$source = normalize_path_to_os($source);
+				$destination = normalize_path_to_os($destination);
+				exec("xcopy /E /Y \"$source\" \"$destination\"");
 			}
-		} else {
-			function recursive_copy($src, $dst, $options = '') {
-				$dir = opendir($src);
+		}
+		else {
+
+			function recursive_copy($source, $destination, $options = '') {
+				$dir = opendir($source);
 				if (!$dir) {
-					throw new Exception("recursive_copy() source directory '".$src."' does not exist.");
+					throw new Exception("recursive_copy() source directory '".$source."' does not exist.");
 				}
-				if (!is_dir($dst)) {
-					if (!mkdir($dst,02770,true)) {
-						throw new Exception("recursive_copy() failed to create destination directory '".$dst."'");
+				if (!is_dir($destination)) {
+					if (!mkdir($destination,02770,true)) {
+						throw new Exception("recursive_copy() failed to create destination directory '".$destination."'");
 					}
 				}
 				while(false !== ( $file = readdir($dir)) ) {
 					if (( $file != '.' ) && ( $file != '..' )) {
-						if ( is_dir($src . '/' . $file) ) {
-							recursive_copy($src . '/' . $file,$dst . '/' . $file);
+						if ( is_dir($source . '/' . $file) ) {
+							recursive_copy($source . '/' . $file,$destination . '/' . $file);
 						}
 						else {
-							copy($src . '/' . $file,$dst . '/' . $file);
+							copy($source . '/' . $file,$destination . '/' . $file);
 						}
 					}
 				}
 				closedir($dir);
 			}
 		}
+
 	}
 
 	if (!function_exists('recursive_delete')) {
