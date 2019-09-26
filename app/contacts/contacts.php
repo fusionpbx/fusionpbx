@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -301,7 +301,7 @@
 			echo "	<td valign='top' class='".$row_style[$c]."' style='width: 10%; max-width: 40px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>".escape($row['contact_title'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' style='width: 10%; max-width: 40px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>".escape($row['contact_role'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' style='padding: 2px 2px; text-align: center; width: 25px;'>";
-				if (sizeof($contact_sync_sources[$row['contact_uuid']]) > 0) {
+				if (is_array($contact_sync_sources[$row['contact_uuid']]) && sizeof($contact_sync_sources[$row['contact_uuid']]) > 0) {
 					foreach ($contact_sync_sources[$row['contact_uuid']] as $contact_sync_source) {
 						switch ($contact_sync_source) {
 							case 'google': echo "<img src='resources/images/icon_gcontacts.png' style='width: 21px; height: 21px; border: none; padding-left: 2px;' alt='".$text['label-contact_google']."'>"; break;
