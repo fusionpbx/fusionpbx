@@ -165,7 +165,7 @@
 	echo th_order_by('user_enabled', $text['label-enabled'], $order_by, $order, '', '', $param);
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('user_add')) {
-		if (isset($_SESSION['limit']['users']['numeric']) && ($_SESSION['limit']['users']['numeric'] == '' || ($_SESSION['limit']['users']['numeric'] != '') && $total_users < $_SESSION['limit']['users']['numeric'])) {
+		if (($_SESSION['limit']['users']['numeric'] == '' || ($_SESSION['limit']['users']['numeric'] != '') && $total_users < $_SESSION['limit']['users']['numeric'])) {
 			echo "<a href='user_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 		}
 	}
