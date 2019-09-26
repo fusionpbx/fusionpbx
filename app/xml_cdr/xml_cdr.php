@@ -221,17 +221,43 @@
 		echo "	</table>\n";
 
 		echo "</td>";
-		echo "<td width='".((if_group("admin") || if_group("superadmin") || if_group("cdr")) ? '24%' : '30%')."' style='vertical-align: top;'>\n";
+		echo "<td width='".((if_group("admin") || if_group("superadmin") || if_group("cdr")) ? '30%' : '40%')."' style='vertical-align: top;'>\n";
 
 		echo "	<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "		<tr>\n";
 		echo "			<td class='vncell' valign='top' nowrap='nowrap'>\n";
-		echo "				".$text['label-caller_id_number']."\n";
+		echo "				".$text['label-caller_id']."\n";
 		echo "			</td>\n";
-		echo "			<td class='vtable' align='left' style='white-space: nowrap;'>\n";
-		echo "				<input type='text' class='formfld' style='".escape($style['caller_id_number'])."' name='caller_id_number' id='caller_id_number' value='".escape($caller_id_number)."'>\n";
+		echo "			<td class='vtable' align='left'>\n";
+		echo "				<input type='text' class='formfld' name='caller_id_name' style='min-width: 115px; width: 115px;' placeholder=\"".$text['label-name']."\" value='".escape($caller_id_name)."'>\n";
+		echo "				<input type='text' class='formfld' name='caller_id_number' style='min-width: 115px; width: 115px;' placeholder=\"".$text['label-number']."\" value='".escape($caller_id_number)."'>\n";
 		echo "			</td>\n";
 		echo "		</tr>\n";
+		echo "		<tr>\n";
+		echo "			<td class='vncell' valign='top' nowrap='nowrap'>\n";
+		echo "				".$text['label-start_range']."\n";
+		echo "			</td>\n";
+		echo "			<td class='vtable' align='left' style='position: relative; min-width: 250px;'>\n";
+		echo "				<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin)."'>\n";
+		echo "				<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end)."'>\n";
+		echo "			</td>\n";
+		echo "		</tr>\n";
+		echo "	</table>\n";
+
+		echo "</td>";
+		echo "<td width='".((if_group("admin") || if_group("superadmin") || if_group("cdr")) ? '24%' : '30%')."' style='vertical-align: top;'>\n";
+
+		echo "	<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+		if (permission_exists('caller_destination')) {
+			echo "	<tr>\n";
+			echo "		<td class='vncell' valign='top' nowrap='nowrap'>\n";
+			echo "			".$text['label-caller_destination']."\n";
+			echo "		</td>\n";
+			echo "		<td class='vtable' align='left'>\n";
+			echo "			<input type='text' class='formfld' name='caller_destination' value='".escape($caller_destination)."'>\n";
+			echo "		</td>\n";
+			echo "	</tr>\n";
+		}
 		echo "		<tr>\n";
 		echo "			<td class='vncell' valign='top' nowrap='nowrap'>\n";
 		echo "				".$text['label-destination']."\n";
@@ -243,95 +269,113 @@
 		echo "	</table>\n";
 
 		echo "</td>";
-		echo "<td width='".((if_group("admin") || if_group("superadmin") || if_group("cdr")) ? '30%' : '40%')."' style='vertical-align: top;'>\n";
+		echo "<td width='27%' style='vertical-align: top;'>\n";
 
 		echo "	<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "		<tr>\n";
-		echo "			<td class='vncell' valign='top' nowrap='nowrap'>\n";
-		echo "				".$text['label-start_range']."\n";
-		echo "			</td>\n";
-		echo "			<td class='vtable' align='left' style='position: relative; min-width: 250px;'>\n";
-		echo "				<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin)."'>\n";
-		echo "				<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end)."'>\n";
-		echo "			</td>\n";
-		echo "		</tr>\n";
+		if (permission_exists('hangup_cause')) {
+			echo "		<td class='vncell' valign='top' nowrap='nowrap'>\n";
+			echo "			".$text['label-hangup_cause']."\n";
+			echo "		</td>\n";
+			echo "		<td class='vtable' align='left'>\n";
+			echo "			<select name='hangup_cause' class='formfld'>\n";
+			echo "				<option value=''></option>\n";
+
+			$cdr_status_options = array(
+				'NORMAL_CLEARING',
+				'ORIGINATOR_CANCEL',
+				'BLIND_TRANSFER',
+				'LOSE_RACE',
+				'NO_ANSWER',
+				'NORMAL_UNSPECIFIED',
+				'NO_USER_RESPONSE',
+				'NO_ROUTE_DESTINATION',
+				'SUBSCRIBER_ABSENT',
+				'NORMAL_TEMPORARY_FAILURE',
+				'ATTENDED_TRANSFER',
+				'PICKED_OFF',
+				'USER_BUSY',
+				'CALL_REJECTED',
+				'INVALID_NUMBER_FORMAT',
+				'NETWORK_OUT_OF_ORDER',
+				'DESTINATION_OUT_OF_ORDER',
+				'RECOVERY_ON_TIMER_EXPIRE',
+				'MANAGER_REQUEST',
+				'MEDIA_TIMEOUT',
+				'UNALLOCATED_NUMBER',
+				'NONE',
+				'EXCHANGE_ROUTING_ERROR',
+				'ALLOTTED_TIMEOUT',
+				'CHAN_NOT_IMPLEMENTED',
+				'INCOMPATIBLE_DESTINATION',
+				'USER_NOT_REGISTERED',
+				'SYSTEM_SHUTDOWN',
+				'MANDATORY_IE_MISSING'
+				);
+			sort($cdr_status_options);
+			foreach ($cdr_status_options as $cdr_status) {
+				$selected = ($hangup_cause == $cdr_status) ? "selected='selected'" : null;
+				$cdr_status_label = ucwords(strtolower(str_replace("_", " ", $cdr_status)));
+				echo "			<option value='".escape($cdr_status)."' ".escape($selected).">".escape($cdr_status_label)."</option>\n";
+			}
+			echo "			</select>\n";
+			echo "		</td>\n";
+			echo "	</tr>\n";
+		}
 		echo "		<tr>\n";
 		echo "			<td class='vncell' valign='top' nowrap='nowrap'>\n";
-		echo "				".$text['label-caller_id_name']."\n";
+		echo "				".$text['label-order']."\n";
 		echo "			</td>\n";
-		echo "			<td class='vtable' align='left'>\n";
-		echo "				<input type='text' class='formfld' name='caller_id_name' value='".escape($caller_id_name)."'>\n";
+		echo "			<td class='vtable' align='left' style='white-space: nowrap;'>\n";
+		echo "				<select name='order_by' class='formfld'>\n";
+		if (permission_exists('xml_cdr_extension')) {
+			echo "				<option value='extension' ".($order_by == 'extension' ? "selected='selected'" : null).">".$text['label-extension']."</option>\n";
+		}
+		if (permission_exists('xml_cdr_all')) {
+			echo "				<option value='domain_name' ".($order_by == 'domain_name' ? "selected='selected'" : null).">".$text['label-domain']."</option>\n";
+		}
+		echo "					<option value='caller_id_name' ".($order_by == 'caller_id_name' ? "selected='selected'" : null).">".$text['label-caller_id_name']."</option>\n";
+		echo "					<option value='caller_id_number' ".($order_by == 'caller_id_number' ? "selected='selected'" : null).">".$text['label-caller_id_number']."</option>\n";
+		if (permission_exists('caller_destination')) {
+			echo "				<option value='caller_destination' ".($order_by == 'caller_destination' ? "selected='selected'" : null).">".$text['label-caller_destination']."</option>\n";
+		}
+		echo "					<option value='destination_number' ".($order_by == 'destination_number' ? "selected='selected'" : null).">".$text['label-destination']."</option>\n";
+		echo "					<option value='start_stamp' ".($order_by == 'start_stamp' || $order_by == '' ? "selected='selected'" : null).">".$text['label-start']."</option>\n";
+		echo "					<option value='tta' ".($order_by == 'tta' ? "selected='selected'" : null).">".$text['label-tta']."</option>\n";
+		echo "					<option value='duration' ".($order_by == 'duration' ? "selected='selected'" : null).">".$text['label-duration']."</option>\n";
+		if (permission_exists('xml_cdr_pdd')) {
+			echo "				<option value='pdd_ms' ".($order_by == 'pdd_ms' ? "selected='selected'" : null).">".$text['label-pdd']."</option>\n";
+		}
+		if (permission_exists('xml_cdr_mos')) {
+			echo "				<option value='rtp_audio_in_mos' ".($order_by == 'rtp_audio_in_mos' ? "selected='selected'" : null).">".$text['label-mos']."</option>\n";
+		}
+		if (permission_exists('hangup_cause')) {
+			echo "				<option value='hangup_cause' ".($order_by == 'desc' ? "selected='selected'" : null).">".$text['label-hangup_cause']."</option>\n";
+		}
+
+		if (is_array($_SESSION['cdr']['field'])) {
+			echo "				<option value='' disabled='disabled'></option>\n";
+			echo "				<optgroup label=\"".$text['label-custom_cdr_fields']."\">\n";
+			foreach ($_SESSION['cdr']['field'] as $field) {
+				$array = explode(",", $field);
+				$field_name = end($array);
+				$field_label = ucwords(str_replace("_", " ", $field_name));
+				$field_label = str_replace("Sip", "SIP", $field_label);
+				if ($field_name != "destination_number") {
+					echo "			<option value='".$field_name."' ".($order_by == $field_name ? "selected='selected'" : null).">".$field_label."</option>\n";
+				}
+			}
+			echo "				</optgroup>\n";
+		}
+		echo "				</select>\n";
+		echo "				<select name='order' class='formfld'>\n";
+		echo "					<option value='desc' ".($order == 'desc' ? "selected='selected'" : null).">".$text['label-descending']."</option>\n";
+		echo "					<option value='asc' ".($order == 'asc' ? "selected='selected'" : null).">".$text['label-ascending']."</option>\n";
+		echo "				</select>\n";
 		echo "			</td>\n";
 		echo "		</tr>\n";
+
 		echo "	</table>\n";
-
-		echo "</td>";
-
-		// show hangup clause filter to super/admin
-		echo "<td width='27%' style='vertical-align: top;'>\n";
-
-			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-			echo "	<tr>\n";
-			if (permission_exists('hangup_cause')) {
-				echo "		<td class='vncell' valign='top' nowrap='nowrap'>\n";
-				echo "			".$text['label-hangup_cause']."\n";
-				echo "		</td>\n";
-				echo "		<td class='vtable' align='left'>\n";
-				echo "			<select name='hangup_cause' class='formfld'>\n";
-				echo "				<option value=''></option>\n";
-
-				$cdr_status_options = array(
-					'NORMAL_CLEARING',
-					'ORIGINATOR_CANCEL',
-					'BLIND_TRANSFER',
-					'LOSE_RACE',
-					'NO_ANSWER',
-					'NORMAL_UNSPECIFIED',
-					'NO_USER_RESPONSE',
-					'NO_ROUTE_DESTINATION',
-					'SUBSCRIBER_ABSENT',
-					'NORMAL_TEMPORARY_FAILURE',
-					'ATTENDED_TRANSFER',
-					'PICKED_OFF',
-					'USER_BUSY',
-					'CALL_REJECTED',
-					'INVALID_NUMBER_FORMAT',
-					'NETWORK_OUT_OF_ORDER',
-					'DESTINATION_OUT_OF_ORDER',
-					'RECOVERY_ON_TIMER_EXPIRE',
-					'MANAGER_REQUEST',
-					'MEDIA_TIMEOUT',
-					'UNALLOCATED_NUMBER',
-					'NONE',
-					'EXCHANGE_ROUTING_ERROR',
-					'ALLOTTED_TIMEOUT',
-					'CHAN_NOT_IMPLEMENTED',
-					'INCOMPATIBLE_DESTINATION',
-					'USER_NOT_REGISTERED',
-					'SYSTEM_SHUTDOWN',
-					'MANDATORY_IE_MISSING'
-					);
-				sort($cdr_status_options);
-				foreach ($cdr_status_options as $cdr_status) {
-					$selected = ($hangup_cause == $cdr_status) ? "selected='selected'" : null;
-					$cdr_status_label = ucwords(strtolower(str_replace("_", " ", $cdr_status)));
-					echo "			<option value='".escape($cdr_status)."' ".escape($selected).">".escape($cdr_status_label)."</option>\n";
-				}
-				echo "			</select>\n";
-				echo "		</td>\n";
-				echo "	</tr>\n";
-			}
-			if (permission_exists('caller_destination')) {
-				echo "	<tr>\n";
-				echo "		<td class='vncell' valign='top' nowrap='nowrap'>\n";
-				echo "			".$text['label-caller_destination']."\n";
-				echo "		</td>\n";
-				echo "		<td class='vtable' align='left'>\n";
-				echo "			<input type='text' class='formfld' name='caller_destination' value='".escape($caller_destination)."'>\n";
-				echo "		</td>\n";
-				echo "	</tr>\n";
-			}
-			echo "</table>\n";
 
 		echo "</td>";
 
@@ -375,18 +419,18 @@
 //column headings
 	echo "<th>&nbsp;</th>\n";
 	if (permission_exists('xml_cdr_extension')) {
-		echo th_order_by('extension', $text['label-extension'], $order_by, $order, null, null, $param);
+		echo "<th>".$text['label-extension']."</th>\n";
 	}
 	if ($_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
-		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
+		echo "<th>".$text['label-domain']."</th>\n";
 		$col_count++;
 	}
-	echo th_order_by('caller_id_name', $text['label-caller_id_name'], $order_by, $order, null, null, $param);
-	echo th_order_by('caller_id_number', $text['label-caller_id_number'], $order_by, $order, null, null, $param);
+	echo "<th>".$text['label-caller_id_name']."</th>\n";
+	echo "<th>".$text['label-caller_id_number']."</th>\n";
 	if (permission_exists('caller_destination')) {
-		echo th_order_by('caller_destination', $text['label-caller_destination'], $order_by, $order, null, null, $param);
+		echo "<th>".$text['label-caller_destination']."</th>\n";
 	}
-	echo th_order_by('destination_number', $text['label-destination'], $order_by, $order, null, null, $param);
+	echo "<th>".$text['label-destination']."</th>\n";
 	if (permission_exists('recording_play') || permission_exists('recording_download')) {
 		echo "<th>".$text['label-recording']."</th>\n";
 		$col_count++;
@@ -398,23 +442,24 @@
 			$field_label = ucwords(str_replace("_", " ", $field_name));
 			$field_label = str_replace("Sip", "SIP", $field_label);
 			if ($field_name != "destination_number") {
-				echo th_order_by($field_name, $field_label, $order_by, $order, null, "style='text-align: right;'", $param);
+				echo "<th style='text-align: right;'>".$field_label."</th>\n";
+				$col_count++;
 			}
 		}
 	}
-	echo th_order_by('start_stamp', $text['label-start'], $order_by, $order, null, "style='text-align: center;'", $param);
-	echo th_order_by('tta', $text['label-tta'], $order_by, $order, null, "style='text-align: right;'", $param, $text['description-tta']);
-	echo th_order_by('duration', $text['label-duration'], $order_by, $order, null, "style='text-align: center;'", $param);
+	echo "<th style='text-align: center;'>".$text['label-start']."</th>\n";
+	echo "<th style='text-align: right;' title=\"".$text['description-tta']."\">".$text['label-tta']."</th>\n";
+	echo "<th style='text-align: center;'>".$text['label-duration']."</th>\n";
 	if (permission_exists('xml_cdr_pdd')) {
-		echo th_order_by('pdd_ms', $text['label-pdd'], $order_by, $order, null, "style='text-align: right;'", $param, $text['description-pdd']);
+		echo "<th style='text-align: right;' title=\"".$text['description-pdd']."\">".$text['label-pdd']."</th>\n";
 		$col_count++;
 	}
 	if (permission_exists('xml_cdr_mos')) {
-		echo th_order_by('rtp_audio_in_mos', $text['label-mos'], $order_by, $order, null, "style='text-align: center;'", $param, $text['description-mos']);
+		echo "<th style='text-align: center;' title=\"".$text['description-mos']."\">".$text['label-mos']."</th>\n";
 		$col_count++;
 	}
 	if (permission_exists('hangup_cause')) {
-		echo th_order_by('hangup_cause', $text['label-hangup_cause'], $order_by, $order, null, null, $param);
+		echo "<th>".$text['label-hangup_cause']."</th>\n";
 	}
 	else {
 		echo "<th>".$text['label-status']."</th>\n";
