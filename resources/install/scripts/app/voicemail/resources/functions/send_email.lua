@@ -47,13 +47,13 @@
 				--greeting_id = row["greeting_id"];
 				voicemail_mail_to = row["voicemail_mail_to"];
 				voicemail_file = row["voicemail_file"];
-				voicemail_local_after_email = row["voicemail_local_after_email"];
+				local voicemail_local_after_email = row["voicemail_local_after_email"];
 				voicemail_description = row["voicemail_description"];
 			end);
 
 		--set default values
 			if (voicemail_local_after_email == nil) then
-				voicemail_local_after_email = "true";
+				local voicemail_local_after_email = "true";
 			end
 			if (voicemail_file == nil) then
 				voicemail_file = "listen";
