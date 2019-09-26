@@ -97,31 +97,32 @@ if (!class_exists('scripts')) {
 		 */
 		public function copy_files() {
 			if (is_array($_SESSION['switch']['scripts'])) {
-				$dst_dir = $_SESSION['switch']['scripts']['dir'];
-				if (file_exists($dst_dir)) {
+				$destination_directory = $_SESSION['switch']['scripts']['dir'];
+				if (file_exists($destination_directory)) {
 					//get the source directory
 					if (file_exists('/usr/share/examples/fusionpbx/scripts')) {
-						$src_dir = '/usr/share/examples/fusionpbx/scripts';
+						$source_directory = '/usr/share/examples/fusionpbx/scripts';
 					}
 					else {
-						$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/scripts';
+						$source_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/scripts';
 					}
-					if (is_readable($dst_dir)) {
-						recursive_copy($src_dir,$dst_dir);
-						unset($src_dir);
-						
-						// Copy the app/*/resource/install/scripts
+					if (is_readable($source_directory)) {
+						//copy the main scripts
+						recursive_copy($source_directory,$destination_directory);
+						unset($source_directory);
+
+						//copy the app/*/resource/install/scripts
 						$app_scripts = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'app/*/resource/install/scripts');
 						foreach ($app_scripts as $app_script){
-							recursive_copy($app_script, $dst_dir);
+							recursive_copy($app_script, $destination_directory);
 						}
 						unset($app_scripts);
 					}
 					else {
-						throw new Exception("Cannot read from '$src_dir' to get the scripts");
+						throw new Exception("Cannot read from '$source_directory' to get the scripts");
 					}
-					chmod($dst_dir, 0775);
-                                        unset($dst_dir);
+					chmod($destination_directory, 0775);
+					unset($destination_directory);
 				}
 			}
 		}
