@@ -227,14 +227,16 @@
 					$extension_number_alias .= '@'.$_SESSION['domain_name'];
 				}
 				$found_count = 0;
-				foreach ($registrations as $array) {
-					if (
-						($extension_number == $array['user']) ||
-						($extension_number_alias != '' &&
-							$extension_number_alias == $array['user']
-						)
-					) {
-						$found_count++;
+				if (is_array($registrations)) {
+					foreach ($registrations as $array) {
+						if (
+							($extension_number == $array['user']) ||
+							($extension_number_alias != '' &&
+								$extension_number_alias == $array['user']
+							)
+						) {
+							$found_count++;
+						}
 					}
 				}
 				if ($found_count > 0) {
