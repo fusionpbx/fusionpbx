@@ -145,14 +145,14 @@
 					//get the vendor
 						$vendor = device::get_vendor_by_agent($row['agent']);
 					//prepare and send the command
-						if (strlen($vendor) > 0 && strlen($profile) > 0 && strlen($user) > 0) {
+						if (strlen($profile) > 0 && strlen($user) > 0) {
 							if ($action == "unregister") {
 								$command = "sofia profile ".$profile." flush_inbound_reg ".$user." reboot";
 							}
-							if ($action == "provision" && strlen($host) > 0) {
+							if (strlen($vendor) > 0 && $action == "provision" && strlen($host) > 0) {
 								$command = "lua app.lua event_notify ".$profile." check_sync ".$user." ".$vendor." ".$host;
 							}
-							if ($action == "reboot" && strlen($host) > 0) {
+							if (strlen($vendor) > 0 && $action == "reboot" && strlen($host) > 0) {
 								$command = "lua app.lua event_notify ".$profile." reboot ".$user." ".$vendor." ".$host;
 							}
 							$response = event_socket_request($fp, "api ".$command);
