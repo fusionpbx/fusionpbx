@@ -72,7 +72,6 @@
 		//device mac address
 			if (permission_exists('device_mac_address')) {
 				$device_mac_address = $_POST["device_mac_address"];
-				$device_mac_address = strtolower(preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address));
 			}
 			else {
 				$sql = "select * from v_devices ";
@@ -93,7 +92,6 @@
 			$device_provisioned_ip = $_POST["device_provisioned_ip"];
 			$domain_uuid = $_POST["domain_uuid"];
 			$device_label = $_POST["device_label"];
-			$device_mac_address = $_POST["device_mac_address"];
 			$device_label = $_POST["device_label"];
 			$device_user_uuid = $_POST["device_user_uuid"];
 			$device_username = $_POST["device_username"];
@@ -136,6 +134,12 @@
 			//$device_setting_value = $_POST["device_setting_value"];
 			//$device_setting_enabled = $_POST["device_setting_enabled"];
 			//$device_setting_description = $_POST["device_setting_description"];
+
+		//normalize the mac address
+			if (isset($device_mac_address) && strlen($device_mac_address) > 0) {
+				$device_mac_address = strtolower($device_mac_address);
+				$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
+			}
 	}
 
 //use the mac address to get the vendor
