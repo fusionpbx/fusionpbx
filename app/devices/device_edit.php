@@ -229,9 +229,7 @@
 					$array['devices'][0]['device_uuid_alternate'] = $device_uuid_alternate;
 					$array['devices'][0]['device_model'] = $device_model;
 					$array['devices'][0]['device_firmware_version'] = $device_firmware_version;
-					if ($_POST["device_enabled"] == "true") {
-						$array['devices'][0]['device_enabled'] = $device_enabled;
-					}
+					$array['devices'][0]['device_enabled'] = $device_enabled;
 					$array['devices'][0]['device_enabled_date'] = 'now()';
 					$array['devices'][0]['device_template'] = $device_template;
 					$array['devices'][0]['device_profile_uuid'] = $device_profile_uuid;
