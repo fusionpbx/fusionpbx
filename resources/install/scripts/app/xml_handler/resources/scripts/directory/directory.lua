@@ -731,6 +731,10 @@
 					<result status="not found" />
 				</section>
 			</document>]];
+		--set the cache
+			local key = "directory:" .. user .. "@" .. domain_name;
+			ok, err = cache.set(key, XML_STRING, expire["directory"]);
+			--freeswitch.consoleLog("notice", "[xml_handler] " .. user .. "@" .. domain_name .. "\n");
 	end
 
 --send the xml to the console
