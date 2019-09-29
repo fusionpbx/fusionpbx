@@ -194,13 +194,20 @@
 		echo "			<td class='vncell' valign='top' nowrap='nowrap'>\n";
 		echo "				".$text['label-direction']."\n";
 		echo "			</td>\n";
-		echo "			<td class='vtable' align='left'>\n";
+		echo "			<td class='vtable' align='left' style='white-space: nowrap;'>\n";
 		echo "				<select name='direction' class='formfld'>\n";
 		echo "					<option value=''></option>\n";
 		echo "					<option value='inbound' ".(($direction == "inbound") ? "selected='selected'" : null).">".$text['label-inbound']."</option>\n";
 		echo "					<option value='outbound' ".(($direction == "outbound") ? "selected='selected'" : null).">".$text['label-outbound']."</option>\n";
 		echo "					<option value='local' ".(($direction == "local") ? "selected='selected'" : null).">".$text['label-local']."</option>\n";
 		echo "				</select>\n";
+		if (permission_exists('xml_cdr_b_leg')){
+			echo "			<select name='leg' class='formfld'>\n";
+			echo "				<option value=''></option>\n";
+			echo "				<option value='a'>a-leg</option>\n";
+			echo "				<option value='b'>b-leg</option>\n";
+			echo "			</select>\n";
+		}
 		echo "			</td>\n";
 		echo "		</tr>\n";
 		echo "		<tr>\n";
@@ -218,6 +225,31 @@
 		echo "				</select>\n";
 		echo "			</td>\n";
 		echo "		</tr>\n";
+		if (permission_exists('xml_cdr_search_advanced')) {
+			$sql = "select extension_uuid, extension, number_alias from v_extensions ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "order by extension asc, number_alias asc ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$database = new database;
+			$result_e = $database->select($sql, $parameters, 'all');
+			echo "		<tr>\n";
+			echo "			<td class='vncell' valign='top' nowrap='nowrap'>\n";
+			echo "				".$text['label-extension']."\n";
+			echo "			</td>\n";
+			echo "			<td class='vtable' align='left'>\n";
+			echo "				<select class='formfld' name='extension_uuid' id='extension_uuid'>\n";
+			echo "					<option value=''></option>";
+			if (is_array($result_e) && @sizeof($result_e) != 0) {
+				foreach ($result_e as &$row) {
+					$selected = ($row['extension_uuid'] == $extension_uuid) ? "selected" : null;
+					echo "			<option value='".escape($row['extension_uuid'])."' ".escape($selected).">".((is_numeric($row['extension'])) ? escape($row['extension']) : escape($row['number_alias'])." (".escape($row['extension']).")")."</option>";
+				}
+			}
+			echo "				</select>\n";
+			echo "			</td>\n";
+			echo "		</tr>\n";
+			unset($sql, $parameters, $result_e, $row, $selected);
+		}
 		echo "	</table>\n";
 
 		echo "</td>";
@@ -242,6 +274,17 @@
 		echo "				<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end)."'>\n";
 		echo "			</td>\n";
 		echo "		</tr>\n";
+		if (permission_exists('xml_cdr_search_advanced')) {
+			echo "		<tr>\n";
+			echo "			<td class='vncell' valign='top' nowrap='nowrap'>\n";
+			echo "				".$text['label-duration']." (".$text['label-seconds'].")\n";
+			echo "			</td>\n";
+			echo "			<td class='vtable' align='left'>\n";
+			echo "				<input type='text' class='formfld' style='min-width: 75px; width: 75px;' name='duration_min' value='".escape($duration_min)."' placeholder=\"".$text['label-minimum']."\">\n";
+			echo "				<input type='text' class='formfld' style='min-width: 75px; width: 75px;' name='duration_max' value='".escape($duration_max)."' placeholder=\"".$text['label-maximum']."\">\n";
+			echo "			</td>\n";
+			echo "		</tr>\n";
+		}
 		echo "	</table>\n";
 
 		echo "</td>";
@@ -266,6 +309,17 @@
 		echo "				<input type='text' class='formfld' name='destination_number' id='destination_number' value='".escape($destination_number)."'>\n";
 		echo "			</td>\n";
 		echo "		</tr>\n";
+		if (permission_exists('xml_cdr_search_advanced')) {
+			echo "		<tr>\n";
+			echo "			<td class='vncell' valign='top' nowrap='nowrap'>\n";
+			echo "				".$text['label-tta']." (".$text['label-seconds'].")\n";
+			echo "			</td>\n";
+			echo "			<td class='vtable' align='left' style='white-space: nowrap;'>\n";
+			echo "				<input type='text' class='formfld' style='min-width: 75px; width: 75px;' name='tta_min' id='tta_min' value='".escape($tta)."' placeholder=\"".$text['label-minimum']."\">\n";
+			echo "				<input type='text' class='formfld' style='min-width: 75px; width: 75px;' name='tta_max' id='tta_max' value='".escape($tta)."' placeholder=\"".$text['label-maximum']."\">\n";
+			echo "			</td>\n";
+			echo "		</tr>\n";
+		}
 		echo "	</table>\n";
 
 		echo "</td>";
@@ -374,6 +428,20 @@
 		echo "				</select>\n";
 		echo "			</td>\n";
 		echo "		</tr>\n";
+		if (permission_exists('xml_cdr_search_advanced')) {
+			echo "		<tr>\n";
+			echo "			<td class='vncell' valign='top' nowrap='nowrap'>\n";
+			echo "				".$text['label-recording']."\n";
+			echo "			</td>\n";
+			echo "			<td class='vtable' align='left' style='white-space: nowrap;'>\n";
+			echo "				<select name='recording' class='formfld'>\n";
+			echo "					<option value=''></option>\n";
+			echo "					<option value='true' ".($recording == 'true' ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+			echo "					<option value='false' ".($recording == 'false' ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+			echo "				</select>\n";
+			echo "			</td>\n";
+			echo "		</tr>\n";
+		}
 
 		echo "	</table>\n";
 
