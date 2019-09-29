@@ -52,7 +52,7 @@
 		$caller_id_name = $_REQUEST["caller_id_name"];
 		$caller_id_number = $_REQUEST["caller_id_number"];
 		$caller_destination = $_REQUEST["caller_destination"];
-		$caller_extension_uuid = $_REQUEST["caller_extension_uuid"];
+		$extension_uuid = $_REQUEST["extension_uuid"];
 		$destination_number = $_REQUEST["destination_number"];
 		$context = $_REQUEST["context"];
 		$start_stamp_begin = $_REQUEST["start_stamp_begin"];
@@ -139,7 +139,7 @@
 	$param .= "&caller_id_name=".urlencode($caller_id_name);
 	$param .= "&caller_id_number=".urlencode($caller_id_number);
 	$param .= "&caller_destination=".urlencode($caller_destination);
-	$param .= "&caller_extension_uuid=".urlencode($caller_extension_uuid);
+	$param .= "&extension_uuid=".urlencode($extension_uuid);
 	$param .= "&destination_number=".urlencode($destination_number);
 	$param .= "&context=".urlencode($context);
 	$param .= "&start_stamp_begin=".urlencode($start_stamp_begin);
@@ -310,9 +310,9 @@
 		$parameters['caller_id_number'] = '%'.$mod_caller_id_number.'%';
 	}
 
-	if (strlen($caller_extension_uuid) > 0 && is_uuid($caller_extension_uuid)) {
+	if (strlen($extension_uuid) > 0 && is_uuid($extension_uuid)) {
 		$sql .= "and e.extension_uuid = :extension_uuid \n";
-		$parameters['extension_uuid'] = $caller_extension_uuid;
+		$parameters['extension_uuid'] = $extension_uuid;
 	}
 	if (strlen($caller_destination) > 0) {
 		$mod_caller_destination = preg_replace("#[^0-9./]#", "", $caller_destination);
