@@ -537,7 +537,7 @@
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
     {$tp=0}
-{	if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
+    {if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
 	{if $account.1.sip_transport == 'tcp'}{$tp=1}{/if}
 	{if $account.1.sip_transport == 'tls'}{$tp=2}{/if}
 	{if $account.1.sip_transport == 'dns srv'}{$tp=1}{/if}
@@ -559,19 +559,19 @@
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
     {if isset($grandstream_nat_traversal)}
-<   P52>{$grandstream_nat_traversal}</P52>
-{   else}
-<   P52>0</P52>
-{   /if}
+    <P52>{$grandstream_nat_traversal}</P52>
+    {else}
+    <P52>0</P52>
+    {/if}
 
 
     <!-- # DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
     {if isset($grandstream_dns_mode)}
-<   P103>{$grandstream_dns_mode}</P103>
-{   else}
-<   P103>0</P103>
+    <P103>{$grandstream_dns_mode}</P103>
+    {else}
+    <P103>0</P103>
     {/if}
 
 
@@ -1646,7 +1646,7 @@
     {if isset($account.7.password)}
     <P4601>1</P4601>
     {else}
-    <P4601>0</P46001>
+    <P4601>0</P4601>
     {/if}
 
     <!-- # String Max Length: 64  -->
@@ -1685,7 +1685,7 @@
     {if isset($account.8.password)}
     <P4602>1</P4602>
     {else}
-    <P4602>0</P46002>
+    <P4602>0</P4602>
     {/if}
 
     <!-- # String Max Length: 64  -->
