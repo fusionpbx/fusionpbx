@@ -49,11 +49,11 @@
 	echo "<script type='text/javascript'>";
 	echo "	function toggle(field) {";
 	echo "		if (field == 'source') {";
-	echo "			document.getElementById('extension_uuid').selectedIndex = 0;";
+	echo "			document.getElementById('caller_extension_uuid').selectedIndex = 0;";
 	echo "			document.getElementById('caller_id_number').value = '';";
-	echo "			$('#extension_uuid').toggle();";
+	echo "			$('#caller_extension_uuid').toggle();";
 	echo "			$('#caller_id_number').toggle();";
-	echo "			if ($('#caller_id_number').is(':visible')) { $('#caller_id_number').trigger('focus'); } else { $('#extension_uuid').trigger('focus'); }";
+	echo "			if ($('#caller_id_number').is(':visible')) { $('#caller_id_number').trigger('focus'); } else { $('#caller_extension_uuid').trigger('focus'); }";
 	echo "		}";
 	echo "	}";
 	echo "</script>";
@@ -137,7 +137,7 @@
 	$result_e = $database->select($sql, $parameters, 'all');
 	if (is_array($result_e) && @sizeof($result_e) != 0) {
 		foreach ($result_e as &$row) {
-			$selected = ($row['extension_uuid'] == $extension_uuid) ? "selected" : null;
+			$selected = ($row['extension_uuid'] == $caller_extension_uuid) ? "selected" : null;
 			echo "			<option value='".escape($row['extension_uuid'])."' ".escape($selected).">".((is_numeric($row['extension'])) ? escape($row['extension']) : escape($row['number_alias'])." (".escape($row['extension']).")")."</option>";
 		}
 	}
@@ -189,8 +189,11 @@
 	echo "		</td>";
 	echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td class='vncell'>".$text['label-duration']."</td>";
-	echo "		<td class='vtable'><input type='text' class='formfld' name='duration' value='".escape($duration)."'></td>";
+	echo "		<td class='vncell'>".$text['label-duration']." (".$text['label-seconds'].")</td>";
+	echo "		<td class='vtable'>\n";
+	echo "			<input type='text' class='formfld' style='min-width: 75px; width: 75px;' name='duration_min' value='".escape($duration_min)."' placeholder=\"".$text['label-minimum']."\">\n";
+	echo "			<input type='text' class='formfld' style='min-width: 75px; width: 75px;' name='duration_max' value='".escape($duration_max)."' placeholder=\"".$text['label-maximum']."\">\n";
+	echo "		</td>";
 	echo "	</tr>";
 	if (permission_exists('xml_cdr_all')) {
 		echo "	<tr>";
