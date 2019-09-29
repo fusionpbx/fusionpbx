@@ -510,7 +510,7 @@
 	}
 	$result = $database->select($sql, $parameters, 'all');
 	$result_count = count($result);
-	unset($database, $sql);
+	unset($database, $sql, $parameters);
 
 //return the paging
 	list($paging_controls_mini, $rows_per_page, $offset) = paging($num_rows, $param, $rows_per_page, true, $result_count); //top
