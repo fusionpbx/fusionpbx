@@ -63,7 +63,8 @@
 		$end_stamp_end = $_REQUEST["end_stamp_end"];
 		$start_epoch = $_REQUEST["start_epoch"];
 		$stop_epoch = $_REQUEST["stop_epoch"];
-		$duration = $_REQUEST["duration"];
+		$duration_min = $_REQUEST["duration_min"];
+		$duration_max = $_REQUEST["duration_max"];
 		$billsec = $_REQUEST["billsec"];
 		$hangup_cause = $_REQUEST["hangup_cause"];
 		$call_result = $_REQUEST["call_result"];
@@ -150,7 +151,8 @@
 	$param .= "&end_stamp_end=".urlencode($end_stamp_end);
 	$param .= "&start_epoch=".urlencode($start_epoch);
 	$param .= "&stop_epoch=".urlencode($stop_epoch);
-	$param .= "&duration=".urlencode($duration);
+	$param .= "&duration_min=".urlencode($duration_min);
+	$param .= "&duration_max=".urlencode($duration_max);
 	$param .= "&billsec=".urlencode($billsec);
 	$param .= "&hangup_cause=".urlencode($hangup_cause);
 	$param .= "&call_result=".urlencode($call_result);
@@ -393,9 +395,13 @@
 			$parameters['end_stamp'] = $end_stamp_end.':59.999';
 		}
 	}
-	if (strlen($duration) > 0) {
-		$sql .= "and duration like :duration ";
-		$parameters['duration'] = '%'.$duration.'%';
+	if (is_numeric($duration_min)) {
+		$sql .= "and duration >= :duration_min ";
+		$parameters['duration_min'] = $duration_min;
+	}
+	if (is_numeric($duration_max)) {
+		$sql .= "and duration <= :duration_max ";
+		$parameters['duration_max'] = $duration_max;
 	}
 	if (strlen($billsec) > 0) {
 		$sql .= "and billsec like :billsec ";
