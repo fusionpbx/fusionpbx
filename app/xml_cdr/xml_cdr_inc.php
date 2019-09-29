@@ -78,6 +78,7 @@
 		$bridge_uuid = $_REQUEST["network_addr"];
 		$tta_min = $_REQUEST['tta_min'];
 		$tta_max = $_REQUEST['tta_max'];
+		$recording = $_REQUEST['recording'];
 		$order_by = $_REQUEST["order_by"];
 		$order = $_REQUEST["order"];
 		if (is_array($_SESSION['cdr']['field'])) {
@@ -170,6 +171,7 @@
 	$param .= "&mos_score=".urlencode($mos_score);
 	$param .= "&tta_min=".urlencode($tta_min);
 	$param .= "&tta_max=".urlencode($tta_max);
+	$param .= "&recording=".urlencode($recording);
 	if (is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
 			$array = explode(",", $field);
@@ -497,6 +499,14 @@
 	if (is_numeric($tta_max)) {
 		$sql .= "and (c.answer_epoch - c.start_epoch) <= :tta_max ";
 		$parameters['tta_max'] = $tta_max;
+	}
+	if ($recording == 'true' || $recording == 'false') {
+		if ($recording == 'true') {
+			$sql .= "and c.record_path is not null and c.record_name is not null ";
+		}
+		if ($recording == 'false') {
+			$sql .= "and (c.record_path is null or c.record_name is null) ";
+		}
 	}
 	//end where
 	if (strlen($order_by) > 0) {
