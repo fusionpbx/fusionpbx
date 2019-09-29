@@ -89,7 +89,7 @@
 		//devices
 			$domain_uuid = $_POST["domain_uuid"];
 			$device_uuid = $_POST["device_uuid"];
-			$device_provisioned_ip = $_POST["device_provisioned_ip"];
+			//$device_provisioned_ip = $_POST["device_provisioned_ip"];
 			$domain_uuid = $_POST["domain_uuid"];
 			$device_label = $_POST["device_label"];
 			$device_label = $_POST["device_label"];
@@ -220,7 +220,7 @@
 					$array['devices'][0]['domain_uuid'] = $domain_uuid;
 					$array['devices'][0]['device_uuid'] = $device_uuid;
 					$array['devices'][0]['device_mac_address'] = $device_mac_address;
-					$array['devices'][0]['device_provisioned_ip'] = $device_provisioned_ip;
+					//$array['devices'][0]['device_provisioned_ip'] = $device_provisioned_ip;
 					$array['devices'][0]['domain_uuid'] = $domain_uuid;
 					$array['devices'][0]['device_label'] = $device_label;
 					$array['devices'][0]['device_user_uuid'] = $device_user_uuid;
