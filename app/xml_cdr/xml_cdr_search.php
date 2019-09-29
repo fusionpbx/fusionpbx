@@ -49,11 +49,11 @@
 	echo "<script type='text/javascript'>";
 	echo "	function toggle(field) {";
 	echo "		if (field == 'source') {";
-	echo "			document.getElementById('caller_extension_uuid').selectedIndex = 0;";
+	echo "			document.getElementById('extension_uuid').selectedIndex = 0;";
 	echo "			document.getElementById('caller_id_number').value = '';";
-	echo "			$('#caller_extension_uuid').toggle();";
+	echo "			$('#extension_uuid').toggle();";
 	echo "			$('#caller_id_number').toggle();";
-	echo "			if ($('#caller_id_number').is(':visible')) { $('#caller_id_number').trigger('focus'); } else { $('#caller_extension_uuid').trigger('focus'); }";
+	echo "			if ($('#caller_id_number').is(':visible')) { $('#caller_id_number').trigger('focus'); } else { $('#extension_uuid').trigger('focus'); }";
 	echo "		}";
 	echo "	}";
 	echo "</script>";
@@ -125,9 +125,9 @@
 	echo "		<td class='vtable'><input type='text' class='formfld' name='caller_id_name' value='".escape($caller_id_name)."'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td class='vncell'>".$text['label-caller_id_number']."</td>"; //source number
+	echo "		<td class='vncell'>".$text['label-extension']."</td>"; //source number
 	echo "		<td class='vtable'>";
-	echo "			<select class='formfld' name='caller_extension_uuid' id='caller_extension_uuid'>\n";
+	echo "			<select class='formfld' name='extension_uuid' id='extension_uuid'>\n";
 	echo "				<option value=''></option>";
 	$sql = "select extension_uuid, extension, number_alias from v_extensions ";
 	$sql .= "where domain_uuid = :domain_uuid ";
@@ -137,7 +137,7 @@
 	$result_e = $database->select($sql, $parameters, 'all');
 	if (is_array($result_e) && @sizeof($result_e) != 0) {
 		foreach ($result_e as &$row) {
-			$selected = ($row['extension_uuid'] == $caller_extension_uuid) ? "selected" : null;
+			$selected = ($row['extension_uuid'] == $extension_uuid) ? "selected" : null;
 			echo "			<option value='".escape($row['extension_uuid'])."' ".escape($selected).">".((is_numeric($row['extension'])) ? escape($row['extension']) : escape($row['number_alias'])." (".escape($row['extension']).")")."</option>";
 		}
 	}
