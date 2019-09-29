@@ -76,6 +76,8 @@
 		$remote_media_ip = $_REQUEST["remote_media_ip"];
 		$network_addr = $_REQUEST["network_addr"];
 		$bridge_uuid = $_REQUEST["network_addr"];
+		$tta_min = $_REQUEST['tta_min'];
+		$tta_max = $_REQUEST['tta_max'];
 		$order_by = $_REQUEST["order_by"];
 		$order = $_REQUEST["order"];
 		if (is_array($_SESSION['cdr']['field'])) {
@@ -166,6 +168,8 @@
 	$param .= "&bridge_uuid=".urlencode($bridge_uuid);
 	$param .= "&mos_comparison=".urlencode($mos_comparison);
 	$param .= "&mos_score=".urlencode($mos_score);
+	$param .= "&tta_min=".urlencode($tta_min);
+	$param .= "&tta_max=".urlencode($tta_max);
 	if (is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
 			$array = explode(",", $field);
@@ -181,6 +185,7 @@
 	if (isset($order_by)) {
 		$param .= "&order_by=".urlencode($order_by)."&order=".urlencode($order);
 	}
+
 
 //create the sql query to get the xml cdr records
 	if (strlen($order_by) == 0) { $order_by  = "start_stamp"; }
@@ -484,6 +489,14 @@
 	if (strlen($leg) > 0) {
 		$sql .= "and leg = :leg ";
 		$parameters['leg'] = $leg;
+	}
+	if (is_numeric($tta_min)) {
+		$sql .= "and (c.answer_epoch - c.start_epoch) >= :tta_min ";
+		$parameters['tta_min'] = $tta_min;
+	}
+	if (is_numeric($tta_max)) {
+		$sql .= "and (c.answer_epoch - c.start_epoch) <= :tta_max ";
+		$parameters['tta_max'] = $tta_max;
 	}
 	//end where
 	if (strlen($order_by) > 0) {
