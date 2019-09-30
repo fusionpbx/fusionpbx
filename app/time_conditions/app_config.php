@@ -233,7 +233,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'time_conditions';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'preset_canada';
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'array';
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = '{"family_day":{"wday":"2","mon":"2","mday":"8-14"}}';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '{"family_day":{"wday":"2","mon":"2","mday":"15-21"}}';
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Canada Holiday';
 		$y++;
