@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <gs_provision version="1">
-<mac>000b829a8c97</mac>
+<mac>{$mac|replace:'-':''}</mac>
 <config version="1">
 <!-- ########################################################################################## -->
 <!-- ## Base template sets telephony related options only. to configure all options, copy to ## -->
@@ -395,12 +395,13 @@
     <!-- Local SIP Port (value:1~65535 && != 6789 && no conflict others) -->
     <P513>5064</P513>
     <!-- SIP Transport (0:UDP  1:TCP  2:TLS/TCP) -->
+    
     {$tp=0}
     {if $account.3.sip_transport == 'udp'}{$tp=0}{/if}
     {if $account.3.sip_transport == 'tcp'}{$tp=1}{/if}
     {if $account.3.sip_transport == 'tls'}{$tp=2}{/if}
-    
     <P548>{$tp}</P548>
+    
     <!-- RFC2833 (0:Disable  1:Enable) -->
     <P2502>1</P2502>
     <!-- SIP INFO (0:Disable  1:Enable) -->
@@ -462,8 +463,10 @@
     {if $account.4.sip_transport == 'tcp'}{$tp=1}{/if}
     {if $account.4.sip_transport == 'tls'}{$tp=2}{/if}
     
-    <P648>{$tp}</P648
-    <!-- RFC2833 (0:Disable  1:Enable) -->
+    <P648>{$tp}</P648>
+    
+    <!--RFC2833 (0:Disable  1:Enable) -->
+    
     <P2602>1</P2602>
     <!-- SIP INFO (0:Disable  1:Enable) -->
     <P2603>0</P2603>
@@ -731,9 +734,7 @@
     <P207>{$grandstream_syslog_server}</P207>
     <!-- Debug Log Level (0:None 1:Debug 2:Info 3:Warning 4:Error) -->
     <P208>{$grandstream_syslog_level}</P208>
-    {else}
-    <P208>0</P208>
-    {/if}
+    
 
   <!-- Event Notification -->
     <!-- Enable Log Reporting (0:Disable 1:Enable) -->
@@ -747,7 +748,7 @@
     <!-- HTTP/HTTPS Server Password (Type:string. Max.length=128) -->
     <P15415></P15415>
     <!-- URL Template (Type:string. Max.length=1024) -->
-    <P15416>{"mac":"${MAC}","content":"${WARNING_MSG}"}</P15416>
+    <P15416></P15416>
 
 </config>
 </gs_provision>
