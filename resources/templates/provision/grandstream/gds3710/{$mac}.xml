@@ -429,9 +429,9 @@ E0Fw0O5Kx31JPa+aSBLDMZAG1+SZ/zfxRYQe7VH8p1g=
     <P411>1</P411>
     <!-- Enable SRTP (0:Disable  1:Enable but no Forced  2:Enable and Forced) -->
     {if isset($grandstream_srtp)}
-    <P8443>{$grandstream_srtp}</P8433>
+    <P8443>{$grandstream_srtp}</P8443>
     {else}
-    <P8433>0</P8443>
+    <P8443>0</P8443>
     {/if}
     <!-- Enable Multi-channel Call Mode(0: Disable (default) 1: Enable) -->
     <P15427>0</P15427>
@@ -794,7 +794,7 @@ E0Fw0O5Kx31JPa+aSBLDMZAG1+SZ/zfxRYQe7VH8p1g=
     <!-- HTTP Server Password (Type:string. Max.length=128) -->
     <P15415></P15415>
     <!-- URL Template (Type: String Maxlen=1024) -->
-    <P15416>{"mac":"${MAC}","content":"${WARNING_MSG}"}</P15416>
+    <P15416></P15416>
   </Module_Event_Notification>
 
   <Module_Trusted_CA_Certificates>
