@@ -85,6 +85,7 @@
 	$row = $database->select($sql, $parameters, 'row');
 	if (is_array($row) && sizeof($row) != 0) {
 		$extension = $row["extension"];
+		$number_alias = $row["number_alias"];
 		$accountcode = $row["accountcode"];
 		$effective_caller_id_name = $row["effective_caller_id_name"];
 		$effective_caller_id_number = $row["effective_caller_id_number"];
@@ -369,19 +370,22 @@
 				//workaround for freeswitch not sending NOTIFY when destination values are nil. Send 0.
 				if ($forward_all_destination == "") {
 					$feature_event_notify->forward_all_destination = "0";
-				} else {
+				}
+				else {
 					$feature_event_notify->forward_all_destination = $forward_all_destination;
 				}
 				
 				if ($forward_busy_destination == "") {
 					$feature_event_notify->forward_busy_destination = "0";
-				} else {
+				}
+				else {
 					$feature_event_notify->forward_busy_destination = $forward_busy_destination;
 				}
 
 				if ($forward_no_answer_destination == "") {
 					$feature_event_notify->forward_no_answer_destination = "0";
-				} else {
+				}
+				else {
 					$feature_event_notify->forward_no_answer_destination = $forward_no_answer_destination;
 				}
 				$feature_event_notify->send_notify();
@@ -399,7 +403,7 @@
 		//clear the cache
 			$cache = new cache;
 			$cache->delete("directory:".$extension."@".$_SESSION['domain_name']);
-			if(strlen($number_alias) > 0){
+			if (strlen($number_alias) > 0) {
 				$cache->delete("directory:".$number_alias."@".$_SESSION['domain_name']);
 			}
 
@@ -446,7 +450,7 @@
 		}
 	}
 
-//get the extensions array
+//get the extensions array - used with autocomplete
 	$sql = "select * from v_extensions ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by extension, number_alias asc ";
