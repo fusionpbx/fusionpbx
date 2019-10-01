@@ -184,7 +184,7 @@
 	--	min_digits = 7;
 	--	max_digits = 20;
 	--	session:sleep(1000);
-	--	caller_id_number = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-id_number.wav", "", "\\d+");
+	--	caller_id_number = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-enter_source_telephone_number.wav", "", "\\d+");
 	--	if (string.len(caller_id_number) == 0) then
 	--		sesssion:hangup();
 	--	end
