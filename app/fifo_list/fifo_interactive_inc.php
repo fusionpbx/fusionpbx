@@ -134,7 +134,7 @@
 			echo "<th>".$text['label-duration']."</th>\n";
 			echo "</tr>\n";
 
-			if (is_array($xml->fifo->callers->caller) && @sizeof($xml->fifo->callers->caller) != 0) {
+			if ($xml->fifo->callers->caller && @sizeof($xml->fifo->callers->caller) != 0) {
 				foreach ($xml->fifo->callers->caller as $row) {
 					/*
 					$username = $row->caller_profile->username;
@@ -218,7 +218,7 @@
 			echo "</tr>\n";
 			//print_r($xml->fifo->outbound->member[0]);
 			//print_r($xml->fifo->outbound->member[1]);
-			if (is_array($xml->fifo->outbound->member) && @sizeof($xml->fifo->outbound->member) != 0) {
+			if ($xml->fifo->outbound->member && @sizeof($xml->fifo->outbound->member) != 0) {
 				foreach ($xml->fifo->outbound->member as $row) {
 					$username=explode("@",$row);
 					$username=explode("/",$username[0]);
