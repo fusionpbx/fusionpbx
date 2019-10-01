@@ -128,13 +128,18 @@
 				$follow_me_enabled = $_POST["follow_me_enabled"];
 				$follow_me_caller_id_uuid = $_POST["follow_me_caller_id_uuid"];
 				$follow_me_ignore_busy = $_POST["follow_me_ignore_busy"];
+
 				$n = 0;
+				$destination_found = false;
 				foreach ($_POST["destinations"] as $field) {
 					$destinations[$n]['uuid'] = $field['uuid'];
 					$destinations[$n]['destination'] = $field['destination'];
 					$destinations[$n]['delay'] = $field['delay'];
 					$destinations[$n]['prompt'] = $field['prompt'];
 					$destinations[$n]['timeout'] = $field['timeout'];
+					if ($field['destination'] != '') {
+						$destination_found = true;
+					}
 					$n++;
 				}
 				$dnd_enabled = $_POST["dnd_enabled"];
@@ -177,42 +182,56 @@
 				$forward_user_not_registered_destination = str_replace('$', '', $forward_user_not_registered_destination);
 
 				//build the array
-				$extensions['domain_uuid'] = $_SESSION['domain_uuid'];
-				$extensions['extension_uuid'] = $extension_uuid;
-				$extensions['forward_all_enabled'] = $forward_all_enabled;
-				$extensions['forward_all_destination'] = $forward_all_destination;
-				$extensions['forward_busy_enabled'] = $forward_busy_enabled;
-				$extensions['forward_busy_destination'] = $forward_busy_destination;
-				$extensions['forward_no_answer_enabled'] = $forward_no_answer_enabled;
-				$extensions['forward_no_answer_destination'] = $forward_no_answer_destination;
-				$extensions['forward_user_not_registered_enabled'] = $forward_user_not_registered_enabled;
-				$extensions['forward_user_not_registered_destination'] = $forward_user_not_registered_destination;
-				$extensions['forward_caller_id_uuid'] = $forward_caller_id_uuid;
+				$array['extensions'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+				$array['extensions'][0]['extension_uuid'] = $extension_uuid;
+				$array['extensions'][0]['forward_all_enabled'] = $forward_all_enabled;
+				$array['extensions'][0]['forward_all_destination'] = $forward_all_destination;
+				$array['extensions'][0]['forward_busy_enabled'] = $forward_busy_enabled;
+				$array['extensions'][0]['forward_busy_destination'] = $forward_busy_destination;
+				$array['extensions'][0]['forward_no_answer_enabled'] = $forward_no_answer_enabled;
+				$array['extensions'][0]['forward_no_answer_destination'] = $forward_no_answer_destination;
+				$array['extensions'][0]['forward_user_not_registered_enabled'] = $forward_user_not_registered_enabled;
+				$array['extensions'][0]['forward_user_not_registered_destination'] = $forward_user_not_registered_destination;
+				$array['extensions'][0]['forward_caller_id_uuid'] = $forward_caller_id_uuid;
 			}
 
 		//do not disturb (dnd) config
 			if (permission_exists('do_not_disturb')) {
-				$extensions['domain_uuid'] = $_SESSION['domain_uuid'];
-				$extensions['extension_uuid'] = $extension_uuid;
-				$extensions['do_not_disturb'] = $dnd_enabled;
+				$array['extensions'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+				$array['extensions'][0]['extension_uuid'] = $extension_uuid;
+				$array['extensions'][0]['do_not_disturb'] = $dnd_enabled;
+				$array['extensions'][0]['dial_string'] = $dnd_enabled == "true" ? "error/user_busy" : '';
 			}
 
 		//follow me config
 			if (permission_exists('follow_me')) {
-				//build the follow me array
+
+				//add follow_me_uuid and follow_me_enabled to the extensions array
 					if ($follow_me_uuid == '') {
 						$follow_me_uuid = uuid();
-						$extensions['domain_uuid'] = $_SESSION['domain_uuid'];
-						$extensions['extension_uuid'] = $extension_uuid;
-						$extensions['follow_me_uuid'] = $follow_me_uuid;
+						$array['extensions'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+						$array['extensions'][0]['extension_uuid'] = $extension_uuid;
+						$array['extensions'][0]['follow_me_uuid'] = $follow_me_uuid;
 					}
-
-					$follow_me['domain_uuid'] = $_SESSION['domain_uuid'];
-					$follow_me['follow_me_uuid'] = $follow_me_uuid;
-					$follow_me['cid_name_prefix'] = $cid_name_prefix;
-					$follow_me['cid_number_prefix'] = $cid_number_prefix;
-					$follow_me['follow_me_caller_id_uuid'] = $follow_me_caller_id_uuid;
-					$follow_me['follow_me_ignore_busy'] = $follow_me_ignore_busy;
+					if ($destination_found) {
+						$array['extensions'][0]['follow_me_enabled'] = $follow_me_enabled;
+					}
+					else {
+						$array['extensions'][0]['follow_me_enabled'] = 'false';
+					}
+				//build the follow me array
+					$array['follow_me'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+					$array['follow_me'][0]['follow_me_uuid'] = $follow_me_uuid;
+					$array['follow_me'][0]['cid_name_prefix'] = $cid_name_prefix;
+					$array['follow_me'][0]['cid_number_prefix'] = $cid_number_prefix;
+					$array['follow_me'][0]['follow_me_caller_id_uuid'] = $follow_me_caller_id_uuid;
+					$array['follow_me'][0]['follow_me_ignore_busy'] = $follow_me_ignore_busy;
+					if ($destination_found) {
+						$array['follow_me'][0]['follow_me_enabled'] = $follow_me_enabled;
+					}
+					else {
+						$array['follow_me'][0]['follow_me_enabled'] = 'false';
+					}
 
 					$d = 0;
 					$destination_found = false;
@@ -223,14 +242,14 @@
 							$field['destination'] = str_replace('$', '', $field['destination']);
 
 							//build the array
-							$follow_me['follow_me_destinations'][$d]['domain_uuid'] = $_SESSION['domain_uuid'];
-							$follow_me['follow_me_destinations'][$d]['follow_me_uuid'] = $follow_me_uuid;
-							$follow_me['follow_me_destinations'][$d]['follow_me_destination_uuid'] = $field['uuid'];
-							$follow_me['follow_me_destinations'][$d]['follow_me_destination'] = $field['destination'];
-							$follow_me['follow_me_destinations'][$d]['follow_me_delay'] = $field['delay'];
-							$follow_me['follow_me_destinations'][$d]['follow_me_prompt'] = $field['prompt'];
-							$follow_me['follow_me_destinations'][$d]['follow_me_timeout'] = $field['timeout'];
-							$follow_me['follow_me_destinations'][$d]['follow_me_order'] = $d;
+							$array['follow_me'][0]['follow_me_destinations'][$d]['domain_uuid'] = $_SESSION['domain_uuid'];
+							$array['follow_me'][0]['follow_me_destinations'][$d]['follow_me_uuid'] = $follow_me_uuid;
+							$array['follow_me'][0]['follow_me_destinations'][$d]['follow_me_destination_uuid'] = $field['uuid'];
+							$array['follow_me'][0]['follow_me_destinations'][$d]['follow_me_destination'] = $field['destination'];
+							$array['follow_me'][0]['follow_me_destinations'][$d]['follow_me_delay'] = $field['delay'];
+							$array['follow_me'][0]['follow_me_destinations'][$d]['follow_me_prompt'] = $field['prompt'];
+							$array['follow_me'][0]['follow_me_destinations'][$d]['follow_me_timeout'] = $field['timeout'];
+							$array['follow_me'][0]['follow_me_destinations'][$d]['follow_me_order'] = $d;
 							$destination_found = true;
 							$d++;
 						}
@@ -238,16 +257,6 @@
 							$follow_me_delete_uuids[] = $field['uuid'];
 						}
 					}
-
-					$follow_me['follow_me_enabled'] = ($destination_found) ? $follow_me_enabled : 'false';
-			}
-
-		//prepare the array
-			if (is_array($extensions) && sizeof($extensions) > 0) {
-				$array['extensions'][] = $extensions;
-			}
-			if (is_array($follow_me) && sizeof($follow_me) > 0) {
-				$array['follow_me'][] = $follow_me;
 			}
 
 		//add the dialplan permission
@@ -277,6 +286,7 @@
 				unset($array);
 			}
 
+		/*
 		//call forward config
 			if (permission_exists('call_forward')) {
 				$call_forward = new call_forward;
@@ -343,6 +353,7 @@
 						unset($dnd);
 				}
 			}
+		*/
 
 		//send feature event notify to the phone
 			if ($_SESSION['device']['feature_sync']['boolean'] == "true") {
@@ -354,7 +365,7 @@
 				$feature_event_notify->ring_count = $ring_count;
 				$feature_event_notify->forward_all_enabled = $forward_all_enabled;
 				$feature_event_notify->forward_busy_enabled = $forward_busy_enabled;
-				$feature_event_notify->forward_no_answer_enabled = $forward_no_answer_enabled;				
+				$feature_event_notify->forward_no_answer_enabled = $forward_no_answer_enabled;
 				//workaround for freeswitch not sending NOTIFY when destination values are nil. Send 0.
 				if ($forward_all_destination == "") {
 					$feature_event_notify->forward_all_destination = "0";
@@ -366,14 +377,13 @@
 					$feature_event_notify->forward_busy_destination = "0";
 				} else {
 					$feature_event_notify->forward_busy_destination = $forward_busy_destination;
-				}				
+				}
 
 				if ($forward_no_answer_destination == "") {
 					$feature_event_notify->forward_no_answer_destination = "0";
 				} else {
 					$feature_event_notify->forward_no_answer_destination = $forward_no_answer_destination;
-				}					
-				
+				}
 				$feature_event_notify->send_notify();
 				unset($feature_event_notify);
 			}
@@ -436,6 +446,15 @@
 		}
 	}
 
+//get the extensions array
+	$sql = "select * from v_extensions ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "order by extension, number_alias asc ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$extensions = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters, $row);
+
 //set the default
 	if (!isset($dnd_enabled)) {
 		//set the value from the database
@@ -448,14 +467,7 @@
 	echo "<script type=\"text/javascript\">\n";
 	echo "\$(function() {\n";
 	echo "	var extensions = [\n";
-
-	$sql = "select * from v_extensions ";
-	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "order by extension, number_alias asc ";
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
-	$result = $database->select($sql, $parameters, 'all');
-	foreach ($result as &$row) {
+	foreach ($extensions as &$row) {
 		if (strlen($number_alias) == 0) {
 			echo "		\"".escape($row["extension"])."\",\n";
 		}
@@ -469,7 +481,7 @@
 		echo "		source: extensions\n";
 		echo "	});\n";
 	}
-	unset($sql, $parameters, $result, $row);
+
 	echo "});\n";
 	echo "</script>\n";
 
