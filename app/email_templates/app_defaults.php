@@ -301,6 +301,64 @@
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
+		$array['email_templates'][$x]['email_template_uuid'] = '14cf1738-2304-4030-b970-a478fda35abc';
+		$array['email_templates'][$x]['template_language'] = 'fr-ca';
+		$array['email_templates'][$x]['template_category'] = 'voicemail';
+		$array['email_templates'][$x]['template_subcategory'] = 'default';
+		$array['email_templates'][$x]['template_subject'] = 'Messagerie vocale à partir de ${caller_id_name} <${caller_id_number}> ${message_duration}';
+		$array['email_templates'][$x]['template_body'] .= "<html>\n";
+		$array['email_templates'][$x]['template_body'] .= "<body>\n";
+		$array['email_templates'][$x]['template_body'] .= "Messagerie vocale à partir de \${caller_id_name} <a href=\"tel:\${caller_id_number}\">\${caller_id_number}</a><br />\n";
+		$array['email_templates'][$x]['template_body'] .= "<br />\n";
+		$array['email_templates'][$x]['template_body'] .= "À \${voicemail_name_formatted}<br />\n";
+		$array['email_templates'][$x]['template_body'] .= "Reçu \${message_date}<br />\n";
+		$array['email_templates'][$x]['template_body'] .= "Longueur \${message_duration}<br />\n";
+		$array['email_templates'][$x]['template_body'] .= "Message \${message}<br />\n";
+		$array['email_templates'][$x]['template_body'] .= "</body>\n";
+		$array['email_templates'][$x]['template_body'] .= "</html>\n";
+		$array['email_templates'][$x]['template_type'] = 'html';
+		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_description'] = '';
+		$x++;
+		$array['email_templates'][$x]['email_template_uuid'] = 'd3971eb3-757e-4501-8469-9d59738db821';
+		$array['email_templates'][$x]['template_language'] = 'fr-ca';
+		$array['email_templates'][$x]['template_category'] = 'voicemail';
+		$array['email_templates'][$x]['template_subcategory'] = 'default';
+		$array['email_templates'][$x]['template_subject'] = 'Messagerie vocale à partir de ${caller_id_name} <${caller_id_number}> ${message_duration}';
+		$array['email_templates'][$x]['template_body'] = "Messagerie vocale à partir de \${caller_id_name} <\${caller_id_number}>\n";
+		$array['email_templates'][$x]['template_body'] .= "\n";
+		$array['email_templates'][$x]['template_body'] .= "À \${voicemail_name_formatted}\n";
+		$array['email_templates'][$x]['template_body'] .= "Reçu \${message_date}\n";
+		$array['email_templates'][$x]['template_body'] .= "Longueur \${message_duration}\n";
+		$array['email_templates'][$x]['template_body'] .= "Message \${message}\n";
+		$array['email_templates'][$x]['template_type'] = 'text';
+		$array['email_templates'][$x]['template_enabled'] = 'false';
+		$array['email_templates'][$x]['template_description'] = '';
+		$x++;
+		$array['email_templates'][$x]['email_template_uuid'] = 'aa2fa675-ccc0-4343-92fb-76c37d67a409';
+		$array['email_templates'][$x]['template_language'] = 'fr-ca';
+		$array['email_templates'][$x]['template_category'] = 'missed';
+		$array['email_templates'][$x]['template_subcategory'] = 'default';
+		$array['email_templates'][$x]['template_subject'] = 'Appel manqué de ${caller_id_name} <${caller_id_number}>';
+		$array['email_templates'][$x]['template_body'] .= "<html>\n";
+		$array['email_templates'][$x]['template_body'] .= "<body>\n";
+		$array['email_templates'][$x]['template_body'] .= "Appel manqué de \${caller_id_name} &lt;<a href=\"tel:\${caller_id_number}\">\${caller_id_number}</a>&gt; À \${sip_to_user} ext \${dialed_user}\n";
+		$array['email_templates'][$x]['template_body'] .= "</body>\n";
+		$array['email_templates'][$x]['template_body'] .= "</html>\n";
+		$array['email_templates'][$x]['template_type'] = 'html';
+		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_description'] = '';
+		$x++;
+		$array['email_templates'][$x]['email_template_uuid'] = '5c57bd40-0479-49ba-945a-c675cd96dc8c';
+		$array['email_templates'][$x]['template_language'] = 'fr-ca';
+		$array['email_templates'][$x]['template_category'] = 'missed';
+		$array['email_templates'][$x]['template_subcategory'] = 'default';
+		$array['email_templates'][$x]['template_subject'] = 'Appel manqué de ${caller_id_name} <${caller_id_number}>';
+		$array['email_templates'][$x]['template_body'] .= "Appel manqué de \${caller_id_name} &lt;\${caller_id_number}&gt; À \${sip_to_user} ext \${dialed_user}\n";
+		$array['email_templates'][$x]['template_type'] = 'text';
+		$array['email_templates'][$x]['template_enabled'] = 'false';
+		$array['email_templates'][$x]['template_description'] = '';
+
 		//build array of email template uuids
 		foreach ($array['email_templates'] as $row) {
 			if (is_uuid($row['email_template_uuid'])) {
