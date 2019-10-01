@@ -78,7 +78,7 @@
 		$sql .= "	lower(cast(voicemail_id as text)) like :search ";
 		$sql .= " 	or lower(voicemail_mail_to) like :search ";
 		$sql .= " 	or lower(voicemail_local_after_email) like :search ";
-		$sql .= " 	or lower(voicemail_enabled like) :search ";
+		$sql .= " 	or lower(voicemail_enabled) like :search ";
 		$sql .= " 	or lower(voicemail_description) like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.strtolower($search).'%';
