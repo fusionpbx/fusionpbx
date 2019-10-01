@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2018
+ Portions created by the Initial Developer are Copyright (C) 2008-2019
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -50,7 +50,7 @@
 		$category = $_REQUEST['category'];
 		$search = $_REQUEST['search'];
 
-		if (sizeof($default_setting_uuids) == 1 && $enabled != '' && is_uuid($default_setting_uuids[0])) {
+		if (is_array($default_setting_uuids) && sizeof($default_setting_uuids) == 1 && $enabled != '' && is_uuid($default_setting_uuids[0])) {
 			$array['default_settings'][0]['default_setting_uuid'] = $default_setting_uuids[0];
 			$array['default_settings'][0]['default_setting_enabled'] = $enabled;
 			$database = new database;
