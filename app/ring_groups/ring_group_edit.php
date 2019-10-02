@@ -850,18 +850,19 @@
 	echo "	</tr>";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-ring_group_follow_me_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='ring_group_follow_me_enabled'>\n";
-	if (ring_group_follow_me_enabled == "true") {
+	echo "	<option value=''></option>\n";
+	if ($ring_group_follow_me_enabled == "true") {
 		echo "	<option value='true' selected='selected'>".$text['option-true']."</option>\n";
 	}
 	else {
 		echo "	<option value='true'>".$text['option-true']."</option>\n";
 	}
-	if (ring_group_follow_me_enabled == "false") {
+	if ($ring_group_follow_me_enabled == "false") {
 		echo "	<option value='false' selected='selected'>".$text['option-false']."</option>\n";
 	}
 	else {
