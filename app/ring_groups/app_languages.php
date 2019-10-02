@@ -601,6 +601,26 @@ $text['label-missed_call']['ru-ru'] = "Пропущенный вызов";
 $text['label-missed_call']['sv-se'] = "Missat Samtal";
 $text['label-missed_call']['uk-ua'] = "пропущений Дзвінок";
 
+$text['label-follow_me']['en-us'] = "Follow Me";
+$text['label-follow_me']['ar-eg'] = "Follow Me";
+$text['label-follow_me']['de-at'] = "Follow Me"; //copied from de-de
+$text['label-follow_me']['de-ch'] = "Follow Me"; //copied from de-de
+$text['label-follow_me']['de-de'] = "Follow Me";
+$text['label-follow_me']['es-cl'] = "Follow Me";
+$text['label-follow_me']['es-mx'] = "Follow Me"; //copied from es-cl
+$text['label-follow_me']['fr-ca'] = "Follow Me"; //copied from fr-fr
+$text['label-follow_me']['fr-fr'] = "Follow Me";
+$text['label-follow_me']['he-il'] = "Follow Me";
+$text['label-follow_me']['it-it'] = "Follow Me";
+$text['label-follow_me']['nl-nl'] = "Follow Me";
+$text['label-follow_me']['pl-pl'] = "Follow Me";
+$text['label-follow_me']['pt-br'] = "Follow Me"; //copied from pt-pt
+$text['label-follow_me']['pt-pt'] = "Follow Me";
+$text['label-follow_me']['ro-ro'] = "Follow Me";
+$text['label-follow_me']['ru-ru'] = "Follow Me";
+$text['label-follow_me']['sv-se'] = "Follow Me";
+$text['label-follow_me']['uk-ua'] = "Follow Me";
+
 $text['label-ring_group_forward']['en-us'] = "Ring Group Forward";
 $text['label-ring_group_forward']['ar-eg'] = "إعادة توجيه";
 $text['label-ring_group_forward']['de-at'] = "Weiterleiten"; //copied from de-de
