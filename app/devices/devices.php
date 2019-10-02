@@ -68,7 +68,7 @@
 
 //prepare to page the results
 	$sql = "select count(*) from v_devices as d ";
-	if ($_GET['show'] == "all" && permission_exists('device_all')) {
+	if (isset($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
 		if (strlen($search) > 0) {
 			$sql .= "where ";
 		}
@@ -104,7 +104,7 @@
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	if ($_GET['show'] == "all" && permission_exists('device_all')) {
+	if (isset($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
 		$param = "&search=".$search."&show=all";
 	} else {
 		$param = "&search=".$search;
@@ -121,7 +121,7 @@
 	$sql .= "	d.device_uuid_alternate = d2.device_uuid  ";
 	$sql .= "	or d.device_uuid_alternate is null and d.device_uuid = d2.device_uuid ";
 	$sql .= ") ";
-	if ($_GET['show'] == "all" && permission_exists('device_all')) {
+	if (isset($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
 		//echo __line__."<br \>\n";
 	}
 	else {
@@ -175,7 +175,7 @@
 	echo "		<td align='right' nowrap='nowrap' valign='top'>\n";
 	echo "			<form method='get' action=''>\n";
 	if (permission_exists('device_all')) {
-		if ($_GET['show'] == 'all') {
+		if (isset($_GET['show']) && $_GET['show'] == 'all') {
 			echo "			<input type='hidden' name='show' value='all'>\n";
 		}
 		else {
@@ -213,7 +213,7 @@
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	if ($_GET['show'] == "all" && permission_exists('device_all')) {
+	if (isset($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param);
 	}
 	echo th_order_by('device_mac_address', $text['label-device_mac_address'], $order_by, $order);
@@ -251,7 +251,7 @@
 
 			$tr_link = (permission_exists('device_edit')) ? "href='device_edit.php?id=".escape($row['device_uuid'])."'" : null;
 			echo "<tr ".$tr_link.">\n";
-			if ($_GET['show'] == "all" && permission_exists('device_all')) {
+			if (isset($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
 				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
