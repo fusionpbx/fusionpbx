@@ -84,36 +84,45 @@
 			unset($sql);
 
 		//create insert array
-			foreach ($vendors as $index_1 => $vendor) {
+			$x = 0; $z = 0;
+			foreach ($vendors as $vendor) {
 				//insert the data into the database
 					$device_vendor_uuid = uuid();
-					$array['device_vendors'][$index_1]['device_vendor_uuid'] = $device_vendor_uuid;
-					$array['device_vendors'][$index_1]['name'] = $vendor['name'];
-					$array['device_vendors'][$index_1]['enabled'] = 'true';
+					$array['device_vendors'][$x]['device_vendor_uuid'] = $device_vendor_uuid;
+					$array['device_vendors'][$x]['name'] = $vendor['name'];
+					$array['device_vendors'][$x]['enabled'] = 'true';
 
-				//add the vendor functions
-					foreach ($vendor['functions'] as $index_2 => $function) {
-						$device_vendor_function_uuid = uuid();
-						$array['device_vendor_functions'][$index_2]['device_vendor_uuid'] = $device_vendor_uuid;
-						$array['device_vendor_functions'][$index_2]['device_vendor_function_uuid'] = $device_vendor_function_uuid;
-						//$array['device_vendor_functions'][$index_2]['label'] = $function['label'];
-						$array['device_vendor_functions'][$index_2]['name'] = $function['name'];
-						$array['device_vendor_functions'][$index_2]['value'] = $function['value'];
-						$array['device_vendor_functions'][$index_2]['enabled'] = 'true';
-						$array['device_vendor_functions'][$index_2]['description'] = $function['description'];
+				//add the device vendor functions
+					$y = 0;
+					foreach ($vendor['functions'] as $function) {
+						//add the device vendor function
+							$device_vendor_function_uuid = uuid();
+							$array['device_vendors'][$x]['device_vendor_functions'][$y]['device_vendor_uuid'] = $device_vendor_uuid;
+							$array['device_vendors'][$x]['device_vendor_functions'][$y]['device_vendor_function_uuid'] = $device_vendor_function_uuid;
+							//$array['device_vendors'][$x]['device_vendor_functions'][$y]['label'] = $function['label'];
+							$array['device_vendors'][$x]['device_vendor_functions'][$y]['name'] = $function['name'];
+							$array['device_vendors'][$x]['device_vendor_functions'][$y]['value'] = $function['value'];
+							$array['device_vendors'][$x]['device_vendor_functions'][$y]['enabled'] = 'true';
+							$array['device_vendors'][$x]['device_vendor_functions'][$y]['description'] = $function['description'];
 
 						//add the device vendor function groups
 							if (is_array($function['groups']) && @sizeof($function['groups']) != 0) {
-								foreach ($function['groups'] as $index_3 => $group_name) {
+								foreach ($function['groups'] as $group_name) {
 									$device_vendor_function_group_uuid = uuid();
-									$array['device_vendor_function_groups'][$index_3]['device_vendor_function_group_uuid'] = $device_vendor_function_group_uuid;
-									$array['device_vendor_function_groups'][$index_3]['device_vendor_function_uuid'] = $device_vendor_function_uuid;
-									$array['device_vendor_function_groups'][$index_3]['device_vendor_uuid'] = $device_vendor_uuid;
-									$array['device_vendor_function_groups'][$index_3]['group_name'] = $group_name;
-									$array['device_vendor_function_groups'][$index_3]['group_uuid'] = $group_uuids[$group_name];
+									$array['device_vendor_function_groups'][$z]['device_vendor_function_group_uuid'] = $device_vendor_function_group_uuid;
+									$array['device_vendor_function_groups'][$z]['device_vendor_function_uuid'] = $device_vendor_function_uuid;
+									$array['device_vendor_function_groups'][$z]['device_vendor_uuid'] = $device_vendor_uuid;
+									$array['device_vendor_function_groups'][$z]['group_name'] = $group_name;
+									$array['device_vendor_function_groups'][$z]['group_uuid'] = $group_uuids[$group_name];
+									$z++;
 								}
 							}
+						//increment the device vendor function index
+							$y++;
 					}
+				
+				//increment the devic vendor index
+					$x++;
 			}
 
 		//assign temp permissions
