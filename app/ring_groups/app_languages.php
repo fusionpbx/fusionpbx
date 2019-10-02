@@ -601,7 +601,7 @@ $text['label-missed_call']['ru-ru'] = "Пропущенный вызов";
 $text['label-missed_call']['sv-se'] = "Missat Samtal";
 $text['label-missed_call']['uk-ua'] = "пропущений Дзвінок";
 
-$text['label-ring_group_forward']['en-us'] = "Forwarding";
+$text['label-ring_group_forward']['en-us'] = "Ring Group Forward";
 $text['label-ring_group_forward']['ar-eg'] = "إعادة توجيه";
 $text['label-ring_group_forward']['de-at'] = "Weiterleiten"; //copied from de-de
 $text['label-ring_group_forward']['de-ch'] = "Weiterleiten"; //copied from de-de
@@ -621,7 +621,7 @@ $text['label-ring_group_forward']['ru-ru'] = "Передать далее";
 $text['label-ring_group_forward']['sv-se'] = "Spedition";
 $text['label-ring_group_forward']['uk-ua'] = "експедиція";
 
-$text['label-ring_group_forward_toll_allow']['en-us'] = "Forwarding Toll Allow";
+$text['label-ring_group_forward_toll_allow']['en-us'] = "Forward Toll Allow";
 $text['label-ring_group_forward_toll_allow']['ar-eg'] = "Toll Allow إعادة ت وجيه";
 $text['label-ring_group_forward_toll_allow']['de-at'] = "Weiterleiten Toll Allow"; //copied from de-de
 $text['label-ring_group_forward_toll_allow']['de-ch'] = "Weiterleiten Toll Allow"; //copied from de-de
