@@ -165,176 +165,158 @@
 	echo "	</form>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td align='left' colspan='2'>\n";
+	echo "</table>\n";
 
 	echo $text['description']." \n";
 	echo $text['description2']." \n";
 	echo $text['description-3']." \n";
 	echo $text['description-4']." \n";
-
 	echo "<br /><br />\n";
 
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
 
 //basic search of call detail records
 	if (permission_exists('xml_cdr_search')) {
-
 		echo "<form method='get' action=''>\n";
 
-		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-		echo "<tr>\n";
-		echo "<td width='".((if_group("admin") || if_group("superadmin") || if_group("cdr")) ? '19%' : '30%')."' style='vertical-align: top;'>\n";
+		echo "<div class='form_grid'>\n";
 
-		echo "	<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-		echo "		<tr>\n";
-		echo "			<td class='vncell' valign='top' nowrap='nowrap'>\n";
-		echo "				".$text['label-direction']."\n";
-		echo "			</td>\n";
-		echo "			<td class='vtable' align='left' style='white-space: nowrap;'>\n";
-		echo "				<select name='direction' class='formfld'>\n";
-		echo "					<option value=''></option>\n";
-		echo "					<option value='inbound' ".(($direction == "inbound") ? "selected='selected'" : null).">".$text['label-inbound']."</option>\n";
-		echo "					<option value='outbound' ".(($direction == "outbound") ? "selected='selected'" : null).">".$text['label-outbound']."</option>\n";
-		echo "					<option value='local' ".(($direction == "local") ? "selected='selected'" : null).">".$text['label-local']."</option>\n";
-		echo "				</select>\n";
-		if (permission_exists('xml_cdr_b_leg')){
-			echo "			<select name='leg' class='formfld'>\n";
+		if (permission_exists('xml_cdr_search_direction')) {
+			echo "	<div class='form_set'>\n";
+			echo "		<div class='label'>\n";
+			echo "			".$text['label-direction']."\n";
+			echo "		</div>\n";
+			echo "		<div class='field'>\n";
+			echo "			<select name='direction' class='formfld'>\n";
 			echo "				<option value=''></option>\n";
-			echo "				<option value='a'>a-leg</option>\n";
-			echo "				<option value='b'>b-leg</option>\n";
+			echo "				<option value='inbound' ".(($direction == "inbound") ? "selected='selected'" : null).">".$text['label-inbound']."</option>\n";
+			echo "				<option value='outbound' ".(($direction == "outbound") ? "selected='selected'" : null).">".$text['label-outbound']."</option>\n";
+			echo "				<option value='local' ".(($direction == "local") ? "selected='selected'" : null).">".$text['label-local']."</option>\n";
 			echo "			</select>\n";
+			if (permission_exists('xml_cdr_b_leg')){
+				echo "		<select name='leg' class='formfld'>\n";
+				echo "			<option value=''></option>\n";
+				echo "			<option value='a'>a-leg</option>\n";
+				echo "			<option value='b'>b-leg</option>\n";
+				echo "		</select>\n";
+			}
+			echo "		</div>\n";
+			echo "	</div>\n";
 		}
-		echo "			</td>\n";
-		echo "		</tr>\n";
-		echo "		<tr>\n";
-		echo "			<td class='vncell' valign='top' nowrap='nowrap'>\n";
-		echo "				".$text['label-status']."\n";
-		echo "			</td>\n";
-		echo "			<td class='vtable' align='left'>\n";
-		echo "				<select name='call_result' class='formfld'>\n";
-		echo "					<option value=''></option>\n";
-		echo "					<option value='answered' ".(($call_result == 'answered') ? 'selected' : null).">".$text['label-answered']."</option>\n";
-		echo "					<option value='missed' ".(($call_result == 'missed') ? 'selected' : null).">".$text['label-missed']."</option>\n";
-		echo "					<option value='voicemail' ".(($call_result == 'voicemail') ? 'selected' : null).">".$text['label-voicemail']."</option>\n";
-		echo "					<option value='cancelled' ".(($call_result == 'cancelled') ? 'selected' : null).">".$text['label-cancelled']."</option>\n";
-		echo "					<option value='failed' ".(($call_result == 'failed') ? 'selected' : null).">".$text['label-failed']."</option>\n";
-		echo "				</select>\n";
-		echo "			</td>\n";
-		echo "		</tr>\n";
-		if (permission_exists('xml_cdr_search_advanced')) {
+		if (permission_exists('xml_cdr_search_status')) {
+			echo "	<div class='form_set'>\n";
+			echo "		<div class='label'>\n";
+			echo "			".$text['label-status']."\n";
+			echo "		</div>\n";
+			echo "		<div class='field'>\n";
+			echo "			<select name='call_result' class='formfld'>\n";
+			echo "				<option value=''></option>\n";
+			echo "				<option value='answered' ".(($call_result == 'answered') ? 'selected' : null).">".$text['label-answered']."</option>\n";
+			echo "				<option value='missed' ".(($call_result == 'missed') ? 'selected' : null).">".$text['label-missed']."</option>\n";
+			echo "				<option value='voicemail' ".(($call_result == 'voicemail') ? 'selected' : null).">".$text['label-voicemail']."</option>\n";
+			echo "				<option value='cancelled' ".(($call_result == 'cancelled') ? 'selected' : null).">".$text['label-cancelled']."</option>\n";
+			echo "				<option value='failed' ".(($call_result == 'failed') ? 'selected' : null).">".$text['label-failed']."</option>\n";
+			echo "			</select>\n";
+			echo "		</div>\n";
+			echo "	</div>\n";
+		}
+		if (permission_exists('xml_cdr_search_extension')) {
 			$sql = "select extension_uuid, extension, number_alias from v_extensions ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$sql .= "order by extension asc, number_alias asc ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 			$database = new database;
 			$result_e = $database->select($sql, $parameters, 'all');
-			echo "		<tr>\n";
-			echo "			<td class='vncell' valign='top' nowrap='nowrap'>\n";
-			echo "				".$text['label-extension']."\n";
-			echo "			</td>\n";
-			echo "			<td class='vtable' align='left'>\n";
-			echo "				<select class='formfld' name='extension_uuid' id='extension_uuid'>\n";
-			echo "					<option value=''></option>";
+			echo "	<div class='form_set'>\n";
+			echo "		<div class='label'>\n";
+			echo "			".$text['label-extension']."\n";
+			echo "		</div>\n";
+			echo "		<div class='field'>\n";
+			echo "			<select class='formfld' name='extension_uuid' id='extension_uuid'>\n";
+			echo "				<option value=''></option>";
 			if (is_array($result_e) && @sizeof($result_e) != 0) {
 				foreach ($result_e as &$row) {
 					$selected = ($row['extension_uuid'] == $extension_uuid) ? "selected" : null;
-					echo "			<option value='".escape($row['extension_uuid'])."' ".escape($selected).">".((is_numeric($row['extension'])) ? escape($row['extension']) : escape($row['number_alias'])." (".escape($row['extension']).")")."</option>";
+					echo "		<option value='".escape($row['extension_uuid'])."' ".escape($selected).">".((is_numeric($row['extension'])) ? escape($row['extension']) : escape($row['number_alias'])." (".escape($row['extension']).")")."</option>";
 				}
 			}
-			echo "				</select>\n";
-			echo "			</td>\n";
-			echo "		</tr>\n";
+			echo "			</select>\n";
+			echo "		</div>\n";
+			echo "	</div>\n";
 			unset($sql, $parameters, $result_e, $row, $selected);
 		}
-		echo "	</table>\n";
-
-		echo "</td>";
-		echo "<td width='".((if_group("admin") || if_group("superadmin") || if_group("cdr")) ? '30%' : '40%')."' style='vertical-align: top;'>\n";
-
-		echo "	<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-		echo "		<tr>\n";
-		echo "			<td class='vncell' valign='top' nowrap='nowrap'>\n";
-		echo "				".$text['label-caller_id']."\n";
-		echo "			</td>\n";
-		echo "			<td class='vtable' align='left'>\n";
-		echo "				<input type='text' class='formfld' name='caller_id_name' style='min-width: 115px; width: 115px;' placeholder=\"".$text['label-name']."\" value='".escape($caller_id_name)."'>\n";
-		echo "				<input type='text' class='formfld' name='caller_id_number' style='min-width: 115px; width: 115px;' placeholder=\"".$text['label-number']."\" value='".escape($caller_id_number)."'>\n";
-		echo "			</td>\n";
-		echo "		</tr>\n";
-		echo "		<tr>\n";
-		echo "			<td class='vncell' valign='top' nowrap='nowrap'>\n";
-		echo "				".$text['label-start_range']."\n";
-		echo "			</td>\n";
-		echo "			<td class='vtable' align='left' style='position: relative; min-width: 250px;'>\n";
-		echo "				<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin)."'>\n";
-		echo "				<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end)."'>\n";
-		echo "			</td>\n";
-		echo "		</tr>\n";
-		if (permission_exists('xml_cdr_search_advanced')) {
-			echo "		<tr>\n";
-			echo "			<td class='vncell' valign='top' nowrap='nowrap'>\n";
-			echo "				".$text['label-duration']." (".$text['label-seconds'].")\n";
-			echo "			</td>\n";
-			echo "			<td class='vtable' align='left'>\n";
-			echo "				<input type='text' class='formfld' style='min-width: 75px; width: 75px;' name='duration_min' value='".escape($duration_min)."' placeholder=\"".$text['label-minimum']."\">\n";
-			echo "				<input type='text' class='formfld' style='min-width: 75px; width: 75px;' name='duration_max' value='".escape($duration_max)."' placeholder=\"".$text['label-maximum']."\">\n";
-			echo "			</td>\n";
-			echo "		</tr>\n";
+		if (permission_exists('xml_cdr_search_caller_id')) {
+			echo "	<div class='form_set'>\n";
+			echo "		<div class='label'>\n";
+			echo "			".$text['label-caller_id']."\n";
+			echo "		</div>\n";
+			echo "		<div class='field nowrap'>\n";
+			echo "			<input type='text' class='formfld' name='caller_id_name' style='min-width: 115px; width: 115px;' placeholder=\"".$text['label-name']."\" value='".escape($caller_id_name)."'>\n";
+			echo "			<input type='text' class='formfld' name='caller_id_number' style='min-width: 115px; width: 115px;' placeholder=\"".$text['label-number']."\" value='".escape($caller_id_number)."'>\n";
+			echo "		</div>\n";
+			echo "	</div>\n";
 		}
-		echo "	</table>\n";
-
-		echo "</td>";
-		echo "<td width='".((if_group("admin") || if_group("superadmin") || if_group("cdr")) ? '24%' : '30%')."' style='vertical-align: top;'>\n";
-
-		echo "	<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-		if (permission_exists('caller_destination')) {
-			echo "	<tr>\n";
-			echo "		<td class='vncell' valign='top' nowrap='nowrap'>\n";
+		if (permission_exists('xml_cdr_search_start_range')) {
+			echo "	<div class='form_set'>\n";
+			echo "		<div class='label'>\n";
+			echo "			".$text['label-start_range']."\n";
+			echo "		</div>\n";
+			echo "		<div class='field nowrap'>\n";
+			echo "			<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin)."'>\n";
+			echo "			<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end)."'>\n";
+			echo "		</div>\n";
+			echo "	</div>\n";
+		}
+		if (permission_exists('xml_cdr_search_duration')) {
+			echo "	<div class='form_set'>\n";
+			echo "		<div class='label'>\n";
+			echo "			".$text['label-duration']." (".$text['label-seconds'].")\n";
+			echo "		</div>\n";
+			echo "		<div class='field nowrap'>\n";
+			echo "			<input type='text' class='formfld' style='min-width: 75px; width: 75px;' name='duration_min' value='".escape($duration_min)."' placeholder=\"".$text['label-minimum']."\">\n";
+			echo "			<input type='text' class='formfld' style='min-width: 75px; width: 75px;' name='duration_max' value='".escape($duration_max)."' placeholder=\"".$text['label-maximum']."\">\n";
+			echo "		</div>\n";
+			echo "	</div>\n";
+		}
+		if (permission_exists('xml_cdr_search_caller_destination')) {
+			echo "	<div class='form_set'>\n";
+			echo "		<div class='label'>\n";
 			echo "			".$text['label-caller_destination']."\n";
-			echo "		</td>\n";
-			echo "		<td class='vtable' align='left'>\n";
+			echo "		</div>\n";
+			echo "		<div class='field'>\n";
 			echo "			<input type='text' class='formfld' name='caller_destination' value='".escape($caller_destination)."'>\n";
-			echo "		</td>\n";
-			echo "	</tr>\n";
+			echo "		</div>\n";
+			echo "	</div>\n";
 		}
-		echo "		<tr>\n";
-		echo "			<td class='vncell' valign='top' nowrap='nowrap'>\n";
-		echo "				".$text['label-destination']."\n";
-		echo "			</td>\n";
-		echo "			<td class='vtable' align='left' style='white-space: nowrap;'>\n";
-		echo "				<input type='text' class='formfld' name='destination_number' id='destination_number' value='".escape($destination_number)."'>\n";
-		echo "			</td>\n";
-		echo "		</tr>\n";
-		if (permission_exists('xml_cdr_search_advanced')) {
-			echo "		<tr>\n";
-			echo "			<td class='vncell' valign='top' nowrap='nowrap'>\n";
-			echo "				".$text['label-tta']." (".$text['label-seconds'].")\n";
-			echo "			</td>\n";
-			echo "			<td class='vtable' align='left' style='white-space: nowrap;'>\n";
-			echo "				<input type='text' class='formfld' style='min-width: 75px; width: 75px;' name='tta_min' id='tta_min' value='".escape($tta)."' placeholder=\"".$text['label-minimum']."\">\n";
-			echo "				<input type='text' class='formfld' style='min-width: 75px; width: 75px;' name='tta_max' id='tta_max' value='".escape($tta)."' placeholder=\"".$text['label-maximum']."\">\n";
-			echo "			</td>\n";
-			echo "		</tr>\n";
+		if (permission_exists('xml_cdr_search_destination')) {
+			echo "	<div class='form_set'>\n";
+			echo "		<div class='label'>\n";
+			echo "			".$text['label-destination']."\n";
+			echo "		</div>\n";
+			echo "		<div class='field'>\n";
+			echo "			<input type='text' class='formfld' name='destination_number' id='destination_number' value='".escape($destination_number)."'>\n";
+			echo "		</div>\n";
+			echo "	</div>\n";
 		}
-		echo "	</table>\n";
+		if (permission_exists('xml_cdr_search_tta')) {
+			echo "	<div class='form_set'>\n";
+			echo "		<div class='label'>\n";
+			echo "			".$text['label-tta']." (".$text['label-seconds'].")\n";
+			echo "		</div>\n";
+			echo "		<div class='field nowrap'>\n";
+			echo "			<input type='text' class='formfld' style='min-width: 75px; width: 75px;' name='tta_min' id='tta_min' value='".escape($tta)."' placeholder=\"".$text['label-minimum']."\">\n";
+			echo "			<input type='text' class='formfld' style='min-width: 75px; width: 75px;' name='tta_max' id='tta_max' value='".escape($tta)."' placeholder=\"".$text['label-maximum']."\">\n";
+			echo "		</div>\n";
+			echo "	</div>\n";
+		}
 
-		echo "</td>";
-		echo "<td width='27%' style='vertical-align: top;'>\n";
-
-		echo "	<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-		echo "		<tr>\n";
-		if (permission_exists('hangup_cause')) {
-			echo "		<td class='vncell' valign='top' nowrap='nowrap'>\n";
+		if (permission_exists('xml_cdr_search_hangup_cause')) {
+			echo "	<div class='form_set'>\n";
+			echo "		<div class='label'>\n";
 			echo "			".$text['label-hangup_cause']."\n";
-			echo "		</td>\n";
-			echo "		<td class='vtable' align='left'>\n";
+			echo "		</div>\n";
+			echo "		<div class='field'>\n";
 			echo "			<select name='hangup_cause' class='formfld'>\n";
 			echo "				<option value=''></option>\n";
-
 			$cdr_status_options = array(
 				'NORMAL_CLEARING',
 				'ORIGINATOR_CANCEL',
@@ -373,98 +355,88 @@
 				echo "			<option value='".escape($cdr_status)."' ".escape($selected).">".escape($cdr_status_label)."</option>\n";
 			}
 			echo "			</select>\n";
-			echo "		</td>\n";
-			echo "	</tr>\n";
+			echo "		</div>\n";
+			echo "	</div>\n";
 		}
-		echo "		<tr>\n";
-		echo "			<td class='vncell' valign='top' nowrap='nowrap'>\n";
-		echo "				".$text['label-order']."\n";
-		echo "			</td>\n";
-		echo "			<td class='vtable' align='left' style='white-space: nowrap;'>\n";
-		echo "				<select name='order_by' class='formfld'>\n";
-		if (permission_exists('xml_cdr_extension')) {
-			echo "				<option value='extension' ".($order_by == 'extension' ? "selected='selected'" : null).">".$text['label-extension']."</option>\n";
+		if (permission_exists('xml_cdr_search_recording')) {
+			echo "	<div class='form_set'>\n";
+			echo "		<div class='label'>\n";
+			echo "			".$text['label-recording']."\n";
+			echo "		</div>\n";
+			echo "		<div class='field'>\n";
+			echo "			<select name='recording' class='formfld'>\n";
+			echo "				<option value=''></option>\n";
+			echo "				<option value='true' ".($recording == 'true' ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+			echo "				<option value='false' ".($recording == 'false' ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+			echo "			</select>\n";
+			echo "		</div>\n";
+			echo "	</div>\n";
 		}
-		if (permission_exists('xml_cdr_all')) {
-			echo "				<option value='domain_name' ".($order_by == 'domain_name' ? "selected='selected'" : null).">".$text['label-domain']."</option>\n";
-		}
-		echo "					<option value='caller_id_name' ".($order_by == 'caller_id_name' ? "selected='selected'" : null).">".$text['label-caller_id_name']."</option>\n";
-		echo "					<option value='caller_id_number' ".($order_by == 'caller_id_number' ? "selected='selected'" : null).">".$text['label-caller_id_number']."</option>\n";
-		if (permission_exists('caller_destination')) {
-			echo "				<option value='caller_destination' ".($order_by == 'caller_destination' ? "selected='selected'" : null).">".$text['label-caller_destination']."</option>\n";
-		}
-		echo "					<option value='destination_number' ".($order_by == 'destination_number' ? "selected='selected'" : null).">".$text['label-destination']."</option>\n";
-		echo "					<option value='start_stamp' ".($order_by == 'start_stamp' || $order_by == '' ? "selected='selected'" : null).">".$text['label-start']."</option>\n";
-		echo "					<option value='tta' ".($order_by == 'tta' ? "selected='selected'" : null).">".$text['label-tta']."</option>\n";
-		echo "					<option value='duration' ".($order_by == 'duration' ? "selected='selected'" : null).">".$text['label-duration']."</option>\n";
-		if (permission_exists('xml_cdr_pdd')) {
-			echo "				<option value='pdd_ms' ".($order_by == 'pdd_ms' ? "selected='selected'" : null).">".$text['label-pdd']."</option>\n";
-		}
-		if (permission_exists('xml_cdr_mos')) {
-			echo "				<option value='rtp_audio_in_mos' ".($order_by == 'rtp_audio_in_mos' ? "selected='selected'" : null).">".$text['label-mos']."</option>\n";
-		}
-		if (permission_exists('hangup_cause')) {
-			echo "				<option value='hangup_cause' ".($order_by == 'desc' ? "selected='selected'" : null).">".$text['label-hangup_cause']."</option>\n";
-		}
-
-		if (is_array($_SESSION['cdr']['field'])) {
-			echo "				<option value='' disabled='disabled'></option>\n";
-			echo "				<optgroup label=\"".$text['label-custom_cdr_fields']."\">\n";
-			foreach ($_SESSION['cdr']['field'] as $field) {
-				$array = explode(",", $field);
-				$field_name = end($array);
-				$field_label = ucwords(str_replace("_", " ", $field_name));
-				$field_label = str_replace("Sip", "SIP", $field_label);
-				if ($field_name != "destination_number") {
-					echo "			<option value='".$field_name."' ".($order_by == $field_name ? "selected='selected'" : null).">".$field_label."</option>\n";
-				}
+		if (permission_exists('xml_cdr_search_order')) {
+			echo "	<div class='form_set'>\n";
+			echo "		<div class='label'>\n";
+			echo "			".$text['label-order']."\n";
+			echo "		</div>\n";
+			echo "		<div class='field nowrap'>\n";
+			echo "			<select name='order_by' class='formfld'>\n";
+			if (permission_exists('xml_cdr_extension')) {
+				echo "			<option value='extension' ".($order_by == 'extension' ? "selected='selected'" : null).">".$text['label-extension']."</option>\n";
 			}
-			echo "				</optgroup>\n";
+			if (permission_exists('xml_cdr_all')) {
+				echo "			<option value='domain_name' ".($order_by == 'domain_name' ? "selected='selected'" : null).">".$text['label-domain']."</option>\n";
+			}
+			echo "				<option value='caller_id_name' ".($order_by == 'caller_id_name' ? "selected='selected'" : null).">".$text['label-caller_id_name']."</option>\n";
+			echo "				<option value='caller_id_number' ".($order_by == 'caller_id_number' ? "selected='selected'" : null).">".$text['label-caller_id_number']."</option>\n";
+			if (permission_exists('xml_cdr_caller_destination')) {
+				echo "			<option value='caller_destination' ".($order_by == 'caller_destination' ? "selected='selected'" : null).">".$text['label-caller_destination']."</option>\n";
+			}
+			echo "				<option value='destination_number' ".($order_by == 'destination_number' ? "selected='selected'" : null).">".$text['label-destination']."</option>\n";
+			echo "				<option value='start_stamp' ".($order_by == 'start_stamp' || $order_by == '' ? "selected='selected'" : null).">".$text['label-start']."</option>\n";
+			echo "				<option value='tta' ".($order_by == 'tta' ? "selected='selected'" : null).">".$text['label-tta']."</option>\n";
+			echo "				<option value='duration' ".($order_by == 'duration' ? "selected='selected'" : null).">".$text['label-duration']."</option>\n";
+			if (permission_exists('xml_cdr_pdd')) {
+				echo "			<option value='pdd_ms' ".($order_by == 'pdd_ms' ? "selected='selected'" : null).">".$text['label-pdd']."</option>\n";
+			}
+			if (permission_exists('xml_cdr_mos')) {
+				echo "			<option value='rtp_audio_in_mos' ".($order_by == 'rtp_audio_in_mos' ? "selected='selected'" : null).">".$text['label-mos']."</option>\n";
+			}
+			if (permission_exists('xml_cdr_hangup_cause')) {
+				echo "			<option value='hangup_cause' ".($order_by == 'desc' ? "selected='selected'" : null).">".$text['label-hangup_cause']."</option>\n";
+			}
+
+			if (is_array($_SESSION['cdr']['field'])) {
+				echo "			<option value='' disabled='disabled'></option>\n";
+				echo "			<optgroup label=\"".$text['label-custom_cdr_fields']."\">\n";
+				foreach ($_SESSION['cdr']['field'] as $field) {
+					$array = explode(",", $field);
+					$field_name = end($array);
+					$field_label = ucwords(str_replace("_", " ", $field_name));
+					$field_label = str_replace("Sip", "SIP", $field_label);
+					if ($field_name != "destination_number") {
+						echo "		<option value='".$field_name."' ".($order_by == $field_name ? "selected='selected'" : null).">".$field_label."</option>\n";
+					}
+				}
+				echo "			</optgroup>\n";
+			}
+			echo "			</select>\n";
+			echo "			<select name='order' class='formfld'>\n";
+			echo "				<option value='desc' ".($order == 'desc' ? "selected='selected'" : null).">".$text['label-descending']."</option>\n";
+			echo "				<option value='asc' ".($order == 'asc' ? "selected='selected'" : null).">".$text['label-ascending']."</option>\n";
+			echo "			</select>\n";
+			echo "		</div>\n";
+			echo "	</div>\n";
 		}
-		echo "				</select>\n";
-		echo "				<select name='order' class='formfld'>\n";
-		echo "					<option value='desc' ".($order == 'desc' ? "selected='selected'" : null).">".$text['label-descending']."</option>\n";
-		echo "					<option value='asc' ".($order == 'asc' ? "selected='selected'" : null).">".$text['label-ascending']."</option>\n";
-		echo "				</select>\n";
-		echo "			</td>\n";
-		echo "		</tr>\n";
-		if (permission_exists('xml_cdr_search_advanced')) {
-			echo "		<tr>\n";
-			echo "			<td class='vncell' valign='top' nowrap='nowrap'>\n";
-			echo "				".$text['label-recording']."\n";
-			echo "			</td>\n";
-			echo "			<td class='vtable' align='left' style='white-space: nowrap;'>\n";
-			echo "				<select name='recording' class='formfld'>\n";
-			echo "					<option value=''></option>\n";
-			echo "					<option value='true' ".($recording == 'true' ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-			echo "					<option value='false' ".($recording == 'false' ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-			echo "				</select>\n";
-			echo "			</td>\n";
-			echo "		</tr>\n";
-		}
 
-		echo "	</table>\n";
+		echo "</div>\n";
 
-		echo "</td>";
-
-		echo "</tr>";
-		echo "</table>";
-
-		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-		echo "<tr>";
-		echo "<td style='padding-top: 8px;' align='left'>";
-		echo 	$text['description_search'];
-		echo "</td>";
-		echo "<td style='padding-top: 8px;' align='right' nowrap>";
+		echo "<div style='float: right; padding-top: 8px; margin-left: 20px; white-space: nowrap;'>";
 		if (permission_exists('xml_cdr_all') && $_REQUEST['show'] == 'all') {
 			echo "<input type='hidden' name='show' value='all'>\n";
 		}
-		echo "<input type='button' class='btn' value='".$text['button-reset']."' onclick=\"document.location.href='xml_cdr.php';\">\n";
-		echo "<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
-
-		echo "</td>";
-		echo "</tr>";
-		echo "</table>";
+		echo "	<input type='button' class='btn' value='".$text['button-reset']."' onclick=\"document.location.href='xml_cdr.php';\">\n";
+		echo "	<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
+		echo "</div>\n";
+		echo "<div style='font-size: 85%; padding-top: 8px;'>".$text['description_search']."</div>\n";
 
 		echo "</form>";
 		echo "<br /><br />";
@@ -495,7 +467,7 @@
 	}
 	echo "<th>".$text['label-caller_id_name']."</th>\n";
 	echo "<th>".$text['label-caller_id_number']."</th>\n";
-	if (permission_exists('caller_destination')) {
+	if (permission_exists('xml_cdr_caller_destination')) {
 		echo "<th>".$text['label-caller_destination']."</th>\n";
 	}
 	echo "<th>".$text['label-destination']."</th>\n";
@@ -526,7 +498,7 @@
 		echo "<th style='text-align: center;' title=\"".$text['description-mos']."\">".$text['label-mos']."</th>\n";
 		$col_count++;
 	}
-	if (permission_exists('hangup_cause')) {
+	if (permission_exists('xml_cdr_hangup_cause')) {
 		echo "<th>".$text['label-hangup_cause']."</th>\n";
 	}
 	else {
@@ -664,7 +636,7 @@
 					$content .= "		</a>";
 					$content .= "	</td>\n";
 				//caller destination
-					if (permission_exists('caller_destination')) {
+					if (permission_exists('xml_cdr_caller_destination')) {
 						$content .= "	<td valign='top' class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>";
 						$content .= "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode(escape($row['caller_id_name']))."&src_cid_number=".urlencode(escape($row['caller_id_number']))."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode(escape($row['caller_destination']))."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 						if (is_numeric($row['caller_destination'])) {
@@ -773,7 +745,7 @@
 						$content .= "	<td valign='top' class='".$row_style[$c]."'$title style='text-align: center;'>$value</td>\n";
 					}
 				//hangup cause/call result
-					if (permission_exists('hangup_cause')) {
+					if (permission_exists('xml_cdr_hangup_cause')) {
 						$content .= "	<td valign='top' class='".$row_style[$c]."' nowrap='nowrap'><a ".$tr_link.">".escape($hangup_cause)."</a></td>\n";
 					}
 					else {
