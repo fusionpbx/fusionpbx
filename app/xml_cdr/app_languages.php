@@ -2680,24 +2680,24 @@ $text['button-download_csv']['ru-ru'] = "Загрузить в формате CS
 $text['button-download_csv']['sv-se'] = "Ladda Ned CSV";
 $text['button-download_csv']['uk-ua'] = "";
 
-$text['button-advanced_search']['en-us'] = "Advanced Search";
+$text['button-advanced_search']['en-us'] = "Advanced";
 $text['button-advanced_search']['ar-eg'] = "";
-$text['button-advanced_search']['de-at'] = "Erweiterte Suche"; //copied from de-de
-$text['button-advanced_search']['de-ch'] = "Erweiterte Suche"; //copied from de-de
-$text['button-advanced_search']['de-de'] = "Erweiterte Suche";
-$text['button-advanced_search']['es-cl'] = "Búsqueda Avanzada";
-$text['button-advanced_search']['es-mx'] = "Búsqueda Avanzada"; //copied from es-cl
-$text['button-advanced_search']['fr-ca'] = "Recherche Avancée"; //copied from fr-fr
-$text['button-advanced_search']['fr-fr'] = "Recherche Avancée";
+$text['button-advanced_search']['de-at'] = "Erweiterte"; //copied from de-de
+$text['button-advanced_search']['de-ch'] = "Erweiterte"; //copied from de-de
+$text['button-advanced_search']['de-de'] = "Erweiterte";
+$text['button-advanced_search']['es-cl'] = "Avanzada";
+$text['button-advanced_search']['es-mx'] = "Avanzada"; //copied from es-cl
+$text['button-advanced_search']['fr-ca'] = "Avancée"; //copied from fr-fr
+$text['button-advanced_search']['fr-fr'] = "Avancée";
 $text['button-advanced_search']['he-il'] = "";
-$text['button-advanced_search']['it-it'] = "Ricerca Avanzata";
+$text['button-advanced_search']['it-it'] = "Avanzata";
 $text['button-advanced_search']['nl-nl'] = "";
 $text['button-advanced_search']['pl-pl'] = "Zaawansowane wyszukiwanie";
-$text['button-advanced_search']['pt-br'] = "Pesquisa Avançada ";
-$text['button-advanced_search']['pt-pt'] = "Pesquisa Avançada";
+$text['button-advanced_search']['pt-br'] = "Avançada ";
+$text['button-advanced_search']['pt-pt'] = "Avançada";
 $text['button-advanced_search']['ro-ro'] = "";
 $text['button-advanced_search']['ru-ru'] = "Расширенный поиск";
-$text['button-advanced_search']['sv-se'] = "Avancerad Sökning";
+$text['button-advanced_search']['sv-se'] = "Avancerad";
 $text['button-advanced_search']['uk-ua'] = "";
 
 ?>
