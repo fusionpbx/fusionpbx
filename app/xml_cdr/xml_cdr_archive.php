@@ -269,7 +269,7 @@
 
 				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 				echo "	<tr>\n";
-				if (permission_exists('hangup_cause')) {
+				if (permission_exists('xml_cdr_hangup_cause')) {
 					echo "		<td class='vncell' valign='top' nowrap='nowrap'>\n";
 					echo "			".$text['label-hangup_cause']."\n";
 					echo "		</td>\n";
@@ -318,7 +318,7 @@
 					echo "		</td>\n";
 					echo "	</tr>\n";
 				}
-				if (permission_exists('caller_destination')) {
+				if (permission_exists('xml_cdr_caller_destination')) {
 					echo "	<tr>\n";
 					echo "		<td class='vncell' valign='top' nowrap='nowrap'>\n";
 					echo "			".$text['label-caller_destination']."\n";
@@ -376,7 +376,7 @@
 		}
 		echo th_order_by('caller_id_name', $text['label-caller_id_name'], $order_by, $order, null, null, $param);
 		echo th_order_by('caller_id_number', $text['label-caller_id_number'], $order_by, $order, null, null, $param);
-		if (permission_exists('caller_destination')) {
+		if (permission_exists('xml_cdr_caller_destination')) {
 			echo th_order_by('caller_destination', $text['label-caller_destination'], $order_by, $order, null, null, $param);
 		}
 		echo th_order_by('destination_number', $text['label-destination'], $order_by, $order, null, null, $param);
@@ -410,7 +410,7 @@
 			echo th_order_by('rtp_audio_in_mos', $text['label-mos'], $order_by, $order, null, "style='text-align: center;'", $param, $text['description-mos']);
 			$col_count++;
 		}
-		if (permission_exists('hangup_cause')) {
+		if (permission_exists('xml_cdr_hangup_cause')) {
 			echo th_order_by('hangup_cause', $text['label-hangup_cause'], $order_by, $order, null, null, $param);
 		}
 		else {
@@ -542,7 +542,7 @@
 				echo "		</a>";
 				echo "	</td>\n";
 			//caller destination
-				if (permission_exists('caller_destination')) {
+				if (permission_exists('xml_cdr_caller_destination')) {
 					echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>";
 					echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode(escape($row['caller_id_name']))."&src_cid_number=".urlencode(escape($row['caller_id_number']))."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode(escape($row['caller_destination']))."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 					if (is_numeric($row['caller_destination'])) {
@@ -675,7 +675,7 @@
 					echo "	<td valign='top' class='".$row_style[$c]."'$title style='text-align: center;'>".escape($value)."</td>\n";
 				}
 			//hangup cause/call result
-				if (permission_exists('hangup_cause')) {
+				if (permission_exists('xml_cdr_hangup_cause')) {
 					echo "	<td valign='top' class='".$row_style[$c]."' nowrap='nowrap'><a ".escape($tr_link).">".escape($hangup_cause)."</a></td>\n";
 				}
 				else {
