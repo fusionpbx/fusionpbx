@@ -833,6 +833,7 @@
 		--session execute
 			if (session:ready()) then
 				--set the variables
+					session:execute("set", "ignore_early_media=true");
 					session:execute("set", "hangup_after_bridge=true");
 					session:execute("set", "continue_on_fail=true");
 
