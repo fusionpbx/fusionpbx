@@ -232,6 +232,7 @@
 		ring_group_caller_id_number = row["ring_group_caller_id_number"];
 		ring_group_cid_name_prefix = row["ring_group_cid_name_prefix"];
 		ring_group_cid_number_prefix = row["ring_group_cid_number_prefix"];
+		ring_group_follow_me_enabled = row["ring_group_follow_me_enabled"];
 		missed_call_app = row["ring_group_missed_call_app"];
 		missed_call_data = row["ring_group_missed_call_data"];
 	end);
@@ -496,7 +497,7 @@
 		---add follow me destinations
 			for key, row in pairs(destinations) do
 
-				if (row.ring_group_strategy == "enterprise") then
+				if (ring_group_follow_me_enabled == "true") then
 					cmd = "user_data ".. row.destination_number .."@" ..row.domain_name.." var follow_me_enabled";
 					if (api:executeString(cmd) == "true") then
 
