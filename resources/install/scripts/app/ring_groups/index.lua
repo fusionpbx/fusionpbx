@@ -787,20 +787,20 @@
 
 							--set the outbound caller id
 								if (caller_is_local == 'true' and outbound_caller_id_name ~= nil) then
-									caller_id = ",origination_caller_id_name='"..outbound_caller_id_name.."'";
+									caller_id = "origination_caller_id_name='"..outbound_caller_id_name.."'";
 								end
 								if (caller_is_local == 'true' and outbound_caller_id_number ~= nil) then
 									caller_id = caller_id .. ",origination_caller_id_number='"..outbound_caller_id_number.."'";
 								end
 								if (ring_group_caller_id_name ~= nil and ring_group_caller_id_name ~= '') then
-									caller_id = ",origination_caller_id_name='"..ring_group_caller_id_name.."'";
+									caller_id = "origination_caller_id_name='"..ring_group_caller_id_name.."'";
 								end
 								if (ring_group_caller_id_number ~= nil and ring_group_caller_id_number ~= '') then
 									caller_id = caller_id .. ",origination_caller_id_number="..ring_group_caller_id_number..",";
 								end
 
 							--set the destination dial string
-								dial_string = "[ignore_early_media=true,toll_allow=".. toll_allow ..",".. caller_id .."sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]"..route_bridge
+								dial_string = "[ignore_early_media=true,toll_allow=".. toll_allow ..",".. caller_id ..",sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]"..route_bridge
 						end
 
 					--add a delimiter between destinations
