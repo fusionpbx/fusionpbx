@@ -550,7 +550,6 @@
 			echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
 		}
 		echo "</td>\n";
-		$col_count++;
 	}
 	echo "</tr>\n";
 
