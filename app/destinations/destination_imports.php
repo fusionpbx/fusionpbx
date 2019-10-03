@@ -81,7 +81,7 @@
 
 //copy the csv file
 	//$_POST['submit'] == "Upload" &&
-	if ( is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('destination_upload')) {
+	if (is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('destination_upload')) {
 		if ($_POST['type'] == 'csv') {
 			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name']);
 			$save_msg = "Uploaded file to ".$_SESSION['server']['temp']['dir']."/". htmlentities($_FILES['ulfile']['name']);
@@ -181,9 +181,6 @@
 									$field_array = explode(".",$value);
 									$table_name = $field_array[0];
 									$field_name = $field_array[1];
-									//echo "value: $value<br />\n";
-									//echo "table_name: $table_name<br />\n";
-									//echo "field_name: $field_name<br />\n";
 
 									//get the parent table name
 									$parent = get_parent($schema, $table_name);
@@ -438,12 +435,6 @@
 					}
 					fclose($handle);
 
-				//debug info
-					//echo "<pre>\n";
-					//print_r($array);
-					//echo "</pre>\n";
-					//exit;
-
 				//save to the data
 					if (is_array($array)) {
 						$database = new database;
@@ -454,7 +445,7 @@
 					}
 
 				//send the redirect header
-					header("Location: destinations.php");
+					header("Location: destinations.php?type=".$destination_type);
 					return;
 			}
 
@@ -548,9 +539,6 @@
 									$field_array = explode(".",$value);
 									$table_name = $field_array[0];
 									$field_name = $field_array[1];
-									//echo "value: $value<br />\n";
-									//echo "table_name: $table_name<br />\n";
-									//echo "field_name: $field_name<br />\n";
 
 									//get the parent table name
 									$parent = get_parent($schema, $table_name);
@@ -586,16 +574,16 @@
 										$destination_number = $row['destination_number'];
 
 									//get the dialplan uuid
-										if (strlen($row['destination_number']) == 0 || strlen($row['dialplan_uuid']) == 0 ) {
+										if (strlen($row['destination_number']) == 0 || !is_uuid($row['dialplan_uuid'])) {
 											$sql = "select * from v_destinations ";
 											$sql .= "where domain_uuid = :domain_uuid ";
 											$sql .= "and destination_number = :destination_number; ";
-											//echo $sql."<br />\n";
 											$parameters['domain_uuid'] = $domain_uuid;
 											$parameters['destination_number'] = $destination_number;
 											$database = new database;
 											$destinations = $database->select($sql, $parameters, 'all');
 											$row = $destinations[0];
+											unset($sql, $parameters);
 
 										//add to the array
 											//$array['destinations'][$row_id] = $destinations[0];
@@ -605,9 +593,9 @@
 												//$array['dialplans'][$row_id]['dialplan_uuid'] = $destinations[0]['dialplan_uuid'];
 											}
 										}
-								} //foreach
+								}
 
-						} //if ($from_row <= $row_number)
+						}
 						$row_number++;
 
 					//process a chunk of the array
@@ -616,39 +604,32 @@
 							$row_number = 0;
 							foreach ($array['destinations'] as $row) {
 								//delete the dialplan
-								if (strlen($row['dialplan_uuid']) > 0) {
+								if (is_uuid($row['dialplan_uuid'])) {
 									$sql = "delete from v_dialplan_details ";
 									$sql .= "where dialplan_uuid = :dialplan_uuid ";
-									//echo "$sql<br />\n";
 									$parameters['dialplan_uuid'] = $row['dialplan_uuid'];
 									$database = new database;
 									$database->execute($sql, $parameters);
+									unset($sql, $parameters);
 
 									$sql = "delete from v_dialplans ";
 									$sql .= "where dialplan_uuid = :dialplan_uuid ";
-									//echo "$sql<br />\n";
 									$parameters['dialplan_uuid'] = $row['dialplan_uuid'];
 									$database = new database;
 									$database->execute($sql, $parameters);
+									unset($sql, $parameters);
 								}
 
 								//delete the destinations
-								if (strlen($row['destination_uuid']) > 0) {
+								if (is_uuid($row['destination_uuid'])) {
 									$sql = "delete from v_destinations ";
 									$sql .= "where destination_uuid = :destination_uuid ";
-									//echo "$sql<br />\n";
 									$parameters['destination_uuid'] = $row['destination_uuid'];
 									$database = new database;
 									$database->execute($sql, $parameters);
+									unset($sql, $parameters);
 								}
-							} //foreach
-
-							//delete to the data
-							//$database = new database;
-							//$database->app_name = 'destinations';
-							//$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
-							//$database->delete($array);
-							//$message = $database->message;
+							}
 
 							//clear the array
 							unset($array);
@@ -666,52 +647,40 @@
 					if ($row_id < 1000) {
 						foreach ($array['destinations'] as $row) {
 							//delete the dialplan
-							if (strlen($row['dialplan_uuid']) > 0) {
+							if (is_uuid($row['dialplan_uuid'])) {
 								$sql = "delete from v_dialplan_details ";
 								$sql .= "where dialplan_uuid = :dialplan_uuid ";
-								//echo "$sql<br />\n";
 								$parameters['dialplan_uuid'] = $row['dialplan_uuid'];
 								$database = new database;
 								$database->execute($sql, $parameters);
+								unset($sql, $parameters);
 
 								$sql = "delete from v_dialplans ";
 								$sql .= "where dialplan_uuid = :dialplan_uuid ";
-								//echo "$sql<br />\n";
 								$parameters['dialplan_uuid'] = $row['dialplan_uuid'];
 								$database = new database;
 								$database->execute($sql, $parameters);
+								unset($sql, $parameters);
 							}
 
 							//delete the destinations
-							if (strlen($row['destination_uuid']) > 0) {
+							if (is_uuid($row['destination_uuid'])) {
 								$sql = "delete from v_destinations ";
 								$sql .= "where destination_uuid = :destination_uuid ";
-								//echo "$sql<br />\n";
 								$parameters['destination_uuid'] = $row['destination_uuid'];
 								$database = new database;
 								$database->execute($sql, $parameters);
+								unset($sql, $parameters);
 							}
-						} //foreach
+						}
 					}
 
-				//debug info
-					//echo "<pre>\n";
-					//print_r($array);
-					//echo "</pre>\n";
-					//exit;
-
-				//save to the data
-					//if (is_array($array)) {
-					//	$database = new database;
-					//	$database->app_name = 'destinations';
-					//	$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
-					//	$database->delete($array);
-					//	//$message = $database->message;
-					//}
+				//set response
+					message::add($text['message-delete'], 'positive');
 
 				//send the redirect header
-					header("Location: /app/destinations/destinations.php");
-					return;
+					header("Location: /app/destinations/destinations.php?type=".$destination_type);
+					exit;
 			}
 	}
 
