@@ -567,7 +567,6 @@
 								}
 
 							//delete the destinations
-								$row_number = 0;
 								foreach ($array['destinations'] as $row) {
 									//get the values
 										$domain_uuid = $row['domain_uuid'];
