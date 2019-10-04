@@ -852,6 +852,6 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "trusted certificate for yealink";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Required trusted certificate for provisioning.";
 		$y++;
 ?>
