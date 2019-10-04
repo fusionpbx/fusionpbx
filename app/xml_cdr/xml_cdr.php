@@ -609,8 +609,8 @@
 						$content .= "<tr id='recording_progress_bar_".$row['xml_cdr_uuid']."' style='display: none;'><td class='".$row_style[$c]." playback_progress_bar_background' style='padding: 0; border: none;' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".$row['xml_cdr_uuid']."'></span></td></tr>\n";
 					}
 
-					if (permission_exists('xml_cdr_details') && $row['raw_data_exists']) {
-						$tr_link = "href='xml_cdr_details.php?id=".escape($row['xml_cdr_uuid']).(($_REQUEST['show']) ? "&show=all" : null)."'";
+					if (permission_exists('xml_cdr_details')) {
+						$tr_link = "href='xml_cdr_details.php?id=".urlencode($row['xml_cdr_uuid']).(($_REQUEST['show']) ? "&show=all" : null)."'";
 					}
 					else {
 						$tr_link = null;
