@@ -846,5 +846,12 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "For example, United States, France, Germany etc.";
 		$y++;
-
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "fabea2c0-3585-4cfc-8819-f45ef61002ab";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_trust_certificates";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Required trusted certificate for provisioning.";
+		$y++;
 ?>
