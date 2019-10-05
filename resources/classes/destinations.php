@@ -38,7 +38,7 @@ class destinations {
 	}
 
 	/**
-	 * Get the destination menu
+	 * Build the destination select list
 	 * @var string $destination_type can be ivr, dialplan, call_center_contact or bridge
 	 * @var string $destination_name - current name
 	 * @var string $destination_value - current value
@@ -75,6 +75,7 @@ class destinations {
 			$x = 0;
 			foreach ($this->destinations as $row) {
 				if ($row['type'] = 'sql') {
+					$table_name = preg_replace('#[^a-zA-Z0-9_]#', '', $row['name']);
 					if (isset($row['sql'])) {
 						if (is_array($row['sql'])) {
 							$sql = trim($row['sql'][$db_type])." ";
@@ -88,29 +89,29 @@ class destinations {
 						$fields = '';
 						$c = 1;
 						foreach ($row['field'] as $key => $value) {
+							$key = preg_replace('#[^a-zA-Z0-9_]#', '', $key);
+							$value = preg_replace('#[^a-zA-Z0-9_]#', '', $value);
 							if ($field_count != $c) { $delimiter = ','; } else { $delimiter = ''; }
 							$fields .= $value." as ".$key.$delimiter." ";
 							$c++;
 						}
 						$sql = "select ".$fields;
-						$sql .= " from v_".$row['name']." ";
+						$sql .= " from v_".$table_name." ";
 					}
 					if (isset($row['where'])) {
 						$sql .= trim($row['where'])." ";
 					}
 					$sql .= "order by ".trim($row['order_by']);
 					$sql = str_replace("\${domain_uuid}", $_SESSION['domain_uuid'], $sql);
-					$sql = trim($sql);
-					$statement = $this->db->prepare($sql);
-					$statement->execute();
-					$result = $statement->fetchAll(PDO::FETCH_NAMED);
-					unset($statement);
+					$database = new database;
+					$result = $database->select($sql, null, 'all');
 
 					$this->destinations[$x]['result']['sql'] = $sql;
 					$this->destinations[$x]['result']['data'] = $result;
 				}
 				$x++;
 			}
+
 			$this->destinations[$x]['type'] = 'array';
 			$this->destinations[$x]['label'] = 'other';
 			$this->destinations[$x]['name'] = 'dialplans';
@@ -324,6 +325,7 @@ class destinations {
 			$x = 0;
 			foreach ($this->destinations as $row) {
 				if ($row['type'] = 'sql') {
+					$table_name = preg_replace('#[^a-zA-Z0-9_]#', '', $row['name']);
 					if (isset($row['sql'])) {
 						if (is_array($row['sql'])) {
 							$sql = trim($row['sql'][$db_type])." ";
@@ -337,23 +339,22 @@ class destinations {
 						$fields = '';
 						$c = 1;
 						foreach ($row['field'] as $key => $value) {
+							$key = preg_replace('#[^a-zA-Z0-9_]#', '', $key);
+							$value = preg_replace('#[^a-zA-Z0-9_]#', '', $value);
 							if ($field_count != $c) { $delimiter = ','; } else { $delimiter = ''; }
 							$fields .= $value." as ".$key.$delimiter." ";
 							$c++;
 						}
 						$sql = "select ".$fields;
-						$sql .= " from v_".$row['name']." ";
+						$sql .= " from v_".$table_name." ";
 					}
 					if (isset($row['where'])) {
 						$sql .= trim($row['where'])." ";
 					}
 					$sql .= "order by ".trim($row['order_by']);
 					$sql = str_replace("\${domain_uuid}", $_SESSION['domain_uuid'], $sql);
-					$sql = trim($sql);
-					$statement = $this->db->prepare($sql);
-					$statement->execute();
-					$result = $statement->fetchAll(PDO::FETCH_NAMED);
-					unset($statement);
+					$database = new database;
+					$result = $database->select($sql, null, 'all');
 
 					$this->destinations[$x]['result']['sql'] = $sql;
 					$this->destinations[$x]['result']['data'] = $result;
