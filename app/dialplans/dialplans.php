@@ -405,7 +405,6 @@
 			$c = $c == 0 ? 1 : 0;
 		}
 	}
-	unset($dialplans, $row);
 
 	echo "<tr>\n";
 	echo "<td colspan='9'>\n";
@@ -458,6 +457,9 @@
 			echo "</script>\n";
 		}
 	}
+
+	unset($dialplans, $row);
+
 //include the footer
 	require_once "resources/footer.php";
 
