@@ -45,9 +45,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//function to show the list of sound files
-	// moved to functions.php
-
 //action add or update
 	if (is_uuid($_REQUEST["id"]) || is_uuid($_REQUEST["ivr_menu_uuid"])) {
 		$action = "update";
@@ -58,7 +55,6 @@
 	}
 	else {
 		$action = "add";
-		$ivr_menu_uuid = uuid();
 	}
 
 //get total ivr menu count from the database, check limit, if defined
@@ -216,13 +212,12 @@
 
 				//add a uuid to ivr_menu_uuid if it is empty
 					if ($action == 'add') {
-						$_POST["ivr_menu_uuid"] = $ivr_menu_uuid;
+						$ivr_menu_uuid = uuid();
 					}
 
 				//add a uuid to dialplan_uuid if it is empty
 					if (!is_uuid($dialplan_uuid)) {
 						$dialplan_uuid = uuid();
-						$_POST["dialplan_uuid"] = $dialplan_uuid;
 					}
 
 				//prepare the array
@@ -370,8 +365,8 @@
 					header("Location: ivr_menu_edit.php?id=".urlencode($ivr_menu_uuid));
 					return;
 
-			} //if ($_POST["persistformvar"] != "true")
-	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+			}
+	}
 
 //initialize the destinations object
 	$destination = new destinations;
