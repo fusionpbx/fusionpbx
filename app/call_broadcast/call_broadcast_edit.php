@@ -304,40 +304,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    ".$text['label-accountcode']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		if ($action == "add"){ $accountcode=$_SESSION['domain_name']; }
+		if ($action == "add") { $accountcode=$_SESSION['domain_name']; }
 		echo "    <input class='formfld' type='text' name='broadcast_accountcode' maxlength='255' value=\"".escape($broadcast_accountcode)."\">\n";
-		echo "<br />\n";
-		echo $text['description-accountcode']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-	}
-	else if (if_group("admin") &&  file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "    ".$text['label-accountcode']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "  <select name='broadcast_accountcode' id='broadcast_accountcode' class='formfld'>\n";
-		$sql = "select type_value ";
-		$sql .= "from v_billings ";
-		$sql .= "where domain_uuid = :domain_uuid ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
-		$result = $database->select($sql, $parameters, 'all');
-		if (is_array($result) && @sizeof($result) != 0) {
-			foreach ($result as &$row) {
-				$selected = '';
-				if (($action == "add") && ($row['type_value'] == $_SESSION['domain_name'])){
-					$selected='selected="selected"';
-				}
-				elseif ($row['type_value'] == $accountcode){
-					$selected='selected="selected"';
-				}
-				echo "    <option value=\"".$row['type_value']."\" $selected>".$row['type_value']."</option>\n";
-			}
-		}
-		unset($sql, $parameters, $result, $row);
-		echo "</select>";
 		echo "<br />\n";
 		echo $text['description-accountcode']."\n";
 		echo "</td>\n";
