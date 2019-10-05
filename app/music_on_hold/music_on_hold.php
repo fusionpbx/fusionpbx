@@ -43,9 +43,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//increase the exucution time
-	ini_set('max_execution_time', 7200);
-
 //get the music_on_hold array
 	$sql = "select * from v_music_on_hold ";
 	$sql .= "where ( ";
@@ -80,13 +77,15 @@
 
 		//replace the sounds_dir variable in the path
 			$stream_path = str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $stream_path);
+			$stream_path = str_replace('..', '', $stream_path);
 
-		//get the file
-			$stream_file = $_GET['file'];
+		//get the file and sanitize it
+			$stream_file = basename($_GET['file']);
+			$search = array('..', '/', ':');
+			$stream_file = str_replace($search, '', $stream_file);
+
+		//join the path and file name
 			$stream_full_path = path_join($stream_path, $stream_file);
-
-		//sanitize path
-			$stream_full_path = str_replace('../', '', $stream_full_path);
 
 		//download the file
 			session_cache_limiter('public');
