@@ -882,10 +882,6 @@
 								if (tonumber(ring_group_call_timeout) == timeout) then
 									break;	
 								end
-				
-								if (session:getVariable("originate_disposition") == "NO_ANSWER" ) then
-								    timeout = timeout + destination_timeout;
-								end
 
 							--send the call to the destination
 								if (user_exists == "true") then
@@ -900,6 +896,10 @@
 								app_data = app_data .. dial_string;
 								freeswitch.consoleLog("NOTICE", "[ring group] app_data: "..app_data.."\n");
 								session:execute("bridge", app_data);
+				
+								if (session:getVariable("originate_disposition") == "NO_ANSWER" ) then
+							    	    timeout = timeout + destination_timeout;
+								end
 
 							--increment the value of x
 								x = x + 1;
