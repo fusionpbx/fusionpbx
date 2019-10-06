@@ -882,7 +882,10 @@
 								if (tonumber(ring_group_call_timeout) == timeout) then
 									break;	
 								end
-								timeout = timeout + destination_timeout;
+				
+								if (session:getVariable("originate_disposition") == "NO_ANSWER" ) then
+								    timeout = timeout + destination_timeout;
+								end
 
 							--send the call to the destination
 								if (user_exists == "true") then
