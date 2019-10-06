@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PhoneDirectory>
 {foreach $contacts as $row}
-{if $smarty.get.contacts == "users" && $row.category == "users"}
+{if $row.category == "users"}
 	<DirectoryEntry>
 	{if $row.contact_name_given != ""}
 		<Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
@@ -17,7 +17,7 @@
 		{/if}
 	{/foreach}
 	</DirectoryEntry>
-{elseif $smarty.get.contacts == "groups" && $row.category == "groups"}
+{elseif $row.category == "groups"}
 	<DirectoryEntry>
 	{if $row.contact_name_given != ""}
 		<Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
@@ -33,7 +33,7 @@
 		{/if}
 	{/foreach}
 	</DirectoryEntry>
-{elseif $smarty.get.contacts == "extensions" && $row.category == "extensions"}
+{elseif $row.category == "extensions"}
 	<DirectoryEntry>
 	{if $row.contact_name_given != ""}
 		<Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
@@ -46,7 +46,7 @@
 		<Telephone>{$row.phone_extension}</Telephone>
 	{/if}
 	</DirectoryEntry>
-{elseif $smarty.get.contacts == "all"}
+{else}
 	<DirectoryEntry>
 	{if $row.contact_name_given != ""}
 		<Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
