@@ -864,65 +864,33 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "e.number_alias, \n";
 
 				$sql .= "count(*) \n";
-				$sql .= "filter( \n";
-				$sql .= " where c.domain_uuid = e.domain_uuid \n";
-				$sql .= " and ((\n";
-				$sql .= "   c.caller_id_number = e.extension \n";
-				$sql .= "   or \n";
-				$sql .= "   c.destination_number = e.extension) \n";
-				$sql .= "  or ( \n";
-				$sql .= "   e.number_alias is not null and ( \n";
-				$sql .= "    c.caller_id_number = e.number_alias \n";
-				$sql .= "    or \n";
-				$sql .= "    c.destination_number = e.number_alias))) \n";
-				$sql .= " and (\n";
-				$sql .= "  c.answer_stamp is not null \n";
-				$sql .= "  and \n";
-				$sql .= "  c.bridge_uuid is not null) \n";
-
+				$sql .= "filter ( \n";
+				$sql .= " where c.extension_uuid = e.extension_uuid \n";
+				$sql .= " and missed_call = false \n";
 				if ($this->include_internal) {
-					$sql .= " and (direction = 'inbound' or direction = 'local')) \n";
+					$sql .= " and (direction = 'inbound' or direction = 'local') \n";
 				}
 				else {
-					$sql .= "and direction = 'inbound') \n";
+					$sql .= "and direction = 'inbound' \n";
 				}
+				$sql .= ") \n";
 				$sql .= "as answered, \n";
 
 				$sql .= "count(*) \n";
-				$sql .= "filter( \n";
-				$sql .= " where (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
-				$sql .= "   or \n";
-				$sql .= "   c.destination_number = e.extension) \n";
-				$sql .= "  or (\n";
-				$sql .= "   e.number_alias is not null \n";
-				$sql .= "   and ( \n";
-				$sql .= "    c.caller_id_number = e.number_alias \n";
-				$sql .= "    or \n";
-				$sql .= "    c.destination_number = e.number_alias))) \n";
-				$sql .= " and ( \n";
-				$sql .= "  c.answer_stamp is null \n";
-				$sql .= "  and \n";
-				$sql .= "  c.bridge_uuid is null) \n";
+				$sql .= "filter ( \n";
+				$sql .= " where c.extension_uuid = e.extension_uuid \n";
+				$sql .= " and missed_call = true \n";
 				if ($this->include_internal) {
-							$sql .= " and (direction = 'inbound' or direction = 'outbound'))";
+							$sql .= " and (direction = 'inbound' or direction = 'outbound') ";
 				} else {
-							$sql .= " and direction = 'inbound')";
+							$sql .= " and direction = 'inbound' ";
 				}
+				$sql .= ") \n";
 				$sql .= "as missed, \n";
 
 				$sql .= "count(*) \n";
-				$sql .= "filter( \n";
-				$sql .= " where (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
-				$sql .= "   or \n";
-				$sql .= "   c.destination_number = e.extension) \n";
-				$sql .= "  or ( \n";
-				$sql .= "   e.number_alias is not null \n";
-				$sql .= "   and ( \n";
-				$sql .= "    c.caller_id_number = e.number_alias \n";
-				$sql .= "    or \n";
-				$sql .= "    c.destination_number = e.number_alias))) \n";
+				$sql .= "filter ( \n";
+				$sql .= " where c.extension_uuid = e.extension_uuid \n";
 				$sql .= " and c.hangup_cause = 'NO_ANSWER' \n";
  				if ($this->include_internal) {
 					$sql .= " and (direction = 'inbound' or direction = 'local') \n";
@@ -930,95 +898,53 @@ if (!class_exists('xml_cdr')) {
 				else { 
 					$sql .= "and direction = 'inbound' \n";
 				}
-				$sql .= ") as no_answer, \n";
+				$sql .= ") \n";
+				$sql .= "as no_answer, \n";
 
 				$sql .= "count(*) \n";
-				$sql .= "filter( \n";
-				$sql .= " where (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
-				$sql .= "   or \n";
-				$sql .= "   c.destination_number = e.extension) \n";
-				$sql .= "  or ( \n";
-				$sql .= "   e.number_alias is not null \n";
-				$sql .= "   and ( \n";
-				$sql .= "    c.caller_id_number = e.number_alias \n";
-				$sql .= "    or \n";
-				$sql .= "    c.destination_number = e.number_alias))) \n";
-				$sql .= " and \n";
-				$sql .= " c.hangup_cause = 'USER_BUSY' \n";
+				$sql .= "filter ( \n";
+				$sql .= " where c.extension_uuid = e.extension_uuid \n";
+				$sql .= " and c.hangup_cause = 'USER_BUSY' \n";
 				if ($this->include_internal) {
-						$sql .= " and (direction = 'inbound' or direction = 'local')) \n";
+						$sql .= " and (direction = 'inbound' or direction = 'local') \n";
 				}
 				else {
-						$sql .= " and direction = 'inbound') \n";
+						$sql .= " and direction = 'inbound' \n";
 				}
+				$sql .= ") \n";
 				$sql .= "as busy, \n";
 
 				$sql .= "sum(c.billsec) \n";
 				$sql .= "filter ( \n";
-				$sql .= " where (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
-				$sql .= "   or \n";
-				$sql .= "   c.destination_number = e.extension) \n";
-				$sql .= "  or ( \n";
-				$sql .= "   e.number_alias is not null \n";
-				$sql .= "   and ( \n";
-				$sql .= "    c.caller_id_number = e.number_alias \n";
-				$sql .= "    or \n";
-				$sql .= "    c.destination_number = e.number_alias))) \n";
-				if ($this->include_internal) {
+				$sql .= " where c.extension_uuid = e.extension_uuid \n";
+				if (!$this->include_internal) {
 						$sql .= " and (direction = 'inbound' or direction = 'outbound') \n";
 				}
 				$sql .= " ) / \n";
 				$sql .= "count(*) \n";
 				$sql .= "filter ( \n";
-				$sql .= " where (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
-				$sql .= "   or \n";
-				$sql .= "   c.destination_number = e.extension) \n";
-				$sql .= "  or ( \n";
-				$sql .= "   e.number_alias is not null \n";
-				$sql .= "   and ( \n";
-				$sql .= "    c.caller_id_number = e.number_alias \n";
-				$sql .= "    or \n";
-				$sql .= "    c.destination_number = e.number_alias))) \n";
-				if ($this->include_internal) {
+				$sql .= " where c.extension_uuid = e.extension_uuid \n";
+				if (!$this->include_internal) {
 						$sql .= " and (direction = 'inbound' or direction = 'outbound') \n";
 				}
-				$sql .= " ) as aloc, \n";
+				$sql .= ") \n";
+				$sql .= "as aloc, \n";
 
 				$sql .= "count(*) \n";
 				$sql .= "filter ( \n";
-				$sql .= " where (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
-				$sql .= "   or \n";
-				$sql .= "   c.destination_number = e.extension) \n";
-				$sql .= "  or ( \n";
-				$sql .= "   e.number_alias is not null \n";
-				$sql .= "   and ( \n";
-				$sql .= "    c.caller_id_number = e.number_alias \n";
-				$sql .= "    or \n";
-				$sql .= "    c.destination_number = e.number_alias))) \n";
+				$sql .= " where c.extension_uuid = e.extension_uuid \n";
 				if ($this->include_internal) {
-						$sql .= " and (direction = 'inbound' or direction = 'local')) \n";
+						$sql .= " and (direction = 'inbound' or direction = 'local') \n";
 				}
 				else {
-						$sql .= " and direction = 'inbound') \n";
+						$sql .= " and direction = 'inbound' \n";
 				}
+				$sql .= ") \n";
 				$sql .= "as inbound_calls, \n";
 
 				$sql .= "sum(c.billsec) \n";
 				$sql .= "filter ( \n";
-				$sql .= " where (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
-				$sql .= "   or \n";
-				$sql .= "   c.destination_number = e.extension) \n";
-				$sql .= "  or ( \n";
-				$sql .= "   e.number_alias is not null \n";
-				$sql .= "   and ( \n";
-				$sql .= "    c.caller_id_number = e.number_alias \n";
-				$sql .= "    or \n";
-				$sql .= "    c.destination_number = e.number_alias))) \n";
+				$sql .= " where c.extension_uuid = e.extension_uuid \n";
 				if ($this->include_internal) {
 						$sql .= " and (direction = 'inbound' or direction = 'local')) \n";
 				}
@@ -1049,6 +975,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= " extension_uuid, \n";
 				$sql .= " caller_id_number, \n";
 				$sql .= " destination_number, \n";
+				$sql .= " missed_call, \n";
 				$sql .= " answer_stamp, \n";
 				$sql .= " bridge_uuid, \n";
 				$sql .= " direction, \n";
