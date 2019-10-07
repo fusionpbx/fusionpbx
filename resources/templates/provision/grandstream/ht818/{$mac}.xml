@@ -882,12 +882,12 @@
     <!-- # Disable Call-Waiting. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P91>0</P91>
+    <P91>{$grandstream_call_waiting}</P91>
 
     <!-- # Disable Call-Waiting Caller ID. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P714>{$grandstream_call_waiting}</P714>
+    <P714>0</P714>
 
     <!-- # Disable Call-Waiting Tone. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
