@@ -598,9 +598,22 @@ if (!class_exists('xml_cdr')) {
 							$this->array[$key]['json'] = json_encode($xml);
 						}
 
-					//insert the $extension_uuid
+					//get the extension_uuid and then add it to the database fields array
 						if (strlen($xml->variables->extension_uuid) > 0) {
 							$this->array[$key]['extension_uuid'] = urldecode($xml->variables->extension_uuid);
+						}
+						else {
+							if (strlen($xml->variables->dialed_user) > 0) {
+								$sql = "select extension_uuid from v_extensions ";
+								$sql .= "where domain_uuid = :domain_uuid ";
+								$sql .= "and (extension = :dialed_user or number_alias = :dialed_user) ";
+								$parameters['domain_uuid'] = $domain_uuid;
+								$parameters['dialed_user'] = $xml->variables->dialed_user;
+								$database = new database;
+								$extension_uuid = $database->select($sql, $parameters, 'column');
+								$this->array[$key]['extension_uuid'] = $extension_uuid;
+								unset($parameters);
+							}
 						}
 
 					//insert the values
