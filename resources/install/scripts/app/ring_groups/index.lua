@@ -872,12 +872,6 @@
 								destination_number = row.destination_number;
 								domain_name = row.domain_name;
 
-							--get the extension_uuid
-								if (user_exists == "true") then
-									cmd = "user_data ".. destination_number .."@"..domain_name.." var extension_uuid";
-									extension_uuid = trim(api:executeString(cmd));
-								end
-
 							--if the timeout was reached exit the loop and go to the timeout action
 								if (tonumber(ring_group_call_timeout) == timeout) then
 									break;	
@@ -885,7 +879,7 @@
 
 							--send the call to the destination
 								if (user_exists == "true") then
-									dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",originate_timeout="..destination_timeout..",call_direction="..call_direction..",dialed_extension=" .. destination_number .. ",extension_uuid="..extension_uuid..",domain_name="..domain_name..",domain_uuid="..domain_uuid..row.record_session.."]user/" .. destination_number .. "@" .. domain_name;
+									dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",originate_timeout="..destination_timeout..",call_direction="..call_direction..",dialed_extension=" .. destination_number .. ",domain_name="..domain_name..",domain_uuid="..domain_uuid..row.record_session.."]user/" .. destination_number .. "@" .. domain_name;
 								elseif (tonumber(destination_number) == nil) then
 									dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",originate_timeout="..destination_timeout..",call_direction=outbound,domain_name="..domain_name..",domain_uuid="..domain_uuid.."]" .. destination_number;
 								else
