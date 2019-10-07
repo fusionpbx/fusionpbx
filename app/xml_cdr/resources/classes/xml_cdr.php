@@ -881,7 +881,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= " where c.extension_uuid = e.extension_uuid \n";
 				$sql .= " and missed_call = true \n";
 				if ($this->include_internal) {
-							$sql .= " and (direction = 'inbound' or direction = 'outbound') ";
+							$sql .= " and (direction = 'inbound' or direction = 'local') ";
 				} else {
 							$sql .= " and direction = 'inbound' ";
 				}
