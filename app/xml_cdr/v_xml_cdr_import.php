@@ -316,6 +316,22 @@
 			if (strlen($xml->variables->extension_uuid) > 0) {
 				$database->fields['extension_uuid'] = urldecode($xml->variables->extension_uuid);
 			}
+			else {
+				$dialed_user = $xml->variables->dialed_user;
+				if (strlen($dialed_user) > 0 && is_numeric($dialed_user)) {
+					$sql = "select extension_uuid from v_extensions ";
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$sql .= "and (extension = :dialed_user or number_alias = :dialed_user) ";
+					$parameters['domain_uuid'] = $domain_uuid;
+					$parameters['dialed_user'] = $dialed_user;
+					$database = new database;
+					$extension_uuid = $database->select($sql, $parameters, 'column');
+					unset($parameters);
+					if (is_uuid($extension_uuid)) {
+						$database->fields['extension_uuid'] = $extension_uuid;
+					}
+				}
+			}
 
 		//get the recording details
 			if (strlen($xml->variables->record_session) > 0) {
