@@ -10,7 +10,7 @@
 <Forced_Resync_Delay>30</Forced_Resync_Delay>
 <Resync_From_SIP>Yes</Resync_From_SIP>
 <Resync_After_Upgrade_Attempt>Yes</Resync_After_Upgrade_Attempt>
-<Resync_At__HHmm_>0300</Resync_At__HHmm_>
+<Resync_At__HHmm_>{$spa_resync_time}</Resync_At__HHmm_>
 {if isset ($http_auth_username)}
 <Profile_Rule>[--uid {$http_auth_username} --pwd {$http_auth_password}]http://{$domain_name}/app/provision/?mac=$MA</Profile_Rule>
 {else}
