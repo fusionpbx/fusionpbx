@@ -2036,3 +2036,34 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	div.form_set > .field.nowrap {
 		white-space: nowrap;
 		}
+
+/*******************************************************************************/
+
+	div.action_bar {
+		position: -webkit-sticky;
+		position: sticky;
+		<?php
+		switch ($_SESSION['theme']['menu_style']['text']) {
+			case 'side':
+				$action_bar_top = '0';
+				break;
+			case 'inline':
+			case 'static':
+				$action_bar_top = '-1px';
+				break;
+			case 'fixed':
+			default:
+				$action_bar_top = '49px';
+		}
+		?>
+		top: <?php echo $action_bar_top; ?>;
+		text-align: right;
+		border-bottom-width: <?php echo ($_SESSION['theme']['action_bar_border_bottom_size']['text'] != '') ? $_SESSION['theme']['action_bar_border_bottom_size']['text'] : '1px'; ?>;
+		border-bottom-style: <?php echo ($_SESSION['theme']['action_bar_border_bottom_style']['text'] != '') ? $_SESSION['theme']['action_bar_border_bottom_style']['text'] : 'solid'; ?>;
+		border-bottom-color: <?php echo ($_SESSION['theme']['action_bar_border_bottom_color']['text'] != '') ? $_SESSION['theme']['action_bar_border_bottom_color']['text'] : '#ddd'; ?>;
+		border-bottom-left-radius: <?php echo ($_SESSION['theme']['action_bar_border_bottom_radius']['text'] != '') ? $_SESSION['theme']['action_bar_border_bottom_radius']['text'] : '0'; ?>;
+		border-bottom-right-radius: <?php echo ($_SESSION['theme']['action_bar_border_bottom_radius']['text'] != '') ? $_SESSION['theme']['action_bar_border_bottom_radius']['text'] : '0'; ?>;
+		padding: 10px;
+		background: <?php echo ($_SESSION['theme']['action_bar_background']['text'] != '') ? $_SESSION['theme']['action_bar_background']['text'] : 'rgba(255,255,255,0.9)'; ?>;
+		margin: -10px -10px 10px -10px;
+		}

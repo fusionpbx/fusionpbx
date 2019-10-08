@@ -221,4 +221,25 @@
 		$text['description-bridge_description']['sv-se'] = '';
 		$text['description-bridge_description']['uk-ua'] = '';
 
+		$text['label-bridge_description']['en-us'] = "Description";
+		$text['label-bridge_description']['ar-eg'] = "";
+		$text['label-bridge_description']['de-at'] = "Beschreibung"; //copied from de-de
+		$text['label-bridge_description']['de-ch'] = "Beschreibung"; //copied from de-de
+		$text['label-bridge_description']['de-de'] = "Beschreibung";
+		$text['label-bridge_description']['es-cl'] = "Descripción";
+		$text['label-bridge_description']['es-mx'] = "Descripción"; //copied from es-cl
+		$text['label-bridge_description']['fr-ca'] = "Description"; //copied from fr-fr
+		$text['label-bridge_description']['fr-fr'] = "Description";
+		$text['label-bridge_description']['he-il'] = "";
+		$text['label-bridge_description']['it-it'] = "Descrizione";
+		$text['label-bridge_description']['nl-nl'] = "";
+		$text['label-bridge_description']['pl-pl'] = "Opis";
+		$text['label-bridge_description']['pt-br'] = "Descrição";
+		$text['label-bridge_description']['pt-pt'] = "Descripção";
+		$text['label-bridge_description']['ro-ro'] = "";
+		$text['label-bridge_description']['ru-ru'] = "Описание";
+		$text['label-bridge_description']['sv-se'] = "Beskrivning";
+		$text['label-bridge_description']['uk-ua'] = "Опис";
+		$text['label-bridge_description']['tr-tr'] = "Açıklama";
+
 ?>
