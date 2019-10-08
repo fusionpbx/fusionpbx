@@ -336,12 +336,12 @@
 					$database->fields['extension_uuid'] = $extension_uuid;
 					unset($parameters);
 				}
-				if (strlen($xml->variables->callee_id_number) > 0) {
+				if (strlen($xml->variables->last_sent_callee_id_number) > 0) {
 					$sql = "select extension_uuid from v_extensions ";
 					$sql .= "where domain_uuid = :domain_uuid ";
 					$sql .= "and (extension = :callee_id_number or number_alias = :callee_id_number) ";
 					$parameters['domain_uuid'] = $domain_uuid;
-					$parameters['callee_id_number'] = $xml->variables->callee_id_number;
+					$parameters['callee_id_number'] = $xml->variables->last_sent_callee_id_number;
 					$extension_uuid = $database->select($sql, $parameters, 'column');
 					$database->fields['extension_uuid'] = $extension_uuid;
 					unset($parameters);
