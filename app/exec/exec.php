@@ -301,7 +301,7 @@
 	echo "<textarea name='command' id='command' style='display: none;'></textarea>";
 	echo "<table cellpadding='0' cellspacing='0' border='0' style='width: 100%;'>\n";
 	echo "	<tr>";
-	echo "		<td style='width: 210px;' valign='top' nowrap>";
+	echo "		<td style='width: 280px;' valign='top' nowrap>";
 
 	echo "			<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'>";
 	if (permission_exists('edit_view') && file_exists($_SERVER["PROJECT_ROOT"]."/app/edit/")) {
@@ -314,7 +314,7 @@
 	echo "			</table>";
 
 	echo "		</td>";
-	echo "		<td valign='top' style='height: 300px;'>"
+	echo "		<td valign='top' style='height: 400px;'>"
 	?>
 	<table cellpadding='0' cellspacing='0' border='0' style='width: 100%;'>
 		<tr>
