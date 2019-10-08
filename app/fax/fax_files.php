@@ -369,7 +369,7 @@
 				echo "&nbsp;\n";
 			}
 			echo "  </td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".date("F d Y H:i:s", strtotime(escape($row['fax_date'])))."&nbsp;</td>\n";
+			echo " <td valign='top' class='".$row_style[$c]."'>".date("F d Y H:i:s", strtotime($row['fax_date']))."&nbsp;</td>\n";
 			echo "	<td style='width: 25px;' class='list_control_icons'>";
 			if (permission_exists('fax_file_delete')) {
 				echo "<a href='fax_file_delete.php?id=".escape($row['fax_file_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
