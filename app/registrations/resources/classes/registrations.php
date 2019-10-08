@@ -54,6 +54,8 @@ if (!class_exists('registrations')) {
 							if ($xml_response == "Invalid Profile!") { $xml_response = "<error_msg>".$text['label-message']."</error_msg>"; }
 							$xml_response = str_replace("<profile-info>", "<profile_info>", $xml_response);
 							$xml_response = str_replace("</profile-info>", "</profile_info>", $xml_response);
+							$xml_response = str_replace("&lt;", "", $xml_response);
+							$xml_response = str_replace("&gt;", "", $xml_response);
 							if (strlen($xml_response) > 101) {
 								try {
 									$xml = new SimpleXMLElement($xml_response);
@@ -116,6 +118,10 @@ if (!class_exists('registrations')) {
 												$lan_ip = preg_replace('/_/', '.', $lan_ip);
 																}
 											$registrations[$id]['lan-ip'] = $lan_ip;
+										}
+										else if (preg_match('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $row['contact'], $ip_match)) {
+										    $lan_ip = preg_replace('/_/', '.', $ip_match[0]);
+										    $registrations[$id]['lan-ip'] = "$lan_ip";
 										}
 										else {
 											$registrations[$id]['lan-ip'] = '';
