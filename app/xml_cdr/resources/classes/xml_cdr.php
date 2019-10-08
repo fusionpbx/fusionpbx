@@ -614,6 +614,28 @@ if (!class_exists('xml_cdr')) {
 								$this->array[$key]['extension_uuid'] = $extension_uuid;
 								unset($parameters);
 							}
+							if (strlen($xml->variables->referred_by_user) > 0) {
+								$sql = "select extension_uuid from v_extensions ";
+								$sql .= "where domain_uuid = :domain_uuid ";
+								$sql .= "and (extension = :referred_by_user or number_alias = :referred_by_user) ";
+								$parameters['domain_uuid'] = $domain_uuid;
+								$parameters['referred_by_user'] = $xml->variables->referred_by_user;
+								$database = new database;
+								$extension_uuid = $database->select($sql, $parameters, 'column');
+								$this->array[$key]['extension_uuid'] = $extension_uuid;
+								unset($parameters);
+							}
+							if (strlen($xml->variables->last_sent_callee_id_number) > 0) {
+								$sql = "select extension_uuid from v_extensions ";
+								$sql .= "where domain_uuid = :domain_uuid ";
+								$sql .= "and (extension = :callee_id_number or number_alias = :last_sent_callee_id_number) ";
+								$parameters['domain_uuid'] = $domain_uuid;
+								$parameters['callee_id_number'] = $xml->variables->callee_id_number;
+								$database = new database;
+								$extension_uuid = $database->select($sql, $parameters, 'column');
+								$this->array[$key]['extension_uuid'] = $extension_uuid;
+								unset($parameters);
+							}
 						}
 
 					//insert the values
