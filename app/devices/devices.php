@@ -53,6 +53,10 @@
 //get total devices count from the database
 	$sql = "select count(*) from v_devices ";
 	$sql .= "where domain_uuid = :domain_uuid ";
+	if (!permission_exists('device_all') && !permission_exists('device_domain_all')) {
+		$sql .= "and device_user_uuid = :user_uuid ";
+		$parameters['user_uuid'] = $_SESSION['user_uuid'];
+	}
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$total_devices = $database->select($sql, $parameters, 'column');
@@ -133,6 +137,10 @@
 		$sql .= ") ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
+	if (!permission_exists('device_all') && !permission_exists('device_domain_all')) {
+		$sql .= "and d.device_user_uuid = :user_uuid ";
+		$parameters['user_uuid'] = $_SESSION['user_uuid'];
+	}
 	if (strlen($search) > 0) {
 		$sql .= "and (";
 		$sql .= "	lower(d.device_mac_address) like :search ";
@@ -170,7 +178,7 @@
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='100%' align='left' valign='top'>\n";
-	echo "			<b>".$text['header-devices']." (".$num_rows.")</b>\n";
+	echo "			<b>".$text['header-devices']." (".$total_devices.")</b>\n";
 	echo "		</td>\n";
 	echo "		<td align='right' nowrap='nowrap' valign='top'>\n";
 	echo "			<form method='get' action=''>\n";
