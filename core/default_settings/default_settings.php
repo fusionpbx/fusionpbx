@@ -330,8 +330,8 @@
 					case "api" : echo "API"; break;
 					case "cdr" : echo "CDR"; break;
 					case "ldap" : echo "LDAP"; break;
-					case "ivr menu" : echo "IVR Menu"; break;
-					default: echo ucwords(str_replace("_", " ", escape($row['default_setting_category'])));
+					case "ivr_menu" : echo "IVR Menu"; break;
+					default: echo escape(ucwords(str_replace("_", " ", $row['default_setting_category'])));
 				}
 				echo "</b>\n";
 
