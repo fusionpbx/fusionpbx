@@ -52,10 +52,26 @@
 		$bridge_name = $_POST["bridge_name"];
 		$bridge_destination = $_POST["bridge_destination"];
 		$bridge_enabled = $_POST["bridge_enabled"];
+		$bridge_description = $_POST["bridge_description"];
 	}
 
 //process the user data and save it to the database
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+
+		//delete the bridge
+			if (permission_exists('bridge_delete')) {
+				if ($_POST['action'] == 'delete' && is_uuid($bridge_uuid)) {
+					//prepare
+						$bridges[0]['checked'] = 'true';
+						$bridges[0]['bridge_uuid'] = $bridge_uuid;
+					//delete
+						$obj = new bridges;
+						$obj->delete($bridges);
+					//redirect
+						header('Location: bridges.php');
+						exit;
+				}
+			}
 
 		//get the uuid from the POST
 			if ($action == "update") {
@@ -99,6 +115,7 @@
 			$array['bridges'][0]['bridge_name'] = $bridge_name;
 			$array['bridges'][0]['bridge_destination'] = $bridge_destination;
 			$array['bridges'][0]['bridge_enabled'] = $bridge_enabled;
+			$array['bridges'][0]['bridge_description'] = $bridge_description;
 
 		//save to the data
 			$database = new database;
@@ -118,7 +135,7 @@
 				header('Location: bridges.php');
 				return;
 			}
-	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
+	}
 
 //pre-populate the form
 	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
@@ -132,6 +149,7 @@
 			$bridge_name = $row["bridge_name"];
 			$bridge_destination = $row["bridge_destination"];
 			$bridge_enabled = $row["bridge_enabled"];
+			$bridge_description = $row["bridge_description"];
 		}
 		unset($sql, $parameters, $row);
 	}
@@ -150,8 +168,9 @@
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-bridge']."</b><br><br></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='bridges.php'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
+	echo "	<a href='bridges.php'><button type='button' class='btn btn-default' style='margin-right: 15px;' alt='".$text['button-back']."'>".$text['button-back']."</button></a>";
+	echo "	<button type='submit' class='btn btn-default' style='margin-right: 15px;' name='action' value='delete' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm').submit(); } else { this.blur(); return false; }\">".$text['button-delete']."</button>";
+	echo "	<button type='submit' class='btn btn-default' name='action' value='save'>".$text['button-save']."</button>";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -201,12 +220,23 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-bridge_description']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='bridge_description' maxlength='255' value=\"".escape($bridge_description)."\">\n";
+	echo "<br />\n";
+	echo $text['description-bridge_description']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	echo "			<br />\n";
 	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<input type='hidden' name='bridge_uuid' value='".escape($bridge_uuid)."'>\n";
-	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<button type='submit' class='btn btn-default' name='action' value='save'>".$text['button-save']."</button>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
