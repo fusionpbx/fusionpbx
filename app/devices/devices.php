@@ -54,13 +54,14 @@
 	$sql = "select count(*) from v_devices ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	if (!permission_exists('device_all') && !permission_exists('device_domain_all')) {
-		$sql .= "and device_user_uuid ='".$_SESSION['user_uuid']."' ";
+		$sql .= "and device_user_uuid = :user_uuid ";
+		$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	}
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$total_devices = $database->select($sql, $parameters, 'column');
 	unset($sql, $parameters);
-	
+
 //get the devices profiles
 	$sql = "select * from v_device_profiles ";
 	$sql .= "where domain_uuid = :domain_uuid ";
@@ -137,7 +138,8 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (!permission_exists('device_all') && !permission_exists('device_domain_all')) {
-		$sql .= "and d.device_user_uuid ='{$_SESSION['user_uuid']}' ";
+		$sql .= "and d.device_user_uuid = :user_uuid ";
+		$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	}
 	if (strlen($search) > 0) {
 		$sql .= "and (";
