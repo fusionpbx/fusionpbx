@@ -224,7 +224,7 @@
 	}
 
 //check or uncheck all voicemail checkboxes
-	if (sizeof($vm_msg_ids) > 0) {
+	if (is_array($vm_msg_ids) && sizeof($vm_msg_ids) > 0) {
 		echo "<script>\n";
 		echo "	function check(what, voicemail_id) {\n";
 		foreach ($vm_msg_ids as $voicemail_id => $checkbox_ids) {
