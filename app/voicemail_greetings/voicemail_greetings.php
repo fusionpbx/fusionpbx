@@ -41,9 +41,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//set the max php execution time
-	ini_set(max_execution_time,7200);
-
 //get the http get values and set them as php variables
 	$voicemail_id = $_REQUEST["id"];
 	$order_by = $_GET["order_by"];
