@@ -54,93 +54,95 @@
 			}
 
 		//copy (to a different domain)
-			if ($action == 'copy' && permission_exists('domain_select') && count($_SESSION['domains']) > 1) {
-				$target_domain_uuid = $_POST["target_domain_uuid"];
+			if ($action == 'copy') {
+				if (permission_exists('domain_select') && count($_SESSION['domains']) > 1) {
+					$target_domain_uuid = $_POST["target_domain_uuid"];
 
-				if (is_uuid($target_domain_uuid) && is_array($domain_setting_uuids) && @sizeof($domain_setting_uuids) > 0) {
-					$settings_copied = 0;
-					foreach ($domain_setting_uuids as $domain_setting_uuid) {
+					if (is_uuid($target_domain_uuid) && is_array($domain_setting_uuids) && @sizeof($domain_setting_uuids) > 0) {
+						$settings_copied = 0;
+						foreach ($domain_setting_uuids as $domain_setting_uuid) {
 
-						if (is_uuid($domain_setting_uuid)) {
+							if (is_uuid($domain_setting_uuid)) {
 
-							//get domain setting from db
-							$sql = "select * from v_domain_settings ";
-							$sql .= "where domain_setting_uuid = :domain_setting_uuid ";
-							$parameters['domain_setting_uuid'] = $domain_setting_uuid;
-							$database = new database;
-							$row = $database->select($sql, $parameters, 'row');
-							if (is_array($row) && sizeof($row) != 0) {
-								$domain_setting_category = $row["domain_setting_category"];
-								$domain_setting_subcategory = $row["domain_setting_subcategory"];
-								$domain_setting_name = $row["domain_setting_name"];
-								$domain_setting_value = $row["domain_setting_value"];
-								$domain_setting_order = $row["domain_setting_order"];
-								$domain_setting_enabled = $row["domain_setting_enabled"];
-								$domain_setting_description = $row["domain_setting_description"];
-							}
-							unset($sql, $parameters, $row);
-
-							//set a random password for http_auth_password
-							if ($domain_setting_subcategory == "http_auth_password") {
-								$domain_setting_value = generate_password();
-							}
-
-							// check if exists
-							$sql = "select domain_setting_uuid from v_domain_settings ";
-							$sql .= "where domain_uuid = :domain_uuid ";
-							$sql .= "and domain_setting_category = :domain_setting_category ";
-							$sql .= "and domain_setting_subcategory = :domain_setting_subcategory ";
-							$sql .= "and domain_setting_name = :domain_setting_name ";
-							$sql .= "and domain_setting_name <> 'array' ";
-							$parameters['domain_uuid'] = $target_domain_uuid;
-							$parameters['domain_setting_category'] = $domain_setting_category;
-							$parameters['domain_setting_subcategory'] = $domain_setting_subcategory;
-							$parameters['domain_setting_name'] = $domain_setting_name;
-							$database = new database;
-							$target_domain_setting_uuid = $database->select($sql, $parameters, 'column');
-
-							$action = is_uuid($target_domain_setting_uuid) ? 'update' : 'add';
-							unset($sql, $parameters);
-
-							// fix null
-							$default_setting_order = $default_setting_order != '' ? $default_setting_order : null;
-
-							//begin array
-							$array['domain_settings'][0]['domain_uuid'] = $target_domain_uuid;
-							$array['domain_settings'][0]['domain_setting_category'] = $domain_setting_category;
-							$array['domain_settings'][0]['domain_setting_subcategory'] = $domain_setting_subcategory;
-							$array['domain_settings'][0]['domain_setting_name'] = $domain_setting_name;
-							$array['domain_settings'][0]['domain_setting_value'] = $domain_setting_value;
-							$array['domain_settings'][0]['domain_setting_order'] = $domain_setting_order;
-							$array['domain_settings'][0]['domain_setting_enabled'] = $domain_setting_enabled;
-							$array['domain_settings'][0]['domain_setting_description'] = $domain_setting_description;
-
-							//insert
-							if ($action == "add" && permission_exists("domain_setting_add")) {
-								$array['domain_settings'][0]['domain_setting_uuid'] = uuid();
-							}
-							//update
-							if ($action == "update" && permission_exists('domain_setting_edit')) {
-								$array['domain_settings'][0]['domain_setting_uuid'] = $target_domain_setting_uuid;
-							}
-
-							//execute
-							if (is_uuid($array['domain_settings'][0]['domain_setting_uuid'])) {
+								//get domain setting from db
+								$sql = "select * from v_domain_settings ";
+								$sql .= "where domain_setting_uuid = :domain_setting_uuid ";
+								$parameters['domain_setting_uuid'] = $domain_setting_uuid;
 								$database = new database;
-								$database->app_name = 'domain_settings';
-								$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
-								$database->save($array);
-								unset($array);
+								$row = $database->select($sql, $parameters, 'row');
+								if (is_array($row) && sizeof($row) != 0) {
+									$domain_setting_category = $row["domain_setting_category"];
+									$domain_setting_subcategory = $row["domain_setting_subcategory"];
+									$domain_setting_name = $row["domain_setting_name"];
+									$domain_setting_value = $row["domain_setting_value"];
+									$domain_setting_order = $row["domain_setting_order"];
+									$domain_setting_enabled = $row["domain_setting_enabled"];
+									$domain_setting_description = $row["domain_setting_description"];
+								}
+								unset($sql, $parameters, $row);
 
-								$settings_copied++;
+								//set a random password for http_auth_password
+								if ($domain_setting_subcategory == "http_auth_password") {
+									$domain_setting_value = generate_password();
+								}
+
+								// check if exists
+								$sql = "select domain_setting_uuid from v_domain_settings ";
+								$sql .= "where domain_uuid = :domain_uuid ";
+								$sql .= "and domain_setting_category = :domain_setting_category ";
+								$sql .= "and domain_setting_subcategory = :domain_setting_subcategory ";
+								$sql .= "and domain_setting_name = :domain_setting_name ";
+								$sql .= "and domain_setting_name <> 'array' ";
+								$parameters['domain_uuid'] = $target_domain_uuid;
+								$parameters['domain_setting_category'] = $domain_setting_category;
+								$parameters['domain_setting_subcategory'] = $domain_setting_subcategory;
+								$parameters['domain_setting_name'] = $domain_setting_name;
+								$database = new database;
+								$target_domain_setting_uuid = $database->select($sql, $parameters, 'column');
+
+								$action = is_uuid($target_domain_setting_uuid) ? 'update' : 'add';
+								unset($sql, $parameters);
+
+								// fix null
+								$default_setting_order = $default_setting_order != '' ? $default_setting_order : null;
+
+								//begin array
+								$array['domain_settings'][0]['domain_uuid'] = $target_domain_uuid;
+								$array['domain_settings'][0]['domain_setting_category'] = $domain_setting_category;
+								$array['domain_settings'][0]['domain_setting_subcategory'] = $domain_setting_subcategory;
+								$array['domain_settings'][0]['domain_setting_name'] = $domain_setting_name;
+								$array['domain_settings'][0]['domain_setting_value'] = $domain_setting_value;
+								$array['domain_settings'][0]['domain_setting_order'] = $domain_setting_order;
+								$array['domain_settings'][0]['domain_setting_enabled'] = $domain_setting_enabled;
+								$array['domain_settings'][0]['domain_setting_description'] = $domain_setting_description;
+
+								//insert
+								if ($action == "add" && permission_exists("domain_setting_add")) {
+									$array['domain_settings'][0]['domain_setting_uuid'] = uuid();
+								}
+								//update
+								if ($action == "update" && permission_exists('domain_setting_edit')) {
+									$array['domain_settings'][0]['domain_setting_uuid'] = $target_domain_setting_uuid;
+								}
+
+								//execute
+								if (is_uuid($array['domain_settings'][0]['domain_setting_uuid'])) {
+									$database = new database;
+									$database->app_name = 'domain_settings';
+									$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
+									$database->save($array);
+									unset($array);
+
+									$settings_copied++;
+								}
+
 							}
 
 						}
 
+						// set message
+						message::add($text['message-copy'].": ".escape($settings_copied));
 					}
-
-					// set message
-					message::add($text['message-copy'].": ".escape($settings_copied));
 				}
 
 				header("Location: ".PROJECT_PATH."/core/domains/domain_edit.php?id=".escape($_REQUEST["domain_uuid"]));
@@ -149,31 +151,33 @@
 
 		//toggle
 			$toggled = 0;
-			if ($action == 'toggle' && is_array($domain_setting_uuids) && sizeof($domain_setting_uuids) > 0) {
-				foreach ($domain_setting_uuids as $domain_setting_uuid) {
-					if (is_uuid($domain_setting_uuid)) {
-						//get current status
-							$sql = "select domain_setting_enabled from v_domain_settings where domain_setting_uuid = :domain_setting_uuid ";
-							$parameters['domain_setting_uuid'] = $domain_setting_uuid;
-							$database = new database;
-							$domain_setting_enabled = $database->select($sql, $parameters, 'column');
-							$new_status = $domain_setting_enabled == 'true' ? 'false' : 'true';
-							unset($sql, $parameters);
-						//set new status
-							$array['domain_settings'][0]['domain_setting_uuid'] = $domain_setting_uuid;
-							$array['domain_settings'][0]['domain_setting_enabled'] = $new_status;
-							$database = new database;
-							$database->app_name = 'domain_settings';
-							$database->app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
-							$database->save($array);
-							$message = $database->message;
-							unset($array);
-						//increment toggle total
-							$toggled++;
+			if ($action == 'toggle') {
+				if (is_array($domain_setting_uuids) && sizeof($domain_setting_uuids) > 0) {
+					foreach ($domain_setting_uuids as $domain_setting_uuid) {
+						if (is_uuid($domain_setting_uuid)) {
+							//get current status
+								$sql = "select domain_setting_enabled from v_domain_settings where domain_setting_uuid = :domain_setting_uuid ";
+								$parameters['domain_setting_uuid'] = $domain_setting_uuid;
+								$database = new database;
+								$domain_setting_enabled = $database->select($sql, $parameters, 'column');
+								$new_status = $domain_setting_enabled == 'true' ? 'false' : 'true';
+								unset($sql, $parameters);
+							//set new status
+								$array['domain_settings'][0]['domain_setting_uuid'] = $domain_setting_uuid;
+								$array['domain_settings'][0]['domain_setting_enabled'] = $new_status;
+								$database = new database;
+								$database->app_name = 'domain_settings';
+								$database->app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
+								$database->save($array);
+								$message = $database->message;
+								unset($array);
+							//increment toggle total
+								$toggled++;
+						}
 					}
-				}
-				if ($toggled > 0) {
-					message::add($text['message-toggle'].': '.$toggled);
+					if ($toggled > 0) {
+						message::add($text['message-toggle'].': '.$toggled);
+					}
 				}
 
 				header("Location: ".PROJECT_PATH."/core/domains/domain_edit.php?id=".escape($_REQUEST["domain_uuid"]));
@@ -181,28 +185,30 @@
 			}
 
 		//delete
-			if ($action == 'delete' && permission_exists('domain_setting_delete')) {
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
+			if ($action == 'delete') {
+				if (permission_exists('domain_setting_delete')) {
+					//add multi-lingual support
+						$language = new text;
+						$text = $language->get();
 
-				if (is_array($domain_setting_uuids) && sizeof($domain_setting_uuids) != 0) {
-					foreach ($domain_setting_uuids as $index => $domain_setting_uuid) {
-						if (is_uuid($domain_setting_uuid)) {
-							$array['domain_settings'][$index]['domain_setting_uuid'] = $domain_setting_uuid;
+					if (is_array($domain_setting_uuids) && sizeof($domain_setting_uuids) != 0) {
+						foreach ($domain_setting_uuids as $index => $domain_setting_uuid) {
+							if (is_uuid($domain_setting_uuid)) {
+								$array['domain_settings'][$index]['domain_setting_uuid'] = $domain_setting_uuid;
+							}
 						}
-					}
-					if (is_array($array) && sizeof($array) != 0) {
-						$database = new database;
-						$database->app_name = 'domain_settings';
-						$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
-						$database->delete($array);
-						$message = $database->message;
+						if (is_array($array) && sizeof($array) != 0) {
+							$database = new database;
+							$database->app_name = 'domain_settings';
+							$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
+							$database->delete($array);
+							$message = $database->message;
 
-						// set message
-						$_SESSION["message"] = $text['message-delete'].": ".sizeof($array);
+							// set message
+							$_SESSION["message"] = $text['message-delete'].": ".sizeof($array);
 
-						unset($array);
+							unset($array);
+						}
 					}
 				}
 
@@ -280,9 +286,9 @@
 	}
 
 //show the content
-	echo "<form name='domain_frm' id='domain_frm' method='post' action='".PROJECT_PATH."/core/domain_settings/domain_settings.php'>";
+	echo "<form name='domain_frm' id='domain_frm' method='post' action='".PROJECT_PATH."/core/domain_settings/domain_settings.php'>\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>";
+	echo "<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>\n";
 
 	echo "<div style='float: right;'>\n";
 	if (permission_exists('domain_setting_add')) {
