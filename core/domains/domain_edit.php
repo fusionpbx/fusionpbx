@@ -561,17 +561,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if (permission_exists('domain_add')) { //only for superadmin, not admin editing their own domain
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='domains.php'\" value='".$text['button-back']."'>\n";
 	}
-	//if (permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) {
-	//	echo "		<input type='button' class='btn' id='button_copy' alt='".$text['button-copy']."' onclick='show_domains();' value='".$text['button-copy']."'>";
-	//	echo "		<input type='button' class='btn' style='display: none;' id='button_back' alt='".$text['button-back']."' onclick='hide_domains();' value='".$text['button-back']."'> ";
-	//	echo "		<select class='formfld' style='display: none; width: auto;' name='target_domain_uuid' id='target_domain_uuid'>\n";
-	//	echo "			<option value=''>Select Domain...</option>\n";
-	//	foreach ($_SESSION['domains'] as $domain) {
-	//		echo "		<option value='".escape($domain["domain_uuid"])."'>".escape($domain["domain_name"])."</option>\n";
-	//	}
-	//	echo "		</select>\n";
-	//	echo "		<input type='button' class='btn' id='button_paste' style='display: none;' alt='".$text['button-paste']."' value='".$text['button-paste']."' onclick=\"$('#frm').attr('action', PROJECT_PATH.'/core/domain_settings/domain_settings.php?search='+$('#domain_setting_search').val()).submit();\">";
-	//}
+	if (permission_exists("domain_select") && is_array($_SESSION['domains']) && @sizeof($_SESSION['domains']) > 1) {
+		echo "		<select id='domains' class='formfld' style='width: auto; margin-right: 15px;' onchange=\"window.location.href='?id=' + document.getElementById('domains').options[document.getElementById('domains').selectedIndex].value;\">\n";
+		foreach ($_SESSION['domains'] as $domain) {
+			$selected = $domain["domain_uuid"] == $domain_uuid ? "selected='selected'" : null;
+			echo "		<option value='".escape($domain["domain_uuid"])."' ".$selected.">".escape($domain["domain_name"])."</option>\n";
+		}
+		echo "		</select>\n";
+	}
 	if (permission_exists('domain_export')) {
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-export']."' onclick=\"window.location='".PROJECT_PATH."/app/domain_export/index.php?id=".escape($domain_uuid)."'\" value='".$text['button-export']."'>\n";
 	}
@@ -642,6 +639,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</form>";
 
 	if ($action == "update" && permission_exists('domain_setting_view')) {
+		echo "<br />\n";
 		require PROJECT_PATH."core/domain_settings/domain_settings.php";
 	}
 

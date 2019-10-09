@@ -391,6 +391,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	if (permission_exists('domain_setting_category_edit')) {
+		if ($action == 'add') {
+			$domain_setting_category = $_GET['domain_setting_category'];
+		}
 		echo "	<input type='text' class='formfld' name='domain_setting_category' id='domain_setting_category' maxlength='255' value=\"".escape($domain_setting_category)."\">\n";
 	}
 	else {

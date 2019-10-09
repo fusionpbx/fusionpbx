@@ -581,6 +581,26 @@ $text['header-domains']['ru-ru'] = "Домены";
 $text['header-domains']['sv-se'] = "Domäner";
 $text['header-domains']['uk-ua'] = "Домени";
 
+$text['header-domain_settings']['en-us'] = "Domain Settings";
+$text['header-domain_settings']['ar-eg'] = "";
+$text['header-domain_settings']['de-at'] = "Domain Einstellungen"; //copied from de-de
+$text['header-domain_settings']['de-ch'] = "Domain Einstellungen"; //copied from de-de
+$text['header-domain_settings']['de-de'] = "Domain Einstellungen";
+$text['header-domain_settings']['es-cl'] = "Configuraciones de dominio";
+$text['header-domain_settings']['es-mx'] = "Configuraciones de dominio"; //copied from es-cl
+$text['header-domain_settings']['fr-ca'] = "Paramètres du domaine"; //copied from fr-fr
+$text['header-domain_settings']['fr-fr'] = "Paramètres du domaine";
+$text['header-domain_settings']['he-il'] = "";
+$text['header-domain_settings']['it-it'] = "Parametro di Dominio";
+$text['header-domain_settings']['nl-nl'] = "";
+$text['header-domain_settings']['pl-pl'] = "Ustawienia domeny";
+$text['header-domain_settings']['pt-br'] = "Configurações do dominio";
+$text['header-domain_settings']['pt-pt'] = "Definições do Domínio";
+$text['header-domain_settings']['ro-ro'] = "";
+$text['header-domain_settings']['ru-ru'] = "Настройки домена";
+$text['header-domain_settings']['sv-se'] = "Domän Inställning";
+$text['header-domain_settings']['uk-ua'] = "Налаштування домену";
+
 $text['header-domain_setting-edit']['en-us'] = "Domain Setting";
 $text['header-domain_setting-edit']['ar-eg'] = "";
 $text['header-domain_setting-edit']['de-at'] = "Domain Einstellungen"; //copied from de-de

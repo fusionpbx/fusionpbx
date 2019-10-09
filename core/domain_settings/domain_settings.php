@@ -37,59 +37,46 @@
 		exit;
 	}
 
-//toggle enabled
-	if (sizeof($_REQUEST) > 1) {
+//get posted values, if any
+	if (is_array($_REQUEST) && @sizeof($_REQUEST) > 1) {
 		//get the variables
 			$action = $_REQUEST["action"];
-			$domain_uuid = $_REQUEST["domain_id"];
+			$domain_uuid = $_REQUEST["domain_uuid"];
 			$domain_setting_uuids = $_REQUEST["id"];
 			$enabled = $_REQUEST['enabled'];
 
-		//change enabled value
-			if (
-				permission_exists('domain_setting_edit') &&
-				is_uuid($domain_uuid) &&
-				is_array($domain_setting_uuids) &&
-				sizeof($domain_setting_uuids) == 1 &&
-				($enabled == 'true' || $enabled == 'false')
-				) {
-				$array['domain_settings'][0]['domain_setting_uuid'] = $domain_setting_uuids[0];
-				$array['domain_settings'][0]['domain_setting_enabled'] = $enabled;
-				$database = new database;
-				$database->app_name = 'domains';
-				$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
-				$database->save($array);
-				unset($array);
-
-				message::add($text['message-update']);
-				header("Location: ".PROJECT_PATH."/core/domains/domain_edit.php?id=".$domain_uuid);
+		//validate the token
+			$token = new token;
+			if (!$token->validate(PROJECT_PATH."/core/domains/domain_edit.php")) {
+				message::add($text['message-invalid_token'],'negative');
+				header("Location: ".PROJECT_PATH."/core/domains/domains.php");
 				exit;
 			}
 
-		//copy domain settings
-			if ($action == 'copy' && permission_exists('domain_setting_add')) {
+		//copy (to a different domain)
+			if ($action == 'copy' && permission_exists('domain_select') && count($_SESSION['domains']) > 1) {
 				$target_domain_uuid = $_POST["target_domain_uuid"];
 
-				if (is_uuid($target_domain_uuid) && is_array($domain_setting_uuids) && sizeof($domain_setting_uuids) != 0) {
-					foreach ($domain_setting_uuids as $index => $domain_setting_uuid) {
+				if (is_uuid($target_domain_uuid) && is_array($domain_setting_uuids) && @sizeof($domain_setting_uuids) > 0) {
+					$settings_copied = 0;
+					foreach ($domain_setting_uuids as $domain_setting_uuid) {
 
 						if (is_uuid($domain_setting_uuid)) {
 
-							// get default setting from db
+							//get domain setting from db
 							$sql = "select * from v_domain_settings ";
 							$sql .= "where domain_setting_uuid = :domain_setting_uuid ";
 							$parameters['domain_setting_uuid'] = $domain_setting_uuid;
 							$database = new database;
 							$row = $database->select($sql, $parameters, 'row');
 							if (is_array($row) && sizeof($row) != 0) {
-								$domain_setting_uuid = $row["default_setting_uuid"];
-								$domain_setting_category = $row["default_setting_category"];
-								$domain_setting_subcategory = $row["default_setting_subcategory"];
-								$domain_setting_name = $row["default_setting_name"];
-								$domain_setting_value = $row["default_setting_value"];
-								$domain_setting_order = $row["default_setting_order"];
-								$domain_setting_enabled = $row["default_setting_enabled"];
-								$domain_setting_description = $row["default_setting_description"];
+								$domain_setting_category = $row["domain_setting_category"];
+								$domain_setting_subcategory = $row["domain_setting_subcategory"];
+								$domain_setting_name = $row["domain_setting_name"];
+								$domain_setting_value = $row["domain_setting_value"];
+								$domain_setting_order = $row["domain_setting_order"];
+								$domain_setting_enabled = $row["domain_setting_enabled"];
+								$domain_setting_description = $row["domain_setting_description"];
 							}
 							unset($sql, $parameters, $row);
 
@@ -111,57 +98,89 @@
 							$parameters['domain_setting_name'] = $domain_setting_name;
 							$database = new database;
 							$target_domain_setting_uuid = $database->select($sql, $parameters, 'column');
-							if (is_uuid($target_domain_setting_uuid)) {
-								$action = "update";
-							}
-							else {
-								$action = "add";
-								$target_domain_setting_uuid = uuid();
-							}
+
+							$action = is_uuid($target_domain_setting_uuid) ? 'update' : 'add';
 							unset($sql, $parameters);
 
 							// fix null
-							$domain_setting_order = $domain_setting_order != '' ? $domain_setting_order : null;
+							$default_setting_order = $default_setting_order != '' ? $default_setting_order : null;
 
-							//prepare the array
-							$array['domain_settings'][$index]['domain_uuid'] = $target_domain_uuid;
-							$array['domain_settings'][$index]['domain_setting_uuid'] = $target_domain_setting_uuid;
-							$array['domain_settings'][$index]['default_setting_category'] = $default_setting_category;
-							$array['domain_settings'][$index]['domain_setting_uuid'] = $default_setting_subcategory;
-							$array['domain_settings'][$index]['domain_setting_uuid'] = $default_setting_name;
-							$array['domain_settings'][$index]['domain_setting_uuid'] = $default_setting_value;
-							$array['domain_settings'][$index]['domain_setting_uuid'] = $default_setting_order;
-							$array['domain_settings'][$index]['domain_setting_uuid'] = $default_setting_enabled;
-							$array['domain_settings'][$index]['domain_setting_uuid'] = $default_setting_description;
+							//begin array
+							$array['domain_settings'][0]['domain_uuid'] = $target_domain_uuid;
+							$array['domain_settings'][0]['domain_setting_category'] = $domain_setting_category;
+							$array['domain_settings'][0]['domain_setting_subcategory'] = $domain_setting_subcategory;
+							$array['domain_settings'][0]['domain_setting_name'] = $domain_setting_name;
+							$array['domain_settings'][0]['domain_setting_value'] = $domain_setting_value;
+							$array['domain_settings'][0]['domain_setting_order'] = $domain_setting_order;
+							$array['domain_settings'][0]['domain_setting_enabled'] = $domain_setting_enabled;
+							$array['domain_settings'][0]['domain_setting_description'] = $domain_setting_description;
+
+							//insert
+							if ($action == "add" && permission_exists("domain_setting_add")) {
+								$array['domain_settings'][0]['domain_setting_uuid'] = uuid();
+							}
+							//update
+							if ($action == "update" && permission_exists('domain_setting_edit')) {
+								$array['domain_settings'][0]['domain_setting_uuid'] = $target_domain_setting_uuid;
+							}
+
+							//execute
+							if (is_uuid($array['domain_settings'][0]['domain_setting_uuid'])) {
+								$database = new database;
+								$database->app_name = 'domain_settings';
+								$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
+								$database->save($array);
+								unset($array);
+
+								$settings_copied++;
+							}
 
 						}
 
-					} // foreach
-
-					//save the data
-					if (is_array($array) && sizeof($array) != 0) {
-						$database = new database;
-						$database->app_name = 'domain_settings';
-						$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
-						$database->save($array);
-						$message = $database->message;
-
-						// set message
-						message::add($text['message-copy'].": ".sizeof($array));
-
-						unset($array);
 					}
-				}
-				else {
+
 					// set message
-					message::add($text['message-copy_failed']);
+					message::add($text['message-copy'].": ".escape($settings_copied));
 				}
-	
-				header("Location: ".PROJECT_PATH."/core/domains/domains.php".($search != '' ? "?search=".escape($search) : null));
+
+				header("Location: ".PROJECT_PATH."/core/domains/domain_edit.php?id=".escape($_REQUEST["domain_uuid"]));
 				exit;
 			}
 
-		//delete domain settings
+		//toggle
+			$toggled = 0;
+			if ($action == 'toggle' && is_array($domain_setting_uuids) && sizeof($domain_setting_uuids) > 0) {
+				foreach ($domain_setting_uuids as $domain_setting_uuid) {
+					if (is_uuid($domain_setting_uuid)) {
+						//get current status
+							$sql = "select domain_setting_enabled from v_domain_settings where domain_setting_uuid = :domain_setting_uuid ";
+							$parameters['domain_setting_uuid'] = $domain_setting_uuid;
+							$database = new database;
+							$domain_setting_enabled = $database->select($sql, $parameters, 'column');
+							$new_status = $domain_setting_enabled == 'true' ? 'false' : 'true';
+							unset($sql, $parameters);
+						//set new status
+							$array['domain_settings'][0]['domain_setting_uuid'] = $domain_setting_uuid;
+							$array['domain_settings'][0]['domain_setting_enabled'] = $new_status;
+							$database = new database;
+							$database->app_name = 'domain_settings';
+							$database->app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
+							$database->save($array);
+							$message = $database->message;
+							unset($array);
+						//increment toggle total
+							$toggled++;
+					}
+				}
+				if ($toggled > 0) {
+					message::add($text['message-toggle'].': '.$toggled);
+				}
+
+				header("Location: ".PROJECT_PATH."/core/domains/domain_edit.php?id=".escape($_REQUEST["domain_uuid"]));
+				exit;
+			}
+
+		//delete
 			if ($action == 'delete' && permission_exists('domain_setting_delete')) {
 				//add multi-lingual support
 					$language = new text;
@@ -186,10 +205,6 @@
 						unset($array);
 					}
 				}
-				else {
-					// set message
-					message::add($text['message-delete_failed'], 'negative');
-				}
 
 				header("Location: ".PROJECT_PATH."/core/domains/domain_edit.php?id=".escape($_REQUEST["domain_uuid"]));
 				exit;
@@ -202,11 +217,6 @@
 //get the variables
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
-
-//show the content
-	echo "<form name='domain_frm' id='domain_frm' method='GET' action='".PROJECT_PATH."/core/domain_settings/domain_settings.php'>";
-	echo "<input type='hidden' name='action' id='action' value=''>";
-	echo "<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>";
 
 //prepare to page the results
 	$sql = "select count(*) from v_domain_settings ";
@@ -236,23 +246,80 @@
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$result = $database->select($sql, $parameters, 'all');
-	$result_count = sizeof($result);
 	unset($sql, $parameters);
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
+//copy settings javascript
+	if (
+		permission_exists("domain_select") &&
+		permission_exists("domain_setting_add") &&
+		is_array($_SESSION['domains']) &&
+		@sizeof($_SESSION['domains']) > 1
+		) {
+		echo "<script language='javascript' type='text/javascript'>\n";
+		echo "	var fade_speed = 400;\n";
+		echo "	function show_domains() {\n";
+		echo "		$('#button_copy').fadeOut(fade_speed, function() {\n";
+		echo "			$('#button_back').fadeIn(fade_speed);\n";
+		echo "			$('#target_domain_uuid').fadeIn(fade_speed);\n";
+		echo "			$('#button_paste').fadeIn(fade_speed);\n";
+		echo "		});";
+		echo "	}";
+		echo "	function hide_domains() {\n";
+		echo "		$('#button_back').fadeOut(fade_speed);\n";
+		echo "		$('#target_domain_uuid').fadeOut(fade_speed);\n";
+		echo "		$('#button_paste').fadeOut(fade_speed, function() {\n";
+		echo "			$('#button_copy').fadeIn(fade_speed);\n";
+		echo "			document.getElementById('target_domain_uuid').selectedIndex = 0;\n";
+		echo "		});\n";
+		echo "	}\n";
+		echo "</script>";
+	}
+
 //show the content
+	echo "<form name='domain_frm' id='domain_frm' method='post' action='".PROJECT_PATH."/core/domain_settings/domain_settings.php'>";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>";
+
+	echo "<div style='float: right;'>\n";
+	if (permission_exists('domain_setting_add')) {
+		echo "	<a href='".PROJECT_PATH."/core/domain_settings/domain_setting_edit.php?domain_uuid=".urlencode($domain_uuid)."' alt=\"".$text['button-add']."\"><button type='button' class='btn btn-default'><span class='fas fa-plus'></span> ".$text['button-add']."</button></a>";
+	}
+	if (is_array($result) && @sizeof($result) != 0) {
+		if (permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) {
+			echo "		<button type='button' id='button_copy' class='btn btn-default' alt='".$text['button-copy']."' onclick='show_domains();'><span class='fas fa-copy'></span> ".$text['button-copy']."</button>";
+			echo "		<button type='button' id='button_back' class='btn btn-default' style='display: none;' alt='".$text['button-back']."' onclick='hide_domains();'><span class='fas fa-undo-alt'></span> ".$text['button-back']."</button>";
+			echo "		<select class='formfld' style='display: none; width: auto;' name='target_domain_uuid' id='target_domain_uuid'>\n";
+			echo "			<option value=''>".$text['label-domain']."...</option>\n";
+			foreach ($_SESSION['domains'] as $domain) {
+				echo "		<option value='".escape($domain["domain_uuid"])."'>".escape($domain["domain_name"])."</option>\n";
+			}
+			echo "		</select>\n";
+			echo "		<button type='submit' id='button_paste' name='action' class='btn btn-default' style='display: none;' alt='".$text['button-paste']."' value='copy'><span class='fas fa-paste'></span> ".$text['button-paste']."</button>";
+		}
+		if (permission_exists('default_setting_edit')) {
+			echo "	<button type='submit' name='action' class='btn btn-default' alt=\"".$text['button-toggle']."\" value='toggle' onclick=\"if (!confirm('".$text['confirm-toggle']."')) { this.blur(); return false; }\"><span class='fas fa-toggle-on'></span> ".$text['button-toggle']."</button>";
+		}
+		if (permission_exists('default_setting_delete')) {
+			echo "	<button type='submit' name='action' class='btn btn-default' alt=\"".$text['button-delete']."\" value='delete' onclick=\"if (!confirm('".$text['confirm-delete']."')) { this.blur(); return false; }\"><span class='fas fa-trash'></span> ".$text['button-delete']."</button>";
+		}
+	}
+	echo "</div>\n";
+	echo "<b>".$text['header-domain_settings']."</b>";
+	echo "<br><br>\n";
+
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
-	if (is_array($result) && sizeof($result) != 0) {
+	if (is_array($result) && @sizeof($result) != 0) {
 		$previous_category = '';
 		foreach($result as $row) {
 			if ($previous_category != $row['domain_setting_category']) {
 				$c = 0;
 				echo "<tr>\n";
-				echo "	<td colspan='7' align='left'>\n";
+				echo "	<td colspan='7' align='left' class='tr_link_void'>\n";
 				if ($previous_category != '') {
 					echo "	<br /><br />\n";
 				}
@@ -279,12 +346,9 @@
 				echo "<th>".$text['label-value']."</th>";
 				echo "<th style='text-align: center;'>".$text['label-enabled']."</th>";
 				echo "<th>".$text['label-description']."</th>";
-				echo "<td class='list_control_icons'>";
+				echo "	<td class='tr_link_void' style='width: 1px;'>\n";
 				if (permission_exists('domain_setting_add')) {
-					echo "<a href='".PROJECT_PATH."/core/domain_settings/domain_setting_edit.php?domain_setting_category=".escape($row['domain_setting_category'])."&domain_uuid=".escape($_GET['id'])."' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
-				}
-				if (permission_exists('domain_setting_delete')) {
-					echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('action').value = 'delete'; document.forms.domain_frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
+					echo "<a href='".PROJECT_PATH."/core/domain_settings/domain_setting_edit.php?domain_setting_category=".escape($row['domain_setting_category'])."&domain_uuid=".escape($_GET['id'])."' alt='".$text['button-add']."'>".$v_button_icon_add."</a>";
 				}
 				echo "</td>\n";
 				echo "</tr>\n";
@@ -357,64 +421,54 @@
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center;'>\n";
-			echo "		<a href='".PROJECT_PATH."/core/domain_settings/domain_settings.php?domain_id=".escape($row['domain_uuid'])."&id[]=".escape($row['domain_setting_uuid'])."&enabled=".(($row['domain_setting_enabled'] == 'true') ? 'false' : 'true')."'>".$text['label-'.escape($row['domain_setting_enabled'])]."</a>\n";
+			echo "		<button type='submit' class='btn btn-link' name='action' value='toggle' onclick=\"document.getElementById('checkbox_".escape($row['domain_setting_uuid'])."').checked=true;\">".$text['label-'.escape($row['domain_setting_enabled'])]."</button>\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".escape($row['domain_setting_description'])."&nbsp;</td>\n";
-			echo "	<td class='list_control_icons'>";
+			echo "	<td class='tr_link_void'>";
 			if (permission_exists('domain_setting_edit')) {
-				echo "<a href='".PROJECT_PATH."/core/domain_settings/domain_setting_edit.php?domain_uuid=".escape($row['domain_uuid'])."&id=".escape($row['domain_setting_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
-			}
-			if (permission_exists('domain_setting_delete')) {
-				echo "<a href='".PROJECT_PATH."/core/domain_settings/domain_settings.php?domain_uuid=".escape($row['domain_uuid'])."&id[]=".escape($row['domain_setting_uuid'])."&action=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='".PROJECT_PATH."/core/domain_settings/domain_setting_edit.php?domain_uuid=".escape($row['domain_uuid'])."&id=".escape($row['domain_setting_uuid'])."' alt='".$text['button-edit']."'>".$v_button_icon_edit."</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 			$previous_category = $row['domain_setting_category'];
-			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
+			$c = $c ? 0 : 1;
+		}
 		unset($sql, $result, $row_count);
-	} //end if results
+	}
 
 	echo "<tr>\n";
-	echo "<td colspan='20' align='left'>\n";
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td class='list_control_icons'>";
-	if (permission_exists('domain_setting_add')) {
-		echo 		"<a href='".PROJECT_PATH."/core/domain_settings/domain_setting_edit.php?domain_uuid=".escape($_GET['id'])."' alt='".$text['button-add']."'>$v_link_label_add</a>";
-	}
-	if (permission_exists('domain_setting_delete') && $result_count > 0) {
-		echo 		"<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('action').value = 'delete'; document.getElementById('domain_frm').submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
-	}
-	echo "		</td>\n";
-	echo "	</tr>\n";
- 	echo "	</table>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
 	echo "</table>";
+
+	echo "<div style='text-align: center; white-space: nowrap'>".$paging_controls."</div>";
+
 	echo "</form>";
 
 	echo "<br /><br />";
 
 	// check or uncheck all category checkboxes
-	if (isset($subcat_ids) && sizeof($subcat_ids) > 0) {
-		echo "<script>\n";
-		echo "	function check(what, category) {\n";
-		foreach ($subcat_ids as $domain_setting_category => $checkbox_ids) {
-			echo "if (category == '".$domain_setting_category."') {\n";
-			foreach ($checkbox_ids as $index => $checkbox_id) {
-				echo "document.getElementById('".$checkbox_id."').checked = (what == 'all') ? true : false;\n";
+		if (isset($subcat_ids) && sizeof($subcat_ids) > 0) {
+			echo "<script>\n";
+			echo "	function check(what, category) {\n";
+			foreach ($subcat_ids as $domain_setting_category => $checkbox_ids) {
+				echo "if (category == '".$domain_setting_category."') {\n";
+				foreach ($checkbox_ids as $index => $checkbox_id) {
+					echo "document.getElementById('".$checkbox_id."').checked = (what == 'all') ? true : false;\n";
+				}
+				echo "}\n";
 			}
-			echo "}\n";
+			echo "	}\n";
+			echo "</script>\n";
 		}
+
+	//handle form actions
+		echo "<script type='text/javascript'>\n";
+		echo "	function set_action(action) {\n";
+		echo "		document.getElementById('action').value = action;\n";
+		echo "	}\n";
+
+		echo "	function submit_form(form_id) {\n";
+		echo "		document.getElementById(form_id).submit();\n";
 		echo "	}\n";
 		echo "</script>\n";
-	}
-
-//include the footer
-	//require_once "resources/footer.php";
 
 ?>
