@@ -273,10 +273,10 @@
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['bridge_enabled']]."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['bridge_description'])."</td>\n";
 			echo "	<td style='width: 0;' class='tr_link_void'>";
+			/*
 			if (permission_exists('bridge_edit')) {
 				echo "<a href='bridge_edit.php?id=".escape($row['bridge_uuid'])."' alt='".$text['button-edit']."'>".$v_button_icon_edit."</a>";
 			}
-			/*
 			if (permission_exists('bridge_delete')) {
 				echo "<button type='input' class='btn btn-default btn-icon' name='bridges[$x][checked]' value='true' alt='".$text['button-delete']."' onclick=\"if (confirm('".$text['confirm-delete']."')) { set_action('delete'); submit_form('form_list'); } else { this.blur(); return false; }\"><span class='fas fa-minus'></span></button>";
 			}
