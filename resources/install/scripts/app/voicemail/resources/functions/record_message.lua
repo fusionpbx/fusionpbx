@@ -214,7 +214,11 @@
                                 local api_key = settings:get('voicemail', 'watson_key', 'text') or '';
                                 local transcription_server = settings:get('voicemail', 'watson_url', 'text') or '';
                                 if (api_key ~= '') then
-                                        transcribe_cmd = [[ curl -X POST -u "apikey:]]..api_key..[[" --header "Content-type: audio/wav" --data-binary @]]..file_path..[[ "]]..transcription_server..[[" ]]
+					if (vm_message_ext == "mp3") then
+                                        	transcribe_cmd = [[ curl -X POST -u "apikey:]]..api_key..[[" --header "Content-type: audio/mp3" --data-binary @]]..file_path..[[ "]]..transcription_server..[[" ]]
+                                        else
+                                        	transcribe_cmd = [[ curl -X POST -u "apikey:]]..api_key..[[" --header "Content-type: audio/wav" --data-binary @]]..file_path..[[ "]]..transcription_server..[[" ]]
+                                        end
                                         local handle = io.popen(transcribe_cmd);
                                         local transcribe_result = handle:read("*a");
                                         handle:close();
@@ -330,7 +334,8 @@
 			local message_silence_threshold = settings:get('voicemail', 'message_silence_threshold', 'numeric') or 200;
 			local message_silence_seconds = settings:get('voicemail', 'message_silence_seconds', 'numeric') or 3;
 			transcribe_enabled = settings:get('voicemail', 'transcribe_enabled', 'boolean') or "false";
-
+			local transcribe_provider = settings:get('voicemail', 'transcribe_provider', 'text') or '';
+	
 		--debug information
 			if (debug["info"]) then
 				freeswitch.consoleLog("notice", "[voicemail] transcribe_enabled: " .. transcribe_enabled .. "\n");
@@ -468,8 +473,12 @@
 					shout_exists = trim(api:execute("module_exists", "mod_shout"));
 					if (shout_exists == "true" and transcribe_enabled == "false") or (shout_exists == "true" and transcribe_enabled == "true" and voicemail_transcription_enabled ~= "true") then
 						freeswitch.consoleLog("notice", "using mod_shout for mp3 encoding\n");
-						--record in mp3 directly
+						--record in mp3 directly, no transcription
 							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3", message_max_length, message_silence_threshold, message_silence_seconds);
+					elseif (shout_exists == "true" and transcribe_enabled == "true" and voicemail_transcription_enabled == "true" and transcribe_provider == "watson") then
+						--record in mp3 directly with mp3 transcription if watson selected
+							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3", message_max_length, message_silence_threshold, message_silence_seconds);
+							transcription = transcribe(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3",settings,start_epoch);
 					else
 						--create initial wav recording
 							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", message_max_length, message_silence_threshold, message_silence_seconds);
