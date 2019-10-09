@@ -190,6 +190,26 @@ $text['message-copy']['sv-se'] = "Kopiering Slutförd";
 $text['message-copy']['uk-ua'] = "Скопійовано";
 $text['message-copy']['tr-tr'] = "Kopyalama İşlemi Tamamlandı";
 
+$text['message-toggle']['en-us'] = "Toggle Completed";
+$text['message-toggle']['ar-eg'] = "الانتهاء من تبديل";
+$text['message-toggle']['de-at'] = "Toggle Completed"; //copied from de-de
+$text['message-toggle']['de-ch'] = "Toggle Completed"; //copied from de-de
+$text['message-toggle']['de-de'] = "Toggle Completed";
+$text['message-toggle']['es-cl'] = "Alternar Completado";
+$text['message-toggle']['es-mx'] = "Alternar Completado"; //copied from es-cl
+$text['message-toggle']['fr-ca'] = "Basculer Terminé"; //copied from fr-fr
+$text['message-toggle']['fr-fr'] = "Basculer Terminé";
+$text['message-toggle']['he-il'] = "הושלם Toggle";
+$text['message-toggle']['it-it'] = "Commutazione Completata";
+$text['message-toggle']['nl-nl'] = "";
+$text['message-toggle']['pl-pl'] = "Przegubowe Zakończony";
+$text['message-toggle']['pt-br'] = "Alternar Concluído"; //copied from pt-pt
+$text['message-toggle']['pt-pt'] = "Alternar Concluído";
+$text['message-toggle']['ro-ro'] = "Completat toggle";
+$text['message-toggle']['ru-ru'] = "Переключить выполнено";
+$text['message-toggle']['sv-se'] = "Växla Avslutade";
+$text['message-toggle']['uk-ua'] = "переключити Завершений";
+
 $text['message-invalid_credentials']['en-us'] = "Invalid Username and/or Password";
 $text['message-invalid_credentials']['ar-eg'] = "";
 $text['message-invalid_credentials']['de-at'] = "Ungültiger Benutzername und/oder Passwort"; //copied from de-de

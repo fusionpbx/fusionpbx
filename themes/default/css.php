@@ -639,6 +639,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 
 	button.btn-icon {
 		margin: 0 2px;
+		white-space: nowrap;
 		}
 
 	/* control icons (define after the default bootstrap btn-default class) */
@@ -932,14 +933,25 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		font-weight: bold
 		}
 
-	a {
+	a,
+	button.btn.btn-link {
 		color: <?php echo ($_SESSION['theme']['text_link_color']['text'] != '') ? $_SESSION['theme']['text_link_color']['text'] : '#004083'; ?>;
 		text-decoration: none;
 		}
 
-	a:hover {
+	a:hover,
+	button.btn.btn-link:hover {
 		color: <?php echo ($_SESSION['theme']['text_link_color_hover']['text'] != '') ? $_SESSION['theme']['text_link_color_hover']['text'] : '#5082ca'; ?>;
 		text-decoration: underline;
+		}
+
+	button.btn.btn-link {
+		margin: 0;
+		margin-top: -2px;
+		padding: 0;
+		border: none;
+		font-size: inherit;
+		font-family: inherit;
 		}
 
 	form {
