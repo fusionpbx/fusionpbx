@@ -3371,6 +3371,26 @@ $text['button-tickets']['ru-ru'] = "";
 $text['button-tickets']['sv-se'] = "";
 $text['button-tickets']['uk-ua'] = "";
 
+$text['button-cdr']['en-us'] = "CDR";
+$text['button-cdr']['ar-eg'] = "";
+$text['button-cdr']['de-at'] = ""; //copied from de-de
+$text['button-cdr']['de-ch'] = ""; //copied from de-de
+$text['button-cdr']['de-de'] = "";
+$text['button-cdr']['es-cl'] = "";
+$text['button-cdr']['es-mx'] = ""; //copied from es-cl
+$text['button-cdr']['fr-ca'] = ""; //copied from fr-fr
+$text['button-cdr']['fr-fr'] = "";
+$text['button-cdr']['he-il'] = "";
+$text['button-cdr']['it-it'] = "";
+$text['button-cdr']['nl-nl'] = "";
+$text['button-cdr']['pl-pl'] = "";
+$text['button-cdr']['pt-br'] = ""; //copied from pt-pt
+$text['button-cdr']['pt-pt'] = "";
+$text['button-cdr']['ro-ro'] = "";
+$text['button-cdr']['ru-ru'] = "";
+$text['button-cdr']['sv-se'] = "";
+$text['button-cdr']['uk-ua'] = "";
+
 $text['description-greeting']['en-us'] = "Select the desired Greeting.";
 $text['description-greeting']['ar-eg'] = "";
 $text['description-greeting']['de-at'] = "Geben Sie die Begrüßungs-ID an."; //copied from de-de
