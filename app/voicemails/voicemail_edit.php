@@ -341,6 +341,15 @@
 		echo "	}\n";
 		echo "</script>\n";
 	}
+
+//set the location for the back button
+	if (permission_exists('voicemail_view')) {
+		$back_button_location = "voicemails.php";
+	}
+	else {
+		$back_button_location = "voicemail_messages.php?voicemail_uuid=".urlencode($voicemail_uuid);
+	}
+
 //show the content
 	echo "<form method='post' name='frm' id='frm' action=''>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
@@ -350,10 +359,11 @@
 	echo "	<br><br>";
 	echo "</td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='voicemails.php'\" value='".$text['button-back']."'>\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='".$back_button_location."'\" value='".$text['button-back']."'>\n";
 	if ($password_complexity == "true") {
 		echo "		<input type='button' class='btn' value='".$text['button-save']."' onclick=\"if (check_password_strength(document.getElementById('password').value)) { submit_form(); }\">";
-	} else {
+	}
+	else {
 		echo "	<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
 	}
 	echo "</td>\n";
