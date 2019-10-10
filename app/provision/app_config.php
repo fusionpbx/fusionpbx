@@ -452,7 +452,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "No";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "spa secure call No or Yes";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "SPA secure call No or Yes";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2672dbbc-2834-4e95-9ea9-e9ff6dc07838";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -466,9 +466,9 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_resync_time";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0300";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "spa resync at a specific time";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "SPA resync at 0300 every night at 3:00 am. Default disabled.";
 		$y++;
 
 ?>
