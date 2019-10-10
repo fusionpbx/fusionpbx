@@ -470,5 +470,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "SPA resync at 0300 every night at 3:00 am. Default disabled.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "753ed706-a5b0-47c1-a466-5ed35c4d27da";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_upgrade_enable";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "SPA upgrade firmware enable Yes or No Default No.";
+		$y++;
 
 ?>
