@@ -48,14 +48,14 @@
 
 	//get the contact list
 		$sql = "select * from v_contact_emails ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and contact_uuid = '$contact_uuid' ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and contact_uuid = :contact_uuid ";
 		$sql .= "order by email_primary desc, email_label asc ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
-		unset ($prep_statement, $sql);
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['contact_uuid'] = $contact_uuid;
+		$database = new database;
+		$result = $database->select($sql, $parameters, 'all');
+		unset($sql, $parameters);
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
@@ -69,12 +69,12 @@
 	echo "<th>".$text['label-email_description']."</th>\n";
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('contact_email_add')) {
-		echo "<a href='contact_email_edit.php?contact_uuid=".$contact_uuid."' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo "<a href='contact_email_edit.php?contact_uuid=".escape($contact_uuid)."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($result_count > 0) {
+	if (is_array($result) && @sizeof($result) != 0) {
 		foreach($result as $row) {
 			if (permission_exists('contact_email_edit')) {
 				$tr_link = "href='contact_email_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_email_uuid'])."'";
@@ -93,9 +93,9 @@
 			echo "	</td>\n";
 			echo "</tr>\n";
 			$c = ($c) ? 0 : 1;
-		} //end foreach
-		unset($sql, $result, $row_count);
-	} //end if results
+		}
+	}
+	unset($result, $row);
 
 	echo "</table>";
 

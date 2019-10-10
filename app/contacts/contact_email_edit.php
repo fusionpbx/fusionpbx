@@ -40,28 +40,28 @@ else {
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$contact_email_uuid = check_str($_REQUEST["id"]);
+		$contact_email_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
 	}
 
-if (strlen($_GET["contact_uuid"]) > 0) {
-	$contact_uuid = check_str($_GET["contact_uuid"]);
+if (is_uuid($_GET["contact_uuid"])) {
+	$contact_uuid = $_GET["contact_uuid"];
 }
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
-		$email_label = check_str($_POST["email_label"]);
-		$email_label_custom = check_str($_POST["email_label_custom"]);
-		$email_address = check_str($_POST["email_address"]);
-		$email_primary = check_str($_POST["email_primary"]);
-		$email_description = check_str($_POST["email_description"]);
+		$email_label = $_POST["email_label"];
+		$email_label_custom = $_POST["email_label_custom"];
+		$email_address = $_POST["email_address"];
+		$email_primary = $_POST["email_primary"];
+		$email_description = $_POST["email_description"];
 
 		//use custom label if set
-		$email_label = ($email_label_custom != '') ? $email_label_custom : $email_label;
+		$email_label = $email_label_custom != '' ? $email_label_custom : $email_label;
 	}
 
 //process the form data
@@ -69,7 +69,7 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 
 		//set the uuid
 			if ($action == "update") {
-				$contact_email_uuid = check_str($_POST["contact_email_uuid"]);
+				$contact_email_uuid = $_POST["contact_email_uuid"];
 			}
 
 		//check for all required data
@@ -91,89 +91,85 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 			if ($_POST["persistformvar"] != "true") {
 
 				//update last modified
-				$sql = "update v_contacts set ";
-				$sql .= "last_mod_date = now(), ";
-				$sql .= "last_mod_user = '".$_SESSION['username']."' ";
-				$sql .= "where domain_uuid = '".$domain_uuid."' ";
-				$sql .= "and contact_uuid = '".$contact_uuid."' ";
-				$db->exec(check_sql($sql));
-				unset($sql);
+					$array['contacts'][0]['contact_uuid'] = $contact_uuid;
+					$array['contacts'][0]['domain_uuid'] = $domain_uuid;
+					$array['contacts'][0]['last_mod_date'] = 'now()';
+					$array['contacts'][0]['last_mod_user'] = $_SESSION['username'];
 
-				//if primary, unmark other primary numbers
-				if ($email_primary) {
-					$sql = "update v_contact_emails set email_primary = 0 ";
-					$sql .= "where domain_uuid = '".$domain_uuid."' ";
-					$sql .= "and contact_uuid = '".$contact_uuid."' ";
-					$db->exec(check_sql($sql));
-					unset($sql);
-				}
+					$p = new permissions;
+					$p->add('contact_edit', 'temp');
 
-				if ($action == "add") {
+					$database = new database;
+					$database->app_name = 'contacts';
+					$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
+					$database->save($array);
+					unset($array);
+
+					$p->delete('contact_edit', 'temp');
+
+				//if primary, unmark other primary emails
+					if ($email_primary) {
+						$sql = "update v_contact_emails set email_primary = 0 ";
+						$sql .= "where domain_uuid = :domain_uuid ";
+						$sql .= "and contact_uuid = :contact_uuid ";
+						$parameters['domain_uuid'] = $domain_uuid;
+						$parameters['contact_uuid'] = $contact_uuid;
+						$database = new database;
+						$database->execute($sql, $parameters);
+						unset($sql, $parameters);
+					}
+
+				if ($action == "add" && permission_exists('contact_email_add')) {
 					$contact_email_uuid = uuid();
-					$sql = "insert into v_contact_emails ";
-					$sql .= "(";
-					$sql .= "domain_uuid, ";
-					$sql .= "contact_uuid, ";
-					$sql .= "contact_email_uuid, ";
-					$sql .= "email_label, ";
-					$sql .= "email_address, ";
-					$sql .= "email_primary, ";
-					$sql .= "email_description ";
-					$sql .= ")";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'".$_SESSION['domain_uuid']."', ";
-					$sql .= "'".$contact_uuid."', ";
-					$sql .= "'".$contact_email_uuid."', ";
-					$sql .= "'".$email_label."', ";
-					$sql .= "'".$email_address."', ";
-					$sql .= (($email_primary) ? 1 : 0).", ";
-					$sql .= "'".$email_description."' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
+					$array['contact_emails'][0]['contact_email_uuid'] = $contact_email_uuid;
 
 					message::add($text['message-add']);
-					header("Location: contact_edit.php?id=".$contact_uuid);
-					return;
-				} //if ($action == "add")
+				}
 
-				if ($action == "update") {
-					$sql = "update v_contact_emails set ";
-					$sql .= "contact_uuid = '".$contact_uuid."', ";
-					$sql .= "email_label = '".$email_label."', ";
-					$sql .= "email_address = '".$email_address."', ";
-					$sql .= "email_primary = ".(($email_primary) ? 1 : 0).", ";
-					$sql .= "email_description = '".$email_description."' ";
-					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-					$sql .= "and contact_email_uuid = '".$contact_email_uuid."'";
-					$db->exec(check_sql($sql));
-					unset($sql);
+				if ($action == "update" && permission_exists('contact_email_edit')) {
+					$array['contact_emails'][0]['contact_email_uuid'] = $contact_email_uuid;
 
 					message::add($text['message-update']);
-					header("Location: contact_edit.php?id=".$contact_uuid);
-					return;
-				} //if ($action == "update")
-			} //if ($_POST["persistformvar"] != "true")
-	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+				}
+
+				if (is_array($array) && @sizeof($array) != 0) {
+					$array['contact_emails'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+					$array['contact_emails'][0]['contact_uuid'] = $contact_uuid;
+					$array['contact_emails'][0]['email_label'] = $email_label;
+					$array['contact_emails'][0]['email_address'] = $email_address;
+					$array['contact_emails'][0]['email_primary'] = $email_primary ? 1 : 0;
+					$array['contact_emails'][0]['email_description'] = $email_description;
+
+					$database = new database;
+					$database->app_name = 'contacts';
+					$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
+					$database->save($array);
+					unset($array);
+				}
+
+				header("Location: contact_edit.php?id=".$contact_uuid);
+				exit;
+
+			}
+	}
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$contact_email_uuid = $_GET["id"];
 		$sql = "select * from v_contact_emails ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and contact_email_uuid = '".$contact_email_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and contact_email_uuid = :contact_email_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['contact_email_uuid'] = $contact_email_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');;
+		if (is_array($row) && @sizeof($row) != 0) {
 			$email_label = $row["email_label"];
 			$email_address = $row["email_address"];
 			$email_primary = $row["email_primary"];
 			$email_description = $row["email_description"];
-			break; //limit to 1 row
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //show the header

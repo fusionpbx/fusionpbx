@@ -44,17 +44,17 @@
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$contact_setting_uuid = check_str($_REQUEST["id"]);
+		$contact_setting_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
 	}
 
 //get the contact uuid
-	if (strlen($_GET["contact_uuid"]) > 0) {
-		$contact_uuid = check_str($_GET["contact_uuid"]);
+	if (is_uuid($_GET["contact_uuid"])) {
+		$contact_uuid = $_GET["contact_uuid"];
 	}
 
 //set the session domain uuid as a variable
@@ -62,21 +62,21 @@
 
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
-		$contact_setting_category = strtolower(check_str($_POST["contact_setting_category"]));
-		$contact_setting_subcategory = strtolower(check_str($_POST["contact_setting_subcategory"]));
-		$contact_setting_name = strtolower(check_str($_POST["contact_setting_name"]));
-		$contact_setting_value = check_str($_POST["contact_setting_value"]);
-		$contact_setting_order = check_str($_POST["contact_setting_order"]);
-		$contact_setting_enabled = strtolower(check_str($_POST["contact_setting_enabled"]));
-		$contact_setting_description = check_str($_POST["contact_setting_description"]);
+		$contact_setting_category = strtolower($_POST["contact_setting_category"]);
+		$contact_setting_subcategory = strtolower($_POST["contact_setting_subcategory"]);
+		$contact_setting_name = strtolower($_POST["contact_setting_name"]);
+		$contact_setting_value = $_POST["contact_setting_value"];
+		$contact_setting_order = $_POST["contact_setting_order"];
+		$contact_setting_enabled = strtolower($_POST["contact_setting_enabled"]);
+		$contact_setting_description = $_POST["contact_setting_description"];
 	}
 
 //process the form data
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (is_array($_POST) && sizeof($_POST) != 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		//set the uuid
 			if ($action == "update") {
-				$contact_setting_uuid = check_str($_POST["contact_setting_uuid"]);
+				$contact_setting_uuid = $_POST["contact_setting_uuid"];
 			}
 
 		//check for all required data
@@ -105,87 +105,76 @@
 			if ($_POST["persistformvar"] != "true") {
 
 				//set the order
-					$contact_setting_order = ($contact_setting_order != '') ? $contact_setting_order : 'null';
+					$contact_setting_order = $contact_setting_order != '' ? $contact_setting_order : null;
 
 				//update last modified
-					$sql = "update v_contacts set ";
-					$sql .= "last_mod_date = now(), ";
-					$sql .= "last_mod_user = '".$_SESSION['username']."' ";
-					$sql .= "where domain_uuid = '".$domain_uuid."' ";
-					$sql .= "and contact_uuid = '".$contact_uuid."' ";
-					$db->exec(check_sql($sql));
-					unset($sql);
+					$array['contacts'][0]['contact_uuid'] = $contact_uuid;
+					$array['contacts'][0]['domain_uuid'] = $domain_uuid;
+					$array['contacts'][0]['last_mod_date'] = 'now()';
+					$array['contacts'][0]['last_mod_user'] = $_SESSION['username'];
 
-				//add the domain
-					if ($action == "add" && permission_exists('domain_setting_add')) {
-						$sql = "insert into v_contact_settings ";
-						$sql .= "(";
-						$sql .= "contact_setting_uuid, ";
-						$sql .= "contact_uuid, ";
-						$sql .= "domain_uuid, ";
-						$sql .= "contact_setting_category, ";
-						$sql .= "contact_setting_subcategory, ";
-						$sql .= "contact_setting_name, ";
-						$sql .= "contact_setting_value, ";
-						$sql .= "contact_setting_order, ";
-						$sql .= "contact_setting_enabled, ";
-						$sql .= "contact_setting_description ";
-						$sql .= ")";
-						$sql .= "values ";
-						$sql .= "(";
-						$sql .= "'".uuid()."', ";
-						$sql .= "'$contact_uuid', ";
-						$sql .= "'$domain_uuid', ";
-						$sql .= "'$contact_setting_category', ";
-						$sql .= "'$contact_setting_subcategory', ";
-						$sql .= "'$contact_setting_name', ";
-						$sql .= "'$contact_setting_value', ";
-						$sql .= "$contact_setting_order, ";
-						$sql .= "'$contact_setting_enabled', ";
-						$sql .= "'$contact_setting_description' ";
-						$sql .= ")";
-						$db->exec(check_sql($sql));
-						unset($sql);
-					} //if ($action == "add")
+					$p = new permissions;
+					$p->add('contact_edit', 'temp');
 
-				//update the domain
-					if ($action == "update") {
-						$sql = "update v_contact_settings set ";
-						$sql .= "contact_setting_category = '$contact_setting_category', ";
-						$sql .= "contact_setting_subcategory = '$contact_setting_subcategory', ";
-						$sql .= "contact_setting_name = '$contact_setting_name', ";
-						$sql .= "contact_setting_value = '$contact_setting_value', ";
-						$sql .= "contact_setting_order = $contact_setting_order, ";
-						$sql .= "contact_setting_enabled = '$contact_setting_enabled', ";
-						$sql .= "contact_setting_description = '$contact_setting_description' ";
-						$sql .= "where contact_uuid = '$contact_uuid' ";
-						$sql .= "and contact_setting_uuid = '$contact_setting_uuid'";
-						$db->exec(check_sql($sql));
-						unset($sql);
-					} //if ($action == "update")
+					$database = new database;
+					$database->app_name = 'contacts';
+					$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
+					$database->save($array);
+					unset($array);
 
-				//redirect the browser
-					if ($action == "update") {
-						message::add($text['message-update']);
-					}
-					if ($action == "add") {
+					$p->delete('contact_edit', 'temp');
+
+				//add the setting
+					if ($action == "add" && permission_exists('contact_setting_add')) {
+						$contact_setting_uuid = uuid();
+						$array['contact_settings'][0]['contact_setting_uuid'] = $contact_setting_uuid;
+
 						message::add($text['message-add']);
 					}
+
+				//update the setting
+					if ($action == "update" && permission_exists('contact_setting_edit')) {
+						$array['contact_settings'][0]['contact_setting_uuid'] = $contact_setting_uuid;
+
+						message::add($text['message-update']);
+					}
+
+				//execute
+					if (is_array($array) && @sizeof($array) != 0) {
+						$array['contact_settings'][0]['contact_uuid'] = $contact_uuid;
+						$array['contact_settings'][0]['domain_uuid'] = $domain_uuid;
+						$array['contact_settings'][0]['contact_setting_category'] = $contact_setting_category;
+						$array['contact_settings'][0]['contact_setting_subcategory'] = $contact_setting_subcategory;
+						$array['contact_settings'][0]['contact_setting_name'] = $contact_setting_name;
+						$array['contact_settings'][0]['contact_setting_value'] = $contact_setting_value;
+						$array['contact_settings'][0]['contact_setting_order'] = $contact_setting_order;
+						$array['contact_settings'][0]['contact_setting_enabled'] = $contact_setting_enabled;
+						$array['contact_settings'][0]['contact_setting_description'] = $contact_setting_description;
+
+						$database = new database;
+						$database->app_name = 'contacts';
+						$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
+						$database->save($array);
+						unset($array);
+					}
+
+				//redirect the browser
 					header("Location: contact_edit.php?id=".escape($contact_uuid));
-					return;
-			} //if ($_POST["persistformvar"] != "true")
-	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+					exit;
+			}
+	}
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
-		$contact_setting_uuid = check_str($_GET["id"]);
+	if (is_array($_GET) && sizeof($_GET) != 0 && $_POST["persistformvar"] != "true") {
+		$contact_setting_uuid = $_GET["id"];
 		$sql = "select * from v_contact_settings ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and contact_setting_uuid = '$contact_setting_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and contact_setting_uuid = :contact_setting_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['contact_setting_uuid'] = $contact_setting_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && sizeof($row) != 0) {
 			$contact_setting_category = escape($row["contact_setting_category"]);
 			$contact_setting_subcategory = escape($row["contact_setting_subcategory"]);
 			$contact_setting_name = escape($row["contact_setting_name"]);
@@ -194,7 +183,7 @@
 			$contact_setting_enabled = escape($row["contact_setting_enabled"]);
 			$contact_setting_description = escape($row["contact_setting_description"]);
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //show the header
@@ -273,16 +262,13 @@
 	echo "	".$text['label-contact_setting_value']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	$category = $row['contact_setting_category'];
-	$subcategory = $row['contact_setting_subcategory'];
-	$name = $row['contact_setting_name'];
-	echo "	<input class='formfld' type='text' name='contact_setting_value' maxlength='255' value=\"".escape($row['contact_setting_value'])."\">\n";
+	echo "	<input class='formfld' type='text' name='contact_setting_value' maxlength='255' value=\"".escape($contact_setting_value)."\">\n";
 	echo "<br />\n";
 	echo $text['description-contact_setting_value']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($name == "array") {
+	if ($contact_setting_name == "array") {
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap' width='30%'>\n";
 		echo "    ".$text['label-order']."\n";

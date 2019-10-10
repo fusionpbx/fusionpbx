@@ -43,9 +43,9 @@
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$contact_uuid = check_str($_REQUEST["id"]);
+		$contact_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
@@ -53,21 +53,21 @@
 
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
-		$user_uuid = check_str($_POST["user_uuid"]);
+		$user_uuid = $_POST["user_uuid"];
 		$group_uuid = $_POST['group_uuid'];
-		$contact_type = check_str($_POST["contact_type"]);
-		$contact_organization = check_str($_POST["contact_organization"]);
-		$contact_name_prefix = check_str($_POST["contact_name_prefix"]);
-		$contact_name_given = check_str($_POST["contact_name_given"]);
-		$contact_name_middle = check_str($_POST["contact_name_middle"]);
-		$contact_name_family = check_str($_POST["contact_name_family"]);
-		$contact_name_suffix = check_str($_POST["contact_name_suffix"]);
-		$contact_nickname = check_str($_POST["contact_nickname"]);
-		$contact_title = check_str($_POST["contact_title"]);
-		$contact_category = check_str($_POST["contact_category"]);
-		$contact_role = check_str($_POST["contact_role"]);
-		$contact_time_zone = check_str($_POST["contact_time_zone"]);
-		$contact_note = check_str($_POST["contact_note"]);
+		$contact_type = $_POST["contact_type"];
+		$contact_organization = $_POST["contact_organization"];
+		$contact_name_prefix = $_POST["contact_name_prefix"];
+		$contact_name_given = $_POST["contact_name_given"];
+		$contact_name_middle = $_POST["contact_name_middle"];
+		$contact_name_family = $_POST["contact_name_family"];
+		$contact_name_suffix = $_POST["contact_name_suffix"];
+		$contact_nickname = $_POST["contact_nickname"];
+		$contact_title = $_POST["contact_title"];
+		$contact_category = $_POST["contact_category"];
+		$contact_role = $_POST["contact_role"];
+		$contact_time_zone = $_POST["contact_time_zone"];
+		$contact_note = $_POST["contact_note"];
 	}
 
 //process the form data
@@ -75,7 +75,7 @@
 
 		//set the uuid
 			if ($action == "update") {
-				$contact_uuid = check_str($_POST["contact_uuid"]);
+				$contact_uuid = $_POST["contact_uuid"];
 			}
 
 		//check for all required data
@@ -111,79 +111,41 @@
 				//add the contact
 					if ($action == "add" && permission_exists('contact_add')) {
 						$contact_uuid = uuid();
-						$sql = "insert into v_contacts ";
-						$sql .= "( ";
-						$sql .= "domain_uuid, ";
-						$sql .= "contact_uuid, ";
-						$sql .= "contact_type, ";
-						$sql .= "contact_organization, ";
-						$sql .= "contact_name_prefix, ";
-						$sql .= "contact_name_given, ";
-						$sql .= "contact_name_middle, ";
-						$sql .= "contact_name_family, ";
-						$sql .= "contact_name_suffix, ";
-						$sql .= "contact_nickname, ";
-						$sql .= "contact_title, ";
-						$sql .= "contact_category, ";
-						$sql .= "contact_role, ";
-						$sql .= "contact_time_zone, ";
-						$sql .= "contact_note, ";
-						$sql .= "last_mod_date, ";
-						$sql .= "last_mod_user ";
-						$sql .= ") ";
-						$sql .= "values ";
-						$sql .= "( ";
-						$sql .= "'".$_SESSION['domain_uuid']."', ";
-						$sql .= "'".$contact_uuid."', ";
-						$sql .= "'".$contact_type."', ";
-						$sql .= "'".$contact_organization."', ";
-						$sql .= "'".$contact_name_prefix."', ";
-						$sql .= "'".$contact_name_given."', ";
-						$sql .= "'".$contact_name_middle."', ";
-						$sql .= "'".$contact_name_family."', ";
-						$sql .= "'".$contact_name_suffix."', ";
-						$sql .= "'".$contact_nickname."', ";
-						$sql .= "'".$contact_title."', ";
-						$sql .= "'".$contact_category."', ";
-						$sql .= "'".$contact_role."', ";
-						$sql .= "'".$contact_time_zone."', ";
-						$sql .= "'".$contact_note."', ";
-						$sql .= "now(), ";
-						$sql .= "'".$_SESSION['username']."' ";
-						$sql .= ")";
-						$db->exec(check_sql($sql));
-						unset($sql);
+						$array['contacts'][0]['contact_uuid'] = $contact_uuid;
 
 						message::add($text['message-add']);
 						$location = "contact_edit.php?id=".$contact_uuid;
-					} //if ($action == "add")
+					}
 
 				//update the contact
 					if ($action == "update" && permission_exists('contact_edit')) {
-						$sql = "update v_contacts set ";
-						$sql .= "contact_type = '".$contact_type."', ";
-						$sql .= "contact_organization = '".$contact_organization."', ";
-						$sql .= "contact_name_prefix = '".$contact_name_prefix."', ";
-						$sql .= "contact_name_given = '".$contact_name_given."', ";
-						$sql .= "contact_name_middle = '".$contact_name_middle."', ";
-						$sql .= "contact_name_family = '".$contact_name_family."', ";
-						$sql .= "contact_name_suffix = '".$contact_name_suffix."', ";
-						$sql .= "contact_nickname = '".$contact_nickname."', ";
-						$sql .= "contact_title = '".$contact_title."', ";
-						$sql .= "contact_category = '".$contact_category."', ";
-						$sql .= "contact_role = '".$contact_role."', ";
-						$sql .= "contact_time_zone = '".$contact_time_zone."', ";
-						$sql .= "contact_note = '".$contact_note."', ";
-						$sql .= "last_mod_date = now(), ";
-						$sql .= "last_mod_user = '".$_SESSION['username']."' ";
-						$sql .= "where domain_uuid = '".$domain_uuid."' ";
-						$sql .= "and contact_uuid = '".$contact_uuid."' ";
-						$db->exec(check_sql($sql));
-						unset($sql);
+						$array['contacts'][0]['contact_uuid'] = $contact_uuid;
 
 						message::add($text['message-update']);
 						$location = "contact_edit.php?id=".escape($contact_uuid);
-					} //if ($action == "update")
+					}
+
+				//create array
+					if (is_array($array) && @sizeof($array) != 0) {
+						$array['contacts'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+						$array['contacts'][0]['contact_type'] = $contact_type;
+						$array['contacts'][0]['contact_organization'] = $contact_organization;
+						$array['contacts'][0]['contact_name_prefix'] = $contact_name_prefix;
+						$array['contacts'][0]['contact_name_given'] = $contact_name_given;
+						$array['contacts'][0]['contact_name_middle'] = $contact_name_middle;
+						$array['contacts'][0]['contact_name_family'] = $contact_name_family;
+						$array['contacts'][0]['contact_name_suffix'] = $contact_name_suffix;
+						$array['contacts'][0]['contact_nickname'] = $contact_nickname;
+						$array['contacts'][0]['contact_title'] = $contact_title;
+						$array['contacts'][0]['contact_category'] = $contact_category;
+						$array['contacts'][0]['contact_role'] = $contact_role;
+						$array['contacts'][0]['contact_time_zone'] = $contact_time_zone;
+						$array['contacts'][0]['contact_note'] = $contact_note;
+						$array['contacts'][0]['last_mod_date'] = 'now()';
+						$array['contacts'][0]['last_mod_user'] = $_SESSION['username'];
+
+						$p = new permissions;
+					}
 
 				//assign the contact to the user that added the contact
 					if ($action == "add" && !permission_exists('contact_user_add')) {
@@ -191,50 +153,37 @@
 					}
 
 				//add user to contact users table
-					if ($user_uuid != '') {
+					if (is_uuid($user_uuid) && (permission_exists('contact_user_add') || $action == "add")) {
 						$contact_user_uuid = uuid();
-						$sql = "insert into v_contact_users ";
-						$sql .= "(";
-						$sql .= "domain_uuid, ";
-						$sql .= "contact_user_uuid, ";
-						$sql .= "contact_uuid, ";
-						$sql .= "user_uuid ";
-						$sql .= ") ";
-						$sql .= "values ";
-						$sql .= "(";
-						$sql .= "'$domain_uuid', ";
-						$sql .= "'$contact_user_uuid', ";
-						$sql .= "'$contact_uuid', ";
-						$sql .= "'$user_uuid' ";
-						$sql .= ")";
-						if (permission_exists('contact_user_add')) {
-							$db->exec(check_sql($sql));
-						}
-						elseif ($action == "add") {
-							//add the contact to the user that created it
-							$db->exec(check_sql($sql));
-						}
-						unset($sql);
+						$array['contact_users'][0]['domain_uuid'] = $domain_uuid;
+						$array['contact_users'][0]['contact_user_uuid'] = $contact_user_uuid;
+						$array['contact_users'][0]['contact_uuid'] = $contact_uuid;
+						$array['contact_users'][0]['user_uuid'] = $user_uuid;
+
+						$p->add('contact_user_add', 'temp');
 					}
 
 				//assign the contact to the group
-					if ($group_uuid != '' && permission_exists('contact_group_add')) {
-						$sql = "insert into v_contact_groups ";
-						$sql .= "( ";
-						$sql .= "contact_group_uuid, ";
-						$sql .= "domain_uuid, ";
-						$sql .= "contact_uuid, ";
-						$sql .= "group_uuid ";
-						$sql .= ") ";
-						$sql .= "values ";
-						$sql .= "( ";
-						$sql .= "'".uuid()."', ";
-						$sql .= "'".$domain_uuid."', ";
-						$sql .= "'".$contact_uuid."', ";
-						$sql .= "'".$group_uuid."' ";
-						$sql .= ") ";
-						$db->exec(check_sql($sql));
-						unset($sql);
+					if (is_uuid($group_uuid) && permission_exists('contact_group_add')) {
+						$contact_group_uuid = uuid();
+						$array['contact_group'][0]['contact_group_uuid'] = $contact_group_uuid;
+						$array['contact_group'][0]['domain_uuid'] = $domain_uuid;
+						$array['contact_group'][0]['contact_uuid'] = $contact_uuid;
+						$array['contact_group'][0]['group_uuid'] = $group_uuid;
+
+						$p->add('contact_group_add', 'temp');
+					}
+
+				//execute
+					if (is_array($array) && @sizeof($array) != 0) {
+						$database = new database;
+						$database->app_name = 'contacts';
+						$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
+						$database->save($array);
+						unset($array);
+
+						$p->delete('contact_user_add', 'temp');
+						$p->delete('contact_group_add', 'temp');
 					}
 
 				//handle redirect
@@ -244,21 +193,22 @@
 
 				//redirect the browser
 					header("Location: ".$location);
-					return;
+					exit;
 
-			} //if ($_POST["persistformvar"] != "true")
-	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+			}
+	}
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$contact_uuid = $_GET["id"];
 		$sql = "select * from v_contacts ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and contact_uuid = '$contact_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and contact_uuid = :contact_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['contact_uuid'] = $contact_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$contact_type = $row["contact_type"];
 			$contact_organization = $row["contact_organization"];
 			$contact_name_prefix = $row["contact_name_prefix"];
@@ -273,17 +223,17 @@
 			$contact_time_zone = $row["contact_time_zone"];
 			$contact_note = $row["contact_note"];
 		}
-		unset ($prep_statement, $sql);
+		unset($sql, $parameters, $row);
 	}
 
 //get the users array
-	$sql = "SELECT * FROM v_users ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql = "select * from v_users ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by username asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset($prep_statement, $sql);
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$users = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //determine if contact assigned to a user
 	if (is_array($users) && sizeof($users) != 0) {
@@ -296,16 +246,17 @@
 	}
 
 //get the users assigned to this contact
-	$sql = "SELECT u.username, u.user_uuid, a.contact_user_uuid FROM v_contacts as c, v_users as u, v_contact_users as a ";
-	$sql .= "where c.contact_uuid = '".$contact_uuid."' ";
-	$sql .= "and c.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql = "select u.username, u.user_uuid, a.contact_user_uuid from v_contacts as c, v_users as u, v_contact_users as a ";
+	$sql .= "where c.contact_uuid = :contact_uuid ";
+	$sql .= "and c.domain_uuid = :domain_uuid ";
 	$sql .= "and u.user_uuid = a.user_uuid ";
 	$sql .= "and c.contact_uuid = a.contact_uuid ";
 	$sql .= "order by u.username asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$contact_users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset($prep_statement, $sql);
+	$parameters['contact_uuid'] = $contact_uuid;
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$contact_users = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //show the header
 	require_once "resources/header.php";
@@ -390,8 +341,8 @@
 	echo "<tr>\n";
 	echo "<td valign='top' align='left' width='30%' nowrap='nowrap'><b>";
 	switch ($action) {
-		case "add" : 	echo $text['header-contact-add'];	break;
-		case "update" :	echo $text['header-contact-edit'];	break;
+		case "add": echo $text['header-contact-add']; break;
+		case "update": echo $text['header-contact-edit']; break;
 	}
 	echo "</b></td>\n";
 	echo "<td valign='top' width='70%' align='right'>\n";
@@ -402,20 +353,19 @@
 			$sql = "select ";
 			$sql .= "time_start ";
 			$sql .= "from v_contact_times ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and user_uuid = '".$_SESSION['user']['user_uuid']."' ";
-			$sql .= "and contact_uuid = '".$contact_uuid."' ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and user_uuid = :user_uuid ";
+			$sql .= "and contact_uuid = :contact_uuid ";
 			$sql .= "and time_start is not null ";
 			$sql .= "and time_stop is null ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetch(PDO::FETCH_NAMED);
-			if ($result['time_start'] != '') {
-				$time_start = $result['time_start'];
-				$btn_mod = "style='background-color: #3693df; background-image: none;'";
-			}
-			unset ($sql, $prep_statement, $result);
-			echo "	<input type='button' class='btn' ".$btn_mod." alt='".$text['button-timer']."' ".(($time_start != '') ? "title='".escape($time_start)."'" : null)." onclick=\"window.open('contact_timer.php?domain_uuid=".escape($domain_uuid)."&contact_uuid=".escape($contact_uuid)."','contact_time_".escape($contact_uuid)."','width=300, height=375, top=30, left='+(screen.width - 350)+', menubar=no, scrollbars=no, status=no, toolbar=no, resizable=no');\" value='".$text['button-timer']."'>\n";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
+			$parameters['contact_uuid'] = $contact_uuid;
+			$database = new database;
+			$time_start = $database->select($sql, $parameters, 'column');
+			$btn_mod = $time_start != '' ? "style='background-color: #3693df; background-image: none;'" : null;
+			unset($sql, $parameters);
+			echo "	<input type='button' class='btn' ".$btn_mod." alt='".$text['button-timer']."' ".($time_start != '' ? "title='".escape($time_start)."'" : null)." onclick=\"window.open('contact_timer.php?domain_uuid=".escape($domain_uuid)."&contact_uuid=".escape($contact_uuid)."','contact_time_".escape($contact_uuid)."','width=300, height=375, top=30, left='+(screen.width - 350)+', menubar=no, scrollbars=no, status=no, toolbar=no, resizable=no');\" value='".$text['button-timer']."'>\n";
 		}
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-qr_code']."' onclick=\"$('#qr_code_container').fadeIn(400);\" value='".$text['button-qr_code']."'>\n";
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-vcard']."' onclick=\"window.location='contacts_vcard.php?id=".escape($contact_uuid)."&type=download'\" value='".$text['button-vcard']."'>\n";
@@ -686,15 +636,16 @@
 			$sql .= "v_contact_groups as cg ";
 			$sql .= "where ";
 			$sql .= "cg.group_uuid = g.group_uuid ";
-			$sql .= "and cg.domain_uuid = '".$domain_uuid."' ";
-			$sql .= "and cg.contact_uuid = '".$contact_uuid."' ";
-			$sql .= "and cg.group_uuid <> '".$_SESSION["user_uuid"]."' ";
+			$sql .= "and cg.domain_uuid = :domain_uuid ";
+			$sql .= "and cg.contact_uuid = :contact_uuid ";
+			$sql .= "and cg.group_uuid <> :group_uuid ";
 			$sql .= "order by g.group_name asc ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			$result_count = count($result);
-			if ($result_count > 0) {
+			$parameters['domain_uuid'] = $domain_uuid;
+			$parameters['contact_uuid'] = $contact_uuid;
+			$parameters['group_uuid'] = $_SESSION["user_uuid"];
+			$database = new database;
+			$result = $database->select($sql, $parameters, 'all');
+			if (is_array($result) && @sizeof($result) != 0) {
 				echo "	<table width='52%'>\n";
 				foreach($result as $field) {
 					if (strlen($field['group_name']) > 0) {
@@ -712,21 +663,28 @@
 				echo "	</table>\n";
 				echo "	<br />\n";
 			}
-			unset($sql, $prep_statement, $result, $field);
+			unset($sql, $parameters, $result, $field);
 
 			if (permission_exists('contact_group_add') || if_group("superadmin")) {
 				$sql = "select * from v_groups ";
-				$sql .= "where domain_uuid = '".$domain_uuid."' ";
+				$sql .= "where domain_uuid = :domain_uuid ";
 				$sql .= "or domain_uuid is null ";
-				if (sizeof($assigned_groups) > 0) {
-					$sql .= "and group_uuid not in ('".implode("','",$assigned_groups)."') ";
+				if (is_array($assigned_groups) && @sizeof($assigned_groups) != 0) {
+					foreach ($assigned_groups as $index => $assigned_group) {
+						$sql_where_and[] = "group_uuid <> :group_uuid_".$index." ";
+						$parameters['group_uuid_'.$index] = $assigned_group;
+					}
+					if (is_array($sql_where_and) && @sizeof($sql_where_and) != 0) {
+						$sql .= "and ".implode(' and ', $sql_where_and)." ";
+					}
 				}
 				$sql .= "order by group_name asc ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				$result_count = count($result);
-				if ($result_count > 0) {
+				$parameters['domain_uuid'] = $domain_uuid;
+				$database = new database;
+				$result = $database->select($sql, $parameters, 'all');
+				unset($sql, $sql_where_and, $index, $parameters, $assigned_groups, $assigned_group);
+
+				if (is_array($result) && @sizeof($result) != 0) {
 					echo "	<select name='group_uuid' class='formfld' style='width: auto; margin-right: 3px;'>\n";
 					echo "		<option value=''></option>\n";
 					foreach($result as $field) {
@@ -741,7 +699,7 @@
 					}
 					echo "<br>";
 				}
-				unset($sql, $prep_statement, $result, $field);
+				unset($result, $field);
 			}
 
 			echo "		".$text['description-groups']."\n";

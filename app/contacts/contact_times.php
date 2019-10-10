@@ -42,14 +42,14 @@
 	$sql = "select ct.*, u.username, u.domain_uuid as user_domain_uuid ";
 	$sql .= "from v_contact_times as ct, v_users as u ";
 	$sql .= "where ct.user_uuid = u.user_uuid ";
-	$sql .= "and ct.domain_uuid = '".$domain_uuid."' ";
-	$sql .= "and ct.contact_uuid = '".$contact_uuid."' ";
+	$sql .= "and ct.domain_uuid = :domain_uuid ";
+	$sql .= "and ct.contact_uuid = :contact_uuid ";
 	$sql .= "order by ct.time_start desc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
-	unset ($prep_statement, $sql);
+	$parameters['domain_uuid'] = $domain_uuid;
+	$parameters['contact_uuid'] = $contact_uuid;
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //set the row style
 	$c = 0;
@@ -85,7 +85,7 @@
 
 	echo "<div id='div_contact_times' style='width: 100%; overflow: auto; direction: rtl; text-align: right; margin-bottom: 23px;'>";
 	echo "<table id='table_contact_times' class='tr_hover' style='width: 100%; direction: ltr;' border='0' cellpadding='0' cellspacing='0'>\n";
-	if ($result_count > 0) {
+	if (is_array($result) && @sizeof($result) != 0) {
 		foreach($result as $row) {
 			$tr_link = (permission_exists('contact_time_edit') && $row['user_uuid'] == $_SESSION["user"]["user_uuid"]) ? "href='contact_time_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_time_uuid'])."'" : null;
 			echo "<tr ".$tr_link.">\n";
@@ -120,9 +120,9 @@
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
-			$c = ($c) ? 0 : 1;
+			$c = $c ? 0 : 1;
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($result, $row);
 	} //end if results
 	echo "</table>";
 	echo "</div>\n";

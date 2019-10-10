@@ -2327,6 +2327,27 @@ $text['label-order']['sv-se'] = "Ordning";
 $text['label-order']['uk-ua'] = "Інше";
 $text['label-order']['tr-tr'] = "Sipariş";
 
+$text['label-level']['en-us'] = "Level";
+$text['label-level']['ar-eg'] = "";
+$text['label-level']['de-at'] = ""; //copied from de-de
+$text['label-level']['de-ch'] = ""; //copied from de-de
+$text['label-level']['de-de'] = "";
+$text['label-level']['es-cl'] = "";
+$text['label-level']['es-mx'] = ""; //copied from es-cl
+$text['label-level']['fr-ca'] = ""; //copied from fr-fr
+$text['label-level']['fr-fr'] = "";
+$text['label-level']['he-il'] = "";
+$text['label-level']['it-it'] = "";
+$text['label-level']['nl-nl'] = "";
+$text['label-level']['pl-pl'] = "";
+$text['label-level']['pt-br'] = "";
+$text['label-level']['pt-pt'] = "";
+$text['label-level']['ro-ro'] = "";
+$text['label-level']['ru-ru'] = "";
+$text['label-level']['sv-se'] = "";
+$text['label-level']['uk-ua'] = "";
+$text['label-level']['tr-tr'] = "";
+
 $text['label-add']['en-us'] = "Add";
 $text['label-add']['ar-eg'] = "اضافة";
 $text['label-add']['de-at'] = "Hinzufügen"; //copied from de-de

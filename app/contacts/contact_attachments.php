@@ -36,13 +36,14 @@
 
 //get the contact attachment list
 	$sql = "select *, length(decode(attachment_content,'base64')) as attachment_size from v_contact_attachments ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and contact_uuid = '$contact_uuid' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and contact_uuid = :contact_uuid ";
 	$sql .= "order by attachment_primary desc, attachment_filename asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$contact_attachments = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$parameters['domain_uuid'] = $domain_uuid;
+	$parameters['contact_uuid'] = $contact_uuid;
+	$database = new database;
+	$contact_attachments = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //set the row style
 	$c = 0;
@@ -82,7 +83,7 @@
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
-	if (is_array($contact_attachments)) {
+	if (is_array($contact_attachments) && @sizeof($contact_attachments) != 0) {
 		foreach($contact_attachments as $row) {
 			if (permission_exists('contact_attachment_edit')) {
 				$tr_link = "href='contact_attachment_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_attachment_uuid'])."'";
@@ -110,8 +111,8 @@
 			echo "</tr>\n";
 			$c = $c ?: 1;
 		}
-		unset($sql, $contact_attachments);
 	}
+	unset($contact_attachments, $row);
 
 	echo "</table>";
 

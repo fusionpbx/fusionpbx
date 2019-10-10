@@ -51,17 +51,17 @@
 	$sql .= "v_contacts as c ";
 	$sql .= "where ";
 	$sql .= "cr.relation_contact_uuid = c.contact_uuid ";
-	$sql .= "and cr.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "and cr.contact_uuid = '".$contact_uuid."' ";
+	$sql .= "and cr.domain_uuid = :domain_uuid ";
+	$sql .= "and cr.contact_uuid = :contact_uuid ";
 	$sql .= "order by ";
 	$sql .= "c.contact_organization desc, ";
 	$sql .= "c.contact_name_given asc, ";
 	$sql .= "c.contact_name_family asc ";
-	//echo $sql."<br><br>";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$contact_relations = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$parameters['contact_uuid'] = $contact_uuid;
+	$database = new database;
+	$contact_relations = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //set the row style
 	$c = 0;
@@ -89,7 +89,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (is_array($contact_relations)) {
+	if (is_array($contact_relations) && @sizeof($contact_relations) != 0) {
 		foreach($contact_relations as $row) {
 			if (permission_exists('contact_relation_edit')) {
 				$tr_link = "href='contact_relation_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_relation_uuid'])."' ";
@@ -109,7 +109,7 @@
 			echo "</tr>\n";
 			$c = ($c) ? 0 : 1;
 		} //end foreach
-		unset($sql, $contact_relations);
+		unset($contact_relations, $row);
 	} //end if results
 
 	echo "</table>";

@@ -70,26 +70,27 @@ if ($_POST['a'] == 'import') {
 	if (sizeof($import_ids) > 0) {
 
 		$import_ids = array_unique($import_ids);
-		foreach ($import_ids as $contact_id) {
+		foreach ($import_ids as $index_1 => $contact_id) {
 
 			//check for duplicate contact (already exists, previously imported, etc)
 			$sql = "select contact_uuid from v_contact_settings ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "where domain_uuid = :domain_uuid ";
 			$sql .= "and contact_setting_category = 'google' ";
 			$sql .= "and contact_setting_subcategory = 'id' ";
-			$sql .= "and contact_setting_value = '".$contact_id."' ";
+			$sql .= "and contact_setting_value = :contact_setting_value ";
 			$sql .= "and contact_setting_enabled = 'true' ";
-			$prep_statement = $db->prepare($sql);
-			$prep_statement->execute();
-			$result = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($result['contact_uuid'] != '') {
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['contact_setting_value'] = $contact_id;
+			$database = new database;
+			$result = $database->select($sql, $parameters, 'row');
+			if (is_uuid($result['contact_uuid'])) {
 				$duplicate_exists = true;
 				$duplicate_contact_uuid = $result['contact_uuid'];
 			}
 			else {
 				$duplicate_exists = false;
 			}
-			unset($sql, $prep_statement, $result);
+			unset($sql, $parameters, $result);
 
 			//skip importing contact
 			if ($duplicate_exists && $_POST['import_duplicates'] == 'skip') {
@@ -110,214 +111,127 @@ if ($_POST['a'] == 'import') {
 
 			//insert contact
 			$contact_uuid = uuid();
-			$sql = "insert into v_contacts ";
-			$sql .= "( ";
-			$sql .= "domain_uuid, ";
-			$sql .= "contact_uuid, ";
-			$sql .= "contact_type, ";
-			$sql .= "contact_organization, ";
-			$sql .= "contact_name_prefix, ";
-			$sql .= "contact_name_given, ";
-			$sql .= "contact_name_middle, ";
-			$sql .= "contact_name_family, ";
-			$sql .= "contact_name_suffix, ";
-			$sql .= "contact_nickname, ";
-			$sql .= "contact_title, ";
-			$sql .= "contact_category, ";
-			$sql .= "contact_note ";
-			$sql .= ") ";
-			$sql .= "values ";
-			$sql .= "( ";
-			$sql .= "'".$_SESSION['domain_uuid']."', ";
-			$sql .= "'".$contact_uuid."', ";
-			$sql .= "'".check_str($_POST['import_type'])."', ";
-			$sql .= "'".check_str($contact['organization'])."', ";
-			$sql .= "'".check_str($contact['name_prefix'])."', ";
-			$sql .= "'".check_str($contact['name_given'])."', ";
-			$sql .= "'".check_str($contact['name_middle'])."', ";
-			$sql .= "'".check_str($contact['name_family'])."', ";
-			$sql .= "'".check_str($contact['name_suffix'])."', ";
-			$sql .= "'".check_str($contact['nickname'])."', ";
-			$sql .= "'".check_str($contact['title'])."', ";
-			$sql .= "'".check_str($_POST['import_category'])."', ";
-			$sql .= "'".check_str($contact['notes'])."' ";
-			$sql .= ")";
-			$db->exec(check_sql($sql));
-			unset($sql);
+			$array['contacts'][$index_1]['domain_uuid'] = $_SESSION['domain_uuid'];
+			$array['contacts'][$index_1]['contact_uuid'] = $contact_uuid;
+			$array['contacts'][$index_1]['contact_type'] = $_POST['import_type'];
+			$array['contacts'][$index_1]['contact_organization'] = $contact['organization'];
+			$array['contacts'][$index_1]['contact_name_prefix'] = $contact['name_prefix'];
+			$array['contacts'][$index_1]['contact_name_given'] = $contact['name_given'];
+			$array['contacts'][$index_1]['contact_name_middle'] = $contact['name_middle'];
+			$array['contacts'][$index_1]['contact_name_family'] = $contact['name_family'];
+			$array['contacts'][$index_1]['contact_name_suffix'] = $contact['name_suffix'];
+			$array['contacts'][$index_1]['contact_nickname'] = $contact['nickname'];
+			$array['contacts'][$index_1]['contact_title'] = $contact['title'];
+			$array['contacts'][$index_1]['contact_category'] = $_POST['import_category'];
+			$array['contacts'][$index_1]['contact_note'] = $contact['notes'];
 
 			//set sharing
 			if ($_POST['import_shared'] != 'true') {
-				$sql = "insert into v_contact_groups ";
-				$sql .= "( ";
-				$sql .= "contact_group_uuid, ";
-				$sql .= "domain_uuid, ";
-				$sql .= "contact_uuid, ";
-				$sql .= "group_uuid ";
-				$sql .= ") ";
-				$sql .= "values ";
-				$sql .= "( ";
-				$sql .= "'".uuid()."', ";
-				$sql .= "'".$_SESSION['domain_uuid']."', ";
-				$sql .= "'".$contact_uuid."', ";
-				$sql .= "'".$_SESSION["user_uuid"]."' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
+				$contact_group_uuid = uuid();
+				$array['contact_groups'][$index_1]['contact_group_uuid'] = $contact_group_uuid;
+				$array['contact_groups'][$index_1]['domain_uuid'] = $_SESSION['domain_uuid'];
+				$array['contact_groups'][$index_1]['contact_uuid'] = $contact_uuid;
+				$array['contact_groups'][$index_1]['group_uuid'] = $_SESSION["user_uuid"];
 			}
 
 			//insert emails
-			if ($_POST['import_fields']['email'] && sizeof($contact['emails']) > 0) {
-				foreach ($contact['emails'] as $contact_email) {
-					$sql = "insert into v_contact_emails ";
-					$sql .= "(";
-					$sql .= "domain_uuid, ";
-					$sql .= "contact_uuid, ";
-					$sql .= "contact_email_uuid, ";
-					$sql .= "email_label, ";
-					$sql .= "email_address, ";
-					$sql .= "email_primary ";
-					$sql .= ") ";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'".$_SESSION['domain_uuid']."', ";
-					$sql .= "'".$contact_uuid."', ";
-					$sql .= "'".uuid()."', ";
-					$sql .= "'".check_str($contact_email['label'])."', ";
-					$sql .= "'".check_str($contact_email['address'])."', ";
-					$sql .= (($contact_email['primary']) ? 1 : 0)." ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
+			if ($_POST['import_fields']['email'] && is_array($contact['emails']) && @sizeof($contact['emails']) != 0) {
+				foreach ($contact['emails'] as $index_2 => $contact_email) {
+					$contact_email_uuid = uuid();
+					$array['contact_emails'][$index_2]['domain_uuid'] = $_SESSION['domain_uuid'];
+					$array['contact_emails'][$index_2]['contact_uuid'] = $contact_uuid;
+					$array['contact_emails'][$index_2]['contact_email_uuid'] = $contact_email_uuid;
+					$array['contact_emails'][$index_2]['email_label'] = $contact_email['label'];
+					$array['contact_emails'][$index_2]['email_address'] = $contact_email['address'];
+					$array['contact_emails'][$index_2]['email_primary'] = $contact_email['primary'] ? 1 : 0;
 				}
 			}
 
 			//insert numbers
-			if ($_POST['import_fields']['number'] && sizeof($contact['numbers']) > 0) {
-				foreach ($contact['numbers'] as $contact_number) {
-					$sql = "insert into v_contact_phones ";
-					$sql .= "(";
-					$sql .= "domain_uuid, ";
-					$sql .= "contact_uuid, ";
-					$sql .= "contact_phone_uuid, ";
-					$sql .= "phone_type_voice, ";
-					$sql .= "phone_type_fax, ";
-					$sql .= "phone_label, ";
-					$sql .= "phone_number, ";
-					$sql .= "phone_primary ";
-					$sql .= ") ";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'".$domain_uuid."', ";
-					$sql .= "'".$contact_uuid."', ";
-					$sql .= "'".uuid()."', ";
-					$sql .= ((substr_count(strtoupper($contact_number['label']), strtoupper($text['label-fax'])) == 0) ? 1 : 'null').", ";
-					$sql .= ((substr_count(strtoupper($contact_number['label']), strtoupper($text['label-fax'])) != 0) ? 1 : 'null').", ";
-					$sql .= "'".check_str($contact_number['label'])."', ";
-					$sql .= "'".check_str($contact_number['number'])."', ";
-					$sql .= ((sizeof($contact['numbers']) == 1) ? 1 : 0)." ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
+			if ($_POST['import_fields']['number'] && is_array($contact['numbers']) && @sizeof($contact['numbers']) != 0) {
+				foreach ($contact['numbers'] as $index_3 => $contact_number) {
+					$contact_phone_uuid = uuid();
+					$array['contact_phones'][$index_3]['domain_uuid'] = $domain_uuid;
+					$array['contact_phones'][$index_3]['contact_uuid'] = $contact_uuid;
+					$array['contact_phones'][$index_3]['contact_phone_uuid'] = $contact_phone_uuid;
+					$array['contact_phones'][$index_3]['phone_type_voice'] = substr_count(strtoupper($contact_number['label']), strtoupper($text['label-fax'])) == 0 ? 1 : null;
+					$array['contact_phones'][$index_3]['phone_type_fax'] = substr_count(strtoupper($contact_number['label']), strtoupper($text['label-fax'])) != 0 ? 1 : null;
+					$array['contact_phones'][$index_3]['phone_label'] = $contact_number['label'];
+					$array['contact_phones'][$index_3]['phone_number'] = $contact_number['number'];
+					$array['contact_phones'][$index_3]['phone_primary'] = @sizeof($contact['numbers']) == 1 ? 1 : 0;
 				}
 			}
 
 			//insert urls
-			if ($_POST['import_fields']['url'] && sizeof($contact['urls']) > 0) {
-				foreach ($contact['urls'] as $contact_url) {
-					$sql = "insert into v_contact_urls ";
-					$sql .= "(";
-					$sql .= "domain_uuid, ";
-					$sql .= "contact_uuid, ";
-					$sql .= "contact_url_uuid, ";
-					$sql .= "url_label, ";
-					$sql .= "url_address, ";
-					$sql .= "url_primary ";
-					$sql .= ") ";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'".$_SESSION['domain_uuid']."', ";
-					$sql .= "'".$contact_uuid."', ";
-					$sql .= "'".uuid()."', ";
-					$sql .= "'".check_str($contact_url['label'])."', ";
-					$sql .= "'".check_str($contact_url['url'])."', ";
-					$sql .= ((sizeof($contact['urls']) == 1) ? 1 : 0)." ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
+			if ($_POST['import_fields']['url'] && is_array($contact['urls']) && @sizeof($contact['urls']) != 0) {
+				foreach ($contact['urls'] as $index_4 => $contact_url) {
+					$contact_url_uuid = uuid();
+					$array['contact_urls'][$index_4]['domain_uuid'] = $_SESSION['domain_uuid'];
+					$array['contact_urls'][$index_4]['contact_uuid'] = $contact_uuid;
+					$array['contact_urls'][$index_4]['contact_url_uuid'] = $contact_url_uuid;
+					$array['contact_urls'][$index_4]['url_label'] = $contact_url['label'];
+					$array['contact_urls'][$index_4]['url_address'] = $contact_url['url'];
+					$array['contact_urls'][$index_4]['url_primary'] = @sizeof($contact['urls']) == 1 ? 1 : 0;
 				}
 			}
 
 			//insert addresses
-			if ($_POST['import_fields']['address'] && sizeof($contact['addresses']) > 0) {
-				foreach ($contact['addresses'] as $contact_address) {
-					$sql = "insert into v_contact_addresses ";
-					$sql .= "(";
-					$sql .= "domain_uuid, ";
-					$sql .= "contact_uuid, ";
-					$sql .= "contact_address_uuid, ";
-					$sql .= "address_type, ";
-					$sql .= "address_label, ";
-					$sql .= "address_street, ";
-					$sql .= "address_extended, ";
-					$sql .= "address_community, ";
-					$sql .= "address_locality, ";
-					$sql .= "address_region, ";
-					$sql .= "address_postal_code, ";
-					$sql .= "address_country, ";
-					$sql .= "address_primary ";
-					$sql .= ") ";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'".$_SESSION['domain_uuid']."', ";
-					$sql .= "'".$contact_uuid."', ";
-					$sql .= "'".uuid()."', ";
+			if ($_POST['import_fields']['address'] && is_array($contact['addresses']) && @sizeof($contact['addresses']) != 0) {
+				foreach ($contact['addresses'] as $index_5 => $contact_address) {
+					$contact_address_uuid = uuid();
+					$array['contact_addresses'][$index_5]['domain_uuid'] = $_SESSION['domain_uuid'];
+					$array['contact_addresses'][$index_5]['contact_uuid'] = $contact_uuid;
+					$array['contact_addresses'][$index_5]['contact_address_uuid'] = $contact_address_uuid;
 					if (substr_count(strtoupper($contact_address['label']), strtoupper($text['option-home'])) != 0) {
-						$sql .= "'home', "; // vcard address type
+						$array['contact_addresses'][$index_5]['address_type'] = 'home';
 					}
 					else if (substr_count(strtoupper($contact_address['label']), strtoupper($text['option-work'])) != 0) {
-						$sql .= "'work', "; // vcard address type
+						$array['contact_addresses'][$index_5]['address_type'] = 'work';
 					}
 					else {
-						$sql .= "'', ";
+						$array['contact_addresses'][$index_5]['address_type'] = null;
 					}
-					$sql .= "'".check_str($contact_address['label'])."', ";
-					$sql .= "'".check_str($contact_address['street'])."', ";
-					$sql .= "'".check_str($contact_address['extended'])."', ";
-					$sql .= "'".check_str($contact_address['community'])."', ";
-					$sql .= "'".check_str($contact_address['locality'])."', ";
-					$sql .= "'".check_str($contact_address['region'])."', ";
-					$sql .= "'".check_str($contact_address['postal_code'])."', ";
-					$sql .= "'".check_str($contact_address['country'])."', ";
-					$sql .= ((sizeof($contact['addresses']) == 1) ? 1 : 0)." ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
+					$array['contact_addresses'][$index_5]['address_label'] = $contact_address['label'];
+					$array['contact_addresses'][$index_5]['address_street'] = $contact_address['street'];
+					$array['contact_addresses'][$index_5]['address_extended'] = $contact_address['extended'];
+					$array['contact_addresses'][$index_5]['address_community'] = $contact_address['community'];
+					$array['contact_addresses'][$index_5]['address_locality'] = $contact_address['locality'];
+					$array['contact_addresses'][$index_5]['address_region'] = $contact_address['region'];
+					$array['contact_addresses'][$index_5]['address_postal_code'] = $contact_address['postal_code'];
+					$array['contact_addresses'][$index_5]['address_country'] = $contact_address['country'];
+					$array['contact_addresses'][$index_5]['address_primary'] = @sizeof($contact['addresses']) == 1 ? 1 : 0;
 				}
 			}
 
 			//add google contact id, etag and updated date to contact settings
 			$contact['updated'] = str_replace('T', ' ', $contact['updated']);
 			$contact['updated'] = str_replace('Z', '', $contact['updated']);
-			$sql = "insert into v_contact_settings ";
-			$sql .= "(";
-			$sql .= "contact_setting_uuid, ";
-			$sql .= "contact_uuid, ";
-			$sql .= "domain_uuid, ";
-			$sql .= "contact_setting_category, ";
-			$sql .= "contact_setting_subcategory, ";
-			$sql .= "contact_setting_name, ";
-			$sql .= "contact_setting_value, ";
-			$sql .= "contact_setting_order, ";
-			$sql .= "contact_setting_enabled ";
-			$sql .= ") ";
-			$sql .= "values ";
-			$sql .= "('".uuid()."', '".$contact_uuid."', '".$_SESSION['domain_uuid']."', 'sync', 'source', 'array', 'google', 0, 'true' )";
-			$sql .= ",('".uuid()."', '".$contact_uuid."', '".$_SESSION['domain_uuid']."', 'google', 'id', 'text', '".check_str($contact_id)."', 0, 'true' )";
-			$sql .= ",('".uuid()."', '".$contact_uuid."', '".$_SESSION['domain_uuid']."', 'google', 'updated', 'date', '".check_str($contact['updated'])."', 0, 'true' )";
-			$sql .= ",('".uuid()."', '".$contact_uuid."', '".$_SESSION['domain_uuid']."', 'google', 'etag', 'text', '".check_str($contact['etag'])."', 0, 'true' )";
-			$db->exec(check_sql($sql));
-			unset($sql);
+			$contact_setting_columns = array('contact_setting_category', 'contact_setting_subcategory', 'contact_setting_name', 'contact_setting_value', 'contact_setting_order', 'contact_setting_enabled');
+			$contact_setting_array[] = array('sync', 'source', 'array', 'google', 0, 'true');
+			$contact_setting_array[] = array('google', 'id', 'text', $contact_id, 0, 'true');
+			$contact_setting_array[] = array('google', 'updated', 'date', $contact['updated'], 0, 'true');
+			$contact_setting_array[] = array('google', 'etag', 'text', $contact['etag'], 0, 'true');
+			foreach ($contact_setting_array as $index_6 => $values) {
+				$contact_setting_uuid = uuid();
+				$array['contact_settings'][$index_6]['contact_setting_uuid'] = $contact_setting_uuid;
+				$array['contact_settings'][$index_6]['contact_uuid'] = $contact_uuid;
+				$array['contact_settings'][$index_6]['domain_uuid'] = $_SESSION['domain_uuid'];
+				foreach ($values as $index_7 => $value) {
+					foreach ($contact_setting_columns as $column) {
+						$array['contact_settings'][$index_6][$contact_setting_columns[$index_7]] = $value;
+					}
+				}
+			}
+			unset($contact_setting_columns, $contact_setting_array);
 
+			//insert records
+			$database = new database;
+			$database->app_name = 'contacts';
+			$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
+			$database->save($array);
+			unset($array);
+
+			//increment counter
 			$contacts_imported++;
 
 		}
@@ -325,7 +239,7 @@ if ($_POST['a'] == 'import') {
 		$message = $text['message-contacts_imported']." ".$contacts_imported;
 		if ($contacts_replaced > 0) { $message .= " (".$text['message_contacts_imported_replaced']." ".$contacts_replaced.")"; }
 		if ($contacts_skipped > 0) { $message .= ", ".$text['message_contacts_imported_skipped']." ".$contacts_skipped; }
-		$_SESSION["message"] = $message;
+		message::add($message);
 		header("Location: contacts.php");
 		exit;
 

@@ -252,16 +252,16 @@
 
 		//get the groups
 			$sql = "select * from v_groups where domain_uuid is null ";
-			$prep_statement = $db->prepare($sql);
-			$prep_statement->execute();
-			$groups = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+			$database = new database;
+			$groups = $database->select($sql, null, 'all');
+			unset($sql);
 
 		//get the users
-			$sql = "select * from v_users where domain_uuid = '".$domain_uuid."' ";
-			$prep_statement = $db->prepare($sql);
-			$prep_statement->execute();
-			$users = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-
+			$sql = "select * from v_users where domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $domain_uuid;
+			$database = new database;
+			$users = $database->select($sql, $parameters, 'all');
+			unset($sql);
 
 		//get the contents of the csv file and convert them into an array
 			$handle = @fopen($_SESSION['file'], "r");
@@ -340,9 +340,6 @@
 										$database->app_name = 'contacts';
 										$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 										$database->save($array);
-										//$message = $database->message;
-	
-									//clear the array
 										unset($array);
 										
 									//set the row id back to 0
@@ -368,12 +365,12 @@
 						$database->app_name = 'contacts';
 						$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 						$database->save($array);
-						//$message = $database->message;
+						unset($array);
 					}
 
 				//send the redirect header
 					header("Location: contacts.php");
-					return;
+					exit;
 			}
 
 		//show the header
@@ -422,8 +419,6 @@
 
 		//include the footer
 			require_once "resources/footer.php";
-
-		//end the script
 			exit;
 	}
 
