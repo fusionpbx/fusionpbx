@@ -34,7 +34,7 @@
 <Log_Resync_Failure_Msg>$PN $MAC -- Resync failed: $ERR</Log_Resync_Failure_Msg>
 <Report_Rule></Report_Rule>
 <SP_Default></SP_Default>
-<Upgrade_Enable>Yes</Upgrade_Enable>
+<Upgrade_Enable>{$spa_upgrade_enable}</Upgrade_Enable>
 <Upgrade_Error_Retry_Delay>3600</Upgrade_Error_Retry_Delay>
 <Downgrade_Rev_Limit></Downgrade_Rev_Limit>
 <Upgrade_Rule></Upgrade_Rule>
