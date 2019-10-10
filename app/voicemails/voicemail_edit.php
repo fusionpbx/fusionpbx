@@ -99,7 +99,7 @@
 	}
 
 //assign the voicemail id copy to the voicemail id
-	if (permission_exists('voicemail_forward_destinations') && is_uuid($voicemail_uuid) && is_uuid($_REQUEST["voicemail_uuid_copy"])) {
+	if (permission_exists('voicemail_forward') && is_uuid($voicemail_uuid) && is_uuid($_REQUEST["voicemail_uuid_copy"])) {
 		//set the variables
 			$voicemail_uuid_copy = $_REQUEST["voicemail_uuid_copy"];
 		//build insert array
@@ -184,7 +184,7 @@
 					unset($array);
 
 				//add voicemail options
-					if (permission_exists('voicemail_options') && sizeof($voicemail_options) > 0) {
+					if (permission_exists('voicemail_option_add') && sizeof($voicemail_options) > 0) {
 						foreach ($voicemail_options as $index => $voicemail_option) {
 							if ($voicemail_option['voicemail_option_digits'] == '' || $voicemail_option['voicemail_option_param'] == '') { unset($voicemail_options[$index]); }
 						}
@@ -427,7 +427,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (permission_exists('voicemail_options')) {
+	if (permission_exists('voicemail_option_add') || permission_exists('voicemail_option_edit')) {
 		echo "	<tr>";
 		echo "		<td class='vncell' valign='top'>".$text['label-options']."</td>";
 		echo "		<td class='vtable' align='left'>";
@@ -477,7 +477,9 @@
 					echo "					</td>\n";
 					echo "					<td class='list_control_icons'>";
 					echo 						"<a href='voicemail_option_edit.php?id=".escape($field['voicemail_option_uuid'])."&voicemail_uuid=".escape($field['voicemail_uuid'])."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
-					echo 						"<a href='voicemail_option_delete.php?id=".escape($field['voicemail_option_uuid'])."&voicemail_uuid=".escape($field['voicemail_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+					if (permission_exists('voicemail_option_delete')) {
+						echo 						"<a href='voicemail_option_delete.php?id=".escape($field['voicemail_option_uuid'])."&voicemail_uuid=".escape($field['voicemail_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+					}
 					echo "					</td>\n";
 					echo "				</tr>\n";
 				}
@@ -601,7 +603,7 @@
 		echo "</tr>\n";
 	}
 
-	if (permission_exists('voicemail_forward_destinations') && $action == "update") {
+	if (permission_exists('voicemail_forward') && $action == "update") {
 		echo "	<tr>";
 		echo "		<td class='vncell' valign='top'>".$text['label-forward_destinations']."</td>";
 		echo "		<td class='vtable'>";
