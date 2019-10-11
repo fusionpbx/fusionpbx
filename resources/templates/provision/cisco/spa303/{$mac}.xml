@@ -79,7 +79,7 @@
 <User_Configurable_Resync ua="na">Yes</User_Configurable_Resync>
 
 <!-- Firmware Upgrade -->
-<Upgrade_Enable ua="na">Yes</Upgrade_Enable>
+<Upgrade_Enable ua="na">{$spa_upgrade_enable}</Upgrade_Enable>
 <Upgrade_Error_Retry_Delay ua="na">3600</Upgrade_Error_Retry_Delay>
 <Downgrade_Rev_Limit ua="na"></Downgrade_Rev_Limit>
 <Upgrade_Rule ua="na"></Upgrade_Rule>
