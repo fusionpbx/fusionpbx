@@ -195,7 +195,7 @@
 <User_Configurable_Resync group="Provisioning/Configuration_Profile">Yes</User_Configurable_Resync>
 
 <!-- Provisioning/Firmware_Upgrade -->
-<Upgrade_Enable group="Provisioning/Firmware_Upgrade">Yes</Upgrade_Enable>
+<Upgrade_Enable group="Provisioning/Firmware_Upgrade">{$spa_upgrade_enable}</Upgrade_Enable>
 <Upgrade_Error_Retry_Delay group="Provisioning/Firmware_Upgrade">3600</Upgrade_Error_Retry_Delay>
 <Downgrade_Rev_Limit group="Provisioning/Firmware_Upgrade" />
 <Upgrade_Rule group="Provisioning/Firmware_Upgrade" />
