@@ -105,8 +105,8 @@
 		--update the display and play a message
 		channel_display(session:get_uuid(), "Activated")
 		session:execute("sleep", "2000");
-		session:execute("playback", "ivr/ivr-call_forwarding_has_been_set.wav");
-		--session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-call_forwarding_has_been_set.wav");
+		--session:execute("playback", "ivr/ivr-call_forwarding_has_been_set.wav");
+		session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-call_forwarding_has_been_set.wav");
 	end
 
 --unset follow me
@@ -114,8 +114,8 @@
 		--update the display and play a message
 		channel_display(session:get_uuid(), "Cancelled")
 		session:execute("sleep", "2000");
-		session:execute("playback", "ivr/ivr-call_forwarding_has_been_cancelled.wav");
-		--session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-call_forwarding_has_been_cancelled.wav");
+		--session:execute("playback", "ivr/ivr-call_forwarding_has_been_cancelled.wav");
+		session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-call_forwarding_has_been_cancelled.wav");
 	end
 
 --enable or disable follow me
