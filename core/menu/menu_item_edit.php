@@ -200,6 +200,16 @@
 					unset($array);
 				}
 
+			//update child menu items to protected true or false
+				$sql = "update v_menu_items ";
+				$sql .= "set menu_item_protected = :menu_item_protected ";
+				$sql .= "where menu_item_parent_uuid = :menu_item_parent_uuid ";
+				$parameters['menu_item_parent_uuid'] = $menu_item_uuid;
+				$parameters['menu_item_protected'] = $menu_item_protected;
+				$database = new database;
+				$database->execute($sql, $parameters);
+				unset($parameters);
+
 			//add a group to the menu
 				if ($_REQUEST["a"] != "delete" && strlen($group_uuid_name) > 0 && permission_exists('menu_add')) {
 					$group_data = explode('|', $group_uuid_name);
@@ -221,7 +231,7 @@
 						}
 				}
 
-			//add title to menu languages
+			//add the menu item label
 				if ($_REQUEST["a"] != "delete" && strlen($menu_item_title) > 0 && permission_exists('menu_add')) {
 					$sql = "select count(*) from v_menu_languages ";
 					$sql .= "where menu_item_uuid = :menu_item_uuid ";
@@ -268,17 +278,17 @@
 
 			//redirect the user
 				if ($_REQUEST['submit'] == $text['button-add']) {
-					header("Location: menu_item_edit.php?id=".$menu_uuid."&menu_item_uuid=".$menu_item_uuid."&menu_uuid=".$menu_uuid);
+					header("Location: menu_item_edit.php?id=".urlencode($menu_uuid)."&menu_item_uuid=".urlencode($menu_item_uuid)."&menu_uuid=".urlencode($menu_uuid));
 				}
 				else {
-					header("Location: menu_edit.php?id=".$menu_uuid);
+					header("Location: menu_edit.php?id=".urlencode($menu_uuid));
 				}
 				return;
 		}
 	}
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$menu_item_uuid = $_GET["menu_item_uuid"];
 
 		$sql = "select * from v_menu_items ";
