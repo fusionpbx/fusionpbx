@@ -570,6 +570,14 @@
 	elseif ($category == "theme" && $subcategory == "custom_css_code" && $name == "text" ) {
 		echo "	<textarea class='formfld' style='min-width: 100%; height: 300px; font-family: courier, monospace; overflow: auto; resize: vertical' id='default_setting_value' name='default_setting_value' wrap='off'>".$default_setting_value."</textarea>\n";
 	}
+	elseif ($category == "theme" && $subcategory == "button_icons" && $name == "text" ) {
+		echo "    <select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "    	<option value='auto'>".$text['option-button_icons_auto']."</option>\n";
+		echo "    	<option value='only' ".($default_setting_value == "only" ? "selected='selected'" : null).">".$text['option-button_icons_only']."</option>\n";
+		echo "    	<option value='always' ".($default_setting_value == "always" ? "selected='selected'" : null).">".$text['option-button_icons_always']."</option>\n";
+		echo "    	<option value='never' ".($default_setting_value == "never" ? "selected='selected'" : null).">".$text['option-button_icons_never']."</option>\n";
+		echo "    </select>\n";
+	}
 	elseif ($category == "voicemail" && $subcategory == "voicemail_file" && $name == "text" ) {
 		echo "    <select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
 		echo "    	<option value='listen' ".(($default_setting_value == "listen") ? "selected='selected'" : null).">".$text['option-voicemail_file_listen']."</option>\n";

@@ -637,6 +637,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		color: <?php echo ($_SESSION['theme']['button_text_color_hover']['text'] != '') ? $_SESSION['theme']['button_text_color_hover']['text'] : '#ffffff'; ?>;
 		}
 
+	/* remove (along with icons in theme/default/config.php) after transition to button class */
 	button.btn-icon {
 		margin: 0 2px;
 		white-space: nowrap;
@@ -696,6 +697,26 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		-moz-opacity: 1.0;
 		opacity: 1.0;
 		}
+
+	<?php if ($_SESSION['theme']['button_icons']['text'] == 'always' || $_SESSION['theme']['button_icons']['text'] == 'auto' || !$_SESSION['theme']['button_icons']['text']) { ?>
+		button:not(.btn-link) > span.button-label.pad {
+			margin-left: 6px;
+			}
+	<?php } ?>
+
+	/* small screen, hide button labels if icons present */
+	@media (max-width: 990px) {
+		button:not(.btn-link) > span.button-label.hide-sm {
+			display: none;
+			}
+	}
+
+	/* large screen show button labels if icons present */
+	@media (min-width: 991px) {
+		button:not(.btn-link) > span.button-label.hide-sm {
+			display: inline;
+			}
+	}
 
 /* ICONS *********************************************************************/
 
@@ -1209,6 +1230,20 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	input[type=text]::-ms-clear {
 		display: none;
 	}
+
+	/* expand search input on focus */
+	input[type=text].search {
+		width: 70px;
+		min-width: 70px;
+		margin-left: 15px;
+		-webkit-transition: all .5s ease;
+		-moz-transition: all .5s ease;
+		transition: all .5s ease;
+		}
+
+	input[type=text].search:focus {
+		width: 150px;
+		}
 
 	input.fileinput {
 		padding: 1px;
