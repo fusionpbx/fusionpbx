@@ -102,24 +102,20 @@
 
 --set follow me
 	if (follow_me_enabled == "false") then
-		--play a tone
-			channel_display(session:get_uuid(), "Activated")
-
-			session:execute("sleep", "2000");
-			session:execute("playback", "tone_stream://%(200,0,500,600,700)");
-		--notify the caller
-			--session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-call_forwarding_has_been_set.wav");
+		--update the display and play a message
+		channel_display(session:get_uuid(), "Activated")
+		session:execute("sleep", "2000");
+		session:execute("playback", "ivr/ivr-call_forwarding_has_been_set.wav");
+		--session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-call_forwarding_has_been_set.wav");
 	end
 
 --unset follow me
 	if (follow_me_enabled == "true") then
-		--play a tone
-			channel_display(session:get_uuid(), "Cancelled")
-
-			session:execute("sleep", "2000");
-			session:execute("playback", "tone_stream://%(500,0,300,200,100,50,25)");
-		--notify the caller
-			--session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-call_forwarding_has_been_cancelled.wav");
+		--update the display and play a message
+		channel_display(session:get_uuid(), "Cancelled")
+		session:execute("sleep", "2000");
+		session:execute("playback", "ivr/ivr-call_forwarding_has_been_cancelled.wav");
+		--session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-call_forwarding_has_been_cancelled.wav");
 	end
 
 --enable or disable follow me
