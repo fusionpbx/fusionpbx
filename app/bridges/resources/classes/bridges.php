@@ -124,7 +124,7 @@ if (!class_exists('bridges')) {
 								$database->save($array);
 								unset($array);
 							//set message
-								message::add($text['message-update']);
+								message::add($text['message-toggle']);
 						}
 						unset($bridges, $bridge_states);
 					}
