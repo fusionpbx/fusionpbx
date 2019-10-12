@@ -217,7 +217,7 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			});
 
 		//autosize jquery autosize plugin on applicable input fields
-			$("input[type=text].txt,input[type=number].txt,input[type=password].txt,input[type=text].formfld,input[type=number].formfld,input[type=password].formfld").not('.datepicker,.datetimepicker,.datetimesecpicker').autosizeInput();
+			$("input[type=text].txt.auto-size,input[type=number].txt.auto-size,input[type=password].txt.auto-size,input[type=text].formfld.auto-size,input[type=number].formfld.auto-size,input[type=password].formfld.auto-size").autosizeInput();
 
 		//initialize bootstrap tempusdominus (calendar/datetime picker) plugin
 			$(function() {

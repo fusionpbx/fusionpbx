@@ -163,67 +163,36 @@
 	echo "			document.getElementById('btn_check_none').style.display = 'none';\n";
 	echo "		}\n";
 	echo "	}\n";
-	/*
-	echo "	function check_all() {\n";
-	echo "		var inputs = document.getElementsByTagName('input');\n";
-	echo "		for (var i = 0, max = inputs.length; i < max; i++) {\n";
-	echo "		    if (inputs[i].type === 'checkbox') {\n";
-	echo "		       	inputs[i].checked = true;\n";
-	echo "			}\n";
-	echo "		}\n";
-	echo "		document.getElementById('btn_check_all').style.display = 'none';\n";
-	echo "		document.getElementById('btn_check_none').style.display = '';\n";
-	echo "	}\n";
-
-	echo "	function check_none() {\n";
-	echo "		var inputs = document.getElementsByTagName('input');\n";
-	echo "		for (var i = 0, max = inputs.length; i < max; i++) {\n";
-	echo "		    if (inputs[i].type === 'checkbox') {\n";
-	echo "		       	inputs[i].checked = false;\n";
-	echo "			}\n";
-	echo "		}\n";
-	echo "		document.getElementById('btn_check_all').style.display = '';\n";
-	echo "		document.getElementById('btn_check_none').style.display = 'none';\n";
-	echo "	}\n";
-	*/
 	echo "</script>\n";
 
 //show the content
 	echo "<div class='action_bar'>\n";
 	echo "	<b style='float: left;'>".$text['title-bridges']." (".$num_rows.")</b>\n";
 	if (permission_exists('bridge_add')) {
-		echo "	<a href='bridge_edit.php' alt=\"".$text['button-add']."\"><button type='button' class='btn btn-default'>".$text['button-add']."</button></a>";
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'bridge_edit.php']);
 	}
-	if (permission_exists('bridge_add') || permission_exists('bridge_edit') || permission_exists('bridge_delete')) {
-		/*
-		echo "	<button type='button' class='btn btn-default' id='btn_check_all' alt=\"".$text['button-check_all']."\" onclick='check_all();'>".$text['button-check_all']."</button>\n";
-		echo "	<button type='button' class='btn btn-default' id='btn_check_none' alt=\"".$text['button-check_none']."\" onclick='check_none();' style='display: none;'>".$text['button-check_none']."</button>\n";
-		*/
-		if (permission_exists('bridge_add')) {
-			echo "	<button type='button' class='btn btn-default' alt=\"".$text['button-copy']."\" onclick=\"if (confirm('".$text['confirm-copy']."')) { set_action('copy'); submit_form('form_list'); } else { this.blur(); return false; }\">".$text['button-copy']."</button>";
-		}
-		if (permission_exists('bridge_edit')) {
-			echo "	<button type='button' class='btn btn-default' alt=\"".$text['button-toggle']."\" onclick=\"if (confirm('".$text['confirm-toggle']."')) { set_action('toggle'); submit_form('form_list'); } else { this.blur(); return false; }\">".$text['button-toggle']."</button>";
-		}
-		if (permission_exists('bridge_delete')) {
-			echo "	<button type='button' class='btn btn-default' alt=\"".$text['button-delete']."\" onclick=\"if (confirm('".$text['confirm-delete']."')) { set_action('delete'); submit_form('form_list'); } else { this.blur(); return false; }\">".$text['button-delete']."</button>";
-		}
+	if (permission_exists('bridge_add')) {
+		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'onclick'=>"if (confirm('".$text['confirm-copy']."')) { set_action('copy'); submit_form('form_list'); } else { this.blur(); return false; }"]);
 	}
-	echo "	<span style='white-space: nowrap;'>\n";
+	if (permission_exists('bridge_edit')) {
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'onclick'=>"if (confirm('".$text['confirm-toggle']."')) { set_action('toggle'); submit_form('form_list'); } else { this.blur(); return false; }"]);
+	}
+	if (permission_exists('bridge_delete')) {
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'onclick'=>"if (confirm('".$text['confirm-delete']."')) { set_action('delete'); submit_form('form_list'); } else { this.blur(); return false; }"]);
+	}
 	if (permission_exists('bridge_all')) {
 		if ($_GET['show'] == 'all') {
 			echo "	<input type='hidden' name='show' value='all'>";
 		}
 		else {
-			echo "	<a href='?show=all'><button type='button' class='btn btn-default' style='margin-left: 15px;'>".$text['button-show_all']."</button></a>\n";
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all']);
 		}
 	}
-	echo "	<form id='form_search' class='inline' method='get'>\n";
-	echo "	<input type='text' class='txt' style='width: 150px; margin-left: 15px;' name='search' id='search' value='".escape($search)."' onkeypress='reset_search();'>\n";
-	echo "	<input type='submit' class='btn' id='btn_search' value=\"".$text['button-search']."\" style='".($search != '' ? 'display: none;' : null)."'>\n";
-	echo "	<a href='bridges.php'><input type='button' class='btn' id='btn_reset' value=\"".$text['button-reset']."\" style='".($search == '' ? 'display: none;' : null)."'></a>\n";
-	echo "	</form>\n";
-	echo "	</span>\n";
+	echo "<form id='form_search' class='inline' method='get'>\n";
+	echo "<input type='text' class='txt search' name='search' id='search' value='".escape($search)."' placeholder=\"".$text['label-search']."\" onkeydown='reset_search();'>";
+	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'bridges.php','style'=>($search == '' ? 'display: none;' : null)]);
+	echo "</form>\n";
 	echo "</div>\n";
 
 	echo $text['title_description-bridge']."\n";
@@ -242,7 +211,7 @@
 	}
 	echo th_order_by('bridge_name', $text['label-bridge_name'], $order_by, $order);
 	echo th_order_by('bridge_destination', $text['label-bridge_destination'], $order_by, $order);
-	echo th_order_by('bridge_enabled', $text['label-bridge_enabled'], $order_by, $order);
+	echo th_order_by('bridge_enabled', $text['label-bridge_enabled'], $order_by, $order, null, "style='text-align: center;'");
 	echo "	<th>".$text['label-description']."</th>\n";
 	echo "	<td style='width: 1px;'>&nbsp;</td>\n";
 	echo "</tr>\n";
@@ -263,24 +232,22 @@
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('bridge_edit')) {
-				echo "	<a ".$tr_link.">".escape($row['bridge_name'])."</a>\n";
+				echo "	<a ".$tr_link." title=\"".$text['button-edit']."\">".escape($row['bridge_name'])."</a>\n";
 			}
 			else {
 				echo "	".escape($row['bridge_name'])."\n";
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['bridge_destination'])."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['bridge_enabled']]."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center;'>";
+			echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['bridge_enabled']],'title'=>$text['button-toggle'],'onclick'=>"check_self('checkbox_".$x."'); set_action('toggle'); submit_form('form_list')"]);
+			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['bridge_description'])."</td>\n";
-			echo "	<td style='width: 0;' class='tr_link_void'>";
-			/*
-			if (permission_exists('bridge_edit')) {
-				echo "<a href='bridge_edit.php?id=".escape($row['bridge_uuid'])."' alt='".$text['button-edit']."'>".$v_button_icon_edit."</a>";
+			echo "	<td style='width: 0; white-space: nowrap;' class='tr_link_void'>";
+
+			if (permission_exists('bridge_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>"bridge_edit.php?id=".escape($row['bridge_uuid'])]);
 			}
-			if (permission_exists('bridge_delete')) {
-				echo "<button type='input' class='btn btn-default btn-icon' name='bridges[$x][checked]' value='true' alt='".$text['button-delete']."' onclick=\"if (confirm('".$text['confirm-delete']."')) { set_action('delete'); submit_form('form_list'); } else { this.blur(); return false; }\"><span class='fas fa-minus'></span></button>";
-			}
-			*/
 			echo "	</td>\n";
 			echo "</tr>\n";
 			$c = $c ? 0 : 1;
@@ -300,6 +267,10 @@
 
 //handle form actions
 	echo "<script type='text/javascript'>\n";
+	echo "	function check_self(checkbox_id) {\n";
+	echo "		document.getElementById(checkbox_id).checked = true;\n";
+	echo "	}\n";
+
 	echo "	function set_action(action) {\n";
 	echo "		document.getElementById('action').value = action;\n";
 	echo "	}\n";
