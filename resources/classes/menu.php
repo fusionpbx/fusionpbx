@@ -70,8 +70,10 @@ if (!class_exists('menu')) {
 				//remove existing unprotected menu items
 					$sql  = "delete from v_menu_items ";
 					$sql .= "where menu_uuid = :menu_uuid ";
-					$sql .= "and (menu_item_protected <> 'true' ";
-					$sql .= "or menu_item_protected is null) ";
+					$sql .= "and ( ";
+					$sql .= "	menu_item_protected <> 'true' ";
+					$sql .= "	or menu_item_protected is null ";
+					$sql .= ") ";
 					$parameters['menu_uuid'] = $this->menu_uuid;
 					$database = new database;
 					$database->execute($sql, $parameters);
@@ -120,7 +122,6 @@ if (!class_exists('menu')) {
 					$sql = "select * from v_menu_items ";
 					$sql .= "where menu_uuid = :menu_uuid ";
 					$parameters['menu_uuid'] = $this->menu_uuid;
-					$parameters['uuid'] = $uuid;
 					$database = new database;
 					$menu_items = $database->select($sql, $parameters, 'all');
 
@@ -146,43 +147,53 @@ if (!class_exists('menu')) {
 										$menu_item_order = $menu['order'];
 										$menu_item_description = $menu['desc'];
 
-									//menu found set the default
-										$menu_item_exists = true;
-
-									//if the item uuid is not currently in the db then add it
-										$sql = "select count(*) from v_menu_items ";
-										$sql .= "where menu_uuid = :menu_uuid ";
-										$sql .= "and uuid = :uuid ";
-										$parameters['menu_uuid'] = $this->menu_uuid;
-										$parameters['uuid'] = $uuid;
-										$database = new database;
-										$num_rows = $database->select($sql, $parameters, 'column');
-										if ($num_rows == 0) {
-
-											//menu found the menu
-												$menu_item_exists = false;
-
-											//build the menu array
-												if ($menu_item_uuid != $menu_item_parent_uuid) {
-														$array['menu_items'][$x]['menu_item_uuid'] = $menu_item_uuid;
-														$array['menu_items'][$x]['menu_uuid'] = $this->menu_uuid;
-														$array['menu_items'][$x]['uuid'] = $uuid;
-														$array['menu_items'][$x]['menu_item_title'] = $menu_item_title;
-														$array['menu_items'][$x]['menu_item_link'] = $menu_item_path;
-														$array['menu_items'][$x]['menu_item_category'] = $menu_item_category;
-														$array['menu_items'][$x]['menu_item_icon'] = $menu_item_icon;
-														if (strlen($menu_item_order) > 0) {
-															$array['menu_items'][$x]['menu_item_order'] = $menu_item_order;
-														}
-														if (is_uuid($menu_item_parent_uuid)) {
-															$array['menu_items'][$x]['menu_item_parent_uuid'] = $menu_item_parent_uuid;
-														}
-														$array['menu_items'][$x]['menu_item_description'] = $menu_item_description;
-														$x++;
-												}
-
+									//check if the menu item exists and if it does set the row array
+										$menu_item_exists = false;
+										foreach ($menu_items as $item) {
+											if ($item['uuid'] == $menu['uuid']) {
+												$menu_item_exists = true;
+												$row = $item;
+											}
 										}
-										unset($sql, $parameters, $num_rows);
+
+									//item exists in the database
+										if ($menu_item_exists) {
+											//get parent_menu_item_protected
+											foreach ($menu_items as $item) {
+												if ($item['uuid'] == $menu['parent_uuid']) {
+													$parent_menu_item_protected = $item['menu_item_protected'];
+												}
+											}
+
+											//parent is not protected so the parent uuid needs to be updated
+											if (is_uuid($menu_item_parent_uuid) && $menu_item_parent_uuid != $row['menu_item_parent_uuid'] && $parent_menu_item_protected != 'true') {
+												$array['menu_items'][$x]['menu_item_uuid'] = $row['menu_item_uuid'];
+												$array['menu_items'][$x]['menu_item_parent_uuid'] = $menu_item_parent_uuid;
+												$x++;
+											}
+										}
+
+									//item does not exist in the database
+										if (!$menu_item_exists) {
+											if ($menu_item_uuid != $menu_item_parent_uuid) {
+													$array['menu_items'][$x]['menu_item_uuid'] = $menu_item_uuid;
+													$array['menu_items'][$x]['menu_uuid'] = $this->menu_uuid;
+													$array['menu_items'][$x]['uuid'] = $uuid;
+													$array['menu_items'][$x]['menu_item_title'] = $menu_item_title;
+													$array['menu_items'][$x]['menu_item_link'] = $menu_item_path;
+													$array['menu_items'][$x]['menu_item_category'] = $menu_item_category;
+													$array['menu_items'][$x]['menu_item_icon'] = $menu_item_icon;
+													if (strlen($menu_item_order) > 0) {
+														$array['menu_items'][$x]['menu_item_order'] = $menu_item_order;
+													}
+													if (is_uuid($menu_item_parent_uuid)) {
+														$array['menu_items'][$x]['menu_item_parent_uuid'] = $menu_item_parent_uuid;
+													}
+													$array['menu_items'][$x]['menu_item_description'] = $menu_item_description;
+													$x++;
+											}
+										}
+										unset($field, $parameters, $num_rows);
 	
 									//set the menu languages
 										if (!$menu_item_exists && is_array($language->languages)) {
@@ -202,7 +213,6 @@ if (!class_exists('menu')) {
 													$x++;
 											}
 										}
-
 								}
 							}
 						}
