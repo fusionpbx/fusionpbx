@@ -158,7 +158,7 @@
 			if (caller_id_name) then
 				--caller id name provided do nothing
 			else
-				caller_id_number = session:getVariable("effective_caller_id_name");
+			        caller_id_number = session:getVariable("effective_caller_id_number");
 			end
 			if (caller_id_number) then
 				--caller id number provided do nothing
@@ -169,7 +169,7 @@
 			if (caller_id_name) then
 				--caller id name provided do nothing
 			else
-				caller_id_number = session:getVariable("outbound_caller_id_name");
+				caller_id_number = session:getVariable("outbound_caller_id_number");
 			end
 			if (caller_id_number) then
 				--caller id number provided do nothing
