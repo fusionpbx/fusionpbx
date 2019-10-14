@@ -930,7 +930,7 @@
 
 		$sql = "select * from v_groups ";
 		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-		if (sizeof($assigned_groups) > 0) {
+		if (is_array($assigned_groups) && sizeof($assigned_groups) > 0) {
 			$sql .= "and group_uuid not in ('".implode("','",$assigned_groups)."') ";
 		}
 		$sql .= "order by domain_uuid desc, group_name asc ";
