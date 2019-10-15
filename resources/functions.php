@@ -163,7 +163,8 @@
 				if (strtoupper(substr(PHP_OS, 0, 3)) === 'SUN') {
 					//copy -R recursive, preserve attributes for SUN
 					$cmd = 'cp -Rp '.$source.'/* '.$destination;
-				} else {
+				}
+				else {
 					//copy -R recursive, -L follow symbolic links, -p preserve attributes for other Posix systemss
 					$cmd = 'cp -RLp '.$options.' '.$source.'/* '.$destination;
 				}
@@ -178,7 +179,6 @@
 			}
 		}
 		else {
-
 			function recursive_copy($source, $destination, $options = '') {
 				$dir = opendir($source);
 				if (!$dir) {
@@ -202,31 +202,35 @@
 				closedir($dir);
 			}
 		}
-
 	}
 
 	if (!function_exists('recursive_delete')) {
 		if (file_exists('/bin/rm')) {
-			function recursive_delete($dir) {
-				//$this->write_debug('rm -Rf '.$dir.'/*');
-				exec ('rm -Rf '.$dir.'/*');
-				clearstatcache();
+			function recursive_delete($directory) {
+				if (isset($directory) && strlen($directory) > 8) {
+					exec ('find '.$directory.' -name "*" | xargs rm -Rf');
+					//exec ('rm -Rf '.$directory.'/*');
+					clearstatcache();
+				}
 			}
-		}elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
-			function recursive_delete($dir) {
-				$dst = normalize_path_to_os($dst);
+		}
+		elseif (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+			function recursive_delete($directory) {
+				$directory = normalize_path_to_os($directory);
 				//$this->write_debug("del /S /F /Q \"$dir\"");
-				exec("del /S /F /Q \"$dir\"");
+				exec("del /S /F /Q \"$directory\"");
 				clearstatcache();
 			}
-		}else{
-			function recursive_delete($dir) {
-				foreach (glob($dir) as $file) {
+		}
+		else {
+			function recursive_delete($directory) {
+				foreach (glob($directory) as $file) {
 					if (is_dir($file)) {
 						//$this->write_debug("rm dir: ".$file);
 						recursive_delete("$file/*");
 						rmdir($file);
-					} else {
+					}
+					else {
 						//$this->write_debug("delete file: ".$file);
 						unlink($file);
 					}
