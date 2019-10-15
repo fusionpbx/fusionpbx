@@ -205,11 +205,11 @@
 	}
 
 	if (!function_exists('recursive_delete')) {
-		if (file_exists('/bin/rm')) {
+		if (file_exists('/usr/bin/find')) {
 			function recursive_delete($directory) {
 				if (isset($directory) && strlen($directory) > 8) {
-					exec ('find '.$directory.' -name "*" | xargs rm -Rf');
-					//exec ('rm -Rf '.$directory.'/*');
+					exec('/usr/bin/find '.$directory.' -name "*" -delete');
+					//exec('rm -Rf '.$directory.'/*');
 					clearstatcache();
 				}
 			}
