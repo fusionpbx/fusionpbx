@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -53,9 +53,6 @@
 			return $data;
 		}
 	}
-
-//set the max php execution time
-	ini_set(max_execution_time,7200);
 
 //get the http get values and set them as php variables
 	$action = check_str($_POST["action"]);
