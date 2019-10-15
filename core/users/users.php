@@ -92,10 +92,12 @@
 	if (isset($_GET['show']) && permission_exists('user_all') && $_GET['show'] == 'all') {
 		$param .= "&show=all";
 	}
-	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
-	$offset = $rows_per_page * $page;
+	if (isset($_GET['page'])) {
+		$page = $_GET['page'];
+		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+		list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
+		$offset = $rows_per_page * $page;
+	}
 
 //get the users from the database
 	$sql = "select u.domain_uuid, u.user_uuid, u.contact_uuid, u.domain_name, u.username, u.user_enabled, ";
@@ -164,8 +166,8 @@
 	}
 	echo th_order_by('user_enabled', $text['label-enabled'], $order_by, $order, '', '', $param);
 	echo "<td class='list_control_icons'>";
-	if (permission_exists('user_add')) {
-		if (($_SESSION['limit']['users']['numeric'] == '' || ($_SESSION['limit']['users']['numeric'] != '') && $total_users < $_SESSION['limit']['users']['numeric'])) {
+	if (permission_exists('user_add') && isset($_SESSION['limit']['users']['numeric'])) {
+		if (($_SESSION['limit']['users']['numeric'] == '' || ($_SESSION['limit']['users']['numeric'] != '') && $num_rows < $_SESSION['limit']['users']['numeric'])) {
 			echo "<a href='user_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 		}
 	}
