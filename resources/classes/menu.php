@@ -452,7 +452,7 @@ if (!class_exists('menu')) {
 					}
 
 				//get the menu from the database
-					$sql = "select i.menu_item_link, l.menu_item_title as menu_language_title, ".
+					$sql = "select i.menu_item_link, l.menu_item_title as menu_language_title, ";
 					$sql .= "i.menu_item_title, i.menu_item_protected, i.menu_item_category, ";
 					$sql .= "i.menu_item_icon, i.menu_item_uuid, i.menu_item_parent_uuid ";
 					$sql .= "from v_menu_items as i, v_menu_languages as l ";
