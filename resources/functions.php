@@ -208,7 +208,7 @@
 		if (file_exists('/usr/bin/find')) {
 			function recursive_delete($directory) {
 				if (isset($directory) && strlen($directory) > 8) {
-					exec('/usr/bin/find '.$directory.' -name "*" -delete');
+					exec('/usr/bin/find '.$directory.'/* -name "*" -delete');
 					//exec('rm -Rf '.$directory.'/*');
 					clearstatcache();
 				}
