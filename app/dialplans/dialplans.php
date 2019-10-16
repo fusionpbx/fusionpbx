@@ -445,8 +445,7 @@
 	}
 	echo "<br><br>";
 
-	if (is_array($dialplans)) {
-		if (sizeof($dialplan_ids) > 0) {
+		if (!empty($dialplan_ids) && sizeof($dialplan_ids) > 0) {
 			echo "<script>\n";
 			echo "	function check(what) {\n";
 			echo "		document.getElementById('chk_all').checked = (what == 'all') ? true : false;\n";
@@ -456,7 +455,6 @@
 			echo "	}\n";
 			echo "</script>\n";
 		}
-	}
 
 	unset($dialplans, $row);
 
