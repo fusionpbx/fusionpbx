@@ -394,6 +394,7 @@
 			echo "		<select class='formfld' style='display: none; width: auto;' name='target_domain_uuid' id='target_domain_uuid'>\n";
 			echo "			<option value=''>".$text['label-domain']."...</option>\n";
 			foreach ($_SESSION['domains'] as $domain) {
+				if ($domain['domain_uuid'] == $domain_uuid) { continue; }
 				echo "		<option value='".escape($domain["domain_uuid"])."'>".escape($domain["domain_name"])."</option>\n";
 			}
 			if (permission_exists('default_setting_add') && permission_exists('default_setting_edit')) {
