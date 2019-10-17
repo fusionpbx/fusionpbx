@@ -431,7 +431,13 @@
 		<!-- Symmetric RTP. 0 - No, 1 - Yes -->
 		<P291>0</P291>
 		<!-- FAX Mode. 0 - T.38 (Auto Detect), 1 - Pass Through -->
+		
+		{if isset($grandstream_fax_mode)}
+		<P228>1</P228>
+		{else}
 		<P228>0</P228>
+		{/if}
+		
 		<!-- Fax Tone Detection Mode. 1 - Caller, 0 - Callee, 2 - Caller or Callee -->
 		<P894>0</P894>
 		<!-- Jitter buffer type.  0 - Fixed, 1 - Adaptive -->
