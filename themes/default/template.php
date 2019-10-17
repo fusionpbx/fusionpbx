@@ -378,6 +378,15 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			}
 		}
 
+		//handle action bar style on scroll
+		window.addEventListener('scroll', action_bar_scroll , false);
+		function action_bar_scroll() {
+			if (document.getElementById('action_bar')) {
+				if (this.scrollY > 20) { document.getElementById('action_bar').classList.add('scroll'); }
+				if (this.scrollY < 20) { document.getElementById('action_bar').classList.remove('scroll'); }
+			}
+		}
+
 </script>
 
 <?php

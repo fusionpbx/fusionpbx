@@ -2110,12 +2110,26 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		?>
 		top: <?php echo $action_bar_top; ?>;
 		text-align: right;
-		border-bottom-width: <?php echo ($_SESSION['theme']['action_bar_border_bottom_size']['text'] != '') ? $_SESSION['theme']['action_bar_border_bottom_size']['text'] : '1px'; ?>;
-		border-bottom-style: <?php echo ($_SESSION['theme']['action_bar_border_bottom_style']['text'] != '') ? $_SESSION['theme']['action_bar_border_bottom_style']['text'] : 'solid'; ?>;
-		border-bottom-color: <?php echo ($_SESSION['theme']['action_bar_border_bottom_color']['text'] != '') ? $_SESSION['theme']['action_bar_border_bottom_color']['text'] : '#ddd'; ?>;
-		border-bottom-left-radius: <?php echo ($_SESSION['theme']['action_bar_border_bottom_radius']['text'] != '') ? $_SESSION['theme']['action_bar_border_bottom_radius']['text'] : '0'; ?>;
-		border-bottom-right-radius: <?php echo ($_SESSION['theme']['action_bar_border_bottom_radius']['text'] != '') ? $_SESSION['theme']['action_bar_border_bottom_radius']['text'] : '0'; ?>;
+		border-top: <?php echo ($_SESSION['theme']['action_bar_border_top']['text'] != '') ? $_SESSION['theme']['action_bar_border_top']['text'] : '0'; ?>;
+		border-right: <?php echo ($_SESSION['theme']['action_bar_border_right']['text'] != '') ? $_SESSION['theme']['action_bar_border_right']['text'] : '0'; ?>;
+		border-bottom: <?php echo ($_SESSION['theme']['action_bar_border_bottom']['text'] != '') ? $_SESSION['theme']['action_bar_border_bottom']['text'] : '0'; ?>;
+		border-left: <?php echo ($_SESSION['theme']['action_bar_border_left']['text'] != '') ? $_SESSION['theme']['action_bar_border_left']['text'] : '0'; ?>;
+		border-radius: <?php echo ($_SESSION['theme']['action_bar_border_radius']['text'] != '') ? $_SESSION['theme']['action_bar_border_radius']['text'] : '0'; ?>;
+		background: <?php echo ($_SESSION['theme']['action_bar_background']['text'] != '') ? $_SESSION['theme']['action_bar_background']['text'] : 'none'; ?>;
+		box-shadow: <?php echo ($_SESSION['theme']['action_bar_shadow']['text'] != '') ? $_SESSION['theme']['action_bar_shadow']['text'] : 'none'; ?>;
 		padding: 10px;
-		background: <?php echo ($_SESSION['theme']['action_bar_background']['text'] != '') ? $_SESSION['theme']['action_bar_background']['text'] : 'rgba(255,255,255,0.9)'; ?>;
 		margin: -10px -10px 10px -10px;
+		-webkit-transition: all .3s ease;
+		-moz-transition: all .3s ease;
+		transition: all .3s ease;
+		}
+
+	div.action_bar.scroll {
+		border-top: <?php echo ($_SESSION['theme']['action_bar_border_top_scroll']['text'] != '') ? $_SESSION['theme']['action_bar_border_top_scroll']['text'] : 'initial'; ?>;
+		border-right: <?php echo ($_SESSION['theme']['action_bar_border_right_scroll']['text'] != '') ? $_SESSION['theme']['action_bar_border_right_scroll']['text'] : 'initial'; ?>;
+		border-bottom: <?php echo ($_SESSION['theme']['action_bar_border_bottom_scroll']['text'] != '') ? $_SESSION['theme']['action_bar_border_bottom_scroll']['text'] : 'initial'; ?>;
+		border-left: <?php echo ($_SESSION['theme']['action_bar_border_left_scroll']['text'] != '') ? $_SESSION['theme']['action_bar_border_left_scroll']['text'] : 'initial'; ?>;
+		border-radius: <?php echo ($_SESSION['theme']['action_bar_border_radius_scroll']['text'] != '') ? $_SESSION['theme']['action_bar_border_radius_scroll']['text'] : 'initial'; ?>;
+		background: <?php echo ($_SESSION['theme']['action_bar_background_scroll']['text'] != '') ? $_SESSION['theme']['action_bar_background_scroll']['text'] : 'rgba(255,255,255,0.9)'; ?>;
+		box-shadow: <?php echo ($_SESSION['theme']['action_bar_shadow_scroll']['text'] != '') ? $_SESSION['theme']['action_bar_shadow_scroll']['text'] : '0 3px 3px 0 rgba(0,0,0,0.2)'; ?>;
 		}
